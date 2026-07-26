@@ -55,6 +55,9 @@ assert.equal(partlyRemoved?.quantity, 2, 'partial removal must reduce aggregate 
 assert.equal(partlyRemoved?.batches?.find(batch => batch.id === split.batches![0].id)?.quantity, 1);
 assert.equal(removeSpeciesBatchQuantity(split, split.batches![1].id, 1)?.quantity, 3, 'removing a full non-final batch keeps the parent species');
 assert.throws(() => removeSpeciesBatchQuantity(split, split.batches![0].id, 4), /数量范围/, 'removal must reject quantities above the selected batch');
+assert.throws(() => removeSpeciesBatchQuantity(split, split.batches![0].id, 1.5), /整数/, 'removal must reject decimal quantities instead of rounding');
+assert.throws(() => removeSpeciesBatchQuantity(split, split.batches![0].id, Number.NaN), /整数/, 'removal must reject NaN');
+assert.throws(() => removeSpeciesBatchQuantity(split, split.batches![0].id, 0), /整数/, 'removal must reject zero');
 const mergeReady = updateSpeciesBatch(split, split.batches![1].id, { reproductiveState: 'normal' });
 const merged = mergeSpeciesBatches(mergeReady, mergeReady.batches![0].id, mergeReady.batches![1].id);
 assert.equal(merged.quantity, 4);

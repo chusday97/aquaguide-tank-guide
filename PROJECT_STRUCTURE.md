@@ -19,6 +19,7 @@
 - `supabase/migrations/202607220001_livestock_batches.sql`：缸内物种批次、生长阶段、繁殖状态、汇总数量触发器与所有者 RLS。
 - `supabase/migrations/202607220002_atomic_livestock_batch_split.sql` 至 `202607220005_fix_livestock_batch_merge_signature.sql`：拆分、生命纪念扣减与合并的原子数据库函数，以及旧合并函数签名的显式升级。
 - `supabase/migrations/202607260001_feedback_submissions.sql`：低敏感意见反馈、管理员 RLS、状态索引与版本触发器。
+- `supabase/migrations/202607260002_atomic_livestock_removal.sql`：缸内物种数量移出的事务锁、整数校验与幂等重放。
 
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。

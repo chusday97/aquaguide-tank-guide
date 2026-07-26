@@ -7,6 +7,7 @@ import {
   aquariumSpeciesBatchCreateSchema,
   aquariumSpeciesBatchSplitSchema,
   aquariumSpeciesBatchMergeSchema,
+  aquariumSpeciesBatchRemovalSchema,
   careReminderCreateSchema,
   diagnosisSaveSchema,
   feedbackCreateSchema,
@@ -23,6 +24,9 @@ assert.equal(aquariumSpeciesBatchCreateSchema.safeParse({ quantity: 2, entryDate
 assert.equal(aquariumSpeciesBatchSplitSchema.safeParse({ quantity: 1, lifeStage: 'adult', reproductiveState: 'pregnant_or_gravid', sourceVersion: 1 }).success, true);
 assert.equal(aquariumSpeciesBatchSplitSchema.safeParse({ quantity: 0, lifeStage: 'adult', reproductiveState: 'normal', sourceVersion: 1 }).success, false);
 assert.equal(aquariumSpeciesBatchMergeSchema.safeParse({ sourceBatchId: '00000000-0000-4000-8000-000000000001', targetEntryDate: '2026-07-16', targetLifeStage: 'adult', targetReproductiveState: 'normal', targetVersion: 1, sourceVersion: 1 }).success, true);
+assert.equal(aquariumSpeciesBatchRemovalSchema.safeParse({ quantity: 2 }).success, true);
+assert.equal(aquariumSpeciesBatchRemovalSchema.safeParse({ quantity: 1.5 }).success, false);
+assert.equal(aquariumSpeciesBatchRemovalSchema.safeParse({ quantity: 0 }).success, false);
 assert.equal(careReminderCreateSchema.safeParse({ sourceCatalogKey: 'guide_water', title: '换水', reminderType: '换水', scheduledFor: '2026-07-17T08:00:00+08:00' }).success, true);
 assert.equal(diagnosisSaveSchema.safeParse({ diagnosisKey: 'daily', answers: {}, resultSummary: '正常', riskLevel: '低' }).success, true);
 assert.equal(profilePreferencesUpdateSchema.safeParse({ version: 1, onboarding: { version: 1, status: 'pending', goal: 'build_tank', viewedSpecies: false, taskCardDismissed: false } }).success, true);
@@ -72,6 +76,7 @@ for (const route of [
   '/aquariums/:id/species/:recordId/batches',
   '/aquariums/:id/species/:recordId/batches/:batchId/split',
   '/aquariums/:id/species/:recordId/batches/:batchId/merge',
+  '/aquariums/:id/species/:recordId/batches/:batchId/remove',
   '/aquariums/:id/species/:recordId/batches/:batchId/memorial',
   '/aquariums/:id/equipment',
   '/aquariums/:id/daily-checks/:localDate',
@@ -89,5 +94,11 @@ assert.match(routes, /这个物种已有多个批次，请调整具体批次的�
 assert.doesNotMatch(routes, /const \{ version, \.\.\.updates \} = parsed\.data;[\s\S]{0,300}from\('aquarium_species'\)\.update\(snakeize\(updates\)\)/);
 assert.match(routes, /MAX_SUBMISSIONS_PER_HOUR = 5/);
 assert.match(routes, /owner_id: userId \|\| null/);
+
+const atomicRemovalMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202607260002_atomic_livestock_removal.sql'), 'utf8');
+assert.match(atomicRemovalMigration, /create or replace function public\.remove_aquarium_species_batch_quantity/);
+assert.match(atomicRemovalMigration, /pg_advisory_xact_lock/);
+assert.match(atomicRemovalMigration, /insert into public\.idempotency_records/);
+assert.match(atomicRemovalMigration, /current_batch\.quantity - removal_quantity/);
 
 console.log('business API contract verified: validation, case conversion, deterministic ids, safety invariants and protected routes');

@@ -41,7 +41,7 @@ export const requireIdempotencyKey = (request: ApiRequest) => {
   return key;
 };
 
-const requestHash = (request: ApiRequest) => createHash('sha256')
+export const getRequestHash = (request: ApiRequest) => createHash('sha256')
   .update(JSON.stringify({ method: request.method, path: request.baseUrl + request.path, body: request.body || null }))
   .digest('hex');
 
@@ -60,7 +60,7 @@ export type IdempotencyState = {
 
 export const beginIdempotentWrite = async (request: ApiRequest): Promise<IdempotencyState> => {
   const key = requireIdempotencyKey(request);
-  const hash = requestHash(request);
+  const hash = getRequestHash(request);
   const client = userClientFor(request);
   const userId = authenticatedRequest(request).authUser.id;
   const { data, error } = await client

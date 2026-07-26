@@ -1,9 +1,9 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.3.0
+> 版本：2.3.1
 > 状态：已确认，实施中
 > 生效日期：2026-07-22
-> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`
+> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`、`202607260002_atomic_livestock_removal.sql`
 > TypeScript 来源：`src/types/database.ts`
 
 ## 1. 产品与架构边界
@@ -326,6 +326,7 @@ type ApiErrorCode =
 | PATCH | `/aquariums/:id/species/:recordId/batches/:batchId` | 可变字段、`version` | `AquariumSpeciesBatchRecord` | 400/401/404/409 |
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/split` | 拆分数量、新体态、`sourceVersion`、幂等键 | `AquariumSpeciesBatchRecord[]` | 400/401/404/409 |
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/merge` | 来源批次、最终入缸日期/生长阶段/繁殖状态、双方版本 | `AquariumSpeciesBatchRecord[]` | 400/401/404/409 |
+| POST | `/aquariums/:id/species/:recordId/batches/:batchId/remove` | 正整数数量、`Idempotency-Key` | `AquariumRecord` | 400/401/404/409 |
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/memorial` | 日期、原因、批次版本、幂等键 | `MemorialRecord` | 400/401/404/409 |
 | DELETE | `/aquariums/:id/species/:recordId/batches/:batchId` | `version` | `{ deleted: true, speciesRemoved: boolean }` | 401/404/409 |
 | PUT | `/aquariums/:id/equipment` | 设备字段、可选 `version` | `AquariumEquipmentRecord` | 400/401/404/409 |
@@ -340,6 +341,7 @@ type ApiErrorCode =
 `aquarium_species` 继续作为同缸同物种的汇总记录，`aquarium_species_batches` 记录同一物种内的数量、入缸日期和体态差异。
 批次拆分必须调用数据库函数 `split_aquarium_species_batch`，在同一事务内减少来源批次数量并创建新批次；任一步失败时总数量保持不变，同一幂等键重放返回同一拆分结果。
 批次合并必须调用 `merge_aquarium_species_batches`，在同一事务内写入用户确认的最终体态并合并两组，合并前后总数量保持不变；最终体态使用数据库 enum 参数，不经不安全的文本隐式转换。
+现实移出必须调用 `remove_aquarium_species_batch_quantity`，在同一数据库事务内锁定批次、扣减或软删除，并写入幂等记录；相同操作号和请求重放只能返回当前鱼缸，不能再次扣减。移出数量在界面、Repository、API 与数据库四层都必须为正整数。
 从缸内物种记录生命纪念必须调用 `record_livestock_memorial`，在同一事务内写入纪念并扣减所选批次；任一步失败时两边都不得产生部分结果。相同幂等键重放必须先返回已提交纪念，再检查可能已被软删除的父物种记录。
 
 ```ts

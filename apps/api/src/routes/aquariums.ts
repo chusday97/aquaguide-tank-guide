@@ -8,6 +8,7 @@ import {
   aquariumSpeciesBatchCreateSchema,
   aquariumSpeciesBatchSplitSchema,
   aquariumSpeciesBatchMergeSchema,
+  aquariumSpeciesBatchRemovalSchema,
   livestockMemorialCreateSchema,
   aquariumSpeciesBatchUpdateSchema,
   aquariumSpeciesUpdateSchema,
@@ -22,6 +23,7 @@ import {
   camelize,
   deterministicUuid,
   finishIdempotentWrite,
+  getRequestHash,
   requireIdempotencyKey,
   snakeize,
   throwDatabaseError,
@@ -395,6 +397,39 @@ aquariumsRouter.delete('/aquariums/:id/species/:recordId/batches/:batchId', asyn
   if (error) throwDatabaseError(error, '批次没有删除成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'aquarium_species_batches', batchId);
   return sendData(request, response, { deleted: true, speciesRemoved: activeBatches.length === 1 });
+}));
+
+aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/remove', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const recordId = parseId(request.params.recordId, '物种记录标识');
+  const batchId = parseId(request.params.batchId, '批次标识');
+  const parsed = aquariumSpeciesBatchRemovalSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '移出数量必须是正整数。', parsed.error.flatten());
+  const client = userClientFor(request);
+  await getOwnedSpeciesRecord(client, aquariumId, recordId);
+  const operationKey = requireIdempotencyKey(request);
+  const { error } = await client.rpc('remove_aquarium_species_batch_quantity', {
+    expected_aquarium_id: aquariumId,
+    expected_species_record_id: recordId,
+    target_batch_id: batchId,
+    removal_quantity: parsed.data.quantity,
+    operation_key: operationKey,
+    operation_request_hash: getRequestHash(request),
+  });
+  if (error?.message?.includes('INVALID_REMOVAL_QUANTITY')) throw new ApiError(400, 'VALIDATION_ERROR', '移出数量超出当前批次范围。');
+  if (error?.message?.includes('INVALID_OPERATION_KEY') || error?.message?.includes('INVALID_REQUEST_HASH')) throw new ApiError(400, 'VALIDATION_ERROR', '移出操作标识无效。');
+  if (error?.message?.includes('DUPLICATE_OPERATION_KEY')) throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一项移出操作。');
+  if (error?.message?.includes('BATCH_NOT_FOUND')) throw new ApiError(404, 'NOT_FOUND', '没有找到需要移出的批次。');
+  if (error) throwDatabaseError(error, '缸内物种数量没有更新成功。');
+  const { data: aquarium, error: aquariumError } = await client
+    .from('aquariums')
+    .select(aquariumSelect)
+    .eq('id', aquariumId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (aquariumError) throwDatabaseError(aquariumError, '鱼缸数据暂时无法刷新。');
+  if (!aquarium) throw new ApiError(404, 'NOT_FOUND', '没有找到当前鱼缸。');
+  return sendData(request, response, mapAquarium(aquarium));
 }));
 
 aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/memorial', asyncRoute(async (request, response) => {

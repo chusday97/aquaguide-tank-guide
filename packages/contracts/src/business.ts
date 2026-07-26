@@ -72,6 +72,10 @@ export const aquariumSpeciesBatchMergeSchema = z.object({
   sourceVersion: versionSchema,
 });
 
+export const aquariumSpeciesBatchRemovalSchema = z.object({
+  quantity: z.number().int().positive().max(100000),
+});
+
 export const aquariumEquipmentUpsertSchema = z.object({
   filterType: z.string().trim().max(80).optional(),
   heater: z.boolean().optional(),
@@ -191,6 +195,7 @@ export type AquariumSpeciesUpdateInput = z.infer<typeof aquariumSpeciesUpdateSch
 export type AquariumSpeciesBatchCreateInput = z.infer<typeof aquariumSpeciesBatchCreateSchema>;
 export type AquariumSpeciesBatchUpdateInput = z.infer<typeof aquariumSpeciesBatchUpdateSchema>;
 export type AquariumSpeciesBatchSplitInput = z.infer<typeof aquariumSpeciesBatchSplitSchema>;
+export type AquariumSpeciesBatchRemovalInput = z.infer<typeof aquariumSpeciesBatchRemovalSchema>;
 export type DiagnosisSaveInput = z.infer<typeof diagnosisSaveSchema>;
 export type MemorialCreateInput = z.infer<typeof memorialCreateSchema>;
 export type CareReminderCreateInput = z.infer<typeof careReminderCreateSchema>;

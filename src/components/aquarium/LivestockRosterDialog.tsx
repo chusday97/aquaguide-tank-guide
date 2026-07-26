@@ -64,8 +64,8 @@ export function LivestockRosterDialog({
 
   const confirmRemoval = async () => {
     if (!removal || !selectedBatch || isRemoving) return;
-    if (removal.quantity < 1 || removal.quantity > selectedBatch.quantity) {
-      setRemoveError(`请输入 1–${selectedBatch.quantity} 之间的数量。`);
+    if (!Number.isInteger(removal.quantity) || removal.quantity < 1 || removal.quantity > selectedBatch.quantity) {
+      setRemoveError(`请输入 1–${selectedBatch.quantity} 之间的整数。`);
       return;
     }
     setIsRemoving(true);
@@ -158,8 +158,10 @@ export function LivestockRosterDialog({
                   type="number"
                   min={1}
                   max={selectedBatch?.quantity ?? 1}
+                  step={1}
+                  inputMode="numeric"
                   value={removal.quantity}
-                  onChange={event => setRemoval(current => current ? { ...current, quantity: Number(event.target.value) || 1 } : current)}
+                  onChange={event => setRemoval(current => current ? { ...current, quantity: Number(event.target.value) } : current)}
                   className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink"
                 />
               </label>
@@ -171,7 +173,7 @@ export function LivestockRosterDialog({
           )}
           <DialogFooter>
             <button type="button" disabled={isRemoving} onClick={() => setRemoval(null)} className="min-h-11 rounded-2xl border border-border px-4 text-sm font-black disabled:opacity-50">暂不移出</button>
-            <button type="button" disabled={isRemoving} onClick={() => void confirmRemoval()} className="min-h-11 rounded-2xl bg-rose-600 px-4 text-sm font-black text-white disabled:opacity-60">
+            <button type="button" disabled={isRemoving || !Number.isInteger(removal?.quantity)} onClick={() => void confirmRemoval()} className="min-h-11 rounded-2xl bg-rose-600 px-4 text-sm font-black text-white disabled:opacity-60">
               {isRemoving ? '正在更新…' : `确认已移出 ${removal?.quantity ?? 0} 只/条`}
             </button>
           </DialogFooter>
