@@ -96,6 +96,7 @@ import { trackSessionEvent } from '../services/analytics/session-events.service'
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode, subscribeToRepositoryMode } from '../services/repository/repository-provider';
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
+import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
 import {
   completeCareReminder,
   deleteCareReminder,
@@ -1562,6 +1563,11 @@ export default function AquariumManager() {
     if (!activeId) return;
     patchLocalAppState({ currentAquariumId: activeId }, { debounce: true });
   }, [activeId]);
+
+  useEffect(() => {
+    if (aquariums.length === 0) return;
+    publishAquariumNavigation({ aquariums, currentAquariumId: activeId });
+  }, [activeId, aquariums]);
 
   useEffect(() => {
     if (!activeId) return;

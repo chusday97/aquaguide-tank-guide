@@ -30,9 +30,10 @@ import { LayoutModeProvider, useLayoutMode } from './components/layout/LayoutMod
 import { DataRecoveryNotice, RouteErrorBoundary } from './components/common/RouteErrorBoundary';
 import { lazyWithRecovery } from './lib/lazyWithRecovery';
 import i18n from './i18n';
-import type { Aquarium } from './types';
-import { loadAppStateFromStorage, subscribeToAppState } from './services/storage/local-app-state';
-import { selectAquarium } from './services/aquarium/aquarium-state.service';
+import {
+  getAquariumNavigationSnapshot,
+  subscribeToAquariumNavigation,
+} from './services/aquarium/aquarium-navigation.service';
 
 const loadAquarium = () => import('./pages/Aquarium');
 const loadEncyclopedia = () => import('./pages/Encyclopedia');
@@ -256,10 +257,7 @@ function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; 
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [searchDraft, setSearchDraft] = useState('');
-  const [aquariumNavigation, setAquariumNavigation] = useState<{ aquariums: Aquarium[]; currentAquariumId: string }>(() => {
-    const state = loadAppStateFromStorage();
-    return { aquariums: state.aquariums, currentAquariumId: state.currentAquariumId };
-  });
+  const [aquariumNavigation, setAquariumNavigation] = useState(getAquariumNavigationSnapshot);
   const activePath = location.pathname === '/wishlist'
     ? '/collection'
     : location.pathname === '/care-favorites'
@@ -269,10 +267,7 @@ function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; 
       : navItems.some(item => item.path === location.pathname) ? location.pathname : '/aquarium';
   const activeMenu = desktopSubMenus[activePath] || [];
 
-  useEffect(() => subscribeToAppState(() => {
-    const state = loadAppStateFromStorage();
-    setAquariumNavigation({ aquariums: state.aquariums, currentAquariumId: state.currentAquariumId });
-  }), []);
+  useEffect(() => subscribeToAquariumNavigation(setAquariumNavigation), []);
 
   const handlePrimaryNav = (path: string) => {
     navigateToRoute(path);
@@ -284,13 +279,11 @@ function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; 
   };
 
   const handleAquariumSwitch = (aquariumId: string) => {
-    try {
-      selectAquarium(aquariumId);
-      navigateToRoute(`/aquarium?tank=${encodeURIComponent(aquariumId)}`);
-    } catch (error) {
-      showToast(error instanceof Error ? error.message : '鱼缸没有切换成功，请重试。', 'error');
-      navigateToRoute('/aquarium');
+    if (!aquariumNavigation.aquariums.some(aquarium => aquarium.id === aquariumId)) {
+      showToast('没有找到要切换的鱼缸。', 'error');
+      return;
     }
+    navigateToRoute(`/aquarium?tank=${encodeURIComponent(aquariumId)}`);
   };
 
   return (
