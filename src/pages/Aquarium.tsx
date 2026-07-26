@@ -3496,12 +3496,12 @@ export default function AquariumManager() {
               return (
                 <SelectableOptionCard
                   key={option.id}
-                  label={isEn ? (option.labelEn || option.label) : option.label}
-                  description={option.type === 'substrate' ? (isEn ? `Substrate · ${option.hintEn || option.hint}` : `底砂 · ${option.hint}`) : (isEn ? `Hardscape · ${option.hintEn || option.hint}` : `硬景 · ${option.hint}`)}
+                label={option.label}
+                description={option.type === 'substrate' ? (isEn ? `Substrate · ${option.hint}` : `底砂 · ${option.hint}`) : (isEn ? `Hardscape · ${option.hint}` : `硬景 · ${option.hint}`)}
                   selected={isSelected}
                   mode={option.type === 'substrate' ? 'single' : 'multi'}
                   visual={option.type === 'hardscape' ? (
-                    <ResilientImage src={getSpeciesDisplayImage(option)} alt={isEn ? (option.labelEn || option.label) : option.label} className="h-full w-full object-contain p-0.5" />
+                    <ResilientImage src={getSpeciesDisplayImage(option)} alt={option.label} className="h-full w-full object-contain p-0.5" />
                   ) : (
                     <span className={`h-6 w-6 rounded-full border ${
                       option.value === '无' ? 'border-dashed border-ink/30 bg-white' :
@@ -7033,11 +7033,11 @@ export default function AquariumManager() {
                           <SelectableOptionCard
                             key={option.id}
                             label={option.label}
-                            description={option.type === 'substrate' ? (isEn ? `Substrate · ${option.hintEn || option.hint}` : `底砂 · ${option.hint}`) : (isEn ? `Hardscape · ${option.hintEn || option.hint}` : `硬景 · ${option.hint}`)}
+                            description={option.type === 'substrate' ? (isEn ? `Substrate · ${option.hint}` : `底砂 · ${option.hint}`) : (isEn ? `Hardscape · ${option.hint}` : `硬景 · ${option.hint}`)}
                             selected={isSelected}
                             mode={option.type === 'substrate' ? 'single' : 'multi'}
                             visual={option.type === 'hardscape' ? (
-                              <ResilientImage src={getSpeciesDisplayImage(option)} alt={isEn ? (option.labelEn || option.label) : option.label} className="h-full w-full object-contain p-0.5" />
+                              <ResilientImage src={getSpeciesDisplayImage(option)} alt={option.label} className="h-full w-full object-contain p-0.5" />
                             ) : (
                               <span className={`h-6 w-6 rounded-full border ${
                                 option.value === '无' ? 'border-dashed border-ink/30 bg-white' :

@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import { useNavigate } from 'react-router-dom';
 import { Droplets, Loader2, Lock, Mail } from 'lucide-react';

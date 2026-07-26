@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -80,7 +81,7 @@ const parseStructuredAnswer = (content: string): StructuredAnswer | null => {
   };
 };
 
-function AssistantAnswer({ content }: { content: string }) {
+function AssistantAnswer({ content, isEn }: { content: string; isEn: boolean }) {
   const structured = parseStructuredAnswer(content);
 
   if (!structured) {
@@ -123,7 +124,7 @@ function AssistantAnswer({ content }: { content: string }) {
 
       {structured.askNext && (
         <div className="rounded-full bg-accent/10 px-3 py-2 text-[11px] font-bold text-accent">
-          可以继续问：{structured.askNext}
+          {isEn ? 'You can also ask: ' : '可以继续问：'}{structured.askNext}
         </div>
       )}
     </div>
@@ -131,6 +132,8 @@ function AssistantAnswer({ content }: { content: string }) {
 }
 
 export default function AIAssistant() {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
   const [messages, setMessages] = useState<Message[]>(loadSavedMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -246,7 +249,7 @@ export default function AIAssistant() {
                   </>
                 ) : (
                   <>
-                    <AssistantAnswer content={message.content} />
+                    <AssistantAnswer content={message.content} isEn={isEn} />
                     {message.mentionedSpeciesIds && message.mentionedSpeciesIds.length > 0 && (
                       <div className="mt-3 grid gap-2">
                         {message.mentionedSpeciesIds.map(speciesId => {
@@ -311,7 +314,7 @@ export default function AIAssistant() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="isEn ? 'Ask a question...' : '输入您的问题...'"
+              placeholder={isEn ? 'Ask a question...' : '输入您的问题...'}
               disabled={isLoading}
               className="h-auto flex-1 rounded-none border-border p-2.5 text-xs font-medium text-ink shadow-none placeholder:text-ink/50 focus-visible:ring-1 focus-visible:ring-accent md:desktop-input-limit"
             />

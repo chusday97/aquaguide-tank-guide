@@ -27,7 +27,8 @@ const normalize = (value: string) => value.trim().toLocaleLowerCase();
 const originalValue = (record: object, key: string) => String((record as Record<string, unknown>)[key] ?? '');
 
 export default function SearchPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
   const { navigateToRoute } = useWorkspaceNavigation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') ?? '';

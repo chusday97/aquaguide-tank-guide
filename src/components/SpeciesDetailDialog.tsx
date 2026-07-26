@@ -220,7 +220,7 @@ const getSecondaryCareType = (fish: Fish) => {
   return '';
 };
 
-const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefined, t: any): SpeciesFitAssessment => {
+const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefined, t: any, isEn = false): SpeciesFitAssessment => {
   const tempRange = parseRange(fish.waterTemperature);
   const phRange = parseRange(fish.phLevel);
   const tankLiters = getTankVolumeLiters(aquarium);
@@ -453,7 +453,7 @@ export function SpeciesDetailDialog({
   const [deathError, setDeathError] = useState('');
   const [isRecordingDeath, setIsRecordingDeath] = useState(false);
   const deathReasonRef = useRef<HTMLTextAreaElement | null>(null);
-  const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t) : null, [fish, aquariumContext, t]);
+  const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);
   const displayFit = selectedFit;
   const selectedTaxonomy = fish ? getCareTaxonomyPath(fish) : null;
   const resolvedImageSrc = fish ? (imageSrc || getSpeciesDisplayImage(fish)) : '';

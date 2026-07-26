@@ -223,7 +223,7 @@ const getActionChips = (topic: CareTopic, limit = 3) => {
   const source = topic.firstSteps.length > 0
     ? topic.firstSteps
     : [...topic.keywords, topic.summary];
-  return Array.from(new Set(source.map(shortActionLabel).filter(Boolean))).slice(0, limit);
+  return Array.from(new Set(source.map(item => shortActionLabel(item)).filter(Boolean))).slice(0, limit);
 };
 
 const splitActionText = (value: string, isEn = false) => {
@@ -429,6 +429,7 @@ const buildWarningSigns = (topic: CareTopic): CareGuideView['warningSigns'] => {
 };
 
 const buildCareGuide = (topic: CareTopic): CareGuideView => {
+  const isEn = i18n.language === 'en';
   const todayActions = topic.firstSteps.slice(0, 4).map(item => {
     const action = splitActionText(item, isEn);
     return {
@@ -1047,7 +1048,7 @@ const stepDiagnosisQuestions: Array<{
   },
 ];
 
-const getStepDiagnosisQuestions = (issueType: StepDiagnosisIssue) => {
+const getStepDiagnosisQuestions = (issueType: StepDiagnosisIssue, isEn = false) => {
   const questionIdsByIssue: Record<StepDiagnosisIssue, Array<keyof StepDiagnosisAnswers>> = {
     cloudy: ['cloudyWater', 'recentWaterChange', 'recentNewLivestock'],
     gasping: ['gasping', 'cloudyWater', 'recentWaterChange'],
@@ -1059,9 +1060,25 @@ const getStepDiagnosisQuestions = (issueType: StepDiagnosisIssue) => {
     aggression: ['abnormalBehavior', 'recentNewLivestock'],
   };
   const ids = questionIdsByIssue[issueType];
-  return ids
+  const questions = ids
     .map(id => stepDiagnosisQuestions.find(question => question.id === id))
     .filter((question): question is (typeof stepDiagnosisQuestions)[number] => Boolean(question));
+  if (!isEn) return questions;
+  const prompts: Record<keyof StepDiagnosisAnswers, string> = {
+    cloudyWater: 'Is the water cloudy or discolored?',
+    gasping: 'Are fish gasping or breathing rapidly?',
+    recentWaterChange: 'Was there a water change in the last 48 hours?',
+    recentNewLivestock: 'Were any new animals added recently?',
+    abnormalBehavior: 'Is there refusal to eat, hiding, or death?',
+  };
+  return questions.map(question => ({
+    ...question,
+    question: prompts[question.id],
+    options: question.options.map(option => ({
+      ...option,
+      label: answerLabelMapEn[option.value],
+    })),
+  }));
 };
 
 const inferStepDiagnosisIssue = (topic: CareTopic): StepDiagnosisIssue => {
@@ -1108,6 +1125,18 @@ const answerLabelMap: Record<StepDiagnosisAnswerValue, string> = {
   yes: '有',
 };
 
+const answerLabelMapEn: Record<StepDiagnosisAnswerValue, string> = {
+  none: 'No',
+  occasional: 'Occasionally',
+  frequent: 'Frequently',
+  unknown: 'Not sure',
+  mild: 'Mild',
+  obvious: 'Obvious',
+  small: 'Small water change',
+  large: 'Large water change',
+  yes: 'Yes',
+};
+
 const riskWeight: Record<StepDiagnosisResult['riskLevel'], number> = {
   low: 1,
   unknown: 2,
@@ -1134,7 +1163,7 @@ const buildStepDiagnosisResult = ({
     ? (livestock.map(({ aqFish, fish }) => `${fish.scientificName || fish.name} x${aqFish.quantity || 1}`).join(', ') || 'No livestock')
     : (livestock.map(({ aqFish, fish }) => `${fish.name} x${aqFish.quantity || 1}`).join('、') || '暂无活体生物');
   
-  const questionList = isEn ? stepDiagnosisQuestionsEn : stepDiagnosisQuestions;
+  const questionList = getStepDiagnosisQuestions(issueType, isEn);
   const labelMap = isEn ? answerLabelMapEn : answerLabelMap;
 
   const evidence = [
@@ -1336,7 +1365,7 @@ const buildStepDiagnosisResult = ({
 };
 
 export default function CareEncyclopedia() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isEn = i18n.language === 'en';
   const navigate = useNavigate();
 
@@ -2546,7 +2575,7 @@ export function CareArticleDetail({
   onOpenCollection?: () => void;
   activeAquarium: Aquarium | null;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isEn = i18n.language === 'en';
   const meta = getCareGuideMeta(topic);
   const careGuide = buildCareGuide(topic);

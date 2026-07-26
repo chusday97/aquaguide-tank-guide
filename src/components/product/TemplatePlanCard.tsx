@@ -1,4 +1,5 @@
 import { TagPill } from './TagPill';
+import i18n from '../../i18n';
 
 type TemplatePlanCardProps = {
   name: string;

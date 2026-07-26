@@ -1,4 +1,5 @@
 import { Thermometer } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import type { LocalWeatherOutput } from '../../services/weather/weather.schema';
 
 type WeatherStatus = 'loading' | 'ready' | 'unavailable';
@@ -9,8 +10,8 @@ interface HeaterReminderCardProps {
   heaterSpeciesCount: number;
 }
 
-const formatWeatherLocation = (weather: LocalWeatherOutput | null) => (
-  [weather?.city, weather?.region].filter(Boolean).join(' · ') || '当前位置'
+const formatWeatherLocation = (weather: LocalWeatherOutput | null, isEn: boolean) => (
+  [weather?.city, weather?.region].filter(Boolean).join(' · ') || (isEn ? 'Current location' : '当前位置')
 );
 
 const formatTemperature = (value?: number) => (
@@ -22,7 +23,9 @@ export function HeaterReminderCard({
   weatherStatus,
   heaterSpeciesCount,
 }: HeaterReminderCardProps) {
-  const weatherLocation = formatWeatherLocation(localWeather);
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
+  const weatherLocation = formatWeatherLocation(localWeather, isEn);
   const weatherTemperatureValue = localWeather?.apparentTemperatureC ?? localWeather?.temperatureC;
   const weatherTemperature = formatTemperature(weatherTemperatureValue);
   const heaterRequired = heaterSpeciesCount > 0;
@@ -71,7 +74,7 @@ export function HeaterReminderCard({
           <p className="mt-0.5 truncate text-[11px] font-black text-ink">{heaterStatusDetail}</p>
         </div>
       </div>
-      <p className="truncate text-[9px] font-medium text-ink/40">{weatherStatus === 'loading' ? '定位中' : weatherLocation}</p>
+      <p className="truncate text-[9px] font-medium text-ink/40">{weatherStatus === 'loading' ? (isEn ? 'Locating' : '定位中') : weatherLocation}</p>
     </section>
   );
 }

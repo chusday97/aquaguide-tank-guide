@@ -409,7 +409,8 @@ function CompatibilityBottomSheet({
   mainConflicts,
   actionHints,
   selectedSpecies,
-  acceptLabel = isEn ? 'Got it' : '我知道了',
+  acceptLabel,
+  isEn,
   onAccept,
   onEdit,
 }: {
@@ -423,10 +424,12 @@ function CompatibilityBottomSheet({
   actionHints: string[];
   selectedSpecies: Fish[];
   acceptLabel?: string;
+  isEn: boolean;
   onAccept: () => void;
   onEdit: () => void;
 }) {
   if (!activeModal) return null;
+  const resolvedAcceptLabel = acceptLabel ?? (isEn ? 'Got it' : '我知道了');
 
   const isAdjustment = activeModal === 'adjustment';
   const fallbackReason = result.reasons[0] || '未发现明显对象冲突，仍建议少量加入并观察。';
@@ -451,7 +454,7 @@ function CompatibilityBottomSheet({
       <button
         type="button"
         className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
-        aria-label="isEn ? 'Close Modal' : '关闭弹窗'"
+        aria-label={isEn ? 'Close dialog' : '关闭弹窗'}
         onClick={onClose}
       />
       <section
@@ -482,7 +485,7 @@ function CompatibilityBottomSheet({
               <h3 id="compatibility-sheet-title" className="text-[18px] font-black text-ink">{sheetTitle}</h3>
               <p className="mt-0.5 text-[11px] font-bold text-ink/45">{isAdjustment ? '只看现在能做什么。' : '看清是哪组生物需要谨慎。'}</p>
             </div>
-            <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/55" aria-label="isEn ? 'Close' : '关闭'">
+            <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/55" aria-label={isEn ? 'Close' : '关闭'}>
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -557,7 +560,7 @@ function CompatibilityBottomSheet({
 
         <div className="modalFooter grid shrink-0 grid-cols-2 gap-2 border-t border-white bg-white/95 backdrop-blur">
           <button type="button" onClick={onAccept} className="min-h-11 rounded-full bg-emerald-700 px-3 text-[13px] font-black text-white">
-            {acceptLabel}
+            {resolvedAcceptLabel}
           </button>
           <button type="button" onClick={onEdit} className="min-h-11 rounded-full border border-border bg-white px-3 text-[13px] font-black text-ink/62">
             返回修改组合
@@ -1240,6 +1243,7 @@ export function CompatibilityRiskCalculator({
       </div>
     </section>
     <CompatibilityBottomSheet
+      isEn={isEn}
       activeModal={activeModal}
       onClose={() => {
         setConfirmingCautionAdd(false);
@@ -1252,7 +1256,7 @@ export function CompatibilityRiskCalculator({
       mainConflicts={mainConflicts}
       actionHints={actionHints}
       selectedSpecies={selectedSpecies}
-      acceptLabel={confirmingCautionAdd ? '确认添加' : '我知道了'}
+      acceptLabel={confirmingCautionAdd ? (isEn ? 'Confirm add' : '确认添加') : (isEn ? 'Got it' : '我知道了')}
       onAccept={() => {
         if (confirmingCautionAdd) {
           void performAddToAquarium();

@@ -7,10 +7,11 @@ import {
 } from '../src/services/aquarium/livestock-removal-attempt.service';
 
 let sequence = 0;
-const firstDraft = createLivestockRemovalAttempt(() => `attempt-${++sequence}`);
+const nextOperationId = () => `00000000-0000-4000-8000-${String(++sequence).padStart(12, '0')}` as `${string}-${string}-${string}-${string}-${string}`;
+const firstDraft = createLivestockRemovalAttempt(nextOperationId);
 const submittedDraft = markLivestockRemovalSubmitted(firstDraft);
 const retryDraft = markLivestockRemovalSubmitted(submittedDraft);
-const nextDraft = createLivestockRemovalAttempt(() => `attempt-${++sequence}`);
+const nextDraft = createLivestockRemovalAttempt(nextOperationId);
 
 assert.equal(submittedDraft.operationId, firstDraft.operationId);
 assert.equal(retryDraft.operationId, firstDraft.operationId, 'a failed response retry must reuse the same operation id');

@@ -69,6 +69,8 @@ import { trackSessionEvent } from '../services/analytics/session-events.service'
 import { recordSpeciesMemorial } from '../services/collection/memorial.service';
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import type { WorkspaceNavigationContext } from '../types/navigation';
+import { englishTranslations } from '../i18n/localizeData';
+import { autoTranslations } from '../i18n/localizeDataAuto';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const FilterBottomSheet = lazy(() => import('../components/common/FilterBottomSheet').then(module => ({ default: module.FilterBottomSheet })));
@@ -2445,12 +2447,12 @@ export default function Encyclopedia() {
 
                   <section className="grid grid-cols-3 gap-2">
                     {selectedFit.items
-                      .filter(item => ['温度', '缸体大小', '性情 / 混养'].includes(isEn ? getDifficultyLabelLocalized(item.id, true) : item.label))
+                      .filter(item => ['温度', '缸体大小', '性情 / 混养'].includes(item.label))
                       .slice(0, 3)
                       .map(item => (
-                        <div key={isEn ? getDifficultyLabelLocalized(item.id, true) : item.label} className="rounded-[14px] border border-border bg-bg/45 p-2">
+                        <div key={item.label} className="rounded-[14px] border border-border bg-bg/45 p-2">
                           <div className="text-[11px] font-black text-ink">
-                            {isEn ? getDifficultyLabelLocalized(item.id, true) : item.label === '缸体大小' ? t('encyclopedia.spaceLabel') : (isEn ? getDifficultyLabelLocalized(item.id, true) : item.label === '温度' ? t('encyclopedia.tempLabelBasic') : t('encyclopedia.temperamentMixing'))}
+                            {item.label === '缸体大小' ? t('encyclopedia.spaceLabel') : item.label === '温度' ? t('encyclopedia.tempLabelBasic') : t('encyclopedia.temperamentMixing')}
                           </div>
                           {item.status !== 'ok' && (
                             <div className="mt-1 line-clamp-2 text-[9px] font-medium leading-snug text-ink/48">
@@ -2544,8 +2546,10 @@ export default function Encyclopedia() {
                       {selectedFit.risks.length > 0 && (
                         <div className="grid gap-1.5">
                           {selectedFit.risks.slice(0, 3).map(item => (
-                            <div key={isEn ? getDifficultyLabelLocalized(item.id, true) : item.label} className="rounded-[12px] border border-amber-100 bg-amber-50/60 p-2">
-                              <div className="text-[11px] font-black text-ink">{isEn ? getDifficultyLabelLocalized(item.id, true) : item.label}</div>
+                            <div key={item.label} className="rounded-[12px] border border-amber-100 bg-amber-50/60 p-2">
+                              <div className="text-[11px] font-black text-ink">
+                                {item.label === '缸体大小' ? t('encyclopedia.spaceLabel') : item.label === '温度' ? t('encyclopedia.tempLabelBasic') : item.label === '性情 / 混养' ? t('encyclopedia.temperamentMixing') : item.label}
+                              </div>
                               <p className="mt-0.5 text-[10px] font-medium leading-relaxed text-ink/60">{item.advice}</p>
                             </div>
                           ))}
