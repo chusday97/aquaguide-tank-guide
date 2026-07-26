@@ -29,6 +29,7 @@
 - `src/pages/Identify.tsx`：拍照识别候选、手动兜底、物种确认、动态追问与可视化风险结果。
 - `src/pages/Search.tsx`：物种与养护指南的双语统一搜索，结果直达具体资料。
 - `src/pages/Settings.tsx`：正式设置路由，替代侧栏设置弹层。
+- `src/services/feedback/feedback.service.ts`：设置页意见反馈的唯一前端 API 入口，支持游客与可选登录会话。
 - `src/pages/Welcome.tsx`：首次使用的“先建缸 / 先看物种”目标选择页。
 - `src/components/onboarding/OnboardingTaskCard.tsx`：根据真实鱼缸、浏览、收藏/入缸和巡检记录自动更新的新手任务卡。
 - `src/components/aquarium/LivestockBatchCard.tsx`：缸内物种批次汇总、体态调整、拆分与最后一组移除确认。
@@ -49,6 +50,7 @@
 - `src/services/admin/content-admin.service.ts`：内容后台唯一 API 访问层，封装 CRUD、发布状态与原始图片上传。
 - `src/services/repository/`：游客本地与登录云端两种 Repository 实现；页面后续只依赖统一接口。
 - `apps/api/src/livestock-memorial-replay.ts`：最后一组被删除后仍可读取已提交生命纪念的幂等重放门禁。
+- `apps/api/src/routes/feedback.ts`：游客/登录反馈提交、频率限制，以及管理员分页和状态更新接口。
 - `src/services/analytics/`：只驻留当前会话的隐私安全事件白名单。
 - `src/services/collection/`：水族册聚合读取与 8 枚派生成就计算。
 - `src/services/collection/memorial.service.ts`：生命纪念校验、兼容存储写入与统一变更通知。
