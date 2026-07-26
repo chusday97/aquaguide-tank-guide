@@ -20,3 +20,12 @@ export const persistAquariums = (aquariums: Aquarium[], currentAquariumId: strin
   }
   return { aquariums: saved.aquariums, currentAquariumId: activeId };
 };
+
+export const selectAquarium = (aquariumId: string) => {
+  const state = loadAppStateFromStorage();
+  if (!state.aquariums.some(aquarium => aquarium.id === aquariumId)) {
+    throw new Error('没有找到要切换的鱼缸。');
+  }
+  patchLocalAppState({ currentAquariumId: aquariumId });
+  return aquariumId;
+};

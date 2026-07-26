@@ -136,6 +136,29 @@ try {
   await emptyDesktop.getByRole('dialog').waitFor();
   await emptyDesktop.close();
 
+  const multiTankState = createState(1);
+  multiTankState.aquariums.push({
+    ...structuredClone(multiTankState.aquariums[0]),
+    id: 'tank-second',
+    name: '隔离观察缸',
+    fishes: [],
+  });
+  const tankNavigationDesktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'zh-CN' });
+  await seed(tankNavigationDesktop, multiTankState);
+  await tankNavigationDesktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  await tankNavigationDesktop.getByRole('heading', { name: /鱼缸基础|Tank Basics/ }).waitFor();
+  const tankNavigation = tankNavigationDesktop.getByRole('region', { name: '切换鱼缸' });
+  await tankNavigation.getByRole('button', { name: /隔离观察缸/ }).click();
+  await tankNavigationDesktop.waitForURL(/tank=tank-second/);
+  await tankNavigationDesktop.locator('.aquarium-desktop-header').getByText('隔离观察缸', { exact: true }).waitFor();
+  await tankNavigationDesktop.getByRole('button', { name: '重命名鱼缸' }).click();
+  const renameInput = tankNavigationDesktop.getByRole('textbox', { name: '鱼缸名称' });
+  await renameInput.fill('新鱼观察缸');
+  await tankNavigationDesktop.getByRole('button', { name: '保存', exact: true }).click();
+  await tankNavigationDesktop.locator('.aquarium-desktop-header').getByText('新鱼观察缸', { exact: true }).waitFor();
+  await tankNavigation.getByText('新鱼观察缸', { exact: true }).waitFor();
+  await tankNavigationDesktop.close();
+
   const riskState = createState(1);
   riskState.aquariums[0].dimensions = { length: '10', width: '10', height: '10' };
   riskState.aquariums[0].fishes[0].quantity = 100;

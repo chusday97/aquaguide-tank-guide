@@ -1111,6 +1111,7 @@ export default function AquariumManager() {
   const [tankCopilotAnswers, setTankCopilotAnswers] = useState<Record<string, string>>({});
   const [isEditingName, setIsEditingName] = useState(false);
   const [editNameValue, setEditNameValue] = useState('');
+  const [isRenamingName, setIsRenamingName] = useState(false);
   const [selectedAqFish, setSelectedAqFish] = useState<{fish: Fish, aqFish: AquariumFish} | null>(null);
   const speciesDetailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -1516,6 +1517,10 @@ export default function AquariumManager() {
 
   useEffect(() => {
     const params = new URLSearchParams(routeLocation.search);
+    const requestedTankId = params.get('tank');
+    if (requestedTankId && aquariums.some(aquarium => aquarium.id === requestedTankId) && requestedTankId !== activeId) {
+      setActiveId(requestedTankId);
+    }
     if (params.get('action') !== 'add-species') {
       handledAddSpeciesRequestRef.current = '';
       return;
@@ -1539,7 +1544,7 @@ export default function AquariumManager() {
     setIsAddFishOpen(true);
     showToast(i18n.language === 'en' ? `Pre-selected "${fish.name}", compatibility will be checked before adding` : `已预选“${fish.name}”，加入前会再次检查混养风险`);
     routeNavigate('/aquarium', { replace: true });
-  }, [activeAquarium, routeLocation.search, routeNavigate, showToast]);
+  }, [activeAquarium, activeId, aquariums, routeLocation.search, routeNavigate, showToast]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !activeAquarium) return;
@@ -1781,16 +1786,28 @@ export default function AquariumManager() {
   const [activeTankRiskIndex, setActiveTankRiskIndex] = useState(0);
   const activeTankRisk = tankRiskItems[Math.min(activeTankRiskIndex, Math.max(tankRiskItems.length - 1, 0))];
 
-  const handleRenameSubmit = () => {
+  const handleRenameSubmit = async () => {
     if (!activeAquarium || !editNameValue.trim()) {
       setIsEditingName(false);
       return;
     }
-    const updated = aquariums.map(a => 
-      a.id === activeId ? { ...a, name: editNameValue.trim() } : a
-    );
-    saveAquariums(updated);
-    setIsEditingName(false);
+    const nextName = editNameValue.trim();
+    if (nextName === activeAquarium.name) {
+      setIsEditingName(false);
+      return;
+    }
+    setIsRenamingName(true);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      const savedAquarium = await repository.saveAquarium({ ...activeAquarium, name: nextName });
+      setAquariums(current => current.map(aquarium => aquarium.id === activeId ? savedAquarium : aquarium));
+      setIsEditingName(false);
+      showToast(`鱼缸已重命名为“${savedAquarium.name}”`);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : '鱼缸名称没有保存成功，请重试。', 'error');
+    } finally {
+      setIsRenamingName(false);
+    }
   };
 
   const normalizeSelectedAddFishItems = () => selectedAddFishItems
@@ -4345,36 +4362,50 @@ export default function AquariumManager() {
         </div>
       </aside>
       <section className="aquarium-desktop-header relative hidden min-w-0 items-center justify-between gap-3 rounded-[20px] border border-white/80 bg-white/72 px-4 py-3 shadow-sm md:flex">
-        <div className="relative min-w-0">
-          <button
-            type="button"
-            onClick={() => setIsAquariumMenuOpen(prev => !prev)}
-            className="flex min-w-[220px] items-center gap-3 rounded-[16px] bg-white px-3 py-2 text-left shadow-sm ring-1 ring-ink/5"
-            aria-expanded={isAquariumMenuOpen}
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[14px] bg-emerald-50 text-emerald-700"><Droplets className="h-4 w-4" /></span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-[13px] font-black text-ink">{activeAquarium.name}</span>
-              <span className="block text-[10px] font-bold text-ink/42">{t('aquarium.switchTankHint', { count: aquariums.length })}</span>
-            </span>
-            <ChevronRight className={`h-4 w-4 text-ink/35 transition-transform ${isAquariumMenuOpen ? 'rotate-90' : ''}`} />
-          </button>
-          {isAquariumMenuOpen && (
-            <div className="absolute left-0 top-[calc(100%+8px)] z-[80] w-[300px] rounded-[20px] border border-white/80 bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.16)]">
-              {aquariums.map(aquarium => (
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-emerald-50 text-emerald-700"><Droplets className="h-4 w-4" /></span>
+          {isEditingName ? (
+            <form
+              className="flex min-w-0 items-center gap-2"
+              onSubmit={event => {
+                event.preventDefault();
+                void handleRenameSubmit();
+              }}
+            >
+              <Input
+                autoFocus
+                value={editNameValue}
+                onChange={event => setEditNameValue(event.target.value)}
+                maxLength={40}
+                aria-label="鱼缸名称"
+                className="h-10 min-w-0 max-w-[280px] rounded-[14px] bg-white text-[13px] font-black"
+                disabled={isRenamingName}
+              />
+              <Button type="submit" disabled={isRenamingName || !editNameValue.trim()} className="h-10 rounded-full px-4 text-[12px] font-black">
+                {isRenamingName ? '保存中…' : '保存'}
+              </Button>
+              <Button type="button" variant="ghost" disabled={isRenamingName} onClick={() => setIsEditingName(false)} className="h-10 rounded-full px-3 text-[12px] font-black">
+                取消
+              </Button>
+            </form>
+          ) : (
+            <div className="min-w-0">
+              <div className="flex min-w-0 items-center gap-1.5">
+                <span className="truncate text-[14px] font-black text-ink">{activeAquarium.name}</span>
                 <button
-                  key={aquarium.id}
                   type="button"
-                  onClick={() => { setActiveId(aquarium.id); setIsAquariumMenuOpen(false); }}
-                  className={`flex w-full items-center justify-between rounded-[14px] px-3 py-2 text-left ${aquarium.id === activeId ? 'bg-emerald-50 text-emerald-800' : 'hover:bg-bg'}`}
+                  onClick={() => {
+                    setEditNameValue(activeAquarium.name);
+                    setIsEditingName(true);
+                  }}
+                  aria-label="重命名鱼缸"
+                  title="重命名鱼缸"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/42 transition-colors hover:bg-white hover:text-emerald-700"
                 >
-                  <span className="min-w-0">
-                    <span className="block truncate text-[12px] font-black">{aquarium.name}</span>
-                    <span className="block text-[9px] font-bold opacity-55">{t('aquarium.livestockCount', { count: new Set(aquarium.fishes.map(fish => fish.fishId)).size })}</span>
-                  </span>
-                  {aquarium.id === activeId && <span className="rounded-full bg-white px-2 py-1 text-[9px] font-black">{t('aquarium.active')}</span>}
+                  <Edit2 className="h-4 w-4" />
                 </button>
-              ))}
+              </div>
+              <span className="block text-[10px] font-bold text-ink/42">可在左侧栏切换鱼缸</span>
             </div>
           )}
         </div>

@@ -30,6 +30,9 @@ import { LayoutModeProvider, useLayoutMode } from './components/layout/LayoutMod
 import { DataRecoveryNotice, RouteErrorBoundary } from './components/common/RouteErrorBoundary';
 import { lazyWithRecovery } from './lib/lazyWithRecovery';
 import i18n from './i18n';
+import type { Aquarium } from './types';
+import { loadAppStateFromStorage, subscribeToAppState } from './services/storage/local-app-state';
+import { selectAquarium } from './services/aquarium/aquarium-state.service';
 
 const loadAquarium = () => import('./pages/Aquarium');
 const loadEncyclopedia = () => import('./pages/Encyclopedia');
@@ -250,8 +253,13 @@ function BottomNavigation() {
 function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; onToggleCollapsed: () => void }) {
   const location = useLocation();
   const { navigateToRoute, navigateToView } = useWorkspaceNavigation();
+  const { showToast } = useToast();
   const { t } = useTranslation();
   const [searchDraft, setSearchDraft] = useState('');
+  const [aquariumNavigation, setAquariumNavigation] = useState<{ aquariums: Aquarium[]; currentAquariumId: string }>(() => {
+    const state = loadAppStateFromStorage();
+    return { aquariums: state.aquariums, currentAquariumId: state.currentAquariumId };
+  });
   const activePath = location.pathname === '/wishlist'
     ? '/collection'
     : location.pathname === '/care-favorites'
@@ -261,6 +269,11 @@ function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; 
       : navItems.some(item => item.path === location.pathname) ? location.pathname : '/aquarium';
   const activeMenu = desktopSubMenus[activePath] || [];
 
+  useEffect(() => subscribeToAppState(() => {
+    const state = loadAppStateFromStorage();
+    setAquariumNavigation({ aquariums: state.aquariums, currentAquariumId: state.currentAquariumId });
+  }), []);
+
   const handlePrimaryNav = (path: string) => {
     navigateToRoute(path);
   };
@@ -268,6 +281,16 @@ function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; 
   const handleSubNav = (item: (typeof activeMenu)[number]) => {
     if (item.path) navigateToRoute(item.path);
     else if (item.hash) navigateToView(activePath, item.hash);
+  };
+
+  const handleAquariumSwitch = (aquariumId: string) => {
+    try {
+      selectAquarium(aquariumId);
+      navigateToRoute(`/aquarium?tank=${encodeURIComponent(aquariumId)}`);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : '鱼缸没有切换成功，请重试。', 'error');
+      navigateToRoute('/aquarium');
+    }
   };
 
   return (
@@ -354,6 +377,40 @@ function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; 
               );
             })}
           </div>
+
+          {activePath === '/aquarium' && aquariumNavigation.aquariums.length > 0 && (
+            <section className={cn('mt-4 border-t border-ink/6 pt-4', collapsed && 'pt-3')} aria-label="切换鱼缸">
+              {!collapsed && <div className="mb-2 px-2 text-[10px] font-black tracking-[0.12em] text-ink/35">我的鱼缸</div>}
+              <div className="app-scrollbar-hidden grid max-h-[176px] gap-1.5 overflow-y-auto">
+                {aquariumNavigation.aquariums.map(aquarium => {
+                  const isCurrent = aquarium.id === aquariumNavigation.currentAquariumId;
+                  const total = aquarium.fishes.reduce((sum, item) => sum + Math.max(0, item.quantity || 0), 0);
+                  return (
+                    <button
+                      key={aquarium.id}
+                      type="button"
+                      onClick={() => handleAquariumSwitch(aquarium.id)}
+                      aria-current={isCurrent ? 'true' : undefined}
+                      title={collapsed ? aquarium.name : undefined}
+                      className={cn(
+                        'flex min-h-11 w-full min-w-0 items-center gap-2 rounded-[15px] px-2.5 text-left transition-colors',
+                        collapsed && 'justify-center px-0',
+                        isCurrent ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-100' : 'text-ink/52 hover:bg-white hover:text-accent'
+                      )}
+                    >
+                      <Droplets className="h-4 w-4 shrink-0" />
+                      {!collapsed && (
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[12px] font-black">{aquarium.name}</span>
+                          <span className="block text-[9px] font-bold opacity-55">{total} 只/条</span>
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {activeMenu.length > 0 && (
           <div className={cn('mt-6 border-t border-ink/6 pt-4', collapsed && 'mt-4 pt-3')}>
