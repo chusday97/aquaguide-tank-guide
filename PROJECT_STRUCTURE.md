@@ -3,6 +3,7 @@
 ## 核心入口
 
 - `apps/api/`：Express TypeScript 业务 API 入口、统一错误、Supabase 客户端、鉴权和版本化路由。
+- `apps/api/src/feedback-rate-limit.ts`：意见反馈单实例有界限流；生产多实例由入口网关提供共享额度。
 - `apps/api/src/routes/admin.ts`：受管理员权限保护的物种、养护文章、发布状态与版本化图片处理接口。
 - `apps/api/src/routes/species-ai.ts`：物种图片识别、匿名未命中和动态症状判断 API。
 - `apps/api/src/ai/provider.ts`：视觉与文本模型的独立 OpenAI 兼容调用、超时和单次重试。

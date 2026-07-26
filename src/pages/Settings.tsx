@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, Languages, MessageSquareText, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { setLocale, type SupportedLocale } from '../i18n';
@@ -15,12 +15,28 @@ const localeOptions: Array<{ locale: SupportedLocale; label: string }> = [
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const currentLocale: SupportedLocale = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';
-  const { navigateToRoute } = useWorkspaceNavigation();
+  const { navigateToRoute, registerNavigationGuard } = useWorkspaceNavigation();
   const { isPhoneLayout } = useLayoutMode();
   const [feedbackCategory, setFeedbackCategory] = useState<'suggestion' | 'problem' | 'content' | 'other'>('suggestion');
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [feedbackError, setFeedbackError] = useState('');
+  const feedbackInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const hasUnsavedFeedback = feedbackMessage.trim().length > 0;
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!hasUnsavedFeedback) return;
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedFeedback]);
+
+  useEffect(() => registerNavigationGuard(hasUnsavedFeedback
+    ? () => window.confirm('反馈还没有提交，确定要离开吗？')
+    : null), [hasUnsavedFeedback, registerNavigationGuard]);
 
   const handleFeedbackSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,6 +44,7 @@ export default function SettingsPage() {
     if (message.length < 10) {
       setFeedbackStatus('error');
       setFeedbackError('请至少写 10 个字，方便我们理解问题。');
+      feedbackInputRef.current?.focus();
       return;
     }
     setFeedbackStatus('submitting');
@@ -126,6 +143,7 @@ export default function SettingsPage() {
           <label className="grid gap-2 text-sm font-black text-ink">
             你的意见
             <textarea
+              ref={feedbackInputRef}
               value={feedbackMessage}
               onChange={event => {
                 setFeedbackMessage(event.target.value);
@@ -144,7 +162,7 @@ export default function SettingsPage() {
           {feedbackStatus === 'error' && <p role="alert" className="rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-700">{feedbackError}</p>}
           <button
             type="submit"
-            disabled={feedbackStatus === 'submitting' || feedbackMessage.trim().length < 10}
+            disabled={feedbackStatus === 'submitting'}
             className="min-h-12 w-full rounded-2xl bg-emerald-700 px-5 text-sm font-black text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-45 sm:w-fit"
           >
             {feedbackStatus === 'submitting' ? '提交中…' : '提交反馈'}

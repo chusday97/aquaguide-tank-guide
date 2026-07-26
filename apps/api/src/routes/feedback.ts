@@ -5,21 +5,22 @@ import {
   uuidSchema,
 } from '../../../../packages/contracts/src/index';
 import { camelize, throwDatabaseError } from '../data-utils';
+import { FeedbackRateLimiter } from '../feedback-rate-limit';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 
-const submissionWindows = new Map<string, number[]>();
 const HOUR_MS = 60 * 60 * 1000;
 const MAX_SUBMISSIONS_PER_HOUR = 5;
+const feedbackRateLimiter = new FeedbackRateLimiter({
+  windowMs: HOUR_MS,
+  maxSubmissions: MAX_SUBMISSIONS_PER_HOUR,
+  maxKeys: 10_000,
+});
 
 const checkSubmissionRate = (key: string) => {
-  const cutoff = Date.now() - HOUR_MS;
-  const recent = (submissionWindows.get(key) || []).filter(timestamp => timestamp > cutoff);
-  if (recent.length >= MAX_SUBMISSIONS_PER_HOUR) {
+  if (!feedbackRateLimiter.check(key)) {
     throw new ApiError(429, 'RATE_LIMITED', '提交次数较多，请稍后再试。');
   }
-  recent.push(Date.now());
-  submissionWindows.set(key, recent);
 };
 
 const optionalUserId = async (authorization?: string) => {

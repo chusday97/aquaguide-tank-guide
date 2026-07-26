@@ -62,7 +62,9 @@ try {
     await page.goto(`${baseUrl}/settings#feedback`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: '意见反馈' }).waitFor();
     const submit = page.getByRole('button', { name: '提交反馈' });
-    assert.equal(await submit.isDisabled(), true, 'short feedback must not be submitted');
+    await submit.click();
+    await page.getByRole('alert').waitFor();
+    assert.equal(await page.getByRole('textbox', { name: '你的意见' }).evaluate(element => element === document.activeElement), true, 'invalid feedback must focus the textarea');
     await page.getByRole('textbox', { name: '你的意见' }).fill('希望风险处理可以继续保留明确的三步操作。');
     await page.getByText('使用问题', { exact: true }).click();
     await submit.click();
@@ -89,6 +91,13 @@ try {
   await failurePage.getByRole('button', { name: '提交反馈' }).click();
   await failurePage.getByRole('alert').waitFor();
   assert.equal(await failureInput.inputValue(), failureMessage, 'failed submission must preserve user input');
+  failurePage.once('dialog', dialog => dialog.dismiss());
+  const guideNavigation = failurePage.locator('.desktop-sidebar').getByRole('button').filter({ hasText: /图鉴|Species/ }).first();
+  await guideNavigation.click();
+  assert.match(failurePage.url(), /\/settings/, 'dismissing the unsaved warning must keep the settings page');
+  failurePage.once('dialog', dialog => dialog.accept());
+  await guideNavigation.click();
+  await failurePage.waitForURL(/\/encyclopedia/);
   await failurePage.close();
 
   console.log('settings feedback verified: validation, metadata, success, responsive layout and failure recovery');
