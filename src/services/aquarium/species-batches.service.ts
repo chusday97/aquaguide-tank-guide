@@ -128,6 +128,21 @@ export const decrementSpeciesBatch = (record: AquariumFish, batchId: string) => 
   });
 };
 
+export const removeSpeciesBatchQuantity = (record: AquariumFish, batchId: string, quantity: number) => {
+  const batches = normalizeSpeciesBatches(record);
+  const target = batches.find(batch => batch.id === batchId);
+  const amount = Math.round(quantity);
+  if (!target) throw new Error('没有找到需要移出的批次。');
+  if (amount < 1 || amount > target.quantity) throw new Error('移出数量必须在当前批次数量范围内。');
+  if (amount === target.quantity) return deleteSpeciesBatch(record, batchId);
+  return withNormalizedSpeciesBatches({
+    ...record,
+    batches: batches.map(batch => batch.id === batchId
+      ? { ...batch, quantity: batch.quantity - amount, stateUpdatedAt: new Date().toISOString() }
+      : batch),
+  });
+};
+
 export const summarizeSpeciesBatches = (record: AquariumFish) => {
   const batches = normalizeSpeciesBatches(record);
   const count = (predicate: (batch: AquariumSpeciesBatch) => boolean) => batches

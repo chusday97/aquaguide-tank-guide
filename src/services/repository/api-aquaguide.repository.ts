@@ -1,7 +1,6 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import type { Aquarium, AquariumFish, AquariumSpeciesBatch, DeceasedRecord } from '../../types';
 import type { CareReminderRecord } from '../care/care-activity.service';
-import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
 import { apiRequest, createIdempotencyKey } from '../api/api-client';
 import type {
   AquaGuideRepository,
@@ -9,6 +8,7 @@ import type {
   FavoriteMutation,
   MemorialSaveInput,
   LivestockMemorialSaveInput,
+  LivestockRemovalInput,
 } from './aquaguide.repository';
 
 type ApiAquariumSpecies = {
@@ -324,6 +324,32 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
 
     saved = await apiRequest<ApiAquarium>(`/aquariums/${saved.id}`);
     return this.rememberAquarium(saved);
+  }
+
+  async removeLivestock(input: LivestockRemovalInput) {
+    const aquarium = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
+    const species = aquarium.species.find(item => item.id === input.aquariumFishId);
+    const batch = species?.batches.find(item => item.id === input.batchId);
+    if (!species || !batch) throw new Error('没有找到需要移出的缸内物种批次。');
+    if (!Number.isInteger(input.quantity) || input.quantity < 1 || input.quantity > batch.quantity) {
+      throw new Error('移出数量必须在当前批次数量范围内。');
+    }
+    if (input.quantity === batch.quantity) {
+      await apiRequest(`/aquariums/${input.aquariumId}/species/${species.id}/batches/${batch.id}?version=${batch.version}`, {
+        method: 'DELETE',
+        idempotencyKey: input.operationId,
+      });
+    } else {
+      await apiRequest(`/aquariums/${input.aquariumId}/species/${species.id}/batches/${batch.id}`, {
+        method: 'PATCH',
+        body: {
+          quantity: batch.quantity - input.quantity,
+          version: batch.version,
+        },
+        idempotencyKey: input.operationId,
+      });
+    }
+    return this.rememberAquarium(await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`));
   }
 
   private async resolveContentId(type: 'species' | 'care', catalogKey: string) {

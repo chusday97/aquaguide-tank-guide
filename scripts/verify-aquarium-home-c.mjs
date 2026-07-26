@@ -82,18 +82,17 @@ try {
     assert.equal(await page.locator('.aquarium-workspace-zone > .aquarium-zone-header h2').count(), 3, 'task zones must use semantic headings');
     assert.deepEqual(await page.locator('.aquarium-workspace-zone').evaluateAll(nodes => nodes.map(node => node.classList.contains('aquarium-observe-zone') ? 'observe' : node.classList.contains('aquarium-manage-zone') ? 'manage' : 'learn')), ['observe', 'manage', 'learn']);
     if (width === 1440) {
-      const [tankBox, statusBox, archiveBox, actionsBox, discoveryBox, basicsBox] = await Promise.all([
+      const [tankBox, statusBox, archiveBox, manageBox, learnBox] = await Promise.all([
         page.locator('.aquarium-tank').boundingBox(),
         page.locator('.aquarium-status').boundingBox(),
         page.locator('.aquarium-archive').boundingBox(),
-        page.locator('.aquarium-actions').boundingBox(),
-        page.locator('.aquarium-discovery').boundingBox(),
-        page.locator('.aquarium-basics').boundingBox(),
+        page.locator('.aquarium-manage-zone').boundingBox(),
+        page.locator('.aquarium-learn-zone').boundingBox(),
       ]);
       assert.ok(tankBox && statusBox && tankBox.x < statusBox.x, 'Observe must place tank before today action');
-      assert.ok(archiveBox && actionsBox && archiveBox.x < actionsBox.x, 'Manage must place livestock before quick actions');
-      assert.ok(discoveryBox && basicsBox && discoveryBox.x < basicsBox.x, 'Learn must place discovery before tank basics');
-      assert.ok(archiveBox.height > 190 && archiveBox.height < actionsBox.height + 40, 'desktop livestock module must use its column with a compact preview');
+      assert.ok(archiveBox && tankBox && archiveBox.y > tankBox.y + tankBox.height, 'livestock preview must be part of Observe below the tank');
+      assert.ok(manageBox && learnBox && manageBox.x < learnBox.x, 'Manage and Learn must share one row on wide desktop');
+      assert.ok(archiveBox.height < 190, 'livestock preview must stay compact before its dialog opens');
     }
     if (width === 600) {
       const newAquarium = page.getByRole('button', { name: 'New Aquarium' });
@@ -113,9 +112,20 @@ try {
     await page.getByRole('heading', { name: 'Tank Basics' }).waitFor();
     assert.equal(await page.locator('.aquarium-archive-preview img').count(), speciesCount, `${speciesCount}-species preview must show every seeded species`);
     const archive = page.locator('.aquarium-archive');
-    await archive.locator('button[aria-expanded="false"]').click();
-    await archive.locator('#aquarium-records-content').waitFor();
-    assert.equal(await archive.locator('.aquarium-archive-preview').count(), 0, 'compact preview must leave the DOM when full livestock content opens');
+    await archive.locator('button[aria-haspopup="dialog"]').click();
+    const roster = page.getByRole('dialog').filter({ hasText: '缸内物种' }).first();
+    await roster.waitFor();
+    assert.equal(await roster.locator('article').count(), speciesCount, 'roster dialog must show every seeded species');
+    assert.equal(await archive.locator('.aquarium-archive-preview').count(), 1, 'compact preview must remain stable behind the dialog');
+    if (speciesCount === 4) {
+      await roster.getByRole('button', { name: /移出鱼缸/ }).first().click();
+      const confirmation = page.getByRole('dialog').filter({ hasText: '不要放生' }).first();
+      await confirmation.waitFor();
+      await confirmation.getByRole('button', { name: '确认已移出 1 只/条' }).click();
+      await confirmation.waitFor({ state: 'detached' });
+      await roster.locator('article').nth(3).waitFor({ state: 'detached' });
+      assert.equal(await roster.locator('article').count(), 3, 'removing the final batch must remove the species card');
+    }
     await page.close();
   }
 

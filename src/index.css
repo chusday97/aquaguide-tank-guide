@@ -1023,8 +1023,18 @@ body::-webkit-scrollbar {
   align-items: start;
 }
 
+.aquarium-desktop-layout {
+  container: aquarium-home / inline-size;
+}
+
+.aquarium-followup-grid {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+}
+
 .aquarium-archive-preview {
-  display: none;
+  display: block;
 }
 
 .aquarium-workspace-zone .aquarium-tank,
@@ -1064,17 +1074,24 @@ body::-webkit-scrollbar {
 }
 
 @media (min-width: 1050px) {
-  .aquarium-archive-preview {
-    display: block;
-  }
-
-  .aquarium-observe-grid,
-  .aquarium-manage-grid {
+  .aquarium-observe-grid {
     grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.85fr);
   }
 
-  .aquarium-learn-grid {
-    grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.9fr);
+  .aquarium-observe-grid > .aquarium-archive {
+    grid-column: 1 / -1;
+  }
+}
+
+@container aquarium-home (min-width: 900px) {
+  .aquarium-followup-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .aquarium-followup-grid .aquarium-manage-grid,
+  .aquarium-followup-grid .aquarium-learn-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

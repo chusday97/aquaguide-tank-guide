@@ -7,6 +7,7 @@ import {
   getSpeciesBatchContextLabel,
   mergeSpeciesBatches,
   normalizeSpeciesBatches,
+  removeSpeciesBatchQuantity,
   splitSpeciesBatch,
   summarizeSpeciesBatches,
   updateSpeciesBatch,
@@ -49,6 +50,11 @@ assert.equal(deleteSpeciesBatch(onlyBatch, onlyBatch.batches![0].id), null, 'del
 const decremented = decrementSpeciesBatch(split, split.batches![0].id);
 assert.equal(decremented?.quantity, 3, 'decrementing a memorial batch must reduce aggregate quantity');
 assert.equal(decremented?.batches?.find(batch => batch.id === split.batches![0].id)?.quantity, 2);
+const partlyRemoved = removeSpeciesBatchQuantity(split, split.batches![0].id, 2);
+assert.equal(partlyRemoved?.quantity, 2, 'partial removal must reduce aggregate quantity by the confirmed amount');
+assert.equal(partlyRemoved?.batches?.find(batch => batch.id === split.batches![0].id)?.quantity, 1);
+assert.equal(removeSpeciesBatchQuantity(split, split.batches![1].id, 1)?.quantity, 3, 'removing a full non-final batch keeps the parent species');
+assert.throws(() => removeSpeciesBatchQuantity(split, split.batches![0].id, 4), /数量范围/, 'removal must reject quantities above the selected batch');
 const mergeReady = updateSpeciesBatch(split, split.batches![1].id, { reproductiveState: 'normal' });
 const merged = mergeSpeciesBatches(mergeReady, mergeReady.batches![0].id, mergeReady.batches![1].id);
 assert.equal(merged.quantity, 4);
@@ -76,4 +82,4 @@ if (addition.added) {
   assert.equal(addition.aquariums[0].fishes[0].quantity, 3);
 }
 
-console.log('species batch service verified: legacy, edit, split, append, delete and addition');
+console.log('species batch service verified: legacy, edit, split, append, confirmed quantity removal, delete and addition');

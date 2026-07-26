@@ -69,13 +69,12 @@ import { ConfigSummaryCard } from '../components/product/ConfigSummaryCard';
 import { TemplatePlanCard } from '../components/product/TemplatePlanCard';
 import { ActionCenterCard, type ActionCenterStatus } from '../components/product/ActionCenterCard';
 import { QuickActionGrid } from '../components/product/QuickActionGrid';
-import { FilterBottomSheet } from '../components/common/FilterBottomSheet';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { AdaptiveTaskContent } from '../components/common/AdaptiveTaskContent';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { OnboardingTaskCard } from '../components/onboarding/OnboardingTaskCard';
 import { markAquariumConfigured } from '../services/onboarding/onboarding.service';
-import { LivestockBatchCard } from '../components/aquarium/LivestockBatchCard';
+import { LivestockRosterDialog } from '../components/aquarium/LivestockRosterDialog';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
 import {
@@ -243,17 +242,19 @@ function AquariumWorkspace({
     <>
       <section className="aquarium-workspace-zone aquarium-observe-zone" aria-labelledby="aquarium-observe-title">
         <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
-        <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}</div>
+        <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}{archive}</div>
       </section>
-      <section className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
-        <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-        <div className="aquarium-zone-grid aquarium-manage-grid">{archive}{actions}</div>
-      </section>
-      <section className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-        <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-        <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}{basics}</div>
-        {advanced}
-      </section>
+      <div className="aquarium-followup-grid">
+        <section className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
+          <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
+          <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
+        </section>
+        <section className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
+          <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
+          <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}{basics}</div>
+          {advanced}
+        </section>
+      </div>
     </>
   );
 }
@@ -1140,9 +1141,6 @@ export default function AquariumManager() {
   const [careDiagnosisContext, setCareDiagnosisContext] = useState<CareDiagnosisContext | null>(null);
   const [selectedBuildTemplateId, setSelectedBuildTemplateId] = useState(localizedTemplates[0].id);
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
-  const [tankArchiveCategory, setTankArchiveCategory] = useState('全部');
-  const [isTankContentFilterOpen, setIsTankContentFilterOpen] = useState(false);
-  const [draftTankArchiveCategory, setDraftTankArchiveCategory] = useState('全部');
   const [settingsForm, setSettingsForm] = useState<Partial<Aquarium>>({});
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | null>(null);
   const [isPlantListExpanded, setIsPlantListExpanded] = useState(false);
@@ -1376,6 +1374,21 @@ export default function AquariumManager() {
       ? (isEn ? 'Livestock group states updated' : '体态与数量已更新')
       : (isEn ? 'Species removed from this tank' : '该物种已移出鱼缸'));
   };
+
+  const removeLivestockQuantity = async (input: { aquariumFishId: string; batchId: string; quantity: number }) => {
+    const active = aquariums.find(aquarium => aquarium.id === activeId);
+    if (!active) throw new Error('没有找到当前鱼缸。');
+    const repository = await getCurrentAquaGuideRepository();
+    const savedAquarium = await repository.removeLivestock({
+      aquariumId: active.id,
+      aquariumFishId: input.aquariumFishId,
+      batchId: input.batchId,
+      quantity: input.quantity,
+      operationId: `livestock-removal-${crypto.randomUUID()}`,
+    });
+    setAquariums(current => current.map(aquarium => aquarium.id === active.id ? savedAquarium : aquarium));
+    showToast(`已从鱼缸记录中移出 ${input.quantity} 只/条`);
+  };
   const handleAddAquarium = () => {
     const newAq = createDefaultAquarium(`我的鱼缸 ${aquariums.length + 1}`);
     const updated = [...aquariums, newAq];
@@ -1386,9 +1399,6 @@ export default function AquariumManager() {
 
   const openTankArchive = () => {
     setIsTankArchiveExpanded(true);
-    window.requestAnimationFrame(() => {
-      void navigateToSection('aquarium-records', { updateHash: false });
-    });
   };
 
   const handleCompleteReminder = (reminder: CareReminderRecord) => {
@@ -1873,14 +1883,6 @@ export default function AquariumManager() {
     setFishSearchTerm('');
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
-  };
-
-  const handleRemoveFish = (fishIdToRemove: string) => {
-    if (!activeAquarium) return;
-    const updated = aquariums.map(a => 
-      a.id === activeId ? { ...a, fishes: a.fishes.filter(f => f.id !== fishIdToRemove) } : a
-    );
-    saveAquariums(updated);
   };
 
   const handleUpdateEntryDate = (fishId: string, newDate: string) => {
@@ -3662,37 +3664,6 @@ export default function AquariumManager() {
     });
   });
 
-  const archiveCandidatePool = fishData
-    .filter(fish => !archiveOwnedById.has(fish.id))
-    .filter(fish => {
-      if (activeAquarium.waterType === 'Saltwater') return fish.category === '海水鱼';
-      return fish.category !== '海水鱼' && getLifeType(fish) !== 'coral';
-    })
-    .filter(fish => (
-      !isHardscapeSpecies(fish)
-      || ['青龙石', '沉木', '杜鹃根', 'ADA风格化妆砂', '火山石板', '水草泥', '溪流砂'].some(name => fish.name.includes(name))
-    ));
-  const archiveFishCandidates = archiveCandidatePool
-    .filter(fish => !isAquaticPlantSpecies(fish) && !isHardscapeSpecies(fish))
-    .slice(0, 24);
-  const archivePlantCandidates = archiveCandidatePool
-    .filter(isAquaticPlantSpecies)
-    .slice(0, 18);
-  const archiveScapeCandidates = archiveCandidatePool
-    .filter(isHardscapeSpecies)
-    .slice(0, 14);
-  const lockedArchiveItems = Array.from(new Map([
-    ...archiveFishCandidates,
-    ...archivePlantCandidates,
-    ...archiveScapeCandidates,
-  ].map(fish => [fish.id, fish])).values())
-    .map(fish => ({ fish, quantity: 0, acquiredDate: '', source: 'stocked' as const, locked: true }));
-  const tankArchiveItems = [
-    ...Array.from(archiveOwnedById.values()).map(item => ({ ...item, locked: false })),
-    ...lockedArchiveItems,
-  ];
-  const archiveCategories = isEn ? ['All', 'Fish', 'Shrimp & Snails', 'Plants', 'Substrate', 'Hardscape'] : ['全部', '鱼类', '虾螺', '水草', '底砂', '造景'];
-  const primaryArchiveCategories = isEn ? ['All', 'Fish', 'Shrimp & Snails', 'Plants'] : ['全部', '鱼类', '虾螺', '水草'];
   const activeConfiguredSettingCount = [
     activeAquarium.dimensions?.length && activeAquarium.dimensions?.width && activeAquarium.dimensions?.height,
     activeAquarium.waterType,
@@ -3770,26 +3741,10 @@ export default function AquariumManager() {
       description: equipmentSummaryItems.slice(0, 2).join(' · '),
     });
   }
-  const filteredTankContentItems = tankConfiguredContentItems;
-  const formatTankContentDate = (dateValue: string) => {
-    const date = new Date(dateValue);
-    if (Number.isNaN(date.getTime())) return isEn ? 'Unknown time' : '时间未知';
-    return format(date, 'yyyy/MM/dd');
-  };
   const ownedArchivePreviewItems = tankConfiguredContentItems
     .filter(item => item.fish)
     .slice(0, 4);
-  const tankContentCount = tankConfiguredContentItems.length;
-  const hasAnyTankContent = tankContentCount > 0;
   const hasEnvironmentContent = tankConfiguredContentItems.some(item => ['水草', '底砂', '造景', '设备'].includes(item.category));
-  const emptyMessageByCategory: Record<string, string> = {
-    全部: '当前还没有配置鱼缸内容，可以先完善配置或套用搭建方案。',
-    鱼类: '暂无鱼类。',
-    虾螺: '暂无虾螺蟹。',
-    水草: '暂无水草配置。',
-    底砂: '暂无底砂配置。',
-    造景: '暂无造景配置。',
-  };
   // Water change calculation
   const shortestCycle = currentFishesDetails.length > 0 ? Math.min(...currentFishesDetails.map(f => f.waterChangeCycle)) : 7;
   const lastChangeDate = new Date(activeAquarium.lastWaterChangeDate || new Date());
@@ -4768,12 +4723,11 @@ export default function AquariumManager() {
       </div>
         )}
         archive={(
-      <section id="aquarium-records" className="aquarium-archive order-[7] scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-[#F8F7F2] shadow-sm">
+      <section id="aquarium-records" className="aquarium-archive scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-[#F8F7F2] shadow-sm">
         <button
           type="button"
-          onClick={() => setIsTankArchiveExpanded(prev => !prev)}
-          aria-expanded={isTankArchiveExpanded}
-          aria-controls="aquarium-records-content"
+          onClick={() => setIsTankArchiveExpanded(true)}
+          aria-haspopup="dialog"
           className="flex w-full items-center justify-between gap-3 bg-[#E9E8E2] px-3 py-3 text-left transition-colors hover:bg-[#E4E2DB]"
         >
           <div className="min-w-0">
@@ -4802,177 +4756,27 @@ export default function AquariumManager() {
             <span className="rounded-full bg-white/80 px-2.5 py-1 text-[12px] font-black tabular-nums text-ink shadow-sm">
               {t('aquarium.tankContentsConfigured', { count: activeConfiguredSettingCount })}
             </span>
-            <ChevronRight className={`h-4 w-4 text-ink/45 transition-transform ${isTankArchiveExpanded ? 'rotate-90' : ''}`} />
+            <ChevronRight className="h-4 w-4 text-ink/45" />
           </div>
         </button>
-
-        {!isTankArchiveExpanded && (
-          <div className="aquarium-archive-preview border-t border-white/70 bg-[#F4F2EC] p-3">
-            {ownedArchivePreviewItems.length > 0 ? (
-              <div className="grid grid-cols-2 gap-2">
-                {ownedArchivePreviewItems.map(item => (
-                  <div key={`preview-${item.id}`} className="grid min-w-0 grid-cols-[42px_minmax(0,1fr)] items-center gap-2 rounded-[14px] bg-white/80 p-2">
-                    <span className={`flex h-[42px] w-[42px] items-center justify-center rounded-[12px] ${getSpeciesImageSurfaceClass(item.fish)}`}>
-                      <img src={getSpeciesDisplayImage(item.fish)} alt="" className={`h-full w-full object-contain p-1 ${getSpeciesImageClass(item.fish)}`} referrerPolicy="no-referrer" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(item, isEn)}</span>
-                      <span className="mt-0.5 block text-[9px] font-bold text-ink/45">{isEn ? `${item.quantity} in tank` : `缸内 ${item.quantity} 只/条`}</span>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex min-h-[150px] flex-col items-center justify-center rounded-[16px] border border-dashed border-ink/10 bg-white/65 px-4 text-center">
-                <BookOpen className="h-6 w-6 text-emerald-700" />
-                <p className="mt-2 max-w-[28ch] text-[10px] font-bold leading-5 text-ink/48">{t('aquarium.tankContentsEmptyHint')}</p>
-                <button type="button" onClick={() => setIsAddFishOpen(true)} className="mt-3 min-h-10 rounded-full bg-emerald-700 px-4 text-[11px] font-black text-white hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                  {t('aquarium.addLivestock')}
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {isTankArchiveExpanded && (
-          <>
-        <div className="relative border-b border-[#E6E2D8] bg-[#E9E8E2] px-3 pb-2">
-          <div className="hidden items-center justify-between gap-3">
-            <button
-              type="button"
-              aria-label={isEn ? 'Back to aquarium view' : '回到鱼缸画面'}
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-white/85 text-ink/55 shadow-sm transition-colors hover:text-ink"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <div className="min-w-0 text-center">
-              <div className="flex items-center justify-center gap-1.5 text-[20px] font-black leading-none text-ink">
-              <BookOpen className="h-4 w-4 text-accent" />
-                {t('aquarium.tankContentsTitle')}
-              </div>
-              <div className="mt-1 text-[10px] font-bold text-ink/45">{activeAquarium.name}</div>
-            </div>
-            <div className="shrink-0 text-right">
-              <div className="text-[11px] font-bold text-ink/45">{isEn ? 'Configurations' : '配置项'}</div>
-              <div className="mt-1 rounded-full bg-white/80 px-2.5 py-1 text-[13px] font-black tabular-nums text-ink shadow-sm">
-                {t('aquarium.tankContentsConfigured', { count: activeConfiguredSettingCount })}
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div id="aquarium-records-content" className="relative bg-[#FBFAF6] px-2.5 pb-4 pt-3 before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_20%_10%,rgba(27,77,62,0.06),transparent_24%),linear-gradient(rgba(26,26,26,0.025)_1px,transparent_1px)] before:bg-[length:100%_100%,18px_18px]">
-          {!hasAnyTankContent ? (
-            <div className="relative rounded-[16px] bg-white/82 px-4 py-6 text-center shadow-sm">
-              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-sky-50 text-sky-600">
-                <Plus className="h-6 w-6" />
-              </div>
-              <div className="text-sm font-black text-ink">{t('aquarium.tankContentsEmpty')}</div>
-              <p className="mx-auto mt-1 max-w-[260px] text-[11px] font-medium leading-relaxed text-ink/50">
-                {t('aquarium.tankContentsEmptyHint')}
-              </p>
-              <div className="mt-4 flex justify-center">
-                <Button type="button" variant="outline" onClick={() => setIsAddFishOpen(true)} className="h-9 rounded-full text-xs font-black">
-                  {t('aquarium.addLivestock')}
-                </Button>
-              </div>
-            </div>
-          ) : filteredTankContentItems.length > 0 ? (
-            <div className="relative grid grid-cols-1 gap-3 rounded-[16px] bg-[#FBFAF6] px-1 py-2 sm:grid-cols-2 lg:grid-cols-5">
-              {!hasStockedAnimals && hasEnvironmentContent && tankArchiveCategory === '全部' && (
-                <div className="col-span-full rounded-[14px] border border-sky-100 bg-sky-50/70 px-3 py-2">
-                  <div className="text-[12px] font-black text-sky-800">{t('aquarium.tankContentsEnvironmentOnly')}</div>
-                  <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-ink/55">
-                    {t('aquarium.tankContentsEnvironmentHint')}
-                  </p>
-                </div>
-              )}
-              {filteredTankContentItems.map(item => {
-                const ownedAqFish = item.fish ? activeAquarium.fishes.find(aqFish => aqFish.fishId === item.fish?.id) : undefined;
-                const canOpenDetail = Boolean(item.fish && ownedAqFish && item.source === 'stocked');
-                const canOpenSettings = ['equipment', 'substrate', 'plant'].includes(item.source);
-
-                if (canOpenDetail && item.fish && ownedAqFish) {
-                  return (
-                    <LivestockBatchCard
-                      key={item.id}
-                      fish={item.fish}
-                      record={ownedAqFish}
-                      reproductiveApplicable={!isAquaticPlantSpecies(item.fish) && !isHardscapeSpecies(item.fish)}
-                      onOpenDetail={() => openAquariumSpeciesDetail(item.fish!, ownedAqFish, `aquarium-archive-species-${item.fish!.id}`)}
-                      onSave={(nextRecord) => saveLivestockBatches(ownedAqFish.id, nextRecord)}
-                    />
-                  );
-                }
-
-                return (
-                  <button
-                    id={canOpenDetail && item.fish ? `aquarium-archive-species-${item.fish.id}` : undefined}
-                    key={item.id}
-                    type="button"
-                    disabled={!canOpenDetail && !canOpenSettings}
-                    onClick={() => {
-                      if (canOpenDetail && item.fish && ownedAqFish) {
-                        openAquariumSpeciesDetail(
-                          item.fish,
-                          ownedAqFish,
-                          `aquarium-archive-species-${item.fish.id}`,
-                        );
-                        return;
-                      }
-                      if (item.source === 'equipment') {
-                        openAquariumSettings('equipment');
-                      } else if (item.source === 'substrate') {
-                        openAquariumSettings('substrate');
-                      } else if (item.source === 'plant') {
-                        openAquariumSettings('plants');
-                      }
-                    }}
-                    className={`group relative min-w-0 text-center ${canOpenDetail || canOpenSettings ? 'cursor-pointer' : 'cursor-default'}`}
-                  >
-                    <div className={`relative mx-auto flex h-[52px] w-full items-end justify-center rounded-[12px] ${item.fish ? getSpeciesImageSurfaceClass(item.fish) : ''}`}>
-                      {item.fish ? (
-                        <img
-                          src={getSpeciesDisplayImage(item.fish)}
-                          alt={getSpeciesNameLocalized(item, isEn)}
-                          referrerPolicy="no-referrer"
-                          className={`max-h-[50px] max-w-full object-contain transition-transform duration-200 group-hover:scale-[1.04] ${getSpeciesImageClass(item.fish)}`}
-                        />
-                      ) : (
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-accent/70 shadow-sm">
-                          <Layers3 className="h-5 w-5" />
-                        </span>
-                      )}
-                      {item.source === 'stocked' && item.quantity > 1 && (
-                        <span className="absolute right-0 top-0 rounded-full bg-ink/80 px-1 py-0.5 text-[8px] font-black text-white shadow-sm">
-                          x{item.quantity}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-1.5 truncate text-[10px] font-bold leading-tight text-ink/75 group-hover:text-accent">{getSpeciesNameLocalized(item, isEn)}</div>
-                    <div className="mt-0.5 truncate text-[9px] font-medium leading-tight text-ink/38">
-                      {formatTankContentDate(item.acquiredDate)}
-                    </div>
-                  </button>
-                );
-              })}
+        <div className="aquarium-archive-preview border-t border-white/70 bg-[#F4F2EC] p-3">
+          {ownedArchivePreviewItems.length > 0 ? (
+            <div className="flex min-w-0 items-center gap-2 overflow-hidden">
+              {ownedArchivePreviewItems.slice(0, 5).map(item => (
+                <span key={`preview-${item.id}`} className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${getSpeciesImageSurfaceClass(item.fish)}`}>
+                  <img src={getSpeciesDisplayImage(item.fish)} alt={item.fish.name} className={`h-full w-full object-contain p-1 ${getSpeciesImageClass(item.fish)}`} referrerPolicy="no-referrer" />
+                  <span className="absolute -bottom-1 -right-1 rounded-full bg-ink px-1.5 py-0.5 text-[8px] font-black text-white">×{item.quantity}</span>
+                </span>
+              ))}
+              {ownedArchivePreviewItems.length > 5 && <span className="text-[11px] font-black text-ink/45">+{ownedArchivePreviewItems.length - 5}</span>}
+              <span className="ml-auto text-[10px] font-bold text-emerald-800">点击查看与管理</span>
             </div>
           ) : (
-            <div className="relative rounded-sm border border-dashed border-ink/15 bg-white/70 px-4 py-8 text-center">
-              <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-accent-light text-accent">
-                <BookOpen className="h-6 w-6" />
-              </div>
-              <div className="text-sm font-black text-ink">{t('aquarium.noItemsInCategory')}</div>
-              <p className="mx-auto mt-1 max-w-[220px] text-[11px] font-medium leading-relaxed text-ink/50">
-                {emptyMessageByCategory[tankArchiveCategory] || t('aquarium.none')}
-              </p>
-            </div>
+            <button type="button" onClick={() => setIsAddFishOpen(true)} className="min-h-11 w-full rounded-xl border border-dashed border-emerald-200 bg-white text-xs font-black text-emerald-800">
+              添加第一种生物
+            </button>
           )}
         </div>
-          </>
-        )}
       </section>
         )}
         basics={(
@@ -7711,8 +7515,8 @@ export default function AquariumManager() {
                       variant="ghost" 
                       className="flex-1 text-[#D32F2F] hover:bg-[#FFF4F4] hover:text-[#D32F2F] text-xs font-bold border border-[#FFD6D6]"
                       onClick={() => {
-                        handleRemoveFish(selectedAqFish.aqFish.id);
                         setSelectedAqFish(null);
+                        setIsTankArchiveExpanded(true);
                       }}
                     >
                       <Trash2 className="w-4 h-4 mr-2" /> {isEn ? 'Remove from Tank' : '移出鱼缸'}
@@ -7731,6 +7535,24 @@ export default function AquariumManager() {
           )}
         </DialogContent>
       </Dialog>
+
+      <LivestockRosterDialog
+        open={isTankArchiveExpanded}
+        aquariumName={activeAquarium.name}
+        records={activeAquarium.fishes}
+        species={fishData}
+        onOpenChange={setIsTankArchiveExpanded}
+        onOpenDetail={(fish, record) => {
+          setIsTankArchiveExpanded(false);
+          openAquariumSpeciesDetail(fish, record, 'aquarium-records');
+        }}
+        onSave={saveLivestockBatches}
+        onRemove={removeLivestockQuantity}
+        onAdd={() => {
+          setIsTankArchiveExpanded(false);
+          setIsAddFishOpen(true);
+        }}
+      />
 
       <Dialog open={isConflictDialogOpen} onOpenChange={setIsConflictDialogOpen}>
         <DialogContent className="max-w-[425px] rounded-[22px] p-0 border-yellow-200 bg-bg overflow-hidden backdrop-blur-md">
@@ -7781,29 +7603,6 @@ export default function AquariumManager() {
         </DialogContent>
       </Dialog>
 
-      <FilterBottomSheet
-        open={isTankContentFilterOpen}
-        title={isEn ? "Select Category" : "选择鱼缸内容分类"}
-        subtitle="切换查看鱼类、虾螺、水草、底砂和造景。"
-        groups={[
-          {
-            title: '缸内内容',
-            selected: draftTankArchiveCategory,
-            onSelect: setDraftTankArchiveCategory,
-            options: archiveCategories.map(label => ({ label })),
-          },
-        ]}
-        onClose={() => setIsTankContentFilterOpen(false)}
-        onReset={() => {
-          setDraftTankArchiveCategory('全部');
-          setTankArchiveCategory('全部');
-          setIsTankContentFilterOpen(false);
-        }}
-        onApply={() => {
-          setTankArchiveCategory(draftTankArchiveCategory);
-          setIsTankContentFilterOpen(false);
-        }}
-      />
     </div>
   );
 }

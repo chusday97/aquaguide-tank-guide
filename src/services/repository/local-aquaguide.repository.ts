@@ -17,12 +17,14 @@ import {
 } from '../favorites/favorites.service';
 import { loadAppStateFromStorage } from '../storage/local-app-state';
 import { persistAquariums } from '../aquarium/aquarium-state.service';
+import { removeSpeciesBatchQuantity } from '../aquarium/species-batches.service';
 import type {
   AquaGuideRepository,
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
   LivestockMemorialSaveInput,
+  LivestockRemovalInput,
 } from './aquaguide.repository';
 
 export class LocalAquaGuideRepository implements AquaGuideRepository {
@@ -37,6 +39,22 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
       ? state.aquariums.map(item => item.id === aquarium.id ? aquarium : item)
       : [...state.aquariums, aquarium];
     return persistAquariums(aquariums, aquarium.id).aquariums.find(item => item.id === aquarium.id)!;
+  }
+
+  async removeLivestock(input: LivestockRemovalInput) {
+    const state = loadAppStateFromStorage();
+    const aquarium = state.aquariums.find(item => item.id === input.aquariumId);
+    if (!aquarium) throw new Error('没有找到需要更新的鱼缸。');
+    const current = aquarium.fishes.find(item => item.id === input.aquariumFishId);
+    if (!current) throw new Error('没有找到需要移出的缸内物种。');
+    const updated = removeSpeciesBatchQuantity(current, input.batchId, input.quantity);
+    const nextAquarium = {
+      ...aquarium,
+      fishes: updated
+        ? aquarium.fishes.map(item => item.id === current.id ? updated : item)
+        : aquarium.fishes.filter(item => item.id !== current.id),
+    };
+    return this.saveAquarium(nextAquarium);
   }
 
   async updateFavorite(input: FavoriteMutation) {
