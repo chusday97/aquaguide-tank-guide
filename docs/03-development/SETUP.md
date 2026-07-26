@@ -37,6 +37,7 @@ npm run dev:api
 | `AI_MODEL` | 模型名称 | 可选 |
 | `AI_TIMEOUT_MS` | 模型超时毫秒数 | 可选，默认 20000 |
 | `API_PORT` | Express 端口 | 可选 |
+| `TRUST_PROXY_HOPS` | Express 可信代理层数；直连保持 `0`，单层可信代理设为 `1` | 可选，默认 0 |
 | `VITE_SUPABASE_URL` | Supabase 项目地址 | 仅登录能力需要 |
 | `VITE_SUPABASE_ANON_KEY` | Supabase 匿名公钥 | 仅登录能力需要 |
 | `SUPABASE_URL` | 服务端 Supabase 项目地址 | 业务 API 必需，可与 Vite URL 相同 |
