@@ -7,6 +7,7 @@
 | GAP-CLAIM-001 | 提升用户任务完成率 | missing_evidence | 没有真实用户基线和对照数据 |
 | GAP-CLAIM-002 | 已正式上线 | missing_evidence | 没有部署地址与发布记录 |
 | GAP-CLAIM-003 | 个人独立完成全部设计开发 | missing_evidence | 个人职责边界尚未由用户确认 |
+| GAP-CLAIM-004 | 登录云端数量移出与反馈已可生产发布 | missing_evidence | 尚无真实 Supabase migration、RLS、并发、回滚和反馈写入证据；Docker registry 拉取 PostgreSQL 镜像连续 EOF |
 
 ## 缺失证据与补充计划
 
