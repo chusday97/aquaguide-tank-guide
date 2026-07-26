@@ -23,5 +23,7 @@ export const publishAquariumNavigation = (next: AquariumNavigationSnapshot) => {
 
 export const subscribeToAquariumNavigation = (listener: (snapshot: AquariumNavigationSnapshot) => void) => {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 };

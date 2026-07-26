@@ -1650,54 +1650,8 @@ export default function AquariumManager() {
       });
     }
 
-    // 2. pH
-    const parseRange = (str: string) => {
-      const match = str.match(/([\d.]+)-([\d.]+)/);
-      if (match) return [parseFloat(match[1]), parseFloat(match[2])];
-      const single = parseFloat(str);
-      if (!isNaN(single)) return [single, single];
-      return [0, 14];
-    };
-    
-    const phRanges = animalItems
-      .map(({ fish }) => ({ fish, range: parseRange(fish.phLevel) }))
-      .filter(item => item.range[0] > 0 || item.range[1] < 14);
-    let minPH = 0;
-    let maxPH = 14;
-    phRanges.forEach(({ range }, index) => {
-      const [min, max] = range;
-      if (index === 0) {
-        minPH = min;
-        maxPH = max;
-      } else {
-        minPH = Math.max(minPH, min);
-        maxPH = Math.min(maxPH, max);
-      }
-    });
-    if (phRanges.length > 1 && minPH > maxPH) {
-      const sorted = [...phRanges].sort((a, b) => a.range[0] - b.range[0]);
-      const low = sorted[0];
-      const high = sorted[sorted.length - 1];
-      risks.push({
-        group: isEn ? '水质参数冲突' : '水质参数冲突',
-        severity: 'danger',
-        title: isEn ? 'pH Requirement Conflict' : 'pH 要求冲突',
-        detail: isEn
-          ? `${low.fish.name}: ${low.fish.phLevel}; ${high.fish.name}: ${high.fish.phLevel}. There is no overlapping pH range, so mixing is not recommended.`
-          : `${low.fish.name}：${low.fish.phLevel}；${high.fish.name}：${high.fish.phLevel}。两者重叠区间为空，因此不建议同缸。`,
-        nextStep: isEn ? 'Remove the species with the most extreme pH demand to ensure overlapping ranges.' : '移除偏酸或偏碱需求差异最大的对象，保持同缸生物 pH 区间有交集。',
-        subjects: [low, high].map(({ fish }) => {
-          const record = animalItems.find(item => item.fish.id === fish.id)?.aqFish;
-          return { id: fish.id, name: fish.name, quantity: record?.quantity || 1 };
-        }),
-        actionSteps: [`先用试纸或滴定测试确认当前水体，不根据水草数量猜 pH。`, `比较 ${low.fish.name} 与 ${high.fish.name} 的要求，选择更符合当前稳定水体的一方。`, '为另一方准备合适水体的接收缸，转移后更新记录。'],
-        avoidActions: ['不要一次性大幅调酸或调碱', '不要用化学药剂追逐某个精确数值', '不要把区间冲突理解成已测得的当前 pH'],
-        primaryAction: 'open_roster',
-        primaryLabel: '查看冲突物种',
-      });
-    }
-
-    // 3. Water Type
+    // 2. Water Type. pH is intentionally excluded here: without a measured
+    // value, species reference ranges must not create a second blocking rule.
     const waterTypes = new Set(curFishes.map(f => f.category === '海水鱼' ? 'Saltwater' : 'Freshwater'));
     if (waterTypes.size > 1) {
       const waterConflictSubjects = animalItems.map(({ fish, aqFish }) => ({ id: fish.id, name: fish.name, quantity: aqFish.quantity }));
