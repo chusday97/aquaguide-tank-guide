@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- 桌面侧栏改为订阅当前页面发布的鱼缸导航快照，避免登录云端模式继续显示游客 localStorage 中的旧鱼缸。
 - **鱼缸首页全量英文本地化与图片鲁棒加载修复**：全面本地化 `Aquarium.tsx` 内底砂、造景、水草、设备、建缸模板、风险提示 Modal、换水日历、日常观察及 AI 建缸助手等 970 余处硬编码中文与标签；将 HTML `<img>` 标签升级为包含加载占位与异常自动重试机制的 `ResilientImage`，消除了图片缺失与掉图问题，确保在英文模式下全站按钮、弹窗与图片均保持 100% 纯净对应的英文呈现。
 - **养护百科全量汉化与中英双语切换修复**：全面本地化 `CareEncyclopedia.tsx` 内硬编码的中文规则、步骤、判断依据、卡片标签及自查诊断结论引擎；修复英文视角下 `shortActionLabel` 误将英文单词截断为 `Dechlo`、`Measur`、`Add ne` 的 Bug，补全步骤标题中漏译的 `后续判断` 等中文标签；补充生成 5 张英文养护图的 480w / 960w 高清 WebP 响应式图片；优化全站按钮与卡片标签在移动端的 CSS 文字换行控制 (`break-words hyphens-auto leading-snug`)，防止英文长词溢出或裁切。
 - **图鉴页面崩溃修复与全量筛选词条英译**：修正了 `Encyclopedia.tsx` 页面因函数作用域置顶顺序缺失导致 `ReferenceError: getSpeciesNameLocalized is not defined` 引起的页面打不开问题；补全了难度（`Beginner Friendly` / `Intermediate Challenge` / `Expert Level`）、水温区间（`Coldwater` / `Tropical` / `Broad Tolerance`）、体型（`Small Size` / `Medium Size` / `Large Size`）及性情（`Peaceful` / `Territorial` / `Aggressive`）等筛选抽屉词条的英文映射，恢复了图鉴页面的正常渲染与全量英文呈现。

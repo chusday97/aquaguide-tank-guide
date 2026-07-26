@@ -56,6 +56,7 @@
 | 2026-07-26 | 缸内物种预览与安全移出、具体风险向导和 pH 非阻断判断 | commits `8204664`, `4174cda`；批次/Repository/兼容性专项、build、320–1440px Playwright |
 | 2026-07-26 | 桌面侧栏切缸与鱼缸行内重命名 | commit `26258bf`；build；真实 Chromium 深链接、保存和跨区域同步 |
 | 2026-07-26 | 设置意见反馈与 Express/API 管理闭环 | commit `5e38185`；API check、业务契约、build、390/1280px Playwright、真实 400/503 |
+| 2026-07-26 | 修复侧栏在云端模式读取旧游客鱼缸 | commit `5535a02`；build；首页 Playwright 复跑 |
 
 ## 当前卡点
 

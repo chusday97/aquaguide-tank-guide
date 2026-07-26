@@ -58,6 +58,7 @@
 - `src/services/aquarium/`：鱼缸生物写入与复核。
 - `src/services/onboarding/onboarding.service.ts`：新手引导状态、首次识别、真实任务进度与完成派生。
 - `src/services/aquarium/aquarium-state.service.ts`：鱼缸集合兼容存储、当前鱼缸校验与统一变更通知。
+- `src/services/aquarium/aquarium-navigation.service.ts`：本地/云端共用的会话级鱼缸列表与当前选择快照，供桌面侧栏订阅。
 - `src/services/aquarium/species-batches.service.ts`：游客模式的批次规范化、汇总、拆分、体态更新与观察提示。
 - `src/services/care/care-activity.service.ts`：应用内养护计划、完成操作与护理清单的旧键兼容写入。
 - `src/services/compatibility/`：Mini 与完整混养的会话级选择传递。
