@@ -145,7 +145,7 @@ export function LivestockRosterDialog({
           setRemoveError('');
         }
       }}>
-        <DialogContent className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
+        <DialogContent data-removal-operation-id={removal?.operationId} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
           <DialogHeader>
             <DialogTitle>确认移出{removal?.fish.name}</DialogTitle>
             <DialogDescription>请先在现实中完成转缸、可靠送养或退回商家，再更新这里的记录。不要放生。</DialogDescription>

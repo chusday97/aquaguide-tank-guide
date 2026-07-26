@@ -129,6 +129,42 @@ try {
     await page.close();
   }
 
+  const removalRetry = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'zh-CN' });
+  await removalRetry.addInitScript(saved => {
+    localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
+    localStorage.setItem('aquaguide_locale', 'zh-CN');
+  }, createState(1));
+  await removalRetry.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  await removalRetry.locator('.aquarium-archive button[aria-haspopup="dialog"]').click();
+  const retryRoster = removalRetry.getByRole('dialog').filter({ hasText: '缸内物种' }).first();
+  await retryRoster.getByRole('button', { name: /移出鱼缸/ }).click();
+  const retryConfirmation = removalRetry.getByRole('dialog').filter({ hasText: '不要放生' }).first();
+  const operationId = await retryConfirmation.getAttribute('data-removal-operation-id');
+  await removalRetry.evaluate(() => {
+    const originalSetItem = Storage.prototype.setItem;
+    let shouldFail = true;
+    window.__livestockRemovalFailureInjected = false;
+    Storage.prototype.setItem = function setItemWithOneFailure(key, value) {
+      const removesFinalSpecies = key === 'aquarium_app_state_v1'
+        && JSON.parse(String(value)).aquariums?.[0]?.fishes?.length === 0;
+      if (removesFinalSpecies && shouldFail) {
+        shouldFail = false;
+        window.__livestockRemovalFailureInjected = true;
+        throw new DOMException('simulated storage failure', 'QuotaExceededError');
+      }
+      return originalSetItem.call(this, key, value);
+    };
+  });
+  await retryConfirmation.getByRole('button', { name: '确认已移出 1 只/条' }).click();
+  await retryConfirmation.getByRole('alert').waitFor();
+  assert.equal(await removalRetry.evaluate(() => window.__livestockRemovalFailureInjected), true, 'the first removal persistence must hit the injected response failure');
+  assert.equal(await retryConfirmation.getAttribute('data-removal-operation-id'), operationId, 'failed response retry must keep the same removal operation id');
+  assert.equal(await retryConfirmation.getByRole('spinbutton', { name: '移出数量' }).isDisabled(), true, 'submitted quantity must stay locked until cancel or success');
+  await retryConfirmation.getByRole('button', { name: '确认已移出 1 只/条' }).click();
+  await retryConfirmation.waitFor({ state: 'detached' });
+  assert.equal(await retryRoster.locator('article').count(), 0, 'retry must finish the original removal once');
+  await removalRetry.close();
+
   const emptyDesktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'en-US' });
   await seed(emptyDesktop);
   await emptyDesktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
