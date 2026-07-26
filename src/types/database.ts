@@ -12,6 +12,8 @@ export type CareEventType = 'water_change' | 'feeding' | 'observation' | 'checkl
 export type MigrationStatus = 'previewed' | 'committing' | 'completed' | 'failed';
 export type LifeStage = 'unknown' | 'juvenile' | 'adult';
 export type ReproductiveState = 'unknown' | 'not_applicable' | 'normal' | 'pregnant_or_gravid' | 'in_labor_or_spawning' | 'postpartum_recovery';
+export type FeedbackCategory = 'suggestion' | 'problem' | 'content' | 'other';
+export type FeedbackStatus = 'new' | 'reviewed' | 'closed';
 
 export interface SyncFields {
   createdAt: IsoDateTime;
@@ -324,6 +326,18 @@ export interface CareEventRecord extends SyncFields {
   occurredAt: IsoDateTime;
 }
 
+export interface FeedbackSubmissionRecord extends SyncFields {
+  id: Uuid;
+  ownerId?: Uuid;
+  category: FeedbackCategory;
+  message: string;
+  pagePath: string;
+  locale: SupportedLocale;
+  appVersion: string;
+  deviceLayout: 'phone' | 'desktop';
+  status: FeedbackStatus;
+}
+
 export interface MigrationBatchRecord extends SyncFields {
   id: Uuid;
   ownerId: Uuid;
@@ -438,6 +452,7 @@ export interface Database {
       memorialRecords: TableDefinition<MemorialRecordRow>;
       careReminders: TableDefinition<CareReminderRecordRow>;
       careEvents: TableDefinition<CareEventRecord>;
+      feedbackSubmissions: TableDefinition<FeedbackSubmissionRecord>;
       migrationBatches: TableDefinition<MigrationBatchRecord>;
       idempotencyRecords: TableDefinition<IdempotencyRecord>;
       speciesRecognitionMisses: RecognitionMissTableDefinition;

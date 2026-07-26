@@ -1,9 +1,9 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.2.0
+> 版本：2.3.0
 > 状态：已确认，实施中
 > 生效日期：2026-07-22
-> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`
+> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`
 > TypeScript 来源：`src/types/database.ts`
 
 ## 1. 产品与架构边界
@@ -193,11 +193,41 @@ type AssetVariant =
 type MigrationStatus = 'previewed' | 'committing' | 'completed' | 'failed';
 ```
 
-### 4.6 IdempotencyRecord
+### 4.6 FeedbackSubmissionRecord
+
+意见反馈是独立的低敏感用户输入，不绑定鱼缸资料：
+
+```ts
+type FeedbackCategory = 'suggestion' | 'problem' | 'content' | 'other';
+type FeedbackStatus = 'new' | 'reviewed' | 'closed';
+
+interface FeedbackSubmissionRecord {
+  id: string;
+  ownerId?: string;
+  category: FeedbackCategory;
+  message: string;
+  pagePath: string;
+  locale: SupportedLocale;
+  appVersion: string;
+  deviceLayout: 'phone' | 'desktop';
+  status: FeedbackStatus;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+  version: number;
+}
+```
+
+- 游客和登录用户均通过 Express 提交；前端不得直接写表。
+- `message` 长度为 10–2000，禁止附带照片、联系方式、鱼缸参数或症状原文。
+- 普通用户不能查询、更新或删除反馈；管理员可读取并更新处理状态。
+- API 日志不记录反馈正文、原始 IP 或认证令牌。
+
+### 4.7 IdempotencyRecord
 
 后端为写请求保存用户、幂等键、请求方法、路径、请求哈希、资源引用、响应状态和过期时间。同一用户的幂等键唯一；相同键但请求哈希不同必须返回 `409 DUPLICATE_RESOURCE`，不能复用旧结果。
 
-### 4.7 SpeciesRecognitionMissRecord
+### 4.8 SpeciesRecognitionMissRecord
 
 拍照识别未命中只保存匿名聚合元数据：图片 SHA-256 指纹、视觉模型名称与版本、候选标签、候选内容键、出现次数和可选的最终确认内容键。
 
@@ -220,6 +250,7 @@ type MigrationStatus = 'previewed' | 'committing' | 'completed' | 'failed';
 | 巡检、收藏、纪念、养护与迁移 | 所有者 | 所有者 |
 | 已发布翻译且父内容已发布 | 所有人 | 管理员 |
 | `species_recognition_misses` | 无客户端权限 | 后端 `service_role` |
+| `feedback_submissions` | 无客户端权限 | 后端受控写入；管理员只读与更新状态 |
 
 所有鱼缸子表都通过鱼缸外键再次验证 `aquariums.owner_id = auth.uid()`，不能只相信请求中的用户 ID。
 
@@ -361,6 +392,14 @@ interface AquariumSpeciesBatchRecord extends SyncFields {
 | GET | `/care-events` | `aquariumId? type? cursor? limit?` | `Page<CareEventRecord>` | 401 |
 | POST | `/care-events` | 类型、时间、内容、幂等键 | `CareEventRecord` | 400/401/409 |
 
+### 7.3.1 意见反馈
+
+| Method | Path | Request | Response | 主要错误 |
+|---|---|---|---|---|
+| POST | `/feedback` | `category message pagePath locale appVersion deviceLayout` | `{ id, status, createdAt }` | 400/429/503 |
+| GET | `/admin/feedback` | `status? cursor? limit?` | `Page<FeedbackSubmissionRecord>` | 401/403/503 |
+| PATCH | `/admin/feedback/:id/status` | `status` | `FeedbackSubmissionRecord` | 400/401/403/404/409 |
+
 ### 7.4 启动、迁移与管理
 
 本节路径均位于 `/api/v1`；用户资料的完整地址为 `/api/v1/profile`。
@@ -412,12 +451,38 @@ AI 请求增加 `locale`，只控制输出语言；混养、巡检、今日行�
 interface AquaGuideRepository {
   getAquariums(): Promise<AquariumWithRelations[]>;
   saveAquarium(input: AquariumSaveInput): Promise<AquariumWithRelations>;
+  removeLivestock(input: LivestockRemovalInput): Promise<AquariumWithRelations>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
   saveDiagnosis(input: DiagnosisSaveInput): Promise<DiagnosisRecordRow>;
   saveMemorial(input: MemorialSaveInput): Promise<MemorialRecordRow>;
   updateCareReminder(input: CareReminderMutation): Promise<CareReminderRecordRow>;
 }
 ```
+
+```ts
+interface LivestockRemovalInput {
+  aquariumId: string;
+  aquariumFishId: string;
+  batchId: string;
+  quantity: number;
+  operationId: string;
+}
+
+type WaterProfileTendency = 'acidic' | 'neutral' | 'alkaline' | 'marine' | 'unknown';
+
+interface WaterProfileEstimate {
+  tendency: WaterProfileTendency;
+  confidence: 'low' | 'medium';
+  evidence: string[];
+  limitation: string;
+}
+```
+
+- 移出表示现实中已转移、送养或退回的数量，不创建生命纪念。
+- 部分移出只减少所选批次；移出最后一个批次时软删除父物种记录。
+- 前端必须显示移出数量、来源批次与物种名称，并在二次确认后写入。
+- `WaterProfileEstimate` 只根据水体、底砂和硬景给出趋势；水草只可作为弱证据，不得推断数值 pH。
+- 缺少 pH 不得阻断普通耐受物种的基础判断；仅在敏感物种或明确区间冲突时提示进一步检测。
 
 - `LocalAquaGuideRepository` 兼容现有游客存储键。
 - `ApiAquaGuideRepository` 只调用 Express API。

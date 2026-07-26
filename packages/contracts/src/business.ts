@@ -156,6 +156,22 @@ export const careEventCreateSchema = z.object({
   occurredAt: isoDateTimeSchema,
 });
 
+export const feedbackCategorySchema = z.enum(['suggestion', 'problem', 'content', 'other']);
+export const feedbackStatusSchema = z.enum(['new', 'reviewed', 'closed']);
+
+export const feedbackCreateSchema = z.object({
+  category: feedbackCategorySchema,
+  message: z.string().trim().min(10).max(2000),
+  pagePath: z.string().trim().min(1).max(500),
+  locale: z.enum(['zh-CN', 'en']),
+  appVersion: z.string().trim().min(1).max(80),
+  deviceLayout: z.enum(['phone', 'desktop']),
+});
+
+export const feedbackStatusUpdateSchema = z.object({
+  status: feedbackStatusSchema,
+});
+
 export const migrationPreviewInputSchema = z.object({
   version: z.literal(1),
   currentAquariumId: z.string(),
@@ -179,3 +195,5 @@ export type DiagnosisSaveInput = z.infer<typeof diagnosisSaveSchema>;
 export type MemorialCreateInput = z.infer<typeof memorialCreateSchema>;
 export type CareReminderCreateInput = z.infer<typeof careReminderCreateSchema>;
 export type CareEventCreateInput = z.infer<typeof careEventCreateSchema>;
+export type FeedbackCreateInput = z.infer<typeof feedbackCreateSchema>;
+export type FeedbackStatusUpdateInput = z.infer<typeof feedbackStatusUpdateSchema>;
