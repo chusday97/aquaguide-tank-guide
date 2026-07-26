@@ -1377,7 +1377,7 @@ export default function AquariumManager() {
       : (isEn ? 'Species removed from this tank' : '该物种已移出鱼缸'));
   };
 
-  const removeLivestockQuantity = async (input: { aquariumFishId: string; batchId: string; quantity: number }) => {
+  const removeLivestockQuantity = async (input: { aquariumFishId: string; batchId: string; quantity: number; operationId: string }) => {
     const active = aquariums.find(aquarium => aquarium.id === activeId);
     if (!active) throw new Error('没有找到当前鱼缸。');
     const repository = await getCurrentAquaGuideRepository();
@@ -1386,7 +1386,7 @@ export default function AquariumManager() {
       aquariumFishId: input.aquariumFishId,
       batchId: input.batchId,
       quantity: input.quantity,
-      operationId: `livestock-removal-${crypto.randomUUID()}`,
+      operationId: input.operationId,
     });
     setAquariums(current => current.map(aquarium => aquarium.id === active.id ? savedAquarium : aquarium));
     showToast(`已从鱼缸记录中移出 ${input.quantity} 只/条`);

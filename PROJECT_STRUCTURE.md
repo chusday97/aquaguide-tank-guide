@@ -36,6 +36,7 @@
 - `src/components/onboarding/OnboardingTaskCard.tsx`：根据真实鱼缸、浏览、收藏/入缸和巡检记录自动更新的新手任务卡。
 - `src/components/aquarium/LivestockBatchCard.tsx`：缸内物种批次汇总、体态调整、拆分与最后一组移除确认。
 - `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情、批次管理和按数量二次确认移出。
+- `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
 - `src/pages/CollectionHub.tsx`：水族册模块首页，只展示四张大模块卡与数量。
 - `src/pages/Collection.tsx`：四个独立水族册模块的列表、详情与空状态。

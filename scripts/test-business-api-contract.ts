@@ -69,6 +69,8 @@ const routes = [
   readFileSync(resolve(import.meta.dirname, '../apps/api/src/routes/user-records.ts'), 'utf8'),
   readFileSync(resolve(import.meta.dirname, '../apps/api/src/routes/feedback.ts'), 'utf8'),
 ].join('\n');
+const livestockDialogSource = readFileSync(resolve(import.meta.dirname, '../src/components/aquarium/LivestockRosterDialog.tsx'), 'utf8');
+const aquariumPageSource = readFileSync(resolve(import.meta.dirname, '../src/pages/Aquarium.tsx'), 'utf8');
 
 for (const route of [
   '/aquariums',
@@ -94,11 +96,30 @@ assert.match(routes, /这个物种已有多个批次，请调整具体批次的�
 assert.doesNotMatch(routes, /const \{ version, \.\.\.updates \} = parsed\.data;[\s\S]{0,300}from\('aquarium_species'\)\.update\(snakeize\(updates\)\)/);
 assert.match(routes, /MAX_SUBMISSIONS_PER_HOUR = 5/);
 assert.match(routes, /owner_id: userId \|\| null/);
+assert.match(livestockDialogSource, /createLivestockRemovalAttempt\(\)/);
+assert.match(livestockDialogSource, /operationId: removal\.operationId/);
+assert.match(livestockDialogSource, /markLivestockRemovalSubmitted\(current\)/);
+assert.match(aquariumPageSource, /operationId: input\.operationId/);
+assert.doesNotMatch(aquariumPageSource, /removeLivestockQuantity[\s\S]{0,800}crypto\.randomUUID/);
 
 const atomicRemovalMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202607260002_atomic_livestock_removal.sql'), 'utf8');
 assert.match(atomicRemovalMigration, /create or replace function public\.remove_aquarium_species_batch_quantity/);
 assert.match(atomicRemovalMigration, /pg_advisory_xact_lock/);
 assert.match(atomicRemovalMigration, /insert into public\.idempotency_records/);
 assert.match(atomicRemovalMigration, /current_batch\.quantity - removal_quantity/);
+assert.ok(
+  atomicRemovalMigration.indexOf('from public.idempotency_records') < atomicRemovalMigration.indexOf('from public.aquarium_species_batches batch'),
+  'replay must be resolved before checking an active batch so a removed final batch can replay',
+);
+const removalRoute = routes.slice(routes.indexOf("aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/remove'"));
+assert.ok(
+  removalRoute.indexOf("client.rpc('remove_aquarium_species_batch_quantity'") < removalRoute.indexOf("aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/memorial'"),
+  'the removal endpoint must invoke the atomic replay-aware RPC',
+);
+assert.doesNotMatch(
+  removalRoute.slice(0, removalRoute.indexOf("client.rpc('remove_aquarium_species_batch_quantity'")),
+  /getOwnedSpeciesRecord/,
+  'the route must not reject a replay after the final batch soft-deletes its parent',
+);
 
 console.log('business API contract verified: validation, case conversion, deterministic ids, safety invariants and protected routes');

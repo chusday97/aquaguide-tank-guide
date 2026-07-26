@@ -406,7 +406,6 @@ aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/remove',
   const parsed = aquariumSpeciesBatchRemovalSchema.safeParse(request.body);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '移出数量必须是正整数。', parsed.error.flatten());
   const client = userClientFor(request);
-  await getOwnedSpeciesRecord(client, aquariumId, recordId);
   const operationKey = requireIdempotencyKey(request);
   const { error } = await client.rpc('remove_aquarium_species_batch_quantity', {
     expected_aquarium_id: aquariumId,

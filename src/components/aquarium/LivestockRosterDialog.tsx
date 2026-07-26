@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { AquariumFish, Fish } from '../../types';
+import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '../../services/aquarium/livestock-removal-attempt.service';
 import { normalizeSpeciesBatches } from '../../services/aquarium/species-batches.service';
 import { LivestockBatchCard } from './LivestockBatchCard';
 
@@ -10,6 +11,8 @@ type RemovalDraft = {
   fish: Fish;
   batchId: string;
   quantity: number;
+  operationId: string;
+  submitted: boolean;
 };
 
 type Props = {
@@ -24,6 +27,7 @@ type Props = {
     aquariumFishId: string;
     batchId: string;
     quantity: number;
+    operationId: string;
   }) => Promise<void>;
   onAdd: () => void;
 };
@@ -59,7 +63,13 @@ export function LivestockRosterDialog({
   const beginRemoval = (record: AquariumFish, fish: Fish) => {
     const firstBatch = normalizeSpeciesBatches(record)[0];
     setRemoveError('');
-    setRemoval({ record, fish, batchId: firstBatch.id, quantity: 1 });
+    setRemoval({
+      record,
+      fish,
+      batchId: firstBatch.id,
+      quantity: 1,
+      ...createLivestockRemovalAttempt(),
+    });
   };
 
   const confirmRemoval = async () => {
@@ -70,11 +80,13 @@ export function LivestockRosterDialog({
     }
     setIsRemoving(true);
     setRemoveError('');
+    setRemoval(current => current ? markLivestockRemovalSubmitted(current) : current);
     try {
       await onRemove({
         aquariumFishId: removal.record.id,
         batchId: removal.batchId,
         quantity: removal.quantity,
+        operationId: removal.operationId,
       });
       setRemoval(null);
     } catch (error) {
@@ -145,6 +157,7 @@ export function LivestockRosterDialog({
                   从哪一组移出
                   <select
                     value={removal.batchId}
+                    disabled={removal.submitted}
                     onChange={event => setRemoval(current => current ? { ...current, batchId: event.target.value, quantity: 1 } : current)}
                     className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink"
                   >
@@ -160,6 +173,7 @@ export function LivestockRosterDialog({
                   max={selectedBatch?.quantity ?? 1}
                   step={1}
                   inputMode="numeric"
+                  disabled={removal.submitted}
                   value={removal.quantity}
                   onChange={event => setRemoval(current => current ? { ...current, quantity: Number(event.target.value) } : current)}
                   className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink"
@@ -169,6 +183,9 @@ export function LivestockRosterDialog({
                 <strong>移出前准备：</strong>使用已循环的接收缸或确认可靠接收人；保持水温接近并缓慢过水。移出不是死亡记录，不会进入生命纪念。
               </div>
               {removeError && <p role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700">{removeError}</p>}
+              {removal.submitted && removeError && (
+                <p className="text-xs font-semibold leading-5 text-ink/55">重试会核对同一次操作，不会再次扣减。若要修改数量，请先取消并重新发起。</p>
+              )}
             </div>
           )}
           <DialogFooter>
