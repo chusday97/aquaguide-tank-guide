@@ -393,7 +393,10 @@ export const evaluateTankCompatibility = ({
     suggestions.push('如需尝试，请先补充躲避空间、确认水质，并少量加入观察。');
   }
   if (missingData.length > 0) {
-    suggestions.push('补充鱼缸尺寸、水温、pH、硬度和设备信息后再评估。');
+    const blockingMissing = missingData.filter(item => item.severity === 'high' || item.severity === 'medium');
+    suggestions.push(blockingMissing.length > 0
+      ? '先补充鱼缸尺寸、水温或必要设备信息后再评估。'
+      : '敏感物种可用试纸或滴定测试复核水质；普通判断无需填写 pH 数值。');
   }
   if (blockingRules.length === 0 && warningRules.length === 0 && missingData.length === 0) {
     suggestions.push('可以少量加入，并在 3-7 天内观察追咬、拒食和水质波动。');

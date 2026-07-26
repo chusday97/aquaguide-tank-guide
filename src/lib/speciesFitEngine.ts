@@ -1,6 +1,7 @@
 import type { Aquarium, Fish } from '../types';
 import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
+import { estimateWaterProfile } from './waterProfileEstimate';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -257,12 +258,18 @@ export const evaluateSpeciesForAquarium = (
   const identityText = identityTextOf(species);
   const phSensitive = Boolean(phRange && (phRange.max - phRange.min <= 1.5 || species.difficulty === 'Hard' || /水晶虾|苏虾|虾|短鲷|七彩|珊瑚|海葵|水母/i.test(identityText)));
   if (phSensitive && species.phLevel && phRange) {
-    confirmations.push({ type: 'missing_ph', title: '需要确认 pH', detail: `当前鱼缸未填写 pH，建议确认是否符合 ${species.phLevel}。` });
-    score -= 4;
+    const waterProfile = estimateWaterProfile(aquarium);
+    confirmations.push({
+      type: 'missing_ph',
+      title: '敏感物种建议实测水质',
+      detail: `环境线索仅显示“${waterProfile.tendency === 'acidic' ? '可能偏酸' : waterProfile.tendency === 'alkaline' ? '可能偏碱' : waterProfile.tendency === 'marine' ? '海水环境' : '倾向不明确'}”，不能代替 pH 实测；该物种参考范围为 ${species.phLevel}。`,
+      severity: 'low',
+    });
+    score -= 2;
   }
   if (/虾|螺|珊瑚|海葵|水母|苏拉威西|水晶/i.test(identityText)) {
-    confirmations.push({ type: 'missing_hardness', title: '需要确认硬度', detail: '该物种对硬度或矿物质更敏感，建议补充硬度数据。' });
-    score -= 3;
+    confirmations.push({ type: 'missing_hardness', title: '敏感物种建议实测硬度', detail: '该物种对硬度或矿物质更敏感；可用试纸或滴定测试确认，不要求在鱼缸资料中长期填写。', severity: 'low' });
+    score -= 2;
   }
 
   if (!aquarium.equipment?.filter || aquarium.equipment.filter === '无') {

@@ -2,6 +2,7 @@ import type { Aquarium, Fish } from '../src/types';
 import { evaluateTankCompatibility, getTankCompatibilityAddPolicy } from '../src/lib/tankCompatibilityEngine';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { executeSpeciesAddition, reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
+import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';
 
 const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   id: 'peaceful-small-fish',
@@ -42,6 +43,45 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       && getTankCompatibilityAddPolicy('insufficient_data') === 'complete_information'
       && getTankCompatibilityAddPolicy('not_recommended') === 'block'
     ),
+  },
+  {
+    name: 'ordinary species does not require a stored pH value',
+    run: () => {
+      const result = evaluateTankCompatibility({
+        tank: makeTank({ substrate: '无', plants: [], hardscape: [] }),
+        candidateSpecies: makeFish(),
+      });
+      return result.status === 'compatible'
+        && result.missingData.every(rule => !['missing_ph', 'missing_hardness'].includes(rule.code));
+    },
+  },
+  {
+    name: 'sensitive species gets an optional test reminder instead of insufficient data',
+    run: () => {
+      const result = evaluateTankCompatibility({
+        tank: makeTank({ substrate: '水草泥', hardscape: ['沉木'] }),
+        candidateSpecies: makeFish({
+          id: 'sensitive-shrimp',
+          name: '测试水晶虾',
+          scientificName: 'Caridina test',
+          category: '虾螺蟹',
+          phLevel: '6.0-6.8',
+        }),
+      });
+      return result.status === 'caution'
+        && result.missingData.some(rule => rule.code === 'missing_ph' && rule.severity === 'low')
+        && result.suggestions.some(item => item.includes('试纸'));
+    },
+  },
+  {
+    name: 'water profile only exposes a tendency and never invents numeric pH',
+    run: () => {
+      const acidic = estimateWaterProfile(makeTank({ substrate: '水草泥', hardscape: ['沉木'], plants: ['水榕', '莫丝'] }));
+      const conflict = estimateWaterProfile(makeTank({ substrate: '水草泥', hardscape: ['青龙石'] }));
+      return acidic.tendency === 'acidic'
+        && acidic.limitation.includes('不代表实际 pH 数值')
+        && conflict.tendency === 'unknown';
+    },
   },
   {
     name: 'freshwater tank blocks saltwater species',

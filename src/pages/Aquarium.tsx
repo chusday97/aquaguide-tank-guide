@@ -1575,6 +1575,11 @@ export default function AquariumManager() {
     title: string;
     detail: string;
     nextStep: string;
+    subjects: Array<{ id: string; name: string; quantity: number }>;
+    actionSteps: string[];
+    avoidActions: string[];
+    primaryAction: 'open_roster' | 'open_settings';
+    primaryLabel: string;
   };
 
   // --- COMPATIBILITY LOGIC ---
@@ -1599,7 +1604,8 @@ export default function AquariumManager() {
 
     const isEn = i18n.language === 'en';
     if (hasAggressive && hasPeaceful) {
-      const aggressiveNames = curFishes.filter(f => f.temperament === 'Aggressive').map(f => f.name).slice(0, 3).join(isEn ? ', ' : '、');
+      const aggressiveItems = animalItems.filter(({ fish }) => fish.temperament === 'Aggressive');
+      const aggressiveNames = aggressiveItems.map(({ fish }) => fish.name).slice(0, 3).join(isEn ? ', ' : '、');
       risks.push({
         group: isEn ? '混养风险' : '混养风险', // Keep internal key matching if needed, or map display
         severity: 'danger',
@@ -1608,9 +1614,15 @@ export default function AquariumManager() {
           ? `${aggressiveNames || 'Aggressive species'} housed with peaceful small species carries a high risk of nipping, chasing, or predation.`
           : `${aggressiveNames || '攻击性生物'} 与温和小型生物同缸，发生撕咬、追逐或吞食的风险较高。`,
         nextStep: isEn ? 'Prioritize removing aggressive species or setup a separate theme tank.' : '优先移除攻击性生物，或单独规划主题缸。',
+        subjects: aggressiveItems.map(({ fish, aqFish }) => ({ id: fish.id, name: fish.name, quantity: aqFish.quantity })),
+        actionSteps: ['先暂停继续加鱼，并观察是否正在追咬或堵住食物。', `为 ${aggressiveNames || '攻击性生物'} 准备已循环的独立缸、隔离区或可靠接收人。`, '现实中完成转移后，再在缸内物种中更新移出数量。'],
+        avoidActions: ['不要直接放生', '不要为压制攻击行为盲目加药', '不要在未循环的小容器里长期隔离'],
+        primaryAction: 'open_roster',
+        primaryLabel: '选择需要移出的生物',
       });
     }
     if (hasLarge && hasSmall && !hasAggressive) { // if aggressive already marked, avoid spam
+      const largeItems = animalItems.filter(({ fish }) => fish.size === 'Large');
       risks.push({
         group: isEn ? '混养风险' : '混养风险',
         severity: 'danger',
@@ -1619,6 +1631,11 @@ export default function AquariumManager() {
           ? 'Large and small species co-exist; small fish or shrimp may be chased, outcompeted, or eaten.'
           : '当前同时存在大型和小型生物，小型鱼虾可能被追逐、抢食或吞食。',
         nextStep: isEn ? 'Reduce large fish or build a separate tank for small species.' : '减少大型鱼，或为小型生物单独开缸。',
+        subjects: largeItems.map(({ fish, aqFish }) => ({ id: fish.id, name: fish.name, quantity: aqFish.quantity })),
+        actionSteps: ['先确认小型鱼虾有没有躲藏、拒食或被追赶。', '为大型鱼或小型生物准备尺寸合适且已循环的接收缸。', '完成转移后更新缸内数量，并连续观察 3 天。'],
+        avoidActions: ['不要仅靠增加躲避物维持明显捕食组合', '不要把小型生物临时放进未循环容器', '不要放生'],
+        primaryAction: 'open_roster',
+        primaryLabel: '调整缸内数量',
       });
     }
 
@@ -1658,18 +1675,32 @@ export default function AquariumManager() {
           ? `${low.fish.name}: ${low.fish.phLevel}; ${high.fish.name}: ${high.fish.phLevel}. There is no overlapping pH range, so mixing is not recommended.`
           : `${low.fish.name}：${low.fish.phLevel}；${high.fish.name}：${high.fish.phLevel}。两者重叠区间为空，因此不建议同缸。`,
         nextStep: isEn ? 'Remove the species with the most extreme pH demand to ensure overlapping ranges.' : '移除偏酸或偏碱需求差异最大的对象，保持同缸生物 pH 区间有交集。',
+        subjects: [low, high].map(({ fish }) => {
+          const record = animalItems.find(item => item.fish.id === fish.id)?.aqFish;
+          return { id: fish.id, name: fish.name, quantity: record?.quantity || 1 };
+        }),
+        actionSteps: [`先用试纸或滴定测试确认当前水体，不根据水草数量猜 pH。`, `比较 ${low.fish.name} 与 ${high.fish.name} 的要求，选择更符合当前稳定水体的一方。`, '为另一方准备合适水体的接收缸，转移后更新记录。'],
+        avoidActions: ['不要一次性大幅调酸或调碱', '不要用化学药剂追逐某个精确数值', '不要把区间冲突理解成已测得的当前 pH'],
+        primaryAction: 'open_roster',
+        primaryLabel: '查看冲突物种',
       });
     }
 
     // 3. Water Type
     const waterTypes = new Set(curFishes.map(f => f.category === '海水鱼' ? 'Saltwater' : 'Freshwater'));
     if (waterTypes.size > 1) {
+      const waterConflictSubjects = animalItems.map(({ fish, aqFish }) => ({ id: fish.id, name: fish.name, quantity: aqFish.quantity }));
       risks.push({
         group: isEn ? '水质参数冲突' : '水质参数冲突',
         severity: 'danger',
         title: isEn ? 'Water Type Conflict' : '水体类型冲突',
         detail: isEn ? 'Both saltwater and freshwater species are present; water conditions cannot satisfy both.' : '当前同时存在海水与淡水生物，水体类型无法同时满足。',
         nextStep: isEn ? 'Separate saltwater and freshwater species into different tanks.' : '把海水生物和淡水生物分缸管理。',
+        subjects: waterConflictSubjects,
+        actionSteps: ['立即停止继续加入生物，不要尝试用同一水体折中。', '按淡水与海水需求准备两个稳定、已循环的环境。', '完成转移后更新缸内记录，再分别观察呼吸和活动状态。'],
+        avoidActions: ['不要把盐度快速来回调整', '不要让淡水与海水生物长期共用同一水体', '不要放生'],
+        primaryAction: 'open_roster',
+        primaryLabel: '选择需要分缸的生物',
       });
     }
 
@@ -1683,14 +1714,14 @@ export default function AquariumManager() {
       const totalQuantity = animalItems.reduce((sum, { aqFish }) => sum + Math.max(aqFish.quantity || 1, 1), 0);
       const loadSources = animalItems
         .map(({ aqFish, fish }) => ({
+          id: fish.id,
           name: fish.name,
           load: getBioLoadLiters(fish) * Math.max(aqFish.quantity || 1, 1),
+          unitLoad: getBioLoadLiters(fish),
           quantity: Math.max(aqFish.quantity || 1, 1),
         }))
-        .sort((a, b) => b.load - a.load)
-        .slice(0, 3)
-        .map(item => `${item.name}×${item.quantity}`)
-        .join('、');
+        .sort((a, b) => b.load - a.load);
+      const loadSourceLabel = loadSources.slice(0, 3).map(item => `${item.name}×${item.quantity}`).join('、');
 
       if (tankLiters < minRequiredLiters) {
         risks.push({
@@ -1699,15 +1730,30 @@ export default function AquariumManager() {
           title: '空间需求偏紧',
           detail: `鱼缸有效水体约 ${tankLiters}L，小于当前动物最低建议缸容 ${Math.round(minRequiredLiters)}L。`,
           nextStep: '优先减少空间需求最高的生物，或升级缸体。',
+          subjects: loadSources.slice(0, 3).map(item => ({ id: item.id, name: item.name, quantity: item.quantity })),
+          actionSteps: ['先暂停添加新生物，并确认是否已有追咬、拒食或活动受限。', `优先为 ${loadSources[0]?.name || '空间需求最高的生物'} 准备更大的已循环鱼缸或可靠接收人。`, '转移完成后更新数量，并重新运行混养判断。'],
+          avoidActions: ['不要只靠增加过滤解决活动空间不足', '不要长期使用过小隔离盒代替鱼缸', '不要放生'],
+          primaryAction: 'open_roster',
+          primaryLabel: '查看空间需求最高的生物',
         });
       }
       if (bioLoadLiters > tankLiters) {
+        const primarySource = loadSources[0];
+        const excessLoad = bioLoadLiters - tankLiters;
+        const suggestedRemoval = primarySource
+          ? Math.min(primarySource.quantity, Math.max(1, Math.ceil(excessLoad / Math.max(primarySource.unitLoad, 1))))
+          : 1;
         risks.push({
           group: '容量风险',
           severity: 'danger',
           title: '动物负载超过当前水体',
-          detail: `当前约 ${totalQuantity} 只/条动物，估算动物负载需要约 ${Math.round(bioLoadLiters)}L，当前有效水体 ${tankLiters}L。主要负载来源：${loadSources || '当前动物记录'}。`,
+          detail: `当前约 ${totalQuantity} 只/条动物，估算动物负载需要约 ${Math.round(bioLoadLiters)}L，当前有效水体 ${tankLiters}L。主要负载来源：${loadSourceLabel || '当前动物记录'}。`,
           nextStep: '先减少数量最多或负载最高的动物，再加强过滤和换水。',
+          subjects: loadSources.slice(0, 3).map(item => ({ id: item.id, name: item.name, quantity: item.quantity })),
+          actionSteps: [`先停止加鱼和过量喂食，检查是否浮头、浑浊或异味。`, `建议优先为 ${primarySource?.name || '负载最高的生物'} 转移约 ${suggestedRemoval} 只/条，接收环境需已循环。`, '转移后分次换水并观察 3 天，再决定是否继续调整。'],
+          avoidActions: ['不要一次性全换水', '不要只增加过滤后继续加鱼', '不要把生物放生'],
+          primaryAction: 'open_roster',
+          primaryLabel: `调整 ${primarySource?.name || '缸内生物'} 数量`,
         });
       } else if (bioLoadLiters > tankLiters * 0.75) {
         risks.push({
@@ -1716,16 +1762,24 @@ export default function AquariumManager() {
           title: '动物负载接近上限',
           detail: `当前约 ${totalQuantity} 只/条动物，估算动物负载需要约 ${Math.round(bioLoadLiters)}L，鱼缸有效水体约 ${tankLiters}L。`,
           nextStep: '暂缓继续加生物，观察氨氮、亚硝酸盐和溶氧。',
+          subjects: loadSources.slice(0, 3).map(item => ({ id: item.id, name: item.name, quantity: item.quantity })),
+          actionSteps: ['暂停继续添加生物和过量喂食。', '连续 3 天观察浮头、异味、浑浊和食欲。', '若出现异常，先执行增氧和分次换水，再考虑转移高负载生物。'],
+          avoidActions: ['不要因暂时正常就继续加鱼', '不要一次性清洗全部滤材', '不要盲目加药'],
+          primaryAction: 'open_roster',
+          primaryLabel: '查看当前负载来源',
         });
       }
     }
 
-    return risks;
+    const severityRank = { danger: 0, warning: 1, info: 2 } as const;
+    return risks.sort((a, b) => severityRank[a.severity] - severityRank[b.severity]);
   };
 
   const tankRiskItems = getTankRiskItems(activeAquarium);
   const conflicts = tankRiskItems.filter(item => item.severity !== 'info').map(item => `${item.title}：${item.detail}`);
   const [isConflictDialogOpen, setIsConflictDialogOpen] = useState(false);
+  const [activeTankRiskIndex, setActiveTankRiskIndex] = useState(0);
+  const activeTankRisk = tankRiskItems[Math.min(activeTankRiskIndex, Math.max(tankRiskItems.length - 1, 0))];
 
   const handleRenameSubmit = () => {
     if (!activeAquarium || !editNameValue.trim()) {
@@ -3845,7 +3899,6 @@ export default function AquariumManager() {
     .filter(status => status === '待处理' || status === '建议处理').length;
   const waterChangeOverdueDays = isChangeOverdue ? Math.abs(daysUntilChange) : 0;
   const dailyAdviceMissingData = [
-    '近期水质数据',
     ...(!latestWaterChangeDate ? ['上次换水记录'] : []),
     ...(!activeAquarium.targetTemperature ? ['当前水温'] : []),
   ];
@@ -7555,51 +7608,84 @@ export default function AquariumManager() {
       />
 
       <Dialog open={isConflictDialogOpen} onOpenChange={setIsConflictDialogOpen}>
-        <DialogContent className="max-w-[425px] rounded-[22px] p-0 border-yellow-200 bg-bg overflow-hidden backdrop-blur-md">
-          <DialogHeader className="mb-2">
-            <div className="border-b border-white bg-white px-5 py-4">
-             <div className="flex items-center gap-2 text-amber-600">
-                <AlertTriangle className="w-5 h-5" />
-                <DialogTitle className="text-xl font-bold font-serif">{isEn ? 'Tank Risk Warnings' : '鱼缸风险提示'}</DialogTitle>
-             </div>
-             <DialogDescription className="mt-1 text-amber-700/80 text-xs">
-               {activeAquarium && (activeAquarium as Aquarium & { buildTemplateMeta?: { name: string } }).buildTemplateMeta
-                 ? (isEn ? 'Base template setup recorded. Current hints prioritize distinguishing between recommended config vs subsequent stocking volume/mix risks.' : '基础搭建方案已记录，当前提示会优先区分是推荐配置本身，还是后续加入的生物数量或组合带来的风险。')
-                 : (isEn ? 'Current hints are grouped by tank capacity, water parameters, and housing compatibility.' : '当前提示按容量、水质参数和混养组合分组展示。')}
-             </DialogDescription>
+        <DialogContent className="flex max-h-[88dvh] w-[min(94vw,820px)] max-w-[820px] flex-col overflow-hidden rounded-[28px] border-amber-100 bg-[#FBFAF6] p-0">
+          <DialogHeader className="shrink-0 border-b border-border bg-white px-5 pb-4 pt-5 text-left">
+            <div className="flex items-center gap-2 text-amber-700">
+              <AlertTriangle className="h-5 w-5" />
+              <DialogTitle className="text-xl font-black">鱼缸风险处理</DialogTitle>
             </div>
+            <DialogDescription>先看最重要的风险和具体处理步骤，需要时再切换其他风险。</DialogDescription>
           </DialogHeader>
-          <div className="flex max-h-[58vh] flex-col gap-3 overflow-y-auto px-4 pb-3">
-            {activeAquarium && (activeAquarium as Aquarium & { buildTemplateMeta?: { name: string; capacityGuidance?: TankBuildTemplate['capacityGuidance'] } }).buildTemplateMeta && (
-              <div className="rounded-[16px] border border-emerald-100 bg-emerald-50 p-3 text-[12px] font-medium leading-relaxed text-emerald-900/78">
-                <div className="font-black text-emerald-800">
-                  {isEn ? 'Base Template Setup: ' : '基础搭建方案：'}{(activeAquarium as Aquarium & { buildTemplateMeta?: { name: string } }).buildTemplateMeta?.name}
+          {activeTankRisk ? (
+            <div className="app-scrollbar-hidden min-h-0 overflow-y-auto px-4 py-4 md:px-5">
+              {tankRiskItems.length > 1 && (
+                <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
+                  {tankRiskItems.map((item, index) => (
+                    <button
+                      key={`${item.group}-${item.title}`}
+                      type="button"
+                      onClick={() => setActiveTankRiskIndex(index)}
+                      aria-pressed={activeTankRiskIndex === index}
+                      className={`min-h-10 shrink-0 rounded-full px-3 text-xs font-black ${activeTankRiskIndex === index ? 'bg-ink text-white' : 'border border-border bg-white text-ink/60'}`}
+                    >
+                      {item.title}
+                    </button>
+                  ))}
                 </div>
-                <div className="mt-1">
-                  {isEn ? 'Base config itself is not a risk; capacity or housing hints usually arise when livestock quantity or subsequent combinations exceed recommendations.' : '基础配置本身不等于风险；如果出现容量或混养提示，通常来自当前动物数量、后续加入生物或组合超出建议范围。'}
+              )}
+              <div className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+                <div className="rounded-[22px] bg-white p-4 shadow-sm">
+                  <div className="text-[10px] font-black text-rose-600">{activeTankRisk.group}</div>
+                  <h3 className="mt-1 text-lg font-black text-ink">{activeTankRisk.title}</h3>
+                  <div className="mt-4 flex min-h-[150px] items-center justify-center gap-2 rounded-[18px] bg-emerald-50/70 p-3">
+                    {activeTankRisk.subjects.slice(0, 3).map((subject, index) => {
+                      const fish = fishData.find(item => item.id === subject.id);
+                      if (!fish) return null;
+                      return (
+                        <div key={subject.id} className={index === 0 ? 'w-28' : 'w-16'}>
+                          <div className={`${index === 0 ? 'h-24' : 'h-14'} flex items-center justify-center rounded-2xl bg-white`}>
+                            <img src={getSpeciesDisplayImage(fish)} alt={subject.name} className={`h-full w-full object-contain p-1 ${getSpeciesImageClass(fish)}`} />
+                          </div>
+                          <div className="mt-1 truncate text-center text-[10px] font-black text-ink">{subject.name} ×{subject.quantity}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-3 text-xs font-semibold leading-5 text-ink/60">{activeTankRisk.detail}</p>
+                </div>
+                <div className="rounded-[22px] border border-emerald-100 bg-white p-4">
+                  <div className="text-[11px] font-black text-emerald-800">现在按这 3 步做</div>
+                  <ol className="mt-3 grid gap-3">
+                    {activeTankRisk.actionSteps.map((step, index) => (
+                      <li key={step} className="grid grid-cols-[28px_minmax(0,1fr)] gap-2 text-sm font-semibold leading-6 text-ink/75">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-700 text-xs font-black text-white">{index + 1}</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <details className="mt-4 rounded-2xl bg-rose-50 px-3 py-2.5">
+                    <summary className="cursor-pointer text-xs font-black text-rose-800">暂时不要这样做</summary>
+                    <ul className="mt-2 grid gap-1.5 text-xs font-semibold leading-5 text-rose-900/75">
+                      {activeTankRisk.avoidActions.map(item => <li key={item}>• {item}</li>)}
+                    </ul>
+                  </details>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsConflictDialogOpen(false);
+                      if (activeTankRisk.primaryAction === 'open_settings') openAquariumSettings();
+                      else setIsTankArchiveExpanded(true);
+                    }}
+                    className="mt-4 min-h-12 w-full rounded-2xl bg-emerald-700 px-4 text-sm font-black text-white hover:bg-emerald-800"
+                  >
+                    {activeTankRisk.primaryLabel}
+                  </button>
                 </div>
               </div>
-            )}
-            {tankRiskItems.map((item, index) => (
-              <div
-                key={`${item.group}-${item.title}-${index}`}
-                className={`rounded-[16px] border p-3 ${
-                  item.severity === 'danger'
-                    ? 'border-red-100 bg-red-50 text-red-900'
-                    : item.severity === 'warning'
-                      ? 'border-amber-100 bg-amber-50 text-amber-900'
-                      : 'border-sky-100 bg-sky-50 text-sky-900'
-                }`}
-              >
-                <div className="text-[10px] font-black opacity-60">{item.group}</div>
-                <div className="mt-1 text-[13px] font-black">{item.title}</div>
-                <p className="mt-1 text-[12px] font-medium leading-relaxed opacity-80">{item.detail}</p>
-                <p className="mt-2 rounded-[12px] bg-white/70 px-2.5 py-2 text-[11px] font-bold leading-relaxed opacity-85">
-                  {isEn ? 'Next Step: ' : '下一步：'}{item.nextStep}
-                </p>
-              </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="px-5 py-10 text-center text-sm font-bold text-ink/55">当前没有需要处理的风险。</div>
+          )}
         </DialogContent>
       </Dialog>
 

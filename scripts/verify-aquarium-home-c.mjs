@@ -136,6 +136,25 @@ try {
   await emptyDesktop.getByRole('dialog').waitFor();
   await emptyDesktop.close();
 
+  const riskState = createState(1);
+  riskState.aquariums[0].dimensions = { length: '10', width: '10', height: '10' };
+  riskState.aquariums[0].fishes[0].quantity = 100;
+  riskState.aquariums[0].fishes[0].batches[0].quantity = 100;
+  const riskDesktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'en-US' });
+  await seed(riskDesktop, riskState);
+  await riskDesktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  const riskTrigger = riskDesktop.locator('button').filter({ hasText: /风险|Risk/ }).first();
+  await riskTrigger.waitFor();
+  await riskTrigger.click();
+  const riskDialog = riskDesktop.getByRole('dialog').filter({ hasText: '鱼缸风险处理' });
+  await riskDialog.waitFor();
+  assert.equal(await riskDialog.locator('ol li').count(), 3, 'risk guide must expose three concrete steps');
+  assert.ok(await riskDialog.locator('img').count() >= 1, 'risk guide must visualize the affected species');
+  assert.equal(await riskDialog.locator('details').count(), 1, 'avoid actions must stay collapsed on first view');
+  await riskDialog.getByRole('button', { name: /调整.*数量|查看当前负载来源/ }).click();
+  await riskDesktop.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
+  await riskDesktop.close();
+
   for (const width of [320, 375, 390, 430]) {
     const phone = await browser.newPage({
       viewport: { width, height: 844 },
