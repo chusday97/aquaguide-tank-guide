@@ -60,6 +60,7 @@
 | 2026-07-26 | 云端数量移出改为数据库原子事务并四层限制正整数 | commit `b3d8d01`；API check、业务契约、批次、build、浏览器回归 |
 | 2026-07-26 | 删除第二套 pH 阻断并修复导航订阅清理类型 | commit `5dc8900`；14 项兼容规则、build、首页 Playwright |
 | 2026-07-26 | 反馈限流有界化、代理感知与未提交草稿保护 | commit `2544ef6`；限流单测、API check、390/1280px Playwright |
+| 2026-07-26 | 移出失败重试复用稳定操作号，最后批次重放不被软删除父记录拦截 | commit `d681ecd`；重放专项、业务契约、API check、build、首页 Playwright |
 
 ## 当前卡点
 
@@ -73,7 +74,7 @@
 | 真实新手可用性数据缺失 | 已建立固定六任务协议 | 当前没有真实参与者 | 完成至少一轮可追溯原始记录 |
 | 真实视觉模型尚未配置 | 识别 API 已完成内存预处理、独立配置和安全降级 | 当前只能验证手动搜索确认路径，不能验证真实识别准确率 | 配置 `VISION_API_KEY / VISION_BASE_URL / VISION_MODEL` 并使用真实照片校准集 |
 | 阿里云百炼视觉服务待用户开通 | 已明确本轮不写入密钥、不修改视觉配置 | 缺少用户侧已开通的服务、Base URL、模型名和本机 Secret | 用户完成开通并在本机 `.env.local` 配置后通知继续 |
-| 数据库 migration 尚未真实执行 | 已完成静态契约校验和 TypeScript 检查 | 当前环境没有 PostgreSQL/Supabase CLI，且未提供测试项目凭据 | 配置测试 Supabase 项目并执行迁移、RLS 双用户隔离与回滚验证 |
+| 数据库 migration 尚未真实执行 | 已完成静态契约、路由与重放顺序专项，并尝试隔离 Docker PostgreSQL | Docker daemon 从官方 registry 拉取 PostgreSQL 镜像连续 EOF；未提供测试 Supabase 凭据 | 配置测试 Supabase 项目或恢复 registry 后执行最后批次真实重放、RLS 与回滚验证 |
 
 
 ## 下一步计划
