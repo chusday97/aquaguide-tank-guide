@@ -62,6 +62,7 @@
 - `src/services/diagnosis/`：巡检记录的同日更新策略。
 - `src/modules/diagnosis/`：每日检查问题、确定性规则与数据类型。
 - `src/lib/tankCompatibilityEngine.ts`：统一混养规则引擎。
+- `src/lib/waterProfileEstimate.ts`：从水体类型、底床、造景和水草派生非数值水体倾向，供缺少 pH 时安全展示。
 - `src/lib/speciesVisual.ts`：二维与 3D 物种素材解析。
 - `src/lib/speciesRecognition.ts`：视觉候选与学名、名称、别名及模糊候选的本地物种库映射。
 - `src/services/ai/species-identification.service.ts`：物种识别、匿名未命中和动态症状 step API 的前端访问层。
