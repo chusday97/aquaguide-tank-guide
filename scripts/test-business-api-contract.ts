@@ -9,6 +9,8 @@ import {
   aquariumSpeciesBatchMergeSchema,
   careReminderCreateSchema,
   diagnosisSaveSchema,
+  feedbackCreateSchema,
+  feedbackStatusUpdateSchema,
   profilePreferencesUpdateSchema,
 } from '../packages/contracts/src/index';
 import { clampAiPriority, highestRisk } from '../packages/domain-rules/src/index';
@@ -25,6 +27,23 @@ assert.equal(careReminderCreateSchema.safeParse({ sourceCatalogKey: 'guide_water
 assert.equal(diagnosisSaveSchema.safeParse({ diagnosisKey: 'daily', answers: {}, resultSummary: '正常', riskLevel: '低' }).success, true);
 assert.equal(profilePreferencesUpdateSchema.safeParse({ version: 1, onboarding: { version: 1, status: 'pending', goal: 'build_tank', viewedSpecies: false, taskCardDismissed: false } }).success, true);
 assert.equal(profilePreferencesUpdateSchema.safeParse({ version: 1 }).success, false);
+assert.equal(feedbackCreateSchema.safeParse({
+  category: 'suggestion',
+  message: '希望风险建议可以直接定位到对应物种。',
+  pagePath: '/settings#feedback',
+  locale: 'zh-CN',
+  appVersion: 'local-preview',
+  deviceLayout: 'desktop',
+}).success, true);
+assert.equal(feedbackCreateSchema.safeParse({
+  category: 'problem',
+  message: '太短',
+  pagePath: '/settings',
+  locale: 'zh-CN',
+  appVersion: 'local-preview',
+  deviceLayout: 'phone',
+}).success, false);
+assert.equal(feedbackStatusUpdateSchema.safeParse({ status: 'reviewed' }).success, true);
 
 const firstId = deterministicUuid('user:operation:key');
 assert.equal(firstId, deterministicUuid('user:operation:key'));
@@ -44,6 +63,7 @@ assert.equal(highestRisk('low', 'high', 'medium'), 'high');
 const routes = [
   readFileSync(resolve(import.meta.dirname, '../apps/api/src/routes/aquariums.ts'), 'utf8'),
   readFileSync(resolve(import.meta.dirname, '../apps/api/src/routes/user-records.ts'), 'utf8'),
+  readFileSync(resolve(import.meta.dirname, '../apps/api/src/routes/feedback.ts'), 'utf8'),
 ].join('\n');
 
 for (const route of [
@@ -58,6 +78,8 @@ for (const route of [
   '/memorial-records',
   '/care-reminders',
   '/care-events',
+  '/feedback',
+  '/feedback/:id/status',
 ]) {
   assert.equal(routes.includes(route), true, `${route} route must exist`);
 }
@@ -65,5 +87,7 @@ assert.match(routes, /registerFavoriteRoutes\('species'\)/);
 assert.match(routes, /registerFavoriteRoutes\('care'\)/);
 assert.match(routes, /这个物种已有多个批次，请调整具体批次的数量/);
 assert.doesNotMatch(routes, /const \{ version, \.\.\.updates \} = parsed\.data;[\s\S]{0,300}from\('aquarium_species'\)\.update\(snakeize\(updates\)\)/);
+assert.match(routes, /MAX_SUBMISSIONS_PER_HOUR = 5/);
+assert.match(routes, /owner_id: userId \|\| null/);
 
 console.log('business API contract verified: validation, case conversion, deterministic ids, safety invariants and protected routes');

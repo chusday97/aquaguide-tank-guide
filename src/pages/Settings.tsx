@@ -1,8 +1,11 @@
-import { Check, Languages, RotateCcw } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Languages, MessageSquareText, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { setLocale, type SupportedLocale } from '../i18n';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { restartOnboarding } from '../services/onboarding/onboarding.service';
+import { submitFeedback } from '../services/feedback/feedback.service';
+import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 
 const localeOptions: Array<{ locale: SupportedLocale; label: string }> = [
   { locale: 'zh-CN', label: '简体中文' },
@@ -13,6 +16,38 @@ export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const currentLocale: SupportedLocale = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';
   const { navigateToRoute } = useWorkspaceNavigation();
+  const { isPhoneLayout } = useLayoutMode();
+  const [feedbackCategory, setFeedbackCategory] = useState<'suggestion' | 'problem' | 'content' | 'other'>('suggestion');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [feedbackError, setFeedbackError] = useState('');
+
+  const handleFeedbackSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const message = feedbackMessage.trim();
+    if (message.length < 10) {
+      setFeedbackStatus('error');
+      setFeedbackError('请至少写 10 个字，方便我们理解问题。');
+      return;
+    }
+    setFeedbackStatus('submitting');
+    setFeedbackError('');
+    try {
+      await submitFeedback({
+        category: feedbackCategory,
+        message,
+        pagePath: window.location.pathname + window.location.search + window.location.hash,
+        locale: currentLocale,
+        appVersion: import.meta.env.VITE_APP_VERSION || 'local-preview',
+        deviceLayout: isPhoneLayout ? 'phone' : 'desktop',
+      });
+      setFeedbackMessage('');
+      setFeedbackStatus('success');
+    } catch (error) {
+      setFeedbackStatus('error');
+      setFeedbackError(error instanceof Error ? error.message : '反馈暂时没有提交成功，请稍后重试。');
+    }
+  };
 
   return (
     <div className="mx-auto w-full max-w-3xl px-1 py-2 md:px-8 md:py-8">
@@ -54,6 +89,67 @@ export default function SettingsPage() {
             <button type="button" onClick={() => { restartOnboarding(); navigateToRoute('/welcome'); }} className="mt-3 min-h-11 rounded-2xl bg-white px-4 text-sm font-black text-emerald-800 shadow-sm hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">{t('settingsPage.replayOnboarding')}</button>
           </div>
         </div>
+      </section>
+
+      <section id="feedback" className="mt-4 scroll-mt-6 rounded-[28px] border border-white/70 bg-white p-5 shadow-sm md:p-7" aria-labelledby="settings-feedback-title">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-700"><MessageSquareText className="h-5 w-5" /></span>
+          <div>
+            <h2 id="settings-feedback-title" className="text-lg font-black text-ink">意见反馈</h2>
+            <p className="mt-1 text-sm font-medium leading-6 text-ink/52">告诉我们哪里难用或希望增加什么。请不要填写联系方式、鱼缸隐私或诊断原文。</p>
+          </div>
+        </div>
+        <form className="mt-5 grid gap-4" onSubmit={handleFeedbackSubmit}>
+          <fieldset disabled={feedbackStatus === 'submitting'}>
+            <legend className="text-sm font-black text-ink">反馈类型</legend>
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {[
+                ['suggestion', '功能建议'],
+                ['problem', '使用问题'],
+                ['content', '内容纠错'],
+                ['other', '其他'],
+              ].map(([value, label]) => (
+                <label key={value} className={`flex min-h-11 cursor-pointer items-center justify-center rounded-2xl border px-3 text-center text-xs font-black ${feedbackCategory === value ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-border/70 text-ink/58'}`}>
+                  <input
+                    type="radio"
+                    name="feedback-category"
+                    value={value}
+                    checked={feedbackCategory === value}
+                    onChange={() => setFeedbackCategory(value as typeof feedbackCategory)}
+                    className="sr-only"
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <label className="grid gap-2 text-sm font-black text-ink">
+            你的意见
+            <textarea
+              value={feedbackMessage}
+              onChange={event => {
+                setFeedbackMessage(event.target.value);
+                if (feedbackStatus !== 'idle') setFeedbackStatus('idle');
+              }}
+              minLength={10}
+              maxLength={2000}
+              rows={5}
+              disabled={feedbackStatus === 'submitting'}
+              placeholder="例如：点击混养结果后，我希望直接看到需要调整哪一种鱼。"
+              className="min-h-[132px] w-full resize-y rounded-[20px] border border-border/70 bg-bg/35 px-4 py-3 text-sm font-semibold leading-6 text-ink outline-none placeholder:text-ink/30 focus:border-emerald-300 focus:ring-2 focus:ring-emerald-100"
+            />
+            <span className="text-right text-[11px] font-bold text-ink/36">{feedbackMessage.length} / 2000</span>
+          </label>
+          {feedbackStatus === 'success' && <p role="status" className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">已收到，谢谢你的建议。</p>}
+          {feedbackStatus === 'error' && <p role="alert" className="rounded-2xl bg-rose-50 px-4 py-3 text-sm font-bold text-rose-700">{feedbackError}</p>}
+          <button
+            type="submit"
+            disabled={feedbackStatus === 'submitting' || feedbackMessage.trim().length < 10}
+            className="min-h-12 w-full rounded-2xl bg-emerald-700 px-5 text-sm font-black text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-45 sm:w-fit"
+          >
+            {feedbackStatus === 'submitting' ? '提交中…' : '提交反馈'}
+          </button>
+        </form>
       </section>
     </div>
   );

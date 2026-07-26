@@ -41,7 +41,7 @@ export const getApiAccessToken = async () => {
 
 export type ApiRequestOptions = Omit<RequestInit, 'body'> & {
   body?: unknown;
-  authenticated?: boolean;
+  authenticated?: boolean | 'optional';
   idempotencyKey?: string;
 };
 
@@ -50,7 +50,14 @@ export const apiRequest = async <T>(path: string, options: ApiRequestOptions = {
   headers.set('Accept', 'application/json');
   if (options.body !== undefined) headers.set('Content-Type', 'application/json');
   if (options.idempotencyKey) headers.set('Idempotency-Key', options.idempotencyKey);
-  if (options.authenticated !== false) headers.set('Authorization', `Bearer ${await getApiAccessToken()}`);
+  if (options.authenticated === 'optional') {
+    if (supabase) {
+      const { data } = await supabase.auth.getSession();
+      if (data.session?.access_token) headers.set('Authorization', `Bearer ${data.session.access_token}`);
+    }
+  } else if (options.authenticated !== false) {
+    headers.set('Authorization', `Bearer ${await getApiAccessToken()}`);
+  }
 
   let response: Response;
   try {
