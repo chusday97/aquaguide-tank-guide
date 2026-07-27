@@ -14,6 +14,7 @@ import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePr
 import type { PairCompatibilityResult } from '../modules/knowledge/knowledge.types';
 import type { PreviewImage } from './common/ImagePreviewModal';
 import { AdaptiveDetailContent } from './common/AdaptiveDetailContent';
+import { ResilientImage } from './common/ResilientImage';
 import { VisualResultCard } from './visual-results/VisualResultCard';
 import { getVisualEmphasis, mapFitStatus } from './visual-results/visual-result.adapters';
 import type { VisualResultViewModel } from './visual-results/visual-result.types';
@@ -531,6 +532,19 @@ export function SpeciesDetailDialog({
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
     return t('encyclopedia.btnCompleteSetup');
   }, [aquariumContext, displayFit, owned, t]);
+  const verdictReasons = useMemo(() => {
+    if (!displayFit || !aquariumContext) return [];
+    const priorityItems = [...displayFit.risks, ...displayFit.confirmations];
+    const fallbackItems = displayFit.items.filter(item => item.status === 'ok');
+    return [...priorityItems, ...fallbackItems]
+      .map(item => ({
+        label: translateLabel(item.label),
+        text: item.advice || `${item.current} · ${item.requirement}`,
+        status: item.status,
+      }))
+      .filter((item, index, list) => list.findIndex(other => other.label === item.label && other.text === item.text) === index)
+      .slice(0, 3);
+  }, [aquariumContext, displayFit]);
   const fitVisualModel = useMemo<VisualResultViewModel | null>(() => {
     if (!fish || !displayFit) return null;
     const status = mapFitStatus(displayFit.status);
@@ -718,7 +732,7 @@ export function SpeciesDetailDialog({
         <AdaptiveDetailContent showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
-              <div className="modalHeader flex items-center justify-between border-b border-border bg-white px-4 py-3">
+              <div className="modalHeader species-detail-header flex items-center justify-between border-b border-border bg-white px-4 py-3">
                 <button type="button" onClick={() => onOpenChange(false)} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.dismiss')}>
                   <ArrowLeft className="h-5 w-5" />
                 </button>
@@ -727,42 +741,77 @@ export function SpeciesDetailDialog({
                 </button>
               </div>
 
-              <div className="modalBody app-scrollbar-hidden p-0">
-                <div className="p-4 pb-28">
-                  <div className="rounded-[20px] border border-border bg-white p-3 shadow-sm">
-                    <div className="grid grid-cols-[128px_1fr] gap-3">
+              <div className="modalBody species-detail-body app-scrollbar-hidden p-0">
+                <div className="p-4 pb-28" data-species-detail-layout="visual-verdict">
+                  <section className="overflow-hidden rounded-[24px] border border-border bg-gradient-to-br from-white via-sky-50/45 to-emerald-50/55 shadow-sm">
+                    <div className="grid min-w-0 grid-cols-1 min-[760px]:grid-cols-[minmax(280px,1.05fr)_minmax(0,0.95fr)]">
+                      <div className="min-w-0 p-3 min-[760px]:p-4">
                       {fish.id === 'sp_0260' ? (
-                        <Suspense fallback={<div className="flex aspect-[1.18] min-h-[112px] items-center justify-center rounded-[16px] border border-border/70 bg-slate-50 text-[10px] text-slate-400">{t('encyclopedia.freshwater') === '淡水' ? '3D 加载中...' : 'Loading 3D...'}</div>}>
+                        <Suspense fallback={<div className="flex h-[220px] items-center justify-center rounded-[20px] border border-border/70 bg-slate-50 text-[11px] text-slate-400 min-[760px]:h-[310px]">{isEn ? 'Loading 3D...' : '3D 加载中...'}</div>}>
                           <Interactive3DFishWrapper
                             imageUrl={resolvedImageSrc}
-                            className={`flex aspect-[1.18] min-h-[112px] items-center justify-center rounded-[16px] border border-border/70 ${getSpeciesImageSurfaceClass(fish)} p-0 shadow-sm overflow-hidden`}
+                            className={`flex h-[220px] items-center justify-center overflow-hidden rounded-[20px] border border-border/70 min-[760px]:h-[310px] ${getSpeciesImageSurfaceClass(fish)} p-0 shadow-sm`}
                           />
                         </Suspense>
                       ) : (
-                        <button type="button" onClick={openPreview} data-species-detail-hero className={`flex aspect-[1.18] min-h-[112px] items-center justify-center rounded-[16px] border border-border/70 ${getSpeciesImageSurfaceClass(fish)} p-2 shadow-sm`} aria-label={t('encyclopedia.freshwater') === '淡水' ? `放大查看${fish.name}图片` : `Enlarge image of ${fish.name}`}>
-                          <img src={resolvedImageSrc} alt={fish.name} className={`h-[88%] w-[88%] object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                        <button type="button" onClick={openPreview} data-species-detail-hero className={`relative flex h-[220px] w-full items-center justify-center rounded-[20px] border border-border/70 min-[760px]:h-[310px] ${getSpeciesImageSurfaceClass(fish)} p-3 shadow-sm`} aria-label={isEn ? `Enlarge image of ${fish.name}` : `放大查看${fish.name}图片`}>
+                          <ResilientImage src={resolvedImageSrc} alt={fish.name} className={`h-[88%] w-[88%] object-contain ${getSpeciesImageClass(fish)}`} />
+                          <span className="absolute bottom-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-black text-white backdrop-blur-sm">{isEn ? 'View image' : '查看大图'}</span>
                         </button>
                       )}
-                      <div className="min-w-0">
+                      </div>
+                      <div className="flex min-w-0 flex-col p-4 min-[760px]:justify-center min-[760px]:p-6">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <DialogTitle className="font-serif text-[22px] italic font-bold leading-tight text-ink">{fish.name}</DialogTitle>
+                            <DialogTitle className="break-words font-serif text-[24px] font-bold italic leading-tight text-ink min-[760px]:text-[30px]">{fish.name}</DialogTitle>
                             <DialogDescription className="mt-1 text-[12px] font-medium leading-tight text-ink/55">{fish.scientificName}</DialogDescription>
                           </div>
                           <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getDifficultyBadgeClass(fish.difficulty)}`}>{fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort')}</span>
                         </div>
-                        <div className="mt-3 flex max-h-[58px] flex-wrap gap-1.5 overflow-hidden">
+                        <div className="mt-3 flex flex-wrap gap-1.5">
                           {[selectedTaxonomy?.variety, fish.housingMode, ...getToolFunctions(fish)].filter(Boolean).slice(0, 3).map(tag => {
                             const displayTag = translateTag(tag, t);
                             return <span key={tag} className="rounded-full border border-border bg-white px-2 py-1 text-[10px] font-bold text-ink/60">{displayTag}</span>;
                           })}
                         </div>
-                        <p className="mt-3 line-clamp-1 text-[12px] font-bold leading-relaxed text-ink/62">{getLocalizedSpeciesRole(fish, t)}</p>
+                        <p className="mt-3 text-[12px] font-bold leading-relaxed text-ink/62">{getLocalizedSpeciesRole(fish, t)}</p>
+
+                        <div className={`mt-4 rounded-[18px] border p-3 ${
+                          displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
+                            ? 'border-emerald-100 bg-emerald-50/85'
+                            : displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk'
+                              ? 'border-red-100 bg-red-50/85'
+                              : displayFit.status === 'unknown' || displayFit.status === 'needConfirmation'
+                                ? 'border-sky-100 bg-sky-50/85'
+                                : 'border-amber-100 bg-amber-50/85'
+                        }`}>
+                          <div className="flex items-start gap-2.5">
+                            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-accent shadow-sm">
+                              {displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank' ? <CheckCircle2 className="h-4.5 w-4.5" /> : displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' ? <AlertTriangle className="h-4.5 w-4.5 text-red-600" /> : <Info className="h-4.5 w-4.5" />}
+                            </span>
+                            <div className="min-w-0">
+                              <div className="text-[10px] font-black uppercase tracking-[0.12em] text-ink/42">{aquariumContext ? (isEn ? 'Current tank fit' : '当前鱼缸适配') : (isEn ? 'Tank not selected' : '尚未选择鱼缸')}</div>
+                              <p className="mt-1 text-[17px] font-black leading-snug text-ink">{displayFit.title}</p>
+                              <p className="mt-1 line-clamp-2 text-[12px] font-bold leading-relaxed text-ink/64">{aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank')}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {verdictReasons.length > 0 && (
+                          <div className="mt-3 grid gap-1.5" aria-label={isEn ? 'Key reasons' : '关键原因'}>
+                            {verdictReasons.map(reason => (
+                              <div key={`${reason.label}-${reason.text}`} className="flex min-w-0 items-start gap-2 rounded-[12px] bg-white/75 px-3 py-2 text-[11px] leading-relaxed text-ink/62">
+                                <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${reason.status === 'danger' ? 'bg-red-500' : reason.status === 'warning' ? 'bg-amber-500' : reason.status === 'ok' ? 'bg-emerald-500' : 'bg-sky-500'}`} />
+                                <span className="min-w-0"><strong className="text-ink">{reason.label}</strong> · {reason.text}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  </section>
 
-                  <div className="mt-3 grid grid-cols-3 gap-2 rounded-[18px] border border-border bg-white p-2 shadow-sm">
+                  <div className="mt-3 flex flex-wrap gap-2 rounded-[18px] border border-border bg-white p-2 shadow-sm">
                     {[
                       { label: t('encyclopedia.compatibilityCalc'), icon: Calculator, active: inCalculator, action: handleOpenCalculator },
                       { label: inWishlist ? t('encyclopedia.inWishlistBtn') : t('encyclopedia.addToWishlistBtn'), icon: inWishlist ? Heart : HeartOff, active: inWishlist, action: () => onToggleWishlist(fish.id) },
@@ -780,24 +829,24 @@ export function SpeciesDetailDialog({
                           type="button"
                           onClick={actionItem.action}
                           aria-pressed={actionItem.active}
-                          className={`flex min-h-[64px] min-w-0 flex-col items-center justify-center gap-1 rounded-[14px] border px-1 text-[10px] font-black transition-colors ${
+                          className={`flex min-h-11 min-w-[88px] flex-1 items-center justify-center gap-1.5 rounded-[14px] border px-2 text-[10px] font-black transition-colors ${
                             actionItem.active ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-border bg-white text-ink/62 hover:border-accent/25 hover:bg-bg'
                           }`}
                         >
                           <Icon className={`h-5 w-5 ${actionItem.active ? 'text-emerald-600' : 'text-accent'}`} />
-                          <span className="max-w-full truncate">{actionItem.label}</span>
+                          <span className="min-w-0 break-words leading-tight">{actionItem.label}</span>
                         </button>
                       );
                     })}
                   </div>
 
-                  <div className="mt-4 grid grid-cols-3 border-b border-border">
+                  <div role="tablist" aria-label={isEn ? 'Species details' : '物种详情'} className="mt-4 flex max-w-full gap-1 overflow-x-auto border-b border-border">
                     {[
-                      { id: 'environment', label: t('encyclopedia.tankEnvironment') },
-                      { id: 'compatibility', label: t('encyclopedia.compatibilityCheck') },
-                      { id: 'care', label: t('encyclopedia.feedingCare') },
+                      { id: 'environment', label: isEn ? 'Fit verdict' : '适配结论' },
+                      { id: 'compatibility', label: isEn ? 'Compatibility' : '混养关系' },
+                      { id: 'care', label: isEn ? 'Care essentials' : '养护要点' },
                     ].map(tab => (
-                      <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id as typeof activeTab)} className={`relative h-11 text-[14px] font-black transition-colors ${activeTab === tab.id ? 'text-accent' : 'text-ink/45'}`}>
+                      <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} type="button" onClick={() => setActiveTab(tab.id as typeof activeTab)} className={`relative min-h-11 min-w-[96px] flex-1 overflow-hidden break-words px-2 text-[13px] font-black transition-colors ${activeTab === tab.id ? 'text-accent' : 'text-ink/45'}`}>
                         {tab.label}
                         {activeTab === tab.id && <span className="absolute inset-x-5 bottom-0 h-[3px] rounded-full bg-accent" />}
                       </button>
