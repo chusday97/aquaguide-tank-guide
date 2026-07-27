@@ -64,7 +64,7 @@ try {
       const phoneDetail = page.locator('[role="dialog"][data-surface="bottom-sheet"]:visible');
       await phoneDetail.waitFor();
       assert.equal(await phoneDetail.getAttribute('data-surface'), 'bottom-sheet');
-      await phoneDetail.getByRole('button', { name: '返回' }).click();
+      await phoneDetail.getByRole('button', { name: /返回|知道了|Got it/ }).click();
     }
     await context.close();
   }
@@ -86,7 +86,7 @@ try {
   const speciesDialog = page.getByRole('dialog');
   await speciesDialog.getByText('极火虾', { exact: true }).first().waitFor();
   assert.equal(await speciesDialog.getAttribute('data-surface'), 'centered-dialog');
-  await speciesDialog.getByRole('button', { name: '返回' }).click();
+  await speciesDialog.getByRole('button', { name: /返回|知道了|Got it/ }).click();
   await speciesDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-wishlist-sp_0001')?.classList.contains('workspace-section-highlight'));
   assert.equal(await page.locator('#collection-wishlist-sp_0001').evaluate(element => element === document.activeElement || element.contains(document.activeElement)), true);

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
+const baseUrl = process.env.AQUAGUIDE_URL || 'http://localhost:3000';
 const browser = await chromium.launch({ headless: true });
 
 const seedOnboarding = async page => {
@@ -24,7 +25,7 @@ const seedOnboarding = async page => {
 try {
   const desktop = await browser.newPage({ viewport: { width: 1280, height: 820 }, locale: 'en-US' });
   await seedOnboarding(desktop);
-  await desktop.goto('http://localhost:3000/aquarium', { waitUntil: 'domcontentloaded' });
+  await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await desktop.getByRole('button', { name: 'Settings' }).click();
   await desktop.waitForURL('**/settings');
   assert.equal(await desktop.locator('html').getAttribute('lang'), 'en');
@@ -41,7 +42,7 @@ try {
     userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
   });
   await seedOnboarding(phone);
-  await phone.goto('http://localhost:3000/aquarium', { waitUntil: 'domcontentloaded' });
+  await phone.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   const phoneSettingsButton = phone.getByRole('button', { name: '设置' });
   const phoneSettingsBox = await phoneSettingsButton.boundingBox();
   assert.ok(phoneSettingsBox && phoneSettingsBox.width >= 44 && phoneSettingsBox.height >= 44, 'phone settings target must be at least 44px');

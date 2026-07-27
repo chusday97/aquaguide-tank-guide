@@ -41,6 +41,7 @@
     "test:core-ui": "node scripts/verify-core-experience.mjs",
     "test:mobile-care-ui": "node scripts/verify-mobile-care-experience.mjs",
     "test:localization-ui": "node scripts/verify-localization-ui.mjs",
+    "test:responsive-routes": "node scripts/verify-responsive-route-scan.mjs",
     "i18n:sync": "tsx scripts/sync-i18n.ts",
     "test:wishlist-shortcut-ui": "node scripts/verify-wishlist-shortcut.mjs",
     "test:three-tier-contract": "node --import tsx scripts/test-three-tier-contract.ts",

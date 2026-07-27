@@ -945,7 +945,7 @@ export function CompatibilityRiskCalculator({
             <Input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="{isEn ? 'Search and add species to evaluate' : '搜索并加入要混养的生物'}"
+              placeholder={isEn ? 'Search and add species to evaluate' : '搜索并加入要混养的生物'}
               className="h-10 rounded-[14px] border-amber-200 bg-white pl-8 text-[12px] font-medium text-ink placeholder:text-ink/40"
             />
           </div>
@@ -1018,7 +1018,7 @@ export function CompatibilityRiskCalculator({
                 type="button"
                 onClick={onBrowseAtlas}
                 className="flex w-[82px] shrink-0 snap-start flex-col items-center justify-center gap-1.5 rounded-[14px] border border-dashed border-emerald-200 bg-emerald-50/65 p-2 text-center text-emerald-800 shadow-sm"
-                aria-label="{isEn ? 'Browse more species' : '浏览更多图鉴'}"
+                aria-label={isEn ? 'Browse more species' : '浏览更多图鉴'}
               >
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/75 text-emerald-700 shadow-sm">
                   <ChevronRight className="h-5 w-5" />

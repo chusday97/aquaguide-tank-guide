@@ -111,6 +111,7 @@
 - `scripts/test-livestock-memorial-replay.ts`：已提交纪念重放先于父记录所有权查询的行为回归。
 - `scripts/verify-admin-content.mjs`：内容后台列表、编辑、保存反馈、权限错误与 390/1280px 布局验收。
 - `scripts/verify-localization-ui.mjs`：浏览器首选、桌面/手机设置、即时切换、持久化、触控尺寸与横向溢出验收。
+- `scripts/verify-responsive-route-scan.mjs`：7 种设备/语言组合下扫描 13 个正式页面和四类养护详情，拦截页面错误、整页横向溢出与可见控件越界。
 - `docs/01-definition/UX_REFACTOR_PRD.md`：本轮交互重构定义。
 - `docs/02-design/UX_REFACTOR_CONCEPTS.md`：三套设计方向与默认自然水族册方案。
 - `docs/02-design/UX_REFACTOR_INTERACTION.md`：分层表面与 CTA 契约。

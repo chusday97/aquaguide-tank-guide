@@ -140,7 +140,7 @@ export default function Login() {
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.password)}
                 aria-describedby={errors.password ? 'login-password-error' : undefined}
-                placeholder="isEn ? 'Enter password' : '输入密码'"
+                placeholder={isEn ? 'Enter password' : '输入密码'}
                 className="h-12 rounded-[18px] border-border bg-bg pl-10 text-[15px] font-bold text-ink placeholder:text-ink/30"
               />
             </div>
