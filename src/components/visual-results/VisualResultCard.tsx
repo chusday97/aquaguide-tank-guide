@@ -155,6 +155,7 @@ export function VisualResultCard({
                   <button
                     key={subject.id}
                     type="button"
+                    data-visual-result-subject-id={subject.id}
                     onClick={() => selectSubject(subject)}
                     aria-pressed={selected}
                     aria-label={`${subject.name}：${subject.badgeLabel || subject.shortReason}`}

@@ -224,6 +224,9 @@ try {
     });
     await seed(phone);
     await phone.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+    const manageToggle = phone.getByRole('button', { name: 'Open management tasks' });
+    await manageToggle.waitFor();
+    assert.equal(await manageToggle.getAttribute('aria-expanded'), 'false', 'phone management zone should start collapsed');
     const learningToggle = phone.getByRole('button', { name: 'Open learning tasks' });
     await learningToggle.waitFor();
     assert.equal(await learningToggle.getAttribute('aria-expanded'), 'false', 'phone learning zone should start collapsed');
@@ -245,6 +248,21 @@ try {
     await assertNoHorizontalOverflow(phone);
     await phone.close();
   }
+
+  const deepLinkPhone = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+    locale: 'en-US',
+    hasTouch: true,
+    isMobile: true,
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
+  });
+  await seed(deepLinkPhone);
+  await deepLinkPhone.goto(`${baseUrl}/aquarium?action=livestock`, { waitUntil: 'domcontentloaded' });
+  const targetedManageZone = deepLinkPhone.locator('#aquarium-manage-zone');
+  await deepLinkPhone.waitForFunction(() => document.querySelector('#aquarium-manage-zone .aquarium-zone-toggle')?.getAttribute('aria-expanded') === 'true');
+  assert.equal(await targetedManageZone.evaluate(element => element === document.activeElement), true, 'manage deep link must focus the target zone');
+  assert.equal(await targetedManageZone.evaluate(element => element.classList.contains('aquarium-zone-target')), true, 'manage deep link must highlight the target zone');
+  await deepLinkPhone.close();
 
   console.log('aquarium homepage C verified: guided zones, optional advanced tests, and responsive English layout');
 } finally {

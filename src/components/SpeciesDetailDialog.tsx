@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, ArrowLeft, Box, Calculator, CheckCircle2, ChevronRight, Flame, FlaskConical, Heart, HeartOff, Info, Plus, Share2, Skull, SlidersHorizontal, Thermometer, Waves } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Box, Calculator, CheckCircle2, ChevronRight, Flame, Heart, HeartOff, Info, Plus, Share2, Skull, SlidersHorizontal, Thermometer, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Aquarium, Fish } from '../types';
@@ -70,6 +70,7 @@ type SpeciesDetailDialogProps = {
   onAddToCalculator: (fish: Fish) => void;
   onToggleWishlist: (fishId: string) => void;
   onGoCalculator?: () => void;
+  onViewInTank?: () => void;
   onOpenTankSettings?: (panel: 'size' | 'parameters' | 'equipment') => void;
   onRecordDeath?: (fish: Fish, input: { date: string; reason: string; batchId?: string; operationId: string }) => void | Promise<void>;
 };
@@ -176,8 +177,10 @@ const mapCompatibilityStatusToDetailStatus = (
   if (compatibility.status === 'compatible') return 'suitable';
   if (compatibility.status === 'insufficient_data') return 'needConfirmation';
   if (compatibility.status === 'caution') {
-    const hasOnlyMissingData = compatibility.warningRules.length === 0 && compatibility.missingData.length > 0;
-    return hasOnlyMissingData ? 'needConfirmation' : 'caution';
+    const hasOnlyAdvisoryMissingData = compatibility.warningRules.length === 0
+      && compatibility.missingData.length > 0
+      && compatibility.missingData.every(item => item.severity === 'low' || item.severity === 'info');
+    return hasOnlyAdvisoryMissingData ? 'suitable' : 'caution';
   }
   const hasCompatibilityBlock = compatibility.blockingRules.some(rule => (
     /predation|territorial|single|compat|attack|housing/i.test(rule.code)
@@ -422,6 +425,7 @@ export function SpeciesDetailDialog({
   onAddToCalculator,
   onToggleWishlist,
   onGoCalculator,
+  onViewInTank,
   onOpenTankSettings,
   onRecordDeath,
 }: SpeciesDetailDialogProps) {
@@ -491,18 +495,16 @@ export function SpeciesDetailDialog({
 
   const metricCards = useMemo(() => {
     if (!displayFit) return [];
-    const findItem = (label: string) => displayFit.items.find(item => item.label === label);
-    const water = findItem('水体类型');
-    const temp = findItem('温度');
-    const waterParam = findItem('水质参数');
-    const space = findItem('缸体大小');
-    const filter = findItem('过滤');
-    const heater = findItem('加热');
+    const findItem = (type: FitDimension['type']) => displayFit.items.find(item => item.type === type);
+    const water = findItem('water_type');
+    const temp = findItem('temperature');
+    const space = findItem('space');
+    const filter = findItem('filter');
+    const heater = findItem('heater');
     return [
-      water && { ...water, label: isEn ? "Water Type" : "水体类型", icon: Waves },
-      temp && { ...temp, label: isEn ? "Temperature" : "温度", icon: Thermometer },
-      waterParam && { ...waterParam, label: isEn ? "Water Parameters" : "水质参数", icon: FlaskConical },
-      space && { ...space, label: '空间', icon: Box },
+      water && { ...water, icon: Waves },
+      temp && { ...temp, icon: Thermometer },
+      space && { ...space, icon: Box },
       filter && { ...filter, icon: SlidersHorizontal },
       heater && { ...heater, icon: Flame },
     ].filter(Boolean) as Array<FitDimension & { icon: typeof Waves }>;
@@ -527,14 +529,17 @@ export function SpeciesDetailDialog({
 
   const mainActionLabel = useMemo(() => {
     if (!displayFit || !aquariumContext) return t('encyclopedia.btnGoSetTank');
-    if (owned || displayFit.alreadyInTank || displayFit.status === 'alreadyInTank') return t('encyclopedia.checkDetails');
+    if (owned || displayFit.alreadyInTank || displayFit.status === 'alreadyInTank') {
+      return source === 'aquarium' ? t('encyclopedia.viewCareEssentials') : t('aquarium.tankContentsTitle');
+    }
     if (displayFit.status === 'suitable') return t('encyclopedia.btnJoinTank');
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
     return t('encyclopedia.btnCompleteSetup');
-  }, [aquariumContext, displayFit, owned, t]);
+  }, [aquariumContext, displayFit, owned, source, t]);
   const verdictReasons = useMemo(() => {
     if (!displayFit || !aquariumContext) return [];
-    const priorityItems = [...displayFit.risks, ...displayFit.confirmations];
+    const actionableConfirmations = displayFit.confirmations.filter(item => item.type !== 'water_parameter');
+    const priorityItems = [...displayFit.risks, ...actionableConfirmations];
     const fallbackItems = displayFit.items.filter(item => item.status === 'ok');
     return [...priorityItems, ...fallbackItems]
       .map(item => ({
@@ -576,7 +581,7 @@ export function SpeciesDetailDialog({
         })) : []),
       ],
       currentAction: aquariumContext
-        ? displayFit.risks[0]?.advice || displayFit.confirmations[0]?.advice || t('encyclopedia.adviceHousingDefault')
+        ? displayFit.risks[0]?.advice || displayFit.confirmations.find(item => item.type !== 'water_parameter')?.advice || t('encyclopedia.adviceHousingDefault')
         : t('encyclopedia.actionNoTank'),
       primaryAction: {
         label: mainActionLabel,
@@ -665,8 +670,11 @@ export function SpeciesDetailDialog({
       return;
     }
     if (owned || displayFit.alreadyInTank || displayFit.status === 'alreadyInTank') {
-      if (!inCalculator) onAddToCalculator(fish);
-      onGoCalculator?.();
+      if (source === 'aquarium') {
+        setActiveTab('care');
+      } else {
+        onViewInTank?.();
+      }
       return;
     }
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') {
@@ -742,7 +750,7 @@ export function SpeciesDetailDialog({
               </div>
 
               <div className="modalBody species-detail-body app-scrollbar-hidden p-0">
-                <div className="p-4 pb-28" data-species-detail-layout="visual-verdict">
+                <div className="p-4" data-species-detail-layout="visual-verdict">
                   <section className="overflow-hidden rounded-[24px] border border-border bg-gradient-to-br from-white via-sky-50/45 to-emerald-50/55 shadow-sm">
                     <div className="grid min-w-0 grid-cols-1 min-[760px]:grid-cols-[minmax(280px,1.05fr)_minmax(0,0.95fr)]">
                       <div className="min-w-0 p-3 min-[760px]:p-4">
@@ -960,10 +968,6 @@ export function SpeciesDetailDialog({
                     </div>
                   )}
                 </div>
-              </div>
-
-              <div className="modalFooter border-t border-border bg-white/95 px-6 pb-[calc(24px+env(safe-area-inset-bottom))] pt-4">
-                <Button className="h-12 w-full rounded-full bg-accent text-base font-black text-white hover:bg-accent/90" onClick={handleMainAction}>{mainActionLabel}</Button>
               </div>
 
               {activeMetric && (

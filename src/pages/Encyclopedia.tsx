@@ -2351,6 +2351,10 @@ export default function Encyclopedia() {
         onAddToCalculator={handleAddToCalculator}
         onToggleWishlist={toggleWishlist}
         onGoCalculator={() => { closeAtlasDetail(false); setViewMode('compatibility'); }}
+        onViewInTank={() => {
+          closeAtlasDetail(false);
+          navigateToView('/aquarium', '?action=livestock');
+        }}
         onOpenTankSettings={(panel) => {
           closeAtlasDetail(false);
           navigateToView('/aquarium', `#settings-${panel}`);

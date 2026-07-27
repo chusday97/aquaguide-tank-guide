@@ -331,6 +331,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         inWishlist={Boolean(selectedFish && snapshot.wishlistIds.includes(selectedFish.id))}
         finalFocusElement={detailFinalFocusRef.current}
         onOpenChange={(open) => { if (!open) { setSelectedFish(null); restoreCard(); } }}
+        onAddToTank={(fish) => navigate(`/aquarium?action=add-species&species=${encodeURIComponent(fish.id)}`)}
         onAddToCalculator={(fish) => { setCompatibilitySelection([fish.id]); navigate('/encyclopedia#compatibility'); }}
         onToggleWishlist={(fishId) => {
           const fish = fishData.find(item => item.id === fishId);
@@ -341,6 +342,8 @@ export default function Collection({ module }: { module: CollectionModule }) {
           setCompatibilitySelection([selectedFish.id]);
           navigate('/encyclopedia#compatibility');
         }}
+        onViewInTank={() => navigate('/aquarium?action=livestock')}
+        onOpenTankSettings={(panel) => navigate(currentAquarium ? `/aquarium#settings-${panel}` : '/aquarium?action=create')}
       />
 
       <Dialog open={Boolean(selectedTopic)} onOpenChange={(open) => { if (!open) { setSelectedTopic(null); restoreCard(); } }}>

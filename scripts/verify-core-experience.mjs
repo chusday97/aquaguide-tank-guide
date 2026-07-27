@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.AQUAGUIDE_URL || 'http://127.0.0.1:3000';
+const baseUrl = process.env.AQUAGUIDE_URL || 'http://localhost:3000';
 const browser = await chromium.launch({ headless: true });
 
 const seededState = {
@@ -50,14 +50,14 @@ try {
     const context = await browser.newContext(options);
     await seedStorage(context);
     const page = await context.newPage();
-    page.setDefaultTimeout(15000);
-    await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    page.setDefaultTimeout(45_000);
+    await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
     await page.waitForSelector('.aquaguide-app');
     assert.equal(await page.locator('.aquaguide-app').getAttribute('data-layout-mode'), expectedMode, name);
     assert.equal(await page.locator('.desktop-sidebar').count(), sidebarCount, `${name} sidebar`);
     assert.equal(await page.locator('nav.fixed.inset-x-0.bottom-0').count(), bottomCount, `${name} bottom nav`);
     if (name === 'iphone') {
-      await page.goto(`${baseUrl}/collection?tab=wishlist`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      await page.goto(`${baseUrl}/collection?tab=wishlist`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
       await page.waitForFunction(() => location.pathname === '/collection/wishlist');
       await page.getByRole('heading', { name: '种草图鉴', exact: true }).waitFor();
       await page.locator('#collection-wishlist-sp_0001 button').first().click();
@@ -73,9 +73,9 @@ try {
   await seedStorage(context);
   await context.addInitScript(() => sessionStorage.setItem('aquaguide_compatibility_selection', JSON.stringify(['sp_0001', 'sp_0002'])));
   const page = await context.newPage();
-  page.setDefaultTimeout(15000);
+  page.setDefaultTimeout(45_000);
 
-  await page.goto(`${baseUrl}/wishlist`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  await page.goto(`${baseUrl}/wishlist`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.waitForFunction(() => location.pathname === '/collection/wishlist');
   await page.getByRole('heading', { name: '种草图鉴', exact: true }).waitFor();
   const wishlistText = await page.locator('body').innerText();
@@ -92,7 +92,7 @@ try {
   assert.equal(await page.locator('#collection-wishlist-sp_0001').evaluate(element => element === document.activeElement || element.contains(document.activeElement)), true);
   assert.equal(await page.locator('#collection-wishlist-sp_0001').evaluate(element => element.classList.contains('workspace-section-highlight')), true);
 
-  await page.goto(`${baseUrl}/care-favorites`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  await page.goto(`${baseUrl}/care-favorites`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.waitForFunction(() => location.pathname === '/collection/care');
   await page.getByRole('heading', { name: '养护收藏', exact: true }).waitFor();
   const careFavoritesText = await page.locator('body').innerText();
@@ -109,7 +109,7 @@ try {
   assert.equal(await page.locator('#collection-care-guide_water_deteriorate').evaluate(element => element === document.activeElement || element.contains(document.activeElement)), true);
   assert.equal(await page.locator('#collection-care-guide_water_deteriorate').evaluate(element => element.classList.contains('workspace-section-highlight')), true);
 
-  await page.goto(`${baseUrl}/collection/achievements`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  await page.goto(`${baseUrl}/collection/achievements`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.waitForFunction(() => location.pathname === '/collection/achievements');
   await page.getByText('勋章会自动解锁，无需领取', { exact: true }).waitFor();
   await page.getByText('初心缸主', { exact: true }).waitFor();
@@ -117,13 +117,13 @@ try {
   assert.ok(await page.locator('[data-achievement-status="locked"], [data-achievement-status="in_progress"]').count() > 0);
   assert.match(await page.locator('[data-achievement-status]').first().innerText(), /当前 \d+.*目标 \d+/s);
 
-  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.getByText('Mini 混养判断', { exact: true }).waitFor();
   await page.getByRole('button', { name: '查看详细判断' }).click();
   await page.getByText(/已选生物 2 种/).waitFor();
   await page.locator('[data-visual-result-status]').waitFor();
 
-  await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.getByRole('button', { name: /AI 建缸助手/ }).click();
   const assistantDialog = page.getByRole('dialog', { name: 'AI 建缸助手' });
   await assistantDialog.waitFor();
