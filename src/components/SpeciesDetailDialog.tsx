@@ -533,8 +533,8 @@ export function SpeciesDetailDialog({
       return source === 'aquarium' ? t('encyclopedia.viewCareEssentials') : t('aquarium.tankContentsTitle');
     }
     if (displayFit.status === 'suitable') return t('encyclopedia.btnJoinTank');
-    if (displayFit.status === 'unsuitable') return t('encyclopedia.viewRiskAndAlternatives');
-    if (displayFit.status === 'conflictRisk' || displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
+    if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk') return t('encyclopedia.viewRiskAndAlternatives');
+    if (displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
     return t('encyclopedia.btnCompleteSetup');
   }, [aquariumContext, displayFit, owned, source, t]);
   const verdictReasons = useMemo(() => {

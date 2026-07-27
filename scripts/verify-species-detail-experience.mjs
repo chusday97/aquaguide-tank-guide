@@ -123,6 +123,26 @@ try {
       },
     },
     {
+      name: 'predation conflict',
+      status: 'not_recommended',
+      action: 'View Risks & Alternatives',
+      expectedUrl: /\/encyclopedia#compatibility/,
+      state: {
+        ...baseConfiguredState,
+        aquariums: [{
+          ...baseConfiguredState.aquariums[0],
+          dimensions: { length: '300', width: '100', height: '100' },
+          fishes: [{
+            id: 'predator-sp-0117',
+            fishId: 'sp_0117',
+            quantity: 1,
+            entryDate: '2026-07-01',
+            lastWaterChangeDate: '2026-07-20',
+          }],
+        }],
+      },
+    },
+    {
       name: 'insufficient data',
       status: 'insufficient_data',
       action: 'Complete Tank Setup',
