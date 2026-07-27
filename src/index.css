@@ -40,6 +40,22 @@ body,
   overflow-x: hidden;
 }
 
+.aquaguide-app button {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.aquaguide-app [role="tablist"] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.aquaguide-app [role="tab"] {
+  min-width: 0;
+  white-space: normal;
+  line-height: 1.2;
+}
+
 .desktop-too-narrow {
   display: none;
 }
@@ -1014,6 +1030,35 @@ body::-webkit-scrollbar {
   display: grid;
   min-width: 0;
   gap: 10px;
+}
+
+.aquarium-zone-toggle {
+  display: flex;
+  min-height: 44px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid rgba(27, 77, 62, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 10px 12px;
+  color: #1b4d3e;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.aquarium-zone-target {
+  border-radius: 18px;
+  outline: 3px solid rgba(16, 185, 129, 0.28);
+  outline-offset: 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aquarium-zone-toggle svg {
+    transition: none;
+  }
 }
 
 .aquarium-zone-grid {

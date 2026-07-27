@@ -14,8 +14,9 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
-import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, X, Layers3, Maximize2, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, X, Layers3, Maximize2, CheckCircle2 } from 'lucide-react';
 import { DeceasedRecord } from '../types';
+import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 import {
   generateTankBuildCopilot,
   generateTankDailyCheckInterpretation,
@@ -239,6 +240,49 @@ function AquariumWorkspace({
   basics: ReactNode;
   advanced: ReactNode;
 }) {
+  const { isPhoneLayout } = useLayoutMode();
+  const location = useLocation();
+  const [manageExpanded, setManageExpanded] = useState(false);
+  const [learnExpanded, setLearnExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!isPhoneLayout) return;
+    const target = `${location.hash} ${location.search}`;
+    const targetId = /manage|add-species|settings|livestock/i.test(target)
+      ? 'aquarium-manage-zone'
+      : /learn|care|discovery|recommend/i.test(target)
+        ? 'aquarium-learn-zone'
+        : '';
+    if (!targetId) return;
+    if (targetId === 'aquarium-manage-zone') setManageExpanded(true);
+    if (targetId === 'aquarium-learn-zone') setLearnExpanded(true);
+    const frame = window.requestAnimationFrame(() => {
+      const element = document.getElementById(targetId);
+      if (!element) return;
+      element.classList.add('aquarium-zone-target');
+      element.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      element.focus({ preventScroll: true });
+      window.setTimeout(() => element.classList.remove('aquarium-zone-target'), 1200);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [isPhoneLayout, location.hash, location.search]);
+
+  const mobileToggle = (
+    expanded: boolean,
+    onToggle: () => void,
+    label: string,
+  ) => isPhoneLayout ? (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={expanded}
+      className="aquarium-zone-toggle"
+    >
+      <span>{expanded ? (i18n.language === 'en' ? 'Hide tasks' : '收起任务') : label}</span>
+      <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+    </button>
+  ) : null;
+
   return (
     <>
       <section className="aquarium-workspace-zone aquarium-observe-zone" aria-labelledby="aquarium-observe-title">
@@ -246,14 +290,20 @@ function AquariumWorkspace({
         <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}{archive}</div>
       </section>
       <div className="aquarium-followup-grid">
-        <section className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
+        <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
           <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-          <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
+          {mobileToggle(manageExpanded, () => setManageExpanded(value => !value), i18n.language === 'en' ? 'Open management tasks' : '展开管理任务')}
+          {(!isPhoneLayout || manageExpanded) && <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>}
         </section>
-        <section className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
+        <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
           <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-          <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}{basics}</div>
-          {advanced}
+          {mobileToggle(learnExpanded, () => setLearnExpanded(value => !value), i18n.language === 'en' ? 'Open learning tasks' : '展开学习任务')}
+          {(!isPhoneLayout || learnExpanded) && (
+            <>
+              <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}{basics}</div>
+              {advanced}
+            </>
+          )}
         </section>
       </div>
     </>

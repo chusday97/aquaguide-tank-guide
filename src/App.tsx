@@ -212,7 +212,13 @@ const desktopSubMenus: Record<string, Array<{
 function BottomNavigation() {
   const location = useLocation();
   const { navigateToRoute } = useWorkspaceNavigation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const shortEnglishLabels: Record<string, string> = {
+    '/aquarium': 'Tank',
+    '/encyclopedia': 'Species',
+    '/care': 'Care',
+    '/collection': 'Collection',
+  };
 
   return (
     <>
@@ -240,7 +246,9 @@ function BottomNavigation() {
                 )}
               >
                 <Icon className={cn("mb-1 h-5 w-5", isActive ? "stroke-white" : "")} />
-                {t(item.labelKey)}
+                <span className="min-w-0 max-w-full leading-tight">
+                  {i18n.language === 'en' ? shortEnglishLabels[item.path] : t(item.labelKey)}
+                </span>
               </button>
             );
           })}
@@ -251,7 +259,15 @@ function BottomNavigation() {
   );
 }
 
-function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; onToggleCollapsed: () => void }) {
+function DesktopSidebar({
+  collapsed,
+  onToggleCollapsed,
+  autoCollapsed = false,
+}: {
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
+  autoCollapsed?: boolean;
+}) {
   const location = useLocation();
   const { navigateToRoute, navigateToView } = useWorkspaceNavigation();
   const { showToast } = useToast();
@@ -307,14 +323,16 @@ function DesktopSidebar({ collapsed, onToggleCollapsed }: { collapsed: boolean; 
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={onToggleCollapsed}
-          className="absolute -right-4 top-7 flex h-9 w-9 items-center justify-center rounded-full border border-white bg-white text-ink/50 shadow-[0_8px_24px_rgba(15,23,42,0.12)] transition-colors hover:text-accent"
-          aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
-        >
-          <ChevronLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
-        </button>
+        {!autoCollapsed && (
+          <button
+            type="button"
+            onClick={onToggleCollapsed}
+            className="absolute -right-4 top-7 flex h-9 w-9 items-center justify-center rounded-full border border-white bg-white text-ink/50 shadow-[0_8px_24px_rgba(15,23,42,0.12)] transition-colors hover:text-accent"
+            aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
+          >
+            <ChevronLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
+          </button>
+        )}
 
         <nav className="min-h-0 flex-1 px-3 pb-4">
           <div className={cn('mb-4 grid gap-2', collapsed ? 'justify-items-center' : 'grid-cols-[minmax(0,1fr)_44px]')}>
@@ -512,6 +530,17 @@ function AppShell() {
       return false;
     }
   });
+  const [isNarrowDesktop, setIsNarrowDesktop] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches
+  ));
+
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 1023px)');
+    const sync = () => setIsNarrowDesktop(query.matches);
+    sync();
+    query.addEventListener('change', sync);
+    return () => query.removeEventListener('change', sync);
+  }, []);
 
   useEffect(() => {
     const handleSyncFailure = () => showToast(t('onboarding.syncFailed'), 'error');
@@ -532,9 +561,10 @@ function AppShell() {
     };
   }, [showToast, t]);
 
+  const effectiveSidebarCollapsed = isNarrowDesktop || isDesktopSidebarCollapsed;
   const desktopShellStyle = useMemo(() => ({
-    '--desktop-sidebar-width': isDesktopSidebarCollapsed ? '76px' : '280px',
-  }) as CSSProperties, [isDesktopSidebarCollapsed]);
+    '--desktop-sidebar-width': effectiveSidebarCollapsed ? '76px' : '280px',
+  }) as CSSProperties, [effectiveSidebarCollapsed]);
 
   const toggleDesktopSidebar = () => {
     setIsDesktopSidebarCollapsed(prev => {
@@ -640,7 +670,8 @@ function AppShell() {
   return (
     <>
       <DesktopAppShell
-        collapsed={isDesktopSidebarCollapsed}
+        collapsed={effectiveSidebarCollapsed}
+        autoCollapsed={isNarrowDesktop}
         onToggleCollapsed={toggleDesktopSidebar}
         style={desktopShellStyle}
       />
@@ -694,10 +725,12 @@ function WorkspaceRoutes() {
 
 function DesktopAppShell({
   collapsed,
+  autoCollapsed,
   onToggleCollapsed,
   style,
 }: {
   collapsed: boolean;
+  autoCollapsed: boolean;
   onToggleCollapsed: () => void;
   style: CSSProperties;
 }) {
@@ -707,7 +740,7 @@ function DesktopAppShell({
       style={style}
       data-layout-mode="desktop"
     >
-      <DesktopSidebar collapsed={collapsed} onToggleCollapsed={onToggleCollapsed} />
+      <DesktopSidebar collapsed={collapsed} autoCollapsed={autoCollapsed} onToggleCollapsed={onToggleCollapsed} />
       <div className="desktop-too-narrow" role="status" aria-live="polite">
         <div className="rounded-[28px] bg-white p-6 text-center shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-accent">

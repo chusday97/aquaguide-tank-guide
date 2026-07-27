@@ -224,6 +224,16 @@ try {
     });
     await seed(phone);
     await phone.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+    const learningToggle = phone.getByRole('button', { name: 'Open learning tasks' });
+    await learningToggle.waitFor();
+    assert.equal(await learningToggle.getAttribute('aria-expanded'), 'false', 'phone learning zone should start collapsed');
+    await learningToggle.click();
+    await phone.waitForFunction(() => document.querySelector('#aquarium-learn-zone .aquarium-zone-toggle')?.getAttribute('aria-expanded') === 'true');
+    assert.equal(
+      await phone.locator('#aquarium-learn-zone .aquarium-zone-toggle').getAttribute('aria-expanded'),
+      'true',
+      'phone learning zone should expand in place',
+    );
     await phone.getByRole('heading', { name: 'Tank Basics' }).waitFor();
     const onboardingBox = await phone.locator('.aquarium-onboarding').boundingBox();
     const observeBox = await phone.locator('.aquarium-observe-zone').boundingBox();
