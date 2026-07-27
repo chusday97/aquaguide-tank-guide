@@ -115,7 +115,8 @@ try {
     {
       name: 'not recommended',
       status: 'not_recommended',
-      action: 'Check Risks & Confirm Add',
+      action: 'View Risks & Alternatives',
+      expectedUrl: /\/encyclopedia#compatibility/,
       state: {
         ...baseConfiguredState,
         aquariums: [{ ...baseConfiguredState.aquariums[0], waterType: 'Saltwater' }],
@@ -135,7 +136,14 @@ try {
     const current = await newSeededPage({ state: testCase.state });
     const dialog = await openWishlistDetail(current.page);
     await dialog.locator(`[data-visual-result-status="${testCase.status}"]`).waitFor();
-    assert.equal(await dialog.getByRole('button', { name: testCase.action, exact: true }).count(), 1, `${testCase.name} must expose exactly one contextual action`);
+    const action = dialog.getByRole('button', { name: testCase.action, exact: true });
+    assert.equal(await action.count(), 1, `${testCase.name} must expose exactly one contextual action`);
+    if (testCase.expectedUrl) {
+      assert.equal(await dialog.getByRole('button', { name: /Confirm Add/, exact: false }).count(), 0, 'not-recommended detail must not imply that adding can be confirmed');
+      await action.click();
+      await current.page.waitForURL(testCase.expectedUrl);
+      assert.equal(await current.page.getByRole('button', { name: 'Add to Current Tank', exact: true }).count(), 0, 'not-recommended destination must not expose a direct add action');
+    }
     await current.context.close();
   }
 
