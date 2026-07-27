@@ -83,12 +83,14 @@ export function VisualResultCard({
   onPrimaryAction,
   onSubjectSelect,
   actionPending = false,
+  showPrimaryAction = true,
   className = '',
 }: {
   model: VisualResultViewModel;
   onPrimaryAction: () => void;
   onSubjectSelect?: (subject: VisualResultSubject) => void;
   actionPending?: boolean;
+  showPrimaryAction?: boolean;
   className?: string;
 }) {
   const { t } = useTranslation();
@@ -182,21 +184,23 @@ export function VisualResultCard({
         )}
       </div>
 
-      <div className="mx-3.5 mb-3 grid gap-2 min-[500px]:mx-4 min-[720px]:grid-cols-[1fr_220px]">
+      <div className={`mx-3.5 mb-3 grid gap-2 min-[500px]:mx-4 ${showPrimaryAction ? 'min-[720px]:grid-cols-[1fr_220px]' : ''}`}>
         <div className="rounded-[16px] border border-border bg-bg px-3 py-2.5">
           <div className="text-[10px] font-black text-emerald-800">{t('visualResult.doNow')}</div>
           <p className="mt-0.5 text-[12px] font-bold leading-relaxed text-ink">{model.currentAction}</p>
         </div>
-        <button
-          type="button"
-          disabled={actionPending}
-          data-action-type={model.primaryAction.actionType}
-          onClick={onPrimaryAction}
-          className="flex min-h-11 items-center justify-center rounded-[16px] bg-accent px-4 text-[12px] font-black text-white transition hover:bg-[#123e31] disabled:cursor-not-allowed disabled:bg-ink/20"
-        >
-          {actionPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {model.primaryAction.label}
-        </button>
+        {showPrimaryAction && (
+          <button
+            type="button"
+            disabled={actionPending}
+            data-action-type={model.primaryAction.actionType}
+            onClick={onPrimaryAction}
+            className="flex min-h-11 items-center justify-center rounded-[16px] bg-accent px-4 text-[12px] font-black text-white transition hover:bg-[#123e31] disabled:cursor-not-allowed disabled:bg-ink/20"
+          >
+            {actionPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {model.primaryAction.label}
+          </button>
+        )}
       </div>
 
       {detailCount > 0 && (

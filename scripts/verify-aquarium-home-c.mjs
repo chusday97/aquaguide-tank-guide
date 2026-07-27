@@ -264,6 +264,21 @@ try {
   assert.equal(await targetedManageZone.evaluate(element => element.classList.contains('aquarium-zone-target')), true, 'manage deep link must highlight the target zone');
   await deepLinkPhone.close();
 
+  const learningDeepLinkPhone = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+    locale: 'en-US',
+    hasTouch: true,
+    isMobile: true,
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
+  });
+  await seed(learningDeepLinkPhone);
+  await learningDeepLinkPhone.goto(`${baseUrl}/aquarium?action=care`, { waitUntil: 'domcontentloaded' });
+  const targetedLearningZone = learningDeepLinkPhone.locator('#aquarium-learn-zone');
+  await learningDeepLinkPhone.waitForFunction(() => document.querySelector('#aquarium-learn-zone .aquarium-zone-toggle')?.getAttribute('aria-expanded') === 'true');
+  assert.equal(await targetedLearningZone.evaluate(element => element === document.activeElement), true, 'learning deep link must focus the target zone');
+  assert.equal(await targetedLearningZone.evaluate(element => element.classList.contains('aquarium-zone-target')), true, 'learning deep link must highlight the target zone');
+  await learningDeepLinkPhone.close();
+
   console.log('aquarium homepage C verified: guided zones, optional advanced tests, and responsive English layout');
 } finally {
   await browser.close();

@@ -82,18 +82,62 @@ try {
   for (const locale of ['zh-CN', 'en']) {
     const current = await newSeededPage({ locale, state: createState({ withTank: true, owned: false }), phone: locale === 'en' });
     const dialog = await openWishlistDetail(current.page);
+    const primaryLabel = locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸';
+    const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
+    assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
+    if (locale === 'en') {
+      const [dialogBox, actionBox] = await Promise.all([dialog.boundingBox(), primaryAction.boundingBox()]);
+      assert.ok(dialogBox && actionBox && actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
+    }
     await dialog.getByRole('button', { name: locale === 'en' ? 'Show all 5 items' : '查看全部 5 项', exact: true }).click();
     metricIdsByLocale[locale] = await dialog.locator('[data-visual-result-subject-id^="fit-"]').evaluateAll(nodes => nodes.map(node => node.getAttribute('data-visual-result-subject-id')).sort());
     assert.deepEqual(metricIdsByLocale[locale], ['fit-filter', 'fit-heater', 'fit-space', 'fit-temperature', 'fit-water_type']);
-    assert.equal(await dialog.getByRole('button', { name: locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸', exact: true }).count(), 1, 'suitable detail must have one primary action');
     assert.doesNotMatch(await dialog.innerText(), /pH range matches|pH 范围与物种资料匹配/);
     if (locale === 'en') {
-      await dialog.getByRole('button', { name: 'Add to Current Tank', exact: true }).click();
+      await primaryAction.click();
       await current.page.waitForURL(/\/aquarium\?action=add-species&species=sp_0001$/);
     }
     await current.context.close();
   }
   assert.deepEqual(metricIdsByLocale.en, metricIdsByLocale['zh-CN'], 'localized details must use the same canonical metric types');
+
+  const baseConfiguredState = createState({ withTank: true, owned: false });
+  const stateCases = [
+    {
+      name: 'caution',
+      status: 'caution',
+      action: 'Check Risks & Confirm Add',
+      state: {
+        ...baseConfiguredState,
+        aquariums: [{ ...baseConfiguredState.aquariums[0], targetTemperature: '29' }],
+      },
+    },
+    {
+      name: 'not recommended',
+      status: 'not_recommended',
+      action: 'Check Risks & Confirm Add',
+      state: {
+        ...baseConfiguredState,
+        aquariums: [{ ...baseConfiguredState.aquariums[0], waterType: 'Saltwater' }],
+      },
+    },
+    {
+      name: 'insufficient data',
+      status: 'insufficient_data',
+      action: 'Complete Tank Setup',
+      state: {
+        ...baseConfiguredState,
+        aquariums: [{ ...baseConfiguredState.aquariums[0], dimensions: undefined, targetTemperature: undefined }],
+      },
+    },
+  ];
+  for (const testCase of stateCases) {
+    const current = await newSeededPage({ state: testCase.state });
+    const dialog = await openWishlistDetail(current.page);
+    await dialog.locator(`[data-visual-result-status="${testCase.status}"]`).waitFor();
+    assert.equal(await dialog.getByRole('button', { name: testCase.action, exact: true }).count(), 1, `${testCase.name} must expose exactly one contextual action`);
+    await current.context.close();
+  }
 
   const ownedCollection = await newSeededPage({ state: createState({ withTank: true, owned: true }) });
   const ownedCollectionDialog = await openWishlistDetail(ownedCollection.page);

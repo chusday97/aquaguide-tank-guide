@@ -866,6 +866,7 @@ export function SpeciesDetailDialog({
                       {fitVisualModel && (
                         <VisualResultCard
                           model={fitVisualModel}
+                          showPrimaryAction={false}
                           onPrimaryAction={handleMainAction}
                           onSubjectSelect={subject => {
                             const metric = metricCards.find(item => `fit-${item.type}` === subject.id);
@@ -969,6 +970,12 @@ export function SpeciesDetailDialog({
                   )}
                 </div>
               </div>
+
+              {activeTab === 'environment' && (
+                <div className="modalFooter shrink-0 border-t border-border bg-white/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 min-[760px]:px-6">
+                  <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
+                </div>
+              )}
 
               {activeMetric && (
                 <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/24 px-3 pb-3">
