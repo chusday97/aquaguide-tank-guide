@@ -1,6 +1,6 @@
 # AquaGuide 交接文档
 
-> 写给一个完全没有此前对话上下文的新接手者。最后更新：2026-07-26（Asia/Shanghai）。
+> 写给一个完全没有此前对话上下文的新接手者。最后更新：2026-07-27（Asia/Shanghai）。
 
 ## 项目一句话说明
 
@@ -18,7 +18,7 @@
 
 ## 正在做什么
 
-- 当前步骤：全局响应式与物种详情 A 重构。第一阶段国际化运行稳定性已恢复，下一步处理 1024px 以下图标侧栏、手机首页第 2/3 模块折叠和全局长文本适配。
+- 当前步骤：全局响应式与物种详情 A 已完成；独立 Critic 首轮发现的英文指标、来源页 CTA、已拥有物种动作、重复主操作和 pH 优先级问题已关闭，手机首屏 CTA 回归已关闭。Evaluator 两轮复验进一步把 `unsuitable/conflictRisk` 的“不建议”动作统一为“查看风险与替代建议”，并用银龙鱼与极火虾真实捕食组合验证阻断。Critic 与 Evaluator 最终均 PASS。
 - 已开始但未完成的工作：真实 Supabase migration/RLS、登录偏好同步和真实视觉准确率依赖外部环境；Antigravity 全局翻译暂停。
 - 涉及文件/模块：`src/App.tsx`、`src/pages/{Search,Settings,Welcome,Aquarium}.tsx`、`src/services/onboarding/`、`src/services/aquarium/species-batches.service.ts`、`apps/api/src/routes/{aquariums,profile}.ts`、`supabase/migrations/202607220001_livestock_batches.sql`。
 - 工作区未提交状态及归属：实现提交已拆分；审查前需以 `git status --short` 再确认工作区。
@@ -27,10 +27,12 @@
 
 | 日期 | 完成事项 | 证据（commit / 测试 / 文档） |
 |---|---|---|
+| 2026-07-27 | 手机物种详情恢复唯一吸底主操作，并补齐六状态及 Manage/Learn 深链接回归 | commit `440376d`；生产预览 species-detail/home-C/core；Critic 六维 PASS |
+| 2026-07-27 | 修复物种详情英文指标、来源页无效 CTA、已拥有物种错跳、重复主操作与 pH 低优先级提示 | commit `2c80073`；species-detail/home-C/core/compatibility；生产预览；7×17 响应式扫描 |
 | 2026-07-27 | 修复养护详情及正式用户页面的国际化作用域、条件表达式和 TypeScript 基线 | commit `1823b88`；lint/API check/build；中英文 390px 养护详情直达无 pageerror |
 | 2026-07-27 | 1024px 以下图标侧栏、手机第 2/3 模块折叠与英文短底栏 | commit `d326dc2`；lint/build；600–1280px 桌面与 390px 英文手机真实 Chrome 边界审计 |
 | 2026-07-27 | 单物种详情采用 A「图像结论」并修复手机弹层宽度与英文页签溢出 | commit `59168b7`；lint/build；visual-results/compatibility；390/600/1280px 真实 Chrome |
-| 2026-07-27 | 全路由响应式与双语回归收口 | 本次提交；7×17 路由扫描；localization/mobile-care/core/home-C/product-actions 全部通过 |
+| 2026-07-27 | 全路由响应式与双语回归收口 | commit `79ba243`；7×17 路由扫描；localization/mobile-care/core/home-C/product-actions 全部通过 |
 | 2026-07-15 | 建立本项目交接入口并记录本轮范围 | 本文档 |
 | 2026-07-15 | 今日行动、水族册四路由、侧栏二级导航与生命纪念安全回流 | commit `917b80a`；lint/build；1280/390px 浏览器回归 |
 | 2026-07-15 | 路由/数据/图片局部恢复、1080 张响应式 WebP 与慢网 3D 策略 | commit `b38508c`；生产故障注入；手机首屏传输量与 2G 回归 |
