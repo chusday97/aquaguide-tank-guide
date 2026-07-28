@@ -40,7 +40,7 @@
 - `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情、批次管理和按数量二次确认移出。
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
-- `src/pages/CollectionHub.tsx`：水族册模块首页，只展示四张大模块卡与数量。
+- `src/pages/CollectionHub.tsx`：水族册模块首页，四格预览现有种草、养护收藏、生命纪念与成就进度，并直达独立模块。
 - `src/pages/Collection.tsx`：四个独立水族册模块的列表、详情与空状态。
 - `src/pages/AdminContent.tsx`：受管理员权限保护的独立内容后台页面，不进入普通用户导航。
 - `src/components/common/RouteErrorBoundary.tsx`：核心路由隔离、友好重试、会话诊断复制与坏数据恢复提示。
@@ -101,6 +101,7 @@
 - `scripts/verify-core-experience.mjs`：设备布局、水族册、自适应详情、Mini、每日检查与 AI 建缸助手浏览器验收。
 - `scripts/verify-mobile-care-experience.mjs`：320–430px 图鉴分页、手动养护推荐、水族册入口、缸内物种、3D 全屏列表与养护计划浏览器验收。
 - `scripts/verify-wishlist-shortcut.mjs`：普通物种与具体变种快捷收藏、触控尺寸、跨页同步和水族册直达验收。
+- `scripts/verify-collection-hub-previews.mjs`：水族册四格真实预览、独立路由、桌面/窄桌面/手机布局与无溢出验收。
 - `scripts/test-three-step-paths.ts` / `scripts/verify-three-step-experience.mjs`：正式路径上限与每日检查、养护自查、添加生物两屏流程验收。
 - `scripts/test-collection-achievements.ts`：水族册聚合与 8 枚勋章追溯断言。
 - `scripts/test-memorial-service.ts`：日期/原因校验、旧键兼容和跨页面变更事件断言。
