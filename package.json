@@ -55,6 +55,7 @@
     "test:settings-feedback": "node scripts/verify-settings-feedback.mjs",
     "test:search-suggestions": "tsx scripts/test-search-suggestions.ts",
     "test:search-ui": "SEARCH_UI_GROUP=atlas node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=mobile node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=care node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=entries node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=identify node scripts/verify-search-and-inline-filter.mjs",
+    "test:collection-hub-ui": "node scripts/verify-collection-hub-previews.mjs",
     "test:feedback-rate-limit": "node --import tsx scripts/test-feedback-rate-limit.ts",
     "test:repository-boundary": "node --import tsx scripts/test-repository-boundary.ts",
     "test:livestock-memorial-replay": "node --import tsx scripts/test-livestock-memorial-replay.ts",
