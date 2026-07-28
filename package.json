@@ -53,6 +53,7 @@
     "test:guided-navigation-ui": "node scripts/verify-guided-navigation.mjs",
     "test:aquarium-home-c": "node scripts/verify-aquarium-home-c.mjs",
     "test:settings-feedback": "node scripts/verify-settings-feedback.mjs",
+    "test:search-suggestions": "tsx scripts/test-search-suggestions.ts",
     "test:feedback-rate-limit": "node --import tsx scripts/test-feedback-rate-limit.ts",
     "test:repository-boundary": "node --import tsx scripts/test-repository-boundary.ts",
     "test:livestock-memorial-replay": "node --import tsx scripts/test-livestock-memorial-replay.ts",
