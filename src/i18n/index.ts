@@ -83,6 +83,8 @@ const resources = {
         filterSuggestions: '筛选条件',
         ownedQuantity: '当前鱼缸已有 {{count}}',
         viewAllSpecies: '查看全部 {{count}} 个物种',
+        loadingSuggestions: '正在加载搜索建议…',
+        suggestionsUnavailable: '搜索建议暂时不可用，按回车仍可进入完整搜索。',
       },
       settingsPage: {
         title: '设置',
@@ -958,6 +960,8 @@ const resources = {
         filterSuggestions: 'Filters',
         ownedQuantity: '{{count}} in current tank',
         viewAllSpecies: 'View all {{count}} species',
+        loadingSuggestions: 'Loading suggestions…',
+        suggestionsUnavailable: 'Suggestions are unavailable. Press Enter to use full search.',
       },
       settingsPage: {
         title: 'Settings',

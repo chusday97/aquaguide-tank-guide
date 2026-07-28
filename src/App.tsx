@@ -279,6 +279,8 @@ function DesktopSidebar({
   const [searchDraft, setSearchDraft] = useState('');
   const [sidebarSuggestions, setSidebarSuggestions] = useState<SearchSuggestion[]>([]);
   const [sidebarSpeciesTotal, setSidebarSpeciesTotal] = useState(0);
+  const [sidebarSuggestionsLoading, setSidebarSuggestionsLoading] = useState(false);
+  const [sidebarSuggestionsError, setSidebarSuggestionsError] = useState('');
   const [selectedSidebarSpecies, setSelectedSidebarSpecies] = useState<SearchSuggestion | null>(null);
   const [aquariumNavigation, setAquariumNavigation] = useState(getAquariumNavigationSnapshot);
   const activePath = location.pathname === '/wishlist'
@@ -295,6 +297,8 @@ function DesktopSidebar({
   useEffect(() => {
     if (collapsed) return;
     let cancelled = false;
+    setSidebarSuggestionsLoading(true);
+    setSidebarSuggestionsError('');
     void Promise.all([
       import('./services/search/search-suggestions.service'),
       import('./data/fishData'),
@@ -315,16 +319,19 @@ function DesktopSidebar({
       });
       setSidebarSuggestions(result.suggestions);
       setSidebarSpeciesTotal(result.totalSpeciesMatches);
+      setSidebarSuggestionsLoading(false);
     }).catch(() => {
       if (!cancelled) {
         setSidebarSuggestions([]);
         setSidebarSpeciesTotal(0);
+        setSidebarSuggestionsLoading(false);
+        setSidebarSuggestionsError(t('searchPage.suggestionsUnavailable'));
       }
     });
     return () => {
       cancelled = true;
     };
-  }, [aquariumNavigation, collapsed, searchDraft, i18n.language]);
+  }, [aquariumNavigation, collapsed, searchDraft, i18n.language, t]);
 
   const handlePrimaryNav = (path: string) => {
     navigateToRoute(path);
@@ -380,46 +387,56 @@ function DesktopSidebar({
             {collapsed ? (
               <button type="button" onClick={() => navigateToRoute('/search')} title={t('searchPage.title')} aria-label={t('searchPage.title')} className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-ink/55 shadow-sm hover:text-emerald-700"><SearchIcon className="h-5 w-5" /></button>
             ) : (
-              <SearchAutocomplete
-                value={searchDraft}
-                suggestions={sidebarSuggestions}
-                selectedSpecies={selectedSidebarSpecies}
-                placeholder={t('searchPage.shortPlaceholder')}
-                inputLabel={t('searchPage.placeholder')}
-                submitLabel={t('searchPage.submit')}
-                viewDetailsLabel={t('searchPage.viewDetails')}
-                reselectLabel={t('searchPage.chooseAgain')}
-                speciesGroupLabel={t('searchPage.speciesCandidates')}
-                careGroupLabel={t('searchPage.careCandidates')}
-                relatedGroupLabel={t('searchPage.relatedSearches')}
-                filterGroupLabel={t('searchPage.filterSuggestions')}
-                ownedLabel={quantity => t('searchPage.ownedQuantity', { count: quantity })}
-                totalSpeciesMatches={sidebarSpeciesTotal}
-                viewAllSpeciesLabel={count => t('searchPage.viewAllSpecies', { count })}
-                compact
-                hideSubmit
-                onValueChange={value => {
-                  setSearchDraft(value);
-                  setSelectedSidebarSpecies(null);
-                }}
-                onSelectSuggestion={suggestion => {
-                  if (suggestion.kind === 'species') {
+              <div className="min-w-0">
+                <SearchAutocomplete
+                  value={searchDraft}
+                  suggestions={sidebarSuggestions}
+                  selectedSpecies={selectedSidebarSpecies}
+                  placeholder={t('searchPage.shortPlaceholder')}
+                  inputLabel={t('searchPage.placeholder')}
+                  submitLabel={t('searchPage.submit')}
+                  viewDetailsLabel={t('searchPage.viewDetails')}
+                  reselectLabel={t('searchPage.chooseAgain')}
+                  speciesGroupLabel={t('searchPage.speciesCandidates')}
+                  careGroupLabel={t('searchPage.careCandidates')}
+                  relatedGroupLabel={t('searchPage.relatedSearches')}
+                  filterGroupLabel={t('searchPage.filterSuggestions')}
+                  ownedLabel={quantity => t('searchPage.ownedQuantity', { count: quantity })}
+                  totalSpeciesMatches={sidebarSpeciesTotal}
+                  viewAllSpeciesLabel={count => t('searchPage.viewAllSpecies', { count })}
+                  compact
+                  hideSubmit
+                  onValueChange={value => {
+                    setSearchDraft(value);
+                    setSelectedSidebarSpecies(null);
+                  }}
+                  onSelectSuggestion={suggestion => {
+                    if (suggestion.kind === 'species') {
+                      setSearchDraft(suggestion.query);
+                      setSelectedSidebarSpecies(suggestion);
+                      return;
+                    }
+                    if (suggestion.kind === 'care' && suggestion.targetId) {
+                      navigateToRoute(`/care?topic=${encodeURIComponent(suggestion.targetId)}&source=search`);
+                      return;
+                    }
                     setSearchDraft(suggestion.query);
-                    setSelectedSidebarSpecies(suggestion);
-                    return;
-                  }
-                  if (suggestion.kind === 'care' && suggestion.targetId) {
-                    navigateToRoute(`/care?topic=${encodeURIComponent(suggestion.targetId)}&source=search`);
-                    return;
-                  }
-                  setSearchDraft(suggestion.query);
-                  navigateToRoute(`/search?q=${encodeURIComponent(suggestion.query)}`);
-                }}
-                onSubmit={value => navigateToRoute(value.trim() ? `/search?q=${encodeURIComponent(value.trim())}` : '/search')}
-                onViewSelected={suggestion => suggestion.targetId && navigateToRoute(`/encyclopedia?species=${encodeURIComponent(suggestion.targetId)}&source=search`)}
-                onReselect={() => setSelectedSidebarSpecies(null)}
-                onViewAllSpecies={() => navigateToRoute(searchDraft.trim() ? `/search?q=${encodeURIComponent(searchDraft.trim())}` : '/search')}
-              />
+                    navigateToRoute(`/search?q=${encodeURIComponent(suggestion.query)}`);
+                  }}
+                  onSubmit={value => navigateToRoute(value.trim() ? `/search?q=${encodeURIComponent(value.trim())}` : '/search')}
+                  onViewSelected={suggestion => suggestion.targetId && navigateToRoute(`/encyclopedia?species=${encodeURIComponent(suggestion.targetId)}&source=search`)}
+                  onReselect={() => setSelectedSidebarSpecies(null)}
+                  onViewAllSpecies={() => navigateToRoute(searchDraft.trim() ? `/search?q=${encodeURIComponent(searchDraft.trim())}` : '/search')}
+                />
+                {(sidebarSuggestionsLoading || sidebarSuggestionsError) && (
+                  <p
+                    className={cn('mt-1 px-1 text-[11px] leading-4', sidebarSuggestionsError ? 'text-rose-700' : 'text-ink/48')}
+                    role="status"
+                  >
+                    {sidebarSuggestionsError || t('searchPage.loadingSuggestions')}
+                  </p>
+                )}
+              </div>
             )}
             <button type="button" onClick={() => navigateToRoute('/identify')} title={t('identify.entry')} aria-label={t('identify.entry')} className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-ink/55 shadow-sm hover:text-emerald-700"><Camera className="h-5 w-5" /></button>
           </div>
