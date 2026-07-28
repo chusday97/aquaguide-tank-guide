@@ -50,6 +50,14 @@ const seed = async (page, state = createState()) => {
   await page.addInitScript(saved => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquaguide_locale', 'en');
+    const now = new Date();
+    const dateKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    localStorage.setItem('aquapediaDiscoveryDeck', JSON.stringify({
+      dateKey,
+      queueIds: ['sp_0001', 'sp_0002', 'sp_0003'],
+      consumedIds: [],
+      history: [],
+    }));
   }, state);
 };
 
@@ -75,7 +83,12 @@ try {
     const page = await browser.newPage({ viewport: { width, height: 900 }, locale: 'en-US' });
     await seed(page);
     await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-    await page.getByRole('heading', { name: 'Tank Basics' }).waitFor();
+    await page.getByText('Daily Discovery', { exact: true }).waitFor();
+    assert.equal(await page.getByText('Tank Basics', { exact: true }).count(), 0, 'redundant tank basics card must not remain on the homepage');
+    const dailyDiscoveryCard = page.locator('.aquarium-discovery-card');
+    await dailyDiscoveryCard.waitFor();
+    assert.ok(await dailyDiscoveryCard.locator('img').count() >= 1, 'daily discovery must lead with a species image');
+    assert.equal(await dailyDiscoveryCard.getByRole('button', { name: 'View species details' }).count(), 1, 'daily discovery must expose one explicit primary detail action');
     assert.deepEqual(await page.locator('.aquarium-zone-header').allTextContents().then(items => items.map(item => item.replace(/\s+/g, ' ').trim()).map(item => item.match(/Observe|Manage|Learn & Maintain/)?.[0])), ['Observe', 'Manage', 'Learn & Maintain']);
     assert.equal(await page.locator('.aquarium-recommend:visible').count(), 0, 'duplicate next-action panel must stay hidden');
     assert.equal(await page.locator('.aquarium-advanced-tests').getAttribute('open'), null, 'advanced tests must be collapsed by default');
@@ -84,21 +97,20 @@ try {
     if (width === 1440) {
       assert.equal(await page.locator('.aquarium-onboarding-sidebar:visible').count(), 1, 'desktop onboarding must live in the sidebar');
       assert.equal(await page.locator('main .aquarium-onboarding:visible').count(), 0, 'desktop content must not repeat the onboarding card');
-      const [tankBox, statusBox, archiveBox, manageBox, learnBox, discoveryBox, basicsBox, advancedBox] = await Promise.all([
+      const [tankBox, statusBox, archiveBox, manageBox, learnBox, discoveryBox, advancedBox] = await Promise.all([
         page.locator('.aquarium-tank').boundingBox(),
         page.locator('.aquarium-status').boundingBox(),
         page.locator('.aquarium-archive').boundingBox(),
         page.locator('.aquarium-manage-zone').boundingBox(),
         page.locator('.aquarium-learn-zone').boundingBox(),
         page.locator('.aquarium-discovery').boundingBox(),
-        page.locator('.aquarium-basics').boundingBox(),
         page.locator('.aquarium-advanced-tests').boundingBox(),
       ]);
       assert.ok(tankBox && statusBox && tankBox.x < statusBox.x, 'Observe must place tank before today action');
       assert.ok(archiveBox && tankBox && archiveBox.y > tankBox.y + tankBox.height, 'livestock preview must be part of Observe below the tank');
       assert.ok(statusBox && archiveBox && statusBox.y + statusBox.height >= archiveBox.y + archiveBox.height - 1, 'today action must span the tank and livestock preview');
       assert.ok(manageBox && learnBox && manageBox.x < learnBox.x, 'Manage and Learn must share one row on wide desktop');
-      assert.ok(discoveryBox && basicsBox && discoveryBox.x < basicsBox.x, 'discovery and tank basics must share the Learn card');
+      assert.ok(discoveryBox && learnBox && discoveryBox.width >= learnBox.width - 4, 'daily discovery must use the full Learn card width');
       assert.ok(advancedBox && manageBox && learnBox && advancedBox.x <= manageBox.x + 1 && advancedBox.x + advancedBox.width >= learnBox.x + learnBox.width - 1, 'advanced tests must span below Manage and Learn');
       assert.ok(archiveBox.height < 190, 'livestock preview must stay compact before its dialog opens');
     }
@@ -117,7 +129,7 @@ try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'en-US' });
     await seed(page, createState(speciesCount));
     await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-    await page.getByRole('heading', { name: 'Tank Basics' }).waitFor();
+    await page.getByText('Daily Discovery', { exact: true }).waitFor();
     assert.equal(await page.locator('.aquarium-archive-preview img').count(), Math.min(speciesCount, 3), `${speciesCount}-species preview must show up to three compact species cards`);
     const archive = page.locator('.aquarium-archive');
     await archive.locator('button[aria-haspopup="dialog"]').click();
@@ -190,7 +202,8 @@ try {
   const tankNavigationDesktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'zh-CN' });
   await seed(tankNavigationDesktop, multiTankState);
   await tankNavigationDesktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  await tankNavigationDesktop.getByRole('heading', { name: /鱼缸基础|Tank Basics/ }).waitFor();
+  await tankNavigationDesktop.getByText(/Daily Discovery|今日推荐/, { exact: true }).waitFor();
+  assert.equal(await tankNavigationDesktop.getByText(/鱼缸基础|Tank Basics/, { exact: true }).count(), 0, 'redundant tank basics card must not remain on the homepage');
   const tankNavigation = tankNavigationDesktop.getByRole('region', { name: '切换鱼缸' });
   await tankNavigation.getByRole('button', { name: /隔离观察缸/ }).click();
   await tankNavigationDesktop.waitForURL(/tank=tank-second/);
@@ -245,7 +258,11 @@ try {
       'true',
       'phone learning zone should expand in place',
     );
-    await phone.getByRole('heading', { name: 'Tank Basics' }).waitFor();
+    await phone.getByText('Daily Discovery', { exact: true }).waitFor();
+    assert.equal(await phone.getByText('Tank Basics', { exact: true }).count(), 0, 'phone learning zone must not repeat tank basics');
+    const phoneDiscovery = phone.locator('.aquarium-discovery-card');
+    await phoneDiscovery.waitFor();
+    await assertControlInsideViewport(phoneDiscovery.getByRole('button', { name: 'View species details' }), `${width}px daily discovery primary action`);
     const onboardingBox = await phone.locator('.aquarium-onboarding').boundingBox();
     const observeBox = await phone.locator('.aquarium-observe-zone').boundingBox();
     assert.ok(onboardingBox && observeBox && onboardingBox.y + onboardingBox.height < observeBox.y, 'onboarding must stay before Observe on phone');

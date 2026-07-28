@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
-import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, X, Layers3, Maximize2, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2 } from 'lucide-react';
 import { DeceasedRecord } from '../types';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 import {
@@ -223,7 +223,6 @@ function AquariumWorkspace({
   archive,
   actions,
   discovery,
-  basics,
   advanced,
 }: {
   observeTitle: string;
@@ -237,7 +236,6 @@ function AquariumWorkspace({
   archive: ReactNode;
   actions: ReactNode;
   discovery: ReactNode;
-  basics: ReactNode;
   advanced: ReactNode;
 }) {
   const { isPhoneLayout } = useLayoutMode();
@@ -299,7 +297,7 @@ function AquariumWorkspace({
           <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
           {mobileToggle(learnExpanded, () => setLearnExpanded(value => !value), i18n.language === 'en' ? 'Open learning tasks' : '展开学习任务')}
           {(!isPhoneLayout || learnExpanded) && (
-            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}{basics}</div>
+            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
           )}
         </section>
       </div>
@@ -2848,7 +2846,12 @@ export default function AquariumManager() {
   }, [activeAquarium?.id]);
 
   const discoveryPool = useMemo(() => {
-    return fishData.filter(fish => !isAquaticPlantSpecies(fish) && !isHardscapeSpecies(fish));
+    return fishData
+      .filter(fish => !isAquaticPlantSpecies(fish) && !isHardscapeSpecies(fish))
+      .map(fish => ({
+        ...fish,
+        housingMode: ((fish as Fish & { _originalHousingMode?: Fish['housingMode'] })._originalHousingMode || fish.housingMode),
+      }));
   }, []);
 
   useEffect(() => {
@@ -4609,73 +4612,87 @@ export default function AquariumManager() {
         discovery={(
       <section id="aquarium-discovery" className="aquarium-discovery order-[1] scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
         <div className="mb-2 flex items-center justify-between gap-3">
-          <div>
-            <div className="text-[13px] font-black text-ink">{isEn ? 'Daily Recommendations' : '今日种草'}</div>
-            <div className="text-[10px] font-bold text-ink/45">{isEn ? '10 random species daily. Tap card for full details.' : '每天随机 10 个物种，完整模式点卡片进入。'}</div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 text-[13px] font-black text-ink">
+              <Sparkles className="h-4 w-4 text-rose-500" />
+              {isEn ? 'Daily Discovery' : '今日推荐'}
+            </div>
+            <div className="mt-0.5 text-[10px] font-bold text-ink/45">{isEn ? 'One visual idea at a time. You decide whether to save it.' : '一次看清一个物种，再决定是否收藏。'}</div>
           </div>
           <span className="shrink-0 rounded-full bg-white px-2.5 py-1.5 text-[10px] font-black text-ink/42">
-            今日 {discoveryRemainingToday}/10
+            {isEn ? `${discoveryRemainingToday} left` : `还可看 ${discoveryRemainingToday} 个`}
           </span>
         </div>
         {discoveryFish ? (
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => setSelectedDiscoveryFish(discoveryFish)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                setSelectedDiscoveryFish(discoveryFish);
-              }
-            }}
-            className="grid min-h-[146px] w-full cursor-pointer grid-cols-[38%_1fr] gap-3 rounded-[16px] bg-[#FBFAF6] p-3 text-left shadow-sm transition-transform active:scale-[0.99] md:desktop-split-card md:items-start md:gap-4"
-          >
-            <div className={`flex h-full min-h-[116px] items-center justify-center rounded-[14px] p-2 ${getSpeciesImageSurfaceClass(discoveryFish)}`}>
+          <article className="aquarium-discovery-card grid min-w-0 overflow-hidden rounded-[18px] border border-white/80 bg-[#FBFAF6] shadow-sm">
+            <button
+              type="button"
+              onClick={() => setSelectedDiscoveryFish(discoveryFish)}
+              className={`aquarium-discovery-visual group relative flex min-h-[210px] min-w-0 items-center justify-center overflow-hidden p-4 text-left ${getSpeciesImageSurfaceClass(discoveryFish)}`}
+              aria-label={isEn ? `View ${discoveryFish.name} details` : `查看${discoveryFish.name}详情`}
+            >
               <ResilientImage
                 src={getSpeciesVisualSources(discoveryFish).thumbnail}
                 srcSet={`${getSpeciesVisualSources(discoveryFish).thumbnail} 256w, ${getSpeciesVisualSources(discoveryFish).detail} 768w`}
-                sizes="(max-width: 430px) 38vw, 260px"
+                sizes="(max-width: 430px) 88vw, 360px"
                 alt={discoveryFish.name}
-                className={`h-full w-full object-contain p-2 ${getSpeciesImageClass(discoveryFish)}`}
+                className={`h-full max-h-[250px] w-full object-contain p-2 transition-transform duration-200 group-hover:scale-[1.03] ${getSpeciesImageClass(discoveryFish)}`}
                 referrerPolicy="no-referrer"
                 loading="eager"
                 decoding="async"
                 onLoad={() => setLoadedDiscoveryImageSrc(discoveryImageSrc)}
               />
-            </div>
-            <div className="min-w-0">
-              <h3 className="truncate font-serif text-[18px] italic font-bold leading-tight text-ink">{discoveryFish.name}</h3>
+              <span className="absolute bottom-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-[9px] font-black text-white backdrop-blur-sm">{isEn ? 'View details' : '查看详情'}</span>
+            </button>
+            <div className="flex min-w-0 flex-col p-3.5">
+              <div className="flex min-w-0 items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="text-[9px] font-black uppercase tracking-[0.14em] text-rose-500">{isEn ? 'Today’s species' : '今天认识它'}</div>
+                  <h3 className="mt-1 break-words font-serif text-[22px] italic font-bold leading-tight text-ink">{discoveryFish.name}</h3>
+                  <p className="mt-0.5 truncate text-[9px] font-bold text-ink/38">{discoveryFish.scientificName}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-700">
+                  {discoveryFish.difficulty === 'Easy' ? (isEn ? 'Beginner' : '新手友好') : getDifficultyLabel(discoveryFish.difficulty)}
+                </span>
+              </div>
               <div className="mt-1 flex flex-wrap gap-1">
                 {[
-                  discoveryFish.difficulty === 'Easy' ? '新手友好' : getDifficultyLabel(discoveryFish.difficulty),
                   getToolFunctions(discoveryFish)[0],
                   needsHeaterForSpecies(discoveryFish) ? '需加热' : discoveryFish.housingMode,
+                  discoveryFish.waterTemperature,
                 ].filter(Boolean).slice(0, 3).map(tag => (
                   <span key={tag} className="rounded-full border border-border bg-white px-1.5 py-0.5 text-[9px] font-black text-ink/55">{tag}</span>
                 ))}
               </div>
-              <p className="mt-2 line-clamp-2 text-[11px] font-bold leading-relaxed text-ink/62">{getDiscoveryPositioning(discoveryFish)}</p>
-              <div className="mt-3 grid grid-cols-2 gap-1.5">
-                <Button
+              <div className="mt-3 rounded-[13px] bg-white/78 p-2.5">
+                <div className="text-[9px] font-black text-ink/40">{isEn ? 'Why it is worth knowing' : '为什么值得认识'}</div>
+                <p className="mt-1 line-clamp-3 text-[11px] font-bold leading-relaxed text-ink/64">{getDiscoveryPositioning(discoveryFish)}</p>
+              </div>
+              <Button
+                type="button"
+                className="mt-3 min-h-10 w-full rounded-full bg-emerald-800 px-4 text-[11px] font-black text-white hover:bg-emerald-900"
+                onClick={() => setSelectedDiscoveryFish(discoveryFish)}
+              >
+                {isEn ? 'View species details' : '查看物种详情'}
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <button
                   type="button"
-                  variant="outline"
-                  className="h-8 min-w-0 rounded-full border-border bg-white px-2 text-[11px] font-black text-ink/62"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    advanceDiscoveryCard('skip');
-                  }}
+                  className="flex min-h-10 min-w-0 items-center justify-center gap-1.5 rounded-full border border-border bg-white px-2 text-[10px] font-black text-ink/58 hover:border-emerald-200"
+                  onClick={() => advanceDiscoveryCard('skip')}
                 >
-                  换一条
-                </Button>
-                <Button
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  {isEn ? 'Another one' : '换一个'}
+                </button>
+                <button
                   type="button"
-                  className={`h-8 min-w-0 rounded-full px-2 text-[11px] font-black ${
+                  className={`flex min-h-10 min-w-0 items-center justify-center gap-1.5 rounded-full px-2 text-[10px] font-black ${
                     wishlistFishIds.has(discoveryFish.id)
-                      ? 'bg-rose-50 text-rose-500 hover:bg-rose-100'
-                      : 'bg-rose-500 text-white hover:bg-rose-600'
+                      ? 'border border-rose-100 bg-rose-50 text-rose-600'
+                      : 'border border-rose-200 bg-white text-rose-600 hover:bg-rose-50'
                   }`}
-                  onClick={(event) => {
-                    event.stopPropagation();
+                  onClick={() => {
                     if (wishlistFishIds.has(discoveryFish.id)) {
                       setDiscoveryMessage(`${discoveryFish.name} 已在种草图鉴中。`);
                       return;
@@ -4683,11 +4700,12 @@ export default function AquariumManager() {
                     advanceDiscoveryCard('interest');
                   }}
                 >
-                  {wishlistFishIds.has(discoveryFish.id) ? '已种草' : '感兴趣'}
-                </Button>
+                  <Heart className={`h-3.5 w-3.5 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
+                  {wishlistFishIds.has(discoveryFish.id) ? (isEn ? 'Saved' : '已收藏') : (isEn ? 'Save species' : '收藏物种')}
+                </button>
               </div>
             </div>
-          </div>
+          </article>
         ) : (
           <div className="rounded-[16px] border border-rose-100 bg-[#FBFAF6] p-4 text-center">
             <Heart className="mx-auto mb-2 h-7 w-7 fill-rose-400 text-rose-400" />
@@ -4881,72 +4899,6 @@ export default function AquariumManager() {
               添加第一种生物
             </button>
           )}
-        </div>
-      </section>
-        )}
-        basics={(
-      <section className="aquarium-basics min-w-0 rounded-[20px] border border-white/80 bg-white/68 p-4 shadow-sm" aria-labelledby="aquarium-basics-title">
-        <div className="flex min-w-0 items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 id="aquarium-basics-title" className="text-[14px] font-black text-ink">{t('aquarium.tankBasics')}</h2>
-            <p className="mt-0.5 text-[10px] font-bold leading-4 text-ink/45">{t('aquarium.tankBasicsHint')}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => openAquariumSettings()}
-            className="shrink-0 rounded-full bg-emerald-50 px-3 py-2 text-[10px] font-black text-emerald-800 transition-colors hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-          >
-            {t('aquarium.editBasics')}
-          </button>
-        </div>
-        <div className="mt-3 divide-y divide-ink/6 overflow-hidden rounded-[15px] bg-[#F8F7F2]">
-          {[
-            {
-              label: t('aquarium.tankBasicsWater'),
-              value: `${tankVolumeLiters || '—'}L · ${activeAquarium.waterType === 'Saltwater' ? t('aquarium.saltwater') : t('aquarium.freshwater')}`,
-              meta: t('aquarium.userEntered'),
-              icon: <Droplets className="h-4 w-4" />,
-            },
-            {
-              label: t('aquarium.tankBasicsEquipment'),
-              value: activeAquarium.equipment?.filter && activeAquarium.equipment.filter !== '无'
-                ? t('aquarium.filterReady')
-                : t('aquarium.filterMissing'),
-              meta: activeAquarium.equipment?.heater
-                ? t('aquarium.heaterReady')
-                : activeAquarium.equipment?.oxygen
-                  ? t('aquarium.aerationReady')
-                  : t('aquarium.optionalEquipment'),
-              icon: <Settings className="h-4 w-4" />,
-            },
-            {
-              label: t('aquarium.tankBasicsLivestock'),
-              value: hasStockedAnimals
-                ? t('aquarium.tankContentsCount', { species: stockedSpeciesCount, quantity: totalStockedQuantity })
-                : t('aquarium.noLivestock'),
-              meta: t('aquarium.userEntered'),
-              icon: <BookOpen className="h-4 w-4" />,
-            },
-            {
-              label: t('aquarium.tankBasicsObservation'),
-              value: todayDailyCheckRecord
-                ? dailyActionViewModel.level === 'urgent' || dailyActionViewModel.level === 'needs_attention'
-                  ? t('aquarium.needsAttention')
-                  : t('aquarium.checkedToday')
-                : t('aquarium.notCheckedToday'),
-              meta: todayDailyCheckRecord ? t('aquarium.checkedToday') : t('aquarium.unknown'),
-              icon: <Activity className="h-4 w-4" />,
-            },
-          ].map(item => (
-            <div key={item.label} className="grid min-w-0 grid-cols-[34px_minmax(0,1fr)_minmax(0,auto)] items-center gap-2 p-2.5">
-              <span className="flex h-[34px] w-[34px] items-center justify-center rounded-[12px] bg-white text-emerald-700 shadow-sm">{item.icon}</span>
-              <span className="min-w-0">
-                <span className="block break-words text-[10px] font-black leading-4 text-ink">{item.label}</span>
-                <span className="mt-0.5 block break-words text-[9px] font-bold leading-4 text-ink/42">{item.meta}</span>
-              </span>
-              <span className="min-w-0 max-w-[16ch] break-words text-right text-[10px] font-black leading-4 text-ink">{item.value}</span>
-            </div>
-          ))}
         </div>
       </section>
         )}
