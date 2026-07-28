@@ -2598,7 +2598,10 @@ export default function AquariumManager() {
   useEffect(() => {
     const params = new URLSearchParams(routeLocation.search);
     const action = params.get('action');
-    if (!isAquariumTaskAction(action) || action === 'add-species') return;
+    if (!isAquariumTaskAction(action) || action === 'add-species') {
+      if (action !== 'add-species') handledOnboardingActionRef.current = '';
+      return;
+    }
     const requestKey = action === 'create'
       ? `create:${params.get('source') ?? ''}`
       : `${activeAquarium?.id ?? 'none'}:${action}:${params.get('source') ?? ''}`;

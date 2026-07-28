@@ -65,7 +65,16 @@ try {
 
   for (const [path, expected] of taskCases) {
     const { page, errors } = await open(path);
-    await page.getByText(expected, { exact: true }).last().waitFor();
+    const target = page.getByText(expected, { exact: true }).last();
+    await target.waitFor();
+    if (path.includes('livestock')) {
+      const dialog = page.getByRole('dialog').filter({ hasText: expected });
+      await dialog.waitFor();
+      await page.keyboard.press('Escape');
+      await dialog.waitFor({ state: 'hidden' });
+      await page.goto(`${baseUrl}${path}`, { waitUntil: 'domcontentloaded' });
+      await page.getByRole('dialog').filter({ hasText: expected }).waitFor();
+    }
     assert.equal(errors.length, 0, `${path} page errors: ${errors.join('; ')}`);
     await page.close();
   }
@@ -86,7 +95,7 @@ try {
   }
 
   {
-    const { page, errors } = await open('/care?topic=guide_water_deteriorate');
+    const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
     await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
     const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
     const normalOptions = panel.getByRole('button', { name: '没有', exact: true });
@@ -101,6 +110,7 @@ try {
     await panel.locator('[data-care-assessment-next]').waitFor();
     await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).click();
     await page.getByText('设置养护提醒', { exact: true }).waitFor();
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, 'mobile care assessment overflowed horizontally');
     assert.equal(errors.length, 0, `care assessment page errors: ${errors.join('; ')}`);
     await page.close();
   }
