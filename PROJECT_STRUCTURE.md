@@ -29,7 +29,9 @@
 - `src/pages/Aquarium.tsx`：我的鱼缸。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
 - `src/pages/Identify.tsx`：拍照识别候选、手动兜底、物种确认、动态追问与可视化风险结果。
-- `src/pages/Search.tsx`：物种与养护指南的双语统一搜索，结果直达具体资料。
+- `src/pages/Search.tsx`：物种与养护指南的双语统一搜索，候选先确认具体物种再打开资料。
+- `src/components/search/SearchAutocomplete.tsx`：共享可访问搜索联想、键盘选择和已选物种摘要。
+- `src/services/search/search-suggestions.service.ts`：确定性物种优先排序、养护匹配与受控相关词。
 - `src/pages/Settings.tsx`：正式设置路由，替代侧栏设置弹层。
 - `src/services/feedback/feedback.service.ts`：设置页意见反馈的唯一前端 API 入口，支持游客与可选登录会话。
 - `src/pages/Welcome.tsx`：首次使用的“先建缸 / 先看物种”目标选择页。

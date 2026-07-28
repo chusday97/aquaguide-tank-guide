@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project_id": "PRJ-aquaguide",
-  "updated_at": "2026-07-27T19:05:00+08:00",
+  "updated_at": "2026-07-28T18:35:00+08:00",
   "evidence_items": [
     {"id":"EVD-20260715-001","type":"commit","locator":"917b80a","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"今日行动、水族册独立地址与生命纪念回流"},
     {"id":"EVD-20260715-002","type":"test","locator":"npm run lint; npm run build; 1280/390 browser regression","date":"2026-07-15","version":"917b80a","accessible":true,"sensitive":false,"notes":"类型、构建和直达行为验证"},
@@ -32,7 +32,9 @@
     {"id":"EVD-20260727-027","type":"test","locator":"lint; check:api; build; compatibility 14; species-detail-ui including real predation conflict; aquarium-home-c; core-ui; responsive-routes 7x17; production preview 127.0.0.1:4173","date":"2026-07-27","version":"b3c34b0","accessible":true,"sensitive":false,"notes":"六状态详情、真实捕食阻断、手机首屏唯一CTA、双深链接、119场景路由和稳定生产预览证据"},
     {"id":"EVD-20260727-028","type":"review","locator":"independent Critic final PASS and independent Evaluator two-round final PASS in current Codex task","date":"2026-07-27","version":"b3c34b0","accessible":false,"sensitive":false,"notes":"关闭英文指标、来源CTA、owned错跳、pH误导、重复CTA、手机首屏CTA与不建议状态误导文案；最终PASS"},
     {"id":"EVD-20260728-029","type":"code","locator":"src/App.tsx; src/components/onboarding/OnboardingTaskCard.tsx; src/pages/Aquarium.tsx; src/index.css","date":"2026-07-28","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"最终 C 首页的侧栏归属、观察网格、并排任务区和新建鱼缸动作闭环"},
-    {"id":"EVD-20260728-030","type":"test","locator":"npm run lint; npm run build; PREVIEW_URL=http://127.0.0.1:4176 node scripts/verify-aquarium-home-c.mjs","date":"2026-07-28","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"覆盖1440/1000/600px桌面、320–430px真手机、完整物种弹窗、移出失败重试和风险向导；截图因本机ENOSPC未生成"}
+    {"id":"EVD-20260728-030","type":"test","locator":"npm run lint; npm run build; PREVIEW_URL=http://127.0.0.1:4176 node scripts/verify-aquarium-home-c.mjs","date":"2026-07-28","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"覆盖1440/1000/600px桌面、320–430px真手机、完整物种弹窗、移出失败重试和风险向导；截图因本机ENOSPC未生成"},
+    {"id":"EVD-20260728-031","type":"commit","locator":"c740dc7; 5343d80; a1bca37","date":"2026-07-28","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"共享搜索索引、五入口联想、两步确认、图鉴原位筛选及侧栏异步状态反馈"},
+    {"id":"EVD-20260728-032","type":"test","locator":"search suggestion ranking script; lint; build; SEARCH_UI_GROUP=atlas|mobile|care|entries|identify","date":"2026-07-28","version":"a1bca37","accessible":true,"sensitive":false,"notes":"物种排序、键盘确认、390px英文、侧栏、养护、识别降级和非模态筛选浏览器证据"}
   ],
   "claims": [
     {"id":"CLM-20260715-001","text":"今日行动只展示一个确定性优先任务，水族册四模块可通过独立地址直达。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260715-001","EVD-20260715-002"],"contradicting_evidence_ids":[],"scope":"本地分支当前版本","career_material_allowed":true,"reviewed_at":"2026-07-15T14:20:00+08:00"},
@@ -46,6 +48,7 @@
     {"id":"CLM-20260722-009","text":"AquaGuide 鱼缸首页已按观察、管理、学习与养护重组，并将专业水质检测下沉为可选信息；独立审查推动补齐窄屏控件边界、命中与DOM顺序测试。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260722-020","EVD-20260722-021","EVD-20260722-022"],"contradicting_evidence_ids":[],"scope":"本地代码、构建及首轮浏览器证据；最后两处小改后的浏览器补跑仍缺失","career_material_allowed":true,"reviewed_at":"2026-07-22T22:40:00+08:00"},
     {"id":"CLM-20260726-010","text":"AquaGuide 首页 C 已形成从今日行动、缸内物种和具体风险步骤到侧栏切缸、重命名与反馈的本地闭环；数量移出在失败重试中保持稳定操作号并由原子 RPC 防重复扣减。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260726-023","EVD-20260726-024","EVD-20260726-025"],"contradicting_evidence_ids":[],"scope":"本地预览、静态数据库契约与浏览器失败恢复；不代表真实 Supabase 生产验证","career_material_allowed":true,"reviewed_at":"2026-07-26T23:58:00+08:00"},
     {"id":"CLM-20260727-011","text":"AquaGuide 的正式用户页面已恢复双语运行稳定性，窄桌面和真实手机使用独立响应式表面；物种详情在六种状态下以稳定指标、图像结论和唯一可见行动完成来源级闭环。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260727-026","EVD-20260727-027","EVD-20260727-028"],"contradicting_evidence_ids":[],"scope":"本地分支与稳定生产预览；不代表全部英文正文已人工审核或真实用户理解度","career_material_allowed":true,"reviewed_at":"2026-07-27T19:05:00+08:00"},
-    {"id":"CLM-20260728-012","text":"鱼缸首页最终 C 方案已落实为侧栏紧凑引导、观察双栏、管理/学习并排和跨区进阶检测，并通过桌面与真实手机浏览器关系断言。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260728-029","EVD-20260728-030"],"contradicting_evidence_ids":[],"scope":"本地分支与127.0.0.1:4176生产预览；不包含因ENOSPC失败的完整截图","career_material_allowed":true,"reviewed_at":"2026-07-28T16:00:00+08:00"}
+    {"id":"CLM-20260728-012","text":"鱼缸首页最终 C 方案已落实为侧栏紧凑引导、观察双栏、管理/学习并排和跨区进阶检测，并通过桌面与真实手机浏览器关系断言。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260728-029","EVD-20260728-030"],"contradicting_evidence_ids":[],"scope":"本地分支与127.0.0.1:4176生产预览；不包含因ENOSPC失败的完整截图","career_material_allowed":true,"reviewed_at":"2026-07-28T16:00:00+08:00"},
+    {"id":"CLM-20260728-013","text":"AquaGuide 的全局、侧栏、图鉴和识别搜索已先确认具体物种再打开详情，养护与相关词不抢占物种；图鉴筛选保持页面上下文原位完成。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260728-031","EVD-20260728-032"],"contradicting_evidence_ids":[],"scope":"本地分支与127.0.0.1:4178生产预览；不包含拼音检索或真实用户理解度数据","career_material_allowed":true,"reviewed_at":"2026-07-28T18:35:00+08:00"}
   ]
 }
