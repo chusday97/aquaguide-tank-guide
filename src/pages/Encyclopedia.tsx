@@ -77,6 +77,7 @@ import {
   getSearchSuggestions,
   type SearchSuggestion,
 } from '../services/search/search-suggestions.service';
+import { taskRoutes } from '../services/navigation/task-routes';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 
@@ -2417,11 +2418,11 @@ export default function Encyclopedia() {
         onGoCalculator={() => { closeAtlasDetail(false); setViewMode('compatibility'); }}
         onViewInTank={() => {
           closeAtlasDetail(false);
-          navigateToView('/aquarium', '?action=livestock');
+          navigateToRoute(taskRoutes.aquarium.livestock);
         }}
         onOpenTankSettings={(panel) => {
           closeAtlasDetail(false);
-          navigateToView('/aquarium', `#settings-${panel}`);
+          navigateToRoute(taskRoutes.aquarium.settings(panel));
         }}
         onRecordDeath={(fish, input) => {
           recordSpeciesMemorial({ fishId: fish.id, ...input });

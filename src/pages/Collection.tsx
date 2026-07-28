@@ -32,6 +32,7 @@ import { getCollectionSnapshot, subscribeToCollection } from '../services/collec
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { getCareFavorites, getSpeciesFavoriteIds, setSpeciesFavoriteIds, toggleCareFavorite } from '../services/favorites/favorites.service';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
+import { taskRoutes } from '../services/navigation/task-routes';
 import type { Aquarium, Fish } from '../types';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { CareArticleDetail } from './CareEncyclopedia';
@@ -440,8 +441,8 @@ export default function Collection({ module }: { module: CollectionModule }) {
         finalFocusElement={detailFinalFocusRef.current}
         onOpenChange={(open) => { if (!open) { setSelectedFish(null); clearDeepLinkItem(); restoreCard(); } }}
         onSelectSpecies={setSelectedFish}
-        onAddToTank={(fish) => navigate(`/aquarium?action=add-species&species=${encodeURIComponent(fish.id)}`)}
-        onAddToCalculator={(fish) => { setCompatibilitySelection([fish.id]); navigate('/encyclopedia#compatibility'); }}
+        onAddToTank={(fish) => navigate(taskRoutes.aquarium.addSpecies(fish.id))}
+        onAddToCalculator={(fish) => { setCompatibilitySelection([fish.id]); navigate(taskRoutes.encyclopedia.compatibility); }}
         onToggleWishlist={(fishId) => {
           const fish = fishData.find(item => item.id === fishId);
           if (fish) setPendingFishRemoval(fish);
@@ -449,10 +450,10 @@ export default function Collection({ module }: { module: CollectionModule }) {
         onGoCalculator={() => {
           if (!selectedFish) return;
           setCompatibilitySelection([selectedFish.id]);
-          navigate('/encyclopedia#compatibility');
+          navigate(taskRoutes.encyclopedia.compatibility);
         }}
-        onViewInTank={() => navigate('/aquarium?action=livestock')}
-        onOpenTankSettings={(panel) => navigate(currentAquarium ? `/aquarium#settings-${panel}` : '/aquarium?action=create')}
+        onViewInTank={() => navigate(taskRoutes.aquarium.livestock)}
+        onOpenTankSettings={(panel) => navigate(currentAquarium ? taskRoutes.aquarium.settings(panel) : '/aquarium?action=create')}
       />
 
       <Dialog open={Boolean(selectedTopic)} onOpenChange={(open) => { if (!open) { setSelectedTopic(null); clearDeepLinkItem(); restoreCard(); } }}>

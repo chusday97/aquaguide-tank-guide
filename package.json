@@ -35,6 +35,8 @@
     "test:memorial": "tsx scripts/test-memorial-service.ts",
     "test:state-services": "tsx scripts/test-business-state-services.ts",
     "test:product-actions": "tsx scripts/audit-product-actions.ts",
+    "test:task-routes": "tsx scripts/test-task-routes.ts",
+    "test:task-actions-ui": "node scripts/verify-task-action-closure.mjs",
     "test:responsive-images": "python3 scripts/test_responsive_images.py",
     "test:three-step-paths": "tsx scripts/test-three-step-paths.ts",
     "test:three-step-ui": "node scripts/verify-three-step-experience.mjs",

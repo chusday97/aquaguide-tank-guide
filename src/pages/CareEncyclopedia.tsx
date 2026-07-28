@@ -1850,7 +1850,8 @@ export default function CareEncyclopedia() {
                 <button
                   key={item.topic.id}
                   type="button"
-                  aria-label={`${t('care.openGuide')} ${index + 1}`}
+                  aria-label={isEn ? `Show recommendation ${index + 1}` : `切换到推荐 ${index + 1}`}
+                  aria-current={activeBannerIndex % Math.max(1, careRecommendations.length) === index ? 'true' : undefined}
                   onClick={() => goToBanner(index)}
                   className="flex h-5 w-7 items-center justify-center rounded-full"
                 >
@@ -2349,7 +2350,13 @@ function CareArticleCard({
   );
 }
 
-function StepDiagnosisPanel({ topic, onReturnToGuide }: { topic: CareTopic; onReturnToGuide: () => void }) {
+function StepDiagnosisPanel({
+  topic,
+  onScheduleFollowUp,
+}: {
+  topic: CareTopic;
+  onScheduleFollowUp: () => void;
+}) {
   const { t } = useTranslation();
   const isEn = i18n.language === 'en';
   const appState = useMemo(() => loadAppStateFromStorage(), []);
@@ -2363,6 +2370,8 @@ function StepDiagnosisPanel({ topic, onReturnToGuide }: { topic: CareTopic; onRe
     targetAquariumId: defaultAquariumId,
     result: null,
   }));
+  const [isResultActionOpen, setIsResultActionOpen] = useState(false);
+  const resultActionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setDiagnosisState({
@@ -2373,6 +2382,7 @@ function StepDiagnosisPanel({ topic, onReturnToGuide }: { topic: CareTopic; onRe
       targetAquariumId: defaultAquariumId,
       result: null,
     });
+    setIsResultActionOpen(false);
   }, [defaultAquariumId, topic.id]);
 
   const targetAquarium = aquariums.find(item => item.id === diagnosisState.targetAquariumId) || aquariums[0] || null;
@@ -2410,12 +2420,19 @@ function StepDiagnosisPanel({ topic, onReturnToGuide }: { topic: CareTopic; onRe
       answers: Object.fromEntries(Object.entries(diagnosisState.answers).map(([key, value]) => [key, value ? labelMap[value] : ''])),
       aquariumName: targetAquarium?.name || (isEn ? 'Active Tank' : '当前鱼缸'),
       livestock: currentLivestock.map(item => item.fish),
-      primaryActionLabel: isEn ? 'Back to Guide' : '返回操作指引',
+      primaryActionLabel: result.riskLevel === 'high'
+        ? (isEn ? 'View Emergency Steps' : '查看紧急处理步骤')
+        : result.riskLevel === 'medium'
+          ? (isEn ? 'View Action Steps' : '查看处理步骤')
+          : result.riskLevel === 'unknown'
+            ? (isEn ? 'View Missing Checks' : '查看需要补充的检查')
+            : (isEn ? 'View Observation Checklist' : '查看观察清单'),
       primaryActionType: 'section',
     });
   }, [currentLivestock, diagnosisState.answers, diagnosisState.result, targetAquarium?.name, isEn]);
 
   const updateAnswer = (key: keyof StepDiagnosisAnswers, value: StepDiagnosisAnswerValue) => {
+    setIsResultActionOpen(false);
     setDiagnosisState(prev => ({
       ...prev,
       answers: { ...prev.answers, [key]: value },
@@ -2431,11 +2448,24 @@ function StepDiagnosisPanel({ topic, onReturnToGuide }: { topic: CareTopic; onRe
       answers: diagnosisState.answers,
       issueType: diagnosisState.issueType,
     });
+    setIsResultActionOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 2, result }));
   };
 
   const resetDiagnosis = () => {
+    setIsResultActionOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 1, questionIndex: 0, answers: {}, result: null }));
+  };
+
+  const openResultActions = () => {
+    setIsResultActionOpen(true);
+    window.requestAnimationFrame(() => {
+      resultActionRef.current?.focus({ preventScroll: true });
+      resultActionRef.current?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'nearest',
+      });
+    });
   };
 
   return (
@@ -2554,7 +2584,46 @@ function StepDiagnosisPanel({ topic, onReturnToGuide }: { topic: CareTopic; onRe
 
       {isResultStep && diagnosisState.result && (
         <div className="mt-3 grid gap-3">
-          {visualResultModel && <VisualResultCard model={visualResultModel} onPrimaryAction={onReturnToGuide} />}
+          {visualResultModel && <VisualResultCard model={visualResultModel} onPrimaryAction={openResultActions} />}
+          {isResultActionOpen && (
+            <div
+              ref={resultActionRef}
+              tabIndex={-1}
+              data-care-assessment-next
+              className="rounded-[20px] border border-emerald-200 bg-white p-4 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            >
+              <div className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-700">
+                {isEn ? 'Do this now' : '现在按顺序做'}
+              </div>
+              <div className="mt-3 grid gap-2">
+                {diagnosisState.result.todayActions.map((action, index) => (
+                  <div key={action} className="grid grid-cols-[26px_1fr] gap-2 rounded-[15px] bg-emerald-50/65 p-3">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-black text-white">{index + 1}</span>
+                    <p className="text-[12px] font-bold leading-5 text-ink">{action}</p>
+                  </div>
+                ))}
+              </div>
+              {diagnosisState.result.avoidActions.length > 0 && (
+                <details className="mt-3 rounded-[15px] bg-amber-50 px-3 py-2.5">
+                  <summary className="cursor-pointer text-[11px] font-black text-amber-800">
+                    {isEn ? 'Avoid these actions' : '暂时不要做这些'}
+                  </summary>
+                  <ul className="mt-2 grid gap-1.5 text-[11px] font-semibold leading-5 text-amber-950/72">
+                    {diagnosisState.result.avoidActions.map(item => <li key={item}>· {item}</li>)}
+                  </ul>
+                </details>
+              )}
+              <div className="mt-3 rounded-[15px] bg-sky-50 px-3 py-2.5">
+                <div className="text-[11px] font-black text-sky-800">{isEn ? 'Afterward' : '做完以后'}</div>
+                <p className="mt-1 text-[11px] font-semibold leading-5 text-sky-950/68">
+                  {diagnosisState.result.observeItems[0] || (isEn ? 'Keep the environment stable and check the same symptom again.' : '保持环境稳定，再复查同一异常是否缓解。')}
+                </p>
+              </div>
+              <Button type="button" onClick={onScheduleFollowUp} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
+                {isEn ? 'Schedule a Follow-up Check' : '设置一次复查提醒'}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </section>
@@ -2644,8 +2713,10 @@ export function CareArticleDetail({
       : meta.guideType === 'diagnosis'
         ? (isEn ? 'Start Self-Check' : '开始问题自查')
         : meta.guideType === 'knowledge'
-          ? favorite ? (isEn ? 'Saved Guide' : '已收藏这篇指南') : (isEn ? 'Save Guide' : '收藏这篇指南')
+          ? favorite ? (isEn ? 'View in Collection' : '去水族册查看') : (isEn ? 'Save Guide' : '收藏这篇指南')
           : (isEn ? 'Set Reminder' : '设置提醒');
+  const isPrimaryDisabled = (meta.guideType === 'procedure' && isOperationCompleted)
+    || (meta.guideType === 'careChecklist' && isChecklistSaved);
   const secondaryLabel: string | null = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
       ? (isEn ? 'Set 3-Day Observe Reminder' : '设置 3 天观察提醒')
@@ -2830,12 +2901,36 @@ export function CareArticleDetail({
       return;
     }
     if (meta.guideType === 'knowledge') {
-      if (!favorite) onToggleFavorite(source);
-      setCtaFeedback(favorite ? (isEn ? 'Saved to library' : '这篇指南已收录到水族册') : (isEn ? 'Saved to library' : '已收录到水族册'));
+      if (favorite) {
+        onOpenCollection?.();
+        return;
+      }
+      onToggleFavorite(source);
+      setCtaFeedback(isEn ? 'Saved to library' : '已收录到水族册');
       return;
     }
     openReminderSheet('general');
   };
+
+  const detailLead = meta.guideType === 'diagnosis'
+    ? {
+      label: isEn ? 'Check first, then act' : '先判断，再处理',
+      text: isEn ? 'Answer 2–4 observations. The result will lead directly to the actions to take.' : '回答 2–4 个观察项，结果会直接带你进入对应处理步骤。',
+    }
+    : meta.guideType === 'procedure'
+      ? {
+        label: isEn ? 'Follow the illustrated steps' : '跟着图示操作',
+        text: careGuide.summary,
+      }
+      : meta.guideType === 'careChecklist'
+        ? {
+          label: isEn ? 'Care by stage' : '按阶段照料',
+          text: isEn ? 'Complete the checklist in order, then schedule the next observation.' : '按顺序完成护理项，再安排下一次观察。',
+        }
+        : {
+          label: isEn ? 'Key takeaway' : '先看结论',
+          text: careGuide.summary,
+        };
 
   return (
     <div className="flex max-h-[88vh] flex-col bg-white">
@@ -2869,11 +2964,8 @@ export function CareArticleDetail({
                 </button>
               </div>
               <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
-                <div className="text-[12px] font-black text-emerald-800">{t('aquarium.keyConclusion')}</div>
-                <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{careGuide.summary}</p>
-                <p className="mt-2 text-[12px] font-medium leading-relaxed text-emerald-900/62">
-                  {isEn ? 'Suitable for: ' : '适用场景：'}{careGuide.suitableFor}
-                </p>
+                <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
+                <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
               </section>
               {meta.guideType === 'procedure' && procedureSteps.length > 0 && (
                 <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm">
@@ -2898,46 +2990,30 @@ export function CareArticleDetail({
             isDiagnosisStarted ? (
               <StepDiagnosisPanel
                 topic={topic}
-                onReturnToGuide={() => scrollRef.current?.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}
+                onScheduleFollowUp={() => openReminderSheet('general')}
               />
             ) : (
               <section className="mt-4 rounded-[20px] border border-emerald-100 bg-[#F8FCF8] p-4">
                 <div className="text-[15px] font-black text-ink">{isEn ? 'Prepare for Self-Check' : '准备开始问题自查'}</div>
                 <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/55">
-                  {isEn ? `System will ask 2–4 questions based on "${getDisplayTitle(topic)}" before providing action recommendations.` : `系统会根据“${getDisplayTitle(topic)}”追问 2–4 个相关问题，再给出处理建议。`}
+                  {isEn ? 'Choose what you observed and answer the visible questions. No professional water-test data is required.' : '选择你观察到的现象并回答页面问题，不要求先掌握专业水质数据。'}
                 </p>
               </section>
             )
           ) : meta.guideType === 'procedure' ? (
             <section className="mt-4 rounded-[22px] border border-emerald-100 bg-[#F8FCF8] p-3 shadow-sm">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <div className="text-[16px] font-black text-ink">{isEn ? 'Post-Operation Notes' : '操作后注意'}</div>
-                  <div className="mt-0.5 text-[11px] font-bold text-ink/45">{isEn ? 'After operation, monitor the tank and maintain stable conditions.' : '完成操作后，继续观察状态并保持环境平稳。'}</div>
-                </div>
-                <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${urgencyTagClassMap[meta.urgencyTag]}`}>
-                  {getUrgencyTagLabel(meta.urgencyTag, isEn)}
-                </span>
-              </div>
-
-              {procedureReminders.length > 0 && (
-                <div className="mt-3 rounded-[16px] bg-yellow-50 px-3 py-3">
-                  <div className="text-[12px] font-black text-yellow-800">{isEn ? 'Operation Reminders' : '操作提醒'}</div>
-                  <div className="mt-2 grid gap-2">
-                    {procedureReminders.slice(0, 3).map(item => (
-                      <div key={item.title} className="rounded-[13px] bg-white/72 px-3 py-2">
-                        <div className="text-[12px] font-black text-yellow-950">{item.title}</div>
-                        <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-yellow-900/72">{item.reason}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="mt-3 rounded-[16px] border border-sky-100 bg-sky-50/65 px-3 py-3">
-                <div className="text-[12px] font-black text-sky-800">{isEn ? 'Observe After Release' : '入缸后观察'}</div>
+              <div className="rounded-[16px] border border-sky-100 bg-sky-50/65 px-3 py-3">
+                <div className="text-[12px] font-black text-sky-800">{isEn ? 'After you finish' : '做完以后看什么'}</div>
                 <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/62">{getProcedureObservation(topic)}</p>
               </div>
+              {procedureReminders[0] && (
+                <div className="mt-2 rounded-[16px] bg-yellow-50 px-3 py-3">
+                  <div className="text-[12px] font-black text-yellow-800">{isEn ? 'One thing to avoid' : '最重要的避坑提醒'}</div>
+                  <p className="mt-1 text-[11px] font-medium leading-relaxed text-yellow-900/72">
+                    <strong>{procedureReminders[0].title}{isEn ? ': ' : '：'}</strong>{procedureReminders[0].reason}
+                  </p>
+                </div>
+              )}
             </section>
           ) : (
             <section className="mt-4 rounded-[22px] border border-emerald-100 bg-[#F8FCF8] p-3 shadow-sm">
@@ -3039,11 +3115,13 @@ export function CareArticleDetail({
         </div>
       </div>
 
+      {!(meta.guideType === 'diagnosis' && isDiagnosisStarted) && (
       <div className="modalFooter shrink-0 border-t border-border bg-white/95 shadow-[0_-12px_30px_rgba(15,23,42,0.08)]">
         <div className="grid gap-2 md:mx-auto md:max-w-[700px] md:grid-cols-[auto_auto] md:justify-end">
           <Button
             type="button"
             onClick={(event) => handlePrimaryCta(event.currentTarget)}
+            disabled={isPrimaryDisabled}
             className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800 md:w-fit md:min-w-[180px] md:max-w-[240px]"
           >
             {primaryCtaLabel}
@@ -3075,6 +3153,7 @@ export function CareArticleDetail({
           )}
         </div>
       </div>
+      )}
 
       {reminderSheet && (
         <div className="fixed inset-0 z-[1200] flex items-end justify-center bg-black/30 px-4 pb-4" onClick={() => setReminderSheet(null)}>

@@ -93,6 +93,7 @@ import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { findDailyPatrolRecord, persistDiagnosisRecords, upsertDiagnosisRecord } from '../services/diagnosis/diagnosis-records.service';
+import { isAquariumTaskAction, taskRoutes } from '../services/navigation/task-routes';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode, subscribeToRepositoryMode } from '../services/repository/repository-provider';
@@ -1578,6 +1579,16 @@ export default function AquariumManager() {
     const requestKey = `${activeAquarium.id}:${speciesId}`;
     if (handledAddSpeciesRequestRef.current === requestKey) return;
     handledAddSpeciesRequestRef.current = requestKey;
+    if (!speciesId) {
+      setAddFishSuccess(null);
+      setAddFishDatePicker(null);
+      setAddFishCompatibilityReview(null);
+      setFishSearchTerm('');
+      setSelectedAddFishItems([]);
+      setIsAddFishOpen(true);
+      routeNavigate('/aquarium', { replace: true });
+      return;
+    }
     const fish = fishData.find(item => item.id === speciesId);
     if (!fish) {
       showToast(i18n.language === 'en' ? 'No corresponding species found for this memorial' : '没有找到这条生命纪念对应的物种', 'error');
@@ -2587,7 +2598,7 @@ export default function AquariumManager() {
   useEffect(() => {
     const params = new URLSearchParams(routeLocation.search);
     const action = params.get('action');
-    if (!action || !['create', 'setup', 'daily-check'].includes(action)) return;
+    if (!isAquariumTaskAction(action) || action === 'add-species') return;
     const requestKey = action === 'create'
       ? `create:${params.get('source') ?? ''}`
       : `${activeAquarium?.id ?? 'none'}:${action}:${params.get('source') ?? ''}`;
@@ -2603,9 +2614,23 @@ export default function AquariumManager() {
     if (action === 'daily-check') {
       setIsDiagnosisOpen(true);
       handleStartDiagnosisQuiz('巡检');
+      routeNavigate('/aquarium', { replace: true });
+      return;
+    }
+    if (action === 'livestock') {
+      setIsTankArchiveExpanded(true);
+      routeNavigate('/aquarium', { replace: true });
+      return;
+    }
+    if (action === 'water-change') {
+      setSelectedWaterChangeDate(format(new Date(), 'yyyy-MM-dd'));
+      setWaterChangeFeedback('');
+      setIsCalendarOpen(true);
+      routeNavigate('/aquarium', { replace: true });
       return;
     }
     openAquariumSettings('size');
+    routeNavigate('/aquarium', { replace: true });
   }, [activeAquarium?.id, routeLocation.search]);
 
   const handleDiagnosisAnswer = (questionId: string, answer: string) => {
@@ -4625,25 +4650,21 @@ export default function AquariumManager() {
         </div>
         {discoveryFish ? (
           <article className="aquarium-discovery-card grid min-w-0 overflow-hidden rounded-[18px] border border-white/80 bg-[#FBFAF6] shadow-sm">
-            <button
-              type="button"
-              onClick={() => setSelectedDiscoveryFish(discoveryFish)}
-              className={`aquarium-discovery-visual group relative flex min-h-[210px] min-w-0 items-center justify-center overflow-hidden p-4 text-left ${getSpeciesImageSurfaceClass(discoveryFish)}`}
-              aria-label={isEn ? `View ${discoveryFish.name} details` : `查看${discoveryFish.name}详情`}
+            <div
+              className={`aquarium-discovery-visual relative flex min-h-[210px] min-w-0 items-center justify-center overflow-hidden p-4 ${getSpeciesImageSurfaceClass(discoveryFish)}`}
             >
               <ResilientImage
                 src={getSpeciesVisualSources(discoveryFish).thumbnail}
                 srcSet={`${getSpeciesVisualSources(discoveryFish).thumbnail} 256w, ${getSpeciesVisualSources(discoveryFish).detail} 768w`}
                 sizes="(max-width: 430px) 88vw, 360px"
                 alt={discoveryFish.name}
-                className={`h-full max-h-[250px] w-full object-contain p-2 transition-transform duration-200 group-hover:scale-[1.03] ${getSpeciesImageClass(discoveryFish)}`}
+                className={`h-full max-h-[250px] w-full object-contain p-2 ${getSpeciesImageClass(discoveryFish)}`}
                 referrerPolicy="no-referrer"
                 loading="eager"
                 decoding="async"
                 onLoad={() => setLoadedDiscoveryImageSrc(discoveryImageSrc)}
               />
-              <span className="absolute bottom-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-[9px] font-black text-white backdrop-blur-sm">{isEn ? 'View details' : '查看详情'}</span>
-            </button>
+            </div>
             <div className="flex min-w-0 flex-col p-3.5">
               <div className="flex min-w-0 items-start justify-between gap-2">
                 <div className="min-w-0">
@@ -4694,14 +4715,14 @@ export default function AquariumManager() {
                   }`}
                   onClick={() => {
                     if (wishlistFishIds.has(discoveryFish.id)) {
-                      setDiscoveryMessage(`${discoveryFish.name} 已在种草图鉴中。`);
+                      navigateToRoute('/collection/wishlist');
                       return;
                     }
                     advanceDiscoveryCard('interest');
                   }}
                 >
                   <Heart className={`h-3.5 w-3.5 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
-                  {wishlistFishIds.has(discoveryFish.id) ? (isEn ? 'Saved' : '已收藏') : (isEn ? 'Save species' : '收藏物种')}
+                  {wishlistFishIds.has(discoveryFish.id) ? (isEn ? 'View Collection' : '去水族册') : (isEn ? 'Save species' : '收藏物种')}
                 </button>
               </div>
             </div>
@@ -7430,7 +7451,7 @@ export default function AquariumManager() {
         onToggleWishlist={(fishId) => toggleWishlist(fishId)}
         onGoCalculator={() => {
           closeAquariumSpeciesDetail(false);
-          navigateToView('/encyclopedia', '#compatibility');
+          navigateToRoute(taskRoutes.encyclopedia.compatibility);
         }}
         onOpenTankSettings={(panel) => {
           closeAquariumSpeciesDetail(false);

@@ -35,6 +35,7 @@ import {
   getSearchSuggestions,
   type SearchSuggestion,
 } from '../services/search/search-suggestions.service';
+import { taskRoutes } from '../services/navigation/task-routes';
 
 type Stage = 'upload' | 'candidates' | 'describe' | 'question' | 'result';
 
@@ -632,7 +633,7 @@ export default function Identify() {
         )}
       </div>
 
-      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(`/aquarium?action=add-species&species=${encodeURIComponent(fish.id)}`)} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation('/encyclopedia#compatibility'); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation('/encyclopedia#compatibility'); }} onViewInTank={() => requestNavigation('/aquarium?action=livestock')} onOpenTankSettings={() => requestNavigation('/aquarium#settings')} />
+      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
       {pendingNavigationPath && (
         <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm" role="presentation">
           <section role="dialog" aria-modal="true" aria-labelledby="identify-leave-title" className="w-full max-w-[420px] rounded-[22px] bg-white p-5 shadow-2xl">

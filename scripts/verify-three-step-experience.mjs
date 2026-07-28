@@ -2,6 +2,30 @@ import { chromium } from 'playwright';
 
 const baseUrl = process.env.AQUAGUIDE_PREVIEW_URL || 'http://localhost:3000';
 const browser = await chromium.launch({ headless: true });
+const state = {
+  version: 1,
+  currentAquariumId: 'three-step-tank',
+  aquariums: [{
+    id: 'three-step-tank',
+    name: '三步测试缸',
+    fishes: [],
+    dimensions: { length: '60', width: '35', height: '40' },
+    waterType: 'Freshwater',
+    targetTemperature: '25',
+    waterChangeHistory: [],
+    equipment: { filter: '瀑布过滤', heater: true, oxygen: true, light: '普通灯' },
+  }],
+  wishlist: [],
+  dismissedRecommendations: [],
+  diagnosisRecords: [],
+  compatibilityRecords: [],
+  deceasedRecords: [],
+  feedingRecords: [],
+  observationRecords: [],
+  riskReminderState: {},
+  onboarding: { version: 1, status: 'completed', viewedSpecies: true, aquariumConfigured: true, taskCardDismissed: true },
+  updatedAt: new Date().toISOString(),
+};
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(message);
@@ -11,15 +35,18 @@ const openPage = async (path) => {
   const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.addInitScript(() => localStorage.setItem('aquaguide_locale', 'zh-CN'));
+  await page.addInitScript(saved => {
+    localStorage.setItem('aquaguide_locale', 'zh-CN');
+    localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
+    localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
+  }, state);
   await page.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle' });
   return { page, errors };
 };
 
 try {
   {
-    const { page, errors } = await openPage('/aquarium');
-    await page.getByRole('button', { name: '开始今日检查', exact: true }).click();
+    const { page, errors } = await openPage('/aquarium?action=daily-check');
     await page.getByText('一次完成今天检查', { exact: true }).waitFor();
     for (const label of ['正常', '清澈', '没有泡沫或油膜', '没有异味', '正常游动和进食', '没有特别操作']) {
       await page.getByRole('button', { name: label, exact: true }).click();
@@ -56,8 +83,7 @@ try {
   }
 
   {
-    const { page, errors } = await openPage('/aquarium');
-    await page.getByRole('button', { name: '添加生物', exact: true }).first().click();
+    const { page, errors } = await openPage('/aquarium?action=add-species');
     const dialog = page.getByRole('dialog');
     const search = dialog.getByPlaceholder('搜索鱼、虾、螺或学名');
     await search.fill('孔雀鱼');

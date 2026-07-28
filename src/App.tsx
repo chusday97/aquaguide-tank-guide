@@ -289,8 +289,8 @@ function DesktopSidebar({
       ? '/collection'
       : location.pathname.startsWith('/collection')
         ? '/collection'
-      : navItems.some(item => item.path === location.pathname) ? location.pathname : '/aquarium';
-  const activeMenu = desktopSubMenus[activePath] || [];
+      : navItems.some(item => item.path === location.pathname) ? location.pathname : null;
+  const activeMenu = activePath ? desktopSubMenus[activePath] || [] : [];
 
   useEffect(() => subscribeToAquariumNavigation(setAquariumNavigation), []);
 
@@ -339,7 +339,7 @@ function DesktopSidebar({
 
   const handleSubNav = (item: (typeof activeMenu)[number]) => {
     if (item.path) navigateToRoute(item.path);
-    else if (item.hash) navigateToView(activePath, item.hash);
+    else if (item.hash && activePath) navigateToView(activePath, item.hash);
   };
 
   const handleAquariumSwitch = (aquariumId: string) => {
@@ -795,6 +795,33 @@ function CollectionEntry() {
   return <CollectionHub />;
 }
 
+function NotFoundPage() {
+  const { navigateToRoute } = useWorkspaceNavigation();
+  const { i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
+  return (
+    <section className="mx-auto flex min-h-[70dvh] w-full max-w-[720px] items-center justify-center px-4 py-10 text-center">
+      <div className="w-full rounded-[28px] border border-white/80 bg-white p-7 shadow-sm">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-emerald-50 text-emerald-700">
+          <SearchIcon className="h-6 w-6" />
+        </div>
+        <h1 className="mt-4 text-2xl font-black text-ink">{isEn ? 'Page not found' : '没有找到这个页面'}</h1>
+        <p className="mt-2 text-sm font-semibold leading-6 text-ink/52">
+          {isEn ? 'This entry may have changed. Return to your tank or search species and care guides.' : '这个入口可能已经更新。你可以回到鱼缸，或搜索物种和养护指南。'}
+        </p>
+        <div className="mt-5 grid gap-2 sm:grid-cols-2">
+          <button type="button" onClick={() => navigateToRoute('/aquarium')} className="h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white hover:bg-emerald-800">
+            {isEn ? 'Back to My Tank' : '返回我的鱼缸'}
+          </button>
+          <button type="button" onClick={() => navigateToRoute('/search')} className="h-11 rounded-full border border-emerald-200 bg-white px-5 text-sm font-black text-emerald-800 hover:bg-emerald-50">
+            {isEn ? 'Search' : '搜索内容'}
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function WorkspaceRoutes() {
   const page = (content: ReactNode, name: string) => <RouteErrorBoundary page={name}>{content}</RouteErrorBoundary>;
   return (
@@ -820,6 +847,7 @@ function WorkspaceRoutes() {
           <Route path="/aquarium" element={shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
           <Route path="/3d-demo" element={page(<ThreeDemo />, '3d-demo')} />
           <Route path="/admin/content" element={page(<AdminContent />, 'admin-content')} />
+          <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>
       </Suspense>
     </>
