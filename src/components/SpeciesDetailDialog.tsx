@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Box, Calculator, CheckCircle2, ChevronRight, Flame, Heart, HeartOff, Info, Share2, Skull, SlidersHorizontal, Thermometer, Waves, X } from 'lucide-react';
+import { AlertTriangle, Box, Calculator, CheckCircle2, ChevronRight, Download, Flame, Heart, HeartOff, Info, Printer, Share2, Skull, SlidersHorizontal, Thermometer, Waves, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Aquarium, Fish } from '../types';
@@ -439,8 +439,12 @@ export function SpeciesDetailDialog({
   const [deathOperationId, setDeathOperationId] = useState('');
   const [deathError, setDeathError] = useState('');
   const [isRecordingDeath, setIsRecordingDeath] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isExportingCard, setIsExportingCard] = useState(false);
+  const [exportError, setExportError] = useState('');
   const deathReasonRef = useRef<HTMLTextAreaElement | null>(null);
   const careSectionButtonRef = useRef<HTMLButtonElement | null>(null);
+  const exportCardRef = useRef<HTMLDivElement | null>(null);
   const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);
   const displayFit = selectedFit;
   const selectedTaxonomy = fish ? getCareTaxonomyPath(fish) : null;
@@ -461,6 +465,9 @@ export function SpeciesDetailDialog({
     setDeathOperationId('');
     setDeathError('');
     setIsRecordingDeath(false);
+    setIsExportOpen(false);
+    setIsExportingCard(false);
+    setExportError('');
   }, [open, fish?.id]);
 
   useEffect(() => {
@@ -670,6 +677,85 @@ export function SpeciesDetailDialog({
     }
   };
 
+  const renderExportCard = async () => {
+    if (!exportCardRef.current) throw new Error(isEn ? 'Card preview is unavailable.' : '卡片预览尚未准备好。');
+    const { default: html2canvas } = await import('html2canvas');
+    return html2canvas(exportCardRef.current, {
+      backgroundColor: '#FFFDF8',
+      scale: 2,
+      useCORS: true,
+      onclone: (clonedDocument) => {
+        const clonedCard = clonedDocument.querySelector<HTMLElement>('[data-species-export-card]');
+        if (!clonedCard) return;
+        const nodes = [clonedCard, ...Array.from(clonedCard.querySelectorAll<HTMLElement>('*'))];
+        nodes.forEach((node) => {
+          const className = node.className.toString();
+          node.style.boxShadow = 'none';
+          node.style.outlineColor = 'transparent';
+          node.style.textDecorationColor = 'transparent';
+          node.style.borderColor = '#E9E0CF';
+          node.style.color = '#16221D';
+          if (className.includes('text-emerald')) node.style.color = '#275A48';
+          if (className.includes('text-[#64716B]')) node.style.color = '#64716B';
+          if (className.includes('text-[#52615A]')) node.style.color = '#52615A';
+          if (className.includes('text-[#6A766F]')) node.style.color = '#6A766F';
+          if (className.includes('bg-[#F4F1E8]')) node.style.backgroundColor = '#F4F1E8';
+          else if (className.includes('bg-[#ECF5F0]')) node.style.backgroundColor = '#ECF5F0';
+          else if (className.includes('bg-[#F1F8F4]')) node.style.backgroundColor = '#F1F8F4';
+          else if (node === clonedCard) node.style.backgroundColor = '#FFFDF8';
+          else node.style.backgroundColor = node.style.backgroundColor || 'transparent';
+        });
+      },
+    });
+  };
+
+  const handleSaveExportCard = async () => {
+    if (!fish || isExportingCard) return;
+    setIsExportingCard(true);
+    setExportError('');
+    try {
+      const canvas = await renderExportCard();
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `AquaGuide-${fish.name}-物种卡片.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setInlineFeedback(isEn ? 'Species card saved.' : '物种卡片已保存。');
+    } catch (error) {
+      setExportError(error instanceof Error ? error.message : (isEn ? 'Save failed. Please try again.' : '保存失败，请稍后重试。'));
+    } finally {
+      setIsExportingCard(false);
+    }
+  };
+
+  const handlePrintExportCard = async () => {
+    if (!fish || isExportingCard) return;
+    const printWindow = window.open('', '_blank', 'width=760,height=900');
+    if (!printWindow) {
+      setExportError(isEn ? 'The print window was blocked. Allow pop-ups and try again.' : '打印窗口被浏览器拦截，请允许弹出窗口后重试。');
+      return;
+    }
+    setIsExportingCard(true);
+    setExportError('');
+    try {
+      printWindow.opener = null;
+      printWindow.document.write(`<p style="font-family:sans-serif;padding:24px">${isEn ? 'Preparing print card…' : '正在准备打印卡片…'}</p>`);
+      const canvas = await renderExportCard();
+      const imageData = canvas.toDataURL('image/png');
+      printWindow.document.open();
+      printWindow.document.write(`<!doctype html><html><head><title>${fish.name}</title><style>@page{margin:12mm}html,body{margin:0;background:#fff}body{display:flex;min-height:100vh;align-items:center;justify-content:center}img{display:block;width:min(100%,680px);height:auto}@media print{body{min-height:auto}}</style></head><body><img src="${imageData}" alt="${fish.name}"></body></html>`);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.setTimeout(() => printWindow.print(), 250);
+    } catch (error) {
+      printWindow.close();
+      setExportError(error instanceof Error ? error.message : (isEn ? 'Print failed. Please try again.' : '打印失败，请稍后重试。'));
+    } finally {
+      setIsExportingCard(false);
+    }
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -679,6 +765,18 @@ export function SpeciesDetailDialog({
               <div className="modalHeader species-detail-header flex items-center justify-between border-b border-border bg-white px-4 py-2 min-[760px]:py-3">
                 <span className="text-[12px] font-black tracking-[0.08em] text-ink/48">{isEn ? 'SPECIES PROFILE' : '物种档案'}</span>
                 <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setExportError('');
+                      setIsExportOpen(true);
+                    }}
+                    className="flex h-10 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-[11px] font-black text-ink/60 hover:text-accent"
+                    aria-label={isEn ? 'Export species card' : '导出物种卡片'}
+                  >
+                    <Download className="h-4 w-4" />
+                    <span className="hidden min-[760px]:inline">{isEn ? 'Export card' : '导出卡片'}</span>
+                  </button>
                   <button type="button" onClick={handleShare} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
                     <Share2 className="h-5 w-5" />
                   </button>
@@ -962,6 +1060,84 @@ export function SpeciesDetailDialog({
                     <div className="mt-5 grid grid-cols-2 gap-2">
                       <Button variant="outline" className="h-11 rounded-full border-border text-sm font-black" disabled={isRecordingDeath} onClick={() => setIsDeathFormOpen(false)}>{t('encyclopedia.btnCancel')}</Button>
                       <Button className="h-11 rounded-full bg-ink text-sm font-black text-white hover:bg-ink/90" disabled={isRecordingDeath} onClick={handleRecordDeath}>{isRecordingDeath ? t('encyclopedia.btnSaving') : t('encyclopedia.btnSave')}</Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {isExportOpen && (
+                <div className="fixed inset-0 z-[190] flex items-center justify-center bg-black/35 px-3 py-4" role="dialog" aria-modal="true" aria-labelledby="species-export-title">
+                  <button type="button" className="absolute inset-0" aria-label={isEn ? 'Close export card' : '关闭导出卡片'} onClick={() => !isExportingCard && setIsExportOpen(false)} />
+                  <div className="relative flex max-h-[92dvh] w-full max-w-[760px] flex-col overflow-hidden rounded-[26px] bg-[#F5F2E9] shadow-[0_28px_80px_rgba(15,23,42,0.28)]">
+                    <div className="flex shrink-0 items-center justify-between border-b border-black/5 bg-white/90 px-4 py-3">
+                      <div>
+                        <h3 id="species-export-title" className="text-[16px] font-black text-ink">{isEn ? 'Export species card' : '导出物种卡片'}</h3>
+                        <p className="mt-0.5 text-[10px] font-bold text-ink/45">{isEn ? 'Basic facts, feeding and environment only' : '仅包含基础信息、喂养和环境'}</p>
+                      </div>
+                      <button type="button" disabled={isExportingCard} onClick={() => setIsExportOpen(false)} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/55 disabled:opacity-45" aria-label={isEn ? 'Close' : '关闭'}>
+                        <X className="h-5 w-5" />
+                      </button>
+                    </div>
+
+                    <div className="app-scrollbar-hidden overflow-y-auto p-3 min-[600px]:p-5">
+                      <div className="species-export-printer mx-auto max-w-[620px] rounded-[22px] bg-[#173E33] px-3 pb-3 pt-4 shadow-[0_18px_40px_rgba(23,62,51,0.22)]">
+                        <div className="mx-auto mb-3 h-2 w-[78%] rounded-full bg-black/45 shadow-inner" aria-hidden="true" />
+                        <div
+                          ref={exportCardRef}
+                          data-species-export-card
+                          className="species-export-paper overflow-hidden rounded-[18px] border border-[#E9E0CF] bg-[#FFFDF8] p-4 text-[#16221D] min-[600px]:p-6"
+                        >
+                          <div className="grid min-w-0 gap-4 min-[600px]:grid-cols-[42%_minmax(0,1fr)]">
+                            <div className={`flex min-h-[170px] items-center justify-center rounded-[16px] ${getSpeciesImageSurfaceClass(fish)} p-3`}>
+                              <ResilientImage src={resolvedImageSrc} alt={fish.name} className={`h-full max-h-[220px] w-full object-contain ${getSpeciesImageClass(fish)}`} />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-[9px] font-black tracking-[0.16em] text-emerald-800/55">AQUAGUIDE SPECIES CARD</div>
+                              <h4 className="mt-2 break-words font-serif text-[26px] font-bold italic leading-tight">{fish.name}</h4>
+                              <p className="mt-1 break-words text-[10px] font-semibold text-[#64716B]">{fish.scientificName}</p>
+                              <div className="mt-3 flex flex-wrap gap-1.5">
+                                {[fish.category, fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort'), fish.size].filter(Boolean).map(item => (
+                                  <span key={item} className="rounded-full border border-[#D9E8DF] bg-[#F1F8F4] px-2 py-1 text-[9px] font-black text-[#275A48]">{item}</span>
+                                ))}
+                              </div>
+                              <p className="mt-3 line-clamp-3 text-[10px] font-semibold leading-5 text-[#52615A]">{fish.description}</p>
+                            </div>
+                          </div>
+
+                          <div className="mt-4 grid gap-3 min-[600px]:grid-cols-2">
+                            <section className="rounded-[15px] bg-[#F4F1E8] p-3">
+                              <h5 className="text-[11px] font-black text-[#173E33]">{isEn ? 'Feeding' : '喂养'}</h5>
+                              <dl className="mt-2 grid gap-2 text-[9px] leading-4">
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Food' : '食物'}</dt><dd className="font-semibold">{fish.feedingProfile?.recommendedFoods || fish.diet}</dd></div>
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Frequency' : '频率'}</dt><dd className="font-semibold">{fish.feedingProfile?.feedingFrequency || (isEn ? 'Feed a small amount daily' : '每日少量投喂')}</dd></div>
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Portion' : '单次建议'}</dt><dd className="font-semibold">{fish.feedingProfile?.portionRule || (isEn ? 'Finish within a few minutes' : '以数分钟内吃完为准')}</dd></div>
+                              </dl>
+                            </section>
+                            <section className="rounded-[15px] bg-[#ECF5F0] p-3">
+                              <h5 className="text-[11px] font-black text-[#173E33]">{isEn ? 'Environment' : '环境'}</h5>
+                              <dl className="mt-2 grid grid-cols-2 gap-2 text-[9px] leading-4">
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Water' : '水体'}</dt><dd className="font-semibold">{selectedTaxonomy?.waterType || fish.category}</dd></div>
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Temperature' : '水温'}</dt><dd className="font-semibold">{fish.waterTemperature}</dd></div>
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Tank size' : '空间'}</dt><dd className="font-semibold">{fish.tankSize}</dd></div>
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Water change' : '换水'}</dt><dd className="font-semibold">{isEn ? `Every ${fish.waterChangeCycle} days` : `约 ${fish.waterChangeCycle} 天一次`}</dd></div>
+                              </dl>
+                            </section>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-center text-[10px] font-bold text-ink/42">{isEn ? 'The card is generated from the current species profile.' : '卡片内容来自当前物种档案。'}</p>
+                      {exportError && <p className="mt-3 rounded-[12px] bg-red-50 px-3 py-2 text-center text-[11px] font-bold text-red-700" role="alert">{exportError}</p>}
+                    </div>
+
+                    <div className="grid shrink-0 grid-cols-2 gap-2 border-t border-black/5 bg-white/92 p-3 min-[600px]:px-5">
+                      <Button type="button" disabled={isExportingCard} onClick={handleSaveExportCard} className="min-h-11 rounded-full bg-accent text-[12px] font-black text-white">
+                        <Download className="mr-1.5 h-4 w-4" />
+                        {isExportingCard ? (isEn ? 'Generating…' : '生成中…') : (isEn ? 'Save image' : '保存图片')}
+                      </Button>
+                      <Button type="button" variant="outline" disabled={isExportingCard} onClick={handlePrintExportCard} className="min-h-11 rounded-full border-accent/25 bg-white text-[12px] font-black text-accent">
+                        <Printer className="mr-1.5 h-4 w-4" />
+                        {isEn ? 'Print card' : '打印卡片'}
+                      </Button>
                     </div>
                   </div>
                 </div>
