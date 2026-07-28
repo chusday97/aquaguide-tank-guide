@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, ArrowLeft, Box, Calculator, CheckCircle2, ChevronRight, Flame, Heart, HeartOff, Info, Plus, Share2, Skull, SlidersHorizontal, Thermometer, Waves } from 'lucide-react';
+import { AlertTriangle, Box, Calculator, CheckCircle2, ChevronRight, Flame, Heart, HeartOff, Info, Plus, Share2, Skull, SlidersHorizontal, Thermometer, Waves, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Aquarium, Fish } from '../types';
@@ -445,8 +445,7 @@ export function SpeciesDetailDialog({
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'environment' | 'compatibility' | 'care'>('environment');
-  const [activeMetric, setActiveMetric] = useState<FitDimension | null>(null);
+  const [expandedSection, setExpandedSection] = useState<'fit' | 'compatibility' | 'care' | null>(null);
   const [inlineFeedback, setInlineFeedback] = useState('');
   const [isDeathFormOpen, setIsDeathFormOpen] = useState(false);
   const [deathDate, setDeathDate] = useState(getLocalDateValue);
@@ -458,6 +457,7 @@ export function SpeciesDetailDialog({
   const [deathError, setDeathError] = useState('');
   const [isRecordingDeath, setIsRecordingDeath] = useState(false);
   const deathReasonRef = useRef<HTMLTextAreaElement | null>(null);
+  const careSectionButtonRef = useRef<HTMLButtonElement | null>(null);
   const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);
   const displayFit = selectedFit;
   const selectedTaxonomy = fish ? getCareTaxonomyPath(fish) : null;
@@ -469,8 +469,7 @@ export function SpeciesDetailDialog({
 
   useEffect(() => {
     if (!open) return;
-    setActiveTab('environment');
-    setActiveMetric(null);
+    setExpandedSection(null);
     setInlineFeedback('');
     setIsDeathFormOpen(false);
     setDeathDate(getLocalDateValue());
@@ -551,56 +550,14 @@ export function SpeciesDetailDialog({
       .filter((item, index, list) => list.findIndex(other => other.label === item.label && other.text === item.text) === index)
       .slice(0, 3);
   }, [aquariumContext, displayFit]);
-  const fitVisualModel = useMemo<VisualResultViewModel | null>(() => {
-    if (!fish || !displayFit) return null;
-    const status = mapFitStatus(displayFit.status);
-    const conclusion = aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank');
-    return {
-      status,
-      title: aquariumContext ? t('encyclopedia.titleSpeciesFit') : t('encyclopedia.titleNoTankSelected'),
-      conclusion,
-      emphasis: getVisualEmphasis(conclusion),
-      subjects: [
-        {
-          id: fish.id,
-          name: fish.name,
-          image: getSpeciesDisplayImage(fish),
-          role: 'focus',
-          status,
-          shortReason: conclusion,
-          badgeLabel: aquariumContext ? t('encyclopedia.preCheckLabel') : t('encyclopedia.currentSpec'),
-          emphasis: getVisualEmphasis(conclusion),
-        },
-        ...(aquariumContext ? metricCards.map(metric => ({
-          id: `fit-${metric.type}`,
-          name: translateLabel(metric.label),
-          role: 'affected' as const,
-          status: mapFitStatus(metric.status),
-          shortReason: metric.advice || `${translateLabel(metric.label)}：${metric.current || t('encyclopedia.noTankSelected')}`,
-          badgeLabel: metric.status === 'ok' ? t('encyclopedia.fitStatusOkLabel') : metric.status === 'info' ? t('encyclopedia.fitStatusInfoLabel') : t('encyclopedia.fitStatusWarningLabel'),
-          emphasis: getVisualEmphasis(metric.advice),
-        })) : []),
-      ],
-      currentAction: aquariumContext
-        ? displayFit.risks[0]?.advice || displayFit.confirmations.find(item => item.type !== 'water_parameter')?.advice || t('encyclopedia.adviceHousingDefault')
-        : t('encyclopedia.actionNoTank'),
-      primaryAction: {
-        label: mainActionLabel,
-        actionType: displayFit.status === 'suitable' && !owned ? 'mutation' : 'section',
-      },
-      detailSections: [
-        { id: 'risks', title: t('encyclopedia.fitStatusWarningLabel'), items: displayFit.risks.map(item => item.advice) },
-        { id: 'confirmations', title: t('encyclopedia.fitAdjustable'), items: displayFit.confirmations.map(item => item.advice) },
-        { id: 'matched', title: t('encyclopedia.fitStatusOkLabel'), items: metricCards.filter(item => item.status === 'ok').map(item => `${translateLabel(item.label)}：${item.current}`) },
-      ].filter(section => section.items.length > 0),
-    };
-  }, [aquariumContext, displayFit, fish, mainActionLabel, metricCards, owned, t]);
   const compatibilityVisualModel = useMemo<VisualResultViewModel | null>(() => {
     if (!fish) return null;
     const statusRank = { compatible: 0, caution: 1, insufficient_data: 2, not_recommended: 3 } as const;
-    const status = compatibilityPairs.reduce<PairCompatibilityResult['status']>((current, pair) => (
-      statusRank[pair.status] > statusRank[current] ? pair.status : current
-    ), 'compatible');
+    const status = compatibilityPairs.length === 0
+      ? 'insufficient_data'
+      : compatibilityPairs.reduce<PairCompatibilityResult['status']>((current, pair) => (
+        statusRank[pair.status] > statusRank[current] ? pair.status : current
+      ), 'compatible');
     const primaryPair = [...compatibilityPairs].sort((a, b) => statusRank[b.status] - statusRank[a.status])[0];
     const conclusion = primaryPair?.primaryReason?.evidence || primaryPair?.rawResult.summary || t('encyclopedia.conclusionNoPairs');
     return {
@@ -650,16 +607,6 @@ export function SpeciesDetailDialog({
     return null;
   };
 
-  const getMetricActionLabel = (metric: FitDimension) => {
-    if (metric.status === 'ok') return t('encyclopedia.dismiss');
-    if (metric.type === 'filter') return t('encyclopedia.btnCompleteEnvDetail');
-    if (metric.type === 'heater') return t('encyclopedia.btnCompleteEnvDetail');
-    if (metric.type === 'temperature') return t('encyclopedia.actionCompleteTemp');
-    if (metric.type === 'space') return t('encyclopedia.actionCompleteSize');
-    if (metric.type === 'water_type') return t('encyclopedia.actionCompleteWaterType');
-    return t('encyclopedia.actionCompleteInfo');
-  };
-
   const handleMainAction = () => {
     if (!fish || !displayFit) return;
     if (!aquariumContext) {
@@ -672,7 +619,11 @@ export function SpeciesDetailDialog({
     }
     if (owned || displayFit.alreadyInTank || displayFit.status === 'alreadyInTank') {
       if (source === 'aquarium') {
-        setActiveTab('care');
+        setExpandedSection('care');
+        window.requestAnimationFrame(() => {
+          careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          careSectionButtonRef.current?.focus({ preventScroll: true });
+        });
       } else {
         onViewInTank?.();
       }
@@ -685,7 +636,8 @@ export function SpeciesDetailDialog({
     }
     const firstIssue = metricCards.find(item => item.status !== 'ok' && getMetricSettingsPanel(item));
     if (firstIssue) {
-      setActiveMetric(firstIssue);
+      const panel = getMetricSettingsPanel(firstIssue);
+      if (panel) onOpenTankSettings?.(panel);
     } else {
       onOpenTankSettings?.('parameters');
     }
@@ -742,16 +694,19 @@ export function SpeciesDetailDialog({
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
               <div className="modalHeader species-detail-header flex items-center justify-between border-b border-border bg-white px-4 py-3">
-                <button type="button" onClick={() => onOpenChange(false)} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.dismiss')}>
-                  <ArrowLeft className="h-5 w-5" />
-                </button>
-                <button type="button" onClick={handleShare} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
-                  <Share2 className="h-5 w-5" />
-                </button>
+                <span className="text-[12px] font-black tracking-[0.08em] text-ink/48">{isEn ? 'SPECIES PROFILE' : '物种档案'}</span>
+                <div className="flex items-center gap-2">
+                  <button type="button" onClick={handleShare} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
+                    <Share2 className="h-5 w-5" />
+                  </button>
+                  <button type="button" onClick={() => onOpenChange(false)} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.dismiss')}>
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
 
               <div className="modalBody species-detail-body app-scrollbar-hidden p-0">
-                <div className="p-4" data-species-detail-layout="visual-verdict">
+                <div className="p-4 min-[760px]:p-5" data-species-detail-layout="single-screen-profile">
                   <section className="overflow-hidden rounded-[24px] border border-border bg-gradient-to-br from-white via-sky-50/45 to-emerald-50/55 shadow-sm">
                     <div className="grid min-w-0 grid-cols-1 min-[760px]:grid-cols-[minmax(280px,1.05fr)_minmax(0,0.95fr)]">
                       <div className="min-w-0 p-3 min-[760px]:p-4">
@@ -785,7 +740,7 @@ export function SpeciesDetailDialog({
                         </div>
                         <p className="mt-3 text-[12px] font-bold leading-relaxed text-ink/62">{getLocalizedSpeciesRole(fish, t)}</p>
 
-                        <div className={`mt-4 rounded-[18px] border p-3 ${
+                        <div data-visual-result-status={mapFitStatus(displayFit.status)} className={`mt-4 rounded-[18px] border p-3 ${
                           displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
                             ? 'border-emerald-100 bg-emerald-50/85'
                             : displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk'
@@ -816,152 +771,167 @@ export function SpeciesDetailDialog({
                             ))}
                           </div>
                         )}
+
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => onToggleWishlist(fish.id)}
+                            aria-pressed={inWishlist}
+                            className={`flex min-h-10 items-center gap-2 rounded-full border px-3 text-[11px] font-black ${
+                              inWishlist ? 'border-rose-100 bg-rose-50 text-rose-700' : 'border-border bg-white text-ink/60 hover:border-rose-200'
+                            }`}
+                          >
+                            {inWishlist ? <Heart className="h-4 w-4 fill-current" /> : <HeartOff className="h-4 w-4" />}
+                            {inWishlist ? t('encyclopedia.inWishlistBtn') : t('encyclopedia.addToWishlistBtn')}
+                          </button>
+                          {onRecordDeath && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setDeathBatchId('');
+                                setDeathOperationId(typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
+                                setIsDeathFormOpen(true);
+                              }}
+                              className="flex min-h-10 items-center gap-2 rounded-full border border-border bg-white px-3 text-[11px] font-black text-ink/60 hover:border-ink/20"
+                            >
+                              <Skull className="h-4 w-4" />
+                              {t('encyclopedia.moreLabel')}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </section>
 
-                  <div className="mt-3 flex flex-wrap gap-2 rounded-[18px] border border-border bg-white p-2 shadow-sm">
-                    {[
-                      { label: t('encyclopedia.compatibilityCalc'), icon: Calculator, active: inCalculator, action: handleOpenCalculator },
-                      { label: inWishlist ? t('encyclopedia.inWishlistBtn') : t('encyclopedia.addToWishlistBtn'), icon: inWishlist ? Heart : HeartOff, active: inWishlist, action: () => onToggleWishlist(fish.id) },
-                      onRecordDeath ? { label: t('encyclopedia.moreLabel'), icon: Skull, active: false, action: () => {
-                        setDeathBatchId('');
-                        setDeathOperationId(typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
-                        setIsDeathFormOpen(true);
-                      } } : null,
-                    ].filter(Boolean).map(item => {
-                      const actionItem = item as { label: string; icon: typeof Calculator; active: boolean; action: () => void };
-                      const Icon = actionItem.icon;
-                      return (
-                        <button
-                          key={actionItem.label}
-                          type="button"
-                          onClick={actionItem.action}
-                          aria-pressed={actionItem.active}
-                          className={`flex min-h-11 min-w-[88px] flex-1 items-center justify-center gap-1.5 rounded-[14px] border px-2 text-[10px] font-black transition-colors ${
-                            actionItem.active ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-border bg-white text-ink/62 hover:border-accent/25 hover:bg-bg'
-                          }`}
-                        >
-                          <Icon className={`h-5 w-5 ${actionItem.active ? 'text-emerald-600' : 'text-accent'}`} />
-                          <span className="min-w-0 break-words leading-tight">{actionItem.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div role="tablist" aria-label={isEn ? 'Species details' : '物种详情'} className="mt-4 flex max-w-full gap-1 overflow-x-auto border-b border-border">
-                    {[
-                      { id: 'environment', label: isEn ? 'Fit verdict' : '适配结论' },
-                      { id: 'compatibility', label: isEn ? 'Compatibility' : '混养关系' },
-                      { id: 'care', label: isEn ? 'Care essentials' : '养护要点' },
-                    ].map(tab => (
-                      <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} type="button" onClick={() => setActiveTab(tab.id as typeof activeTab)} className={`relative min-h-11 min-w-[96px] flex-1 overflow-hidden break-words px-2 text-[13px] font-black transition-colors ${activeTab === tab.id ? 'text-accent' : 'text-ink/45'}`}>
-                        {tab.label}
-                        {activeTab === tab.id && <span className="absolute inset-x-5 bottom-0 h-[3px] rounded-full bg-accent" />}
+                  <div className="mt-4 grid gap-2" data-species-detail-sections>
+                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
+                      <button
+                        type="button"
+                        aria-expanded={expandedSection === 'fit'}
+                        onClick={() => setExpandedSection(current => current === 'fit' ? null : 'fit')}
+                        className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Tank fit evidence' : '适配依据'}</span>
+                          <span className="mt-0.5 block text-[11px] font-bold text-ink/45">
+                            {aquariumContext
+                              ? (isEn ? `${metricCards.filter(item => item.status !== 'ok').length} items need attention` : `${metricCards.filter(item => item.status !== 'ok').length} 项需要留意`)
+                              : t('encyclopedia.noTankSelected')}
+                          </span>
+                        </span>
+                        <ChevronRight className={`h-5 w-5 shrink-0 text-ink/35 transition-transform ${expandedSection === 'fit' ? 'rotate-90' : ''}`} />
                       </button>
-                    ))}
-                  </div>
-
-                  {activeTab === 'environment' && (
-                    <div className="mt-4 grid gap-4">
-                      {fitVisualModel && (
-                        <VisualResultCard
-                          model={fitVisualModel}
-                          showPrimaryAction={false}
-                          onPrimaryAction={handleMainAction}
-                          onSubjectSelect={subject => {
-                            const metric = metricCards.find(item => `fit-${item.type}` === subject.id);
-                            if (metric) setActiveMetric(metric);
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-
-                  {activeTab === 'compatibility' && (
-                    <div className="mt-4 grid gap-3">
-                      {compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} onPrimaryAction={handleOpenCalculator} />}
-                      {(fish.housingMode || fish.housingReason) && (
-                        <details className="rounded-[16px] border border-border bg-white/70 p-3">
-                          <summary className="flex cursor-pointer list-none items-center justify-between text-[13px] font-black text-ink">{t('encyclopedia.categoryReferenceTitle')}<ChevronRight className="h-4 w-4 text-ink/40" /></summary>
-                          <div className="mt-3 rounded-[12px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
-                            <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.adviceHousingDefault')}</div>
-                            {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
-                            <p className="mt-2 text-[10px] font-bold text-amber-700">{t('encyclopedia.disclaimerHousing')}</p>
-                          </div>
-                        </details>
-                      )}
-                    </div>
-                  )}
-
-                  {activeTab === 'care' && (
-                    <div className="mt-4 grid gap-3">
-                      {sexIdentificationGuide && (
-                        <details open className="rounded-[16px] border border-emerald-100 bg-emerald-50/60 p-3 shadow-sm">
-                          <summary className="flex cursor-pointer list-none items-center justify-between text-[14px] font-black text-ink">
-                            {sexIdentificationGuide.title === '暂无可靠的公母辨别资料' ? t('encyclopedia.sexTitlePlaceholder') : sexIdentificationGuide.title}
-                            <ChevronRight className="h-4 w-4 text-ink/40" />
-                          </summary>
-                          <p className="mt-3 text-[12px] font-bold leading-relaxed text-ink/62">
-                            {sexIdentificationGuide.summary === '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。' ? t('encyclopedia.sexSummaryPlaceholder') : sexIdentificationGuide.summary}
-                          </p>
-                          <div className="mt-3 grid gap-2">
-                            {sexIdentificationGuide.points.map(point => {
-                              const translatedPt = point === '可先按健康状态、体型完整度和活性挑选个体。' ? t('encyclopedia.sexPt1') : point === '如果确实需要配对繁殖，建议向可靠商家确认性别来源。' ? t('encyclopedia.sexPt2') : point === '后续补充人工审核资料后，这里会显示具体辨别要点。' ? t('encyclopedia.sexPt3') : point;
-                              return (
-                                <div key={point} className="rounded-[12px] bg-white px-3 py-2 text-[12px] font-medium leading-relaxed text-ink/64">
-                                  {translatedPt}
+                      {expandedSection === 'fit' && (
+                        <div className="border-t border-border/70 p-3">
+                          <div className="grid grid-cols-2 gap-2 min-[760px]:grid-cols-3">
+                            {metricCards.map(metric => (
+                              <div
+                                key={metric.type}
+                                data-species-fit-metric={`fit-${metric.type}`}
+                                className="min-w-0 rounded-[14px] bg-bg p-3"
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="min-w-0 break-words text-[11px] font-black text-ink">{translateLabel(metric.label)}</span>
+                                  <span className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-black ${getFitStatusClass(metric.status)}`}>{getFitStatusLabel(metric.status, isEn)}</span>
                                 </div>
-                              );
-                            })}
-                          </div>
-                        </details>
-                      )}
-                      {carePresentation && (
-                        <>
-                          <section className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
-                            <div className="flex items-start justify-between gap-3">
-                              <div>
-                                <h3 className="text-[14px] font-black text-ink">{t('encyclopedia.feedingLabel')}</h3>
-                                <p className="mt-1 text-[11px] font-medium leading-relaxed text-ink/52">
-                                  {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.noCareProfile') : carePresentation.sourceStatus === 'generic' ? t('encyclopedia.disclaimerHousing') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.adviceAlreadyInTankPage')}
-                                </p>
+                                <p className={`mt-2 break-words text-[11px] font-bold leading-relaxed ${getFitCurrentClass(metric.status)}`}>{metric.current || t('encyclopedia.noTankSelected')}</p>
+                                {metric.status !== 'ok' && <p className="mt-1 text-[10px] font-medium leading-relaxed text-ink/48">{metric.advice || metric.requirement}</p>}
                               </div>
-                              <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
-                                {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'generic' ? t('encyclopedia.adviceHousingDefault') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
-                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </section>
+
+                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
+                      <button
+                        type="button"
+                        aria-expanded={expandedSection === 'compatibility'}
+                        onClick={() => setExpandedSection(current => current === 'compatibility' ? null : 'compatibility')}
+                        className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Compatibility' : '混养关系'}</span>
+                          <span className="mt-0.5 block text-[11px] font-bold text-ink/45">
+                            {compatibilityPairs.length > 0
+                              ? (isEn ? `${compatibilityPairs.length} tank relationships` : `已判断缸内 ${compatibilityPairs.length} 组关系`)
+                              : t('encyclopedia.conclusionNoPairs')}
+                          </span>
+                        </span>
+                        <ChevronRight className={`h-5 w-5 shrink-0 text-ink/35 transition-transform ${expandedSection === 'compatibility' ? 'rotate-90' : ''}`} />
+                      </button>
+                      {expandedSection === 'compatibility' && (
+                        <div className="grid gap-3 border-t border-border/70 p-3">
+                          {compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
+                          {(fish.housingMode || fish.housingReason) && (
+                            <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
+                              <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.adviceHousingDefault')}</div>
+                              {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
                             </div>
-                            {carePresentation.feedingItems.length > 0 ? (
-                              <div className="mt-3 grid gap-2">
-                                {carePresentation.feedingItems.map(item => (
-                                  <div key={item.label} className="rounded-[12px] bg-bg p-3">
+                          )}
+                          <button type="button" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
+                            <Calculator className="h-4 w-4" />
+                            {inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.compatibilityCalc')}
+                          </button>
+                        </div>
+                      )}
+                    </section>
+
+                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
+                      <button
+                        ref={careSectionButtonRef}
+                        type="button"
+                        aria-expanded={expandedSection === 'care'}
+                        onClick={() => setExpandedSection(current => current === 'care' ? null : 'care')}
+                        className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Care essentials' : '养护要点'}</span>
+                          <span className="mt-0.5 block text-[11px] font-bold text-ink/45">{isEn ? 'Feeding, environment and observation' : '喂食、环境与观察重点'}</span>
+                        </span>
+                        <ChevronRight className={`h-5 w-5 shrink-0 text-ink/35 transition-transform ${expandedSection === 'care' ? 'rotate-90' : ''}`} />
+                      </button>
+                      {expandedSection === 'care' && (
+                        <div className="grid gap-3 border-t border-border/70 p-3">
+                          {carePresentation && (
+                            <>
+                              <div className="flex items-center justify-between gap-3">
+                                <span className="text-[12px] font-black text-ink">{t('encyclopedia.feedingLabel')}</span>
+                                <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
+                                  {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
+                                </span>
+                              </div>
+                              <div className="grid gap-2 min-[760px]:grid-cols-2">
+                                {carePresentation.feedingItems.slice(0, 3).map(item => (
+                                  <div key={item.label} className="rounded-[14px] bg-bg p-3">
                                     <div className="text-[10px] font-black text-ink/42">{translateLabel(item.label)}</div>
                                     <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/65">{item.value}</p>
                                   </div>
                                 ))}
-                              </div>
-                            ) : (
-                              <div className="mt-3 rounded-[12px] bg-bg p-3 text-[12px] font-bold text-ink/55">{t('encyclopedia.noCareProfile')}</div>
-                            )}
-                          </section>
-                          <section className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
-                            <h3 className="text-[14px] font-black text-ink">{t('encyclopedia.waterEnvLabel')}</h3>
-                            <div className="mt-3 grid grid-cols-2 gap-2">
-                              {carePresentation.environmentItems.map(item => {
-                                const displayVal = item.label === '换水周期' ? t('encyclopedia.careWaterChangeValue', { days: fish.waterChangeCycle }) : item.value;
-                                return (
-                                  <div key={item.label} className="rounded-[12px] bg-bg p-3">
+                                {carePresentation.environmentItems.slice(0, 3).map(item => (
+                                  <div key={item.label} className="rounded-[14px] bg-bg p-3">
                                     <div className="text-[10px] font-black text-ink/42">{translateLabel(item.label)}</div>
-                                    <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/65">{displayVal}</p>
+                                    <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/65">{item.label === '换水周期' ? t('encyclopedia.careWaterChangeValue', { days: fish.waterChangeCycle }) : item.value}</p>
                                   </div>
-                                );
-                              })}
-                            </div>
-                          </section>
-                        </>
+                                ))}
+                              </div>
+                            </>
+                          )}
+                          {sexIdentificationGuide && (
+                            <details className="rounded-[14px] border border-emerald-100 bg-emerald-50/55 p-3">
+                              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                                {sexIdentificationGuide.title === '暂无可靠的公母辨别资料' ? t('encyclopedia.sexTitlePlaceholder') : sexIdentificationGuide.title}
+                                <ChevronRight className="h-4 w-4 text-ink/35" />
+                              </summary>
+                              <p className="mt-3 text-[11px] font-bold leading-relaxed text-ink/58">
+                                {sexIdentificationGuide.summary === '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。' ? t('encyclopedia.sexSummaryPlaceholder') : sexIdentificationGuide.summary}
+                              </p>
+                            </details>
+                          )}
+                        </div>
                       )}
-                    </div>
-                  )}
+                    </section>
+                  </div>
 
                   {(detailFeedback || inlineFeedback) && (
                     <div className="mt-3 rounded-[14px] border border-emerald-100 bg-emerald-50 px-3 py-2 text-[12px] font-bold text-emerald-800">
@@ -972,34 +942,9 @@ export function SpeciesDetailDialog({
                 </div>
               </div>
 
-              {activeTab === 'environment' && (
-                <div className="modalFooter shrink-0 border-t border-border bg-white/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 min-[760px]:px-6">
-                  <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
-                </div>
-              )}
-
-              {activeMetric && (
-                <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/24 px-3 pb-3">
-                  <button type="button" className="absolute inset-0" aria-label={t('encyclopedia.dismiss')} onClick={() => setActiveMetric(null)} />
-                  <div className="relative w-full max-w-[520px] rounded-[26px] bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.22)]">
-                    <div className="mx-auto mb-3 h-1.5 w-12 rounded-full bg-ink/12" />
-                    <h3 className="text-[18px] font-black text-ink">{activeMetric.status === 'ok' ? t('encyclopedia.viewEnvTitle') : t('encyclopedia.adjustEnvLabel', { label: translateLabel(activeMetric.label) })}</h3>
-                    <div className="mt-3 grid gap-2 rounded-[18px] bg-bg p-3">
-                      <div className="flex justify-between gap-3 text-[13px] font-bold text-ink/60"><span>{t('encyclopedia.currentValue')}</span><span className={getFitCurrentClass(activeMetric.status)}>{activeMetric.current || t('encyclopedia.noTankSelected')}</span></div>
-                      <div className="flex justify-between gap-3 text-[13px] font-bold text-ink/60"><span>{t('encyclopedia.targetRange')}</span><span className="text-ink">{activeMetric.requirement || t('encyclopedia.checkRequirements')}</span></div>
-                    </div>
-                    <p className="mt-3 text-[12px] font-medium leading-relaxed text-ink/55">{activeMetric.advice || t('encyclopedia.dismissAdvice')}</p>
-                    {getMetricSettingsPanel(activeMetric) && onOpenTankSettings && (
-                      <Button className="mt-4 h-11 w-full rounded-full bg-accent text-sm font-black text-white hover:bg-accent/90" onClick={() => {
-                        const panel = getMetricSettingsPanel(activeMetric);
-                        if (!panel) return;
-                        setActiveMetric(null);
-                        onOpenTankSettings(panel);
-                      }}>{getMetricActionLabel(activeMetric)}</Button>
-                    )}
-                  </div>
-                </div>
-              )}
+              <div className="modalFooter shrink-0 border-t border-border bg-white/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 min-[760px]:px-6">
+                <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
+              </div>
 
               {isDeathFormOpen && (
                 <div className="fixed inset-0 z-[180] flex items-center justify-center bg-black/30 px-4" role="dialog" aria-modal="true" aria-labelledby="death-record-title">

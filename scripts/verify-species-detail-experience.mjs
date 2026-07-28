@@ -74,6 +74,8 @@ try {
   const noTankDialog = await openWishlistDetail(noTank.page);
   const setupAction = noTankDialog.getByRole('button', { name: 'Go to Tank Settings', exact: true });
   assert.equal(await setupAction.count(), 1, 'no-tank detail must expose exactly one primary action');
+  await noTankDialog.getByRole('button', { name: /Compatibility/ }).click();
+  await noTankDialog.locator('.visual-result-card[data-visual-result-status="insufficient_data"]').waitFor();
   await setupAction.click();
   await noTank.page.waitForURL(/\/aquarium\?action=create$/);
   await noTank.context.close();
@@ -89,8 +91,10 @@ try {
       const [dialogBox, actionBox] = await Promise.all([dialog.boundingBox(), primaryAction.boundingBox()]);
       assert.ok(dialogBox && actionBox && actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
     }
-    await dialog.getByRole('button', { name: locale === 'en' ? 'Show all 5 items' : '查看全部 5 项', exact: true }).click();
-    metricIdsByLocale[locale] = await dialog.locator('[data-visual-result-subject-id^="fit-"]').evaluateAll(nodes => nodes.map(node => node.getAttribute('data-visual-result-subject-id')).sort());
+    const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank fit evidence/ : /适配依据/ });
+    assert.equal(await fitSection.getAttribute('aria-expanded'), 'false', 'fit evidence must be collapsed on first open');
+    await fitSection.click();
+    metricIdsByLocale[locale] = await dialog.locator('[data-species-fit-metric]').evaluateAll(nodes => nodes.map(node => node.getAttribute('data-species-fit-metric')).sort());
     assert.deepEqual(metricIdsByLocale[locale], ['fit-filter', 'fit-heater', 'fit-space', 'fit-temperature', 'fit-water_type']);
     assert.doesNotMatch(await dialog.innerText(), /pH range matches|pH 范围与物种资料匹配/);
     if (locale === 'en') {
@@ -184,11 +188,11 @@ try {
   const careAction = aquariumDetail.getByRole('button', { name: 'View Care Essentials', exact: true });
   assert.equal(await careAction.count(), 1, 'owned aquarium detail must replace the duplicate tank entry with one contextual action');
   await careAction.click();
-  assert.equal(await aquariumDetail.getByRole('tab', { name: 'Care essentials', exact: true }).getAttribute('aria-selected'), 'true');
+  assert.equal(await aquariumDetail.getByRole('button', { name: /Care essentials/ }).getAttribute('aria-expanded'), 'true');
   assert.match(ownedAquarium.page.url(), /\/aquarium$/);
   await ownedAquarium.context.close();
 
-  console.log('species detail experience verified: canonical metrics, unique CTA, collection routing, and owned context');
+  console.log('species detail experience verified: single-screen profile, collapsed evidence, unique CTA, routing, and owned context');
 } finally {
   await browser.close();
 }
