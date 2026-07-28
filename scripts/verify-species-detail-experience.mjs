@@ -88,8 +88,21 @@ try {
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
     assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
     if (locale === 'en') {
-      const [dialogBox, actionBox] = await Promise.all([dialog.boundingBox(), primaryAction.boundingBox()]);
-      assert.ok(dialogBox && actionBox && actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
+      const [dialogBox, actionBox, heroBox, verdictBox, reasonBoxes] = await Promise.all([
+        dialog.boundingBox(),
+        primaryAction.boundingBox(),
+        dialog.locator('[data-species-detail-hero]').boundingBox(),
+        dialog.locator('[data-visual-result-status]').first().boundingBox(),
+        dialog.locator('[aria-label="Key reasons"] > div').evaluateAll(nodes => nodes.map(node => {
+          const box = node.getBoundingClientRect();
+          return { y: box.y, height: box.height };
+        })),
+      ]);
+      assert.ok(dialogBox && actionBox && heroBox && verdictBox, 'phone first-screen elements must have visible bounds');
+      assert.ok(actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
+      assert.equal(reasonBoxes.length, 3, 'phone first screen must expose three key reasons');
+      assert.ok(heroBox.y + heroBox.height < verdictBox.y, 'phone hero and verdict must not overlap');
+      assert.ok(reasonBoxes.every(box => box.y + box.height <= actionBox.y), 'phone reasons must stay fully above the sticky primary action');
     }
     const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank fit evidence/ : /适配依据/ });
     assert.equal(await fitSection.getAttribute('aria-expanded'), 'false', 'fit evidence must be collapsed on first open');
@@ -162,7 +175,16 @@ try {
     await dialog.locator(`[data-visual-result-status="${testCase.status}"]`).waitFor();
     const action = dialog.getByRole('button', { name: testCase.action, exact: true });
     assert.equal(await action.count(), 1, `${testCase.name} must expose exactly one contextual action`);
+    if (testCase.name === 'caution') {
+      await dialog.getByRole('button', { name: /Tank fit evidence/ }).click();
+      const temperatureMetric = dialog.locator('[data-species-fit-metric="fit-temperature"]');
+      assert.equal(await temperatureMetric.evaluate(node => node.tagName), 'BUTTON', 'an abnormal temperature metric must be actionable');
+      await temperatureMetric.click();
+      await current.page.waitForURL(/\/aquarium#settings-parameters$/);
+    }
     if (testCase.expectedUrl) {
+      await dialog.getByRole('button', { name: /^Compatibility/ }).click();
+      assert.equal(await dialog.getByRole('button', { name: 'Compatibility Calculator', exact: true }).count(), 0, 'risk detail must not duplicate the footer route inside compatibility evidence');
       assert.equal(await dialog.getByRole('button', { name: /Confirm Add/, exact: false }).count(), 0, 'not-recommended detail must not imply that adding can be confirmed');
       await action.click();
       await current.page.waitForURL(testCase.expectedUrl);

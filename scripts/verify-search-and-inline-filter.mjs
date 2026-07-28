@@ -71,6 +71,34 @@ await withBrowser(async browser => {
       /contain/,
       '筛选面板到达滚动边界后不得把滚动继续传给下方物种列表',
     );
+    const scrollBoundaryBefore = await panel.evaluate(node => {
+      node.scrollTop = node.scrollHeight;
+      let parent = node.parentElement;
+      while (parent) {
+        const style = getComputedStyle(parent);
+        if (/(auto|scroll)/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight) break;
+        parent = parent.parentElement;
+      }
+      const scrollParent = parent || document.scrollingElement;
+      scrollParent?.setAttribute('data-filter-scroll-parent', 'true');
+      return {
+        panelTop: node.scrollTop,
+        parentTop: scrollParent?.scrollTop || 0,
+        resultTop: document.querySelector('#atlas-results')?.getBoundingClientRect().top || 0,
+      };
+    });
+    const panelCenter = await panel.boundingBox();
+    assert.ok(panelCenter, '筛选面板必须具有可点击边界');
+    await page.mouse.move(panelCenter.x + panelCenter.width / 2, panelCenter.y + panelCenter.height / 2);
+    await page.mouse.wheel(0, 900);
+    const scrollBoundaryAfter = await panel.evaluate(node => ({
+      panelTop: node.scrollTop,
+      parentTop: document.querySelector('[data-filter-scroll-parent="true"]')?.scrollTop || 0,
+      resultTop: document.querySelector('#atlas-results')?.getBoundingClientRect().top || 0,
+    }));
+    assert.equal(scrollBoundaryAfter.panelTop, scrollBoundaryBefore.panelTop, '筛选面板应停留在自己的底部边界');
+    assert.equal(scrollBoundaryAfter.parentTop, scrollBoundaryBefore.parentTop, '筛选面板内继续滚动不得改变页面滚动位置');
+    assert.equal(Math.round(scrollBoundaryAfter.resultTop), Math.round(scrollBoundaryBefore.resultTop), '下方物种结果不得随筛选滚动移动');
 
     await panel.getByRole('button', { name: /^海水\s*\d+$/ }).click();
     await panel.locator('header button').click();
