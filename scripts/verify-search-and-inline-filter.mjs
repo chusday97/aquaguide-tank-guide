@@ -66,6 +66,11 @@ await withBrowser(async browser => {
     const resultsBox = await page.locator('#atlas-results').boundingBox();
     assert.ok(panelBox && resultsBox && panelBox.y < resultsBox.y, '筛选区必须位于工具栏和结果摘要之间');
     assert.equal(await page.locator('body').evaluate(node => getComputedStyle(node).overflow), overflowBefore, '打开筛选不得锁定页面滚动');
+    assert.match(
+      await panel.evaluate(node => getComputedStyle(node).overscrollBehavior),
+      /contain/,
+      '筛选面板到达滚动边界后不得把滚动继续传给下方物种列表',
+    );
 
     await panel.getByRole('button', { name: /^海水\s*\d+$/ }).click();
     await panel.locator('header button').click();

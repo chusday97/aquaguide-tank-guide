@@ -2814,7 +2814,7 @@ export default function Encyclopedia() {
           <section
             data-inline-filter-panel="true"
             aria-labelledby="atlas-inline-filter-title"
-            className="order-none max-h-[52dvh] w-full overflow-y-auto rounded-[20px] border border-emerald-100 bg-white shadow-[0_18px_46px_rgba(15,23,42,0.12)] md:max-h-[360px]"
+            className="order-none max-h-[52dvh] w-full overflow-y-auto overscroll-contain rounded-[20px] border border-emerald-100 bg-white shadow-[0_18px_46px_rgba(15,23,42,0.12)] md:max-h-[360px]"
           >
             <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-border/70 bg-white/96 px-4 py-3 backdrop-blur">
               <div>
