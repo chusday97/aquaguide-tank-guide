@@ -7,7 +7,7 @@ const browser = await chromium.launch({ headless: true });
 const seedCollection = async page => {
   await page.addInitScript(() => {
     localStorage.setItem('aquaguide_locale', 'zh-CN');
-    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0001', 'sp_0002', 'sp_0003']));
+    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0001', 'sp_0002', 'sp_0003', 'sp_0004']));
     localStorage.setItem('aqua_care_favorites', JSON.stringify({
       guide_new_fish_acclimation: {
         id: 'guide_new_fish_acclimation',
@@ -19,10 +19,16 @@ const seedCollection = async page => {
         title: '水质变差怎么办',
         favoritedAt: '2026-07-27T10:00:00.000Z',
       },
+      guide_pregnant_care: {
+        id: 'guide_pregnant_care',
+        title: '怀孕鱼护理',
+        favoritedAt: '2026-07-29T10:00:00.000Z',
+      },
     }));
     localStorage.setItem('deceasedRecords', JSON.stringify([
       { id: 'memorial-1', fishId: 'sp_0001', date: '2026-07-18T08:00:00.000Z', reason: '记录水质波动并调整换水节奏' },
       { id: 'memorial-2', fishId: 'sp_0002', date: '2026-06-29T08:00:00.000Z' },
+      { id: 'memorial-3', fishId: 'sp_0003', date: '2026-07-25T08:00:00.000Z', reason: '复盘入缸观察' },
     ]));
   });
 };
@@ -43,6 +49,14 @@ try {
   assert.equal(await desktop.locator('[data-preview-item="wishlist"]').count(), 3, '种草模块应预览三个物种');
   assert.equal(await desktop.locator('[data-preview-item="care"]').count(), 2, '养护模块应预览两篇文章');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').count(), 2, '生命纪念应预览两条记录');
+  assert.equal(await desktop.locator('[data-preview-item="achievements"]').count(), 2, '成就模块应预览两个具体项目');
+  assert.equal(await desktop.locator('[data-preview-item="wishlist"]').first().getAttribute('data-preview-id'), 'sp_0004', '最新加入的种草物种应排在最前');
+  assert.equal(await desktop.locator('[data-preview-item="care"]').first().getAttribute('data-preview-id'), 'guide_pregnant_care', '养护收藏应按 favoritedAt 倒序');
+  assert.equal(await desktop.locator('[data-preview-item="memorial"]').first().getAttribute('data-preview-id'), 'memorial-3', '生命纪念应按记录日期倒序');
+  await desktop.getByRole('button', { name: '更多 1 种' }).waitFor();
+  await desktop.getByRole('button', { name: '更多 1 篇' }).waitFor();
+  await desktop.getByRole('button', { name: '更多 1 条' }).waitFor();
+  await desktop.getByRole('button', { name: '更多 6 枚' }).waitFor();
   assert.equal(await desktop.getByText('今日种草', { exact: true }).count(), 0, '今日种草不得进入水族册');
 
   const wishlistBox = await desktop.locator('[data-collection-module="wishlist"]').boundingBox();
@@ -54,17 +68,44 @@ try {
   await assertNoHorizontalOverflow(desktop);
   assert.deepEqual(desktopErrors, [], `桌面不应出现页面错误：${desktopErrors.join('; ')}`);
 
-  const routeMap = {
-    wishlist: '/collection/wishlist',
-    care: '/collection/care',
-    memorial: '/collection/memorial',
-    achievements: '/collection/achievements',
-  };
-  for (const [moduleId, expectedPath] of Object.entries(routeMap)) {
-    await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle' });
-    await desktop.locator(`[data-collection-module="${moduleId}"]`).click();
-    await desktop.waitForURL(url => url.pathname === expectedPath);
-  }
+  await desktop.locator('[data-preview-item="wishlist"]').first().click();
+  await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && url.searchParams.get('item') === 'sp_0004');
+  await desktop.locator('[data-surface="centered-dialog"]').waitFor();
+  await desktop.getByRole('button', { name: '知道了', exact: true }).click();
+  await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && !url.searchParams.has('item'));
+  await desktop.goBack();
+  await desktop.waitForURL(url => url.pathname === '/collection');
+
+  await desktop.locator('[data-preview-item="care"]').first().click();
+  await desktop.waitForURL(url => url.pathname === '/collection/care' && url.searchParams.get('item') === 'guide_pregnant_care');
+  await desktop.locator('[data-surface="centered-dialog"]').waitFor();
+  await desktop.goBack();
+  await desktop.waitForURL(url => url.pathname === '/collection');
+
+  await desktop.locator('[data-preview-item="memorial"]').first().click();
+  await desktop.waitForURL(url => url.pathname === '/collection/memorial' && url.searchParams.get('item') === 'memorial-3');
+  await desktop.locator('[data-surface="centered-dialog"]').waitFor();
+  await desktop.goBack();
+  await desktop.waitForURL(url => url.pathname === '/collection');
+
+  const achievementId = await desktop.locator('[data-preview-item="achievements"]').first().getAttribute('data-preview-id');
+  assert.ok(achievementId, '成就预览应提供稳定 ID');
+  await desktop.locator('[data-preview-item="achievements"]').first().click();
+  await desktop.waitForURL(url => url.pathname === '/collection/achievements' && url.searchParams.get('item') === achievementId);
+  await desktop.locator(`#collection-achievement-${achievementId}`).waitFor();
+  assert.equal(
+    await desktop.locator(`#collection-achievement-${achievementId}`).evaluate(element => document.activeElement === element),
+    true,
+    '成就深链应聚焦具体勋章',
+  );
+
+  await desktop.goto(`${baseUrl}/collection/wishlist?item=missing-species`, { waitUntil: 'networkidle' });
+  await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && !url.searchParams.has('item'));
+  await desktop.getByText('该内容已不存在或已移出水族册。', { exact: true }).waitFor();
+
+  await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle' });
+  await desktop.locator('[data-collection-module="wishlist"] > button').first().click();
+  await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && !url.searchParams.has('item'));
   await desktop.close();
 
   const narrowDesktop = await browser.newPage({ viewport: { width: 600, height: 900 } });

@@ -44,7 +44,8 @@ function CollectionModuleCard({
   count,
   icon,
   tone,
-  footer,
+  remainingCount,
+  moreLabel,
   children,
 }: {
   id: CollectionModule;
@@ -52,33 +53,42 @@ function CollectionModuleCard({
   count: string;
   icon: ReactNode;
   tone: string;
-  footer: string;
+  remainingCount: number;
+  moreLabel: string;
   children: ReactNode;
 }) {
   const navigate = useNavigate();
   return (
-    <button
-      type="button"
+    <section
       data-collection-module={id}
-      onClick={() => navigate(moduleRoutes[id])}
-      className="group flex min-h-[326px] min-w-0 flex-col rounded-[24px] border border-white/90 bg-white p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-      aria-label={`${title}，${footer}`}
+      className="flex min-h-[326px] min-w-0 flex-col rounded-[24px] border border-white/90 bg-white p-4 text-left shadow-sm"
     >
-      <span className="flex w-full items-center gap-3">
+      <button
+        type="button"
+        onClick={() => navigate(moduleRoutes[id])}
+        className="group flex w-full items-center gap-3 rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+        aria-label={`${title}，${count}`}
+      >
         <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] ${tone}`}>{icon}</span>
         <span className="min-w-0 flex-1 text-[17px] font-black text-ink">
           {title}
           <span className="ml-2 text-[13px] text-ink/45">· {count}</span>
         </span>
         <ChevronRight className="h-5 w-5 shrink-0 text-ink/25 transition-transform group-hover:translate-x-0.5" />
-      </span>
+      </button>
       <span className="mt-3 flex min-h-0 w-full flex-1 flex-col overflow-hidden rounded-[18px] border border-slate-100 bg-[#fbfcfb]">
         {children}
       </span>
-      <span className="mt-3 inline-flex w-full items-center justify-center gap-1 text-[12px] font-black text-emerald-800">
-        {footer}<ChevronRight className="h-3.5 w-3.5" />
-      </span>
-    </button>
+      {remainingCount > 0 && (
+        <button
+          type="button"
+          onClick={() => navigate(moduleRoutes[id])}
+          className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-1 rounded-full text-[12px] font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+        >
+          {moreLabel}<ChevronRight className="h-3.5 w-3.5" />
+        </button>
+      )}
+    </section>
   );
 }
 
@@ -102,12 +112,14 @@ function PreviewEmpty({
 
 export default function CollectionHub() {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
   const isEn = i18n.language === 'en';
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
 
   useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);
 
-  const wishlistFishes = useMemo(() => snapshot.wishlistIds
+  const wishlistFishes = useMemo(() => [...snapshot.wishlistIds]
+    .reverse()
     .map(id => fishData.find(fish => fish.id === id))
     .filter((fish): fish is (typeof fishData)[number] => Boolean(fish))
     .slice(0, 3), [snapshot.wishlistIds]);
@@ -123,6 +135,19 @@ export default function CollectionHub() {
   const nextAchievement = snapshot.achievements
     .filter(item => !item.unlocked)
     .sort((a, b) => (b.current / b.target) - (a.current / a.target))[0];
+  const achievementPreviews = useMemo(() => {
+    const prioritized = [
+      ...(unlockedAchievement ? [unlockedAchievement] : []),
+      ...(nextAchievement ? [nextAchievement] : []),
+      ...snapshot.achievements,
+    ];
+    return prioritized
+      .filter((item, index, items) => items.findIndex(candidate => candidate.id === item.id) === index)
+      .slice(0, 2);
+  }, [nextAchievement, snapshot.achievements, unlockedAchievement]);
+  const openItem = (module: CollectionModule, itemId: string) => {
+    navigate(`${moduleRoutes[module]}?item=${encodeURIComponent(itemId)}`);
+  };
   const formatDate = (value: string) => {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
@@ -146,14 +171,22 @@ export default function CollectionHub() {
           count={String(snapshot.counts.wishlist)}
           icon={<Heart className="h-5 w-5" />}
           tone="bg-rose-50 text-rose-600"
-          footer={isEn ? `View all ${snapshot.counts.wishlist} species` : `查看全部 ${snapshot.counts.wishlist} 种`}
+          remainingCount={Math.max(0, snapshot.counts.wishlist - 3)}
+          moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.wishlist - 3)} species` : `更多 ${Math.max(0, snapshot.counts.wishlist - 3)} 种`}
         >
           {wishlistFishes.length ? wishlistFishes.map(fish => (
-            <span key={fish.id} data-preview-item="wishlist" className="flex min-h-0 flex-1 items-center gap-3 border-b border-slate-100 px-2.5 py-2 last:border-b-0">
+            <button
+              key={fish.id}
+              type="button"
+              data-preview-item="wishlist"
+              data-preview-id={fish.id}
+              onClick={() => openItem('wishlist', fish.id)}
+              className="flex min-h-0 w-full flex-1 items-center gap-3 border-b border-slate-100 px-2.5 py-2 text-left transition-colors last:border-b-0 hover:bg-rose-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-rose-500"
+            >
               <span className="flex h-[62px] w-[104px] shrink-0 items-center justify-center overflow-hidden rounded-[13px] bg-white">
                 <ResilientImage
                   src={getSpeciesVisualSources(fish).thumbnail}
-                  alt=""
+                  alt={fish.name}
                   className={`h-full w-full object-contain p-[7%] ${getSpeciesImageClass(fish)}`}
                   loading="lazy"
                   decoding="async"
@@ -163,7 +196,7 @@ export default function CollectionHub() {
                 <span className="block truncate text-[13px] font-black text-ink">{fish.name}</span>
                 <span className="mt-1 inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-black text-rose-600">{fish.category}</span>
               </span>
-            </span>
+            </button>
           )) : (
             <PreviewEmpty
               icon={<Heart className="h-5 w-5" />}
@@ -179,14 +212,22 @@ export default function CollectionHub() {
           count={String(snapshot.counts.care)}
           icon={<BookOpenCheck className="h-5 w-5" />}
           tone="bg-sky-50 text-sky-700"
-          footer={isEn ? `View all ${snapshot.counts.care} guides` : `查看全部 ${snapshot.counts.care} 篇`}
+          remainingCount={Math.max(0, snapshot.counts.care - 2)}
+          moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.care - 2)} guides` : `更多 ${Math.max(0, snapshot.counts.care - 2)} 篇`}
         >
           {careTopics.length ? careTopics.map(topic => (
-            <span key={topic.id} data-preview-item="care" className="grid min-h-0 flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 last:border-b-0">
+            <button
+              key={topic.id}
+              type="button"
+              data-preview-item="care"
+              data-preview-id={topic.id}
+              onClick={() => openItem('care', topic.id)}
+              className="grid min-h-0 w-full flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 text-left transition-colors last:border-b-0 hover:bg-sky-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-600"
+            >
               <span className="h-[82px] overflow-hidden rounded-[13px] bg-white">
                 <ResilientImage
                   src={getCareVisualSources(topic.imageUrl).thumbnail}
-                  alt=""
+                  alt={topic.title}
                   className="h-full w-full object-cover"
                   loading="lazy"
                   decoding="async"
@@ -196,7 +237,7 @@ export default function CollectionHub() {
                 <span className="line-clamp-2 text-[13px] font-black leading-5 text-ink">{topic.title}</span>
                 <span className="mt-1 line-clamp-2 text-[10px] font-bold leading-4 text-ink/45">{topic.summary}</span>
               </span>
-            </span>
+            </button>
           )) : (
             <PreviewEmpty
               icon={<BookOpenCheck className="h-5 w-5" />}
@@ -212,12 +253,20 @@ export default function CollectionHub() {
           count={String(snapshot.counts.memorial)}
           icon={<Skull className="h-5 w-5" />}
           tone="bg-slate-100 text-slate-600"
-          footer={isEn ? `View all ${snapshot.counts.memorial} records` : `查看全部 ${snapshot.counts.memorial} 条`}
+          remainingCount={Math.max(0, snapshot.counts.memorial - 2)}
+          moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.memorial - 2)} records` : `更多 ${Math.max(0, snapshot.counts.memorial - 2)} 条`}
         >
           {recentMemorials.length ? recentMemorials.map(record => {
             const fish = fishData.find(item => item.id === record.fishId);
             return (
-              <span key={record.id} data-preview-item="memorial" className="grid min-h-0 flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 last:border-b-0">
+              <button
+                key={record.id}
+                type="button"
+                data-preview-item="memorial"
+                data-preview-id={record.id}
+                onClick={() => openItem('memorial', record.id)}
+                className="grid min-h-0 w-full flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 text-left transition-colors last:border-b-0 hover:bg-slate-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-600"
+              >
                 <span className="flex h-[82px] items-center justify-center overflow-hidden rounded-[13px] bg-slate-100 grayscale">
                   {fish ? (
                     <ResilientImage
@@ -235,7 +284,7 @@ export default function CollectionHub() {
                     {record.reason ? (isEn ? 'Reflected' : '已复盘') : (isEn ? 'Reason needed' : '待补充原因')}
                   </span>
                 </span>
-              </span>
+              </button>
             );
           }) : (
             <PreviewEmpty
@@ -252,43 +301,37 @@ export default function CollectionHub() {
           count={`${snapshot.counts.achievements}/${snapshot.achievements.length}`}
           icon={<Medal className="h-5 w-5" />}
           tone="bg-amber-50 text-amber-700"
-          footer={isEn ? 'View all achievements' : '查看全部勋章'}
+          remainingCount={Math.max(0, snapshot.achievements.length - 2)}
+          moreLabel={isEn ? `More ${Math.max(0, snapshot.achievements.length - 2)} badges` : `更多 ${Math.max(0, snapshot.achievements.length - 2)} 枚`}
         >
           <span className="flex min-h-0 flex-1 flex-col p-2.5">
-            {unlockedAchievement ? (() => {
-              const Icon = achievementIcons[unlockedAchievement.id];
+            {achievementPreviews.map((achievement, index) => {
+              const Icon = achievementIcons[achievement.id];
               return (
-                <span className="flex items-center gap-3 rounded-[14px] border border-amber-100 bg-white px-3 py-3">
-                  <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-300 text-amber-950">
+                <button
+                  key={achievement.id}
+                  type="button"
+                  data-preview-item="achievements"
+                  data-preview-id={achievement.id}
+                  onClick={() => openItem('achievements', achievement.id)}
+                  className={`${index > 0 ? 'mt-2' : ''} flex items-center gap-3 rounded-[14px] border border-amber-100 bg-white px-3 py-3 text-left hover:bg-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600`}
+                >
+                  <span className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${achievement.unlocked ? 'bg-amber-300 text-amber-950' : 'bg-amber-50 text-amber-800'}`}>
                     <Icon className="h-5 w-5" />
-                    <Check className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-emerald-700 p-1 text-white" />
+                    {achievement.unlocked && <Check className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-emerald-700 p-1 text-white" />}
                   </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[13px] font-black text-ink">{unlockedAchievement.title}</span>
-                    <span className="mt-1 text-[10px] font-black text-emerald-700">{isEn ? 'Unlocked' : '已解锁'}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[13px] font-black text-ink">{achievement.title}</span>
+                    <span className={`mt-1 block text-[10px] font-black ${achievement.unlocked ? 'text-emerald-700' : 'text-amber-800'}`}>
+                      {achievement.unlocked
+                        ? (isEn ? 'Unlocked' : '已解锁')
+                        : (isEn ? `${achievement.current}/${achievement.target} completed` : `已完成 ${achievement.current}/${achievement.target}`)}
+                    </span>
                   </span>
-                </span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-ink/25" />
+                </button>
               );
-            })() : (
-              <span className="rounded-[14px] bg-white px-3 py-4 text-[11px] font-bold text-ink/45">
-                {isEn ? 'Complete your first action to unlock a badge.' : '完成第一个养护行动后，会自动解锁勋章。'}
-              </span>
-            )}
-
-            {nextAchievement && (
-              <span className="mt-2 rounded-[14px] border border-amber-100 bg-white px-3 py-3">
-                <span className="flex items-center justify-between gap-3">
-                  <span className="min-w-0 truncate text-[12px] font-black text-ink">{nextAchievement.title}</span>
-                  <span className="shrink-0 text-[10px] font-black text-amber-800">{nextAchievement.current}/{nextAchievement.target}</span>
-                </span>
-                <span className="mt-2 block h-2 overflow-hidden rounded-full bg-amber-100">
-                  <span className="block h-full rounded-full bg-amber-500" style={{ width: `${Math.min(100, Math.round((nextAchievement.current / nextAchievement.target) * 100))}%` }} />
-                </span>
-                <span className="mt-2 block text-[10px] font-bold text-ink/45">
-                  {isEn ? `${Math.max(0, nextAchievement.target - nextAchievement.current)} remaining` : `还差 ${Math.max(0, nextAchievement.target - nextAchievement.current)}`}
-                </span>
-              </span>
-            )}
+            })}
             <span className="mt-auto pt-3 text-center text-[10px] font-black text-amber-800">{isEn ? 'Unlocks automatically · no claiming needed' : '自动解锁，无需领取'}</span>
           </span>
         </CollectionModuleCard>

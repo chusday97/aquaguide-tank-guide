@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import i18n from '../i18n';
 import {
   BookHeart,
@@ -39,6 +39,11 @@ import { CareArticleDetail } from './CareEncyclopedia';
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const PAGE_SIZE = 20;
 
+interface CollectionItemDeepLink {
+  module: CollectionModule;
+  itemId: string;
+}
+
 // tabConfig is defined dynamically inside the component to support i18n
 
 const achievementIcons: Record<AchievementId, typeof Medal> = {
@@ -59,6 +64,7 @@ const formatMemorialDate = (value: string) => {
 
 export default function Collection({ module }: { module: CollectionModule }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { showToast } = useToast();
   const { captureContext, restoreContext } = useWorkspaceNavigation();
   const isEn = i18n.language === 'en';
@@ -79,8 +85,10 @@ export default function Collection({ module }: { module: CollectionModule }) {
   const [checkedActions, setCheckedActions] = useState<string[]>([]);
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [highlightedAchievementId, setHighlightedAchievementId] = useState<AchievementId | null>(null);
   const returnContextRef = useRef<WorkspaceNavigationContext | null>(null);
   const detailFinalFocusRef = useRef<HTMLElement | null>(null);
+  const handledDeepLinkRef = useRef('');
   const previousUnlockedRef = useRef(new Set(snapshot.achievements.filter(item => item.unlocked).map(item => item.id)));
   const detailScrollRef = useRef<HTMLDivElement>(null);
 
@@ -97,11 +105,13 @@ export default function Collection({ module }: { module: CollectionModule }) {
     trackSessionEvent('favorite_page_view', { action: 'view', status: activeTab, entry: 'collection' });
   }, [activeTab]);
 
-  const wishlistFishes = useMemo(() => snapshot.wishlistIds
+  const wishlistFishes = useMemo(() => [...snapshot.wishlistIds]
+    .reverse()
     .map(id => fishData.find(item => item.id === id))
     .filter((item): item is Fish => Boolean(item)), [snapshot.wishlistIds]);
-  const careTopics = useMemo(() => Object.keys(snapshot.careFavorites)
-    .map(id => careTopicsData.find(item => item.id === id))
+  const careTopics = useMemo(() => Object.values(snapshot.careFavorites)
+    .sort((a, b) => new Date(b.favoritedAt).getTime() - new Date(a.favoritedAt).getTime())
+    .map(favorite => careTopicsData.find(item => item.id === favorite.id))
     .filter((item): item is CareTopic => Boolean(item)), [snapshot.careFavorites]);
   const currentAquarium = useMemo<Aquarium | null>(() => (
     snapshot.appState.aquariums.find(item => item.id === snapshot.appState.currentAquariumId)
@@ -109,6 +119,90 @@ export default function Collection({ module }: { module: CollectionModule }) {
     || null
   ), [snapshot.appState]);
   const ownedIds = useMemo(() => new Set(snapshot.appState.aquariums.flatMap(item => item.fishes.map(record => record.fishId))), [snapshot.appState.aquariums]);
+  const deepLink = useMemo<CollectionItemDeepLink | null>(() => {
+    const itemId = new URLSearchParams(location.search).get('item')?.trim();
+    return itemId ? { module: activeTab, itemId } : null;
+  }, [activeTab, location.search]);
+
+  const clearDeepLinkItem = () => {
+    if (!deepLink) return;
+    const params = new URLSearchParams(location.search);
+    params.delete('item');
+    handledDeepLinkRef.current = '';
+    navigate({
+      pathname: location.pathname,
+      search: params.toString() ? `?${params.toString()}` : '',
+    }, { replace: true });
+  };
+
+  useEffect(() => {
+    if (!deepLink) {
+      handledDeepLinkRef.current = '';
+      setHighlightedAchievementId(null);
+      return;
+    }
+
+    const key = `${deepLink.module}:${deepLink.itemId}`;
+    if (handledDeepLinkRef.current === key) return;
+    handledDeepLinkRef.current = key;
+    detailFinalFocusRef.current = document.getElementById('collection-module-heading');
+
+    const showMissingItem = () => {
+      showToast(isEn ? 'This collection item is no longer available.' : '该内容已不存在或已移出水族册。', 'error');
+      const params = new URLSearchParams(location.search);
+      params.delete('item');
+      navigate({
+        pathname: location.pathname,
+        search: params.toString() ? `?${params.toString()}` : '',
+      }, { replace: true });
+    };
+
+    if (activeTab === 'wishlist') {
+      const fish = wishlistFishes.find(item => item.id === deepLink.itemId);
+      if (!fish) showMissingItem();
+      else setSelectedFish(fish);
+      return;
+    }
+    if (activeTab === 'care') {
+      const topic = careTopics.find(item => item.id === deepLink.itemId);
+      if (!topic) showMissingItem();
+      else setSelectedTopic(topic);
+      return;
+    }
+    if (activeTab === 'memorial') {
+      const record = snapshot.memorials.find(item => item.id === deepLink.itemId);
+      if (!record) showMissingItem();
+      else setSelectedMemorial(record);
+      return;
+    }
+
+    const achievement = snapshot.achievements.find(item => item.id === deepLink.itemId);
+    if (!achievement) {
+      showMissingItem();
+      return;
+    }
+    setHighlightedAchievementId(achievement.id);
+    const target = document.getElementById(`collection-achievement-${achievement.id}`);
+    if (target) {
+      target.scrollIntoView({
+        block: 'center',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      });
+      target.focus({ preventScroll: true });
+    }
+  }, [
+    activeTab,
+    careTopics,
+    deepLink,
+    isEn,
+    location.pathname,
+    location.search,
+    navigate,
+    showToast,
+    snapshot.achievements,
+    snapshot.memorials,
+    wishlistFishes,
+  ]);
 
   const openFromCard = (sourceId: string) => {
     returnContextRef.current = captureContext(sourceId);
@@ -128,6 +222,10 @@ export default function Collection({ module }: { module: CollectionModule }) {
       return;
     }
     setPendingFishRemoval(null);
+    if (deepLink?.module === 'wishlist' && deepLink.itemId === pendingFishRemoval.id) {
+      setSelectedFish(null);
+      clearDeepLinkItem();
+    }
     showToast(isEn ? 'Removed from species wishlist' : '已从种草图鉴移除');
   };
 
@@ -139,6 +237,10 @@ export default function Collection({ module }: { module: CollectionModule }) {
       return;
     }
     setPendingCareRemoval(null);
+    if (deepLink?.module === 'care' && deepLink.itemId === pendingCareRemoval.id) {
+      setSelectedTopic(null);
+      clearDeepLinkItem();
+    }
     showToast(isEn ? 'Removed from care collection' : '已从养护收藏移除');
   };
 
@@ -182,7 +284,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-black text-emerald-800 shadow-sm">
               <BookHeart className="h-3.5 w-3.5" /> {i18n.language === 'en' ? 'My Aquaria' : '自然水族册'}
             </div>
-            <h1 className="text-[24px] font-black tracking-tight text-ink">{tabConfig.find(item => item.id === activeTab)?.label}</h1>
+            <h1 id="collection-module-heading" tabIndex={-1} className="text-[24px] font-black tracking-tight text-ink focus-visible:outline-none">{tabConfig.find(item => item.id === activeTab)?.label}</h1>
             <button type="button" onClick={() => navigate('/collection')} className="mt-2 inline-flex items-center gap-1 text-[11px] font-black text-emerald-800 hover:underline">
               {i18n.language === 'en' ? 'Back to Collection' : '返回水族册首页'}
             </button>
@@ -285,7 +387,13 @@ export default function Collection({ module }: { module: CollectionModule }) {
               const remaining = Math.max(0, achievement.target - achievement.current);
               const status = achievement.unlocked ? 'unlocked' : achievement.current > 0 ? 'in_progress' : 'locked';
               return (
-                <article key={achievement.id} data-achievement-status={status} className={`flex min-h-[250px] min-w-0 flex-col rounded-[22px] border p-4 shadow-sm ${status === 'unlocked' ? 'border-amber-300 bg-[linear-gradient(145deg,#fffdf5,#f6f1dc)]' : status === 'in_progress' ? 'border-emerald-200 bg-emerald-50/65' : 'border-slate-200 bg-white'}`}>
+                <article
+                  key={achievement.id}
+                  id={`collection-achievement-${achievement.id}`}
+                  tabIndex={-1}
+                  data-achievement-status={status}
+                  className={`flex min-h-[250px] min-w-0 scroll-mt-24 flex-col rounded-[22px] border p-4 shadow-sm focus-visible:outline-none ${highlightedAchievementId === achievement.id ? 'workspace-section-highlight' : ''} ${status === 'unlocked' ? 'border-amber-300 bg-[linear-gradient(145deg,#fffdf5,#f6f1dc)]' : status === 'in_progress' ? 'border-emerald-200 bg-emerald-50/65' : 'border-slate-200 bg-white'}`}
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div className={`relative flex h-12 w-12 items-center justify-center rounded-[18px] ${status === 'unlocked' ? 'bg-amber-400 text-amber-950 shadow-[0_10px_24px_rgba(217,160,45,0.25)]' : status === 'in_progress' ? 'bg-emerald-700 text-white' : 'border border-slate-200 bg-slate-100 text-slate-500'}`}>
                       {achievement.unlocked && <Check className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-emerald-700 p-1 text-white" />}
@@ -330,7 +438,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         inCalculator={false}
         inWishlist={Boolean(selectedFish && snapshot.wishlistIds.includes(selectedFish.id))}
         finalFocusElement={detailFinalFocusRef.current}
-        onOpenChange={(open) => { if (!open) { setSelectedFish(null); restoreCard(); } }}
+        onOpenChange={(open) => { if (!open) { setSelectedFish(null); clearDeepLinkItem(); restoreCard(); } }}
         onSelectSpecies={setSelectedFish}
         onAddToTank={(fish) => navigate(`/aquarium?action=add-species&species=${encodeURIComponent(fish.id)}`)}
         onAddToCalculator={(fish) => { setCompatibilitySelection([fish.id]); navigate('/encyclopedia#compatibility'); }}
@@ -347,7 +455,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         onOpenTankSettings={(panel) => navigate(currentAquarium ? `/aquarium#settings-${panel}` : '/aquarium?action=create')}
       />
 
-      <Dialog open={Boolean(selectedTopic)} onOpenChange={(open) => { if (!open) { setSelectedTopic(null); restoreCard(); } }}>
+      <Dialog open={Boolean(selectedTopic)} onOpenChange={(open) => { if (!open) { setSelectedTopic(null); clearDeepLinkItem(); restoreCard(); } }}>
         <AdaptiveDetailContent finalFocus={detailFinalFocusRef}>
           {selectedTopic && (
             <CareArticleDetail
@@ -367,7 +475,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         </AdaptiveDetailContent>
       </Dialog>
 
-      <Dialog open={Boolean(selectedMemorial)} onOpenChange={(open) => { if (!open) { setSelectedMemorial(null); restoreCard(); } }}>
+      <Dialog open={Boolean(selectedMemorial)} onOpenChange={(open) => { if (!open) { setSelectedMemorial(null); clearDeepLinkItem(); restoreCard(); } }}>
         <AdaptiveDetailContent className="flex flex-col" finalFocus={detailFinalFocusRef}>
           {selectedMemorial && (() => {
             const fish = fishData.find(item => item.id === selectedMemorial.fishId);
