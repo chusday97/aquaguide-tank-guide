@@ -23,10 +23,12 @@ import {
   Settings,
   Search as SearchIcon,
   Camera,
+  Plus,
 } from 'lucide-react';
 import { ToastProvider, useToast } from './components/common/ToastProvider';
 import { WorkspaceNavigationProvider, useWorkspaceNavigation } from './components/layout/WorkspaceNavigationProvider';
 import { LayoutModeProvider, useLayoutMode } from './components/layout/LayoutModeProvider';
+import { OnboardingTaskCard } from './components/onboarding/OnboardingTaskCard';
 import { DataRecoveryNotice, RouteErrorBoundary } from './components/common/RouteErrorBoundary';
 import { lazyWithRecovery } from './lib/lazyWithRecovery';
 import i18n from './i18n';
@@ -334,7 +336,7 @@ function DesktopSidebar({
           </button>
         )}
 
-        <nav className="min-h-0 flex-1 px-3 pb-4">
+        <nav className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto px-3 pb-4">
           <div className={cn('mb-4 grid gap-2', collapsed ? 'justify-items-center' : 'grid-cols-[minmax(0,1fr)_44px]')}>
             {collapsed ? (
               <button type="button" onClick={() => navigateToRoute('/search')} title={t('searchPage.title')} aria-label={t('searchPage.title')} className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-ink/55 shadow-sm hover:text-emerald-700"><SearchIcon className="h-5 w-5" /></button>
@@ -389,37 +391,53 @@ function DesktopSidebar({
             })}
           </div>
 
-          {activePath === '/aquarium' && aquariumNavigation.aquariums.length > 0 && (
+          {activePath === '/aquarium' && (
             <section className={cn('mt-4 border-t border-ink/6 pt-4', collapsed && 'pt-3')} aria-label="切换鱼缸">
               {!collapsed && <div className="mb-2 px-2 text-[10px] font-black tracking-[0.12em] text-ink/35">我的鱼缸</div>}
-              <div className="app-scrollbar-hidden grid max-h-[176px] gap-1.5 overflow-y-auto">
-                {aquariumNavigation.aquariums.map(aquarium => {
-                  const isCurrent = aquarium.id === aquariumNavigation.currentAquariumId;
-                  const total = aquarium.fishes.reduce((sum, item) => sum + Math.max(0, item.quantity || 0), 0);
-                  return (
-                    <button
-                      key={aquarium.id}
-                      type="button"
-                      onClick={() => handleAquariumSwitch(aquarium.id)}
-                      aria-current={isCurrent ? 'true' : undefined}
-                      title={collapsed ? aquarium.name : undefined}
-                      className={cn(
-                        'flex min-h-11 w-full min-w-0 items-center gap-2 rounded-[15px] px-2.5 text-left transition-colors',
-                        collapsed && 'justify-center px-0',
-                        isCurrent ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-100' : 'text-ink/52 hover:bg-white hover:text-accent'
-                      )}
-                    >
-                      <Droplets className="h-4 w-4 shrink-0" />
-                      {!collapsed && (
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[12px] font-black">{aquarium.name}</span>
-                          <span className="block text-[9px] font-bold opacity-55">{total} 只/条</span>
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+              {aquariumNavigation.aquariums.length > 0 && (
+                <div className="app-scrollbar-hidden grid max-h-[146px] gap-1.5 overflow-y-auto">
+                  {aquariumNavigation.aquariums.map(aquarium => {
+                    const isCurrent = aquarium.id === aquariumNavigation.currentAquariumId;
+                    const total = aquarium.fishes.reduce((sum, item) => sum + Math.max(0, item.quantity || 0), 0);
+                    return (
+                      <button
+                        key={aquarium.id}
+                        type="button"
+                        onClick={() => handleAquariumSwitch(aquarium.id)}
+                        aria-current={isCurrent ? 'true' : undefined}
+                        title={collapsed ? aquarium.name : undefined}
+                        className={cn(
+                          'flex min-h-11 w-full min-w-0 items-center gap-2 rounded-[15px] px-2.5 text-left transition-colors',
+                          collapsed && 'justify-center px-0',
+                          isCurrent ? 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-100' : 'text-ink/52 hover:bg-white hover:text-accent'
+                        )}
+                      >
+                        <Droplets className="h-4 w-4 shrink-0" />
+                        {!collapsed && (
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-[12px] font-black">{aquarium.name}</span>
+                            <span className="block text-[9px] font-bold opacity-55">{total} 只/条</span>
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => navigateToRoute('/aquarium?action=create')}
+                aria-label={t('aquarium.newTank')}
+                title={collapsed ? t('aquarium.newTank') : undefined}
+                className={cn(
+                  'mt-2 flex min-h-11 w-full min-w-0 items-center gap-2 rounded-[15px] border border-dashed border-emerald-200 px-2.5 text-left text-emerald-800 transition-colors hover:bg-emerald-50',
+                  collapsed && 'justify-center px-0'
+                )}
+              >
+                <Plus className="h-4 w-4 shrink-0" />
+                {!collapsed && <span className="text-[12px] font-black">{t('aquarium.newTank')}</span>}
+              </button>
+              {!collapsed && <OnboardingTaskCard variant="sidebar" />}
             </section>
           )}
 

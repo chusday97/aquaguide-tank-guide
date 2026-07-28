@@ -299,13 +299,11 @@ function AquariumWorkspace({
           <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
           {mobileToggle(learnExpanded, () => setLearnExpanded(value => !value), i18n.language === 'en' ? 'Open learning tasks' : '展开学习任务')}
           {(!isPhoneLayout || learnExpanded) && (
-            <>
-              <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}{basics}</div>
-              {advanced}
-            </>
+            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}{basics}</div>
           )}
         </section>
       </div>
+      {(!isPhoneLayout || learnExpanded) && advanced}
     </>
   );
 }
@@ -1122,6 +1120,7 @@ const loadWishlistFishIds = () => {
 
 export default function AquariumManager() {
   const { t, i18n } = useTranslation();
+  const { isPhoneLayout } = useLayoutMode();
   const isEn = i18n.language === 'en';
   const localizedTemplates = useMemo(() => getLocalizedTemplates(isEn), [isEn]);
   const filterOptionKeys: Record<string, string> = {
@@ -2590,11 +2589,19 @@ export default function AquariumManager() {
   useEffect(() => {
     const params = new URLSearchParams(routeLocation.search);
     const action = params.get('action');
-    if (!activeAquarium || !action || !['create', 'setup', 'daily-check'].includes(action)) return;
-    const requestKey = `${activeAquarium.id}:${action}:${params.get('source') ?? ''}`;
+    if (!action || !['create', 'setup', 'daily-check'].includes(action)) return;
+    const requestKey = action === 'create'
+      ? `create:${params.get('source') ?? ''}`
+      : `${activeAquarium?.id ?? 'none'}:${action}:${params.get('source') ?? ''}`;
     if (handledOnboardingActionRef.current === requestKey) return;
     handledOnboardingActionRef.current = requestKey;
 
+    if (action === 'create') {
+      handleAddAquarium();
+      routeNavigate('/aquarium', { replace: true });
+      return;
+    }
+    if (!activeAquarium) return;
     if (action === 'daily-check') {
       setIsDiagnosisOpen(true);
       handleStartDiagnosisQuiz('巡检');
@@ -4371,7 +4378,7 @@ export default function AquariumManager() {
           </button>
         </div>
       </aside>
-      <section className="aquarium-desktop-header relative hidden min-w-0 items-center justify-between gap-3 rounded-[20px] border border-white/80 bg-white/72 px-4 py-3 shadow-sm md:flex">
+      <section className="aquarium-desktop-header relative hidden min-w-0 items-center gap-3 rounded-[20px] border border-white/80 bg-white/72 px-4 py-3 shadow-sm md:flex">
         <div className="flex min-w-0 items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-emerald-50 text-emerald-700"><Droplets className="h-4 w-4" /></span>
           {isEditingName ? (
@@ -4400,6 +4407,7 @@ export default function AquariumManager() {
             </form>
           ) : (
             <div className="min-w-0">
+              <span className="block text-[9px] font-black uppercase tracking-[0.12em] text-emerald-700/55">{isEn ? 'Current aquarium' : '当前鱼缸'}</span>
               <div className="flex min-w-0 items-center gap-1.5">
                 <span className="truncate text-[14px] font-black text-ink">{activeAquarium.name}</span>
                 <button
@@ -4415,14 +4423,11 @@ export default function AquariumManager() {
                   <Edit2 className="h-4 w-4" />
                 </button>
               </div>
-              <span className="block text-[10px] font-bold text-ink/42">可在左侧栏切换鱼缸</span>
+              <span className="block text-[10px] font-bold text-ink/42">
+                {activeAquarium.waterType === 'Saltwater' ? t('aquarium.saltwater') : t('aquarium.freshwater')} · {isEn ? `About ${tankVolumeLiters || '—'} L` : `约 ${tankVolumeLiters || '—'} L`}
+              </span>
             </div>
           )}
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <Button type="button" onClick={handleAddAquarium} className="h-10 rounded-full bg-emerald-700 px-4 text-[12px] font-black text-white hover:bg-emerald-800">
-            <Plus className="mr-1.5 h-4 w-4" />{t('aquarium.newTank')}
-          </Button>
         </div>
       </section>
       {/* Aquarium Tabs */}
@@ -4562,7 +4567,7 @@ export default function AquariumManager() {
 
       </section>
 
-      <OnboardingTaskCard />
+      {isPhoneLayout && <OnboardingTaskCard />}
 
       <AquariumWorkspace
         observeTitle={t('aquarium.zoneObserve')}
@@ -4855,15 +4860,21 @@ export default function AquariumManager() {
         </button>
         <div className="aquarium-archive-preview border-t border-white/70 bg-[#F4F2EC] p-3">
           {ownedArchivePreviewItems.length > 0 ? (
-            <div className="flex min-w-0 items-center gap-2 overflow-hidden">
-              {ownedArchivePreviewItems.slice(0, 5).map(item => (
-                <span key={`preview-${item.id}`} className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] ${getSpeciesImageSurfaceClass(item.fish)}`}>
-                  <img src={getSpeciesDisplayImage(item.fish)} alt={item.fish.name} className={`h-full w-full object-contain p-1 ${getSpeciesImageClass(item.fish)}`} referrerPolicy="no-referrer" />
-                  <span className="absolute -bottom-1 -right-1 rounded-full bg-ink px-1.5 py-0.5 text-[8px] font-black text-white">×{item.quantity}</span>
+            <div className="grid min-w-0 gap-2 sm:grid-cols-3">
+              {ownedArchivePreviewItems.slice(0, 3).map(item => (
+                <span key={`preview-${item.id}`} className="flex min-w-0 items-center gap-2 rounded-[14px] bg-white/75 p-2">
+                  <span className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] ${getSpeciesImageSurfaceClass(item.fish)}`}>
+                    <img src={getSpeciesDisplayImage(item.fish)} alt={getSpeciesNameLocalized(item.fish, isEn)} className={`h-full w-full object-contain p-1 ${getSpeciesImageClass(item.fish)}`} referrerPolicy="no-referrer" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-[10px] font-black text-ink">{getSpeciesNameLocalized(item.fish, isEn)}</span>
+                    <span className="mt-0.5 block text-[9px] font-bold text-ink/45">×{item.quantity}</span>
+                  </span>
                 </span>
               ))}
-              {ownedArchivePreviewItems.length > 5 && <span className="text-[11px] font-black text-ink/45">+{ownedArchivePreviewItems.length - 5}</span>}
-              <span className="ml-auto text-[10px] font-bold text-emerald-800">点击查看与管理</span>
+              {ownedArchivePreviewItems.length > 3 && (
+                <span className="flex min-h-11 items-center justify-center rounded-[14px] bg-white/75 text-[11px] font-black text-emerald-800">+{ownedArchivePreviewItems.length - 3}</span>
+              )}
             </div>
           ) : (
             <button type="button" onClick={() => setIsAddFishOpen(true)} className="min-h-11 w-full rounded-xl border border-dashed border-emerald-200 bg-white text-xs font-black text-emerald-800">
@@ -4888,7 +4899,7 @@ export default function AquariumManager() {
             {t('aquarium.editBasics')}
           </button>
         </div>
-        <div className="mt-3 grid min-w-0 gap-2 sm:grid-cols-2">
+        <div className="mt-3 divide-y divide-ink/6 overflow-hidden rounded-[15px] bg-[#F8F7F2]">
           {[
             {
               label: t('aquarium.tankBasicsWater'),
@@ -4927,13 +4938,13 @@ export default function AquariumManager() {
               icon: <Activity className="h-4 w-4" />,
             },
           ].map(item => (
-            <div key={item.label} className="grid min-w-0 grid-cols-[34px_minmax(0,1fr)] gap-2 rounded-[15px] bg-[#F8F7F2] p-2.5">
+            <div key={item.label} className="grid min-w-0 grid-cols-[34px_minmax(0,1fr)_minmax(0,auto)] items-center gap-2 p-2.5">
               <span className="flex h-[34px] w-[34px] items-center justify-center rounded-[12px] bg-white text-emerald-700 shadow-sm">{item.icon}</span>
               <span className="min-w-0">
-                <span className="block text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{item.label}</span>
-                <span className="mt-0.5 block break-words text-[11px] font-black leading-4 text-ink">{item.value}</span>
+                <span className="block break-words text-[10px] font-black leading-4 text-ink">{item.label}</span>
                 <span className="mt-0.5 block break-words text-[9px] font-bold leading-4 text-ink/42">{item.meta}</span>
               </span>
+              <span className="min-w-0 max-w-[16ch] break-words text-right text-[10px] font-black leading-4 text-ink">{item.value}</span>
             </div>
           ))}
         </div>

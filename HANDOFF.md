@@ -27,6 +27,7 @@
 
 | 日期 | 完成事项 | 证据（commit / 测试 / 文档） |
 |---|---|---|
+| 2026-07-28 | 首页按最终 C 方案完成真实层级重排：侧栏统一鱼缸切换/新建/紧凑引导，正文观察双栏、管理学习并排、进阶检测横跨底部；修复新建深链接伪操作 | lint/build；`scripts/verify-aquarium-home-c.mjs` 覆盖 1440/1000/600px 桌面与 320–430px 真手机；commit 待本次提交 |
 | 2026-07-27 | 手机物种详情恢复唯一吸底主操作，并补齐六状态及 Manage/Learn 深链接回归 | commit `440376d`；生产预览 species-detail/home-C/core；Critic 六维 PASS |
 | 2026-07-27 | 修复物种详情英文指标、来源页无效 CTA、已拥有物种错跳、重复主操作与 pH 低优先级提示 | commit `2c80073`；species-detail/home-C/core/compatibility；生产预览；7×17 响应式扫描 |
 | 2026-07-27 | 修复养护详情及正式用户页面的国际化作用域、条件表达式和 TypeScript 基线 | commit `1823b88`；lint/API check/build；中英文 390px 养护详情直达无 pageerror |

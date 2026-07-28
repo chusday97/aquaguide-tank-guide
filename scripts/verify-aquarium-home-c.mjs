@@ -82,16 +82,24 @@ try {
     assert.equal(await page.locator('.aquarium-workspace-zone > .aquarium-zone-header h2').count(), 3, 'task zones must use semantic headings');
     assert.deepEqual(await page.locator('.aquarium-workspace-zone').evaluateAll(nodes => nodes.map(node => node.classList.contains('aquarium-observe-zone') ? 'observe' : node.classList.contains('aquarium-manage-zone') ? 'manage' : 'learn')), ['observe', 'manage', 'learn']);
     if (width === 1440) {
-      const [tankBox, statusBox, archiveBox, manageBox, learnBox] = await Promise.all([
+      assert.equal(await page.locator('.aquarium-onboarding-sidebar:visible').count(), 1, 'desktop onboarding must live in the sidebar');
+      assert.equal(await page.locator('main .aquarium-onboarding:visible').count(), 0, 'desktop content must not repeat the onboarding card');
+      const [tankBox, statusBox, archiveBox, manageBox, learnBox, discoveryBox, basicsBox, advancedBox] = await Promise.all([
         page.locator('.aquarium-tank').boundingBox(),
         page.locator('.aquarium-status').boundingBox(),
         page.locator('.aquarium-archive').boundingBox(),
         page.locator('.aquarium-manage-zone').boundingBox(),
         page.locator('.aquarium-learn-zone').boundingBox(),
+        page.locator('.aquarium-discovery').boundingBox(),
+        page.locator('.aquarium-basics').boundingBox(),
+        page.locator('.aquarium-advanced-tests').boundingBox(),
       ]);
       assert.ok(tankBox && statusBox && tankBox.x < statusBox.x, 'Observe must place tank before today action');
       assert.ok(archiveBox && tankBox && archiveBox.y > tankBox.y + tankBox.height, 'livestock preview must be part of Observe below the tank');
+      assert.ok(statusBox && archiveBox && statusBox.y + statusBox.height >= archiveBox.y + archiveBox.height - 1, 'today action must span the tank and livestock preview');
       assert.ok(manageBox && learnBox && manageBox.x < learnBox.x, 'Manage and Learn must share one row on wide desktop');
+      assert.ok(discoveryBox && basicsBox && discoveryBox.x < basicsBox.x, 'discovery and tank basics must share the Learn card');
+      assert.ok(advancedBox && manageBox && learnBox && advancedBox.x <= manageBox.x + 1 && advancedBox.x + advancedBox.width >= learnBox.x + learnBox.width - 1, 'advanced tests must span below Manage and Learn');
       assert.ok(archiveBox.height < 190, 'livestock preview must stay compact before its dialog opens');
     }
     if (width === 600) {
@@ -110,7 +118,7 @@ try {
     await seed(page, createState(speciesCount));
     await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Tank Basics' }).waitFor();
-    assert.equal(await page.locator('.aquarium-archive-preview img').count(), speciesCount, `${speciesCount}-species preview must show every seeded species`);
+    assert.equal(await page.locator('.aquarium-archive-preview img').count(), Math.min(speciesCount, 3), `${speciesCount}-species preview must show up to three compact species cards`);
     const archive = page.locator('.aquarium-archive');
     await archive.locator('button[aria-haspopup="dialog"]').click();
     const roster = page.getByRole('dialog').filter({ hasText: '缸内物种' }).first();
