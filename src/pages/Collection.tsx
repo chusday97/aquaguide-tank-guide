@@ -331,6 +331,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         inWishlist={Boolean(selectedFish && snapshot.wishlistIds.includes(selectedFish.id))}
         finalFocusElement={detailFinalFocusRef.current}
         onOpenChange={(open) => { if (!open) { setSelectedFish(null); restoreCard(); } }}
+        onSelectSpecies={setSelectedFish}
         onAddToTank={(fish) => navigate(`/aquarium?action=add-species&species=${encodeURIComponent(fish.id)}`)}
         onAddToCalculator={(fish) => { setCompatibilitySelection([fish.id]); navigate('/encyclopedia#compatibility'); }}
         onToggleWishlist={(fishId) => {

@@ -7454,6 +7454,16 @@ export default function AquariumManager() {
         onOpenChange={(open) => {
           if (!open) closeAquariumSpeciesDetail();
         }}
+        onSelectSpecies={(nextFish) => {
+          const ownedRecord = activeAquarium.fishes.find(record => record.fishId === nextFish.id);
+          if (ownedRecord) {
+            setSelectedAqFish({ fish: nextFish, aqFish: ownedRecord });
+            setSelectedWishlistFish(null);
+          } else {
+            setSelectedAqFish(null);
+            setSelectedWishlistFish(nextFish);
+          }
+        }}
         onAddToCalculator={(fish) => {
           const nextCompatibilitySelection = new Set(getCompatibilitySelection());
           nextCompatibilitySelection.add(fish.id);

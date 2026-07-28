@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Box, Calculator, CheckCircle2, ChevronRight, Download, Flame, Heart, HeartOff, Info, Printer, Share2, Skull, SlidersHorizontal, Thermometer, Waves, X } from 'lucide-react';
+import { AlertTriangle, Box, Calculator, CheckCircle2, ChevronLeft, ChevronRight, Download, Flame, Heart, HeartOff, Info, Printer, Share2, Skull, SlidersHorizontal, Thermometer, Waves, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Aquarium, Fish } from '../types';
@@ -20,6 +20,7 @@ import { getVisualEmphasis, mapFitStatus } from './visual-results/visual-result.
 import type { VisualResultViewModel } from './visual-results/visual-result.types';
 import { markSpeciesViewed } from '../services/onboarding/onboarding.service';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
+import { deriveSpeciesGroups, findGroupForSpecies, getVariantLabel } from '../lib/speciesGrouping';
 
 const ImagePreviewModal = lazy(() => import('./common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const Interactive3DFishWrapper = lazy(() => import('./Interactive3DFishWrapper'));
@@ -66,6 +67,7 @@ type SpeciesDetailDialogProps = {
   detailFeedback?: string;
   finalFocusElement?: HTMLElement | null;
   onOpenChange: (open: boolean) => void;
+  onSelectSpecies?: (fish: Fish) => void;
   onAddToTank?: (fish: Fish) => void;
   onAddToCalculator: (fish: Fish) => void;
   onToggleWishlist: (fishId: string) => void;
@@ -404,6 +406,7 @@ export function SpeciesDetailDialog({
   detailFeedback,
   finalFocusElement,
   onOpenChange,
+  onSelectSpecies,
   onAddToTank,
   onAddToCalculator,
   onToggleWishlist,
@@ -449,6 +452,22 @@ export function SpeciesDetailDialog({
   const displayFit = selectedFit;
   const selectedTaxonomy = fish ? getCareTaxonomyPath(fish) : null;
   const resolvedImageSrc = fish ? (imageSrc || getSpeciesDisplayImage(fish)) : '';
+  const speciesGroup = useMemo(() => {
+    if (!fish) return null;
+    return findGroupForSpecies(fish.id, deriveSpeciesGroups(fishData));
+  }, [fish, isEn]);
+  const speciesGroupVariants = useMemo(() => {
+    if (!speciesGroup) return [];
+    const unique = new Map<string, Fish>();
+    speciesGroup.variants.forEach(variant => {
+      const key = `${variant.name.trim().toLowerCase()}|${variant.scientificName.trim().toLowerCase()}`;
+      if (!unique.has(key) || variant.id === fish?.id) unique.set(key, variant);
+    });
+    return Array.from(unique.values());
+  }, [fish?.id, speciesGroup]);
+  const speciesGroupIndex = fish
+    ? speciesGroupVariants.findIndex(variant => variant.id === fish.id)
+    : -1;
 
   useEffect(() => {
     if (open && fish) markSpeciesViewed();
@@ -480,6 +499,12 @@ export function SpeciesDetailDialog({
     setPreviewImages([{ src: resolvedImageSrc, title: fish.name }]);
     setPreviewIndex(0);
     setIsPreviewOpen(true);
+  };
+
+  const selectAdjacentSpecies = (direction: -1 | 1) => {
+    if (!speciesGroup || speciesGroupIndex < 0 || !onSelectSpecies) return;
+    const nextIndex = (speciesGroupIndex + direction + speciesGroupVariants.length) % speciesGroupVariants.length;
+    onSelectSpecies(speciesGroupVariants[nextIndex]);
   };
 
   const metricCards = useMemo(() => {
@@ -883,6 +908,55 @@ export function SpeciesDetailDialog({
                       </div>
                     </div>
                   </section>
+
+                  {speciesGroup && speciesGroupVariants.length > 1 && onSelectSpecies && (
+                    <section className="mt-3 rounded-[18px] border border-border bg-[#F8F7F2] p-2.5 min-[760px]:p-3" aria-label={isEn ? `Other ${speciesGroup.groupName} variants` : `${speciesGroup.groupName}的其他类型`}>
+                      <div className="flex min-w-0 items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => selectAdjacentSpecies(-1)}
+                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink/60 shadow-sm transition-colors hover:border-emerald-200 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                          aria-label={isEn ? 'Previous variant' : '上一个类型'}
+                        >
+                          <ChevronLeft className="h-5 w-5" />
+                        </button>
+                        <div className="app-scrollbar-hidden flex min-w-0 flex-1 gap-2 overflow-x-auto py-0.5">
+                          {speciesGroupVariants.map((variant, index) => {
+                            const active = variant.id === fish.id;
+                            return (
+                              <button
+                                key={variant.id}
+                                type="button"
+                                aria-current={active ? 'true' : undefined}
+                                onClick={() => !active && onSelectSpecies(variant)}
+                                className={`flex min-w-[112px] flex-1 items-center gap-2 rounded-[14px] border px-2 py-1.5 text-left transition-colors ${
+                                  active
+                                    ? 'border-emerald-300 bg-emerald-50 text-emerald-900'
+                                    : 'border-transparent bg-white text-ink/58 hover:border-emerald-100'
+                                }`}
+                              >
+                                <span className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[11px] ${getSpeciesImageSurfaceClass(variant)}`}>
+                                  <ResilientImage src={getSpeciesDisplayImage(variant)} alt="" className={`h-full w-full object-contain p-1 ${getSpeciesImageClass(variant)}`} />
+                                </span>
+                                <span className="min-w-0">
+                                  <span className="block truncate text-[10px] font-black">{getVariantLabel(variant, speciesGroup)}</span>
+                                  <span className="mt-0.5 block text-[9px] font-bold text-ink/38">{index + 1} / {speciesGroupVariants.length}</span>
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => selectAdjacentSpecies(1)}
+                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink/60 shadow-sm transition-colors hover:border-emerald-200 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                          aria-label={isEn ? 'Next variant' : '下一个类型'}
+                        >
+                          <ChevronRight className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </section>
+                  )}
 
                   <div className="mt-4 grid gap-2" data-species-detail-sections>
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">

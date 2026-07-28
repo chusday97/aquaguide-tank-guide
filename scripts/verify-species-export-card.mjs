@@ -44,13 +44,26 @@ try {
   await page.goto(`${baseUrl}/collection/wishlist`, { waitUntil: 'domcontentloaded' });
   await page.locator('#collection-wishlist-sp_0001 button').first().click();
   const detail = page.locator('[role="dialog"][data-surface]:visible');
+  const firstSpeciesName = (await detail.getByRole('heading').first().innerText()).trim();
+  const variantNavigator = detail.getByLabel(/米虾的其他类型/);
+  await variantNavigator.waitFor();
+  assert.equal(await variantNavigator.getByRole('button').count() > 2, true, 'grouped species must expose specific variants and two arrow controls');
+  await variantNavigator.getByRole('button', { name: '下一个类型' }).click();
+  await page.waitForFunction((previousName) => {
+    const heading = document.querySelector('[role="dialog"][data-surface] h2');
+    return heading?.textContent?.trim() !== previousName;
+  }, firstSpeciesName);
+  const nextSpeciesName = (await detail.getByRole('heading').first().innerText()).trim();
+  assert.notEqual(nextSpeciesName, firstSpeciesName, 'next variant must update the detail in place');
+  assert.equal(await detail.count(), 1, 'variant switching must keep the same detail surface open');
+
   await detail.getByRole('button', { name: '导出物种卡片' }).click();
 
   const exportDialog = page.locator('[role="dialog"][aria-labelledby="species-export-title"]:visible');
   await exportDialog.waitFor();
   const card = exportDialog.locator('[data-species-export-card]');
   const cardText = await card.innerText();
-  assert.match(cardText, /基础|极火虾|喂养|环境/);
+  assert.match(cardText, new RegExp(`基础|${nextSpeciesName}|喂养|环境`));
   assert.doesNotMatch(cardText, /当前鱼缸适配|混养风险|已种草|加入当前鱼缸/);
 
   const downloadPromise = page.waitForEvent('download');
@@ -67,7 +80,7 @@ try {
 
   const paperAnimation = await card.evaluate(node => getComputedStyle(node).animationName);
   assert.equal(paperAnimation, 'species-card-print');
-  console.log('species export card verified: scoped content, print animation, PNG download, and print preview');
+  console.log('species detail extras verified: deduplicated variant switching, scoped export content, PNG download, and print preview');
 } finally {
   await context.close();
   await browser.close();

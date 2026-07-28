@@ -2410,6 +2410,7 @@ export default function Encyclopedia() {
         inWishlist={!!selectedFish && wishlistFishIds.has(selectedFish.id)}
         detailFeedback={detailFeedback}
         onOpenChange={(open) => !open && closeAtlasDetail()}
+        onSelectSpecies={setSelectedFish}
         onAddToTank={handleAddToTank}
         onAddToCalculator={handleAddToCalculator}
         onToggleWishlist={toggleWishlist}
