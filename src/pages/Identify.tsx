@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Camera, Check, ChevronLeft, ImagePlus, Loader2, Search, ShieldAlert, Sparkles, X } from 'lucide-react';
+import { AlertTriangle, Camera, ChevronLeft, ImagePlus, Loader2, ShieldAlert, Sparkles, X } from 'lucide-react';
 import type {
   SpeciesDiagnosisStepInput,
   SpeciesDiagnosisStepOutput,
@@ -26,9 +26,15 @@ import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { useToast } from '../components/common/ToastProvider';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds } from '../services/favorites/favorites.service';
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
-import { buildSpeciesDiagnosisContextAnswers, isSpeciesEligibleForHealthTriage, mapVisionCandidateToCatalog, normalizeSpeciesName, type MappedRecognitionCandidate } from '../lib/speciesRecognition';
+import { buildSpeciesDiagnosisContextAnswers, isSpeciesEligibleForHealthTriage, mapVisionCandidateToCatalog, type MappedRecognitionCandidate } from '../lib/speciesRecognition';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { getSpeciesBatchContextLabel } from '../services/aquarium/species-batches.service';
+import { careTopicsData } from '../data/careTopicsData';
+import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
+import {
+  getSearchSuggestions,
+  type SearchSuggestion,
+} from '../services/search/search-suggestions.service';
 
 type Stage = 'upload' | 'candidates' | 'describe' | 'question' | 'result';
 
@@ -94,6 +100,7 @@ export default function Identify() {
   const [selectedFish, setSelectedFish] = useState<Fish | null>(null);
   const [detailFish, setDetailFish] = useState<Fish | null>(null);
   const [manualQuery, setManualQuery] = useState('');
+  const [selectedManualSpecies, setSelectedManualSpecies] = useState<SearchSuggestion | null>(null);
   const [description, setDescription] = useState('');
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [askedQuestionIds, setAskedQuestionIds] = useState<string[]>([]);
@@ -110,11 +117,14 @@ export default function Identify() {
 
   const appState = useMemo(() => loadAppStateFromStorage(), []);
   const aquarium = useMemo(() => appState.aquariums.find(item => item.id === appState.currentAquariumId) || appState.aquariums[0] || null, [appState]);
-  const manualResults = useMemo(() => {
-    const query = normalizeSpeciesName(manualQuery);
-    if (query.length < 2) return [];
-    return fishData.filter(fish => [fish.name, fish.scientificName, (fish as Fish & { _originalName?: string })._originalName || ''].some(value => normalizeSpeciesName(value).includes(query))).slice(0, 6);
-  }, [manualQuery]);
+  const manualSuggestionResult = useMemo(() => getSearchSuggestions({
+    query: manualQuery,
+    locale: isEn ? 'en' : 'zh-CN',
+    scope: 'identify',
+    species: fishData,
+    careTopics: careTopicsData,
+    ownedQuantityBySpeciesId: new Map((aquarium?.fishes || []).map(item => [item.fishId, item.quantity])),
+  }), [aquarium, isEn, manualQuery]);
 
   useEffect(() => () => {
     requestControllerRef.current?.abort();
@@ -540,8 +550,41 @@ export default function Identify() {
             </div>
             <div className="rounded-[18px] border border-border bg-bg p-3">
               <label htmlFor="manual-species-search" className="text-xs font-black">{t('identify.manualSearch')}</label>
-              <div className="relative mt-2"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" /><input id="manual-species-search" value={manualQuery} onChange={event => setManualQuery(event.target.value)} placeholder={t('identify.manualPlaceholder')} className="h-11 w-full rounded-full border border-border bg-white pl-9 pr-3 text-sm outline-none focus:border-emerald-500" /></div>
-              {manualResults.length > 0 && <div className="mt-3 grid gap-2 sm:grid-cols-2">{manualResults.map(fish => <button key={fish.id} type="button" onClick={() => void confirmFish(fish)} className="flex min-h-12 items-center gap-3 rounded-[14px] bg-white p-2 text-left ring-1 ring-border"><ResilientImage src={getSpeciesDisplayImage(fish)} alt="" className="h-10 w-10 object-contain" /><span className="min-w-0"><strong className="block truncate text-xs">{fish.name}</strong><span className="block truncate text-[10px] italic text-ink/40">{fish.scientificName}</span></span><Check className="ml-auto h-4 w-4 text-emerald-700" /></button>)}</div>}
+              <SearchAutocomplete
+                className="mt-2"
+                value={manualQuery}
+                suggestions={manualSuggestionResult.suggestions}
+                selectedSpecies={selectedManualSpecies}
+                placeholder={t('identify.manualPlaceholder')}
+                inputLabel={t('identify.manualSearch')}
+                submitLabel={isEn ? 'Search' : '搜索'}
+                viewDetailsLabel={t('identify.confirmSpecies')}
+                reselectLabel={t('searchPage.chooseAgain')}
+                speciesGroupLabel={t('searchPage.speciesCandidates')}
+                careGroupLabel={t('searchPage.careCandidates')}
+                relatedGroupLabel={t('searchPage.relatedSearches')}
+                filterGroupLabel={t('searchPage.filterSuggestions')}
+                ownedLabel={quantity => t('searchPage.ownedQuantity', { count: quantity })}
+                totalSpeciesMatches={manualSuggestionResult.totalSpeciesMatches}
+                viewAllSpeciesLabel={count => isEn ? `${count} species matched; keep typing` : `共匹配 ${count} 个物种，请继续输入`}
+                compact
+                hideSubmit
+                onValueChange={value => {
+                  setManualQuery(value);
+                  setSelectedManualSpecies(null);
+                }}
+                onSelectSuggestion={suggestion => {
+                  setManualQuery(suggestion.query);
+                  setSelectedManualSpecies(suggestion);
+                }}
+                onSubmit={() => undefined}
+                onViewSelected={suggestion => {
+                  const fish = fishData.find(item => item.id === suggestion.targetId);
+                  if (fish) void confirmFish(fish);
+                }}
+                onReselect={() => setSelectedManualSpecies(null)}
+                onViewAllSpecies={() => undefined}
+              />
             </div>
             {candidates.every(item => !item.fish) && <button type="button" onClick={() => requestNavigation('/aquarium?action=daily-check')} className="min-h-11 rounded-full border border-red-200 bg-red-50 px-4 text-xs font-black text-red-700">{t('identify.checkUrgentFirst')}</button>}
           </section>

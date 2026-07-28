@@ -3,6 +3,7 @@ import posthog from 'posthog-js';
 import type { PointerEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { createPortal } from 'react-dom';
 import { Fish, Aquarium } from '../types';
 import { fishData } from '../data/fishData';
 import { encyclopediaService } from '../modules/encyclopedia/encyclopedia.service';
@@ -23,7 +24,6 @@ import {
   normalizeDiscoveryState,
   recommendationService,
 } from '../modules/recommendation/recommendation.service';
-import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger, DialogHeader, DialogFooter } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -71,9 +71,14 @@ import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { englishTranslations } from '../i18n/localizeData';
 import { autoTranslations } from '../i18n/localizeDataAuto';
+import { careTopicsData } from '../data/careTopicsData';
+import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
+import {
+  getSearchSuggestions,
+  type SearchSuggestion,
+} from '../services/search/search-suggestions.service';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
-const FilterBottomSheet = lazy(() => import('../components/common/FilterBottomSheet').then(module => ({ default: module.FilterBottomSheet })));
 
 
 const getSpeciesNameLocalized = (species: any, isEn = false): string => {
@@ -472,6 +477,8 @@ const getFilteredSpecies = (
       matchesKeyword(fish, keyword)
       && matchesFunctionFilter(fish, filters.functionTag, fitEvaluations.get(fish.id), compatibilityEvaluations.get(fish.id))
       && matchesEnvironmentFilter(fish, filters.environment)
+      && matchesFunctionFilter(fish, filters.difficulty, fitEvaluations.get(fish.id), compatibilityEvaluations.get(fish.id))
+      && matchesFunctionFilter(fish, filters.housing, fitEvaluations.get(fish.id), compatibilityEvaluations.get(fish.id))
     )
     .sort((a, b) => {
       if (filters.functionTag === '适合当前鱼缸') {
@@ -515,12 +522,16 @@ type ActiveFilters = {
   keyword: string;
   functionTag: string | null;
   environment: string | null;
+  difficulty: string | null;
+  housing: string | null;
 };
 
 const emptyActiveFilters: ActiveFilters = {
   keyword: '',
   functionTag: null,
   environment: null,
+  difficulty: null,
+  housing: null,
 };
 
 const functionFilterOptions = ['全部', '新手好养', '清洁工具', '除藻', '清残饵', '观赏鱼', '工具生物', '适合草缸', '小缸适合'];
@@ -610,11 +621,13 @@ export default function Encyclopedia() {
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<'browse' | 'compatibility'>('browse');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSearchSpecies, setSelectedSearchSpecies] = useState<SearchSuggestion | null>(null);
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>(emptyActiveFilters);
   const [selectedFish, setSelectedFish] = useState<Fish | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<SpeciesGroup | null>(null);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const detailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
+  const inlineFilterHostRef = useRef<HTMLDivElement | null>(null);
 
   const closeAtlasDetail = (restoreReturnContext = true) => {
     setSelectedFish(null);
@@ -672,6 +685,8 @@ export default function Encyclopedia() {
   const [isMoreFilterOpen, setIsMoreFilterOpen] = useState(false);
   const [draftFunctionTag, setDraftFunctionTag] = useState<string | null>(null);
   const [draftEnvironment, setDraftEnvironment] = useState<string | null>(null);
+  const [draftDifficulty, setDraftDifficulty] = useState<string | null>(null);
+  const [draftHousing, setDraftHousing] = useState<string | null>(null);
   const [filterSheetMessage, setFilterSheetMessage] = useState('');
   const [filterUsage, setFilterUsage] = useState<FilterUsageState>(() => loadFilterUsage());
   const [activeFilterGroup, setActiveFilterGroup] = useState<'life' | 'size' | 'housing' | 'water' | 'difficulty' | 'temperament'>('life');
@@ -789,6 +804,17 @@ export default function Encyclopedia() {
     []
   );
   const allFishes = encyclopediaCatalog.allItems;
+  const ownedQuantityBySpeciesId = useMemo(() => new Map(
+    (currentAquarium?.fishes || []).map(item => [item.fishId, item.quantity]),
+  ), [currentAquarium]);
+  const atlasSuggestionResult = useMemo(() => getSearchSuggestions({
+    query: searchTerm,
+    locale: isEn ? 'en' : 'zh-CN',
+    scope: 'encyclopedia',
+    species: allFishes,
+    careTopics: careTopicsData,
+    ownedQuantityBySpeciesId,
+  }), [allFishes, isEn, ownedQuantityBySpeciesId, searchTerm]);
   const wishlistFishes = useMemo(
     () => Array.from(wishlistFishIds)
       .map(id => fishData.find(fish => fish.id === id))
@@ -977,6 +1003,8 @@ export default function Encyclopedia() {
     activeFilters.keyword.trim() && `搜索：“${activeFilters.keyword.trim()}”`,
     activeFilters.functionTag,
     activeFilters.environment,
+    activeFilters.difficulty,
+    activeFilters.housing,
   ].filter(Boolean) as string[];
   const isSuitableCurrentTankFilter = activeFilters.functionTag === '适合当前鱼缸';
   const hasAnyActiveCriteria = resultFilterLabels.length > 0;
@@ -1014,30 +1042,14 @@ export default function Encyclopedia() {
         keyword: '',
         functionTag: draftFunctionTag,
         environment: draftEnvironment,
+        difficulty: draftDifficulty,
+        housing: draftHousing,
         ...nextFilters,
       },
       fitEvaluations,
       compatibilityEvaluations
     ).length
   );
-  const makeFilterOption = (label: string, nextFilters: Partial<ActiveFilters>, hint?: string) => {
-    const count = getDraftFilterCount(nextFilters);
-    const displayLabel = filterLabelKeys[label] ? t('encyclopedia.' + filterLabelKeys[label]) : label;
-    let displayHint = hint;
-    if (hint === '通常不加热') displayHint = t('encyclopedia.hintColdwater');
-    else if (hint === '适应范围宽') displayHint = t('encyclopedia.hintBroad');
-    else if (hint === '建议稳定加热') displayHint = t('encyclopedia.hintTropical');
-    else if (hint === '海水缸专用') displayHint = t('encyclopedia.hintMarine');
-
-    return {
-      label: displayLabel,
-      value: label,
-      hint: displayHint,
-      count,
-      disabled: label !== '全部' && count === 0,
-      noMatchLabel: t('encyclopedia.filterSheetNoMatch'),
-    };
-  };
   const allSpeciesGroups = useMemo(() => deriveSpeciesGroups(allFishes), [allFishes, i18n.language]);
   const filteredFishes = useMemo(() => {
     if (showWishlistOnly) return wishlistFishes;
@@ -1421,6 +1433,8 @@ export default function Encyclopedia() {
       setViewMode('browse');
       setDraftFunctionTag(activeFilters.functionTag);
       setDraftEnvironment(activeFilters.environment);
+      setDraftDifficulty(activeFilters.difficulty);
+      setDraftHousing(activeFilters.housing);
       setFilterSheetMessage('');
       setIsMoreFilterOpen(true);
     }
@@ -1462,6 +1476,7 @@ export default function Encyclopedia() {
 
   const handleSearchTermChange = (value: string) => {
     setSearchTerm(value);
+    setSelectedSearchSpecies(null);
     setResultPage(0);
     if (!value.trim() && activeFilters.keyword) {
       setActiveFilters(prev => ({ ...prev, keyword: '' }));
@@ -1629,25 +1644,47 @@ export default function Encyclopedia() {
         >
           <Camera className="h-4 w-4" />{t('identify.entry')}
         </button>
-        <div style={{ flex: '1 1 420px' }} className="relative min-w-0 md:mx-auto md:max-w-[560px] min-[1200px]:mx-0 min-[1200px]:max-w-[420px]">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/42" />
-          <Input
-            placeholder={t('encyclopedia.searchPlaceholder')}
-            className="h-11 rounded-full border-border bg-white pl-9 pr-12 text-[14px] font-medium text-ink placeholder:text-ink/42"
+        <div style={{ flex: '1 1 420px' }} className="min-w-0 md:mx-auto md:max-w-[620px] min-[1200px]:mx-0 min-[1200px]:max-w-[520px]">
+          <SearchAutocomplete
             value={searchTerm}
-            onChange={(e) => handleSearchTermChange(e.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') submitSearch();
+            suggestions={atlasSuggestionResult.suggestions}
+            selectedSpecies={selectedSearchSpecies}
+            placeholder={t('encyclopedia.searchPlaceholder')}
+            inputLabel={t('encyclopedia.searchPlaceholder')}
+            submitLabel={t('encyclopedia.search')}
+            viewDetailsLabel={t('searchPage.viewDetails')}
+            reselectLabel={t('searchPage.chooseAgain')}
+            speciesGroupLabel={t('searchPage.speciesCandidates')}
+            careGroupLabel={t('searchPage.careCandidates')}
+            relatedGroupLabel={t('searchPage.relatedSearches')}
+            filterGroupLabel={t('searchPage.filterSuggestions')}
+            ownedLabel={quantity => t('searchPage.ownedQuantity', { count: quantity })}
+            totalSpeciesMatches={atlasSuggestionResult.totalSpeciesMatches}
+            viewAllSpeciesLabel={count => t('searchPage.viewAllSpecies', { count })}
+            onValueChange={handleSearchTermChange}
+            onSelectSuggestion={suggestion => {
+              if (suggestion.kind === 'species') {
+                setSearchTerm(suggestion.query);
+                setSelectedSearchSpecies(suggestion);
+                return;
+              }
+              setSelectedSearchSpecies(null);
+              setSearchTerm(suggestion.query);
+              if (suggestion.kind === 'filter') {
+                applyFilterLabel(suggestion.query);
+                return;
+              }
+              setActiveFilters(prev => ({ ...prev, keyword: suggestion.query }));
+              setResultPage(0);
             }}
+            onSubmit={() => submitSearch()}
+            onViewSelected={suggestion => {
+              const fish = allFishes.find(item => item.id === suggestion.targetId);
+              if (fish) openSpeciesDetail(fish, `atlas-search-selected-${fish.id}`);
+            }}
+            onReselect={() => setSelectedSearchSpecies(null)}
+            onViewAllSpecies={() => submitSearch()}
           />
-          <button
-            type="button"
-            aria-label={t('encyclopedia.search')}
-            onClick={submitSearch}
-            className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-accent-light text-accent"
-          >
-            <Search className="h-4 w-4" />
-          </button>
         </div>
 
         <section style={{ flex: '1 1 420px' }} className="mx-auto flex w-full min-w-0 max-w-[720px] flex-col gap-2 md:mx-0 md:max-w-none">
@@ -1680,6 +1717,9 @@ export default function Encyclopedia() {
               onClick={() => {
                 setDraftFunctionTag(activeFilters.functionTag);
                 setDraftEnvironment(activeFilters.environment);
+                setDraftDifficulty(activeFilters.difficulty);
+                setDraftHousing(activeFilters.housing);
+                setFilterSheetMessage('');
                 setIsMoreFilterOpen(true);
               }}
               className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50"
@@ -1690,6 +1730,8 @@ export default function Encyclopedia() {
             </button>
           </div>
         </section>
+
+        <div ref={inlineFilterHostRef} style={{ flex: '1 0 100%' }} className="w-full" />
 
         <div id="atlas-results" style={{ flex: '1 0 100%' }} className="atlas-result-summary mx-auto grid w-full max-w-[960px] gap-3 rounded-[14px] border border-border/70 bg-white px-3 py-2 shadow-sm md:max-w-none md:grid-cols-1 md:items-center md:px-4 md:py-3 xl:grid-cols-[minmax(220px,1fr)_auto_minmax(280px,360px)]">
           <div className="flex items-center justify-between gap-3">
@@ -1713,6 +1755,27 @@ export default function Encyclopedia() {
               </button>
             )}
           </div>
+          {hasAnyActiveCriteria && (
+            <div className="flex min-w-0 flex-wrap gap-1.5 xl:col-span-3" aria-label={t('encyclopedia.activeFilters')}>
+              {([
+                { key: 'keyword', value: activeFilters.keyword, label: activeFilters.keyword ? t('encyclopedia.searchResultPrefix', { keyword: activeFilters.keyword }) : '' },
+                { key: 'functionTag', value: activeFilters.functionTag, label: activeFilters.functionTag ? formatFilterLabel(activeFilters.functionTag) : '' },
+                { key: 'environment', value: activeFilters.environment, label: activeFilters.environment ? formatFilterLabel(activeFilters.environment) : '' },
+                { key: 'difficulty', value: activeFilters.difficulty, label: activeFilters.difficulty ? formatFilterLabel(activeFilters.difficulty) : '' },
+                { key: 'housing', value: activeFilters.housing, label: activeFilters.housing ? formatFilterLabel(activeFilters.housing) : '' },
+              ] as const).filter(item => Boolean(item.value)).map(item => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => setActiveFilters(current => ({ ...current, [item.key]: item.key === 'keyword' ? '' : null }))}
+                  className="inline-flex min-h-8 min-w-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-800 ring-1 ring-emerald-100"
+                  aria-label={`${item.label} · ${t('encyclopedia.clear')}`}
+                >
+                  <span className="max-w-[180px] truncate">{item.label}</span><X className="h-3 w-3 shrink-0" />
+                </button>
+              ))}
+            </div>
+          )}
           {resultItemCount > resultPageSize && (
             <div className="atlas-inline-pager hidden min-w-0 items-center justify-center gap-2 md:flex">
               <button
@@ -2704,101 +2767,136 @@ export default function Encyclopedia() {
         </DialogContent>
       </Dialog>
 
-      {isMoreFilterOpen && (
-        <Suspense fallback={null}>
-          <FilterBottomSheet
-        open
-        title={t('encyclopedia.filterSheetTitle')}
-        subtitle={filterSheetMessage || t('encyclopedia.filterSheetSubtitle')}
-        resetLabel={t('encyclopedia.filterSheetReset')}
-        applyLabel={t('encyclopedia.filterSheetApply')}
-        groups={[
+      {isMoreFilterOpen && (() => {
+        const groups = [
           {
+            id: 'purpose',
             title: t('encyclopedia.findCategory'),
             selected: draftFunctionTag,
-            onSelect: (label) => {
-              setFilterSheetMessage('');
-              setDraftFunctionTag(label === '全部' ? null : label);
-            },
-            options: functionFilterOptions.map(label => makeFilterOption(label, { functionTag: label === '全部' ? null : label })),
+            options: functionFilterOptions,
+            update: (value: string | null) => setDraftFunctionTag(value),
+            filterKey: 'functionTag' as const,
           },
           {
+            id: 'environment',
             title: t('encyclopedia.tankEnvironment'),
             selected: draftEnvironment,
-            onSelect: (label) => {
-              setFilterSheetMessage('');
-              setDraftEnvironment(label === '全部' ? null : label);
-            },
-            options: environmentFilterOptions.map(label => makeFilterOption(
-              label,
-              { environment: label === '全部' ? null : label },
-              label === '淡水冷水' ? '通常不加热'
-                : label === '淡水广温' ? '适应范围宽'
-                : label === '淡水热带' ? '建议稳定加热'
-                : label === '海水' ? '海水缸专用'
-                : undefined
-            )),
+            options: environmentFilterOptions,
+            update: (value: string | null) => setDraftEnvironment(value),
+            filterKey: 'environment' as const,
           },
           {
+            id: 'difficulty',
             title: t('encyclopedia.difficultyCategory'),
-            selected: difficultyFilterOptions.includes(draftFunctionTag || '') ? draftFunctionTag : null,
-            onSelect: (label) => {
-              setFilterSheetMessage('');
-              setDraftFunctionTag(label === '全部' ? null : label);
-            },
-            options: difficultyFilterOptions.map(label => makeFilterOption(label, { functionTag: label === '全部' ? null : label })),
+            selected: draftDifficulty,
+            options: difficultyFilterOptions,
+            update: (value: string | null) => setDraftDifficulty(value),
+            filterKey: 'difficulty' as const,
           },
           {
+            id: 'housing',
             title: t('encyclopedia.housingTendency'),
-            selected: housingFilterOptions.includes(draftFunctionTag || '') ? draftFunctionTag : null,
-            onSelect: (label) => {
-              setFilterSheetMessage('');
-              setDraftFunctionTag(label === '全部' ? null : label);
-            },
-            options: housingFilterOptions.map(label => makeFilterOption(label, { functionTag: label === '全部' ? null : label })),
+            selected: draftHousing,
+            options: housingFilterOptions,
+            update: (value: string | null) => setDraftHousing(value),
+            filterKey: 'housing' as const,
           },
-        ]}
-        onClose={() => setIsMoreFilterOpen(false)}
-        onReset={() => {
-          setDraftFunctionTag(null);
-          setDraftEnvironment(null);
-          setFilterSheetMessage('');
-          setActiveFilters(emptyActiveFilters);
-          setSearchTerm('');
-          setIsMoreFilterOpen(false);
-        }}
-        onApply={() => {
-          const nextCount = getFilteredSpecies(
-            allFishes,
-            {
-              keyword: '',
-              functionTag: draftFunctionTag,
-              environment: draftEnvironment,
-            },
-            fitEvaluations,
-            compatibilityEvaluations
-          ).length;
-          if (nextCount === 0) {
-            setFilterSheetMessage(t('encyclopedia.noResultsCombination'));
-            return;
-          }
-          if (draftFunctionTag) recordFilterUsage(draftFunctionTag);
-          if (draftEnvironment) recordFilterUsage(draftEnvironment);
-          setActiveFilters(prev => ({
-            ...prev,
-            keyword: '',
-            functionTag: draftFunctionTag,
-            environment: draftEnvironment,
-          }));
-          setSearchTerm('');
-          setShowWishlistOnly(false);
-          setResultPage(0);
-          setIsMoreFilterOpen(false);
-          void navigateToSection('atlas-grid', { updateHash: false });
-        }}
-          />
-        </Suspense>
-      )}
+        ];
+        const nextFilters: ActiveFilters = {
+          keyword: '',
+          functionTag: draftFunctionTag,
+          environment: draftEnvironment,
+          difficulty: draftDifficulty,
+          housing: draftHousing,
+        };
+        const nextCount = getFilteredSpecies(allFishes, nextFilters, fitEvaluations, compatibilityEvaluations).length;
+        return inlineFilterHostRef.current ? createPortal((
+          <section
+            data-inline-filter-panel="true"
+            aria-labelledby="atlas-inline-filter-title"
+            className="order-none max-h-[52dvh] w-full overflow-y-auto rounded-[20px] border border-emerald-100 bg-white shadow-[0_18px_46px_rgba(15,23,42,0.12)] md:max-h-[360px]"
+          >
+            <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-border/70 bg-white/96 px-4 py-3 backdrop-blur">
+              <div>
+                <h2 id="atlas-inline-filter-title" className="text-sm font-black text-ink">{t('encyclopedia.filterSheetTitle')}</h2>
+                <p className={`mt-1 text-[11px] font-bold ${nextCount === 0 ? 'text-red-600' : 'text-ink/45'}`}>
+                  {filterSheetMessage || (nextCount === 0 ? t('encyclopedia.noResultsCombination') : `${nextCount} ${t('encyclopedia.speciesUnit')}`)}
+                </p>
+              </div>
+              <button type="button" onClick={() => setIsMoreFilterOpen(false)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg text-ink/50 hover:text-ink" aria-label={t('encyclopedia.closeWarning')}>
+                <X className="h-4 w-4" />
+              </button>
+            </header>
+
+            <div className="grid gap-4 p-4 md:grid-cols-2">
+              {groups.map(group => (
+                <fieldset key={group.id} className="min-w-0 rounded-[16px] border border-border/70 bg-bg/45 p-3">
+                  <legend className="px-1 text-xs font-black text-ink">{group.title}</legend>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {group.options.map(label => {
+                      const value = label === '全部' ? null : label;
+                      const selected = group.selected === value;
+                      const count = getDraftFilterCount({ [group.filterKey]: value });
+                      return (
+                        <button
+                          key={label}
+                          type="button"
+                          aria-pressed={selected}
+                          onClick={() => {
+                            setFilterSheetMessage('');
+                            group.update(value);
+                          }}
+                          className={`min-h-10 min-w-0 rounded-full border px-3 py-2 text-left text-[11px] font-black transition-colors ${
+                            selected
+                              ? 'border-emerald-700 bg-emerald-700 text-white'
+                              : 'border-border bg-white text-ink/58 hover:border-emerald-300 hover:text-emerald-800'
+                          }`}
+                        >
+                          <span className="break-words">{filterLabelKeys[label] ? t(`encyclopedia.${filterLabelKeys[label]}`) : label}</span>
+                          <span className={`ml-1.5 text-[9px] ${selected ? 'text-white/70' : 'text-ink/35'}`}>{count}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              ))}
+            </div>
+
+            <footer className="sticky bottom-0 z-10 grid grid-cols-2 gap-2 border-t border-border/70 bg-white/96 p-3 backdrop-blur">
+              <button
+                type="button"
+                onClick={() => {
+                  setDraftFunctionTag(null);
+                  setDraftEnvironment(null);
+                  setDraftDifficulty(null);
+                  setDraftHousing(null);
+                  setFilterSheetMessage('');
+                }}
+                className="min-h-11 rounded-full border border-border bg-white px-4 text-xs font-black text-ink/58"
+              >
+                {t('encyclopedia.filterSheetReset')}
+              </button>
+              <button
+                type="button"
+                disabled={nextCount === 0}
+                onClick={() => {
+                  [draftFunctionTag, draftEnvironment, draftDifficulty, draftHousing].filter(Boolean).forEach(label => recordFilterUsage(label!));
+                  setActiveFilters(nextFilters);
+                  setSearchTerm('');
+                  setSelectedSearchSpecies(null);
+                  setShowWishlistOnly(false);
+                  setResultPage(0);
+                  setIsMoreFilterOpen(false);
+                  void navigateToSection('atlas-grid', { updateHash: false });
+                }}
+                className="min-h-11 rounded-full bg-emerald-700 px-4 text-xs font-black text-white disabled:cursor-not-allowed disabled:bg-ink/20"
+              >
+                {t('encyclopedia.filterSheetApply')} · {nextCount}
+              </button>
+            </footer>
+          </section>
+        ), inlineFilterHostRef.current) : null;
+      })()}
     </div>
   );
 }

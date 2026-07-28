@@ -35,6 +35,8 @@ try {
   const manualCandidate = mobile.getByRole('button', { name: /孔雀鱼/ }).first();
   await manualCandidate.waitFor();
   await manualCandidate.click();
+  assert.equal(await mobile.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, 'manual suggestion selection must not skip confirmation');
+  await mobile.locator('[data-selected-species-summary="true"]').getByRole('button', { name: '确认是它，判断状态' }).click();
   await mobile.getByRole('heading', { name: '它现在有什么异常？' }).waitFor();
   await mobile.locator('textarea').fill('全缸不动并急促呼吸');
   await mobile.getByRole('button', { name: '开始判断' }).click();

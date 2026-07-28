@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertTriangle, Baby, Check, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
 import { fishData } from '../data/fishData';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
@@ -37,6 +36,8 @@ import { VisualResultCard } from '../components/visual-results/VisualResultCard'
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
 import type { DiagnosisOutput } from '../modules/diagnosis/diagnosis.types';
+import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
+import { getSearchSuggestions } from '../services/search/search-suggestions.service';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const FilterBottomSheet = lazy(() => import('../components/common/FilterBottomSheet').then(module => ({ default: module.FilterBottomSheet })));
@@ -1474,6 +1475,13 @@ export default function CareEncyclopedia() {
         : `${aquariumVolumeLiters || '未设'}L · ${activeAquarium.targetTemperature || 25}°C · ${activeAquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · 已有 ${(activeAquarium.fishes || []).length} 种生物`)
     : (isEn ? 'No tank data loaded. Showing general care recommendations.' : '还没有当前鱼缸数据，先显示通用养护推荐');
   const careRecommendations = useMemo(() => getCareRecommendations(activeAquarium, careTopicsData), [activeAquarium]);
+  const careSuggestionResult = useMemo(() => getSearchSuggestions({
+    query: searchTerm,
+    locale: isEn ? 'en' : 'zh-CN',
+    scope: 'care',
+    species: fishData,
+    careTopics: careTopicsData,
+  }), [isEn, searchTerm]);
 
   useEffect(() => {
     if (!location.hash) return;
@@ -1853,24 +1861,43 @@ export default function CareEncyclopedia() {
       </section>
 
       <section id="care-search" ref={careSearchRef} className="care-left-panel scroll-mt-4 rounded-[18px] border border-white/80 bg-white p-3 shadow-sm">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" />
-          <Input
-            value={searchTerm}
-            onChange={(event) => {
-              setSearchTerm(event.target.value);
-              setCareWorkspacePage(event.target.value.trim() ? 'content' : careWorkspacePage);
-              setCareResultPage(0);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' && searchTerm.trim()) {
-                void navigateToSection('care-results', { updateHash: false });
-              }
-            }}
-            placeholder={t('care.searchPlaceholder')}
-            className="h-10 rounded-full border-border bg-bg pl-9 text-[13px] font-medium text-ink placeholder:text-ink/36 md:desktop-input-limit"
-          />
-        </div>
+        <SearchAutocomplete
+          value={searchTerm}
+          suggestions={careSuggestionResult.suggestions}
+          placeholder={t('care.searchPlaceholder')}
+          inputLabel={t('care.searchPlaceholder')}
+          submitLabel={isEn ? 'Search' : '搜索'}
+          viewDetailsLabel={t('searchPage.viewDetails')}
+          reselectLabel={t('searchPage.chooseAgain')}
+          speciesGroupLabel={t('searchPage.speciesCandidates')}
+          careGroupLabel={t('searchPage.careCandidates')}
+          relatedGroupLabel={t('searchPage.relatedSearches')}
+          filterGroupLabel={t('searchPage.filterSuggestions')}
+          ownedLabel={quantity => t('searchPage.ownedQuantity', { count: quantity })}
+          compact
+          onValueChange={value => {
+            setSearchTerm(value);
+            setCareWorkspacePage(value.trim() ? 'content' : careWorkspacePage);
+            setCareResultPage(0);
+          }}
+          onSelectSuggestion={suggestion => {
+            if (suggestion.kind === 'care' && suggestion.targetId) {
+              setSearchTerm(suggestion.query);
+              openCareDetail(suggestion.targetId, `care-suggestion-${suggestion.targetId}`);
+              return;
+            }
+            setSearchTerm(suggestion.query);
+            setCareWorkspacePage('content');
+            setCareResultPage(0);
+            void navigateToSection('care-results', { updateHash: false });
+          }}
+          onSubmit={value => {
+            setSearchTerm(value);
+            setCareWorkspacePage('content');
+            setCareResultPage(0);
+            void navigateToSection('care-results', { updateHash: false });
+          }}
+        />
       </section>
 
       <section id="care-categories" className={`${searchTerm.trim() ? 'hidden md:block' : ''} care-left-panel scroll-mt-4 rounded-[18px] border border-white/80 bg-white p-3 shadow-sm`}>

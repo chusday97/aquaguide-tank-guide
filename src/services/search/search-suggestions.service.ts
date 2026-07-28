@@ -2,6 +2,8 @@ import type { CareTopic } from '../../data/careTopicsData';
 import { careTranslations } from '../../i18n/localizeCareDataAuto';
 import { autoTranslations } from '../../i18n/localizeDataAuto';
 import { categoryTranslations, englishTranslations } from '../../i18n/localizeData';
+import { getCareVisualSources } from '../../lib/careVisual';
+import { getSpeciesVisualSources } from '../../lib/speciesVisual';
 import { getSpeciesFilterTags } from '../../modules/species/species.service';
 import type { Fish } from '../../types';
 
@@ -56,10 +58,9 @@ const getAliases = (fish: FishWithAliases) => {
 
 const getLocalizedSpeciesName = (fish: Fish, locale: 'zh-CN' | 'en') => {
   if (locale === 'zh-CN') return fish.name;
-  return englishTranslations[fish.id]?.name
-    || autoTranslations[fish.id]?.name
-    || fish.scientificName
-    || fish.name;
+  const translatedName = englishTranslations[fish.id]?.name || autoTranslations[fish.id]?.name;
+  if (translatedName && normalize(translatedName) !== normalize(fish.scientificName)) return translatedName;
+  return fish.name;
 };
 
 const getLocalizedCategory = (fish: FishWithAliases, locale: 'zh-CN' | 'en') => {
@@ -112,12 +113,19 @@ const RELATED_QUERY_MAP: Array<{ terms: string[]; related: string[] }> = [
 
 const ENCYCLOPEDIA_FILTERS = [
   '清洁工具',
-  '新手友好',
-  '小型鱼',
-  '淡水冷水',
-  '淡水广温',
-  '淡水热带',
+  '新手好养',
+  '除藻',
+  '清残饵',
+  '观赏鱼',
+  '工具生物',
+  '适合草缸',
+  '小缸适合',
+  '淡水',
   '海水',
+  '草缸',
+  '小缸',
+  '需加热',
+  '不需加热',
   '简单',
   '中等',
   '困难',
@@ -151,7 +159,7 @@ const buildSpeciesSuggestions = (
     label: getLocalizedSpeciesName(fish, input.locale),
     scientificName: fish.scientificName,
     category: getLocalizedCategory(fish as FishWithAliases, input.locale),
-    image: fish.image,
+    image: getSpeciesVisualSources(fish).thumbnail,
     query: getLocalizedSpeciesName(fish, input.locale),
     matchedBy: match.matchedBy,
     ownedQuantity: input.ownedQuantityBySpeciesId?.get(fish.id),
@@ -201,7 +209,7 @@ const buildCareSuggestions = (input: SearchSuggestionInput, normalizedQuery: str
       kind: 'care' as const,
       label,
       category: input.locale === 'en' && translation?.category ? translation.category : topic.category,
-      image: topic.imageUrl,
+      image: getCareVisualSources(topic.imageUrl).thumbnail,
       query: label,
       matchedBy: rank <= 1 ? 'prefix' as const : 'keyword' as const,
       targetId: topic.id,
@@ -260,4 +268,3 @@ export const getSearchSuggestions = (input: SearchSuggestionInput): SearchSugges
     totalSpeciesMatches: allSpecies.length,
   };
 };
-
