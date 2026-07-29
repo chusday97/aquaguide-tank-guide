@@ -142,4 +142,6 @@
 - `src/pages/SharedReport.tsx`：匿名脱敏报告页面与 PNG 下载。
 - `src/services/share/aquarium-share-report.service.ts`：创建、列出、撤销和公开读取分享报告。
 - `apps/api/src/routes/share-reports.ts`：令牌哈希、七天失效、owner 管理与匿名快照读取。
+- `supabase/migrations/202607290002_lock_share_report_updates.sql`：删除普通用户直接 UPDATE 分享报告的权限。
+- `supabase/migrations/202607290003_lock_share_report_inserts.sql`：删除普通用户直接 INSERT 分享报告的权限。
 - `scripts/verify-share-report-ui.mjs`：390/1280px 公共报告浏览器回归。
