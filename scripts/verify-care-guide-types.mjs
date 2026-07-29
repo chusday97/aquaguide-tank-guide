@@ -82,6 +82,29 @@ try {
   assert.equal(await dialog.getByRole('button', { name: '已完成过水' }).isDisabled(), true, '刷新后应恢复操作完成状态');
 
   await persistenceContext.close();
+
+  const collectionContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await collectionContext.addInitScript(() => {
+    window.localStorage.setItem('aquaguide_locale', 'zh-CN');
+    window.localStorage.setItem('aqua_care_favorites', JSON.stringify({
+      qa_gen_004: {
+        id: 'qa_gen_004',
+        title: '养鱼常说的『软水』『硬度（GH/KH）』真的很重要吗？',
+        favoritedAt: '2026-07-29T00:00:00.000Z',
+      },
+    }));
+  });
+  const collectionPage = await collectionContext.newPage();
+  await collectionPage.goto(`${baseUrl}/collection/care?item=qa_gen_004`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  const collectionDialog = collectionPage.getByRole('dialog');
+  await collectionDialog.waitFor({ state: 'visible', timeout: 30000 });
+  assert.equal(
+    await collectionDialog.getByRole('button', { name: '已收藏在水族册' }).isDisabled(),
+    true,
+    '水族册详情不得显示无效的“去水族册查看”操作',
+  );
+  await collectionContext.close();
+
   console.log('Care guide type verification passed.');
 } finally {
   await browser.close();

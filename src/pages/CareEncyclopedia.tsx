@@ -38,6 +38,7 @@ import { buildDiagnosisVisualResult } from '../components/visual-results/visual-
 import type { DiagnosisOutput } from '../modules/diagnosis/diagnosis.types';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
 import { getSearchSuggestions } from '../services/search/search-suggestions.service';
+import { taskRoutes } from '../services/navigation/task-routes';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const FilterBottomSheet = lazy(() => import('../components/common/FilterBottomSheet').then(module => ({ default: module.FilterBottomSheet })));
@@ -2764,6 +2765,7 @@ export function CareArticleDetail({
 }) {
   const { t, i18n } = useTranslation();
   const isEn = i18n.language === 'en';
+  const navigate = useNavigate();
   const meta = getCareGuideMeta(topic);
   const careGuide = buildCareGuide(topic);
   const visibleActions = careGuide.todayActions;
@@ -2806,7 +2808,7 @@ export function CareArticleDetail({
     ? isNewFishAcclimationTopic(topic)
       ? isOperationCompleted ? (isEn ? 'Completed Acclimation' : '已完成过水') : (isEn ? 'Mark Acclimation Done' : '标记已完成过水')
       : isWaterChangeGuide
-        ? isOperationCompleted ? (isEn ? 'Water Change Logged' : '已记录本次换水') : (isEn ? 'Mark Water Change Done' : '标记已完成换水')
+        ? (isEn ? 'Record Water Change in Tank' : '去记录本次换水')
         : isOperationCompleted ? (isEn ? 'Marked Completed' : '已标记完成') : isFilterGuide ? (isEn ? 'Mark Cleaning Done' : '标记已完成清洗') : (isEn ? 'Mark Operation Done' : '标记已完成操作')
     : meta.guideType === 'careChecklist'
       ? isChecklistSaved
@@ -2817,10 +2819,15 @@ export function CareArticleDetail({
       : meta.guideType === 'diagnosis'
         ? (isEn ? 'Start Self-Check' : '开始问题自查')
         : meta.guideType === 'knowledge'
-          ? favorite ? (isEn ? 'View in Collection' : '去水族册查看') : (isEn ? 'Save Guide' : '收藏这篇指南')
+          ? favorite
+            ? onOpenCollection
+              ? (isEn ? 'View in Collection' : '去水族册查看')
+              : (isEn ? 'Saved in Collection' : '已收藏在水族册')
+            : (isEn ? 'Save Guide' : '收藏这篇指南')
           : (isEn ? 'Set Reminder' : '设置提醒');
-  const isPrimaryDisabled = (meta.guideType === 'procedure' && isOperationCompleted)
-    || (meta.guideType === 'careChecklist' && (isChecklistSaved || completedVisibleActions === 0));
+  const isPrimaryDisabled = (meta.guideType === 'procedure' && isOperationCompleted && !isWaterChangeGuide)
+    || (meta.guideType === 'careChecklist' && (isChecklistSaved || completedVisibleActions === 0))
+    || (meta.guideType === 'knowledge' && favorite && !onOpenCollection);
   const secondaryLabel: string | null = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
       ? (isEn ? 'Set 3-Day Observe Reminder' : '设置 3 天观察提醒')
@@ -2966,6 +2973,10 @@ export function CareArticleDetail({
 
   const handleSecondaryCta = () => {
     if (meta.guideType === 'procedure') {
+      if (isWaterChangeGuide) {
+        navigate(taskRoutes.aquarium.waterChange);
+        return;
+      }
       if (isNewFishAcclimationTopic(topic)) {
         openReminderSheet('newFish');
         return;

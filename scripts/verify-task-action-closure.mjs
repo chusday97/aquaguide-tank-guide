@@ -136,6 +136,14 @@ try {
     await page.close();
   }
 
+  {
+    const { page, errors } = await open('/care?topic=guide_safe_water_change');
+    await page.getByRole('button', { name: '去记录本次换水', exact: true }).click();
+    await page.getByRole('dialog').filter({ hasText: '换水记录' }).waitFor();
+    assert.equal(errors.length, 0, `water change guide page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
   console.log('任务动作闭环浏览器验收通过。');
 } finally {
   await browser.close();
