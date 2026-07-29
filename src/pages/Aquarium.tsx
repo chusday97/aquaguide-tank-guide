@@ -4298,24 +4298,24 @@ export default function AquariumManager() {
       ? `今天有 ${todayTaskCount} 项建议处理。`
       : '今天暂无紧急任务，可以正常观察。';
   const dailyCheckStatus = !todayDailyCheckRecord
-    ? '今日未检查'
+    ? (isEn ? 'Not Checked Today' : '今日未检查')
     : todayDailyCheckRecord.riskCode === 'high' || todayDailyCheckRecord.riskCode === 'medium' || todayDailyCheckRecord.riskCode === 'unknown'
-      ? '建议重新检查'
-      : '今日已检查';
+      ? (isEn ? 'Re-check Recommended' : '建议重新检查')
+      : (isEn ? 'Checked Today' : '今日已检查');
   const commonActions = [
     {
       id: 'dailyTankCheck',
-      label: '每日鱼缸检查',
+      label: isEn ? 'Daily Tank Check' : '每日鱼缸检查',
       description: dailyCheckStatus,
       icon: <Activity className="h-4 w-4" />,
       onClick: handleOpenDailyCheck,
-      tone: dailyCheckStatus === '建议重新检查' ? 'warning' as const : todayDailyCheckRecord ? 'normal' as const : 'info' as const,
+      tone: dailyCheckStatus === '建议重新检查' || dailyCheckStatus === 'Re-check Recommended' ? 'warning' as const : todayDailyCheckRecord ? 'normal' as const : 'info' as const,
       active: Boolean(todayDailyCheckRecord),
     },
     {
       id: 'recordWaterChange',
-      label: waterChangedToday ? '撤回换水记录' : '记录本次换水',
-      description: waterChangedToday ? '今日已记录' : '更新换水周期',
+      label: isEn ? (waterChangedToday ? 'Undo Water Change' : 'Record Water Change') : (waterChangedToday ? '撤回换水记录' : '记录本次换水'),
+      description: isEn ? (waterChangedToday ? 'Recorded Today' : 'Update Change Cycle') : (waterChangedToday ? '今日已记录' : '更新换水周期'),
       icon: <Droplets className="h-4 w-4" />,
       onClick: handleTankWaterChange,
       tone: waterChangedToday ? 'normal' as const : waterTaskStatus === '建议处理' || waterTaskStatus === '待处理' ? 'warning' as const : 'info' as const,
@@ -4323,12 +4323,12 @@ export default function AquariumManager() {
     },
     {
       id: 'recordFeeding',
-      label: fedToday ? '撤回喂食记录' : '记录本次喂食',
-      description: hasStockedAnimals ? (fedToday ? '今日已记录' : '少量投喂') : '添加生物后使用',
+      label: isEn ? (fedToday ? 'Undo Feeding Record' : 'Record Feeding') : (fedToday ? '撤回喂食记录' : '记录本次喂食'),
+      description: isEn ? (hasStockedAnimals ? (fedToday ? 'Recorded Today' : 'Light Feeding') : 'Add Livestock First') : (hasStockedAnimals ? (fedToday ? '今日已记录' : '少量投喂') : '添加生物后使用'),
       icon: <Heart className="h-4 w-4" />,
       onClick: () => {
         if (!hasStockedAnimals) {
-          showToast('鱼缸内还没有生物，添加后才能记录喂食', 'error');
+          showToast(isEn ? 'No livestock in tank yet, add animals to record feeding.' : '鱼缸内还没有生物，添加后才能记录喂食', 'error');
           return;
         }
         setFedToday(prev => {
@@ -4342,13 +4342,13 @@ export default function AquariumManager() {
                 aquariumId: activeId,
                 createdAt: new Date().toISOString(),
                 type: 'feeding',
-                note: '喂食记录',
+                note: isEn ? 'Feeding Record' : '喂食记录',
               },
             ]
             : feedingRecords.filter(record => !(record.aquariumId === activeId && record.createdAt.startsWith(today)));
           setFeedingRecords(nextRecords);
           patchLocalAppState({ feedingRecords: nextRecords }, { debounce: true });
-          setTankActionMessage(next ? `已记录喂食：${format(new Date(), 'HH:mm')}` : '已撤回今日喂食记录');
+          setTankActionMessage(next ? (isEn ? `Recorded feeding: ${format(new Date(), 'HH:mm')}` : `已记录喂食：${format(new Date(), 'HH:mm')}`) : (isEn ? 'Undid feeding record' : '已撤回今日喂食记录'));
           return next;
         });
       },
@@ -4357,8 +4357,8 @@ export default function AquariumManager() {
     },
     {
       id: 'addSpecies',
-      label: '添加生物',
-      description: tankHealthStatus === '风险' ? '先处理风险后添加' : '从图鉴加入鱼缸',
+      label: isEn ? 'Add Livestock' : '添加生物',
+      description: isEn ? (tankHealthStatus === '风险' ? 'Resolve Risks First' : 'Add from Encyclopedia') : (tankHealthStatus === '风险' ? '先处理风险后添加' : '从图鉴加入鱼缸'),
       icon: <Plus className="h-4 w-4" />,
       onClick: () => setIsAddFishOpen(true),
       tone: tankHealthStatus === '风险' ? 'muted' as const : 'normal' as const,
@@ -4373,8 +4373,8 @@ export default function AquariumManager() {
     },
     {
       id: 'viewRecords',
-      label: '查看养护记录',
-      description: '养护历史',
+      label: isEn ? 'View Care Logs' : '查看养护记录',
+      description: isEn ? 'History Logs' : '养护历史',
       icon: <Calendar className="h-4 w-4" />,
       onClick: () => setIsCalendarOpen(true),
       tone: 'info' as const,
