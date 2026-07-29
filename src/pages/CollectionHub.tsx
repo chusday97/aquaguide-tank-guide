@@ -146,6 +146,10 @@ export default function CollectionHub() {
       .slice(0, 2);
   }, [nextAchievement, snapshot.achievements, unlockedAchievement]);
   const openItem = (module: CollectionModule, itemId: string) => {
+    if (module === 'memorial') {
+      navigate(`/collection/memorial/${encodeURIComponent(itemId)}`);
+      return;
+    }
     navigate(`${moduleRoutes[module]}?item=${encodeURIComponent(itemId)}`);
   };
   const formatDate = (value: string) => {

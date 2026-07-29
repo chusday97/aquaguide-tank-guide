@@ -27,7 +27,7 @@ import { careTopicsData, type CareTopic } from '../data/careTopicsData';
 import { fishData } from '../data/fishData';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import { getCareVisualSources } from '../lib/careVisual';
-import type { AchievementId, CollectionModule, MemorialItem } from '../modules/collection/collection.types';
+import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
 import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { getCareFavorites, getSpeciesFavoriteIds, setSpeciesFavoriteIds, toggleCareFavorite } from '../services/favorites/favorites.service';
@@ -80,7 +80,6 @@ export default function Collection({ module }: { module: CollectionModule }) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [selectedFish, setSelectedFish] = useState<Fish | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<CareTopic | null>(null);
-  const [selectedMemorial, setSelectedMemorial] = useState<MemorialItem | null>(null);
   const [pendingFishRemoval, setPendingFishRemoval] = useState<Fish | null>(null);
   const [pendingCareRemoval, setPendingCareRemoval] = useState<CareTopic | null>(null);
   const [checkedActions, setCheckedActions] = useState<string[]>([]);
@@ -173,7 +172,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
     if (activeTab === 'memorial') {
       const record = snapshot.memorials.find(item => item.id === deepLink.itemId);
       if (!record) showMissingItem();
-      else setSelectedMemorial(record);
+      else navigate(`/collection/memorial/${encodeURIComponent(record.id)}`, { replace: true });
       return;
     }
 
@@ -352,7 +351,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
                 key={record.id}
                 id={`collection-memorial-${record.id}`}
                 type="button"
-                onClick={() => { openFromCard(`collection-memorial-${record.id}`); setSelectedMemorial(record); }}
+                onClick={() => navigate(`/collection/memorial/${encodeURIComponent(record.id)}`)}
                 className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 rounded-[20px] border border-white/80 bg-white p-3 text-left shadow-sm transition-transform duration-200 hover:-translate-y-0.5"
               >
                 <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-slate-100 grayscale">
@@ -474,40 +473,6 @@ export default function Collection({ module }: { module: CollectionModule }) {
               activeAquarium={currentAquarium}
             />
           )}
-        </AdaptiveDetailContent>
-      </Dialog>
-
-      <Dialog open={Boolean(selectedMemorial)} onOpenChange={(open) => { if (!open) { setSelectedMemorial(null); clearDeepLinkItem(); restoreCard(); } }}>
-        <AdaptiveDetailContent className="flex flex-col" finalFocus={detailFinalFocusRef}>
-          {selectedMemorial && (() => {
-            const fish = fishData.find(item => item.id === selectedMemorial.fishId);
-            return (
-              <div className="app-scrollbar-hidden flex-1 overflow-y-auto p-5 pt-16 md:p-8 md:pt-16">
-                <div className="mx-auto max-w-[520px]">
-                  <div className="flex h-36 items-center justify-center rounded-[24px] bg-slate-100 grayscale">
-                    {fish ? <ResilientImage src={getSpeciesVisualSources(fish).detail} alt={fish.name} className={`h-full w-full object-contain p-[10%] opacity-75 ${getSpeciesImageClass(fish)}`} /> : <Skull className="h-10 w-10 text-ink/25" />}
-                  </div>
-                  <DialogHeader className="mt-5 text-left">
-                    <DialogTitle className="text-[22px] font-black">{fish?.name || '生命纪念'}</DialogTitle>
-                    <DialogDescription>{formatMemorialDate(selectedMemorial.date)}</DialogDescription>
-                  </DialogHeader>
-                  <section className="mt-5 rounded-[20px] border border-slate-200 bg-slate-50 p-4">
-                    <div className="text-[11px] font-black text-ink/40">复盘记录</div>
-                    <p className="mt-2 text-[14px] font-bold leading-6 text-ink/68">{selectedMemorial.reason || '这条记录还没有填写原因。后续新增生命纪念时，可以补充观察到的情况，帮助回顾养护过程。'}</p>
-                  </section>
-                  {fish && (
-                    <Button
-                      type="button"
-                      onClick={() => navigate(`/aquarium?action=add-species&species=${encodeURIComponent(fish.id)}`)}
-                      className="mt-4 h-11 w-full rounded-full bg-emerald-800 text-[12px] font-black text-white hover:bg-emerald-900"
-                    >
-                      再次加入
-                    </Button>
-                  )}
-                </div>
-              </div>
-            );
-          })()}
         </AdaptiveDetailContent>
       </Dialog>
 

@@ -83,10 +83,24 @@ try {
   await desktop.waitForURL(url => url.pathname === '/collection');
 
   await desktop.locator('[data-preview-item="memorial"]').first().click();
-  await desktop.waitForURL(url => url.pathname === '/collection/memorial' && url.searchParams.get('item') === 'memorial-3');
-  await desktop.locator('[data-surface="centered-dialog"]').waitFor();
+  await desktop.waitForURL(url => url.pathname === '/collection/memorial/memorial-3');
+  await desktop.locator('[data-memorial-detail="memorial-3"]').waitFor();
+  await desktop.getByRole('button', { name: '返回生命纪念' }).waitFor();
   await desktop.goBack();
   await desktop.waitForURL(url => url.pathname === '/collection');
+
+  await desktop.goto(`${baseUrl}/collection/memorial?item=memorial-2`, { waitUntil: 'networkidle' });
+  await desktop.waitForURL(url => url.pathname === '/collection/memorial/memorial-2');
+  await desktop.getByRole('button', { name: '补充复盘' }).click();
+  await desktop.getByLabel('当时看到什么').fill('入缸后活动量持续减少');
+  await desktop.getByLabel('可能原因').fill('可能与入缸应激有关');
+  await desktop.getByLabel('以后准备怎么做').fill('下次延长过水并单独观察');
+  await desktop.getByRole('button', { name: '保存复盘' }).click();
+  await desktop.getByText('复盘已保存', { exact: true }).waitFor();
+  await desktop.getByText('可能与入缸应激有关', { exact: true }).waitFor();
+  await desktop.reload({ waitUntil: 'networkidle' });
+  await desktop.getByText('可能与入缸应激有关', { exact: true }).waitFor();
+  await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle' });
 
   const achievementId = await desktop.locator('[data-preview-item="achievements"]').first().getAttribute('data-preview-id');
   assert.ok(achievementId, '成就预览应提供稳定 ID');

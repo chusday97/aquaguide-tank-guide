@@ -45,6 +45,7 @@ const loadEncyclopedia = () => import('./pages/Encyclopedia');
 const loadCare = () => import('./pages/CareEncyclopedia');
 const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
+const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadProjectStructure = () => import('./pages/ProjectStructurePreview');
 const loadLogin = () => import('./pages/Login');
 const loadAdminContent = () => import('./pages/AdminContent');
@@ -60,6 +61,7 @@ const Encyclopedia = lazyWithRecovery(loadEncyclopedia, 'encyclopedia');
 const CareEncyclopedia = lazyWithRecovery(loadCare, 'care');
 const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
+const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const ProjectStructurePreview = lazyWithRecovery(loadProjectStructure, 'project-structure');
 const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
@@ -85,6 +87,8 @@ const preloadRoute = (path: string) => {
         ? loadCare
         : path === '/collection'
           ? loadCollectionHub
+          : path.startsWith('/collection/memorial/')
+            ? loadMemorialDetail
           : path.startsWith('/collection/')
             ? loadCollection
           : null;
@@ -855,6 +859,7 @@ function WorkspaceRoutes() {
           <Route path="/collection" element={page(<CollectionEntry />, 'collection')} />
           <Route path="/collection/wishlist" element={page(<Collection module="wishlist" />, 'collection-wishlist')} />
           <Route path="/collection/care" element={page(<Collection module="care" />, 'collection-care')} />
+          <Route path="/collection/memorial/:recordId" element={page(<MemorialDetail />, 'collection-memorial-detail')} />
           <Route path="/collection/memorial" element={page(<Collection module="memorial" />, 'collection-memorial')} />
           <Route path="/collection/achievements" element={page(<Collection module="achievements" />, 'collection-achievements')} />
           <Route path="/wishlist" element={<Navigate to="/collection/wishlist" replace />} />
