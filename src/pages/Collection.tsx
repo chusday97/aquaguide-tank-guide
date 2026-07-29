@@ -470,6 +470,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
               onOpenShare={() => void shareCareTopic(selectedTopic)}
               onPreview={() => openCarePreview(selectedTopic)}
               onSelectRelated={(topic) => setSelectedTopic(topic)}
+              onRestoreActions={setCheckedActions}
               activeAquarium={currentAquarium}
             />
           )}

@@ -2084,6 +2084,7 @@ export default function CareEncyclopedia() {
               onPreview={() => openPreview(selectedTopic)}
               onSelectRelated={(topic) => openCareDetail(topic.id, undefined, false)}
               onOpenCollection={() => navigateToRoute('/collection/care')}
+              onRestoreActions={setCheckedActions}
               activeAquarium={activeAquarium}
             />
           )}
@@ -2725,6 +2726,7 @@ export function CareArticleDetail({
   onPreview,
   onSelectRelated,
   onOpenCollection,
+  onRestoreActions,
   activeAquarium,
 }: {
   topic: CareTopic;
@@ -2737,6 +2739,7 @@ export function CareArticleDetail({
   onPreview: () => void;
   onSelectRelated: (topic: CareTopic) => void;
   onOpenCollection?: () => void;
+  onRestoreActions?: (values: string[]) => void;
   activeAquarium: Aquarium | null;
 }) {
   const { t, i18n } = useTranslation();
@@ -2769,7 +2772,16 @@ export function CareArticleDetail({
     setIsDiagnosisStarted(false);
     setIsDetailExpanded(false);
     setCtaFeedback('');
-  }, [topic.id]);
+    setIsOperationCompleted(getCompletedCareOperations().some(item => item.id === topic.id));
+    const savedChecklist = getSavedCareChecklists().find(item => item.id === topic.id);
+    const restoredActions = savedChecklist
+      ? visibleActions
+          .map(action => action.description)
+          .filter(description => savedChecklist.actions.some(saved => saved === description || saved.endsWith(`：${description}`)))
+      : [];
+    setIsChecklistSaved(restoredActions.length > 0);
+    onRestoreActions?.(restoredActions);
+  }, [onRestoreActions, topic.id]);
   const primaryCtaLabel = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
       ? isOperationCompleted ? (isEn ? 'Completed Acclimation' : '已完成过水') : (isEn ? 'Mark Acclimation Done' : '标记已完成过水')
@@ -2777,14 +2789,18 @@ export function CareArticleDetail({
         ? isOperationCompleted ? (isEn ? 'Water Change Logged' : '已记录本次换水') : (isEn ? 'Mark Water Change Done' : '标记已完成换水')
         : isOperationCompleted ? (isEn ? 'Marked Completed' : '已标记完成') : isFilterGuide ? (isEn ? 'Mark Cleaning Done' : '标记已完成清洗') : (isEn ? 'Mark Operation Done' : '标记已完成操作')
     : meta.guideType === 'careChecklist'
-      ? isChecklistSaved ? (isEn ? 'Care Checklist Saved' : '已保存护理清单') : (isEn ? 'Save Care Checklist' : '保存护理清单')
+      ? isChecklistSaved
+        ? (isEn ? `${completedVisibleActions} Items Saved` : `已保存 ${completedVisibleActions} 项`)
+        : completedVisibleActions > 0
+          ? (isEn ? `Save ${completedVisibleActions} Completed` : `保存已完成的 ${completedVisibleActions} 项`)
+          : (isEn ? 'Check Completed Items First' : '先勾选已完成项目')
       : meta.guideType === 'diagnosis'
         ? (isEn ? 'Start Self-Check' : '开始问题自查')
         : meta.guideType === 'knowledge'
           ? favorite ? (isEn ? 'View in Collection' : '去水族册查看') : (isEn ? 'Save Guide' : '收藏这篇指南')
           : (isEn ? 'Set Reminder' : '设置提醒');
   const isPrimaryDisabled = (meta.guideType === 'procedure' && isOperationCompleted)
-    || (meta.guideType === 'careChecklist' && isChecklistSaved);
+    || (meta.guideType === 'careChecklist' && (isChecklistSaved || completedVisibleActions === 0));
   const secondaryLabel: string | null = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
       ? (isEn ? 'Set 3-Day Observe Reminder' : '设置 3 天观察提醒')
@@ -2902,14 +2918,20 @@ export function CareArticleDetail({
         id: topic.id,
         title: getDisplayTitle(topic),
         savedAt: new Date().toISOString(),
-        actions: visibleActions.map(action => `${action.title}：${action.description}`),
+        actions: visibleActions
+          .filter(action => checkedActions.includes(action.description))
+          .map(action => action.description),
       },
       ...saved.filter(item => item.id !== topic.id),
     ].slice(0, 30);
     try {
       setSavedCareChecklists(next);
       setIsChecklistSaved(true);
-      setCtaFeedback(isEn ? 'Care checklist saved' : '护理清单已保存');
+      setCtaFeedback(
+        isEn
+          ? `${completedVisibleActions} completed item${completedVisibleActions === 1 ? '' : 's'} saved`
+          : `已保存 ${completedVisibleActions} 项完成记录`
+      );
     } catch (error) {
       setCtaFeedback(error instanceof Error ? error.message : (isEn ? 'Failed to save care checklist' : '护理清单保存失败'));
     }
@@ -3110,7 +3132,10 @@ export function CareArticleDetail({
                     checked={checkedActions.includes(item.description)}
                     title={`${index + 1}. ${item.title}`}
                     description={item.description}
-                    onClick={() => onToggleAction(item.description)}
+                    onClick={() => {
+                      setIsChecklistSaved(false);
+                      onToggleAction(item.description);
+                    }}
                   />
                 )) : careGuide.maintenanceTips.slice(0, 4).map((item, index) => (
                   <div key={`${item.title}-${item.description}`} className="rounded-[15px] bg-white px-3 py-3 shadow-sm">
@@ -3272,6 +3297,8 @@ function ActionStepCard({
     <button
       type="button"
       onClick={onClick}
+      data-care-action-step
+      aria-pressed={checked}
       className={`flex items-start gap-2 rounded-[15px] border px-3 py-2.5 text-left transition-colors ${
         checked ? 'border-emerald-200 bg-white text-ink/58' : 'border-white bg-white text-ink'
       }`}

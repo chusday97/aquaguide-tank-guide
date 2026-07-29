@@ -45,6 +45,43 @@ try {
     assert.deepEqual(pageErrors, [], `${testCase.topicId} 出现页面错误`);
     await page.close();
   }
+
+  const persistenceContext = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await persistenceContext.addInitScript(() => {
+    window.localStorage.setItem('aquaguide_locale', 'zh-CN');
+  });
+  const persistencePage = await persistenceContext.newPage();
+
+  await persistencePage.goto(`${baseUrl}/care?topic=guide_pregnant_care`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await persistencePage.evaluate(() => {
+    window.localStorage.removeItem('aqua_care_completed_operations');
+    window.localStorage.removeItem('aqua_care_saved_checklists');
+  });
+  await persistencePage.reload({ waitUntil: 'domcontentloaded' });
+  let dialog = persistencePage.getByRole('dialog');
+  await dialog.waitFor({ state: 'visible', timeout: 30000 });
+  const emptyChecklistButton = dialog.getByRole('button', { name: '先勾选已完成项目' });
+  assert.equal(await emptyChecklistButton.isDisabled(), true, '未勾选护理项时不得保存');
+  await dialog.locator('[data-care-action-step]').first().click();
+  await dialog.getByRole('button', { name: '保存已完成的 1 项' }).click();
+  await dialog.getByText('已保存 1 项完成记录', { exact: true }).waitFor();
+  await persistencePage.reload({ waitUntil: 'domcontentloaded' });
+  dialog = persistencePage.getByRole('dialog');
+  await dialog.waitFor({ state: 'visible', timeout: 30000 });
+  assert.equal(await dialog.locator('[data-care-action-step]').first().getAttribute('aria-pressed'), 'true', '刷新后应恢复已完成护理项');
+  assert.equal(await dialog.getByRole('button', { name: '已保存 1 项' }).isDisabled(), true, '刷新后应恢复清单已保存状态');
+
+  await persistencePage.goto(`${baseUrl}/care?topic=guide_new_fish_acclimation`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+  dialog = persistencePage.getByRole('dialog');
+  await dialog.waitFor({ state: 'visible', timeout: 30000 });
+  await dialog.getByRole('button', { name: '标记已完成过水' }).click();
+  await dialog.getByText('已标记完成', { exact: true }).waitFor();
+  await persistencePage.reload({ waitUntil: 'domcontentloaded' });
+  dialog = persistencePage.getByRole('dialog');
+  await dialog.waitFor({ state: 'visible', timeout: 30000 });
+  assert.equal(await dialog.getByRole('button', { name: '已完成过水' }).isDisabled(), true, '刷新后应恢复操作完成状态');
+
+  await persistenceContext.close();
   console.log('Care guide type verification passed.');
 } finally {
   await browser.close();
