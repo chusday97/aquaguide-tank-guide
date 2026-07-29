@@ -121,7 +121,13 @@ import {
   subscribeToCareActivity,
   type CareReminderRecord,
 } from '../services/care/care-activity.service';
-import { appendSpeciesBatch, createSpeciesBatch, getSpeciesBatchContextLabel, withNormalizedSpeciesBatches } from '../services/aquarium/species-batches.service';
+import {
+  appendSpeciesBatch,
+  createSpeciesBatch,
+  getAquariumBatchCareSignal,
+  getSpeciesBatchContextLabel,
+  withNormalizedSpeciesBatches,
+} from '../services/aquarium/species-batches.service';
 
 const ThreeAquarium = lazy(() => import('../components/ThreeAquarium').then(module => ({ default: module.ThreeAquarium })));
 
@@ -2081,6 +2087,10 @@ export default function AquariumManager() {
     }
     if (task.actionType === 'daily_check') {
       handleOpenDailyCheck();
+      return;
+    }
+    if (task.actionType === 'life_stage_observation') {
+      setIsTankArchiveExpanded(true);
     }
   };
 
@@ -4038,6 +4048,14 @@ export default function AquariumManager() {
   const blockingCompatibilityRisk = tankRiskItems.find(item => item.severity === 'danger');
   const overdueCareReminder = activeCareReminders.find(reminder => getCareReminderStatus(reminder) === 'overdue');
   const todayCareReminder = activeCareReminders.find(reminder => getCareReminderStatus(reminder) === 'today');
+  const batchCareSignal = getAquariumBatchCareSignal(activeAquarium.fishes, Boolean(isEn));
+  const batchCareSpecies = batchCareSignal
+    ? fishData.find(item => item.id === activeAquarium.fishes.find(record => record.id === batchCareSignal.speciesRecordId)?.fishId)
+    : undefined;
+  const batchCareSpeciesName = batchCareSpecies ? getSpeciesNameLocalized(batchCareSpecies, Boolean(isEn)) : '';
+  const batchCareReason = batchCareSignal
+    ? `${batchCareSpeciesName ? `${batchCareSpeciesName}：` : ''}${batchCareSignal.reason}`
+    : '';
 
   let dailyActionTask: DailyActionTask;
   if (unresolvedPatrol) {
@@ -4113,12 +4131,40 @@ export default function AquariumManager() {
     dailyActionTask = {
       id: `daily-check-${activeAquarium.id}`,
       actionType: 'daily_check',
-      title: '完成今天的鱼缸检查',
-      priority: 'normal',
-      reason: '今天还没有记录鱼群、水面和气味是否正常。',
-      evidence: '当前鱼缸今天没有巡检记录',
-      primaryLabel: '开始今日检查',
-      trigger: { type: 'scheduled_task', source: 'user_observation' },
+      title: batchCareSignal
+        ? (isEn ? `Check ${batchCareSpeciesName || 'livestock'} today` : `今天重点观察${batchCareSpeciesName || '缸内生物'}`)
+        : (isEn ? 'Complete today’s aquarium check' : '完成今天的鱼缸检查'),
+      priority: batchCareSignal?.priority === 'important' ? 'medium' : 'normal',
+      reason: batchCareSignal
+        ? batchCareReason
+        : (isEn ? 'No aquarium check has been recorded for today.' : '今天还没有记录鱼群、水面和气味是否正常。'),
+      evidence: batchCareSignal
+        ? (isEn ? 'Based on the recorded life or reproductive stage and today’s missing check.' : '基于已记录体态与今天尚未完成的巡检')
+        : (isEn ? 'No aquarium check is recorded for this tank today.' : '当前鱼缸今天没有巡检记录'),
+      primaryLabel: batchCareSignal
+        ? (isEn ? 'Start focused check' : '开始重点观察')
+        : (isEn ? 'Start today’s check' : '开始今日检查'),
+      trigger: {
+        type: 'scheduled_task',
+        source: 'user_observation',
+        value: batchCareSignal ? { lifeStageSignal: batchCareSignal.code } : undefined,
+      },
+    };
+  } else if (batchCareSignal) {
+    dailyActionTask = {
+      id: `life-stage-${batchCareSignal.speciesRecordId}-${batchCareSignal.code}`,
+      actionType: 'life_stage_observation',
+      title: batchCareSignal.title,
+      priority: batchCareSignal.priority === 'important' ? 'medium' : 'normal',
+      reason: batchCareReason,
+      evidence: isEn ? 'Based on the life and reproductive states you recorded.' : '基于你记录的生长阶段与繁殖状态',
+      primaryLabel: isEn ? 'View observation focus' : '查看观察重点',
+      targetId: batchCareSignal.speciesRecordId,
+      trigger: {
+        type: 'scheduled_task',
+        source: 'aquarium_stock',
+        value: { lifeStageSignal: batchCareSignal.code },
+      },
     };
   } else {
     dailyActionTask = {
@@ -4174,6 +4220,7 @@ export default function AquariumManager() {
       care_plan: 'Complete the due care plan',
       water_change: 'Record this water change',
       daily_check: 'Complete today’s aquarium check',
+      life_stage_observation: 'Review the recorded life-stage observation focus',
       routine: 'Continue routine observation',
     } satisfies Record<DailyActionTask['actionType'], string>)[dailyActionTask.actionType]
     : dailyActionTask.title;

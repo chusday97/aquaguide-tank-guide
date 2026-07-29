@@ -52,9 +52,9 @@ try {
   await fresh.waitForURL('**/welcome');
   await fresh.getByRole('button', { name: '开始' }).first().click();
   await fresh.waitForURL('**/aquarium?action=create&source=onboarding');
-  await fresh.getByRole('dialog').waitFor();
-  assert.ok(await fresh.getByRole('dialog').isVisible(), 'build-tank onboarding must open the actual creation task');
-  console.log('PASS onboarding opens the real tank task');
+  await fresh.waitForURL('**/aquarium');
+  await fresh.getByText(/已新建/).waitFor();
+  console.log('PASS onboarding creates and enters the real aquarium');
   await fresh.close();
 
   const desktop = await browser.newPage({ viewport: { width: 1200, height: 900 }, locale: 'zh-CN' });
@@ -69,6 +69,7 @@ try {
   await desktop.waitForURL('**/search?q=*');
   await desktop.getByRole('heading', { name: '物种' }).waitFor();
   await desktop.locator('#search-species-sp_0001').click();
+  await desktop.getByRole('button', { name: '查看详情' }).click();
   await desktop.waitForURL('**/encyclopedia?species=sp_0001&source=search');
   await desktop.getByRole('dialog').waitFor();
   await desktop.keyboard.press('Escape');
@@ -103,11 +104,12 @@ try {
   await phone.getByText('缸内物种', { exact: true }).last().click();
   await phone.getByRole('button', { name: '调整体态' }).click();
   await phone.getByLabel('数量').fill('3');
-  await phone.getByLabel('生长阶段').selectOption('adult');
-  await phone.getByLabel('繁殖状态').selectOption('normal');
+  await phone.getByRole('radio', { name: '成年', exact: true }).click();
+  await phone.getByRole('radio', { name: '常态', exact: true }).click();
   await phone.getByRole('button', { name: '拆分' }).click();
   await phone.getByLabel('拆出数量').fill('1');
-  await phone.getByLabel('繁殖状态').last().selectOption('pregnant_or_gravid');
+  const splitPanel = phone.getByText('拆出一组', { exact: true }).locator('xpath=ancestor::section');
+  await splitPanel.getByRole('radio', { name: '怀孕 / 抱卵', exact: true }).click();
   await phone.getByRole('button', { name: '确认拆分' }).click();
   await phone.getByRole('button', { name: '保存修改' }).click();
   await phone.getByRole('button', { name: '保存修改' }).waitFor({ state: 'hidden' });
@@ -116,7 +118,7 @@ try {
   assert.equal(stored.quantity, 3);
   assert.equal(stored.batches.length, 2);
   await phone.getByRole('button', { name: '调整体态' }).click();
-  await phone.getByLabel('繁殖状态').last().selectOption('normal');
+  await phone.getByRole('radio', { name: '常态', exact: true }).last().click();
   await phone.getByRole('button', { name: '合并到上一组' }).click();
   await phone.getByRole('button', { name: '保存修改' }).click();
   await phone.getByRole('button', { name: '保存修改' }).waitFor({ state: 'hidden' });
@@ -148,12 +150,12 @@ try {
   assert.ok(await narrowEnglish.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), '600px English desktop must not overflow');
   await narrowEnglish.getByLabel('Quantity').fill('2');
   await narrowEnglish.keyboard.press('Escape');
-  await narrowEnglish.getByRole('heading', { name: 'Discard changes?' }).waitFor();
+  await narrowEnglish.getByRole('heading', { name: 'Discard livestock changes?' }).waitFor();
   await narrowEnglish.getByRole('button', { name: 'Continue editing' }).click();
   assert.ok(narrowEnglish.url().includes('/aquarium'), 'continuing an edit must keep the livestock editor route');
   await narrowEnglish.keyboard.press('Escape');
-  await narrowEnglish.getByRole('heading', { name: 'Discard changes?' }).waitFor();
-  await narrowEnglish.getByRole('button', { name: 'Discard changes' }).click();
+  await narrowEnglish.getByRole('heading', { name: 'Discard livestock changes?' }).waitFor();
+  await narrowEnglish.getByRole('button', { name: 'Discard and close' }).click();
   await narrowEnglish.getByRole('heading', { name: /^Manage / }).waitFor({ state: 'hidden' });
   await narrowEnglish.getByRole('button', { name: 'Settings', exact: true }).click();
   await narrowEnglish.waitForURL('**/settings');

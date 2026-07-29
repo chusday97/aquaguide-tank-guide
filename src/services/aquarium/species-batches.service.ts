@@ -177,3 +177,61 @@ export const getSpeciesBatchObservation = (record: AquariumFish, isEn: boolean) 
   if (summary.juvenile) return isEn ? 'Check feeding access, growth, and whether larger tank mates are chasing them.' : '观察鱼苗是否吃得到、生长正常，以及是否被大鱼追咬。';
   return '';
 };
+
+export type SpeciesBatchCareSignal = {
+  code: 'spawning' | 'pregnant' | 'recovery' | 'juvenile';
+  speciesRecordId: string;
+  priority: 'routine' | 'important';
+  title: string;
+  reason: string;
+};
+
+export const getAquariumBatchCareSignal = (
+  records: AquariumFish[],
+  isEn: boolean,
+): SpeciesBatchCareSignal | null => {
+  const candidates = records.flatMap(record => {
+    const summary = summarizeSpeciesBatches(record);
+    return [
+      summary.spawning > 0 ? {
+        code: 'spawning' as const,
+        speciesRecordId: record.id,
+        priority: 'important' as const,
+        title: isEn ? 'Watch birthing or spawning closely' : '重点观察生产或繁殖',
+        reason: isEn
+          ? `${summary.spawning} animal(s) are marked as birthing or spawning. Check breathing, shelter and whether the process has finished.`
+          : `${summary.spawning} 条/只正处于生产或繁殖状态，今天重点看呼吸、躲藏和过程是否结束。`,
+      } : null,
+      summary.pregnant > 0 ? {
+        code: 'pregnant' as const,
+        speciesRecordId: record.id,
+        priority: 'routine' as const,
+        title: isEn ? 'Check pregnant or gravid livestock' : '观察怀孕或抱卵生物',
+        reason: isEn
+          ? `${summary.pregnant} animal(s) need an appetite, chasing and shelter check.`
+          : `${summary.pregnant} 条/只需要观察食欲、追咬和躲避空间。`,
+      } : null,
+      summary.recovery > 0 ? {
+        code: 'recovery' as const,
+        speciesRecordId: record.id,
+        priority: 'routine' as const,
+        title: isEn ? 'Check postpartum recovery' : '观察产后恢复状态',
+        reason: isEn
+          ? `${summary.recovery} animal(s) are recovering. Check appetite and activity while keeping the water stable.`
+          : `${summary.recovery} 条/只处于产后恢复，观察食欲和活动量并保持水体稳定。`,
+      } : null,
+      summary.juvenile > 0 ? {
+        code: 'juvenile' as const,
+        speciesRecordId: record.id,
+        priority: 'routine' as const,
+        title: isEn ? 'Check juvenile feeding access' : '观察幼年生物进食',
+        reason: isEn
+          ? `${summary.juvenile} juvenile(s) need feeding access, growth and chasing checks.`
+          : `${summary.juvenile} 条/只幼年生物需要观察是否吃得到、生长正常及有无被追咬。`,
+      } : null,
+    ].filter(Boolean) as SpeciesBatchCareSignal[];
+  });
+
+  const priorityOrder: SpeciesBatchCareSignal['code'][] = ['spawning', 'pregnant', 'recovery', 'juvenile'];
+  return candidates.sort((a, b) => priorityOrder.indexOf(a.code) - priorityOrder.indexOf(b.code))[0] || null;
+};

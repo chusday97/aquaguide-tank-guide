@@ -70,10 +70,16 @@ export function LivestockRosterDialog({
   const [removeError, setRemoveError] = useState('');
   const [startedAtDraft, setStartedAtDraft] = useState(startedAt || '');
   const [startedAtError, setStartedAtError] = useState('');
+  const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
+  const [isEditingDirty, setIsEditingDirty] = useState(false);
+  const [isRosterCloseConfirmOpen, setIsRosterCloseConfirmOpen] = useState(false);
   const speciesById = useMemo(() => new Map(species.map(item => [item.id, item])), [species]);
   const visibleRecords = useMemo(() => records
     .map(record => ({ record, fish: speciesById.get(record.fishId) }))
     .filter((item): item is { record: AquariumFish; fish: Fish } => Boolean(item.fish)), [records, speciesById]);
+  const displayedRecords = editingRecordId
+    ? visibleRecords.filter(item => item.record.id === editingRecordId)
+    : visibleRecords;
 
   useEffect(() => {
     if (!removal) return;
@@ -82,6 +88,19 @@ export function LivestockRosterDialog({
   }, [records, removal]);
 
   useEffect(() => setStartedAtDraft(startedAt || ''), [startedAt]);
+  useEffect(() => {
+    if (!open) {
+      setEditingRecordId(null);
+      setIsEditingDirty(false);
+      setIsRosterCloseConfirmOpen(false);
+    }
+  }, [open]);
+  useEffect(() => {
+    if (editingRecordId && !visibleRecords.some(item => item.record.id === editingRecordId)) {
+      setEditingRecordId(null);
+      setIsEditingDirty(false);
+    }
+  }, [editingRecordId, visibleRecords]);
 
   const batches = removal ? normalizeSpeciesBatches(removal.record) : [];
   const selectedBatch = batches.find(batch => batch.id === removal?.batchId);
@@ -122,27 +141,43 @@ export function LivestockRosterDialog({
     }
   };
 
+  const requestRosterOpenChange = (next: boolean) => {
+    if (!next && editingRecordId && isEditingDirty) {
+      setIsRosterCloseConfirmOpen(true);
+      return;
+    }
+    if (!next) {
+      setEditingRecordId(null);
+      setIsEditingDirty(false);
+    }
+    onOpenChange(next);
+  };
+
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent showCloseButton={false} className="flex max-h-[88dvh] w-[min(94vw,900px)] max-w-[900px] flex-col overflow-hidden rounded-[28px] p-0">
+      <Dialog open={open} onOpenChange={requestRosterOpenChange}>
+        <DialogContent showCloseButton={false} className="flex h-[92dvh] max-h-[92dvh] w-[min(94vw,900px)] max-w-[900px] flex-col overflow-hidden rounded-[28px] p-0 sm:h-auto sm:max-h-[88dvh]">
           <SurfaceHeader
-            title="缸内物种"
-            description={`${aquariumName} · ${visibleRecords.length} 种 · 共 ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} 只/条`}
-            onClose={() => onOpenChange(false)}
+            title={editingRecordId ? (isEn ? 'Manage livestock state' : '调整缸内物种体态') : (isEn ? 'Tank livestock' : '缸内物种')}
+            description={editingRecordId
+              ? (isEn ? 'Update one batch at a time, then review and save.' : '按批次调整，确认修改摘要后再保存。')
+              : `${aquariumName} · ${visibleRecords.length} ${isEn ? 'species' : '种'} · ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} ${isEn ? 'animals' : '只/条'}`}
+            onClose={() => requestRosterOpenChange(false)}
             actions={(
-              <>
+              editingRecordId ? undefined : (
+                <>
                 <button type="button" disabled={isCreatingShare} onClick={onCreateShare} aria-label={isEn ? 'Create share report' : '生成分享报告'} title={isEn ? 'Create share report' : '生成分享报告'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
                   <Share2 className="h-4 w-4" />
                 </button>
                 <button type="button" onClick={onDownloadArchive} aria-label={isEn ? 'Download aquarium archive' : '下载鱼缸档案'} title={isEn ? 'Download aquarium archive' : '下载鱼缸档案'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
                   <Download className="h-4 w-4" />
                 </button>
-              </>
+                </>
+              )
             )}
           />
           <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
-            <section className="mb-4 rounded-[20px] border border-emerald-100 bg-white p-4">
+            {!editingRecordId && <section className="mb-4 rounded-[20px] border border-emerald-100 bg-white p-4">
               <div className="flex flex-wrap items-end gap-3">
                 <label className="min-w-[190px] flex-1 text-xs font-black text-ink/65">
                   {isEn ? 'Aquarium start date' : '建缸日期'}
@@ -171,24 +206,30 @@ export function LivestockRosterDialog({
                   <button type="button" onClick={onDownloadMilestone} aria-label={isEn ? 'Download milestone card' : '下载百日纪念卡'} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-amber-800 shadow-sm"><Download className="h-4 w-4" /></button>
                 </div>
               )}
-            </section>
-            {visibleRecords.length > 0 ? (
+            </section>}
+            {displayedRecords.length > 0 ? (
               <div className="grid gap-3 md:grid-cols-2">
-                {visibleRecords.map(({ record, fish }) => (
+                {displayedRecords.map(({ record, fish }) => (
                   <div key={record.id} className="relative min-w-0">
-                    <button
+                    {!editingRecordId && <button
                       type="button"
-                      aria-label={`将${fish.name}移出鱼缸`}
-                      title="移出鱼缸"
+                      aria-label={isEn ? `Remove ${fish.name} from aquarium` : `将${fish.name}移出鱼缸`}
+                      title={isEn ? 'Remove from aquarium' : '移出鱼缸'}
                       onClick={() => beginRemoval(record, fish)}
                       className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-rose-100 bg-white/95 text-rose-600 shadow-sm transition-colors hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
                     >
                       <X className="h-5 w-5" />
-                    </button>
+                    </button>}
                     <LivestockBatchCard
                       fish={fish}
                       record={record}
                       reproductiveApplicable
+                      isEditing={editingRecordId === record.id}
+                      onEditingChange={editing => {
+                        setEditingRecordId(editing ? record.id : null);
+                        if (!editing) setIsEditingDirty(false);
+                      }}
+                      onDirtyChange={setIsEditingDirty}
                       onOpenDetail={() => onOpenDetail(fish, record)}
                       onSave={next => onSave(record.id, next)}
                     />
@@ -203,6 +244,30 @@ export function LivestockRosterDialog({
               </div>
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isRosterCloseConfirmOpen} onOpenChange={setIsRosterCloseConfirmOpen}>
+        <DialogContent showCloseButton={false} className="w-[min(92vw,440px)] max-w-[440px] rounded-[26px]">
+          <DialogHeader>
+            <DialogTitle>{isEn ? 'Discard livestock changes?' : '放弃体态修改？'}</DialogTitle>
+            <DialogDescription>{isEn ? 'Unsaved quantity and state changes will be lost before the livestock panel closes.' : '关闭缸内物种前，尚未保存的数量和体态调整会丢失。'}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button type="button" onClick={() => setIsRosterCloseConfirmOpen(false)} className="min-h-11 rounded-full border border-border px-4 text-sm font-black">{isEn ? 'Continue editing' : '继续编辑'}</button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsRosterCloseConfirmOpen(false);
+                setEditingRecordId(null);
+                setIsEditingDirty(false);
+                onOpenChange(false);
+              }}
+              className="min-h-11 rounded-full bg-rose-600 px-4 text-sm font-black text-white"
+            >
+              {isEn ? 'Discard and close' : '放弃并关闭'}
+            </button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

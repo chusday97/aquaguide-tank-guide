@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import type { Aquarium, AquariumFish } from '../src/types';
 import {
   appendSpeciesBatch,
   deleteSpeciesBatch,
   decrementSpeciesBatch,
+  getAquariumBatchCareSignal,
   getSpeciesBatchContextLabel,
   mergeSpeciesBatches,
   normalizeSpeciesBatches,
@@ -38,10 +40,24 @@ assert.equal(split.quantity, 4, 'splitting must not change total quantity');
 assert.equal(split.batches?.length, 2);
 assert.equal(summarizeSpeciesBatches(split).pregnant, 1);
 assert.match(getSpeciesBatchContextLabel(split, false), /怀孕\/\u62b1卵 1/);
+assert.equal(getAquariumBatchCareSignal([split], false)?.code, 'pregnant');
 
 const appended = appendSpeciesBatch(split, { quantity: 2, entryDate: '2026-07-22T00:00:00.000Z', lifeStage: 'juvenile' });
 assert.equal(appended.quantity, 6);
 assert.equal(summarizeSpeciesBatches(appended).juvenile, 2);
+const spawning = updateSpeciesBatch(appended, appended.batches![1].id, { reproductiveState: 'in_labor_or_spawning' });
+assert.deepEqual(
+  {
+    code: getAquariumBatchCareSignal([spawning], false)?.code,
+    priority: getAquariumBatchCareSignal([spawning], false)?.priority,
+  },
+  { code: 'spawning', priority: 'important' },
+  'birthing/spawning must outrank other life-stage observations without changing stored quantity',
+);
+assert.equal(spawning.quantity, appended.quantity);
+const aquariumPageSource = readFileSync(new URL('../src/pages/Aquarium.tsx', import.meta.url), 'utf8');
+const healthScoreBlock = aquariumPageSource.match(/const calculateHealthScore = \(\) => \{([\s\S]*?)const healthScore = calculateHealthScore\(\);/)?.[1] || '';
+assert.doesNotMatch(healthScoreBlock, /lifeStage|reproductiveState|batchCareSignal/, 'life and reproductive states must not directly change the aquarium health score');
 
 const afterDelete = deleteSpeciesBatch(appended, appended.batches![2].id);
 assert.equal(afterDelete?.quantity, 4);

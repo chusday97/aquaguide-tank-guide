@@ -11,6 +11,7 @@ export type DailyActionType =
   | 'care_plan'
   | 'water_change'
   | 'daily_check'
+  | 'life_stage_observation'
   | 'routine';
 
 export type DailyAquariumStatus = {

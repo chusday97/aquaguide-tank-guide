@@ -139,12 +139,12 @@ try {
     assert.equal(await page.locator('.aquarium-archive-preview').getByText(/more species|另有 \d+ 种/).count(), 0, 'livestock preview must not add a numeric overflow placeholder card');
     const archive = page.locator('.aquarium-archive');
     await archive.locator('button[aria-haspopup="dialog"]').click();
-    const roster = page.getByRole('dialog').filter({ hasText: '缸内物种' }).first();
+    const roster = page.getByRole('dialog').filter({ hasText: /缸内物种|Tank livestock/i }).first();
     await roster.waitFor();
     assert.equal(await roster.locator('article').count(), speciesCount, 'roster dialog must show every seeded species');
     assert.equal(await archive.locator('.aquarium-archive-preview').count(), 1, 'compact preview must remain stable behind the dialog');
     if (speciesCount === 4) {
-      await roster.getByRole('button', { name: /移出鱼缸/ }).first().click();
+      await roster.getByRole('button', { name: /移出鱼缸|Remove .* from aquarium/i }).first().click();
       const confirmation = page.getByRole('dialog').filter({ hasText: '不要放生' }).first();
       await confirmation.waitFor();
       await confirmation.getByRole('button', { name: '确认已移出 1 只/条' }).click();
@@ -162,7 +162,7 @@ try {
   }, createState(1));
   await removalRetry.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await removalRetry.locator('.aquarium-archive button[aria-haspopup="dialog"]').click();
-  const retryRoster = removalRetry.getByRole('dialog').filter({ hasText: '缸内物种' }).first();
+  const retryRoster = removalRetry.getByRole('dialog').filter({ hasText: /缸内物种|Tank livestock/i }).first();
   await retryRoster.getByRole('button', { name: /移出鱼缸/ }).click();
   const retryConfirmation = removalRetry.getByRole('dialog').filter({ hasText: '不要放生' }).first();
   const operationId = await retryConfirmation.getAttribute('data-removal-operation-id');
@@ -242,6 +242,42 @@ try {
   await riskDesktop.getByRole('dialog').filter({ hasText: /缸内物种|Tank Livestock/i }).waitFor();
   await riskDesktop.close();
 
+  const lifeStageState = createState(1);
+  const nowIso = new Date().toISOString();
+  const todayKey = nowIso.slice(0, 10);
+  lifeStageState.aquariums[0].lastWaterChangeDate = nowIso;
+  lifeStageState.aquariums[0].waterChangeHistory = [todayKey];
+  lifeStageState.aquariums[0].fishes[0].lastWaterChangeDate = nowIso;
+  lifeStageState.aquariums[0].fishes[0].batches[0].lifeStage = 'adult';
+  lifeStageState.aquariums[0].fishes[0].batches[0].reproductiveState = 'in_labor_or_spawning';
+  lifeStageState.diagnosisRecords = [{
+    id: 'today-check',
+    diagnosisId: 'today-check',
+    aquariumId: 'tank-c',
+    createdAt: nowIso,
+    problemType: '巡检',
+    answers: {},
+    resultSummary: '状态正常',
+    riskLevel: '低风险',
+    riskCode: 'low',
+    conclusion: '状态正常',
+    keyMetrics: [],
+    suggestedActions: [],
+    avoidActions: [],
+    observeItems: [],
+    missingInfo: [],
+    optionalMissingInfo: [],
+    followUpNotes: [],
+  }];
+  const lifeStageDesktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'en-US' });
+  await seed(lifeStageDesktop, lifeStageState);
+  await lifeStageDesktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  const lifeStageAction = lifeStageDesktop.locator('[data-daily-action="life_stage_observation"]');
+  await lifeStageAction.waitFor();
+  await lifeStageAction.getByRole('button', { name: 'View observation focus' }).click();
+  await lifeStageDesktop.getByRole('dialog').filter({ hasText: /Tank livestock|缸内物种/i }).waitFor();
+  await lifeStageDesktop.close();
+
   for (const width of [320, 375, 390, 430]) {
     const phone = await browser.newPage({
       viewport: { width, height: 844 },
@@ -291,7 +327,7 @@ try {
   await seed(deepLinkPhone);
   await deepLinkPhone.goto(`${baseUrl}/aquarium?action=livestock`, { waitUntil: 'domcontentloaded' });
   const targetedManageZone = deepLinkPhone.locator('#aquarium-manage-zone');
-  const livestockDialog = deepLinkPhone.getByRole('dialog').filter({ hasText: /缸内物种|Tank Livestock/ });
+  const livestockDialog = deepLinkPhone.getByRole('dialog').filter({ hasText: /缸内物种|Tank Livestock/i });
   await livestockDialog.waitFor();
   assert.equal(await livestockDialog.evaluate(element => element.contains(document.activeElement)), true, 'livestock deep link must focus the opened target dialog');
   assert.equal(await targetedManageZone.isVisible(), true, 'manage zone must stay available behind the direct target dialog');

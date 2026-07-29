@@ -117,6 +117,8 @@ const resources = {
       livestock: {
         manageTitle: '调整{{name}}体态',
         manageGroups: '调整体态',
+        backToList: '返回缸内物种',
+        changeSummary: '保存后更新为：',
         openProfile: '打开{{name}}资料',
         observePrefix: '观察：',
         summaryTotal: '共 {{count}} 条/只',
@@ -996,6 +998,8 @@ const resources = {
       livestock: {
         manageTitle: 'Manage {{name}}',
         manageGroups: 'Manage groups',
+        backToList: 'Back to tank livestock',
+        changeSummary: 'After saving: ',
         openProfile: 'Open {{name}} profile',
         observePrefix: 'Observe: ',
         summaryTotal: '{{count}} total',
