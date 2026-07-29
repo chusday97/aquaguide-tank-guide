@@ -513,15 +513,35 @@ export default function Collection({ module }: { module: CollectionModule }) {
 
       <Dialog open={Boolean(pendingFishRemoval)} onOpenChange={(open) => !open && setPendingFishRemoval(null)}>
         <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
-          <DialogHeader><DialogTitle>移除这条种草？</DialogTitle><DialogDescription>“{pendingFishRemoval?.name}”会从水族册移除，之后仍可在图鉴重新收藏。</DialogDescription></DialogHeader>
-          <DialogFooter className="grid grid-cols-2 gap-2"><Button variant="outline" onClick={() => setPendingFishRemoval(null)}>取消</Button><Button variant="destructive" onClick={removeFishFavorite}>确认移除</Button></DialogFooter>
+          <DialogHeader>
+            <DialogTitle>{i18n.language === 'en' ? 'Remove this saved species?' : '移除这条种草？'}</DialogTitle>
+            <DialogDescription>
+              {i18n.language === 'en'
+                ? `${pendingFishRemoval?.name || 'This species'} will be removed from My Collection. You can save it again from Species later.`
+                : `“${pendingFishRemoval?.name}”会从水族册移除，之后仍可在图鉴重新收藏。`}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <Button variant="outline" onClick={() => setPendingFishRemoval(null)} className="min-h-11">{i18n.language === 'en' ? 'Cancel' : '取消'}</Button>
+            <Button variant="destructive" onClick={removeFishFavorite} className="min-h-11">{i18n.language === 'en' ? 'Remove' : '确认移除'}</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <Dialog open={Boolean(pendingCareRemoval)} onOpenChange={(open) => !open && setPendingCareRemoval(null)}>
         <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
-          <DialogHeader><DialogTitle>移除这篇收藏？</DialogTitle><DialogDescription>“{pendingCareRemoval?.title}”会从水族册移除，之后仍可重新收藏。</DialogDescription></DialogHeader>
-          <DialogFooter className="grid grid-cols-2 gap-2"><Button variant="outline" onClick={() => setPendingCareRemoval(null)}>取消</Button><Button variant="destructive" onClick={removeCareFavorite}>确认移除</Button></DialogFooter>
+          <DialogHeader>
+            <DialogTitle>{i18n.language === 'en' ? 'Remove this saved guide?' : '移除这篇收藏？'}</DialogTitle>
+            <DialogDescription>
+              {i18n.language === 'en'
+                ? `${pendingCareRemoval?.title || 'This guide'} will be removed from My Collection. You can save it again later.`
+                : `“${pendingCareRemoval?.title}”会从水族册移除，之后仍可重新收藏。`}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <Button variant="outline" onClick={() => setPendingCareRemoval(null)} className="min-h-11">{i18n.language === 'en' ? 'Cancel' : '取消'}</Button>
+            <Button variant="destructive" onClick={removeCareFavorite} className="min-h-11">{i18n.language === 'en' ? 'Remove' : '确认移除'}</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

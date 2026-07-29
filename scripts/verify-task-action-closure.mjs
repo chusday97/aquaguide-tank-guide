@@ -58,15 +58,15 @@ const state = {
   updatedAt: new Date().toISOString(),
 };
 
-const open = async (path, width = 1200) => {
+const open = async (path, width = 1200, locale = 'zh-CN') => {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.addInitScript(saved => {
+  await page.addInitScript(({ saved, requestedLocale }) => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
-    localStorage.setItem('aquaguide_locale', 'zh-CN');
-  }, state);
+    localStorage.setItem('aquaguide_locale', requestedLocale);
+  }, { saved: state, requestedLocale: locale });
   await page.goto(`${baseUrl}${path}`, { waitUntil: 'domcontentloaded' });
   return { page, errors };
 };
@@ -96,13 +96,28 @@ try {
       }
     }
     if (path.includes('daily-check')) {
-      const dialog = page.getByRole('dialog');
+      const dialog = page.getByRole('dialog').filter({ hasText: '每日鱼缸检查' });
       for (const label of ['返回', '退出']) {
         const control = dialog.getByRole('button', { name: label, exact: true });
         const box = await control.boundingBox();
         assert.ok(box && box.width >= 44 && box.height >= 44, `daily check ${label} must be at least 44×44`);
       }
       assert.equal(await dialog.getByRole('button', { name: '关闭', exact: true }).count(), 0, 'task flow must not retain a duplicate generic close control');
+      const firstAnswer = dialog.getByRole('button', { name: '正常', exact: true }).first();
+      const initialAnswerClass = await firstAnswer.getAttribute('class');
+      await firstAnswer.click();
+      const selectedAnswerClass = await firstAnswer.getAttribute('class');
+      assert.notEqual(selectedAnswerClass, initialAnswerClass, 'daily check answer should become visibly selected before testing exit protection');
+      await dialog.getByRole('button', { name: '退出', exact: true }).click();
+      const exitConfirmation = page.getByRole('dialog').filter({ hasText: '退出本次检查？' });
+      await exitConfirmation.waitFor();
+      assert.equal(await exitConfirmation.locator('[data-slot="dialog-close"]').count(), 0, 'draft exit confirmation must only use footer decisions');
+      await exitConfirmation.getByRole('button', { name: '继续填写', exact: true }).click();
+      await exitConfirmation.waitFor({ state: 'hidden' });
+      assert.equal(await firstAnswer.getAttribute('class'), selectedAnswerClass, 'continuing must preserve the selected answer');
+      await dialog.getByRole('button', { name: '退出', exact: true }).click();
+      await page.getByRole('dialog').filter({ hasText: '退出本次检查？' }).getByRole('button', { name: '退出并放弃', exact: true }).click();
+      await dialog.waitFor({ state: 'hidden' });
     }
     if (path.includes('water-change')) {
       const dialog = page.getByRole('dialog');
@@ -110,6 +125,14 @@ try {
         const control = dialog.getByRole('button', { name: label, exact: true });
         const box = await control.boundingBox();
         assert.ok(box && box.width >= 44 && box.height >= 44, `water-change ${label} must be at least 44×44`);
+      }
+      const dateControl = dialog.getByRole('button', { name: /^\d+$/ }).first();
+      const dateBox = await dateControl.boundingBox();
+      assert.ok(dateBox && dateBox.width >= 44 && dateBox.height >= 44, 'water-change date control must be at least 44×44');
+      for (const label of ['取消', '记录这天换水']) {
+        const control = dialog.getByRole('button', { name: label, exact: true });
+        const box = await control.boundingBox();
+        assert.ok(box && box.height >= 44, `water-change ${label} must be at least 44px high`);
       }
     }
     if (path.includes('livestock')) {
@@ -129,10 +152,28 @@ try {
     await page.getByRole('button', { name: '移除种草', exact: true }).first().click();
     const confirmation = page.getByRole('dialog').filter({ hasText: '移除这条种草？' });
     await confirmation.waitFor();
+    await page.waitForTimeout(200);
     assert.equal(await confirmation.locator('[data-slot="dialog-close"]').count(), 0, 'confirmation dialog must not include a duplicate top-right close');
+    for (const label of ['取消', '确认移除']) {
+      const control = confirmation.getByRole('button', { name: label, exact: true });
+      const box = await control.boundingBox();
+      assert.ok(box && box.height >= 44, `collection confirmation ${label} must be at least 44px high`);
+    }
     await confirmation.getByRole('button', { name: '取消', exact: true }).click();
     await confirmation.waitFor({ state: 'hidden' });
     assert.equal(errors.length, 0, `collection confirmation page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
+  {
+    const { page, errors } = await open('/collection/wishlist', 390, 'en');
+    await page.getByRole('button', { name: 'Remove Saved', exact: true }).first().click();
+    const confirmation = page.getByRole('dialog').filter({ hasText: 'Remove this saved species?' });
+    await confirmation.waitFor();
+    await confirmation.getByRole('button', { name: 'Cancel', exact: true }).waitFor();
+    await confirmation.getByRole('button', { name: 'Remove', exact: true }).waitFor();
+    assert.equal(await confirmation.getByText('移除这条种草？', { exact: true }).count(), 0, 'English confirmation must not fall back to a Chinese title');
+    assert.equal(errors.length, 0, `English collection confirmation page errors: ${errors.join('; ')}`);
     await page.close();
   }
 

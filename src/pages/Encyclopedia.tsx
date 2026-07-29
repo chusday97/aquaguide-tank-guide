@@ -2748,7 +2748,7 @@ export default function Encyclopedia() {
             <Button variant="outline" onClick={() => {
               setPendingTankFish(null);
               setPendingTankAddConfirmed(false);
-            }} className="h-10 rounded-full text-sm font-bold">{t('encyclopedia.btnCancel')}</Button>
+            }} className="min-h-11 rounded-full text-sm font-bold">{t('encyclopedia.btnCancel')}</Button>
             <Button
               disabled={!pendingTankFish || !targetAquariumId || pendingAddPolicy === 'block' || pendingAddPolicy === 'complete_information'}
               onClick={() => {
@@ -2759,7 +2759,7 @@ export default function Encyclopedia() {
                 }
                 addFishToAquarium(pendingTankFish, targetAquariumId, pendingTankAddConfirmed);
               }}
-              className="h-10 rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90"
+              className="min-h-11 rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90"
             >
               {pendingAddPolicy === 'block'
                 ? t('encyclopedia.btnBlock')

@@ -1145,6 +1145,7 @@ export default function AquariumManager() {
   const [shouldLoadThreeAquarium, setShouldLoadThreeAquarium] = useState(false);
   const [requiresManualThreeLoad, setRequiresManualThreeLoad] = useState(false);
   const [isDiagnosisOpen, setIsDiagnosisOpen] = useState(false);
+  const [isDiagnosisExitConfirmOpen, setIsDiagnosisExitConfirmOpen] = useState(false);
   const [diagnosisText, setDiagnosisText] = useState('');
   const [diagnosisFullText, setDiagnosisFullText] = useState('');
   const [isDiagnosing, setIsDiagnosing] = useState(false);
@@ -3924,6 +3925,24 @@ export default function AquariumManager() {
   const dailyCheckAnsweredCount = dailyCheckRequiredQuestions.filter(question => Boolean(diagnosisQuizAnswers[question.id])).length;
   const isDailyCheckReady = dailyCheckRequiredQuestions.length > 0
     && dailyCheckAnsweredCount === dailyCheckRequiredQuestions.length;
+  const hasUnsavedDiagnosisDraft = !diagnosisResult
+    && Object.values(diagnosisQuizAnswers).some(value => value.trim().length > 0);
+  const requestDiagnosisClose = () => {
+    if (hasUnsavedDiagnosisDraft) {
+      setIsDiagnosisExitConfirmOpen(true);
+      return;
+    }
+    setIsDiagnosisOpen(false);
+  };
+  const discardDiagnosisDraftAndClose = () => {
+    setDiagnosisQuizAnswers({});
+    setDiagnosisText('');
+    setDiagnosisFullText('');
+    setDiagnosisSaveMessage('');
+    setDiagnosisMode('home');
+    setIsDiagnosisExitConfirmOpen(false);
+    setIsDiagnosisOpen(false);
+  };
   const diagnosisProgressPercent = activeDiagnosisQuestions.length > 0
     ? ((diagnosisQuestionIndex + 1) / activeDiagnosisQuestions.length) * 100
     : 0;
@@ -4949,14 +4968,14 @@ export default function AquariumManager() {
             <Button
               type="button"
               variant="outline"
-              className="h-10 rounded-full text-sm font-bold"
+              className="min-h-11 rounded-full text-sm font-bold"
               onClick={() => setPendingDeleteAquariumId(null)}
             >
               {t('aquarium.cancel')}
             </Button>
             <Button
               type="button"
-              className="h-10 rounded-full bg-red-600 text-sm font-bold text-white hover:bg-red-700 disabled:bg-red-100 disabled:text-red-300"
+              className="min-h-11 rounded-full bg-red-600 text-sm font-bold text-white hover:bg-red-700 disabled:bg-red-100 disabled:text-red-300"
               disabled={aquariums.length <= 1}
               onClick={confirmDeleteAquarium}
             >
@@ -5096,7 +5115,13 @@ export default function AquariumManager() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isDiagnosisOpen} onOpenChange={setIsDiagnosisOpen}>
+      <Dialog open={isDiagnosisOpen} onOpenChange={(open) => {
+        if (open) {
+          setIsDiagnosisOpen(true);
+          return;
+        }
+        requestDiagnosisClose();
+      }}>
         <AdaptiveTaskContent showCloseButton={false} className="bg-bg md:max-w-[620px]">
           <SurfaceHeader
             title={(
@@ -5114,7 +5139,7 @@ export default function AquariumManager() {
                 ? handleDiagnosisPrevious
                 : () => setDiagnosisMode('home')}
             backLabel={diagnosisMode === 'quiz' && !isDailyCheckQuiz ? t('aquarium.prevQuestion') : t('aquarium.back')}
-            onClose={() => setIsDiagnosisOpen(false)}
+            onClose={requestDiagnosisClose}
             closeLabel={isEn ? 'Exit' : '退出'}
           />
 
@@ -5443,6 +5468,25 @@ export default function AquariumManager() {
           </DialogFooter>
           )}
         </AdaptiveTaskContent>
+      </Dialog>
+
+      <Dialog open={isDiagnosisExitConfirmOpen} onOpenChange={setIsDiagnosisExitConfirmOpen}>
+        <DialogContent showCloseButton={false} className="w-[min(420px,calc(100vw-32px))] rounded-[24px] border-border bg-white">
+          <DialogHeader>
+            <DialogTitle>{isEn ? 'Exit this check?' : '退出本次检查？'}</DialogTitle>
+            <DialogDescription>
+              {isEn ? 'Your unanswered check has not been saved. Continue filling it out or discard this draft.' : '当前回答尚未生成结果。你可以继续填写，或放弃这次未保存的内容。'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <Button type="button" variant="outline" onClick={() => setIsDiagnosisExitConfirmOpen(false)} className="min-h-11 rounded-full text-sm font-black">
+              {isEn ? 'Continue' : '继续填写'}
+            </Button>
+            <Button type="button" variant="destructive" onClick={discardDiagnosisDraftAndClose} className="min-h-11 rounded-full text-sm font-black">
+              {isEn ? 'Exit and discard' : '退出并放弃'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
       </Dialog>
 
       <Dialog open={Boolean(selectedDailyCheckArticle)} onOpenChange={(open) => !open && setSelectedDailyCheckArticle(null)}>
@@ -6572,7 +6616,7 @@ export default function AquariumManager() {
                 </div>
                 <div className="grid grid-cols-7 gap-1">
                   {Array.from({ length: getDay(startOfMonth(calendarMonth)) }).map((_, i) => (
-                    <div key={`empty-${i}`} className="h-9" />
+                    <div key={`empty-${i}`} className="h-11" />
                   ))}
                   {eachDayOfInterval({ start: startOfMonth(calendarMonth), end: endOfMonth(calendarMonth) }).map(date => {
                     const dateStr = format(date, 'yyyy-MM-dd');
@@ -6588,7 +6632,7 @@ export default function AquariumManager() {
                           setSelectedWaterChangeDate(dateStr);
                           setWaterChangeFeedback('');
                         }}
-                        className={`relative flex h-9 items-center justify-center rounded-full text-xs font-black transition-colors ${
+                        className={`relative flex h-11 items-center justify-center rounded-full text-xs font-black transition-colors ${
                           isChanged ? 'bg-emerald-700 text-white' :
                           isSelected ? 'bg-emerald-50 text-emerald-700 ring-2 ring-emerald-300' :
                           isToday ? 'border border-emerald-500 text-emerald-700' :
@@ -6606,11 +6650,11 @@ export default function AquariumManager() {
             </div>
           </div>
           <DialogFooter className="shrink-0 border-t border-white bg-white/90 px-4 py-3">
-            <Button variant="outline" className="h-10 rounded-full text-sm font-bold" onClick={() => setIsCalendarOpen(false)}>
+            <Button variant="outline" className="min-h-11 rounded-full text-sm font-bold" onClick={() => setIsCalendarOpen(false)}>
               {selectedWaterDateHasRecord ? '关闭' : '取消'}
             </Button>
             <Button
-              className={`h-10 rounded-full text-sm font-bold text-white ${selectedWaterDateHasRecord ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-700 hover:bg-emerald-800'}`}
+              className={`min-h-11 rounded-full text-sm font-bold text-white ${selectedWaterDateHasRecord ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-700 hover:bg-emerald-800'}`}
               onClick={() => {
                 const wasRecorded = selectedWaterDateHasRecord;
                 handleToggleWaterChangeDate(selectedWaterChangeDate);
