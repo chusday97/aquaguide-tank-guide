@@ -162,6 +162,7 @@ export function buildDiagnosisVisualResult({
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
 }): VisualResultViewModel {
   const status = diagnosisStatus(result.riskLevel);
+  const currentAction = result.currentAction || result.actions[0] || '保持环境稳定并继续观察。';
   const abnormalAnswers = Object.entries(answers)
     .filter(([key, value]) => diagnosisAnswerLabels[key] && value && value !== '跳过' && !normalDiagnosisAnswers.has(value))
     .slice(0, 5);
@@ -214,8 +215,8 @@ export function buildDiagnosisVisualResult({
     conclusion: result.summary,
     emphasis: getVisualEmphasis(`${result.summary} ${result.currentAction}`),
     subjects,
-    currentAction: result.currentAction || result.actions[0] || '保持环境稳定并继续观察。',
-    actionItems: result.actions.filter(item => item !== result.currentAction),
+    currentAction,
+    actionItems: result.actions.filter(item => item !== currentAction),
     avoidActions: result.avoidActions,
     primaryAction: { label: primaryActionLabel, actionType: primaryActionType },
     detailSections: [

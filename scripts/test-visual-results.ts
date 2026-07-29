@@ -90,6 +90,22 @@ assert.deepEqual(diagnosisModel.avoidActions, ['不要盲目下药']);
 assert.equal(diagnosisModel.detailSections.some(section => section.id === 'actions' || section.id === 'avoid'), false, '操作与禁止动作不得进入折叠证据层');
 assert.equal(diagnosisModel.primaryAction.actionType, 'dialog');
 
+const longActionDiagnosis = buildDiagnosisVisualResult({
+  result: {
+    ...diagnosis,
+    currentAction: '',
+    actions: ['动作 1', '动作 2', '动作 3', '动作 4', '动作 5'],
+    avoidActions: ['禁止 1', '禁止 2', '禁止 3', '禁止 4', '禁止 5'],
+  },
+  answers: {},
+  aquariumName: '客厅缸',
+  livestock: [focus],
+  primaryActionLabel: '查看复查要点',
+});
+assert.equal(longActionDiagnosis.currentAction, '动作 1', '空主动作必须回退到第一条规则动作');
+assert.deepEqual(longActionDiagnosis.actionItems, ['动作 2', '动作 3', '动作 4', '动作 5'], '回退主动作不得在后续动作中重复');
+assert.deepEqual(longActionDiagnosis.avoidActions, ['禁止 1', '禁止 2', '禁止 3', '禁止 4', '禁止 5'], '全部禁止动作必须保留给直显层');
+
 const singleSpeciesDiagnosis = buildDiagnosisVisualResult({
   result: diagnosis,
   answers: { breathing: '频繁浮头' },
