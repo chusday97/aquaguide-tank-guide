@@ -46,7 +46,7 @@ const state = {
     waterChangeHistory: [],
     equipment: { filter: '瀑布过滤', heater: true, oxygen: true, light: '普通灯' },
   }],
-  wishlist: [],
+  wishlist: ['sp_0001'],
   dismissedRecommendations: [],
   diagnosisRecords: [],
   compatibilityRecords: [],
@@ -83,6 +83,35 @@ try {
     const { page, errors } = await open(path);
     const target = page.getByText(expected, { exact: true }).last();
     await target.waitFor();
+    if (path.includes('add-species')) {
+      const dialog = page.getByRole('dialog');
+      const selectionSection = dialog.locator('section').filter({ hasText: '第 1 步：选择生物' });
+      await selectionSection.locator('button').filter({ hasText: '选择' }).first().click();
+      const entryDateField = dialog.getByText('入缸日期', { exact: true }).last().locator('..');
+      await entryDateField.getByRole('button').click();
+      for (const label of ['上个月', '下个月']) {
+        const control = dialog.getByRole('button', { name: label, exact: true });
+        const box = await control.boundingBox();
+        assert.ok(box && box.width >= 44 && box.height >= 44, `${label} must be at least 44×44`);
+      }
+    }
+    if (path.includes('daily-check')) {
+      const dialog = page.getByRole('dialog');
+      for (const label of ['返回', '退出']) {
+        const control = dialog.getByRole('button', { name: label, exact: true });
+        const box = await control.boundingBox();
+        assert.ok(box && box.width >= 44 && box.height >= 44, `daily check ${label} must be at least 44×44`);
+      }
+      assert.equal(await dialog.getByRole('button', { name: '关闭', exact: true }).count(), 0, 'task flow must not retain a duplicate generic close control');
+    }
+    if (path.includes('water-change')) {
+      const dialog = page.getByRole('dialog');
+      for (const label of ['上个月', '下个月']) {
+        const control = dialog.getByRole('button', { name: label, exact: true });
+        const box = await control.boundingBox();
+        assert.ok(box && box.width >= 44 && box.height >= 44, `water-change ${label} must be at least 44×44`);
+      }
+    }
     if (path.includes('livestock')) {
       const dialog = page.getByRole('dialog').filter({ hasText: expected });
       await dialog.waitFor();
@@ -92,6 +121,32 @@ try {
       await page.getByRole('dialog').filter({ hasText: expected }).waitFor();
     }
     assert.equal(errors.length, 0, `${path} page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
+  {
+    const { page, errors } = await open('/collection/wishlist', 390);
+    await page.getByRole('button', { name: '移除种草', exact: true }).first().click();
+    const confirmation = page.getByRole('dialog').filter({ hasText: '移除这条种草？' });
+    await confirmation.waitFor();
+    assert.equal(await confirmation.locator('[data-slot="dialog-close"]').count(), 0, 'confirmation dialog must not include a duplicate top-right close');
+    await confirmation.getByRole('button', { name: '取消', exact: true }).click();
+    await confirmation.waitFor({ state: 'hidden' });
+    assert.equal(errors.length, 0, `collection confirmation page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
+  {
+    const { page, errors } = await open('/encyclopedia', 390);
+    const groupCard = page.locator('[data-species-group-card]').first();
+    await groupCard.waitFor();
+    await groupCard.locator('button[aria-label^="查看"]').first().click();
+    const variantFavorite = page.locator('[id^="group-variant-wishlist-"]').first();
+    await variantFavorite.waitFor();
+    await page.waitForTimeout(200);
+    const box = await variantFavorite.boundingBox();
+    assert.ok(box && box.width >= 44 && box.height >= 44, `variant favorite control must be at least 44×44, got ${JSON.stringify(box)}`);
+    assert.equal(errors.length, 0, `variant dialog page errors: ${errors.join('; ')}`);
     await page.close();
   }
 

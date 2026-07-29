@@ -2332,7 +2332,7 @@ export default function Encyclopedia() {
                                 aria-pressed={isFavorite}
                                 aria-label={isFavorite ? t('encyclopedia.wishlistRemoved', { name: variant.name }) : t('encyclopedia.wishlistAdded', { name: variant.name })}
                                 title={isFavorite ? t('encyclopedia.wishlistRemoved', { name: variant.name }) : t('encyclopedia.wishlistAdded', { name: variant.name })}
-                                className={`absolute right-1 top-1 z-10 flex h-8 w-8 items-center justify-center rounded-full border bg-white/95 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
+                                className={`absolute right-1 top-1 z-10 flex h-11 w-11 items-center justify-center rounded-full border bg-white/95 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
                                   isFavorite ? 'border-rose-200 text-rose-500' : 'border-white text-ink/42 hover:text-rose-500'
                                 }`}
                               >
@@ -2678,7 +2678,7 @@ export default function Encyclopedia() {
           setPendingTankAddConfirmed(false);
         }
       }}>
-        <DialogContent className="w-[90vw] max-w-[440px] rounded-[18px] border-border p-0 overflow-hidden">
+        <DialogContent showCloseButton={false} className="w-[90vw] max-w-[440px] rounded-[18px] border-border p-0 overflow-hidden">
           <DialogHeader>
             <div className="border-b border-border bg-bg/60 px-5 py-4 text-left">
               <DialogTitle className="font-serif text-xl font-bold italic text-ink">{t('encyclopedia.confirmAddTitle')}</DialogTitle>

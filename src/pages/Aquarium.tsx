@@ -72,6 +72,7 @@ import { ActionCenterCard, type ActionCenterStatus } from '../components/product
 import { QuickActionGrid } from '../components/product/QuickActionGrid';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { AdaptiveTaskContent } from '../components/common/AdaptiveTaskContent';
+import { SurfaceHeader } from '../components/common/SurfaceHeader';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { OnboardingTaskCard } from '../components/onboarding/OnboardingTaskCard';
 import { markAquariumConfigured } from '../services/onboarding/onboarding.service';
@@ -4914,7 +4915,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={Boolean(pendingReminderDelete)} onOpenChange={(open) => !open && setPendingReminderDelete(null)}>
-        <DialogContent className="w-[90vw] max-w-[380px] rounded-[22px] border-red-100 bg-white p-5">
+        <DialogContent showCloseButton={false} className="w-[90vw] max-w-[380px] rounded-[22px] border-red-100 bg-white p-5">
           <DialogHeader>
             <DialogTitle className="text-lg font-black text-ink">{t('aquarium.deleteReminderTitle')}</DialogTitle>
             <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">{t('aquarium.deleteReminderDesc', { title: pendingReminderDelete?.title })}</DialogDescription>
@@ -4927,7 +4928,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={!!pendingDeleteAquariumId} onOpenChange={(open) => !open && setPendingDeleteAquariumId(null)}>
-        <DialogContent className="w-[90vw] max-w-[380px] rounded-[22px] border-red-100 bg-white p-5">
+        <DialogContent showCloseButton={false} className="w-[90vw] max-w-[380px] rounded-[22px] border-red-100 bg-white p-5">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg font-black text-ink">
               <X className="h-5 w-5 rounded-full bg-red-50 p-1 text-red-600" />
@@ -4992,11 +4993,6 @@ export default function AquariumManager() {
               </div>
             </div>
           </div>
-          <DialogFooter className="shrink-0 border-t border-white bg-white px-4 py-3">
-            <Button type="button" variant="outline" onClick={() => setIsLocalDataOpen(false)} className="h-10 w-full rounded-full text-sm font-bold md:w-fit md:max-w-[220px]">
-              {t('common.close')}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -5101,18 +5097,26 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={isDiagnosisOpen} onOpenChange={setIsDiagnosisOpen}>
-        <AdaptiveTaskContent className="bg-bg md:max-w-[620px]">
-          <DialogHeader className="shrink-0 border-b border-white px-4 pb-3 pt-4">
-            <DialogTitle className="flex items-center gap-2 text-xl font-black text-ink">
-              <Activity className="h-5 w-5 text-emerald-700" />
-              {diagnosisIssueType === '巡检' ? t('aquarium.dailyCheck') : t('aquarium.smartDiagnosis')}
-            </DialogTitle>
-            <DialogDescription className="text-xs leading-relaxed text-ink/60">
-              {diagnosisIssueType === '巡检'
-                ? t('aquarium.dailyCheckDesc')
-                : t('aquarium.smartDiagnosisDesc')}
-            </DialogDescription>
-          </DialogHeader>
+        <AdaptiveTaskContent showCloseButton={false} className="bg-bg md:max-w-[620px]">
+          <SurfaceHeader
+            title={(
+              <span className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-emerald-700" />
+                {diagnosisIssueType === '巡检' ? t('aquarium.dailyCheck') : t('aquarium.smartDiagnosis')}
+              </span>
+            )}
+            description={diagnosisIssueType === '巡检'
+              ? t('aquarium.dailyCheckDesc')
+              : t('aquarium.smartDiagnosisDesc')}
+            onBack={diagnosisMode === 'home'
+              ? undefined
+              : diagnosisMode === 'quiz' && !isDailyCheckQuiz
+                ? handleDiagnosisPrevious
+                : () => setDiagnosisMode('home')}
+            backLabel={diagnosisMode === 'quiz' && !isDailyCheckQuiz ? t('aquarium.prevQuestion') : t('aquarium.back')}
+            onClose={() => setIsDiagnosisOpen(false)}
+            closeLabel={isEn ? 'Exit' : '退出'}
+          />
 
           <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
             <div className="grid gap-4 p-4 pb-24">
@@ -5416,17 +5420,9 @@ export default function AquariumManager() {
               )}
             </div>
           </div>
+          {diagnosisMode !== 'home' && (
           <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-4 py-3 shadow-[0_-10px_24px_rgba(27,77,62,0.08)]">
-            {diagnosisMode === 'home' && <Button onClick={() => setIsDiagnosisOpen(false)} className="h-10 w-full rounded-full bg-emerald-700 text-sm font-bold text-white hover:bg-emerald-800">{t('common.close')}</Button>}
             {diagnosisMode === 'quiz' && (
-              <>
-                <Button
-                  variant="outline"
-                  onClick={isDailyCheckQuiz ? () => setDiagnosisMode('home') : handleDiagnosisPrevious}
-                  className="h-10 rounded-full text-sm font-bold"
-                >
-                  {isDailyCheckQuiz ? t('aquarium.back') : t('aquarium.prevQuestion')}
-                </Button>
                 <Button
                   ref={diagnosisSubmitRef}
                   onClick={isDailyCheckQuiz ? () => void handleRunDiagnosis() : handleDiagnosisNext}
@@ -5437,18 +5433,15 @@ export default function AquariumManager() {
                     ? `${t('aquarium.generateCheckResults')}${isDailyCheckReady ? '' : t('aquarium.missingItemsCount', { count: dailyCheckRequiredQuestions.length - dailyCheckAnsweredCount })}`
                     : diagnosisQuestionIndex >= activeDiagnosisQuestions.length - 1 ? t('aquarium.smartDiagnosis') : t('aquarium.nextQuestion')}
                 </Button>
-              </>
             )}
             {diagnosisMode === 'result' && (
               <Button variant="outline" onClick={() => setDiagnosisMode('home')} className="h-10 w-full rounded-full text-sm font-bold">{t('aquarium.diagnoseAgain')}</Button>
             )}
             {diagnosisMode === 'history' && (
-              <>
-                <Button variant="outline" onClick={() => setDiagnosisMode('home')} className="h-10 rounded-full text-sm font-bold">{t('aquarium.back')}</Button>
                 <Button onClick={() => handleStartDiagnosisQuiz(selectedDiagnosisRecord?.problemType || '巡检')} className="h-10 rounded-full bg-emerald-700 text-sm font-bold text-white hover:bg-emerald-800">{t('aquarium.diagnoseAgainThisProblem')}</Button>
-              </>
             )}
           </DialogFooter>
+          )}
         </AdaptiveTaskContent>
       </Dialog>
 
@@ -5485,9 +5478,6 @@ export default function AquariumManager() {
               </section>
             </div>
           )}
-          <DialogFooter className="shrink-0 border-t border-border bg-white p-4">
-            <Button onClick={() => setSelectedDailyCheckArticle(null)} className="h-10 w-full rounded-full bg-emerald-700 text-sm font-black text-white">{isEn ? 'Back to Results' : '返回检查结果'}</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -5543,16 +5533,6 @@ export default function AquariumManager() {
               })}
             </div>
           </div>
-          <DialogFooter className="shrink-0 border-t border-border bg-white p-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsRiskReminderOpen(false)}
-              className="h-10 w-full rounded-full text-sm font-bold md:w-fit md:max-w-[220px]"
-            >
-              关闭
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -5915,7 +5895,7 @@ export default function AquariumManager() {
                                 <button
                                   type="button"
                                   onClick={() => setAddFishDatePicker({ fishId: item.fishId, month: subMonths(datePickerMonth, 1) })}
-                                  className="flex h-8 w-8 items-center justify-center rounded-full bg-bg text-ink/55"
+                                  className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55"
                                   aria-label="上个月"
                                 >
                                   <ChevronLeft className="h-4 w-4" />
@@ -5924,7 +5904,7 @@ export default function AquariumManager() {
                                 <button
                                   type="button"
                                   onClick={() => setAddFishDatePicker({ fishId: item.fishId, month: addMonths(datePickerMonth, 1) })}
-                                  className="flex h-8 w-8 items-center justify-center rounded-full bg-bg text-ink/55 disabled:text-ink/18"
+                                  className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55 disabled:text-ink/18"
                                   disabled={startOfMonth(addMonths(datePickerMonth, 1)) > new Date()}
                                   aria-label="下个月"
                                 >
@@ -6532,7 +6512,7 @@ export default function AquariumManager() {
           setWaterChangeFeedback('');
         }
       }}>
-        <DialogContent className="flex h-[86dvh] max-h-[calc(100dvh-24px)] w-[92vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[20px] border-border bg-bg p-0">
+        <DialogContent showCloseButton={false} className="flex h-[86dvh] max-h-[calc(100dvh-24px)] w-[92vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[20px] border-border bg-bg p-0">
           <DialogHeader className="shrink-0 border-b border-white px-4 pb-3 pt-4">
             <DialogTitle className="text-xl font-black text-ink">{isEn ? 'Water Change Log' : '换水记录'}</DialogTitle>
             <DialogDescription className="text-xs leading-relaxed text-ink/60">
@@ -6569,7 +6549,7 @@ export default function AquariumManager() {
 
               <section className="rounded-[18px] bg-white p-3 shadow-sm">
                 <div className="mb-3 flex items-center justify-between gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setCalendarMonth(subMonths(calendarMonth, 1))}>
+                  <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full" aria-label={isEn ? 'Previous month' : '上个月'} onClick={() => setCalendarMonth(subMonths(calendarMonth, 1))}>
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                   <div className="text-center">
@@ -6578,7 +6558,7 @@ export default function AquariumManager() {
                       {isEn ? 'Today' : '回到今天'}
                     </button>
                   </div>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setCalendarMonth(addMonths(calendarMonth, 1))}>
+                  <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full" aria-label={isEn ? 'Next month' : '下个月'} onClick={() => setCalendarMonth(addMonths(calendarMonth, 1))}>
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
@@ -7282,9 +7262,6 @@ export default function AquariumManager() {
               <p className="text-xs text-ink/80 leading-relaxed font-medium">{isEn ? 'Match new water temp within 1-2°C. Pre-heat in winter.' : '换水时，新水温度应与缸内水温尽量保持一致，温差不应超过 1-2°C。冬季换水建议提前加热新水。'}</p>
             </div>
           </div>
-          <DialogFooter>
-            <Button className="rounded-sm bg-ink text-white font-bold w-full" onClick={() => setIsGuideOpen(false)}>{isEn ? 'Got it' : '我知道了'}</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 

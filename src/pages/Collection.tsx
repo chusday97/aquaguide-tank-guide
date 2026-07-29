@@ -313,7 +313,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
                   <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-ink/25" />
                 </span>
               </button>
-              <button type="button" onClick={() => setPendingFishRemoval(fish)} className="mt-3 inline-flex h-9 items-center justify-center rounded-full border border-rose-100 bg-rose-50 text-[11px] font-black text-rose-600">
+              <button type="button" onClick={() => setPendingFishRemoval(fish)} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full border border-rose-100 bg-rose-50 text-[11px] font-black text-rose-600">
                 <HeartOff className="mr-1.5 h-3.5 w-3.5" />{i18n.language === 'en' ? 'Remove Saved' : '移除种草'}
               </button>
             </article>
@@ -335,7 +335,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
                   <span className="mt-2 line-clamp-2 text-[11px] font-medium leading-5 text-ink/48">{topic.summary}</span>
                 </span>
               </button>
-              <button type="button" onClick={() => setPendingCareRemoval(topic)} className="mt-3 inline-flex h-9 items-center justify-center rounded-full border border-rose-100 bg-rose-50 text-[11px] font-black text-rose-600">
+              <button type="button" onClick={() => setPendingCareRemoval(topic)} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full border border-rose-100 bg-rose-50 text-[11px] font-black text-rose-600">
                 <HeartOff className="mr-1.5 h-3.5 w-3.5" />{i18n.language === 'en' ? 'Remove Saved' : '移除收藏'}
               </button>
             </article>
@@ -512,14 +512,14 @@ export default function Collection({ module }: { module: CollectionModule }) {
       </Dialog>
 
       <Dialog open={Boolean(pendingFishRemoval)} onOpenChange={(open) => !open && setPendingFishRemoval(null)}>
-        <DialogContent className="w-[92vw] max-w-[420px] rounded-[22px]">
+        <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
           <DialogHeader><DialogTitle>移除这条种草？</DialogTitle><DialogDescription>“{pendingFishRemoval?.name}”会从水族册移除，之后仍可在图鉴重新收藏。</DialogDescription></DialogHeader>
           <DialogFooter className="grid grid-cols-2 gap-2"><Button variant="outline" onClick={() => setPendingFishRemoval(null)}>取消</Button><Button variant="destructive" onClick={removeFishFavorite}>确认移除</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 
       <Dialog open={Boolean(pendingCareRemoval)} onOpenChange={(open) => !open && setPendingCareRemoval(null)}>
-        <DialogContent className="w-[92vw] max-w-[420px] rounded-[22px]">
+        <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
           <DialogHeader><DialogTitle>移除这篇收藏？</DialogTitle><DialogDescription>“{pendingCareRemoval?.title}”会从水族册移除，之后仍可重新收藏。</DialogDescription></DialogHeader>
           <DialogFooter className="grid grid-cols-2 gap-2"><Button variant="outline" onClick={() => setPendingCareRemoval(null)}>取消</Button><Button variant="destructive" onClick={removeCareFavorite}>确认移除</Button></DialogFooter>
         </DialogContent>

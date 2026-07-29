@@ -4,6 +4,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   React.useEffect(() => {
@@ -50,6 +51,7 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) {
+  const { t } = useTranslation()
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -75,7 +77,7 @@ function DialogContent({
           >
             <XIcon
             />
-            <span className="sr-only">关闭</span>
+            <span className="sr-only">{t("common.close")}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
