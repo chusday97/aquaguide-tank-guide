@@ -126,6 +126,8 @@ export const memorialCreateSchema = z.object({
   speciesCatalogKey: z.string().trim().min(1).max(160),
   memorialDate: isoDateSchema,
   reason: z.string().trim().max(2000).optional(),
+  observation: z.string().trim().max(2000).optional(),
+  improvement: z.string().trim().max(2000).optional(),
 });
 
 export const livestockMemorialCreateSchema = memorialCreateSchema.omit({ aquariumId: true }).extend({
@@ -135,8 +137,15 @@ export const livestockMemorialCreateSchema = memorialCreateSchema.omit({ aquariu
 export const memorialUpdateSchema = z.object({
   memorialDate: isoDateSchema.optional(),
   reason: z.string().trim().max(2000).optional(),
+  observation: z.string().trim().max(2000).optional(),
+  improvement: z.string().trim().max(2000).optional(),
   version: versionSchema,
-}).refine(value => value.memorialDate !== undefined || value.reason !== undefined, '至少修改一个字段');
+}).refine(value => (
+  value.memorialDate !== undefined
+  || value.reason !== undefined
+  || value.observation !== undefined
+  || value.improvement !== undefined
+), '至少修改一个字段');
 
 export const careReminderCreateSchema = z.object({
   aquariumId: uuidSchema.optional(),

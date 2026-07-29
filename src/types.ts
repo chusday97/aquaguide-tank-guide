@@ -103,4 +103,7 @@ export interface DeceasedRecord {
   fishId: string;
   date: string;
   reason?: string;
+  observation?: string;
+  improvement?: string;
+  version?: number;
 }

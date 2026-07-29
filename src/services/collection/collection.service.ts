@@ -39,6 +39,9 @@ const normalizeMemorials = (value: unknown[]): MemorialItem[] => value
       fishId: record.fishId,
       date: record.date,
       reason: typeof record.reason === 'string' ? record.reason.trim() : undefined,
+      observation: typeof record.observation === 'string' ? record.observation.trim() : undefined,
+      improvement: typeof record.improvement === 'string' ? record.improvement.trim() : undefined,
+      version: typeof record.version === 'number' ? record.version : undefined,
     };
   })
   .filter((item): item is MemorialItem => Boolean(item))

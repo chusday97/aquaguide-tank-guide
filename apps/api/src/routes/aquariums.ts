@@ -451,6 +451,8 @@ aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/memorial
         data.species_catalog_key !== parsed.data.speciesCatalogKey
         || data.memorial_date !== parsed.data.memorialDate
         || (data.reason || undefined) !== parsed.data.reason
+        || (data.observation || undefined) !== parsed.data.observation
+        || (data.improvement || undefined) !== parsed.data.improvement
       )) throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一条生命纪念。');
       return data;
     },
@@ -463,7 +465,9 @@ aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/memorial
     target_batch_id: batchId,
     target_batch_version: parsed.data.batchVersion,
     target_memorial_date: parsed.data.memorialDate,
+    target_observation: parsed.data.observation ?? null,
     target_reason: parsed.data.reason ?? null,
+    target_improvement: parsed.data.improvement ?? null,
     new_memorial_id: memorialId,
   }).single();
   if (error?.message?.includes('BATCH_VERSION_CONFLICT')) throw new ApiError(409, 'VERSION_CONFLICT', '这个批次已更新，请刷新后再记录。');

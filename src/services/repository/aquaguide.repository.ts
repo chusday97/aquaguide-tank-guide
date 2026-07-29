@@ -11,6 +11,17 @@ export type MemorialSaveInput = {
   speciesCatalogKey: string;
   date: string;
   reason: string;
+  observation?: string;
+  improvement?: string;
+};
+
+export type MemorialUpdateInput = {
+  id: string;
+  date?: string;
+  reason?: string;
+  observation?: string;
+  improvement?: string;
+  version?: number;
 };
 
 export type LivestockMemorialSaveInput = MemorialSaveInput & {
@@ -42,5 +53,6 @@ export interface AquaGuideRepository {
   saveDiagnosis(record: DiagnosisRecord): Promise<DiagnosisRecord>;
   saveMemorial(input: MemorialSaveInput): Promise<DeceasedRecord>;
   saveLivestockMemorial(input: LivestockMemorialSaveInput): Promise<{ record: DeceasedRecord; aquarium: Aquarium }>;
+  updateMemorial(input: MemorialUpdateInput): Promise<DeceasedRecord>;
   updateCareReminder(input: CareReminderMutation): Promise<CareReminderRecord | null>;
 }

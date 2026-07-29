@@ -185,6 +185,8 @@ userRecordsRouter.post('/memorial-records', asyncRoute(async (request, response)
     species_catalog_key: parsed.data.speciesCatalogKey,
     memorial_date: parsed.data.memorialDate,
     reason: parsed.data.reason,
+    observation: parsed.data.observation,
+    improvement: parsed.data.improvement,
   }).select('*').single();
   if (error || !data) throwDatabaseError(error, '生命纪念没有保存成功。');
   await finishIdempotentWrite(request, idempotency, 'memorial_record', id, 201);

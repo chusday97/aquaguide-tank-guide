@@ -314,6 +314,8 @@ export interface MemorialRecordRow extends SyncFields {
   speciesCatalogKey: string;
   memorialDate: IsoDate;
   reason?: string;
+  observation?: string;
+  improvement?: string;
 }
 
 export interface CareReminderRecordRow extends SyncFields {

@@ -32,6 +32,9 @@ export type MemorialItem = {
   fishId: string;
   date: string;
   reason?: string;
+  observation?: string;
+  improvement?: string;
+  version?: number;
 };
 
 export type CollectionCounts = {

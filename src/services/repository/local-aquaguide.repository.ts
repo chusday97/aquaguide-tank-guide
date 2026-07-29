@@ -6,7 +6,7 @@ import {
   rescheduleCareReminder,
   upsertCareReminder,
 } from '../care/care-activity.service';
-import { recordSpeciesMemorial, recordSpeciesMemorialAndDecrementBatch } from '../collection/memorial.service';
+import { recordSpeciesMemorial, recordSpeciesMemorialAndDecrementBatch, updateSpeciesMemorial } from '../collection/memorial.service';
 import { persistDiagnosisRecords, upsertDiagnosisRecord } from '../diagnosis/diagnosis-records.service';
 import {
   addSpeciesFavorite,
@@ -23,6 +23,7 @@ import type {
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
+  MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
 } from './aquaguide.repository';
@@ -76,7 +77,13 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
   }
 
   async saveMemorial(input: MemorialSaveInput) {
-    return recordSpeciesMemorial({ fishId: input.speciesCatalogKey, date: input.date, reason: input.reason }).record;
+    return recordSpeciesMemorial({
+      fishId: input.speciesCatalogKey,
+      date: input.date,
+      reason: input.reason,
+      observation: input.observation,
+      improvement: input.improvement,
+    }).record;
   }
 
   async saveLivestockMemorial(input: LivestockMemorialSaveInput) {
@@ -84,11 +91,17 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
       fishId: input.speciesCatalogKey,
       date: input.date,
       reason: input.reason,
+      observation: input.observation,
+      improvement: input.improvement,
       aquariumId: input.aquariumId,
       aquariumFishId: input.aquariumFishId,
       batchId: input.batchId,
     });
     return { record: saved.record, aquarium: saved.aquariums.find(item => item.id === input.aquariumId)! };
+  }
+
+  async updateMemorial(input: MemorialUpdateInput) {
+    return updateSpeciesMemorial(input);
   }
 
   async updateCareReminder(input: CareReminderMutation) {

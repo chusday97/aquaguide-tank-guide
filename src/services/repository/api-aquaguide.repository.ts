@@ -8,6 +8,7 @@ import type {
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
+  MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
 } from './aquaguide.repository';
@@ -406,6 +407,9 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       speciesCatalogKey: string;
       memorialDate: string;
       reason?: string;
+      observation?: string;
+      improvement?: string;
+      version: number;
     }>('/memorial-records', {
       method: 'POST',
       idempotencyKey: createIdempotencyKey('memorial'),
@@ -414,6 +418,8 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
         speciesCatalogKey: input.speciesCatalogKey,
         memorialDate: input.date.slice(0, 10),
         reason: input.reason,
+        observation: input.observation,
+        improvement: input.improvement,
       },
     });
     return {
@@ -421,6 +427,39 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       fishId: saved.speciesCatalogKey,
       date: new Date(`${saved.memorialDate}T12:00:00`).toISOString(),
       reason: saved.reason,
+      observation: saved.observation,
+      improvement: saved.improvement,
+      version: saved.version,
+    } satisfies DeceasedRecord;
+  }
+
+  async updateMemorial(input: MemorialUpdateInput) {
+    const saved = await apiRequest<{
+      id: string;
+      speciesCatalogKey: string;
+      memorialDate: string;
+      reason?: string;
+      observation?: string;
+      improvement?: string;
+      version: number;
+    }>(`/memorial-records/${input.id}`, {
+      method: 'PATCH',
+      body: {
+        memorialDate: input.date?.slice(0, 10),
+        reason: input.reason,
+        observation: input.observation,
+        improvement: input.improvement,
+        version: input.version || 1,
+      },
+    });
+    return {
+      id: saved.id,
+      fishId: saved.speciesCatalogKey,
+      date: new Date(`${saved.memorialDate}T12:00:00`).toISOString(),
+      reason: saved.reason,
+      observation: saved.observation,
+      improvement: saved.improvement,
+      version: saved.version,
     } satisfies DeceasedRecord;
   }
 
@@ -434,11 +473,18 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       attempt = { aquarium, batchVersion: batch.version };
       this.livestockMemorialAttempts.set(input.operationId, attempt);
     }
-    const raw = await apiRequest<{ id: string; speciesCatalogKey: string; memorialDate: string; reason?: string }>(
+    const raw = await apiRequest<{ id: string; speciesCatalogKey: string; memorialDate: string; reason?: string; observation?: string; improvement?: string; version: number }>(
       `/aquariums/${input.aquariumId}/species/${input.aquariumFishId}/batches/${input.batchId}/memorial`,
       {
         method: 'POST',
-        body: { speciesCatalogKey: input.speciesCatalogKey, memorialDate: input.date, reason: input.reason, batchVersion: attempt.batchVersion },
+        body: {
+          speciesCatalogKey: input.speciesCatalogKey,
+          memorialDate: input.date,
+          reason: input.reason,
+          observation: input.observation,
+          improvement: input.improvement,
+          batchVersion: attempt.batchVersion,
+        },
         idempotencyKey: `livestock-memorial:${input.operationId}`,
       },
     );
@@ -453,7 +499,18 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
         ? aquarium.fishes.map(item => item.id === fish.id ? nextFish : item)
         : aquarium.fishes.filter(item => item.id !== fish.id),
     };
-    return { record: { id: raw.id, fishId: raw.speciesCatalogKey, date: raw.memorialDate, reason: raw.reason }, aquarium: updatedAquarium };
+    return {
+      record: {
+        id: raw.id,
+        fishId: raw.speciesCatalogKey,
+        date: raw.memorialDate,
+        reason: raw.reason,
+        observation: raw.observation,
+        improvement: raw.improvement,
+        version: raw.version,
+      },
+      aquarium: updatedAquarium,
+    };
   }
 
   private rememberReminder(record: ApiReminder): CareReminderRecord {

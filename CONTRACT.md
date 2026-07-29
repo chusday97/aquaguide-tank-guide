@@ -3,7 +3,7 @@
 > 版本：2.3.1
 > 状态：已确认，实施中
 > 生效日期：2026-07-22
-> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`、`202607260002_atomic_livestock_removal.sql`
+> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`、`202607260002_atomic_livestock_removal.sql`、`202607290001_memorial_reflection_fields.sql`
 > TypeScript 来源：`src/types/database.ts`
 
 ## 1. 产品与架构边界
@@ -178,7 +178,7 @@ type AssetVariant =
 
 - `species_favorites`：用户与物种唯一。
 - `care_favorites`：用户与文章唯一。
-- `memorial_records`：用户、可选鱼缸、可选物种 UUID、兼容物种键、日期和复盘原因。
+- `memorial_records`：用户、可选鱼缸、可选物种 UUID、兼容物种键、日期、当时观察、可能原因和后续改进。
 - `care_reminders`：用户、可选鱼缸、来源文章、计划日期和完成时间。
 - `care_events`：换水、喂食、观察和清单完成事件。
 - 同一文章、同一鱼缸只能有一条未完成养护计划。
@@ -328,7 +328,7 @@ type ApiErrorCode =
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/split` | 拆分数量、新体态、`sourceVersion`、幂等键 | `AquariumSpeciesBatchRecord[]` | 400/401/404/409 |
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/merge` | 来源批次、最终入缸日期/生长阶段/繁殖状态、双方版本 | `AquariumSpeciesBatchRecord[]` | 400/401/404/409 |
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/remove` | 正整数数量、`Idempotency-Key` | `AquariumRecord` | 400/401/404/409 |
-| POST | `/aquariums/:id/species/:recordId/batches/:batchId/memorial` | 日期、原因、批次版本、幂等键 | `MemorialRecord` | 400/401/404/409 |
+| POST | `/aquariums/:id/species/:recordId/batches/:batchId/memorial` | 日期、观察、原因、后续改进、批次版本、幂等键 | `MemorialRecord` | 400/401/404/409 |
 | DELETE | `/aquariums/:id/species/:recordId/batches/:batchId` | `version` | `{ deleted: true, speciesRemoved: boolean }` | 401/404/409 |
 | PUT | `/aquariums/:id/equipment` | 设备字段、可选 `version` | `AquariumEquipmentRecord` | 400/401/404/409 |
 | POST | `/aquariums/:id/components` | 类型、名称、数量、幂等键 | `AquariumComponentRecord` | 400/401/404/409 |
@@ -385,8 +385,8 @@ interface AquariumSpeciesBatchRecord extends SyncFields {
 | PUT | `/favorites/care/:articleId` | Header 幂等键 | `CareFavoriteRecord` | 401/404/409 |
 | DELETE | `/favorites/care/:articleId` | 可选版本 | `{ deleted: true }` | 401/404/409 |
 | GET | `/memorial-records` | `cursor? limit?` | `Page<MemorialRecordRow>` | 401 |
-| POST | `/memorial-records` | 物种、日期、原因、幂等键 | `MemorialRecordRow` | 400/401/409 |
-| PATCH | `/memorial-records/:id` | 日期、原因、`version` | `MemorialRecordRow` | 400/401/404/409 |
+| POST | `/memorial-records` | 物种、日期、观察、原因、后续改进、幂等键 | `MemorialRecordRow` | 400/401/409 |
+| PATCH | `/memorial-records/:id` | 日期、观察、原因、后续改进、`version` | `MemorialRecordRow` | 400/401/404/409 |
 | DELETE | `/memorial-records/:id` | `version` | `{ deleted: true }` | 401/404/409 |
 | GET | `/care-reminders` | `status? aquariumId?` | `CareReminderRecordRow[]` | 401 |
 | POST | `/care-reminders` | 来源、时间、幂等键 | `CareReminderRecordRow` | 400/401/409 |
