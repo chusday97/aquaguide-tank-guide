@@ -40,7 +40,7 @@ const openPage = async (path) => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
   }, state);
-  await page.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}${path}`, { waitUntil: 'domcontentloaded', timeout: 60_000 });
   return { page, errors };
 };
 
@@ -87,9 +87,9 @@ try {
     const dialog = page.getByRole('dialog');
     const search = dialog.getByPlaceholder('搜索鱼、虾、螺或学名');
     await search.fill('孔雀鱼');
-    await dialog.getByText('孔雀鱼', { exact: true }).first().click();
+    await dialog.getByRole('button').filter({ hasText: '孔雀鱼' }).first().click();
     await search.fill('公子小丑');
-    await dialog.getByText('公子小丑', { exact: true }).first().click();
+    await dialog.getByRole('button').filter({ hasText: '公子小丑' }).first().click();
     await dialog.getByRole('button', { name: '确认添加到鱼缸', exact: true }).click();
     await dialog.getByText('第 2 步：混养复核', { exact: true }).waitFor();
     assert(await search.count() === 0, '混养复核屏仍叠加显示生物选择长列表');

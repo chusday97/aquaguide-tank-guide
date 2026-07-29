@@ -128,7 +128,7 @@ try {
       await unknownOptions.nth(index).click();
     }
     await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
-    await panel.getByText('信息不足', { exact: true }).waitFor();
+    await panel.getByText(/资料不足|信息不足/, { exact: true }).waitFor();
     await panel.getByRole('button', { name: '查看需要补充的检查', exact: true }).click();
     await panel.getByRole('button', { name: '重新补充关键检查', exact: true }).click();
     await panel.getByText('一次填完 · 已回答 0/2', { exact: true }).waitFor();
