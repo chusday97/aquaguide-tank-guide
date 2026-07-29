@@ -38,8 +38,8 @@
 - `src/services/feedback/feedback.service.ts`：设置页意见反馈的唯一前端 API 入口，支持游客与可选登录会话。
 - `src/pages/Welcome.tsx`：首次使用的“先建缸 / 先看物种”目标选择页。
 - `src/components/onboarding/OnboardingTaskCard.tsx`：根据真实鱼缸、浏览、收藏/入缸和巡检记录自动更新的新手任务卡。
-- `src/components/aquarium/LivestockBatchCard.tsx`：缸内物种批次汇总、体态调整、拆分与最后一组移除确认。
-- `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情、批次管理和按数量二次确认移出。
+- `src/components/aquarium/LivestockBatchCard.tsx`：同一任务表面内的批次汇总、图标式体态选择、拆分/合并、保存摘要与删除确认。
+- `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情；桌面中央/手机全高管理体态，并按数量二次确认移出。
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
 - `src/pages/CollectionHub.tsx`：水族册模块首页，四格按最近新增规则预览种草、养护收藏、生命纪念与成就；具体条目使用稳定深链，剩余内容通过“更多”进入模块。
@@ -66,7 +66,7 @@
 - `src/services/onboarding/onboarding.service.ts`：新手引导状态、首次识别、真实任务进度与完成派生。
 - `src/services/aquarium/aquarium-state.service.ts`：鱼缸集合兼容存储、当前鱼缸校验与统一变更通知。
 - `src/services/aquarium/aquarium-navigation.service.ts`：本地/云端共用的会话级鱼缸列表与当前选择快照，供桌面侧栏订阅。
-- `src/services/aquarium/species-batches.service.ts`：游客模式的批次规范化、汇总、拆分、体态更新与观察提示。
+- `src/services/aquarium/species-batches.service.ts`：游客模式的批次规范化、汇总、拆分、体态更新与确定性今日观察信号。
 - `src/services/care/care-activity.service.ts`：应用内养护计划、完成操作与护理清单的旧键兼容写入。
 - `src/services/compatibility/`：Mini 与完整混养的会话级选择传递。
 - `src/services/diagnosis/`：巡检记录的同日更新策略。
