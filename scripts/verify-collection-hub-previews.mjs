@@ -144,6 +144,11 @@ try {
   await mobile.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle' });
   assert.equal(await mobile.locator('[data-collection-module]').count(), 4, '手机也应显示四个完整模块');
   await assertNoHorizontalOverflow(mobile);
+  await mobile.locator('[data-preview-item="memorial"]').first().click();
+  await mobile.waitForURL(url => url.pathname === '/collection/memorial/memorial-3');
+  await mobile.locator('[data-memorial-detail="memorial-3"]').waitFor();
+  await assertNoHorizontalOverflow(mobile);
+  await mobile.getByRole('button', { name: '返回生命纪念' }).waitFor();
   assert.deepEqual(mobileErrors, [], `手机不应出现页面错误：${mobileErrors.join('; ')}`);
   await mobileContext.close();
 

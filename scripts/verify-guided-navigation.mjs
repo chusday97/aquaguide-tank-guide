@@ -48,6 +48,7 @@ const seed = async (page, state, locale = 'zh-CN') => {
 try {
   const fresh = await browser.newPage({ viewport: { width: 390, height: 844 }, locale: 'zh-CN', isMobile: true, hasTouch: true });
   fresh.setDefaultTimeout(8_000);
+  fresh.setDefaultNavigationTimeout(20_000);
   await fresh.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await fresh.waitForURL('**/welcome');
   await fresh.getByRole('button', { name: '开始' }).first().click();
@@ -59,14 +60,24 @@ try {
 
   const desktop = await browser.newPage({ viewport: { width: 1200, height: 900 }, locale: 'zh-CN' });
   desktop.setDefaultTimeout(8_000);
+  desktop.setDefaultNavigationTimeout(20_000);
   await seed(desktop, baseState({ withTank: true }));
   const desktopErrors = [];
   desktop.on('pageerror', error => desktopErrors.push(error.message));
   await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   const sidebarSearch = desktop.getByLabel('输入中文名、英文名、学名或养护问题').first();
   await sidebarSearch.fill('极火虾');
+  await desktop.locator('[data-search-suggestion-list="true"]').waitFor();
   await sidebarSearch.press('Enter');
-  await desktop.waitForURL('**/search?q=*');
+  await desktop.locator('[data-selected-species-summary="true"]').waitFor();
+  assert.ok(desktop.url().endsWith('/aquarium'), 'Enter must confirm the species candidate without leaving the current route');
+  await desktop.locator('[data-selected-species-summary="true"]').getByRole('button', { name: '查看详情' }).click();
+  await desktop.waitForURL('**/encyclopedia?species=sp_0001&source=search');
+  await desktop.getByRole('dialog').waitFor();
+  await desktop.keyboard.press('Escape');
+  await desktop.waitForURL('**/aquarium');
+
+  await desktop.goto(`${baseUrl}/search?q=${encodeURIComponent('极火虾')}`, { waitUntil: 'domcontentloaded' });
   await desktop.getByRole('heading', { name: '物种' }).waitFor();
   await desktop.locator('#search-species-sp_0001').click();
   await desktop.getByRole('button', { name: '查看详情' }).click();
@@ -97,6 +108,7 @@ try {
     userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148',
   });
   phone.setDefaultTimeout(8_000);
+  phone.setDefaultNavigationTimeout(20_000);
   await seed(phone, baseState({ withTank: true }));
   const phoneErrors = [];
   phone.on('pageerror', error => phoneErrors.push(error.message));
@@ -138,6 +150,7 @@ try {
 
   const narrowEnglish = await browser.newPage({ viewport: { width: 600, height: 900 }, locale: 'en-US' });
   narrowEnglish.setDefaultTimeout(8_000);
+  narrowEnglish.setDefaultNavigationTimeout(20_000);
   await seed(narrowEnglish, baseState({ withTank: true }), 'en');
   await narrowEnglish.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
   await narrowEnglish.getByRole('button', { name: 'My Aquarium' }).click();
