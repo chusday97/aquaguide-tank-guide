@@ -3535,7 +3535,7 @@ export default function AquariumManager() {
   const renderSettingsPanel = (panel: NonNullable<typeof activeSettingsPanel>) => {
     if (panel === 'size') {
       return (
-        <ConfigSection title={isEn ? "Dimensions" : "尺寸"} subtitle="用于估算容量和后续养护建议。">
+        <ConfigSection title={isEn ? "Dimensions" : "尺寸"} subtitle={isEn ? "Used for volume estimation and care advice." : "用于估算容量和后续养护建议。"}>
           <div className="grid grid-cols-3 gap-2">
             {dimensionFields.map(item => (
               <div key={item.key} className="grid gap-1.5">
@@ -3574,7 +3574,7 @@ export default function AquariumManager() {
 
     if (panel === 'parameters') {
       return (
-        <ConfigSection title={isEn ? "Parameters" : "参数"} subtitle="新手优先保持稳定，不要频繁大幅调整。">
+        <ConfigSection title={isEn ? "Parameters" : "参数"} subtitle={isEn ? "Keep water parameters stable. Avoid frequent drastic changes." : "新手优先保持稳定，不要频繁大幅调整。"}>
           <div className="grid grid-cols-3 gap-2">
             {[
               { value: 'Freshwater', label: '淡水', description: '常见观赏鱼' },
@@ -3608,7 +3608,7 @@ export default function AquariumManager() {
       return (
         <ConfigSection
           title={isEn ? "Substrate / Hardscape" : "底砂 / 造景"}
-          subtitle="底砂单选，硬景可多选。"
+          subtitle={isEn ? "Select one substrate type. Hardscape items can be multi-selected." : "底砂单选，硬景可多选。"}
           actionText={isScapeListExpanded ? '收起' : '查看全部'}
           onAction={() => setIsScapeListExpanded(prev => !prev)}
         >
@@ -3661,7 +3661,7 @@ export default function AquariumManager() {
       return (
         <ConfigSection
           title={isEn ? "Aquatic Plants" : "水草"}
-          subtitle="选择当前鱼缸里的水草种类。"
+          subtitle={isEn ? "Select aquatic plant species currently in the tank." : "选择当前鱼缸里的水草种类。"}
           actionText={isPlantListExpanded ? '收起' : '查看全部'}
           onAction={() => setIsPlantListExpanded(prev => !prev)}
         >
@@ -3695,7 +3695,7 @@ export default function AquariumManager() {
 
     if (panel === 'lighting') {
       return (
-        <ConfigSection title={isEn ? "Lighting" : "灯光"} subtitle="选择草缸和观赏所需灯光。">
+        <ConfigSection title={isEn ? "Lighting" : "灯光"} subtitle={isEn ? "Select lighting for planted tank or reef display." : "选择草缸和观赏所需灯光。"}>
           <div className="grid grid-cols-2 gap-2">
             {['无', '普通灯', '水草灯', '海水灯'].map(option => (
               <SelectableOptionCard
@@ -3714,7 +3714,7 @@ export default function AquariumManager() {
     }
 
     return (
-      <ConfigSection title={isEn ? "Equipment" : "设备"} subtitle="过滤单选，加热与氧气按需开启。">
+      <ConfigSection title={isEn ? "Equipment" : "设备"} subtitle={isEn ? "Select one filter. Enable heater & aeration as needed." : "过滤单选，加热与氧气按需开启。"}>
         <div className="grid gap-3">
           <div className="grid grid-cols-2 gap-2">
             {['无', '瀑布过滤', '桶滤', '上滤', '海绵过滤'].map(option => (
@@ -4581,7 +4581,7 @@ export default function AquariumManager() {
                 value={editNameValue}
                 onChange={event => setEditNameValue(event.target.value)}
                 maxLength={40}
-                aria-label="鱼缸名称"
+                aria-label={isEn ? "Aquarium Name" : "鱼缸名称"}
                 className="h-10 min-w-0 max-w-[280px] rounded-[14px] bg-white text-[13px] font-black"
                 disabled={isRenamingName}
               />
@@ -4603,8 +4603,8 @@ export default function AquariumManager() {
                     setEditNameValue(activeAquarium.name);
                     setIsEditingName(true);
                   }}
-                  aria-label="重命名鱼缸"
-                  title="重命名鱼缸"
+                  aria-label={isEn ? "Rename Aquarium" : "重命名鱼缸"}
+                  title={isEn ? "Rename Aquarium" : "重命名鱼缸"}
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink/42 transition-colors hover:bg-white hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 >
                   <Edit2 className="h-4 w-4" />
@@ -4728,14 +4728,14 @@ export default function AquariumManager() {
               title={isEn ? "Browse Collection Hub" : "查看水族册种草"}
             >
               <Heart className={`h-3.5 w-3.5 ${wishlistFishes.length > 0 ? 'fill-current' : ''}`} />
-              <span className="hidden min-[380px]:inline">水族册</span>
+              <span className="hidden min-[380px]:inline">{isEn ? "Collection Hub" : "水族册"}</span>
               <span>{wishlistFishes.length}</span>
               <ChevronRight className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
               onClick={openLocalDataManager}
-              aria-label="数据保存提醒"
+              aria-label={isEn ? "Data Storage Notice" : "数据保存提醒"}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               title={isEn ? "Data Storage Notice" : "数据保存提醒"}
             >
@@ -4744,7 +4744,7 @@ export default function AquariumManager() {
             <button
               type="button"
               onClick={() => navigateToRoute('/settings')}
-              aria-label="语言设置"
+              aria-label={isEn ? "Language Settings" : "语言设置"}
               className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:text-emerald-700"
               title={isEn ? "Language Settings" : "语言设置"}
             >
@@ -4894,7 +4894,7 @@ export default function AquariumManager() {
         )}
         actions={(
       <section id="aquarium-actions" className="aquarium-actions order-[3] scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
-        <SectionHeader title={isEn ? "Quick Actions" : "常用操作"} subtitle="快速记录日常养护。" />
+        <SectionHeader title={isEn ? "Quick Actions" : "常用操作"} subtitle={isEn ? "Quickly log daily care tasks." : "快速记录日常养护。"} />
         <div className="mt-3">
           <QuickActionGrid actions={commonActions} />
         </div>
@@ -4968,7 +4968,7 @@ export default function AquariumManager() {
         <div className="absolute right-2 top-2 z-20 flex flex-col gap-2">
           <Button
             aria-label={isEn ? "Add Livestock" : "添加生物"}
-            title="添加生物"
+            title={isEn ? "Add Livestock" : "添加生物"}
             onClick={() => setIsAddFishOpen(true)}
             className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
           >
@@ -4976,7 +4976,7 @@ export default function AquariumManager() {
           </Button>
           <Button
             aria-label={isEn ? "Fullscreen Preview" : "全屏预览"}
-            title="全屏预览"
+            title={isEn ? "Fullscreen Preview" : "全屏预览"}
             onClick={() => { setShouldLoadThreeAquarium(true); setRequiresManualThreeLoad(false); setIsTankPreviewOpen(true); }}
             className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
           >
@@ -6111,7 +6111,7 @@ export default function AquariumManager() {
                                   type="button"
                                   onClick={() => setAddFishDatePicker({ fishId: item.fishId, month: subMonths(datePickerMonth, 1) })}
                                   className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55"
-                                  aria-label="上个月"
+                                  aria-label={isEn ? "Previous Month" : "上个月"}
                                 >
                                   <ChevronLeft className="h-4 w-4" />
                                 </button>
@@ -6121,7 +6121,7 @@ export default function AquariumManager() {
                                   onClick={() => setAddFishDatePicker({ fishId: item.fishId, month: addMonths(datePickerMonth, 1) })}
                                   className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55 disabled:text-ink/18"
                                   disabled={startOfMonth(addMonths(datePickerMonth, 1)) > new Date()}
-                                  aria-label="下个月"
+                                  aria-label={isEn ? "Next Month" : "下个月"}
                                 >
                                   <ChevronRight className="h-4 w-4" />
                                 </button>
@@ -6367,7 +6367,7 @@ export default function AquariumManager() {
                                     [question.id]: nextValue,
                                   }));
                                 }}
-                                placeholder="不知道也可以写“不确定”"
+                                placeholder={isEn ? "Write 'unsure' if not certain" : "不知道也可以写“不确定”"}
                                 className="h-10 rounded-full border-border bg-white px-3 text-xs font-bold"
                               />
                             </label>
@@ -7423,7 +7423,7 @@ export default function AquariumManager() {
             </div>
           </div>
           <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:px-6">
-            <Button variant="outline" onClick={() => setIsSettingsOpen(false)} className="h-10 min-w-[112px] rounded-full text-sm font-bold">取消</Button>
+            <Button variant="outline" onClick={() => setIsSettingsOpen(false)} className="h-10 min-w-[112px] rounded-full text-sm font-bold">{isEn ? "Cancel" : "取消"}</Button>
             <Button onClick={() => {
               const updated = aquariums.map(a => a.id === activeId ? { ...a, ...settingsForm } : a);
               saveAquariums(updated);
@@ -7838,9 +7838,9 @@ export default function AquariumManager() {
           <DialogHeader className="shrink-0 border-b border-border bg-white px-5 pb-4 pt-5 text-left">
             <div className="flex items-center gap-2 text-amber-700">
               <AlertTriangle className="h-5 w-5" />
-              <DialogTitle className="text-xl font-black">鱼缸风险处理</DialogTitle>
+              <DialogTitle className="text-xl font-black">{isEn ? "Aquarium Risk Resolution" : "鱼缸风险处理"}</DialogTitle>
             </div>
-            <DialogDescription>先看最重要的风险和具体处理步骤，需要时再切换其他风险。</DialogDescription>
+            <DialogDescription>{isEn ? "Review highest priority risk & steps, then switch to others if needed." : "先看最重要的风险和具体处理步骤，需要时再切换其他风险。"}</DialogDescription>
           </DialogHeader>
           {activeTankRisk ? (
             <div className="app-scrollbar-hidden min-h-0 overflow-y-auto px-4 py-4 md:px-5">
@@ -7880,7 +7880,7 @@ export default function AquariumManager() {
                   <p className="mt-3 text-xs font-semibold leading-5 text-ink/60">{activeTankRisk.detail}</p>
                 </div>
                 <div className="rounded-[22px] border border-emerald-100 bg-white p-4">
-                  <div className="text-[11px] font-black text-emerald-800">现在按这 3 步做</div>
+                  <div className="text-[11px] font-black text-emerald-800">{isEn ? "Follow These 3 Steps Now" : "现在按这 3 步做"}</div>
                   <ol className="mt-3 grid gap-3">
                     {activeTankRisk.actionSteps.map((step, index) => (
                       <li key={step} className="grid grid-cols-[28px_minmax(0,1fr)] gap-2 text-sm font-semibold leading-6 text-ink/75">
@@ -7890,7 +7890,7 @@ export default function AquariumManager() {
                     ))}
                   </ol>
                   <div className="mt-4 rounded-2xl bg-rose-50 px-3 py-2.5">
-                    <div className="text-xs font-black text-rose-800">暂时不要这样做</div>
+                    <div className="text-xs font-black text-rose-800">{isEn ? "Avoid Doing This Temporarily" : "暂时不要这样做"}</div>
                     <ul className="mt-2 grid gap-1.5 text-xs font-semibold leading-5 text-rose-900/75">
                       {activeTankRisk.avoidActions.map(item => <li key={item}>• {item}</li>)}
                     </ul>
@@ -7910,7 +7910,7 @@ export default function AquariumManager() {
               </div>
             </div>
           ) : (
-            <div className="px-5 py-10 text-center text-sm font-bold text-ink/55">当前没有需要处理的风险。</div>
+            <div className="px-5 py-10 text-center text-sm font-bold text-ink/55">{isEn ? "No active risks require action right now." : "当前没有需要处理的风险。"}</div>
           )}
         </DialogContent>
       </Dialog>
