@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+import sharp from 'sharp';
 
 const report = {
   snapshotVersion: 1,
@@ -13,7 +14,7 @@ const report = {
 
 const browser = await chromium.launch({ headless: true });
 for (const width of [390, 1280]) {
-  const page = await browser.newPage({ viewport: { width, height: 844 } });
+  const page = await browser.newPage({ viewport: { width, height: 844 }, acceptDownloads: true });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.route('**/api/v1/public/share-reports/**', route => route.fulfill({
@@ -23,12 +24,20 @@ for (const width of [390, 1280]) {
   }));
   await page.goto('http://localhost:3000/report/test-token', { waitUntil: 'networkidle' });
   const body = await page.locator('body').innerText();
-  if (!body.includes('我的鱼缸报告') || !body.includes('孔雀鱼 × 6')) throw new Error(`report content missing at ${width}px`);
+  if (!(body.includes('我的鱼缸报告') || body.includes('My aquarium report')) || !body.includes('孔雀鱼 × 6')) throw new Error(`report content missing at ${width}px`);
   if (body.includes('客厅缸') || body.includes('ownerId')) throw new Error(`private field visible at ${width}px`);
-  const download = page.getByRole('button', { name: '下载脱敏报告' });
+  const download = page.getByRole('button', { name: /下载脱敏报告|Download report/ });
   if (await download.count() !== 1) throw new Error(`download action missing at ${width}px`);
   await download.click();
   if (await page.getByRole('dialog').count() !== 1) throw new Error(`export preview missing at ${width}px`);
+  if (width === 390) {
+    const [file] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: /Save PNG|保存 PNG/ }).click(),
+    ]);
+    const metadata = await sharp(await file.path()).metadata();
+    if (metadata.width !== 1080) throw new Error(`export width should be 1080px, received ${metadata.width}`);
+  }
   if (errors.length) throw new Error(`page error at ${width}px: ${errors.join('; ')}`);
   await page.close();
 }

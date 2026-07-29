@@ -10,21 +10,39 @@ const waitForImages = async (root: HTMLElement) => {
 };
 
 export const downloadElementAsPng = async (element: HTMLElement, fileName: string) => {
-  await waitForImages(element);
-  const { default: html2canvas } = await import('html2canvas');
-  const canvas = await html2canvas(element, {
-    backgroundColor: '#fffdf8',
-    scale: 2,
-    useCORS: true,
-    logging: false,
-    windowWidth: 1080,
-  });
-  const link = document.createElement('a');
-  link.href = canvas.toDataURL('image/png');
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
+  const exportRoot = element.cloneNode(true) as HTMLElement;
+  exportRoot.style.position = 'fixed';
+  exportRoot.style.left = '-100000px';
+  exportRoot.style.top = '0';
+  exportRoot.style.width = '1080px';
+  exportRoot.style.maxWidth = 'none';
+  exportRoot.style.boxSizing = 'border-box';
+  exportRoot.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(exportRoot);
+  try {
+    await waitForImages(exportRoot);
+    const { default: html2canvas } = await import('html2canvas');
+    const canvas = await html2canvas(exportRoot, {
+      backgroundColor: '#fffdf8',
+      scale: 1,
+      useCORS: true,
+      foreignObjectRendering: true,
+      logging: false,
+      width: 1080,
+      windowWidth: 1080,
+    });
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } finally {
+    exportRoot.remove();
+  }
 };
 
-export const safeExportFileName = (value: string) => value.replace(/[\\/:*?"<>|]+/g, '-').trim();
+export const safeExportFileName = (value: string) => {
+  const sanitized = value.replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').trim();
+  return sanitized || 'AquaGuide-export.png';
+};

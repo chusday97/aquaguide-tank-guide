@@ -6,6 +6,7 @@ import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '..
 import { normalizeSpeciesBatches } from '../../services/aquarium/species-batches.service';
 import { LivestockBatchCard } from './LivestockBatchCard';
 import { SurfaceHeader } from '../common/SurfaceHeader';
+import { useTranslation } from 'react-i18next';
 
 type RemovalDraft = {
   record: AquariumFish;
@@ -62,6 +63,8 @@ export function LivestockRosterDialog({
   onCreateShare,
   isCreatingShare = false,
 }: Props) {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language !== 'zh-CN';
   const [removal, setRemoval] = useState<RemovalDraft | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
   const [removeError, setRemoveError] = useState('');
@@ -129,10 +132,10 @@ export function LivestockRosterDialog({
             onClose={() => onOpenChange(false)}
             actions={(
               <>
-                <button type="button" disabled={isCreatingShare} onClick={onCreateShare} aria-label="生成分享报告" title="生成分享报告" className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
+                <button type="button" disabled={isCreatingShare} onClick={onCreateShare} aria-label={isEn ? 'Create share report' : '生成分享报告'} title={isEn ? 'Create share report' : '生成分享报告'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
                   <Share2 className="h-4 w-4" />
                 </button>
-                <button type="button" onClick={onDownloadArchive} aria-label="下载鱼缸档案" title="下载鱼缸档案" className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                <button type="button" onClick={onDownloadArchive} aria-label={isEn ? 'Download aquarium archive' : '下载鱼缸档案'} title={isEn ? 'Download aquarium archive' : '下载鱼缸档案'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
                   <Download className="h-4 w-4" />
                 </button>
               </>
@@ -142,7 +145,7 @@ export function LivestockRosterDialog({
             <section className="mb-4 rounded-[20px] border border-emerald-100 bg-white p-4">
               <div className="flex flex-wrap items-end gap-3">
                 <label className="min-w-[190px] flex-1 text-xs font-black text-ink/65">
-                  建缸日期
+                  {isEn ? 'Aquarium start date' : '建缸日期'}
                   <input type="date" value={startedAtDraft} max={new Date().toISOString().slice(0, 10)} onChange={event => setStartedAtDraft(event.target.value)} className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink" />
                 </label>
                 <button
@@ -154,18 +157,18 @@ export function LivestockRosterDialog({
                   }}
                   className="min-h-11 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50"
                 >
-                  {isSavingStartedAt ? '保存中…' : startedAtConfirmed ? '修改日期' : '确认日期'}
+                  {isSavingStartedAt ? (isEn ? 'Saving…' : '保存中…') : startedAtConfirmed ? (isEn ? 'Update date' : '修改日期') : (isEn ? 'Confirm date' : '确认日期')}
                 </button>
               </div>
-              {!startedAtConfirmed && <p className="mt-2 text-xs font-semibold leading-5 text-amber-700">该日期由旧记录推算。确认或修改后，才会解锁百日纪念。</p>}
+              {!startedAtConfirmed && <p className="mt-2 text-xs font-semibold leading-5 text-amber-700">{isEn ? 'This date was inferred from older records. Confirm or edit it before milestone cards are unlocked.' : '该日期由旧记录推算。确认或修改后，才会解锁百日纪念。'}</p>}
               {startedAtError && <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{startedAtError}</p>}
               {startedAtConfirmed && aquariumAgeDays >= 100 && onDownloadMilestone && (
                 <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-amber-50 px-3 py-3 text-amber-900">
                   <div>
-                    <div className="text-sm font-black">我的鱼缸养了 {aquariumAgeDays} 天</div>
-                    <div className="mt-0.5 text-xs font-semibold opacity-70">百日之后持续可见，可随时重新生成。</div>
+                    <div className="text-sm font-black">{isEn ? `My aquarium is ${aquariumAgeDays} days old` : `我的鱼缸养了 ${aquariumAgeDays} 天`}</div>
+                    <div className="mt-0.5 text-xs font-semibold opacity-70">{isEn ? 'Milestone cards remain available after day 100.' : '百日之后持续可见，可随时重新生成。'}</div>
                   </div>
-                  <button type="button" onClick={onDownloadMilestone} aria-label="下载百日纪念卡" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-amber-800 shadow-sm"><Download className="h-4 w-4" /></button>
+                  <button type="button" onClick={onDownloadMilestone} aria-label={isEn ? 'Download milestone card' : '下载百日纪念卡'} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-amber-800 shadow-sm"><Download className="h-4 w-4" /></button>
                 </div>
               )}
             </section>

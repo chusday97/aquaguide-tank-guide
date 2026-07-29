@@ -25,6 +25,14 @@
 - 设置管理：`/settings#shared-reports` 显示有效期、过期与撤销状态；有效链接可撤销。数据库只保存哈希，因此页面刷新后不会伪造“再次复制”能力。
 - 验证：导出模型和隐私契约专项、390/1280px 公共报告浏览器回归、lint、API check 与生产 build。
 
+## 2026-07-29 独立安全审查修复
+
+- Critic 阻塞：旧 UPDATE RLS 允许 owner 绕过 API 改到期时间、恢复撤销或替换快照。
+- 修复：新增 migration 删除 owner UPDATE policy；撤销由 Express 验证 JWT owner 后用 service role 仅写 `revoked_at`。公开接口成功/错误均 `no-store`。
+- 交互：撤销链接现在必须经过居中确认，明确“立即失效且无法恢复”，提交期间防重复。
+- 导出：克隆到离屏 1080px 模板并使用 foreign-object 渲染，避免 Tailwind `oklch` 让 html2canvas 报错；真下载尺寸 `1080×651`。
+- 仍需：真实 Supabase 执行 migration、用户 JWT 直接 PATCH 拒绝、双账号、撤销/过期生命周期和恢复攻击验证。
+
 ## 2026-07-29 全局交互显性化与折叠治理交接
 
 - 当前结果：物种喂养与环境摘要、今日行动、紧急依据、单条养护计划和手机管理/学习模块均直接显示；只允许次级证据、进阶数据、超长列表剩余项和备选方案折叠。

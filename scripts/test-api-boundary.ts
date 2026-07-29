@@ -47,10 +47,30 @@ try {
   assert.equal(adminResponse.status, 401);
   assert.equal(adminPayload.error.code, 'AUTH_REQUIRED');
 
+  const shareListResponse = await fetch(`${baseUrl}/api/v1/share-reports`);
+  const shareListPayload = await shareListResponse.json();
+  assert.equal(shareListResponse.status, 401);
+  assert.equal(shareListPayload.error.code, 'AUTH_REQUIRED');
+
+  const shareCreateResponse = await fetch(`${baseUrl}/api/v1/aquariums/00000000-0000-4000-8000-000000000001/share-reports`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'idempotency-key': 'share-boundary-test' },
+    body: JSON.stringify({ snapshot: {} }),
+  });
+  const shareCreatePayload = await shareCreateResponse.json();
+  assert.equal(shareCreateResponse.status, 401);
+  assert.equal(shareCreatePayload.error.code, 'AUTH_REQUIRED');
+
+  const invalidShareResponse = await fetch(`${baseUrl}/api/v1/public/share-reports/invalid`);
+  const invalidSharePayload = await invalidShareResponse.json();
+  assert.equal(invalidShareResponse.status, 404);
+  assert.equal(invalidSharePayload.error.code, 'NOT_FOUND');
+  assert.match(invalidShareResponse.headers.get('cache-control') || '', /no-store/);
+
   const legacyHealthResponse = await fetch(`${baseUrl}/api/health`);
   assert.equal(legacyHealthResponse.status, 200);
 
-  console.log('API boundary verified: versioned health, user/profile/admin auth guards, structured errors, content dependency fallback and legacy health');
+  console.log('API boundary verified: versioned health, user/profile/admin/share auth guards, public share validation, structured errors, content dependency fallback and legacy health');
 } finally {
   if (server.listening) {
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

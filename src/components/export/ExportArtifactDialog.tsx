@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Download, LoaderCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { downloadElementAsPng } from '../../services/export/png-export.service';
+import { downloadElementAsPng, safeExportFileName } from '../../services/export/png-export.service';
 
 export type ExportSection = {
   title: string;
@@ -41,7 +41,7 @@ export function ExportArtifactDialog({
     setIsDownloading(true);
     setError('');
     try {
-      await downloadElementAsPng(cardRef.current, content.fileName);
+      await downloadElementAsPng(cardRef.current, safeExportFileName(content.fileName));
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : (isEn ? 'Download failed.' : '图片下载失败，请稍后重试。'));
     } finally {

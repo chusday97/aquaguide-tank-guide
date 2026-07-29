@@ -12,6 +12,7 @@ import {
   type AquariumShareReportListItem,
 } from '../services/share/aquarium-share-report.service';
 import { AquaGuideApiError } from '../services/api/api-client';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const localeOptions: Array<{ locale: SupportedLocale; label: string }> = [
   { locale: 'zh-CN', label: '简体中文' },
@@ -21,6 +22,7 @@ const localeOptions: Array<{ locale: SupportedLocale; label: string }> = [
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const currentLocale: SupportedLocale = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';
+  const isEn = currentLocale === 'en';
   const { navigateToRoute, registerNavigationGuard } = useWorkspaceNavigation();
   const { isPhoneLayout } = useLayoutMode();
   const [feedbackCategory, setFeedbackCategory] = useState<'suggestion' | 'problem' | 'content' | 'other'>('suggestion');
@@ -32,6 +34,7 @@ export default function SettingsPage() {
   const [shareStatus, setShareStatus] = useState<'loading' | 'ready' | 'auth' | 'error'>('loading');
   const [shareError, setShareError] = useState('');
   const [revokingShareId, setRevokingShareId] = useState('');
+  const [pendingRevokeShareId, setPendingRevokeShareId] = useState('');
   const hasUnsavedFeedback = feedbackMessage.trim().length > 0;
 
   useEffect(() => {
@@ -60,7 +63,7 @@ export default function SettingsPage() {
         setShareStatus('auth');
         return;
       }
-      setShareError(error instanceof Error ? error.message : '分享记录暂时无法加载。');
+      setShareError(isEn ? 'Shared reports are temporarily unavailable.' : (error instanceof Error ? error.message : '分享记录暂时无法加载。'));
       setShareStatus('error');
     });
     return () => { active = false; };
@@ -73,8 +76,9 @@ export default function SettingsPage() {
     try {
       const result = await revokeAquariumShareReport(id);
       setShareReports(current => current.map(item => item.id === id ? { ...item, revokedAt: result.revokedAt } : item));
+      setPendingRevokeShareId('');
     } catch (error) {
-      setShareError(error instanceof Error ? error.message : '分享链接暂时无法撤销。');
+      setShareError(isEn ? 'The report link could not be revoked. Try again.' : (error instanceof Error ? error.message : '分享链接暂时无法撤销。'));
     } finally {
       setRevokingShareId('');
     }
@@ -154,13 +158,13 @@ export default function SettingsPage() {
         <div className="flex items-start gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-50 text-sky-700"><Link2 className="h-5 w-5" /></span>
           <div>
-            <h2 id="settings-share-title" className="text-lg font-black text-ink">已分享报告</h2>
-            <p className="mt-1 text-sm font-medium leading-6 text-ink/52">分享链接只保留 7 天，可随时撤销。原始链接不会再次显示。</p>
+            <h2 id="settings-share-title" className="text-lg font-black text-ink">{isEn ? 'Shared reports' : '已分享报告'}</h2>
+            <p className="mt-1 text-sm font-medium leading-6 text-ink/52">{isEn ? 'Links expire after 7 days and can be revoked early. The original token is only shown when created.' : '分享链接只保留 7 天，可随时撤销。原始链接只在创建时显示。'}</p>
           </div>
         </div>
-        {shareStatus === 'loading' && <p className="mt-4 text-sm font-bold text-ink/45">正在加载…</p>}
-        {shareStatus === 'auth' && <div className="mt-4 rounded-2xl bg-bg p-4"><p className="text-sm font-semibold text-ink/60">登录后可以生成和撤销脱敏报告链接。</p><button type="button" onClick={() => navigateToRoute('/login')} className="mt-3 min-h-11 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white">去登录</button></div>}
-        {shareStatus === 'ready' && shareReports.length === 0 && <p className="mt-4 rounded-2xl bg-bg p-4 text-sm font-semibold text-ink/55">还没有分享过鱼缸报告。请从鱼缸档案生成。</p>}
+        {shareStatus === 'loading' && <p className="mt-4 text-sm font-bold text-ink/45">{isEn ? 'Loading…' : '正在加载…'}</p>}
+        {shareStatus === 'auth' && <div className="mt-4 rounded-2xl bg-bg p-4"><p className="text-sm font-semibold text-ink/60">{isEn ? 'Sign in to create and revoke privacy-safe report links.' : '登录后可以生成和撤销脱敏报告链接。'}</p><button type="button" onClick={() => navigateToRoute('/login')} className="mt-3 min-h-11 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white">{isEn ? 'Sign in' : '去登录'}</button></div>}
+        {shareStatus === 'ready' && shareReports.length === 0 && <p className="mt-4 rounded-2xl bg-bg p-4 text-sm font-semibold text-ink/55">{isEn ? 'No reports have been shared yet. Create one from the aquarium archive.' : '还没有分享过鱼缸报告。请从鱼缸档案生成。'}</p>}
         {shareStatus === 'ready' && shareReports.length > 0 && (
           <div className="mt-4 grid gap-3">
             {shareReports.map(report => {
@@ -169,14 +173,14 @@ export default function SettingsPage() {
               return (
                 <article key={report.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 p-4">
                   <div className="min-w-0">
-                    <div className="text-sm font-black text-ink">我的鱼缸报告</div>
+                    <div className="text-sm font-black text-ink">{isEn ? 'My aquarium report' : '我的鱼缸报告'}</div>
                     <div className="mt-1 text-xs font-semibold text-ink/45">
-                      {revoked ? '已撤销' : expired ? '已过期' : `有效至 ${new Date(report.expiresAt).toLocaleString('zh-CN')}`}
+                      {revoked ? (isEn ? 'Revoked' : '已撤销') : expired ? (isEn ? 'Expired' : '已过期') : `${isEn ? 'Valid until' : '有效至'} ${new Date(report.expiresAt).toLocaleString(isEn ? 'en' : 'zh-CN')}`}
                     </div>
                   </div>
                   {!revoked && !expired && (
-                    <button type="button" disabled={revokingShareId === report.id} onClick={() => void revokeShare(report.id)} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-rose-50 px-3 text-xs font-black text-rose-700 disabled:opacity-50">
-                      <Trash2 className="h-4 w-4" />{revokingShareId === report.id ? '撤销中…' : '撤销链接'}
+                    <button type="button" disabled={revokingShareId === report.id} onClick={() => setPendingRevokeShareId(report.id)} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-rose-50 px-3 text-xs font-black text-rose-700 disabled:opacity-50">
+                      <Trash2 className="h-4 w-4" />{revokingShareId === report.id ? (isEn ? 'Revoking…' : '撤销中…') : (isEn ? 'Revoke link' : '撤销链接')}
                     </button>
                   )}
                 </article>
@@ -248,6 +252,18 @@ export default function SettingsPage() {
           </button>
         </form>
       </section>
+      <Dialog open={Boolean(pendingRevokeShareId)} onOpenChange={open => { if (!open && !revokingShareId) setPendingRevokeShareId(''); }}>
+        <DialogContent showCloseButton={false} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
+          <DialogHeader>
+            <DialogTitle>{isEn ? 'Revoke this report link?' : '撤销这条报告链接？'}</DialogTitle>
+            <DialogDescription>{isEn ? 'The original link will stop working immediately and cannot be restored. Create a new report if you need to share again.' : '原链接会立即失效且无法恢复。如需再次分享，请重新生成一份报告。'}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button type="button" autoFocus disabled={Boolean(revokingShareId)} onClick={() => setPendingRevokeShareId('')} className="min-h-11 rounded-xl border border-border px-4 text-sm font-black disabled:opacity-50">{isEn ? 'Keep link' : '暂不撤销'}</button>
+            <button type="button" disabled={Boolean(revokingShareId)} onClick={() => void revokeShare(pendingRevokeShareId)} className="min-h-11 rounded-xl bg-rose-600 px-4 text-sm font-black text-white disabled:opacity-50">{revokingShareId ? (isEn ? 'Revoking…' : '正在撤销…') : (isEn ? 'Revoke permanently' : '确认撤销')}</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

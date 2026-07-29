@@ -112,11 +112,13 @@ shareReportsRouter.delete('/share-reports/:id', requireAuth, asyncRoute(async (r
   const id = uuidSchema.safeParse(request.params.id);
   if (!id.success) throw new ApiError(400, 'VALIDATION_ERROR', '分享报告 ID 无效。');
   requireIdempotencyKey(request);
-  const client = userClientFor(request);
+  const ownerId = authenticatedRequest(request).authUser.id;
+  const client = getAdminSupabase();
   const { data, error } = await client
     .from('aquarium_share_reports')
     .update({ revoked_at: new Date().toISOString() })
     .eq('id', id.data)
+    .eq('owner_id', ownerId)
     .is('deleted_at', null)
     .is('revoked_at', null)
     .select('id,revoked_at')
@@ -127,6 +129,7 @@ shareReportsRouter.delete('/share-reports/:id', requireAuth, asyncRoute(async (r
       .from('aquarium_share_reports')
       .select('id,revoked_at')
       .eq('id', id.data)
+      .eq('owner_id', ownerId)
       .is('deleted_at', null)
       .maybeSingle();
     if (!existing) throw new ApiError(404, 'NOT_FOUND', '没有找到这条分享报告。');
@@ -136,6 +139,8 @@ shareReportsRouter.delete('/share-reports/:id', requireAuth, asyncRoute(async (r
 }));
 
 shareReportsRouter.get('/public/share-reports/:token', asyncRoute(async (request, response) => {
+  response.setHeader('Cache-Control', 'no-store, private, max-age=0');
+  response.setHeader('Pragma', 'no-cache');
   const token = request.params.token;
   if (!TOKEN_PATTERN.test(token)) throw new ApiError(404, 'NOT_FOUND', '分享链接无效。');
   const { data, error } = await getAdminSupabase()

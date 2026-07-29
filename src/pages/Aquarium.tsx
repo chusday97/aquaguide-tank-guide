@@ -3907,6 +3907,7 @@ export default function AquariumManager() {
   const nextChangeDate = addDays(lastChangeDate, shortestCycle);
   const daysUntilChange = differenceInDays(nextChangeDate, new Date());
   const isChangeOverdue = daysUntilChange < 0;
+  const scorePatrolRecord = findDailyPatrolRecord(diagnosisRecords, activeAquarium.id);
 
   const calculateHealthScore = () => {
     if (!activeAquarium) return 100;
@@ -3929,6 +3930,10 @@ export default function AquariumManager() {
         score -= 10;
       }
     }
+
+    if (scorePatrolRecord?.riskCode === 'high') score -= 25;
+    else if (scorePatrolRecord?.riskCode === 'medium') score -= 10;
+    else if (scorePatrolRecord?.riskCode === 'unknown') score -= 5;
 
     return Math.max(0, score);
   };
@@ -4024,7 +4029,7 @@ export default function AquariumManager() {
     ...(!activeAquarium.targetTemperature ? ['当前水温'] : []),
   ];
   const knownRiskLevel = conflicts.length >= 3 ? 'high' : conflicts.length > 0 ? 'medium' : 'none_recorded';
-  const todayDailyCheckRecord = findDailyPatrolRecord(diagnosisRecords, activeAquarium.id);
+  const todayDailyCheckRecord = scorePatrolRecord;
   const unresolvedPatrol = todayDailyCheckRecord && ['high', 'medium', 'unknown'].includes(todayDailyCheckRecord.riskCode || 'unknown')
     ? todayDailyCheckRecord
     : null;
@@ -5515,7 +5520,7 @@ export default function AquariumManager() {
               <section className="grid gap-3">
                 <div className="flex justify-end">
                   <button type="button" onClick={() => openExportArtifact(buildDiagnosisArtifact(artifactContext, toDiagnosisOutput(structuredDiagnosis)))} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-white px-4 text-xs font-black text-emerald-800 shadow-sm">
-                    <Download className="h-4 w-4" />下载诊断结果图
+                    <Download className="h-4 w-4" />{isEn ? 'Download result image' : '下载诊断结果图'}
                   </button>
                 </div>
                 {diagnosisVisualModel && (
@@ -7774,16 +7779,16 @@ export default function AquariumManager() {
       <Dialog open={Boolean(shareUrl)} onOpenChange={open => { if (!open) setShareUrl(''); }}>
         <DialogContent className="w-[min(92vw,520px)] max-w-[520px] rounded-[26px]">
           <DialogHeader>
-            <DialogTitle>脱敏报告链接已生成</DialogTitle>
-            <DialogDescription>链接 7 天后自动失效，可在设置中提前撤销。报告不会显示鱼缸名称、用户身份、自由描述或内部记录 ID。</DialogDescription>
+            <DialogTitle>{isEn ? 'Privacy-safe report created' : '脱敏报告链接已生成'}</DialogTitle>
+            <DialogDescription>{isEn ? 'The link expires after 7 days and can be revoked in Settings. It does not include the custom aquarium name, identity, free text or internal record IDs.' : '链接 7 天后自动失效，可在设置中提前撤销。报告不会显示鱼缸名称、用户身份、自由描述或内部记录 ID。'}</DialogDescription>
           </DialogHeader>
           <label className="grid gap-2 text-xs font-black text-ink/65">
-            分享链接
+            {isEn ? 'Share link' : '分享链接'}
             <input readOnly value={shareUrl} className="h-11 w-full rounded-xl border border-border bg-bg px-3 text-sm font-semibold text-ink" onFocus={event => event.currentTarget.select()} />
           </label>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShareUrl('')} className="min-h-11 rounded-xl">完成</Button>
-            <Button onClick={() => void navigator.clipboard.writeText(shareUrl).then(() => showToast('链接已复制。')).catch(() => showToast('复制失败，请手动复制。', 'error'))} className="min-h-11 rounded-xl">复制链接</Button>
+            <Button variant="outline" onClick={() => setShareUrl('')} className="min-h-11 rounded-xl">{isEn ? 'Done' : '完成'}</Button>
+            <Button onClick={() => void navigator.clipboard.writeText(shareUrl).then(() => showToast(isEn ? 'Link copied.' : '链接已复制。')).catch(() => showToast(isEn ? 'Copy failed. Copy the link manually.' : '复制失败，请手动复制。', 'error'))} className="min-h-11 rounded-xl">{isEn ? 'Copy link' : '复制链接'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

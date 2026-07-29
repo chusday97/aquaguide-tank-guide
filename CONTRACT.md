@@ -528,6 +528,9 @@ interface WaterProfileEstimate {
 - `aquarium_share_reports` 只保存登录用户主动生成的七天脱敏快照和令牌哈希；公开读取必须经过 Express，前端不得直接读表。
 - 分享快照采用字段白名单：健康、环境概况、物种汇总、结构化巡检和本周计划。用户身份、自定义鱼缸名、内部 ID、自由描述、纪念原因和 AI 原始回复禁止进入快照。
 - 原始分享令牌不落库；撤销或过期后公开接口不得返回快照。
+- 普通用户没有 `aquarium_share_reports` 的 UPDATE 权限；撤销只允许 Express 在验证登录用户和 `owner_id` 后通过服务端凭据写入，快照、令牌哈希、鱼缸和失效时间对用户不可修改。
+- 公开令牌接口的成功与错误响应均使用 `Cache-Control: no-store`，避免撤销后继续命中历史响应。
+- 生产环境必须配置 `SHARE_TOKEN_SECRET` 和可信 `WEB_BASE_URL`；开发环境可分别回退服务端密钥与本地站点。
 
 ```text
 POST   /api/v1/aquariums/:id/share-reports
