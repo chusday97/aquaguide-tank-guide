@@ -4,9 +4,9 @@ import { chromium } from 'playwright';
 const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
 const browser = await chromium.launch({ headless: true });
 
-const seed = async page => {
-  await page.addInitScript(() => {
-    localStorage.setItem('aquaguide_locale', 'zh-CN');
+const seed = async (page, locale = 'zh-CN') => {
+  await page.addInitScript(selectedLocale => {
+    localStorage.setItem('aquaguide_locale', selectedLocale);
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify({
       version: 1,
       currentAquariumId: 'feedback-tank',
@@ -32,7 +32,7 @@ const seed = async page => {
       onboarding: { version: 1, status: 'completed', viewedSpecies: true, aquariumConfigured: true, taskCardDismissed: false },
       updatedAt: new Date().toISOString(),
     }));
-  });
+  }, locale);
 };
 
 try {
@@ -61,9 +61,16 @@ try {
     });
     await page.goto(`${baseUrl}/settings#feedback`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: '意见反馈' }).waitFor();
+    const settingsWorkspace = await page.locator('[data-settings-workspace]').evaluate(element => getComputedStyle(element).gridTemplateColumns);
+    if (device.isMobile) {
+      assert.equal(await page.locator('[data-settings-navigation]').isVisible(), false, '手机设置页不应显示桌面分类侧栏');
+    } else {
+      assert.match(settingsWorkspace, /^210px /, '桌面设置页应使用紧凑双栏工作区');
+      assert.equal(await page.locator('[data-settings-navigation]').isVisible(), true, '桌面应显示设置分类侧栏');
+    }
     const submit = page.getByRole('button', { name: '提交反馈' });
     await submit.click();
-    await page.getByRole('alert').waitFor();
+    await page.locator('#feedback').getByRole('alert').waitFor();
     assert.equal(await page.getByRole('textbox', { name: '你的意见' }).evaluate(element => element === document.activeElement), true, 'invalid feedback must focus the textarea');
     await page.getByRole('textbox', { name: '你的意见' }).fill('希望风险处理可以继续保留明确的三步操作。');
     await page.getByText('使用问题', { exact: true }).click();
@@ -89,7 +96,7 @@ try {
   const failureMessage = '提交失败时需要保留这段文字，方便用户重试。';
   await failureInput.fill(failureMessage);
   await failurePage.getByRole('button', { name: '提交反馈' }).click();
-  await failurePage.getByRole('alert').waitFor();
+  await failurePage.locator('#feedback').getByRole('alert').waitFor();
   assert.equal(await failureInput.inputValue(), failureMessage, 'failed submission must preserve user input');
   failurePage.once('dialog', dialog => dialog.dismiss());
   const guideNavigation = failurePage.locator('.desktop-sidebar').getByRole('button').filter({ hasText: /图鉴|Species/ }).first();
@@ -99,6 +106,14 @@ try {
   await guideNavigation.click();
   await failurePage.waitForURL(/\/encyclopedia/);
   await failurePage.close();
+
+  const englishNarrow = await browser.newPage({ viewport: { width: 600, height: 900 }, locale: 'en-US' });
+  await seed(englishNarrow, 'en');
+  await englishNarrow.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
+  await englishNarrow.getByRole('heading', { name: 'Feedback' }).waitFor();
+  assert.equal(await englishNarrow.locator('[data-settings-navigation]').isVisible(), false, '600px desktop should keep a compact single-column settings workspace');
+  assert.equal(await englishNarrow.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, '600px English settings must not overflow');
+  await englishNarrow.close();
 
   console.log('settings feedback verified: validation, metadata, success, responsive layout and failure recovery');
 } finally {
