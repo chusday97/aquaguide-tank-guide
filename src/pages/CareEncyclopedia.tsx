@@ -1397,8 +1397,9 @@ const buildStepDiagnosisResult = ({
     observe.push(isEn ? 'Monitor for continuous deaths or failed molts' : '是否出现连续死亡或蜕壳失败');
   }
 
-  const unknownCount = Object.values(answers).filter(value => value === 'unknown').length;
-  if (unknownCount >= 3) {
+  const unknownCount = questionList.filter(question => answers[question.id] === 'unknown').length;
+  const unknownThreshold = Math.max(1, Math.ceil(questionList.length * 0.67));
+  if (unknownCount >= unknownThreshold) {
     liftRisk('unknown');
     causes.push(isEn ? 'High amount of unsure answers in current session' : '当前回答中不确定信息较多');
     actions.push(isEn ? 'Observe for 2-4 hours, verify water change, feeding, and water stats' : '先观察 2-4 小时，并补充水质、换水和喂食信息');
@@ -1425,7 +1426,12 @@ const buildStepDiagnosisResult = ({
     riskLevel: resolvedRiskLevel,
     riskLabel,
     conclusion,
-    causes: Array.from(new Set(causes.length > 0 ? causes : [isEn ? 'Mild environmental fluctuation or info insufficient' : '信息不足或轻微环境波动'])).slice(0, 5),
+    causes: Array.from(new Set(causes.length > 0
+      ? causes
+      : [resolvedRiskLevel === 'unknown'
+          ? (isEn ? 'Key observations are still missing' : '关键观察信息尚未确认')
+          : (isEn ? 'No obvious abnormal signal in the current answers' : '本次回答暂未发现明显异常信号')]
+    )).slice(0, 5),
     todayActions: Array.from(new Set(actions.length > 0 ? actions : [isEn ? 'Keep environment stable' : '保持环境稳定', isEn ? 'Observe for 24 hours' : '观察 24 小时', isEn ? 'Check filtration and temperature' : '检查过滤和水温'])).slice(0, 5),
     avoidActions: Array.from(new Set(avoid)).slice(0, 5),
     observeItems: Array.from(new Set(observe)).slice(0, 5),
@@ -2422,9 +2428,11 @@ function CareArticleCard({
 function StepDiagnosisPanel({
   topic,
   onScheduleFollowUp,
+  followUpFeedback,
 }: {
   topic: CareTopic;
   onScheduleFollowUp: () => void;
+  followUpFeedback?: string;
 }) {
   const { t } = useTranslation();
   const isEn = i18n.language === 'en';
@@ -2476,7 +2484,9 @@ function StepDiagnosisPanel({
       avoidActions: result.avoidActions,
       possibleCauses: result.causes,
       observeItems: result.observeItems,
-      missingInfo: [],
+      missingInfo: diagnosisQuestions
+        .filter(question => diagnosisState.answers[question.id] === 'unknown')
+        .map(question => question.question),
       evidence: result.evidence,
       keyMetrics: [],
       matchedRules: [],
@@ -2498,7 +2508,7 @@ function StepDiagnosisPanel({
             : (isEn ? 'View Observation Checklist' : '查看观察清单'),
       primaryActionType: 'section',
     });
-  }, [currentLivestock, diagnosisState.answers, diagnosisState.result, targetAquarium?.name, isEn]);
+  }, [currentLivestock, diagnosisQuestions, diagnosisState.answers, diagnosisState.result, targetAquarium?.name, isEn]);
 
   const updateAnswer = (key: keyof StepDiagnosisAnswers, value: StepDiagnosisAnswerValue) => {
     setIsResultActionOpen(false);
@@ -2691,6 +2701,16 @@ function StepDiagnosisPanel({
               <Button type="button" onClick={onScheduleFollowUp} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
                 {isEn ? 'Schedule a Follow-up Check' : '设置一次复查提醒'}
               </Button>
+              {diagnosisState.result.riskLevel === 'unknown' && (
+                <Button type="button" variant="outline" onClick={resetDiagnosis} className="mt-2 h-11 w-full rounded-full border-emerald-200 bg-white text-sm font-black text-emerald-700 hover:bg-emerald-50">
+                  {isEn ? 'Complete the Missing Checks' : '重新补充关键检查'}
+                </Button>
+              )}
+              {followUpFeedback && (
+                <div role="status" className="mt-2 rounded-[15px] bg-emerald-50 px-3 py-2.5 text-center text-[11px] font-black text-emerald-800">
+                  {followUpFeedback}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -2813,7 +2833,7 @@ export function CareArticleDetail({
 
   const getScheduledFor = (label = '') => {
     const scheduled = new Date();
-    const hourMatch = label.match(/(\d+)\s*(?:小时|hour)/i);
+    const hourMatch = label.match(/(\d+)\s*(?:小时|hours?|h\b)/i);
     const dayMatch = label.match(/(\d+)\s*(?:天后|day)/i);
     if (hourMatch) scheduled.setHours(scheduled.getHours() + Number(hourMatch[1]));
     else if (/明天|tomorrow/i.test(label)) scheduled.setDate(scheduled.getDate() + 1);
@@ -2823,7 +2843,7 @@ export function CareArticleDetail({
 
   const addReminder = (label?: string, storageType: string = meta.guideType, successMessage?: string) => {
     try {
-      upsertCareReminder({
+      const reminder = upsertCareReminder({
         sourceTopicId: topic.id,
         title: getDisplayTitle(topic),
         type: storageType,
@@ -2831,11 +2851,17 @@ export function CareArticleDetail({
         aquariumId: activeAquarium?.id,
         label,
       });
-      setCtaFeedback(successMessage || (isEn ? 'Reminder scheduled' : '提醒已设置'));
+      const scheduledLabel = new Intl.DateTimeFormat(isEn ? 'en' : 'zh-CN', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(reminder.scheduledFor));
+      setCtaFeedback(`${successMessage || (isEn ? 'Reminder scheduled' : '提醒已设置')} · ${scheduledLabel}`);
     } catch (error) {
       setCtaFeedback(error instanceof Error ? error.message : (isEn ? 'Failed to save reminder' : '提醒保存失败'));
     }
-    window.setTimeout(() => setCtaFeedback(''), 1800);
+    window.setTimeout(() => setCtaFeedback(''), 5000);
   };
 
   const openReminderSheet = (kind: 'newFish' | 'waterChange' | 'stage' | 'fry' | 'general') => {
@@ -3081,6 +3107,7 @@ export function CareArticleDetail({
               <StepDiagnosisPanel
                 topic={topic}
                 onScheduleFollowUp={() => openReminderSheet('general')}
+                followUpFeedback={ctaFeedback}
               />
             ) : (
               <section className="mt-4 rounded-[20px] border border-emerald-100 bg-[#F8FCF8] p-4">

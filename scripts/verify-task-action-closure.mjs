@@ -70,7 +70,7 @@ try {
     if (path.includes('livestock')) {
       const dialog = page.getByRole('dialog').filter({ hasText: expected });
       await dialog.waitFor();
-      await page.keyboard.press('Escape');
+      await dialog.getByRole('button', { name: '关闭', exact: true }).click();
       await dialog.waitFor({ state: 'hidden' });
       await page.goto(`${baseUrl}${path}`, { waitUntil: 'domcontentloaded' });
       await page.getByRole('dialog').filter({ hasText: expected }).waitFor();
@@ -110,8 +110,29 @@ try {
     await panel.locator('[data-care-assessment-next]').waitFor();
     await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).click();
     await page.getByText('设置养护提醒', { exact: true }).waitFor();
+    await page.getByRole('button', { name: '确认设置', exact: true }).click();
+    await panel.getByRole('status').filter({ hasText: '养护提醒已设置' }).waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, 'mobile care assessment overflowed horizontally');
     assert.equal(errors.length, 0, `care assessment page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
+  {
+    const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
+    await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
+    await panel.getByRole('button', { name: '追咬打架', exact: true }).click();
+    const unknownOptions = panel.getByRole('button', { name: '不确定', exact: true });
+    assert.equal(await unknownOptions.count(), 2, '追咬自查应显示两道有效问题');
+    for (let index = 0; index < 2; index += 1) {
+      await unknownOptions.nth(index).click();
+    }
+    await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
+    await panel.getByText('信息不足', { exact: true }).waitFor();
+    await panel.getByRole('button', { name: '查看需要补充的检查', exact: true }).click();
+    await panel.getByRole('button', { name: '重新补充关键检查', exact: true }).click();
+    await panel.getByText('一次填完 · 已回答 0/2', { exact: true }).waitFor();
+    assert.equal(errors.length, 0, `unknown care assessment page errors: ${errors.join('; ')}`);
     await page.close();
   }
 
