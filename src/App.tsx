@@ -38,6 +38,7 @@ import {
 } from './services/aquarium/aquarium-navigation.service';
 import { SearchAutocomplete } from './components/search/SearchAutocomplete';
 import type { SearchSuggestion } from './services/search/search-suggestions.service';
+import { taskRoutes } from './services/navigation/task-routes';
 
 const loadAquarium = () => import('./pages/Aquarium');
 const loadEncyclopedia = () => import('./pages/Encyclopedia');
@@ -202,8 +203,8 @@ const desktopSubMenus: Record<string, Array<{
   path?: string;
 }>> = {
   '/encyclopedia': [
-    { id: 'browse', labelKey: 'nav.browse', descriptionKey: 'nav.browseDescription', icon: BookOpen, path: '/encyclopedia?mode=browse' },
-    { id: 'compatibility', labelKey: 'nav.compatibility', descriptionKey: 'nav.compatibilityDescription', icon: Activity, path: '/encyclopedia?mode=compatibility' },
+    { id: 'browse', labelKey: 'nav.browse', descriptionKey: 'nav.browseDescription', icon: BookOpen, path: taskRoutes.encyclopedia.browse },
+    { id: 'compatibility', labelKey: 'nav.compatibility', descriptionKey: 'nav.compatibilityDescription', icon: Activity, path: taskRoutes.encyclopedia.compatibility },
   ],
   '/collection': [
     { id: 'wishlist', labelKey: 'nav.wishlist', descriptionKey: 'nav.wishlistDescription', icon: Heart, path: '/collection/wishlist' },
@@ -511,7 +512,7 @@ function DesktopSidebar({
               )}
               <button
                 type="button"
-                onClick={() => navigateToRoute('/aquarium?action=create')}
+                onClick={() => navigateToRoute(taskRoutes.aquarium.create())}
                 aria-label={t('aquarium.newTank')}
                 title={collapsed ? t('aquarium.newTank') : undefined}
                 className={cn(

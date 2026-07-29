@@ -1,5 +1,11 @@
 export const taskRoutes = {
   aquarium: {
+    create: (source?: string) => source
+      ? `/aquarium?action=create&source=${encodeURIComponent(source)}`
+      : '/aquarium?action=create',
+    setup: (source?: string) => source
+      ? `/aquarium?action=setup&source=${encodeURIComponent(source)}`
+      : '/aquarium?action=setup',
     addSpecies: (speciesId?: string) => speciesId
       ? `/aquarium?action=add-species&species=${encodeURIComponent(speciesId)}`
       : '/aquarium?action=add-species',

@@ -10,6 +10,7 @@ import {
   getOnboardingTaskProgress,
   syncOnboardingCompletion,
 } from '../../services/onboarding/onboarding.service';
+import { taskRoutes } from '../../services/navigation/task-routes';
 
 export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 'sidebar' }) {
   const { t } = useTranslation();
@@ -30,10 +31,10 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
   }, [progress.complete]);
 
   const tasks = useMemo(() => [
-    { done: progress.aquariumReady, label: t('onboarding.taskTank'), route: '/aquarium?action=setup&source=onboarding' },
+    { done: progress.aquariumReady, label: t('onboarding.taskTank'), route: taskRoutes.aquarium.setup('onboarding') },
     { done: progress.speciesViewed, label: t('onboarding.taskViewSpecies'), route: '/encyclopedia?difficulty=Easy&source=onboarding' },
     { done: progress.speciesChosen, label: t('onboarding.taskChooseSpecies'), route: '/encyclopedia?difficulty=Easy&source=onboarding' },
-    { done: progress.dailyCheckDone, label: t('onboarding.taskCheck'), route: '/aquarium?action=daily-check&source=onboarding' },
+    { done: progress.dailyCheckDone, label: t('onboarding.taskCheck'), route: `${taskRoutes.aquarium.dailyCheck}&source=onboarding` },
   ], [progress, t]);
   const nextTask = tasks.find(task => !task.done);
 

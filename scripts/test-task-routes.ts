@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import { isAquariumTaskAction, taskRoutes } from '../src/services/navigation/task-routes';
 
 assert.equal(taskRoutes.aquarium.addSpecies(), '/aquarium?action=add-species');
+assert.equal(taskRoutes.aquarium.create(), '/aquarium?action=create');
+assert.equal(taskRoutes.aquarium.create('onboarding'), '/aquarium?action=create&source=onboarding');
+assert.equal(taskRoutes.aquarium.setup('onboarding'), '/aquarium?action=setup&source=onboarding');
 assert.equal(
   taskRoutes.aquarium.addSpecies('species / 1'),
   '/aquarium?action=add-species&species=species%20%2F%201',

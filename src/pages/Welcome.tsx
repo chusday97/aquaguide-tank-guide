@@ -2,6 +2,7 @@ import { ArrowRight, BookOpen, Droplets } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { chooseOnboardingGoal, skipOnboarding } from '../services/onboarding/onboarding.service';
+import { taskRoutes } from '../services/navigation/task-routes';
 
 export default function WelcomePage() {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export default function WelcomePage() {
   const choose = (goal: 'build_tank' | 'browse_species') => {
     chooseOnboardingGoal(goal);
     navigateToRoute(goal === 'build_tank'
-      ? '/aquarium?action=create&source=onboarding'
+      ? taskRoutes.aquarium.create('onboarding')
       : '/encyclopedia?difficulty=Easy&source=onboarding');
   };
 

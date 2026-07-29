@@ -453,7 +453,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
           navigate(taskRoutes.encyclopedia.compatibility);
         }}
         onViewInTank={() => navigate(taskRoutes.aquarium.livestock)}
-        onOpenTankSettings={(panel) => navigate(currentAquarium ? taskRoutes.aquarium.settings(panel) : '/aquarium?action=create')}
+        onOpenTankSettings={(panel) => navigate(currentAquarium ? taskRoutes.aquarium.settings(panel) : taskRoutes.aquarium.create())}
       />
 
       <Dialog open={Boolean(selectedTopic)} onOpenChange={(open) => { if (!open) { setSelectedTopic(null); clearDeepLinkItem(); restoreCard(); } }}>
