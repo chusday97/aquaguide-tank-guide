@@ -148,6 +148,36 @@ try {
   }
 
   {
+    const { page, errors } = await open('/aquarium?action=daily-check');
+    const dialog = page.getByRole('dialog').filter({ hasText: '每日鱼缸检查' });
+    await dialog.waitFor();
+    for (const answer of ['正常', '清澈', '没有泡沫或油膜', '没有异味', '正常游动和进食', '没有特别操作']) {
+      await dialog.getByRole('button', { name: answer, exact: true }).click();
+    }
+    await dialog.getByRole('button', { name: '生成检查结果', exact: true }).click();
+    const saveResult = dialog.getByRole('button', { name: /^(保存今天记录|查看补救步骤)$/ });
+    await saveResult.waitFor();
+
+    await dialog.getByRole('button', { name: '退出', exact: true }).click();
+    const exitConfirmation = page.getByRole('dialog').filter({ hasText: '退出本次检查？' });
+    await exitConfirmation.waitFor();
+    await exitConfirmation.getByRole('button', { name: '继续填写', exact: true }).click();
+    await exitConfirmation.waitFor({ state: 'hidden' });
+    await saveResult.waitFor();
+
+    await saveResult.click();
+    const visibleDialogs = page.getByRole('dialog');
+    if (await visibleDialogs.count() > 1) {
+      await visibleDialogs.last().getByRole('button', { name: '关闭', exact: true }).click();
+    }
+    await dialog.getByRole('button', { name: '退出', exact: true }).click();
+    await dialog.waitFor({ state: 'hidden' });
+    assert.equal(await page.getByRole('dialog').filter({ hasText: '退出本次检查？' }).count(), 0, 'saved diagnosis result must close without a stale draft confirmation');
+    assert.equal(errors.length, 0, `saved daily-check page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
+  {
     const { page, errors } = await open('/collection/wishlist', 390);
     await page.getByRole('button', { name: '移除种草', exact: true }).first().click();
     const confirmation = page.getByRole('dialog').filter({ hasText: '移除这条种草？' });

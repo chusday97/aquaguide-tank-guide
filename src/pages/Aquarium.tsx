@@ -1161,6 +1161,7 @@ export default function AquariumManager() {
   const [diagnosisRecords, setDiagnosisRecords] = useState<DiagnosisRecord[]>([]);
   const [selectedDiagnosisRecord, setSelectedDiagnosisRecord] = useState<DiagnosisRecord | null>(null);
   const [diagnosisSaveMessage, setDiagnosisSaveMessage] = useState('');
+  const [isDiagnosisRecordSaved, setIsDiagnosisRecordSaved] = useState(false);
   const [dailyCheckInterpretation, setDailyCheckInterpretation] = useState<TankDailyCheckInterpretationData | null>(null);
   const [dailyCheckArticles, setDailyCheckArticles] = useState<typeof careTopicsData>([]);
   const [selectedDailyCheckArticle, setSelectedDailyCheckArticle] = useState<(typeof careTopicsData)[number] | null>(null);
@@ -2504,6 +2505,7 @@ export default function AquariumManager() {
     setDiagnosisFullText('');
     setDiagnosisText('');
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
     setDailyCheckInterpretation(null);
     setDailyCheckArticles([]);
   };
@@ -2518,6 +2520,7 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
     setSelectedDiagnosisRecord(null);
     setCareDiagnosisContext(null);
     setIsDiagnosing(false);
@@ -2542,6 +2545,7 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
     setSelectedDiagnosisRecord(null);
     setCareDiagnosisContext(null);
     setIsDiagnosing(false);
@@ -2564,6 +2568,7 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
     setSelectedDiagnosisRecord(null);
     setCareDiagnosisContext(null);
     setDailyCheckInterpretation(null);
@@ -2615,6 +2620,7 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers(prev => ({ ...prev, [questionId]: answer }));
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
   };
 
   const handleDiagnosisChoice = (questionId: string, answer: string) => {
@@ -2665,6 +2671,7 @@ export default function AquariumManager() {
     setDiagnosisResult(result);
     setDiagnosisMode('result');
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
     setDailyCheckInterpretation(null);
     setDailyCheckArticles([]);
 
@@ -2812,6 +2819,7 @@ export default function AquariumManager() {
     setDiagnosisSaveMessage(problemType === '巡检'
       ? existingDailyRecord ? '已更新今天的检查记录。' : '已保存今天的检查记录。'
       : '已保存到诊断记录，下次诊断会参考最近记录。');
+    setIsDiagnosisRecordSaved(true);
     showToast(problemType === '巡检'
       ? existingDailyRecord ? '已更新今天的检查记录' : '已保存今天的检查记录'
       : '已保存本次诊断');
@@ -2844,6 +2852,7 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
     setSelectedDiagnosisRecord(null);
     setIsDiagnosisOpen(true);
   }, [activeAquarium?.id]);
@@ -3925,7 +3934,7 @@ export default function AquariumManager() {
   const dailyCheckAnsweredCount = dailyCheckRequiredQuestions.filter(question => Boolean(diagnosisQuizAnswers[question.id])).length;
   const isDailyCheckReady = dailyCheckRequiredQuestions.length > 0
     && dailyCheckAnsweredCount === dailyCheckRequiredQuestions.length;
-  const hasUnsavedDiagnosisDraft = !diagnosisResult
+  const hasUnsavedDiagnosisDraft = !isDiagnosisRecordSaved
     && Object.values(diagnosisQuizAnswers).some(value => value.trim().length > 0);
   const requestDiagnosisClose = () => {
     if (hasUnsavedDiagnosisDraft) {
@@ -3939,6 +3948,7 @@ export default function AquariumManager() {
     setDiagnosisText('');
     setDiagnosisFullText('');
     setDiagnosisSaveMessage('');
+    setIsDiagnosisRecordSaved(false);
     setDiagnosisMode('home');
     setIsDiagnosisExitConfirmOpen(false);
     setIsDiagnosisOpen(false);
@@ -5157,6 +5167,7 @@ export default function AquariumManager() {
                           setDiagnosisAquariumId(aquarium.id);
                           setDiagnosisResult(null);
                           setDiagnosisSaveMessage('');
+                          setIsDiagnosisRecordSaved(false);
                         }}
                         className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-black transition-colors ${
                           diagnosisTankSummary.aquariumId === aquarium.id
