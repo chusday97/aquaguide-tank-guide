@@ -432,7 +432,7 @@ export function SpeciesDetailDialog({
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [expandedSection, setExpandedSection] = useState<'fit' | 'compatibility' | 'care' | null>(null);
+  const [expandedSection, setExpandedSection] = useState<'fit' | 'compatibility' | null>(null);
   const [inlineFeedback, setInlineFeedback] = useState('');
   const [isDeathFormOpen, setIsDeathFormOpen] = useState(false);
   const [deathDate, setDeathDate] = useState(getLocalDateValue);
@@ -447,7 +447,7 @@ export function SpeciesDetailDialog({
   const [isExportingCard, setIsExportingCard] = useState(false);
   const [exportError, setExportError] = useState('');
   const deathReasonRef = useRef<HTMLTextAreaElement | null>(null);
-  const careSectionButtonRef = useRef<HTMLButtonElement | null>(null);
+  const careSectionButtonRef = useRef<HTMLElement | null>(null);
   const exportCardRef = useRef<HTMLDivElement | null>(null);
   const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);
   const displayFit = selectedFit;
@@ -635,7 +635,6 @@ export function SpeciesDetailDialog({
     }
     if (owned || displayFit.alreadyInTank || displayFit.status === 'alreadyInTank') {
       if (source === 'aquarium') {
-        setExpandedSection('care');
         window.requestAnimationFrame(() => {
           careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
           careSectionButtonRef.current?.focus({ preventScroll: true });
@@ -849,6 +848,23 @@ export function SpeciesDetailDialog({
                         </div>
                         <p className="mt-3 hidden text-[12px] font-bold leading-relaxed text-ink/62 min-[760px]:block">{getLocalizedSpeciesRole(fish, t)}</p>
 
+                        <section data-species-feeding-summary className="mt-2 rounded-[16px] border border-amber-100 bg-amber-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3" aria-labelledby="species-feeding-summary-title">
+                          <div className="flex items-center justify-between gap-2">
+                            <h3 id="species-feeding-summary-title" className="text-[11px] font-black text-amber-900">{isEn ? 'Feeding at a glance' : '喂养速览'}</h3>
+                            {carePresentation && (
+                              <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
+                                {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1 break-words text-[11px] font-bold leading-4 text-ink/70">{fish.feedingProfile?.recommendedFoods || fish.diet}</p>
+                          <div className="mt-1.5 grid grid-cols-2 gap-1.5 text-[10px] font-semibold leading-4 text-ink/58">
+                            <div className="rounded-[10px] bg-white/80 px-2 py-1.5"><strong className="block text-ink/72">{isEn ? 'Frequency' : '频率'}</strong>{fish.feedingProfile?.feedingFrequency || (isEn ? 'Feed a small amount daily' : '每日少量投喂')}</div>
+                            <div className="rounded-[10px] bg-white/80 px-2 py-1.5"><strong className="block text-ink/72">{isEn ? 'Portion' : '单次份量'}</strong>{fish.feedingProfile?.portionRule || (isEn ? 'Finish within a few minutes' : '以数分钟内吃完为准')}</div>
+                          </div>
+                          <p className="mt-1.5 break-words text-[10px] font-semibold leading-4 text-amber-950/62"><strong>{isEn ? 'Avoid: ' : '避免：'}</strong>{fish.feedingProfile?.avoidFoods || (isEn ? 'Overfeeding and uneaten food' : '过量投喂和长期残饵')}</p>
+                        </section>
+
                         <div data-visual-result-status={mapFitStatus(displayFit.status)} className={`mt-2 rounded-[16px] border p-2.5 min-[760px]:mt-4 min-[760px]:rounded-[18px] min-[760px]:p-3 ${
                           displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
                             ? 'border-emerald-100 bg-emerald-50/85'
@@ -910,6 +926,40 @@ export function SpeciesDetailDialog({
                         </div>
                       </div>
                     </div>
+                  </section>
+
+                  <section
+                    ref={careSectionButtonRef}
+                    tabIndex={-1}
+                    data-species-environment-summary
+                    className="mt-3 rounded-[18px] border border-border bg-white p-3 outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                    aria-labelledby="species-environment-summary-title"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <h3 id="species-environment-summary-title" className="text-[13px] font-black text-ink">{isEn ? 'Environment at a glance' : '环境速览'}</h3>
+                        <p className="mt-0.5 text-[10px] font-semibold text-ink/45">{isEn ? 'The essential conditions to keep stable' : '日常需要保持稳定的基础条件'}</p>
+                      </div>
+                      <Waves className="h-5 w-5 shrink-0 text-sky-600" />
+                    </div>
+                    <div className="mt-2 grid grid-cols-2 gap-2 min-[760px]:grid-cols-4">
+                      {[
+                        { label: isEn ? 'Temperature' : '水温', value: fish.waterTemperature },
+                        { label: isEn ? 'Water' : '水体', value: selectedTaxonomy?.waterType || fish.category },
+                        { label: isEn ? 'Space' : '空间', value: fish.tankSize },
+                        { label: isEn ? 'Water change' : '换水', value: t('encyclopedia.careWaterChangeValue', { days: fish.waterChangeCycle }) },
+                      ].map(item => (
+                        <div key={item.label} className="min-w-0 rounded-[13px] bg-bg p-2.5">
+                          <div className="text-[9px] font-black text-ink/40">{item.label}</div>
+                          <div className="mt-1 break-words text-[11px] font-black leading-4 text-ink/72">{item.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {fish.feedingProfile?.specialNotes && (
+                      <p className="mt-2 rounded-[12px] bg-emerald-50 px-3 py-2 text-[10px] font-semibold leading-4 text-emerald-950/68">
+                        <strong>{isEn ? 'Observe: ' : '观察：'}</strong>{fish.feedingProfile.specialNotes}
+                      </p>
+                    )}
                   </section>
 
                   {speciesGroup && speciesGroupVariants.length > 1 && onSelectSpecies && (
@@ -1053,60 +1103,17 @@ export function SpeciesDetailDialog({
                       )}
                     </section>
 
-                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
-                      <button
-                        ref={careSectionButtonRef}
-                        type="button"
-                        aria-expanded={expandedSection === 'care'}
-                        onClick={() => setExpandedSection(current => current === 'care' ? null : 'care')}
-                        className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
-                      >
-                        <span className="min-w-0">
-                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Care essentials' : '养护要点'}</span>
-                          <span className="mt-0.5 block text-[11px] font-bold text-ink/45">{isEn ? 'Feeding, environment and observation' : '喂食、环境与观察重点'}</span>
-                        </span>
-                        <ChevronRight className={`h-5 w-5 shrink-0 text-ink/35 transition-transform ${expandedSection === 'care' ? 'rotate-90' : ''}`} />
-                      </button>
-                      {expandedSection === 'care' && (
-                        <div className="grid gap-3 border-t border-border/70 p-3">
-                          {carePresentation && (
-                            <>
-                              <div className="flex items-center justify-between gap-3">
-                                <span className="text-[12px] font-black text-ink">{t('encyclopedia.feedingLabel')}</span>
-                                <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
-                                  {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
-                                </span>
-                              </div>
-                              <div className="grid gap-2 min-[760px]:grid-cols-2">
-                                {carePresentation.feedingItems.slice(0, 3).map(item => (
-                                  <div key={item.label} className="rounded-[14px] bg-bg p-3">
-                                    <div className="text-[10px] font-black text-ink/42">{translateLabel(item.label)}</div>
-                                    <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/65">{item.value}</p>
-                                  </div>
-                                ))}
-                                {carePresentation.environmentItems.slice(0, 3).map(item => (
-                                  <div key={item.label} className="rounded-[14px] bg-bg p-3">
-                                    <div className="text-[10px] font-black text-ink/42">{translateLabel(item.label)}</div>
-                                    <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/65">{item.label === '换水周期' ? t('encyclopedia.careWaterChangeValue', { days: fish.waterChangeCycle }) : item.value}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            </>
-                          )}
-                          {sexIdentificationGuide && (
-                            <details className="rounded-[14px] border border-emerald-100 bg-emerald-50/55 p-3">
-                              <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
-                                {sexIdentificationGuide.title === '暂无可靠的公母辨别资料' ? t('encyclopedia.sexTitlePlaceholder') : sexIdentificationGuide.title}
-                                <ChevronRight className="h-4 w-4 text-ink/35" />
-                              </summary>
-                              <p className="mt-3 text-[11px] font-bold leading-relaxed text-ink/58">
-                                {sexIdentificationGuide.summary === '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。' ? t('encyclopedia.sexSummaryPlaceholder') : sexIdentificationGuide.summary}
-                              </p>
-                            </details>
-                          )}
-                        </div>
-                      )}
-                    </section>
+                    {sexIdentificationGuide && (
+                      <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          {sexIdentificationGuide.title === '暂无可靠的公母辨别资料' ? t('encyclopedia.sexTitlePlaceholder') : sexIdentificationGuide.title}
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <p className="mt-2 text-[11px] font-bold leading-relaxed text-ink/58">
+                          {sexIdentificationGuide.summary === '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。' ? t('encyclopedia.sexSummaryPlaceholder') : sexIdentificationGuide.summary}
+                        </p>
+                      </details>
+                    )}
                   </div>
 
                   {(detailFeedback || inlineFeedback) && (
