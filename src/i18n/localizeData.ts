@@ -224,7 +224,7 @@ export const englishTranslations: Record<string, SpeciesTranslation> = {
 };
 
 export const applyLocalization = (lng: string) => {
-  const isEn = lng === 'en';
+  const isEn = Boolean(lng?.startsWith('en'));
   
   fishData.forEach(fish => {
     // 1. Initialize original cache if not exists
