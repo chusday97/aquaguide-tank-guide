@@ -592,7 +592,7 @@ function AnimatedFishBackground() {
 
 export default function Encyclopedia() {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const filterLabelKeys: Record<string, string> = {
     '全部': 'all',
     '淡水': 'freshwater',

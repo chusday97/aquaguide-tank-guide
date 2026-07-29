@@ -133,7 +133,7 @@ function AssistantAnswer({ content, isEn }: { content: string; isEn: boolean }) 
 
 export default function AIAssistant() {
   const { i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const [messages, setMessages] = useState<Message[]>(loadSavedMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

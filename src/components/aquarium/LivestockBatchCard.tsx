@@ -54,7 +54,7 @@ const summarize = (record: AquariumFish, t: TFunction) => {
 
 export function LivestockBatchCard({ fish, record, reproductiveApplicable, onOpenDetail, onSave }: Props) {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(record);
   const [splitSource, setSplitSource] = useState<AquariumSpeciesBatch | null>(null);

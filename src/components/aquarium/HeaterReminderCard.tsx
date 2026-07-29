@@ -24,7 +24,7 @@ export function HeaterReminderCard({
   heaterSpeciesCount,
 }: HeaterReminderCardProps) {
   const { i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const weatherLocation = formatWeatherLocation(localWeather, isEn);
   const weatherTemperatureValue = localWeather?.apparentTemperatureC ?? localWeather?.temperatureC;
   const weatherTemperature = formatTemperature(weatherTemperatureValue);

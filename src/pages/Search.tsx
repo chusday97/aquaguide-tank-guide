@@ -34,7 +34,7 @@ const originalValue = (record: object, key: string) => String((record as Record<
 
 export default function SearchPage() {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = i18n.language?.startsWith('en');
   const { navigateToRoute } = useWorkspaceNavigation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') ?? '';

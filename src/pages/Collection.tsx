@@ -68,7 +68,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
   const location = useLocation();
   const { showToast } = useToast();
   const { captureContext, restoreContext } = useWorkspaceNavigation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const tabConfig = useMemo(() => [
     { id: 'wishlist' as CollectionModule, label: isEn ? 'Species Wishlist' : '种草图鉴', shortLabel: isEn ? 'Wishlist' : '种草', icon: Heart },
     { id: 'care' as CollectionModule, label: isEn ? 'Care Collection' : '养护收藏', shortLabel: isEn ? 'Care' : '养护', icon: BookOpenCheck },
@@ -256,10 +256,10 @@ export default function Collection({ module }: { module: CollectionModule }) {
     try {
       if (navigator.share) await navigator.share({ title: topic.title, text });
       else await navigator.clipboard.writeText(text);
-      showToast(i18n.language === 'en' ? (navigator.share ? 'Share panel opened' : 'Share content copied to clipboard') : (navigator.share ? '已打开分享' : '已复制分享内容'));
+      showToast(Boolean(i18n.language?.startsWith('en')) ? (navigator.share ? 'Share panel opened' : 'Share content copied to clipboard') : (navigator.share ? '已打开分享' : '已复制分享内容'));
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') return;
-      showToast(i18n.language === 'en' ? 'Share failed, please try again later' : '分享失败，请稍后重试', 'error');
+      showToast(Boolean(i18n.language?.startsWith('en')) ? 'Share failed, please try again later' : '分享失败，请稍后重试', 'error');
     }
   };
 
@@ -283,18 +283,18 @@ export default function Collection({ module }: { module: CollectionModule }) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-black text-emerald-800 shadow-sm">
-              <BookHeart className="h-3.5 w-3.5" /> {i18n.language === 'en' ? 'My Aquaria' : '自然水族册'}
+              <BookHeart className="h-3.5 w-3.5" /> {Boolean(i18n.language?.startsWith('en')) ? 'My Aquaria' : '自然水族册'}
             </div>
             <h1 id="collection-module-heading" tabIndex={-1} className="text-[24px] font-black tracking-tight text-ink focus-visible:outline-none">{tabConfig.find(item => item.id === activeTab)?.label}</h1>
             <button type="button" onClick={() => navigate('/collection')} className="mt-2 inline-flex items-center gap-1 text-[11px] font-black text-emerald-800 hover:underline">
-              {i18n.language === 'en' ? 'Back to Collection' : '返回水族册首页'}
+              {Boolean(i18n.language?.startsWith('en')) ? 'Back to Collection' : '返回水族册首页'}
             </button>
           </div>
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-emerald-800 text-white shadow-[0_14px_30px_rgba(6,78,59,0.2)]">
             <BookHeart className="h-6 w-6" />
           </div>
         </div>
-        <div className="mt-5 inline-flex rounded-full bg-white/75 px-3 py-1.5 text-[11px] font-black text-ink/55 shadow-sm">{i18n.language === 'en' ? `Total ${snapshot.counts[activeTab]} item(s)` : `共 ${snapshot.counts[activeTab]} 项`}</div>
+        <div className="mt-5 inline-flex rounded-full bg-white/75 px-3 py-1.5 text-[11px] font-black text-ink/55 shadow-sm">{Boolean(i18n.language?.startsWith('en')) ? `Total ${snapshot.counts[activeTab]} item(s)` : `共 ${snapshot.counts[activeTab]} 项`}</div>
       </header>
 
       {activeTab === 'wishlist' && (wishlistFishes.length ? (
@@ -308,18 +308,18 @@ export default function Collection({ module }: { module: CollectionModule }) {
                 <span className="mt-3 flex items-start justify-between gap-2">
                   <span className="min-w-0">
                     <span className="block truncate text-[15px] font-black text-ink">{fish.name}</span>
-                    <span className="mt-1 block truncate text-[10px] font-bold text-ink/42">{fish.category} · {fish.difficulty === 'Easy' ? (i18n.language === 'en' ? 'Beginner' : '新手适宜') : fish.difficulty === 'Medium' ? (i18n.language === 'en' ? 'Intermediate' : '进阶') : (i18n.language === 'en' ? 'Expert' : '高难度')}</span>
+                    <span className="mt-1 block truncate text-[10px] font-bold text-ink/42">{fish.category} · {fish.difficulty === 'Easy' ? (Boolean(i18n.language?.startsWith('en')) ? 'Beginner' : '新手适宜') : fish.difficulty === 'Medium' ? (Boolean(i18n.language?.startsWith('en')) ? 'Intermediate' : '进阶') : (Boolean(i18n.language?.startsWith('en')) ? 'Expert' : '高难度')}</span>
                   </span>
                   <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-ink/25" />
                 </span>
               </button>
               <button type="button" onClick={() => setPendingFishRemoval(fish)} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full border border-rose-100 bg-rose-50 text-[11px] font-black text-rose-600">
-                <HeartOff className="mr-1.5 h-3.5 w-3.5" />{i18n.language === 'en' ? 'Remove Saved' : '移除种草'}
+                <HeartOff className="mr-1.5 h-3.5 w-3.5" />{Boolean(i18n.language?.startsWith('en')) ? 'Remove Saved' : '移除种草'}
               </button>
             </article>
           ))}
         </section>
-      ) : renderEmpty(Heart, i18n.language === 'en' ? 'No Saved Species Yet' : '还没有种草生物', i18n.language === 'en' ? 'Add species you like to your favorites in the Encyclopedia, and they will show up here.' : '在图鉴中收藏想进一步了解的生物，它会出现在这里。', { label: i18n.language === 'en' ? 'Browse Encyclopedia' : '浏览图鉴', route: '/encyclopedia' }))}
+      ) : renderEmpty(Heart, Boolean(i18n.language?.startsWith('en')) ? 'No Saved Species Yet' : '还没有种草生物', Boolean(i18n.language?.startsWith('en')) ? 'Add species you like to your favorites in the Encyclopedia, and they will show up here.' : '在图鉴中收藏想进一步了解的生物，它会出现在这里。', { label: Boolean(i18n.language?.startsWith('en')) ? 'Browse Encyclopedia' : '浏览图鉴', route: '/encyclopedia' }))}
 
       {activeTab === 'care' && (careTopics.length ? (
         <section className="collection-care-grid grid gap-3">
@@ -336,12 +336,12 @@ export default function Collection({ module }: { module: CollectionModule }) {
                 </span>
               </button>
               <button type="button" onClick={() => setPendingCareRemoval(topic)} className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full border border-rose-100 bg-rose-50 text-[11px] font-black text-rose-600">
-                <HeartOff className="mr-1.5 h-3.5 w-3.5" />{i18n.language === 'en' ? 'Remove Saved' : '移除收藏'}
+                <HeartOff className="mr-1.5 h-3.5 w-3.5" />{Boolean(i18n.language?.startsWith('en')) ? 'Remove Saved' : '移除收藏'}
               </button>
             </article>
           ))}
         </section>
-      ) : renderEmpty(BookOpenCheck, i18n.language === 'en' ? 'No Saved Care Guides' : '还没有养护收藏', i18n.language === 'en' ? 'Save frequently used care guidelines from the Care Guide page, and they will appear here.' : '把常用的处理步骤收藏起来，出现问题时可以更快找到。', { label: i18n.language === 'en' ? 'Search Care Guide' : '查养护百科', route: '/care' }))}
+      ) : renderEmpty(BookOpenCheck, Boolean(i18n.language?.startsWith('en')) ? 'No Saved Care Guides' : '还没有养护收藏', Boolean(i18n.language?.startsWith('en')) ? 'Save frequently used care guidelines from the Care Guide page, and they will appear here.' : '把常用的处理步骤收藏起来，出现问题时可以更快找到。', { label: Boolean(i18n.language?.startsWith('en')) ? 'Search Care Guide' : '查养护百科', route: '/care' }))}
 
       {activeTab === 'memorial' && (snapshot.memorials.length ? (
         <section className="collection-memorial-grid grid gap-3">
@@ -359,16 +359,16 @@ export default function Collection({ module }: { module: CollectionModule }) {
                   {fish ? <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt={fish.name} className={`h-full w-full object-contain p-[8%] opacity-75 ${getSpeciesImageClass(fish)}`} loading="lazy" /> : <Skull className="h-5 w-5 text-ink/30" />}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[14px] font-black text-ink">{fish?.name || (i18n.language === 'en' ? 'Unrecognized Species' : '未匹配生物')}</span>
+                  <span className="block truncate text-[14px] font-black text-ink">{fish?.name || (Boolean(i18n.language?.startsWith('en')) ? 'Unrecognized Species' : '未匹配生物')}</span>
                   <span className="mt-1 block text-[11px] font-bold text-ink/42">{formatMemorialDate(record.date)}</span>
-                  <span className="mt-1 block truncate text-[10px] font-medium text-ink/38">{record.reason || (i18n.language === 'en' ? 'No reflection reason provided' : '尚未填写复盘原因')}</span>
+                  <span className="mt-1 block truncate text-[10px] font-medium text-ink/38">{record.reason || (Boolean(i18n.language?.startsWith('en')) ? 'No reflection reason provided' : '尚未填写复盘原因')}</span>
                 </span>
                 <ChevronRight className="h-4 w-4 text-ink/25" />
               </button>
             );
           })}
         </section>
-      ) : renderEmpty(Skull, i18n.language === 'en' ? 'No Memorials Logged' : '还没有生命纪念', i18n.language === 'en' ? 'When you log a livestock death or removal from its details page, its timeline and reflection info will be preserved here.' : '在物种详情中记录离缸或死亡后，这里会保留时间与复盘信息。', { label: i18n.language === 'en' ? 'Back to Aquarium' : '返回我的鱼缸', route: '/aquarium' }))}
+      ) : renderEmpty(Skull, Boolean(i18n.language?.startsWith('en')) ? 'No Memorials Logged' : '还没有生命纪念', Boolean(i18n.language?.startsWith('en')) ? 'When you log a livestock death or removal from its details page, its timeline and reflection info will be preserved here.' : '在物种详情中记录离缸或死亡后，这里会保留时间与复盘信息。', { label: Boolean(i18n.language?.startsWith('en')) ? 'Back to Aquarium' : '返回我的鱼缸', route: '/aquarium' }))}
 
       {activeTab === 'achievements' && (
         <section className="grid gap-3">
@@ -376,8 +376,8 @@ export default function Collection({ module }: { module: CollectionModule }) {
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] bg-emerald-700 text-white"><Medal className="h-5 w-5" /></div>
               <div>
-                <h2 className="text-[15px] font-black text-ink">{i18n.language === 'en' ? 'Badges unlock automatically' : '勋章会自动解锁，无需领取'}</h2>
-                <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/58">{i18n.language === 'en' ? 'Calculated based on your active tank setups, logs, saves, and memorials. Badges update automatically.' : '系统根据已有鱼缸、巡检、换水、收藏和复盘记录计算。完成记录后，这里会自动更新。'}</p>
+                <h2 className="text-[15px] font-black text-ink">{Boolean(i18n.language?.startsWith('en')) ? 'Badges unlock automatically' : '勋章会自动解锁，无需领取'}</h2>
+                <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/58">{Boolean(i18n.language?.startsWith('en')) ? 'Calculated based on your active tank setups, logs, saves, and memorials. Badges update automatically.' : '系统根据已有鱼缸、巡检、换水、收藏和复盘记录计算。完成记录后，这里会自动更新。'}</p>
               </div>
             </div>
           </div>
@@ -400,18 +400,18 @@ export default function Collection({ module }: { module: CollectionModule }) {
                       {achievement.unlocked && <Check className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-emerald-700 p-1 text-white" />}
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className={`rounded-full border px-2.5 py-1 text-[10px] font-black ${status === 'unlocked' ? 'border-amber-300 bg-amber-100 text-amber-900' : status === 'in_progress' ? 'border-emerald-200 bg-white text-emerald-800' : 'border-slate-200 bg-slate-100 text-slate-600'}`}>{status === 'unlocked' ? (i18n.language === 'en' ? 'Unlocked' : '已解锁') : status === 'in_progress' ? (i18n.language === 'en' ? 'In Progress' : '进行中') : (i18n.language === 'en' ? 'Not Started' : '未开始')}</span>
+                    <span className={`rounded-full border px-2.5 py-1 text-[10px] font-black ${status === 'unlocked' ? 'border-amber-300 bg-amber-100 text-amber-900' : status === 'in_progress' ? 'border-emerald-200 bg-white text-emerald-800' : 'border-slate-200 bg-slate-100 text-slate-600'}`}>{status === 'unlocked' ? (Boolean(i18n.language?.startsWith('en')) ? 'Unlocked' : '已解锁') : status === 'in_progress' ? (Boolean(i18n.language?.startsWith('en')) ? 'In Progress' : '进行中') : (Boolean(i18n.language?.startsWith('en')) ? 'Not Started' : '未开始')}</span>
                   </div>
                   <h2 className="mt-3 text-[16px] font-black text-ink">{achievement.title}</h2>
-                  <p className="mt-1 text-[11px] font-bold leading-[18px] text-ink/48">{achievement.unlocked ? (i18n.language === 'en' ? `Completed: ${achievement.description}` : `已完成：${achievement.description}`) : (i18n.language === 'en' ? `Target: ${achievement.description}` : `目标：${achievement.description}`)}</p>
+                  <p className="mt-1 text-[11px] font-bold leading-[18px] text-ink/48">{achievement.unlocked ? (Boolean(i18n.language?.startsWith('en')) ? `Completed: ${achievement.description}` : `已完成：${achievement.description}`) : (Boolean(i18n.language?.startsWith('en')) ? `Target: ${achievement.description}` : `目标：${achievement.description}`)}</p>
                   <div className="mt-4 rounded-[14px] bg-white/80 p-3">
-                    <div className="flex items-center justify-between gap-3 text-[11px] font-black text-ink/58"><span>{i18n.language === 'en' ? 'Current' : '当前'} {achievement.current}</span><span>{i18n.language === 'en' ? 'Target' : '目标'} {achievement.target}</span></div>
+                    <div className="flex items-center justify-between gap-3 text-[11px] font-black text-ink/58"><span>{Boolean(i18n.language?.startsWith('en')) ? 'Current' : '当前'} {achievement.current}</span><span>{Boolean(i18n.language?.startsWith('en')) ? 'Target' : '目标'} {achievement.target}</span></div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200"><div className={`h-full rounded-full ${status === 'unlocked' ? 'bg-amber-400' : 'bg-emerald-700'}`} style={{ width: `${progress}%` }} /></div>
-                    <p className="mt-2 text-[11px] font-black text-ink/62">{achievement.unlocked ? (i18n.language === 'en' ? 'Goal Completed' : '目标已完成') : (i18n.language === 'en' ? `${remaining} remaining` : `还差 ${remaining}`)}</p>
+                    <p className="mt-2 text-[11px] font-black text-ink/62">{achievement.unlocked ? (Boolean(i18n.language?.startsWith('en')) ? 'Goal Completed' : '目标已完成') : (Boolean(i18n.language?.startsWith('en')) ? `${remaining} remaining` : `还差 ${remaining}`)}</p>
                   </div>
                   {achievement.nextAction && (
                     <button type="button" onClick={() => navigate(achievement.nextAction!.route)} className="mt-auto h-10 w-full rounded-full bg-emerald-800 px-3 text-[11px] font-black text-white hover:bg-emerald-900">
-                      {i18n.language === 'en' ? 'Next step: ' : '下一步：'}{achievement.nextAction.label}
+                      {Boolean(i18n.language?.startsWith('en')) ? 'Next step: ' : '下一步：'}{achievement.nextAction.label}
                     </button>
                   )}
                 </article>
@@ -514,16 +514,16 @@ export default function Collection({ module }: { module: CollectionModule }) {
       <Dialog open={Boolean(pendingFishRemoval)} onOpenChange={(open) => !open && setPendingFishRemoval(null)}>
         <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
           <DialogHeader>
-            <DialogTitle>{i18n.language === 'en' ? 'Remove this saved species?' : '移除这条种草？'}</DialogTitle>
+            <DialogTitle>{Boolean(i18n.language?.startsWith('en')) ? 'Remove this saved species?' : '移除这条种草？'}</DialogTitle>
             <DialogDescription>
-              {i18n.language === 'en'
+              {Boolean(i18n.language?.startsWith('en'))
                 ? `${pendingFishRemoval?.name || 'This species'} will be removed from My Collection. You can save it again from Species later.`
                 : `“${pendingFishRemoval?.name}”会从水族册移除，之后仍可在图鉴重新收藏。`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => setPendingFishRemoval(null)} className="min-h-11">{i18n.language === 'en' ? 'Cancel' : '取消'}</Button>
-            <Button variant="destructive" onClick={removeFishFavorite} className="min-h-11">{i18n.language === 'en' ? 'Remove' : '确认移除'}</Button>
+            <Button variant="outline" onClick={() => setPendingFishRemoval(null)} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Cancel' : '取消'}</Button>
+            <Button variant="destructive" onClick={removeFishFavorite} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Remove' : '确认移除'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -531,16 +531,16 @@ export default function Collection({ module }: { module: CollectionModule }) {
       <Dialog open={Boolean(pendingCareRemoval)} onOpenChange={(open) => !open && setPendingCareRemoval(null)}>
         <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
           <DialogHeader>
-            <DialogTitle>{i18n.language === 'en' ? 'Remove this saved guide?' : '移除这篇收藏？'}</DialogTitle>
+            <DialogTitle>{Boolean(i18n.language?.startsWith('en')) ? 'Remove this saved guide?' : '移除这篇收藏？'}</DialogTitle>
             <DialogDescription>
-              {i18n.language === 'en'
+              {Boolean(i18n.language?.startsWith('en'))
                 ? `${pendingCareRemoval?.title || 'This guide'} will be removed from My Collection. You can save it again later.`
                 : `“${pendingCareRemoval?.title}”会从水族册移除，之后仍可重新收藏。`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => setPendingCareRemoval(null)} className="min-h-11">{i18n.language === 'en' ? 'Cancel' : '取消'}</Button>
-            <Button variant="destructive" onClick={removeCareFavorite} className="min-h-11">{i18n.language === 'en' ? 'Remove' : '确认移除'}</Button>
+            <Button variant="outline" onClick={() => setPendingCareRemoval(null)} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Cancel' : '取消'}</Button>
+            <Button variant="destructive" onClick={removeCareFavorite} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Remove' : '确认移除'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

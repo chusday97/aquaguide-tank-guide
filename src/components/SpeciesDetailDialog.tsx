@@ -417,7 +417,7 @@ export function SpeciesDetailDialog({
   onRecordDeath,
 }: SpeciesDetailDialogProps) {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const translateLabel = (label: string) => {
     if (label === '水体类型') return t('encyclopedia.waterType');
     if (label === '温度') return t('encyclopedia.tempLabelBasic');

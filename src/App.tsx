@@ -254,7 +254,7 @@ function BottomNavigation() {
               >
                 <Icon className={cn("mb-1 h-5 w-5", isActive ? "stroke-white" : "")} />
                 <span className="min-w-0 max-w-full leading-tight">
-                  {i18n.language === 'en' ? shortEnglishLabels[item.path] : t(item.labelKey)}
+                  {Boolean(i18n.language?.startsWith('en')) ? shortEnglishLabels[item.path] : t(item.labelKey)}
                 </span>
               </button>
             );
@@ -314,7 +314,7 @@ function DesktopSidebar({
       const ownedQuantityBySpeciesId = new Map((currentAquarium?.fishes || []).map(item => [item.fishId, item.quantity]));
       const result = searchModule.getSearchSuggestions({
         query: searchDraft,
-        locale: i18n.language === 'en' ? 'en' : 'zh-CN',
+        locale: Boolean(i18n.language?.startsWith('en')) ? 'en' : 'zh-CN',
         scope: 'global',
         species: speciesModule.fishData,
         careTopics: careModule.careTopicsData,
@@ -813,7 +813,7 @@ function CollectionEntry() {
 function NotFoundPage() {
   const { navigateToRoute } = useWorkspaceNavigation();
   const { i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   return (
     <section className="mx-auto flex min-h-[70dvh] w-full max-w-[720px] items-center justify-center px-4 py-10 text-center">
       <div className="w-full rounded-[28px] border border-white/80 bg-white p-7 shadow-sm">

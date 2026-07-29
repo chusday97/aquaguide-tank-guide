@@ -113,7 +113,7 @@ const getDifficultyLabel = (difficulty: string) => {
 
 export default function Home() {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const [defaultAquarium, setDefaultAquarium] = useState<Aquarium | null>(null);
   const [ownedFishes, setOwnedFishes] = useState<Fish[]>([]);
   const [deceasedRecords, setDeceasedRecords] = useState<DeceasedRecord[]>([]);

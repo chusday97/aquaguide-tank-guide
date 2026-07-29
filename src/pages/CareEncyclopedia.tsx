@@ -316,7 +316,7 @@ const isNewFishAcclimationTopic = (topic: CareTopic) => (
 );
 
 const getProcedureSteps = (topic: CareTopic): ProcedureStep[] => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isNewFishAcclimationTopic(topic)) {
     if (isEn) {
       return [
@@ -341,7 +341,7 @@ const getProcedureSteps = (topic: CareTopic): ProcedureStep[] => {
 };
 
 const getProcedureReminders = (topic: CareTopic): ProcedureReminder[] => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isNewFishAcclimationTopic(topic)) {
     if (isEn) {
       return [
@@ -363,7 +363,7 @@ const getProcedureReminders = (topic: CareTopic): ProcedureReminder[] => {
 };
 
 const getProcedureDetails = (topic: CareTopic): ProcedureDetail[] => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isNewFishAcclimationTopic(topic)) {
     if (isEn) {
       return [
@@ -387,7 +387,7 @@ const getProcedureDetails = (topic: CareTopic): ProcedureDetail[] => {
 };
 
 const getProcedureObservation = (topic: CareTopic) => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isNewFishAcclimationTopic(topic)) {
     return isEn
       ? 'It is recommended to quarantine and observe new fish for 3-7 days. Confirm there is no white spot, fin rot, refusal to eat or other abnormalities before releasing into the main tank.'
@@ -397,7 +397,7 @@ const getProcedureObservation = (topic: CareTopic) => {
 };
 
 const inferAvoidAlternative = (topic: CareTopic, index: number) => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const action = topic.firstSteps[index] || topic.firstSteps[0] || topic.nextStep || topic.summary;
   const cleaned = cleanCareSentence(action).replace(/^下一步建议|^Next step recommended/i, isEn ? 'Recommend' : '建议');
   return cleaned || (isEn ? 'Keep observing first, prioritize treatment methods with less impact on water temperature and quality.' : '先保持观察，优先选择对水温和水质影响更小的处理方式。');
@@ -416,7 +416,7 @@ const inferAvoidReason = (topic: CareTopic, avoidText: string) => {
 };
 
 const inferAvoidConsequence = (reason: string) => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isEn) {
     if (/oxygen|ammonia|pollution|water/i.test(reason)) return 'May trigger gasping, bottom-sitting, refusal to feed, or rapid water deterioration.';
     if (/stress|scare|fluctuate|temp/i.test(reason)) return 'May cause shock, hiding, jumping out of tank, or reduced immunity.';
@@ -491,7 +491,7 @@ const buildWarningSigns = (topic: CareTopic): CareGuideView['warningSigns'] => {
 };
 
 const buildCareGuide = (topic: CareTopic): CareGuideView => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const todayActions = topic.firstSteps.slice(0, 4).map(item => {
     const action = splitActionText(item, isEn);
     return {
@@ -650,7 +650,7 @@ const buildCareCard = (topic: CareTopic): CareCard => {
       action: item.action,
     })),
     suitableFor,
-    source: i18n.language === 'en' ? 'From AquaGuide' : '来自 AquaGuide',
+    source: Boolean(i18n.language?.startsWith('en')) ? 'From AquaGuide' : '来自 AquaGuide',
   };
 };
 
@@ -746,7 +746,7 @@ const displayTitleMap: Record<string, string> = {
 };
 
 const getDisplayTitle = (topic: CareTopic) => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isEn) {
     if (displayTitleMapEn[topic.id]) return displayTitleMapEn[topic.id];
     const title = topic.title.trim();
@@ -862,7 +862,7 @@ const getCareHomeMeta = (topic: CareTopic): CareHomeMeta => {
   return {
     topicTags: topicTags.slice(0, 1),
     actionLevel,
-    ctaLabel: i18n.language === 'en' ? 'View Guide' : actionLevelCtaMap[actionLevel],
+    ctaLabel: Boolean(i18n.language?.startsWith('en')) ? 'View Guide' : actionLevelCtaMap[actionLevel],
   };
 };
 
@@ -1323,7 +1323,7 @@ const buildStepDiagnosisResult = ({
   answers: StepDiagnosisAnswers;
   issueType: StepDiagnosisIssue;
 }): StepDiagnosisResult => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const volumeLiters = getTankVolumeLiters(aquarium);
   const hasShrimp = livestock.some(({ fish }) => /虾|shrimp|neocaridina|caridina/i.test(`${fish.name} ${fish.scientificName}`));
   const hasBetta = livestock.some(({ fish }) => /斗鱼|betta/i.test(`${fish.name} ${fish.scientificName}`));
@@ -1539,7 +1539,7 @@ const buildStepDiagnosisResult = ({
 
 export default function CareEncyclopedia() {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const navigate = useNavigate();
 
   const categoryChips = [
@@ -2345,7 +2345,7 @@ export default function CareEncyclopedia() {
 
 function CareImage({ topic, className, showPreviewHint = false }: { topic: CareTopic; className: string; showPreviewHint?: boolean }) {
   const { i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const Icon = categoryIconMap[topic.category] || HelpCircle;
   const image = getCareImage(topic, isEn);
   const visualSources = image ? getCareVisualSources(image) : null;
@@ -2378,7 +2378,7 @@ function CareShareCardPreview({
   cardRef: RefObject<HTMLDivElement | null>;
 }) {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const careCard = buildCareCard(topic);
   return (
     <div
@@ -2491,7 +2491,7 @@ function CareArticleCard({
   onToggleFavorite: (source: HTMLElement) => void;
 }) {
   const { t } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   return (
     <article className="group relative overflow-hidden rounded-[20px] bg-white p-3 text-left shadow-sm ring-1 ring-border/70">
       <button
@@ -2533,7 +2533,7 @@ function StepDiagnosisPanel({
   followUpFeedback?: string;
 }) {
   const { t } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const appState = useMemo(() => loadAppStateFromStorage(), []);
   const aquariums = appState.aquariums;
   const defaultAquariumId = appState.currentAquariumId || aquariums[0]?.id || '';
@@ -2951,7 +2951,7 @@ export function CareArticleDetail({
   activeAquarium: Aquarium | null;
 }) {
   const { t, i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const navigate = useNavigate();
   const meta = getCareGuideMeta(topic);
   const careGuide = buildCareGuide(topic);

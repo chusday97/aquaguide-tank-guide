@@ -113,7 +113,7 @@ function PreviewEmpty({
 export default function CollectionHub() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
 
   useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);

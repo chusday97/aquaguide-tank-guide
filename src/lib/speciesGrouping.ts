@@ -101,7 +101,7 @@ const getGroupName = (baseScientificName: string, representative: Fish) => {
   if (i18n.exists(i18nKey)) {
     return i18n.t(i18nKey);
   }
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isEn) {
     return MANUAL_GROUP_NAMES_EN[baseScientificName] || representative.name.replace(/[（(].*?[）)]/g, '').trim();
   }

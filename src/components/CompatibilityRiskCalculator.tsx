@@ -147,15 +147,15 @@ const getCompatibilityWaterType = (fish: Fish) => {
 const getRiskMeta = (level: CompatibilityRiskLevel) => {
   switch (level) {
     case 'not_recommended':
-      return { label: i18n.language === 'en' ? 'Avoid' : '不建议加入', tone: 'border-red-200 bg-red-50 text-red-600', iconTone: 'bg-red-500 text-white' };
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Avoid' : '不建议加入', tone: 'border-red-200 bg-red-50 text-red-600', iconTone: 'bg-red-500 text-white' };
     case 'caution':
-      return { label: i18n.language === 'en' ? 'Caution' : '谨慎尝试', tone: 'border-amber-200 bg-amber-50 text-amber-700', iconTone: 'bg-amber-500 text-white' };
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Caution' : '谨慎尝试', tone: 'border-amber-200 bg-amber-50 text-amber-700', iconTone: 'bg-amber-500 text-white' };
     case 'insufficient_data':
-      return { label: i18n.language === 'en' ? 'Info Needed' : '信息不足', tone: 'border-sky-200 bg-sky-50 text-sky-700', iconTone: 'bg-sky-500 text-white' };
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Info Needed' : '信息不足', tone: 'border-sky-200 bg-sky-50 text-sky-700', iconTone: 'bg-sky-500 text-white' };
     case 'compatible':
-      return { label: i18n.language === 'en' ? 'Compatible' : '适合', tone: 'border-emerald-200 bg-emerald-50 text-emerald-700', iconTone: 'bg-emerald-500 text-white' };
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Compatible' : '适合', tone: 'border-emerald-200 bg-emerald-50 text-emerald-700', iconTone: 'bg-emerald-500 text-white' };
     default:
-      return { label: i18n.language === 'en' ? 'Pending' : '待添加', tone: 'border-border bg-white text-ink/55', iconTone: 'bg-bg text-ink/45' };
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Pending' : '待添加', tone: 'border-border bg-white text-ink/55', iconTone: 'bg-bg text-ink/45' };
   }
 };
 
@@ -205,7 +205,7 @@ const calculateRisk = (items: SelectedCompatibilityItem[], tank?: Aquarium | nul
 
   return {
     level,
-    reasons: level === 'compatible' ? [(i18n.language === 'en' ? 'No water quality, size or temperament conflicts found.' : '当前组合未发现明显水质、体型或性情冲突。')] : reasons.slice(0, 5),
+    reasons: level === 'compatible' ? [(Boolean(i18n.language?.startsWith('en')) ? 'No water quality, size or temperament conflicts found.' : '当前组合未发现明显水质、体型或性情冲突。')] : reasons.slice(0, 5),
     nextSteps: ruleResult.suggestions,
     ruleResult,
     decision,
@@ -214,7 +214,7 @@ const calculateRisk = (items: SelectedCompatibilityItem[], tank?: Aquarium | nul
 
 const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reasons: string[]) => {
   if (species.length < 2) return '';
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Not recommended under current conditions; remove risks first.' : '当前条件下不建议加入，先移除阻断风险。';
   if (level === 'insufficient_data') return isEn ? 'Insufficient data; cannot provide a reliable evaluation.' : '信息不足，暂时无法可靠判断。';
   if (level === 'caution') return isEn ? 'Can attempt, but environment adjustments and close observation needed.' : '可以尝试，但需要调整环境并观察。';
@@ -222,7 +222,7 @@ const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reaso
 };
 
 const getResultNextAction = (level: CompatibilityRiskLevel) => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Remove red-flagged species below and recalculate.' : '先移除下方红色对象，再重新计算组合。';
   if (level === 'insufficient_data') return isEn ? 'Fill in missing details before deciding to add.' : '先补充缺失信息，再决定是否加入。';
   if (level === 'caution') return isEn ? 'Keep only checked species; review warnings before adding.' : '只保留下方勾选对象，添加前确认提醒。';
@@ -231,7 +231,7 @@ const getResultNextAction = (level: CompatibilityRiskLevel) => {
 };
 
 const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Handle Red Flags First' : '先处理阻断对象';
   if (level === 'insufficient_data') return isEn ? 'Fill in Details First' : '先补充判断信息';
   if (level === 'caution') return isEn ? 'Confirm and Add Slowly' : '确认后少量加入';
@@ -240,7 +240,7 @@ const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
 };
 
 const getPrimaryResultButtonLabel = (level: CompatibilityRiskLevel) => {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'compatible') return isEn ? 'Add Selected Species' : '添加选中的新生物';
   if (level === 'not_recommended') return isEn ? 'Reselect Stocking Mix' : '重新选择组合';
   if (level === 'insufficient_data') return isEn ? 'Update Tank Details' : '补充鱼缸信息';
@@ -251,7 +251,7 @@ const getPrimaryResultButtonLabel = (level: CompatibilityRiskLevel) => {
 const getConflictTags = (species: Fish[], reasons: string[]) => {
   if (species.length < 2) return [];
   const tags = new Set<string>();
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   if (species.some(item => item.housingMode === '建议单养')) tags.add(isEn ? 'Single Species Recommended' : '建议单养');
   if (new Set(species.map(getCompatibilityWaterType)).size > 1) tags.add(isEn ? 'Incompatible Water Type' : '水体不兼容');
   reasons.forEach(reason => {
@@ -617,7 +617,7 @@ export function CompatibilityRiskCalculator({
   aquariums = [],
   activeAquariumId = '',
 }: CompatibilityRiskCalculatorProps = {}) {
-  const isEn = i18n.language === 'en';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
   const [searchTerm, setSearchTerm] = useState('');
   const [internalSpeciesIds, setInternalSpeciesIds] = useState<string[]>([]);
   const [resultFeedback, setResultFeedback] = useState('');
