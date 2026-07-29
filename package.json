@@ -64,6 +64,7 @@
     "test:feedback-rate-limit": "node --import tsx scripts/test-feedback-rate-limit.ts",
     "test:repository-boundary": "node --import tsx scripts/test-repository-boundary.ts",
     "test:aquarium-artifacts": "node --import tsx scripts/test-aquarium-artifacts.ts",
+    "test:share-report-contract": "node --import tsx scripts/test-share-report-contract.ts",
     "test:livestock-memorial-replay": "node --import tsx scripts/test-livestock-memorial-replay.ts",
     "test:admin-content-contract": "node --import tsx scripts/test-admin-content-contract.ts",
     "content:import": "node --import tsx scripts/content-import/import-catalog.ts",

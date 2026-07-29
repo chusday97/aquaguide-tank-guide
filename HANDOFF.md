@@ -10,6 +10,14 @@
 - 验证：`lint`、API check、build、`test:aquarium-artifacts`；390px 健康卡预览和 1280px 页面无运行错误。
 - 下一步：实现七天脱敏报告的后端令牌哈希、公开读取、设置页撤销管理及公共报告下载。
 
+## 2026-07-29 七天脱敏分享 API 交接
+
+- 创建：`POST /api/v1/aquariums/:id/share-reports` 要求登录和幂等键；服务端覆盖生成/失效时间，令牌由服务端密钥和幂等上下文派生，数据库仅保存 SHA-256。
+- 管理：`GET /api/v1/share-reports` 只列出本人记录；`DELETE /api/v1/share-reports/:id` 只做撤销，不暴露原令牌。
+- 公开：`GET /api/v1/public/share-reports/:token` 通过 service role 按哈希读取，失效、撤销和无效令牌均不返回快照。
+- 隐私：Zod 白名单会剥离 owner、鱼缸自定义名称、内部 ID、自由描述和 AI 原文；专项 `test:share-report-contract` 已通过。
+- 外部门禁：真实 Supabase migration、双账号 RLS 和过期/撤销接口仍需测试项目验证。
+
 ## 2026-07-29 全局交互显性化与折叠治理交接
 
 - 当前结果：物种喂养与环境摘要、今日行动、紧急依据、单条养护计划和手机管理/学习模块均直接显示；只允许次级证据、进阶数据、超长列表剩余项和备选方案折叠。
