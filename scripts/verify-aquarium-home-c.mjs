@@ -230,7 +230,8 @@ try {
   await riskDialog.waitFor();
   assert.equal(await riskDialog.locator('ol li').count(), 3, 'risk guide must expose three concrete steps');
   assert.ok(await riskDialog.locator('img').count() >= 1, 'risk guide must visualize the affected species');
-  assert.equal(await riskDialog.locator('details').count(), 1, 'avoid actions must stay collapsed on first view');
+  assert.equal(await riskDialog.locator('details').count(), 0, 'risk dialog must not hide avoid actions');
+  await riskDialog.getByText('暂时不要这样做', { exact: true }).waitFor();
   await riskDialog.getByRole('button', { name: /调整.*数量|查看当前负载来源/ }).click();
   await riskDesktop.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
   await riskDesktop.close();
@@ -245,19 +246,9 @@ try {
     });
     await seed(phone);
     await phone.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-    const manageToggle = phone.getByRole('button', { name: 'Open management tasks' });
-    await manageToggle.waitFor();
-    assert.equal(await manageToggle.getAttribute('aria-expanded'), 'false', 'phone management zone should start collapsed');
-    const learningToggle = phone.getByRole('button', { name: 'Open learning tasks' });
-    await learningToggle.waitFor();
-    assert.equal(await learningToggle.getAttribute('aria-expanded'), 'false', 'phone learning zone should start collapsed');
-    await learningToggle.click();
-    await phone.waitForFunction(() => document.querySelector('#aquarium-learn-zone .aquarium-zone-toggle')?.getAttribute('aria-expanded') === 'true');
-    assert.equal(
-      await phone.locator('#aquarium-learn-zone .aquarium-zone-toggle').getAttribute('aria-expanded'),
-      'true',
-      'phone learning zone should expand in place',
-    );
+    assert.equal(await phone.locator('.aquarium-zone-toggle').count(), 0, 'phone task zones must not hide core content behind disclosure controls');
+    await phone.locator('#aquarium-manage-zone .aquarium-actions').waitFor();
+    await phone.locator('#aquarium-learn-zone .aquarium-discovery').waitFor();
     await phone.getByText('Daily Discovery', { exact: true }).waitFor();
     assert.equal(await phone.getByText('Tank Basics', { exact: true }).count(), 0, 'phone learning zone must not repeat tank basics');
     const phoneDiscovery = phone.locator('.aquarium-discovery-card');
@@ -284,9 +275,10 @@ try {
   await seed(deepLinkPhone);
   await deepLinkPhone.goto(`${baseUrl}/aquarium?action=livestock`, { waitUntil: 'domcontentloaded' });
   const targetedManageZone = deepLinkPhone.locator('#aquarium-manage-zone');
-  await deepLinkPhone.waitForFunction(() => document.querySelector('#aquarium-manage-zone .aquarium-zone-toggle')?.getAttribute('aria-expanded') === 'true');
-  assert.equal(await targetedManageZone.evaluate(element => element === document.activeElement), true, 'manage deep link must focus the target zone');
-  assert.equal(await targetedManageZone.evaluate(element => element.classList.contains('aquarium-zone-target')), true, 'manage deep link must highlight the target zone');
+  const livestockDialog = deepLinkPhone.getByRole('dialog').filter({ hasText: /缸内物种|Tank Livestock/ });
+  await livestockDialog.waitFor();
+  assert.equal(await livestockDialog.evaluate(element => element.contains(document.activeElement)), true, 'livestock deep link must focus the opened target dialog');
+  assert.equal(await targetedManageZone.isVisible(), true, 'manage zone must stay available behind the direct target dialog');
   await deepLinkPhone.close();
 
   const learningDeepLinkPhone = await browser.newPage({
@@ -299,7 +291,7 @@ try {
   await seed(learningDeepLinkPhone);
   await learningDeepLinkPhone.goto(`${baseUrl}/aquarium?action=care`, { waitUntil: 'domcontentloaded' });
   const targetedLearningZone = learningDeepLinkPhone.locator('#aquarium-learn-zone');
-  await learningDeepLinkPhone.waitForFunction(() => document.querySelector('#aquarium-learn-zone .aquarium-zone-toggle')?.getAttribute('aria-expanded') === 'true');
+  await learningDeepLinkPhone.waitForFunction(() => document.activeElement?.id === 'aquarium-learn-zone');
   assert.equal(await targetedLearningZone.evaluate(element => element === document.activeElement), true, 'learning deep link must focus the target zone');
   assert.equal(await targetedLearningZone.evaluate(element => element.classList.contains('aquarium-zone-target')), true, 'learning deep link must highlight the target zone');
   await learningDeepLinkPhone.close();

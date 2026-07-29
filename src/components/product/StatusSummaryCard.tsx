@@ -76,11 +76,9 @@ export type CarePlanSummaryViewModel = {
 
 type StatusSummaryCardProps = {
   action: DailyActionViewModel;
-  showWhy: boolean;
   carePlan: CarePlanSummaryViewModel;
   showCarePlan: boolean;
   onPrimaryAction: () => void;
-  onToggleWhy: () => void;
   onToggleCarePlan: () => void;
   onOpenCarePlan: (id: string) => void;
   onCompleteCarePlan: (id: string) => void;
@@ -105,11 +103,9 @@ const levelStyles: Record<AquariumStatusLevel, string> = {
 
 export function StatusSummaryCard({
   action,
-  showWhy,
   carePlan,
   showCarePlan,
   onPrimaryAction,
-  onToggleWhy,
   onToggleCarePlan,
   onOpenCarePlan,
   onCompleteCarePlan,
@@ -120,7 +116,10 @@ export function StatusSummaryCard({
   const { t } = useTranslation();
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
   const hasPrimaryAction = Boolean(action.task.primaryLabel);
-  const careItems = showCarePlan ? carePlan.visibleItems : carePlan.visibleItems.slice(0, 1);
+  const hasOverflowCarePlans = carePlan.activeCount > 1;
+  const careItems = hasOverflowCarePlans && showCarePlan
+    ? carePlan.visibleItems
+    : carePlan.visibleItems.slice(0, 1);
   const careSummary = carePlan.overdueCount > 0
     ? t('aquarium.carePlanOverdueCount', { count: carePlan.overdueCount })
     : carePlan.dueCount > 0
@@ -157,23 +156,12 @@ export function StatusSummaryCard({
       <div className="mt-4 rounded-[17px] bg-white/78 p-4">
         <h2 className="text-[18px] font-black leading-snug text-ink [text-wrap:pretty]">{action.task.title}</h2>
         <p className="mt-2 text-[12px] font-bold leading-5 text-ink/60">{action.task.reason}</p>
-
-        <button
-          type="button"
-          aria-expanded={showWhy}
-          onClick={onToggleWhy}
-          className="mt-3 inline-flex min-h-9 items-center gap-1.5 rounded-full px-2 text-[11px] font-black text-ink/52 transition-colors hover:bg-white hover:text-emerald-800"
-        >
-          {t('aquarium.why')}
-          <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${showWhy ? 'rotate-180' : ''}`} />
-        </button>
-
-        {showWhy && (
-          <div className="mt-2 rounded-[14px] border border-ink/6 bg-white/80 p-3" aria-live="polite">
+        {action.level === 'urgent' && action.reasoning.length > 0 && (
+          <div className="mt-3 rounded-[14px] border border-red-100 bg-red-50/70 p-3" aria-live="polite">
             <ul className="grid gap-2">
-              {action.reasoning.slice(0, 3).map(reason => (
+              {action.reasoning.slice(0, 2).map(reason => (
                 <li key={reason} className="flex gap-2 text-[11px] font-bold leading-5 text-ink/58">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" />
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
                   <span>{reason}</span>
                 </li>
               ))}
@@ -193,12 +181,7 @@ export function StatusSummaryCard({
       )}
 
       <section id="care-plan" className="mt-3 rounded-[17px] border border-white/80 bg-white/72 p-3 text-ink shadow-sm">
-        <button
-          type="button"
-          onClick={onToggleCarePlan}
-          aria-expanded={showCarePlan}
-          className="flex min-h-10 w-full items-center justify-between gap-3 rounded-[12px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-        >
+        <div className="flex min-h-11 w-full items-center justify-between gap-3 rounded-[12px] text-left">
           <span className="flex min-w-0 items-center gap-2.5">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
               <CalendarDays className="h-4 w-4" />
@@ -208,18 +191,26 @@ export function StatusSummaryCard({
               <span className="block truncate text-[10px] font-bold text-ink/45">{careSummary}</span>
             </span>
           </span>
-          <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-black text-ink/42">
-            {carePlan.activeCount > 1 && (showCarePlan
-              ? t('aquarium.collapse')
-              : t('aquarium.carePlanMore', { count: carePlan.activeCount - 1 }))}
-            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
-          </span>
-        </button>
+          {hasOverflowCarePlans && (
+            <button
+              type="button"
+              onClick={onToggleCarePlan}
+              aria-expanded={showCarePlan}
+              data-disclosure-purpose="overflow_list"
+              className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-2 text-[10px] font-black text-ink/52 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            >
+              {showCarePlan
+                ? t('aquarium.collapse')
+                : t('aquarium.carePlanMore', { count: carePlan.activeCount - 1 })}
+              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
+            </button>
+          )}
+        </div>
 
         {carePlan.activeCount === 0 ? (
           <div className="mt-2 flex items-center justify-between gap-3 rounded-[13px] bg-bg/75 px-3 py-2.5">
             <span className="text-[10px] font-bold leading-5 text-ink/48">{t('aquarium.carePlanEmptyHint')}</span>
-            <button type="button" onClick={onBrowseCare} className="h-8 shrink-0 rounded-full bg-white px-3 text-[10px] font-black text-emerald-700 shadow-sm">
+            <button type="button" onClick={onBrowseCare} className="min-h-11 shrink-0 rounded-full bg-white px-3 text-[10px] font-black text-emerald-700 shadow-sm">
               {t('aquarium.browseCare')}
             </button>
           </div>
@@ -236,22 +227,20 @@ export function StatusSummaryCard({
                     {careStatusLabel[item.status]}
                   </span>
                 </div>
-                {showCarePlan && (
-                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                    <button type="button" onClick={() => onOpenCarePlan(item.id)} className="h-8 rounded-full bg-emerald-700 px-3 text-[10px] font-black text-white">
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                    <button type="button" onClick={() => onOpenCarePlan(item.id)} className="min-h-11 rounded-full bg-emerald-700 px-3 text-[10px] font-black text-white">
                       {t('aquarium.viewGuide')}
                     </button>
-                    <button type="button" onClick={() => onCompleteCarePlan(item.id)} className="inline-flex h-8 items-center gap-1 rounded-full bg-emerald-50 px-2.5 text-[10px] font-black text-emerald-700">
+                    <button type="button" onClick={() => onCompleteCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full bg-emerald-50 px-2.5 text-[10px] font-black text-emerald-700">
                       <Check className="h-3 w-3" />{t('aquarium.complete')}
                     </button>
-                    <button type="button" onClick={() => onRescheduleCarePlan(item.id)} className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-[10px] font-black text-ink/48 hover:bg-bg">
+                    <button type="button" onClick={() => onRescheduleCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[10px] font-black text-ink/48 hover:bg-bg">
                       <Clock3 className="h-3 w-3" />{t('aquarium.reschedule')}
                     </button>
-                    <button type="button" onClick={() => onDeleteCarePlan(item.id)} className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-[10px] font-black text-red-500 hover:bg-red-50">
+                    <button type="button" onClick={() => onDeleteCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[10px] font-black text-red-500 hover:bg-red-50">
                       <Trash2 className="h-3 w-3" />{t('aquarium.delete')}
                     </button>
                   </div>
-                )}
               </article>
             ))}
           </div>
