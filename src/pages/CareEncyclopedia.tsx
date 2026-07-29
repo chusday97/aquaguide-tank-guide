@@ -2699,12 +2699,13 @@ function StepDiagnosisPanel({
                   {diagnosisState.result.observeItems[0] || (isEn ? 'Keep the environment stable and check the same symptom again.' : '保持环境稳定，再复查同一异常是否缓解。')}
                 </p>
               </div>
-              <Button type="button" onClick={onScheduleFollowUp} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
-                {isEn ? 'Schedule a Follow-up Check' : '设置一次复查提醒'}
-              </Button>
-              {diagnosisState.result.riskLevel === 'unknown' && (
-                <Button type="button" variant="outline" onClick={resetDiagnosis} className="mt-2 h-11 w-full rounded-full border-emerald-200 bg-white text-sm font-black text-emerald-700 hover:bg-emerald-50">
+              {diagnosisState.result.riskLevel === 'unknown' ? (
+                <Button type="button" onClick={resetDiagnosis} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
                   {isEn ? 'Complete the Missing Checks' : '重新补充关键检查'}
+                </Button>
+              ) : (
+                <Button type="button" onClick={onScheduleFollowUp} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
+                  {isEn ? 'Schedule a Follow-up Check' : '设置一次复查提醒'}
                 </Button>
               )}
               {followUpFeedback && (
@@ -3165,16 +3166,23 @@ export function CareArticleDetail({
 
               <div className="mt-3 grid gap-2">
                 {visibleActions.length > 0 ? visibleActions.map((item, index) => (
-                  <ActionStepCard
-                    key={`${item.title}-${item.description}`}
-                    checked={checkedActions.includes(item.description)}
-                    title={`${index + 1}. ${item.title}`}
-                    description={item.description}
-                    onClick={() => {
-                      setIsChecklistSaved(false);
-                      onToggleAction(item.description);
-                    }}
-                  />
+                  meta.guideType === 'careChecklist' ? (
+                    <ActionStepCard
+                      key={`${item.title}-${item.description}`}
+                      checked={checkedActions.includes(item.description)}
+                      title={`${index + 1}. ${item.title}`}
+                      description={item.description}
+                      onClick={() => {
+                        setIsChecklistSaved(false);
+                        onToggleAction(item.description);
+                      }}
+                    />
+                  ) : (
+                    <div key={`${item.title}-${item.description}`} className="rounded-[15px] bg-white px-3 py-3 shadow-sm">
+                      <div className="text-[12px] font-black leading-tight text-ink">{index + 1}. {item.title}</div>
+                      <p className="mt-1 text-[11px] font-medium leading-relaxed text-ink/62">{item.description}</p>
+                    </div>
+                  )
                 )) : careGuide.maintenanceTips.slice(0, 4).map((item, index) => (
                   <div key={`${item.title}-${item.description}`} className="rounded-[15px] bg-white px-3 py-3 shadow-sm">
                     <div className="text-[12px] font-black text-ink break-words leading-tight">{index + 1}. {item.title}</div>

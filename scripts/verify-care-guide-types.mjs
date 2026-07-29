@@ -42,6 +42,9 @@ try {
     for (const text of testCase.absent) {
       assert.equal(await dialog.getByText(text, { exact: true }).count(), 0, `${testCase.topicId} 不应显示“${text}”`);
     }
+    if (testCase.topicId === 'qa_gen_004') {
+      assert.equal(await dialog.locator('[data-care-action-step]').count(), 0, '知识文章正文不得渲染无业务结果的勾选按钮');
+    }
     assert.deepEqual(pageErrors, [], `${testCase.topicId} 出现页面错误`);
     await page.close();
   }

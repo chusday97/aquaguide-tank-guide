@@ -130,6 +130,7 @@ try {
     await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
     await panel.getByText('资料不足', { exact: true }).waitFor();
     await panel.getByRole('button', { name: '查看需要补充的检查', exact: true }).click();
+    assert.equal(await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).count(), 0, '信息不足时不应让提醒抢占补充检查');
     await panel.getByRole('button', { name: '重新补充关键检查', exact: true }).click();
     await panel.getByText('一次填完 · 已回答 0/2', { exact: true }).waitFor();
     assert.equal(errors.length, 0, `unknown care assessment page errors: ${errors.join('; ')}`);
