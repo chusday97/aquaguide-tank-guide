@@ -77,7 +77,7 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
             <button
               type="button"
               onClick={() => setIsZoomed(prev => !prev)}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/18"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/18 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               aria-label={isZoomed ? '恢复原大小' : '放大图片'}
             >
               {isZoomed ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
@@ -86,7 +86,7 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
               ref={closeButtonRef}
               type="button"
               onClick={onClose}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/18 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/18 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               aria-label="关闭"
             >
               <X className="h-4 w-4" />
@@ -100,7 +100,7 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
               <button
                 type="button"
                 onClick={goPrevious}
-                className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition-colors hover:bg-white/22"
+                className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition-colors hover:bg-white/22 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 aria-label="上一张"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -108,7 +108,7 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
               <button
                 type="button"
                 onClick={goNext}
-                className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition-colors hover:bg-white/22"
+                className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/12 text-white backdrop-blur transition-colors hover:bg-white/22 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 aria-label="下一张"
               >
                 <ChevronRight className="h-5 w-5" />

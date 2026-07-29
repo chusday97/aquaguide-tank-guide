@@ -114,12 +114,31 @@ try {
               text: (element.getAttribute('aria-label') || element.textContent || element.tagName).trim().slice(0, 80),
               rect: element.getBoundingClientRect().toJSON(),
             }));
+          const undersizedIconControls = [...document.querySelectorAll('button[aria-label], a[aria-label]')]
+            .filter(element => {
+              const rect = element.getBoundingClientRect();
+              if (rect.width < 1 || rect.height < 1 || rect.bottom < 0 || rect.top > innerHeight) return false;
+              const visibleText = [...element.childNodes]
+                .filter(node => node.nodeType === Node.TEXT_NODE)
+                .map(node => node.textContent || '')
+                .join('')
+                .trim();
+              const onlyIconContent = visibleText.length === 0
+                && Boolean(element.querySelector('svg, img'))
+                && !element.querySelector('[data-control-label]');
+              return onlyIconContent && (rect.width < 44 || rect.height < 44);
+            })
+            .map(element => ({
+              label: element.getAttribute('aria-label'),
+              rect: element.getBoundingClientRect().toJSON(),
+            }));
           return {
             documentWidth: document.documentElement.scrollWidth,
             viewportWidth: innerWidth,
             layoutMode: document.querySelector('.aquaguide-app')?.getAttribute('data-layout-mode') || 'standalone',
             errorBoundary: /页面暂时无法显示|Page unavailable/i.test(document.body.innerText),
             overflowingControls,
+            undersizedIconControls,
           };
         });
         if (
@@ -127,6 +146,7 @@ try {
           || result.documentWidth > result.viewportWidth + 1
           || result.errorBoundary
           || result.overflowingControls.length > 0
+          || result.undersizedIconControls.length > 0
         ) {
           failures.push({ profile, route, pageErrors, ...result });
         }
@@ -142,5 +162,39 @@ try {
   await browser.close();
 }
 
-assert.deepEqual(failures, [], `responsive route failures:\n${JSON.stringify(failures, null, 2)}`);
+const uniqueUndersizedControls = [...new Map(
+  failures
+    .flatMap(failure => (failure.undersizedIconControls || []).map(control => [
+      `${control.label}:${Math.round(control.rect.width)}x${Math.round(control.rect.height)}`,
+      {
+        label: control.label,
+        size: `${Math.round(control.rect.width)}x${Math.round(control.rect.height)}`,
+        route: failure.route,
+        profile: `${failure.profile?.width || '?'}:${failure.profile?.locale || '?'}`,
+      },
+    ]))
+).values()];
+const routeFailures = failures
+  .filter(failure => (
+    failure.navigationError
+    || failure.pageErrors?.length
+    || failure.documentWidth > failure.viewportWidth + 1
+    || failure.errorBoundary
+    || failure.overflowingControls?.length
+  ))
+  .map(({ profile, route, navigationError, pageErrors, documentWidth, viewportWidth, errorBoundary, overflowingControls }) => ({
+    profile,
+    route,
+    navigationError,
+    pageErrors,
+    documentWidth,
+    viewportWidth,
+    errorBoundary,
+    overflowingControls,
+  }));
+assert.deepEqual(
+  { routeFailures, uniqueUndersizedControls },
+  { routeFailures: [], uniqueUndersizedControls: [] },
+  `responsive route failures:\n${JSON.stringify({ routeFailures, uniqueUndersizedControls }, null, 2)}`,
+);
 console.log(`responsive route scan passed: ${profiles.length} profiles × ${routes.length} routes`);

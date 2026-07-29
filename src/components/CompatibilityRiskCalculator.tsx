@@ -485,7 +485,7 @@ function CompatibilityBottomSheet({
               <h3 id="compatibility-sheet-title" className="text-[18px] font-black text-ink">{sheetTitle}</h3>
               <p className="mt-0.5 text-[11px] font-bold text-ink/45">{isAdjustment ? '只看现在能做什么。' : '看清是哪组生物需要谨慎。'}</p>
             </div>
-            <button type="button" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/55" aria-label={isEn ? 'Close' : '关闭'}>
+            <button type="button" onClick={onClose} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={isEn ? 'Close' : '关闭'}>
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -1050,7 +1050,7 @@ export function CompatibilityRiskCalculator({
             ) : (
               <div className="flex flex-wrap gap-2">
                 {selectedSpecies.map(fish => (
-                  <div key={fish.id} className="relative flex min-w-0 max-w-full items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/40 py-1 pl-1.5 pr-8">
+                  <div key={fish.id} className="relative flex min-w-0 max-w-full items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/40 py-1 pl-1.5 pr-12">
                     <button
                       type="button"
                       aria-label={`移除${fish.name}`}
@@ -1062,7 +1062,7 @@ export function CompatibilityRiskCalculator({
                           return next;
                         });
                       }}
-                      className="absolute right-1.5 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink/40 shadow-sm hover:text-red-500"
+                      className="absolute right-0.5 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink/40 shadow-sm hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -1148,7 +1148,7 @@ export function CompatibilityRiskCalculator({
                               });
                               setResultFeedback(`已从组合中移除 ${fish.name}。`);
                             }}
-                            className="flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-white"
+                            className="flex h-11 w-11 items-center justify-center rounded-full bg-red-600 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2"
                           >
                             <X className="h-3.5 w-3.5" />
                           </button>

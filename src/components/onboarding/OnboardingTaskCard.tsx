@@ -55,7 +55,7 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
           <h2 id={isSidebar ? 'onboarding-sidebar-title' : 'onboarding-task-title'} className={`${isSidebar ? 'mt-0.5 text-[13px]' : 'mt-1 text-lg'} font-black`}>{progress.complete ? t('onboarding.completeTitle') : t('onboarding.taskTitle')}</h2>
           <p className={`${isSidebar ? 'mt-0.5 text-[10px] leading-4 text-ink/45' : 'mt-1 text-xs leading-5 text-white/62'} font-semibold`}>{progress.complete ? t('onboarding.completeSubtitle') : t('onboarding.taskSubtitle')}</p>
         </div>
-        <button type="button" onClick={dismissOnboardingTaskCard} aria-label={t('onboarding.dismiss')} className={`flex shrink-0 items-center justify-center rounded-xl ${isSidebar ? 'h-8 w-8 bg-emerald-50 text-ink/45 hover:text-emerald-800' : 'h-11 w-11 bg-white/10 text-white/70 hover:bg-white/15 hover:text-white'}`}><X className="h-4 w-4" /></button>
+        <button type="button" onClick={dismissOnboardingTaskCard} aria-label={t('onboarding.dismiss')} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl focus-visible:outline-none focus-visible:ring-2 ${isSidebar ? 'bg-emerald-50 text-ink/45 hover:text-emerald-800 focus-visible:ring-emerald-400' : 'bg-white/10 text-white/70 hover:bg-white/15 hover:text-white focus-visible:ring-white'}`}><X className="h-4 w-4" /></button>
       </div>
       <div className={`mt-3 h-1.5 overflow-hidden rounded-full ${isSidebar ? 'bg-emerald-100' : 'bg-white/12'}`} aria-hidden="true">
         <div className={`h-full rounded-full transition-[width] duration-200 ${isSidebar ? 'bg-emerald-600' : 'bg-emerald-300'}`} style={{ width: `${progress.completedCount * 25}%` }} />

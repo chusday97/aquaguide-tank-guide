@@ -253,6 +253,16 @@ try {
     assert.equal(await phone.getByText('Tank Basics', { exact: true }).count(), 0, 'phone learning zone must not repeat tank basics');
     const phoneDiscovery = phone.locator('.aquarium-discovery-card');
     await phoneDiscovery.waitFor();
+    const [phoneDiscoveryBox, manageZoneBox, learnZoneBox, discoveryColumns] = await Promise.all([
+      phoneDiscovery.boundingBox(),
+      phone.locator('#aquarium-manage-zone').boundingBox(),
+      phone.locator('#aquarium-learn-zone').boundingBox(),
+      phoneDiscovery.evaluate(element => getComputedStyle(element).gridTemplateColumns),
+    ]);
+    assert.ok(phoneDiscoveryBox && phoneDiscoveryBox.height <= 200, `${width}px daily discovery must stay compact (actual ${phoneDiscoveryBox?.height ?? 'missing'}px)`);
+    assert.equal(discoveryColumns.trim().split(/\s+/).length, 2, `${width}px daily discovery must keep image and summary in two columns`);
+    assert.ok(manageZoneBox && manageZoneBox.height <= 330, `${width}px Manage zone must stay compact while keeping actions visible (actual ${manageZoneBox?.height ?? 'missing'}px)`);
+    assert.ok(learnZoneBox && learnZoneBox.height <= 390, `${width}px Learn zone must stay compact while keeping discovery visible (actual ${learnZoneBox?.height ?? 'missing'}px)`);
     await assertControlInsideViewport(phoneDiscovery.getByRole('button', { name: 'View species details' }), `${width}px daily discovery primary action`);
     const onboardingBox = await phone.locator('.aquarium-onboarding').boundingBox();
     const observeBox = await phone.locator('.aquarium-observe-zone').boundingBox();

@@ -217,7 +217,7 @@ export function StatusSummaryCard({
         ) : (
           <div className="mt-2 grid gap-2">
             {careItems.map(item => (
-              <article key={item.id} className="rounded-[13px] border border-border/65 bg-white/90 p-2.5">
+              <article key={item.id} data-care-plan-visible className="rounded-[13px] border border-border/65 bg-white/90 p-2.5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="truncate text-[11px] font-black text-ink">{item.title}</div>

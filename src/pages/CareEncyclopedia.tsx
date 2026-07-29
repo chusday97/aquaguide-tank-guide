@@ -1221,6 +1221,97 @@ const riskWeight: Record<StepDiagnosisResult['riskLevel'], number> = {
   high: 4,
 };
 
+const getIssueGuidance = (issueType: StepDiagnosisIssue, isEn: boolean) => {
+  const guidance: Record<StepDiagnosisIssue, {
+    routineActions: string[];
+    avoidActions: string[];
+    observeItems: string[];
+  }> = isEn ? {
+    cloudy: {
+      routineActions: ['Check filter flow and intake for blockage', 'Remove visible leftovers or decaying matter', 'Record water clarity and odor, then recheck in 24 hours'],
+      avoidActions: ['Do not clean all filter media at once', 'Do not medicate before the cause is clear'],
+      observeItems: ['Whether the water becomes cloudier or greener', 'Whether odor becomes stronger', 'Whether filter flow becomes weaker'],
+    },
+    gasping: {
+      routineActions: ['Increase surface movement and verify filter output', 'Pause feeding and observe breathing for 2 hours', 'Recheck whether gasping spreads to more fish'],
+      avoidActions: ['Do not add medication blindly', 'Do not switch off aeration while breathing is abnormal'],
+      observeItems: ['Whether gasping continues', 'Whether more fish gather at the surface', 'Whether filter output remains stable'],
+    },
+    refusal: {
+      routineActions: ['Remove uneaten food after 3 minutes', 'Keep temperature and lighting stable', 'Offer a smaller portion at the next feeding'],
+      avoidActions: ['Do not keep adding different foods', 'Do not force-feed or medicate without other signs'],
+      observeItems: ['Whether appetite returns at the next feeding', 'Whether refusal spreads to other fish', 'Whether feces or swimming changes'],
+    },
+    hiding: {
+      routineActions: ['Reduce light and disturbance for 2 hours', 'Check for chasing and available hiding places', 'Recheck activity after the tank is quiet'],
+      avoidActions: ['Do not repeatedly net or chase the fish', 'Do not rearrange the whole tank immediately'],
+      observeItems: ['Whether the fish leaves hiding after lights dim', 'Whether chasing continues', 'Whether breathing or posture changes'],
+    },
+    aggression: {
+      routineActions: ['Identify the chasing and affected fish', 'Add or rearrange one hiding barrier', 'Observe whether chasing decreases for 30 minutes'],
+      avoidActions: ['Do not repeatedly chase all fish with a net', 'Do not add more fish before the conflict is clear'],
+      observeItems: ['Whether the same fish is repeatedly targeted', 'Whether fins are damaged', 'Whether feeding access is blocked'],
+    },
+    death: {
+      routineActions: ['Remove the deceased animal and inspect the tank', 'Increase aeration and check filter operation', 'Record whether any other livestock is abnormal'],
+      avoidActions: ['Do not medicate the whole tank before checking acute causes', 'Do not perform repeated large water changes'],
+      observeItems: ['Whether another death occurs', 'Whether multiple animals breathe rapidly', 'Whether odor or cloudiness worsens'],
+    },
+    shrimpDeath: {
+      routineActions: ['Remove the deceased shrimp and inspect molts', 'Check recent water change and medication history', 'Keep temperature and water conditions stable'],
+      avoidActions: ['Do not use copper medication or unknown algaecide', 'Do not make another large water change immediately'],
+      observeItems: ['Whether shrimp deaths continue', 'Whether molts fail', 'Whether other shrimp become inactive'],
+    },
+    plantProblem: {
+      routineActions: ['Remove badly decayed leaves', 'Check whether lighting duration changed recently', 'Photograph the same leaves and compare in 3 days'],
+      avoidActions: ['Do not increase fertilizer and light at the same time', 'Do not replace all plants immediately'],
+      observeItems: ['Whether new leaves remain healthy', 'Whether melting spreads', 'Whether algae increases'],
+    },
+  } : {
+    cloudy: {
+      routineActions: ['检查过滤出水和进水口是否通畅', '清理可见残饵和腐败物', '记录水体清澈度与气味，24 小时后复查'],
+      avoidActions: ['不要一次性清洗全部滤材', '不要在原因未明时盲目下药'],
+      observeItems: ['水体是否继续变浑或发绿', '异味是否加重', '过滤出水是否减弱'],
+    },
+    gasping: {
+      routineActions: ['增加水面扰动并确认过滤正常出水', '暂停喂食，连续观察呼吸 2 小时', '复查是否有更多鱼只浮头'],
+      avoidActions: ['不要盲目下药', '呼吸异常时不要关闭增氧'],
+      observeItems: ['浮头或急促呼吸是否持续', '是否有更多鱼聚集水面', '过滤出水是否保持稳定'],
+    },
+    refusal: {
+      routineActions: ['3 分钟后捞出未吃完的饲料', '保持水温和灯光稳定', '下次只投更少份量并观察'],
+      avoidActions: ['不要连续追加不同饲料', '没有其他症状时不要强行喂食或下药'],
+      observeItems: ['下一次投喂是否恢复食欲', '拒食是否扩大到其他鱼', '排泄和游动是否变化'],
+    },
+    hiding: {
+      routineActions: ['降低灯光并减少打扰 2 小时', '检查是否被追咬以及躲避空间', '环境安静后再次观察活动'],
+      avoidActions: ['不要反复追捞异常鱼只', '不要立即大幅重排整个鱼缸'],
+      observeItems: ['弱光后是否离开躲藏处', '追咬是否持续', '呼吸或体态是否变化'],
+    },
+    aggression: {
+      routineActions: ['确认追咬者和被追咬对象', '增加或调整一处遮挡和躲避区', '观察 30 分钟内追咬是否减少'],
+      avoidActions: ['不要频繁追捞所有生物', '冲突未确认前不要继续加鱼'],
+      observeItems: ['是否固定追咬同一对象', '鱼鳍是否出现损伤', '被追对象是否无法进食'],
+    },
+    death: {
+      routineActions: ['移出死亡个体并检查缸内情况', '加强增氧并确认过滤正常运行', '记录是否还有其他生物异常'],
+      avoidActions: ['急性原因未排查前不要全缸下药', '不要连续进行大比例换水'],
+      observeItems: ['是否再次出现死亡', '是否多只生物呼吸急促', '异味或浑浊是否加重'],
+    },
+    shrimpDeath: {
+      routineActions: ['移出死亡虾并检查蜕壳情况', '核对近期换水和用药记录', '保持水温和水体稳定'],
+      avoidActions: ['不要使用含铜药物或不明除藻剂', '不要马上再次大比例换水'],
+      observeItems: ['虾类是否继续死亡', '是否出现蜕壳失败', '其他虾是否停止活动'],
+    },
+    plantProblem: {
+      routineActions: ['剪除严重腐烂的叶片', '确认近期光照时长是否变化', '拍下同一叶片，3 天后对比'],
+      avoidActions: ['不要同时提高肥料和光照', '不要立即整缸更换水草'],
+      observeItems: ['新叶是否保持健康', '烂叶是否继续扩散', '藻类是否增加'],
+    },
+  };
+  return guidance[issueType];
+};
+
 const buildStepDiagnosisResult = ({
   aquarium,
   livestock,
@@ -1319,12 +1410,11 @@ const buildStepDiagnosisResult = ({
     };
   }
 
+  const issueGuidance = getIssueGuidance(issueType, isEn);
   const causes: string[] = [];
   const actions: string[] = [];
-  const avoid: string[] = isEn ? ['Do not continue adding new livestock', 'Do not add medication blindly'] : ['不要继续新增生物', '不要盲目下药'];
-  const observe: string[] = isEn 
-    ? ['Whether gasping persists', 'Whether refusing food', 'Whether hiding', 'Whether water becomes cloudy or smelly']
-    : ['是否持续浮头', '是否拒食', '是否躲藏', '水体是否变浑或有异味'];
+  const avoid: string[] = [...issueGuidance.avoidActions];
+  const observe: string[] = [...issueGuidance.observeItems];
   let riskLevel: StepDiagnosisResult['riskLevel'] = 'low';
   const liftRisk = (next: StepDiagnosisResult['riskLevel']) => {
     if (riskWeight[next] > riskWeight[riskLevel]) riskLevel = next;
@@ -1440,7 +1530,7 @@ const buildStepDiagnosisResult = ({
           ? (isEn ? 'Key observations are still missing' : '关键观察信息尚未确认')
           : (isEn ? 'No obvious abnormal signal in the current answers' : '本次回答暂未发现明显异常信号')]
     )).slice(0, 5),
-    todayActions: Array.from(new Set(actions.length > 0 ? actions : [isEn ? 'Keep environment stable' : '保持环境稳定', isEn ? 'Observe for 24 hours' : '观察 24 小时', isEn ? 'Check filtration and temperature' : '检查过滤和水温'])).slice(0, 5),
+    todayActions: Array.from(new Set(actions.length > 0 ? actions : issueGuidance.routineActions)).slice(0, 5),
     avoidActions: Array.from(new Set(avoid)).slice(0, 5),
     observeItems: Array.from(new Set(observe)).slice(0, 5),
     evidence: Array.from(new Set(evidence)).slice(0, 8),
@@ -2410,7 +2500,7 @@ function CareArticleCard({
           event.stopPropagation();
           onToggleFavorite(event.currentTarget);
         }}
-        className={`absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/88 shadow-sm backdrop-blur-sm transition-transform active:scale-90 ${
+        className={`absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/88 shadow-sm backdrop-blur-sm transition-transform active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
           favorite ? 'text-rose-500' : 'text-ink/35'
         }`}
         aria-label={favorite ? (isEn ? 'Unsave' : '取消收藏') : (isEn ? 'Save' : '收藏百科')}
@@ -2529,6 +2619,7 @@ function StepDiagnosisPanel({
       answers: Object.fromEntries(Object.entries(diagnosisState.answers).map(([key, value]) => [key, value ? labelMap[value] : ''])),
       aquariumName: targetAquarium?.name || (isEn ? 'Active Tank' : '当前鱼缸'),
       livestock: scopedLivestock.map(item => item.fish),
+      assessmentScope: diagnosisState.target.scope,
       focusSpeciesId: diagnosisState.target.scope === 'single_species'
         ? diagnosisState.target.speciesIds[0]
         : undefined,
@@ -2788,17 +2879,21 @@ function StepDiagnosisPanel({
               data-care-assessment-next
               className="rounded-[20px] border border-emerald-200 bg-white p-4 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              <div className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-700">
-                {isEn ? 'Do this now' : '现在按顺序做'}
-              </div>
-              <div className="mt-3 grid gap-2">
-                {diagnosisState.result.todayActions.map((action, index) => (
-                  <div key={action} className="grid grid-cols-[26px_1fr] gap-2 rounded-[15px] bg-emerald-50/65 p-3">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-black text-white">{index + 1}</span>
-                    <p className="text-[12px] font-bold leading-5 text-ink">{action}</p>
+              {diagnosisState.result.todayActions.length > 1 && (
+                <>
+                  <div className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-700">
+                    {isEn ? 'Then continue with' : '接着按顺序做'}
                   </div>
-                ))}
-              </div>
+                  <div className="mt-3 grid gap-2">
+                    {diagnosisState.result.todayActions.slice(1).map((action, index) => (
+                      <div key={action} className="grid grid-cols-[26px_1fr] gap-2 rounded-[15px] bg-emerald-50/65 p-3">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-black text-white">{index + 2}</span>
+                        <p className="text-[12px] font-bold leading-5 text-ink">{action}</p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
               {diagnosisState.result.avoidActions.length > 0 && (
                 <div className="mt-3 rounded-[15px] bg-amber-50 px-3 py-2.5">
                   <div className="text-[11px] font-black text-amber-800">
@@ -3199,7 +3294,7 @@ export function CareArticleDetail({
                 <button
                   type="button"
                   onClick={(event) => onToggleFavorite(event.currentTarget)}
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg transition-colors ${
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-bg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
                     favorite ? 'text-rose-500' : 'text-ink/35'
                   }`}
                   aria-label={favorite ? (isEn ? 'Unsave' : '取消收藏') : (isEn ? 'Save' : '收藏百科')}

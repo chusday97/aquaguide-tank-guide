@@ -376,7 +376,7 @@ function DesktopSidebar({
           <button
             type="button"
             onClick={onToggleCollapsed}
-            className="absolute -right-4 top-7 flex h-9 w-9 items-center justify-center rounded-full border border-white bg-white text-ink/50 shadow-[0_8px_24px_rgba(15,23,42,0.12)] transition-colors hover:text-accent"
+            className="absolute -right-[22px] top-6 flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white text-ink/50 shadow-[0_8px_24px_rgba(15,23,42,0.12)] transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
           >
             <ChevronLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />

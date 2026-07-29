@@ -147,6 +147,7 @@ export function buildDiagnosisVisualResult({
   answers,
   aquariumName,
   livestock,
+  assessmentScope = 'whole_tank',
   focusSpeciesId,
   primaryActionLabel,
   primaryActionType = 'mutation',
@@ -155,6 +156,7 @@ export function buildDiagnosisVisualResult({
   answers: DiagnosisAnswerMap;
   aquariumName: string;
   livestock: Fish[];
+  assessmentScope?: 'whole_tank' | 'single_species' | 'multiple_species';
   focusSpeciesId?: string;
   primaryActionLabel: string;
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
@@ -163,16 +165,19 @@ export function buildDiagnosisVisualResult({
   const abnormalAnswers = Object.entries(answers)
     .filter(([key, value]) => diagnosisAnswerLabels[key] && value && value !== '跳过' && !normalDiagnosisAnswers.has(value))
     .slice(0, 5);
-  const focusFish = focusSpeciesId ? livestock.find(item => item.id === focusSpeciesId) : undefined;
+  const focusFish = assessmentScope === 'single_species' && focusSpeciesId
+    ? livestock.find(item => item.id === focusSpeciesId)
+    : undefined;
+  const isMultipleSpecies = assessmentScope === 'multiple_species';
   const relatedLivestock = focusFish ? livestock.filter(item => item.id !== focusFish.id) : livestock;
   const subjects: VisualResultSubject[] = [{
-    id: focusFish?.id || 'aquarium',
-    name: focusFish?.name || aquariumName,
+    id: focusFish?.id || (isMultipleSpecies ? 'selected-species' : 'aquarium'),
+    name: focusFish?.name || (isMultipleSpecies ? `所选 ${livestock.length} 种生物` : aquariumName),
     image: focusFish ? getSpeciesDisplayImage(focusFish) : undefined,
     role: 'focus',
     status,
     shortReason: result.summary,
-    badgeLabel: focusFish ? '重点观察' : '全缸检查',
+    badgeLabel: focusFish ? '重点观察' : isMultipleSpecies ? '多种生物' : '全缸检查',
     emphasis: getVisualEmphasis(result.summary),
   }, ...relatedLivestock.map<VisualResultSubject>(fish => ({
     id: fish.id,

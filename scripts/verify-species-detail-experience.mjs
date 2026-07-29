@@ -88,20 +88,22 @@ try {
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
     assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
     if (locale === 'en') {
-      const [dialogBox, actionBox, heroBox, verdictBox, reasonBoxes] = await Promise.all([
+      const [dialogBox, actionBox, heroBox, feedingBox, verdictBox, reasonBoxes] = await Promise.all([
         dialog.boundingBox(),
         primaryAction.boundingBox(),
         dialog.locator('[data-species-detail-hero]').boundingBox(),
+        dialog.locator('[data-species-feeding-summary]').boundingBox(),
         dialog.locator('[data-visual-result-status]').first().boundingBox(),
         dialog.locator('[aria-label="Key reasons"] > div').evaluateAll(nodes => nodes.map(node => {
           const box = node.getBoundingClientRect();
           return { y: box.y, height: box.height };
         })),
       ]);
-      assert.ok(dialogBox && actionBox && heroBox && verdictBox, 'phone first-screen elements must have visible bounds');
+      assert.ok(dialogBox && actionBox && heroBox && feedingBox && verdictBox, 'phone primary information must have visible bounds');
       assert.ok(actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
-      assert.equal(reasonBoxes.length, 3, 'phone first screen must expose three key reasons');
-      assert.ok(heroBox.y + heroBox.height < verdictBox.y, 'phone hero and verdict must not overlap');
+      assert.equal(reasonBoxes.length, 3, 'phone detail must render three key reasons without claiming they all fit before scrolling');
+      assert.ok(heroBox.y + heroBox.height < feedingBox.y, 'phone hero and feeding summary must not overlap');
+      assert.ok(feedingBox.y + feedingBox.height < verdictBox.y, 'feeding summary must appear before the fit verdict');
       assert.ok(verdictBox.y < actionBox.y, 'phone must show the fit verdict before the sticky primary action');
       const lastReason = dialog.locator('[aria-label="Key reasons"] > div').last();
       await lastReason.scrollIntoViewIfNeeded();

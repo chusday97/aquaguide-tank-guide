@@ -494,7 +494,7 @@ export default function Identify() {
           <div role="alert" className="flex items-start gap-3 rounded-[16px] border border-red-200 bg-red-50 p-3 text-xs font-bold leading-5 text-red-800">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
             <span className="min-w-0 flex-1">{errorMessage}</span>
-            <button type="button" onClick={() => setErrorMessage('')} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white" aria-label={t('common.close')}><X className="h-4 w-4" /></button>
+            <button type="button" onClick={() => setErrorMessage('')} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('common.close')}><X className="h-4 w-4" /></button>
           </div>
         )}
 

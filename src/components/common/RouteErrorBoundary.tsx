@@ -92,7 +92,7 @@ export function DataRecoveryNotice() {
       <span>一条本地记录格式异常，已先隔离并使用安全默认值。</span>
       <div className="flex shrink-0 gap-1.5">
         <button type="button" onClick={() => navigate('/aquarium#local-data')} className="rounded-full bg-white px-2.5 py-1 font-black">查看恢复</button>
-        <button type="button" aria-label="关闭恢复提示" onClick={() => setDiagnostic(null)} className="rounded-full px-2 py-1 font-black">关闭</button>
+        <button type="button" aria-label="关闭恢复提示" onClick={() => setDiagnostic(null)} className="min-h-11 rounded-full px-3 py-2 font-black">关闭</button>
       </div>
     </div>
   );

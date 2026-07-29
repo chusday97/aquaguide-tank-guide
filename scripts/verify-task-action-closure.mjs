@@ -121,15 +121,44 @@ try {
     await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
     const nextAction = panel.getByRole('button', { name: /查看.+步骤|查看观察清单|查看需要补充的检查/ });
     await nextAction.waitFor();
+    await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).waitFor();
+    assert.equal(await panel.getByText('保持环境稳定', { exact: true }).count(), 0, 'water assessment must provide a concrete first action');
     assert.equal(await page.getByRole('button', { name: '开始问题自查', exact: true }).count(), 0, 'stale footer action remains after assessment starts');
     await nextAction.click();
     await panel.locator('[data-care-assessment-next]').waitFor();
+    assert.equal(await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).count(), 1, 'the visual first action must not repeat inside expanded steps');
+    assert.equal(await panel.getByText('是否持续浮头', { exact: true }).count(), 0, 'water assessment must not reuse gasping follow-up semantics');
+    await panel.getByText('水体是否继续变浑或发绿', { exact: true }).waitFor();
     await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).click();
     await page.getByText('设置养护提醒', { exact: true }).waitFor();
     await page.getByRole('button', { name: '确认设置', exact: true }).click();
     await panel.getByRole('status').filter({ hasText: '养护提醒已设置' }).waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, 'mobile care assessment overflowed horizontally');
     assert.equal(errors.length, 0, `care assessment page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
+  {
+    const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
+    await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
+    await panel.getByRole('button', { name: '追咬打架', exact: true }).click();
+    const targetPanel = panel.getByText('哪些生物出现了这个情况？', { exact: true }).locator('..');
+    await targetPanel.getByRole('button', { name: '多种生物', exact: true }).click();
+    const speciesTargets = targetPanel.locator('button:has(img)');
+    assert.equal(await speciesTargets.count(), 2, 'multi-species scope must show every distinct resident species');
+    await speciesTargets.nth(0).click();
+    await speciesTargets.nth(1).click();
+    const normalOptions = panel.getByRole('button', { name: '没有', exact: true });
+    for (let index = 0; index < await normalOptions.count(); index += 1) {
+      await normalOptions.nth(index).click();
+    }
+    await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
+    const multiSpeciesFocus = panel.locator('.visual-result-focus');
+    await multiSpeciesFocus.getByText(/所选 2 种生物/).waitFor();
+    await multiSpeciesFocus.getByText(/多种生物/).waitFor();
+    assert.equal(await panel.getByText('全缸检查', { exact: true }).count(), 0, 'multi-species result must not claim whole-tank scope');
+    assert.equal(errors.length, 0, `multi-species care assessment page errors: ${errors.join('; ')}`);
     await page.close();
   }
 

@@ -82,10 +82,40 @@ const diagnosisModel = buildDiagnosisVisualResult({
 });
 
 assert.equal(diagnosisModel.status, 'urgent');
+assert.equal(diagnosisModel.subjects[0]?.badgeLabel, '全缸检查');
 assert.equal(diagnosisModel.subjects[0]?.role, 'focus');
 assert.ok(diagnosisModel.subjects.some(item => item.name === '呼吸状态'));
 assert.ok(diagnosisModel.detailSections.some(section => section.id === 'avoid'));
 assert.equal(diagnosisModel.primaryAction.actionType, 'dialog');
+
+const singleSpeciesDiagnosis = buildDiagnosisVisualResult({
+  result: diagnosis,
+  answers: { breathing: '频繁浮头' },
+  aquariumName: '客厅缸',
+  livestock: [focus, peaceful],
+  assessmentScope: 'single_species',
+  focusSpeciesId: peaceful.id,
+  primaryActionLabel: '查看补救步骤',
+});
+assert.equal(singleSpeciesDiagnosis.subjects[0]?.id, peaceful.id, '单物种自查必须以所选物种为中心');
+assert.equal(singleSpeciesDiagnosis.subjects[0]?.badgeLabel, '重点观察');
+
+const multipleSpeciesDiagnosis = buildDiagnosisVisualResult({
+  result: diagnosis,
+  answers: { breathing: '频繁浮头' },
+  aquariumName: '客厅缸',
+  livestock: [focus, peaceful],
+  assessmentScope: 'multiple_species',
+  primaryActionLabel: '查看补救步骤',
+});
+assert.equal(multipleSpeciesDiagnosis.subjects[0]?.id, 'selected-species');
+assert.equal(multipleSpeciesDiagnosis.subjects[0]?.name, '所选 2 种生物');
+assert.equal(multipleSpeciesDiagnosis.subjects[0]?.badgeLabel, '多种生物');
+assert.deepEqual(
+  multipleSpeciesDiagnosis.subjects.filter(item => item.role === 'related').map(item => item.id).sort(),
+  [focus.id, peaceful.id].sort(),
+  '多物种自查只能显示所选物种，不能暗示覆盖全缸',
+);
 assert.equal(mapFitStatus('suitable'), 'compatible');
 assert.equal(mapFitStatus('conflictRisk'), 'not_recommended');
 assert.equal(mapFitStatus('unknown'), 'insufficient_data');

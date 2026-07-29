@@ -1587,7 +1587,7 @@ export default function Encyclopedia() {
             <button
               type="button"
               onClick={() => setWishlistFeedback(null)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white/75"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               aria-label={t('encyclopedia.closeWarning')}
             >
               <X className="h-3.5 w-3.5" />
@@ -1723,7 +1723,7 @@ export default function Encyclopedia() {
                 setFilterSheetMessage('');
                 setIsMoreFilterOpen(true);
               }}
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               aria-label={t('encyclopedia.moreFilters')}
               title={t('encyclopedia.moreFilters')}
             >
@@ -1863,7 +1863,7 @@ export default function Encyclopedia() {
                       focusGroupWishlistOnOpenRef.current = true;
                       openSpeciesGroup(group, undefined, `atlas-group-${group.groupId}`);
                     }}
-                    className={`absolute left-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border bg-white/94 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
+                    className={`absolute left-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border bg-white/94 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
                       group.variants.some(variant => wishlistFishIds.has(variant.id))
                         ? 'border-rose-200 text-rose-500'
                         : 'border-white text-ink/45 hover:border-rose-100 hover:text-rose-500'
@@ -1913,16 +1913,16 @@ export default function Encyclopedia() {
                         {t('encyclopedia.groupCollectionDesc', { count: group.variantCount })}{theme.needsHeater ? t('encyclopedia.groupHeaterHint') : ''}
                       </p>
                     </div>
-                    <div className="grid min-h-[66px] grid-cols-5 items-start gap-1 overflow-hidden">
+                    <div className="app-scrollbar-hidden flex min-h-[66px] items-start gap-1 overflow-x-auto overflow-y-hidden">
                       {previewVariants.map(variant => (
                         <button
                           key={variant.id}
                           type="button"
                           onClick={() => openSpeciesGroup(group, variant.id, `atlas-group-${group.groupId}`)}
-                          className="group flex min-w-0 flex-col items-center gap-1"
+                          className="group flex min-w-11 shrink-0 flex-col items-center gap-1"
                           aria-label={t('encyclopedia.viewThisVariant', { name: variant.name })}
                         >
-                          <span className={`flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-bg shadow-sm transition-colors group-hover:border-emerald-300 ${getSpeciesImageSurfaceClass(variant)}`}>
+                          <span className={`flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-bg shadow-sm transition-colors group-hover:border-emerald-300 ${getSpeciesImageSurfaceClass(variant)}`}>
                             <ResilientImage
                               src={getSpeciesVisualSources(variant).thumbnail}
                               alt=""
@@ -1941,10 +1941,10 @@ export default function Encyclopedia() {
                         <button
                           type="button"
                           onClick={() => openSpeciesGroup(group, undefined, `atlas-group-${group.groupId}`)}
-                          className="flex min-w-0 flex-col items-center gap-1"
+                          className="flex min-w-11 shrink-0 flex-col items-center gap-1"
                           aria-label={t('encyclopedia.viewMoreVariants', { count: hiddenVariantCount })}
                         >
-                          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-emerald-200 bg-emerald-50 text-[11px] font-black text-emerald-700">
+                          <span className="flex h-11 w-11 items-center justify-center rounded-full border border-dashed border-emerald-200 bg-emerald-50 text-[11px] font-black text-emerald-700">
                             +{hiddenVariantCount}
                           </span>
                           <span className="block text-[9px] font-black leading-tight text-ink/42">{t('encyclopedia.moreLabel')}</span>
@@ -2003,7 +2003,7 @@ export default function Encyclopedia() {
                   aria-pressed={wishlistFishIds.has(fish.id)}
                   aria-label={wishlistFishIds.has(fish.id) ? t('encyclopedia.wishlistRemoved', { name: fish.name }) : t('encyclopedia.wishlistAdded', { name: fish.name })}
                   title={wishlistFishIds.has(fish.id) ? t('encyclopedia.wishlistRemoved', { name: fish.name }) : t('encyclopedia.wishlistAdded', { name: fish.name })}
-                  className={`absolute left-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border bg-white/94 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
+                  className={`absolute left-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border bg-white/94 shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
                     wishlistFishIds.has(fish.id)
                       ? 'border-rose-200 text-rose-500'
                       : 'border-white text-ink/45 hover:border-rose-100 hover:text-rose-500'
@@ -2829,7 +2829,7 @@ export default function Encyclopedia() {
                   {filterSheetMessage || (nextCount === 0 ? t('encyclopedia.noResultsCombination') : `${nextCount} ${t('encyclopedia.speciesUnit')}`)}
                 </p>
               </div>
-              <button type="button" onClick={() => setIsMoreFilterOpen(false)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg text-ink/50 hover:text-ink" aria-label={t('encyclopedia.closeWarning')}>
+              <button type="button" onClick={() => setIsMoreFilterOpen(false)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-bg text-ink/50 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.closeWarning')}>
                 <X className="h-4 w-4" />
               </button>
             </header>

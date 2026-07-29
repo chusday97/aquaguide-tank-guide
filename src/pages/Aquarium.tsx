@@ -4422,7 +4422,7 @@ export default function AquariumManager() {
                   }}
                   aria-label="重命名鱼缸"
                   title="重命名鱼缸"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/42 transition-colors hover:bg-white hover:text-emerald-700"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink/42 transition-colors hover:bg-white hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 >
                   <Edit2 className="h-4 w-4" />
                 </button>
@@ -4443,6 +4443,7 @@ export default function AquariumManager() {
               onClick={() => setIsAquariumMenuOpen(prev => !prev)}
               className="flex h-9 w-full min-w-0 items-center justify-between gap-2 rounded-full border border-white/80 bg-white px-2.5 text-left shadow-sm ring-1 ring-ink/5 transition-colors hover:border-emerald-100"
               aria-expanded={isAquariumMenuOpen}
+              data-transient-control="menu"
               title={isEn ? 'Switch Tank' : '切换鱼缸'}
             >
               <span className="flex min-w-0 items-center gap-2">
@@ -4513,7 +4514,7 @@ export default function AquariumManager() {
                             setIsAquariumMenuOpen(false);
                             requestDeleteAquarium(aq.id);
                           }}
-                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink/28 transition-colors hover:bg-red-50 hover:text-red-600"
+                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink/28 transition-colors hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
                           title={isEn ? 'Delete Aquarium' : '删除鱼缸'}
                         >
                           <X className="h-3.5 w-3.5" />
@@ -4552,7 +4553,7 @@ export default function AquariumManager() {
               type="button"
               onClick={openLocalDataManager}
               aria-label="数据保存提醒"
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:text-ink"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               title={isEn ? "Data Storage Notice" : "数据保存提醒"}
             >
               <Info className="h-4 w-4" />
@@ -4659,17 +4660,16 @@ export default function AquariumManager() {
                 <Heart className={`h-4 w-4 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
               </button>
             </div>
-            <div className="flex min-w-0 flex-col p-3">
+            <div className="flex min-w-0 flex-col p-2.5">
               <div className="flex min-w-0 items-start gap-2">
                 <div className="min-w-0">
                   <h3 className="break-words font-serif text-[18px] italic font-bold leading-tight text-ink">{discoveryFish.name}</h3>
-                  <p className="mt-0.5 truncate text-[9px] font-bold text-ink/38">{discoveryFish.scientificName}</p>
                 </div>
               </div>
-              <span className="mt-2 w-fit rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-700">
+              <span className="mt-1.5 w-fit rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-700">
                 {discoveryFish.difficulty === 'Easy' ? (isEn ? 'Beginner' : '新手友好') : getDifficultyLabel(discoveryFish.difficulty)}
               </span>
-              <p className="mt-2 line-clamp-2 text-[11px] font-bold leading-5 text-ink/64">{getDiscoveryPositioning(discoveryFish)}</p>
+              <p className="mt-1.5 line-clamp-2 text-[11px] font-bold leading-4 text-ink/64">{getDiscoveryPositioning(discoveryFish)}</p>
               <Button
                 type="button"
                 className="mt-auto min-h-11 min-w-0 rounded-full bg-emerald-800 px-3 text-[10px] font-black text-white hover:bg-emerald-900"
@@ -4785,7 +4785,7 @@ export default function AquariumManager() {
             aria-label={isEn ? "Add Livestock" : "添加生物"}
             title="添加生物"
             onClick={() => setIsAddFishOpen(true)}
-            className="h-8 w-8 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
+            className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -4793,7 +4793,7 @@ export default function AquariumManager() {
             aria-label={isEn ? "Fullscreen Preview" : "全屏预览"}
             title="全屏预览"
             onClick={() => { setShouldLoadThreeAquarium(true); setRequiresManualThreeLoad(false); setIsTankPreviewOpen(true); }}
-            className="h-8 w-8 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
+            className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
           >
             <Maximize2 className="h-4 w-4" />
           </Button>
@@ -4801,7 +4801,7 @@ export default function AquariumManager() {
             aria-label={isEn ? 'Tank Settings' : '鱼缸设置'}
             title={isEn ? 'Tank Settings' : '鱼缸设置'}
             onClick={() => openAquariumSettings()}
-            className="h-8 w-8 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
+            className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
           >
             <Settings className="h-4 w-4" />
           </Button>
@@ -4920,8 +4920,8 @@ export default function AquariumManager() {
             <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">{t('aquarium.deleteReminderDesc', { title: pendingReminderDelete?.title })}</DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-2">
-            <Button type="button" variant="outline" onClick={() => setPendingReminderDelete(null)} className="h-10 rounded-full">{t('aquarium.cancel')}</Button>
-            <Button type="button" onClick={handleDeleteReminder} className="h-10 rounded-full bg-red-600 text-white hover:bg-red-700">{t('aquarium.deleteReminderBtn')}</Button>
+            <Button type="button" variant="outline" onClick={() => setPendingReminderDelete(null)} className="h-11 rounded-full">{t('aquarium.cancel')}</Button>
+            <Button type="button" onClick={handleDeleteReminder} className="h-11 rounded-full bg-red-600 text-white hover:bg-red-700">{t('aquarium.deleteReminderBtn')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -5861,7 +5861,7 @@ export default function AquariumManager() {
                                         setAddFishCompatibilityReview(null);
                                         setSelectedAddFishItems(prev => prev.filter(selected => selected.fishId !== item.fishId));
                                       }}
-                                      className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-ink/45"
+                                      className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                               aria-label={`移除 ${item.fish.name}`}
                             >
                               <X className="h-3.5 w-3.5" />

@@ -52,7 +52,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 type="button"
                 aria-label="关闭提示"
                 onClick={() => dismissToast(toast.id)}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink/35 hover:bg-bg hover:text-ink"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink/35 hover:bg-bg hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -71,4 +71,3 @@ export function useToast() {
   }
   return context;
 }
-

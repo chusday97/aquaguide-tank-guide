@@ -1078,7 +1078,7 @@ body::-webkit-scrollbar {
 }
 
 .aquarium-discovery-card {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(108px, 36%) minmax(0, 1fr);
 }
 
 @container daily-discovery (min-width: 560px) {
@@ -1088,6 +1088,25 @@ body::-webkit-scrollbar {
 
   .aquarium-discovery-visual {
     min-height: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .aquarium-manage-grid .desktop-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .aquarium-manage-grid .desktop-card-grid > button {
+    min-height: 58px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 6px;
+    padding: 6px 8px;
+  }
+
+  .aquarium-manage-grid .desktop-card-grid > button > span:first-child {
+    width: 32px;
+    height: 32px;
   }
 }
 

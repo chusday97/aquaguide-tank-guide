@@ -1160,7 +1160,7 @@ export function SpeciesDetailDialog({
                         <h3 id="species-export-title" className="text-[16px] font-black text-ink">{isEn ? 'Export species card' : '导出物种卡片'}</h3>
                         <p className="mt-0.5 text-[10px] font-bold text-ink/45">{isEn ? 'Basic facts, feeding and environment only' : '仅包含基础信息、喂养和环境'}</p>
                       </div>
-                      <button type="button" disabled={isExportingCard} onClick={() => setIsExportOpen(false)} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/55 disabled:opacity-45" aria-label={isEn ? 'Close' : '关闭'}>
+                      <button type="button" disabled={isExportingCard} onClick={() => setIsExportOpen(false)} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-45" aria-label={isEn ? 'Close' : '关闭'}>
                         <X className="h-5 w-5" />
                       </button>
                     </div>
