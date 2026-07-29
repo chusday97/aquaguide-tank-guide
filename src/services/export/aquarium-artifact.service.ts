@@ -28,6 +28,27 @@ const disclaimer = (isEn: boolean) => isEn
   ? 'Generated only from records entered in AquaGuide. This is not real-time monitoring from a smart device.'
   : '仅根据用户在 AquaGuide 中的记录生成，并非智能设备实时检测。';
 
+const containsCjk = (value: string) => /[\u3400-\u9fff]/u.test(value);
+
+const englishSystemText = (value: string | undefined, fallback: string) =>
+  value && !containsCjk(value) ? value : fallback;
+
+const localizedReminderTitle = (reminder: CareReminderRecord, isEn: boolean) =>
+  isEn ? englishSystemText(reminder.title, 'Aquarium care task') : reminder.title;
+
+const localizedFilterLabel = (value: string, isEn: boolean) => {
+  if (!isEn) return value;
+  const known: Record<string, string> = {
+    瀑布过滤: 'Hang-on-back filter',
+    海绵过滤: 'Sponge filter',
+    内置过滤: 'Internal filter',
+    外置过滤桶: 'Canister filter',
+    底滤: 'Sump filter',
+    无过滤: 'No filter',
+  };
+  return known[value] || englishSystemText(value, 'Configured filter');
+};
+
 const fileName = (aquarium: Aquarium, label: string) =>
   `AquaGuide-${aquarium.name}-${label}-${format(new Date(), 'yyyy-MM-dd')}.png`;
 
@@ -55,20 +76,52 @@ export const buildHealthScoreArtifact = (context: AquariumArtifactContext): Expo
 export const buildDiagnosisArtifact = (
   context: AquariumArtifactContext,
   diagnosis: DiagnosisOutput,
-): ExportArtifactContent => ({
-  eyebrow: context.isEn ? 'Diagnosis result' : '诊断结果',
-  title: context.aquarium.name,
-  summary: diagnosis.summary,
-  metric: diagnosis.riskLabel,
-  sections: [
-    { title: context.isEn ? 'Act now' : '立即动作', items: [diagnosis.currentAction, ...diagnosis.actions].filter(Boolean).slice(0, 3), tone: diagnosis.riskLevel === 'high' ? 'warning' : 'default' },
-    { title: context.isEn ? 'Possible reasons' : '可能原因', items: diagnosis.possibleCauses.slice(0, 3) },
-    { title: context.isEn ? 'Avoid' : '暂时不要做', items: diagnosis.avoidActions.slice(0, 3), tone: 'warning' },
-    { title: context.isEn ? 'Review time' : '复查时间', items: [diagnosis.nextCheckAt || (context.isEn ? 'Follow the result instructions.' : '按结果页提示复查。')] },
-  ],
-  fileName: fileName(context.aquarium, context.isEn ? 'diagnosis' : '诊断结果'),
-  disclaimer: disclaimer(Boolean(context.isEn)),
-});
+): ExportArtifactContent => {
+  const isEn = Boolean(context.isEn);
+  const actionFallback = diagnosis.riskLevel === 'high'
+    ? 'Follow the urgent care steps shown in AquaGuide.'
+    : 'Follow the recommended care step shown in AquaGuide.';
+  return {
+    eyebrow: isEn ? 'Diagnosis result' : '诊断结果',
+    title: context.aquarium.name,
+    summary: isEn
+      ? englishSystemText(diagnosis.summary, 'Review the structured aquarium check result.')
+      : diagnosis.summary,
+    metric: isEn
+      ? ({ low: 'Routine', medium: 'Watch', high: 'Urgent', unknown: 'More information needed' }[diagnosis.riskLevel])
+      : diagnosis.riskLabel,
+    sections: [
+      {
+        title: isEn ? 'Act now' : '立即动作',
+        items: isEn
+          ? [englishSystemText(diagnosis.currentAction, actionFallback)]
+          : [diagnosis.currentAction, ...diagnosis.actions].filter(Boolean).slice(0, 3),
+        tone: diagnosis.riskLevel === 'high' ? 'warning' : 'default',
+      },
+      {
+        title: isEn ? 'Possible reasons' : '可能原因',
+        items: isEn
+          ? diagnosis.possibleCauses.slice(0, 3).map((item, index) => englishSystemText(item, `Possible factor ${index + 1}`))
+          : diagnosis.possibleCauses.slice(0, 3),
+      },
+      {
+        title: isEn ? 'Avoid' : '暂时不要做',
+        items: isEn
+          ? diagnosis.avoidActions.slice(0, 3).map(item => englishSystemText(item, 'Avoid unverified medication or abrupt environmental changes.'))
+          : diagnosis.avoidActions.slice(0, 3),
+        tone: 'warning',
+      },
+      {
+        title: isEn ? 'Review time' : '复查时间',
+        items: [isEn
+          ? englishSystemText(diagnosis.nextCheckAt, 'Follow the review timing shown in the result.')
+          : diagnosis.nextCheckAt || '按结果页提示复查。'],
+      },
+    ],
+    fileName: fileName(context.aquarium, isEn ? 'diagnosis' : '诊断结果'),
+    disclaimer: disclaimer(isEn),
+  };
+};
 
 export const buildWeeklyCareArtifact = (context: AquariumArtifactContext): ExportArtifactContent => {
   const now = new Date();
@@ -78,7 +131,7 @@ export const buildWeeklyCareArtifact = (context: AquariumArtifactContext): Expor
   const weekly: string[] = [];
   context.careReminders.forEach(reminder => {
     const date = new Date(reminder.scheduledFor);
-    const item = `${format(date, 'MM/dd')} · ${reminder.title} · ${reminder.completedAt ? (context.isEn ? 'Done' : '已完成') : (context.isEn ? 'Pending' : '待完成')}`;
+    const item = `${format(date, 'MM/dd')} · ${localizedReminderTitle(reminder, Boolean(context.isEn))} · ${reminder.completedAt ? (context.isEn ? 'Done' : '已完成') : (context.isEn ? 'Pending' : '待完成')}`;
     if (!reminder.completedAt && isBefore(date, startOfDay(weekStart))) overdue.push(item);
     else if (date >= weekStart && date <= weekEnd) weekly.push(item);
   });
@@ -101,7 +154,7 @@ export const buildAquariumArchiveArtifact = (context: AquariumArtifactContext): 
     ? `${aquarium.dimensions.length} × ${aquarium.dimensions.width} × ${aquarium.dimensions.height} cm`
     : (context.isEn ? 'Not recorded' : '未记录');
   const equipment = [
-    aquarium.equipment?.filter && `${context.isEn ? 'Filter' : '过滤'}：${aquarium.equipment.filter}`,
+    aquarium.equipment?.filter && `${context.isEn ? 'Filter' : '过滤'}：${localizedFilterLabel(aquarium.equipment.filter, Boolean(context.isEn))}`,
     aquarium.equipment?.heater != null && `${context.isEn ? 'Heater' : '加热'}：${aquarium.equipment.heater ? (context.isEn ? 'On' : '有') : (context.isEn ? 'Off' : '无')}`,
     aquarium.equipment?.oxygen != null && `${context.isEn ? 'Aeration' : '增氧'}：${aquarium.equipment.oxygen ? (context.isEn ? 'On' : '有') : (context.isEn ? 'Off' : '无')}`,
   ].filter(Boolean) as string[];
@@ -114,8 +167,12 @@ export const buildAquariumArchiveArtifact = (context: AquariumArtifactContext): 
       { title: context.isEn ? 'Equipment' : '设备概况', items: equipment },
       { title: context.isEn ? 'Livestock' : '全部物种汇总', items: context.species.map(item => `${item.name} × ${item.quantity}`) },
       { title: context.isEn ? 'Recent care' : '最近养护', items: [
-        context.latestDiagnosis?.summary || (context.isEn ? 'No recent diagnosis result.' : '暂无最近诊断结果。'),
-        context.careReminders[0]?.title || (context.isEn ? 'No active care plan.' : '暂无待办养护计划。'),
+        context.latestDiagnosis
+          ? (context.isEn ? englishSystemText(context.latestDiagnosis.summary, 'A recent structured check is available.') : context.latestDiagnosis.summary)
+          : (context.isEn ? 'No recent diagnosis result.' : '暂无最近诊断结果。'),
+        context.careReminders[0]
+          ? localizedReminderTitle(context.careReminders[0], Boolean(context.isEn))
+          : (context.isEn ? 'No active care plan.' : '暂无待办养护计划。'),
       ] },
     ],
     fileName: fileName(aquarium, context.isEn ? 'aquarium-archive' : '鱼缸档案'),
@@ -163,7 +220,7 @@ export const buildSanitizedAquariumReport = (context: AquariumArtifactContext): 
       volumeLiters,
       targetTemperatureC: context.aquarium.targetTemperature ? Number(context.aquarium.targetTemperature) : undefined,
       equipment: [
-        context.aquarium.equipment?.filter && `${context.isEn ? 'Filter' : '过滤'}：${context.aquarium.equipment.filter}`,
+        context.aquarium.equipment?.filter && `${context.isEn ? 'Filter' : '过滤'}：${localizedFilterLabel(context.aquarium.equipment.filter, Boolean(context.isEn))}`,
         context.aquarium.equipment?.heater != null && `${context.isEn ? 'Heater' : '加热'}：${context.aquarium.equipment.heater ? (context.isEn ? 'On' : '有') : (context.isEn ? 'Off' : '无')}`,
         context.aquarium.equipment?.oxygen != null && `${context.isEn ? 'Aeration' : '增氧'}：${context.aquarium.equipment.oxygen ? (context.isEn ? 'On' : '有') : (context.isEn ? 'Off' : '无')}`,
       ].filter(Boolean) as string[],
@@ -175,11 +232,20 @@ export const buildSanitizedAquariumReport = (context: AquariumArtifactContext): 
     })),
     latestDiagnosis: context.latestDiagnosis ? {
       riskLevel: context.latestDiagnosis.riskLabel,
-      conclusion: context.latestDiagnosis.summary,
-      actions: [context.latestDiagnosis.currentAction, ...context.latestDiagnosis.actions].filter(Boolean).slice(0, 8),
+      conclusion: context.isEn
+        ? englishSystemText(context.latestDiagnosis.summary, 'A structured aquarium check found an item to review.')
+        : context.latestDiagnosis.summary,
+      actions: context.isEn
+        ? [englishSystemText(
+          context.latestDiagnosis.currentAction,
+          context.latestDiagnosis.riskLevel === 'high'
+            ? 'Follow the urgent care steps shown in AquaGuide.'
+            : 'Follow the recommended care step shown in AquaGuide.',
+        )]
+        : [context.latestDiagnosis.currentAction, ...context.latestDiagnosis.actions].filter(Boolean).slice(0, 8),
     } : undefined,
     weeklyCarePlan: context.careReminders.slice(0, 50).map(reminder => ({
-      title: reminder.title,
+      title: localizedReminderTitle(reminder, Boolean(context.isEn)),
       dayLabel: format(new Date(reminder.scheduledFor), 'MM/dd'),
       status: reminder.completedAt ? 'completed' : new Date(reminder.scheduledFor) < startOfDay(new Date()) ? 'overdue' : 'pending',
     })),

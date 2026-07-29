@@ -4156,13 +4156,53 @@ export default function AquariumManager() {
   const aquariumAgeDays = activeAquarium.startedAt
     ? Math.max(0, differenceInDays(new Date(), new Date(activeAquarium.startedAt)))
     : 0;
+  const artifactHealthStatus = isEn
+    ? tankHealthStatus === '风险' ? 'Risk' : tankHealthStatus === '提醒' ? 'Attention' : 'Normal'
+    : tankHealthStatus;
+  const artifactMissingData = isEn
+    ? [
+      ...(!latestWaterChangeDate ? ['Last water change record'] : []),
+      ...(!activeAquarium.targetTemperature ? ['Current water temperature'] : []),
+    ]
+    : dailyAdviceMissingData;
+  const artifactNextAction = isEn
+    ? ({
+      urgent_recovery: 'Continue handling the issue found today',
+      compatibility_review: 'Review the aquarium compatibility risk',
+      care_plan: 'Complete the due care plan',
+      water_change: 'Record this water change',
+      daily_check: 'Complete today’s aquarium check',
+      routine: 'Continue routine observation',
+    } satisfies Record<DailyActionTask['actionType'], string>)[dailyActionTask.actionType]
+    : dailyActionTask.title;
+  const artifactHealthReasons = isEn
+    ? [
+      dailyActionTask.actionType === 'urgent_recovery'
+        ? 'Based on today’s saved aquarium check.'
+        : dailyActionTask.actionType === 'compatibility_review'
+          ? 'A blocking compatibility risk is recorded.'
+          : dailyActionTask.actionType === 'care_plan'
+            ? 'Based on the current care plan schedule.'
+            : dailyActionTask.actionType === 'water_change'
+              ? 'Based on the recorded water-change schedule.'
+              : dailyActionTask.actionType === 'daily_check'
+                ? 'No aquarium check has been recorded today.'
+                : 'Today’s aquarium check and care schedule are up to date.',
+      conflicts.length > 0
+        ? `${conflicts.length} compatibility ${conflicts.length === 1 ? 'notice is' : 'notices are'} recorded.`
+        : 'No blocking compatibility risk is recorded.',
+      artifactMissingData.length > 0
+        ? `Missing: ${artifactMissingData.join(', ')}.`
+        : 'Key care information is recorded.',
+    ]
+    : dailyActionViewModel.reasoning;
   const artifactContext: AquariumArtifactContext = {
     aquarium: activeAquarium,
     healthScore,
-    healthStatus: tankHealthStatus,
-    healthReasons: dailyActionViewModel.reasoning,
-    missingData: dailyAdviceMissingData,
-    nextAction: dailyActionTask.title,
+    healthStatus: artifactHealthStatus,
+    healthReasons: artifactHealthReasons,
+    missingData: artifactMissingData,
+    nextAction: artifactNextAction,
     species: activeAquarium.fishes.map(record => {
       const fish = fishData.find(item => item.id === record.fishId);
       return { catalogKey: record.fishId, name: fish ? getSpeciesNameLocalized(fish, isEn) : record.fishId, quantity: record.quantity };

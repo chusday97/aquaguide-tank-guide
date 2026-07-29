@@ -59,4 +59,41 @@ const publicSnapshot = buildSanitizedAquariumReport(context);
 assert.equal(JSON.stringify(publicSnapshot).includes('客厅缸'), false);
 assert.equal('aquariumId' in publicSnapshot, false);
 
+const englishContext: AquariumArtifactContext = {
+  ...context,
+  aquarium: { ...context.aquarium, name: 'Living room tank' },
+  isEn: true,
+  healthStatus: 'Normal',
+  healthReasons: ['No blocking compatibility risk is recorded.'],
+  missingData: [],
+  nextAction: 'Complete today’s aquarium check',
+  species: [{ name: 'Guppy', quantity: 6 }],
+};
+const englishArtifacts = [
+  buildHealthScoreArtifact(englishContext),
+  buildDiagnosisArtifact(englishContext, {
+    riskLevel: 'high',
+    riskLabel: '紧急',
+    summary: '先增氧并观察呼吸',
+    currentAction: '立即增氧',
+    actions: ['停止喂食'],
+    avoidActions: ['不要直接下药'],
+    possibleCauses: ['缺氧'],
+    observeItems: [],
+    missingInfo: [],
+    evidence: [],
+    keyMetrics: [],
+    matchedRules: [],
+    matchedArticles: [],
+    nextCheckAt: '30 分钟后',
+  }),
+  buildWeeklyCareArtifact(englishContext),
+  buildAquariumArchiveArtifact(englishContext),
+  buildHundredDayArtifact(englishContext, 128),
+  buildSanitizedAquariumReport(englishContext),
+];
+for (const artifact of englishArtifacts) {
+  assert.doesNotMatch(JSON.stringify(artifact), /[\u3400-\u9fff]/u, 'English export contains fixed Chinese product copy');
+}
+
 console.log('aquarium artifact builders: ok');

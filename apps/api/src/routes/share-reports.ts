@@ -69,7 +69,8 @@ shareReportsRouter.post('/aquariums/:id/share-reports', requireAuth, asyncRoute(
     expiresAt: expiresAt.toISOString(),
   });
 
-  const { data, error } = await client
+  const adminClient = getAdminSupabase();
+  const { data, error } = await adminClient
     .from('aquarium_share_reports')
     .upsert({
       id: reportId,
@@ -84,10 +85,11 @@ shareReportsRouter.post('/aquariums/:id/share-reports', requireAuth, asyncRoute(
     .maybeSingle();
   if (error) throwDatabaseError(error, '分享报告暂时没有生成成功。');
 
-  const record = data || (await client
+  const record = data || (await adminClient
     .from('aquarium_share_reports')
     .select('id,aquarium_id,snapshot_version,created_at,expires_at,revoked_at')
     .eq('id', reportId)
+    .eq('owner_id', ownerId)
     .maybeSingle()).data;
   if (!record) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '暂时无法读取已生成的分享报告。');
 

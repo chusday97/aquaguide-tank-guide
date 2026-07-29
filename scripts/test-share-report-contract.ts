@@ -37,4 +37,11 @@ const updateLockMigration = readFileSync(resolve('supabase/migrations/2026072900
 assert.match(updateLockMigration, /drop policy if exists aquarium_share_reports_owner_update/);
 assert.doesNotMatch(updateLockMigration, /create policy .*update/i);
 
+const insertLockMigration = readFileSync(resolve('supabase/migrations/202607290003_lock_share_report_inserts.sql'), 'utf8');
+assert.match(insertLockMigration, /drop policy if exists aquarium_share_reports_owner_insert/);
+assert.doesNotMatch(insertLockMigration, /create policy .*insert/i);
+
+const shareRoute = readFileSync(resolve('apps/api/src/routes/share-reports.ts'), 'utf8');
+assert.match(shareRoute, /const adminClient = getAdminSupabase\(\);[\s\S]*adminClient[\s\S]*\.from\('aquarium_share_reports'\)[\s\S]*\.upsert/);
+
 console.log('share report contract: ok');
