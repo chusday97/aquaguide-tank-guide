@@ -520,3 +520,18 @@ interface WaterProfileEstimate {
 ## 11. 历史契约状态
 
 本文件 2.1.0 替代此前“本轮不迁移 Supabase、不新增业务表”的阶段性约束。旧约束只适用于 2026-07-16 前的本地核心体验收口，不再作为云端架构实施依据。
+
+## 12. 鱼缸记录导出与隐私分享（2.4.0）
+
+- `Aquarium` 增加 `startedAt / startedAtSource / startedAtConfirmedAt`；新缸使用创建日，旧缸推算后必须由用户确认，百日纪念只使用已确认日期。
+- 六类导出统一为客户端 PNG，只消费现有业务数据，不保存导出图片。
+- `aquarium_share_reports` 只保存登录用户主动生成的七天脱敏快照和令牌哈希；公开读取必须经过 Express，前端不得直接读表。
+- 分享快照采用字段白名单：健康、环境概况、物种汇总、结构化巡检和本周计划。用户身份、自定义鱼缸名、内部 ID、自由描述、纪念原因和 AI 原始回复禁止进入快照。
+- 原始分享令牌不落库；撤销或过期后公开接口不得返回快照。
+
+```text
+POST   /api/v1/aquariums/:id/share-reports
+GET    /api/v1/share-reports
+DELETE /api/v1/share-reports/:id
+GET    /api/v1/public/share-reports/:token
+```

@@ -7,6 +7,9 @@ export const versionSchema = z.number().int().positive();
 
 export const aquariumCreateSchema = z.object({
   name: z.string().trim().min(1).max(80),
+  startedAt: isoDateSchema.optional(),
+  startedAtSource: z.enum(['created', 'inferred', 'user']).optional(),
+  startedAtConfirmedAt: isoDateTimeSchema.optional(),
   waterType: z.enum(['Freshwater', 'Saltwater']).optional(),
   lengthCm: z.number().positive().max(10000).optional(),
   widthCm: z.number().positive().max(10000).optional(),

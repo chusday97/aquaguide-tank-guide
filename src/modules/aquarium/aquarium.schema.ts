@@ -11,6 +11,9 @@ export const aquariumFishSchema = z.object({
 export const aquariumSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  startedAt: z.string().optional(),
+  startedAtSource: z.enum(['created', 'inferred', 'user']).optional(),
+  startedAtConfirmedAt: z.string().optional(),
   fishes: z.array(aquariumFishSchema).default([]),
   lastWaterChangeDate: z.string().optional(),
   waterChangeHistory: z.array(z.string()).optional(),
@@ -55,4 +58,3 @@ export type AquariumSaveInput = z.infer<typeof aquariumSaveInputSchema>;
 export type AquariumReadInput = z.infer<typeof aquariumReadInputSchema>;
 export type AquariumListOutput = z.infer<typeof aquariumListOutputSchema>;
 export type AquariumSaveOutput = z.infer<typeof aquariumSaveOutputSchema>;
-

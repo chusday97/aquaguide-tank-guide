@@ -77,6 +77,9 @@ export interface OnboardingState {
 export interface Aquarium {
   id: string;
   name: string;
+  startedAt?: string;
+  startedAtSource?: 'created' | 'inferred' | 'user';
+  startedAtConfirmedAt?: string;
   fishes: AquariumFish[];
   lastWaterChangeDate?: string;
   waterChangeHistory?: string[];

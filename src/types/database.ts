@@ -208,6 +208,9 @@ export interface AquariumRecord extends SyncFields {
   id: Uuid;
   ownerId: Uuid;
   name: string;
+  startedAt: IsoDate;
+  startedAtSource: 'created' | 'inferred' | 'user';
+  startedAtConfirmedAt?: IsoDateTime;
   waterType?: WaterType;
   lengthCm?: number;
   widthCm?: number;
@@ -215,6 +218,17 @@ export interface AquariumRecord extends SyncFields {
   targetTemperatureC?: number;
   lastWaterChangeAt?: IsoDateTime;
   lastWaterStoredAt?: IsoDateTime;
+}
+
+export interface AquariumShareReportRecord extends SyncFields {
+  id: Uuid;
+  ownerId: Uuid;
+  aquariumId: Uuid;
+  snapshotVersion: 1;
+  snapshot: Record<string, unknown>;
+  tokenHash: string;
+  expiresAt: IsoDateTime;
+  revokedAt?: IsoDateTime;
 }
 
 export interface AquariumSpeciesRecord extends SyncFields {
@@ -442,6 +456,7 @@ export interface Database {
       careArticleTranslations: TableDefinition<CareArticleTranslationRecord>;
       careArticleStepTranslations: TableDefinition<CareArticleStepTranslationRecord>;
       aquariums: TableDefinition<AquariumRecord>;
+      aquariumShareReports: TableDefinition<AquariumShareReportRecord>;
       aquariumSpecies: TableDefinition<AquariumSpeciesRecord>;
       aquariumSpeciesBatches: TableDefinition<AquariumSpeciesBatchRecord>;
       aquariumEquipment: TableDefinition<AquariumEquipmentRecord>;
