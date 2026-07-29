@@ -21,6 +21,7 @@
 - `supabase/migrations/202607220002_atomic_livestock_batch_split.sql` 至 `202607220005_fix_livestock_batch_merge_signature.sql`：拆分、生命纪念扣减与合并的原子数据库函数，以及旧合并函数签名的显式升级。
 - `supabase/migrations/202607260001_feedback_submissions.sql`：低敏感意见反馈、管理员 RLS、状态索引与版本触发器。
 - `supabase/migrations/202607260002_atomic_livestock_removal.sql`：缸内物种数量移出的事务锁、整数校验与幂等重放。
+- `supabase/migrations/202607290001_memorial_reflection_fields.sql`：生命纪念“当时观察 / 可能原因 / 后续改进”字段与原子批次纪念写入函数。
 
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
@@ -89,6 +90,7 @@
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。
 - `docs/02-design/USER_PATH_REGISTRY.md`：正式入口、三步上限、返回上下文与空状态登记。
 - `docs/02-design/demos/`：养护详情 A/B/C 三套桌面与手机高保真方案及可复现原型。
+- `docs/02-design/MEMORIAL_DETAIL_CONCEPTS.md`：生命纪念 A/B/C 三套视觉方案与独立详情页实施约束。
 - `docs/03-development/`：技术架构、模块结构、本地运行、QA 与日志入口。
 - `docs/04-planning/PRODUCT_GAPS_AND_ROADMAP.md`：证据化卡点、优先级与迭代顺序。
 - `docs/LAYOUT_FEATURE_PARITY.md`：手机/桌面功能对照。
@@ -110,7 +112,7 @@
 - `scripts/verify-collection-hub-previews.mjs`：水族册固定预览数量、最近排序、四类内容深链、关闭/返回/失效恢复及桌面/窄桌面/手机布局验收。
 - `scripts/test-three-step-paths.ts` / `scripts/verify-three-step-experience.mjs`：正式路径上限与每日检查、养护自查、添加生物两屏流程验收。
 - `scripts/test-collection-achievements.ts`：水族册聚合与 8 枚勋章追溯断言。
-- `scripts/test-memorial-service.ts`：日期/原因校验、旧键兼容和跨页面变更事件断言。
+- `scripts/test-memorial-service.ts`：日期/原因校验、结构化复盘更新、版本递增、旧键兼容和跨页面变更事件断言。
 - `scripts/test-business-state-services.ts`：鱼缸、巡检与养护业务写入服务断言。
 - `scripts/audit-product-actions.ts`：路由页面空操作、日志操作、原生 alert 与重复伪 CTA 审计。
 - `CONTRACT.md`：三层架构、数据库、RLS、API、Repository、迁移与 AI 边界的权威契约。
