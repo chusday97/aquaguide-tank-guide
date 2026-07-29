@@ -69,6 +69,7 @@
 - `src/services/aquarium/aquarium-navigation.service.ts`：本地/云端共用的会话级鱼缸列表与当前选择快照，供桌面侧栏订阅。
 - `src/services/aquarium/species-batches.service.ts`：游客模式的批次规范化、汇总、拆分、体态更新与确定性今日观察信号。
 - `src/services/care/care-activity.service.ts`：应用内养护计划、完成操作与护理清单的旧键兼容写入。
+- `src/services/care/care-category.service.ts`：养护分类稳定 ID 与中文基准字段匹配，保证中英文返回相同文章集合。
 - `src/services/compatibility/`：Mini 与完整混养的会话级选择传递。
 - `src/services/diagnosis/`：巡检记录的同日更新策略。
 - `src/modules/diagnosis/`：每日检查问题、确定性规则与数据类型。
@@ -100,6 +101,7 @@
 - `scripts/test-visual-results.ts`：视觉结果适配、关注对象、折叠依据和规则只读性的专项断言。
 - `scripts/verify-disclosure-contract.mjs`：同时扫描 `<details>` 与 `aria-expanded` 的折叠用途白名单，并验证喂养、环境、单条计划、安全内容和首页核心模块直显。
 - `scripts/test-care-assessment-guidance.ts`：验证八类养护自查的范围、立即动作、禁止动作和复查内容不会串用语义。
+- `scripts/test-care-category-consistency.ts` / `scripts/verify-care-category-ui.mjs`：中英文分类文章 ID 一致性，以及分类筛选、单篇打开和关闭恢复的浏览器门禁。
 - `scripts/verify-task-action-closure.mjs`：验证任务路由、统一关闭、44px 决策控件，以及每日检查从草稿、生成结果到保存后的退出保护。
 - `scripts/verify-responsive-route-scan.mjs`：7 种设备/语言配置 × 17 个正式地址的页面错误、横向溢出、控件越界及 44×44px 图标点击范围门禁。
 - `scripts/test-species-diagnosis.ts`：单条新鱼、全缸急促呼吸、最多三问和中英文一致性规则断言。

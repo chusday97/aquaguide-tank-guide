@@ -15,7 +15,9 @@
 - 验证：`lint`、`build`、`test:collection-hub-ui`；浏览器覆盖水族册首页直达、旧深链、补录、保存、刷新、返回、窄桌面和手机无横向溢出。
 - 设置页已完成：删除渐变头图，900px 以上改为 210px 分类栏与内容工作区；语言为单行选择，分享记录为状态行，反馈保持错误恢复和离开保护；手机为紧凑单列。（commit: `e20adc9`）
 - 设置验证：`lint`、`build`、`test:settings-feedback`；覆盖 1280px 双栏、390px 手机、600px 英文桌面、提交成功/失败、字段聚焦与未保存导航确认。
-- 下一步：修复中英文养护分类稳定 ID 与文章集合一致性。
+- 养护分类已完成：使用稳定 `CareCategoryId`，确定性匹配读取未翻译基准字段；中英文点击同一分类返回完全相同文章 ID，“新鱼入缸”至少包含过水指南和直接入缸安全文章。（commit: `054916e`）
+- 养护验证：`test:care-categories`、`test:care-categories-ui`、`test:care-guidance`、`test:care-guide-types`、`lint`、`build`；分类只筛选列表，明确点击文章才打开详情，关闭后分类结果不丢失。
+- 下一步：执行本计划全量回归、独立 Critic 审查、修复复验与 Evaluator 用户路径裁决。
 
 ## 2026-07-29 鱼缸 PNG 导出与百日记录交接
 
