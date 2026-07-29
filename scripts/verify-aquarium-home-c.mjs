@@ -89,29 +89,34 @@ try {
     await dailyDiscoveryCard.waitFor();
     assert.ok(await dailyDiscoveryCard.locator('img').count() >= 1, 'daily discovery must lead with a species image');
     assert.equal(await dailyDiscoveryCard.getByRole('button', { name: 'View species details' }).count(), 1, 'daily discovery must expose one explicit primary detail action');
+    await page.getByLabel('Daily recommendation 1 of 10').waitFor();
     assert.deepEqual(await page.locator('.aquarium-zone-header').allTextContents().then(items => items.map(item => item.replace(/\s+/g, ' ').trim()).map(item => item.match(/Observe|Manage|Learn & Maintain/)?.[0])), ['Observe', 'Manage', 'Learn & Maintain']);
     assert.equal(await page.locator('.aquarium-recommend:visible').count(), 0, 'duplicate next-action panel must stay hidden');
-    assert.equal(await page.locator('.aquarium-advanced-tests').getAttribute('open'), null, 'advanced tests must be collapsed by default');
+    assert.equal(await page.locator('.aquarium-advanced-tests').count(), 0, 'advanced water tests must not remain on the aquarium homepage');
     assert.equal(await page.locator('.aquarium-workspace-zone > .aquarium-zone-header h2').count(), 3, 'task zones must use semantic headings');
     assert.deepEqual(await page.locator('.aquarium-workspace-zone').evaluateAll(nodes => nodes.map(node => node.classList.contains('aquarium-observe-zone') ? 'observe' : node.classList.contains('aquarium-manage-zone') ? 'manage' : 'learn')), ['observe', 'manage', 'learn']);
     if (width === 1440) {
+      const recommendationName = await dailyDiscoveryCard.locator('h3').innerText();
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.getByText('Daily Discovery', { exact: true }).waitFor();
+      assert.equal(await page.locator('.aquarium-discovery-card h3').innerText(), recommendationName, 'same-day reload must keep the current recommendation order');
+      await page.getByRole('button', { name: 'Show another species' }).click();
+      await page.getByLabel('Daily recommendation 2 of 10').waitFor();
       assert.equal(await page.locator('.aquarium-onboarding-sidebar:visible').count(), 1, 'desktop onboarding must live in the sidebar');
       assert.equal(await page.locator('main .aquarium-onboarding:visible').count(), 0, 'desktop content must not repeat the onboarding card');
-      const [tankBox, statusBox, archiveBox, manageBox, learnBox, discoveryBox, advancedBox] = await Promise.all([
+      const [tankBox, statusBox, archiveBox, manageBox, learnBox, discoveryBox] = await Promise.all([
         page.locator('.aquarium-tank').boundingBox(),
         page.locator('.aquarium-status').boundingBox(),
         page.locator('.aquarium-archive').boundingBox(),
         page.locator('.aquarium-manage-zone').boundingBox(),
         page.locator('.aquarium-learn-zone').boundingBox(),
         page.locator('.aquarium-discovery').boundingBox(),
-        page.locator('.aquarium-advanced-tests').boundingBox(),
       ]);
       assert.ok(tankBox && statusBox && tankBox.x < statusBox.x, 'Observe must place tank before today action');
       assert.ok(archiveBox && tankBox && archiveBox.y > tankBox.y + tankBox.height, 'livestock preview must be part of Observe below the tank');
       assert.ok(statusBox && archiveBox && statusBox.y + statusBox.height >= archiveBox.y + archiveBox.height - 1, 'today action must span the tank and livestock preview');
       assert.ok(manageBox && learnBox && manageBox.x < learnBox.x, 'Manage and Learn must share one row on wide desktop');
       assert.ok(discoveryBox && learnBox && discoveryBox.width >= learnBox.width - 4, 'daily discovery must use the full Learn card width');
-      assert.ok(advancedBox && manageBox && learnBox && advancedBox.x <= manageBox.x + 1 && advancedBox.x + advancedBox.width >= learnBox.x + learnBox.width - 1, 'advanced tests must span below Manage and Learn');
       assert.ok(archiveBox.height < 190, 'livestock preview must stay compact before its dialog opens');
     }
     if (width === 600) {
@@ -131,6 +136,7 @@ try {
     await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
     await page.getByText('Daily Discovery', { exact: true }).waitFor();
     assert.equal(await page.locator('.aquarium-archive-preview img').count(), Math.min(speciesCount, 3), `${speciesCount}-species preview must show up to three compact species cards`);
+    assert.equal(await page.locator('.aquarium-archive-preview').getByText(/more species|另有 \d+ 种/).count(), 0, 'livestock preview must not add a numeric overflow placeholder card');
     const archive = page.locator('.aquarium-archive');
     await archive.locator('button[aria-haspopup="dialog"]').click();
     const roster = page.getByRole('dialog').filter({ hasText: '缸内物种' }).first();
@@ -188,7 +194,7 @@ try {
   const emptyDesktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'en-US' });
   await seed(emptyDesktop);
   await emptyDesktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  await emptyDesktop.getByRole('button', { name: 'Add Livestock' }).click();
+  await emptyDesktop.getByRole('button', { name: 'Add Livestock', exact: true }).click();
   await emptyDesktop.getByRole('dialog').waitFor();
   await emptyDesktop.close();
 
@@ -208,10 +214,10 @@ try {
   await tankNavigation.getByRole('button', { name: /隔离观察缸/ }).click();
   await tankNavigationDesktop.waitForURL(/tank=tank-second/);
   await tankNavigationDesktop.locator('.aquarium-desktop-header').getByText('隔离观察缸', { exact: true }).waitFor();
-  await tankNavigationDesktop.getByRole('button', { name: '重命名鱼缸' }).click();
-  const renameInput = tankNavigationDesktop.getByRole('textbox', { name: '鱼缸名称' });
+  await tankNavigationDesktop.getByRole('button', { name: /重命名鱼缸|Rename aquarium/i }).click();
+  const renameInput = tankNavigationDesktop.getByRole('textbox', { name: /鱼缸名称|Aquarium name/i });
   await renameInput.fill('新鱼观察缸');
-  await tankNavigationDesktop.getByRole('button', { name: '保存', exact: true }).click();
+  await renameInput.locator('xpath=ancestor::form').locator('button[type="submit"]').click();
   await tankNavigationDesktop.locator('.aquarium-desktop-header').getByText('新鱼观察缸', { exact: true }).waitFor();
   await tankNavigation.getByText('新鱼观察缸', { exact: true }).waitFor();
   await tankNavigationDesktop.close();
@@ -226,14 +232,14 @@ try {
   const riskTrigger = riskDesktop.locator('button').filter({ hasText: /风险|Risk/ }).first();
   await riskTrigger.waitFor();
   await riskTrigger.click();
-  const riskDialog = riskDesktop.getByRole('dialog').filter({ hasText: '鱼缸风险处理' });
+  const riskDialog = riskDesktop.getByRole('dialog').filter({ hasText: /鱼缸风险处理|Aquarium risk/i });
   await riskDialog.waitFor();
   assert.equal(await riskDialog.locator('ol li').count(), 3, 'risk guide must expose three concrete steps');
   assert.ok(await riskDialog.locator('img').count() >= 1, 'risk guide must visualize the affected species');
   assert.equal(await riskDialog.locator('details').count(), 0, 'risk dialog must not hide avoid actions');
-  await riskDialog.getByText('暂时不要这样做', { exact: true }).waitFor();
-  await riskDialog.getByRole('button', { name: /调整.*数量|查看当前负载来源/ }).click();
-  await riskDesktop.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
+  await riskDialog.getByText(/暂时不要这样做|Avoid doing this temporarily/i).waitFor();
+  await riskDialog.getByRole('button', { name: /调整.*数量|查看当前负载来源|Adjust.*quantity|View current load/i }).click();
+  await riskDesktop.getByRole('dialog').filter({ hasText: /缸内物种|Tank Livestock/i }).waitFor();
   await riskDesktop.close();
 
   for (const width of [320, 375, 390, 430]) {
@@ -270,7 +276,7 @@ try {
     const zonePositions = await phone.locator('.aquarium-zone-header').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().top));
     assert.ok(zonePositions[0] < zonePositions[1] && zonePositions[1] < zonePositions[2], 'phone task zones must keep Observe → Manage → Learn order');
     await assertControlInsideViewport(phone.getByText('View all 4 steps', { exact: true }), `${width}px onboarding details`);
-    assert.equal(await phone.getByText('Advanced Water Tests (Optional)', { exact: true }).count(), 1);
+    assert.equal(await phone.getByText('Advanced Water Tests (Optional)', { exact: true }).count(), 0);
     await assertNoHorizontalOverflow(phone);
     await phone.close();
   }
@@ -306,7 +312,7 @@ try {
   assert.equal(await targetedLearningZone.evaluate(element => element.classList.contains('aquarium-zone-target')), true, 'learning deep link must highlight the target zone');
   await learningDeepLinkPhone.close();
 
-  console.log('aquarium homepage C verified: guided zones, optional advanced tests, and responsive English layout');
+  console.log('aquarium homepage C verified: guided zones, daily 10-item progress, compact livestock preview, and responsive English layout');
 } finally {
   await browser.close();
 }

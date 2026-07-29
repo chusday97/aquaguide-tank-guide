@@ -47,7 +47,7 @@ export function QuickActionGrid({ actions }: QuickActionGridProps) {
           <span className="min-w-0">
             <span className="block whitespace-normal text-[12px] font-black leading-snug text-current [overflow-wrap:anywhere] md:text-[13px]">{action.label}</span>
             {action.description && (
-              <span className="mt-0.5 block text-[9px] font-medium leading-snug opacity-60 md:text-[10px]">{action.description}</span>
+              <span className="quick-action-description mt-0.5 hidden text-[9px] font-medium leading-snug opacity-60 md:block md:text-[10px]">{action.description}</span>
             )}
           </span>
         </button>
