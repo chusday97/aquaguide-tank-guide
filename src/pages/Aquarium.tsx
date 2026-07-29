@@ -1022,31 +1022,33 @@ const saveDiscoveryState = (state: DiscoveryDeckState) => {
   patchLocalAppState({ discoveryState: state }, { debounce: true });
 };
 
-const getDiscoveryPositioning = (fish: Fish) => {
+const getDiscoveryPositioning = (fish: Fish, isEn = false) => {
   const primaryTool = getToolFunctions(fish)[0];
-  if (primaryTool) return `${primaryTool} · ${fish.housingMode || '适合继续观察'}`;
-  if (fish.difficulty === 'Easy') return '适合新手观察和入门搭配';
+  if (primaryTool) return `${primaryTool} · ${fish.housingMode || (isEn ? 'Observe' : '适合继续观察')}`;
+  if (fish.difficulty === 'Easy') return isEn ? 'Great for beginners & observation' : '适合新手观察和入门搭配';
   if (fish.housingMode) return fish.housingMode;
-  return '可以先看详情，再决定是否加入鱼缸';
+  return isEn ? 'View details before deciding to add' : '可以先看详情，再决定是否加入鱼缸';
 };
 
-const getDiscoveryFitText = (fish: Fish) => {
+const getDiscoveryFitText = (fish: Fish, isEn = false) => {
   const lifeType = getLifeType(fish);
   if (lifeType === 'invertebrate') {
     return {
-      suitable: '适合稳定淡水缸、草缸或工具生物搭配。',
-      unsuitable: '不适合频繁下药、强攻击鱼或水质大幅波动的缸。',
+      suitable: isEn ? 'Suitable for established freshwater/planted tanks & cleanups.' : '适合稳定淡水缸、草缸或工具生物搭配。',
+      unsuitable: isEn ? 'Unsuitable for heavy medication, aggressive fish or wild water swings.' : '不适合频繁下药、强攻击鱼或水质大幅波动的缸。',
     };
   }
   if (fish.difficulty === 'Easy') {
     return {
-      suitable: '适合新手、稳定水体和循序少量添加。',
-      unsuitable: '不适合刚开缸大量加入或与体型差异过大的鱼混养。',
+      suitable: isEn ? 'Suitable for beginners, stable water & gradual small additions.' : '适合新手、稳定水体和循序少量添加。',
+      unsuitable: isEn ? 'Unsuitable for instant large additions or big aggressive fish.' : '不适合刚开缸大量加入或与体型差异过大的鱼混养。',
     };
   }
   return {
-    suitable: '适合已有稳定参数和一定养护经验后尝试。',
-    unsuitable: fish.housingMode === '建议单养' ? '不适合随意混养，建议先单独规划缸位。' : '不适合水质不稳定或没有观察周期时直接加入。',
+    suitable: isEn ? 'Suitable for tanks with stable parameters and care experience.' : '适合已有稳定参数和一定养护经验后尝试。',
+    unsuitable: fish.housingMode === '建议单养'
+      ? (isEn ? 'Not suitable for casual co-housing. Single tank recommended.' : '不适合随意混养，建议先单独规划缸位。')
+      : (isEn ? 'Not suitable for unstable water parameters without observation.' : '不适合水质不稳定或没有观察周期时直接加入。'),
   };
 };
 
@@ -1466,7 +1468,7 @@ export default function AquariumManager() {
       operationId: input.operationId,
     });
     setAquariums(current => current.map(aquarium => aquarium.id === active.id ? savedAquarium : aquarium));
-    showToast(`已从鱼缸记录中移出 ${input.quantity} 只/条`);
+    showToast(isEn ? `Removed ${input.quantity} livestock from aquarium log` : `已从鱼缸记录中移出 ${input.quantity} 只/条`);
   };
   const handleAddAquarium = () => {
     const newAq = createDefaultAquarium(`我的鱼缸 ${aquariums.length + 1}`);
