@@ -39,6 +39,7 @@ import type { DiagnosisOutput } from '../modules/diagnosis/diagnosis.types';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
 import { getSearchSuggestions } from '../services/search/search-suggestions.service';
 import { taskRoutes } from '../services/navigation/task-routes';
+import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const FilterBottomSheet = lazy(() => import('../components/common/FilterBottomSheet').then(module => ({ default: module.FilterBottomSheet })));
@@ -85,12 +86,18 @@ type StepDiagnosisResult = {
   observeItems: string[];
   evidence: string[];
 };
+type AssessmentScope = 'whole_tank' | 'single_species' | 'multiple_species';
+type AssessmentTarget = {
+  scope: AssessmentScope;
+  speciesIds: string[];
+};
 type StepDiagnosisState = {
   issueType: StepDiagnosisIssue;
   currentStep: number;
   questionIndex: number;
   answers: StepDiagnosisAnswers;
   targetAquariumId: string;
+  target: AssessmentTarget;
   result: StepDiagnosisResult | null;
 };
 type CareUrgencyTag = '科普了解' | '入缸前准备' | '观察为主' | '阶段护理' | '建议尽快处理' | '需要立即处理' | '谨慎操作';
@@ -2446,6 +2453,7 @@ function StepDiagnosisPanel({
     questionIndex: 0,
     answers: {},
     targetAquariumId: defaultAquariumId,
+    target: { scope: 'whole_tank', speciesIds: [] },
     result: null,
   }));
   const [isResultActionOpen, setIsResultActionOpen] = useState(false);
@@ -2458,6 +2466,7 @@ function StepDiagnosisPanel({
       questionIndex: 0,
       answers: {},
       targetAquariumId: defaultAquariumId,
+      target: { scope: 'whole_tank', speciesIds: [] },
       result: null,
     });
     setIsResultActionOpen(false);
@@ -2465,10 +2474,30 @@ function StepDiagnosisPanel({
 
   const targetAquarium = aquariums.find(item => item.id === diagnosisState.targetAquariumId) || aquariums[0] || null;
   const currentLivestock = useMemo(() => getCurrentLivestock(targetAquarium), [targetAquarium]);
+  const scopeLivestock = useMemo(() => {
+    const grouped = new Map<string, { fish: FishType; quantity: number }>();
+    currentLivestock.forEach(item => {
+      const existing = grouped.get(item.fish.id);
+      const quantity = item.aqFish.quantity || 1;
+      grouped.set(item.fish.id, existing
+        ? { ...existing, quantity: existing.quantity + quantity }
+        : { fish: item.fish, quantity });
+    });
+    return Array.from(grouped.values());
+  }, [currentLivestock]);
+  const requiresSpeciesScope = !['cloudy', 'plantProblem'].includes(diagnosisState.issueType);
+  const scopedLivestock = useMemo(() => {
+    if (!requiresSpeciesScope || diagnosisState.target.scope === 'whole_tank') return currentLivestock;
+    const selectedIds = new Set(diagnosisState.target.speciesIds);
+    return currentLivestock.filter(item => selectedIds.has(item.fish.id));
+  }, [currentLivestock, diagnosisState.target.scope, diagnosisState.target.speciesIds, requiresSpeciesScope]);
   const diagnosisQuestions = useMemo(() => getStepDiagnosisQuestions(diagnosisState.issueType, isEn), [diagnosisState.issueType, isEn]);
   const answeredCount = diagnosisQuestions.filter(question => diagnosisState.answers[question.id]).length;
   const isResultStep = diagnosisState.currentStep === 2 && Boolean(diagnosisState.result);
-  const isReady = diagnosisQuestions.length > 0 && answeredCount === diagnosisQuestions.length;
+  const isTargetReady = !requiresSpeciesScope
+    || diagnosisState.target.scope === 'whole_tank'
+    || diagnosisState.target.speciesIds.length > 0;
+  const isReady = diagnosisQuestions.length > 0 && answeredCount === diagnosisQuestions.length && isTargetReady;
   
   const issuesList = isEn ? stepDiagnosisIssuesEn : stepDiagnosisIssues;
   const issueMeta = issuesList.find(item => item.id === diagnosisState.issueType) || issuesList[0];
@@ -2499,7 +2528,10 @@ function StepDiagnosisPanel({
       result: output,
       answers: Object.fromEntries(Object.entries(diagnosisState.answers).map(([key, value]) => [key, value ? labelMap[value] : ''])),
       aquariumName: targetAquarium?.name || (isEn ? 'Active Tank' : '当前鱼缸'),
-      livestock: currentLivestock.map(item => item.fish),
+      livestock: scopedLivestock.map(item => item.fish),
+      focusSpeciesId: diagnosisState.target.scope === 'single_species'
+        ? diagnosisState.target.speciesIds[0]
+        : undefined,
       primaryActionLabel: result.riskLevel === 'high'
         ? (isEn ? 'View Emergency Steps' : '查看紧急处理步骤')
         : result.riskLevel === 'medium'
@@ -2509,7 +2541,7 @@ function StepDiagnosisPanel({
             : (isEn ? 'View Observation Checklist' : '查看观察清单'),
       primaryActionType: 'section',
     });
-  }, [currentLivestock, diagnosisQuestions, diagnosisState.answers, diagnosisState.result, targetAquarium?.name, isEn]);
+  }, [diagnosisQuestions, diagnosisState.answers, diagnosisState.result, diagnosisState.target.scope, diagnosisState.target.speciesIds, scopedLivestock, targetAquarium?.name, isEn]);
 
   const updateAnswer = (key: keyof StepDiagnosisAnswers, value: StepDiagnosisAnswerValue) => {
     setIsResultActionOpen(false);
@@ -2524,7 +2556,7 @@ function StepDiagnosisPanel({
     if (!isReady) return;
     const result = buildStepDiagnosisResult({
       aquarium: targetAquarium,
-      livestock: currentLivestock,
+      livestock: scopedLivestock,
       answers: diagnosisState.answers,
       issueType: diagnosisState.issueType,
     });
@@ -2585,7 +2617,14 @@ function StepDiagnosisPanel({
                   <button
                     key={issue.id}
                     type="button"
-                    onClick={() => setDiagnosisState(prev => ({ ...prev, issueType: issue.id, questionIndex: 0, answers: {}, result: null }))}
+                    onClick={() => setDiagnosisState(prev => ({
+                      ...prev,
+                      issueType: issue.id,
+                      questionIndex: 0,
+                      answers: {},
+                      target: { scope: 'whole_tank', speciesIds: [] },
+                      result: null,
+                    }))}
                     className={`rounded-full border px-3 py-2 text-[11px] font-black transition-colors ${
                       selected ? 'border-emerald-700 bg-emerald-700 text-white' : 'border-border bg-bg text-ink/58'
                     }`}
@@ -2606,8 +2645,13 @@ function StepDiagnosisPanel({
                   <button
                     key={aquarium.id}
                     type="button"
-                    onClick={() => setDiagnosisState(prev => ({ ...prev, targetAquariumId: aquarium.id, result: null }))}
-                    className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-black ${
+                    onClick={() => setDiagnosisState(prev => ({
+                      ...prev,
+                      targetAquariumId: aquarium.id,
+                      target: { scope: 'whole_tank', speciesIds: [] },
+                      result: null,
+                    }))}
+                    className={`min-h-11 shrink-0 rounded-full px-3 py-2 text-[11px] font-black ${
                       diagnosisState.targetAquariumId === aquarium.id ? 'bg-emerald-700 text-white' : 'bg-bg text-ink/55'
                     }`}
                   >
@@ -2615,6 +2659,74 @@ function StepDiagnosisPanel({
                   </button>
                 ))}
               </div>
+            </div>
+          )}
+
+          {requiresSpeciesScope && scopeLivestock.length > 0 && (
+            <div className="rounded-[18px] bg-white p-3 shadow-sm">
+              <div className="text-[12px] font-black text-ink">{isEn ? 'Who shows this symptom?' : '哪些生物出现了这个情况？'}</div>
+              <div className="mt-2 grid grid-cols-3 gap-2 max-[420px]:grid-cols-1">
+                {([
+                  ['whole_tank', isEn ? 'Whole tank' : '全缸都这样'],
+                  ['single_species', isEn ? 'One species' : '某一种生物'],
+                  ['multiple_species', isEn ? 'Several species' : '多种生物'],
+                ] as Array<[AssessmentScope, string]>).map(([scope, label]) => (
+                  <button
+                    key={scope}
+                    type="button"
+                    onClick={() => setDiagnosisState(prev => ({
+                      ...prev,
+                      target: { scope, speciesIds: [] },
+                      result: null,
+                    }))}
+                    aria-pressed={diagnosisState.target.scope === scope}
+                    className={`min-h-11 rounded-[14px] border px-3 py-2 text-[11px] font-black transition-colors ${
+                      diagnosisState.target.scope === scope
+                        ? 'border-emerald-700 bg-emerald-700 text-white'
+                        : 'border-border bg-bg text-ink/58'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {diagnosisState.target.scope !== 'whole_tank' && (
+                <div className="mt-3 grid grid-cols-2 gap-2 max-[360px]:grid-cols-1">
+                  {scopeLivestock.map(item => {
+                    const selected = diagnosisState.target.speciesIds.includes(item.fish.id);
+                    return (
+                      <button
+                        key={item.fish.id}
+                        type="button"
+                        onClick={() => setDiagnosisState(prev => {
+                          const isSelected = prev.target.speciesIds.includes(item.fish.id);
+                          const speciesIds = prev.target.scope === 'single_species'
+                            ? [item.fish.id]
+                            : isSelected
+                              ? prev.target.speciesIds.filter(id => id !== item.fish.id)
+                              : [...prev.target.speciesIds, item.fish.id];
+                          return { ...prev, target: { ...prev.target, speciesIds }, result: null };
+                        })}
+                        aria-pressed={selected}
+                        className={`grid min-h-14 grid-cols-[44px_minmax(0,1fr)] items-center gap-2 rounded-[14px] border p-2 text-left transition-colors ${
+                          selected ? 'border-emerald-700 bg-emerald-50' : 'border-border bg-bg'
+                        }`}
+                      >
+                        <img
+                          src={getSpeciesDisplayImage(item.fish)}
+                          alt=""
+                          className="h-11 w-11 rounded-[12px] bg-white object-contain"
+                        />
+                        <span className="min-w-0">
+                          <span className="block break-words text-[12px] font-black text-ink">{item.fish.name}</span>
+                          <span className="mt-0.5 block text-[10px] font-bold text-ink/45">{isEn ? `${item.quantity} in tank` : `缸内 ${item.quantity} 只`}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -2657,7 +2769,11 @@ function StepDiagnosisPanel({
             disabled={!isReady}
             className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800 disabled:bg-ink/15 disabled:text-ink/35"
           >
-            {isReady ? (isEn ? 'View Results' : '查看自查结果') : (isEn ? `${diagnosisQuestions.length - answeredCount} left` : `还差 ${diagnosisQuestions.length - answeredCount} 项`)}
+            {isReady
+              ? (isEn ? 'View Results' : '查看自查结果')
+              : !isTargetReady
+                ? (isEn ? 'Select who shows the symptom' : '请先选择检查对象')
+                : (isEn ? `${diagnosisQuestions.length - answeredCount} left` : `还差 ${diagnosisQuestions.length - answeredCount} 项`)}
           </Button>
         </div>
       )}
@@ -2684,14 +2800,14 @@ function StepDiagnosisPanel({
                 ))}
               </div>
               {diagnosisState.result.avoidActions.length > 0 && (
-                <details className="mt-3 rounded-[15px] bg-amber-50 px-3 py-2.5">
-                  <summary className="cursor-pointer text-[11px] font-black text-amber-800">
+                <div className="mt-3 rounded-[15px] bg-amber-50 px-3 py-2.5">
+                  <div className="text-[11px] font-black text-amber-800">
                     {isEn ? 'Avoid these actions' : '暂时不要做这些'}
-                  </summary>
+                  </div>
                   <ul className="mt-2 grid gap-1.5 text-[11px] font-semibold leading-5 text-amber-950/72">
                     {diagnosisState.result.avoidActions.map(item => <li key={item}>· {item}</li>)}
                   </ul>
-                </details>
+                </div>
               )}
               <div className="mt-3 rounded-[15px] bg-sky-50 px-3 py-2.5">
                 <div className="text-[11px] font-black text-sky-800">{isEn ? 'Afterward' : '做完以后'}</div>

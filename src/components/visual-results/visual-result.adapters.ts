@@ -147,6 +147,7 @@ export function buildDiagnosisVisualResult({
   answers,
   aquariumName,
   livestock,
+  focusSpeciesId,
   primaryActionLabel,
   primaryActionType = 'mutation',
 }: {
@@ -154,6 +155,7 @@ export function buildDiagnosisVisualResult({
   answers: DiagnosisAnswerMap;
   aquariumName: string;
   livestock: Fish[];
+  focusSpeciesId?: string;
   primaryActionLabel: string;
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
 }): VisualResultViewModel {
@@ -161,7 +163,8 @@ export function buildDiagnosisVisualResult({
   const abnormalAnswers = Object.entries(answers)
     .filter(([key, value]) => diagnosisAnswerLabels[key] && value && value !== '跳过' && !normalDiagnosisAnswers.has(value))
     .slice(0, 5);
-  const focusFish = livestock[0];
+  const focusFish = focusSpeciesId ? livestock.find(item => item.id === focusSpeciesId) : undefined;
+  const relatedLivestock = focusFish ? livestock.filter(item => item.id !== focusFish.id) : livestock;
   const subjects: VisualResultSubject[] = [{
     id: focusFish?.id || 'aquarium',
     name: focusFish?.name || aquariumName,
@@ -169,9 +172,17 @@ export function buildDiagnosisVisualResult({
     role: 'focus',
     status,
     shortReason: result.summary,
-    badgeLabel: focusFish ? '重点观察' : '当前鱼缸',
+    badgeLabel: focusFish ? '重点观察' : '全缸检查',
     emphasis: getVisualEmphasis(result.summary),
-  }, ...abnormalAnswers.map<VisualResultSubject>(([key, value]) => ({
+  }, ...relatedLivestock.map<VisualResultSubject>(fish => ({
+    id: fish.id,
+    name: fish.name,
+    image: getSpeciesDisplayImage(fish),
+    role: 'related',
+    status,
+    shortReason: '本次检查包含该物种',
+    badgeLabel: '检查对象',
+  })), ...abnormalAnswers.map<VisualResultSubject>(([key, value]) => ({
     id: `answer-${key}`,
     name: diagnosisAnswerLabels[key],
     role: 'affected',
