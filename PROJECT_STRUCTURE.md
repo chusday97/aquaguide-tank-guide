@@ -133,3 +133,9 @@
 ## 内部实验
 
 - `src/pages/ThreeDemo.tsx` 与 `/3d-demo`：3D 独立验证入口，不进入正式导航和核心发布验收。
+# 2026-07-29 导出模块补充
+
+- `src/components/export/ExportArtifactDialog.tsx`：固定宽度 PNG 预览与下载表面。
+- `src/services/export/png-export.service.ts`：字体/图片就绪、1080px 渲染与本地保存。
+- `src/services/export/aquarium-artifact.service.ts`：健康、诊断、计划、档案和百日纪念展示模型。
+- `scripts/test-aquarium-artifacts.ts`：导出内容与隐私边界专项。

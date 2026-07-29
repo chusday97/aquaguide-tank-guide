@@ -34,6 +34,9 @@ type ApiAquarium = {
   targetTemperatureC?: number;
   lastWaterChangeAt?: string;
   lastWaterStoredAt?: string;
+  startedAt?: string;
+  startedAtSource?: 'created' | 'inferred' | 'user';
+  startedAtConfirmedAt?: string;
   version: number;
   species: ApiAquariumSpecies[];
   equipment?: {
@@ -94,6 +97,9 @@ const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
     })),
     lastWaterChangeDate: record.lastWaterChangeAt,
     lastWaterStoredDate: record.lastWaterStoredAt,
+    startedAt: record.startedAt,
+    startedAtSource: record.startedAtSource,
+    startedAtConfirmedAt: record.startedAtConfirmedAt,
     dimensions: record.lengthCm && record.widthCm && record.heightCm
       ? { length: String(record.lengthCm), width: String(record.widthCm), height: String(record.heightCm) }
       : undefined,
@@ -237,6 +243,9 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       targetTemperatureC: aquarium.targetTemperature ? Number(aquarium.targetTemperature) : undefined,
       lastWaterChangeAt: aquarium.lastWaterChangeDate,
       lastWaterStoredAt: aquarium.lastWaterStoredDate,
+      startedAt: aquarium.startedAt,
+      startedAtSource: aquarium.startedAtSource,
+      startedAtConfirmedAt: aquarium.startedAtConfirmedAt,
     };
 
     const version = this.aquariumVersions.get(aquarium.id);

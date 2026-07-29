@@ -1,4 +1,4 @@
-import { Check, ChevronRight, Circle, X } from 'lucide-react';
+import { Check, ChevronRight, Circle, Download, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceNavigation } from '../layout/WorkspaceNavigationProvider';
@@ -11,11 +11,13 @@ import {
   syncOnboardingCompletion,
 } from '../../services/onboarding/onboarding.service';
 import { taskRoutes } from '../../services/navigation/task-routes';
+import { ExportArtifactDialog, type ExportArtifactContent } from '../export/ExportArtifactDialog';
 
 export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 'sidebar' }) {
   const { t } = useTranslation();
   const { navigateToRoute } = useWorkspaceNavigation();
   const [, setRevision] = useState(0);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const onboarding = getOnboardingState();
   const progress = getOnboardingTaskProgress();
 
@@ -37,6 +39,25 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
     { done: progress.dailyCheckDone, label: t('onboarding.taskCheck'), route: `${taskRoutes.aquarium.dailyCheck}&source=onboarding` },
   ], [progress, t]);
   const nextTask = tasks.find(task => !task.done);
+  const isEn = document.documentElement.lang.startsWith('en');
+  const exportContent: ExportArtifactContent = {
+    eyebrow: isEn ? 'Starter checklist' : '新手开缸清单',
+    title: isEn ? 'My first aquarium' : '我的第一口鱼缸',
+    summary: progress.complete
+      ? (isEn ? 'All four starter steps are complete.' : '四项新手任务已经全部完成。')
+      : (isEn ? `${progress.completedCount} of 4 steps complete.` : `已完成 ${progress.completedCount} / 4 项。`),
+    metric: `${progress.completedCount}/4`,
+    sections: [{
+      title: isEn ? 'Checklist' : '开缸清单',
+      items: tasks.map(task => `${task.done ? '✓' : '○'} ${task.label}`),
+    }, {
+      title: isEn ? 'Next step' : '下一步',
+      items: [nextTask?.label || (isEn ? 'Keep observing the aquarium every day.' : '继续每天观察鱼缸。')],
+      tone: 'success',
+    }],
+    fileName: `AquaGuide-${isEn ? 'starter-checklist' : '新手开缸清单'}-${new Date().toISOString().slice(0, 10)}.png`,
+    disclaimer: isEn ? 'Generated from your recorded progress.' : '仅根据你在 AquaGuide 中的真实完成记录生成。',
+  };
 
   if (!onboarding || onboarding.taskCardDismissed) return null;
 
@@ -55,7 +76,10 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
           <h2 id={isSidebar ? 'onboarding-sidebar-title' : 'onboarding-task-title'} className={`${isSidebar ? 'mt-0.5 text-[13px]' : 'mt-1 text-lg'} font-black`}>{progress.complete ? t('onboarding.completeTitle') : t('onboarding.taskTitle')}</h2>
           <p className={`${isSidebar ? 'mt-0.5 text-[10px] leading-4 text-ink/45' : 'mt-1 text-xs leading-5 text-white/62'} font-semibold`}>{progress.complete ? t('onboarding.completeSubtitle') : t('onboarding.taskSubtitle')}</p>
         </div>
-        <button type="button" onClick={dismissOnboardingTaskCard} aria-label={t('onboarding.dismiss')} className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl focus-visible:outline-none focus-visible:ring-2 ${isSidebar ? 'bg-emerald-50 text-ink/45 hover:text-emerald-800 focus-visible:ring-emerald-400' : 'bg-white/10 text-white/70 hover:bg-white/15 hover:text-white focus-visible:ring-white'}`}><X className="h-4 w-4" /></button>
+        <div className="flex shrink-0 gap-1">
+          <button type="button" onClick={() => setIsExportOpen(true)} aria-label={isEn ? 'Download starter checklist' : '下载新手开缸清单'} className={`flex h-11 w-11 items-center justify-center rounded-xl focus-visible:outline-none focus-visible:ring-2 ${isSidebar ? 'bg-emerald-50 text-emerald-800 focus-visible:ring-emerald-400' : 'bg-white/10 text-white focus-visible:ring-white'}`}><Download className="h-4 w-4" /></button>
+          <button type="button" onClick={dismissOnboardingTaskCard} aria-label={t('onboarding.dismiss')} className={`flex h-11 w-11 items-center justify-center rounded-xl focus-visible:outline-none focus-visible:ring-2 ${isSidebar ? 'bg-emerald-50 text-ink/45 hover:text-emerald-800 focus-visible:ring-emerald-400' : 'bg-white/10 text-white/70 hover:bg-white/15 hover:text-white focus-visible:ring-white'}`}><X className="h-4 w-4" /></button>
+        </div>
       </div>
       <div className={`mt-3 h-1.5 overflow-hidden rounded-full ${isSidebar ? 'bg-emerald-100' : 'bg-white/12'}`} aria-hidden="true">
         <div className={`h-full rounded-full transition-[width] duration-200 ${isSidebar ? 'bg-emerald-600' : 'bg-emerald-300'}`} style={{ width: `${progress.completedCount * 25}%` }} />
@@ -80,6 +104,7 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
           </div>
         </details>
       </div>
+      <ExportArtifactDialog open={isExportOpen} onOpenChange={setIsExportOpen} content={exportContent} isEn={isEn} />
     </section>
   );
 }

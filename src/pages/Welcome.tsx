@@ -1,12 +1,36 @@
-import { ArrowRight, BookOpen, Droplets } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, BookOpen, Download, Droplets } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
-import { chooseOnboardingGoal, skipOnboarding } from '../services/onboarding/onboarding.service';
+import { chooseOnboardingGoal, getOnboardingTaskProgress, skipOnboarding } from '../services/onboarding/onboarding.service';
 import { taskRoutes } from '../services/navigation/task-routes';
+import { ExportArtifactDialog, type ExportArtifactContent } from '../components/export/ExportArtifactDialog';
 
 export default function WelcomePage() {
   const { t } = useTranslation();
   const { navigateToRoute } = useWorkspaceNavigation();
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const progress = getOnboardingTaskProgress();
+  const isEn = document.documentElement.lang.startsWith('en');
+  const taskLabels = [
+    t('onboarding.taskTank'),
+    t('onboarding.taskViewSpecies'),
+    t('onboarding.taskChooseSpecies'),
+    t('onboarding.taskCheck'),
+  ];
+  const taskStates = [progress.aquariumReady, progress.speciesViewed, progress.speciesChosen, progress.dailyCheckDone];
+  const exportContent: ExportArtifactContent = {
+    eyebrow: isEn ? 'Starter checklist' : '新手开缸清单',
+    title: isEn ? 'My first aquarium' : '我的第一口鱼缸',
+    summary: isEn ? `${progress.completedCount} of 4 steps complete.` : `已完成 ${progress.completedCount} / 4 项。`,
+    metric: `${progress.completedCount}/4`,
+    sections: [
+      { title: isEn ? 'Checklist' : '开缸清单', items: taskLabels.map((label, index) => `${taskStates[index] ? '✓' : '○'} ${label}`) },
+      { title: isEn ? 'Next step' : '下一步', items: [taskLabels[taskStates.findIndex(done => !done)] || (isEn ? 'Keep observing the aquarium.' : '继续每天观察鱼缸。')], tone: 'success' },
+    ],
+    fileName: `AquaGuide-${isEn ? 'starter-checklist' : '新手开缸清单'}-${new Date().toISOString().slice(0, 10)}.png`,
+    disclaimer: isEn ? 'Generated from your recorded progress.' : '仅根据你在 AquaGuide 中的真实完成记录生成。',
+  };
 
   const choose = (goal: 'build_tank' | 'browse_species') => {
     chooseOnboardingGoal(goal);
@@ -37,8 +61,14 @@ export default function WelcomePage() {
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-black text-emerald-800">{t('onboarding.start')}<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
           </button>
         </div>
-        <button type="button" onClick={() => { skipOnboarding(); navigateToRoute('/aquarium'); }} className="mx-auto mt-6 block min-h-11 rounded-2xl px-4 text-sm font-black text-ink/45 hover:bg-white/70 hover:text-ink">{t('onboarding.skip')}</button>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          <button type="button" onClick={() => setIsExportOpen(true)} className="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-white px-4 text-sm font-black text-emerald-800 shadow-sm hover:bg-emerald-50">
+            <Download className="h-4 w-4" />{isEn ? 'Download checklist' : '下载新手开缸清单'}
+          </button>
+          <button type="button" onClick={() => { skipOnboarding(); navigateToRoute('/aquarium'); }} className="min-h-11 rounded-2xl px-4 text-sm font-black text-ink/45 hover:bg-white/70 hover:text-ink">{t('onboarding.skip')}</button>
+        </div>
       </div>
+      <ExportArtifactDialog open={isExportOpen} onOpenChange={setIsExportOpen} content={exportContent} isEn={isEn} />
     </main>
   );
 }

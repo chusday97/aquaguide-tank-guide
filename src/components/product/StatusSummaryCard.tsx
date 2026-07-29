@@ -1,4 +1,4 @@
-import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, Trash2 } from 'lucide-react';
+import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, Download, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { TagPill, type TagPillTone } from './TagPill';
@@ -85,6 +85,8 @@ type StatusSummaryCardProps = {
   onRescheduleCarePlan: (id: string) => void;
   onDeleteCarePlan: (id: string) => void;
   onBrowseCare: () => void;
+  onDownloadHealth?: () => void;
+  onDownloadCarePlan?: () => void;
 };
 
 const levelTone: Record<AquariumStatusLevel, TagPillTone> = {
@@ -112,6 +114,8 @@ export function StatusSummaryCard({
   onRescheduleCarePlan,
   onDeleteCarePlan,
   onBrowseCare,
+  onDownloadHealth,
+  onDownloadCarePlan,
 }: StatusSummaryCardProps) {
   const { t } = useTranslation();
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
@@ -148,8 +152,15 @@ export function StatusSummaryCard({
             <span className="text-[10px] font-black text-ink/38">{action.sourceLabel}</span>
           </div>
         </div>
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/90 shadow-sm">
-          <Icon className="h-5 w-5" />
+        <div className="flex shrink-0 items-center gap-1">
+          {onDownloadHealth && (
+            <button type="button" onClick={onDownloadHealth} aria-label={t('common.download', '下载健康评分卡')} title={t('common.download', '下载健康评分卡')} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
+              <Download className="h-4 w-4" />
+            </button>
+          )}
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 shadow-sm">
+            <Icon className="h-5 w-5" />
+          </div>
         </div>
       </div>
 
@@ -191,20 +202,27 @@ export function StatusSummaryCard({
               <span className="block truncate text-[10px] font-bold text-ink/45">{careSummary}</span>
             </span>
           </span>
-          {hasOverflowCarePlans && (
-            <button
-              type="button"
-              onClick={onToggleCarePlan}
-              aria-expanded={showCarePlan}
-              data-disclosure-purpose="overflow_list"
-              className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-2 text-[10px] font-black text-ink/52 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-            >
-              {showCarePlan
-                ? t('aquarium.collapse')
-                : t('aquarium.carePlanMore', { count: carePlan.activeCount - 1 })}
-              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
-            </button>
-          )}
+          <span className="flex shrink-0 items-center gap-1">
+            {onDownloadCarePlan && (
+              <button type="button" onClick={onDownloadCarePlan} aria-label={t('common.download', '下载本周养护计划')} title={t('common.download', '下载本周养护计划')} className="flex h-11 w-11 items-center justify-center rounded-full text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
+                <Download className="h-4 w-4" />
+              </button>
+            )}
+            {hasOverflowCarePlans && (
+              <button
+                type="button"
+                onClick={onToggleCarePlan}
+                aria-expanded={showCarePlan}
+                data-disclosure-purpose="overflow_list"
+                className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-2 text-[10px] font-black text-ink/52 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+              >
+                {showCarePlan
+                  ? t('aquarium.collapse')
+                  : t('aquarium.carePlanMore', { count: carePlan.activeCount - 1 })}
+                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
+              </button>
+            )}
+          </span>
         </div>
 
         {carePlan.activeCount === 0 ? (

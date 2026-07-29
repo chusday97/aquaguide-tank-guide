@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { X } from 'lucide-react';
+import { Download, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { AquariumFish, Fish } from '../../types';
 import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '../../services/aquarium/livestock-removal-attempt.service';
@@ -31,6 +31,13 @@ type Props = {
     operationId: string;
   }) => Promise<void>;
   onAdd: () => void;
+  startedAt?: string;
+  startedAtConfirmed: boolean;
+  aquariumAgeDays: number;
+  isSavingStartedAt?: boolean;
+  onConfirmStartedAt: (value: string) => Promise<void>;
+  onDownloadArchive: () => void;
+  onDownloadMilestone?: () => void;
 };
 
 export function LivestockRosterDialog({
@@ -43,10 +50,19 @@ export function LivestockRosterDialog({
   onSave,
   onRemove,
   onAdd,
+  startedAt,
+  startedAtConfirmed,
+  aquariumAgeDays,
+  isSavingStartedAt = false,
+  onConfirmStartedAt,
+  onDownloadArchive,
+  onDownloadMilestone,
 }: Props) {
   const [removal, setRemoval] = useState<RemovalDraft | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
   const [removeError, setRemoveError] = useState('');
+  const [startedAtDraft, setStartedAtDraft] = useState(startedAt || '');
+  const [startedAtError, setStartedAtError] = useState('');
   const speciesById = useMemo(() => new Map(species.map(item => [item.id, item])), [species]);
   const visibleRecords = useMemo(() => records
     .map(record => ({ record, fish: speciesById.get(record.fishId) }))
@@ -57,6 +73,8 @@ export function LivestockRosterDialog({
     const current = records.find(item => item.id === removal.record.id);
     if (!current) setRemoval(null);
   }, [records, removal]);
+
+  useEffect(() => setStartedAtDraft(startedAt || ''), [startedAt]);
 
   const batches = removal ? normalizeSpeciesBatches(removal.record) : [];
   const selectedBatch = batches.find(batch => batch.id === removal?.batchId);
@@ -105,8 +123,43 @@ export function LivestockRosterDialog({
             title="缸内物种"
             description={`${aquariumName} · ${visibleRecords.length} 种 · 共 ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} 只/条`}
             onClose={() => onOpenChange(false)}
+            actions={(
+              <button type="button" onClick={onDownloadArchive} aria-label="下载鱼缸档案" title="下载鱼缸档案" className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                <Download className="h-4 w-4" />
+              </button>
+            )}
           />
           <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
+            <section className="mb-4 rounded-[20px] border border-emerald-100 bg-white p-4">
+              <div className="flex flex-wrap items-end gap-3">
+                <label className="min-w-[190px] flex-1 text-xs font-black text-ink/65">
+                  建缸日期
+                  <input type="date" value={startedAtDraft} max={new Date().toISOString().slice(0, 10)} onChange={event => setStartedAtDraft(event.target.value)} className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink" />
+                </label>
+                <button
+                  type="button"
+                  disabled={!startedAtDraft || isSavingStartedAt}
+                  onClick={() => {
+                    setStartedAtError('');
+                    void onConfirmStartedAt(startedAtDraft).catch(error => setStartedAtError(error instanceof Error ? error.message : '日期保存失败，请重试。'));
+                  }}
+                  className="min-h-11 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50"
+                >
+                  {isSavingStartedAt ? '保存中…' : startedAtConfirmed ? '修改日期' : '确认日期'}
+                </button>
+              </div>
+              {!startedAtConfirmed && <p className="mt-2 text-xs font-semibold leading-5 text-amber-700">该日期由旧记录推算。确认或修改后，才会解锁百日纪念。</p>}
+              {startedAtError && <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{startedAtError}</p>}
+              {startedAtConfirmed && aquariumAgeDays >= 100 && onDownloadMilestone && (
+                <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-amber-50 px-3 py-3 text-amber-900">
+                  <div>
+                    <div className="text-sm font-black">我的鱼缸养了 {aquariumAgeDays} 天</div>
+                    <div className="mt-0.5 text-xs font-semibold opacity-70">百日之后持续可见，可随时重新生成。</div>
+                  </div>
+                  <button type="button" onClick={onDownloadMilestone} aria-label="下载百日纪念卡" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-amber-800 shadow-sm"><Download className="h-4 w-4" /></button>
+                </div>
+              )}
+            </section>
             {visibleRecords.length > 0 ? (
               <div className="grid gap-3 md:grid-cols-2">
                 {visibleRecords.map(({ record, fish }) => (

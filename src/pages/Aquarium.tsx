@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
-import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download } from 'lucide-react';
 import { DeceasedRecord } from '../types';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 import {
@@ -91,6 +91,15 @@ import {
 } from '../services/aquarium/species-addition.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import { useToast } from '../components/common/ToastProvider';
+import { ExportArtifactDialog, type ExportArtifactContent } from '../components/export/ExportArtifactDialog';
+import {
+  buildAquariumArchiveArtifact,
+  buildDiagnosisArtifact,
+  buildHealthScoreArtifact,
+  buildHundredDayArtifact,
+  buildWeeklyCareArtifact,
+  type AquariumArtifactContext,
+} from '../services/export/aquarium-artifact.service';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { findDailyPatrolRecord, persistDiagnosisRecords, upsertDiagnosisRecord } from '../services/diagnosis/diagnosis-records.service';
@@ -908,24 +917,44 @@ const normalizeAquariumRecord = (aquarium: Partial<Aquarium>, index = 0): Aquari
     oxygen: aquarium.equipment?.oxygen ?? false,
     light: aquarium.equipment?.light || '普通灯',
   },
+  startedAt: aquarium.startedAt,
+  startedAtSource: aquarium.startedAtSource,
+  startedAtConfirmedAt: aquarium.startedAtConfirmedAt,
 });
 
-const createDefaultAquarium = (name = '我的鱼缸'): Aquarium => ({
-  id: Math.random().toString(36).substring(2, 9),
-  name,
-  fishes: [],
-  lastWaterChangeDate: new Date().toISOString(),
-  dimensions: { length: '60', width: '40', height: '40' },
-  waterType: 'Freshwater',
-  targetTemperature: '25',
-  substrate: '无',
-  plants: [],
-  hardscape: [],
-  equipment: { filter: '瀑布过滤', heater: true, oxygen: false, light: '普通灯' },
-});
+const createDefaultAquarium = (name = '我的鱼缸'): Aquarium => {
+  const now = new Date().toISOString();
+  return {
+    id: Math.random().toString(36).substring(2, 9),
+    name,
+    fishes: [],
+    lastWaterChangeDate: now,
+    dimensions: { length: '60', width: '40', height: '40' },
+    waterType: 'Freshwater',
+    targetTemperature: '25',
+    substrate: '无',
+    plants: [],
+    hardscape: [],
+    equipment: { filter: '瀑布过滤', heater: true, oxygen: false, light: '普通灯' },
+    startedAt: now.slice(0, 10),
+    startedAtSource: 'created',
+    startedAtConfirmedAt: now,
+  };
+};
 
 const normalizeAquariumPlants = (aquariums: Partial<Aquarium>[]) => aquariums.map((rawAquarium, index) => {
-  const aquarium = normalizeAquariumRecord(rawAquarium, index);
+  const normalized = normalizeAquariumRecord(rawAquarium, index);
+  const inferredCandidates = [
+    normalized.lastWaterChangeDate,
+    ...(normalized.waterChangeHistory || []),
+    ...normalized.fishes.map(item => item.entryDate),
+  ].filter(Boolean).map(value => new Date(value as string)).filter(value => !Number.isNaN(value.getTime()));
+  const inferredStartedAt = inferredCandidates.length
+    ? new Date(Math.min(...inferredCandidates.map(value => value.getTime()))).toISOString().slice(0, 10)
+    : new Date().toISOString().slice(0, 10);
+  const aquarium: Aquarium = normalized.startedAt
+    ? normalized
+    : { ...normalized, startedAt: inferredStartedAt, startedAtSource: 'inferred', startedAtConfirmedAt: undefined };
   const plantIdsFromFishes = aquarium.fishes
     .map(item => fishData.find(fish => fish.id === item.fishId))
     .filter((fish): fish is Fish => Boolean(fish) && isAquaticPlantSpecies(fish))
@@ -1074,6 +1103,23 @@ type DiagnosisResult = {
   nextCheckAt?: string;
 };
 
+const toDiagnosisOutput = (result: DiagnosisResult): DiagnosisOutput => ({
+  riskLevel: result.riskLevel,
+  riskLabel: result.risk,
+  summary: result.verdict,
+  currentAction: result.currentAction,
+  actions: result.actions,
+  avoidActions: result.avoid,
+  possibleCauses: result.reasons,
+  observeItems: result.observe,
+  missingInfo: result.missing,
+  evidence: result.evidence,
+  keyMetrics: result.keyMetrics,
+  matchedRules: [],
+  matchedArticles: [],
+  nextCheckAt: result.nextCheckAt,
+});
+
 type CareDiagnosisContext = {
   source: 'care';
   topicId: string;
@@ -1168,6 +1214,8 @@ export default function AquariumManager() {
   const [careDiagnosisContext, setCareDiagnosisContext] = useState<CareDiagnosisContext | null>(null);
   const [selectedBuildTemplateId, setSelectedBuildTemplateId] = useState(localizedTemplates[0].id);
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
+  const [exportArtifact, setExportArtifact] = useState<ExportArtifactContent | null>(null);
+  const [isSavingStartedAt, setIsSavingStartedAt] = useState(false);
   const [settingsForm, setSettingsForm] = useState<Partial<Aquarium>>({});
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | null>(null);
   const [isPlantListExpanded, setIsPlantListExpanded] = useState(false);
@@ -4095,6 +4143,42 @@ export default function AquariumManager() {
       dailyAdviceMissingData.length > 0 ? `尚缺：${dailyAdviceMissingData.join('、')}。` : '关键维护信息已有记录。',
     ],
   };
+  const aquariumAgeDays = activeAquarium.startedAt
+    ? Math.max(0, differenceInDays(new Date(), new Date(activeAquarium.startedAt)))
+    : 0;
+  const artifactContext: AquariumArtifactContext = {
+    aquarium: activeAquarium,
+    healthScore,
+    healthStatus: tankHealthStatus,
+    healthReasons: dailyActionViewModel.reasoning,
+    missingData: dailyAdviceMissingData,
+    nextAction: dailyActionTask.title,
+    species: activeAquarium.fishes.map(record => {
+      const fish = fishData.find(item => item.id === record.fishId);
+      return { name: fish ? getSpeciesNameLocalized(fish, isEn) : record.fishId, quantity: record.quantity };
+    }),
+    careReminders,
+    latestDiagnosis: diagnosisResult ? toDiagnosisOutput(diagnosisResult) : undefined,
+    isEn,
+  };
+  const openExportArtifact = (content: ExportArtifactContent) => setExportArtifact(content);
+  const confirmAquariumStartedAt = async (startedAt: string) => {
+    if (!startedAt || isSavingStartedAt) return;
+    setIsSavingStartedAt(true);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      const saved = await repository.saveAquarium({
+        ...activeAquarium,
+        startedAt,
+        startedAtSource: 'user',
+        startedAtConfirmedAt: new Date().toISOString(),
+      });
+      setAquariums(current => current.map(item => item.id === saved.id ? saved : item));
+      showToast(isEn ? 'Aquarium start date confirmed.' : '建缸日期已确认。');
+    } finally {
+      setIsSavingStartedAt(false);
+    }
+  };
   const localTemperatureHint = weatherStatus === 'ready' && localWeather?.temperatureC !== undefined
     ? `室外约 ${Math.round(localWeather.temperatureC)}°C，`
     : '';
@@ -4636,6 +4720,8 @@ export default function AquariumManager() {
             if (reminder) setPendingReminderDelete(reminder);
           }}
           onBrowseCare={() => navigateToRoute('/care')}
+          onDownloadHealth={() => openExportArtifact(buildHealthScoreArtifact(artifactContext))}
+          onDownloadCarePlan={() => openExportArtifact(buildWeeklyCareArtifact(artifactContext))}
         />
       </div>
         )}
@@ -5403,6 +5489,11 @@ export default function AquariumManager() {
               {diagnosisMode === 'result' && structuredDiagnosis && (
               <>
               <section className="grid gap-3">
+                <div className="flex justify-end">
+                  <button type="button" onClick={() => openExportArtifact(buildDiagnosisArtifact(artifactContext, toDiagnosisOutput(structuredDiagnosis)))} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-white px-4 text-xs font-black text-emerald-800 shadow-sm">
+                    <Download className="h-4 w-4" />下载诊断结果图
+                  </button>
+                </div>
                 {diagnosisVisualModel && (
                   <VisualResultCard
                     model={diagnosisVisualModel}
@@ -7636,6 +7727,22 @@ export default function AquariumManager() {
           setIsTankArchiveExpanded(false);
           setIsAddFishOpen(true);
         }}
+        startedAt={activeAquarium.startedAt}
+        startedAtConfirmed={Boolean(activeAquarium.startedAtConfirmedAt)}
+        aquariumAgeDays={aquariumAgeDays}
+        isSavingStartedAt={isSavingStartedAt}
+        onConfirmStartedAt={confirmAquariumStartedAt}
+        onDownloadArchive={() => openExportArtifact(buildAquariumArchiveArtifact(artifactContext))}
+        onDownloadMilestone={aquariumAgeDays >= 100 && activeAquarium.startedAtConfirmedAt
+          ? () => openExportArtifact(buildHundredDayArtifact(artifactContext, aquariumAgeDays))
+          : undefined}
+      />
+
+      <ExportArtifactDialog
+        open={Boolean(exportArtifact)}
+        onOpenChange={open => { if (!open) setExportArtifact(null); }}
+        content={exportArtifact}
+        isEn={isEn}
       />
 
       <Dialog open={isConflictDialogOpen} onOpenChange={setIsConflictDialogOpen}>
