@@ -43,6 +43,7 @@
     "test:core-ui": "node scripts/verify-core-experience.mjs",
     "test:mobile-care-ui": "node scripts/verify-mobile-care-experience.mjs",
     "test:care-guide-types": "node scripts/verify-care-guide-types.mjs",
+    "test:care-guidance": "tsx scripts/test-care-assessment-guidance.ts",
     "test:localization-ui": "node scripts/verify-localization-ui.mjs",
     "test:responsive-routes": "node scripts/verify-responsive-route-scan.mjs",
     "test:species-detail-ui": "node scripts/verify-species-detail-experience.mjs",

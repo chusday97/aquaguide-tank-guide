@@ -85,7 +85,9 @@ assert.equal(diagnosisModel.status, 'urgent');
 assert.equal(diagnosisModel.subjects[0]?.badgeLabel, '全缸检查');
 assert.equal(diagnosisModel.subjects[0]?.role, 'focus');
 assert.ok(diagnosisModel.subjects.some(item => item.name === '呼吸状态'));
-assert.ok(diagnosisModel.detailSections.some(section => section.id === 'avoid'));
+assert.deepEqual(diagnosisModel.actionItems, ['立即增氧']);
+assert.deepEqual(diagnosisModel.avoidActions, ['不要盲目下药']);
+assert.equal(diagnosisModel.detailSections.some(section => section.id === 'actions' || section.id === 'avoid'), false, '操作与禁止动作不得进入折叠证据层');
 assert.equal(diagnosisModel.primaryAction.actionType, 'dialog');
 
 const singleSpeciesDiagnosis = buildDiagnosisVisualResult({

@@ -119,14 +119,20 @@ try {
       await normalOptions.nth(index).click();
     }
     await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
-    const nextAction = panel.getByRole('button', { name: /查看.+步骤|查看观察清单|查看需要补充的检查/ });
+    const nextAction = panel.getByRole('button', { name: /查看复查要点|查看需要补充的检查/ });
     await nextAction.waitFor();
     await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).waitFor();
+    const secondWaterAction = panel.locator('li').filter({ hasText: '清理可见残饵和腐败物' });
+    const firstWaterAvoid = panel.locator('li').filter({ hasText: '不要一次性清洗全部滤材' });
+    await secondWaterAction.waitFor();
+    await firstWaterAvoid.waitFor();
     assert.equal(await panel.getByText('保持环境稳定', { exact: true }).count(), 0, 'water assessment must provide a concrete first action');
     assert.equal(await page.getByRole('button', { name: '开始问题自查', exact: true }).count(), 0, 'stale footer action remains after assessment starts');
     await nextAction.click();
     await panel.locator('[data-care-assessment-next]').waitFor();
     assert.equal(await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).count(), 1, 'the visual first action must not repeat inside expanded steps');
+    assert.equal(await secondWaterAction.count(), 1, 'direct action steps must not repeat in follow-up checks');
+    assert.equal(await firstWaterAvoid.count(), 1, 'safety actions must remain direct and unique');
     assert.equal(await panel.getByText('是否持续浮头', { exact: true }).count(), 0, 'water assessment must not reuse gasping follow-up semantics');
     await panel.getByText('水体是否继续变浑或发绿', { exact: true }).waitFor();
     await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).click();
@@ -157,6 +163,10 @@ try {
     const multiSpeciesFocus = panel.locator('.visual-result-focus');
     await multiSpeciesFocus.getByText(/所选 2 种生物/).waitFor();
     await multiSpeciesFocus.getByText(/多种生物/).waitFor();
+    await panel.getByText('增加水草、沉木或石缝作为躲避区', { exact: true }).waitFor();
+    await panel.locator('li').filter({ hasText: '不要频繁追捞所有生物' }).waitFor();
+    await panel.getByRole('button', { name: '查看复查要点', exact: true }).click();
+    await panel.getByText('是否固定追咬同一对象', { exact: true }).waitFor();
     assert.equal(await panel.getByText('全缸检查', { exact: true }).count(), 0, 'multi-species result must not claim whole-tank scope');
     assert.equal(errors.length, 0, `multi-species care assessment page errors: ${errors.join('; ')}`);
     await page.close();

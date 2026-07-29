@@ -215,10 +215,10 @@ export function buildDiagnosisVisualResult({
     emphasis: getVisualEmphasis(`${result.summary} ${result.currentAction}`),
     subjects,
     currentAction: result.currentAction || result.actions[0] || '保持环境稳定并继续观察。',
+    actionItems: result.actions.filter(item => item !== result.currentAction),
+    avoidActions: result.avoidActions,
     primaryAction: { label: primaryActionLabel, actionType: primaryActionType },
     detailSections: [
-      { id: 'actions', title: '立即处理', items: result.actions },
-      { id: 'avoid', title: '暂时避免', items: result.avoidActions },
       { id: 'evidence', title: '判断依据', items: result.evidence },
       { id: 'causes', title: '可能原因', items: result.possibleCauses },
       { id: 'observe', title: '继续观察', items: result.observeItems },

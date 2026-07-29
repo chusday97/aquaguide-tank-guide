@@ -25,6 +25,8 @@ export interface VisualResultViewModel {
   emphasis: string[];
   subjects: VisualResultSubject[];
   currentAction: string;
+  actionItems?: string[];
+  avoidActions?: string[];
   primaryAction: {
     label: string;
     actionType: 'route' | 'mutation' | 'dialog' | 'section';

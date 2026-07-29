@@ -203,6 +203,24 @@ export function VisualResultCard({
         )}
       </div>
 
+      {model.actionItems && model.actionItems.length > 0 && (
+        <section className="mx-3.5 mb-3 rounded-[16px] border border-emerald-100 bg-emerald-50/70 px-3 py-2.5 min-[500px]:mx-4" aria-labelledby="visual-result-next-actions">
+          <h4 id="visual-result-next-actions" className="text-[10px] font-black text-emerald-800">{t('visualResult.continueActions')}</h4>
+          <ul className="mt-1.5 grid gap-1">
+            {model.actionItems.slice(0, 3).map(item => <li key={item} className="text-[11px] font-bold leading-5 text-ink/68">· {item}</li>)}
+          </ul>
+        </section>
+      )}
+
+      {model.avoidActions && model.avoidActions.length > 0 && (
+        <section className="mx-3.5 mb-3 rounded-[16px] border border-amber-100 bg-amber-50/80 px-3 py-2.5 min-[500px]:mx-4" aria-labelledby="visual-result-avoid-actions">
+          <h4 id="visual-result-avoid-actions" className="text-[10px] font-black text-amber-800">{t('visualResult.avoidActions')}</h4>
+          <ul className="mt-1.5 grid gap-1">
+            {model.avoidActions.slice(0, 3).map(item => <li key={item} className="text-[11px] font-bold leading-5 text-amber-950/72">· {item}</li>)}
+          </ul>
+        </section>
+      )}
+
       {detailCount > 0 && (
         <div className="mx-3.5 mb-3 overflow-hidden rounded-[16px] border border-border bg-white min-[500px]:mx-4">
           <button

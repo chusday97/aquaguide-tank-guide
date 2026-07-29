@@ -67,7 +67,7 @@ type CareCard = {
   suitableFor: string[];
   source: string;
 };
-type StepDiagnosisIssue = 'gasping' | 'refusal' | 'hiding' | 'aggression' | 'death' | 'cloudy' | 'shrimpDeath' | 'plantProblem';
+export type StepDiagnosisIssue = 'gasping' | 'refusal' | 'hiding' | 'aggression' | 'death' | 'cloudy' | 'shrimpDeath' | 'plantProblem';
 type StepDiagnosisAnswerValue = 'none' | 'occasional' | 'frequent' | 'unknown' | 'mild' | 'obvious' | 'small' | 'large' | 'yes';
 type StepDiagnosisAnswers = {
   gasping?: StepDiagnosisAnswerValue;
@@ -1221,7 +1221,7 @@ const riskWeight: Record<StepDiagnosisResult['riskLevel'], number> = {
   high: 4,
 };
 
-const getIssueGuidance = (issueType: StepDiagnosisIssue, isEn: boolean) => {
+export const getIssueGuidance = (issueType: StepDiagnosisIssue, isEn: boolean) => {
   const guidance: Record<StepDiagnosisIssue, {
     routineActions: string[];
     avoidActions: string[];
@@ -2624,12 +2624,12 @@ function StepDiagnosisPanel({
         ? diagnosisState.target.speciesIds[0]
         : undefined,
       primaryActionLabel: result.riskLevel === 'high'
-        ? (isEn ? 'View Emergency Steps' : '查看紧急处理步骤')
+        ? (isEn ? 'View Follow-up Checks' : '查看复查要点')
         : result.riskLevel === 'medium'
-          ? (isEn ? 'View Action Steps' : '查看处理步骤')
+          ? (isEn ? 'View Follow-up Checks' : '查看复查要点')
           : result.riskLevel === 'unknown'
             ? (isEn ? 'View Missing Checks' : '查看需要补充的检查')
-            : (isEn ? 'View Observation Checklist' : '查看观察清单'),
+            : (isEn ? 'View Follow-up Checks' : '查看复查要点'),
       primaryActionType: 'section',
     });
   }, [diagnosisQuestions, diagnosisState.answers, diagnosisState.result, diagnosisState.target.scope, diagnosisState.target.speciesIds, scopedLivestock, targetAquarium?.name, isEn]);
@@ -2879,32 +2879,7 @@ function StepDiagnosisPanel({
               data-care-assessment-next
               className="rounded-[20px] border border-emerald-200 bg-white p-4 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              {diagnosisState.result.todayActions.length > 1 && (
-                <>
-                  <div className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-700">
-                    {isEn ? 'Then continue with' : '接着按顺序做'}
-                  </div>
-                  <div className="mt-3 grid gap-2">
-                    {diagnosisState.result.todayActions.slice(1).map((action, index) => (
-                      <div key={action} className="grid grid-cols-[26px_1fr] gap-2 rounded-[15px] bg-emerald-50/65 p-3">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-black text-white">{index + 2}</span>
-                        <p className="text-[12px] font-bold leading-5 text-ink">{action}</p>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-              {diagnosisState.result.avoidActions.length > 0 && (
-                <div className="mt-3 rounded-[15px] bg-amber-50 px-3 py-2.5">
-                  <div className="text-[11px] font-black text-amber-800">
-                    {isEn ? 'Avoid these actions' : '暂时不要做这些'}
-                  </div>
-                  <ul className="mt-2 grid gap-1.5 text-[11px] font-semibold leading-5 text-amber-950/72">
-                    {diagnosisState.result.avoidActions.map(item => <li key={item}>· {item}</li>)}
-                  </ul>
-                </div>
-              )}
-              <div className="mt-3 rounded-[15px] bg-sky-50 px-3 py-2.5">
+              <div className="rounded-[15px] bg-sky-50 px-3 py-2.5">
                 <div className="text-[11px] font-black text-sky-800">{isEn ? 'Afterward' : '做完以后'}</div>
                 <p className="mt-1 text-[11px] font-semibold leading-5 text-sky-950/68">
                   {diagnosisState.result.observeItems[0] || (isEn ? 'Keep the environment stable and check the same symptom again.' : '保持环境稳定，再复查同一异常是否缓解。')}
