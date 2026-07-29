@@ -40,6 +40,7 @@ import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
 import { getSearchSuggestions } from '../services/search/search-suggestions.service';
 import { taskRoutes } from '../services/navigation/task-routes';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
+import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const FilterBottomSheet = lazy(() => import('../components/common/FilterBottomSheet').then(module => ({ default: module.FilterBottomSheet })));
@@ -1030,23 +1031,6 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
   };
 };
 
-const matchesChip = (topic: CareTopic, chip: string) => {
-  const homeMeta = getCareHomeMeta(topic);
-  const haystack = `${getDisplayTitle(topic)} ${topic.title} ${topic.category} ${homeMeta.topicTags.join(' ')} ${homeMeta.actionLevel} ${topic.keywords.join(' ')}`;
-  if (chip === '全部') return true;
-  if (chip === '急救') return homeMeta.actionLevel === '立即排查' || /死|浮头|喘|臭|白点|烂尾|急|异常/.test(haystack);
-  if (chip === '鱼不舒服' || chip === '鱼类症状' || chip === '鱼只异常') return /鱼只异常|疾病排查|病|白点|烂尾|趴缸|拒食|浮头|喘|死鱼/.test(haystack);
-  if (chip === '水变差' || chip === '水质问题' || chip === '水质异常' || chip === '水质检测') return /水质异常|水质|水浑|白浊|发绿|异味|油膜|氨氮|亚硝酸盐/.test(haystack);
-  if (chip === '新鱼入缸' || chip === '入缸') return /入缸|新鱼|过水|检疫/.test(haystack);
-  if (chip === '日常喂食' || chip === '喂食' || chip === '喂食管理') return /喂|饲料|吃|残饵/.test(haystack);
-  if (chip === '换水维护' || chip === '换水' || chip === '日常养护') return /日常养护|换水|困水|除氯|喂食/.test(haystack);
-  if (chip === '怀孕 / 鱼苗' || chip === '鱼苗' || chip === '鱼苗养护' || chip === '繁殖护理') return /鱼苗|怀孕|繁殖|母鱼/.test(haystack);
-  if (chip === '死亡处理') return /死亡|死鱼|连续死/.test(haystack);
-  if (chip === '设备' || chip === '设备问题' || chip === '设备维护') return /设备维护|设备|过滤|加热棒|气泵|灯/.test(haystack);
-  if (chip === '新手必看') return /新手|新缸|入缸|过水|换水|开缸|白浊/.test(haystack);
-  return haystack.includes(chip);
-};
-
 const stepDiagnosisIssues: Array<{ id: StepDiagnosisIssue; label: string; description: string }> = [
   { id: 'gasping', label: '浮头 / 呼吸急促', description: '排查缺氧、水质波动和短期应激' },
   { id: 'refusal', label: '拒食', description: '排查新鱼应激、喂食压力和水质问题' },
@@ -1542,42 +1526,45 @@ export default function CareEncyclopedia() {
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const navigate = useNavigate();
 
-  const categoryChips = [
-    { value: '全部', label: t('care.categories.all') },
-    { value: '鱼不舒服', label: t('care.categories.sick_fish') },
-    { value: '水变差', label: t('care.categories.water_bad') },
-    { value: '新鱼入缸', label: t('care.categories.new_stock') },
-    { value: '日常喂食', label: t('care.categories.feeding') },
-    { value: '换水维护', label: t('care.categories.maintenance') },
-    { value: '怀孕 / 鱼苗', label: t('care.categories.breeding') },
-    { value: '死亡处理', label: t('care.categories.death') },
-    { value: '设备问题', label: t('care.categories.equipment') },
+  const categoryChips: Array<{ id: CareCategoryId; label: string }> = [
+    { id: 'all', label: t('care.categories.all') },
+    { id: 'fish_health', label: t('care.categories.sick_fish') },
+    { id: 'water_quality', label: t('care.categories.water_bad') },
+    { id: 'new_stock', label: t('care.categories.new_stock') },
+    { id: 'feeding', label: t('care.categories.feeding') },
+    { id: 'maintenance', label: t('care.categories.maintenance') },
+    { id: 'breeding', label: t('care.categories.breeding') },
+    { id: 'death', label: t('care.categories.death') },
+    { id: 'equipment', label: t('care.categories.equipment') },
   ];
+  const getCategoryLabel = (categoryId: CareCategoryId) => (
+    categoryChips.find(item => item.id === categoryId)?.label || categoryId
+  );
 
   const localizedCategoryEntrances = useMemo(() => [
-    { label: t('care.categories.water_bad'), filter: '水质异常', icon: Droplets, hint: isEn ? 'Cloudy / Odor / Parameter' : '水浑 / 异味 / 波动' },
-    { label: t('care.categories.new_stock'), filter: '新鱼入缸', icon: Stethoscope, hint: isEn ? 'Acclimation / Quarantine / Stocking' : '过水 / 检疫 / 放养' },
-    { label: t('care.categories.sick_fish'), filter: '鱼只异常', icon: Fish, hint: isEn ? 'Gasping / Refusal / Disease' : '浮头 / 拒食 / 体表' },
-    { label: t('care.categories.equipment'), filter: '设备维护', icon: Settings, hint: isEn ? 'Filter / Aeration / Light' : '过滤 / 打氧 / 灯光' },
-    { label: t('care.categories.breeding'), filter: '鱼苗养护', icon: Baby, hint: isEn ? 'Spawning / First Feed / Divide' : '繁殖 / 开口 / 隔离' },
-    { label: t('care.categories.maintenance'), filter: '日常养护', icon: Waves, hint: isEn ? 'Water Change / Feed / Clean' : '换水 / 喂食 / 清洁' },
+    { id: 'water_quality' as CareCategoryId, label: t('care.categories.water_bad'), icon: Droplets, hint: isEn ? 'Cloudy / Odor / Parameter' : '水浑 / 异味 / 波动' },
+    { id: 'new_stock' as CareCategoryId, label: t('care.categories.new_stock'), icon: Stethoscope, hint: isEn ? 'Acclimation / Quarantine / Stocking' : '过水 / 检疫 / 放养' },
+    { id: 'fish_health' as CareCategoryId, label: t('care.categories.sick_fish'), icon: Fish, hint: isEn ? 'Gasping / Refusal / Disease' : '浮头 / 拒食 / 体表' },
+    { id: 'equipment' as CareCategoryId, label: t('care.categories.equipment'), icon: Settings, hint: isEn ? 'Filter / Aeration / Light' : '过滤 / 打氧 / 灯光' },
+    { id: 'breeding' as CareCategoryId, label: t('care.categories.breeding'), icon: Baby, hint: isEn ? 'Spawning / First Feed / Divide' : '繁殖 / 开口 / 隔离' },
+    { id: 'maintenance' as CareCategoryId, label: t('care.categories.maintenance'), icon: Waves, hint: isEn ? 'Water Change / Feed / Clean' : '换水 / 喂食 / 清洁' },
   ], [t, isEn]);
 
   const localizedSceneEntrances = useMemo(() => [
-    { label: t('care.categories.new_stock'), subtitle: isEn ? 'Acclimation / Stocking' : '过水 / 放养', filter: '新鱼入缸' },
-    { label: t('care.categories.water_bad'), subtitle: isEn ? 'Cloudy / Odor' : '浑水 / 异味', filter: '水质异常' },
-    { label: t('care.categories.breeding'), subtitle: isEn ? 'Spawning / Hatching' : '产卵 / 孵化', filter: '鱼苗养护' },
-    { label: t('care.categories.equipment'), subtitle: isEn ? 'Cleaning / Maintenance' : '清洗 / 保养', filter: '设备维护' },
-    { label: t('care.categories.sick_fish'), subtitle: isEn ? 'Gasping / Refusal / Death' : '浮头 / 拒食 / 死鱼', filter: '鱼只异常' },
+    { id: 'new_stock' as CareCategoryId, label: t('care.categories.new_stock'), subtitle: isEn ? 'Acclimation / Stocking' : '过水 / 放养' },
+    { id: 'water_quality' as CareCategoryId, label: t('care.categories.water_bad'), subtitle: isEn ? 'Cloudy / Odor' : '浑水 / 异味' },
+    { id: 'breeding' as CareCategoryId, label: t('care.categories.breeding'), subtitle: isEn ? 'Spawning / Hatching' : '产卵 / 孵化' },
+    { id: 'equipment' as CareCategoryId, label: t('care.categories.equipment'), subtitle: isEn ? 'Cleaning / Maintenance' : '清洗 / 保养' },
+    { id: 'fish_health' as CareCategoryId, label: t('care.categories.sick_fish'), subtitle: isEn ? 'Gasping / Refusal / Death' : '浮头 / 拒食 / 死鱼' },
   ], [t, isEn]);
 
   const localizedHighFrequencyFilters = useMemo(() => [
-    { value: '全部', label: t('care.categories.all') },
-    { value: '新手必看', label: isEn ? 'Beginner Guides' : '新手必看' },
-    { value: '水质问题', label: t('care.categories.water_bad') },
-    { value: '鱼类症状', label: t('care.categories.sick_fish') },
-    { value: '喂食管理', label: t('care.categories.feeding') },
-    { value: '设备维护', label: t('care.categories.equipment') },
+    { id: 'all' as CareCategoryId, label: t('care.categories.all') },
+    { id: 'beginner' as CareCategoryId, label: isEn ? 'Beginner Guides' : '新手必看' },
+    { id: 'water_quality' as CareCategoryId, label: t('care.categories.water_bad') },
+    { id: 'fish_health' as CareCategoryId, label: t('care.categories.sick_fish') },
+    { id: 'feeding' as CareCategoryId, label: t('care.categories.feeding') },
+    { id: 'equipment' as CareCategoryId, label: t('care.categories.equipment') },
   ], [t, isEn]);
 
   const getUrgencyText = (urgency: string) => {
@@ -1606,8 +1593,8 @@ export default function CareEncyclopedia() {
   const { captureContext, navigateToRoute, navigateToSection, restoreContext } = useWorkspaceNavigation();
   const { showToast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState('全部');
-  const [highFrequencyFilter, setHighFrequencyFilter] = useState('全部');
+  const [activeCategory, setActiveCategory] = useState<CareCategoryId>('all');
+  const [highFrequencyFilter, setHighFrequencyFilter] = useState<CareCategoryId>('all');
   const [careWorkspacePage, setCareWorkspacePage] = useState<'home' | 'content'>('home');
   const [careResultPage, setCareResultPage] = useState(0);
   const [selectedTopic, setSelectedTopic] = useState<CareTopic | null>(null);
@@ -1617,7 +1604,7 @@ export default function CareEncyclopedia() {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isCareFilterOpen, setIsCareFilterOpen] = useState(false);
-  const [draftCareCategory, setDraftCareCategory] = useState(activeCategory);
+  const [draftCareCategory, setDraftCareCategory] = useState<CareCategoryId>(activeCategory);
   const [careViewMode, setCareViewMode] = useState<CareViewMode>('all');
   const [draftCareViewMode, setDraftCareViewMode] = useState<CareViewMode>('all');
   const [favorites, setFavorites] = useState<CareFavoriteMap>(() => getCareFavorites());
@@ -1661,7 +1648,7 @@ export default function CareEncyclopedia() {
       setCareViewMode('favorites');
       setCareWorkspacePage('content');
       setSearchTerm('');
-      setActiveCategory('全部');
+      setActiveCategory('all');
       setCareResultPage(0);
       void navigateToSection('care-results', { updateHash: false });
       return;
@@ -1696,8 +1683,8 @@ export default function CareEncyclopedia() {
     setActiveBannerIndex((index + careRecommendations.length) % Math.max(1, careRecommendations.length));
   };
 
-  const handleSelectCareCategory = (filter: string) => {
-    setActiveCategory(filter);
+  const handleSelectCareCategory = (categoryId: CareCategoryId) => {
+    setActiveCategory(categoryId);
     setCareViewMode('all');
     setCareWorkspacePage('content');
     setCareResultPage(0);
@@ -1783,7 +1770,7 @@ export default function CareEncyclopedia() {
   const filteredTopics = useMemo(() => {
     const keyword = searchTerm.trim().toLowerCase();
     return careTopicsData.filter(topic => {
-      const matchesCategory = keyword ? true : matchesChip(topic, activeCategory);
+      const matchesCategory = keyword ? true : matchesCareCategory(topic, activeCategory);
       const matchesView = careViewMode === 'all' || Boolean(favorites[topic.id]);
       const homeMeta = getCareHomeMeta(topic);
       const searchable = [
@@ -1824,7 +1811,7 @@ export default function CareEncyclopedia() {
       .filter((topic): topic is CareTopic => Boolean(topic));
     const expanded = [...baseTopics, ...careTopicsData]
       .filter((topic, index, list) => list.findIndex(item => item.id === topic.id) === index)
-      .filter(topic => matchesChip(topic, highFrequencyFilter));
+      .filter(topic => matchesCareCategory(topic, highFrequencyFilter));
     return expanded.length > 0 ? expanded : baseTopics;
   }, [highFrequencyFilter]);
 
@@ -1849,38 +1836,38 @@ export default function CareEncyclopedia() {
   }, [favorites]);
 
   const currentCareScopeLabel = isEn
-    ? (careViewMode === 'favorites' ? 'My Favorites' : activeCategory === '全部' ? 'All Topics' : translateTopicTag(activeCategory, true))
-    : (careViewMode === 'favorites' ? '我的收藏' : activeCategory === '全部' ? '全部问题' : activeCategory);
+    ? (careViewMode === 'favorites' ? 'My Favorites' : activeCategory === 'all' ? 'All Topics' : getCategoryLabel(activeCategory))
+    : (careViewMode === 'favorites' ? '我的收藏' : activeCategory === 'all' ? '全部问题' : getCategoryLabel(activeCategory));
   const favoriteCount = Object.keys(favorites).length;
   const careListTitle = isEn
     ? (searchTerm.trim()
         ? `Search: "${searchTerm.trim()}" (${filteredTopics.length} items)`
         : careViewMode === 'favorites'
           ? `My Favorites (${filteredTopics.length} items)`
-          : activeCategory !== '全部'
-            ? `${translateTopicTag(activeCategory, true)} (${filteredTopics.length} items)`
+          : activeCategory !== 'all'
+            ? `${getCategoryLabel(activeCategory)} (${filteredTopics.length} items)`
             : 'Care Knowledge')
     : (searchTerm.trim()
         ? `搜索结果：“${searchTerm.trim()}” · 共 ${filteredTopics.length} 篇`
         : careViewMode === 'favorites'
           ? `我的收藏 · 共 ${filteredTopics.length} 篇`
-          : activeCategory !== '全部'
-            ? `${activeCategory} · 共 ${filteredTopics.length} 篇`
+          : activeCategory !== 'all'
+            ? `${getCategoryLabel(activeCategory)} · 共 ${filteredTopics.length} 篇`
             : '养护知识');
   const careListSubtitle = isEn
     ? (searchTerm.trim()
         ? 'Filtered by title, summary, category, and keywords.'
         : careViewMode === 'favorites'
           ? 'Saved articles for quick reference.'
-          : activeCategory !== '全部'
-            ? `Current category: ${translateTopicTag(activeCategory, true)}`
+          : activeCategory !== 'all'
+            ? `Current category: ${getCategoryLabel(activeCategory)}`
             : 'Browse care guides by topic.')
     : (searchTerm.trim()
         ? '已按标题、简介、分类和关键词筛选。'
         : careViewMode === 'favorites'
           ? '这里收纳你常用的养护文章。'
-          : activeCategory !== '全部'
-            ? `当前分类：${activeCategory}`
+          : activeCategory !== 'all'
+            ? `当前分类：${getCategoryLabel(activeCategory)}`
             : '按问题浏览常用养护方法。');
 
   const openPreview = (topic: CareTopic) => {
@@ -2078,12 +2065,13 @@ export default function CareEncyclopedia() {
           <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:gap-3">
             {localizedCategoryEntrances.map(item => {
               const Icon = item.icon;
-              const selected = activeCategory === item.filter;
+              const selected = activeCategory === item.id;
               return (
                 <button
                   key={item.label}
                   type="button"
-                  onClick={() => handleSelectCareCategory(item.filter)}
+                  data-care-category={item.id}
+                  onClick={() => handleSelectCareCategory(item.id)}
                   className={`grid min-h-[76px] grid-cols-[28px_1fr] items-center gap-2 rounded-[16px] border px-3 py-2 text-left transition-colors ${
                     selected ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-border/70 bg-bg/70 text-ink/68 hover:border-emerald-100 hover:bg-emerald-50/45'
                   }`}
@@ -2101,8 +2089,8 @@ export default function CareEncyclopedia() {
           </div>
       </section>
 
-      <section id="care-results" ref={contentListRef} className="care-results-panel scroll-mt-4 grid min-w-0 grid-cols-1 gap-3">
-        <div className={`${!searchTerm.trim() && careViewMode === 'all' && activeCategory === '全部' ? 'hidden md:block' : ''} px-1 py-1 md:rounded-[18px] md:border md:border-white/80 md:bg-white md:px-4 md:py-3 md:shadow-sm`}>
+      <section id="care-results" ref={contentListRef} data-care-result-count={filteredTopics.length} className="care-results-panel scroll-mt-4 grid min-w-0 grid-cols-1 gap-3">
+        <div className={`${!searchTerm.trim() && careViewMode === 'all' && activeCategory === 'all' ? 'hidden md:block' : ''} px-1 py-1 md:rounded-[18px] md:border md:border-white/80 md:bg-white md:px-4 md:py-3 md:shadow-sm`}>
           <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="text-[15px] font-black text-ink">
@@ -2110,11 +2098,11 @@ export default function CareEncyclopedia() {
             </div>
             <div className="mt-0.5 text-[11px] font-bold text-ink/45">{careListSubtitle}</div>
           </div>
-          {(activeCategory !== '全部' || searchTerm.trim() || careViewMode === 'favorites') && (
+          {(activeCategory !== 'all' || searchTerm.trim() || careViewMode === 'favorites') && (
             <button
               type="button"
               onClick={() => {
-                setActiveCategory('全部');
+                setActiveCategory('all');
                 setCareViewMode('all');
                 setSearchTerm('');
                 setCareWorkspacePage('home');
@@ -2264,8 +2252,8 @@ export default function CareEncyclopedia() {
         groups={[
           {
             title: isEn ? 'Scenario' : '问题场景',
-            selected: draftCareCategory,
-            onSelect: setDraftCareCategory,
+            selected: getCategoryLabel(draftCareCategory),
+            onSelect: (label) => setDraftCareCategory(categoryChips.find(item => item.label === label)?.id || 'all'),
             options: categoryChips.map(item => ({ label: item.label })),
           },
           {
@@ -2277,8 +2265,8 @@ export default function CareEncyclopedia() {
         ]}
         onClose={() => setIsCareFilterOpen(false)}
         onReset={() => {
-          setDraftCareCategory('全部');
-          setActiveCategory('全部');
+          setDraftCareCategory('all');
+          setActiveCategory('all');
           setDraftCareViewMode('all');
           setCareViewMode('all');
           setIsCareFilterOpen(false);
