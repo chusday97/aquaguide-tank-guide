@@ -14,6 +14,7 @@ import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePr
 import type { PairCompatibilityResult } from '../modules/knowledge/knowledge.types';
 import type { PreviewImage } from './common/ImagePreviewModal';
 import { AdaptiveDetailContent } from './common/AdaptiveDetailContent';
+import { SurfaceHeader } from './common/SurfaceHeader';
 import { ResilientImage } from './common/ResilientImage';
 import { VisualResultCard } from './visual-results/VisualResultCard';
 import { getVisualEmphasis, mapFitStatus } from './visual-results/visual-result.adapters';
@@ -787,29 +788,31 @@ export function SpeciesDetailDialog({
         <AdaptiveDetailContent showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
-              <div className="modalHeader species-detail-header flex items-center justify-between border-b border-border bg-white px-4 py-2 min-[760px]:py-3">
-                <span className="text-[12px] font-black tracking-[0.08em] text-ink/48">{isEn ? 'SPECIES PROFILE' : '物种档案'}</span>
-                <div className="flex items-center gap-2">
+              <SurfaceHeader
+                className="modalHeader species-detail-header"
+                title={isEn ? 'Species profile' : '物种档案'}
+                onClose={() => onOpenChange(false)}
+                closeLabel={t('encyclopedia.dismiss')}
+                actions={(
+                  <>
                   <button
                     type="button"
                     onClick={() => {
                       setExportError('');
                       setIsExportOpen(true);
                     }}
-                    className="flex h-10 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-[11px] font-black text-ink/60 hover:text-accent"
+                    className="flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-[11px] font-black text-ink/60 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                     aria-label={isEn ? 'Export species card' : '导出物种卡片'}
                   >
                     <Download className="h-4 w-4" />
                     <span className="hidden min-[760px]:inline">{isEn ? 'Export card' : '导出卡片'}</span>
                   </button>
-                  <button type="button" onClick={handleShare} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
+                  <button type="button" onClick={handleShare} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
                     <Share2 className="h-5 w-5" />
                   </button>
-                  <button type="button" onClick={() => onOpenChange(false)} className="flex h-10 w-10 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent" aria-label={t('encyclopedia.dismiss')}>
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
+                  </>
+                )}
+              />
 
               <div className="modalBody species-detail-body app-scrollbar-hidden p-0">
                 <div className="p-3 min-[760px]:p-5" data-species-detail-layout="single-screen-profile">

@@ -5,6 +5,7 @@ import type { AquariumFish, Fish } from '../../types';
 import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '../../services/aquarium/livestock-removal-attempt.service';
 import { normalizeSpeciesBatches } from '../../services/aquarium/species-batches.service';
 import { LivestockBatchCard } from './LivestockBatchCard';
+import { SurfaceHeader } from '../common/SurfaceHeader';
 
 type RemovalDraft = {
   record: AquariumFish;
@@ -99,11 +100,12 @@ export function LivestockRosterDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="flex max-h-[88dvh] w-[min(94vw,900px)] max-w-[900px] flex-col overflow-hidden rounded-[28px] p-0">
-          <DialogHeader className="shrink-0 border-b border-border px-5 pb-4 pt-5 text-left">
-            <DialogTitle>缸内物种</DialogTitle>
-            <DialogDescription>{aquariumName} · {visibleRecords.length} 种 · 共 {visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} 只/条</DialogDescription>
-          </DialogHeader>
+        <DialogContent showCloseButton={false} className="flex max-h-[88dvh] w-[min(94vw,900px)] max-w-[900px] flex-col overflow-hidden rounded-[28px] p-0">
+          <SurfaceHeader
+            title="缸内物种"
+            description={`${aquariumName} · ${visibleRecords.length} 种 · 共 ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} 只/条`}
+            onClose={() => onOpenChange(false)}
+          />
           <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
             {visibleRecords.length > 0 ? (
               <div className="grid gap-3 md:grid-cols-2">

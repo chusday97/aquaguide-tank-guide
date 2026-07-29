@@ -78,6 +78,7 @@
 - `src/components/SpeciesDetailDialog.tsx`：共享物种详情。
 - `src/components/common/AdaptiveDetailContent.tsx`：桌面中央详情弹窗与手机底部详情面板。
 - `src/components/common/AdaptiveTaskContent.tsx`：桌面与手机的沉浸式任务流程表面。
+- `src/components/common/SurfaceHeader.tsx`：统一详情/任务表面的标题、返回、关闭与 44px 图标操作。
 - `src/components/ThreeAquarium.tsx`：3D 鱼缸。
 
 ## 文档与验证

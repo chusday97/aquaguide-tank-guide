@@ -51,6 +51,8 @@
 
 ## 当前目标与成功标准
 
+- 当前实施：全局交互显性化与折叠治理。阶段 1 已完成共享表面标题栏、44px 关闭按钮与物种/缸内详情统一关闭位置；下一步重排物种档案喂养与环境信息。
+
 - 当前目标：任务动作与养护评测闭环已经通过 Critic 与 Evaluator，当前只剩文档和证据归档收口。
 - 成功标准：所有正式任务入口消费 `task-routes`；四种养护详情具有不同任务语义；评测、操作、清单、提醒、收藏和换水都产生可观察且可恢复的业务结果。
 - 当前证据：生产构建通过；`test:care-guide-types`、`test:task-actions-ui`、`test:mobile-care-ui`、`test:three-step-ui`、`test:localization-ui`、`test:responsive-routes`、任务路由和按钮审计通过。Critic 首轮 6 个阻塞项和 Evaluator 发现的 2 个目标级问题均已修复并同线程复验 PASS。
