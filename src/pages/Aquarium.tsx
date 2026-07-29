@@ -98,8 +98,11 @@ import {
   buildHealthScoreArtifact,
   buildHundredDayArtifact,
   buildWeeklyCareArtifact,
+  buildSanitizedAquariumReport,
   type AquariumArtifactContext,
 } from '../services/export/aquarium-artifact.service';
+import { createAquariumShareReport } from '../services/share/aquarium-share-report.service';
+import { AquaGuideApiError } from '../services/api/api-client';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { findDailyPatrolRecord, persistDiagnosisRecords, upsertDiagnosisRecord } from '../services/diagnosis/diagnosis-records.service';
@@ -1216,6 +1219,8 @@ export default function AquariumManager() {
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
   const [exportArtifact, setExportArtifact] = useState<ExportArtifactContent | null>(null);
   const [isSavingStartedAt, setIsSavingStartedAt] = useState(false);
+  const [isCreatingShare, setIsCreatingShare] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
   const [settingsForm, setSettingsForm] = useState<Partial<Aquarium>>({});
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | null>(null);
   const [isPlantListExpanded, setIsPlantListExpanded] = useState(false);
@@ -4155,7 +4160,7 @@ export default function AquariumManager() {
     nextAction: dailyActionTask.title,
     species: activeAquarium.fishes.map(record => {
       const fish = fishData.find(item => item.id === record.fishId);
-      return { name: fish ? getSpeciesNameLocalized(fish, isEn) : record.fishId, quantity: record.quantity };
+      return { catalogKey: record.fishId, name: fish ? getSpeciesNameLocalized(fish, isEn) : record.fishId, quantity: record.quantity };
     }),
     careReminders,
     latestDiagnosis: diagnosisResult ? toDiagnosisOutput(diagnosisResult) : undefined,
@@ -4177,6 +4182,25 @@ export default function AquariumManager() {
       showToast(isEn ? 'Aquarium start date confirmed.' : '建缸日期已确认。');
     } finally {
       setIsSavingStartedAt(false);
+    }
+  };
+  const createPrivateShare = async () => {
+    if (isCreatingShare) return;
+    setIsCreatingShare(true);
+    try {
+      const created = await createAquariumShareReport(activeAquarium.id, buildSanitizedAquariumReport(artifactContext));
+      if (!created.shareUrl) throw new Error('分享链接没有生成成功。');
+      setShareUrl(created.shareUrl);
+      showToast(isEn ? 'Privacy-safe report created.' : '脱敏分享报告已生成。');
+    } catch (error) {
+      if (error instanceof AquaGuideApiError && error.code === 'AUTH_REQUIRED') {
+        showToast(isEn ? 'Sign in to create a share link.' : '登录后才能生成分享链接。', 'error');
+        navigateToRoute('/login');
+        return;
+      }
+      showToast(error instanceof Error ? error.message : '分享报告暂时没有生成成功。', 'error');
+    } finally {
+      setIsCreatingShare(false);
     }
   };
   const localTemperatureHint = weatherStatus === 'ready' && localWeather?.temperatureC !== undefined
@@ -7736,6 +7760,8 @@ export default function AquariumManager() {
         onDownloadMilestone={aquariumAgeDays >= 100 && activeAquarium.startedAtConfirmedAt
           ? () => openExportArtifact(buildHundredDayArtifact(artifactContext, aquariumAgeDays))
           : undefined}
+        onCreateShare={() => void createPrivateShare()}
+        isCreatingShare={isCreatingShare}
       />
 
       <ExportArtifactDialog
@@ -7744,6 +7770,23 @@ export default function AquariumManager() {
         content={exportArtifact}
         isEn={isEn}
       />
+
+      <Dialog open={Boolean(shareUrl)} onOpenChange={open => { if (!open) setShareUrl(''); }}>
+        <DialogContent className="w-[min(92vw,520px)] max-w-[520px] rounded-[26px]">
+          <DialogHeader>
+            <DialogTitle>脱敏报告链接已生成</DialogTitle>
+            <DialogDescription>链接 7 天后自动失效，可在设置中提前撤销。报告不会显示鱼缸名称、用户身份、自由描述或内部记录 ID。</DialogDescription>
+          </DialogHeader>
+          <label className="grid gap-2 text-xs font-black text-ink/65">
+            分享链接
+            <input readOnly value={shareUrl} className="h-11 w-full rounded-xl border border-border bg-bg px-3 text-sm font-semibold text-ink" onFocus={event => event.currentTarget.select()} />
+          </label>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShareUrl('')} className="min-h-11 rounded-xl">完成</Button>
+            <Button onClick={() => void navigator.clipboard.writeText(shareUrl).then(() => showToast('链接已复制。')).catch(() => showToast('复制失败，请手动复制。', 'error'))} className="min-h-11 rounded-xl">复制链接</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isConflictDialogOpen} onOpenChange={setIsConflictDialogOpen}>
         <DialogContent className="flex max-h-[88dvh] w-[min(94vw,820px)] max-w-[820px] flex-col overflow-hidden rounded-[28px] border-amber-100 bg-[#FBFAF6] p-0">

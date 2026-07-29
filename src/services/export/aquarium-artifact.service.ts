@@ -3,8 +3,10 @@ import type { Aquarium } from '../../types';
 import type { DiagnosisOutput } from '../../modules/diagnosis/diagnosis.types';
 import type { CareReminderRecord } from '../care/care-activity.service';
 import type { ExportArtifactContent } from '../../components/export/ExportArtifactDialog';
+import type { SanitizedAquariumReport } from '../../../packages/contracts/src/share-reports';
 
 export type AquariumArtifactSpecies = {
+  catalogKey?: string;
   name: string;
   quantity: number;
 };
@@ -136,3 +138,51 @@ export const buildHundredDayArtifact = (context: AquariumArtifactContext, days: 
   fileName: fileName(context.aquarium, context.isEn ? `${days}-day-milestone` : `${days}天纪念`),
   disclaimer: disclaimer(Boolean(context.isEn)),
 });
+
+export const buildSanitizedAquariumReport = (context: AquariumArtifactContext): SanitizedAquariumReport => {
+  const generatedAt = new Date();
+  const length = Number(context.aquarium.dimensions?.length || 0);
+  const width = Number(context.aquarium.dimensions?.width || 0);
+  const height = Number(context.aquarium.dimensions?.height || 0);
+  const volumeLiters = length > 0 && width > 0 && height > 0
+    ? Math.round((length * width * height / 1000) * 0.85)
+    : undefined;
+  return {
+    snapshotVersion: 1,
+    generatedAt: generatedAt.toISOString(),
+    expiresAt: new Date(generatedAt.getTime() + 7 * 86_400_000).toISOString(),
+    health: {
+      score: context.healthScore,
+      status: context.healthStatus,
+      reasons: context.healthReasons.slice(0, 3),
+      nextAction: context.nextAction,
+      missingData: context.missingData.slice(0, 8),
+    },
+    environment: {
+      waterType: context.aquarium.waterType,
+      volumeLiters,
+      targetTemperatureC: context.aquarium.targetTemperature ? Number(context.aquarium.targetTemperature) : undefined,
+      equipment: [
+        context.aquarium.equipment?.filter && `${context.isEn ? 'Filter' : '过滤'}：${context.aquarium.equipment.filter}`,
+        context.aquarium.equipment?.heater != null && `${context.isEn ? 'Heater' : '加热'}：${context.aquarium.equipment.heater ? (context.isEn ? 'On' : '有') : (context.isEn ? 'Off' : '无')}`,
+        context.aquarium.equipment?.oxygen != null && `${context.isEn ? 'Aeration' : '增氧'}：${context.aquarium.equipment.oxygen ? (context.isEn ? 'On' : '有') : (context.isEn ? 'Off' : '无')}`,
+      ].filter(Boolean) as string[],
+    },
+    species: context.species.map(item => ({
+      catalogKey: item.catalogKey || item.name,
+      name: item.name,
+      quantity: item.quantity,
+    })),
+    latestDiagnosis: context.latestDiagnosis ? {
+      riskLevel: context.latestDiagnosis.riskLabel,
+      conclusion: context.latestDiagnosis.summary,
+      actions: [context.latestDiagnosis.currentAction, ...context.latestDiagnosis.actions].filter(Boolean).slice(0, 8),
+    } : undefined,
+    weeklyCarePlan: context.careReminders.slice(0, 50).map(reminder => ({
+      title: reminder.title,
+      dayLabel: format(new Date(reminder.scheduledFor), 'MM/dd'),
+      status: reminder.completedAt ? 'completed' : new Date(reminder.scheduledFor) < startOfDay(new Date()) ? 'overdue' : 'pending',
+    })),
+    disclaimer: disclaimer(Boolean(context.isEn)),
+  };
+};

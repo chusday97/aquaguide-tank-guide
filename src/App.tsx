@@ -53,6 +53,7 @@ const loadThreeDemo = () => import('./pages/ThreeDemo').then(module => ({ defaul
 const loadSearch = () => import('./pages/Search');
 const loadSettings = () => import('./pages/Settings');
 const loadWelcome = () => import('./pages/Welcome');
+const loadSharedReport = () => import('./pages/SharedReport');
 
 const AquariumManager = lazyWithRecovery(loadAquarium, 'aquarium');
 const Encyclopedia = lazyWithRecovery(loadEncyclopedia, 'encyclopedia');
@@ -67,6 +68,7 @@ const ThreeDemo = lazyWithRecovery(loadThreeDemo, '3d-demo');
 const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
 const WelcomePage = lazyWithRecovery(loadWelcome, 'welcome');
+const SharedReportPage = lazyWithRecovery(loadSharedReport, 'shared-report');
 
 const preloadRoute = (path: string) => {
   const loader = path === '/aquarium'
@@ -627,6 +629,7 @@ function AppShell() {
   const isLogin = location.pathname === '/login';
   const isAdminContent = location.pathname === '/admin/content';
   const isWelcome = location.pathname === '/welcome';
+  const isSharedReport = location.pathname.startsWith('/report/');
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(() => {
     try {
       return localStorage.getItem('aquaguide_desktop_sidebar_collapsed') === 'true';
@@ -723,7 +726,18 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isStructurePreview && !isLogin && !isAdminContent) return <PageLoading />;
+  if (!preferencesReady && !isStructurePreview && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
+
+  if (isSharedReport) {
+    return (
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/report/:token" element={<RouteErrorBoundary page="shared-report"><SharedReportPage /></RouteErrorBoundary>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
 
   if (isStructurePreview) {
     return (

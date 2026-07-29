@@ -4,6 +4,7 @@ import {
   buildDiagnosisArtifact,
   buildHealthScoreArtifact,
   buildHundredDayArtifact,
+  buildSanitizedAquariumReport,
   buildWeeklyCareArtifact,
 } from '../src/services/export/aquarium-artifact.service';
 import type { AquariumArtifactContext } from '../src/services/export/aquarium-artifact.service';
@@ -54,5 +55,8 @@ const weekly = buildWeeklyCareArtifact(context);
 assert.equal(weekly.sections[0].title, '优先补做');
 assert.equal(buildAquariumArchiveArtifact(context).sections[2].items[0], '孔雀鱼 × 6');
 assert.equal(buildHundredDayArtifact(context, 128).metric, '128');
+const publicSnapshot = buildSanitizedAquariumReport(context);
+assert.equal(JSON.stringify(publicSnapshot).includes('客厅缸'), false);
+assert.equal('aquariumId' in publicSnapshot, false);
 
 console.log('aquarium artifact builders: ok');

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Download, X } from 'lucide-react';
+import { Download, Share2, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { AquariumFish, Fish } from '../../types';
 import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '../../services/aquarium/livestock-removal-attempt.service';
@@ -38,6 +38,8 @@ type Props = {
   onConfirmStartedAt: (value: string) => Promise<void>;
   onDownloadArchive: () => void;
   onDownloadMilestone?: () => void;
+  onCreateShare: () => void;
+  isCreatingShare?: boolean;
 };
 
 export function LivestockRosterDialog({
@@ -57,6 +59,8 @@ export function LivestockRosterDialog({
   onConfirmStartedAt,
   onDownloadArchive,
   onDownloadMilestone,
+  onCreateShare,
+  isCreatingShare = false,
 }: Props) {
   const [removal, setRemoval] = useState<RemovalDraft | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -124,9 +128,14 @@ export function LivestockRosterDialog({
             description={`${aquariumName} · ${visibleRecords.length} 种 · 共 ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} 只/条`}
             onClose={() => onOpenChange(false)}
             actions={(
-              <button type="button" onClick={onDownloadArchive} aria-label="下载鱼缸档案" title="下载鱼缸档案" className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                <Download className="h-4 w-4" />
-              </button>
+              <>
+                <button type="button" disabled={isCreatingShare} onClick={onCreateShare} aria-label="生成分享报告" title="生成分享报告" className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
+                  <Share2 className="h-4 w-4" />
+                </button>
+                <button type="button" onClick={onDownloadArchive} aria-label="下载鱼缸档案" title="下载鱼缸档案" className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                  <Download className="h-4 w-4" />
+                </button>
+              </>
             )}
           />
           <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">

@@ -139,3 +139,7 @@
 - `src/services/export/png-export.service.ts`：字体/图片就绪、1080px 渲染与本地保存。
 - `src/services/export/aquarium-artifact.service.ts`：健康、诊断、计划、档案和百日纪念展示模型。
 - `scripts/test-aquarium-artifacts.ts`：导出内容与隐私边界专项。
+- `src/pages/SharedReport.tsx`：匿名脱敏报告页面与 PNG 下载。
+- `src/services/share/aquarium-share-report.service.ts`：创建、列出、撤销和公开读取分享报告。
+- `apps/api/src/routes/share-reports.ts`：令牌哈希、七天失效、owner 管理与匿名快照读取。
+- `scripts/verify-share-report-ui.mjs`：390/1280px 公共报告浏览器回归。
