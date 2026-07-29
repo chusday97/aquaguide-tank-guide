@@ -1144,7 +1144,7 @@ const loadWishlistFishIds = () => {
 export default function AquariumManager() {
   const { t, i18n } = useTranslation();
   const { isPhoneLayout } = useLayoutMode();
-  const isEn = i18n.language === 'en';
+  const isEn = i18n.language?.startsWith('en');
   const localizedTemplates = useMemo(() => getLocalizedTemplates(isEn), [isEn]);
   const filterOptionKeys: Record<string, string> = {
     '无': 'none',
@@ -1700,7 +1700,7 @@ export default function AquariumManager() {
     const hasSmall = curFishes.some(f => f.size === 'Small');
     const hasLarge = curFishes.some(f => f.size === 'Large');
 
-    const isEn = i18n.language === 'en';
+    const isEn = i18n.language?.startsWith('en');
     if (hasAggressive && hasPeaceful) {
       const aggressiveItems = animalItems.filter(({ fish }) => fish.temperament === 'Aggressive');
       const aggressiveNames = aggressiveItems.map(({ fish }) => fish.name).slice(0, 3).join(isEn ? ', ' : '、');
