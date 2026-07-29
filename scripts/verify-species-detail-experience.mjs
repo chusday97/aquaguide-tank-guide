@@ -102,7 +102,11 @@ try {
       assert.ok(actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
       assert.equal(reasonBoxes.length, 3, 'phone first screen must expose three key reasons');
       assert.ok(heroBox.y + heroBox.height < verdictBox.y, 'phone hero and verdict must not overlap');
-      assert.ok(reasonBoxes.every(box => box.y + box.height <= actionBox.y), 'phone reasons must stay fully above the sticky primary action');
+      assert.ok(verdictBox.y < actionBox.y, 'phone must show the fit verdict before the sticky primary action');
+      const lastReason = dialog.locator('[aria-label="Key reasons"] > div').last();
+      await lastReason.scrollIntoViewIfNeeded();
+      const [scrolledReasonBox, stickyActionBox] = await Promise.all([lastReason.boundingBox(), primaryAction.boundingBox()]);
+      assert.ok(scrolledReasonBox && stickyActionBox && scrolledReasonBox.y + scrolledReasonBox.height <= stickyActionBox.y, 'phone reasons must remain reachable above the sticky primary action after scrolling');
     }
     const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank fit evidence/ : /适配依据/ });
     assert.equal(await fitSection.getAttribute('aria-expanded'), 'false', 'fit evidence must be collapsed on first open');
@@ -133,7 +137,7 @@ try {
       name: 'not recommended',
       status: 'not_recommended',
       action: 'View Risks & Alternatives',
-      expectedUrl: /\/encyclopedia#compatibility/,
+      expectedUrl: /\/encyclopedia\?mode=compatibility/,
       state: {
         ...baseConfiguredState,
         aquariums: [{ ...baseConfiguredState.aquariums[0], waterType: 'Saltwater' }],
@@ -143,7 +147,7 @@ try {
       name: 'predation conflict',
       status: 'not_recommended',
       action: 'View Risks & Alternatives',
-      expectedUrl: /\/encyclopedia#compatibility/,
+      expectedUrl: /\/encyclopedia\?mode=compatibility/,
       state: {
         ...baseConfiguredState,
         aquariums: [{
@@ -210,11 +214,14 @@ try {
   const careAction = aquariumDetail.getByRole('button', { name: 'View Care Essentials', exact: true });
   assert.equal(await careAction.count(), 1, 'owned aquarium detail must replace the duplicate tank entry with one contextual action');
   await careAction.click();
-  assert.equal(await aquariumDetail.getByRole('button', { name: /Care essentials/ }).getAttribute('aria-expanded'), 'true');
+  const environmentSummary = aquariumDetail.locator('[data-species-environment-summary]');
+  await ownedAquarium.page.waitForFunction(() => document.activeElement?.hasAttribute('data-species-environment-summary'));
+  assert.equal(await environmentSummary.evaluate(element => element === document.activeElement), true, 'owned aquarium action must focus the directly visible environment summary');
+  assert.equal(await aquariumDetail.getByText('Feeding at a glance', { exact: true }).count(), 1, 'feeding summary must stay directly visible without a disclosure');
   assert.match(ownedAquarium.page.url(), /\/aquarium$/);
   await ownedAquarium.context.close();
 
-  console.log('species detail experience verified: single-screen profile, collapsed evidence, unique CTA, routing, and owned context');
+  console.log('species detail experience verified: visible feeding, scoped evidence, unique CTA, routing, and owned context');
 } finally {
   await browser.close();
 }

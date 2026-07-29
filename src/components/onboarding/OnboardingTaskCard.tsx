@@ -66,7 +66,7 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
             <span className="min-w-0 break-words text-left">{nextTask.label}</span><ChevronRight className="h-4 w-4 shrink-0" />
           </button>
         )}
-        <details className="min-w-0 flex-1">
+        <details data-disclosure-purpose="secondary_evidence" className="min-w-0 flex-1">
           <summary className={`cursor-pointer select-none rounded-full px-3 py-2 text-[11px] font-black focus-visible:outline-none focus-visible:ring-2 ${isSidebar ? 'mx-auto w-fit text-emerald-800 hover:bg-emerald-50 focus-visible:ring-emerald-400' : 'ml-auto w-fit text-white/70 hover:bg-white/10 focus-visible:ring-white'}`}>
             {t('onboarding.showSteps')}
           </summary>

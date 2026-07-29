@@ -207,6 +207,7 @@ export function VisualResultCard({
         <div className="mx-3.5 mb-3 overflow-hidden rounded-[16px] border border-border bg-white min-[500px]:mx-4">
           <button
             type="button"
+            data-disclosure-purpose="secondary_evidence"
             aria-expanded={detailsOpen}
             onClick={() => setDetailsOpen(value => !value)}
             className="flex min-h-11 w-full items-center justify-between gap-3 px-3 py-2 text-left text-[11px] font-black text-ink/65"

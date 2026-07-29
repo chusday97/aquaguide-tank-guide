@@ -1015,6 +1015,7 @@ export function SpeciesDetailDialog({
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
+                        data-disclosure-purpose="secondary_evidence"
                         aria-expanded={expandedSection === 'fit'}
                         onClick={() => setExpandedSection(current => current === 'fit' ? null : 'fit')}
                         className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
@@ -1070,6 +1071,7 @@ export function SpeciesDetailDialog({
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
+                        data-disclosure-purpose="secondary_evidence"
                         aria-expanded={expandedSection === 'compatibility'}
                         onClick={() => setExpandedSection(current => current === 'compatibility' ? null : 'compatibility')}
                         className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"

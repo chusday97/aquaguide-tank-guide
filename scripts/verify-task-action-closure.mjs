@@ -10,20 +10,36 @@ const state = {
   aquariums: [{
     id: 'closure-tank',
     name: '闭环测试缸',
-    fishes: [{
-      id: 'resident-1',
-      fishId: 'sp_0001',
-      quantity: 2,
-      entryDate: '2026-07-01',
-      batches: [{
-        id: 'batch-1',
+    fishes: [
+      {
+        id: 'resident-1',
+        fishId: 'sp_0001',
         quantity: 2,
         entryDate: '2026-07-01',
-        lifeStage: 'adult',
-        reproductiveState: 'normal',
-        stateUpdatedAt: '2026-07-01T00:00:00.000Z',
-      }],
-    }],
+        batches: [{
+          id: 'batch-1',
+          quantity: 2,
+          entryDate: '2026-07-01',
+          lifeStage: 'adult',
+          reproductiveState: 'normal',
+          stateUpdatedAt: '2026-07-01T00:00:00.000Z',
+        }],
+      },
+      {
+        id: 'resident-2',
+        fishId: 'sp_0002',
+        quantity: 1,
+        entryDate: '2026-07-02',
+        batches: [{
+          id: 'batch-2',
+          quantity: 1,
+          entryDate: '2026-07-02',
+          lifeStage: 'juvenile',
+          reproductiveState: 'normal',
+          stateUpdatedAt: '2026-07-02T00:00:00.000Z',
+        }],
+      },
+    ],
     dimensions: { length: '60', width: '35', height: '40' },
     waterType: 'Freshwater',
     targetTemperature: '25',
@@ -122,6 +138,13 @@ try {
     await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
     const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
     await panel.getByRole('button', { name: '追咬打架', exact: true }).click();
+    const targetPanel = panel.getByText('哪些生物出现了这个情况？', { exact: true }).locator('..');
+    assert.equal(await targetPanel.getByRole('button', { name: '全缸都这样', exact: true }).getAttribute('aria-pressed'), 'true', 'behavior checks must default to the whole tank');
+    await targetPanel.getByRole('button', { name: '某一种生物', exact: true }).click();
+    await panel.getByRole('button', { name: '请先选择检查对象', exact: true }).waitFor();
+    const speciesTargets = targetPanel.locator('button:has(img)');
+    assert.equal(await speciesTargets.count(), 2, 'single-species scope must show every distinct resident species');
+    await speciesTargets.first().click();
     const unknownOptions = panel.getByRole('button', { name: '不确定', exact: true });
     assert.equal(await unknownOptions.count(), 2, '追咬自查应显示两道有效问题');
     for (let index = 0; index < 2; index += 1) {
@@ -129,6 +152,7 @@ try {
     }
     await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
     await panel.getByText('资料不足', { exact: true }).waitFor();
+    await panel.getByText(/重点观察/).waitFor();
     await panel.getByRole('button', { name: '查看需要补充的检查', exact: true }).click();
     assert.equal(await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).count(), 0, '信息不足时不应让提醒抢占补充检查');
     await panel.getByRole('button', { name: '重新补充关键检查', exact: true }).click();

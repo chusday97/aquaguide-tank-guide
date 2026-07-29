@@ -3323,18 +3323,23 @@ export function CareArticleDetail({
           )}
 
           <section className="mt-3 rounded-[18px] border border-border bg-white p-3">
-            <button
-              type="button"
-              onClick={() => setIsDetailExpanded(prev => !prev)}
-              className="flex w-full items-center justify-between gap-3 text-left"
-              aria-expanded={isDetailExpanded}
-            >
-              <span className="text-[13px] font-black text-ink">{isEn ? 'Detailed Description & Analysis' : '详细说明与判断依据'}</span>
-              <span className="rounded-full bg-bg px-2.5 py-1 text-[10px] font-black text-ink/50">
-                {isDetailExpanded ? (isEn ? 'Collapse' : '收起') : (isEn ? 'Expand' : '展开')}
-              </span>
-            </button>
-            {isDetailExpanded && (
+            {meta.guideType === 'knowledge' ? (
+              <div className="text-[13px] font-black text-ink">{isEn ? 'Detailed Description' : '详细说明'}</div>
+            ) : (
+              <button
+                type="button"
+                data-disclosure-purpose="secondary_evidence"
+                onClick={() => setIsDetailExpanded(prev => !prev)}
+                className="flex min-h-11 w-full items-center justify-between gap-3 text-left"
+                aria-expanded={isDetailExpanded}
+              >
+                <span className="text-[13px] font-black text-ink">{isEn ? 'Detailed Description & Analysis' : '详细说明与判断依据'}</span>
+                <span className="rounded-full bg-bg px-2.5 py-1 text-[10px] font-black text-ink/50">
+                  {isDetailExpanded ? (isEn ? 'Collapse' : '收起') : (isEn ? 'Expand' : '展开')}
+                </span>
+              </button>
+            )}
+            {(meta.guideType === 'knowledge' || isDetailExpanded) && (
               <div className="mt-3 grid gap-2">
                 {procedureDetails.map(item => (
                   <div key={`${item.title}-${item.description}`} className="rounded-[14px] bg-bg px-3 py-2.5">

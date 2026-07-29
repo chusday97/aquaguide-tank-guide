@@ -2415,7 +2415,11 @@ export default function Encyclopedia() {
         onAddToTank={handleAddToTank}
         onAddToCalculator={handleAddToCalculator}
         onToggleWishlist={toggleWishlist}
-        onGoCalculator={() => { closeAtlasDetail(false); setViewMode('compatibility'); }}
+        onGoCalculator={() => {
+          closeAtlasDetail(false);
+          setViewMode('compatibility');
+          navigateToRoute(taskRoutes.encyclopedia.compatibility);
+        }}
         onViewInTank={() => {
           closeAtlasDetail(false);
           navigateToRoute(taskRoutes.aquarium.livestock);
@@ -2579,7 +2583,7 @@ export default function Encyclopedia() {
                     )}
                   </div>
 
-                  <details className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
+                  <details data-disclosure-purpose="advanced_data" className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-[13px] font-black text-ink">
                       {t('encyclopedia.basicRequirements')}
                       <ChevronRight className="h-4 w-4 text-ink/38" />
@@ -2599,7 +2603,7 @@ export default function Encyclopedia() {
                     </div>
                   </details>
 
-                  <details className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
+                  <details data-disclosure-purpose="secondary_evidence" className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-[13px] font-black text-ink">
                       {t('encyclopedia.housingRisk')}
                       <ChevronRight className="h-4 w-4 text-ink/38" />
@@ -2627,7 +2631,7 @@ export default function Encyclopedia() {
                     </div>
                   </details>
 
-                  <details className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
+                  <details data-disclosure-purpose="advanced_data" className="rounded-[16px] border border-border bg-white p-3 shadow-sm">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-[13px] font-black text-ink">
                       {t('encyclopedia.feedingCare')}
                       <ChevronRight className="h-4 w-4 text-ink/38" />

@@ -55,6 +55,7 @@
     "test:livestock-removal-replay": "node --import tsx scripts/test-livestock-removal-replay.ts",
     "test:guided-navigation-ui": "node scripts/verify-guided-navigation.mjs",
     "test:aquarium-home-c": "node scripts/verify-aquarium-home-c.mjs",
+    "test:disclosures": "node scripts/verify-disclosure-contract.mjs",
     "test:settings-feedback": "node scripts/verify-settings-feedback.mjs",
     "test:search-suggestions": "tsx scripts/test-search-suggestions.ts",
     "test:search-ui": "SEARCH_UI_GROUP=atlas node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=mobile node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=care node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=entries node scripts/verify-search-and-inline-filter.mjs && SEARCH_UI_GROUP=identify node scripts/verify-search-and-inline-filter.mjs",

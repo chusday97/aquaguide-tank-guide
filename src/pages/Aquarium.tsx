@@ -6248,7 +6248,7 @@ export default function AquariumManager() {
                       </div>
                     </div>
                     {tankCopilotResult.blockedExplanation.length > 0 && (
-                      <details className="mt-3 rounded-[14px] bg-rose-50/70 px-3 py-2 text-xs font-bold text-rose-700">
+                      <details data-disclosure-purpose="alternative_plan" className="mt-3 rounded-[14px] bg-rose-50/70 px-3 py-2 text-xs font-bold text-rose-700">
                         <summary className="cursor-pointer">{isEn ? 'View Not Recommended' : '查看不建议方向'}</summary>
                         <div className="mt-2 grid gap-1.5">
                           {tankCopilotResult.blockedExplanation.map(reason => (
@@ -6793,7 +6793,7 @@ export default function AquariumManager() {
               </section>
 
               <section className="grid gap-3 rounded-[18px] bg-white p-3 shadow-sm">
-                <details>
+                <details data-disclosure-purpose="advanced_data">
                   <summary className="cursor-pointer list-none text-[14px] font-black text-ink">
                     C. 配置明细
                     <span className="ml-2 text-[11px] font-bold text-ink/45">{isEn ? 'Tap to expand' : '点击展开'}</span>
