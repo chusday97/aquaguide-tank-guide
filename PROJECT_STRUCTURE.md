@@ -95,7 +95,8 @@
 - `scripts/`：规则、契约、素材与回归断言。
 - `scripts/content-import/import-catalog.ts`：本地目录内容与图片的预检、去重、版本化 Storage 上传和数据库导入工具。
 - `scripts/test-visual-results.ts`：视觉结果适配、关注对象、折叠依据和规则只读性的专项断言。
-- `scripts/verify-disclosure-contract.mjs`：折叠用途白名单、喂养与安全内容直显、首页核心模块和缸内预览文案的静态门禁。
+- `scripts/verify-disclosure-contract.mjs`：同时扫描 `<details>` 与 `aria-expanded` 的折叠用途白名单，并验证喂养、环境、单条计划、安全内容和首页核心模块直显。
+- `scripts/verify-responsive-route-scan.mjs`：7 种设备/语言配置 × 17 个正式地址的页面错误、横向溢出、控件越界及 44×44px 图标点击范围门禁。
 - `scripts/test-species-diagnosis.ts`：单条新鱼、全缸急促呼吸、最多三问和中英文一致性规则断言。
 - `scripts/test-species-batches.ts`：旧鱼缸批次回填、体态更新、拆分、追加和最后一组移除断言。
 - `scripts/verify-guided-navigation.mjs`：首次引导、侧栏直达、手机体态批次和 600px 英文桌面浏览器验收。
