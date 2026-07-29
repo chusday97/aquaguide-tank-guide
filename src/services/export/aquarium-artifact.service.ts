@@ -231,7 +231,9 @@ export const buildSanitizedAquariumReport = (context: AquariumArtifactContext): 
       quantity: item.quantity,
     })),
     latestDiagnosis: context.latestDiagnosis ? {
-      riskLevel: context.latestDiagnosis.riskLabel,
+      riskLevel: context.isEn
+        ? ({ low: 'Routine', medium: 'Watch', high: 'Urgent', unknown: 'More information needed' }[context.latestDiagnosis.riskLevel])
+        : context.latestDiagnosis.riskLabel,
       conclusion: context.isEn
         ? englishSystemText(context.latestDiagnosis.summary, 'A structured aquarium check found an item to review.')
         : context.latestDiagnosis.summary,

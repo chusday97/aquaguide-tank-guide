@@ -68,6 +68,22 @@ const englishContext: AquariumArtifactContext = {
   missingData: [],
   nextAction: 'Complete today’s aquarium check',
   species: [{ name: 'Guppy', quantity: 6 }],
+  latestDiagnosis: {
+    riskLevel: 'high',
+    riskLabel: '紧急',
+    summary: '先增氧并观察呼吸',
+    currentAction: '立即增氧',
+    actions: ['停止喂食'],
+    avoidActions: ['不要直接下药'],
+    possibleCauses: ['缺氧'],
+    observeItems: [],
+    missingInfo: [],
+    evidence: [],
+    keyMetrics: [],
+    matchedRules: [],
+    matchedArticles: [],
+    nextCheckAt: '30 分钟后',
+  },
 };
 const englishArtifacts = [
   buildHealthScoreArtifact(englishContext),
@@ -95,5 +111,6 @@ const englishArtifacts = [
 for (const artifact of englishArtifacts) {
   assert.doesNotMatch(JSON.stringify(artifact), /[\u3400-\u9fff]/u, 'English export contains fixed Chinese product copy');
 }
+assert.equal(buildSanitizedAquariumReport(englishContext).latestDiagnosis?.riskLevel, 'Urgent');
 
 console.log('aquarium artifact builders: ok');
