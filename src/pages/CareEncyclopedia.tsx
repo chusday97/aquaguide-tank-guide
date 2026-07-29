@@ -126,6 +126,59 @@ type ProcedureStep = { title: string; description: string };
 type ProcedureReminder = { title: string; reason: string };
 type ProcedureDetail = { title: string; description: string };
 
+const procedureGuideIds = new Set([
+  'guide_new_fish_acclimation',
+  'guide_safe_water_change',
+  'guide_fish_death_action',
+  'qa_gen_005',
+  'qa_gen_006',
+  'qa_gen_013',
+  'qa_gen_014',
+  'qa_gen_015',
+  'qa_gen_016',
+  'qa_gen_017',
+  'qa_gen_025',
+  'qa_gen_031',
+  'qa_gen_033',
+]);
+
+const careChecklistGuideIds = new Set([
+  'guide_pregnant_care',
+  'guide_fry_care',
+  'qa_gen_021',
+  'qa_gen_023',
+]);
+
+const diagnosisGuideIds = new Set([
+  'guide_water_deteriorate',
+  'qa_gen_001',
+  'qa_gen_002',
+  'qa_gen_003',
+  'qa_gen_008',
+  'qa_gen_011',
+  'qa_gen_012',
+  'qa_gen_019',
+  'qa_gen_020',
+  'qa_gen_022',
+  'qa_gen_032',
+]);
+
+const knowledgeGuideIds = new Set([
+  'qa_gen_004',
+  'qa_gen_007',
+  'qa_gen_009',
+  'qa_gen_010',
+  'qa_gen_018',
+  'qa_gen_024',
+  'qa_gen_026',
+  'qa_gen_027',
+  'qa_gen_028',
+  'qa_gen_029',
+  'qa_gen_030',
+  'qa_gen_034',
+  'qa_gen_035',
+]);
+
 const safeJsonParse = <T,>(value: string | null, fallback: T): T => {
   if (!value) return fallback;
   try {
@@ -881,18 +934,22 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
   if (/换水|清洁|喂食|残饵|日常/.test(text)) addTag('日常养护');
   if (topicTags.size === 0) addTag(topic.category || '日常养护');
 
-  if (/过水|新鱼入缸|检疫/.test(text)) {
+  if (procedureGuideIds.has(topic.id) || /过水|新鱼入缸|检疫/.test(text)) {
     return {
       topicTags: Array.from(topicTags).slice(0, 2),
-      urgencyTag: '入缸前准备',
+      urgencyTag: /过水|新鱼入缸|检疫/.test(text)
+        ? '入缸前准备'
+        : /大换水|下药|滤材|死亡/.test(text)
+          ? '谨慎操作'
+          : '观察为主',
       guideType: 'procedure',
-      ctaLabel: '设置 3 天观察提醒',
-      secondaryCtaLabel: '标记已完成过水',
+      ctaLabel: /过水|新鱼入缸|检疫/.test(text) ? '设置 3 天观察提醒' : '标记已完成操作',
+      secondaryCtaLabel: /过水|新鱼入缸|检疫/.test(text) ? '标记已完成过水' : '展开完整说明',
       relatedIssueType: 'gasping',
     };
   }
 
-  if (/怀孕|母鱼|鱼苗|繁殖|开口|平游|卵黄囊/.test(text)) {
+  if (careChecklistGuideIds.has(topic.id)) {
     return {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '阶段护理',
@@ -903,7 +960,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
     };
   }
 
-  if (topic.id === 'guide_water_deteriorate' || /水质变差/.test(text)) {
+  if (diagnosisGuideIds.has(topic.id)) {
     return {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '建议尽快处理',
@@ -913,7 +970,18 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
     };
   }
 
-  if (/浮头|呼吸急促|急性|死亡|暴毙|氨中毒|烂尾|白点|红鳃/.test(text) || topic.urgency === '高优先级') {
+  if (knowledgeGuideIds.has(topic.id)) {
+    return {
+      topicTags: Array.from(topicTags).slice(0, 2),
+      urgencyTag: /用药|除藻|硬度|pH|CO2|盐度|钙|镁|KH/.test(text) ? '谨慎操作' : '科普了解',
+      guideType: 'knowledge',
+      ctaLabel: '收藏文章',
+      secondaryCtaLabel: '展开完整说明',
+      relatedIssueType: inferStepDiagnosisIssue(topic),
+    };
+  }
+
+  if (/浮头|呼吸急促|急性|氨中毒|烂尾|白点|红鳃/.test(text)) {
     return {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '需要立即处理',
@@ -923,7 +991,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
     };
   }
 
-  if (/水质变差|水浑|发白|发绿|异味|过滤器不出水|设备异常|死鱼/.test(text) || topic.urgency === '尽快处理') {
+  if (/水质变差|水浑|发白|发绿|异味|过滤器不出水|设备异常/.test(text)) {
     return {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '建议尽快处理',
