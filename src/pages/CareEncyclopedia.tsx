@@ -2973,10 +2973,6 @@ export function CareArticleDetail({
 
   const handleSecondaryCta = () => {
     if (meta.guideType === 'procedure') {
-      if (isWaterChangeGuide) {
-        navigate(taskRoutes.aquarium.waterChange);
-        return;
-      }
       if (isNewFishAcclimationTopic(topic)) {
         openReminderSheet('newFish');
         return;
@@ -3003,6 +2999,10 @@ export function CareArticleDetail({
 
   const handlePrimaryCta = (source: HTMLElement) => {
     if (meta.guideType === 'procedure') {
+      if (isWaterChangeGuide) {
+        navigate(taskRoutes.aquarium.waterChange);
+        return;
+      }
       if (isNewFishAcclimationTopic(topic)) {
         markOperationCompleted(isEn ? 'Acclimation completed' : '已完成过水');
         return;
