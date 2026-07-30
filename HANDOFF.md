@@ -4,7 +4,9 @@
 
 ## 2026-07-29 首页、体态与生命纪念修复交接
 
-- 当前目标：依次完成首页内容收口、现代化批次体态编辑、体态观察进入今日行动、生命纪念独立详情、桌面设置页和养护分类稳定 ID。
+- 当前目标：功能实现与主线程回归已完成；等待同一 Critic 复验和 Evaluator 最终裁决。
+- 审查修复：纪念记录状态区分“已记录但原因待补充”和“尚未记录”；原生确认已替换为项目内确认框，并新增在路由器启动前注册的历史导航守卫，浏览器返回会恢复当前详情并保留草稿，确认放弃后才离开。英文今日推荐只使用本地化名称与受控英文摘要；体态观察进入巡检时直显对应观察重点。旧七参数纪念 RPC 重载已在 migration 中显式删除。（commit: `df1532b`）
+- 审查修复验证：`lint`、`build`、`check:api`、`test:collection-hub-ui`、`test:aquarium-home-c`、`test:care-categories`、`test:care-guidance` 与 `test-species-batches.ts` 全部通过；构建只保留既有大块警告。
 - 已完成：生命纪念结构化字段已贯通数据库 migration、共享契约、API、Repository 和本地服务；专项验证覆盖新增与编辑、版本递增和变更事件。（commit: `b79793f`）
 - 设计基线：`docs/02-design/MEMORIAL_DETAIL_CONCEPTS.md` 收录 A/B/C 三套方案，正式采用 A「纪念档案」；B 依赖连续过程数据，C 的手机首屏过长，暂不实施。
 - 兼容边界：旧纪念记录无需迁移即可读取；新字段均可空。生命纪念原因只来自用户复盘，不允许 AI 推断或自动写入。
@@ -17,7 +19,7 @@
 - 设置验证：`lint`、`build`、`test:settings-feedback`；覆盖 1280px 双栏、390px 手机、600px 英文桌面、提交成功/失败、字段聚焦与未保存导航确认。
 - 养护分类已完成：使用稳定 `CareCategoryId`，确定性匹配读取未翻译基准字段；中英文点击同一分类返回完全相同文章 ID，“新鱼入缸”至少包含过水指南和直接入缸安全文章。（commit: `054916e`）
 - 养护验证：`test:care-categories`、`test:care-categories-ui`、`test:care-guidance`、`test:care-guide-types`、`lint`、`build`；分类只筛选列表，明确点击文章才打开详情，关闭后分类结果不丢失。
-- 下一步：执行本计划全量回归、独立 Critic 审查、修复复验与 Evaluator 用户路径裁决。
+- 下一步：将 `df1532b` 和上述运行证据交回同一 Critic 复验；通过后由 Evaluator 对照原始用户路径做最终裁决。
 
 ## 2026-07-29 鱼缸 PNG 导出与百日记录交接
 

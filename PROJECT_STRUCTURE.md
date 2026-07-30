@@ -34,6 +34,7 @@
 - `src/components/search/SearchAutocomplete.tsx`：共享可访问搜索联想、键盘选择和已选物种摘要。
 - `src/services/search/search-suggestions.service.ts`：确定性物种优先排序、养护匹配与受控相关词。
 - `src/services/navigation/task-routes.ts`：添加生物、巡检、换水、缸内物种、混养与设置的正式任务地址契约。
+- `src/services/navigation/history-navigation-guard.service.ts`：在路由器启动前拦截受保护的浏览器历史导航，供未保存纪念复盘显示项目内确认并安全继续或放弃。
 - `src/pages/Settings.tsx`：正式设置路由，替代侧栏设置弹层。
 - `src/services/feedback/feedback.service.ts`：设置页意见反馈的唯一前端 API 入口，支持游客与可选登录会话。
 - `src/pages/Welcome.tsx`：首次使用的“先建缸 / 先看物种”目标选择页。
