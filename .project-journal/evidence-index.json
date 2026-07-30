@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project_id": "PRJ-aquaguide",
-  "updated_at": "2026-07-29T20:10:00+08:00",
+  "updated_at": "2026-07-29T23:30:00+08:00",
   "evidence_items": [
     {"id":"EVD-20260715-001","type":"commit","locator":"917b80a","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"今日行动、水族册独立地址与生命纪念回流"},
     {"id":"EVD-20260715-002","type":"test","locator":"npm run lint; npm run build; 1280/390 browser regression","date":"2026-07-15","version":"917b80a","accessible":true,"sensitive":false,"notes":"类型、构建和直达行为验证"},
@@ -44,7 +44,10 @@
     {"id":"EVD-20260729-039","type":"review","locator":"independent Critic repair loop and independent Evaluator two-round final PASS in current Codex task","date":"2026-07-29","version":"f30529d","accessible":false,"sensitive":false,"notes":"Critic发现换水假阳性并复验六项；Evaluator发现knowledge伪勾选和unknown主次倒置，修复后最终PASS"},
     {"id":"EVD-20260729-040","type":"commit","locator":"d06f7df;35927a8;c908fce;b1da90c;b29e902;9faecad;4c47b81;aa419de;781a4f8;dbc83a8;392e829","date":"2026-07-29","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"详情表面、喂养直显、自查范围、首页收紧、折叠门禁、安全动作、确认语义和未保存任务保护"},
     {"id":"EVD-20260729-041","type":"test","locator":"lint; build; disclosures; care-guidance; visual-results; species-detail-ui; aquarium-home-c; task-actions-ui; responsive-routes 7x17","date":"2026-07-29","version":"392e829","accessible":true,"sensitive":false,"notes":"核心直显、八类语义、生成未保存结果退出、保存后退出、44px触控与119个路由配置回归"},
-    {"id":"EVD-20260729-042","type":"review","locator":"independent Critic final PASS and independent Evaluator final PASS in current Codex task","date":"2026-07-29","version":"392e829","accessible":false,"sensitive":false,"notes":"Critic复验需求/逻辑/边界/代码/测试/运行六维；Evaluator独立复现生成结果未保存保护后最终PASS"}
+    {"id":"EVD-20260729-042","type":"review","locator":"independent Critic final PASS and independent Evaluator final PASS in current Codex task","date":"2026-07-29","version":"392e829","accessible":false,"sensitive":false,"notes":"Critic复验需求/逻辑/边界/代码/测试/运行六维；Evaluator独立复现生成结果未保存保护后最终PASS"},
+    {"id":"EVD-20260729-046","type":"commit","locator":"b79793f–36ad43c","date":"2026-07-29","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"结构化纪念、首页推荐收口、体态任务、纪念独立页、桌面设置、稳定养护分类与审查修复"},
+    {"id":"EVD-20260729-047","type":"test","locator":"lint; build; check:api; care-categories; care-guidance; species-batches; collection-hub-ui; aquarium-home-c; production preview 127.0.0.1:4184","date":"2026-07-29","version":"36ad43c","accessible":true,"sensitive":false,"notes":"类型构建、双语分类、体态规则、英文推荐、纪念补录与浏览器历史保护的规则及真实Chromium证据"},
+    {"id":"EVD-20260729-048","type":"review","locator":"same-thread Critic final PASS and independent Evaluator final PASS in current Codex task","date":"2026-07-29","version":"36ad43c","accessible":false,"sensitive":false,"notes":"关闭纪念状态、原生确认、英文推荐、旧RPC、体态巡检上下文和浏览器返回六项；六条原始用户路径最终PASS"}
   ],
   "claims": [
     {"id":"CLM-20260715-001","text":"今日行动只展示一个确定性优先任务，水族册四模块可通过独立地址直达。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260715-001","EVD-20260715-002"],"contradicting_evidence_ids":[],"scope":"本地分支当前版本","career_material_allowed":true,"reviewed_at":"2026-07-15T14:20:00+08:00"},
@@ -63,6 +66,7 @@
     {"id":"CLM-20260728-014","text":"AquaGuide 水族册首页四格可直接预览现有种草、养护收藏、生命纪念和成就进度，并通过唯一模块入口进入独立页面；今日种草不属于水族册。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260728-033","EVD-20260728-034"],"contradicting_evidence_ids":[],"scope":"已被CLM-20260728-015替代；保留为首次内容预览里程碑","career_material_allowed":false,"reviewed_at":"2026-07-28T22:20:00+08:00"},
     {"id":"CLM-20260728-015","text":"AquaGuide 水族册首页已将模块标题、具体预览与更多入口分离，四类内容可通过稳定深链直达，并按真实可解释的新增依据排序。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260728-035","EVD-20260728-036"],"contradicting_evidence_ids":[],"scope":"本地分支与127.0.0.1:3001开发预览；旧种草仅有稳定插入顺序，不代表精确收藏时间","career_material_allowed":true,"reviewed_at":"2026-07-28T22:20:00+08:00"},
     {"id":"CLM-20260729-016","text":"AquaGuide 的正式任务入口使用统一地址直达具体目标，41篇养护文章按用户任务呈现不同表面，评测后提供状态匹配且可执行的唯一下一步。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260729-037","EVD-20260729-038","EVD-20260729-039"],"contradicting_evidence_ids":[],"scope":"本地分支与127.0.0.1:4186生产预览；不代表真实用户理解度或线上部署","career_material_allowed":true,"reviewed_at":"2026-07-29T17:20:00+08:00"},
-    {"id":"CLM-20260729-017","text":"AquaGuide 已按内容职责治理折叠：喂养、环境、安全动作和核心任务直接显示，自查范围由用户明确选择，统一任务表面能保护填写中及已生成未保存的检查结果。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260729-040","EVD-20260729-041","EVD-20260729-042"],"contradicting_evidence_ids":[],"scope":"本地分支与本地浏览器；不代表真实新手理解度、iOS Safari真机或线上部署","career_material_allowed":true,"reviewed_at":"2026-07-29T20:10:00+08:00"}
+    {"id":"CLM-20260729-017","text":"AquaGuide 已按内容职责治理折叠：喂养、环境、安全动作和核心任务直接显示，自查范围由用户明确选择，统一任务表面能保护填写中及已生成未保存的检查结果。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260729-040","EVD-20260729-041","EVD-20260729-042"],"contradicting_evidence_ids":[],"scope":"本地分支与本地浏览器；不代表真实新手理解度、iOS Safari真机或线上部署","career_material_allowed":true,"reviewed_at":"2026-07-29T20:10:00+08:00"},
+    {"id":"CLM-20260729-019","text":"AquaGuide 的每日推荐、体态观察、生命纪念独立档案、桌面设置与双语养护分类已形成稳定闭环，体态和AI均保持确定性规则边界。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260729-046","EVD-20260729-047","EVD-20260729-048"],"contradicting_evidence_ids":[],"scope":"本地分支、GitHub功能分支与本地生产预览；不代表真实Supabase、视觉模型准确率或真人真机可用性","career_material_allowed":true,"reviewed_at":"2026-07-29T23:30:00+08:00"}
   ]
 }
