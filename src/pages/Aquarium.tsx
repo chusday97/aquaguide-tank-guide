@@ -127,6 +127,7 @@ import {
   getAquariumBatchCareSignal,
   getSpeciesBatchContextLabel,
   withNormalizedSpeciesBatches,
+  type SpeciesBatchCareSignal,
 } from '../services/aquarium/species-batches.service';
 
 const ThreeAquarium = lazy(() => import('../components/ThreeAquarium').then(module => ({ default: module.ThreeAquarium })));
@@ -135,10 +136,10 @@ const ThreeAquarium = lazy(() => import('../components/ThreeAquarium').then(modu
 const getSpeciesNameLocalized = (species: any, isEn = false): string => {
   if (!species) return '';
   if (!isEn) return species.name || '';
-  if (species.scientificName) return species.scientificName;
   const id = species.id || '';
   if (autoTranslations[id]?.name) return autoTranslations[id].name;
   if (englishTranslations[id]?.name) return englishTranslations[id].name;
+  if (species.scientificName) return species.scientificName;
   return species.name || '';
 };
 
@@ -1027,10 +1028,15 @@ const saveDiscoveryState = (state: DiscoveryDeckState) => {
 
 const getDiscoveryPositioning = (fish: Fish, isEn = false) => {
   const primaryTool = getToolFunctions(fish)[0];
+  if (isEn) {
+    if (primaryTool) return 'Useful tank helper · check the full care profile before adding';
+    if (fish.difficulty === 'Easy') return 'Great for beginners and daily observation';
+    return 'Review its care needs and tank fit before deciding';
+  }
   if (primaryTool) return `${primaryTool} · ${fish.housingMode || (isEn ? 'Observe' : '适合继续观察')}`;
-  if (fish.difficulty === 'Easy') return isEn ? 'Great for beginners & observation' : '适合新手观察和入门搭配';
+  if (fish.difficulty === 'Easy') return '适合新手观察和入门搭配';
   if (fish.housingMode) return fish.housingMode;
-  return isEn ? 'View details before deciding to add' : '可以先看详情，再决定是否加入鱼缸';
+  return '可以先看详情，再决定是否加入鱼缸';
 };
 
 const getDiscoveryFitText = (fish: Fish, isEn = false) => {
@@ -1216,6 +1222,7 @@ export default function AquariumManager() {
   const [selectedDiagnosisRecord, setSelectedDiagnosisRecord] = useState<DiagnosisRecord | null>(null);
   const [diagnosisSaveMessage, setDiagnosisSaveMessage] = useState('');
   const [isDiagnosisRecordSaved, setIsDiagnosisRecordSaved] = useState(false);
+  const [diagnosisBatchCareFocus, setDiagnosisBatchCareFocus] = useState<SpeciesBatchCareSignal | null>(null);
   const [dailyCheckInterpretation, setDailyCheckInterpretation] = useState<TankDailyCheckInterpretationData | null>(null);
   const [dailyCheckArticles, setDailyCheckArticles] = useState<typeof careTopicsData>([]);
   const [selectedDailyCheckArticle, setSelectedDailyCheckArticle] = useState<(typeof careTopicsData)[number] | null>(null);
@@ -2086,7 +2093,7 @@ export default function AquariumManager() {
       return;
     }
     if (task.actionType === 'daily_check') {
-      handleOpenDailyCheck();
+      handleOpenDailyCheck(batchCareSignal);
       return;
     }
     if (task.actionType === 'life_stage_observation') {
@@ -2549,6 +2556,7 @@ export default function AquariumManager() {
       evidence: Array.from(new Set([
         `当前鱼缸：${targetAquarium.name}`,
         `当前真实活体：${livestockNames.join('、') || '暂无活体生物'}`,
+        ...(diagnosisBatchCareFocus ? [`体态观察重点：${diagnosisBatchCareFocus.reason}`] : []),
         ...output.evidence,
       ].filter(Boolean))).slice(0, 6),
       nextCheckAt: output.nextCheckAt,
@@ -2568,11 +2576,12 @@ export default function AquariumManager() {
     setDiagnosisText('');
     setDiagnosisSaveMessage('');
     setIsDiagnosisRecordSaved(false);
+    setDiagnosisBatchCareFocus(null);
     setDailyCheckInterpretation(null);
     setDailyCheckArticles([]);
   };
 
-  const handleOpenDailyCheck = () => {
+  const handleOpenDailyCheck = (focus: SpeciesBatchCareSignal | null = null) => {
     if (!activeAquarium) return;
     setDiagnosisAquariumId(activeAquarium.id);
     setIsDiagnosisOpen(true);
@@ -2583,6 +2592,7 @@ export default function AquariumManager() {
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
     setIsDiagnosisRecordSaved(false);
+    setDiagnosisBatchCareFocus(focus);
     setSelectedDiagnosisRecord(null);
     setCareDiagnosisContext(null);
     setIsDiagnosing(false);
@@ -2608,6 +2618,7 @@ export default function AquariumManager() {
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
     setIsDiagnosisRecordSaved(false);
+    setDiagnosisBatchCareFocus(null);
     setSelectedDiagnosisRecord(null);
     setCareDiagnosisContext(null);
     setIsDiagnosing(false);
@@ -2631,6 +2642,7 @@ export default function AquariumManager() {
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
     setIsDiagnosisRecordSaved(false);
+    setDiagnosisBatchCareFocus(null);
     setSelectedDiagnosisRecord(null);
     setCareDiagnosisContext(null);
     setDailyCheckInterpretation(null);
@@ -3054,9 +3066,9 @@ export default function AquariumManager() {
 
   const getDifficultyLabel = (difficulty: string) => {
     switch (difficulty) {
-      case 'Easy': return '极易';
-      case 'Medium': return '中等';
-      case 'Hard': return '困难';
+      case 'Easy': return isEn ? 'Beginner' : '极易';
+      case 'Medium': return isEn ? 'Intermediate' : '中等';
+      case 'Hard': return isEn ? 'Advanced' : '困难';
       default: return difficulty;
     }
   };
@@ -4863,15 +4875,15 @@ export default function AquariumManager() {
           </span>
         </div>
         {discoveryFish ? (
-          <article className="aquarium-discovery-card relative grid min-h-[168px] min-w-0 grid-cols-[minmax(108px,36%)_minmax(0,1fr)] overflow-hidden rounded-[18px] border border-white/80 bg-[#FBFAF6] shadow-sm">
+          <article className="aquarium-discovery-card relative grid min-h-[160px] min-w-0 grid-cols-[minmax(108px,36%)_minmax(0,1fr)] overflow-hidden rounded-[18px] border border-white/80 bg-[#FBFAF6] shadow-sm">
             <div
-              className={`aquarium-discovery-visual relative flex min-h-[168px] min-w-0 items-center justify-center overflow-hidden p-2 ${getSpeciesImageSurfaceClass(discoveryFish)}`}
+              className={`aquarium-discovery-visual relative flex min-h-[160px] min-w-0 items-center justify-center overflow-hidden p-2 ${getSpeciesImageSurfaceClass(discoveryFish)}`}
             >
               <ResilientImage
                 src={getSpeciesVisualSources(discoveryFish).thumbnail}
                 srcSet={`${getSpeciesVisualSources(discoveryFish).thumbnail} 256w, ${getSpeciesVisualSources(discoveryFish).detail} 768w`}
                 sizes="(max-width: 430px) 36vw, 240px"
-                alt={discoveryFish.name}
+                alt={getSpeciesNameLocalized(discoveryFish, isEn)}
                 className={`h-full max-h-[160px] w-full object-contain p-1 ${getSpeciesImageClass(discoveryFish)}`}
                 referrerPolicy="no-referrer"
                 loading="eager"
@@ -4905,13 +4917,13 @@ export default function AquariumManager() {
             <div className="flex min-w-0 flex-col p-2.5">
               <div className="flex min-w-0 items-start gap-2">
                 <div className="min-w-0">
-                  <h3 className="break-words font-serif text-[18px] italic font-bold leading-tight text-ink">{discoveryFish.name}</h3>
+                  <h3 className="break-words font-serif text-[18px] italic font-bold leading-tight text-ink">{getSpeciesNameLocalized(discoveryFish, isEn)}</h3>
                 </div>
               </div>
               <span className="mt-1.5 w-fit rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-700">
                 {discoveryFish.difficulty === 'Easy' ? (isEn ? 'Beginner' : '新手友好') : getDifficultyLabel(discoveryFish.difficulty)}
               </span>
-              <p className="mt-1.5 line-clamp-2 text-[11px] font-bold leading-4 text-ink/64">{getDiscoveryPositioning(discoveryFish)}</p>
+              <p className="mt-1.5 line-clamp-1 text-[11px] font-bold leading-4 text-ink/64">{getDiscoveryPositioning(discoveryFish, isEn)}</p>
               <Button
                 type="button"
                 className="mt-auto min-h-11 min-w-0 rounded-full bg-emerald-800 px-3 text-[10px] font-black text-white hover:bg-emerald-900"
@@ -4935,10 +4947,14 @@ export default function AquariumManager() {
           <div className="rounded-[16px] border border-rose-100 bg-[#FBFAF6] p-4 text-center">
             <Heart className="mx-auto mb-2 h-7 w-7 fill-rose-400 text-rose-400" />
             <h3 className="font-serif text-base italic font-bold text-ink">
-              {isDiscoveryDailyLimitReached ? '今天的 10 款已经看完啦' : '暂时没有新的推荐'}
+              {isDiscoveryDailyLimitReached
+                ? (isEn ? 'You have viewed today’s 10 picks' : '今天的 10 款已经看完啦')
+                : (isEn ? 'No new picks right now' : '暂时没有新的推荐')}
             </h3>
             <p className="mt-1 text-xs font-medium text-ink/55">
-              {isDiscoveryDailyLimitReached ? '明天再来看看新的灵感。' : '稍后再来看看，也许会遇到新的心动物种。'}
+              {isDiscoveryDailyLimitReached
+                ? (isEn ? 'Come back tomorrow for a new set.' : '明天再来看看新的灵感。')
+                : (isEn ? 'Check again later for another species idea.' : '稍后再来看看，也许会遇到新的心动物种。')}
             </p>
           </div>
         )}
@@ -5472,6 +5488,16 @@ export default function AquariumManager() {
 
               {diagnosisMode === 'quiz' && isDailyCheckQuiz && (
                 <section className="grid gap-3 rounded-[18px] bg-white p-3 shadow-sm">
+                  {diagnosisBatchCareFocus && (
+                    <div className="rounded-[15px] border border-amber-200 bg-amber-50 px-3 py-2.5" data-diagnosis-life-stage-focus={diagnosisBatchCareFocus.code}>
+                      <div className="text-[11px] font-black text-amber-900">
+                        {isEn ? 'Today’s observation focus' : '今天的体态观察重点'}
+                      </div>
+                      <p className="mt-1 text-[11px] font-semibold leading-5 text-amber-950/70">
+                        {diagnosisBatchCareFocus.reason}
+                      </p>
+                    </div>
+                  )}
                   <div>
                     <div className="flex items-center justify-between gap-3">
                       <div>

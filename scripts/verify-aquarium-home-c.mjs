@@ -89,6 +89,7 @@ try {
     await dailyDiscoveryCard.waitFor();
     assert.ok(await dailyDiscoveryCard.locator('img').count() >= 1, 'daily discovery must lead with a species image');
     assert.equal(await dailyDiscoveryCard.getByRole('button', { name: 'View species details' }).count(), 1, 'daily discovery must expose one explicit primary detail action');
+    assert.equal(/[\u3400-\u9fff]/u.test(await dailyDiscoveryCard.innerText()), false, 'English daily discovery must not leak fixed Chinese copy');
     await page.getByLabel('Daily recommendation 1 of 10').waitFor();
     assert.deepEqual(await page.locator('.aquarium-zone-header').allTextContents().then(items => items.map(item => item.replace(/\s+/g, ' ').trim()).map(item => item.match(/Observe|Manage|Learn & Maintain/)?.[0])), ['Observe', 'Manage', 'Learn & Maintain']);
     assert.equal(await page.locator('.aquarium-recommend:visible').count(), 0, 'duplicate next-action panel must stay hidden');
@@ -154,6 +155,21 @@ try {
     }
     await page.close();
   }
+
+  const focusedState = createState(1);
+  const today = new Date();
+  const focusedTodayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  focusedState.aquariums[0].lastWaterChangeDate = today.toISOString();
+  focusedState.aquariums[0].waterChangeHistory = [focusedTodayKey];
+  focusedState.aquariums[0].fishes[0].batches[0].lifeStage = 'adult';
+  focusedState.aquariums[0].fishes[0].batches[0].reproductiveState = 'pregnant_or_gravid';
+  const focusedCheck = await browser.newPage({ viewport: { width: 1200, height: 900 }, locale: 'en-US' });
+  await seed(focusedCheck, focusedState);
+  await focusedCheck.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  await focusedCheck.locator('[data-daily-action="daily_check"]').getByRole('button', { name: 'Start focused check' }).click();
+  await focusedCheck.locator('[data-diagnosis-life-stage-focus="pregnant"]').waitFor();
+  await focusedCheck.getByText('Today’s observation focus', { exact: true }).waitFor();
+  await focusedCheck.close();
 
   const removalRetry = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'zh-CN' });
   await removalRetry.addInitScript(saved => {
@@ -229,7 +245,7 @@ try {
   const riskDesktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'en-US' });
   await seed(riskDesktop, riskState);
   await riskDesktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  const riskTrigger = riskDesktop.locator('button').filter({ hasText: /风险|Risk/ }).first();
+  const riskTrigger = riskDesktop.locator('[data-daily-action="compatibility_review"] > button').first();
   await riskTrigger.waitFor();
   await riskTrigger.click();
   const riskDialog = riskDesktop.getByRole('dialog').filter({ hasText: /鱼缸风险处理|Aquarium risk/i });

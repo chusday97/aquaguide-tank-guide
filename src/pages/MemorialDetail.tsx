@@ -5,10 +5,15 @@ import i18n from '../i18n';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { fishData } from '../data/fishData';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import type { MemorialItem } from '../modules/collection/collection.types';
 import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
+import {
+  proceedWithHistoryNavigation,
+  registerHistoryNavigationGuard,
+} from '../services/navigation/history-navigation-guard.service';
 import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 
 type MemorialDraft = {
@@ -53,11 +58,23 @@ export default function MemorialDetail() {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [discardRequest, setDiscardRequest] = useState<{
+    kind: 'cancel' | 'navigate' | 'history';
+    targetPath?: string;
+  } | null>(null);
   const firstFieldRef = useRef<HTMLTextAreaElement | null>(null);
+  const pendingHistoryDeltaRef = useRef<number | null>(null);
+  const allowNextNavigationRef = useRef(false);
 
   const fish = useMemo(() => fishData.find(item => item.id === record?.fishId), [record?.fishId]);
   const initialDraft = useMemo(() => (record ? createDraft(record) : null), [record]);
   const dirty = Boolean(editing && draft && initialDraft && !sameDraft(draft, initialDraft));
+  const hasReflection = Boolean(record && (
+    record.observation?.trim()
+    || record.reason?.trim()
+    || record.improvement?.trim()
+  ));
+  const hasPossibleCause = Boolean(record?.reason?.trim());
 
   useEffect(() => subscribeToCollection(() => {
     const next = getCollectionSnapshot().memorials.find(item => item.id === recordId) || null;
@@ -80,9 +97,23 @@ export default function MemorialDetail() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [dirty]);
 
+  useEffect(() => dirty
+    ? registerHistoryNavigationGuard(({ delta }) => {
+      pendingHistoryDeltaRef.current = delta;
+      setDiscardRequest({ kind: 'history' });
+    })
+    : undefined, [dirty]);
+
   useEffect(() => registerNavigationGuard(dirty
-    ? () => window.confirm(isEn ? 'Your reflection has unsaved changes. Leave this page?' : '复盘内容还没有保存，确定离开吗？')
-    : null), [dirty, isEn, registerNavigationGuard]);
+    ? (targetPath) => {
+      if (allowNextNavigationRef.current) {
+        allowNextNavigationRef.current = false;
+        return true;
+      }
+      setDiscardRequest({ kind: 'navigate', targetPath });
+      return false;
+    }
+    : null), [dirty, registerNavigationGuard]);
 
   const updateDraft = (field: keyof MemorialDraft, value: string) => {
     setDraft(current => current ? { ...current, [field]: value } : current);
@@ -97,10 +128,38 @@ export default function MemorialDetail() {
   };
 
   const cancelEditing = () => {
-    if (dirty && !window.confirm(isEn ? 'Discard these unsaved changes?' : '放弃尚未保存的修改吗？')) return;
+    if (dirty) {
+      setDiscardRequest({ kind: 'cancel' });
+      return;
+    }
     if (record) setDraft(createDraft(record));
     setEditing(false);
     setError('');
+  };
+
+  const discardChanges = () => {
+    if (!discardRequest) return;
+    const request = discardRequest;
+    if (record) setDraft(createDraft(record));
+    setEditing(false);
+    setError('');
+    setDiscardRequest(null);
+    if (request.kind === 'history') {
+      const historyDelta = pendingHistoryDeltaRef.current;
+      pendingHistoryDeltaRef.current = null;
+      if (historyDelta) proceedWithHistoryNavigation(historyDelta);
+      return;
+    }
+    if (request.kind === 'navigate' && request.targetPath) {
+      allowNextNavigationRef.current = true;
+      navigateToRoute(request.targetPath);
+      return;
+    }
+  };
+
+  const continueEditing = () => {
+    pendingHistoryDeltaRef.current = null;
+    setDiscardRequest(null);
   };
 
   const saveReflection = async () => {
@@ -154,6 +213,7 @@ export default function MemorialDetail() {
   }
 
   return (
+    <>
     <main className="page-frame mx-auto w-full max-w-[1080px] pb-24">
       <button type="button" onClick={() => navigateToRoute('/collection/memorial')} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
         <ArrowLeft className="h-4 w-4" />{isEn ? 'Back to Memorials' : '返回生命纪念'}
@@ -164,7 +224,11 @@ export default function MemorialDetail() {
           <section className="relative min-h-[300px] overflow-hidden bg-[radial-gradient(circle_at_50%_25%,#eff8f4_0%,#e4eee9_56%,#d8e3dd_100%)] p-5 sm:p-7 lg:min-h-[640px]">
             <div className="absolute inset-x-5 top-5 flex items-center justify-between gap-3 sm:inset-x-7 sm:top-7">
               <span className="rounded-full border border-white/80 bg-white/85 px-3 py-1.5 text-[11px] font-black text-slate-600 shadow-sm">
-                {record.reason?.trim() ? (isEn ? 'Reflection recorded' : '已完成复盘') : (isEn ? 'Reflection needed' : '待补充复盘')}
+                {hasPossibleCause
+                  ? (isEn ? 'Possible cause recorded' : '已补充可能原因')
+                  : hasReflection
+                    ? (isEn ? 'Record saved · cause still open' : '已记录 · 原因待补充')
+                    : (isEn ? 'Reflection needed' : '待补充记录')}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900/70 px-3 py-1.5 text-[11px] font-black text-white">
                 <CalendarDays className="h-3.5 w-3.5" />{new Intl.DateTimeFormat(isEn ? 'en' : 'zh-CN', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(record.date))}
@@ -196,7 +260,7 @@ export default function MemorialDetail() {
               </div>
               {!editing && (
                 <button type="button" onClick={startEditing} className="min-h-11 shrink-0 rounded-full border border-emerald-200 px-4 text-xs font-black text-emerald-800 hover:bg-emerald-50">
-                  {record.reason?.trim() ? (isEn ? 'Edit' : '编辑复盘') : (isEn ? 'Add reflection' : '补充复盘')}
+                  {hasReflection ? (isEn ? 'Edit record' : '编辑记录') : (isEn ? 'Add reflection' : '补充记录')}
                 </button>
               )}
             </div>
@@ -255,5 +319,22 @@ export default function MemorialDetail() {
         </div>
       </article>
     </main>
+    <Dialog open={Boolean(discardRequest)} onOpenChange={open => { if (!open) continueEditing(); }}>
+      <DialogContent showCloseButton={false} className="max-w-md rounded-[26px]">
+        <DialogHeader>
+          <DialogTitle>{isEn ? 'Discard unsaved reflection?' : '放弃未保存的复盘吗？'}</DialogTitle>
+          <DialogDescription>{isEn ? 'Your latest edits have not been saved.' : '刚才填写的内容还没有保存。'}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <button type="button" onClick={continueEditing} className="min-h-11 rounded-2xl border border-slate-200 px-4 text-sm font-black text-ink/65">
+            {isEn ? 'Continue editing' : '继续编辑'}
+          </button>
+          <button type="button" onClick={discardChanges} className="min-h-11 rounded-2xl bg-rose-600 px-4 text-sm font-black text-white">
+            {isEn ? 'Discard changes' : '放弃修改'}
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }

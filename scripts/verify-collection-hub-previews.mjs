@@ -91,12 +91,34 @@ try {
 
   await desktop.goto(`${baseUrl}/collection/memorial?item=memorial-2`, { waitUntil: 'networkidle' });
   await desktop.waitForURL(url => url.pathname === '/collection/memorial/memorial-2');
-  await desktop.getByRole('button', { name: '补充复盘' }).click();
+  await desktop.getByRole('button', { name: '返回生命纪念' }).click();
+  await desktop.waitForURL(url => url.pathname === '/collection/memorial');
+  await desktop.locator('#collection-memorial-memorial-2').click();
+  await desktop.waitForURL(url => url.pathname === '/collection/memorial/memorial-2');
+  await desktop.getByRole('button', { name: '补充记录' }).click();
   await desktop.getByLabel('当时看到什么').fill('入缸后活动量持续减少');
-  await desktop.getByLabel('可能原因').fill('可能与入缸应激有关');
   await desktop.getByLabel('以后准备怎么做').fill('下次延长过水并单独观察');
   await desktop.getByRole('button', { name: '保存复盘' }).click();
-  await desktop.getByText('复盘已保存', { exact: true }).waitFor();
+  await desktop.getByText('复盘已保存', { exact: true }).last().waitFor();
+  await desktop.getByText('已记录 · 原因待补充', { exact: true }).waitFor();
+  await desktop.getByRole('button', { name: '编辑记录' }).click();
+  await desktop.getByLabel('可能原因').fill('可能与入缸应激有关');
+  await desktop.evaluate(() => window.history.back());
+  await desktop.getByRole('heading', { name: '放弃未保存的复盘吗？' }).waitFor();
+  assert.equal(new URL(desktop.url()).pathname, '/collection/memorial/memorial-2', '浏览器返回必须先恢复纪念详情');
+  await desktop.getByRole('button', { name: '继续编辑' }).click();
+  assert.equal(await desktop.getByLabel('可能原因').inputValue(), '可能与入缸应激有关', '浏览器返回后继续编辑必须保留草稿');
+  await desktop.getByRole('button', { name: '取消', exact: true }).click();
+  await desktop.getByRole('heading', { name: '放弃未保存的复盘吗？' }).waitFor();
+  await desktop.getByRole('button', { name: '继续编辑' }).click();
+  assert.equal(await desktop.getByLabel('可能原因').inputValue(), '可能与入缸应激有关', '继续编辑必须保留未保存内容');
+  await desktop.getByRole('button', { name: '取消', exact: true }).click();
+  await desktop.getByRole('button', { name: '放弃修改' }).click();
+  await desktop.getByText('还没有记录可能原因。', { exact: true }).waitFor();
+  await desktop.getByRole('button', { name: '编辑记录' }).click();
+  await desktop.getByLabel('可能原因').fill('可能与入缸应激有关');
+  await desktop.getByRole('button', { name: '保存复盘' }).click();
+  await desktop.getByText('复盘已保存', { exact: true }).last().waitFor();
   await desktop.getByText('可能与入缸应激有关', { exact: true }).waitFor();
   await desktop.reload({ waitUntil: 'networkidle' });
   await desktop.getByText('可能与入缸应激有关', { exact: true }).waitFor();
@@ -124,7 +146,8 @@ try {
 
   const narrowDesktop = await browser.newPage({ viewport: { width: 600, height: 900 } });
   await seedCollection(narrowDesktop);
-  await narrowDesktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle' });
+  await narrowDesktop.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
+  await narrowDesktop.locator('[data-collection-module="wishlist"]').waitFor();
   const narrowWishlist = await narrowDesktop.locator('[data-collection-module="wishlist"]').boundingBox();
   const narrowCare = await narrowDesktop.locator('[data-collection-module="care"]').boundingBox();
   assert.ok(narrowWishlist && narrowCare && narrowCare.y > narrowWishlist.y + narrowWishlist.height, '600px 桌面应降为单列');
@@ -141,7 +164,8 @@ try {
   const mobileErrors = [];
   mobile.on('pageerror', error => mobileErrors.push(error.message));
   await seedCollection(mobile);
-  await mobile.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle' });
+  await mobile.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
+  await mobile.locator('[data-collection-module="wishlist"]').waitFor();
   assert.equal(await mobile.locator('[data-collection-module]').count(), 4, '手机也应显示四个完整模块');
   await assertNoHorizontalOverflow(mobile);
   await mobile.locator('[data-preview-item="memorial"]').first().click();

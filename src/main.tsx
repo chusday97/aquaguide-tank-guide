@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import posthog from 'posthog-js';
 import App from './App.tsx';
+import './services/navigation/history-navigation-guard.service';
 import './index.css';
 
 const isSyntheticTest = typeof window !== 'undefined' && window.location.search.includes('synthetic_test=1');

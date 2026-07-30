@@ -4,6 +4,8 @@ alter table public.memorial_records
   add column if not exists observation text,
   add column if not exists improvement text;
 
+drop function if exists public.record_livestock_memorial(uuid, uuid, uuid, integer, date, text, uuid);
+
 create or replace function public.record_livestock_memorial(
   target_aquarium_id uuid,
   target_species_record_id uuid,
