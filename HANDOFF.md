@@ -4,7 +4,7 @@
 
 ## 2026-07-29 首页、体态与生命纪念修复交接
 
-- 当前目标：功能实现与主线程回归已完成；等待同一 Critic 复验和 Evaluator 最终裁决。
+- 当前结果：功能实现、主线程回归、同一 Critic 修复后复验和独立 Evaluator 最终裁决均 PASS。
 - 审查修复：纪念记录状态区分“已记录但原因待补充”和“尚未记录”；原生确认已替换为项目内确认框，并新增在路由器启动前注册的历史导航守卫，浏览器返回会恢复当前详情并保留草稿，确认放弃后才离开。英文今日推荐只使用本地化名称与受控英文摘要；体态观察进入巡检时直显对应观察重点。旧七参数纪念 RPC 重载已在 migration 中显式删除。（commit: `df1532b`）
 - 审查修复验证：`lint`、`build`、`check:api`、`test:collection-hub-ui`、`test:aquarium-home-c`、`test:care-categories`、`test:care-guidance` 与 `test-species-batches.ts` 全部通过；构建只保留既有大块警告。
 - 已完成：生命纪念结构化字段已贯通数据库 migration、共享契约、API、Repository 和本地服务；专项验证覆盖新增与编辑、版本递增和变更事件。（commit: `b79793f`）
@@ -19,7 +19,8 @@
 - 设置验证：`lint`、`build`、`test:settings-feedback`；覆盖 1280px 双栏、390px 手机、600px 英文桌面、提交成功/失败、字段聚焦与未保存导航确认。
 - 养护分类已完成：使用稳定 `CareCategoryId`，确定性匹配读取未翻译基准字段；中英文点击同一分类返回完全相同文章 ID，“新鱼入缸”至少包含过水指南和直接入缸安全文章。（commit: `054916e`）
 - 养护验证：`test:care-categories`、`test:care-categories-ui`、`test:care-guidance`、`test:care-guide-types`、`lint`、`build`；分类只筛选列表，明确点击文章才打开详情，关闭后分类结果不丢失。
-- 下一步：将 `df1532b` 和上述运行证据交回同一 Critic 复验；通过后由 Evaluator 对照原始用户路径做最终裁决。
+- 审查结论：Critic 六维 PASS；Evaluator 确认首页推荐、体态观察、生命纪念、桌面设置、双语养护分类与 AI 边界六项路径均闭环。
+- 外部门禁：真实 Supabase migration/RLS/RPC 并发、配置视觉模型后的照片准确率，以及真实手机/水族新手可用性仍需外部环境验证。
 
 ## 2026-07-29 鱼缸 PNG 导出与百日记录交接
 
