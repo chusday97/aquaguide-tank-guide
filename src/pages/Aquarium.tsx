@@ -75,7 +75,7 @@ import { AdaptiveTaskContent } from '../components/common/AdaptiveTaskContent';
 import { SurfaceHeader } from '../components/common/SurfaceHeader';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { OnboardingTaskCard } from '../components/onboarding/OnboardingTaskCard';
-import { markAquariumConfigured } from '../services/onboarding/onboarding.service';
+import { getOnboardingTaskProgress, markAquariumConfigured } from '../services/onboarding/onboarding.service';
 import { LivestockRosterDialog } from '../components/aquarium/LivestockRosterDialog';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
@@ -92,12 +92,14 @@ import {
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import { useToast } from '../components/common/ToastProvider';
 import { ExportArtifactDialog, type ExportArtifactContent } from '../components/export/ExportArtifactDialog';
+import { AquariumExportCenter, type ExportCenterItem } from '../components/export/AquariumExportCenter';
 import {
   buildAquariumArchiveArtifact,
   buildDiagnosisArtifact,
   buildHealthScoreArtifact,
   buildHundredDayArtifact,
   buildWeeklyCareArtifact,
+  buildStarterChecklistArtifact,
   buildSanitizedAquariumReport,
   type AquariumArtifactContext,
 } from '../services/export/aquarium-artifact.service';
@@ -4510,6 +4512,27 @@ export default function AquariumManager() {
   const scrollToDesktopDiscovery = () => {
     void navigateToSection('aquarium-discovery', { updateHash: false });
   };
+
+  const isExportCenterOpen = new URLSearchParams(routeLocation.search).get('action') === 'exports';
+  if (isExportCenterOpen) {
+    const onboardingProgress = getOnboardingTaskProgress();
+    const checklistLabels = [t('onboarding.taskTank'), t('onboarding.taskViewSpecies'), t('onboarding.taskChooseSpecies'), t('onboarding.taskCheck')];
+    const checklistStates = [onboardingProgress.aquariumReady, onboardingProgress.speciesViewed, onboardingProgress.speciesChosen, onboardingProgress.dailyCheckDone];
+    const items: ExportCenterItem[] = [
+      { id: 'health', icon: 'health', title: isEn ? 'Aquarium health score' : '鱼缸健康评分卡', description: isEn ? 'Score, evidence, missing records and the next action.' : '健康分、主要依据、缺失记录和下一步。', content: buildHealthScoreArtifact(artifactContext) },
+      { id: 'diagnosis', icon: 'diagnosis', title: isEn ? 'Diagnosis result' : '诊断结果图片', description: isEn ? 'Structured risk, actions, possible factors and review timing.' : '结构化风险、应急动作、可能原因和复查时间。', content: artifactContext.latestDiagnosis ? buildDiagnosisArtifact(artifactContext, artifactContext.latestDiagnosis) : undefined, unavailableReason: artifactContext.latestDiagnosis ? undefined : (isEn ? 'Complete an aquarium check first.' : '完成一次鱼缸检查后即可生成。') },
+      { id: 'plan', icon: 'plan', title: isEn ? 'Weekly care plan' : '本周养护计划', description: isEn ? 'Monday-to-Sunday tasks and overdue items.' : '周一至周日任务和优先补做项目。', content: buildWeeklyCareArtifact(artifactContext) },
+      { id: 'checklist', icon: 'checklist', title: isEn ? 'Starter checklist' : '新手开缸清单', description: isEn ? 'Your four real onboarding steps and the next task.' : '四项真实新手进度和唯一下一步。', content: buildStarterChecklistArtifact({ labels: checklistLabels, states: checklistStates, isEn }) },
+      { id: 'archive', icon: 'archive', title: isEn ? 'Aquarium archive' : '鱼缸档案页', description: isEn ? 'Environment, equipment, livestock and recent care summary.' : '环境、设备、全部物种和近期养护摘要。', content: buildAquariumArchiveArtifact(artifactContext) },
+      { id: 'milestone', icon: 'milestone', title: isEn ? 'Aquarium milestone' : '“我的鱼缸养了100天”记录', description: isEn ? 'A milestone card based on the confirmed aquarium start date.' : '根据已确认建缸日期生成的纪念卡。', content: activeAquarium.startedAtConfirmedAt && aquariumAgeDays >= 100 ? buildHundredDayArtifact(artifactContext, aquariumAgeDays) : undefined, unavailableReason: activeAquarium.startedAtConfirmedAt ? (isEn ? `Available after day 100. Current: ${aquariumAgeDays} days.` : `满 100 天后可生成，当前 ${aquariumAgeDays} 天。`) : (isEn ? 'Confirm the aquarium start date in the archive first.' : '请先在鱼缸档案确认建缸日期。') },
+    ];
+    return (
+      <div className="page-frame-wide min-w-0 overflow-x-hidden">
+        <AquariumExportCenter items={items} isEn={isEn} onBack={() => navigateToRoute('/aquarium')} onPreview={openExportArtifact} onCreateShare={() => void createPrivateShare()} isCreatingShare={isCreatingShare} shareUrl={shareUrl} onCopyShare={() => { void navigator.clipboard.writeText(shareUrl).then(() => showToast(isEn ? 'Link copied.' : '链接已复制。')).catch(() => showToast(isEn ? 'Could not copy the link.' : '暂时无法复制链接。', 'error')); }} />
+        <ExportArtifactDialog open={Boolean(exportArtifact)} onOpenChange={open => { if (!open) setExportArtifact(null); }} content={exportArtifact} isEn={isEn} />
+      </div>
+    );
+  }
 
   return (
     <div className="page-frame-wide aquarium-desktop-layout flex min-w-0 flex-col gap-4 overflow-x-hidden text-[13px] leading-relaxed">

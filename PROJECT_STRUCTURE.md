@@ -83,6 +83,8 @@
 - `src/components/SpeciesDetailDialog.tsx`：共享物种详情与同表面生命纪念任务。
 - `src/components/forms/QuickDatePicker.tsx`、`QuantityStepper.tsx`：日期快捷选择与数量步进控件。
 - `src/components/memorial/MemorialCauseSelector.tsx`：生命纪念受控原因标签。
+- `src/components/export/AquariumExportCenter.tsx`：六类鱼缸记录和脱敏分享的统一任务页。
+- `src/services/export/png-export.service.ts`：固定 1080px Canvas 记录卡绘制与通用文件名清理。
 - `src/components/common/AdaptiveDetailContent.tsx`：桌面中央详情弹窗与手机底部详情面板。
 - `src/components/common/AdaptiveTaskContent.tsx`：桌面与手机的沉浸式任务流程表面。
 - `src/components/common/SurfaceHeader.tsx`：统一详情/任务表面的标题、返回、关闭与 44px 图标操作。

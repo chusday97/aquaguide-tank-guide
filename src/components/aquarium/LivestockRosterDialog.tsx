@@ -170,8 +170,8 @@ export function LivestockRosterDialog({
                 <button type="button" disabled={isCreatingShare} onClick={onCreateShare} aria-label={isEn ? 'Create share report' : '生成分享报告'} title={isEn ? 'Create share report' : '生成分享报告'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
                   <Share2 className="h-4 w-4" />
                 </button>
-                <button type="button" onClick={onDownloadArchive} aria-label={isEn ? 'Download aquarium archive' : '下载鱼缸档案'} title={isEn ? 'Download aquarium archive' : '下载鱼缸档案'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                  <Download className="h-4 w-4" />
+                <button type="button" onClick={onDownloadArchive} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-xs font-black text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                  <Download className="h-4 w-4" />{isEn ? 'Export archive' : '导出档案'}
                 </button>
                 </>
               )
@@ -204,7 +204,7 @@ export function LivestockRosterDialog({
                     <div className="text-sm font-black">{isEn ? `My aquarium is ${aquariumAgeDays} days old` : `我的鱼缸养了 ${aquariumAgeDays} 天`}</div>
                     <div className="mt-0.5 text-xs font-semibold opacity-70">{isEn ? 'Milestone cards remain available after day 100.' : '百日之后持续可见，可随时重新生成。'}</div>
                   </div>
-                  <button type="button" onClick={onDownloadMilestone} aria-label={isEn ? 'Download milestone card' : '下载百日纪念卡'} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-amber-800 shadow-sm"><Download className="h-4 w-4" /></button>
+                  <button type="button" onClick={onDownloadMilestone} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-full bg-white px-3 text-xs font-black text-amber-800 shadow-sm"><Download className="h-4 w-4" />{isEn ? 'Export' : '导出'}</button>
                 </div>
               )}
             </section>}

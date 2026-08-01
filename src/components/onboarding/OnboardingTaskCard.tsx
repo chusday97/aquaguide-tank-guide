@@ -11,7 +11,8 @@ import {
   syncOnboardingCompletion,
 } from '../../services/onboarding/onboarding.service';
 import { taskRoutes } from '../../services/navigation/task-routes';
-import { ExportArtifactDialog, type ExportArtifactContent } from '../export/ExportArtifactDialog';
+import { ExportArtifactDialog } from '../export/ExportArtifactDialog';
+import { buildStarterChecklistArtifact } from '../../services/export/aquarium-artifact.service';
 
 export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 'sidebar' }) {
   const { t } = useTranslation();
@@ -40,24 +41,7 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
   ], [progress, t]);
   const nextTask = tasks.find(task => !task.done);
   const isEn = document.documentElement.lang.startsWith('en');
-  const exportContent: ExportArtifactContent = {
-    eyebrow: isEn ? 'Starter checklist' : '新手开缸清单',
-    title: isEn ? 'My first aquarium' : '我的第一口鱼缸',
-    summary: progress.complete
-      ? (isEn ? 'All four starter steps are complete.' : '四项新手任务已经全部完成。')
-      : (isEn ? `${progress.completedCount} of 4 steps complete.` : `已完成 ${progress.completedCount} / 4 项。`),
-    metric: `${progress.completedCount}/4`,
-    sections: [{
-      title: isEn ? 'Checklist' : '开缸清单',
-      items: tasks.map(task => `${task.done ? '✓' : '○'} ${task.label}`),
-    }, {
-      title: isEn ? 'Next step' : '下一步',
-      items: [nextTask?.label || (isEn ? 'Keep observing the aquarium every day.' : '继续每天观察鱼缸。')],
-      tone: 'success',
-    }],
-    fileName: `AquaGuide-${isEn ? 'starter-checklist' : '新手开缸清单'}-${new Date().toISOString().slice(0, 10)}.png`,
-    disclaimer: isEn ? 'Generated from your recorded progress.' : '仅根据你在 AquaGuide 中的真实完成记录生成。',
-  };
+  const exportContent = buildStarterChecklistArtifact({ labels: tasks.map(task => task.label), states: tasks.map(task => task.done), isEn });
 
   if (!onboarding || onboarding.taskCardDismissed) return null;
 

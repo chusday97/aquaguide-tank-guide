@@ -52,6 +52,23 @@ const localizedFilterLabel = (value: string, isEn: boolean) => {
 const fileName = (aquarium: Aquarium, label: string) =>
   `AquaGuide-${aquarium.name}-${label}-${format(new Date(), 'yyyy-MM-dd')}.png`;
 
+export const buildStarterChecklistArtifact = ({ labels, states, isEn = false }: { labels: string[]; states: boolean[]; isEn?: boolean }): ExportArtifactContent => {
+  const completed = states.filter(Boolean).length;
+  const nextIndex = states.findIndex(done => !done);
+  return {
+    eyebrow: isEn ? 'Starter checklist' : '新手开缸清单',
+    title: isEn ? 'My first aquarium' : '我的第一口鱼缸',
+    summary: isEn ? `${completed} of ${labels.length} steps complete.` : `已完成 ${completed} / ${labels.length} 项。`,
+    metric: `${completed}/${labels.length}`,
+    sections: [
+      { title: isEn ? 'Checklist' : '开缸清单', items: labels.map((label, index) => `${states[index] ? '✓' : '○'} ${label}`) },
+      { title: isEn ? 'Next step' : '下一步', items: [labels[nextIndex] || (isEn ? 'Keep observing the aquarium.' : '继续每天观察鱼缸。')], tone: 'success' },
+    ],
+    fileName: `AquaGuide-${isEn ? 'starter-checklist' : '新手开缸清单'}-${format(new Date(), 'yyyy-MM-dd')}.png`,
+    disclaimer: isEn ? 'Generated from your recorded progress.' : '仅根据你在 AquaGuide 中的真实完成记录生成。',
+  };
+};
+
 export const buildHealthScoreArtifact = (context: AquariumArtifactContext): ExportArtifactContent => ({
   eyebrow: context.isEn ? 'Health score' : '鱼缸健康评分',
   title: context.aquarium.name,

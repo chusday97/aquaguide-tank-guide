@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, ChevronRight, Languages, Link2, MessageSquareText, RotateCcw, Settings2, ShieldCheck, Trash2 } from 'lucide-react';
+import { Check, ChevronRight, Download, Languages, Link2, MessageSquareText, RotateCcw, Settings2, ShieldCheck, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { setLocale, type SupportedLocale } from '../i18n';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
@@ -195,6 +195,7 @@ export default function SettingsPage() {
                 <p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{isEn ? 'Privacy-safe links expire after 7 days and can be revoked early.' : '脱敏链接保留 7 天，可提前撤销。原始链接只在创建时显示。'}</p>
               </div>
             </div>
+            <button type="button" onClick={() => navigateToRoute('/aquarium?action=exports')} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-800 px-4 text-sm font-black text-white hover:bg-emerald-900"><Download className="h-4 w-4" />{isEn ? 'Open export & share' : '打开导出与分享'}</button>
             {shareStatus === 'loading' && <p className="mt-4 text-sm font-bold text-ink/45">{isEn ? 'Loading…' : '正在加载…'}</p>}
             {shareStatus === 'auth' && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[14px] bg-slate-50 px-4 py-3"><p className="text-sm font-semibold text-ink/60">{isEn ? 'Sign in to create and revoke privacy-safe links.' : '登录后可以生成和撤销脱敏报告链接。'}</p><button type="button" onClick={() => navigateToRoute('/login')} className="min-h-11 rounded-full bg-emerald-700 px-4 text-sm font-black text-white">{isEn ? 'Sign in' : '去登录'}</button></div>}
             {shareStatus === 'ready' && shareReports.length === 0 && <p className="mt-4 rounded-[14px] bg-slate-50 px-4 py-3 text-sm font-semibold text-ink/55">{isEn ? 'No shared reports. Create one from the aquarium archive.' : '还没有分享报告，可从鱼缸档案生成。'}</p>}

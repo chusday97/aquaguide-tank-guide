@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { chooseOnboardingGoal, getOnboardingTaskProgress, skipOnboarding } from '../services/onboarding/onboarding.service';
 import { taskRoutes } from '../services/navigation/task-routes';
-import { ExportArtifactDialog, type ExportArtifactContent } from '../components/export/ExportArtifactDialog';
+import { ExportArtifactDialog } from '../components/export/ExportArtifactDialog';
+import { buildStarterChecklistArtifact } from '../services/export/aquarium-artifact.service';
 
 export default function WelcomePage() {
   const { t } = useTranslation();
@@ -19,18 +20,7 @@ export default function WelcomePage() {
     t('onboarding.taskCheck'),
   ];
   const taskStates = [progress.aquariumReady, progress.speciesViewed, progress.speciesChosen, progress.dailyCheckDone];
-  const exportContent: ExportArtifactContent = {
-    eyebrow: isEn ? 'Starter checklist' : '新手开缸清单',
-    title: isEn ? 'My first aquarium' : '我的第一口鱼缸',
-    summary: isEn ? `${progress.completedCount} of 4 steps complete.` : `已完成 ${progress.completedCount} / 4 项。`,
-    metric: `${progress.completedCount}/4`,
-    sections: [
-      { title: isEn ? 'Checklist' : '开缸清单', items: taskLabels.map((label, index) => `${taskStates[index] ? '✓' : '○'} ${label}`) },
-      { title: isEn ? 'Next step' : '下一步', items: [taskLabels[taskStates.findIndex(done => !done)] || (isEn ? 'Keep observing the aquarium.' : '继续每天观察鱼缸。')], tone: 'success' },
-    ],
-    fileName: `AquaGuide-${isEn ? 'starter-checklist' : '新手开缸清单'}-${new Date().toISOString().slice(0, 10)}.png`,
-    disclaimer: isEn ? 'Generated from your recorded progress.' : '仅根据你在 AquaGuide 中的真实完成记录生成。',
-  };
+  const exportContent = buildStarterChecklistArtifact({ labels: taskLabels, states: taskStates, isEn });
 
   const choose = (goal: 'build_tank' | 'browse_species') => {
     chooseOnboardingGoal(goal);
