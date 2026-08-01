@@ -43,9 +43,6 @@ import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
-const FilterBottomSheet = lazy(() => import('../components/common/FilterBottomSheet').then(module => ({ default: module.FilterBottomSheet })));
-
-const categoryChips = ['全部', '鱼不舒服', '水变差', '新鱼入缸', '日常喂食', '换水维护', '怀孕 / 鱼苗', '死亡处理', '设备问题'];
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
 type CareViewMode = 'all' | 'favorites';
 type FlyingFavorite = { id: string; startX: number; startY: number; endX: number; endY: number };
@@ -1603,10 +1600,7 @@ export default function CareEncyclopedia() {
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [isCareFilterOpen, setIsCareFilterOpen] = useState(false);
-  const [draftCareCategory, setDraftCareCategory] = useState<CareCategoryId>(activeCategory);
   const [careViewMode, setCareViewMode] = useState<CareViewMode>('all');
-  const [draftCareViewMode, setDraftCareViewMode] = useState<CareViewMode>('all');
   const [favorites, setFavorites] = useState<CareFavoriteMap>(() => getCareFavorites());
   const [shareTopic, setShareTopic] = useState<CareTopic | null>(null);
   const [isSavingShareCard, setIsSavingShareCard] = useState(false);
@@ -2060,8 +2054,11 @@ export default function CareEncyclopedia() {
         />
       </section>
 
-      <section id="care-categories" className={`${searchTerm.trim() ? 'hidden md:block' : ''} care-left-panel scroll-mt-4 rounded-[18px] border border-white/80 bg-white p-3 shadow-sm`}>
-          <div className="mb-2 text-[15px] font-black text-ink">{isEn ? 'What do I want to handle now?' : '我现在想处理什么？'}</div>
+      <section id="care-categories" className={`${searchTerm.trim() ? 'hidden md:block' : ''} care-left-panel min-w-0 scroll-mt-4 rounded-[18px] border border-white/80 bg-white p-3 shadow-sm`}>
+          <div className="mb-2 flex min-w-0 items-center justify-between gap-2">
+            <div className="min-w-0 text-[15px] font-black text-ink">{isEn ? 'What do I want to handle now?' : '我现在想处理什么？'}</div>
+            {(activeCategory !== 'all' || careViewMode !== 'all') && <button type="button" onClick={() => { setActiveCategory('all'); setCareViewMode('all'); setCareResultPage(0); }} className="min-h-11 shrink-0 rounded-full px-3 text-xs font-black text-emerald-700 hover:bg-emerald-50">{isEn ? 'Clear all' : '清除全部'}</button>}
+          </div>
           <div className="grid grid-cols-2 gap-2 md:grid-cols-2 md:gap-3">
             {localizedCategoryEntrances.map(item => {
               const Icon = item.icon;
@@ -2243,42 +2240,6 @@ export default function CareEncyclopedia() {
         </Suspense>
       )}
 
-      {isCareFilterOpen && (
-        <Suspense fallback={null}>
-          <FilterBottomSheet
-        open
-        title={isEn ? "Select Issue Scenario" : "选择问题场景"}
-        subtitle={isEn ? "Select a scenario; the list will update accordingly." : "选择一个问题场景，列表会按场景更新。"}
-        groups={[
-          {
-            title: isEn ? 'Scenario' : '问题场景',
-            selected: getCategoryLabel(draftCareCategory),
-            onSelect: (label) => setDraftCareCategory(categoryChips.find(item => item.label === label)?.id || 'all'),
-            options: categoryChips.map(item => ({ label: item.label })),
-          },
-          {
-            title: isEn ? 'View Mode' : '查看方式',
-            selected: draftCareViewMode === 'favorites' ? (isEn ? 'My Saved' : '我的收藏') : (isEn ? 'All' : '全部'),
-            onSelect: (label) => setDraftCareViewMode((label === '我的收藏' || label === 'My Saved') ? 'favorites' : 'all'),
-            options: [{ label: isEn ? 'All' : '全部' }, { label: isEn ? 'My Saved' : '我的收藏' }, { label: isEn ? 'Recent View' : '最近查看', hint: isEn ? 'Default' : '暂按推荐优先' }],
-          },
-        ]}
-        onClose={() => setIsCareFilterOpen(false)}
-        onReset={() => {
-          setDraftCareCategory('all');
-          setActiveCategory('all');
-          setDraftCareViewMode('all');
-          setCareViewMode('all');
-          setIsCareFilterOpen(false);
-        }}
-        onApply={() => {
-          setActiveCategory(draftCareCategory);
-          setCareViewMode(draftCareViewMode);
-          setIsCareFilterOpen(false);
-        }}
-          />
-        </Suspense>
-      )}
 
       <Dialog open={!!shareTopic} onOpenChange={(open) => {
         if (!open) {

@@ -276,3 +276,9 @@
 - 服务端读取 `RESEND_API_KEY / FEEDBACK_EMAIL_TO / FEEDBACK_EMAIL_FROM`；未配置时回传 `not_configured`，前端显示已保存但未送达。
 - 邮件内容只包含反馈分类、页面、语言、版本、布局和用户正文；正文 HTML 转义，Resend 请求用反馈 ID 保证幂等。
 - 验证：`lint`、API check、业务 API 契约、`scripts/test-feedback-email.ts`。
+
+## 养护筛选原位化
+
+- 删除无触发入口的旧 `FilterBottomSheet` 和分类/收藏草稿副本，避免隐藏状态造成布局与结果不一致。
+- 分类区直接显示“清除全部”；结果标题仍可分别清空搜索、查看全部或清除分类。
+- 真实 Chromium 覆盖中英文 390/600/1440px：无页面错误、无横向溢出，清除后恢复 41 篇。
