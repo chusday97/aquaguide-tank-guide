@@ -4,6 +4,7 @@ import posthog from 'posthog-js';
 import App from './App.tsx';
 import './services/navigation/history-navigation-guard.service';
 import './index.css';
+import { initializeSessionAnalytics } from './services/analytics/session-events.service';
 
 const isSyntheticTest = typeof window !== 'undefined' && window.location.search.includes('synthetic_test=1');
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY || (isSyntheticTest ? 'phc_synthetic_dummy_key_123' : '');
@@ -29,6 +30,8 @@ if (posthogKey) {
     }
   });
 }
+
+initializeSessionAnalytics();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

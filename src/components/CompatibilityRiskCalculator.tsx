@@ -104,6 +104,7 @@ import type { CompatibilityDecision } from '../modules/knowledge/knowledge.types
 import { VisualResultCard } from './visual-results/VisualResultCard';
 import { buildCompatibilityVisualResult } from './visual-results/visual-result.adapters';
 import { recordTankCompatibility } from '../services/compatibility/compatibility-records.service';
+import { trackSessionEvent } from '../services/analytics/session-events.service';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
@@ -672,6 +673,13 @@ export function CompatibilityRiskCalculator({
     const key = `${selectedAquarium.id}:${selectedItems.map(item => item.species.id).sort().join('|')}:${result.level}`;
     if (recordedEvaluationKeyRef.current === key) return;
     recordedEvaluationKeyRef.current = key;
+    trackSessionEvent('compatibility_started', {
+      action: 'calculate',
+      status: result.level,
+      entry: 'full_compatibility',
+      source: 'rules',
+      candidateCount: selectedItems.length,
+    });
     recordTankCompatibility({ aquariumId: selectedAquarium.id, speciesIds: selectedItems.map(item => item.species.id), status: result.level });
     onEvaluationRecorded?.();
   }, [onEvaluationRecorded, result.level, result.ruleResult, selectedAquarium, selectedItems]);

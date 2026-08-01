@@ -12,7 +12,23 @@ const unsafeInput = {
 trackSessionEvent('daily_check_completed', unsafeInput);
 const events = getSessionEvents();
 assert.equal(events.length, 1);
-assert.deepEqual(Object.keys(events[0]).sort(), ['action', 'entry', 'name', 'occurredAt', 'status']);
+assert.deepEqual(Object.keys(events[0]).sort(), [
+  'action',
+  'appVersion',
+  'candidateCount',
+  'durationBucket',
+  'entry',
+  'failureReason',
+  'filterType',
+  'goal',
+  'locale',
+  'name',
+  'occurredAt',
+  'riskLevel',
+  'source',
+  'status',
+  'task',
+]);
 assert.equal(JSON.stringify(events).includes('这里不应被记录'), false);
 assert.equal(JSON.stringify(events).includes('明显异味'), false);
 resetSessionEvents();

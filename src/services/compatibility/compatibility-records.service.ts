@@ -1,5 +1,6 @@
 import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
+import { trackActivationIfFirstValidCompatibility, trackSessionEvent } from '../analytics/session-events.service';
 
 export interface CompatibilityRecord {
   id: string;
@@ -27,6 +28,9 @@ export const recordTankCompatibility = (input: Omit<CompatibilityRecord, 'id' | 
   const state = loadAppStateFromStorage();
   const speciesIds = [...new Set(input.speciesIds)].sort();
   if (!input.aquariumId || speciesIds.length < 2) return null;
+  const alreadyActivated = state.compatibilityRecords.some(item => (
+    isCompatibilityRecord(item) && state.aquariums.some(aquarium => aquarium.id === item.aquariumId)
+  ));
 
   const record: CompatibilityRecord = {
     id: crypto.randomUUID(),
@@ -41,6 +45,17 @@ export const recordTankCompatibility = (input: Omit<CompatibilityRecord, 'id' | 
     return !(item.aquariumId === record.aquariumId && item.speciesIds.join('|') === speciesIds.join('|'));
   });
   patchLocalAppState({ compatibilityRecords: [...existing, record] });
+  trackSessionEvent('compatibility_completed', {
+    action: 'complete',
+    status: record.status,
+    entry: 'full_compatibility',
+    source: 'rules',
+    candidateCount: record.speciesIds.length,
+  });
+  trackActivationIfFirstValidCompatibility({
+    alreadyActivated,
+    status: record.status,
+    candidateCount: record.speciesIds.length,
+  });
   return record;
 };
-
