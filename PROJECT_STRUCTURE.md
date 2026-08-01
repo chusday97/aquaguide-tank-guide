@@ -17,6 +17,9 @@
 - `src/services/onboarding/onboarding-paths.ts`：两条新手目标路线、真实进度计算与统一任务定义。
 - `src/services/compatibility/compatibility-records.service.ts`：保存并校验与真实鱼缸关联的完整混养判断记录。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
+- `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。
+- `scripts/verify-taxonomy-ui.mjs`：珊瑚、歧义名称、两条五彩青蛙及中英文角色标签的真实浏览器分类回归。
+- `scripts/verify-daily-discovery-deep-link.mjs`：图鉴今日推荐的粘性工具栏命中、收藏推进、筛选隐藏、水族册入口和直达关闭回归。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。
