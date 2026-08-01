@@ -10,3 +10,6 @@ coverage/
 .git_corrupt_*/
 __pycache__/
 *.pyc
+evaluation/reports/*.json
+evaluation/reports/*.md
+!evaluation/reports/.gitkeep

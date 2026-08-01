@@ -215,6 +215,10 @@ const failureReasonFromError = (error: unknown): AiFailureReason => {
   return 'unknown';
 };
 
+const isStructuredAiData = (value: unknown): value is Record<string, unknown> => (
+  Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+);
+
 export const askAquaGuideAI = async ({
   messages,
   system,
@@ -477,7 +481,7 @@ export const generateTankBuildCopilot = async (context: TankCopilotContext): Pro
       return withAiMeta(fallback, 'build_tank_copilot', 'fallback', failureReasonFromResponse(response, payload));
     }
 
-    if (payload?.task !== 'build_tank_copilot') {
+    if (payload?.task !== 'build_tank_copilot' || !isStructuredAiData(payload?.data)) {
       return withAiMeta(fallback, 'build_tank_copilot', 'fallback', 'invalid_json');
     }
 
@@ -501,7 +505,7 @@ export const generateTankDailyCheckInterpretation = async (
     if (!response.ok || payload?.ok === false) {
       return withAiMeta(fallback, 'tank_daily_check_interpretation', 'fallback', failureReasonFromResponse(response, payload));
     }
-    if (payload?.task !== 'tank_daily_check_interpretation') {
+    if (payload?.task !== 'tank_daily_check_interpretation' || !isStructuredAiData(payload?.data)) {
       return withAiMeta(fallback, 'tank_daily_check_interpretation', 'fallback', 'invalid_json');
     }
     return withAiMeta(

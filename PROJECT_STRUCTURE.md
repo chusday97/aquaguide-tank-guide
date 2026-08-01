@@ -102,6 +102,7 @@
 
 - `.project-journal/`：按工作区证据规则维护可追溯事件、证据索引、事实卡和证据缺口；职业材料仅使用 verified 结论。
 - `docs/05-validation/`：证据矩阵、产品假设、真人测试结果与 AI Evaluation 当前状态；严格区分自动测试、真实模型和真人证据。
+- `evaluation/`：47 个版本化 JSONL Case、Zod 契约、deterministic/mocked/live Runner、统一报告与 Badcase Registry。
 - `docs/README.md`：当前产品文档总入口与事实来源说明。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。

@@ -4,6 +4,7 @@
 
 ### Added
 - 新增产品证据矩阵、H1–H5 产品假设、真人测试空结果门禁和 AI Evaluation 状态基线，明确自动测试不等于真人体验有效。
+- 新增结构化 AI Evaluation：20 个 Copilot、13 个每日检查和 14 个物种状态判断 Case，分离本地、Mock 与显式 Live Provider，并建立统一报告和 Badcase 回流。
 
 ### Changed
 - 识别完成与健康分诊阶段使用共享边界函数；识别完成页不会触发症状草稿保护，分诊仍需用户主动选择。

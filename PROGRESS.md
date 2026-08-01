@@ -2,6 +2,7 @@
 在 `codex/activation-evaluation-v1` 把 AquaGuide 从功能完整 Demo 推进到可持续验证的 0–1 基线：明确激活、结构化 AI Evaluation、安全行为分析和真人验证准备，不新增产品功能。
 
 ## 已完成
+- 状态：`阶段 3 结构化 AI Evaluation 已建立`。既有 47 个程序化场景迁移为版本化 JSONL，新增 Zod Case/Result/Badcase 契约、deterministic/mocked/live 三类 Runner、统一指标报告和失败回流脚本；视觉 manifest 保持空白并明确未校准。（commit: 待本阶段提交）
 - 状态：`阶段 2 识别/分诊隔离门禁已补齐`。确认候选继续先到独立识别完成页；手动搜索与视觉候选复用同一确认函数；只有 describe/question 且已有症状文字时保护离开，非鱼类不能进入鱼类分诊。（commit: 待本阶段提交）
 - 状态：`阶段 1 激活任务契约已补齐`。既有真实鱼缸适配门禁保持不变，任务 ID 改为明确的 setup/choose/complete 语义；新增专项覆盖两条目标顺序、收藏不能代替适配、浏览路线不强制巡检、历史用户保护、旧引导兼容和清单单一来源。（commit: 待本阶段提交）
 - 状态：`阶段 0 证据基线已建立`。新增证据矩阵、H1–H5 产品假设、真人测试空结果门禁和 AI Evaluation 状态页；当前产品状态与路线图明确区分自动测试、真实模型与真人证据，并明确当前没有激活率、TTV、留存或视觉准确率结论。（commit: 待本阶段提交）
