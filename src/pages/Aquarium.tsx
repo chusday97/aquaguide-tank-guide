@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useMemo, useRef } from 'react';
-import type { PointerEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Aquarium, AquariumFish, Fish } from '../types';
@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
-import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download, MoreHorizontal } from 'lucide-react';
 import { DeceasedRecord } from '../types';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 import {
@@ -26,7 +26,7 @@ import {
 import { isAquaticPlantSpecies, isHardscapeSpecies } from '../lib/speciesClassification';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import { getLifeType, getToolFunctions, isSpeciesCompatibleWithWaterType } from '../modules/species/species.service';
-import type { DiscoveryDeckState, RecommendationCandidate, RecommendationMode, SimulationResult, SmartRecommendationOutput } from '../modules/recommendation/recommendation.schema';
+import type { RecommendationCandidate, RecommendationMode, SimulationResult, SmartRecommendationOutput } from '../modules/recommendation/recommendation.schema';
 import { careTopicsData } from '../data/careTopicsData';
 import { buildDiagnosisResult } from '../modules/diagnosis/diagnosis.rules';
 import {
@@ -36,12 +36,7 @@ import {
   isDiagnosisProblemType,
 } from '../modules/diagnosis/diagnosis.questionBank';
 import type { DiagnosisAnswerMap, DiagnosisOutput, DiagnosisProblemType, DiagnosisQuestion, DiagnosisRecord, TankDailyCheckContext } from '../modules/diagnosis/diagnosis.types';
-import {
-  DISCOVERY_DAILY_LIMIT,
-  DISCOVERY_STORAGE_KEY,
-  normalizeDiscoveryState,
-  recommendationService,
-} from '../modules/recommendation/recommendation.service';
+import { recommendationService } from '../modules/recommendation/recommendation.service';
 import { buildTankCopilotContext, getTankCopilotMissingInfo } from '../modules/copilot/tankBuildCopilot';
 import { weatherService } from '../services/weather/weather.service';
 import type { LocalWeatherOutput } from '../services/weather/weather.schema';
@@ -291,10 +286,12 @@ function AquariumWorkspace({
           <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
           <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
         </section>
-        <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-          <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-          <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
-        </section>
+        {discovery && (
+          <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
+            <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
+            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
+          </section>
+        )}
       </div>
     </>
   );
@@ -1014,33 +1011,6 @@ const needsHeaterForSpecies = (fish: Fish) => {
   return parseInt(match[1], 10) >= 20;
 };
 
-const loadDiscoveryState = () => {
-  try {
-    const state = normalizeDiscoveryState(JSON.parse(localStorage.getItem(DISCOVERY_STORAGE_KEY) || 'null'));
-    return { ...state, queueIds: [] };
-  } catch {
-    return normalizeDiscoveryState();
-  }
-};
-
-const saveDiscoveryState = (state: DiscoveryDeckState) => {
-  localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state));
-  patchLocalAppState({ discoveryState: state }, { debounce: true });
-};
-
-const getDiscoveryPositioning = (fish: Fish, isEn = false) => {
-  const primaryTool = getToolFunctions(fish)[0];
-  if (isEn) {
-    if (primaryTool) return 'Useful tank helper · check the full care profile before adding';
-    if (fish.difficulty === 'Easy') return 'Great for beginners and daily observation';
-    return 'Review its care needs and tank fit before deciding';
-  }
-  if (primaryTool) return `${primaryTool} · ${fish.housingMode || (isEn ? 'Observe' : '适合继续观察')}`;
-  if (fish.difficulty === 'Easy') return '适合新手观察和入门搭配';
-  if (fish.housingMode) return fish.housingMode;
-  return '可以先看详情，再决定是否加入鱼缸';
-};
-
 const getBioLoadLiters = (fish: Fish) => {
   const lifeType = getLifeType(fish);
   if (lifeType === 'plant' || lifeType === 'hardscape') return 0;
@@ -1160,6 +1130,7 @@ export default function AquariumManager() {
   
   // UI States
   const [isAquariumMenuOpen, setIsAquariumMenuOpen] = useState(false);
+  const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false);
   const [isAddFishOpen, setIsAddFishOpen] = useState(false);
   const [isSmartRecommendOpen, setIsSmartRecommendOpen] = useState(false);
   const [smartRecommendMode, setSmartRecommendMode] = useState<RecommendationMode>('existing_livestock');
@@ -1243,11 +1214,6 @@ export default function AquariumManager() {
   const [careReminders, setCareRemindersState] = useState<CareReminderRecord[]>(() => getCareReminders());
   const [pendingReminderDelete, setPendingReminderDelete] = useState<CareReminderRecord | null>(null);
   const [pendingReminderReschedule, setPendingReminderReschedule] = useState<CareReminderRecord | null>(null);
-  const [discoveryState, setDiscoveryState] = useState<DiscoveryDeckState>(() => loadDiscoveryState());
-  const [discoveryDragStartX, setDiscoveryDragStartX] = useState<number | null>(null);
-  const [discoveryDragX, setDiscoveryDragX] = useState(0);
-  const [discoveryMessage, setDiscoveryMessage] = useState('');
-  const [loadedDiscoveryImageSrc, setLoadedDiscoveryImageSrc] = useState('');
   const [selectedWishlistFish, setSelectedWishlistFish] = useState<Fish | null>(null);
 
   const openAquariumSpeciesDetail = (fish: Fish, aqFish: AquariumFish, sourceId?: string) => {
@@ -2910,89 +2876,6 @@ export default function AquariumManager() {
     setIsDiagnosisOpen(true);
   }, [activeAquarium?.id]);
 
-  const discoveryPool = useMemo(() => {
-    return fishData
-      .filter(fish => !isAquaticPlantSpecies(fish) && !isHardscapeSpecies(fish))
-      .map(fish => ({
-        ...fish,
-        housingMode: ((fish as Fish & { _originalHousingMode?: Fish['housingMode'] })._originalHousingMode || fish.housingMode),
-      }));
-  }, []);
-
-  useEffect(() => {
-    setDiscoveryState(prev => {
-      const output = recommendationService.createDiscoveryDeck({
-        speciesPool: discoveryPool,
-        wishlistIds: Array.from(wishlistFishIds),
-        state: prev,
-      });
-      saveDiscoveryState(output.state);
-      return output.state;
-    });
-  }, [discoveryPool, wishlistFishIds]);
-
-  const discoveryFish = useMemo(
-    () => discoveryPool.find(fish => fish.id === discoveryState.queueIds[0]) || null,
-    [discoveryPool, discoveryState.queueIds]
-  );
-  const nextDiscoveryFish = useMemo(
-    () => discoveryPool.find(fish => fish.id === discoveryState.queueIds[1]) || null,
-    [discoveryPool, discoveryState.queueIds]
-  );
-  const discoveryImageSrc = discoveryFish ? getSpeciesVisualSources(discoveryFish).thumbnail : '';
-  const nextDiscoveryImageSrc = nextDiscoveryFish ? getSpeciesDisplayImage(nextDiscoveryFish) : '';
-  const discoveryUsedToday = discoveryState.consumedIds.length;
-  const discoveryRemainingToday = Math.max(0, DISCOVERY_DAILY_LIMIT - discoveryUsedToday);
-  const isDiscoveryDailyLimitReached = discoveryRemainingToday === 0;
-  const discoveryPositionToday = discoveryFish
-    ? Math.min(DISCOVERY_DAILY_LIMIT, discoveryUsedToday + 1)
-    : Math.min(DISCOVERY_DAILY_LIMIT, discoveryUsedToday);
-  const discoveryRotation = Math.max(-9, Math.min(9, discoveryDragX / 18));
-  const discoveryIntent = discoveryDragX > 44 ? 'interest' : discoveryDragX < -44 ? 'skip' : null;
-
-  useEffect(() => {
-    if (!discoveryImageSrc) return;
-
-    setLoadedDiscoveryImageSrc('');
-    const image = new Image();
-    image.decoding = 'async';
-    image.onload = () => setLoadedDiscoveryImageSrc(discoveryImageSrc);
-    image.src = discoveryImageSrc;
-    if (image.complete) setLoadedDiscoveryImageSrc(discoveryImageSrc);
-
-    discoveryState.queueIds.slice(1, 5).forEach(id => {
-      const fish = discoveryPool.find(item => item.id === id);
-      if (!fish) return;
-      const preload = new Image();
-      preload.decoding = 'async';
-      preload.src = getSpeciesVisualSources(fish).thumbnail;
-    });
-  }, [discoveryImageSrc, discoveryPool, discoveryState.queueIds]);
-
-  const advanceDiscoveryCard = (action: 'skip' | 'interest') => {
-    if (!discoveryFish) return;
-    const output = recommendationService.advanceDiscoveryDeck({
-      speciesId: discoveryFish.id,
-      action,
-      speciesPool: discoveryPool,
-      wishlistIds: Array.from(wishlistFishIds),
-      state: discoveryState,
-    });
-
-    const addedWishlistId = output.addedWishlistId || (action === 'interest' ? discoveryFish.id : null);
-    if (addedWishlistId) {
-      const next = new Set(wishlistFishIds);
-      next.add(addedWishlistId);
-      syncWishlistFishIds(next);
-    }
-
-    setDiscoveryMessage(output.message);
-    setDiscoveryDragStartX(null);
-    setDiscoveryDragX(0);
-    saveDiscoveryState(output.state);
-    setDiscoveryState(output.state);
-  };
-
   const handleAquariumSpeciesSelect = (fishId: string | null) => {
     setActive3DSpecies(fishId);
     if (!fishId) return;
@@ -3006,28 +2889,6 @@ export default function AquariumManager() {
       aqFish,
       isTankPreviewOpen ? 'aquarium-tank-preview' : 'aquarium-tank',
     );
-  };
-
-  const handleDiscoveryPointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    setDiscoveryDragStartX(event.clientX);
-    setDiscoveryMessage('');
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const handleDiscoveryPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (discoveryDragStartX === null) return;
-    setDiscoveryDragX(event.clientX - discoveryDragStartX);
-  };
-
-  const handleDiscoveryPointerEnd = () => {
-    if (discoveryDragX > 90) {
-      advanceDiscoveryCard('interest');
-    } else if (discoveryDragX < -90) {
-      advanceDiscoveryCard('skip');
-    } else {
-      setDiscoveryDragStartX(null);
-      setDiscoveryDragX(0);
-    }
   };
 
   const handleTankCopilotPrimaryAction = () => {
@@ -4421,6 +4282,15 @@ export default function AquariumManager() {
     },
   ];
   const hasPriorityRisk = hasStockedAnimals && (healthScore < 85 || conflicts.length > 0 || observeTaskStatus === '建议处理');
+  const showStableDiscoveryLink = isBasicConfigComplete && !hasPriorityRisk && todayTaskCount === 0;
+  const primaryAquariumActions = commonActions.slice(0, 3).map(action => ({
+    ...action,
+    onClick: () => {
+      trackSessionEvent('aquarium_primary_action_clicked', { action: action.id, status: action.active ? 'active' : 'available', entry: 'aquarium-home' });
+      action.onClick();
+    },
+  }));
+  const secondaryAquariumActions = commonActions.slice(3);
   const markPriorityTask = (id: string, status: string) => {
     setPriorityTaskStatus(prev => {
       const next = { ...prev, [id]: status };
@@ -4509,10 +4379,6 @@ export default function AquariumManager() {
       trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });
     }
   };
-  const scrollToDesktopDiscovery = () => {
-    void navigateToSection('aquarium-discovery', { updateHash: false });
-  };
-
   const isExportCenterOpen = new URLSearchParams(routeLocation.search).get('action') === 'exports';
   if (isExportCenterOpen) {
     const onboardingProgress = getOnboardingTaskProgress();
@@ -4616,14 +4482,6 @@ export default function AquariumManager() {
               <Info className="h-4 w-4" />
               <span className="text-[13px] font-black">{t('aquarium.dataSavingTitle')}</span>
             </span>
-          </button>
-          <button
-            type="button"
-            onClick={scrollToDesktopDiscovery}
-            className="rounded-[20px] bg-white/70 px-3 py-3 text-left text-ink/58 transition-colors hover:bg-white hover:text-accent"
-          >
-            <span className="block text-[13px] font-black">{t('aquarium.todayDiscovery')}</span>
-            <span className="mt-0.5 block text-[10px] font-bold text-ink/36">{t('aquarium.scrollToDiscovery')}</span>
           </button>
         </div>
       </aside>
@@ -4751,67 +4609,51 @@ export default function AquariumManager() {
                             {isEn ? 'Active' : '当前'}
                           </span>
                         )}
-                        <button
-                          type="button"
-                          aria-label={isEn ? `Delete ${localizedAqName}` : `删除${aq.name}`}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            setIsAquariumMenuOpen(false);
-                            requestDeleteAquarium(aq.id);
-                          }}
-                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink/28 transition-colors hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
-                          title={isEn ? 'Delete Aquarium' : '删除鱼缸'}
-                        >
-                          <X className="h-3.5 w-3.5" />
-                        </button>
                       </div>
                     );
                   })}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleAddAquarium();
-                    setIsAquariumMenuOpen(false);
-                  }}
-                  className="flex w-full items-center justify-center gap-1.5 border-t border-border/60 bg-bg/55 px-3 py-2.5 text-[12px] font-black text-emerald-700 transition-colors hover:bg-emerald-50"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  {isEn ? 'New Aquarium' : '新建鱼缸'}
-                </button>
               </div>
             )}
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
             <button
               type="button"
-              onClick={() => navigateToRoute('/collection/wishlist')}
-              className="flex h-8 items-center gap-1 rounded-full border border-rose-100 bg-white px-2.5 text-[11px] font-black text-rose-500 shadow-sm"
-              title={isEn ? "Browse Collection Hub" : "查看水族册种草"}
+              onClick={handleAddAquarium}
+              aria-label={isEn ? 'New aquarium' : '新建鱼缸'}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 shadow-sm"
+              title={isEn ? 'New aquarium' : '新建鱼缸'}
             >
-              <Heart className={`h-3.5 w-3.5 ${wishlistFishes.length > 0 ? 'fill-current' : ''}`} />
-              <span className="hidden min-[380px]:inline">{isEn ? "Collection Hub" : "水族册"}</span>
-              <span>{wishlistFishes.length}</span>
-              <ChevronRight className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4" />
             </button>
-            <button
-              type="button"
-              onClick={openLocalDataManager}
-              aria-label={isEn ? "Data Storage Notice" : "数据保存提醒"}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-              title={isEn ? "Data Storage Notice" : "数据保存提醒"}
-            >
-              <Info className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => navigateToRoute('/settings')}
-              aria-label={isEn ? "Language Settings" : "语言设置"}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:text-emerald-700"
-              title={isEn ? "Language Settings" : "语言设置"}
-            >
-              <Settings className="h-4 w-4" />
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsMobileMoreOpen(open => !open)}
+                aria-expanded={isMobileMoreOpen}
+                aria-label={isEn ? 'More aquarium actions' : '更多鱼缸操作'}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/55 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              >
+                <MoreHorizontal className="h-5 w-5" />
+              </button>
+              {isMobileMoreOpen && (
+                <div className="absolute right-0 top-[calc(100%+8px)] z-[80] w-[240px] rounded-[18px] border border-white/80 bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.16)] ring-1 ring-ink/5">
+                  {isEditingName ? (
+                    <form className="grid gap-2 p-1" onSubmit={event => { event.preventDefault(); void handleRenameSubmit().then(() => setIsMobileMoreOpen(false)); }}>
+                      <Input autoFocus value={editNameValue} onChange={event => setEditNameValue(event.target.value)} maxLength={40} aria-label={isEn ? 'Aquarium name' : '鱼缸名称'} className="h-11 rounded-[14px]" />
+                      <div className="grid grid-cols-2 gap-2"><Button type="button" variant="outline" onClick={() => setIsEditingName(false)} className="h-11 rounded-full">{isEn ? 'Cancel' : '取消'}</Button><Button type="submit" disabled={!editNameValue.trim() || isRenamingName} className="h-11 rounded-full">{isRenamingName ? (isEn ? 'Saving…' : '保存中…') : (isEn ? 'Save' : '保存')}</Button></div>
+                    </form>
+                  ) : (
+                    <div className="grid gap-1">
+                      <button type="button" onClick={() => { setEditNameValue(activeAquarium.name); setIsEditingName(true); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black hover:bg-bg"><Edit2 className="h-4 w-4 text-emerald-700" />{isEn ? 'Rename aquarium' : '重命名鱼缸'}</button>
+                      <button type="button" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/settings'); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black hover:bg-bg"><Settings className="h-4 w-4 text-emerald-700" />{isEn ? 'Settings' : '设置'}</button>
+                      <button type="button" onClick={() => { setIsMobileMoreOpen(false); openLocalDataManager(); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black hover:bg-bg"><Info className="h-4 w-4 text-sky-700" />{isEn ? 'Data & backup' : '数据与备份'}</button>
+                      <button type="button" onClick={() => { setIsMobileMoreOpen(false); requestDeleteAquarium(activeAquarium.id); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black text-red-600 hover:bg-red-50"><Trash2 className="h-4 w-4" />{isEn ? 'Delete aquarium' : '删除鱼缸'}</button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -4856,121 +4698,26 @@ export default function AquariumManager() {
         />
       </div>
         )}
-        discovery={(
-      <section id="aquarium-discovery" className="aquarium-discovery order-[1] scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
-        <div className="mb-2 flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 text-[13px] font-black text-ink">
-              <Sparkles className="h-4 w-4 text-rose-500" />
-              {isEn ? 'Daily Discovery' : '今日推荐'}
+        discovery={showStableDiscoveryLink ? (
+          <section className="rounded-[18px] border border-emerald-100 bg-white/70 p-3 shadow-sm">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700"><Sparkles className="h-4 w-4" /></span>
+              <div className="min-w-0 flex-1"><h3 className="text-[13px] font-black text-ink">{isEn ? 'Ready to explore species' : '鱼缸稳定，可以看看物种'}</h3><p className="mt-0.5 text-[10px] font-bold leading-4 text-ink/45">{isEn ? 'Open beginner-friendly species matched to your current setup.' : '前往图鉴浏览新手友好物种，加入前仍会进行完整混养判断。'}</p></div>
+              <button type="button" onClick={() => navigateToRoute('/encyclopedia?difficulty=Easy&fit=current&source=aquarium-stable')} className="min-h-11 shrink-0 rounded-full bg-emerald-700 px-3 text-[11px] font-black text-white">{isEn ? 'Browse' : '去图鉴'}</button>
             </div>
-            <div className="mt-0.5 text-[10px] font-bold text-ink/45">{isEn ? 'One visual idea at a time. You decide whether to save it.' : '一次看清一个物种，再决定是否收藏。'}</div>
-          </div>
-          <span
-            className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black tabular-nums text-emerald-800"
-            aria-label={isEn
-              ? `Daily recommendation ${discoveryPositionToday} of ${DISCOVERY_DAILY_LIMIT}`
-              : `今日推荐第 ${discoveryPositionToday} 个，共 ${DISCOVERY_DAILY_LIMIT} 个`}
-          >
-            {discoveryPositionToday} / {DISCOVERY_DAILY_LIMIT}
-          </span>
-        </div>
-        {discoveryFish ? (
-          <article className="aquarium-discovery-card relative grid min-h-[160px] min-w-0 grid-cols-[minmax(108px,36%)_minmax(0,1fr)] overflow-hidden rounded-[18px] border border-white/80 bg-[#FBFAF6] shadow-sm">
-            <div
-              className={`aquarium-discovery-visual relative flex min-h-[160px] min-w-0 items-center justify-center overflow-hidden p-2 ${getSpeciesImageSurfaceClass(discoveryFish)}`}
-            >
-              <ResilientImage
-                src={getSpeciesVisualSources(discoveryFish).thumbnail}
-                srcSet={`${getSpeciesVisualSources(discoveryFish).thumbnail} 256w, ${getSpeciesVisualSources(discoveryFish).detail} 768w`}
-                sizes="(max-width: 430px) 36vw, 240px"
-                alt={getSpeciesNameLocalized(discoveryFish, isEn)}
-                className={`h-full max-h-[160px] w-full object-contain p-1 ${getSpeciesImageClass(discoveryFish)}`}
-                referrerPolicy="no-referrer"
-                loading="eager"
-                decoding="async"
-                onLoad={() => setLoadedDiscoveryImageSrc(discoveryImageSrc)}
-              />
-              <button
-                type="button"
-                aria-label={wishlistFishIds.has(discoveryFish.id)
-                  ? (isEn ? 'View saved species' : '查看已收藏物种')
-                  : (isEn ? 'Save species' : '收藏物种')}
-                title={wishlistFishIds.has(discoveryFish.id)
-                  ? (isEn ? 'View Collection' : '去水族册')
-                  : (isEn ? 'Save species' : '收藏物种')}
-                className={`absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border bg-white/95 shadow-sm ${
-                  wishlistFishIds.has(discoveryFish.id)
-                    ? 'border-rose-100 text-rose-600'
-                    : 'border-white text-rose-500'
-                }`}
-                onClick={() => {
-                  if (wishlistFishIds.has(discoveryFish.id)) {
-                    navigateToRoute('/collection/wishlist');
-                    return;
-                  }
-                  advanceDiscoveryCard('interest');
-                }}
-              >
-                <Heart className={`h-4 w-4 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
-              </button>
-            </div>
-            <div className="flex min-w-0 flex-col p-2.5">
-              <div className="flex min-w-0 items-start gap-2">
-                <div className="min-w-0">
-                  <h3 className="break-words font-serif text-[18px] italic font-bold leading-tight text-ink">{getSpeciesNameLocalized(discoveryFish, isEn)}</h3>
-                </div>
-              </div>
-              <span className="mt-1.5 w-fit rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-700">
-                {discoveryFish.difficulty === 'Easy' ? (isEn ? 'Beginner' : '新手友好') : getDifficultyLabel(discoveryFish.difficulty)}
-              </span>
-              <p className="mt-1.5 line-clamp-1 text-[11px] font-bold leading-4 text-ink/64">{getDiscoveryPositioning(discoveryFish, isEn)}</p>
-              <Button
-                type="button"
-                className="mt-auto min-h-11 min-w-0 rounded-full bg-emerald-800 px-3 text-[10px] font-black text-white hover:bg-emerald-900"
-                onClick={() => navigateToRoute(`/encyclopedia?species=${encodeURIComponent(discoveryFish.id)}&source=daily-discovery`)}
-              >
-                {isEn ? 'View species details' : '查看物种详情'}
-                <ChevronRight className="ml-1 h-4 w-4" />
-              </Button>
-            </div>
-            <button
-              type="button"
-              aria-label={isEn ? 'Show another species' : '换一个物种'}
-              title={isEn ? 'Another one' : '换一个'}
-              className="absolute bottom-2 left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/95 text-ink/58 shadow-sm"
-              onClick={() => advanceDiscoveryCard('skip')}
-            >
-              <RefreshCw className="h-4 w-4" />
-            </button>
-          </article>
-        ) : (
-          <div className="rounded-[16px] border border-rose-100 bg-[#FBFAF6] p-4 text-center">
-            <Heart className="mx-auto mb-2 h-7 w-7 fill-rose-400 text-rose-400" />
-            <h3 className="font-serif text-base italic font-bold text-ink">
-              {isDiscoveryDailyLimitReached
-                ? (isEn ? 'You have viewed today’s 10 picks' : '今天的 10 款已经看完啦')
-                : (isEn ? 'No new picks right now' : '暂时没有新的推荐')}
-            </h3>
-            <p className="mt-1 text-xs font-medium text-ink/55">
-              {isDiscoveryDailyLimitReached
-                ? (isEn ? 'Come back tomorrow for a new set.' : '明天再来看看新的灵感。')
-                : (isEn ? 'Check again later for another species idea.' : '稍后再来看看，也许会遇到新的心动物种。')}
-            </p>
-          </div>
-        )}
-        {discoveryMessage && (
-          <div className="mt-2 rounded-full bg-ink px-3 py-2 text-center text-[11px] font-bold text-white shadow-sm">
-            {discoveryMessage}
-          </div>
-        )}
-      </section>
-        )}
+          </section>
+        ) : null}
         actions={(
       <section id="aquarium-actions" className="aquarium-actions order-[3] scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
         <SectionHeader title={isEn ? "Quick Actions" : "常用操作"} subtitle={isEn ? "Quickly log daily care tasks." : "快速记录日常养护。"} />
         <div className="mt-3">
-          <QuickActionGrid actions={commonActions} />
+          <QuickActionGrid actions={primaryAquariumActions} />
+          {secondaryAquariumActions.length > 0 && (
+            <details data-disclosure-purpose="overflow_list" className="mt-2 rounded-[16px] border border-border/70 bg-white/65 p-2">
+              <summary className="cursor-pointer rounded-xl px-2 py-2 text-[11px] font-black text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">{isEn ? 'More tools' : '更多工具'}</summary>
+              <div className="mt-2"><QuickActionGrid actions={secondaryAquariumActions} /></div>
+            </details>
+          )}
         </div>
       </section>
         )}

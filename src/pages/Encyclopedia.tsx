@@ -1512,8 +1512,8 @@ export default function Encyclopedia() {
   return (
     <div className="encyclopedia-workspace page-frame-wide flex min-w-0 flex-col gap-6 overflow-x-hidden pt-[58px] md:pt-0 md:overflow-visible">
       {!isOverlayOpen && (
-      <div className="atlas-mobile-toolbar fixed inset-x-0 top-0 z-[60] mx-auto grid w-full max-w-[430px] grid-cols-2 gap-1 bg-bg/95 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] shadow-sm backdrop-blur-md md:sticky md:inset-auto md:top-3 md:max-w-[560px] md:rounded-[30px] md:p-2 md:hidden">
-        <div className="col-span-2 grid grid-cols-4 gap-1 rounded-full bg-white/90 p-1 ring-1 ring-border/70">
+      <div className="atlas-mobile-toolbar fixed inset-x-0 top-0 z-[60] mx-auto grid w-full max-w-[430px] grid-cols-[minmax(0,1fr)_auto_auto] gap-1.5 bg-bg/95 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] shadow-sm backdrop-blur-md md:sticky md:inset-auto md:top-3 md:max-w-[560px] md:rounded-[30px] md:p-2 md:hidden">
+        <div className="grid min-w-0 grid-cols-2 gap-1 rounded-full bg-white/90 p-1 ring-1 ring-border/70">
         {atlasModeItems.map(item => (
           <button
             key={item.id}
@@ -1538,21 +1538,23 @@ export default function Encyclopedia() {
             )}
           </button>
         ))}
-          <button
-            type="button"
-            onClick={() => navigateToRoute('/collection/wishlist')}
-            className="h-10 rounded-full text-[13px] font-black text-rose-500 transition-colors hover:bg-rose-50"
-          >
-            <Heart className="mr-1 inline h-3.5 w-3.5" />{t('encyclopedia.wishlistShort')} {wishlistFishIds.size}
-          </button>
-          <button
-            type="button"
-            onClick={() => navigateToRoute('/identify')}
-            className="h-10 rounded-full text-[13px] font-black text-emerald-700 transition-colors hover:bg-emerald-50"
-          >
-            <Camera className="mr-1 inline h-3.5 w-3.5" />{t('identify.shortEntry')}
-          </button>
         </div>
+        <button
+          type="button"
+          onClick={() => navigateToRoute('/collection/wishlist')}
+          aria-label={`${t('encyclopedia.wishlistShort')} ${wishlistFishIds.size}`}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-rose-500 ring-1 ring-rose-100"
+        >
+          <Heart className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => navigateToRoute('/identify')}
+          aria-label={t('identify.entry')}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-emerald-700 ring-1 ring-emerald-100"
+        >
+          <Camera className="h-4 w-4" />
+        </button>
       </div>
       )}
       {lastAddedToTankMessage && (

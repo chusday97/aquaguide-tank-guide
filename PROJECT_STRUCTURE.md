@@ -16,6 +16,7 @@
 - `packages/domain-rules/src/species-diagnosis.ts`：受控观察、本地症状解析、红旗优先与信息增益追问策略。
 - `src/services/onboarding/onboarding-paths.ts`：两条新手目标路线、真实进度计算与统一任务定义。
 - `src/services/compatibility/compatibility-records.service.ts`：保存并校验与真实鱼缸关联的完整混养判断记录。
+- `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。
