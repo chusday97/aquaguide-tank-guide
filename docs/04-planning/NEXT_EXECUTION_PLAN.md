@@ -2,11 +2,12 @@
 
 > 更新：2026-08-02。本文档只保留当前代码中尚未完成或缺少外部验证的任务，已完成的首页今日推荐、六项常用操作、水族册、Mini 混养、每日巡检、生命纪念、8 枚勋章和现有 3D 素材解析不重复开发。
 
-## 0. 先让生产站显示最新版本（P0）
+## 0. 生产可见性（已完成）
 
-- GitHub 功能分支已更新至 `codex/activation-evaluation-v1@5f0447e`。
-- Cloudflare Pages 生产站仍为旧资源版本；本机需要完成一次 Cloudflare OAuth，再把 `dist/` 发布到现有 `aquaguide-frontend` 项目。
-- 发布后验证：生产 `/aquarium`、`/care`、`/collection` 均返回 200，HTML 资源 hash 与当次构建一致，首页能看到今日推荐和六项直显操作。
+- GitHub 功能分支已完整同步到 `codex/activation-evaluation-v1`。
+- 最新生产版本已发布到 Vercel：[https://ice-glide.vercel.app](https://ice-glide.vercel.app)。
+- 已验证生产 `/aquarium` 返回 200，并加载当次构建资源 `index-BtS9X_Qg.js`；`vercel.json` 提供 SPA 深链接回退。
+- 原 Cloudflare Pages 地址仍保留旧资源，不再作为本轮最新版本验收地址；如需把原域名切回 Cloudflare，仍需单独完成 Cloudflare OAuth 和发布。
 
 ## 1. 养护指南正确性与“动作优先”重构（P0）
 
@@ -80,10 +81,9 @@
 
 ## 推荐执行顺序
 
-1. 完成 Cloudflare 授权并发布当前版本。
-2. 先修正水质浑浊规则，再重构养护动作层与权威引用。
-3. 完成体态三步任务。
-4. 确认时间线/循环提醒数据契约后，实施 API、Repository 和页面。
-5. 进入真实 Supabase、视觉模型、真机性能和真人可用性验收。
+1. 先修正水质浑浊规则，再重构养护动作层与权威引用。
+2. 完成体态三步任务。
+3. 确认时间线/循环提醒数据契约后，实施 API、Repository 和页面。
+4. 进入真实 Supabase、视觉模型、真机性能和真人可用性验收。
 
-新手容易踩的坑是把“代码已实现”当作“生产已上线”；本计划把 GitHub、Cloudflare、Supabase、真实模型和真人验收分别记录，只在各自通过后升级状态。
+新手容易踩的坑是把“代码已实现”当作“生产已上线”；本计划把 GitHub、Vercel、原 Cloudflare 地址、Supabase、真实模型和真人验收分别记录，只在各自通过后升级状态。

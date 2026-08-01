@@ -1,5 +1,7 @@
 # AquaGuide 项目结构
 
+根目录 `vercel.json`：Vercel 生产部署的 SPA 路由回退配置，确保 `/aquarium` 等前端深链接直接访问时返回应用入口。
+
 ## 核心入口
 
 - `apps/api/`：Express TypeScript 业务 API 入口、统一错误、Supabase 客户端、鉴权和版本化路由。
