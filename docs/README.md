@@ -50,6 +50,7 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 - [3D、物种数据与图片性能基线](./04-planning/THREE_AND_ASSET_PERFORMANCE_BASELINE.md)
 - [外部验收协议](./04-planning/EXTERNAL_VALIDATION_PROTOCOL.md)（真人新手、真实鱼缸跨入口与低端真机）
 - [云同步方案评估](./04-planning/CLOUD_SYNC_EVALUATION.md)（只评估，不实施）
+- [证据矩阵](./05-validation/EVIDENCE_MATRIX.md) · [产品假设](./05-validation/PRODUCT_HYPOTHESES.md) · [真人测试结果](./05-validation/USER_TEST_RESULTS.md) · [AI Evaluation 状态](./05-validation/AI_EVALUATION_STATUS.md)
 
 ## 单一事实来源
 

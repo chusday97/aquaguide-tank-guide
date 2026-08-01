@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-01 激活与 Evaluation 基线
+
+- 当前分支：`codex/activation-evaluation-v1`，从已通过审查的 `codex/ux-core-flow-v1@4ece6cb` 建立。
+- 本轮不新增产品功能；目标是补齐证据边界、结构化 AI Evaluation、激活/TTV/AI 生命周期匿名事件和真人测试准备。
+- 已确认 Onboarding 真实适配任务与识别/健康分诊分离主体均已实现，本轮只补兼容测试、事件语义和验证缺口，不重写页面。
+- 安全默认：旧兼容记录不补发新激活；真人原始匿名记录保存在 Git 忽略文件；Live Eval 只走现有 BFF 且必须显式设置 `RUN_LIVE_EVAL=1`。
+- 当前阶段：证据矩阵、产品假设、真人测试空状态和 AI Evaluation 状态基线已写入 `docs/05-validation/`，等待阶段提交。
+
 ## 2026-08-01 物种属性审计与今日推荐
 
 - 486 条物种已全部进入 `output/classification_audit/`；实际派生为 40 条珊瑚生命类型。此前“39 条”是丁香珊瑚被名称正则误判成水草后的错误统计。
