@@ -29,8 +29,8 @@ patchLocalAppState({
 let progress = buildOnboardingTaskProgress((await import('../src/services/storage/local-app-state')).loadAppStateFromStorage());
 assert.equal(progress.speciesChosen, true);
 assert.equal(progress.compatibilityCompleted, false, '收藏或加入物种不能代替完整混养判断');
-assert.deepEqual(getOnboardingTasks('build_tank', progress).map(task => task.id), ['aquarium', 'choose_species', 'compatibility', 'daily_check']);
-assert.deepEqual(getOnboardingTasks('browse_species', progress).map(task => task.id), ['view_species', 'choose_species', 'aquarium', 'compatibility']);
+assert.deepEqual(getOnboardingTasks('build_tank', progress).map(task => task.id), ['setup_aquarium', 'choose_species', 'complete_compatibility', 'complete_daily_check']);
+assert.deepEqual(getOnboardingTasks('browse_species', progress).map(task => task.id), ['view_species', 'choose_species', 'setup_aquarium', 'complete_compatibility']);
 
 recordTankCompatibility({ aquariumId: aquarium.id, speciesIds: ['fish-1', 'fish-2'], status: 'compatible' });
 progress = buildOnboardingTaskProgress((await import('../src/services/storage/local-app-state')).loadAppStateFromStorage());

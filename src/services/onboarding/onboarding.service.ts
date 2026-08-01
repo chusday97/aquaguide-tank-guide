@@ -6,9 +6,9 @@ import { getCareFavorites } from '../favorites/favorites.service';
 import { getCareReminders, getCompletedCareOperations, getSavedCareChecklists } from '../care/care-activity.service';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { trackSessionEvent } from '../analytics/session-events.service';
-import { buildOnboardingTaskProgress, type OnboardingTaskProgress } from './onboarding-paths';
+import { buildOnboardingTaskProgress, hasHistoricalUserActivity, type OnboardingTaskProgress } from './onboarding-paths';
 export { getOnboardingTasks } from './onboarding-paths';
-export type { OnboardingTask, OnboardingTaskProgress } from './onboarding-paths';
+export type { OnboardingTask, OnboardingTaskId, OnboardingTaskProgress } from './onboarding-paths';
 
 const createState = (patch: Partial<OnboardingState> = {}): OnboardingState => ({
   version: 1,
@@ -94,17 +94,11 @@ export const subscribeToOnboardingAuth = (listener: () => void) => {
 export const shouldStartOnboarding = () => {
   const state = loadAppStateFromStorage();
   if (state.onboarding) return false;
-  return state.aquariums.length === 0
-    && state.wishlist.length === 0
-    && state.compatibilityRecords.length === 0
-    && Object.keys(getCareFavorites()).length === 0
-    && state.diagnosisRecords.length === 0
-    && state.deceasedRecords.length === 0
-    && state.feedingRecords.length === 0
-    && state.observationRecords.length === 0
-    && getCareReminders().length === 0
-    && getCompletedCareOperations().length === 0
-    && getSavedCareChecklists().length === 0;
+  const hasSupplementalCareActivity = Object.keys(getCareFavorites()).length > 0
+    || getCareReminders().length > 0
+    || getCompletedCareOperations().length > 0
+    || getSavedCareChecklists().length > 0;
+  return !hasHistoricalUserActivity(state, hasSupplementalCareActivity);
 };
 
 export const getOnboardingState = () => loadAppStateFromStorage().onboarding;
