@@ -56,7 +56,7 @@ try {
       await route.fulfill({
         status: 201,
         contentType: 'application/json',
-        body: JSON.stringify({ data: { id: 'feedback-id', status: 'new', createdAt: new Date().toISOString() }, requestId: 'feedback-request' }),
+        body: JSON.stringify({ data: { id: 'feedback-id', status: 'new', createdAt: new Date().toISOString(), emailDeliveryStatus: 'sent' }, requestId: 'feedback-request' }),
       });
     });
     await page.goto(`${baseUrl}/settings#feedback`, { waitUntil: 'domcontentloaded' });
@@ -75,7 +75,7 @@ try {
     await page.getByRole('textbox', { name: '你的意见' }).fill('希望风险处理可以继续保留明确的三步操作。');
     await page.getByText('使用问题', { exact: true }).click();
     await submit.click();
-    await page.getByText('已收到，谢谢你的建议。', { exact: true }).waitFor();
+    await page.getByText('已保存并发送到反馈邮箱。', { exact: true }).waitFor();
     assert.equal(submittedBody.category, 'problem');
     assert.equal(submittedBody.deviceLayout, device.isMobile ? 'phone' : 'desktop');
     assert.equal(submittedBody.pagePath, '/settings#feedback');

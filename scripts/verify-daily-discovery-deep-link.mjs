@@ -8,24 +8,21 @@ try {
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(error.message));
     await page.addInitScript(() => localStorage.setItem('aquaguide_locale', 'zh-CN'));
-    await page.goto('http://localhost:3000/aquarium', { waitUntil: 'networkidle' });
-    if (page.url().includes('/welcome')) {
-      await page.getByRole('button', { name: '先跳过，直接进入我的鱼缸' }).click();
-      await page.waitForURL(/\/aquarium/);
-    }
+    await page.goto('http://localhost:3000/encyclopedia', { waitUntil: 'networkidle' });
+    await page.getByText('今日推荐', { exact: true }).waitFor();
     const detailsButton = page.getByRole('button', { name: '查看物种详情' }).first();
     await detailsButton.scrollIntoViewIfNeeded();
     await detailsButton.click();
-    await page.waitForURL(/\/encyclopedia\?species=.*source=daily-discovery/);
+    await page.waitForURL(/\/encyclopedia\?species=/);
     const detailSurface = page.locator('[data-surface="centered-dialog"], [data-surface="bottom-sheet"]');
     await detailSurface.waitFor({ state: 'visible' });
     assert.equal(await detailSurface.count(), 1, 'should reuse the encyclopedia species detail surface');
     await page.keyboard.press('Escape');
-    await page.waitForURL(/\/aquarium/);
+    await page.waitForURL(/\/encyclopedia/);
     assert.equal(pageErrors.length, 0);
     await page.close();
   }
-  console.log('daily discovery deep link: aquarium → encyclopedia species → aquarium passed');
+  console.log('daily discovery deep link: encyclopedia discovery → species profile → encyclopedia passed');
 } finally {
   await browser.close();
 }

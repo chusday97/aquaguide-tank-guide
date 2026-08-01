@@ -29,7 +29,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, X, Heart, HeartOff, Skull, CheckCircle2, Plus, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal, AlertTriangle, Info, MoreHorizontal, Camera } from 'lucide-react';
+import { Search, X, Heart, HeartOff, Skull, CheckCircle2, Plus, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal, AlertTriangle, Info, MoreHorizontal, Camera, RefreshCw } from 'lucide-react';
 import { CompatibilityRiskCalculator } from '../components/CompatibilityRiskCalculator';
 import { VisualResultMini } from '../components/visual-results/VisualResultCard';
 import type { VisualResultSubject } from '../components/visual-results/visual-result.types';
@@ -887,6 +887,7 @@ export default function Encyclopedia() {
   const discoveryUsedToday = discoveryState.consumedIds.length;
   const discoveryRemainingToday = Math.max(0, DISCOVERY_DAILY_LIMIT - discoveryUsedToday);
   const isDiscoveryDailyLimitReached = discoveryRemainingToday === 0;
+  const discoveryPositionToday = discoveryFish ? Math.min(DISCOVERY_DAILY_LIMIT, discoveryUsedToday + 1) : Math.min(DISCOVERY_DAILY_LIMIT, discoveryUsedToday);
   const discoveryRotation = Math.max(-9, Math.min(9, discoveryDragX / 18));
   const discoveryIntent = discoveryDragX > 44 ? 'interest' : discoveryDragX < -44 ? 'skip' : null;
 
@@ -1832,6 +1833,31 @@ export default function Encyclopedia() {
           )}
         </div>
       </div>
+
+      {discoveryFish && (
+        <section className="grid min-w-0 overflow-hidden rounded-[22px] border border-rose-100 bg-white shadow-sm sm:grid-cols-[minmax(180px,34%)_minmax(0,1fr)]" aria-labelledby="atlas-daily-discovery-title">
+          <div className={`relative flex min-h-[190px] items-center justify-center overflow-hidden bg-bg p-4 ${getSpeciesImageSurfaceClass(discoveryFish)}`}>
+            <ResilientImage src={discoveryImageSrc} alt={getSpeciesNameLocalized(discoveryFish, isEn)} className={`h-[180px] w-full object-contain ${getSpeciesImageClass(discoveryFish)}`} loading="eager" />
+            <button
+              type="button"
+              onClick={() => wishlistFishIds.has(discoveryFish.id)
+                ? navigateToRoute('/collection/wishlist')
+                : advanceDiscoveryCard('interest')}
+              aria-label={wishlistFishIds.has(discoveryFish.id) ? (isEn ? 'View saved species' : '查看已收藏物种') : (isEn ? 'Save species' : '收藏物种')}
+              className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-rose-500 shadow-sm"
+            >
+              <Heart className={`h-4 w-4 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
+            </button>
+          </div>
+          <div className="flex min-w-0 flex-col p-4">
+            <div className="flex items-center justify-between gap-3"><p className="text-[11px] font-black uppercase tracking-[0.14em] text-rose-600">{isEn ? 'Daily Discovery' : '今日推荐'}</p><span className="rounded-full bg-rose-50 px-2.5 py-1 text-[10px] font-black text-rose-700">{discoveryPositionToday} / {DISCOVERY_DAILY_LIMIT}</span></div>
+            <h2 id="atlas-daily-discovery-title" className="mt-3 font-serif text-2xl font-bold italic text-ink">{getSpeciesNameLocalized(discoveryFish, isEn)}</h2>
+            <p className="mt-1 text-xs font-bold text-ink/48">{discoveryTaxonomy ? `${discoveryTaxonomy.variety} · ${discoveryTaxonomy.waterType}` : discoveryFish.category}</p>
+            <p className="mt-3 text-xs font-semibold leading-5 text-ink/58">{isEn ? 'Start with the image and care profile, then decide whether this species belongs in your plan.' : '先看图片与养护要求，再决定是否收藏或加入鱼缸。'}</p>
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-auto"><button type="button" onClick={() => navigateToRoute(`/encyclopedia?species=${encodeURIComponent(discoveryFish.id)}&source=daily-discovery`)} className="min-h-11 rounded-full bg-emerald-800 px-5 text-xs font-black text-white">{isEn ? 'View species details' : '查看物种详情'}</button><button type="button" onClick={() => advanceDiscoveryCard('skip')} className="min-h-11 rounded-full border border-border bg-white px-4 text-xs font-black text-ink/58"><RefreshCw className="mr-1 inline h-4 w-4" />{isEn ? 'Another species' : '换一个'}</button></div>
+          </div>
+        </section>
+      )}
 
         <div id="atlas-grid" className="mt-1 grid scroll-mt-[178px] grid-cols-2 gap-2.5 md:col-span-2 md:grid-cols-2 md:gap-3 lg:grid-cols-3 xl:grid-cols-4">
           {pagedAtlasItems.map((item) => {
