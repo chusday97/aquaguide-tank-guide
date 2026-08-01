@@ -4,6 +4,7 @@ import {
   getEncyclopediaLifeType,
   getLifeType,
   getSpeciesFilterTags,
+  getSpeciesRoleLabel,
   getToolFunctions,
   getSecondaryCategory,
   isSpeciesCompatibleWithWaterType,
@@ -26,6 +27,8 @@ for (const fish of fishData) {
   const lifeType = getLifeType(fish);
   const encyclopediaLifeType = getEncyclopediaLifeType(fish);
   const secondaryCategory = getSecondaryCategory(fish);
+  const roleLabel = getSpeciesRoleLabel(fish);
+  const englishRoleLabel = getSpeciesRoleLabel(fish, true);
 
   if ((lifeType === 'plant' || lifeType === 'hardscape') && displayableIds.has(fish.id)) {
     fail({
@@ -42,6 +45,32 @@ for (const fish of fishData) {
       speciesId: fish.id,
       name: fish.name,
       details: `encyclopediaLifeType=${encyclopediaLifeType}`,
+    });
+  }
+
+  if (lifeType !== 'fish' && (/小型观赏鱼|群游搭配/.test(roleLabel) || /Small Fish|Schooling Mix/.test(englishRoleLabel))) {
+    fail({
+      rule: '非鱼类不得使用鱼类角色标签',
+      speciesId: fish.id,
+      name: fish.name,
+      details: `lifeType=${lifeType}, role=${roleLabel}, roleEn=${englishRoleLabel}`,
+    });
+  }
+
+  if (lifeType === 'coral' && !/珊瑚|海水特殊养护|特殊缸体/.test(roleLabel)) {
+    fail({
+      rule: '珊瑚生命类型必须使用珊瑚或海水特殊养护标签',
+      speciesId: fish.id,
+      name: fish.name,
+      details: `secondaryCategory=${secondaryCategory}, role=${roleLabel}`,
+    });
+  }
+
+  if (lifeType === 'coral' && getSpeciesFilterTags(fish).functionTags.includes('小缸适合')) {
+    fail({
+      rule: '珊瑚不得仅凭通用 Small 字段获得小缸适合标签',
+      speciesId: fish.id,
+      name: fish.name,
     });
   }
 }
@@ -155,5 +184,7 @@ console.log(JSON.stringify({
     '人工覆盖物种标签正确',
     '观赏鱼和水体标签边界正确',
     '工具生物边界和组合筛选有效',
+    '非鱼类不得出现鱼类角色标签',
+    '珊瑚角色和小缸标签边界正确',
   ],
 }, null, 2));

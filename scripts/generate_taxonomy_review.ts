@@ -1,7 +1,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fishData } from '../src/data/fishData';
-import { getEncyclopediaLifeType, getSecondaryCategory } from '../src/modules/species/species.service';
+import {
+  getCareTaxonomyPath,
+  getEncyclopediaLifeType,
+  getLifeType,
+  getSecondaryCategory,
+  getSpeciesFilterTags,
+  getSpeciesRoleLabel,
+} from '../src/modules/species/species.service';
+
+interface SpeciesTaxonomyAuditRow {
+  speciesId: string;
+  lifeType: string;
+  primaryCategory: string;
+  secondaryCategory: string;
+  roleLabel: string;
+  waterType: string;
+  violations: string[];
+}
 
 const outputDir = path.resolve('output/classification_audit');
 const csvPath = path.join(outputDir, 'species_taxonomy_review.csv');
@@ -34,22 +51,51 @@ const escapeHtml = (value: unknown) => String(value ?? '')
   .replaceAll('"', '&quot;');
 
 const rows = fishData.map((fish) => {
-  const lifeType = getEncyclopediaLifeType(fish);
-  const primary = primaryLabelByLifeType[lifeType] || '淡水鱼';
+  const encyclopediaLifeType = getEncyclopediaLifeType(fish);
+  const lifeType = getLifeType(fish);
+  const primary = primaryLabelByLifeType[encyclopediaLifeType] || '淡水鱼';
   const secondary = getSecondaryCategory(fish);
   const reviewReason = reviewReasonFor(fish.category, primary, secondary);
+  const roleLabel = getSpeciesRoleLabel(fish);
+  const englishRoleLabel = getSpeciesRoleLabel(fish, true);
+  const taxonomy = getCareTaxonomyPath(fish);
+  const filterTags = getSpeciesFilterTags(fish);
+  const violations = [
+    reviewReason,
+    lifeType !== 'fish' && (/小型观赏鱼|群游搭配/.test(roleLabel) || /Small Fish|Schooling Mix/.test(englishRoleLabel))
+      ? '非鱼类使用了鱼类角色标签'
+      : '',
+    lifeType === 'coral' && taxonomy.waterType !== '海水' ? '珊瑚水体类型不是海水' : '',
+    lifeType === 'coral' && filterTags.functionTags.includes('小缸适合') ? '珊瑚错误获得小缸适合标签' : '',
+    lifeType !== 'fish' && filterTags.functionTags.includes('观赏鱼') ? '非鱼类错误获得观赏鱼标签' : '',
+  ].filter(Boolean);
+
+  const audit: SpeciesTaxonomyAuditRow = {
+    speciesId: fish.id,
+    lifeType,
+    primaryCategory: primary,
+    secondaryCategory: secondary,
+    roleLabel,
+    waterType: taxonomy.waterType,
+    violations,
+  };
 
   return {
-    id: fish.id,
+    id: audit.speciesId,
     name: fish.name,
     scientificName: fish.scientificName,
     oldCategory: fish.category,
-    proposedPrimaryCategory: primary,
-    proposedSecondaryCategory: secondary,
+    lifeType: audit.lifeType,
+    proposedPrimaryCategory: audit.primaryCategory,
+    proposedSecondaryCategory: audit.secondaryCategory,
+    roleLabel: audit.roleLabel,
+    roleLabelEn: englishRoleLabel,
+    waterType: audit.waterType,
+    functionTags: filterTags.functionTags.join(' · '),
     showInEncyclopedia: ['淡水鱼', '海水鱼', '虾螺蟹', '龟/两栖', '珊瑚/海葵'].includes(primary),
     showInAquariumSettings: ['水草', '硬景/底砂'].includes(primary),
-    internalReviewFlag: Boolean(reviewReason),
-    internalReviewReason: reviewReason,
+    internalReviewFlag: audit.violations.length > 0,
+    internalReviewReason: audit.violations.join('；'),
   };
 });
 

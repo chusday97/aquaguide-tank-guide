@@ -371,6 +371,7 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
 const roleLabelKeys: Record<string, string> = {
   '观赏生物 / 特殊缸体': 'roleSpecialTank',
   '观赏生物 / 海水特殊养护': 'roleMarineCare',
+  '礁岩珊瑚 / 海水生态': 'roleReefCoral',
   '水草造景 / 环境植物': 'rolePlantedEnvironment',
   '造景素材 / 环境配置': 'roleSceneryConfig',
   '工具虾螺 / 除藻生物': 'roleAlgaeCrew',

@@ -19,6 +19,7 @@
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
     "test:favorites": "tsx scripts/test-favorites-service.ts",
     "test:taxonomy": "tsx scripts/assert_taxonomy_rules.ts",
+    "test:taxonomy-ui": "node scripts/verify-taxonomy-ui.mjs",
     "test:species-knowledge": "tsx scripts/assert_species_detail_knowledge.ts",
     "test:ai-entry-policy": "tsx scripts/assert_ai_entry_policy.ts",
     "test:copilot-contract": "tsx scripts/assert_tank_copilot_contract.ts",
