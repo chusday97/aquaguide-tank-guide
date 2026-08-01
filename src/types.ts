@@ -98,10 +98,24 @@ export interface Aquarium {
   };
 }
 
+export type MemorialCauseCode =
+  | 'water_quality_change'
+  | 'oxygen_shortage'
+  | 'temperature_stress'
+  | 'acclimation_stress'
+  | 'aggression_or_injury'
+  | 'feeding_or_digestive'
+  | 'suspected_illness'
+  | 'recent_medication_or_change'
+  | 'age_related'
+  | 'unknown'
+  | 'other';
+
 export interface DeceasedRecord {
   id: string;
   fishId: string;
   date: string;
+  causeCodes?: MemorialCauseCode[];
   reason?: string;
   observation?: string;
   improvement?: string;

@@ -14,6 +14,19 @@ export type LifeStage = 'unknown' | 'juvenile' | 'adult';
 export type ReproductiveState = 'unknown' | 'not_applicable' | 'normal' | 'pregnant_or_gravid' | 'in_labor_or_spawning' | 'postpartum_recovery';
 export type FeedbackCategory = 'suggestion' | 'problem' | 'content' | 'other';
 export type FeedbackStatus = 'new' | 'reviewed' | 'closed';
+export type FeedbackEmailDeliveryStatus = 'not_configured' | 'sent' | 'failed';
+export type MemorialCauseCode =
+  | 'water_quality_change'
+  | 'oxygen_shortage'
+  | 'temperature_stress'
+  | 'acclimation_stress'
+  | 'aggression_or_injury'
+  | 'feeding_or_digestive'
+  | 'suspected_illness'
+  | 'recent_medication_or_change'
+  | 'age_related'
+  | 'unknown'
+  | 'other';
 
 export interface SyncFields {
   createdAt: IsoDateTime;
@@ -313,6 +326,7 @@ export interface MemorialRecordRow extends SyncFields {
   speciesId?: Uuid;
   speciesCatalogKey: string;
   memorialDate: IsoDate;
+  causeCodes: MemorialCauseCode[];
   reason?: string;
   observation?: string;
   improvement?: string;
@@ -352,6 +366,10 @@ export interface FeedbackSubmissionRecord extends SyncFields {
   appVersion: string;
   deviceLayout: 'phone' | 'desktop';
   status: FeedbackStatus;
+  emailDeliveryStatus: FeedbackEmailDeliveryStatus;
+  emailDeliveryId?: string;
+  emailDeliveryError?: string;
+  emailedAt?: IsoDateTime;
 }
 
 export interface MigrationBatchRecord extends SyncFields {

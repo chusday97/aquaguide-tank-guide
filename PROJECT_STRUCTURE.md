@@ -22,6 +22,7 @@
 - `supabase/migrations/202607260001_feedback_submissions.sql`：低敏感意见反馈、管理员 RLS、状态索引与版本触发器。
 - `supabase/migrations/202607260002_atomic_livestock_removal.sql`：缸内物种数量移出的事务锁、整数校验与幂等重放。
 - `supabase/migrations/202607290001_memorial_reflection_fields.sql`：生命纪念“当时观察 / 可能原因 / 后续改进”字段与原子批次纪念写入函数。
+- `supabase/migrations/202608010001_memorial_causes_feedback_email.sql`：生命纪念受控原因代码、反馈邮件投递状态与新版原子纪念写入函数。
 
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。

@@ -1,9 +1,9 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.3.1
+> 版本：2.4.0
 > 状态：已确认，实施中
-> 生效日期：2026-07-22
-> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`、`202607260002_atomic_livestock_removal.sql`、`202607290001_memorial_reflection_fields.sql`
+> 生效日期：2026-08-01
+> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`、`202607260002_atomic_livestock_removal.sql`、`202607290001_memorial_reflection_fields.sql`、`202608010001_memorial_causes_feedback_email.sql`
 > TypeScript 来源：`src/types/database.ts`
 
 ## 1. 产品与架构边界
@@ -178,7 +178,7 @@ type AssetVariant =
 
 - `species_favorites`：用户与物种唯一。
 - `care_favorites`：用户与文章唯一。
-- `memorial_records`：用户、可选鱼缸、可选物种 UUID、兼容物种键、日期、当时观察、可能原因和后续改进。
+- `memorial_records`：用户、可选鱼缸、可选物种 UUID、兼容物种键、日期、受控可能原因、其他原因、当时观察和后续改进。
 - `care_reminders`：用户、可选鱼缸、来源文章、计划日期和完成时间。
 - `care_events`：换水、喂食、观察和清单完成事件。
 - 同一文章、同一鱼缸只能有一条未完成养护计划。
@@ -200,6 +200,7 @@ type MigrationStatus = 'previewed' | 'committing' | 'completed' | 'failed';
 ```ts
 type FeedbackCategory = 'suggestion' | 'problem' | 'content' | 'other';
 type FeedbackStatus = 'new' | 'reviewed' | 'closed';
+type FeedbackEmailDeliveryStatus = 'not_configured' | 'sent' | 'failed';
 
 interface FeedbackSubmissionRecord {
   id: string;
@@ -211,6 +212,10 @@ interface FeedbackSubmissionRecord {
   appVersion: string;
   deviceLayout: 'phone' | 'desktop';
   status: FeedbackStatus;
+  emailDeliveryStatus: FeedbackEmailDeliveryStatus;
+  emailDeliveryId?: string;
+  emailDeliveryError?: string;
+  emailedAt?: string;
   createdAt: string;
   updatedAt: string;
   deletedAt?: string;
@@ -223,6 +228,28 @@ interface FeedbackSubmissionRecord {
 - 普通用户不能查询、更新或删除反馈；管理员可读取并更新处理状态。
 - 单实例 API 使用有界、代理感知的进程内限流；直连环境默认不信任转发头，部署在单层可信代理后必须设置 `TRUST_PROXY_HOPS=1`。多实例生产部署还必须在入口网关配置共享限流，不能依赖单个进程形成全局额度。
 - API 日志不记录反馈正文、原始 IP 或认证令牌。
+- Express 先写入数据库，再尝试调用邮件服务；邮件失败不得回滚已保存反馈。服务端使用反馈 ID 作为邮件幂等键，收件地址、发件地址和密钥只来自部署 Secret。
+
+### 4.6.1 生命纪念原因
+
+```ts
+type MemorialCauseCode =
+  | 'water_quality_change'
+  | 'oxygen_shortage'
+  | 'temperature_stress'
+  | 'acclimation_stress'
+  | 'aggression_or_injury'
+  | 'feeding_or_digestive'
+  | 'suspected_illness'
+  | 'recent_medication_or_change'
+  | 'age_related'
+  | 'unknown'
+  | 'other';
+```
+
+- `causeCodes` 最多五项；`unknown` 必须单独选择。
+- `reason` 继续保存“其他原因”的用户补充，并兼容旧自由文本记录。
+- 原因标签只表达可能性，不作为疾病确诊、健康评分或混养结论输入。
 
 ### 4.7 IdempotencyRecord
 
@@ -328,7 +355,7 @@ type ApiErrorCode =
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/split` | 拆分数量、新体态、`sourceVersion`、幂等键 | `AquariumSpeciesBatchRecord[]` | 400/401/404/409 |
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/merge` | 来源批次、最终入缸日期/生长阶段/繁殖状态、双方版本 | `AquariumSpeciesBatchRecord[]` | 400/401/404/409 |
 | POST | `/aquariums/:id/species/:recordId/batches/:batchId/remove` | 正整数数量、`Idempotency-Key` | `AquariumRecord` | 400/401/404/409 |
-| POST | `/aquariums/:id/species/:recordId/batches/:batchId/memorial` | 日期、观察、原因、后续改进、批次版本、幂等键 | `MemorialRecord` | 400/401/404/409 |
+| POST | `/aquariums/:id/species/:recordId/batches/:batchId/memorial` | 日期、受控原因、其他原因、观察、后续改进、批次版本、幂等键 | `MemorialRecord` | 400/401/404/409 |
 | DELETE | `/aquariums/:id/species/:recordId/batches/:batchId` | `version` | `{ deleted: true, speciesRemoved: boolean }` | 401/404/409 |
 | PUT | `/aquariums/:id/equipment` | 设备字段、可选 `version` | `AquariumEquipmentRecord` | 400/401/404/409 |
 | POST | `/aquariums/:id/components` | 类型、名称、数量、幂等键 | `AquariumComponentRecord` | 400/401/404/409 |
@@ -385,8 +412,8 @@ interface AquariumSpeciesBatchRecord extends SyncFields {
 | PUT | `/favorites/care/:articleId` | Header 幂等键 | `CareFavoriteRecord` | 401/404/409 |
 | DELETE | `/favorites/care/:articleId` | 可选版本 | `{ deleted: true }` | 401/404/409 |
 | GET | `/memorial-records` | `cursor? limit?` | `Page<MemorialRecordRow>` | 401 |
-| POST | `/memorial-records` | 物种、日期、观察、原因、后续改进、幂等键 | `MemorialRecordRow` | 400/401/409 |
-| PATCH | `/memorial-records/:id` | 日期、观察、原因、后续改进、`version` | `MemorialRecordRow` | 400/401/404/409 |
+| POST | `/memorial-records` | 物种、日期、受控原因、其他原因、观察、后续改进、幂等键 | `MemorialRecordRow` | 400/401/409 |
+| PATCH | `/memorial-records/:id` | 日期、受控原因、其他原因、观察、后续改进、`version` | `MemorialRecordRow` | 400/401/404/409 |
 | DELETE | `/memorial-records/:id` | `version` | `{ deleted: true }` | 401/404/409 |
 | GET | `/care-reminders` | `status? aquariumId?` | `CareReminderRecordRow[]` | 401 |
 | POST | `/care-reminders` | 来源、时间、幂等键 | `CareReminderRecordRow` | 400/401/409 |
@@ -399,7 +426,7 @@ interface AquariumSpeciesBatchRecord extends SyncFields {
 
 | Method | Path | Request | Response | 主要错误 |
 |---|---|---|---|---|
-| POST | `/feedback` | `category message pagePath locale appVersion deviceLayout` | `{ id, status, createdAt }` | 400/429/503 |
+| POST | `/feedback` | `category message pagePath locale appVersion deviceLayout` | `{ id, status, emailDeliveryStatus, createdAt }` | 400/429/503 |
 | GET | `/admin/feedback` | `status? cursor? limit?` | `Page<FeedbackSubmissionRecord>` | 401/403/503 |
 | PATCH | `/admin/feedback/:id/status` | `status` | `FeedbackSubmissionRecord` | 400/401/403/404/409 |
 

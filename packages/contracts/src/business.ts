@@ -121,10 +121,30 @@ export const diagnosisSaveSchema = z.object({
   version: versionSchema.optional(),
 });
 
+export const memorialCauseCodeSchema = z.enum([
+  'water_quality_change',
+  'oxygen_shortage',
+  'temperature_stress',
+  'acclimation_stress',
+  'aggression_or_injury',
+  'feeding_or_digestive',
+  'suspected_illness',
+  'recent_medication_or_change',
+  'age_related',
+  'unknown',
+  'other',
+]);
+
+export const memorialCauseCodesSchema = z.array(memorialCauseCodeSchema).max(5).refine(
+  value => !value.includes('unknown') || value.length === 1,
+  '不确定不能与其他原因同时选择',
+);
+
 export const memorialCreateSchema = z.object({
   aquariumId: uuidSchema.optional(),
   speciesCatalogKey: z.string().trim().min(1).max(160),
   memorialDate: isoDateSchema,
+  causeCodes: memorialCauseCodesSchema.default([]),
   reason: z.string().trim().max(2000).optional(),
   observation: z.string().trim().max(2000).optional(),
   improvement: z.string().trim().max(2000).optional(),
@@ -136,12 +156,14 @@ export const livestockMemorialCreateSchema = memorialCreateSchema.omit({ aquariu
 
 export const memorialUpdateSchema = z.object({
   memorialDate: isoDateSchema.optional(),
+  causeCodes: memorialCauseCodesSchema.optional(),
   reason: z.string().trim().max(2000).optional(),
   observation: z.string().trim().max(2000).optional(),
   improvement: z.string().trim().max(2000).optional(),
   version: versionSchema,
 }).refine(value => (
   value.memorialDate !== undefined
+  || value.causeCodes !== undefined
   || value.reason !== undefined
   || value.observation !== undefined
   || value.improvement !== undefined
@@ -174,6 +196,7 @@ export const careEventCreateSchema = z.object({
 
 export const feedbackCategorySchema = z.enum(['suggestion', 'problem', 'content', 'other']);
 export const feedbackStatusSchema = z.enum(['new', 'reviewed', 'closed']);
+export const feedbackEmailDeliveryStatusSchema = z.enum(['not_configured', 'sent', 'failed']);
 
 export const feedbackCreateSchema = z.object({
   category: feedbackCategorySchema,
@@ -214,3 +237,12 @@ export type CareReminderCreateInput = z.infer<typeof careReminderCreateSchema>;
 export type CareEventCreateInput = z.infer<typeof careEventCreateSchema>;
 export type FeedbackCreateInput = z.infer<typeof feedbackCreateSchema>;
 export type FeedbackStatusUpdateInput = z.infer<typeof feedbackStatusUpdateSchema>;
+export type MemorialCauseCode = z.infer<typeof memorialCauseCodeSchema>;
+export type FeedbackEmailDeliveryStatus = z.infer<typeof feedbackEmailDeliveryStatusSchema>;
+
+export interface FeedbackSubmissionReceipt {
+  id: string;
+  status: z.infer<typeof feedbackStatusSchema>;
+  emailDeliveryStatus: FeedbackEmailDeliveryStatus;
+  createdAt: string;
+}
