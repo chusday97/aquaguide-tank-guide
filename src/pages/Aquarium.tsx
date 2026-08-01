@@ -1039,28 +1039,6 @@ const getDiscoveryPositioning = (fish: Fish, isEn = false) => {
   return '可以先看详情，再决定是否加入鱼缸';
 };
 
-const getDiscoveryFitText = (fish: Fish, isEn = false) => {
-  const lifeType = getLifeType(fish);
-  if (lifeType === 'invertebrate') {
-    return {
-      suitable: isEn ? 'Suitable for established freshwater/planted tanks & cleanups.' : '适合稳定淡水缸、草缸或工具生物搭配。',
-      unsuitable: isEn ? 'Unsuitable for heavy medication, aggressive fish or wild water swings.' : '不适合频繁下药、强攻击鱼或水质大幅波动的缸。',
-    };
-  }
-  if (fish.difficulty === 'Easy') {
-    return {
-      suitable: isEn ? 'Suitable for beginners, stable water & gradual small additions.' : '适合新手、稳定水体和循序少量添加。',
-      unsuitable: isEn ? 'Unsuitable for instant large additions or big aggressive fish.' : '不适合刚开缸大量加入或与体型差异过大的鱼混养。',
-    };
-  }
-  return {
-    suitable: isEn ? 'Suitable for tanks with stable parameters and care experience.' : '适合已有稳定参数和一定养护经验后尝试。',
-    unsuitable: fish.housingMode === '建议单养'
-      ? (isEn ? 'Not suitable for casual co-housing. Single tank recommended.' : '不适合随意混养，建议先单独规划缸位。')
-      : (isEn ? 'Not suitable for unstable water parameters without observation.' : '不适合水质不稳定或没有观察周期时直接加入。'),
-  };
-};
-
 const getBioLoadLiters = (fish: Fish) => {
   const lifeType = getLifeType(fish);
   if (lifeType === 'plant' || lifeType === 'hardscape') return 0;
@@ -1268,7 +1246,6 @@ export default function AquariumManager() {
   const [discoveryDragX, setDiscoveryDragX] = useState(0);
   const [discoveryMessage, setDiscoveryMessage] = useState('');
   const [loadedDiscoveryImageSrc, setLoadedDiscoveryImageSrc] = useState('');
-  const [selectedDiscoveryFish, setSelectedDiscoveryFish] = useState<Fish | null>(null);
   const [selectedWishlistFish, setSelectedWishlistFish] = useState<Fish | null>(null);
 
   const openAquariumSpeciesDetail = (fish: Fish, aqFish: AquariumFish, sourceId?: string) => {
@@ -4927,7 +4904,7 @@ export default function AquariumManager() {
               <Button
                 type="button"
                 className="mt-auto min-h-11 min-w-0 rounded-full bg-emerald-800 px-3 text-[10px] font-black text-white hover:bg-emerald-900"
-                onClick={() => setSelectedDiscoveryFish(discoveryFish)}
+                onClick={() => navigateToRoute(`/encyclopedia?species=${encodeURIComponent(discoveryFish.id)}&source=daily-discovery`)}
               >
                 {isEn ? 'View species details' : '查看物种详情'}
                 <ChevronRight className="ml-1 h-4 w-4" />
@@ -7547,95 +7524,6 @@ export default function AquariumManager() {
               <p className="text-xs text-ink/80 leading-relaxed font-medium">{isEn ? 'Match new water temp within 1-2°C. Pre-heat in winter.' : '换水时，新水温度应与缸内水温尽量保持一致，温差不应超过 1-2°C。冬季换水建议提前加热新水。'}</p>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={!!selectedDiscoveryFish} onOpenChange={(open) => !open && setSelectedDiscoveryFish(null)}>
-        <DialogContent className="flex max-h-[86dvh] w-[92vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[22px] border-border bg-bg p-0">
-          {selectedDiscoveryFish && (
-            <>
-              <DialogHeader className="shrink-0 border-b border-white px-5 pb-3 pt-5">
-                <DialogTitle className="font-serif text-2xl italic font-bold text-ink">{selectedDiscoveryFish.name}</DialogTitle>
-                <DialogDescription className="text-xs font-medium text-ink/55">{selectedDiscoveryFish.scientificName}</DialogDescription>
-              </DialogHeader>
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
-                <div className="rounded-[20px] bg-white p-4">
-                  <div className="flex h-44 items-center justify-center rounded-[18px] bg-[#FBFAF6]">
-                    <img
-                      src={getSpeciesDisplayImage(selectedDiscoveryFish)}
-                      alt={selectedDiscoveryFish.name}
-                      className={`h-full w-full object-contain p-4 ${getSpeciesImageSurfaceClass(selectedDiscoveryFish)} ${getSpeciesImageClass(selectedDiscoveryFish)}`}
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    {[
-                      selectedDiscoveryFish.difficulty === 'Easy' ? '新手友好' : getDifficultyLabel(selectedDiscoveryFish.difficulty),
-                      getToolFunctions(selectedDiscoveryFish)[0],
-                      needsHeaterForSpecies(selectedDiscoveryFish) ? '需加热' : selectedDiscoveryFish.housingMode,
-                    ].filter(Boolean).slice(0, 3).map(tag => (
-                      <TagPill key={tag} tone={tag === '需加热' ? 'warning' : 'normal'}>{tag}</TagPill>
-                    ))}
-                  </div>
-                  <p className="mt-3 text-sm font-medium leading-relaxed text-ink/70">
-                    {selectedDiscoveryFish.description}
-                  </p>
-                </div>
-
-                <div className="mt-3 grid grid-cols-2 gap-2">
-                  {[
-                    ['水温', selectedDiscoveryFish.waterTemperature],
-                    ['pH', selectedDiscoveryFish.phLevel],
-                    ['最小缸体', selectedDiscoveryFish.tankSize],
-                    ['性情', selectedDiscoveryFish.temperament === 'Peaceful' ? '温和' : selectedDiscoveryFish.temperament === 'Aggressive' ? '凶猛' : '领地意识强'],
-                  ].map(([label, value]) => (
-                    <div key={label} className="rounded-[16px] bg-white px-3 py-3">
-                      <div className="text-[10px] font-black text-ink/38">{label}</div>
-                      <div className="mt-1 text-sm font-black text-ink">{value}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50 px-4 py-3">
-                  <div className="text-xs font-black text-emerald-800">{isEn ? 'Who is it for' : '适合谁'}</div>
-                  <p className="mt-1 text-xs font-bold leading-relaxed text-emerald-900/75">
-                    {getDiscoveryFitText(selectedDiscoveryFish).suitable}
-                  </p>
-                </div>
-                <div className="mt-2 rounded-[18px] border border-amber-100 bg-amber-50 px-4 py-3">
-                  <div className="text-xs font-black text-amber-800">{isEn ? 'Pre-Stocking Notes' : '加入前注意'}</div>
-                  <p className="mt-1 text-xs font-bold leading-relaxed text-amber-900/75">
-                    {getDiscoveryFitText(selectedDiscoveryFish).unsuitable}
-                  </p>
-                </div>
-              </div>
-              <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-4 py-3 shadow-[0_-10px_24px_rgba(27,77,62,0.08)]">
-                <Button
-                  variant="outline"
-                  className="h-10 rounded-full text-sm font-bold"
-                  onClick={() => toggleWishlist(selectedDiscoveryFish.id)}
-                >
-                  <Heart className={`mr-1 h-4 w-4 ${wishlistFishIds.has(selectedDiscoveryFish.id) ? 'fill-current text-rose-500' : ''}`} />
-                  {wishlistFishIds.has(selectedDiscoveryFish.id) ? '已种草' : '加入种草'}
-                </Button>
-                <Button
-                  className="h-10 rounded-full bg-emerald-700 text-sm font-bold text-white hover:bg-emerald-800"
-                  onClick={() => {
-                    setSelectedAddFishItems(prev => (
-                      prev.some(item => item.fishId === selectedDiscoveryFish.id)
-                        ? prev
-                        : [...prev, { fishId: selectedDiscoveryFish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd') }]
-                    ));
-                    setFishSearchTerm('');
-                    setSelectedDiscoveryFish(null);
-                    setIsAddFishOpen(true);
-                  }}
-                >
-                  添加到鱼缸
-                </Button>
-              </DialogFooter>
-            </>
-          )}
         </DialogContent>
       </Dialog>
 

@@ -636,7 +636,7 @@ export default function Encyclopedia() {
     const params = new URLSearchParams(location.search);
     if (params.has('species')) {
       detailNavigationContextRef.current = null;
-      if (params.get('source') === 'search') navigate(-1);
+      if (params.get('source') === 'search' || params.get('source') === 'daily-discovery') navigate(-1);
       else navigateToRoute('/encyclopedia');
       return;
     }
