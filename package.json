@@ -69,6 +69,7 @@
     "test:livestock-removal-replay": "node --import tsx scripts/test-livestock-removal-replay.ts",
     "test:guided-navigation-ui": "node scripts/verify-guided-navigation.mjs",
     "test:aquarium-home-c": "node scripts/verify-aquarium-home-c.mjs",
+    "test:daily-discovery": "node scripts/verify-daily-discovery-deep-link.mjs",
     "test:mobile-aquarium-priorities": "node scripts/verify-mobile-aquarium-priorities.mjs",
     "test:disclosures": "node scripts/verify-disclosure-contract.mjs",
     "test:settings-feedback": "node scripts/verify-settings-feedback.mjs",

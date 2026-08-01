@@ -1,6 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useMemo, useRef } from 'react';
 import posthog from 'posthog-js';
-import type { PointerEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
@@ -17,23 +16,16 @@ import {
   getToolFunctions,
   isSaltwaterSpecies,
 } from '../modules/species/species.service';
-import type { DiscoveryDeckState } from '../modules/recommendation/recommendation.schema';
-import {
-  DISCOVERY_DAILY_LIMIT,
-  DISCOVERY_STORAGE_KEY,
-  normalizeDiscoveryState,
-  recommendationService,
-} from '../modules/recommendation/recommendation.service';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger, DialogHeader, DialogFooter } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, X, Heart, HeartOff, Skull, CheckCircle2, Plus, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal, AlertTriangle, Info, MoreHorizontal, Camera, RefreshCw } from 'lucide-react';
+import { Search, X, Heart, HeartOff, Skull, CheckCircle2, Plus, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal, AlertTriangle, Info, MoreHorizontal, Camera } from 'lucide-react';
 import { CompatibilityRiskCalculator } from '../components/CompatibilityRiskCalculator';
 import { VisualResultMini } from '../components/visual-results/VisualResultCard';
 import type { VisualResultSubject } from '../components/visual-results/visual-result.types';
-import { loadAppStateFromStorage, patchLocalAppState } from '../services/storage/local-app-state';
+import { loadAppStateFromStorage } from '../services/storage/local-app-state';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { ResilientImage } from '../components/common/ResilientImage';
@@ -242,19 +234,6 @@ const lifeTypes = [
 ];
 
 const getEncyclopediaImage = getSpeciesDisplayImage;
-
-const loadDiscoveryState = () => {
-  try {
-    return normalizeDiscoveryState(JSON.parse(localStorage.getItem(DISCOVERY_STORAGE_KEY) || 'null'));
-  } catch {
-    return normalizeDiscoveryState();
-  }
-};
-
-const saveDiscoveryState = (state: DiscoveryDeckState) => {
-  localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state));
-  patchLocalAppState({ discoveryState: state }, { debounce: true });
-};
 
 const loadWishlistIds = () => {
   return new Set(getSpeciesFavoriteIds());
@@ -684,11 +663,6 @@ export default function Encyclopedia() {
 
   const [ownedFishIds, setOwnedFishIds] = useState<Set<string>>(new Set());
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => loadWishlistIds());
-  const [discoveryState, setDiscoveryState] = useState<DiscoveryDeckState>(() => loadDiscoveryState());
-  const [discoveryDragStartX, setDiscoveryDragStartX] = useState<number | null>(null);
-  const [discoveryDragX, setDiscoveryDragX] = useState(0);
-  const [discoveryMessage, setDiscoveryMessage] = useState('');
-  const [loadedDiscoveryImageSrc, setLoadedDiscoveryImageSrc] = useState('');
   const [isWishlistExpanded, setIsWishlistExpanded] = useState(false);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
   const [isMoreFilterOpen, setIsMoreFilterOpen] = useState(false);
@@ -864,105 +838,6 @@ export default function Encyclopedia() {
       });
     } catch (e) {}
   }, [calculatorSpeciesIds, miniCompatibilityResult]);
-  const discoveryPool = useMemo(
-    () => allFishes,
-    [allFishes]
-  );
-
-  useEffect(() => {
-    setDiscoveryState(prev => {
-      const output = recommendationService.createDiscoveryDeck({
-        speciesPool: discoveryPool,
-        wishlistIds: Array.from(wishlistFishIds),
-        state: prev,
-      });
-      saveDiscoveryState(output.state);
-      return output.state;
-    });
-  }, [discoveryPool, wishlistFishIds]);
-
-  const discoveryFish = useMemo(
-    () => discoveryPool.find(fish => fish.id === discoveryState.queueIds[0]) || null,
-    [discoveryPool, discoveryState.queueIds]
-  );
-  const discoveryTaxonomy = discoveryFish ? getCareTaxonomyPath(discoveryFish) : null;
-  const nextDiscoveryFish = useMemo(
-    () => discoveryPool.find(fish => fish.id === discoveryState.queueIds[1]) || null,
-    [discoveryPool, discoveryState.queueIds]
-  );
-  const discoveryImageSrc = discoveryFish ? getSpeciesVisualSources(discoveryFish).thumbnail : '';
-  const nextDiscoveryImageSrc = nextDiscoveryFish ? getSpeciesVisualSources(nextDiscoveryFish).thumbnail : '';
-  const discoveryUsedToday = discoveryState.consumedIds.length;
-  const discoveryRemainingToday = Math.max(0, DISCOVERY_DAILY_LIMIT - discoveryUsedToday);
-  const isDiscoveryDailyLimitReached = discoveryRemainingToday === 0;
-  const discoveryPositionToday = discoveryFish ? Math.min(DISCOVERY_DAILY_LIMIT, discoveryUsedToday + 1) : Math.min(DISCOVERY_DAILY_LIMIT, discoveryUsedToday);
-  const discoveryRotation = Math.max(-9, Math.min(9, discoveryDragX / 18));
-  const discoveryIntent = discoveryDragX > 44 ? 'interest' : discoveryDragX < -44 ? 'skip' : null;
-
-  useEffect(() => {
-    if (!discoveryImageSrc) return;
-
-    setLoadedDiscoveryImageSrc('');
-    const image = new Image();
-    image.decoding = 'async';
-    image.onload = () => setLoadedDiscoveryImageSrc(discoveryImageSrc);
-    image.src = discoveryImageSrc;
-    if (image.complete) setLoadedDiscoveryImageSrc(discoveryImageSrc);
-
-    discoveryState.queueIds.slice(1, 5).forEach(id => {
-      const fish = discoveryPool.find(item => item.id === id);
-      if (!fish) return;
-      const preload = new Image();
-      preload.decoding = 'async';
-      preload.src = getSpeciesVisualSources(fish).thumbnail;
-    });
-  }, [discoveryImageSrc, discoveryPool, discoveryState.queueIds]);
-
-  const advanceDiscoveryCard = (action: 'skip' | 'interest') => {
-    if (!discoveryFish) return;
-    const output = recommendationService.advanceDiscoveryDeck({
-      speciesId: discoveryFish.id,
-      action,
-      speciesPool: discoveryPool,
-      wishlistIds: Array.from(wishlistFishIds),
-      state: discoveryState,
-    });
-
-    const addedWishlistId = output.addedWishlistId || (action === 'interest' ? discoveryFish.id : null);
-    if (addedWishlistId) {
-      const next = new Set(wishlistFishIds);
-      next.add(addedWishlistId);
-      syncWishlistFishIds(next);
-    }
-    setDiscoveryMessage(output.message);
-    setDiscoveryDragStartX(null);
-    setDiscoveryDragX(0);
-    saveDiscoveryState(output.state);
-    setDiscoveryState(output.state);
-  };
-
-  const handleDiscoveryPointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    setDiscoveryDragStartX(event.clientX);
-    setDiscoveryMessage('');
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const handleDiscoveryPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (discoveryDragStartX === null) return;
-    setDiscoveryDragX(event.clientX - discoveryDragStartX);
-  };
-
-  const handleDiscoveryPointerEnd = () => {
-    if (discoveryDragX > 90) {
-      advanceDiscoveryCard('interest');
-    } else if (discoveryDragX < -90) {
-      advanceDiscoveryCard('skip');
-    } else {
-      setDiscoveryDragStartX(null);
-      setDiscoveryDragX(0);
-    }
-  };
-
   const resetFilterState = () => {
     setShowWishlistOnly(false);
     setSearchTerm('');
@@ -1841,31 +1716,6 @@ export default function Encyclopedia() {
           )}
         </div>
       </div>
-
-      {discoveryFish && !hasAnyActiveCriteria && (
-        <section className="grid min-w-0 overflow-hidden rounded-[22px] border border-rose-100 bg-white shadow-sm sm:grid-cols-[minmax(180px,34%)_minmax(0,1fr)]" aria-labelledby="atlas-daily-discovery-title">
-          <div className={`relative flex min-h-[190px] items-center justify-center overflow-hidden bg-bg p-4 ${getSpeciesImageSurfaceClass(discoveryFish)}`}>
-            <ResilientImage src={discoveryImageSrc} alt={getSpeciesNameLocalized(discoveryFish, isEn)} className={`h-[180px] w-full object-contain ${getSpeciesImageClass(discoveryFish)}`} loading="eager" />
-            <button
-              type="button"
-              onClick={() => wishlistFishIds.has(discoveryFish.id)
-                ? navigateToRoute('/collection/wishlist')
-                : advanceDiscoveryCard('interest')}
-              aria-label={wishlistFishIds.has(discoveryFish.id) ? (isEn ? 'View saved species' : '查看已收藏物种') : (isEn ? 'Save species' : '收藏物种')}
-              className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-rose-500 shadow-sm"
-            >
-              <Heart className={`h-4 w-4 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
-            </button>
-          </div>
-          <div className="flex min-w-0 flex-col p-4">
-            <div className="flex items-center justify-between gap-3"><p className="text-[11px] font-black uppercase tracking-[0.14em] text-rose-600">{isEn ? 'Daily Discovery' : '今日推荐'}</p><span className="rounded-full bg-rose-50 px-2.5 py-1 text-[10px] font-black text-rose-700">{discoveryPositionToday} / {DISCOVERY_DAILY_LIMIT}</span></div>
-            <h2 id="atlas-daily-discovery-title" className="mt-3 font-serif text-2xl font-bold italic text-ink">{getSpeciesNameLocalized(discoveryFish, isEn)}</h2>
-            <p className="mt-1 text-xs font-bold text-ink/48">{discoveryTaxonomy ? `${discoveryTaxonomy.variety} · ${discoveryTaxonomy.waterType}` : discoveryFish.category}</p>
-            <p className="mt-3 text-xs font-semibold leading-5 text-ink/58">{isEn ? 'Start with the image and care profile, then decide whether this species belongs in your plan.' : '先看图片与养护要求，再决定是否收藏或加入鱼缸。'}</p>
-            <div className="mt-4 flex flex-wrap gap-2 sm:mt-auto"><button type="button" onClick={() => navigate(`/encyclopedia?species=${encodeURIComponent(discoveryFish.id)}&source=daily-discovery`, { state: { dailyDiscoveryReturn: true } })} className="min-h-11 rounded-full bg-emerald-800 px-5 text-xs font-black text-white">{isEn ? 'View species details' : '查看物种详情'}</button><button type="button" onClick={() => advanceDiscoveryCard('skip')} className="min-h-11 rounded-full border border-border bg-white px-4 text-xs font-black text-ink/58"><RefreshCw className="mr-1 inline h-4 w-4" />{isEn ? 'Another species' : '换一个'}</button></div>
-          </div>
-        </section>
-      )}
 
         <div id="atlas-grid" className="mt-1 grid scroll-mt-[178px] grid-cols-2 gap-2.5 md:col-span-2 md:grid-cols-2 md:gap-3 lg:grid-cols-3 xl:grid-cols-4">
           {pagedAtlasItems.map((item) => {

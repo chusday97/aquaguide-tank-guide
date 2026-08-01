@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-02 今日推荐回迁与常用操作直显
+
+- 最新用户决策替代 2026-08-01 的首页内容边界：今日推荐使用原有紧凑图片卡回到鱼缸首页第 3 区，图鉴不再显示重复推荐卡。
+- 推荐继续复用 `discoveryState` 与每日 10 个候选；查看详情进入正式图鉴物种档案，并通过 `dailyDiscoveryReturn` 返回鱼缸首页。
+- 鱼缸首页第 2 区六个常用操作全部进入同一响应式网格，“更多工具”折叠已删除。
+- 验证通过：`lint`、`build`、`test:daily-discovery`、`test:mobile-aquarium-priorities`、`test:aquarium-home-c`、`test:disclosures`、`test:responsive-routes`。
+- 提交边界：本功能只应提交 Aquarium、Encyclopedia、两个浏览器脚本、package 命令与同步文档；Analytics 四个未提交文件属于后续激活阶段，不得混入。
+
 ## 2026-08-01 激活与 Evaluation 基线
 
 - 当前分支：`codex/activation-evaluation-v1`，从已通过审查的 `codex/ux-core-flow-v1@4ece6cb` 建立。

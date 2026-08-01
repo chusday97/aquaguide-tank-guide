@@ -44,10 +44,10 @@ try {
   await page.getByRole('button', { name: '更多鱼缸操作' }).click();
 
   const primaryActionTexts = await page.locator('.aquarium-actions .desktop-card-grid').first().locator(':scope > button').allTextContents();
-  assert.equal(primaryActionTexts.length, 3);
-  for (const keyword of ['鱼缸检查', '换水', '喂食']) assert.ok(primaryActionTexts.some(text => text.includes(keyword)), `primary actions must include ${keyword}`);
-  assert.equal(await page.getByText('今日推荐', { exact: true }).count(), 0, 'full daily discovery card must not remain on aquarium home');
-  assert.ok(await page.getByText('更多工具', { exact: true }).isVisible());
+  assert.equal(primaryActionTexts.length, 6);
+  for (const keyword of ['鱼缸检查', '换水', '喂食', '添加生物', 'AI 建缸助手', '养护记录']) assert.ok(primaryActionTexts.some(text => text.includes(keyword)), `visible actions must include ${keyword}`);
+  assert.equal(await page.getByText('更多工具', { exact: true }).count(), 0, 'core actions must not be folded under more tools');
+  assert.ok(await page.getByText('今日推荐', { exact: true }).isVisible(), 'daily discovery must remain visible on aquarium home');
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
 
   const atlas = await context.newPage();
@@ -64,11 +64,12 @@ try {
     await seed(desktop, 'en');
     await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'networkidle' });
     assert.ok(await desktop.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `${width}px must not overflow`);
-    assert.equal(await desktop.getByText('Daily Discovery', { exact: true }).count(), 0);
+    assert.ok(await desktop.getByText('Daily Discovery', { exact: true }).isVisible());
+    assert.equal(await desktop.getByText('More tools', { exact: true }).count(), 0);
     await desktop.close();
   }
 
-  console.log('mobile aquarium priorities: compact header, three primary actions, no full discovery card, atlas modes separated');
+  console.log('mobile aquarium priorities: compact header, six visible actions, homepage discovery and atlas modes separated');
 } finally {
   await browser.close();
 }
