@@ -200,8 +200,10 @@ await withBrowser(async browser => {
     await listbox.getByRole('option').first().click();
     assert.equal(await page.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, '手动候选选择不能跳过物种确认');
     const selected = page.locator('[data-selected-species-summary="true"]');
-    await selected.getByRole('button', { name: '确认是它，判断状态' }).click();
-    await page.getByRole('heading', { name: '它现在有什么异常？' }).waitFor();
+    await selected.getByRole('button', { name: '确认是它', exact: true }).click();
+    await page.getByText('识别结果', { exact: true }).waitFor();
+    assert.equal(await page.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, '确认物种后不得自动启动健康分诊');
+    assert.equal(await page.getByRole('button', { name: '它有异常？进入健康分诊', exact: true }).count(), 1, '识别结果必须把健康分诊保留为用户主动操作');
     assert.deepEqual(errors, [], `识别页手动搜索不应产生页面错误：${errors.join(' | ')}`);
     console.log('✓ identify manual search');
     await page.close();
