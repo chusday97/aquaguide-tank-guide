@@ -23,6 +23,9 @@ export const apiConfig = {
   visionBaseUrl: (process.env.VISION_BASE_URL || '').replace(/\/$/, ''),
   visionModel: process.env.VISION_MODEL || '',
   visionTimeoutMs: Number(process.env.VISION_TIMEOUT_MS || 20_000),
+  resendApiKey: process.env.RESEND_API_KEY || '',
+  feedbackEmailTo: process.env.FEEDBACK_EMAIL_TO || '',
+  feedbackEmailFrom: process.env.FEEDBACK_EMAIL_FROM || '',
 };
 
 export const isBusinessDatabaseConfigured = () => Boolean(

@@ -269,3 +269,10 @@
 - 交互：日期为今天/昨天/自选；多批次以可见卡片选择；数量和拆分使用 44px 步进器。物种详情内的纪念录入改为同一详情表面的任务层，不再创建第二个 Dialog。
 - 数据：`causeCodes` 已贯通本地服务、Local/API Repository、普通纪念 API、缸内批次原子纪念 RPC 与水族册快照；“认真复盘”只接受明确原因，不接受单独“暂不确定”。
 - 验证：`lint`、API check、生产 build、纪念服务与成就专项通过。下一步是反馈先入库、再由 Resend 邮件投递。
+
+## 反馈邮件直送
+
+- 顺序固定为数据库保存成功后再投递邮件，邮件失败不会让用户反馈丢失。
+- 服务端读取 `RESEND_API_KEY / FEEDBACK_EMAIL_TO / FEEDBACK_EMAIL_FROM`；未配置时回传 `not_configured`，前端显示已保存但未送达。
+- 邮件内容只包含反馈分类、页面、语言、版本、布局和用户正文；正文 HTML 转义，Resend 请求用反馈 ID 保证幂等。
+- 验证：`lint`、API check、业务 API 契约、`scripts/test-feedback-email.ts`。

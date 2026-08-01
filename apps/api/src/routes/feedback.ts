@@ -8,6 +8,7 @@ import { camelize, throwDatabaseError } from '../data-utils';
 import { FeedbackRateLimiter } from '../feedback-rate-limit';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
+import { sendFeedbackEmail } from '../email/feedback-email';
 
 const HOUR_MS = 60 * 60 * 1000;
 const MAX_SUBMISSIONS_PER_HOUR = 5;
@@ -56,7 +57,30 @@ feedbackRouter.post('/feedback', asyncRoute(async (request, response) => {
     .select('id,status,created_at')
     .single();
   if (error || !data) throwDatabaseError(error, '反馈暂时没有提交成功，请稍后重试。');
-  return sendData(request, response, camelize(data), 201);
+  const delivery = await sendFeedbackEmail({
+    feedbackId: data.id,
+    category: parsed.data.category,
+    message: parsed.data.message,
+    pagePath: parsed.data.pagePath,
+    locale: parsed.data.locale,
+    appVersion: parsed.data.appVersion,
+    deviceLayout: parsed.data.deviceLayout,
+  });
+  const deliveryUpdate = delivery.status === 'sent'
+    ? { email_delivery_status: 'sent', email_delivery_id: delivery.deliveryId, email_delivery_error: null, emailed_at: delivery.emailedAt }
+    : delivery.status === 'failed'
+      ? { email_delivery_status: 'failed', email_delivery_error: delivery.error, emailed_at: null }
+      : { email_delivery_status: 'not_configured', email_delivery_error: null, emailed_at: null };
+  const { data: updated, error: updateError } = await client
+    .from('feedback_submissions')
+    .update(deliveryUpdate)
+    .eq('id', data.id)
+    .select('id,status,created_at,email_delivery_status')
+    .single();
+  if (updateError || !updated) {
+    return sendData(request, response, camelize({ ...data, email_delivery_status: delivery.status }), 201);
+  }
+  return sendData(request, response, camelize(updated), 201);
 }));
 
 export const adminFeedbackRouter = Router();

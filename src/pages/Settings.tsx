@@ -28,6 +28,7 @@ export default function SettingsPage() {
   const [feedbackCategory, setFeedbackCategory] = useState<'suggestion' | 'problem' | 'content' | 'other'>('suggestion');
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [feedbackDeliveryStatus, setFeedbackDeliveryStatus] = useState<'not_configured' | 'sent' | 'failed' | null>(null);
   const [feedbackError, setFeedbackError] = useState('');
   const feedbackInputRef = useRef<HTMLTextAreaElement | null>(null);
   const [shareReports, setShareReports] = useState<AquariumShareReportListItem[]>([]);
@@ -96,7 +97,7 @@ export default function SettingsPage() {
     setFeedbackStatus('submitting');
     setFeedbackError('');
     try {
-      await submitFeedback({
+      const receipt = await submitFeedback({
         category: feedbackCategory,
         message,
         pagePath: window.location.pathname + window.location.search + window.location.hash,
@@ -105,6 +106,7 @@ export default function SettingsPage() {
         deviceLayout: isPhoneLayout ? 'phone' : 'desktop',
       });
       setFeedbackMessage('');
+      setFeedbackDeliveryStatus(receipt.emailDeliveryStatus);
       setFeedbackStatus('success');
     } catch (error) {
       setFeedbackStatus('error');
@@ -265,7 +267,7 @@ export default function SettingsPage() {
                 />
                 <span className="text-right text-[11px] font-bold text-ink/36">{feedbackMessage.length} / 2000</span>
               </label>
-              {feedbackStatus === 'success' && <p role="status" className="rounded-[14px] bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">{isEn ? 'Thanks. Your feedback was received.' : '已收到，谢谢你的建议。'}</p>}
+              {feedbackStatus === 'success' && <p role="status" className="rounded-[14px] bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">{feedbackDeliveryStatus === 'sent' ? (isEn ? 'Saved and delivered to the feedback email.' : '已保存并发送到反馈邮箱。') : (isEn ? 'Saved successfully. Email delivery is temporarily unavailable.' : '反馈已保存，邮件暂未送达。')}</p>}
               {feedbackStatus === 'error' && <p role="alert" className="rounded-[14px] bg-rose-50 px-4 py-3 text-sm font-bold text-rose-700">{feedbackError}</p>}
               <button type="submit" disabled={feedbackStatus === 'submitting'} className="min-h-11 w-full rounded-full bg-emerald-700 px-5 text-sm font-black text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-45 sm:w-fit">
                 {feedbackStatus === 'submitting' ? (isEn ? 'Submitting…' : '提交中…') : (isEn ? 'Submit feedback' : '提交反馈')}
