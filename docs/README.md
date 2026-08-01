@@ -46,6 +46,7 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 
 ### 04 计划
 
+- [后续执行计划](./04-planning/NEXT_EXECUTION_PLAN.md)（当前去重后的待办与外部门禁）
 - [产品卡点与路线图](./04-planning/PRODUCT_GAPS_AND_ROADMAP.md)
 - [3D、物种数据与图片性能基线](./04-planning/THREE_AND_ASSET_PERFORMANCE_BASELINE.md)
 - [外部验收协议](./04-planning/EXTERNAL_VALIDATION_PROTOCOL.md)（真人新手、真实鱼缸跨入口与低端真机）

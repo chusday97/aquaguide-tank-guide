@@ -194,6 +194,8 @@
 - `test:business-api-contract`、`test:repository-boundary`、`test:admin-content-contract`、`test:api-boundary`、API/Web 类型检查与生产构建通过。
 
 ## 待办
+- 先完成 Cloudflare OAuth 并将 `codex/activation-evaluation-v1@5f0447e` 发布到 `aquaguide-frontend.pages.dev`；GitHub 已同步，生产站仍使用旧资源。
+- 按 `docs/04-planning/NEXT_EXECUTION_PLAN.md` 推进去重待办：养护规则与权威来源、体态三步任务、鱼缸时间线与循环计划，再进入 Supabase/视觉模型/真机与真人验收。
 - 在测试 Supabase 执行 migration、RLS 双账号、不同操作号并发扣减、最后批次同号重放、事务失败回滚和反馈真实写入；通过前不得宣称云端生产就绪。
 - 将剩余用户端固定文案按模块迁入 i18next；生成 486 个物种、喂养资料和 41 篇养护文章的英文草稿，完成术语/数字/禁止动作校验与人工审核后再发布，未审核内容继续安全回退中文。
 - 为管理后台增加翻译对照、覆盖率和审核发布页面；把已登录前端语言切换接到 `/api/v1/profile`，新设备在没有本地选择时读取云端偏好。

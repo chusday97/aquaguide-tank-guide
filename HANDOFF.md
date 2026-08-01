@@ -6,6 +6,8 @@
 - 事件只保留受控字段；自由描述和巡检答案会被丢弃。
 - 验证：`lint`、`check:api`、`build`、`test-session-events`、`test-onboarding-activation`、`test-tank-compatibility-engine` 均通过；构建仍保留主包与 Three.js 大块警告。
 - 当前证据不代表已有真实激活率、TTV 或留存数据；生产 PostHog 仍取决于部署环境变量。
+- GitHub 远程已核对到 `5f0447e`；`https://aquaguide-frontend.pages.dev` 仍返回旧资源 `index-B1LSC3HF.js`，而本地新构建为 `index-BtS9X_Qg.js`。Wrangler OAuth 等待约 90 秒未授权后已停止；下次从 Cloudflare 授权继续，不重复推送 GitHub。
+- 全部去重后待办已写入 `docs/04-planning/NEXT_EXECUTION_PLAN.md`。
 
 ## 2026-08-02 今日推荐回迁与常用操作直显
 
