@@ -32,6 +32,7 @@
     "test:species-diagnosis": "tsx scripts/test-species-diagnosis.ts",
     "test:species-identification-ui": "node scripts/verify-species-identification.mjs",
     "test:identify-flow-separation": "node scripts/verify-identify-flow-separation.mjs",
+    "test:identify-triage-separation": "node scripts/verify-identification-triage-separation.mjs",
     "test:session-events": "tsx scripts/test-session-events.ts",
     "test:onboarding-goal-paths": "tsx scripts/test-onboarding-goal-paths.ts",
     "test:onboarding-activation": "tsx scripts/test-onboarding-activation.ts",

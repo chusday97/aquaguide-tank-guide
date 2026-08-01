@@ -37,8 +37,11 @@ import {
 } from '../services/search/search-suggestions.service';
 import { taskRoutes } from '../services/navigation/task-routes';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
-
-type Stage = 'upload' | 'candidates' | 'identified' | 'describe' | 'question' | 'result';
+import {
+  isIdentificationStage,
+  shouldProtectDiagnosisDraft,
+  type IdentificationFlowStage,
+} from '../services/ai/identification-triage-flow';
 
 const aquariumVolume = (aquarium?: Aquarium | null) => {
   const dimensions = aquarium?.dimensions;
@@ -94,7 +97,7 @@ export default function Identify() {
   const pendingHistoryDeltaRef = useRef<number | null>(null);
   const restoringHistoryRef = useRef(false);
   const allowHistoryNavigationRef = useRef(false);
-  const [stage, setStage] = useState<Stage>('upload');
+  const [stage, setStage] = useState<IdentificationFlowStage>('upload');
   const [previewUrl, setPreviewUrl] = useState('');
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [recognition, setRecognition] = useState<(SpeciesRecognitionResult & { modelName?: string }) | null>(null);
@@ -115,7 +118,7 @@ export default function Identify() {
   const [pendingNavigationPath, setPendingNavigationPath] = useState('');
   const [showEmergencyGuide, setShowEmergencyGuide] = useState(false);
   const [pendingAnswer, setPendingAnswer] = useState<{ questionId: string; value: string } | null>(null);
-  const hasUnsavedDiagnosis = Boolean(description.trim()) && (stage === 'describe' || stage === 'question');
+  const hasUnsavedDiagnosis = shouldProtectDiagnosisDraft(stage, description);
 
   const appState = useMemo(() => loadAppStateFromStorage(), []);
   const aquarium = useMemo(() => appState.aquariums.find(item => item.id === appState.currentAquariumId) || appState.aquariums[0] || null, [appState]);
@@ -498,7 +501,7 @@ export default function Identify() {
       </header>
 
       <div className="mx-auto grid w-full max-w-[980px] gap-4">
-        {(stage === 'upload' || stage === 'candidates' || stage === 'identified') && <div className="grid grid-cols-2 gap-2 rounded-[18px] bg-white p-2 ring-1 ring-border/70" aria-label={t('identify.progress')}>
+        {isIdentificationStage(stage) && <div className="grid grid-cols-2 gap-2 rounded-[18px] bg-white p-2 ring-1 ring-border/70" aria-label={t('identify.progress')}>
           {[t('identify.stepPhoto'), t('identify.stepConfirm')].map((label, index) => {
             const activeIndex = stage === 'upload' || stage === 'candidates' ? 0 : 1;
             return <div key={label} className={`rounded-[13px] px-2 py-2 text-center text-[10px] font-black min-[420px]:text-xs ${index <= activeIndex ? 'bg-emerald-50 text-emerald-800' : 'text-ink/32'}`}>{index + 1}. {label}</div>;

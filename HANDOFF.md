@@ -8,6 +8,7 @@
 - 安全默认：旧兼容记录不补发新激活；真人原始匿名记录保存在 Git 忽略文件；Live Eval 只走现有 BFF 且必须显式设置 `RUN_LIVE_EVAL=1`。
 - 当前阶段：证据矩阵、产品假设、真人测试空状态和 AI Evaluation 状态基线已写入 `docs/05-validation/`，等待阶段提交。
 - 阶段 1 只补齐任务 ID 和专项门禁；`compatibilityCompleted` 仍只接受关联现存鱼缸、至少两个物种、`scope=tank` 且具备正式四态结果的有效记录。
+- 阶段 2 增加 `identification-triage-flow.ts` 作为边界单一来源；页面外观和既有识别/分诊业务结果不变。
 
 ## 2026-08-01 物种属性审计与今日推荐
 

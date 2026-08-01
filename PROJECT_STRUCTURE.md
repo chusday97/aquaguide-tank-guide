@@ -87,6 +87,7 @@
 - `src/lib/speciesVisual.ts`：二维与 3D 物种素材解析。
 - `src/lib/speciesRecognition.ts`：视觉候选与学名、名称、别名及模糊候选的本地物种库映射。
 - `src/services/ai/species-identification.service.ts`：物种识别、匿名未命中和动态症状 step API 的前端访问层。
+- `src/services/ai/identification-triage-flow.ts`：识别阶段与健康分诊草稿保护的纯边界，防止两项任务再次耦合。
 - `src/components/SpeciesDetailDialog.tsx`：共享物种详情与同表面生命纪念任务。
 - `src/components/forms/QuickDatePicker.tsx`、`QuantityStepper.tsx`：日期快捷选择与数量步进控件。
 - `src/components/memorial/MemorialCauseSelector.tsx`：生命纪念受控原因标签。
