@@ -32,11 +32,14 @@ try {
   await mobile.getByText('视觉模型未配置或暂不可用').waitFor({ timeout: 20_000 });
   assert.equal(missRequests, 0, 'provider failures must not be recorded as catalog misses');
   await mobile.getByLabel('没有合适候选？手动搜索物种库').fill('孔雀鱼');
-  const manualCandidate = mobile.getByRole('button', { name: /孔雀鱼/ }).first();
+  const manualCandidate = mobile.getByRole('option', { name: /孔雀鱼/ }).first();
   await manualCandidate.waitFor();
   await manualCandidate.click();
   assert.equal(await mobile.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, 'manual suggestion selection must not skip confirmation');
-  await mobile.locator('[data-selected-species-summary="true"]').getByRole('button', { name: '确认是它，判断状态' }).click();
+  await mobile.locator('[data-selected-species-summary="true"]').getByRole('button', { name: '确认是它' }).click();
+  await mobile.getByRole('heading', { name: '孔雀鱼' }).waitFor();
+  assert.ok(await mobile.getByRole('button', { name: /先建立鱼缸|结合鱼缸判断混养/ }).isVisible());
+  await mobile.getByRole('button', { name: '它有异常？进入健康分诊' }).click();
   await mobile.getByRole('heading', { name: '它现在有什么异常？' }).waitFor();
   await mobile.locator('textarea').fill('全缸不动并急促呼吸');
   await mobile.getByRole('button', { name: '开始判断' }).click();
@@ -54,10 +57,6 @@ try {
   await mobile.waitForFunction(() => !document.body.textContent?.includes('它现在能保持正常姿态吗？'));
   assert.equal(diagnosisStepRequests - beforeRapidAnswer, 1, 'rapid answer clicks must schedule only one diagnosis request');
   await mobile.locator('nav').getByRole('button').first().click();
-  await mobile.getByRole('dialog').waitFor();
-  await mobile.getByRole('button', { name: '继续判断' }).click();
-  assert.match(mobile.url(), /\/identify$/);
-  await mobile.goBack();
   await mobile.getByRole('dialog').waitFor();
   await mobile.getByRole('button', { name: '继续判断' }).click();
   assert.match(mobile.url(), /\/identify$/);
@@ -80,8 +79,9 @@ try {
   await unsupported.locator('input[type=file]').setInputFiles(fixture);
   await unsupported.getByText('视觉模型未配置或暂不可用').waitFor({ timeout: 20_000 });
   await unsupported.getByLabel('没有合适候选？手动搜索物种库').fill('挖耳草');
-  await unsupported.getByRole('button', { name: /挖耳草/ }).first().click();
-  await unsupported.getByText('状态判断第一版仅支持鱼类').waitFor();
+  await unsupported.getByRole('option', { name: /挖耳草/ }).first().click();
+  await unsupported.getByRole('button', { name: '确认是它' }).click();
+  await unsupported.getByRole('button', { name: '健康分诊第一版仅支持鱼类' }).waitFor();
   assert.equal(await unsupported.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0);
   await unsupported.close();
 
@@ -101,8 +101,8 @@ try {
 
   const guide = await mobileContext.newPage();
   await guide.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
-  await guide.getByRole('button', { name: /识别/ }).waitFor();
-  await guide.getByRole('button', { name: /识别/ }).click();
+  await guide.getByRole('button', { name: '识别', exact: true }).waitFor();
+  await guide.getByRole('button', { name: '识别', exact: true }).click();
   await guide.waitForURL('**/identify');
 
   console.log('species identification UI: mobile fallback, urgent triage, English desktop, and guide entry passed');

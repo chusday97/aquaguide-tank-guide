@@ -465,7 +465,7 @@ AI 请求增加 `locale`，只控制输出语言；混养、巡检、今日行�
 | PATCH | `/ai/species-recognition/misses/:id/resolve` | `resolvedCatalogKey` | `{ persisted, missId? }` | 400/404/503 |
 | POST | `/ai/species-diagnosis/step` | `SpeciesDiagnosisStepInput` | `SpeciesDiagnosisStepOutput` | 400/429/503 |
 
-视觉识别使用独立的 `VISION_API_KEY / VISION_BASE_URL / VISION_MODEL / VISION_TIMEOUT_MS`。图片只在内存中去除 EXIF 并缩放到最长边 1536px，推理后立即释放，不写入 Storage。物种详情可以先查看，但只有用户确认后才能进入状态判断。
+视觉识别使用独立的 `VISION_API_KEY / VISION_BASE_URL / VISION_MODEL / VISION_TIMEOUT_MS`。图片只在内存中去除 EXIF 并缩放到最长边 1536px，推理后立即释放，不写入 Storage。确认物种后先进入独立识别结果；用户可查看资料或结合当前鱼缸做混养判断，只有主动选择“健康分诊”后才进入症状描述与动态追问。非鱼类可识别和查看资料，但第一版不开放健康分诊。
 
 状态判断的职责边界：
 

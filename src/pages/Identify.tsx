@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Camera, ChevronLeft, ImagePlus, Loader2, ShieldAlert, Sparkles, X } from 'lucide-react';
+import { AlertTriangle, Camera, CheckCircle2, ChevronLeft, Fish as FishIcon, HeartPulse, Loader2, ShieldAlert, Sparkles, X } from 'lucide-react';
 import type {
   SpeciesDiagnosisStepInput,
   SpeciesDiagnosisStepOutput,
@@ -36,8 +36,9 @@ import {
   type SearchSuggestion,
 } from '../services/search/search-suggestions.service';
 import { taskRoutes } from '../services/navigation/task-routes';
+import { trackSessionEvent } from '../services/analytics/session-events.service';
 
-type Stage = 'upload' | 'candidates' | 'describe' | 'question' | 'result';
+type Stage = 'upload' | 'candidates' | 'identified' | 'describe' | 'question' | 'result';
 
 const aquariumVolume = (aquarium?: Aquarium | null) => {
   const dimensions = aquarium?.dimensions;
@@ -114,7 +115,7 @@ export default function Identify() {
   const [pendingNavigationPath, setPendingNavigationPath] = useState('');
   const [showEmergencyGuide, setShowEmergencyGuide] = useState(false);
   const [pendingAnswer, setPendingAnswer] = useState<{ questionId: string; value: string } | null>(null);
-  const hasUnsavedDiagnosis = Boolean(description.trim()) && stage !== 'result' && stage !== 'upload';
+  const hasUnsavedDiagnosis = Boolean(description.trim()) && (stage === 'describe' || stage === 'question');
 
   const appState = useMemo(() => loadAppStateFromStorage(), []);
   const aquarium = useMemo(() => appState.aquariums.find(item => item.id === appState.currentAquariumId) || appState.aquariums[0] || null, [appState]);
@@ -126,6 +127,7 @@ export default function Identify() {
     careTopics: careTopicsData,
     ownedQuantityBySpeciesId: new Map((aquarium?.fishes || []).map(item => [item.fishId, item.quantity])),
   }), [aquarium, isEn, manualQuery]);
+  const selectedRecognitionCandidate = useMemo(() => candidates.find(candidate => candidate.fish?.id === selectedFish?.id), [candidates, selectedFish?.id]);
 
   useEffect(() => () => {
     requestControllerRef.current?.abort();
@@ -287,13 +289,6 @@ export default function Identify() {
   };
 
   const confirmFish = async (fish: Fish) => {
-    if (!isSpeciesEligibleForHealthTriage(fish)) {
-      setDetailFish(fish);
-      showToast(Boolean(i18n.language?.startsWith('en'))
-        ? 'Health triage currently supports fish species only. You can still view this catalog entry.'
-        : Boolean(i18n.language?.startsWith('en')) ? 'Health assessment only supports fish currently; you can still view species info.' : '状态判断第一版仅支持鱼类；你仍可查看该物种资料。', 'error');
-      return;
-    }
     setSelectedFish(fish);
     if (missId) {
       try {
@@ -303,7 +298,26 @@ export default function Identify() {
         setCloudNotice(t('identify.cloudNotRecorded'));
       }
     }
+    trackSessionEvent('identification_completed', { action: 'confirm', status: recognition?.status || 'manual', entry: 'identify' });
+    setStage('identified');
+  };
+
+  const startHealthTriage = () => {
+    if (!selectedFish || !isSpeciesEligibleForHealthTriage(selectedFish)) return;
+    trackSessionEvent('triage_started', { action: 'start', status: 'species_confirmed', entry: 'identify' });
     setStage('describe');
+  };
+
+  const startCompatibilityFromIdentify = () => {
+    if (!selectedFish) return;
+    if (!aquarium) {
+      requestNavigation(taskRoutes.aquarium.create('identify'));
+      return;
+    }
+    const ids = Array.from(new Set([...aquarium.fishes.map(item => item.fishId), selectedFish.id]));
+    setCompatibilitySelection(ids);
+    trackSessionEvent('compatibility_from_identify_started', { action: 'open', status: 'tank_context', entry: 'identify' });
+    requestNavigation(`${taskRoutes.encyclopedia.compatibility}&source=identify`);
   };
 
   const requestDiagnosis = async (nextAnswers = answers, nextAsked = askedQuestionIds, lockAcquired = false) => {
@@ -484,12 +498,18 @@ export default function Identify() {
       </header>
 
       <div className="mx-auto grid w-full max-w-[980px] gap-4">
-        <div className="grid grid-cols-3 gap-2 rounded-[18px] bg-white p-2 ring-1 ring-border/70" aria-label={t('identify.progress')}>
-          {[t('identify.stepPhoto'), t('identify.stepConfirm'), t('identify.stepTriage')].map((label, index) => {
-            const activeIndex = stage === 'upload' || stage === 'candidates' ? 0 : stage === 'describe' ? 1 : 2;
+        {(stage === 'upload' || stage === 'candidates' || stage === 'identified') && <div className="grid grid-cols-2 gap-2 rounded-[18px] bg-white p-2 ring-1 ring-border/70" aria-label={t('identify.progress')}>
+          {[t('identify.stepPhoto'), t('identify.stepConfirm')].map((label, index) => {
+            const activeIndex = stage === 'upload' || stage === 'candidates' ? 0 : 1;
             return <div key={label} className={`rounded-[13px] px-2 py-2 text-center text-[10px] font-black min-[420px]:text-xs ${index <= activeIndex ? 'bg-emerald-50 text-emerald-800' : 'text-ink/32'}`}>{index + 1}. {label}</div>;
           })}
-        </div>
+        </div>}
+        {(stage === 'describe' || stage === 'question' || stage === 'result') && (
+          <section className="rounded-[18px] border border-sky-100 bg-sky-50 px-4 py-3">
+            <div className="flex items-center gap-2 text-sm font-black text-sky-900"><HeartPulse className="h-5 w-5" />{t('identify.healthTriageTitle')}</div>
+            <p className="mt-1 text-xs font-medium leading-5 text-sky-800/70">{t('identify.healthTriageSubtitle')}</p>
+          </section>
+        )}
         {errorMessage && (
           <div role="alert" className="flex items-start gap-3 rounded-[16px] border border-red-200 bg-red-50 p-3 text-xs font-bold leading-5 text-red-800">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
@@ -588,6 +608,34 @@ export default function Identify() {
               />
             </div>
             {candidates.every(item => !item.fish) && <button type="button" onClick={() => requestNavigation(taskRoutes.aquarium.dailyCheck)} className="min-h-11 rounded-full border border-red-200 bg-red-50 px-4 text-xs font-black text-red-700">{t('identify.checkUrgentFirst')}</button>}
+          </section>
+        )}
+
+        {stage === 'identified' && selectedFish && (
+          <section className="overflow-hidden rounded-[26px] border border-emerald-100 bg-white p-4 shadow-sm md:p-6">
+            <div className="grid gap-5 md:grid-cols-[minmax(260px,.85fr)_minmax(0,1.15fr)] md:items-center">
+              <div className="relative min-h-[280px] overflow-hidden rounded-[22px] bg-gradient-to-b from-emerald-50 to-bg p-4">
+                <ResilientImage src={getSpeciesDisplayImage(selectedFish)} alt={selectedFish.name} className="h-[250px] w-full object-contain" />
+                <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-black text-emerald-800 shadow-sm"><CheckCircle2 className="h-4 w-4" />{t('identify.speciesConfirmed')}</span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">{t('identify.identificationResult')}</p>
+                <h2 className="mt-2 text-2xl font-black text-ink">{selectedFish.name}</h2>
+                <p className="mt-1 break-words text-xs italic text-ink/45">{selectedFish.scientificName}</p>
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-bold">
+                  <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{selectedFish.category}</span>
+                  <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{selectedRecognitionCandidate ? t(`identify.confidence.${selectedRecognitionCandidate.confidenceBand}`) : t('identify.manualConfirmed')}</span>
+                  <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{aquarium?.fishes.some(item => item.fishId === selectedFish.id) ? t('identify.alreadyInTank') : t('identify.notInTank')}</span>
+                  <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{getSpeciesFavoriteIds().includes(selectedFish.id) ? t('identify.alreadySaved') : t('identify.notSaved')}</span>
+                </div>
+                <p className="mt-4 rounded-[16px] bg-emerald-50 p-3 text-xs font-bold leading-5 text-emerald-900">{aquarium ? t('identify.tankContextReady', { name: aquarium.name }) : t('identify.needTankForCompatibility')}</p>
+                <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                  <button type="button" onClick={startCompatibilityFromIdentify} className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-emerald-700 px-4 text-sm font-black text-white"><FishIcon className="h-4 w-4" />{aquarium ? t('identify.checkTankCompatibility') : t('identify.buildTankFirst')}</button>
+                  <button type="button" onClick={() => setDetailFish(selectedFish)} className="min-h-12 rounded-full border border-emerald-200 bg-white px-4 text-sm font-black text-emerald-800">{t('identify.viewSpeciesProfile')}</button>
+                </div>
+                <button type="button" disabled={!isSpeciesEligibleForHealthTriage(selectedFish)} onClick={startHealthTriage} className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-4 text-xs font-black text-ink/58 hover:bg-bg disabled:cursor-not-allowed disabled:text-ink/30"><HeartPulse className="h-4 w-4" />{isSpeciesEligibleForHealthTriage(selectedFish) ? t('identify.startHealthTriage') : t('identify.healthTriageFishOnly')}</button>
+              </div>
+            </div>
           </section>
         )}
 
