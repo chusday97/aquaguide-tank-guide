@@ -450,6 +450,7 @@ aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/memorial
       if (data && (
         data.species_catalog_key !== parsed.data.speciesCatalogKey
         || data.memorial_date !== parsed.data.memorialDate
+        || JSON.stringify(data.cause_codes || []) !== JSON.stringify(parsed.data.causeCodes)
         || (data.reason || undefined) !== parsed.data.reason
         || (data.observation || undefined) !== parsed.data.observation
         || (data.improvement || undefined) !== parsed.data.improvement
@@ -465,6 +466,7 @@ aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/memorial
     target_batch_id: batchId,
     target_batch_version: parsed.data.batchVersion,
     target_memorial_date: parsed.data.memorialDate,
+    target_cause_codes: parsed.data.causeCodes,
     target_observation: parsed.data.observation ?? null,
     target_reason: parsed.data.reason ?? null,
     target_improvement: parsed.data.improvement ?? null,

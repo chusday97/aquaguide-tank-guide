@@ -7689,6 +7689,7 @@ export default function AquariumManager() {
           return getCurrentAquaGuideRepository().then(repository => repository.saveLivestockMemorial({
             speciesCatalogKey: fish.id,
             date: input.date,
+            causeCodes: input.causeCodes,
             reason: input.reason,
             batchId,
             aquariumId: activeAquarium.id,

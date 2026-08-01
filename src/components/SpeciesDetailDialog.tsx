@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Box, Calculator, CheckCircle2, ChevronLeft, ChevronRight, Download, Flame, Heart, HeartOff, Info, Printer, Share2, Skull, SlidersHorizontal, Thermometer, Waves, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogDescription, DialogTitle } from '@/components/ui/dialog';
-import { Aquarium, Fish } from '../types';
+import type { Aquarium, Fish, MemorialCauseCode } from '../types';
 import { fishData } from '../data/fishData';
 import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions } from '../modules/species/species.service';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
@@ -22,6 +22,8 @@ import type { VisualResultViewModel } from './visual-results/visual-result.types
 import { markSpeciesViewed } from '../services/onboarding/onboarding.service';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
 import { deriveSpeciesGroups, findGroupForSpecies, getVariantLabel } from '../lib/speciesGrouping';
+import { QuickDatePicker } from './forms/QuickDatePicker';
+import { MemorialCauseSelector } from './memorial/MemorialCauseSelector';
 
 const ImagePreviewModal = lazy(() => import('./common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const Interactive3DFishWrapper = lazy(() => import('./Interactive3DFishWrapper'));
@@ -75,7 +77,7 @@ type SpeciesDetailDialogProps = {
   onGoCalculator?: () => void;
   onViewInTank?: () => void;
   onOpenTankSettings?: (panel: 'size' | 'parameters' | 'equipment') => void;
-  onRecordDeath?: (fish: Fish, input: { date: string; reason: string; batchId?: string; operationId: string }) => void | Promise<void>;
+  onRecordDeath?: (fish: Fish, input: { date: string; causeCodes: MemorialCauseCode[]; reason?: string; batchId?: string; operationId: string }) => void | Promise<void>;
 };
 
 const getLocalDateValue = () => {
@@ -436,6 +438,7 @@ export function SpeciesDetailDialog({
   const [inlineFeedback, setInlineFeedback] = useState('');
   const [isDeathFormOpen, setIsDeathFormOpen] = useState(false);
   const [deathDate, setDeathDate] = useState(getLocalDateValue);
+  const [deathCauseCodes, setDeathCauseCodes] = useState<MemorialCauseCode[]>([]);
   const [deathReason, setDeathReason] = useState('');
   const ownedRecord = useMemo(() => aquariumContext?.fishes.find(item => item.fishId === fish?.id), [aquariumContext, fish?.id]);
   const deathBatches = useMemo(() => ownedRecord ? normalizeSpeciesBatches(ownedRecord) : [], [ownedRecord]);
@@ -480,6 +483,7 @@ export function SpeciesDetailDialog({
     setInlineFeedback('');
     setIsDeathFormOpen(false);
     setDeathDate(getLocalDateValue());
+    setDeathCauseCodes([]);
     setDeathReason('');
     setDeathBatchId('');
     setDeathOperationId('');
@@ -489,11 +493,6 @@ export function SpeciesDetailDialog({
     setIsExportingCard(false);
     setExportError('');
   }, [open, fish?.id]);
-
-  useEffect(() => {
-    if (!isDeathFormOpen) return;
-    window.requestAnimationFrame(() => deathReasonRef.current?.focus());
-  }, [isDeathFormOpen]);
 
   const openPreview = () => {
     if (!fish) return;
@@ -666,8 +665,12 @@ export function SpeciesDetailDialog({
 
   const handleRecordDeath = async () => {
     if (!fish || !onRecordDeath || isRecordingDeath) return;
-    if (!deathDate || !deathReason.trim()) {
-      setDeathError(t('encyclopedia.freshwater') === '淡水' ? '请填写日期和原因后再保存。' : 'Please enter date and reason.');
+    if (!deathDate || (deathCauseCodes.length === 0 && !deathReason.trim())) {
+      setDeathError(isEn ? 'Choose a possible cause or add your own.' : '请选择一个可能原因，或填写自定义原因。');
+      return;
+    }
+    if (deathCauseCodes.includes('other') && !deathReason.trim()) {
+      setDeathError(isEn ? 'Add a short note for “Other”.' : '选择“其他”后，请补充自定义原因。');
       deathReasonRef.current?.focus();
       return;
     }
@@ -676,9 +679,10 @@ export function SpeciesDetailDialog({
     try {
       const selectedBatchId = deathBatchId || deathBatches[0]?.id;
       if (deathBatches.length > 0 && !selectedBatchId) throw new Error(t('livestock.selectMemorialBatch'));
-      await onRecordDeath(fish, { date: deathDate, reason: deathReason.trim(), batchId: selectedBatchId, operationId: deathOperationId });
+      await onRecordDeath(fish, { date: deathDate, causeCodes: deathCauseCodes, reason: deathReason.trim() || undefined, batchId: selectedBatchId, operationId: deathOperationId });
       setIsDeathFormOpen(false);
       setDeathBatchId('');
+      setDeathCauseCodes([]);
       setDeathOperationId('');
       setInlineFeedback(t('encyclopedia.freshwater') === '淡水' ? `已保存 ${fish.name} 的生命纪念。` : `Saved memorial for ${fish.name}.`);
     } catch (error) {
@@ -1132,18 +1136,22 @@ export function SpeciesDetailDialog({
               </div>
 
               {isDeathFormOpen && (
-                <div className="fixed inset-0 z-[180] flex items-center justify-center bg-black/30 px-4" role="dialog" aria-modal="true" aria-labelledby="death-record-title">
-                  <button type="button" className="absolute inset-0" aria-label={t('encyclopedia.btnCancel')} onClick={() => !isRecordingDeath && setIsDeathFormOpen(false)} />
-                  <div className="relative w-full max-w-[440px] rounded-[24px] bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.24)]">
+                <div className="absolute inset-0 z-[180] flex flex-col overflow-y-auto bg-[#f7faf8]" aria-labelledby="death-record-title">
+                  <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur min-[760px]:px-6">
+                    <button type="button" disabled={isRecordingDeath} onClick={() => setIsDeathFormOpen(false)} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-black text-emerald-800 hover:bg-emerald-50 disabled:opacity-50"><ChevronLeft className="h-4 w-4" />{isEn ? 'Back' : '返回详情'}</button>
+                    <span className="text-xs font-black text-ink/40">{isEn ? 'Memorial record' : '生命纪念'}</span>
+                  </div>
+                  <div className="mx-auto w-full max-w-[640px] flex-1 p-4 min-[760px]:p-6">
                     <h3 id="death-record-title" className="text-[18px] font-black text-ink">{t('encyclopedia.recordMemorialTitle')}</h3>
                     <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/58">{t('encyclopedia.memorialSubtitle')}</p>
-                    <label className="mt-4 block text-[12px] font-black text-ink" htmlFor="death-date">{t('encyclopedia.dateLabel')}</label>
-                    <input id="death-date" type="date" value={deathDate} onChange={event => setDeathDate(event.target.value)} disabled={isRecordingDeath} className="mt-2 h-11 w-full rounded-[14px] border border-border bg-white px-3 text-[14px] font-bold text-ink outline-none focus:border-accent" />
-                    <label className="mt-4 block text-[12px] font-black text-ink" htmlFor="death-reason">{t('encyclopedia.reasonLabel')}</label>
-                    <textarea ref={deathReasonRef} id="death-reason" value={deathReason} onChange={event => setDeathReason(event.target.value)} disabled={isRecordingDeath} rows={4} placeholder={t('encyclopedia.deathReasonPlaceholder')} className="mt-2 w-full resize-none rounded-[14px] border border-border bg-white p-3 text-[14px] font-medium leading-relaxed text-ink outline-none focus:border-accent" />
-                    {deathBatches.length > 1 && <><label className="mt-4 block text-[12px] font-black text-ink" htmlFor="death-batch">{t('livestock.memorialBatch')}</label><select id="death-batch" value={deathBatchId || deathBatches[0]?.id || ''} onChange={event => setDeathBatchId(event.target.value)} disabled={isRecordingDeath} className="mt-2 h-11 w-full rounded-[14px] border border-border bg-white px-3 text-[14px] font-bold text-ink"><option value="" disabled>{t('livestock.selectMemorialBatch')}</option>{deathBatches.map((batch, index) => <option key={batch.id} value={batch.id}>{t('livestock.groupOption', { index: index + 1, count: batch.quantity })}</option>)}</select></>}
+                    <div className="mt-5 grid gap-5 rounded-[22px] border border-slate-200 bg-white p-4 shadow-sm">
+                      <QuickDatePicker value={deathDate} onChange={setDeathDate} disabled={isRecordingDeath} isEn={isEn} />
+                      <MemorialCauseSelector value={deathCauseCodes} onChange={(value) => { setDeathCauseCodes(value); setDeathError(''); }} disabled={isRecordingDeath} isEn={isEn} />
+                      {(deathCauseCodes.includes('other') || Boolean(deathReason)) && <label className="grid gap-2 text-[12px] font-black text-ink" htmlFor="death-reason">{isEn ? 'Custom note' : '补充自定义原因'}<textarea ref={deathReasonRef} id="death-reason" value={deathReason} onChange={event => setDeathReason(event.target.value)} disabled={isRecordingDeath} rows={3} placeholder={isEn ? 'Use your own words when none of the options fit' : '没有合适选项时，用自己的话补充'} className="w-full resize-y rounded-[14px] border border-border bg-white p-3 text-[14px] font-medium leading-relaxed text-ink outline-none focus:border-accent" /></label>}
+                      {deathBatches.length > 1 && <fieldset className="grid gap-2"><legend className="text-[12px] font-black text-ink">{t('livestock.memorialBatch')}</legend><div className="grid gap-2 sm:grid-cols-2">{deathBatches.map((batch, index) => { const selected = (deathBatchId || deathBatches[0]?.id) === batch.id; return <button type="button" key={batch.id} aria-pressed={selected} disabled={isRecordingDeath} onClick={() => setDeathBatchId(batch.id)} className={`min-h-11 rounded-2xl border px-3 text-left text-xs font-black ${selected ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-white text-ink/60'}`}>{t('livestock.groupOption', { index: index + 1, count: batch.quantity })}</button>; })}</div></fieldset>}
+                    </div>
                     {deathError && <p className="mt-2 rounded-[12px] bg-red-50 px-3 py-2 text-[12px] font-bold text-red-700" role="alert">{deathError}</p>}
-                    <div className="mt-5 grid grid-cols-2 gap-2">
+                    <div className="sticky bottom-3 mt-5 grid grid-cols-2 gap-2 rounded-[18px] border border-white/80 bg-white/95 p-2 shadow-[0_12px_32px_rgba(15,23,42,0.12)]">
                       <Button variant="outline" className="h-11 rounded-full border-border text-sm font-black" disabled={isRecordingDeath} onClick={() => setIsDeathFormOpen(false)}>{t('encyclopedia.btnCancel')}</Button>
                       <Button className="h-11 rounded-full bg-ink text-sm font-black text-white hover:bg-ink/90" disabled={isRecordingDeath} onClick={handleRecordDeath}>{isRecordingDeath ? t('encyclopedia.btnSaving') : t('encyclopedia.btnSave')}</Button>
                     </div>

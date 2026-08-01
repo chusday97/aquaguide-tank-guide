@@ -1,5 +1,5 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
-import type { Aquarium, DeceasedRecord } from '../../types';
+import type { Aquarium, DeceasedRecord, MemorialCauseCode } from '../../types';
 import type { CareReminderRecord } from '../care/care-activity.service';
 
 export type FavoriteMutation =
@@ -10,7 +10,8 @@ export type MemorialSaveInput = {
   aquariumId?: string;
   speciesCatalogKey: string;
   date: string;
-  reason: string;
+  causeCodes?: MemorialCauseCode[];
+  reason?: string;
   observation?: string;
   improvement?: string;
 };
@@ -18,6 +19,7 @@ export type MemorialSaveInput = {
 export type MemorialUpdateInput = {
   id: string;
   date?: string;
+  causeCodes?: MemorialCauseCode[];
   reason?: string;
   observation?: string;
   improvement?: string;

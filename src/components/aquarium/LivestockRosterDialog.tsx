@@ -7,6 +7,7 @@ import { normalizeSpeciesBatches } from '../../services/aquarium/species-batches
 import { LivestockBatchCard } from './LivestockBatchCard';
 import { SurfaceHeader } from '../common/SurfaceHeader';
 import { useTranslation } from 'react-i18next';
+import { QuantityStepper } from '../forms/QuantityStepper';
 
 type RemovalDraft = {
   record: AquariumFish;
@@ -284,33 +285,8 @@ export function LivestockRosterDialog({
           </DialogHeader>
           {removal && (
             <div className="grid gap-3">
-              {batches.length > 1 && (
-                <label className="text-xs font-black text-ink/65">
-                  从哪一组移出
-                  <select
-                    value={removal.batchId}
-                    disabled={removal.submitted}
-                    onChange={event => setRemoval(current => current ? { ...current, batchId: event.target.value, quantity: 1 } : current)}
-                    className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink"
-                  >
-                    {batches.map((batch, index) => <option key={batch.id} value={batch.id}>第 {index + 1} 组 · {batch.quantity} 只/条</option>)}
-                  </select>
-                </label>
-              )}
-              <label className="text-xs font-black text-ink/65">
-                移出数量
-                <input
-                  type="number"
-                  min={1}
-                  max={selectedBatch?.quantity ?? 1}
-                  step={1}
-                  inputMode="numeric"
-                  disabled={removal.submitted}
-                  value={removal.quantity}
-                  onChange={event => setRemoval(current => current ? { ...current, quantity: Number(event.target.value) } : current)}
-                  className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink"
-                />
-              </label>
+              {batches.length > 1 && <fieldset className="grid gap-2"><legend className="text-xs font-black text-ink/65">从哪一组移出</legend><div className="grid gap-2 sm:grid-cols-2">{batches.map((batch, index) => <button key={batch.id} type="button" aria-pressed={removal.batchId === batch.id} disabled={removal.submitted} onClick={() => setRemoval(current => current ? { ...current, batchId: batch.id, quantity: 1 } : current)} className={`min-h-11 rounded-2xl border px-3 text-left text-xs font-black ${removal.batchId === batch.id ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-white text-ink/60'}`}>第 {index + 1} 组 · {batch.quantity} 只/条</button>)}</div></fieldset>}
+              <div className="grid gap-1.5 text-xs font-black text-ink/65"><span>移出数量</span><QuantityStepper label="移出数量" min={1} max={selectedBatch?.quantity ?? 1} disabled={removal.submitted} value={removal.quantity} onChange={quantity => setRemoval(current => current ? { ...current, quantity } : current)} /></div>
               <div className="rounded-2xl bg-amber-50 px-3 py-3 text-xs font-semibold leading-5 text-amber-900">
                 <strong>移出前准备：</strong>使用已循环的接收缸或确认可靠接收人；保持水温接近并缓慢过水。移出不是死亡记录，不会进入生命纪念。
               </div>

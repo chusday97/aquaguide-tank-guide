@@ -80,6 +80,7 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     return recordSpeciesMemorial({
       fishId: input.speciesCatalogKey,
       date: input.date,
+      causeCodes: input.causeCodes,
       reason: input.reason,
       observation: input.observation,
       improvement: input.improvement,
@@ -90,6 +91,7 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     const saved = recordSpeciesMemorialAndDecrementBatch({
       fishId: input.speciesCatalogKey,
       date: input.date,
+      causeCodes: input.causeCodes,
       reason: input.reason,
       observation: input.observation,
       improvement: input.improvement,

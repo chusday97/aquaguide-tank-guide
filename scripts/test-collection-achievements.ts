@@ -48,6 +48,10 @@ assert.equal(achievements.find(item => item.id === 'compatible_community')?.unlo
 
 const lockedReflection = evaluateAchievements(state, 5, 3, [{ ...memorials[0], reason: '' }]);
 assert.equal(lockedReflection.find(item => item.id === 'life_reflection')?.unlocked, false);
+const taggedReflection = evaluateAchievements(state, 5, 3, [{ ...memorials[0], reason: '', causeCodes: ['oxygen_shortage'] }]);
+assert.equal(taggedReflection.find(item => item.id === 'life_reflection')?.unlocked, true);
+const unknownReflection = evaluateAchievements(state, 5, 3, [{ ...memorials[0], reason: '', causeCodes: ['unknown'] }]);
+assert.equal(unknownReflection.find(item => item.id === 'life_reflection')?.unlocked, false);
 
 const interruptedPatrolState = {
   ...state,

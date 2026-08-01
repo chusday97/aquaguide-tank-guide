@@ -184,6 +184,7 @@ userRecordsRouter.post('/memorial-records', asyncRoute(async (request, response)
     species_id: species?.id,
     species_catalog_key: parsed.data.speciesCatalogKey,
     memorial_date: parsed.data.memorialDate,
+    cause_codes: parsed.data.causeCodes,
     reason: parsed.data.reason,
     observation: parsed.data.observation,
     improvement: parsed.data.improvement,

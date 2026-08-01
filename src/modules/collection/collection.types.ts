@@ -27,10 +27,13 @@ export interface AchievementProgress {
   nextAction?: AchievementNextAction;
 }
 
+import type { MemorialCauseCode } from '../../types';
+
 export type MemorialItem = {
   id: string;
   fishId: string;
   date: string;
+  causeCodes?: MemorialCauseCode[];
   reason?: string;
   observation?: string;
   improvement?: string;

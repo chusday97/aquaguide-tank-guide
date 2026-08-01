@@ -27,6 +27,8 @@ import {
   getSpeciesBatchObservation,
   mergeSpeciesBatches,
 } from '../../services/aquarium/species-batches.service';
+import { QuantityStepper } from '../forms/QuantityStepper';
+import { QuickDatePicker } from '../forms/QuickDatePicker';
 
 type Props = {
   fish: Fish;
@@ -369,8 +371,8 @@ export function LivestockBatchCard({
 
                   <div className="mt-4 grid gap-4">
                     <div className="grid gap-3 sm:grid-cols-2">
-                      <label className="text-xs font-black text-ink/55">{t('livestock.quantity')}<input aria-label={t('livestock.quantity')} type="number" min={1} value={batch.quantity} onChange={event => update(batch.id, { quantity: Math.max(1, Number(event.target.value) || 1) })} className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink" /></label>
-                      <label className="text-xs font-black text-ink/55">{t('livestock.entryDate')}<input aria-label={t('livestock.entryDate')} type="date" required value={batch.entryDate.slice(0, 10)} onChange={event => { if (event.target.value) update(batch.id, { entryDate: new Date(`${event.target.value}T00:00:00`).toISOString() }); }} className="mt-1 h-11 w-full rounded-xl border border-border bg-white px-3 text-sm text-ink" /></label>
+                      <div className="grid gap-1.5 text-xs font-black text-ink/55"><span>{t('livestock.quantity')}</span><QuantityStepper label={t('livestock.quantity')} value={batch.quantity} onChange={quantity => update(batch.id, { quantity })} /></div>
+                      <QuickDatePicker value={batch.entryDate.slice(0, 10)} onChange={value => update(batch.id, { entryDate: new Date(`${value}T00:00:00`).toISOString() })} isEn={isEn} />
                     </div>
                     <StateChoiceGroup
                       label={t('livestock.lifeStageLabel')}
@@ -397,7 +399,7 @@ export function LivestockBatchCard({
                     <div><h3 className="text-sm font-black text-amber-950">{t('livestock.splitTitle')}</h3><p className="mt-1 text-xs font-semibold text-amber-900/60">{t('livestock.currentGroup', { count: splitSource.quantity })}</p></div>
                     <button type="button" onClick={() => setSplitSource(null)} className="flex h-11 w-11 items-center justify-center rounded-full text-amber-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400" aria-label={t('common.close')}><X className="h-4 w-4" /></button>
                   </div>
-                  <label className="mt-3 block text-xs font-black text-amber-950/70">{t('livestock.moveQuantity')}<input aria-label={t('livestock.moveQuantity')} type="number" min={1} max={Math.max(1, splitSource.quantity - 1)} value={splitQuantity} onChange={event => setSplitQuantity(Number(event.target.value) || 1)} className="mt-1 h-11 w-full rounded-xl border border-amber-200 bg-white px-3" /></label>
+                  <div className="mt-3 grid gap-1.5 text-xs font-black text-amber-950/70"><span>{t('livestock.moveQuantity')}</span><QuantityStepper label={t('livestock.moveQuantity')} min={1} max={Math.max(1, splitSource.quantity - 1)} value={splitQuantity} onChange={setSplitQuantity} /></div>
                   <div className="mt-4">
                     <StateChoiceGroup<LifeStage> label={t('livestock.lifeStageLabel')} value={splitLifeStage} options={lifeStageChoices} onChange={setSplitLifeStage} />
                   </div>

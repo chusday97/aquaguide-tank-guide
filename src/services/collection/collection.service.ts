@@ -19,6 +19,13 @@ import {
   type LocalAppState,
 } from '../storage/local-app-state';
 import { taskRoutes } from '../navigation/task-routes';
+import type { MemorialCauseCode } from '../../types';
+
+const memorialCauseCodes = new Set<MemorialCauseCode>([
+  'water_quality_change', 'oxygen_shortage', 'temperature_stress', 'acclimation_stress',
+  'aggression_or_injury', 'feeding_or_digestive', 'suspected_illness',
+  'recent_medication_or_change', 'age_related', 'unknown', 'other',
+]);
 
 export type CollectionSnapshot = {
   appState: LocalAppState;
@@ -38,6 +45,9 @@ const normalizeMemorials = (value: unknown[]): MemorialItem[] => value
       id: record.id,
       fishId: record.fishId,
       date: record.date,
+      causeCodes: Array.isArray(record.causeCodes)
+        ? record.causeCodes.filter((code): code is MemorialCauseCode => memorialCauseCodes.has(code as MemorialCauseCode))
+        : undefined,
       reason: typeof record.reason === 'string' ? record.reason.trim() : undefined,
       observation: typeof record.observation === 'string' ? record.observation.trim() : undefined,
       improvement: typeof record.improvement === 'string' ? record.improvement.trim() : undefined,
@@ -129,7 +139,10 @@ export const evaluateAchievements = (
   const hasAquariumResident = appState.aquariums.some(aquarium => aquarium.fishes.some(record => record.quantity > 0));
   const patrolStreak = longestConsecutiveDays(patrolRecords.map(record => record.createdAt || ''));
   const compatibleCommunity = hasCompatibleCommunity(appState);
-  const reflectionCount = memorials.filter(record => Boolean(record.reason?.trim())).length;
+  const reflectionCount = memorials.filter(record => (
+    Boolean(record.reason?.trim())
+    || Boolean(record.causeCodes?.some(code => code !== 'unknown'))
+  )).length;
 
   return [
     createProgress({ id: 'first_aquarium', title: '初心缸主', description: '创建鱼缸并迎来第一位成员', current: hasAquariumResident ? 1 : 0, target: 1, nextAction: { label: '去添加生物', route: taskRoutes.aquarium.addSpecies() } }),

@@ -406,6 +406,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       id: string;
       speciesCatalogKey: string;
       memorialDate: string;
+      causeCodes?: DeceasedRecord['causeCodes'];
       reason?: string;
       observation?: string;
       improvement?: string;
@@ -417,6 +418,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
         aquariumId: input.aquariumId && isUuid(input.aquariumId) ? input.aquariumId : undefined,
         speciesCatalogKey: input.speciesCatalogKey,
         memorialDate: input.date.slice(0, 10),
+        causeCodes: input.causeCodes,
         reason: input.reason,
         observation: input.observation,
         improvement: input.improvement,
@@ -426,6 +428,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       id: saved.id,
       fishId: saved.speciesCatalogKey,
       date: new Date(`${saved.memorialDate}T12:00:00`).toISOString(),
+      causeCodes: saved.causeCodes,
       reason: saved.reason,
       observation: saved.observation,
       improvement: saved.improvement,
@@ -438,6 +441,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       id: string;
       speciesCatalogKey: string;
       memorialDate: string;
+      causeCodes?: DeceasedRecord['causeCodes'];
       reason?: string;
       observation?: string;
       improvement?: string;
@@ -446,6 +450,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       method: 'PATCH',
       body: {
         memorialDate: input.date?.slice(0, 10),
+        causeCodes: input.causeCodes,
         reason: input.reason,
         observation: input.observation,
         improvement: input.improvement,
@@ -456,6 +461,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       id: saved.id,
       fishId: saved.speciesCatalogKey,
       date: new Date(`${saved.memorialDate}T12:00:00`).toISOString(),
+      causeCodes: saved.causeCodes,
       reason: saved.reason,
       observation: saved.observation,
       improvement: saved.improvement,
@@ -473,13 +479,14 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       attempt = { aquarium, batchVersion: batch.version };
       this.livestockMemorialAttempts.set(input.operationId, attempt);
     }
-    const raw = await apiRequest<{ id: string; speciesCatalogKey: string; memorialDate: string; reason?: string; observation?: string; improvement?: string; version: number }>(
+    const raw = await apiRequest<{ id: string; speciesCatalogKey: string; memorialDate: string; causeCodes?: DeceasedRecord['causeCodes']; reason?: string; observation?: string; improvement?: string; version: number }>(
       `/aquariums/${input.aquariumId}/species/${input.aquariumFishId}/batches/${input.batchId}/memorial`,
       {
         method: 'POST',
         body: {
           speciesCatalogKey: input.speciesCatalogKey,
           memorialDate: input.date,
+          causeCodes: input.causeCodes,
           reason: input.reason,
           observation: input.observation,
           improvement: input.improvement,
@@ -504,6 +511,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
         id: raw.id,
         fishId: raw.speciesCatalogKey,
         date: raw.memorialDate,
+        causeCodes: raw.causeCodes,
         reason: raw.reason,
         observation: raw.observation,
         improvement: raw.improvement,

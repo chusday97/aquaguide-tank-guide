@@ -3,6 +3,8 @@ import { ArrowLeft, CalendarDays, Check, ClipboardPenLine, HeartHandshake, Rotat
 import { useParams } from 'react-router-dom';
 import i18n from '../i18n';
 import { ResilientImage } from '../components/common/ResilientImage';
+import { QuickDatePicker } from '../components/forms/QuickDatePicker';
+import { getMemorialCauseLabel, MemorialCauseSelector } from '../components/memorial/MemorialCauseSelector';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -15,9 +17,11 @@ import {
   registerHistoryNavigationGuard,
 } from '../services/navigation/history-navigation-guard.service';
 import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
+import type { MemorialCauseCode } from '../types';
 
 type MemorialDraft = {
   date: string;
+  causeCodes: MemorialCauseCode[];
   observation: string;
   reason: string;
   improvement: string;
@@ -34,6 +38,7 @@ const toDateInputValue = (value: string) => {
 
 const createDraft = (record: MemorialItem): MemorialDraft => ({
   date: toDateInputValue(record.date),
+  causeCodes: record.causeCodes?.length ? record.causeCodes : (record.reason ? ['other'] : []),
   observation: record.observation || '',
   reason: record.reason || '',
   improvement: record.improvement || '',
@@ -41,6 +46,7 @@ const createDraft = (record: MemorialItem): MemorialDraft => ({
 
 const sameDraft = (left: MemorialDraft, right: MemorialDraft) => (
   left.date === right.date
+  && left.causeCodes.join('|') === right.causeCodes.join('|')
   && left.observation === right.observation
   && left.reason === right.reason
   && left.improvement === right.improvement
@@ -71,10 +77,11 @@ export default function MemorialDetail() {
   const dirty = Boolean(editing && draft && initialDraft && !sameDraft(draft, initialDraft));
   const hasReflection = Boolean(record && (
     record.observation?.trim()
+    || record.causeCodes?.length
     || record.reason?.trim()
     || record.improvement?.trim()
   ));
-  const hasPossibleCause = Boolean(record?.reason?.trim());
+  const hasPossibleCause = Boolean(record?.reason?.trim() || record?.causeCodes?.some(code => code !== 'unknown'));
 
   useEffect(() => subscribeToCollection(() => {
     const next = getCollectionSnapshot().memorials.find(item => item.id === recordId) || null;
@@ -115,7 +122,7 @@ export default function MemorialDetail() {
     }
     : null), [dirty, registerNavigationGuard]);
 
-  const updateDraft = (field: keyof MemorialDraft, value: string) => {
+  const updateDraft = <K extends keyof MemorialDraft>(field: K, value: MemorialDraft[K]) => {
     setDraft(current => current ? { ...current, [field]: value } : current);
     setError('');
   };
@@ -168,9 +175,13 @@ export default function MemorialDetail() {
       setError(isEn ? 'Choose the date of this record.' : '请选择记录日期。');
       return;
     }
-    if (!draft.observation.trim() && !draft.reason.trim() && !draft.improvement.trim()) {
+    if (!draft.observation.trim() && draft.causeCodes.length === 0 && !draft.reason.trim() && !draft.improvement.trim()) {
       setError(isEn ? 'Add at least one observation, possible reason, or improvement.' : '请至少填写当时现象、可能原因或后续改进中的一项。');
       firstFieldRef.current?.focus();
+      return;
+    }
+    if (draft.causeCodes.includes('other') && !draft.reason.trim()) {
+      setError(isEn ? 'Add a short note for “Other”.' : '选择“其他”后，请补充自定义原因。');
       return;
     }
 
@@ -181,6 +192,7 @@ export default function MemorialDetail() {
       const saved = await repository.updateMemorial({
         id: record.id,
         date: draft.date,
+        causeCodes: draft.causeCodes,
         observation: draft.observation,
         reason: draft.reason,
         improvement: draft.improvement,
@@ -267,18 +279,18 @@ export default function MemorialDetail() {
 
             {editing && draft ? (
               <div className="mt-6 grid gap-4">
-                <label className="grid gap-1.5 text-xs font-black text-ink/65">
-                  {isEn ? 'Record date' : '记录日期'}
-                  <input type="date" value={draft.date} onChange={event => updateDraft('date', event.target.value)} className="min-h-11 rounded-[14px] border border-slate-200 bg-white px-3 text-sm font-bold text-ink outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100" />
-                </label>
+                <QuickDatePicker value={draft.date} onChange={value => updateDraft('date', value)} disabled={saving} isEn={isEn} />
                 <label className="grid gap-1.5 text-xs font-black text-ink/65">
                   {isEn ? 'What did you observe?' : '当时看到什么'}
                   <textarea ref={firstFieldRef} value={draft.observation} onChange={event => updateDraft('observation', event.target.value)} rows={3} placeholder={isEn ? 'For example: stopped eating and stayed near the bottom' : '例如：拒食、趴底，活动量明显减少'} className="resize-y rounded-[14px] border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold leading-6 text-ink outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100" />
                 </label>
-                <label className="grid gap-1.5 text-xs font-black text-ink/65">
-                  {isEn ? 'Possible cause' : '可能原因'}
-                  <textarea value={draft.reason} onChange={event => updateDraft('reason', event.target.value)} rows={3} placeholder={isEn ? 'Write a possibility, not a definite diagnosis' : '写下可能性，不需要把它当成确定诊断'} className="resize-y rounded-[14px] border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold leading-6 text-ink outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100" />
-                </label>
+                <MemorialCauseSelector value={draft.causeCodes} onChange={value => updateDraft('causeCodes', value)} disabled={saving} isEn={isEn} />
+                {(draft.causeCodes.includes('other') || Boolean(draft.reason)) && (
+                  <label className="grid gap-1.5 text-xs font-black text-ink/65">
+                    {isEn ? 'Custom note' : '补充自定义原因'}
+                    <textarea value={draft.reason} onChange={event => updateDraft('reason', event.target.value)} rows={3} placeholder={isEn ? 'Describe the possibility in your own words' : '没有合适选项时，用自己的话补充'} className="resize-y rounded-[14px] border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold leading-6 text-ink outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100" />
+                  </label>
+                )}
                 <label className="grid gap-1.5 text-xs font-black text-ink/65">
                   {isEn ? 'What will you change next time?' : '以后准备怎么做'}
                   <textarea value={draft.improvement} onChange={event => updateDraft('improvement', event.target.value)} rows={3} placeholder={isEn ? 'For example: acclimate longer and observe before feeding' : '例如：延长过水时间，入缸后先观察再喂食'} className="resize-y rounded-[14px] border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold leading-6 text-ink outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100" />
@@ -295,12 +307,12 @@ export default function MemorialDetail() {
               <div className="mt-6 grid gap-3">
                 {[
                   { label: isEn ? 'What happened' : '当时现象', value: record.observation, fallback: isEn ? 'No observation recorded yet.' : '还没有记录当时看到的现象。' },
-                  { label: isEn ? 'Possible cause' : '可能原因', value: record.reason, fallback: isEn ? 'No possible cause recorded yet.' : '还没有记录可能原因。' },
+                  { label: isEn ? 'Possible cause' : '可能原因', value: [record.causeCodes?.map(code => getMemorialCauseLabel(code, isEn)).join(' · '), record.reason].filter(Boolean).join('\n'), fallback: isEn ? 'No possible cause recorded yet.' : '还没有记录可能原因。' },
                   { label: isEn ? 'Next improvement' : '后续改进', value: record.improvement, fallback: isEn ? 'No improvement recorded yet.' : '还没有记录下次准备怎么做。' },
                 ].map(item => (
                   <section key={item.label} className={`rounded-[18px] border p-4 ${item.value?.trim() ? 'border-slate-100 bg-slate-50/70' : 'border-dashed border-slate-200 bg-white'}`}>
                     <h3 className="text-[11px] font-black text-ink/42">{item.label}</h3>
-                    <p className={`mt-2 text-sm font-semibold leading-6 ${item.value?.trim() ? 'text-ink/72' : 'text-ink/38'}`}>{item.value?.trim() || item.fallback}</p>
+                    <p className={`mt-2 whitespace-pre-line text-sm font-semibold leading-6 ${item.value?.trim() ? 'text-ink/72' : 'text-ink/38'}`}>{item.value?.trim() || item.fallback}</p>
                   </section>
                 ))}
                 <div className="mt-2 flex flex-wrap items-center gap-2">
