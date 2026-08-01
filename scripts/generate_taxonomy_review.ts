@@ -8,6 +8,7 @@ import {
   getSecondaryCategory,
   getSpeciesFilterTags,
   getSpeciesRoleLabel,
+  getSpeciesPositioning,
 } from '../src/modules/species/species.service';
 
 interface SpeciesTaxonomyAuditRow {
@@ -51,6 +52,7 @@ const escapeHtml = (value: unknown) => String(value ?? '')
   .replaceAll('"', '&quot;');
 
 const rows = fishData.map((fish) => {
+  const originalCategory = (fish as typeof fish & { _originalCategory?: string })._originalCategory || fish.category;
   const encyclopediaLifeType = getEncyclopediaLifeType(fish);
   const lifeType = getLifeType(fish);
   const primary = primaryLabelByLifeType[encyclopediaLifeType] || '淡水鱼';
@@ -60,14 +62,21 @@ const rows = fishData.map((fish) => {
   const englishRoleLabel = getSpeciesRoleLabel(fish, true);
   const taxonomy = getCareTaxonomyPath(fish);
   const filterTags = getSpeciesFilterTags(fish);
+  const positioning = getSpeciesPositioning(fish);
+  const positioningEn = getSpeciesPositioning(fish, true);
   const violations = [
     reviewReason,
+    originalCategory === '珊瑚/海水无脊椎' && (lifeType !== 'coral' || taxonomy.waterType !== '海水')
+      ? '来源珊瑚分类被错误改判'
+      : '',
     lifeType !== 'fish' && (/小型观赏鱼|群游搭配/.test(roleLabel) || /Small Fish|Schooling Mix/.test(englishRoleLabel))
       ? '非鱼类使用了鱼类角色标签'
       : '',
     lifeType === 'coral' && taxonomy.waterType !== '海水' ? '珊瑚水体类型不是海水' : '',
     lifeType === 'coral' && filterTags.functionTags.includes('小缸适合') ? '珊瑚错误获得小缸适合标签' : '',
+    lifeType === 'coral' && filterTags.environmentTags.includes('小缸') ? '珊瑚错误获得小缸环境标签' : '',
     lifeType !== 'fish' && filterTags.functionTags.includes('观赏鱼') ? '非鱼类错误获得观赏鱼标签' : '',
+    /\p{Script=Han}/u.test(englishRoleLabel) || /\p{Script=Han}/u.test(positioningEn) ? '英文角色或定位仍包含中文' : '',
   ].filter(Boolean);
 
   const audit: SpeciesTaxonomyAuditRow = {
@@ -90,6 +99,8 @@ const rows = fishData.map((fish) => {
     proposedSecondaryCategory: audit.secondaryCategory,
     roleLabel: audit.roleLabel,
     roleLabelEn: englishRoleLabel,
+    positioning,
+    positioningEn,
     waterType: audit.waterType,
     functionTags: filterTags.functionTags.join(' · '),
     showInEncyclopedia: ['淡水鱼', '海水鱼', '虾螺蟹', '龟/两栖', '珊瑚/海葵'].includes(primary),

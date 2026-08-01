@@ -26,7 +26,7 @@ const openSpecies = async ({ speciesId, locale, width }) => {
   const page = await context.newPage();
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
-  await page.goto(`${baseUrl}/encyclopedia?species=${speciesId}`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}/encyclopedia?species=${speciesId}`, { waitUntil: 'domcontentloaded' });
   const surface = page.locator('[data-surface="centered-dialog"], [data-surface="bottom-sheet"]');
   await surface.waitFor({ state: 'visible' });
   return { context, page, surface, pageErrors };
@@ -49,14 +49,23 @@ try {
   assert.equal(phone.pageErrors.length, 0);
   await phone.context.close();
 
-  const frogfish = await openSpecies({ speciesId: 'sp_0366', locale: 'zh-CN', width: 1280 });
-  const frogfishText = await frogfish.surface.innerText();
-  assert.match(frogfishText, /虾虎\/青蛙鱼/);
-  assert.doesNotMatch(frogfishText, /蛙类/);
-  assert.equal(frogfish.pageErrors.length, 0);
-  await frogfish.context.close();
+  const dianthusCoral = await openSpecies({ speciesId: 'sp_0335', locale: 'zh-CN', width: 1280 });
+  const dianthusText = await dianthusCoral.surface.innerText();
+  assert.match(dianthusText, /珊瑚|海水生态/);
+  assert.doesNotMatch(dianthusText, /水草造景|环境植物|适合草缸/);
+  assert.equal(dianthusCoral.pageErrors.length, 0);
+  await dianthusCoral.context.close();
 
-  console.log('taxonomy UI verified: coral roles, mobile category and frogfish classification');
+  for (const speciesId of ['sp_0366', 'sp_0406']) {
+    const frogfish = await openSpecies({ speciesId, locale: 'zh-CN', width: 1280 });
+    const frogfishText = await frogfish.surface.innerText();
+    assert.match(frogfishText, /虾虎\/青蛙鱼/);
+    assert.doesNotMatch(frogfishText, /蛙类/);
+    assert.equal(frogfish.pageErrors.length, 0);
+    await frogfish.context.close();
+  }
+
+  console.log('taxonomy UI verified: coral roles, 丁香珊瑚 source priority and both frogfish classifications');
 } finally {
   await browser.close();
 }

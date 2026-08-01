@@ -101,6 +101,8 @@ export const getLifeType = (fish: Fish) => {
   const origCategory = (fish as any)._originalCategory || fish.category;
   const text = `${fish.name} ${fish.scientificName} ${fish.category} ${origCategory}`;
 
+  // Source taxonomy must win over ambiguous common-name tokens such as “丁香”.
+  if (origCategory === '珊瑚/海水无脊椎' || fish.category === '珊瑚/海水无脊椎') return 'coral';
   if (origCategory === '水草' || fish.category === '水草') {
     if (isHardscapeSpecies(fish)) return 'hardscape';
     if (isAquaticPlantSpecies(fish)) return 'plant';
@@ -108,7 +110,7 @@ export const getLifeType = (fish: Fish) => {
   if (isAquaticPlantSpecies(fish)) return 'plant';
   if (isHardscapeSpecies(fish)) return 'hardscape';
   if (/水母|海月|海刺水母|Cassiopea|Aurelia|Chrysaora|Phyllorhiza|Cotylorhiza|Sanderia/i.test(text)) return 'coral';
-  if (origCategory === '珊瑚/海水无脊椎' || fish.category === '珊瑚/海水无脊椎' || /珊瑚|海葵|coral|anemone|管虫|海绵|海星|海参|sponge|starfish|Sabellastarte|Protula|Haliclona|Astropecten/i.test(text)) return 'coral';
+  if (/珊瑚|海葵|coral|anemone|管虫|海绵|海星|海参|sponge|starfish|Sabellastarte|Protula|Haliclona|Astropecten/i.test(text)) return 'coral';
   if (isMarineFishText(text)) return 'fish';
   if (origCategory === '虾螺蟹' || origCategory === '虾类' || origCategory === '螺类' || fish.category === '虾螺蟹' || fish.category === '虾类' || fish.category === '螺类' || /虾|螺|蟹|shrimp|snail|crab|Lysmata|Thor|Paguristes|Pomacea|Neritina|Clithon|Anentome|Caridina|Neocaridina|Geosesarma/i.test(text)) return 'invertebrate';
   if (origCategory === '龟类' || origCategory === '两栖/爬宠' || fish.category === '龟类' || fish.category === '两栖/爬宠' || fish.category === 'Amphibians/Reptiles' || fish.category === 'Turtles' || /龟|蛙|蝾螈|六角恐龙|axolotl|turtle|frog|newt|Ambystoma|Cynops|Ceratophrys|Amphibian|Reptile/i.test(text)) return 'reptile';
@@ -265,7 +267,9 @@ export const getToolFunctions = (fish: Fish) => {
 
 type SpeciesTaxonomyOverride = {
   roleLabel?: string;
+  roleLabelEn?: string;
   positioning?: string;
+  positioningEn?: string;
   functionTags?: string[];
   environmentTags?: string[];
 };
@@ -273,19 +277,25 @@ type SpeciesTaxonomyOverride = {
 export const speciesTaxonomyOverrides: Record<string, SpeciesTaxonomyOverride> = {
   sp_0141: {
     roleLabel: '小型观赏鱼 / 群游搭配',
+    roleLabelEn: 'Small Fish / Schooling Mix',
     positioning: '适合稳定淡水草缸的群游观赏鱼',
+    positioningEn: 'A schooling ornamental fish for stable freshwater planted tanks',
     functionTags: ['观赏鱼', '适合草缸', '小缸适合'],
     environmentTags: ['淡水', '淡水热带', '草缸', '小缸', '需加热'],
   },
   sp_0186: {
     roleLabel: '海水观赏鱼 / 谨慎混养',
+    roleLabelEn: 'Marine Ornamental Fish / Cautious Community',
     positioning: '海水观赏鱼，加入珊瑚缸前需确认啄食风险',
+    positioningEn: 'A marine ornamental fish; confirm coral-nipping risk before adding it to a reef tank',
     functionTags: ['观赏鱼', '谨慎混养'],
     environmentTags: ['海水', '需加热'],
   },
   sp_0460: {
     roleLabel: '水龟 / 建议单养',
+    roleLabelEn: 'Aquatic Turtle / Single Setup Preferred',
     positioning: '需要晒背区和强过滤，不作为普通观赏鱼混养对象',
+    positioningEn: 'Requires a basking area and strong filtration; not a standard community-tank species',
     functionTags: ['建议单养'],
     environmentTags: ['淡水', '淡水广温', '不需加热'],
   },
@@ -305,8 +315,8 @@ const getSpeciesAliases = (fish: Fish) => {
 };
 
 export const getSpeciesRoleLabel = (fish: Fish, isEn = false) => {
-  const override = speciesTaxonomyOverrides[fish.id]?.roleLabel;
-  if (override) return override;
+  const override = speciesTaxonomyOverrides[fish.id];
+  if (override?.roleLabel) return isEn ? (override.roleLabelEn || override.roleLabel) : override.roleLabel;
   const lifeType = getLifeType(fish);
   const secondaryCategory = getSecondaryCategory(fish);
   const tools = getToolFunctions(fish);
@@ -325,8 +335,8 @@ export const getSpeciesRoleLabel = (fish: Fish, isEn = false) => {
 };
 
 export const getSpeciesPositioning = (fish: Fish, isEn = false) => {
-  const override = speciesTaxonomyOverrides[fish.id]?.positioning;
-  if (override) return override;
+  const override = speciesTaxonomyOverrides[fish.id];
+  if (override?.positioning) return isEn ? (override.positioningEn || override.positioning) : override.positioning;
   const tools = getToolFunctions(fish);
   if (tools.includes('除藻')) return isEn ? 'Suitable as an algae control helper' : '适合作为除藻辅助生物';
   if (tools.includes('清残饵')) return isEn ? 'Suitable bottom dweller for clearing leftover food' : '适合清理残饵的底层生物';
@@ -374,7 +384,7 @@ export const getSpeciesFilterTags = (fish: Fish) => {
     !saltwater && temperatureBand === '热带' ? '淡水热带' : null,
     !saltwater && temperatureBand === '广温' ? '淡水广温' : null,
     grassTankSuitable ? '草缸' : null,
-    fish.size === 'Small' && !isHardscape ? '小缸' : null,
+    fish.size === 'Small' && (lifeType === 'fish' || lifeType === 'invertebrate') ? '小缸' : null,
     temperatureBand === '热带' ? '需加热' : '不需加热',
   ]);
 

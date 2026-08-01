@@ -628,6 +628,7 @@ export default function Encyclopedia() {
   const [selectedGroup, setSelectedGroup] = useState<SpeciesGroup | null>(null);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const detailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
+  const closingDetailRef = useRef(false);
   const inlineFilterHostRef = useRef<HTMLDivElement | null>(null);
 
   const closeAtlasDetail = (restoreReturnContext = true) => {
@@ -635,8 +636,10 @@ export default function Encyclopedia() {
     setSelectedGroup(null);
     const params = new URLSearchParams(location.search);
     if (params.has('species')) {
+      closingDetailRef.current = true;
       detailNavigationContextRef.current = null;
-      if (params.get('source') === 'search' || params.get('source') === 'daily-discovery') navigate(-1);
+      if (params.get('source') === 'search') navigate(-1);
+      else if (params.get('source') === 'daily-discovery' && location.state?.dailyDiscoveryReturn && Number(window.history.state?.idx) > 0) navigate(-1);
       else navigateToRoute('/encyclopedia');
       return;
     }
@@ -652,7 +655,12 @@ export default function Encyclopedia() {
 
   useEffect(() => {
     const speciesId = new URLSearchParams(location.search).get('species');
-    if (!speciesId || selectedFish?.id === speciesId) return;
+    if (!speciesId) {
+      closingDetailRef.current = false;
+      return;
+    }
+    if (closingDetailRef.current) return;
+    if (selectedFish?.id === speciesId) return;
     const fish = fishData.find(item => item.id === speciesId);
     if (fish) openSpeciesDetail(fish);
   }, [location.search, selectedFish?.id]);
@@ -1834,7 +1842,7 @@ export default function Encyclopedia() {
         </div>
       </div>
 
-      {discoveryFish && (
+      {discoveryFish && !hasAnyActiveCriteria && (
         <section className="grid min-w-0 overflow-hidden rounded-[22px] border border-rose-100 bg-white shadow-sm sm:grid-cols-[minmax(180px,34%)_minmax(0,1fr)]" aria-labelledby="atlas-daily-discovery-title">
           <div className={`relative flex min-h-[190px] items-center justify-center overflow-hidden bg-bg p-4 ${getSpeciesImageSurfaceClass(discoveryFish)}`}>
             <ResilientImage src={discoveryImageSrc} alt={getSpeciesNameLocalized(discoveryFish, isEn)} className={`h-[180px] w-full object-contain ${getSpeciesImageClass(discoveryFish)}`} loading="eager" />
@@ -1854,7 +1862,7 @@ export default function Encyclopedia() {
             <h2 id="atlas-daily-discovery-title" className="mt-3 font-serif text-2xl font-bold italic text-ink">{getSpeciesNameLocalized(discoveryFish, isEn)}</h2>
             <p className="mt-1 text-xs font-bold text-ink/48">{discoveryTaxonomy ? `${discoveryTaxonomy.variety} · ${discoveryTaxonomy.waterType}` : discoveryFish.category}</p>
             <p className="mt-3 text-xs font-semibold leading-5 text-ink/58">{isEn ? 'Start with the image and care profile, then decide whether this species belongs in your plan.' : '先看图片与养护要求，再决定是否收藏或加入鱼缸。'}</p>
-            <div className="mt-4 flex flex-wrap gap-2 sm:mt-auto"><button type="button" onClick={() => navigateToRoute(`/encyclopedia?species=${encodeURIComponent(discoveryFish.id)}&source=daily-discovery`)} className="min-h-11 rounded-full bg-emerald-800 px-5 text-xs font-black text-white">{isEn ? 'View species details' : '查看物种详情'}</button><button type="button" onClick={() => advanceDiscoveryCard('skip')} className="min-h-11 rounded-full border border-border bg-white px-4 text-xs font-black text-ink/58"><RefreshCw className="mr-1 inline h-4 w-4" />{isEn ? 'Another species' : '换一个'}</button></div>
+            <div className="mt-4 flex flex-wrap gap-2 sm:mt-auto"><button type="button" onClick={() => navigate(`/encyclopedia?species=${encodeURIComponent(discoveryFish.id)}&source=daily-discovery`, { state: { dailyDiscoveryReturn: true } })} className="min-h-11 rounded-full bg-emerald-800 px-5 text-xs font-black text-white">{isEn ? 'View species details' : '查看物种详情'}</button><button type="button" onClick={() => advanceDiscoveryCard('skip')} className="min-h-11 rounded-full border border-border bg-white px-4 text-xs font-black text-ink/58"><RefreshCw className="mr-1 inline h-4 w-4" />{isEn ? 'Another species' : '换一个'}</button></div>
           </div>
         </section>
       )}

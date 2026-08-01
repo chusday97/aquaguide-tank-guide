@@ -1,10 +1,12 @@
 import { fishData } from '../src/data/fishData';
+import type { Fish } from '../src/types';
 import {
   getDisplayableSpecies,
   getEncyclopediaLifeType,
   getLifeType,
   getSpeciesFilterTags,
   getSpeciesRoleLabel,
+  getSpeciesPositioning,
   getToolFunctions,
   getSecondaryCategory,
   isSpeciesCompatibleWithWaterType,
@@ -24,11 +26,24 @@ const displayableIds = new Set(getDisplayableSpecies().map(fish => fish.id));
 const encyclopediaItems = speciesService.list({ includeScenery: false, limit: 500 }).items;
 
 for (const fish of fishData) {
+  const originalCategory = (fish as Fish & { _originalCategory?: string })._originalCategory || fish.category;
   const lifeType = getLifeType(fish);
   const encyclopediaLifeType = getEncyclopediaLifeType(fish);
   const secondaryCategory = getSecondaryCategory(fish);
   const roleLabel = getSpeciesRoleLabel(fish);
   const englishRoleLabel = getSpeciesRoleLabel(fish, true);
+
+  if (originalCategory === '珊瑚/海水无脊椎') {
+    const sourceTags = getSpeciesFilterTags(fish);
+    if (lifeType !== 'coral' || encyclopediaLifeType !== 'coral' || !sourceTags.environmentTags.includes('海水')) {
+      fail({
+        rule: '来源分类为珊瑚/海水无脊椎的记录不得被名称规则改判',
+        speciesId: fish.id,
+        name: fish.name,
+        details: `lifeType=${lifeType}, encyclopediaLifeType=${encyclopediaLifeType}, environment=${sourceTags.environmentTags.join(',')}`,
+      });
+    }
+  }
 
   if ((lifeType === 'plant' || lifeType === 'hardscape') && displayableIds.has(fish.id)) {
     fail({
@@ -69,6 +84,14 @@ for (const fish of fishData) {
   if (lifeType === 'coral' && getSpeciesFilterTags(fish).functionTags.includes('小缸适合')) {
     fail({
       rule: '珊瑚不得仅凭通用 Small 字段获得小缸适合标签',
+      speciesId: fish.id,
+      name: fish.name,
+    });
+  }
+
+  if (lifeType === 'coral' && getSpeciesFilterTags(fish).environmentTags.includes('小缸')) {
+    fail({
+      rule: '珊瑚不得仅凭通用 Small 字段获得小缸环境标签',
       speciesId: fish.id,
       name: fish.name,
     });
@@ -140,6 +163,9 @@ for (const expected of knownOverrides) {
   if ((getToolFunctions(fish).length > 0) !== expected.tool) {
     fail({ rule: '人工分类覆盖的工具属性必须正确', speciesId: fish.id, name: fish.name, details: getToolFunctions(fish).join(',') });
   }
+  if (/\p{Script=Han}/u.test(getSpeciesRoleLabel(fish, true)) || /\p{Script=Han}/u.test(getSpeciesPositioning(fish, true))) {
+    fail({ rule: '人工分类覆盖的英文角色和定位不得回退中文', speciesId: fish.id, name: fish.name });
+  }
 }
 
 for (const fish of fishData) {
@@ -185,6 +211,8 @@ console.log(JSON.stringify({
     '观赏鱼和水体标签边界正确',
     '工具生物边界和组合筛选有效',
     '非鱼类不得出现鱼类角色标签',
-    '珊瑚角色和小缸标签边界正确',
+    '珊瑚角色和两类小缸标签边界正确',
+    '人工覆盖物种具备英文角色与定位',
+    '来源珊瑚分类独立约束生命类型和海水环境',
   ],
 }, null, 2));
