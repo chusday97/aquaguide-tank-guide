@@ -2,7 +2,7 @@
 在 `codex/activation-evaluation-v1` 把 AquaGuide 从功能完整 Demo 推进到可持续验证的 0–1 基线：明确激活、结构化 AI Evaluation、安全行为分析和真人验证准备，不新增产品功能。
 
 ## 已完成
-- 状态：`GitHub 全量同步与最新生产部署已完成`。当前分支完整推送到 `origin/codex/activation-evaluation-v1`；最新构建发布于 `https://ice-glide.vercel.app`。首次发布发现 `/aquarium` 深链接 404，补充 Vercel SPA rewrite 后重新部署，现 `/aquarium` 返回 200 并加载 `index-BtS9X_Qg.js`。原 Cloudflare Pages 地址仍是旧版本，不作为当前验收地址。（commit: 待本阶段提交）
+- 状态：`GitHub 全量同步与最新生产部署已完成`。当前分支完整推送到 `origin/codex/activation-evaluation-v1`；最新构建发布于 `https://ice-glide.vercel.app`。首次发布发现 `/aquarium` 深链接 404，补充 Vercel SPA rewrite 后重新部署，现 `/aquarium` 返回 200 并加载 `index-BtS9X_Qg.js`。原 Cloudflare Pages 地址仍是旧版本，不作为当前验收地址。（commit: `44fd894`）
 - 状态：`激活与会话事件基线已完成`。应用启动、真实鱼缸完整混养、识别/分诊和受控 AI 任务通过同一会话事件适配器记录；只接受安全白名单字段，不记录自由描述或结构化答案。旧用户和已有有效记录不补发首次激活。`lint`、API 类型检查、生产构建、事件白名单、引导激活和混养专项均通过。（commit: `a29d7df`）
 - 状态：`今日推荐回迁与常用操作直显已完成`。今日推荐使用现有每日 10 个稳定队列回到鱼缸首页第 3 区，图鉴删除重复卡；图片卡保留进度、详情、换一个和收藏，详情关闭返回鱼缸首页。第 2 区六个常用操作全部直显，不再进入“更多工具”。`lint`、`build`、推荐深链、手机优先级、首页 C、折叠门禁及 7×17 全路由响应式回归通过。（commit: 待本阶段提交）
 - 状态：`阶段 3 结构化 AI Evaluation 已建立`。既有 47 个程序化场景迁移为版本化 JSONL，新增 Zod Case/Result/Badcase 契约、deterministic/mocked/live 三类 Runner、统一指标报告和失败回流脚本；视觉 manifest 保持空白并明确未校准。（commit: 待上一阶段提交）
