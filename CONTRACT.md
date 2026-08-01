@@ -44,6 +44,8 @@ flowchart LR
 
 `OnboardingState` 保存在现有 `LocalAppState` 中；登录用户同步到 `profiles.preferences`，不新增独立存储键或数据表。仅在没有引导状态、鱼缸、收藏和记录时自动进入 `/welcome`。
 
+两条起步路线均必须完成一次与真实鱼缸关联的完整混养判断。完整计算会在现有 `LocalAppState.compatibilityRecords` 中保存 `{ aquariumId, speciesIds, status, scope: 'tank', evaluatedAt }`；Mini 判断、收藏或直接加入物种不能替代此步骤。建缸路线的第四步是每日巡检，浏览路线的第四步是完整混养判断。
+
 ```ts
 type OnboardingGoal = 'build_tank' | 'browse_species';
 interface OnboardingState {

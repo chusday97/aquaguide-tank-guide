@@ -5,6 +5,10 @@ import { apiRequest, AquaGuideApiError, createIdempotencyKey } from '../api/api-
 import { getCareFavorites } from '../favorites/favorites.service';
 import { getCareReminders, getCompletedCareOperations, getSavedCareChecklists } from '../care/care-activity.service';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
+import { trackSessionEvent } from '../analytics/session-events.service';
+import { buildOnboardingTaskProgress, type OnboardingTaskProgress } from './onboarding-paths';
+export { getOnboardingTasks } from './onboarding-paths';
+export type { OnboardingTask, OnboardingTaskProgress } from './onboarding-paths';
 
 const createState = (patch: Partial<OnboardingState> = {}): OnboardingState => ({
   version: 1,
@@ -105,7 +109,10 @@ export const shouldStartOnboarding = () => {
 
 export const getOnboardingState = () => loadAppStateFromStorage().onboarding;
 
-export const chooseOnboardingGoal = (goal: OnboardingGoal) => persistOnboarding(createState({ goal }));
+export const chooseOnboardingGoal = (goal: OnboardingGoal) => {
+  trackSessionEvent('onboarding_goal_selected', { action: 'select', status: goal, entry: 'welcome' });
+  return persistOnboarding(createState({ goal }));
+};
 
 export const skipOnboarding = () => persistOnboarding(createState({ status: 'skipped' }));
 
@@ -135,31 +142,14 @@ export const dismissOnboardingTaskCard = () => {
   return persistOnboarding({ ...current, taskCardDismissed: true });
 };
 
-export interface OnboardingTaskProgress {
-  aquariumReady: boolean;
-  speciesViewed: boolean;
-  speciesChosen: boolean;
-  dailyCheckDone: boolean;
-  completedCount: number;
-  complete: boolean;
-}
-
 export const getOnboardingTaskProgress = (): OnboardingTaskProgress => {
-  const state = loadAppStateFromStorage();
-  const aquariumReady = state.onboarding?.aquariumConfigured ?? false;
-  const speciesViewed = state.onboarding?.viewedSpecies ?? false;
-  const speciesChosen = state.wishlist.length > 0 || state.aquariums.some(aquarium => aquarium.fishes.some(fish => fish.quantity > 0));
-  const dailyCheckDone = state.diagnosisRecords.some(record => {
-    if (!record || typeof record !== 'object') return false;
-    return (record as { problemType?: string }).problemType === '巡检';
-  });
-  const completedCount = [aquariumReady, speciesViewed, speciesChosen, dailyCheckDone].filter(Boolean).length;
-  return { aquariumReady, speciesViewed, speciesChosen, dailyCheckDone, completedCount, complete: completedCount === 4 };
+  return buildOnboardingTaskProgress(loadAppStateFromStorage());
 };
 
 export const syncOnboardingCompletion = () => {
   const current = getOnboardingState();
   const progress = getOnboardingTaskProgress();
   if (!current || !progress.complete || current.status === 'completed') return current;
+  trackSessionEvent('onboarding_core_value_completed', { action: 'complete', status: current.goal ?? 'build_tank', entry: 'onboarding-card' });
   return persistOnboarding({ ...current, status: 'completed', completedAt: new Date().toISOString() });
 };

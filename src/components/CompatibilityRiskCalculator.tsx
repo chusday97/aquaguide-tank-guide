@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, CheckCircle2, ChevronDown, ChevronRight, Loader2, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -103,6 +103,7 @@ import { evaluateCompatibilityDecision, type CompatibilityItem } from '../module
 import type { CompatibilityDecision } from '../modules/knowledge/knowledge.types';
 import { VisualResultCard } from './visual-results/VisualResultCard';
 import { buildCompatibilityVisualResult } from './visual-results/visual-result.adapters';
+import { recordTankCompatibility } from '../services/compatibility/compatibility-records.service';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
@@ -587,6 +588,7 @@ type CompatibilityRiskCalculatorProps = {
   preferredSpeciesIds?: string[];
   aquariums?: Aquarium[];
   activeAquariumId?: string;
+  onEvaluationRecorded?: () => void;
 };
 
 const commonPreviewNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼'];
@@ -616,6 +618,7 @@ export function CompatibilityRiskCalculator({
   preferredSpeciesIds = [],
   aquariums = [],
   activeAquariumId = '',
+  onEvaluationRecorded,
 }: CompatibilityRiskCalculatorProps = {}) {
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [searchTerm, setSearchTerm] = useState('');
@@ -663,6 +666,15 @@ export function CompatibilityRiskCalculator({
     quantity: selectedQuantitiesById[species.id] || currentQuantityBySpeciesId[species.id] || 1,
   })), [currentQuantityBySpeciesId, selectedQuantitiesById, selectedSpecies]);
   const result = useMemo(() => calculateRisk(selectedItems, selectedAquarium), [selectedAquarium, selectedItems]);
+  const recordedEvaluationKeyRef = useRef('');
+  useEffect(() => {
+    if (!selectedAquarium || selectedItems.length < 2 || !result.ruleResult || result.level === 'empty') return;
+    const key = `${selectedAquarium.id}:${selectedItems.map(item => item.species.id).sort().join('|')}:${result.level}`;
+    if (recordedEvaluationKeyRef.current === key) return;
+    recordedEvaluationKeyRef.current = key;
+    recordTankCompatibility({ aquariumId: selectedAquarium.id, speciesIds: selectedItems.map(item => item.species.id), status: result.level });
+    onEvaluationRecorded?.();
+  }, [onEvaluationRecorded, result.level, result.ruleResult, selectedAquarium, selectedItems]);
   const meta = getRiskMeta(result.level);
   const riskConclusion = getRiskConclusion(result.level, selectedSpecies, result.reasons);
   const conflictTags = getConflictTags(selectedSpecies, result.reasons);

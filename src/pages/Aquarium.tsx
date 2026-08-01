@@ -75,7 +75,7 @@ import { AdaptiveTaskContent } from '../components/common/AdaptiveTaskContent';
 import { SurfaceHeader } from '../components/common/SurfaceHeader';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { OnboardingTaskCard } from '../components/onboarding/OnboardingTaskCard';
-import { getOnboardingTaskProgress, markAquariumConfigured } from '../services/onboarding/onboarding.service';
+import { getOnboardingState, getOnboardingTaskProgress, getOnboardingTasks, markAquariumConfigured } from '../services/onboarding/onboarding.service';
 import { LivestockRosterDialog } from '../components/aquarium/LivestockRosterDialog';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
@@ -4516,8 +4516,9 @@ export default function AquariumManager() {
   const isExportCenterOpen = new URLSearchParams(routeLocation.search).get('action') === 'exports';
   if (isExportCenterOpen) {
     const onboardingProgress = getOnboardingTaskProgress();
-    const checklistLabels = [t('onboarding.taskTank'), t('onboarding.taskViewSpecies'), t('onboarding.taskChooseSpecies'), t('onboarding.taskCheck')];
-    const checklistStates = [onboardingProgress.aquariumReady, onboardingProgress.speciesViewed, onboardingProgress.speciesChosen, onboardingProgress.dailyCheckDone];
+    const onboardingTasks = getOnboardingTasks(getOnboardingState()?.goal ?? 'build_tank', onboardingProgress);
+    const checklistLabels = onboardingTasks.map(task => t(task.labelKey));
+    const checklistStates = onboardingTasks.map(task => task.done);
     const items: ExportCenterItem[] = [
       { id: 'health', icon: 'health', title: isEn ? 'Aquarium health score' : '鱼缸健康评分卡', description: isEn ? 'Score, evidence, missing records and the next action.' : '健康分、主要依据、缺失记录和下一步。', content: buildHealthScoreArtifact(artifactContext) },
       { id: 'diagnosis', icon: 'diagnosis', title: isEn ? 'Diagnosis result' : '诊断结果图片', description: isEn ? 'Structured risk, actions, possible factors and review timing.' : '结构化风险、应急动作、可能原因和复查时间。', content: artifactContext.latestDiagnosis ? buildDiagnosisArtifact(artifactContext, artifactContext.latestDiagnosis) : undefined, unavailableReason: artifactContext.latestDiagnosis ? undefined : (isEn ? 'Complete an aquarium check first.' : '完成一次鱼缸检查后即可生成。') },

@@ -1,26 +1,12 @@
-import { useState } from 'react';
-import { ArrowRight, BookOpen, Download, Droplets } from 'lucide-react';
+import { ArrowRight, BookOpen, Droplets } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
-import { chooseOnboardingGoal, getOnboardingTaskProgress, skipOnboarding } from '../services/onboarding/onboarding.service';
+import { chooseOnboardingGoal, skipOnboarding } from '../services/onboarding/onboarding.service';
 import { taskRoutes } from '../services/navigation/task-routes';
-import { ExportArtifactDialog } from '../components/export/ExportArtifactDialog';
-import { buildStarterChecklistArtifact } from '../services/export/aquarium-artifact.service';
 
 export default function WelcomePage() {
   const { t } = useTranslation();
   const { navigateToRoute } = useWorkspaceNavigation();
-  const [isExportOpen, setIsExportOpen] = useState(false);
-  const progress = getOnboardingTaskProgress();
-  const isEn = document.documentElement.lang.startsWith('en');
-  const taskLabels = [
-    t('onboarding.taskTank'),
-    t('onboarding.taskViewSpecies'),
-    t('onboarding.taskChooseSpecies'),
-    t('onboarding.taskCheck'),
-  ];
-  const taskStates = [progress.aquariumReady, progress.speciesViewed, progress.speciesChosen, progress.dailyCheckDone];
-  const exportContent = buildStarterChecklistArtifact({ labels: taskLabels, states: taskStates, isEn });
 
   const choose = (goal: 'build_tank' | 'browse_species') => {
     chooseOnboardingGoal(goal);
@@ -52,13 +38,9 @@ export default function WelcomePage() {
           </button>
         </div>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-          <button type="button" onClick={() => setIsExportOpen(true)} className="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-white px-4 text-sm font-black text-emerald-800 shadow-sm hover:bg-emerald-50">
-            <Download className="h-4 w-4" />{isEn ? 'Download checklist' : '下载新手开缸清单'}
-          </button>
           <button type="button" onClick={() => { skipOnboarding(); navigateToRoute('/aquarium'); }} className="min-h-11 rounded-2xl px-4 text-sm font-black text-ink/45 hover:bg-white/70 hover:text-ink">{t('onboarding.skip')}</button>
         </div>
       </div>
-      <ExportArtifactDialog open={isExportOpen} onOpenChange={setIsExportOpen} content={exportContent} isEn={isEn} />
     </main>
   );
 }

@@ -8,9 +8,9 @@ import {
   dismissOnboardingTaskCard,
   getOnboardingState,
   getOnboardingTaskProgress,
+  getOnboardingTasks,
   syncOnboardingCompletion,
 } from '../../services/onboarding/onboarding.service';
-import { taskRoutes } from '../../services/navigation/task-routes';
 import { ExportArtifactDialog } from '../export/ExportArtifactDialog';
 import { buildStarterChecklistArtifact } from '../../services/export/aquarium-artifact.service';
 
@@ -33,12 +33,7 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
     if (progress.complete) syncOnboardingCompletion();
   }, [progress.complete]);
 
-  const tasks = useMemo(() => [
-    { done: progress.aquariumReady, label: t('onboarding.taskTank'), route: taskRoutes.aquarium.setup('onboarding') },
-    { done: progress.speciesViewed, label: t('onboarding.taskViewSpecies'), route: '/encyclopedia?difficulty=Easy&source=onboarding' },
-    { done: progress.speciesChosen, label: t('onboarding.taskChooseSpecies'), route: '/encyclopedia?difficulty=Easy&source=onboarding' },
-    { done: progress.dailyCheckDone, label: t('onboarding.taskCheck'), route: `${taskRoutes.aquarium.dailyCheck}&source=onboarding` },
-  ], [progress, t]);
+  const tasks = useMemo(() => getOnboardingTasks(onboarding?.goal ?? 'build_tank', progress).map(task => ({ ...task, label: t(task.labelKey) })), [onboarding?.goal, progress, t]);
   const nextTask = tasks.find(task => !task.done);
   const isEn = document.documentElement.lang.startsWith('en');
   const exportContent = buildStarterChecklistArtifact({ labels: tasks.map(task => task.label), states: tasks.map(task => task.done), isEn });
@@ -56,17 +51,16 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className={`text-[10px] font-black uppercase tracking-[0.18em] ${isSidebar ? 'text-emerald-700/60' : 'text-emerald-200'}`}>{progress.completedCount} / 4</div>
+          <div className={`text-[10px] font-black uppercase tracking-[0.18em] ${isSidebar ? 'text-emerald-700/60' : 'text-emerald-200'}`}>{progress.completedCount} / {progress.totalCount}</div>
           <h2 id={isSidebar ? 'onboarding-sidebar-title' : 'onboarding-task-title'} className={`${isSidebar ? 'mt-0.5 text-[13px]' : 'mt-1 text-lg'} font-black`}>{progress.complete ? t('onboarding.completeTitle') : t('onboarding.taskTitle')}</h2>
           <p className={`${isSidebar ? 'mt-0.5 text-[10px] leading-4 text-ink/45' : 'mt-1 text-xs leading-5 text-white/62'} font-semibold`}>{progress.complete ? t('onboarding.completeSubtitle') : t('onboarding.taskSubtitle')}</p>
         </div>
         <div className="flex shrink-0 gap-1">
-          <button type="button" onClick={() => setIsExportOpen(true)} aria-label={isEn ? 'Download starter checklist' : '下载新手开缸清单'} className={`flex h-11 w-11 items-center justify-center rounded-xl focus-visible:outline-none focus-visible:ring-2 ${isSidebar ? 'bg-emerald-50 text-emerald-800 focus-visible:ring-emerald-400' : 'bg-white/10 text-white focus-visible:ring-white'}`}><Download className="h-4 w-4" /></button>
           <button type="button" onClick={dismissOnboardingTaskCard} aria-label={t('onboarding.dismiss')} className={`flex h-11 w-11 items-center justify-center rounded-xl focus-visible:outline-none focus-visible:ring-2 ${isSidebar ? 'bg-emerald-50 text-ink/45 hover:text-emerald-800 focus-visible:ring-emerald-400' : 'bg-white/10 text-white/70 hover:bg-white/15 hover:text-white focus-visible:ring-white'}`}><X className="h-4 w-4" /></button>
         </div>
       </div>
       <div className={`mt-3 h-1.5 overflow-hidden rounded-full ${isSidebar ? 'bg-emerald-100' : 'bg-white/12'}`} aria-hidden="true">
-        <div className={`h-full rounded-full transition-[width] duration-200 ${isSidebar ? 'bg-emerald-600' : 'bg-emerald-300'}`} style={{ width: `${progress.completedCount * 25}%` }} />
+        <div className={`h-full rounded-full transition-[width] duration-200 ${isSidebar ? 'bg-emerald-600' : 'bg-emerald-300'}`} style={{ width: `${progress.completedCount / progress.totalCount * 100}%` }} />
       </div>
       <div className={`${isSidebar ? 'mt-2 grid' : 'mt-3 flex flex-wrap items-center'} gap-2`}>
         {nextTask && (
@@ -86,6 +80,11 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
               </div>
             ))}
           </div>
+          {progress.completedCount > 0 && (
+            <button type="button" onClick={() => setIsExportOpen(true)} className={`mt-2 inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-xs font-black ${isSidebar ? 'bg-emerald-50 text-emerald-800' : 'bg-white/10 text-white'}`}>
+              <Download className="h-4 w-4" />{isEn ? 'Download checklist' : '下载新手开缸清单'}
+            </button>
+          )}
         </details>
       </div>
       <ExportArtifactDialog open={isExportOpen} onOpenChange={setIsExportOpen} content={exportContent} isEn={isEn} />

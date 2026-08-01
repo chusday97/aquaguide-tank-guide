@@ -6,7 +6,13 @@ export type AquaGuideEventName =
   | 'mini_open_full'
   | 'daily_check_started'
   | 'daily_check_completed'
-  | 'remedy_article_opened';
+  | 'remedy_article_opened'
+  | 'onboarding_goal_selected'
+  | 'onboarding_core_value_completed'
+  | 'identification_completed'
+  | 'triage_started'
+  | 'compatibility_from_identify_started'
+  | 'aquarium_primary_action_clicked';
 
 export type AquaGuideEvent = {
   name: AquaGuideEventName;

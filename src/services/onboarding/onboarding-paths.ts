@@ -1,0 +1,60 @@
+import type { OnboardingGoal } from '../../types';
+import type { LocalAppState } from '../storage/local-app-state';
+import { isCompatibilityRecord } from '../compatibility/compatibility-records.service';
+
+export interface OnboardingTaskProgress {
+  aquariumReady: boolean;
+  speciesViewed: boolean;
+  speciesChosen: boolean;
+  compatibilityCompleted: boolean;
+  dailyCheckDone: boolean;
+  completedCount: number;
+  totalCount: number;
+  complete: boolean;
+}
+
+export interface OnboardingTask {
+  id: 'aquarium' | 'view_species' | 'choose_species' | 'compatibility' | 'daily_check';
+  labelKey: string;
+  done: boolean;
+  route: string;
+}
+
+export const buildOnboardingTaskProgress = (state: LocalAppState): OnboardingTaskProgress => {
+  const aquariumReady = state.aquariums.length > 0 && (state.onboarding?.aquariumConfigured ?? false);
+  const speciesViewed = state.onboarding?.viewedSpecies ?? false;
+  const speciesChosen = state.wishlist.length > 0 || state.aquariums.some(aquarium => aquarium.fishes.some(fish => fish.quantity > 0));
+  const compatibilityCompleted = state.compatibilityRecords.some(record => {
+    if (!isCompatibilityRecord(record)) return false;
+    return state.aquariums.some(aquarium => aquarium.id === record.aquariumId);
+  });
+  const dailyCheckDone = state.diagnosisRecords.some(record => {
+    if (!record || typeof record !== 'object') return false;
+    return (record as { problemType?: string }).problemType === '巡检';
+  });
+  const goal = state.onboarding?.goal ?? 'build_tank';
+  const completionStates = goal === 'build_tank'
+    ? [aquariumReady, speciesChosen, compatibilityCompleted, dailyCheckDone]
+    : [speciesViewed, speciesChosen, aquariumReady, compatibilityCompleted];
+  const completedCount = completionStates.filter(Boolean).length;
+  const totalCount = completionStates.length;
+  return { aquariumReady, speciesViewed, speciesChosen, compatibilityCompleted, dailyCheckDone, completedCount, totalCount, complete: completedCount === totalCount };
+};
+
+export const getOnboardingTasks = (goal: OnboardingGoal, progress: OnboardingTaskProgress): OnboardingTask[] => {
+  if (goal === 'browse_species') {
+    return [
+      { id: 'view_species', labelKey: 'onboarding.taskViewSpecies', done: progress.speciesViewed, route: '/encyclopedia?difficulty=Easy&source=onboarding' },
+      { id: 'choose_species', labelKey: 'onboarding.taskChooseSpecies', done: progress.speciesChosen, route: '/encyclopedia?difficulty=Easy&source=onboarding' },
+      { id: 'aquarium', labelKey: 'onboarding.taskTank', done: progress.aquariumReady, route: '/aquarium?action=settings&panel=setup&source=onboarding' },
+      { id: 'compatibility', labelKey: 'onboarding.taskCompatibility', done: progress.compatibilityCompleted, route: '/encyclopedia?mode=compatibility&source=onboarding' },
+    ];
+  }
+  return [
+    { id: 'aquarium', labelKey: 'onboarding.taskTank', done: progress.aquariumReady, route: '/aquarium?action=settings&panel=setup&source=onboarding' },
+    { id: 'choose_species', labelKey: 'onboarding.taskChooseSpecies', done: progress.speciesChosen, route: '/encyclopedia?difficulty=Easy&source=onboarding' },
+    { id: 'compatibility', labelKey: 'onboarding.taskCompatibility', done: progress.compatibilityCompleted, route: '/encyclopedia?mode=compatibility&source=onboarding' },
+    { id: 'daily_check', labelKey: 'onboarding.taskCheck', done: progress.dailyCheckDone, route: '/aquarium?action=daily-check&source=onboarding' },
+  ];
+};
+
