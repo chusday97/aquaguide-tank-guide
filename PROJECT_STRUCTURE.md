@@ -51,6 +51,7 @@
 - `src/components/onboarding/OnboardingTaskCard.tsx`：根据真实鱼缸、浏览、收藏/入缸和巡检记录自动更新的新手任务卡。
 - `src/components/aquarium/LivestockBatchCard.tsx`：同一任务表面内的批次汇总、三步体态调整、部分数量自动分组、保存摘要与删除确认。
 - `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情；桌面中央/手机全高管理体态，并按数量二次确认移出。
+- `src/components/aquarium/AquariumTimeline.tsx`：鱼缸操作时间线与循环养护工作区，桌面双栏、手机单列。
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
 - `src/data/careEvidence.ts`：41 篇养护内容的确定性来源映射、审核状态与复查动作兜底。
@@ -81,6 +82,7 @@
 - `src/services/aquarium/aquarium-navigation.service.ts`：本地/云端共用的会话级鱼缸列表与当前选择快照，供桌面侧栏订阅。
 - `src/services/aquarium/species-batches.service.ts`：游客模式的批次规范化、汇总、拆分、体态更新与确定性今日观察信号。
 - `src/services/care/care-activity.service.ts`：应用内养护计划、完成操作与护理清单的旧键兼容写入。
+- `src/services/care/care-timeline.service.ts`：现有鱼缸记录的确定性时间线聚合、新事件来源去重与本地持久化。
 - `src/services/care/care-category.service.ts`：养护分类稳定 ID 与中文基准字段匹配，保证中英文返回相同文章集合。
 - `src/services/compatibility/`：Mini 与完整混养的会话级选择传递。
 - `src/services/diagnosis/`：巡检记录的同日更新策略。
@@ -136,6 +138,7 @@
 - `scripts/test-collection-achievements.ts`：水族册聚合与 8 枚勋章追溯断言。
 - `scripts/test-memorial-service.ts`：日期/原因校验、结构化复盘更新、版本递增、旧键兼容和跨页面变更事件断言。
 - `scripts/test-business-state-services.ts`：鱼缸、巡检与养护业务写入服务断言。
+- `scripts/test-care-timeline.ts` / `scripts/verify-care-timeline.mjs`：时间线派生、来源幂等、循环计划和桌面/手机直达回归。
 - `scripts/audit-product-actions.ts`：路由页面空操作、日志操作、原生 alert 与重复伪 CTA 审计。
 - `CONTRACT.md`：三层架构、数据库、RLS、API、Repository、迁移与 AI 边界的权威契约。
 - `src/types/database.ts`：camelCase 数据库与关联实体共享类型。
