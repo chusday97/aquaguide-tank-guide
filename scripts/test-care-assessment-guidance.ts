@@ -68,4 +68,11 @@ for (const testCase of cases) {
   assert.equal(new Set(allItems).size, allItems.length, `${testCase.issue} 不能重复动作或观察语句`);
 }
 
+const cloudy = getIssueGuidance('cloudy', false);
+assert.doesNotMatch(
+  [...cloudy.routineActions, ...cloudy.avoidActions, ...cloudy.observeItems].join(' '),
+  /躲避|遮挡/,
+  '水质浑浊不得混入追咬或领地问题的躲避物建议',
+);
+
 console.log(`care assessment guidance: ${cases.length} issue-specific contracts passed`);

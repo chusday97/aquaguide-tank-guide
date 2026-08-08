@@ -56,6 +56,7 @@
     "test:mobile-care-ui": "node scripts/verify-mobile-care-experience.mjs",
     "test:care-guide-types": "node scripts/verify-care-guide-types.mjs",
     "test:care-guidance": "tsx scripts/test-care-assessment-guidance.ts",
+    "audit:care-evidence": "node --import tsx scripts/audit-care-evidence.ts",
     "test:care-categories": "tsx scripts/test-care-category-consistency.ts",
     "test:care-categories-ui": "node scripts/verify-care-category-ui.mjs",
     "test:localization-ui": "node scripts/verify-localization-ui.mjs",

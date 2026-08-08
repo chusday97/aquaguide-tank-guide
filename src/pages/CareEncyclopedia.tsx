@@ -7,6 +7,7 @@ import { AlertTriangle, Baby, Check, ChevronRight, Copy, Download, Droplets, Fis
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
+import { getCareFollowUpAction, getCareReferences, getCareReferenceReviewStatus } from '../data/careEvidence';
 import { fishData } from '../data/fishData';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import type { Aquarium, AquariumFish, Fish as FishType } from '../types';
@@ -502,7 +503,7 @@ const buildCareGuide = (topic: CareTopic): CareGuideView => {
     : [
       ...topic.observe.map(item => ({ title: isEn ? 'Key Observations' : '观察重点', description: cleanCareSentence(item) })),
       ...topic.diagnoseWhen.map(item => ({ title: isEn ? 'Follow-up Assessment' : '后续判断', description: cleanCareSentence(item) })),
-      ...(topic.nextStep ? [{ title: isEn ? 'Next Step' : '下一步', description: cleanCareSentence(topic.nextStep) }] : []),
+      { title: isEn ? 'Next Step' : '下一步', description: cleanCareSentence(getCareFollowUpAction(topic, isEn)) },
     ]
       .filter(item => item.description)
       .filter((item, index, list) => list.findIndex(other => other.description === item.description) === index);
@@ -1462,7 +1463,7 @@ const buildStepDiagnosisResult = ({
     causes.push(isEn ? 'Mild behavioral abnormalities, monitor to see if it spreads' : '有轻微行为异常，需要继续观察是否扩大到多条生物');
   }
 
-  if (issueType === 'aggression' || hasBetta) {
+  if (issueType === 'aggression') {
     causes.push(hasBetta 
       ? (isEn ? 'Betta present in current tank, monitor territorial pressure' : '当前鱼缸存在斗鱼，需额外关注领地压力') 
       : (isEn ? 'Possible territorial or space competition' : '可能存在领地或空间竞争'));
@@ -2904,6 +2905,8 @@ export function CareArticleDetail({
   const navigate = useNavigate();
   const meta = getCareGuideMeta(topic);
   const careGuide = buildCareGuide(topic);
+  const careReferences = getCareReferences(topic);
+  const careReferenceStatus = getCareReferenceReviewStatus(topic);
   const visibleActions = careGuide.todayActions;
   const completedVisibleActions = checkedActions.filter(item => visibleActions.some(action => action.description === item)).length;
   const relatedTopics = getRelatedCareGuides(topic, careTopicsData, activeAquarium);
@@ -3368,6 +3371,40 @@ export function CareArticleDetail({
                 ))}
               </div>
             )}
+          </section>
+
+          <section className="mt-3 rounded-[18px] border border-border bg-white p-3" data-care-references>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="text-[13px] font-black text-ink">{isEn ? 'Sources for these actions' : '这些行动的参考来源'}</div>
+              <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${careReferenceStatus === 'reviewed' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
+                {careReferenceStatus === 'reviewed'
+                  ? (isEn ? 'Reviewed' : '已审核')
+                  : (isEn ? 'Partly pending review' : '部分细节待复核')}
+              </span>
+            </div>
+            <p className="mt-1 text-[11px] font-medium leading-relaxed text-ink/55">
+              {isEn
+                ? 'Each source supports the action noted below. Sources explain safe care principles; they do not replace an aquatic veterinarian.'
+                : '每个来源都标注其支持的操作范围；来源用于解释安全养护原则，不能替代水生动物兽医诊断。'}
+            </p>
+            <div className="mt-2 grid gap-2">
+              {careReferences.map(reference => (
+                <a
+                  key={reference.id}
+                  href={reference.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-[14px] bg-bg px-3 py-2.5 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  data-action-kind="external"
+                >
+                  <span className="block text-[11px] font-black text-emerald-800">{reference.publisher} · {reference.title}</span>
+                  <span className="mt-1 block text-[10px] font-medium leading-relaxed text-ink/55">{reference.supports}</span>
+                  {reference.reviewStatus === 'draft' && (
+                    <span className="mt-1 block text-[10px] font-black text-amber-700">{isEn ? 'Specific household steps still need review.' : '具体家庭操作细节仍需专项复核。'}</span>
+                  )}
+                </a>
+              ))}
+            </div>
           </section>
 
           {relatedTopics.length > 0 && (
