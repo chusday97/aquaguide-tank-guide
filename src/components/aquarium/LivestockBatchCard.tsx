@@ -10,7 +10,7 @@ const getSpeciesNameLocalized = (species: any, isEn = false): string => {
   if (englishTranslations[id]?.name) return englishTranslations[id].name;
   return species.name || '';
 };
-import { ArrowLeft, Baby, CircleHelp, Egg, Fish as FishIcon, GitBranch, GitMerge, HeartPulse, Pencil, Plus, Trash2, Waves, X } from 'lucide-react';
+import { ArrowLeft, Baby, Check, CircleHelp, Egg, Fish as FishIcon, HeartPulse, Pencil, Trash2, Waves } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
@@ -25,7 +25,6 @@ import {
   summarizeSpeciesBatches,
   updateSpeciesBatch,
   getSpeciesBatchObservation,
-  mergeSpeciesBatches,
 } from '../../services/aquarium/species-batches.service';
 import { QuantityStepper } from '../forms/QuantityStepper';
 import { QuickDatePicker } from '../forms/QuickDatePicker';
@@ -110,10 +109,12 @@ export function LivestockBatchCard({
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [draft, setDraft] = useState(record);
-  const [splitSource, setSplitSource] = useState<AquariumSpeciesBatch | null>(null);
-  const [splitQuantity, setSplitQuantity] = useState(1);
-  const [splitLifeStage, setSplitLifeStage] = useState<LifeStage>('adult');
-  const [splitReproductiveState, setSplitReproductiveState] = useState<ReproductiveState>('normal');
+  const [taskStep, setTaskStep] = useState<1 | 2 | 3>(1);
+  const [selectedBatchId, setSelectedBatchId] = useState('');
+  const [targetQuantity, setTargetQuantity] = useState(1);
+  const [targetEntryDate, setTargetEntryDate] = useState('');
+  const [targetLifeStage, setTargetLifeStage] = useState<LifeStage>('unknown');
+  const [targetReproductiveState, setTargetReproductiveState] = useState<ReproductiveState>('unknown');
   const [pendingDelete, setPendingDelete] = useState<AquariumSpeciesBatch | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -126,10 +127,23 @@ export function LivestockBatchCard({
   const [error, setError] = useState('');
   const { navigateToRoute, registerNavigationGuard } = useWorkspaceNavigation();
 
+  const initializeTask = (nextRecord: AquariumFish) => {
+    const firstBatch = normalizeSpeciesBatches(nextRecord)[0];
+    setDraft(nextRecord);
+    setTaskStep(1);
+    setSelectedBatchId(firstBatch?.id || '');
+    setTargetQuantity(firstBatch?.quantity || 1);
+    setTargetEntryDate(firstBatch?.entryDate.slice(0, 10) || new Date().toISOString().slice(0, 10));
+    setTargetLifeStage(firstBatch?.lifeStage || 'unknown');
+    setTargetReproductiveState(firstBatch?.reproductiveState === 'not_applicable' ? 'unknown' : firstBatch?.reproductiveState || 'unknown');
+  };
+
   useEffect(() => {
-    if (isEditing) setDraft(record);
+    if (isEditing) initializeTask(record);
   }, [isEditing, record]);
   const batches = useMemo(() => normalizeSpeciesBatches(draft), [draft]);
+  const sourceBatches = useMemo(() => normalizeSpeciesBatches(record), [record]);
+  const selectedSourceBatch = sourceBatches.find(batch => batch.id === selectedBatchId) || sourceBatches[0];
   const observation = getSpeciesBatchObservation(record, isEn);
   const lifeStageChoices: Array<{ value: LifeStage; label: string; icon: ReactNode }> = lifeStageOptions.map(option => ({
     value: option,
@@ -155,11 +169,6 @@ export function LivestockBatchCard({
     isEn ? t(fallbackKey) : (caught instanceof Error ? caught.message : t(fallbackKey))
   );
 
-  const update = (batchId: string, patch: Partial<Pick<AquariumSpeciesBatch, 'quantity' | 'entryDate' | 'lifeStage' | 'reproductiveState'>>) => {
-    setDraft(current => updateSpeciesBatch(current, batchId, patch));
-    setError('');
-  };
-
   const save = async () => {
     if (isSaving) return;
     setIsSaving(true);
@@ -177,18 +186,37 @@ export function LivestockBatchCard({
     }
   };
 
-  const confirmSplit = () => {
-    if (!splitSource) return;
+  const selectBatch = (batch: AquariumSpeciesBatch) => {
+    setSelectedBatchId(batch.id);
+    setTargetQuantity(batch.quantity);
+    setTargetEntryDate(batch.entryDate.slice(0, 10));
+    setTargetLifeStage(batch.lifeStage);
+    setTargetReproductiveState(batch.reproductiveState === 'not_applicable' ? 'unknown' : batch.reproductiveState);
+    setError('');
+  };
+
+  const prepareReview = () => {
+    if (!selectedSourceBatch) return;
     try {
-      setDraft(current => splitSpeciesBatch(current, splitSource.id, {
-        quantity: splitQuantity,
-        lifeStage: splitLifeStage,
-        reproductiveState: reproductiveApplicable ? splitReproductiveState : 'not_applicable',
-      }));
-      setSplitSource(null);
+      const entryDate = new Date(`${targetEntryDate}T00:00:00`).toISOString();
+      const reproductiveState = reproductiveApplicable ? targetReproductiveState : 'not_applicable';
+      const next = targetQuantity < selectedSourceBatch.quantity
+        ? splitSpeciesBatch(record, selectedSourceBatch.id, {
+          quantity: targetQuantity,
+          entryDate,
+          lifeStage: targetLifeStage,
+          reproductiveState,
+        })
+        : updateSpeciesBatch(record, selectedSourceBatch.id, {
+          entryDate,
+          lifeStage: targetLifeStage,
+          reproductiveState,
+        });
+      setDraft(next);
+      setTaskStep(3);
       setError('');
-    } catch (splitError) {
-      setError(messageFor(splitError, 'livestock.splitFailed'));
+    } catch (reviewError) {
+      setError(messageFor(reviewError, 'livestock.saveFailed'));
     }
   };
 
@@ -221,7 +249,13 @@ export function LivestockBatchCard({
     }
   };
 
-  const hasUnsavedChanges = JSON.stringify(draft) !== JSON.stringify(record);
+  const hasPendingSelection = Boolean(selectedSourceBatch) && (
+    targetQuantity !== selectedSourceBatch.quantity
+    || targetEntryDate !== selectedSourceBatch.entryDate.slice(0, 10)
+    || targetLifeStage !== selectedSourceBatch.lifeStage
+    || (reproductiveApplicable && targetReproductiveState !== selectedSourceBatch.reproductiveState)
+  );
+  const hasUnsavedChanges = hasPendingSelection || JSON.stringify(draft) !== JSON.stringify(record);
   useEffect(() => {
     onDirtyChange?.(isEditing && hasUnsavedChanges);
     return () => onDirtyChange?.(false);
@@ -346,84 +380,99 @@ export function LivestockBatchCard({
               </div>
             </header>
 
-            <div className="grid gap-3 px-3 py-4 md:px-5">
-              {batches.map((batch, index) => (
-                <section key={batch.id} className="rounded-[22px] border border-border/80 bg-white p-3 shadow-sm md:p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                      <div className="flex items-center gap-2 text-sm font-black text-ink"><Baby className="h-4 w-4 text-emerald-700" />{t('livestock.groupTitle', { index: index + 1 })}</div>
-                      <div className="mt-1 text-[10px] font-bold text-ink/42">{batch.quantity} {isEn ? 'animals' : '条/只'} · {batch.entryDate.slice(0, 10)}</div>
-                    </div>
-                    <div className="flex flex-wrap justify-end gap-1">
-                      {batch.quantity > 1 && (
-                        <button type="button" onClick={() => { setSplitSource(batch); setSplitQuantity(1); }} className="inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-xs font-black text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                          <GitBranch className="h-4 w-4" />{t('livestock.split')}
-                        </button>
-                      )}
-                      {index > 0 && batches[index - 1].lifeStage === batch.lifeStage && batches[index - 1].reproductiveState === batch.reproductiveState && (
-                        <button type="button" onClick={() => { setDraft(current => mergeSpeciesBatches(current, batches[index - 1].id, batch.id)); setError(''); }} className="inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-xs font-black text-sky-700 hover:bg-sky-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400">
-                          <GitMerge className="h-4 w-4" />{t('livestock.mergePrevious')}
-                        </button>
-                      )}
-                      <button type="button" onClick={() => setPendingDelete(batch)} aria-label={t('livestock.deleteGroupLabel', { index: index + 1 })} className="flex h-11 w-11 items-center justify-center rounded-full text-rose-600 hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"><Trash2 className="h-4 w-4" /></button>
-                    </div>
-                  </div>
+            <div className="grid gap-4 px-3 py-4 md:px-5" data-livestock-state-task data-task-step={taskStep}>
+              <ol className="grid grid-cols-3 gap-2" aria-label={isEn ? 'Livestock state steps' : '体态调整步骤'}>
+                {[
+                  isEn ? 'Choose group' : '选择数量',
+                  isEn ? 'Choose state' : '选择体态',
+                  isEn ? 'Review' : '核对保存',
+                ].map((label, index) => {
+                  const step = (index + 1) as 1 | 2 | 3;
+                  const active = step === taskStep;
+                  const complete = step < taskStep;
+                  return (
+                    <li key={label} className={`rounded-2xl px-2 py-2.5 text-center text-[11px] font-black ${active ? 'bg-emerald-700 text-white shadow-sm' : complete ? 'bg-emerald-50 text-emerald-800' : 'bg-white text-ink/38'}`}>
+                      <span className="mr-1">{complete ? <Check className="inline h-3.5 w-3.5" /> : step}</span>{label}
+                    </li>
+                  );
+                })}
+              </ol>
 
-                  <div className="mt-4 grid gap-4">
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="grid gap-1.5 text-xs font-black text-ink/55"><span>{t('livestock.quantity')}</span><QuantityStepper label={t('livestock.quantity')} value={batch.quantity} onChange={quantity => update(batch.id, { quantity })} /></div>
-                      <QuickDatePicker value={batch.entryDate.slice(0, 10)} onChange={value => update(batch.id, { entryDate: new Date(`${value}T00:00:00`).toISOString() })} isEn={isEn} />
-                    </div>
-                    <StateChoiceGroup
-                      label={t('livestock.lifeStageLabel')}
-                      value={batch.lifeStage}
-                      options={lifeStageChoices}
-                      onChange={value => update(batch.id, { lifeStage: value })}
-                    />
-                    {reproductiveApplicable && (
-                      <StateChoiceGroup
-                        label={t('livestock.reproductiveStateLabel')}
-                        value={batch.reproductiveState === 'not_applicable' ? 'unknown' : batch.reproductiveState}
-                        options={reproductiveChoices}
-                        onChange={value => update(batch.id, { reproductiveState: value })}
-                        compact
-                      />
-                    )}
-                  </div>
-                </section>
-              ))}
-
-              {splitSource && (
-                <section className="rounded-[22px] border border-amber-200 bg-amber-50 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div><h3 className="text-sm font-black text-amber-950">{t('livestock.splitTitle')}</h3><p className="mt-1 text-xs font-semibold text-amber-900/60">{t('livestock.currentGroup', { count: splitSource.quantity })}</p></div>
-                    <button type="button" onClick={() => setSplitSource(null)} className="flex h-11 w-11 items-center justify-center rounded-full text-amber-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400" aria-label={t('common.close')}><X className="h-4 w-4" /></button>
-                  </div>
-                  <div className="mt-3 grid gap-1.5 text-xs font-black text-amber-950/70"><span>{t('livestock.moveQuantity')}</span><QuantityStepper label={t('livestock.moveQuantity')} min={1} max={Math.max(1, splitSource.quantity - 1)} value={splitQuantity} onChange={setSplitQuantity} /></div>
-                  <div className="mt-4">
-                    <StateChoiceGroup<LifeStage> label={t('livestock.lifeStageLabel')} value={splitLifeStage} options={lifeStageChoices} onChange={setSplitLifeStage} />
-                  </div>
-                  {reproductiveApplicable && (
-                    <div className="mt-4">
-                      <StateChoiceGroup<ReproductiveState> label={t('livestock.reproductiveStateLabel')} value={splitReproductiveState} options={reproductiveChoices} onChange={setSplitReproductiveState} compact />
+              {taskStep === 1 && selectedSourceBatch && (
+                <section className="rounded-[22px] border border-border/80 bg-white p-4 shadow-sm">
+                  <h3 className="text-base font-black text-ink">{isEn ? 'Which animals are changing?' : '这次要调整哪一组？'}</h3>
+                  <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">{isEn ? 'Choose the group and number. The remaining animals keep their current state automatically.' : '选择批次和本次调整数量；其余生物会自动保留原体态，不需要理解“拆分批次”。'}</p>
+                  {sourceBatches.length > 1 && (
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label={isEn ? 'Choose group' : '选择批次'}>
+                      {sourceBatches.map((batch, index) => (
+                        <button key={batch.id} type="button" role="radio" aria-checked={batch.id === selectedSourceBatch.id} onClick={() => selectBatch(batch)} className={`min-h-14 rounded-2xl border px-3 py-2 text-left text-xs font-black ${batch.id === selectedSourceBatch.id ? 'border-emerald-700 bg-emerald-50 text-emerald-900' : 'border-border bg-white text-ink/55 hover:bg-bg'}`}>
+                          {t('livestock.groupTitle', { index: index + 1 })}<span className="mt-1 block text-[10px] font-semibold opacity-65">{batch.quantity} {isEn ? 'animals' : '条/只'} · {batch.entryDate.slice(0, 10)}</span>
+                        </button>
+                      ))}
                     </div>
                   )}
-                  <button type="button" onClick={confirmSplit} className="mt-4 min-h-11 rounded-full bg-amber-900 px-4 text-sm font-black text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"><Plus className="mr-1 inline h-4 w-4" />{t('livestock.confirmSplit')}</button>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div className="grid gap-1.5 text-xs font-black text-ink/55">
+                      <span>{isEn ? 'Number to update' : '本次调整数量'}</span>
+                      <QuantityStepper label={isEn ? 'Number to update' : '本次调整数量'} min={1} max={selectedSourceBatch.quantity} value={targetQuantity} onChange={setTargetQuantity} />
+                    </div>
+                    <QuickDatePicker value={targetEntryDate} onChange={setTargetEntryDate} isEn={isEn} />
+                  </div>
+                  <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-bg px-3 py-3 text-xs font-semibold text-ink/58">
+                    <span>{targetQuantity < selectedSourceBatch.quantity
+                      ? (isEn ? `${targetQuantity} will change; ${selectedSourceBatch.quantity - targetQuantity} keep their current state.` : `调整 ${targetQuantity} 只/条，其余 ${selectedSourceBatch.quantity - targetQuantity} 只/条保留原体态。`)
+                      : (isEn ? 'The whole group will use the new state.' : '这一整组都会更新为新体态。')}</span>
+                    <button type="button" onClick={() => setPendingDelete(selectedSourceBatch)} aria-label={t('livestock.deleteGroupLabel', { index: sourceBatches.findIndex(batch => batch.id === selectedSourceBatch.id) + 1 })} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-rose-600 hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"><Trash2 className="h-4 w-4" /></button>
+                  </div>
                 </section>
               )}
 
-              {hasUnsavedChanges && (
-                <div className="rounded-[18px] border border-emerald-100 bg-emerald-50 px-4 py-3 text-xs font-bold leading-5 text-emerald-900" aria-live="polite">
-                  <strong>{t('livestock.changeSummary')}</strong>
-                  <span className="ml-1">{summarize(draft, t)}</span>
-                </div>
+              {taskStep === 2 && selectedSourceBatch && (
+                <section className="rounded-[22px] border border-border/80 bg-white p-4 shadow-sm">
+                  <h3 className="text-base font-black text-ink">{isEn ? `Set the state for ${targetQuantity}` : `为这 ${targetQuantity} 只/条选择体态`}</h3>
+                  <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">{isEn ? 'State changes create observation reminders, but do not diagnose disease or change compatibility.' : '体态只会生成观察提醒，不会自动判病，也不会改变混养结论。'}</p>
+                  <div className="mt-4">
+                    <StateChoiceGroup<LifeStage> label={t('livestock.lifeStageLabel')} value={targetLifeStage} options={lifeStageChoices} onChange={setTargetLifeStage} />
+                  </div>
+                  {reproductiveApplicable && (
+                    <div className="mt-5">
+                      <StateChoiceGroup<ReproductiveState> label={t('livestock.reproductiveStateLabel')} value={targetReproductiveState} options={reproductiveChoices} onChange={setTargetReproductiveState} compact />
+                    </div>
+                  )}
+                </section>
               )}
+
+              {taskStep === 3 && (
+                <section className="rounded-[22px] border border-emerald-200 bg-white p-4 shadow-sm">
+                  <h3 className="text-base font-black text-ink">{isEn ? 'Review before saving' : '保存前核对'}</h3>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    <div className="rounded-2xl bg-bg px-3 py-3">
+                      <div className="text-[10px] font-black uppercase tracking-wide text-ink/40">{isEn ? 'Before' : '修改前'}</div>
+                      <p className="mt-1 text-xs font-bold leading-5 text-ink/65">{summarize(record, t)}</p>
+                    </div>
+                    <div className="rounded-2xl bg-emerald-50 px-3 py-3">
+                      <div className="text-[10px] font-black uppercase tracking-wide text-emerald-700">{isEn ? 'After' : '修改后'}</div>
+                      <p className="mt-1 text-xs font-black leading-5 text-emerald-900">{summarize(draft, t)}</p>
+                    </div>
+                  </div>
+                  <p className="mt-3 rounded-2xl bg-amber-50 px-3 py-3 text-xs font-semibold leading-5 text-amber-900">{targetQuantity < (selectedSourceBatch?.quantity || 0)
+                    ? (isEn ? 'Only the selected number changes. The rest stay in their original group.' : '只修改所选数量，其余生物仍保留在原组。')
+                    : (isEn ? 'This updates the entire selected group.' : '本次会更新所选整组。')}</p>
+                </section>
+              )}
+
               {error && <p role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700">{error}</p>}
             </div>
 
-            <footer className="sticky bottom-0 flex justify-end gap-2 border-t border-border bg-white/95 px-4 py-3 backdrop-blur md:px-5">
-              <button type="button" onClick={requestClose} disabled={isSaving} className="min-h-11 rounded-full border border-border px-4 text-sm font-black text-ink/60 disabled:opacity-50">{t('livestock.cancel')}</button>
-              <button type="button" onClick={() => void save()} disabled={isSaving || !hasUnsavedChanges} className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white disabled:opacity-50">{isSaving ? t('livestock.saving') : t('livestock.saveChanges')}</button>
+            <footer className="sticky bottom-0 flex items-center justify-between gap-2 border-t border-border bg-white/95 px-4 py-3 backdrop-blur md:px-5">
+              <button type="button" onClick={taskStep === 1 ? requestClose : () => { if (taskStep === 3) setDraft(record); setTaskStep(previous => previous === 3 ? 2 : 1); }} disabled={isSaving} className="min-h-11 rounded-full border border-border px-4 text-sm font-black text-ink/60 disabled:opacity-50">{taskStep === 1 ? t('livestock.cancel') : (isEn ? 'Previous' : '上一步')}</button>
+              {taskStep === 1 ? (
+                <button type="button" onClick={() => setTaskStep(2)} className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white">{isEn ? 'Next: choose state' : '下一步：选择体态'}</button>
+              ) : taskStep === 2 ? (
+                <button type="button" onClick={prepareReview} disabled={!hasPendingSelection} className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white disabled:opacity-50">{isEn ? 'Review changes' : '核对修改'}</button>
+              ) : (
+                <button type="button" onClick={() => void save()} disabled={isSaving || JSON.stringify(draft) === JSON.stringify(record)} className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white disabled:opacity-50">{isSaving ? t('livestock.saving') : t('livestock.saveChanges')}</button>
+              )}
             </footer>
           </div>
         )}

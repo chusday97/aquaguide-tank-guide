@@ -8,6 +8,7 @@ import { LivestockBatchCard } from './LivestockBatchCard';
 import { SurfaceHeader } from '../common/SurfaceHeader';
 import { useTranslation } from 'react-i18next';
 import { QuantityStepper } from '../forms/QuantityStepper';
+import { getLifeType } from '../../modules/species/species.service';
 
 type RemovalDraft = {
   record: AquariumFish;
@@ -224,7 +225,7 @@ export function LivestockRosterDialog({
                     <LivestockBatchCard
                       fish={fish}
                       record={record}
-                      reproductiveApplicable
+                      reproductiveApplicable={['fish', 'invertebrate', 'reptile'].includes(getLifeType(fish))}
                       isEditing={editingRecordId === record.id}
                       onEditingChange={editing => {
                         setEditingRecordId(editing ? record.id : null);
