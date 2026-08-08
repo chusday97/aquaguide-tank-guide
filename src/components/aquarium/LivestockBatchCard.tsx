@@ -124,6 +124,7 @@ export function LivestockBatchCard({
   const restoringHistoryRef = useRef(false);
   const allowHistoryNavigationRef = useRef(false);
   const navigationGuardCleanupRef = useRef<(() => void) | null>(null);
+  const wasEditingRef = useRef(false);
   const [error, setError] = useState('');
   const { navigateToRoute, registerNavigationGuard } = useWorkspaceNavigation();
 
@@ -139,7 +140,8 @@ export function LivestockBatchCard({
   };
 
   useEffect(() => {
-    if (isEditing) initializeTask(record);
+    if (isEditing && !wasEditingRef.current) initializeTask(record);
+    wasEditingRef.current = isEditing;
   }, [isEditing, record]);
   const batches = useMemo(() => normalizeSpeciesBatches(draft), [draft]);
   const sourceBatches = useMemo(() => normalizeSpeciesBatches(record), [record]);
@@ -286,6 +288,19 @@ export function LivestockBatchCard({
 
   useEffect(() => {
     if (!isEditing || !hasUnsavedChanges) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      setPendingNavigationPath(null);
+      setIsDiscardConfirmOpen(true);
+    };
+    window.addEventListener('keydown', handleEscape, true);
+    return () => window.removeEventListener('keydown', handleEscape, true);
+  }, [hasUnsavedChanges, isEditing]);
+
+  useEffect(() => {
+    if (!isEditing || !hasUnsavedChanges) return;
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = '';
@@ -414,9 +429,9 @@ export function LivestockBatchCard({
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <div className="grid gap-1.5 text-xs font-black text-ink/55">
                       <span>{isEn ? 'Number to update' : '本次调整数量'}</span>
-                      <QuantityStepper label={isEn ? 'Number to update' : '本次调整数量'} min={1} max={selectedSourceBatch.quantity} value={targetQuantity} onChange={setTargetQuantity} />
+                      <QuantityStepper label={isEn ? 'Number to update' : '本次调整数量'} min={1} max={selectedSourceBatch.quantity} value={targetQuantity} onChange={value => { onDirtyChange?.(true); setTargetQuantity(value); }} />
                     </div>
-                    <QuickDatePicker value={targetEntryDate} onChange={setTargetEntryDate} isEn={isEn} />
+                    <QuickDatePicker value={targetEntryDate} onChange={value => { onDirtyChange?.(true); setTargetEntryDate(value); }} isEn={isEn} />
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-bg px-3 py-3 text-xs font-semibold text-ink/58">
                     <span>{targetQuantity < selectedSourceBatch.quantity
@@ -432,11 +447,11 @@ export function LivestockBatchCard({
                   <h3 className="text-base font-black text-ink">{isEn ? `Set the state for ${targetQuantity}` : `为这 ${targetQuantity} 只/条选择体态`}</h3>
                   <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">{isEn ? 'State changes create observation reminders, but do not diagnose disease or change compatibility.' : '体态只会生成观察提醒，不会自动判病，也不会改变混养结论。'}</p>
                   <div className="mt-4">
-                    <StateChoiceGroup<LifeStage> label={t('livestock.lifeStageLabel')} value={targetLifeStage} options={lifeStageChoices} onChange={setTargetLifeStage} />
+                    <StateChoiceGroup<LifeStage> label={t('livestock.lifeStageLabel')} value={targetLifeStage} options={lifeStageChoices} onChange={value => { onDirtyChange?.(true); setTargetLifeStage(value); }} />
                   </div>
                   {reproductiveApplicable && (
                     <div className="mt-5">
-                      <StateChoiceGroup<ReproductiveState> label={t('livestock.reproductiveStateLabel')} value={targetReproductiveState} options={reproductiveChoices} onChange={setTargetReproductiveState} compact />
+                      <StateChoiceGroup<ReproductiveState> label={t('livestock.reproductiveStateLabel')} value={targetReproductiveState} options={reproductiveChoices} onChange={value => { onDirtyChange?.(true); setTargetReproductiveState(value); }} compact />
                     </div>
                   )}
                 </section>

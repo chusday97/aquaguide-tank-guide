@@ -162,12 +162,12 @@ try {
   assert.ok(await narrowEnglish.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), '600px English desktop must not overflow');
   await narrowEnglish.getByRole('textbox', { name: 'Number to update' }).fill('2');
   await narrowEnglish.keyboard.press('Escape');
-  await narrowEnglish.getByRole('heading', { name: 'Discard livestock changes?' }).waitFor();
+  await narrowEnglish.getByRole('heading', { name: 'Discard changes?' }).waitFor();
   await narrowEnglish.getByRole('button', { name: 'Continue editing' }).click();
   assert.ok(narrowEnglish.url().includes('/aquarium'), 'continuing an edit must keep the livestock editor route');
   await narrowEnglish.keyboard.press('Escape');
-  await narrowEnglish.getByRole('heading', { name: 'Discard livestock changes?' }).waitFor();
-  await narrowEnglish.getByRole('button', { name: 'Discard and close' }).click();
+  await narrowEnglish.getByRole('heading', { name: 'Discard changes?' }).waitFor();
+  await narrowEnglish.getByRole('button', { name: 'Discard changes' }).click();
   await narrowEnglish.getByRole('heading', { name: /^Manage / }).waitFor({ state: 'hidden' });
   await narrowEnglish.getByRole('button', { name: 'Settings', exact: true }).click();
   await narrowEnglish.waitForURL('**/settings');
