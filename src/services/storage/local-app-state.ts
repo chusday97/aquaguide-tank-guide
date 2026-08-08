@@ -1,6 +1,7 @@
 import type { Aquarium, OnboardingState } from '../../types';
 import type { DiscoveryDeckState } from '../../modules/recommendation/recommendation.schema';
 import { notifyDataRecovery } from '../diagnostics/ui-failure.service';
+import type { CareEventType } from '../../types/database';
 
 export const AQUARIUM_APP_STATE_KEY = 'aquarium_app_state_v1';
 export const AQUARIUM_APP_STATE_VERSION = 1;
@@ -14,6 +15,19 @@ export type LocalEventRecord = {
   note?: string;
 };
 
+export type LocalCareEventRecord = {
+  id: string;
+  aquariumId: string;
+  eventType: CareEventType;
+  title: string;
+  label?: string;
+  payload: Record<string, unknown>;
+  occurredAt: string;
+  sourceType?: string;
+  sourceId?: string;
+  isInferred: boolean;
+};
+
 export type LocalAppState = {
   version: 1;
   currentAquariumId: string;
@@ -25,6 +39,7 @@ export type LocalAppState = {
   deceasedRecords: unknown[];
   feedingRecords: LocalEventRecord[];
   observationRecords: LocalEventRecord[];
+  careEvents?: LocalCareEventRecord[];
   riskReminderState: Record<string, string>;
   discoveryState?: DiscoveryDeckState;
   onboarding?: OnboardingState;
@@ -58,6 +73,7 @@ const createEmptyState = (): LocalAppState => ({
   deceasedRecords: [],
   feedingRecords: [],
   observationRecords: [],
+  careEvents: [],
   riskReminderState: {},
   updatedAt: new Date().toISOString(),
 });
@@ -75,6 +91,7 @@ const normalizeState = (value: Partial<LocalAppState> | null | undefined): Local
     deceasedRecords: Array.isArray(value?.deceasedRecords) ? value.deceasedRecords : fallback.deceasedRecords,
     feedingRecords: Array.isArray(value?.feedingRecords) ? value.feedingRecords : fallback.feedingRecords,
     observationRecords: Array.isArray(value?.observationRecords) ? value.observationRecords : fallback.observationRecords,
+    careEvents: Array.isArray(value?.careEvents) ? value.careEvents : fallback.careEvents,
     riskReminderState: value?.riskReminderState && typeof value.riskReminderState === 'object' ? value.riskReminderState : fallback.riskReminderState,
     discoveryState: value?.discoveryState,
     onboarding: value?.onboarding ? {

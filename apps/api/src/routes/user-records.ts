@@ -246,7 +246,13 @@ userRecordsRouter.post('/care-reminders', asyncRoute(async (request, response) =
   const { data: existing, error: existingError } = await existingQuery.maybeSingle();
   if (existingError) throwDatabaseError(existingError, '暂时无法确认养护计划。');
   if (existing) {
-    const { data, error } = await client.from('care_reminders').update({ scheduled_for: parsed.data.scheduledFor, label: parsed.data.label, title: parsed.data.title, reminder_type: parsed.data.reminderType }).eq('id', existing.id).eq('version', existing.version).select('*').single();
+    const updatePayload: Record<string, unknown> = { scheduled_for: parsed.data.scheduledFor, label: parsed.data.label, title: parsed.data.title, reminder_type: parsed.data.reminderType };
+    if (parsed.data.repeatEnabled) {
+      updatePayload.series_id = parsed.data.seriesId;
+      updatePayload.repeat_enabled = true;
+      updatePayload.repeat_interval_days = parsed.data.repeatIntervalDays;
+    }
+    const { data, error } = await client.from('care_reminders').update(updatePayload).eq('id', existing.id).eq('version', existing.version).select('*').single();
     if (error || !data) throwDatabaseError(error, '养护计划没有更新成功。');
     await finishIdempotentWrite(request, idempotency, 'care_reminder', existing.id, 200);
     return sendData(request, response, camelize(data));
@@ -262,6 +268,9 @@ userRecordsRouter.post('/care-reminders', asyncRoute(async (request, response) =
     reminder_type: parsed.data.reminderType,
     scheduled_for: parsed.data.scheduledFor,
     label: parsed.data.label,
+    series_id: parsed.data.seriesId,
+    repeat_enabled: parsed.data.repeatEnabled,
+    repeat_interval_days: parsed.data.repeatIntervalDays,
   }).select('*').single();
   if (error || !data) throwDatabaseError(error, '养护计划没有保存成功。');
   await finishIdempotentWrite(request, idempotency, 'care_reminder', id, 201);
@@ -273,11 +282,45 @@ userRecordsRouter.patch('/care-reminders/:id', asyncRoute(async (request, respon
   const parsed = careReminderUpdateSchema.safeParse(request.body);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '养护计划更新无效。', parsed.error.flatten());
   const { version, ...updates } = parsed.data;
-  const normalized = { ...updates, completedAt: updates.completedAt === null ? null : updates.completedAt };
   const client = userClientFor(request);
+  const userId = authenticatedRequest(request).authUser.id;
+  const { data: current, error: currentError } = await client.from('care_reminders').select('*').eq('id', id).is('deleted_at', null).maybeSingle();
+  if (currentError) throwDatabaseError(currentError, '养护计划暂时无法读取。');
+  if (!current) throw new ApiError(404, 'NOT_FOUND', '没有找到这条养护计划。');
+  const normalized: Record<string, unknown> = { ...updates, completedAt: updates.completedAt === null ? null : updates.completedAt };
+  if (updates.repeatEnabled === true) {
+    const interval = updates.repeatIntervalDays ?? current.repeat_interval_days;
+    if (!interval) throw new ApiError(400, 'VALIDATION_ERROR', '开启循环需要设置 1–90 天的间隔。');
+    normalized.seriesId = current.series_id || deterministicUuid(`${userId}:care-reminder-series:${id}`);
+    normalized.repeatIntervalDays = interval;
+  }
+  if (updates.repeatEnabled === false) {
+    normalized.seriesId = null;
+    normalized.repeatIntervalDays = null;
+  }
   const { data, error } = await client.from('care_reminders').update(snakeize(normalized)).eq('id', id).eq('version', version).is('deleted_at', null).select('*').maybeSingle();
   if (error) throwDatabaseError(error, '养护计划没有更新成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'care_reminders', id);
+  if (updates.completedAt && current.repeat_enabled && current.repeat_interval_days && current.series_id) {
+    const nextScheduledFor = new Date(updates.completedAt);
+    nextScheduledFor.setDate(nextScheduledFor.getDate() + current.repeat_interval_days);
+    const nextId = deterministicUuid(`${current.series_id}:${nextScheduledFor.toISOString()}`);
+    const { error: nextError } = await client.from('care_reminders').upsert({
+      id: nextId,
+      owner_id: userId,
+      aquarium_id: current.aquarium_id,
+      source_article_id: current.source_article_id,
+      source_catalog_key: current.source_catalog_key,
+      title: current.title,
+      reminder_type: current.reminder_type,
+      scheduled_for: nextScheduledFor.toISOString(),
+      label: `${current.repeat_interval_days} 天循环`,
+      series_id: current.series_id,
+      repeat_enabled: true,
+      repeat_interval_days: current.repeat_interval_days,
+    }, { onConflict: 'id', ignoreDuplicates: true });
+    if (nextError) throwDatabaseError(nextError, '当前计划已完成，但下一次循环计划没有生成成功。');
+  }
   return sendData(request, response, camelize(data));
 }));
 

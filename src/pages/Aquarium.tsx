@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
-import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download, MoreHorizontal } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download, MoreHorizontal, History } from 'lucide-react';
 import { DeceasedRecord } from '../types';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 import {
@@ -77,6 +77,7 @@ import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { OnboardingTaskCard } from '../components/onboarding/OnboardingTaskCard';
 import { getOnboardingState, getOnboardingTaskProgress, getOnboardingTasks, markAquariumConfigured } from '../services/onboarding/onboarding.service';
 import { LivestockRosterDialog } from '../components/aquarium/LivestockRosterDialog';
+import { AquariumTimeline } from '../components/aquarium/AquariumTimeline';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
 import {
@@ -116,13 +117,16 @@ import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
 import {
   completeCareReminder,
+  configureCareReminderRecurrence,
   deleteCareReminder,
   getCareReminders,
   getCareReminderStatus,
   rescheduleCareReminder,
   subscribeToCareActivity,
+  upsertCareReminder,
   type CareReminderRecord,
 } from '../services/care/care-activity.service';
+import { buildAquariumTimeline, recordCareTimelineEvent, removeCareTimelineEvent } from '../services/care/care-timeline.service';
 import {
   appendSpeciesBatch,
   createSpeciesBatch,
@@ -1244,6 +1248,7 @@ export default function AquariumManager() {
 
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => loadWishlistFishIds());
   const [careReminders, setCareRemindersState] = useState<CareReminderRecord[]>(() => getCareReminders());
+  const [careTimelineRevision, setCareTimelineRevision] = useState(0);
   const [pendingReminderDelete, setPendingReminderDelete] = useState<CareReminderRecord | null>(null);
   const [pendingReminderReschedule, setPendingReminderReschedule] = useState<CareReminderRecord | null>(null);
   const [discoveryState, setDiscoveryState] = useState<DiscoveryDeckState>(() => loadDiscoveryState());
@@ -1440,6 +1445,21 @@ export default function AquariumManager() {
     const repository = await getCurrentAquaGuideRepository();
     const savedAquarium = await repository.saveAquarium(nextAquarium);
     setAquariums(current => current.map(aquarium => aquarium.id === activeId ? savedAquarium : aquarium));
+    if (nextRecord) {
+      const latestStateUpdate = nextRecord.batches?.map(batch => batch.stateUpdatedAt).sort().at(-1) || new Date().toISOString();
+      recordCareTimelineEvent({
+        aquariumId: active.id,
+        eventType: 'life_stage_updated',
+        title: isEn ? 'Updated livestock state' : '调整缸内物种体态',
+        label: isEn ? 'Quantity and state changes saved' : '已保存数量与体态变化',
+        payload: { speciesRecordId: recordId },
+        occurredAt: new Date().toISOString(),
+        sourceType: 'livestock_state',
+        sourceId: `${recordId}:${latestStateUpdate}`,
+        isInferred: false,
+      });
+      setCareTimelineRevision(value => value + 1);
+    }
     showToast(nextRecord
       ? (isEn ? 'Livestock group states updated' : '体态与数量已更新')
       : (isEn ? 'Species removed from this tank' : '该物种已移出鱼缸'));
@@ -1457,6 +1477,18 @@ export default function AquariumManager() {
       operationId: input.operationId,
     });
     setAquariums(current => current.map(aquarium => aquarium.id === active.id ? savedAquarium : aquarium));
+    recordCareTimelineEvent({
+      aquariumId: active.id,
+      eventType: 'species_removed',
+      title: isEn ? 'Removed livestock' : '移出缸内生物',
+      label: isEn ? `${input.quantity} animals` : `${input.quantity} 只/条`,
+      payload: { aquariumFishId: input.aquariumFishId, quantity: input.quantity },
+      occurredAt: new Date().toISOString(),
+      sourceType: 'livestock_removal',
+      sourceId: input.operationId,
+      isInferred: false,
+    });
+    setCareTimelineRevision(value => value + 1);
     showToast(isEn ? `Removed ${input.quantity} livestock from aquarium log` : `已从鱼缸记录中移出 ${input.quantity} 只/条`);
   };
   const handleAddAquarium = () => {
@@ -1473,10 +1505,60 @@ export default function AquariumManager() {
 
   const handleCompleteReminder = (reminder: CareReminderRecord) => {
     try {
-      completeCareReminder(reminder.id);
-      showToast(Boolean(i18n.language?.startsWith('en')) ? 'Care plan task marked completed' : '养护计划已完成');
+      const completed = completeCareReminder(reminder.id);
+      recordCareTimelineEvent({
+        aquariumId: reminder.aquariumId || activeId,
+        eventType: 'care_plan_completed',
+        title: isEn ? `Completed care plan: ${reminder.title}` : `完成养护计划：${reminder.title}`,
+        payload: {},
+        occurredAt: completed.completedAt || new Date().toISOString(),
+        sourceType: 'care_reminder',
+        sourceId: reminder.id,
+        isInferred: false,
+      });
+      setCareTimelineRevision(value => value + 1);
+      showToast(completed.repeatEnabled
+        ? (Boolean(i18n.language?.startsWith('en')) ? `Completed. Next task is in ${completed.repeatIntervalDays} days.` : `已完成，下一次将在 ${completed.repeatIntervalDays} 天后提醒。`)
+        : (Boolean(i18n.language?.startsWith('en')) ? 'Care plan task marked completed' : '养护计划已完成'));
     } catch (error) {
       showToast(error instanceof Error ? error.message : (Boolean(i18n.language?.startsWith('en')) ? 'Failed to update care plan.' : '养护计划没有更新成功。'), 'error');
+    }
+  };
+
+  const handleCreateRecurrence = (type: 'feeding' | 'water_change' | 'general', days: number) => {
+    const labels = {
+      feeding: isEn ? 'Feeding reminder' : '喂食计划',
+      water_change: isEn ? 'Water change reminder' : '换水计划',
+      general: isEn ? 'General care reminder' : '通用养护计划',
+    };
+    const scheduled = new Date();
+    scheduled.setDate(scheduled.getDate() + days);
+    try {
+      const reminder = upsertCareReminder({
+        sourceTopicId: `routine-${type}`,
+        title: labels[type],
+        type,
+        scheduledFor: scheduled.toISOString(),
+        aquariumId: activeId,
+        label: `${days} 天循环`,
+        seriesId: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `series-${Date.now()}`,
+        repeatEnabled: true,
+        repeatIntervalDays: days,
+      });
+      setCareRemindersState(getCareReminders());
+      showToast(isEn ? `${reminder.title} repeats every ${days} days.` : `已设置“${reminder.title}”每 ${days} 天循环。`);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : (isEn ? 'Could not save recurring care.' : '循环养护没有保存成功。'), 'error');
+    }
+  };
+
+  const handleChangeRecurrence = (reminder: CareReminderRecord, enabled: boolean, days?: number) => {
+    try {
+      configureCareReminderRecurrence(reminder.id, enabled, days);
+      setCareRemindersState(getCareReminders());
+      showToast(enabled ? (isEn ? 'Recurring care updated.' : '循环养护已更新。') : (isEn ? 'Recurring care turned off.' : '已关闭循环，历史记录仍会保留。'));
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : (isEn ? 'Could not update recurring care.' : '循环养护没有更新成功。'), 'error');
     }
   };
 
@@ -1839,6 +1921,18 @@ export default function AquariumManager() {
       const repository = await getCurrentAquaGuideRepository();
       const savedAquarium = await repository.saveAquarium({ ...activeAquarium, name: nextName });
       setAquariums(current => current.map(aquarium => aquarium.id === activeId ? savedAquarium : aquarium));
+      recordCareTimelineEvent({
+        aquariumId: savedAquarium.id,
+        eventType: 'settings_updated',
+        title: isEn ? 'Renamed aquarium' : '重命名鱼缸',
+        label: isEn ? `Renamed to ${savedAquarium.name}` : `已改为“${savedAquarium.name}”`,
+        payload: {},
+        occurredAt: new Date().toISOString(),
+        sourceType: 'aquarium_rename',
+        sourceId: `${savedAquarium.id}:${Date.now()}`,
+        isInferred: false,
+      });
+      setCareTimelineRevision(value => value + 1);
       setIsEditingName(false);
       showToast(`鱼缸已重命名为“${savedAquarium.name}”`);
     } catch (error) {
@@ -1861,6 +1955,27 @@ export default function AquariumManager() {
       ? reviewSpeciesAdditions({ aquarium: activeAquarium, items, speciesCatalog: fishData })
       : null
   );
+
+  const recordAddedSpeciesBatches = (before: Aquarium, after: Aquarium) => {
+    const previousBatchIds = new Set(before.fishes.flatMap(record => record.batches?.map(batch => batch.id) || [record.id]));
+    after.fishes.forEach(record => {
+      const speciesName = fishData.find(item => item.id === record.fishId)?.name || '缸内生物';
+      (record.batches || []).filter(batch => !previousBatchIds.has(batch.id)).forEach(batch => {
+        recordCareTimelineEvent({
+          aquariumId: after.id,
+          eventType: 'species_added',
+          title: isEn ? `Added ${speciesName}` : `加入${speciesName}`,
+          label: isEn ? `${batch.quantity} animals` : `${batch.quantity} 只/条`,
+          payload: { speciesId: record.fishId, quantity: batch.quantity },
+          occurredAt: batch.entryDate,
+          sourceType: 'livestock_batch',
+          sourceId: batch.id,
+          isInferred: false,
+        });
+      });
+    });
+    setCareTimelineRevision(value => value + 1);
+  };
 
   const commitAddFishItems = (normalizedItems: SpeciesAdditionItem[], confirmedCaution = false) => {
     if (!activeAquarium || normalizedItems.length === 0) return false;
@@ -1885,6 +2000,8 @@ export default function AquariumManager() {
     if (!execution.added) return false;
 
     saveAquariums(execution.aquariums);
+    const updatedTank = execution.aquariums.find(aquarium => aquarium.id === activeAquarium.id);
+    if (updatedTank) recordAddedSpeciesBatches(activeAquarium, updatedTank);
     setAddFishCompatibilityReview(null);
     setAddFishSuccess({
       aquariumName: activeAquarium.name,
@@ -1972,6 +2089,8 @@ export default function AquariumManager() {
     }
 
     saveAquariums(execution.aquariums);
+    const updatedTank = execution.aquariums.find(aquarium => aquarium.id === activeAquarium.id);
+    if (updatedTank) recordAddedSpeciesBatches(activeAquarium, updatedTank);
     const addedNames = normalizedItems
       .map(item => fishData.find(fish => fish.id === item.fishId)?.name)
       .filter(Boolean)
@@ -2042,6 +2161,21 @@ export default function AquariumManager() {
       } : a
     );
     saveAquariums(updated);
+    if (hasTodayRecord) {
+      removeCareTimelineEvent(activeAquarium.id, 'water_change_day', todayStr);
+    } else {
+      recordCareTimelineEvent({
+        aquariumId: activeAquarium.id,
+        eventType: 'water_change',
+        title: isEn ? 'Logged water change' : '记录换水',
+        payload: {},
+        occurredAt: now,
+        sourceType: 'water_change_day',
+        sourceId: todayStr,
+        isInferred: false,
+      });
+    }
+    setCareTimelineRevision(value => value + 1);
     setTankActionMessage(hasTodayRecord ? (Boolean(i18n.language?.startsWith('en')) ? 'Recalled today\'s water change record' : '已撤回今日换水记录') : (Boolean(i18n.language?.startsWith('en')) ? `Logged water change: ${format(new Date(), 'yyyy-MM-dd HH:mm')}` : `已记录换水：${format(new Date(), 'yyyy-MM-dd HH:mm')}`));
   };
 
@@ -2869,6 +3003,18 @@ export default function AquariumManager() {
     };
     const nextRecords = upsertDiagnosisRecord(diagnosisRecords, record);
     setDiagnosisRecords(persistDiagnosisRecords(nextRecords));
+    recordCareTimelineEvent({
+      aquariumId: targetAquarium.id,
+      eventType: 'daily_check',
+      title: problemType === '巡检' ? (isEn ? 'Completed daily check' : '完成每日检查') : (isEn ? `Completed ${problemType}` : `完成${problemType}`),
+      label: result.verdict,
+      payload: { riskLevel: result.riskLevel },
+      occurredAt: record.createdAt,
+      sourceType: 'diagnosis_record',
+      sourceId: id,
+      isInferred: false,
+    });
+    setCareTimelineRevision(value => value + 1);
     setDiagnosisSaveMessage(problemType === '巡检'
       ? existingDailyRecord ? '已更新今天的检查记录。' : '已保存今天的检查记录。'
       : '已保存到诊断记录，下次诊断会参考最近记录。');
@@ -4357,20 +4503,34 @@ export default function AquariumManager() {
         setFedToday(prev => {
           const next = !prev;
           const today = format(new Date(), 'yyyy-MM-dd');
+          const todayRecords = feedingRecords.filter(record => record.aquariumId === activeId && record.createdAt.startsWith(today));
+          const createdRecord: LocalEventRecord = {
+            id: Math.random().toString(36).substring(2, 9),
+            aquariumId: activeId,
+            createdAt: new Date().toISOString(),
+            type: 'feeding',
+            note: isEn ? 'Feeding Record' : '喂食记录',
+          };
           const nextRecords = next
-            ? [
-              ...feedingRecords,
-              {
-                id: Math.random().toString(36).substring(2, 9),
-                aquariumId: activeId,
-                createdAt: new Date().toISOString(),
-                type: 'feeding',
-                note: isEn ? 'Feeding Record' : '喂食记录',
-              },
-            ]
+            ? [...feedingRecords, createdRecord]
             : feedingRecords.filter(record => !(record.aquariumId === activeId && record.createdAt.startsWith(today)));
           setFeedingRecords(nextRecords);
-          patchLocalAppState({ feedingRecords: nextRecords }, { debounce: true });
+          patchLocalAppState({ feedingRecords: nextRecords });
+          if (next) {
+            recordCareTimelineEvent({
+              aquariumId: activeId,
+              eventType: 'feeding',
+              title: isEn ? 'Logged feeding' : '记录喂食',
+              payload: {},
+              occurredAt: createdRecord.createdAt,
+              sourceType: 'feeding_record',
+              sourceId: createdRecord.id,
+              isInferred: false,
+            });
+          } else {
+            todayRecords.forEach(record => removeCareTimelineEvent(activeId, 'feeding_record', record.id));
+          }
+          setCareTimelineRevision(value => value + 1);
           setTankActionMessage(next ? (isEn ? `Recorded feeding: ${format(new Date(), 'HH:mm')}` : `已记录喂食：${format(new Date(), 'HH:mm')}`) : (isEn ? 'Undid feeding record' : '已撤回今日喂食记录'));
           return next;
         });
@@ -4498,6 +4658,28 @@ export default function AquariumManager() {
       trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });
     }
   };
+  const isTimelineOpen = new URLSearchParams(routeLocation.search).get('action') === 'timeline';
+  if (isTimelineOpen) {
+    void careTimelineRevision;
+    const timelineItems = buildAquariumTimeline({
+      aquarium: activeAquarium,
+      species: fishData,
+      diagnosisRecords,
+      feedingRecords,
+      reminders: careReminders,
+    });
+    return (
+      <AquariumTimeline
+        aquariumName={activeAquarium.name}
+        items={timelineItems}
+        reminders={careReminders.filter(reminder => !reminder.aquariumId || reminder.aquariumId === activeAquarium.id)}
+        isEn={Boolean(isEn)}
+        onBack={() => navigateToRoute('/aquarium')}
+        onCreateRecurrence={handleCreateRecurrence}
+        onChangeRecurrence={handleChangeRecurrence}
+      />
+    );
+  }
   const isExportCenterOpen = new URLSearchParams(routeLocation.search).get('action') === 'exports';
   if (isExportCenterOpen) {
     const onboardingProgress = getOnboardingTaskProgress();
@@ -4655,6 +4837,13 @@ export default function AquariumManager() {
             </div>
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => navigateToRoute(taskRoutes.aquarium.timeline(activeAquarium.id))}
+          className="ml-auto inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-emerald-100 bg-white px-4 text-xs font-black text-emerald-800 shadow-sm hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+        >
+          <History className="h-4 w-4" />{isEn ? 'Aquarium timeline' : '鱼缸记录'}
+        </button>
       </section>
       {/* Aquarium Tabs */}
       <section className="aquarium-toolbar order-[0] min-w-0 pb-1 pt-[58px] md:pt-0 md:hidden">
@@ -4736,6 +4925,15 @@ export default function AquariumManager() {
             )}
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => navigateToRoute(taskRoutes.aquarium.timeline(activeAquarium.id))}
+              aria-label={isEn ? 'Aquarium timeline' : '鱼缸记录'}
+              title={isEn ? 'Aquarium timeline' : '鱼缸记录'}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+            >
+              <History className="h-4 w-4" />
+            </button>
             <button
               type="button"
               onClick={handleAddAquarium}
@@ -7449,6 +7647,18 @@ export default function AquariumManager() {
             <Button onClick={() => {
               const updated = aquariums.map(a => a.id === activeId ? { ...a, ...settingsForm } : a);
               saveAquariums(updated);
+              recordCareTimelineEvent({
+                aquariumId: activeAquarium.id,
+                eventType: 'settings_updated',
+                title: isEn ? 'Updated aquarium settings' : '更新鱼缸设置',
+                label: isEn ? 'Environment and equipment settings saved' : '已保存环境与设备配置',
+                payload: {},
+                occurredAt: new Date().toISOString(),
+                sourceType: 'aquarium_settings',
+                sourceId: `${activeAquarium.id}:${Date.now()}`,
+                isInferred: false,
+              });
+              setCareTimelineRevision(value => value + 1);
               markAquariumConfigured();
               setIsSettingsOpen(false);
             }} className="h-10 min-w-[128px] rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90">{isEn ? 'Save Settings' : '保存设置'}</Button>

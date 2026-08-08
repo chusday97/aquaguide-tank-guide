@@ -45,6 +45,7 @@ export type CareReminderMutation =
   | { action: 'upsert'; record: Omit<CareReminderRecord, 'id' | 'createdAt'> }
   | { action: 'complete'; id: string; completedAt: string }
   | { action: 'reschedule'; id: string; scheduledFor: string; label?: string }
+  | { action: 'recurrence'; id: string; repeatEnabled: boolean; repeatIntervalDays?: number }
   | { action: 'delete'; id: string };
 
 export interface AquaGuideRepository {

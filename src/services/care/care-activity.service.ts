@@ -13,6 +13,9 @@ export type CareReminderRecord = {
   aquariumId?: string;
   label?: string;
   completedAt?: string;
+  seriesId?: string;
+  repeatEnabled?: boolean;
+  repeatIntervalDays?: number;
 };
 export type CareReminderStatus = 'overdue' | 'today' | 'upcoming' | 'completed';
 export type CareCompletedOperation = { id: string; title: string; label: string; aquariumId?: string; completedAt: string };
@@ -56,6 +59,9 @@ export const normalizeCareReminder = (record: LegacyCareReminderRecord): CareRem
   aquariumId: record.aquariumId,
   label: record.label,
   completedAt: record.completedAt,
+  seriesId: record.seriesId,
+  repeatEnabled: record.repeatEnabled === true,
+  repeatIntervalDays: record.repeatEnabled === true ? record.repeatIntervalDays : undefined,
 });
 
 const readArray = <T,>(key: string): T[] => {
@@ -97,7 +103,43 @@ export const completeCareReminder = (id: string, completedAt = new Date().toISOS
   const current = getCareReminders();
   const target = current.find(item => item.id === id);
   if (!target) throw new Error('没有找到这条养护计划。');
-  const next = current.map(item => item.id === id ? { ...item, completedAt } : item);
+  if (target.completedAt) return target;
+  const completed = { ...target, completedAt };
+  let next = current.map(item => item.id === id ? completed : item);
+  if (target.repeatEnabled && target.repeatIntervalDays && target.seriesId) {
+    const scheduledFor = addTime(new Date(completedAt), target.repeatIntervalDays, 'day').toISOString();
+    const nextId = `${target.seriesId}:${scheduledFor}`;
+    if (!next.some(item => item.id === nextId)) {
+      next = [{
+        ...target,
+        id: nextId,
+        createdAt: completedAt,
+        scheduledFor,
+        completedAt: undefined,
+        label: `${target.repeatIntervalDays} 天循环`,
+      }, ...next];
+    }
+  }
+  setCareReminders(next);
+  return next.find(item => item.id === id)!;
+};
+
+export const configureCareReminderRecurrence = (id: string, repeatEnabled: boolean, repeatIntervalDays?: number) => {
+  const current = getCareReminders();
+  const target = current.find(item => item.id === id);
+  if (!target) throw new Error('没有找到这条养护计划。');
+  if (repeatEnabled && (!Number.isInteger(repeatIntervalDays) || repeatIntervalDays! < 1 || repeatIntervalDays! > 90)) {
+    throw new Error('循环间隔需要是 1–90 天的整数。');
+  }
+  const seriesId = target.seriesId || (typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `series-${Date.now()}`);
+  const next = current.map(item => item.id === id ? {
+    ...item,
+    repeatEnabled,
+    seriesId: repeatEnabled ? seriesId : undefined,
+    repeatIntervalDays: repeatEnabled ? repeatIntervalDays : undefined,
+  } : item);
   setCareReminders(next);
   return next.find(item => item.id === id)!;
 };

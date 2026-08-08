@@ -67,6 +67,9 @@ type ApiReminder = {
   aquariumId?: string;
   label?: string;
   completedAt?: string;
+  seriesId?: string;
+  repeatEnabled: boolean;
+  repeatIntervalDays?: number;
   createdAt: string;
   version: number;
 };
@@ -533,6 +536,9 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       aquariumId: record.aquariumId,
       label: record.label,
       completedAt: record.completedAt,
+      seriesId: record.seriesId,
+      repeatEnabled: record.repeatEnabled,
+      repeatIntervalDays: record.repeatIntervalDays,
     };
   }
 
@@ -558,6 +564,9 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
           reminderType: input.record.type,
           scheduledFor: input.record.scheduledFor,
           label: input.record.label,
+          seriesId: input.record.seriesId,
+          repeatEnabled: input.record.repeatEnabled === true,
+          repeatIntervalDays: input.record.repeatIntervalDays,
         },
       });
       return this.rememberReminder(saved);
@@ -574,7 +583,9 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       method: 'PATCH',
       body: input.action === 'complete'
         ? { completedAt: input.completedAt, version }
-        : { scheduledFor: input.scheduledFor, label: input.label, version },
+        : input.action === 'reschedule'
+          ? { scheduledFor: input.scheduledFor, label: input.label, version }
+          : { repeatEnabled: input.repeatEnabled, repeatIntervalDays: input.repeatEnabled ? input.repeatIntervalDays : null, version },
       idempotencyKey: createIdempotencyKey('care-reminder-update'),
     });
     return this.rememberReminder(saved);

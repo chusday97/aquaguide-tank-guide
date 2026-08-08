@@ -12,6 +12,7 @@ export const taskRoutes = {
     dailyCheck: '/aquarium?action=daily-check',
     livestock: '/aquarium?action=livestock',
     waterChange: '/aquarium?action=water-change',
+    timeline: (aquariumId: string) => `/aquarium?action=timeline&tank=${encodeURIComponent(aquariumId)}`,
     settings: (panel: 'size' | 'parameters' | 'equipment') => `/aquarium#settings-${panel}`,
   },
   encyclopedia: {

@@ -2,6 +2,7 @@ import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import type { Aquarium } from '../../types';
 import {
   completeCareReminder,
+  configureCareReminderRecurrence,
   deleteCareReminder,
   rescheduleCareReminder,
   upsertCareReminder,
@@ -110,6 +111,7 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     if (input.action === 'upsert') return upsertCareReminder(input.record);
     if (input.action === 'complete') return completeCareReminder(input.id, input.completedAt);
     if (input.action === 'reschedule') return rescheduleCareReminder(input.id, input.scheduledFor, input.label);
+    if (input.action === 'recurrence') return configureCareReminderRecurrence(input.id, input.repeatEnabled, input.repeatIntervalDays);
     deleteCareReminder(input.id);
     return null;
   }

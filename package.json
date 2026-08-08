@@ -46,6 +46,8 @@
     "test:collection": "tsx scripts/test-collection-achievements.ts",
     "test:memorial": "tsx scripts/test-memorial-service.ts",
     "test:state-services": "tsx scripts/test-business-state-services.ts",
+    "test:care-timeline": "node --import tsx scripts/test-care-timeline.ts",
+    "test:care-timeline-ui": "node scripts/verify-care-timeline.mjs",
     "test:product-actions": "node --import tsx scripts/audit-product-actions.ts",
     "test:task-routes": "tsx scripts/test-task-routes.ts",
     "test:task-actions-ui": "node scripts/verify-task-action-closure.mjs",
