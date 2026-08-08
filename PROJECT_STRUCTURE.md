@@ -49,7 +49,7 @@
 - `src/services/feedback/feedback.service.ts`：设置页意见反馈的唯一前端 API 入口，支持游客与可选登录会话。
 - `src/pages/Welcome.tsx`：首次使用的“先建缸 / 先看物种”目标选择页。
 - `src/components/onboarding/OnboardingTaskCard.tsx`：根据真实鱼缸、浏览、收藏/入缸和巡检记录自动更新的新手任务卡。
-- `src/components/aquarium/LivestockBatchCard.tsx`：同一任务表面内的批次汇总、图标式体态选择、拆分/合并、保存摘要与删除确认。
+- `src/components/aquarium/LivestockBatchCard.tsx`：同一任务表面内的批次汇总、三步体态调整、部分数量自动分组、保存摘要与删除确认。
 - `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情；桌面中央/手机全高管理体态，并按数量二次确认移出。
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
