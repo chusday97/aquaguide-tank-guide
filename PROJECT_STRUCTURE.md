@@ -53,6 +53,7 @@
 - `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情；桌面中央/手机全高管理体态，并按数量二次确认移出。
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
+- `src/data/careEvidence.ts`：41 篇养护内容的确定性来源映射、审核状态与复查动作兜底。
 - `src/pages/CollectionHub.tsx`：水族册模块首页，四格按最近新增规则预览种草、养护收藏、生命纪念与成就；具体条目使用稳定深链，剩余内容通过“更多”进入模块。
 - `src/pages/Collection.tsx`：四个独立水族册模块的排序列表、物种/养护详情深链、纪念旧地址兼容跳转、勋章定位与空状态。
 - `src/pages/MemorialDetail.tsx`：生命纪念独立档案页；结构化复盘补录/编辑、未保存保护、列表返回与再次加入统一复核。
