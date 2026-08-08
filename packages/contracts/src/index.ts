@@ -76,6 +76,27 @@ export interface PublicAssetDto {
   url: string;
 }
 
+export type EvidenceReviewStatus = 'draft' | 'reviewed' | 'rejected';
+export type EvidenceConfidence = 'high' | 'medium' | 'low' | 'unknown';
+export type CompatibilityRuleBasis = 'species_trait' | 'pair_rule' | 'tank_condition' | 'rule_inference';
+
+export interface EvidenceSourceDto {
+  id: string;
+  title: string;
+  publisher: string;
+  url: string;
+  sourceType: 'government' | 'peer_reviewed' | 'university' | 'professional_association' | 'curated_husbandry';
+  reviewStatus: EvidenceReviewStatus;
+}
+
+export interface CompatibilityEvidenceDto {
+  basis: CompatibilityRuleBasis;
+  confidence: EvidenceConfidence;
+  reviewStatus: EvidenceReviewStatus;
+  affectedSpeciesIds: string[];
+  citations: EvidenceSourceDto[];
+}
+
 export interface SpeciesSummaryDto {
   id: string;
   catalogKey: string;
@@ -106,6 +127,14 @@ export interface SpeciesDetailDto extends SpeciesSummaryDto {
   housingReason?: string;
   feedingProfile?: Record<string, unknown>;
   assets: PublicAssetDto[];
+  compatibilityProfile?: {
+    behaviorTraits: string[];
+    minimumGroupSize?: number;
+    predationTargets: string[];
+    confidence: EvidenceConfidence;
+    reviewStatus: EvidenceReviewStatus;
+    citations: EvidenceSourceDto[];
+  };
 }
 
 export interface CareArticleSummaryDto {
@@ -132,7 +161,15 @@ export interface CareArticleDetailDto extends CareArticleSummaryDto {
     position: number;
     instruction: string;
     durationLabel?: string;
+    actionTitle?: string;
+    actionKind: 'immediate' | 'avoid' | 'observe' | 'recheck';
     image?: PublicAssetDto;
+  }>;
+  references: Array<{
+    id: string;
+    stepId?: string;
+    supportSummary: string;
+    source: EvidenceSourceDto;
   }>;
   assets: PublicAssetDto[];
 }

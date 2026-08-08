@@ -8,7 +8,22 @@ export type UserRole = 'user' | 'admin';
 export type AssetVariant = 'original' | 'thumbnail' | 'detail' | 'texture' | 'article_main' | 'article_step';
 export type WaterType = 'Freshwater' | 'Saltwater';
 export type ComponentType = 'substrate' | 'plant' | 'hardscape';
-export type CareEventType = 'water_change' | 'feeding' | 'observation' | 'checklist_completed';
+export type CareEventType =
+  | 'aquarium_created'
+  | 'settings_updated'
+  | 'species_added'
+  | 'species_removed'
+  | 'life_stage_updated'
+  | 'water_change'
+  | 'feeding'
+  | 'observation'
+  | 'daily_check'
+  | 'checklist_completed'
+  | 'care_plan_completed';
+export type EvidenceSourceType = 'government' | 'peer_reviewed' | 'university' | 'professional_association' | 'curated_husbandry';
+export type EvidenceReviewStatus = 'draft' | 'reviewed' | 'rejected';
+export type EvidenceConfidence = 'high' | 'medium' | 'low' | 'unknown';
+export type CareActionKind = 'immediate' | 'avoid' | 'observe' | 'recheck';
 export type MigrationStatus = 'previewed' | 'committing' | 'completed' | 'failed';
 export type LifeStage = 'unknown' | 'juvenile' | 'adult';
 export type ReproductiveState = 'unknown' | 'not_applicable' | 'normal' | 'pregnant_or_gravid' | 'in_labor_or_spawning' | 'postpartum_recovery';
@@ -169,6 +184,66 @@ export interface CareArticleStepRecord extends SyncFields {
   position: number;
   instruction: string;
   durationLabel?: string;
+  actionTitle?: string;
+  actionKind: CareActionKind;
+}
+
+export interface EvidenceSourceRecord extends SyncFields {
+  id: Uuid;
+  title: string;
+  publisher: string;
+  url: string;
+  sourceType: EvidenceSourceType;
+  publishedAt?: IsoDate;
+  accessedAt: IsoDate;
+  reviewStatus: EvidenceReviewStatus;
+  reviewedAt?: IsoDateTime;
+  reviewedBy?: Uuid;
+}
+
+export interface SpeciesCompatibilityProfileRecord extends SyncFields {
+  id: Uuid;
+  speciesId: Uuid;
+  behaviorTraits: string[];
+  minimumGroupSize?: number;
+  predationTargets: string[];
+  confidence: EvidenceConfidence;
+  reviewStatus: EvidenceReviewStatus;
+  reviewedAt?: IsoDateTime;
+  reviewedBy?: Uuid;
+}
+
+export interface SpeciesCompatibilityProfileSourceRecord {
+  profileId: Uuid;
+  sourceId: Uuid;
+}
+
+export interface SpeciesPairCompatibilityRuleRecord extends SyncFields {
+  id: Uuid;
+  speciesAId: Uuid;
+  speciesBId: Uuid;
+  verdict: 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
+  riskType: string;
+  reason: string;
+  mitigation: string[];
+  confidence: EvidenceConfidence;
+  reviewStatus: EvidenceReviewStatus;
+  reviewedAt?: IsoDateTime;
+  reviewedBy?: Uuid;
+}
+
+export interface SpeciesPairCompatibilityRuleSourceRecord {
+  ruleId: Uuid;
+  sourceId: Uuid;
+}
+
+export interface CareArticleReferenceLinkRecord extends SyncFields {
+  id: Uuid;
+  articleId: Uuid;
+  stepId?: Uuid;
+  sourceId: Uuid;
+  supportSummary: string;
+  position: number;
 }
 
 export interface CareArticleAssetRecord extends SyncFields {
@@ -213,6 +288,7 @@ export interface CareArticleStepTranslationRecord extends SyncFields {
   status: ContentStatus;
   instruction: string;
   durationLabel?: string;
+  actionTitle?: string;
   reviewedAt?: IsoDateTime;
   reviewedBy?: Uuid;
 }
@@ -343,6 +419,9 @@ export interface CareReminderRecordRow extends SyncFields {
   scheduledFor: IsoDateTime;
   label?: string;
   completedAt?: IsoDateTime;
+  seriesId?: Uuid;
+  repeatEnabled: boolean;
+  repeatIntervalDays?: number;
 }
 
 export interface CareEventRecord extends SyncFields {
@@ -354,6 +433,9 @@ export interface CareEventRecord extends SyncFields {
   label?: string;
   payload: Record<string, unknown>;
   occurredAt: IsoDateTime;
+  sourceType?: string;
+  sourceId?: string;
+  isInferred: boolean;
 }
 
 export interface FeedbackSubmissionRecord extends SyncFields {
@@ -460,6 +542,12 @@ type RecognitionMissTableDefinition = {
   Update: Partial<Omit<SpeciesRecognitionMissRecord, 'id' | 'imageSha256' | 'modelName'>>;
 };
 
+type JoinTableDefinition<Row> = {
+  Row: Row;
+  Insert: Row;
+  Update: Partial<Row>;
+};
+
 export interface Database {
   public: {
     Tables: {
@@ -475,6 +563,12 @@ export interface Database {
       careArticleAssets: TableDefinition<CareArticleAssetRecord>;
       careArticleTranslations: TableDefinition<CareArticleTranslationRecord>;
       careArticleStepTranslations: TableDefinition<CareArticleStepTranslationRecord>;
+      evidenceSources: TableDefinition<EvidenceSourceRecord>;
+      speciesCompatibilityProfiles: TableDefinition<SpeciesCompatibilityProfileRecord>;
+      speciesCompatibilityProfileSources: JoinTableDefinition<SpeciesCompatibilityProfileSourceRecord>;
+      speciesPairCompatibilityRules: TableDefinition<SpeciesPairCompatibilityRuleRecord>;
+      speciesPairCompatibilityRuleSources: JoinTableDefinition<SpeciesPairCompatibilityRuleSourceRecord>;
+      careArticleReferenceLinks: TableDefinition<CareArticleReferenceLinkRecord>;
       aquariums: TableDefinition<AquariumRecord>;
       aquariumShareReports: TableDefinition<AquariumShareReportRecord>;
       aquariumSpecies: TableDefinition<AquariumSpeciesRecord>;

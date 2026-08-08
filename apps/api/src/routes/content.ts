@@ -59,7 +59,7 @@ contentRouter.get('/species/:catalogKey', asyncRoute(async (request, response) =
   const client = getPublicSupabase();
   const { data, error } = await client
     .from('species')
-    .select('*,species_translations(*),species_feeding_profiles(*,species_feeding_profile_translations(*)),species_assets(*)')
+    .select('*,species_translations(*),species_feeding_profiles(*,species_feeding_profile_translations(*)),species_assets(*),species_compatibility_profiles(*,species_compatibility_profile_sources(*,evidence_sources(*)))')
     .eq('catalog_key', parsed.data)
     .eq('status', 'published')
     .is('deleted_at', null)
@@ -105,7 +105,7 @@ contentRouter.get('/care-articles/:catalogKey', asyncRoute(async (request, respo
   const client = getPublicSupabase();
   const { data, error } = await client
     .from('care_articles')
-    .select('*,care_article_translations(*),care_article_steps(*,care_article_step_translations(*)),care_article_assets(*)')
+    .select('*,care_article_translations(*),care_article_steps(*,care_article_step_translations(*)),care_article_assets(*),care_article_reference_links(*,evidence_sources(*))')
     .eq('catalog_key', parsed.data)
     .eq('status', 'published')
     .is('deleted_at', null)

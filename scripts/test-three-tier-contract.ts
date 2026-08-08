@@ -7,6 +7,7 @@ const migration = [
   '202607160001_core_schema.sql',
   '202607160002_localization.sql',
   '202607220001_livestock_batches.sql',
+  '202608090001_evidence_timeline_recurrence.sql',
 ].map(file => readFileSync(resolve(root, 'supabase/migrations', file), 'utf8')).join('\n');
 const contract = readFileSync(resolve(root, 'CONTRACT.md'), 'utf8');
 const databaseTypes = readFileSync(resolve(root, 'src/types/database.ts'), 'utf8');
@@ -37,6 +38,12 @@ const tables = [
   'species_feeding_profile_translations',
   'care_article_translations',
   'care_article_step_translations',
+  'evidence_sources',
+  'species_compatibility_profiles',
+  'species_compatibility_profile_sources',
+  'species_pair_compatibility_rules',
+  'species_pair_compatibility_rule_sources',
+  'care_article_reference_links',
 ];
 
 for (const table of tables) {
@@ -58,6 +65,14 @@ assert.match(migration, /create policy species_translations_public_select/);
 assert.match(migration, /create policy care_translations_public_select/);
 assert.match(migration, /create policy aquarium_species_batches_owner_all/);
 assert.match(migration, /create trigger aquarium_species_batches_sync_quantity/);
+assert.match(migration, /create policy evidence_sources_public_select/);
+assert.match(migration, /create policy compatibility_profiles_public_select/);
+assert.match(migration, /create policy pair_compatibility_rules_public_select/);
+assert.match(migration, /create policy care_article_references_public_select/);
+assert.match(migration, /add column action_title text/);
+assert.match(migration, /add column action_kind text not null default 'immediate'/);
+assert.match(migration, /add column series_id uuid/);
+assert.match(migration, /add column source_type text/);
 
 assert.match(contract, /前端仅使用 Supabase Auth 获取会话，不直接读写业务表/);
 assert.match(contract, /Idempotency-Key/);
@@ -67,6 +82,9 @@ assert.match(contract, /LocalizedContentMeta/);
 assert.match(contract, /\/api\/v1\/profile/);
 assert.match(contract, /AquariumSpeciesBatchRecord/);
 assert.match(contract, /\/search\?q=/);
+assert.match(contract, /CompatibilityEvidence/);
+assert.match(contract, /care_article_reference_links/);
+assert.match(contract, /repeatIntervalDays/);
 
 assert.match(databaseTypes, /export interface Database/);
 assert.match(databaseTypes, /export interface AquariumWithRelations/);
@@ -76,5 +94,9 @@ assert.match(databaseTypes, /export interface IdempotencyRecord/);
 assert.match(databaseTypes, /export interface SpeciesTranslationRecord/);
 assert.match(databaseTypes, /export interface CareArticleTranslationRecord/);
 assert.match(databaseTypes, /export interface AquariumSpeciesBatchRecord/);
+assert.match(databaseTypes, /export interface EvidenceSourceRecord/);
+assert.match(databaseTypes, /export interface SpeciesCompatibilityProfileRecord/);
+assert.match(databaseTypes, /export interface SpeciesPairCompatibilityRuleRecord/);
+assert.match(databaseTypes, /export interface CareArticleReferenceLinkRecord/);
 
 console.log(`three-tier contract verified: ${tables.length} tables, RLS, Storage, API and shared types`);

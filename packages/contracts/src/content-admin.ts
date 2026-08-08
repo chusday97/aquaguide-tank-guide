@@ -35,7 +35,12 @@ export const careArticleAdminInputSchema = z.object({
   urgency: z.enum(['日常', '尽快处理', '高优先级']),
   summary: z.string().trim().min(1).max(4000),
   symptoms: z.array(z.string()).default([]),
-  steps: z.array(z.object({ instruction: z.string().trim().min(1), durationLabel: z.string().optional() })).default([]),
+  steps: z.array(z.object({
+    instruction: z.string().trim().min(1),
+    durationLabel: z.string().optional(),
+    actionTitle: z.string().trim().min(1).max(160).optional(),
+    actionKind: z.enum(['immediate', 'avoid', 'observe', 'recheck']).default('immediate'),
+  })).default([]),
   avoidActions: z.array(z.string()).default([]),
   observeItems: z.array(z.string()).default([]),
   diagnoseWhen: z.array(z.string()).default([]),

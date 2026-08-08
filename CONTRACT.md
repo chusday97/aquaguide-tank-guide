@@ -1,9 +1,9 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.4.0
+> 版本：2.5.0
 > 状态：已确认，实施中
-> 生效日期：2026-08-01
-> SQL 来源：`supabase/migrations/202607160001_core_schema.sql`、`supabase/migrations/202607160002_localization.sql`、`supabase/migrations/202607220001_livestock_batches.sql`、`202607220002_atomic_livestock_batch_split.sql`、`202607220003_atomic_livestock_memorial.sql`、`202607220004_atomic_livestock_batch_merge.sql`、`202607220005_fix_livestock_batch_merge_signature.sql`、`202607260001_feedback_submissions.sql`、`202607260002_atomic_livestock_removal.sql`、`202607290001_memorial_reflection_fields.sql`、`202608010001_memorial_causes_feedback_email.sql`
+> 生效日期：2026-08-09
+> SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090001_evidence_timeline_recurrence.sql`
 > TypeScript 来源：`src/types/database.ts`
 
 ## 1. 产品与架构边界
@@ -135,10 +135,29 @@ type AssetVariant =
 ### 3.5 CareArticleStepRecord / CareArticleAssetRecord
 
 - 操作步骤按文章内 `position` 唯一排序。
-- 步骤可包含时间说明。
+- 步骤可包含时间说明、动词式 `actionTitle` 和稳定 `actionKind`（`immediate / avoid / observe / recheck`）。
 - 文章素材支持主图和步骤图，同一文章或步骤的同一用途只能有一个当前资源。
 
-### 3.6 翻译实体
+### 3.6 证据来源、混养审核与养护引用
+
+```ts
+interface CompatibilityEvidence {
+  basis: 'species_trait' | 'pair_rule' | 'tank_condition' | 'rule_inference';
+  confidence: 'high' | 'medium' | 'low' | 'unknown';
+  reviewStatus: 'draft' | 'reviewed' | 'rejected';
+  affectedSpeciesIds: string[];
+  citations: EvidenceSource[];
+}
+```
+
+- `evidence_sources` 保存权威来源、机构、URL、来源类型和人工审核状态；搜索结果页不能作为正式来源。
+- `species_compatibility_profiles` 保存物种行为特征、最低群体数量、明确捕食目标、可信度和审核状态。
+- `species_pair_compatibility_rules` 只保存有明确依据的高频或特殊组合，不穷举全部物种组合。
+- 未审核且会影响结论的数据必须降级为 `insufficient_data`；`Aggressive` 不能直接推导 `predatory`。
+- `care_article_reference_links` 将来源绑定到文章或具体步骤，并保存该来源支持的动作摘要。
+- 普通用户只能读取已审核证据；草稿、驳回与审核写入仅管理员可执行。
+
+### 3.7 翻译实体
 
 新增四张翻译表，不复制中文主数据：
 
@@ -181,8 +200,9 @@ type AssetVariant =
 - `species_favorites`：用户与物种唯一。
 - `care_favorites`：用户与文章唯一。
 - `memorial_records`：用户、可选鱼缸、可选物种 UUID、兼容物种键、日期、受控可能原因、其他原因、当时观察和后续改进。
-- `care_reminders`：用户、可选鱼缸、来源文章、计划日期和完成时间。
-- `care_events`：换水、喂食、观察和清单完成事件。
+- `care_reminders`：用户、可选鱼缸、来源文章、计划日期、完成时间和可选 1–90 天应用内循环；循环计划必须同时具有 `seriesId` 与 `repeatIntervalDays`。
+- `care_events`：建缸、设置、生物加入/移出、体态、换水、喂食、巡检和清单/计划完成事件。
+- 事件可通过 `sourceType + sourceId` 关联原始记录；同一来源事件必须幂等。旧记录回填使用 `isInferred = true`，不得伪造历史设置变更。
 - 同一文章、同一鱼缸只能有一条未完成养护计划。
 
 ### 4.5 MigrationBatchRecord
@@ -419,10 +439,11 @@ interface AquariumSpeciesBatchRecord extends SyncFields {
 | DELETE | `/memorial-records/:id` | `version` | `{ deleted: true }` | 401/404/409 |
 | GET | `/care-reminders` | `status? aquariumId?` | `CareReminderRecordRow[]` | 401 |
 | POST | `/care-reminders` | 来源、时间、幂等键 | `CareReminderRecordRow` | 400/401/409 |
-| PATCH | `/care-reminders/:id` | 时间、完成状态、`version` | `CareReminderRecordRow` | 400/401/404/409 |
+| PATCH | `/care-reminders/:id` | 时间、完成状态、循环设置、`version` | `CareReminderRecordRow` | 400/401/404/409 |
+| POST | `/care-reminders/:id/complete` | 完成时间、幂等键、`version` | `{ completed, nextReminder? }` | 400/401/404/409 |
 | DELETE | `/care-reminders/:id` | `version` | `{ deleted: true }` | 401/404/409 |
 | GET | `/care-events` | `aquariumId? type? cursor? limit?` | `Page<CareEventRecord>` | 401 |
-| POST | `/care-events` | 类型、时间、内容、幂等键 | `CareEventRecord` | 400/401/409 |
+| POST | `/care-events` | 类型、时间、内容、稳定来源、幂等键 | `CareEventRecord` | 400/401/409 |
 
 ### 7.3.1 意见反馈
 

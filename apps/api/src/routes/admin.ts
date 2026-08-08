@@ -110,6 +110,8 @@ adminRouter.post('/care-articles', asyncRoute(async (request, response) => {
       position: index + 1,
       instruction: step.instruction,
       duration_label: step.durationLabel,
+      action_title: step.actionTitle,
+      action_kind: step.actionKind,
     }))); 
     if (stepError) {
       await client.from('care_articles').delete().eq('id', id);
@@ -146,6 +148,8 @@ adminRouter.patch('/care-articles/:id', asyncRoute(async (request, response) => 
           position: index + 1,
           instruction: step.instruction,
           duration_label: step.durationLabel,
+          action_title: step.actionTitle,
+          action_kind: step.actionKind,
         }).eq('id', existing.id);
         if (stepError) throwDatabaseError(stepError, '文章步骤没有更新成功。');
         retainedIds.push(existing.id);
@@ -157,6 +161,8 @@ adminRouter.patch('/care-articles/:id', asyncRoute(async (request, response) => 
           position: index + 1,
           instruction: step.instruction,
           duration_label: step.durationLabel,
+          action_title: step.actionTitle,
+          action_kind: step.actionKind,
         });
         if (stepError) throwDatabaseError(stepError, '文章步骤没有保存成功。');
         retainedIds.push(stepId);

@@ -176,22 +176,41 @@ export const careReminderCreateSchema = z.object({
   reminderType: z.string().trim().min(1).max(80),
   scheduledFor: isoDateTimeSchema,
   label: z.string().trim().max(120).optional(),
+  seriesId: uuidSchema.optional(),
+  repeatEnabled: z.boolean().default(false),
+  repeatIntervalDays: z.number().int().min(1).max(90).optional(),
+}).superRefine((value, context) => {
+  if (value.repeatEnabled && (!value.seriesId || !value.repeatIntervalDays)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: '循环计划需要系列标识和间隔天数' });
+  }
+  if (!value.repeatEnabled && (value.seriesId || value.repeatIntervalDays)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: '非循环计划不能携带循环字段' });
+  }
 });
 
 export const careReminderUpdateSchema = z.object({
   scheduledFor: isoDateTimeSchema.optional(),
   label: z.string().trim().max(120).optional(),
   completedAt: isoDateTimeSchema.nullable().optional(),
+  repeatEnabled: z.boolean().optional(),
+  repeatIntervalDays: z.number().int().min(1).max(90).nullable().optional(),
   version: versionSchema,
-}).refine(value => value.scheduledFor !== undefined || value.label !== undefined || value.completedAt !== undefined, '至少修改一个字段');
+}).refine(value => value.scheduledFor !== undefined || value.label !== undefined || value.completedAt !== undefined || value.repeatEnabled !== undefined || value.repeatIntervalDays !== undefined, '至少修改一个字段');
 
 export const careEventCreateSchema = z.object({
   aquariumId: uuidSchema.optional(),
-  eventType: z.enum(['water_change', 'feeding', 'observation', 'checklist_completed']),
+  eventType: z.enum(['aquarium_created', 'settings_updated', 'species_added', 'species_removed', 'life_stage_updated', 'water_change', 'feeding', 'observation', 'daily_check', 'checklist_completed', 'care_plan_completed']),
   title: z.string().trim().min(1).max(160),
   label: z.string().trim().max(160).optional(),
   payload: z.record(z.string(), z.unknown()).default({}),
   occurredAt: isoDateTimeSchema,
+  sourceType: z.string().trim().min(1).max(80).optional(),
+  sourceId: z.string().trim().min(1).max(200).optional(),
+  isInferred: z.boolean().default(false),
+}).superRefine((value, context) => {
+  if (Boolean(value.sourceType) !== Boolean(value.sourceId)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: '事件来源类型与来源标识必须同时提供' });
+  }
 });
 
 export const feedbackCategorySchema = z.enum(['suggestion', 'problem', 'content', 'other']);

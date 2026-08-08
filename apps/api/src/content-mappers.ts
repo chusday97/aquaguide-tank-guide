@@ -41,6 +41,15 @@ const localizationMeta = (requestedLocale: SupportedLocale, hasTranslation: bool
   usedFallback: requestedLocale !== 'zh-CN' && !hasTranslation,
 });
 
+const mapEvidenceSource = (row: DbRow) => ({
+  id: row.id,
+  title: row.title,
+  publisher: row.publisher,
+  url: row.url,
+  sourceType: row.source_type,
+  reviewStatus: row.review_status,
+});
+
 export const mapSpeciesSummary = (row: DbRow, requestedLocale: SupportedLocale = 'zh-CN'): SpeciesSummaryDto => {
   const assets = currentAssets(row.species_assets);
   const translation = resolveTranslation(row.species_translations, requestedLocale);
@@ -66,6 +75,11 @@ export const mapSpeciesDetail = (row: DbRow, requestedLocale: SupportedLocale = 
   const translation = resolveTranslation(row.species_translations, requestedLocale);
   const feedingRow = row.species_feeding_profiles?.[0];
   const feedingTranslation = resolveTranslation(feedingRow?.species_feeding_profile_translations, requestedLocale);
+  const compatibilityRow = row.species_compatibility_profiles?.find((profile: DbRow) => !profile.deleted_at);
+  const compatibilityCitations = (compatibilityRow?.species_compatibility_profile_sources || [])
+    .map((link: DbRow) => link.evidence_sources)
+    .filter(Boolean)
+    .map(mapEvidenceSource);
   return {
     ...mapSpeciesSummary(row, requestedLocale),
     waterTemperatureMinC: row.water_temperature_min_c ?? undefined,
@@ -98,6 +112,16 @@ export const mapSpeciesDetail = (row: DbRow, requestedLocale: SupportedLocale = 
         }
       : undefined,
     assets,
+    ...(compatibilityRow ? {
+      compatibilityProfile: {
+        behaviorTraits: compatibilityRow.behavior_traits || [],
+        ...(compatibilityRow.minimum_group_size == null ? {} : { minimumGroupSize: compatibilityRow.minimum_group_size }),
+        predationTargets: compatibilityRow.predation_targets || [],
+        confidence: compatibilityRow.confidence,
+        reviewStatus: compatibilityRow.review_status,
+        citations: compatibilityCitations,
+      },
+    } : {}),
   };
 };
 
@@ -131,6 +155,8 @@ export const mapCareArticleDetail = (row: DbRow, requestedLocale: SupportedLocal
         position: step.position,
         instruction: stepTranslation?.instruction || step.instruction,
         durationLabel: stepTranslation?.duration_label || step.duration_label || undefined,
+        actionTitle: stepTranslation?.action_title || step.action_title || undefined,
+        actionKind: step.action_kind || 'immediate',
         image: assets.find(asset => asset.variant === 'article_step' && asset.stepId === step.id),
       };
     });
@@ -142,6 +168,15 @@ export const mapCareArticleDetail = (row: DbRow, requestedLocale: SupportedLocal
     diagnoseWhen: translation?.diagnose_when || row.diagnose_when || [],
     nextStep: translation?.next_step || row.next_step,
     steps,
+    references: (row.care_article_reference_links || [])
+      .filter((link: DbRow) => !link.deleted_at && link.evidence_sources)
+      .sort((left: DbRow, right: DbRow) => left.position - right.position)
+      .map((link: DbRow) => ({
+        id: link.id,
+        ...(link.step_id == null ? {} : { stepId: link.step_id }),
+        supportSummary: link.support_summary,
+        source: mapEvidenceSource(link.evidence_sources),
+      })),
     assets,
   };
 };
