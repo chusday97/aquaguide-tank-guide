@@ -10,6 +10,27 @@ export const recommendationInputSchema = z.object({
   limit: z.number().int().positive().max(20).default(10),
 });
 
+const evidenceSourceSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  publisher: z.string(),
+  url: z.string().url(),
+  sourceType: z.enum(['government', 'peer_reviewed', 'university', 'professional_association', 'curated_husbandry']),
+  reviewStatus: z.enum(['draft', 'reviewed', 'rejected']),
+});
+
+const compatibilityRuleSchema = z.object({
+  code: z.string(),
+  title: z.string(),
+  evidence: z.string(),
+  severity: z.enum(['info', 'low', 'medium', 'high']),
+  basis: z.enum(['species_trait', 'pair_rule', 'tank_condition', 'rule_inference']),
+  confidence: z.enum(['high', 'medium', 'low', 'unknown']),
+  reviewStatus: z.enum(['draft', 'reviewed', 'rejected']),
+  affectedSpeciesIds: z.array(z.string()),
+  citations: z.array(evidenceSourceSchema),
+});
+
 export const recommendationItemSchema = z.object({
   speciesId: z.string().min(1),
   reason: z.string().min(1),
@@ -18,30 +39,10 @@ export const recommendationItemSchema = z.object({
   canAdd: z.boolean().default(true),
   compatibilityStatus: z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']).optional(),
   ruleSummary: z.string().optional(),
-  passedRules: z.array(z.object({
-    code: z.string(),
-    title: z.string(),
-    evidence: z.string(),
-    severity: z.enum(['info', 'low', 'medium', 'high']),
-  })).optional(),
-  warningRules: z.array(z.object({
-    code: z.string(),
-    title: z.string(),
-    evidence: z.string(),
-    severity: z.enum(['info', 'low', 'medium', 'high']),
-  })).optional(),
-  blockingRules: z.array(z.object({
-    code: z.string(),
-    title: z.string(),
-    evidence: z.string(),
-    severity: z.enum(['info', 'low', 'medium', 'high']),
-  })).optional(),
-  missingData: z.array(z.object({
-    code: z.string(),
-    title: z.string(),
-    evidence: z.string(),
-    severity: z.enum(['info', 'low', 'medium', 'high']),
-  })).optional(),
+  passedRules: z.array(compatibilityRuleSchema).optional(),
+  warningRules: z.array(compatibilityRuleSchema).optional(),
+  blockingRules: z.array(compatibilityRuleSchema).optional(),
+  missingData: z.array(compatibilityRuleSchema).optional(),
 });
 
 export const recommendationOutputSchema = z.object({

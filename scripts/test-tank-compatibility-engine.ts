@@ -120,8 +120,8 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     name: 'predator blocks a smaller candidate',
     run: () => {
       const predator = makeFish({
-        id: 'large-predator',
-        name: '测试大型掠食鱼',
+        id: 'sp_0049',
+        name: '珍珠赤雷龙',
         description: '会捕食小型鱼。',
         temperament: 'Aggressive',
         size: 'Large',
@@ -141,8 +141,8 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     run: () => {
       const smallFish = makeFish();
       const predator = makeFish({
-        id: 'order-test-predator',
-        name: '顺序测试掠食鱼',
+        id: 'sp_0049',
+        name: '珍珠赤雷龙',
         description: '会捕食小型鱼。',
         temperament: 'Aggressive',
         size: 'Large',
@@ -161,6 +161,57 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         && reverse.status === 'not_recommended'
         && forward.blockingRules.some(rule => rule.code === 'predation_risk')
         && reverse.blockingRules.some(rule => rule.code === 'predation_risk');
+    },
+  },
+  {
+    name: 'aggressive does not automatically mean predatory',
+    run: () => {
+      const aggressive = makeFish({
+        id: 'unreviewed-aggressive-fish',
+        name: '测试攻击性鱼',
+        temperament: 'Aggressive',
+        size: 'Large',
+        description: '会争夺领地，但没有明确捕食资料。',
+      });
+      const result = evaluateTankCompatibility({
+        scope: 'species_only',
+        existingSpecies: [aggressive],
+        candidateSpecies: makeFish(),
+      });
+      return result.status === 'insufficient_data'
+        && result.blockingRules.every(rule => rule.code !== 'predation_risk')
+        && result.missingData.some(rule => rule.code === 'behavior_evidence_unreviewed');
+    },
+  },
+  {
+    name: 'tiger barb and mini parrot use reviewed behavior evidence instead of size predation',
+    run: () => {
+      const tigerBarb = makeFish({
+        id: 'sp_0439',
+        name: '虎皮鱼',
+        temperament: 'Aggressive',
+        description: '活泼，有追鳍倾向。',
+      });
+      const miniParrot = makeFish({
+        id: 'sp_0021',
+        name: '迷你鹦鹉鱼',
+        temperament: 'Aggressive',
+        size: 'Medium',
+        description: '繁殖期会防御领地。',
+      });
+      const result = evaluateTankCompatibility({
+        scope: 'species_only',
+        existingSpecies: [tigerBarb],
+        candidateSpecies: miniParrot,
+      });
+      const behaviorRule = result.blockingRules.find(rule => rule.code === 'pair_rule_behavior_and_territory_conflict');
+      return result.status === 'not_recommended'
+        && Boolean(behaviorRule)
+        && behaviorRule?.basis === 'rule_inference'
+        && behaviorRule?.reviewStatus === 'reviewed'
+        && behaviorRule.citations.length === 2
+        && result.blockingRules.every(rule => rule.code !== 'predation_risk')
+        && /追鳍|领地/.test(result.summary);
     },
   },
   {

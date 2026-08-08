@@ -27,15 +27,17 @@ const territorial = makeFish({ id: 'territorial', name: '领地鱼', temperament
 const predator = makeFish({ id: 'predator', name: '大型捕食鱼', size: 'Large', temperament: 'Aggressive', description: '会吞食小鱼' });
 const incomplete = makeFish({ id: 'incomplete', name: '资料缺失鱼', waterTemperature: '' });
 
-const compatible = evaluateSpeciesCombination([peacefulA, peacefulB]);
-assert.equal(compatible.status, 'compatible');
-assert.equal(compatible.metadata.scope, 'species_only');
+const unreviewed = evaluateSpeciesCombination([peacefulA, peacefulB]);
+assert.equal(unreviewed.status, 'insufficient_data');
+assert.equal(unreviewed.metadata.scope, 'species_only');
+assert.ok(unreviewed.missingData.some(rule => rule.code === 'behavior_evidence_unreviewed'));
 
 const caution = evaluateSpeciesCombination([peacefulA, territorial]);
-assert.equal(caution.status, 'caution');
+assert.equal(caution.status, 'insufficient_data');
 
-const blockedForward = evaluateSpeciesCombination([predator, peacefulA]);
-const blockedReverse = evaluateSpeciesCombination([peacefulA, predator]);
+const reviewedPredator = { ...predator, id: 'sp_0049', name: '珍珠赤雷龙' };
+const blockedForward = evaluateSpeciesCombination([reviewedPredator, peacefulA]);
+const blockedReverse = evaluateSpeciesCombination([peacefulA, reviewedPredator]);
 assert.equal(blockedForward.status, 'not_recommended');
 assert.equal(blockedReverse.status, 'not_recommended', '选择顺序不得改变捕食结论');
 
@@ -46,4 +48,4 @@ const needsMore = evaluateSpeciesCombination([peacefulA]);
 assert.equal(needsMore.status, 'insufficient_data');
 assert.equal(needsMore.missingData[0]?.code, 'missing_species_pair');
 
-console.log('mini compatibility: compatible/caution/not_recommended/insufficient_data passed');
+console.log('mini compatibility: reviewed blockers and unreviewed evidence gate passed');

@@ -1,6 +1,8 @@
 import type { Aquarium, Fish } from '../types';
 import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
+import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../data/compatibilityEvidence';
+import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
@@ -12,7 +14,7 @@ export type TankCompatibilityRule = {
   title: string;
   evidence: string;
   severity: 'info' | 'low' | 'medium' | 'high';
-};
+} & CompatibilityEvidenceDto;
 
 export type TankCompatibilityResult = {
   status: TankCompatibilityStatus;
@@ -39,15 +41,51 @@ export type EvaluateTankCompatibilityInput = {
   scope?: TankCompatibilityScope;
 };
 
-const RULE_VERSION = 'tank-compatibility-v1';
-const SPECIES_DATA_VERSION = 'local-fish-data-v1';
+const RULE_VERSION = 'tank-compatibility-v2-reviewed-evidence';
+const SPECIES_DATA_VERSION = 'local-fish-data-v1+compatibility-evidence-v1';
 
 const asRule = (
   code: string,
   title: string,
   evidence: string,
   severity: TankCompatibilityRule['severity'] = 'info',
-): TankCompatibilityRule => ({ code, title, evidence, severity });
+  evidenceMeta: Partial<CompatibilityEvidenceDto> = {},
+): TankCompatibilityRule => ({
+  code,
+  title,
+  evidence,
+  severity,
+  basis: evidenceMeta.basis || 'rule_inference',
+  confidence: evidenceMeta.confidence || 'unknown',
+  reviewStatus: evidenceMeta.reviewStatus || 'draft',
+  affectedSpeciesIds: evidenceMeta.affectedSpeciesIds || [],
+  citations: evidenceMeta.citations || [],
+});
+
+const evidenceFromProfile = (speciesId: string): CompatibilityEvidenceDto => {
+  const profile = getReviewedCompatibilityProfile(speciesId);
+  return profile ? {
+    basis: 'species_trait',
+    confidence: profile.confidence,
+    reviewStatus: profile.reviewStatus,
+    affectedSpeciesIds: [speciesId],
+    citations: profile.citations,
+  } : {
+    basis: 'species_trait',
+    confidence: 'unknown',
+    reviewStatus: 'draft',
+    affectedSpeciesIds: [speciesId],
+    citations: [],
+  };
+};
+
+const reviewedRuleEvidence: CompatibilityEvidenceDto = {
+  basis: 'tank_condition',
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  affectedSpeciesIds: [],
+  citations: [],
+};
 
 const normalizeExistingSpecies = (
   existingSpecies: EvaluateTankCompatibilityInput['existingSpecies'] = [],
@@ -103,6 +141,7 @@ const convertFitItem = (
   item.title,
   item.detail,
   item.severity || fallbackSeverity,
+  reviewedRuleEvidence,
 );
 
 const buildSummary = (
@@ -174,54 +213,100 @@ export const evaluateTankCompatibility = ({
 
     currentSpecies.forEach(existing => {
       const pairName = `${existing.name} 与 ${candidateSpecies.name}`;
+      const reviewedPairRule = getReviewedPairRule(existing.id, candidateSpecies.id);
+      const existingProfile = getReviewedCompatibilityProfile(existing.id);
+      const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
       if (isSaltwaterSpecies(existing) !== isSaltwaterSpecies(candidateSpecies)) {
-        blockingRules.push(asRule('species_water_type_conflict', '水体类型冲突', `${pairName} 分属淡水与海水环境，不能混养。`, 'high'));
+        blockingRules.push(asRule('species_water_type_conflict', '水体类型冲突', `${pairName} 分属淡水与海水环境，不能混养。`, 'high', reviewedRuleEvidence));
       } else {
-        passedRules.push(asRule('species_water_type_match', '水体类型一致', `${pairName} 的水体类型一致。`, 'info'));
+        passedRules.push(asRule('species_water_type_match', '水体类型一致', `${pairName} 的水体类型一致。`, 'info', reviewedRuleEvidence));
       }
 
       const existingTemperature = parseRange(existing.waterTemperature);
       const candidateTemperature = parseRange(candidateSpecies.waterTemperature);
       if (!existingTemperature || !candidateTemperature) {
-        missingData.push(asRule('species_temperature_missing', '温度资料不足', `${pairName} 缺少可比较的温度区间。`, 'medium'));
+        missingData.push(asRule('species_temperature_missing', '温度资料不足', `${pairName} 缺少可比较的温度区间。`, 'medium', reviewedRuleEvidence));
       } else if (!rangesOverlap(existingTemperature, candidateTemperature)) {
-        blockingRules.push(asRule('temperature_no_overlap', '温度区间不重合', `${pairName} 的适宜温度没有交集。`, 'high'));
+        blockingRules.push(asRule('temperature_no_overlap', '温度区间不重合', `${pairName} 的适宜温度没有交集。`, 'high', reviewedRuleEvidence));
       } else {
-        passedRules.push(asRule('temperature_overlap', '温度区间有交集', `${pairName} 可以找到共同温度区间。`, 'info'));
+        passedRules.push(asRule('temperature_overlap', '温度区间有交集', `${pairName} 可以找到共同温度区间。`, 'info', reviewedRuleEvidence));
       }
 
       const existingPh = parseRange(existing.phLevel);
       const candidatePh = parseRange(candidateSpecies.phLevel);
       if (!existingPh || !candidatePh) {
-        missingData.push(asRule('species_ph_missing', 'pH 资料不足', `${pairName} 缺少可比较的 pH 区间。`, 'medium'));
+        missingData.push(asRule('species_ph_missing', 'pH 资料不足', `${pairName} 缺少可比较的 pH 区间。`, 'low', reviewedRuleEvidence));
       } else if (!rangesOverlap(existingPh, candidatePh)) {
-        warningRules.push(asRule('ph_range_gap', 'pH 区间差异较大', `${pairName} 的 pH 区间没有明确交集。`, 'medium'));
+        warningRules.push(asRule('ph_range_gap', 'pH 区间差异较大', `${pairName} 的 pH 区间没有明确交集。`, 'medium', reviewedRuleEvidence));
       } else {
-        passedRules.push(asRule('ph_range_overlap', 'pH 区间有交集', `${pairName} 可以找到共同 pH 区间。`, 'info'));
-      }
-
-      if (existing.housingMode === '建议单养' || candidateSpecies.housingMode === '建议单养') {
-        const singleSpecies = existing.housingMode === '建议单养' ? existing : candidateSpecies;
-        blockingRules.push(asRule('single_housing_required', '存在单养倾向', `${singleSpecies.name} 更适合单养，不建议作为普通混养组合。`, 'high'));
+        passedRules.push(asRule('ph_range_overlap', 'pH 区间有交集', `${pairName} 可以找到共同 pH 区间。`, 'info', reviewedRuleEvidence));
       }
 
       const predator = [existing, candidateSpecies].find(item => (
-        item.size === 'Large'
-        || item.temperament === 'Aggressive'
-        || /掠食|捕食|吞食|龙鱼|雷龙|地图|雀鳝|大型/i.test(`${item.name} ${item.description}`)
+        getReviewedCompatibilityProfile(item.id)?.behaviorTraits.includes('predatory')
       ));
       const smaller = predator?.id === existing.id ? candidateSpecies : existing;
       if (predator && smaller.size === 'Small' && predator.id !== smaller.id) {
-        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 可能捕食或吞食 ${smaller.name}。`, 'high'));
+        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食特征，可能捕食或吞食 ${smaller.name}。`, 'high', evidenceFromProfile(predator.id)));
       }
 
-      const territorialCount = [existing, candidateSpecies].filter(item => item.temperament === 'Territorial').length;
-      if (territorialCount >= 2) {
-        blockingRules.push(asRule('territorial_conflict', '领地冲突', `${pairName} 都有明显领地倾向。`, 'high'));
-      } else if ([existing, candidateSpecies].some(item => item.temperament === 'Aggressive' || item.temperament === 'Territorial')) {
-        warningRules.push(asRule('temperament_caution', '性情需要观察', `${pairName} 中存在攻击性或领地倾向，需要准备躲避空间。`, 'medium'));
+      if (reviewedPairRule) {
+        const target = reviewedPairRule.verdict === 'not_recommended'
+          ? blockingRules
+          : reviewedPairRule.verdict === 'caution' ? warningRules : passedRules;
+        target.push(asRule(
+          `pair_rule_${reviewedPairRule.riskType}`,
+          reviewedPairRule.verdict === 'not_recommended' ? '已审核的行为冲突' : '已审核的配对结论',
+          `${reviewedPairRule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`,
+          reviewedPairRule.verdict === 'not_recommended' ? 'high' : reviewedPairRule.verdict === 'caution' ? 'medium' : 'info',
+          reviewedPairRule,
+        ));
+      } else if (!existingProfile || !candidateProfile) {
+        missingData.push(asRule(
+          'behavior_evidence_unreviewed',
+          '行为资料尚未审核',
+          `${pairName} 缺少两者均已审核的行为资料，不能据此判断为安全可混养。`,
+          'medium',
+          {
+            basis: 'species_trait',
+            confidence: 'unknown',
+            reviewStatus: 'draft',
+            affectedSpeciesIds: [existing.id, candidateSpecies.id],
+            citations: [],
+          },
+        ));
       } else {
-        passedRules.push(asRule('temperament_match', '性情未见明显冲突', `${pairName} 暂未发现明确性情阻断。`, 'info'));
+        const territorialCount = [existingProfile, candidateProfile]
+          .filter(profile => profile.behaviorTraits.includes('territorial')).length;
+        if (territorialCount >= 2) {
+          blockingRules.push(asRule(
+            'territorial_conflict',
+            '领地冲突',
+            `${pairName} 都有已审核的领地防御特征。`,
+            'high',
+            {
+              basis: 'rule_inference',
+              confidence: 'medium',
+              reviewStatus: 'reviewed',
+              affectedSpeciesIds: [existing.id, candidateSpecies.id],
+              citations: [...existingProfile.citations, ...candidateProfile.citations],
+            },
+          ));
+        } else {
+          passedRules.push(asRule(
+            'reviewed_behavior_no_block',
+            '行为资料已审核',
+            `${pairName} 的已审核行为资料未发现明确阻断。`,
+            'info',
+            {
+              basis: 'rule_inference',
+              confidence: 'medium',
+              reviewStatus: 'reviewed',
+              affectedSpeciesIds: [existing.id, candidateSpecies.id],
+              citations: [...existingProfile.citations, ...candidateProfile.citations],
+            },
+          ));
+        }
       }
     });
 
@@ -298,20 +383,13 @@ export const evaluateTankCompatibility = ({
   }
 
   currentSpecies.forEach(existing => {
-    if (existing.housingMode === '建议单养') {
-      warningRules.push(asRule(
-        'existing_single_housing',
-        '已有生物建议单养',
-        `${existing.name} 更适合单独饲养，新增 ${candidateSpecies.name} 前需要确认空间和隔离条件。`,
-        'medium',
-      ));
-    }
     if (!rangesOverlap(parseRange(existing.waterTemperature), parseRange(candidateSpecies.waterTemperature))) {
       blockingRules.push(asRule(
         'temperature_no_overlap',
         '温度区间不重合',
         `${existing.name} 与 ${candidateSpecies.name} 的适宜温度没有交集。`,
         'high',
+        reviewedRuleEvidence,
       ));
     }
     if (!rangesOverlap(parseRange(existing.phLevel), parseRange(candidateSpecies.phLevel))) {
@@ -320,14 +398,43 @@ export const evaluateTankCompatibility = ({
         'pH 区间差异较大',
         `${existing.name} 与 ${candidateSpecies.name} 的 pH 区间差异较大，建议先确认水质。`,
         'medium',
+        reviewedRuleEvidence,
+      ));
+    }
+
+    const pairRule = getReviewedPairRule(existing.id, candidateSpecies.id);
+    const existingProfile = getReviewedCompatibilityProfile(existing.id);
+    const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
+    if (pairRule) {
+      const target = pairRule.verdict === 'not_recommended'
+        ? blockingRules
+        : pairRule.verdict === 'caution' ? warningRules : passedRules;
+      target.push(asRule(
+        `pair_rule_${pairRule.riskType}`,
+        pairRule.verdict === 'not_recommended' ? '已审核的行为冲突' : '已审核的配对结论',
+        `${pairRule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`,
+        pairRule.verdict === 'not_recommended' ? 'high' : pairRule.verdict === 'caution' ? 'medium' : 'info',
+        pairRule,
+      ));
+    } else if (!existingProfile || !candidateProfile) {
+      missingData.push(asRule(
+        'behavior_evidence_unreviewed',
+        '行为资料尚未审核',
+        `${existing.name} 与 ${candidateSpecies.name} 缺少两者均已审核的行为资料，不能据此判断为安全可加入。`,
+        'medium',
+        {
+          basis: 'species_trait',
+          confidence: 'unknown',
+          reviewStatus: 'draft',
+          affectedSpeciesIds: [existing.id, candidateSpecies.id],
+          citations: [],
+        },
       ));
     }
   });
 
   const hasPredator = currentSpecies.find(item => (
-    item.size === 'Large'
-    || item.temperament === 'Aggressive'
-    || /掠食|捕食|吞食|龙鱼|雷龙|地图|雀鳝|大型/i.test(`${item.name} ${item.description}`)
+    getReviewedCompatibilityProfile(item.id)?.behaviorTraits.includes('predatory')
   ));
   if (hasPredator && candidateSpecies.size === 'Small') {
     blockingRules.push(asRule(
@@ -335,19 +442,28 @@ export const evaluateTankCompatibility = ({
       '捕食或吞食风险',
       `当前已有 ${hasPredator.name}，不建议加入明显更小的 ${candidateSpecies.name}。`,
       'high',
+      evidenceFromProfile(hasPredator.id),
     ));
   }
 
   const territorialConflict = currentSpecies.find(item => (
-    item.temperament === 'Territorial'
-    || item.housingMode === '建议单养'
+    getReviewedCompatibilityProfile(item.id)?.behaviorTraits.includes('territorial')
   ));
-  if (territorialConflict && (candidateSpecies.temperament === 'Territorial' || candidateSpecies.housingMode === '建议单养')) {
+  if (territorialConflict && getReviewedCompatibilityProfile(candidateSpecies.id)?.behaviorTraits.includes('territorial')) {
+    const existingProfile = getReviewedCompatibilityProfile(territorialConflict.id)!;
+    const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id)!;
     blockingRules.push(asRule(
       'territorial_conflict',
       '领地冲突',
-      `${territorialConflict.name} 与 ${candidateSpecies.name} 都存在领地或单养倾向。`,
+      `${territorialConflict.name} 与 ${candidateSpecies.name} 都存在已审核的领地防御特征。`,
       'high',
+      {
+        basis: 'rule_inference',
+        confidence: 'medium',
+        reviewStatus: 'reviewed',
+        affectedSpeciesIds: [territorialConflict.id, candidateSpecies.id],
+        citations: [...existingProfile.citations, ...candidateProfile.citations],
+      },
     ));
   }
 
@@ -377,12 +493,14 @@ export const evaluateTankCompatibility = ({
     ));
   }
 
-  if (candidateSpecies.housingMode === '建议单养' && currentSpecies.length > 0) {
+  const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
+  if (candidateProfile?.behaviorTraits.includes('solitary_required') && currentSpecies.length > 0) {
     blockingRules.push(asRule(
       'single_housing_required',
       '更适合单养',
-      `${candidateSpecies.name} 标记为建议单养，不应作为普通混养候选。`,
+      `${candidateSpecies.name} 的已审核资料支持单养要求，不应作为普通混养候选。`,
       'high',
+      evidenceFromProfile(candidateSpecies.id),
     ));
   }
 

@@ -688,6 +688,19 @@ export function CompatibilityRiskCalculator({
   const conflictTags = getConflictTags(selectedSpecies, result.reasons);
   const mainConflicts = useMemo(() => getMainConflicts(result, selectedSpecies), [result, selectedSpecies]);
   const actionHints = useMemo(() => getActionHints(result, selectedSpecies), [result, selectedSpecies]);
+  const resultEvidenceSources = useMemo(() => {
+    const rules = result.ruleResult
+      ? [
+          ...result.ruleResult.blockingRules,
+          ...result.ruleResult.warningRules,
+          ...result.ruleResult.missingData,
+          ...result.ruleResult.passedRules,
+        ]
+      : [];
+    return Array.from(new Map(
+      rules.flatMap(rule => rule.citations).map(source => [source.id, source]),
+    ).values());
+  }, [result.ruleResult]);
   const visualResultModel = useMemo(() => {
     if (!result.decision) return null;
     return {
@@ -1255,6 +1268,32 @@ export function CompatibilityRiskCalculator({
                     {actionHints[0]}
                   </div>
                 )}
+
+                <div className="mt-3 rounded-[12px] border border-border/70 bg-white/75 px-3 py-2.5">
+                  <div className="text-[10px] font-black text-ink/55">
+                    {isEn ? 'Evidence status' : '依据状态'}
+                  </div>
+                  <div className="mt-1 text-[10px] font-bold leading-relaxed text-ink/48">
+                    {resultEvidenceSources.length > 0
+                      ? (isEn ? 'Reviewed sources support the behavior conclusion.' : '行为结论使用已审核来源；没有直接配对研究时会明确标注为规则推断。')
+                      : (isEn ? 'Behavior evidence is not reviewed. The result cannot be treated as safe to add.' : '行为资料尚未审核，当前结果不能作为“安全可加入”的依据。')}
+                  </div>
+                  {resultEvidenceSources.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {resultEvidenceSources.map(source => (
+                        <a
+                          key={source.id}
+                          href={source.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex min-h-11 items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-2 text-[10px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                        >
+                          {source.publisher}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
             </>
