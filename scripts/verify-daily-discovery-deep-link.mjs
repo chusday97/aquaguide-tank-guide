@@ -56,6 +56,15 @@ try {
         const saved = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');
         return Array.isArray(saved.wishlist) && saved.wishlist.length === 1;
       });
+      assert.equal((await discovery.locator('h3').innerText()).trim(), nextSpeciesName, 'saving must keep the current recommendation visible');
+      await discovery.getByText('已收录到水族册', { exact: true }).waitFor();
+      await discovery.getByRole('button', { name: '取消收藏物种', exact: true }).click();
+      await page.waitForFunction(() => {
+        const saved = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');
+        return Array.isArray(saved.wishlist) && saved.wishlist.length === 0;
+      });
+      assert.equal((await discovery.locator('h3').innerText()).trim(), nextSpeciesName, 'unsaving must also keep the current recommendation visible');
+      await discovery.getByText('已从水族册移除', { exact: true }).waitFor();
     }
 
     assert.equal(pageErrors.length, 0, pageErrors.join('\n'));

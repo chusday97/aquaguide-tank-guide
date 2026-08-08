@@ -2958,24 +2958,44 @@ export default function AquariumManager() {
     });
   }, [discoveryImageSrc, discoveryPool, discoveryState.queueIds]);
 
-  const advanceDiscoveryCard = (action: 'skip' | 'interest') => {
+  const advanceDiscoveryCard = () => {
     if (!discoveryFish) return;
     const output = recommendationService.advanceDiscoveryDeck({
       speciesId: discoveryFish.id,
-      action,
+      action: 'skip',
       speciesPool: discoveryPool,
       wishlistIds: Array.from(wishlistFishIds),
       state: discoveryState,
     });
-    const addedWishlistId = output.addedWishlistId || (action === 'interest' ? discoveryFish.id : null);
-    if (addedWishlistId) {
-      const next = new Set(wishlistFishIds);
-      next.add(addedWishlistId);
-      syncWishlistFishIds(next);
-    }
     setDiscoveryMessage(output.message);
     saveDiscoveryState(output.state);
     setDiscoveryState(output.state);
+  };
+
+  const handleDiscoveryFavorite = () => {
+    if (!discoveryFish) return;
+    const previous = new Set(wishlistFishIds);
+    const next = new Set(previous);
+    const willSave = !next.has(discoveryFish.id);
+    if (willSave) next.add(discoveryFish.id);
+    else next.delete(discoveryFish.id);
+
+    setWishlistFishIds(next);
+    try {
+      setSpeciesFavoriteIds(next);
+      setDiscoveryMessage(
+        willSave
+          ? (isEn ? 'Saved to My Collection' : '已收录到水族册')
+          : (isEn ? 'Removed from My Collection' : '已从水族册移除'),
+      );
+    } catch (error) {
+      setWishlistFishIds(previous);
+      setDiscoveryMessage(
+        error instanceof Error
+          ? error.message
+          : (isEn ? 'Could not update the collection. Try again.' : '收藏没有保存成功，请重试。'),
+      );
+    }
   };
 
   const handleAquariumSpeciesSelect = (fishId: string | null) => {
@@ -4832,23 +4852,17 @@ export default function AquariumManager() {
               <button
                 type="button"
                 aria-label={wishlistFishIds.has(discoveryFish.id)
-                  ? (isEn ? 'View saved species' : '查看已收藏物种')
+                  ? (isEn ? 'Remove saved species' : '取消收藏物种')
                   : (isEn ? 'Save species' : '收藏物种')}
                 title={wishlistFishIds.has(discoveryFish.id)
-                  ? (isEn ? 'View Collection' : '去水族册')
+                  ? (isEn ? 'Remove from My Collection' : '取消收藏')
                   : (isEn ? 'Save species' : '收藏物种')}
                 className={`absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border bg-white/95 shadow-sm ${
                   wishlistFishIds.has(discoveryFish.id)
                     ? 'border-rose-100 text-rose-600'
                     : 'border-white text-rose-500'
                 }`}
-                onClick={() => {
-                  if (wishlistFishIds.has(discoveryFish.id)) {
-                    navigateToRoute('/collection/wishlist');
-                    return;
-                  }
-                  advanceDiscoveryCard('interest');
-                }}
+                onClick={handleDiscoveryFavorite}
               >
                 <Heart className={`h-4 w-4 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
               </button>
@@ -4876,7 +4890,7 @@ export default function AquariumManager() {
               aria-label={isEn ? 'Show another species' : '换一个物种'}
               title={isEn ? 'Another one' : '换一个'}
               className="absolute bottom-2 left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/95 text-ink/58 shadow-sm"
-              onClick={() => advanceDiscoveryCard('skip')}
+              onClick={advanceDiscoveryCard}
             >
               <RefreshCw className="h-4 w-4" />
             </button>
@@ -4897,7 +4911,7 @@ export default function AquariumManager() {
           </div>
         )}
         {discoveryMessage && (
-          <div className="mt-2 rounded-full bg-ink px-3 py-2 text-center text-[11px] font-bold text-white shadow-sm">
+          <div role="status" className="mt-2 rounded-full bg-ink px-3 py-2 text-center text-[11px] font-bold text-white shadow-sm">
             {discoveryMessage}
           </div>
         )}
