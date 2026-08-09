@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import type { Aquarium } from '../src/types';
+import { selectAquariumSnapshot } from '../src/services/aquarium/aquarium-selection.service';
 import { getSpeciesAdditionPolicy } from '../src/services/aquarium/species-addition-policy';
 import { isAquariumTaskAction, taskRoutes } from '../src/services/navigation/task-routes';
 
@@ -15,5 +17,15 @@ assert.equal(taskRoutes.aquarium.planSpecies('sp_0001'), '/aquarium?action=plan-
 assert.equal(isAquariumTaskAction('add-species'), true, 'legacy addition deep link must remain compatible');
 assert.equal(isAquariumTaskAction('record-existing'), true);
 assert.equal(isAquariumTaskAction('plan-species'), true);
+
+const cloudOnlyAquariums: Aquarium[] = [
+  { id: 'cloud-a', name: '云端 A', fishes: [] },
+  { id: 'cloud-b', name: '云端 B', fishes: [] },
+];
+assert.equal(
+  selectAquariumSnapshot(cloudOnlyAquariums, ['missing-local-id', 'cloud-b'])?.id,
+  'cloud-b',
+  'a cloud aquarium must be selected without relying on a localStorage copy',
+);
 
 console.log('addition intent policies verified: facts never block and plans remain safety-gated');

@@ -165,7 +165,21 @@ assert.match(aquariumPageSource, /getCurrentAquaGuideRepository/);
 assert.match(aquariumPageSource, /recordExistingLivestock/);
 assert.doesNotMatch(aquariumPageSource, /commitAddFishItems/);
 assert.doesNotMatch(encyclopediaPageSource, /persistAquariums/);
+assert.doesNotMatch(encyclopediaPageSource, /loadAppStateFromStorage/);
+assert.match(encyclopediaPageSource, /repository\.getAquariums\(\)/);
 assert.match(encyclopediaPageSource, /action=plan-species/);
+const buildTemplateHandler = aquariumPageSource.slice(
+  aquariumPageSource.indexOf('const handleApplyBuildTemplate'),
+  aquariumPageSource.indexOf('const handleToggleWaterChangeDate'),
+);
+assert.doesNotMatch(buildTemplateHandler, /saveAquariums|persistAquariums|appendSpeciesBatch|createSpeciesBatch/);
+assert.match(buildTemplateHandler, /setAdditionIntent\('planned_addition'\)/);
+assert.match(aquariumPageSource, /createAquariumOperationIdRef\.current/);
+assert.match(aquariumPageSource, /compatibilityRecordOperationRef\.current/);
+assert.match(aquariumPageSource, /smartSimulationOperationRef\.current/);
+assert.match(encyclopediaPageSource, /calculatorRecordOperationRef\.current/);
+assert.match(aquariumPageSource, /result\.failedItems\.length > 0/);
+assert.match(encyclopediaPageSource, /recorded\.failedItems\.length > 0/);
 assert.match(aquariumPageSource, /subscribeToRepositoryMode/);
 assert.doesNotMatch(aquariumPageSource, /recordCareTimelineEvent\(/);
 assert.doesNotMatch(aquariumPageSource, /completeCareReminder\(/);

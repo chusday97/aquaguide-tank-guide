@@ -25,7 +25,6 @@ import { Search, X, Heart, HeartOff, Skull, CheckCircle2, Plus, ChevronLeft, Che
 import { CompatibilityRiskCalculator } from '../components/CompatibilityRiskCalculator';
 import { VisualResultMini } from '../components/visual-results/VisualResultCard';
 import type { VisualResultSubject } from '../components/visual-results/visual-result.types';
-import { loadAppStateFromStorage } from '../services/storage/local-app-state';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { ResilientImage } from '../components/common/ResilientImage';
@@ -70,6 +69,8 @@ import {
   type SearchSuggestion,
 } from '../services/search/search-suggestions.service';
 import { taskRoutes } from '../services/navigation/task-routes';
+import { getAquariumNavigationSnapshot } from '../services/aquarium/aquarium-navigation.service';
+import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.service';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 
@@ -286,17 +287,6 @@ const getTankVolumeLiters = (aquarium?: Aquarium | null) => {
 const getMinimumTankLiters = (fish: Fish) => {
   const match = fish.tankSize.match(/(\d+)/);
   return match ? Number(match[1]) : null;
-};
-
-const getAquariumSnapshots = () => {
-  try {
-    const appState = loadAppStateFromStorage();
-    if (appState.aquariums.length > 0) return appState.aquariums;
-    const aquariums = JSON.parse(localStorage.getItem('aquariums') || '[]');
-    return Array.isArray(aquariums) ? aquariums as Aquarium[] : [];
-  } catch {
-    return [] as Aquarium[];
-  }
 };
 
 const getTemperamentLabel = (temperament: Fish['temperament'], isEn?: boolean) => (
@@ -674,6 +664,7 @@ export default function Encyclopedia() {
   const [filterUsage, setFilterUsage] = useState<FilterUsageState>(() => loadFilterUsage());
   const [activeFilterGroup, setActiveFilterGroup] = useState<'life' | 'size' | 'housing' | 'water' | 'difficulty' | 'temperament'>('life');
   const [currentAquarium, setCurrentAquarium] = useState<Aquarium | null>(null);
+  const [availableAquariums, setAvailableAquariums] = useState<Aquarium[]>([]);
   const [pendingTankFish, setPendingTankFish] = useState<Fish | null>(null);
   const [targetAquariumId, setTargetAquariumId] = useState('');
   const [pendingTankAddConfirmed, setPendingTankAddConfirmed] = useState(false);
@@ -681,6 +672,7 @@ export default function Encyclopedia() {
     getCompatibilitySelection().filter(id => fishData.some(fish => fish.id === id))
   ));
   const [calculatorFeedback, setCalculatorFeedback] = useState('');
+  const calculatorRecordOperationRef = useRef<{ key: string; id: string }>({ key: '', id: '' });
   const [calculatorPulse, setCalculatorPulse] = useState(false);
   const [flyingThumbnail, setFlyingThumbnail] = useState<{
     id: string;
@@ -710,23 +702,33 @@ export default function Encyclopedia() {
   }, [calculatorSpeciesIds]);
 
   useEffect(() => {
-    const appState = loadAppStateFromStorage();
-    const aquariums = appState.aquariums.length > 0
-      ? appState.aquariums
-      : JSON.parse(localStorage.getItem('aquariums') || '[]') as Aquarium[];
-    if (Array.isArray(aquariums)) {
-      const ids = new Set<string>();
-      aquariums.forEach(aq => {
-        aq.fishes.forEach(f => ids.add(f.fishId));
-      });
-      setOwnedFishIds(ids);
-      const current = appState.currentAquariumId
-        ? aquariums.find(aq => aq.id === appState.currentAquariumId)
-        : aquariums[0];
-      setCurrentAquarium(current || null);
-    }
+    let cancelled = false;
+    const loadAquariumContext = async () => {
+      try {
+        const repository = await getCurrentAquaGuideRepository();
+        const aquariums = await repository.getAquariums();
+        if (cancelled) return;
+        const ids = new Set<string>();
+        aquariums.forEach(aquarium => aquarium.fishes.forEach(item => ids.add(item.fishId)));
+        const navigation = getAquariumNavigationSnapshot();
+        const current = selectAquariumSnapshot(aquariums, [navigation.currentAquariumId]);
+        setOwnedFishIds(ids);
+        setAvailableAquariums(aquariums);
+        setCurrentAquarium(current || null);
+      } catch {
+        if (!cancelled) {
+          setOwnedFishIds(new Set());
+          setAvailableAquariums([]);
+          setCurrentAquarium(null);
+        }
+      }
+    };
+    void loadAquariumContext();
 
     setWishlistFishIds(loadWishlistIds());
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const syncWishlistFishIds = (next: Set<string>) => {
@@ -1097,9 +1099,7 @@ export default function Encyclopedia() {
   };
 
   const addFishToAquarium = (fish: Fish, aquariumId: string) => {
-    const appState = loadAppStateFromStorage();
-    const aquariums = appState.aquariums.length > 0 ? appState.aquariums : [];
-    if (!aquariums.some(item => item.id === aquariumId)) {
+    if (!availableAquariums.some(item => item.id === aquariumId)) {
       setLastAddedToTankMessage(t('encyclopedia.noTankError'));
       return;
     }
@@ -1111,16 +1111,15 @@ export default function Encyclopedia() {
   };
 
   const addCompatibilitySpeciesToAquarium = async (items: { fishId: string; quantity: number }[]) => {
-    const appState = loadAppStateFromStorage();
-    const aquariums: Aquarium[] = appState.aquariums.length > 0
-      ? appState.aquariums
-      : JSON.parse(localStorage.getItem('aquariums') || '[]');
-    if (!Array.isArray(aquariums) || aquariums.length === 0) {
+    const repository = await getCurrentAquaGuideRepository();
+    const aquariums = await repository.getAquariums();
+    if (aquariums.length === 0) {
       throw new Error(t('encyclopedia.noTankError'));
     }
 
-    const activeId = currentAquarium?.id || targetAquariumId || appState.currentAquariumId || aquariums[0].id;
-    const activeAquarium = aquariums.find(item => item.id === activeId) || aquariums[0];
+    const navigation = getAquariumNavigationSnapshot();
+    const activeAquarium = selectAquariumSnapshot(aquariums, [targetAquariumId, currentAquarium?.id, navigation.currentAquariumId]);
+    if (!activeAquarium) throw new Error(t('encyclopedia.noTankError'));
     const normalizedItems = items
       .filter(item => fishData.some(fish => fish.id === item.fishId))
       .map(item => ({
@@ -1139,15 +1138,25 @@ export default function Encyclopedia() {
         ? t('encyclopedia.addInfoIncomplete')
         : t('encyclopedia.addCombinationBlocked'));
     }
-    const repository = await getCurrentAquaGuideRepository();
+    const operationKey = `${activeAquarium.id}:${normalizedItems
+      .map(item => `${item.fishId}:${item.quantity}`)
+      .sort()
+      .join('|')}`;
+    if (calculatorRecordOperationRef.current.key !== operationKey) {
+      calculatorRecordOperationRef.current = {
+        key: operationKey,
+        id: `encyclopedia-calculator:${crypto.randomUUID()}`,
+      };
+    }
     const recorded = await recordExistingLivestock({
       repository,
       aquarium: activeAquarium,
       items: normalizedItems,
       speciesCatalog: fishData,
-      operationId: `encyclopedia-calculator:${crypto.randomUUID()}`,
+      operationId: calculatorRecordOperationRef.current.id,
     });
     const updatedActiveAquarium = recorded.aquarium;
+    setAvailableAquariums(current => current.map(aquarium => aquarium.id === updatedActiveAquarium.id ? updatedActiveAquarium : aquarium));
     setCurrentAquarium(updatedActiveAquarium);
     setTargetAquariumId(activeAquarium.id);
     setOwnedFishIds(prev => {
@@ -1155,6 +1164,15 @@ export default function Encyclopedia() {
       normalizedItems.forEach(item => next.add(item.fishId));
       return next;
     });
+    if (recorded.failedItems.length > 0) {
+      const failedNames = recorded.failedItems
+        .map(item => fishData.find(fish => fish.id === item.fishId)?.name || item.fishId)
+        .join('、');
+      throw new Error(i18n.language?.startsWith('en')
+        ? `${recorded.savedItems.length} species were recorded; ${recorded.failedItems.length} still need retrying.`
+        : `已记录 ${recorded.savedItems.length} 种；${failedNames || `${recorded.failedItems.length} 种生物`}尚未记录，请重试。`);
+    }
+    calculatorRecordOperationRef.current = { key: '', id: '' };
 
     const addedNames = normalizedItems
       .map(item => fishData.find(fish => fish.id === item.fishId)?.name)
@@ -1168,17 +1186,13 @@ export default function Encyclopedia() {
   };
 
   const handleAddToTank = (fish: Fish) => {
-    const appState = loadAppStateFromStorage();
-    const aquariums: Aquarium[] = appState.aquariums.length > 0
-      ? appState.aquariums
-      : JSON.parse(localStorage.getItem('aquariums') || '[]');
-    if (!Array.isArray(aquariums) || aquariums.length === 0) {
+    if (availableAquariums.length === 0) {
       setDetailFeedback(t('encyclopedia.noTankError'));
       return;
     }
 
     setPendingTankFish(fish);
-    setTargetAquariumId(aquariums[0].id);
+    setTargetAquariumId(currentAquarium?.id || availableAquariums[0].id);
     setPendingTankAddConfirmed(false);
   };
 
@@ -1345,7 +1359,7 @@ export default function Encyclopedia() {
     }
   };
 
-  const aquariumSnapshots = getAquariumSnapshots();
+  const aquariumSnapshots = availableAquariums;
   const referenceAquarium = aquariumSnapshots[0] || null;
   const selectedFit = selectedFish ? getSpeciesFitAssessment(selectedFish, referenceAquarium) : null;
   const selectedGroupFit = selectedGroupVariant ? fitEvaluations.get(selectedGroupVariant.id) : null;

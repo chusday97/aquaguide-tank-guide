@@ -1121,11 +1121,15 @@ export default function AquariumManager() {
   const [additionIntent, setAdditionIntent] = useState<SpeciesAdditionIntent>('record_existing');
   const [isAddFishSaving, setIsAddFishSaving] = useState(false);
   const addFishOperationIdRef = useRef('');
+  const createAquariumOperationIdRef = useRef('');
+  const compatibilityRecordOperationRef = useRef<{ key: string; id: string }>({ key: '', id: '' });
+  const smartSimulationOperationRef = useRef<{ key: string; id: string }>({ key: '', id: '' });
   const [isSmartRecommendOpen, setIsSmartRecommendOpen] = useState(false);
   const [smartRecommendMode, setSmartRecommendMode] = useState<RecommendationMode>('existing_livestock');
   const [smartPreference, setSmartPreference] = useState('新手友好 低维护');
   const [smartSimulation, setSmartSimulation] = useState<SimulationResult | null>(null);
   const [smartAddQuantity, setSmartAddQuantity] = useState(1);
+  const [isSmartSimulationSaving, setIsSmartSimulationSaving] = useState(false);
   const [smartCandidateScopeIds, setSmartCandidateScopeIds] = useState<string[] | null>(null);
   const [isTankCopilotOpen, setIsTankCopilotOpen] = useState(false);
   const [tankCopilotGoal, setTankCopilotGoal] = useState('');
@@ -1479,15 +1483,18 @@ export default function AquariumManager() {
     if (isCreatingAquarium) return null;
     setIsCreatingAquarium(true);
     const draft = createAquariumDraft(`我的鱼缸 ${aquariums.length + 1}`);
-    const operationId = `aquarium-create:${crypto.randomUUID()}`;
+    if (!createAquariumOperationIdRef.current) {
+      createAquariumOperationIdRef.current = `aquarium-create:${crypto.randomUUID()}`;
+    }
     try {
       const repository = await getCurrentAquaGuideRepository();
       const created = await repository.createAquarium({
         name: draft.name,
         startedAt: draft.startedAt!,
         startedAtSource: 'created',
-        operationId,
+        operationId: createAquariumOperationIdRef.current,
       });
+      createAquariumOperationIdRef.current = '';
       setAquariums(current => [...current.filter(item => item.id !== created.id), created]);
       setActiveId(created.id);
       showToast(Boolean(i18n.language?.startsWith('en')) ? `Created new aquarium "${created.name}"` : `已新建“${created.name}”`);
@@ -2029,6 +2036,7 @@ export default function AquariumManager() {
       });
       setAddFishCompatibilityReview(null);
       setAddFishSuccess({ aquariumName: result.aquarium.name, items: successItems, result });
+      if (result.failedItems.length === 0) addFishOperationIdRef.current = '';
       setSelectedAddFishItems(result.failedItems.map(item => ({
         fishId: item.fishId,
         quantity: item.quantity,
@@ -2126,16 +2134,35 @@ export default function AquariumManager() {
           ? (Boolean(i18n.language?.startsWith('en')) ? 'Stocking mix is not recommended for this aquarium.' : '当前组合不建议加入鱼缸。')
           : (Boolean(i18n.language?.startsWith('en')) ? 'Could not assess this addition.' : '暂时无法评估这次加入。'));
     }
+    const operationKey = `${activeAquarium.id}:${normalizedItems
+      .map(item => `${item.fishId}:${item.quantity}`)
+      .sort()
+      .join('|')}`;
+    if (compatibilityRecordOperationRef.current.key !== operationKey) {
+      compatibilityRecordOperationRef.current = {
+        key: operationKey,
+        id: `compatibility-add:${crypto.randomUUID()}`,
+      };
+    }
     const repository = await getCurrentAquaGuideRepository();
     const result = await recordExistingLivestock({
       repository,
       aquarium: activeAquarium,
       items: normalizedItems,
       speciesCatalog: fishData,
-      operationId: `compatibility-add:${crypto.randomUUID()}`,
+      operationId: compatibilityRecordOperationRef.current.id,
     });
     setAquariums(current => current.map(aquarium => aquarium.id === result.aquarium.id ? result.aquarium : aquarium));
     await recordAddedSpeciesBatches(activeAquarium, result.aquarium);
+    if (result.failedItems.length > 0) {
+      const failedNames = result.failedItems
+        .map(item => fishData.find(fish => fish.id === item.fishId)?.name || item.fishId)
+        .join('、');
+      throw new Error(Boolean(i18n.language?.startsWith('en'))
+        ? `${result.savedItems.length} species were recorded; ${result.failedItems.length} still need retrying.`
+        : `已记录 ${result.savedItems.length} 种；${failedNames || `${result.failedItems.length} 种生物`}尚未记录，请重试。`);
+    }
+    compatibilityRecordOperationRef.current = { key: '', id: '' };
     const addedNames = normalizedItems
       .map(item => fishData.find(fish => fish.id === item.fishId)?.name)
       .filter(Boolean)
@@ -2286,61 +2313,28 @@ export default function AquariumManager() {
       return;
     }
     const template = adaptedPlan.template;
-    const now = new Date().toISOString();
+    const entryDate = format(new Date(), 'yyyy-MM-dd');
     const templateFish = adaptedPlan.appliedSpecies
       .map(item => ({ name: item.name, quantity: item.quantity, fish: item.fish || findStockSpeciesByName(item.name) }))
       .filter((item): item is { name: string; quantity: number; fish: Fish } => Boolean(item.fish));
-
-    const updated = aquariums.map(a => (
-      a.id === activeId
-        ? (() => {
-            const nextFishes = [...a.fishes];
-            templateFish.forEach(({ fish, quantity }) => {
-              const existingIndex = nextFishes.findIndex(item => item.fishId === fish.id);
-              if (existingIndex >= 0) {
-                const existing = withNormalizedSpeciesBatches(nextFishes[existingIndex]);
-                nextFishes[existingIndex] = quantity > existing.quantity
-                  ? appendSpeciesBatch(existing, { quantity: quantity - existing.quantity, entryDate: now })
-                  : existing;
-                return;
-              }
-
-              nextFishes.push({
-                id: Math.random().toString(36).substring(2, 9),
-                fishId: fish.id,
-                quantity,
-                entryDate: now,
-                lastWaterChangeDate: now,
-                batches: [createSpeciesBatch({ quantity, entryDate: now })],
-              });
-            });
-
-            return {
-              ...a,
-              waterType: 'Freshwater' as const,
-              targetTemperature: template.temperature,
-              substrate: template.substrate,
-              plants: template.plants,
-              hardscape: template.hardscape,
-              equipment: template.equipmentSettings,
-              fishes: nextFishes,
-              buildTemplateMeta: {
-                id: template.id,
-                name: template.name,
-                appliedAt: now,
-                capacityGuidance: template.capacityGuidance,
-                adaptedStatus: adaptedPlan.status,
-                adaptedSummary: adaptedPlan.summary,
-                stockedSpecies: templateFish.map(({ name, quantity }) => ({ name, quantity })),
-              },
-            };
-          })()
-        : a
-    ));
-
-    saveAquariums(updated);
-    setTankActionMessage(Boolean(i18n.language?.startsWith('en')) ? `Applied "${template.name}" setup layout: ${adaptedPlan.summary}` : `已应用「${template.name}」的适配方案：${adaptedPlan.summary}`);
     setIsBuildPlanOpen(false);
+    if (templateFish.length === 0) {
+      setTankActionMessage(isEn
+        ? `"${template.name}" remains a reference plan. No livestock was recorded.`
+        : `「${template.name}」仅作为参考方案，当前没有可进入混养判断的生物。`);
+      return;
+    }
+    setAdditionIntent('planned_addition');
+    addFishOperationIdRef.current = `livestock-add:${crypto.randomUUID()}`;
+    setAddFishSuccess(null);
+    setAddFishDatePicker(null);
+    setAddFishCompatibilityReview(null);
+    setFishSearchTerm('');
+    setSelectedAddFishItems(templateFish.map(({ fish, quantity }) => ({ fishId: fish.id, quantity, entryDate })));
+    setIsAddFishOpen(true);
+    setTankActionMessage(isEn
+      ? `Reviewing livestock planned in "${template.name}". The environment and livestock have not been written to the aquarium.`
+      : `正在评估「${template.name}」里的规划生物；环境和生物都尚未写入真实鱼缸。`);
   };
 
   const handleToggleWaterChangeDate = (dateStr: string) => {
@@ -2490,12 +2484,14 @@ export default function AquariumManager() {
     });
     setSmartSimulation(simulation);
     setSmartAddQuantity(candidate.recommendedQuantity);
+    smartSimulationOperationRef.current = { key: '', id: '' };
   };
 
   const updateSmartSimulationQuantity = (quantity: number) => {
     if (!smartSimulation) return;
     const nextQuantity = Math.max(1, quantity);
     setSmartAddQuantity(nextQuantity);
+    smartSimulationOperationRef.current = { key: '', id: '' };
     setSmartSimulation(recommendationService.simulateSmartAdd({
       candidate: smartSimulation.candidate,
       quantity: nextQuantity,
@@ -2505,6 +2501,7 @@ export default function AquariumManager() {
   };
 
   const confirmSmartSimulationAdd = async () => {
+    if (isSmartSimulationSaving) return;
     if (!activeAquarium || !smartSimulation) {
       showToast('当前没有可确认的模拟方案。', 'error');
       return;
@@ -2526,20 +2523,31 @@ export default function AquariumManager() {
       showToast(message, 'error');
       return;
     }
+    setIsSmartSimulationSaving(true);
     try {
+      const operationKey = `${activeAquarium.id}:${species.id}:${smartAddQuantity}`;
+      if (smartSimulationOperationRef.current.key !== operationKey) {
+        smartSimulationOperationRef.current = {
+          key: operationKey,
+          id: `smart-simulation:${crypto.randomUUID()}`,
+        };
+      }
       const repository = await getCurrentAquaGuideRepository();
       const result = await recordExistingLivestock({
         repository,
         aquarium: activeAquarium,
         items,
         speciesCatalog: fishData,
-        operationId: `smart-simulation:${crypto.randomUUID()}`,
+        operationId: smartSimulationOperationRef.current.id,
       });
+      smartSimulationOperationRef.current = { key: '', id: '' };
       setAquariums(current => current.map(aquarium => aquarium.id === result.aquarium.id ? result.aquarium : aquarium));
       await recordAddedSpeciesBatches(activeAquarium, result.aquarium);
     } catch (error) {
       showToast(error instanceof Error ? error.message : '当前模拟没有记录成功。', 'error');
       return;
+    } finally {
+      setIsSmartSimulationSaving(false);
     }
     setTankActionMessage(Boolean(i18n.language?.startsWith('en')) ? `Added ${species.name} x${smartAddQuantity}, recommend to observe for 3-7 days.` : `已加入 ${species.name} x${smartAddQuantity}，建议观察 3-7 天。`);
     showToast(Boolean(i18n.language?.startsWith('en')) ? `Added ${species.name} x${smartAddQuantity}` : `已加入 ${species.name} x${smartAddQuantity}`, 'success');
@@ -3503,9 +3511,9 @@ export default function AquariumManager() {
         ? (isEn ? 'Available, scaled list' : '可用，已缩减生物') 
         : (isEn ? 'Unsuitable for active tank' : '不适合当前鱼缸');
     const ctaLabel = status === 'suitable'
-      ? (isEn ? 'Apply to active tank' : '应用到当前鱼缸')
+      ? (isEn ? 'Review planned livestock' : '评估方案内生物')
       : status === 'caution'
-        ? (isEn ? 'Apply adjusted safe setup' : '应用调整后的安全方案')
+        ? (isEn ? 'Review adjusted livestock' : '评估调整后的生物')
         : (isEn ? 'Tank size too small' : '当前鱼缸偏小');
 
     return {
@@ -3599,6 +3607,7 @@ export default function AquariumManager() {
   };
   const updateSelectedAddFishItem = (fishId: string, patch: Partial<{ quantity: number; entryDate: string }>) => {
     setAddFishCompatibilityReview(null);
+    addFishOperationIdRef.current = '';
     setSelectedAddFishItems(prev => prev.map(item => (
       item.fishId === fishId
         ? { ...item, ...patch, quantity: Math.max(1, patch.quantity ?? item.quantity) }
@@ -3609,6 +3618,7 @@ export default function AquariumManager() {
     setAddFishSuccess(null);
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
+    addFishOperationIdRef.current = '';
     setSelectedAddFishItems(prev => {
       if (prev.some(item => item.fishId === fish.id)) {
         return prev.filter(item => item.fishId !== fish.id);
@@ -5074,11 +5084,13 @@ export default function AquariumManager() {
             <button
               type="button"
               onClick={handleAddAquarium}
+              disabled={isCreatingAquarium}
+              aria-busy={isCreatingAquarium}
               aria-label={isEn ? 'New aquarium' : '新建鱼缸'}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 shadow-sm"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 shadow-sm disabled:cursor-wait disabled:opacity-55"
               title={isEn ? 'New aquarium' : '新建鱼缸'}
             >
-              <Plus className="h-4 w-4" />
+              {isCreatingAquarium ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
             </button>
             <div className="relative">
               <button
@@ -6480,6 +6492,7 @@ export default function AquariumManager() {
                                       type="button"
                                       onClick={() => {
                                         setAddFishCompatibilityReview(null);
+                                        addFishOperationIdRef.current = '';
                                         setSelectedAddFishItems(prev => prev.filter(selected => selected.fishId !== item.fishId));
                                       }}
                                       className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
@@ -7145,11 +7158,12 @@ export default function AquariumManager() {
           <DialogFooter className="shrink-0 border-t border-border/70 bg-white px-6 pb-[calc(20px+env(safe-area-inset-bottom))] pt-4">
             {smartSimulation ? (
               <div className="grid w-full gap-2 sm:grid-cols-[1fr_1fr]">
-                <Button type="button" variant="outline" onClick={() => setSmartSimulation(null)} className="h-11 rounded-full text-sm font-black">
+                <Button type="button" variant="outline" disabled={isSmartSimulationSaving} onClick={() => setSmartSimulation(null)} className="h-11 rounded-full text-sm font-black">
                   取消模拟
                 </Button>
-                <Button type="button" onClick={confirmSmartSimulationAdd} className="h-11 rounded-full bg-accent text-sm font-black text-white">
-                  确认加入当前鱼缸
+                <Button type="button" disabled={isSmartSimulationSaving} onClick={confirmSmartSimulationAdd} className="h-11 rounded-full bg-accent text-sm font-black text-white">
+                  {isSmartSimulationSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isSmartSimulationSaving ? '记录中…' : '已经实际入缸，记录下来'}
                 </Button>
               </div>
             ) : (
@@ -7291,7 +7305,7 @@ export default function AquariumManager() {
               鱼缸搭建方案
             </DialogTitle>
             <DialogDescription className="text-xs leading-relaxed text-ink/60">
-              方案会先根据当前鱼缸水量、长度、已有生物和设备生成安全适配版，再允许应用。
+              方案只作为规划参考；环境配置不会自动写入，推荐生物会先进入混养判断。
             </DialogDescription>
           </DialogHeader>
 
@@ -7410,8 +7424,8 @@ export default function AquariumManager() {
 
               <section className="grid gap-3 rounded-[18px] bg-white p-3 shadow-sm">
                 <div>
-                  <h3 className="text-[14px] font-black text-ink">{isEn ? 'B. Setup Plan Summary' : 'B. 综合方案摘要'}</h3>
-                  <p className="mt-0.5 text-[11px] font-medium text-ink/50">{isEn ? 'Displays results that will apply to your active tank.' : '这里展示会真正应用到当前鱼缸的适配结果。'}</p>
+                  <h3 className="text-[14px] font-black text-ink">{isEn ? 'B. Reference Plan Summary' : 'B. 规划参考摘要'}</h3>
+                  <p className="mt-0.5 text-[11px] font-medium text-ink/50">{isEn ? 'Review the reference configuration. Nothing is written until you record the real setup.' : '这里展示参考配置；只有你实际记录后，环境或生物才会写入鱼缸。'}</p>
                 </div>
                 <div className="grid gap-2 rounded-[16px] bg-emerald-50/70 p-3">
                   {[
@@ -7465,7 +7479,7 @@ export default function AquariumManager() {
           </div>
 
           <DialogFooter className="shrink-0 border-t border-white bg-white/90 px-4 py-3">
-            <Button variant="outline" onClick={() => setIsBuildPlanOpen(false)} className="h-10 rounded-full text-sm font-bold">{isEn ? 'Cancel' : '暂不应用'}</Button>
+            <Button variant="outline" onClick={() => setIsBuildPlanOpen(false)} className="h-10 rounded-full text-sm font-bold">{isEn ? 'Close' : '暂不评估'}</Button>
             <Button
               onClick={() => handleApplyBuildTemplate(selectedAdaptedBuildPlan)}
               disabled={!selectedAdaptedBuildPlan.canApply}
