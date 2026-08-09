@@ -133,6 +133,8 @@ import {
   type SpeciesBatchCareSignal,
 } from '../services/aquarium/species-batches.service';
 
+// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
+
 const ThreeAquarium = lazy(() => import('../components/ThreeAquarium').then(module => ({ default: module.ThreeAquarium })));
 
 
@@ -221,6 +223,17 @@ const getCareLevelLocalized = (val: string | undefined, isEn = false): string =>
     '困难': 'Advanced',
   };
   return map[val] || val;
+};
+
+const getAddFishCategory = (fish: Fish): 'fish' | 'shrimp' | 'snail' | 'crab' | 'plant' | 'coral' | 'other' => {
+  const value = `${fish.category} ${fish.name} ${fish.scientificName}`.toLowerCase();
+  if (/水草|plant|moss|fern|anubias|cryptocoryne/.test(value)) return 'plant';
+  if (/珊瑚|coral|reef/.test(value)) return 'coral';
+  if (/虾|shrimp|prawn|caridina|neocaridina/.test(value)) return 'shrimp';
+  if (/螺|snail|nerite|mystery snail/.test(value)) return 'snail';
+  if (/蟹|crab/.test(value)) return 'crab';
+  if (/鱼|fish|tetra|rasbora|cichlid|gourami|betta|guppy|cory|loach/.test(value)) return 'fish';
+  return 'other';
 };
 
 function AquariumZoneHeader({ index, title, subtitle, titleId }: { index: number; title: string; subtitle: string; titleId: string }) {
@@ -1191,6 +1204,8 @@ export default function AquariumManager() {
 
   // New fish form state
   const [fishSearchTerm, setFishSearchTerm] = useState('');
+  const [addFishCategory, setAddFishCategory] = useState<'all' | 'fish' | 'shrimp' | 'snail' | 'crab' | 'plant' | 'coral' | 'other'>('all');
+  const [isRiskOverrideConfirmOpen, setIsRiskOverrideConfirmOpen] = useState(false);
   const [selectedAddFishItems, setSelectedAddFishItems] = useState<SelectedAddFishItem[]>([]);
   const [addFishSuccess, setAddFishSuccess] = useState<{
     aquariumName: string;
@@ -1979,6 +1994,7 @@ export default function AquariumManager() {
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
     setFishSearchTerm('');
+    setAddFishCategory('all');
     setSelectedAddFishItems(selectedFish
       ? [{ fishId: selectedFish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd') }]
       : []);
@@ -2114,6 +2130,38 @@ export default function AquariumManager() {
     const items = addFishCompatibilityReview?.items || normalizeSelectedAddFishItems();
     setAdditionIntent('record_existing');
     await recordSelectedFishItems(items);
+  };
+
+  const handleRiskOverrideAdd = async () => {
+    if (!addFishCompatibilityReview || !activeAquarium) return;
+    const review = addFishCompatibilityReview;
+    try {
+      const storageKey = 'aquaguide:risk-overrides:v1';
+      const existing = JSON.parse(window.localStorage.getItem(storageKey) || '[]');
+      const records = Array.isArray(existing) ? existing : [];
+      const riskRecord = {
+        id: crypto.randomUUID(),
+        aquariumId: activeAquarium.id,
+        species: review.items.map(item => ({
+          fishId: item.fishId,
+          name: fishData.find(fish => fish.id === item.fishId)?.name || item.fishId,
+          quantity: item.quantity,
+        })),
+        status: review.status,
+        reasons: review.keyRules.map(rule => ({ code: rule.code, title: rule.title, evidence: rule.evidence, severity: rule.severity })),
+        ruleVersion: review.evaluations[0]?.result.metadata.ruleVersion || 'unknown',
+        confirmedAt: new Date().toISOString(),
+      };
+      window.localStorage.setItem(storageKey, JSON.stringify([riskRecord, ...records].slice(0, 100)));
+    } catch (error) {
+      console.warn('AquaGuide risk override audit could not be saved', error);
+    }
+    setAdditionIntent('record_existing');
+    setIsRiskOverrideConfirmOpen(false);
+    await recordSelectedFishItems(review.items);
+    setTankActionMessage(Boolean(i18n.language?.startsWith('en'))
+      ? 'High-risk stocking was recorded after your explicit confirmation. Keep monitoring the flagged risks.'
+      : '已按你的明确确认记录高风险组合；后续请持续关注上方标记的风险。');
   };
 
   const handleAddCompatibilitySpeciesToTank = async (items: { fishId: string; quantity: number }[]) => {
@@ -2339,6 +2387,7 @@ export default function AquariumManager() {
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
     setFishSearchTerm('');
+    setAddFishCategory('all');
     setSelectedAddFishItems(templateFish.map(({ fish, quantity }) => ({ fishId: fish.id, quantity, entryDate })));
     setIsAddFishOpen(true);
     setTankActionMessage(isEn
@@ -2392,11 +2441,7 @@ export default function AquariumManager() {
   };
 
   const openTankBuildCopilot = () => {
-    setTankCopilotError('');
-    setTankCopilotResult(null);
-    setTankCopilotAnswers({});
-    setTankCopilotGoal(prev => prev || (activeAquarium.fishes.length > 0 ? (Boolean(i18n.language?.startsWith('en')) ? 'Plan safe additions based on active tank' : '基于当前鱼缸规划下一步安全搭配') : (Boolean(i18n.language?.startsWith('en')) ? 'Beginner small freshwater tank' : '新手小型淡水缸')));
-    setIsTankCopilotOpen(true);
+    window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'ai-care' } }));
   };
 
   const handleTankCopilotGenerate = async (goalOverride?: string, answerOverride?: Record<string, string>) => {
@@ -3817,6 +3862,25 @@ export default function AquariumManager() {
     if (panel === 'size') {
       return (
         <ConfigSection title={isEn ? "Dimensions" : "尺寸"} subtitle={isEn ? "Used for volume estimation and care advice." : "用于估算容量和后续养护建议。"}>
+          <div className="mb-3 grid gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-[11px] font-black text-ink/55">{isEn ? 'Common size presets' : '常用尺寸预设'}</div>
+              <span className="text-[9px] font-bold text-ink/35">{isEn ? 'Tap to confirm, editable afterwards' : '点击确认，之后仍可修改'}</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: '40×25×20 · 20L', length: '40', width: '25', height: '20' },
+                { label: '45×30×25 · 34L', length: '45', width: '30', height: '25' },
+                { label: '50×30×30 · 45L', length: '50', width: '30', height: '30' },
+                { label: '60×30×35 · 63L', length: '60', width: '30', height: '35' },
+                { label: '75×40×30 · 90L', length: '75', width: '40', height: '30' },
+              ].map(preset => (
+                <button key={preset.label} type="button" onClick={() => setSettingsForm({ ...settingsForm, dimensions: { length: preset.length, width: preset.width, height: preset.height } })} className="min-h-10 rounded-full border border-emerald-100 bg-emerald-50 px-3 text-[10px] font-black text-emerald-800">
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="grid grid-cols-3 gap-2">
             {dimensionFields.map(item => (
               <div key={item.key} className="grid gap-1.5">
@@ -6349,11 +6413,13 @@ export default function AquariumManager() {
                 }`}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-[11px] font-black text-ink/45">{isEn ? 'Step 2: Planning Assessment' : '第 2 步：规划判断'}</div>
-                      <div className="mt-1 text-lg font-black text-ink">
-                        {getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
+                      <div className="text-[11px] font-black text-ink/45">{isEn ? 'Post-addition Risk Assessment' : '加入后风险判定'}</div>
+                      <div className={`mt-1 font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[28px] leading-tight text-red-700' : 'text-lg text-ink'}`}>
+                        {addFishCompatibilityReview.status === 'not_recommended'
+                          ? (isEn ? 'Not recommended to add' : '不建议加入')
+                          : getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
                       </div>
-                      <p className="mt-1 text-[12px] font-bold leading-relaxed text-ink/62">
+                      <p className={`mt-2 leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[14px] font-black text-red-800' : 'text-[12px] font-bold text-ink/62'}`}>
                         {addFishCompatibilityReview.status === 'not_recommended'
                           ? '当前规划命中阻断风险，不建议实际加入；这不会删除现实中已经存在的记录。'
                           : addFishCompatibilityReview.status === 'insufficient_data'
@@ -6381,12 +6447,12 @@ export default function AquariumManager() {
                   </div>
 
                   {addFishCompatibilityReview.keyRules.length > 0 && (
-                    <div className="rounded-[14px] bg-white/72 p-3">
-                      <div className="text-[11px] font-black text-ink">{isEn ? 'Key Reasons' : '最关键的依据'}</div>
+                    <div className={`rounded-[16px] p-4 ${addFishCompatibilityReview.status === 'not_recommended' ? 'border-2 border-red-200 bg-white' : 'bg-white/72'}`}>
+                      <div className={`font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[15px] text-red-700' : 'text-[11px] text-ink'}`}>{isEn ? 'Key Reasons' : '不建议混养的原因'}</div>
                       <div className="mt-2 grid gap-1.5">
                         {addFishCompatibilityReview.keyRules.slice(0, 3).map(rule => (
-                          <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className="text-[11px] font-medium leading-relaxed text-ink/62">
-                            <span className="font-black text-ink/72">{rule.title}：</span>{rule.evidence}
+                          <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className={`leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'rounded-[12px] bg-red-50 px-3 py-2 text-[14px] font-bold text-red-900' : 'text-[11px] font-medium text-ink/62'}`}>
+                            <span className={addFishCompatibilityReview.status === 'not_recommended' ? 'font-black text-red-800' : 'font-black text-ink/72'}>{rule.title}：</span>{rule.evidence}
                           </div>
                         ))}
                       </div>
@@ -6401,6 +6467,34 @@ export default function AquariumManager() {
                   <div className="text-[13px] font-black text-ink">{isEn ? 'Step 1: Select Species' : '第 1 步：选择生物'}</div>
                   <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-ink/50">{addFishIntro}</p>
                 </div>
+              <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+                {([
+                  { id: 'all', zh: '全部', en: 'All' },
+                  { id: 'fish', zh: '鱼类', en: 'Fish' },
+                  { id: 'shrimp', zh: '虾', en: 'Shrimp' },
+                  { id: 'snail', zh: '螺', en: 'Snails' },
+                  { id: 'crab', zh: '蟹', en: 'Crabs' },
+                  { id: 'plant', zh: '水草', en: 'Plants' },
+                  { id: 'coral', zh: '珊瑚', en: 'Coral' },
+                  { id: 'other', zh: '其他', en: 'Other' },
+                ] as const).map(category => {
+                  const count = category.id === 'all' ? fishData.length : fishData.filter(fish => getAddFishCategory(fish) === category.id).length;
+                  return (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => { setAddFishCategory(category.id); setAddFishCompatibilityReview(null); }}
+                      className={`min-h-11 rounded-[14px] border px-2 py-2 text-[11px] font-black transition-colors ${addFishCategory === category.id ? 'border-emerald-400 bg-emerald-50 text-emerald-800' : 'border-border bg-white text-ink/55'}`}
+                    >
+                      <span className="block">{isEn ? category.en : category.zh}</span>
+                      <span className="mt-0.5 block text-[9px] opacity-55">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="rounded-[12px] bg-bg px-3 py-2 text-[10px] font-bold leading-5 text-ink/48">
+                {isEn ? 'Choose a broad group first, then a specific species. AquaGuide will not guess a strain or variant you did not choose.' : '先选生物大类，再选具体物种；系统不会自动猜测你没有确认的品系或变体。'}
+              </p>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/45" />
                 <Input 
@@ -6422,7 +6516,7 @@ export default function AquariumManager() {
                 </div>
 
                 <div className="grid max-h-[300px] gap-2 overflow-y-auto pr-1">
-                  {addFishList.map(fish => {
+                  {addFishList.filter(fish => addFishCategory === 'all' || getAddFishCategory(fish) === addFishCategory).map(fish => {
                     const isSelected = selectedAddFishItems.some(item => item.fishId === fish.id);
                     return (
                     <button
@@ -6652,7 +6746,22 @@ export default function AquariumManager() {
               )}
             </div>
           </div>
-                  {!addFishSuccess && (
+                  {!addFishSuccess && addFishCompatibilityReview?.status === 'not_recommended' && (
+                    <DialogFooter className="shrink-0 border-t border-red-100 bg-white/98 px-4 py-3 shadow-[0_-10px_24px_rgba(127,29,29,0.08)]">
+                      <div className="grid w-full gap-2 sm:grid-cols-3">
+                        <Button type="button" variant="outline" disabled={isAddFishSaving} onClick={() => setAddFishCompatibilityReview(null)} className="h-11 rounded-full text-sm font-black">
+                          {isEn ? 'Go back & adjust' : '返回调整'}
+                        </Button>
+                        <Button type="button" variant="outline" disabled={isAddFishSaving} onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'ai-risk' } }))} className="h-11 rounded-full border-violet-200 bg-violet-50 text-sm font-black text-violet-800">
+                          {isEn ? 'AI advice' : 'AI 建议'}
+                        </Button>
+                        <Button type="button" disabled={isAddFishSaving} onClick={() => setIsRiskOverrideConfirmOpen(true)} className="h-11 rounded-full bg-red-700 text-sm font-black text-white hover:bg-red-800">
+                          {isEn ? 'Add anyway' : '仍要加入'}
+                        </Button>
+                      </div>
+                    </DialogFooter>
+                  )}
+                  {!addFishSuccess && addFishCompatibilityReview?.status !== 'not_recommended' && (
                     <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-4 py-3 shadow-[0_-10px_24px_rgba(27,77,62,0.08)]">
                       <Button
                         variant="outline"
@@ -6709,6 +6818,34 @@ export default function AquariumManager() {
         </AdaptiveTaskContent>
       </Dialog>
 
+      <Dialog open={isRiskOverrideConfirmOpen} onOpenChange={setIsRiskOverrideConfirmOpen}>
+        <DialogContent showCloseButton={false} className="w-[92vw] max-w-[460px] rounded-[24px] border-red-100 bg-white p-0">
+          <DialogHeader className="border-b border-red-100 px-5 py-4 text-left">
+            <div className="inline-flex w-fit rounded-full bg-red-100 px-3 py-1 text-[11px] font-black text-red-800">{isEn ? 'HIGH RISK OVERRIDE' : '高风险确认'}</div>
+            <DialogTitle className="mt-2 text-[22px] font-black text-red-700">{isEn ? 'AquaGuide does not recommend this mix' : 'AquaGuide 不建议这个组合'}</DialogTitle>
+            <DialogDescription className="text-sm font-bold leading-6 text-ink/60">
+              {isEn ? 'If you continue, the species will be recorded in the tank and this explicit override will be saved for later risk reminders.' : '如果继续，这些生物会被记录到鱼缸，同时保存一次“已知风险仍加入”的确认记录，便于后续持续提示。'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-2 px-5 py-4">
+            {addFishCompatibilityReview?.keyRules.slice(0, 4).map(rule => (
+              <div key={`override-${rule.code}-${rule.evidence}`} className="rounded-[14px] bg-red-50 px-3 py-3 text-[13px] font-bold leading-6 text-red-900">
+                <span className="font-black">{rule.title}：</span>{rule.evidence}
+              </div>
+            ))}
+          </div>
+          <DialogFooter className="grid gap-2 border-t border-red-100 px-5 py-4 sm:grid-cols-2">
+            <Button type="button" variant="outline" disabled={isAddFishSaving} onClick={() => setIsRiskOverrideConfirmOpen(false)} className="h-11 rounded-full text-sm font-black">
+              {isEn ? 'Cancel' : '返回调整'}
+            </Button>
+            <Button type="button" disabled={isAddFishSaving} onClick={() => void handleRiskOverrideAdd()} className="h-11 rounded-full bg-red-700 text-sm font-black text-white hover:bg-red-800">
+              {isAddFishSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isEn ? 'I understand the risk, add anyway' : '我已了解风险，仍要加入'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={isTankCopilotOpen} onOpenChange={setIsTankCopilotOpen}>
         <AdaptiveTaskContent>
           <DialogHeader className="shrink-0 border-b border-border/70 px-5 py-4 text-left">
@@ -6753,7 +6890,7 @@ export default function AquariumManager() {
                   <div>
                     <div className="text-sm font-black text-ink">{isEn ? 'What tank do you want to build?' : '你想建什么样的缸？'}</div>
                     <div className="text-[11px] font-bold text-ink/45">
-                      当前参考：{activeAquarium.name} · {activeAquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · {activeAquarium.targetTemperature || 25}°C
+                      当前参考：{activeAquarium.name} · {activeAquarium.waterType === 'Saltwater' ? '海水' : activeAquarium.waterType === 'Freshwater' ? '淡水' : '水体未设置'} · {activeAquarium.targetTemperature ? `${activeAquarium.targetTemperature}°C` : '温度未设置'}
                     </div>
                   </div>
                   <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-ink/45">
@@ -7631,7 +7768,14 @@ export default function AquariumManager() {
                   ))}
                 </div>
                 <div className="mt-3 grid gap-1.5">
-                  <Label className="text-[11px] font-bold text-ink/55">{t('aquarium.targetTemp')}</Label>
+                  <div className="mb-2 flex flex-wrap gap-2">
+            {[22, 24, 25, 26, 28].map(temp => (
+              <button key={temp} type="button" onClick={() => setSettingsForm({ ...settingsForm, targetTemperature: String(temp) })} className={`min-h-10 rounded-full border px-3 text-[11px] font-black ${settingsForm.targetTemperature === String(temp) ? 'border-emerald-400 bg-emerald-50 text-emerald-800' : 'border-border bg-white text-ink/55'}`}>
+                {temp}°C
+              </button>
+            ))}
+          </div>
+          <Label className="text-[11px] font-bold text-ink/55">{t('aquarium.targetTemp')}</Label>
                   <Input
                     type="number"
                     value={settingsForm.targetTemperature || ''}
@@ -7786,8 +7930,8 @@ export default function AquariumManager() {
                   <p className="mt-1 text-[11px] font-medium leading-relaxed text-ink/48">{activeSettingsPanel === 'lighting' ? t('aquarium.lightingDesc') : t('aquarium.equipmentDesc')}</p>
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {[
-                      t(`aquarium.${filterOptionKeys[settingsForm.equipment?.filter || '瀑布过滤'] || 'filterCascade'}`),
-                      t(`aquarium.${lightOptionKeys[settingsForm.equipment?.light || '普通灯'] || 'lightNormal'}`),
+                      settingsForm.equipment?.filter ? t(`aquarium.${filterOptionKeys[settingsForm.equipment.filter] || 'filterCascade'}`) : (isEn ? 'Filter not set' : '过滤未设置'),
+                      settingsForm.equipment?.light ? t(`aquarium.${lightOptionKeys[settingsForm.equipment.light] || 'lightNormal'}`) : (isEn ? 'Light not set' : '照明未设置'),
                       settingsForm.equipment?.heater ? t('aquarium.heater') : t('aquarium.noHeater'),
                       settingsForm.equipment?.oxygen ? t('aquarium.oxygen') : t('aquarium.noOxygen'),
                     ].map(item => (

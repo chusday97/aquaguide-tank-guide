@@ -1,6 +1,9 @@
 import type { Aquarium } from '../../types';
 import type { SmartRecommendationOutput } from '../recommendation/recommendation.schema';
 import type { TankCopilotContext } from './copilot.types';
+import { getAquariumAiReadiness } from '../../services/aquarium/aquarium-setup.service';
+
+// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
 
 const hasText = (value: unknown) => typeof value === 'string' && value.trim().length > 0;
 
@@ -14,14 +17,9 @@ const getTankVolumeLiters = (aquarium: Aquarium) => {
   return 0;
 };
 
-export const getTankCopilotMissingInfo = (aquarium: Aquarium) => {
-  const missing: string[] = [];
-  if (!getTankVolumeLiters(aquarium)) missing.push('鱼缸尺寸或容量');
-  if (!hasText(aquarium.waterType)) missing.push('水体类型');
-  if (!Number.isFinite(Number(aquarium.targetTemperature))) missing.push('目标水温');
-  if (!aquarium.equipment?.filter || aquarium.equipment.filter === '无') missing.push('过滤设备');
-  return missing;
-};
+export const getTankCopilotMissingInfo = (aquarium: Aquarium) => (
+  getAquariumAiReadiness(aquarium).missing.map(item => item.label)
+);
 
 export const buildTankCopilotContext = ({
   aquarium,

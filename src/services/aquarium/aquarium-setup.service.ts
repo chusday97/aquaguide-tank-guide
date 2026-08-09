@@ -77,3 +77,50 @@ export const getAquariumSetupStatus = (aquarium: Aquarium): AquariumSetupStatus 
   if (temperatureKnown && filterKnown) return 'complete';
   return 'usable';
 };
+
+
+// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
+export type AquariumAiSetupPanel = 'size' | 'parameters' | 'equipment';
+
+export type AquariumAiMissingField = {
+  key: 'dimensions' | 'waterType' | 'temperature' | 'filter';
+  label: string;
+  panel: AquariumAiSetupPanel;
+};
+
+export const AQUARIUM_QUICK_SETUP_PRESETS = {
+  dimensions: [
+    { id: '20l', label: '40×25×20 cm · 20L', dimensions: { length: '40', width: '25', height: '20' } },
+    { id: '34l', label: '45×30×25 cm · 34L', dimensions: { length: '45', width: '30', height: '25' } },
+    { id: '45l', label: '50×30×30 cm · 45L', dimensions: { length: '50', width: '30', height: '30' } },
+    { id: '63l', label: '60×30×35 cm · 63L', dimensions: { length: '60', width: '30', height: '35' } },
+    { id: '90l', label: '75×40×30 cm · 90L', dimensions: { length: '75', width: '40', height: '30' } },
+  ],
+  temperaturesC: [22, 24, 25, 26, 28],
+  filters: ['无', '瀑布过滤', '海绵过滤', '上滤', '桶滤'] as const,
+} as const;
+
+export const getAquariumAiReadiness = (aquarium: Aquarium) => {
+  const missing: AquariumAiMissingField[] = [];
+  const dimensionsComplete = Boolean(
+    nonEmpty(aquarium.dimensions?.length)
+    && nonEmpty(aquarium.dimensions?.width)
+    && nonEmpty(aquarium.dimensions?.height),
+  );
+  if (!dimensionsComplete) missing.push({ key: 'dimensions', label: '鱼缸尺寸 / 容量', panel: 'size' });
+  if (aquarium.waterType !== 'Freshwater' && aquarium.waterType !== 'Saltwater') {
+    missing.push({ key: 'waterType', label: '水体类型', panel: 'parameters' });
+  }
+  if (!nonEmpty(aquarium.targetTemperature) || !Number.isFinite(Number(aquarium.targetTemperature))) {
+    missing.push({ key: 'temperature', label: '目标水温', panel: 'parameters' });
+  }
+  // undefined means the user has not answered. The explicit value "无" is a real answer.
+  if (aquarium.equipment?.filter === undefined) {
+    missing.push({ key: 'filter', label: '过滤设备', panel: 'equipment' });
+  }
+  return {
+    ready: missing.length === 0,
+    missing,
+    firstPanel: missing[0]?.panel,
+  };
+};
