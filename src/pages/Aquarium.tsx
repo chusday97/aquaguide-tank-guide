@@ -134,6 +134,7 @@ import {
 } from '../services/aquarium/species-batches.service';
 
 // AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
+// AQUAGUIDE_PRODUCT_UX_CLOSURE_V2
 
 const ThreeAquarium = lazy(() => import('../components/ThreeAquarium').then(module => ({ default: module.ThreeAquarium })));
 
@@ -3649,7 +3650,11 @@ export default function AquariumManager() {
     : [];
 
   const recommendedFishes = recommendations.slice(0, 6);
-  const addFishList = fishSearchTerm.trim() ? searchResults : recommendedFishes;
+  const addFishCandidatePool = fishData.filter(f => !isAquaticPlantSpecies(f) && !isHardscapeSpecies(f));
+  const categoryFishes = addFishCategory === 'all'
+    ? recommendedFishes
+    : addFishCandidatePool.filter(fish => getAddFishCategory(fish) === addFishCategory).slice(0, 24);
+  const addFishList = fishSearchTerm.trim() ? searchResults : categoryFishes;
   const selectedAddFishDetails = selectedAddFishItems
     .map(item => {
       const fish = fishData.find(candidate => candidate.id === item.fishId);
@@ -3718,7 +3723,7 @@ export default function AquariumManager() {
   const selectedPlantCount = settingsForm.plants?.length || 0;
   const settingsGrossVolumeLiters = getTankGrossVolumeLiters(settingsForm.dimensions);
   const settingsEstimatedWaterLiters = getEstimatedWaterVolumeLiters(settingsForm.dimensions);
-  const settingsWaterType = settingsForm.waterType || 'Freshwater';
+  const settingsWaterType = settingsForm.waterType;
   const availablePlantOptions = settingsWaterType === 'Freshwater'
     ? plantOptions.filter(item => isSpeciesCompatibleWithWaterType(item, 'Freshwater'))
     : plantOptions;
@@ -3936,8 +3941,23 @@ export default function AquariumManager() {
               />
             ))}
           </div>
-          <div className="mt-3 grid gap-1.5">
-            <Label className="text-[11px] font-bold text-ink/55">{isEn ? 'Target Temp (°C)' : '目标温度 (°C)'}</Label>
+          <div className="mt-3 grid gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <Label className="text-[11px] font-bold text-ink/55">{isEn ? 'Target Temp (°C)' : '目标温度 (°C)'}</Label>
+              <span className="text-[9px] font-bold text-ink/35">{isEn ? 'Choose a preset or enter your own' : '可点选常用值，也可自定义'}</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {[22, 24, 25, 26, 28].map(temp => (
+                <button
+                  key={temp}
+                  type="button"
+                  onClick={() => setSettingsForm({ ...settingsForm, targetTemperature: String(temp) })}
+                  className={`min-h-10 rounded-full border px-3 text-[11px] font-black ${settingsForm.targetTemperature === String(temp) ? 'border-emerald-400 bg-emerald-50 text-emerald-800' : 'border-border bg-white text-ink/55'}`}
+                >
+                  {temp}°C
+                </button>
+              ))}
+            </div>
             <Input
               type="number"
               value={settingsForm.targetTemperature || ''}
@@ -4046,7 +4066,7 @@ export default function AquariumManager() {
               <SelectableOptionCard
                 key={option}
                 label={option}
-                selected={(settingsForm.equipment?.light || '普通灯') === option}
+                selected={settingsForm.equipment?.light === option}
                 onClick={() => setSettingsForm({
                   ...settingsForm,
                   equipment: { ...(settingsForm.equipment || {}), light: option as any }
@@ -4066,7 +4086,7 @@ export default function AquariumManager() {
               <SelectableOptionCard
                 key={option}
                 label={option}
-                selected={(settingsForm.equipment?.filter || '瀑布过滤') === option}
+                selected={settingsForm.equipment?.filter === option}
                 onClick={() => setSettingsForm({
                   ...settingsForm,
                   equipment: { ...(settingsForm.equipment || {}), filter: option as any }
@@ -6297,6 +6317,7 @@ export default function AquariumManager() {
                 setIsAddFishOpen(open);
                 if (!open) {
                   setFishSearchTerm('');
+                  setAddFishCategory('all');
                   setSelectedAddFishItems([]);
                   setAddFishSuccess(null);
                   setAddFishDatePicker(null);
@@ -6478,7 +6499,7 @@ export default function AquariumManager() {
                   { id: 'coral', zh: '珊瑚', en: 'Coral' },
                   { id: 'other', zh: '其他', en: 'Other' },
                 ] as const).map(category => {
-                  const count = category.id === 'all' ? fishData.length : fishData.filter(fish => getAddFishCategory(fish) === category.id).length;
+                  const count = category.id === 'all' ? addFishCandidatePool.length : addFishCandidatePool.filter(fish => getAddFishCategory(fish) === category.id).length;
                   return (
                     <button
                       key={category.id}
