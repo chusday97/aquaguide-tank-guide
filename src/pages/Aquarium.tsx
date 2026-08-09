@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
-import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download, MoreHorizontal, History } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download, MoreHorizontal, History, Loader2 } from 'lucide-react';
 import { DeceasedRecord } from '../types';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 import {
@@ -1250,6 +1250,7 @@ export default function AquariumManager() {
   const [pendingReminderReschedule, setPendingReminderReschedule] = useState<CareReminderRecord | null>(null);
   const [discoveryState, setDiscoveryState] = useState<DiscoveryDeckState>(() => loadDiscoveryState());
   const [discoveryMessage, setDiscoveryMessage] = useState('');
+  const [isDiscoveryFavoritePending, setIsDiscoveryFavoritePending] = useState(false);
   const [selectedWishlistFish, setSelectedWishlistFish] = useState<Fish | null>(null);
 
   const persistCareTimelineEvent = async (input: Omit<CareTimelineMutation, 'operationId'>) => {
@@ -3157,17 +3158,20 @@ export default function AquariumManager() {
     setDiscoveryState(output.state);
   };
 
-  const handleDiscoveryFavorite = () => {
-    if (!discoveryFish) return;
+  const handleDiscoveryFavorite = async () => {
+    if (!discoveryFish || isDiscoveryFavoritePending) return;
+    const targetFishId = discoveryFish.id;
     const previous = new Set(wishlistFishIds);
     const next = new Set(previous);
-    const willSave = !next.has(discoveryFish.id);
-    if (willSave) next.add(discoveryFish.id);
-    else next.delete(discoveryFish.id);
+    const willSave = !next.has(targetFishId);
+    if (willSave) next.add(targetFishId);
+    else next.delete(targetFishId);
 
     setWishlistFishIds(next);
+    setIsDiscoveryFavoritePending(true);
     try {
-      setSpeciesFavoriteIds(next);
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: targetFishId, favorite: willSave });
       setDiscoveryMessage(
         willSave
           ? (isEn ? 'Saved to My Collection' : '已收录到水族册')
@@ -3180,6 +3184,8 @@ export default function AquariumManager() {
           ? error.message
           : (isEn ? 'Could not update the collection. Try again.' : '收藏没有保存成功，请重试。'),
       );
+    } finally {
+      setIsDiscoveryFavoritePending(false);
     }
   };
 
@@ -5100,9 +5106,13 @@ export default function AquariumManager() {
                     ? 'border-rose-100 text-rose-600'
                     : 'border-white text-rose-500'
                 }`}
-                onClick={handleDiscoveryFavorite}
+                onClick={() => void handleDiscoveryFavorite()}
+                disabled={isDiscoveryFavoritePending}
+                aria-busy={isDiscoveryFavoritePending}
               >
-                <Heart className={`h-4 w-4 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />
+                {isDiscoveryFavoritePending
+                  ? <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" />
+                  : <Heart className={`h-4 w-4 ${wishlistFishIds.has(discoveryFish.id) ? 'fill-current' : ''}`} />}
               </button>
             </div>
             <div className="flex min-w-0 flex-col p-2.5">
@@ -5129,6 +5139,7 @@ export default function AquariumManager() {
               title={isEn ? 'Another one' : '换一个'}
               className="absolute bottom-2 left-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white bg-white/95 text-ink/58 shadow-sm"
               onClick={advanceDiscoveryCard}
+              disabled={isDiscoveryFavoritePending}
             >
               <RefreshCw className="h-4 w-4" />
             </button>

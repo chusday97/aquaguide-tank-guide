@@ -65,6 +65,25 @@ try {
       });
       assert.equal((await discovery.locator('h3').innerText()).trim(), nextSpeciesName, 'unsaving must also keep the current recommendation visible');
       await discovery.getByText('已从水族册移除', { exact: true }).waitFor();
+      await page.evaluate(() => {
+        const originalSetItem = Storage.prototype.setItem;
+        let failed = false;
+        Storage.prototype.setItem = function setItemWithOneWishlistFailure(key, value) {
+          if (!failed && key === 'aquarium_app_state_v1') {
+            const parsed = JSON.parse(String(value));
+            if (Array.isArray(parsed.wishlist) && parsed.wishlist.length > 0) {
+              failed = true;
+              throw new DOMException('Quota exceeded for rollback test', 'QuotaExceededError');
+            }
+          }
+          return originalSetItem.call(this, key, value);
+        };
+      });
+      await discovery.getByRole('button', { name: '收藏物种', exact: true }).click();
+      await discovery.getByRole('button', { name: '收藏物种', exact: true }).waitFor();
+      assert.equal((await discovery.locator('h3').innerText()).trim(), nextSpeciesName, 'failed saving must keep the current recommendation visible');
+      assert.equal(await discovery.getByRole('button', { name: '换一个物种', exact: true }).isEnabled(), true, 'switch action must recover after a failed favorite write');
+      assert.equal(await page.evaluate(() => (JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}').wishlist || []).length), 0, 'failed favorite write must roll back persisted state');
     }
 
     assert.equal(pageErrors.length, 0, pageErrors.join('\n'));
