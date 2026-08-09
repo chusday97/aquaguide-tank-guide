@@ -122,4 +122,16 @@ assert.doesNotMatch(
   'the route must not reject a replay after the final batch soft-deletes its parent',
 );
 
+const atomicCareCompletionMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202608090002_atomic_care_reminder_completion.sql'), 'utf8');
+assert.match(routes, /rpc\('complete_care_reminder_with_recurrence'/);
+assert.match(atomicCareCompletionMigration, /for update/);
+assert.match(atomicCareCompletionMigration, /pg_advisory_xact_lock/);
+assert.match(atomicCareCompletionMigration, /on conflict \(id\) do nothing/);
+assert.match(atomicCareCompletionMigration, /resource_type, resource_id, response_status/);
+assert.doesNotMatch(
+  routes.slice(routes.indexOf("userRecordsRouter.patch('/care-reminders/:id'"), routes.indexOf("userRecordsRouter.delete('/care-reminders/:id'")),
+  /current plan.*completed|当前计划已完成，但下一次循环计划没有生成成功/,
+  'the API must not use the old two-write completion path',
+);
+
 console.log('business API contract verified: validation, case conversion, deterministic ids, safety invariants and protected routes');

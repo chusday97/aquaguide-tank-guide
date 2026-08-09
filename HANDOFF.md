@@ -11,6 +11,7 @@
 - `0112998` 新增 `/aquarium?action=timeline&tank=<id>`，桌面和手机都从鱼缸标题区直达并明确返回。
 - 旧建缸、入缸、换水、喂食、巡检和计划完成记录确定性回填并标记“由旧记录整理”；新设置、加减生物、体态和操作记录使用稳定来源去重。
 - 循环养护复用现有提醒：喂食 1/2/3 天、换水 3/7/14 天、通用 1/3/7 天；底层支持 1–90 天。完成后按实际完成时间生成下一条，关闭循环不删历史。
+- 审查后补齐云端边界：时间线与提醒统一经 Local/API Repository；`complete_care_reminder_with_recurrence` 在一个事务中完成当前计划、创建下一期和写入幂等记录；批次同步及提醒修改使用可重放的稳定操作号。
 - 验证：`lint`、`check:api`、`build`、`test:care-timeline`、`test:care-timeline-ui`、业务 API、状态服务、任务路由和按钮审计通过。真实 Supabase migration/RLS 仍属于外部门禁。
 
 ## 2026-08-09 缸内体态三步任务

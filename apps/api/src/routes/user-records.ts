@@ -17,6 +17,7 @@ import {
   camelize,
   deterministicUuid,
   finishIdempotentWrite,
+  getRequestHash,
   requireIdempotencyKey,
   snakeize,
   throwDatabaseError,
@@ -298,29 +299,34 @@ userRecordsRouter.patch('/care-reminders/:id', asyncRoute(async (request, respon
     normalized.seriesId = null;
     normalized.repeatIntervalDays = null;
   }
+  if (updates.completedAt) {
+    const operationKey = requireIdempotencyKey(request);
+    const nextScheduledFor = current.repeat_enabled && current.repeat_interval_days && current.series_id
+      ? new Date(updates.completedAt)
+      : null;
+    if (nextScheduledFor) nextScheduledFor.setDate(nextScheduledFor.getDate() + current.repeat_interval_days);
+    const nextReminderId = nextScheduledFor
+      ? deterministicUuid(`${current.series_id}:${nextScheduledFor.toISOString()}`)
+      : deterministicUuid(`${id}:no-next:${operationKey}`);
+    const { error: completionError } = await client.rpc('complete_care_reminder_with_recurrence', {
+      reminder_id: id,
+      expected_version: version,
+      completion_time: updates.completedAt,
+      next_reminder_id: nextReminderId,
+      operation_key: operationKey,
+      operation_request_hash: getRequestHash(request),
+    });
+    if (completionError?.message?.includes('REMINDER_VERSION_CONFLICT')) throw new ApiError(409, 'VERSION_CONFLICT', '这条养护计划已更新，请刷新后重试。');
+    if (completionError?.message?.includes('REMINDER_NOT_FOUND')) throw new ApiError(404, 'NOT_FOUND', '没有找到这条养护计划。');
+    if (completionError?.message?.includes('DUPLICATE_OPERATION_KEY')) throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一项修改。');
+    if (completionError) throwDatabaseError(completionError, '养护计划没有完整完成，当前记录与下一期均保持不变。');
+    const { data: completed, error: completedError } = await client.from('care_reminders').select('*').eq('id', id).maybeSingle();
+    if (completedError || !completed) throwDatabaseError(completedError, '养护计划已完成，但结果暂时无法读取。');
+    return sendData(request, response, camelize(completed));
+  }
   const { data, error } = await client.from('care_reminders').update(snakeize(normalized)).eq('id', id).eq('version', version).is('deleted_at', null).select('*').maybeSingle();
   if (error) throwDatabaseError(error, '养护计划没有更新成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'care_reminders', id);
-  if (updates.completedAt && current.repeat_enabled && current.repeat_interval_days && current.series_id) {
-    const nextScheduledFor = new Date(updates.completedAt);
-    nextScheduledFor.setDate(nextScheduledFor.getDate() + current.repeat_interval_days);
-    const nextId = deterministicUuid(`${current.series_id}:${nextScheduledFor.toISOString()}`);
-    const { error: nextError } = await client.from('care_reminders').upsert({
-      id: nextId,
-      owner_id: userId,
-      aquarium_id: current.aquarium_id,
-      source_article_id: current.source_article_id,
-      source_catalog_key: current.source_catalog_key,
-      title: current.title,
-      reminder_type: current.reminder_type,
-      scheduled_for: nextScheduledFor.toISOString(),
-      label: `${current.repeat_interval_days} 天循环`,
-      series_id: current.series_id,
-      repeat_enabled: true,
-      repeat_interval_days: current.repeat_interval_days,
-    }, { onConflict: 'id', ignoreDuplicates: true });
-    if (nextError) throwDatabaseError(nextError, '当前计划已完成，但下一次循环计划没有生成成功。');
-  }
   return sendData(request, response, camelize(data));
 }));
 
@@ -361,4 +367,27 @@ userRecordsRouter.post('/care-events', asyncRoute(async (request, response) => {
   if (error || !data) throwDatabaseError(error, '养护记录没有保存成功。');
   await finishIdempotentWrite(request, idempotency, 'care_event', id, 201);
   return sendData(request, response, camelize(data), 201);
+}));
+
+userRecordsRouter.delete('/care-events/by-source', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(String(request.query.aquariumId || ''), '鱼缸标识');
+  const sourceType = String(request.query.sourceType || '').trim();
+  const sourceId = String(request.query.sourceId || '').trim();
+  if (!sourceType || !sourceId) throw new ApiError(400, 'VALIDATION_ERROR', '养护记录来源无效。');
+  const idempotency = await beginIdempotentWrite(request);
+  if (idempotency.replay) return sendData(request, response, { deleted: true });
+  const client = userClientFor(request);
+  const userId = authenticatedRequest(request).authUser.id;
+  const { data, error } = await client.from('care_events')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('owner_id', userId)
+    .eq('aquarium_id', aquariumId)
+    .eq('source_type', sourceType)
+    .eq('source_id', sourceId)
+    .is('deleted_at', null)
+    .select('id');
+  if (error) throwDatabaseError(error, '养护记录没有撤回成功。');
+  const resourceId = data?.[0]?.id || deterministicUuid(`${userId}:care-event-delete:${aquariumId}:${sourceType}:${sourceId}`);
+  await finishIdempotentWrite(request, idempotency, 'care_event_deletion', resourceId, 200);
+  return sendData(request, response, { deleted: true });
 }));

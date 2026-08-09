@@ -1,9 +1,9 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.5.0
+> 版本：2.5.1
 > 状态：已确认，实施中
 > 生效日期：2026-08-09
-> SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090001_evidence_timeline_recurrence.sql`
+> SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090002_atomic_care_reminder_completion.sql`
 > TypeScript 来源：`src/types/database.ts`
 
 ## 1. 产品与架构边界
@@ -154,7 +154,7 @@ interface CompatibilityEvidence {
 - `species_compatibility_profiles` 保存物种行为特征、最低群体数量、明确捕食目标、可信度和审核状态。
 - `species_pair_compatibility_rules` 只保存有明确依据的高频或特殊组合，不穷举全部物种组合。
 - 未审核且会影响结论的数据必须降级为 `insufficient_data`；`Aggressive` 不能直接推导 `predatory`。
-- `care_article_reference_links` 将来源绑定到文章或具体步骤，并保存该来源支持的动作摘要。
+- `care_article_reference_links` 必须把来源绑定到每个立即动作、禁止动作、观察项、复查动作和唯一下一步，并保存该来源直接支持的动作摘要；文章级泛化来源不能替代逐动作审核。
 - 普通用户只能读取已审核证据；草稿、驳回与审核写入仅管理员可执行。
 
 ### 3.7 翻译实体
@@ -394,6 +394,8 @@ type ApiErrorCode =
 现实移出必须调用 `remove_aquarium_species_batch_quantity`，在同一数据库事务内锁定批次、扣减或软删除，并写入幂等记录；相同操作号和请求重放只能返回当前鱼缸，不能再次扣减。移出数量在界面、Repository、API 与数据库四层都必须为正整数。
 从缸内物种记录生命纪念必须调用 `record_livestock_memorial`，在同一事务内写入纪念并扣减所选批次；任一步失败时两边都不得产生部分结果。相同幂等键重放必须先返回已提交纪念，再检查可能已被软删除的父物种记录。
 
+完成循环养护必须调用 `complete_care_reminder_with_recurrence`，在同一数据库事务内完成当前计划、创建唯一下一期并登记幂等结果；响应丢失或并发重放不得重复生成下一期，也不得留下“当前已完成但下一期缺失”的半完成状态。
+
 ```ts
 type LifeStage = 'unknown' | 'juvenile' | 'adult';
 type ReproductiveState =
@@ -439,11 +441,11 @@ interface AquariumSpeciesBatchRecord extends SyncFields {
 | DELETE | `/memorial-records/:id` | `version` | `{ deleted: true }` | 401/404/409 |
 | GET | `/care-reminders` | `status? aquariumId?` | `CareReminderRecordRow[]` | 401 |
 | POST | `/care-reminders` | 来源、时间、幂等键 | `CareReminderRecordRow` | 400/401/409 |
-| PATCH | `/care-reminders/:id` | 时间、完成状态、循环设置、`version` | `CareReminderRecordRow` | 400/401/404/409 |
-| POST | `/care-reminders/:id/complete` | 完成时间、幂等键、`version` | `{ completed, nextReminder? }` | 400/401/404/409 |
+| PATCH | `/care-reminders/:id` | 时间、完成状态、循环设置、`version`、稳定幂等键 | `CareReminderRecordRow` | 400/401/404/409 |
 | DELETE | `/care-reminders/:id` | `version` | `{ deleted: true }` | 401/404/409 |
 | GET | `/care-events` | `aquariumId? type? cursor? limit?` | `Page<CareEventRecord>` | 401 |
 | POST | `/care-events` | 类型、时间、内容、稳定来源、幂等键 | `CareEventRecord` | 400/401/409 |
+| DELETE | `/care-events/by-source` | 鱼缸、来源类型、来源 ID、稳定幂等键 | `{ deleted: true }` | 400/401/409 |
 
 ### 7.3.1 意见反馈
 

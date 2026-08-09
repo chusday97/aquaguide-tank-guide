@@ -4,9 +4,11 @@ import {
   completeCareReminder,
   configureCareReminderRecurrence,
   deleteCareReminder,
+  getCareReminders,
   rescheduleCareReminder,
   upsertCareReminder,
 } from '../care/care-activity.service';
+import { recordCareTimelineEvent, removeCareTimelineEvent } from '../care/care-timeline.service';
 import { recordSpeciesMemorial, recordSpeciesMemorialAndDecrementBatch, updateSpeciesMemorial } from '../collection/memorial.service';
 import { persistDiagnosisRecords, upsertDiagnosisRecord } from '../diagnosis/diagnosis-records.service';
 import {
@@ -27,6 +29,7 @@ import type {
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
+  CareTimelineMutation,
 } from './aquaguide.repository';
 
 export class LocalAquaGuideRepository implements AquaGuideRepository {
@@ -107,6 +110,10 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     return updateSpeciesMemorial(input);
   }
 
+  async getCareReminders() {
+    return getCareReminders();
+  }
+
   async updateCareReminder(input: CareReminderMutation) {
     if (input.action === 'upsert') return upsertCareReminder(input.record);
     if (input.action === 'complete') return completeCareReminder(input.id, input.completedAt);
@@ -114,5 +121,18 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     if (input.action === 'recurrence') return configureCareReminderRecurrence(input.id, input.repeatEnabled, input.repeatIntervalDays);
     deleteCareReminder(input.id);
     return null;
+  }
+
+  async getCareEvents(aquariumId?: string) {
+    return (loadAppStateFromStorage().careEvents || []).filter(item => !aquariumId || item.aquariumId === aquariumId);
+  }
+
+  async saveCareEvent(input: CareTimelineMutation) {
+    const { operationId: _operationId, ...record } = input;
+    return recordCareTimelineEvent(record);
+  }
+
+  async removeCareEventBySource(input: { aquariumId: string; sourceType: string; sourceId: string; operationId?: string }) {
+    removeCareTimelineEvent(input.aquariumId, input.sourceType, input.sourceId);
   }
 }

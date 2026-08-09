@@ -11,6 +11,8 @@ import type {
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
+  CareTimelineMutation,
+  CareTimelineRecord,
 } from './aquaguide.repository';
 
 type ApiAquariumSpecies = {
@@ -73,6 +75,7 @@ type ApiReminder = {
   createdAt: string;
   version: number;
 };
+type ApiCareEvent = CareTimelineRecord & { version: number };
 
 const isUuid = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 
@@ -159,7 +162,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
             targetVersion: increased[0].current!.version,
             sourceVersion: removed[0].version,
           },
-          idempotencyKey: createIdempotencyKey('aquarium-species-batch-merge'),
+          idempotencyKey: `aquarium-species-batch-merge:${current.id}:${removed[0].id}:${increased[0].current!.id}:v${removed[0].version}-${increased[0].current!.version}`,
         });
         return this.syncSpeciesBatches(aquariumId, { ...current, batches: mergeResult }, desired);
       }
@@ -176,7 +179,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
             reproductiveState: added[0].reproductiveState,
             sourceVersion: reduced[0].current!.version,
           },
-          idempotencyKey: createIdempotencyKey('aquarium-species-batch-split'),
+          idempotencyKey: `aquarium-species-batch-split:${current.id}:${reduced[0].current!.id}:${added[0].id}:v${reduced[0].current!.version}`,
         });
         const created = splitResult.find(batch => !currentById.has(batch.id));
         if (!created) throw new Error('批次已拆分，但没有返回新批次。');
@@ -204,7 +207,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
               reproductiveState: batch.reproductiveState,
               version: existing.version,
             },
-            idempotencyKey: createIdempotencyKey('aquarium-species-batch-update'),
+            idempotencyKey: `aquarium-species-batch-update:${current.id}:${existing.id}:${batch.stateUpdatedAt}:v${existing.version}`,
           });
         }
         continue;
@@ -217,7 +220,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
           lifeStage: batch.lifeStage,
           reproductiveState: batch.reproductiveState,
         },
-        idempotencyKey: createIdempotencyKey('aquarium-species-batch'),
+        idempotencyKey: `aquarium-species-batch-create:${current.id}:${batch.id}`,
       });
       retained.add(created.id);
     }
@@ -225,7 +228,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       if (!retained.has(existing.id)) {
         await apiRequest(`/aquariums/${aquariumId}/species/${current.id}/batches/${existing.id}?version=${existing.version}`, {
           method: 'DELETE',
-          idempotencyKey: createIdempotencyKey('aquarium-species-batch-delete'),
+          idempotencyKey: `aquarium-species-batch-delete:${current.id}:${existing.id}:v${existing.version}`,
         });
       }
     }
@@ -552,11 +555,18 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return version;
   }
 
+  async getCareReminders() {
+    const records = await apiRequest<ApiReminder[]>('/care-reminders');
+    return records.map(record => this.rememberReminder(record));
+  }
+
   async updateCareReminder(input: CareReminderMutation) {
     if (input.action === 'upsert') {
       const saved = await apiRequest<ApiReminder>('/care-reminders', {
         method: 'POST',
-        idempotencyKey: createIdempotencyKey('care-reminder'),
+        idempotencyKey: input.record.seriesId
+          ? `care-reminder-create:${input.record.seriesId}:${input.record.scheduledFor}`
+          : createIdempotencyKey('care-reminder'),
         body: {
           aquariumId: input.record.aquariumId && isUuid(input.record.aquariumId) ? input.record.aquariumId : undefined,
           sourceCatalogKey: input.record.sourceTopicId,
@@ -574,7 +584,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
 
     const version = await this.ensureReminderVersion(input.id);
     if (input.action === 'delete') {
-      await apiRequest(`/care-reminders/${input.id}?version=${version}`, { method: 'DELETE', idempotencyKey: createIdempotencyKey('care-reminder-delete') });
+      await apiRequest(`/care-reminders/${input.id}?version=${version}`, { method: 'DELETE', idempotencyKey: `care-reminder-delete:${input.id}:v${version}` });
       this.reminderVersions.delete(input.id);
       return null;
     }
@@ -586,8 +596,28 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
         : input.action === 'reschedule'
           ? { scheduledFor: input.scheduledFor, label: input.label, version }
           : { repeatEnabled: input.repeatEnabled, repeatIntervalDays: input.repeatEnabled ? input.repeatIntervalDays : null, version },
-      idempotencyKey: createIdempotencyKey('care-reminder-update'),
+      idempotencyKey: `care-reminder-${input.action}:${input.id}:v${version}`,
     });
     return this.rememberReminder(saved);
+  }
+
+  async getCareEvents(aquariumId?: string) {
+    const query = aquariumId ? `?aquariumId=${encodeURIComponent(aquariumId)}` : '';
+    const result = await apiRequest<{ items: ApiCareEvent[] }>(`/care-events${query}`);
+    return result.items;
+  }
+
+  async saveCareEvent(input: CareTimelineMutation) {
+    const { operationId, ...body } = input;
+    return apiRequest<ApiCareEvent>('/care-events', {
+      method: 'POST',
+      body,
+      idempotencyKey: operationId,
+    });
+  }
+
+  async removeCareEventBySource(input: { aquariumId: string; sourceType: string; sourceId: string; operationId: string }) {
+    const query = new URLSearchParams({ aquariumId: input.aquariumId, sourceType: input.sourceType, sourceId: input.sourceId });
+    await apiRequest(`/care-events/by-source?${query}`, { method: 'DELETE', idempotencyKey: input.operationId });
   }
 }

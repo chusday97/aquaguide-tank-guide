@@ -86,6 +86,22 @@ const reminder = await repository.updateCareReminder({
   },
 });
 assert.equal(reminder?.sourceTopicId, 'guide_water');
+assert.equal((await repository.getCareReminders()).length, 1);
+
+const careEvent = await repository.saveCareEvent({
+  aquariumId: stocked.id,
+  eventType: 'feeding',
+  title: '记录喂食',
+  payload: {},
+  occurredAt: '2026-07-17T09:00:00.000Z',
+  sourceType: 'feeding_record',
+  sourceId: 'feed-1',
+  isInferred: false,
+  operationId: 'care-event:feed-1',
+});
+assert.equal((await repository.getCareEvents(stocked.id))[0].id, careEvent.id);
+await repository.removeCareEventBySource({ aquariumId: stocked.id, sourceType: 'feeding_record', sourceId: 'feed-1', operationId: 'care-event-delete:feed-1' });
+assert.equal((await repository.getCareEvents(stocked.id)).length, 0);
 
 localStorage.failWrites = true;
 await assert.rejects(
@@ -103,6 +119,7 @@ const atomicMemorialMigration = readFileSync(resolve(import.meta.dirname, '../su
 const atomicMergeMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202607220004_atomic_livestock_batch_merge.sql'), 'utf8');
 const mergeSignatureFixMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202607220005_fix_livestock_batch_merge_signature.sql'), 'utf8');
 const aquariumPageSource = readFileSync(resolve(import.meta.dirname, '../src/pages/Aquarium.tsx'), 'utf8');
+const atomicCareCompletionMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202608090002_atomic_care_reminder_completion.sql'), 'utf8');
 assert.doesNotMatch(apiRepositorySource, /supabase\.from\(/);
 assert.match(apiRepositorySource, /apiRequest/);
 assert.match(apiClientSource, /Bearer/);
@@ -112,6 +129,9 @@ assert.match(apiRepositorySource, /livestockMemorialAttempts/);
 assert.match(apiRepositorySource, /this\.livestockMemorialAttempts\.get\(input\.operationId\)/);
 assert.match(apiRepositorySource, /aquarium-species-batch-update/);
 assert.match(apiRepositorySource, /aquarium-species-batch-split/);
+assert.match(apiRepositorySource, /care-reminder-\$\{input\.action\}:\$\{input\.id\}:v\$\{version\}/);
+assert.match(apiRepositorySource, /saveCareEvent/);
+assert.match(apiRepositorySource, /removeCareEventBySource/);
 assert.match(aquariumApiSource, /rpc\('split_aquarium_species_batch'/);
 assert.doesNotMatch(aquariumApiSource, /原数量已尝试恢复/);
 assert.match(atomicSplitMigration, /for update/);
@@ -131,7 +151,17 @@ assert.match(atomicMergeMigration, /final_life_stage public\.aquarium_life_stage
 assert.match(atomicMergeMigration, /final_reproductive_state public\.aquarium_reproductive_state/);
 assert.match(mergeSignatureFixMigration, /drop function if exists public\.merge_aquarium_species_batches\(uuid, uuid, uuid, date, text, text, integer, integer\)/);
 assert.match(apiRepositorySource, /targetLifeStage: increased\[0\]\.desired\.lifeStage/);
+assert.match(atomicCareCompletionMigration, /complete_care_reminder_with_recurrence/);
+assert.match(atomicCareCompletionMigration, /pg_advisory_xact_lock/);
+assert.match(atomicCareCompletionMigration, /insert into public\.care_reminders/);
+assert.match(atomicCareCompletionMigration, /insert into public\.idempotency_records/);
+assert.ok(
+  atomicCareCompletionMigration.indexOf('update public.care_reminders') < atomicCareCompletionMigration.indexOf('insert into public.idempotency_records'),
+  'completion and next reminder must commit before the replay record in one transaction',
+);
 assert.match(aquariumPageSource, /getCurrentAquaGuideRepository/);
 assert.match(aquariumPageSource, /subscribeToRepositoryMode/);
+assert.doesNotMatch(aquariumPageSource, /recordCareTimelineEvent\(/);
+assert.doesNotMatch(aquariumPageSource, /completeCareReminder\(/);
 
 console.log('repository boundary verified: local compatibility and cloud API-only access');

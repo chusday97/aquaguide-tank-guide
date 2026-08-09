@@ -32,6 +32,7 @@
 - `supabase/migrations/202607260002_atomic_livestock_removal.sql`：缸内物种数量移出的事务锁、整数校验与幂等重放。
 - `supabase/migrations/202607290001_memorial_reflection_fields.sql`：生命纪念“当时观察 / 可能原因 / 后续改进”字段与原子批次纪念写入函数。
 - `supabase/migrations/202608010001_memorial_causes_feedback_email.sql`：生命纪念受控原因代码、反馈邮件投递状态与新版原子纪念写入函数。
+- `supabase/migrations/202608090001_evidence_timeline_recurrence.sql` 至 `202608090002_atomic_care_reminder_completion.sql`：可信证据、时间线来源、循环养护字段，以及完成当前计划和生成下一期的原子事务函数。
 
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
