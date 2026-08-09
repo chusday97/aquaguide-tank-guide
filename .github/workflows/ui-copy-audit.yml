@@ -1,0 +1,21 @@
+name: UI Copy Audit
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan user-facing copy
+        run: node scripts/audit-ui-copy.mjs
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-copy-audit
+          path: ui-copy-audit.json
+          retention-days: 1
