@@ -1,5 +1,5 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
-import type { Aquarium, DeceasedRecord, MemorialCauseCode } from '../../types';
+import type { Aquarium, DeceasedRecord, LifeStage, MemorialCauseCode, ReproductiveState } from '../../types';
 import type { CareEventType } from '../../types/database';
 import type { CareReminderRecord } from '../care/care-activity.service';
 
@@ -42,6 +42,23 @@ export type LivestockRemovalInput = {
   operationId: string;
 };
 
+export type AquariumCreateCommand = {
+  name: string;
+  startedAt: string;
+  startedAtSource: 'created';
+  operationId: string;
+};
+
+export type LivestockAddCommand = {
+  aquariumId: string;
+  speciesCatalogKey: string;
+  quantity: number;
+  entryDate: string;
+  lifeStage?: LifeStage;
+  reproductiveState?: ReproductiveState;
+  operationId: string;
+};
+
 export type CareReminderMutation =
   | { action: 'upsert'; record: Omit<CareReminderRecord, 'id' | 'createdAt'> }
   | { action: 'complete'; id: string; completedAt: string }
@@ -66,6 +83,9 @@ export type CareTimelineMutation = Omit<CareTimelineRecord, 'id'> & { operationI
 
 export interface AquaGuideRepository {
   getAquariums(): Promise<Aquarium[]>;
+  createAquarium(input: AquariumCreateCommand): Promise<Aquarium>;
+  addLivestock(input: LivestockAddCommand): Promise<Aquarium>;
+  /** @deprecated Aggregate synchronization retained for legacy profile and batch editors. */
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
   updateFavorite(input: FavoriteMutation): Promise<void>;

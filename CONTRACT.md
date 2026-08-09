@@ -543,6 +543,7 @@ interface AquariumCreateCommand {
   name: string;
   startedAt: string;
   startedAtSource: 'created';
+  operationId: string;
 }
 
 interface LivestockAddCommand {

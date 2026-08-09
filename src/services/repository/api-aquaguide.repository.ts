@@ -5,12 +5,14 @@ import { apiRequest, createIdempotencyKey } from '../api/api-client';
 import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
 import type {
   AquaGuideRepository,
+  AquariumCreateCommand,
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
+  LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
 } from './aquaguide.repository';
@@ -92,7 +94,7 @@ const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
       fishId: item.speciesCatalogKey,
       quantity: item.quantity,
       entryDate: item.entryDate,
-      lastWaterChangeDate: item.lastWaterChangeAt || record.lastWaterChangeAt || item.entryDate,
+      lastWaterChangeDate: item.lastWaterChangeAt,
       batches: (item.batches || []).map(batch => ({
         id: batch.id,
         quantity: batch.quantity,
@@ -237,6 +239,51 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
   async getAquariums() {
     const records = await apiRequest<ApiAquarium[]>('/aquariums');
     return records.map(record => this.rememberAquarium(record));
+  }
+
+  async createAquarium(input: AquariumCreateCommand) {
+    const saved = await apiRequest<ApiAquarium>('/aquariums', {
+      method: 'POST',
+      body: {
+        name: input.name,
+        startedAt: input.startedAt,
+        startedAtSource: input.startedAtSource,
+      },
+      idempotencyKey: input.operationId,
+    });
+    return this.rememberAquarium(saved);
+  }
+
+  async addLivestock(input: LivestockAddCommand) {
+    if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('记录数量必须是正整数。');
+    const current = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
+    const existing = current.species.find(item => item.speciesCatalogKey === input.speciesCatalogKey);
+    if (existing) {
+      await apiRequest(`/aquariums/${input.aquariumId}/species/${existing.id}/batches`, {
+        method: 'POST',
+        body: {
+          quantity: input.quantity,
+          entryDate: input.entryDate.slice(0, 10),
+          lifeStage: input.lifeStage,
+          reproductiveState: input.reproductiveState,
+        },
+        idempotencyKey: input.operationId,
+      });
+    } else {
+      await apiRequest(`/aquariums/${input.aquariumId}/species`, {
+        method: 'POST',
+        body: {
+          speciesCatalogKey: input.speciesCatalogKey,
+          quantity: input.quantity,
+          entryDate: input.entryDate.slice(0, 10),
+          lifeStage: input.lifeStage,
+          reproductiveState: input.reproductiveState,
+        },
+        idempotencyKey: input.operationId,
+      });
+    }
+    const saved = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
+    return this.rememberAquarium(saved);
   }
 
   async saveAquarium(aquarium: Aquarium) {

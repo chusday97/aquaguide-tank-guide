@@ -20,21 +20,73 @@ import {
 } from '../favorites/favorites.service';
 import { loadAppStateFromStorage } from '../storage/local-app-state';
 import { persistAquariums } from '../aquarium/aquarium-state.service';
-import { removeSpeciesBatchQuantity } from '../aquarium/species-batches.service';
+import { appendSpeciesBatch, createSpeciesBatch, removeSpeciesBatchQuantity } from '../aquarium/species-batches.service';
 import type {
   AquaGuideRepository,
+  AquariumCreateCommand,
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
+  LivestockAddCommand,
   CareTimelineMutation,
 } from './aquaguide.repository';
 
 export class LocalAquaGuideRepository implements AquaGuideRepository {
   async getAquariums() {
     return loadAppStateFromStorage().aquariums;
+  }
+
+  async createAquarium(input: AquariumCreateCommand) {
+    const replayId = `aquarium_${input.operationId}`;
+    const replay = loadAppStateFromStorage().aquariums.find(item => item.id === replayId);
+    if (replay) return replay;
+    return this.saveAquarium({
+      id: replayId,
+      name: input.name,
+      fishes: [],
+      startedAt: input.startedAt,
+      startedAtSource: input.startedAtSource,
+    });
+  }
+
+  async addLivestock(input: LivestockAddCommand) {
+    if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('记录数量必须是正整数。');
+    const state = loadAppStateFromStorage();
+    const aquarium = state.aquariums.find(item => item.id === input.aquariumId);
+    if (!aquarium) throw new Error('没有找到需要记录生物的鱼缸。');
+    const batchId = `livestock_${input.operationId}`;
+    if (aquarium.fishes.some(item => item.batches?.some(batch => batch.id === batchId))) return aquarium;
+    const current = aquarium.fishes.find(item => item.fishId === input.speciesCatalogKey);
+    const nextRecord = current
+      ? appendSpeciesBatch(current, {
+          id: batchId,
+          quantity: input.quantity,
+          entryDate: input.entryDate,
+          lifeStage: input.lifeStage,
+          reproductiveState: input.reproductiveState,
+        })
+      : {
+          id: `species_${input.operationId}`,
+          fishId: input.speciesCatalogKey,
+          quantity: input.quantity,
+          entryDate: input.entryDate,
+          batches: [createSpeciesBatch({
+            id: batchId,
+            quantity: input.quantity,
+            entryDate: input.entryDate,
+            lifeStage: input.lifeStage,
+            reproductiveState: input.reproductiveState,
+          })],
+        };
+    return this.saveAquarium({
+      ...aquarium,
+      fishes: current
+        ? aquarium.fishes.map(item => item.id === current.id ? nextRecord : item)
+        : [...aquarium.fishes, nextRecord],
+    });
   }
 
   async saveAquarium(aquarium: Aquarium) {

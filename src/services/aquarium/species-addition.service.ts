@@ -8,6 +8,7 @@ import {
   type TankCompatibilityRule,
   type TankCompatibilityStatus,
 } from '../../lib/tankCompatibilityEngine';
+import { getSpeciesAdditionPolicy } from './species-addition-policy';
 
 export type SpeciesAdditionItem = {
   fishId: string;
@@ -27,6 +28,16 @@ export type SpeciesAdditionReview = {
   items: SpeciesAdditionItem[];
   evaluations: SpeciesAdditionEvaluation[];
   keyRules: TankCompatibilityRule[];
+};
+
+export type SpeciesAdditionAssessment = Omit<SpeciesAdditionReview, 'policy'> & {
+  warnings: TankCompatibilityRule[];
+  missingInformation: TankCompatibilityRule[];
+};
+
+export type PlannedAdditionResult = {
+  assessment: SpeciesAdditionAssessment | null;
+  policy: ReturnType<typeof getSpeciesAdditionPolicy> | null;
 };
 
 type ReviewSpeciesAdditionsInput = {
@@ -55,7 +66,7 @@ const statusRank: Record<TankCompatibilityStatus, number> = {
   not_recommended: 3,
 };
 
-const normalizeItems = (items: SpeciesAdditionItem[], speciesCatalog: Fish[]) => {
+export const normalizeSpeciesAdditionItems = (items: SpeciesAdditionItem[], speciesCatalog: Fish[]) => {
   const knownIds = new Set(speciesCatalog.map(fish => fish.id));
   const grouped = new Map<string, SpeciesAdditionItem>();
 
@@ -87,7 +98,20 @@ export const reviewSpeciesAdditions = ({
   items,
   speciesCatalog,
 }: ReviewSpeciesAdditionsInput): SpeciesAdditionReview | null => {
-  const normalizedItems = normalizeItems(items, speciesCatalog);
+  const assessment = assessSpeciesAddition({ aquarium, items, speciesCatalog });
+  if (!assessment) return null;
+  return {
+    ...assessment,
+    policy: getTankCompatibilityAddPolicy(assessment.status),
+  };
+};
+
+export const assessSpeciesAddition = ({
+  aquarium,
+  items,
+  speciesCatalog,
+}: ReviewSpeciesAdditionsInput): SpeciesAdditionAssessment | null => {
+  const normalizedItems = normalizeSpeciesAdditionItems(items, speciesCatalog);
   if (normalizedItems.length === 0) return null;
 
   const catalogById = new Map(speciesCatalog.map(fish => [fish.id, fish]));
@@ -129,10 +153,21 @@ export const reviewSpeciesAdditions = ({
 
   return {
     status,
-    policy: getTankCompatibilityAddPolicy(status),
     items: normalizedItems,
     evaluations,
     keyRules,
+    warnings: evaluations.flatMap(item => item.result.warningRules),
+    missingInformation: evaluations.flatMap(item => item.result.missingData),
+  };
+};
+
+export const preparePlannedAddition = (input: ReviewSpeciesAdditionsInput): PlannedAdditionResult => {
+  const assessment = assessSpeciesAddition(input);
+  return {
+    assessment,
+    policy: assessment
+      ? getSpeciesAdditionPolicy({ intent: 'planned_addition', status: assessment.status })
+      : null,
   };
 };
 
@@ -173,7 +208,6 @@ export const executeSpeciesAddition = ({
         fishId: addition.fishId,
         quantity: addition.quantity,
         entryDate,
-        lastWaterChangeDate: entryDate,
         batches: [createSpeciesBatch({ quantity: addition.quantity, entryDate })],
       });
     });
