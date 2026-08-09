@@ -6,6 +6,10 @@ AquaGuide is an aquarium management web app for beginner and light-experience fi
 
 > 面向水族新手的鱼缸管理、物种选择、混养判断与养护补救助手。确定性规则负责安全边界，AI 负责解释与辅助。
 
+**At a glance:** Tank management · Species compatibility · Daily checks · Care guidance · Rules-first safety · Bounded AI · Evaluation
+
+[Live demo](https://aqua-tank-guide.vercel.app) · [Product flow](#why-aquaguide) · [AI boundary](#ai-is-not-the-decision-engine) · [Architecture](#architecture) · [Evaluation](#reliability--evaluation) · [Run locally](#local-development)
+
 ## Why AquaGuide
 
 Aquarium beginners rarely lack information. The harder problem is that information is fragmented, advice can conflict, and users often do not know what to do next.
