@@ -33,3 +33,5 @@ if (!source.includes(marker)) {
 
   writeFileSync(path, source, 'utf8');
 }
+
+// Triggered after the workflow exists; safe because the migration is idempotent.
