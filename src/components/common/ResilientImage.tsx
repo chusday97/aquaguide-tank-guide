@@ -8,7 +8,15 @@ const withRetryToken = (src: string) => {
   return `${src}${separator}retry=1`;
 };
 
-export function ResilientImage({ src = '', alt = '', className = '', onLoad, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
+export function ResilientImage({
+  src = '',
+  alt = '',
+  className = '',
+  onLoad,
+  loading = 'lazy',
+  decoding = 'async',
+  ...props
+}: ImgHTMLAttributes<HTMLImageElement>) {
   const [attempt, setAttempt] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
@@ -26,6 +34,8 @@ export function ResilientImage({ src = '', alt = '', className = '', onLoad, ...
         {...props}
         src={resolvedSrc}
         alt={alt}
+        loading={loading}
+        decoding={decoding}
         className={`${className} relative z-[1]`}
         onLoad={(event) => {
           setLoaded(true);
