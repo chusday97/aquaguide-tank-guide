@@ -1,4 +1,4 @@
-import { useEffect, useState, type ImgHTMLAttributes } from 'react';
+import { useEffect, useMemo, useState, type ImgHTMLAttributes } from 'react';
 import { recordUiFailure } from '../../services/diagnostics/ui-failure.service';
 
 const FALLBACK_IMAGE = '/image-placeholder.svg';
@@ -7,6 +7,8 @@ const withRetryToken = (src: string) => {
   const separator = src.includes('?') ? '&' : '?';
   return `${src}${separator}retry=1`;
 };
+
+const isRemoteImage = (src: string) => /^https?:\/\//i.test(src);
 
 export function ResilientImage({
   src = '',
@@ -19,13 +21,18 @@ export function ResilientImage({
 }: ImgHTMLAttributes<HTMLImageElement>) {
   const [attempt, setAttempt] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const remote = useMemo(() => isRemoteImage(src), [src]);
 
   useEffect(() => {
     setAttempt(0);
     setLoaded(false);
   }, [src]);
 
-  const resolvedSrc = attempt === 0 ? src : attempt === 1 ? withRetryToken(src) : FALLBACK_IMAGE;
+  const resolvedSrc = attempt === 0
+    ? src
+    : remote && attempt === 1
+      ? withRetryToken(src)
+      : FALLBACK_IMAGE;
 
   return (
     <span className="relative block h-full w-full overflow-hidden">
@@ -42,10 +49,31 @@ export function ResilientImage({
           onLoad?.(event);
         }}
         onError={() => {
-          if (attempt < 2) {
-            if (attempt === 1) recordUiFailure({ kind: 'image', page: window.location.pathname, resource: src, error: new Error('图片重试失败') });
-            setAttempt(value => value + 1);
+          if (resolvedSrc === FALLBACK_IMAGE) return;
+
+          if (!remote) {
+            recordUiFailure({
+              kind: 'image',
+              page: window.location.pathname,
+              resource: src,
+              error: new Error('本地图片加载失败'),
+            });
+            setAttempt(2);
+            return;
           }
+
+          if (attempt === 0) {
+            setAttempt(1);
+            return;
+          }
+
+          recordUiFailure({
+            kind: 'image',
+            page: window.location.pathname,
+            resource: src,
+            error: new Error('远程图片重试失败'),
+          });
+          setAttempt(2);
         }}
       />
     </span>
