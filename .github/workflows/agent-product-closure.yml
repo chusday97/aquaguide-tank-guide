@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -40,6 +40,9 @@ jobs:
       - name: Addition policy regression
         run: npm run test:addition-intents
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Settings regression
         run: npm run test:settings-feedback
 
@@ -53,6 +56,6 @@ jobs:
         run: |
           git config user.name "OpenAI Agent"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/Aquarium.tsx src/pages/Settings.tsx src/pages/Login.tsx src/modules/copilot/tankBuildCopilot.ts scripts/apply_product_closure_patch.mjs .github/workflows/agent-product-closure.yml
+          git add -A
           git commit -m "feat: close incomplete product flows [agent-applied]"
           git push origin HEAD:agent/product-closure-gates
