@@ -1,5 +1,11 @@
 # AquaGuide 交接文档
 
+## 2026-08-09 GitHub main 合并
+
+- 已确认远端 `main@de61600` 是功能分支的共同祖先，功能分支只领先 64 个提交，因此使用 fast-forward 合并，无冲突、无强制推送、无历史改写。
+- 已把 `codex/activation-evaluation-v1@153695e` 推送到 GitHub `main`；功能分支继续保留。
+- 生产预览此前已发布同一 P0 产品代码；本条只记录 GitHub 默认分支同步状态。
+
 ## 2026-08-09 P0 独立审查闭环
 
 - 本地 P0 已由同一独立 Critic 完成“首轮审查 → Builder 修复 → 同线程复验”，最终 PASS。
