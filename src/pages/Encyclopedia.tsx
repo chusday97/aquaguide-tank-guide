@@ -1612,6 +1612,8 @@ export default function Encyclopedia() {
               className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               aria-label={t('encyclopedia.moreFilters')}
               title={t('encyclopedia.moreFilters')}
+              aria-expanded={isMoreFilterOpen}
+              aria-controls="atlas-inline-filter-panel"
             >
               <SlidersHorizontal className="h-4 w-4" />
             </button>
@@ -2704,6 +2706,7 @@ export default function Encyclopedia() {
         const nextCount = getFilteredSpecies(allFishes, nextFilters, fitEvaluations, compatibilityEvaluations).length;
         return inlineFilterHostRef.current ? createPortal((
           <section
+            id="atlas-inline-filter-panel"
             data-inline-filter-panel="true"
             aria-labelledby="atlas-inline-filter-title"
             className="order-none max-h-[52dvh] w-full overflow-y-auto overscroll-contain rounded-[20px] border border-emerald-100 bg-white shadow-[0_18px_46px_rgba(15,23,42,0.12)] md:max-h-[360px]"

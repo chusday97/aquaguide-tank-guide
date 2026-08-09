@@ -25,6 +25,7 @@
 - `13c6994` 将推荐收藏从“收藏后自动换卡”改为原位收藏/取消；当前物种、进度和队列保持不变，只有“换一个”推进队列。
 - 收藏统一经当前 Local/API Repository；写入期间心形与“换一个”禁用，成功显示“已收录到水族册 / 已从水族册移除”，失败回滚心形和持久化状态并展示原因。Chromium 已注入存储配额失败验证恢复路径。
 - `test:product-actions` 现扫描 13 个正式页面和所有共享组件（排除基础 UI 原语），覆盖 49 个交互表面并输出六类动作清单。
+- `test:product-actions-runtime` 追加 14 个正式路由的真实浏览器扫描，并分别点击验证 route、view、mutation、dialog、section、external 的可观察结果；图鉴原位筛选补齐展开状态和目标关联。
 - 验证：`lint`、`test:product-actions`、`test:daily-discovery`、`build`、`git diff --check`；浏览器使用 `http://127.0.0.1:4178`。
 
 ## 2026-08-09 养护动作与来源门禁
