@@ -242,7 +242,7 @@ export function LivestockRosterDialog({
               <div className="flex min-h-[260px] flex-col items-center justify-center rounded-[22px] border border-dashed border-ink/15 bg-white px-5 text-center">
                 <p className="text-base font-black text-ink">鱼缸里还没有生物</p>
                 <p className="mt-2 max-w-[30ch] text-xs font-semibold leading-5 text-ink/50">先添加一种生物，之后可以在这里查看数量、体态和入缸批次。</p>
-                <button type="button" onClick={onAdd} className="mt-4 min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white hover:bg-emerald-800">添加生物</button>
+                <button type="button" onClick={onAdd} className="mt-4 min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white hover:bg-emerald-800">记录已有生物</button>
               </div>
             )}
           </div>

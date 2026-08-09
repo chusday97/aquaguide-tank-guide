@@ -44,9 +44,10 @@ import {
 } from '../lib/tankCompatibilityEngine';
 
 import {
-  executeSpeciesAddition,
   reviewSpeciesAdditions,
 } from '../services/aquarium/species-addition.service';
+import { recordExistingLivestock } from '../services/aquarium/livestock-recording.service';
+import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import {
   buildAtlasDisplayItems,
@@ -59,7 +60,6 @@ import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigation
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { recordSpeciesMemorial } from '../services/collection/memorial.service';
-import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { englishTranslations } from '../i18n/localizeData';
 import { autoTranslations } from '../i18n/localizeDataAuto';
@@ -1096,41 +1096,18 @@ export default function Encyclopedia() {
     };
   };
 
-  const addFishToAquarium = (fish: Fish, aquariumId: string, confirmedCaution = false) => {
+  const addFishToAquarium = (fish: Fish, aquariumId: string) => {
     const appState = loadAppStateFromStorage();
-    const aquariums = appState.aquariums.length > 0
-      ? appState.aquariums
-      : JSON.parse(localStorage.getItem('aquariums') || '[]') as Aquarium[];
-    if (!Array.isArray(aquariums) || aquariums.length === 0) {
+    const aquariums = appState.aquariums.length > 0 ? appState.aquariums : [];
+    if (!aquariums.some(item => item.id === aquariumId)) {
       setLastAddedToTankMessage(t('encyclopedia.noTankError'));
       return;
     }
-    const aquarium = aquariums.find(item => item.id === aquariumId) || aquariums[0];
-    const execution = executeSpeciesAddition({
-      aquariums,
-      aquarium,
-      items: [{ fishId: fish.id, quantity: 1 }],
-      speciesCatalog: fishData,
-      confirmedCaution,
-    });
-    if (!execution.added) {
-      if (execution.reason === 'confirmation_required') {
-        setPendingTankAddConfirmed(true);
-      } else if (execution.reason === 'missing_information') {
-        setLastAddedToTankMessage(t('encyclopedia.tankInfoError'));
-      } else if (execution.reason === 'blocked') {
-        setLastAddedToTankMessage(t('encyclopedia.addBlockedError'));
-      }
-      return;
-    }
-
-    persistAquariums(execution.aquariums, aquarium.id);
-    setOwnedFishIds(prev => new Set(prev).add(fish.id));
-    setLastAddedToTankMessage(t('encyclopedia.addedToTankMsg', { name: fish.name, tankName: aquarium.name }));
     closeAtlasDetail();
     setPendingTankFish(null);
     setTargetAquariumId('');
     setPendingTankAddConfirmed(false);
+    navigateToRoute(`/aquarium?action=plan-species&species=${encodeURIComponent(fish.id)}&tank=${encodeURIComponent(aquariumId)}`);
   };
 
   const addCompatibilitySpeciesToAquarium = async (items: { fishId: string; quantity: number }[]) => {
@@ -1155,22 +1132,22 @@ export default function Encyclopedia() {
       throw new Error(t('encyclopedia.noAddableSpecies'));
     }
 
-    const execution = executeSpeciesAddition({
-      aquariums,
-      aquarium: activeAquarium,
-      items: normalizedItems,
-      speciesCatalog: fishData,
-      confirmedCaution: true,
-    });
-    if (!execution.added) {
-      throw new Error(execution.reason === 'missing_information'
+    const review = reviewSpeciesAdditions({ aquarium: activeAquarium, items: normalizedItems, speciesCatalog: fishData });
+    const policy = review ? getTankCompatibilityAddPolicy(review.status) : null;
+    if (!review || policy === 'block' || policy === 'complete_information') {
+      throw new Error(policy === 'complete_information'
         ? t('encyclopedia.addInfoIncomplete')
         : t('encyclopedia.addCombinationBlocked'));
     }
-
-    persistAquariums(execution.aquariums, activeAquarium.id);
-
-    const updatedActiveAquarium = execution.aquariums.find(item => item.id === activeAquarium.id) || activeAquarium;
+    const repository = await getCurrentAquaGuideRepository();
+    const recorded = await recordExistingLivestock({
+      repository,
+      aquarium: activeAquarium,
+      items: normalizedItems,
+      speciesCatalog: fishData,
+      operationId: `encyclopedia-calculator:${crypto.randomUUID()}`,
+    });
+    const updatedActiveAquarium = recorded.aquarium;
     setCurrentAquarium(updatedActiveAquarium);
     setTargetAquariumId(activeAquarium.id);
     setOwnedFishIds(prev => {
@@ -2645,7 +2622,7 @@ export default function Encyclopedia() {
                   setPendingTankAddConfirmed(true);
                   return;
                 }
-                addFishToAquarium(pendingTankFish, targetAquariumId, pendingTankAddConfirmed);
+                addFishToAquarium(pendingTankFish, targetAquariumId);
               }}
               className="min-h-11 rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90"
             >

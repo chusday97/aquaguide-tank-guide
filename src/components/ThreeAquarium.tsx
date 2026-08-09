@@ -1109,7 +1109,7 @@ export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect }: Thre
         </div>
       )}
       <div className="pointer-events-none absolute inset-x-4 bottom-3 hidden justify-between text-[10px] font-bold text-ink/35 md:flex">
-        <span>{isSaltwater ? '海水礁岩视图' : '淡水造景视图'}</span>
+        <span>{aquarium.waterType ? (isSaltwater ? '海水礁岩视图' : '淡水造景视图') : '水体类型未记录'}</span>
         <span>{allSwimFishes.length > 0 ? `已显示 ${allSwimFishes.length} 个活体` : '空缸预览'}</span>
       </div>
     </div>

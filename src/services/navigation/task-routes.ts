@@ -9,6 +9,12 @@ export const taskRoutes = {
     addSpecies: (speciesId?: string) => speciesId
       ? `/aquarium?action=add-species&species=${encodeURIComponent(speciesId)}`
       : '/aquarium?action=add-species',
+    recordExisting: (speciesId?: string) => speciesId
+      ? `/aquarium?action=record-existing&species=${encodeURIComponent(speciesId)}`
+      : '/aquarium?action=record-existing',
+    planSpecies: (speciesId?: string) => speciesId
+      ? `/aquarium?action=plan-species&species=${encodeURIComponent(speciesId)}`
+      : '/aquarium?action=plan-species',
     dailyCheck: '/aquarium?action=daily-check',
     livestock: '/aquarium?action=livestock',
     waterChange: '/aquarium?action=water-change',
@@ -23,6 +29,8 @@ export const taskRoutes = {
 
 export type AquariumTaskAction =
   | 'add-species'
+  | 'record-existing'
+  | 'plan-species'
   | 'daily-check'
   | 'livestock'
   | 'water-change'
@@ -31,6 +39,8 @@ export type AquariumTaskAction =
 
 export const isAquariumTaskAction = (value: string | null): value is AquariumTaskAction => (
   value === 'add-species'
+  || value === 'record-existing'
+  || value === 'plan-species'
   || value === 'daily-check'
   || value === 'livestock'
   || value === 'water-change'
