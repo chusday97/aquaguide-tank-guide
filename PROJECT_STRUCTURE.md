@@ -45,6 +45,10 @@
 - `src/components/search/SearchAutocomplete.tsx`：共享可访问搜索联想、键盘选择和已选物种摘要。
 - `src/services/search/search-suggestions.service.ts`：确定性物种优先排序、养护匹配与受控相关词。
 - `src/services/navigation/task-routes.ts`：添加生物、巡检、换水、缸内物种、混养与设置的正式任务地址契约。
+- `src/services/aquarium/aquarium-setup.service.ts`：鱼缸未知字段规范化、空白鱼缸草稿和 `empty / incomplete / usable / complete` 资料状态派生。
+- `src/services/aquarium/species-addition-policy.ts`：现实记录与未来规划在混养四态下的独立产品策略。
+- `src/services/aquarium/livestock-recording.service.ts`：现实生物先保存、后评估及批量部分失败保留的统一服务。
+- `src/services/aquarium/aquarium-selection.service.ts`：鱼缸选择、云端空状态与本地兼容选择的统一边界。
 - `src/services/navigation/history-navigation-guard.service.ts`：在路由器启动前拦截受保护的浏览器历史导航，供未保存纪念复盘显示项目内确认并安全继续或放弃。
 - `src/pages/Settings.tsx`：正式设置路由，替代侧栏设置弹层。
 - `src/services/feedback/feedback.service.ts`：设置页意见反馈的唯一前端 API 入口，支持游客与可选登录会话。
@@ -145,6 +149,11 @@
 - `src/types/database.ts`：camelCase 数据库与关联实体共享类型。
 - `scripts/test-three-tier-contract.ts` / `scripts/test-api-boundary.ts`：三层契约与本地 API 边界回归。
 - `scripts/test-business-api-contract.ts` / `scripts/test-repository-boundary.ts`：业务路由、校验、稳定 ID、安全规则与本地/云端访问边界回归。
+- `scripts/test-aquarium-creation-semantics.ts` / `scripts/test-addition-intents.ts` / `scripts/test-livestock-recording.ts`：空白鱼缸语义、两类 Intent 策略与现实记录顺序/幂等专项。
+- `supabase/migrations/202608090003_atomic_livestock_addition.sql`：原子创建/复用父物种、写入批次并登记幂等结果。
+- `scripts/test-atomic-livestock-addition.ts` / `supabase/tests/atomic_livestock_addition.sql`：代码契约及真实 PostgreSQL 父记录成功、批次失败回滚专项。
+- `apps/api/src/livestock-addition-error.ts` / `scripts/test-livestock-addition-api-errors.ts`：原子 RPC 的 404、409 与 503 错误语义映射和回归。
+- `scripts/verify-aquarium-factual-flow.mjs`：真实浏览器验证创建无伪数据、规划不写入、明确现实确认后保存和旧深链兼容。
 - `scripts/test-livestock-memorial-replay.ts`：已提交纪念重放先于父记录所有权查询的行为回归。
 - `scripts/verify-admin-content.mjs`：内容后台列表、编辑、保存反馈、权限错误与 390/1280px 布局验收。
 - `scripts/verify-localization-ui.mjs`：浏览器首选、桌面/手机设置、即时切换、持久化、触控尺寸与横向溢出验收。

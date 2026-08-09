@@ -118,15 +118,20 @@
 
 - 新手引导改用 `getOnboardingTasks(goal, progress)` 单一任务来源；完整混养计算写入现有 `compatibilityRecords` 后才计为核心价值完成。建缸路线仍要求首次巡检，浏览路线不强制巡检。专项、类型检查和生产构建通过。
 
-> 写给一个完全没有此前对话上下文的新接手者。最后更新：2026-07-29（Asia/Shanghai）。
+> 写给一个完全没有此前对话上下文的新接手者。最后更新：2026-08-09（Asia/Shanghai）。
 
 ## 2026-08-09 核心鱼缸事实链路重构
 
 - 当前目标：把“现实中已经存在的生物”和“未来准备加入的生物”拆成不同 Intent；事实必须先保存，混养判断只能生成保存后的风险提示。
-- 已完成：2.6.0 契约、鱼缸资料 `empty / incomplete / usable / complete` 派生规则、`AquariumFish.lastWaterChangeDate` 可空语义和两类 Intent 策略测试。
-- 当前阶段：尚未接入 Repository 命令和页面；旧 `executeSpeciesAddition`、默认鱼缸和直接 `persistAquariums` 路径仍待替换。
+- 已完成：2.6.0 契约、鱼缸资料 `empty / incomplete / usable / complete` 派生规则、`AquariumFish.lastWaterChangeDate` 可空语义和两类 Intent 策略测试。（commit: `56c486b`）
+- 已完成：Local/API Repository 增加 `createAquarium` 与幂等 `addLivestock` 命令；现实记录按照“先写入、再基于写入前快照评估”执行，评估失败不会回滚已保存事实。（commit: `7284008`）
+- 已完成：新增 `/aquarium?action=record-existing` 与 `/aquarium?action=plan-species`；旧 `add-species` 映射为规划链路。空状态、新建鱼缸、首页、3D、图鉴详情和完整混养的新增入口已接入新边界，页面不再为新鱼缸生成推荐值。（commit: `f04f189`）
+- 已完成：关闭建缸模板、图鉴、完整混养与模拟入口的事实写入绕过；云端空数组保持真实空状态，批量部分失败只把实际保存项计入已拥有。（commits: `8d272aa`, `9accb48`）
+- 已完成：云端父物种、批次和幂等结果由 `add_aquarium_livestock` 在同一 PostgreSQL 事务提交；真实 PostgreSQL 16 失败注入证明批次失败后三类记录均为 0，重试和重放最终各保留 1 条。RPC 业务错误分别映射为 404/409，未知故障安全降级为 503。（commits: `f97e6ca`, `3af5c61`）
+- 当前阶段：主线程 lint、API 类型、生产构建、领域测试和生产预览 Chromium 闭环均已通过；独立 Critic 与独立 Evaluator 均对照原始计划给出六维 PASS。
 - 禁止重踩：不得用入缸日期补换水日期；不得让 `not_recommended` 或 `insufficient_data` 阻止记录现实事实；规划阶段不得静默写入真实鱼缸。
-- 验证：`test:aquarium-creation-semantics`、`test:addition-intents`、`lint` 通过。
+- 验证：`lint`、`check:api`、`build`、`test:compatibility`、`test:aquarium-creation-semantics`、`test:addition-intents`、`test:livestock-recording`、`test:repository-boundary`、`test:species-batches`、`test:business-api-contract`、`test:atomic-livestock-addition`、`test:livestock-addition-api-errors`、真实 PostgreSQL 失败注入、`test:aquarium-factual-flow` 与首页 C 浏览器专项通过。
+- 剩余边界：旧版本已经保存的默认组合不自动删除；真实 Supabase 项目尚未执行本轮创建/批次幂等验收。
 
 ## 2026-07-29 首页、体态与生命纪念修复交接
 
