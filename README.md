@@ -1,20 +1,22 @@
 # AquaGuide — AI-Assisted Aquarium Management for Beginner Fishkeepers
 
-AquaGuide is an aquarium management web app for beginner and light-experience fishkeepers. It connects tank setup, species discovery, compatibility checking, daily observations, care guidance, and personal collection tracking into one workflow.
+AquaGuide is an aquarium management web app for beginner and light-experience fishkeepers. It connects tank setup, species discovery, compatibility checking, daily observations, care guidance, and collection tracking into one workflow.
 
-**Core design principle:** safety-critical conclusions come from deterministic rules. AI explains, organizes, and asks follow-up questions, but it does not override compatibility or risk decisions.
+**Core design principle:** safety-critical conclusions come from deterministic rules. AI explains, organizes, and asks bounded follow-up questions, but does not override compatibility or risk decisions.
 
 > 面向水族新手的鱼缸管理、物种选择、混养判断与养护补救助手。确定性规则负责安全边界，AI 负责解释与辅助。
 
 **At a glance:** Tank management · Species compatibility · Daily checks · Care guidance · Rules-first safety · Bounded AI · Evaluation
 
-[Live demo](https://aqua-tank-guide.vercel.app) · [Product flow](#why-aquaguide) · [AI boundary](#ai-is-not-the-decision-engine) · [Architecture](#architecture) · [Evaluation](#reliability--evaluation) · [Run locally](#local-development)
+[Live demo](https://aqua-tank-guide.vercel.app) · [Product flow](#product-flow) · [AI boundary](#ai-is-not-the-decision-engine) · [Architecture](#architecture) · [Evaluation](#reliability--evaluation)
 
 ## Why AquaGuide
 
 Aquarium beginners rarely lack information. The harder problem is that information is fragmented, advice can conflict, and users often do not know what to do next.
 
-AquaGuide is designed to turn that scattered decision process into a short, traceable path:
+AquaGuide turns that scattered decision process into a shorter, traceable workflow.
+
+## Product Flow
 
 ```mermaid
 flowchart LR
@@ -31,17 +33,17 @@ flowchart LR
 
 ## Core Product Modules
 
-| Module | What it does | Current status |
+| Module | What it does | Status |
 | --- | --- | --- |
-| **My Aquarium** | Manage multiple tanks, dimensions, equipment, livestock, and 3D tank views | Implemented |
-| **Species Atlas** | Search, filter, inspect species details, and save species for later | Implemented |
-| **Compatibility Engine** | Run quick species-only checks and full checks against a specific tank | Implemented |
-| **Daily Check** | Record structured observations and receive local risk triage | Implemented |
-| **Care Guide** | Search care topics, follow recovery steps, and save useful guidance | Implemented |
-| **AI Tank Copilot** | Understand setup goals, ask limited follow-up questions, and propose constrained options | Implemented |
+| **My Aquarium** | Manage tanks, dimensions, equipment, livestock, and tank views | Implemented |
+| **Species Atlas** | Search, filter, inspect, and save species | Implemented |
+| **Compatibility Engine** | Run species-only checks and tank-aware compatibility checks | Implemented |
+| **Daily Check** | Record observations and receive structured local risk triage | Implemented |
+| **Care Guide** | Search care topics and follow recovery guidance | Implemented |
+| **AI Tank Copilot** | Clarify setup goals and explain bounded options | Implemented |
 | **Aquarium Collection** | Aggregate saved species, care records, memorials, and achievements | Implemented |
-| **3D Demo** | Experimental 3D interaction and material work | Internal experiment |
-| **Cloud Sync** | Cross-device backup and recovery | Not yet complete |
+| **3D Demo** | Experimental aquarium interaction and material work | Internal experiment |
+| **Cloud Sync** | Cross-device backup and recovery | In progress |
 
 ## AI Is Not the Decision Engine
 
@@ -52,7 +54,7 @@ AquaGuide deliberately separates deterministic product logic from generative AI.
 - species compatibility and blocking rules;
 - structured risk classification;
 - safety boundaries and allowed actions;
-- article/care-guide allowlists;
+- care-guide allowlists;
 - validation before livestock is written into a tank.
 
 ### AI handles
@@ -62,7 +64,7 @@ AquaGuide deliberately separates deterministic product logic from generative AI.
 - asking bounded follow-up questions;
 - helping users understand setup and care options.
 
-When the model is unavailable, times out, or returns invalid output, the product is designed to keep the local rule result rather than downgrade risk.
+If the model is unavailable or returns invalid output, the product keeps the deterministic result rather than weakening a risk decision.
 
 ## Architecture
 
@@ -80,9 +82,9 @@ flowchart TB
     UI --> Three
   end
 
-  Actions -->|/api/v1| API[Express Business API]
+  Actions -->|Business API| API[Express Service]
   API --> DB[Supabase PostgreSQL / Storage]
-  API --> AI[DeepSeek-compatible Model API]
+  API --> AI[Model Service]
   Auth[Supabase Auth] --> UI
 ```
 
@@ -90,13 +92,10 @@ flowchart TB
 
 - **Frontend:** React 19, TypeScript, React Router, Vite 6, Tailwind CSS 4
 - **3D:** Three.js, React Three Fiber, Drei
-- **API:** Express + TypeScript
+- **Service layer:** Express + TypeScript
 - **Identity & data:** Supabase Auth, PostgreSQL, Storage
-- **AI:** DeepSeek-compatible API behind the server boundary
-- **Analytics:** PostHog client integration
+- **Analytics:** PostHog
 - **Validation:** TypeScript checks, scripted contract tests, Playwright-based verification
-
-Guest flows can remain local-first. Authenticated/cloud data paths are being introduced behind the business API and repository boundary rather than letting the UI write directly to privileged services.
 
 ## Reliability & Evaluation
 
@@ -104,12 +103,12 @@ AquaGuide includes an explicit evaluation layer rather than treating model outpu
 
 Current evaluation work covers:
 
-- **AI Tank Copilot:** 20 programmatic scenarios for contracts, candidate constraints, fallback behavior, and question-count limits;
-- **Daily Check:** deterministic rules plus provider-failure scenarios;
-- **Species status assessment:** 14 rule/flow scenarios covering red-flag priority and bounded questioning;
-- **Visual identification:** flow and fallback validation, with real-image accuracy still awaiting an authorized evaluation set;
+- AI Tank Copilot contract and fallback scenarios;
+- deterministic Daily Check rules and provider-failure scenarios;
+- species status assessment and red-flag priority;
+- visual-identification flow and fallback validation;
 - separate deterministic, mocked-provider, and opt-in live-provider evaluation paths;
-- a Badcase → Fix → Regression workflow for traceable failures.
+- a **Badcase → Fix → Regression** workflow for traceable failures.
 
 Run the default evaluation suite with:
 
@@ -117,52 +116,20 @@ Run the default evaluation suite with:
 npm run eval:all
 ```
 
-Live model evaluation is intentionally opt-in and is not run unless explicitly enabled.
-
 ## Local Development
-
-### 1. Install dependencies
 
 ```bash
 npm install
-```
-
-### 2. Configure the model API
-
-Create `.env.local` in the project root:
-
-```bash
-DEEPSEEK_API_KEY="your_deepseek_api_key"
-DEEPSEEK_BASE_URL="https://api.deepseek.com"
-DEEPSEEK_MODEL="deepseek-v4-flash"
-API_PORT="8787"
-```
-
-For email/password authentication, also configure Supabase public client values:
-
-```bash
-VITE_SUPABASE_URL="your_supabase_project_url"
-VITE_SUPABASE_ANON_KEY="your_supabase_anon_key"
-```
-
-Do **not** expose `SUPABASE_SERVICE_ROLE_KEY` in frontend environment variables or source code.
-
-### 3. Start the app
-
-```bash
 npm run dev
 ```
 
-- Web: `http://localhost:3000`
-- API health check: `http://localhost:8787/api/health`
-
-### 4. Build
+Build the project with:
 
 ```bash
 npm run build
 ```
 
-## Useful Validation Commands
+Useful validation commands:
 
 ```bash
 npm run lint
@@ -173,26 +140,24 @@ npm run test:daily-check
 npm run eval:all
 ```
 
-The repository contains additional contract and UI verification scripts for taxonomy, onboarding, care flows, responsive behavior, data boundaries, sharing, and business actions.
-
 ## Documentation
 
 Start with the [product documentation index](./docs/README.md).
 
 Recommended entry points:
 
-- [PRD](./docs/01-definition/PRD.md) — users, problems, product scope, priorities, and success metrics
-- [Technical Architecture](./docs/03-development/TECH_ARCHITECTURE.md) — system boundaries and data flow
-- [AI & API Specification](./docs/02-design/AI_AND_API_SPEC.md) — model and API contracts
-- [QA & Acceptance](./docs/03-development/QA_ACCEPTANCE.md) — product acceptance criteria
-- [AI Evaluation Status](./docs/05-validation/AI_EVALUATION_STATUS.md) — what is and is not currently validated
-- [Product Gaps & Roadmap](./docs/04-planning/PRODUCT_GAPS_AND_ROADMAP.md) — known gaps and next-stage work
-- [CONTRACT.md](./CONTRACT.md) — code/data contract reference
-- [PROGRESS.md](./PROGRESS.md) — current implementation progress
+- [PRD](./docs/01-definition/PRD.md)
+- [Technical Architecture](./docs/03-development/TECH_ARCHITECTURE.md)
+- [AI & API Specification](./docs/02-design/AI_AND_API_SPEC.md)
+- [QA & Acceptance](./docs/03-development/QA_ACCEPTANCE.md)
+- [AI Evaluation Status](./docs/05-validation/AI_EVALUATION_STATUS.md)
+- [Product Gaps & Roadmap](./docs/04-planning/PRODUCT_GAPS_AND_ROADMAP.md)
+- [CONTRACT.md](./CONTRACT.md)
+- [PROGRESS.md](./PROGRESS.md)
 
 ## Current Limitations
 
-- cloud repository, guest-to-account migration, and some business API paths are still being introduced in stages;
+- cloud repository and guest-to-account migration are still being introduced in stages;
 - real-user coverage for open-ended AI inputs is not yet complete;
 - visual identification does not yet have a sufficiently broad real-photo accuracy benchmark;
 - 3D first-load performance and low-end-device behavior still need dedicated validation;
@@ -200,4 +165,4 @@ Recommended entry points:
 
 ## Product Philosophy
 
-The goal is not to make an AI that sounds confident about aquarium care. The goal is to make aquarium decisions **traceable, bounded, and safer to act on** — using rules where the answer must be stable and AI only where explanation genuinely helps.
+The goal is not to make an AI that sounds confident about aquarium care. The goal is to make aquarium decisions **traceable, bounded, and safer to act on** — using rules where the answer must stay stable and AI only where explanation genuinely helps.
