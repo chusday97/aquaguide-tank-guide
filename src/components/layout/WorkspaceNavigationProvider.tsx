@@ -141,7 +141,7 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
     const resolveBuildingFeature = (target: HTMLElement): FeaturePreviewState['kind'] | null => {
       const href = target instanceof HTMLAnchorElement ? target.getAttribute('href') || '' : '';
       const text = (target.textContent || '').replace(/\s+/g, ' ').trim();
-      if (/^\/login(?:[/?#]|$)/.test(href)) return 'auth';
+      if (/^\/login(?:[/?#]|$)/.test(href) || /^(登录|去登录|Sign in|Log in)$/i.test(text) || /云端同步|Cloud sync/i.test(text)) return 'auth';
       if (/^\/collection\/achievements(?:[/?#]|$)/.test(href) || /成就勋章|Achievements|Badges/i.test(text)) return 'achievements';
       if (/分享与隐私|Sharing & privacy|生成分享报告|Create share report|生成报告链接|Create report link|打开导出与分享|Open export & share/i.test(text)) return 'sharing';
       if (/保存图片|Save image|保存 PNG|Save PNG|下载图片|Download image|预览并下载|Preview & download|导出物种卡片|Export species card|导出卡片|Export card|导出档案|Export archive|百日.*导出|Export.*milestone/i.test(text)) return 'imageExport';

@@ -702,17 +702,13 @@ const copyPlainText = async (text: string) => {
 const getRecommendationReasonLocalized = (reason: string, isEn = false) => {
   if (!isEn) return reason;
   const map: Record<string, string> = {
-    '最近添加了新生物': 'Recent livestock added to tank. Prioritize acclimation & initial observation.',
-    '新缸优先检查水质稳定情况': 'Tank appears newly established. Check bacterial bloom & cycling stability.',
-    '有生物处于繁殖阶段': 'Active pregnancy or birth logged. Check breeding & fry care.',
-    '': 'Breeding or fry species present. Review care routine in advance.',
-    '过滤设备尚未设置': 'Equipment info incomplete. Verify filtration & maintenance routine.',
-    '还没有换水记录': 'No water change history logged. Establish a regular water change routine.',
-    '': 'Most common daily checklist for water quality troubleshooting.',
-    '暂无鱼缸数据': 'No tank data yet. Recommended general water quality check.',
-    '': 'Quick checklist for before and after adding new fish or shrimp.',
-    '': 'Essential high-frequency maintenance guide.',
-    '日常喂食和残饵管理会影响水质稳定。': 'Daily feeding and waste management affect water stability.',
+    '最近添加了新生物': 'New livestock added',
+    '新缸优先检查水质稳定情况': 'New tank: check water stability',
+    '有生物处于繁殖阶段': 'Breeding stage detected',
+    '过滤设备尚未设置': 'Filter not set',
+    '还没有换水记录': 'No water-change record',
+    '暂无鱼缸数据': 'No tank data',
+    '日常喂食和残饵管理会影响水质稳定。': 'Feeding and leftovers affect water stability.',
   };
   return map[reason] || reason;
 };
