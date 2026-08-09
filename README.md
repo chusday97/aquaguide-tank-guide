@@ -1,5 +1,8 @@
 # AquaGuide — AI 辅助水族管理 / AI-Assisted Aquarium Management
 
+**🌐 在线体验 / Website:** [aquaguide.chusday.dpdns.org](https://aquaguide.chusday.dpdns.org)  
+**𝕏 X:** [@chu77s](https://x.com/chu77s)
+
 AquaGuide 是面向水族新手的鱼缸管理、物种选择、混养判断与养护辅助工具。
 
 AquaGuide is an aquarium management product for beginner and light-experience fishkeepers.
@@ -39,8 +42,6 @@ AquaGuide 将鱼缸建立、物种图鉴、混养判断、日常观察、养护�
 **核心设计原则：需要稳定和安全的结论由确定性规则负责，AI 负责解释、整理和有限追问，不覆盖规则给出的风险判断。**
 
 **关键词：** 鱼缸管理 · 物种图鉴 · 混养判断 · 日常检查 · 养护指南 · AI 辅助 · 产品评测
-
-[在线体验](https://aqua-tank-guide.vercel.app)
 
 ## 为什么做 AquaGuide
 
@@ -190,8 +191,6 @@ AquaGuide connects tank setup, species discovery, compatibility checking, daily 
 **Core design principle: deterministic rules own safety-critical decisions. AI explains, organizes, and asks bounded follow-up questions, but does not override compatibility or risk decisions.**
 
 **Keywords:** aquarium management · fishkeeping · species compatibility · daily checks · care guidance · AI assistance · product evaluation
-
-[Live Demo](https://aqua-tank-guide.vercel.app)
 
 ## Why AquaGuide
 
