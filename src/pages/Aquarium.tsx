@@ -1366,8 +1366,12 @@ export default function AquariumManager() {
   }, []);
 
   useEffect(() => subscribeToCareActivity(() => {
-    setCareRemindersState(getCareReminders());
-  }), []);
+    void resolveRepositoryMode()
+      .then(mode => {
+        if (mode === 'local') setCareRemindersState(getCareReminders());
+      })
+      .catch(error => showToast(error instanceof Error ? error.message : (isEn ? 'Care plans could not be refreshed.' : '养护计划暂时无法刷新。'), 'error'));
+  }), [isEn, showToast]);
 
   useEffect(() => {
     let isMounted = true;

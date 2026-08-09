@@ -164,6 +164,7 @@ interface CareActionEvidence {
 - `species_pair_compatibility_rules` 只保存有明确依据的高频或特殊组合，不穷举全部物种组合。
 - 未审核且会影响结论的数据必须降级为 `insufficient_data`；`Aggressive` 不能直接推导 `predatory`。
 - `care_article_reference_links` 必须把来源绑定到每个立即动作、禁止动作、观察项、复查动作和唯一下一步，并保存该来源直接支持的动作摘要；文章级泛化来源不能替代逐动作审核。
+- 关键词或文章主题只能生成候选来源，不能授予 `reviewed`。动作只有在显式审核登记中同时记录审核人、审核时间和被核对的来源 ID 后才可显示为已审核；未登记动作一律保持 `draft`。
 - 普通用户只能读取已审核证据；草稿、驳回与审核写入仅管理员可执行。
 
 ### 3.7 翻译实体

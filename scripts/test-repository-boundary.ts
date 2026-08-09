@@ -119,6 +119,7 @@ const atomicMemorialMigration = readFileSync(resolve(import.meta.dirname, '../su
 const atomicMergeMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202607220004_atomic_livestock_batch_merge.sql'), 'utf8');
 const mergeSignatureFixMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202607220005_fix_livestock_batch_merge_signature.sql'), 'utf8');
 const aquariumPageSource = readFileSync(resolve(import.meta.dirname, '../src/pages/Aquarium.tsx'), 'utf8');
+const carePageSource = readFileSync(resolve(import.meta.dirname, '../src/pages/CareEncyclopedia.tsx'), 'utf8');
 const atomicCareCompletionMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202608090002_atomic_care_reminder_completion.sql'), 'utf8');
 assert.doesNotMatch(apiRepositorySource, /supabase\.from\(/);
 assert.match(apiRepositorySource, /apiRequest/);
@@ -163,5 +164,9 @@ assert.match(aquariumPageSource, /getCurrentAquaGuideRepository/);
 assert.match(aquariumPageSource, /subscribeToRepositoryMode/);
 assert.doesNotMatch(aquariumPageSource, /recordCareTimelineEvent\(/);
 assert.doesNotMatch(aquariumPageSource, /completeCareReminder\(/);
+assert.match(carePageSource, /getCurrentAquaGuideRepository/);
+assert.match(carePageSource, /repository\.updateCareReminder\(\{ action: 'upsert'/);
+assert.doesNotMatch(carePageSource, /upsertCareReminder\(/);
+assert.match(aquariumPageSource, /if \(mode === 'local'\) setCareRemindersState\(getCareReminders\(\)\)/);
 
 console.log('repository boundary verified: local compatibility and cloud API-only access');

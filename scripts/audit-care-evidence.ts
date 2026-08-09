@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { careTopicsData } from '../src/data/careTopicsData';
-import { getCareActionEvidence, getCareFollowUpAction, getCareReferences, getCareReferenceReviewStatus } from '../src/data/careEvidence';
+import { careActionReviewRegistry, getCareActionEvidence, getCareFollowUpAction, getCareReferences, getCareReferenceReviewStatus } from '../src/data/careEvidence';
 
 assert.equal(careTopicsData.length, 41, '养护内容数量变化时必须重新执行全量审核');
 
@@ -18,6 +18,12 @@ const topicRows = careTopicsData.map(topic => {
     assert.ok(action.supportSummary.trim(), `${action.id} 缺少支持范围说明`);
     assert.ok(action.citations.length > 0, `${action.id} 缺少逐动作引用`);
     assert.ok(action.citations.every(reference => /^https:\/\//.test(reference.url)), `${action.id} 存在无效逐动作来源`);
+    if (action.reviewStatus === 'reviewed') {
+      const review = careActionReviewRegistry[action.id];
+      assert.ok(review, `${action.id} 不得由关键词自动授予 reviewed`);
+      assert.ok(review.reviewedAt && review.reviewedBy, `${action.id} 缺少人工审核人或审核时间`);
+      assert.ok(review.citationIds.every(sourceId => action.citations.some(reference => reference.id === sourceId)), `${action.id} 人工审核来源与页面来源不一致`);
+    }
   }
   return {
     id: topic.id,

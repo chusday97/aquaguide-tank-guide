@@ -85,6 +85,15 @@ const uniqueReferences = (items: CareReference[]) => (
   items.filter((item, index, list) => list.findIndex(candidate => candidate.id === item.id) === index)
 );
 
+// Only IDs placed in this registry after a person compares the exact action
+// against the cited passage may be exposed as reviewed. Keyword matching below
+// only proposes candidate sources and must never grant review status.
+export const careActionReviewRegistry: Record<string, {
+  reviewedAt: string;
+  reviewedBy: string;
+  citationIds: string[];
+}> = {};
+
 const getActionReferences = (topic: CareTopic, actionText: string): CareReference[] => {
   const text = `${topic.title} ${topic.category} ${topic.summary} ${topic.keywords.join(' ')} ${actionText}`;
   const references: CareReference[] = [];
@@ -115,17 +124,23 @@ const buildActionEvidence = (
   text: string,
   index: number,
 ): CareActionEvidence => {
+  const id = `${topic.id}:${kind}:${index + 1}`;
   const citations = getActionReferences(topic, text);
-  const reviewStatus = citations.every(reference => reference.reviewStatus === 'reviewed') && !needsSpecialistReview(topic, text)
-    ? 'reviewed'
-    : 'draft';
+  const explicitReview = careActionReviewRegistry[id];
+  const reviewStatus = explicitReview
+    && explicitReview.citationIds.length > 0
+    && explicitReview.citationIds.every(sourceId => citations.some(reference => reference.id === sourceId))
+    && citations.every(reference => reference.reviewStatus === 'reviewed')
+    && !needsSpecialistReview(topic, text)
+      ? 'reviewed'
+      : 'draft';
   return {
-    id: `${topic.id}:${kind}:${index + 1}`,
+    id,
     kind,
     text: text.trim(),
     supportSummary: reviewStatus === 'reviewed'
-      ? `这些来源直接支持“${text.trim()}”所采用的基础养护原则。`
-      : `“${text.trim()}”已绑定基础资料，但具体家庭操作仍需专项人工复核。`,
+      ? `人工审核已确认这些来源直接支持“${text.trim()}”。`
+      : `已为“${text.trim()}”匹配候选资料，但尚未逐段完成人工核验。`,
     reviewStatus,
     citations,
   };

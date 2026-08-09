@@ -37,8 +37,8 @@ import {
   getSavedCareChecklists,
   setCompletedCareOperations,
   setSavedCareChecklists,
-  upsertCareReminder,
 } from '../services/care/care-activity.service';
+import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 import { useToast } from '../components/common/ToastProvider';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
@@ -3028,6 +3028,7 @@ export function CareArticleDetail({
     successMessage: string;
   }>(null);
   const [selectedReminderOption, setSelectedReminderOption] = useState('');
+  const [isReminderSaving, setIsReminderSaving] = useState(false);
   const procedureSteps = meta.guideType === 'procedure' ? getProcedureSteps(topic) : [];
   const procedureReminders = meta.guideType === 'procedure' ? getProcedureReminders(topic) : [];
   const procedureDetails = meta.guideType === 'procedure' ? getProcedureDetails(topic) : careGuide.maintenanceTips;
@@ -3093,16 +3094,20 @@ export function CareArticleDetail({
     return scheduled.toISOString();
   };
 
-  const addReminder = (label?: string, storageType: string = meta.guideType, successMessage?: string) => {
+  const addReminder = async (label?: string, storageType: string = meta.guideType, successMessage?: string) => {
+    if (isReminderSaving) return false;
+    setIsReminderSaving(true);
     try {
-      const reminder = upsertCareReminder({
+      const repository = await getCurrentAquaGuideRepository();
+      const reminder = await repository.updateCareReminder({ action: 'upsert', record: {
         sourceTopicId: topic.id,
         title: getDisplayTitle(topic),
         type: storageType,
         scheduledFor: getScheduledFor(label),
         aquariumId: activeAquarium?.id,
         label,
-      });
+      } });
+      if (!reminder) throw new Error(isEn ? 'The care reminder was not saved.' : '养护提醒没有保存成功。');
       const scheduledLabel = new Intl.DateTimeFormat(isEn ? 'en' : 'zh-CN', {
         month: 'short',
         day: 'numeric',
@@ -3110,10 +3115,14 @@ export function CareArticleDetail({
         minute: '2-digit',
       }).format(new Date(reminder.scheduledFor));
       setCtaFeedback(`${successMessage || (isEn ? 'Reminder scheduled' : '提醒已设置')} · ${scheduledLabel}`);
+      return true;
     } catch (error) {
       setCtaFeedback(error instanceof Error ? error.message : (isEn ? 'Failed to save reminder' : '提醒保存失败'));
+      return false;
+    } finally {
+      setIsReminderSaving(false);
+      window.setTimeout(() => setCtaFeedback(''), 5000);
     }
-    window.setTimeout(() => setCtaFeedback(''), 5000);
   };
 
   const openReminderSheet = (kind: 'newFish' | 'waterChange' | 'stage' | 'fry' | 'general') => {
@@ -3163,10 +3172,10 @@ export function CareArticleDetail({
     setSelectedReminderOption(config.options[0]);
   };
 
-  const confirmReminder = () => {
-    if (!reminderSheet) return;
-    addReminder(selectedReminderOption, reminderSheet.storageType, reminderSheet.successMessage);
-    setReminderSheet(null);
+  const confirmReminder = async () => {
+    if (!reminderSheet || isReminderSaving) return;
+    const saved = await addReminder(selectedReminderOption, reminderSheet.storageType, reminderSheet.successMessage);
+    if (saved) setReminderSheet(null);
   };
 
   const markOperationCompleted = (label: string) => {
@@ -3603,8 +3612,9 @@ export function CareArticleDetail({
                 </button>
               ))}
             </div>
-            <Button type="button" onClick={confirmReminder} className="mt-4 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
-              {isEn ? 'Confirm Settings' : '确认设置'}
+            <Button type="button" onClick={() => void confirmReminder()} disabled={isReminderSaving} aria-busy={isReminderSaving} className="mt-4 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60">
+              {isReminderSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin motion-reduce:animate-none" />}
+              {isReminderSaving ? (isEn ? 'Saving…' : '正在保存…') : (isEn ? 'Confirm Settings' : '确认设置')}
             </Button>
           </div>
         </div>
