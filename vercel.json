@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "node scripts/apply-product-ux-closure.mjs && npm run lint && npm run build",
   "headers": [
     {
       "source": "/responsive/(.*)",
