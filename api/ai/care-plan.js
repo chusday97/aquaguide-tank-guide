@@ -10,24 +10,18 @@ const isConfiguredApiKey = (apiKey) => Boolean(
 
 const apiKey = [process.env.AI_API_KEY, process.env.DEEPSEEK_API_KEY].find(isConfiguredApiKey) || '';
 
-export const config = {
-  maxDuration: 30,
-};
+export const config = { maxDuration: 30 };
 
 const fetchWithTimeout = async (url, options, timeoutMs = aiRequestTimeoutMs) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { ...options, signal: controller.signal });
-  } finally {
-    clearTimeout(timer);
-  }
+  try { return await fetch(url, { ...options, signal: controller.signal }); }
+  finally { clearTimeout(timer); }
 };
 
 const parseJsonObject = (text) => {
-  try {
-    return JSON.parse(text);
-  } catch {
+  try { return JSON.parse(text); }
+  catch {
     const match = String(text || '').match(/\{[\s\S]*\}/);
     if (!match) throw new Error('AI response is not valid JSON');
     return JSON.parse(match[0]);
@@ -40,7 +34,7 @@ const cleanStringArray = (value, limit = 8) => (
     : []
 );
 
-const normalizePlan = (raw, locale) => {
+const normalizePlan = (raw, locale, hasRuleFacts) => {
   const isEn = String(locale || '').toLowerCase().startsWith('en');
   const allowedWhen = new Set(['today', 'this_week', 'ongoing', 'watch']);
   const confidence = raw?.confidence === 'personalized' ? 'personalized' : 'provisional';
@@ -68,9 +62,13 @@ const normalizePlan = (raw, locale) => {
     aiRole: isEn
       ? 'AI organizes the known facts, prioritizes actions, explains why they matter, and asks one high-value follow-up question.'
       : 'AI 负责整理已知信息、给行动排优先级、解释原因，并只追问一个最有价值的问题。',
-    ruleRole: isEn
-      ? 'Stored tank facts and explicit safety constraints remain the source of truth; AI must not override them.'
-      : '已保存的鱼缸事实和明确的安全约束仍是事实来源，AI 不允许覆盖它们。',
+    ruleRole: hasRuleFacts
+      ? (isEn
+        ? 'Stored tank facts and explicit deterministic rule outputs are the source of truth; AI must not override them.'
+        : '已保存的鱼缸事实和确定性规则输出是事实来源，AI 不允许覆盖它们。')
+      : (isEn
+        ? 'This Beta currently uses stored tank facts and reminders. Full deterministic compatibility-rule outputs are not connected on this page yet.'
+        : '当前 Beta 使用的是已保存鱼缸事实与提醒；完整的确定性兼容性规则输出尚未接入这个页面。'),
     disclaimer: isEn
       ? 'This is aquarium care guidance, not a disease diagnosis or medication prescription.'
       : '这是鱼缸养护与风险分诊建议，不是疾病诊断或用药处方。',
@@ -79,12 +77,10 @@ const normalizePlan = (raw, locale) => {
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
-
   if (!isConfiguredApiKey(apiKey)) {
     return res.status(503).json({ ok: false, error: 'AI provider is not configured', failureReason: 'not_configured' });
   }
@@ -97,39 +93,44 @@ export default async function handler(req, res) {
   const existingReminders = Array.isArray(context.existingReminders) ? context.existingReminders.slice(0, 8) : [];
   const ruleFacts = Array.isArray(context.ruleFacts) ? context.ruleFacts.slice(0, 12) : [];
   const missingInformation = cleanStringArray(context.missingInformation, 10);
+  const hasRuleFacts = ruleFacts.length > 0;
 
-  const hasStoredFacts = Object.values(aquariumSnapshot).some(value => value !== null && value !== undefined && value !== '' && (!(Array.isArray(value)) || value.length > 0));
+  const hasStoredFacts = Object.values(aquariumSnapshot).some(value => (
+    value !== null && value !== undefined && value !== '' && (!(Array.isArray(value)) || value.length > 0)
+  ));
   if (!userDescription && !hasStoredFacts) {
     return res.status(400).json({ ok: false, error: isEn ? 'Describe your tank first.' : '请先描述一下你的鱼缸。' });
   }
 
-  const compactContext = JSON.stringify({
-    locale,
-    userDescription,
-    aquariumSnapshot,
-    existingReminders,
-    ruleFacts,
-    missingInformation,
-  }, null, 2).slice(0, 16000);
+  const compactContext = JSON.stringify({ locale, userDescription, aquariumSnapshot, existingReminders, ruleFacts, missingInformation }, null, 2).slice(0, 16000);
+  const ruleBoundary = hasRuleFacts
+    ? (isEn
+      ? 'ruleFacts contains deterministic system conclusions. Never weaken, replace, or contradict them.'
+      : 'ruleFacts 中包含系统确定性结论，不得弱化、替换或与其矛盾。')
+    : (isEn
+      ? 'No deterministic rule output is supplied in this Beta request. Do not claim that an AI suggestion is a rule conclusion.'
+      : '本次 Beta 请求没有提供确定性规则输出，不得把 AI 建议描述成规则结论。');
 
   const system = isEn
     ? [
       'You are AquaGuide Care Plan Copilot.',
-      'Your job is to turn partial aquarium information into a useful provisional care plan without forcing the user to complete every field first.',
-      'Treat aquariumSnapshot, ruleFacts, and existingReminders as factual inputs. Treat userDescription as user-provided information, not verified measurements.',
-      'Never override explicit ruleFacts or safety constraints. Never invent a measured water value, livestock species, tank volume, equipment, or completed action.',
-      'Missing information must reduce confidence, not block the plan. Always produce useful actions from known facts first, then ask exactly one highest-value follow-up question if needed.',
+      'Turn partial aquarium information into a useful provisional care plan without forcing the user to complete every field first.',
+      'Treat aquariumSnapshot and existingReminders as stored facts. Treat userDescription as user-provided information, not verified measurements.',
+      ruleBoundary,
+      'Never invent a measured water value, livestock species, tank volume, equipment, or completed action.',
+      'Missing information lowers confidence; it does not block a plan. Always give useful actions from known facts first, then ask exactly one highest-value follow-up question if needed.',
       'When volume, species, cycling status, or water parameters are unknown, avoid exact dosing, exact feeding quantities, exact stocking numbers, or confident disease claims.',
       'Do not diagnose disease and do not prescribe medication. For urgent warning signs, prioritize checking water quality, temperature, oxygenation, recent changes, and qualified help when appropriate.',
       'Return valid JSON only. No Markdown.',
     ].join('\n')
     : [
       '你是 AquaGuide 的 AI 养护计划 Copilot。',
-      '你的任务是把不完整的鱼缸信息整理成一份有用的暂定养护计划，而不是要求用户先把所有字段填完。',
-      'aquariumSnapshot、ruleFacts、existingReminders 是事实输入；userDescription 是用户自述信息，不等于已经检测验证的数据。',
-      '不得覆盖 ruleFacts 或明确安全约束；不得编造水质检测值、生物种类、鱼缸容量、设备或已经完成的动作。',
-      '信息缺失只能降低置信度，不能阻止生成计划。必须先根据已知事实给出能做的行动；如果还需要信息，只追问一个最有价值的问题。',
-      '当容量、鱼种、开缸阶段或水质参数未知时，不要给精确药量、精确投喂量、精确加鱼数量，也不要下确定疾病结论。',
+      '把不完整的鱼缸信息整理成一份有用的暂定养护计划，不要要求用户先把所有字段填完。',
+      'aquariumSnapshot 和 existingReminders 是已保存事实；userDescription 是用户自述，不等于已检测验证的数据。',
+      ruleBoundary,
+      '不得编造水质检测值、生物种类、鱼缸容量、设备或已经完成的动作。',
+      '信息缺失只降低置信度，不能阻止生成计划。必须先根据已知事实给行动；如果还需要信息，只追问一个最有价值的问题。',
+      '当容量、鱼种、开缸阶段或水质参数未知时，不给精确药量、精确投喂量、精确加鱼数量，也不下确定疾病结论。',
       '不能诊断疾病，不能自动给用药处方。遇到紧急异常，应优先建议检查水质、温度、溶氧、近期变化，并在必要时寻求专业帮助。',
       '只返回合法 JSON，不要 Markdown，不要代码块。',
     ].join('\n');
@@ -138,17 +139,15 @@ export default async function handler(req, res) {
     confidence: 'provisional | personalized',
     summary: isEn ? 'One sentence explaining the current plan.' : '一句话说明当前计划。',
     knownFacts: [isEn ? '30 L freshwater tank (stored fact)' : '30L 淡水缸（已保存事实）'],
-    tasks: [
-      {
-        id: 'check-water',
-        when: 'today | this_week | ongoing | watch',
-        title: isEn ? 'Check ammonia and nitrite' : '检查氨和亚硝酸盐',
-        detail: isEn ? 'What to do, without inventing a measurement.' : '具体怎么做，但不能编造检测结果。',
-        why: isEn ? 'Why this is prioritized.' : '为什么优先做这件事。',
-        evidence: [isEn ? 'User says the tank is two weeks old' : '用户自述开缸约两周'],
-        confidence: 'low | medium | high',
-      },
-    ],
+    tasks: [{
+      id: 'check-water',
+      when: 'today | this_week | ongoing | watch',
+      title: isEn ? 'Check ammonia and nitrite' : '检查氨和亚硝酸盐',
+      detail: isEn ? 'What to do, without inventing a measurement.' : '具体怎么做，但不能编造检测结果。',
+      why: isEn ? 'Why this is prioritized.' : '为什么优先做这件事。',
+      evidence: [isEn ? 'User says the tank is two weeks old' : '用户自述开缸约两周'],
+      confidence: 'low | medium | high',
+    }],
     unknowns: [isEn ? 'Ammonia value is unknown' : '氨检测值未知'],
     nextQuestion: isEn ? 'Ask exactly one highest-value question.' : '只追问一个最有价值的问题。',
   };
@@ -157,24 +156,16 @@ export default async function handler(req, res) {
     isEn ? 'Create a progressive aquarium care plan from this context.' : '请基于下面信息生成渐进式鱼缸养护计划。',
     isEn ? 'Return exactly this JSON shape:' : '必须返回这个 JSON 结构：',
     JSON.stringify(schemaExample, null, 2),
-    '',
-    'context:',
-    compactContext,
+    '', 'context:', compactContext,
   ].join('\n');
 
   try {
     const upstream = await fetchWithTimeout(`${aiBaseUrl}/chat/completions`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
         model: aiModel,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
+        messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
         temperature: 0.2,
         max_tokens: 1300,
         stream: false,
@@ -194,12 +185,12 @@ export default async function handler(req, res) {
     const payload = JSON.parse(responseText);
     const content = payload?.choices?.[0]?.message?.content || '';
     const parsed = parseJsonObject(content);
-    const plan = normalizePlan(parsed, locale);
+    const plan = normalizePlan(parsed, locale, hasRuleFacts);
 
     return res.status(200).json({
       ok: true,
       task: 'care_plan_personalization',
-      source: 'rules_plus_ai',
+      source: hasRuleFacts ? 'rules_plus_ai' : 'stored_facts_plus_ai',
       model: payload?.model || aiModel,
       generatedAt: new Date().toISOString(),
       data: plan,
