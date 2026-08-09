@@ -238,30 +238,29 @@ try {
 
   {
     const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
-    await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
+    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
     const normalOptions = panel.getByRole('button', { name: '没有', exact: true });
     for (let index = (await normalOptions.count()) - 1; index >= 0; index -= 1) {
       await normalOptions.nth(index).click();
     }
-    await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
-    const nextAction = panel.getByRole('button', { name: /查看复查要点|查看需要补充的检查/ });
-    await nextAction.waitFor();
+    await panel.getByRole('button', { name: '查看处理方案', exact: true }).click();
+    await panel.locator('[data-care-assessment-result]').waitFor();
     await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).waitFor();
-    const secondWaterAction = panel.locator('li').filter({ hasText: '清理可见残饵和腐败物' });
-    const firstWaterAvoid = panel.locator('li').filter({ hasText: '不要一次性清洗全部滤材' });
+    const secondWaterAction = panel.getByText('清理可见残饵和腐败物', { exact: true });
+    const firstWaterAvoid = panel.getByText('不要一次性清洗全部滤材', { exact: true });
     await secondWaterAction.waitFor();
     await firstWaterAvoid.waitFor();
     assert.equal(await panel.getByText('保持环境稳定', { exact: true }).count(), 0, 'water assessment must provide a concrete first action');
-    assert.equal(await page.getByRole('button', { name: '开始问题自查', exact: true }).count(), 0, 'stale footer action remains after assessment starts');
-    await nextAction.click();
+    assert.equal(await page.getByRole('button', { name: '开始快速评测', exact: true }).count(), 0, 'stale footer action remains after assessment starts');
     await panel.locator('[data-care-assessment-next]').waitFor();
     assert.equal(await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).count(), 1, 'the visual first action must not repeat inside expanded steps');
     assert.equal(await secondWaterAction.count(), 1, 'direct action steps must not repeat in follow-up checks');
     assert.equal(await firstWaterAvoid.count(), 1, 'safety actions must remain direct and unique');
     assert.equal(await panel.getByText('是否持续浮头', { exact: true }).count(), 0, 'water assessment must not reuse gasping follow-up semantics');
     await panel.getByText('水体是否继续变浑或发绿', { exact: true }).waitFor();
-    await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).click();
+    await panel.getByRole('button', { name: '设置复查时间', exact: true }).waitFor();
+    await panel.getByRole('button', { name: '设置复查时间', exact: true }).click();
     await page.getByText('设置养护提醒', { exact: true }).waitFor();
     await page.getByRole('button', { name: '确认设置', exact: true }).click();
     await panel.getByRole('status').filter({ hasText: '养护提醒已设置' }).waitFor();
@@ -272,8 +271,8 @@ try {
 
   {
     const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
-    await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
+    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
     await panel.getByRole('button', { name: '追咬打架', exact: true }).click();
     const targetPanel = panel.getByText('哪些生物出现了这个情况？', { exact: true }).locator('..');
     await targetPanel.getByRole('button', { name: '多种生物', exact: true }).click();
@@ -285,13 +284,12 @@ try {
     for (let index = 0; index < await normalOptions.count(); index += 1) {
       await normalOptions.nth(index).click();
     }
-    await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
-    const multiSpeciesFocus = panel.locator('.visual-result-focus');
-    await multiSpeciesFocus.getByText(/所选 2 种生物/).waitFor();
-    await multiSpeciesFocus.getByText(/多种生物/).waitFor();
+    await panel.getByRole('button', { name: '查看处理方案', exact: true }).click();
+    const assessmentResult = panel.locator('[data-care-assessment-result]');
+    await assessmentResult.getByText(/所选 2 种生物/).waitFor();
+    assert.equal(await assessmentResult.locator('img').count(), 2, 'multi-species result should preview the selected species');
     await panel.getByText('增加水草、沉木或石缝作为躲避区', { exact: true }).waitFor();
-    await panel.locator('li').filter({ hasText: '不要频繁追捞所有生物' }).waitFor();
-    await panel.getByRole('button', { name: '查看复查要点', exact: true }).click();
+    await panel.getByText('不要频繁追捞所有生物', { exact: true }).waitFor();
     await panel.getByText('是否固定追咬同一对象', { exact: true }).waitFor();
     assert.equal(await panel.getByText('全缸检查', { exact: true }).count(), 0, 'multi-species result must not claim whole-tank scope');
     assert.equal(errors.length, 0, `multi-species care assessment page errors: ${errors.join('; ')}`);
@@ -300,8 +298,8 @@ try {
 
   {
     const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
-    await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
+    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
     await panel.getByRole('button', { name: '追咬打架', exact: true }).click();
     const targetPanel = panel.getByText('哪些生物出现了这个情况？', { exact: true }).locator('..');
     assert.equal(await targetPanel.getByRole('button', { name: '全缸都这样', exact: true }).getAttribute('aria-pressed'), 'true', 'behavior checks must default to the whole tank');
@@ -315,13 +313,11 @@ try {
     for (let index = 0; index < 2; index += 1) {
       await unknownOptions.nth(index).click();
     }
-    await panel.getByRole('button', { name: '查看自查结果', exact: true }).click();
-    await panel.getByText('资料不足', { exact: true }).waitFor();
-    await panel.getByText(/重点观察/).waitFor();
-    await panel.getByRole('button', { name: '查看需要补充的检查', exact: true }).click();
-    assert.equal(await panel.getByRole('button', { name: '设置一次复查提醒', exact: true }).count(), 0, '信息不足时不应让提醒抢占补充检查');
-    await panel.getByRole('button', { name: '重新补充关键检查', exact: true }).click();
-    await panel.getByText('一次填完 · 已回答 0/2', { exact: true }).waitFor();
+    await panel.getByRole('button', { name: '查看处理方案', exact: true }).click();
+    await panel.getByText('信息不足', { exact: true }).waitFor();
+    assert.equal(await panel.getByRole('button', { name: '设置复查时间', exact: true }).count(), 0, '信息不足时不应让提醒抢占补充检查');
+    await panel.getByRole('button', { name: '补充关键检查', exact: true }).click();
+    await panel.getByText('已回答 0/2', { exact: true }).waitFor();
     assert.equal(errors.length, 0, `unknown care assessment page errors: ${errors.join('; ')}`);
     await page.close();
   }

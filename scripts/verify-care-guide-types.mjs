@@ -12,8 +12,9 @@ const cases = [
   },
   {
     topicId: 'guide_water_deteriorate',
-    expected: ['先判断，再处理', '开始问题自查'],
+    expected: ['先做快速评测', '开始快速评测'],
     absent: ['现在按顺序做'],
+    openAssessmentResult: true,
   },
   {
     topicId: 'guide_pregnant_care',
@@ -45,6 +46,19 @@ try {
     const referenceSection = dialog.locator('[data-care-references]');
     await referenceSection.waitFor({ state: 'visible' });
     assert.ok(await referenceSection.locator('a[href^="https://"]').count(), `${testCase.topicId} 必须显示可访问的外部来源`);
+    if (testCase.openAssessmentResult) {
+      await dialog.getByRole('button', { name: '开始快速评测', exact: true }).click();
+      const assessment = dialog.locator('section').filter({ hasText: '快速评测' }).last();
+      const normalOptions = assessment.getByRole('button', { name: '没有', exact: true });
+      for (let index = (await normalOptions.count()) - 1; index >= 0; index -= 1) await normalOptions.nth(index).click();
+      await assessment.getByRole('button', { name: '查看处理方案', exact: true }).click();
+      await assessment.locator('[data-care-assessment-result]').waitFor();
+    }
+    const inlineEvidence = dialog.locator('[data-care-action-evidence]');
+    assert.ok(await inlineEvidence.count(), `${testCase.topicId} 必须把来源绑定到具体动作，而不是只放在页尾`);
+    assert.ok(await inlineEvidence.first().locator('a[href^="https://"]').count(), `${testCase.topicId} 首个动作缺少可访问来源`);
+    const evidenceIds = await inlineEvidence.evaluateAll(elements => elements.map(element => element.getAttribute('data-care-action-evidence')));
+    assert.equal(new Set(evidenceIds).size, evidenceIds.length, `${testCase.topicId} 页面重复渲染同一个动作依据`);
     if (testCase.topicId === 'qa_gen_004') {
       assert.equal(await dialog.locator('[data-care-action-step]').count(), 0, '知识文章正文不得渲染无业务结果的勾选按钮');
     }

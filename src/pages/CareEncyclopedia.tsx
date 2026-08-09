@@ -3,11 +3,18 @@ import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
+import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
-import { getCareFollowUpAction, getCareReferences, getCareReferenceReviewStatus } from '../data/careEvidence';
+import {
+  getCareActionEvidence,
+  getCareActionEvidenceForText,
+  getCareFollowUpAction,
+  getCareReferences,
+  getCareReferenceReviewStatus,
+  type CareActionEvidence,
+} from '../data/careEvidence';
 import { fishData } from '../data/fishData';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import type { Aquarium, AquariumFish, Fish as FishType } from '../types';
@@ -33,10 +40,7 @@ import {
   upsertCareReminder,
 } from '../services/care/care-activity.service';
 import { useToast } from '../components/common/ToastProvider';
-import { VisualResultCard } from '../components/visual-results/VisualResultCard';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
-import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
-import type { DiagnosisOutput } from '../modules/diagnosis/diagnosis.types';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
 import { getSearchSuggestions } from '../services/search/search-suggestions.service';
 import { taskRoutes } from '../services/navigation/task-routes';
@@ -972,7 +976,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '建议尽快处理',
       guideType: 'diagnosis',
-      ctaLabel: '开始问题自查',
+      ctaLabel: '开始快速评测',
       relatedIssueType: 'cloudy',
     };
   }
@@ -993,7 +997,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '需要立即处理',
       guideType: 'diagnosis',
-      ctaLabel: '开始问题自查',
+      ctaLabel: '开始快速评测',
       relatedIssueType: inferStepDiagnosisIssue(topic),
     };
   }
@@ -1003,7 +1007,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '建议尽快处理',
       guideType: 'diagnosis',
-      ctaLabel: '开始问题自查',
+      ctaLabel: '开始快速评测',
       relatedIssueType: inferStepDiagnosisIssue(topic),
     };
   }
@@ -2496,8 +2500,7 @@ function StepDiagnosisPanel({
     target: { scope: 'whole_tank', speciesIds: [] },
     result: null,
   }));
-  const [isResultActionOpen, setIsResultActionOpen] = useState(false);
-  const resultActionRef = useRef<HTMLDivElement | null>(null);
+  const [isResultDetailOpen, setIsResultDetailOpen] = useState(false);
 
   useEffect(() => {
     setDiagnosisState({
@@ -2509,7 +2512,7 @@ function StepDiagnosisPanel({
       target: { scope: 'whole_tank', speciesIds: [] },
       result: null,
     });
-    setIsResultActionOpen(false);
+    setIsResultDetailOpen(false);
   }, [defaultAquariumId, topic.id]);
 
   const targetAquarium = aquariums.find(item => item.id === diagnosisState.targetAquariumId) || aquariums[0] || null;
@@ -2542,50 +2545,37 @@ function StepDiagnosisPanel({
   const issuesList = isEn ? stepDiagnosisIssuesEn : stepDiagnosisIssues;
   const issueMeta = issuesList.find(item => item.id === diagnosisState.issueType) || issuesList[0];
   
-  const visualResultModel = useMemo(() => {
-    if (!diagnosisState.result) return null;
-    const result = diagnosisState.result;
-    const output: DiagnosisOutput = {
-      riskLevel: result.riskLevel,
-      riskLabel: result.riskLabel,
-      summary: result.conclusion,
-      currentAction: result.todayActions[0] || (isEn ? 'Keep conditions stable and continue observing.' : '保持环境稳定并继续观察。'),
-      actions: result.todayActions,
-      avoidActions: result.avoidActions,
-      possibleCauses: result.causes,
-      observeItems: result.observeItems,
-      missingInfo: diagnosisQuestions
-        .filter(question => diagnosisState.answers[question.id] === 'unknown')
-        .map(question => question.question),
-      evidence: result.evidence,
-      keyMetrics: [],
-      matchedRules: [],
-      matchedArticles: [],
-    };
-    
-    const labelMap = isEn ? answerLabelMapEn : answerLabelMap;
-    return buildDiagnosisVisualResult({
-      result: output,
-      answers: Object.fromEntries(Object.entries(diagnosisState.answers).map(([key, value]) => [key, value ? labelMap[value] : ''])),
-      aquariumName: targetAquarium?.name || (isEn ? 'Active Tank' : '当前鱼缸'),
-      livestock: scopedLivestock.map(item => item.fish),
-      assessmentScope: diagnosisState.target.scope,
-      focusSpeciesId: diagnosisState.target.scope === 'single_species'
-        ? diagnosisState.target.speciesIds[0]
-        : undefined,
-      primaryActionLabel: result.riskLevel === 'high'
-        ? (isEn ? 'View Follow-up Checks' : '查看复查要点')
-        : result.riskLevel === 'medium'
-          ? (isEn ? 'View Follow-up Checks' : '查看复查要点')
-          : result.riskLevel === 'unknown'
-            ? (isEn ? 'View Missing Checks' : '查看需要补充的检查')
-            : (isEn ? 'View Follow-up Checks' : '查看复查要点'),
-      primaryActionType: 'section',
-    });
-  }, [diagnosisQuestions, diagnosisState.answers, diagnosisState.result, diagnosisState.target.scope, diagnosisState.target.speciesIds, scopedLivestock, targetAquarium?.name, isEn]);
+  const resultScopeLabel = diagnosisState.target.scope === 'single_species'
+    ? (scopedLivestock[0]?.fish.name || (isEn ? 'Selected species' : '所选生物'))
+    : diagnosisState.target.scope === 'multiple_species'
+      ? (isEn ? `${scopedLivestock.length} selected species` : `所选 ${scopedLivestock.length} 种生物`)
+      : (targetAquarium?.name || (isEn ? 'Current aquarium' : '当前鱼缸'));
+  const resultTone = diagnosisState.result?.riskLevel === 'high'
+    ? {
+      badge: 'bg-red-50 text-red-700',
+      panel: 'border-red-100 bg-red-50/70',
+      icon: 'bg-red-600 text-white',
+    }
+    : diagnosisState.result?.riskLevel === 'medium'
+      ? {
+        badge: 'bg-amber-50 text-amber-700',
+        panel: 'border-amber-100 bg-amber-50/70',
+        icon: 'bg-amber-500 text-white',
+      }
+      : diagnosisState.result?.riskLevel === 'unknown'
+        ? {
+          badge: 'bg-sky-50 text-sky-700',
+          panel: 'border-sky-100 bg-sky-50/70',
+          icon: 'bg-sky-600 text-white',
+        }
+        : {
+          badge: 'bg-emerald-50 text-emerald-700',
+          panel: 'border-emerald-100 bg-emerald-50/70',
+          icon: 'bg-emerald-700 text-white',
+        };
 
   const updateAnswer = (key: keyof StepDiagnosisAnswers, value: StepDiagnosisAnswerValue) => {
-    setIsResultActionOpen(false);
+    setIsResultDetailOpen(false);
     setDiagnosisState(prev => ({
       ...prev,
       answers: { ...prev.answers, [key]: value },
@@ -2601,33 +2591,22 @@ function StepDiagnosisPanel({
       answers: diagnosisState.answers,
       issueType: diagnosisState.issueType,
     });
-    setIsResultActionOpen(false);
+    setIsResultDetailOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 2, result }));
   };
 
   const resetDiagnosis = () => {
-    setIsResultActionOpen(false);
+    setIsResultDetailOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 1, questionIndex: 0, answers: {}, result: null }));
-  };
-
-  const openResultActions = () => {
-    setIsResultActionOpen(true);
-    window.requestAnimationFrame(() => {
-      resultActionRef.current?.focus({ preventScroll: true });
-      resultActionRef.current?.scrollIntoView({
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-        block: 'nearest',
-      });
-    });
   };
 
   return (
     <section className="mt-4 rounded-[22px] border border-emerald-100 bg-[#F8FCF8] p-3 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="text-[16px] font-black text-ink">{isEn ? 'Problem Self-Check' : '问题自查'}</div>
+          <div className="text-[16px] font-black text-ink">{isEn ? 'Quick Assessment' : '快速评测'}</div>
           <div className="mt-0.5 text-[11px] font-bold text-ink/45">
-            {isResultStep ? (isEn ? 'Results' : '自查结果') : (isEn ? `Complete All · Answered ${answeredCount}/${diagnosisQuestions.length}` : `一次填完 · 已回答 ${answeredCount}/${diagnosisQuestions.length}`)}
+            {isResultStep ? (isEn ? 'Your action plan is ready' : '处理方案已生成') : (isEn ? `Answered ${answeredCount}/${diagnosisQuestions.length}` : `已回答 ${answeredCount}/${diagnosisQuestions.length}`)}
           </div>
         </div>
         {isResultStep && (
@@ -2811,7 +2790,7 @@ function StepDiagnosisPanel({
             className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800 disabled:bg-ink/15 disabled:text-ink/35"
           >
             {isReady
-              ? (isEn ? 'View Results' : '查看自查结果')
+              ? (isEn ? 'View Action Plan' : '查看处理方案')
               : !isTargetReady
                 ? (isEn ? 'Select who shows the symptom' : '请先选择检查对象')
                 : (isEn ? `${diagnosisQuestions.length - answeredCount} left` : `还差 ${diagnosisQuestions.length - answeredCount} 项`)}
@@ -2820,38 +2799,133 @@ function StepDiagnosisPanel({
       )}
 
       {isResultStep && diagnosisState.result && (
-        <div className="mt-3 grid gap-3">
-          {visualResultModel && <VisualResultCard model={visualResultModel} onPrimaryAction={openResultActions} />}
-          {isResultActionOpen && (
-            <div
-              ref={resultActionRef}
-              tabIndex={-1}
-              data-care-assessment-next
-              className="rounded-[20px] border border-emerald-200 bg-white p-4 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >
-              <div className="rounded-[15px] bg-sky-50 px-3 py-2.5">
-                <div className="text-[11px] font-black text-sky-800">{isEn ? 'Afterward' : '做完以后'}</div>
-                <p className="mt-1 text-[11px] font-semibold leading-5 text-sky-950/68">
-                  {diagnosisState.result.observeItems[0] || (isEn ? 'Keep the environment stable and check the same symptom again.' : '保持环境稳定，再复查同一异常是否缓解。')}
-                </p>
+        <section data-care-assessment-result className="mt-3 overflow-hidden rounded-[22px] border border-border bg-white shadow-sm">
+          <div className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[11px] font-black text-emerald-800">{isEn ? 'Assessment complete' : '评测完成'}</div>
+                <h3 className="mt-0.5 text-[19px] font-black leading-tight text-ink">{diagnosisState.result.riskLabel}</h3>
               </div>
-              {diagnosisState.result.riskLevel === 'unknown' ? (
-                <Button type="button" onClick={resetDiagnosis} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
-                  {isEn ? 'Complete the Missing Checks' : '重新补充关键检查'}
-                </Button>
-              ) : (
-                <Button type="button" onClick={onScheduleFollowUp} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
-                  {isEn ? 'Schedule a Follow-up Check' : '设置一次复查提醒'}
-                </Button>
-              )}
-              {followUpFeedback && (
-                <div role="status" className="mt-2 rounded-[15px] bg-emerald-50 px-3 py-2.5 text-center text-[11px] font-black text-emerald-800">
-                  {followUpFeedback}
-                </div>
-              )}
+              <span className={`shrink-0 rounded-full px-2.5 py-1.5 text-[10px] font-black ${resultTone.badge}`}>
+                {issueMeta.label}
+              </span>
             </div>
-          )}
-        </div>
+
+            <div className="mt-3 flex min-w-0 items-center gap-3 rounded-[16px] bg-bg px-3 py-2.5">
+              <div className="flex shrink-0 -space-x-2">
+                {scopedLivestock.slice(0, 3).map(item => (
+                  <span key={item.fish.id} className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-white shadow-sm">
+                    <img src={getSpeciesDisplayImage(item.fish)} alt={item.fish.name} className="h-9 w-9 object-contain" />
+                  </span>
+                ))}
+                {scopedLivestock.length === 0 && (
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-full ${resultTone.icon}`}>
+                    <Waves className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                )}
+              </div>
+              <div className="min-w-0">
+                <div className="break-words text-[12px] font-black text-ink">{resultScopeLabel}</div>
+                <p className="mt-0.5 text-[11px] font-semibold leading-5 text-ink/58">{diagnosisState.result.conclusion}</p>
+              </div>
+            </div>
+
+            <section className={`mt-3 rounded-[18px] border p-3 ${resultTone.panel}`} data-care-assessment-next>
+              <div className="flex items-center gap-2">
+                <span className={`flex h-7 w-7 items-center justify-center rounded-full ${resultTone.icon}`}>
+                  {diagnosisState.result.riskLevel === 'unknown'
+                    ? <HelpCircle className="h-4 w-4" aria-hidden="true" />
+                    : diagnosisState.result.riskLevel === 'low'
+                      ? <Check className="h-4 w-4" aria-hidden="true" />
+                      : <AlertTriangle className="h-4 w-4" aria-hidden="true" />}
+                </span>
+                <h4 className="text-[13px] font-black text-ink">
+                  {diagnosisState.result.riskLevel === 'unknown'
+                    ? (isEn ? 'Complete these checks first' : '先补充这些检查')
+                    : (isEn ? 'Do these steps now' : '现在按顺序做')}
+                </h4>
+              </div>
+              <ol className="mt-3 grid gap-2">
+                {diagnosisState.result.todayActions.slice(0, 3).map((action, index) => (
+                  <li key={action} className="grid grid-cols-[24px_minmax(0,1fr)] gap-2 rounded-[13px] bg-white/85 px-2.5 py-2.5">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[10px] font-black text-emerald-800 shadow-sm">{index + 1}</span>
+                    <span className="min-w-0 text-[12px] font-black leading-5 text-ink">
+                      <span data-care-action-text>{action}</span>
+                      <ActionEvidenceInline evidence={getCareActionEvidenceForText(topic, 'immediate', action, index)} isEn={isEn} />
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            {diagnosisState.result.avoidActions[0] && (
+              <section className="mt-3 rounded-[16px] bg-amber-50 px-3 py-2.5">
+                <div className="text-[10px] font-black text-amber-800">{isEn ? 'Avoid for now' : '暂时不要'}</div>
+                <p className="mt-1 text-[11px] font-bold leading-5 text-amber-950/72">{diagnosisState.result.avoidActions[0]}</p>
+                <ActionEvidenceInline evidence={getCareActionEvidenceForText(topic, 'avoid', diagnosisState.result.avoidActions[0])} isEn={isEn} />
+              </section>
+            )}
+
+            <section className="mt-3 rounded-[16px] bg-sky-50 px-3 py-2.5">
+              <div className="text-[10px] font-black text-sky-800">{isEn ? 'Check again after handling' : '处理后复查'}</div>
+              <p className="mt-1 text-[11px] font-bold leading-5 text-sky-950/68">
+                {diagnosisState.result.observeItems[0] || (isEn ? 'Keep conditions stable and check whether the same symptom improves.' : '保持环境稳定，复查同一异常是否缓解。')}
+              </p>
+              <ActionEvidenceInline
+                evidence={getCareActionEvidenceForText(
+                  topic,
+                  'recheck',
+                  diagnosisState.result.observeItems[0] || (isEn ? 'Keep conditions stable and check whether the same symptom improves.' : '保持环境稳定，复查同一异常是否缓解。'),
+                )}
+                isEn={isEn}
+              />
+            </section>
+
+            <button
+              type="button"
+              data-disclosure-purpose="secondary_evidence"
+              aria-expanded={isResultDetailOpen}
+              onClick={() => setIsResultDetailOpen(value => !value)}
+              className="mt-3 flex min-h-11 w-full items-center justify-between gap-3 rounded-[14px] border border-border px-3 text-left text-[11px] font-black text-ink/62"
+            >
+              <span>{isEn ? 'Why this result?' : '为什么是这个结果？'}</span>
+              <ChevronDown className={`h-4 w-4 transition-transform motion-reduce:transition-none ${isResultDetailOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+            </button>
+            {isResultDetailOpen && (
+              <div className="mt-2 grid gap-2 rounded-[14px] bg-bg p-3">
+                {diagnosisState.result.causes.length > 0 && (
+                  <div>
+                    <div className="text-[10px] font-black text-ink/55">{isEn ? 'Possible reasons' : '可能原因'}</div>
+                    <ul className="mt-1 grid gap-1">
+                      {diagnosisState.result.causes.slice(0, 3).map(item => <li key={item} className="text-[11px] font-semibold leading-5 text-ink/68">· {item}</li>)}
+                    </ul>
+                  </div>
+                )}
+                <div>
+                  <div className="text-[10px] font-black text-ink/55">{isEn ? 'Based on' : '判断依据'}</div>
+                  <ul className="mt-1 grid gap-1">
+                    {diagnosisState.result.evidence.slice(0, 4).map(item => <li key={item} className="text-[11px] font-semibold leading-5 text-ink/68">· {item}</li>)}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {diagnosisState.result.riskLevel === 'unknown' ? (
+              <Button type="button" onClick={resetDiagnosis} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
+                {isEn ? 'Complete Key Checks' : '补充关键检查'}
+              </Button>
+            ) : (
+              <Button type="button" onClick={onScheduleFollowUp} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
+                {isEn ? 'Set Follow-up Time' : '设置复查时间'}
+              </Button>
+            )}
+            {followUpFeedback && (
+              <div role="status" className="mt-2 rounded-[15px] bg-emerald-50 px-3 py-2.5 text-center text-[11px] font-black text-emerald-800">
+                {followUpFeedback}
+              </div>
+            )}
+          </div>
+        </section>
       )}
     </section>
   );
@@ -2872,6 +2946,33 @@ const translateTopicTag = (tag: string, isEn = false) => {
   };
   return map[tag] || tag;
 };
+
+function ActionEvidenceInline({ evidence, isEn }: { evidence?: CareActionEvidence; isEn: boolean }) {
+  if (!evidence) return null;
+  return (
+    <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-[9px] font-bold leading-4 text-ink/45" data-care-action-evidence={evidence.id}>
+      <span>{isEn ? 'Evidence:' : '依据：'}</span>
+      {evidence.citations.slice(0, 2).map(reference => (
+        <a
+          key={reference.id}
+          href={reference.url}
+          target="_blank"
+          rel="noreferrer"
+          className="max-w-full break-words text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+          data-action-kind="external"
+          title={reference.supports}
+        >
+          {reference.publisher}
+        </a>
+      ))}
+      <span className={evidence.reviewStatus === 'reviewed' ? 'text-emerald-700' : 'text-amber-700'}>
+        {evidence.reviewStatus === 'reviewed'
+          ? (isEn ? 'Reviewed' : '已审核')
+          : (isEn ? 'Specific step pending review' : '具体步骤待专项复核')}
+      </span>
+    </div>
+  );
+}
 
 export function CareArticleDetail({
   topic,
@@ -2907,6 +3008,11 @@ export function CareArticleDetail({
   const careGuide = buildCareGuide(topic);
   const careReferences = getCareReferences(topic);
   const careReferenceStatus = getCareReferenceReviewStatus(topic);
+  const careActionEvidence = getCareActionEvidence(topic);
+  const immediateEvidence = careActionEvidence.filter(item => item.kind === 'immediate');
+  const avoidEvidence = careActionEvidence.filter(item => item.kind === 'avoid');
+  const followUpEvidence = careActionEvidence.find(item => item.kind === 'next')
+    || careActionEvidence.find(item => item.kind === 'recheck');
   const visibleActions = careGuide.todayActions;
   const completedVisibleActions = checkedActions.filter(item => visibleActions.some(action => action.description === item)).length;
   const relatedTopics = getRelatedCareGuides(topic, careTopicsData, activeAquarium);
@@ -2956,7 +3062,7 @@ export function CareArticleDetail({
           ? (isEn ? `Save ${completedVisibleActions} Completed` : `保存已完成的 ${completedVisibleActions} 项`)
           : (isEn ? 'Check Completed Items First' : '先勾选已完成项目')
       : meta.guideType === 'diagnosis'
-        ? (isEn ? 'Start Self-Check' : '开始问题自查')
+        ? (isEn ? 'Start Quick Assessment' : '开始快速评测')
         : meta.guideType === 'knowledge'
           ? favorite
             ? onOpenCollection
@@ -3180,8 +3286,8 @@ export function CareArticleDetail({
 
   const detailLead = meta.guideType === 'diagnosis'
     ? {
-      label: isEn ? 'Check first, then act' : '先判断，再处理',
-      text: isEn ? 'Answer 2–4 observations. The result will lead directly to the actions to take.' : '回答 2–4 个观察项，结果会直接带你进入对应处理步骤。',
+      label: isEn ? 'Assess first, then act' : '先做快速评测',
+      text: isEn ? 'Answer only what you can observe. The result will show the exact steps to take.' : '只回答你能观察到的情况，结果会直接给出处理步骤。',
     }
     : meta.guideType === 'procedure'
       ? {
@@ -3243,6 +3349,7 @@ export function CareArticleDetail({
                         <span className="min-w-0">
                           <span className="block text-[12px] font-black text-ink break-words leading-tight">{item.title}</span>
                           <span className="mt-0.5 line-clamp-2 block text-[10px] font-medium leading-relaxed text-ink/55">{item.description}</span>
+                          <ActionEvidenceInline evidence={immediateEvidence[index]} isEn={isEn} />
                         </span>
                       </div>
                     ))}
@@ -3253,25 +3360,19 @@ export function CareArticleDetail({
           </div>
 
           {meta.guideType === 'diagnosis' ? (
-            isDiagnosisStarted ? (
+            isDiagnosisStarted && (
               <StepDiagnosisPanel
                 topic={topic}
                 onScheduleFollowUp={() => openReminderSheet('general')}
                 followUpFeedback={ctaFeedback}
               />
-            ) : (
-              <section className="mt-4 rounded-[20px] border border-emerald-100 bg-[#F8FCF8] p-4">
-                <div className="text-[15px] font-black text-ink">{isEn ? 'Prepare for Self-Check' : '准备开始问题自查'}</div>
-                <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/55">
-                  {isEn ? 'Choose what you observed and answer the visible questions. No professional water-test data is required.' : '选择你观察到的现象并回答页面问题，不要求先掌握专业水质数据。'}
-                </p>
-              </section>
             )
           ) : meta.guideType === 'procedure' ? (
             <section className="mt-4 rounded-[22px] border border-emerald-100 bg-[#F8FCF8] p-3 shadow-sm">
               <div className="rounded-[16px] border border-sky-100 bg-sky-50/65 px-3 py-3">
                 <div className="text-[12px] font-black text-sky-800">{isEn ? 'After you finish' : '做完以后看什么'}</div>
                 <p className="mt-1 text-[12px] font-medium leading-relaxed text-ink/62">{getProcedureObservation(topic)}</p>
+                <ActionEvidenceInline evidence={followUpEvidence} isEn={isEn} />
               </div>
               {procedureReminders[0] && (
                 <div className="mt-2 rounded-[16px] bg-yellow-50 px-3 py-3">
@@ -3279,6 +3380,7 @@ export function CareArticleDetail({
                   <p className="mt-1 text-[11px] font-medium leading-relaxed text-yellow-900/72">
                     <strong>{procedureReminders[0].title}{isEn ? ': ' : '：'}</strong>{procedureReminders[0].reason}
                   </p>
+                  <ActionEvidenceInline evidence={avoidEvidence[0]} isEn={isEn} />
                 </div>
               )}
             </section>
@@ -3305,20 +3407,25 @@ export function CareArticleDetail({
               <div className="mt-3 grid gap-2">
                 {visibleActions.length > 0 ? visibleActions.map((item, index) => (
                   meta.guideType === 'careChecklist' ? (
-                    <ActionStepCard
-                      key={`${item.title}-${item.description}`}
-                      checked={checkedActions.includes(item.description)}
-                      title={`${index + 1}. ${item.title}`}
-                      description={item.description}
-                      onClick={() => {
-                        setIsChecklistSaved(false);
-                        onToggleAction(item.description);
-                      }}
-                    />
+                    <div key={`${item.title}-${item.description}`} className="rounded-[15px] bg-white p-2 shadow-sm">
+                      <ActionStepCard
+                        checked={checkedActions.includes(item.description)}
+                        title={`${index + 1}. ${item.title}`}
+                        description={item.description}
+                        onClick={() => {
+                          setIsChecklistSaved(false);
+                          onToggleAction(item.description);
+                        }}
+                      />
+                      <div className="px-2 pb-1">
+                        <ActionEvidenceInline evidence={immediateEvidence[index]} isEn={isEn} />
+                      </div>
+                    </div>
                   ) : (
                     <div key={`${item.title}-${item.description}`} className="rounded-[15px] bg-white px-3 py-3 shadow-sm">
                       <div className="text-[12px] font-black leading-tight text-ink">{index + 1}. {item.title}</div>
                       <p className="mt-1 text-[11px] font-medium leading-relaxed text-ink/62">{item.description}</p>
+                      <ActionEvidenceInline evidence={immediateEvidence[index]} isEn={isEn} />
                     </div>
                   )
                 )) : careGuide.maintenanceTips.slice(0, 4).map((item, index) => (
@@ -3333,9 +3440,10 @@ export function CareArticleDetail({
                 <div className="mt-3 rounded-[16px] bg-yellow-50 px-3 py-3">
                   <div className="text-[12px] font-black text-yellow-800">{isEn ? 'Operation Reminders' : '操作提醒'}</div>
                   <div className="mt-2 grid gap-1.5">
-                    {careGuide.avoidActions.slice(0, 3).map(item => (
+                    {careGuide.avoidActions.slice(0, 3).map((item, index) => (
                       <div key={item.title} className="text-[11px] font-medium leading-relaxed text-yellow-900/78">
                         <span className="font-black">{item.title}{isEn ? ': ' : '：'}</span>{item.reason}
+                        <ActionEvidenceInline evidence={avoidEvidence[index]} isEn={isEn} />
                       </div>
                     ))}
                   </div>

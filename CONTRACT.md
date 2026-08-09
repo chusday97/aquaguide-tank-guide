@@ -148,6 +148,15 @@ interface CompatibilityEvidence {
   affectedSpeciesIds: string[];
   citations: EvidenceSource[];
 }
+
+interface CareActionEvidence {
+  id: string;
+  kind: 'immediate' | 'avoid' | 'observe' | 'recheck' | 'next';
+  text: string;
+  supportSummary: string;
+  reviewStatus: 'draft' | 'reviewed';
+  citations: EvidenceSource[];
+}
 ```
 
 - `evidence_sources` 保存权威来源、机构、URL、来源类型和人工审核状态；搜索结果页不能作为正式来源。

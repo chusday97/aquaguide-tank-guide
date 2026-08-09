@@ -1,19 +1,29 @@
 import assert from 'node:assert/strict';
 import { careTopicsData } from '../src/data/careTopicsData';
-import { getCareFollowUpAction, getCareReferences, getCareReferenceReviewStatus } from '../src/data/careEvidence';
+import { getCareActionEvidence, getCareFollowUpAction, getCareReferences, getCareReferenceReviewStatus } from '../src/data/careEvidence';
 
 assert.equal(careTopicsData.length, 41, '养护内容数量变化时必须重新执行全量审核');
 
 const topicRows = careTopicsData.map(topic => {
   const references = getCareReferences(topic);
+  const actions = getCareActionEvidence(topic);
   assert.ok(topic.firstSteps.length > 0, `${topic.id} 缺少立即动作`);
   assert.ok(getCareFollowUpAction(topic).trim(), `${topic.id} 缺少用户实际可见的唯一下一步`);
   assert.ok(references.length > 0, `${topic.id} 缺少引用来源`);
   assert.ok(references.every(reference => /^https:\/\//.test(reference.url)), `${topic.id} 存在无效来源地址`);
+  assert.ok(actions.length >= topic.firstSteps.length + topic.avoid.length + 1, `${topic.id} 没有覆盖全部主要动作`);
+  assert.equal(new Set(actions.map(action => action.id)).size, actions.length, `${topic.id} 存在重复动作证据 ID`);
+  for (const action of actions) {
+    assert.ok(action.text.trim(), `${action.id} 缺少动作文字`);
+    assert.ok(action.supportSummary.trim(), `${action.id} 缺少支持范围说明`);
+    assert.ok(action.citations.length > 0, `${action.id} 缺少逐动作引用`);
+    assert.ok(action.citations.every(reference => /^https:\/\//.test(reference.url)), `${action.id} 存在无效逐动作来源`);
+  }
   return {
     id: topic.id,
     status: getCareReferenceReviewStatus(topic),
     references: references.length,
+    actions,
   };
 });
 
@@ -46,4 +56,6 @@ assert.deepEqual(dangerousCopy, [], `仍有高风险或已被纠正的旧操作�
 
 const reviewedCount = topicRows.filter(row => row.status === 'reviewed').length;
 const draftCount = topicRows.length - reviewedCount;
-console.log(`care evidence audit: ${topicRows.length} topics, ${reviewedCount} reviewed, ${draftCount} partly pending review, ${issueTypes.length} issue paths checked`);
+const actionRows = topicRows.flatMap(row => row.actions);
+const reviewedActionCount = actionRows.filter(action => action.reviewStatus === 'reviewed').length;
+console.log(`care evidence audit: ${topicRows.length} topics, ${actionRows.length} action citations (${reviewedActionCount} reviewed, ${actionRows.length - reviewedActionCount} pending), ${reviewedCount} fully reviewed topics, ${draftCount} partly pending review, ${issueTypes.length} issue paths checked`);

@@ -64,20 +64,21 @@ try {
   {
     const { page, errors } = await openPage('/care');
     await page.getByText('水质变差怎么办？', { exact: true }).last().click();
-    await page.getByRole('button', { name: '开始问题自查', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '问题自查' }).last();
-    await panel.getByText(/一次填完/).waitFor();
+    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
+    await panel.getByText(/已回答 0\//).waitFor();
     assert(await panel.getByText('水体是否浑浊或有异味？', { exact: true }).count() === 1, '养护自查没有一次展示相关问题');
     const normalOptions = panel.getByRole('button', { name: '没有', exact: true });
     const optionCount = await normalOptions.count();
     assert(optionCount >= 2, '养护自查缺少可选答案');
     for (let index = optionCount - 1; index >= 0; index -= 1) await normalOptions.nth(index).click();
-    const showResult = panel.getByRole('button', { name: '查看自查结果', exact: true });
+    const showResult = panel.getByRole('button', { name: '查看处理方案', exact: true });
     assert(await showResult.isEnabled(), '养护自查填写完整后仍不能生成结果');
     await showResult.click();
-    const visualResult = panel.locator('[data-visual-result-status]');
-    await visualResult.waitFor();
-    assert(await visualResult.getByText(/展开具体判断依据/).count() === 1, '养护自查依据没有默认折叠');
+    const actionResult = panel.locator('[data-care-assessment-result]');
+    await actionResult.waitFor();
+    assert(await actionResult.getByRole('button', { name: '为什么是这个结果？', exact: true }).count() === 1, '养护评测依据没有默认折叠');
+    assert(await actionResult.getByText('现在按顺序做', { exact: true }).count() === 1, '养护评测结果没有直接提供处理步骤');
     assert(errors.length === 0, `养护自查发生页面错误：${errors.join('；')}`);
     await page.close();
   }

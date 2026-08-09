@@ -11,6 +11,17 @@ export interface CareReference {
   reviewStatus: CareReferenceReviewStatus;
 }
 
+export type CareActionKind = 'immediate' | 'avoid' | 'observe' | 'recheck' | 'next';
+
+export interface CareActionEvidence {
+  id: string;
+  kind: CareActionKind;
+  text: string;
+  supportSummary: string;
+  reviewStatus: CareReferenceReviewStatus;
+  citations: CareReference[];
+}
+
 const sources = {
   aquariumManagement: {
     id: 'merck-aquarium-management',
@@ -74,37 +85,77 @@ const uniqueReferences = (items: CareReference[]) => (
   items.filter((item, index, list) => list.findIndex(candidate => candidate.id === item.id) === index)
 );
 
-export const getCareReferences = (topic: CareTopic): CareReference[] => {
-  const text = `${topic.title} ${topic.category} ${topic.summary} ${topic.keywords.join(' ')}`;
+const getActionReferences = (topic: CareTopic, actionText: string): CareReference[] => {
+  const text = `${topic.title} ${topic.category} ${topic.summary} ${topic.keywords.join(' ')} ${actionText}`;
   const references: CareReference[] = [];
 
-  if (/海缸|海水|盐度|比重|珊瑚|海葵|小丑鱼/.test(text)) {
-    references.push(sources.marineGuide, sources.aquariumManagement);
-  }
-  if (/水草|藻|黄叶|烂叶|CO2|光照/.test(text)) {
-    references.push(sources.aquaticPlants, sources.rspcaEnvironment);
-  }
-  if (/喂|饲料|拒食|开口/.test(text)) {
-    references.push(sources.fishNutrition, sources.routineHealth);
-  }
-  if (/水质|白浊|水浑|氨|亚硝酸|换水|自来水|过滤|油膜|浮头|气泵|加热|新缸/.test(text)) {
+  if (/海缸|海水|盐度|比重|珊瑚|海葵|小丑鱼/.test(text)) references.push(sources.marineGuide, sources.aquariumManagement);
+  if (/水草|藻|黄叶|烂叶|CO2|光照|肥料/.test(text)) references.push(sources.aquaticPlants, sources.rspcaEnvironment);
+  if (/喂|饲料|拒食|开口|残饵|营养/.test(text)) references.push(sources.fishNutrition, sources.routineHealth);
+  if (/水质|白浊|水浑|氨|亚硝酸|硝酸|换水|自来水|除氯|过滤|滤材|油膜|浮头|增氧|打氧|气泵|温度|加热|新缸/.test(text)) {
     references.push(sources.aquariumManagement, sources.fishHome, sources.rspcaEnvironment);
   }
-  if (/死亡|白点|烂尾|白毛|红鳃|异常|检疫|隔离|入缸/.test(text)) {
+  if (/死亡|白点|烂尾|白毛|红鳃|异常|检疫|隔离|呼吸|兽医|用药|药浴/.test(text)) {
     references.push(sources.aquariumManagement, sources.routineHealth);
   }
-  if (/混养|打架|追咬|密度|多少条|领地/.test(text)) {
-    references.push(sources.fishHome, sources.aquariumManagement);
-  }
-  if (/怀孕|繁殖|鱼苗|公母|生产/.test(text)) {
-    references.push(sources.routineHealth);
-  }
+  if (/混养|打架|追咬|密度|领地|躲避/.test(text)) references.push(sources.fishHome, sources.aquariumManagement);
+  if (/怀孕|繁殖|鱼苗|母鱼|产后|生产|卵黄囊/.test(text)) references.push(sources.routineHealth);
 
   return uniqueReferences(references.length > 0 ? references : [sources.aquariumManagement]);
 };
 
+const needsSpecialistReview = (topic: CareTopic, actionText: string) => {
+  const text = `${topic.title} ${topic.category} ${actionText}`;
+  return /水草|藻|黄叶|烂叶|CO2|肥料|怀孕|繁殖|鱼苗|母鱼|产后|生产|卵黄囊|珊瑚|海葵/.test(text);
+};
+
+const buildActionEvidence = (
+  topic: CareTopic,
+  kind: CareActionKind,
+  text: string,
+  index: number,
+): CareActionEvidence => {
+  const citations = getActionReferences(topic, text);
+  const reviewStatus = citations.every(reference => reference.reviewStatus === 'reviewed') && !needsSpecialistReview(topic, text)
+    ? 'reviewed'
+    : 'draft';
+  return {
+    id: `${topic.id}:${kind}:${index + 1}`,
+    kind,
+    text: text.trim(),
+    supportSummary: reviewStatus === 'reviewed'
+      ? `这些来源直接支持“${text.trim()}”所采用的基础养护原则。`
+      : `“${text.trim()}”已绑定基础资料，但具体家庭操作仍需专项人工复核。`,
+    reviewStatus,
+    citations,
+  };
+};
+
+export const getCareActionEvidenceForText = (
+  topic: CareTopic,
+  kind: CareActionKind,
+  text: string,
+  index = 0,
+) => buildActionEvidence(topic, kind, text, index);
+
+export const getCareActionEvidence = (topic: CareTopic): CareActionEvidence[] => {
+  const actions: CareActionEvidence[] = [
+    ...topic.firstSteps.map((text, index) => buildActionEvidence(topic, 'immediate', text, index)),
+    ...topic.avoid.map((text, index) => buildActionEvidence(topic, 'avoid', text, index)),
+    ...topic.observe.map((text, index) => buildActionEvidence(topic, 'observe', text, index)),
+    ...topic.diagnoseWhen.map((text, index) => buildActionEvidence(topic, 'recheck', text, index)),
+  ];
+  const nextText = getCareFollowUpAction(topic);
+  if (nextText) actions.push(buildActionEvidence(topic, 'next', nextText, 0));
+  return actions;
+};
+
+export const getCareReferences = (topic: CareTopic): CareReference[] => {
+  return uniqueReferences(getCareActionEvidence(topic).flatMap(action => action.citations));
+};
+
 export const getCareReferenceReviewStatus = (topic: CareTopic): CareReferenceReviewStatus => (
-  getCareReferences(topic).every(reference => reference.reviewStatus === 'reviewed') ? 'reviewed' : 'draft'
+  getCareActionEvidence(topic).every(action => action.reviewStatus === 'reviewed') ? 'reviewed' : 'draft'
 );
 
 export const getCareFollowUpAction = (topic: CareTopic, isEn = false): string => {
