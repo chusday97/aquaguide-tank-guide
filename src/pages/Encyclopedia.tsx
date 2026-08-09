@@ -1161,7 +1161,7 @@ export default function Encyclopedia() {
     setTargetAquariumId(activeAquarium.id);
     setOwnedFishIds(prev => {
       const next = new Set(prev);
-      normalizedItems.forEach(item => next.add(item.fishId));
+      recorded.savedItems.forEach(item => next.add(item.fishId));
       return next;
     });
     if (recorded.failedItems.length > 0) {

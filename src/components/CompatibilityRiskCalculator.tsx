@@ -227,8 +227,8 @@ const getResultNextAction = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Remove red-flagged species below and recalculate.' : '先移除下方红色对象，再重新计算组合。';
   if (level === 'insufficient_data') return isEn ? 'Fill in missing details before deciding to add.' : '先补充缺失信息，再决定是否加入。';
-  if (level === 'caution') return isEn ? 'Keep only checked species; review warnings before adding.' : '只保留下方勾选对象，添加前确认提醒。';
-  if (level === 'compatible') return isEn ? 'Checked species are compatible to be added to this tank.' : '可添加下方勾选的新生物到当前鱼缸。';
+  if (level === 'caution') return isEn ? 'Review the warnings. Record only after the livestock is actually in the tank.' : '先确认风险；只有生物实际入缸后再记录。';
+  if (level === 'compatible') return isEn ? 'The plan is compatible. Record it only after the livestock is actually in the tank.' : '规划判断通过；只有生物实际入缸后再记录。';
   return isEn ? 'Select at least 2 species first.' : '先选择至少 2 种生物。';
 };
 
@@ -236,17 +236,17 @@ const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Handle Red Flags First' : '先处理阻断对象';
   if (level === 'insufficient_data') return isEn ? 'Fill in Details First' : '先补充判断信息';
-  if (level === 'caution') return isEn ? 'Confirm and Add Slowly' : '确认后少量加入';
-  if (level === 'compatible') return isEn ? 'Confirm Add Species' : '确认加入对象';
+  if (level === 'caution') return isEn ? 'Review Before Stocking' : '入缸前确认风险';
+  if (level === 'compatible') return isEn ? 'Plan Confirmed' : '规划判断完成';
   return isEn ? 'Select Species First' : '先选择生物';
 };
 
 const getPrimaryResultButtonLabel = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
-    if (level === 'compatible') return isEn ? 'Add Selected Species' : '添加选中的新生物';
+    if (level === 'compatible') return isEn ? 'Already stocked? Record now' : '已经实际入缸，记录下来';
   if (level === 'not_recommended') return isEn ? 'Reselect Stocking Mix' : '重新选择组合';
   if (level === 'insufficient_data') return isEn ? 'Update Tank Details' : '补充鱼缸信息';
-  if (level === 'caution') return isEn ? 'Acknowledge & Add' : '确认风险后添加';
+  if (level === 'caution') return isEn ? 'Review stocking risks' : '确认实际入缸风险';
   return isEn ? 'Continue Selecting' : '继续选择';
 };
 
@@ -856,7 +856,7 @@ export function CompatibilityRiskCalculator({
       const names = pendingAddableSpecies.map(fish => fish.name).join('、');
       setAddedSpeciesIds(prev => Array.from(new Set([...prev, ...addedIds])));
       setSelectedAddableSpeciesIds(prev => prev.filter(id => !addedIds.includes(id)));
-      setResultFeedback((response && 'message' in response && response.message) || `已加入 ${pendingAddableSpecies.length} 种生物到当前鱼缸：${names}。`);
+      setResultFeedback((response && 'message' in response && response.message) || `已记录 ${pendingAddableSpecies.length} 种实际入缸生物：${names}。`);
     } catch (error) {
       setResultFeedback(error instanceof Error ? error.message : '添加失败，请稍后重试。');
     } finally {
@@ -1315,7 +1315,7 @@ export function CompatibilityRiskCalculator({
       mainConflicts={mainConflicts}
       actionHints={actionHints}
       selectedSpecies={selectedSpecies}
-      acceptLabel={confirmingCautionAdd ? (isEn ? 'Confirm add' : '确认添加') : (isEn ? 'Got it' : '我知道了')}
+      acceptLabel={confirmingCautionAdd ? (isEn ? 'Actually stocked, record now' : '已经实际入缸，确认记录') : (isEn ? 'Got it' : '我知道了')}
       onAccept={() => {
         if (confirmingCautionAdd) {
           void performAddToAquarium();

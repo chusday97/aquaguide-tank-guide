@@ -189,39 +189,88 @@ aquariumsRouter.post('/aquariums/:id/species', asyncRoute(async (request, respon
   if (speciesError) throwDatabaseError(speciesError, '暂时无法核对物种。');
   if (!species) throw new ApiError(404, 'NOT_FOUND', '没有找到这个物种。');
 
-  const id = deterministicUuid(`${userId}:${aquariumId}:species:${idempotency.key}`);
-  const { data, error } = await client
+  const { data: existingRecord, error: existingError } = await client
     .from('aquarium_species')
-    .insert({
-      id,
-      aquarium_id: aquariumId,
-      species_id: species.id,
-      species_catalog_key: species.catalog_key,
+    .select('id')
+    .eq('aquarium_id', aquariumId)
+    .eq('species_catalog_key', species.catalog_key)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (existingError) throwDatabaseError(existingError, '暂时无法核对缸内物种。');
+
+  let recordId = existingRecord?.id as string | undefined;
+  if (!recordId) {
+    const candidateId = deterministicUuid(`${userId}:${aquariumId}:species:${idempotency.key}`);
+    const { data: insertedRecord, error: insertError } = await client
+      .from('aquarium_species')
+      .insert({
+        id: candidateId,
+        aquarium_id: aquariumId,
+        species_id: species.id,
+        species_catalog_key: species.catalog_key,
+        quantity: parsed.data.quantity,
+        entry_date: parsed.data.entryDate,
+        last_water_change_at: parsed.data.lastWaterChangeAt,
+      })
+      .select('id')
+      .maybeSingle();
+    if (insertError?.code === '23505') {
+      const { data: concurrentRecord, error: concurrentError } = await client
+        .from('aquarium_species')
+        .select('id')
+        .eq('aquarium_id', aquariumId)
+        .eq('species_catalog_key', species.catalog_key)
+        .is('deleted_at', null)
+        .maybeSingle();
+      if (concurrentError) throwDatabaseError(concurrentError, '暂时无法恢复缸内物种记录。');
+      recordId = concurrentRecord?.id as string | undefined;
+    } else if (insertError) {
+      throwDatabaseError(insertError, '物种没有加入鱼缸。');
+    } else {
+      recordId = insertedRecord?.id as string | undefined;
+    }
+  }
+  if (!recordId) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '物种记录已经提交，但暂时无法确认保存结果。');
+
+  const batchId = deterministicUuid(`${userId}:${aquariumId}:${species.catalog_key}:batch:${idempotency.key}`);
+  const { data: existingBatch, error: existingBatchError } = await client
+    .from('aquarium_species_batches')
+    .select('id,aquarium_species_id')
+    .eq('id', batchId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (existingBatchError) throwDatabaseError(existingBatchError, '暂时无法核对体态批次。');
+  if (existingBatch && existingBatch.aquarium_species_id !== recordId) {
+    throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一条缸内记录。');
+  }
+  if (!existingBatch) {
+    const { error: batchError } = await client.from('aquarium_species_batches').insert({
+      id: batchId,
+      aquarium_species_id: recordId,
       quantity: parsed.data.quantity,
       entry_date: parsed.data.entryDate,
-      last_water_change_at: parsed.data.lastWaterChangeAt,
-    })
-    .select('*')
-    .single();
-  if (error || !data) throwDatabaseError(error, '物种没有加入鱼缸。');
-
-  const batchId = deterministicUuid(`${id}:batch:initial`);
-  const { error: batchError } = await client.from('aquarium_species_batches').insert({
-    id: batchId,
-    aquarium_species_id: id,
-    quantity: parsed.data.quantity,
-    entry_date: parsed.data.entryDate,
-    life_stage: parsed.data.lifeStage,
-    reproductive_state: parsed.data.reproductiveState,
-    state_updated_at: new Date().toISOString(),
-  });
-  if (batchError) {
-    await client.from('aquarium_species').update({ deleted_at: new Date().toISOString() }).eq('id', id).is('deleted_at', null);
-    throwDatabaseError(batchError, '物种已校验，但首个体态批次没有保存成功。');
+      life_stage: parsed.data.lifeStage,
+      reproductive_state: parsed.data.reproductiveState,
+      state_updated_at: new Date().toISOString(),
+    });
+    if (batchError?.code === '23505') {
+      const { data: replayedBatch, error: replayedBatchError } = await client
+        .from('aquarium_species_batches')
+        .select('id,aquarium_species_id')
+        .eq('id', batchId)
+        .is('deleted_at', null)
+        .maybeSingle();
+      if (replayedBatchError) throwDatabaseError(replayedBatchError, '暂时无法恢复体态批次。');
+      if (!replayedBatch || replayedBatch.aquarium_species_id !== recordId) {
+        throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一条体态批次。');
+      }
+    } else if (batchError) {
+      throwDatabaseError(batchError, '物种已校验，但体态批次没有保存成功。');
+    }
   }
 
-  const created = await getOwnedSpeciesRecord(client, aquariumId, id);
-  await finishIdempotentWrite(request, idempotency, 'aquarium_species', id, 201);
+  const created = await getOwnedSpeciesRecord(client, aquariumId, recordId);
+  await finishIdempotentWrite(request, idempotency, 'aquarium_species', recordId, 201);
   return sendData(request, response, mapAquariumSpecies(created), 201);
 }));
 

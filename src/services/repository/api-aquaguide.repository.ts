@@ -256,32 +256,17 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
 
   async addLivestock(input: LivestockAddCommand) {
     if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('记录数量必须是正整数。');
-    const current = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
-    const existing = current.species.find(item => item.speciesCatalogKey === input.speciesCatalogKey);
-    if (existing) {
-      await apiRequest(`/aquariums/${input.aquariumId}/species/${existing.id}/batches`, {
-        method: 'POST',
-        body: {
-          quantity: input.quantity,
-          entryDate: input.entryDate.slice(0, 10),
-          lifeStage: input.lifeStage,
-          reproductiveState: input.reproductiveState,
-        },
-        idempotencyKey: input.operationId,
-      });
-    } else {
-      await apiRequest(`/aquariums/${input.aquariumId}/species`, {
-        method: 'POST',
-        body: {
-          speciesCatalogKey: input.speciesCatalogKey,
-          quantity: input.quantity,
-          entryDate: input.entryDate.slice(0, 10),
-          lifeStage: input.lifeStage,
-          reproductiveState: input.reproductiveState,
-        },
-        idempotencyKey: input.operationId,
-      });
-    }
+    await apiRequest(`/aquariums/${input.aquariumId}/species`, {
+      method: 'POST',
+      body: {
+        speciesCatalogKey: input.speciesCatalogKey,
+        quantity: input.quantity,
+        entryDate: input.entryDate.slice(0, 10),
+        lifeStage: input.lifeStage,
+        reproductiveState: input.reproductiveState,
+      },
+      idempotencyKey: input.operationId,
+    });
     const saved = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
     return this.rememberAquarium(saved);
   }

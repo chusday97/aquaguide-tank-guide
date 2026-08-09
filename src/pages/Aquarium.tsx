@@ -1301,13 +1301,13 @@ export default function AquariumManager() {
         const [repositoryAquariums, repositoryReminders, repositoryEvents] = resolvedMode === 'cloud'
           ? await Promise.all([repository.getAquariums(), repository.getCareReminders(), repository.getCareEvents()])
           : [loadAppStateFromStorage().aquariums, await repository.getCareReminders(), await repository.getCareEvents()];
-        if (!active || repositoryAquariums.length === 0) return;
+        if (!active) return;
         if (resolvedMode === 'cloud') patchLocalAppState({ cloudMigrationConfirmed: true });
         const normalized = normalizeAquariumPlants(repositoryAquariums);
         setAquariums(normalized);
         setCareRemindersState(repositoryReminders);
         setCareTimelineEvents(repositoryEvents);
-        setActiveId(current => normalized.some(item => item.id === current) ? current : normalized[0].id);
+        setActiveId(current => normalized.some(item => item.id === current) ? current : normalized[0]?.id || '');
       } catch (error) {
         if (active) showToast(error instanceof Error ? error.message : (isEn ? 'Cloud aquarium data could not be loaded.' : '云端鱼缸暂时无法读取。'), 'error');
       }
@@ -1399,13 +1399,18 @@ export default function AquariumManager() {
   };
 
   useEffect(() => {
-    const appState = loadAppStateFromStorage();
-    if (appState.aquariums.length > 0) {
-      const parsed = normalizeAquariumPlants(appState.aquariums);
-      setAquariums(parsed);
-      if (parsed.length > 0) setActiveId(appState.currentAquariumId && parsed.some(item => item.id === appState.currentAquariumId) ? appState.currentAquariumId : parsed[0].id);
-      saveAppStateToStorage({ ...appState, aquariums: parsed, currentAquariumId: appState.currentAquariumId || parsed[0]?.id || '' });
-    } else {
+    let active = true;
+    const loadLocalAquariums = async () => {
+      const mode = await resolveRepositoryMode();
+      if (!active || mode === 'cloud') return;
+      const appState = loadAppStateFromStorage();
+      if (appState.aquariums.length > 0) {
+        const parsed = normalizeAquariumPlants(appState.aquariums);
+        setAquariums(parsed);
+        setActiveId(appState.currentAquariumId && parsed.some(item => item.id === appState.currentAquariumId) ? appState.currentAquariumId : parsed[0]?.id || '');
+        saveAppStateToStorage({ ...appState, aquariums: parsed, currentAquariumId: appState.currentAquariumId || parsed[0]?.id || '' });
+        return;
+      }
       const oldSaved = localStorage.getItem('myAquarium');
       const oldAquarium = safeJsonParse<Partial<Aquarium> | null>(oldSaved, null);
       const initialAquariums = normalizeAquariumPlants(oldAquarium ? [oldAquarium] : []);
@@ -1414,8 +1419,12 @@ export default function AquariumManager() {
       if (oldAquarium) {
         saveAppStateToStorage({ ...appState, aquariums: initialAquariums, currentAquariumId: initialAquariums[0].id });
       }
-    }
-  }, []);
+    };
+    void loadLocalAquariums().catch(error => {
+      if (active) showToast(error instanceof Error ? error.message : (isEn ? 'Local aquarium data could not be loaded.' : '本地鱼缸数据暂时无法读取。'), 'error');
+    });
+    return () => { active = false; };
+  }, [isEn, showToast]);
 
   const saveAquariums = (newAquariums: Aquarium[]) => {
     const saved = persistAquariums(newAquariums, activeId || newAquariums[0]?.id || '');
@@ -2542,7 +2551,13 @@ export default function AquariumManager() {
       });
       smartSimulationOperationRef.current = { key: '', id: '' };
       setAquariums(current => current.map(aquarium => aquarium.id === result.aquarium.id ? result.aquarium : aquarium));
-      await recordAddedSpeciesBatches(activeAquarium, result.aquarium);
+      try {
+        await recordAddedSpeciesBatches(activeAquarium, result.aquarium);
+      } catch {
+        showToast(Boolean(i18n.language?.startsWith('en'))
+          ? 'Livestock was recorded, but the timeline will refresh later.'
+          : '生物已经记录；时间线暂未更新，稍后可再查看。', 'error');
+      }
     } catch (error) {
       showToast(error instanceof Error ? error.message : '当前模拟没有记录成功。', 'error');
       return;

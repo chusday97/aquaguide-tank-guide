@@ -15,7 +15,7 @@ import {
   profilePreferencesUpdateSchema,
 } from '../packages/contracts/src/index';
 import { clampAiPriority, highestRisk } from '../packages/domain-rules/src/index';
-import { camelize, deterministicUuid, snakeize } from '../apps/api/src/data-utils';
+import { camelize, deterministicUuid, getRequestHash, snakeize } from '../apps/api/src/data-utils';
 
 assert.equal(aquariumCreateSchema.safeParse({ name: '客厅缸', lengthCm: 60 }).success, true);
 assert.equal(aquariumCreateSchema.safeParse({ name: '', lengthCm: -1 }).success, false);
@@ -71,6 +71,7 @@ const routes = [
 ].join('\n');
 const livestockDialogSource = readFileSync(resolve(import.meta.dirname, '../src/components/aquarium/LivestockRosterDialog.tsx'), 'utf8');
 const aquariumPageSource = readFileSync(resolve(import.meta.dirname, '../src/pages/Aquarium.tsx'), 'utf8');
+const apiRepositorySource = readFileSync(resolve(import.meta.dirname, '../src/services/repository/api-aquaguide.repository.ts'), 'utf8');
 
 for (const route of [
   '/aquariums',
@@ -101,6 +102,40 @@ assert.match(livestockDialogSource, /operationId: removal\.operationId/);
 assert.match(livestockDialogSource, /markLivestockRemovalSubmitted\(current\)/);
 assert.match(aquariumPageSource, /operationId: input\.operationId/);
 assert.doesNotMatch(aquariumPageSource, /removeLivestockQuantity[\s\S]{0,800}crypto\.randomUUID/);
+
+const addLivestockMethod = apiRepositorySource.slice(
+  apiRepositorySource.indexOf('async addLivestock'),
+  apiRepositorySource.indexOf('async saveAquarium'),
+);
+assert.match(addLivestockMethod, /`\/aquariums\/\$\{input\.aquariumId\}\/species`/);
+assert.doesNotMatch(addLivestockMethod, /species\/\$\{existing\.id\}\/batches/);
+const speciesCreateRoute = routes.slice(
+  routes.indexOf("aquariumsRouter.post('/aquariums/:id/species'"),
+  routes.indexOf("aquariumsRouter.patch('/aquariums/:id/species/:recordId'"),
+);
+assert.match(speciesCreateRoute, /species_catalog_key.*batch:\$\{idempotency\.key\}/s);
+assert.match(speciesCreateRoute, /existingBatch/);
+assert.match(speciesCreateRoute, /replayedBatch/);
+
+const requestShape = {
+  method: 'POST',
+  baseUrl: '/api/v1',
+  path: '/aquariums/00000000-0000-4000-8000-000000000001/species',
+  body: { speciesCatalogKey: 'sp_0001', quantity: 1, entryDate: '2026-08-09' },
+} as Parameters<typeof getRequestHash>[0];
+assert.equal(
+  getRequestHash(requestShape),
+  getRequestHash({ ...requestShape } as Parameters<typeof getRequestHash>[0]),
+  'response-loss retry must keep the same API request hash',
+);
+const parentIds = new Set<string>();
+const batchIds = new Set<string>();
+for (let attempt = 0; attempt < 2; attempt += 1) {
+  parentIds.add(deterministicUuid('user:tank:species:operation'));
+  batchIds.add(deterministicUuid('user:tank:sp_0001:batch:operation'));
+}
+assert.equal(parentIds.size, 1, 'response-loss retry must reuse the parent record identity');
+assert.equal(batchIds.size, 1, 'response-loss retry must reuse the batch identity');
 
 const atomicRemovalMigration = readFileSync(resolve(import.meta.dirname, '../supabase/migrations/202607260002_atomic_livestock_removal.sql'), 'utf8');
 assert.match(atomicRemovalMigration, /create or replace function public\.remove_aquarium_species_batch_quantity/);

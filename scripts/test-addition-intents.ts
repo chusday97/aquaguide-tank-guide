@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import type { Aquarium } from '../src/types';
 import { selectAquariumSnapshot } from '../src/services/aquarium/aquarium-selection.service';
 import { getSpeciesAdditionPolicy } from '../src/services/aquarium/species-addition-policy';
@@ -27,5 +28,10 @@ assert.equal(
   'cloud-b',
   'a cloud aquarium must be selected without relying on a localStorage copy',
 );
+
+const calculatorSource = readFileSync(new URL('../src/components/CompatibilityRiskCalculator.tsx', import.meta.url), 'utf8');
+assert.match(calculatorSource, /已经实际入缸，记录下来/);
+assert.match(calculatorSource, /已经实际入缸，确认记录/);
+assert.doesNotMatch(calculatorSource, /添加选中的新生物|确认风险后添加/);
 
 console.log('addition intent policies verified: facts never block and plans remain safety-gated');
