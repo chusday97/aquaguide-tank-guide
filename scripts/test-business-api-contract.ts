@@ -115,6 +115,7 @@ const speciesCreateRoute = routes.slice(
 );
 assert.match(speciesCreateRoute, /client\.rpc\('add_aquarium_livestock'/);
 assert.match(speciesCreateRoute, /operation_request_hash: getRequestHash\(request\)/);
+assert.match(speciesCreateRoute, /throwLivestockAdditionRpcError\(operationError\)/);
 assert.doesNotMatch(speciesCreateRoute, /\.from\('aquarium_species'\)\s*\.insert/);
 assert.doesNotMatch(speciesCreateRoute, /\.from\('aquarium_species_batches'\)\s*\.insert/);
 

@@ -32,6 +32,7 @@ import {
 } from '../data-utils';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { resolveLivestockMemorialReplay } from '../livestock-memorial-replay';
+import { throwLivestockAdditionRpcError } from '../livestock-addition-error';
 
 type DbRow = Record<string, any>;
 
@@ -188,7 +189,7 @@ aquariumsRouter.post('/aquariums/:id/species', asyncRoute(async (request, respon
     operation_key: operationKey,
     operation_request_hash: getRequestHash(request),
   });
-  if (operationError) throwDatabaseError(operationError, '物种和体态批次没有保存成功。');
+  if (operationError) throwLivestockAdditionRpcError(operationError);
   const savedRecordId = operationRows?.[0]?.species_record_id as string | undefined;
   if (!savedRecordId) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '物种记录已经提交，但暂时无法确认保存结果。');
 
