@@ -168,11 +168,11 @@ export function LivestockRosterDialog({
             actions={(
               editingRecordId ? undefined : (
                 <>
-                <button type="button" disabled={isCreatingShare} onClick={onCreateShare} aria-label={isEn ? 'Create share report' : '生成分享报告'} title={isEn ? 'Create share report' : '生成分享报告'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
+                <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} aria-label={isEn ? 'Sharing is coming' : '分享功能建设中'} title={isEn ? 'Sharing is coming' : '分享功能建设中'} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
                   <Share2 className="h-4 w-4" />
                 </button>
-                <button type="button" onClick={onDownloadArchive} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-xs font-black text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                  <Download className="h-4 w-4" />{isEn ? 'Export archive' : '导出档案'}
+                <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 text-xs font-black text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
+                  <Download className="h-4 w-4" />{isEn ? 'Export · Coming soon' : '导出 · 建设中'}
                 </button>
                 </>
               )
@@ -205,7 +205,7 @@ export function LivestockRosterDialog({
                     <div className="text-sm font-black">{isEn ? `My aquarium is ${aquariumAgeDays} days old` : `我的鱼缸养了 ${aquariumAgeDays} 天`}</div>
                     <div className="mt-0.5 text-xs font-semibold opacity-70">{isEn ? 'Milestone cards remain available after day 100.' : '百日之后持续可见，可随时重新生成。'}</div>
                   </div>
-                  <button type="button" onClick={onDownloadMilestone} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-full bg-white px-3 text-xs font-black text-amber-800 shadow-sm"><Download className="h-4 w-4" />{isEn ? 'Export' : '导出'}</button>
+                  <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-3 text-xs font-black text-slate-400 shadow-none"><Download className="h-4 w-4" />{isEn ? 'Export' : '导出'}</button>
                 </div>
               )}
             </section>}

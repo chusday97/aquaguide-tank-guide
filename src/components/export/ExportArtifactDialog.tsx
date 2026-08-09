@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import { Download, LoaderCircle } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { downloadArtifactContentAsPng, safeExportFileName } from '../../services/export/png-export.service';
 
 export type ExportSection = {
   title: string;
@@ -31,29 +29,15 @@ export function ExportArtifactDialog({
   content: ExportArtifactContent | null;
   isEn?: boolean;
 }) {
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [error, setError] = useState('');
   if (!content) return null;
 
-  const download = async () => {
-    if (isDownloading) return;
-    setIsDownloading(true);
-    setError('');
-    try {
-      await downloadArtifactContentAsPng(content, safeExportFileName(content.fileName), isEn ? 'en' : 'zh-CN');
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : (isEn ? 'Download failed.' : '图片下载失败，请稍后重试。'));
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
   return (
-    <Dialog open={open} onOpenChange={(next) => !isDownloading && onOpenChange(next)}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90dvh] w-[94vw] max-w-[760px] flex-col overflow-hidden rounded-[24px] bg-[#eef3f0] p-0">
         <DialogHeader className="border-b border-white bg-white px-5 py-4 text-left">
-          <DialogTitle className="text-lg font-black">{isEn ? 'Download image' : '下载图片'}</DialogTitle>
-          <DialogDescription>{isEn ? 'Preview the privacy-safe card before saving.' : '保存前可预览本次生成的记录卡。'}</DialogDescription>
+          <DialogTitle className="text-lg font-black text-slate-600">{isEn ? 'Image export · Coming soon' : '图片导出 · 建设中'}</DialogTitle>
+          <DialogDescription>{isEn ? 'Image saving is being completed.' : '图片保存功能正在完善。'}</DialogDescription>
         </DialogHeader>
         <div className="min-h-0 overflow-y-auto p-4">
           <div data-export-artifact className="mx-auto w-full max-w-[680px] rounded-[28px] border-2 border-[#173e33] bg-white p-8 text-[#10231b]">
@@ -83,12 +67,11 @@ export function ExportArtifactDialog({
               {content.disclaimer}<br />{new Date().toLocaleString(isEn ? 'en' : 'zh-CN')}
             </div>
           </div>
-          {error && <p role="alert" className="mt-3 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>}
         </div>
         <div className="border-t border-white bg-white p-4">
-          <Button type="button" onClick={() => void download()} disabled={isDownloading} className="min-h-11 w-full rounded-full font-black">
-            {isDownloading ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-            {isDownloading ? (isEn ? 'Generating…' : '正在生成…') : (isEn ? 'Save PNG' : '保存 PNG')}
+          <Button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))} className="min-h-11 w-full rounded-full border border-slate-200 bg-slate-100 font-black text-slate-400 shadow-none hover:bg-slate-100">
+            <Download className="mr-2 h-4 w-4" />
+            {isEn ? 'Image export · Coming soon' : '图片导出 · 建设中'}
           </Button>
         </div>
       </DialogContent>

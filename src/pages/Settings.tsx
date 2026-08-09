@@ -1,18 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, ChevronRight, Download, Languages, Link2, MessageSquareText, RotateCcw, Settings2, ShieldCheck, Trash2 } from 'lucide-react';
+import { Check, ChevronRight, Languages, Link2, MessageSquareText, RotateCcw, Settings2, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { setLocale, type SupportedLocale } from '../i18n';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { restartOnboarding } from '../services/onboarding/onboarding.service';
 import { submitFeedback } from '../services/feedback/feedback.service';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
-import {
-  listAquariumShareReports,
-  revokeAquariumShareReport,
-  type AquariumShareReportListItem,
-} from '../services/share/aquarium-share-report.service';
-import { AquaGuideApiError } from '../services/api/api-client';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const localeOptions: Array<{ locale: SupportedLocale; label: string }> = [
   { locale: 'zh-CN', label: '简体中文' },
@@ -31,11 +24,6 @@ export default function SettingsPage() {
   const [feedbackDeliveryStatus, setFeedbackDeliveryStatus] = useState<'not_configured' | 'sent' | 'failed' | null>(null);
   const [feedbackError, setFeedbackError] = useState('');
   const feedbackInputRef = useRef<HTMLTextAreaElement | null>(null);
-  const [shareReports, setShareReports] = useState<AquariumShareReportListItem[]>([]);
-  const [shareStatus, setShareStatus] = useState<'loading' | 'ready' | 'auth' | 'error'>('loading');
-  const [shareError, setShareError] = useState('');
-  const [revokingShareId, setRevokingShareId] = useState('');
-  const [pendingRevokeShareId, setPendingRevokeShareId] = useState('');
   const hasUnsavedFeedback = feedbackMessage.trim().length > 0;
 
   useEffect(() => {
@@ -52,38 +40,7 @@ export default function SettingsPage() {
     ? () => window.confirm(isEn ? 'Your feedback has not been submitted. Leave this page?' : '反馈还没有提交，确定要离开吗？')
     : null), [hasUnsavedFeedback, registerNavigationGuard]);
 
-  useEffect(() => {
-    let active = true;
-    void listAquariumShareReports().then(result => {
-      if (!active) return;
-      setShareReports(result.items);
-      setShareStatus('ready');
-    }).catch(error => {
-      if (!active) return;
-      if (error instanceof AquaGuideApiError && error.code === 'AUTH_REQUIRED') {
-        setShareStatus('auth');
-        return;
-      }
-      setShareError(isEn ? 'Shared reports are temporarily unavailable.' : (error instanceof Error ? error.message : '分享记录暂时无法加载。'));
-      setShareStatus('error');
-    });
-    return () => { active = false; };
-  }, []);
 
-  const revokeShare = async (id: string) => {
-    if (revokingShareId) return;
-    setRevokingShareId(id);
-    setShareError('');
-    try {
-      const result = await revokeAquariumShareReport(id);
-      setShareReports(current => current.map(item => item.id === id ? { ...item, revokedAt: result.revokedAt } : item));
-      setPendingRevokeShareId('');
-    } catch (error) {
-      setShareError(isEn ? 'The report link could not be revoked. Try again.' : (error instanceof Error ? error.message : '分享链接暂时无法撤销。'));
-    } finally {
-      setRevokingShareId('');
-    }
-  };
 
   const handleFeedbackSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -187,42 +144,16 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section id="shared-reports" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5" aria-labelledby="settings-share-title">
+          <section id="shared-reports" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200 bg-slate-50 p-4 text-slate-500 shadow-none sm:p-5" aria-labelledby="settings-share-title">
             <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-sky-50 text-sky-700"><Link2 className="h-5 w-5" /></span>
-              <div>
-                <h2 id="settings-share-title" className="text-base font-black text-ink">{isEn ? 'Shared reports' : '已分享报告'}</h2>
-                <p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{isEn ? 'Privacy-safe links expire after 7 days and can be revoked early.' : '脱敏链接保留 7 天，可提前撤销。原始链接只在创建时显示。'}</p>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-slate-100 text-slate-400"><Link2 className="h-5 w-5" /></span>
+              <div className="min-w-0 flex-1">
+                <div className="inline-flex rounded-full bg-slate-200/70 px-2.5 py-1 text-[10px] font-black text-slate-500">{isEn ? 'COMING SOON' : '功能建设中'}</div>
+                <h2 id="settings-share-title" className="mt-2 text-base font-black text-slate-600">{isEn ? 'Sharing & privacy' : '分享与隐私'}</h2>
+                <p className="mt-1 text-xs font-semibold leading-5 text-slate-400">{isEn ? 'Share links and privacy controls are being completed.' : '分享链接与隐私管理正在完善。'}</p>
               </div>
             </div>
-            <button type="button" onClick={() => navigateToRoute('/aquarium?action=exports')} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-800 px-4 text-sm font-black text-white hover:bg-emerald-900"><Download className="h-4 w-4" />{isEn ? 'Open export & share' : '打开导出与分享'}</button>
-            {shareStatus === 'loading' && <p className="mt-4 text-sm font-bold text-ink/45">{isEn ? 'Loading…' : '正在加载…'}</p>}
-            {shareStatus === 'auth' && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[14px] bg-slate-50 px-4 py-3"><p className="text-sm font-semibold text-ink/60">{isEn ? 'Sign in to create and revoke privacy-safe links.' : '登录后可以生成和撤销脱敏报告链接。'}</p><button type="button" onClick={() => navigateToRoute('/login')} className="min-h-11 rounded-full bg-emerald-700 px-4 text-sm font-black text-white">{isEn ? 'Sign in' : '去登录'}</button></div>}
-            {shareStatus === 'ready' && shareReports.length === 0 && <p className="mt-4 rounded-[14px] bg-slate-50 px-4 py-3 text-sm font-semibold text-ink/55">{isEn ? 'No shared reports. Create one from the aquarium archive.' : '还没有分享报告，可从鱼缸档案生成。'}</p>}
-            {shareStatus === 'ready' && shareReports.length > 0 && (
-              <div className="mt-4 overflow-hidden rounded-[14px] border border-slate-200">
-                {shareReports.map(report => {
-                  const revoked = Boolean(report.revokedAt);
-                  const expired = new Date(report.expiresAt).getTime() <= Date.now();
-                  return (
-                    <article key={report.id} className="grid min-w-0 gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-                      <div className="min-w-0">
-                        <div className="text-sm font-black text-ink">{isEn ? 'My aquarium report' : '我的鱼缸报告'}</div>
-                        <div className="mt-1 break-words text-xs font-semibold text-ink/45">
-                          {revoked ? (isEn ? 'Revoked' : '已撤销') : expired ? (isEn ? 'Expired' : '已过期') : `${isEn ? 'Valid until' : '有效至'} ${new Date(report.expiresAt).toLocaleString(isEn ? 'en' : 'zh-CN')}`}
-                        </div>
-                      </div>
-                      {!revoked && !expired && (
-                        <button type="button" disabled={revokingShareId === report.id} onClick={() => setPendingRevokeShareId(report.id)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-rose-50 px-4 text-xs font-black text-rose-700 disabled:opacity-50">
-                          <Trash2 className="h-4 w-4" />{revokingShareId === report.id ? (isEn ? 'Revoking…' : '撤销中…') : (isEn ? 'Revoke link' : '撤销链接')}
-                        </button>
-                      )}
-                    </article>
-                  );
-                })}
-              </div>
-            )}
-            {(shareStatus === 'error' || shareError) && <p role="alert" className="mt-4 rounded-[14px] bg-rose-50 p-3 text-sm font-bold text-rose-700">{shareError}</p>}
+            <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="mt-4 min-h-11 rounded-full border border-slate-200 bg-slate-100 px-4 text-sm font-black text-slate-400 shadow-none">{isEn ? 'View details' : '查看说明'}</button>
           </section>
 
           <section id="feedback" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5" aria-labelledby="settings-feedback-title">
@@ -277,18 +208,6 @@ export default function SettingsPage() {
           </section>
         </div>
       </div>
-      <Dialog open={Boolean(pendingRevokeShareId)} onOpenChange={open => { if (!open && !revokingShareId) setPendingRevokeShareId(''); }}>
-        <DialogContent showCloseButton={false} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
-          <DialogHeader>
-            <DialogTitle>{isEn ? 'Revoke this report link?' : '撤销这条报告链接？'}</DialogTitle>
-            <DialogDescription>{isEn ? 'The original link will stop working immediately and cannot be restored. Create a new report if you need to share again.' : '原链接会立即失效且无法恢复。如需再次分享，请重新生成一份报告。'}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <button type="button" autoFocus disabled={Boolean(revokingShareId)} onClick={() => setPendingRevokeShareId('')} className="min-h-11 rounded-xl border border-border px-4 text-sm font-black disabled:opacity-50">{isEn ? 'Keep link' : '暂不撤销'}</button>
-            <button type="button" disabled={Boolean(revokingShareId)} onClick={() => void revokeShare(pendingRevokeShareId)} className="min-h-11 rounded-xl bg-rose-600 px-4 text-sm font-black text-white disabled:opacity-50">{revokingShareId ? (isEn ? 'Revoking…' : '正在撤销…') : (isEn ? 'Revoke permanently' : '确认撤销')}</button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

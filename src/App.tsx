@@ -810,7 +810,7 @@ function NotFoundPage() {
         </div>
         <h1 className="mt-4 text-2xl font-black text-ink">{isEn ? 'Page not found' : '没有找到这个页面'}</h1>
         <p className="mt-2 text-sm font-semibold leading-6 text-ink/52">
-          {isEn ? 'This entry may have changed. Return to your tank or search species and care guides.' : '这个入口可能已经更新。你可以回到鱼缸，或搜索物种和养护指南。'}
+          {isEn ? 'This page does not exist or has been removed.' : '页面不存在或已被移除。'}
         </p>
         <div className="mt-5 grid gap-2 sm:grid-cols-2">
           <button type="button" onClick={() => navigateToRoute('/aquarium')} className="h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white hover:bg-emerald-800">

@@ -801,15 +801,12 @@ export function SpeciesDetailDialog({
                   <>
                   <button
                     type="button"
-                    onClick={() => {
-                      setExportError('');
-                      setIsExportOpen(true);
-                    }}
-                    className="flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-[11px] font-black text-ink/60 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                    onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))}
+                    className="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 text-[11px] font-black text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
                     aria-label={isEn ? 'Export species card' : '导出物种卡片'}
                   >
                     <Download className="h-4 w-4" />
-                    <span className="hidden min-[760px]:inline">{isEn ? 'Export card' : '导出卡片'}</span>
+                    <span className="hidden min-[760px]:inline">{isEn ? 'Export · Coming soon' : '导出 · 建设中'}</span>
                   </button>
                   <button type="button" onClick={handleShare} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
                     <Share2 className="h-5 w-5" />
@@ -1225,9 +1222,9 @@ export function SpeciesDetailDialog({
                     </div>
 
                     <div className="grid shrink-0 grid-cols-2 gap-2 border-t border-black/5 bg-white/92 p-3 min-[600px]:px-5">
-                      <Button type="button" disabled={isExportingCard} onClick={handleSaveExportCard} className="min-h-11 rounded-full bg-accent text-[12px] font-black text-white">
+                      <Button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))} className="min-h-11 rounded-full border border-slate-200 bg-slate-100 text-[12px] font-black text-slate-400 shadow-none">
                         <Download className="mr-1.5 h-4 w-4" />
-                        {isExportingCard ? (isEn ? 'Generating…' : '生成中…') : (isEn ? 'Save image' : '保存图片')}
+                        {isEn ? 'Save image · Coming soon' : '保存图片 · 建设中'}
                       </Button>
                       <Button type="button" variant="outline" disabled={isExportingCard} onClick={handlePrintExportCard} className="min-h-11 rounded-full border-accent/25 bg-white text-[12px] font-black text-accent">
                         <Printer className="mr-1.5 h-4 w-4" />

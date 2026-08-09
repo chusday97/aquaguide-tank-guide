@@ -702,16 +702,16 @@ const copyPlainText = async (text: string) => {
 const getRecommendationReasonLocalized = (reason: string, isEn = false) => {
   if (!isEn) return reason;
   const map: Record<string, string> = {
-    '当前鱼缸最近新增了生物，优先确认过水和入缸观察。': 'Recent livestock added to tank. Prioritize acclimation & initial observation.',
-    '当前鱼缸像新缸状态，先看白浊和开缸稳定问题。': 'Tank appears newly established. Check bacterial bloom & cycling stability.',
-    '已记录怀孕、生产或产后恢复状态，优先查看对应观察与护理。': 'Active pregnancy or birth logged. Check breeding & fry care.',
-    '当前鱼缸有繁殖或鱼苗相关生物，建议提前看护理节奏。': 'Breeding or fry species present. Review care routine in advance.',
-    '当前鱼缸设备信息不完整，建议先确认过滤和维护方式。': 'Equipment info incomplete. Verify filtration & maintenance routine.',
-    '当前暂无换水记录，建议建立稳定换水流程。': 'No water change history logged. Establish a regular water change routine.',
-    '作为日常兜底，水质异常排查最常用。': 'Most common daily checklist for water quality troubleshooting.',
-    '还没有当前鱼缸数据，先推荐通用水质排查。': 'No tank data yet. Recommended general water quality check.',
-    '新鱼、新虾入缸前后都适合快速复查。': 'Quick checklist for before and after adding new fish or shrimp.',
-    '基础养护高频内容，适合建立固定流程。': 'Essential high-frequency maintenance guide.',
+    '最近添加了新生物': 'Recent livestock added to tank. Prioritize acclimation & initial observation.',
+    '新缸优先检查水质稳定情况': 'Tank appears newly established. Check bacterial bloom & cycling stability.',
+    '有生物处于繁殖阶段': 'Active pregnancy or birth logged. Check breeding & fry care.',
+    '': 'Breeding or fry species present. Review care routine in advance.',
+    '过滤设备尚未设置': 'Equipment info incomplete. Verify filtration & maintenance routine.',
+    '还没有换水记录': 'No water change history logged. Establish a regular water change routine.',
+    '': 'Most common daily checklist for water quality troubleshooting.',
+    '暂无鱼缸数据': 'No tank data yet. Recommended general water quality check.',
+    '': 'Quick checklist for before and after adding new fish or shrimp.',
+    '': 'Essential high-frequency maintenance guide.',
     '日常喂食和残饵管理会影响水质稳定。': 'Daily feeding and waste management affect water stability.',
   };
   return map[reason] || reason;
@@ -902,26 +902,26 @@ const getCareRecommendations = (aquarium: Aquarium | null, allGuides: CareTopic[
   const hasFilter = Boolean(aquarium?.equipment?.filter && aquarium.equipment.filter !== '无');
 
   if (hasRecentLivestock) {
-    addRecommendation(findCareTopic(topic => topic.id === 'guide_new_fish_acclimation'), '当前鱼缸最近新增了生物，优先确认过水和入缸观察。');
+    addRecommendation(findCareTopic(topic => topic.id === 'guide_new_fish_acclimation'), '最近添加了新生物');
   }
   if (isNewTank) {
-    addRecommendation(findCareTopic(topic => /白蒙蒙|白浊|新缸刚放水/.test(getDisplayTitle(topic) + topic.summary)), '当前鱼缸像新缸状态，先看白浊和开缸稳定问题。');
+    addRecommendation(findCareTopic(topic => /白蒙蒙|白浊|新缸刚放水/.test(getDisplayTitle(topic) + topic.summary)), '新缸优先检查水质稳定情况');
   }
   if (hasActivePregnancy || hasBreedingSpecies) {
     addRecommendation(findCareTopic(topic => topic.id === 'guide_pregnant_care' || topic.id === 'guide_fry_care'), hasActivePregnancy
-      ? '已记录怀孕、生产或产后恢复状态，优先查看对应观察与护理。'
-      : '当前鱼缸有繁殖或鱼苗相关生物，建议提前看护理节奏。');
+      ? '有生物处于繁殖阶段'
+      : '');
   }
   if (!hasFilter && aquarium) {
-    addRecommendation(findCareTopic(topic => /过滤|滤棉|过滤器/.test(getDisplayTitle(topic) + topic.summary + topic.keywords.join(' '))), '当前鱼缸设备信息不完整，建议先确认过滤和维护方式。');
+    addRecommendation(findCareTopic(topic => /过滤|滤棉|过滤器/.test(getDisplayTitle(topic) + topic.summary + topic.keywords.join(' '))), '过滤设备尚未设置');
   }
   if ((aquarium?.waterChangeHistory || []).length === 0) {
-    addRecommendation(findCareTopic(topic => topic.id === 'guide_safe_water_change'), '当前暂无换水记录，建议建立稳定换水流程。');
+    addRecommendation(findCareTopic(topic => topic.id === 'guide_safe_water_change'), '还没有换水记录');
   }
 
-  addRecommendation(findCareTopic(topic => topic.id === 'guide_water_deteriorate'), aquarium ? '作为日常兜底，水质异常排查最常用。' : '还没有当前鱼缸数据，先推荐通用水质排查。');
-  addRecommendation(findCareTopic(topic => topic.id === 'guide_new_fish_acclimation'), '新鱼、新虾入缸前后都适合快速复查。');
-  addRecommendation(findCareTopic(topic => topic.id === 'guide_safe_water_change'), '基础养护高频内容，适合建立固定流程。');
+  addRecommendation(findCareTopic(topic => topic.id === 'guide_water_deteriorate'), aquarium ? '' : '暂无鱼缸数据');
+  addRecommendation(findCareTopic(topic => topic.id === 'guide_new_fish_acclimation'), '');
+  addRecommendation(findCareTopic(topic => topic.id === 'guide_safe_water_change'), '');
   addRecommendation(allGuides.find(topic => /喂食|残饵/.test(getDisplayTitle(topic) + topic.keywords.join(' '))), '日常喂食和残饵管理会影响水质稳定。');
 
   return recommendations.slice(0, 5);
@@ -1861,11 +1861,11 @@ export default function CareEncyclopedia() {
             ? `Current category: ${getCategoryLabel(activeCategory)}`
             : 'Browse care guides by topic.')
     : (searchTerm.trim()
-        ? '已按标题、简介、分类和关键词筛选。'
+        ? ''
         : careViewMode === 'favorites'
-          ? '这里收纳你常用的养护文章。'
+          ? ''
           : activeCategory !== 'all'
-            ? `当前分类：${getCategoryLabel(activeCategory)}`
+            ? ''
             : '按问题浏览常用养护方法。');
 
   const openPreview = (topic: CareTopic) => {
@@ -1992,7 +1992,7 @@ export default function CareEncyclopedia() {
                     <CareImage topic={topic} className="h-full w-full" />
                   </span>
                   <span className="min-w-0 py-1 text-left">
-                    <span className="block text-[10px] font-black text-emerald-700">{getRecommendationReasonLocalized(reason, isEn)}</span>
+                    {reason && <span className="block text-[10px] font-black text-emerald-700">{getRecommendationReasonLocalized(reason, isEn)}</span>}
                     <span className="mt-1 line-clamp-2 block text-[15px] font-black leading-tight text-ink md:text-[17px]">{getDisplayTitle(topic)}</span>
                     <span className="mt-1 line-clamp-2 block text-[11px] font-medium leading-relaxed text-ink/58 md:text-[12px]">{topic.summary}</span>
                     <span className="mt-1.5 inline-flex items-center text-[11px] font-black text-emerald-700">
@@ -2279,12 +2279,11 @@ export default function CareEncyclopedia() {
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => saveShareCard(shareTopic)}
-                  disabled={isSavingShareCard}
-                  className="h-[52px] rounded-full bg-emerald-700 text-[13px] font-black text-white hover:bg-emerald-800"
+                  onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))}
+                  className="h-[52px] rounded-full border border-slate-200 bg-slate-100 text-[13px] font-black text-slate-400 shadow-none hover:bg-slate-100"
                 >
                   {isSavingShareCard ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Download className="mr-1 h-4 w-4" />}
-                  {isSavingShareCard ? (isEn ? 'Generating...' : '生成中...') : (isEn ? 'Save Image' : '保存图片')}
+                  {isEn ? 'Save image · Coming soon' : '保存图片 · 建设中'}
                 </Button>
               </div>
             </>

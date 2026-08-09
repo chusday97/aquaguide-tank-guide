@@ -311,14 +311,14 @@ export default function CollectionHub() {
           title={isEn ? 'Achievements' : '成就勋章'}
           count={isEn ? 'Coming soon' : '建设中'}
           icon={<Medal className="h-5 w-5" />}
-          tone="bg-amber-50 text-amber-700"
+          tone="bg-slate-100 text-slate-400"
           remainingCount={0}
           moreLabel=""
         >
           <PreviewEmpty
             icon={<Medal className="h-5 w-5" />}
-            title={isEn ? 'Achievements are being built' : '勋章系统建设中'}
-            description={isEn ? 'It will record long-term care milestones and habits.' : '将用于记录长期养护里程碑和习惯。'}
+            title={isEn ? 'Achievements are coming' : '成就勋章 · 建设中'}
+            description={isEn ? 'Track long-term care milestones.' : '记录你的养护里程碑。'}
           />
         </CollectionModuleCard>
       </section>
