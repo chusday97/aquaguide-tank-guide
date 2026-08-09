@@ -7,7 +7,8 @@
 - 已关闭的主要问题：页面绕过 Repository、循环完成半成功、动作来源只在文章级、体态重试操作号不稳定、收藏失败不回滚、按钮只做静态扫描、关键词自动授予“已审核”。
 - 当前可信边界：本地规则、契约、构建和 Chromium 路径已验证；真实 Supabase migration/RLS/RPC 尚未运行；41 篇文章的 228 条动作只有候选来源，全部等待水族内容专家显式审核，不能称为已发布可靠知识。
 - 独立 Evaluator 已按原始 P0-1 至 P0-4 从六维最终裁决 PASS，并指出证据审计文档仍有旧 35/6 数字；该漂移已修正为 `0 reviewed / 228 pending`。
-- 生产站仍是此前版本 `https://ice-glide.vercel.app`，待本次文档提交后发布当前构建。
+- 当前构建已发布：deployment `dpl_Dsw3wUTfmaHWZw3v2BPQhtCysJrq` READY，别名为 `https://ice-glide.vercel.app`；`/aquarium` 返回 200 并加载 `index-0k6PQE5x.js`。生产环境的时间线专项与 14 路由/六类动作运行时门禁均通过。
+- 发布排障：Vercel CLI 58 会拒绝本地旧绑定 `directory: "."`；从 Git 忽略的 `.vercel/repo.json` 移除该失效字段后，预构建上传与别名切换成功。不要把密钥或 `.env.local` 纳入 Git。
 
 ## 2026-08-09 体态编辑退出竞态修复
 

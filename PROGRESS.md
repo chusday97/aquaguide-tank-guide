@@ -11,6 +11,7 @@
 - 状态：`养护提醒已统一 Repository`。文章详情设置提醒不再直接写本地服务，游客走 Local Repository、登录用户走 API Repository，并具有 loading、防重复、失败保留面板和可见错误；鱼缸页的本地 care activity 订阅仅在 local 模式刷新，不能覆盖已加载的云端提醒。（commit: `b8627ad`）
 - 状态：`P0 独立 Critic 最终复验通过`。审查推动关闭云端 Repository 绕过、循环完成非原子、动作来源粒度、体态重试操作号、推荐收藏云端/回滚和按钮仅静态审计六类问题；二次审查再关闭养护提醒直写与关键词自证审核，`3da4587` 清除最后一项来源无关文案。Critic 最终裁决本地 P0 PASS；真实 Supabase 和 228 条动作人工审核继续作为外部门禁。
 - 状态：`独立 Evaluator 最终验收通过`。Evaluator 对照原始 P0-1 至 P0-4，从需求、逻辑、边界、代码、测试和实际运行六维裁决本地 P0 PASS；发现并修正 `CARE_GUIDANCE_EVIDENCE_AUDIT.md` 遗留的旧 35/6 数字。验收不包含真实 Supabase、专家内容审核、视觉模型、真机或真人效果。
+- 状态：`当前 P0 已发布生产预览`。Vercel deployment `dpl_Dsw3wUTfmaHWZw3v2BPQhtCysJrq` READY 并已别名到 `https://ice-glide.vercel.app`；`/aquarium` 返回 200，HTML 加载 `index-0k6PQE5x.js`。生产站时间线专项及 14 路由、六类动作运行时验收通过。发布时修正了本地 Vercel 旧绑定 `directory: "."` 与 CLI 58 的校验冲突；未修改数据库或业务数据。
 - 状态：`混养结论已启用审核证据门禁`。`Aggressive` 不再等于捕食者，旧 `housingReason` 不再直接阻断；虎皮鱼与迷你鹦鹉鱼使用追鳍、追逐、领地和繁殖防御资料推断，界面显示审核状态与外部来源。486 个物种全部进入审核清单，目前 3 个物种画像和 1 条特殊配对规则已审核，剩余 483 个在行为资料影响结论时安全降级为资料不足。（commit: `985da98`）
 - 状态：`2.5.0 可信证据与时间线契约已完成`。新增混养证据来源、物种审核画像、特殊配对规则、养护步骤引用、时间线事件来源和循环养护字段；公开 API 映射审核证据并保持现有页面兼容。三层契约、API 类型、lint 和生产构建通过。（commit: `716fdad`）
 - 状态：`GitHub 全量同步与最新生产部署已完成`。当前分支完整推送到 `origin/codex/activation-evaluation-v1`；最新构建发布于 `https://ice-glide.vercel.app`。首次发布发现 `/aquarium` 深链接 404，补充 Vercel SPA rewrite 后重新部署，现 `/aquarium` 返回 200 并加载 `index-BtS9X_Qg.js`。原 Cloudflare Pages 地址仍是旧版本，不作为当前验收地址。（commit: `44fd894`）
