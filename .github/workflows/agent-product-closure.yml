@@ -43,6 +43,18 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Start Vite for UI checks
+        run: |
+          npm run dev:web > /tmp/aquaguide-vite.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-vite.log
+          exit 1
+
       - name: Settings regression
         run: npm run test:settings-feedback
 
