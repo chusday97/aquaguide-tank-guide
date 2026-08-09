@@ -58,6 +58,13 @@ function CollectionModuleCard({
   children: ReactNode;
 }) {
   const navigate = useNavigate();
+  const openModule = () => {
+    if (id === 'achievements') {
+      window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'achievements' } }));
+      return;
+    }
+    navigate(moduleRoutes[id]);
+  };
   return (
     <section
       data-collection-module={id}
@@ -65,7 +72,7 @@ function CollectionModuleCard({
     >
       <button
         type="button"
-        onClick={() => navigate(moduleRoutes[id])}
+        onClick={openModule}
         className="group flex w-full items-center gap-3 rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
         aria-label={`${title}，${count}`}
       >
@@ -82,7 +89,7 @@ function CollectionModuleCard({
       {remainingCount > 0 && (
         <button
           type="button"
-          onClick={() => navigate(moduleRoutes[id])}
+          onClick={openModule}
           className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-1 rounded-full text-[12px] font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
         >
           {moreLabel}<ChevronRight className="h-3.5 w-3.5" />
@@ -302,42 +309,17 @@ export default function CollectionHub() {
         <CollectionModuleCard
           id="achievements"
           title={isEn ? 'Achievements' : '成就勋章'}
-          count={`${snapshot.counts.achievements}/${snapshot.achievements.length}`}
+          count={isEn ? 'Coming soon' : '建设中'}
           icon={<Medal className="h-5 w-5" />}
           tone="bg-amber-50 text-amber-700"
-          remainingCount={Math.max(0, snapshot.achievements.length - 2)}
-          moreLabel={isEn ? `More ${Math.max(0, snapshot.achievements.length - 2)} badges` : `更多 ${Math.max(0, snapshot.achievements.length - 2)} 枚`}
+          remainingCount={0}
+          moreLabel=""
         >
-          <span className="flex min-h-0 flex-1 flex-col p-2.5">
-            {achievementPreviews.map((achievement, index) => {
-              const Icon = achievementIcons[achievement.id];
-              return (
-                <button
-                  key={achievement.id}
-                  type="button"
-                  data-preview-item="achievements"
-                  data-preview-id={achievement.id}
-                  onClick={() => openItem('achievements', achievement.id)}
-                  className={`${index > 0 ? 'mt-2' : ''} flex items-center gap-3 rounded-[14px] border border-amber-100 bg-white px-3 py-3 text-left hover:bg-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600`}
-                >
-                  <span className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${achievement.unlocked ? 'bg-amber-300 text-amber-950' : 'bg-amber-50 text-amber-800'}`}>
-                    <Icon className="h-5 w-5" />
-                    {achievement.unlocked && <Check className="absolute -right-1 -top-1 h-5 w-5 rounded-full bg-emerald-700 p-1 text-white" />}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13px] font-black text-ink">{achievement.title}</span>
-                    <span className={`mt-1 block text-[10px] font-black ${achievement.unlocked ? 'text-emerald-700' : 'text-amber-800'}`}>
-                      {achievement.unlocked
-                        ? (isEn ? 'Unlocked' : '已解锁')
-                        : (isEn ? `${achievement.current}/${achievement.target} completed` : `已完成 ${achievement.current}/${achievement.target}`)}
-                    </span>
-                  </span>
-                  <ChevronRight className="h-4 w-4 shrink-0 text-ink/25" />
-                </button>
-              );
-            })}
-            <span className="mt-auto pt-3 text-center text-[10px] font-black text-amber-800">{isEn ? 'Unlocks automatically · no claiming needed' : '自动解锁，无需领取'}</span>
-          </span>
+          <PreviewEmpty
+            icon={<Medal className="h-5 w-5" />}
+            title={isEn ? 'Achievements are being built' : '勋章系统建设中'}
+            description={isEn ? 'It will record long-term care milestones and habits.' : '将用于记录长期养护里程碑和习惯。'}
+          />
         </CollectionModuleCard>
       </section>
     </div>

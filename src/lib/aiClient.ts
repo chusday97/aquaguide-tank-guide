@@ -90,18 +90,18 @@ export type TankDailyCheckInterpretationData = TankDailyCheckInterpretation & Ai
 
 const fallbackRiskExplanation: RiskExplanationData = {
   statusRestatement: 'unknown',
-  summary: 'AI 暂不可用，系统规则仍可使用。',
+  summary: 'AI 建议暂时不可用。',
   reasons: [{
-    title: '本地模板说明',
-    detail: '当前只展示本地规则结果，AI 没有参与判断或改写结论。',
-    source: '本地模板',
+    title: '当前结果说明',
+    detail: '请先参考当前风险结果。',
+    source: '当前结果',
   }],
   suggestions: [{
-    title: '查看系统规则',
-    detail: '先处理页面中的阻断、风险或缺失信息，再重新评估。',
+    title: '查看风险结果',
+    detail: '先处理当前风险或缺失信息，再重新评估。',
   }],
-  nextSteps: ['查看系统规则依据', '处理风险或缺失信息', '调整后再次检查'],
-  disclaimer: '最终判断以系统规则结果为准',
+  nextSteps: ['查看风险结果依据', '处理风险或补充信息', '调整后再次检查'],
+  disclaimer: '请结合当前鱼缸状态判断。',
   fallback: true,
 };
 
@@ -111,9 +111,9 @@ const fallbackRiskAudit: RiskAuditData = {
   missingRisks: [],
   uncertainItems: [{
     title: 'AI 解读暂不可用',
-    reason: '当前结果以系统规则为准，AI 失败不会影响本地适配判断。',
+    reason: 'AI 建议暂时不可用，请先参考当前结果。',
   }],
-  userFacingSummary: 'AI 解读暂不可用，当前结果以系统规则为准。',
+  userFacingSummary: 'AI 建议暂时不可用。',
   suggestions: [],
   fallback: true,
 };
@@ -121,7 +121,7 @@ const fallbackRiskAudit: RiskAuditData = {
 const fallbackRecommendationAssist: RecommendationAssistData = {
   structuredPreference: {},
   ranking: [],
-  explanations: ['AI 辅助暂不可用，当前推荐已按本地规则排序。'],
+  explanations: ['AI 建议暂时不可用。'],
   stagedPlan: ['先选择 1 个候选进入模拟', '确认负载和风险后再少量加入', '加入后观察 3-7 天'],
   questions: [],
   fallback: true,
@@ -246,14 +246,14 @@ const normalizeRiskExplanation = (data: Partial<RiskExplanationData> | undefined
   reasons: Array.isArray(data?.reasons) ? data.reasons.map(item => ({
     title: typeof item?.title === 'string' ? item.title : '风险原因',
     detail: typeof item?.detail === 'string' ? item.detail : '信息不足。',
-    source: typeof item?.source === 'string' ? item.source : '来自本地规则',
+    source: typeof item?.source === 'string' ? item.source : '当前结果',
   })) : fallbackRiskExplanation.reasons,
   suggestions: Array.isArray(data?.suggestions) ? data.suggestions.map(item => ({
     title: typeof item?.title === 'string' ? item.title : '调整建议',
-    detail: typeof item?.detail === 'string' ? item.detail : '先参考系统规则结果逐项调整。',
+    detail: typeof item?.detail === 'string' ? item.detail : '请根据当前结果逐项调整。',
   })) : fallbackRiskExplanation.suggestions,
   nextSteps: Array.isArray(data?.nextSteps) ? data.nextSteps.filter(step => typeof step === 'string') : fallbackRiskExplanation.nextSteps,
-  disclaimer: '最终判断以系统规则结果为准',
+  disclaimer: '请结合当前鱼缸状态判断。',
 });
 
 const getExpectedRiskExplanationStatus = (context: unknown) => {
@@ -307,7 +307,7 @@ const normalizeRecommendationAssist = (data: Partial<RecommendationAssistData> |
     : {},
   ranking: Array.isArray(data?.ranking) ? data.ranking.map(item => ({
     speciesId: typeof item?.speciesId === 'string' ? item.speciesId : '',
-    reason: typeof item?.reason === 'string' ? item.reason : '本地规则候选。',
+    reason: typeof item?.reason === 'string' ? item.reason : '当前候选。',
   })).filter(item => item.speciesId).slice(0, 8) : [],
   explanations: Array.isArray(data?.explanations)
     ? data.explanations.filter(item => typeof item === 'string').slice(0, 5)
@@ -389,7 +389,7 @@ export const generateRiskExplanation = async (context: unknown): Promise<RiskExp
     if (!response.ok || payload?.ok === false) {
       return withAiMeta({
         ...fallbackRiskExplanation,
-        summary: 'AI 暂不可用，系统规则仍可使用。',
+        summary: 'AI 建议暂时不可用。',
         reasons: fallbackRiskExplanation.reasons,
       }, 'risk_explanation', 'fallback', failureReasonFromResponse(response, payload));
     }

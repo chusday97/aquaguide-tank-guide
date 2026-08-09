@@ -10,10 +10,7 @@ import {
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '../common/ToastProvider';
-import { loadAppStateFromStorage } from '../../services/storage/local-app-state';
-import { getAquariumAiReadiness, type AquariumAiSetupPanel } from '../../services/aquarium/aquarium-setup.service';
 
-// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
 
 import type {
   NavigateToSectionOptions,
@@ -34,68 +31,31 @@ type WorkspaceNavigationValue = {
 const WorkspaceNavigationContextValue = createContext<WorkspaceNavigationValue | null>(null);
 
 type FeaturePreviewState = {
-  kind: 'auth' | 'ai';
+  kind: 'auth' | 'achievements';
   title: string;
   description: string;
-  ready?: boolean;
-  missing?: string[];
-  firstPanel?: AquariumAiSetupPanel;
 };
 
 const isEnglishUi = () => typeof document !== 'undefined' && document.documentElement.lang.toLowerCase().startsWith('en');
 
-const buildFeaturePreview = (kind: 'auth' | 'ai'): FeaturePreviewState => {
+const buildFeaturePreview = (kind: 'auth' | 'achievements'): FeaturePreviewState => {
   const isEn = isEnglishUi();
   if (kind === 'auth') {
     return {
       kind,
-      title: isEn ? 'Cloud sync is being built' : '云端同步 · 建设中',
+      title: isEn ? 'Cloud sync is coming' : '云端同步 · 建设中',
       description: isEn
-        ? 'Sign-in will later sync tanks, species, favorites and care history across devices. The current version continues to save data on this device.'
-        : '未来登录后可跨设备同步鱼缸、物种、收藏与养护记录。当前版本继续使用本设备数据，不会进入尚未闭环的登录流程。',
+        ? 'Sign in will sync tanks and care data across devices. This feature is still being completed.'
+        : '登录后可跨设备同步鱼缸和养护数据。该功能正在完善。',
     };
   }
-
-  try {
-    const state = loadAppStateFromStorage();
-    const aquarium = state.aquariums.find(item => item.id === state.currentAquariumId) || state.aquariums[0];
-    if (!aquarium) {
-      return {
-        kind,
-        title: isEn ? 'AI features are being built' : 'AI 功能 · 建设中',
-        description: isEn
-          ? 'AI will use verified tank settings and AquaGuide safety rules to explain risks and personalize care. Create a tank and confirm its core parameters first.'
-          : '未来 AI 会读取已确认的鱼缸参数，并结合 AquaGuide 安全规则解释风险和个性化养护。使用前需要先创建鱼缸并确认核心参数。',
-        ready: false,
-        missing: [isEn ? 'Create or select a tank first' : '先创建或选择一个鱼缸'],
-        firstPanel: 'size',
-      };
-    }
-    const readiness = getAquariumAiReadiness(aquarium);
-    return {
-      kind,
-      title: isEn ? 'AI features are being built' : 'AI 功能 · 建设中',
-      description: readiness.ready
-        ? (isEn
-          ? 'Your tank data meets the current AI-ready requirement. When released, AI will automatically use these settings instead of asking you to type them again.'
-          : '当前鱼缸资料已经达到 AI 使用条件。功能开放后，AI 会自动读取这些已确认参数，不再要求你重复填写文字。')
-        : (isEn
-          ? 'AI will only activate after the core tank parameters below are confirmed, so it does not generate advice from guessed values.'
-          : '为避免 AI 基于猜测数据生成建议，以下核心参数确认完成后才会开放 AI 能力。'),
-      ready: readiness.ready,
-      missing: readiness.missing.map(item => item.label),
-      firstPanel: readiness.firstPanel,
-    };
-  } catch {
-    return {
-      kind,
-      title: isEn ? 'AI features are being built' : 'AI 功能 · 建设中',
-      description: isEn ? 'AI will be enabled after verified tank parameters are available.' : 'AI 会在鱼缸核心参数确认后开放。',
-      ready: false,
-      missing: [isEn ? 'Tank settings are not available yet' : '暂时无法读取鱼缸设置'],
-      firstPanel: 'size',
-    };
-  }
+  return {
+    kind,
+    title: isEn ? 'Achievements are coming' : '成就勋章 · 建设中',
+    description: isEn
+      ? 'Badges will record long-term care milestones and habits. They will open after the system is complete.'
+      : '用于记录长期养护里程碑和习惯。系统完善后开放。',
+  };
 };
 
 const getWorkspaceScroller = () => document.querySelector<HTMLElement>('.desktop-workspace-scroll');
@@ -163,14 +123,15 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
   const navigationGuardRef = useRef<((targetPath: string) => boolean) | null>(null);
   const [featurePreview, setFeaturePreview] = useState<FeaturePreviewState | null>(null);
 
-  const showFeaturePreview = useCallback((kind: 'auth' | 'ai') => {
+  const showFeaturePreview = useCallback((kind: 'auth' | 'achievements') => {
     setFeaturePreview(buildFeaturePreview(kind));
   }, []);
 
   useEffect(() => {
     const handleFeaturePreviewEvent = (event: Event) => {
       const feature = (event as CustomEvent<{ feature?: string }>).detail?.feature || '';
-      showFeaturePreview(feature.startsWith('auth') ? 'auth' : 'ai');
+      if (/^auth/i.test(feature)) showFeaturePreview('auth');
+      if (/achievement|badge|medal|成就|勋章/i.test(feature)) showFeaturePreview('achievements');
     };
     const handleFeatureClick = (event: MouseEvent) => {
       const target = event.target instanceof Element ? event.target.closest<HTMLElement>('button, a, [role="button"]') : null;
@@ -183,10 +144,10 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
         showFeaturePreview('auth');
         return;
       }
-      if (/AI\s*(Tank Copilot|建缸助手|建议|养护|风险|Plan|Care)|(^|\s)AI($|\s)/i.test(text)) {
+      if (/^\/collection\/achievements(?:[/?#]|$)/.test(href) || /成就勋章|Achievements|Badges/i.test(text)) {
         event.preventDefault();
         event.stopPropagation();
-        showFeaturePreview('ai');
+        showFeaturePreview('achievements');
       }
     };
     window.addEventListener('aquaguide:feature-preview', handleFeaturePreviewEvent as EventListener);
@@ -211,6 +172,10 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
       showFeaturePreview('auth');
       return;
     }
+    if (/^\/collection\/achievements(?:[/?#]|$)/.test(path)) {
+      showFeaturePreview('achievements');
+      return;
+    }
     if (!canNavigate(path)) return;
     navigate(path);
   }, [canNavigate, navigate, showFeaturePreview]);
@@ -219,6 +184,10 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
     const targetPath = `${path}${hash}`;
     if (/^\/login(?:[/?#]|$)/.test(targetPath)) {
       showFeaturePreview('auth');
+      return;
+    }
+    if (/^\/collection\/achievements(?:[/?#]|$)/.test(targetPath)) {
+      showFeaturePreview('achievements');
       return;
     }
     if (!canNavigate(targetPath)) return;
@@ -337,30 +306,8 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
             </div>
             <h2 id="feature-preview-title" className="mt-3 text-[22px] font-black leading-tight">{featurePreview.title}</h2>
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/58">{featurePreview.description}</p>
-            {featurePreview.kind === 'ai' && (featurePreview.missing?.length || 0) > 0 && (
-              <div className="mt-4 rounded-[18px] border border-amber-100 bg-amber-50/75 p-4">
-                <div className="text-xs font-black text-amber-900">{isEnglishUi() ? 'Confirm these before AI can be used' : 'AI 开放前需要先确认'}</div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {featurePreview.missing?.map(item => <span key={item} className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black text-amber-800 shadow-sm">{item}</span>)}
-                </div>
-              </div>
-            )}
-            {featurePreview.kind === 'ai' && featurePreview.ready && (
-              <div className="mt-4 rounded-[16px] bg-emerald-50 px-4 py-3 text-xs font-black text-emerald-800">
-                {isEnglishUi() ? 'Tank parameters ready ✓' : '鱼缸核心参数已确认 ✓'}
-              </div>
-            )}
-            <div className="mt-5 grid gap-2 sm:grid-cols-2">
-              {featurePreview.kind === 'ai' && !featurePreview.ready && (
-                <button type="button" onClick={() => {
-                  const panel = featurePreview.firstPanel || 'size';
-                  setFeaturePreview(null);
-                  navigate(`/aquarium#settings-${panel}`);
-                }} className="min-h-11 rounded-full bg-emerald-800 px-4 text-sm font-black text-white hover:bg-emerald-900">
-                  {isEnglishUi() ? 'Complete tank settings' : '去完善鱼缸资料'}
-                </button>
-              )}
-              <button type="button" onClick={() => setFeaturePreview(null)} className="min-h-11 rounded-full border border-slate-200 bg-white px-4 text-sm font-black text-ink/65 hover:bg-slate-50">
+            <div className="mt-5">
+              <button type="button" onClick={() => setFeaturePreview(null)} className="min-h-11 w-full rounded-full border border-slate-200 bg-white px-4 text-sm font-black text-ink/65 hover:bg-slate-50">
                 {isEnglishUi() ? 'Got it' : '我知道了'}
               </button>
             </div>

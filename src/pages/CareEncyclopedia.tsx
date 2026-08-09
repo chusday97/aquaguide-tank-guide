@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
+import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
@@ -12,7 +12,6 @@ import {
   getCareActionEvidenceForText,
   getCareFollowUpAction,
   getCareReferences,
-  getCareReferenceReviewStatus,
   type CareActionEvidence,
 } from '../data/careEvidence';
 import { fishData } from '../data/fishData';
@@ -2948,28 +2947,24 @@ const translateTopicTag = (tag: string, isEn = false) => {
 };
 
 function ActionEvidenceInline({ evidence, isEn }: { evidence?: CareActionEvidence; isEn: boolean }) {
-  if (!evidence) return null;
+  if (!evidence || evidence.citations.length === 0) return null;
   return (
-    <div className="mt-1.5 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-[9px] font-bold leading-4 text-ink/45" data-care-action-evidence={evidence.id}>
-      <span>{isEn ? 'Evidence:' : '依据：'}</span>
+    <div className="mt-1.5 flex items-center gap-1.5" data-care-action-evidence={evidence.id}>
+      <span className="text-[9px] font-bold text-ink/38">{isEn ? 'Sources' : '来源'}</span>
       {evidence.citations.slice(0, 2).map(reference => (
         <a
           key={reference.id}
           href={reference.url}
           target="_blank"
           rel="noreferrer"
-          className="max-w-full break-words text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+          title={`${reference.publisher} · ${reference.title}`}
+          aria-label={isEn ? `Open source: ${reference.publisher}` : `打开来源：${reference.publisher}`}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           data-action-kind="external"
-          title={reference.supports}
         >
-          {reference.publisher}
+          <ExternalLink className="h-3.5 w-3.5" />
         </a>
       ))}
-      <span className={evidence.reviewStatus === 'reviewed' ? 'text-emerald-700' : 'text-amber-700'}>
-        {evidence.reviewStatus === 'reviewed'
-          ? (isEn ? 'Reviewed' : '已审核')
-          : (isEn ? 'Specific step pending review' : '具体步骤待专项复核')}
-      </span>
     </div>
   );
 }
@@ -3007,7 +3002,6 @@ export function CareArticleDetail({
   const meta = getCareGuideMeta(topic);
   const careGuide = buildCareGuide(topic);
   const careReferences = getCareReferences(topic);
-  const careReferenceStatus = getCareReferenceReviewStatus(topic);
   const careActionEvidence = getCareActionEvidence(topic);
   const immediateEvidence = careActionEvidence.filter(item => item.kind === 'immediate');
   const avoidEvidence = careActionEvidence.filter(item => item.kind === 'avoid');
@@ -3491,34 +3485,21 @@ export function CareArticleDetail({
           </section>
 
           <section className="mt-3 rounded-[18px] border border-border bg-white p-3" data-care-references>
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="text-[13px] font-black text-ink">{isEn ? 'Sources for these actions' : '这些行动的参考来源'}</div>
-              <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${careReferenceStatus === 'reviewed' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
-                {careReferenceStatus === 'reviewed'
-                  ? (isEn ? 'Reviewed' : '已审核')
-                  : (isEn ? 'Partly pending review' : '部分细节待复核')}
-              </span>
-            </div>
-            <p className="mt-1 text-[11px] font-medium leading-relaxed text-ink/55">
-              {isEn
-                ? 'Each source supports the action noted below. Sources explain safe care principles; they do not replace an aquatic veterinarian.'
-                : '每个来源都标注其支持的操作范围；来源用于解释安全养护原则，不能替代水生动物兽医诊断。'}
-            </p>
-            <div className="mt-2 grid gap-2">
+            <div className="text-[13px] font-black text-ink">{isEn ? 'Sources' : '参考来源'}</div>
+            <div className="mt-2 flex flex-wrap gap-2">
               {careReferences.map(reference => (
                 <a
                   key={reference.id}
                   href={reference.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-[14px] bg-bg px-3 py-2.5 transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  title={`${reference.publisher} · ${reference.title}`}
+                  aria-label={isEn ? `Open ${reference.publisher} source` : `打开 ${reference.publisher} 原文`}
+                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/55 px-3 text-[11px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   data-action-kind="external"
                 >
-                  <span className="block text-[11px] font-black text-emerald-800">{reference.publisher} · {reference.title}</span>
-                  <span className="mt-1 block text-[10px] font-medium leading-relaxed text-ink/55">{reference.supports}</span>
-                  {reference.reviewStatus === 'draft' && (
-                    <span className="mt-1 block text-[10px] font-black text-amber-700">{isEn ? 'Specific household steps still need review.' : '具体家庭操作细节仍需专项复核。'}</span>
-                  )}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  <span>{reference.publisher}</span>
                 </a>
               ))}
             </div>

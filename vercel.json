@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "node scripts/open-ai-feature-gate.mjs && npm run build",
   "headers": [
     {
       "source": "/responsive/(.*)",

@@ -46,11 +46,9 @@ const loadCare = () => import('./pages/CareEncyclopedia');
 const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
-const loadProjectStructure = () => import('./pages/ProjectStructurePreview');
 const loadLogin = () => import('./pages/Login');
 const loadAdminContent = () => import('./pages/AdminContent');
 const loadIdentify = () => import('./pages/Identify');
-const loadThreeDemo = () => import('./pages/ThreeDemo').then(module => ({ default: module.ThreeDemo }));
 const loadSearch = () => import('./pages/Search');
 const loadSettings = () => import('./pages/Settings');
 const loadWelcome = () => import('./pages/Welcome');
@@ -62,11 +60,9 @@ const CareEncyclopedia = lazyWithRecovery(loadCare, 'care');
 const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
-const ProjectStructurePreview = lazyWithRecovery(loadProjectStructure, 'project-structure');
 const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
-const ThreeDemo = lazyWithRecovery(loadThreeDemo, '3d-demo');
 const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
 const WelcomePage = lazyWithRecovery(loadWelcome, 'welcome');
@@ -629,7 +625,6 @@ function AppShell() {
   const { showToast } = useToast();
   const { isPhoneLayout } = useLayoutMode();
   const [preferencesReady, setPreferencesReady] = useState(false);
-  const isStructurePreview = location.pathname === '/project-structure';
   const isLogin = location.pathname === '/login';
   const isAdminContent = location.pathname === '/admin/content';
   const isWelcome = location.pathname === '/welcome';
@@ -730,7 +725,7 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isStructurePreview && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
+  if (!preferencesReady && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
 
   if (isSharedReport) {
     return (
@@ -743,16 +738,6 @@ function AppShell() {
     );
   }
 
-  if (isStructurePreview) {
-    return (
-      <Suspense fallback={<PageLoading />}>
-        <Routes>
-          <Route path="/project-structure" element={<ProjectStructurePreview />} />
-          <Route path="*" element={<Navigate to="/project-structure" replace />} />
-        </Routes>
-      </Suspense>
-    );
-  }
 
   if (isLogin) {
     return (
@@ -808,7 +793,6 @@ function CollectionEntry() {
     wishlist: '/collection/wishlist',
     care: '/collection/care',
     memorial: '/collection/memorial',
-    achievements: '/collection/achievements',
   };
   if (tab && routeByTab[tab]) return <Navigate to={routeByTab[tab]} replace />;
   return <CollectionHub />;
@@ -861,11 +845,10 @@ function WorkspaceRoutes() {
           <Route path="/collection/care" element={page(<Collection module="care" />, 'collection-care')} />
           <Route path="/collection/memorial/:recordId" element={page(<MemorialDetail />, 'collection-memorial-detail')} />
           <Route path="/collection/memorial" element={page(<Collection module="memorial" />, 'collection-memorial')} />
-          <Route path="/collection/achievements" element={page(<Collection module="achievements" />, 'collection-achievements')} />
+          <Route path="/collection/achievements" element={<Navigate to="/collection" replace />} />
           <Route path="/wishlist" element={<Navigate to="/collection/wishlist" replace />} />
           <Route path="/care-favorites" element={<Navigate to="/collection/care" replace />} />
           <Route path="/aquarium" element={shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
-          <Route path="/3d-demo" element={page(<ThreeDemo />, '3d-demo')} />
           <Route path="/admin/content" element={page(<AdminContent />, 'admin-content')} />
           <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>

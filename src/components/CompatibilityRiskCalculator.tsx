@@ -428,7 +428,7 @@ export function CompatibilityRiskCalculator({
           <p className="mt-1 max-w-[680px] text-[12px] font-semibold leading-5 text-ink/52">
             {isEn
               ? 'Existing livestock is treated as the baseline. Select only what you plan to add; AquaGuide will tell you which pair conflicts and what to change.'
-              : '当前鱼缸已有生物作为基线，你只需要选择“准备加入”的生物。系统会指出具体冲突对象、原因和调整动作。'}
+              : '选择准备加入的生物，查看是否适合当前鱼缸。'}
           </p>
         </div>
         {aquariums.length > 1 && (
@@ -444,7 +444,7 @@ export function CompatibilityRiskCalculator({
 
       <section className="rounded-[18px] bg-bg/65 p-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="text-[12px] font-black text-ink">{isEn ? 'Evaluation baseline' : '判断基线'}</div>
+          <div className="text-[12px] font-black text-ink">{isEn ? 'Evaluation baseline' : '当前鱼缸'}</div>
           {selectedAquarium && onViewAquarium && (
             <button type="button" onClick={onViewAquarium} className="text-[10px] font-black text-emerald-700">{isEn ? 'View tank' : '查看鱼缸'}</button>
           )}
@@ -526,7 +526,7 @@ export function CompatibilityRiskCalculator({
       <section className="grid gap-3">
         <div className="flex items-center justify-between gap-2">
           <div className="text-[13px] font-black text-ink">{isEn ? '2. Compatibility decision' : '2. 混养结论'}</div>
-          <div className="text-[10px] font-bold text-ink/40">{relevantPairs.length} {isEn ? 'relationships checked' : '组关系已检查'}</div>
+          <div className="text-[10px] font-bold text-ink/40">{isEn ? 'Compatibility' : '混养结果'}</div>
         </div>
 
         {!canEvaluate || !resultStatus || !meta ? (
@@ -594,7 +594,7 @@ export function CompatibilityRiskCalculator({
             {resultStatus === 'not_recommended' && (
               <section className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
                 <div className="text-[13px] font-black text-ink">{isEn ? '3. Choose how to adjust' : '3. 直接选择怎么调整'}</div>
-                <p className="mt-1 text-[10px] font-bold leading-5 text-ink/45">{isEn ? 'AquaGuide does not guess which animal matters more to you. It shows the safe choices explicitly.' : '系统不会替你猜“哪只更重要”，而是把可执行的安全选择直接列出来。'}</p>
+                <p className="mt-1 text-[10px] font-bold leading-5 text-ink/45">{isEn ? 'AquaGuide does not guess which animal matters more to you. It shows the safe choices explicitly.' : '选择一个调整方案后会立即重新计算。'}</p>
                 <div className="mt-3 grid gap-2 md:grid-cols-2">
                   {conflictActions.map(action => (
                     <div key={action.id} className="rounded-[16px] border border-white bg-white p-3 shadow-sm">
@@ -615,7 +615,7 @@ export function CompatibilityRiskCalculator({
             <div className="grid gap-2 sm:grid-cols-2">
               <Button type="button" onClick={() => void openAiAdvice()} disabled={aiLoading || !resultStatus} className="h-11 rounded-full bg-violet-700 text-sm font-black text-white hover:bg-violet-800">
                 {aiLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                {!selectedAquarium || !readiness?.ready ? (isEn ? 'Complete data before AI' : '完善参数后使用 AI') : (isEn ? 'Ask AI to explain & adjust' : 'AI 解释并给调整建议')}
+                {!selectedAquarium || !readiness?.ready ? (isEn ? 'Complete data before AI' : '完善参数后使用 AI') : (isEn ? 'Ask AI to explain & adjust' : 'AI 建议')}
               </Button>
               {candidateSpecies.length > 0 && resultStatus !== 'not_recommended' && resultStatus !== 'insufficient_data' && onAddToAquarium && (
                 <Button type="button" onClick={() => void recordActualStocking()} disabled={isRecording} className={`h-11 rounded-full text-sm font-black text-white ${resultStatus === 'caution' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-700 hover:bg-emerald-800'}`}>
@@ -627,7 +627,7 @@ export function CompatibilityRiskCalculator({
 
             {!aiReady && selectedAquarium && readiness && !readiness.ready && (
               <div className="rounded-[14px] bg-violet-50 px-3 py-2 text-[10px] font-bold leading-5 text-violet-800">
-                {isEn ? 'AI uses verified tank data only. Missing: ' : 'AI 只读取已确认的鱼缸参数。还缺：'}{readiness.missing.map(item => item.label).join(isEn ? ', ' : '、')}
+                {isEn ? 'AI uses verified tank data only. Missing: ' : '还缺：'}{readiness.missing.map(item => item.label).join(isEn ? ', ' : '、')}
               </div>
             )}
 
@@ -639,16 +639,16 @@ export function CompatibilityRiskCalculator({
       <Dialog open={aiOpen} onOpenChange={setAiOpen}>
         <DialogContent className="w-[92vw] max-w-[560px] rounded-[24px] border-violet-100 bg-white p-0">
           <DialogHeader className="border-b border-violet-100 bg-violet-50/70 px-5 py-4 text-left">
-            <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-violet-700"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'AI INTERPRETATION' : 'AI 解读'}</div>
+            <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-violet-700"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'AI INTERPRETATION' : 'AI 建议'}</div>
             <DialogTitle className="mt-2 text-[20px] font-black text-ink">{isEn ? 'Why this result, and what can I change?' : '为什么会这样？我具体可以怎么改？'}</DialogTitle>
-            <DialogDescription className="text-xs font-semibold leading-5 text-ink/50">{isEn ? 'Deterministic rules keep the final safety status. AI explains the evidence and organizes options.' : '最终安全结论仍由规则确定；AI 负责解释依据、整理调整方案，不会把阻断结论改成“可以养”。'}</DialogDescription>
+            <DialogDescription className="text-xs font-semibold leading-5 text-ink/50">{isEn ? 'Deterministic rules keep the final safety status. AI explains the evidence and organizes options.' : '基于当前鱼缸和风险结果给出调整建议。'}</DialogDescription>
           </DialogHeader>
           <div className="max-h-[62dvh] overflow-y-auto px-5 py-4">
             {aiLoading && <div className="flex min-h-[180px] items-center justify-center gap-2 text-sm font-black text-violet-700"><Loader2 className="h-5 w-5 animate-spin" />{isEn ? 'AI is reading this tank and rule result…' : 'AI 正在读取当前鱼缸和规则结果…'}</div>}
             {!aiLoading && aiResult && (
               <div className="grid gap-3">
                 <div className={`rounded-[16px] px-3 py-2 text-[11px] font-black ${aiResult.source === 'model' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
-                  {aiResult.source === 'model' ? (isEn ? '✓ DeepSeek model response' : '✓ DeepSeek 模型回复') : (isEn ? 'Fallback response · AI did not participate' : '本地兜底 · AI 本次没有参与')}
+                  {aiResult.source === 'model' ? (isEn ? '✓ DeepSeek model response' : 'AI 已生成') : (isEn ? 'Fallback response · AI did not participate' : 'AI 暂不可用')}
                   {aiResult.failureReason ? ` · ${aiResult.failureReason}` : ''}
                 </div>
                 <div className="rounded-[16px] bg-violet-50 p-3">
