@@ -1,0 +1,55 @@
+name: Agent product closure patch
+
+on:
+  push:
+    branches:
+      - agent/product-closure-gates
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[agent-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/product-closure-gates
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply focused product patch
+        run: node scripts/apply_product_closure_patch.mjs
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Addition policy regression
+        run: npm run test:addition-intents
+
+      - name: Settings regression
+        run: npm run test:settings-feedback
+
+      - name: Production build
+        run: npm run build
+
+      - name: Diff check
+        run: git diff --check
+
+      - name: Commit patched product flows
+        run: |
+          git config user.name "OpenAI Agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/Aquarium.tsx src/pages/Settings.tsx src/pages/Login.tsx src/modules/copilot/tankBuildCopilot.ts scripts/apply_product_closure_patch.mjs .github/workflows/agent-product-closure.yml
+          git commit -m "feat: close incomplete product flows [agent-applied]"
+          git push origin HEAD:agent/product-closure-gates
