@@ -1,3 +1,4 @@
+// Validation trigger: source patch is applied by the branch workflow below.
 import fs from 'node:fs';
 
 const read = (path) => fs.readFileSync(path, 'utf8');
@@ -62,13 +63,11 @@ aquarium = replaceOnce(
   'risk override handler',
 );
 
-// Remove fake temperature fallback in the dormant AI panel text too.
 aquarium = aquarium.replace(
   "当前参考：{activeAquarium.name} · {activeAquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · {activeAquarium.targetTemperature || 25}°C",
   "当前参考：{activeAquarium.name} · {activeAquarium.waterType === 'Saltwater' ? '海水' : activeAquarium.waterType === 'Freshwater' ? '淡水' : '水体未设置'} · {activeAquarium.targetTemperature ? `${activeAquarium.targetTemperature}°C` : '温度未设置'}",
 );
 
-// Settings: quick presets and no visually selected fake defaults.
 aquarium = replaceOnce(
   aquarium,
   "        <ConfigSection title={isEn ? \"Dimensions\" : \"尺寸\"} subtitle={isEn ? \"Used for volume estimation and care advice.\" : \"用于估算容量和后续养护建议。\"}>\n          <div className=\"grid grid-cols-3 gap-2\">",
@@ -93,7 +92,6 @@ aquarium = replaceOnce(
   'explicit no-filter counts as configured',
 );
 
-// Add category selector and filter the list.
 aquarium = replaceOnce(
   aquarium,
   "                  <p className=\"mt-0.5 text-[11px] font-medium leading-relaxed text-ink/50\">{addFishIntro}</p>\n                </div>\n              <div className=\"relative\">",
@@ -108,7 +106,6 @@ aquarium = replaceOnce(
   'filter add fish list by category',
 );
 
-// Make the blocking risk the visual hierarchy, not tiny helper text.
 aquarium = replaceOnce(
   aquarium,
   "                  </div>\n\n                  <div className=\"grid gap-2\">\n                    {addFishCompatibilityReview.evaluations.map(evaluation => (",
@@ -123,7 +120,6 @@ aquarium = replaceOnce(
   'prominent risk reasons',
 );
 
-// Footer: Return / AI advice / still add for blocked plans.
 aquarium = aquarium.replace(
   "{addFishCompatibilityReview && ['block', 'complete_information'].includes(getTankCompatibilityAddPolicy(addFishCompatibilityReview.status)) && (",
   "{addFishCompatibilityReview && getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'complete_information' && (",
@@ -142,7 +138,6 @@ aquarium = aquarium.replace(
 );
 aquarium = aquarium.replace("? '返回调整组合'", "? '仍要加入'");
 
-// Feature-preview and explicit-risk-confirm dialogs.
 aquarium = insertBefore(
   aquarium,
   "      {/* Add Fish Dialog (Search Based) */}",
@@ -150,7 +145,6 @@ aquarium = insertBefore(
   'feature and risk dialogs',
 );
 
-// Reset the selected category when the dialog closes.
 aquarium = replaceOnce(
   aquarium,
   "                  setFishSearchTerm('');\n                  setSelectedAddFishItems([]);",
@@ -160,7 +154,6 @@ aquarium = replaceOnce(
 
 write(aquariumPath, aquarium);
 
-// ---- AI readiness semantics ----
 const copilotPath = 'src/modules/copilot/tankBuildCopilot.ts';
 let copilot = read(copilotPath);
 copilot = replaceOnce(
@@ -171,7 +164,6 @@ copilot = replaceOnce(
 );
 write(copilotPath, copilot);
 
-// ---- Settings login gate ----
 const settingsPath = 'src/pages/Settings.tsx';
 let settings = read(settingsPath);
 settings = replaceOnce(
@@ -194,11 +186,9 @@ settings = insertBefore(
 );
 write(settingsPath, settings);
 
-// ---- Direct /login fallback: no live auth until the cloud loop is declared ready ----
 const loginPath = 'src/pages/Login.tsx';
 write(loginPath, `import { Cloud, ChevronLeft } from 'lucide-react';\nimport { useTranslation } from 'react-i18next';\nimport { useNavigate } from 'react-router-dom';\n\nexport default function Login() {\n  const navigate = useNavigate();\n  const { i18n } = useTranslation();\n  const isEn = Boolean(i18n.language?.startsWith('en'));\n  return (\n    <div className="flex min-h-[100dvh] items-center justify-center bg-[#dfe8e5] px-4 py-8 text-ink">\n      <main className="w-full max-w-[480px] rounded-[30px] border border-white/80 bg-white p-6 shadow-[0_24px_70px_rgba(27,77,62,0.14)]">\n        <span className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-emerald-50 text-emerald-800"><Cloud className="h-6 w-6" /></span>\n        <div className="mt-5 inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-black text-amber-800">{isEn ? 'Under construction' : '功能建设中'}</div>\n        <h1 className="mt-3 text-[24px] font-black leading-tight text-ink">{isEn ? 'AquaGuide cloud sync' : 'AquaGuide 云端同步'}</h1>\n        <p className="mt-3 text-sm font-semibold leading-6 text-ink/58">{isEn ? 'When this feature is ready, signing in will sync aquariums, favorites, care history and share links across devices. For now, AquaGuide keeps your working data on this device and does not expose the unfinished sign-in flow.' : '功能完成后，登录会用于跨设备同步鱼缸、收藏、养护记录和分享链接。当前版本继续使用本设备数据，不开放尚未闭环的正式登录流程。'}</p>\n        <button type="button" onClick={() => navigate(-1)} className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-emerald-800 px-5 text-sm font-black text-white hover:bg-emerald-900"><ChevronLeft className="h-4 w-4" />{isEn ? 'Go back' : '返回'}</button>\n      </main>\n    </div>\n  );\n}\n`);
 
-// Keep this temporary patch mechanism out of the resulting PR diff.
 try { fs.unlinkSync('scripts/apply_product_closure_patch.mjs'); } catch {}
 try { fs.unlinkSync('.github/workflows/agent-product-closure.yml'); } catch {}
 
