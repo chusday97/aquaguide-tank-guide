@@ -5,7 +5,7 @@ export const aquariumFishSchema = z.object({
   fishId: z.string().min(1),
   quantity: z.number().int().positive(),
   entryDate: z.string().min(1),
-  lastWaterChangeDate: z.string().min(1),
+  lastWaterChangeDate: z.string().min(1).optional(),
 });
 
 export const aquariumSchema = z.object({

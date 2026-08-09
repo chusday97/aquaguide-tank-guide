@@ -120,6 +120,14 @@
 
 > 写给一个完全没有此前对话上下文的新接手者。最后更新：2026-07-29（Asia/Shanghai）。
 
+## 2026-08-09 核心鱼缸事实链路重构
+
+- 当前目标：把“现实中已经存在的生物”和“未来准备加入的生物”拆成不同 Intent；事实必须先保存，混养判断只能生成保存后的风险提示。
+- 已完成：2.6.0 契约、鱼缸资料 `empty / incomplete / usable / complete` 派生规则、`AquariumFish.lastWaterChangeDate` 可空语义和两类 Intent 策略测试。
+- 当前阶段：尚未接入 Repository 命令和页面；旧 `executeSpeciesAddition`、默认鱼缸和直接 `persistAquariums` 路径仍待替换。
+- 禁止重踩：不得用入缸日期补换水日期；不得让 `not_recommended` 或 `insufficient_data` 阻止记录现实事实；规划阶段不得静默写入真实鱼缸。
+- 验证：`test:aquarium-creation-semantics`、`test:addition-intents`、`lint` 通过。
+
 ## 2026-07-29 首页、体态与生命纪念修复交接
 
 - 当前结果：功能实现、主线程回归、同一 Critic 修复后复验和独立 Evaluator 最终裁决均 PASS。

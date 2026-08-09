@@ -39,7 +39,7 @@ export interface AquariumFish {
   fishId: string;
   quantity: number;
   entryDate: string; // ISO string
-  lastWaterChangeDate: string; // ISO string
+  lastWaterChangeDate?: string; // ISO string; unknown until a real water-change record exists
   batches?: AquariumSpeciesBatch[];
 }
 
@@ -97,6 +97,20 @@ export interface Aquarium {
     light?: '无' | '普通灯' | '水草灯' | '海水灯';
   };
 }
+
+export type SpeciesAdditionIntent = 'record_existing' | 'planned_addition';
+
+export type AquariumSetupStatus = 'empty' | 'incomplete' | 'usable' | 'complete';
+
+export type SpeciesAdditionPolicy =
+  | 'save'
+  | 'save_with_warning'
+  | 'save_with_unknown'
+  | 'save_with_urgent_warning'
+  | 'allow'
+  | 'confirm'
+  | 'complete_information'
+  | 'block';
 
 export type MemorialCauseCode =
   | 'water_quality_change'

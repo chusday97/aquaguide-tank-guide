@@ -1,6 +1,6 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.5.1
+> 版本：2.6.0
 > 状态：已确认，实施中
 > 生效日期：2026-08-09
 > SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090002_atomic_care_reminder_completion.sql`
@@ -30,6 +30,7 @@ flowchart LR
 - 中文主数据继续作为确定性规则的稳定输入；本地化只改变展示文本，不改变规则结论。
 - 侧栏与页头的任务入口只能进入正式路由或可定位模块，不得由导航直接打开业务弹窗。
 - 缸内体态属于养护与诊断上下文，不得改变混养四态结论。
+- 现实中已经存在的缸内生物属于事实记录；混养结论只能生成保存后的风险提示，不能阻止事实写入。未来规划仍受四态添加策略约束。
 
 ### 1.1 任务式路由
 
@@ -196,6 +197,19 @@ interface CareActionEvidence {
 - `aquarium_components`：底砂、水草和硬景。
 
 同一鱼缸内同一 `speciesCatalogKey` 只能保留一条有效记录，追加数量通过更新完成。
+
+鱼缸创建时只保存名称、真实建缸日期和来源。尺寸、水体、目标温度、设备、底砂与换水日期在用户未提供时必须保持空值；UI 示例值不得进入持久化对象。`aquarium_species.last_water_change_at` 继续允许为空，入缸日期不得作为换水日期回填。
+
+鱼缸资料状态由前端领域服务派生，不新增数据库字段：
+
+```ts
+type AquariumSetupStatus = 'empty' | 'incomplete' | 'usable' | 'complete';
+```
+
+- `empty`：无配置、无生物。
+- `incomplete`：已有部分事实或生物，但缺少完整尺寸或水体类型。
+- `usable`：完整尺寸与水体类型均已记录。
+- `complete`：在 `usable` 基础上确认目标温度与过滤状态。
 
 ### 4.3 DiagnosisRecordRow
 
@@ -394,7 +408,7 @@ type ApiErrorCode =
 | PATCH | `/aquariums/:id/components/:componentId` | 可变字段、`version` | `AquariumComponentRecord` | 400/401/404/409 |
 | DELETE | `/aquariums/:id/components/:componentId` | `version` | `{ deleted: true }` | 401/404/409 |
 
-鱼缸直接添加生物仍需先通过共享确定性混养规则；后端必须复核最终写入请求，不能只相信前端结论。
+物种写入分为两种 Intent：`record_existing` 先保存事实再评估，四态均不得阻止保存；`planned_addition` 先评估，继续使用 `allow / confirm / complete_information / block`。规划阶段不写入缸内物种，只有用户明确确认已经实际入缸后才切换为事实记录。
 
 ### 7.2.1 缸内物种批次
 
@@ -515,12 +529,30 @@ AI 请求增加 `locale`，只控制输出语言；混养、巡检、今日行�
 ```ts
 interface AquaGuideRepository {
   getAquariums(): Promise<AquariumWithRelations[]>;
+  createAquarium(input: AquariumCreateCommand): Promise<AquariumWithRelations>;
+  addLivestock(input: LivestockAddCommand): Promise<AquariumWithRelations>;
   saveAquarium(input: AquariumSaveInput): Promise<AquariumWithRelations>;
   removeLivestock(input: LivestockRemovalInput): Promise<AquariumWithRelations>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
   saveDiagnosis(input: DiagnosisSaveInput): Promise<DiagnosisRecordRow>;
   saveMemorial(input: MemorialSaveInput): Promise<MemorialRecordRow>;
   updateCareReminder(input: CareReminderMutation): Promise<CareReminderRecordRow>;
+}
+
+interface AquariumCreateCommand {
+  name: string;
+  startedAt: string;
+  startedAtSource: 'created';
+}
+
+interface LivestockAddCommand {
+  aquariumId: string;
+  speciesCatalogKey: string;
+  quantity: number;
+  entryDate: string;
+  lifeStage?: LifeStage;
+  reproductiveState?: ReproductiveState;
+  operationId: string;
 }
 ```
 
