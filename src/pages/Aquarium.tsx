@@ -1034,6 +1034,23 @@ const getSubstrateArchiveSpecies = (substrate?: string) => {
   );
 };
 
+const getAddFishCategoryGroup = (fish: Fish) => {
+  const lifeType = getLifeType(fish);
+  const text = `${fish.name} ${fish.category} ${fish.scientificName}`;
+  if (lifeType === 'plant') return '水草';
+  if (lifeType === 'coral') return '珊瑚';
+  if (lifeType === 'invertebrate') {
+    if (/虾|shrimp|caridina|neocaridina/i.test(text)) return '虾';
+    if (/螺|snail|neritina|pomacea|clithon|anentome/i.test(text)) return '螺';
+    if (/蟹|crab/i.test(text)) return '蟹';
+    return '其他';
+  }
+  if (lifeType === 'fish') return '鱼类';
+  return '其他';
+};
+
+const ADD_FISH_CATEGORY_OPTIONS = ['全部', '鱼类', '虾', '螺', '蟹', '珊瑚', '水草', '其他'] as const;
+
 type DiagnosisMode = 'home' | 'quiz' | 'result' | 'history';
 
 type DiagnosisQuizQuestion = DiagnosisQuestion;
@@ -1191,6 +1208,7 @@ export default function AquariumManager() {
 
   // New fish form state
   const [fishSearchTerm, setFishSearchTerm] = useState('');
+  const [addFishCategory, setAddFishCategory] = useState<(typeof ADD_FISH_CATEGORY_OPTIONS)[number]>('全部');
   const [selectedAddFishItems, setSelectedAddFishItems] = useState<SelectedAddFishItem[]>([]);
   const [addFishSuccess, setAddFishSuccess] = useState<{
     aquariumName: string;
@@ -1259,6 +1277,8 @@ export default function AquariumManager() {
   };
   const [deceasedRecords, setDeceasedRecords] = useState<DeceasedRecord[]>([]);
   const [tankActionMessage, setTankActionMessage] = useState<string>('');
+  const [featurePreview, setFeaturePreview] = useState<null | { kind: 'ai_setup' | 'ai_building' | 'ai_risk' | 'login'; missing?: string[] }>(null);
+  const [riskOverrideConfirmOpen, setRiskOverrideConfirmOpen] = useState(false);
   const [fedToday, setFedToday] = useState(false);
   const [priorityTaskStatus, setPriorityTaskStatus] = useState<Record<string, string>>({});
   const [isCarePlanExpanded, setIsCarePlanExpanded] = useState(false);
@@ -1979,6 +1999,7 @@ export default function AquariumManager() {
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
     setFishSearchTerm('');
+    setAddFishCategory('全部');
     setSelectedAddFishItems(selectedFish
       ? [{ fishId: selectedFish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd') }]
       : []);
@@ -2114,6 +2135,33 @@ export default function AquariumManager() {
     const items = addFishCompatibilityReview?.items || normalizeSelectedAddFishItems();
     setAdditionIntent('record_existing');
     await recordSelectedFishItems(items);
+  };
+
+  const handleOverrideRiskAndAdd = async () => {
+    if (!activeAquarium || !addFishCompatibilityReview || addFishCompatibilityReview.status !== 'not_recommended') return;
+    const key = 'aquaguide_risk_overrides_v1';
+    let current: unknown[] = [];
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+      current = Array.isArray(parsed) ? parsed : [];
+    } catch {
+      current = [];
+    }
+    const override = {
+      id: crypto.randomUUID(),
+      aquariumId: activeAquarium.id,
+      items: addFishCompatibilityReview.items,
+      status: addFishCompatibilityReview.status,
+      blockingReasons: addFishCompatibilityReview.keyRules.map(rule => ({ code: rule.code, title: rule.title, evidence: rule.evidence, severity: rule.severity })),
+      ruleVersion: addFishCompatibilityReview.evaluations[0]?.result.metadata.ruleVersion || 'unknown',
+      confirmedAt: new Date().toISOString(),
+    };
+    localStorage.setItem(key, JSON.stringify([override, ...current].slice(0, 100)));
+    setRiskOverrideConfirmOpen(false);
+    const saved = await recordSelectedFishItems(addFishCompatibilityReview.items);
+    if (saved) {
+      setTankActionMessage(isEn ? 'Added after explicit risk confirmation. The high-risk override was recorded.' : '已在明确确认风险后加入，并保留这次高风险覆盖记录。');
+    }
   };
 
   const handleAddCompatibilitySpeciesToTank = async (items: { fishId: string; quantity: number }[]) => {
@@ -2392,11 +2440,12 @@ export default function AquariumManager() {
   };
 
   const openTankBuildCopilot = () => {
-    setTankCopilotError('');
-    setTankCopilotResult(null);
-    setTankCopilotAnswers({});
-    setTankCopilotGoal(prev => prev || (activeAquarium.fishes.length > 0 ? (Boolean(i18n.language?.startsWith('en')) ? 'Plan safe additions based on active tank' : '基于当前鱼缸规划下一步安全搭配') : (Boolean(i18n.language?.startsWith('en')) ? 'Beginner small freshwater tank' : '新手小型淡水缸')));
-    setIsTankCopilotOpen(true);
+    const missing = getTankCopilotMissingInfo(activeAquarium);
+    if (missing.length > 0) {
+      setFeaturePreview({ kind: 'ai_setup', missing });
+      return;
+    }
+    setFeaturePreview({ kind: 'ai_building' });
   };
 
   const handleTankCopilotGenerate = async (goalOverride?: string, answerOverride?: Record<string, string>) => {
@@ -3806,17 +3855,41 @@ export default function AquariumManager() {
         settingsForm.equipment?.heater ? (isEn ? 'Heater' : '加热棒') : null,
         settingsForm.equipment?.oxygen ? (isEn ? 'Aeration' : '氧气/气泡石') : null,
       ].filter(Boolean).join(isEn ? ', ' : '、') || (isEn ? 'No filter or auxiliary equipment selected' : '未选择过滤或辅助设备'),
-      configured: Boolean(
-        (settingsForm.equipment?.filter && settingsForm.equipment.filter !== '无')
-        || settingsForm.equipment?.heater
-        || settingsForm.equipment?.oxygen
-      ),
+      configured: settingsForm.equipment?.filter !== undefined
+        || typeof settingsForm.equipment?.heater === 'boolean'
+        || typeof settingsForm.equipment?.oxygen === 'boolean',
     },
   ];
   const renderSettingsPanel = (panel: NonNullable<typeof activeSettingsPanel>) => {
     if (panel === 'size') {
       return (
         <ConfigSection title={isEn ? "Dimensions" : "尺寸"} subtitle={isEn ? "Used for volume estimation and care advice." : "用于估算容量和后续养护建议。"}>
+          <div className="mb-3">
+            <div className="text-[11px] font-black text-ink/55">{isEn ? 'Quick presets' : '常见鱼缸预设'}</div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {[
+                { label: '30×20×25cm · ~15L', dimensions: { length: '30', width: '20', height: '25' } },
+                { label: '45×25×30cm · ~34L', dimensions: { length: '45', width: '25', height: '30' } },
+                { label: '60×30×36cm · ~65L', dimensions: { length: '60', width: '30', height: '36' } },
+                { label: '90×45×45cm · ~182L', dimensions: { length: '90', width: '45', height: '45' } },
+              ].map(preset => {
+                const selected = settingsForm.dimensions?.length === preset.dimensions.length
+                  && settingsForm.dimensions?.width === preset.dimensions.width
+                  && settingsForm.dimensions?.height === preset.dimensions.height;
+                return (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => setSettingsForm({ ...settingsForm, dimensions: preset.dimensions })}
+                    className={`rounded-full border px-3 py-1.5 text-[11px] font-black ${selected ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-border bg-white text-ink/55'}`}
+                  >
+                    {preset.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-2 text-[10px] font-medium text-ink/42">{isEn ? 'Choose a preset only if it matches your real tank; otherwise enter the dimensions below.' : '只有和真实鱼缸一致时才选择预设；不匹配请在下方填写实际长宽高。'}</div>
+          </div>
           <div className="grid grid-cols-3 gap-2">
             {dimensionFields.map(item => (
               <div key={item.key} className="grid gap-1.5">
@@ -3874,6 +3947,19 @@ export default function AquariumManager() {
           </div>
           <div className="mt-3 grid gap-1.5">
             <Label className="text-[11px] font-bold text-ink/55">{isEn ? 'Target Temp (°C)' : '目标温度 (°C)'}</Label>
+            <div className="flex flex-wrap gap-2">
+              {['22', '24', '25', '26', '28'].map(value => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setSettingsForm({ ...settingsForm, targetTemperature: value })}
+                  className={`min-h-9 rounded-full border px-3 text-[11px] font-black ${settingsForm.targetTemperature === value ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-border bg-white text-ink/55'}`}
+                >
+                  {value}°C
+                </button>
+              ))}
+            </div>
+            <div className="text-[10px] font-medium text-ink/42">{isEn ? 'Tap a common target or enter your actual target below.' : '可点选常见目标温度，或在下方填写你的实际温度。'}</div>
             <Input
               type="number"
               value={settingsForm.targetTemperature || ''}
@@ -3982,7 +4068,7 @@ export default function AquariumManager() {
               <SelectableOptionCard
                 key={option}
                 label={option}
-                selected={(settingsForm.equipment?.light || '普通灯') === option}
+                selected={settingsForm.equipment?.light === option}
                 onClick={() => setSettingsForm({
                   ...settingsForm,
                   equipment: { ...(settingsForm.equipment || {}), light: option as any }
@@ -4002,7 +4088,7 @@ export default function AquariumManager() {
               <SelectableOptionCard
                 key={option}
                 label={option}
-                selected={(settingsForm.equipment?.filter || '瀑布过滤') === option}
+                selected={settingsForm.equipment?.filter === option}
                 onClick={() => setSettingsForm({
                   ...settingsForm,
                   equipment: { ...(settingsForm.equipment || {}), filter: option as any }
@@ -4557,8 +4643,7 @@ export default function AquariumManager() {
       showToast(isEn ? 'Privacy-safe report created.' : '脱敏分享报告已生成。');
     } catch (error) {
       if (error instanceof AquaGuideApiError && error.code === 'AUTH_REQUIRED') {
-        showToast(isEn ? 'Sign in to create a share link.' : '登录后才能生成分享链接。', 'error');
-        navigateToRoute('/login');
+        setFeaturePreview({ kind: 'login' });
         return;
       }
       showToast(error instanceof Error ? error.message : '分享报告暂时没有生成成功。', 'error');
@@ -6228,11 +6313,91 @@ export default function AquariumManager() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={Boolean(featurePreview)} onOpenChange={(open) => { if (!open) setFeaturePreview(null); }}>
+        <DialogContent showCloseButton={false} className="w-[min(92vw,480px)] max-w-[480px] rounded-[24px]">
+          <DialogHeader>
+            <DialogTitle>
+              {featurePreview?.kind === 'ai_setup'
+                ? (isEn ? 'Complete tank details before using AI' : '完善鱼缸参数后才能使用 AI')
+                : featurePreview?.kind === 'login'
+                  ? (isEn ? 'Cloud sync is under construction' : '云端同步 · 建设中')
+                  : featurePreview?.kind === 'ai_risk'
+                    ? (isEn ? 'AI risk advice is under construction' : 'AI 风险调整建议 · 建设中')
+                    : (isEn ? 'AI personalized guidance is under construction' : 'AI 个性化建议 · 建设中')}
+            </DialogTitle>
+            <DialogDescription>
+              {featurePreview?.kind === 'ai_setup'
+                ? (isEn ? 'AI only becomes available after the tank size, water type, target temperature, and filter status are confirmed. This avoids advice based on guessed values.' : 'AI 只有在尺寸、水体类型、目标温度和过滤状态都由你确认后才会开放，避免系统基于猜测数据生成建议。')
+                : featurePreview?.kind === 'login'
+                  ? (isEn ? 'Future sign-in will sync aquariums, favorites, care history and share links across devices. The current version continues to store data locally.' : '未来登录后会跨设备同步鱼缸、收藏、养护记录和分享链接；当前版本继续使用本地数据，不会进入未闭环的登录流程。')
+                  : featurePreview?.kind === 'ai_risk'
+                    ? (isEn ? 'This feature will explain the blocking rule and suggest safer alternatives or tank adjustments. Current decisions still use AquaGuide compatibility rules.' : '这个功能未来会解释阻断风险，并给出更安全的替代物种或鱼缸调整方案；当前仍以 AquaGuide 兼容规则为准。')
+                    : (isEn ? 'This feature will use confirmed tank parameters and compatibility rules to generate personalized care and stocking guidance. It is not yet open to production users.' : '这个功能未来会读取已确认的鱼缸参数与兼容规则，生成个性化养护和搭配建议；当前版本暂不开放正式使用。')}
+            </DialogDescription>
+          </DialogHeader>
+          {featurePreview?.kind === 'ai_setup' && featurePreview.missing && featurePreview.missing.length > 0 && (
+            <div className="rounded-[16px] bg-amber-50 p-3 text-sm font-bold text-amber-900">
+              <div className="font-black">{isEn ? 'Still missing' : '还缺少'}</div>
+              <div className="mt-1">{featurePreview.missing.join('、')}</div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setFeaturePreview(null)}>{isEn ? 'Got it' : '稍后'}</Button>
+            {featurePreview?.kind === 'ai_setup' && (
+              <Button
+                type="button"
+                onClick={() => {
+                  const missing = featurePreview.missing || [];
+                  const panel = missing.some(item => /尺寸|容量|volume|size/i.test(item))
+                    ? 'size'
+                    : missing.some(item => /过滤|filter|设备|equipment/i.test(item))
+                      ? 'equipment'
+                      : 'parameters';
+                  setFeaturePreview(null);
+                  openAquariumSettings(panel);
+                }}
+                className="bg-emerald-700 text-white hover:bg-emerald-800"
+              >
+                {isEn ? 'Complete tank settings' : '去完善鱼缸参数'}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={riskOverrideConfirmOpen} onOpenChange={setRiskOverrideConfirmOpen}>
+        <DialogContent showCloseButton={false} className="w-[min(92vw,500px)] max-w-[500px] rounded-[24px] border-red-200">
+          <DialogHeader>
+            <DialogTitle className="text-red-700">{isEn ? 'AquaGuide does not recommend this combination' : 'AquaGuide 不建议这个组合'}</DialogTitle>
+            <DialogDescription>
+              {isEn ? 'If you continue, the livestock will be recorded as intentionally added despite a blocking compatibility risk. The override and current rule reasons will be kept locally.' : '如果继续，这些生物会在存在阻断级混养风险的情况下被记录为“用户明确选择加入”。系统会保留本次风险原因和确认记录。'}
+            </DialogDescription>
+          </DialogHeader>
+          {addFishCompatibilityReview?.keyRules?.length ? (
+            <div className="rounded-[16px] bg-red-50 p-3">
+              {addFishCompatibilityReview.keyRules.slice(0, 3).map(rule => (
+                <div key={`${rule.code}-${rule.evidence}`} className="py-1 text-sm font-bold leading-relaxed text-red-950">
+                  <span className="font-black text-red-700">{rule.title}：</span>{rule.evidence}
+                </div>
+              ))}
+            </div>
+          ) : null}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setRiskOverrideConfirmOpen(false)}>{isEn ? 'Go back' : '返回调整'}</Button>
+            <Button type="button" disabled={isAddFishSaving} onClick={() => void handleOverrideRiskAndAdd()} className="bg-red-600 text-white hover:bg-red-700">
+              {isAddFishSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {isEn ? 'I understand the risk, still add' : '我已了解风险，仍要加入'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Add Fish Dialog (Search Based) */}
               <Dialog open={isAddFishOpen} onOpenChange={(open) => {
                 setIsAddFishOpen(open);
                 if (!open) {
                   setFishSearchTerm('');
+                  setAddFishCategory('全部');
                   setSelectedAddFishItems([]);
                   setAddFishSuccess(null);
                   setAddFishDatePicker(null);
@@ -6368,6 +6533,16 @@ export default function AquariumManager() {
                     </span>
                   </div>
 
+                  {addFishCompatibilityReview.status === 'not_recommended' && (
+                    <div className="rounded-[18px] border-2 border-red-300 bg-white p-4 shadow-sm">
+                      <div className="text-[11px] font-black uppercase tracking-[0.12em] text-red-600">{isEn ? 'Risk after adding' : '加入后的风险判定'}</div>
+                      <div className="mt-1 text-2xl font-black leading-tight text-red-700">{isEn ? 'Not recommended to mix' : '不建议混养'}</div>
+                      <p className="mt-2 text-[15px] font-black leading-relaxed text-red-950">
+                        {addFishCompatibilityReview.keyRules[0]?.evidence || (isEn ? 'The current combination has a blocking compatibility risk.' : '当前组合存在阻断级混养风险。')}
+                      </p>
+                    </div>
+                  )}
+
                   <div className="grid gap-2">
                     {addFishCompatibilityReview.evaluations.map(evaluation => (
                       <div key={evaluation.fish.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[14px] bg-white/82 px-3 py-2 shadow-sm">
@@ -6385,8 +6560,8 @@ export default function AquariumManager() {
                       <div className="text-[11px] font-black text-ink">{isEn ? 'Key Reasons' : '最关键的依据'}</div>
                       <div className="mt-2 grid gap-1.5">
                         {addFishCompatibilityReview.keyRules.slice(0, 3).map(rule => (
-                          <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className="text-[11px] font-medium leading-relaxed text-ink/62">
-                            <span className="font-black text-ink/72">{rule.title}：</span>{rule.evidence}
+                          <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className={addFishCompatibilityReview.status === 'not_recommended' ? 'text-[14px] font-bold leading-relaxed text-red-950' : 'text-[11px] font-medium leading-relaxed text-ink/62'}>
+                            <span className={addFishCompatibilityReview.status === 'not_recommended' ? 'font-black text-red-800' : 'font-black text-ink/72'}>{rule.title}：</span>{rule.evidence}
                           </div>
                         ))}
                       </div>
@@ -6400,6 +6575,21 @@ export default function AquariumManager() {
                 <div>
                   <div className="text-[13px] font-black text-ink">{isEn ? 'Step 1: Select Species' : '第 1 步：选择生物'}</div>
                   <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-ink/50">{addFishIntro}</p>
+                </div>
+                <div>
+                  <div className="text-[11px] font-black text-ink/45">{isEn ? 'Choose a category first' : '先选择大类'}</div>
+                  <div className="app-scrollbar-hidden mt-2 flex gap-2 overflow-x-auto pb-1">
+                    {ADD_FISH_CATEGORY_OPTIONS.map(category => (
+                      <button
+                        key={category}
+                        type="button"
+                        onClick={() => { setAddFishCategory(category); setFishSearchTerm(''); }}
+                        className={`shrink-0 rounded-full border px-3 py-1.5 text-[11px] font-black ${addFishCategory === category ? 'border-emerald-300 bg-emerald-50 text-emerald-800' : 'border-border bg-white text-ink/50'}`}
+                      >
+                        {isEn ? ({ '全部': 'All', '鱼类': 'Fish', '虾': 'Shrimp', '螺': 'Snails', '蟹': 'Crabs', '珊瑚': 'Corals', '水草': 'Plants', '其他': 'Other' } as Record<string, string>)[category] : category}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/45" />
@@ -6422,7 +6612,7 @@ export default function AquariumManager() {
                 </div>
 
                 <div className="grid max-h-[300px] gap-2 overflow-y-auto pr-1">
-                  {addFishList.map(fish => {
+                  {addFishList.filter(fish => addFishCategory === '全部' || getAddFishCategoryGroup(fish) === addFishCategory).map(fish => {
                     const isSelected = selectedAddFishItems.some(item => item.fishId === fish.id);
                     return (
                     <button
@@ -6670,7 +6860,7 @@ export default function AquariumManager() {
                       </Button>
                       <div className="grid gap-1">
                         {selectedAddSpeciesCount === 0 && <div className="text-center text-[10px] font-bold text-ink/38">{isEn ? 'Select at least one species.' : '请先从上方选择至少一种生物'}</div>}
-                        {addFishCompatibilityReview && ['block', 'complete_information'].includes(getTankCompatibilityAddPolicy(addFishCompatibilityReview.status)) && (
+                        {addFishCompatibilityReview && getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'complete_information' && (
                           <Button
                             type="button"
                             variant="outline"
@@ -6682,11 +6872,22 @@ export default function AquariumManager() {
                             已经在缸里了，记录实际情况
                           </Button>
                         )}
+                        {addFishCompatibilityReview && getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'block' && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled={isAddFishSaving}
+                            onClick={() => setFeaturePreview({ kind: 'ai_risk' })}
+                            className="h-10 rounded-full border-violet-200 bg-violet-50 text-sm font-black text-violet-800"
+                          >
+                            <Sparkles className="mr-1.5 h-4 w-4" />AI 建议
+                          </Button>
+                        )}
                         <Button
-                          className="h-10 rounded-full bg-emerald-700 text-sm font-bold text-white hover:bg-emerald-800 disabled:bg-ink/15 disabled:text-ink/35"
+                          className={`h-10 rounded-full text-sm font-bold text-white disabled:bg-ink/15 disabled:text-ink/35 ${addFishCompatibilityReview && getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'block' ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-700 hover:bg-emerald-800'}`}
                           onClick={addFishCompatibilityReview
                             ? getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'block'
-                              ? () => setAddFishCompatibilityReview(null)
+                              ? () => setRiskOverrideConfirmOpen(true)
                               : () => void handleConfirmAddFishAfterReview()
                             : () => void handleAddFish()}
                           disabled={selectedAddSpeciesCount === 0 || isAddFishSaving}
@@ -6695,7 +6896,7 @@ export default function AquariumManager() {
                             ? '请先选择生物'
                             : addFishCompatibilityReview
                               ? getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'block'
-                                ? '返回调整组合'
+                                ? '仍要加入'
                                 : getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'complete_information'
                                   ? '先补充鱼缸信息'
                                   : '已经实际入缸，记录下来'
@@ -6753,7 +6954,7 @@ export default function AquariumManager() {
                   <div>
                     <div className="text-sm font-black text-ink">{isEn ? 'What tank do you want to build?' : '你想建什么样的缸？'}</div>
                     <div className="text-[11px] font-bold text-ink/45">
-                      当前参考：{activeAquarium.name} · {activeAquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · {activeAquarium.targetTemperature || 25}°C
+                      当前参考：{activeAquarium.name} · {activeAquarium.waterType === 'Saltwater' ? '海水' : activeAquarium.waterType === 'Freshwater' ? '淡水' : '水体未设置'} · {activeAquarium.targetTemperature ? `${activeAquarium.targetTemperature}°C` : '温度未设置'}
                     </div>
                   </div>
                   <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-ink/45">

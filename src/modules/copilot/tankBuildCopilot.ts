@@ -19,7 +19,7 @@ export const getTankCopilotMissingInfo = (aquarium: Aquarium) => {
   if (!getTankVolumeLiters(aquarium)) missing.push('鱼缸尺寸或容量');
   if (!hasText(aquarium.waterType)) missing.push('水体类型');
   if (!Number.isFinite(Number(aquarium.targetTemperature))) missing.push('目标水温');
-  if (!aquarium.equipment?.filter || aquarium.equipment.filter === '无') missing.push('过滤设备');
+  if (aquarium.equipment?.filter === undefined) missing.push('过滤设备');
   return missing;
 };
 

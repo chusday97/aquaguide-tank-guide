@@ -36,6 +36,7 @@ export default function SettingsPage() {
   const [shareError, setShareError] = useState('');
   const [revokingShareId, setRevokingShareId] = useState('');
   const [pendingRevokeShareId, setPendingRevokeShareId] = useState('');
+  const [isLoginPreviewOpen, setIsLoginPreviewOpen] = useState(false);
   const hasUnsavedFeedback = feedbackMessage.trim().length > 0;
 
   useEffect(() => {
@@ -197,7 +198,7 @@ export default function SettingsPage() {
             </div>
             <button type="button" onClick={() => navigateToRoute('/aquarium?action=exports')} className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-800 px-4 text-sm font-black text-white hover:bg-emerald-900"><Download className="h-4 w-4" />{isEn ? 'Open export & share' : '打开导出与分享'}</button>
             {shareStatus === 'loading' && <p className="mt-4 text-sm font-bold text-ink/45">{isEn ? 'Loading…' : '正在加载…'}</p>}
-            {shareStatus === 'auth' && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[14px] bg-slate-50 px-4 py-3"><p className="text-sm font-semibold text-ink/60">{isEn ? 'Sign in to create and revoke privacy-safe links.' : '登录后可以生成和撤销脱敏报告链接。'}</p><button type="button" onClick={() => navigateToRoute('/login')} className="min-h-11 rounded-full bg-emerald-700 px-4 text-sm font-black text-white">{isEn ? 'Sign in' : '去登录'}</button></div>}
+            {shareStatus === 'auth' && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[14px] bg-slate-50 px-4 py-3"><p className="text-sm font-semibold text-ink/60">{isEn ? 'Sign in to create and revoke privacy-safe links.' : '登录后可以生成和撤销脱敏报告链接。'}</p><button type="button" onClick={() => setIsLoginPreviewOpen(true)} className="min-h-11 rounded-full bg-emerald-700 px-4 text-sm font-black text-white">{isEn ? 'Sign in' : '去登录'}</button></div>}
             {shareStatus === 'ready' && shareReports.length === 0 && <p className="mt-4 rounded-[14px] bg-slate-50 px-4 py-3 text-sm font-semibold text-ink/55">{isEn ? 'No shared reports. Create one from the aquarium archive.' : '还没有分享报告，可从鱼缸档案生成。'}</p>}
             {shareStatus === 'ready' && shareReports.length > 0 && (
               <div className="mt-4 overflow-hidden rounded-[14px] border border-slate-200">
@@ -277,6 +278,17 @@ export default function SettingsPage() {
           </section>
         </div>
       </div>
+      <Dialog open={isLoginPreviewOpen} onOpenChange={setIsLoginPreviewOpen}>
+        <DialogContent showCloseButton={false} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
+          <DialogHeader>
+            <DialogTitle>{isEn ? 'Cloud sync is under construction' : '云端同步 · 建设中'}</DialogTitle>
+            <DialogDescription>{isEn ? 'Future sign-in will sync your aquariums, favorites, care history and privacy-safe share links across devices. The current version keeps using local data and will not enter an unfinished login flow.' : '未来登录后会跨设备同步鱼缸、收藏、养护记录和脱敏分享链接。当前版本继续使用本地数据，不会进入尚未闭环的登录流程。'}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button type="button" autoFocus onClick={() => setIsLoginPreviewOpen(false)} className="min-h-11 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white">{isEn ? 'Got it' : '知道了'}</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Dialog open={Boolean(pendingRevokeShareId)} onOpenChange={open => { if (!open && !revokingShareId) setPendingRevokeShareId(''); }}>
         <DialogContent showCloseButton={false} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
           <DialogHeader>
