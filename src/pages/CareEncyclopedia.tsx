@@ -3594,7 +3594,7 @@ export function CareArticleDetail({
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="text-[17px] font-black text-ink">{reminderSheet.title}</div>
-                <div className="mt-1 text-[11px] font-bold text-ink/45">{isEn ? 'Select a reminder node, which will be saved to local care reminders upon confirmation.' : '选择一个提醒节点，确认后会保存到本地养护提醒。'}</div>
+                <div className="mt-1 text-[11px] font-bold text-ink/45">{isEn ? 'Choose a time. After confirmation, it will be saved to your care plan.' : '选择一个提醒时间，确认后会保存到养护计划。'}</div>
               </div>
               <button type="button" onClick={() => setReminderSheet(null)} className="rounded-full bg-bg px-2 py-1 text-[11px] font-black text-ink/45">{isEn ? 'Close' : '关闭'}</button>
             </div>
