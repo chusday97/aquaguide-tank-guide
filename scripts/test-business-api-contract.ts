@@ -113,9 +113,10 @@ const speciesCreateRoute = routes.slice(
   routes.indexOf("aquariumsRouter.post('/aquariums/:id/species'"),
   routes.indexOf("aquariumsRouter.patch('/aquariums/:id/species/:recordId'"),
 );
-assert.match(speciesCreateRoute, /species_catalog_key.*batch:\$\{idempotency\.key\}/s);
-assert.match(speciesCreateRoute, /existingBatch/);
-assert.match(speciesCreateRoute, /replayedBatch/);
+assert.match(speciesCreateRoute, /client\.rpc\('add_aquarium_livestock'/);
+assert.match(speciesCreateRoute, /operation_request_hash: getRequestHash\(request\)/);
+assert.doesNotMatch(speciesCreateRoute, /\.from\('aquarium_species'\)\s*\.insert/);
+assert.doesNotMatch(speciesCreateRoute, /\.from\('aquarium_species_batches'\)\s*\.insert/);
 
 const requestShape = {
   method: 'POST',

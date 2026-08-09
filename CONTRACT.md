@@ -413,6 +413,7 @@ type ApiErrorCode =
 ### 7.2.1 缸内物种批次
 
 `aquarium_species` 继续作为同缸同物种的汇总记录，`aquarium_species_batches` 记录同一物种内的数量、入缸日期和体态差异。
+新增现实生物必须调用数据库函数 `add_aquarium_livestock`，在同一事务内创建或复用父物种、写入批次并登记幂等结果；批次或幂等登记失败时不得留下 active 父记录，相同操作号重放只能得到一个父记录和一个批次。
 批次拆分必须调用数据库函数 `split_aquarium_species_batch`，在同一事务内减少来源批次数量并创建新批次；任一步失败时总数量保持不变，同一幂等键重放返回同一拆分结果。
 批次合并必须调用 `merge_aquarium_species_batches`，在同一事务内写入用户确认的最终体态并合并两组，合并前后总数量保持不变；最终体态使用数据库 enum 参数，不经不安全的文本隐式转换。
 现实移出必须调用 `remove_aquarium_species_batch_quantity`，在同一数据库事务内锁定批次、扣减或软删除，并写入幂等记录；相同操作号和请求重放只能返回当前鱼缸，不能再次扣减。移出数量在界面、Repository、API 与数据库四层都必须为正整数。
