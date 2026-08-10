@@ -1855,14 +1855,14 @@ export default function CareEncyclopedia() {
           ? 'Saved articles for quick reference.'
           : activeCategory !== 'all'
             ? `Current category: ${getCategoryLabel(activeCategory)}`
-            : 'Browse care guides by topic.')
+            : '')
     : (searchTerm.trim()
         ? ''
         : careViewMode === 'favorites'
           ? ''
           : activeCategory !== 'all'
             ? ''
-            : '按问题浏览常用养护方法。');
+            : '');
 
   const openPreview = (topic: CareTopic) => {
     const image = getCareImage(topic, isEn);
@@ -1949,7 +1949,6 @@ export default function CareEncyclopedia() {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-[20px] font-black leading-tight text-ink">{t('care.title')}</h1>
-            <p className="mt-1 text-[12px] font-medium text-ink/55">{t('care.subtitle')}</p>
           </div>
           <button
             type="button"
@@ -1969,7 +1968,6 @@ export default function CareEncyclopedia() {
                 <div className="text-[16px] font-black text-ink">{t('care.recommendedTitle')}</div>
                 <p className="mt-0.5 line-clamp-1 text-[11px] font-bold text-ink/45">{t('care.recommendedBasedOn')}{aquariumSummary}</p>
               </div>
-              <span className="shrink-0 rounded-full bg-bg px-2.5 py-1 text-[10px] font-black text-ink/42">{activeBannerIndex + 1}/{careRecommendations.length}</span>
             </div>
             <div
               ref={recommendationCarouselRef}
@@ -2598,9 +2596,9 @@ function StepDiagnosisPanel({
     <section className="mt-4 rounded-[22px] border border-emerald-100 bg-[#F8FCF8] p-3 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="text-[16px] font-black text-ink">{isEn ? 'Quick Assessment' : '快速评测'}</div>
+          <div className="text-[16px] font-black text-ink">{isEn ? 'Quick check' : '快速检查'}</div>
           <div className="mt-0.5 text-[11px] font-bold text-ink/45">
-            {isResultStep ? (isEn ? 'Your action plan is ready' : '处理方案已生成') : (isEn ? `Answered ${answeredCount}/${diagnosisQuestions.length}` : `已回答 ${answeredCount}/${diagnosisQuestions.length}`)}
+            {isResultStep ? (isEn ? 'Recommendations are ready' : '处理建议已生成') : (isEn ? `Answered ${answeredCount}/${diagnosisQuestions.length}` : `已回答 ${answeredCount}/${diagnosisQuestions.length}`)}
           </div>
         </div>
         {isResultStep && (
@@ -2609,7 +2607,7 @@ function StepDiagnosisPanel({
             onClick={resetDiagnosis}
             className="rounded-full bg-white px-3 py-1.5 text-[11px] font-black text-emerald-700 shadow-sm"
           >
-            {isEn ? 'Check Again' : '重新自查'}
+            {isEn ? 'Check again' : '重新检查'}
           </button>
         )}
       </div>
@@ -2784,7 +2782,7 @@ function StepDiagnosisPanel({
             className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800 disabled:bg-ink/15 disabled:text-ink/35"
           >
             {isReady
-              ? (isEn ? 'View Action Plan' : '查看处理方案')
+              ? (isEn ? 'View recommendations' : '查看处理建议')
               : !isTargetReady
                 ? (isEn ? 'Select who shows the symptom' : '请先选择检查对象')
                 : (isEn ? `${diagnosisQuestions.length - answeredCount} left` : `还差 ${diagnosisQuestions.length - answeredCount} 项`)}
@@ -2797,7 +2795,7 @@ function StepDiagnosisPanel({
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-[11px] font-black text-emerald-800">{isEn ? 'Assessment complete' : '评测完成'}</div>
+                <div className="text-[11px] font-black text-emerald-800">{isEn ? 'Check complete' : '检查完成'}</div>
                 <h3 className="mt-0.5 text-[19px] font-black leading-tight text-ink">{diagnosisState.result.riskLabel}</h3>
               </div>
               <span className={`shrink-0 rounded-full px-2.5 py-1.5 text-[10px] font-black ${resultTone.badge}`}>
@@ -2835,7 +2833,7 @@ function StepDiagnosisPanel({
                 </span>
                 <h4 className="text-[13px] font-black text-ink">
                   {diagnosisState.result.riskLevel === 'unknown'
-                    ? (isEn ? 'Complete these checks first' : '先补充这些检查')
+                    ? (isEn ? 'Confirm these details first' : '先确认这些信息')
                     : (isEn ? 'Do these steps now' : '现在按顺序做')}
                 </h4>
               </div>
@@ -2945,7 +2943,7 @@ function ActionEvidenceInline({ evidence, isEn }: { evidence?: CareActionEvidenc
   if (!evidence || evidence.citations.length === 0) return null;
   return (
     <div className="mt-1.5 flex items-center gap-1.5" data-care-action-evidence={evidence.id}>
-      <span className="text-[9px] font-bold text-ink/38">{isEn ? 'Sources' : '来源'}</span>
+      <span className="sr-only">{isEn ? 'Sources' : '来源'}</span>
       {evidence.citations.slice(0, 2).map(reference => (
         <a
           key={reference.id}
@@ -3374,7 +3372,7 @@ export function CareArticleDetail({
               </div>
               {procedureReminders[0] && (
                 <div className="mt-2 rounded-[16px] bg-yellow-50 px-3 py-3">
-                  <div className="text-[12px] font-black text-yellow-800">{isEn ? 'One thing to avoid' : '最重要的避坑提醒'}</div>
+                  <div className="text-[12px] font-black text-yellow-800">{isEn ? 'Avoid for now' : '暂时不要'}</div>
                   <p className="mt-1 text-[11px] font-medium leading-relaxed text-yellow-900/72">
                     <strong>{procedureReminders[0].title}{isEn ? ': ' : '：'}</strong>{procedureReminders[0].reason}
                   </p>
@@ -3392,9 +3390,7 @@ export function CareArticleDetail({
                       : (isEn ? 'Full Description' : '完整说明')}
                   </div>
                   <div className="mt-0.5 text-[11px] font-bold text-ink/45">
-                    {meta.guideType === 'careChecklist'
-                        ? (isEn ? 'Care by phase, focusing on stability, observation, and minimal operations.' : '按阶段照料，重点是稳定、观察和少量操作。')
-                        : (isEn ? 'Understand the logic first, then decide whether to operate.' : '先理解原理，再决定是否需要操作。')}
+                    {''}
                   </div>
                 </div>
                 <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${urgencyTagClassMap[meta.urgencyTag]}`}>
@@ -3461,7 +3457,7 @@ export function CareArticleDetail({
                 className="flex min-h-11 w-full items-center justify-between gap-3 text-left"
                 aria-expanded={isDetailExpanded}
               >
-                <span className="text-[13px] font-black text-ink">{isEn ? 'Detailed Description & Analysis' : '详细说明与判断依据'}</span>
+                <span className="text-[13px] font-black text-ink">{isEn ? 'Detailed description' : '详细说明'}</span>
                 <span className="rounded-full bg-bg px-2.5 py-1 text-[10px] font-black text-ink/50">
                   {isDetailExpanded ? (isEn ? 'Collapse' : '收起') : (isEn ? 'Expand' : '展开')}
                 </span>
