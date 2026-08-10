@@ -127,7 +127,7 @@ edit('src/pages/Settings.tsx', source => {
   return source;
 });
 
-edit('src/i18n.ts', source => {
+edit('src/i18n/index.ts', source => {
   const replacements = [
     ["localDataHint: '数据保存在当前浏览器，切换设备前请先同步或导出。'", "localDataHint: '数据目前保存在当前浏览器。'"],
     ["localDataHint: 'Data is stored in this browser. Sync or export before switching devices.'", "localDataHint: 'Data is currently stored in this browser.'"],
