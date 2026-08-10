@@ -63,6 +63,52 @@ replaceRequired('src/pages/Aquarium.tsx', "        onCreateShare={() => void cre
 replaceRequired('src/pages/Aquarium.tsx', "        isCreatingShare={isCreatingShare}\\n", '');`
 );
 
+// Add remaining export surfaces discovered by the regression scan.
+replace(
+`// Package surface: remove export test and html2canvas dependency; add a regression guard.`,
+`// Onboarding task card: progress remains, downloadable checklist is removed.
+replaceRequired('src/components/onboarding/OnboardingTaskCard.tsx',
+  "import { Check, ChevronRight, Circle, Download, X } from 'lucide-react';",
+  "import { Check, ChevronRight, Circle, X } from 'lucide-react';");
+replaceRequired('src/components/onboarding/OnboardingTaskCard.tsx', "import { ExportArtifactDialog } from '../export/ExportArtifactDialog';\\n", '');
+replaceRequired('src/components/onboarding/OnboardingTaskCard.tsx', "import { buildStarterChecklistArtifact } from '../../services/export/aquarium-artifact.service';\\n", '');
+replaceRequired('src/components/onboarding/OnboardingTaskCard.tsx', "  const [isExportOpen, setIsExportOpen] = useState(false);\\n", '');
+replaceRequired('src/components/onboarding/OnboardingTaskCard.tsx', "  const isEn = document.documentElement.lang.startsWith('en');\\n", '');
+replaceRequired('src/components/onboarding/OnboardingTaskCard.tsx', "  const exportContent = buildStarterChecklistArtifact({ labels: tasks.map(task => task.label), states: tasks.map(task => task.done), isEn });\\n", '');
+removeBalancedExpression('src/components/onboarding/OnboardingTaskCard.tsx', '          {progress.completedCount > 0 && (');
+replaceRequired('src/components/onboarding/OnboardingTaskCard.tsx', "      <ExportArtifactDialog open={isExportOpen} onOpenChange={setIsExportOpen} content={exportContent} isEn={isEn} />\\n", '');
+
+// Existing public share links may still be viewed; downloading a report is removed.
+replaceRequired('src/pages/SharedReport.tsx',
+  "import { useEffect, useMemo, useState } from 'react';",
+  "import { useEffect, useState } from 'react';");
+replaceRequired('src/pages/SharedReport.tsx',
+  "import { Download, ShieldCheck } from 'lucide-react';",
+  "import { ShieldCheck } from 'lucide-react';");
+replaceRequired('src/pages/SharedReport.tsx', "import { ExportArtifactDialog, type ExportArtifactContent } from '../components/export/ExportArtifactDialog';\\n", '');
+replaceRequired('src/pages/SharedReport.tsx', "  const [isExportOpen, setIsExportOpen] = useState(false);\\n", '');
+removeBetween('src/pages/SharedReport.tsx',
+  '  const exportContent = useMemo<ExportArtifactContent | null>(() => report ? ({\\n',
+  '  return (\\n');
+const sharedReportDownloadButtons = removeButtonContaining('src/pages/SharedReport.tsx', 'setIsExportOpen(true)');
+if (sharedReportDownloadButtons < 1) fail('SharedReport: expected report download button');
+replaceRequired('src/pages/SharedReport.tsx', "      <ExportArtifactDialog open={isExportOpen} onOpenChange={setIsExportOpen} content={exportContent} isEn={isEn} />\\n", '');
+
+// Onboarding activation test must no longer require an export action.
+replaceRequired('scripts/test-onboarding-activation.ts', "assert.match(taskCardSource, /buildStarterChecklistArtifact\\\\(\\\\{ labels: tasks\\\\.map/, '导出清单必须复用任务卡的同一任务集合');\\n", '');
+replaceRequired('scripts/test-onboarding-activation.ts', "assert.match(taskCardSource, /progress\\\\.completedCount > 0/, '未完成任何真实任务时不得下载清单');\\n", '');
+replaceRequired('scripts/test-onboarding-activation.ts',
+  "console.log('onboarding activation: goal order, real compatibility, legacy data and shared checklist passed');",
+  "console.log('onboarding activation: goal order, real compatibility and legacy data passed');");
+
+// Package surface: remove export test and html2canvas dependency; add a regression guard.`
+);
+
+replace(
+`const roots = ['src', 'scripts', 'package.json', 'HANDOFF.md'];\\n`,
+`const roots = ['src', 'scripts', 'package.json'];\\n`
+);
+
 replace(
 `const walk = (target) => {\\n  if (!fs.existsSync(target)) return;\\n  const stat = fs.statSync(target);`,
 `const walk = (target) => {\\n  if (target === 'scripts/verify-no-export-features.mjs' || target === 'scripts/remove-export-features.mjs' || target === 'scripts/fix-remove-export-migration.mjs') return;\\n  if (!fs.existsSync(target)) return;\\n  const stat = fs.statSync(target);`
