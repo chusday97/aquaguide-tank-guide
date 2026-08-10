@@ -21,6 +21,8 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      - name: Fix audit helper
+        run: node scripts/fix-fifth-copy-audit-runner.mjs
       - name: Apply approved copy audit
         run: node scripts/apply-fifth-copy-audit.mjs
       - name: Install dependencies
@@ -28,7 +30,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Remove one-time migration files
-        run: rm -f scripts/apply-fifth-copy-audit.mjs .github/workflows/apply-fifth-copy-audit.yml
+        run: rm -f scripts/apply-fifth-copy-audit.mjs scripts/fix-fifth-copy-audit-runner.mjs .github/workflows/apply-fifth-copy-audit.yml
       - name: Commit cleanup
         run: |
           git config user.name "github-actions[bot]"
