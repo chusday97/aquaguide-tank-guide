@@ -28,7 +28,6 @@ edit('src/components/CompatibilityRiskCalculator.tsx', source => {
     ["          detail: isEn ? `It conflicts with livestock already in the tank. ${reason}` : `它与当前缸内已有生物 ${pair.speciesB.name} 存在阻断冲突。${reason}`", "          detail: isEn ? `It is not suitable with ${getSpeciesName(pair.speciesB, true)}: ${reason}` : `它与 ${pair.speciesB.name} 不适合一起养：${reason}`"],
     ["          detail: isEn ? `It conflicts with livestock already in the tank. ${reason}` : `它与当前缸内已有生物 ${pair.speciesA.name} 存在阻断冲突。${reason}`", "          detail: isEn ? `It is not suitable with ${getSpeciesName(pair.speciesA, true)}: ${reason}` : `它与 ${pair.speciesA.name} 不适合一起养：${reason}`"],
     ["          detail: isEn ? `This is an existing-tank issue, not a new-addition decision. ${reason}` : `这是当前鱼缸已经存在的风险，不应该由混养工具擅自删除任何生物。${reason}`", "          detail: isEn ? `This conflict already exists in the current tank. Adjust the current stocking first. ${reason}` : `这个风险已经存在于当前鱼缸，请先调整缸内组合。${reason}`"],
-    ["{isEn ? 'Mixing planner' : '混养决策'}", ""],
     ["'1. What do you want to add?'", "'What do you want to add?'"],
     ["'1. 你准备加入什么？'", "'你准备加入什么？'"],
     ["'1. Select species to compare'", "'Select species to compare'"],
@@ -60,7 +59,7 @@ edit('src/components/CompatibilityRiskCalculator.tsx', source => {
   source = replaceAll(
     source,
     "const unique = <T,>(items: T[]) => Array.from(new Set(items));\n",
-    `const unique = <T,>(items: T[]) => Array.from(new Set(items));\n\nconst getConflictActionLabel = (action: ConflictAction, isEn: boolean) => {\n  if (!action.removeSpeciesId) return isEn ? 'Review current tank' : '查看当前鱼缸';\n  const species = fishData.find(item => item.id === action.removeSpeciesId);\n  const name = species ? getSpeciesName(species, isEn) : (isEn ? 'this species' : '该生物');\n  const isSkip = action.title.startsWith(isEn ? 'Do not add ' : '不要加入 ');\n  return isSkip\n    ? (isEn ? \\`Do not add \\${name}\\` : \\`不加入 \\${name}\\`)\n    : (isEn ? \\`Remove \\${name}\\` : \\`移除 \\${name}\\`);\n};\n`,
+    `const unique = <T,>(items: T[]) => Array.from(new Set(items));\n\nconst getConflictActionLabel = (action: ConflictAction, isEn: boolean) => {\n  if (!action.removeSpeciesId) return isEn ? 'Review current tank' : '查看当前鱼缸';\n  const species = fishData.find(item => item.id === action.removeSpeciesId);\n  const name = species ? getSpeciesName(species, isEn) : (isEn ? 'this species' : '该生物');\n  const isSkip = action.title.startsWith(isEn ? 'Do not add ' : '不要加入 ');\n  return isSkip\n    ? (isEn ? 'Do not add ' + name : '不加入 ' + name)\n    : (isEn ? 'Remove ' + name : '移除 ' + name);\n};\n`,
     'action button helper',
   );
 
@@ -71,7 +70,7 @@ edit('src/components/CompatibilityRiskCalculator.tsx', source => {
     'tank context label',
   );
 
-  source = source.replace(/\s*<div className="text-\[11px\] font-black uppercase tracking-\[0\.16em\] text-emerald-700">\{isEn \? 'Mixing planner' : ''\}<\/div>\n?/, '\n');
+  source = source.replace(/\s*<div className="text-\[11px\] font-black uppercase tracking-\[0\.16em\] text-emerald-700">\{isEn \? 'Mixing planner' : '混养决策'\}<\/div>\n?/, '\n');
   source = source.replace(/\s*<div className="text-\[10px\] font-bold text-ink\/40">\{isEn \? 'Compatibility' : '混养结果'\}<\/div>\n?/, '\n');
   source = source.replace(/\s*<p className="mt-1 text-\[10px\] font-bold leading-5 text-ink\/45">\{isEn \? 'AquaGuide does not guess which animal matters more to you\. It shows the safe choices explicitly\.' : '选择一个调整方案后会立即重新计算。'\}<\/p>\n?/, '\n');
   source = source.replace(/\s*<DialogDescription className="text-xs font-semibold leading-5 text-ink\/50">\{isEn \? 'Deterministic rules keep the final safety status\. AI explains the evidence and organizes options\.' : '基于当前鱼缸和风险结果给出调整建议。'\}<\/DialogDescription>\n?/, '\n');
