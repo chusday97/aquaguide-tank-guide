@@ -22,6 +22,8 @@ jobs:
           cache: npm
       - name: Install current dependencies
         run: npm ci
+      - name: Harden export removal migration
+        run: node scripts/fix-remove-export-migration.mjs
       - name: Apply export removal
         run: node scripts/remove-export-features.mjs
       - name: Refresh lockfile without html2canvas
@@ -38,8 +40,8 @@ jobs:
         run: npm run test:share-report-contract
       - name: Build
         run: npm run build
-      - name: Remove migration script
-        run: rm scripts/remove-export-features.mjs
+      - name: Remove migration scripts
+        run: rm scripts/remove-export-features.mjs scripts/fix-remove-export-migration.mjs
       - name: Commit verified changes
         run: |
           git config user.name "github-actions[bot]"
