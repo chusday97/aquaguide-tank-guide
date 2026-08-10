@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Check, ChevronRight, Languages, Link2, MessageSquareText, RotateCcw, Settings2, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { setLocale, type SupportedLocale } from '../i18n';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { restartOnboarding } from '../services/onboarding/onboarding.service';
 import { submitFeedback } from '../services/feedback/feedback.service';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
+import { ConfirmDialog } from '../components/common/ConfirmDialog';
+import { useUnsavedChangesGuard } from '../hooks/useUnsavedChangesGuard';
 
 const localeOptions: Array<{ locale: SupportedLocale; label: string }> = [
   { locale: 'zh-CN', label: '简体中文' },
@@ -16,7 +19,8 @@ export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const currentLocale: SupportedLocale = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';
   const isEn = currentLocale === 'en';
-  const { navigateToRoute, registerNavigationGuard } = useWorkspaceNavigation();
+  const { registerNavigationGuard } = useWorkspaceNavigation();
+  const navigate = useNavigate();
   const { isPhoneLayout } = useLayoutMode();
   const [feedbackCategory, setFeedbackCategory] = useState<'suggestion' | 'problem' | 'content' | 'other'>('suggestion');
   const [feedbackMessage, setFeedbackMessage] = useState('');
@@ -26,19 +30,10 @@ export default function SettingsPage() {
   const feedbackInputRef = useRef<HTMLTextAreaElement | null>(null);
   const hasUnsavedFeedback = feedbackMessage.trim().length > 0;
 
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (!hasUnsavedFeedback) return;
-      event.preventDefault();
-      event.returnValue = '';
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [hasUnsavedFeedback]);
-
-  useEffect(() => registerNavigationGuard(hasUnsavedFeedback
-    ? () => window.confirm(isEn ? 'Your feedback has not been submitted. Leave this page?' : '反馈还没有提交，确定要离开吗？')
-    : null), [hasUnsavedFeedback, registerNavigationGuard]);
+  const unsavedGuard = useUnsavedChangesGuard({
+    enabled: hasUnsavedFeedback,
+    registerNavigationGuard,
+  });
 
 
 
@@ -139,7 +134,7 @@ export default function SettingsPage() {
                 <h2 className="text-base font-black text-ink">{t('settingsPage.onboardingTitle')}</h2>
                 <p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{t('settingsPage.onboardingHint')}</p>
               </div>
-              <button type="button" onClick={() => { restartOnboarding(); navigateToRoute('/welcome'); }} className="min-h-11 rounded-full border border-emerald-200 bg-emerald-50 px-4 text-sm font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">{t('settingsPage.replayOnboarding')}</button>
+              <button type="button" onClick={() => unsavedGuard.requestAction(() => { restartOnboarding(); navigate('/welcome'); })} className="min-h-11 rounded-full border border-emerald-200 bg-emerald-50 px-4 text-sm font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">{t('settingsPage.replayOnboarding')}</button>
             </div>
           </section>
 
@@ -206,6 +201,16 @@ export default function SettingsPage() {
           </section>
         </div>
       </div>
+      <ConfirmDialog
+        open={unsavedGuard.pending}
+        title={isEn ? 'Leave without submitting feedback?' : '放弃未提交的反馈？'}
+        description={isEn ? 'Your current feedback text will not be submitted.' : '当前填写的反馈不会被提交。'}
+        confirmLabel={isEn ? 'Leave' : '离开'}
+        cancelLabel={isEn ? 'Keep editing' : '继续编辑'}
+        destructive
+        onConfirm={unsavedGuard.confirmPending}
+        onCancel={unsavedGuard.cancelPending}
+      />
     </div>
   );
 }

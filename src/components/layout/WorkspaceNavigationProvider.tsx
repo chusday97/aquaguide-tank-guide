@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '../common/ToastProvider';
+import { featureRegistry, isBuildingFeature, isFeatureKey, type FeatureKey } from '../../config/features';
 
 
 import type {
@@ -31,40 +32,20 @@ type WorkspaceNavigationValue = {
 const WorkspaceNavigationContextValue = createContext<WorkspaceNavigationValue | null>(null);
 
 type FeaturePreviewState = {
-  kind: 'auth' | 'achievements' | 'imageExport' | 'sharing';
+  kind: FeatureKey;
   title: string;
   description: string;
 };
 
 const isEnglishUi = () => typeof document !== 'undefined' && document.documentElement.lang.toLowerCase().startsWith('en');
 
-const buildFeaturePreview = (kind: 'auth' | 'achievements' | 'imageExport' | 'sharing'): FeaturePreviewState => {
+const buildFeaturePreview = (kind: FeatureKey): FeaturePreviewState => {
   const isEn = isEnglishUi();
-  if (kind === 'auth') {
-    return {
-      kind,
-      title: isEn ? 'Cloud sync' : '云端同步',
-      description: isEn ? 'Sync aquariums and care records across devices.' : '跨设备同步鱼缸和养护记录。',
-    };
-  }
-  if (kind === 'achievements') {
-    return {
-      kind,
-      title: isEn ? 'Achievements' : '成就勋章',
-      description: isEn ? 'Track long-term care milestones.' : '记录长期养护里程碑。',
-    };
-  }
-  if (kind === 'sharing') {
-    return {
-      kind,
-      title: isEn ? 'Sharing & privacy' : '分享与隐私',
-      description: isEn ? 'Manage share links and privacy settings.' : '管理分享链接和隐私设置。',
-    };
-  }
+  const feature = featureRegistry[kind];
   return {
     kind,
-    title: isEn ? 'Image export' : '图片导出',
-    description: isEn ? 'Save cards as images.' : '将卡片保存为图片。',
+    title: isEn ? feature.title.en : feature.title.zh,
+    description: isEn ? feature.description.en : feature.description.zh,
   };
 };
 
@@ -133,18 +114,17 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
   const navigationGuardRef = useRef<((targetPath: string) => boolean) | null>(null);
   const [featurePreview, setFeaturePreview] = useState<FeaturePreviewState | null>(null);
 
-  const showFeaturePreview = useCallback((kind: 'auth' | 'achievements' | 'imageExport' | 'sharing') => {
+  const showFeaturePreview = useCallback((kind: FeatureKey) => {
     setFeaturePreview(buildFeaturePreview(kind));
   }, []);
 
   useEffect(() => {
     const resolveBuildingFeature = (target: HTMLElement): FeaturePreviewState['kind'] | null => {
+      const explicitTarget = target.closest<HTMLElement>('[data-feature-building]');
+      const explicitFeature = explicitTarget?.dataset.featureBuilding;
+      if (isFeatureKey(explicitFeature) && isBuildingFeature(explicitFeature)) return explicitFeature;
       const href = target instanceof HTMLAnchorElement ? target.getAttribute('href') || '' : '';
-      const text = (target.textContent || '').replace(/\s+/g, ' ').trim();
-      if (/^\/login(?:[/?#]|$)/.test(href) || /^(登录|去登录|Sign in|Log in)$/i.test(text) || /云端同步|Cloud sync/i.test(text)) return 'auth';
-      if (/^\/collection\/achievements(?:[/?#]|$)/.test(href) || /成就勋章|Achievements|Badges/i.test(text)) return 'achievements';
-      if (/分享与隐私|Sharing & privacy|生成分享报告|Create share report|生成报告链接|Create report link|打开导出与分享|Open export & share/i.test(text)) return 'sharing';
-      if (/保存图片|Save image|保存 PNG|Save PNG|下载图片|Download image|预览并下载|Preview & download|导出物种卡片|Export species card|导出卡片|Export card|导出档案|Export archive|百日.*导出|Export.*milestone/i.test(text)) return 'imageExport';
+      if (/^\/login(?:[/?#]|$)/.test(href)) return 'auth';
       return null;
     };
 

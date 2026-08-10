@@ -212,7 +212,6 @@ const desktopSubMenus: Record<string, Array<{
     { id: 'wishlist', labelKey: 'nav.wishlist', descriptionKey: 'nav.wishlistDescription', icon: Heart, path: '/collection/wishlist' },
     { id: 'care', labelKey: 'nav.careFavorites', descriptionKey: 'nav.careFavoritesDescription', icon: BookOpenCheck, path: '/collection/care' },
     { id: 'memorial', labelKey: 'nav.memorial', descriptionKey: 'nav.memorialDescription', icon: Skull, path: '/collection/memorial' },
-    { id: 'achievements', labelKey: 'nav.achievements', descriptionKey: 'nav.achievementsDescription', icon: Medal, path: '/collection/achievements' },
   ],
 };
 
@@ -294,6 +293,13 @@ function DesktopSidebar({
         ? '/collection'
       : navItems.some(item => item.path === location.pathname) ? location.pathname : null;
   const activeMenu = activePath ? desktopSubMenus[activePath] || [] : [];
+  const isSubMenuPathActive = (target: string) => {
+    const [targetPathname, targetQuery = ''] = target.split('?');
+    if (location.pathname !== targetPathname) return false;
+    const required = new URLSearchParams(targetQuery);
+    const current = new URLSearchParams(location.search);
+    return Array.from(required.entries()).every(([key, value]) => current.get(key) === value);
+  };
 
   useEffect(() => subscribeToAquariumNavigation(setAquariumNavigation), []);
 
@@ -534,7 +540,7 @@ function DesktopSidebar({
             <div className="grid gap-1.5">
               {activeMenu.map((item) => {
                 const Icon = item.icon;
-                const isActive = item.path ? `${location.pathname}${location.search}` === item.path : location.hash === item.hash;
+                const isActive = item.path ? isSubMenuPathActive(item.path) : location.hash === item.hash;
                 return (
                   <button
                     key={item.id}
@@ -845,7 +851,7 @@ function WorkspaceRoutes() {
           <Route path="/collection/care" element={page(<Collection module="care" />, 'collection-care')} />
           <Route path="/collection/memorial/:recordId" element={page(<MemorialDetail />, 'collection-memorial-detail')} />
           <Route path="/collection/memorial" element={page(<Collection module="memorial" />, 'collection-memorial')} />
-          <Route path="/collection/achievements" element={<Navigate to="/collection" replace />} />
+          <Route path="/collection/achievements" element={page(<Collection module="achievements" />, 'collection-achievements')} />
           <Route path="/wishlist" element={<Navigate to="/collection/wishlist" replace />} />
           <Route path="/care-favorites" element={<Navigate to="/collection/care" replace />} />
           <Route path="/aquarium" element={shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />

@@ -23,6 +23,7 @@ import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
+import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
 import { fishData } from '../data/fishData';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
@@ -420,7 +421,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
               favorite={Boolean(snapshot.careFavorites[selectedTopic.id])}
               onToggleAction={(value) => setCheckedActions(items => items.includes(value) ? items.filter(item => item !== value) : [...items, value])}
               onToggleFavorite={() => setPendingCareRemoval(selectedTopic)}
-              onOpenShare={() => void shareCareTopic(selectedTopic)}
+              onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
               onPreview={() => openCarePreview(selectedTopic)}
               onSelectRelated={(topic) => setSelectedTopic(topic)}
               onRestoreActions={setCheckedActions}
@@ -430,39 +431,27 @@ export default function Collection({ module }: { module: CollectionModule }) {
         </AdaptiveDetailContent>
       </Dialog>
 
-      <Dialog open={Boolean(pendingFishRemoval)} onOpenChange={(open) => !open && setPendingFishRemoval(null)}>
-        <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
-          <DialogHeader>
-            <DialogTitle>{Boolean(i18n.language?.startsWith('en')) ? 'Remove this saved species?' : '移除这条种草？'}</DialogTitle>
-            <DialogDescription>
-              {Boolean(i18n.language?.startsWith('en'))
-                ? `${pendingFishRemoval?.name || 'This species'} will be removed from My Collection. You can save it again from Species later.`
-                : `“${pendingFishRemoval?.name}”会从水族册移除，之后仍可在图鉴重新收藏。`}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => setPendingFishRemoval(null)} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Cancel' : '取消'}</Button>
-            <Button variant="destructive" onClick={removeFishFavorite} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Remove' : '确认移除'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={Boolean(pendingFishRemoval)}
+        title={isEn ? 'Remove this saved species?' : '移除这条种草？'}
+        description={isEn ? `${pendingFishRemoval?.name || 'This species'} will be removed from My Collection. You can save it again later.` : `“${pendingFishRemoval?.name || ''}”会从水族册移除，之后仍可在图鉴重新收藏。`}
+        confirmLabel={isEn ? 'Remove' : '确认移除'}
+        cancelLabel={isEn ? 'Cancel' : '取消'}
+        destructive
+        onConfirm={removeFishFavorite}
+        onCancel={() => setPendingFishRemoval(null)}
+      />
 
-      <Dialog open={Boolean(pendingCareRemoval)} onOpenChange={(open) => !open && setPendingCareRemoval(null)}>
-        <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
-          <DialogHeader>
-            <DialogTitle>{Boolean(i18n.language?.startsWith('en')) ? 'Remove this saved guide?' : '移除这篇收藏？'}</DialogTitle>
-            <DialogDescription>
-              {Boolean(i18n.language?.startsWith('en'))
-                ? `${pendingCareRemoval?.title || 'This guide'} will be removed from My Collection. You can save it again later.`
-                : `“${pendingCareRemoval?.title}”会从水族册移除，之后仍可重新收藏。`}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => setPendingCareRemoval(null)} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Cancel' : '取消'}</Button>
-            <Button variant="destructive" onClick={removeCareFavorite} className="min-h-11">{Boolean(i18n.language?.startsWith('en')) ? 'Remove' : '确认移除'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={Boolean(pendingCareRemoval)}
+        title={isEn ? 'Remove this saved guide?' : '移除这篇收藏？'}
+        description={isEn ? `${pendingCareRemoval?.title || 'This guide'} will be removed from My Collection. You can save it again later.` : `“${pendingCareRemoval?.title || ''}”会从水族册移除，之后仍可重新收藏。`}
+        confirmLabel={isEn ? 'Remove' : '确认移除'}
+        cancelLabel={isEn ? 'Cancel' : '取消'}
+        destructive
+        onConfirm={removeCareFavorite}
+        onCancel={() => setPendingCareRemoval(null)}
+      />
 
       <Suspense fallback={null}>
         <ImagePreviewModal images={previewImages} index={0} open={previewOpen} onClose={() => setPreviewOpen(false)} onIndexChange={() => undefined} />

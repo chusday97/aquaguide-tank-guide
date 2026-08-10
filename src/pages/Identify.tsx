@@ -28,6 +28,7 @@ import { getSpeciesFavoriteIds, setSpeciesFavoriteIds } from '../services/favori
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { buildSpeciesDiagnosisContextAnswers, isSpeciesEligibleForHealthTriage, mapVisionCandidateToCatalog, type MappedRecognitionCandidate } from '../lib/speciesRecognition';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
+import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { getSpeciesBatchContextLabel } from '../services/aquarium/species-batches.service';
 import { careTopicsData } from '../data/careTopicsData';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
@@ -684,15 +685,31 @@ export default function Identify() {
       </div>
 
       <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
-      {pendingNavigationPath && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm" role="presentation">
-          <section role="dialog" aria-modal="true" aria-labelledby="identify-leave-title" className="w-full max-w-[420px] rounded-[22px] bg-white p-5 shadow-2xl">
-            <h2 id="identify-leave-title" className="text-lg font-black">{t('identify.leaveTitle')}</h2>
-            <p className="mt-2 text-sm leading-6 text-ink/55">{t('identify.leaveHint')}</p>
-            <div className="mt-5 grid grid-cols-2 gap-2"><button type="button" onClick={() => { pendingHistoryDeltaRef.current = null; setPendingNavigationPath(''); }} className="min-h-11 rounded-full border border-border bg-white text-xs font-black">{t('identify.stay')}</button><button type="button" onClick={() => { const path = pendingNavigationPath; const historyDelta = pendingHistoryDeltaRef.current; pendingHistoryDeltaRef.current = null; setPendingNavigationPath(''); cancelDiagnosisSession(); if (path === '__reset__') { reset(); return; } if (path === '__history_back__') { if (historyDelta !== null) { allowHistoryNavigationRef.current = true; window.history.go(historyDelta); } else navigate('/encyclopedia', { replace: true }); return; } navigate(path); }} className="min-h-11 rounded-full bg-red-600 text-xs font-black text-white">{t('identify.leave')}</button></div>
-          </section>
-        </div>
-      )}
+      <ConfirmDialog
+        open={Boolean(pendingNavigationPath)}
+        title={t('identify.leaveTitle')}
+        description={t('identify.leaveHint')}
+        confirmLabel={t('identify.leave')}
+        cancelLabel={t('identify.stay')}
+        destructive
+        onCancel={() => { pendingHistoryDeltaRef.current = null; setPendingNavigationPath(''); }}
+        onConfirm={() => {
+          const path = pendingNavigationPath;
+          const historyDelta = pendingHistoryDeltaRef.current;
+          pendingHistoryDeltaRef.current = null;
+          setPendingNavigationPath('');
+          cancelDiagnosisSession();
+          if (path === '__reset__') { reset(); return; }
+          if (path === '__history_back__') {
+            if (historyDelta !== null) {
+              allowHistoryNavigationRef.current = true;
+              window.history.go(historyDelta);
+            } else navigate('/encyclopedia', { replace: true });
+            return;
+          }
+          navigate(path);
+        }}
+      />
     </main>
   );
 }
