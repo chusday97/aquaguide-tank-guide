@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 
+// Preflight patch for the one-time export removal migration.
 const path = 'scripts/remove-export-features.mjs';
 let content = fs.readFileSync(path, 'utf8');
 
