@@ -1,4 +1,4 @@
-export type FeatureKey = 'auth' | 'achievements' | 'imageExport' | 'sharing';
+export type FeatureKey = 'auth' | 'achievements' | 'sharing';
 export type FeatureStatus = 'live' | 'building';
 
 type FeatureDefinition = {
@@ -23,15 +23,10 @@ export const featureRegistry: Record<FeatureKey, FeatureDefinition> = {
     title: { zh: '分享与隐私', en: 'Sharing & privacy' },
     description: { zh: '管理分享链接和隐私设置。', en: 'Manage share links and privacy settings.' },
   },
-  imageExport: {
-    status: 'building',
-    title: { zh: '图片导出', en: 'Image export' },
-    description: { zh: '将卡片保存为图片。', en: 'Save cards as images.' },
-  },
 };
 
 export const isFeatureKey = (value: string | undefined | null): value is FeatureKey => (
-  value === 'auth' || value === 'achievements' || value === 'imageExport' || value === 'sharing'
+  value === 'auth' || value === 'achievements' || value === 'sharing'
 );
 
 export const isBuildingFeature = (feature: FeatureKey) => featureRegistry[feature].status === 'building';

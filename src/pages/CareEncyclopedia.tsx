@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
-import type { CSSProperties, ReactNode, RefObject } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
+import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
@@ -1603,14 +1603,11 @@ export default function CareEncyclopedia() {
   const [careViewMode, setCareViewMode] = useState<CareViewMode>('all');
   const [favorites, setFavorites] = useState<CareFavoriteMap>(() => getCareFavorites());
   const [shareTopic, setShareTopic] = useState<CareTopic | null>(null);
-  const [isSavingShareCard, setIsSavingShareCard] = useState(false);
-  const [shareMessage, setShareMessage] = useState('');
   const [copyMessage, setCopyMessage] = useState('');
   const [flyingFavorites, setFlyingFavorites] = useState<FlyingFavorite[]>([]);
   const recommendationCarouselRef = useRef<HTMLDivElement | null>(null);
   const detailScrollRef = useRef<HTMLDivElement | null>(null);
   const favoriteShelfRef = useRef<HTMLButtonElement | null>(null);
-  const careCardRef = useRef<HTMLDivElement | null>(null);
   const careSearchRef = useRef<HTMLElement | null>(null);
   const contentListRef = useRef<HTMLElement | null>(null);
   const detailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
@@ -1884,61 +1881,6 @@ export default function CareEncyclopedia() {
       window.setTimeout(() => setCopyMessage(''), 1800);
     } catch {
       setCopyMessage('复制失败，请手动长按复制');
-    }
-  };
-
-  const saveShareCard = async (topic: CareTopic) => {
-    if (!careCardRef.current) {
-      setShareMessage(t('care.toastSaveFailed'));
-      return;
-    }
-    setIsSavingShareCard(true);
-    setShareMessage('');
-    try {
-      const { default: html2canvas } = await import('html2canvas');
-      const canvas = await html2canvas(careCardRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-        onclone: (clonedDocument) => {
-          const clonedCard = clonedDocument.querySelector<HTMLElement>('[data-care-share-card]');
-          if (!clonedCard) return;
-          const nodes = [clonedCard, ...Array.from(clonedCard.querySelectorAll<HTMLElement>('*'))];
-          nodes.forEach((node) => {
-            const className = node.className.toString();
-            node.style.boxShadow = 'none';
-            node.style.outlineColor = 'transparent';
-            node.style.textDecorationColor = 'transparent';
-            node.style.borderColor = '#F1E9D8';
-            node.style.color = '#16221D';
-            if (className.includes('text-emerald')) node.style.color = '#0F5132';
-            if (className.includes('text-orange')) node.style.color = '#9A3412';
-            if (className.includes('text-amber')) node.style.color = '#92400E';
-            if (className.includes('text-white')) node.style.color = '#FFFFFF';
-            if (className.includes('text-ink/')) node.style.color = '#66736D';
-            if (className.includes('bg-emerald')) node.style.backgroundColor = '#E8F5EF';
-            else if (className.includes('bg-orange')) node.style.backgroundColor = '#FFF4E8';
-            else if (className.includes('bg-amber')) node.style.backgroundColor = '#FFF7D6';
-            else if (className.includes('bg-[#F4EFE3]')) node.style.backgroundColor = '#F4EFE3';
-            else if (className.includes('bg-white')) node.style.backgroundColor = '#FFFFFF';
-            else if (node === clonedCard) node.style.backgroundColor = '#FFFDF8';
-            else node.style.backgroundColor = node.style.backgroundColor || 'transparent';
-          });
-        },
-      });
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = 'aquaguide-care-card.png';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setShareMessage(t('care.toastSaveSuccess'));
-      window.setTimeout(() => setShareMessage(''), 2200);
-    } catch {
-      setShareMessage(t('care.toastSaveFailed'));
-    } finally {
-      setIsSavingShareCard(false);
     }
   };
 
@@ -2238,7 +2180,6 @@ export default function CareEncyclopedia() {
       <Dialog open={!!shareTopic} onOpenChange={(open) => {
         if (!open) {
           setShareTopic(null);
-          setShareMessage('');
           setCopyMessage('');
         }
       }}>
@@ -2250,10 +2191,10 @@ export default function CareEncyclopedia() {
                 <div className="mt-0.5 text-[11px] font-bold text-ink/45">{isEn ? 'Extract key steps to generate a copyable mobile card.' : '提取关键步骤，生成可复制、可保存的移动端卡片。'}</div>
               </div>
               <div className="aqua-care-card-modal-body min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-[#F7F4EC]/55 px-3 py-4">
-                <CareShareCardPreview topic={shareTopic} cardRef={careCardRef} />
-                {(shareMessage || copyMessage) && (
+                <CareShareCardPreview topic={shareTopic} />
+                {copyMessage && (
                   <div className="mt-3 rounded-[14px] bg-white px-3 py-2 text-center text-[12px] font-bold text-emerald-700">
-                    {shareMessage || copyMessage}
+                    {copyMessage}
                   </div>
                 )}
               </div>
@@ -2267,15 +2208,7 @@ export default function CareEncyclopedia() {
                   <Copy className="mr-1 h-4 w-4" />
                   {copyMessage === 'Copied' || copyMessage === '已复制' ? (isEn ? 'Copied' : '已复制') : (isEn ? 'Copy Text' : '复制文字')}
                 </Button>
-                <Button
-                  type="button"
-                  onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))}
-                  className="h-[52px] rounded-full border border-slate-200 bg-slate-100 text-[13px] font-black text-slate-400 shadow-none hover:bg-slate-100"
-                >
-                  {isSavingShareCard ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Download className="mr-1 h-4 w-4" />}
-                  {isEn ? 'Save image · Coming soon' : '保存图片 · 建设中'}
-                </Button>
-              </div>
+                              </div>
             </>
           )}
         </DialogContent>
@@ -2312,19 +2245,12 @@ function CareImage({ topic, className, showPreviewHint = false }: { topic: CareT
   );
 }
 
-function CareShareCardPreview({
-  topic,
-  cardRef,
-}: {
-  topic: CareTopic;
-  cardRef: RefObject<HTMLDivElement | null>;
-}) {
+function CareShareCardPreview({ topic }: { topic: CareTopic }) {
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const careCard = buildCareCard(topic);
   return (
     <div
-      ref={cardRef}
       data-care-share-card
       className="mx-auto w-full max-w-[420px] rounded-[28px] bg-[#FFFDF8] p-6 text-left shadow-[0_18px_46px_rgba(39,54,45,0.12)] ring-1 ring-[#F1E9D8]"
     >

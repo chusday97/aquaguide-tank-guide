@@ -145,7 +145,6 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
       if (/^auth/i.test(feature)) showFeaturePreview('auth');
       else if (/achievement|badge|medal|成就|勋章/i.test(feature)) showFeaturePreview('achievements');
       else if (/share|sharing|分享/i.test(feature)) showFeaturePreview('sharing');
-      else if (/image|export|download|导出|图片/i.test(feature)) showFeaturePreview('imageExport');
     };
     const handleFeatureClick = (event: MouseEvent) => {
       const target = event.target instanceof Element ? event.target.closest<HTMLElement>('button, a, [role="button"]') : null;

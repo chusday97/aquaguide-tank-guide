@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
-import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, Download, MoreHorizontal, History, Loader2 } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, MoreHorizontal, History, Loader2 } from 'lucide-react';
 import { DeceasedRecord } from '../types';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 import {
@@ -47,7 +47,6 @@ import { weatherService } from '../services/weather/weather.service';
 import type { LocalWeatherOutput } from '../services/weather/weather.schema';
 import {
   clearLocalAppState,
-  exportLocalAppState,
   importLocalAppState,
   loadAppStateFromStorage,
   patchLocalAppState,
@@ -93,20 +92,6 @@ import { recordExistingLivestock, type RecordExistingResult } from '../services/
 import { createAquariumDraft, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import { useToast } from '../components/common/ToastProvider';
-import { ExportArtifactDialog, type ExportArtifactContent } from '../components/export/ExportArtifactDialog';
-import { AquariumExportCenter, type ExportCenterItem } from '../components/export/AquariumExportCenter';
-import {
-  buildAquariumArchiveArtifact,
-  buildDiagnosisArtifact,
-  buildHealthScoreArtifact,
-  buildHundredDayArtifact,
-  buildWeeklyCareArtifact,
-  buildStarterChecklistArtifact,
-  buildSanitizedAquariumReport,
-  type AquariumArtifactContext,
-} from '../services/export/aquarium-artifact.service';
-import { createAquariumShareReport } from '../services/share/aquarium-share-report.service';
-import { AquaGuideApiError } from '../services/api/api-client';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { findDailyPatrolRecord, persistDiagnosisRecords, upsertDiagnosisRecord } from '../services/diagnosis/diagnosis-records.service';
@@ -1185,10 +1170,7 @@ export default function AquariumManager() {
   const [careDiagnosisContext, setCareDiagnosisContext] = useState<CareDiagnosisContext | null>(null);
   const [selectedBuildTemplateId, setSelectedBuildTemplateId] = useState(localizedTemplates[0].id);
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
-  const [exportArtifact, setExportArtifact] = useState<ExportArtifactContent | null>(null);
   const [isSavingStartedAt, setIsSavingStartedAt] = useState(false);
-  const [isCreatingShare, setIsCreatingShare] = useState(false);
-  const [shareUrl, setShareUrl] = useState('');
   const [settingsForm, setSettingsForm] = useState<Partial<Aquarium>>({});
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | null>(null);
   const [isPlantListExpanded, setIsPlantListExpanded] = useState(false);
@@ -1681,11 +1663,6 @@ export default function AquariumManager() {
       body.scrollTo({ top: Math.max(0, target.offsetTop - 10), behavior: 'smooth' });
     }, 140);
   }, [activeSettingsPanel, isSettingsOpen]);
-
-  const handleExportLocalData = () => {
-    setLocalDataText(exportLocalAppState());
-    setLocalDataMessage(Boolean(i18n.language?.startsWith('en')) ? 'Local data generated, copy to save.' : '已生成本地数据，可复制保存。');
-  };
 
   const handleImportLocalData = () => {
     try {
@@ -4551,63 +4528,6 @@ export default function AquariumManager() {
   const aquariumAgeDays = activeAquarium.startedAt
     ? Math.max(0, differenceInDays(new Date(), new Date(activeAquarium.startedAt)))
     : 0;
-  const artifactHealthStatus = isEn
-    ? tankHealthStatus === '风险' ? 'Risk' : tankHealthStatus === '提醒' ? 'Attention' : 'Normal'
-    : tankHealthStatus;
-  const artifactMissingData = isEn
-    ? [
-      ...(!latestWaterChangeDate ? ['Last water change record'] : []),
-      ...(!activeAquarium.targetTemperature ? ['Current water temperature'] : []),
-    ]
-    : dailyAdviceMissingData;
-  const artifactNextAction = isEn
-    ? ({
-      urgent_recovery: 'Continue handling the issue found today',
-      compatibility_review: 'Review the aquarium compatibility risk',
-      care_plan: 'Complete the due care plan',
-      water_change: 'Record this water change',
-      daily_check: 'Complete today’s aquarium check',
-      life_stage_observation: 'Review the recorded life-stage observation focus',
-      routine: 'Continue routine observation',
-    } satisfies Record<DailyActionTask['actionType'], string>)[dailyActionTask.actionType]
-    : dailyActionTask.title;
-  const artifactHealthReasons = isEn
-    ? [
-      dailyActionTask.actionType === 'urgent_recovery'
-        ? 'Based on today’s saved aquarium check.'
-        : dailyActionTask.actionType === 'compatibility_review'
-          ? 'A blocking compatibility risk is recorded.'
-          : dailyActionTask.actionType === 'care_plan'
-            ? 'Based on the current care plan schedule.'
-            : dailyActionTask.actionType === 'water_change'
-              ? 'Based on the recorded water-change schedule.'
-              : dailyActionTask.actionType === 'daily_check'
-                ? 'No aquarium check has been recorded today.'
-                : 'Today’s aquarium check and care schedule are up to date.',
-      conflicts.length > 0
-        ? `${conflicts.length} compatibility ${conflicts.length === 1 ? 'notice is' : 'notices are'} recorded.`
-        : 'No blocking compatibility risk is recorded.',
-      artifactMissingData.length > 0
-        ? `Missing: ${artifactMissingData.join(', ')}.`
-        : 'Key care information is recorded.',
-    ]
-    : dailyActionViewModel.reasoning;
-  const artifactContext: AquariumArtifactContext = {
-    aquarium: activeAquarium,
-    healthScore,
-    healthStatus: artifactHealthStatus,
-    healthReasons: artifactHealthReasons,
-    missingData: artifactMissingData,
-    nextAction: artifactNextAction,
-    species: activeAquarium.fishes.map(record => {
-      const fish = fishData.find(item => item.id === record.fishId);
-      return { catalogKey: record.fishId, name: fish ? getSpeciesNameLocalized(fish, isEn) : record.fishId, quantity: record.quantity };
-    }),
-    careReminders,
-    latestDiagnosis: diagnosisResult ? toDiagnosisOutput(diagnosisResult) : undefined,
-    isEn,
-  };
-  const openExportArtifact = (content: ExportArtifactContent) => setExportArtifact(content);
   const confirmAquariumStartedAt = async (startedAt: string) => {
     if (!startedAt || isSavingStartedAt) return;
     setIsSavingStartedAt(true);
@@ -4623,25 +4543,6 @@ export default function AquariumManager() {
       showToast(isEn ? 'Aquarium start date confirmed.' : '建缸日期已确认。');
     } finally {
       setIsSavingStartedAt(false);
-    }
-  };
-  const createPrivateShare = async () => {
-    if (isCreatingShare) return;
-    setIsCreatingShare(true);
-    try {
-      const created = await createAquariumShareReport(activeAquarium.id, buildSanitizedAquariumReport(artifactContext));
-      if (!created.shareUrl) throw new Error('分享链接没有生成成功。');
-      setShareUrl(created.shareUrl);
-      showToast(isEn ? 'Privacy-safe report created.' : '脱敏分享报告已生成。');
-    } catch (error) {
-      if (error instanceof AquaGuideApiError && error.code === 'AUTH_REQUIRED') {
-        showToast(isEn ? 'Sign in to create a share link.' : '登录后才能生成分享链接。', 'error');
-        navigateToRoute('/login');
-        return;
-      }
-      showToast('分享报告暂时没有生成成功。', 'error');
-    } finally {
-      setIsCreatingShare(false);
     }
   };
   const localTemperatureHint = weatherStatus === 'ready' && localWeather?.temperatureC !== undefined
@@ -4916,28 +4817,6 @@ export default function AquariumManager() {
       />
     );
   }
-  const isExportCenterOpen = new URLSearchParams(routeLocation.search).get('action') === 'exports';
-  if (isExportCenterOpen) {
-    const onboardingProgress = getOnboardingTaskProgress();
-    const onboardingTasks = getOnboardingTasks(getOnboardingState()?.goal ?? 'build_tank', onboardingProgress);
-    const checklistLabels = onboardingTasks.map(task => t(task.labelKey));
-    const checklistStates = onboardingTasks.map(task => task.done);
-    const items: ExportCenterItem[] = [
-      { id: 'health', icon: 'health', title: isEn ? 'Aquarium health score' : '鱼缸健康评分卡', description: isEn ? 'Score, evidence, missing records and the next action.' : '健康分、主要依据、缺失记录和下一步。', content: buildHealthScoreArtifact(artifactContext) },
-      { id: 'diagnosis', icon: 'diagnosis', title: isEn ? 'Diagnosis result' : '诊断结果图片', description: isEn ? 'Structured risk, actions, possible factors and review timing.' : '结构化风险、应急动作、可能原因和复查时间。', content: artifactContext.latestDiagnosis ? buildDiagnosisArtifact(artifactContext, artifactContext.latestDiagnosis) : undefined, unavailableReason: artifactContext.latestDiagnosis ? undefined : (isEn ? 'Complete an aquarium check first.' : '完成一次鱼缸检查后即可生成。') },
-      { id: 'plan', icon: 'plan', title: isEn ? 'Weekly care plan' : '本周养护计划', description: isEn ? 'Monday-to-Sunday tasks and overdue items.' : '周一至周日任务和优先补做项目。', content: buildWeeklyCareArtifact(artifactContext) },
-      { id: 'checklist', icon: 'checklist', title: isEn ? 'Starter checklist' : '新手开缸清单', description: isEn ? 'Your four real onboarding steps and the next task.' : '四项真实新手进度和唯一下一步。', content: buildStarterChecklistArtifact({ labels: checklistLabels, states: checklistStates, isEn }) },
-      { id: 'archive', icon: 'archive', title: isEn ? 'Aquarium archive' : '鱼缸档案页', description: isEn ? 'Environment, equipment, livestock and recent care summary.' : '环境、设备、全部物种和近期养护摘要。', content: buildAquariumArchiveArtifact(artifactContext) },
-      { id: 'milestone', icon: 'milestone', title: isEn ? 'Aquarium milestone' : '“我的鱼缸养了100天”记录', description: isEn ? 'A milestone card based on the confirmed aquarium start date.' : '根据已确认建缸日期生成的纪念卡。', content: activeAquarium.startedAtConfirmedAt && aquariumAgeDays >= 100 ? buildHundredDayArtifact(artifactContext, aquariumAgeDays) : undefined, unavailableReason: activeAquarium.startedAtConfirmedAt ? (isEn ? `Available after day 100. Current: ${aquariumAgeDays} days.` : `满 100 天后可生成，当前 ${aquariumAgeDays} 天。`) : (isEn ? 'Confirm the aquarium start date in the archive first.' : '请先在鱼缸档案确认建缸日期。') },
-    ];
-    return (
-      <div className="page-frame-wide min-w-0 overflow-x-hidden">
-        <AquariumExportCenter items={items} isEn={isEn} onBack={() => navigateToRoute('/aquarium')} onPreview={openExportArtifact} onCreateShare={() => void createPrivateShare()} isCreatingShare={isCreatingShare} shareUrl={shareUrl} onCopyShare={() => { void navigator.clipboard.writeText(shareUrl).then(() => showToast(isEn ? 'Link copied.' : '链接已复制。')).catch(() => showToast(isEn ? 'Could not copy the link.' : '暂时无法复制链接。', 'error')); }} />
-        <ExportArtifactDialog open={Boolean(exportArtifact)} onOpenChange={open => { if (!open) setExportArtifact(null); }} content={exportArtifact} isEn={isEn} />
-      </div>
-    );
-  }
-
   return (
     <div className="page-frame-wide aquarium-desktop-layout flex min-w-0 flex-col gap-4 overflow-x-hidden text-[13px] leading-relaxed">
       <aside className="aquarium-side hidden">
@@ -5252,8 +5131,6 @@ export default function AquariumManager() {
             if (reminder) setPendingReminderDelete(reminder);
           }}
           onBrowseCare={() => navigateToRoute('/care')}
-          onDownloadHealth={() => openExportArtifact(buildHealthScoreArtifact(artifactContext))}
-          onDownloadCarePlan={() => openExportArtifact(buildWeeklyCareArtifact(artifactContext))}
         />
       </div>
         )}
@@ -6034,10 +5911,7 @@ export default function AquariumManager() {
               <>
               <section className="grid gap-3">
                 <div className="flex justify-end">
-                  <button type="button" onClick={() => openExportArtifact(buildDiagnosisArtifact(artifactContext, toDiagnosisOutput(structuredDiagnosis)))} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-white px-4 text-xs font-black text-emerald-800 shadow-sm">
-                    <Download className="h-4 w-4" />{isEn ? 'Download result image' : '下载诊断结果图'}
-                  </button>
-                </div>
+                                  </div>
                 {diagnosisVisualModel && (
                   <VisualResultCard
                     model={diagnosisVisualModel}
@@ -8333,37 +8207,8 @@ export default function AquariumManager() {
         aquariumAgeDays={aquariumAgeDays}
         isSavingStartedAt={isSavingStartedAt}
         onConfirmStartedAt={confirmAquariumStartedAt}
-        onDownloadArchive={() => openExportArtifact(buildAquariumArchiveArtifact(artifactContext))}
-        onDownloadMilestone={aquariumAgeDays >= 100 && activeAquarium.startedAtConfirmedAt
-          ? () => openExportArtifact(buildHundredDayArtifact(artifactContext, aquariumAgeDays))
-          : undefined}
-        onCreateShare={() => void createPrivateShare()}
-        isCreatingShare={isCreatingShare}
       />
 
-      <ExportArtifactDialog
-        open={Boolean(exportArtifact)}
-        onOpenChange={open => { if (!open) setExportArtifact(null); }}
-        content={exportArtifact}
-        isEn={isEn}
-      />
-
-      <Dialog open={Boolean(shareUrl)} onOpenChange={open => { if (!open) setShareUrl(''); }}>
-        <DialogContent className="w-[min(92vw,520px)] max-w-[520px] rounded-[26px]">
-          <DialogHeader>
-            <DialogTitle>{isEn ? 'Privacy-safe report created' : '脱敏报告链接已生成'}</DialogTitle>
-            <DialogDescription>{isEn ? 'The link expires after 7 days and can be revoked in Settings. It does not include the custom aquarium name, identity, free text or internal record IDs.' : '链接 7 天后自动失效，可在设置中提前撤销。报告不会显示鱼缸名称、用户身份、自由描述或内部记录 ID。'}</DialogDescription>
-          </DialogHeader>
-          <label className="grid gap-2 text-xs font-black text-ink/65">
-            {isEn ? 'Share link' : '分享链接'}
-            <input readOnly value={shareUrl} className="h-11 w-full rounded-xl border border-border bg-bg px-3 text-sm font-semibold text-ink" onFocus={event => event.currentTarget.select()} />
-          </label>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShareUrl('')} className="min-h-11 rounded-xl">{isEn ? 'Done' : '完成'}</Button>
-            <Button onClick={() => void navigator.clipboard.writeText(shareUrl).then(() => showToast(isEn ? 'Link copied.' : '链接已复制。')).catch(() => showToast(isEn ? 'Copy failed. Copy the link manually.' : '复制失败，请手动复制。', 'error'))} className="min-h-11 rounded-xl">{isEn ? 'Copy link' : '复制链接'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       <Dialog open={isConflictDialogOpen} onOpenChange={setIsConflictDialogOpen}>
         <DialogContent className="flex max-h-[88dvh] w-[min(94vw,820px)] max-w-[820px] flex-col overflow-hidden rounded-[28px] border-amber-100 bg-[#FBFAF6] p-0">

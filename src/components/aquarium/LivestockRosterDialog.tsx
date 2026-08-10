@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Download, Share2, X } from 'lucide-react';
+import { Share2, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { AquariumFish, Fish } from '../../types';
 import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '../../services/aquarium/livestock-removal-attempt.service';
@@ -39,10 +39,6 @@ type Props = {
   aquariumAgeDays: number;
   isSavingStartedAt?: boolean;
   onConfirmStartedAt: (value: string) => Promise<void>;
-  onDownloadArchive: () => void;
-  onDownloadMilestone?: () => void;
-  onCreateShare: () => void;
-  isCreatingShare?: boolean;
 };
 
 export function LivestockRosterDialog({
@@ -60,10 +56,6 @@ export function LivestockRosterDialog({
   aquariumAgeDays,
   isSavingStartedAt = false,
   onConfirmStartedAt,
-  onDownloadArchive,
-  onDownloadMilestone,
-  onCreateShare,
-  isCreatingShare = false,
 }: Props) {
   const { i18n } = useTranslation();
   const isEn = i18n.language !== 'zh-CN';
@@ -171,10 +163,7 @@ export function LivestockRosterDialog({
                 <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} aria-label={isEn ? 'Sharing is coming' : '分享功能建设中'} title={isEn ? 'Sharing is coming' : '分享功能建设中'} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
                   <Share2 className="h-4 w-4" />
                 </button>
-                <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 text-xs font-black text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
-                  <Download className="h-4 w-4" />{isEn ? 'Export · Coming soon' : '导出 · 建设中'}
-                </button>
-                </>
+                                </>
               )
             )}
           />
@@ -199,15 +188,6 @@ export function LivestockRosterDialog({
               </div>
               {!startedAtConfirmed && <p className="mt-2 text-xs font-semibold leading-5 text-amber-700">{isEn ? 'This date was inferred from older records. Confirm or edit it before milestone cards are unlocked.' : '该日期由旧记录推算。确认或修改后，才会解锁百日纪念。'}</p>}
               {startedAtError && <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{startedAtError}</p>}
-              {startedAtConfirmed && aquariumAgeDays >= 100 && onDownloadMilestone && (
-                <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-amber-50 px-3 py-3 text-amber-900">
-                  <div>
-                    <div className="text-sm font-black">{isEn ? `My aquarium is ${aquariumAgeDays} days old` : `我的鱼缸养了 ${aquariumAgeDays} 天`}</div>
-                    <div className="mt-0.5 text-xs font-semibold opacity-70">{isEn ? 'Milestone cards remain available after day 100.' : '百日之后持续可见，可随时重新生成。'}</div>
-                  </div>
-                  <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'image-export' } }))} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-3 text-xs font-black text-slate-400 shadow-none"><Download className="h-4 w-4" />{isEn ? 'Export' : '导出'}</button>
-                </div>
-              )}
             </section>}
             {displayedRecords.length > 0 ? (
               <div className="grid gap-3 md:grid-cols-2">

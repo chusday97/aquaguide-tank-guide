@@ -3,7 +3,6 @@ import { sanitizedAquariumReportSchema } from '../packages/contracts/src/share-r
 import { hashShareToken } from '../apps/api/src/routes/share-reports';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { safeExportFileName } from '../src/services/export/png-export.service';
 
 const rawToken = 'A'.repeat(43);
 assert.equal(hashShareToken(rawToken).length, 64);
@@ -29,9 +28,6 @@ const serialized = JSON.stringify(parsed);
 for (const forbidden of ['ownerId', 'aquariumName', 'userDescription', 'aiRawResponse', 'internalId']) {
   assert.equal(serialized.includes(forbidden), false, `forbidden field leaked: ${forbidden}`);
 }
-
-assert.equal(safeExportFileName('AquaGuide-客厅/主缸:*?.png'), 'AquaGuide-客厅-主缸-.png');
-assert.equal(safeExportFileName('  '), 'AquaGuide-export.png');
 
 const updateLockMigration = readFileSync(resolve('supabase/migrations/202607290002_lock_share_report_updates.sql'), 'utf8');
 assert.match(updateLockMigration, /drop policy if exists aquarium_share_reports_owner_update/);

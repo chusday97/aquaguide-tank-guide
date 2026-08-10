@@ -90,7 +90,6 @@
     "test:collection-hub-ui": "node scripts/verify-collection-hub-previews.mjs",
     "test:feedback-rate-limit": "node --import tsx scripts/test-feedback-rate-limit.ts",
     "test:repository-boundary": "node --import tsx scripts/test-repository-boundary.ts",
-    "test:aquarium-artifacts": "node --import tsx scripts/test-aquarium-artifacts.ts",
     "test:share-report-contract": "node --import tsx scripts/test-share-report-contract.ts",
     "test:share-report-ui": "node scripts/verify-share-report-ui.mjs",
     "test:livestock-memorial-replay": "node --import tsx scripts/test-livestock-memorial-replay.ts",
@@ -100,7 +99,8 @@
     "audit:images": "python3 scripts/audit_species_images.py",
     "audit:taxonomy": "tsx scripts/generate_taxonomy_review.ts",
     "audit:species-knowledge": "python3 scripts/audit_species_knowledge.py",
-    "refresh:species-assets": "python3 scripts/prepare_species_assets_and_data.py && python3 scripts/add_housing_profiles.py && python3 scripts/add_feeding_profiles_to_fish_data.py && python3 scripts/audit_species_images.py"
+    "refresh:species-assets": "python3 scripts/prepare_species_assets_and_data.py && python3 scripts/add_housing_profiles.py && python3 scripts/add_feeding_profiles_to_fish_data.py && python3 scripts/audit_species_images.py",
+    "test:no-export-features": "node scripts/verify-no-export-features.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
@@ -116,7 +116,6 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
-    "html2canvas": "^1.4.1",
     "i18next": "^26.3.6",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
