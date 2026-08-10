@@ -211,8 +211,6 @@ export const clearLocalAppState = () => {
   }
 };
 
-export const exportLocalAppState = () => JSON.stringify(loadAppStateFromStorage(), null, 2);
-
 export const importLocalAppState = (json: string) => {
   const parsed = safeParse<Partial<LocalAppState> | null>(json, null, 'local-data-import');
   if (!parsed) throw new Error('导入失败：不是有效的 AquaGuide 本地数据。');

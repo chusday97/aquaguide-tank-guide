@@ -71,7 +71,5 @@ assert.equal(hasHistoricalUserActivity(loadAppStateFromStorage(), true), true, '
 
 const taskCardSource = readFileSync(resolve('src/components/onboarding/OnboardingTaskCard.tsx'), 'utf8');
 assert.match(taskCardSource, /getOnboardingTasks\(/, '任务卡必须使用统一任务定义');
-assert.match(taskCardSource, /buildStarterChecklistArtifact\(\{ labels: tasks\.map/, '导出清单必须复用任务卡的同一任务集合');
-assert.match(taskCardSource, /progress\.completedCount > 0/, '未完成任何真实任务时不得下载清单');
 
-console.log('onboarding activation: goal order, real compatibility, legacy data and shared checklist passed');
+console.log('onboarding activation: goal order, real compatibility and legacy data passed');

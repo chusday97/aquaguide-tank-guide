@@ -1,4 +1,4 @@
-import { Check, ChevronRight, Circle, Download, X } from 'lucide-react';
+import { Check, ChevronRight, Circle, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceNavigation } from '../layout/WorkspaceNavigationProvider';
@@ -11,14 +11,11 @@ import {
   getOnboardingTasks,
   syncOnboardingCompletion,
 } from '../../services/onboarding/onboarding.service';
-import { ExportArtifactDialog } from '../export/ExportArtifactDialog';
-import { buildStarterChecklistArtifact } from '../../services/export/aquarium-artifact.service';
 
 export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 'sidebar' }) {
   const { t } = useTranslation();
   const { navigateToRoute } = useWorkspaceNavigation();
   const [, setRevision] = useState(0);
-  const [isExportOpen, setIsExportOpen] = useState(false);
   const onboarding = getOnboardingState();
   const progress = getOnboardingTaskProgress();
 
@@ -35,8 +32,6 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
 
   const tasks = useMemo(() => getOnboardingTasks(onboarding?.goal ?? 'build_tank', progress).map(task => ({ ...task, label: t(task.labelKey) })), [onboarding?.goal, progress, t]);
   const nextTask = tasks.find(task => !task.done);
-  const isEn = document.documentElement.lang.startsWith('en');
-  const exportContent = buildStarterChecklistArtifact({ labels: tasks.map(task => task.label), states: tasks.map(task => task.done), isEn });
 
   if (!onboarding || onboarding.taskCardDismissed) return null;
 
@@ -80,14 +75,8 @@ export function OnboardingTaskCard({ variant = 'page' }: { variant?: 'page' | 's
               </div>
             ))}
           </div>
-          {progress.completedCount > 0 && (
-            <button type="button" onClick={() => setIsExportOpen(true)} className={`mt-2 inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-xs font-black ${isSidebar ? 'bg-emerald-50 text-emerald-800' : 'bg-white/10 text-white'}`}>
-              <Download className="h-4 w-4" />{isEn ? 'Download checklist' : '下载新手开缸清单'}
-            </button>
-          )}
         </details>
       </div>
-      <ExportArtifactDialog open={isExportOpen} onOpenChange={setIsExportOpen} content={exportContent} isEn={isEn} />
     </section>
   );
 }

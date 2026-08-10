@@ -1,4 +1,4 @@
-import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, Download, Trash2 } from 'lucide-react';
+import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { TagPill, type TagPillTone } from './TagPill';
@@ -86,8 +86,6 @@ type StatusSummaryCardProps = {
   onRescheduleCarePlan: (id: string) => void;
   onDeleteCarePlan: (id: string) => void;
   onBrowseCare: () => void;
-  onDownloadHealth?: () => void;
-  onDownloadCarePlan?: () => void;
 };
 
 const levelTone: Record<AquariumStatusLevel, TagPillTone> = {
@@ -115,11 +113,8 @@ export function StatusSummaryCard({
   onRescheduleCarePlan,
   onDeleteCarePlan,
   onBrowseCare,
-  onDownloadHealth,
-  onDownloadCarePlan,
 }: StatusSummaryCardProps) {
-  const { t, i18n } = useTranslation();
-  const isEn = Boolean(i18n.language?.startsWith('en'));
+  const { t } = useTranslation();
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
   const hasPrimaryAction = Boolean(action.task.primaryLabel);
   const hasOverflowCarePlans = carePlan.activeCount > 1;
@@ -155,11 +150,6 @@ export function StatusSummaryCard({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          {onDownloadHealth && (
-            <button type="button" onClick={onDownloadHealth} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-white/90 px-3 text-[11px] font-black text-emerald-800 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
-              <Download className="h-4 w-4" />{isEn ? 'Export score' : '导出评分'}
-            </button>
-          )}
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 shadow-sm">
             <Icon className="h-5 w-5" />
           </div>
@@ -205,11 +195,6 @@ export function StatusSummaryCard({
             </span>
           </span>
           <span className="flex shrink-0 items-center gap-1">
-            {onDownloadCarePlan && (
-              <button type="button" onClick={onDownloadCarePlan} className="inline-flex min-h-11 items-center justify-center gap-1 rounded-full px-2 text-[10px] font-black text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
-                <Download className="h-4 w-4" />{isEn ? 'Export plan' : '导出计划'}
-              </button>
-            )}
             {hasOverflowCarePlans && (
               <button
                 type="button"
