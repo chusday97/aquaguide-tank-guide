@@ -25,34 +25,43 @@ interface StructuredAnswer {
   askNext?: string;
 }
 
-const SUGGESTED_QUESTIONS = [
-  "新手适合养什么鱼？",
-  "鱼缸水质变浑浊怎么办？",
-  "孔雀鱼怎么繁殖？",
-  "新鱼入缸需要注意什么？"
+const SUGGESTED_QUESTIONS_ZH = [
+  '新手适合养什么鱼？',
+  '鱼缸水变浑浊怎么办？',
+  '孔雀鱼怎么繁殖？',
+  '新鱼入缸要注意什么？',
+];
+
+const SUGGESTED_QUESTIONS_EN = [
+  'Which fish are suitable for beginners?',
+  'What should I do if the aquarium water turns cloudy?',
+  'How do guppies breed?',
+  'What should I check when adding new fish?',
 ];
 
 const CHAT_STORAGE_KEY = 'aquaguide_ai_chat_messages';
 
-const welcomeMessage: Message = {
+const getWelcomeMessage = (isEn: boolean): Message => ({
   id: 'welcome',
   role: 'assistant',
-  content: '你好！我是你的养鱼助手。无论你是想了解某种鱼的饲养条件，还是遇到了水质问题，都可以问我。'
-};
+  content: isEn
+    ? 'Hi! Ask me about species care, aquarium conditions, or problems you are seeing.'
+    : '你好！可以问我物种养护、鱼缸环境，或你正在遇到的问题。',
+});
 
-const loadSavedMessages = () => {
+const loadSavedMessages = (isEn: boolean) => {
   try {
     const saved = localStorage.getItem(CHAT_STORAGE_KEY);
-    if (!saved) return [welcomeMessage];
+    if (!saved) return [getWelcomeMessage(isEn)];
     const parsed = JSON.parse(saved);
-    if (!Array.isArray(parsed) || parsed.length === 0) return [welcomeMessage];
+    if (!Array.isArray(parsed) || parsed.length === 0) return [getWelcomeMessage(isEn)];
     return parsed.filter((message): message is Message =>
       typeof message?.id === 'string' &&
       (message.role === 'user' || message.role === 'assistant') &&
       typeof message.content === 'string'
     );
   } catch {
-    return [welcomeMessage];
+    return [getWelcomeMessage(isEn)];
   }
 };
 
@@ -134,11 +143,15 @@ function AssistantAnswer({ content, isEn }: { content: string; isEn: boolean }) 
 export default function AIAssistant() {
   const { i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
-  const [messages, setMessages] = useState<Message[]>(loadSavedMessages);
+  const [messages, setMessages] = useState<Message[]>(() => loadSavedMessages(isEn));
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => new Set(getSpeciesFavoriteIds()));
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMessages(prev => prev.map(message => message.id === 'welcome' ? getWelcomeMessage(isEn) : message));
+  }, [isEn]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -155,8 +168,8 @@ export default function AIAssistant() {
   }), []);
 
   const handleClearChat = () => {
-    if (!confirm('确定要清空 AI 助手的历史对话吗？')) return;
-    setMessages([welcomeMessage]);
+    if (!confirm(isEn ? 'Clear AI assistant chat history?' : '确定要清空 AI 助手的历史对话吗？')) return;
+    setMessages([getWelcomeMessage(isEn)]);
     localStorage.removeItem(CHAT_STORAGE_KEY);
   };
 
@@ -193,7 +206,7 @@ export default function AIAssistant() {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.answer || '抱歉，我没有理解你的问题。',
+        content: response.answer || (isEn ? 'I could not understand that question. Please try rephrasing it.' : '我没有理解这个问题，可以换一种说法再试。'),
         mentionedSpeciesIds: response.mentionedSpeciesIds,
         suggestedActions: response.suggestedActions,
       };
@@ -216,7 +229,7 @@ export default function AIAssistant() {
       <header className="mb-4 flex min-w-0 items-start justify-between gap-3 md:items-center">
         <div className="min-w-0">
           <h1 className="mb-1 font-serif text-[34px] font-bold leading-tight text-ink">{isEn ? 'AI Tank Copilot' : 'AI 养鱼助手'}</h1>
-          <p className="text-xs font-medium text-ink/80">{isEn ? 'Remembers conversation history for seamless follow-up questions.' : '会记住本机里的历史对话，继续追问也能接上上下文。'}</p>
+          <p className="text-xs font-medium text-ink/80">{isEn ? 'Supports follow-up questions. Chat history stays in this browser.' : '支持连续追问，历史对话保存在当前浏览器。'}</p>
         </div>
         {messages.length > 1 && (
           <button
@@ -225,7 +238,7 @@ export default function AIAssistant() {
             className="mt-1 inline-flex h-9 shrink-0 items-center rounded-sm border border-border bg-white px-2 text-[11px] font-bold text-ink/60 hover:text-red-500"
           >
             <Trash2 className="mr-1 h-3.5 w-3.5" />
-            清空
+            {isEn ? 'Clear' : '清空'}
           </button>
         )}
       </header>
@@ -243,10 +256,7 @@ export default function AIAssistant() {
                 }`}
               >
                 {message.role === 'user' ? (
-                  <>
-                    <span className="mr-2 font-bold text-ink/60">{isEn ? 'Q: ' : '问：'}</span>
-                    {message.content}
-                  </>
+                  message.content
                 ) : (
                   <>
                     <AssistantAnswer content={message.content} isEn={isEn} />
@@ -285,7 +295,7 @@ export default function AIAssistant() {
             ))}
             {isLoading && (
               <div className="mt-2 border-t border-border pt-2 text-[13px] italic text-ink/60 font-medium">
-                {isEn ? 'AI is analyzing your aquarium environment...' : 'AI 正在为您分析当前鱼缸环境...'}
+                {isEn ? 'Generating an answer…' : '正在生成回答…'}
               </div>
             )}
           </div>
@@ -294,7 +304,7 @@ export default function AIAssistant() {
         <div className="mt-3 flex flex-col gap-2 md:basis-[34%] md:justify-between md:border-l md:border-border/70 md:pl-4">
           {messages.length === 1 && (
             <div className="mb-1 flex flex-wrap gap-2 md:max-w-[280px]">
-              {SUGGESTED_QUESTIONS.map((q, i) => (
+              {(isEn ? SUGGESTED_QUESTIONS_EN : SUGGESTED_QUESTIONS_ZH).map((q, i) => (
                 <button
                   key={i}
                   onClick={() => handleSend(q)}
@@ -314,12 +324,12 @@ export default function AIAssistant() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={isEn ? 'Ask a question...' : '输入您的问题...'}
+              placeholder={isEn ? 'Ask a question…' : '输入问题…'}
               disabled={isLoading}
               className="h-auto flex-1 rounded-none border-border p-2.5 text-xs font-medium text-ink shadow-none placeholder:text-ink/50 focus-visible:ring-1 focus-visible:ring-accent md:desktop-input-limit"
             />
             <Button type="submit" disabled={!input.trim() || isLoading} className="h-auto rounded-none bg-accent px-4 text-xs font-bold text-white hover:bg-accent/90 md:desktop-action-fit">
-              发送
+              {isEn ? 'Send' : '发送'}
             </Button>
           </form>
         </div>

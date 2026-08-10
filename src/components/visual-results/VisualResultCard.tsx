@@ -123,7 +123,6 @@ export function VisualResultCard({
       <div className="px-3.5 pb-3 pt-3.5 min-[500px]:px-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="text-[11px] font-black uppercase tracking-[0.08em] text-emerald-800/65">AquaGuide</div>
             <h3 className="mt-0.5 text-[19px] font-black leading-tight text-ink">{model.title}</h3>
           </div>
           <span className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1.5 text-[10px] font-black ${meta.tone}`}>

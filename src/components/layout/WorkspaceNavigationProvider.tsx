@@ -43,28 +43,28 @@ const buildFeaturePreview = (kind: 'auth' | 'achievements' | 'imageExport' | 'sh
   if (kind === 'auth') {
     return {
       kind,
-      title: isEn ? 'Cloud sync is coming' : '云端同步 · 建设中',
-      description: isEn ? 'Sign in will sync tanks and care records across devices.' : '登录后可跨设备同步鱼缸和养护记录。',
+      title: isEn ? 'Cloud sync' : '云端同步',
+      description: isEn ? 'Sync aquariums and care records across devices.' : '跨设备同步鱼缸和养护记录。',
     };
   }
   if (kind === 'achievements') {
     return {
       kind,
-      title: isEn ? 'Achievements are coming' : '成就勋章 · 建设中',
-      description: isEn ? 'Track long-term care milestones.' : '记录你的养护里程碑。',
+      title: isEn ? 'Achievements' : '成就勋章',
+      description: isEn ? 'Track long-term care milestones.' : '记录长期养护里程碑。',
     };
   }
   if (kind === 'sharing') {
     return {
       kind,
-      title: isEn ? 'Sharing is coming' : '分享功能 · 建设中',
-      description: isEn ? 'Share links and privacy controls are being completed.' : '分享链接与隐私管理正在完善。',
+      title: isEn ? 'Sharing & privacy' : '分享与隐私',
+      description: isEn ? 'Manage share links and privacy settings.' : '管理分享链接和隐私设置。',
     };
   }
   return {
     kind,
-    title: isEn ? 'Image export is coming' : '图片导出 · 建设中',
-    description: isEn ? 'Saving generated cards as images is being completed.' : '图片保存与导出功能正在完善。',
+    title: isEn ? 'Image export' : '图片导出',
+    description: isEn ? 'Save cards as images.' : '将卡片保存为图片。',
   };
 };
 
@@ -266,7 +266,7 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
       return true;
     } catch (error) {
       console.error('Workspace navigation failed', error);
-      showToast('目标内容暂不可用，请稍后重试', 'error');
+      showToast(isEnglishUi() ? 'Unable to open this right now. Please try again later.' : '暂时无法打开，请稍后再试。', 'error');
       return false;
     }
   }, [canNavigate, location.hash, location.pathname, navigate, showToast, waitForSection]);
@@ -338,7 +338,7 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/58">{featurePreview.description}</p>
             <div className="mt-5">
               <button type="button" onClick={() => setFeaturePreview(null)} className="min-h-11 w-full rounded-full border border-slate-200 bg-white px-4 text-sm font-black text-ink/65 hover:bg-slate-50">
-                {isEnglishUi() ? 'Got it' : '我知道了'}
+                {isEnglishUi() ? 'Close' : '关闭'}
               </button>
             </div>
           </section>
