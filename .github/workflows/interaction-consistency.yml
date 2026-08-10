@@ -29,6 +29,8 @@ jobs:
           p = Path('.github/scripts/apply-interaction-consistency.mjs')
           s = p.read_text()
           s = s.replace('failures.forEach(item => console.error(`- ${item}`));', "failures.forEach(item => console.error('- ' + item));")
+          s = s.replace('${pendingFishRemoval', r'\${pendingFishRemoval')
+          s = s.replace('${pendingCareRemoval', r'\${pendingCareRemoval')
           p.write_text(s)
           PY
 
