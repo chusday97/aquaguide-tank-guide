@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Remove one-time migration files
-        run: rm -f scripts/apply-third-copy-audit.mjs .github/workflows/apply-third-copy-audit.yml
+        run: rm -f scripts/apply-third-copy-audit.mjs .github/workflows/apply-third-copy-audit.yml .third-copy-audit-trigger
       - name: Commit cleanup
         run: |
           git config user.name "github-actions[bot]"
