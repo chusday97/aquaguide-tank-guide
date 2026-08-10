@@ -1,0 +1,53 @@
+name: Remove export features
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  remove-export-features:
+    if: github.head_ref == 'agent/remove-export-features'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install current dependencies
+        run: npm ci
+      - name: Apply export removal
+        run: node scripts/remove-export-features.mjs
+      - name: Refresh lockfile without html2canvas
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Validate clean install
+        run: npm ci
+      - name: Verify export surfaces are gone
+        run: npm run test:no-export-features
+      - name: Verify interaction contracts
+        run: npm run test:interaction-consistency
+      - name: Verify product actions
+        run: npm run test:product-actions
+      - name: Verify share contract remains intact
+        run: npm run test:share-report-contract
+      - name: Build
+        run: npm run build
+      - name: Remove migration script
+        run: rm scripts/remove-export-features.mjs
+      - name: Commit verified changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "refactor(product): remove export features"
+          git push origin HEAD:${{ github.head_ref }}
