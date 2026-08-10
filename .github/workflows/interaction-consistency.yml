@@ -63,6 +63,9 @@ jobs:
       - name: Product action audit
         run: npm run test:product-actions
 
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+
       - name: Settings feedback regression
         run: npm run test:settings-feedback
 
