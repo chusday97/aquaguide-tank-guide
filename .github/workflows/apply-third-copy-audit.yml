@@ -1,14 +1,9 @@
 name: Apply Third UI Copy Audit
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/apply-third-copy-audit.yml'
-      - 'scripts/apply-third-copy-audit.mjs'
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
-  issues:
-    types: [opened]
 
 permissions:
   contents: write
@@ -16,10 +11,12 @@ permissions:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -41,5 +38,9 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "refactor(ui): apply third copy audit"
-            git push
+            if [ -n "${{ github.event.pull_request.head.ref }}" ]; then
+              git push origin HEAD:${{ github.event.pull_request.head.ref }}
+            else
+              git push
+            fi
           fi
