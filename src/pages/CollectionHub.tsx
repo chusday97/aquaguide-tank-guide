@@ -168,11 +168,8 @@ export default function CollectionHub() {
   return (
     <div className="collection-hub page-frame mx-auto flex w-full min-w-0 max-w-[1180px] flex-col gap-4 pb-24">
       <header className="px-1 py-1">
-        <div className="inline-flex items-center gap-1.5 text-[10px] font-black text-emerald-800">
-          <BookHeart className="h-3.5 w-3.5" /> {isEn ? 'Aqua Collection' : '自然水族册'}
-        </div>
-        <h1 className="mt-2 text-[25px] font-black tracking-tight text-ink">{isEn ? 'My Collection' : '我的水族册'}</h1>
-        <p className="mt-1 text-[12px] font-bold text-ink/48">{isEn ? 'Wishlist · Care · Memorials · Badges' : '种草 · 养护 · 纪念 · 勋章'}</p>
+        <h1 className="text-[25px] font-black tracking-tight text-ink">{isEn ? 'My Collection' : '我的水族册'}</h1>
+        <p className="mt-1 text-[12px] font-bold text-ink/48">{isEn ? 'Wishlist · Care · Memorials' : '种草 · 养护 · 纪念'}</p>
       </header>
 
       <section className="grid min-w-0 gap-3 min-[900px]:grid-cols-2" aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
@@ -289,10 +286,10 @@ export default function CollectionHub() {
                   ) : <Skull className="h-5 w-5 text-ink/25" />}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[13px] font-black text-ink">{fish?.name || (isEn ? 'Unrecognized species' : '未匹配生物')}</span>
+                  <span className="block truncate text-[13px] font-black text-ink">{fish?.name || (isEn ? 'Species unavailable' : '物种信息不可用')}</span>
                   <span className="mt-1 block text-[10px] font-bold text-ink/45">{formatDate(record.date)}</span>
                   <span className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[9px] font-black ${record.reason ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
-                    {record.reason ? (isEn ? 'Reflected' : '已复盘') : (isEn ? 'Reason needed' : '待补充原因')}
+                    {record.reason ? (isEn ? 'Reason recorded' : '已记录原因') : (isEn ? 'Reason needed' : '原因待补充')}
                   </span>
                 </span>
               </button>
@@ -301,7 +298,7 @@ export default function CollectionHub() {
             <PreviewEmpty
               icon={<Skull className="h-5 w-5" />}
               title={isEn ? 'No memorial records' : '还没有生命纪念'}
-              description={isEn ? 'Memorial records preserve dates and care reflections.' : '生命纪念会保留日期和养护复盘。'}
+              description={isEn ? 'After recording a departure or death, the date and reason are kept here.' : '记录离缸或死亡后，这里会保留日期和原因。'}
             />
           )}
         </CollectionModuleCard>
@@ -317,7 +314,7 @@ export default function CollectionHub() {
         >
           <PreviewEmpty
             icon={<Medal className="h-5 w-5" />}
-            title={isEn ? 'Achievements are coming' : '成就勋章 · 建设中'}
+            title={isEn ? 'Not available yet' : '暂未开放'}
             description={isEn ? 'Track long-term care milestones.' : '记录你的养护里程碑。'}
           />
         </CollectionModuleCard>

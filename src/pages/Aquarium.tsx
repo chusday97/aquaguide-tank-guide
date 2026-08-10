@@ -4686,7 +4686,7 @@ export default function AquariumManager() {
       ].slice(0, 1);
   const nextStepMessage = !hasStockedAnimals
     ? isBasicConfigComplete && hasAppliedBuildPlan
-      ? '当前只保留一个最该做的动作。'
+      ? '下一步可以添加生物。'
       : isBasicConfigComplete
         ? '先选一个安全搭建方向。'
         : '先把基础配置补齐。'
@@ -4711,7 +4711,7 @@ export default function AquariumManager() {
     {
       id: 'recordWaterChange',
       label: isEn ? (waterChangedToday ? 'Undo Water Change' : 'Record Water Change') : (waterChangedToday ? '撤回换水记录' : '记录本次换水'),
-      description: isEn ? (waterChangedToday ? 'Recorded Today' : 'Update Change Cycle') : (waterChangedToday ? '今日已记录' : '更新换水周期'),
+      description: isEn ? (waterChangedToday ? 'Recorded Today' : "Save today's water change") : (waterChangedToday ? '今日已记录' : '保存今天的换水记录'),
       icon: <Droplets className="h-4 w-4" />,
       onClick: () => void handleTankWaterChange().catch(error => showToast('换水记录没有保存成功。', 'error')),
       tone: waterChangedToday ? 'normal' as const : waterTaskStatus === '建议处理' || waterTaskStatus === '待处理' ? 'warning' as const : 'info' as const,
@@ -4720,7 +4720,7 @@ export default function AquariumManager() {
     {
       id: 'recordFeeding',
       label: isEn ? (fedToday ? 'Undo Feeding Record' : 'Record Feeding') : (fedToday ? '撤回喂食记录' : '记录本次喂食'),
-      description: isEn ? (hasStockedAnimals ? (fedToday ? 'Recorded Today' : 'Light Feeding') : 'Add Livestock First') : (hasStockedAnimals ? (fedToday ? '今日已记录' : '少量投喂') : '添加生物后使用'),
+      description: isEn ? (hasStockedAnimals ? (fedToday ? 'Recorded Today' : "Save today's feeding") : 'Add Livestock First') : (hasStockedAnimals ? (fedToday ? '今日已记录' : '保存今天的喂食记录') : '添加生物后使用'),
       icon: <Heart className="h-4 w-4" />,
       onClick: () => {
         if (!hasStockedAnimals) {
@@ -4768,7 +4768,7 @@ export default function AquariumManager() {
     {
       id: 'recordExistingSpecies',
       label: isEn ? 'Record Existing Livestock' : '记录已有生物',
-      description: isEn ? 'Save what is already in the tank' : '先保存现实情况，再看风险',
+      description: isEn ? 'Record what is already in the aquarium' : '记录鱼缸里已经有的生物',
       icon: <Plus className="h-4 w-4" />,
       onClick: () => openSpeciesAddition('record_existing'),
       tone: 'normal' as const,
@@ -4776,7 +4776,7 @@ export default function AquariumManager() {
     {
       id: 'planSpecies',
       label: isEn ? 'Plan Livestock' : '规划想养的生物',
-      description: isEn ? 'Assess before an actual addition' : '先判断，不直接写入鱼缸',
+      description: isEn ? 'Review risks before adding' : '查看加入前的风险',
       icon: <BookOpen className="h-4 w-4" />,
       onClick: () => openSpeciesAddition('planned_addition'),
       tone: 'info' as const,
@@ -4792,7 +4792,7 @@ export default function AquariumManager() {
     {
       id: 'viewRecords',
       label: isEn ? 'View Care Logs' : '查看养护记录',
-      description: isEn ? 'History Logs' : '养护历史',
+      description: isEn ? 'Feeding, water-change and check records' : '查看喂食、换水和检查记录',
       icon: <Calendar className="h-4 w-4" />,
       onClick: () => setIsCalendarOpen(true),
       tone: 'info' as const,
@@ -4825,7 +4825,7 @@ export default function AquariumManager() {
     }] : []),
     ...(conflicts.length > 0 ? [{
       id: 'viewMixingRisk',
-      level: '配置提醒',
+      level: '混养提醒',
       title: '查看混养风险',
       reason: `当前鱼缸内已有 ${totalStockedQuantity} 只/条生物，建议检查体型、性情或空间冲突。`,
       actionText: priorityTaskStatus.viewMixingRisk || '查看混养风险',
@@ -4837,7 +4837,7 @@ export default function AquariumManager() {
     }] : []),
     ...((healthScore < 85 || isChangeOverdue) ? [{
       id: 'checkWater',
-      level: '可选排查',
+      level: '建议检查',
       title: '检查水体状态',
       reason: '如果水发白、发绿、有异味，再进入水质诊断。',
       actionText: priorityTaskStatus.checkWater || '开始水质自查',

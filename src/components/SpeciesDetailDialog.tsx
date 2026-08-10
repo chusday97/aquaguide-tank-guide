@@ -922,7 +922,7 @@ export function SpeciesDetailDialog({
                               className="flex min-h-10 items-center gap-2 rounded-full border border-border bg-white px-3 text-[11px] font-black text-ink/60 hover:border-ink/20"
                             >
                               <Skull className="h-4 w-4" />
-                              {t('encyclopedia.moreLabel')}
+                              {isEn ? 'Record exit / death' : '记录离缸 / 死亡'}
                             </button>
                           )}
                         </div>
