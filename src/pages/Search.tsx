@@ -134,9 +134,7 @@ export default function SearchPage() {
   return (
     <div className="mx-auto w-full max-w-5xl px-1 py-2 md:px-8 md:py-8">
       <header>
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">AquaGuide</p>
-        <h1 className="mt-2 text-2xl font-black text-ink md:text-3xl">{t('searchPage.title')}</h1>
-        <p className="mt-2 text-sm font-semibold leading-6 text-ink/50">{t('searchPage.subtitle')}</p>
+        <h1 className="text-2xl font-black text-ink md:text-3xl">{t('searchPage.title')}</h1>
       </header>
 
       <form onSubmit={submit} className="mt-5">
@@ -203,7 +201,7 @@ export default function SearchPage() {
                 window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
               }} className="flex min-w-0 items-center gap-3 rounded-[22px] border border-white/80 bg-white p-3 text-left shadow-sm hover:border-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
                 <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-[18px] bg-emerald-50"><ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt={getSpeciesNameLocalized(fish, isEn)} className="h-full w-full object-contain p-2" /></span>
-                <span className="min-w-0"><span className="block truncate text-sm font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span><span className="mt-1 block truncate text-xs font-semibold italic text-ink/42">{fish.scientificName}</span><span className="mt-2 inline-flex items-center gap-1 text-[11px] font-black text-emerald-700"><Fish className="h-3.5 w-3.5" />{isEn ? 'Select this species' : '选择这个物种'}</span></span>
+                <span className="min-w-0"><span className="block truncate text-sm font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span><span className="mt-1 block truncate text-xs font-semibold italic text-ink/42">{fish.scientificName}</span><span className="mt-2 inline-flex items-center gap-1 text-[11px] font-black text-emerald-700"><Fish className="h-3.5 w-3.5" />{isEn ? 'Select' : '选择'}</span></span>
               </button>
             ))}
           </div>
