@@ -15,6 +15,19 @@ type ToastContextValue = {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
+const technicalErrorPattern = /(?:stack|trace|http\s*\d{3}|status\s*code|json|unexpected token|syntaxerror|typeerror|referenceerror|fetch failed|networkerror|network request|repository|provider|supabase|postgres|database|sql|api[_ -]?key|oauth|cors|timeout|timed out|ECONN|ENOTFOUND|ERR_|\b5\d\d\b|\b4\d\d\b)/i;
+
+const sanitizeToastMessage = (message: string, tone: ToastTone) => {
+  const normalized = String(message || '').trim();
+  if (tone !== 'error') return normalized;
+  if (!normalized || technicalErrorPattern.test(normalized)) {
+    return document.documentElement.lang?.toLowerCase().startsWith('en')
+      ? 'Something went wrong. Please try again.'
+      : '暂时无法完成，请重试。';
+  }
+  return normalized;
+};
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
@@ -24,7 +37,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const showToast = useCallback((message: string, tone: ToastTone = 'success') => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    setToasts(prev => [...prev.slice(-2), { id, message, tone }]);
+    const safeMessage = sanitizeToastMessage(message, tone);
+    setToasts(prev => [...prev.slice(-2), { id, message: safeMessage, tone }]);
     window.setTimeout(() => dismissToast(id), 2600);
   }, [dismissToast]);
 

@@ -67,7 +67,7 @@ export default function SettingsPage() {
       setFeedbackStatus('success');
     } catch (error) {
       setFeedbackStatus('error');
-      setFeedbackError(error instanceof Error ? error.message : (isEn ? 'Your feedback could not be submitted. Try again later.' : '反馈暂时没有提交成功，请稍后重试。'));
+      setFeedbackError(isEn ? 'Your feedback could not be submitted. Try again later.' : '反馈暂时没有提交成功，请稍后重试。');
     }
   };
 

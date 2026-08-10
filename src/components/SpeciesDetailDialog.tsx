@@ -687,7 +687,7 @@ export function SpeciesDetailDialog({
       setDeathOperationId('');
       setInlineFeedback(t('encyclopedia.freshwater') === '淡水' ? `已保存 ${fish.name} 的生命纪念。` : `Saved memorial for ${fish.name}.`);
     } catch (error) {
-      setDeathError(error instanceof Error ? error.message : (t('encyclopedia.freshwater') === '淡水' ? '保存失败，请稍后重试。' : 'Save failed, please try again later.'));
+      setDeathError(t('encyclopedia.freshwater') === '淡水' ? '保存失败，请稍后重试。' : 'Save failed, please try again later.');
     } finally {
       setIsRecordingDeath(false);
     }
@@ -753,7 +753,7 @@ export function SpeciesDetailDialog({
       link.remove();
       setInlineFeedback(isEn ? 'Species card saved.' : '物种卡片已保存。');
     } catch (error) {
-      setExportError(error instanceof Error ? error.message : (isEn ? 'Save failed. Please try again.' : '保存失败，请稍后重试。'));
+      setExportError(isEn ? 'Save failed. Please try again.' : '保存失败，请稍后重试。');
     } finally {
       setIsExportingCard(false);
     }
@@ -780,7 +780,7 @@ export function SpeciesDetailDialog({
       printWindow.setTimeout(() => printWindow.print(), 250);
     } catch (error) {
       printWindow.close();
-      setExportError(error instanceof Error ? error.message : (isEn ? 'Print failed. Please try again.' : '打印失败，请稍后重试。'));
+      setExportError(isEn ? 'Print failed. Please try again.' : '打印失败，请稍后重试。');
     } finally {
       setIsExportingCard(false);
     }

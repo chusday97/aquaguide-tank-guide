@@ -1323,7 +1323,7 @@ export default function AquariumManager() {
         setCareTimelineEvents(repositoryEvents);
         setActiveId(current => normalized.some(item => item.id === current) ? current : normalized[0]?.id || '');
       } catch (error) {
-        if (active) showToast(error instanceof Error ? error.message : (isEn ? 'Cloud aquarium data could not be loaded.' : '云端鱼缸暂时无法读取。'), 'error');
+        if (active) showToast((isEn ? 'Cloud aquarium data could not be loaded.' : '云端鱼缸暂时无法读取。'), 'error');
       }
     };
     void loadRepositoryAquariums();
@@ -1346,7 +1346,7 @@ export default function AquariumManager() {
       .then(mode => {
         if (mode === 'local') setCareRemindersState(getCareReminders());
       })
-      .catch(error => showToast(error instanceof Error ? error.message : (isEn ? 'Care plans could not be refreshed.' : '养护计划暂时无法刷新。'), 'error'));
+      .catch(error => showToast((isEn ? 'Care plans could not be refreshed.' : '养护计划暂时无法刷新。'), 'error'));
   }), [isEn, showToast]);
 
   useEffect(() => {
@@ -1435,7 +1435,7 @@ export default function AquariumManager() {
       }
     };
     void loadLocalAquariums().catch(error => {
-      if (active) showToast(error instanceof Error ? error.message : (isEn ? 'Local aquarium data could not be loaded.' : '本地鱼缸数据暂时无法读取。'), 'error');
+      if (active) showToast((isEn ? 'Local aquarium data could not be loaded.' : '本地鱼缸数据暂时无法读取。'), 'error');
     });
     return () => { active = false; };
   }, [isEn, showToast]);
@@ -1523,7 +1523,7 @@ export default function AquariumManager() {
       showToast(Boolean(i18n.language?.startsWith('en')) ? `Created new aquarium "${created.name}"` : `已新建“${created.name}”`);
       return created;
     } catch (error) {
-      showToast(error instanceof Error ? error.message : (isEn ? 'Could not create the aquarium.' : '鱼缸没有创建成功。'), 'error');
+      showToast((isEn ? 'Could not create the aquarium.' : '鱼缸没有创建成功。'), 'error');
       return null;
     } finally {
       setIsCreatingAquarium(false);
@@ -1555,7 +1555,7 @@ export default function AquariumManager() {
         ? (Boolean(i18n.language?.startsWith('en')) ? `Completed. Next task is in ${completed.repeatIntervalDays} days.` : `已完成，下一次将在 ${completed.repeatIntervalDays} 天后提醒。`)
         : (Boolean(i18n.language?.startsWith('en')) ? 'Care plan task marked completed' : '养护计划已完成'));
     } catch (error) {
-      showToast(error instanceof Error ? error.message : (Boolean(i18n.language?.startsWith('en')) ? 'Failed to update care plan.' : '养护计划没有更新成功。'), 'error');
+      showToast((Boolean(i18n.language?.startsWith('en')) ? 'Failed to update care plan.' : '养护计划没有更新成功。'), 'error');
     }
   };
 
@@ -1584,7 +1584,7 @@ export default function AquariumManager() {
       setCareRemindersState(await repository.getCareReminders());
       showToast(isEn ? `${reminder.title} repeats every ${days} days.` : `已设置“${reminder.title}”每 ${days} 天循环。`);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : (isEn ? 'Could not save recurring care.' : '循环养护没有保存成功。'), 'error');
+      showToast((isEn ? 'Could not save recurring care.' : '循环养护没有保存成功。'), 'error');
     }
   };
 
@@ -1595,7 +1595,7 @@ export default function AquariumManager() {
       setCareRemindersState(await repository.getCareReminders());
       showToast(enabled ? (isEn ? 'Recurring care updated.' : '循环养护已更新。') : (isEn ? 'Recurring care turned off.' : '已关闭循环，历史记录仍会保留。'));
     } catch (error) {
-      showToast(error instanceof Error ? error.message : (isEn ? 'Could not update recurring care.' : '循环养护没有更新成功。'), 'error');
+      showToast((isEn ? 'Could not update recurring care.' : '循环养护没有更新成功。'), 'error');
     }
   };
 
@@ -1609,7 +1609,7 @@ export default function AquariumManager() {
       setPendingReminderReschedule(null);
       showToast(Boolean(i18n.language?.startsWith('en')) ? `Rescheduled to remind in ${days} days` : `已改为 ${days} 天后提醒`);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : (Boolean(i18n.language?.startsWith('en')) ? 'Failed to reschedule care plan.' : '养护计划没有改期成功。'), 'error');
+      showToast((Boolean(i18n.language?.startsWith('en')) ? 'Failed to reschedule care plan.' : '养护计划没有改期成功。'), 'error');
     }
   };
 
@@ -1622,7 +1622,7 @@ export default function AquariumManager() {
       setPendingReminderDelete(null);
       showToast(Boolean(i18n.language?.startsWith('en')) ? 'Care plan task deleted' : '养护计划已删除');
     } catch (error) {
-      showToast(error instanceof Error ? error.message : (Boolean(i18n.language?.startsWith('en')) ? 'Failed to delete care plan.' : '养护计划没有删除成功。'), 'error');
+      showToast((Boolean(i18n.language?.startsWith('en')) ? 'Failed to delete care plan.' : '养护计划没有删除成功。'), 'error');
     }
   };
 
@@ -1693,7 +1693,7 @@ export default function AquariumManager() {
       setLocalDataMessage(Boolean(i18n.language?.startsWith('en')) ? 'Import successful, reloading...' : '导入成功，正在重新加载。');
       window.setTimeout(() => window.location.reload(), 300);
     } catch (error) {
-      setLocalDataMessage(error instanceof Error ? error.message : (Boolean(i18n.language?.startsWith('en')) ? 'Import failed, please check JSON format.' : '导入失败，请检查 JSON 格式。'));
+      setLocalDataMessage(Boolean(i18n.language?.startsWith('en')) ? 'Import failed. Check the data format and try again.' : '导入失败，请检查数据格式后重试。');
     }
   };
 
@@ -1738,8 +1738,8 @@ export default function AquariumManager() {
     }
     openSpeciesAddition(intent, fish.id);
     showToast(intent === 'record_existing'
-      ? (isEn ? `Pre-selected "${fish.name}". It will be saved before risk guidance.` : `已预选“${fish.name}”，会先保存现实记录，再显示风险提示`)
-      : (isEn ? `Pre-selected "${fish.name}". It will be assessed before recording.` : `已预选“${fish.name}”，会先完成规划判断，不会直接写入鱼缸`));
+      ? (isEn ? `Selected "${fish.name}". Confirm quantity and entry date.` : `已选择“${fish.name}”，请确认数量和入缸日期。`)
+      : (isEn ? `Selected "${fish.name}". Review the risk first.` : `已选择“${fish.name}”，请先查看风险。`));
     routeNavigate('/aquarium', { replace: true });
   }, [activeAquarium, activeId, aquariums, routeLocation.search, routeNavigate, showToast]);
 
@@ -1971,7 +1971,7 @@ export default function AquariumManager() {
       setIsEditingName(false);
       showToast(`鱼缸已重命名为“${savedAquarium.name}”`);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : '鱼缸名称没有保存成功，请重试。', 'error');
+      showToast('鱼缸名称没有保存成功，请重试。', 'error');
     } finally {
       setIsRenamingName(false);
     }
@@ -2046,7 +2046,7 @@ export default function AquariumManager() {
       try {
         await recordAddedSpeciesBatches(before, result.aquarium);
       } catch (error) {
-        showToast(error instanceof Error ? error.message : '入缸时间线没有保存成功。', 'error');
+        showToast('入缸时间线没有保存成功。', 'error');
       }
       const successItems = result.savedItems.map(item => {
         const fish = fishData.find(candidate => candidate.id === item.fishId);
@@ -2073,7 +2073,7 @@ export default function AquariumManager() {
         : (isEn ? 'Livestock recorded. Risk guidance is ready.' : '已记录缸内生物，并生成风险提示'));
       return true;
     } catch (error) {
-      showToast(error instanceof Error ? error.message : (isEn ? 'Livestock was not recorded.' : '缸内生物没有保存成功。'), 'error');
+      showToast((isEn ? 'Livestock was not recorded.' : '缸内生物没有保存成功。'), 'error');
       return false;
     } finally {
       setIsAddFishSaving(false);
@@ -2350,7 +2350,7 @@ export default function AquariumManager() {
       return;
     }
     if (task.actionType === 'water_change') {
-      void handleTankWaterChange().catch(error => showToast(error instanceof Error ? error.message : '换水记录没有保存成功。', 'error'));
+      void handleTankWaterChange().catch(error => showToast('换水记录没有保存成功。', 'error'));
       return;
     }
     if (task.actionType === 'daily_check') {
@@ -2496,7 +2496,7 @@ export default function AquariumManager() {
       if (tankCopilotAllowedCandidates.length === 0) {
         setTankCopilotResult(null);
         setTankCopilotAnswers({});
-        setTankCopilotError('当前本地规则没有可执行候选，请换一个目标或先完善鱼缸信息。');
+        setTankCopilotError('暂时没有合适的候选，请换一个目标或先完善鱼缸信息。');
         return;
       }
       setIsTankCopilotOpen(false);
@@ -2603,7 +2603,7 @@ export default function AquariumManager() {
           : '生物已经记录；时间线暂未更新，稍后可再查看。', 'error');
       }
     } catch (error) {
-      showToast(error instanceof Error ? error.message : '当前模拟没有记录成功。', 'error');
+      showToast('当前模拟没有记录成功。', 'error');
       return;
     } finally {
       setIsSmartSimulationSaving(false);
@@ -3158,10 +3158,10 @@ export default function AquariumManager() {
       sourceType: 'diagnosis_record',
       sourceId: id,
       isInferred: false,
-    }).catch(error => showToast(error instanceof Error ? error.message : '巡检时间线没有保存成功。', 'error'));
+    }).catch(error => showToast('巡检时间线没有保存成功。', 'error'));
     setDiagnosisSaveMessage(problemType === '巡检'
       ? existingDailyRecord ? '已更新今天的检查记录。' : '已保存今天的检查记录。'
-      : '已保存到诊断记录，下次诊断会参考最近记录。');
+      : '已保存本次诊断记录。');
     setIsDiagnosisRecordSaved(true);
     showToast(problemType === '巡检'
       ? existingDailyRecord ? '已更新今天的检查记录' : '已保存今天的检查记录'
@@ -3283,11 +3283,7 @@ export default function AquariumManager() {
       );
     } catch (error) {
       setWishlistFishIds(previous);
-      setDiscoveryMessage(
-        error instanceof Error
-          ? error.message
-          : (isEn ? 'Could not update the collection. Try again.' : '收藏没有保存成功，请重试。'),
-      );
+      setDiscoveryMessage(isEn ? 'Could not update the collection. Try again.' : '收藏没有保存成功，请重试。');
     } finally {
       setIsDiscoveryFavoritePending(false);
     }
@@ -3451,12 +3447,12 @@ export default function AquariumManager() {
       if (tankCopilotAllowedCandidates.length === 0) {
         return {
           label: '重新描述目标',
-          description: '本地规则暂时没有可执行候选。换一个更具体的目标，或先完善鱼缸信息。',
+          description: '暂时没有合适的候选。换一个更具体的目标，或先完善鱼缸信息。',
         };
       }
       return {
         label: '查看候选生物',
-        description: `打开 ${tankCopilotAllowedCandidates.length} 个本地规则允许的候选，不写入真实鱼缸。`,
+        description: isEn ? `View ${tankCopilotAllowedCandidates.length} candidates suitable for the current aquarium.` : `查看 ${tankCopilotAllowedCandidates.length} 个适合当前鱼缸的候选。`,
       };
     }
     if (actionType === 'start_addition_simulation') {
@@ -4643,7 +4639,7 @@ export default function AquariumManager() {
         navigateToRoute('/login');
         return;
       }
-      showToast(error instanceof Error ? error.message : '分享报告暂时没有生成成功。', 'error');
+      showToast('分享报告暂时没有生成成功。', 'error');
     } finally {
       setIsCreatingShare(false);
     }
@@ -4717,7 +4713,7 @@ export default function AquariumManager() {
       label: isEn ? (waterChangedToday ? 'Undo Water Change' : 'Record Water Change') : (waterChangedToday ? '撤回换水记录' : '记录本次换水'),
       description: isEn ? (waterChangedToday ? 'Recorded Today' : 'Update Change Cycle') : (waterChangedToday ? '今日已记录' : '更新换水周期'),
       icon: <Droplets className="h-4 w-4" />,
-      onClick: () => void handleTankWaterChange().catch(error => showToast(error instanceof Error ? error.message : '换水记录没有保存成功。', 'error')),
+      onClick: () => void handleTankWaterChange().catch(error => showToast('换水记录没有保存成功。', 'error')),
       tone: waterChangedToday ? 'normal' as const : waterTaskStatus === '建议处理' || waterTaskStatus === '待处理' ? 'warning' as const : 'info' as const,
       active: waterChangedToday,
     },
@@ -4757,9 +4753,9 @@ export default function AquariumManager() {
               sourceType: 'feeding_record',
               sourceId: createdRecord.id,
               isInferred: false,
-            }).catch(error => showToast(error instanceof Error ? error.message : '喂食时间线没有保存成功。', 'error'));
+            }).catch(error => showToast('喂食时间线没有保存成功。', 'error'));
           } else {
-            todayRecords.forEach(record => void removeCareTimelineEventBySource(activeId, 'feeding_record', record.id).catch(error => showToast(error instanceof Error ? error.message : '喂食时间线没有撤回成功。', 'error')));
+            todayRecords.forEach(record => void removeCareTimelineEventBySource(activeId, 'feeding_record', record.id).catch(error => showToast('喂食时间线没有撤回成功。', 'error')));
           }
           setCareTimelineRevision(value => value + 1);
           setTankActionMessage(next ? (isEn ? `Recorded feeding: ${format(new Date(), 'HH:mm')}` : `已记录喂食：${format(new Date(), 'HH:mm')}`) : (isEn ? 'Undid feeding record' : '已撤回今日喂食记录'));
@@ -4884,7 +4880,7 @@ export default function AquariumManager() {
     if (dailyCheckInterpretation) {
       model.detailSections.push({
         id: 'interpretation',
-        title: dailyCheckInterpretation.source === 'model' ? 'AI 补充解读' : '本地补充解读',
+        title: '补充解读',
         items: [dailyCheckInterpretation.summary, ...dailyCheckInterpretation.reasoning, dailyCheckInterpretation.disclaimer].filter(Boolean),
       });
     }
@@ -6055,7 +6051,7 @@ export default function AquariumManager() {
                 )}
                 {diagnosisIssueType === '巡检' && isDiagnosing && (
                   <div className="rounded-[14px] border border-sky-100 bg-sky-50 px-3 py-2 text-[11px] font-black text-sky-700">
-                    AI 正在整理你的补充描述；本地风险和处理步骤已先生成。
+                    正在补充分析…
                   </div>
                 )}
               </section>
@@ -6512,7 +6508,7 @@ export default function AquariumManager() {
                 })}
               </div>
               <p className="rounded-[12px] bg-bg px-3 py-2 text-[10px] font-bold leading-5 text-ink/48">
-                {isEn ? 'Choose a broad group first, then a specific species. AquaGuide will not guess a strain or variant you did not choose.' : '先选生物大类，再选具体物种；系统不会自动猜测你没有确认的品系或变体。'}
+                {isEn ? 'Choose a group, then select a specific species.' : '先选生物大类，再选择具体物种。'}
               </p>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/45" />
@@ -6586,7 +6582,7 @@ export default function AquariumManager() {
               <section className={`grid gap-3 rounded-[18px] bg-white p-3 shadow-sm ${selectedAddSpeciesCount > 0 ? '' : 'opacity-80'}`}>
                 <div>
                   <div className="flex items-center justify-between gap-3">
-                    <div className="text-[13px] font-black text-ink">{isEn ? 'Step 2: Confirm Selected Species' : '第 2 步：确认已选生物'}</div>
+                    <div className="text-[13px] font-black text-ink">{isEn ? 'Confirm selected species' : '确认已选生物'}</div>
                     {selectedAddSpeciesCount > 0 && (
                       <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-700">
                         已选择 {selectedAddSpeciesCount} 种
@@ -6594,7 +6590,7 @@ export default function AquariumManager() {
                     )}
                   </div>
                   <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-ink/50">
-                    {selectedAddSpeciesCount > 0 ? '确认每种生物的数量和入缸日期后再添加。' : '还没有选择生物，请先从上方搜索或推荐中选择。'}
+                    {selectedAddSpeciesCount > 0 ? (isEn ? 'Confirm quantity and entry date before adding.' : '确认每种生物的数量和入缸日期后再添加。') : (isEn ? 'No species selected yet.' : '还没有选择生物。')}
                   </p>
                 </div>
 
@@ -6956,18 +6952,12 @@ export default function AquariumManager() {
                   <section className="rounded-[20px] border border-emerald-100 bg-emerald-50/70 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-black text-accent">{isEn ? 'Goal Interpretation' : '目标理解'}</div>
-                      <span className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-black ${
-                        tankCopilotResult.source === 'model'
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-amber-100 text-amber-700'
-                      }`}>
-                        {tankCopilotResult.source === 'model' ? '模型回复' : '本地模板'}
-                      </span>
+
                     </div>
                     <p className="mt-2 text-sm font-bold leading-relaxed text-ink">
                       {tankCopilotResult.source === 'model'
                         ? tankCopilotResult.goalUnderstanding
-                        : 'AI 暂不可用，系统规则仍可使用。'}
+                        : 'AI 暂不可用，请查看下方建议。'}
                     </p>
                     {tankCopilotNeedsAnswers && (
                       <div className="mt-3 rounded-[16px] bg-white/85 p-3">
@@ -6999,7 +6989,7 @@ export default function AquariumManager() {
                           ))}
                         </div>
                         <p className="mt-3 text-[11px] font-bold leading-relaxed text-ink/45">
-                          补完后重新生成，方案会更贴近你的鱼缸；不会直接修改真实鱼缸。
+                          补充后重新生成，方案会更贴近你的鱼缸。
                         </p>
                       </div>
                     )}
@@ -7018,9 +7008,6 @@ export default function AquariumManager() {
                     <section className="rounded-[20px] border border-border bg-white p-4">
                       <div className="flex items-center justify-between gap-2">
                         <div className="text-sm font-black text-ink">{isEn ? 'Candidate Species' : '候选生物'}</div>
-                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-700">
-                          本地规则允许
-                        </span>
                       </div>
                       <div className="mt-3 grid gap-2 sm:grid-cols-2">
                         {tankCopilotAllowedCandidates.map(candidate => (
@@ -7044,22 +7031,17 @@ export default function AquariumManager() {
 
                   {!tankCopilotNeedsAnswers && tankCopilotResult.selectedCandidateIds.length > 0 && tankCopilotAllowedCandidates.length === 0 && (
                     <section className="rounded-[20px] border border-amber-100 bg-amber-50/70 p-4">
-                      <div className="text-sm font-black text-amber-800">{isEn ? 'No executable candidates' : '暂无可执行候选'}</div>
+                      <div className="text-sm font-black text-amber-800">{isEn ? 'No suitable candidates' : '暂时没有合适的候选'}</div>
                       <p className="mt-2 text-xs font-bold leading-relaxed text-amber-700">
-                        模型或模板给出的候选没有通过本地规则候选池校验。请重新描述目标，或先完善鱼缸信息。
+                        暂时没有适合当前鱼缸的推荐。请重新描述目标，或先完善鱼缸信息。
                       </p>
                     </section>
                   )}
 
-                  {!tankCopilotNeedsAnswers && tankCopilotHiddenCandidateCount > 0 && (
-                    <div className="rounded-[16px] border border-amber-100 bg-amber-50 px-3 py-2 text-[11px] font-bold text-amber-700">
-                      已隐藏 {tankCopilotHiddenCandidateCount} 个未通过本地规则候选池校验的候选。
-                    </div>
-                  )}
 
                   {!tankCopilotNeedsAnswers && (
                   <section className="rounded-[20px] border border-border bg-white p-4">
-                    <div className="text-sm font-black text-ink">{isEn ? 'Next Step' : '下一步动作'}</div>
+                    <div className="text-sm font-black text-ink">{isEn ? 'Next step' : '下一步'}</div>
                     <div className="mt-3 rounded-[16px] bg-emerald-50 px-3 py-3">
                       <div className="text-xs font-black text-emerald-700">{isEn ? 'Recommended First' : '建议先做'}</div>
                       <div className="mt-1 text-sm font-black text-ink">{tankCopilotActionView.label}</div>
@@ -7069,7 +7051,7 @@ export default function AquariumManager() {
                     </div>
                     {tankCopilotResult.blockedExplanation.length > 0 && (
                       <details data-disclosure-purpose="alternative_plan" className="mt-3 rounded-[14px] bg-rose-50/70 px-3 py-2 text-xs font-bold text-rose-700">
-                        <summary className="cursor-pointer">{isEn ? 'View Not Recommended' : '查看不建议方向'}</summary>
+                        <summary className="cursor-pointer">{isEn ? 'Not recommended' : '不建议'}</summary>
                         <div className="mt-2 grid gap-1.5">
                           {tankCopilotResult.blockedExplanation.map(reason => (
                             <div key={reason}>• {reason}</div>
@@ -7084,14 +7066,11 @@ export default function AquariumManager() {
                 <section className="rounded-[20px] border border-dashed border-border bg-white p-5 text-center">
                   <div className="text-sm font-black text-ink">{isEn ? 'No setup plan generated yet' : '还没有生成方案'}</div>
                   <p className="mt-2 text-xs font-bold leading-relaxed text-ink/45">
-                    输入一个目标后，系统会先用本地规则筛掉不安全方向，再让 AI 组织成可执行方案。
+                    输入你的目标，获取搭建建议。
                   </p>
                 </section>
               )}
 
-              <div className="rounded-[16px] bg-bg px-4 py-3 text-[11px] font-bold leading-relaxed text-ink/45">
-                系统结论由规则生成，AI 负责理解目标、解释方案和生成行动建议。
-              </div>
             </div>
           </div>
           <DialogFooter className="shrink-0 border-t border-border/70 px-5 pb-5 pt-4 sm:justify-end">
@@ -7121,8 +7100,8 @@ export default function AquariumManager() {
               <Sparkles className="h-5 w-5 text-accent" />
               缸内生物智能推荐
             </DialogTitle>
-            <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">
-              系统规则先筛安全边界，AI 只做解释和排序辅助。
+            <DialogDescription className="sr-only">
+              {isEn ? 'Recommendations based on the current aquarium.' : '根据当前鱼缸提供推荐。'}
             </DialogDescription>
           </DialogHeader>
           <div className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto px-5 py-4">
@@ -7151,12 +7130,9 @@ export default function AquariumManager() {
 
               <div className="grid gap-3 rounded-[20px] border border-emerald-100 bg-emerald-50/60 p-4 md:grid-cols-[1fr_auto] md:items-center">
                 <div>
-                  <div className="text-sm font-black text-ink">{isEn ? 'Current Tank Profile' : '当前鱼缸画像'}</div>
+                  <div className="text-sm font-black text-ink">{isEn ? 'Current aquarium' : '当前鱼缸'}</div>
                   <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-black">
-                    <span className="rounded-full bg-white px-2.5 py-1 text-accent">负载 {smartRecommendation.profile.load.loadRate}%</span>
-                    <span className="rounded-full bg-white px-2.5 py-1 text-ink/58">剩余 {smartRecommendation.profile.load.remainingCapacity} 负载</span>
                     <span className="rounded-full bg-white px-2.5 py-1 text-ink/58">已有 {smartRecommendation.profile.livestock.length} 种活体</span>
-                    <span className="rounded-full bg-white px-2.5 py-1 text-ink/58">可补水层 {smartRecommendation.profile.availableNiches.length || 0} 个</span>
                   </div>
                 </div>
                 <div className="rounded-[16px] bg-white px-4 py-3 text-[12px] font-bold text-ink/62">
@@ -7165,7 +7141,7 @@ export default function AquariumManager() {
               </div>
 
               <div className="grid gap-2 rounded-[18px] border border-border/70 bg-white p-3">
-                <Label className="text-[12px] font-black text-ink">{isEn ? 'Preference Keywords' : '偏好关键词'}</Label>
+                <Label className="text-[12px] font-black text-ink">{isEn ? 'What matters to you?' : '你更在意什么？'}</Label>
                 <div className="flex flex-wrap gap-2">
                   {['新手友好', '低维护', '群游', '清洁工具', '草缸友好'].map(keyword => (
                     <button
@@ -7190,13 +7166,13 @@ export default function AquariumManager() {
 
               {smartRecommendation.needsMoreInfo && (
                 <div className="rounded-[18px] border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-800">
-                  推荐前建议先补充：{smartRecommendation.infoRequests.join('、')}。
+                  先补充：{smartRecommendation.infoRequests.join('、')}。
                 </div>
               )}
 
               {!smartCandidateScope && smartRecommendation.mode === 'empty_tank' && smartRecommendation.emptyPlans.length > 0 && (
                 <section className="grid gap-3">
-                  <div className="text-sm font-black text-ink">{isEn ? 'Empty Tank Preset Plans' : '空缸组合方案'}</div>
+                  <div className="text-sm font-black text-ink">{isEn ? 'Setup plans' : '搭配方案'}</div>
                   <div className="grid gap-3 md:grid-cols-3">
                     {smartRecommendation.emptyPlans.map(plan => (
                       <div key={plan.id} className="rounded-[20px] border border-border/70 bg-bg/45 p-4">
@@ -7210,7 +7186,7 @@ export default function AquariumManager() {
                             </div>
                           ))}
                         </div>
-                        <div className="mt-3 text-[11px] font-bold text-ink/50">预计负载 {plan.estimatedLoadRate}% · 维护 {plan.maintenanceLevel}</div>
+                        <div className="mt-3 text-[11px] font-bold text-ink/50">{isEn ? 'Care level' : '养护难度'}：{plan.maintenanceLevel}</div>
                         <Button
                           type="button"
                           className="mt-3 h-9 w-full rounded-full bg-accent text-xs font-black text-white"
@@ -8070,7 +8046,7 @@ export default function AquariumManager() {
                 sourceType: 'aquarium_settings',
                 sourceId: `${activeAquarium.id}:${Date.now()}`,
                 isInferred: false,
-              }).catch(error => showToast(error instanceof Error ? error.message : '设置时间线没有保存成功。', 'error'));
+              }).catch(error => showToast('设置时间线没有保存成功。', 'error'));
               markAquariumConfigured();
               setIsSettingsOpen(false);
             }} className="h-10 min-w-[128px] rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90">{isEn ? 'Save Settings' : '保存设置'}</Button>

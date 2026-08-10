@@ -204,7 +204,7 @@ export default function AIAssistant() {
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: error instanceof Error ? error.message : 'AI 请求失败。请检查 DeepSeek API Key、余额或网络连接。'
+        content: isEn ? 'AI is temporarily unavailable. Please try again later.' : 'AI 暂不可用，请稍后再试。'
       }]);
     } finally {
       setIsLoading(false);
