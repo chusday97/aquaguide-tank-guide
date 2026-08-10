@@ -47,7 +47,7 @@ export default function SettingsPage() {
     const message = feedbackMessage.trim();
     if (message.length < 10) {
       setFeedbackStatus('error');
-      setFeedbackError(isEn ? 'Write at least 10 characters so we can understand the issue.' : '请至少写 10 个字，方便我们理解问题。');
+      setFeedbackError(isEn ? 'Please enter at least 10 characters.' : '请至少填写 10 个字。');
       feedbackInputRef.current?.focus();
       return;
     }
@@ -149,10 +149,9 @@ export default function SettingsPage() {
               <div className="min-w-0 flex-1">
                 <div className="inline-flex rounded-full bg-slate-200/70 px-2.5 py-1 text-[10px] font-black text-slate-500">{isEn ? 'COMING SOON' : '功能建设中'}</div>
                 <h2 id="settings-share-title" className="mt-2 text-base font-black text-slate-600">{isEn ? 'Sharing & privacy' : '分享与隐私'}</h2>
-                <p className="mt-1 text-xs font-semibold leading-5 text-slate-400">{isEn ? 'Share links and privacy controls are being completed.' : '分享链接与隐私管理正在完善。'}</p>
               </div>
             </div>
-            <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="mt-4 min-h-11 rounded-full border border-slate-200 bg-slate-100 px-4 text-sm font-black text-slate-400 shadow-none">{isEn ? 'View details' : '查看说明'}</button>
+            <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="mt-4 min-h-11 rounded-full border border-slate-200 bg-slate-100 px-4 text-sm font-black text-slate-400 shadow-none">{isEn ? 'Learn about feature' : '了解功能'}</button>
           </section>
 
           <section id="feedback" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5" aria-labelledby="settings-feedback-title">
@@ -160,7 +159,7 @@ export default function SettingsPage() {
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-amber-50 text-amber-700"><MessageSquareText className="h-5 w-5" /></span>
               <div>
                 <h2 id="settings-feedback-title" className="text-base font-black text-ink">{isEn ? 'Feedback' : '意见反馈'}</h2>
-                <p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{isEn ? 'Tell us what is difficult or missing. Do not include contact details, aquarium privacy, or diagnosis text.' : '告诉我们哪里难用或希望增加什么。请不要填写联系方式、鱼缸隐私或诊断原文。'}</p>
+                <p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{isEn ? 'Tell us what is difficult or what you would like us to add.' : '告诉我们哪里难用，或希望增加什么功能。'}</p>
               </div>
             </div>
             <form className="mt-4 grid gap-4" onSubmit={handleFeedbackSubmit}>
@@ -198,7 +197,7 @@ export default function SettingsPage() {
                 />
                 <span className="text-right text-[11px] font-bold text-ink/36">{feedbackMessage.length} / 2000</span>
               </label>
-              {feedbackStatus === 'success' && <p role="status" className="rounded-[14px] bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">{feedbackDeliveryStatus === 'sent' ? (isEn ? 'Saved and delivered to the feedback email.' : '已保存并发送到反馈邮箱。') : (isEn ? 'Saved successfully. Email delivery is temporarily unavailable.' : '反馈已保存，邮件暂未送达。')}</p>}
+              {feedbackStatus === 'success' && <p role="status" className="rounded-[14px] bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">{isEn ? 'Feedback submitted.' : '反馈已提交。'}</p>}
               {feedbackStatus === 'error' && <p role="alert" className="rounded-[14px] bg-rose-50 px-4 py-3 text-sm font-bold text-rose-700">{feedbackError}</p>}
               <button type="submit" disabled={feedbackStatus === 'submitting'} className="min-h-11 w-full rounded-full bg-emerald-700 px-5 text-sm font-black text-white shadow-sm transition-colors hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-45 sm:w-fit">
                 {feedbackStatus === 'submitting' ? (isEn ? 'Submitting…' : '提交中…') : (isEn ? 'Submit feedback' : '提交反馈')}
