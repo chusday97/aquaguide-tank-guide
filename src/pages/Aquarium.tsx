@@ -3283,11 +3283,7 @@ export default function AquariumManager() {
       );
     } catch (error) {
       setWishlistFishIds(previous);
-      setDiscoveryMessage(
-        error instanceof Error
-          ? error.message
-          : (isEn ? 'Could not update the collection. Try again.' : '收藏没有保存成功，请重试。'),
-      );
+      setDiscoveryMessage(isEn ? 'Could not update the collection. Try again.' : '收藏没有保存成功，请重试。');
     } finally {
       setIsDiscoveryFavoritePending(false);
     }
@@ -6961,7 +6957,7 @@ export default function AquariumManager() {
                     <p className="mt-2 text-sm font-bold leading-relaxed text-ink">
                       {tankCopilotResult.source === 'model'
                         ? tankCopilotResult.goalUnderstanding
-                        : 'AI 暂不可用，系统规则仍可使用。'}
+                        : 'AI 暂不可用，请查看下方建议。'}
                     </p>
                     {tankCopilotNeedsAnswers && (
                       <div className="mt-3 rounded-[16px] bg-white/85 p-3">
@@ -6993,7 +6989,7 @@ export default function AquariumManager() {
                           ))}
                         </div>
                         <p className="mt-3 text-[11px] font-bold leading-relaxed text-ink/45">
-                          补完后重新生成，方案会更贴近你的鱼缸；不会直接修改真实鱼缸。
+                          补充后重新生成，方案会更贴近你的鱼缸。
                         </p>
                       </div>
                     )}
@@ -7012,9 +7008,6 @@ export default function AquariumManager() {
                     <section className="rounded-[20px] border border-border bg-white p-4">
                       <div className="flex items-center justify-between gap-2">
                         <div className="text-sm font-black text-ink">{isEn ? 'Candidate Species' : '候选生物'}</div>
-                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-700">
-                          
-                        </span>
                       </div>
                       <div className="mt-3 grid gap-2 sm:grid-cols-2">
                         {tankCopilotAllowedCandidates.map(candidate => (
@@ -7038,7 +7031,7 @@ export default function AquariumManager() {
 
                   {!tankCopilotNeedsAnswers && tankCopilotResult.selectedCandidateIds.length > 0 && tankCopilotAllowedCandidates.length === 0 && (
                     <section className="rounded-[20px] border border-amber-100 bg-amber-50/70 p-4">
-                      <div className="text-sm font-black text-amber-800">{isEn ? 'No executable candidates' : '暂时没有合适的候选'}</div>
+                      <div className="text-sm font-black text-amber-800">{isEn ? 'No suitable candidates' : '暂时没有合适的候选'}</div>
                       <p className="mt-2 text-xs font-bold leading-relaxed text-amber-700">
                         暂时没有适合当前鱼缸的推荐。请重新描述目标，或先完善鱼缸信息。
                       </p>

@@ -31,7 +31,7 @@ const emptyCare = (): CareArticleAdminInput => ({
 
 const lines = (value: string) => value.split('\n').map(item => item.trim()).filter(Boolean);
 const lineText = (value: string[] | undefined) => (value || []).join('\n');
-const errorMessage = (error: unknown) => error instanceof Error ? error.message : '操作没有完成，请稍后重试。';
+const errorMessage = (_error: unknown) => '操作没有完成，请稍后重试。';
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return <label className="grid gap-1.5 text-[12px] font-black text-ink/65"><span>{label}{required ? ' *' : ''}</span>{children}</label>;

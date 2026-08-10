@@ -137,7 +137,7 @@ export function LivestockRosterDialog({
       });
       setRemoval(null);
     } catch (error) {
-      setRemoveError(error instanceof Error ? error.message : '移出失败，请稍后重试。');
+      setRemoveError('移出失败，请稍后重试。');
     } finally {
       setIsRemoving(false);
     }
@@ -190,7 +190,7 @@ export function LivestockRosterDialog({
                   disabled={!startedAtDraft || isSavingStartedAt}
                   onClick={() => {
                     setStartedAtError('');
-                    void onConfirmStartedAt(startedAtDraft).catch(error => setStartedAtError(error instanceof Error ? error.message : '日期保存失败，请重试。'));
+                    void onConfirmStartedAt(startedAtDraft).catch(error => setStartedAtError('日期保存失败，请重试。'));
                   }}
                   className="min-h-11 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50"
                 >

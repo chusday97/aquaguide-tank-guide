@@ -281,7 +281,7 @@ export default function Identify() {
       if (result.source === 'model' && mapped.every(item => !item.fish || item.matchType === 'fuzzy')) void logMiss(result, mapped);
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
-      const message = error instanceof Error ? error.message : t('identify.recognitionFailed');
+      const message = t('identify.recognitionFailed');
       setErrorMessage(message);
       showToast(message, 'error');
     } finally {
@@ -354,7 +354,7 @@ export default function Identify() {
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
       if (requestId !== diagnosisRequestIdRef.current) return;
-      const message = error instanceof Error ? error.message : t('identify.diagnosisFailed');
+      const message = t('identify.diagnosisFailed');
       setErrorMessage(message);
       showToast(message, 'error');
     } finally {

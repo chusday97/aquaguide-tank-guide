@@ -3104,7 +3104,7 @@ export function CareArticleDetail({
       setCtaFeedback(`${successMessage || (isEn ? 'Reminder scheduled' : '提醒已设置')} · ${scheduledLabel}`);
       return true;
     } catch (error) {
-      setCtaFeedback(error instanceof Error ? error.message : (isEn ? 'Failed to save reminder' : '提醒保存失败'));
+      setCtaFeedback(isEn ? 'Could not save the reminder. Try again.' : '提醒保存失败，请重试。');
       return false;
     } finally {
       setIsReminderSaving(false);
@@ -3180,7 +3180,7 @@ export function CareArticleDetail({
           : (isEn ? 'Marked completed' : '已标记完成')
       );
     } catch (error) {
-      setCtaFeedback(error instanceof Error ? error.message : (isEn ? 'Failed to save operation record' : '操作记录保存失败'));
+      setCtaFeedback(isEn ? 'Could not save the operation. Try again.' : '操作记录保存失败，请重试。');
     }
     window.setTimeout(() => setCtaFeedback(''), 1800);
   };
@@ -3207,7 +3207,7 @@ export function CareArticleDetail({
           : `已保存 ${completedVisibleActions} 项完成记录`
       );
     } catch (error) {
-      setCtaFeedback(error instanceof Error ? error.message : (isEn ? 'Failed to save care checklist' : '护理清单保存失败'));
+      setCtaFeedback(isEn ? 'Could not save the checklist. Try again.' : '护理清单保存失败，请重试。');
     }
     window.setTimeout(() => setCtaFeedback(''), 1800);
   };
