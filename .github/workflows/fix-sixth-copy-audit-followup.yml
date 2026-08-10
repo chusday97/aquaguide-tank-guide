@@ -1,0 +1,52 @@
+name: Fix Sixth UI Copy Audit Follow-up
+
+on:
+  pull_request:
+    types: [synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  cleanup:
+    if: github.event.pull_request.head.ref == 'agent/sixth-copy-audit'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply Aquarium follow-up
+        run: node scripts/fix-sixth-aquarium-followup.mjs
+      - name: Apply error-copy follow-up
+        run: node scripts/fix-sixth-errors-followup.mjs
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Audit remaining raw UI errors
+        run: |
+          HITS=$(grep -RIn --include='*.ts' --include='*.tsx' 'error\.message' src/pages src/components || true)
+          if [ -n "$HITS" ]; then
+            echo "$HITS"
+            exit 1
+          fi
+          echo "No raw error.message references remain in pages/components."
+      - name: Remove one-time follow-up files
+        run: rm -f scripts/fix-sixth-aquarium-followup.mjs scripts/fix-sixth-errors-followup.mjs .github/workflows/fix-sixth-copy-audit-followup.yml
+      - name: Commit follow-up
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No follow-up changes to commit"
+          else
+            git commit -m "fix(ui): finish sixth copy audit"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
