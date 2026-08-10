@@ -25,6 +25,17 @@ jobs:
         run: sed -i 's#src/components/visual-result/#src/components/visual-results/#g' scripts/apply-seventh-copy-audit.mjs
       - name: Apply approved copy changes
         run: node scripts/apply-seventh-copy-audit.mjs
+      - name: Fix generated quote literals
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('src/pages/Aquarium.tsx')
+          s = p.read_text()
+          s = s.replace("'Save today's water change'", '"Save today\'s water change"')
+          s = s.replace("'Save today's feeding'", '"Save today\'s feeding"')
+          p.write_text(s)
+          PY
       - name: Install dependencies
         run: npm ci
       - name: Build
