@@ -66,6 +66,19 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install chromium
 
+      - name: Start app for browser regression
+        run: |
+          npm run dev:web > /tmp/aquaguide-vite.log 2>&1 &
+          echo $! > /tmp/aquaguide-vite.pid
+          for i in {1..30}; do
+            if curl -fsS http://localhost:3000/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-vite.log
+          exit 1
+
       - name: Settings feedback regression
         run: npm run test:settings-feedback
 
@@ -74,6 +87,11 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Stop browser regression server
+        if: always()
+        run: |
+          if [ -f /tmp/aquaguide-vite.pid ]; then kill $(cat /tmp/aquaguide-vite.pid) || true; fi
 
       - name: Remove one-time migration files
         run: |
