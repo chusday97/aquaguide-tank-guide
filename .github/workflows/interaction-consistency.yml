@@ -22,6 +22,16 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Patch one-time migration quoting
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('.github/scripts/apply-interaction-consistency.mjs')
+          s = p.read_text()
+          s = s.replace('failures.forEach(item => console.error(`- ${item}`));', "failures.forEach(item => console.error('- ' + item));")
+          p.write_text(s)
+          PY
+
       - name: Apply approved interaction consistency changes
         run: node .github/scripts/apply-interaction-consistency.mjs
 
