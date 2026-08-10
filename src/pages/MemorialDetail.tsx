@@ -218,7 +218,7 @@ export default function MemorialDetail() {
         <section className="mt-4 rounded-[24px] border border-dashed border-slate-200 bg-white px-5 py-14 text-center">
           <HeartHandshake className="mx-auto h-9 w-9 text-ink/20" />
           <h1 className="mt-4 text-xl font-black text-ink">{isEn ? 'This record is unavailable' : '没有找到这条生命纪念'}</h1>
-          <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-ink/50">{isEn ? 'It may have been removed. Return to the memorial list to view the records that are still available.' : '它可能已经被移除。返回生命纪念列表可以查看现有记录。'}</p>
+          <p className="mx-auto mt-2 max-w-md text-sm font-semibold leading-6 text-ink/50">{isEn ? 'This record is no longer available.' : '这条记录已不可用。'}</p>
         </section>
       </main>
     );
@@ -237,9 +237,9 @@ export default function MemorialDetail() {
             <div className="absolute inset-x-5 top-5 flex items-center justify-between gap-3 sm:inset-x-7 sm:top-7">
               <span className="rounded-full border border-white/80 bg-white/85 px-3 py-1.5 text-[11px] font-black text-slate-600 shadow-sm">
                 {hasPossibleCause
-                  ? (isEn ? 'Possible cause recorded' : '已补充可能原因')
+                  ? (isEn ? 'Reason recorded' : '已记录原因')
                   : hasReflection
-                    ? (isEn ? 'Record saved · cause still open' : '已记录 · 原因待补充')
+                    ? (isEn ? 'Reason not recorded' : '原因待补充')
                     : (isEn ? 'Reflection needed' : '待补充记录')}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900/70 px-3 py-1.5 text-[11px] font-black text-white">
@@ -267,8 +267,7 @@ export default function MemorialDetail() {
                 <div className="inline-flex items-center gap-2 text-xs font-black text-emerald-800">
                   <ClipboardPenLine className="h-4 w-4" />{isEn ? 'Care reflection' : '养护复盘'}
                 </div>
-                <h2 className="mt-2 text-[22px] font-black text-ink">{isEn ? 'Keep what you learned' : '把这次经验留下来'}</h2>
-                <p className="mt-1 text-sm font-semibold leading-6 text-ink/50">{isEn ? 'Record what you observed, a possible cause, and one change for next time.' : '记录看到的现象、可能原因，以及下次准备改变的一件事。'}</p>
+                                <p className="mt-1 text-sm font-semibold leading-6 text-ink/50">{isEn ? 'Record what you observed, a possible reason, and what you would change next time.' : '记录当时现象、可能原因和后续改进。'}</p>
               </div>
               {!editing && (
                 <button type="button" onClick={startEditing} className="min-h-11 shrink-0 rounded-full border border-emerald-200 px-4 text-xs font-black text-emerald-800 hover:bg-emerald-50">
@@ -287,7 +286,7 @@ export default function MemorialDetail() {
                 <MemorialCauseSelector value={draft.causeCodes} onChange={value => updateDraft('causeCodes', value)} disabled={saving} isEn={isEn} />
                 {(draft.causeCodes.includes('other') || Boolean(draft.reason)) && (
                   <label className="grid gap-1.5 text-xs font-black text-ink/65">
-                    {isEn ? 'Custom note' : '补充自定义原因'}
+                    {isEn ? 'Other reason' : '其他原因'}
                     <textarea value={draft.reason} onChange={event => updateDraft('reason', event.target.value)} rows={3} placeholder={isEn ? 'Describe the possibility in your own words' : '没有合适选项时，用自己的话补充'} className="resize-y rounded-[14px] border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold leading-6 text-ink outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100" />
                   </label>
                 )}
@@ -299,16 +298,16 @@ export default function MemorialDetail() {
                 <div className="sticky bottom-3 grid grid-cols-2 gap-2 rounded-[18px] border border-white/80 bg-white/92 p-2 shadow-[0_12px_32px_rgba(15,23,42,0.1)] backdrop-blur">
                   <button type="button" onClick={cancelEditing} disabled={saving} className="min-h-11 rounded-full border border-slate-200 text-sm font-black text-ink/65 disabled:opacity-50">{isEn ? 'Cancel' : '取消'}</button>
                   <button type="button" onClick={() => void saveReflection()} disabled={saving || !dirty} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-800 px-4 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-45">
-                    <Save className="h-4 w-4" />{saving ? (isEn ? 'Saving…' : '保存中…') : (isEn ? 'Save reflection' : '保存复盘')}
+                    <Save className="h-4 w-4" />{saving ? (isEn ? 'Saving…' : '保存中…') : (isEn ? 'Save' : '保存')}
                   </button>
                 </div>
               </div>
             ) : (
               <div className="mt-6 grid gap-3">
                 {[
-                  { label: isEn ? 'What happened' : '当时现象', value: record.observation, fallback: isEn ? 'No observation recorded yet.' : '还没有记录当时看到的现象。' },
-                  { label: isEn ? 'Possible cause' : '可能原因', value: [record.causeCodes?.map(code => getMemorialCauseLabel(code, isEn)).join(' · '), record.reason].filter(Boolean).join('\n'), fallback: isEn ? 'No possible cause recorded yet.' : '还没有记录可能原因。' },
-                  { label: isEn ? 'Next improvement' : '后续改进', value: record.improvement, fallback: isEn ? 'No improvement recorded yet.' : '还没有记录下次准备怎么做。' },
+                  { label: isEn ? 'What happened' : '当时现象', value: record.observation, fallback: isEn ? 'Not recorded' : '未记录' },
+                  { label: isEn ? 'Possible cause' : '可能原因', value: [record.causeCodes?.map(code => getMemorialCauseLabel(code, isEn)).join(' · '), record.reason].filter(Boolean).join('\n'), fallback: isEn ? 'Not recorded' : '未记录' },
+                  { label: isEn ? 'Next improvement' : '后续改进', value: record.improvement, fallback: isEn ? 'Not recorded' : '未记录' },
                 ].map(item => (
                   <section key={item.label} className={`rounded-[18px] border p-4 ${item.value?.trim() ? 'border-slate-100 bg-slate-50/70' : 'border-dashed border-slate-200 bg-white'}`}>
                     <h3 className="text-[11px] font-black text-ink/42">{item.label}</h3>
@@ -316,12 +315,9 @@ export default function MemorialDetail() {
                   </section>
                 ))}
                 <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <span className="inline-flex min-h-11 items-center gap-2 rounded-full bg-emerald-50 px-4 text-xs font-black text-emerald-800">
-                    <Check className="h-4 w-4" />{isEn ? 'Reflection supports future care decisions' : '复盘用于改进后续养护'}
-                  </span>
                   {fish && (
                     <button type="button" onClick={() => navigateToRoute(`/aquarium?action=add-species&species=${encodeURIComponent(fish.id)}`)} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-slate-200 px-4 text-xs font-black text-ink/60 hover:bg-slate-50">
-                      <RotateCcw className="h-4 w-4" />{isEn ? 'Add again' : '再次加入'}
+                      <RotateCcw className="h-4 w-4" />{isEn ? 'Add this species again' : '重新添加该物种'}
                     </button>
                   )}
                 </div>
