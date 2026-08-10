@@ -241,7 +241,7 @@ function AquariumZoneHeader({ index, title, subtitle, titleId }: { index: number
       <span className="aquarium-zone-index" aria-hidden="true">{index}</span>
       <span className="min-w-0">
         <h2 id={titleId} className="block text-[14px] font-black leading-tight text-ink">{title}</h2>
-        <span className="mt-0.5 block text-[10px] font-bold leading-4 text-ink/45">{subtitle}</span>
+        {subtitle && <span className="mt-0.5 block text-[10px] font-bold leading-4 text-ink/45">{subtitle}</span>}
       </span>
     </header>
   );

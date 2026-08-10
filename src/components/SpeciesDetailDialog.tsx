@@ -881,7 +881,7 @@ export function SpeciesDetailDialog({
                               {displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank' ? <CheckCircle2 className="h-4.5 w-4.5" /> : displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' ? <AlertTriangle className="h-4.5 w-4.5 text-red-600" /> : <Info className="h-4.5 w-4.5" />}
                             </span>
                             <div className="min-w-0">
-                              <div className="text-[10px] font-black uppercase tracking-[0.12em] text-ink/42">{aquariumContext ? (isEn ? 'Current tank fit' : '当前鱼缸适配') : (isEn ? 'Tank not selected' : '尚未选择鱼缸')}</div>
+                              <div className="text-[10px] font-black uppercase tracking-[0.12em] text-ink/42">{aquariumContext ? (isEn ? 'Fits my tank?' : '适合我的鱼缸吗？') : (isEn ? 'Tank not selected' : '尚未选择鱼缸')}</div>
                               <p className="mt-0.5 text-[15px] font-black leading-snug text-ink min-[760px]:mt-1 min-[760px]:text-[17px]">{displayFit.title}</p>
                               <p className="mt-0.5 line-clamp-2 text-[11px] font-bold leading-snug text-ink/64 min-[760px]:mt-1 min-[760px]:text-[12px] min-[760px]:leading-relaxed">{aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank')}</p>
                             </div>
@@ -1023,10 +1023,10 @@ export function SpeciesDetailDialog({
                         className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
                       >
                         <span className="min-w-0">
-                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Tank fit evidence' : '适配依据'}</span>
+                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Why?' : '为什么？'}</span>
                           <span className="mt-0.5 block text-[11px] font-bold text-ink/45">
                             {aquariumContext
-                              ? (isEn ? `${metricCards.filter(item => item.status !== 'ok').length} items need attention` : `${metricCards.filter(item => item.status !== 'ok').length} 项需要留意`)
+                              ? (() => { const count = metricCards.filter(item => item.status !== 'ok').length; return count === 0 ? (isEn ? 'No obvious issues' : '目前没有明显问题') : (isEn ? `${count} items need attention` : `${count} 项需要留意`); })()
                               : t('encyclopedia.noTankSelected')}
                           </span>
                         </span>

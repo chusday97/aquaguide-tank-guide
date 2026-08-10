@@ -37,28 +37,28 @@ const statusRank: Record<TankCompatibilityStatus, number> = {
 const statusMeta = (status: TankCompatibilityStatus, isEn: boolean) => {
   if (status === 'not_recommended') return {
     label: isEn ? 'Not recommended' : '不建议混养',
-    description: isEn ? 'At least one blocking conflict was found.' : '当前组合命中明确阻断风险，不建议按现在的组合入缸。',
+    description: isEn ? 'This combination has a clear conflict and is not recommended.' : '存在明确冲突，不建议一起养。',
     box: 'border-red-200 bg-red-50',
     text: 'text-red-800',
     icon: <AlertTriangle className="h-5 w-5" />,
   };
   if (status === 'caution') return {
     label: isEn ? 'Conditional' : '有条件可尝试',
-    description: isEn ? 'No hard block, but one or more conditions require attention.' : '没有硬性阻断，但存在需要先调整或持续观察的条件。',
+    description: isEn ? 'This combination may work if the conditions below are met.' : '可以尝试，但需要满足以下条件。',
     box: 'border-amber-200 bg-amber-50',
     text: 'text-amber-800',
     icon: <AlertTriangle className="h-5 w-5" />,
   };
   if (status === 'insufficient_data') return {
     label: isEn ? 'More tank data needed' : '需要补充鱼缸信息',
-    description: isEn ? 'The rules are missing data required for a reliable decision.' : '缺少关键鱼缸参数，当前不应给出确定的混养结论。',
+    description: isEn ? 'Complete the tank details before deciding whether these species can live together.' : '先补充鱼缸参数，再判断是否适合混养。',
     box: 'border-sky-200 bg-sky-50',
     text: 'text-sky-800',
     icon: <Info className="h-5 w-5" />,
   };
   return {
     label: isEn ? 'Compatible' : '当前可混养',
-    description: isEn ? 'No blocking conflict was found in the current rules.' : '当前规则没有发现明确阻断风险，仍建议少量加入并观察。',
+    description: isEn ? 'No obvious conflict was found. Add gradually and observe.' : '目前没有发现明显冲突，建议少量加入并观察。',
     box: 'border-emerald-200 bg-emerald-50',
     text: 'text-emerald-800',
     icon: <CheckCircle2 className="h-5 w-5" />,
@@ -87,6 +87,16 @@ type ConflictAction = {
 };
 
 const unique = <T,>(items: T[]) => Array.from(new Set(items));
+
+const getConflictActionLabel = (action: ConflictAction, isEn: boolean) => {
+  if (!action.removeSpeciesId) return isEn ? 'Review current tank' : '查看当前鱼缸';
+  const species = fishData.find(item => item.id === action.removeSpeciesId);
+  const name = species ? getSpeciesName(species, isEn) : (isEn ? 'this species' : '该生物');
+  const isSkip = action.title.startsWith(isEn ? 'Do not add ' : '不要加入 ');
+  return isSkip
+    ? (isEn ? 'Do not add ' + name : '不加入 ' + name)
+    : (isEn ? 'Remove ' + name : '移除 ' + name);
+};
 
 const getPairReasons = (pair: PairCompatibilityResult) => unique([
   pair.primaryReason?.evidence,
@@ -156,8 +166,6 @@ export function CompatibilityRiskCalculator({
     .map(id => fishData.find(fish => fish.id === id))
     .filter((fish): fish is Fish => Boolean(fish && isLivestock(fish))), [activeSpeciesIds]);
 
-  // In a real tank, existing livestock is the baseline. User selections are the planned additions.
-  // If every selected species is already in the tank, fall back to compare-selected mode instead of pretending they are additions.
   const candidateSpecies = useMemo(() => selectedSpecies.filter(fish => !existingIds.has(fish.id)), [existingIds, selectedSpecies]);
   const compareExistingOnly = selectedSpecies.length >= 2 && candidateSpecies.length === 0;
 
@@ -269,7 +277,7 @@ export function CompatibilityRiskCalculator({
         actions.push({
           id: `${pair.pairId}-skip-a`,
           title: isEn ? `Do not add ${getSpeciesName(pair.speciesA, true)}` : `不要加入 ${pair.speciesA.name}`,
-          detail: isEn ? `It conflicts with livestock already in the tank. ${reason}` : `它与当前缸内已有生物 ${pair.speciesB.name} 存在阻断冲突。${reason}`,
+          detail: isEn ? `It is not suitable with ${getSpeciesName(pair.speciesB, true)}: ${reason}` : `它与 ${pair.speciesB.name} 不适合一起养：${reason}`,
           removeSpeciesId: pair.speciesA.id,
           tone: 'danger',
         });
@@ -279,7 +287,7 @@ export function CompatibilityRiskCalculator({
         actions.push({
           id: `${pair.pairId}-skip-b`,
           title: isEn ? `Do not add ${getSpeciesName(pair.speciesB, true)}` : `不要加入 ${pair.speciesB.name}`,
-          detail: isEn ? `It conflicts with livestock already in the tank. ${reason}` : `它与当前缸内已有生物 ${pair.speciesA.name} 存在阻断冲突。${reason}`,
+          detail: isEn ? `It is not suitable with ${getSpeciesName(pair.speciesA, true)}: ${reason}` : `它与 ${pair.speciesA.name} 不适合一起养：${reason}`,
           removeSpeciesId: pair.speciesB.id,
           tone: 'danger',
         });
@@ -306,7 +314,7 @@ export function CompatibilityRiskCalculator({
         actions.push({
           id: `${pair.pairId}-existing`,
           title: isEn ? 'Existing tank conflict detected' : '当前缸内已有组合存在风险',
-          detail: isEn ? `This is an existing-tank issue, not a new-addition decision. ${reason}` : `这是当前鱼缸已经存在的风险，不应该由混养工具擅自删除任何生物。${reason}`,
+          detail: isEn ? `This conflict already exists in the current tank. Adjust the current stocking first. ${reason}` : `这个风险已经存在于当前鱼缸，请先调整缸内组合。${reason}`,
           tone: 'warning',
         });
       }
@@ -415,15 +423,19 @@ export function CompatibilityRiskCalculator({
   };
 
   const canEvaluate = evaluationItems.length >= 2 && relevantPairs.length > 0;
+  const aquariumVolume = selectedAquarium ? getAquariumVolumeLiters(selectedAquarium) : null;
   const contextLabel = selectedAquarium
-    ? `${selectedAquarium.name} · ${getAquariumVolumeLiters(selectedAquarium) || '--'}L · ${existingLivestock.length} ${isEn ? 'existing species' : '种已有生物'}`
+    ? [
+      selectedAquarium.name,
+      aquariumVolume ? `${aquariumVolume}L` : '',
+      `${existingLivestock.length} ${isEn ? 'existing species' : '种已有生物'}`,
+    ].filter(Boolean).join(' · ')
     : (isEn ? 'No tank selected · comparison only' : '未选择鱼缸 · 仅比较所选组合');
 
   return (
     <div className="grid gap-4 rounded-[24px] border border-emerald-100 bg-white p-4 shadow-sm md:p-5">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-700">{isEn ? 'Mixing planner' : '混养决策'}</div>
           <h2 className="mt-1 text-[22px] font-black text-ink">{isEn ? 'Can these species live together?' : '这些生物能不能一起养？'}</h2>
           <p className="mt-1 max-w-[680px] text-[12px] font-semibold leading-5 text-ink/52">
             {isEn
@@ -464,10 +476,10 @@ export function CompatibilityRiskCalculator({
 
       <section className="grid gap-3 rounded-[18px] border border-border/70 p-3">
         <div>
-          <div className="text-[13px] font-black text-ink">{selectedAquarium && existingLivestock.length > 0 ? (isEn ? '1. What do you want to add?' : '1. 你准备加入什么？') : (isEn ? '1. Select species to compare' : '1. 选择要比较的生物')}</div>
+          <div className="text-[13px] font-black text-ink">{selectedAquarium && existingLivestock.length > 0 ? (isEn ? 'What do you want to add?' : '你准备加入什么？') : (isEn ? 'Select species to compare' : '选择要比较的生物')}</div>
           <div className="mt-1 text-[10px] font-bold text-ink/42">
             {selectedAquarium && existingLivestock.length > 0
-              ? (isEn ? 'One new species is enough; existing livestock is included automatically.' : '只选 1 种新生物也可以，系统会自动与缸内已有生物比较。')
+              ? (isEn ? 'Existing livestock is included automatically.' : '已有生物会自动纳入判断')
               : (isEn ? 'Select at least two species.' : '未选择已有鱼缸时，需要至少选择 2 种。')}
           </div>
         </div>
@@ -525,8 +537,7 @@ export function CompatibilityRiskCalculator({
 
       <section className="grid gap-3">
         <div className="flex items-center justify-between gap-2">
-          <div className="text-[13px] font-black text-ink">{isEn ? '2. Compatibility decision' : '2. 混养结论'}</div>
-          <div className="text-[10px] font-bold text-ink/40">{isEn ? 'Compatibility' : '混养结果'}</div>
+          <div className="text-[13px] font-black text-ink">{isEn ? 'Compatibility result' : '混养结果'}</div>
         </div>
 
         {!canEvaluate || !resultStatus || !meta ? (
@@ -551,7 +562,7 @@ export function CompatibilityRiskCalculator({
 
             {blockingPairs.length > 0 && (
               <section className="grid gap-2">
-                <div className="text-[12px] font-black text-red-700">{isEn ? 'Blocking conflicts' : '阻断冲突'}</div>
+                <div className="text-[12px] font-black text-red-700">{isEn ? 'Conflicting pairs' : '不适合的组合'}</div>
                 {blockingPairs.slice(0, 4).map(pair => (
                   <article key={pair.pairId} className="rounded-[18px] border-2 border-red-200 bg-white p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -581,7 +592,7 @@ export function CompatibilityRiskCalculator({
 
             {missingPairs.length > 0 && (
               <section className="rounded-[18px] border border-sky-200 bg-sky-50 p-3">
-                <div className="text-[12px] font-black text-sky-800">{isEn ? 'Missing information' : '还缺这些信息'}</div>
+                <div className="text-[12px] font-black text-sky-800">{isEn ? 'Complete these details' : '补充这些信息'}</div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {unique(missingPairs.flatMap(pair => pair.rawResult.missingData.map(item => item.evidence || item.title))).slice(0, 5).map(item => (
                     <span key={item} className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-sky-800">{item}</span>
@@ -593,15 +604,14 @@ export function CompatibilityRiskCalculator({
 
             {resultStatus === 'not_recommended' && (
               <section className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
-                <div className="text-[13px] font-black text-ink">{isEn ? '3. Choose how to adjust' : '3. 直接选择怎么调整'}</div>
-                <p className="mt-1 text-[10px] font-bold leading-5 text-ink/45">{isEn ? 'AquaGuide does not guess which animal matters more to you. It shows the safe choices explicitly.' : '选择一个调整方案后会立即重新计算。'}</p>
+                <div className="text-[13px] font-black text-ink">{isEn ? 'How to adjust?' : '怎么调整？'}</div>
                 <div className="mt-3 grid gap-2 md:grid-cols-2">
                   {conflictActions.map(action => (
                     <div key={action.id} className="rounded-[16px] border border-white bg-white p-3 shadow-sm">
                       <div className={`text-[12px] font-black ${action.tone === 'danger' ? 'text-red-700' : action.tone === 'warning' ? 'text-amber-700' : 'text-sky-700'}`}>{action.title}</div>
                       <p className="mt-1 text-[10px] font-semibold leading-5 text-ink/50">{action.detail}</p>
                       {action.removeSpeciesId && (
-                        <Button type="button" variant="outline" onClick={() => removeSpecies(action.removeSpeciesId!)} className="mt-2 h-9 rounded-full border-red-200 px-3 text-[10px] font-black text-red-700">{isEn ? 'Apply this adjustment' : '按这个方案调整'}</Button>
+                        <Button type="button" variant="outline" onClick={() => removeSpecies(action.removeSpeciesId!)} className="mt-2 h-9 rounded-full border-red-200 px-3 text-[10px] font-black text-red-700">{getConflictActionLabel(action, isEn)}</Button>
                       )}
                       {!action.removeSpeciesId && onViewAquarium && (
                         <Button type="button" variant="outline" onClick={onViewAquarium} className="mt-2 h-9 rounded-full px-3 text-[10px] font-black">{isEn ? 'Review current tank' : '查看当前鱼缸'}</Button>
@@ -641,18 +651,16 @@ export function CompatibilityRiskCalculator({
           <DialogHeader className="border-b border-violet-100 bg-violet-50/70 px-5 py-4 text-left">
             <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-violet-700"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'AI INTERPRETATION' : 'AI 建议'}</div>
             <DialogTitle className="mt-2 text-[20px] font-black text-ink">{isEn ? 'Why this result, and what can I change?' : '为什么会这样？我具体可以怎么改？'}</DialogTitle>
-            <DialogDescription className="text-xs font-semibold leading-5 text-ink/50">{isEn ? 'Deterministic rules keep the final safety status. AI explains the evidence and organizes options.' : '基于当前鱼缸和风险结果给出调整建议。'}</DialogDescription>
           </DialogHeader>
           <div className="max-h-[62dvh] overflow-y-auto px-5 py-4">
-            {aiLoading && <div className="flex min-h-[180px] items-center justify-center gap-2 text-sm font-black text-violet-700"><Loader2 className="h-5 w-5 animate-spin" />{isEn ? 'AI is reading this tank and rule result…' : 'AI 正在读取当前鱼缸和规则结果…'}</div>}
+            {aiLoading && <div className="flex min-h-[180px] items-center justify-center gap-2 text-sm font-black text-violet-700"><Loader2 className="h-5 w-5 animate-spin" />{isEn ? 'Generating suggestions…' : '正在生成建议…'}</div>}
             {!aiLoading && aiResult && (
               <div className="grid gap-3">
                 <div className={`rounded-[16px] px-3 py-2 text-[11px] font-black ${aiResult.source === 'model' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
-                  {aiResult.source === 'model' ? (isEn ? '✓ DeepSeek model response' : 'AI 已生成') : (isEn ? 'Fallback response · AI did not participate' : 'AI 暂不可用')}
-                  {aiResult.failureReason ? ` · ${aiResult.failureReason}` : ''}
+                  {aiResult.source === 'model' ? (isEn ? 'AI generated' : 'AI 已生成') : (isEn ? 'AI unavailable. Please try again later.' : 'AI 暂不可用，请稍后再试')}
                 </div>
                 <div className="rounded-[16px] bg-violet-50 p-3">
-                  <div className="text-[11px] font-black text-violet-800">{isEn ? 'AI summary' : 'AI 总结'}</div>
+                  <div className="text-[11px] font-black text-violet-800">{isEn ? 'Overview' : '建议概览'}</div>
                   <p className="mt-1 text-[13px] font-bold leading-6 text-ink">{aiResult.summary}</p>
                 </div>
                 {aiResult.reasons.length > 0 && (
@@ -663,7 +671,6 @@ export function CompatibilityRiskCalculator({
                         <div key={`${item.title}-${index}`} className="rounded-[14px] border border-border bg-white p-3">
                           <div className="text-[11px] font-black text-ink">{item.title}</div>
                           <p className="mt-1 text-[11px] font-semibold leading-5 text-ink/58">{item.detail}</p>
-                          <div className="mt-1 text-[9px] font-bold text-ink/35">{item.source}</div>
                         </div>
                       ))}
                     </div>
@@ -682,7 +689,7 @@ export function CompatibilityRiskCalculator({
                     </div>
                   </section>
                 )}
-                <div className="rounded-[14px] bg-slate-50 px-3 py-2 text-[10px] font-bold leading-5 text-ink/45">{aiResult.disclaimer}</div>
+                <div className="rounded-[14px] bg-slate-50 px-3 py-2 text-[10px] font-bold leading-5 text-ink/45">{isEn ? 'Check the advice against actual water conditions and livestock behavior.' : '请结合实际水质和生物状态判断。'}</div>
               </div>
             )}
           </div>

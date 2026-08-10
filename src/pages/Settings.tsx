@@ -84,7 +84,6 @@ export default function SettingsPage() {
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-emerald-800 text-white"><Settings2 className="h-5 w-5" /></span>
         <div className="min-w-0">
           <h1 className="text-[25px] font-black tracking-tight text-ink">{t('settingsPage.title')}</h1>
-          <p className="mt-1 text-sm font-semibold leading-6 text-ink/48">{t('settingsPage.subtitle')}</p>
         </div>
       </header>
 
