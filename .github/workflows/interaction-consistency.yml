@@ -38,6 +38,36 @@ jobs:
       - name: Apply approved interaction consistency changes
         run: node .github/scripts/apply-interaction-consistency.mjs
 
+      - name: Align settings feedback regression with new interaction contract
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/verify-settings-feedback.mjs')
+          s = p.read_text()
+          s = s.replace("await page.getByText('已保存并发送到反馈邮箱。', { exact: true }).waitFor();", "await page.getByText('反馈已提交。', { exact: true }).waitFor();")
+          old = """  failurePage.once('dialog', dialog => dialog.dismiss());
+          const guideNavigation = failurePage.locator('.desktop-sidebar').getByRole('button').filter({ hasText: /图鉴|Species/ }).first();
+          await guideNavigation.click();
+          assert.match(failurePage.url(), /\\/settings/, 'dismissing the unsaved warning must keep the settings page');
+          failurePage.once('dialog', dialog => dialog.accept());
+          await guideNavigation.click();
+          await failurePage.waitForURL(/\\/encyclopedia/);"""
+          new = """  const guideNavigation = failurePage.locator('.desktop-sidebar').getByRole('button').filter({ hasText: /图鉴|Species/ }).first();
+          await guideNavigation.click();
+          await failurePage.getByRole('heading', { name: '放弃未提交的反馈？' }).waitFor();
+          assert.match(failurePage.url(), /\\/settings/, 'opening the unsaved warning must keep the settings page');
+          await failurePage.getByRole('button', { name: '继续编辑' }).click();
+          assert.match(failurePage.url(), /\\/settings/, 'cancelling the shared confirmation must keep the settings page');
+          await guideNavigation.click();
+          await failurePage.getByRole('heading', { name: '放弃未提交的反馈？' }).waitFor();
+          await failurePage.getByRole('button', { name: '离开' }).click();
+          await failurePage.waitForURL(/\\/encyclopedia/);"""
+          if old not in s:
+              raise SystemExit('native confirm regression block not found')
+          s = s.replace(old, new)
+          p.write_text(s)
+          PY
+
       - name: Install dependencies
         run: npm ci
 
