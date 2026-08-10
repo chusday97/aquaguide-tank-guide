@@ -10,6 +10,20 @@ const replace = (from, to) => {
 };
 
 replace(
+`    const start = content.lastIndexOf('<button', needleIndex);
+    const endTag = content.indexOf('</button>', needleIndex);
+    if (start < 0 || endTag < 0) fail(\`${'${path}'}: could not remove button containing ${'${needle}'}\`);
+    let end = endTag + '</button>'.length;`,
+`    const nativeStart = content.lastIndexOf('<button', needleIndex);
+    const componentStart = content.lastIndexOf('<Button', needleIndex);
+    const start = Math.max(nativeStart, componentStart);
+    const closingTag = start === componentStart ? '</Button>' : '</button>';
+    const endTag = content.indexOf(closingTag, needleIndex);
+    if (start < 0 || endTag < 0) fail(\`${'${path}'}: could not remove button containing ${'${needle}'}\`);
+    let end = endTag + closingTag.length;`
+);
+
+replace(
 `removeBetween('src/components/SpeciesDetailDialog.tsx',
   '  const renderExportCard = async () => {',
   '  const handleRecordDeath = async () => {');`,
