@@ -50,3 +50,5 @@ jobs:
             git commit -m "refactor(ui): apply seventh copy audit"
             git push origin HEAD:agent/seventh-copy-audit
           fi
+
+# trigger: 2026-08-10
