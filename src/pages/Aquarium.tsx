@@ -3452,7 +3452,7 @@ export default function AquariumManager() {
       }
       return {
         label: '查看候选生物',
-        description: `打开 ${tankCopilotAllowedCandidates.length} 个的候选，不写入真实鱼缸。`,
+        description: isEn ? `View ${tankCopilotAllowedCandidates.length} candidates suitable for the current aquarium.` : `查看 ${tankCopilotAllowedCandidates.length} 个适合当前鱼缸的候选。`,
       };
     }
     if (actionType === 'start_addition_simulation') {

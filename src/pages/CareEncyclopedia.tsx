@@ -3389,9 +3389,6 @@ export function CareArticleDetail({
                       ? (isEn ? 'Care Checklist' : '护理清单')
                       : (isEn ? 'Full Description' : '完整说明')}
                   </div>
-                  <div className="mt-0.5 text-[11px] font-bold text-ink/45">
-                    {''}
-                  </div>
                 </div>
                 <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${urgencyTagClassMap[meta.urgencyTag]}`}>
                   {getUrgencyTagLabel(meta.urgencyTag, isEn)}
