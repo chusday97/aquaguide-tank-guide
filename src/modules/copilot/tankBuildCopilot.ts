@@ -3,7 +3,6 @@ import type { SmartRecommendationOutput } from '../recommendation/recommendation
 import type { TankCopilotContext } from './copilot.types';
 import { getAquariumAiReadiness } from '../../services/aquarium/aquarium-setup.service';
 
-// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
 
 const hasText = (value: unknown) => typeof value === 'string' && value.trim().length > 0;
 

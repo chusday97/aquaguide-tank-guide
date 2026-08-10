@@ -2,7 +2,6 @@ import { Cloud, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
 
 export default function Login() {
   const navigate = useNavigate();

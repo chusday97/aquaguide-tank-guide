@@ -79,7 +79,6 @@ export const getAquariumSetupStatus = (aquarium: Aquarium): AquariumSetupStatus 
 };
 
 
-// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
 export type AquariumAiSetupPanel = 'size' | 'parameters' | 'equipment';
 
 export type AquariumAiMissingField = {

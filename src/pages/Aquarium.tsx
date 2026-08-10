@@ -133,8 +133,6 @@ import {
   type SpeciesBatchCareSignal,
 } from '../services/aquarium/species-batches.service';
 
-// AQUAGUIDE_PRODUCT_UX_CLOSURE_V1
-// AQUAGUIDE_PRODUCT_UX_CLOSURE_V2
 
 const ThreeAquarium = lazy(() => import('../components/ThreeAquarium').then(module => ({ default: module.ThreeAquarium })));
 
