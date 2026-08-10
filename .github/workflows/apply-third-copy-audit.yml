@@ -1,0 +1,13 @@
+name: Apply Third UI Copy Audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Third copy audit completed; this temporary workflow is awaiting cleanup."
