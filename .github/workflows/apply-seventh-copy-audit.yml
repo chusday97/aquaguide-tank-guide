@@ -21,6 +21,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Fix migration path
+        run: sed -i 's#src/components/visual-result/#src/components/visual-results/#g' scripts/apply-seventh-copy-audit.mjs
       - name: Apply approved copy changes
         run: node scripts/apply-seventh-copy-audit.mjs
       - name: Install dependencies
@@ -35,7 +37,7 @@ jobs:
           ! grep -nE '自动解锁与下一步|喚养|喚食|骨灰级' src/i18n/index.ts
           ! grep -n 'identify.match.' src/pages/Identify.tsx
           ! grep -nE 'AI 正在为您分析|输入您的问题|const SUGGESTED_QUESTIONS =|>发送<|>清空<' src/pages/AIAssistant.tsx
-          ! grep -n 'AquaGuide</div>' src/components/visual-result/VisualResultCard.tsx
+          ! grep -n 'AquaGuide</div>' src/components/visual-results/VisualResultCard.tsx
           echo 'Seventh-copy regression checks passed.'
       - name: Remove one-time migration files
         run: rm -f scripts/apply-seventh-copy-audit.mjs .github/workflows/apply-seventh-copy-audit.yml
