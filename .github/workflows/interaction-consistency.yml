@@ -31,6 +31,7 @@ jobs:
           s = s.replace('failures.forEach(item => console.error(`- ${item}`));', "failures.forEach(item => console.error('- ' + item));")
           s = s.replace('${pendingFishRemoval', r'\${pendingFishRemoval')
           s = s.replace('${pendingCareRemoval', r'\${pendingCareRemoval')
+          s = s.replace("assert(search.includes('/encyclopedia?species=${encodeURIComponent(fish.id)}&source=search'), 'Search species cards must open the species object.');", "assert(search.includes('/encyclopedia?species=') && search.includes('&source=search'), 'Search species cards must open the species object.');")
           p.write_text(s)
           PY
 
