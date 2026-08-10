@@ -7,6 +7,8 @@ on:
       - '.github/workflows/apply-third-copy-audit.yml'
       - 'scripts/apply-third-copy-audit.mjs'
   workflow_dispatch:
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
