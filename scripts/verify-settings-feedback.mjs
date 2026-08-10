@@ -75,7 +75,7 @@ try {
     await page.getByRole('textbox', { name: '你的意见' }).fill('希望风险处理可以继续保留明确的三步操作。');
     await page.getByText('使用问题', { exact: true }).click();
     await submit.click();
-    await page.getByText('已保存并发送到反馈邮箱。', { exact: true }).waitFor();
+    await page.getByText('反馈已提交。', { exact: true }).waitFor();
     assert.equal(submittedBody.category, 'problem');
     assert.equal(submittedBody.deviceLayout, device.isMobile ? 'phone' : 'desktop');
     assert.equal(submittedBody.pagePath, '/settings#feedback');
@@ -98,12 +98,15 @@ try {
   await failurePage.getByRole('button', { name: '提交反馈' }).click();
   await failurePage.locator('#feedback').getByRole('alert').waitFor();
   assert.equal(await failureInput.inputValue(), failureMessage, 'failed submission must preserve user input');
-  failurePage.once('dialog', dialog => dialog.dismiss());
   const guideNavigation = failurePage.locator('.desktop-sidebar').getByRole('button').filter({ hasText: /图鉴|Species/ }).first();
   await guideNavigation.click();
-  assert.match(failurePage.url(), /\/settings/, 'dismissing the unsaved warning must keep the settings page');
-  failurePage.once('dialog', dialog => dialog.accept());
+  await failurePage.getByRole('heading', { name: '放弃未提交的反馈？' }).waitFor();
+  assert.match(failurePage.url(), /\/settings/, 'opening the unsaved warning must keep the settings page');
+  await failurePage.getByRole('button', { name: '继续编辑' }).click();
+  assert.match(failurePage.url(), /\/settings/, 'cancelling the shared confirmation must keep the settings page');
   await guideNavigation.click();
+  await failurePage.getByRole('heading', { name: '放弃未提交的反馈？' }).waitFor();
+  await failurePage.getByRole('button', { name: '离开' }).click();
   await failurePage.waitForURL(/\/encyclopedia/);
   await failurePage.close();
 
@@ -115,7 +118,7 @@ try {
   assert.equal(await englishNarrow.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, '600px English settings must not overflow');
   await englishNarrow.close();
 
-  console.log('settings feedback verified: validation, metadata, success, responsive layout and failure recovery');
+  console.log('settings feedback verified: validation, metadata, success, shared unsaved-work confirmation, responsive layout and failure recovery');
 } finally {
   await browser.close();
 }

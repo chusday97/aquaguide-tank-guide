@@ -9,6 +9,8 @@ import { assistantService } from '../modules/assistant/assistant.service';
 import type { AssistantAskOutput } from '../modules/assistant/assistant.schema';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { addSpeciesFavorite, getSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
+import { ConfirmDialog } from '../components/common/ConfirmDialog';
 
 interface Message {
   id: string;
@@ -143,7 +145,9 @@ function AssistantAnswer({ content, isEn }: { content: string; isEn: boolean }) 
 export default function AIAssistant() {
   const { i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
+  const { navigateToRoute } = useWorkspaceNavigation();
   const [messages, setMessages] = useState<Message[]>(() => loadSavedMessages(isEn));
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => new Set(getSpeciesFavoriteIds()));
@@ -167,10 +171,11 @@ export default function AIAssistant() {
     setWishlistFishIds(new Set(getSpeciesFavoriteIds()));
   }), []);
 
-  const handleClearChat = () => {
-    if (!confirm(isEn ? 'Clear AI assistant chat history?' : '确定要清空 AI 助手的历史对话吗？')) return;
+  const handleClearChat = () => setIsClearConfirmOpen(true);
+  const confirmClearChat = () => {
     setMessages([getWelcomeMessage(isEn)]);
     localStorage.removeItem(CHAT_STORAGE_KEY);
+    setIsClearConfirmOpen(false);
   };
 
   const addToWishlist = (speciesId: string) => {
@@ -267,24 +272,28 @@ export default function AIAssistant() {
                           if (!species) return null;
                           const isAdded = wishlistFishIds.has(speciesId);
                           return (
-                            <button
-                              key={speciesId}
-                              type="button"
-                              onClick={() => addToWishlist(speciesId)}
-                              disabled={isAdded}
-                              className="flex items-center gap-2 rounded-sm border border-accent/15 bg-white px-2.5 py-2 text-left transition-colors hover:border-accent disabled:cursor-default disabled:bg-accent/5 md:max-w-[360px]"
-                            >
-                              <img src={getSpeciesDisplayImage(species)} alt={species.name} className="h-9 w-12 shrink-0 object-contain" loading="lazy" />
-                              <span className="min-w-0 flex-1">
-                                <span className="block truncate text-[12px] font-black text-ink">{species.name}</span>
-                                <span className="block truncate text-[10px] font-bold text-ink/50">{species.category}</span>
-                              </span>
-                              {isAdded ? (
-                                <Heart className="h-4 w-4 shrink-0 fill-accent text-accent" />
-                              ) : (
-                                <Plus className="h-4 w-4 shrink-0 text-accent" />
-                              )}
-                            </button>
+                            <div key={speciesId} className="flex items-center gap-2 rounded-sm border border-accent/15 bg-white px-2.5 py-2 transition-colors hover:border-accent md:max-w-[360px]">
+                              <button
+                                type="button"
+                                onClick={() => navigateToRoute(`/encyclopedia?species=${encodeURIComponent(speciesId)}&source=assistant`)}
+                                className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                              >
+                                <img src={getSpeciesDisplayImage(species)} alt={species.name} className="h-9 w-12 shrink-0 object-contain" loading="lazy" />
+                                <span className="min-w-0 flex-1">
+                                  <span className="block truncate text-[12px] font-black text-ink">{species.name}</span>
+                                  <span className="block truncate text-[10px] font-bold text-ink/50">{species.category}</span>
+                                </span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => addToWishlist(speciesId)}
+                                disabled={isAdded}
+                                aria-label={isAdded ? (isEn ? 'Saved' : '已收藏') : (isEn ? 'Save species' : '收藏物种')}
+                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent hover:bg-accent/10 disabled:cursor-default disabled:opacity-65"
+                              >
+                                {isAdded ? <Heart className="h-4 w-4 fill-accent" /> : <Plus className="h-4 w-4" />}
+                              </button>
+                            </div>
                           );
                         })}
                       </div>
@@ -334,6 +343,16 @@ export default function AIAssistant() {
           </form>
         </div>
       </div>
+      <ConfirmDialog
+        open={isClearConfirmOpen}
+        title={isEn ? 'Clear chat history?' : '清空历史对话？'}
+        description={isEn ? 'This removes the saved AI assistant conversation from this browser.' : '这会删除当前浏览器中保存的 AI 助手历史对话。'}
+        confirmLabel={isEn ? 'Clear' : '清空'}
+        cancelLabel={isEn ? 'Cancel' : '取消'}
+        destructive
+        onConfirm={confirmClearChat}
+        onCancel={() => setIsClearConfirmOpen(false)}
+      />
     </div>
   );
 }

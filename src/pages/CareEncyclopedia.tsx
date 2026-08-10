@@ -2163,11 +2163,7 @@ export default function CareEncyclopedia() {
               favorite={Boolean(favorites[selectedTopic.id])}
               onToggleAction={(value) => toggleValue(value, setCheckedActions)}
               onToggleFavorite={(source) => toggleFavorite(selectedTopic, source)}
-              onOpenShare={() => {
-                setShareTopic(selectedTopic);
-                setShareMessage('');
-                setCopyMessage('');
-              }}
+              onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
               onPreview={() => openPreview(selectedTopic)}
               onSelectRelated={(topic) => openCareDetail(topic.id, undefined, false)}
               onOpenCollection={() => navigateToRoute('/collection/care')}

@@ -59,16 +59,12 @@ function CollectionModuleCard({
 }) {
   const navigate = useNavigate();
   const openModule = () => {
-    if (id === 'achievements') {
-      window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'achievements' } }));
-      return;
-    }
     navigate(moduleRoutes[id]);
   };
   return (
     <section
       data-collection-module={id}
-      className="flex min-h-[326px] min-w-0 flex-col rounded-[24px] border border-white/90 bg-white p-4 text-left shadow-sm"
+      className={`flex min-h-[326px] min-w-0 flex-col rounded-[24px] border p-4 text-left ${id === 'achievements' ? 'border-slate-200 bg-slate-50 text-slate-500 shadow-none' : 'border-white/90 bg-white shadow-sm'}`}
     >
       <button
         type="button"

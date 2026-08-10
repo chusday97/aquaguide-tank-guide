@@ -808,7 +808,7 @@ export function SpeciesDetailDialog({
                     <Download className="h-4 w-4" />
                     <span className="hidden min-[760px]:inline">{isEn ? 'Export · Coming soon' : '导出 · 建设中'}</span>
                   </button>
-                  <button type="button" onClick={handleShare} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
+                  <button type="button" data-feature-building="sharing" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
                     <Share2 className="h-5 w-5" />
                   </button>
                   </>

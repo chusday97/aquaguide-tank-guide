@@ -1,5 +1,18 @@
 # AquaGuide 交接文档
 
+## 2026-08-10 文案与交互一致性基线
+
+- 2026-08-10 已完成连续七轮用户可见文案审计：删除模型/provider/fallback/候选池/数据结构/原始错误等内部实现语言；普通用户界面不得直接展示 raw error.message。
+- 已确认产品事实边界：用户事实必须显式；未回答与明确“无”不同；高风险确定性规则与 AI 解释分离，AI 不得反转安全阻断。
+- 当前建设中功能统一为：云端同步/登录、成就勋章、图片导出、分享与隐私。建设中是显式 feature state，不能再依靠按钮文字或 DOM 正则猜测。
+- Interaction Contract：①浏览场景 Card=Open object；收藏/添加/删除/选择必须是独立 control。②只有明确选择任务允许 Card=Select。③Guard first, side effect second。④删除/清空/放弃未保存内容使用共享 ConfirmDialog，不新增 window.confirm。⑤侧栏 active 按业务 route/query 判断，source/item 等辅助参数不能破坏高亮。⑥同一建设中功能的所有入口必须表现一致。
+- Search 物种结果卡应打开物种档案；AI 助手提到的物种卡应打开物种档案，收藏为独立按钮。
+- Achievements 不属于当前正常 IA：可保留灰色建设中入口，但不得展示真实进度、自动解锁、目标或下一步。直接 URL 与点击入口应落到同一建设中 surface。
+- 分享/导出在转 live 之前不得保留 icon-only 绕过入口，不得一边在 Settings 标注建设中、一边仍调用 navigator.share/clipboard/PNG/print。
+- 未保存内容保护应覆盖应用内导航、浏览器返回/前进、刷新/关闭和 reset/restart；任何 reset/write/delete 副作用都必须发生在用户确认之后。
+- UI/导航改动合并前至少运行 build + 交互一致性回归检查；合并后必须确认 Vercel Production success 才能宣称上线。
+
+
 ## 2026-08-09 GitHub main 合并
 
 - 已确认远端 `main@de61600` 是功能分支的共同祖先，功能分支只领先 64 个提交，因此使用 fast-forward 合并，无冲突、无强制推送、无历史改写。

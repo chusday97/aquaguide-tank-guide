@@ -45,7 +45,7 @@ const resources = {
         careDescription: '排查问题与养护步骤',
         collection: '我的水族册',
         collectionMobile: '水族册',
-        collectionDescription: '种草、养护、纪念与勋章',
+        collectionDescription: '种草、养护与纪念',
         browse: '浏览图鉴',
         browseDescription: '查找生物和分类',
         compatibility: '混养计算',
