@@ -40,7 +40,7 @@ assert.equal(aquarium.includes("onBrowseCare={() => navigateToRoute('/care')}"),
 assert.ok(/\/encyclopedia\?[^'`\n]*species=/.test(search), '搜索物种结果必须携带 species 定位信息');
 assert.ok(/\/care\?topic=/.test(search), '搜索养护结果必须携带 topic 定位信息');
 assert.ok(identify.includes('taskRoutes.encyclopedia.compatibility'), '识别后的混养入口必须进入 compatibility task');
-assert.ok(identify.includes('taskRoutes.aquarium.setup'), '识别缺少鱼缸信息时必须直达 setup task');
+assert.ok(identify.includes("taskRoutes.aquarium.create('identify')"), '识别缺少鱼缸时必须直达建缸任务，而不是落鱼缸首页');
 assert.ok(care.includes("location.hash === '#care-recommendations'"), '养护页必须消费推荐区 deep link');
 assert.ok(care.includes("location.hash === '#care-search'"), '养护页必须消费搜索/检查区 deep link');
 assert.ok(care.includes("location.hash === '#care-favorites'"), '养护页必须消费收藏 deep link');
