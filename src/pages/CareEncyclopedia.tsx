@@ -3226,12 +3226,12 @@ export function CareArticleDetail({
     <div className="flex max-h-[88vh] flex-col bg-white">
       <div ref={scrollRef} className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
         <div className="mx-auto max-w-[850px] p-4 pb-8 pt-7">
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] md:items-stretch">
-            <button type="button" onClick={onPreview} data-care-detail-hero className="block min-w-0" aria-label={isEn ? `View large image of ${topic.title}` : `查看${topic.title}大图`}>
-              <CareImage topic={topic} className="h-[270px] w-full rounded-[20px] md:h-full md:min-h-[430px]" showPreviewHint />
+          <div className="grid gap-3 md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] md:items-stretch">
+            <button type="button" onClick={onPreview} data-care-detail-hero className="order-2 block min-w-0 md:order-1" aria-label={isEn ? `View large image of ${topic.title}` : `查看${topic.title}大图`}>
+              <CareImage topic={topic} className="h-[180px] w-full rounded-[20px] md:h-full md:min-h-[430px]" showPreviewHint />
             </button>
 
-            <div className="min-w-0">
+            <div className="order-1 min-w-0 md:order-2" data-care-first-screen>
               <div className="mb-2 flex flex-wrap items-center gap-1.5">
                 {meta.topicTags.map(tag => (
                   <span key={tag} className="rounded-full bg-bg px-2 py-1 text-[10px] font-black text-ink/50">{translateTopicTag(tag, isEn)}</span>
@@ -3257,6 +3257,58 @@ export function CareArticleDetail({
                 <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
                 <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
               </section>
+              {meta.guideType === 'diagnosis' && !isDiagnosisStarted && (
+                <Button
+                  type="button"
+                  data-care-first-screen-primary
+                  onClick={(event) => handlePrimaryCta(event.currentTarget)}
+                  className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800"
+                >
+                  {isEn ? 'Start Quick Check' : '开始快速检查'}
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              )}
+              {meta.guideType === 'careChecklist' && visibleActions.length > 0 && (
+                <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm" data-care-first-screen-checklist>
+                  <div className="text-[12px] font-black text-ink">{isEn ? 'Start here' : '现在先做'}</div>
+                  <div className="mt-2 grid gap-2">
+                    {visibleActions.slice(0, 3).map((item, index) => (
+                      <div key={`first-screen-${item.title}-${item.description}`} className="rounded-[15px] bg-bg/70 p-1">
+                        <ActionStepCard
+                          checked={checkedActions.includes(item.description)}
+                          title={`${index + 1}. ${item.title}`}
+                          description={item.description}
+                          onClick={() => {
+                            setIsChecklistSaved(false);
+                            onToggleAction(item.description);
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  {visibleActions.length > 3 && (
+                    <div className="mt-2 text-[10px] font-bold text-ink/45">
+                      {isEn ? `${visibleActions.length - 3} more items below` : `下方还有 ${visibleActions.length - 3} 项`}
+                    </div>
+                  )}
+                </section>
+              )}
+              {meta.guideType === 'knowledge' && visibleActions.length > 0 && (
+                <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm" data-care-first-screen-key-points>
+                  <div className="text-[12px] font-black text-ink">{isEn ? 'Key points' : '关键要点'}</div>
+                  <div className="mt-2 grid gap-2">
+                    {visibleActions.slice(0, 2).map((item, index) => (
+                      <div key={`key-point-${item.title}-${item.description}`} className="grid grid-cols-[24px_minmax(0,1fr)] gap-2 rounded-[13px] bg-bg/70 px-2.5 py-2.5">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 text-[10px] font-black text-emerald-800">{index + 1}</span>
+                        <span className="min-w-0">
+                          <span className="block text-[12px] font-black leading-5 text-ink">{item.title}</span>
+                          {item.description && <span className="mt-0.5 block text-[10px] font-medium leading-4 text-ink/55">{item.description}</span>}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
               {meta.guideType === 'procedure' && procedureSteps.length > 0 && (
                 <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm">
                   <div className="text-[12px] font-black text-ink">{isEn ? 'Follow Steps Sequentially' : '现在按顺序做'}</div>
@@ -3439,7 +3491,7 @@ export function CareArticleDetail({
         </div>
       </div>
 
-      {!(meta.guideType === 'diagnosis' && isDiagnosisStarted) && (
+      {meta.guideType !== 'diagnosis' && meta.guideType !== 'knowledge' && (
       <div className="modalFooter shrink-0 border-t border-border bg-white/95 shadow-[0_-12px_30px_rgba(15,23,42,0.08)]">
         <div className="grid gap-2 md:mx-auto md:max-w-[700px] md:grid-cols-[auto_auto] md:justify-end">
           <Button
