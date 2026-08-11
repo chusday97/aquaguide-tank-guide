@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
+import { mkdirSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
 const browser = await chromium.launch({ headless: true });
+mkdirSync('artifacts', { recursive: true });
 
 const state = {
   version: 1,
@@ -48,6 +50,7 @@ try {
   const desktop = await browser.newPage({ viewport: { width: 1200, height: 900 }, locale: 'zh-CN' });
   await seed(desktop);
   await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  await desktop.screenshot({ path: 'artifacts/aquarium-typography-desktop.png', fullPage: false });
   await desktop.getByText('缸内物种', { exact: true }).last().click();
   const desktopDrawer = desktop.locator('[role="dialog"][data-surface="right-drawer"]:visible');
   await desktopDrawer.waitFor();
@@ -62,6 +65,7 @@ try {
   assert.ok(Math.abs(drawerBox.width - 600) <= 3, `1200px desktop drawer must be 50vw; got ${drawerBox.width}px`);
   assert.ok(editorBox.width >= drawerBox.width * 0.9, `editing card must use the drawer width; got ${editorBox.width}px inside ${drawerBox.width}px`);
   assert.ok(await desktop.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'desktop drawer must not create horizontal page overflow');
+  await desktop.screenshot({ path: 'artifacts/livestock-state-drawer-desktop.png', fullPage: false });
   await desktop.close();
 
   const phoneContext = await browser.newContext({
@@ -82,6 +86,7 @@ try {
   const mobileBox = await mobileSheet.boundingBox();
   assert.ok(mobileBox && mobileBox.width <= 390 && mobileBox.width >= 380, 'mobile livestock task must keep the full-width bottom sheet');
   assert.ok(await phone.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), '390px mobile livestock task must not overflow');
+  await phone.screenshot({ path: 'artifacts/livestock-state-sheet-mobile.png', fullPage: false });
   await phoneContext.close();
 
   console.log('Livestock state drawer browser geometry verified: 50vw desktop, full-width editor, mobile bottom sheet preserved.');
