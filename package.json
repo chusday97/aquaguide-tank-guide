@@ -52,6 +52,7 @@
     "test:task-routes": "tsx scripts/test-task-routes.ts",
     "test:task-entry": "node scripts/test-task-entry-contract.mjs",
     "test:product-evaluation": "node scripts/test-product-evaluation.mjs",
+    "test:core-flow-state-eval-v2": "tsx scripts/test-core-flow-state-eval-v2.ts",
     "test:responsive-detail-surface": "node scripts/test-responsive-detail-surface.mjs",
     "test:task-actions-ui": "node scripts/verify-task-action-closure.mjs",
     "test:product-actions-runtime": "node scripts/verify-action-kind-runtime.mjs",
@@ -132,7 +133,7 @@
     "sharp": "^0.35.3",
     "tailwind-merge": "^3.5.0",
     "three": "^0.184.0",
-    "tw-animate-css": "^1.4.0",
+    "tw-animate-css": "^4.1.14",
     "vite": "^6.2.0",
     "zod": "^4.4.3"
   },
