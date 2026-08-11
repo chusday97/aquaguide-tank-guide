@@ -1,0 +1,100 @@
+name: Task entry contract migration
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  migrate:
+    if: github.head_ref == 'agent/task-deeplink-contract'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply task-entry contract cleanup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              if old in text:
+                  p.write_text(text.replace(old, new), encoding='utf-8')
+                  return True
+              if new in text:
+                  return False
+              raise SystemExit(f'Expected text not found in {path}: {old[:100]}')
+
+          replace(
+              'src/pages/Aquarium.tsx',
+              "onBrowseCare={() => navigateToRoute('/care')}",
+              "onBrowseCare={() => navigateToRoute(taskRoutes.care.recommendations)}",
+          )
+
+          status = Path('src/components/product/StatusSummaryCard.tsx')
+          text = status.read_text(encoding='utf-8')
+          text = text.replace("import { useNavigate } from 'react-router-dom';\n", '')
+          text = text.replace("import { taskRoutes } from '../../services/navigation/task-routes';\n", '')
+          text = text.replace("  onDeleteCarePlan,\n}: StatusSummaryCardProps) {\n  const { t } = useTranslation();\n  const navigate = useNavigate();", "  onDeleteCarePlan,\n  onBrowseCare,\n}: StatusSummaryCardProps) {\n  const { t } = useTranslation();")
+          text = text.replace("onClick={() => navigate(taskRoutes.care.recommendations)}", "onClick={onBrowseCare}")
+          status.write_text(text, encoding='utf-8')
+
+          app = Path('src/App.tsx')
+          text = app.read_text(encoding='utf-8')
+          text = text.replace("path: '/collection/wishlist'", "path: taskRoutes.collection.wishlist")
+          text = text.replace("path: '/collection/care'", "path: taskRoutes.collection.care")
+          text = text.replace("path: '/collection/memorial'", "path: taskRoutes.collection.memorial")
+          app.write_text(text, encoding='utf-8')
+
+          care = Path('src/pages/CareEncyclopedia.tsx')
+          text = care.read_text(encoding='utf-8')
+          text = text.replace("navigateToRoute('/collection/care')", "navigateToRoute(taskRoutes.collection.care)")
+          care.write_text(text, encoding='utf-8')
+
+          pkg = Path('package.json')
+          text = pkg.read_text(encoding='utf-8')
+          if '"test:task-entry"' not in text:
+              text = text.replace(
+                  '"test:task-routes": "tsx scripts/test-task-routes.ts",',
+                  '"test:task-routes": "tsx scripts/test-task-routes.ts",\n    "test:task-entry": "node scripts/test-task-entry-contract.mjs",',
+              )
+          pkg.write_text(text, encoding='utf-8')
+
+          handoff = Path('HANDOFF.md')
+          text = handoff.read_text(encoding='utf-8')
+          section = """## Task-entry / Deep-link contract (2026-08-11)\n\n- 功能 CTA 必须把用户直接送到任务起点、目标对象、对应结果或具体操作区，不能只打开大页面后让用户自己翻找。\n- 顶层主导航（我的鱼缸 / 图鉴 / 养护 / 水族册）和明确的“返回首页”是例外，可以落页面首页。\n- Task intent 必须显式表达在 `taskRoutes` 的 action/query/hash 中；目标页面必须实际消费该 intent，不能出现 URL 看似有 action 但页面不处理的伪 deep link。\n- 典型路径：换水→换水记录；每日检查→巡检；混养→compatibility mode；物种→指定物种详情；养护→指定 topic/推荐/搜索区；收藏→对应水族册子模块。\n- 跨页面任务跳转必须保留必要上下文（如 species/topic/source），辅助 source 参数不得破坏导航高亮。\n- Search、Identify、Onboarding、今日行动、养护计划和内容详情新增 CTA 时都必须遵守本契约；用 `test:task-entry` + `test:task-routes` 防止回退。\n\n\n"""
+          if '## Task-entry / Deep-link contract (2026-08-11)' not in text:
+              text = text.replace('# AquaGuide 交接文档\n\n', '# AquaGuide 交接文档\n\n' + section, 1)
+          handoff.write_text(text, encoding='utf-8')
+          PY
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate task routes
+        run: npm run test:task-routes
+      - name: Validate task entry contract
+        run: npm run test:task-entry
+      - name: Validate onboarding routes
+        run: npm run test:onboarding-goal-paths
+      - name: Typecheck
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Commit branch changes
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/pages/Aquarium.tsx src/components/product/StatusSummaryCard.tsx src/App.tsx src/pages/CareEncyclopedia.tsx package.json HANDOFF.md
+          if git diff --cached --quiet; then
+            echo "No migration changes to commit"
+            exit 0
+          fi
+          git commit -m "fix: make functional CTAs land on task targets"
+          git push origin HEAD:${{ github.head_ref }}
