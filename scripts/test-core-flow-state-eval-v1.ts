@@ -105,8 +105,9 @@ assert.equal(getTankCompatibilityAddPolicy(incompleteCompatibility.status), 'com
 const hardConflict = evaluateTankCompatibility({ tank: makeTank(), candidateSpecies: saltwater });
 assert.equal(hardConflict.status, 'not_recommended');
 assert.equal(getTankCompatibilityAddPolicy(hardConflict.status), 'block');
+const conflictTank = makeTank();
 const blockedPlan = executeSpeciesAddition({
-  aquariums: [makeTank()], aquarium: makeTank(),
+  aquariums: [conflictTank], aquarium: conflictTank,
   items: [{ fishId: saltwater.id, quantity: 1 }], speciesCatalog: [saltwater], confirmedCaution: true,
 });
 assert.equal(blockedPlan.added, false);
@@ -140,7 +141,7 @@ assert.ok(savedConflictReality.aquarium.fishes.some(item => item.fishId === salt
 assert.equal(savedConflictReality.assessment?.status, 'not_recommended');
 assert.equal(savedConflictReality.policy, 'save_with_urgent_warning');
 
-// CF-ADD-004: partial failure is explicit and retryable.
+// CF-ADD-004/008: partial failure is explicit, retryable, and sanitized.
 const partialTank = await repository.createAquarium({
   name: '部分失败测试缸', startedAt: '2026-08-11', startedAtSource: 'created', operationId: 'cf-create-partial',
 });
@@ -164,6 +165,10 @@ const partial = await recordExistingLivestock({
 });
 assert.deepEqual(partial.savedItems.map(item => item.fishId), [freshwater.id]);
 assert.deepEqual(partial.failedItems.map(item => item.fishId), [companion.id]);
+assert.equal(partial.failedItems[0]?.message, '该生物没有保存成功，请重试。');
+assert.equal(partial.failedItems[0]?.message.includes('HTTP'), false);
+assert.equal(partial.failedItems[0]?.message.includes('database'), false);
+assert.equal(partial.failedItems[0]?.message.includes('secret_internal_detail'), false);
 assert.equal(partial.aquarium.fishes.find(item => item.fishId === freshwater.id)?.quantity, 2);
 assert.equal(partial.aquarium.fishes.some(item => item.fishId === companion.id), false);
 const retried = await recordExistingLivestock({
@@ -182,15 +187,11 @@ const replay = await recordExistingLivestock({
 });
 assert.equal(replay.aquarium.fishes.find(item => item.fishId === saltwater.id)?.quantity, 1);
 
-// UI state contracts: failure is recoverable and raw infrastructure errors never render.
+// CF-COMP-001/006 and CF-ADD-006: UI contracts.
 const calculatorSource = readFileSync(resolve(import.meta.dirname, '../src/components/CompatibilityRiskCalculator.tsx'), 'utf8');
 assert.match(calculatorSource, /const \[recordError, setRecordError\] = useState\(''\)/, 'compatibility record failure needs an explicit UI state');
 assert.match(calculatorSource, /catch \{\s*setRecordError\(isEn \? 'Could not save the livestock record\. Try again\.' : '入缸记录没有保存成功，请重试。'\)/s, 'compatibility record failure must become stable user-facing feedback');
 assert.match(calculatorSource, /disabled=\{isRecording\}/, 'record CTA must be disabled during save');
 assert.match(calculatorSource, /选择至少 1 种准备加入的生物后，这里会直接给出结论。/, 'initial state must explain what to select');
-
-const aquariumSource = readFileSync(resolve(import.meta.dirname, '../src/pages/Aquarium.tsx'), 'utf8');
-assert.doesNotMatch(aquariumSource, /\{item\.message\}/, 'partial failure UI must never render repository/API error.message directly');
-assert.match(aquariumSource, /未保存，请重试/, 'partial failure UI must provide a stable retry message');
 
 console.log(`核心流程状态验收 v1 通过：${dataset.cases.length} 个 Case，覆盖混养与添加生物的至少 6 种状态。`);
