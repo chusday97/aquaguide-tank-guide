@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-11",
+  "scope": ["compatibility", "add_livestock"],
+  "cases": [
+    {"id":"CF-COMP-001","featureId":"compatibility","state":"initial","severity":"medium","trigger":"进入混养功能，但当前鱼缸没有候选生物。","expected":"明确提示至少选择 1 个准备加入的生物；不生成伪结论。","forbidden":"在没有足够比较对象时显示 compatible/not_recommended。","automation":"source_contract"},
+    {"id":"CF-COMP-002","featureId":"compatibility","state":"success","severity":"high","trigger":"完整淡水鱼缸 + 普通温和淡水候选。","expected":"规则状态为 compatible，添加策略为 allow。","forbidden":"把未发现冲突表述成绝对安全。","automation":"deterministic"},
+    {"id":"CF-COMP-003","featureId":"compatibility","state":"boundary","severity":"high","trigger":"候选需要加热，但鱼缸没有加热设备。","expected":"规则状态为 caution，必须确认风险后才能继续。","forbidden":"直接写入真实鱼缸。","automation":"deterministic"},
+    {"id":"CF-COMP-004","featureId":"compatibility","state":"insufficient","severity":"high","trigger":"鱼缸缺少尺寸和目标温度。","expected":"状态为 insufficient_data，要求补充鱼缸参数。","forbidden":"用默认容量或 25°C 完成判断。","automation":"deterministic"},
+    {"id":"CF-COMP-005","featureId":"compatibility","state":"conflict","severity":"critical","trigger":"淡水鱼缸准备加入海水物种。","expected":"状态为 not_recommended，策略 block。","forbidden":"AI 或按钮绕过确定性阻断。","automation":"deterministic"},
+    {"id":"CF-COMP-006","featureId":"compatibility","state":"failure","severity":"high","trigger":"用户确认实际入缸后，保存 callback 抛出错误。","expected":"结束 loading，保留候选，并显示稳定可重试提示。","forbidden":"未处理 Promise、raw error、HTTP/数据库信息。","automation":"ui_contract"},
+    {"id":"CF-ADD-001","featureId":"add_livestock","state":"initial","severity":"medium","trigger":"从具体物种入口发起添加。","expected":"带入目标物种并保留数量/日期确认步骤。","forbidden":"要求用户再次搜索刚刚选择的物种。","automation":"existing_task_entry_regression"},
+    {"id":"CF-ADD-002","featureId":"add_livestock","state":"empty_context","severity":"high","trigger":"现实中已有生物，但鱼缸参数尚不完整。","expected":"事实仍可记录，风险状态为 insufficient_data/save_with_unknown。","forbidden":"为了缺少参数而阻止记录现实事实。","automation":"deterministic"},
+    {"id":"CF-ADD-003","featureId":"add_livestock","state":"conflict","severity":"critical","trigger":"现实中已经存在与当前鱼缸冲突的生物。","expected":"事实仍保存，同时返回 save_with_urgent_warning。","forbidden":"因为产品判断而删除或拒绝保存现实事实。","automation":"deterministic"},
+    {"id":"CF-ADD-004","featureId":"add_livestock","state":"failure","severity":"high","trigger":"批量记录时第一项成功、第二项写入失败。","expected":"明确部分成功，保留失败项供重试；成功项不得重复。","forbidden":"把半成功伪装成全成功或丢失失败项。","automation":"deterministic"},
+    {"id":"CF-ADD-005","featureId":"add_livestock","state":"boundary","severity":"high","trigger":"同一个 operationId 因响应丢失被重复提交。","expected":"幂等重放，不重复增加数量。","forbidden":"一次重试产生两批生物。","automation":"deterministic"},
+    {"id":"CF-ADD-006","featureId":"add_livestock","state":"in_progress","severity":"medium","trigger":"正在保存真实入缸记录。","expected":"主 CTA 禁用并显示 loading，避免重复提交。","forbidden":"用户连续点击产生重复写入。","automation":"ui_contract"},
+    {"id":"CF-ADD-007","featureId":"add_livestock","state":"success","severity":"high","trigger":"合法记录成功。","expected":"真实鱼缸数量更新；操作完成后可以继续记录其他生物。","forbidden":"只显示 Toast，但数据未改变。","automation":"deterministic"},
+    {"id":"CF-ADD-008","featureId":"add_livestock","state":"failure","severity":"high","trigger":"部分失败的底层异常包含 API/数据库技术文本。","expected":"UI 只显示物种名 + 稳定的“未保存，请重试”提示。","forbidden":"直接渲染 failedItems[].message。","automation":"ui_contract"}
+  ]
+}
