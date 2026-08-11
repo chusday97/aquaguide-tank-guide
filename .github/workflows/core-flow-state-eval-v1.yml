@@ -1,31 +1,18 @@
 name: Core flow state evaluation v1
 on:
-  push:
-    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   validate:
+    if: github.head_ref == 'agent/core-flow-state-eval-v1-validation'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: agent/core-flow-state-eval-v1-validation
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: Restore dependency baseline
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('package.json')
-          text = p.read_text(encoding='utf-8')
-          text = text.replace('"react-i18next": "^16.2.1"', '"react-i18next": "^17.0.10"')
-          p.write_text(text, encoding='utf-8')
-          PY
       - run: npm ci
       - run: npm run test:product-evaluation
       - run: npm run test:core-flow-state-eval
@@ -35,14 +22,3 @@ jobs:
       - run: npm run test:atomic-livestock-addition
       - run: npm run lint
       - run: npm run build
-      - name: Commit validated baseline
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add package.json
-          if git diff --cached --quiet; then
-            echo "No generated changes to commit"
-            exit 0
-          fi
-          git commit -m "chore: restore dependency baseline after core flow validation"
-          git push origin HEAD:agent/core-flow-state-eval-v1-validation
