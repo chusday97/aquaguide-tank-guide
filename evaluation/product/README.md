@@ -20,9 +20,13 @@
 ## 当前评测集
 
 - `feature-states.v1.json`：当前核心功能的状态矩阵。每个注册功能必须 `states.length >= 6`。
+- `core-flow-v2.json`：换水记录 + 每日检查的可执行状态 Case，覆盖真实历史、未来日期、保存失败、同日 upsert 与高风险不降级等边界。
 - `badcases.v1.jsonl`：开发、用户测试、回归中发现的产品 Badcase。发现即记录，不等到功能做完再补。
 - `scripts/test-product-evaluation.mjs`：校验每个功能至少 6 种状态、字段完整、Badcase 有可回归信息。
+- `scripts/test-core-flow-state-eval-v2.ts`：执行换水状态纯逻辑、每日检查同日 upsert，并检查页面必须存在的 in-progress / failure / future-date 交互契约。
 - `scripts/test-responsive-detail-surface.mjs`：校验手机仍是 bottom sheet，桌面内容型详情为右侧 drawer，ConfirmDialog 不被误改。
+
+`core-flow-v2.json` 中写入 Case 并不代表功能已经通过。只有对应测试、lint、build 真正执行成功，Badcase 才能从 `fixed` 升为 `regression_verified`。
 
 ## Badcase 回流规则
 
