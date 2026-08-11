@@ -3,10 +3,11 @@ import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
-const [routes, onboarding, statusCard, search, identify, care] = await Promise.all([
+const [routes, onboarding, statusCard, aquarium, search, identify, care] = await Promise.all([
   read('src/services/navigation/task-routes.ts'),
   read('src/services/onboarding/onboarding-paths.ts'),
   read('src/components/product/StatusSummaryCard.tsx'),
+  read('src/pages/Aquarium.tsx'),
   read('src/pages/Search.tsx'),
   read('src/pages/Identify.tsx'),
   read('src/pages/CareEncyclopedia.tsx'),
@@ -32,8 +33,9 @@ assert.ok(onboarding.includes("taskRoutes.encyclopedia.compatibilityWith('onboar
 assert.ok(onboarding.includes("taskRoutes.aquarium.dailyCheckFrom('onboarding')"), 'onboarding 的每日检查必须直达巡检 task');
 assert.equal(onboarding.includes('action=settings&panel=setup'), false, '禁止把不存在的 action=settings 当任务入口');
 
-assert.ok(statusCard.includes('navigate(taskRoutes.care.recommendations)'), '空养护计划的 CTA 必须直达养护推荐，不得只打开 /care 首页');
-assert.equal(statusCard.includes('onClick={onBrowseCare}'), false, '养护 CTA 不得继续依赖泛 /care 跳转');
+assert.ok(statusCard.includes('onClick={onBrowseCare}'), '展示组件只负责触发养护任务，不应自行猜目的地');
+assert.ok(aquarium.includes("onBrowseCare={() => navigateToRoute(taskRoutes.care.recommendations)}"), '空养护计划的 CTA 必须由容器传入养护推荐 deep link');
+assert.equal(aquarium.includes("onBrowseCare={() => navigateToRoute('/care')}"), false, '空养护计划不得只打开 /care 首页');
 
 assert.ok(/\/encyclopedia\?[^'`\n]*species=/.test(search), '搜索物种结果必须携带 species 定位信息');
 assert.ok(/\/care\?topic=/.test(search), '搜索养护结果必须携带 topic 定位信息');
