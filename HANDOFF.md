@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-12 Typography + 任务 Drawer 基线
+
+- 全站文字不再通过大量 8/9/10/11/12/13/14/15/16px 与 font-black 自由组合制造层级。统一采用有限的 display / section / card / body / meta / action 语义层级；旧 arbitrary size 在全局 typography baseline 中归并，900/800 重字重收敛。
+- 共享 SurfaceHeader、SectionHeader 与鱼缸分区标题优先使用语义 typography class，新 UI 不再新增任意字号 + font-black 组合。
+- 桌面多步骤任务使用右侧 50vw × 100dvh Drawer；手机保持各任务原有 mobile surface。短确认仍使用居中 ConfirmDialog。
+- “调整缸内物种体态”进入单物种编辑后必须占满 Drawer 可用宽度，不得继续继承缸内物种列表的两列网格。
+- 回归门禁：test:typography-system + test:livestock-state-surface + test:responsive-detail-surface；涉及体态编辑时同时运行 test:guided-navigation-ui。
+
 ## 2026-08-12 右侧半屏 Drawer 交互基线
 
 - 桌面端“查看品类/物种详情/养护指南”等内容型详情统一从右侧滑入，严格占视口 50% 宽、100dvh 高；不再使用 94vw 居中大弹窗。手机端继续使用原 bottom sheet。

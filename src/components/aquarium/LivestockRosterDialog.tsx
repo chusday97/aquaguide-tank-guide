@@ -6,6 +6,7 @@ import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '..
 import { normalizeSpeciesBatches } from '../../services/aquarium/species-batches.service';
 import { LivestockBatchCard } from './LivestockBatchCard';
 import { SurfaceHeader } from '../common/SurfaceHeader';
+import { AdaptiveDetailContent } from '../common/AdaptiveDetailContent';
 import { useTranslation } from 'react-i18next';
 import { QuantityStepper } from '../forms/QuantityStepper';
 import { getLifeType } from '../../modules/species/species.service';
@@ -150,7 +151,7 @@ export function LivestockRosterDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={requestRosterOpenChange}>
-        <DialogContent showCloseButton={false} className="flex h-[92dvh] max-h-[92dvh] w-[min(94vw,900px)] max-w-[900px] flex-col overflow-hidden rounded-[28px] p-0 sm:h-auto sm:max-h-[88dvh]">
+        <AdaptiveDetailContent showCloseButton={false} className="livestock-roster-surface">
           <SurfaceHeader
             title={editingRecordId ? (isEn ? 'Manage livestock state' : '调整缸内物种体态') : (isEn ? 'Tank livestock' : '缸内物种')}
             description={editingRecordId
@@ -190,7 +191,7 @@ export function LivestockRosterDialog({
               {startedAtError && <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{startedAtError}</p>}
             </section>}
             {displayedRecords.length > 0 ? (
-              <div className="grid gap-3 md:grid-cols-2">
+              <div className={editingRecordId ? 'grid grid-cols-1 gap-3' : 'grid gap-3 md:grid-cols-2'}>
                 {displayedRecords.map(({ record, fish }) => (
                   <div key={record.id} className="relative min-w-0">
                     {!editingRecordId && <button
@@ -226,7 +227,7 @@ export function LivestockRosterDialog({
               </div>
             )}
           </div>
-        </DialogContent>
+        </AdaptiveDetailContent>
       </Dialog>
 
       <Dialog open={isRosterCloseConfirmOpen} onOpenChange={setIsRosterCloseConfirmOpen}>
