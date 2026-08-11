@@ -1,0 +1,25 @@
+name: Task deeplink migration
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  migrate:
+    if: github.head_ref == 'agent/task-deeplink-contract'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Print generic navigation audit
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          patterns = [r"navigate\([^\n]{0,120}['\"]/(aquarium|care|encyclopedia|collection)['\"]", r"navigateToRoute\([^\n]{0,120}['\"]/(aquarium|care|encyclopedia|collection)['\"]", r"href=[{]?['\"]/(aquarium|care|encyclopedia|collection)['\"]"]
+          for path in Path('src').rglob('*'):
+            if path.suffix not in {'.ts','.tsx'}: continue
+            for i,line in enumerate(path.read_text(encoding='utf-8').splitlines(),1):
+              if any(re.search(p,line) for p in patterns): print(f'{path}:{i}: {line.strip()}')
+          PY
