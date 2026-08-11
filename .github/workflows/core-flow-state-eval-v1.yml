@@ -17,109 +17,14 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Apply badcase fixes
+      - name: Restore dependency baseline
         run: |
           python - <<'PY'
           from pathlib import Path
-
-          def replace(path, old, new):
-              p = Path(path)
-              text = p.read_text(encoding='utf-8')
-              if old in text:
-                  p.write_text(text.replace(old, new), encoding='utf-8')
-                  return
-              if new in text:
-                  return
-              raise SystemExit(f'Expected text not found in {path}: {old[:120]}')
-
-          replace(
-              'src/components/CompatibilityRiskCalculator.tsx',
-              "  const [feedback, setFeedback] = useState('');\n  const [isRecording, setIsRecording] = useState(false);",
-              "  const [feedback, setFeedback] = useState('');\n  const [recordError, setRecordError] = useState('');\n  const [isRecording, setIsRecording] = useState(false);",
-          )
-          replace(
-              'src/components/CompatibilityRiskCalculator.tsx',
-              "    setCautionConfirmed(false);\n    setFeedback('');\n    setAiResult(null);",
-              "    setCautionConfirmed(false);\n    setFeedback('');\n    setRecordError('');\n    setAiResult(null);",
-          )
-          replace(
-              'src/components/CompatibilityRiskCalculator.tsx',
-              """  const recordActualStocking = async () => {
-    if (!onAddToAquarium || candidateSpecies.length === 0 || !resultStatus) return;
-    if (resultStatus === 'not_recommended' || resultStatus === 'insufficient_data') return;
-    if (resultStatus === 'caution' && !cautionConfirmed) {
-      setCautionConfirmed(true);
-      return;
-    }
-    setIsRecording(true);
-    try {
-      const response = await onAddToAquarium(candidateSpecies.map(fish => ({
-        fishId: fish.id,
-        quantity: Math.max(1, quantities[fish.id] || 1),
-      })));
-      const feedbackMessage = response && typeof response === 'object' ? response.message : undefined;
-      setFeedback(feedbackMessage || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));
-    } finally {
-      setIsRecording(false);
-    }
-  };
-""",
-              """  const recordActualStocking = async () => {
-    if (!onAddToAquarium || candidateSpecies.length === 0 || !resultStatus) return;
-    if (resultStatus === 'not_recommended' || resultStatus === 'insufficient_data') return;
-    setRecordError('');
-    setFeedback('');
-    if (resultStatus === 'caution' && !cautionConfirmed) {
-      setCautionConfirmed(true);
-      return;
-    }
-    setIsRecording(true);
-    try {
-      const response = await onAddToAquarium(candidateSpecies.map(fish => ({
-        fishId: fish.id,
-        quantity: Math.max(1, quantities[fish.id] || 1),
-      })));
-      const feedbackMessage = response && typeof response === 'object' ? response.message : undefined;
-      setFeedback(feedbackMessage || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));
-    } catch {
-      setRecordError(isEn ? 'Could not save the livestock record. Try again.' : '入缸记录没有保存成功，请重试。');
-    } finally {
-      setIsRecording(false);
-    }
-  };
-""",
-          )
-          replace(
-              'src/components/CompatibilityRiskCalculator.tsx',
-              "            {feedback && <div className=\"rounded-[14px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-800\">{feedback}</div>}",
-              "            {feedback && <div className=\"rounded-[14px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-800\">{feedback}</div>}\n            {recordError && <div className=\"rounded-[14px] bg-red-50 px-3 py-2 text-[11px] font-black text-red-800\">{recordError}</div>}",
-          )
-          replace(
-              'src/pages/Aquarium.tsx',
-              "<div key={item.fishId}>{fishData.find(fish => fish.id === item.fishId)?.name || item.fishId}：{item.message}</div>",
-              "<div key={item.fishId}>{fishData.find(fish => fish.id === item.fishId)?.name || item.fishId}：{isEn ? 'Not saved. Try again.' : '未保存，请重试。'}</div>",
-          )
-          replace(
-              'package.json',
-              '    \"test:product-evaluation\": \"node scripts/test-product-evaluation.mjs\",',
-              '    \"test:product-evaluation\": \"node scripts/test-product-evaluation.mjs\",\n    \"test:core-flow-state-eval\": \"tsx scripts/test-core-flow-state-eval-v1.ts\",',
-          )
-
-          readme = Path('evaluation/product/README.md')
-          text = readme.read_text(encoding='utf-8')
-          marker = '- `feature-states.v1.json`：当前核心功能的状态矩阵。每个注册功能必须 `states.length >= 6`。'
-          addition = marker + '\n- `core-flow-v1.json`：混养 + 添加生物的第一批可执行核心流程状态 Case；绑定 deterministic/UI regression。'
-          if 'core-flow-v1.json' not in text:
-              if marker not in text: raise SystemExit('README dataset marker missing')
-              text = text.replace(marker, addition)
-          readme.write_text(text, encoding='utf-8')
-
-          handoff = Path('HANDOFF.md')
-          text = handoff.read_text(encoding='utf-8')
-          section = """## Core-flow executable evaluation contract (2026-08-11)\n\n- 六状态矩阵只是设计基线，不等于功能已经通过验收。核心流程必须继续落成可执行 Case。\n- 开发/CI/验收中发现 Badcase 时先写入 `evaluation/product/badcases.v1.jsonl`，再修复；可以自动化的必须绑定 regression。\n- 第一批 executable state eval 覆盖 `compatibility` + `add_livestock`，数据集为 `evaluation/product/core-flow-v1.json`，回归入口为 `test:core-flow-state-eval`。\n- Failure state 必须验证：保留用户上下文、结束 loading、允许重试、不直接展示 repository/API/database/raw error。\n- Partial success 必须显式区分成功项和失败项；重试失败项不得重复写入已经成功的生物。\n\n\n"""
-          if '## Core-flow executable evaluation contract (2026-08-11)' not in text:
-              text = text.replace('# AquaGuide 交接文档\n\n', '# AquaGuide 交接文档\n\n' + section, 1)
-          handoff.write_text(text, encoding='utf-8')
+          p = Path('package.json')
+          text = p.read_text(encoding='utf-8')
+          text = text.replace('"react-i18next": "^16.2.1"', '"react-i18next": "^17.0.10"')
+          p.write_text(text, encoding='utf-8')
           PY
       - run: npm ci
       - run: npm run test:product-evaluation
@@ -130,14 +35,14 @@ jobs:
       - run: npm run test:atomic-livestock-addition
       - run: npm run lint
       - run: npm run build
-      - name: Commit verified changes
+      - name: Commit validated baseline
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add src/components/CompatibilityRiskCalculator.tsx src/pages/Aquarium.tsx package.json evaluation/product/README.md HANDOFF.md
+          git add package.json
           if git diff --cached --quiet; then
             echo "No generated changes to commit"
             exit 0
           fi
-          git commit -m "fix: close compatibility and livestock failure states"
+          git commit -m "chore: restore dependency baseline after core flow validation"
           git push origin HEAD:agent/core-flow-state-eval-v1-validation
