@@ -1,7 +1,9 @@
 import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { TagPill, type TagPillTone } from './TagPill';
+import { taskRoutes } from '../../services/navigation/task-routes';
 
 export type AquariumStatusLevel = 'normal' | 'needs_attention' | 'urgent' | 'insufficient_data';
 
@@ -112,9 +114,9 @@ export function StatusSummaryCard({
   onCompleteCarePlan,
   onRescheduleCarePlan,
   onDeleteCarePlan,
-  onBrowseCare,
 }: StatusSummaryCardProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
   const hasPrimaryAction = Boolean(action.task.primaryLabel);
   const hasOverflowCarePlans = carePlan.activeCount > 1;
@@ -215,7 +217,11 @@ export function StatusSummaryCard({
         {carePlan.activeCount === 0 ? (
           <div className="mt-2 flex items-center justify-between gap-3 rounded-[13px] bg-bg/75 px-3 py-2.5">
             <span className="text-[10px] font-bold leading-5 text-ink/48">{t('aquarium.carePlanEmptyHint')}</span>
-            <button type="button" onClick={onBrowseCare} className="min-h-11 shrink-0 rounded-full bg-white px-3 text-[10px] font-black text-emerald-700 shadow-sm">
+            <button
+              type="button"
+              onClick={() => navigate(taskRoutes.care.recommendations)}
+              className="min-h-11 shrink-0 rounded-full bg-white px-3 text-[10px] font-black text-emerald-700 shadow-sm"
+            >
               {t('aquarium.browseCare')}
             </button>
           </div>
@@ -233,19 +239,19 @@ export function StatusSummaryCard({
                   </span>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                    <button type="button" onClick={() => onOpenCarePlan(item.id)} className="min-h-11 rounded-full bg-emerald-700 px-3 text-[10px] font-black text-white">
-                      {t('aquarium.viewGuide')}
-                    </button>
-                    <button type="button" onClick={() => onCompleteCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full bg-emerald-50 px-2.5 text-[10px] font-black text-emerald-700">
-                      <Check className="h-3 w-3" />{t('aquarium.complete')}
-                    </button>
-                    <button type="button" onClick={() => onRescheduleCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[10px] font-black text-ink/48 hover:bg-bg">
-                      <Clock3 className="h-3 w-3" />{t('aquarium.reschedule')}
-                    </button>
-                    <button type="button" onClick={() => onDeleteCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[10px] font-black text-red-500 hover:bg-red-50">
-                      <Trash2 className="h-3 w-3" />{t('aquarium.delete')}
-                    </button>
-                  </div>
+                  <button type="button" onClick={() => onOpenCarePlan(item.id)} className="min-h-11 rounded-full bg-emerald-700 px-3 text-[10px] font-black text-white">
+                    {t('aquarium.viewGuide')}
+                  </button>
+                  <button type="button" onClick={() => onCompleteCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full bg-emerald-50 px-2.5 text-[10px] font-black text-emerald-700">
+                    <Check className="h-3 w-3" />{t('aquarium.complete')}
+                  </button>
+                  <button type="button" onClick={() => onRescheduleCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[10px] font-black text-ink/48 hover:bg-bg">
+                    <Clock3 className="h-3 w-3" />{t('aquarium.reschedule')}
+                  </button>
+                  <button type="button" onClick={() => onDeleteCarePlan(item.id)} className="inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[10px] font-black text-red-500 hover:bg-red-50">
+                    <Trash2 className="h-3 w-3" />{t('aquarium.delete')}
+                  </button>
+                </div>
               </article>
             ))}
           </div>
