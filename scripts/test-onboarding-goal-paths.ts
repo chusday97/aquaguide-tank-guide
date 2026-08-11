@@ -29,8 +29,16 @@ patchLocalAppState({
 let progress = buildOnboardingTaskProgress((await import('../src/services/storage/local-app-state')).loadAppStateFromStorage());
 assert.equal(progress.speciesChosen, true);
 assert.equal(progress.compatibilityCompleted, false, '收藏或加入物种不能代替完整混养判断');
-assert.deepEqual(getOnboardingTasks('build_tank', progress).map(task => task.id), ['setup_aquarium', 'choose_species', 'complete_compatibility', 'complete_daily_check']);
-assert.deepEqual(getOnboardingTasks('browse_species', progress).map(task => task.id), ['view_species', 'choose_species', 'setup_aquarium', 'complete_compatibility']);
+const buildTankTasks = getOnboardingTasks('build_tank', progress);
+const browseSpeciesTasks = getOnboardingTasks('browse_species', progress);
+assert.deepEqual(buildTankTasks.map(task => task.id), ['setup_aquarium', 'choose_species', 'complete_compatibility', 'complete_daily_check']);
+assert.deepEqual(browseSpeciesTasks.map(task => task.id), ['view_species', 'choose_species', 'setup_aquarium', 'complete_compatibility']);
+
+assert.equal(buildTankTasks[0].route, '/aquarium?action=setup&source=onboarding', '完善鱼缸参数必须直接进入 setup task，而不是落在鱼缸首页');
+assert.equal(buildTankTasks[1].route, '/encyclopedia?mode=browse&difficulty=Easy&source=onboarding', '选择物种必须直接进入筛选后的图鉴任务');
+assert.equal(buildTankTasks[2].route, '/encyclopedia?mode=compatibility&source=onboarding', '混养任务必须直接进入混养模式');
+assert.equal(buildTankTasks[3].route, '/aquarium?action=daily-check&source=onboarding', '每日检查必须直接进入巡检任务');
+assert.equal(buildTankTasks.some(task => task.route.includes('action=settings')), false, '不得使用 Aquarium 不消费的伪 action=settings');
 
 recordTankCompatibility({ aquariumId: aquarium.id, speciesIds: ['fish-1', 'fish-2'], status: 'compatible' });
 progress = buildOnboardingTaskProgress((await import('../src/services/storage/local-app-state')).loadAppStateFromStorage());
@@ -43,4 +51,4 @@ assert.equal(progress.complete, true, '浏览路线不额外要求每日巡检')
 assert.equal(progress.completedCount, 4);
 assert.equal(progress.totalCount, 4);
 
-console.log('onboarding goal paths: real tank compatibility and goal-specific completion passed');
+console.log('onboarding goal paths: real tank compatibility, direct task destinations, and goal-specific completion passed');
