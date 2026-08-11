@@ -1,5 +1,15 @@
 # AquaGuide 交接文档
 
+## Task-entry / Deep-link contract (2026-08-11)
+
+- 功能 CTA 必须把用户直接送到任务起点、目标对象、对应结果或具体操作区，不能只打开大页面后让用户自己翻找。
+- 顶层主导航（我的鱼缸 / 图鉴 / 养护 / 水族册）和明确的“返回首页”是例外，可以落页面首页。
+- Task intent 必须显式表达在 `taskRoutes` 的 action/query/hash 中；目标页面必须实际消费该 intent，不能出现 URL 看似有 action 但页面不处理的伪 deep link。
+- 典型路径：换水→换水记录；每日检查→巡检；混养→compatibility mode；物种→指定物种详情；养护→指定 topic/推荐/搜索区；收藏→对应水族册子模块。
+- 跨页面任务跳转必须保留必要上下文（如 species/topic/source），辅助 source 参数不得破坏导航高亮。
+- Search、Identify、Onboarding、今日行动、养护计划和内容详情新增 CTA 时都必须遵守本契约；用 `test:task-entry` + `test:task-routes` 防止回退。
+
+
 ## First-screen task contract (2026-08-11)
 
 - Detail pages must show the user's core conclusion, next action, or primary control in the first viewport. Users should not need to scroll to discover what the page is for.
