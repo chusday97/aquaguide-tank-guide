@@ -1,24 +1,23 @@
 name: Core flow state evaluation v1
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
 
 jobs:
   validate:
-    if: github.head_ref == 'agent/core-flow-state-eval-v1-validation'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: agent/core-flow-state-eval-v1-validation
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: Apply core flow badcase fixes
+      - name: Apply badcase fixes
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -109,7 +108,7 @@ jobs:
           readme = Path('evaluation/product/README.md')
           text = readme.read_text(encoding='utf-8')
           marker = '- `feature-states.v1.json`：当前核心功能的状态矩阵。每个注册功能必须 `states.length >= 6`。'
-          addition = marker + '\n- `core-flow-v1.json`：混养 + 添加生物的第一批可执行核心流程状态 Case；不仅写状态，还绑定 deterministic/UI regression。'
+          addition = marker + '\n- `core-flow-v1.json`：混养 + 添加生物的第一批可执行核心流程状态 Case；绑定 deterministic/UI regression。'
           if 'core-flow-v1.json' not in text:
               if marker not in text: raise SystemExit('README dataset marker missing')
               text = text.replace(marker, addition)
@@ -131,7 +130,7 @@ jobs:
       - run: npm run test:atomic-livestock-addition
       - run: npm run lint
       - run: npm run build
-      - name: Commit verified fixes and docs
+      - name: Commit verified changes
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
@@ -141,4 +140,4 @@ jobs:
             exit 0
           fi
           git commit -m "fix: close compatibility and livestock failure states"
-          git push origin HEAD:${{ github.head_ref }}
+          git push origin HEAD:agent/core-flow-state-eval-v1-validation
