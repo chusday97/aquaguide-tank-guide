@@ -1,0 +1,48 @@
+name: Validate typography and livestock browser UI
+
+on:
+  push:
+    branches:
+      - agent/right-half-drawer-ui
+
+jobs:
+  browser-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Build
+        run: npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 0.0.0.0 --port 4173 > /tmp/aqua-preview.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/aquarium >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aqua-preview.log
+          exit 1
+      - name: Livestock drawer browser geometry
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:livestock-state-drawer-ui
+      - name: Existing guided navigation regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:guided-navigation-ui
+      - name: Typography static regression
+        run: npm run test:typography-system
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: typography-livestock-ui
+          path: artifacts/*.png
+          if-no-files-found: warn
