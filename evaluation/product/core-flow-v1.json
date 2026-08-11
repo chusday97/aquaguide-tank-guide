@@ -2,6 +2,7 @@
   "version": 1,
   "updatedAt": "2026-08-11",
   "phase": "executable",
+  "validationRevision": 1,
   "scope": ["compatibility", "add_livestock"],
   "cases": [
     {"id":"CF-COMP-001","featureId":"compatibility","state":"initial","severity":"medium","trigger":"进入混养功能，但当前鱼缸没有候选生物。","expected":"明确提示至少选择 1 个准备加入的生物；不生成伪结论。","forbidden":"在没有足够比较对象时显示 compatible/not_recommended。","automation":"source_contract"},
