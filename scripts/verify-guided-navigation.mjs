@@ -80,7 +80,6 @@ try {
   await desktop.goto(`${baseUrl}/search?q=${encodeURIComponent('极火虾')}`, { waitUntil: 'domcontentloaded' });
   await desktop.getByRole('heading', { name: '物种' }).waitFor();
   await desktop.locator('#search-species-sp_0001').click();
-  await desktop.getByRole('button', { name: '查看详情' }).click();
   await desktop.waitForURL('**/encyclopedia?species=sp_0001&source=search');
   await desktop.getByRole('dialog').waitFor();
   await desktop.keyboard.press('Escape');
@@ -169,6 +168,8 @@ try {
   await narrowEnglish.getByRole('heading', { name: 'Discard changes?' }).waitFor();
   await narrowEnglish.getByRole('button', { name: 'Discard changes' }).click();
   await narrowEnglish.getByRole('heading', { name: /^Manage / }).waitFor({ state: 'hidden' });
+  await narrowEnglish.keyboard.press('Escape');
+  await narrowEnglish.locator('[role="dialog"][data-surface="right-drawer"]:visible').waitFor({ state: 'hidden' });
   await narrowEnglish.getByRole('button', { name: 'Settings', exact: true }).click();
   await narrowEnglish.waitForURL('**/settings');
   await narrowEnglish.goto(`${baseUrl}/search?q=${encodeURIComponent('极火虾')}`, { waitUntil: 'domcontentloaded' });
