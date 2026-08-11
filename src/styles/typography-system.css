@@ -1,0 +1,108 @@
+/* AquaGuide typography baseline
+ * Keep semantic hierarchy while collapsing arbitrary one-off sizes and heavy weights.
+ * Components may still use text-xs/sm/base/lg for semantic roles; arbitrary legacy sizes
+ * are normalized here until they are migrated to shared typography primitives.
+ */
+
+.aquaguide-app {
+  --type-display-size: 1.75rem;
+  --type-section-size: 1.125rem;
+  --type-card-size: 1rem;
+  --type-body-size: 0.875rem;
+  --type-meta-size: 0.75rem;
+  --type-action-size: 0.875rem;
+  --type-display-weight: 700;
+  --type-title-weight: 600;
+  --type-body-weight: 400;
+  --type-meta-weight: 500;
+  --type-action-weight: 600;
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: 1.55;
+}
+
+/* The previous UI used 800/900 as a default emphasis. Collapse that visual noise. */
+.aquaguide-app .font-black,
+.aquaguide-app .font-extrabold {
+  font-weight: 700;
+}
+
+.aquaguide-app .font-bold {
+  font-weight: 600;
+}
+
+.aquaguide-app .font-semibold {
+  font-weight: 500;
+}
+
+/* Normalize legacy arbitrary sizes to a small, intentional scale. */
+.aquaguide-app .text-\[8px\],
+.aquaguide-app .text-\[9px\] {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+}
+
+.aquaguide-app .text-\[10px\],
+.aquaguide-app .text-\[11px\] {
+  font-size: var(--type-meta-size);
+  line-height: 1.05rem;
+}
+
+.aquaguide-app .text-\[12px\],
+.aquaguide-app .text-\[13px\],
+.aquaguide-app .text-\[14px\] {
+  font-size: var(--type-body-size);
+  line-height: 1.35rem;
+}
+
+.aquaguide-app .text-\[15px\],
+.aquaguide-app .text-\[16px\] {
+  font-size: var(--type-card-size);
+  line-height: 1.45rem;
+}
+
+/* Shared semantic typography utilities for new and migrated UI. */
+.type-page-title {
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.type-section-title {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-title-weight);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.type-card-title {
+  font-size: var(--type-card-size);
+  font-weight: var(--type-title-weight);
+  line-height: 1.4;
+}
+
+.type-body {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: 1.6;
+}
+
+.type-meta {
+  font-size: var(--type-meta-size);
+  font-weight: var(--type-meta-weight);
+  line-height: 1.45;
+}
+
+.type-action {
+  font-size: var(--type-action-size);
+  font-weight: var(--type-action-weight);
+  line-height: 1.35;
+}
+
+@media (max-width: 767px) {
+  .aquaguide-app {
+    --type-display-size: 1.5rem;
+    --type-section-size: 1.0625rem;
+  }
+}
