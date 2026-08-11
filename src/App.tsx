@@ -209,9 +209,9 @@ const desktopSubMenus: Record<string, Array<{
     { id: 'compatibility', labelKey: 'nav.compatibility', descriptionKey: 'nav.compatibilityDescription', icon: Activity, path: taskRoutes.encyclopedia.compatibility },
   ],
   '/collection': [
-    { id: 'wishlist', labelKey: 'nav.wishlist', descriptionKey: 'nav.wishlistDescription', icon: Heart, path: '/collection/wishlist' },
-    { id: 'care', labelKey: 'nav.careFavorites', descriptionKey: 'nav.careFavoritesDescription', icon: BookOpenCheck, path: '/collection/care' },
-    { id: 'memorial', labelKey: 'nav.memorial', descriptionKey: 'nav.memorialDescription', icon: Skull, path: '/collection/memorial' },
+    { id: 'wishlist', labelKey: 'nav.wishlist', descriptionKey: 'nav.wishlistDescription', icon: Heart, path: taskRoutes.collection.wishlist },
+    { id: 'care', labelKey: 'nav.careFavorites', descriptionKey: 'nav.careFavoritesDescription', icon: BookOpenCheck, path: taskRoutes.collection.care },
+    { id: 'memorial', labelKey: 'nav.memorial', descriptionKey: 'nav.memorialDescription', icon: Skull, path: taskRoutes.collection.memorial },
   ],
 };
 

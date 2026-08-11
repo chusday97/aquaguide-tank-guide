@@ -486,9 +486,6 @@ export function SpeciesDetailDialog({
     setDeathOperationId('');
     setDeathError('');
     setIsRecordingDeath(false);
-    setIsExportOpen(false);
-    setIsExportingCard(false);
-    setExportError('');
   }, [open, fish?.id]);
 
   const openPreview = () => {

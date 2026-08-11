@@ -5130,7 +5130,7 @@ export default function AquariumManager() {
             const reminder = activeCareReminders.find(item => item.id === id);
             if (reminder) setPendingReminderDelete(reminder);
           }}
-          onBrowseCare={() => navigateToRoute('/care')}
+          onBrowseCare={() => navigateToRoute(taskRoutes.care.recommendations)}
         />
       </div>
         )}

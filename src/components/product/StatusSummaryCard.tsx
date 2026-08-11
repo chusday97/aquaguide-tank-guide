@@ -1,9 +1,7 @@
 import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { TagPill, type TagPillTone } from './TagPill';
-import { taskRoutes } from '../../services/navigation/task-routes';
 
 export type AquariumStatusLevel = 'normal' | 'needs_attention' | 'urgent' | 'insufficient_data';
 
@@ -114,9 +112,9 @@ export function StatusSummaryCard({
   onCompleteCarePlan,
   onRescheduleCarePlan,
   onDeleteCarePlan,
+  onBrowseCare,
 }: StatusSummaryCardProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
   const hasPrimaryAction = Boolean(action.task.primaryLabel);
   const hasOverflowCarePlans = carePlan.activeCount > 1;
@@ -219,7 +217,7 @@ export function StatusSummaryCard({
             <span className="text-[10px] font-bold leading-5 text-ink/48">{t('aquarium.carePlanEmptyHint')}</span>
             <button
               type="button"
-              onClick={() => navigate(taskRoutes.care.recommendations)}
+              onClick={onBrowseCare}
               className="min-h-11 shrink-0 rounded-full bg-white px-3 text-[10px] font-black text-emerald-700 shadow-sm"
             >
               {t('aquarium.browseCare')}

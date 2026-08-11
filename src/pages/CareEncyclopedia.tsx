@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -1895,7 +1895,7 @@ export default function CareEncyclopedia() {
           <button
             type="button"
             ref={favoriteShelfRef}
-            onClick={() => navigateToRoute('/collection/care')}
+            onClick={() => navigateToRoute(taskRoutes.collection.care)}
             className="shrink-0 rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-[11px] font-black text-emerald-700 shadow-sm"
           >
             {t('care.savedCare')}{favoriteCount > 0 ? ` ${favoriteCount}` : ''}
@@ -2108,7 +2108,7 @@ export default function CareEncyclopedia() {
               onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
               onPreview={() => openPreview(selectedTopic)}
               onSelectRelated={(topic) => openCareDetail(topic.id, undefined, false)}
-              onOpenCollection={() => navigateToRoute('/collection/care')}
+              onOpenCollection={() => navigateToRoute(taskRoutes.collection.care)}
               onRestoreActions={setCheckedActions}
               activeAquarium={activeAquarium}
             />

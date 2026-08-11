@@ -416,7 +416,8 @@ export function CompatibilityRiskCalculator({
         fishId: fish.id,
         quantity: Math.max(1, quantities[fish.id] || 1),
       })));
-      setFeedback(response?.message || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));
+      const feedbackMessage = response && typeof response === 'object' ? response.message : undefined;
+      setFeedback(feedbackMessage || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));
     } finally {
       setIsRecording(false);
     }
