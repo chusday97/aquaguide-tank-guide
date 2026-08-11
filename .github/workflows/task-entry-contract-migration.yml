@@ -56,8 +56,22 @@ jobs:
 
           care = Path('src/pages/CareEncyclopedia.tsx')
           text = care.read_text(encoding='utf-8')
+          text = text.replace("import type { CSSProperties, ReactNode } from 'react';", "import type { CSSProperties, ReactNode, RefObject } from 'react';")
           text = text.replace("navigateToRoute('/collection/care')", "navigateToRoute(taskRoutes.collection.care)")
           care.write_text(text, encoding='utf-8')
+
+          compatibility = Path('src/components/CompatibilityRiskCalculator.tsx')
+          text = compatibility.read_text(encoding='utf-8')
+          old = "      setFeedback(response?.message || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));"
+          new = "      const feedbackMessage = response && typeof response === 'object' ? response.message : undefined;\n      setFeedback(feedbackMessage || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));"
+          if old in text:
+              text = text.replace(old, new)
+          compatibility.write_text(text, encoding='utf-8')
+
+          detail = Path('src/components/SpeciesDetailDialog.tsx')
+          text = detail.read_text(encoding='utf-8')
+          text = text.replace("    setIsExportOpen(false);\n    setIsExportingCard(false);\n    setExportError('');\n", '')
+          detail.write_text(text, encoding='utf-8')
 
           pkg = Path('package.json')
           text = pkg.read_text(encoding='utf-8')
@@ -91,7 +105,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add src/pages/Aquarium.tsx src/components/product/StatusSummaryCard.tsx src/App.tsx src/pages/CareEncyclopedia.tsx package.json HANDOFF.md
+          git add src/pages/Aquarium.tsx src/components/product/StatusSummaryCard.tsx src/App.tsx src/pages/CareEncyclopedia.tsx src/components/CompatibilityRiskCalculator.tsx src/components/SpeciesDetailDialog.tsx package.json HANDOFF.md
           if git diff --cached --quiet; then
             echo "No migration changes to commit"
             exit 0
