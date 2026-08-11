@@ -1,5 +1,15 @@
 # AquaGuide 交接文档
 
+## First-screen task contract (2026-08-11)
+
+- Detail pages must show the user's core conclusion, next action, or primary control in the first viewport. Users should not need to scroll to discover what the page is for.
+- On mobile, task content comes before decorative/supporting media. Hero imagery is secondary to the task.
+- Care guides follow: title/risk → conclusion → immediate steps/check/start action → supporting image → detailed explanation/sources/related content.
+- Secondary actions such as favorite, reminder, sources, and related reading must not outrank the core care task.
+- Knowledge guides are for understanding first; “save to collection” is not treated as the primary CTA.
+- This is a product interaction rule, not only a Care-page styling preference. New detail flows should follow the same first-screen principle.
+
+
 ## 2026-08-10 文案与交互一致性基线
 
 - 2026-08-10 已完成连续七轮用户可见文案审计：删除模型/provider/fallback/候选池/数据结构/原始错误等内部实现语言；普通用户界面不得直接展示 raw error.message。
