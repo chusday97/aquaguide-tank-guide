@@ -5,7 +5,7 @@ on:
 
 jobs:
   validate:
-    if: github.head_ref == 'agent/core-flow-state-eval-v1'
+    if: github.head_ref == 'agent/core-flow-state-eval-v1-validation'
     runs-on: ubuntu-latest
     permissions:
       contents: write
