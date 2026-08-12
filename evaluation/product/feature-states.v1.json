@@ -1,198 +1,762 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-11",
+  "updatedAt": "2026-08-13",
   "minimumStatesPerFeature": 6,
   "features": [
     {
       "id": "onboarding",
       "name": "新手引导",
       "states": [
-        {"id":"initial","scenario":"首次进入且尚未选择目标","expected":"显示目标选择和一个明确主 CTA","forbidden":"同时展示多个互相竞争的主 CTA"},
-        {"id":"in_progress","scenario":"已开始一条 onboarding 路径","expected":"展示当前步骤，点击任务直达对应任务","forbidden":"把用户送到大页面后自己寻找功能"},
-        {"id":"success","scenario":"当前任务完成","expected":"更新完成状态并给下一任务","forbidden":"仍把已完成任务当主要行动"},
-        {"id":"empty_context","scenario":"尚未创建鱼缸或没有物种上下文","expected":"提供建缸或浏览物种的可执行入口","forbidden":"用虚构默认鱼缸参数继续"},
-        {"id":"failure","scenario":"状态读取或保存失败","expected":"保留当前选择并给稳定可重试提示","forbidden":"展示 raw error、HTTP、数据库细节"},
-        {"id":"boundary","scenario":"历史用户已有部分行为但未完成当前路径","expected":"按真实历史状态跳过已完成步骤","forbidden":"仅因进入过页面就判定任务完成"}
+        {
+          "id": "initial",
+          "scenario": "首次进入且尚未选择目标",
+          "expected": "显示目标选择和一个明确主 CTA",
+          "forbidden": "同时展示多个互相竞争的主 CTA"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "已开始一条 onboarding 路径",
+          "expected": "展示当前步骤，点击任务直达对应任务",
+          "forbidden": "把用户送到大页面后自己寻找功能"
+        },
+        {
+          "id": "success",
+          "scenario": "当前任务完成",
+          "expected": "更新完成状态并给下一任务",
+          "forbidden": "仍把已完成任务当主要行动"
+        },
+        {
+          "id": "empty_context",
+          "scenario": "尚未创建鱼缸或没有物种上下文",
+          "expected": "提供建缸或浏览物种的可执行入口",
+          "forbidden": "用虚构默认鱼缸参数继续"
+        },
+        {
+          "id": "failure",
+          "scenario": "状态读取或保存失败",
+          "expected": "保留当前选择并给稳定可重试提示",
+          "forbidden": "展示 raw error、HTTP、数据库细节"
+        },
+        {
+          "id": "boundary",
+          "scenario": "历史用户已有部分行为但未完成当前路径",
+          "expected": "按真实历史状态跳过已完成步骤",
+          "forbidden": "仅因进入过页面就判定任务完成"
+        }
       ]
     },
     {
       "id": "aquarium_setup",
       "name": "鱼缸创建与参数设置",
       "states": [
-        {"id":"initial","scenario":"没有鱼缸","expected":"直接进入创建/基础设置任务","forbidden":"只展示空白鱼缸首页"},
-        {"id":"in_progress","scenario":"正在填写尺寸、水体、温度、过滤","expected":"保留草稿并指出缺少的事实","forbidden":"偷偷补 25°C、瀑布过滤等默认值"},
-        {"id":"success","scenario":"关键参数保存成功","expected":"更新鱼缸状态并给下一动作","forbidden":"保存后仍显示旧参数"},
-        {"id":"explicit_none","scenario":"用户明确某项为无，例如过滤=无","expected":"把无作为有效显式值","forbidden":"把无误判为未填写"},
-        {"id":"failure","scenario":"保存失败","expected":"不丢草稿并允许重试","forbidden":"失败后清空用户输入"},
-        {"id":"boundary","scenario":"参数异常或缺失导致下游无法判断","expected":"阻止伪精确结论并直达补充参数","forbidden":"继续输出确定性建议"}
+        {
+          "id": "initial",
+          "scenario": "没有鱼缸",
+          "expected": "直接进入创建/基础设置任务",
+          "forbidden": "只展示空白鱼缸首页"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "正在填写尺寸、水体、温度、过滤",
+          "expected": "保留草稿并指出缺少的事实",
+          "forbidden": "偷偷补 25°C、瀑布过滤等默认值"
+        },
+        {
+          "id": "success",
+          "scenario": "关键参数保存成功",
+          "expected": "更新鱼缸状态并给下一动作",
+          "forbidden": "保存后仍显示旧参数"
+        },
+        {
+          "id": "explicit_none",
+          "scenario": "用户明确某项为无，例如过滤=无",
+          "expected": "把无作为有效显式值",
+          "forbidden": "把无误判为未填写"
+        },
+        {
+          "id": "failure",
+          "scenario": "保存失败",
+          "expected": "不丢草稿并允许重试",
+          "forbidden": "失败后清空用户输入"
+        },
+        {
+          "id": "boundary",
+          "scenario": "参数异常或缺失导致下游无法判断",
+          "expected": "阻止伪精确结论并直达补充参数",
+          "forbidden": "继续输出确定性建议"
+        }
       ]
     },
     {
       "id": "add_livestock",
       "name": "添加生物",
       "states": [
-        {"id":"initial","scenario":"从图鉴或鱼缸发起添加","expected":"带入目标物种并确认数量/日期","forbidden":"让用户再次搜索刚选过的物种"},
-        {"id":"in_progress","scenario":"填写数量、日期、体态等","expected":"危险副作用前只保留草稿","forbidden":"未确认就修改真实鱼缸"},
-        {"id":"success","scenario":"添加成功","expected":"鱼缸生物和时间线同步更新","forbidden":"只 Toast 成功但真实状态未变"},
-        {"id":"empty_context","scenario":"没有鱼缸","expected":"直达建缸任务并保留物种上下文","forbidden":"丢掉物种后只去鱼缸首页"},
-        {"id":"failure","scenario":"写入失败或事务未完成","expected":"整体回滚或明确未完成并可重试","forbidden":"出现用户无法识别的半成功"},
-        {"id":"conflict","scenario":"候选与现有生物明确冲突","expected":"先给风险和调整选项，override 需二次确认","forbidden":"AI 文案反转确定性安全阻断"}
+        {
+          "id": "initial",
+          "scenario": "从图鉴或鱼缸发起添加",
+          "expected": "带入目标物种并确认数量/日期",
+          "forbidden": "让用户再次搜索刚选过的物种"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "填写数量、日期、体态等",
+          "expected": "危险副作用前只保留草稿",
+          "forbidden": "未确认就修改真实鱼缸"
+        },
+        {
+          "id": "success",
+          "scenario": "添加成功",
+          "expected": "鱼缸生物和时间线同步更新",
+          "forbidden": "只 Toast 成功但真实状态未变"
+        },
+        {
+          "id": "empty_context",
+          "scenario": "没有鱼缸",
+          "expected": "直达建缸任务并保留物种上下文",
+          "forbidden": "丢掉物种后只去鱼缸首页"
+        },
+        {
+          "id": "failure",
+          "scenario": "写入失败或事务未完成",
+          "expected": "整体回滚或明确未完成并可重试",
+          "forbidden": "出现用户无法识别的半成功"
+        },
+        {
+          "id": "conflict",
+          "scenario": "候选与现有生物明确冲突",
+          "expected": "先给风险和调整选项，override 需二次确认",
+          "forbidden": "AI 文案反转确定性安全阻断"
+        }
       ]
     },
     {
       "id": "water_change",
       "name": "换水记录",
       "states": [
-        {"id":"initial","scenario":"用户点击记录换水","expected":"直接打开换水记录任务","forbidden":"只跳到鱼缸顶部"},
-        {"id":"in_progress","scenario":"填写日期和比例","expected":"保持表单状态并防重复提交","forbidden":"按钮连点产生重复记录"},
-        {"id":"success","scenario":"记录成功","expected":"更新时间线、今日状态和计划","forbidden":"只保存局部数据不刷新依赖状态"},
-        {"id":"empty_context","scenario":"没有鱼缸","expected":"先建缸","forbidden":"把换水写到不存在的鱼缸"},
-        {"id":"failure","scenario":"保存失败","expected":"保留输入并允许重试","forbidden":"清空输入或展示 raw error"},
-        {"id":"boundary","scenario":"日期异常、比例不合理或重复提交","expected":"校验并要求修正或确认","forbidden":"静默接受明显错误值"}
+        {
+          "id": "initial",
+          "scenario": "用户点击记录换水",
+          "expected": "直接打开换水记录任务",
+          "forbidden": "只跳到鱼缸顶部"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "填写日期和比例",
+          "expected": "保持表单状态并防重复提交",
+          "forbidden": "按钮连点产生重复记录"
+        },
+        {
+          "id": "success",
+          "scenario": "记录成功",
+          "expected": "更新时间线、今日状态和计划",
+          "forbidden": "只保存局部数据不刷新依赖状态"
+        },
+        {
+          "id": "empty_context",
+          "scenario": "没有鱼缸",
+          "expected": "先建缸",
+          "forbidden": "把换水写到不存在的鱼缸"
+        },
+        {
+          "id": "failure",
+          "scenario": "保存失败",
+          "expected": "保留输入并允许重试",
+          "forbidden": "清空输入或展示 raw error"
+        },
+        {
+          "id": "boundary",
+          "scenario": "日期异常、比例不合理或重复提交",
+          "expected": "校验并要求修正或确认",
+          "forbidden": "静默接受明显错误值"
+        }
       ]
     },
     {
       "id": "daily_check",
       "name": "每日检查",
       "states": [
-        {"id":"initial","scenario":"有鱼缸且尚未巡检","expected":"显示最少必要问题和开始按钮","forbidden":"先展示大段解释再让用户找入口"},
-        {"id":"in_progress","scenario":"巡检进行中","expected":"显示当前题并保留已答信息","forbidden":"重复问题或丢失答案"},
-        {"id":"success","scenario":"巡检完成","expected":"给结论、原因和下一步并写入记录","forbidden":"只给结论没有行动"},
-        {"id":"insufficient","scenario":"缺少关键鱼缸参数","expected":"指出缺什么并直达设置","forbidden":"用猜测参数完成巡检"},
-        {"id":"failure","scenario":"规则或 AI 服务失败","expected":"保留已答信息并按能力降级或重试","forbidden":"伪装成正常结果"},
-        {"id":"urgent","scenario":"用户报告紧急异常","expected":"提高风险等级并优先展示立即动作","forbidden":"把紧急情况埋在普通建议后面"}
+        {
+          "id": "initial",
+          "scenario": "有鱼缸且尚未巡检",
+          "expected": "显示最少必要问题和开始按钮",
+          "forbidden": "先展示大段解释再让用户找入口"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "巡检进行中",
+          "expected": "显示当前题并保留已答信息",
+          "forbidden": "重复问题或丢失答案"
+        },
+        {
+          "id": "success",
+          "scenario": "巡检完成",
+          "expected": "给结论、原因和下一步并写入记录",
+          "forbidden": "只给结论没有行动"
+        },
+        {
+          "id": "insufficient",
+          "scenario": "缺少关键鱼缸参数",
+          "expected": "指出缺什么并直达设置",
+          "forbidden": "用猜测参数完成巡检"
+        },
+        {
+          "id": "failure",
+          "scenario": "规则或 AI 服务失败",
+          "expected": "保留已答信息并按能力降级或重试",
+          "forbidden": "伪装成正常结果"
+        },
+        {
+          "id": "urgent",
+          "scenario": "用户报告紧急异常",
+          "expected": "提高风险等级并优先展示立即动作",
+          "forbidden": "把紧急情况埋在普通建议后面"
+        }
       ]
     },
     {
       "id": "compatibility",
       "name": "混养判断",
       "states": [
-        {"id":"initial","scenario":"已有鱼缸+候选或选择至少两个对象","expected":"明确已有生物和准备加入对象","forbidden":"隐藏判断对象来源"},
-        {"id":"in_progress","scenario":"正在计算或等待 AI 解释","expected":"规则先给确定性状态，AI 只补解释","forbidden":"让 AI 自由决定安全结论"},
-        {"id":"success","scenario":"未发现明显冲突","expected":"给结论和观察建议","forbidden":"把未发现冲突写成绝对安全"},
-        {"id":"insufficient","scenario":"对象不足或关键参数缺失","expected":"明确缺什么并直达补充","forbidden":"硬算一个结果"},
-        {"id":"failure","scenario":"规则、数据或 AI 调用失败","expected":"保留选择，规则结果不被 AI 失败覆盖","forbidden":"清空候选或展示内部错误"},
-        {"id":"conflict","scenario":"候选-现有或候选-候选明确冲突","expected":"指出具体组合并给保留/移除方案","forbidden":"自动删除现有生物或模糊风险"}
+        {
+          "id": "initial",
+          "scenario": "已有鱼缸+候选或选择至少两个对象",
+          "expected": "明确已有生物和准备加入对象",
+          "forbidden": "隐藏判断对象来源"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "正在计算或等待 AI 解释",
+          "expected": "规则先给确定性状态，AI 只补解释",
+          "forbidden": "让 AI 自由决定安全结论"
+        },
+        {
+          "id": "success",
+          "scenario": "未发现明显冲突",
+          "expected": "给结论和观察建议",
+          "forbidden": "把未发现冲突写成绝对安全"
+        },
+        {
+          "id": "insufficient",
+          "scenario": "对象不足或关键参数缺失",
+          "expected": "明确缺什么并直达补充",
+          "forbidden": "硬算一个结果"
+        },
+        {
+          "id": "failure",
+          "scenario": "规则、数据或 AI 调用失败",
+          "expected": "保留选择，规则结果不被 AI 失败覆盖",
+          "forbidden": "清空候选或展示内部错误"
+        },
+        {
+          "id": "conflict",
+          "scenario": "候选-现有或候选-候选明确冲突",
+          "expected": "指出具体组合并给保留/移除方案",
+          "forbidden": "自动删除现有生物或模糊风险"
+        }
       ]
     },
     {
       "id": "species_search",
       "name": "物种搜索与筛选",
       "states": [
-        {"id":"initial","scenario":"空查询","expected":"显示常用分类或推荐入口","forbidden":"空白页面"},
-        {"id":"in_progress","scenario":"输入关键词或切换筛选","expected":"反馈当前条件且不丢已选筛选","forbidden":"每次输入都重置全部筛选"},
-        {"id":"success","scenario":"找到结果","expected":"卡片打开具体物种，收藏为独立 control","forbidden":"整张卡点击直接收藏或选择"},
-        {"id":"empty","scenario":"0 结果","expected":"提供清除或放宽条件的下一步","forbidden":"只显示暂无没有行动"},
-        {"id":"failure","scenario":"搜索建议服务失败","expected":"仍允许直接搜索并提示建议暂不可用","forbidden":"整个搜索功能不可用"},
-        {"id":"ambiguous","scenario":"同名、变种或多语言模糊匹配","expected":"展示区分信息并要求确认对象","forbidden":"自动选一个最接近物种"}
+        {
+          "id": "initial",
+          "scenario": "空查询",
+          "expected": "显示常用分类或推荐入口",
+          "forbidden": "空白页面"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "输入关键词或切换筛选",
+          "expected": "反馈当前条件且不丢已选筛选",
+          "forbidden": "每次输入都重置全部筛选"
+        },
+        {
+          "id": "success",
+          "scenario": "找到结果",
+          "expected": "卡片打开具体物种，收藏为独立 control",
+          "forbidden": "整张卡点击直接收藏或选择"
+        },
+        {
+          "id": "empty",
+          "scenario": "0 结果",
+          "expected": "提供清除或放宽条件的下一步",
+          "forbidden": "只显示暂无没有行动"
+        },
+        {
+          "id": "failure",
+          "scenario": "搜索建议服务失败",
+          "expected": "仍允许直接搜索并提示建议暂不可用",
+          "forbidden": "整个搜索功能不可用"
+        },
+        {
+          "id": "ambiguous",
+          "scenario": "同名、变种或多语言模糊匹配",
+          "expected": "展示区分信息并要求确认对象",
+          "forbidden": "自动选一个最接近物种"
+        }
       ]
     },
     {
       "id": "species_detail",
       "name": "物种详情",
       "states": [
-        {"id":"initial","scenario":"打开具体物种","expected":"首屏先给适配结论、关键养护和主行动","forbidden":"首屏只有大图和装饰信息"},
-        {"id":"in_progress","scenario":"切换变种、加载 3D 或计算适配","expected":"保留详情框架并局部 loading","forbidden":"整个面板闪白或重置"},
-        {"id":"success","scenario":"有完整鱼缸上下文","expected":"显示是否适合、为什么和下一步","forbidden":"只堆知识没有决策"},
-        {"id":"empty_context","scenario":"没有鱼缸","expected":"明确尚未选择鱼缸并直达建缸/设置","forbidden":"输出伪适配结论"},
-        {"id":"failure","scenario":"图片或辅助内容失败","expected":"文本核心信息仍可用并有 fallback","forbidden":"因图片失败让整个详情不可用"},
-        {"id":"boundary","scenario":"物种已在缸、冲突或资料待复核","expected":"按真实状态改变主 CTA 和证据标签","forbidden":"所有状态都显示同一个加入鱼缸"}
+        {
+          "id": "initial",
+          "scenario": "打开具体物种",
+          "expected": "首屏先给适配结论、关键养护和主行动",
+          "forbidden": "首屏只有大图和装饰信息"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "切换变种、加载 3D 或计算适配",
+          "expected": "保留详情框架并局部 loading",
+          "forbidden": "整个面板闪白或重置"
+        },
+        {
+          "id": "success",
+          "scenario": "有完整鱼缸上下文",
+          "expected": "显示是否适合、为什么和下一步",
+          "forbidden": "只堆知识没有决策"
+        },
+        {
+          "id": "empty_context",
+          "scenario": "没有鱼缸",
+          "expected": "明确尚未选择鱼缸并直达建缸/设置",
+          "forbidden": "输出伪适配结论"
+        },
+        {
+          "id": "failure",
+          "scenario": "图片或辅助内容失败",
+          "expected": "文本核心信息仍可用并有 fallback",
+          "forbidden": "因图片失败让整个详情不可用"
+        },
+        {
+          "id": "boundary",
+          "scenario": "物种已在缸、冲突或资料待复核",
+          "expected": "按真实状态改变主 CTA 和证据标签",
+          "forbidden": "所有状态都显示同一个加入鱼缸"
+        }
       ]
     },
     {
       "id": "care",
       "name": "养护指南与计划",
       "states": [
-        {"id":"initial","scenario":"进入养护页或打开指定 topic","expected":"落到具体推荐、搜索或指南任务","forbidden":"功能 CTA 只打开 /care 顶部"},
-        {"id":"in_progress","scenario":"筛选、评测或设置提醒中","expected":"保留选择并显示局部 loading","forbidden":"阻塞整页或重复创建提醒"},
-        {"id":"success","scenario":"指南或计划可用","expected":"先给立即动作、暂时不要和复查","forbidden":"把解释放在行动之前"},
-        {"id":"empty","scenario":"没有计划、收藏或结果","expected":"给直接去推荐或搜索的 CTA","forbidden":"让用户自己翻找"},
-        {"id":"failure","scenario":"提醒、收藏或指南读取失败","expected":"保留当前页面并允许重试","forbidden":"展示数据库或 provider 细节"},
-        {"id":"evidence_boundary","scenario":"证据待复核或条件不适用","expected":"显式标记待复核","forbidden":"把未审核内容包装成权威结论"}
+        {
+          "id": "initial",
+          "scenario": "进入养护页或打开指定 topic",
+          "expected": "落到具体推荐、搜索或指南任务",
+          "forbidden": "功能 CTA 只打开 /care 顶部"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "筛选、评测或设置提醒中",
+          "expected": "保留选择并显示局部 loading",
+          "forbidden": "阻塞整页或重复创建提醒"
+        },
+        {
+          "id": "success",
+          "scenario": "指南或计划可用",
+          "expected": "先给立即动作、暂时不要和复查",
+          "forbidden": "把解释放在行动之前"
+        },
+        {
+          "id": "empty",
+          "scenario": "没有计划、收藏或结果",
+          "expected": "给直接去推荐或搜索的 CTA",
+          "forbidden": "让用户自己翻找"
+        },
+        {
+          "id": "failure",
+          "scenario": "提醒、收藏或指南读取失败",
+          "expected": "保留当前页面并允许重试",
+          "forbidden": "展示数据库或 provider 细节"
+        },
+        {
+          "id": "evidence_boundary",
+          "scenario": "证据待复核或条件不适用",
+          "expected": "显式标记待复核",
+          "forbidden": "把未审核内容包装成权威结论"
+        }
       ]
     },
     {
       "id": "identify",
       "name": "拍照识别",
       "states": [
-        {"id":"initial","scenario":"尚未上传图片","expected":"给拍摄要求和上传入口","forbidden":"要求用户先填写无关信息"},
-        {"id":"in_progress","scenario":"正在上传或识别","expected":"显示分析中并避免重复提交","forbidden":"没有反馈导致用户重复上传"},
-        {"id":"success","scenario":"高置信候选映射到目录","expected":"要求用户确认后再进入详情/混养/健康检查","forbidden":"识别后直接写入鱼缸"},
-        {"id":"empty","scenario":"没有可匹配目录候选","expected":"允许手动搜索并记录 miss","forbidden":"编造一个最接近物种"},
-        {"id":"failure","scenario":"文件非法、网络或模型失败","expected":"给可理解错误并保留重试入口","forbidden":"暴露模型/provider/raw error"},
-        {"id":"ambiguous","scenario":"低置信、多候选或非鱼类","expected":"展示不确定性和功能边界","forbidden":"用单一确定答案掩盖不确定性"}
+        {
+          "id": "initial",
+          "scenario": "尚未上传图片",
+          "expected": "给拍摄要求和上传入口",
+          "forbidden": "要求用户先填写无关信息"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "正在上传或识别",
+          "expected": "显示分析中并避免重复提交",
+          "forbidden": "没有反馈导致用户重复上传"
+        },
+        {
+          "id": "success",
+          "scenario": "高置信候选映射到目录",
+          "expected": "要求用户确认后再进入详情/混养/健康检查",
+          "forbidden": "识别后直接写入鱼缸"
+        },
+        {
+          "id": "empty",
+          "scenario": "没有可匹配目录候选",
+          "expected": "允许手动搜索并记录 miss",
+          "forbidden": "编造一个最接近物种"
+        },
+        {
+          "id": "failure",
+          "scenario": "文件非法、网络或模型失败",
+          "expected": "给可理解错误并保留重试入口",
+          "forbidden": "暴露模型/provider/raw error"
+        },
+        {
+          "id": "ambiguous",
+          "scenario": "低置信、多候选或非鱼类",
+          "expected": "展示不确定性和功能边界",
+          "forbidden": "用单一确定答案掩盖不确定性"
+        }
       ]
     },
     {
       "id": "health_triage",
       "name": "健康状态检查",
       "states": [
-        {"id":"initial","scenario":"已确认支持的鱼类","expected":"说明仅做风险判断并请求异常描述","forbidden":"暗示疾病确诊"},
-        {"id":"in_progress","scenario":"追问关键问题","expected":"每次只问有信息增益的问题并保留历史","forbidden":"无限追问或重复问题"},
-        {"id":"success","scenario":"信息足够","expected":"给风险级别、依据、立即动作和复查","forbidden":"直接自动推荐处方药"},
-        {"id":"insufficient","scenario":"信息仍不足","expected":"明确还需要确认哪一项","forbidden":"给过度确定诊断"},
-        {"id":"failure","scenario":"模型或接口失败","expected":"保留描述和答案并允许稍后重试","forbidden":"清空会话"},
-        {"id":"urgent_or_unsupported","scenario":"紧急风险或不支持对象","expected":"优先安全边界，非鱼类明确不支持","forbidden":"继续常规流程延误风险"}
+        {
+          "id": "initial",
+          "scenario": "已确认支持的鱼类",
+          "expected": "说明仅做风险判断并请求异常描述",
+          "forbidden": "暗示疾病确诊"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "追问关键问题",
+          "expected": "每次只问有信息增益的问题并保留历史",
+          "forbidden": "无限追问或重复问题"
+        },
+        {
+          "id": "success",
+          "scenario": "信息足够",
+          "expected": "给风险级别、依据、立即动作和复查",
+          "forbidden": "直接自动推荐处方药"
+        },
+        {
+          "id": "insufficient",
+          "scenario": "信息仍不足",
+          "expected": "明确还需要确认哪一项",
+          "forbidden": "给过度确定诊断"
+        },
+        {
+          "id": "failure",
+          "scenario": "模型或接口失败",
+          "expected": "保留描述和答案并允许稍后重试",
+          "forbidden": "清空会话"
+        },
+        {
+          "id": "urgent_or_unsupported",
+          "scenario": "紧急风险或不支持对象",
+          "expected": "优先安全边界，非鱼类明确不支持",
+          "forbidden": "继续常规流程延误风险"
+        }
       ]
     },
     {
       "id": "collection",
       "name": "收藏、水族册与生命纪念",
       "states": [
-        {"id":"initial","scenario":"有收藏或纪念数据","expected":"进入对应子模块而不是集合首页","forbidden":"点击养护收藏却落水族册首页"},
-        {"id":"in_progress","scenario":"收藏、取消或保存纪念中","expected":"按钮禁用并保持对象上下文","forbidden":"并发点击造成重复或错乱"},
-        {"id":"success","scenario":"操作成功","expected":"原位更新状态并给短反馈","forbidden":"成功后自动跳走或换对象"},
-        {"id":"empty","scenario":"没有收藏或纪念","expected":"解释这里会出现什么并给相关入口","forbidden":"只显示空白占位"},
-        {"id":"failure","scenario":"持久化失败","expected":"回滚 UI 到真实状态并允许重试","forbidden":"UI 显示成功但存储失败"},
-        {"id":"boundary","scenario":"对象失效、记录缺字段或重复操作","expected":"显示不可用/待补充并保持历史可理解","forbidden":"崩溃或偷偷丢记录"}
+        {
+          "id": "initial",
+          "scenario": "有收藏或纪念数据",
+          "expected": "进入对应子模块而不是集合首页",
+          "forbidden": "点击养护收藏却落水族册首页"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "收藏、取消或保存纪念中",
+          "expected": "按钮禁用并保持对象上下文",
+          "forbidden": "并发点击造成重复或错乱"
+        },
+        {
+          "id": "success",
+          "scenario": "操作成功",
+          "expected": "原位更新状态并给短反馈",
+          "forbidden": "成功后自动跳走或换对象"
+        },
+        {
+          "id": "empty",
+          "scenario": "没有收藏或纪念",
+          "expected": "解释这里会出现什么并给相关入口",
+          "forbidden": "只显示空白占位"
+        },
+        {
+          "id": "failure",
+          "scenario": "持久化失败",
+          "expected": "回滚 UI 到真实状态并允许重试",
+          "forbidden": "UI 显示成功但存储失败"
+        },
+        {
+          "id": "boundary",
+          "scenario": "对象失效、记录缺字段或重复操作",
+          "expected": "显示不可用/待补充并保持历史可理解",
+          "forbidden": "崩溃或偷偷丢记录"
+        }
       ]
     },
     {
       "id": "tank_copilot",
       "name": "鱼缸助手",
       "states": [
-        {"id":"initial","scenario":"用户选择目标或提出问题","expected":"基于真实鱼缸参数和用户目标","forbidden":"默认假设用户意图和参数"},
-        {"id":"in_progress","scenario":"正在生成建议","expected":"显示生成中并保持上下文","forbidden":"输出 provider/model 内部状态"},
-        {"id":"success","scenario":"建议可执行","expected":"给目标、建议、原因和下一步","forbidden":"只给长段泛化建议"},
-        {"id":"insufficient","scenario":"缺少关键事实","expected":"先要求补参数或只给可确定部分","forbidden":"编造默认值完成方案"},
-        {"id":"failure","scenario":"Provider 失败","expected":"稳定提示并按能力降级","forbidden":"把 fallback 冒充模型结果"},
-        {"id":"rule_conflict","scenario":"建议与安全规则冲突","expected":"确定性规则优先，AI 只能解释","forbidden":"让模型推翻安全阻断"}
+        {
+          "id": "initial",
+          "scenario": "用户选择目标或提出问题",
+          "expected": "基于真实鱼缸参数和用户目标",
+          "forbidden": "默认假设用户意图和参数"
+        },
+        {
+          "id": "in_progress",
+          "scenario": "正在生成建议",
+          "expected": "显示生成中并保持上下文",
+          "forbidden": "输出 provider/model 内部状态"
+        },
+        {
+          "id": "success",
+          "scenario": "建议可执行",
+          "expected": "给目标、建议、原因和下一步",
+          "forbidden": "只给长段泛化建议"
+        },
+        {
+          "id": "insufficient",
+          "scenario": "缺少关键事实",
+          "expected": "先要求补参数或只给可确定部分",
+          "forbidden": "编造默认值完成方案"
+        },
+        {
+          "id": "failure",
+          "scenario": "Provider 失败",
+          "expected": "稳定提示并按能力降级",
+          "forbidden": "把 fallback 冒充模型结果"
+        },
+        {
+          "id": "rule_conflict",
+          "scenario": "建议与安全规则冲突",
+          "expected": "确定性规则优先，AI 只能解释",
+          "forbidden": "让模型推翻安全阻断"
+        }
       ]
     },
     {
       "id": "task_entry_navigation",
       "name": "功能直达 / Deep-link",
       "states": [
-        {"id":"main_navigation","scenario":"点击主导航","expected":"允许进入页面首页","forbidden":"强行进入某个子任务"},
-        {"id":"functional_cta","scenario":"点击明确功能 CTA","expected":"携带 action/query/hash 和必要上下文直达任务","forbidden":"只跳到 /aquarium 或 /care 等大页面"},
-        {"id":"target_consumed","scenario":"目标页面收到 task intent","expected":"进入正确模式、对象或操作区","forbidden":"URL 有 action 但页面不处理"},
-        {"id":"missing_prerequisite","scenario":"任务缺前置条件","expected":"直达最近前置任务并保留上下文","forbidden":"丢上下文让用户重来"},
-        {"id":"target_failure","scenario":"对象已失效或路由不可用","expected":"给恢复入口或相关模块回退","forbidden":"404 后没有下一步"},
-        {"id":"unsaved_guard","scenario":"存在未保存草稿","expected":"先经过 navigation guard 再跳转","forbidden":"先产生副作用再询问是否离开"}
+        {
+          "id": "main_navigation",
+          "scenario": "点击主导航",
+          "expected": "允许进入页面首页",
+          "forbidden": "强行进入某个子任务"
+        },
+        {
+          "id": "functional_cta",
+          "scenario": "点击明确功能 CTA",
+          "expected": "携带 action/query/hash 和必要上下文直达任务",
+          "forbidden": "只跳到 /aquarium 或 /care 等大页面"
+        },
+        {
+          "id": "target_consumed",
+          "scenario": "目标页面收到 task intent",
+          "expected": "进入正确模式、对象或操作区",
+          "forbidden": "URL 有 action 但页面不处理"
+        },
+        {
+          "id": "missing_prerequisite",
+          "scenario": "任务缺前置条件",
+          "expected": "直达最近前置任务并保留上下文",
+          "forbidden": "丢上下文让用户重来"
+        },
+        {
+          "id": "target_failure",
+          "scenario": "对象已失效或路由不可用",
+          "expected": "给恢复入口或相关模块回退",
+          "forbidden": "404 后没有下一步"
+        },
+        {
+          "id": "unsaved_guard",
+          "scenario": "存在未保存草稿",
+          "expected": "先经过 navigation guard 再跳转",
+          "forbidden": "先产生副作用再询问是否离开"
+        }
       ]
     },
     {
       "id": "responsive_detail_surface",
       "name": "响应式详情弹窗",
       "states": [
-        {"id":"mobile_default","scenario":"手机打开内容型详情","expected":"保持现有 bottom sheet，约 92dvh，顶部圆角","forbidden":"改成桌面右侧 Drawer"},
-        {"id":"desktop_default","scenario":"桌面打开内容型详情","expected":"从右侧滑入约半屏宽任务面板","forbidden":"继续居中遮挡主工作区"},
-        {"id":"open_transition","scenario":"面板打开","expected":"右侧滑入且 backdrop/focus trap 正常","forbidden":"缩放和右滑动画冲突造成跳动"},
-        {"id":"close_transition","scenario":"关闭面板","expected":"向右退出并把焦点还给触发元素","forbidden":"焦点丢失到 body"},
-        {"id":"overflow","scenario":"详情内容超过一屏","expected":"只在面板内容区滚动","forbidden":"页面和面板同时滚动"},
-        {"id":"confirm_boundary","scenario":"删除、放弃修改或高风险确认","expected":"继续使用居中 ConfirmDialog","forbidden":"所有确认框都变成半屏 Drawer"}
+        {
+          "id": "mobile_default",
+          "scenario": "手机打开内容型详情",
+          "expected": "保持现有 bottom sheet，约 92dvh，顶部圆角",
+          "forbidden": "改成桌面右侧 Drawer"
+        },
+        {
+          "id": "desktop_default",
+          "scenario": "桌面打开内容型详情",
+          "expected": "从右侧滑入约半屏宽任务面板",
+          "forbidden": "继续居中遮挡主工作区"
+        },
+        {
+          "id": "open_transition",
+          "scenario": "面板打开",
+          "expected": "右侧滑入且 backdrop/focus trap 正常",
+          "forbidden": "缩放和右滑动画冲突造成跳动"
+        },
+        {
+          "id": "close_transition",
+          "scenario": "关闭面板",
+          "expected": "向右退出并把焦点还给触发元素",
+          "forbidden": "焦点丢失到 body"
+        },
+        {
+          "id": "overflow",
+          "scenario": "详情内容超过一屏",
+          "expected": "只在面板内容区滚动",
+          "forbidden": "页面和面板同时滚动"
+        },
+        {
+          "id": "confirm_boundary",
+          "scenario": "删除、放弃修改或高风险确认",
+          "expected": "继续使用居中 ConfirmDialog",
+          "forbidden": "所有确认框都变成半屏 Drawer"
+        }
       ]
     },
     {
       "id": "building_gate",
       "name": "建设中功能门禁",
       "states": [
-        {"id":"initial","scenario":"用户看到建设中功能","expected":"灰色、非正常激活态并说明建设中","forbidden":"看起来像可用功能"},
-        {"id":"interaction","scenario":"点击建设中入口","expected":"只展示统一说明，不执行真实副作用","forbidden":"部分入口仍调用真实 API/share"},
-        {"id":"live_transition","scenario":"功能未来转 live","expected":"移除 gate 并启用完整正常状态","forbidden":"只改按钮颜色但后台仍不可用"},
-        {"id":"empty","scenario":"功能没有可展示内容","expected":"不伪造进度或云数据","forbidden":"展示假的完成度"},
-        {"id":"failure","scenario":"建设中说明 surface 异常","expected":"不影响主产品使用","forbidden":"阻塞整个页面"},
-        {"id":"multiple_entries","scenario":"同一功能存在多个入口","expected":"所有入口表现同一 feature state","forbidden":"一个入口建设中、另一个可绕过"}
+        {
+          "id": "initial",
+          "scenario": "用户看到建设中功能",
+          "expected": "灰色、非正常激活态并说明建设中",
+          "forbidden": "看起来像可用功能"
+        },
+        {
+          "id": "interaction",
+          "scenario": "点击建设中入口",
+          "expected": "只展示统一说明，不执行真实副作用",
+          "forbidden": "部分入口仍调用真实 API/share"
+        },
+        {
+          "id": "live_transition",
+          "scenario": "功能未来转 live",
+          "expected": "移除 gate 并启用完整正常状态",
+          "forbidden": "只改按钮颜色但后台仍不可用"
+        },
+        {
+          "id": "empty",
+          "scenario": "功能没有可展示内容",
+          "expected": "不伪造进度或云数据",
+          "forbidden": "展示假的完成度"
+        },
+        {
+          "id": "failure",
+          "scenario": "建设中说明 surface 异常",
+          "expected": "不影响主产品使用",
+          "forbidden": "阻塞整个页面"
+        },
+        {
+          "id": "multiple_entries",
+          "scenario": "同一功能存在多个入口",
+          "expected": "所有入口表现同一 feature state",
+          "forbidden": "一个入口建设中、另一个可绕过"
+        }
+      ]
+    },
+    {
+      "id": "typography_system",
+      "name": "语义排版系统",
+      "states": [
+        {
+          "id": "semantic_hierarchy",
+          "scenario": "页面同时出现 page、section、card、body、meta、action 多层信息",
+          "expected": "共享语义层级保持稳定，主次关系跨页面一致",
+          "forbidden": "同一信息层级因页面不同随意切换字号和字重"
+        },
+        {
+          "id": "legacy_migration",
+          "scenario": "旧页面仍保留部分 font-black/font-bold/text-[Npx]，新组件逐步迁移",
+          "expected": "共享组件分批迁移且旧页面视觉节奏不被一次性破坏",
+          "forbidden": "用全局 CSS 强制重写所有旧字号或字重"
+        },
+        {
+          "id": "portal_surface",
+          "scenario": "Dialog/Drawer 通过 Portal 挂到 body",
+          "expected": "Portal 内仍可访问 Typography token，层级与页面内一致",
+          "forbidden": "因脱离 .aquaguide-app 祖先而回退到错误字号或字重"
+        },
+        {
+          "id": "dense_metadata",
+          "scenario": "详情同时展示名称、结论、参数、来源和辅助标签",
+          "expected": "meta 信息保持次级但仍清晰可读，结论和主行动优先",
+          "forbidden": "所有文字都加粗或放大导致视觉权重相同"
+        },
+        {
+          "id": "long_or_bilingual_copy",
+          "scenario": "中文、英文或较长物种/养护文案进入同一组件",
+          "expected": "文字允许合理换行且不破坏标题、正文、按钮层级",
+          "forbidden": "靠缩到不可读字号或截断核心结论维持布局"
+        },
+        {
+          "id": "responsive_boundary",
+          "scenario": "手机、窄桌面与大桌面切换或浏览器字体放大",
+          "expected": "语义层级不因断点改变而反转，正文保持可读",
+          "forbidden": "移动端主任务文字比辅助 meta 更弱或出现横向溢出"
+        }
+      ]
+    },
+    {
+      "id": "livestock_state_task",
+      "name": "缸内生物状态与体态编辑",
+      "states": [
+        {
+          "id": "browse_existing",
+          "scenario": "用户打开缸内生物并浏览当前数量、批次和体态",
+          "expected": "展示真实当前状态，并把编辑作为明确独立任务",
+          "forbidden": "浏览卡片本身隐式修改数量或状态"
+        },
+        {
+          "id": "edit_in_progress",
+          "scenario": "进入单个物种的数量/日期/体态三步编辑",
+          "expected": "单物种编辑占满 editing surface 可用宽度并保留草稿",
+          "forbidden": "继续继承父级两列网格导致编辑器只有半宽"
+        },
+        {
+          "id": "unsaved_navigation",
+          "scenario": "已有草稿时点击关闭、Esc、返回或切换页面",
+          "expected": "先触发未保存保护，再由用户决定继续编辑或放弃",
+          "forbidden": "先关闭或写入，再询问是否放弃修改"
+        },
+        {
+          "id": "success",
+          "scenario": "用户核对并保存体态/数量变化",
+          "expected": "真实鱼缸状态、批次和相关时间线按同一操作结果更新",
+          "forbidden": "只显示成功 Toast 但底层数量或批次未变化"
+        },
+        {
+          "id": "failure",
+          "scenario": "保存或 Repository 写入失败",
+          "expected": "保留草稿、显示可理解提示并允许稳定重试",
+          "forbidden": "清空草稿、展示 raw error 或把失败状态当作已保存"
+        },
+        {
+          "id": "partial_group_boundary",
+          "scenario": "只调整同一物种中的部分数量或存在多个批次",
+          "expected": "明确本次影响数量，保持总数量守恒并让用户核对目标批次",
+          "forbidden": "部分编辑意外覆盖全部生物，或拆分后总数量发生变化"
+        }
       ]
     }
   ]
