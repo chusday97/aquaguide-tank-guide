@@ -1,0 +1,58 @@
+name: Golden Path acceptance v1
+
+on:
+  push:
+    branches:
+      - agent/golden-path-acceptance-v1
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Golden Path contract
+        run: node scripts/test-golden-path-acceptance.mjs
+      - name: Deterministic product gates
+        run: |
+          npm run test:task-entry
+          npm run test:onboarding-goal-paths
+          npm run test:core-flow-state-eval
+          npm run test:daily-check
+          npm run test:care-first-screen
+          npm run test:collection-swipe-cards
+          npm run test:responsive-detail-surface
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-preview.log
+          exit 1
+      - name: Browser navigation path coverage
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:guided-navigation-ui
+      - name: Browser daily-care path coverage
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:core-flow-state-ui
+      - name: Browser collection path coverage
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:collection-hub-ui
