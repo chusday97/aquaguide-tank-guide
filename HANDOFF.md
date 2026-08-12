@@ -1,19 +1,15 @@
 # AquaGuide 交接文档
 
-## 2026-08-12 Typography + 任务 Drawer 基线
+## 2026-08-12 Surface Sizing + Typography Migration + 收藏滑动卡片基线
 
-- 全站文字不再通过大量 8/9/10/11/12/13/14/15/16px 与 font-black 自由组合制造层级。统一采用有限的 display / section / card / body / meta / action 语义层级；旧 arbitrary size 在全局 typography baseline 中归并，900/800 重字重收敛。
-- 共享 SurfaceHeader、SectionHeader 与鱼缸分区标题优先使用语义 typography class，新 UI 不再新增任意字号 + font-black 组合。
-- 桌面多步骤任务使用右侧 50vw × 100dvh Drawer；手机保持各任务原有 mobile surface。短确认仍使用居中 ConfirmDialog。
-- “调整缸内物种体态”进入单物种编辑后必须占满 Drawer 可用宽度，不得继续继承缸内物种列表的两列网格。
-- 回归门禁：test:typography-system + test:livestock-state-surface + test:responsive-detail-surface；涉及体态编辑时同时运行 test:guided-navigation-ui。
-
-## 2026-08-12 右侧半屏 Drawer 交互基线
-
-- 桌面端“查看品类/物种详情/养护指南”等内容型详情统一从右侧滑入，严格占视口 50% 宽、100dvh 高；不再使用 94vw 居中大弹窗。手机端继续使用原 bottom sheet。
-- “加入混养计算”属于结算型任务：加入候选后直接打开右侧半屏混养方案 Drawer，左侧图鉴保持原位作为上下文，不再用 compatibility mode 替换整页内容。
-- 混养 Drawer 类似购物车结算：当前鱼缸是 baseline，准备加入的物种是候选项，用户可调整数量/移除候选/查看风险，并通过右上角关闭返回原图鉴。
-- ConfirmDialog 仍保持居中；右侧 Drawer 只用于内容阅读、对象详情和多步骤任务。
+- 桌面 Drawer 不再统一使用 50vw。Surface 按任务密度分级：阅读/详情约 520px、编辑任务约 560px、复杂决策约 640px；所有宽度必须再受固定侧栏之后的真实剩余工作区限制。手机端继续使用原有 bottom sheet / mobile task surface。
+- “调整缸内物种体态”保留单物种编辑一列修复：进入编辑后单个编辑器占满 Drawer 可用宽度，不得继承缸内物种列表的两列网格。
+- 物种详情、品类详情与养护指南属于 reading surface；缸内体态/设置等属于 editing surface；混养结算属于 decision surface。ConfirmDialog 仍保持居中短决策。
+- Typography 只提供 page / section / card / body / meta / action 语义层级；不得通过全局 CSS 强制重写所有 font-black/font-bold/font-semibold 或 text-[Npx]。旧页面按共享组件逐步迁移，避免一次性改变导航、标签、卡片等既有节奏。
+- 语义 Typography 与 Surface token 必须定义在 Portal 可访问的作用域；Dialog/Drawer 挂载到 body 时不能因为脱离 .aquaguide-app 而回退到错误字号或宽度。
+- 水族册首页模块预览、种草收藏和养护收藏使用横向可滑动 snap 卡片轨道；手机露出下一张卡作为滑动提示，桌面支持触控板/横向滚动。生命纪念保持自己的浏览结构；成就继续保持建设中且不展示真实进度。
+- Card 仍遵守 Card=Open object：点击收藏卡直接进入对应物种/养护详情；详情再按 Surface Sizing contract 展示。
+- 回归门禁：test:responsive-detail-surface + test:typography-system + test:collection-swipe-cards + test:collection-hub-ui + test:livestock-state-surface + test:livestock-state-drawer-ui + test:guided-navigation-ui + lint + build。
 
 ## Task-entry / Deep-link contract (2026-08-11)
 
