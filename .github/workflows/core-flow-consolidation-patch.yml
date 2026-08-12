@@ -21,6 +21,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Scope patch to water calendar
+        run: python3 scripts/prepare-core-flow-patch.py
       - name: Apply patch
         run: python3 scripts/apply-core-flow-consolidation-patch.py
       - name: Install dependencies
@@ -41,6 +43,7 @@ jobs:
           rm -f .github/workflows/core-flow-consolidation-patch.yml
           rm -f scripts/core-flow-consolidation-trigger.txt
           rm -f scripts/apply-core-flow-consolidation-patch.py
+          rm -f scripts/prepare-core-flow-patch.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
