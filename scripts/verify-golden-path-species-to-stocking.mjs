@@ -102,9 +102,18 @@ try {
     await recordButton.waitFor();
     await recordButton.click();
   }
-  await calculator.getByText(/已记录到鱼缸|已记录/).last().waitFor();
 
-  // Milestone 7: verify the persisted side effect, not only the success feedback.
+  // Milestone 7: persisted product state is the source of truth. A transient success message is
+  // secondary evidence and must not be able to make a failed write look successful (or vice versa).
+  await page.waitForFunction(() => {
+    const stored = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');
+    const tank = stored.aquariums?.find(item => item.id === 'tank-gp2');
+    return tank?.fishes?.some(item => item.fishId === 'sp_0432' && item.quantity === 6);
+  });
+
+  const successFeedback = calculator.getByText(/已加入|已记录到鱼缸|已记录/).last();
+  if (await successFeedback.count()) await successFeedback.waitFor();
+
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}'));
   const tank = stored.aquariums?.find(item => item.id === 'tank-gp2');
   assert.ok(tank, 'target aquarium must still exist after stocking');
