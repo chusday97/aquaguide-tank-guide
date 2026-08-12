@@ -45,6 +45,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const neonTetraFishBase: EvidenceSourceDto = {
+  id: 'fishbase-paracheirodon-innesi',
+  title: 'Paracheirodon innesi (Neon tetra) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.org/summary/Paracheirodon-innesi.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const cardinalTetraFishBase: EvidenceSourceDto = {
+  id: 'fishbase-paracheirodon-axelrodi',
+  title: 'Paracheirodon axelrodi (Cardinal tetra) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.org/summary/Paracheirodon-axelrodi.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0439: {
     speciesId: 'sp_0439',
@@ -71,6 +89,24 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [smallSnakeheadAssessment],
   },
+  sp_0431: {
+    speciesId: 'sp_0431',
+    behaviorTraits: ['shoaling'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [neonTetraFishBase],
+  },
+  sp_0432: {
+    speciesId: 'sp_0432',
+    behaviorTraits: ['shoaling'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [cardinalTetraFishBase],
+  },
 };
 
 const pairRules: ReviewedPairRule[] = [
@@ -85,6 +121,18 @@ const pairRules: ReviewedPairRule[] = [
     reviewStatus: 'reviewed',
     affectedSpeciesIds: ['sp_0021', 'sp_0439'],
     citations: [tigerBarbStudy, convictCichlidTerritoryStudy],
+  },
+  {
+    speciesIds: ['sp_0431', 'sp_0432'],
+    verdict: 'caution',
+    riskType: 'group_size_and_shared_water_window',
+    reason: 'FishBase 将红绿灯与宝莲灯都记录为小型淡水群游/群养鱼；两者温度区间在约 23–26°C、pH 区间在约 5.0–6.0 有共同范围。当前没有直接配对实验，因此只作为有条件可尝试，而不是“已证明安全”。',
+    mitigation: ['两种鱼都按群体饲养，不以单条长期混养作为目标。', '把温度和 pH 保持在两者共同区间，并避免快速波动。', '分批加入并持续观察摄食、追逐和应激表现。'],
+    basis: 'rule_inference',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0431', 'sp_0432'],
+    citations: [neonTetraFishBase, cardinalTetraFishBase],
   },
 ];
 
