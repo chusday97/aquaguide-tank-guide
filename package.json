@@ -107,7 +107,8 @@
     "test:care-first-screen": "node scripts/test-care-first-screen.mjs",
     "test:typography-system": "node scripts/test-typography-system.mjs",
     "test:livestock-state-surface": "node scripts/test-livestock-state-surface.mjs",
-    "test:livestock-state-drawer-ui": "node scripts/verify-livestock-state-drawer.mjs"
+    "test:livestock-state-drawer-ui": "node scripts/verify-livestock-state-drawer.mjs",
+    "test:collection-swipe-cards": "node scripts/test-collection-swipe-cards.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
