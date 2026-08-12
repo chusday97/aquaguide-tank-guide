@@ -5,7 +5,6 @@ const goldenPath = 'evaluation/product/golden-path-v1.json';
 const badcasesPath = 'evaluation/product/badcases.v1.jsonl';
 const readmePath = 'evaluation/product/README.md';
 const handoffPath = 'HANDOFF.md';
-const durableWorkflowPath = '.github/workflows/product-golden-path.yml';
 
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 pkg.scripts['test:golden-path-contract'] = 'node scripts/test-golden-path-acceptance.mjs';
@@ -62,14 +61,7 @@ if (!handoff.includes('## 2026-08-13 Golden Path GP-002 + Compatibility Evidence
 }
 fs.writeFileSync(handoffPath, handoff);
 
-fs.writeFileSync(durableWorkflowPath, `name: Product Golden Path\n\non:\n  pull_request:\n    branches: [main]\n  push:\n    branches: [main]\n\njobs:\n  validate:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: 22\n          cache: npm\n      - run: npm ci\n      - run: npx playwright install --with-deps chromium\n      - name: Product evaluation contracts\n        run: |\n          npm run test:product-evaluation\n          npm run test:golden-path-contract\n          npm run test:compatibility-evidence-coverage\n          npm run test:task-entry\n          npm run test:core-flow-state-eval\n      - name: Type check\n        run: npm run lint\n      - name: Build\n        run: npm run build\n      - name: Start preview\n        run: |\n          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-preview.log 2>&1 &\n          for i in $(seq 1 40); do\n            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi\n            sleep 1\n          done\n          cat /tmp/aquaguide-preview.log\n          exit 1\n      - name: GP-002 continuous browser path\n        env:\n          PREVIEW_URL: http://127.0.0.1:4173\n        run: npm run test:golden-path-gp002-ui\n`);
+if (fs.existsSync('scripts/diagnose-gp002-safe-fixture.ts')) fs.rmSync('scripts/diagnose-gp002-safe-fixture.ts');
+if (fs.existsSync('scripts/finalize-gp002-evaluation.mjs')) fs.rmSync('scripts/finalize-gp002-evaluation.mjs');
 
-for (const path of [
-  '.github/workflows/diagnose-gp002-safe-fixture.yml',
-  '.github/workflows/golden-path-e2e-validation.yml',
-  'scripts/diagnose-gp002-safe-fixture.ts',
-]) {
-  if (fs.existsSync(path)) fs.rmSync(path);
-}
-
-console.log('Finalized GP-002 evaluation, durable gates, badcases, and documentation.');
+console.log('Finalized GP-002 ordinary evaluation files; workflow files are managed separately by GitHub connector permissions.');
