@@ -1,5 +1,14 @@
 # AquaGuide 交接文档
 
+## 2026-08-12 Core-flow executable evaluation baseline
+
+- 核心行为不再只做静态“六状态”登记：混养 + 添加生物有 14 个 executable Case，换水 + 每日检查有 12 个 executable Case；四个核心功能都至少覆盖 6 种有业务意义的状态。
+- 持久化契约：用户可见层不得展示 repository / storage / HTTP / database 等 raw error；部分成功必须保留已成功事实和失败项重试入口；同一 operationId 的响应丢失重试不得重复增加数量。
+- “规划添加”和“现实已在缸内”必须分开：规划冲突可以阻断；现实事实即使高风险也必须允许记录，再明确显示风险，不得为了产品判断删除现实事实。
+- 换水记录以 waterChangeHistory 为唯一事实源：最近换水由真实历史推导并同步到鱼缸和所有缸内生物；空历史就是未记录；未来日期不能进入正式历史。
+- 每日检查采用同鱼缸、同本地日期 upsert；保存失败必须保留结果并允许重试，保存后的文章/下一步行动只允许在正式记录持久化成功之后执行。
+- 永久回归：test:core-flow-state-eval（v1+v2）+ test:core-flow-state-ui + test:compatibility + test:livestock-recording + test:daily-check + lint + build。新增核心行为时，应优先扩展对应 executable Case，而不是只补 happy path。
+
 ## 2026-08-12 Surface Sizing + Typography Migration + 收藏滑动卡片基线
 
 - 桌面 Drawer 不再统一使用 50vw。Surface 按任务密度分级：阅读/详情约 520px、编辑任务约 560px、复杂决策约 640px；所有宽度必须再受固定侧栏之后的真实剩余工作区限制。手机端继续使用原有 bottom sheet / mobile task surface。
