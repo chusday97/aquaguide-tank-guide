@@ -62,22 +62,23 @@ assert.equal(withoutHistory.lastWaterChangeDate, undefined);
 assert.ok(withoutHistory.fishes.every(item => item.lastWaterChangeDate === undefined));
 
 const makeDiagnosisRecord = (id: string, createdAt: string, summary: string): DiagnosisRecord => ({
+  diagnosisId: id,
   id,
   aquariumId: 'daily-v2-tank',
-  problemType: 'daily_check',
-  answers: [],
-  result: {
-    riskLevel: 'normal',
-    title: '日常检查',
-    summary,
-    immediateActions: [],
-    possibleCauses: [],
-    evidence: [],
-    missingInfo: [],
-    avoidActions: [],
-    recheck: [],
-    matchedSignals: [],
-  },
+  problemType: '巡检',
+  answers: {},
+  structuredAnswers: [],
+  resultSummary: summary,
+  riskLevel: '正常',
+  riskCode: 'normal',
+  conclusion: summary,
+  keyMetrics: [],
+  suggestedActions: [],
+  avoidActions: [],
+  observeItems: [],
+  missingInfo: [],
+  optionalMissingInfo: [],
+  followUpNotes: [],
   createdAt,
 });
 const firstRecord = makeDiagnosisRecord('daily-a', '2026-08-12T01:00:00.000Z', 'first');
@@ -86,8 +87,8 @@ const nextDayRecord = makeDiagnosisRecord('daily-c', '2026-08-13T01:00:00.000Z',
 const sameDay = upsertDiagnosisRecord([], firstRecord);
 const replaced = upsertDiagnosisRecord(sameDay, replacementRecord);
 assert.equal(replaced.length, 1);
-assert.equal(replaced[0]?.id, 'daily-b');
-assert.equal(replaced[0]?.result.summary, 'replacement');
+assert.equal(replaced[0]?.id, 'daily-a', 'same-day patrol update must preserve the original record identity');
+assert.equal(replaced[0]?.resultSummary, 'replacement');
 const nextDay = upsertDiagnosisRecord(replaced, nextDayRecord);
 assert.equal(nextDay.length, 2);
 
