@@ -46,8 +46,8 @@ const tank: Aquarium = {
   id: 'water-v2-tank',
   name: '换水验收缸',
   fishes: [
-    { fishId: 'fish-a', quantity: 2 },
-    { fishId: 'fish-b', quantity: 1 },
+    { id: 'stock-a', fishId: 'fish-a', quantity: 2, entryDate: '2026-08-01' },
+    { id: 'stock-b', fishId: 'fish-b', quantity: 1, entryDate: '2026-08-02' },
   ],
 };
 const withHistory = applyWaterChangeHistory(tank, history);
@@ -70,7 +70,7 @@ const makeDiagnosisRecord = (id: string, createdAt: string, summary: string): Di
   structuredAnswers: [],
   resultSummary: summary,
   riskLevel: '正常',
-  riskCode: 'normal',
+  riskCode: 'low',
   conclusion: summary,
   keyMetrics: [],
   suggestedActions: [],
