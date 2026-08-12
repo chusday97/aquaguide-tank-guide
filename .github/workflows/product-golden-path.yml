@@ -1,0 +1,43 @@
+name: Product Golden Path
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Product evaluation contracts
+        run: |
+          npm run test:product-evaluation
+          npm run test:golden-path-contract
+          npm run test:compatibility-evidence-coverage
+          npm run test:task-entry
+          npm run test:core-flow-state-eval
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-preview.log
+          exit 1
+      - name: GP-002 continuous browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp002-ui
