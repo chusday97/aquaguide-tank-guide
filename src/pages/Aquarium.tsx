@@ -89,7 +89,7 @@ import {
   type SpeciesAdditionReview,
 } from '../services/aquarium/species-addition.service';
 import { recordExistingLivestock, type RecordExistingResult } from '../services/aquarium/livestock-recording.service';
-import { createAquariumDraft, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
+import { createAquariumDraft, getAquariumAiReadiness, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
@@ -7969,7 +7969,23 @@ export default function AquariumManager() {
           <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:px-6">
             <Button variant="outline" onClick={() => setIsSettingsOpen(false)} className="h-10 min-w-[112px] rounded-full text-sm font-bold">{isEn ? "Cancel" : "取消"}</Button>
             <Button onClick={() => {
-              const updated = aquariums.map(a => a.id === activeId ? { ...a, ...settingsForm } : a);
+              const nextAquarium = { ...activeAquarium, ...settingsForm };
+              const readiness = getAquariumAiReadiness(nextAquarium);
+              if (!readiness.ready) {
+                const firstPanel = readiness.firstPanel || 'size';
+                setActiveSettingsPanel(firstPanel);
+                window.requestAnimationFrame(() => {
+                  settingPanelRefs.current[firstPanel]?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                });
+                showToast(
+                  isEn
+                    ? `Complete these tank facts first: ${readiness.missing.map(item => item.label).join(', ')}`
+                    : `还缺：${readiness.missing.map(item => item.label).join('、')}`,
+                  'error',
+                );
+                return;
+              }
+              const updated = aquariums.map(a => a.id === activeId ? nextAquarium : a);
               saveAquariums(updated);
               void persistCareTimelineEvent({
                 aquariumId: activeAquarium.id,
