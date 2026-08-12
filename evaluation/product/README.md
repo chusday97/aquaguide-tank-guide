@@ -26,6 +26,8 @@
 - `badcases.v1.jsonl`：开发、用户测试、回归中发现的产品 Badcase。发现即记录，不等到功能做完再补。
 - `scripts/test-product-evaluation.mjs`：校验 Feature State 与 Badcase 基础结构。
 - `scripts/test-golden-path-acceptance.mjs`：校验 Golden Path 里程碑、禁止项与自动化证据映射。
+- `scripts/test-compatibility-evidence-coverage.ts`：用真实图鉴物种验证“可记录组合必须有 reviewed evidence”，并防止和平小型鱼被误判成捕食者。
+- `scripts/verify-golden-path-species-to-stocking.mjs`：GP-002 连续 Chromium 验收，从搜索具体物种一直验证到真实入缸后的持久化数量。
 
 ## Golden Path 验收规则
 
@@ -46,6 +48,8 @@ Golden Path v1 固定覆盖五条旅程：
 - `covered`：入口、关键中间状态、数据副作用和返回/恢复均有真实连续验收。
 
 **多个单点测试全部通过，不等于 Golden Path 已 covered。** 只有连续旅程的缺口真正补齐后，才允许升级 coverage。
+
+当前 GP-002 已有连续浏览器证据：搜索宝莲灯 → 打开精确物种详情 → 从主 CTA 进入混养 → 候选数量调至群游要求 ×6 → 查看 caution 结论 → 显式确认风险 → 记录实际入缸 → 读取持久化状态确认宝莲灯 ×6、原有红绿灯数量不变。对应门禁为 `test:golden-path-gp002-ui`。兼容性知识覆盖另由 `test:compatibility-evidence-coverage` 约束：未知组合继续保持 insufficient_data，不得为了让 Golden Path 通过而放宽安全规则。
 
 ## Badcase 回流规则
 

@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline
+
+- GP-002 已升级为 covered：真实 Chromium 连续执行“搜索宝莲灯 → 精确物种详情 → 主 CTA 进入混养 → 候选 ×6 → caution 风险确认 → 实际入缸 → 持久化数量验证”，不得用多个单点测试替代。
+- Species deep-link 详情进入下一任务时，`closeAtlasDetail(false)` 只关闭详情/清理 detail state，不得恢复旧浏览上下文；下一任务 CTA 是唯一导航所有者，避免 return navigation 与 task navigation 竞争。
+- 捕食硬阻断不得从 description / diet / housingReason / feeding notes 等自由文本中的“被捕食、避免大型鱼”等字样反推 predator 身份。Predator identity 只读取结构化 Aggressive/Large 及名称/类别中的明确掠食身份。
+- Compatibility evidence 继续 fail closed：没有 reviewed behavior profile 的组合保持 insufficient_data。红绿灯（sp_0431）与宝莲灯（sp_0432）新增 reviewed species profile；pair 只标 caution，因为当前证据支持群游属性与水质区间重叠，但不是直接配对实验。
+- 永久回归：`test:golden-path-contract` + `test:compatibility-evidence-coverage` + `test:golden-path-gp002-ui` + `test:core-flow-state-eval` + `test:task-entry` + lint + build。
+
 ## 2026-08-12 Core-flow executable evaluation baseline
 
 - 核心行为不再只做静态“六状态”登记：混养 + 添加生物有 14 个 executable Case，换水 + 每日检查有 12 个 executable Case；四个核心功能都至少覆盖 6 种有业务意义的状态。

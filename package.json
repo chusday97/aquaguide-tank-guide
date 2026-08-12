@@ -112,7 +112,10 @@
     "test:core-flow-state-eval-v1": "tsx scripts/test-core-flow-state-eval-v1.ts",
     "test:core-flow-state-eval-v2": "tsx scripts/test-core-flow-state-eval-v2.ts",
     "test:core-flow-state-eval": "npm run test:core-flow-state-eval-v1 && npm run test:core-flow-state-eval-v2",
-    "test:core-flow-state-ui": "node scripts/verify-core-flow-v1-v2-ui.mjs"
+    "test:core-flow-state-ui": "node scripts/verify-core-flow-v1-v2-ui.mjs",
+    "test:golden-path-contract": "node scripts/test-golden-path-acceptance.mjs",
+    "test:compatibility-evidence-coverage": "tsx scripts/test-compatibility-evidence-coverage.ts",
+    "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
