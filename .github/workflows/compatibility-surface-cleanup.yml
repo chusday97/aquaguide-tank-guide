@@ -1,0 +1,33 @@
+name: Compatibility surface cleanup
+
+on:
+  push:
+    branches:
+      - agent/right-half-drawer-ui
+    paths:
+      - '.github/workflows/compatibility-surface-cleanup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Remove legacy 50vw class
+        run: node scripts/remove-compatibility-50vw.mjs
+      - name: Remove one-shot cleanup files
+        run: rm -f scripts/remove-compatibility-50vw.mjs .github/workflows/compatibility-surface-cleanup.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/CompatibilityRiskCalculator.tsx scripts/remove-compatibility-50vw.mjs .github/workflows/compatibility-surface-cleanup.yml
+          git commit -m "refactor(ui): remove compatibility 50vw fallback"
+          git push
