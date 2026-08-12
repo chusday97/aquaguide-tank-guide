@@ -608,6 +608,7 @@ export default function Encyclopedia() {
     if (params.has('species')) {
       closingDetailRef.current = true;
       detailNavigationContextRef.current = null;
+      if (!restoreReturnContext) return;
       if (params.get('source') === 'search') navigate(-1);
       else if (params.get('source') === 'daily-discovery' && location.state?.dailyDiscoveryReturn && Number(window.history.state?.idx) > 0) navigate(-1);
       else navigateToRoute('/encyclopedia');
