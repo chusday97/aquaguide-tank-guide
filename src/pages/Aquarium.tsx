@@ -100,6 +100,7 @@ import { trackSessionEvent } from '../services/analytics/session-events.service'
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode, subscribeToRepositoryMode } from '../services/repository/repository-provider';
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
+import { applyWaterChangeHistory, isFutureWaterChangeDate, toggleWaterChangeDate } from '../services/aquarium/water-change.service';
 import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
 import {
   getCareReminders,
@@ -1162,6 +1163,8 @@ export default function AquariumManager() {
   const [diagnosisRecords, setDiagnosisRecords] = useState<DiagnosisRecord[]>([]);
   const [selectedDiagnosisRecord, setSelectedDiagnosisRecord] = useState<DiagnosisRecord | null>(null);
   const [diagnosisSaveMessage, setDiagnosisSaveMessage] = useState('');
+  const [diagnosisSaveError, setDiagnosisSaveError] = useState('');
+  const [isDiagnosisRecordSaving, setIsDiagnosisRecordSaving] = useState(false);
   const [isDiagnosisRecordSaved, setIsDiagnosisRecordSaved] = useState(false);
   const [diagnosisBatchCareFocus, setDiagnosisBatchCareFocus] = useState<SpeciesBatchCareSignal | null>(null);
   const [dailyCheckInterpretation, setDailyCheckInterpretation] = useState<TankDailyCheckInterpretationData | null>(null);
@@ -1199,6 +1202,8 @@ export default function AquariumManager() {
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [selectedWaterChangeDate, setSelectedWaterChangeDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [waterChangeFeedback, setWaterChangeFeedback] = useState('');
+  const [waterChangeError, setWaterChangeError] = useState('');
+  const [isWaterChangeSaving, setIsWaterChangeSaving] = useState(false);
 
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => loadWishlistFishIds());
   const [careReminders, setCareRemindersState] = useState<CareReminderRecord[]>(() => getCareReminders());
@@ -2257,51 +2262,60 @@ export default function AquariumManager() {
     }
   };
 
-  const handleTankWaterChange = async () => {
-    if (!activeAquarium) return;
+  const handleTankWaterChange = async (): Promise<boolean> => {
+    if (!activeAquarium || isWaterChangeSaving) return false;
     const now = new Date().toISOString();
     const todayStr = format(new Date(), 'yyyy-MM-dd');
     const history = activeAquarium.waterChangeHistory || [];
     const hasTodayRecord = history.includes(todayStr);
-    const newHistory = hasTodayRecord ? history.filter(date => date !== todayStr) : [...history, todayStr];
-    const previousChangeDate = newHistory.length > 0
-      ? new Date(newHistory[newHistory.length - 1]).toISOString()
-      : activeAquarium.lastWaterChangeDate;
+    const newHistory = toggleWaterChangeDate(history, todayStr);
+    const nextAquarium = applyWaterChangeHistory(activeAquarium, newHistory);
 
-    const updated = aquariums.map(a => 
-      a.id === activeId ? { 
-        ...a, 
-        lastWaterChangeDate: hasTodayRecord ? previousChangeDate : now,
-        waterChangeHistory: newHistory,
-        fishes: a.fishes.map(f => ({ ...f, lastWaterChangeDate: hasTodayRecord ? (previousChangeDate || f.lastWaterChangeDate) : now }))
-      } : a
-    );
-    saveAquariums(updated);
-    if (hasTodayRecord) {
-      await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', todayStr);
-      await persistCareTimelineEvent({
-        aquariumId: activeAquarium.id,
-        eventType: 'water_change',
-        title: isEn ? 'Undid today\'s water-change record' : '撤回今日换水记录',
-        payload: { reversed: true },
-        occurredAt: now,
-        sourceType: 'water_change_reversal',
-        sourceId: todayStr,
-        isInferred: false,
-      });
-    } else {
-      await persistCareTimelineEvent({
-        aquariumId: activeAquarium.id,
-        eventType: 'water_change',
-        title: isEn ? 'Logged water change' : '记录换水',
-        payload: {},
-        occurredAt: now,
-        sourceType: 'water_change_day',
-        sourceId: todayStr,
-        isInferred: false,
-      });
+    setIsWaterChangeSaving(true);
+    setWaterChangeError('');
+    setWaterChangeFeedback('');
+    try {
+      saveAquariums(aquariums.map(aquarium => aquarium.id === activeId ? nextAquarium : aquarium));
+      try {
+        if (hasTodayRecord) {
+          await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', todayStr);
+          await persistCareTimelineEvent({
+            aquariumId: activeAquarium.id,
+            eventType: 'water_change',
+            title: isEn ? "Undid today's water-change record" : '撤回今日换水记录',
+            payload: { reversed: true },
+            occurredAt: now,
+            sourceType: 'water_change_reversal',
+            sourceId: todayStr,
+            isInferred: false,
+          });
+        } else {
+          await persistCareTimelineEvent({
+            aquariumId: activeAquarium.id,
+            eventType: 'water_change',
+            title: isEn ? 'Logged water change' : '记录换水',
+            payload: {},
+            occurredAt: now,
+            sourceType: 'water_change_day',
+            sourceId: todayStr,
+            isInferred: false,
+          });
+        }
+      } catch {
+        showToast(isEn ? 'Water change was saved, but the timeline could not be updated.' : '换水已保存，但养护时间线没有更新成功。', 'error');
+      }
+      setTankActionMessage(hasTodayRecord
+        ? (isEn ? "Recalled today's water change record" : '已撤回今日换水记录')
+        : (isEn ? `Logged water change: ${format(new Date(), 'yyyy-MM-dd HH:mm')}` : `已记录换水：${format(new Date(), 'yyyy-MM-dd HH:mm')}`));
+      return true;
+    } catch {
+      const message = isEn ? 'Could not save the water-change record. Try again.' : '换水记录没有保存成功，请重试。';
+      setWaterChangeError(message);
+      showToast(message, 'error');
+      return false;
+    } finally {
+      setIsWaterChangeSaving(false);
     }
-    setTankActionMessage(hasTodayRecord ? (Boolean(i18n.language?.startsWith('en')) ? 'Recalled today\'s water change record' : '已撤回今日换水记录') : (Boolean(i18n.language?.startsWith('en')) ? `Logged water change: ${format(new Date(), 'yyyy-MM-dd HH:mm')}` : `已记录换水：${format(new Date(), 'yyyy-MM-dd HH:mm')}`));
   };
 
   const handleDailyActionPrimary = () => {
@@ -2371,34 +2385,12 @@ export default function AquariumManager() {
       : `正在评估「${template.name}」里的规划生物；环境和生物都尚未写入真实鱼缸。`);
   };
 
-  const handleToggleWaterChangeDate = (dateStr: string) => {
-    if (!activeAquarium) return;
-    const history = activeAquarium.waterChangeHistory || [];
-    let newHistory;
-    if (history.includes(dateStr)) {
-      newHistory = history.filter(d => d !== dateStr);
-    } else {
-      newHistory = [...history, dateStr];
-    }
-    newHistory.sort();
-    
-    // Update lastWaterChangeDate if needed
-    let newLastDate = activeAquarium.lastWaterChangeDate;
-    if (newHistory.length > 0) {
-      const latest = newHistory[newHistory.length - 1];
-      newLastDate = new Date(latest).toISOString();
-    } else {
-      newLastDate = new Date().toISOString(); // fallback
-    }
-
-    const updated = aquariums.map(a => 
-      a.id === activeId ? { 
-        ...a, 
-        waterChangeHistory: newHistory,
-        lastWaterChangeDate: newLastDate
-      } : a
-    );
-    saveAquariums(updated);
+  const handleToggleWaterChangeDate = (dateStr: string): boolean => {
+    if (!activeAquarium || isFutureWaterChangeDate(dateStr)) return false;
+    const newHistory = toggleWaterChangeDate(activeAquarium.waterChangeHistory || [], dateStr);
+    const nextAquarium = applyWaterChangeHistory(activeAquarium, newHistory);
+    saveAquariums(aquariums.map(aquarium => aquarium.id === activeId ? nextAquarium : aquarium));
+    return true;
   };
 
   const getConflicts = (_fishes: AquariumFish[]): string[] => {
@@ -2809,6 +2801,8 @@ export default function AquariumManager() {
     setDiagnosisFullText('');
     setDiagnosisText('');
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
     setDiagnosisBatchCareFocus(null);
     setDailyCheckInterpretation(null);
@@ -2825,6 +2819,8 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
     setDiagnosisBatchCareFocus(focus);
     setSelectedDiagnosisRecord(null);
@@ -2851,6 +2847,8 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
     setDiagnosisBatchCareFocus(null);
     setSelectedDiagnosisRecord(null);
@@ -2875,6 +2873,8 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
     setDiagnosisBatchCareFocus(null);
     setSelectedDiagnosisRecord(null);
@@ -2929,6 +2929,8 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers(prev => ({ ...prev, [questionId]: answer }));
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
   };
 
@@ -2980,6 +2982,8 @@ export default function AquariumManager() {
     setDiagnosisResult(result);
     setDiagnosisMode('result');
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
     setDailyCheckInterpretation(null);
     setDailyCheckArticles([]);
@@ -3082,9 +3086,13 @@ export default function AquariumManager() {
     setDiagnosisMode('home');
   };
 
-  const handleSaveDiagnosisRecord = () => {
+  const handleSaveDiagnosisRecord = (): boolean => {
+    if (isDiagnosisRecordSaving) return false;
     const targetAquarium = diagnosisAquarium;
-    if (!targetAquarium) return;
+    if (!targetAquarium) return false;
+    setIsDiagnosisRecordSaving(true);
+    setDiagnosisSaveError('');
+    setDiagnosisSaveMessage('');
     const result = diagnosisResult || buildStructuredDiagnosis();
     const problemType: DiagnosisProblemType = isDiagnosisProblemType(diagnosisIssueType) ? diagnosisIssueType : '巡检';
     const activeQuestions = getDiagnosisQuestions(problemType, diagnosisQuizAnswers);
@@ -3124,27 +3132,39 @@ export default function AquariumManager() {
       followUpNotes: careDiagnosisContext ? [`来自百科：${careDiagnosisContext.title}`] : [],
     };
     const nextRecords = upsertDiagnosisRecord(diagnosisRecords, record);
-    setDiagnosisRecords(persistDiagnosisRecords(nextRecords));
-    void persistCareTimelineEvent({
-      aquariumId: targetAquarium.id,
-      eventType: 'daily_check',
-      title: problemType === '巡检' ? (isEn ? 'Completed daily check' : '完成每日检查') : (isEn ? `Completed ${problemType}` : `完成${problemType}`),
-      label: result.verdict,
-      payload: { riskLevel: result.riskLevel },
-      occurredAt: record.createdAt,
-      sourceType: 'diagnosis_record',
-      sourceId: id,
-      isInferred: false,
-    }).catch(error => showToast('巡检时间线没有保存成功。', 'error'));
-    setDiagnosisSaveMessage(problemType === '巡检'
-      ? existingDailyRecord ? '已更新今天的检查记录。' : '已保存今天的检查记录。'
-      : '已保存本次诊断记录。');
-    setIsDiagnosisRecordSaved(true);
-    showToast(problemType === '巡检'
-      ? existingDailyRecord ? '已更新今天的检查记录' : '已保存今天的检查记录'
-      : '已保存本次诊断');
-    if (problemType === '巡检') {
-      trackSessionEvent('daily_check_completed', { action: existingDailyRecord ? 'update' : 'complete', status: result.riskLevel, entry: 'aquarium' });
+    try {
+      const persistedRecords = persistDiagnosisRecords(nextRecords);
+      setDiagnosisRecords(persistedRecords);
+      setDiagnosisSaveMessage(problemType === '巡检'
+        ? existingDailyRecord ? '已更新今天的检查记录。' : '已保存今天的检查记录。'
+        : '已保存本次诊断记录。');
+      setIsDiagnosisRecordSaved(true);
+      showToast(problemType === '巡检'
+        ? existingDailyRecord ? '已更新今天的检查记录' : '已保存今天的检查记录'
+        : '已保存本次诊断');
+      if (problemType === '巡检') {
+        trackSessionEvent('daily_check_completed', { action: existingDailyRecord ? 'update' : 'complete', status: result.riskLevel, entry: 'aquarium' });
+      }
+      void persistCareTimelineEvent({
+        aquariumId: targetAquarium.id,
+        eventType: 'daily_check',
+        title: problemType === '巡检' ? (isEn ? 'Completed daily check' : '完成每日检查') : (isEn ? `Completed ${problemType}` : `完成${problemType}`),
+        label: result.verdict,
+        payload: { riskLevel: result.riskLevel },
+        occurredAt: record.createdAt,
+        sourceType: 'diagnosis_record',
+        sourceId: id,
+        isInferred: false,
+      }).catch(() => showToast(isEn ? 'The check was saved, but the timeline could not be updated.' : '检查结果已保存，但巡检时间线没有更新成功。', 'error'));
+      return true;
+    } catch {
+      const message = isEn ? 'Could not save the check result. Try again.' : '检查结果没有保存成功，请重试。';
+      setDiagnosisSaveError(message);
+      setIsDiagnosisRecordSaved(false);
+      showToast(message, 'error');
+      return false;
+    } finally {
+      setIsDiagnosisRecordSaving(false);
     }
   };
 
@@ -3172,6 +3192,8 @@ export default function AquariumManager() {
     setDiagnosisQuizAnswers({});
     setDiagnosisResult(null);
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
     setSelectedDiagnosisRecord(null);
     setIsDiagnosisOpen(true);
@@ -4342,6 +4364,8 @@ export default function AquariumManager() {
     setDiagnosisText('');
     setDiagnosisFullText('');
     setDiagnosisSaveMessage('');
+    setDiagnosisSaveError('');
+    setIsDiagnosisRecordSaving(false);
     setIsDiagnosisRecordSaved(false);
     setDiagnosisMode('home');
     setIsDiagnosisExitConfirmOpen(false);
@@ -4788,7 +4812,8 @@ export default function AquariumManager() {
     return model;
   })() : null;
   const handleVisualDiagnosisPrimary = () => {
-    handleSaveDiagnosisRecord();
+    const saved = handleSaveDiagnosisRecord();
+    if (!saved) return;
     if (diagnosisIssueType === '巡检' && dailyCheckArticles[0] && structuredDiagnosis) {
       setSelectedDailyCheckArticle(dailyCheckArticles[0]);
       trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });
@@ -5921,6 +5946,11 @@ export default function AquariumManager() {
                 {diagnosisSaveMessage && (
                   <div className="rounded-[12px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-700">
                     {diagnosisSaveMessage}
+                  </div>
+                )}
+                {diagnosisSaveError && (
+                  <div role="alert" className="rounded-[12px] border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-black text-red-700">
+                    {diagnosisSaveError}
                   </div>
                 )}
                 {diagnosisIssueType === '巡检' && isDiagnosing && (
@@ -7201,6 +7231,7 @@ export default function AquariumManager() {
         if (open) {
           setSelectedWaterChangeDate(format(new Date(), 'yyyy-MM-dd'));
           setWaterChangeFeedback('');
+          setWaterChangeError('');
         }
       }}>
         <DialogContent showCloseButton={false} className="flex h-[86dvh] max-h-[calc(100dvh-24px)] w-[92vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[20px] border-border bg-bg p-0">
@@ -7236,6 +7267,11 @@ export default function AquariumManager() {
                     {waterChangeFeedback}
                   </div>
                 )}
+                {waterChangeError && (
+                  <div role="alert" className="mt-3 rounded-[14px] border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-bold text-red-800">
+                    {waterChangeError}
+                  </div>
+                )}
               </section>
 
               <section className="rounded-[18px] bg-white p-3 shadow-sm">
@@ -7249,7 +7285,7 @@ export default function AquariumManager() {
                       {isEn ? 'Today' : '回到今天'}
                     </button>
                   </div>
-                  <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full" aria-label={isEn ? 'Next month' : '下个月'} onClick={() => setCalendarMonth(addMonths(calendarMonth, 1))}>
+                  <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full" aria-label={isEn ? 'Next month' : '下个月'} disabled={startOfMonth(addMonths(calendarMonth, 1)) > startOfMonth(new Date())} onClick={() => setCalendarMonth(addMonths(calendarMonth, 1))}>
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
@@ -7270,14 +7306,16 @@ export default function AquariumManager() {
                     const isChanged = waterChangeHistory.includes(dateStr);
                     const isToday = isSameDay(date, new Date());
                     const isSelected = selectedWaterChangeDate === dateStr;
-                    const isFuture = date > new Date() && !isToday;
+                    const isFuture = isFutureWaterChangeDate(dateStr);
                     return (
                       <button
                         key={dateStr}
                         type="button"
+                        disabled={isFuture}
                         onClick={() => {
                           setSelectedWaterChangeDate(dateStr);
                           setWaterChangeFeedback('');
+                          setWaterChangeError('');
                         }}
                         className={`relative flex h-11 items-center justify-center rounded-full text-xs font-black transition-colors ${
                           isChanged ? 'bg-emerald-700 text-white' :
@@ -7301,17 +7339,40 @@ export default function AquariumManager() {
               {selectedWaterDateHasRecord ? '关闭' : '取消'}
             </Button>
             <Button
+              disabled={isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)}
               className={`min-h-11 rounded-full text-sm font-bold text-white ${selectedWaterDateHasRecord ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-700 hover:bg-emerald-800'}`}
               onClick={() => {
+                if (isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)) {
+                  setWaterChangeError(isEn ? 'Only today or past water changes can be recorded.' : '只能记录今天或过去实际发生的换水。');
+                  return;
+                }
                 const wasRecorded = selectedWaterDateHasRecord;
-                handleToggleWaterChangeDate(selectedWaterChangeDate);
-                setWaterChangeFeedback(wasRecorded
-                  ? `已取消 ${format(new Date(selectedWaterChangeDate), 'yyyy/MM/dd')} 的换水记录。`
-                  : `已记录换水，下次建议约 ${shortestCycle} 天后。`
-                );
+                setIsWaterChangeSaving(true);
+                setWaterChangeError('');
+                setWaterChangeFeedback('');
+                try {
+                  const saved = handleToggleWaterChangeDate(selectedWaterChangeDate);
+                  if (!saved) {
+                    setWaterChangeError(isEn ? 'Could not save the water-change record. Try again.' : '换水记录没有保存成功，请重试。');
+                    return;
+                  }
+                  setWaterChangeFeedback(wasRecorded
+                    ? `已取消 ${format(new Date(selectedWaterChangeDate), 'yyyy/MM/dd')} 的换水记录。`
+                    : `已记录换水，下次建议约 ${shortestCycle} 天后。`
+                  );
+                } catch {
+                  setWaterChangeError(isEn ? 'Could not save the water-change record. Try again.' : '换水记录没有保存成功，请重试。');
+                } finally {
+                  setIsWaterChangeSaving(false);
+                }
               }}
             >
-              {selectedWaterDateHasRecord ? (isEn ? 'Remove Log' : '取消这天记录') : (isEn ? 'Log Water Change' : '记录这天换水')}
+              {isWaterChangeSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isWaterChangeSaving
+                ? (isEn ? 'Saving…' : '保存中…')
+                : selectedWaterDateHasRecord
+                  ? (isEn ? 'Remove Log' : '取消这天记录')
+                  : (isEn ? 'Log Water Change' : '记录这天换水')}
             </Button>
           </DialogFooter>
         </DialogContent>

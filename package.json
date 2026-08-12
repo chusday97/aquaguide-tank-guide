@@ -108,7 +108,10 @@
     "test:typography-system": "node scripts/test-typography-system.mjs",
     "test:livestock-state-surface": "node scripts/test-livestock-state-surface.mjs",
     "test:livestock-state-drawer-ui": "node scripts/verify-livestock-state-drawer.mjs",
-    "test:collection-swipe-cards": "node scripts/test-collection-swipe-cards.mjs"
+    "test:collection-swipe-cards": "node scripts/test-collection-swipe-cards.mjs",
+    "test:core-flow-state-eval-v1": "tsx scripts/test-core-flow-state-eval-v1.ts",
+    "test:core-flow-state-eval-v2": "tsx scripts/test-core-flow-state-eval-v2.ts",
+    "test:core-flow-state-eval": "npm run test:core-flow-state-eval-v1 && npm run test:core-flow-state-eval-v2"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

@@ -124,6 +124,7 @@ export function CompatibilityRiskCalculator({
   const [searchTerm, setSearchTerm] = useState('');
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [feedback, setFeedback] = useState('');
+  const [recordError, setRecordError] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [cautionConfirmed, setCautionConfirmed] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
@@ -141,6 +142,7 @@ export function CompatibilityRiskCalculator({
     else setInternalSpeciesIds(resolved);
     setCautionConfirmed(false);
     setFeedback('');
+    setRecordError('');
     setAiResult(null);
   };
 
@@ -404,13 +406,14 @@ export function CompatibilityRiskCalculator({
   };
 
   const recordActualStocking = async () => {
-    if (!onAddToAquarium || candidateSpecies.length === 0 || !resultStatus) return;
+    if (!onAddToAquarium || candidateSpecies.length === 0 || !resultStatus || isRecording) return;
     if (resultStatus === 'not_recommended' || resultStatus === 'insufficient_data') return;
     if (resultStatus === 'caution' && !cautionConfirmed) {
       setCautionConfirmed(true);
       return;
     }
     setIsRecording(true);
+    setRecordError('');
     try {
       const response = await onAddToAquarium(candidateSpecies.map(fish => ({
         fishId: fish.id,
@@ -418,6 +421,8 @@ export function CompatibilityRiskCalculator({
       })));
       const feedbackMessage = response && typeof response === 'object' ? response.message : undefined;
       setFeedback(feedbackMessage || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));
+    } catch {
+      setRecordError(isEn ? 'Could not save the livestock record. Try again.' : '入缸记录没有保存成功，请重试。');
     } finally {
       setIsRecording(false);
     }
@@ -653,6 +658,7 @@ export function CompatibilityRiskCalculator({
             )}
 
             {feedback && <div className="rounded-[14px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-800">{feedback}</div>}
+            {recordError && <div role="alert" className="rounded-[14px] border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-black text-red-800">{recordError}</div>}
           </>
         )}
       </section>
