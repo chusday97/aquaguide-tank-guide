@@ -62,12 +62,13 @@ try {
   await detail.waitFor();
   await detail.getByText('水晶虾', { exact: true }).first().waitFor();
 
-  // Milestone 3: move from species detail into compatibility through the detail task itself.
-  const compatibilityDisclosure = detail.getByRole('button', { name: /混养关系/ });
-  await compatibilityDisclosure.click();
-  const calculatorAction = detail.getByRole('button', { name: /混养计算|前往混养计算/ }).last();
-  await calculatorAction.waitFor();
-  await calculatorAction.click();
+  // Milestone 3: use the species detail PRIMARY task CTA. For a caution/conflict-like fit,
+  // the footer action is intentionally the canonical path into full compatibility checkout.
+  const mainTaskAction = detail.locator('.modalFooter button').first();
+  await mainTaskAction.waitFor();
+  const mainTaskLabel = (await mainTaskAction.textContent())?.trim() || '';
+  assert.match(mainTaskLabel, /风险|混养|加入/, `detail primary CTA must lead toward compatibility, got: ${mainTaskLabel}`);
+  await mainTaskAction.click();
 
   // Milestones 4–5: atlas remains context; decision drawer shows tank baseline + candidate + a real result.
   const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
@@ -100,7 +101,7 @@ try {
   assert.equal(tank.fishes?.find(item => item.fishId === 'sp_0001')?.quantity, 2, 'existing livestock quantity must not change');
   assert.deepEqual(pageErrors, [], `GP-002 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-002 continuous E2E passed: search → exact detail → compatibility drawer → result → actual stocking → persisted quantity.');
+  console.log('GP-002 continuous E2E passed: search → exact detail → primary compatibility task → result → actual stocking → persisted quantity.');
 } finally {
   await browser.close();
 }
