@@ -19,6 +19,8 @@ export type RecordExistingResult = {
   failedItems: FailedLivestockRecord[];
 };
 
+const getSafeLivestockFailureMessage = () => '该生物没有保存成功，请重试。';
+
 export const recordExistingLivestock = async (input: {
   repository: Pick<AquaGuideRepository, 'addLivestock'>;
   aquarium: Aquarium;
@@ -44,10 +46,10 @@ export const recordExistingLivestock = async (input: {
         operationId: `${input.operationId}:${item.fishId}`,
       });
       savedItems.push(item);
-    } catch (error) {
+    } catch {
       failedItems.push({
         ...item,
-        message: error instanceof Error ? error.message : '该生物没有保存成功。',
+        message: getSafeLivestockFailureMessage(),
       });
     }
   }
@@ -69,11 +71,11 @@ export const recordExistingLivestock = async (input: {
       savedItems,
       failedItems,
     };
-  } catch (error) {
+  } catch {
     return {
       aquarium: savedAquarium,
       assessment: null,
-      assessmentFailure: error instanceof Error ? error.message : '判断暂时不可用。',
+      assessmentFailure: '判断暂时不可用。',
       policy: null,
       savedItems,
       failedItems,

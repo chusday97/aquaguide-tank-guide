@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-12",
+  "phase": "executable",
+  "scope": ["water_change", "daily_check"],
+  "cases": [
+    {"id":"CF-WATER-001","featureId":"water_change","state":"initial","severity":"medium","trigger":"打开换水日历，尚未修改任何日期。","expected":"显示真实历史和当前选择，不自动制造一条换水记录。","forbidden":"仅因打开日历就把今天写成最近换水。","automation":"source_contract"},
+    {"id":"CF-WATER-002","featureId":"water_change","state":"in_progress","severity":"medium","trigger":"正在保存补录或取消的换水日期。","expected":"保存 CTA 暂时禁用并显示进行中，避免重复点击。","forbidden":"连续点击造成重复切换或相反结果。","automation":"ui_contract"},
+    {"id":"CF-WATER-003","featureId":"water_change","state":"success","severity":"high","trigger":"记录今天或过去真实发生的换水。","expected":"history、aquarium.lastWaterChangeDate 与所有缸内生物 lastWaterChangeDate 同步到真实最新日期。","forbidden":"只更新其中一个状态来源。","automation":"deterministic"},
+    {"id":"CF-WATER-004","featureId":"water_change","state":"empty","severity":"high","trigger":"取消最后一条换水历史。","expected":"history 为空，鱼缸与生物的最近换水都恢复为未记录。","forbidden":"用今天作为 fallback 伪造换水。","automation":"deterministic"},
+    {"id":"CF-WATER-005","featureId":"water_change","state":"failure","severity":"high","trigger":"保存历史换水时持久化失败。","expected":"不显示成功反馈，保留当前日期选择，并显示稳定可重试错误。","forbidden":"暴露 storage/raw error 或把失败当成功。","automation":"ui_contract"},
+    {"id":"CF-WATER-006","featureId":"water_change","state":"boundary","severity":"critical","trigger":"用户选择未来日期或尝试翻到未来月份。","expected":"未来日期不可作为已发生换水保存，未来月份导航受限。","forbidden":"把未来计划写成真实历史。","automation":"deterministic_ui"},
+    {"id":"CF-DAILY-001","featureId":"daily_check","state":"initial","severity":"medium","trigger":"从鱼缸进入每日检查。","expected":"清空上一次临时结果并开始本次最少必要问题。","forbidden":"把上次答案直接当作本次结果。","automation":"source_contract"},
+    {"id":"CF-DAILY-002","featureId":"daily_check","state":"in_progress","severity":"medium","trigger":"用户逐项回答巡检问题。","expected":"保留已经回答的内容和当前进度，尚未完成时不写入正式记录。","forbidden":"每答一题就创建一条完成记录。","automation":"source_contract"},
+    {"id":"CF-DAILY-003","featureId":"daily_check","state":"success","severity":"high","trigger":"巡检结果生成并成功保存。","expected":"同一天使用 upsert 语义保存当前结果，标记已保存后才能继续结果主行动。","forbidden":"只显示成功但正式记录没有写入。","automation":"deterministic_ui"},
+    {"id":"CF-DAILY-004","featureId":"daily_check","state":"insufficient","severity":"high","trigger":"鱼缸事实或回答不足以支持更确定判断。","expected":"保留缺失信息和不确定性，不凭空补鱼缸事实。","forbidden":"用默认温度、水质或设备制造确定结论。","automation":"existing_daily_contract"},
+    {"id":"CF-DAILY-005","featureId":"daily_check","state":"failure","severity":"high","trigger":"巡检结果写入失败。","expected":"保留当前结果和回答，明确未保存、允许重试，并且不执行保存后的后续行动。","forbidden":"未保存却标记已保存或暴露底层错误。","automation":"ui_contract"},
+    {"id":"CF-DAILY-006","featureId":"daily_check","state":"urgent","severity":"critical","trigger":"确定性规则给出高风险结果，AI 返回更低优先级建议。","expected":"最终优先级不得低于确定性高风险，立即行动优先展示。","forbidden":"AI 降低或反转确定性风险。","automation":"existing_daily_contract"}
+  ]
+}

@@ -123,6 +123,8 @@ const partialResult = await recordExistingLivestock({
 });
 assert.deepEqual(partialResult.savedItems.map(item => item.fishId), [freshwater.id]);
 assert.deepEqual(partialResult.failedItems.map(item => item.fishId), [freshwaterCompanion.id]);
+assert.equal(partialResult.failedItems[0]?.message, '该生物没有保存成功，请重试。');
+assert.equal(partialResult.failedItems[0]?.message.includes('模拟第二项网络失败'), false);
 assert.equal(partialResult.aquarium.fishes.find(item => item.fishId === freshwater.id)?.quantity, 2);
 assert.equal(partialResult.aquarium.fishes.some(item => item.fishId === freshwaterCompanion.id), false);
 
@@ -154,13 +156,21 @@ const responseLossRepository = {
     return saved;
   },
 };
-await assert.rejects(recordExistingLivestock({
-  repository: responseLossRepository,
-  aquarium: responseLossTank,
-  items: [{ fishId: freshwater.id, quantity: 1, entryDate: '2026-08-09' }],
-  speciesCatalog: [freshwater],
-  operationId: 'record-response-loss',
-}), /模拟服务端已提交但响应丢失/);
+await assert.rejects(
+  recordExistingLivestock({
+    repository: responseLossRepository,
+    aquarium: responseLossTank,
+    items: [{ fishId: freshwater.id, quantity: 1, entryDate: '2026-08-09' }],
+    speciesCatalog: [freshwater],
+    operationId: 'record-response-loss',
+  }),
+  error => {
+    assert.ok(error instanceof Error);
+    assert.equal(error.message, '该生物没有保存成功，请重试。');
+    assert.equal(error.message.includes('模拟服务端已提交但响应丢失'), false, 'raw repository failure must not escape the service boundary');
+    return true;
+  },
+);
 const recoveredResponse = await recordExistingLivestock({
   repository: responseLossRepository,
   aquarium: responseLossTank,
@@ -170,4 +180,4 @@ const recoveredResponse = await recordExistingLivestock({
 });
 assert.equal(recoveredResponse.aquarium.fishes.find(item => item.fishId === freshwater.id)?.quantity, 1, 'response-loss retry must reuse the operation and not duplicate quantity');
 
-console.log('livestock recording verified: incomplete, blocked, replayed and partially failed facts preserve correct batches');
+console.log('livestock recording verified: incomplete, blocked, replayed, partially failed and response-loss retries preserve facts without exposing raw errors');
