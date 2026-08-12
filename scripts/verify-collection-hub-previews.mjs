@@ -46,9 +46,8 @@ try {
   assert.equal(await desktop.locator('[data-preview-item="care"]').count(), 2, '养护模块应预览两篇文章');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').count(), 2, '生命纪念应预览两条记录');
   assert.equal(await desktop.locator('[data-preview-item="achievements"]').count(), 0, '建设中的成就模块不得展示真实勋章或进度');
-  await desktop.getByText('成就勋章', { exact: true }).waitFor();
-  await desktop.getByText('建设中', { exact: true }).waitFor();
-  await desktop.getByText('暂未开放', { exact: true }).waitFor();
+  const achievementCopy = await desktop.locator('[data-collection-module="achievements"]').textContent();
+  assert.ok(achievementCopy?.includes('成就勋章') && achievementCopy.includes('建设中') && achievementCopy.includes('暂未开放'), '横向轨道末端的成就模块必须保持建设中状态，不要求首屏可见');
   assert.equal(await desktop.locator('[data-preview-item="wishlist"]').first().getAttribute('data-preview-id'), 'sp_0004', '最新加入的种草物种应排在最前');
   assert.equal(await desktop.locator('[data-preview-item="care"]').first().getAttribute('data-preview-id'), 'guide_pregnant_care', '养护收藏应按 favoritedAt 倒序');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').first().getAttribute('data-preview-id'), 'memorial-3', '生命纪念应按记录日期倒序');
@@ -74,6 +73,7 @@ try {
   await assertNoHorizontalOverflow(desktop);
   assert.deepEqual(desktopErrors, [], `桌面不应出现页面错误：${desktopErrors.join('; ')}`);
 
+  await hubRail.evaluate(element => { element.scrollLeft = 0; });
   await desktop.locator('[data-preview-item="wishlist"]').first().click();
   await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && url.searchParams.get('item') === 'sp_0004');
   await desktop.locator('[data-surface="right-drawer"]').waitFor();
