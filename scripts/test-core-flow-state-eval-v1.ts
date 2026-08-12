@@ -92,6 +92,23 @@ const cautionConfirmed = executeSpeciesAddition({
 });
 assert.equal(cautionConfirmed.added, true);
 
+const preyWordingExisting = makeFish({
+  id: 'prey-wording-existing',
+  name: '温和小型鱼',
+  housingReason: '性情温和，但可能被中大型鱼或肉食鱼捕食。',
+});
+const preyWordingCandidate = makeFish({ id: 'prey-wording-candidate', name: '另一种温和小型鱼' });
+const preyWordingResult = evaluateTankCompatibility({
+  tank: makeTank(),
+  existingSpecies: [{ species: preyWordingExisting, record: { quantity: 2 } }],
+  candidateSpecies: preyWordingCandidate,
+});
+assert.equal(
+  preyWordingResult.blockingRules.some(item => item.code === 'predation_risk'),
+  false,
+  'prey-risk wording must not be reversed into predator identity',
+);
+
 const incompleteCompatibility = evaluateTankCompatibility({
   tank: makeTank({ dimensions: undefined, targetTemperature: undefined }), candidateSpecies: freshwater,
 });

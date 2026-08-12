@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-12",
+  "updatedAt": "2026-08-13",
   "status": "coverage_audit",
   "paths": [
     {
@@ -20,7 +20,11 @@
         "用伪默认温度/尺寸替代用户输入",
         "保存失败却显示配置完成"
       ],
-      "existingAutomation": ["test:guided-navigation-ui", "test:onboarding-goal-paths", "test:task-entry"],
+      "existingAutomation": [
+        "test:guided-navigation-ui",
+        "test:onboarding-goal-paths",
+        "test:task-entry"
+      ],
       "coverage": "partial"
     },
     {
@@ -42,8 +46,15 @@
         "保存失败后仍显示已入缸",
         "重试造成重复数量"
       ],
-      "existingAutomation": ["test:guided-navigation-ui", "test:task-entry", "test:core-flow-state-eval", "test:livestock-recording"],
-      "coverage": "partial"
+      "existingAutomation": [
+        "test:guided-navigation-ui",
+        "test:task-entry",
+        "test:core-flow-state-eval",
+        "test:livestock-recording",
+        "test:golden-path-gp002-ui",
+        "test:compatibility-evidence-coverage"
+      ],
+      "coverage": "covered"
     },
     {
       "id": "GP-003",
@@ -62,7 +73,11 @@
         "动作成功但状态卡仍不更新",
         "失败后把任务标记完成"
       ],
-      "existingAutomation": ["test:core-flow-state-ui", "test:daily-check", "test:daily-discovery"],
+      "existingAutomation": [
+        "test:core-flow-state-ui",
+        "test:daily-check",
+        "test:daily-discovery"
+      ],
       "coverage": "partial"
     },
     {
@@ -83,7 +98,11 @@
         "普通 UI 展示 provider/raw error",
         "养护指南先突出收藏而不是行动"
       ],
-      "existingAutomation": ["test:daily-check", "test:care-first-screen", "test:task-entry"],
+      "existingAutomation": [
+        "test:daily-check",
+        "test:care-first-screen",
+        "test:task-entry"
+      ],
       "coverage": "partial"
     },
     {
@@ -104,7 +123,11 @@
         "关闭详情后丢失收藏上下文",
         "手机横向溢出整个页面"
       ],
-      "existingAutomation": ["test:collection-swipe-cards", "test:collection-hub-ui", "test:responsive-detail-surface"],
+      "existingAutomation": [
+        "test:collection-swipe-cards",
+        "test:collection-hub-ui",
+        "test:responsive-detail-surface"
+      ],
       "coverage": "mostly_covered"
     }
   ]
