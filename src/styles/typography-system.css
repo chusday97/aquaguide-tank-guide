@@ -1,11 +1,10 @@
-/* AquaGuide typography baseline
- * Keep semantic hierarchy while collapsing arbitrary one-off sizes and heavy weights.
- * Components may still use text-xs/sm/base/lg for semantic roles; arbitrary legacy sizes
- * are normalized here until they are migrated to shared typography primitives.
+/* AquaGuide UI foundation
+ * Typography is migrated component-by-component instead of globally rewriting every legacy
+ * font utility. Surface widths are task-aware and collection content uses swipeable card rails.
  */
 
 .aquaguide-app {
-  --type-display-size: 1.75rem;
+  --type-display-size: 1.5rem;
   --type-section-size: 1.125rem;
   --type-card-size: 1rem;
   --type-body-size: 0.875rem;
@@ -16,52 +15,14 @@
   --type-body-weight: 400;
   --type-meta-weight: 500;
   --type-action-weight: 600;
-  font-size: var(--type-body-size);
-  font-weight: var(--type-body-weight);
-  line-height: 1.55;
+
+  --surface-reading-width: 520px;
+  --surface-editing-width: 560px;
+  --surface-decision-width: 640px;
 }
 
-/* The previous UI used 800/900 as a default emphasis. Collapse that visual noise. */
-.aquaguide-app .font-black,
-.aquaguide-app .font-extrabold {
-  font-weight: 700;
-}
-
-.aquaguide-app .font-bold {
-  font-weight: 600;
-}
-
-.aquaguide-app .font-semibold {
-  font-weight: 500;
-}
-
-/* Normalize legacy arbitrary sizes to a small, intentional scale. */
-.aquaguide-app .text-\[8px\],
-.aquaguide-app .text-\[9px\] {
-  font-size: 0.6875rem;
-  line-height: 1rem;
-}
-
-.aquaguide-app .text-\[10px\],
-.aquaguide-app .text-\[11px\] {
-  font-size: var(--type-meta-size);
-  line-height: 1.05rem;
-}
-
-.aquaguide-app .text-\[12px\],
-.aquaguide-app .text-\[13px\],
-.aquaguide-app .text-\[14px\] {
-  font-size: var(--type-body-size);
-  line-height: 1.35rem;
-}
-
-.aquaguide-app .text-\[15px\],
-.aquaguide-app .text-\[16px\] {
-  font-size: var(--type-card-size);
-  line-height: 1.45rem;
-}
-
-/* Shared semantic typography utilities for new and migrated UI. */
+/* Shared semantic typography utilities. Do not globally override font-black/font-bold or
+ * arbitrary text sizes: old screens migrate to these roles deliberately. */
 .type-page-title {
   font-size: var(--type-display-size);
   font-weight: var(--type-display-weight);
@@ -100,9 +61,95 @@
   line-height: 1.35;
 }
 
+/* Surface sizing contract: reading ≈ 520px, editing ≈ 560px, complex decisions ≈ 640px.
+ * Every desktop surface is capped by the real workspace left after the fixed sidebar. */
+@media (min-width: 768px) {
+  .livestock-roster-surface {
+    --adaptive-surface-width: var(--surface-editing-width);
+  }
+
+  [data-surface="compatibility-checkout-drawer"] {
+    width: min(var(--surface-decision-width), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px)) !important;
+    max-width: min(var(--surface-decision-width), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px)) !important;
+    border-top-left-radius: 24px !important;
+    border-bottom-left-radius: 24px !important;
+  }
+}
+
+/* Collection browsing contract: saved content is a horizontal snap rail, not a dense grid.
+ * The next card deliberately peeks into view on phones; desktop trackpads can scroll the rail. */
+.collection-wishlist-grid,
+.collection-care-grid {
+  display: flex !important;
+  min-width: 0;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 42px 10px 2px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.collection-wishlist-grid::-webkit-scrollbar,
+.collection-care-grid::-webkit-scrollbar,
+.collection-hub > section[aria-label]::-webkit-scrollbar {
+  display: none;
+}
+
+.collection-wishlist-grid > article,
+.collection-care-grid > article {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.collection-wishlist-grid > article {
+  flex: 0 0 min(82vw, 320px);
+}
+
+.collection-care-grid > article {
+  flex: 0 0 min(86vw, 360px);
+}
+
+.collection-hub > section[aria-label] {
+  display: flex !important;
+  min-width: 0;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 42px 10px 2px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.collection-hub > section[aria-label] > section {
+  flex: 0 0 min(88vw, 390px);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@media (min-width: 768px) {
+  .collection-wishlist-grid > article {
+    flex-basis: 280px;
+  }
+
+  .collection-care-grid > article {
+    flex-basis: 360px;
+  }
+
+  .collection-hub > section[aria-label] > section {
+    flex-basis: 390px;
+  }
+}
+
 @media (max-width: 767px) {
   .aquaguide-app {
-    --type-display-size: 1.5rem;
+    --type-display-size: 1.375rem;
     --type-section-size: 1.0625rem;
   }
 }
