@@ -34,7 +34,7 @@ const addition = `,
 const marker = '\n  ]\n}';
 const index = baseline.lastIndexOf(marker);
 if (index < 0) throw new Error('Feature registry closing marker not found');
-const minimized = `${baseline.slice(0, index - 1)}${addition}${baseline.slice(index - 1)}`;
+const minimized = `${baseline.slice(0, index)}${addition}${baseline.slice(index)}`;
 JSON.parse(minimized);
 fs.writeFileSync(path, minimized);
 console.log('Rebuilt feature registry from main with only two compact feature additions.');
