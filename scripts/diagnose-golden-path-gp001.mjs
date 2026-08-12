@@ -6,10 +6,11 @@ const browser = await chromium.launch({ headless: true });
 const snapshot = async (page, label) => {
   const data = await page.evaluate(() => ({
     url: location.href,
+    userAgent: navigator.userAgent,
     buttons: Array.from(document.querySelectorAll('button')).filter(el => {
       const r = el.getBoundingClientRect();
       return r.width > 0 && r.height > 0;
-    }).map(el => (el.textContent || el.getAttribute('aria-label') || '').trim()).filter(Boolean).slice(0, 80),
+    }).map(el => ({ text: (el.textContent || '').replace(/\s+/g, ' ').trim(), aria: el.getAttribute('aria-label') })).filter(item => item.text || item.aria).slice(0, 100),
     inputs: Array.from(document.querySelectorAll('input, select, textarea')).filter(el => {
       const r = el.getBoundingClientRect();
       return r.width > 0 && r.height > 0;
@@ -20,19 +21,19 @@ const snapshot = async (page, label) => {
       aria: el.getAttribute('aria-label'),
       placeholder: el.getAttribute('placeholder'),
       value: el.value,
-    })).slice(0, 60),
+    })).slice(0, 80),
     dialogs: Array.from(document.querySelectorAll('[role="dialog"]')).filter(el => {
       const r = el.getBoundingClientRect();
       return r.width > 0 && r.height > 0;
-    }).map(el => ({ surface: el.getAttribute('data-surface'), text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 1200) })),
+    }).map(el => ({ surface: el.getAttribute('data-surface'), text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 1800) })),
     appState: JSON.parse(localStorage.getItem('aquarium_app_state_v1') || 'null'),
   }));
   console.log(`\n===== ${label} =====`);
   console.log(JSON.stringify(data, null, 2));
 };
 
-try {
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, locale: 'zh-CN', isMobile: true, hasTouch: true });
+const runScenario = async ({ label, viewport, userAgent, isMobile = false, hasTouch = false }) => {
+  const page = await browser.newPage({ viewport, locale: 'zh-CN', userAgent, isMobile, hasTouch });
   page.setDefaultTimeout(10_000);
   page.setDefaultNavigationTimeout(20_000);
   await page.addInitScript(() => {
@@ -42,23 +43,36 @@ try {
 
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await page.waitForURL('**/welcome');
-  await snapshot(page, 'WELCOME');
-
   await page.getByRole('button').filter({ hasText: '开始' }).first().click();
   await page.waitForURL('**/aquarium?action=create&source=onboarding');
   await page.waitForURL('**/aquarium');
   await page.getByText(/已新建/).waitFor();
-  await snapshot(page, 'AFTER_CREATE');
+  await snapshot(page, `${label}_AFTER_CREATE`);
 
-  const setupButton = page.getByRole('button', { name: /完善鱼缸参数|设置鱼缸|完善参数/ }).first();
-  if (await setupButton.count()) {
-    await setupButton.click();
-  } else {
-    const textButton = page.getByText(/完善鱼缸参数|设置鱼缸|完善参数/, { exact: false }).first();
-    if (await textButton.count()) await textButton.click();
+  const setupTask = page.getByRole('button', { name: /建立或完善鱼缸/ }).first();
+  console.log(`${label}_SETUP_TASK_COUNT=${await setupTask.count()}`);
+  if (await setupTask.count()) {
+    await setupTask.click();
+    await page.waitForTimeout(700);
   }
-  await page.waitForTimeout(500);
-  await snapshot(page, 'AFTER_SETUP_ENTRY');
+  await snapshot(page, `${label}_AFTER_SETUP_ENTRY`);
+  await page.close();
+};
+
+try {
+  await runScenario({
+    label: 'PHONE',
+    viewport: { width: 390, height: 844 },
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
+    isMobile: true,
+    hasTouch: true,
+  });
+
+  await runScenario({
+    label: 'DESKTOP',
+    viewport: { width: 1200, height: 900 },
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36',
+  });
 } finally {
   await browser.close();
 }
