@@ -1,0 +1,108 @@
+name: UI refinement validation
+
+on:
+  push:
+    branches:
+      - agent/right-half-drawer-ui
+    paths:
+      - 'scripts/ui-refinement-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Static UI contracts
+        run: |
+          npm run test:responsive-detail-surface
+          npm run test:typography-system
+          npm run test:collection-swipe-cards
+          npm run test:livestock-state-surface
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-preview.log 2>&1 &
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-preview.log
+          exit 1
+      - name: Browser collection rail regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:collection-hub-ui
+      - name: Browser livestock drawer regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:livestock-state-drawer-ui
+      - name: Guided navigation regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:guided-navigation-ui
+      - name: Record validated UI contracts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          handoff = Path('HANDOFF.md')
+          text = handoff.read_text()
+          replacement = '''## 2026-08-12 Surface Sizing + Typography Migration + 收藏滑动卡片基线
+
+- 桌面 Drawer 不再统一使用 50vw。Surface 按任务密度分级：阅读/详情约 520px、编辑任务约 560px、复杂决策约 640px；所有宽度必须再受固定侧栏之后的真实剩余工作区限制。手机端继续使用原有 bottom sheet / mobile task surface。
+- “调整缸内物种体态”保留单物种编辑一列修复：进入编辑后单个编辑器占满 Drawer 可用宽度，不得继承缸内物种列表的两列网格。
+- 物种详情、品类详情与养护指南属于 reading surface；缸内体态/设置等属于 editing surface；混养结算属于 decision surface。ConfirmDialog 仍保持居中短决策。
+- Typography 只提供 page / section / card / body / meta / action 语义层级；不得通过全局 CSS 强制重写所有 font-black/font-bold/font-semibold 或 text-[Npx]。旧页面按共享组件逐步迁移，避免一次性改变导航、标签、卡片等既有节奏。
+- 水族册首页模块预览、种草收藏和养护收藏使用横向可滑动 snap 卡片轨道；手机露出下一张卡作为滑动提示，桌面支持触控板/横向滚动。生命纪念保持自己的浏览结构，不因“收藏滑动”被强制改成同一种卡片。
+- Card 仍遵守 Card=Open object：点击收藏卡直接进入对应物种/养护详情；详情再按 Surface Sizing contract 展示。
+- 回归门禁：test:responsive-detail-surface + test:typography-system + test:collection-swipe-cards + test:collection-hub-ui + test:livestock-state-surface + test:livestock-state-drawer-ui + test:guided-navigation-ui + lint + build。
+
+'''
+          pattern = r'## 2026-08-12 Typography \+ 任务 Drawer 基线.*?(?=## Task-entry / Deep-link contract)'
+          updated, count = re.subn(pattern, replacement, text, flags=re.S)
+          if count != 1:
+              raise SystemExit(f'HANDOFF surface section replacement count={count}')
+          handoff.write_text(updated)
+
+          registry = Path('evaluation/product/badcases.v1.jsonl')
+          rows = []
+          for line in registry.read_text().splitlines():
+              if not line.strip():
+                  continue
+              row = json.loads(line)
+              if row.get('id') in {'PUI-BC-014', 'PUI-BC-016', 'PUI-BC-017'}:
+                  row['status'] = 'regression_verified'
+              rows.append(row)
+          registry.write_text('\n'.join(json.dumps(row, ensure_ascii=False, separators=(',', ':')) for row in rows) + '\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add HANDOFF.md evaluation/product/badcases.v1.jsonl
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(ui): record validated sizing and collection contracts"
+            git push
+          fi
+      - name: Upload browser artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-refinement-artifacts
+          path: artifacts/
+          if-no-files-found: ignore
