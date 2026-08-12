@@ -47,7 +47,7 @@ try {
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').count(), 2, '生命纪念应预览两条记录');
   assert.equal(await desktop.locator('[data-preview-item="achievements"]').count(), 0, '建设中的成就模块不得展示真实勋章或进度');
   const achievementCopy = await desktop.locator('[data-collection-module="achievements"]').textContent();
-  assert.ok(achievementCopy?.includes('成就勋章') && achievementCopy.includes('建设中') && achievementCopy.includes('暂未开放'), '横向轨道末端的成就模块必须保持建设中状态，不要求首屏可见');
+  assert.ok(achievementCopy?.includes('成就勋章') && achievementCopy.includes('建设中') && achievementCopy.includes('暂未开放'), '轨道末端的成就模块必须保持建设中状态');
   assert.equal(await desktop.locator('[data-preview-item="wishlist"]').first().getAttribute('data-preview-id'), 'sp_0004', '最新加入的种草物种应排在最前');
   assert.equal(await desktop.locator('[data-preview-item="care"]').first().getAttribute('data-preview-id'), 'guide_pregnant_care', '养护收藏应按 favoritedAt 倒序');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').first().getAttribute('data-preview-id'), 'memorial-3', '生命纪念应按记录日期倒序');
@@ -59,7 +59,7 @@ try {
 
   const hubRail = desktop.locator('.collection-hub > section[aria-label]');
   const hubMetrics = await railMetrics(hubRail);
-  assert.equal(hubMetrics.display, 'flex', '宽桌面水族册模块也应为横向卡片轨道');
+  assert.equal(hubMetrics.display, 'flex', '宽桌面水族册模块应为横向卡片轨道');
   assert.ok(hubMetrics.scrollWidth > hubMetrics.clientWidth, '宽桌面模块轨道应可横向滚动');
   assert.ok(hubMetrics.snap.includes('x'), '宽桌面模块轨道应启用横向 scroll snap');
   const hubBoxes = await desktop.locator('[data-collection-module]').evaluateAll(elements => elements.slice(0, 3).map(element => {
@@ -69,7 +69,7 @@ try {
   assert.ok(Math.abs(hubBoxes[0].y - hubBoxes[1].y) <= 2 && Math.abs(hubBoxes[1].y - hubBoxes[2].y) <= 2, '模块卡应在同一横向轨道而不是换行成 grid');
   assert.ok(hubBoxes[1].x > hubBoxes[0].x + hubBoxes[0].width, '后续模块卡应位于第一张右侧');
   await hubRail.evaluate(element => { element.scrollLeft = 420; });
-  assert.ok((await railMetrics(hubRail)).scrollLeft > 0, '桌面触控板/水平滚动对应的 rail scrollLeft 必须可推进');
+  assert.ok((await railMetrics(hubRail)).scrollLeft > 0, '桌面水平滚动必须可推进 rail');
   await assertNoHorizontalOverflow(desktop);
   assert.deepEqual(desktopErrors, [], `桌面不应出现页面错误：${desktopErrors.join('; ')}`);
 
@@ -105,7 +105,7 @@ try {
   await desktop.getByRole('button', { name: '补充记录' }).click();
   await desktop.getByLabel('当时看到什么').fill('入缸后活动量持续减少');
   await desktop.getByLabel('以后准备怎么做').fill('下次延长过水并单独观察');
-  await desktop.getByRole('button', { name: '保存复盘' }).click();
+  await desktop.getByRole('button', { name: '保存', exact: true }).click();
   await desktop.getByText('复盘已保存', { exact: true }).last().waitFor();
   await desktop.close();
 
@@ -115,7 +115,7 @@ try {
   const narrowRail = narrowDesktop.locator('.collection-hub > section[aria-label]');
   await narrowRail.waitFor();
   const narrowMetrics = await railMetrics(narrowRail);
-  assert.equal(narrowMetrics.display, 'flex', '600px 窄桌面仍应保持横向卡片轨道，而不是回退为单列列表');
+  assert.equal(narrowMetrics.display, 'flex', '600px 窄桌面仍应保持横向卡片轨道');
   assert.ok(narrowMetrics.scrollWidth > narrowMetrics.clientWidth, '600px 窄桌面必须保留左右滑动能力');
   await assertNoHorizontalOverflow(narrowDesktop);
   await narrowDesktop.close();
@@ -145,7 +145,7 @@ try {
   await mobileRail.evaluate(element => element.scrollBy({ left: 260, behavior: 'instant' }));
   await mobile.waitForTimeout(100);
   const after = (await railMetrics(mobileRail)).scrollLeft;
-  assert.ok(after > before, '手机 rail 必须能响应横向滑动对应的 scroll movement');
+  assert.ok(after > before, '手机 rail 必须能响应横向滑动');
   await assertNoHorizontalOverflow(mobile);
 
   await mobile.goto(`${baseUrl}/collection/wishlist`, { waitUntil: 'domcontentloaded' });
@@ -157,11 +157,11 @@ try {
     mobileWishlistRail.locator('article').nth(0).boundingBox(),
     mobileWishlistRail.locator('article').nth(1).boundingBox(),
   ]);
-  assert.ok(wish1 && wish2 && wish1.width < 390 && wish2.x < 390, '手机收藏卡应露出下一张，形成明确左右滑动 affordance');
+  assert.ok(wish1 && wish2 && wish1.width < 390 && wish2.x < 390, '手机收藏卡应露出下一张，形成明确左右滑动提示');
   assert.deepEqual(mobileErrors, [], `手机不应出现页面错误：${mobileErrors.join('; ')}`);
   await mobileContext.close();
 
-  console.log('Collection swipe-card browser checks passed: hub + wishlist + care rails, next-card peek, deep-link drawers, achievements gate, and no page overflow.');
+  console.log('Collection swipe-card browser checks passed: hub + wishlist + care rails, next-card peek, deep-link drawers, achievements gate, memorial edit, and no page overflow.');
 } finally {
   await browser.close();
 }
