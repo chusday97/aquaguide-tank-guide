@@ -434,7 +434,7 @@ export function CompatibilityRiskCalculator({
     : (isEn ? 'No tank selected · comparison only' : '未选择鱼缸 · 仅比较所选组合');
 
   return (
-    <div data-surface="compatibility-checkout-drawer" className="fixed bottom-0 right-0 top-0 z-[80] grid h-[100dvh] w-full content-start gap-4 overflow-y-auto rounded-none border-l border-emerald-100 bg-white p-4 shadow-[-24px_0_60px_rgba(15,23,42,0.18)] animate-in slide-in-from-right-full duration-200 sm:w-[50vw] sm:min-w-0 sm:max-w-none sm:rounded-l-[28px] md:p-5">
+    <div data-surface="compatibility-checkout-drawer" className="fixed bottom-0 right-0 top-0 z-[80] grid h-[100dvh] w-full content-start gap-4 overflow-y-auto rounded-none border-l border-emerald-100 bg-white p-4 shadow-[-24px_0_60px_rgba(15,23,42,0.18)] animate-in slide-in-from-right-full duration-200 sm:min-w-0 sm:rounded-l-[24px] md:p-5">
       {onBrowseAtlas && (
         <button
           type="button"
