@@ -50,7 +50,6 @@ try {
   const desktop = await browser.newPage({ viewport: { width: 1200, height: 900 }, locale: 'zh-CN' });
   await seed(desktop);
   await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  await desktop.screenshot({ path: 'artifacts/aquarium-typography-desktop.png', fullPage: false });
   await desktop.getByText('缸内物种', { exact: true }).last().click();
   const desktopDrawer = desktop.locator('[role="dialog"][data-surface="right-drawer"]:visible');
   await desktopDrawer.waitFor();
@@ -62,7 +61,8 @@ try {
     desktopDrawer.locator('article').filter({ hasText: '这次要调整哪一组？' }).first().boundingBox(),
   ]);
   assert.ok(drawerBox && editorBox, 'desktop livestock editor must have measurable bounds');
-  assert.ok(Math.abs(drawerBox.width - 600) <= 3, `1200px desktop drawer must be 50vw; got ${drawerBox.width}px`);
+  assert.ok(Math.abs(drawerBox.width - 560) <= 3, `1200px desktop livestock drawer should use the 560px editing width; got ${drawerBox.width}px`);
+  assert.ok(drawerBox.width < 1200 * 0.5, 'editing drawer must not consume half of the entire viewport when a sidebar already exists');
   assert.ok(editorBox.width >= drawerBox.width * 0.9, `editing card must use the drawer width; got ${editorBox.width}px inside ${drawerBox.width}px`);
   assert.ok(await desktop.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'desktop drawer must not create horizontal page overflow');
   await desktop.screenshot({ path: 'artifacts/livestock-state-drawer-desktop.png', fullPage: false });
@@ -89,7 +89,7 @@ try {
   await phone.screenshot({ path: 'artifacts/livestock-state-sheet-mobile.png', fullPage: false });
   await phoneContext.close();
 
-  console.log('Livestock state drawer browser geometry verified: 50vw desktop, full-width editor, mobile bottom sheet preserved.');
+  console.log('Livestock state drawer browser geometry verified: 560px desktop editing drawer, full-width editor, mobile bottom sheet preserved.');
 } finally {
   await browser.close();
 }
