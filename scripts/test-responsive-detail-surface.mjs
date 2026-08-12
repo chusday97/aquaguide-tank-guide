@@ -44,6 +44,7 @@ assert.ok(care.includes('<AdaptiveDetailContent>'), 'care guide detail must use 
 assert.ok(compatibility.includes('data-surface="compatibility-checkout-drawer"'), 'compatibility must expose a dedicated checkout drawer surface');
 assert.ok(compatibility.includes('fixed bottom-0 right-0 top-0'), 'compatibility checkout drawer must attach to the right viewport edge');
 assert.ok(compatibility.includes('slide-in-from-right-full'), 'compatibility checkout drawer must slide in from the right');
+assert.equal(compatibility.includes('sm:w-[50vw]'), false, 'compatibility checkout drawer must not carry a legacy 50vw utility width');
 assert.ok(compatibility.includes("aria-label={isEn ? 'Close compatibility plan' : '关闭混养方案'}"), 'compatibility checkout drawer must expose an explicit close control');
 
 assert.ok(confirm.includes("from '@/components/ui/dialog'"), 'ConfirmDialog must keep using the centered base dialog');
