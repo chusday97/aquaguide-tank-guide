@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
 @import "tailwindcss";
+@import "./styles/typography-system.css";
 
 .workspace-section-highlight {
   outline: 2px solid rgb(16 185 129 / 0.46);

@@ -27,6 +27,7 @@ import { VisualResultMini } from '../components/visual-results/VisualResultCard'
 import type { VisualResultSubject } from '../components/visual-results/visual-result.types';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
+import { AdaptiveDetailContent } from '../components/common/AdaptiveDetailContent';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import {
@@ -1250,6 +1251,9 @@ export default function Encyclopedia() {
     setCalculatorFeedback(nextCount >= 2 ? t('encyclopedia.addedToCalcMany', { count: nextCount }) : t('encyclopedia.addedToCalcSingle', { name: fish.name }));
     setDetailFeedback(nextCount >= 2 ? t('encyclopedia.addedToCalcMany', { count: nextCount }) : t('encyclopedia.addedToCalcSingle', { name: fish.name }));
     setCalculatorSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
+    closeAtlasDetail(false);
+    setViewMode('compatibility');
+    navigateToRoute(taskRoutes.encyclopedia.compatibility);
   };
 
   const applyFunctionFilter = (label: string) => {
@@ -1512,7 +1516,6 @@ export default function Encyclopedia() {
         </aside>
         <div className="min-w-0">
 
-      {viewMode === 'browse' ? (
       <div className="flex flex-col gap-5">
       <div id="atlas-toolbar" data-workspace-sticky="true" className="atlas-sticky-toolbar flex flex-wrap gap-4 md:items-center md:gap-3 md:rounded-[22px] md:border md:border-white/80 md:bg-white/82 md:p-3 md:shadow-sm">
         <button
@@ -2098,7 +2101,7 @@ export default function Encyclopedia() {
         </div>
       )}
       </div>
-      ) : (
+      {viewMode === 'compatibility' && (
         <div id="compatibility-calculator" className="scroll-mt-6">
         <CompatibilityRiskCalculator
           speciesIds={calculatorSpeciesIds}
@@ -2127,9 +2130,9 @@ export default function Encyclopedia() {
       </div>
 
       <Dialog open={!!selectedGroup} onOpenChange={(open) => !open && closeAtlasDetail()}>
-        <DialogContent className="w-[94vw] max-w-[920px] overflow-hidden rounded-[24px] border-border bg-white p-0">
+        <AdaptiveDetailContent showCloseButton={false}>
           {selectedGroup && selectedGroupVariant && (
-            <div className="flex max-h-[86dvh] flex-col">
+            <div className="flex min-h-0 flex-1 flex-col">
               <DialogHeader className="border-b border-border/70 px-6 py-4 text-left">
                 <DialogTitle className="text-[20px] font-black text-ink">{selectedGroup.groupName}</DialogTitle>
                 <DialogDescription className="text-[12px] font-bold text-ink/50">
@@ -2276,7 +2279,7 @@ export default function Encyclopedia() {
               </DialogFooter>
             </div>
           )}
-        </DialogContent>
+        </AdaptiveDetailContent>
       </Dialog>
 
       <SpeciesDetailDialog

@@ -434,8 +434,18 @@ export function CompatibilityRiskCalculator({
     : (isEn ? 'No tank selected · comparison only' : '未选择鱼缸 · 仅比较所选组合');
 
   return (
-    <div className="grid gap-4 rounded-[24px] border border-emerald-100 bg-white p-4 shadow-sm md:p-5">
-      <header className="flex flex-wrap items-start justify-between gap-3">
+    <div data-surface="compatibility-checkout-drawer" className="fixed bottom-0 right-0 top-0 z-[80] grid h-[100dvh] w-full content-start gap-4 overflow-y-auto rounded-none border-l border-emerald-100 bg-white p-4 shadow-[-24px_0_60px_rgba(15,23,42,0.18)] animate-in slide-in-from-right-full duration-200 sm:min-w-0 sm:rounded-l-[24px] md:p-5">
+      {onBrowseAtlas && (
+        <button
+          type="button"
+          onClick={onBrowseAtlas}
+          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:border-emerald-200 hover:text-emerald-700"
+          aria-label={isEn ? 'Close compatibility plan' : '关闭混养方案'}
+        >
+          <X className="h-4 w-4" />
+        </button>
+      )}
+      <header className="flex flex-wrap items-start justify-between gap-3 pr-12">
         <div>
           <h2 className="mt-1 text-[22px] font-black text-ink">{isEn ? 'Can these species live together?' : '这些生物能不能一起养？'}</h2>
           <p className="mt-1 max-w-[680px] text-[12px] font-semibold leading-5 text-ink/52">
