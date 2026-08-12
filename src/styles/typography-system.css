@@ -3,6 +3,7 @@
  * font utility. Surface widths are task-aware and collection content uses swipeable card rails.
  */
 
+:root,
 .aquaguide-app {
   --type-display-size: 1.5rem;
   --type-section-size: 1.125rem;
@@ -62,15 +63,16 @@
 }
 
 /* Surface sizing contract: reading ≈ 520px, editing ≈ 560px, complex decisions ≈ 640px.
- * Every desktop surface is capped by the real workspace left after the fixed sidebar. */
+ * Every desktop surface is capped by the real workspace left after the fixed sidebar.
+ * Tokens live on :root as well because Dialog portals render outside .aquaguide-app. */
 @media (min-width: 768px) {
   .livestock-roster-surface {
-    --adaptive-surface-width: var(--surface-editing-width);
+    --adaptive-surface-width: var(--surface-editing-width, 560px);
   }
 
   [data-surface="compatibility-checkout-drawer"] {
-    width: min(var(--surface-decision-width), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px)) !important;
-    max-width: min(var(--surface-decision-width), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px)) !important;
+    width: min(var(--surface-decision-width, 640px), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px)) !important;
+    max-width: min(var(--surface-decision-width, 640px), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px)) !important;
     border-top-left-radius: 24px !important;
     border-bottom-left-radius: 24px !important;
   }
@@ -148,6 +150,7 @@
 }
 
 @media (max-width: 767px) {
+  :root,
   .aquaguide-app {
     --type-display-size: 1.375rem;
     --type-section-size: 1.0625rem;
