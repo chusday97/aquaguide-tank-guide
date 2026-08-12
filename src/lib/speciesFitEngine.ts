@@ -123,11 +123,12 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
   const speciesText = textOf(species);
   const selectedIsSmall = species.size === 'Small';
   const selectedIsLongFin = /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
-  const predator = validLivestock.find(item => (
-    item.species?.temperament === 'Aggressive'
-    || item.species?.size === 'Large'
-    || /掠食|捕食|吞食|大型|龙鱼|雷龙|地图|雀鳝|魟|鳗/i.test(textOf(item.species))
-  ));
+  const predator = validLivestock.find(item => {
+    const predatorIdentity = `${item.species.name} ${item.species.category}`;
+    return item.species.temperament === 'Aggressive'
+      || item.species.size === 'Large'
+      || /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗/i.test(predatorIdentity);
+  });
   if (predator && selectedIsSmall) {
     return {
       type: 'predation_risk',
