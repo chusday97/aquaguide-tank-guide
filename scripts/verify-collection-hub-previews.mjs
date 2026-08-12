@@ -104,6 +104,7 @@ try {
   await desktop.waitForURL(url => url.pathname === '/collection/memorial/memorial-2');
   await desktop.getByRole('button', { name: '补充记录' }).click();
   await desktop.getByLabel('当时看到什么').fill('入缸后活动量持续减少');
+  await desktop.getByRole('button', { name: '暂不确定', exact: true }).click();
   await desktop.getByLabel('以后准备怎么做').fill('下次延长过水并单独观察');
   await desktop.getByRole('button', { name: '保存', exact: true }).click();
   await desktop.getByText('复盘已保存', { exact: true }).last().waitFor();
