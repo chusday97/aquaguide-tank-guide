@@ -1,86 +1,99 @@
 import assert from 'node:assert/strict';
-import { fishData } from '../src/data/fishData';
-import { LocalAquaGuideRepository } from '../src/services/repository/local-aquaguide.repository';
-import { recordExistingLivestock } from '../src/services/aquarium/livestock-recording.service';
+import type { Fish } from '../src/types';
 
 class MemoryStorage {
-  private store = new Map<string, string>();
-  getItem(key: string) { return this.store.get(key) ?? null; }
-  setItem(key: string, value: string) { this.store.set(key, String(value)); }
-  removeItem(key: string) { this.store.delete(key); }
-  clear() { this.store.clear(); }
+  private values = new Map<string, string>();
+  getItem(key: string) { return this.values.get(key) ?? null; }
+  setItem(key: string, value: string) { this.values.set(key, value); }
+  removeItem(key: string) { this.values.delete(key); }
 }
 
 const localStorage = new MemoryStorage();
-const fakeWindow = Object.assign(new EventTarget(), { localStorage });
-Object.defineProperty(globalThis, 'localStorage', { value: localStorage, configurable: true });
+const fakeWindow = Object.assign(new EventTarget(), { localStorage, setTimeout, clearTimeout });
 Object.defineProperty(globalThis, 'window', { value: fakeWindow, configurable: true });
+Object.defineProperty(globalThis, 'localStorage', { value: localStorage, configurable: true });
 
+const { LocalAquaGuideRepository } = await import('../src/services/repository/local-aquaguide.repository');
+const { recordExistingLivestock } = await import('../src/services/aquarium/livestock-recording.service');
+
+const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
+  id: 'freshwater-test',
+  name: '测试淡水鱼',
+  scientificName: 'Testus aqua',
+  category: '淡水观赏鱼',
+  image: '',
+  difficulty: 'Easy',
+  waterTemperature: '22-28°C',
+  phLevel: '6.0-8.0',
+  waterChangeCycle: 7,
+  description: '测试物种',
+  diet: '杂食',
+  tankSize: '至少 20 升',
+  temperament: 'Peaceful',
+  size: 'Small',
+  ...overrides,
+});
+
+const freshwater = makeFish();
+const saltwater = makeFish({ id: 'saltwater-test', name: '测试海水鱼', category: '海水观赏鱼' });
+const freshwaterCompanion = makeFish({ id: 'freshwater-companion', name: '测试同伴鱼' });
 const repository = new LocalAquaGuideRepository();
-const freshwater = fishData.find(item => item.waterType === 'Freshwater') || fishData[0];
-const saltwater = fishData.find(item => item.waterType === 'Saltwater') || fishData.find(item => /海水|Marine/i.test(item.category || ''));
-const freshwaterCompanion = fishData.find(item => item.id !== freshwater.id && (item.waterType === 'Freshwater' || /淡水|Freshwater/i.test(item.category || '')))
-  || fishData.find(item => item.id !== freshwater.id)
-  || freshwater;
 
-const incompleteTank = await repository.createAquarium({
-  name: '记录现实测试缸',
+const created = await repository.createAquarium({
+  name: '事实测试缸',
   startedAt: '2026-08-09',
   startedAtSource: 'created',
-  operationId: 'create-recording-test-tank',
+  operationId: 'create-factual-tank',
 });
+assert.equal(created.dimensions, undefined);
+assert.equal(created.targetTemperature, undefined);
+assert.equal(created.equipment, undefined);
+assert.equal(created.lastWaterChangeDate, undefined);
+assert.equal((await repository.createAquarium({
+  name: '事实测试缸',
+  startedAt: '2026-08-09',
+  startedAtSource: 'created',
+  operationId: 'create-factual-tank',
+})).id, created.id, 'create replay must return the same local aquarium');
+
 const incompleteResult = await recordExistingLivestock({
   repository,
-  aquarium: incompleteTank,
-  items: [{ fishId: freshwater.id, quantity: 2, entryDate: '2026-08-09' }],
-  speciesCatalog: fishData,
+  aquarium: created,
+  items: [{ fishId: freshwater.id, quantity: 3, entryDate: '2026-08-09' }],
+  speciesCatalog: [freshwater, saltwater],
   operationId: 'record-incomplete',
 });
-assert.equal(incompleteResult.aquarium.fishes.find(item => item.fishId === freshwater.id)?.quantity, 2);
+assert.equal(incompleteResult.aquarium.fishes[0].quantity, 3);
 assert.equal(incompleteResult.assessment?.status, 'insufficient_data');
 assert.equal(incompleteResult.policy, 'save_with_unknown');
 
-if (saltwater) {
-  const configuredTank = await repository.saveAquarium({
-    ...incompleteResult.aquarium,
-    waterType: 'Freshwater',
-    dimensions: { length: '60', width: '30', height: '30' },
-    targetTemperature: '25',
-    equipment: { filter: '瀑布过滤', heater: true },
-  });
-  const conflictResult = await recordExistingLivestock({
-    repository,
-    aquarium: configuredTank,
-    items: [{ fishId: saltwater.id, quantity: 1, entryDate: '2026-08-09' }],
-    speciesCatalog: fishData,
-    operationId: 'record-conflict',
-  });
-  assert.ok(conflictResult.aquarium.fishes.some(item => item.fishId === saltwater.id));
-  assert.equal(conflictResult.assessment?.status, 'not_recommended');
-  assert.equal(conflictResult.policy, 'save_with_urgent_warning');
-}
+const configured = await repository.saveAquarium({
+  ...incompleteResult.aquarium,
+  dimensions: { length: '60', width: '30', height: '30' },
+  waterType: 'Freshwater',
+  targetTemperature: '25',
+  equipment: { filter: '瀑布过滤', heater: true },
+});
+const blockedReality = await recordExistingLivestock({
+  repository,
+  aquarium: configured,
+  items: [{ fishId: saltwater.id, quantity: 1, entryDate: '2026-08-09' }],
+  speciesCatalog: [freshwater, saltwater],
+  operationId: 'record-blocked-reality',
+});
+assert.equal(blockedReality.assessment?.status, 'not_recommended');
+assert.equal(blockedReality.policy, 'save_with_urgent_warning');
+assert.ok(blockedReality.aquarium.fishes.some(item => item.fishId === saltwater.id), 'blocked reality must still persist');
 
-const replayTank = await repository.createAquarium({
-  name: '重复记录测试缸',
-  startedAt: '2026-08-09',
-  startedAtSource: 'created',
-  operationId: 'create-replay-tank',
-});
-const firstReplay = await recordExistingLivestock({
+const replay = await recordExistingLivestock({
   repository,
-  aquarium: replayTank,
-  items: [{ fishId: freshwater.id, quantity: 1, entryDate: '2026-08-09' }],
-  speciesCatalog: fishData,
-  operationId: 'record-replay',
+  aquarium: blockedReality.aquarium,
+  items: [{ fishId: saltwater.id, quantity: 1, entryDate: '2026-08-09' }],
+  speciesCatalog: [freshwater, saltwater],
+  operationId: 'record-blocked-reality',
 });
-const secondReplay = await recordExistingLivestock({
-  repository,
-  aquarium: firstReplay.aquarium,
-  items: [{ fishId: freshwater.id, quantity: 1, entryDate: '2026-08-09' }],
-  speciesCatalog: fishData,
-  operationId: 'record-replay',
-});
-assert.equal(secondReplay.aquarium.fishes.find(item => item.fishId === freshwater.id)?.quantity, 1, 'same operation must not duplicate quantity');
+assert.equal(replay.aquarium.fishes.find(item => item.fishId === saltwater.id)?.quantity, 1, 'record replay must not duplicate quantity');
+assert.equal((await repository.getAquariums())[0].fishes.length, 2, 'recorded facts must survive repository reload');
 
 const partialTank = await repository.createAquarium({
   name: '部分失败测试缸',
@@ -88,12 +101,12 @@ const partialTank = await repository.createAquarium({
   startedAtSource: 'created',
   operationId: 'create-partial-tank',
 });
-let failCompanionOnce = true;
+let companionFailures = 1;
 const partialRepository = {
   addLivestock: async (input: Parameters<typeof repository.addLivestock>[0]) => {
-    if (input.speciesCatalogKey === freshwaterCompanion.id && failCompanionOnce) {
-      failCompanionOnce = false;
-      throw new Error('模拟第二个物种保存失败');
+    if (input.speciesCatalogKey === freshwaterCompanion.id && companionFailures > 0) {
+      companionFailures -= 1;
+      throw new Error('模拟第二项网络失败');
     }
     return repository.addLivestock(input);
   },
@@ -111,7 +124,7 @@ const partialResult = await recordExistingLivestock({
 assert.deepEqual(partialResult.savedItems.map(item => item.fishId), [freshwater.id]);
 assert.deepEqual(partialResult.failedItems.map(item => item.fishId), [freshwaterCompanion.id]);
 assert.equal(partialResult.failedItems[0]?.message, '该生物没有保存成功，请重试。');
-assert.equal(partialResult.failedItems[0]?.message.includes('模拟第二个物种保存失败'), false);
+assert.equal(partialResult.failedItems[0]?.message.includes('模拟第二项网络失败'), false);
 assert.equal(partialResult.aquarium.fishes.find(item => item.fishId === freshwater.id)?.quantity, 2);
 assert.equal(partialResult.aquarium.fishes.some(item => item.fishId === freshwaterCompanion.id), false);
 
