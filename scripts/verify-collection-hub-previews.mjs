@@ -45,14 +45,17 @@ try {
   assert.equal(await desktop.locator('[data-preview-item="wishlist"]').count(), 3, '种草模块应预览三个物种');
   assert.equal(await desktop.locator('[data-preview-item="care"]').count(), 2, '养护模块应预览两篇文章');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').count(), 2, '生命纪念应预览两条记录');
-  assert.equal(await desktop.locator('[data-preview-item="achievements"]').count(), 2, '成就模块应预览两个具体项目');
+  assert.equal(await desktop.locator('[data-preview-item="achievements"]').count(), 0, '建设中的成就模块不得展示真实勋章或进度');
+  await desktop.getByText('成就勋章', { exact: true }).waitFor();
+  await desktop.getByText('建设中', { exact: true }).waitFor();
+  await desktop.getByText('暂未开放', { exact: true }).waitFor();
   assert.equal(await desktop.locator('[data-preview-item="wishlist"]').first().getAttribute('data-preview-id'), 'sp_0004', '最新加入的种草物种应排在最前');
   assert.equal(await desktop.locator('[data-preview-item="care"]').first().getAttribute('data-preview-id'), 'guide_pregnant_care', '养护收藏应按 favoritedAt 倒序');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').first().getAttribute('data-preview-id'), 'memorial-3', '生命纪念应按记录日期倒序');
   await desktop.getByRole('button', { name: '更多 1 种' }).waitFor();
   await desktop.getByRole('button', { name: '更多 1 篇' }).waitFor();
   await desktop.getByRole('button', { name: '更多 1 条' }).waitFor();
-  await desktop.getByRole('button', { name: '更多 6 枚' }).waitFor();
+  assert.equal(await desktop.getByRole('button', { name: /更多 .*枚/ }).count(), 0, '建设中的成就模块不得出现真实剩余勋章 CTA');
   assert.equal(await desktop.getByText('今日种草', { exact: true }).count(), 0, '今日种草不得进入水族册');
 
   const hubRail = desktop.locator('.collection-hub > section[aria-label]');
@@ -158,7 +161,7 @@ try {
   assert.deepEqual(mobileErrors, [], `手机不应出现页面错误：${mobileErrors.join('; ')}`);
   await mobileContext.close();
 
-  console.log('Collection swipe-card browser checks passed: hub + wishlist + care rails, next-card peek, deep-link drawers, and no page overflow.');
+  console.log('Collection swipe-card browser checks passed: hub + wishlist + care rails, next-card peek, deep-link drawers, achievements gate, and no page overflow.');
 } finally {
   await browser.close();
 }
