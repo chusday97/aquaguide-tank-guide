@@ -38,6 +38,14 @@ assert_category(
     Care_Guide="常见珊瑚礁鱼，可在成熟珊瑚缸中饲养",
 )
 
+# `五彩青蛙` is a marine dragonet common name, not an amphibian.
+assert_category(
+    "海水鱼",
+    Common_Name="五彩青蛙 (改良型)",
+    Scientific_Name="Synchiropus splendidus",
+    Family="Callionymidae",
+)
+
 # Marine context must not collapse shrimp into the fish category.
 assert_category(
     "虾螺蟹",
@@ -148,4 +156,4 @@ for common_name, scientific_name, family in [
         Family=family,
     )
 
-print("species taxonomy source rules passed: 22 fixtures")
+print("species taxonomy source rules passed: 23 fixtures")
