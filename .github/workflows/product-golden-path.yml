@@ -22,6 +22,7 @@ jobs:
           npx tsx scripts/audit-species-water-type-fallback.ts
           npx tsx scripts/audit-species-duplicates.ts
           python3 scripts/test_species_taxonomy_rules.py
+          python3 scripts/test_species_category_normalizer.py
       - name: Taxonomy regression
         run: |
           npm run test:taxonomy
