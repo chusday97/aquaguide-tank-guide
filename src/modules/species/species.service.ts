@@ -4,6 +4,8 @@ import { loggerService } from '../../services/logger/logger.service';
 import { Aquarium, Fish } from '../../types';
 import { speciesDetailInputSchema, speciesListInputSchema, SpeciesDetailOutput, SpeciesListOutput } from './species.schema';
 
+export type SpeciesWaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+
 const secondaryCategoryOrder: Record<string, string[]> = {
   freshwaterFish: [
     '灯科鱼',
@@ -51,6 +53,8 @@ const secondaryCategoryOrder: Record<string, string[]> = {
     '龙鱼/古代鱼',
     '美人鱼',
     '特色观赏鱼',
+    '汽水特色鱼',
+    '待确认鱼类',
   ],
   invertebrate: ['除藻生物', '清残饵生物', '翻砂生物', '控螺生物', '观赏虾', '观赏螺', '观赏蟹', '海水清洁生物'],
   reptile: ['六角恐龙/蝾螈', '蛙类', '龟类'],
@@ -122,12 +126,42 @@ export const getLifeType = (fish: Fish) => {
   return 'fish';
 };
 
+export const getSpeciesWaterType = (fish: Fish): SpeciesWaterType => {
+  const lifeType = getLifeType(fish);
+  const text = `${fish.name} ${fish.scientificName} ${fish.category} ${fish.description} ${fish.housingReason || ''}`;
+
+  if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
+  if (
+    fish.category === '海水鱼'
+    || fish.category === 'Marine Fish'
+    || lifeType === 'coral'
+    || /海水|marine|saltwater|reef/i.test(text)
+    || (lifeType === 'fish' && isMarineFishText(text))
+    || (lifeType === 'invertebrate' && isMarineInvertebrateText(text))
+  ) return 'saltwater';
+
+  // Legacy catalog categories are noisy, so this broad freshwater fallback is
+  // intentionally retained until the audited legacy records are normalized.
+  if (
+    fish.category
+    || lifeType === 'plant'
+    || lifeType === 'hardscape'
+    || lifeType === 'reptile'
+    || /淡水|freshwater|水草|灯科|鼠鱼|虾|螺|斗鱼|慈鲷|孔雀|金鱼|锦鲤/i.test(text)
+  ) return 'freshwater';
+
+  return 'unknown';
+};
+
+export const isSaltwaterSpecies = (fish: Fish) => getSpeciesWaterType(fish) === 'saltwater';
+
 export const getSecondaryCategory = (fish: Fish) => {
   const text = `${fish.name} ${fish.scientificName} ${fish.description}`;
   const lifeType = getLifeType(fish);
 
   if (lifeType === 'fish') {
-    if (isSaltwaterSpecies(fish)) {
+    const waterType = getSpeciesWaterType(fish);
+    if (waterType === 'saltwater') {
       if (/小丑|Amphiprion/i.test(text)) return '小丑鱼';
       if (/倒吊|Zebrasoma|Paracanthurus/i.test(text)) return '倒吊鱼';
       if (/雀鲷|蓝魔鬼|Chrysiptera/i.test(text)) return '雀鲷';
@@ -136,6 +170,8 @@ export const getSecondaryCategory = (fish: Fish) => {
       if (/狮子鱼|炮弹|Pterois|Xanthichthys/i.test(text)) return '狮子鱼/炮弹鱼';
       return '海水特色鱼';
     }
+    if (waterType === 'brackish') return '汽水特色鱼';
+    if (waterType === 'unknown') return '待确认鱼类';
     if (/红绿灯|宝莲灯|红鼻|剪刀|黑裙|红裙|樱桃灯|柠檬灯|红莲灯|琥珀灯|蓝眼灯|血心灯|帝王灯|红眼灯|金灯|黄金灯|霓虹灯|红十字灯|玻璃灯|刚果美人|Hyphessobrycon|Paracheirodon|Hemigrammus|Gymnocorymbus|Moenkhausia|Nematobrycon|Phenacogrammus|Boehlkea|Prionobrama|Aphyocharax/i.test(text)) return '灯科鱼';
     if (/白云金丝|唐鱼|Tanichthys/i.test(text)) return '白云金丝';
     if (/斑马鱼|Danio/i.test(text)) return '斑马鱼';
@@ -191,7 +227,7 @@ export const getSecondaryCategory = (fish: Fish) => {
     if (/莫斯|鹿角苔|凤尾藓|Fissidens|Vesicularia|Riccia/i.test(text)) return '莫斯/苔藓';
     if (/水榕|辣椒榕|铁皇冠|黑木蕨|Anubias|Bucephalandra|Microsorum|Bolbitis/i.test(text)) return '阴性附生草';
     if (/椒草|Cryptocoryne/i.test(text)) return '椒草';
-    if (/宫廷|红丁香|小对叶|水罗兰|红雨伞|红蝴蝶|蜈蚣草|Rotala|Ludwigia|Bacopa|Hygrophila|Proserpinaca|Egeria|Myriophyllum/i.test(text)) return '有茎草';
+    if (/宫廷|红丁香|小对叶|水罗兰|红雨伞|红蝴蝶|蜈蚣草|Rotala|Ludwigia|Bacopa|Hygrophila|Proserpinaca|Egeria|Myriophyllum|Cabomba|Limnophila/i.test(text)) return '有茎草';
     if (/皇冠|水兰|睡莲|红荷根|大浪草|Echinodorus|Vallisneria|Nymphaea|Aponogeton/i.test(text)) return '中后景莲座草';
     if (/浮萍|圆心萍|红根浮萍|Lemna|Limnobium|Phyllanthus/i.test(text)) return '浮草';
     return '其他水草';
@@ -200,34 +236,33 @@ export const getSecondaryCategory = (fish: Fish) => {
   return '';
 };
 
-export const isSaltwaterSpecies = (fish: Fish) => {
-  const lifeType = getLifeType(fish);
-  const text = `${fish.name} ${fish.scientificName} ${fish.category} ${fish.description}`;
-  return fish.category === '海水鱼'
-    || lifeType === 'coral'
-    || /海水/.test(fish.name)
-    || (lifeType === 'fish' && isMarineFishText(text))
-    || (lifeType === 'invertebrate' && isMarineInvertebrateText(text));
+export const getCareTaxonomyPath = (fish: Fish) => {
+  const waterType = getSpeciesWaterType(fish);
+  return {
+    waterType: waterType === 'saltwater' ? '海水' : waterType === 'brackish' ? '汽水' : waterType === 'freshwater' ? '淡水' : '水体待确认',
+    temperatureBand: getTemperatureBand(fish),
+    size: getSizeLabel(fish),
+    temperament: getTemperamentLabel(fish),
+    difficulty: getDifficultyLabel(fish),
+    variety: getSecondaryCategory(fish),
+  };
 };
-
-export const getCareTaxonomyPath = (fish: Fish) => ({
-  waterType: isSaltwaterSpecies(fish) ? '海水' : '淡水',
-  temperatureBand: getTemperatureBand(fish),
-  size: getSizeLabel(fish),
-  temperament: getTemperamentLabel(fish),
-  difficulty: getDifficultyLabel(fish),
-  variety: getSecondaryCategory(fish),
-});
 
 export const getEncyclopediaLifeType = (fish: Fish) => {
   const lifeType = getLifeType(fish);
-  if (lifeType === 'fish') return isSaltwaterSpecies(fish) ? 'saltwaterFish' : 'freshwaterFish';
+  if (lifeType === 'fish') {
+    const waterType = getSpeciesWaterType(fish);
+    if (waterType === 'saltwater') return 'saltwaterFish';
+    if (waterType === 'freshwater') return 'freshwaterFish';
+    return 'fish';
+  }
   return lifeType;
 };
 
 export const matchesWaterTypeFilter = (fish: Fish, waterTypeFilter: string) => {
-  if (waterTypeFilter === 'Freshwater') return !isSaltwaterSpecies(fish);
-  if (waterTypeFilter === 'Saltwater') return isSaltwaterSpecies(fish);
+  const waterType = getSpeciesWaterType(fish);
+  if (waterTypeFilter === 'Freshwater') return waterType === 'freshwater';
+  if (waterTypeFilter === 'Saltwater') return waterType === 'saltwater';
   if (waterTypeFilter === 'Coldwater') {
     return getTemperatureBand(fish) === '冷水';
   }
@@ -360,12 +395,14 @@ export const getSpeciesFilterTags = (fish: Fish) => {
   const taxonomy = getCareTaxonomyPath(fish);
   const tools = getToolFunctions(fish);
   const cleaningTools = tools.filter(tool => tool !== '造景维护');
-  const saltwater = isSaltwaterSpecies(fish);
+  const speciesWaterType = getSpeciesWaterType(fish);
+  const saltwater = speciesWaterType === 'saltwater';
+  const freshwater = speciesWaterType === 'freshwater';
   const temperatureBand = getTemperatureBand(fish);
   const isPlant = lifeType === 'plant';
   const isHardscape = lifeType === 'hardscape';
   const isOrnamentalFish = lifeType === 'fish';
-  const grassTankSuitable = !saltwater && !isHardscape && (
+  const grassTankSuitable = freshwater && !isHardscape && (
     isPlant || (isOrnamentalFish && fish.temperament === 'Peaceful' && fish.size !== 'Large')
   );
 
@@ -387,10 +424,13 @@ export const getSpeciesFilterTags = (fish: Fish) => {
   ]);
 
   const environmentTags = uniqueValues(override?.environmentTags || [
-    saltwater ? '海水' : '淡水',
-    !saltwater && temperatureBand === '冷水' ? '淡水冷水' : null,
-    !saltwater && temperatureBand === '热带' ? '淡水热带' : null,
-    !saltwater && temperatureBand === '广温' ? '淡水广温' : null,
+    saltwater ? '海水' : null,
+    freshwater ? '淡水' : null,
+    speciesWaterType === 'brackish' ? '汽水' : null,
+    speciesWaterType === 'unknown' ? '水体待确认' : null,
+    freshwater && temperatureBand === '冷水' ? '淡水冷水' : null,
+    freshwater && temperatureBand === '热带' ? '淡水热带' : null,
+    freshwater && temperatureBand === '广温' ? '淡水广温' : null,
     grassTankSuitable ? '草缸' : null,
     fish.size === 'Small' && (lifeType === 'fish' || lifeType === 'invertebrate') ? '小缸' : null,
     temperatureBand === '热带' ? '需加热' : '不需加热',
@@ -427,9 +467,12 @@ export const getSpeciesFunctionTags = (fish: Fish) => {
   return preferred.filter(tag => tags.includes(tag)).slice(0, 3);
 };
 
-export const isSpeciesCompatibleWithWaterType = (fish: Fish, waterType?: Aquarium['waterType']) => (
-  waterType === 'Saltwater' ? isSaltwaterSpecies(fish) : !isSaltwaterSpecies(fish)
-);
+export const isSpeciesCompatibleWithWaterType = (fish: Fish, waterType?: Aquarium['waterType']) => {
+  const speciesWaterType = getSpeciesWaterType(fish);
+  if (waterType === 'Saltwater') return speciesWaterType === 'saltwater';
+  if (waterType === 'Freshwater') return speciesWaterType === 'freshwater';
+  return false;
+};
 
 export const getDisplayableSpecies = () => fishData.filter((fish) => {
   const lifeType = getLifeType(fish);
