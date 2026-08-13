@@ -45,12 +45,31 @@ const businessFingerprint = (species: typeof fishData[number]) => JSON.stringify
   housingReason: normalize(species.housingReason),
 });
 
+const aliasFingerprint = (species: typeof fishData[number]) => JSON.stringify({
+  scientificName: normalize(species.scientificName),
+  category: normalize(species.category),
+  difficulty: species.difficulty,
+  waterTemperature: normalize(species.waterTemperature),
+  phLevel: normalize(species.phLevel),
+  tankSize: normalize(species.tankSize),
+  temperament: species.temperament,
+  size: species.size,
+  housingMode: normalize(species.housingMode),
+  housingReason: normalize(species.housingReason),
+});
+
 const byBusinessFingerprint = new Map<string, typeof fishData>();
+const byAliasFingerprint = new Map<string, typeof fishData>();
 for (const species of fishData) {
-  const key = businessFingerprint(species);
-  const group = byBusinessFingerprint.get(key) || [];
-  group.push(species);
-  byBusinessFingerprint.set(key, group);
+  const businessKey = businessFingerprint(species);
+  const businessGroup = byBusinessFingerprint.get(businessKey) || [];
+  businessGroup.push(species);
+  byBusinessFingerprint.set(businessKey, businessGroup);
+
+  const aliasKey = aliasFingerprint(species);
+  const aliasGroup = byAliasFingerprint.get(aliasKey) || [];
+  aliasGroup.push(species);
+  byAliasFingerprint.set(aliasKey, aliasGroup);
 }
 
 const likelyDuplicateEntities = [...byBusinessFingerprint.values()]
@@ -75,6 +94,23 @@ const likelyDuplicateEntities = [...byBusinessFingerprint.values()]
   }))
   .sort((a, b) => b.count - a.count || a.records[0].scientificName.localeCompare(b.records[0].scientificName));
 
+const aliasLikeCollisionGroups = [...byAliasFingerprint.values()]
+  .filter(group => group.length > 1 && new Set(group.map(species => normalize(species.name))).size > 1)
+  .map(group => ({
+    count: group.length,
+    records: [...group]
+      .sort((a, b) => a.id.localeCompare(b.id))
+      .map(species => ({
+        id: species.id,
+        name: species.name,
+        scientificName: species.scientificName,
+        category: species.category,
+        difficulty: species.difficulty,
+        tankSize: species.tankSize,
+      })),
+  }))
+  .sort((a, b) => b.count - a.count || a.records[0].scientificName.localeCompare(b.records[0].scientificName));
+
 const coarseScientificNameGroups = exactScientificNameDuplicates.filter(group => {
   const names = new Set(group.records.map(record => normalize(record.name)));
   return names.size > 1;
@@ -91,12 +127,15 @@ const report = {
   likelyDuplicateEntityGroups: likelyDuplicateEntities.length,
   maxAllowedLikelyDuplicateEntityGroups: MAX_LIKELY_DUPLICATE_ENTITY_GROUPS,
   likelyDuplicateEntityRecords: likelyDuplicateEntities.reduce((sum, group) => sum + group.count, 0),
+  aliasLikeCollisionGroups: aliasLikeCollisionGroups.length,
+  aliasLikeCollisionRecords: aliasLikeCollisionGroups.reduce((sum, group) => sum + group.count, 0),
   stableAliasCount: Object.keys(speciesIdAliases).length,
   expectedStableAliasCount: EXPECTED_STABLE_ALIAS_COUNT,
   remainingLegacyAliasIds,
   missingCanonicalAliasTargets,
   coarseScientificNameGroups: coarseScientificNameGroups.length,
   likelyDuplicateEntities,
+  aliasLikeCollisions: aliasLikeCollisionGroups,
   coarseScientificNames: coarseScientificNameGroups,
 };
 
