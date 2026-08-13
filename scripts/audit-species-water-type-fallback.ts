@@ -2,6 +2,8 @@ import { fishData } from '../src/data/fishData';
 import type { Fish } from '../src/types';
 import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/modules/species/species.service';
 
+const MAX_CATEGORY_FALLBACK_ONLY = 57;
+
 const textOf = (species: Fish) => [
   species.name,
   species.scientificName,
@@ -69,12 +71,22 @@ const categoryFallbackOnly = fishData.filter(species => (
   getSpeciesWaterType(species) === 'freshwater' && classifyWithoutBroadCategoryFallback(species) === 'unknown'
 ));
 
-console.log(JSON.stringify({
+const report = {
   totalSpecies: fishData.length,
   currentCounts,
   withoutBroadCategoryFallbackCounts: strictCounts,
   categoryFallbackOnlyCount: categoryFallbackOnly.length,
+  maxAllowedCategoryFallbackOnly: MAX_CATEGORY_FALLBACK_ONLY,
   unknownByCategory,
   unknownByLifeType,
   unknownSamples: samples,
-}, null, 2));
+};
+
+console.log(JSON.stringify(report, null, 2));
+
+if (categoryFallbackOnly.length > MAX_CATEGORY_FALLBACK_ONLY) {
+  console.error(
+    `Water-type taxonomy debt increased: ${categoryFallbackOnly.length} records rely only on the broad category fallback; maximum allowed is ${MAX_CATEGORY_FALLBACK_ONLY}.`,
+  );
+  process.exit(1);
+}
