@@ -54,7 +54,7 @@ def load_aliases(path: Path = ALIASES_TS) -> dict[str, str]:
     return aliases
 
 
-def validate_aliases(items: list[dict[str, Any]], aliases: dict[str, str]) -> list[dict[str, str]]:
+def validate_aliases(items: list[dict[str, Any]], aliases: dict[str, str]) -> tuple[str, list[dict[str, str]]]:
     if len(aliases) != EXPECTED_ALIAS_COUNT:
         raise RuntimeError(
             f"Refusing migration: expected exactly {EXPECTED_ALIAS_COUNT} aliases, got {len(aliases)}"
@@ -64,20 +64,30 @@ def validate_aliases(items: list[dict[str, Any]], aliases: dict[str, str]) -> li
     if len(by_id) != len(items):
         raise RuntimeError("Refusing migration: catalog contains duplicate species IDs")
 
-    plan: list[dict[str, str]] = []
-    for duplicate_id, canonical_id in sorted(aliases.items()):
-        duplicate = by_id.get(duplicate_id)
-        canonical = by_id.get(canonical_id)
-        if duplicate is None:
-            raise RuntimeError(f"Refusing migration: duplicate ID missing from catalog: {duplicate_id}")
-        if canonical is None:
-            raise RuntimeError(f"Refusing migration: canonical ID missing from catalog: {canonical_id}")
+    duplicate_ids_present = [duplicate_id for duplicate_id in aliases if duplicate_id in by_id]
+    if duplicate_ids_present and len(duplicate_ids_present) != EXPECTED_ALIAS_COUNT:
+        raise RuntimeError(
+            f"Refusing migration: partial duplicate deletion detected; "
+            f"{len(duplicate_ids_present)}/{EXPECTED_ALIAS_COUNT} legacy IDs remain"
+        )
+
+    for duplicate_id, canonical_id in aliases.items():
         if duplicate_id == canonical_id:
             raise RuntimeError(f"Refusing migration: self-alias detected: {duplicate_id}")
         if canonical_id in aliases:
             raise RuntimeError(
                 f"Refusing migration: canonical ID {canonical_id} is itself an alias; flatten aliases first"
             )
+        if canonical_id not in by_id:
+            raise RuntimeError(f"Refusing migration: canonical ID missing from catalog: {canonical_id}")
+
+    if not duplicate_ids_present:
+        return "already_deduplicated", []
+
+    plan: list[dict[str, str]] = []
+    for duplicate_id, canonical_id in sorted(aliases.items()):
+        duplicate = by_id[duplicate_id]
+        canonical = by_id[canonical_id]
         if business_fingerprint(duplicate) != business_fingerprint(canonical):
             raise RuntimeError(
                 f"Refusing migration: {duplicate_id} no longer exactly matches canonical {canonical_id}"
@@ -88,36 +98,37 @@ def validate_aliases(items: list[dict[str, Any]], aliases: dict[str, str]) -> li
             "name": str(duplicate.get("name", "")),
             "scientificName": str(duplicate.get("scientificName", "")),
         })
-    return plan
+    return "ready", plan
 
 
-def deduplicate_file(path: Path = FISH_DATA_TS, *, dry_run: bool = False) -> list[dict[str, str]]:
+def deduplicate_file(path: Path = FISH_DATA_TS, *, dry_run: bool = False) -> tuple[str, list[dict[str, str]]]:
     items = load_fish_data(path)
     aliases = load_aliases()
-    plan = validate_aliases(items, aliases)
-    if not dry_run:
+    state, plan = validate_aliases(items, aliases)
+    if not dry_run and state == "ready":
         duplicate_ids = set(aliases)
         remaining = [item for item in items if str(item.get("id", "")) not in duplicate_ids]
         if len(items) - len(remaining) != EXPECTED_ALIAS_COUNT:
             raise RuntimeError("Refusing migration: deletion count changed unexpectedly")
         write_fish_data(remaining, path)
-    return plan
+    return state, plan
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Guarded removal of exact duplicate catalog records after stable species-ID aliases exist."
     )
-    parser.add_argument("--check", action="store_true", help="Validate the exact 28-pair migration without writing.")
+    parser.add_argument("--check", action="store_true", help="Validate pre- or post-migration catalog state without writing.")
     parser.add_argument("--dry-run", action="store_true", help="Print the deletion plan without writing.")
     args = parser.parse_args()
 
     dry_run = args.check or args.dry_run
-    plan = deduplicate_file(dry_run=dry_run)
+    state, plan = deduplicate_file(dry_run=dry_run)
     print(json.dumps({
+        "state": state,
         "validatedDuplicateDeletions": len(plan),
         "plan": plan,
-        "written": bool(plan) and not dry_run,
+        "written": state == "ready" and bool(plan) and not dry_run,
     }, ensure_ascii=False, indent=2))
 
 
