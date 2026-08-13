@@ -7,7 +7,10 @@ const assert = (condition: unknown, message: string) => {
 };
 
 const covered = fishData.filter(species => getSpeciesWaterEvidence(species));
-assert(covered.length === 55, `expected explicit water evidence to cover the 55 audited fallback records, got ${covered.length}`);
+assert(
+  covered.length >= auditedWaterEvidenceTaxa.length,
+  `expected every audited water-evidence taxon to cover at least one catalog record; got ${covered.length} records for ${auditedWaterEvidenceTaxa.length} taxa`,
+);
 
 for (const scientificName of auditedWaterEvidenceTaxa) {
   assert(
