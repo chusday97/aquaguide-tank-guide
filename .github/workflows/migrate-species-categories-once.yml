@@ -31,6 +31,8 @@ jobs:
           count = plan['pendingCategoryChanges']
           print(f'pending_category_changes={count}')
           if count != 49:
+              for change in plan['changes']:
+                  print(f"{change['id']}\t{change['name']}\t{change['before']} -> {change['after']}")
               raise SystemExit(f'Expected exactly 49 audited category changes, got {count}; refusing to mutate catalog.')
           PY
       - name: Apply migration
