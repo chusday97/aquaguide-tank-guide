@@ -1,6 +1,8 @@
 import { fishData } from '../src/data/fishData';
+import { speciesIdAliases } from '../src/modules/species/speciesAliases';
 
-const MAX_LIKELY_DUPLICATE_ENTITY_GROUPS = 28;
+const MAX_LIKELY_DUPLICATE_ENTITY_GROUPS = 0;
+const EXPECTED_STABLE_ALIAS_COUNT = 28;
 
 const normalize = (value?: string) => (value || '').trim().toLowerCase().replace(/\s+/g, ' ');
 
@@ -51,40 +53,36 @@ for (const species of fishData) {
   byBusinessFingerprint.set(key, group);
 }
 
-const likelyDuplicateGroups = [...byBusinessFingerprint.values()]
+const likelyDuplicateEntities = [...byBusinessFingerprint.values()]
   .filter(group => group.length > 1)
-  .map(group => [...group].sort((a, b) => a.id.localeCompare(b.id)));
-
-const likelyDuplicateEntities = likelyDuplicateGroups
   .map(group => ({
     count: group.length,
-    records: group.map(species => ({
-      id: species.id,
-      name: species.name,
-      scientificName: species.scientificName,
-      category: species.category,
-      difficulty: species.difficulty,
-      waterTemperature: species.waterTemperature,
-      phLevel: species.phLevel,
-      tankSize: species.tankSize,
-      temperament: species.temperament,
-      size: species.size,
-      housingMode: species.housingMode,
-    })),
+    records: [...group]
+      .sort((a, b) => a.id.localeCompare(b.id))
+      .map(species => ({
+        id: species.id,
+        name: species.name,
+        scientificName: species.scientificName,
+        category: species.category,
+        difficulty: species.difficulty,
+        waterTemperature: species.waterTemperature,
+        phLevel: species.phLevel,
+        tankSize: species.tankSize,
+        temperament: species.temperament,
+        size: species.size,
+        housingMode: species.housingMode,
+      })),
   }))
   .sort((a, b) => b.count - a.count || a.records[0].scientificName.localeCompare(b.records[0].scientificName));
-
-const recommendedAliasMap = Object.fromEntries(
-  likelyDuplicateGroups.flatMap(group => {
-    const canonicalId = group[0].id;
-    return group.slice(1).map(species => [species.id, canonicalId]);
-  }),
-);
 
 const coarseScientificNameGroups = exactScientificNameDuplicates.filter(group => {
   const names = new Set(group.records.map(record => normalize(record.name)));
   return names.size > 1;
 });
+
+const remainingLegacyAliasIds = Object.keys(speciesIdAliases).filter(aliasId => fishData.some(species => species.id === aliasId));
+const missingCanonicalAliasTargets = Array.from(new Set(Object.values(speciesIdAliases)))
+  .filter(canonicalId => !fishData.some(species => species.id === canonicalId));
 
 const report = {
   totalSpecies: fishData.length,
@@ -93,11 +91,11 @@ const report = {
   likelyDuplicateEntityGroups: likelyDuplicateEntities.length,
   maxAllowedLikelyDuplicateEntityGroups: MAX_LIKELY_DUPLICATE_ENTITY_GROUPS,
   likelyDuplicateEntityRecords: likelyDuplicateEntities.reduce((sum, group) => sum + group.count, 0),
-  recommendedAliasCount: Object.keys(recommendedAliasMap).length,
-  recommendedAliasMap,
+  stableAliasCount: Object.keys(speciesIdAliases).length,
+  expectedStableAliasCount: EXPECTED_STABLE_ALIAS_COUNT,
+  remainingLegacyAliasIds,
+  missingCanonicalAliasTargets,
   coarseScientificNameGroups: coarseScientificNameGroups.length,
-  migrationRequiredBeforeDeletion: true,
-  migrationReason: 'Species IDs are business identifiers; duplicate rows must be aliased or migrated before any catalog deletion.',
   likelyDuplicateEntities,
   coarseScientificNames: coarseScientificNameGroups,
 };
@@ -108,5 +106,20 @@ if (likelyDuplicateEntities.length > MAX_LIKELY_DUPLICATE_ENTITY_GROUPS) {
   console.error(
     `Duplicate catalog debt increased: ${likelyDuplicateEntities.length} likely duplicate entity groups; maximum allowed is ${MAX_LIKELY_DUPLICATE_ENTITY_GROUPS}.`,
   );
+  process.exit(1);
+}
+
+if (Object.keys(speciesIdAliases).length !== EXPECTED_STABLE_ALIAS_COUNT) {
+  console.error(`Stable species alias count changed unexpectedly: ${Object.keys(speciesIdAliases).length}`);
+  process.exit(1);
+}
+
+if (remainingLegacyAliasIds.length > 0) {
+  console.error(`Deduplicated legacy species IDs reappeared in catalog: ${remainingLegacyAliasIds.join(', ')}`);
+  process.exit(1);
+}
+
+if (missingCanonicalAliasTargets.length > 0) {
+  console.error(`Canonical species IDs required by aliases are missing: ${missingCanonicalAliasTargets.join(', ')}`);
   process.exit(1);
 }
