@@ -14,7 +14,7 @@ type SurfaceHeaderProps = {
   className?: string;
 };
 
-const iconButtonClass = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-bg text-ink/60 transition-colors hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
+const iconButtonClass = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-transparent text-ink/55 transition-colors hover:border-ink/10 hover:bg-white hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
 
 export function SurfaceHeader({
   title,
@@ -28,7 +28,7 @@ export function SurfaceHeader({
   className,
 }: SurfaceHeaderProps) {
   return (
-    <header className={cn('surface-header flex min-h-16 shrink-0 items-center gap-3 border-b border-border bg-white px-3 py-2.5 min-[760px]:px-4', className)}>
+    <header className={cn('surface-header flex min-h-16 shrink-0 items-center gap-3 border-b border-ink/10 bg-[#FDFCF8] px-3 py-2.5 min-[760px]:px-5', className)}>
       {onBack && (
         <button type="button" onClick={onBack} className={iconButtonClass} aria-label={backLabel} title={backLabel}>
           <ChevronLeft className="h-5 w-5" />
@@ -36,7 +36,7 @@ export function SurfaceHeader({
       )}
       <div className="min-w-0 flex-1">
         {eyebrow && <div className="text-[10px] font-black uppercase tracking-[0.12em] text-ink/42">{eyebrow}</div>}
-        <div className="break-words text-[15px] font-black leading-tight text-ink">{title}</div>
+        <div className="break-words font-serif text-[16px] font-bold leading-tight text-ink">{title}</div>
         {description && <div className="mt-0.5 break-words text-[11px] font-semibold leading-4 text-ink/48">{description}</div>}
       </div>
       {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
@@ -48,4 +48,3 @@ export function SurfaceHeader({
     </header>
   );
 }
-

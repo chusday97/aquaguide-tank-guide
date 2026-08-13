@@ -70,7 +70,7 @@ try {
 
   await desktop.locator('[data-preview-item="wishlist"]').first().click();
   await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && url.searchParams.get('item') === 'sp_0004');
-  await desktop.locator('[data-surface="centered-dialog"]').waitFor();
+  await desktop.locator('[data-surface="detail-drawer"]').waitFor();
   await desktop.getByRole('button', { name: '知道了', exact: true }).click();
   await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && !url.searchParams.has('item'));
   await desktop.goBack();
@@ -78,7 +78,7 @@ try {
 
   await desktop.locator('[data-preview-item="care"]').first().click();
   await desktop.waitForURL(url => url.pathname === '/collection/care' && url.searchParams.get('item') === 'guide_pregnant_care');
-  await desktop.locator('[data-surface="centered-dialog"]').waitFor();
+  await desktop.locator('[data-surface="detail-drawer"]').waitFor();
   await desktop.goBack();
   await desktop.waitForURL(url => url.pathname === '/collection');
 

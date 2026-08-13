@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
+import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Share2, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
@@ -3314,7 +3314,7 @@ export function CareArticleDetail({
         };
 
   return (
-    <div className="flex max-h-[88vh] flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-col bg-[#FDFCF8]">
       <div ref={scrollRef} className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
         <div className="mx-auto max-w-[850px] p-4 pb-8 pt-7">
           <div className="grid gap-4 md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] md:items-stretch">
@@ -3331,23 +3331,44 @@ export function CareArticleDetail({
                   {getUrgencyTagLabel(meta.urgencyTag, isEn)}
                 </span>
               </div>
-              <div className="flex items-start gap-2">
-                <h2 className="min-w-0 flex-1 text-[22px] font-black leading-tight text-ink">{careGuide.title}</h2>
-                <button
-                  type="button"
-                  onClick={(event) => onToggleFavorite(event.currentTarget)}
-                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-bg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
-                    favorite ? 'text-rose-500' : 'text-ink/35'
-                  }`}
-                  aria-label={favorite ? (isEn ? 'Unsave' : '取消收藏') : (isEn ? 'Save' : '收藏百科')}
-                >
-                  <Heart className={`h-4 w-4 ${favorite ? 'fill-current' : ''}`} />
-                </button>
-              </div>
-              <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
+              <h2 className="font-serif text-[25px] font-bold leading-tight text-ink">{careGuide.title}</h2>
+              <section className="mt-3 border-y border-emerald-200 py-3.5">
                 <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
                 <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
               </section>
+              {!(meta.guideType === 'diagnosis' && isDiagnosisStarted) && (
+                <div className="mt-3" data-care-primary-action>
+                  <Button
+                    type="button"
+                    onClick={(event) => handlePrimaryCta(event.currentTarget)}
+                    disabled={isPrimaryDisabled}
+                    className="h-12 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800"
+                  >
+                    {primaryCtaLabel}
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </Button>
+                  {secondaryLabel && (
+                    <Button type="button" variant="outline" onClick={handleSecondaryCta} className="mt-2 h-11 w-full rounded-full border-emerald-100 bg-white text-sm font-black text-emerald-700 hover:bg-emerald-50">
+                      {secondaryLabel}
+                    </Button>
+                  )}
+                  <div className="mt-2 grid grid-cols-2 gap-2" aria-label={isEn ? 'Guide tools' : '指南工具'}>
+                    <button
+                      type="button"
+                      onClick={(event) => onToggleFavorite(event.currentTarget)}
+                      className={`flex min-h-11 items-center justify-center gap-2 rounded-full border px-3 text-[11px] font-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${favorite ? 'border-rose-100 bg-rose-50 text-rose-600' : 'border-border bg-white text-ink/55'}`}
+                      aria-label={favorite ? (isEn ? 'Unsave' : '取消收藏') : (isEn ? 'Save' : '收藏百科')}
+                    >
+                      <Heart className={`h-4 w-4 ${favorite ? 'fill-current' : ''}`} />
+                      {favorite ? (isEn ? 'Saved' : '已收藏') : (isEn ? 'Save' : '收藏')}
+                    </button>
+                    <button type="button" onClick={onOpenShare} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-white px-3 text-[11px] font-black text-ink/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                      <Share2 className="h-4 w-4" />{isEn ? 'Share card' : '分享卡片'}
+                    </button>
+                  </div>
+                  {ctaFeedback && <div className="mt-2 rounded-[14px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-700" role="status">{ctaFeedback}</div>}
+                </div>
+              )}
               {meta.guideType === 'procedure' && procedureSteps.length > 0 && (
                 <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm">
                   <div className="text-[12px] font-black text-ink">{isEn ? 'Follow Steps Sequentially' : '现在按顺序做'}</div>
@@ -3547,46 +3568,6 @@ export function CareArticleDetail({
           )}
         </div>
       </div>
-
-      {!(meta.guideType === 'diagnosis' && isDiagnosisStarted) && (
-      <div className="modalFooter shrink-0 border-t border-border bg-white/95 shadow-[0_-12px_30px_rgba(15,23,42,0.08)]">
-        <div className="grid gap-2 md:mx-auto md:max-w-[700px] md:grid-cols-[auto_auto] md:justify-end">
-          <Button
-            type="button"
-            onClick={(event) => handlePrimaryCta(event.currentTarget)}
-            disabled={isPrimaryDisabled}
-            className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800 md:w-fit md:min-w-[180px] md:max-w-[240px]"
-          >
-            {primaryCtaLabel}
-            <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-          {secondaryLabel && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleSecondaryCta}
-              className="h-10 w-full rounded-full border-emerald-100 bg-white text-sm font-black text-emerald-700 hover:bg-emerald-50 md:w-fit md:min-w-[160px] md:max-w-[220px]"
-            >
-              {secondaryLabel}
-            </Button>
-          )}
-          {ctaFeedback && (
-            <div className="flex items-center justify-center gap-2 rounded-[18px] bg-emerald-50 px-3 py-1.5 text-center text-[11px] font-black text-emerald-700 md:col-span-2">
-              <span>{ctaFeedback}</span>
-              {(ctaFeedback.includes('水族册') || ctaFeedback.includes('collection') || ctaFeedback.toLowerCase().includes('saved')) && onOpenCollection && (
-                <button
-                  type="button"
-                  onClick={onOpenCollection}
-                  className="shrink-0 rounded-full bg-white px-2.5 py-1 text-emerald-800 shadow-sm ring-1 ring-emerald-100"
-                >
-                  {isEn ? 'Go to Collection' : '去水族册查看'}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-      )}
 
       {reminderSheet && (
         <div className="fixed inset-0 z-[1200] flex items-end justify-center bg-black/30 px-4 pb-4" onClick={() => setReminderSheet(null)}>

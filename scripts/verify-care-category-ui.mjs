@@ -39,14 +39,14 @@ const inspectNewStock = async (locale, buttonName) => {
 
   const resultCount = Number(await page.locator('#care-results').getAttribute('data-care-result-count'));
   assert.ok(resultCount >= 2, `${locale} new-stock category should show at least two articles`);
-  assert.equal(await page.locator('[data-surface="centered-dialog"]').count(), 0, 'choosing a category must not open a single article');
+  assert.equal(await page.locator('[data-surface="detail-drawer"]').count(), 0, 'choosing a category must not open a single article');
   assert.equal(await category.getAttribute('class').then(value => value?.includes('bg-emerald-50')), true, 'selected category should stay visibly selected');
 
   const firstArticle = page.locator('#care-results button[id^="care-article-"]').first();
   await firstArticle.click();
-  await page.locator('[data-surface="centered-dialog"]').waitFor();
+  await page.locator('[data-surface="detail-drawer"]').waitFor();
   await page.keyboard.press('Escape');
-  await page.locator('[data-surface="centered-dialog"]').waitFor({ state: 'detached' });
+  await page.locator('[data-surface="detail-drawer"]').waitFor({ state: 'detached' });
   assert.equal(Number(await page.locator('#care-results').getAttribute('data-care-result-count')), resultCount, 'closing an article must restore the category result set');
   assert.deepEqual(errors, [], `${locale} care page should not throw: ${errors.join('; ')}`);
   await page.close();

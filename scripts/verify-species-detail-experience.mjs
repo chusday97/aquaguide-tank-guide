@@ -104,11 +104,12 @@ try {
       assert.equal(reasonBoxes.length, 3, 'phone detail must render three key reasons without claiming they all fit before scrolling');
       assert.ok(heroBox.y + heroBox.height < feedingBox.y, 'phone hero and feeding summary must not overlap');
       assert.ok(feedingBox.y + feedingBox.height < verdictBox.y, 'feeding summary must appear before the fit verdict');
-      assert.ok(verdictBox.y < actionBox.y, 'phone must show the fit verdict before the sticky primary action');
+      assert.ok(verdictBox.y < actionBox.y, 'phone must show the fit verdict before the primary action');
       const lastReason = dialog.locator('[aria-label="Key reasons"] > div').last();
-      await lastReason.scrollIntoViewIfNeeded();
-      const [scrolledReasonBox, stickyActionBox] = await Promise.all([lastReason.boundingBox(), primaryAction.boundingBox()]);
-      assert.ok(scrolledReasonBox && stickyActionBox && scrolledReasonBox.y + scrolledReasonBox.height <= stickyActionBox.y, 'phone reasons must remain reachable above the sticky primary action after scrolling');
+      await lastReason.evaluate(node => node.scrollIntoView({ block: 'center' }));
+      await current.page.waitForTimeout(120);
+      const [scrolledReasonBox, scrolledDialogBox] = await Promise.all([lastReason.boundingBox(), dialog.boundingBox()]);
+      assert.ok(scrolledReasonBox && scrolledDialogBox && scrolledReasonBox.y >= scrolledDialogBox.y && scrolledReasonBox.y + scrolledReasonBox.height <= scrolledDialogBox.y + scrolledDialogBox.height, 'phone reasons must remain reachable after the inline primary action');
     }
     const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank fit evidence/ : /适配依据/ });
     assert.equal(await fitSection.getAttribute('aria-expanded'), 'false', 'fit evidence must be collapsed on first open');
@@ -210,8 +211,8 @@ try {
   const ownedAquarium = await newSeededPage({ state: createState({ withTank: true, owned: true }) });
   await ownedAquarium.page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await ownedAquarium.page.locator('.aquarium-archive button[aria-haspopup="dialog"]').click();
-  const roster = ownedAquarium.page.locator('[role="dialog"]:visible').filter({ hasText: '缸内物种' }).first();
-  await roster.getByRole('button', { name: /Open .* profile/ }).click();
+  const roster = ownedAquarium.page.locator('[role="dialog"][data-surface="task-flow"]:visible').first();
+  await roster.locator('[data-livestock-open-profile]').click();
   const aquariumDetail = ownedAquarium.page.locator('[role="dialog"][data-surface]:visible');
   const careAction = aquariumDetail.getByRole('button', { name: 'View Care Essentials', exact: true });
   assert.equal(await careAction.count(), 1, 'owned aquarium detail must replace the duplicate tank entry with one contextual action');

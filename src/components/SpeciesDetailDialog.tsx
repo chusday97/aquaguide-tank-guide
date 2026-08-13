@@ -797,32 +797,13 @@ export function SpeciesDetailDialog({
                 title={isEn ? 'Species profile' : '物种档案'}
                 onClose={() => onOpenChange(false)}
                 closeLabel={t('encyclopedia.dismiss')}
-                actions={(
-                  <>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setExportError('');
-                      setIsExportOpen(true);
-                    }}
-                    className="flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-[11px] font-black text-ink/60 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                    aria-label={isEn ? 'Export species card' : '导出物种卡片'}
-                  >
-                    <Download className="h-4 w-4" />
-                    <span className="hidden min-[760px]:inline">{isEn ? 'Export card' : '导出卡片'}</span>
-                  </button>
-                  <button type="button" onClick={handleShare} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/60 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
-                    <Share2 className="h-5 w-5" />
-                  </button>
-                  </>
-                )}
               />
 
               <div className="modalBody species-detail-body app-scrollbar-hidden p-0">
                 <div className="p-3 min-[760px]:p-5" data-species-detail-layout="single-screen-profile">
-                  <section className="overflow-hidden rounded-[24px] border border-border bg-gradient-to-br from-white via-sky-50/45 to-emerald-50/55 shadow-sm">
-                    <div className="grid min-w-0 grid-cols-1 min-[760px]:grid-cols-[minmax(280px,1.05fr)_minmax(0,0.95fr)]">
-                      <div className="min-w-0 p-2 min-[760px]:p-4">
+                  <section className="overflow-hidden border-y border-ink/10 bg-transparent">
+                    <div className="grid min-w-0 grid-cols-1 min-[620px]:grid-cols-[minmax(250px,0.92fr)_minmax(0,1.08fr)]">
+                      <div className="min-w-0 py-3 min-[620px]:py-5 min-[620px]:pr-5">
                       {fish.id === 'sp_0260' ? (
                         <Suspense fallback={<div className="flex h-[140px] items-center justify-center rounded-[18px] border border-border/70 bg-slate-50 text-[11px] text-slate-400 min-[760px]:h-[310px] min-[760px]:rounded-[20px]">{isEn ? 'Loading 3D...' : '3D 加载中...'}</div>}>
                           <Interactive3DFishWrapper
@@ -837,7 +818,7 @@ export function SpeciesDetailDialog({
                         </button>
                       )}
                       </div>
-                      <div className="flex min-w-0 flex-col p-3 min-[760px]:justify-center min-[760px]:p-6">
+                      <div className="flex min-w-0 flex-col py-3 min-[620px]:justify-center min-[620px]:border-l min-[620px]:border-ink/10 min-[620px]:py-5 min-[620px]:pl-5">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <DialogTitle className="break-words font-serif text-[21px] font-bold italic leading-tight text-ink min-[760px]:text-[30px]">{fish.name}</DialogTitle>
@@ -853,7 +834,7 @@ export function SpeciesDetailDialog({
                         </div>
                         <p className="mt-3 hidden text-[12px] font-bold leading-relaxed text-ink/62 min-[760px]:block">{getLocalizedSpeciesRole(fish, t)}</p>
 
-                        <section data-species-feeding-summary className="mt-2 rounded-[16px] border border-amber-100 bg-amber-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3" aria-labelledby="species-feeding-summary-title">
+                        <section data-species-feeding-summary className="mt-3 border-y border-amber-200/70 py-3" aria-labelledby="species-feeding-summary-title">
                           <div className="flex items-center justify-between gap-2">
                             <h3 id="species-feeding-summary-title" className="text-[11px] font-black text-amber-900">{isEn ? 'Feeding at a glance' : '喂养速览'}</h3>
                             {carePresentation && (
@@ -864,8 +845,8 @@ export function SpeciesDetailDialog({
                           </div>
                           <p className="mt-1 break-words text-[11px] font-bold leading-4 text-ink/70">{fish.feedingProfile?.recommendedFoods || fish.diet}</p>
                           <div className="mt-1.5 grid grid-cols-2 gap-1.5 text-[10px] font-semibold leading-4 text-ink/58">
-                            <div className="rounded-[10px] bg-white/80 px-2 py-1.5"><strong className="block text-ink/72">{isEn ? 'Frequency' : '频率'}</strong>{fish.feedingProfile?.feedingFrequency || (isEn ? 'Feed a small amount daily' : '每日少量投喂')}</div>
-                            <div className="rounded-[10px] bg-white/80 px-2 py-1.5"><strong className="block text-ink/72">{isEn ? 'Portion' : '单次份量'}</strong>{fish.feedingProfile?.portionRule || (isEn ? 'Finish within a few minutes' : '以数分钟内吃完为准')}</div>
+                            <div className="border-r border-ink/10 pr-2"><strong className="block text-ink/72">{isEn ? 'Frequency' : '频率'}</strong>{fish.feedingProfile?.feedingFrequency || (isEn ? 'Feed a small amount daily' : '每日少量投喂')}</div>
+                            <div className="pl-1"><strong className="block text-ink/72">{isEn ? 'Portion' : '单次份量'}</strong>{fish.feedingProfile?.portionRule || (isEn ? 'Finish within a few minutes' : '以数分钟内吃完为准')}</div>
                           </div>
                           <p className="mt-1.5 break-words text-[10px] font-semibold leading-4 text-amber-950/62"><strong>{isEn ? 'Avoid: ' : '避免：'}</strong>{fish.feedingProfile?.avoidFoods || (isEn ? 'Overfeeding and uneaten food' : '过量投喂和长期残饵')}</p>
                         </section>
@@ -891,6 +872,16 @@ export function SpeciesDetailDialog({
                           </div>
                         </div>
 
+                        <Button
+                          type="button"
+                          data-species-primary-action
+                          className="mt-3 min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90"
+                          onClick={handleMainAction}
+                        >
+                          {mainActionLabel}
+                          <ChevronRight className="ml-1 h-4 w-4" />
+                        </Button>
+
                         {verdictReasons.length > 0 && (
                           <div className="mt-2 grid gap-1 min-[760px]:mt-3 min-[760px]:gap-1.5" aria-label={isEn ? 'Key reasons' : '关键原因'}>
                             {verdictReasons.map(reason => (
@@ -902,33 +893,32 @@ export function SpeciesDetailDialog({
                           </div>
                         )}
 
-                        <div className="mt-2 flex flex-wrap gap-2 min-[760px]:mt-3">
+                        <div className="mt-2 grid grid-cols-3 gap-2" aria-label={isEn ? 'Species tools' : '物种工具'}>
                           <button
                             type="button"
                             onClick={() => onToggleWishlist(fish.id)}
                             aria-pressed={inWishlist}
-                            className={`flex min-h-10 items-center gap-2 rounded-full border px-3 text-[11px] font-black ${
+                            className={`flex min-h-11 items-center justify-center gap-1.5 rounded-full border px-2 text-[10px] font-black ${
                               inWishlist ? 'border-rose-100 bg-rose-50 text-rose-700' : 'border-border bg-white text-ink/60 hover:border-rose-200'
                             }`}
                           >
                             {inWishlist ? <Heart className="h-4 w-4 fill-current" /> : <HeartOff className="h-4 w-4" />}
-                            {inWishlist ? t('encyclopedia.inWishlistBtn') : t('encyclopedia.addToWishlistBtn')}
+                            <span className="min-w-0">{inWishlist ? t('encyclopedia.inWishlistBtn') : t('encyclopedia.addToWishlistBtn')}</span>
                           </button>
-                          {onRecordDeath && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setDeathBatchId('');
-                                setDeathOperationId(typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
-                                setIsDeathFormOpen(true);
-                              }}
-                              className="flex min-h-10 items-center gap-2 rounded-full border border-border bg-white px-3 text-[11px] font-black text-ink/60 hover:border-ink/20"
-                            >
-                              <Skull className="h-4 w-4" />
-                              {t('encyclopedia.moreLabel')}
-                            </button>
-                          )}
+                          <button type="button" onClick={() => { setExportError(''); setIsExportOpen(true); }} className="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-border bg-white px-2 text-[10px] font-black text-ink/60 hover:border-emerald-200 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                            <Download className="h-4 w-4" />
+                            <span>{isEn ? 'Export' : '下载'}</span>
+                          </button>
+                          <button type="button" onClick={handleShare} className="flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-border bg-white px-2 text-[10px] font-black text-ink/60 hover:border-emerald-200 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.shareTextSuffix').trim()}>
+                            <Share2 className="h-4 w-4" />
+                            <span>{isEn ? 'Share' : '分享'}</span>
+                          </button>
                         </div>
+                        {onRecordDeath && (
+                          <button type="button" onClick={() => { setDeathBatchId(''); setDeathOperationId(typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`); setIsDeathFormOpen(true); }} className="mt-2 flex min-h-11 items-center gap-2 self-start rounded-full px-2 text-[11px] font-black text-ink/50 hover:bg-white">
+                            <Skull className="h-4 w-4" />{t('encyclopedia.moreLabel')}
+                          </button>
+                        )}
                       </div>
                     </div>
                   </section>
@@ -1130,10 +1120,6 @@ export function SpeciesDetailDialog({
                     </div>
                   )}
                 </div>
-              </div>
-
-              <div className="modalFooter shrink-0 border-t border-border bg-white/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 min-[760px]:px-6">
-                <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
               </div>
 
               {isDeathFormOpen && (

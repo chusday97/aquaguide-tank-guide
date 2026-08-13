@@ -27,7 +27,7 @@ const openSpecies = async ({ speciesId, locale, width }) => {
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
   await page.goto(`${baseUrl}/encyclopedia?species=${speciesId}`, { waitUntil: 'domcontentloaded' });
-  const surface = page.locator('[data-surface="centered-dialog"], [data-surface="bottom-sheet"]');
+  const surface = page.locator('[data-surface="detail-drawer"], [data-surface="bottom-sheet"]');
   await surface.waitFor({ state: 'visible' });
   return { context, page, surface, pageErrors };
 };

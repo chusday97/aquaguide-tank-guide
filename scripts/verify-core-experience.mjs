@@ -85,7 +85,9 @@ try {
   await page.locator('#collection-wishlist-sp_0001 button').first().click();
   const speciesDialog = page.getByRole('dialog');
   await speciesDialog.getByText('极火虾', { exact: true }).first().waitFor();
-  assert.equal(await speciesDialog.getAttribute('data-surface'), 'centered-dialog');
+  assert.equal(await speciesDialog.getAttribute('data-surface'), 'detail-drawer');
+  assert.equal(await speciesDialog.locator('.modalFooter').count(), 0, 'species primary action must not be trapped in a bottom footer');
+  await speciesDialog.locator('[data-species-primary-action]').waitFor();
   await speciesDialog.getByRole('button', { name: /返回|知道了|Got it/ }).click();
   await speciesDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-wishlist-sp_0001')?.classList.contains('workspace-section-highlight'));
@@ -101,8 +103,9 @@ try {
   assert.doesNotMatch(careFavoritesText, /为当前鱼缸推荐|按问题快速查找/);
   await page.locator('#collection-care-guide_water_deteriorate button').first().click();
   await page.getByText('水质变差怎么办', { exact: true }).last().waitFor();
-  const careDialog = page.locator('[role="dialog"][data-surface="centered-dialog"]:visible');
-  assert.equal(await careDialog.getAttribute('data-surface'), 'centered-dialog');
+  const careDialog = page.locator('[role="dialog"][data-surface="detail-drawer"]:visible');
+  assert.equal(await careDialog.getAttribute('data-surface'), 'detail-drawer');
+  await careDialog.locator('[data-care-primary-action]').waitFor();
   await careDialog.getByRole('button', { name: '关闭' }).click();
   await careDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-care-guide_water_deteriorate')?.classList.contains('workspace-section-highlight'));

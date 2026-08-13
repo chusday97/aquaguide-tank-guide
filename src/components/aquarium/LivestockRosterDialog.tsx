@@ -9,6 +9,7 @@ import { SurfaceHeader } from '../common/SurfaceHeader';
 import { useTranslation } from 'react-i18next';
 import { QuantityStepper } from '../forms/QuantityStepper';
 import { getLifeType } from '../../modules/species/species.service';
+import { AdaptiveTaskContent } from '../common/AdaptiveTaskContent';
 
 type RemovalDraft = {
   record: AquariumFish;
@@ -158,28 +159,24 @@ export function LivestockRosterDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={requestRosterOpenChange}>
-        <DialogContent showCloseButton={false} className="flex h-[92dvh] max-h-[92dvh] w-[min(94vw,900px)] max-w-[900px] flex-col overflow-hidden rounded-[28px] p-0 sm:h-auto sm:max-h-[88dvh]">
+        <AdaptiveTaskContent showCloseButton={false}>
           <SurfaceHeader
             title={editingRecordId ? (isEn ? 'Manage livestock state' : '调整缸内物种体态') : (isEn ? 'Tank livestock' : '缸内物种')}
             description={editingRecordId
               ? (isEn ? 'Update one batch at a time, then review and save.' : '按批次调整，确认修改摘要后再保存。')
               : `${aquariumName} · ${visibleRecords.length} ${isEn ? 'species' : '种'} · ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} ${isEn ? 'animals' : '只/条'}`}
             onClose={() => requestRosterOpenChange(false)}
-            actions={(
-              editingRecordId ? undefined : (
-                <>
-                <button type="button" disabled={isCreatingShare} onClick={onCreateShare} aria-label={isEn ? 'Create share report' : '生成分享报告'} title={isEn ? 'Create share report' : '生成分享报告'} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
-                  <Share2 className="h-4 w-4" />
-                </button>
-                <button type="button" onClick={onDownloadArchive} className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-bg px-3 text-xs font-black text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                  <Download className="h-4 w-4" />{isEn ? 'Export archive' : '导出档案'}
-                </button>
-                </>
-              )
-            )}
           />
-          <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
-            {!editingRecordId && <section className="mb-4 rounded-[20px] border border-emerald-100 bg-white p-4">
+          <div className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto bg-[#FDFCF8] px-4 py-4 md:px-6">
+            {!editingRecordId && <section className="mb-5 border-y border-ink/10 py-4">
+              <div className="mb-4 flex flex-wrap gap-2" aria-label={isEn ? 'Aquarium archive tools' : '鱼缸档案工具'}>
+                <button type="button" disabled={isCreatingShare} onClick={onCreateShare} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-white px-4 text-xs font-black text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
+                  <Share2 className="h-4 w-4" />{isEn ? 'Create share report' : '生成分享报告'}
+                </button>
+                <button type="button" onClick={onDownloadArchive} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-white px-4 text-xs font-black text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+                  <Download className="h-4 w-4" />{isEn ? 'Export archive' : '导出鱼缸档案'}
+                </button>
+              </div>
               <div className="flex flex-wrap items-end gap-3">
                 <label className="min-w-[190px] flex-1 text-xs font-black text-ink/65">
                   {isEn ? 'Aquarium start date' : '建缸日期'}
@@ -210,7 +207,7 @@ export function LivestockRosterDialog({
               )}
             </section>}
             {displayedRecords.length > 0 ? (
-              <div className="grid gap-3 md:grid-cols-2">
+              <div className="grid gap-3">
                 {displayedRecords.map(({ record, fish }) => (
                   <div key={record.id} className="relative min-w-0">
                     {!editingRecordId && <button
@@ -246,7 +243,7 @@ export function LivestockRosterDialog({
               </div>
             )}
           </div>
-        </DialogContent>
+        </AdaptiveTaskContent>
       </Dialog>
 
       <Dialog open={isRosterCloseConfirmOpen} onOpenChange={setIsRosterCloseConfirmOpen}>

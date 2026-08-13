@@ -362,10 +362,10 @@ export function LivestockBatchCard({
 
   return (
     <>
-      <article className={`min-w-0 rounded-[20px] border border-emerald-100 bg-white shadow-sm ${isEditing ? 'col-span-full overflow-hidden' : 'col-span-1 p-3 lg:col-span-2'}`}>
+      <article className={`min-w-0 border-b border-ink/10 bg-transparent ${isEditing ? 'col-span-full overflow-hidden' : 'col-span-1 px-1 py-4 lg:col-span-2'}`}>
         {!isEditing ? (
           <div className="flex min-w-0 items-center gap-3">
-            <button type="button" onClick={onOpenDetail} className="flex h-20 w-24 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" aria-label={t('livestock.openProfile', { name: fish.name })}>
+            <button type="button" data-livestock-open-profile onClick={onOpenDetail} className="flex h-20 w-24 shrink-0 items-center justify-center rounded-[18px] border border-ink/10 bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500" aria-label={t('livestock.openProfile', { name: fish.name })}>
               <img src={getSpeciesDisplayImage(fish)} alt={fish.name} className={`h-[88%] w-[88%] object-contain ${getSpeciesImageClass(fish)}`} />
             </button>
             <div className="min-w-0 flex-1 pr-10">
@@ -378,8 +378,8 @@ export function LivestockBatchCard({
             </div>
           </div>
         ) : (
-          <div className="bg-[#FBFAF6]">
-            <header className="border-b border-border bg-white px-4 py-4 md:px-5">
+          <div className="bg-[#FDFCF8]">
+            <header className="border-b border-ink/10 bg-[#FDFCF8] px-4 py-4 md:px-5">
               <button type="button" onClick={requestClose} disabled={isSaving} className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-full px-2 text-xs font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 disabled:opacity-50">
                 <ArrowLeft className="h-4 w-4" />
                 {t('livestock.backToList')}
@@ -396,7 +396,7 @@ export function LivestockBatchCard({
             </header>
 
             <div className="grid gap-4 px-3 py-4 md:px-5" data-livestock-state-task data-task-step={taskStep}>
-              <ol className="grid grid-cols-3 gap-2" aria-label={isEn ? 'Livestock state steps' : '体态调整步骤'}>
+              <ol className="flex items-center border-y border-ink/10 py-3" aria-label={isEn ? 'Livestock state steps' : '体态调整步骤'}>
                 {[
                   isEn ? 'Choose group' : '选择数量',
                   isEn ? 'Choose state' : '选择体态',
@@ -406,7 +406,7 @@ export function LivestockBatchCard({
                   const active = step === taskStep;
                   const complete = step < taskStep;
                   return (
-                    <li key={label} className={`rounded-2xl px-2 py-2.5 text-center text-[11px] font-black ${active ? 'bg-emerald-700 text-white shadow-sm' : complete ? 'bg-emerald-50 text-emerald-800' : 'bg-white text-ink/38'}`}>
+                    <li key={label} className={`relative flex min-w-0 flex-1 items-center justify-center px-2 py-2 text-center text-[11px] font-black after:absolute after:right-0 after:h-px after:w-4 after:bg-ink/15 last:after:hidden ${active ? 'text-emerald-800' : complete ? 'text-emerald-700' : 'text-ink/38'}`}>
                       <span className="mr-1">{complete ? <Check className="inline h-3.5 w-3.5" /> : step}</span>{label}
                     </li>
                   );
@@ -414,7 +414,7 @@ export function LivestockBatchCard({
               </ol>
 
               {taskStep === 1 && selectedSourceBatch && (
-                <section className="rounded-[22px] border border-border/80 bg-white p-4 shadow-sm">
+                <section className="border-y border-ink/10 bg-transparent py-5">
                   <h3 className="text-base font-black text-ink">{isEn ? 'Which animals are changing?' : '这次要调整哪一组？'}</h3>
                   <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">{isEn ? 'Choose the group and number. The remaining animals keep their current state automatically.' : '选择批次和本次调整数量；其余生物会自动保留原体态，不需要理解“拆分批次”。'}</p>
                   {sourceBatches.length > 1 && (
@@ -443,7 +443,7 @@ export function LivestockBatchCard({
               )}
 
               {taskStep === 2 && selectedSourceBatch && (
-                <section className="rounded-[22px] border border-border/80 bg-white p-4 shadow-sm">
+                <section className="border-y border-ink/10 bg-transparent py-5">
                   <h3 className="text-base font-black text-ink">{isEn ? `Set the state for ${targetQuantity}` : `为这 ${targetQuantity} 只/条选择体态`}</h3>
                   <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">{isEn ? 'State changes create observation reminders, but do not diagnose disease or change compatibility.' : '体态只会生成观察提醒，不会自动判病，也不会改变混养结论。'}</p>
                   <div className="mt-4">
@@ -458,7 +458,7 @@ export function LivestockBatchCard({
               )}
 
               {taskStep === 3 && (
-                <section className="rounded-[22px] border border-emerald-200 bg-white p-4 shadow-sm">
+                <section className="border-y border-emerald-200 bg-transparent py-5">
                   <h3 className="text-base font-black text-ink">{isEn ? 'Review before saving' : '保存前核对'}</h3>
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     <div className="rounded-2xl bg-bg px-3 py-3">
