@@ -102,7 +102,7 @@
     "audit:images": "python3 scripts/audit_species_images.py",
     "audit:taxonomy": "tsx scripts/generate_taxonomy_review.ts",
     "audit:species-knowledge": "python3 scripts/audit_species_knowledge.py",
-    "refresh:species-assets": "python3 scripts/prepare_species_assets_and_data.py && python3 scripts/add_housing_profiles.py && python3 scripts/add_feeding_profiles_to_fish_data.py && python3 scripts/audit_species_images.py",
+    "refresh:species-assets": "python3 scripts/prepare_species_assets_and_data_safe.py && python3 scripts/add_housing_profiles.py && python3 scripts/add_feeding_profiles_to_fish_data.py && python3 scripts/audit_species_images.py",
     "test:no-export-features": "node scripts/verify-no-export-features.mjs",
     "test:care-first-screen": "node scripts/test-care-first-screen.mjs",
     "test:typography-system": "node scripts/test-typography-system.mjs",
