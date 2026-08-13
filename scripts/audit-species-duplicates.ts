@@ -84,6 +84,8 @@ const report = {
   maxAllowedLikelyDuplicateEntityGroups: MAX_LIKELY_DUPLICATE_ENTITY_GROUPS,
   likelyDuplicateEntityRecords: likelyDuplicateEntities.reduce((sum, group) => sum + group.count, 0),
   coarseScientificNameGroups: coarseScientificNameGroups.length,
+  migrationRequiredBeforeDeletion: true,
+  migrationReason: 'Species IDs are business identifiers; duplicate rows must be aliased or migrated before any catalog deletion.',
   likelyDuplicateEntities,
   coarseScientificNames: coarseScientificNameGroups,
 };
