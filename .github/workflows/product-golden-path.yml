@@ -17,6 +17,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Catalog water-type audit
+        run: npx tsx scripts/audit-species-water-type-fallback.ts
       - name: Taxonomy regression
         run: |
           npm run test:taxonomy
