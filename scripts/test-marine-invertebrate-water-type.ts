@@ -1,3 +1,4 @@
+import { fishData } from '../src/data/fishData';
 import type { Fish } from '../src/types';
 import {
   getLifeType,
@@ -59,8 +60,17 @@ assert(isSpeciesCompatibleWithWaterType(freshwaterShrimp, 'Freshwater'), 'Neocar
 assert(!isSpeciesCompatibleWithWaterType(freshwaterShrimp, 'Saltwater'), 'Neocaridina davidi: must not be compatible with saltwater');
 assert(getSpeciesFilterTags(freshwaterShrimp).environmentTags.includes('淡水'), 'Neocaridina davidi: expected 淡水 environment tag');
 
+const catalogMarineCleaners = fishData.filter(species => getSecondaryCategory(species) === '海水清洁生物');
+for (const species of catalogMarineCleaners) {
+  assert(isSaltwaterSpecies(species), `${species.id} ${species.name}: marine cleaner catalog item must be saltwater`);
+  const environmentTags = getSpeciesFilterTags(species).environmentTags;
+  assert(environmentTags.includes('海水'), `${species.id} ${species.name}: marine cleaner catalog item must receive 海水 tag`);
+  assert(!environmentTags.includes('淡水'), `${species.id} ${species.name}: marine cleaner catalog item must not receive 淡水 tag`);
+}
+
 console.log(JSON.stringify({
   ok: true,
   marineCases: marineCases.map(item => item.scientificName),
   freshwaterControl: freshwaterShrimp.scientificName,
+  catalogMarineCleanerCount: catalogMarineCleaners.length,
 }, null, 2));
