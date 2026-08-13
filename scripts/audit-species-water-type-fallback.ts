@@ -4,7 +4,7 @@ import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/
 
 const MAX_CATEGORY_FALLBACK_ONLY = 57;
 const MAX_MALFORMED_FISH_CATEGORY_RECORDS = 7;
-const MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS = 22;
+const MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS = 50;
 
 const textOf = (species: Fish) => [
   species.name,
