@@ -1,8 +1,9 @@
 import { fishData } from '../src/data/fishData';
 import type { Fish } from '../src/types';
 import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/modules/species/species.service';
+import { getSpeciesWaterEvidence } from '../src/modules/species/speciesWaterEvidence';
 
-const MAX_CATEGORY_FALLBACK_ONLY = 55;
+const MAX_CATEGORY_FALLBACK_ONLY = 0;
 const MAX_MALFORMED_FISH_CATEGORY_RECORDS = 0;
 const MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS = 0;
 
@@ -29,6 +30,9 @@ const hasExplicitFreshwaterEvidence = (species: Fish) => {
 const classifyWithoutBroadCategoryFallback = (species: Fish): SpeciesWaterType => {
   const canonical = getSpeciesWaterType(species);
   if (canonical === 'saltwater' || canonical === 'brackish') return canonical;
+
+  const explicitEvidence = getSpeciesWaterEvidence(species);
+  if (explicitEvidence) return explicitEvidence.primaryWaterType;
 
   const lifeType = getLifeType(species);
   if (lifeType === 'plant' || lifeType === 'hardscape' || lifeType === 'reptile') return 'freshwater';
