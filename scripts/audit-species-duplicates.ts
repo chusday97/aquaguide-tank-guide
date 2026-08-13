@@ -1,5 +1,7 @@
 import { fishData } from '../src/data/fishData';
 
+const MAX_LIKELY_DUPLICATE_ENTITY_GROUPS = 28;
+
 const normalize = (value?: string) => (value || '').trim().toLowerCase().replace(/\s+/g, ' ');
 
 const byScientificName = new Map<string, typeof fishData>();
@@ -74,13 +76,23 @@ const coarseScientificNameGroups = exactScientificNameDuplicates.filter(group =>
   return names.size > 1;
 });
 
-console.log(JSON.stringify({
+const report = {
   totalSpecies: fishData.length,
   scientificNameCollisionGroups: exactScientificNameDuplicates.length,
   scientificNameCollisionRecords: exactScientificNameDuplicates.reduce((sum, group) => sum + group.count, 0),
   likelyDuplicateEntityGroups: likelyDuplicateEntities.length,
+  maxAllowedLikelyDuplicateEntityGroups: MAX_LIKELY_DUPLICATE_ENTITY_GROUPS,
   likelyDuplicateEntityRecords: likelyDuplicateEntities.reduce((sum, group) => sum + group.count, 0),
   coarseScientificNameGroups: coarseScientificNameGroups.length,
   likelyDuplicateEntities,
   coarseScientificNames: coarseScientificNameGroups,
-}, null, 2));
+};
+
+console.log(JSON.stringify(report, null, 2));
+
+if (likelyDuplicateEntities.length > MAX_LIKELY_DUPLICATE_ENTITY_GROUPS) {
+  console.error(
+    `Duplicate catalog debt increased: ${likelyDuplicateEntities.length} likely duplicate entity groups; maximum allowed is ${MAX_LIKELY_DUPLICATE_ENTITY_GROUPS}.`,
+  );
+  process.exit(1);
+}
