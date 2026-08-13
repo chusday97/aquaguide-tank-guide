@@ -12,7 +12,7 @@ CORAL_OR_MARINE_INVERTEBRATE = re.compile(
 
 INVERTEBRATE = re.compile(
     r"虾|螺|蟹|shrimp|snail|crab|Atyidae|Neritidae|Ampullariidae|"
-    r"Lysmata|Thor|Paguristes|Pomacea|Neritina|Clithon|Anentome|Caridina|Neocaridina|Geosesarma|Tylomelania|Vittina",
+    r"Lysmata|\bThor\b|Paguristes|Pomacea|Neritina|Clithon|Anentome|Caridina|Neocaridina|Geosesarma|Tylomelania|Vittina",
     re.I,
 )
 
@@ -46,7 +46,7 @@ MARINE_FISH = re.compile(
 
 EXPLICIT_MARINE_CONTEXT = re.compile(r"海水|marine|saltwater|reef|珊瑚礁", re.I)
 
-CICHLID_OR_BETTA = re.compile(r"慈鲷|Cichlidae|Pterophyllum|Betta|斗鱼|Apistogramma|Mikrogeophagus", re.I)
+CICHLID_OR_BETTA = re.compile(r"慈鲷|Cichlidae|Pterophyllum|Thorichthys|Betta|斗鱼|Apistogramma|Mikrogeophagus", re.I)
 TETRA = re.compile(r"灯|Tetra|Characidae|Paracheirodon|Hemigrammus|Hyphessobrycon|Phenacogrammus", re.I)
 CATFISH_OR_PLECO = re.compile(r"异型|鲶|鼠鱼|Loricariidae|Corydoras|Ancistrus|Otocinclus|Panaque|Hypancistrus", re.I)
 
