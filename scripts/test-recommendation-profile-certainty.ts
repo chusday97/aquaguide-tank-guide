@@ -34,6 +34,7 @@ assert(legacyProfile.waterType === 'Unknown', `missing water type must remain Un
 assert(legacyProfile.volumeLiters === 0, `missing dimensions must not synthesize tank volume, got ${legacyProfile.volumeLiters}`);
 assert(legacyProfile.effectiveVolumeLiters === 0, `missing dimensions must not synthesize effective capacity, got ${legacyProfile.effectiveVolumeLiters}`);
 assert(legacyProfile.load.capacity === 0, `missing dimensions must keep load capacity at 0, got ${legacyProfile.load.capacity}`);
+assert(legacyProfile.load.status === 'unknown', `missing capacity must keep load status unknown, got ${legacyProfile.load.status}`);
 assert(legacyProfile.load.remainingCapacity === 0, `unknown capacity must not expose fake remaining capacity, got ${legacyProfile.load.remainingCapacity}`);
 assert(legacyProfile.missingData.includes('水体类型'), 'missing water type must be explicitly requested');
 assert(legacyProfile.missingData.includes('鱼缸容量'), 'missing dimensions must request tank capacity');
@@ -62,6 +63,7 @@ const configuredProfile = recommendationService.buildAquariumProfile(configuredA
 assert(configuredProfile.waterType === 'Freshwater', 'configured freshwater tank must preserve water type');
 assert(configuredProfile.volumeLiters === 54, `60×30×35 tank must calculate to 54L usable volume, got ${configuredProfile.volumeLiters}`);
 assert(configuredProfile.effectiveVolumeLiters > 0, 'configured dimensions must produce positive effective capacity');
+assert(configuredProfile.load.status !== 'unknown', 'configured positive-capacity tank must have a known load status');
 assert(!configuredProfile.missingData.includes('水体类型'), 'configured water type must not be reported missing');
 assert(!configuredProfile.missingData.includes('鱼缸容量'), 'configured dimensions must not be reported missing');
 
@@ -71,6 +73,7 @@ console.log(JSON.stringify({
     waterType: legacyProfile.waterType,
     volumeLiters: legacyProfile.volumeLiters,
     capacity: legacyProfile.load.capacity,
+    loadStatus: legacyProfile.load.status,
     directCandidates: legacySmart.direct.length,
     infoRequests: legacySmart.infoRequests,
   },
@@ -78,5 +81,6 @@ console.log(JSON.stringify({
     waterType: configuredProfile.waterType,
     volumeLiters: configuredProfile.volumeLiters,
     capacity: configuredProfile.load.capacity,
+    loadStatus: configuredProfile.load.status,
   },
 }, null, 2));
