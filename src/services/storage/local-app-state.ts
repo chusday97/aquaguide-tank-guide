@@ -81,10 +81,12 @@ const createEmptyState = (): LocalAppState => ({
 
 const normalizeAquariumsSpeciesIds = (aquariums: Aquarium[]) => aquariums.map(aquarium => ({
   ...aquarium,
-  fishes: aquarium.fishes.map(fish => ({
-    ...fish,
-    fishId: resolveCanonicalSpeciesId(fish.fishId),
-  })),
+  fishes: Array.isArray(aquarium?.fishes)
+    ? aquarium.fishes.map(fish => ({
+      ...fish,
+      fishId: resolveCanonicalSpeciesId(fish.fishId),
+    }))
+    : [],
 }));
 
 const normalizeRecordFishId = (record: unknown) => {
