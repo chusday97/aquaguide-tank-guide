@@ -2,6 +2,7 @@ import { fishData } from '../src/data/fishData';
 import { speciesIdAliases } from '../src/modules/species/speciesAliases';
 
 const MAX_LIKELY_DUPLICATE_ENTITY_GROUPS = 0;
+const MAX_ALIAS_LIKE_COLLISION_GROUPS = 11;
 const EXPECTED_STABLE_ALIAS_COUNT = 28;
 
 const normalize = (value?: string) => (value || '').trim().toLowerCase().replace(/\s+/g, ' ');
@@ -128,6 +129,7 @@ const report = {
   maxAllowedLikelyDuplicateEntityGroups: MAX_LIKELY_DUPLICATE_ENTITY_GROUPS,
   likelyDuplicateEntityRecords: likelyDuplicateEntities.reduce((sum, group) => sum + group.count, 0),
   aliasLikeCollisionGroups: aliasLikeCollisionGroups.length,
+  maxAllowedAliasLikeCollisionGroups: MAX_ALIAS_LIKE_COLLISION_GROUPS,
   aliasLikeCollisionRecords: aliasLikeCollisionGroups.reduce((sum, group) => sum + group.count, 0),
   stableAliasCount: Object.keys(speciesIdAliases).length,
   expectedStableAliasCount: EXPECTED_STABLE_ALIAS_COUNT,
@@ -144,6 +146,13 @@ console.log(JSON.stringify(report, null, 2));
 if (likelyDuplicateEntities.length > MAX_LIKELY_DUPLICATE_ENTITY_GROUPS) {
   console.error(
     `Duplicate catalog debt increased: ${likelyDuplicateEntities.length} likely duplicate entity groups; maximum allowed is ${MAX_LIKELY_DUPLICATE_ENTITY_GROUPS}.`,
+  );
+  process.exit(1);
+}
+
+if (aliasLikeCollisionGroups.length > MAX_ALIAS_LIKE_COLLISION_GROUPS) {
+  console.error(
+    `Alias-like catalog collision debt increased: ${aliasLikeCollisionGroups.length} groups; maximum allowed is ${MAX_ALIAS_LIKE_COLLISION_GROUPS}.`,
   );
   process.exit(1);
 }
