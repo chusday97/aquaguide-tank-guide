@@ -95,6 +95,15 @@ assert_category(
     Family="Cichlidae",
 )
 
+# `Thor` is a marine shrimp genus, but it must not match the prefix of the
+# freshwater cichlid genus `Thorichthys`.
+assert_category(
+    "慈鲷/斗鱼",
+    Common_Name="大点火口",
+    Scientific_Name="Thorichthys meeki",
+    Family="Cichlidae",
+)
+
 # A second legacy corruption class stored aquatic plants as 鱼类. These source
 # identities must resolve to 水草 before a regenerated catalog is accepted.
 for common_name, scientific_name, family in [
@@ -113,4 +122,4 @@ for common_name, scientific_name, family in [
         Family=family,
     )
 
-print("species taxonomy source rules passed: 18 fixtures")
+print("species taxonomy source rules passed: 19 fixtures")
