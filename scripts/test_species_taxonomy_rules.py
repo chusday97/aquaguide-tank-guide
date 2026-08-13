@@ -72,4 +72,27 @@ assert_category(
     Family="Characidae",
 )
 
-print("species taxonomy source rules passed: 8 fixtures")
+# These real legacy records were previously stored as 硬景/底床. The safe
+# generator must keep them in fish taxonomy when the catalog is refreshed.
+assert_category(
+    "慈鲷/斗鱼",
+    Common_Name="红宝石鱼",
+    Scientific_Name="Hemichromis bimaculatus",
+    Family="Cichlidae",
+)
+
+assert_category(
+    "慈鲷/斗鱼",
+    Common_Name="黑白大理石神仙",
+    Scientific_Name="Pterophyllum scalare var. Marble",
+    Family="Cichlidae",
+)
+
+assert_category(
+    "慈鲷/斗鱼",
+    Common_Name="球形蓝宝石鱼",
+    Scientific_Name="Andinoacara pulcher var. Balloon",
+    Family="Cichlidae",
+)
+
+print("species taxonomy source rules passed: 11 fixtures")
