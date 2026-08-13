@@ -3,6 +3,7 @@ import type { Fish } from '../src/types';
 import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/modules/species/species.service';
 
 const MAX_CATEGORY_FALLBACK_ONLY = 57;
+const MAX_MALFORMED_FISH_CATEGORY_RECORDS = 7;
 
 const textOf = (species: Fish) => [
   species.name,
@@ -88,6 +89,8 @@ const report = {
   withoutBroadCategoryFallbackCounts: strictCounts,
   categoryFallbackOnlyCount: categoryFallbackOnly.length,
   maxAllowedCategoryFallbackOnly: MAX_CATEGORY_FALLBACK_ONLY,
+  malformedFishCategoryCount: malformedCategoryRecords.length,
+  maxAllowedMalformedFishCategoryRecords: MAX_MALFORMED_FISH_CATEGORY_RECORDS,
   unknownByCategory,
   unknownByLifeType,
   malformedCategoryRecords,
@@ -99,6 +102,13 @@ console.log(JSON.stringify(report, null, 2));
 if (categoryFallbackOnly.length > MAX_CATEGORY_FALLBACK_ONLY) {
   console.error(
     `Water-type taxonomy debt increased: ${categoryFallbackOnly.length} records rely only on the broad category fallback; maximum allowed is ${MAX_CATEGORY_FALLBACK_ONLY}.`,
+  );
+  process.exit(1);
+}
+
+if (malformedCategoryRecords.length > MAX_MALFORMED_FISH_CATEGORY_RECORDS) {
+  console.error(
+    `Malformed fish-category debt increased: ${malformedCategoryRecords.length} fish records use scenery/coral categories; maximum allowed is ${MAX_MALFORMED_FISH_CATEGORY_RECORDS}.`,
   );
   process.exit(1);
 }
