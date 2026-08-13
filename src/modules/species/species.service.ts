@@ -63,6 +63,10 @@ const isMarineFishText = (text: string) => (
   /小丑|倒吊|蓝魔鬼|雀鲷|蝶鱼|炮弹|狮子鱼|红利|泗水玫瑰|五彩青蛙|虾虎|Pseudochromis|Amphiprion|Zebrasoma|Paracanthurus|Chaetodon|Chrysiptera|Pterois|Lutjanus|Pterapogon|Xanthichthys|Centropyge|Pomacanthus|Synchiropus|Gobiodon/i.test(text)
 );
 
+const isMarineInvertebrateText = (text: string) => (
+  /海水|清洁虾|医生虾|性感虾|薄荷虾|寄居蟹|Lysmata|Thor|Paguristes/i.test(text)
+);
+
 const parseTemperatureRange = (temperature?: string) => {
   const matches = temperature?.match(/(\d+(?:\.\d+)?)/g);
   if (!matches || matches.length === 0) return null;
@@ -144,7 +148,7 @@ export const getSecondaryCategory = (fish: Fish) => {
     if (/短鲷|波子|荷兰凤凰|阿卡西|Apistogramma|Mikrogeophagus/i.test(text)) return '短鲷';
     if (/慈鲷|鹦鹉鱼|蓝王子|地图鱼|菠萝鱼|火口|地魔|关刀|凤凰|Hemichromis|Andinoacara|Chindongo|Cichlasoma|Amatitlania|Heros|Astronotus|Thorichthys|Pelvicachromis|Geophagus|Labidochromis|Maylandia|Sciaenochromis|Nimbochromis|Neolamprologus|Altolamprologus/i.test(text)) return '慈鲷';
     if (/鼠鱼|咖啡鼠|熊猫鼠|月光鼠|精灵鼠|Corydoras/i.test(text)) return '鼠鱼';
-    if (/异型|胡子|L\\d+|Otocinclus|Ancistrus|Panaque|Peckoltia|Hypancistrus|Pterygoplichthys|Leporacanthicus|Scobinancistrus|Parancistrus/i.test(text)) return '异型鱼';
+    if (/异型|胡子|L\d+|Otocinclus|Ancistrus|Panaque|Peckoltia|Hypancistrus|Pterygoplichthys|Leporacanthicus|Scobinancistrus|Parancistrus/i.test(text)) return '异型鱼';
     if (/清道夫|青苔鼠|金苔鼠|Gyrinocheilus|Hypostomus/i.test(text)) return '清道夫/青苔鼠';
     if (/鳅|蛇鱼|Pangio|Botia|Cobitis|Sewellia|Beaufortia|Pseudogastromyzon|Mastacembelus|Chromobotia/i.test(text)) return '鳅类/吸鳅';
     if (/金鱼|龙睛|兰寿|泰狮|蝶尾|狮头|虎头|Carassius auratus/i.test(text)) return '金鱼';
@@ -156,7 +160,7 @@ export const getSecondaryCategory = (fish: Fish) => {
   }
 
   if (lifeType === 'invertebrate') {
-    if (/海水|清洁虾|医生虾|性感虾|薄荷虾|寄居蟹|Lysmata|Thor|Paguristes/i.test(text)) return '海水清洁生物';
+    if (isMarineInvertebrateText(text)) return '海水清洁生物';
     if (/杀手螺|控螺|Anentome/i.test(text)) return '控螺生物';
     if (/翻砂|海星|海参|Astropecten/i.test(text)) return '翻砂生物';
     if (/除藻|藻虾|大和|角螺|斑马螺|洋葱螺|鲍螺|Neritina|Clithon|Vittina|Caridina multidentata/i.test(text)) return '除藻生物';
@@ -199,7 +203,11 @@ export const getSecondaryCategory = (fish: Fish) => {
 export const isSaltwaterSpecies = (fish: Fish) => {
   const lifeType = getLifeType(fish);
   const text = `${fish.name} ${fish.scientificName} ${fish.category} ${fish.description}`;
-  return fish.category === '海水鱼' || lifeType === 'coral' || /海水/.test(fish.name) || (lifeType === 'fish' && isMarineFishText(text));
+  return fish.category === '海水鱼'
+    || lifeType === 'coral'
+    || /海水/.test(fish.name)
+    || (lifeType === 'fish' && isMarineFishText(text))
+    || (lifeType === 'invertebrate' && isMarineInvertebrateText(text));
 };
 
 export const getCareTaxonomyPath = (fish: Fish) => ({
