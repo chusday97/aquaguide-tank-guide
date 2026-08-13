@@ -32,8 +32,8 @@ REPTILE_OR_AMPHIBIAN = re.compile(
 )
 
 HARDSCAPE = re.compile(
-    r"青龙石|松皮石|火山石|沉木|流木|水草泥|溪流砂|化妆砂|景观板|景观组|景观树|底床|"
-    r"Hardscape|Seiryu|Ohko|Lava|Driftwood|Aqua Soil|River Sand|Cosmetic Sand|Iwagumi|Bonsai Wood",
+    r"青龙石|松皮石|火山石|沉木|流木|杜鹃根|水草泥|溪流砂|化妆砂|景观板|景观组|景观树|底床|"
+    r"Hardscape|Seiryu|Ohko|Lava|Driftwood|Azalea Root|Aqua Soil|River Sand|Cosmetic Sand|Iwagumi|Bonsai Wood",
     re.I,
 )
 
@@ -59,22 +59,25 @@ def infer_category(row: Mapping[str, str]) -> str:
     """Infer display taxonomy without treating pH as habitat evidence.
 
     The category is a life/taxonomy label. Water chemistry such as pH must not
-    independently turn a freshwater species into a marine species.
+    independently turn a freshwater species into a marine species. Cross-life
+    type identity (coral, hardscape, plant, etc.) is inferred from identity
+    fields, while marine habitat context may still distinguish marine fish.
     """
     identity = _text(row, "Common_Name", "Family", "Scientific_Name")
     context = _text(row, "Origin", "Care_Guide", "Basic_Prompt", "Enhanced_Prompt")
-    combined = f"{identity} {context}"
 
-    if CORAL_OR_MARINE_INVERTEBRATE.search(combined):
+    if CORAL_OR_MARINE_INVERTEBRATE.search(identity):
         return "珊瑚/海水无脊椎"
     if INVERTEBRATE.search(identity):
         return "虾螺蟹"
+    # Hardscape must precede the broad 水草 token: names such as 水草泥 are
+    # substrate, not aquatic plants.
+    if HARDSCAPE.search(identity):
+        return "硬景/底床"
     if AQUATIC_PLANT.search(identity):
         return "水草"
     if REPTILE_OR_AMPHIBIAN.search(identity):
         return "两栖/爬宠"
-    if HARDSCAPE.search(identity):
-        return "硬景/底床"
     if MARINE_FISH.search(identity) or EXPLICIT_MARINE_CONTEXT.search(context):
         return "海水鱼"
     if CICHLID_OR_BETTA.search(identity):
