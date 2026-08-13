@@ -24,6 +24,7 @@ export type SpeciesFitEvaluation = {
 };
 
 type SpeciesWaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+type AquariumWaterType = 'freshwater' | 'saltwater' | 'unknown';
 
 const textOf = (species: Fish) => [
   species.name,
@@ -86,6 +87,12 @@ const getSpeciesWaterType = (species: Fish): SpeciesWaterType => {
   if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
   if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
   if (species.category || /淡水|水草|灯科|鼠鱼|虾|螺|斗鱼|慈鲷|孔雀|金鱼|锦鲤|freshwater/i.test(text)) return 'freshwater';
+  return 'unknown';
+};
+
+const getAquariumWaterType = (aquarium: Aquarium): AquariumWaterType => {
+  if (aquarium.waterType === 'Saltwater') return 'saltwater';
+  if (aquarium.waterType === 'Freshwater') return 'freshwater';
   return 'unknown';
 };
 
@@ -187,12 +194,14 @@ export const evaluateSpeciesForAquarium = (
   }
 
   const speciesWaterType = getSpeciesWaterType(species);
-  const aquariumWaterType = aquarium.waterType === 'Saltwater' ? 'saltwater' : 'freshwater';
+  const aquariumWaterType = getAquariumWaterType(aquarium);
   const specialTankType = isSpecialTankSpecies(species);
   const lifeType = getLifeType(species);
   const missingCoreSpeciesData = !species.category || !species.waterTemperature || !species.tankSize;
 
-  if (speciesWaterType === 'unknown') {
+  if (aquariumWaterType === 'unknown') {
+    confirmations.push({ type: 'unknown_aquarium_water_type', title: '需要确认鱼缸水体类型', detail: '当前鱼缸未设置淡水或海水类型，不应默认按淡水判断。' });
+  } else if (speciesWaterType === 'unknown') {
     confirmations.push({ type: 'unknown_water_type', title: '物种水体资料不足', detail: '该物种缺少可靠水体类型，不应默认判断为适合。' });
   } else if (aquariumWaterType === 'freshwater' && speciesWaterType !== 'freshwater') {
     hardBlocks.push({ type: 'water_type_mismatch', title: '水体类型不匹配', detail: '当前是淡水鱼缸，不能推荐海水、汽水、珊瑚、水母或海葵等特殊水体生物。', severity: 'high' });
@@ -205,7 +214,7 @@ export const evaluateSpeciesForAquarium = (
 
   if (specialTankType === 'jellyfish') {
     hardBlocks.push({ type: 'special_tank_required', title: '需要水母专用缸', detail: '水母需要圆形缸体和柔和循环水流，普通鱼缸不应推荐。', severity: 'high' });
-  } else if ((specialTankType === 'coral' || specialTankType === 'anemone') && aquariumWaterType !== 'saltwater') {
+  } else if ((specialTankType === 'coral' || specialTankType === 'anemone') && aquariumWaterType === 'freshwater') {
     hardBlocks.push({ type: 'special_tank_required', title: '需要海水特殊缸体', detail: '珊瑚和海葵需要稳定盐度、光照和水流条件。', severity: 'high' });
   } else if ((specialTankType === 'coral' || specialTankType === 'anemone') && aquarium.equipment?.light !== '海水灯') {
     warnings.push({ type: 'special_light_required', title: '需要确认海水灯光', detail: '珊瑚或海葵通常需要海水灯和稳定水流，当前设备未完整确认。', severity: 'medium' });
@@ -330,7 +339,7 @@ export const evaluateSpeciesForAquarium = (
 
   const status: SpeciesFitStatus = hardBlocks.length > 0
     ? 'unsuitable'
-    : matchedItems.length === 0 || speciesWaterType === 'unknown' || missingCoreSpeciesData
+    : matchedItems.length === 0 || aquariumWaterType === 'unknown' || speciesWaterType === 'unknown' || missingCoreSpeciesData
       ? 'unknown'
       : warnings.length > 0 || confirmations.length > 0
         ? 'adjustable'
