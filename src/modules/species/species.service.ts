@@ -68,7 +68,7 @@ const isMarineFishText = (text: string) => (
 );
 
 const isMarineInvertebrateText = (text: string) => (
-  /海水|清洁虾|医生虾|性感虾|薄荷虾|寄居蟹|Lysmata|Thor|Paguristes/i.test(text)
+  /海水|清洁虾|医生虾|性感虾|薄荷虾|寄居蟹|Lysmata|\bThor\b|Paguristes/i.test(text)
 );
 
 const parseTemperatureRange = (temperature?: string) => {
@@ -120,7 +120,7 @@ export const getLifeType = (fish: Fish) => {
   if (/水母|海月|海刺水母|Cassiopea|Aurelia|Chrysaora|Phyllorhiza|Cotylorhiza|Sanderia/i.test(text)) return 'coral';
   if (/珊瑚|海葵|coral|anemone|管虫|海绵|海星|海参|sponge|starfish|Sabellastarte|Protula|Haliclona|Astropecten/i.test(text)) return 'coral';
   if (isMarineFishText(text)) return 'fish';
-  if (origCategory === '虾螺蟹' || origCategory === '虾类' || origCategory === '螺类' || fish.category === '虾螺蟹' || fish.category === '虾类' || fish.category === '螺类' || /虾|螺|蟹|shrimp|snail|crab|Lysmata|Thor|Paguristes|Pomacea|Neritina|Clithon|Anentome|Caridina|Neocaridina|Geosesarma/i.test(text)) return 'invertebrate';
+  if (origCategory === '虾螺蟹' || origCategory === '虾类' || origCategory === '螺类' || fish.category === '虾螺蟹' || fish.category === '虾类' || fish.category === '螺类' || /虾|螺|蟹|shrimp|snail|crab|Lysmata|\bThor\b|Paguristes|Pomacea|Neritina|Clithon|Anentome|Caridina|Neocaridina|Geosesarma/i.test(text)) return 'invertebrate';
   if (origCategory === '龟类' || origCategory === '两栖/爬宠' || fish.category === '龟类' || fish.category === '两栖/爬宠' || fish.category === 'Amphibians/Reptiles' || fish.category === 'Turtles' || /龟|蛙|蝾螈|六角恐龙|axolotl|turtle|frog|newt|Ambystoma|Cynops|Ceratophrys|Amphibian|Reptile/i.test(text)) return 'reptile';
   if (origCategory === '海水鱼' || fish.category === '海水鱼' || fish.category === 'Marine Fish' || isMarineFishText(text)) return 'fish';
   return 'fish';
