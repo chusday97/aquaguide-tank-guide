@@ -28,6 +28,16 @@ assert_category(
     Origin="Marine reef",
 )
 
+# Reef/coral wording in care text is habitat context, not evidence that a fish
+# itself is coral.
+assert_category(
+    "海水鱼",
+    Common_Name="公子小丑",
+    Scientific_Name="Amphiprion ocellaris",
+    Family="Pomacentridae",
+    Care_Guide="常见珊瑚礁鱼，可在成熟珊瑚缸中饲养",
+)
+
 # Marine context must not collapse shrimp into the fish category.
 assert_category(
     "虾螺蟹",
@@ -55,6 +65,22 @@ assert_category(
     "硬景/底床",
     Common_Name="青龙石",
     Scientific_Name="Seiryu Stone",
+    Family="Hardscape",
+)
+
+# `水草泥` contains the broad token 水草 but is substrate, so hardscape must
+# win before plant matching.
+assert_category(
+    "硬景/底床",
+    Common_Name="水草泥 (底床)",
+    Scientific_Name="Hardscape - Aqua Soil",
+    Family="Hardscape",
+)
+
+assert_category(
+    "硬景/底床",
+    Common_Name="杜鹃根",
+    Scientific_Name="Hardscape - Azalea Root",
     Family="Hardscape",
 )
 
@@ -122,4 +148,4 @@ for common_name, scientific_name, family in [
         Family=family,
     )
 
-print("species taxonomy source rules passed: 19 fixtures")
+print("species taxonomy source rules passed: 22 fixtures")
