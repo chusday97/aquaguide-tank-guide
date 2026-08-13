@@ -34,9 +34,9 @@ cases = [
         "虾螺蟹",
     ),
     (
-        "freshwater cichlid stored as hardscape",
+        "freshwater fish stored as hardscape",
         species("红宝石鱼", "Hemichromis bimaculatus", "硬景/底床", "淡水慈鲷"),
-        "慈鲷/斗鱼",
+        "鱼类",
     ),
     (
         "ordinary curated fish category is preserved",
@@ -47,6 +47,11 @@ cases = [
         "Thorichthys is not normalized as shrimp",
         species("大点火口", "Thorichthys meeki", "慈鲷/斗鱼", "淡水慈鲷"),
         "慈鲷/斗鱼",
+    ),
+    (
+        "reef wording in fish care text cannot turn a fish into coral",
+        species("公子小丑", "Amphiprion ocellaris", "海水鱼", "适合成熟珊瑚礁缸饲养"),
+        "海水鱼",
     ),
 ]
 
