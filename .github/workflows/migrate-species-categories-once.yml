@@ -30,10 +30,10 @@ jobs:
           plan = json.loads(Path('/tmp/species-category-plan.json').read_text(encoding='utf-8'))
           count = plan['pendingCategoryChanges']
           print(f'pending_category_changes={count}')
-          if count != 49:
+          if count != 56:
               for change in plan['changes']:
                   print(f"{change['id']}\t{change['name']}\t{change['before']} -> {change['after']}")
-              raise SystemExit(f'Expected exactly 49 audited category changes, got {count}; refusing to mutate catalog.')
+              raise SystemExit(f'Expected exactly 56 audited category changes, got {count}; refusing to mutate catalog.')
           PY
       - name: Apply migration
         run: |
