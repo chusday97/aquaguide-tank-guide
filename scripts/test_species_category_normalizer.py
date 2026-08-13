@@ -34,6 +34,11 @@ cases = [
         "虾螺蟹",
     ),
     (
+        "marine coral-like animal stored as marine fish",
+        species("管虫 (硬管)", "Protula bispiralis", "海水鱼"),
+        "珊瑚/海水无脊椎",
+    ),
+    (
         "freshwater fish stored as hardscape",
         species("红宝石鱼", "Hemichromis bimaculatus", "硬景/底床", "淡水慈鲷"),
         "鱼类",
@@ -51,6 +56,21 @@ cases = [
     (
         "reef wording in fish care text cannot turn a fish into coral",
         species("公子小丑", "Amphiprion ocellaris", "海水鱼", "适合成熟珊瑚礁缸饲养"),
+        "海水鱼",
+    ),
+    (
+        "jellyfish specialized category is preserved",
+        species("海月水母", "Aurelia aurita", "水母"),
+        "水母",
+    ),
+    (
+        "turtle specialized category is preserved",
+        species("巴西龟", "Trachemys scripta elegans", "龟类"),
+        "龟类",
+    ),
+    (
+        "dragonet common name is not migrated to amphibian",
+        species("五彩青蛙 (改良型)", "Synchiropus splendidus", "海水鱼"),
         "海水鱼",
     ),
 ]
