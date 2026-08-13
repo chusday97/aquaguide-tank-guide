@@ -19,6 +19,39 @@ try {
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
 
+  const clickStable = async locator => {
+    await locator.waitFor({ state: 'visible' });
+    await locator.scrollIntoViewIfNeeded();
+    await locator.evaluate(element => new Promise((resolve, reject) => {
+      let previous = null;
+      let stableFrames = 0;
+      let frames = 0;
+      const tick = () => {
+        frames += 1;
+        const rect = element.getBoundingClientRect();
+        const pointX = rect.left + rect.width / 2;
+        const pointY = rect.top + rect.height / 2;
+        const hit = document.elementFromPoint(pointX, pointY);
+        const topmost = hit === element || (hit instanceof Node && element.contains(hit));
+        const current = [rect.left, rect.top, rect.width, rect.height];
+        const unchanged = previous?.every((value, index) => Math.abs(value - current[index]) < 0.5) ?? false;
+        stableFrames = topmost && unchanged ? stableFrames + 1 : 0;
+        previous = current;
+        if (stableFrames >= 3) {
+          resolve();
+          return;
+        }
+        if (frames >= 120) {
+          reject(new Error('target did not become a stable topmost pointer target'));
+          return;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }));
+    await locator.click();
+  };
+
   await page.addInitScript(() => {
     localStorage.clear();
     localStorage.setItem('aquaguide_locale', 'zh-CN');
@@ -56,21 +89,22 @@ try {
   await settingsDialog.waitFor();
   await settingsDialog.getByText('常用尺寸预设', { exact: true }).waitFor();
 
-  // Milestone 5: explicitly record required facts. No implicit/default value is accepted as evidence.
-  await settingsDialog.getByRole('button', { name: '60×30×35 · 63L', exact: true }).click();
+  // Milestone 5: explicitly record required facts. Wait for animated mobile dialog targets
+  // to become both geometrically stable and the topmost pointer target before clicking.
+  await clickStable(settingsDialog.getByRole('button', { name: '60×30×35 · 63L', exact: true }));
 
   const parametersButton = settingsDialog.getByRole('button', { name: /参数/ }).first();
-  await parametersButton.click();
+  await clickStable(parametersButton);
   await settingsDialog.getByText('目标温度 (°C)', { exact: true }).waitFor();
-  await settingsDialog.getByRole('button', { name: /淡水/ }).last().click();
-  await settingsDialog.getByRole('button', { name: /^25(?:°C)?$/ }).click();
+  await clickStable(settingsDialog.getByRole('button', { name: /淡水/ }).last());
+  await clickStable(settingsDialog.getByRole('button', { name: /^25(?:°C)?$/ }));
 
   const equipmentButton = settingsDialog.getByRole('button', { name: /设备/ }).first();
-  await equipmentButton.click();
-  await settingsDialog.getByRole('button', { name: '瀑布过滤', exact: true }).click();
+  await clickStable(equipmentButton);
+  await clickStable(settingsDialog.getByRole('button', { name: '瀑布过滤', exact: true }));
 
   // Saving is not considered successful until persisted product state contains the explicit facts.
-  await settingsDialog.getByRole('button', { name: '保存设置', exact: true }).click();
+  await clickStable(settingsDialog.getByRole('button', { name: '保存设置', exact: true }));
   await settingsDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(expectedId => {
     const stored = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');
