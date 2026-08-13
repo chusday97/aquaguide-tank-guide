@@ -48,12 +48,15 @@ def write_fish_data(items: list[dict[str, Any]], path: Path = FISH_DATA_TS) -> N
 
 
 def item_to_source_row(item: dict[str, Any]) -> dict[str, str]:
+    # Cross-life-type migration intentionally uses identity only. Descriptions
+    # are excluded because a marine fish may legitimately mention coral/reef in
+    # its care text without itself being a coral or marine invertebrate.
     return {
         "Common_Name": str(item.get("name", "") or ""),
         "Scientific_Name": str(item.get("scientificName", "") or ""),
         "Family": "",
         "Origin": "",
-        "Care_Guide": str(item.get("description", "") or ""),
+        "Care_Guide": "",
         "Basic_Prompt": "",
         "Enhanced_Prompt": "",
     }
