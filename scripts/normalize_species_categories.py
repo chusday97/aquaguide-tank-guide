@@ -30,6 +30,46 @@ FISH_CATEGORIES = {
     "鲶鱼/异型",
 }
 
+# Existing fine-grained labels that are already compatible with an inferred
+# life class must be preserved. The migration repairs contradictions; it does
+# not flatten useful taxonomy such as 水母 or 龟类 into a broader bucket.
+COMPATIBLE_EXISTING_CATEGORIES = {
+    "水草": {"水草"},
+    "硬景/底床": {"硬景/底床"},
+    "珊瑚/海水无脊椎": {
+        "珊瑚/海水无脊椎",
+        "水母",
+        "海葵",
+        "软体珊瑚",
+        "LPS硬骨珊瑚",
+        "SPS硬骨珊瑚",
+        "纽扣/菇类珊瑚",
+        "海水滤食生物",
+    },
+    "虾螺蟹": {
+        "虾螺蟹",
+        "虾类",
+        "螺类",
+        "蟹类",
+        "海水清洁生物",
+        "除藻生物",
+        "清残饵生物",
+        "翻砂生物",
+        "控螺生物",
+        "观赏虾",
+        "观赏螺",
+        "观赏蟹",
+    },
+    "两栖/爬宠": {
+        "两栖/爬宠",
+        "龟类",
+        "蛙类",
+        "六角恐龙/蝾螈",
+        "Amphibians/Reptiles",
+        "Turtles",
+    },
+}
+
 
 def load_fish_data(path: Path = FISH_DATA_TS) -> list[dict[str, Any]]:
     text = path.read_text(encoding="utf-8")
@@ -67,13 +107,15 @@ def normalized_category(item: dict[str, Any]) -> str:
     inferred = infer_category(item_to_source_row(item))
 
     # A positive plant/hardscape/coral/invertebrate/reptile identity is strong
-    # enough to repair an incompatible legacy category.
+    # enough to repair an incompatible legacy category, but not to erase a
+    # compatible specialized category.
     if inferred in STRONG_NON_FISH_CATEGORIES:
-        return inferred
+        compatible = COMPATIBLE_EXISTING_CATEGORIES.get(inferred, set())
+        return current if current in compatible else inferred
 
-    # Conversely, if a record is currently stored in a non-fish class but its
-    # identity is confidently fish-like, repair the class while retaining the
-    # source rule's fish subcategory where available.
+    # Conversely, if a record is currently stored in a broad non-fish class but
+    # its identity is fish-like, repair the class while retaining the source
+    # rule's fish subcategory where available.
     if current in {"水草", "硬景/底床", "珊瑚/海水无脊椎"} and inferred in FISH_CATEGORIES:
         return inferred
 
