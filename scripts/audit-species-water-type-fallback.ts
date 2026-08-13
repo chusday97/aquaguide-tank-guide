@@ -2,7 +2,7 @@ import { fishData } from '../src/data/fishData';
 import type { Fish } from '../src/types';
 import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/modules/species/species.service';
 
-const MAX_CATEGORY_FALLBACK_ONLY = 57;
+const MAX_CATEGORY_FALLBACK_ONLY = 55;
 const MAX_MALFORMED_FISH_CATEGORY_RECORDS = 0;
 const MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS = 0;
 
