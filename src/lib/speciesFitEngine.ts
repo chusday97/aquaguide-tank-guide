@@ -1,5 +1,5 @@
 import type { Aquarium, Fish } from '../types';
-import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
+import { getLifeType, getSpeciesWaterType } from '../modules/species/species.service';
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
 import { estimateWaterProfile } from './waterProfileEstimate';
 
@@ -23,7 +23,6 @@ export type SpeciesFitEvaluation = {
   reasonSummary: string;
 };
 
-type SpeciesWaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
 type AquariumWaterType = 'freshwater' | 'saltwater' | 'unknown';
 
 const textOf = (species: Fish) => [
@@ -80,14 +79,6 @@ const getSpeciesMinLengthCm = (species: Fish) => {
   const text = `${species.tankSize} ${textOf(species)}`;
   const match = text.match(/(\d+(?:\.\d+)?)\s*(?:cm|厘米|公分)/i);
   return match ? Number(match[1]) : null;
-};
-
-const getSpeciesWaterType = (species: Fish): SpeciesWaterType => {
-  const text = textOf(species);
-  if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
-  if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
-  if (species.category || /淡水|水草|灯科|鼠鱼|虾|螺|斗鱼|慈鲷|孔雀|金鱼|锦鲤|freshwater/i.test(text)) return 'freshwater';
-  return 'unknown';
 };
 
 const getAquariumWaterType = (aquarium: Aquarium): AquariumWaterType => {
@@ -376,5 +367,5 @@ export const getSuitableSpeciesForCurrentTank = (
       evaluation: evaluateSpeciesForAquarium(species, currentAquarium, currentLivestock),
     }))
     .filter(item => item.evaluation.status === 'suitable')
-    .sort((a, b) => b.evaluation.score - a.evaluation.score || a.species.name.localeCompare(b.species.name, 'zh-Hans-CN'))
+    .sort((a, b) => b.evaluation.score - a.species.name.localeCompare ? 0 : 0)
 );
