@@ -79,9 +79,9 @@ const parseRange = (str: string, fallback: [number, number]) => {
 const rangesOverlap = (a: [number, number], b: [number, number]) => Math.max(a[0], b[0]) <= Math.min(a[1], b[1]);
 
 const getTankVolumeLiters = (aquarium: Aquarium) => {
-  const length = parseFloat(aquarium.dimensions?.length || '60');
-  const width = parseFloat(aquarium.dimensions?.width || '40');
-  const height = parseFloat(aquarium.dimensions?.height || '40');
+  const length = parseFloat(aquarium.dimensions?.length || '0');
+  const width = parseFloat(aquarium.dimensions?.width || '0');
+  const height = parseFloat(aquarium.dimensions?.height || '0');
   if ([length, width, height].some(value => Number.isNaN(value) || value <= 0)) return 0;
   return Math.round((length * width * height) / 1000 * 0.85);
 };
@@ -190,6 +190,7 @@ const getWaterChangeMultiplier = (aquarium: Aquarium) => {
 };
 
 const calculateTankCapacity = (aquarium: Aquarium, volumeLiters: number) => {
+  if (volumeLiters <= 0) return 0;
   const filterMultiplier = getFilterCapacityMultiplier(aquarium.equipment?.filter);
   const changeMultiplier = getWaterChangeMultiplier(aquarium);
   const oxygenMultiplier = aquarium.equipment?.oxygen ? TANK_CAPACITY_MULTIPLIER.oxygen.enabled : TANK_CAPACITY_MULTIPLIER.oxygen.disabled;
@@ -232,7 +233,7 @@ const buildAquariumProfile = (
     return sum + getBioLoadLiters(fish) * Math.max(1, item.quantity || 1);
   }, 0);
   const capacity = calculateTankCapacity(aquarium, volumeLiters);
-  const loadRate = Math.round((currentLoad / capacity) * 100);
+  const loadRate = capacity > 0 ? Math.round((currentLoad / capacity) * 100) : 0;
   const waterLayers = aquarium.fishes.reduce<Record<string, number>>((acc, item) => {
     const fish = speciesPool.find(species => species.id === item.fishId);
     if (!fish) return acc;
@@ -259,7 +260,7 @@ const buildAquariumProfile = (
     lengthCm,
     widthCm,
     heightCm,
-    waterType: aquarium.waterType || 'Freshwater',
+    waterType: aquarium.waterType || 'Unknown',
     temperature: aquarium.targetTemperature ? Number(aquarium.targetTemperature) : null,
     equipment: [
       aquarium.equipment?.filter && `过滤：${aquarium.equipment.filter}`,
@@ -274,9 +275,9 @@ const buildAquariumProfile = (
     load: {
       currentLoad: Math.round(currentLoad * 10) / 10,
       capacity,
-      loadRate: Number.isFinite(loadRate) ? Math.max(0, loadRate) : 0,
+      loadRate,
       status: getLoadStatus(loadRate),
-      remainingCapacity: Math.max(0, Math.round((capacity - currentLoad) * 10) / 10),
+      remainingCapacity: capacity > 0 ? Math.max(0, Math.round((capacity - currentLoad) * 10) / 10) : 0,
     },
     waterLayers,
     missingData,
@@ -305,9 +306,13 @@ const buildCandidate = (
   });
   const singleLoad = Math.max(0.4, getBioLoadLiters(fish));
   const recommendedQuantity = getRecommendedQuantity(fish, profile.load.remainingCapacity);
-  const loadAfterAdd = Math.round(((profile.load.currentLoad + singleLoad * recommendedQuantity) / profile.load.capacity) * 100);
+  const loadAfterAdd = profile.load.capacity > 0
+    ? Math.round(((profile.load.currentLoad + singleLoad * recommendedQuantity) / profile.load.capacity) * 100)
+    : profile.load.loadRate;
   const minGroup = getMinimumGroupQuantity(fish);
-  const minGroupLoadRate = Math.round(((profile.load.currentLoad + singleLoad * minGroup) / profile.load.capacity) * 100);
+  const minGroupLoadRate = profile.load.capacity > 0
+    ? Math.round(((profile.load.currentLoad + singleLoad * minGroup) / profile.load.capacity) * 100)
+    : profile.load.loadRate;
   const risks = [
     ...evaluation.warnings.map(item => item.title),
     loadAfterAdd >= TANK_LOAD_THRESHOLDS.nearLimit && '添加后负载接近上限',
@@ -315,6 +320,7 @@ const buildCandidate = (
   ].filter(Boolean) as string[];
   const requiredAdjustments = [
     ...evaluation.confirmations.map(item => item.title),
+    profile.load.capacity <= 0 && '补充鱼缸容量后再计算建议数量',
     minGroup > recommendedQuantity && `剩余承载不足以满足建议群游数量 ${minGroup}`,
   ].filter(Boolean) as string[];
 
@@ -336,7 +342,7 @@ const buildCandidate = (
     risks: Array.from(new Set([...risks, ...compatibility.warningRules.map(item => item.title), ...compatibility.blockingRules.map(item => item.title)])).slice(0, 5),
     requiredAdjustments: Array.from(new Set([...requiredAdjustments, ...compatibility.missingData.map(item => item.title)])).slice(0, 5),
     confidence: compatibility.status === 'insufficient_data' || evaluation.status === 'unknown' || currentFishes.length > 0 && requiredAdjustments.length > 0 ? 'medium' : 'high',
-    loadAfterAdd: Number.isFinite(loadAfterAdd) ? loadAfterAdd : profile.load.loadRate,
+    loadAfterAdd,
   };
 };
 
@@ -390,7 +396,7 @@ const buildEmptyTankPlans = (
       audience,
       species,
       maintenanceLevel,
-      estimatedLoadRate: Math.round((totalLoad / profile.load.capacity) * 100),
+      estimatedLoadRate: profile.load.capacity > 0 ? Math.round((totalLoad / profile.load.capacity) * 100) : 0,
       strengths,
       cautions,
     };
@@ -412,7 +418,9 @@ const buildSimulation = (
   const species = speciesPool.find(item => item.id === candidate.speciesId);
   const layer = species ? getWaterLayer(species) : 'middle';
   const load = species ? getBioLoadLiters(species) * quantity : 0;
-  const afterLoadRate = Math.round(((profile.load.currentLoad + load) / profile.load.capacity) * 100);
+  const afterLoadRate = profile.load.capacity > 0
+    ? Math.round(((profile.load.currentLoad + load) / profile.load.capacity) * 100)
+    : profile.load.loadRate;
   const risks = [
     ...candidate.risks,
     afterLoadRate >= TANK_LOAD_THRESHOLDS.nearLimit && '添加后鱼缸接近建议承载上限',
@@ -427,11 +435,13 @@ const buildSimulation = (
     compatibilityChange: candidate.status === 'direct' ? ['未发现明确新增冲突'] : candidate.requiredAdjustments,
     equipmentStillFits: !candidate.requiredAdjustments.some(item => /过滤|加热|设备/.test(item)),
     newRisks: risks,
-    conclusion: afterLoadRate >= TANK_LOAD_THRESHOLDS.nearLimit
-      ? '添加后负载偏高，建议先减少数量或加强过滤后再考虑。'
-      : candidate.status === 'direct'
-        ? '可以作为候选加入，但仍建议分批加入并观察。'
-        : '需要先确认调整项，再决定是否加入。',
+    conclusion: profile.load.capacity <= 0
+      ? '鱼缸容量尚未确认，先补充尺寸后再模拟添加数量。'
+      : afterLoadRate >= TANK_LOAD_THRESHOLDS.nearLimit
+        ? '添加后负载偏高，建议先减少数量或加强过滤后再考虑。'
+        : candidate.status === 'direct'
+          ? '可以作为候选加入，但仍建议分批加入并观察。'
+          : '需要先确认调整项，再决定是否加入。',
   };
 };
 
