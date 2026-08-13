@@ -76,9 +76,13 @@ def infer_category(row: Mapping[str, str]) -> str:
         return "硬景/底床"
     if AQUATIC_PLANT.search(identity):
         return "水草"
+    # Marine-fish identity must precede the broad amphibian token `蛙`: common
+    # aquarium names such as 五彩青蛙 refer to Synchiropus dragonets, not frogs.
+    if MARINE_FISH.search(identity):
+        return "海水鱼"
     if REPTILE_OR_AMPHIBIAN.search(identity):
         return "两栖/爬宠"
-    if MARINE_FISH.search(identity) or EXPLICIT_MARINE_CONTEXT.search(context):
+    if EXPLICIT_MARINE_CONTEXT.search(context):
         return "海水鱼"
     if CICHLID_OR_BETTA.search(identity):
         return "慈鲷/斗鱼"
