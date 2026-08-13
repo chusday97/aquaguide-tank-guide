@@ -17,6 +17,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Taxonomy regression
+        run: |
+          npm run test:taxonomy
+          npx tsx scripts/test-marine-invertebrate-water-type.ts
       - name: Product evaluation contracts
         run: |
           npm run test:product-evaluation
