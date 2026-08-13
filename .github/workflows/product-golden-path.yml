@@ -37,6 +37,7 @@ jobs:
           npx tsx scripts/test-species-water-evidence.ts
           npx tsx scripts/test-species-id-alias-migration.ts
           npx tsx scripts/test-species-only-water-certainty.ts
+          npx tsx scripts/test-recommendation-profile-certainty.ts
       - name: Product evaluation contracts
         run: |
           npm run test:product-evaluation
