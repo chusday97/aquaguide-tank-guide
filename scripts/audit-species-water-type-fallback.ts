@@ -4,7 +4,7 @@ import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/
 
 const MAX_CATEGORY_FALLBACK_ONLY = 57;
 const MAX_MALFORMED_FISH_CATEGORY_RECORDS = 7;
-const MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS = 49;
+const MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS = 56;
 
 const textOf = (species: Fish) => [
   species.name,
@@ -88,6 +88,7 @@ const getLifeTypeCategoryContradiction = (species: Fish) => {
   if (lifeType === 'hardscape' && category !== '硬景/底床') return 'hardscape_not_hardscape';
   if (lifeType === 'fish' && /水草|硬景|底床|珊瑚|海水无脊椎/.test(category)) return 'fish_as_scenery_or_coral';
   if (lifeType === 'invertebrate' && /鱼类|灯科鱼|慈鲷|海水鱼|水草|硬景|底床/.test(category)) return 'invertebrate_wrong_category';
+  if (lifeType === 'coral' && /鱼类|灯科鱼|慈鲷|海水鱼|水草|硬景|底床/.test(category)) return 'coral_wrong_category';
   if (lifeType === 'reptile' && !/龟|两栖|爬宠|Amphibians|Reptiles|Turtles/i.test(category)) return 'reptile_wrong_category';
   return null;
 };
