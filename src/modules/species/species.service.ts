@@ -3,6 +3,7 @@ import { isAquaticPlantSpecies, isHardscapeSpecies } from '../../lib/speciesClas
 import { loggerService } from '../../services/logger/logger.service';
 import { Aquarium, Fish } from '../../types';
 import { speciesDetailInputSchema, speciesListInputSchema, SpeciesDetailOutput, SpeciesListOutput } from './species.schema';
+import { getSpeciesWaterEvidence } from './speciesWaterEvidence';
 
 export type SpeciesWaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
 
@@ -131,6 +132,10 @@ export const getSpeciesWaterType = (fish: Fish): SpeciesWaterType => {
   const text = `${fish.name} ${fish.scientificName} ${fish.category} ${fish.description} ${fish.housingReason || ''}`;
 
   if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
+
+  const explicitEvidence = getSpeciesWaterEvidence(fish);
+  if (explicitEvidence) return explicitEvidence.primaryWaterType;
+
   if (
     fish.category === '海水鱼'
     || fish.category === 'Marine Fish'
