@@ -4,6 +4,7 @@ import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/
 
 const MAX_CATEGORY_FALLBACK_ONLY = 57;
 const MAX_MALFORMED_FISH_CATEGORY_RECORDS = 7;
+const MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS = 22;
 
 const textOf = (species: Fish) => [
   species.name,
@@ -79,6 +80,35 @@ const malformedCategoryRecords = strictUnknown
     lifeType: getLifeType(species),
   }));
 
+const getLifeTypeCategoryContradiction = (species: Fish) => {
+  const lifeType = getLifeType(species);
+  const category = species.category || '';
+
+  if (lifeType === 'plant' && category !== '水草') return 'plant_not_water_plant';
+  if (lifeType === 'hardscape' && category !== '硬景/底床') return 'hardscape_not_hardscape';
+  if (lifeType === 'fish' && /水草|硬景|底床|珊瑚|海水无脊椎/.test(category)) return 'fish_as_scenery_or_coral';
+  if (lifeType === 'invertebrate' && /鱼类|灯科鱼|慈鲷|海水鱼|水草|硬景|底床/.test(category)) return 'invertebrate_wrong_category';
+  if (lifeType === 'reptile' && !/龟|两栖|爬宠|Amphibians|Reptiles|Turtles/i.test(category)) return 'reptile_wrong_category';
+  return null;
+};
+
+const lifeTypeCategoryContradictions = fishData
+  .map(species => ({ species, reason: getLifeTypeCategoryContradiction(species) }))
+  .filter((item): item is { species: Fish; reason: string } => Boolean(item.reason))
+  .map(({ species, reason }) => ({
+    reason,
+    id: species.id,
+    name: species.name,
+    scientificName: species.scientificName,
+    category: species.category,
+    lifeType: getLifeType(species),
+  }));
+
+const contradictionCounts = lifeTypeCategoryContradictions.reduce<Record<string, number>>((acc, item) => {
+  acc[item.reason] = (acc[item.reason] || 0) + 1;
+  return acc;
+}, {});
+
 const categoryFallbackOnly = fishData.filter(species => (
   getSpeciesWaterType(species) === 'freshwater' && classifyWithoutBroadCategoryFallback(species) === 'unknown'
 ));
@@ -91,9 +121,13 @@ const report = {
   maxAllowedCategoryFallbackOnly: MAX_CATEGORY_FALLBACK_ONLY,
   malformedFishCategoryCount: malformedCategoryRecords.length,
   maxAllowedMalformedFishCategoryRecords: MAX_MALFORMED_FISH_CATEGORY_RECORDS,
+  lifeTypeCategoryContradictionCount: lifeTypeCategoryContradictions.length,
+  maxAllowedLifeTypeCategoryContradictions: MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS,
+  contradictionCounts,
   unknownByCategory,
   unknownByLifeType,
   malformedCategoryRecords,
+  lifeTypeCategoryContradictions,
   unknownSamples: samples,
 };
 
@@ -109,6 +143,13 @@ if (categoryFallbackOnly.length > MAX_CATEGORY_FALLBACK_ONLY) {
 if (malformedCategoryRecords.length > MAX_MALFORMED_FISH_CATEGORY_RECORDS) {
   console.error(
     `Malformed fish-category debt increased: ${malformedCategoryRecords.length} fish records use scenery/coral categories; maximum allowed is ${MAX_MALFORMED_FISH_CATEGORY_RECORDS}.`,
+  );
+  process.exit(1);
+}
+
+if (lifeTypeCategoryContradictions.length > MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS) {
+  console.error(
+    `Life-type/category debt increased: ${lifeTypeCategoryContradictions.length} contradictory catalog records; maximum allowed is ${MAX_LIFE_TYPE_CATEGORY_CONTRADICTIONS}.`,
   );
   process.exit(1);
 }
