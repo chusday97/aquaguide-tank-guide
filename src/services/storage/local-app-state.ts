@@ -142,10 +142,15 @@ export const normalizePersistedSpeciesReferences = (value: Partial<LocalAppState
 const normalizeState = (value: Partial<LocalAppState> | null | undefined): LocalAppState => {
   const fallback = createEmptyState();
   const migrated = normalizePersistedSpeciesReferences(value || {});
+  const aquariums = Array.isArray(migrated.aquariums) ? migrated.aquariums : fallback.aquariums;
+  const requestedCurrentAquariumId = typeof migrated.currentAquariumId === 'string' ? migrated.currentAquariumId : '';
+  const currentAquariumId = aquariums.some(aquarium => aquarium.id === requestedCurrentAquariumId)
+    ? requestedCurrentAquariumId
+    : aquariums[0]?.id || '';
   return {
     version: AQUARIUM_APP_STATE_VERSION,
-    currentAquariumId: typeof migrated.currentAquariumId === 'string' ? migrated.currentAquariumId : fallback.currentAquariumId,
-    aquariums: Array.isArray(migrated.aquariums) ? migrated.aquariums : fallback.aquariums,
+    currentAquariumId,
+    aquariums,
     wishlist: Array.isArray(migrated.wishlist) ? migrated.wishlist : fallback.wishlist,
     dismissedRecommendations: Array.isArray(migrated.dismissedRecommendations) ? migrated.dismissedRecommendations : fallback.dismissedRecommendations,
     diagnosisRecords: Array.isArray(migrated.diagnosisRecords) ? migrated.diagnosisRecords : fallback.diagnosisRecords,
