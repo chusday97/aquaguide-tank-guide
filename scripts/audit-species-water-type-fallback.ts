@@ -1,8 +1,6 @@
 import { fishData } from '../src/data/fishData';
 import type { Fish } from '../src/types';
-import { getLifeType, isSaltwaterSpecies } from '../src/modules/species/species.service';
-
-type WaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+import { getLifeType, getSpeciesWaterType, type SpeciesWaterType } from '../src/modules/species/species.service';
 
 const textOf = (species: Fish) => [
   species.name,
@@ -15,14 +13,6 @@ const textOf = (species: Fish) => [
   species.feedingProfile?.specialNotes,
 ].filter(Boolean).join(' ');
 
-const classifyCurrent = (species: Fish): WaterType => {
-  const text = textOf(species);
-  if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
-  if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
-  if (species.category || /淡水|水草|灯科|鼠鱼|虾|螺|斗鱼|慈鲷|孔雀|金鱼|锦鲤|freshwater/i.test(text)) return 'freshwater';
-  return 'unknown';
-};
-
 const hasExplicitFreshwaterEvidence = (species: Fish) => {
   const text = textOf(species);
   const originalCategory = (species as Fish & { _originalCategory?: string })._originalCategory || '';
@@ -32,10 +22,12 @@ const hasExplicitFreshwaterEvidence = (species: Fish) => {
     || /淡水|freshwater|水草|灯科|鼠鱼|斗鱼|慈鲷|孔雀|月光鱼|玛丽|剑尾|斑马鱼|白云金丝|鳉鱼|曼龙|七彩神仙|神仙鱼|短鲷|异型|清道夫|青苔鼠|鳅|金鱼|锦鲤|雷龙|龙鱼|美人鱼|Neocaridina|Caridina|Neritina|Clithon|Anentome|Pomacea|Tylomelania|Geosesarma|Corydoras|Betta|Poecilia|Xiphophorus|Danio|Tanichthys|Apistogramma|Ancistrus|Otocinclus/i.test(text);
 };
 
-const classifyWithoutCategoryFallback = (species: Fish): WaterType => {
-  const text = textOf(species);
-  if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
-  if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
+const classifyWithoutBroadCategoryFallback = (species: Fish): SpeciesWaterType => {
+  const canonical = getSpeciesWaterType(species);
+  if (canonical === 'saltwater' || canonical === 'brackish') return canonical;
+
+  const lifeType = getLifeType(species);
+  if (lifeType === 'plant' || lifeType === 'hardscape' || lifeType === 'reptile') return 'freshwater';
   if (hasExplicitFreshwaterEvidence(species)) return 'freshwater';
   return 'unknown';
 };
@@ -45,9 +37,9 @@ const countBy = <T extends string>(values: T[]) => values.reduce<Record<string, 
   return acc;
 }, {});
 
-const currentCounts = countBy(fishData.map(classifyCurrent));
-const strictCounts = countBy(fishData.map(classifyWithoutCategoryFallback));
-const strictUnknown = fishData.filter(species => classifyWithoutCategoryFallback(species) === 'unknown');
+const currentCounts = countBy(fishData.map(getSpeciesWaterType));
+const strictCounts = countBy(fishData.map(classifyWithoutBroadCategoryFallback));
+const strictUnknown = fishData.filter(species => classifyWithoutBroadCategoryFallback(species) === 'unknown');
 
 const unknownByCategory = Object.entries(
   strictUnknown.reduce<Record<string, number>>((acc, species) => {
@@ -74,13 +66,13 @@ const samples = strictUnknown.slice(0, 40).map(species => ({
 }));
 
 const categoryFallbackOnly = fishData.filter(species => (
-  classifyCurrent(species) === 'freshwater' && classifyWithoutCategoryFallback(species) === 'unknown'
+  getSpeciesWaterType(species) === 'freshwater' && classifyWithoutBroadCategoryFallback(species) === 'unknown'
 ));
 
 console.log(JSON.stringify({
   totalSpecies: fishData.length,
   currentCounts,
-  withoutCategoryFallbackCounts: strictCounts,
+  withoutBroadCategoryFallbackCounts: strictCounts,
   categoryFallbackOnlyCount: categoryFallbackOnly.length,
   unknownByCategory,
   unknownByLifeType,
