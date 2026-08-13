@@ -51,8 +51,11 @@ for (const species of fishData) {
   byBusinessFingerprint.set(key, group);
 }
 
-const likelyDuplicateEntities = [...byBusinessFingerprint.values()]
+const likelyDuplicateGroups = [...byBusinessFingerprint.values()]
   .filter(group => group.length > 1)
+  .map(group => [...group].sort((a, b) => a.id.localeCompare(b.id)));
+
+const likelyDuplicateEntities = likelyDuplicateGroups
   .map(group => ({
     count: group.length,
     records: group.map(species => ({
@@ -71,6 +74,13 @@ const likelyDuplicateEntities = [...byBusinessFingerprint.values()]
   }))
   .sort((a, b) => b.count - a.count || a.records[0].scientificName.localeCompare(b.records[0].scientificName));
 
+const recommendedAliasMap = Object.fromEntries(
+  likelyDuplicateGroups.flatMap(group => {
+    const canonicalId = group[0].id;
+    return group.slice(1).map(species => [species.id, canonicalId]);
+  }),
+);
+
 const coarseScientificNameGroups = exactScientificNameDuplicates.filter(group => {
   const names = new Set(group.records.map(record => normalize(record.name)));
   return names.size > 1;
@@ -83,6 +93,8 @@ const report = {
   likelyDuplicateEntityGroups: likelyDuplicateEntities.length,
   maxAllowedLikelyDuplicateEntityGroups: MAX_LIKELY_DUPLICATE_ENTITY_GROUPS,
   likelyDuplicateEntityRecords: likelyDuplicateEntities.reduce((sum, group) => sum + group.count, 0),
+  recommendedAliasCount: Object.keys(recommendedAliasMap).length,
+  recommendedAliasMap,
   coarseScientificNameGroups: coarseScientificNameGroups.length,
   migrationRequiredBeforeDeletion: true,
   migrationReason: 'Species IDs are business identifiers; duplicate rows must be aliased or migrated before any catalog deletion.',
