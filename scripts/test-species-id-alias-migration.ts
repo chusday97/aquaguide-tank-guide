@@ -1,4 +1,6 @@
 import { normalizeSpeciesIds, resolveCanonicalSpeciesId, speciesIdAliases } from '../src/modules/species/speciesAliases';
+import { speciesService } from '../src/modules/species/species.service';
+import { speciesDetailInputSchema } from '../src/modules/species/species.schema';
 import { normalizePersistedSpeciesReferences } from '../src/services/storage/local-app-state';
 import type { Aquarium } from '../src/types';
 
@@ -10,6 +12,15 @@ assert(Object.keys(speciesIdAliases).length === 28, `expected 28 duplicate-id al
 assert(resolveCanonicalSpeciesId('sp_0027') === 'sp_0001', 'duplicate shrimp id must resolve to canonical id');
 assert(resolveCanonicalSpeciesId('sp_0001') === 'sp_0001', 'canonical id must resolve to itself');
 assert(resolveCanonicalSpeciesId('custom_species') === 'custom_species', 'unknown/custom ids must remain untouched');
+
+const legacyDetailInput = speciesDetailInputSchema.parse({ speciesId: 'sp_0454' });
+assert(legacyDetailInput.speciesId === 'sp_0427', `legacy detail input must resolve to canonical id, got ${legacyDetailInput.speciesId}`);
+const legacyDetail = speciesService.detail({ speciesId: 'sp_0454' });
+const canonicalDetail = speciesService.detail({ speciesId: 'sp_0427' });
+assert(legacyDetail.item?.id === 'sp_0427', `legacy detail lookup must return canonical item, got ${legacyDetail.item?.id || 'null'}`);
+assert(canonicalDetail.item?.id === 'sp_0427', 'canonical detail lookup must continue to work');
+assert(legacyDetail.item?.id === canonicalDetail.item?.id, 'legacy and canonical detail lookups must resolve to the same catalog entity');
+assert(speciesService.detail({ speciesId: 'custom_species' }).item === null, 'unknown/custom detail ids must remain unresolved rather than aliasing to another species');
 
 const normalizedIds = normalizeSpeciesIds(['sp_0027', 'sp_0001', 'sp_0032', 'sp_0004', 'custom_species']);
 assert(normalizedIds.length === 3, `alias/canonical pairs must dedupe; got ${normalizedIds.join(', ')}`);
@@ -44,6 +55,7 @@ assert((migrated.deceasedRecords?.[2] as { note?: string }).note === 'must remai
 console.log(JSON.stringify({
   ok: true,
   aliasCount: Object.keys(speciesIdAliases).length,
+  legacyDetailResolvedTo: legacyDetail.item?.id,
   migratedAquariumFishId: migrated.aquariums?.[0].fishes[0].fishId,
   normalizedWishlist: migrated.wishlist,
   migratedDeceasedFishId: (migrated.deceasedRecords?.[0] as { fishId?: string }).fishId,
