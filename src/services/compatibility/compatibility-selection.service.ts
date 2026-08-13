@@ -1,8 +1,10 @@
+import { normalizeSpeciesIds } from '../../modules/species/speciesAliases';
+
 export const COMPATIBILITY_SELECTION_SESSION_KEY = 'aquaguide_compatibility_selection';
 
 const normalizeIds = (value: unknown) => (
   Array.isArray(value)
-    ? Array.from(new Set(value.filter((id): id is string => typeof id === 'string' && id.length > 0)))
+    ? normalizeSpeciesIds(value.filter((id): id is string => typeof id === 'string' && id.length > 0))
     : []
 );
 
