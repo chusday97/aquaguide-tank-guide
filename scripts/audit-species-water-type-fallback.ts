@@ -61,14 +61,6 @@ const unknownByLifeType = Object.entries(
   }, {}),
 ).sort((a, b) => b[1] - a[1]);
 
-const samples = strictUnknown.slice(0, 40).map(species => ({
-  id: species.id,
-  name: species.name,
-  scientificName: species.scientificName,
-  category: species.category,
-  lifeType: getLifeType(species),
-}));
-
 const malformedCategoryRecords = strictUnknown
   .filter(species => getLifeType(species) === 'fish' && /硬景|底床|水草|珊瑚|海水无脊椎/.test(species.category || ''))
   .map(species => ({
@@ -114,6 +106,14 @@ const categoryFallbackOnly = fishData.filter(species => (
   getSpeciesWaterType(species) === 'freshwater' && classifyWithoutBroadCategoryFallback(species) === 'unknown'
 ));
 
+const fallbackDependentSpecies = categoryFallbackOnly.map(species => ({
+  id: species.id,
+  name: species.name,
+  scientificName: species.scientificName,
+  category: species.category,
+  lifeType: getLifeType(species),
+}));
+
 const report = {
   totalSpecies: fishData.length,
   currentCounts,
@@ -129,7 +129,7 @@ const report = {
   unknownByLifeType,
   malformedCategoryRecords,
   lifeTypeCategoryContradictions,
-  unknownSamples: samples,
+  fallbackDependentSpecies,
 };
 
 console.log(JSON.stringify(report, null, 2));
