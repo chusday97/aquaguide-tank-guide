@@ -95,4 +95,22 @@ assert_category(
     Family="Cichlidae",
 )
 
-print("species taxonomy source rules passed: 11 fixtures")
+# A second legacy corruption class stored aquatic plants as 鱼类. These source
+# identities must resolve to 水草 before a regenerated catalog is accepted.
+for common_name, scientific_name, family in [
+    ("牛毛毡", "Eleocharis acicularis", "Cyperaceae"),
+    ("凤尾藓", "Fissidens fontanus", "Fissidentaceae"),
+    ("迷你矮珍珠", "Hemianthus callitrichoides", "Linderniaceae"),
+    ("铁皇冠", "Microsorum pteropus", "Polypodiaceae"),
+    ("绿羽毛", "Myriophyllum aquaticum", "Haloragaceae"),
+    ("红宫廷", "Rotala rotundifolia 'Red'", "Lythraceae"),
+    ("南美叉柱花", "Staurogyne repens", "Acanthaceae"),
+]:
+    assert_category(
+        "水草",
+        Common_Name=common_name,
+        Scientific_Name=scientific_name,
+        Family=family,
+    )
+
+print("species taxonomy source rules passed: 18 fixtures")
