@@ -58,6 +58,7 @@ const unknownByLifeType = Object.entries(
     const key = getLifeType(species);
     acc[key] = (acc[key] || 0) + 1;
     return acc;
+;
   }, {}),
 ).sort((a, b) => b[1] - a[1]);
 
