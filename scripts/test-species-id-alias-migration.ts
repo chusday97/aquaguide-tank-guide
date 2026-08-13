@@ -42,8 +42,13 @@ const aquarium: Aquarium = {
   ],
 };
 
+const legacyAquariumWithoutFishes = {
+  id: 'aq_legacy_without_fishes',
+  name: 'Legacy tank without fishes field',
+} as Aquarium;
+
 const migrated = normalizePersistedSpeciesReferences({
-  aquariums: [aquarium],
+  aquariums: [aquarium, legacyAquariumWithoutFishes],
   wishlist: ['sp_0454', 'sp_0427', 'sp_0028'],
   compatibilityRecords: [
     {
@@ -74,6 +79,7 @@ const migrated = normalizePersistedSpeciesReferences({
 
 assert(migrated.aquariums?.[0].fishes[0].fishId === 'sp_0038', 'aquarium fishId must migrate to canonical id');
 assert(migrated.aquariums?.[0].fishes[1].fishId === 'custom_species', 'custom aquarium species id must remain untouched');
+assert(Array.isArray(migrated.aquariums?.[1].fishes) && migrated.aquariums?.[1].fishes.length === 0, 'legacy aquarium without fishes must normalize to an empty fishes array');
 assert(JSON.stringify(migrated.wishlist) === JSON.stringify(['sp_0427', 'sp_0002']), `wishlist aliases must migrate and dedupe: ${JSON.stringify(migrated.wishlist)}`);
 assert(
   JSON.stringify((migrated.compatibilityRecords?.[0] as { speciesIds?: string[] }).speciesIds) === JSON.stringify(['sp_0427', 'sp_0002', 'custom_species']),
@@ -97,6 +103,7 @@ console.log(JSON.stringify({
   legacyDetailResolvedTo: legacyDetail.item?.id,
   compatibilitySelection,
   migratedAquariumFishId: migrated.aquariums?.[0].fishes[0].fishId,
+  legacyAquariumFishCount: migrated.aquariums?.[1].fishes.length,
   normalizedWishlist: migrated.wishlist,
   migratedCompatibilityIds: (migrated.compatibilityRecords?.[0] as { speciesIds?: string[] }).speciesIds,
   migratedDiscoveryQueue: migrated.discoveryState?.queueIds,
