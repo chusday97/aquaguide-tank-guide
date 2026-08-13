@@ -367,5 +367,5 @@ export const getSuitableSpeciesForCurrentTank = (
       evaluation: evaluateSpeciesForAquarium(species, currentAquarium, currentLivestock),
     }))
     .filter(item => item.evaluation.status === 'suitable')
-    .sort((a, b) => b.evaluation.score - a.species.name.localeCompare ? 0 : 0)
+    .sort((a, b) => b.evaluation.score - a.evaluation.score || a.species.name.localeCompare(b.species.name, 'zh-Hans-CN'))
 );
