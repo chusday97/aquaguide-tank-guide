@@ -45,6 +45,7 @@ jobs:
           npm run test:compatibility-evidence-coverage
           npm run test:task-entry
           npm run test:core-flow-state-eval
+          npx tsx scripts/test-water-change-history.ts
       - name: Type check
         run: npm run lint
       - name: Build
