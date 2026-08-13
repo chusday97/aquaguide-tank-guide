@@ -205,8 +205,8 @@ export const evaluateSpeciesForAquarium = (
     confirmations.push({ type: 'unknown_water_type', title: '物种水体资料不足', detail: '该物种缺少可靠水体类型，不应默认判断为适合。' });
   } else if (aquariumWaterType === 'freshwater' && speciesWaterType !== 'freshwater') {
     hardBlocks.push({ type: 'water_type_mismatch', title: '水体类型不匹配', detail: '当前是淡水鱼缸，不能推荐海水、汽水、珊瑚、水母或海葵等特殊水体生物。', severity: 'high' });
-  } else if (aquariumWaterType === 'saltwater' && speciesWaterType === 'freshwater') {
-    hardBlocks.push({ type: 'water_type_mismatch', title: '水体类型不匹配', detail: '当前是海水鱼缸，不能推荐普通淡水鱼、淡水虾螺或水草。', severity: 'high' });
+  } else if (aquariumWaterType === 'saltwater' && speciesWaterType !== 'saltwater') {
+    hardBlocks.push({ type: 'water_type_mismatch', title: '水体类型不匹配', detail: '当前是海水鱼缸，只能匹配明确海水物种；普通淡水或汽水物种需要独立规划。', severity: 'high' });
   } else {
     matchedItems.push({ type: 'water_type', title: '水体类型匹配', detail: aquariumWaterType === 'saltwater' ? '当前为海水鱼缸。' : '当前为淡水鱼缸。' });
     score += 24;
