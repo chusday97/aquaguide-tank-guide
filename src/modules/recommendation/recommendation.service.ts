@@ -276,7 +276,7 @@ const buildAquariumProfile = (
       currentLoad: Math.round(currentLoad * 10) / 10,
       capacity,
       loadRate,
-      status: getLoadStatus(loadRate),
+      status: capacity > 0 ? getLoadStatus(loadRate) : 'unknown',
       remainingCapacity: capacity > 0 ? Math.max(0, Math.round((capacity - currentLoad) * 10) / 10) : 0,
     },
     waterLayers,
