@@ -1,4 +1,5 @@
 import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import { normalizeSpeciesIds } from '../../modules/species/speciesAliases';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { trackActivationIfFirstValidCompatibility, trackSessionEvent } from '../analytics/session-events.service';
 
@@ -26,7 +27,7 @@ export const isCompatibilityRecord = (value: unknown): value is CompatibilityRec
 
 export const recordTankCompatibility = (input: Omit<CompatibilityRecord, 'id' | 'evaluatedAt' | 'scope'>) => {
   const state = loadAppStateFromStorage();
-  const speciesIds = [...new Set(input.speciesIds)].sort();
+  const speciesIds = normalizeSpeciesIds(input.speciesIds).sort();
   if (!input.aquariumId || speciesIds.length < 2) return null;
   const alreadyActivated = state.compatibilityRecords.some(item => (
     isCompatibilityRecord(item) && state.aquariums.some(aquarium => aquarium.id === item.aquariumId)
