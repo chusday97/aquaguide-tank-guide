@@ -67,6 +67,17 @@ const samples = strictUnknown.slice(0, 40).map(species => ({
   lifeType: getLifeType(species),
 }));
 
+const malformedCategoryRecords = strictUnknown
+  .filter(species => getLifeType(species) === 'fish' && /硬景|底床|水草|珊瑚|海水无脊椎/.test(species.category || ''))
+  .map(species => ({
+    id: species.id,
+    name: species.name,
+    scientificName: species.scientificName,
+    category: species.category,
+    originalCategory: (species as Fish & { _originalCategory?: string })._originalCategory || null,
+    lifeType: getLifeType(species),
+  }));
+
 const categoryFallbackOnly = fishData.filter(species => (
   getSpeciesWaterType(species) === 'freshwater' && classifyWithoutBroadCategoryFallback(species) === 'unknown'
 ));
@@ -79,6 +90,7 @@ const report = {
   maxAllowedCategoryFallbackOnly: MAX_CATEGORY_FALLBACK_ONLY,
   unknownByCategory,
   unknownByLifeType,
+  malformedCategoryRecords,
   unknownSamples: samples,
 };
 
