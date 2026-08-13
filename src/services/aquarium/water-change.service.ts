@@ -22,15 +22,19 @@ export const isFutureWaterChangeDate = (dateKey: string, now = new Date()) => (
   !isValidDateKey(dateKey) || dateKey > toLocalDateKey(now)
 );
 
-export const toggleWaterChangeDate = (history: string[], dateKey: string) => {
-  const normalized = Array.from(new Set(history.filter(isValidDateKey))).sort();
+const normalizeWaterChangeHistory = (history: string[], now = new Date()) => (
+  Array.from(new Set(history.filter(dateKey => isValidDateKey(dateKey) && !isFutureWaterChangeDate(dateKey, now)))).sort()
+);
+
+export const toggleWaterChangeDate = (history: string[], dateKey: string, now = new Date()) => {
+  const normalized = normalizeWaterChangeHistory(history, now);
   if (normalized.includes(dateKey)) return normalized.filter(item => item !== dateKey);
-  if (!isValidDateKey(dateKey)) return normalized;
+  if (isFutureWaterChangeDate(dateKey, now)) return normalized;
   return [...normalized, dateKey].sort();
 };
 
-export const getLatestWaterChangeDate = (history: string[]) => {
-  const normalized = Array.from(new Set(history.filter(isValidDateKey))).sort();
+export const getLatestWaterChangeDate = (history: string[], now = new Date()) => {
+  const normalized = normalizeWaterChangeHistory(history, now);
   return normalized.at(-1);
 };
 
@@ -40,9 +44,9 @@ export const waterChangeDateToIso = (dateKey: string) => {
   return new Date(year, month - 1, day, 12, 0, 0, 0).toISOString();
 };
 
-export const applyWaterChangeHistory = (aquarium: Aquarium, history: string[]): Aquarium => {
-  const normalizedHistory = Array.from(new Set(history.filter(isValidDateKey))).sort();
-  const latestDate = getLatestWaterChangeDate(normalizedHistory);
+export const applyWaterChangeHistory = (aquarium: Aquarium, history: string[], now = new Date()): Aquarium => {
+  const normalizedHistory = normalizeWaterChangeHistory(history, now);
+  const latestDate = getLatestWaterChangeDate(normalizedHistory, now);
   const latestIso = latestDate ? waterChangeDateToIso(latestDate) : undefined;
 
   return {
