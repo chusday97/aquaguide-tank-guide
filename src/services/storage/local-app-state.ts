@@ -94,15 +94,47 @@ const normalizeRecordFishId = (record: unknown) => {
   return { ...record, fishId: resolveCanonicalSpeciesId(fishId) };
 };
 
+const normalizeRecordSpeciesIds = (record: unknown) => {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return record;
+  const speciesIds = (record as { speciesIds?: unknown }).speciesIds;
+  if (!Array.isArray(speciesIds) || !speciesIds.every(id => typeof id === 'string')) return record;
+  return { ...record, speciesIds: normalizeSpeciesIds(speciesIds) };
+};
+
+const normalizeDiscoveryStateSpeciesIds = (state: DiscoveryDeckState | undefined) => {
+  if (!state || typeof state !== 'object') return state;
+  const history = Array.isArray(state.history)
+    ? state.history.map(item => (
+      item && typeof item === 'object' && typeof item.id === 'string'
+        ? { ...item, id: resolveCanonicalSpeciesId(item.id) }
+        : item
+    )) as DiscoveryDeckState['history']
+    : [];
+  return {
+    ...state,
+    queueIds: Array.isArray(state.queueIds)
+      ? normalizeSpeciesIds(state.queueIds.filter((id): id is string => typeof id === 'string'))
+      : [],
+    consumedIds: Array.isArray(state.consumedIds)
+      ? normalizeSpeciesIds(state.consumedIds.filter((id): id is string => typeof id === 'string'))
+      : [],
+    history,
+  };
+};
+
 export const normalizePersistedSpeciesReferences = (value: Partial<LocalAppState>) => ({
   ...value,
   aquariums: Array.isArray(value.aquariums) ? normalizeAquariumsSpeciesIds(value.aquariums) : value.aquariums,
   wishlist: Array.isArray(value.wishlist)
     ? normalizeSpeciesIds(value.wishlist.filter((id): id is string => typeof id === 'string'))
     : value.wishlist,
+  compatibilityRecords: Array.isArray(value.compatibilityRecords)
+    ? value.compatibilityRecords.map(normalizeRecordSpeciesIds)
+    : value.compatibilityRecords,
   deceasedRecords: Array.isArray(value.deceasedRecords)
     ? value.deceasedRecords.map(normalizeRecordFishId)
     : value.deceasedRecords,
+  discoveryState: normalizeDiscoveryStateSpeciesIds(value.discoveryState),
 });
 
 const normalizeState = (value: Partial<LocalAppState> | null | undefined): LocalAppState => {
