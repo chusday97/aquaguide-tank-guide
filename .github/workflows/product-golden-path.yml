@@ -21,6 +21,7 @@ jobs:
         run: |
           npm run test:taxonomy
           npx tsx scripts/test-marine-invertebrate-water-type.ts
+          npx tsx scripts/test-aquarium-water-type-certainty.ts
       - name: Product evaluation contracts
         run: |
           npm run test:product-evaluation
