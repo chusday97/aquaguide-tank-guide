@@ -61,6 +61,18 @@ const aliasFingerprint = (species: typeof fishData[number]) => JSON.stringify({
   housingReason: normalize(species.housingReason),
 });
 
+const comparableRecord = (species: typeof fishData[number]) => {
+  const { id: _id, name: _name, image: _image, ...rest } = species;
+  return rest as Record<string, unknown>;
+};
+
+const mismatchedRecordFields = (records: Array<Record<string, unknown>>) => {
+  const keys = new Set(records.flatMap(record => Object.keys(record)));
+  return [...keys]
+    .filter(key => new Set(records.map(record => JSON.stringify(record[key]))).size > 1)
+    .sort();
+};
+
 const byBusinessFingerprint = new Map<string, typeof fishData>();
 const byAliasFingerprint = new Map<string, typeof fishData>();
 for (const species of fishData) {
@@ -148,6 +160,31 @@ const reviewStatusCounts = speciesCollisionReviews.reduce<Record<string, number>
   return counts;
 }, {});
 
+const speciesById = new Map(fishData.map(species => [species.id, species]));
+const probableAliasRecordParity = speciesCollisionReviews
+  .filter(review => review.status === 'probable_alias')
+  .map(review => {
+    const missingIds = review.ids.filter(id => !speciesById.has(id));
+    const records = review.ids
+      .map(id => speciesById.get(id))
+      .filter((species): species is typeof fishData[number] => Boolean(species));
+    const comparableRecords = records.map(comparableRecord);
+    const mismatchedFields = comparableRecords.length === review.ids.length
+      ? mismatchedRecordFields(comparableRecords)
+      : [];
+    return {
+      key: collisionKey(review.ids),
+      ids: review.ids,
+      names: records.map(species => species.name),
+      confidence: review.confidence,
+      missingIds,
+      fullRecordParity: missingIds.length === 0 && mismatchedFields.length === 0,
+      mismatchedFields,
+    };
+  });
+const fullRecordParityCandidates = probableAliasRecordParity.filter(candidate => candidate.fullRecordParity);
+const probableAliasesNeedingRecordReview = probableAliasRecordParity.filter(candidate => !candidate.fullRecordParity);
+
 const remainingLegacyAliasIds = Object.keys(speciesIdAliases).filter(aliasId => fishData.some(species => species.id === aliasId));
 const missingCanonicalAliasTargets = Array.from(new Set(Object.values(speciesIdAliases)))
   .filter(canonicalId => !fishData.some(species => species.id === canonicalId));
@@ -165,6 +202,9 @@ const report = {
   unreviewedAliasLikeCollisionGroups: unreviewedAliasLikeCollisions.length,
   maxAllowedUnreviewedAliasLikeCollisionGroups: MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_GROUPS,
   reviewStatusCounts,
+  probableAliasGroups: probableAliasRecordParity.length,
+  fullRecordParityCandidateGroups: fullRecordParityCandidates.length,
+  probableAliasGroupsNeedingRecordReview: probableAliasesNeedingRecordReview.length,
   duplicateReviewKeys,
   malformedReviewPairCount: malformedReviewPairs.length,
   staleCollisionReviewCount: staleCollisionReviews.length,
@@ -175,6 +215,9 @@ const report = {
   scientificNameCollisionsWithDifferentNames: scientificNameCollisionsWithDifferentNames.length,
   likelyDuplicateEntities,
   reviewedAliasLikeCollisions,
+  probableAliasRecordParity,
+  fullRecordParityCandidates,
+  probableAliasesNeedingRecordReview,
   unreviewedAliasLikeCollisions,
   malformedReviewPairs,
   staleCollisionReviews,
