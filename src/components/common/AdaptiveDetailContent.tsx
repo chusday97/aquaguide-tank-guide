@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react';
 import { DialogContent } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useLayoutMode } from '../layout/LayoutModeProvider';
+import '../../styles/adaptive-detail.css';
 
 type AdaptiveDetailContentProps = ComponentProps<typeof DialogContent>;
 
