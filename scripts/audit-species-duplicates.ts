@@ -122,6 +122,11 @@ const scientificNameCollisionsWithDifferentNames = exactScientificNameDuplicates
 
 const reviewByKey = new Map<string, typeof speciesCollisionReviews[number]>();
 const duplicateReviewKeys: string[] = [];
+const malformedReviewPairs = speciesCollisionReviews.filter(review => (
+  review.ids.length !== 2
+  || review.ids.some(id => !id)
+  || new Set(review.ids).size !== review.ids.length
+));
 for (const review of speciesCollisionReviews) {
   const key = collisionKey(review.ids);
   if (reviewByKey.has(key)) duplicateReviewKeys.push(key);
@@ -161,6 +166,7 @@ const report = {
   maxAllowedUnreviewedAliasLikeCollisionGroups: MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_GROUPS,
   reviewStatusCounts,
   duplicateReviewKeys,
+  malformedReviewPairCount: malformedReviewPairs.length,
   staleCollisionReviewCount: staleCollisionReviews.length,
   stableAliasCount: Object.keys(speciesIdAliases).length,
   expectedStableAliasCount: EXPECTED_STABLE_ALIAS_COUNT,
@@ -170,6 +176,7 @@ const report = {
   likelyDuplicateEntities,
   reviewedAliasLikeCollisions,
   unreviewedAliasLikeCollisions,
+  malformedReviewPairs,
   staleCollisionReviews,
   scientificNameCollisionDetails: scientificNameCollisionsWithDifferentNames,
 };
@@ -180,6 +187,11 @@ if (likelyDuplicateEntities.length > MAX_LIKELY_DUPLICATE_ENTITY_GROUPS) {
   console.error(
     `Duplicate catalog debt increased: ${likelyDuplicateEntities.length} likely duplicate entity groups; maximum allowed is ${MAX_LIKELY_DUPLICATE_ENTITY_GROUPS}.`,
   );
+  process.exit(1);
+}
+
+if (malformedReviewPairs.length > 0) {
+  console.error(`Malformed species collision review pairs: ${malformedReviewPairs.map(review => collisionKey(review.ids)).join(', ')}`);
   process.exit(1);
 }
 
