@@ -46,6 +46,7 @@ jobs:
           npm run test:task-entry
           npm run test:core-flow-state-eval
           npx tsx scripts/test-species-fit-engine.ts
+          npx tsx scripts/test-life-type-detail-semantics.ts
           npx tsx scripts/test-water-change-history.ts
           npx tsx scripts/test-local-app-state-active-aquarium.ts
           npm run test:memorial
