@@ -190,7 +190,8 @@ export const evaluateSpeciesForAquarium = (
   const targetIsHardscape = lifeType === 'hardscape' || isHardscapeSpecies(species);
   const targetIsAnimal = isAnimalSpecies(species);
   const targetIsUnknown = !targetIsAnimal && !targetIsPlant && !targetIsHardscape;
-  const otherLivestock = currentLivestock.filter(item => item.species?.id !== species.id && isAnimalSpecies(item.species));
+  const animalLivestock = currentLivestock.filter(item => isAnimalSpecies(item.species));
+  const otherLivestock = animalLivestock.filter(item => item.species.id !== species.id);
   const speciesWaterType = getSpeciesWaterType(species);
   const aquariumWaterType = getAquariumWaterType(aquarium);
   const specialTankType = targetIsAnimal ? isSpecialTankSpecies(species) : null;
@@ -364,7 +365,7 @@ export const evaluateSpeciesForAquarium = (
       score += 8;
     }
 
-    const livestockCount = otherLivestock.reduce((sum, item) => sum + (item.record?.quantity || 1), 0);
+    const livestockCount = animalLivestock.reduce((sum, item) => sum + (item.record?.quantity || 1), 0);
     if (volumeLiters && livestockCount > 0 && livestockCount >= Math.max(20, volumeLiters / 3)) {
       warnings.push({ type: 'density_high', title: '当前密度偏高', detail: `当前已有约 ${livestockCount} 只/条活体，新增前建议先复核密度。`, severity: 'medium' });
       score -= 14;
