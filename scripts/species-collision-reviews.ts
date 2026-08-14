@@ -27,7 +27,7 @@ export const speciesCollisionReviews: readonly SpeciesCollisionReview[] = [
     status: 'probable_alias',
     confidence: 'high',
     reason: "Both records identify Anubias barteri var. nana 'Petite'; 小水榕/迷你水榕 are trade-name variants for the same named dwarf cultivar in this catalog.",
-    evidenceUrls: ['https://www.aquasabi.com/Anubias-barteri-var-nana-Petite'],
+    evidenceUrls: ['https://www.aquasabi.com/Anubias-barteri-var-nana-Petite-pot'],
   },
   {
     ids: ['sp_0208', 'sp_0340'],
@@ -69,7 +69,7 @@ export const speciesCollisionReviews: readonly SpeciesCollisionReview[] = [
     status: 'probable_alias',
     confidence: 'high',
     reason: 'Both records resolve to Mastacembelus armatus with the same care fingerprint; 大刺鳅/刺鳅 are common-name variants in this dataset rather than encoded strains.',
-    evidenceUrls: ['https://www.fishbase.se/summary/Mastacembelus-armatus.html'],
+    evidenceUrls: ['https://www.fishbase.se/summary/Mastacembelus_armatus.html'],
   },
   {
     ids: ['sp_0088', 'sp_0312'],
