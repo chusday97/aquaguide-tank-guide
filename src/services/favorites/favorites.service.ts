@@ -1,3 +1,4 @@
+import { normalizeSpeciesIds, resolveCanonicalSpeciesId } from '../../modules/species/speciesAliases';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 
 export const FAVORITES_CHANGED_EVENT = 'aquaguide:favorites-changed';
@@ -21,9 +22,9 @@ const readJson = <T,>(key: string, fallback: T): T => {
   }
 };
 
-const normalizeSpeciesIds = (value: unknown) => (
+const readSpeciesIds = (value: unknown) => (
   Array.isArray(value)
-    ? value.filter((id): id is string => typeof id === 'string' && id.length > 0)
+    ? normalizeSpeciesIds(value.filter((id): id is string => typeof id === 'string' && id.length > 0))
     : []
 );
 
@@ -44,30 +45,31 @@ const emitFavoritesChanged = () => {
 
 export const getSpeciesFavoriteIds = () => {
   if (typeof window === 'undefined') return [] as string[];
-  const legacyIds = normalizeSpeciesIds(readJson<unknown>(SPECIES_FAVORITES_STORAGE_KEY, []));
-  const appStateIds = normalizeSpeciesIds(loadAppStateFromStorage().wishlist);
-  return Array.from(new Set([...legacyIds, ...appStateIds]));
+  const legacyIds = readSpeciesIds(readJson<unknown>(SPECIES_FAVORITES_STORAGE_KEY, []));
+  const appStateIds = readSpeciesIds(loadAppStateFromStorage().wishlist);
+  return normalizeSpeciesIds([...legacyIds, ...appStateIds]);
 };
 
 export const setSpeciesFavoriteIds = (ids: Iterable<string>) => {
-  const normalized = Array.from(new Set(Array.from(ids).filter(Boolean)));
+  const normalized = normalizeSpeciesIds(ids);
   patchLocalAppState({ wishlist: normalized });
   emitFavoritesChanged();
   return normalized;
 };
 
 export const toggleSpeciesFavorite = (speciesId: string) => {
+  const canonicalId = resolveCanonicalSpeciesId(speciesId);
   const next = new Set(getSpeciesFavoriteIds());
-  const isFavorite = !next.has(speciesId);
-  if (isFavorite) next.add(speciesId);
-  else next.delete(speciesId);
+  const isFavorite = !next.has(canonicalId);
+  if (isFavorite) next.add(canonicalId);
+  else next.delete(canonicalId);
   setSpeciesFavoriteIds(next);
   return isFavorite;
 };
 
 export const addSpeciesFavorite = (speciesId: string) => {
   const next = new Set(getSpeciesFavoriteIds());
-  next.add(speciesId);
+  next.add(resolveCanonicalSpeciesId(speciesId));
   setSpeciesFavoriteIds(next);
 };
 

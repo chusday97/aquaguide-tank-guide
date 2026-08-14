@@ -1,5 +1,6 @@
 import type { Aquarium, OnboardingState } from '../../types';
 import type { DiscoveryDeckState } from '../../modules/recommendation/recommendation.schema';
+import { normalizeSpeciesIds, resolveCanonicalSpeciesId } from '../../modules/species/speciesAliases';
 import { notifyDataRecovery } from '../diagnostics/ui-failure.service';
 import type { CareEventType } from '../../types/database';
 
@@ -78,28 +79,94 @@ const createEmptyState = (): LocalAppState => ({
   updatedAt: new Date().toISOString(),
 });
 
+const normalizeAquariumsSpeciesIds = (aquariums: Aquarium[]) => aquariums.map(aquarium => ({
+  ...aquarium,
+  fishes: Array.isArray(aquarium?.fishes)
+    ? aquarium.fishes.map(fish => ({
+      ...fish,
+      fishId: resolveCanonicalSpeciesId(fish.fishId),
+    }))
+    : [],
+}));
+
+const normalizeRecordFishId = (record: unknown) => {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return record;
+  const fishId = (record as { fishId?: unknown }).fishId;
+  if (typeof fishId !== 'string' || !fishId) return record;
+  return { ...record, fishId: resolveCanonicalSpeciesId(fishId) };
+};
+
+const normalizeRecordSpeciesIds = (record: unknown) => {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return record;
+  const speciesIds = (record as { speciesIds?: unknown }).speciesIds;
+  if (!Array.isArray(speciesIds) || !speciesIds.every(id => typeof id === 'string')) return record;
+  return { ...record, speciesIds: normalizeSpeciesIds(speciesIds) };
+};
+
+const normalizeDiscoveryStateSpeciesIds = (state: DiscoveryDeckState | undefined) => {
+  if (!state || typeof state !== 'object') return state;
+  const history = Array.isArray(state.history)
+    ? state.history.map(item => (
+      item && typeof item === 'object' && typeof item.id === 'string'
+        ? { ...item, id: resolveCanonicalSpeciesId(item.id) }
+        : item
+    )) as DiscoveryDeckState['history']
+    : [];
+  return {
+    ...state,
+    queueIds: Array.isArray(state.queueIds)
+      ? normalizeSpeciesIds(state.queueIds.filter((id): id is string => typeof id === 'string'))
+      : [],
+    consumedIds: Array.isArray(state.consumedIds)
+      ? normalizeSpeciesIds(state.consumedIds.filter((id): id is string => typeof id === 'string'))
+      : [],
+    history,
+  };
+};
+
+export const normalizePersistedSpeciesReferences = (value: Partial<LocalAppState>) => ({
+  ...value,
+  aquariums: Array.isArray(value.aquariums) ? normalizeAquariumsSpeciesIds(value.aquariums) : value.aquariums,
+  wishlist: Array.isArray(value.wishlist)
+    ? normalizeSpeciesIds(value.wishlist.filter((id): id is string => typeof id === 'string'))
+    : value.wishlist,
+  compatibilityRecords: Array.isArray(value.compatibilityRecords)
+    ? value.compatibilityRecords.map(normalizeRecordSpeciesIds)
+    : value.compatibilityRecords,
+  deceasedRecords: Array.isArray(value.deceasedRecords)
+    ? value.deceasedRecords.map(normalizeRecordFishId)
+    : value.deceasedRecords,
+  discoveryState: normalizeDiscoveryStateSpeciesIds(value.discoveryState),
+});
+
 const normalizeState = (value: Partial<LocalAppState> | null | undefined): LocalAppState => {
   const fallback = createEmptyState();
+  const migrated = normalizePersistedSpeciesReferences(value || {});
+  const aquariums = Array.isArray(migrated.aquariums) ? migrated.aquariums : fallback.aquariums;
+  const requestedCurrentAquariumId = typeof migrated.currentAquariumId === 'string' ? migrated.currentAquariumId : '';
+  const currentAquariumId = aquariums.some(aquarium => aquarium.id === requestedCurrentAquariumId)
+    ? requestedCurrentAquariumId
+    : aquariums[0]?.id || '';
   return {
     version: AQUARIUM_APP_STATE_VERSION,
-    currentAquariumId: typeof value?.currentAquariumId === 'string' ? value.currentAquariumId : fallback.currentAquariumId,
-    aquariums: Array.isArray(value?.aquariums) ? value.aquariums : fallback.aquariums,
-    wishlist: Array.isArray(value?.wishlist) ? value.wishlist : fallback.wishlist,
-    dismissedRecommendations: Array.isArray(value?.dismissedRecommendations) ? value.dismissedRecommendations : fallback.dismissedRecommendations,
-    diagnosisRecords: Array.isArray(value?.diagnosisRecords) ? value.diagnosisRecords : fallback.diagnosisRecords,
-    compatibilityRecords: Array.isArray(value?.compatibilityRecords) ? value.compatibilityRecords : fallback.compatibilityRecords,
-    deceasedRecords: Array.isArray(value?.deceasedRecords) ? value.deceasedRecords : fallback.deceasedRecords,
-    feedingRecords: Array.isArray(value?.feedingRecords) ? value.feedingRecords : fallback.feedingRecords,
-    observationRecords: Array.isArray(value?.observationRecords) ? value.observationRecords : fallback.observationRecords,
-    careEvents: Array.isArray(value?.careEvents) ? value.careEvents : fallback.careEvents,
-    riskReminderState: value?.riskReminderState && typeof value.riskReminderState === 'object' ? value.riskReminderState : fallback.riskReminderState,
-    discoveryState: value?.discoveryState,
-    onboarding: value?.onboarding ? {
-      ...value.onboarding,
-      aquariumConfigured: value.onboarding.aquariumConfigured ?? value.onboarding.status === 'completed',
+    currentAquariumId,
+    aquariums,
+    wishlist: Array.isArray(migrated.wishlist) ? migrated.wishlist : fallback.wishlist,
+    dismissedRecommendations: Array.isArray(migrated.dismissedRecommendations) ? migrated.dismissedRecommendations : fallback.dismissedRecommendations,
+    diagnosisRecords: Array.isArray(migrated.diagnosisRecords) ? migrated.diagnosisRecords : fallback.diagnosisRecords,
+    compatibilityRecords: Array.isArray(migrated.compatibilityRecords) ? migrated.compatibilityRecords : fallback.compatibilityRecords,
+    deceasedRecords: Array.isArray(migrated.deceasedRecords) ? migrated.deceasedRecords : fallback.deceasedRecords,
+    feedingRecords: Array.isArray(migrated.feedingRecords) ? migrated.feedingRecords : fallback.feedingRecords,
+    observationRecords: Array.isArray(migrated.observationRecords) ? migrated.observationRecords : fallback.observationRecords,
+    careEvents: Array.isArray(migrated.careEvents) ? migrated.careEvents : fallback.careEvents,
+    riskReminderState: migrated.riskReminderState && typeof migrated.riskReminderState === 'object' ? migrated.riskReminderState : fallback.riskReminderState,
+    discoveryState: migrated.discoveryState,
+    onboarding: migrated.onboarding ? {
+      ...migrated.onboarding,
+      aquariumConfigured: migrated.onboarding.aquariumConfigured ?? migrated.onboarding.status === 'completed',
     } : undefined,
-    cloudMigrationConfirmed: value?.cloudMigrationConfirmed === true,
-    updatedAt: typeof value?.updatedAt === 'string' ? value.updatedAt : fallback.updatedAt,
+    cloudMigrationConfirmed: migrated.cloudMigrationConfirmed === true,
+    updatedAt: typeof migrated.updatedAt === 'string' ? migrated.updatedAt : fallback.updatedAt,
   };
 };
 

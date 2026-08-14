@@ -17,6 +17,27 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Catalog integrity audit
+        run: |
+          npx tsx scripts/audit-species-water-type-fallback.ts
+          npx tsx scripts/audit-species-duplicates.ts
+          python3 scripts/test_species_taxonomy_rules.py
+          python3 scripts/test_species_category_normalizer.py
+          python3 scripts/normalize_species_categories.py --check
+          python3 scripts/deduplicate_species_catalog.py --check
+      - name: Taxonomy regression
+        run: |
+          npm run test:taxonomy
+          npx tsx scripts/test-marine-invertebrate-water-type.ts
+          npx tsx scripts/test-aquarium-water-type-certainty.ts
+          npx tsx scripts/test-brackish-water-type.ts
+          npx tsx scripts/test-aquatic-plant-taxonomy-regression.ts
+          npx tsx scripts/test-water-type-service-consistency.ts
+          npx tsx scripts/test-thorichthys-taxonomy.ts
+          npx tsx scripts/test-species-water-evidence.ts
+          npx tsx scripts/test-species-id-alias-migration.ts
+          npx tsx scripts/test-species-only-water-certainty.ts
+          npx tsx scripts/test-recommendation-profile-certainty.ts
       - name: Product evaluation contracts
         run: |
           npm run test:product-evaluation
@@ -24,6 +45,10 @@ jobs:
           npm run test:compatibility-evidence-coverage
           npm run test:task-entry
           npm run test:core-flow-state-eval
+          npx tsx scripts/test-water-change-history.ts
+          npx tsx scripts/test-local-app-state-active-aquarium.ts
+          npm run test:memorial
+          npm run test:livestock-memorial-replay
       - name: Type check
         run: npm run lint
       - name: Build
@@ -37,6 +62,14 @@ jobs:
           done
           cat /tmp/aquaguide-preview.log
           exit 1
+      - name: Major route smoke
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:responsive-routes
+      - name: GP-001 continuous browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-golden-path-first-tank-setup.mjs
       - name: GP-002 continuous browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
