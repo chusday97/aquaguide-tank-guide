@@ -305,6 +305,15 @@ if (unreviewedAliasLikeCollisions.length > MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_G
   process.exit(1);
 }
 
+if (careParameterConflictCandidates.length > 0) {
+  console.error(
+    `Probable aliases contain care-parameter conflicts and must be re-reviewed: ${careParameterConflictCandidates
+      .map(candidate => `${candidate.key} (${candidate.careParameterMismatchPaths.join(', ')})`)
+      .join('; ')}`,
+  );
+  process.exit(1);
+}
+
 if (staleCollisionReviews.length > 0) {
   console.error(
     `Species collision review ledger is stale: ${staleCollisionReviews.map(review => collisionKey(review.ids)).join(', ')}`,
