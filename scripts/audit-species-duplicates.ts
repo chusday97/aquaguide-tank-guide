@@ -1,11 +1,13 @@
 import { fishData } from '../src/data/fishData';
 import { speciesIdAliases } from '../src/modules/species/speciesAliases';
+import { speciesCollisionReviews } from './species-collision-reviews';
 
 const MAX_LIKELY_DUPLICATE_ENTITY_GROUPS = 0;
-const MAX_ALIAS_LIKE_COLLISION_GROUPS = 11;
 const EXPECTED_STABLE_ALIAS_COUNT = 28;
+const MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_GROUPS = 0;
 
 const normalize = (value?: string) => (value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+const collisionKey = (ids: Iterable<string>) => [...ids].sort().join('|');
 
 const byScientificName = new Map<string, typeof fishData>();
 for (const species of fishData) {
@@ -98,6 +100,7 @@ const likelyDuplicateEntities = [...byBusinessFingerprint.values()]
 const aliasLikeCollisionGroups = [...byAliasFingerprint.values()]
   .filter(group => group.length > 1 && new Set(group.map(species => normalize(species.name))).size > 1)
   .map(group => ({
+    key: collisionKey(group.map(species => species.id)),
     count: group.length,
     records: [...group]
       .sort((a, b) => a.id.localeCompare(b.id))
@@ -112,10 +115,33 @@ const aliasLikeCollisionGroups = [...byAliasFingerprint.values()]
   }))
   .sort((a, b) => b.count - a.count || a.records[0].scientificName.localeCompare(b.records[0].scientificName));
 
-const coarseScientificNameGroups = exactScientificNameDuplicates.filter(group => {
+const scientificNameCollisionsWithDifferentNames = exactScientificNameDuplicates.filter(group => {
   const names = new Set(group.records.map(record => normalize(record.name)));
   return names.size > 1;
 });
+
+const reviewByKey = new Map<string, typeof speciesCollisionReviews[number]>();
+const duplicateReviewKeys: string[] = [];
+for (const review of speciesCollisionReviews) {
+  const key = collisionKey(review.ids);
+  if (reviewByKey.has(key)) duplicateReviewKeys.push(key);
+  reviewByKey.set(key, review);
+}
+
+const collisionKeys = new Set(aliasLikeCollisionGroups.map(group => group.key));
+const unreviewedAliasLikeCollisions = aliasLikeCollisionGroups.filter(group => !reviewByKey.has(group.key));
+const staleCollisionReviews = speciesCollisionReviews.filter(review => !collisionKeys.has(collisionKey(review.ids)));
+const reviewedAliasLikeCollisions = aliasLikeCollisionGroups
+  .filter(group => reviewByKey.has(group.key))
+  .map(group => ({
+    ...group,
+    review: reviewByKey.get(group.key),
+  }));
+
+const reviewStatusCounts = speciesCollisionReviews.reduce<Record<string, number>>((counts, review) => {
+  counts[review.status] = (counts[review.status] || 0) + 1;
+  return counts;
+}, {});
 
 const remainingLegacyAliasIds = Object.keys(speciesIdAliases).filter(aliasId => fishData.some(species => species.id === aliasId));
 const missingCanonicalAliasTargets = Array.from(new Set(Object.values(speciesIdAliases)))
@@ -129,16 +155,23 @@ const report = {
   maxAllowedLikelyDuplicateEntityGroups: MAX_LIKELY_DUPLICATE_ENTITY_GROUPS,
   likelyDuplicateEntityRecords: likelyDuplicateEntities.reduce((sum, group) => sum + group.count, 0),
   aliasLikeCollisionGroups: aliasLikeCollisionGroups.length,
-  maxAllowedAliasLikeCollisionGroups: MAX_ALIAS_LIKE_COLLISION_GROUPS,
   aliasLikeCollisionRecords: aliasLikeCollisionGroups.reduce((sum, group) => sum + group.count, 0),
+  reviewedAliasLikeCollisionGroups: reviewedAliasLikeCollisions.length,
+  unreviewedAliasLikeCollisionGroups: unreviewedAliasLikeCollisions.length,
+  maxAllowedUnreviewedAliasLikeCollisionGroups: MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_GROUPS,
+  reviewStatusCounts,
+  duplicateReviewKeys,
+  staleCollisionReviewCount: staleCollisionReviews.length,
   stableAliasCount: Object.keys(speciesIdAliases).length,
   expectedStableAliasCount: EXPECTED_STABLE_ALIAS_COUNT,
   remainingLegacyAliasIds,
   missingCanonicalAliasTargets,
-  coarseScientificNameGroups: coarseScientificNameGroups.length,
+  scientificNameCollisionsWithDifferentNames: scientificNameCollisionsWithDifferentNames.length,
   likelyDuplicateEntities,
-  aliasLikeCollisions: aliasLikeCollisionGroups,
-  coarseScientificNames: coarseScientificNameGroups,
+  reviewedAliasLikeCollisions,
+  unreviewedAliasLikeCollisions,
+  staleCollisionReviews,
+  scientificNameCollisionDetails: scientificNameCollisionsWithDifferentNames,
 };
 
 console.log(JSON.stringify(report, null, 2));
@@ -150,9 +183,21 @@ if (likelyDuplicateEntities.length > MAX_LIKELY_DUPLICATE_ENTITY_GROUPS) {
   process.exit(1);
 }
 
-if (aliasLikeCollisionGroups.length > MAX_ALIAS_LIKE_COLLISION_GROUPS) {
+if (duplicateReviewKeys.length > 0) {
+  console.error(`Duplicate species collision review keys: ${duplicateReviewKeys.join(', ')}`);
+  process.exit(1);
+}
+
+if (unreviewedAliasLikeCollisions.length > MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_GROUPS) {
   console.error(
-    `Alias-like catalog collision debt increased: ${aliasLikeCollisionGroups.length} groups; maximum allowed is ${MAX_ALIAS_LIKE_COLLISION_GROUPS}.`,
+    `Unreviewed alias-like catalog collisions detected: ${unreviewedAliasLikeCollisions.length}; maximum allowed is ${MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_GROUPS}.`,
+  );
+  process.exit(1);
+}
+
+if (staleCollisionReviews.length > 0) {
+  console.error(
+    `Species collision review ledger is stale: ${staleCollisionReviews.map(review => collisionKey(review.ids)).join(', ')}`,
   );
   process.exit(1);
 }
