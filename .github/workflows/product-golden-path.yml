@@ -46,6 +46,7 @@ jobs:
           npm run test:task-entry
           npm run test:core-flow-state-eval
           npx tsx scripts/test-water-change-history.ts
+          npm run test:memorial
       - name: Type check
         run: npm run lint
       - name: Build
@@ -59,6 +60,10 @@ jobs:
           done
           cat /tmp/aquaguide-preview.log
           exit 1
+      - name: Major route smoke
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:responsive-routes
       - name: GP-001 continuous browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
