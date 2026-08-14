@@ -13,7 +13,11 @@ const fakeWindow = Object.assign(eventTarget, { localStorage, setTimeout, clearT
 Object.defineProperty(globalThis, 'window', { value: fakeWindow, configurable: true });
 Object.defineProperty(globalThis, 'localStorage', { value: localStorage, configurable: true });
 
-const { recordSpeciesMemorial, updateSpeciesMemorial } = await import('../src/services/collection/memorial.service');
+const {
+  recordSpeciesMemorial,
+  updateSpeciesMemorial,
+  recordSpeciesMemorialAndDecrementBatch,
+} = await import('../src/services/collection/memorial.service');
 
 assert.throws(
   () => recordSpeciesMemorial({ fishId: 'sp_0015', date: '2026-07-14', reason: '  ' }),
@@ -59,4 +63,59 @@ assert.equal(updated.improvement, '分次换水并记录温度');
 assert.equal(updated.version, 2);
 assert.equal(stateChangeCount, 2);
 
-console.log('memorial service: structured review, compatible storage, update and change event passed');
+const legacyDirect = recordSpeciesMemorial({
+  fishId: 'sp_0027',
+  date: '2026-07-15',
+  causeCodes: ['unknown'],
+});
+assert.equal(legacyDirect.record.fishId, 'sp_0001', 'legacy memorial writes must return the canonical species id');
+assert.equal(legacyDirect.records.at(-1)?.fishId, 'sp_0001', 'legacy memorial storage must keep the canonical species id');
+
+const legacyState = {
+  version: 1,
+  currentAquariumId: 'tank_legacy',
+  aquariums: [{
+    id: 'tank_legacy',
+    name: 'Legacy tank',
+    fishes: [{
+      id: 'tank_fish_legacy',
+      fishId: 'sp_0027',
+      quantity: 2,
+      entryDate: '2026-07-01T00:00:00.000Z',
+      batches: [{
+        id: 'batch_legacy',
+        quantity: 2,
+        entryDate: '2026-07-01T00:00:00.000Z',
+        lifeStage: 'adult',
+        reproductiveState: 'normal',
+        stateUpdatedAt: '2026-07-01T00:00:00.000Z',
+      }],
+    }],
+  }],
+  wishlist: [],
+  dismissedRecommendations: [],
+  diagnosisRecords: [],
+  compatibilityRecords: [],
+  deceasedRecords: [],
+  feedingRecords: [],
+  observationRecords: [],
+  careEvents: [],
+  riskReminderState: {},
+  updatedAt: '2026-07-15T00:00:00.000Z',
+};
+localStorage.setItem('aquarium_app_state_v1', JSON.stringify(legacyState));
+
+const batchResult = recordSpeciesMemorialAndDecrementBatch({
+  fishId: 'sp_0027',
+  aquariumId: 'tank_legacy',
+  aquariumFishId: 'tank_fish_legacy',
+  batchId: 'batch_legacy',
+  date: '2026-07-16',
+  causeCodes: ['unknown'],
+});
+assert.equal(batchResult.record.fishId, 'sp_0001', 'legacy batch memorial must canonicalize the input id before matching');
+assert.equal(batchResult.aquariums[0]?.fishes[0]?.fishId, 'sp_0001', 'legacy aquarium livestock id must remain canonical');
+assert.equal(batchResult.aquariums[0]?.fishes[0]?.quantity, 1, 'legacy alias must not block the intended batch decrement');
+assert.equal(batchResult.aquariums.length, 1, 'memorial batch update must not affect other aquarium records');
+
+console.log('memorial service: structured review, canonical legacy ids, batch decrement, compatible storage and change events passed');
