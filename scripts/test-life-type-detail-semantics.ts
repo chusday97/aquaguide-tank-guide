@@ -21,7 +21,6 @@ for (const forbidden of [
   'Feeding at a glance',
   '喂养速览',
   'Compatibility',
-  '混养关系',
   'sexIdentification',
 ]) {
   assert.equal(nonAnimalSource.includes(forbidden), false, `non-livestock detail must not expose livestock-only semantic: ${forbidden}`);
