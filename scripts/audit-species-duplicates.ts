@@ -66,12 +66,43 @@ const comparableRecord = (species: typeof fishData[number]) => {
   return rest as Record<string, unknown>;
 };
 
-const mismatchedRecordFields = (records: Array<Record<string, unknown>>) => {
-  const keys = new Set(records.flatMap(record => Object.keys(record)));
-  return [...keys]
-    .filter(key => new Set(records.map(record => JSON.stringify(record[key]))).size > 1)
-    .sort();
+const isPlainObject = (value: unknown): value is Record<string, unknown> => (
+  Boolean(value)
+  && typeof value === 'object'
+  && !Array.isArray(value)
+);
+
+const diffValuePaths = (left: unknown, right: unknown, prefix = ''): string[] => {
+  if (JSON.stringify(left) === JSON.stringify(right)) return [];
+
+  if (Array.isArray(left) && Array.isArray(right)) {
+    const maxLength = Math.max(left.length, right.length);
+    const paths: string[] = [];
+    for (let index = 0; index < maxLength; index += 1) {
+      const childPrefix = `${prefix}[${index}]`;
+      paths.push(...diffValuePaths(left[index], right[index], childPrefix));
+    }
+    return paths.length > 0 ? paths : [prefix || '<root>'];
+  }
+
+  if (isPlainObject(left) && isPlainObject(right)) {
+    const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
+    const paths = [...keys]
+      .sort()
+      .flatMap(key => diffValuePaths(left[key], right[key], prefix ? `${prefix}.${key}` : key));
+    return paths.length > 0 ? paths : [prefix || '<root>'];
+  }
+
+  return [prefix || '<root>'];
 };
+
+const mismatchedRecordPaths = (records: Array<Record<string, unknown>>) => {
+  if (records.length < 2) return [];
+  const [first, ...rest] = records;
+  return [...new Set(rest.flatMap(record => diffValuePaths(first, record)))].sort();
+};
+
+const topLevelField = (path: string) => path.split(/[.[]/, 1)[0];
 
 const byBusinessFingerprint = new Map<string, typeof fishData>();
 const byAliasFingerprint = new Map<string, typeof fishData>();
@@ -169,20 +200,30 @@ const probableAliasRecordParity = speciesCollisionReviews
       .map(id => speciesById.get(id))
       .filter((species): species is typeof fishData[number] => Boolean(species));
     const comparableRecords = records.map(comparableRecord);
-    const mismatchedFields = comparableRecords.length === review.ids.length
-      ? mismatchedRecordFields(comparableRecords)
+    const mismatchedFieldPaths = comparableRecords.length === review.ids.length
+      ? mismatchedRecordPaths(comparableRecords)
       : [];
+    const mismatchedFields = [...new Set(mismatchedFieldPaths.map(topLevelField))].sort();
+    const structuredMismatchPaths = mismatchedFieldPaths.filter(path => topLevelField(path) !== 'description');
+    const descriptionOnlyDifference = missingIds.length === 0
+      && mismatchedFieldPaths.length > 0
+      && structuredMismatchPaths.length === 0;
     return {
       key: collisionKey(review.ids),
       ids: review.ids,
       names: records.map(species => species.name),
       confidence: review.confidence,
       missingIds,
-      fullRecordParity: missingIds.length === 0 && mismatchedFields.length === 0,
+      fullRecordParity: missingIds.length === 0 && mismatchedFieldPaths.length === 0,
+      descriptionOnlyDifference,
       mismatchedFields,
+      mismatchedFieldPaths,
+      structuredMismatchPaths,
     };
   });
 const fullRecordParityCandidates = probableAliasRecordParity.filter(candidate => candidate.fullRecordParity);
+const descriptionOnlyCandidates = probableAliasRecordParity.filter(candidate => candidate.descriptionOnlyDifference);
+const structuredConflictCandidates = probableAliasRecordParity.filter(candidate => candidate.structuredMismatchPaths.length > 0);
 const probableAliasesNeedingRecordReview = probableAliasRecordParity.filter(candidate => !candidate.fullRecordParity);
 
 const remainingLegacyAliasIds = Object.keys(speciesIdAliases).filter(aliasId => fishData.some(species => species.id === aliasId));
@@ -204,6 +245,8 @@ const report = {
   reviewStatusCounts,
   probableAliasGroups: probableAliasRecordParity.length,
   fullRecordParityCandidateGroups: fullRecordParityCandidates.length,
+  descriptionOnlyCandidateGroups: descriptionOnlyCandidates.length,
+  structuredConflictCandidateGroups: structuredConflictCandidates.length,
   probableAliasGroupsNeedingRecordReview: probableAliasesNeedingRecordReview.length,
   duplicateReviewKeys,
   malformedReviewPairCount: malformedReviewPairs.length,
@@ -217,6 +260,8 @@ const report = {
   reviewedAliasLikeCollisions,
   probableAliasRecordParity,
   fullRecordParityCandidates,
+  descriptionOnlyCandidates,
+  structuredConflictCandidates,
   probableAliasesNeedingRecordReview,
   unreviewedAliasLikeCollisions,
   malformedReviewPairs,
