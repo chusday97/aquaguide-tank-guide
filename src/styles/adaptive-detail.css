@@ -3,6 +3,10 @@
   transform: none !important;
 }
 
+[data-surface="bottom-sheet"] {
+  animation: none !important;
+}
+
 [data-surface="right-drawer"] .modalFooter > div {
   box-sizing: border-box;
   width: 100%;
