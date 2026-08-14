@@ -96,10 +96,12 @@ const isSpecialTankSpecies = (species: Fish) => {
 };
 
 const isAnimalSpecies = (species: Fish) => {
+  if (isAquaticPlantSpecies(species) || isHardscapeSpecies(species)) return false;
   const lifeType = getLifeType(species);
-  return (lifeType === 'fish' || lifeType === 'invertebrate' || lifeType === 'amphibian')
-    && !isAquaticPlantSpecies(species)
-    && !isHardscapeSpecies(species);
+  return lifeType === 'fish'
+    || lifeType === 'invertebrate'
+    || lifeType === 'reptile'
+    || lifeType === 'coral';
 };
 
 export const getCurrentLivestockForAquarium = (aquarium: Aquarium | null | undefined, allSpecies: Fish[]) => (
