@@ -54,8 +54,8 @@ const aquarium: Aquarium = {
   id: 'life-type-detail-test',
   name: '30L test tank',
   waterType: 'Freshwater',
-  dimensions: { length: 40, width: 30, height: 30 },
-  targetTemperature: 25,
+  dimensions: { length: '40', width: '30', height: '30' },
+  targetTemperature: '25',
   fishes: [],
   equipment: { filter: '瀑布过滤', heater: true, oxygen: true, light: '水草灯' },
 };
