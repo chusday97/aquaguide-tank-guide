@@ -5,6 +5,7 @@ import { speciesCollisionReviews } from './species-collision-reviews';
 const MAX_LIKELY_DUPLICATE_ENTITY_GROUPS = 0;
 const EXPECTED_STABLE_ALIAS_COUNT = 28;
 const MAX_UNREVIEWED_ALIAS_LIKE_COLLISION_GROUPS = 0;
+const NARRATIVE_MISMATCH_PATHS = new Set(['description', 'feedingProfile.specialNotes']);
 
 const normalize = (value?: string) => (value || '').trim().toLowerCase().replace(/\s+/g, ' ');
 const collisionKey = (ids: Iterable<string>) => [...ids].sort().join('|');
@@ -204,10 +205,17 @@ const probableAliasRecordParity = speciesCollisionReviews
       ? mismatchedRecordPaths(comparableRecords)
       : [];
     const mismatchedFields = [...new Set(mismatchedFieldPaths.map(topLevelField))].sort();
-    const structuredMismatchPaths = mismatchedFieldPaths.filter(path => topLevelField(path) !== 'description');
-    const descriptionOnlyDifference = missingIds.length === 0
+    const narrativeMismatchPaths = mismatchedFieldPaths.filter(path => NARRATIVE_MISMATCH_PATHS.has(path));
+    const careParameterMismatchPaths = mismatchedFieldPaths.filter(path => !NARRATIVE_MISMATCH_PATHS.has(path));
+    const narrativeOnlyDifference = missingIds.length === 0
       && mismatchedFieldPaths.length > 0
-      && structuredMismatchPaths.length === 0;
+      && careParameterMismatchPaths.length === 0;
+    const narrativeValues = records.map(species => ({
+      id: species.id,
+      name: species.name,
+      description: species.description,
+      feedingSpecialNotes: species.feedingProfile?.specialNotes || '',
+    }));
     return {
       key: collisionKey(review.ids),
       ids: review.ids,
@@ -215,15 +223,17 @@ const probableAliasRecordParity = speciesCollisionReviews
       confidence: review.confidence,
       missingIds,
       fullRecordParity: missingIds.length === 0 && mismatchedFieldPaths.length === 0,
-      descriptionOnlyDifference,
+      narrativeOnlyDifference,
       mismatchedFields,
       mismatchedFieldPaths,
-      structuredMismatchPaths,
+      narrativeMismatchPaths,
+      careParameterMismatchPaths,
+      narrativeValues,
     };
   });
 const fullRecordParityCandidates = probableAliasRecordParity.filter(candidate => candidate.fullRecordParity);
-const descriptionOnlyCandidates = probableAliasRecordParity.filter(candidate => candidate.descriptionOnlyDifference);
-const structuredConflictCandidates = probableAliasRecordParity.filter(candidate => candidate.structuredMismatchPaths.length > 0);
+const narrativeOnlyCandidates = probableAliasRecordParity.filter(candidate => candidate.narrativeOnlyDifference);
+const careParameterConflictCandidates = probableAliasRecordParity.filter(candidate => candidate.careParameterMismatchPaths.length > 0);
 const probableAliasesNeedingRecordReview = probableAliasRecordParity.filter(candidate => !candidate.fullRecordParity);
 
 const remainingLegacyAliasIds = Object.keys(speciesIdAliases).filter(aliasId => fishData.some(species => species.id === aliasId));
@@ -245,8 +255,8 @@ const report = {
   reviewStatusCounts,
   probableAliasGroups: probableAliasRecordParity.length,
   fullRecordParityCandidateGroups: fullRecordParityCandidates.length,
-  descriptionOnlyCandidateGroups: descriptionOnlyCandidates.length,
-  structuredConflictCandidateGroups: structuredConflictCandidates.length,
+  narrativeOnlyCandidateGroups: narrativeOnlyCandidates.length,
+  careParameterConflictCandidateGroups: careParameterConflictCandidates.length,
   probableAliasGroupsNeedingRecordReview: probableAliasesNeedingRecordReview.length,
   duplicateReviewKeys,
   malformedReviewPairCount: malformedReviewPairs.length,
@@ -260,8 +270,8 @@ const report = {
   reviewedAliasLikeCollisions,
   probableAliasRecordParity,
   fullRecordParityCandidates,
-  descriptionOnlyCandidates,
-  structuredConflictCandidates,
+  narrativeOnlyCandidates,
+  careParameterConflictCandidates,
   probableAliasesNeedingRecordReview,
   unreviewedAliasLikeCollisions,
   malformedReviewPairs,
