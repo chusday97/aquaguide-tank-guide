@@ -27,6 +27,7 @@ jobs:
           npm run test:aquarium-creation-semantics
           npm run test:onboarding-activation
           npm run test:onboarding-goal-paths
+          node scripts/test-aquarium-settings-boundary.mjs
       - name: Type check
         run: npm run lint
       - name: Build
