@@ -26,6 +26,7 @@ jobs:
           npm run test:core-flow-state-eval
           npm run test:aquarium-creation-semantics
           npm run test:onboarding-activation
+          npm run test:onboarding-goal-paths
       - name: Type check
         run: npm run lint
       - name: Build
