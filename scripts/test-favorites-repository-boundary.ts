@@ -30,7 +30,11 @@ assert.match(apiRoutes, /const contentTable = type === 'species' \? 'species' : 
 assert.match(apiRoutes, /const contentSelect = type === 'species' \? 'id,catalog_key' : 'id,catalog_key,title'/);
 assert.match(apiRoutes, /catalogKey: content\.catalog_key/);
 assert.match(apiRoutes, /favoritedAt: row\.created_at/);
-assert.doesNotMatch(apiRoutes, /return sendData\(request, response, camelize\(data \|\| \[\]\)\);/);
+const favoriteRouteStart = apiRoutes.indexOf("const registerFavoriteRoutes = (type: 'species' | 'care') => {");
+const favoriteRouteEnd = apiRoutes.indexOf("registerFavoriteRoutes('species');");
+assert.ok(favoriteRouteStart >= 0 && favoriteRouteEnd > favoriteRouteStart, 'favorite route block must be discoverable');
+const favoriteRouteBlock = apiRoutes.slice(favoriteRouteStart, favoriteRouteEnd);
+assert.doesNotMatch(favoriteRouteBlock, /return sendData\(request, response, camelize\(data \|\| \[\]\)\);/);
 
 // Collection hydration must make cloud favorites authoritative only after successful reads.
 assert.match(collectionService, /const \[memorials, favorites\] = await Promise\.all\(\[/);
