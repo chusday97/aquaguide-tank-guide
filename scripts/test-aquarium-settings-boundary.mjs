@@ -19,6 +19,51 @@ assert.doesNotMatch(
   /const isBasicConfigComplete = hasDimensionConfig && hasWaterConfig && hasEquipmentConfig;/,
   'page-level completion rules must not drift from the setup service',
 );
+assert.match(
+  aquariumPageSource,
+  /const settingsFacts = getAquariumSetupFacts\(settingsForm\);/,
+  'settings display state must reuse canonical answer-presence semantics',
+);
+assert.match(
+  aquariumPageSource,
+  /settingsFacts\.filterKnown[\s\S]*settingsFacts\.lightKnown[\s\S]*settingsFacts\.heaterKnown[\s\S]*settingsFacts\.oxygenKnown/,
+  'recorded-setting counts must include explicit none and false answers',
+);
+assert.match(
+  aquariumPageSource,
+  /configured: settingsFacts\.filterKnown/,
+  'equipment readiness must depend on the filter question being answered, not on a truthy auxiliary device',
+);
+assert.doesNotMatch(
+  aquariumPageSource,
+  /configured: Boolean\([\s\S]{0,220}settingsForm\.equipment\?\.heater[\s\S]{0,120}settingsForm\.equipment\?\.oxygen/,
+  'truthy auxiliary devices must not substitute for an unanswered filter',
+);
+assert.match(
+  aquariumPageSource,
+  /const currentValue = settingsForm\.equipment\?\.\[device\.key\];/,
+  'heater and aeration controls must preserve undefined separately from boolean false',
+);
+assert.match(
+  aquariumPageSource,
+  /selected=\{currentValue === option\.value\}/,
+  'auxiliary equipment choices must select explicit true or false without coercion',
+);
+assert.doesNotMatch(
+  aquariumPageSource,
+  /const isSelected = Boolean\(\(settingsForm\.equipment as any\)\?\.\[device\.key\]\);/,
+  'the settings UI must not collapse unknown and false into the same visual state',
+);
+assert.match(
+  aquariumPageSource,
+  /currentSubstrate === '无'[\s\S]{0,100}Substrate: none[\s\S]{0,100}底砂：无/,
+  'explicitly recording no substrate must be represented as a real answer',
+);
+assert.match(
+  aquariumPageSource,
+  /settingsForm\.equipment\?\.light === '无'[\s\S]{0,100}Lighting: none[\s\S]{0,100}灯光：无/,
+  'explicitly recording no lighting must be represented as a real answer',
+);
 
 const settingsStart = aquariumPageSource.indexOf('/* Settings Modal */');
 const settingsEnd = aquariumPageSource.indexOf('/* Guide Modal */', settingsStart);
@@ -46,4 +91,4 @@ assert.match(
   'repository failures must remain visible instead of closing the settings dialog as if saving succeeded',
 );
 
-console.log('aquarium settings boundary: canonical completion and repository-backed persistence verified');
+console.log('aquarium settings boundary: canonical completion, three-state answers, and repository-backed persistence verified');
