@@ -18,7 +18,15 @@ const { patchLocalAppState } = await import('../src/services/storage/local-app-s
 const { buildOnboardingTaskProgress, getOnboardingTasks } = await import('../src/services/onboarding/onboarding-paths');
 const { recordTankCompatibility } = await import('../src/services/compatibility/compatibility-records.service');
 
-const aquarium = { id: 'tank-1', name: '测试缸', fishes: [{ id: 'stock-1', fishId: 'fish-1', quantity: 1, entryDate: '2026-08-01', lastWaterChangeDate: '2026-08-01' }], dimensions: { length: '40', width: '25', height: '30' } };
+const aquarium = {
+  id: 'tank-1',
+  name: '测试缸',
+  fishes: [{ id: 'stock-1', fishId: 'fish-1', quantity: 1, entryDate: '2026-08-01', lastWaterChangeDate: '2026-08-01' }],
+  dimensions: { length: '40', width: '25', height: '30' },
+  waterType: 'Freshwater' as const,
+  targetTemperature: '25',
+  equipment: { filter: '无' as const },
+};
 patchLocalAppState({
   currentAquariumId: aquarium.id,
   aquariums: [aquarium],
@@ -27,6 +35,7 @@ patchLocalAppState({
 });
 
 let progress = buildOnboardingTaskProgress((await import('../src/services/storage/local-app-state')).loadAppStateFromStorage());
+assert.equal(progress.aquariumReady, true, 'setup task completion must come from complete aquarium facts');
 assert.equal(progress.speciesChosen, true);
 assert.equal(progress.compatibilityCompleted, false, '收藏或加入物种不能代替完整混养判断');
 const buildTankTasks = getOnboardingTasks('build_tank', progress);
@@ -51,4 +60,4 @@ assert.equal(progress.complete, true, '浏览路线不额外要求每日巡检')
 assert.equal(progress.completedCount, 4);
 assert.equal(progress.totalCount, 4);
 
-console.log('onboarding goal paths: real tank compatibility, direct task destinations, and goal-specific completion passed');
+console.log('onboarding goal paths: factual tank readiness, real compatibility, direct task destinations, and goal-specific completion passed');
