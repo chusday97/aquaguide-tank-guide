@@ -1,0 +1,44 @@
+name: Agent Package Manifest Repair
+
+on:
+  push:
+    branches:
+      - agent/fix-aquarium-completion-state
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fix-aquarium-completion-state
+          fetch-depth: 0
+      - name: Restore known-good manifest and add feeding test
+        run: |
+          git show 286cca2205f0ce1b388d3c1e070ae86d16e1afec:package.json > package.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('package.json')
+          package = json.loads(path.read_text())
+          scripts = package['scripts']
+          rebuilt = {}
+          for key, value in scripts.items():
+              rebuilt[key] = value
+              if key == 'test:care-timeline-ui':
+                  rebuilt['test:feeding-canonical'] = 'node --import tsx scripts/test-feeding-canonical-state.ts'
+          package['scripts'] = rebuilt
+          path.write_text(json.dumps(package, ensure_ascii=False, indent=2) + '\n')
+          PY
+      - name: Commit clean manifest and remove temporary workflow
+        run: |
+          git config user.name "AquaGuide Agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/agent-package-repair.yml
+          git add package.json
+          git commit -m "fix: restore package manifest"
+          git push origin HEAD:agent/fix-aquarium-completion-state
