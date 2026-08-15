@@ -1,0 +1,161 @@
+from pathlib import Path
+import re
+
+path = Path('src/pages/Aquarium.tsx')
+text = path.read_text()
+
+
+def replace_once(old: str, new: str, label: str):
+    global text
+    count = text.count(old)
+    if count != 1:
+        raise SystemExit(f'{label}: expected 1 exact match, got {count}')
+    text = text.replace(old, new, 1)
+
+
+replace_once(
+    "import { buildAquariumTimeline } from '../services/care/care-timeline.service';\n",
+    "import { buildAquariumTimeline } from '../services/care/care-timeline.service';\n"
+    "import {\n"
+    "  FEEDING_DAY_SOURCE_TYPE,\n"
+    "  getFeedingEventsForDate,\n"
+    "  getFeedingSourceForDate,\n"
+    "  getLatestFeedingOccurredAt,\n"
+    "  getLocalDateKey,\n"
+    "  getLocalFeedingRecordsForDate,\n"
+    "  isAquariumFedOnDate,\n"
+    "} from '../services/care/feeding-state.service';\n",
+    'feeding helper import',
+)
+
+replace_once(
+    "  const [fedToday, setFedToday] = useState(false);\n",
+    "  const [fedToday, setFedToday] = useState(false);\n"
+    "  const [isFeedingSaving, setIsFeedingSaving] = useState(false);\n",
+    'feeding pending state',
+)
+
+replace_once(
+    "  useEffect(() => {\n"
+    "    if (!activeId) return;\n"
+    "    const today = format(new Date(), 'yyyy-MM-dd');\n"
+    "    setFedToday(feedingRecords.some(record => record.aquariumId === activeId && record.createdAt.startsWith(today)));\n"
+    "  }, [activeId, feedingRecords]);\n",
+    "  useEffect(() => {\n"
+    "    if (!activeId) return;\n"
+    "    const today = getLocalDateKey();\n"
+    "    setFedToday(isAquariumFedOnDate({\n"
+    "      events: careTimelineEvents,\n"
+    "      localRecords: feedingRecords,\n"
+    "      aquariumId: activeId,\n"
+    "      dateKey: today,\n"
+    "    }));\n"
+    "  }, [activeId, careTimelineEvents, feedingRecords]);\n",
+    'fedToday derivation',
+)
+
+replace_once(
+    "    const latestFeeding = feedingRecords\n"
+    "      .filter(record => record.aquariumId === targetAquarium?.id)\n"
+    "      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];\n",
+    "    const latestFeedingAt = getLatestFeedingOccurredAt(\n"
+    "      careTimelineEvents,\n"
+    "      feedingRecords,\n"
+    "      targetAquarium?.id || '',\n"
+    "    );\n",
+    'latest feeding derivation',
+)
+
+replace_once(
+    "      recentFeeding: latestFeeding ? format(new Date(latestFeeding.createdAt), 'MM/dd HH:mm') : t('aquarium.none'),\n",
+    "      recentFeeding: latestFeedingAt ? format(new Date(latestFeedingAt), 'MM/dd HH:mm') : t('aquarium.none'),\n",
+    'latest feeding display',
+)
+
+marker = "  const recommendedActionCandidates: Array<{\n"
+if text.count(marker) != 1:
+    raise SystemExit(f'feeding handler insertion: expected 1 marker, got {text.count(marker)}')
+
+handler = """  const handleFeedingToggle = async () => {
+    if (!activeId || !hasStockedAnimals) {
+      showToast(isEn ? 'No livestock in tank yet, add animals to record feeding.' : '鱼缸内还没有生物，添加后才能记录喂食', 'error');
+      return;
+    }
+    if (isFeedingSaving) return;
+
+    const today = getLocalDateKey();
+    const localTodayRecords = getLocalFeedingRecordsForDate(feedingRecords, activeId, today);
+    const persistedTodayEvents = getFeedingEventsForDate(careTimelineEvents, activeId, today);
+    setIsFeedingSaving(true);
+
+    try {
+      if (!fedToday) {
+        const occurredAt = new Date().toISOString();
+        const source = getFeedingSourceForDate(today);
+        const saved = await persistCareTimelineEvent({
+          aquariumId: activeId,
+          eventType: 'feeding',
+          title: isEn ? 'Logged feeding' : '记录喂食',
+          payload: { localDate: today },
+          occurredAt,
+          sourceType: FEEDING_DAY_SOURCE_TYPE,
+          sourceId: source.sourceId,
+          isInferred: false,
+        });
+        const createdRecord: LocalEventRecord = {
+          id: saved.sourceId || saved.id,
+          aquariumId: activeId,
+          createdAt: saved.occurredAt || occurredAt,
+          type: 'feeding',
+          note: isEn ? 'Feeding Record' : '喂食记录',
+        };
+        const nextRecords = [
+          ...feedingRecords.filter(record => !localTodayRecords.some(todayRecord => todayRecord.id === record.id)),
+          createdRecord,
+        ];
+        setFeedingRecords(nextRecords);
+        patchLocalAppState({ feedingRecords: nextRecords });
+        setFedToday(true);
+        setTankActionMessage(isEn ? `Recorded feeding: ${format(new Date(), 'HH:mm')}` : `已记录喂食：${format(new Date(), 'HH:mm')}`);
+      } else {
+        const persistedSources = Array.from(new Map(
+          persistedTodayEvents
+            .filter(event => event.sourceType && event.sourceId)
+            .map(event => [`${event.sourceType}:${event.sourceId}`, { sourceType: event.sourceType!, sourceId: event.sourceId! }]),
+        ).values());
+        if (persistedTodayEvents.length > 0 && persistedSources.length === 0) {
+          throw new Error('FEEDING_EVENT_SOURCE_MISSING');
+        }
+        for (const source of persistedSources) {
+          await removeCareTimelineEventBySource(activeId, source.sourceType, source.sourceId);
+        }
+        const nextRecords = feedingRecords.filter(record => !localTodayRecords.some(todayRecord => todayRecord.id === record.id));
+        setFeedingRecords(nextRecords);
+        patchLocalAppState({ feedingRecords: nextRecords });
+        setFedToday(false);
+        setTankActionMessage(isEn ? 'Undid feeding record' : '已撤回今日喂食记录');
+      }
+    } catch (error) {
+      showToast(isEn ? 'Feeding record could not be saved. Your previous state was kept.' : '喂食记录没有保存成功，已保留原状态。', 'error');
+    } finally {
+      setIsFeedingSaving(false);
+    }
+  };
+
+"""
+text = text.replace(marker, handler + marker, 1)
+
+pattern = re.compile(
+    r"(      id: 'recordFeeding',[\s\S]*?      icon: <Heart className=\"h-4 w-4\" />,\n)"
+    r"      onClick: \(\) => \{[\s\S]*?\n      \},\n"
+    r"(      tone:)"
+)
+text, count = pattern.subn(
+    r"\1      onClick: () => { void handleFeedingToggle(); },\n\2",
+    text,
+    count=1,
+)
+if count != 1:
+    raise SystemExit(f'feeding action handler: expected 1 match, got {count}')
+
+path.write_text(text)
