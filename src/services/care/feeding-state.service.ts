@@ -18,15 +18,28 @@ export const getFeedingSourceForDate = (dateKey: string) => ({
   sourceId: dateKey,
 });
 
+const getEventLocalDate = (event: CareTimelineRecord): string => {
+  const payloadLocalDate = event.payload?.localDate;
+  if (typeof payloadLocalDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(payloadLocalDate)) {
+    return payloadLocalDate;
+  }
+  if (event.sourceType === FEEDING_DAY_SOURCE_TYPE && event.sourceId && /^\d{4}-\d{2}-\d{2}$/.test(event.sourceId)) {
+    return event.sourceId;
+  }
+  // Legacy feeding_record events did not persist their originating local date.
+  // Interpret occurredAt in the current client timezone as a compatibility fallback only.
+  return getLocalDateKey(event.occurredAt);
+};
+
 export const getFeedingEventsForDate = (
   events: CareTimelineRecord[],
   aquariumId: string,
   dateKey: string,
-): CareTimelineRecord[] => events.filter(event => {
-  if (event.aquariumId !== aquariumId || event.eventType !== 'feeding') return false;
-  if (event.sourceType === FEEDING_DAY_SOURCE_TYPE && event.sourceId === dateKey) return true;
-  return getLocalDateKey(event.occurredAt) === dateKey;
-});
+): CareTimelineRecord[] => events.filter(event => (
+  event.aquariumId === aquariumId
+  && event.eventType === 'feeding'
+  && getEventLocalDate(event) === dateKey
+));
 
 export const getLocalFeedingRecordsForDate = (
   records: LocalEventRecord[],
