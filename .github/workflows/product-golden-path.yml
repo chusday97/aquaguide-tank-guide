@@ -24,6 +24,8 @@ jobs:
           npm run test:compatibility-evidence-coverage
           npm run test:task-entry
           npm run test:core-flow-state-eval
+          npm run test:aquarium-creation-semantics
+          npm run test:onboarding-activation
       - name: Type check
         run: npm run lint
       - name: Build
