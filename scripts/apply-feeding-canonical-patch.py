@@ -1,5 +1,13 @@
 from pathlib import Path
+import json
 import re
+
+package_path = Path('package.json')
+package = json.loads(package_path.read_text())
+dependencies = package.setdefault('dependencies', {})
+dependencies['@vitejs/plugin-react'] = '^5.0.4'
+dependencies['date-fns'] = '^4.0.0'
+package_path.write_text(json.dumps(package, ensure_ascii=False, indent=2) + '\n')
 
 path = Path('src/pages/Aquarium.tsx')
 text = path.read_text()
