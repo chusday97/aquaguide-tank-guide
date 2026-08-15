@@ -2311,7 +2311,7 @@ export default function AquariumManager() {
     return true;
   };
 
-  const handleDailyActionPrimary = () => {  const handleDailyActionPrimary = () => {
+  const handleDailyActionPrimary = () => {
     const task = dailyActionViewModel.task;
     if (task.actionType === 'urgent_recovery') {
       if (todayDailyCheckRecord) {
@@ -2384,7 +2384,7 @@ export default function AquariumManager() {
     return setWaterChangeRecorded(dateStr, recorded);
   };
 
-  const getConflicts = (_fishes: AquariumFish[]): string[] => {  const getConflicts = (_fishes: AquariumFish[]): string[] => {
+  const getConflicts = (_fishes: AquariumFish[]): string[] => {
     return tankRiskItems.filter(item => item.severity !== 'info').map(item => `${item.title}：${item.detail}`);
   };
 
