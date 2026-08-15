@@ -37,7 +37,8 @@ assert.match(collectionService, /const \[memorials, favorites\] = await Promise\
 assert.match(collectionService, /repository\.getFavorites\(\)/);
 assert.match(collectionService, /setSpeciesFavoriteIds\(favorites\.speciesCatalogKeys\)/);
 assert.match(collectionService, /setCareFavorites\(Object\.fromEntries\(favorites\.careFavorites/);
-assert.match(collectionService, /export const hydrateCollectionMemorials = hydrateCollectionData/);
+assert.match(collectionService, /export const hydrateCollectionMemorials = async .*hydrateCollectionData\(\)/s);
+assert.match(collectionPage, /hydrateCollectionMemorials\(\)/);
 
 // Collection removals are persisted first; local mirror refresh happens afterward.
 assert.match(collectionPage, /await repository\.updateFavorite\(\{ type: 'species', catalogKey: target\.id, favorite: false \}\);\s+setSnapshot\(await hydrateCollectionData\(\)\)/s);
