@@ -59,6 +59,13 @@ export type LivestockAddCommand = {
   operationId: string;
 };
 
+export type WaterChangeMutation = {
+  aquariumId: string;
+  date: string;
+  recorded: boolean;
+  operationId: string;
+};
+
 export type CareReminderMutation =
   | { action: 'upsert'; record: Omit<CareReminderRecord, 'id' | 'createdAt'> }
   | { action: 'complete'; id: string; completedAt: string }
@@ -86,6 +93,7 @@ export interface AquaGuideRepository {
   createAquarium(input: AquariumCreateCommand): Promise<Aquarium>;
   deleteAquarium(aquariumId: string): Promise<void>;
   addLivestock(input: LivestockAddCommand): Promise<Aquarium>;
+  setWaterChange(input: WaterChangeMutation): Promise<Aquarium>;
   /** @deprecated Aggregate synchronization retained for legacy profile and batch editors. */
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
