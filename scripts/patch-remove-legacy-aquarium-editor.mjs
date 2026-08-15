@@ -44,10 +44,23 @@ removeExactlyOnce([
 
 const legacyStartMarker = '      {/* Legacy fish detail modal is intentionally disabled; aquarium entries now use SpeciesDetailDialog. */}';
 const nextMarker = '      <LivestockRosterDialog';
-const start = source.indexOf(legacyStartMarker);
-const end = source.indexOf(nextMarker, start);
-if (start < 0 || end < 0 || end <= start) throw new Error('legacy detail block markers not found');
-source = source.slice(0, start) + source.slice(end);
+const legacyStart = source.indexOf(legacyStartMarker);
+const legacyEnd = source.indexOf(nextMarker, legacyStart);
+if (legacyStart < 0 || legacyEnd < 0 || legacyEnd <= legacyStart) throw new Error('legacy detail block markers not found');
+source = source.slice(0, legacyStart) + source.slice(legacyEnd);
+
+const settingsModalStart = source.indexOf('      {/* Settings Modal */}');
+const disabledSettingsStart = source.indexOf("              {false && activeSettingsPanel === 'size' && (", settingsModalStart);
+const settingsFooterMarker = '          <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:px-6">';
+const settingsFooter = source.indexOf(settingsFooterMarker, disabledSettingsStart);
+if (settingsModalStart < 0 || disabledSettingsStart < 0 || settingsFooter < 0 || settingsFooter <= disabledSettingsStart) {
+  throw new Error('disabled settings block markers not found');
+}
+const disabledSettingsTail = source.slice(disabledSettingsStart, settingsFooter);
+if (!disabledSettingsTail.includes('{false && activeSettingsPanel && (')) {
+  throw new Error('disabled settings summary was not inside the removal range');
+}
+source = source.slice(0, disabledSettingsStart) + '            </div>\n          </div>\n' + source.slice(settingsFooter);
 
 writeFileSync(path, source);
-console.log('Removed disabled legacy aquarium detail editor and local-only handlers.');
+console.log('Removed disabled legacy aquarium detail and settings editors plus local-only handlers.');
