@@ -72,10 +72,3 @@ replace_once(
     '    "test:diagnosis-repository": "node --import tsx scripts/test-diagnosis-repository-boundary.ts",\n    "test:memorial-repository": "node --import tsx scripts/test-memorial-repository-boundary.ts",\n',
     'package memorial test script',
 )
-
-replace_once(
-    '.github/workflows/product-golden-path.yml',
-    '          npm run test:diagnosis-repository\n',
-    '          npm run test:diagnosis-repository\n          npm run test:memorial-repository\n',
-    'Golden Path memorial test',
-)
