@@ -61,7 +61,11 @@ assert.match(encyclopedia, /await repository\.updateFavorite\(\{ type: 'species'
 assert.match(encyclopedia, /onToggleWishlist=\{\(id\) => \{\s+const fish = fishData\.find\(item => item\.id === id\);\s+if \(fish\) void handleWishlistToggle\(fish\);\s+\}\}/s);
 assert.doesNotMatch(encyclopedia, /const toggleWishlist = \(id: string\)/);
 
-assert.match(care, /getCurrentAquaGuideRepository\(\)\s+\.then\(repository => repository\.getFavorites\(\)\)/s);
+// Care may hydrate favorites together with aquarium facts; the contract is semantic,
+// not tied to one exact Promise chaining shape.
+assert.match(care, /getCurrentAquaGuideRepository\(\)/);
+assert.match(care, /repository\.getFavorites\(\)/);
+assert.match(care, /repository\.getAquariums\(\)/);
 assert.match(care, /await repository\.updateFavorite\(\{ type: 'care', catalogKey: topic\.id, title: getDisplayTitle\(topic\), favorite: isAdding \}\);\s+const snapshot = await repository\.getFavorites\(\)/s);
 assert.doesNotMatch(care, /const next = toggleCareFavorite\(/);
 
