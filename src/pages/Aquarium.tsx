@@ -118,6 +118,17 @@ import {
   getLocalFeedingRecordsForDate,
   isAquariumFedOnDate,
 } from '../services/care/feeding-state.service';
+import {
+  NO_OBVIOUS_ABNORMALITY_CODE,
+  OBSERVATION_CHECK_OPTIONS,
+  OBSERVATION_SOURCE_TYPE,
+  getLatestObservationStatusForDate,
+  getObservationNote,
+  normalizeObservationChecks,
+  toggleObservationCheck,
+  type ObservationCheckCode,
+  type ObservationStatus,
+} from '../services/care/observation-state.service';
 import type { CareTimelineMutation, CareTimelineRecord } from '../services/repository/aquaguide.repository';
 import {
   appendSpeciesBatch,
@@ -1276,7 +1287,8 @@ export default function AquariumManager() {
   const [isCarePlanExpanded, setIsCarePlanExpanded] = useState(false);
   const [isRiskReminderOpen, setIsRiskReminderOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
-  const [observationChecks, setObservationChecks] = useState<string[]>([]);
+  const [isObservationSaving, setIsObservationSaving] = useState(false);
+  const [observationChecks, setObservationChecks] = useState<ObservationCheckCode[]>([]);
   const [feedingRecords, setFeedingRecords] = useState<LocalEventRecord[]>([]);
   const [observationRecords, setObservationRecords] = useState<LocalEventRecord[]>([]);
   const [isLocalDataOpen, setIsLocalDataOpen] = useState(false);
@@ -4679,6 +4691,49 @@ export default function AquariumManager() {
     }
   };
 
+  const handleObservationSubmit = async (status: ObservationStatus) => {
+    if (!activeId || isObservationSaving) return;
+    const occurredAt = new Date().toISOString();
+    const selectedChecks = normalizeObservationChecks(status, observationChecks);
+    const note = getObservationNote(status, selectedChecks, Boolean(isEn));
+    setIsObservationSaving(true);
+    try {
+      const saved = await persistCareTimelineEvent({
+        aquariumId: activeId,
+        eventType: 'observation',
+        title: status === 'normal'
+          ? (isEn ? 'Observation: no obvious abnormality' : '记录观察：未见明显异常')
+          : (isEn ? 'Observation: abnormality noticed' : '记录观察：发现异常'),
+        label: note,
+        payload: { status, checks: selectedChecks, localDate: getLocalDateKey(occurredAt) },
+        occurredAt,
+        sourceType: OBSERVATION_SOURCE_TYPE,
+        sourceId: crypto.randomUUID(),
+        isInferred: false,
+      });
+      const createdRecord: LocalEventRecord = {
+        id: saved.sourceId || saved.id,
+        aquariumId: activeId,
+        createdAt: saved.occurredAt || occurredAt,
+        type: 'observation',
+        note,
+      };
+      const nextRecords = [...observationRecords, createdRecord];
+      setObservationRecords(nextRecords);
+      patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
+      setObservationChecks([]);
+      setTankActionMessage(status === 'normal'
+        ? (isEn ? `Observation recorded: ${format(new Date(), 'HH:mm')} no obvious abnormality` : `已记录观察：${format(new Date(), 'HH:mm')} 未发现明显呼吸异常`)
+        : (isEn ? 'Abnormal observation recorded. Continue with diagnosis.' : '已记录呼吸异常，建议继续完成鱼只异常诊断。'));
+      setIsObservationOpen(false);
+      if (status === 'abnormal') handleOpenDiagnosisWithType('鱼只异常');
+    } catch {
+      showToast(isEn ? 'Observation could not be saved. Your selections were kept.' : '观察记录没有保存成功，已保留当前选择。', 'error');
+    } finally {
+      setIsObservationSaving(false);
+    }
+  };
+
   const recommendedActionCandidates: Array<{
     id: string;
     title: string;
@@ -4800,6 +4855,12 @@ export default function AquariumManager() {
       return next;
     });
   };
+  const todayObservationStatus = getLatestObservationStatusForDate({
+    events: careTimelineEvents,
+    localRecords: observationRecords,
+    aquariumId: activeAquarium.id,
+    dateKey: getLocalDateKey(),
+  });
   const riskReminderCount = Math.max(1, conflicts.length || todayTaskCount || (healthScore < 85 ? 1 : 0));
   const riskReminders = [
     ...(hasStockedAnimals ? [{
@@ -4807,7 +4868,11 @@ export default function AquariumManager() {
       level: healthScore < 60 ? '紧急' : '建议观察',
       title: '观察鱼的呼吸状态',
       reason: '如果鱼浮头、急促呼吸或趴缸，可能需要处理。',
-      actionText: priorityTaskStatus.observeBreathing || '开始观察',
+      actionText: todayObservationStatus === 'abnormal'
+        ? (isEn ? 'Abnormality noted' : '已发现异常')
+        : todayObservationStatus === 'normal'
+          ? (isEn ? 'Observed today' : '已观察')
+          : (isEn ? 'Start observation' : '开始观察'),
       tone: healthScore < 60 ? 'danger' : 'warning',
       onClick: () => setIsObservationOpen(true),
     }] : []),
@@ -6202,13 +6267,14 @@ export default function AquariumManager() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-2 px-5 py-4 md:grid-cols-2">
-            {(isEn ? ['Fish floating at surface', 'Rapid breathing', 'Lying at bottom or hiding', 'Refusing food or abnormal feeding', 'No obvious abnormalities'] : ['鱼浮在水面', '呼吸明显急促', '趴缸或躲藏', '拒食或抢食异常', '没有明显异常']).map(item => {
-              const checked = observationChecks.includes(item);
+            {OBSERVATION_CHECK_OPTIONS.map(option => {
+              const item = isEn ? option.en : option.zh;
+              const checked = observationChecks.includes(option.code);
               return (
                 <button
-                  key={item}
+                  key={option.code}
                   type="button"
-                  onClick={() => setObservationChecks(prev => prev.includes(item) ? prev.filter(value => value !== item) : [...prev, item])}
+                  onClick={() => setObservationChecks(prev => toggleObservationCheck(prev, option.code))}
                   className={`flex items-center justify-between rounded-[14px] border px-3 py-3 text-left text-sm font-black transition-colors ${
                     checked ? 'border-red-100 bg-red-50 text-red-700' : 'border-border bg-bg text-ink/68'
                   }`}
@@ -6225,47 +6291,15 @@ export default function AquariumManager() {
             <Button
               variant="outline"
               className="h-10 rounded-full text-sm font-bold"
-              onClick={() => {
-                setObservationChecks([]);
-                markPriorityTask('observeBreathing', '已观察');
-                const nextRecords = [
-                  ...observationRecords,
-                  {
-                    id: Math.random().toString(36).substring(2, 9),
-                    aquariumId: activeId,
-                    createdAt: new Date().toISOString(),
-                    type: 'observation',
-                    note: '未发现明显呼吸异常',
-                  },
-                ];
-                setObservationRecords(nextRecords);
-                patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
-                setTankActionMessage(`已记录观察：${format(new Date(), 'HH:mm')} 未发现明显呼吸异常`);
-                setIsObservationOpen(false);
-              }}
+              disabled={isObservationSaving || observationChecks.some(code => code !== NO_OBVIOUS_ABNORMALITY_CODE)}
+              onClick={() => { void handleObservationSubmit('normal'); }}
             >
               {isEn ? 'No Abnormalities' : '没有异常，记录观察'}
             </Button>
             <Button
               className="h-10 rounded-full bg-red-600 text-sm font-bold text-white hover:bg-red-700"
-              onClick={() => {
-                markPriorityTask('observeBreathing', '已发现异常');
-                const nextRecords = [
-                  ...observationRecords,
-                  {
-                    id: Math.random().toString(36).substring(2, 9),
-                    aquariumId: activeId,
-                    createdAt: new Date().toISOString(),
-                    type: 'observation',
-                    note: observationChecks.length > 0 ? observationChecks.join('、') : '发现异常',
-                  },
-                ];
-                setObservationRecords(nextRecords);
-                patchLocalAppState({ observationRecords: nextRecords }, { debounce: true });
-                setTankActionMessage('已记录呼吸异常，建议继续完成鱼只异常诊断。');
-                setIsObservationOpen(false);
-                handleOpenDiagnosisWithType('鱼只异常');
-              }}
+              disabled={isObservationSaving || observationChecks.includes(NO_OBVIOUS_ABNORMALITY_CODE)}
+              onClick={() => { void handleObservationSubmit('abnormal'); }}
             >
               {isEn ? 'Go to Diagnosis' : '发现异常，去诊断'}
             </Button>

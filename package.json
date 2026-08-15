@@ -49,6 +49,7 @@
     "test:care-timeline": "node --import tsx scripts/test-care-timeline.ts",
     "test:care-timeline-ui": "node scripts/verify-care-timeline.mjs",
     "test:feeding-canonical": "node --import tsx scripts/test-feeding-canonical-state.ts",
+    "test:observation-canonical": "node --import tsx scripts/test-observation-canonical-state.ts",
     "test:product-actions": "node --import tsx scripts/audit-product-actions.ts",
     "test:task-routes": "tsx scripts/test-task-routes.ts",
     "test:task-entry": "node scripts/test-task-entry-contract.mjs",
