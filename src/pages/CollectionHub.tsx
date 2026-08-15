@@ -18,7 +18,7 @@ import { fishData } from '../data/fishData';
 import { getCareVisualSources } from '../lib/careVisual';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
-import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
+import { getCollectionSnapshot, hydrateCollectionData, subscribeToCollection } from '../services/collection/collection.service';
 
 const moduleRoutes: Record<CollectionModule, string> = {
   wishlist: '/collection/wishlist',
@@ -119,7 +119,17 @@ export default function CollectionHub() {
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
 
-  useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);
+  useEffect(() => {
+    let active = true;
+    const unsubscribe = subscribeToCollection(() => setSnapshot(getCollectionSnapshot()));
+    void hydrateCollectionData()
+      .then(next => { if (active) setSnapshot(next); })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, []);
 
   const wishlistFishes = useMemo(() => [...snapshot.wishlistIds]
     .reverse()
@@ -226,11 +236,11 @@ export default function CollectionHub() {
               data-preview-item="care"
               data-preview-id={topic.id}
               onClick={() => openItem('care', topic.id)}
-              className="grid min-h-0 w-full flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 text-left transition-colors last:border-b-0 hover:bg-sky-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-600"
+              className="flex min-h-0 w-full flex-1 items-center gap-3 border-b border-slate-100 px-2.5 py-2 text-left transition-colors last:border-b-0 hover:bg-sky-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-500"
             >
-              <span className="h-[82px] overflow-hidden rounded-[13px] bg-white">
+              <span className="flex h-[62px] w-[104px] shrink-0 items-center justify-center overflow-hidden rounded-[13px] bg-white">
                 <ResilientImage
-                  src={getCareVisualSources(topic.imageUrl).thumbnail}
+                  src={getCareVisualSources(topic).thumbnail}
                   alt={topic.title}
                   className="h-full w-full object-cover"
                   loading="lazy"
@@ -238,22 +248,22 @@ export default function CollectionHub() {
                 />
               </span>
               <span className="min-w-0">
-                <span className="line-clamp-2 text-[13px] font-black leading-5 text-ink">{topic.title}</span>
-                <span className="mt-1 line-clamp-2 text-[10px] font-bold leading-4 text-ink/45">{topic.summary}</span>
+                <span className="block line-clamp-2 text-[13px] font-black leading-5 text-ink">{topic.title}</span>
+                <span className="mt-1 block text-[10px] font-bold text-ink/42">{topic.category}</span>
               </span>
             </button>
           )) : (
             <PreviewEmpty
               icon={<BookOpenCheck className="h-5 w-5" />}
-              title={isEn ? 'No saved care guides' : '还没有养护收藏'}
-              description={isEn ? 'Save practical guides to reach them quickly when needed.' : '收藏常用处理步骤，遇到问题时可以快速找到。'}
+              title={isEn ? 'No saved care yet' : '还没有养护收藏'}
+              description={isEn ? 'Save care guides to keep important routines close at hand.' : '收藏常用养护内容后，会在这里显示。'}
             />
           )}
         </CollectionModuleCard>
 
         <CollectionModuleCard
           id="memorial"
-          title={isEn ? 'Memorials' : '生命纪念'}
+          title={isEn ? 'Life Memorial' : '生命纪念'}
           count={String(snapshot.counts.memorial)}
           icon={<Skull className="h-5 w-5" />}
           tone="bg-slate-100 text-slate-600"
@@ -269,24 +279,22 @@ export default function CollectionHub() {
                 data-preview-item="memorial"
                 data-preview-id={record.id}
                 onClick={() => openItem('memorial', record.id)}
-                className="grid min-h-0 w-full flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 text-left transition-colors last:border-b-0 hover:bg-slate-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-600"
+                className="flex min-h-0 w-full flex-1 items-center gap-3 border-b border-slate-100 px-2.5 py-2 text-left transition-colors last:border-b-0 hover:bg-slate-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-500"
               >
-                <span className="flex h-[82px] items-center justify-center overflow-hidden rounded-[13px] bg-slate-100 grayscale">
+                <span className="flex h-[62px] w-[104px] shrink-0 items-center justify-center overflow-hidden rounded-[13px] bg-white">
                   {fish ? (
                     <ResilientImage
                       src={getSpeciesVisualSources(fish).thumbnail}
-                      alt=""
-                      className={`h-full w-full object-contain p-[8%] opacity-75 ${getSpeciesImageClass(fish)}`}
+                      alt={fish.name}
+                      className={`h-full w-full object-contain p-[7%] opacity-75 grayscale-[28%] ${getSpeciesImageClass(fish)}`}
                       loading="lazy"
+                      decoding="async"
                     />
-                  ) : <Skull className="h-5 w-5 text-ink/25" />}
+                  ) : <Skull className="h-5 w-5 text-ink/30" />}
                 </span>
                 <span className="min-w-0">
-                  <span className="block truncate text-[13px] font-black text-ink">{fish?.name || (isEn ? 'Species unavailable' : '物种信息不可用')}</span>
-                  <span className="mt-1 block text-[10px] font-bold text-ink/45">{formatDate(record.date)}</span>
-                  <span className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[9px] font-black ${record.reason ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
-                    {record.reason ? (isEn ? 'Reason recorded' : '已记录原因') : (isEn ? 'Reason needed' : '原因待补充')}
-                  </span>
+                  <span className="block truncate text-[13px] font-black text-ink">{fish?.name || (isEn ? 'Life Memorial' : '生命纪念')}</span>
+                  <span className="mt-1 block text-[10px] font-bold text-ink/42">{formatDate(record.date)}</span>
                 </span>
               </button>
             );
@@ -294,7 +302,7 @@ export default function CollectionHub() {
             <PreviewEmpty
               icon={<Skull className="h-5 w-5" />}
               title={isEn ? 'No memorial records' : '还没有生命纪念'}
-              description={isEn ? 'After recording a departure or death, the date and reason are kept here.' : '记录离缸或死亡后，这里会保留日期和原因。'}
+              description={isEn ? 'Memorial records will appear here when you choose to keep them.' : '当你选择留下生命记录时，会在这里显示。'}
             />
           )}
         </CollectionModuleCard>
@@ -302,7 +310,7 @@ export default function CollectionHub() {
         <CollectionModuleCard
           id="achievements"
           title={isEn ? 'Achievements' : '成就勋章'}
-          count={isEn ? 'Coming soon' : '建设中'}
+          count={isEn ? 'Building' : '建设中'}
           icon={<Medal className="h-5 w-5" />}
           tone="bg-slate-100 text-slate-400"
           remainingCount={0}
@@ -310,8 +318,8 @@ export default function CollectionHub() {
         >
           <PreviewEmpty
             icon={<Medal className="h-5 w-5" />}
-            title={isEn ? 'Not available yet' : '暂未开放'}
-            description={isEn ? 'Track long-term care milestones.' : '记录你的养护里程碑。'}
+            title={isEn ? 'Coming later' : '暂未开放'}
+            description={isEn ? 'Achievements are still being designed and will not count as completed product behavior yet.' : '成就体系仍在设计中，目前不会作为已完成的产品行为展示。'}
           />
         </CollectionModuleCard>
       </section>
