@@ -30,6 +30,7 @@ jobs:
           node scripts/test-aquarium-settings-boundary.mjs
           node --import tsx scripts/test-aquarium-delete-boundary.ts
           node --import tsx scripts/test-water-change-repository-boundary.ts
+          grep -q "const events = await repository.getCareEvents();" src/pages/Aquarium.tsx
       - name: Type check
         run: npm run lint
       - name: Build
