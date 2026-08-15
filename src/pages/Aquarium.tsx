@@ -89,7 +89,7 @@ import {
   type SpeciesAdditionReview,
 } from '../services/aquarium/species-addition.service';
 import { recordExistingLivestock, type RecordExistingResult } from '../services/aquarium/livestock-recording.service';
-import { createAquariumDraft, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
+import { createAquariumDraft, getAquariumSetupFacts, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
@@ -3785,17 +3785,18 @@ export default function AquariumManager() {
   const selectedHardscapeNames = (settingsForm.hardscape || [])
     .map(value => fishData.find(item => item.id === value || item.name === value)?.name || value)
     .slice(0, 3);
+  const settingsFacts = getAquariumSetupFacts(settingsForm);
   const configuredSettingCount = [
-    settingsForm.waterType,
-    settingsForm.targetTemperature,
-    settingsEstimatedWaterLiters > 0,
-    currentSubstrate !== '无',
+    settingsFacts.waterTypeKnown,
+    settingsFacts.temperatureKnown,
+    settingsFacts.dimensionsKnown,
+    settingsFacts.substrateKnown,
     selectedPlantCount > 0,
     selectedHardscapeCount > 0,
-    settingsForm.equipment?.filter,
-    settingsForm.equipment?.light,
-    settingsForm.equipment?.heater,
-    settingsForm.equipment?.oxygen,
+    settingsFacts.filterKnown,
+    settingsFacts.lightKnown,
+    settingsFacts.heaterKnown,
+    settingsFacts.oxygenKnown,
   ].filter(Boolean).length;
   const settingItems: Array<{
     id: NonNullable<typeof activeSettingsPanel>;
@@ -3820,10 +3821,17 @@ export default function AquariumManager() {
     {
       id: 'substrate',
       title: isEn ? 'Substrate' : '底砂',
-      summary: currentSubstrate !== '无' || selectedHardscapeNames.length > 0
-        ? [currentSubstrate !== '无' ? (isEn ? (substrateOptions.find(opt => opt.value === currentSubstrate)?.labelEn || currentSubstrate) : currentSubstrate) : null, ...selectedHardscapeNames].filter(Boolean).join(isEn ? ', ' : '、')
-        : (isEn ? 'No substrate or hardscape selected' : '未选择底砂或造景'),
-      configured: currentSubstrate !== '无' || selectedHardscapeCount > 0,
+      summary: settingsFacts.substrateKnown || selectedHardscapeNames.length > 0
+        ? [
+            settingsFacts.substrateKnown
+              ? (currentSubstrate === '无'
+                  ? (isEn ? 'Substrate: none' : '底砂：无')
+                  : (isEn ? (substrateOptions.find(opt => opt.value === currentSubstrate)?.labelEn || currentSubstrate) : currentSubstrate))
+              : (isEn ? 'Substrate not recorded' : '底砂未记录'),
+            ...selectedHardscapeNames,
+          ].filter(Boolean).join(isEn ? ', ' : '、')
+        : (isEn ? 'No substrate or hardscape recorded' : '未记录底砂或造景'),
+      configured: settingsFacts.substrateKnown || selectedHardscapeCount > 0,
     },
     {
       id: 'plants',
@@ -3834,26 +3842,30 @@ export default function AquariumManager() {
     {
       id: 'lighting',
       title: isEn ? 'Lighting' : '灯光',
-      summary: settingsForm.equipment?.light && settingsForm.equipment.light !== '无' 
-        ? (isEn ? (t(`aquarium.${lightOptionKeys[settingsForm.equipment.light] || 'none'}`) || settingsForm.equipment.light) : settingsForm.equipment.light) 
-        : (isEn ? 'No lighting selected' : '未选择灯光'),
-      configured: Boolean(settingsForm.equipment?.light && settingsForm.equipment.light !== '无'),
+      summary: !settingsFacts.lightKnown
+        ? (isEn ? 'Lighting not recorded' : '灯光未记录')
+        : settingsForm.equipment?.light === '无'
+          ? (isEn ? 'Lighting: none' : '灯光：无')
+          : (isEn ? (t(`aquarium.${lightOptionKeys[settingsForm.equipment?.light || ''] || 'none'}`) || settingsForm.equipment?.light) : settingsForm.equipment?.light || ''),
+      configured: settingsFacts.lightKnown,
     },
     {
       id: 'equipment',
       title: isEn ? 'Equipment' : '设备',
       summary: [
-        settingsForm.equipment?.filter && settingsForm.equipment.filter !== '无' 
-          ? (isEn ? (t(`aquarium.${filterOptionKeys[settingsForm.equipment.filter] || 'none'}`) || settingsForm.equipment.filter) : settingsForm.equipment.filter) 
-          : null,
-        settingsForm.equipment?.heater ? (isEn ? 'Heater' : '加热棒') : null,
-        settingsForm.equipment?.oxygen ? (isEn ? 'Aeration' : '氧气/气泡石') : null,
-      ].filter(Boolean).join(isEn ? ', ' : '、') || (isEn ? 'No filter or auxiliary equipment selected' : '未选择过滤或辅助设备'),
-      configured: Boolean(
-        (settingsForm.equipment?.filter && settingsForm.equipment.filter !== '无')
-        || settingsForm.equipment?.heater
-        || settingsForm.equipment?.oxygen
-      ),
+        settingsFacts.filterKnown
+          ? (settingsForm.equipment?.filter === '无'
+              ? (isEn ? 'Filter: none' : '过滤：无')
+              : (isEn ? (t(`aquarium.${filterOptionKeys[settingsForm.equipment?.filter || ''] || 'none'}`) || settingsForm.equipment?.filter) : settingsForm.equipment?.filter))
+          : (isEn ? 'Filter not recorded' : '过滤未记录'),
+        settingsFacts.heaterKnown
+          ? (settingsForm.equipment?.heater ? (isEn ? 'Heater: yes' : '加热棒：有') : (isEn ? 'Heater: no' : '加热棒：无'))
+          : (isEn ? 'Heater not recorded' : '加热棒未记录'),
+        settingsFacts.oxygenKnown
+          ? (settingsForm.equipment?.oxygen ? (isEn ? 'Aeration: yes' : '增氧：有') : (isEn ? 'Aeration: no' : '增氧：无'))
+          : (isEn ? 'Aeration not recorded' : '增氧未记录'),
+      ].filter(Boolean).join(isEn ? ', ' : '、'),
+      configured: settingsFacts.filterKnown,
     },
   ];
   const renderSettingsPanel = (panel: NonNullable<typeof activeSettingsPanel>) => {
@@ -4087,27 +4099,43 @@ export default function AquariumManager() {
               />
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid gap-3">
             {[
-              { key: 'heater', label: '加热棒', description: '低温或热带鱼建议开启' },
-              { key: 'oxygen', label: '氧气 / 气泡石', description: '高密度或虾缸可开启' },
+              { key: 'heater' as const, label: isEn ? 'Heater' : '加热棒', description: isEn ? 'Record whether this tank has a heater.' : '明确记录当前鱼缸是否有加热棒' },
+              { key: 'oxygen' as const, label: isEn ? 'Aeration' : '氧气 / 气泡石', description: isEn ? 'Record whether this tank has aeration.' : '明确记录当前鱼缸是否有增氧设备' },
             ].map(device => {
-              const isSelected = Boolean((settingsForm.equipment as any)?.[device.key]);
+              const currentValue = settingsForm.equipment?.[device.key];
               return (
-                <SelectableOptionCard
-                  key={device.key}
-                  label={device.label}
-                  description={device.description}
-                  selected={isSelected}
-                  mode="multi"
-                  onClick={() => setSettingsForm({
-                    ...settingsForm,
-                    equipment: {
-                      ...(settingsForm.equipment || {}),
-                      [device.key]: !isSelected
-                    }
-                  })}
-                />
+                <div key={device.key} className="grid gap-2 rounded-[14px] bg-bg/60 p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-[12px] font-black text-ink">{device.label}</div>
+                      <div className="mt-0.5 text-[10px] font-medium text-ink/45">{device.description}</div>
+                    </div>
+                    <span className="rounded-full bg-white px-2 py-1 text-[9px] font-black text-ink/45">
+                      {typeof currentValue === 'boolean' ? (isEn ? 'Recorded' : '已记录') : (isEn ? 'Not recorded' : '未记录')}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { value: true, label: isEn ? 'Yes' : '有' },
+                      { value: false, label: isEn ? 'No' : '没有' },
+                    ].map(option => (
+                      <SelectableOptionCard
+                        key={`${device.key}-${String(option.value)}`}
+                        label={option.label}
+                        selected={currentValue === option.value}
+                        onClick={() => setSettingsForm({
+                          ...settingsForm,
+                          equipment: {
+                            ...(settingsForm.equipment || {}),
+                            [device.key]: option.value,
+                          },
+                        })}
+                      />
+                    ))}
+                  </div>
+                </div>
               );
             })}
           </div>
@@ -7592,7 +7620,7 @@ export default function AquariumManager() {
                 settingsForm.waterType === 'Saltwater' ? '海水' : settingsForm.waterType === 'Freshwater' ? '淡水' : '水体未记录',
                 settingsForm.targetTemperature ? `目标 ${settingsForm.targetTemperature}°C` : '目标温度未记录',
                 settingsEstimatedWaterLiters > 0 ? `约 ${settingsEstimatedWaterLiters}L` : '水量未设置',
-                `已配置 ${configuredSettingCount} 项`,
+                isEn ? `${configuredSettingCount} recorded` : `已记录 ${configuredSettingCount} 项`,
               ].map(item => (
                 <span key={item} className="rounded-full bg-white px-2.5 py-1 text-center text-[11px] font-black text-ink/58 shadow-sm">
                   {item}
@@ -7620,7 +7648,7 @@ export default function AquariumManager() {
                             <span className={`rounded-full px-2 py-0.5 text-[10px] font-black ${
                               item.configured ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
                             }`}>
-                              {item.configured ? '已配置' : '待配置'}
+                              {item.configured ? (isEn ? 'Recorded' : '已记录') : (isEn ? 'Missing' : '待记录')}
                             </span>
                           </span>
                           <span className="mt-1 block truncate text-[11px] font-medium text-ink/48">{item.summary}</span>
