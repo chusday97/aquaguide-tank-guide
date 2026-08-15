@@ -15,10 +15,12 @@ import {
 } from '../favorites/favorites.service';
 import {
   loadAppStateFromStorage,
+  patchLocalAppState,
   subscribeToAppState,
   type LocalAppState,
 } from '../storage/local-app-state';
 import { taskRoutes } from '../navigation/task-routes';
+import { getAquaGuideRepository, resolveRepositoryMode } from '../repository/repository-provider';
 import type { MemorialCauseCode } from '../../types';
 
 const memorialCauseCodes = new Set<MemorialCauseCode>([
@@ -175,6 +177,15 @@ export const getCollectionSnapshot = (): CollectionSnapshot => {
       achievements: achievements.filter(item => item.unlocked).length,
     },
   };
+};
+
+export const hydrateCollectionMemorials = async (): Promise<CollectionSnapshot> => {
+  const mode = await resolveRepositoryMode();
+  if (mode !== 'cloud') return getCollectionSnapshot();
+  const repository = getAquaGuideRepository(mode);
+  const memorials = await repository.getMemorialRecords();
+  patchLocalAppState({ deceasedRecords: memorials });
+  return getCollectionSnapshot();
 };
 
 export const subscribeToCollection = (listener: () => void) => {

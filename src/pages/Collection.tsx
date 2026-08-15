@@ -29,7 +29,7 @@ import { fishData } from '../data/fishData';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import { getCareVisualSources } from '../lib/careVisual';
 import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
-import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
+import { getCollectionSnapshot, hydrateCollectionMemorials, subscribeToCollection } from '../services/collection/collection.service';
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { getCareFavorites, getSpeciesFavoriteIds, setSpeciesFavoriteIds, toggleCareFavorite } from '../services/favorites/favorites.service';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
@@ -96,6 +96,16 @@ export default function Collection({ module }: { module: CollectionModule }) {
   useEffect(() => subscribeToCollection(() => {
     setSnapshot(getCollectionSnapshot());
   }), []);
+
+  useEffect(() => {
+    let active = true;
+    void hydrateCollectionMemorials()
+      .then(next => { if (active) setSnapshot(next); })
+      .catch(() => {
+        if (active && activeTab === 'memorial') showToast(isEn ? 'Could not refresh memorial history.' : '生命纪念暂时无法同步，正在显示本机缓存。', 'error');
+      });
+    return () => { active = false; };
+  }, [activeTab, isEn, showToast]);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);

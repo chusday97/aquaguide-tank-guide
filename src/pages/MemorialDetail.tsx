@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { fishData } from '../data/fishData';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import type { MemorialItem } from '../modules/collection/collection.types';
-import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
+import { getCollectionSnapshot, hydrateCollectionMemorials, subscribeToCollection } from '../services/collection/collection.service';
 import {
   proceedWithHistoryNavigation,
   registerHistoryNavigationGuard,
@@ -60,6 +60,7 @@ export default function MemorialDetail() {
   const [record, setRecord] = useState<MemorialItem | null>(() => (
     getCollectionSnapshot().memorials.find(item => item.id === recordId) || null
   ));
+  const [isMemorialHydrating, setIsMemorialHydrating] = useState(true);
   const [draft, setDraft] = useState<MemorialDraft | null>(() => (record ? createDraft(record) : null));
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -88,6 +89,23 @@ export default function MemorialDetail() {
     setRecord(next);
     if (next && !dirty) setDraft(createDraft(next));
   }), [dirty, recordId]);
+
+  useEffect(() => {
+    let active = true;
+    setIsMemorialHydrating(true);
+    void hydrateCollectionMemorials()
+      .then(snapshot => {
+        if (!active) return;
+        const next = snapshot.memorials.find(item => item.id === recordId) || null;
+        setRecord(next);
+        if (next) setDraft(createDraft(next));
+      })
+      .catch(() => {
+        if (active) showToast(isEn ? 'Could not refresh this memorial.' : '这条生命纪念暂时无法从云端刷新。', 'error');
+      })
+      .finally(() => { if (active) setIsMemorialHydrating(false); });
+    return () => { active = false; };
+  }, [isEn, recordId, showToast]);
 
   useEffect(() => {
     if (!editing) return;
@@ -208,6 +226,17 @@ export default function MemorialDetail() {
       setSaving(false);
     }
   };
+
+  if (isMemorialHydrating && !record) {
+    return (
+      <main className="page-frame mx-auto w-full max-w-[980px] pb-24">
+        <section className="mt-4 rounded-[24px] border border-slate-200 bg-white px-5 py-14 text-center">
+          <HeartHandshake className="mx-auto h-9 w-9 animate-pulse text-emerald-700/40" />
+          <h1 className="mt-4 text-xl font-black text-ink">{isEn ? 'Loading memorial' : '正在加载生命纪念'}</h1>
+        </section>
+      </main>
+    );
+  }
 
   if (!record) {
     return (
