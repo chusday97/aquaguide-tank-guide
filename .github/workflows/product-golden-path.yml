@@ -18,26 +18,7 @@ jobs:
         if: github.event_name == 'push' && hashFiles('.agent-diagnosis-trigger') != ''
         run: |
           python3 scripts/apply-diagnosis-repository-patch.py
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('src/services/repository/api-aquaguide.repository.ts')
-          text = path.read_text()
-          old = """  const source = sourceType === 'manual' || sourceType === 'care_article' || sourceType === 'home'
-    ? { type: sourceType, title: sourceTitle }
-    : undefined;
-"""
-          new = """  const source: DiagnosisRecord['source'] = sourceType === 'manual'
-    ? { type: 'manual', title: sourceTitle }
-    : sourceType === 'care_article'
-      ? { type: 'care_article', title: sourceTitle }
-      : sourceType === 'home'
-        ? { type: 'home', title: sourceTitle }
-        : undefined;
-"""
-          if text.count(old) != 1:
-              raise SystemExit(f'diagnosis source typing: expected 1 match, got {text.count(old)}')
-          path.write_text(text.replace(old, new, 1))
-          PY
+          python3 scripts/fix-diagnosis-source-type.py
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -84,7 +65,7 @@ jobs:
         run: |
           git config user.name "AquaGuide Agent"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .agent-diagnosis-trigger scripts/apply-diagnosis-repository-patch.py
+          git rm .agent-diagnosis-trigger scripts/apply-diagnosis-repository-patch.py scripts/fix-diagnosis-source-type.py
           git add src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts apps/api/src/routes/user-records.ts src/pages/Aquarium.tsx package.json
           git commit -m "fix: persist diagnosis records canonically"
           git push origin HEAD:agent/fix-aquarium-completion-state
