@@ -109,6 +109,15 @@ import {
   type CareReminderRecord,
 } from '../services/care/care-activity.service';
 import { buildAquariumTimeline } from '../services/care/care-timeline.service';
+import {
+  FEEDING_DAY_SOURCE_TYPE,
+  getFeedingEventsForDate,
+  getFeedingSourceForDate,
+  getLatestFeedingOccurredAt,
+  getLocalDateKey,
+  getLocalFeedingRecordsForDate,
+  isAquariumFedOnDate,
+} from '../services/care/feeding-state.service';
 import type { CareTimelineMutation, CareTimelineRecord } from '../services/repository/aquaguide.repository';
 import {
   appendSpeciesBatch,
@@ -1262,6 +1271,7 @@ export default function AquariumManager() {
   const [deceasedRecords, setDeceasedRecords] = useState<DeceasedRecord[]>([]);
   const [tankActionMessage, setTankActionMessage] = useState<string>('');
   const [fedToday, setFedToday] = useState(false);
+  const [isFeedingSaving, setIsFeedingSaving] = useState(false);
   const [priorityTaskStatus, setPriorityTaskStatus] = useState<Record<string, string>>({});
   const [isCarePlanExpanded, setIsCarePlanExpanded] = useState(false);
   const [isRiskReminderOpen, setIsRiskReminderOpen] = useState(false);
@@ -1777,9 +1787,14 @@ export default function AquariumManager() {
 
   useEffect(() => {
     if (!activeId) return;
-    const today = format(new Date(), 'yyyy-MM-dd');
-    setFedToday(feedingRecords.some(record => record.aquariumId === activeId && record.createdAt.startsWith(today)));
-  }, [activeId, feedingRecords]);
+    const today = getLocalDateKey();
+    setFedToday(isAquariumFedOnDate({
+      events: careTimelineEvents,
+      localRecords: feedingRecords,
+      aquariumId: activeId,
+      dateKey: today,
+    }));
+  }, [activeId, careTimelineEvents, feedingRecords]);
 
   type TankRiskItem = {
     group: '容量风险' | '水质参数冲突' | '混养风险' | '信息不足';
@@ -2612,9 +2627,11 @@ export default function AquariumManager() {
     const latestAdded = [...stockedFishes]
       .sort((a, b) => new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime())[0];
     const latestAddedFish = latestAdded ? fishData.find(item => item.id === latestAdded.fishId) : null;
-    const latestFeeding = feedingRecords
-      .filter(record => record.aquariumId === targetAquarium?.id)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+    const latestFeedingAt = getLatestFeedingOccurredAt(
+      careTimelineEvents,
+      feedingRecords,
+      targetAquarium?.id || '',
+    );
 
     return {
       aquariumId: targetAquarium?.id || '',
@@ -2630,7 +2647,7 @@ export default function AquariumManager() {
       stocked,
       livestockCount: currentLivestock.reduce((sum, item) => sum + (item.aqFish.quantity || 1), 0),
       waterChange: targetAquarium?.lastWaterChangeDate ? format(new Date(targetAquarium.lastWaterChangeDate), 'MM/dd') : t('aquarium.none'),
-      recentFeeding: latestFeeding ? format(new Date(latestFeeding.createdAt), 'MM/dd HH:mm') : t('aquarium.none'),
+      recentFeeding: latestFeedingAt ? format(new Date(latestFeedingAt), 'MM/dd HH:mm') : t('aquarium.none'),
       recentAddedSpecies: latestAddedFish ? `${latestAddedFish.name} · ${format(new Date(latestAdded.entryDate), 'MM/dd')}` : t('aquarium.none'),
       equipment: targetAquarium?.equipment ? [
         targetAquarium.equipment?.filter ? `${t('aquarium.filterSystem')}：${t(`aquarium.${filterOptionKeys[targetAquarium.equipment.filter] || 'none'}`)}` : '',
@@ -4596,6 +4613,72 @@ export default function AquariumManager() {
     : hasOnlyInvertebrates
       ? '以藻类和残饵为主，少量补充即可，避免过量坏水。'
       : '按鱼只状态少量投喂，2-3 分钟内吃完即可，不必机械固定每天同量。';
+  const handleFeedingToggle = async () => {
+    if (!activeId || !hasStockedAnimals) {
+      showToast(isEn ? 'No livestock in tank yet, add animals to record feeding.' : '鱼缸内还没有生物，添加后才能记录喂食', 'error');
+      return;
+    }
+    if (isFeedingSaving) return;
+
+    const today = getLocalDateKey();
+    const localTodayRecords = getLocalFeedingRecordsForDate(feedingRecords, activeId, today);
+    const persistedTodayEvents = getFeedingEventsForDate(careTimelineEvents, activeId, today);
+    setIsFeedingSaving(true);
+
+    try {
+      if (!fedToday) {
+        const occurredAt = new Date().toISOString();
+        const source = getFeedingSourceForDate(today);
+        const saved = await persistCareTimelineEvent({
+          aquariumId: activeId,
+          eventType: 'feeding',
+          title: isEn ? 'Logged feeding' : '记录喂食',
+          payload: { localDate: today },
+          occurredAt,
+          sourceType: FEEDING_DAY_SOURCE_TYPE,
+          sourceId: source.sourceId,
+          isInferred: false,
+        });
+        const createdRecord: LocalEventRecord = {
+          id: saved.sourceId || saved.id,
+          aquariumId: activeId,
+          createdAt: saved.occurredAt || occurredAt,
+          type: 'feeding',
+          note: isEn ? 'Feeding Record' : '喂食记录',
+        };
+        const nextRecords = [
+          ...feedingRecords.filter(record => !localTodayRecords.some(todayRecord => todayRecord.id === record.id)),
+          createdRecord,
+        ];
+        setFeedingRecords(nextRecords);
+        patchLocalAppState({ feedingRecords: nextRecords });
+        setFedToday(true);
+        setTankActionMessage(isEn ? `Recorded feeding: ${format(new Date(), 'HH:mm')}` : `已记录喂食：${format(new Date(), 'HH:mm')}`);
+      } else {
+        const persistedSources = Array.from(new Map(
+          persistedTodayEvents
+            .filter(event => event.sourceType && event.sourceId)
+            .map(event => [`${event.sourceType}:${event.sourceId}`, { sourceType: event.sourceType!, sourceId: event.sourceId! }]),
+        ).values());
+        if (persistedTodayEvents.length > 0 && persistedSources.length === 0) {
+          throw new Error('FEEDING_EVENT_SOURCE_MISSING');
+        }
+        for (const source of persistedSources) {
+          await removeCareTimelineEventBySource(activeId, source.sourceType, source.sourceId);
+        }
+        const nextRecords = feedingRecords.filter(record => !localTodayRecords.some(todayRecord => todayRecord.id === record.id));
+        setFeedingRecords(nextRecords);
+        patchLocalAppState({ feedingRecords: nextRecords });
+        setFedToday(false);
+        setTankActionMessage(isEn ? 'Undid feeding record' : '已撤回今日喂食记录');
+      }
+    } catch (error) {
+      showToast(isEn ? 'Feeding record could not be saved. Your previous state was kept.' : '喂食记录没有保存成功，已保留原状态。', 'error');
+    } finally {
+      setIsFeedingSaving(false);
+    }
+  };
+
   const recommendedActionCandidates: Array<{
     id: string;
     title: string;
@@ -4666,46 +4749,7 @@ export default function AquariumManager() {
       label: isEn ? (fedToday ? 'Undo Feeding Record' : 'Record Feeding') : (fedToday ? '撤回喂食记录' : '记录本次喂食'),
       description: isEn ? (hasStockedAnimals ? (fedToday ? 'Recorded Today' : "Save today's feeding") : 'Add Livestock First') : (hasStockedAnimals ? (fedToday ? '今日已记录' : '保存今天的喂食记录') : '添加生物后使用'),
       icon: <Heart className="h-4 w-4" />,
-      onClick: () => {
-        if (!hasStockedAnimals) {
-          showToast(isEn ? 'No livestock in tank yet, add animals to record feeding.' : '鱼缸内还没有生物，添加后才能记录喂食', 'error');
-          return;
-        }
-        setFedToday(prev => {
-          const next = !prev;
-          const today = format(new Date(), 'yyyy-MM-dd');
-          const todayRecords = feedingRecords.filter(record => record.aquariumId === activeId && record.createdAt.startsWith(today));
-          const createdRecord: LocalEventRecord = {
-            id: Math.random().toString(36).substring(2, 9),
-            aquariumId: activeId,
-            createdAt: new Date().toISOString(),
-            type: 'feeding',
-            note: isEn ? 'Feeding Record' : '喂食记录',
-          };
-          const nextRecords = next
-            ? [...feedingRecords, createdRecord]
-            : feedingRecords.filter(record => !(record.aquariumId === activeId && record.createdAt.startsWith(today)));
-          setFeedingRecords(nextRecords);
-          patchLocalAppState({ feedingRecords: nextRecords });
-          if (next) {
-            void persistCareTimelineEvent({
-              aquariumId: activeId,
-              eventType: 'feeding',
-              title: isEn ? 'Logged feeding' : '记录喂食',
-              payload: {},
-              occurredAt: createdRecord.createdAt,
-              sourceType: 'feeding_record',
-              sourceId: createdRecord.id,
-              isInferred: false,
-            }).catch(error => showToast('喂食时间线没有保存成功。', 'error'));
-          } else {
-            todayRecords.forEach(record => void removeCareTimelineEventBySource(activeId, 'feeding_record', record.id).catch(error => showToast('喂食时间线没有撤回成功。', 'error')));
-          }
-          setCareTimelineRevision(value => value + 1);
-          setTankActionMessage(next ? (isEn ? `Recorded feeding: ${format(new Date(), 'HH:mm')}` : `已记录喂食：${format(new Date(), 'HH:mm')}`) : (isEn ? 'Undid feeding record' : '已撤回今日喂食记录'));
-          return next;
-        });
-      },
+      onClick: () => { void handleFeedingToggle(); },
       tone: !hasStockedAnimals ? 'muted' as const : fedToday ? 'normal' as const : 'info' as const,
       active: fedToday,
     },
