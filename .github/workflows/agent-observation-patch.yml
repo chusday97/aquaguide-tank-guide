@@ -1,0 +1,39 @@
+name: Agent Observation Canonical Patch
+
+on:
+  push:
+    branches:
+      - agent/fix-aquarium-completion-state
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'chore: run observation canonical patch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/fix-aquarium-completion-state
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply narrow Aquarium observation patch
+        run: python3 scripts/apply-observation-canonical-patch.py
+      - run: npm ci
+      - name: Observation canonical contract
+        run: node --import tsx scripts/test-observation-canonical-state.ts
+      - name: Type check
+        run: npm run lint
+      - name: Commit repaired source and remove temporary patch machinery
+        shell: bash
+        run: |
+          git config user.name "AquaGuide Agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/agent-observation-patch.yml scripts/apply-observation-canonical-patch.py
+          git add src/pages/Aquarium.tsx
+          git commit -m "fix: persist observation events canonically"
+          git push origin HEAD:agent/fix-aquarium-completion-state
