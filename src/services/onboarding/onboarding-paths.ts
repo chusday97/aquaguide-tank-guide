@@ -1,4 +1,5 @@
 import type { OnboardingGoal } from '../../types';
+import { getAquariumSetupStatus } from '../aquarium/aquarium-setup.service';
 import type { LocalAppState } from '../storage/local-app-state';
 import { isCompatibilityRecord } from '../compatibility/compatibility-records.service';
 import { taskRoutes } from '../navigation/task-routes';
@@ -40,7 +41,9 @@ export const hasHistoricalUserActivity = (state: LocalAppState, hasSupplementalC
 );
 
 export const buildOnboardingTaskProgress = (state: LocalAppState): OnboardingTaskProgress => {
-  const aquariumReady = state.aquariums.length > 0 && (state.onboarding?.aquariumConfigured ?? false);
+  // Readiness is factual state, not a sticky UI flag. This also repairs users whose
+  // aquariumConfigured flag was previously set by saving an incomplete settings form.
+  const aquariumReady = state.aquariums.some(aquarium => getAquariumSetupStatus(aquarium) === 'complete');
   const speciesViewed = state.onboarding?.viewedSpecies ?? false;
   const speciesChosen = state.wishlist.length > 0 || state.aquariums.some(aquarium => aquarium.fishes.some(fish => fish.quantity > 0));
   const compatibilityCompleted = state.compatibilityRecords.some(record => {
