@@ -28,6 +28,7 @@ jobs:
           npm run test:onboarding-activation
           npm run test:onboarding-goal-paths
           node scripts/test-aquarium-settings-boundary.mjs
+          node --import tsx scripts/test-aquarium-delete-boundary.ts
       - name: Type check
         run: npm run lint
       - name: Build
