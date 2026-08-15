@@ -17,8 +17,10 @@ const canonical: CareTimelineRecord = {
   aquariumId,
   eventType: 'feeding',
   title: '记录喂食',
-  payload: {},
-  occurredAt: '2026-08-15T12:30:00+09:00',
+  payload: { localDate: today },
+  // This instant is still Aug 14 in UTC, proving canonical localDate/sourceId
+  // rather than the CI runner timezone determines the feeding day.
+  occurredAt: '2026-08-15T00:30:00+09:00',
   sourceType: FEEDING_DAY_SOURCE_TYPE,
   sourceId: today,
   isInferred: false,
@@ -26,14 +28,18 @@ const canonical: CareTimelineRecord = {
 const legacyCloud: CareTimelineRecord = {
   ...canonical,
   id: 'event-legacy',
-  occurredAt: '2026-08-15T08:00:00+09:00',
+  payload: {},
+  // Legacy records have no localDate. Noon UTC keeps this compatibility test
+  // independent of the runner timezone without pretending the old data carried
+  // a local calendar date it never persisted.
+  occurredAt: '2026-08-15T12:00:00Z',
   sourceType: 'feeding_record',
   sourceId: 'legacy-local-id',
 };
 const localLegacy: LocalEventRecord = {
   id: 'local-only',
   aquariumId,
-  createdAt: '2026-08-15T09:00:00+09:00',
+  createdAt: '2026-08-15T12:00:00Z',
   type: 'feeding',
   note: 'legacy local feeding',
 };
@@ -42,15 +48,15 @@ assert.deepEqual(getFeedingSourceForDate(today), { sourceType: 'feeding_day', so
 assert.equal(isAquariumFedOnDate({ events: [canonical], localRecords: [], aquariumId, dateKey: today }), true,
   'a new device with only a persisted feeding event must show fed today');
 assert.equal(isAquariumFedOnDate({ events: [legacyCloud], localRecords: [], aquariumId, dateKey: today }), true,
-  'legacy persisted feeding_record events must remain readable');
+  'legacy persisted feeding_record events must remain readable in the current client timezone');
 assert.equal(isAquariumFedOnDate({ events: [], localRecords: [localLegacy], aquariumId, dateKey: today }), true,
   'legacy local-only users retain a migration fallback');
 assert.equal(isAquariumFedOnDate({ events: [canonical], localRecords: [], aquariumId: 'tank-b', dateKey: today }), false,
   'feeding state must be isolated by aquarium');
 assert.equal(isAquariumFedOnDate({ events: [canonical], localRecords: [], aquariumId, dateKey: '2026-08-14' }), false,
-  'feeding state must be isolated by local date');
+  'canonical localDate must not drift with the runtime timezone');
 assert.deepEqual(getFeedingEventsForDate([canonical, legacyCloud], aquariumId, today).map(item => item.id).sort(), ['event-canonical', 'event-legacy']);
-assert.equal(getLatestFeedingOccurredAt([canonical, legacyCloud], [localLegacy], aquariumId), canonical.occurredAt,
+assert.equal(getLatestFeedingOccurredAt([canonical, legacyCloud], [localLegacy], aquariumId), legacyCloud.occurredAt,
   'persisted care events are canonical for latest feeding time when available');
 
 const aquariumSource = await readFile(new URL('../src/pages/Aquarium.tsx', import.meta.url), 'utf8');
