@@ -43,7 +43,9 @@ const otherDayEvent: CareTimelineRecord = {
 const legacyLocal: LocalEventRecord = {
   id: 'legacy-normal',
   aquariumId,
-  createdAt: '2026-08-16T07:00:00+09:00',
+  // Legacy local records never stored their originating localDate. Midday keeps
+  // this fallback fixture on the same calendar date in UTC CI and Asia/Tokyo.
+  createdAt: '2026-08-16T12:00:00+09:00',
   type: 'observation',
   note: '未发现明显呼吸异常',
 };
