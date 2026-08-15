@@ -16,7 +16,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Apply one-time favorites repository repair
         if: github.event_name == 'push' && hashFiles('.agent-favorites-trigger') != ''
-        run: python3 scripts/apply-favorites-repository-patch.py
+        run: |
+          python3 scripts/apply-favorites-repository-patch.py
+          python3 scripts/fix-favorites-memorial-alias.py
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -66,7 +68,7 @@ jobs:
         run: |
           git config user.name "AquaGuide Agent"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .agent-favorites-trigger scripts/apply-favorites-repository-patch.py
+          git rm .agent-favorites-trigger scripts/apply-favorites-repository-patch.py scripts/fix-favorites-memorial-alias.py
           git add src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts apps/api/src/routes/user-records.ts src/services/collection/collection.service.ts src/pages/Collection.tsx src/pages/Encyclopedia.tsx src/pages/CareEncyclopedia.tsx package.json scripts/test-favorites-repository-boundary.ts
           git commit -m "fix: persist and hydrate favorites canonically"
           git push origin HEAD:agent/fix-aquarium-completion-state
