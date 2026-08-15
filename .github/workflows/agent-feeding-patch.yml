@@ -30,6 +30,6 @@ jobs:
           git config user.name "AquaGuide Agent"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git rm .github/workflows/agent-feeding-patch.yml scripts/apply-feeding-canonical-patch.py
-          git add src/pages/Aquarium.tsx
+          git add src/pages/Aquarium.tsx package.json
           git commit -m "fix: make feeding event canonical"
           git push origin HEAD:agent/fix-aquarium-completion-state
