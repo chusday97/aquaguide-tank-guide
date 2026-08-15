@@ -1,5 +1,5 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
-import type { Aquarium } from '../../types';
+import type { Aquarium, DeceasedRecord } from '../../types';
 import {
   completeCareReminder,
   configureCareReminderRecurrence,
@@ -185,6 +185,11 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     const next = upsertDiagnosisRecord(current, record);
     persistDiagnosisRecords(next);
     return next[0];
+  }
+
+  async getMemorialRecords() {
+    return [...(loadAppStateFromStorage().deceasedRecords as DeceasedRecord[])]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }
 
   async saveMemorial(input: MemorialSaveInput) {

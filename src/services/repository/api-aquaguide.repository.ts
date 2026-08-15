@@ -70,6 +70,17 @@ type ApiDiagnosis = Omit<DiagnosisRecord, 'diagnosisId' | 'source'> & {
   sourceType?: string;
   sourceTitle?: string;
 };
+type ApiMemorial = {
+  id: string;
+  speciesCatalogKey: string;
+  memorialDate: string;
+  causeCodes?: DeceasedRecord['causeCodes'];
+  reason?: string;
+  observation?: string;
+  improvement?: string;
+  version?: number;
+};
+
 type ApiReminder = {
   id: string;
   sourceCatalogKey: string;
@@ -109,6 +120,17 @@ const toDiagnosisRecord = (record: ApiDiagnosis): DiagnosisRecord => {
         : undefined;
   return { ...rest, id: record.id, diagnosisId: diagnosisKey, source };
 };
+
+const toMemorialRecord = (record: ApiMemorial): DeceasedRecord => ({
+  id: record.id,
+  fishId: record.speciesCatalogKey,
+  date: record.memorialDate,
+  causeCodes: record.causeCodes,
+  reason: record.reason,
+  observation: record.observation,
+  improvement: record.improvement,
+  version: record.version,
+});
 
 const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
   const components = record.components || [];
@@ -507,6 +529,11 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       body,
     });
     return toDiagnosisRecord(saved);
+  }
+
+  async getMemorialRecords() {
+    const response = await apiRequest<{ items: ApiMemorial[] }>('/memorial-records?limit=100');
+    return (response.items || []).map(toMemorialRecord);
   }
 
   async saveMemorial(input: MemorialSaveInput) {

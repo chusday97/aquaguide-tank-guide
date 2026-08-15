@@ -51,6 +51,7 @@
     "test:feeding-canonical": "node --import tsx scripts/test-feeding-canonical-state.ts",
     "test:observation-canonical": "node --import tsx scripts/test-observation-canonical-state.ts",
     "test:diagnosis-repository": "node --import tsx scripts/test-diagnosis-repository-boundary.ts",
+    "test:memorial-repository": "node --import tsx scripts/test-memorial-repository-boundary.ts",
     "test:product-actions": "node --import tsx scripts/audit-product-actions.ts",
     "test:task-routes": "tsx scripts/test-task-routes.ts",
     "test:task-entry": "node scripts/test-task-entry-contract.mjs",

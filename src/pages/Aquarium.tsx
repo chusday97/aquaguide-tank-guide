@@ -1323,9 +1323,9 @@ export default function AquariumManager() {
       try {
         const resolvedMode = mode ?? await resolveRepositoryMode();
         const repository = getAquaGuideRepository(resolvedMode);
-        const [repositoryAquariums, repositoryReminders, repositoryEvents] = resolvedMode === 'cloud'
-          ? await Promise.all([repository.getAquariums(), repository.getCareReminders(), repository.getCareEvents()])
-          : [loadAppStateFromStorage().aquariums, await repository.getCareReminders(), await repository.getCareEvents()];
+        const [repositoryAquariums, repositoryReminders, repositoryEvents, repositoryMemorials] = resolvedMode === 'cloud'
+          ? await Promise.all([repository.getAquariums(), repository.getCareReminders(), repository.getCareEvents(), repository.getMemorialRecords()])
+          : [loadAppStateFromStorage().aquariums, await repository.getCareReminders(), await repository.getCareEvents(), await repository.getMemorialRecords()];
         if (!active) return;
         if (resolvedMode === 'cloud') patchLocalAppState({ cloudMigrationConfirmed: true });
         const normalizedBase = normalizeAquariumPlants(repositoryAquariums);
@@ -1335,6 +1335,8 @@ export default function AquariumManager() {
         setAquariums(normalized);
         setCareRemindersState(repositoryReminders);
         setCareTimelineEvents(repositoryEvents);
+        setDeceasedRecords(repositoryMemorials);
+        if (resolvedMode === 'cloud') patchLocalAppState({ deceasedRecords: repositoryMemorials });
         try {
           const repositoryDiagnoses = (await Promise.all(
             repositoryAquariums.map(aquarium => repository.getDiagnosisRecords(aquarium.id)),
