@@ -15,6 +15,7 @@ import type {
   LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
+  WaterChangeMutation,
 } from './aquaguide.repository';
 
 type ApiAquariumSpecies = {
@@ -268,6 +269,15 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       idempotencyKey: input.operationId,
     });
     const saved = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
+    return this.rememberAquarium(saved);
+  }
+
+  async setWaterChange(input: WaterChangeMutation) {
+    const saved = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}/water-changes/${input.date}`, {
+      method: 'PUT',
+      body: { recorded: input.recorded },
+      idempotencyKey: input.operationId,
+    });
     return this.rememberAquarium(saved);
   }
 

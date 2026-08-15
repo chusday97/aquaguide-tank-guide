@@ -18,9 +18,10 @@ import {
   setCareFavorites,
   setSpeciesFavoriteIds,
 } from '../favorites/favorites.service';
-import { loadAppStateFromStorage } from '../storage/local-app-state';
+import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { persistAquariums } from '../aquarium/aquarium-state.service';
 import { appendSpeciesBatch, createSpeciesBatch, removeSpeciesBatchQuantity } from '../aquarium/species-batches.service';
+import { applyWaterChangeHistory, isFutureWaterChangeDate, setWaterChangeDateRecorded, waterChangeDateToIso } from '../aquarium/water-change.service';
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
@@ -32,6 +33,8 @@ import type {
   LivestockRemovalInput,
   LivestockAddCommand,
   CareTimelineMutation,
+  CareTimelineRecord,
+  WaterChangeMutation,
 } from './aquaguide.repository';
 
 export class LocalAquaGuideRepository implements AquaGuideRepository {
@@ -87,6 +90,40 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
         ? aquarium.fishes.map(item => item.id === current.id ? nextRecord : item)
         : [...aquarium.fishes, nextRecord],
     });
+  }
+
+  async setWaterChange(input: WaterChangeMutation) {
+    const state = loadAppStateFromStorage();
+    const aquarium = state.aquariums.find(item => item.id === input.aquariumId);
+    if (!aquarium) throw new Error('没有找到需要记录换水的鱼缸。');
+    if (isFutureWaterChangeDate(input.date)) throw new Error('只能记录今天或过去实际发生的换水。');
+    const occurredAt = waterChangeDateToIso(input.date);
+    if (!occurredAt) throw new Error('换水日期无效。');
+    const nextHistory = setWaterChangeDateRecorded(aquarium.waterChangeHistory || [], input.date, input.recorded);
+    const nextAquarium = applyWaterChangeHistory(aquarium, nextHistory);
+    const currentEvents = (state.careEvents || []) as CareTimelineRecord[];
+    const sameDayEvent = (event: CareTimelineRecord) => event.aquariumId === input.aquariumId
+      && event.eventType === 'water_change'
+      && event.sourceType === 'water_change_day'
+      && event.sourceId === input.date;
+    const retainedEvents = currentEvents.filter(event => !sameDayEvent(event));
+    const nextEvents: CareTimelineRecord[] = input.recorded
+      ? [{
+          id: `water-change:${input.aquariumId}:${input.date}`,
+          aquariumId: input.aquariumId,
+          eventType: 'water_change',
+          title: '换水记录',
+          label: input.date,
+          payload: { localDate: input.date },
+          occurredAt,
+          sourceType: 'water_change_day',
+          sourceId: input.date,
+          isInferred: false,
+        }, ...retainedEvents]
+      : retainedEvents;
+    const nextAquariums = state.aquariums.map(item => item.id === input.aquariumId ? nextAquarium : item);
+    patchLocalAppState({ aquariums: nextAquariums, careEvents: nextEvents });
+    return nextAquarium;
   }
 
   async saveAquarium(aquarium: Aquarium) {
