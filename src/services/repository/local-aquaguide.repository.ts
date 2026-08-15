@@ -98,6 +98,17 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     return persistAquariums(aquariums, aquarium.id).aquariums.find(item => item.id === aquarium.id)!;
   }
 
+  async deleteAquarium(aquariumId: string) {
+    const state = loadAppStateFromStorage();
+    if (!state.aquariums.some(item => item.id === aquariumId)) return;
+    const remaining = state.aquariums.filter(item => item.id !== aquariumId);
+    if (remaining.length === 0) throw new Error('至少需要保留一个鱼缸。');
+    const nextActiveId = state.currentAquariumId && remaining.some(item => item.id === state.currentAquariumId)
+      ? state.currentAquariumId
+      : remaining[0].id;
+    persistAquariums(remaining, nextActiveId);
+  }
+
   async removeLivestock(input: LivestockRemovalInput) {
     const state = loadAppStateFromStorage();
     const aquarium = state.aquariums.find(item => item.id === input.aquariumId);

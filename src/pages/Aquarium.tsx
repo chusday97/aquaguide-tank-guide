@@ -1111,6 +1111,7 @@ export default function AquariumManager() {
   const [aquariums, setAquariums] = useState<Aquarium[]>([]);
   const [activeId, setActiveId] = useState<string>('');
   const [pendingDeleteAquariumId, setPendingDeleteAquariumId] = useState<string | null>(null);
+  const [isDeletingAquarium, setIsDeletingAquarium] = useState(false);
   
   // UI States
   const [isAquariumMenuOpen, setIsAquariumMenuOpen] = useState(false);
@@ -1617,14 +1618,37 @@ export default function AquariumManager() {
     setPendingDeleteAquariumId(id);
   };
 
-  const confirmDeleteAquarium = () => {
-    if (!pendingDeleteAquariumId || aquariums.length <= 1) return;
-    const updated = aquariums.filter(a => a.id !== pendingDeleteAquariumId);
-    saveAquariums(updated);
-    if (activeId === pendingDeleteAquariumId) {
-      setActiveId(updated[0]?.id || '');
+  const confirmDeleteAquarium = async () => {
+    const aquariumId = pendingDeleteAquariumId;
+    if (!aquariumId || aquariums.length <= 1 || isDeletingAquarium) return;
+    setIsDeletingAquarium(true);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.deleteAquarium(aquariumId);
+      const updated = aquariums.filter(aquarium => aquarium.id !== aquariumId);
+      const nextActiveId = activeId === aquariumId ? updated[0]?.id || '' : activeId;
+      let mirroredAquariums = updated;
+      let mirroredActiveId = nextActiveId;
+      let mirrorFailed = false;
+      try {
+        const mirrored = persistAquariums(updated, nextActiveId);
+        mirroredAquariums = mirrored.aquariums;
+        mirroredActiveId = mirrored.currentAquariumId;
+      } catch {
+        mirrorFailed = true;
+      }
+      setAquariums(mirroredAquariums);
+      setActiveId(mirroredActiveId);
+      setPendingDeleteAquariumId(null);
+      showToast(mirrorFailed
+        ? (isEn ? 'Aquarium deleted, but the local cache could not be refreshed.' : '鱼缸已删除，但本地缓存未能刷新；重新打开后会以云端数据为准。')
+        : (isEn ? 'Aquarium deleted.' : '鱼缸已删除。'),
+        mirrorFailed ? 'error' : 'success');
+    } catch {
+      showToast(isEn ? 'Aquarium could not be deleted.' : '鱼缸没有删除成功，请刷新后重试。', 'error');
+    } finally {
+      setIsDeletingAquarium(false);
     }
-    setPendingDeleteAquariumId(null);
   };
 
   const openLocalDataManager = () => {

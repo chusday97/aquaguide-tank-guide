@@ -375,6 +375,21 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return this.rememberAquarium(saved);
   }
 
+  async deleteAquarium(aquariumId: string) {
+    if (!isUuid(aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    let version = this.aquariumVersions.get(aquariumId);
+    if (!version) {
+      const current = await apiRequest<ApiAquarium>(`/aquariums/${aquariumId}`);
+      this.rememberAquarium(current);
+      version = current.version;
+    }
+    await apiRequest(`/aquariums/${aquariumId}?version=${version}`, {
+      method: 'DELETE',
+      idempotencyKey: `aquarium-delete:${aquariumId}:v${version}`,
+    });
+    this.aquariumVersions.delete(aquariumId);
+  }
+
   async removeLivestock(input: LivestockRemovalInput) {
     if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('移出数量必须是正整数。');
     const aquarium = await apiRequest<ApiAquarium>(
