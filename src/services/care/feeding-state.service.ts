@@ -2,7 +2,6 @@ import type { CareTimelineRecord } from '../repository/aquaguide.repository';
 import type { LocalEventRecord } from '../storage/local-app-state';
 
 export const FEEDING_DAY_SOURCE_TYPE = 'feeding_day';
-export const LEGACY_FEEDING_SOURCE_TYPE = 'feeding_record';
 
 export const getLocalDateKey = (value: string | Date = new Date()): string => {
   const date = value instanceof Date ? value : new Date(value);
