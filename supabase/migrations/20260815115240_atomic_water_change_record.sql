@@ -21,7 +21,6 @@ declare
   current_user_id uuid := auth.uid();
   current_aquarium public.aquariums%rowtype;
   existing_operation public.idempotency_records%rowtype;
-  latest_date date;
   latest_at timestamptz;
 begin
   if current_user_id is null then raise exception 'AUTH_REQUIRED'; end if;
@@ -50,18 +49,14 @@ begin
       raise exception 'DUPLICATE_OPERATION_KEY';
     end if;
 
-    select max(source_id::date) into latest_date
+    select max(occurred_at) into latest_at
     from public.care_events
     where owner_id = current_user_id
       and aquarium_id = target_aquarium_id
       and event_type = 'water_change'
       and source_type = 'water_change_day'
-      and source_id ~ '^\d{4}-\d{2}-\d{2}$'
       and deleted_at is null;
-    latest_at := case
-      when latest_date is null then null
-      else (latest_date + time '12:00') at time zone 'UTC'
-    end;
+
     return query select target_aquarium_id, should_record, latest_at, true;
     return;
   end if;
@@ -121,19 +116,13 @@ begin
       and deleted_at is null;
   end if;
 
-  select max(source_id::date) into latest_date
+  select max(occurred_at) into latest_at
   from public.care_events
   where owner_id = current_user_id
     and aquarium_id = target_aquarium_id
     and event_type = 'water_change'
     and source_type = 'water_change_day'
-    and source_id ~ '^\d{4}-\d{2}-\d{2}$'
     and deleted_at is null;
-
-  latest_at := case
-    when latest_date is null then null
-    else (latest_date + time '12:00') at time zone 'UTC'
-  end;
 
   update public.aquariums
   set last_water_change_at = latest_at
