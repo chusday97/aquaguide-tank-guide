@@ -112,6 +112,52 @@ userRecordsRouter.put('/aquariums/:id/daily-checks/:localDate', asyncRoute(async
   return sendData(request, response, camelize(data), 201);
 }));
 
+userRecordsRouter.get('/aquariums/:id/diagnoses', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const limit = parseLimit(request.query.limit);
+  const client = userClientFor(request);
+  const { data, error } = await client.from('diagnosis_records')
+    .select('*')
+    .eq('aquarium_id', aquariumId)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) throwDatabaseError(error, '诊断历史暂时无法加载。');
+  return sendData(request, response, { items: camelize(data || []) });
+}));
+
+userRecordsRouter.post('/aquariums/:id/diagnoses/:localDate', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const localDate = isoDateSchema.safeParse(request.params.localDate);
+  if (!localDate.success) throw new ApiError(400, 'VALIDATION_ERROR', '诊断日期无效。');
+  const parsed = diagnosisSaveSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '诊断结果无效。', parsed.error.flatten());
+  if (parsed.data.problemType === '巡检') throw new ApiError(400, 'VALIDATION_ERROR', '每日巡检必须使用巡检保存接口。');
+  const idempotency = await beginIdempotentWrite(request);
+  const client = userClientFor(request);
+  const userId = authenticatedRequest(request).authUser.id;
+
+  if (idempotency.replay?.resourceId) {
+    const { data } = await client.from('diagnosis_records').select('*').eq('id', idempotency.replay.resourceId).maybeSingle();
+    if (data) return sendData(request, response, camelize(data));
+  }
+
+  const { version: _version, ...body } = parsed.data;
+  const id = deterministicUuid(`${userId}:diagnosis:${body.diagnosisKey}`);
+  const normalized = {
+    ...snakeize(body),
+    id,
+    owner_id: userId,
+    aquarium_id: aquariumId,
+    local_date: localDate.data,
+    problem_type: parsed.data.problemType,
+  };
+  const { data, error } = await client.from('diagnosis_records').insert(normalized).select('*').single();
+  if (error || !data) throwDatabaseError(error, '诊断记录没有保存成功。');
+  await finishIdempotentWrite(request, idempotency, 'diagnosis_record', id, 201);
+  return sendData(request, response, camelize(data), 201);
+}));
+
 const registerFavoriteRoutes = (type: 'species' | 'care') => {
   const table = type === 'species' ? 'species_favorites' : 'care_favorites';
   const idColumn = type === 'species' ? 'species_id' : 'article_id';

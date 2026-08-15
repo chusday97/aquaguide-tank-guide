@@ -62,7 +62,14 @@ type ApiAquarium = {
   }>;
 };
 
-type ApiDiagnosis = DiagnosisRecord & { id: string; version: number; localDate: string; diagnosisKey: string };
+type ApiDiagnosis = Omit<DiagnosisRecord, 'diagnosisId' | 'source'> & {
+  id: string;
+  version: number;
+  localDate: string;
+  diagnosisKey: string;
+  sourceType?: string;
+  sourceTitle?: string;
+};
 type ApiReminder = {
   id: string;
   sourceCatalogKey: string;
@@ -81,6 +88,27 @@ type ApiReminder = {
 type ApiCareEvent = CareTimelineRecord & { version: number };
 
 const isUuid = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+
+const getLocalDateKey = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) throw new Error('诊断时间无效。');
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const toDiagnosisRecord = (record: ApiDiagnosis): DiagnosisRecord => {
+  const { diagnosisKey, sourceType, sourceTitle, localDate: _localDate, version: _version, ...rest } = record;
+  const source: DiagnosisRecord['source'] = sourceType === 'manual'
+    ? { type: 'manual', title: sourceTitle }
+    : sourceType === 'care_article'
+      ? { type: 'care_article', title: sourceTitle }
+      : sourceType === 'home'
+        ? { type: 'home', title: sourceTitle }
+        : undefined;
+  return { ...rest, id: record.id, diagnosisId: diagnosisKey, source };
+};
 
 const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
   const components = record.components || [];
@@ -433,35 +461,52 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     }
   }
 
+  async getDiagnosisRecords(aquariumId: string) {
+    if (!isUuid(aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const result = await apiRequest<{ items: ApiDiagnosis[] }>(`/aquariums/${aquariumId}/diagnoses?limit=50`);
+    return (result.items || []).map(toDiagnosisRecord);
+  }
+
   async saveDiagnosis(record: DiagnosisRecord) {
-    const date = record.createdAt.slice(0, 10);
-    const current = await apiRequest<ApiDiagnosis | null>(`/aquariums/${record.aquariumId}/daily-checks/${date}`);
-    const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/daily-checks/${date}`, {
-      method: 'PUT',
-      idempotencyKey: createIdempotencyKey('daily-check'),
-      body: {
-        diagnosisKey: record.diagnosisId,
-        problemType: record.problemType,
-        sourceType: record.source?.type,
-        sourceTitle: record.source?.title,
-        answers: record.answers,
-        structuredAnswers: record.structuredAnswers || [],
-        resultSummary: record.resultSummary,
-        riskLevel: record.riskLevel,
-        riskCode: record.riskCode,
-        conclusion: record.conclusion,
-        keyMetrics: record.keyMetrics || [],
-        suggestedActions: record.suggestedActions,
-        avoidActions: record.avoidActions || [],
-        observeItems: record.observeItems || [],
-        missingInfo: record.missingInfo,
-        optionalMissingInfo: record.optionalMissingInfo || [],
-        nextCheckAt: record.nextCheckAt,
-        followUpNotes: record.followUpNotes,
-        version: current?.version,
-      },
+    if (!isUuid(record.aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const localDate = getLocalDateKey(record.createdAt);
+    const body = {
+      diagnosisKey: record.diagnosisId,
+      problemType: record.problemType,
+      sourceType: record.source?.type,
+      sourceTitle: record.source?.title,
+      answers: record.answers,
+      structuredAnswers: record.structuredAnswers || [],
+      resultSummary: record.resultSummary,
+      riskLevel: record.riskLevel,
+      riskCode: record.riskCode,
+      conclusion: record.conclusion,
+      keyMetrics: record.keyMetrics || [],
+      suggestedActions: record.suggestedActions,
+      avoidActions: record.avoidActions || [],
+      observeItems: record.observeItems || [],
+      missingInfo: record.missingInfo,
+      optionalMissingInfo: record.optionalMissingInfo || [],
+      nextCheckAt: record.nextCheckAt,
+      followUpNotes: record.followUpNotes,
+    };
+
+    if (record.problemType === '巡检') {
+      const current = await apiRequest<ApiDiagnosis | null>(`/aquariums/${record.aquariumId}/daily-checks/${localDate}`);
+      const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/daily-checks/${localDate}`, {
+        method: 'PUT',
+        idempotencyKey: `daily-check:${record.aquariumId}:${localDate}:v${current?.version || 0}`,
+        body: { ...body, version: current?.version },
+      });
+      return toDiagnosisRecord(saved);
+    }
+
+    const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/diagnoses/${localDate}`, {
+      method: 'POST',
+      idempotencyKey: `diagnosis:${record.diagnosisId}`,
+      body,
     });
-    return { ...record, id: saved.id, diagnosisId: saved.diagnosisKey || record.diagnosisId };
+    return toDiagnosisRecord(saved);
   }
 
   async saveMemorial(input: MemorialSaveInput) {

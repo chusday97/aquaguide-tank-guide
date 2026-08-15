@@ -174,10 +174,17 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     setCareFavorites(favorites);
   }
 
+  async getDiagnosisRecords(aquariumId: string) {
+    return (loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[])
+      .filter(record => record.aquariumId === aquariumId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
   async saveDiagnosis(record: DiagnosisRecord) {
     const current = loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[];
-    persistDiagnosisRecords(upsertDiagnosisRecord(current, record));
-    return record;
+    const next = upsertDiagnosisRecord(current, record);
+    persistDiagnosisRecords(next);
+    return next[0];
   }
 
   async saveMemorial(input: MemorialSaveInput) {

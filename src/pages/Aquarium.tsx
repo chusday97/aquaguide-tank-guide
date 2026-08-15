@@ -1176,6 +1176,7 @@ export default function AquariumManager() {
   const [diagnosisMode, setDiagnosisMode] = useState<DiagnosisMode>('home');
   const [diagnosisQuestionIndex, setDiagnosisQuestionIndex] = useState(0);
   const diagnosisAdvanceTimerRef = useRef<number | null>(null);
+  const diagnosisSaveIdRef = useRef('');
   const diagnosisQuestionRefs = useRef<Record<string, HTMLElement | null>>({});
   const diagnosisSubmitRef = useRef<HTMLButtonElement | null>(null);
   const [diagnosisQuizAnswers, setDiagnosisQuizAnswers] = useState<Record<string, string>>({});
@@ -1334,6 +1335,16 @@ export default function AquariumManager() {
         setAquariums(normalized);
         setCareRemindersState(repositoryReminders);
         setCareTimelineEvents(repositoryEvents);
+        try {
+          const repositoryDiagnoses = (await Promise.all(
+            repositoryAquariums.map(aquarium => repository.getDiagnosisRecords(aquarium.id)),
+          )).flat().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          if (!active) return;
+          setDiagnosisRecords(repositoryDiagnoses);
+          if (resolvedMode === 'cloud') patchLocalAppState({ diagnosisRecords: repositoryDiagnoses });
+        } catch {
+          if (active) showToast(isEn ? 'Diagnosis history could not be loaded.' : '诊断历史暂时无法读取。', 'error');
+        }
         setActiveId(current => normalized.some(item => item.id === current) ? current : normalized[0]?.id || '');
       } catch (error) {
         if (active) showToast((isEn ? 'Cloud aquarium data could not be loaded.' : '云端鱼缸暂时无法读取。'), 'error');
@@ -2999,6 +3010,7 @@ export default function AquariumManager() {
 
   const handleRunDiagnosis = async () => {
     const result = buildStructuredDiagnosis();
+    diagnosisSaveIdRef.current = crypto.randomUUID();
     setDiagnosisResult(result);
     setDiagnosisMode('result');
     setDiagnosisSaveMessage('');
@@ -3106,7 +3118,7 @@ export default function AquariumManager() {
     setDiagnosisMode('home');
   };
 
-  const handleSaveDiagnosisRecord = (): boolean => {
+  const handleSaveDiagnosisRecord = async (): Promise<boolean> => {
     if (isDiagnosisRecordSaving) return false;
     const targetAquarium = diagnosisAquarium;
     if (!targetAquarium) return false;
@@ -3126,7 +3138,8 @@ export default function AquariumManager() {
     const existingDailyRecord = problemType === '巡检'
       ? findDailyPatrolRecord(diagnosisRecords, targetAquarium.id)
       : undefined;
-    const id = existingDailyRecord?.diagnosisId || Math.random().toString(36).substring(2, 10);
+    if (!diagnosisSaveIdRef.current) diagnosisSaveIdRef.current = crypto.randomUUID();
+    const id = existingDailyRecord?.diagnosisId || diagnosisSaveIdRef.current;
     const record: DiagnosisRecord = {
       diagnosisId: id,
       id,
@@ -3151,8 +3164,10 @@ export default function AquariumManager() {
       nextCheckAt: result.nextCheckAt,
       followUpNotes: careDiagnosisContext ? [`来自百科：${careDiagnosisContext.title}`] : [],
     };
-    const nextRecords = upsertDiagnosisRecord(diagnosisRecords, record);
     try {
+      const repository = await getCurrentAquaGuideRepository();
+      const persistedRecord = await repository.saveDiagnosis(record);
+      const nextRecords = upsertDiagnosisRecord(diagnosisRecords, persistedRecord);
       const persistedRecords = persistDiagnosisRecords(nextRecords);
       setDiagnosisRecords(persistedRecords);
       setDiagnosisSaveMessage(problemType === '巡检'
@@ -3164,18 +3179,18 @@ export default function AquariumManager() {
         : '已保存本次诊断');
       if (problemType === '巡检') {
         trackSessionEvent('daily_check_completed', { action: existingDailyRecord ? 'update' : 'complete', status: result.riskLevel, entry: 'aquarium' });
+        void persistCareTimelineEvent({
+          aquariumId: targetAquarium.id,
+          eventType: 'daily_check',
+          title: isEn ? 'Completed daily check' : '完成每日检查',
+          label: result.verdict,
+          payload: { riskLevel: result.riskLevel },
+          occurredAt: persistedRecord.createdAt,
+          sourceType: 'diagnosis_record',
+          sourceId: persistedRecord.id || persistedRecord.diagnosisId,
+          isInferred: false,
+        }).catch(() => showToast(isEn ? 'The check was saved, but the timeline could not be updated.' : '检查结果已保存，但巡检时间线没有更新成功。', 'error'));
       }
-      void persistCareTimelineEvent({
-        aquariumId: targetAquarium.id,
-        eventType: 'daily_check',
-        title: problemType === '巡检' ? (isEn ? 'Completed daily check' : '完成每日检查') : (isEn ? `Completed ${problemType}` : `完成${problemType}`),
-        label: result.verdict,
-        payload: { riskLevel: result.riskLevel },
-        occurredAt: record.createdAt,
-        sourceType: 'diagnosis_record',
-        sourceId: id,
-        isInferred: false,
-      }).catch(() => showToast(isEn ? 'The check was saved, but the timeline could not be updated.' : '检查结果已保存，但巡检时间线没有更新成功。', 'error'));
       return true;
     } catch {
       const message = isEn ? 'Could not save the check result. Try again.' : '检查结果没有保存成功，请重试。';
@@ -4939,8 +4954,8 @@ export default function AquariumManager() {
     }
     return model;
   })() : null;
-  const handleVisualDiagnosisPrimary = () => {
-    const saved = handleSaveDiagnosisRecord();
+  const handleVisualDiagnosisPrimary = async () => {
+    const saved = await handleSaveDiagnosisRecord();
     if (!saved) return;
     if (diagnosisIssueType === '巡检' && dailyCheckArticles[0] && structuredDiagnosis) {
       setSelectedDailyCheckArticle(dailyCheckArticles[0]);

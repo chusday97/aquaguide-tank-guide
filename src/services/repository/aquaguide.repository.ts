@@ -98,6 +98,7 @@ export interface AquaGuideRepository {
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
+  getDiagnosisRecords(aquariumId: string): Promise<DiagnosisRecord[]>;
   saveDiagnosis(record: DiagnosisRecord): Promise<DiagnosisRecord>;
   saveMemorial(input: MemorialSaveInput): Promise<DeceasedRecord>;
   saveLivestockMemorial(input: LivestockMemorialSaveInput): Promise<{ record: DeceasedRecord; aquarium: Aquarium }>;
