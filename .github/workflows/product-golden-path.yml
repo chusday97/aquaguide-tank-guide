@@ -16,7 +16,28 @@ jobs:
       - uses: actions/checkout@v4
       - name: Apply one-time diagnosis repository repair
         if: github.event_name == 'push' && hashFiles('.agent-diagnosis-trigger') != ''
-        run: python3 scripts/apply-diagnosis-repository-patch.py
+        run: |
+          python3 scripts/apply-diagnosis-repository-patch.py
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('src/services/repository/api-aquaguide.repository.ts')
+          text = path.read_text()
+          old = """  const source = sourceType === 'manual' || sourceType === 'care_article' || sourceType === 'home'
+    ? { type: sourceType, title: sourceTitle }
+    : undefined;
+"""
+          new = """  const source: DiagnosisRecord['source'] = sourceType === 'manual'
+    ? { type: 'manual', title: sourceTitle }
+    : sourceType === 'care_article'
+      ? { type: 'care_article', title: sourceTitle }
+      : sourceType === 'home'
+        ? { type: 'home', title: sourceTitle }
+        : undefined;
+"""
+          if text.count(old) != 1:
+              raise SystemExit(f'diagnosis source typing: expected 1 match, got {text.count(old)}')
+          path.write_text(text.replace(old, new, 1))
+          PY
       - uses: actions/setup-node@v4
         with:
           node-version: 22
