@@ -3,7 +3,8 @@ import { onboardingPreferenceSchema } from '../../../packages/contracts/src/inde
 import { supabase } from '../../lib/supabaseClient';
 import { apiRequest, AquaGuideApiError, createIdempotencyKey } from '../api/api-client';
 import { getAquariumSetupStatus } from '../aquarium/aquarium-setup.service';
-import { getCareFavorites } from '../favorites/favorites.service';
+import { getCareFavorites, getSpeciesFavoriteIds, setCareFavorites, setSpeciesFavoriteIds } from '../favorites/favorites.service';
+import { getCurrentAquaGuideRepository } from '../repository/repository-provider';
 import { getCareReminders, getCompletedCareOperations, getSavedCareChecklists } from '../care/care-activity.service';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { trackSessionEvent } from '../analytics/session-events.service';
@@ -78,8 +79,30 @@ export const hydrateOnboardingFromProfile = async () => {
     const local = getOnboardingState();
     const cloud = onboardingPreferenceSchema.safeParse(profile.preferences?.onboarding);
     if (!local && cloud.success) return patchLocalAppState({ onboarding: cloud.data }).onboarding;
-    if (local && !cloud.success) queueProfileSync(local);
-    return local;
+    if (local && !cloud.success) {
+      queueProfileSync(local);
+      return local;
+    }
+    if (!local && !cloud.success) {
+      const repository = await getCurrentAquaGuideRepository();
+      const [aquariums, favorites] = await Promise.all([
+        repository.getAquariums(),
+        repository.getFavorites(),
+      ]);
+      const cached = loadAppStateFromStorage();
+      const currentAquariumId = cached.currentAquariumId
+        && aquariums.some(item => item.id === cached.currentAquariumId)
+        ? cached.currentAquariumId
+        : (aquariums[0]?.id || '');
+      patchLocalAppState({ aquariums, currentAquariumId });
+      setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+      setCareFavorites(Object.fromEntries(favorites.careFavorites.map(item => [item.catalogKey, {
+        id: item.catalogKey,
+        title: item.title,
+        favoritedAt: item.favoritedAt,
+      }])));
+    }
+    return getOnboardingState();
   } catch {
     emitSyncFailure();
     return getOnboardingState();
@@ -95,7 +118,8 @@ export const subscribeToOnboardingAuth = (listener: () => void) => {
 export const shouldStartOnboarding = () => {
   const state = loadAppStateFromStorage();
   if (state.onboarding) return false;
-  const hasSupplementalCareActivity = Object.keys(getCareFavorites()).length > 0
+  const hasSupplementalCareActivity = getSpeciesFavoriteIds().length > 0
+    || Object.keys(getCareFavorites()).length > 0
     || getCareReminders().length > 0
     || getCompletedCareOperations().length > 0
     || getSavedCareChecklists().length > 0;
