@@ -2,6 +2,7 @@ import type { OnboardingGoal, OnboardingState } from '../../types';
 import { onboardingPreferenceSchema } from '../../../packages/contracts/src/index';
 import { supabase } from '../../lib/supabaseClient';
 import { apiRequest, AquaGuideApiError, createIdempotencyKey } from '../api/api-client';
+import { getAquariumSetupStatus } from '../aquarium/aquarium-setup.service';
 import { getCareFavorites } from '../favorites/favorites.service';
 import { getCareReminders, getCompletedCareOperations, getSavedCareChecklists } from '../care/care-activity.service';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
@@ -128,6 +129,10 @@ export const markSpeciesViewed = () => {
 export const markAquariumConfigured = () => {
   const current = getOnboardingState();
   if (!current || current.aquariumConfigured) return current;
+  const aquariumReady = loadAppStateFromStorage().aquariums.some(
+    aquarium => getAquariumSetupStatus(aquarium) === 'complete',
+  );
+  if (!aquariumReady) return current;
   return persistOnboarding({ ...current, aquariumConfigured: true });
 };
 
