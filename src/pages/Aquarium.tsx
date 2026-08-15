@@ -4323,7 +4323,7 @@ export default function AquariumManager() {
     || typeof activeAquarium.equipment?.heater === 'boolean'
     || typeof activeAquarium.equipment?.oxygen === 'boolean'
   );
-  const isBasicConfigComplete = hasDimensionConfig && hasWaterConfig && hasEquipmentConfig;
+  const isBasicConfigComplete = aquariumSetupStatus === 'complete';
   const hasAppliedBuildPlan = Boolean(
     activeAquarium.substrate
     || (activeAquarium.plants?.length || 0) > 0
@@ -7968,22 +7968,30 @@ export default function AquariumManager() {
           </div>
           <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:px-6">
             <Button variant="outline" onClick={() => setIsSettingsOpen(false)} className="h-10 min-w-[112px] rounded-full text-sm font-bold">{isEn ? "Cancel" : "取消"}</Button>
-            <Button onClick={() => {
-              const updated = aquariums.map(a => a.id === activeId ? { ...a, ...settingsForm } : a);
-              saveAquariums(updated);
-              void persistCareTimelineEvent({
-                aquariumId: activeAquarium.id,
-                eventType: 'settings_updated',
-                title: isEn ? 'Updated aquarium settings' : '更新鱼缸设置',
-                label: isEn ? 'Environment and equipment settings saved' : '已保存环境与设备配置',
-                payload: {},
-                occurredAt: new Date().toISOString(),
-                sourceType: 'aquarium_settings',
-                sourceId: `${activeAquarium.id}:${Date.now()}`,
-                isInferred: false,
-              }).catch(error => showToast('设置时间线没有保存成功。', 'error'));
-              markAquariumConfigured();
-              setIsSettingsOpen(false);
+            <Button onClick={async () => {
+              const nextAquarium = { ...activeAquarium, ...settingsForm };
+              try {
+                const repository = await getCurrentAquaGuideRepository();
+                const savedAquarium = await repository.saveAquarium(nextAquarium);
+                const mirroredAquariums = aquariums.map(a => a.id === activeId ? savedAquarium : a);
+                const mirroredState = persistAquariums(mirroredAquariums, savedAquarium.id);
+                setAquariums(mirroredState.aquariums);
+                markAquariumConfigured();
+                setIsSettingsOpen(false);
+                void persistCareTimelineEvent({
+                  aquariumId: savedAquarium.id,
+                  eventType: 'settings_updated',
+                  title: isEn ? 'Updated aquarium settings' : '更新鱼缸设置',
+                  label: isEn ? 'Environment and equipment settings saved' : '已保存环境与设备配置',
+                  payload: {},
+                  occurredAt: new Date().toISOString(),
+                  sourceType: 'aquarium_settings',
+                  sourceId: `${savedAquarium.id}:${Date.now()}`,
+                  isInferred: false,
+                }).catch(() => showToast('设置时间线没有保存成功。', 'error'));
+              } catch {
+                showToast(isEn ? 'Aquarium settings could not be saved.' : '鱼缸设置没有保存成功。', 'error');
+              }
             }} className="h-10 min-w-[128px] rounded-full bg-accent text-sm font-bold text-white hover:bg-accent/90">{isEn ? 'Save Settings' : '保存设置'}</Button>
           </DialogFooter>
         </AdaptiveTaskContent>
