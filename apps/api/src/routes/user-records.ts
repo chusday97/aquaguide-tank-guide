@@ -165,9 +165,62 @@ const registerFavoriteRoutes = (type: 'species' | 'care') => {
 
   userRecordsRouter.get(route, asyncRoute(async (request, response) => {
     const client = userClientFor(request);
-    const { data, error } = await client.from(table).select('*').is('deleted_at', null).order('created_at', { ascending: false });
+    if (type === 'species') {
+      const { data: favoriteRows, error } = await client
+        .from('species_favorites')
+        .select('species_id,created_at,version')
+        .is('deleted_at', null)
+        .order('created_at', { ascending: true });
+      if (error) throwDatabaseError(error, '收藏暂时无法加载。');
+      const speciesIds = (favoriteRows || []).map(row => row.species_id);
+      if (speciesIds.length === 0) return sendData(request, response, { items: [] });
+      const { data: speciesRows, error: speciesError } = await client
+        .from('species')
+        .select('id,catalog_key')
+        .in('id', speciesIds)
+        .is('deleted_at', null);
+      if (speciesError) throwDatabaseError(speciesError, '收藏内容暂时无法加载。');
+      const speciesById = new Map((speciesRows || []).map(item => [item.id, item]));
+      return sendData(request, response, {
+        items: (favoriteRows || []).flatMap(row => {
+          const content = speciesById.get(row.species_id);
+          if (!content?.catalog_key) return [];
+          return [{
+            catalogKey: content.catalog_key,
+            favoritedAt: row.created_at,
+            version: row.version,
+          }];
+        }),
+      });
+    }
+
+    const { data: favoriteRows, error } = await client
+      .from('care_favorites')
+      .select('article_id,created_at,version')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: true });
     if (error) throwDatabaseError(error, '收藏暂时无法加载。');
-    return sendData(request, response, camelize(data || []));
+    const articleIds = (favoriteRows || []).map(row => row.article_id);
+    if (articleIds.length === 0) return sendData(request, response, { items: [] });
+    const { data: articleRows, error: articleError } = await client
+      .from('care_articles')
+      .select('id,catalog_key,title')
+      .in('id', articleIds)
+      .is('deleted_at', null);
+    if (articleError) throwDatabaseError(articleError, '收藏内容暂时无法加载。');
+    const articleById = new Map((articleRows || []).map(item => [item.id, item]));
+    return sendData(request, response, {
+      items: (favoriteRows || []).flatMap(row => {
+        const content = articleById.get(row.article_id);
+        if (!content?.catalog_key || !content.title) return [];
+        return [{
+          catalogKey: content.catalog_key,
+          title: content.title,
+          favoritedAt: row.created_at,
+          version: row.version,
+        }];
+      }),
+    });
   }));
 
   userRecordsRouter.put(`${route}/:contentId`, asyncRoute(async (request, response) => {

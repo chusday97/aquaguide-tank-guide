@@ -708,7 +708,7 @@ export default function Encyclopedia() {
     const loadAquariumContext = async () => {
       try {
         const repository = await getCurrentAquaGuideRepository();
-        const aquariums = await repository.getAquariums();
+        const [aquariums, favorites] = await Promise.all([repository.getAquariums(), repository.getFavorites()]);
         if (cancelled) return;
         const ids = new Set<string>();
         aquariums.forEach(aquarium => aquarium.fishes.forEach(item => ids.add(item.fishId)));
@@ -717,6 +717,8 @@ export default function Encyclopedia() {
         setOwnedFishIds(ids);
         setAvailableAquariums(aquariums);
         setCurrentAquarium(current || null);
+        setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+        setWishlistFishIds(new Set(favorites.speciesCatalogKeys));
       } catch {
         if (!cancelled) {
           setOwnedFishIds(new Set());
@@ -733,11 +735,6 @@ export default function Encyclopedia() {
     };
   }, []);
 
-  const syncWishlistFishIds = (next: Set<string>) => {
-    setWishlistFishIds(next);
-    setSpeciesFavoriteIds(next);
-  };
-
   useEffect(() => {
     const refreshWishlist = () => setWishlistFishIds(loadWishlistIds());
     window.addEventListener('focus', refreshWishlist);
@@ -748,25 +745,14 @@ export default function Encyclopedia() {
     };
   }, []);
 
-  const toggleWishlist = (id: string) => {
-    const next = new Set(wishlistFishIds);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    syncWishlistFishIds(next);
-  };
-
-  const handleWishlistToggle = (fish: Fish) => {
+  const handleWishlistToggle = async (fish: Fish) => {
     const wasFavorite = wishlistFishIds.has(fish.id);
-    const next = new Set(wishlistFishIds);
-    if (wasFavorite) next.delete(fish.id);
-    else next.add(fish.id);
-
     try {
-      setSpeciesFavoriteIds(next);
-      const savedIds = new Set(getSpeciesFavoriteIds());
-      const savedAsExpected = savedIds.has(fish.id) === !wasFavorite;
-      if (!savedAsExpected) throw new Error('收藏状态未能保存');
-      setWishlistFishIds(savedIds);
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: fish.id, favorite: !wasFavorite });
+      const favorites = await repository.getFavorites();
+      setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+      setWishlistFishIds(new Set(favorites.speciesCatalogKeys));
       setWishlistFeedback({
         message: wasFavorite ? t('encyclopedia.wishlistRemoved', { name: fish.name }) : t('encyclopedia.wishlistAdded', { name: fish.name }),
         added: !wasFavorite,
@@ -2297,7 +2283,10 @@ export default function Encyclopedia() {
         onSelectSpecies={setSelectedFish}
         onAddToTank={handleAddToTank}
         onAddToCalculator={handleAddToCalculator}
-        onToggleWishlist={toggleWishlist}
+        onToggleWishlist={(id) => {
+          const fish = fishData.find(item => item.id === id);
+          if (fish) void handleWishlistToggle(fish);
+        }}
         onGoCalculator={() => {
           closeAtlasDetail(false);
           setViewMode('compatibility');
@@ -2448,7 +2437,7 @@ export default function Encyclopedia() {
                       <Button
                         variant="outline"
                         className={`h-9 rounded-full text-xs font-black ${wishlistFishIds.has(selectedFish.id) ? 'border-rose-200 bg-rose-50 text-rose-500' : 'border-border text-ink/65'}`}
-                        onClick={() => toggleWishlist(selectedFish.id)}
+                        onClick={() => void handleWishlistToggle(selectedFish)}
                       >
                         {wishlistFishIds.has(selectedFish.id) ? <Heart className="mr-1 h-4 w-4 fill-current" /> : <HeartOff className="mr-1 h-4 w-4" />}
                         {wishlistFishIds.has(selectedFish.id) ? t('encyclopedia.inWishlistBtn') : t('encyclopedia.addToWishlistBtn')}

@@ -162,6 +162,17 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     return this.saveAquarium(nextAquarium);
   }
 
+  async getFavorites() {
+    return {
+      speciesCatalogKeys: getSpeciesFavoriteIds(),
+      careFavorites: Object.values(getCareFavorites()).map(item => ({
+        catalogKey: item.id,
+        title: item.title,
+        favoritedAt: item.favoritedAt,
+      })),
+    };
+  }
+
   async updateFavorite(input: FavoriteMutation) {
     if (input.type === 'species') {
       if (input.favorite) addSpeciesFavorite(input.catalogKey);

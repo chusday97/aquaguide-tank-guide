@@ -27,8 +27,8 @@ import { getCareVisualSources } from '../lib/careVisual';
 import { AdaptiveDetailContent } from '../components/common/AdaptiveDetailContent';
 import {
   getCareFavorites,
+  setCareFavorites,
   subscribeToFavorites,
-  toggleCareFavorite,
   type CareFavoriteMap,
 } from '../services/favorites/favorites.service';
 import {
@@ -1670,6 +1670,24 @@ export default function CareEncyclopedia() {
     setFavorites(getCareFavorites());
   }), []);
 
+  useEffect(() => {
+    let active = true;
+    void getCurrentAquaGuideRepository()
+      .then(repository => repository.getFavorites())
+      .then(snapshot => {
+        if (!active) return;
+        const next = Object.fromEntries(snapshot.careFavorites.map(item => [item.catalogKey, {
+          id: item.catalogKey,
+          title: item.title,
+          favoritedAt: item.favoritedAt,
+        }]));
+        setCareFavorites(next);
+        setFavorites(next);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
+
   const goToBanner = (index: number) => {
     setActiveBannerIndex((index + careRecommendations.length) % Math.max(1, careRecommendations.length));
   };
@@ -1741,20 +1759,28 @@ export default function CareEncyclopedia() {
     }, 720);
   };
 
-  const toggleFavorite = (topic: CareTopic, source?: HTMLElement) => {
+  const toggleFavorite = async (topic: CareTopic, source?: HTMLElement) => {
     const isAdding = !favorites[topic.id];
-    if (isAdding) launchFavoriteFly(source);
-    const next = toggleCareFavorite({
-      id: topic.id,
-      title: getDisplayTitle(topic),
-      favoritedAt: new Date().toISOString(),
-    });
-    setFavorites(next);
-    showToast(isAdding ? '已收录到水族册' : '已从水族册移除');
-    if (isAdding) {
-      try {
-        posthog.capture('care_article_favorited', { topic_id: topic.id });
-      } catch (e) {}
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'care', catalogKey: topic.id, title: getDisplayTitle(topic), favorite: isAdding });
+      const snapshot = await repository.getFavorites();
+      const next = Object.fromEntries(snapshot.careFavorites.map(item => [item.catalogKey, {
+        id: item.catalogKey,
+        title: item.title,
+        favoritedAt: item.favoritedAt,
+      }]));
+      setCareFavorites(next);
+      setFavorites(next);
+      if (isAdding) launchFavoriteFly(source);
+      showToast(isAdding ? '已收录到水族册' : '已从水族册移除');
+      if (isAdding) {
+        try {
+          posthog.capture('care_article_favorited', { topic_id: topic.id });
+        } catch (e) {}
+      }
+    } catch {
+      showToast(isEn ? 'Could not update collection. Try again.' : '收藏没有更新成功，请稍后重试。', 'error');
     }
   };
 

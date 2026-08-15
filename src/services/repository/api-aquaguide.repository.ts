@@ -80,6 +80,12 @@ type ApiMemorial = {
   improvement?: string;
   version?: number;
 };
+type ApiFavorite = {
+  catalogKey: string;
+  title?: string;
+  favoritedAt: string;
+  version: number;
+};
 
 type ApiReminder = {
   id: string;
@@ -471,6 +477,19 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     const content = await apiRequest<{ id: string }>(path, { authenticated: false });
     this.contentIds.set(cacheKey, content.id);
     return content.id;
+  }
+
+  async getFavorites() {
+    const [speciesResponse, careResponse] = await Promise.all([
+      apiRequest<{ items: ApiFavorite[] }>('/favorites/species'),
+      apiRequest<{ items: ApiFavorite[] }>('/favorites/care'),
+    ]);
+    return {
+      speciesCatalogKeys: (speciesResponse.items || []).map(item => item.catalogKey),
+      careFavorites: (careResponse.items || [])
+        .filter(item => Boolean(item.catalogKey && item.title))
+        .map(item => ({ catalogKey: item.catalogKey, title: item.title!, favoritedAt: item.favoritedAt })),
+    };
   }
 
   async updateFavorite(input: FavoriteMutation) {

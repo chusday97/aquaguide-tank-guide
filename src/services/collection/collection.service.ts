@@ -10,6 +10,8 @@ import { evaluateTankCompatibility } from '../../lib/tankCompatibilityEngine';
 import {
   getCareFavorites,
   getSpeciesFavoriteIds,
+  setCareFavorites,
+  setSpeciesFavoriteIds,
   subscribeToFavorites,
   type CareFavoriteMap,
 } from '../favorites/favorites.service';
@@ -179,14 +181,25 @@ export const getCollectionSnapshot = (): CollectionSnapshot => {
   };
 };
 
-export const hydrateCollectionMemorials = async (): Promise<CollectionSnapshot> => {
+export const hydrateCollectionData = async (): Promise<CollectionSnapshot> => {
   const mode = await resolveRepositoryMode();
   if (mode !== 'cloud') return getCollectionSnapshot();
   const repository = getAquaGuideRepository(mode);
-  const memorials = await repository.getMemorialRecords();
+  const [memorials, favorites] = await Promise.all([
+    repository.getMemorialRecords(),
+    repository.getFavorites(),
+  ]);
   patchLocalAppState({ deceasedRecords: memorials });
+  setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+  setCareFavorites(Object.fromEntries(favorites.careFavorites.map(item => [item.catalogKey, {
+    id: item.catalogKey,
+    title: item.title,
+    favoritedAt: item.favoritedAt,
+  }])));
   return getCollectionSnapshot();
 };
+
+export const hydrateCollectionMemorials = async (): Promise<CollectionSnapshot> => hydrateCollectionData();
 
 export const subscribeToCollection = (listener: () => void) => {
   const unsubscribeFavorites = subscribeToFavorites(listener);
