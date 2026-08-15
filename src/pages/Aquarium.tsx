@@ -2282,7 +2282,7 @@ export default function AquariumManager() {
       }
       setAquariums(displayAquariums);
       try {
-        const events = await repository.getCareEvents(activeAquarium.id);
+        const events = await repository.getCareEvents();
         setCareTimelineEvents(events);
         setCareTimelineRevision(value => value + 1);
       } catch {
