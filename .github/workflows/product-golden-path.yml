@@ -27,6 +27,7 @@ jobs:
           npm run test:aquarium-creation-semantics
           npm run test:onboarding-activation
           npm run test:onboarding-goal-paths
+          npm run test:feeding-canonical
           node scripts/test-aquarium-settings-boundary.mjs
           node --import tsx scripts/test-aquarium-delete-boundary.ts
           node --import tsx scripts/test-water-change-repository-boundary.ts
