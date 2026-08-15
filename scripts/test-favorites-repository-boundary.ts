@@ -25,9 +25,12 @@ assert.match(apiRepository, /apiRequest<\{ items: ApiFavorite\[\] \}>\('\/favori
 assert.match(apiRepository, /speciesCatalogKeys: \(speciesResponse\.items \|\| \[\]\)\.map\(item => item\.catalogKey\)/);
 assert.match(apiRepository, /catalogKey: item\.catalogKey, title: item\.title!, favoritedAt: item\.favoritedAt/);
 
-// The API must resolve internal UUID foreign keys back to stable catalog keys.
-assert.match(apiRoutes, /const contentTable = type === 'species' \? 'species' : 'care_articles'/);
-assert.match(apiRoutes, /const contentSelect = type === 'species' \? 'id,catalog_key' : 'id,catalog_key,title'/);
+// API reads use literal table/select branches so Supabase's type parser stays sound,
+// while internal UUID foreign keys are resolved back to stable catalog keys.
+assert.match(apiRoutes, /\.from\('species_favorites'\)\s+\.select\('species_id,created_at,version'\)/s);
+assert.match(apiRoutes, /\.from\('species'\)\s+\.select\('id,catalog_key'\)/s);
+assert.match(apiRoutes, /\.from\('care_favorites'\)\s+\.select\('article_id,created_at,version'\)/s);
+assert.match(apiRoutes, /\.from\('care_articles'\)\s+\.select\('id,catalog_key,title'\)/s);
 assert.match(apiRoutes, /catalogKey: content\.catalog_key/);
 assert.match(apiRoutes, /favoritedAt: row\.created_at/);
 const favoriteRouteStart = apiRoutes.indexOf("const registerFavoriteRoutes = (type: 'species' | 'care') => {");
@@ -35,6 +38,8 @@ const favoriteRouteEnd = apiRoutes.indexOf("registerFavoriteRoutes('species');")
 assert.ok(favoriteRouteStart >= 0 && favoriteRouteEnd > favoriteRouteStart, 'favorite route block must be discoverable');
 const favoriteRouteBlock = apiRoutes.slice(favoriteRouteStart, favoriteRouteEnd);
 assert.doesNotMatch(favoriteRouteBlock, /return sendData\(request, response, camelize\(data \|\| \[\]\)\);/);
+assert.doesNotMatch(favoriteRouteBlock, /const contentTable = type ===/);
+assert.doesNotMatch(favoriteRouteBlock, /const contentSelect = type ===/);
 
 // Collection hydration must make cloud favorites authoritative only after successful reads.
 assert.match(collectionService, /const \[memorials, favorites\] = await Promise\.all\(\[/);
@@ -53,10 +58,11 @@ assert.doesNotMatch(collectionPage, /setSpeciesFavoriteIds\(snapshot\.wishlistId
 // Direct entry to both source pages must hydrate cloud favorites and mutations must be repository-first.
 assert.match(encyclopedia, /Promise\.all\(\[repository\.getAquariums\(\), repository\.getFavorites\(\)\]\)/);
 assert.match(encyclopedia, /await repository\.updateFavorite\(\{ type: 'species', catalogKey: fish\.id, favorite: !wasFavorite \}\);\s+const favorites = await repository\.getFavorites\(\)/s);
+assert.match(encyclopedia, /onToggleWishlist=\{\(id\) => \{\s+const fish = fishData\.find\(item => item\.id === id\);\s+if \(fish\) void handleWishlistToggle\(fish\);\s+\}\}/s);
 assert.doesNotMatch(encyclopedia, /const toggleWishlist = \(id: string\)/);
 
 assert.match(care, /getCurrentAquaGuideRepository\(\)\s+\.then\(repository => repository\.getFavorites\(\)\)/s);
 assert.match(care, /await repository\.updateFavorite\(\{ type: 'care', catalogKey: topic\.id, title: getDisplayTitle\(topic\), favorite: isAdding \}\);\s+const snapshot = await repository\.getFavorites\(\)/s);
 assert.doesNotMatch(care, /const next = toggleCareFavorite\(/);
 
-console.log('favorites repository boundary: stable catalog-key reads, direct-entry hydration, and repository-first add/remove verified');
+console.log('favorites repository boundary: typed catalog-key reads, direct-entry hydration, and repository-first add/remove verified');
