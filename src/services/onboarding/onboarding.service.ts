@@ -128,12 +128,12 @@ export const markSpeciesViewed = () => {
 
 export const markAquariumConfigured = () => {
   const current = getOnboardingState();
-  if (!current || current.aquariumConfigured) return current;
+  if (!current) return current;
   const aquariumReady = loadAppStateFromStorage().aquariums.some(
     aquarium => getAquariumSetupStatus(aquarium) === 'complete',
   );
-  if (!aquariumReady) return current;
-  return persistOnboarding({ ...current, aquariumConfigured: true });
+  if (current.aquariumConfigured === aquariumReady) return current;
+  return persistOnboarding({ ...current, aquariumConfigured: aquariumReady });
 };
 
 export const dismissOnboardingTaskCard = () => {
