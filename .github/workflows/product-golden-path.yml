@@ -33,6 +33,7 @@ jobs:
           npm run test:memorial-repository
           npm run test:collection-memorial-hydration
           npm run test:favorites-repository
+          node --import tsx scripts/test-collection-hub-hydration.ts
           node scripts/test-aquarium-settings-boundary.mjs
           node --import tsx scripts/test-aquarium-delete-boundary.ts
           node --import tsx scripts/test-water-change-repository-boundary.ts
