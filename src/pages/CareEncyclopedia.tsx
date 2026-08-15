@@ -20,7 +20,7 @@ import type { Aquarium, AquariumFish, Fish as FishType } from '../types';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { getLifeType } from '../modules/species/species.service';
 import i18n from '../i18n';
-import { loadAppStateFromStorage } from '../services/storage/local-app-state';
+import { loadAppStateFromStorage, patchLocalAppState, subscribeToAppState } from '../services/storage/local-app-state';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { getCareVisualSources } from '../lib/careVisual';
@@ -1612,7 +1612,11 @@ export default function CareEncyclopedia() {
   const contentListRef = useRef<HTMLElement | null>(null);
   const detailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
 
-  const appStateSnapshot = useMemo(() => loadAppStateFromStorage(), []);
+  const [appStateSnapshot, setAppStateSnapshot] = useState(loadAppStateFromStorage);
+
+  useEffect(() => subscribeToAppState(() => {
+    setAppStateSnapshot(loadAppStateFromStorage());
+  }), []);
   const activeAquarium = useMemo(() => (
     appStateSnapshot.aquariums.find(item => item.id === appStateSnapshot.currentAquariumId)
     || appStateSnapshot.aquariums[0]
@@ -1673,10 +1677,22 @@ export default function CareEncyclopedia() {
   useEffect(() => {
     let active = true;
     void getCurrentAquaGuideRepository()
-      .then(repository => repository.getFavorites())
-      .then(snapshot => {
+      .then(async repository => {
+        const [favoriteSnapshot, aquariums] = await Promise.all([
+          repository.getFavorites(),
+          repository.getAquariums(),
+        ]);
+        return { favoriteSnapshot, aquariums };
+      })
+      .then(({ favoriteSnapshot, aquariums }) => {
         if (!active) return;
-        const next = Object.fromEntries(snapshot.careFavorites.map(item => [item.catalogKey, {
+        const cachedState = loadAppStateFromStorage();
+        const currentAquariumId = cachedState.currentAquariumId
+          && aquariums.some(item => item.id === cachedState.currentAquariumId)
+          ? cachedState.currentAquariumId
+          : (aquariums[0]?.id || '');
+        patchLocalAppState({ aquariums, currentAquariumId });
+        const next = Object.fromEntries(favoriteSnapshot.careFavorites.map(item => [item.catalogKey, {
           id: item.catalogKey,
           title: item.title,
           favoritedAt: item.favoritedAt,
@@ -1684,7 +1700,9 @@ export default function CareEncyclopedia() {
         setCareFavorites(next);
         setFavorites(next);
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (active) showToast(isEn ? 'Tank data could not sync. Showing this device cache.' : '鱼缸数据暂时无法同步，当前显示本机缓存。', 'error');
+      });
     return () => { active = false; };
   }, []);
 
@@ -2428,7 +2446,10 @@ function StepDiagnosisPanel({
 }) {
   const { t } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
-  const appState = useMemo(() => loadAppStateFromStorage(), []);
+  const [appState, setAppState] = useState(loadAppStateFromStorage);
+  useEffect(() => subscribeToAppState(() => {
+    setAppState(loadAppStateFromStorage());
+  }), []);
   const aquariums = appState.aquariums;
   const defaultAquariumId = appState.currentAquariumId || aquariums[0]?.id || '';
   const [diagnosisState, setDiagnosisState] = useState<StepDiagnosisState>(() => ({
