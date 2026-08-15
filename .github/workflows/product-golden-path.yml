@@ -6,22 +6,11 @@ on:
   push:
     branches: [main, agent/fix-aquarium-completion-state]
 
-permissions:
-  contents: write
-
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply one-time diagnosis repository repair
-        if: github.event_name == 'push' && hashFiles('.agent-diagnosis-trigger') != ''
-        run: |
-          python3 scripts/apply-diagnosis-repository-patch.py
-          python3 scripts/fix-diagnosis-source-type.py
-      - name: Apply one-time memorial repository repair
-        if: github.event_name == 'push' && hashFiles('.agent-memorial-trigger') != ''
-        run: python3 scripts/apply-memorial-repository-patch.py
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -41,7 +30,7 @@ jobs:
           npm run test:feeding-canonical
           npm run test:observation-canonical
           npm run test:diagnosis-repository
-          if [ -f .agent-memorial-trigger ]; then npm run test:memorial-repository; fi
+          npm run test:memorial-repository
           node scripts/test-aquarium-settings-boundary.mjs
           node --import tsx scripts/test-aquarium-delete-boundary.ts
           node --import tsx scripts/test-water-change-repository-boundary.ts
@@ -63,23 +52,3 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: npm run test:golden-path-gp002-ui
-      - name: Commit one-time diagnosis repository repair
-        if: github.event_name == 'push' && hashFiles('.agent-diagnosis-trigger') != ''
-        shell: bash
-        run: |
-          git config user.name "AquaGuide Agent"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .agent-diagnosis-trigger scripts/apply-diagnosis-repository-patch.py scripts/fix-diagnosis-source-type.py
-          git add src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts apps/api/src/routes/user-records.ts src/pages/Aquarium.tsx package.json
-          git commit -m "fix: persist diagnosis records canonically"
-          git push origin HEAD:agent/fix-aquarium-completion-state
-      - name: Commit one-time memorial repository repair
-        if: github.event_name == 'push' && hashFiles('.agent-memorial-trigger') != ''
-        shell: bash
-        run: |
-          git config user.name "AquaGuide Agent"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .agent-memorial-trigger scripts/apply-memorial-repository-patch.py
-          git add src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts src/pages/Aquarium.tsx package.json scripts/test-memorial-repository-boundary.ts
-          git commit -m "fix: hydrate memorial records from repository"
-          git push origin HEAD:agent/fix-aquarium-completion-state
