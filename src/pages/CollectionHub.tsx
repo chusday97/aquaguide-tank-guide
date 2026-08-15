@@ -240,7 +240,7 @@ export default function CollectionHub() {
             >
               <span className="flex h-[62px] w-[104px] shrink-0 items-center justify-center overflow-hidden rounded-[13px] bg-white">
                 <ResilientImage
-                  src={getCareVisualSources(topic).thumbnail}
+                  src={getCareVisualSources(topic.imageUrl).thumbnail}
                   alt={topic.title}
                   className="h-full w-full object-cover"
                   loading="lazy"
