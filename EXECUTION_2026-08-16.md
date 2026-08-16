@@ -81,7 +81,7 @@ Base：PR #29 / `fix/marine-invertebrate-water-type`
 5. 当前 50 / 75 / 90 thresholds 被映射到 qualitative pressure bands，而不是伪精确安全评分；
 6. 继续复用 #29 的 recommendation-profile certainty regression。
 
-验证：CI 已启动；最终状态以 #37 workflow 为准。
+验证：Recommendation Explanation Contract regression ✅；existing recommendation certainty regression ✅；TypeScript ✅。
 
 ## 5. 当前分支依赖图
 
@@ -116,7 +116,7 @@ main
 ### P1
 
 1. #36 已绿，保持 Draft 等待 #29 / Phase-0 stack 清理；
-2. #37 完成 CI；
+2. #37 已绿，保持 Draft 等待 #29 / Phase-0 stack 清理；
 3. 把新增 contract 与 `BADCASES_2026-08-16.md` 的对应 case 建立明确编号映射。
 
 ### P2 — 等基线汇合后实施
