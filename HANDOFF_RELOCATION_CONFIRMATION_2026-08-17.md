@@ -15,83 +15,73 @@
 - #65 run `31961532732` green.
 - disposable #62 + #65 audit `31961690289` green, no new conflicts/no merge commit.
 - canonical combined implementation bootstrap `31962121116` green; no product PR/main merge.
-
-## Care attempt controller — green
-
-`care-relocation-confirmation.controller.ts` owns one attempt / one operationId / one repository session.
-
-- operationId created once from the opener event, never render;
-- request/facts fixed for the attempt;
-- one successfully resolved repository instance owns pre-load → mutation → post-load → reconcile;
-- `execute()` caches one Promise, so double clicks cannot create another write;
-- pre/post fresh loads use repository `getAquariums()`;
-- repository mutation is reachable only through #63's injected callback;
-- reconcile is canonical read-only recovery.
-
-Permanent controller run `31962344545` is fully green, including controller regressions, fresh policy, uncertainty, confirmation, entrypoint, app/API TypeScript and build.
-
-## REL-048 confirmation lifecycle — fixed and green
-
-Current combined-branch confirmation dialog locks uncertain/post-state-unavailable attempts until canonical reconciliation succeeds. Overlay/Escape/close requests are ignored, failed reconciliation remains sync-only, successful reconciliation enters explicit reconciled state, and only then may the dialog close. Full rerun `31962635712` is green.
+- Care attempt controller run `31962344545` green.
+- reconciliation lifecycle run `31962635712` green.
 
 ## Canonical display + compatibility mirror boundary
 
 `ApiAquaGuideRepository.getAquariums()` fetches canonical `/aquariums` but does not persist the list into Care's local mirror. Care therefore needs a direct canonical aquarium override plus best-effort compatibility-mirror persistence. Canonical data becomes visible first; local mirror failure must never reclassify a confirmed relocation/read as failed. This protects REL-044/049.
 
-## Care JSX wiring attempt — safety chain green, hydration test harness stale
+## Care JSX wiring one-shot history
 
-One-shot run `31962863527` intentionally proved the Care wiring verifier red before patch, then applied the exact-anchor JSX wiring in the runner.
+### Run `31962863527`
 
-After patch, all new relocation safety gates passed:
+The exact-anchor Care patch applied in the runner and all new relocation gates passed through mutation uncertainty. The run stopped at the pre-existing Care hydration static test because that test incorrectly required `useState(loadAppStateFromStorage)` and `subscribeToAppState` to be adjacent. This was recorded as TEST-003; product hydration remained intact.
 
+### Run `31963027394`
+
+TEST-003 was corrected to capability assertions. The rerun proved:
+
+- pre-patch wiring verifier intentionally red ✅
+- exact-anchor Care patch applied ✅
 - Care wiring static contract ✅
-- canonical view/mirror fallback regression ✅
+- canonical view/mirror fallback ✅
 - Care attempt controller ✅
-- REL-048 confirmation lifecycle ✅
-- #65 confirmation entrypoint ✅
-- #63 fresh execution policy ✅
+- confirmation lifecycle ✅
+- #65 entrypoint ✅
+- #63 fresh policy ✅
 - mutation uncertainty ✅
+- corrected Care hydration ✅
+- severe-risk ✅
 
-The run then stopped at the pre-existing `scripts/test-care-aquarium-hydration.ts` static assertion.
+The next failure is now a **real TypeScript integration issue**, not a product-rule failure:
 
-Root cause is now confirmed as **TEST-003 test-structure coupling, not a hydration/product regression**. The old test required this exact adjacency:
+`src/pages/CareEncyclopedia.tsx(...): Property 'errorMessage' does not exist on type 'CareCanonicalAquariumApplyResult'`.
 
-`const [appState, setAppState] = useState(loadAppStateFromStorage);` immediately followed by `useEffect(() => subscribeToAppState(...))`.
+`applyCareCanonicalAquariums()` intentionally returns a strict discriminated union:
 
-The new Care wiring inserts only:
+- `{ mirrorPersisted: true, mirrorState, ... }`
+- `{ mirrorPersisted: false, errorMessage, ... }`
 
-`const [canonicalAquariums, setCanonicalAquariums] = useState<Aquarium[] | null>(null);`
+The page patch used truthiness narrowing:
 
-between those statements. The `subscribeToAppState` hydration subscription remains present and unchanged; the new canonical override is required so a verified post-relocation canonical list can temporarily outrank a stale local mirror.
+`if (applied.mirrorPersisted) { ... } else { console.warn(applied.errorMessage) }`
 
-The hydration regression is being changed from source-line adjacency to capability assertions:
+Under the current TypeScript configuration, that `else` was not accepted as a sufficiently explicit false discriminant.
 
-- `appState` still initializes from `loadAppStateFromStorage`;
-- `subscribeToAppState` still refreshes `appState`;
-- StepDiagnosis uses `canonicalAquariums ?? appState.aquariums`;
-- no one-time `useMemo(loadAppStateFromStorage)` regression returns.
+The fix will preserve the strict union and use explicit discrimination (`applied.mirrorPersisted === false`) rather than weakening the type, making `errorMessage` optional, or introducing `any`.
 
-No relocation or hydration product rule is being relaxed.
+Because the run stopped at TypeScript, JSX wiring still has **not** been committed/pushed. API TypeScript/build/self-delete/commit did not run.
 
-## Intended Care wiring already verified in the runner
+## Care execution architecture already verified before TypeScript stop
 
-- eligible #65 destination opens one controller attempt;
-- Care page never calls `repository.relocateLivestock()` directly;
-- controller uses `getCurrentAquaGuideRepository` only as its repository provider;
-- `executed` applies `result.postAquariums` before returning success to the dialog;
-- reconciliation reads through the controller and applies that canonical list;
-- direct canonical override is shown before compatibility-mirror persistence;
-- mirror persistence failure is isolated and cannot become relocation failure.
-
-Because the one-shot run stopped before TypeScript/build/commit, these JSX changes are **not yet saved on the branch**. The workflow will be rerun after TEST-003 is corrected; only a full green run may self-delete the one-shot tooling and commit the Care wiring.
+- one opener event creates one controller/operationId;
+- no Care direct `relocateLivestock()` call;
+- one repository session owns pre-load/mutation/post-load/reconcile;
+- fresh target degradation blocks with zero writes;
+- executed result applies canonical `postAquariums` before dialog success returns;
+- reconciliation is canonical read-only recovery;
+- canonical visible state is applied before compatibility-mirror persistence;
+- mirror write failure is isolated from mutation/canonical-read status;
+- uncertain dialog remains locked until successful canonical reconciliation.
 
 ## Next step
 
-1. update the Care hydration regression to capability-based assertions;
-2. rerun the guarded one-shot Care wiring from the pre-wiring branch state;
-3. require hydration + severe-risk + app/API TypeScript + build to pass;
-4. only then persist the verified Care wiring and self-delete write tooling;
-5. update handoff/badcase again before browser Golden Path work.
+1. update the exact-anchor Care patch to use explicit boolean-literal discrimination for `mirrorPersisted`;
+2. rerun the same guarded one-shot from the still-unpersisted pre-wiring branch state;
+3. require app/API TypeScript + production build green;
+4. only full green may self-delete the one-shot patch tooling and persist the Care wiring;
+5. update handoff/badcase immediately with that result, then proceed to browser Golden Path.
 
 ## Non-negotiable constraints
 
@@ -99,6 +89,7 @@ Because the one-shot run stopped before TypeScript/build/commit, these JSX chang
 - no stale destination card as mutation authorization;
 - no direct Care UI → repository relocation;
 - no local mirror presented as fresh canonical execution state;
+- no weakening discriminated result types merely to satisfy compilation;
 - no partial/multi-batch move described as whole conflict resolution;
 - no `conditional` override;
 - no blind retry after uncertain mutation outcome.
