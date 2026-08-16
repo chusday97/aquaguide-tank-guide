@@ -1,4 +1,5 @@
 name: Apply Relocation Receipt Boundary Once
+# Retry after aligning the legacy wiring assertion with the receipt-only response.
 
 on:
   push:
