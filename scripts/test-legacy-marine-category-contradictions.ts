@@ -34,6 +34,19 @@ assert.deepEqual(
   'Altolamprologus calvus var. Gold should inherit the reviewed base-species freshwater evidence',
 );
 
+// General invariant: once a taxon has explicit high-confidence freshwater evidence,
+// the display catalog may not continue to label that same entity as a marine fish.
+// This turns future evidence additions into an automatic audit of stale legacy categories.
+const reviewedFreshwaterStillMarkedMarine = fishData
+  .filter(item => item.category === '海水鱼' && getSpeciesWaterEvidence(item)?.primaryWaterType === 'freshwater')
+  .map(item => `${item.id}:${item.scientificName}`)
+  .sort();
+assert.deepEqual(
+  reviewedFreshwaterStillMarkedMarine,
+  [],
+  `reviewed freshwater taxa must not retain marine display categories: ${reviewedFreshwaterStillMarkedMarine.join(', ')}`,
+);
+
 const marineControl = fishData.find(item => item.id === 'sp_0297');
 assert.ok(marineControl, 'missing explicit Small marine Pseudochromis control sp_0297');
 assert.equal(marineControl.category, '海水鱼');
@@ -41,4 +54,4 @@ assert.equal(marineControl.size, 'Small');
 assert.match(marineControl.scientificName, /^Pseudochromis\b/i);
 assert.equal(getSpeciesWaterType(marineControl), 'saltwater');
 
-console.log(`legacy marine-category contradiction regression passed: freshwater=${freshwaterCases.map(item => item.id).join(',')}; marine-control=${marineControl.id}`);
+console.log(`legacy marine-category contradiction regression passed: freshwater=${freshwaterCases.map(item => item.id).join(',')}; reviewed-freshwater/marine-category contradictions=0; marine-control=${marineControl.id}`);
