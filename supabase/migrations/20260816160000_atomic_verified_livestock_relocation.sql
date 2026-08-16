@@ -37,6 +37,12 @@ begin
   if operation_request_hash is null or operation_request_hash !~ '^[0-9a-f]{64}$' then raise exception 'INVALID_REQUEST_HASH'; end if;
 
   perform pg_advisory_xact_lock(hashtextextended(current_user_id::text || ':relocation:' || operation_key, 0));
+  perform pg_advisory_xact_lock(hashtextextended(
+    current_user_id::text || ':aquarium-pair:'
+      || least(source_aquarium_id::text, destination_aquarium_id::text) || ':'
+      || greatest(source_aquarium_id::text, destination_aquarium_id::text),
+    0
+  ));
 
   select * into existing_operation
   from public.idempotency_records
