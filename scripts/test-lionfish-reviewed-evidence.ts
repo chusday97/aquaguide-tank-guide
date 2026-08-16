@@ -3,11 +3,17 @@ import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
 import { getLifeType, getSpeciesWaterType } from '../src/modules/species/species.service';
+import { resolveCanonicalSpeciesId } from '../src/modules/species/speciesAliases';
 
-const lionfish = fishData.find(item => item.id === 'sp_0130');
-assert.ok(lionfish, 'missing lionfish catalog fixture sp_0130');
+const lionfish = fishData.find(item => item.id === 'sp_0453');
+assert.ok(lionfish, 'missing canonical lionfish catalog fixture sp_0453');
 assert.equal(lionfish.scientificName, 'Pterois volitans');
 assert.equal(getSpeciesWaterType(lionfish), 'saltwater');
+
+// sp_0130 is a legacy duplicate ID for Opsariichthys bidens/马口鱼, not lionfish.
+// Reviewed lionfish evidence must never be rebound to that removed identity.
+assert.equal(resolveCanonicalSpeciesId('sp_0130'), 'sp_0038');
+assert.equal(getReviewedCompatibilityProfile('sp_0130'), undefined);
 
 const marineSmallFish = fishData.find(item => (
   item.scientificName === 'Amphiprion ocellaris'
@@ -19,6 +25,7 @@ assert.equal(marineSmallFish.size, 'Small');
 
 const profile = getReviewedCompatibilityProfile(lionfish.id);
 assert.ok(profile, 'lionfish must resolve a reviewed deterministic compatibility profile');
+assert.equal(profile.speciesId, 'sp_0453');
 assert.equal(profile.reviewStatus, 'reviewed');
 assert.equal(profile.confidence, 'medium');
 assert.ok(profile.behaviorTraits.includes('predatory'));
@@ -41,4 +48,4 @@ assert.ok(predationBlock.citations.some(source => source.id === 'lionfish-prey-r
 assert.match(predationBlock.evidence, new RegExp(lionfish.name));
 assert.match(predationBlock.evidence, new RegExp(marineSmallFish.name));
 
-console.log(`lionfish reviewed evidence passed: ${lionfish.name} -> ${marineSmallFish.name} remains a same-water high predation blocker with reviewed citation provenance`);
+console.log(`lionfish reviewed evidence passed: ${lionfish.name} (${lionfish.id}) -> ${marineSmallFish.name} remains a same-water high predation blocker with reviewed citation provenance; legacy sp_0130 remains mapped to non-lionfish canonical identity`);
