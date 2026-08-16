@@ -196,6 +196,9 @@ export const subscribeToAppState = (listener: () => void) => {
 };
 
 export const clearLocalAppState = () => {
+  if (pendingTimer !== null && typeof window !== 'undefined') window.clearTimeout(pendingTimer);
+  pendingTimer = null;
+  pendingState = null;
   try {
     [
       AQUARIUM_APP_STATE_KEY,
@@ -206,6 +209,7 @@ export const clearLocalAppState = () => {
       'deceasedRecords',
       'aquapediaDiscoveryDeck',
     ].forEach(key => localStorage.removeItem(key));
+    emitAppStateChanged();
   } catch (error) {
     console.warn('AquaGuide local app state clear failed', error);
   }

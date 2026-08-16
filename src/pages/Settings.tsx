@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Check, ChevronRight, Languages, Link2, MessageSquareText, RotateCcw, Settings2, ShieldCheck } from 'lucide-react';
+import { Check, ChevronRight, Cloud, Languages, Link2, MessageSquareText, RotateCcw, Settings2, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { setLocale, type SupportedLocale } from '../i18n';
@@ -87,6 +87,7 @@ export default function SettingsPage() {
           <nav aria-label={isEn ? 'Settings sections' : '设置分类'} className="sticky top-5 rounded-[18px] border border-slate-200/80 bg-white p-2 shadow-sm">
             {[
               { id: 'settings-general', label: isEn ? 'General' : '通用', icon: Languages },
+              { id: 'settings-account', label: isEn ? 'Account & sync' : '账户与同步', icon: Cloud },
               { id: 'settings-onboarding', label: isEn ? 'Getting started' : '新手引导', icon: RotateCcw },
               { id: 'shared-reports', label: isEn ? 'Sharing & privacy' : '分享与隐私', icon: ShieldCheck },
               { id: 'feedback', label: isEn ? 'Feedback' : '意见反馈', icon: MessageSquareText },
@@ -125,6 +126,16 @@ export default function SettingsPage() {
                   );
                 })}
               </div>
+            </div>
+          </section>
+
+          <section id="settings-account" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2"><Cloud className="h-4 w-4 text-emerald-700" /><h2 className="text-base font-black text-ink">{isEn ? 'Account & sync' : '账户与同步'}</h2></div>
+                <p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{isEn ? 'Sign in with an email link to use the cloud repository across devices, or manage the account already signed in on this browser.' : '通过邮箱登录链接启用跨设备云端仓库；若当前浏览器已登录，也可在这里管理或退出账号。'}</p>
+              </div>
+              <button type="button" onClick={() => unsavedGuard.requestAction(() => navigate('/login?mode=account'))} className="min-h-11 rounded-full border border-emerald-200 bg-emerald-50 px-4 text-sm font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">{isEn ? 'Manage account' : '管理账户'}</button>
             </div>
           </section>
 

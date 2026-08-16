@@ -1,0 +1,49 @@
+name: Auth Golden Path
+
+on:
+  push:
+    branches: [agent/auth-magic-link]
+  pull_request:
+    branches: [agent/fix-aquarium-completion-state, main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Auth and data contracts
+        run: |
+          npm run test:auth-boundary
+          npm run test:onboarding-activation
+          npm run test:onboarding-goal-paths
+          npm run test:favorites-repository
+          node --import tsx scripts/test-care-aquarium-hydration.ts
+          node --import tsx scripts/test-identify-repository-hydration.ts
+          npm run test:search-aquarium-hydration
+          node --import tsx scripts/test-onboarding-history-hydration.ts
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-auth-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-auth-preview.log
+          exit 1
+      - name: GP-002 continuous browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp002-ui
