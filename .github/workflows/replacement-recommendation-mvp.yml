@@ -1,0 +1,31 @@
+name: Replacement Recommendation MVP
+
+on:
+  pull_request:
+    branches:
+      - agent/recommendation-grounding-contracts
+  push:
+    branches:
+      - agent/replacement-recommendation-mvp
+
+permissions:
+  contents: read
+
+jobs:
+  replacement-mvp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Replacement recommendation golden cases
+        run: node --import tsx scripts/test-replacement-recommendation-engine.ts
+      - name: Catalog grounding regression
+        run: node --import tsx scripts/test-catalog-grounding-contract.ts
+      - name: Compatibility evidence coverage
+        run: npm run test:compatibility-evidence-coverage
+      - name: Type check
+        run: npm run lint
