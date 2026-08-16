@@ -1,0 +1,51 @@
+name: Relocation Confirmation Entrypoint
+
+on:
+  push:
+    branches:
+      - agent/relocation-confirmation-entrypoint
+  pull_request:
+    paths:
+      - 'src/lib/relocationConfirmationEntrypoint.ts'
+      - 'src/components/compatibility/InterventionComparisonPanel.tsx'
+      - 'scripts/test-relocation-confirmation-entrypoint.ts'
+      - 'scripts/test-relocation-confirmation-entrypoint-ui.mjs'
+      - 'src/lib/relocationExecutionPolicy.ts'
+      - 'src/components/compatibility/RelocationConfirmationDialog.tsx'
+      - '.github/workflows/relocation-confirmation-entrypoint.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  confirmation-entrypoint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Confirmation entrypoint source-scope regression
+        run: node --import tsx scripts/test-relocation-confirmation-entrypoint.ts
+      - name: Confirmation entrypoint UI static contract
+        run: node scripts/test-relocation-confirmation-entrypoint-ui.mjs
+      - name: Confirmation state regression
+        run: node --import tsx scripts/test-relocation-confirmation-state.ts
+      - name: Confirmation dialog static contract
+        run: node scripts/test-relocation-confirmation-ui-contract.mjs
+      - name: Fresh execution policy regression
+        run: node --import tsx scripts/test-relocation-execution-policy.ts
+      - name: Ambiguous mutation outcome regression
+        run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
+      - name: Tank decision support regression
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Destination evaluator regression
+        run: node --import tsx scripts/test-relocation-destination-evaluator.ts
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: TypeScript
+        run: npm run lint
+      - name: Production build
+        run: npm run build
