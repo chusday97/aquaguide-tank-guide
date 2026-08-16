@@ -1,79 +1,119 @@
-import { loggerService } from '../logger/logger.service';
-import { authStateSchema, AuthState } from './auth.schema';
+import type { Session } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '../../lib/supabaseClient';
+import {
+  CARE_ACTIVITY_CHANGED_EVENT,
+  CARE_COMPLETED_OPERATIONS_STORAGE_KEY,
+  CARE_REMINDERS_STORAGE_KEY,
+  CARE_SAVED_CHECKLISTS_STORAGE_KEY,
+} from '../care/care-activity.service';
+import {
+  CARE_FAVORITES_STORAGE_KEY,
+  FAVORITES_CHANGED_EVENT,
+} from '../favorites/favorites.service';
+import { APP_STATE_CHANGED_EVENT, clearLocalAppState } from '../storage/local-app-state';
 
-export type SignInResult =
-  | { ok: true; userId: string; email?: string }
-  | { ok: false; reason: 'missing_config' | 'invalid_credentials' | 'network' | 'unknown'; message: string };
+export type MagicLinkResult =
+  | { ok: true; email: string; redirectTo: string; reason?: never; message?: never }
+  | { ok: false; reason: 'missing_config' | 'invalid_email' | 'rate_limited' | 'network' | 'unknown'; message: string; email?: never; redirectTo?: never };
 
-const isNetworkError = (message: string) => (
-  /fetch|network|failed to fetch|load failed|timeout|abort/i.test(message)
-);
+export type SignOutResult =
+  | { ok: true; reason?: never; message?: never }
+  | { ok: false; reason: 'missing_config' | 'network' | 'unknown'; message: string };
 
-const isInvalidCredentialsError = (message: string) => (
-  /invalid login credentials|invalid credentials|email not confirmed|invalid email or password/i.test(message)
-);
+export const normalizeAuthEmail = (value: string) => value.trim().toLowerCase();
+
+const isEmailLike = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+const isNetworkError = (message: string) => /fetch|network|failed to fetch|load failed|timeout|abort/i.test(message);
+const isRateLimitError = (message: string) => /rate|limit|too many|seconds|email rate/i.test(message);
+
+const emitClearedUserData = () => {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new Event(APP_STATE_CHANGED_EVENT));
+  window.dispatchEvent(new Event(FAVORITES_CHANGED_EVENT));
+  window.dispatchEvent(new Event(CARE_ACTIVITY_CHANGED_EVENT));
+};
+
+export const clearSignedInUserLocalData = () => {
+  clearLocalAppState();
+  if (typeof window !== 'undefined') {
+    [
+      CARE_FAVORITES_STORAGE_KEY,
+      CARE_REMINDERS_STORAGE_KEY,
+      CARE_COMPLETED_OPERATIONS_STORAGE_KEY,
+      CARE_SAVED_CHECKLISTS_STORAGE_KEY,
+    ].forEach(key => window.localStorage.removeItem(key));
+  }
+  emitClearedUserData();
+};
 
 export const authService = {
-  getCurrentUser: (): AuthState => {
-    const fallback: AuthState = { user: { id: 'local-user', nickname: '本地用户' } };
-    const parsed = authStateSchema.safeParse(fallback);
-    if (!parsed.success) {
-      loggerService.error({ module: 'auth', action: 'getCurrentUser', message: 'Fallback auth state failed validation', details: parsed.error.flatten() });
-      return { user: null };
-    }
+  isConfigured: () => isSupabaseConfigured && Boolean(supabase),
 
-    loggerService.info({ module: 'auth', action: 'getCurrentUser', message: 'Returned local auth user' });
-    return parsed.data;
+  getSession: async (): Promise<Session | null> => {
+    if (!supabase) return null;
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw new Error('暂时无法读取登录状态。');
+    return data.session;
   },
 
-  signInWithEmailPassword: async (email: string, password: string): Promise<SignInResult> => {
+  sendMagicLink: async (rawEmail: string): Promise<MagicLinkResult> => {
     if (!isSupabaseConfigured || !supabase) {
-      loggerService.warn({
-        module: 'auth',
-        action: 'signInWithEmailPassword',
-        message: 'Supabase auth is not configured',
-      });
-      return { ok: false, reason: 'missing_config', message: 'Supabase auth is not configured' };
+      return { ok: false, reason: 'missing_config', message: '登录服务尚未配置。' };
+    }
+    const email = normalizeAuthEmail(rawEmail);
+    if (!isEmailLike(email)) {
+      return { ok: false, reason: 'invalid_email', message: '请输入有效的邮箱地址。' };
     }
 
+    const redirectTo = `${window.location.origin}/login?callback=1`;
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: redirectTo,
+          shouldCreateUser: true,
+        },
+      });
       if (error) {
-        const message = error.message || 'Login failed';
-        const reason = isInvalidCredentialsError(message)
-          ? 'invalid_credentials'
-          : isNetworkError(message)
-            ? 'network'
-            : 'unknown';
-        loggerService.warn({
-          module: 'auth',
-          action: 'signInWithEmailPassword',
-          message,
-          details: { reason },
-        });
-        return { ok: false, reason, message };
+        const message = error.message || 'Magic link request failed';
+        if (isRateLimitError(message)) return { ok: false, reason: 'rate_limited', message: '发送过于频繁，请稍后再试。' };
+        if (isNetworkError(message)) return { ok: false, reason: 'network', message: '网络连接失败，请稍后重试。' };
+        return { ok: false, reason: 'unknown', message: '登录链接没有发送成功，请稍后重试。' };
       }
-
-      if (!data.user) {
-        return { ok: false, reason: 'unknown', message: 'No user returned from Supabase' };
-      }
-
-      loggerService.info({
-        module: 'auth',
-        action: 'signInWithEmailPassword',
-        message: 'Supabase login succeeded',
-        details: { userId: data.user.id },
-      });
-      return { ok: true, userId: data.user.id, email: data.user.email || email };
+      return { ok: true, email, redirectTo };
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Network error';
-      loggerService.error({
-        module: 'auth',
-        action: 'signInWithEmailPassword',
-        message,
-      });
-      return { ok: false, reason: isNetworkError(message) ? 'network' : 'unknown', message };
+      const message = error instanceof Error ? error.message : '';
+      return {
+        ok: false,
+        reason: isNetworkError(message) ? 'network' : 'unknown',
+        message: isNetworkError(message) ? '网络连接失败，请稍后重试。' : '登录链接没有发送成功，请稍后重试。',
+      };
+    }
+  },
+
+  signOut: async (): Promise<SignOutResult> => {
+    if (!isSupabaseConfigured || !supabase) {
+      return { ok: false, reason: 'missing_config', message: '登录服务尚未配置。' };
+    }
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        const message = error.message || 'Sign out failed';
+        return {
+          ok: false,
+          reason: isNetworkError(message) ? 'network' : 'unknown',
+          message: isNetworkError(message) ? '网络连接失败，当前账号尚未退出。' : '退出登录没有完成，请稍后重试。',
+        };
+      }
+      clearSignedInUserLocalData();
+      return { ok: true };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      return {
+        ok: false,
+        reason: isNetworkError(message) ? 'network' : 'unknown',
+        message: isNetworkError(message) ? '网络连接失败，当前账号尚未退出。' : '退出登录没有完成，请稍后重试。',
+      };
     }
   },
 };
