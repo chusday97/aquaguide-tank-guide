@@ -1,5 +1,5 @@
 name: Apply Care Relocation Confirmation Wiring Once
-# Retry after TEST-003 was corrected from source-line adjacency to capability assertions.
+# Retry after TEST-003 capability assertions and TYPE-001 explicit discriminant fix.
 
 on:
   push:
