@@ -1,0 +1,35 @@
+name: Quick Diagnosis Conflict Augmentation
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/quickDiagnosisConflictAugmentation.ts'
+      - 'src/lib/diagnosisConflictEvidence.ts'
+      - 'src/lib/tankDecisionSupportOrchestrator.ts'
+      - 'scripts/test-quick-diagnosis-conflict-augmentation.ts'
+      - 'scripts/test-diagnosis-conflict-evidence.ts'
+      - 'scripts/test-reviewed-severe-risk-regression.ts'
+      - '.github/workflows/quick-diagnosis-conflict-augmentation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quick-diagnosis-augmentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Quick Diagnosis augmentation golden cases
+        run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
+      - name: Diagnosis conflict regression
+        run: node --import tsx scripts/test-diagnosis-conflict-evidence.ts
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Type check
+        run: npm run lint
