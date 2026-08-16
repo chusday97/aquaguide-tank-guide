@@ -64,10 +64,12 @@ try {
   await page.getByText('你主要看到了什么？', { exact: true }).waitFor();
   await page.getByRole('button', { name: '追咬打架', exact: true }).click();
 
-  const abnormalQuestion = page.getByText('是否有拒食、躲藏或死亡？', { exact: true }).locator('..').locator('..');
-  await abnormalQuestion.getByRole('button', { name: '没有', exact: true }).click();
-  const newLivestockQuestion = page.getByText('最近是否新增生物？', { exact: true }).locator('..').locator('..');
-  await newLivestockQuestion.getByRole('button', { name: '没有', exact: true }).click();
+  await page.getByText('是否有拒食、躲藏或死亡？', { exact: true }).waitFor();
+  await page.getByText('最近是否新增生物？', { exact: true }).waitFor();
+  const noneButtons = page.getByRole('button', { name: '没有', exact: true });
+  assert.ok(await noneButtons.count() >= 2, 'aggression diagnosis must render two explicit “没有” answer options');
+  await noneButtons.nth(0).click();
+  await noneButtons.nth(1).click();
 
   const showAdvice = page.getByRole('button', { name: '查看处理建议', exact: true });
   await showAdvice.waitFor();
