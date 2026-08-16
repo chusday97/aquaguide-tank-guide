@@ -24,7 +24,7 @@
 
 **Required:** direct confirmation only when the formal subject maps to exactly one factual source record.
 
-**Current fix:** `buildRelocationConfirmationEntrypoint()` requires `sourceRecordIds.length === 1`; multi-record regression passed in CI run `31961302689`.
+**Current fix:** `buildRelocationConfirmationEntrypoint()` requires `sourceRecordIds.length === 1`; multi-record regression passed in CI.
 
 ## REL-035 — Formal whole-subject quantity spans multiple batches, opener picks the first batch
 
@@ -34,7 +34,7 @@
 
 **Required:** never use `batches[0]`; direct confirmation requires exactly one positive source batch representing the entire formal option.
 
-**Current fix:** entrypoint requires exactly one positive batch and panel explicitly explains the multi-batch limitation. Regression passed in CI run `31961302689`.
+**Current fix:** entrypoint requires exactly one positive batch and panel explicitly explains the multi-batch limitation. Regression passed in CI.
 
 ## REL-036 — Destination card status is copied into candidate as execution authorization
 
@@ -44,7 +44,7 @@
 
 **Required:** current `compatible_by_current_evidence` may only decide whether an opener is displayed. Launch candidate contains identifiers/facts, not authorization. PR #63 re-evaluates again before mutation.
 
-**Current fix:** candidate has no `operationId`, safety boolean or cached verdict. Pure entrypoint regression checks serialized candidate. UI static contract also guards this boundary.
+**Current fix:** candidate has no `operationId`, safety boolean or cached verdict. Pure entrypoint regression checks serialized candidate. UI static contract guards this boundary.
 
 ## REL-037 — Record quantity, batch quantity and formal option quantity disagree
 
@@ -52,7 +52,7 @@
 
 **Required:** fail closed unless factual record quantity and selected batch quantity both equal the formal whole-subject quantity.
 
-**Current fix:** separate record-quantity and batch-quantity guards; both regressions passed in CI run `31961302689`.
+**Current fix:** separate record-quantity and batch-quantity guards; regressions passed in CI.
 
 ## REL-038 — Source record has no explicit batches but opener fabricates a batch identity
 
@@ -60,7 +60,7 @@
 
 **Required:** no explicit factual batch = no direct confirmation entry under #62 v1.
 
-**Current fix:** `source_batch_missing`; regression passed in CI run `31961302689`.
+**Current fix:** `source_batch_missing`; regression passed in CI.
 
 ## REL-039 — Multiple positive batches exist but one matching batch is accepted despite contradictory storage
 
@@ -68,21 +68,31 @@
 
 **Required:** exactly one positive source batch, not merely one matching batch.
 
-**Current fix:** `positiveBatches.length === 1` is mandatory before quantity matching; regression passed in CI run `31961302689`.
+**Current fix:** `positiveBatches.length === 1` is mandatory before quantity matching; regression passed in CI.
 
 ## TEST-001 — Static UI contract mis-parses optional callback syntax
 
-**Observed in first entrypoint CI run:** source-scope regression passed, UI static contract failed because the regex expected:
-
-`onOpenRelocationConfirmation?(candidate)`
-
-while valid TypeScript/JavaScript optional-call syntax is:
-
-`onOpenRelocationConfirmation?.(candidate)`
+**Observed:** source-scope regression passed, UI static contract failed because the regex expected `onOpenRelocationConfirmation?(candidate)` while valid optional-call syntax is `onOpenRelocationConfirmation?.(candidate)`.
 
 **Classification:** test-harness false failure, not product-policy failure.
 
-**Fix:** static regex corrected to `?.(`. No product gate was relaxed.
+**Fix:** regex corrected. No product gate was relaxed.
+
+## TEST-002 — Entrypoint workflow references a non-existent inherited confirmation test
+
+**Observed in CI run `31961390757`:** entrypoint source-scope, entrypoint UI static contract, and confirmation-state regression all passed. The next job failed with:
+
+`MODULE_NOT_FOUND: scripts/test-relocation-confirmation-ui-contract.mjs`
+
+**Root cause:** the entrypoint workflow guessed an inherited #64 test filename. PR #64's real permanent verifier is:
+
+`scripts/verify-relocation-confirmation-surface.mjs`
+
+**Classification:** CI configuration failure. No `RelocationConfirmationDialog` assertion ran, so this is not evidence of a product regression.
+
+**Required:** downstream stacked workflows must call the canonical test file already declared by the parent PR workflow instead of inventing a parallel filename.
+
+**Fix in progress:** point the entrypoint workflow to `verify-relocation-confirmation-surface.mjs`, then rerun full gates.
 
 ## Entry-point exit gate
 
@@ -100,5 +110,5 @@ Before this layer can be described as safe:
 - `InterventionComparisonPanel` imports no repository/API/Supabase code;
 - clicking the entry calls only the provided confirmation-opener callback;
 - no mutation is executed by this PR;
-- full confirmation/policy/decision/type/build gates pass after the static-contract fix;
+- full confirmation/policy/decision/type/build gates pass with canonical parent verifiers;
 - handoff/badcase remain updated as new failures are found.
