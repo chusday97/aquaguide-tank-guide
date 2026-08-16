@@ -68,17 +68,14 @@ const destinationUnknown = buildTankDecisionSupport({
 assert.equal(destinationUnknown.destinationSetProvided, false);
 assert.deepEqual(destinationUnknown.relocationDestinations, [], 'omitted aquarium set must stay unknown, not become no-existing-destination');
 
+// PR #38's repository mirror uses `fishId=unresolved:<record-id>` for cloud-hydrated
+// unresolved livestock. That string is the cross-stack compatibility contract here;
+// this recommendation branch intentionally does not depend on #38's not-yet-merged
+// identityStatus/rawName type additions.
 const partialSource = makeTank('partial-source', 'Partial Source', [
   { id: 'predator-record-partial', fishId: predator.id, quantity: 1, entryDate: '2026-08-16T00:00:00.000Z' },
   { id: 'neon-record-partial', fishId: neon.id, quantity: 5, entryDate: '2026-08-16T00:00:00.000Z' },
-  {
-    id: 'unknown-record',
-    fishId: 'unresolved:real-cloud-record',
-    identityStatus: 'unresolved',
-    rawName: '用户记录但身份未确认的生物',
-    quantity: 1,
-    entryDate: '2026-08-16T00:00:00.000Z',
-  },
+  { id: 'unknown-record', fishId: 'unresolved:real-cloud-record', quantity: 1, entryDate: '2026-08-16T00:00:00.000Z' },
 ]);
 const partial = buildTankDecisionSupport({
   aquarium: partialSource,
@@ -100,8 +97,6 @@ assert.deepEqual(partial.relocationDestinations, [], 'no destination should be p
 const onlyUnknown = makeTank('unknown-only-source', 'Unknown Only Source', [{
   id: 'unknown-only-record',
   fishId: 'unresolved:only-resident',
-  identityStatus: 'unresolved',
-  rawName: '未知生物',
   quantity: 2,
   entryDate: '2026-08-16T00:00:00.000Z',
 }]);
