@@ -25,6 +25,8 @@ jobs:
       - run: npm ci
       - name: Generate research-only evidence priority queue
         shell: bash
+        env:
+          EVIDENCE_QUEUE_OUTPUT: /tmp/compatibility-evidence-research-queue.json
         run: |
           set -euo pipefail
           node --import tsx scripts/audit-compatibility-evidence-gaps.ts | tee /tmp/evidence-gap-audit-output.txt
@@ -37,6 +39,13 @@ jobs:
             sed '$d' /tmp/evidence-gap-audit-output.txt
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload machine-readable research queue
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-evidence-research-queue
+          path: /tmp/compatibility-evidence-research-queue.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Contextual evidence regression
         run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
       - name: Type check
