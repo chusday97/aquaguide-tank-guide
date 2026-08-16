@@ -37,63 +37,65 @@ Full one-shot run `31963163536`: GREEN through page static contract, canonical-v
 ## Browser acceptance badcases
 
 ### REL-050 — opening confirmation mutates immediately
-Opener must display confirmation with mutation count 0.
+Current evidence: **protected in rendered browser**. GP-REL-01 diagnostic rerun confirmed zero business relocation transitions before confirm.
 
 ### REL-051 — rapid/double confirm creates two mutations
-Browser must prove exactly one business relocation transition despite rapid interaction.
+Current evidence: **protected in rendered browser**. Run `31964475428` reached completed state after programmatic rapid double click and the subsequent assertion `business relocation transition count === 1` passed before the later Close-locator failure.
 
 ### REL-052 — stale rendered destination still moves
-Target change after card render must fresh-block with mutation count 0.
+Target change after card render must fresh-block with mutation count 0. Not yet reached in suite.
 
 ### REL-053 — success UI leaves conflict cards stale
-Rendered Care decisions must reflect canonical post-state without reload.
+Rendered Care decisions must reflect canonical post-state without reload. The assertion exists but has not yet run because the preceding Close locator failed.
 
 ### REL-054 — Escape/overlay closes uncertainty dialog
-Rendered Radix dialog must remain open while reconciliation is required.
+Rendered Radix dialog must remain open while reconciliation is required. Not yet reached.
 
 ### REL-055 — reconciliation visually unlocks before canonical read succeeds
-Sync failure/pending keeps lock; successful read renders reconciled state, then Close unlocks.
+Sync failure/pending keeps lock; successful read renders reconciled state, then Close unlocks. Not yet reached.
 
 ### REL-056 — deterministic local browser harness is misreported as hosted/Supabase acceptance
 Browser harness and real hosted/Auth acceptance remain separate gates.
 
 ### REL-057 — browser fixture bypasses real source-scope builder
-Browser test must seed the reviewed source community and click the real rendered `进入迁移确认` CTA. Synthetic dialog/request injection is not accepted.
+Browser test seeds the reviewed source community and clicks the real rendered `进入迁移确认` CTA. Synthetic dialog/request injection is not accepted.
 
 ### REL-058 — multi-record/multi-batch case silently hides execution limitation
-Rendered user must see deterministic source-scope reason, not merely absence of CTA.
+Rendered user must see deterministic source-scope reason, not merely absence of CTA. Not yet reached.
 
 ### REL-059 — real species fixture bypasses reviewed conflict construction
-Seed full `sp_0021 ×1 + sp_0439 ×6` community plus separate target so the real decision engine creates the formal option.
+Browser GP seeds full `sp_0021 ×1 + sp_0439 ×6` community plus separate target, so the real decision engine creates the formal option.
 
 ### REL-060 — browser success checks markers but not visible facts
-GP-REL-01 must assert visible `冲突缸 / 安全目标缸 / 虎皮鱼 / 6` and zero relocation before confirm.
+Current evidence: **protected**. Run `31964475428` passed visible `冲突缸 / 安全目标缸 / 虎皮鱼 / 6` assertions before confirm.
 
-## BROWSER-OBS-001 — first valid rendered run failed after completed state, exact assertion not yet recovered
+## TEST-005 — ambiguous `关闭` role locator after successful relocation
 
-Run `31964201289` is the first browser run with Chromium + pure Vite successfully started and the actual page-level suite executed.
+Diagnostic rerun `31964475428` captured the exact Playwright failure:
 
-Uploaded screenshot for `gp-rel-01-02-success` shows the real confirmation dialog in green completed state with the correct four visible facts:
+`getByRole('button', { name: '关闭' })` violated strict mode because it matched two controls inside/around the rendered dialog:
+1. the intended bottom action button containing visible text `关闭`;
+2. Radix's built-in `DialogClose` control, whose accessible name is also `关闭`.
 
-- `冲突缸`;
-- `安全目标缸`;
-- `虎皮鱼`;
-- `6`;
-- `迁移已完成，并已重新计算两个鱼缸`.
+Failure line: `scripts/test-care-relocation-browser-golden-path.mjs:242`.
 
-**Bounded classification:**
-- GP-REL-01 is rendered-green.
-- GP-REL-02 reached `data-relocation-completed`.
-- failure is after success rendering, so it can only be in the remaining post-success assertions: source/target stored quantities, business transition count, dialog Close, or Care post-state redraw.
+**Classification:** browser test locator ambiguity, not product behavior failure.
 
-**Do not yet classify this as REL-051 or REL-053.** Current GitHub job-log surface did not expose the Node assertion stderr, and the artifact had only screenshot + healthy Vite log.
+**Important proof from execution order:** all assertions before line 242 passed, including:
+- GP-REL-01 correct four visible facts and zero pre-confirm relocation;
+- rapid double-confirm reaches completed state;
+- source tiger quantity becomes 0;
+- target tiger quantity becomes 6;
+- **actual business relocation transition count is exactly 1**.
 
-**Required diagnostic action:** rerun the exact same script/assertions with stdout/stderr tee'd into an uploaded browser-test log. This is diagnostics-only; no product code and no GP assertion may be changed before the exact failure is known.
+Therefore REL-050 and REL-051 are currently green in deterministic rendered browser testing. REL-053 is still unproven because its post-Close redraw assertion occurs after line 242.
+
+**Required fix:** test-only locator refinement to the explicit bottom Close action (e.g. visible-text button within the confirmation dialog), not `.first()` guessing and not any product/assertion change.
 
 ## Browser Golden Path exit gate
 
-- GP-REL-01 reviewed rendered intervention → opener → correct four visible facts; zero mutation before confirm — evidence currently green from run `31964201289`, pending full suite rerun.
-- GP-REL-02 success + rapid double-confirm → exactly one relocation + visible canonical post-state refresh — incomplete; completed UI reached but post-success assertion failed.
+- GP-REL-01 reviewed rendered intervention → opener → correct four visible facts; zero mutation before confirm — **green** in `31964475428`.
+- GP-REL-02 success + rapid double-confirm → exactly one relocation — **core green**; post-Close rendered Care redraw still pending.
 - GP-REL-03 target changes after render → fresh blocked UI, zero mutation — not yet reached.
 - GP-REL-04 uncertain mutation → non-dismissible sync-only recovery — not yet reached.
 - GP-REL-05 multi-batch source-scope limitation visible — not yet reached.
