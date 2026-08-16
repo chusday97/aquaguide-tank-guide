@@ -1,0 +1,33 @@
+name: Diagnosis Conflict Evidence
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/diagnosisConflictEvidence.ts'
+      - 'src/lib/tankDecisionSupportOrchestrator.ts'
+      - 'src/lib/communityConflictGraph.ts'
+      - 'src/lib/conflictActionEngine.ts'
+      - 'scripts/test-diagnosis-conflict-evidence.ts'
+      - 'scripts/test-tank-decision-support-orchestrator.ts'
+      - '.github/workflows/diagnosis-conflict-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnosis-conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Diagnosis conflict golden cases
+        run: node --import tsx scripts/test-diagnosis-conflict-evidence.ts
+      - name: Decision support regression
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Type check
+        run: npm run lint
