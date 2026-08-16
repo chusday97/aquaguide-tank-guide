@@ -8,6 +8,7 @@ on:
     paths:
       - 'src/lib/relocationExecutionPolicy.ts'
       - 'scripts/test-relocation-execution-policy.ts'
+      - 'scripts/test-relocation-mutation-uncertainty.ts'
       - 'src/lib/tankDecisionSupportOrchestrator.ts'
       - 'src/lib/relocationDestinationEvaluator.ts'
       - 'src/lib/relocationDestinationContext.ts'
@@ -28,6 +29,8 @@ jobs:
       - run: npm ci
       - name: Fresh relocation execution policy
         run: node --import tsx scripts/test-relocation-execution-policy.ts
+      - name: Ambiguous mutation outcome regression
+        run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
       - name: Tank decision support regression
         run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
       - name: Destination evaluator regression
