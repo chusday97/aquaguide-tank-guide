@@ -88,7 +88,13 @@ import {
   type SpeciesAdditionItem,
   type SpeciesAdditionReview,
 } from '../services/aquarium/species-addition.service';
-import { recordExistingLivestock, type RecordExistingResult } from '../services/aquarium/livestock-recording.service';
+import {
+  getExistingLivestockItemKey,
+  getExistingLivestockItemLabel,
+  isVerifiedExistingLivestockItem,
+  recordExistingLivestock,
+  type RecordExistingResult,
+} from '../services/aquarium/livestock-recording.service';
 import { createAquariumDraft, getAquariumSetupFacts, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import { useToast } from '../components/common/ToastProvider';
@@ -2094,10 +2100,12 @@ export default function AquariumManager() {
         showToast('入缸时间线没有保存成功。', 'error');
       }
       const successItems = result.savedItems.map(item => {
-        const fish = fishData.find(candidate => candidate.id === item.fishId);
+        const fish = isVerifiedExistingLivestockItem(item)
+          ? fishData.find(candidate => candidate.id === item.fishId)
+          : undefined;
         return {
-          fishId: item.fishId,
-          name: fish?.name || '生物',
+          fishId: getExistingLivestockItemKey(item),
+          name: getExistingLivestockItemLabel(item, fishData) || '生物',
           image: fish ? getSpeciesDisplayImage(fish) : '',
           quantity: item.quantity,
           entryDate: item.entryDate || format(new Date(), 'yyyy-MM-dd'),
@@ -2106,11 +2114,15 @@ export default function AquariumManager() {
       setAddFishCompatibilityReview(null);
       setAddFishSuccess({ aquariumName: result.aquarium.name, items: successItems, result });
       if (result.failedItems.length === 0) addFishOperationIdRef.current = '';
-      setSelectedAddFishItems(result.failedItems.map(item => ({
-        fishId: item.fishId,
-        quantity: item.quantity,
-        entryDate: item.entryDate || format(new Date(), 'yyyy-MM-dd'),
-      })));
+      setSelectedAddFishItems(result.failedItems.flatMap(item => (
+        isVerifiedExistingLivestockItem(item)
+          ? [{
+              fishId: item.fishId,
+              quantity: item.quantity,
+              entryDate: item.entryDate || format(new Date(), 'yyyy-MM-dd'),
+            }]
+          : []
+      )));
       setFishSearchTerm('');
       setAddFishDatePicker(null);
       showToast(result.failedItems.length > 0
@@ -2257,7 +2269,7 @@ export default function AquariumManager() {
     await recordAddedSpeciesBatches(activeAquarium, result.aquarium);
     if (result.failedItems.length > 0) {
       const failedNames = result.failedItems
-        .map(item => fishData.find(fish => fish.id === item.fishId)?.name || item.fishId)
+        .map(item => getExistingLivestockItemLabel(item, fishData))
         .join('、');
       throw new Error(Boolean(i18n.language?.startsWith('en'))
         ? `${result.savedItems.length} species were recorded; ${result.failedItems.length} still need retrying.`
@@ -6415,7 +6427,7 @@ export default function AquariumManager() {
                   {addFishSuccess.result.failedItems.length > 0 && (
                     <div className="rounded-[16px] border border-amber-200 bg-amber-50 p-3 text-[11px] font-bold text-amber-900">
                       {addFishSuccess.result.failedItems.map(item => (
-                        <div key={item.fishId}>{fishData.find(fish => fish.id === item.fishId)?.name || item.fishId}：{item.message}</div>
+                        <div key={getExistingLivestockItemKey(item)}>{getExistingLivestockItemLabel(item, fishData)}：{item.message}</div>
                       ))}
                     </div>
                   )}

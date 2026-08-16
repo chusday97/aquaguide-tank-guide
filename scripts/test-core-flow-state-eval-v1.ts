@@ -174,8 +174,8 @@ const partial = await recordExistingLivestock({
   ],
   speciesCatalog: [freshwater, companion], operationId: 'cf-partial',
 });
-assert.deepEqual(partial.savedItems.map(item => item.fishId), [freshwater.id]);
-assert.deepEqual(partial.failedItems.map(item => item.fishId), [companion.id]);
+assert.deepEqual(partial.savedItems.flatMap(item => 'fishId' in item ? [item.fishId] : []), [freshwater.id]);
+assert.deepEqual(partial.failedItems.flatMap(item => 'fishId' in item ? [item.fishId] : []), [companion.id]);
 assert.equal(partial.failedItems[0]?.message, '该生物没有保存成功，请重试。');
 assert.equal(partial.failedItems[0]?.message.includes('HTTP'), false);
 assert.equal(partial.failedItems[0]?.message.includes('database'), false);

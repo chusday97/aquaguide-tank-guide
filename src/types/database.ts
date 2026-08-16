@@ -28,6 +28,7 @@ export type CareActionKind = 'immediate' | 'avoid' | 'observe' | 'recheck';
 export type MigrationStatus = 'previewed' | 'committing' | 'completed' | 'failed';
 export type LifeStage = 'unknown' | 'juvenile' | 'adult';
 export type ReproductiveState = 'unknown' | 'not_applicable' | 'normal' | 'pregnant_or_gravid' | 'in_labor_or_spawning' | 'postpartum_recovery';
+export type LivestockIdentityStatus = 'verified' | 'unresolved';
 export type FeedbackCategory = 'suggestion' | 'problem' | 'content' | 'other';
 export type FeedbackStatus = 'new' | 'reviewed' | 'closed';
 export type FeedbackEmailDeliveryStatus = 'not_configured' | 'sent' | 'failed';
@@ -325,7 +326,9 @@ export interface AquariumSpeciesRecord extends SyncFields {
   id: Uuid;
   aquariumId: Uuid;
   speciesId?: Uuid;
-  speciesCatalogKey: string;
+  speciesCatalogKey?: string;
+  identityStatus: LivestockIdentityStatus;
+  rawName?: string;
   quantity: number;
   entryDate: IsoDate;
   lastWaterChangeAt?: IsoDateTime;

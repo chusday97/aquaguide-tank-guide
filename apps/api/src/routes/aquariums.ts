@@ -204,25 +204,51 @@ aquariumsRouter.post('/aquariums/:id/species', asyncRoute(async (request, respon
   const client = userClientFor(request);
   const userId = authenticatedRequest(request).authUser.id;
   const operationKey = requireIdempotencyKey(request);
+  const identityKey = parsed.data.identityStatus === 'unresolved'
+    ? 'unresolved'
+    : parsed.data.speciesCatalogKey;
   const recordId = deterministicUuid(`${userId}:${aquariumId}:species:${operationKey}`);
-  const batchId = deterministicUuid(`${userId}:${aquariumId}:${parsed.data.speciesCatalogKey}:batch:${operationKey}`);
-  const { data: operationRows, error: operationError } = await client.rpc('add_aquarium_livestock', {
-    target_aquarium_id: aquariumId,
-    target_species_catalog_key: parsed.data.speciesCatalogKey,
-    target_quantity: parsed.data.quantity,
-    target_entry_date: parsed.data.entryDate,
-    target_last_water_change_at: parsed.data.lastWaterChangeAt ?? null,
-    target_life_stage: parsed.data.lifeStage,
-    target_reproductive_state: parsed.data.reproductiveState,
-    new_species_record_id: recordId,
-    new_batch_id: batchId,
-    operation_key: operationKey,
-    operation_request_hash: getRequestHash(request),
-  });
-  if (operationError) throwLivestockAdditionRpcError(operationError);
-  const savedRecordId = operationRows?.[0]?.species_record_id as string | undefined;
-  if (!savedRecordId) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '物种记录已经提交，但暂时无法确认保存结果。');
+  const batchId = deterministicUuid(`${userId}:${aquariumId}:${identityKey}:batch:${operationKey}`);
 
+  const rpcResult = parsed.data.identityStatus === 'unresolved'
+    ? await client.rpc('add_unresolved_aquarium_livestock', {
+        target_aquarium_id: aquariumId,
+        target_raw_name: parsed.data.rawName,
+        target_quantity: parsed.data.quantity,
+        target_entry_date: parsed.data.entryDate,
+        target_life_stage: parsed.data.lifeStage,
+        target_reproductive_state: parsed.data.reproductiveState,
+        new_species_record_id: recordId,
+        new_batch_id: batchId,
+        operation_key: operationKey,
+        operation_request_hash: getRequestHash(request),
+      })
+    : await client.rpc('add_aquarium_livestock', {
+        target_aquarium_id: aquariumId,
+        target_species_catalog_key: parsed.data.speciesCatalogKey,
+        target_quantity: parsed.data.quantity,
+        target_entry_date: parsed.data.entryDate,
+        target_last_water_change_at: parsed.data.lastWaterChangeAt ?? null,
+        target_life_stage: parsed.data.lifeStage,
+        target_reproductive_state: parsed.data.reproductiveState,
+        new_species_record_id: recordId,
+        new_batch_id: batchId,
+        operation_key: operationKey,
+        operation_request_hash: getRequestHash(request),
+      });
+
+  if (rpcResult.error) {
+    if (parsed.data.identityStatus === 'unresolved') {
+      if (rpcResult.error.message?.includes('AQUARIUM_NOT_FOUND')) throw new ApiError(404, 'NOT_FOUND', '没有找到这个鱼缸。');
+      if (rpcResult.error.message?.includes('DUPLICATE_OPERATION_KEY')) throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一项修改。');
+      if (rpcResult.error.message?.includes('INVALID_RAW_NAME')) throw new ApiError(400, 'VALIDATION_ERROR', '未确认生物名称无效。');
+      throwDatabaseError(rpcResult.error, '未确认生物没有保存成功。');
+    }
+    throwLivestockAdditionRpcError(rpcResult.error);
+  }
+
+  const savedRecordId = rpcResult.data?.[0]?.species_record_id as string | undefined;
+  if (!savedRecordId) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '物种记录已经提交，但暂时无法确认保存结果。');
   const created = await getOwnedSpeciesRecord(client, aquariumId, savedRecordId);
   return sendData(request, response, mapAquariumSpecies(created), 201);
 }));

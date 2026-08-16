@@ -34,9 +34,13 @@ export interface Fish {
   isCustom?: boolean;
 }
 
+export type LivestockIdentityStatus = 'verified' | 'unresolved';
+
 export interface AquariumFish {
   id: string;
-  fishId: string;
+  fishId: string; // canonical catalog key for verified records; explicit unresolved:* mirror key otherwise
+  identityStatus?: LivestockIdentityStatus;
+  rawName?: string;
   quantity: number;
   entryDate: string; // ISO string
   lastWaterChangeDate?: string; // ISO string; unknown until a real water-change record exists
