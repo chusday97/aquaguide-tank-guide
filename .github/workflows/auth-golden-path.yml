@@ -23,6 +23,7 @@ jobs:
       - name: Auth and data contracts
         run: |
           npm run test:auth-boundary
+          node --check scripts/verify-auth-two-device-cloud.mjs
           npm run test:onboarding-activation
           npm run test:onboarding-goal-paths
           npm run test:favorites-repository
