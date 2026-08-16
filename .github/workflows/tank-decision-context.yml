@@ -1,0 +1,37 @@
+name: Tank Decision Context
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/tankDecisionContext.ts'
+      - 'src/lib/relocationDestinationContext.ts'
+      - 'src/lib/replacementRecommendationEngine.ts'
+      - 'src/modules/recommendation/catalog-grounding.ts'
+      - 'src/modules/species/speciesAliases.ts'
+      - 'scripts/test-tank-decision-context.ts'
+      - 'scripts/test-replacement-recommendation-engine.ts'
+      - 'scripts/test-relocation-destination-evaluator.ts'
+      - '.github/workflows/tank-decision-context.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  decision-context:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tank decision context golden cases
+        run: node --import tsx scripts/test-tank-decision-context.ts
+      - name: Replacement recommendation regression
+        run: node --import tsx scripts/test-replacement-recommendation-engine.ts
+      - name: Destination evaluation regression
+        run: node --import tsx scripts/test-relocation-destination-evaluator.ts
+      - name: Type check
+        run: npm run lint
