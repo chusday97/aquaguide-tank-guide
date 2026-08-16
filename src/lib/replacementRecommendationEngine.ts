@@ -24,6 +24,7 @@ export type ReplacementIntent = {
 export type ReplacementCandidate = {
   species: Fish;
   compatibility: TankCompatibilityResult;
+  evaluationQuantity: number;
   intentMatches: string[];
   evidenceStatus: 'reviewed_behavior' | 'behavior_evidence_missing';
 };
@@ -75,9 +76,18 @@ const getIntentMatches = (candidate: Fish, intent: ReplacementIntent) => {
   return matches;
 };
 
-const hasReviewedBehaviorEvidence = (fish: Fish) => {
+const getReviewedBehaviorProfile = (fish: Fish) => {
   const profile = getReviewedCompatibilityProfile(fish.id);
-  return Boolean(profile && profile.reviewStatus === 'reviewed');
+  return profile?.reviewStatus === 'reviewed' ? profile : null;
+};
+
+const getEvaluationQuantity = (fish: Fish, explicitQuantity?: number) => {
+  const normalizedExplicit = Number(explicitQuantity);
+  if (Number.isFinite(normalizedExplicit) && normalizedExplicit > 0) {
+    return Math.max(1, Math.round(normalizedExplicit));
+  }
+  const reviewedMinimum = getReviewedBehaviorProfile(fish)?.minimumGroupSize;
+  return reviewedMinimum && reviewedMinimum > 1 ? reviewedMinimum : 1;
 };
 
 const candidateRank = (candidate: ReplacementCandidate) => {
@@ -104,7 +114,7 @@ export const recommendReplacementSpecies = ({
   aquarium,
   rejectedSpecies,
   catalog,
-  candidateQuantity = 1,
+  candidateQuantity,
 }: ReplacementRecommendationInput): ReplacementRecommendationResult => {
   const intent = deriveReplacementIntent(rejectedSpecies);
   const catalogById = new Map(catalog.map(species => [species.id, species]));
@@ -134,18 +144,21 @@ export const recommendReplacementSpecies = ({
   let rejectedCandidateCount = 0;
 
   candidatePool.forEach(candidate => {
+    const reviewedProfile = getReviewedBehaviorProfile(candidate);
+    const evaluationQuantity = getEvaluationQuantity(candidate, candidateQuantity);
     const compatibility = evaluateTankCompatibility({
       tank: aquarium,
       existingSpecies,
       candidateSpecies: candidate,
-      candidateQuantity,
+      candidateQuantity: evaluationQuantity,
     });
-    const evidenceStatus = hasReviewedBehaviorEvidence(candidate)
+    const evidenceStatus = reviewedProfile
       ? 'reviewed_behavior' as const
       : 'behavior_evidence_missing' as const;
     const result: ReplacementCandidate = {
       species: candidate,
       compatibility,
+      evaluationQuantity,
       intentMatches: getIntentMatches(candidate, intent),
       evidenceStatus,
     };
