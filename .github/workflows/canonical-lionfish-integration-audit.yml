@@ -78,6 +78,10 @@ jobs:
         run: node --import tsx scripts/test-legacy-marine-category-contradictions.ts
       - name: Taxonomy regression
         run: node --import tsx scripts/assert_taxonomy_rules.ts
+      - name: Canonical Care aquarium hydration contract
+        run: node --import tsx scripts/test-care-aquarium-hydration.ts
+      - name: Canonical Care unknown-facts contract
+        run: node --import tsx scripts/test-care-unknown-facts.ts
       - name: Care conflict decision-surface contract
         run: node scripts/test-care-conflict-decision-surface.mjs
       - name: Tank decision context
