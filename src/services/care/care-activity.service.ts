@@ -55,7 +55,41 @@ export const getCompletedCareOperationsFromEvents = (
       }];
     });
 };
-export type CareSavedChecklist = { id: string; title: string; savedAt: string; actions: string[] };
+export type CareSavedChecklist = {
+  id: string;
+  title: string;
+  savedAt: string;
+  actionKeys?: string[];
+  /** Legacy display-text identities retained only for migration/fallback. */
+  actions?: string[];
+  aquariumId?: string;
+};
+
+export const getCareChecklistActionKey = (topicId: string, actionIndex: number) =>
+  `care-checklist:v1:${topicId}:${actionIndex}`;
+
+export const getSavedCareChecklistForContext = (
+  records: CareSavedChecklist[],
+  topicId: string,
+  aquariumId?: string,
+) => (
+  records.find(item => item.id === topicId && item.aquariumId === aquariumId)
+  || records.find(item => item.id === topicId && !item.aquariumId)
+);
+
+export const getSavedCareChecklistRestoredActions = (
+  record: CareSavedChecklist | undefined,
+  topicId: string,
+  visibleActions: string[],
+) => {
+  if (!record) return [];
+  const stableKeys = new Set(record.actionKeys || []);
+  const legacyActions = record.actions || [];
+  return visibleActions.filter((description, index) => (
+    stableKeys.has(getCareChecklistActionKey(topicId, index))
+    || legacyActions.some(saved => saved === description || saved.endsWith(`：${description}`))
+  ));
+};
 
 type LegacyCareReminderRecord = Partial<CareReminderRecord> & {
   id: string;

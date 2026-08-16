@@ -5,7 +5,9 @@ import {
   configureCareReminderRecurrence,
   deleteCareReminder,
   getCareReminders,
+  getSavedCareChecklists,
   rescheduleCareReminder,
+  setSavedCareChecklists,
   upsertCareReminder,
 } from '../care/care-activity.service';
 import { recordCareTimelineEvent, removeCareTimelineEvent } from '../care/care-timeline.service';
@@ -34,6 +36,7 @@ import type {
   LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
+  CareChecklistProgressMutation,
   WaterChangeMutation,
 } from './aquaguide.repository';
 
@@ -244,6 +247,34 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     if (input.action === 'recurrence') return configureCareReminderRecurrence(input.id, input.repeatEnabled, input.repeatIntervalDays);
     deleteCareReminder(input.id);
     return null;
+  }
+
+  async getCareChecklistProgress(aquariumId?: string) {
+    const records = getSavedCareChecklists();
+    return aquariumId
+      ? records.filter(item => !item.aquariumId || item.aquariumId === aquariumId)
+      : records;
+  }
+
+  async saveCareChecklistProgress(input: CareChecklistProgressMutation) {
+    const record = {
+      id: input.topicId,
+      title: input.title,
+      savedAt: new Date().toISOString(),
+      actionKeys: [...input.actionKeys],
+      actions: input.legacyActions ? [...input.legacyActions] : undefined,
+      aquariumId: input.aquariumId,
+    };
+    const current = getSavedCareChecklists();
+    const next = [
+      record,
+      ...current.filter(item => !(
+        item.id === input.topicId
+        && (item.aquariumId || '') === (input.aquariumId || '')
+      )),
+    ].slice(0, 30);
+    setSavedCareChecklists(next);
+    return record;
   }
 
   async getCareEvents(aquariumId?: string) {

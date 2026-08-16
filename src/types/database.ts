@@ -425,6 +425,17 @@ export interface CareReminderRecordRow extends SyncFields {
   repeatIntervalDays?: number;
 }
 
+export interface CareChecklistProgressRecord extends SyncFields {
+  id: Uuid;
+  ownerId: Uuid;
+  aquariumId?: Uuid;
+  topicId: string;
+  title: string;
+  actionKeys: string[];
+  legacyActions: string[];
+  savedAt: IsoDateTime;
+}
+
 export interface CareEventRecord extends SyncFields {
   id: Uuid;
   ownerId: Uuid;

@@ -7,9 +7,19 @@ assert.match(care, /loadAppStateFromStorage, patchLocalAppState, subscribeToAppS
 assert.match(care, /const \[appStateSnapshot, setAppStateSnapshot\] = useState\(loadAppStateFromStorage\)/);
 assert.match(care, /subscribeToAppState\(\(\) => \{\s+setAppStateSnapshot\(loadAppStateFromStorage\(\)\);\s+\}\)/s);
 
-// Direct Care entry hydrates collection favorites, canonical aquarium facts, and canonical care events.
-assert.match(care, /const \[favoriteSnapshot, aquariums, careEvents\] = await Promise\.all\(\[\s+repository\.getFavorites\(\),\s+repository\.getAquariums\(\),\s+repository\.getCareEvents\(\),\s+\]\)/s);
+// Direct Care entry hydrates every account-level fact the page consumes.
+// Keep this contract capability-based: adding a new canonical read must not fail merely
+// because Promise.all gains another item or a local variable changes shape.
+for (const canonicalRead of [
+  'repository.getFavorites()',
+  'repository.getAquariums()',
+  'repository.getCareEvents()',
+  'repository.getCareChecklistProgress()',
+]) {
+  assert.ok(care.includes(canonicalRead), `Care direct hydration missing ${canonicalRead}`);
+}
 assert.match(care, /const currentAquariumId = cachedState\.currentAquariumId\s+&& aquariums\.some\(item => item\.id === cachedState\.currentAquariumId\)/s);
+assert.match(care, /setSavedCareChecklists\(checklistProgress\);/);
 assert.match(care, /patchLocalAppState\(\{ aquariums, currentAquariumId, careEvents \}\);/);
 assert.match(care, /鱼缸数据暂时无法同步，当前显示本机缓存。/);
 
@@ -24,4 +34,4 @@ assert.match(care, /const \[appState, setAppState\] = useState\(loadAppStateFrom
 assert.match(care, /\}, \[defaultAquariumId, topic\.id\]\);/);
 assert.doesNotMatch(care, /const appState = useMemo\(\(\) => loadAppStateFromStorage\(\), \[\]\)/);
 
-console.log('care aquarium hydration contract passed: direct Care entry hydrates repository aquarium facts and canonical care events');
+console.log('care aquarium hydration contract passed: direct Care entry hydrates favorites, aquarium facts, care events, and checklist progress');

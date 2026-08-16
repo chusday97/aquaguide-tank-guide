@@ -1,7 +1,7 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import type { Aquarium, DeceasedRecord, LifeStage, MemorialCauseCode, ReproductiveState } from '../../types';
 import type { CareEventType } from '../../types/database';
-import type { CareReminderRecord } from '../care/care-activity.service';
+import type { CareReminderRecord, CareSavedChecklist } from '../care/care-activity.service';
 
 export type FavoriteMutation =
   | { type: 'species'; catalogKey: string; favorite: boolean }
@@ -93,6 +93,14 @@ export type CareTimelineRecord = {
 
 export type CareTimelineMutation = Omit<CareTimelineRecord, 'id'> & { operationId: string };
 
+export type CareChecklistProgressMutation = {
+  topicId: string;
+  title: string;
+  actionKeys: string[];
+  legacyActions?: string[];
+  aquariumId?: string;
+};
+
 export interface AquaGuideRepository {
   getAquariums(): Promise<Aquarium[]>;
   createAquarium(input: AquariumCreateCommand): Promise<Aquarium>;
@@ -112,6 +120,8 @@ export interface AquaGuideRepository {
   updateMemorial(input: MemorialUpdateInput): Promise<DeceasedRecord>;
   getCareReminders(): Promise<CareReminderRecord[]>;
   updateCareReminder(input: CareReminderMutation): Promise<CareReminderRecord | null>;
+  getCareChecklistProgress(aquariumId?: string): Promise<CareSavedChecklist[]>;
+  saveCareChecklistProgress(input: CareChecklistProgressMutation): Promise<CareSavedChecklist>;
   getCareEvents(aquariumId?: string): Promise<CareTimelineRecord[]>;
   saveCareEvent(input: CareTimelineMutation): Promise<CareTimelineRecord>;
   removeCareEventBySource(input: { aquariumId: string; sourceType: string; sourceId: string; operationId: string }): Promise<void>;

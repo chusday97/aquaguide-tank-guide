@@ -34,9 +34,13 @@ import {
 import {
   getCompletedCareOperations,
   getCompletedCareOperationsFromEvents,
+  getCareChecklistActionKey,
+  getSavedCareChecklistForContext,
+  getSavedCareChecklistRestoredActions,
   getSavedCareChecklists,
   setCompletedCareOperations,
   setSavedCareChecklists,
+  subscribeToCareActivity,
 } from '../services/care/care-activity.service';
 import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode } from '../services/repository/repository-provider';
 import { useToast } from '../components/common/ToastProvider';
@@ -1699,14 +1703,48 @@ export default function CareEncyclopedia() {
     void resolveRepositoryMode()
       .then(async mode => {
         const repository = getAquaGuideRepository(mode);
-        const [favoriteSnapshot, aquariums, careEvents] = await Promise.all([
+        const localChecklistProgress = getSavedCareChecklists();
+        let [favoriteSnapshot, aquariums, careEvents, checklistProgress] = await Promise.all([
           repository.getFavorites(),
           repository.getAquariums(),
           repository.getCareEvents(),
+          repository.getCareChecklistProgress(),
         ]);
-        return { favoriteSnapshot, aquariums, careEvents, mode };
+        if (mode === 'cloud' && localChecklistProgress.length > 0) {
+          const canonicalKeys = new Set(checklistProgress.map(item => `${item.aquariumId || 'global'}:${item.id}`));
+          const migratable = localChecklistProgress.filter(item => {
+            const scopeValid = !item.aquariumId || aquariums.some(aquarium => aquarium.id === item.aquariumId);
+            return scopeValid
+              && ((item.actionKeys?.length || 0) > 0 || (item.actions?.length || 0) > 0)
+              && !canonicalKeys.has(`${item.aquariumId || 'global'}:${item.id}`);
+          });
+          if (migratable.length > 0) {
+            await Promise.all(migratable.map(item => {
+              const legacyTopic = careTopicsData.find(topic => topic.id === item.id);
+              const legacyVisibleActions = legacyTopic ? buildCareGuide(legacyTopic).todayActions : [];
+              const legacyActionKeys = item.actionKeys?.length
+                ? item.actionKeys
+                : legacyVisibleActions.flatMap((action, index) =>
+                    (item.actions || []).some(saved => saved === action.description || saved.endsWith(`：${action.description}`))
+                      ? [getCareChecklistActionKey(item.id, index)]
+                      : []
+                  );
+              return repository.saveCareChecklistProgress({
+                topicId: item.id,
+                title: item.title,
+                actionKeys: legacyActionKeys,
+                legacyActions: (item.actions || [])
+                  .filter(action => typeof action === 'string' && action.trim().length > 0 && action.length <= 1000)
+                  .slice(0, 50),
+                aquariumId: item.aquariumId,
+              });
+            }));
+            checklistProgress = await repository.getCareChecklistProgress();
+          }
+        }
+        return { favoriteSnapshot, aquariums, careEvents, checklistProgress, mode };
       })
-      .then(({ favoriteSnapshot, aquariums, careEvents, mode }) => {
+      .then(({ favoriteSnapshot, aquariums, careEvents, checklistProgress, mode }) => {
         if (!active) return;
         const cachedState = loadAppStateFromStorage();
         const currentAquariumId = cachedState.currentAquariumId
@@ -1716,6 +1754,7 @@ export default function CareEncyclopedia() {
         if (mode === 'cloud') {
           setCompletedCareOperations(getCompletedCareOperationsFromEvents(careEvents));
         }
+        setSavedCareChecklists(checklistProgress);
         patchLocalAppState({ aquariums, currentAquariumId, careEvents });
         const next = Object.fromEntries(favoriteSnapshot.careFavorites.map(item => [item.catalogKey, {
           id: item.catalogKey,
@@ -3001,6 +3040,7 @@ export function CareArticleDetail({
   const [isDetailExpanded, setIsDetailExpanded] = useState(false);
   const [isDiagnosisStarted, setIsDiagnosisStarted] = useState(false);
   const [isChecklistSaved, setIsChecklistSaved] = useState(false);
+  const [isChecklistSaving, setIsChecklistSaving] = useState(false);
   const [isOperationCompleted, setIsOperationCompleted] = useState(false);
   const [reminderSheet, setReminderSheet] = useState<null | {
     title: string;
@@ -3021,15 +3061,24 @@ export function CareArticleDetail({
     setIsDiagnosisStarted(false);
     setIsDetailExpanded(false);
     setCtaFeedback('');
-    const savedChecklist = getSavedCareChecklists().find(item => item.id === topic.id);
-    const restoredActions = savedChecklist
-      ? visibleActions
-          .map(action => action.description)
-          .filter(description => savedChecklist.actions.some(saved => saved === description || saved.endsWith(`：${description}`)))
-      : [];
-    setIsChecklistSaved(restoredActions.length > 0);
-    onRestoreActions?.(restoredActions);
-  }, [onRestoreActions, topic.id]);
+    const syncChecklistProgress = () => {
+      const savedChecklist = getSavedCareChecklistForContext(
+        getSavedCareChecklists(),
+        topic.id,
+        activeAquarium?.id,
+      );
+      const restoredActions = getSavedCareChecklistRestoredActions(
+        savedChecklist,
+        topic.id,
+        visibleActions.map(action => action.description),
+      );
+      const isScopedSave = !activeAquarium?.id || savedChecklist?.aquariumId === activeAquarium.id;
+      setIsChecklistSaved(restoredActions.length > 0 && isScopedSave);
+      onRestoreActions?.(restoredActions);
+    };
+    syncChecklistProgress();
+    return subscribeToCareActivity(syncChecklistProgress);
+  }, [activeAquarium?.id, onRestoreActions, topic.id]);
 
   useEffect(() => {
     const syncOperationCompletion = () => {
@@ -3072,7 +3121,7 @@ export function CareArticleDetail({
             : (isEn ? 'Save Guide' : '收藏这篇指南')
           : (isEn ? 'Set Reminder' : '设置提醒');
   const isPrimaryDisabled = (meta.guideType === 'procedure' && isOperationCompleted && !isWaterChangeGuide)
-    || (meta.guideType === 'careChecklist' && (isChecklistSaved || completedVisibleActions === 0))
+    || (meta.guideType === 'careChecklist' && (isChecklistSaving || isChecklistSaved || completedVisibleActions === 0))
     || (meta.guideType === 'knowledge' && favorite && !onOpenCollection);
   const secondaryLabel: string | null = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
@@ -3228,21 +3277,24 @@ export function CareArticleDetail({
     window.setTimeout(() => setCtaFeedback(''), 2500);
   };
 
-  const saveChecklist = () => {
-    const saved = getSavedCareChecklists();
-    const next = [
-      {
-        id: topic.id,
-        title: getDisplayTitle(topic),
-        savedAt: new Date().toISOString(),
-        actions: visibleActions
-          .filter(action => checkedActions.includes(action.description))
-          .map(action => action.description),
-      },
-      ...saved.filter(item => item.id !== topic.id),
-    ].slice(0, 30);
+  const saveChecklist = async () => {
+    if (isChecklistSaving || completedVisibleActions === 0) return;
+    const actionKeys = visibleActions.flatMap((action, index) =>
+      checkedActions.includes(action.description)
+        ? [getCareChecklistActionKey(topic.id, index)]
+        : []
+    );
+    setIsChecklistSaving(true);
     try {
-      setSavedCareChecklists(next);
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.saveCareChecklistProgress({
+        topicId: topic.id,
+        title: getDisplayTitle(topic),
+        actionKeys,
+        aquariumId: activeAquarium?.id,
+      });
+      const checklistProgress = await repository.getCareChecklistProgress();
+      setSavedCareChecklists(checklistProgress);
       setIsChecklistSaved(true);
       setCtaFeedback(
         isEn
@@ -3251,8 +3303,10 @@ export function CareArticleDetail({
       );
     } catch (error) {
       setCtaFeedback(isEn ? 'Could not save the checklist. Try again.' : '护理清单保存失败，请重试。');
+    } finally {
+      setIsChecklistSaving(false);
+      window.setTimeout(() => setCtaFeedback(''), 1800);
     }
-    window.setTimeout(() => setCtaFeedback(''), 1800);
   };
 
   const handleSecondaryCta = () => {
@@ -3301,7 +3355,7 @@ export function CareArticleDetail({
       return;
     }
     if (meta.guideType === 'careChecklist') {
-      saveChecklist();
+      void saveChecklist();
       return;
     }
     if (meta.guideType === 'diagnosis') {

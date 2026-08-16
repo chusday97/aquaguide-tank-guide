@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  careChecklistProgressSaveSchema,
   careEventCreateSchema,
   careReminderCreateSchema,
   careReminderUpdateSchema,
@@ -46,7 +47,7 @@ const parseLimit = (value: unknown) => {
 };
 
 export const userRecordsRouter = Router();
-const protectedPrefixes = ['/aquariums/', '/favorites/', '/memorial-records', '/care-reminders', '/care-events'];
+const protectedPrefixes = ['/aquariums/', '/favorites/', '/memorial-records', '/care-reminders', '/care-checklist-progress', '/care-events'];
 userRecordsRouter.use((request, response, next) => (
   protectedPrefixes.some(prefix => request.path.startsWith(prefix))
     ? requireAuth(request, response, next)
@@ -438,6 +439,57 @@ userRecordsRouter.delete('/care-reminders/:id', asyncRoute(async (request, respo
   if (error) throwDatabaseError(error, '养护计划没有删除成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'care_reminders', id);
   return sendData(request, response, { deleted: true });
+}));
+
+userRecordsRouter.get('/care-checklist-progress', asyncRoute(async (request, response) => {
+  const client = userClientFor(request);
+  let builder = client
+    .from('care_checklist_progress')
+    .select('*')
+    .is('deleted_at', null)
+    .order('saved_at', { ascending: false })
+    .limit(100);
+  if (request.query.aquariumId) {
+    const aquariumId = parseId(String(request.query.aquariumId), '鱼缸标识');
+    builder = builder.or(`aquarium_id.eq.${aquariumId},aquarium_id.is.null`);
+  }
+  const { data, error } = await builder;
+  if (error) throwDatabaseError(error, '护理清单进度暂时无法加载。');
+  return sendData(request, response, { items: camelize(data || []) });
+}));
+
+userRecordsRouter.put('/care-checklist-progress', asyncRoute(async (request, response) => {
+  const parsed = careChecklistProgressSaveSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '护理清单进度无效。', parsed.error.flatten());
+  const idempotency = await beginIdempotentWrite(request);
+  const client = userClientFor(request);
+  const userId = authenticatedRequest(request).authUser.id;
+
+  if (idempotency.replay?.resourceId) {
+    const { data } = await client
+      .from('care_checklist_progress')
+      .select('*')
+      .eq('id', idempotency.replay.resourceId)
+      .maybeSingle();
+    if (data) return sendData(request, response, camelize(data));
+  }
+
+  const scopeKey = parsed.data.aquariumId || 'global';
+  const id = deterministicUuid(`${userId}:care-checklist-progress:${scopeKey}:${parsed.data.topicId}`);
+  const { data, error } = await client.from('care_checklist_progress').upsert({
+    id,
+    owner_id: userId,
+    aquarium_id: parsed.data.aquariumId,
+    topic_id: parsed.data.topicId,
+    title: parsed.data.title,
+    action_keys: parsed.data.actionKeys,
+    legacy_actions: parsed.data.legacyActions,
+    saved_at: new Date().toISOString(),
+    deleted_at: null,
+  }, { onConflict: 'id' }).select('*').single();
+  if (error || !data) throwDatabaseError(error, '护理清单进度没有保存成功。');
+  await finishIdempotentWrite(request, idempotency, 'care_checklist_progress', id, 200);
+  return sendData(request, response, camelize(data));
 }));
 
 userRecordsRouter.get('/care-events', asyncRoute(async (request, response) => {

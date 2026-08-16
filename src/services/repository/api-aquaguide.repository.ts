@@ -1,6 +1,6 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import type { Aquarium, AquariumFish, AquariumSpeciesBatch, DeceasedRecord } from '../../types';
-import type { CareReminderRecord } from '../care/care-activity.service';
+import type { CareReminderRecord, CareSavedChecklist } from '../care/care-activity.service';
 import { apiRequest, createIdempotencyKey } from '../api/api-client';
 import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
 import type {
@@ -15,6 +15,7 @@ import type {
   LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
+  CareChecklistProgressMutation,
   WaterChangeMutation,
 } from './aquaguide.repository';
 
@@ -103,6 +104,16 @@ type ApiReminder = {
   version: number;
 };
 type ApiCareEvent = CareTimelineRecord & { version: number };
+type ApiCareChecklistProgress = {
+  id: string;
+  aquariumId?: string;
+  topicId: string;
+  title: string;
+  actionKeys: string[];
+  legacyActions?: string[];
+  savedAt: string;
+  version: number;
+};
 
 const isUuid = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 
@@ -747,6 +758,43 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       idempotencyKey: `care-reminder-${input.action}:${input.id}:v${version}`,
     });
     return this.rememberReminder(saved);
+  }
+
+  async getCareChecklistProgress(aquariumId?: string): Promise<CareSavedChecklist[]> {
+    if (aquariumId && !isUuid(aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const query = aquariumId ? `?aquariumId=${encodeURIComponent(aquariumId)}` : '';
+    const result = await apiRequest<{ items: ApiCareChecklistProgress[] }>(`/care-checklist-progress${query}`);
+    return (result.items || []).map(item => ({
+      id: item.topicId,
+      title: item.title,
+      savedAt: item.savedAt,
+      actionKeys: item.actionKeys || [],
+      actions: item.legacyActions || undefined,
+      aquariumId: item.aquariumId,
+    }));
+  }
+
+  async saveCareChecklistProgress(input: CareChecklistProgressMutation): Promise<CareSavedChecklist> {
+    if (input.aquariumId && !isUuid(input.aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const saved = await apiRequest<ApiCareChecklistProgress>('/care-checklist-progress', {
+      method: 'PUT',
+      idempotencyKey: createIdempotencyKey('care-checklist-progress'),
+      body: {
+        aquariumId: input.aquariumId,
+        topicId: input.topicId,
+        title: input.title,
+        actionKeys: input.actionKeys,
+        legacyActions: input.legacyActions,
+      },
+    });
+    return {
+      id: saved.topicId,
+      title: saved.title,
+      savedAt: saved.savedAt,
+      actionKeys: saved.actionKeys || [],
+      actions: saved.legacyActions || undefined,
+      aquariumId: saved.aquariumId,
+    };
   }
 
   async getCareEvents(aquariumId?: string) {
