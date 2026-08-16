@@ -1,176 +1,200 @@
 # AquaGuide 执行状态补充 — 2026-08-16
 
-> 这是 `HANDOFF_2026-08-16.md` / `BADCASES_2026-08-16.md` 的执行记录。只记录已经实际落地、正在验证或被明确依赖阻塞的事项，不把计划写成完成。
+> 配套 `HANDOFF_2026-08-16.md` / `BADCASES_2026-08-16.md`。只记录已经实际完成、正在验证或被明确外部依赖阻塞的事项；Draft / green CI 不等于已合并到 main。
 
-## 1. Phase 0：Observation reachability — 代码门禁已关闭
+## 1. Phase 0：Observation reachability — 已关闭代码 blocker
 
-PR #34 已完成 Observation direct action：
+PR #34 已完成 `记录观察 / Record Observation` 直接入口：
 
-- 鱼缸首页 `commonActions` 已有 `记录观察 / Record Observation`；
-- stocked tank 打开原有 canonical observation dialog；
+- stocked tank 可打开现有 canonical observation dialog；
 - empty tank action disabled；
-- 继续复用 repository-first `handleObservationSubmit()`，没有第二套保存逻辑；
-- `scripts/test-observation-canonical-state.ts` 已覆盖 reachability + disabled contract；
-- Product Golden Path clean head 已通过。
+- 保存继续复用 repository-first `handleObservationSubmit()`；
+- canonical observation regression + TypeScript 已通过；
+- 临时 write-enabled patch workflow/script 已删除。
 
-真实路径现在是：
+真实路径：
 
 `鱼缸首页 → 记录观察 → 正常/异常 → 保存 → canonical care_events → Timeline`
 
-为修改大型 `Aquarium.tsx` 使用过一次性 exact-anchor GitHub Actions patch；只有 observation regression + TypeScript 全绿后才提交产品 diff。临时 write-enabled workflow/script 已立即删除。
-
-## 2. Auth / deployment gate
+## 2. Auth：代码门禁完成，真实部署仍受外部 blocker
 
 PR #35 仍是 Draft。
 
-代码层已经完成：
+已完成：
 
-- 最新 #34 已无冲突叠入 #35；
-- two-device live harness 已加入真实 observation UI：Device A Tank B 记录正常观察 → canonical `observation_record` → Device B cloud hydrate → Tank A isolation；
-- Auth/data contracts、TypeScript、production build、preview、GP-002 clean head 全绿；
-- 临时 stacking workflow/script 已删除。
+- 最新 #34 已叠入；
+- live two-device harness 已包含真实 observation UI；
+- Device A Tank B observation → `observation_record` → Device B hydrate → Tank A isolation 已写入 harness；
+- Auth/data contracts、TypeScript、build、preview、GP-002 clean-head CI 已绿。
 
-**仍未完成 production/真实用户 acceptance：**
+仍未完成：
 
 1. fresh Vercel deployment；
-2. Supabase Auth redirect origin；
+2. deployed origin 对应的 Supabase Auth redirect；
 3. real one-time Magic Link；
-4. two-device cloud harness 全路径。
+4. 完整 two-device deployed-browser acceptance。
 
-不得把 #35 描述成 Auth 已上线。
+当前 GitHub/Vercel 仍受 build-rate-limit，Vercel connector 也没有暴露可管理的 AquaGuide project，因此不得描述为 Auth 已上线。
 
-## 3. Recommendation P1 contracts
+## 3. Recommendation 基础 contracts
 
-### PR #36 — Catalog Grounding
+### PR #36 — Catalog Grounding ✅
 
-已绿：
-
-- canonical species ID → `verified`；
+- canonical ID → `verified`；
 - explicit unknown ID → `unresolved`；
-- explicit unknown ID 不因相似名称静默回退；
+- unknown ID 不因相似名称静默回退；
 - unique exact name 可解析；
 - scientific-name collision → `ambiguous`；
 - formal recommendation 必须经过 canonical ID gate。
 
-### PR #37 — Explanation Semantics
+### PR #37 — Explanation Semantics ✅
 
-已绿：
-
-- physical/estimated water volume 与 heuristic load pressure 分离；
+- estimated physical water volume 与 heuristic load pressure 分离；
 - filter / oxygen / maintenance 不改变用户看到的真实水量；
 - unknown capacity 不 fake `0%`；
-- load pressure 不是“用了百分之多少水”或安全概率；
-- 50/75/90 只映射 qualitative pressure bands。
+- load pressure 不是水量占用比例，也不是安全概率。
 
-两条 PR 都保持 Draft，未合并。
+两条均保持 Draft、未合并。
 
-## 4. Draft PR #38 — Unresolved Existing Livestock
+## 4. PR #38 — Unresolved Existing Livestock：代码 + 数据库门禁已大幅关闭
 
-新增 Draft PR #38：`Support unresolved existing livestock as factual tank state`
+Draft PR #38：`Support unresolved existing livestock as factual tank state`
 
 Base：PR #34 / `agent/fix-aquarium-completion-state`
 
-目标：关闭 `CATALOG-002 / CATALOG-003`，但不放宽 planned-addition safety/catalog gate。
+关闭的 badcase：`CATALOG-002 / CATALOG-003`。
 
-### 已落地的数据身份
+### 事实记录 contract
 
-`aquarium_species` migration 新增：
+`record_existing` 可保存 catalog 外、现实已存在的生物：
 
-- `identity_status = verified | unresolved`；
-- `raw_name`；
-- verified：必须有 canonical `species_catalog_key`；
-- unresolved：`species_id = NULL`、`species_catalog_key = NULL`、必须有用户原始 `raw_name`；
-- local/device mirror 仅用显式 `unresolved:<record-id>` 兼容 key，不把它当 catalog ID。
+- canonical DB：`identity_status='unresolved'`；
+- `species_id=NULL`；
+- `species_catalog_key=NULL`；
+- 保留用户 `raw_name`；
+- local/device compatibility mirror 使用显式 `unresolved:<record-id>`，不得当作 catalog ID；
+- roster 显示 `待确认身份 / Identity pending`；
+- unresolved 可移出，但不开放伪造的 canonical species detail/edit。
 
-### 已落地的 repository / API / RPC
-
-- `LivestockAddCommand` 成为 verified/unresolved discriminated union；
-- API contract 区分 canonical `speciesCatalogKey` 与 unresolved `rawName`；
-- local repository 可记录 unresolved reality；
-- cloud API 为 unresolved 调用独立 atomic RPC；
-- `add_unresolved_aquarium_livestock()`：`SECURITY INVOKER`、ownership + idempotency、PUBLIC/anon revoke、authenticated execute；
-- 不查询、不制造 canonical species。
+`planned_addition` 继续要求 canonical catalog，不开放 unresolved manual-record 绕过。
 
 ### Compatibility fail-closed
 
-`species-addition.service` 不再把 catalog 查不到的当前缸记录静默过滤。
-
 当前鱼缸存在 unresolved livestock 时：
 
-- verified 部分继续判断；
-- 增加 `unresolved_existing_livestock` missing-evidence rule；
+- verified 部分继续 deterministic evaluation；
+- unresolved 作为 `unresolved_existing_livestock` missing evidence；
 - aggregate 至少降级为 `insufficient_data`；
-- 不允许返回“完整兼容结论”。
+- 不允许把未知居民当不存在后给完整兼容结论。
 
-### 用户 UI 已落地并有真实浏览器回归
+### UI / CI
 
-`record_existing`：
+read-only `Unresolved Livestock Contract` clean head 已全绿：
 
-- 搜索无结果时显示 `待确认身份`；
-- 可按用户输入的真实名称 + 数量 `按此名称记录`；
-- 明确提示“身份确认前不会用于完整混养判断，也不会伪造物种资料”；
-- 保存后 roster 可见；
-- unresolved 可移出；
-- 不开放 canonical species detail/edit。
-
-`planned_addition`：
-
-- 搜索无结果只提示“规划模式只接受已收录生物”；
-- 不显示 unresolved manual-record CTA；
-- 不允许绕过 catalog direct-add。
-
-Playwright 已实际验证：
-
-`记录已有生物 → 搜索库外名称 → 按名称记录 → local mirror identityStatus=unresolved/rawName → 缸内物种可见待确认记录 → planned mode 同名逻辑不可绕过`
-
-### 永久门禁
-
-新增 read-only `Unresolved Livestock Contract` workflow（`contents: read`），覆盖：
-
-- unresolved core/model/API/repository contract；
+- core model/API/repository contract；
 - legacy livestock recording；
 - atomic livestock regression；
 - core-flow v1；
 - static UI contract；
 - livestock state surface；
-- API/app TypeScript；
+- API/App TypeScript；
 - production build；
 - existing livestock drawer browser；
-- unresolved record-existing/planned-addition browser path。
+- unresolved `record_existing` / `planned_addition` browser path。
 
-所有一次性 write-enabled patch workflow/scripts 已删除。
+### Supabase rollout — 已部署并验证
 
-## 5. Supabase remote baseline / rollout
+Dedicated project：`ydiygvhuqpogmqlcvgob`。
 
-Dedicated AquaGuide project：`ydiygvhuqpogmqlcvgob` 当前实时状态：`ACTIVE_HEALTHY`，Postgres 17。
+远端 migration：`20260816103423_unresolved_existing_livestock`。
 
-实时 migration list 已比旧 handoff 更新：当前远端已有 24 条 migration，最新包括：
+已发现并修复 source-control migration drift：GitHub 原文件名 `20260816100000...` 与远端 version 不一致；现已改为与远端完全一致的 `20260816103423...`，旧文件已删除，contract test 已同步。
 
-- `20260816065339_add_care_operation_completed_event`
-- `20260816072659_care_checklist_progress`
+Live schema 已验证：
 
-因此后续 rollout 不再引用旧的“22 migrations”数字，必须以实时 `list_migrations` 为准。
+- `identity_status` enum + default `verified`；
+- `raw_name`；
+- `species_catalog_key` nullable；
+- truth constraint 强制 unresolved = null canonical identity + non-empty raw name；
+- active unique index 只约束非空 canonical key；
+- `add_unresolved_aquarium_livestock()` = `SECURITY INVOKER` + empty search path；
+- authenticated 有 execute；anon / PUBLIC 无 execute。
 
-PR #38 的 `20260816100000_unresolved_existing_livestock.sql` **尚未部署**。远端当前事实仍是：
+### Authenticated RLS / idempotency acceptance — 已通过并回滚
 
-- `species_id` nullable；
-- `species_catalog_key` NOT NULL；
-- `identity_status/raw_name` 尚不存在。
+在单事务中创建临时 User A/User B + Tank A/Tank B，以真实 `authenticated` role + JWT claim 调用 RPC：
 
-当前 security advisor：无 WARNING；仅保留 intentional deny-all `species_recognition_misses` 的 RLS-no-policy INFO。
+- User A 写自己的 Tank A unresolved record ✅
+- 同 operation key/request hash 重放仍只有 1 条 ✅
+- User A 尝试写 User B 的 Tank B 被拒绝 ✅
+- rollback 后 `auth.users / aquariums / aquarium_species / idempotency_records` 全部恢复为 0 ✅
 
-performance advisor：INFO-only（unindexed FK / unused index），不在 #38 rollout 中顺手改索引，避免没有 workload evidence 就扩大 schema scope。
+Supabase security advisor：无 WARNING；仅既有 intentional deny-all `species_recognition_misses` INFO。
 
-官方当前 function-security guidance 与 #38 migration 方向一致：普通业务函数优先 `SECURITY INVOKER`，且 function execution 默认可能由 PUBLIC 获得，应显式 revoke/grant。
+performance advisor：INFO-only（unindexed FK / unused index），没有在无 workload evidence 时顺手扩 scope。
 
-## 6. 当前分支依赖图
+### #38 尚未关闭的门禁
+
+- deployed-browser / true cross-device cloud hydrate 尚需可用部署环境；
+- 验证真实 cloud unresolved record 经 Device B hydrate 后，再评估新候选必须得到 `insufficient_data`。
+
+因此 #38 仍保持 Draft。
+
+## 5. 重复工作清理
+
+PR #39 是执行过程中建立的窄版 CATALOG-003 guard。发现 #38 已并行完成同一 guard + 完整 persistence/API/UI 后，#39 已关闭为 superseded/duplicate，未合并。
+
+原则：宁可删除重复分支，也不保留两套相似 compatibility guard 让后续漂移。
+
+## 6. PR #40 — Replacement Recommendation MVP：正在验证
+
+Draft PR #40：`Add same-intent replacement recommendation MVP`
+
+Base：PR #36 catalog grounding。
+
+范围仅处理“候选尚未入缸”场景，不处理已经同缸后的移出决策。
+
+已提交纯 deterministic engine：
+
+`原候选 → intent → same-role candidate pool → 每个候选重新跑 tankCompatibility → recommended / conditional / needsConfirmation / zero-safe-alternative`
+
+Intent v1：
+
+- life type；
+- canonical water type；
+- secondary role/category；
+- social mode；
+- size；
+- difficulty。
+
+关键 contract：
+
+- 不用 unrelated organism 凑 Top 3；
+- `not_recommended` 排除；
+- `caution` 保持 conditional；
+- `insufficient_data` 保持 needsConfirmation；
+- tank 有 unresolved current livestock 时 formal recommendation fail-closed；
+- 已有 livestock 且 candidate 缺 reviewed behavior evidence 时，不包装成高置信推荐；
+- `no_safe_same_intent_alternative` 是合法结果。
+
+Golden cases 已提交：
+
+1. neon tetra → cardinal tetra 保持同类群游意图；
+2. reviewed predator + small schooling replacement → 必须允许 0 个安全替代；
+3. unresolved current livestock → formal replacement 不得 promoted；
+4. unrelated large cichlid 不得拿来填推荐位。
+
+当前 #40 CI 正在执行。
+
+## 7. 当前依赖图
 
 ```text
 main
 ├─ #29 catalog / taxonomy / water certainty
 │  ├─ #30 collision audit
 │  ├─ #31 life-type fit
-│  ├─ #36 catalog grounding contract
+│  ├─ #36 catalog grounding
+│  │  └─ #40 replacement recommendation MVP
 │  └─ #37 explanation semantics
 │
 └─ #34 canonical aquarium state / repository
@@ -178,50 +202,36 @@ main
    └─ #38 unresolved existing livestock
 ```
 
-#38 故意 base 在 #34，而不是强行制造 #29 + #34 的交叉 merge：
+Closed duplicate：#39。
 
-- 现实事实记录只要求 canonical repository；
-- unresolved 不依赖 catalog 猜测；
-- planned addition 继续要求 canonical catalog，因此没有绕开 #29 的 safety/identity 边界。
+## 8. 接下来执行顺序
 
-## 7. 下一步执行顺序
+### External rollout
 
-### P0 external
+- Vercel 恢复可部署后：#35 real Magic Link + two-device；
+- 同一部署继续跑 #38 unresolved cloud hydrate / fail-closed acceptance。
 
-1. 等可用 fresh Vercel deployment；
-2. 完成 #35 real Magic Link + two-device rollout acceptance。
+### Recommendation
 
-### P1 #38 rollout
+1. #40 golden cases + typecheck 全绿；
+2. `REC-001`：先把当前假“查看风险与替代方案” CTA 接到真实 result model；
+3. UI 必须分别显示：真正替代 / 有条件 / 待确认 / 没有安全同类替代；
+4. 再做 whole-community Conflict Graph；
+5. 再做 Action Engine / fixability；
+6. 最后才进入 keep-A vs keep-B / simulateWithout intervention。
 
-1. clean-head permanent read-only CI；
-2. apply Supabase migration；
-3. 验证 enum/columns/check/index/function grants；
-4. authenticated ownership / idempotency / cross-user isolation acceptance；
-5. 清理/回滚 acceptance test data；
-6. rerun security/performance advisors；
-7. cloud unresolved record cross-device hydrate；
-8. verified candidate + unresolved current livestock → `insufficient_data` cloud acceptance。
+### Explanation / diagnosis
 
-### P2
+- 把 #37 contract 接真实 UI；
+- `EXPLAIN-003` group-size evidence level；
+- Care Diagnosis 接 Compatibility Graph，解决泛化 aggression advice。
 
-- 修 pure-local unresolved → cloud aggregate `saveAquarium()` create-path guard；
-- Missing Species Queue；
-- unresolved → canonical identity resolution / rebind。
-
-### P3
-
-修 `REC-001`：Replacement Engine 上线前，先让 CTA 文案与真实行为一致；然后实现同意图候选、安全重算、允许 0 个安全替代。
-
-### P4
-
-Explanation UI migration → Conflict Graph → Action Engine / fixability → Intervention Simulation → Unified Tank Diagnosis。
-
-## 8. 禁止事项
+## 9. 禁止事项
 
 - 不合并任何 PR；
-- 不把 Draft / green CI 描述成 production；
-- 不把 committed migration 描述成 remote deployed；
-- 不用 synthetic catalog ID 解决 unresolved reality；
-- 不让 planned-addition 通过 unresolved manual path 绕过 catalog；
-- 不因为 advisor INFO 顺手做无证据索引清理；
-- 不把 heuristic load budget 显示成物理水量或安全概率。
+- 不把 Draft / green CI 描述成 main/production；
+- 不保留重复 compatibility implementation；
+- 不用 synthetic catalog identity 保存 unresolved reality；
+- 不让 planned-addition 绕过 catalog；
+- 不强行凑替代 Top N；
+- 不把 heuristic load / fit score 显示成科学概率或真实水量。
