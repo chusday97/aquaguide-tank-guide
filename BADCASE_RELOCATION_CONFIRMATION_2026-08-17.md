@@ -19,22 +19,7 @@ REL-023…REL-049 remain active:
 - TEST-002 guessed parent verifier filename — parent canonical verifier reused.
 - TEST-003 Care hydration source-line adjacency — replaced with capability assertions; green in `31963163536`.
 - TYPE-001 mirror-result false-branch narrowing — explicit `mirrorPersisted === false`; no union weakening; app/API TS + build green.
-
-## TEST-004 — browser workflow starts the wrong development command
-
-**Observed in first browser run `31963987371`:** Playwright/Chromium installation completed, but the `Start AquaGuide Vite server` step failed and the actual browser Golden Path step was skipped. Therefore no GP-REL product assertion ran.
-
-**Root cause confirmed from `package.json`:** workflow used `npm run dev -- --host ... --port ...`, but this repository defines:
-
-`"dev": "node scripts/dev-with-api.mjs"`
-
-So the browser harness accidentally invoked the combined API+web dev orchestrator rather than the intended deterministic plain Vite frontend server.
-
-**Classification:** browser test infrastructure error, not a Care relocation product failure.
-
-**Required fix:** start frontend explicitly with `npx vite --host 127.0.0.1 --port 4173` (or an equivalent pure `dev:web` invocation), use a bounded curl readiness probe, and leave every GP-REL browser assertion unchanged.
-
-**Status:** workflow correction in progress. Do not add or relax product logic based on run `31963987371`.
+- TEST-004 browser workflow started combined API/web dev command instead of plain Vite — corrected without changing GP assertions.
 
 ## Persisted Care wiring verification
 
@@ -42,15 +27,12 @@ Branch: `agent/canonical-care-relocation-wiring`
 
 Care wiring commit: `9403663c371b8cfa824c92d843a1f57d9b6cbf3e`
 
-Full one-shot run `31963163536`: **GREEN** through page static contract, canonical-view/mirror fallback, controller, reconciliation lifecycle, entrypoint, fresh policy, mutation uncertainty, Care hydration, severe-risk, app/API TypeScript, production build, write-tool self-delete and branch commit/push.
+Full one-shot run `31963163536`: GREEN through page static contract, canonical-view/mirror fallback, controller, reconciliation lifecycle, entrypoint, fresh policy, mutation uncertainty, Care hydration, severe-risk, app/API TypeScript, production build, write-tool self-delete and branch commit/push.
 
-This closes static/logic/type/build, not browser/hosted acceptance.
+## Browser testability / fixture gates
 
-## Browser testability gate
-
-Run `31963752488` is **GREEN**. It proved the pre-marker source did not satisfy the marker verifier, then applied only non-semantic `data-*` selectors to the real StepDiagnosis path. Care hydration, Care relocation static contract, App TypeScript and production build remained green. One-shot marker tooling self-deleted and the marker commit was pushed.
-
-Markers are not a product-behavior shortcut and do not close any browser badcase by themselves. They only provide stable selectors so the Playwright suite can traverse the actual Care diagnosis/intervention/confirmation path.
+- real-catalog fixture audit `31963516019`: green; primary reviewed path is `sp_0021 ×1 + sp_0439 ×6 → empty freshwater target`, with `sp_0439 ×6` entrypoint eligible.
+- browser testability markers run `31963752488`: green; only non-semantic `data-*` selectors were added.
 
 ## Browser acceptance badcases
 
@@ -58,7 +40,7 @@ Markers are not a product-behavior shortcut and do not close any browser badcase
 Opener must display confirmation with mutation count 0.
 
 ### REL-051 — rapid/double confirm creates two mutations
-Browser must prove exactly one mutation despite rapid interaction.
+Browser must prove exactly one business relocation transition despite rapid interaction.
 
 ### REL-052 — stale rendered destination still moves
 Target change after card render must fresh-block with mutation count 0.
@@ -76,36 +58,44 @@ Sync failure/pending keeps lock; successful read renders reconciled state, then 
 Browser harness and real hosted/Auth acceptance remain separate gates.
 
 ### REL-057 — browser fixture bypasses real source-scope builder
-
-**Risk:** test directly constructs `RelocationConfirmationDialog` with a synthetic request/species and never proves the actual user path through Care → InterventionComparisonPanel → #65 entrypoint.
-
-**Real-catalog audit:** run `31963516019` found reviewed eligible fixtures:
-
-- `迷你鹦鹉鱼 sp_0021 ×1 + 虎皮鱼 sp_0439 ×6` → move `虎皮鱼 ×6` to empty freshwater target: `compatible_by_current_evidence`, entrypoint `eligible`;
-- `珍珠赤雷龙 sp_0049 ×1 + 红绿灯 sp_0431 ×6` → move `红绿灯 ×6` to empty target: `compatible_by_current_evidence`, entrypoint `eligible`.
-
-**Required browser fixture:** primary GP uses the first pair (`sp_0021` + `sp_0439`) because its source blocker is the reviewed pair rule. Test starts from the rendered intervention/destination card and clicks actual `进入迁移确认`. No synthetic catalog/request is acceptable as proof of GP-REL-01/02.
+Browser test must seed the reviewed source community and click the real rendered `进入迁移确认` CTA. Synthetic dialog/request injection is not accepted.
 
 ### REL-058 — multi-record/multi-batch case silently hides execution limitation
 Rendered user must see deterministic source-scope reason, not merely absence of CTA.
 
-### REL-059 — browser fixture uses a real species but bypasses reviewed conflict construction
-**Failure:** test seeds only the relocating species and directly manufactures an intervention card/URL.
+### REL-059 — real species fixture bypasses reviewed conflict construction
+Seed full `sp_0021 ×1 + sp_0439 ×6` community plus separate target so the real decision engine creates the formal option.
 
-**Required:** seed the complete reviewed source community (`sp_0021 ×1 + sp_0439 ×6`) plus separate target aquarium so the formal option is produced by the real conflict/decision engine.
+### REL-060 — browser success checks markers but not visible facts
+GP-REL-01 must assert visible `冲突缸 / 安全目标缸 / 虎皮鱼 / 6` and zero relocation before confirm.
 
-### REL-060 — browser success is based only on component data markers without checking visible facts
-**Failure:** test sees `data-open-relocation-confirmation`/dialog marker but never checks displayed source/destination/species/quantity.
+## BROWSER-OBS-001 — first valid rendered run failed after completed state, exact assertion not yet recovered
 
-**Required:** GP-REL-01 asserts visible labels/values: source tank name, destination tank name, `虎皮鱼`, quantity `6`, plus mutation count 0 before confirm.
+Run `31964201289` is the first browser run with Chromium + pure Vite successfully started and the actual page-level suite executed.
+
+Uploaded screenshot for `gp-rel-01-02-success` shows the real confirmation dialog in green completed state with the correct four visible facts:
+
+- `冲突缸`;
+- `安全目标缸`;
+- `虎皮鱼`;
+- `6`;
+- `迁移已完成，并已重新计算两个鱼缸`.
+
+**Bounded classification:**
+- GP-REL-01 is rendered-green.
+- GP-REL-02 reached `data-relocation-completed`.
+- failure is after success rendering, so it can only be in the remaining post-success assertions: source/target stored quantities, business transition count, dialog Close, or Care post-state redraw.
+
+**Do not yet classify this as REL-051 or REL-053.** Current GitHub job-log surface did not expose the Node assertion stderr, and the artifact had only screenshot + healthy Vite log.
+
+**Required diagnostic action:** rerun the exact same script/assertions with stdout/stderr tee'd into an uploaded browser-test log. This is diagnostics-only; no product code and no GP assertion may be changed before the exact failure is known.
 
 ## Browser Golden Path exit gate
 
-- GP-REL-01 real reviewed rendered intervention → opener → correct four visible facts; zero mutation before confirm;
-- GP-REL-02 success + rapid double-confirm → one mutation and visible canonical post-state refresh;
-- GP-REL-03 target changes after render → fresh blocked UI, zero mutation;
-- GP-REL-04 uncertain mutation → non-dismissible sync-only recovery; reconciliation sends no second mutation and unlocks only after read;
-- GP-REL-05 multi-record/multi-batch source-scope limitation visible;
-- actual Care/intervention/confirmation path is exercised, not isolated component injection;
-- local browser harness is explicitly not hosted/Auth/Supabase acceptance;
-- handoff/badcase updated immediately for any new browser failure.
+- GP-REL-01 reviewed rendered intervention → opener → correct four visible facts; zero mutation before confirm — evidence currently green from run `31964201289`, pending full suite rerun.
+- GP-REL-02 success + rapid double-confirm → exactly one relocation + visible canonical post-state refresh — incomplete; completed UI reached but post-success assertion failed.
+- GP-REL-03 target changes after render → fresh blocked UI, zero mutation — not yet reached.
+- GP-REL-04 uncertain mutation → non-dismissible sync-only recovery — not yet reached.
+- GP-REL-05 multi-batch source-scope limitation visible — not yet reached.
+- local browser harness remains explicitly distinct from hosted/Auth/Supabase acceptance.
+- handoff/badcase updated before any browser fix.
