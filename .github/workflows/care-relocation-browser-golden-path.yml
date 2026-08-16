@@ -1,0 +1,69 @@
+name: Care Relocation Browser Golden Path
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+    paths:
+      - 'scripts/test-care-relocation-browser-golden-path.mjs'
+      - 'src/pages/CareEncyclopedia.tsx'
+      - 'src/components/compatibility/InterventionComparisonPanel.tsx'
+      - 'src/components/compatibility/RelocationConfirmationDialog.tsx'
+      - 'src/services/care/care-relocation-confirmation.controller.ts'
+      - 'src/services/care/care-relocation-canonical-state.ts'
+      - 'src/lib/relocationConfirmationEntrypoint.ts'
+      - 'src/lib/relocationExecutionPolicy.ts'
+      - '.github/workflows/care-relocation-browser-golden-path.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-golden-path:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Start AquaGuide Vite server
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run dev -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-vite.log 2>&1 &
+          echo $! > /tmp/aquaguide-vite.pid
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-vite.log
+          exit 1
+      - name: Real Care relocation browser Golden Path
+        env:
+          AQUAGUIDE_BROWSER_BASE_URL: http://127.0.0.1:4173
+          AQUAGUIDE_BROWSER_ARTIFACT_DIR: /tmp/aquaguide-browser-artifacts
+        run: node scripts/test-care-relocation-browser-golden-path.mjs
+      - name: Upload browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: care-relocation-browser-diagnostics-${{ github.run_id }}
+          path: |
+            /tmp/aquaguide-browser-artifacts
+            /tmp/aquaguide-vite.log
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Stop AquaGuide Vite server
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/aquaguide-vite.pid ]; then
+            kill "$(cat /tmp/aquaguide-vite.pid)" 2>/dev/null || true
+          fi
