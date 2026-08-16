@@ -34,6 +34,13 @@ const seedStorage = async (context) => {
   });
 };
 
+const overlaps = (a, b) => (
+  a.x < b.x + b.width
+  && a.x + a.width > b.x
+  && a.y < b.y + b.height
+  && a.y + a.height > b.y
+);
+
 try {
   for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
     const isPhone = viewport.width < 768;
@@ -83,12 +90,25 @@ try {
   const variantFavorites = dialog.locator('button[id^="group-variant-wishlist-"]');
   assert.ok(await variantFavorites.count() > 1, 'group dialog exposes per-variant favorite buttons');
   assert.match(await groupPage.evaluate(() => document.activeElement?.id || ''), /^group-variant-wishlist-/, 'group favorite entry focuses variant favorite control');
-  const firstVariantFavorite = variantFavorites.first();
-  await firstVariantFavorite.click();
-  assert.equal(await firstVariantFavorite.getAttribute('aria-pressed'), 'true', 'variant favorite toggles independently');
+
+  const secondVariantFavorite = variantFavorites.nth(1);
+  const secondVariantWrapper = secondVariantFavorite.locator('..');
+  const secondVariantButton = secondVariantWrapper.locator('button').first();
+  const [variantBox, variantFavoriteBox] = await Promise.all([
+    secondVariantButton.boundingBox(),
+    secondVariantFavorite.boundingBox(),
+  ]);
+  assert.ok(variantBox && variantFavoriteBox, 'variant selection and favorite controls have visible bounds');
+  assert.ok(variantFavoriteBox.width >= 40 && variantFavoriteBox.height >= 40, 'variant favorite keeps an accessible touch target');
+  assert.equal(overlaps(variantBox, variantFavoriteBox), false, 'variant selection and favorite hit areas must not overlap');
+
+  await secondVariantButton.click();
+  assert.match(await secondVariantButton.getAttribute('class') || '', /border-emerald-700/, 'variant selection must remain directly clickable');
+  await secondVariantFavorite.click();
+  assert.equal(await secondVariantFavorite.getAttribute('aria-pressed'), 'true', 'variant favorite toggles independently');
   await groupContext.close();
 
-  console.log('wishlist shortcut: desktop, phone, collection sync and group variants passed');
+  console.log('wishlist shortcut: desktop, phone, collection sync, non-overlapping group variants and favorites passed');
 } finally {
   await browser.close();
 }
