@@ -1,0 +1,36 @@
+name: Intervention Comparison UI
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/compatibility/InterventionComparisonPanel.tsx'
+      - 'src/lib/tankDecisionSupportOrchestrator.ts'
+      - 'src/lib/interventionChoiceModel.ts'
+      - 'src/lib/conflictActionEngine.ts'
+      - 'src/lib/communityConflictGraph.ts'
+      - 'scripts/test-intervention-comparison-ui-contract.mjs'
+      - 'scripts/test-tank-decision-support-orchestrator.ts'
+      - '.github/workflows/intervention-comparison-ui.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  intervention-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Read-only intervention UI contract
+        run: node scripts/test-intervention-comparison-ui-contract.mjs
+      - name: Decision support regression
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Type check
+        run: npm run lint
+      - name: Production build
+        run: npm run build
