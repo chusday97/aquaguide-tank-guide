@@ -26,20 +26,20 @@ jobs:
         run: node scripts/apply-lionfish-evidence-hook.mjs
       - name: Verify canonical lionfish evidence
         run: node --import tsx scripts/test-lionfish-reviewed-evidence.ts
-      - name: Verify five-fixture severe-risk suite
+      - name: Verify existing reviewed severe-risk suite
         run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
       - name: Verify contextual non-escalation
         run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
       - name: Verify TypeScript
         run: npm run lint
-      - name: Commit verified product patch and remove all one-shot write tooling
+      - name: Commit verified profile integration and remove all one-shot write tooling
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/compatibilityEvidence.ts scripts/test-reviewed-severe-risk-regression.ts
+          git add src/data/compatibilityEvidence.ts
           git rm .github/workflows/apply-lionfish-evidence-once.yml
           git rm scripts/apply-lionfish-evidence-hook.mjs
           git rm .github/workflows/cleanup-lionfish-patch-once.yml
-          git commit -m "Fix canonical lionfish evidence and remove write tooling"
+          git commit -m "Integrate canonical lionfish evidence and remove write tooling"
           git push origin HEAD:agent/reviewed-lionfish-predation-evidence
