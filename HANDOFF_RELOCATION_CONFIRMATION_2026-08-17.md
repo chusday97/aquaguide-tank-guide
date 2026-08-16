@@ -24,8 +24,6 @@ Working branch: `agent/canonical-care-relocation-wiring`
 
 Persisted Care wiring commit: `9403663c371b8cfa824c92d843a1f57d9b6cbf3e`
 
-This is a normal working-branch commit produced only after the full one-shot gate passed. It is **not** a PR merge and main was not changed.
-
 Persisted flow:
 
 `StepDiagnosisPanel → InterventionComparisonPanel → eligible #65 destination → one Care relocation controller/operationId → RelocationConfirmationDialog → #63 fresh policy → #62 atomic receipt → canonical post-read → Care canonical display/mirror refresh`
@@ -49,7 +47,7 @@ TEST-003 and TYPE-001 were resolved without weakening product/type semantics.
 
 ## Real-catalog browser fixture audit — GREEN
 
-Run `31963516019` found reviewed eligible real-catalog scenarios. Primary browser fixture:
+Run `31963516019` found reviewed eligible real-catalog scenarios. Primary fixture:
 
 - source `冲突缸`: `迷你鹦鹉鱼 sp_0021 ×1 + 虎皮鱼 sp_0439 ×6`;
 - target `安全目标缸`: empty freshwater tank;
@@ -66,54 +64,53 @@ Run `31963752488` passed pre-marker red check, non-semantic marker patch, Care h
 
 ## Browser Golden Path implementation
 
-Added a Playwright page-level suite that starts at:
-
-`/care?topic=guide_water_deteriorate`
-
-and follows the actual rendered path:
+Playwright page-level suite starts at `/care?topic=guide_water_deteriorate` and follows the actual rendered path:
 
 `Care first-screen CTA → aggression diagnosis → real questions → diagnosis result → intervention comparison → #65 target CTA → #64 confirmation → Care/#63/#62 execution path`.
 
-Planned deterministic cases:
+Cases:
 - GP-REL-01/02 real opener + four visible facts + zero pre-confirm mutation + rapid double confirm → one actual state transition + immediate post-state redraw;
 - GP-REL-03 silently stale target → fresh block + zero relocation;
 - GP-REL-04 forced ambiguous local write outcome → close-locked sync-only reconciliation + zero second relocation;
 - GP-REL-05 multi-batch whole subject → visible limitation + no executable CTA.
 
-The suite counts actual `sp_0439` source→target state transitions rather than raw localStorage writes, because canonical mirror synchronization may legitimately write the same post-state again.
+The suite counts actual `sp_0439` source→target state transitions rather than raw localStorage writes.
 
-## Browser run 1 — INFRASTRUCTURE FAILURE BEFORE PRODUCT TEST
+## Browser run 1 — TEST-004 infrastructure failure
 
-Run `31963987371` installed Playwright/Chromium successfully but failed at `Start AquaGuide Vite server`. The actual browser Golden Path step was skipped; **no GP-REL product assertion executed**.
+Run `31963987371` never entered product browser assertions because the workflow treated `npm run dev` as Vite even though it runs `scripts/dev-with-api.mjs`. Corrected to explicit `npx vite --host 127.0.0.1 --port 4173`; no product assertion was changed.
 
-Root cause is confirmed from `package.json`:
+## Browser run 2 — first valid rendered run, partial boundary confirmed
 
-`npm run dev` = `node scripts/dev-with-api.mjs`
+Run `31964201289` successfully installed Chromium and started the pure Vite frontend, so it is the first run that actually exercised the rendered Care relocation path.
 
-The workflow mistakenly treated `dev` as a pure Vite command and passed Vite host/port flags to the combined API+web dev orchestrator.
+The run failed inside the first case `gp-rel-01-02-success`, but the uploaded failure screenshot proves the flow had already reached the **completed relocation state**. The rendered confirmation shows:
 
-Classification: TEST-004 browser test infrastructure error, not a Care relocation failure.
+- source: `冲突缸`;
+- destination: `安全目标缸`;
+- livestock: `虎皮鱼`;
+- quantity: `6`;
+- green terminal state: `迁移已完成，并已重新计算两个鱼缸`.
 
-Correction:
-- start the deterministic frontend explicitly with `npx vite --host 127.0.0.1 --port 4173`;
-- use bounded readiness curl;
-- keep every browser product assertion unchanged.
+Therefore the current evidence supports these bounded conclusions:
+
+1. **GP-REL-01 is rendered-green**: real Care navigation reached the real #65 opener and the four visible confirmation facts are correct. Opening confirmation did not fail or bypass the real reviewed fixture path.
+2. **GP-REL-02 reached the executed/completed UI state**: confirm passed fresh execution and rendered success.
+3. The first failure occurred **after** `data-relocation-completed` became visible. Remaining possible assertions are narrowed to post-action local state quantities, business transition count, closing the dialog, or rendered Care decision redraw after Close.
+4. This is not enough evidence yet to label the failure REL-053 or to claim GP-REL-02 fully green.
+
+Diagnostics limitation: Actions did not expose the Node assertion stderr through the available job-log interface, and the first artifact contained only the failure screenshot plus a healthy Vite log. The exact post-success assertion is therefore still unknown.
+
+Next action is diagnostic-only: rerun the **same unchanged browser assertions** while teeing browser stdout/stderr into the diagnostics artifact. No product code or GP assertion will be changed until the exact failing assertion is recovered.
 
 ## What remains unproven
 
-1. real rendered Care navigation reaches the eligible CTA;
-2. confirmation shows source/destination/虎皮鱼/6 correctly;
-3. rapid double confirm remains one mutation in rendered UI;
-4. stale target visibly blocks with zero write;
-5. success redraws Care decision surface without reload;
-6. Escape/overlay cannot dismiss rendered uncertainty dialog;
-7. reconciliation unlocks only after canonical sync;
-8. hosted Supabase/Auth/API performs the same flow end-to-end;
-9. two-session/device mutation after card render is caught in hosted path.
-
-## Next step
-
-Rerun the exact same deterministic Playwright suite using a pure Vite server. Only after rendered browser cases pass may this branch move to separate hosted/Auth acceptance. Browser-harness success must not be described as production/hosted acceptance.
+- GP-REL-02 exactly one business relocation transition + post-state redraw;
+- GP-REL-03 stale target fresh-block;
+- GP-REL-04 rendered non-dismissible reconcile lifecycle;
+- GP-REL-05 visible multi-batch fail-closed limitation;
+- hosted Supabase/Auth/API end-to-end behavior;
+- two-session/device stale-target hosted behavior.
 
 ## Non-negotiable constraints
 
