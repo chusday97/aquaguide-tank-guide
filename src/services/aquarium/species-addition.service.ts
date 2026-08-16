@@ -93,6 +93,32 @@ const getRulesForStatus = (evaluation: SpeciesAdditionEvaluation) => {
   return [];
 };
 
+const getUnresolvedCurrentLivestockRule = (
+  aquarium: Aquarium,
+  speciesCatalog: Fish[],
+): TankCompatibilityRule | null => {
+  const knownIds = new Set(speciesCatalog.map(fish => fish.id));
+  const unresolvedFishIds = Array.from(new Set(
+    aquarium.fishes
+      .map(record => record.fishId?.trim())
+      .filter((fishId): fishId is string => Boolean(fishId) && !knownIds.has(fishId)),
+  ));
+
+  if (unresolvedFishIds.length === 0) return null;
+
+  return {
+    code: 'unresolved_current_livestock',
+    title: '当前鱼缸存在未确认生物',
+    evidence: `以下缸内记录尚未映射到可验证物种：${unresolvedFishIds.join('、')}。系统不会忽略这些生物并给出完整混养结论。`,
+    severity: 'medium',
+    basis: 'missing_data',
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: unresolvedFishIds,
+    citations: [],
+  };
+};
+
 export const reviewSpeciesAdditions = ({
   aquarium,
   items,
@@ -115,6 +141,7 @@ export const assessSpeciesAddition = ({
   if (normalizedItems.length === 0) return null;
 
   const catalogById = new Map(speciesCatalog.map(fish => [fish.id, fish]));
+  const unresolvedCurrentLivestockRule = getUnresolvedCurrentLivestockRule(aquarium, speciesCatalog);
   const existingFromTank = aquarium.fishes.flatMap(record => {
     const species = catalogById.get(record.fishId);
     return species ? [{ species, record: { quantity: Math.max(1, record.quantity || 1) } }] : [];
@@ -141,11 +168,16 @@ export const assessSpeciesAddition = ({
   });
 
   if (evaluations.length === 0) return null;
-  const status = evaluations.reduce<TankCompatibilityStatus>((current, evaluation) => (
+  const evaluatedStatus = evaluations.reduce<TankCompatibilityStatus>((current, evaluation) => (
     statusRank[evaluation.result.status] > statusRank[current] ? evaluation.result.status : current
   ), 'compatible');
-  const keyRules = evaluations
-    .flatMap(getRulesForStatus)
+  const status = unresolvedCurrentLivestockRule && statusRank[evaluatedStatus] < statusRank.insufficient_data
+    ? 'insufficient_data'
+    : evaluatedStatus;
+  const keyRules = [
+    ...evaluations.flatMap(getRulesForStatus),
+    ...(unresolvedCurrentLivestockRule ? [unresolvedCurrentLivestockRule] : []),
+  ]
     .filter((rule, index, rules) => rules.findIndex(candidate => (
       `${candidate.code}-${candidate.title}-${candidate.evidence}` === `${rule.code}-${rule.title}-${rule.evidence}`
     )) === index)
@@ -157,7 +189,10 @@ export const assessSpeciesAddition = ({
     evaluations,
     keyRules,
     warnings: evaluations.flatMap(item => item.result.warningRules),
-    missingInformation: evaluations.flatMap(item => item.result.missingData),
+    missingInformation: [
+      ...evaluations.flatMap(item => item.result.missingData),
+      ...(unresolvedCurrentLivestockRule ? [unresolvedCurrentLivestockRule] : []),
+    ],
   };
 };
 
