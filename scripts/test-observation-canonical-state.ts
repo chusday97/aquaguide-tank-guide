@@ -90,6 +90,7 @@ assert.deepEqual(normalizeObservationChecks('normal', ['rapid_breathing']), [NO_
 assert.deepEqual(normalizeObservationChecks('abnormal', [NO_OBVIOUS_ABNORMALITY_CODE, 'rapid_breathing']), ['rapid_breathing']);
 
 const aquariumSource = await readFile(new URL('../src/pages/Aquarium.tsx', import.meta.url), 'utf8');
+const quickActionSource = await readFile(new URL('../src/components/product/QuickActionGrid.tsx', import.meta.url), 'utf8');
 assert.match(aquariumSource, /const handleObservationSubmit = async \(status: ObservationStatus\)/,
   'observation submission must use one repository-first async handler');
 assert.match(aquariumSource, /await persistCareTimelineEvent\([\s\S]*eventType:\s*'observation'[\s\S]*sourceType:\s*OBSERVATION_SOURCE_TYPE/,
@@ -110,5 +111,13 @@ assert.match(aquariumSource, /if \(status === 'abnormal'\) handleOpenDiagnosisWi
   'diagnosis should open only after an abnormal observation was persisted');
 assert.match(aquariumSource, /disabled=\{isObservationSaving/,
   'observation actions must block duplicate submission while saving');
+assert.match(aquariumSource, /id:\s*'recordObservation'[\s\S]*onClick:\s*\(\)\s*=>\s*setIsObservationOpen\(true\)/,
+  'the aquarium quick-action surface must expose a reachable observation entry');
+assert.match(aquariumSource, /id:\s*'recordObservation'[\s\S]*disabled:\s*!hasStockedAnimals/,
+  'observation entry must be disabled when there is no livestock to observe');
+assert.match(quickActionSource, /disabled\?:\s*boolean/,
+  'quick actions must expose a disabled contract for unavailable factual actions');
+assert.match(quickActionSource, /disabled=\{action\.disabled\}/,
+  'quick-action buttons must enforce the disabled contract in the DOM');
 
 console.log('observation canonical state contract passed');

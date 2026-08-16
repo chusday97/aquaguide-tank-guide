@@ -4808,6 +4808,17 @@ export default function AquariumManager() {
       active: Boolean(todayDailyCheckRecord),
     },
     {
+      id: 'recordObservation',
+      label: isEn ? 'Record Observation' : '记录观察',
+      description: isEn
+        ? (hasStockedAnimals ? 'Record normal or abnormal condition' : 'Add livestock first')
+        : (hasStockedAnimals ? '记录正常或异常状态' : '添加生物后使用'),
+      icon: <Activity className="h-4 w-4" />,
+      onClick: () => setIsObservationOpen(true),
+      tone: !hasStockedAnimals ? 'muted' as const : 'info' as const,
+      disabled: !hasStockedAnimals,
+    },
+    {
       id: 'recordWaterChange',
       label: isEn ? (waterChangedToday ? 'Undo Water Change' : 'Record Water Change') : (waterChangedToday ? '撤回换水记录' : '记录本次换水'),
       description: isEn ? (waterChangedToday ? 'Recorded Today' : "Save today's water change") : (waterChangedToday ? '今日已记录' : '保存今天的换水记录'),
