@@ -111,7 +111,7 @@ const getUnresolvedCurrentLivestockRule = (
     title: '当前鱼缸存在未确认生物',
     evidence: `以下缸内记录尚未映射到可验证物种：${unresolvedFishIds.join('、')}。系统不会忽略这些生物并给出完整混养结论。`,
     severity: 'medium',
-    basis: 'missing_data',
+    basis: 'rule_inference',
     confidence: 'high',
     reviewStatus: 'reviewed',
     affectedSpeciesIds: unresolvedFishIds,
