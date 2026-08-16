@@ -18,30 +18,11 @@ const block = `    {
       id: 'recordObservation',
       label: isEn ? 'Record Observation' : '记录观察',
       description: isEn
-        ? (!hasStockedAnimals
-          ? 'Add livestock first'
-          : todayObservationStatus === 'abnormal'
-            ? 'Abnormality noted today'
-            : todayObservationStatus === 'normal'
-              ? 'Observed today'
-              : 'Record normal or abnormal condition')
-        : (!hasStockedAnimals
-          ? '添加生物后使用'
-          : todayObservationStatus === 'abnormal'
-            ? '今日已发现异常'
-            : todayObservationStatus === 'normal'
-              ? '今日已观察'
-              : '记录正常或异常状态'),
+        ? (hasStockedAnimals ? 'Record normal or abnormal condition' : 'Add livestock first')
+        : (hasStockedAnimals ? '记录正常或异常状态' : '添加生物后使用'),
       icon: <Activity className="h-4 w-4" />,
       onClick: () => setIsObservationOpen(true),
-      tone: !hasStockedAnimals
-        ? 'muted' as const
-        : todayObservationStatus === 'abnormal'
-          ? 'warning' as const
-          : todayObservationStatus === 'normal'
-            ? 'normal' as const
-            : 'info' as const,
-      active: Boolean(todayObservationStatus),
+      tone: !hasStockedAnimals ? 'muted' as const : 'info' as const,
       disabled: !hasStockedAnimals,
     },
 `;
