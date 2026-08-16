@@ -21,7 +21,7 @@ Current product boundary remains deliberate: the Care page does not yet have a r
 
 Branch: `agent/relocation-confirmation-entrypoint`, stacked on PR #64.
 
-### 2026-08-17 — first source-scope audit
+### 2026-08-17 — source-scope audit
 
 The formal intervention model is species-level, while the atomic mutation contract is source-record + source-batch-level.
 
@@ -53,20 +53,39 @@ New entrypoint invariant:
 - launch candidate contains IDs/facts/quantity only; no `operationId`, `isSafe`, `allowed`, cached verdict or compatibility authorization.
 - permanent read-only workflow added for entrypoint + inherited confirmation/policy/decision/type/build gates.
 
-### First CI run
+### CI run 1 — source model green, new static regex false-failed
 
 Run `31961302689`:
 
 - source-scope regression: **passed**;
 - UI static contract: **failed before later gates ran**.
 
-Failure classification: **test-harness assertion error, not product-policy failure**.
+Classification: **test-harness assertion error, not product-policy failure**.
 
-The component correctly calls optional callback using JavaScript optional-call syntax:
+The component correctly calls optional callback using valid optional-call syntax:
 
 `onOpenRelocationConfirmation?.(entrypoint.candidate)`
 
-The static regex incorrectly expected `onOpenRelocationConfirmation?(...)` and therefore false-failed. The product code and source-scope gate were not relaxed. Static test was corrected to match `?.(` and the branch was pushed again for full CI.
+The static regex incorrectly expected `onOpenRelocationConfirmation?(...)`. The product code and source-scope gate were not relaxed; only the regex was corrected.
+
+### CI run 2 — entrypoint + state green, inherited confirmation test path was wrong
+
+Run `31961390757`:
+
+- source-scope regression: **passed**;
+- entrypoint UI static contract: **passed**;
+- PR #64 confirmation-state regression: **passed**;
+- next step failed with `MODULE_NOT_FOUND` before any dialog assertion executed.
+
+The new workflow referenced a non-existent file:
+
+`scripts/test-relocation-confirmation-ui-contract.mjs`
+
+PR #64's real permanent static confirmation test is:
+
+`scripts/verify-relocation-confirmation-surface.mjs`
+
+Classification: **CI configuration error, not confirmation-dialog/product regression**. The dialog code was not changed and no product rule is being relaxed. The entrypoint workflow is being corrected to invoke the same static verifier already used by PR #64.
 
 ### Architecture for this PR
 
@@ -89,11 +108,12 @@ The panel itself remains repository/API/Supabase-free. A later Care integration 
 
 ## Immediate next implementation steps
 
-1. rerun full entrypoint CI after the static-regex correction;
-2. if green, open a Draft PR stacked on #64;
-3. update handoff/badcase with final gate status;
-4. run a disposable canonical #62 + entrypoint-stack audit;
-5. only after that, design the Care-page integration that creates one operation ID and injects PR #63 execution policy.
+1. correct the inherited PR #64 verifier path in the entrypoint workflow;
+2. rerun the entire entrypoint + confirmation + policy + decision + type/build gate;
+3. if green, open a Draft PR stacked on #64;
+4. update handoff/badcase with final gate status;
+5. run a disposable canonical #62 + entrypoint-stack audit;
+6. only after that, design the Care-page integration that creates one operation ID and injects PR #63 execution policy.
 
 ## Non-negotiable constraints
 
