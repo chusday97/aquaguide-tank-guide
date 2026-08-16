@@ -110,11 +110,19 @@ const resolutionSignalForEdge = (
       .flatMap(option => option.subjectSpeciesIds)
       .filter((id, index, list) => list.indexOf(id) === index)
       .sort();
+    if (candidateSubjectSpeciesIds.length > 0) {
+      return {
+        conflictId: edge.id,
+        mode: 'compare_relocation_options',
+        candidateSubjectSpeciesIds,
+        evidenceMode: 'counterfactual_recomputed',
+      };
+    }
     return {
       conflictId: edge.id,
-      mode: 'compare_relocation_options',
-      candidateSubjectSpeciesIds,
-      evidenceMode: 'counterfactual_recomputed',
+      mode: 'monitor',
+      candidateSubjectSpeciesIds: [],
+      evidenceMode: 'rule_mapped',
     };
   }
 
