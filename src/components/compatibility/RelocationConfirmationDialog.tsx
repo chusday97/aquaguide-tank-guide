@@ -16,7 +16,6 @@ export type RelocationConfirmationFacts = {
   sourceAquariumName: string;
   destinationAquariumName: string;
   speciesName: string;
-  quantity: number;
 };
 
 export type RelocationConfirmationDialogProps = {
@@ -142,7 +141,7 @@ export function RelocationConfirmationDialog({
               <FactRow label={isEn ? 'Livestock' : '迁移生物'} value={facts.speciesName} testId="species" />
             </div>
             <div data-relocation-quantity={request.quantity}>
-              <FactRow label={isEn ? 'Quantity' : '数量'} value={String(facts.quantity)} testId="quantity" />
+              <FactRow label={isEn ? 'Quantity' : '数量'} value={String(request.quantity)} testId="quantity" />
             </div>
           </div>
 
