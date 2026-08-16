@@ -35,10 +35,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run dev -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-vite.log 2>&1 &
+          nohup npx vite --host 127.0.0.1 --port 4173 </dev/null > /tmp/aquaguide-vite.log 2>&1 &
           echo $! > /tmp/aquaguide-vite.pid
           for attempt in $(seq 1 60); do
-            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
+            if curl --fail --silent --max-time 2 http://127.0.0.1:4173/ >/dev/null; then
               exit 0
             fi
             sleep 1
