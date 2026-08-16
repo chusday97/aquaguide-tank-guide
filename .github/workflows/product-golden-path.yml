@@ -22,6 +22,7 @@ jobs:
           python3 scripts/agent-care-checklist-progress-03-api-contract.py
           python3 scripts/agent-care-checklist-progress-04-care-page.py
           python3 scripts/agent-care-checklist-progress-05-artifacts.py
+          python3 scripts/agent-care-checklist-progress-06-hydration-regression.py
           git diff --check
       - uses: actions/setup-node@v4
         with:
@@ -82,7 +83,7 @@ jobs:
         run: |
           git config user.name "AquaGuide Agent"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .agent-care-checklist-progress-trigger .agent-care-checklist-progress-patch.gz.b64 scripts/agent-care-checklist-progress-01-core.py scripts/agent-care-checklist-progress-02-api-repo.py scripts/agent-care-checklist-progress-03-api-contract.py scripts/agent-care-checklist-progress-04-care-page.py scripts/agent-care-checklist-progress-05-artifacts.py
-          git add src/services/care/care-activity.service.ts src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts packages/contracts/src/business.ts src/types/database.ts apps/api/src/routes/user-records.ts src/pages/CareEncyclopedia.tsx supabase/migrations/20260816072000_care_checklist_progress.sql scripts/test-care-checklist-progress-canonical.ts
+          git rm .agent-care-checklist-progress-trigger .agent-care-checklist-progress-patch.gz.b64 scripts/agent-care-checklist-progress-01-core.py scripts/agent-care-checklist-progress-02-api-repo.py scripts/agent-care-checklist-progress-03-api-contract.py scripts/agent-care-checklist-progress-04-care-page.py scripts/agent-care-checklist-progress-05-artifacts.py scripts/agent-care-checklist-progress-06-hydration-regression.py
+          git add src/services/care/care-activity.service.ts src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts packages/contracts/src/business.ts src/types/database.ts apps/api/src/routes/user-records.ts src/pages/CareEncyclopedia.tsx supabase/migrations/20260816072000_care_checklist_progress.sql scripts/test-care-checklist-progress-canonical.ts scripts/test-care-aquarium-hydration.ts
           git commit -m "fix: persist care checklist progress canonically"
           git push origin HEAD:agent/fix-aquarium-completion-state
