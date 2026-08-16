@@ -56,8 +56,8 @@ const scoreSignals = (signals: string[], contextualOnly: boolean) => {
 };
 
 export const buildCompatibilityEvidenceResearchQueue = (): EvidenceResearchPriority[] => fishData
-  .flatMap(species => {
-    const lifeType = getLifeType(species);
+  .flatMap<EvidenceResearchPriority>(species => {
+    const lifeType: EvidenceResearchPriority['lifeType'] = getLifeType(species);
     if (lifeType === 'plant' || lifeType === 'hardscape') return [];
     if (getReviewedCompatibilityProfile(species.id)) return [];
 
@@ -66,17 +66,18 @@ export const buildCompatibilityEvidenceResearchQueue = (): EvidenceResearchPrior
     const priorityScore = scoreSignals(researchSignals, Boolean(conditional));
     if (priorityScore <= 0) return [];
 
-    return [{
+    const item: EvidenceResearchPriority = {
       speciesId: species.id,
       name: species.name,
       scientificName: species.scientificName,
       lifeType,
       waterType: getSpeciesWaterType(species),
       role: getSecondaryCategory(species),
-      coverage: conditional ? 'contextual_only' as const : 'unreviewed' as const,
+      coverage: conditional ? 'contextual_only' : 'unreviewed',
       priorityScore,
       researchSignals,
-    }];
+    };
+    return [item];
   })
   .sort((left, right) => (
     right.priorityScore - left.priorityScore
