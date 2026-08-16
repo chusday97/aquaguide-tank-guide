@@ -2454,12 +2454,12 @@ function StepDiagnosisPanel({
     return currentLivestock.filter(item => selectedIds.has(item.fish.id));
   }, [currentLivestock, diagnosisState.target.scope, diagnosisState.target.speciesIds, requiresSpeciesScope]);
   // CARE_CONFLICT_DECISION_SURFACE_START
-  // This first page integration intentionally omits allAquariums. Until the canonical #34
-  // hydration stack is formally converged, destination-list certainty stays unknown rather
-  // than turning a standalone Draft's device snapshot into a relocation claim.
+  // Canonical merged-tree verification proved this Care surface reacts to #34 repository
+  // hydration. The full aquarium set can therefore be supplied explicitly for destination
+  // evaluation; every target tank is still recomputed through the canonical compatibility path.
   const decisionSupport = useMemo(() => targetAquarium
-    ? buildTankDecisionSupport({ aquarium: targetAquarium, catalog: fishData })
-    : null, [targetAquarium]);
+    ? buildTankDecisionSupport({ aquarium: targetAquarium, catalog: fishData, allAquariums: aquariums })
+    : null, [targetAquarium, aquariums]);
   const conflictAugmentation = useMemo(() => decisionSupport
     ? buildQuickDiagnosisConflictAugmentation({
         issueType: diagnosisState.issueType,

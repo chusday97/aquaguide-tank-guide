@@ -25,7 +25,7 @@ assert.ok(integration.includes('buildQuickDiagnosisConflictAugmentation({'), 'Ca
 assert.ok(integration.includes('InterventionComparisonPanel'), 'Care surface must open the existing read-only intervention panel');
 assert.ok(integration.includes('targetAquarium'), 'Care decision support must be scoped to the diagnosis aquarium');
 assert.ok(integration.includes('fishData'), 'Care decision support must use the canonical catalog pool');
-assert.ok(!integration.includes('allAquariums:'), 'first Care integration must leave destination-set certainty unknown until canonical cross-stack hydration is verified');
+assert.ok(integration.includes('allAquariums: aquariums'), 'after canonical hydration verification, Care decision support must receive the reactive aquarium set for destination evaluation');
 
 for (const forbidden of [
   'removeLivestock',
@@ -58,4 +58,9 @@ assert.ok(
   'selected diagnosis scope must flow into conflict evidence filtering',
 );
 
-console.log('Care conflict decision-surface static contract passed: additive, read-only, destination-unknown, shared decision/diagnosis models');
+assert.ok(
+  source.includes(': null, [targetAquarium, aquariums]);'),
+  'destination-aware decision support must recompute when repository-hydrated aquarium state changes',
+);
+
+console.log('Care conflict decision-surface static contract passed: additive, read-only, destination-reactive, shared decision/diagnosis models');

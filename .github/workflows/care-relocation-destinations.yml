@@ -1,0 +1,38 @@
+name: Care Relocation Destinations
+
+on:
+  push:
+    branches:
+      - agent/care-relocation-destinations
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  care-relocation-destinations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Care relocation destination contract
+        run: node scripts/test-care-relocation-destination-surface.mjs
+      - name: Evolved Care decision-surface contract
+        run: node scripts/test-care-conflict-decision-surface.mjs
+      - name: Relocation destination evaluator regression
+        run: node --import tsx scripts/test-relocation-destination-evaluator.ts
+      - name: Tank Decision Support regression
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Read-only Intervention UI contract
+        run: node scripts/test-intervention-comparison-ui-contract.mjs
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Type check
+        run: npm run lint
+      - name: Production build
+        run: npm run build
