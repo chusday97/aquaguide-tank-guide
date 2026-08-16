@@ -1,5 +1,5 @@
 import type { Aquarium, Fish } from '../types';
-import { isSaltwaterSpecies } from '../modules/species/species.service';
+import { getSpeciesWaterType } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
 import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
@@ -168,6 +168,10 @@ const dedupeRules = (rules: TankCompatibilityRule[]) => {
   });
 };
 
+const hasBinaryWaterCertainty = (waterType: ReturnType<typeof getSpeciesWaterType>) => (
+  waterType === 'freshwater' || waterType === 'saltwater'
+);
+
 export const evaluateTankCompatibility = ({
   tank,
   existingSpecies = [],
@@ -230,7 +234,17 @@ export const evaluateTankCompatibility = ({
       const reviewedPairRule = getReviewedPairRule(existing.id, candidateSpecies.id);
       const existingProfile = getReviewedCompatibilityProfile(existing.id);
       const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
-      if (isSaltwaterSpecies(existing) !== isSaltwaterSpecies(candidateSpecies)) {
+      const existingWaterType = getSpeciesWaterType(existing);
+      const candidateWaterType = getSpeciesWaterType(candidateSpecies);
+      if (!hasBinaryWaterCertainty(existingWaterType) || !hasBinaryWaterCertainty(candidateWaterType)) {
+        missingData.push(asRule(
+          'species_water_type_uncertain',
+          '水体类型需要确认',
+          `${pairName} 至少一方属于汽水或水体类型尚未确认，不能按淡水/海水一致处理。`,
+          'medium',
+          reviewedRuleEvidence,
+        ));
+      } else if (existingWaterType !== candidateWaterType) {
         blockingRules.push(asRule('species_water_type_conflict', '水体类型冲突', `${pairName} 分属淡水与海水环境，不能混养。`, 'high', reviewedRuleEvidence));
       } else {
         passedRules.push(asRule('species_water_type_match', '水体类型一致', `${pairName} 的水体类型一致。`, 'info', reviewedRuleEvidence));

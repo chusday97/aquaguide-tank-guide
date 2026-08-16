@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { Fish } from '../../types';
+import { resolveCanonicalSpeciesId } from './speciesAliases';
 
 export const lifeTypeSchema = z.enum(['All', 'fish', 'freshwaterFish', 'saltwaterFish', 'invertebrate', 'reptile', 'coral', 'plant', 'hardscape']);
 
@@ -53,7 +54,7 @@ export const speciesListOutputSchema = z.object({
 });
 
 export const speciesDetailInputSchema = z.object({
-  speciesId: z.string().min(1),
+  speciesId: z.string().min(1).transform(resolveCanonicalSpeciesId),
 });
 
 export const speciesDetailOutputSchema = z.object({

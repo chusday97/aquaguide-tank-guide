@@ -1,0 +1,36 @@
+name: Care Conflict Decision Surface
+
+on:
+  push:
+    branches:
+      - agent/care-conflict-decision-surface
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  care-decision-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Static Care decision-surface contract
+        run: node scripts/test-care-conflict-decision-surface.mjs
+      - name: Quick Diagnosis conflict augmentation regression
+        run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
+      - name: Tank Decision Support regression
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Read-only Intervention UI contract
+        run: node scripts/test-intervention-comparison-ui-contract.mjs
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Type check
+        run: npm run lint
+      - name: Production build
+        run: npm run build

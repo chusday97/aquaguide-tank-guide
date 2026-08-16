@@ -1,0 +1,39 @@
+name: Tank Decision Support Orchestrator
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/tankDecisionSupportOrchestrator.ts'
+      - 'src/lib/tankDecisionContext.ts'
+      - 'src/lib/relocationDestinationContext.ts'
+      - 'src/lib/relocationDestinationEvaluator.ts'
+      - 'src/lib/interventionChoiceModel.ts'
+      - 'src/lib/conflictActionEngine.ts'
+      - 'scripts/test-tank-decision-support-orchestrator.ts'
+      - 'scripts/test-tank-decision-context.ts'
+      - '.github/workflows/tank-decision-support-orchestrator.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  orchestrator:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Decision support orchestration golden cases
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Tank decision context regression
+        run: node --import tsx scripts/test-tank-decision-context.ts
+      - name: Keeper choice regression
+        run: node --import tsx scripts/test-intervention-choice-model.ts
+      - name: Destination evaluation regression
+        run: node --import tsx scripts/test-relocation-destination-evaluator.ts
+      - name: Type check
+        run: npm run lint

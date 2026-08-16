@@ -192,6 +192,32 @@ const routeFailures = failures
     errorBoundary,
     overflowingControls,
   }));
+
+const escapeWorkflowCommandValue = value => String(value)
+  .replace(/%/g, '%25')
+  .replace(/\r/g, '%0D')
+  .replace(/\n/g, '%0A')
+  .replace(/:/g, '%3A')
+  .replace(/,/g, '%2C');
+
+const emitFailureAnnotation = (title, details) => {
+  if (process.env.GITHUB_ACTIONS !== 'true') return;
+  console.error(`::error title=${escapeWorkflowCommandValue(title)}::${escapeWorkflowCommandValue(JSON.stringify(details))}`);
+};
+
+routeFailures.slice(0, 20).forEach(failure => {
+  emitFailureAnnotation(
+    `Responsive route ${failure.route} @ ${failure.profile?.width || '?'}x${failure.profile?.height || '?'} ${failure.profile?.locale || '?'}`,
+    failure,
+  );
+});
+uniqueUndersizedControls.slice(0, 20).forEach(control => {
+  emitFailureAnnotation(
+    `Touch target under 44px: ${control.label || 'unlabelled icon control'}`,
+    control,
+  );
+});
+
 assert.deepEqual(
   { routeFailures, uniqueUndersizedControls },
   { routeFailures: [], uniqueUndersizedControls: [] },

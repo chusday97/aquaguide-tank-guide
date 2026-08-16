@@ -1,4 +1,5 @@
 import type { Aquarium, DeceasedRecord, MemorialCauseCode } from '../../types';
+import { resolveCanonicalSpeciesId } from '../../modules/species/speciesAliases';
 import { decrementSpeciesBatch, normalizeSpeciesBatches } from '../aquarium/species-batches.service';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 
@@ -43,7 +44,11 @@ const normalizeRecords = (value: unknown[]): DeceasedRecord[] => value.map(item 
   if (!item || typeof item !== 'object') return false;
   const record = item as Partial<DeceasedRecord>;
   if (typeof record.id !== 'string' || typeof record.fishId !== 'string' || typeof record.date !== 'string') return false;
-  return { ...record, causeCodes: normalizeCauseCodes(record.causeCodes) } as DeceasedRecord;
+  return {
+    ...record,
+    fishId: resolveCanonicalSpeciesId(record.fishId),
+    causeCodes: normalizeCauseCodes(record.causeCodes),
+  } as DeceasedRecord;
 }).filter((item): item is DeceasedRecord => Boolean(item));
 
 const createRecordId = () => (
@@ -53,15 +58,16 @@ const createRecordId = () => (
 );
 
 export const recordSpeciesMemorial = ({ fishId, date, causeCodes, reason, observation, improvement }: MemorialRecordInput) => {
+  const canonicalFishId = resolveCanonicalSpeciesId(fishId);
   const normalizedReason = reason?.trim();
   const normalizedCauseCodes = normalizeCauseCodes(causeCodes);
-  if (!fishId || !date) throw new Error('请选择记录日期。');
+  if (!canonicalFishId || !date) throw new Error('请选择记录日期。');
   validateCause(normalizedCauseCodes, normalizedReason);
 
   const current = loadAppStateFromStorage();
   const record: DeceasedRecord = {
     id: createRecordId(),
-    fishId,
+    fishId: canonicalFishId,
     date: new Date(`${date}T12:00:00`).toISOString(),
     causeCodes: normalizedCauseCodes,
     reason: normalizedReason || undefined,
@@ -107,15 +113,16 @@ export const recordSpeciesMemorialAndDecrementBatch = (input: MemorialRecordInpu
   aquariumFishId: string;
   batchId: string;
 }) => {
+  const canonicalFishId = resolveCanonicalSpeciesId(input.fishId);
   const normalizedReason = input.reason?.trim();
   const normalizedCauseCodes = normalizeCauseCodes(input.causeCodes);
-  if (!input.fishId || !input.date) throw new Error('请选择记录日期。');
+  if (!canonicalFishId || !input.date) throw new Error('请选择记录日期。');
   validateCause(normalizedCauseCodes, normalizedReason);
   const current = loadAppStateFromStorage();
   const aquarium = current.aquariums.find(item => item.id === input.aquariumId);
   const aquariumFish = aquarium?.fishes.find(item => item.id === input.aquariumFishId);
   if (!aquarium || !aquariumFish) throw new Error('没有找到需要更新的缸内物种。');
-  if (aquariumFish.fishId !== input.fishId) throw new Error('所选物种与缸内记录不一致。');
+  if (aquariumFish.fishId !== canonicalFishId) throw new Error('所选物种与缸内记录不一致。');
   if (!normalizeSpeciesBatches(aquariumFish).some(batch => batch.id === input.batchId)) throw new Error('请选择记录减少数量的批次。');
 
   const nextFish = decrementSpeciesBatch(aquariumFish, input.batchId);
@@ -127,7 +134,7 @@ export const recordSpeciesMemorialAndDecrementBatch = (input: MemorialRecordInpu
   };
   const record: DeceasedRecord = {
     id: createRecordId(),
-    fishId: input.fishId,
+    fishId: canonicalFishId,
     date: new Date(`${input.date}T12:00:00`).toISOString(),
     causeCodes: normalizedCauseCodes,
     reason: normalizedReason || undefined,

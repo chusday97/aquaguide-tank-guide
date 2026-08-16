@@ -1,0 +1,34 @@
+name: Compatibility Evidence Contextual Expansion
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/compatibilityEvidence.ts'
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'scripts/test-contextual-compatibility-evidence.ts'
+      - 'scripts/test-compatibility-evidence-coverage.ts'
+      - 'scripts/test-reviewed-severe-risk-regression.ts'
+      - '.github/workflows/compatibility-evidence-contextual-expansion.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contextual-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Contextual evidence integrity and non-escalation
+        run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
+      - name: Existing compatibility evidence coverage
+        run: npm run test:compatibility-evidence-coverage
+      - name: Reviewed severe-risk cross-layer regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Type check
+        run: npm run lint

@@ -151,7 +151,7 @@ export type CompatibleRecommendationInput = {
 };
 
 export type RecommendationMode = 'empty_tank' | 'existing_livestock';
-export type LoadStatus = 'relaxed' | 'moderate' | 'near_limit' | 'over_limit';
+export type LoadStatus = 'unknown' | 'relaxed' | 'moderate' | 'near_limit' | 'over_limit';
 export type CandidateStatus = 'direct' | 'adjustable' | 'blocked';
 
 export type UserPreference = {

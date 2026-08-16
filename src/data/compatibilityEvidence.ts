@@ -1,10 +1,28 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
+import {
+  getAdditionalReviewedCompatibilityProfile,
+  getAdditionalReviewedCompatibilityProfileIds,
+} from './compatibilityEvidenceReviewedPredators';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
   behaviorTraits: string[];
   minimumGroupSize?: number;
   predationTargets: string[];
+  confidence: CompatibilityEvidenceDto['confidence'];
+  reviewStatus: CompatibilityEvidenceDto['reviewStatus'];
+  citations: EvidenceSourceDto[];
+};
+
+export type ReviewedConditionalBehaviorTrait = {
+  trait: string;
+  context: string;
+};
+
+export type ReviewedConditionalBehaviorEvidence = {
+  evidenceKey: string;
+  scientificSpecies: string;
+  behaviorTraits: ReviewedConditionalBehaviorTrait[];
   confidence: CompatibilityEvidenceDto['confidence'];
   reviewStatus: CompatibilityEvidenceDto['reviewStatus'];
   citations: EvidenceSourceDto[];
@@ -63,6 +81,42 @@ const cardinalTetraFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const oscarPreyCaptureStudy: EvidenceSourceDto = {
+  id: 'oscar-live-guppy-prey-capture-study',
+  title: 'Functional morphology of extreme jaw protrusion in Neotropical cichlids',
+  publisher: 'Journal of Morphology',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/12740901/',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const bettaTerritoryPhaseStudy: EvidenceSourceDto = {
+  id: 'betta-territory-reproductive-phase-study',
+  title: 'Type of intruder and reproductive phase influence male territorial defence in wild-caught Siamese fighting fish',
+  publisher: 'Behavioural Processes',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/12914992/',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const bettaEnvironmentAggressionStudy: EvidenceSourceDto = {
+  id: 'betta-environment-aggression-study',
+  title: 'Timing of isolation from an enriched environment determines the level of aggressive behavior and sexual maturity in Siamese fighting fish (Betta splendens)',
+  publisher: 'Applied Animal Behaviour Science',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/37170314/',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const angelfishMatingTerritoryStudy: EvidenceSourceDto = {
+  id: 'angelfish-mating-territory-study',
+  title: 'Mating system of the Amazonian cichlid angel fish, Pterophyllum scalare',
+  publisher: 'Brazilian Journal of Biology',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/17505764/',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0439: {
     speciesId: 'sp_0439',
@@ -107,6 +161,72 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [cardinalTetraFishBase],
   },
+  sp_0451: {
+    speciesId: 'sp_0451',
+    behaviorTraits: ['predatory'],
+    predationTargets: ['small_fish'],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [oscarPreyCaptureStudy],
+  },
+};
+
+const conditionalEvidence: Record<string, ReviewedConditionalBehaviorEvidence> = {
+  betta_splendens_contextual_aggression: {
+    evidenceKey: 'betta_splendens_contextual_aggression',
+    scientificSpecies: 'Betta splendens',
+    behaviorTraits: [
+      {
+        trait: 'territorial',
+        context: 'Territorial defence is directly documented in adult/nest-holding males, and response intensity varies with reproductive phase and intruder type.',
+      },
+      {
+        trait: 'intraspecific_aggression',
+        context: 'Aggression expression is context-dependent; rearing environment and isolation history can change later aggressive behaviour.',
+      },
+    ],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [bettaTerritoryPhaseStudy, bettaEnvironmentAggressionStudy],
+  },
+  pterophyllum_scalare_breeding_territory: {
+    evidenceKey: 'pterophyllum_scalare_breeding_territory',
+    scientificSpecies: 'Pterophyllum scalare',
+    behaviorTraits: [
+      {
+        trait: 'territorial',
+        context: 'Paired fish defend territory and attack intruders in the presence of the mate during the reproductive cycle; the study did not observe the same intruder aggression between breeding cycles.',
+      },
+      {
+        trait: 'breeding_defense',
+        context: 'The reviewed evidence supports reproductive-state-dependent territory defence rather than an unconditional always-aggressive trait.',
+      },
+    ],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [angelfishMatingTerritoryStudy],
+  },
+};
+
+const conditionalEvidenceAssignments: Record<string, string> = {
+  sp_0258: 'betta_splendens_contextual_aggression',
+  sp_0259: 'betta_splendens_contextual_aggression',
+  sp_0260: 'betta_splendens_contextual_aggression',
+  sp_0261: 'betta_splendens_contextual_aggression',
+  sp_0262: 'betta_splendens_contextual_aggression',
+  sp_0389: 'betta_splendens_contextual_aggression',
+  sp_0390: 'betta_splendens_contextual_aggression',
+  sp_0391: 'betta_splendens_contextual_aggression',
+  sp_0175: 'pterophyllum_scalare_breeding_territory',
+  sp_0176: 'pterophyllum_scalare_breeding_territory',
+  sp_0177: 'pterophyllum_scalare_breeding_territory',
+  sp_0178: 'pterophyllum_scalare_breeding_territory',
+  sp_0240: 'pterophyllum_scalare_breeding_territory',
+  sp_0241: 'pterophyllum_scalare_breeding_territory',
+  sp_0247: 'pterophyllum_scalare_breeding_territory',
+  sp_0272: 'pterophyllum_scalare_breeding_territory',
+  sp_0388: 'pterophyllum_scalare_breeding_territory',
+  sp_0446: 'pterophyllum_scalare_breeding_territory',
 };
 
 const pairRules: ReviewedPairRule[] = [
@@ -136,13 +256,27 @@ const pairRules: ReviewedPairRule[] = [
   },
 ];
 
-export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
+export const getReviewedCompatibilityProfile = (speciesId: string) => (
+  profiles[speciesId] || getAdditionalReviewedCompatibilityProfile(speciesId)
+);
+
+export const getReviewedConditionalBehaviorEvidence = (speciesId: string) => {
+  const evidenceKey = conditionalEvidenceAssignments[speciesId];
+  return evidenceKey ? conditionalEvidence[evidenceKey] : undefined;
+};
 
 export const getReviewedPairRule = (leftId: string, rightId: string) => pairRules.find(rule => (
   rule.speciesIds.includes(leftId) && rule.speciesIds.includes(rightId)
 ));
 
+export const getConditionalBehaviorEvidenceAudit = () => ({
+  evidence: conditionalEvidence,
+  assignments: conditionalEvidenceAssignments,
+});
+
 export const getCompatibilityEvidenceAudit = () => ({
-  reviewedSpeciesIds: Object.keys(profiles),
+  reviewedSpeciesIds: [...Object.keys(profiles), ...getAdditionalReviewedCompatibilityProfileIds()],
   reviewedPairRules: pairRules,
+  conditionalEvidenceKeys: Object.keys(conditionalEvidence),
+  conditionalEvidenceAssignments,
 });

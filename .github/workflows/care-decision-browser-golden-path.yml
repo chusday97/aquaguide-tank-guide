@@ -1,0 +1,49 @@
+name: Care Decision Browser Golden Path
+
+on:
+  push:
+    branches:
+      - agent/care-decision-browser-golden-path
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-golden-path:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Care decision static contracts
+        run: |
+          node scripts/test-care-conflict-decision-surface.mjs
+          node scripts/test-care-relocation-destination-surface.mjs
+      - name: Decision and destination regressions
+        run: |
+          node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+          node --import tsx scripts/test-relocation-destination-evaluator.ts
+          node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-care-decision-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-care-decision-preview.log
+          exit 1
+      - name: Care decision browser Golden Path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-care-decision-browser-golden-path.mjs
