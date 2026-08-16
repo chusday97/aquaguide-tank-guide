@@ -4,52 +4,9 @@
 
 ## Existing protected badcases
 
-- REL-023 — committed RPC + failed post-read cannot look like mutation failure.
-- REL-024 — rejected mutation transport may be post-write: preserve operationId and reconcile.
-- REL-025 — displayed/submitted quantity share one source.
-- REL-026 — confirmation UI cannot import repository/API/Supabase directly.
-- REL-027 — fresh blocked result cannot become success UI.
-- REL-028 — uncertain state has no blind relocation retry.
-- REL-029 — completed confirmation cannot execute again.
-- REL-030 — blocked stale proposal needs a new evaluation.
-- REL-031 — request IDs authoritative; names display-only.
-- REL-032 — unexpected callback error reconciles conservatively.
-- REL-033 — isolated green requires canonical integration audit.
-- REL-034…REL-039 — PR #65 multi-record/multi-batch/missing-batch/quantity/cached-verdict protections remain green.
+REL-023…REL-049 remain active. The latest confirmed protections include atomic receipt semantics, fresh revalidation, stable attempt operationId/repository session, no direct Care relocation mutation, canonical display before mirror persistence, and non-dismissible uncertainty until canonical reconciliation succeeds.
 
-## Care executable-layer badcases
-
-### REL-040 — operationId regenerated during render
-**Fix:** controller creates operationId once from the opener event. Regression green.
-
-### REL-041 — reconciliation sends a second mutation/new operationId
-**Fix:** controller `reconcile()` is canonical read-only; unknown outcome preserves attempt identity. Regression green.
-
-### REL-042 — Care JSX/page handler calls `repository.relocateLivestock()` directly
-**Current wiring contract:** Care only creates the controller; mutation remains reachable solely inside the #63 injected callback. Static page verifier passed in the one-shot runner.
-
-### REL-043 — “fresh” loader returns React/local mirror state
-**Fix:** controller pre/post loads use repository `getAquariums()`. Fresh destination degradation produces zero writes. Regression green.
-
-### REL-044 — success leaves Care decision state stale
-**Confirmed and addressed in wiring design:** executed/reconciled canonical aquarium lists are applied directly to the Care-visible state before compatibility-mirror persistence.
-
-### REL-045 — idle cancel and terminal attempt lifecycle are conflated
-One attempt identity belongs to one move. Uncertain states are now non-dismissible until reconciliation succeeds; idle unused cancellation remains separately discardable.
-
-### REL-046 — final Care wiring implemented on PR #65-only branch
-**Fix:** executable work moved to canonical combined branch. Bootstrap `31962121116` green; no main/product PR merge.
-
-### REL-047 — repository mode/source changes inside one attempt
-**Fix:** one successfully resolved repository instance owns pre-load → mutation → post-load → reconcile. Controller regression green.
-
-### REL-048 — reconciliation-required dialog can be dismissed before canonical sync
-**Fix:** dialog close lock + reconciled terminal state. Full rerun `31962635712` green.
-
-### REL-049 — canonical refresh succeeds but compatibility-mirror persistence fails
-**Fix design + helper regression:** canonical state is shown first; mirror persistence is best-effort and caught. Mirror failure cannot throw/reclassify relocation success. Helper static/logic gates passed in Care wiring runner before later hydration-test stop.
-
-## Test infrastructure badcases
+## Test infrastructure findings
 
 ### TEST-001 — optional-call regex false failure
 Fixed test only; product gate unchanged.
@@ -57,48 +14,54 @@ Fixed test only; product gate unchanged.
 ### TEST-002 — guessed parent verifier filename
 Fixed by reusing PR #64 canonical verifier.
 
-### TEST-003 — Care hydration regression requires unrelated statements to be adjacent
+### TEST-003 — Care hydration regression coupled to source-line adjacency
+Run `31962863527` stopped because the static test required `appState` initialization and `subscribeToAppState` to be adjacent. The new canonical override state legitimately sits between them. Test was changed to capability assertions; rerun `31963027394` confirmed Care hydration is green.
 
-**Observed in one-shot Care wiring run `31962863527`:**
+## TYPE-001 — mirror-result false branch is not explicitly discriminated
 
-New wiring static contract, canonical mirror fallback, controller, confirmation lifecycle, entrypoint, fresh policy and mutation uncertainty all passed. The run then failed at `scripts/test-care-aquarium-hydration.ts` before severe-risk/TypeScript/build.
+**Observed in Care wiring rerun `31963027394`:** all relocation/canonical/hydration/severe-risk gates passed, then app TypeScript failed with:
 
-The failing static regex requires:
+`Property 'errorMessage' does not exist on type 'CareCanonicalAquariumApplyResult'`.
 
-`const [appState, setAppState] = useState(loadAppStateFromStorage);` immediately followed by `useEffect(() => subscribeToAppState(...))`.
+The helper deliberately returns a strict union:
 
-The Care patch only inserts the required canonical override state between them:
+- `mirrorPersisted: true` → has `mirrorState`
+- `mirrorPersisted: false` → has `errorMessage`
 
-`const [canonicalAquariums, setCanonicalAquariums] = useState<Aquarium[] | null>(null);`
+The Care patch used:
 
-The app-state subscription itself remains present. This insertion is necessary to protect REL-044/049 and does not remove direct-page hydration.
+`if (applied.mirrorPersisted) { ... } else { applied.errorMessage }`
 
-**Classification:** stale test-structure coupling, not a product/hydration regression.
+The current TypeScript configuration did not accept the truthiness `else` as sufficiently narrowed to the false literal branch.
 
-**Required test correction:** assert capabilities independently:
-- appState initializes from storage mirror;
-- `subscribeToAppState` still refreshes appState;
-- StepDiagnosis uses `canonicalAquariums ?? appState.aquariums` so verified canonical post-action state can outrank a stale mirror;
-- no regression to one-time `useMemo(loadAppStateFromStorage)`.
+**Classification:** integration type-boundary issue. This is not evidence against REL-049 behavior; the helper regressions and page static contract were already green.
 
-Do not restore source-line adjacency or remove the canonical override merely to satisfy this regex.
+**Forbidden fixes:**
+- do not add `any`;
+- do not make `errorMessage` optional on the success branch;
+- do not weaken `mirrorPersisted` from literal `true | false` to generic boolean;
+- do not throw mirror errors just to simplify the type.
 
-**Status:** fix test, rerun the full one-shot workflow from the unpersisted pre-wiring branch state.
+**Required fix:** use explicit literal discrimination, preferably handle `applied.mirrorPersisted === false` first, log the false-branch `errorMessage`, retain canonical React override, and return from the mirror-sync helper path. The true branch may then safely access `mirrorState` and release the canonical override.
+
+**Status:** patch-script correction required; JSX wiring is still unpersisted because the one-shot run stopped before commit.
 
 ## Current verified baseline
 
-- #65 isolated run `31961532732`: green.
+- #65 isolated `31961532732`: green.
 - disposable #62 + #65 audit `31961690289`: green.
 - canonical bootstrap `31962121116`: green.
-- controller run `31962344545`: green.
-- reconciliation lifecycle run `31962635712`: green.
-- Care JSX one-shot `31962863527`: new wiring gates green through mutation uncertainty; stopped at TEST-003. JSX patch was not committed/pushed.
+- Care controller `31962344545`: green.
+- reconciliation lifecycle `31962635712`: green.
+- Care wiring run `31962863527`: new wiring gates green through uncertainty; TEST-003 stopped run.
+- Care wiring rerun `31963027394`: wiring/mirror/controller/confirmation/entrypoint/fresh/uncertainty/hydration/severe-risk all green; TYPE-001 stopped app TypeScript before API TS/build/commit.
 
 ## Remaining Care executable-layer exit gate
 
-- correct TEST-003 without weakening hydration semantics;
-- rerun exact-anchor Care wiring and require Care hydration + severe-risk + app/API TypeScript + build green;
+- fix TYPE-001 without weakening result types;
+- rerun exact-anchor Care wiring from unpersisted pre-wiring state;
+- require app/API TypeScript + production build green;
 - self-delete one-shot write tooling only after full green;
-- verify persisted Care page has no direct relocation mutation call;
+- verify persisted Care page still contains no direct relocation mutation call;
 - then add browser Golden Path for open → confirm → fresh block/success/reconcile;
 - keep handoff/badcase updated as failures are found.
