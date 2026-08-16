@@ -46,10 +46,13 @@ jobs:
           cat /tmp/aquaguide-vite.log
           exit 1
       - name: Real Care relocation browser Golden Path
+        shell: bash
         env:
           AQUAGUIDE_BROWSER_BASE_URL: http://127.0.0.1:4173
           AQUAGUIDE_BROWSER_ARTIFACT_DIR: /tmp/aquaguide-browser-artifacts
-        run: node scripts/test-care-relocation-browser-golden-path.mjs
+        run: |
+          set -o pipefail
+          node scripts/test-care-relocation-browser-golden-path.mjs 2>&1 | tee /tmp/aquaguide-browser-test.log
       - name: Upload browser diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,6 +60,7 @@ jobs:
           name: care-relocation-browser-diagnostics-${{ github.run_id }}
           path: |
             /tmp/aquaguide-browser-artifacts
+            /tmp/aquaguide-browser-test.log
             /tmp/aquaguide-vite.log
           if-no-files-found: ignore
           retention-days: 7
