@@ -35,12 +35,29 @@ jobs:
         run: npx tsx scripts/test-unresolved-existing-livestock.ts
       - name: Livestock state surface regression
         run: npm run test:livestock-state-surface
-      - name: Livestock drawer regression
-        run: npm run test:livestock-state-drawer-ui
       - name: App type check
         run: npm run lint
       - name: Production build
         run: npm run build
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-unresolved-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-unresolved-preview.log
+          exit 1
+      - name: Existing livestock drawer browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:livestock-state-drawer-ui
+      - name: Unresolved livestock browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-unresolved-livestock-ui.mjs
       - name: Commit verified UI
         run: |
           git config user.name "github-actions[bot]"
