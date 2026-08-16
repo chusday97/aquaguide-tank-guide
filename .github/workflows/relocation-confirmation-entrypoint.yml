@@ -12,6 +12,7 @@ on:
       - 'scripts/test-relocation-confirmation-entrypoint-ui.mjs'
       - 'src/lib/relocationExecutionPolicy.ts'
       - 'src/components/compatibility/RelocationConfirmationDialog.tsx'
+      - 'scripts/verify-relocation-confirmation-surface.mjs'
       - '.github/workflows/relocation-confirmation-entrypoint.yml'
 
 permissions:
@@ -34,7 +35,7 @@ jobs:
       - name: Confirmation state regression
         run: node --import tsx scripts/test-relocation-confirmation-state.ts
       - name: Confirmation dialog static contract
-        run: node scripts/test-relocation-confirmation-ui-contract.mjs
+        run: node scripts/verify-relocation-confirmation-surface.mjs
       - name: Fresh execution policy regression
         run: node --import tsx scripts/test-relocation-execution-policy.ts
       - name: Ambiguous mutation outcome regression
