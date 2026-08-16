@@ -1,0 +1,36 @@
+name: Legacy Marine Category Contradictions
+
+on:
+  push:
+    branches:
+      - agent/fix-legacy-marine-category-contradictions
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  legacy-water-category:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tanganyika legacy category regression
+        run: node --import tsx scripts/test-legacy-marine-category-contradictions.ts
+      - name: Water ambiguity regression
+        run: node --import tsx scripts/test-species-water-type-ambiguity.ts
+      - name: Taxonomy regression
+        run: node --import tsx scripts/assert_taxonomy_rules.ts
+      - name: Catalog grounding regression
+        run: npx tsx scripts/test-catalog-grounding-contract.ts
+      - name: Lionfish reviewed evidence regression
+        run: node --import tsx scripts/test-lionfish-reviewed-evidence.ts
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Type check
+        run: npm run lint
