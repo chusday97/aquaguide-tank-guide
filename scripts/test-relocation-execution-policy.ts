@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
-import type { Aquarium, AquariumFish, AquariumSpeciesBatch } from '../src/types';
+import type { Aquarium, AquariumFish, AquariumSpeciesBatch, Fish } from '../src/types';
 import { executeFreshRelocation } from '../src/lib/relocationExecutionPolicy';
 
 const byId = (id: string) => {
@@ -10,8 +10,25 @@ const byId = (id: string) => {
 };
 
 const predator = byId('sp_0049');
-const neon = byId('sp_0431');
 const cardinal = byId('sp_0432');
+const relocationCandidate: Fish = {
+  id: 'synthetic-relocation-execution-candidate',
+  name: 'Relocation Execution Test Fish',
+  scientificName: 'Testus relocationis executionis',
+  category: '淡水观赏鱼',
+  image: '',
+  difficulty: 'Easy',
+  waterTemperature: '22-28°C',
+  phLevel: '6.0-8.0',
+  waterChangeCycle: 7,
+  description: 'Small peaceful freshwater control used only to test execution-policy semantics.',
+  diet: '杂食',
+  tankSize: '至少 20 升',
+  temperament: 'Peaceful',
+  size: 'Small',
+  housingMode: '适合混养',
+};
+const catalog = [...fishData, relocationCandidate];
 
 const batch = (id: string, quantity: number): AquariumSpeciesBatch => ({
   id,
@@ -49,18 +66,18 @@ const makeTank = (
 
 const sourceTank = () => makeTank('source', 'Source', [
   fish('predator-record', predator.id, 1, [batch('predator-batch', 1)]),
-  fish('neon-record', neon.id, 5, [batch('neon-batch', 5)]),
+  fish('candidate-record', relocationCandidate.id, 5, [batch('candidate-batch', 5)]),
   fish('cardinal-record', cardinal.id, 5, [batch('cardinal-batch', 5)]),
 ]);
 const compatibleTarget = () => makeTank('target', 'Target', []);
 
 const request = {
   sourceAquariumId: 'source',
-  sourceAquariumFishId: 'neon-record',
-  sourceBatchId: 'neon-batch',
+  sourceAquariumFishId: 'candidate-record',
+  sourceBatchId: 'candidate-batch',
   destinationAquariumId: 'target',
   quantity: 5,
-  operationId: 'relocate-neon-once',
+  operationId: 'relocate-control-once',
 };
 
 const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[] => aquariums.map(aquarium => {
@@ -84,10 +101,10 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
     return {
       ...aquarium,
       fishes: [...aquarium.fishes, fish(
-        'destination-neon-record',
-        neon.id,
+        'destination-candidate-record',
+        relocationCandidate.id,
         input.quantity,
-        [batch('destination-neon-batch', input.quantity)],
+        [batch('destination-candidate-batch', input.quantity)],
       )],
     };
   }
@@ -96,14 +113,17 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
 
 // Green path: the execution policy loads fresh state, rebuilds both source and
 // destination decisions, executes only the current compatible verdict, then
-// reloads and recomputes both aquariums.
+// reloads and recomputes both aquariums. The destination control is the same
+// kind of deliberately simple freshwater fixture used by the destination
+// evaluator regression; this test must not assume a real species has no extra
+// husbandry confirmations.
 {
   let state = [sourceTank(), compatibleTarget()];
   let loadCount = 0;
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
+    catalog,
     loadAquariums: async () => {
       loadCount += 1;
       return structuredClone(state);
@@ -111,16 +131,20 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
     relocate: async input => {
       relocateCount += 1;
       state = applyMockRelocation(state, input);
-      return { destinationFishId: 'destination-neon-record', destinationBatchId: 'destination-neon-batch', replayed: false };
+      return { destinationFishId: 'destination-candidate-record', destinationBatchId: 'destination-candidate-batch', replayed: false };
     },
   });
-  assert.equal(result.status, 'executed');
+  assert.equal(
+    result.status,
+    'executed',
+    result.status === 'blocked' ? `green path unexpectedly blocked: ${result.reason}` : 'green path did not complete',
+  );
   assert.equal(relocateCount, 1);
   assert.equal(loadCount, 2, 'execution must load once before mutation and once after commit');
   if (result.status === 'executed') {
     assert.equal(result.freshDestinationEvaluation.status, 'compatible_by_current_evidence');
-    assert.equal(result.postAquariums.find(item => item.id === 'source')?.fishes.some(item => item.id === 'neon-record'), false);
-    assert.equal(result.postAquariums.find(item => item.id === 'target')?.fishes.find(item => item.fishId === neon.id)?.quantity, 5);
+    assert.equal(result.postAquariums.find(item => item.id === 'source')?.fishes.some(item => item.id === 'candidate-record'), false);
+    assert.equal(result.postAquariums.find(item => item.id === 'target')?.fishes.find(item => item.fishId === relocationCandidate.id)?.quantity, 5);
     assert.equal(result.postSourceDecision.context.aquariumId, 'source');
     assert.equal(result.postDestinationDecision.context.aquariumId, 'target');
   }
@@ -135,7 +159,7 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
+    catalog,
     loadAquariums: async () => [sourceTank(), staleChangedTarget],
     relocate: async () => {
       relocateCount += 1;
@@ -159,7 +183,7 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
+    catalog,
     loadAquariums: async () => [sourceTank(), unresolvedTarget],
     relocate: async () => {
       relocateCount += 1;
@@ -184,7 +208,7 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
+    catalog,
     loadAquariums: async () => [sourceWithUnknown, compatibleTarget()],
     relocate: async () => {
       relocateCount += 1;
@@ -200,13 +224,13 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
 // longer a formal relocation option and an old CTA cannot move it anyway.
 {
   const noLongerConflictSource = makeTank('source', 'Conflict resolved', [
-    fish('neon-record', neon.id, 5, [batch('neon-batch', 5)]),
+    fish('candidate-record', relocationCandidate.id, 5, [batch('candidate-batch', 5)]),
     fish('cardinal-record', cardinal.id, 5, [batch('cardinal-batch', 5)]),
   ]);
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
+    catalog,
     loadAquariums: async () => [noLongerConflictSource, compatibleTarget()],
     relocate: async () => {
       relocateCount += 1;
@@ -221,16 +245,16 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
 // The formal intervention currently means relocating the whole subject. A stale
 // quantity or a partial move must not masquerade as resolving the blocker.
 {
-  const sixNeonSource = makeTank('source', 'Quantity changed', [
+  const changedQuantitySource = makeTank('source', 'Quantity changed', [
     fish('predator-record', predator.id, 1, [batch('predator-batch', 1)]),
-    fish('neon-record', neon.id, 6, [batch('neon-batch', 6)]),
+    fish('candidate-record', relocationCandidate.id, 6, [batch('candidate-batch', 6)]),
     fish('cardinal-record', cardinal.id, 5, [batch('cardinal-batch', 5)]),
   ]);
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
-    loadAquariums: async () => [sixNeonSource, compatibleTarget()],
+    catalog,
+    loadAquariums: async () => [changedQuantitySource, compatibleTarget()],
     relocate: async () => {
       relocateCount += 1;
       throw new Error('mutation must not run');
@@ -247,13 +271,13 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
 {
   const multiBatchSource = makeTank('source', 'Multi-batch source', [
     fish('predator-record', predator.id, 1, [batch('predator-batch', 1)]),
-    fish('neon-record', neon.id, 5, [batch('neon-batch', 3), batch('neon-batch-2', 2)]),
+    fish('candidate-record', relocationCandidate.id, 5, [batch('candidate-batch', 3), batch('candidate-batch-2', 2)]),
     fish('cardinal-record', cardinal.id, 5, [batch('cardinal-batch', 5)]),
   ]);
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
+    catalog,
     loadAquariums: async () => [multiBatchSource, compatibleTarget()],
     relocate: async () => {
       relocateCount += 1;
@@ -272,7 +296,7 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
   let relocateCount = 0;
   const result = await executeFreshRelocation({
     request,
-    catalog: fishData,
+    catalog,
     loadAquariums: async () => {
       loadCount += 1;
       if (loadCount === 1) return [sourceTank(), compatibleTarget()];
@@ -280,7 +304,7 @@ const applyMockRelocation = (aquariums: Aquarium[], input = request): Aquarium[]
     },
     relocate: async () => {
       relocateCount += 1;
-      return { destinationFishId: 'destination-neon-record', destinationBatchId: 'destination-neon-batch', replayed: false };
+      return { destinationFishId: 'destination-candidate-record', destinationBatchId: 'destination-candidate-batch', replayed: false };
     },
   });
   assert.equal(relocateCount, 1);
