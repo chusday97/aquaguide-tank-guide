@@ -18,13 +18,21 @@ const oldBlock = `  next = replaceOnce(
 `;
 const newBlock = `  next = replaceOnce(
     next,
-    \`    setAddFishSuccess(null);
+    \`  const openSpeciesAddition = (intent: SpeciesAdditionIntent, speciesId?: string) => {
+    const selectedFish = speciesId ? fishData.find(item => item.id === speciesId) : undefined;
+    setAdditionIntent(intent);
+    addFishOperationIdRef.current = \\\`livestock-add:\\${crypto.randomUUID()}\\\`;
+    setAddFishSuccess(null);
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
     setFishSearchTerm('');
     setAddFishCategory('all');
 \`,
-    \`    setAddFishSuccess(null);
+    \`  const openSpeciesAddition = (intent: SpeciesAdditionIntent, speciesId?: string) => {
+    const selectedFish = speciesId ? fishData.find(item => item.id === speciesId) : undefined;
+    setAdditionIntent(intent);
+    addFishOperationIdRef.current = \\\`livestock-add:\\${crypto.randomUUID()}\\\`;
+    setAddFishSuccess(null);
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
     setFishSearchTerm('');
@@ -37,4 +45,4 @@ const newBlock = `  next = replaceOnce(
 const count = source.split(oldBlock).length - 1;
 if (count !== 1) throw new Error(`Expected one ambiguous reset patch block, found ${count}`);
 await writeFile(path, source.replace(oldBlock, newBlock), 'utf8');
-console.log('Disambiguated openSpeciesAddition reset anchor');
+console.log('Anchored openSpeciesAddition reset patch to the full function prelude');
