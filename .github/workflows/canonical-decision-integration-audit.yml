@@ -25,17 +25,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Dry-run merge and resolve only audited conflicts
+      - name: Dry-run merge latest decision/evidence stack and resolve only audited conflicts
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "integration-audit"
           git config user.email "integration-audit@users.noreply.github.com"
           git rev-parse HEAD > /tmp/integration_audit_base_head
-          git fetch origin agent/quick-diagnosis-conflict-augmentation
+          git fetch origin agent/compatibility-evidence-contextual-expansion
 
           set +e
-          git merge --no-commit --no-ff origin/agent/quick-diagnosis-conflict-augmentation
+          git merge --no-commit --no-ff origin/agent/compatibility-evidence-contextual-expansion
           merge_status=$?
           set -e
 
@@ -56,7 +56,7 @@ jobs:
 
             # Product Golden Path is CI orchestration rather than runtime code.
             # Keep the canonical-stack version inside this disposable merge and
-            # run the decision-stack gates explicitly below.
+            # run the decision/evidence gates explicitly below.
             git checkout --ours .github/workflows/product-golden-path.yml
 
             # Runtime water-change conflict has an audited semantic-union template:
@@ -99,6 +99,9 @@ jobs:
 
       - name: Quick Diagnosis augmentation on merged tree
         run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
+
+      - name: Contextual behavior evidence on merged tree
+        run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
 
       - name: Reviewed severe-risk regression on merged tree
         run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
