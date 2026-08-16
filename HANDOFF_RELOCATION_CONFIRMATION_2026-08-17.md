@@ -12,76 +12,156 @@
 - #63 fresh source/destination recomputation; only `compatible_by_current_evidence` mutates; unknown/post-state-unavailable reconcile first.
 - #64 request-bound confirmation, no repository import/blind retry.
 - #65 opener only for lossless one-record + one-positive-batch whole-subject mapping; no cached authorization.
-- #65 run `31961532732` green.
+- #65 isolated full-chain run `31961532732` green.
 - disposable #62 + #65 audit `31961690289` green, no new conflicts/no merge commit.
 - canonical combined implementation bootstrap `31962121116` green; no product PR/main merge.
 - Care attempt controller run `31962344545` green.
 - reconciliation lifecycle run `31962635712` green.
 
-## Canonical display + compatibility mirror boundary
+## Care executable wiring — PERSISTED ON WORKING BRANCH
 
-`ApiAquaGuideRepository.getAquariums()` fetches canonical `/aquariums` but does not persist the list into Care's local mirror. Care therefore needs a direct canonical aquarium override plus best-effort compatibility-mirror persistence. Canonical data becomes visible first; local mirror failure must never reclassify a confirmed relocation/read as failed. This protects REL-044/049.
+Working branch:
 
-## Care JSX wiring one-shot history
+`agent/canonical-care-relocation-wiring`
 
-### Run `31962863527`
+Current persisted head:
 
-The exact-anchor Care patch applied in the runner and all new relocation gates passed through mutation uncertainty. The run stopped at the pre-existing Care hydration static test because that test incorrectly required `useState(loadAppStateFromStorage)` and `subscribeToAppState` to be adjacent. This was recorded as TEST-003; product hydration remained intact.
+`9403663c371b8cfa824c92d843a1f57d9b6cbf3e`
 
-### Run `31963027394`
+Commit:
 
-TEST-003 was corrected to capability assertions. The rerun proved:
+`Wire canonical relocation confirmation into Care decision surface`
 
-- pre-patch wiring verifier intentionally red ✅
+This is a normal working-branch commit produced only after the full one-shot gate passed. It is **not** a PR merge and main was not changed.
+
+### Persisted Care flow
+
+`StepDiagnosisPanel`
+→ `InterventionComparisonPanel`
+→ eligible #65 destination emits one launch candidate
+→ opener creates one Care relocation controller / operationId
+→ `RelocationConfirmationDialog`
+→ controller injects repository-backed `getAquariums` + relocation callback into #63
+→ #63 fresh-revalidates source/destination
+→ #62 returns atomic mutation receipt
+→ #63 canonical post-read/recompute
+→ Care applies canonical aquarium state before mirror persistence
+→ compatibility mirror converges best-effort
+
+### Persisted safety semantics
+
+- Care page has no direct `.relocateLivestock()` call.
+- one opener event creates one operationId; render does not create IDs.
+- one successfully resolved repository instance owns pre-load → mutation → post-load → reconcile for the attempt.
+- `execute()` is promise-cached; double click cannot send a second relocation.
+- fresh destination degradation blocks before mutation.
+- `mutation_state_unknown` preserves the same attempt/operationId and reconciliation is read-only.
+- uncertain/post-state-unavailable dialog cannot be dismissed until canonical reconciliation succeeds.
+- successful reconciliation enters explicit reconciled state before Close is allowed.
+- executed `postAquariums` becomes the current Care-visible truth before success returns to the dialog.
+- reconciliation canonical list likewise refreshes the Care-visible decision state.
+- local compatibility mirror persistence is secondary; mirror failure does not reclassify canonical success.
+- strict `mirrorPersisted: true | false` discriminated result remains intact; no `any`/optional-error weakening.
+
+## Final one-shot wiring run — FULL GREEN
+
+Run `31963163536` completed **success**.
+
+It intentionally proved the old Care page failed the new wiring verifier before applying the patch, then passed every gate after the exact-anchor patch:
+
+- pre-patch Care wiring verifier red as expected ✅
 - exact-anchor Care patch applied ✅
-- Care wiring static contract ✅
-- canonical view/mirror fallback ✅
-- Care attempt controller ✅
-- confirmation lifecycle ✅
-- #65 entrypoint ✅
-- #63 fresh policy ✅
-- mutation uncertainty ✅
-- corrected Care hydration ✅
-- severe-risk ✅
+- Care relocation wiring static contract ✅
+- canonical view / mirror fallback regression ✅
+- Care relocation attempt controller ✅
+- confirmation reconciliation lifecycle ✅
+- #65 confirmation entrypoint ✅
+- #63 fresh execution policy ✅
+- mutation-outcome uncertainty ✅
+- Care hydration regression ✅
+- reviewed severe-risk regression ✅
+- App TypeScript ✅
+- API TypeScript ✅
+- production build ✅
+- one-shot workflow / patch tooling removed ✅
+- verified Care wiring committed and pushed ✅
 
-The next failure is now a **real TypeScript integration issue**, not a product-rule failure:
+The one-shot write tooling self-deleted after green and is not part of the persisted working tree.
 
-`src/pages/CareEncyclopedia.tsx(...): Property 'errorMessage' does not exist on type 'CareCanonicalAquariumApplyResult'`.
+## TEST-003 — resolved
 
-`applyCareCanonicalAquariums()` intentionally returns a strict discriminated union:
+The old Care hydration test incorrectly coupled correctness to source-line adjacency. It was replaced with capability assertions proving:
 
-- `{ mirrorPersisted: true, mirrorState, ... }`
-- `{ mirrorPersisted: false, errorMessage, ... }`
+- mirror state still initializes reactively;
+- `subscribeToAppState` still refreshes it;
+- canonical post-action aquarium override can temporarily outrank the mirror;
+- there is no return to one-time `useMemo(loadAppStateFromStorage)` hydration.
 
-The page patch used truthiness narrowing:
+Run `31963163536` confirms the corrected hydration contract is green.
 
-`if (applied.mirrorPersisted) { ... } else { console.warn(applied.errorMessage) }`
+## TYPE-001 — resolved without type weakening
 
-Under the current TypeScript configuration, that `else` was not accepted as a sufficiently explicit false discriminant.
+The mirror helper retains its strict union:
 
-The fix will preserve the strict union and use explicit discrimination (`applied.mirrorPersisted === false`) rather than weakening the type, making `errorMessage` optional, or introducing `any`.
+- `mirrorPersisted: true` → `mirrorState`
+- `mirrorPersisted: false` → `errorMessage`
 
-Because the run stopped at TypeScript, JSX wiring still has **not** been committed/pushed. API TypeScript/build/self-delete/commit did not run.
+Care now uses explicit `applied.mirrorPersisted === false` discrimination. App/API TypeScript and production build are green. No `any`, optional error field, generic boolean, or thrown mirror failure was introduced.
 
-## Care execution architecture already verified before TypeScript stop
+## What this does NOT prove yet
 
-- one opener event creates one controller/operationId;
-- no Care direct `relocateLivestock()` call;
-- one repository session owns pre-load/mutation/post-load/reconcile;
-- fresh target degradation blocks with zero writes;
-- executed result applies canonical `postAquariums` before dialog success returns;
-- reconciliation is canonical read-only recovery;
-- canonical visible state is applied before compatibility-mirror persistence;
-- mirror write failure is isolated from mutation/canonical-read status;
-- uncertain dialog remains locked until successful canonical reconciliation.
+The Care relocation flow is now executable **on the working branch**, but it has not completed browser or hosted/live acceptance.
 
-## Next step
+Not yet proven:
 
-1. update the exact-anchor Care patch to use explicit boolean-literal discrimination for `mirrorPersisted`;
-2. rerun the same guarded one-shot from the still-unpersisted pre-wiring branch state;
-3. require app/API TypeScript + production build green;
-4. only full green may self-delete the one-shot patch tooling and persist the Care wiring;
-5. update handoff/badcase immediately with that result, then proceed to browser Golden Path.
+1. actual user navigation reaches the eligible relocation CTA in a real rendered Care flow;
+2. dialog displays the correct four facts visually;
+3. a browser double-click/rapid interaction cannot bypass React/controller guards;
+4. fresh-blocked UI visibly says no move occurred;
+5. success immediately redraws the source/destination decision surface without page reload;
+6. uncertainty dialog is truly non-dismissible by Escape / overlay in the rendered Radix dialog;
+7. reconciliation visually unlocks only after canonical sync;
+8. hosted Supabase/Auth/API path performs the same flow end-to-end on real account data;
+9. a two-session/device change between card render and confirm is caught in the hosted path.
+
+Therefore this branch must **not** be described as production-ready yet.
+
+## Next step — browser Golden Path
+
+Build/run browser acceptance against this persisted branch before opening/advancing any final integration PR.
+
+Required browser cases:
+
+### GP-REL-01 — eligible opener → confirmation
+- rendered formal intervention has an eligible destination;
+- click `进入迁移确认`;
+- confirmation shows source tank, destination tank, species, exact quantity;
+- no mutation occurs merely by opening confirmation.
+
+### GP-REL-02 — confirm success
+- click `重新检查并确认迁移` once / rapid-double-click variant;
+- one mutation only;
+- success state renders;
+- source and destination Care decision state updates from canonical post-state without page reload.
+
+### GP-REL-03 — stale destination blocks
+- destination becomes unsafe after the card was shown but before confirm;
+- fresh policy returns blocked;
+- UI states `条件已变化，本次没有执行迁移`;
+- mutation count remains zero.
+
+### GP-REL-04 — ambiguous mutation outcome / reconcile
+- mutation transport becomes unknown;
+- dialog cannot close by Escape/overlay;
+- only canonical sync is available;
+- sync sends no second relocation;
+- successful reconciliation renders synced state, then allows Close.
+
+### GP-REL-05 — source-scope fail-closed
+- multi-record / multi-batch formal subject never exposes a direct executable confirmation opener;
+- deterministic limitation remains visible.
+
+After deterministic browser harness passes, run separate hosted/Auth acceptance. Local/browser harness success does not substitute for real Supabase/API acceptance.
 
 ## Non-negotiable constraints
 
@@ -89,7 +169,7 @@ Because the run stopped at TypeScript, JSX wiring still has **not** been committ
 - no stale destination card as mutation authorization;
 - no direct Care UI → repository relocation;
 - no local mirror presented as fresh canonical execution state;
-- no weakening discriminated result types merely to satisfy compilation;
 - no partial/multi-batch move described as whole conflict resolution;
 - no `conditional` override;
-- no blind retry after uncertain mutation outcome.
+- no blind retry after uncertain mutation outcome;
+- no browser-harness success described as hosted production acceptance.
