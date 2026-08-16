@@ -1,0 +1,27 @@
+name: Recommendation Explanation Contract
+
+on:
+  push:
+    branches:
+      - agent/recommendation-explanation-contracts
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  explanation-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Recommendation explanation regression
+        run: npx tsx scripts/test-recommendation-explanation-contract.ts
+      - name: Existing certainty regression
+        run: npx tsx scripts/test-recommendation-profile-certainty.ts
+      - name: Type check
+        run: npm run lint
