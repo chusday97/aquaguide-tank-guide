@@ -1,12 +1,12 @@
 # AquaGuide Relocation Confirmation Handoff — 2026-08-17
 
-> Living continuation record for PR #62 mutation receipt, PR #63 fresh execution policy, PR #64 confirmation surface, and the next confirmation-entrypoint layer. Draft/green CI is not main/production. No product PR is merged or Ready.
+> Living continuation record for PR #62 mutation receipt, PR #63 fresh execution policy, PR #64 confirmation surface, and the confirmation-entrypoint layer. Draft/green CI is not main/production. No product PR is merged or Ready.
 
 ## Current safe chain
 
 `read-only intervention → eligible confirmation entrypoint → confirmation facts → fresh canonical load → fresh source decision → fresh destination verdict → atomic relocation receipt → fresh canonical reload/recompute → confirmation outcome`
 
-Current product boundary remains deliberate: the Care page does not yet have a repository-backed executable relocation path.
+Current product boundary remains deliberate: the Care page still does **not** have a repository-backed executable relocation path.
 
 ## Stable foundations carried forward
 
@@ -21,79 +21,74 @@ Current product boundary remains deliberate: the Care page does not yet have a r
 
 Branch: `agent/relocation-confirmation-entrypoint`, stacked on PR #64.
 
-### 2026-08-17 — source-scope audit
+### Source-scope finding
 
-The formal intervention model is species-level, while the atomic mutation contract is source-record + source-batch-level.
+The formal intervention model is canonical-species-level, while #62 mutation is source-record + source-batch-level. `TankDecisionContext.resolvedLivestock` may aggregate multiple factual records into one canonical species, so a formal card like `A ×5 leaves the tank` is not by itself sufficient to construct an atomic mutation request.
 
-`TankDecisionContext.resolvedLivestock` can aggregate multiple factual source records into one canonical species:
+Entrypoint invariants now enforced:
 
-- `quantity` is summed across records;
-- `sourceRecordIds` can contain more than one record;
-- aliases can resolve multiple source species IDs into one canonical species.
-
-Therefore a card such as “if species A ×5 leaves the tank” is **not enough information to construct a mutation request**.
-
-New entrypoint invariant:
-
-1. the subject must still be a formal relocation option in the supplied decision result;
-2. the chosen destination card must currently be `compatible_by_current_evidence` only to expose the confirmation opener — this card is still not mutation authorization;
+1. formal intervention and exact formal option must still exist in the supplied result;
+2. current `compatible_by_current_evidence` controls only whether confirmation is worth opening — it is not mutation authorization;
 3. the formal subject must map to exactly one factual source record;
-4. that source record must have an explicit batch that alone represents the whole formal subject quantity;
-5. the record quantity, selected batch quantity, and formal option quantity must agree;
-6. if the subject spans multiple source records or multiple positive batches, direct confirmation stays unavailable and the UI must explain the current single-batch boundary;
-7. the opener must not pick `sourceRecordIds[0]` or `batches[0]` arbitrarily;
-8. the opener must not pass cached compatibility as `isSafe`, `allowed`, or another authorization field.
+4. that record must have exactly one positive explicit batch;
+5. resolved quantity, record quantity, batch quantity and formal option quantity must agree;
+6. multi-record / multi-batch whole-subject cases stay unavailable and show an explicit limitation;
+7. no arbitrary first-record / first-batch selection;
+8. launch candidate contains no `operationId`, cached verdict, `isSafe`, `allowed`, or other execution authorization.
 
-### Implemented on branch
+### Implemented
 
-- `src/lib/relocationConfirmationEntrypoint.ts`: pure fail-closed source/destination entrypoint builder.
+- `src/lib/relocationConfirmationEntrypoint.ts`: pure fail-closed entrypoint builder.
 - `scripts/test-relocation-confirmation-entrypoint.ts`: exact eligible path plus multi-record, multi-batch, missing-batch, stale quantity, batch mismatch, non-compatible destination, invented destination and unresolved-source regressions.
-- `InterventionComparisonPanel`: optional `sourceAquarium` + `onOpenRelocationConfirmation(candidate)`; eligible target card exposes `进入迁移确认`; panel still contains no mutation dependency.
-- compatible destination + non-executable source scope now shows an explicit reason instead of silently hiding the limitation.
-- launch candidate contains IDs/facts/quantity only; no `operationId`, `isSafe`, `allowed`, cached verdict or compatibility authorization.
-- permanent read-only workflow added for entrypoint + inherited confirmation/policy/decision/type/build gates.
+- `InterventionComparisonPanel`: optional `sourceAquarium` + `onOpenRelocationConfirmation(candidate)`.
+- only eligible target cards can expose `进入迁移确认`.
+- compatible destination + non-executable source scope shows the deterministic reason instead of silently hiding the limitation.
+- the panel remains repository/API/Supabase-free and only emits a launch candidate.
+- `scripts/test-relocation-confirmation-entrypoint-ui.mjs` protects the mutation-free / no-cached-authorization boundary.
+- permanent entrypoint workflow reuses PR #64's canonical confirmation verifier rather than duplicating it.
 
-### CI run 1 — source model green, new static regex false-failed
+### CI history
 
-Run `31961302689`:
-
-- source-scope regression: **passed**;
-- UI static contract: **failed before later gates ran**.
-
-Classification: **test-harness assertion error, not product-policy failure**.
-
-The component correctly calls optional callback using valid optional-call syntax:
-
-`onOpenRelocationConfirmation?.(entrypoint.candidate)`
-
-The static regex incorrectly expected `onOpenRelocationConfirmation?(...)`. The product code and source-scope gate were not relaxed; only the regex was corrected.
-
-### CI run 2 — entrypoint + state green, inherited confirmation test path was wrong
-
-Run `31961390757`:
+#### Run `31961302689`
 
 - source-scope regression: **passed**;
+- new UI static contract false-failed because its regex misparsed valid optional-call syntax `onOpenRelocationConfirmation?.(...)`.
+- classification: test-harness assertion error; no product gate was relaxed.
+
+#### Run `31961390757`
+
+- source-scope: **passed**;
 - entrypoint UI static contract: **passed**;
-- PR #64 confirmation-state regression: **passed**;
-- next step failed with `MODULE_NOT_FOUND` before any dialog assertion executed.
+- confirmation state: **passed**;
+- workflow then failed with `MODULE_NOT_FOUND` because it guessed a non-existent inherited test filename.
+- classification: CI configuration error; no dialog assertion had run.
+- corrected to PR #64's canonical `scripts/verify-relocation-confirmation-surface.mjs`.
 
-The new workflow referenced a non-existent file:
+#### Effective full-chain run `31961532732`
 
-`scripts/test-relocation-confirmation-ui-contract.mjs`
+All substantive gates passed:
 
-PR #64's real permanent static confirmation test is:
+- confirmation entrypoint source-scope regression ✅
+- confirmation entrypoint UI static contract ✅
+- PR #64 confirmation state ✅
+- PR #64 confirmation surface verifier ✅
+- PR #63 fresh execution policy ✅
+- mutation-outcome uncertainty regression ✅
+- Tank Decision Support ✅
+- Relocation Destination Evaluator ✅
+- Reviewed Severe-Risk regression ✅
+- TypeScript ✅
+- production build ✅
 
-`scripts/verify-relocation-confirmation-surface.mjs`
+No business rule was loosened to obtain green.
 
-Classification: **CI configuration error, not confirmation-dialog/product regression**. The dialog code was not changed and no product rule is being relaxed. The entrypoint workflow is being corrected to invoke the same static verifier already used by PR #64.
-
-### Architecture for this PR
-
-The panel emits a **confirmation launch candidate**, not a mutation authorization:
+## Architecture for this PR
 
 `InterventionComparisonPanel → onOpenRelocationConfirmation(candidate)`
 
-The panel itself remains repository/API/Supabase-free. A later Care integration may turn that candidate into one confirmation attempt / operation ID and inject PR #63 `executeFreshRelocation`; that repository-backed integration is not introduced here.
+The candidate is a **confirmation launch candidate**, not a relocation command. This layer creates no operation ID and executes no repository mutation.
+
+A later Care integration may create one operation identity for a confirmation attempt and inject PR #63 `executeFreshRelocation`; that repository-backed integration remains intentionally separate.
 
 ## Still intentionally blocked
 
@@ -104,22 +99,21 @@ The panel itself remains repository/API/Supabase-free. A later Care integration 
 - direct UI → repository mutation;
 - stale destination card used as execution authorization;
 - automatic keeper choice;
-- blind retry after any uncertain mutation outcome.
+- blind retry after uncertain mutation outcome.
 
-## Immediate next implementation steps
+## Next safe step
 
-1. correct the inherited PR #64 verifier path in the entrypoint workflow;
-2. rerun the entire entrypoint + confirmation + policy + decision + type/build gate;
-3. if green, open a Draft PR stacked on #64;
-4. update handoff/badcase with final gate status;
-5. run a disposable canonical #62 + entrypoint-stack audit;
-6. only after that, design the Care-page integration that creates one operation ID and injects PR #63 execution policy.
+1. open this layer as a Draft PR stacked on #64;
+2. run a disposable canonical audit combining latest #62 mutation stack with the full entrypoint stack;
+3. confirm no new merge conflicts beyond the already-known canonical/decision conflict set;
+4. rerun receipt, fresh policy, uncertainty, confirmation, entrypoint, canonical hydration, repository adapter, TypeScript and build in the disposable tree;
+5. only after that design a separate Care-page integration for operationId + injected `executeFreshRelocation`.
 
 ## Non-negotiable constraints
 
 - no merge/Ready without explicit user instruction;
 - no stale verdict as authorization;
-- no direct UI → repository relocation call in the entrypoint PR;
+- no direct UI → repository relocation call in this PR;
 - no arbitrary first-record / first-batch selection;
 - no partial batch move described as whole-conflict resolution;
 - no second display-only quantity source;
