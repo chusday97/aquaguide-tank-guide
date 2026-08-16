@@ -4,7 +4,6 @@ create or replace function public.relocate_verified_aquarium_livestock(
   source_aquarium_id uuid,
   source_species_record_id uuid,
   source_batch_id uuid,
-  source_batch_version integer,
   destination_aquarium_id uuid,
   relocation_quantity integer,
   new_destination_species_record_id uuid,
@@ -29,12 +28,10 @@ declare
   source_batch public.aquarium_species_batches%rowtype;
   destination_species public.aquarium_species%rowtype;
   existing_operation public.idempotency_records%rowtype;
-  operation_replayed boolean := false;
 begin
   if current_user_id is null then raise exception 'AUTH_REQUIRED'; end if;
   if source_aquarium_id = destination_aquarium_id then raise exception 'SAME_AQUARIUM'; end if;
   if relocation_quantity is null or relocation_quantity < 1 then raise exception 'INVALID_RELOCATION_QUANTITY'; end if;
-  if source_batch_version is null or source_batch_version < 1 then raise exception 'INVALID_BATCH_VERSION'; end if;
   if new_destination_species_record_id is null or new_destination_batch_id is null then raise exception 'INVALID_RECORD_ID'; end if;
   if operation_key is null or char_length(operation_key) < 1 or char_length(operation_key) > 180 then raise exception 'INVALID_OPERATION_KEY'; end if;
   if operation_request_hash is null or operation_request_hash !~ '^[0-9a-f]{64}$' then raise exception 'INVALID_REQUEST_HASH'; end if;
@@ -86,7 +83,6 @@ begin
     and deleted_at is null
   for update;
   if not found then raise exception 'SOURCE_BATCH_NOT_FOUND'; end if;
-  if source_batch.version <> source_batch_version then raise exception 'SOURCE_BATCH_VERSION_CONFLICT'; end if;
   if relocation_quantity > source_batch.quantity then raise exception 'INVALID_RELOCATION_QUANTITY'; end if;
 
   perform pg_advisory_xact_lock(hashtextextended(
@@ -140,12 +136,12 @@ begin
     now() + interval '7 days'
   );
 
-  return query select source_aquarium_id, destination_aquarium_id, destination_species.id, new_destination_batch_id, operation_replayed;
+  return query select source_aquarium_id, destination_aquarium_id, destination_species.id, new_destination_batch_id, false;
 end;
 $$;
 
-revoke all on function public.relocate_verified_aquarium_livestock(uuid, uuid, uuid, integer, uuid, integer, uuid, uuid, text, text) from public;
-revoke all on function public.relocate_verified_aquarium_livestock(uuid, uuid, uuid, integer, uuid, integer, uuid, uuid, text, text) from anon;
-grant execute on function public.relocate_verified_aquarium_livestock(uuid, uuid, uuid, integer, uuid, integer, uuid, uuid, text, text) to authenticated;
+revoke all on function public.relocate_verified_aquarium_livestock(uuid, uuid, uuid, uuid, integer, uuid, uuid, text, text) from public;
+revoke all on function public.relocate_verified_aquarium_livestock(uuid, uuid, uuid, uuid, integer, uuid, uuid, text, text) from anon;
+grant execute on function public.relocate_verified_aquarium_livestock(uuid, uuid, uuid, uuid, integer, uuid, uuid, text, text) to authenticated;
 
 commit;
