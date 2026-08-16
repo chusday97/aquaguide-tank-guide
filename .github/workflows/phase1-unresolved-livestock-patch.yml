@@ -27,6 +27,8 @@ jobs:
       - run: npm ci
       - name: Apply guarded cross-stack patch
         run: node scripts/phase1-patch-unresolved-existing-livestock.mjs
+      - name: Preserve source-template literals in temporary caller patch
+        run: node -e 'const fs=require("fs"); const p="scripts/phase1-fix-unresolved-result-callers.mjs"; let s=fs.readFileSync(p,"utf8"); s=s.replaceAll("${input.operationId}", "\\${input.operationId}"); fs.writeFileSync(p,s);'
       - name: Narrow unresolved result callsites
         run: node scripts/phase1-fix-unresolved-result-callers.mjs
       - name: Unresolved existing-livestock contract
