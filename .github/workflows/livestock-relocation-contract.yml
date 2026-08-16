@@ -16,7 +16,7 @@ on:
       - 'scripts/test-livestock-relocation.ts'
       - 'scripts/test-livestock-relocation-contract.mjs'
       - 'scripts/test-livestock-relocation-wiring.mjs'
-      - 'supabase/migrations/20260816160000_atomic_verified_livestock_relocation.sql'
+      - 'supabase/migrations/20260816160129_atomic_verified_livestock_relocation.sql'
       - '.github/workflows/livestock-relocation-contract.yml'
 
 permissions:
