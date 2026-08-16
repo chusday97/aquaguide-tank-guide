@@ -1,0 +1,79 @@
+name: Canonical Decision Integration Audit
+
+on:
+  push:
+    branches:
+      - integration/canonical-decision-support-audit
+    paths:
+      - '.github/workflows/canonical-decision-integration-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integration/canonical-decision-support-audit
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dry-run merge decision stack without committing
+        shell: bash
+        run: |
+          set -u
+          git config user.name "integration-audit"
+          git config user.email "integration-audit@users.noreply.github.com"
+          git fetch origin agent/quick-diagnosis-conflict-augmentation
+          set +e
+          git merge --no-commit --no-ff origin/agent/quick-diagnosis-conflict-augmentation
+          merge_status=$?
+          set -e
+          if [ "$merge_status" -ne 0 ]; then
+            echo "Canonical/decision integration has merge conflicts:"
+            git diff --name-only --diff-filter=U
+            echo "--- conflict status ---"
+            git status --short
+            exit "$merge_status"
+          fi
+          echo "Dry-run merge is conflict-free. No merge commit will be created or pushed."
+          git status --short
+
+      - name: Install merged-tree dependencies
+        run: npm ci
+
+      - name: Unresolved livestock contract on merged tree
+        run: node --import tsx scripts/test-unresolved-existing-livestock.ts
+
+      - name: Livestock recording regression on merged tree
+        run: node --import tsx scripts/test-livestock-recording.ts
+
+      - name: Tank decision context on merged tree
+        run: node --import tsx scripts/test-tank-decision-context.ts
+
+      - name: Decision support orchestration on merged tree
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+
+      - name: Quick Diagnosis augmentation on merged tree
+        run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
+
+      - name: Reviewed severe-risk regression on merged tree
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+
+      - name: Type check merged tree
+        run: npm run lint
+
+      - name: Production build merged tree
+        run: npm run build
+
+      - name: Confirm audit did not create a merge commit
+        shell: bash
+        run: |
+          test -f .git/MERGE_HEAD
+          echo "Merge remained uncommitted inside the disposable runner as intended."
