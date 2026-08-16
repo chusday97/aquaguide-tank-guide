@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import type { Fish } from '../src/types';
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
@@ -15,12 +16,28 @@ assert.equal(getSpeciesWaterType(lionfish), 'saltwater');
 assert.equal(resolveCanonicalSpeciesId('sp_0130'), 'sp_0038');
 assert.equal(getReviewedCompatibilityProfile('sp_0130'), undefined);
 
-const marineSmallFish = fishData.find(item => (
+const catalogSmallMarineFish = fishData.find(item => (
+  item.id !== lionfish.id
+  && getLifeType(item) === 'fish'
+  && getSpeciesWaterType(item) === 'saltwater'
+  && item.size === 'Small'
+));
+const ocellarisTemplate = fishData.find(item => (
   item.scientificName === 'Amphiprion ocellaris'
   && getLifeType(item) === 'fish'
   && getSpeciesWaterType(item) === 'saltwater'
 ));
-assert.ok(marineSmallFish, 'missing same-water Amphiprion ocellaris fixture');
+assert.ok(ocellarisTemplate, 'missing saltwater fish template Amphiprion ocellaris');
+
+const marineSmallFish: Fish = catalogSmallMarineFish || {
+  ...ocellarisTemplate,
+  id: 'eval-synthetic-small-marine-target',
+  name: 'Eval Synthetic Small Marine Fish',
+  scientificName: 'Syntheticus marinus',
+  size: 'Small',
+};
+assert.equal(getLifeType(marineSmallFish), 'fish');
+assert.equal(getSpeciesWaterType(marineSmallFish), 'saltwater');
 assert.equal(marineSmallFish.size, 'Small');
 
 const profile = getReviewedCompatibilityProfile(lionfish.id);
@@ -48,4 +65,4 @@ assert.ok(predationBlock.citations.some(source => source.id === 'lionfish-prey-r
 assert.match(predationBlock.evidence, new RegExp(lionfish.name));
 assert.match(predationBlock.evidence, new RegExp(marineSmallFish.name));
 
-console.log(`lionfish reviewed evidence passed: ${lionfish.name} (${lionfish.id}) -> ${marineSmallFish.name} remains a same-water high predation blocker with reviewed citation provenance; legacy sp_0130 remains mapped to non-lionfish canonical identity`);
+console.log(`lionfish reviewed evidence passed: ${lionfish.name} (${lionfish.id}) -> ${marineSmallFish.name} remains a same-water Small-target high predation blocker with reviewed citation provenance; target fixture=${catalogSmallMarineFish ? 'catalog' : 'synthetic-rule-level'}; legacy sp_0130 remains mapped to non-lionfish canonical identity`);
