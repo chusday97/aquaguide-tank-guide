@@ -113,5 +113,16 @@ const summary = {
   topResearchQueue: queue.slice(0, 30),
 };
 
+const escapeGitHubCommand = (value: string) => value
+  .replace(/%/g, '%25')
+  .replace(/\r/g, '%0D')
+  .replace(/\n/g, '%0A');
+
+if (process.env.GITHUB_ACTIONS === 'true') {
+  queue.slice(0, 30).forEach((item, index) => {
+    console.log(`::notice title=Evidence research priority ${index + 1}::${escapeGitHubCommand(JSON.stringify(item))}`);
+  });
+}
+
 console.log(JSON.stringify(summary, null, 2));
 console.log('compatibility evidence gap audit passed: research priorities are generated from catalog signals only, never consumed as runtime compatibility evidence');
