@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { writeFile } from 'node:fs/promises';
 import { fishData } from '../src/data/fishData';
 import {
   getReviewedCompatibilityProfile,
@@ -122,6 +123,10 @@ if (process.env.GITHUB_ACTIONS === 'true') {
   queue.slice(0, 30).forEach((item, index) => {
     console.log(`::notice title=Evidence research priority ${index + 1}::${escapeGitHubCommand(JSON.stringify(item))}`);
   });
+}
+
+if (process.env.EVIDENCE_QUEUE_OUTPUT) {
+  await writeFile(process.env.EVIDENCE_QUEUE_OUTPUT, `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
 }
 
 console.log(JSON.stringify(summary, null, 2));
