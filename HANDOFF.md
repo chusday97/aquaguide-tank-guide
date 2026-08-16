@@ -1,116 +1,59 @@
 # AquaGuide 当前交接文档
 
-> **用途**：这是 current-state handoff，只保留当前仍成立的事实、风险和下一步。历史过程查 `PROGRESS.md` 与 Git history，不要再依赖旧 handoff 里已经失效的“Supabase 未执行”等结论。
+> **用途**：这是项目当前唯一有效 handoff。只记录仍成立的事实、执行顺序和验收标准。历史过程查 `PROGRESS.md` 与 Git history。
 >
 > 最后更新：2026-08-16（Asia/Tokyo）
 
-## 1. 当前状态
+## 1. 当前项目状态
 
 - Repo：`chusday97/aquaguide-tank-guide`
-- Branch：`agent/fix-aquarium-completion-state`
+- 当前修复分支：`agent/fix-aquarium-completion-state`
 - PR：#34 `fix: make aquarium completion factual`
 - PR 状态：**Open / Draft / 未合并**。未经用户明确要求，不 merge、不改 Ready for review。
-- 当前 branch head（本 handoff 更新前）：`c4f433c437987aabf2ffe67b4d4e7d36f43cbe59`
-- Care operation canonical business commit：`ffc143d5065f09fbb2cdc7d1c21344d0e26e8e3c`
+- 本次 handoff 更新前 PR head：`9b67debe70e7705d2f7b0b2ea8ae178f79eec7a6`
 - Base：`main@d7f57094691d67972c213a5a8b86fb42503bca0f`
 
-AquaGuide 当前主线已经从“localStorage Demo”转为：
+当前产品底层主线已经统一为：
 
 `Supabase / API canonical data -> Repository -> local compatibility mirror -> UI`
 
-接下来不应继续堆新功能，而是收口剩余 local-only 业务事实，并完成真实跨设备云端验收。
+后续不再横向堆功能；先保证“记得对”，再做“判断对”，再做“告诉用户下一步”，最后才做增长。
 
 ---
 
-## 2. 已完成的 canonical 数据链路
+## 2. 已完成的基础设施 / canonical state
 
-### Aquarium setup / onboarding
+已进入 repository / canonical data 边界：
 
-- `getAquariumSetupFacts()` / `getAquariumSetupStatus()` 为唯一建缸完成度模型。
-- `undefined` = unknown；明确 `无` / `false` = 已回答。
-- setup `usable`：dimensions + waterType。
-- setup `complete`：dimensions + waterType + targetTemperature + 已回答 filter。
-- onboarding readiness 从真实 aquarium facts 推导，不再相信 stale `aquariumConfigured`。
+- Aquarium setup / onboarding readiness
+- Aquarium settings / deletion
+- Water change
+- Feeding
+- Observation
+- Diagnosis
+- Memorial
+- Species favorites / Care favorites
+- Collection direct hydration
+- Care direct hydration
+- Identify direct hydration
+- Search direct hydration
+- Home direct hydration
+- Assistant favorites
+- Legacy onboarding history routing
 
-### Settings / deletion
+关键原则已经锁定：
 
-- Aquarium settings：repository-first 保存，失败不制造 local 假成功。
-- Aquarium deletion：Local/API Repository boundary 已完成；云端有 UUID / version / idempotency；Local 保留“不能删除最后一个鱼缸”。
-
-### Water change
-
-Canonical 单日事实：
-
-- `event_type='water_change'`
-- `source_type='water_change_day'`
-- `source_id=YYYY-MM-DD`
-
-`last_water_change_at` 只作为 derived summary。
-
-已完成 Local/API `setWaterChange()`、Supabase atomic RPC、事务锁、幂等、aquarium/species summary 同事务更新、云端 hydrate 从 `care_events` 重建 history。
-
-### Feeding
-
-- `fedToday` / latest feeding 从 canonical care events 派生。
-- 新设备不依赖 local `feedingRecords`。
-- repository-first 写入与 persisted-event undo 已完成。
-- feeding day identity 稳定，避免重放重复写入。
-
-### Observation
-
-- Observation 已是 append-only canonical `care_events`。
-- 同日可多次记录，最新 persisted event 决定今日状态。
-- normal / abnormal 互斥。
-- 异常 observation 只有保存成功后才进入 diagnosis。
-- 新设备可恢复今日观察。
-
-### Diagnosis
-
-- Diagnosis history 进入 Repository。
-- 每日巡检：同 aquarium + local date upsert。
-- 一般 diagnosis：append。
-- direct entry 可 hydrate cloud history。
-
-### Memorial
-
-- Local/API Repository reads 已完成。
-- Collection / MemorialDetail direct entry 会主动 hydrate。
-- loading 与 genuine missing 已区分。
-
-### Favorites / Collection
-
-- Species wishlist + Care favorites 进入 Repository。
-- API 内部 UUID 会映射回稳定 `catalogKey`。
-- Collection / Encyclopedia / Care / Identify / Assistant direct entry 都会 hydrate canonical favorites。
-- add/remove repository-first。
-
-### Direct-entry hydration
-
-已处理：
-
-- `/collection`
-- `/care`
-- `/identify`
-- `/search`
-- `/`
-- `/assistant`
-- MemorialDetail
-- Onboarding legacy-history routing
-
-正式页面不得依赖“先访问另一个页面”才能拿到正确账户数据。
+- `undefined` = unknown；明确 `无 / false` = 已回答。
+- Cloud write 失败时 UI 不先制造 local 假成功。
+- 登录用户的 localStorage 只允许作为 compatibility mirror / device preference，不得重新成为账户事实源。
+- 页面不得依赖“先访问另一个页面”才能拿到正确数据。
+- AI 不得反转 deterministic safety / factual verdict。
 
 ---
 
-## 3. Care completed operation：已完成代码修复
+## 3. 当前正在收尾：Care completed operation
 
-之前的问题：
-
-- `getCompletedCareOperations()` / `setCompletedCareOperations()` 主要依赖 localStorage。
-- 新设备无法恢复完成状态。
-- completion 没有严格 aquarium scope。
-- “已完成过水”曾可能因字符串包含“水”被错误解释成“已记录本次换水”。
-
-现在正式采用：
+业务代码已采用 canonical event：
 
 - `event_type='care_operation_completed'`
 - `source_type='care_operation'`
@@ -121,281 +64,294 @@ Canonical 单日事实：
 
 `repository.saveCareEvent -> repository.getCareEvents -> compatibility mirror -> UI`
 
-Cloud 模式：canonical care events 是真值；`cloudMigrationConfirmed=true` 后旧 local completion 不得反向覆盖云端事实。
+相关业务修复已经通过此前 Product Golden Path，并进入分支。
 
-Local 模式：保留 compatibility mirror，但 completion 必须 aquarium-scoped。
+### 仍需完成的两件事
 
-相关代码已经由 commit `ffc143d5065f09fbb2cdc7d1c21344d0e26e8e3c` 正式写入 branch；一次性 `.agent-care-operation-trigger` 和 patch script 已从该业务 commit 删除。
+1. 清理 `.github/workflows/product-golden-path.yml` 中一次性 patch / auto-commit / `contents: write` 逻辑，并让 `scripts/test-care-operation-canonical.ts` 永久无条件运行。
+2. 给 Supabase `public.care_event_type` 增加 `care_operation_completed` enum migration，并只 rollout 到 AquaGuide project `ydiygvhuqpogmqlcvgob`。
 
-### 本次 CI 结果
-
-Push run：`31931398433`
-
-**全部通过：**
-
-- one-time patch apply
-- Product evaluation contracts
-- Care hydration regression
-- Type check
-- Build
-- Preview start
-- GP-002 continuous browser path
-- auto-commit business patch
-
-旧 `test-care-aquarium-hydration.ts` 也已修正：不再锁死 `Promise.all` 恰好只能有 favorites + aquariums，而是要求 direct Care entry hydrate：
-
-`favorites + aquariums + careEvents`
-
-这是提升业务 contract，不是放宽测试。
+完成后再跑一轮正式 Golden Path，Care completed operation 才算前端 + API contract + DB schema 全闭环。
 
 ---
 
-## 4. Supabase 当前真实状态
+## 4. 项目总执行顺序
 
-Dedicated AquaGuide project：
+### Phase 0 — 收口当前基础设施 PR #34
 
-- Project ref：`ydiygvhuqpogmqlcvgob`
-- Region：Tokyo / `ap-northeast-1`
+目标：停止无限扩大 #34，让账户级事实层稳定。
 
-当前 remote 已有 **22 migrations**，截至：
+执行：
 
-`20260815160000_optimize_rls_policies.sql`
+1. 清理 one-time Golden Path runner。
+2. rollout `care_operation_completed` migration。
+3. 最终 Golden Path。
+4. 做一次 data-state sweep，只修剩余明确的账户级业务事实，不再加入新的业务能力。
+5. 审计 Care saved checklist 的语义；只有确认它属于跨设备账户事实后才 canonicalize。
+6. 两设备 / 两浏览器真实云端验收：Aquarium、settings、delete、water change、feeding、observation、care operation、favorites 等状态可恢复且 aquarium 之间不串线。
 
-已完成：
-
-- GitHub migration timestamp 与 remote migration history 对齐。
-- public 表 RLS 已启用。
-- mutation RPC 使用 `SECURITY INVOKER`。
-- anon / PUBLIC execution 收紧。
-- mutable function search path 清理。
-- privileged admin lookup 移出 exposed `public` schema。
-- water-change RPC ambiguity 修复。
-- RLS statement-level `auth.uid()` 优化。
-- Live acceptance 覆盖 cross-user isolation、profile/role trigger、livestock add/split/merge/memorial/removal、water change、reminder completion。
-- Acceptance transaction 均 rollback，无测试业务数据残留。
-- Security advisor 无 warning。
-- Performance advisor 无 warning；unindexed FK / unused index 仅 INFO，不盲目优化。
-
-### 仍未完成
-
-Supabase `care_event_type` 目前还没有 `care_operation_completed` enum value。
-
-因此 **代码修复已完成，但数据库 schema rollout 还没有完成**。在 enum migration 上线前，云端保存这类新 event 仍不能视为正式可用。
-
-不要触碰 IceGlide Supabase project。
+**完成标准：** 新设备登录后，已有账户事实可恢复；刷新不丢；页面访问顺序不影响结果；失败不会伪成功。
 
 ---
 
-## 5. 现在的 P0 下一步：严格按顺序
+### Phase 1 — Canonical State Ownership
 
-### P0-1 清理一次性 CI workflow
+为整个 AquaGuide 明确状态所有权，形成可维护 contract：
 
-当前 `.github/workflows/product-golden-path.yml` 仍残留一次性 runner 逻辑：
+- Aquarium Facts
+- Livestock Facts
+- Care Events
+- Health Facts
+- Knowledge Facts
 
-- `permissions: contents: write`
-- conditional patch apply step
-- conditional canonical test
-- auto-commit step
+任何关键状态都必须回答：`Who owns this state?`
 
-虽然 trigger 已被业务 commit 删除，这些步骤现在不会再执行，但不应长期留在正式 CI。
-
-需要：
-
-1. 删除 one-time patch apply / auto-commit logic。
-2. 移除不再需要的 `contents: write`。
-3. **把 `scripts/test-care-operation-canonical.ts` 改成永久无条件执行。**
-4. 保留正常 Product Golden Path 行为。
-
-### P0-2 新增 Supabase enum migration
-
-新增新 migration，为 `public.care_event_type` 添加：
-
-`care_operation_completed`
-
-要求：
-
-1. migration version 不与现有 22 个版本冲突。
-2. GitHub migration 文件先落 branch。
-3. 再通过 connected Supabase apply 到 `ydiygvhuqpogmqlcvgob`。
-4. apply 后检查 `list_migrations`。
-5. 查询 `pg_enum` 确认新 value 实际存在。
-6. 不插入 fake business data。
-7. 不修改 IceGlide 项目。
-
-### P0-3 最终 Golden Path
-
-workflow cleanup + schema rollout 后再跑完整 Product Golden Path，至少确认：
-
-- product evaluation
-- care aquarium hydration
-- care unknown facts
-- care operation canonical
-- feeding
-- observation
-- diagnosis
-- memorial
-- favorites
-- typecheck
-- build
-- preview
-- GP-002 browser path
-
-只有这一轮绿灯后，Care completed operation 才算真正跨前端 + API contract + DB schema 闭环。
-
-PR #34 继续保持 Draft。
+页面自己的 `useState` 只能是 view state，不能重新定义业务事实。
 
 ---
 
-## 6. 下一项业务真值修复：Care saved checklist
+### Phase 2 — Compatibility v2：可信混养决策系统
 
-Care operation 完成后，优先审计 **saved checklist**。
+这是下一阶段最高优先级业务能力，单独新建 stacked Draft branch / PR，不继续塞进 #34。
 
-原因：
+建议 branch：`agent/compatibility-evidence-v2`
 
-- 已存在 `checklist_completed` event taxonomy。
-- `getSavedCareChecklists()` / `setSavedCareChecklists()` 仍有明显 localStorage compatibility 结构。
-- 如果“已完成/已保存护理清单”仍只读本机，会重复出现 completed operation 同类的新设备不一致。
+#### 2.1 V1 Audit + Baseline
 
-先确认产品语义：
+先冻结现有行为：
 
-- 用户是在“保存部分已经完成的 action”吗？
-- 还是“整个 checklist 已完成”吗？
+- 现有输入 / 输出
+- 哪些字段真正参与判断
+- 哪些规则是关键词 / heuristic
+- 哪些 verdict 有 reviewed evidence
+- 哪些结果存在假确定性
 
-不要把两个语义混成一个 boolean。
+保存 V1 golden baseline，后续每个 verdict 变化都必须可解释。
 
-建议实现：
+#### 2.2 Compatibility Contract v2
 
-1. 定义 canonical payload 与 source identity。
-2. repository-first persist。
-3. cloud hydrate event-derived state。
-4. local fallback 只作为 legacy compatibility。
-5. regression 覆盖 aquarium/date/topic isolation、duplicate submit、new-device hydrate、failed write rollback。
+输入：
 
----
+`Aquarium + Existing Residents + Candidate Species + Species Facts + Pair Evidence`
 
-## 7. 哪些状态不要盲目云端化
+输出结构必须包含：
 
-只有“换设备后仍应该属于这个账户/鱼缸发生过的事实”才进入 canonical persistence。
+- `verdict`
+- `confidence`
+- `blockers`
+- `majorRisks`
+- `conditions`
+- `environmentFit`
+- `socialFit`
+- `communityFit`
+- `evidenceIds`
+- `engineVersion`
+- `evidenceRevision`
 
-当前仍可以合理保持 device-local：
+Verdict 固定五态：
 
-- UI 展开状态。
-- 当前浏览偏好。
-- Assistant chat transcript（当前明确 browser-local）。
-- 纯展示型 discovery session state，除非产品定义改变。
+- `NOT_RECOMMENDED`
+- `HIGH_RISK`
+- `CONDITIONAL`
+- `NO_MAJOR_CONFLICT_FOUND`
+- `INSUFFICIENT_DATA`
 
-不要因为“现在接了 Supabase”就把所有 localStorage 都搬进数据库。
+禁止无校准依据的“兼容度 82%”。
 
----
+#### 2.3 Deterministic Rule Engine
 
-## 8. 数据语义收口后：真实云端产品验收
+第一版只做约 10 条核心规则：
 
-数据库 ready 不等于用户已经完成“云端同步”验收。
+1. WATER_TYPE_CONFLICT
+2. TEMPERATURE_NO_OVERLAP
+3. PREDATOR_PREY
+4. FIN_NIPPER_LONG_FIN
+5. AGGRESSIVE_VULNERABLE
+6. TERRITORIAL_CONFLICT
+7. SCHOOLING_REQUIREMENT
+8. TANK_SIZE_OR_LENGTH
+9. FLOW_CONFLICT
+10. INVERTEBRATE_PREDATION
 
-### Deployment env
+Severity-first，不做平均分；hard blocker 不能被其他优点抵消。
 
-Frontend：
+#### 2.4 Evaluation Dataset
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
+先覆盖约 12 个代表性高频物种、约 30 个 deliberately difficult golden cases。
 
-API：
+重点覆盖：
 
-- `SUPABASE_URL`
-- `SUPABASE_PUBLISHABLE_KEY`
-- `SUPABASE_SECRET_KEY`
-- 独立 `SHARE_TOKEN_SECRET`
+- 水参数重合但行为冲突
+- predator / prey
+- schooling 数量不足
+- 同 pair 不同 tank context
+- direct pair evidence 与 generic inference 冲突
+- evidence 不足必须 fail closed
 
-Secret 不得写进 GitHub / README / HANDOFF / 聊天正文。
+核心门禁：
 
-### Auth
+- 严重风险 false negative = 0（在 golden set 上）
+- 相同输入 verdict deterministic = 100%
+- decisive claim 必须 100% 有 reviewed evidence
+- AI explanation 不得改变 engine verdict
 
-先读取实际 callback / redirect code，再设置 Supabase Site URL / redirect URL，不猜 route。
+#### 2.5 Evidence Schema + 第一批 reviewed knowledge
 
-### Two-device E2E
+主来源策略：
 
-至少真实验证：
+- FishBase：科学 / 生态事实
+- SeriouslyFish：水族物种资料、行为、群体、饲养条件
+- Aquarium Co-Op：community tank 实操、fin nipping、群体行为等
+- Practical Fishkeeping：复杂场景、慈鲷、领地、繁殖攻击等补充
 
-1. signup / login。
-2. 创建第一个鱼缸，刷新仍存在。
-3. 修改设置，刷新仍存在。
-4. 创建第二个鱼缸。
-5. 删除第二个鱼缸，刷新不复活。
-6. 记录换水，刷新存在。
-7. 记录喂食，新浏览器同账号看到今日已喂。
-8. 记录 observation，新浏览器恢复最新状态。
-9. 完成 Care operation，新浏览器同账号同 aquarium 恢复 completed state。
-10. 不同 aquarium completion 不串线。
-11. timeline 与页面状态一致。
+Evidence 与 Species Fact 分离；任何参与关键判断的事实都必须可追溯到 source URL 和 review 状态。
 
-只有这组通过，才能把“跨设备云端同步”从架构能力升级为用户验收能力。
+第一批不要追求 486 种全覆盖；先做约 12 种高频物种，把系统质量证明出来，再扩到 30–50 种。
 
----
+#### 2.6 Compatibility UI v2
 
-## 9. Evaluation / CI 债务
+UI 在 engine / evidence / eval 稳定后再改。
 
-### Golden Path coverage
+用户看到：
 
-当前 contract 仍提示 GP-001、GP-003、GP-004 只有 partial end-to-end coverage。
+- 是否推荐
+- 主要风险
+- 当前鱼缸哪些条件触发判断
+- 需要满足哪些条件
+- 来源引用
+- 可执行的替代建议
 
-后续不要用更多源码 regex 代替连续浏览器路径。优先补：
-
-- 新用户首次成功。
-- 第二设备恢复。
-- failure / retry / idempotency。
-
-### 测试不要锁死源码形状
-
-本轮旧 Care hydration test 暴露的问题：
-
-测试应该验证业务边界和 badcase，而不是无必要锁死局部变量、Promise.all 项数或实现顺序。
-
-### npm audit
-
-当前 CI `npm ci` 报告依赖漏洞提示，包含 high severity。
-
-这不是本轮 canonical-data 修复的直接 blocker，但需要单独依赖审计。不要直接把大范围自动依赖升级混入 PR #34；先确认具体 package、runtime reachability 和 breaking risk。
-
----
-
-## 10. 核心产品规则：禁止回退
-
-- 登录用户的 localStorage compatibility mirror 不能重新成为账户 canonical truth。
-- Unknown 不能自动补“合理默认值”。
-- `undefined` 与明确 `无 / false` 必须区分。
-- 风险规则不能删除现实已经存在的事实。
-- 规划加入与记录现实存在必须分开。
-- AI 不能反转 deterministic safety block。
-- 页面不能依赖访问顺序才能拿到正确数据。
-- 云端写失败不能让 UI 先显示假成功。
-- 不跳过失败 Golden Path 来制造绿色 CI。
-- 不在没有 workload evidence 时盲目调整索引。
-- 不泄露 Supabase secret / API key。
+AI 只负责把 structured assessment 翻译成自然语言；若输出与 engine verdict / reasonCode / evidence 不一致，丢弃 AI 文案并退回 deterministic template。
 
 ---
 
-## 11. 新接手者第一步
+### Phase 3 — Aquarium Health / Care System
 
-不要重新做全项目审计，按顺序执行：
+Compatibility 回答“能不能加入”；这一阶段回答“已经养了以后今天该做什么”。
 
-1. 确认 PR #34 仍为 Draft / Open。
-2. 读取最新 branch head，不依赖本文 SHA 作为永恒值。
-3. 清理 one-time Product Golden Path workflow，并让 care-operation canonical test 永久执行。
-4. 新增 `care_operation_completed` enum migration。
-5. apply 到 AquaGuide Supabase，并验证 migration history + `pg_enum`。
-6. 跑最终 Product Golden Path。
-7. 通过后审计 Care saved checklist 的 local-only business state。
-8. 数据真值收口后执行 Auth + deployment + two-device E2E。
+建设：
 
-## 12. 当前阶段完成定义
+- Aquarium Health Model
+- Task Engine
+- Recommendation Engine
+- Daily care loop
 
-不是“页面能点”，而是：
+不要先造虚假总分；先输出事实型状态：water / care / livestock / risk / maintenance。
 
-- 同账户不同设备看到一致 aquarium business facts。
-- 关键写入 repository-first。
-- 失败不制造 local 假成功。
-- refresh / direct entry / new device 不依赖页面访问顺序。
-- canonical state 有 deterministic identity、idempotency 和 regression tests。
-- unknown / explicit none / derived summary 不混淆。
-- GitHub contracts、API contract、Supabase schema、RLS/RPC 同时成立。
-- Product Golden Path 通过后才进入下一条 business-fact 修复。
+目标闭环：
+
+`建立鱼缸 -> 添加生物 -> 系统判断 -> 执行养护 -> 记录结果 -> 系统重新判断`
+
+---
+
+### Phase 4 — Onboarding / Golden Path
+
+目标 Golden Path：
+
+`Landing -> 创建鱼缸 -> 最少必要信息 -> 添加第一种鱼 -> 得到第一条有价值判断 -> 看到今天下一步`
+
+First Value 不是“鱼缸创建成功”，而是 AquaGuide 第一次减少用户一个真实养鱼决策的不确定性。
+
+采用 Progressive Profiling：只在某个判断真正需要事实时再追问，而不是开局要求填完整表单。
+
+---
+
+### Phase 5 — Knowledge Ops / 自动更新
+
+流程：
+
+`Source Monitor -> Fetch -> Extract -> Normalize -> Compare -> Conflict Detection -> Review Queue -> Publish`
+
+自动抓取只能生成 candidate evidence，不能直接把 AI 抽取结果标成 reviewed / production truth。
+
+需要简单 Review Console：
+
+- New Evidence
+- Conflict
+- Needs Review
+- Approved
+- Rejected
+
+---
+
+### Phase 6 — Product Evaluation / Analytics
+
+建立四层评测：
+
+1. Data：数据是否丢失、跨设备是否一致
+2. Logic：规则是否判断错误
+3. Product：用户是否完成核心任务
+4. AI：解释是否 grounded、是否改变事实
+
+CI 方向：
+
+`Repository contracts -> Rules -> Golden cases -> Browser Golden Path -> AI grounding eval`
+
+优先补 GP-001 / GP-003 / GP-004 的连续浏览器路径，不用越来越多源码 regex 代替真实 E2E。
+
+---
+
+### Phase 7 — Growth / SEO / 分享 / 商业化
+
+最后再做：
+
+- 分享鱼缸 / Compatibility Result
+- 导出 / 保存诊断
+- SEO / 可索引物种页
+- Returning loop / reminder
+- Landing optimization
+- Acquisition / retention experiment
+- Commercialization tests
+
+只有核心结果真正可靠后，增长才有意义；否则只是放大错误。
+
+---
+
+## 5. 当前明确“不做”
+
+- 不先做 486 种鱼自动全覆盖。
+- 不让 LLM 自由决定 compatibility verdict。
+- 不继续给 PR #34 塞新业务功能。
+- 不把所有 localStorage 无差别迁到 Supabase。
+- 不用“合理默认值”填充 unknown facts。
+- 不为了绿 CI 跳过失败 Golden Path。
+- 不在没有真实 workload evidence 时盲目删/加索引。
+- 不把 Supabase secret / API key 写入 README、HANDOFF、GitHub 或聊天正文。
+
+---
+
+## 6. 下一步执行队列（由 ChatGPT 继续推进）
+
+严格按以下顺序，不需要重新做全项目审计：
+
+1. 确认 PR #34 仍 Draft / Open。
+2. 清理 Product Golden Path one-time runner；care-operation canonical test 改为永久无条件运行。
+3. 新增并 rollout `care_operation_completed` Supabase enum migration。
+4. 跑最终基础设施 Golden Path。
+5. 完成 PR #34 data-state sweep 与 two-device cloud acceptance；只修明确账户事实问题。
+6. 停止扩大 #34。
+7. 从 #34 当前稳定基础切 `agent/compatibility-evidence-v2` stacked Draft branch。
+8. Compatibility V1 audit + baseline。
+9. Compatibility v2 contract + 10 条 Rule Spec。
+10. 建 12-species / 30-case evaluation dataset。
+11. Evidence Schema + 第一批主流来源 reviewed evidence。
+12. Rule Engine v2 + invariants + Golden Path。
+13. Shadow compare V1 / V2。
+14. 再做 Compatibility Result UI 和受约束 AI explanation。
+15. Compatibility 稳定后进入 Aquarium Health / Task Engine。
+
+---
+
+## 7. 接手原则
+
+压缩成一句话：
+
+> **先让 AquaGuide 记得对，再让它判断对，然后让用户知道下一步做什么，最后才让更多用户进来。**
+
+所有新改动都要遵守：
+
+`Fact -> Evidence -> Deterministic Decision -> Action -> Evaluation`
+
+而不是：
+
+`Prompt -> LLM -> 看起来合理的答案`。
