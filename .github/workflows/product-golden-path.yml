@@ -37,7 +37,10 @@ jobs:
           done
           cat /tmp/aquaguide-preview.log
           exit 1
-      - name: GP-002 continuous browser path
+      - name: Product browser paths
         env:
           PREVIEW_URL: http://127.0.0.1:4173
-        run: npm run test:golden-path-gp002-ui
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: |
+          npm run test:golden-path-gp002-ui
+          npm run test:wishlist-shortcut-ui
