@@ -1,0 +1,37 @@
+name: Conflict Action Engine
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/conflictActionEngine.ts'
+      - 'src/lib/tankInterventionSimulator.ts'
+      - 'src/lib/communityConflictGraph.ts'
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'src/data/compatibilityEvidence.ts'
+      - 'scripts/test-conflict-action-engine.ts'
+      - 'scripts/test-tank-intervention-simulator.ts'
+      - 'scripts/test-community-conflict-graph.ts'
+      - '.github/workflows/conflict-action-engine.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  action-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Conflict action golden cases
+        run: node --import tsx scripts/test-conflict-action-engine.ts
+      - name: Intervention simulator regression
+        run: node --import tsx scripts/test-tank-intervention-simulator.ts
+      - name: Community conflict graph regression
+        run: node --import tsx scripts/test-community-conflict-graph.ts
+      - name: Type check
+        run: npm run lint
