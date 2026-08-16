@@ -32,46 +32,66 @@ Permanent controller run `31962344545` is fully green, including controller regr
 
 ## REL-048 confirmation lifecycle — fixed and green
 
-Current combined-branch confirmation dialog now locks uncertain/post-state-unavailable attempts until canonical reconciliation succeeds:
-
-- overlay/Escape/dialog close requests are ignored while reconciliation is required;
-- failed reconciliation stays on the same attempt and offers sync retry only;
-- successful `onReconcile()` enters explicit `data-relocation-reconciled` state;
-- only then may the user close the dialog;
-- a different operationId/open lifecycle resets reconciliation state.
-
-Verifier was extended to protect these rules. Full controller/confirmation/type/build rerun `31962635712` is green.
+Current combined-branch confirmation dialog locks uncertain/post-state-unavailable attempts until canonical reconciliation succeeds. Overlay/Escape/close requests are ignored, failed reconciliation remains sync-only, successful reconciliation enters explicit reconciled state, and only then may the dialog close. Full rerun `31962635712` is green.
 
 ## Canonical display + compatibility mirror boundary
 
-Confirmed: `ApiAquaGuideRepository.getAquariums()` fetches canonical `/aquariums` and updates repository version caches but does not persist the aquarium list into Care's local app-state mirror.
+`ApiAquaGuideRepository.getAquariums()` fetches canonical `/aquariums` but does not persist the list into Care's local mirror. Care therefore needs a direct canonical aquarium override plus best-effort compatibility-mirror persistence. Canonical data becomes visible first; local mirror failure must never reclassify a confirmed relocation/read as failed. This protects REL-044/049.
 
-Therefore page wiring must not wait for `subscribeToAppState()` to become correct by accident.
+## Care JSX wiring attempt — safety chain green, hydration test harness stale
 
-Care wiring strategy:
+One-shot run `31962863527` intentionally proved the Care wiring verifier red before patch, then applied the exact-anchor JSX wiring in the runner.
 
-1. maintain a direct canonical aquarium override for the current StepDiagnosis surface;
-2. on `executed`, set that override from `result.postAquariums` before returning the execution result to the dialog;
-3. on successful reconciliation, set it from `await controller.reconcile()`;
-4. only after canonical read success, best-effort call `patchLocalAppState({ aquariums: canonicalList, currentAquariumId })` so compatibility mirror / other pages converge;
-5. if mirror persistence succeeds, update current appState and release the temporary canonical override;
-6. if mirror persistence fails, keep the canonical override for the current Care surface and do not reclassify the relocation/canonical read as failed.
+After patch, all new relocation safety gates passed:
 
-This protects REL-044 and REL-049.
+- Care wiring static contract ✅
+- canonical view/mirror fallback regression ✅
+- Care attempt controller ✅
+- REL-048 confirmation lifecycle ✅
+- #65 confirmation entrypoint ✅
+- #63 fresh execution policy ✅
+- mutation uncertainty ✅
 
-## Next implementation step — now authorized
+The run then stopped at the pre-existing `scripts/test-care-aquarium-hydration.ts` static assertion.
 
-Wire `StepDiagnosisPanel` on the combined canonical branch:
+Root cause is now confirmed as **TEST-003 test-structure coupling, not a hydration/product regression**. The old test required this exact adjacency:
 
-- pass `sourceAquarium={targetAquarium}` and `onOpenRelocationConfirmation` into `InterventionComparisonPanel`;
-- opener event creates exactly one Care relocation controller and closes the comparison panel;
-- render `RelocationConfirmationDialog` from `controller.attempt.request/facts`;
-- execution wrapper applies canonical `postAquariums` on `executed`;
-- reconcile wrapper applies canonical list from controller;
-- no Care JSX call to `repository.relocateLivestock()`;
-- reset/topic/aquarium changes may discard only an idle/unexecuted attempt; reconciliation-required dialog itself is non-dismissible until canonical sync.
+`const [appState, setAppState] = useState(loadAppStateFromStorage);` immediately followed by `useEffect(() => subscribeToAppState(...))`.
 
-After JSX wiring: add static page contract + integration regression, then browser Golden Path.
+The new Care wiring inserts only:
+
+`const [canonicalAquariums, setCanonicalAquariums] = useState<Aquarium[] | null>(null);`
+
+between those statements. The `subscribeToAppState` hydration subscription remains present and unchanged; the new canonical override is required so a verified post-relocation canonical list can temporarily outrank a stale local mirror.
+
+The hydration regression is being changed from source-line adjacency to capability assertions:
+
+- `appState` still initializes from `loadAppStateFromStorage`;
+- `subscribeToAppState` still refreshes `appState`;
+- StepDiagnosis uses `canonicalAquariums ?? appState.aquariums`;
+- no one-time `useMemo(loadAppStateFromStorage)` regression returns.
+
+No relocation or hydration product rule is being relaxed.
+
+## Intended Care wiring already verified in the runner
+
+- eligible #65 destination opens one controller attempt;
+- Care page never calls `repository.relocateLivestock()` directly;
+- controller uses `getCurrentAquaGuideRepository` only as its repository provider;
+- `executed` applies `result.postAquariums` before returning success to the dialog;
+- reconciliation reads through the controller and applies that canonical list;
+- direct canonical override is shown before compatibility-mirror persistence;
+- mirror persistence failure is isolated and cannot become relocation failure.
+
+Because the one-shot run stopped before TypeScript/build/commit, these JSX changes are **not yet saved on the branch**. The workflow will be rerun after TEST-003 is corrected; only a full green run may self-delete the one-shot tooling and commit the Care wiring.
+
+## Next step
+
+1. update the Care hydration regression to capability-based assertions;
+2. rerun the guarded one-shot Care wiring from the pre-wiring branch state;
+3. require hydration + severe-risk + app/API TypeScript + build to pass;
+4. only then persist the verified Care wiring and self-delete write tooling;
+5. update handoff/badcase again before browser Golden Path work.
 
 ## Non-negotiable constraints
 
