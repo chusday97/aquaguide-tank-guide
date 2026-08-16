@@ -31,10 +31,10 @@ jobs:
           git config user.name "integration-audit"
           git config user.email "integration-audit@users.noreply.github.com"
           git rev-parse HEAD > /tmp/integration_audit_base_head
-          git fetch origin agent/fix-ambiguous-marine-water-type
+          git fetch origin agent/fix-legacy-marine-category-contradictions
 
           set +e
-          git merge --no-commit --no-ff origin/agent/fix-ambiguous-marine-water-type
+          git merge --no-commit --no-ff origin/agent/fix-legacy-marine-category-contradictions
           merge_status=$?
           set -e
 
@@ -74,6 +74,8 @@ jobs:
         run: node --import tsx scripts/test-livestock-recording.ts
       - name: Species water-type ambiguity regression
         run: node --import tsx scripts/test-species-water-type-ambiguity.ts
+      - name: Legacy marine-category contradiction regression
+        run: node --import tsx scripts/test-legacy-marine-category-contradictions.ts
       - name: Taxonomy regression
         run: node --import tsx scripts/assert_taxonomy_rules.ts
       - name: Tank decision context
