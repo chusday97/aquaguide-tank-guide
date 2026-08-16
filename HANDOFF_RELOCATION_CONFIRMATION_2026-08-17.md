@@ -4,7 +4,7 @@
 
 ## Current safe chain
 
-`formal intervention → #65 confirmation entrypoint → #64 confirmation dialog → #63 fresh execution policy → #62 atomic receipt → fresh canonical reload/recompute`
+`formal intervention → #65 confirmation entrypoint → #64 confirmation dialog → Care attempt controller → #63 fresh execution policy → #62 atomic receipt → fresh canonical reload/recompute`
 
 ## Completed foundations
 
@@ -15,67 +15,75 @@
 - #65 full-chain CI `31961532732`: green.
 - Disposable #62 + #65-stack audit `31961690289`: green; only the two known semantic conflicts; no merge commit.
 
-## New canonical implementation baseline
+## Canonical implementation baseline
 
-The first investigation branch cut from #65 exposed REL-046: its Care state is a page/local snapshot and #65 does not contain #62's mutation repository contract. It must not become the executable branch.
+Executable work now lives only on `agent/canonical-care-relocation-wiring`, created from latest #62 and populated with the full #65 stack via guarded squash integration. Bootstrap run `31962121116` passed receipt, fresh policy, uncertainty, confirmation, entrypoint, unresolved, Care hydration, app/API TypeScript and production build before saving the combined tree. The one-shot workflow self-deleted. No product PR/main merge occurred.
 
-A new implementation branch was therefore created from latest #62:
+## Care relocation attempt controller — implemented and green
 
-`agent/canonical-care-relocation-wiring`
+Added `src/services/care/care-relocation-confirmation.controller.ts`.
 
-The full #65 stack was brought in via guarded **squash integration**, not by merging a product PR. Workflow run `31962121116` passed before saving the tree:
+One controller instance represents one confirmation attempt:
 
-- atomic receipt boundary ✅
-- fresh execution policy ✅
+- operationId generated once when the opener event creates the controller, never during render;
+- request/facts/intent are frozen for that attempt;
+- repository mode is lazily resolved once and the same successful repository instance owns pre-load → mutation callback → post-load → later reconciliation reads;
+- `execute()` caches its Promise, so double clicks/repeated callbacks cannot create a second mutation;
+- pre/post fresh loads call repository `getAquariums()`;
+- repository `relocateLivestock()` is only reachable inside the callback injected into #63 `executeFreshRelocation`;
+- `reconcile()` is canonical read-only recovery and never mutates;
+- repository resolution that fails before any repository exists may be retried for a later recovery read because no write could have occurred through an unresolved repository.
+
+Controller regression suite verifies:
+
+- stable single operationId;
+- one repository resolution per successful attempt;
+- exactly one mutation on success even when execute is called twice;
+- exactly two canonical reads on success (pre/post);
+- fresh destination degradation blocks with mutation count 0;
+- `mutation_state_unknown` preserves operationId and reconcile adds only a read;
+- repeated execute after unknown returns the same prior result and sends no second mutation;
+- repository-resolution failure before a repository is obtained performs no mutation.
+
+Permanent controller workflow run `31962344545` is fully green:
+
+- Care controller regression ✅
+- #63 fresh execution policy ✅
 - mutation uncertainty ✅
-- confirmation surface ✅
-- confirmation entrypoint source/UI ✅
-- unresolved livestock ✅
-- Care hydration regression ✅
+- #64 confirmation surface ✅
+- #65 entrypoint source scope ✅
 - app TypeScript ✅
 - API TypeScript ✅
 - production build ✅
 
-The one-shot bootstrap workflow self-deleted. Saved combined-tree head: `8ccc6a33fe2788e4c06cf633b7229908ad5b1e07`.
+## New confirmed display-state boundary
 
-No PR was merged, no PR was marked Ready, and main was not changed.
+`ApiAquaGuideRepository.getAquariums()` fetches `/aquariums` and maps/records repository version metadata, but it does **not** persist the returned list into `loadAppStateFromStorage()` / Care's local mirror subscription.
 
-## Fresh canonical execution rule
+Therefore a successful #63 execution can have correct `postAquariums` while Care still renders the old local mirror and old conflict graph.
 
-Care/local React state is never the authorization source. The combined repository interface provides:
+REL-044 is confirmed, not hypothetical.
 
-`getAquariums(): Promise<Aquarium[]>`
+The page wiring must update its visible aquarium set directly from canonical results:
 
-and
+- on `executed`: use `result.postAquariums` immediately for the Care decision surface;
+- on reconciliation: use `await controller.reconcile()` canonical aquariums;
+- do not wait for localStorage subscription to become accurate by accident;
+- local mirror may remain a compatibility/cache source, but the just-confirmed canonical list must take precedence for the current Care decision surface.
 
-`relocateLivestock(input): Promise<{ committed: true; replayed?: boolean }>`.
+## Next JSX wiring design
 
-The execution controller must resolve the current repository **once when the user confirms the attempt**. That same repository instance must be used for:
+`StepDiagnosisPanel` will add a canonical display override plus one active relocation controller:
 
-`repository.getAquariums() pre-load → #63 revalidation → repository.relocateLivestock() callback → repository.getAquariums() post-load`.
+1. `displayAquariums = canonicalAquariums ?? appState.aquariums`;
+2. opening an eligible #65 destination creates exactly one controller and closes/backs the comparison panel;
+3. pass `sourceAquarium={targetAquarium}` + opener callback to `InterventionComparisonPanel`;
+4. render #64 `RelocationConfirmationDialog` from `controller.attempt.request/facts`;
+5. dialog execution wrapper awaits `controller.execute()`; on `executed`, set canonical display state from `result.postAquariums` before returning the result to the dialog;
+6. reconcile wrapper awaits `controller.reconcile()` and sets canonical display state from that result;
+7. reset/topic/aquarium changes must clear an unused idle attempt deliberately, but terminal/uncertain lifecycle must not silently mint a new operationId for the same move.
 
-Do not resolve repository mode separately for pre-load/mutation/post-load; otherwise an auth/mode change could split one attempt across different truth sources.
-
-## Operation-attempt contract to implement before JSX
-
-A confirmation attempt owns exactly one operation identity and exactly one launch candidate:
-
-- create operationId only when opening a new confirmation attempt, never during render;
-- rerenders keep the same operationId;
-- one attempt = one `{source aquarium, source record, source batch, destination, quantity}` intent;
-- uncertain/post-state-unavailable reconciliation sends no second mutation;
-- idle unused cancel may discard the attempt;
-- completed/uncertain terminal attempt cannot be repurposed for another move;
-- a new move creates a new attempt and operationId.
-
-## Next implementation order
-
-1. add a pure Care relocation attempt model/controller;
-2. add repository-backed execution adapter that injects `getAquariums` + `relocateLivestock` only under #63;
-3. regression-test operationId stability, repository resolution count, pre/post canonical load and no-mutation reconcile;
-4. only after those tests pass, wire `StepDiagnosisPanel → InterventionComparisonPanel → RelocationConfirmationDialog`;
-5. refresh Care decision state from canonical result after success/reconciliation;
-6. then add browser Golden Path.
+Before coding that JSX, confirm/adjust #64 dialog close semantics so reconciliation-required outcomes cannot be dismissed and then silently reopened as a new attempt without canonical reconciliation.
 
 ## Non-negotiable constraints
 
