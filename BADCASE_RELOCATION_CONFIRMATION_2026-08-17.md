@@ -45,7 +45,7 @@
 **Status:** confirmed P0 page-wiring requirement; regression/static/browser coverage still required.
 
 ### REL-045 — idle cancel and terminal attempt lifecycle are conflated
-One attempt identity is bound to one move intent. Idle unused cancel may discard it; completed/uncertain attempts cannot be repurposed. Dialog close/reconciliation semantics still need inspection before JSX wiring.
+One attempt identity is bound to one move intent. Idle unused cancel may discard it; completed/uncertain attempts cannot be repurposed.
 
 ### REL-046 — final Care wiring is implemented on the PR #65-only branch
 **Fix complete:** executable work moved to `agent/canonical-care-relocation-wiring`, created from latest #62 and populated with full #65 stack using guarded squash integration. Bootstrap `31962121116` is green; one-shot workflow self-deleted. No product PR/main merge occurred.
@@ -55,6 +55,23 @@ One attempt identity is bound to one move intent. Idle unused cancel may discard
 **Fix implemented in controller:** repository resolution is cached per attempt. Same repository instance owns pre-load → mutation → post-load → reconciliation. Controller regression proves repository resolver count is 1 for a resolved attempt.
 
 If repository resolution itself fails before any repository exists, no mutation is possible through it; the cache is cleared so a later recovery read may resolve again.
+
+### REL-048 — reconciliation-required dialog can be dismissed before canonical sync
+
+**Observed in current confirmation dialog:** `Dialog.onOpenChange` only blocks closing while `checking`. After `mutation_state_unknown`, `executed_post_state_unavailable`, or an unexpected thrown error sets reconciliation-required UI, external dialog close events are still forwarded to the parent.
+
+Also, a successful `onReconcile()` currently has no local `reconciled` terminal state; the dialog remains in the uncertainty panel indefinitely.
+
+**Risk:** user dismisses an unresolved attempt, parent discards the controller, then reopens the same move as a new attempt/operationId before canonical reconciliation. This defeats the stable-attempt lifecycle even though the controller itself is safe.
+
+**Required:**
+- while reconciliation is required and not completed, reject close requests (overlay / escape / dialog close);
+- `handleReconcile` must mark reconciliation complete only after `onReconcile()` resolves successfully;
+- after successful canonical reconciliation, show a distinct synced/reconciled state and allow Close;
+- failed reconciliation remains non-dismissible and retry is **sync retry only**, never relocation retry;
+- opening a different `operationId` resets reconciliation-complete state.
+
+**Status:** P0 confirmation lifecycle fix required before Care JSX wiring.
 
 ## Controller verification
 
@@ -90,7 +107,7 @@ Controller regression additionally proves:
 
 ## Remaining Care executable-layer exit gate
 
-- inspect/fix terminal dialog close lifecycle before page wiring;
+- fix REL-048 and extend confirmation verifier;
 - no Care page direct `relocateLivestock()` call;
 - success/reconcile refreshes Care visible decision state from canonical data;
 - blocked fresh result never writes (controller covered; page flow still needs integration coverage);
