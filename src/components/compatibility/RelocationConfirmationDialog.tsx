@@ -70,12 +70,16 @@ export function RelocationConfirmationDialog({
   const [outcome, setOutcome] = useState<RelocationConfirmationOutcome | null>(null);
   const [unexpectedError, setUnexpectedError] = useState(false);
   const [reconciling, setReconciling] = useState(false);
+  const [reconciliationComplete, setReconciliationComplete] = useState(false);
+  const [reconciliationError, setReconciliationError] = useState<string | null>(null);
 
   useEffect(() => {
     setChecking(false);
     setOutcome(null);
     setUnexpectedError(false);
     setReconciling(false);
+    setReconciliationComplete(false);
+    setReconciliationError(null);
   }, [open, request.operationId]);
 
   const handleConfirm = async () => {
@@ -94,25 +98,41 @@ export function RelocationConfirmationDialog({
   };
 
   const handleReconcile = async () => {
-    if (reconciling) return;
+    if (reconciling || reconciliationComplete) return;
     setReconciling(true);
+    setReconciliationError(null);
     try {
       await onReconcile();
+      // Only a successfully completed canonical read clears the non-dismissible
+      // uncertainty gate. It does not infer whether the prior mutation happened;
+      // the caller refreshes the visible decision surface from that canonical state.
+      setReconciliationComplete(true);
+    } catch (error) {
+      setReconciliationError(error instanceof Error ? error.message : String(error));
     } finally {
       setReconciling(false);
     }
   };
 
-  const reconciliationRequired = unexpectedError || Boolean(outcome && relocationOutcomeRequiresReconciliation(outcome));
+  const rawReconciliationRequired = unexpectedError || Boolean(outcome && relocationOutcomeRequiresReconciliation(outcome));
+  const reconciliationRequired = rawReconciliationRequired && !reconciliationComplete;
   const completed = outcome?.phase === 'completed';
   const blocked = outcome?.phase === 'blocked' ? outcome : null;
+  const canClose = !checking && !reconciling && !reconciliationRequired;
 
   return (
-    <Dialog open={open} onOpenChange={(nextOpen) => !checking && onOpenChange(nextOpen)}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen && !canClose) return;
+        onOpenChange(nextOpen);
+      }}
+    >
       <DialogContent
         className="w-[94vw] max-w-[560px] rounded-[24px] border-border bg-bg p-0"
         data-relocation-confirmation-dialog="true"
         data-relocation-result={unexpectedError ? 'unexpected_error' : outcome?.phase || 'idle'}
+        data-relocation-close-locked={reconciliationRequired ? 'true' : 'false'}
       >
         <DialogHeader className="border-b border-border/70 bg-white px-5 py-4 text-left">
           <div className="flex items-center gap-2 text-ink/50">
@@ -200,9 +220,26 @@ export function RelocationConfirmationDialog({
                   </h3>
                   <p className="mt-1 text-[10px] font-bold leading-relaxed text-sky-900/70">
                     {isEn
-                      ? 'Do not send another relocation. Synchronize the aquarium state first; the same operation identity is preserved for reconciliation.'
-                      : '不要再次发起迁移。请先重新同步鱼缸状态；系统会保留本次操作标识用于核对，而不是生成新的迁移操作。'}
+                      ? 'Do not send another relocation. Synchronize the aquarium state first; this dialog stays locked until a canonical read succeeds.'
+                      : '不要再次发起迁移。请先重新同步鱼缸状态；在 canonical 状态读取成功前，这个确认不会被关闭或换成新的迁移操作。'}
                   </p>
+                  {reconciliationError && (
+                    <p className="mt-2 text-[9px] font-bold leading-relaxed text-red-700" data-relocation-reconciliation-error="true">
+                      {isEn ? `Synchronization failed: ${reconciliationError}` : `同步失败：${reconciliationError}`}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {reconciliationComplete && rawReconciliationRequired && (
+            <section className="mt-4 rounded-[16px] border border-emerald-200 bg-emerald-50 p-4" data-relocation-reconciled="true">
+              <div className="flex items-start gap-2.5">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" />
+                <div>
+                  <h3 className="text-[12px] font-black text-emerald-950">{isEn ? 'Aquarium state synchronized.' : '鱼缸状态已重新同步'}</h3>
+                  <p className="mt-1 text-[10px] font-bold leading-relaxed text-emerald-900/70">{isEn ? 'Close this confirmation and continue from the refreshed canonical aquarium state. No second relocation was sent.' : '现在可以关闭确认，并以刚读取的 canonical 鱼缸状态继续判断。本次同步没有再次发送迁移。'}</p>
                 </div>
               </div>
             </section>
@@ -213,10 +250,10 @@ export function RelocationConfirmationDialog({
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                disabled={checking}
+                disabled={checking || reconciling}
                 className="rounded-[13px] border border-border bg-white px-4 py-2.5 text-[11px] font-black text-ink/65 disabled:opacity-50"
               >
-                {completed || blocked ? (isEn ? 'Close' : '关闭') : (isEn ? 'Cancel' : '取消')}
+                {completed || blocked || reconciliationComplete ? (isEn ? 'Close' : '关闭') : (isEn ? 'Cancel' : '取消')}
               </button>
             )}
 
