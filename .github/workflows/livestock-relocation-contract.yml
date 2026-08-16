@@ -1,0 +1,38 @@
+name: Livestock Relocation Contract
+
+on:
+  push:
+    branches:
+      - agent/atomic-livestock-relocation-contract
+  pull_request:
+    paths:
+      - 'packages/contracts/src/livestock-relocation.ts'
+      - 'src/services/aquarium/livestock-relocation.service.ts'
+      - 'scripts/test-livestock-relocation.ts'
+      - 'scripts/test-livestock-relocation-contract.mjs'
+      - 'supabase/migrations/20260816160000_atomic_verified_livestock_relocation.sql'
+      - '.github/workflows/livestock-relocation-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  relocation-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Pure local relocation regression
+        run: node --import tsx scripts/test-livestock-relocation.ts
+      - name: SQL and public-contract safety regression
+        run: node scripts/test-livestock-relocation-contract.mjs
+      - name: Existing unresolved livestock regression
+        run: node --import tsx scripts/test-unresolved-existing-livestock.ts
+      - name: Existing livestock recording regression
+        run: node --import tsx scripts/test-livestock-recording.ts
+      - name: Type check
+        run: npm run lint
