@@ -1,0 +1,25 @@
+name: Recommendation Grounding Contract
+
+on:
+  push:
+    branches:
+      - agent/recommendation-grounding-contracts
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  grounding-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Catalog grounding regression
+        run: npx tsx scripts/test-catalog-grounding-contract.ts
+      - name: Type check
+        run: npm run lint
