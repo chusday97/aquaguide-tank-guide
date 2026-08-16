@@ -1,0 +1,43 @@
+name: Care Relocation Confirmation Controller
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+  pull_request:
+    paths:
+      - 'src/services/care/care-relocation-confirmation.controller.ts'
+      - 'scripts/test-care-relocation-confirmation-controller.ts'
+      - 'src/lib/relocationExecutionPolicy.ts'
+      - 'src/services/repository/aquaguide.repository.ts'
+      - '.github/workflows/care-relocation-confirmation-controller.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  controller:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Care relocation confirmation controller
+        run: node --import tsx scripts/test-care-relocation-confirmation-controller.ts
+      - name: Fresh relocation execution policy
+        run: node --import tsx scripts/test-relocation-execution-policy.ts
+      - name: Mutation uncertainty regression
+        run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
+      - name: Confirmation surface
+        run: node scripts/verify-relocation-confirmation-surface.mjs
+      - name: Confirmation entrypoint source scope
+        run: node --import tsx scripts/test-relocation-confirmation-entrypoint.ts
+      - name: TypeScript
+        run: npm run lint
+      - name: API TypeScript
+        run: npm run check:api
+      - name: Production build
+        run: npm run build
