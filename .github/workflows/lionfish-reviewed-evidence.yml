@@ -1,0 +1,43 @@
+name: Lionfish Reviewed Evidence
+
+on:
+  push:
+    branches:
+      - agent/reviewed-lionfish-predation-evidence
+    paths:
+      - '.github/workflows/lionfish-reviewed-evidence.yml'
+      - 'src/data/compatibilityEvidenceReviewedPredators.ts'
+      - 'src/data/compatibilityEvidence.ts'
+      - 'scripts/test-lionfish-reviewed-evidence.ts'
+      - 'scripts/test-reviewed-severe-risk-regression.ts'
+  pull_request:
+    paths:
+      - 'src/data/compatibilityEvidenceReviewedPredators.ts'
+      - 'src/data/compatibilityEvidence.ts'
+      - 'scripts/test-lionfish-reviewed-evidence.ts'
+      - 'scripts/test-reviewed-severe-risk-regression.ts'
+      - 'scripts/test-contextual-compatibility-evidence.ts'
+      - '.github/workflows/lionfish-reviewed-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lionfish-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lionfish reviewed predation regression
+        run: node --import tsx scripts/test-lionfish-reviewed-evidence.ts
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Contextual evidence non-escalation regression
+        run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
+      - name: Type check
+        run: npm run lint

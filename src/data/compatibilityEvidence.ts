@@ -1,4 +1,8 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
+import {
+  getAdditionalReviewedCompatibilityProfile,
+  getAdditionalReviewedCompatibilityProfileIds,
+} from './compatibilityEvidenceReviewedPredators';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -252,7 +256,9 @@ const pairRules: ReviewedPairRule[] = [
   },
 ];
 
-export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
+export const getReviewedCompatibilityProfile = (speciesId: string) => (
+  profiles[speciesId] || getAdditionalReviewedCompatibilityProfile(speciesId)
+);
 
 export const getReviewedConditionalBehaviorEvidence = (speciesId: string) => {
   const evidenceKey = conditionalEvidenceAssignments[speciesId];
@@ -269,7 +275,7 @@ export const getConditionalBehaviorEvidenceAudit = () => ({
 });
 
 export const getCompatibilityEvidenceAudit = () => ({
-  reviewedSpeciesIds: Object.keys(profiles),
+  reviewedSpeciesIds: [...Object.keys(profiles), ...getAdditionalReviewedCompatibilityProfileIds()],
   reviewedPairRules: pairRules,
   conditionalEvidenceKeys: Object.keys(conditionalEvidence),
   conditionalEvidenceAssignments,
