@@ -1,0 +1,26 @@
+name: Relocation Browser Fixture Audit
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+    paths:
+      - 'scripts/audit-relocation-browser-fixtures.ts'
+      - '.github/workflows/relocation-browser-fixture-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Find reviewed real-catalog browser fixtures
+        run: node --import tsx scripts/audit-relocation-browser-fixtures.ts
