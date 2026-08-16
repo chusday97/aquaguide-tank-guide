@@ -24,6 +24,8 @@ const TAXON_WATER_EVIDENCE: TaxonEvidence[] = [
   { scientificName: 'Acheilognathus macropterus', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Opsariichthys bidens', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Pseudogastromyzon fangi', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon', note: 'Freshwater hillstream loach; explicit evidence prevents the ambiguous common-name token 蝴蝶鱼 from creating marine certainty.', sourceName: 'Eschmeyer Catalog of Fishes / FishBase' },
+  { scientificName: 'Altolamprologus calvus', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon', note: 'Endemic Lake Tanganyika cichlid; explicit taxon evidence overrides stale legacy marine category data, including catalog varieties.', sourceName: 'Eschmeyer Catalog of Fishes / FishBase' },
+  { scientificName: 'Neolamprologus multifasciatus', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon', note: 'Endemic Lake Tanganyika shell-dwelling cichlid; explicit taxon evidence overrides stale legacy marine category data.', sourceName: 'Eschmeyer Catalog of Fishes / FishBase' },
   { scientificName: 'Abbottina rivularis', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Pseudorasbora parva', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Aphyocypris chinensis', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
