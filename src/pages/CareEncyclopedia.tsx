@@ -53,6 +53,13 @@ import { matchesCareCategory, type CareCategoryId } from '../services/care/care-
 import { buildTankDecisionSupport } from '../lib/tankDecisionSupportOrchestrator';
 import { buildQuickDiagnosisConflictAugmentation } from '../lib/quickDiagnosisConflictAugmentation';
 import { InterventionComparisonPanel } from '../components/compatibility/InterventionComparisonPanel';
+import { RelocationConfirmationDialog } from '../components/compatibility/RelocationConfirmationDialog';
+import type { RelocationConfirmationLaunchCandidate } from '../lib/relocationConfirmationEntrypoint';
+import {
+  createCareRelocationConfirmationController,
+  type CareRelocationConfirmationController,
+} from '../services/care/care-relocation-confirmation.controller';
+import { applyCareCanonicalAquariums } from '../services/care/care-relocation-canonical-state';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
@@ -2514,10 +2521,14 @@ function StepDiagnosisPanel({
   const { t } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [appState, setAppState] = useState(loadAppStateFromStorage);
+  const [canonicalAquariums, setCanonicalAquariums] = useState<Aquarium[] | null>(null);
   useEffect(() => subscribeToAppState(() => {
     setAppState(loadAppStateFromStorage());
   }), []);
-  const aquariums = appState.aquariums;
+  // The local app state is a compatibility mirror. Immediately after a
+  // relocation/reconciliation, a successfully read canonical list takes
+  // precedence until that verified list is persisted back into the mirror.
+  const aquariums = canonicalAquariums ?? appState.aquariums;
   const defaultAquariumId = appState.currentAquariumId || aquariums[0]?.id || '';
   const [diagnosisState, setDiagnosisState] = useState<StepDiagnosisState>(() => ({
     issueType: inferStepDiagnosisIssue(topic),
@@ -2530,6 +2541,7 @@ function StepDiagnosisPanel({
   }));
   const [isResultDetailOpen, setIsResultDetailOpen] = useState(false);
   const [isInterventionComparisonOpen, setIsInterventionComparisonOpen] = useState(false);
+  const [relocationController, setRelocationController] = useState<CareRelocationConfirmationController | null>(null);
 
   useEffect(() => {
     setDiagnosisState({
@@ -2599,6 +2611,35 @@ function StepDiagnosisPanel({
       || conflictAugmentation.status === 'community_identity_incomplete'
     )
   );
+  const applyCanonicalCareState = (freshAquariums: Aquarium[]) => {
+    const applied = applyCareCanonicalAquariums({
+      aquariums: freshAquariums,
+      currentAquariumId: diagnosisState.targetAquariumId || appState.currentAquariumId,
+      showCanonicalAquariums: setCanonicalAquariums,
+      persistMirror: patch => patchLocalAppState(patch),
+    });
+    if (applied.mirrorPersisted === false) {
+      // Canonical truth is already visible through the direct override. A mirror
+      // failure must not be reclassified as relocation/canonical-read failure.
+      console.warn('AquaGuide Care canonical aquarium mirror sync failed', applied.errorMessage);
+      return;
+    }
+    setAppState(applied.mirrorState);
+    // Mirror now contains the exact canonical list, so normal subscriptions can
+    // resume without masking later legitimate local/cross-page state updates.
+    setCanonicalAquariums(null);
+  };
+
+  const openRelocationConfirmation = (candidate: RelocationConfirmationLaunchCandidate) => {
+    const controller = createCareRelocationConfirmationController({
+      candidate,
+      catalog: fishData,
+      getRepository: getCurrentAquaGuideRepository,
+    });
+    setRelocationController(controller);
+    setIsInterventionComparisonOpen(false);
+  };
+
   const isTargetReady = !requiresSpeciesScope
     || diagnosisState.target.scope === 'whole_tank'
     || diagnosisState.target.speciesIds.length > 0;
@@ -3049,8 +3090,36 @@ function StepDiagnosisPanel({
         <InterventionComparisonPanel
           open={isInterventionComparisonOpen}
           result={decisionSupport}
+          sourceAquarium={targetAquarium || undefined}
           isEn={isEn}
           onOpenChange={setIsInterventionComparisonOpen}
+          onOpenRelocationConfirmation={openRelocationConfirmation}
+        />
+      )}
+
+      {relocationController && (
+        <RelocationConfirmationDialog
+          open={true}
+          request={relocationController.attempt.request}
+          facts={relocationController.attempt.facts}
+          isEn={isEn}
+          onOpenChange={nextOpen => {
+            if (!nextOpen) setRelocationController(null);
+          }}
+          executeFreshRelocation={async request => {
+            if (request.operationId !== relocationController.attempt.operationId) {
+              throw new Error('Relocation confirmation attempt identity changed.');
+            }
+            const result = await relocationController.execute();
+            if (result.status === 'executed') {
+              applyCanonicalCareState(result.postAquariums);
+            }
+            return result;
+          }}
+          onReconcile={async () => {
+            const freshAquariums = await relocationController.reconcile();
+            applyCanonicalCareState(freshAquariums);
+          }}
         />
       )}
       {/* CARE_CONFLICT_DECISION_SURFACE_END */}
