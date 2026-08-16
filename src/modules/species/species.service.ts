@@ -65,7 +65,7 @@ const secondaryCategoryOrder: Record<string, string[]> = {
 };
 
 const isMarineFishText = (text: string) => (
-  /小丑|倒吊|蓝魔鬼|雀鲷|蝶鱼|炮弹|狮子鱼|红利|泗水玫瑰|五彩青蛙|虾虎|Pseudochromis|Amphiprion|Zebrasoma|Paracanthurus|Chaetodon|Chrysiptera|Pterois|Lutjanus|Pterapogon|Xanthichthys|Centropyge|Pomacanthus|Synchiropus|Gobiodon/i.test(text)
+  /小丑|倒吊|蓝魔鬼|雀鲷|炮弹|狮子鱼|红利|泗水玫瑰|五彩青蛙|虾虎|Pseudochromis|Amphiprion|Zebrasoma|Paracanthurus|Chaetodon|Chrysiptera|Pterois|Lutjanus|Pterapogon|Xanthichthys|Centropyge|Pomacanthus|Synchiropus|Gobiodon/i.test(text)
 );
 
 const isMarineInvertebrateText = (text: string) => (
