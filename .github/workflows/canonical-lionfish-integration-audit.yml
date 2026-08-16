@@ -24,17 +24,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Dry-run merge current decision/evidence/water-correction stack
+      - name: Dry-run merge current Care decision-surface stack
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "integration-audit"
           git config user.email "integration-audit@users.noreply.github.com"
           git rev-parse HEAD > /tmp/integration_audit_base_head
-          git fetch origin agent/fix-legacy-marine-category-contradictions
+          git fetch origin agent/care-conflict-decision-surface
 
           set +e
-          git merge --no-commit --no-ff origin/agent/fix-legacy-marine-category-contradictions
+          git merge --no-commit --no-ff origin/agent/care-conflict-decision-surface
           merge_status=$?
           set -e
 
@@ -78,12 +78,16 @@ jobs:
         run: node --import tsx scripts/test-legacy-marine-category-contradictions.ts
       - name: Taxonomy regression
         run: node --import tsx scripts/assert_taxonomy_rules.ts
+      - name: Care conflict decision-surface contract
+        run: node scripts/test-care-conflict-decision-surface.mjs
       - name: Tank decision context
         run: node --import tsx scripts/test-tank-decision-context.ts
       - name: Decision support orchestration
         run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
       - name: Quick Diagnosis augmentation
         run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
+      - name: Read-only Intervention UI contract
+        run: node scripts/test-intervention-comparison-ui-contract.mjs
       - name: Contextual behavior evidence
         run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
       - name: Canonical lionfish reviewed predation
