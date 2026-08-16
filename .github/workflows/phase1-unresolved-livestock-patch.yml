@@ -1,0 +1,45 @@
+name: Phase1 Unresolved Livestock Patch
+
+on:
+  push:
+    branches:
+      - agent/unresolved-existing-livestock
+    paths:
+      - scripts/phase1-patch-unresolved-existing-livestock.mjs
+      - .github/workflows/phase1-unresolved-livestock-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/unresolved-existing-livestock
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply guarded cross-stack patch
+        run: node scripts/phase1-patch-unresolved-existing-livestock.mjs
+      - name: Unresolved existing-livestock contract
+        run: npx tsx scripts/test-unresolved-existing-livestock.ts
+      - name: Existing livestock recording regression
+        run: npx tsx scripts/test-livestock-recording.ts
+      - name: Existing atomic livestock contract
+        run: npx tsx scripts/test-atomic-livestock-addition.ts
+      - name: API type check
+        run: npm run check:api
+      - name: App type check
+        run: npm run lint
+      - name: Commit verified implementation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/types.ts src/types/database.ts src/services/repository/aquaguide.repository.ts packages/contracts/src/business.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts apps/api/src/routes/aquariums.ts src/lib/tankCompatibilityEngine.ts src/services/aquarium/species-addition.service.ts src/services/aquarium/livestock-recording.service.ts
+          git commit -m "Support unresolved existing livestock end to end"
+          git push origin HEAD:agent/unresolved-existing-livestock
