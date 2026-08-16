@@ -8,6 +8,8 @@ import { fishData } from '../data/fishData';
 import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions } from '../modules/species/species.service';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/tankCompatibilityEngine';
+import { recommendReplacementSpecies } from '../lib/replacementRecommendationEngine';
+import { RiskAndAlternativesPanel } from './compatibility/RiskAndAlternativesPanel';
 import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
 import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
@@ -437,6 +439,7 @@ export function SpeciesDetailDialog({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [expandedSection, setExpandedSection] = useState<'fit' | 'compatibility' | null>(null);
   const [inlineFeedback, setInlineFeedback] = useState('');
+  const [isAlternativesOpen, setIsAlternativesOpen] = useState(false);
   const [isDeathFormOpen, setIsDeathFormOpen] = useState(false);
   const [deathDate, setDeathDate] = useState(getLocalDateValue);
   const [deathCauseCodes, setDeathCauseCodes] = useState<MemorialCauseCode[]>([]);
@@ -451,6 +454,15 @@ export function SpeciesDetailDialog({
   const careSectionButtonRef = useRef<HTMLElement | null>(null);
   const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);
   const displayFit = selectedFit;
+  const replacementResult = useMemo(() => {
+    if (!fish || !aquariumContext || !displayFit) return null;
+    if (displayFit.status !== 'unsuitable' && displayFit.status !== 'conflictRisk') return null;
+    return recommendReplacementSpecies({
+      aquarium: aquariumContext,
+      rejectedSpecies: fish,
+      catalog: fishData,
+    });
+  }, [aquariumContext, displayFit, fish]);
   const selectedTaxonomy = fish ? getCareTaxonomyPath(fish) : null;
   const resolvedImageSrc = fish ? (imageSrc || getSpeciesDisplayImage(fish)) : '';
   const speciesGroup = useMemo(() => {
@@ -478,6 +490,7 @@ export function SpeciesDetailDialog({
     if (!open) return;
     setExpandedSection(null);
     setInlineFeedback('');
+    setIsAlternativesOpen(false);
     setIsDeathFormOpen(false);
     setDeathDate(getLocalDateValue());
     setDeathCauseCodes([]);
@@ -637,7 +650,11 @@ export function SpeciesDetailDialog({
       }
       return;
     }
-    if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') {
+    if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk') {
+      setIsAlternativesOpen(true);
+      return;
+    }
+    if (displayFit.status === 'caution') {
       if (!inCalculator) onAddToCalculator(fish);
       onGoCalculator?.();
       return;
@@ -1066,6 +1083,21 @@ export function SpeciesDetailDialog({
           )}
         </AdaptiveDetailContent>
       </Dialog>
+
+      {fish && displayFit && replacementResult && (
+        <RiskAndAlternativesPanel
+          open={isAlternativesOpen}
+          rejectedSpecies={fish}
+          rejectedCompatibility={displayFit.compatibilityResult}
+          replacementResult={replacementResult}
+          isEn={isEn}
+          onOpenChange={setIsAlternativesOpen}
+          onViewCandidate={onSelectSpecies ? (candidate) => {
+            setIsAlternativesOpen(false);
+            onSelectSpecies(candidate);
+          } : undefined}
+        />
+      )}
 
       {isPreviewOpen && (
         <Suspense fallback={null}>
