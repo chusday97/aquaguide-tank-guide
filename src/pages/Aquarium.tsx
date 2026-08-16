@@ -93,6 +93,7 @@ import {
   getExistingLivestockItemLabel,
   isVerifiedExistingLivestockItem,
   recordExistingLivestock,
+  type ExistingLivestockRecordItem,
   type RecordExistingResult,
 } from '../services/aquarium/livestock-recording.service';
 import { createAquariumDraft, getAquariumSetupFacts, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
@@ -1216,6 +1217,7 @@ export default function AquariumManager() {
 
   // New fish form state
   const [fishSearchTerm, setFishSearchTerm] = useState('');
+  const [unresolvedLivestockQuantity, setUnresolvedLivestockQuantity] = useState(1);
   const [addFishCategory, setAddFishCategory] = useState<'all' | 'fish' | 'shrimp' | 'snail' | 'crab' | 'plant' | 'coral' | 'other'>('all');
   const [isRiskOverrideConfirmOpen, setIsRiskOverrideConfirmOpen] = useState(false);
   const [selectedAddFishItems, setSelectedAddFishItems] = useState<SelectedAddFishItem[]>([]);
@@ -2044,6 +2046,7 @@ export default function AquariumManager() {
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
     setFishSearchTerm('');
+    setUnresolvedLivestockQuantity(1);
     setAddFishCategory('all');
     setSelectedAddFishItems(selectedFish
       ? [{ fishId: selectedFish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd') }]
@@ -2061,14 +2064,19 @@ export default function AquariumManager() {
     const previousBatchIds = new Set(before.fishes.flatMap(record => record.batches?.map(batch => batch.id) || [record.id]));
     const operations: Array<Promise<CareTimelineRecord>> = [];
     after.fishes.forEach(record => {
-      const speciesName = fishData.find(item => item.id === record.fishId)?.name || '缸内生物';
+      const isUnresolved = record.identityStatus === 'unresolved';
+      const speciesName = isUnresolved
+        ? (record.rawName?.trim() || (isEn ? 'Unresolved livestock' : '未确认生物'))
+        : (fishData.find(item => item.id === record.fishId)?.name || '缸内生物');
       (record.batches || []).filter(batch => !previousBatchIds.has(batch.id)).forEach(batch => {
         operations.push(persistCareTimelineEvent({
           aquariumId: after.id,
           eventType: 'species_added',
           title: isEn ? `Added ${speciesName}` : `加入${speciesName}`,
           label: isEn ? `${batch.quantity} animals` : `${batch.quantity} 只/条`,
-          payload: { speciesId: record.fishId, quantity: batch.quantity },
+          payload: isUnresolved
+            ? { identityStatus: 'unresolved', rawName: record.rawName, quantity: batch.quantity }
+            : { identityStatus: 'verified', speciesId: record.fishId, quantity: batch.quantity },
           occurredAt: batch.entryDate,
           sourceType: 'livestock_batch',
           sourceId: batch.id,
@@ -2079,7 +2087,7 @@ export default function AquariumManager() {
     await Promise.all(operations);
   };
 
-  const recordSelectedFishItems = async (normalizedItems: SpeciesAdditionItem[]) => {
+  const recordSelectedFishItems = async (normalizedItems: ExistingLivestockRecordItem[]) => {
     if (!activeAquarium || normalizedItems.length === 0 || isAddFishSaving) return false;
     setIsAddFishSaving(true);
     if (!addFishOperationIdRef.current) addFishOperationIdRef.current = `livestock-add:${crypto.randomUUID()}`;
@@ -2127,7 +2135,9 @@ export default function AquariumManager() {
       setAddFishDatePicker(null);
       showToast(result.failedItems.length > 0
         ? `已记录 ${result.savedItems.length} 项，${result.failedItems.length} 项需要重试`
-        : (isEn ? 'Livestock recorded. Risk guidance is ready.' : '已记录缸内生物，并生成风险提示'));
+        : result.assessmentFailure
+          ? (isEn ? 'Livestock recorded. Identity confirmation is still needed.' : '已按现实情况记录；身份确认前完整混养判断暂不可用。')
+          : (isEn ? 'Livestock recorded. Risk guidance is ready.' : '已记录缸内生物，并生成风险提示'));
       return true;
     } catch (error) {
       showToast((isEn ? 'Livestock was not recorded.' : '缸内生物没有保存成功。'), 'error');
@@ -2135,6 +2145,18 @@ export default function AquariumManager() {
     } finally {
       setIsAddFishSaving(false);
     }
+  };
+
+  const handleRecordUnresolvedExistingLivestock = async () => {
+    const rawName = fishSearchTerm.trim();
+    if (additionIntent !== 'record_existing' || !activeAquarium || !rawName || isAddFishSaving) return;
+    const saved = await recordSelectedFishItems([{
+      identityStatus: 'unresolved',
+      rawName,
+      quantity: Math.max(1, Math.min(100000, Math.round(unresolvedLivestockQuantity || 1))),
+      entryDate: format(new Date(), 'yyyy-MM-dd'),
+    }]);
+    if (saved) setUnresolvedLivestockQuantity(1);
   };
 
   const handleAddFish = async () => {
@@ -6352,6 +6374,7 @@ export default function AquariumManager() {
                 setIsAddFishOpen(open);
                 if (!open) {
                   setFishSearchTerm('');
+                  setUnresolvedLivestockQuantity(1);
                   setAddFishCategory('all');
                   setSelectedAddFishItems([]);
                   setAddFishSuccess(null);
@@ -6610,7 +6633,45 @@ export default function AquariumManager() {
                     );
                   })}
                   {fishSearchTerm.trim() && searchResults.length === 0 && (
-                    <div className="rounded-[14px] bg-bg px-3 py-5 text-center text-xs font-medium text-ink/50">{isEn ? 'No species found' : '没有找到相关生物'}</div>
+                    additionIntent === 'record_existing' ? (
+                      <div data-unresolved-record-entry="true" className="grid gap-3 rounded-[16px] border border-sky-100 bg-sky-50 p-3 text-left">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <span className="inline-flex rounded-full bg-white px-2 py-1 text-[10px] font-black text-sky-700">{isEn ? 'Identity pending' : '待确认身份'}</span>
+                            <div className="mt-2 break-words text-sm font-black text-ink">{fishSearchTerm.trim()}</div>
+                          </div>
+                          <label className="w-24 shrink-0 text-[10px] font-black text-ink/55">
+                            {isEn ? 'Quantity' : '数量'}
+                            <Input
+                              aria-label={isEn ? 'Unresolved livestock quantity' : '未确认生物数量'}
+                              type="number"
+                              min={1}
+                              max={100000}
+                              value={unresolvedLivestockQuantity}
+                              onChange={event => setUnresolvedLivestockQuantity(Math.max(1, Math.min(100000, Math.round(Number(event.target.value) || 1))))}
+                              className="mt-1 h-9 rounded-[12px] bg-white text-center text-sm font-black"
+                            />
+                          </label>
+                        </div>
+                        <p className="text-[11px] font-medium leading-relaxed text-sky-900/72">
+                          {isEn
+                            ? 'Save this as a real tank fact. Until the identity is confirmed, it will not be used for a complete compatibility verdict.'
+                            : '可以先按现实名称保存。身份确认前不会用于完整混养判断，也不会伪造物种资料。'}
+                        </p>
+                        <Button
+                          type="button"
+                          disabled={isAddFishSaving || !fishSearchTerm.trim()}
+                          onClick={() => { void handleRecordUnresolvedExistingLivestock(); }}
+                          className="h-10 rounded-full bg-sky-700 text-xs font-black text-white hover:bg-sky-800"
+                        >
+                          {isAddFishSaving ? (isEn ? 'Saving…' : '保存中…') : (isEn ? 'Record this name' : '按此名称记录')}
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="rounded-[14px] bg-bg px-3 py-5 text-center text-xs font-medium leading-relaxed text-ink/50">
+                        {isEn ? 'No catalog species found. Planned additions require a catalog species; try another name or scientific name.' : '没有找到已收录生物。规划模式只接受已收录生物，请尝试其他名称或学名。'}
+                      </div>
+                    )
                   )}
                   {!fishSearchTerm.trim() && recommendedFishes.length === 0 && (
                     <div className="rounded-[14px] bg-amber-50 p-3 text-xs font-medium leading-relaxed text-amber-800">

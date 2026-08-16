@@ -13,7 +13,8 @@ import { getLifeType } from '../../modules/species/species.service';
 
 type RemovalDraft = {
   record: AquariumFish;
-  fish: Fish;
+  fish?: Fish;
+  label: string;
   batchId: string;
   quantity: number;
   operationId: string;
@@ -69,9 +70,14 @@ export function LivestockRosterDialog({
   const [isEditingDirty, setIsEditingDirty] = useState(false);
   const [isRosterCloseConfirmOpen, setIsRosterCloseConfirmOpen] = useState(false);
   const speciesById = useMemo(() => new Map(species.map(item => [item.id, item])), [species]);
-  const visibleRecords = useMemo(() => records
-    .map(record => ({ record, fish: speciesById.get(record.fishId) }))
-    .filter((item): item is { record: AquariumFish; fish: Fish } => Boolean(item.fish)), [records, speciesById]);
+  const visibleRecords = useMemo(() => records.map(record => {
+    const fish = speciesById.get(record.fishId);
+    const unresolved = record.identityStatus === 'unresolved' || !fish;
+    const label = unresolved
+      ? (record.rawName?.trim() || (isEn ? 'Unresolved livestock' : '未确认生物'))
+      : fish.name;
+    return { record, fish, unresolved, label };
+  }), [records, speciesById, isEn]);
   const displayedRecords = editingRecordId
     ? visibleRecords.filter(item => item.record.id === editingRecordId)
     : visibleRecords;
@@ -100,12 +106,13 @@ export function LivestockRosterDialog({
   const batches = removal ? normalizeSpeciesBatches(removal.record) : [];
   const selectedBatch = batches.find(batch => batch.id === removal?.batchId);
 
-  const beginRemoval = (record: AquariumFish, fish: Fish) => {
+  const beginRemoval = (record: AquariumFish, fish: Fish | undefined, label: string) => {
     const firstBatch = normalizeSpeciesBatches(record)[0];
     setRemoveError('');
     setRemoval({
       record,
       fish,
+      label,
       batchId: firstBatch.id,
       quantity: 1,
       ...createLivestockRemovalAttempt(),
@@ -192,30 +199,48 @@ export function LivestockRosterDialog({
             </section>}
             {displayedRecords.length > 0 ? (
               <div className={editingRecordId ? 'grid grid-cols-1 gap-3' : 'grid gap-3 md:grid-cols-2'}>
-                {displayedRecords.map(({ record, fish }) => (
+                {displayedRecords.map(({ record, fish, unresolved, label }) => (
                   <div key={record.id} className="relative min-w-0">
                     {!editingRecordId && <button
                       type="button"
-                      aria-label={isEn ? `Remove ${fish.name} from aquarium` : `将${fish.name}移出鱼缸`}
+                      aria-label={isEn ? `Remove ${label} from aquarium` : `将${label}移出鱼缸`}
                       title={isEn ? 'Remove from aquarium' : '移出鱼缸'}
-                      onClick={() => beginRemoval(record, fish)}
+                      onClick={() => beginRemoval(record, fish, label)}
                       className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-rose-100 bg-white/95 text-rose-600 shadow-sm transition-colors hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
                     >
                       <X className="h-5 w-5" />
                     </button>}
-                    <LivestockBatchCard
-                      fish={fish}
-                      record={record}
-                      reproductiveApplicable={['fish', 'invertebrate', 'reptile'].includes(getLifeType(fish))}
-                      isEditing={editingRecordId === record.id}
-                      onEditingChange={editing => {
-                        setEditingRecordId(editing ? record.id : null);
-                        if (!editing) setIsEditingDirty(false);
-                      }}
-                      onDirtyChange={setIsEditingDirty}
-                      onOpenDetail={() => onOpenDetail(fish, record)}
-                      onSave={next => onSave(record.id, next)}
-                    />
+                    {fish ? (
+                      <LivestockBatchCard
+                        fish={fish}
+                        record={record}
+                        reproductiveApplicable={['fish', 'invertebrate', 'reptile'].includes(getLifeType(fish))}
+                        isEditing={editingRecordId === record.id}
+                        onEditingChange={editing => {
+                          setEditingRecordId(editing ? record.id : null);
+                          if (!editing) setIsEditingDirty(false);
+                        }}
+                        onDirtyChange={setIsEditingDirty}
+                        onOpenDetail={() => onOpenDetail(fish, record)}
+                        onSave={nextRecord => onSave(record.id, nextRecord)}
+                      />
+                    ) : (
+                      <article data-livestock-identity="unresolved" className="min-h-[150px] rounded-[22px] border border-sky-100 bg-white p-4 pr-14 shadow-sm">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="break-words text-base font-black text-ink">{record.rawName?.trim() || label}</h3>
+                          <span className="rounded-full bg-sky-50 px-2 py-1 text-[10px] font-black text-sky-700">{isEn ? 'Identity pending' : '待确认身份'}</span>
+                        </div>
+                        <p className="mt-2 text-xs font-semibold leading-5 text-ink/55">
+                          {isEn
+                            ? 'Recorded from the real tank without a catalog match. Compatibility remains incomplete until this identity is confirmed.'
+                            : '这是按现实名称保存的记录，尚未绑定物种资料。身份确认前，完整混养判断会保持信息不足。'}
+                        </p>
+                        <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-black text-ink/60">
+                          <span className="rounded-full bg-bg px-3 py-1.5">{isEn ? `Quantity ${record.quantity}` : `数量 ${record.quantity}`}</span>
+                          <span className="rounded-full bg-bg px-3 py-1.5">{isEn ? `Recorded ${record.entryDate.slice(0, 10)}` : `记录日期 ${record.entryDate.slice(0, 10)}`}</span>
+                        </div>
+                      </article>
+                    )}
                   </div>
                 ))}
               </div>
@@ -262,7 +287,7 @@ export function LivestockRosterDialog({
       }}>
         <DialogContent showCloseButton={false} data-removal-operation-id={removal?.operationId} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
           <DialogHeader>
-            <DialogTitle>确认移出{removal?.fish.name}</DialogTitle>
+            <DialogTitle>确认移出{removal?.label}</DialogTitle>
             <DialogDescription>请先在现实中完成转缸、可靠送养或退回商家，再更新这里的记录。不要放生。</DialogDescription>
           </DialogHeader>
           {removal && (
