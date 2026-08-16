@@ -30,6 +30,7 @@ export type TankDecisionSupportResult = {
   formalInterventionAllowed: boolean;
   formalInterventionBlockReason?: FormalInterventionBlockReason;
   formalChoiceComparison: InterventionChoiceComparison | null;
+  destinationSetProvided: boolean;
   relocationDestinations: TankDecisionDestinationEvaluation[];
 };
 
@@ -47,7 +48,7 @@ const toResolvedInput = (context: TankDecisionContext) => context.resolvedLivest
 export const buildTankDecisionSupport = ({
   aquarium,
   catalog,
-  allAquariums = [],
+  allAquariums,
 }: TankDecisionSupportInput): TankDecisionSupportResult => {
   const context = buildTankDecisionContext({ aquarium, catalog });
   const resolvedInput = toResolvedInput(context);
@@ -61,12 +62,12 @@ export const buildTankDecisionSupport = ({
   const formalChoiceComparison = formalInterventionAllowed
     ? knownSubsetChoiceComparison
     : null;
+  const destinationSetProvided = allAquariums !== undefined;
 
-  // Destination evaluation is intentionally downstream of source-community
-  // certainty. If source residents are unresolved, the product may still show
-  // the known-subset graph for transparency, but it cannot promote a relocation
-  // option or destination as a formal whole-tank intervention.
-  const relocationDestinations: TankDecisionDestinationEvaluation[] = formalChoiceComparison
+  // Destination evaluation is intentionally downstream of both source-community
+  // certainty and destination-list certainty. Undefined means the caller did not
+  // provide the user's aquarium set; it must not be rewritten as “no other tank”.
+  const relocationDestinations: TankDecisionDestinationEvaluation[] = formalChoiceComparison && allAquariums
     ? formalChoiceComparison.options.map(option => {
         const subject = context.resolvedLivestock.find(item => item.species.id === option.subjectSpeciesId);
         if (!subject) throw new Error(`Missing resolved relocation subject ${option.subjectSpeciesId}`);
@@ -95,6 +96,7 @@ export const buildTankDecisionSupport = ({
       ? 'unresolved_current_livestock'
       : undefined,
     formalChoiceComparison,
+    destinationSetProvided,
     relocationDestinations,
   };
 };
