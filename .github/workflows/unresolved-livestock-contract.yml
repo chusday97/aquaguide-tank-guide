@@ -1,0 +1,67 @@
+name: Unresolved Livestock Contract
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'apps/api/**'
+      - 'packages/contracts/**'
+      - 'supabase/migrations/**'
+      - 'scripts/test-unresolved-existing-livestock.ts'
+      - 'scripts/test-unresolved-livestock-ui-contract.mjs'
+      - 'scripts/verify-unresolved-livestock-ui.mjs'
+      - '.github/workflows/unresolved-livestock-contract.yml'
+  push:
+    branches:
+      - agent/unresolved-existing-livestock
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Core unresolved existing-livestock contract
+        run: npx tsx scripts/test-unresolved-existing-livestock.ts
+      - name: Unresolved livestock UI contract
+        run: node scripts/test-unresolved-livestock-ui-contract.mjs
+      - name: Existing livestock recording regression
+        run: npx tsx scripts/test-livestock-recording.ts
+      - name: Existing atomic livestock regression
+        run: npx tsx scripts/test-atomic-livestock-addition.ts
+      - name: Existing core-flow regression
+        run: npx tsx scripts/test-core-flow-state-eval-v1.ts
+      - name: Livestock state surface regression
+        run: npm run test:livestock-state-surface
+      - name: API type check
+        run: npm run check:api
+      - name: App type check
+        run: npm run lint
+      - name: Production build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-unresolved-contract.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-unresolved-contract.log
+          exit 1
+      - name: Existing livestock drawer browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:livestock-state-drawer-ui
+      - name: Unresolved livestock browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-unresolved-livestock-ui.mjs
