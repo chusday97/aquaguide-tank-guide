@@ -18,6 +18,8 @@ for (const marker of [
   'data-confirm-relocation',
   'data-reconcile-relocation',
   'data-relocation-result',
+  'data-relocation-close-locked',
+  'data-relocation-reconciled',
 ]) {
   assert.match(component, new RegExp(marker));
 }
@@ -32,6 +34,20 @@ assert.match(component, /暂时无法确认迁移是否已经执行/);
 assert.match(component, /迁移可能已经完成，但最新状态暂时无法同步/);
 assert.match(component, /不要再次发起迁移/);
 assert.match(component, /重新同步鱼缸状态/);
+assert.match(component, /鱼缸状态已重新同步/);
+assert.match(component, /本次同步没有再次发送迁移/);
+
+// Uncertain/post-state-unavailable attempts must stay attached to their original
+// operation identity until a canonical reconciliation read succeeds. Overlay /
+// Escape / built-in close events cannot discard the controller early.
+assert.match(component, /const \[reconciliationComplete, setReconciliationComplete\] = useState\(false\)/);
+assert.match(component, /const rawReconciliationRequired =/);
+assert.match(component, /const reconciliationRequired = rawReconciliationRequired && !reconciliationComplete/);
+assert.match(component, /const canClose = !checking && !reconciling && !reconciliationRequired/);
+assert.match(component, /if \(!nextOpen && !canClose\) return/);
+assert.match(component, /await onReconcile\(\);[\s\S]*setReconciliationComplete\(true\)/);
+assert.match(component, /setReconciliationComplete\(false\)/);
+assert.match(component, /setReconciliationError/);
 
 assert.match(state, /mutation_state_unknown/);
 assert.match(state, /executed_post_state_unavailable/);
@@ -49,4 +65,4 @@ for (const forbidden of [
   assert.doesNotMatch(component, new RegExp(forbidden), `confirmation surface must not bypass the fresh execution policy or offer a blind mutation retry: ${forbidden}`);
 }
 
-console.log('relocation confirmation surface contract passed: request-bound facts, policy-only execution callback, distinct blocked/completed/reconcile states, and no direct repository or blind retry path');
+console.log('relocation confirmation surface contract passed: request-bound facts, policy-only execution, locked uncertainty lifecycle until canonical reconciliation, and no direct repository/blind retry path');
