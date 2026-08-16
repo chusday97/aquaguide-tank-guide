@@ -1,0 +1,30 @@
+name: Species Water-Type Ambiguity
+
+on:
+  push:
+    branches:
+      - agent/fix-ambiguous-marine-water-type
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  water-type-ambiguity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Ambiguous butterfly-fish water regression
+        run: node --import tsx scripts/test-species-water-type-ambiguity.ts
+      - name: Recommendation grounding regression
+        run: npx tsx scripts/test-catalog-grounding-contract.ts
+      - name: Lionfish reviewed evidence regression
+        run: node --import tsx scripts/test-lionfish-reviewed-evidence.ts
+      - name: Type check
+        run: npm run lint

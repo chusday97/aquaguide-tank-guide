@@ -23,6 +23,7 @@ const TAXON_WATER_EVIDENCE: TaxonEvidence[] = [
   { scientificName: 'Phenacogrammus interruptus', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Acheilognathus macropterus', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Opsariichthys bidens', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
+  { scientificName: 'Pseudogastromyzon fangi', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon', note: 'Freshwater hillstream loach; explicit evidence prevents the ambiguous common-name token 蝴蝶鱼 from creating marine certainty.', sourceName: 'Eschmeyer Catalog of Fishes / FishBase' },
   { scientificName: 'Abbottina rivularis', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Pseudorasbora parva', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
   { scientificName: 'Aphyocypris chinensis', primaryWaterType: 'freshwater', confidence: 'high', basis: 'taxon' },
