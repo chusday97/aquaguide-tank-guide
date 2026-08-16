@@ -47,6 +47,20 @@ export type LivestockRemovalInput = {
   operationId: string;
 };
 
+export type LivestockRelocationInput = {
+  sourceAquariumId: string;
+  sourceAquariumFishId: string;
+  sourceBatchId: string;
+  destinationAquariumId: string;
+  quantity: number;
+  operationId: string;
+};
+
+export type LivestockRelocationMutationResult = {
+  committed: true;
+  replayed?: boolean;
+};
+
 export type AquariumCreateCommand = {
   name: string;
   startedAt: string;
@@ -114,6 +128,7 @@ export interface AquaGuideRepository {
   /** @deprecated Aggregate synchronization retained for legacy profile and batch editors. */
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
+  relocateLivestock(input: LivestockRelocationInput): Promise<LivestockRelocationMutationResult>;
   getFavorites(): Promise<FavoriteSnapshot>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
   getDiagnosisRecords(aquariumId: string): Promise<DiagnosisRecord[]>;

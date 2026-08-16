@@ -23,6 +23,7 @@ import {
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { persistAquariums } from '../aquarium/aquarium-state.service';
 import { appendSpeciesBatch, createSpeciesBatch, removeSpeciesBatchQuantity } from '../aquarium/species-batches.service';
+import { relocateLivestockInAquariums } from '../aquarium/livestock-relocation.service';
 import { applyWaterChangeHistory, isFutureWaterChangeDate, setWaterChangeDateRecorded, waterChangeDateToIso } from '../aquarium/water-change.service';
 import type {
   AquaGuideRepository,
@@ -33,6 +34,7 @@ import type {
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
+  LivestockRelocationInput,
   LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
@@ -169,6 +171,13 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
         : aquarium.fishes.filter(item => item.id !== current.id),
     };
     return this.saveAquarium(nextAquarium);
+  }
+
+  async relocateLivestock(input: LivestockRelocationInput) {
+    const state = loadAppStateFromStorage();
+    const result = relocateLivestockInAquariums(state.aquariums, input);
+    persistAquariums(result.aquariums, state.currentAquariumId || input.sourceAquariumId);
+    return { committed: true as const, replayed: result.replayed };
   }
 
   async getFavorites() {
