@@ -1,0 +1,31 @@
+name: Community Conflict Graph
+
+on:
+  pull_request:
+    branches:
+      - agent/replacement-recommendation-mvp
+  push:
+    branches:
+      - agent/community-conflict-graph
+
+permissions:
+  contents: read
+
+jobs:
+  conflict-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Community conflict graph golden cases
+        run: node --import tsx scripts/test-community-conflict-graph.ts
+      - name: Compatibility evidence coverage
+        run: npm run test:compatibility-evidence-coverage
+      - name: Replacement recommendation regression
+        run: node --import tsx scripts/test-replacement-recommendation-engine.ts
+      - name: Type check
+        run: npm run lint
