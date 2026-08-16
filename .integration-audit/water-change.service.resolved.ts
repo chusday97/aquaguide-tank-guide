@@ -1,4 +1,4 @@
-import type { Aquarium } from '../src/types';
+import type { Aquarium } from '../../types';
 
 const WATER_CHANGE_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
