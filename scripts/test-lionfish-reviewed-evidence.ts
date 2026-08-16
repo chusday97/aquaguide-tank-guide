@@ -16,17 +16,13 @@ assert.equal(getSpeciesWaterType(lionfish), 'saltwater');
 assert.equal(resolveCanonicalSpeciesId('sp_0130'), 'sp_0038');
 assert.equal(getReviewedCompatibilityProfile('sp_0130'), undefined);
 
-// Fixture selection must not trust water classification alone: a classification regression
-// must never make a freshwater fish a valid marine-control fixture for this evidence test.
-const marineSmallFish = fishData.find(item => (
-  item.id !== lionfish.id
-  && item.category === '海水鱼'
-  && getLifeType(item) === 'fish'
-  && getSpeciesWaterType(item) === 'saltwater'
-  && item.size === 'Small'
-));
-assert.ok(marineSmallFish, 'missing catalog Small marine-fish fixture');
+// Use one fixed, audited marine control instead of scanning for the first record that happens
+// to satisfy derived water/category fields. This prevents unrelated catalog-classification bugs
+// from making the lionfish evidence test pass with a freshwater species.
+const marineSmallFish = fishData.find(item => item.id === 'sp_0297');
+assert.ok(marineSmallFish, 'missing audited Small marine control sp_0297');
 assert.equal(marineSmallFish.category, '海水鱼');
+assert.match(marineSmallFish.scientificName, /^Pseudochromis\b/i);
 assert.equal(getLifeType(marineSmallFish), 'fish');
 assert.equal(getSpeciesWaterType(marineSmallFish), 'saltwater');
 assert.equal(marineSmallFish.size, 'Small');
@@ -53,7 +49,7 @@ assert.ok(predationBlock, 'same-water small marine fish must receive the reviewe
 assert.equal(predationBlock.severity, 'high');
 assert.deepEqual(predationBlock.affectedSpeciesIds, [lionfish.id]);
 assert.ok(predationBlock.citations.some(source => source.id === 'lionfish-prey-risk-experiment'));
-assert.match(predationBlock.evidence, new RegExp(lionfish.name));
-assert.match(predationBlock.evidence, new RegExp(marineSmallFish.name));
+assert.ok(predationBlock.evidence.includes(lionfish.name));
+assert.ok(predationBlock.evidence.includes(marineSmallFish.name));
 
-console.log(`lionfish reviewed evidence passed: ${lionfish.name} (${lionfish.id}) -> ${marineSmallFish.name} (${marineSmallFish.id}) remains a same-water Small-target high predation blocker with reviewed citation provenance; fixture requires explicit marine catalog category; legacy sp_0130 remains mapped to non-lionfish canonical identity`);
+console.log(`lionfish reviewed evidence passed: ${lionfish.name} (${lionfish.id}) -> ${marineSmallFish.name} (${marineSmallFish.id}) remains a same-water Small-target high predation blocker with reviewed citation provenance; control is fixed/audited; legacy sp_0130 remains mapped to non-lionfish canonical identity`);
