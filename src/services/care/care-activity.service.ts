@@ -19,6 +19,42 @@ export type CareReminderRecord = {
 };
 export type CareReminderStatus = 'overdue' | 'today' | 'upcoming' | 'completed';
 export type CareCompletedOperation = { id: string; title: string; label: string; aquariumId?: string; completedAt: string };
+
+type CareOperationEventLike = {
+  aquariumId?: string;
+  eventType: string;
+  title: string;
+  label?: string;
+  occurredAt: string;
+  sourceType?: string;
+  sourceId?: string;
+};
+
+export const getCompletedCareOperationsFromEvents = (
+  events: CareOperationEventLike[],
+  aquariumId?: string,
+): CareCompletedOperation[] => {
+  const seen = new Set<string>();
+  return [...events]
+    .filter(event => event.eventType === 'care_operation_completed'
+      && event.sourceType === 'care_operation'
+      && Boolean(event.sourceId)
+      && (!aquariumId || event.aquariumId === aquariumId))
+    .sort((a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime())
+    .flatMap(event => {
+      const sourceId = event.sourceId!;
+      const identity = `${event.aquariumId || 'global'}:${sourceId}`;
+      if (seen.has(identity)) return [];
+      seen.add(identity);
+      return [{
+        id: sourceId,
+        title: event.title,
+        label: event.label || event.title,
+        aquariumId: event.aquariumId,
+        completedAt: event.occurredAt,
+      }];
+    });
+};
 export type CareSavedChecklist = { id: string; title: string; savedAt: string; actions: string[] };
 
 type LegacyCareReminderRecord = Partial<CareReminderRecord> & {

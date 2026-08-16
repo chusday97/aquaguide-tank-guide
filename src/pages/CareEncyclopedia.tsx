@@ -33,11 +33,12 @@ import {
 } from '../services/favorites/favorites.service';
 import {
   getCompletedCareOperations,
+  getCompletedCareOperationsFromEvents,
   getSavedCareChecklists,
   setCompletedCareOperations,
   setSavedCareChecklists,
 } from '../services/care/care-activity.service';
-import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
+import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode } from '../services/repository/repository-provider';
 import { useToast } from '../components/common/ToastProvider';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
@@ -1695,22 +1696,27 @@ export default function CareEncyclopedia() {
 
   useEffect(() => {
     let active = true;
-    void getCurrentAquaGuideRepository()
-      .then(async repository => {
-        const [favoriteSnapshot, aquariums] = await Promise.all([
+    void resolveRepositoryMode()
+      .then(async mode => {
+        const repository = getAquaGuideRepository(mode);
+        const [favoriteSnapshot, aquariums, careEvents] = await Promise.all([
           repository.getFavorites(),
           repository.getAquariums(),
+          repository.getCareEvents(),
         ]);
-        return { favoriteSnapshot, aquariums };
+        return { favoriteSnapshot, aquariums, careEvents, mode };
       })
-      .then(({ favoriteSnapshot, aquariums }) => {
+      .then(({ favoriteSnapshot, aquariums, careEvents, mode }) => {
         if (!active) return;
         const cachedState = loadAppStateFromStorage();
         const currentAquariumId = cachedState.currentAquariumId
           && aquariums.some(item => item.id === cachedState.currentAquariumId)
           ? cachedState.currentAquariumId
           : (aquariums[0]?.id || '');
-        patchLocalAppState({ aquariums, currentAquariumId });
+        if (mode === 'cloud') {
+          setCompletedCareOperations(getCompletedCareOperationsFromEvents(careEvents));
+        }
+        patchLocalAppState({ aquariums, currentAquariumId, careEvents });
         const next = Object.fromEntries(favoriteSnapshot.careFavorites.map(item => [item.catalogKey, {
           id: item.catalogKey,
           title: item.title,
@@ -3015,7 +3021,6 @@ export function CareArticleDetail({
     setIsDiagnosisStarted(false);
     setIsDetailExpanded(false);
     setCtaFeedback('');
-    setIsOperationCompleted(getCompletedCareOperations().some(item => item.id === topic.id));
     const savedChecklist = getSavedCareChecklists().find(item => item.id === topic.id);
     const restoredActions = savedChecklist
       ? visibleActions
@@ -3025,6 +3030,26 @@ export function CareArticleDetail({
     setIsChecklistSaved(restoredActions.length > 0);
     onRestoreActions?.(restoredActions);
   }, [onRestoreActions, topic.id]);
+
+  useEffect(() => {
+    const syncOperationCompletion = () => {
+      if (!activeAquarium?.id) {
+        setIsOperationCompleted(false);
+        return;
+      }
+      const state = loadAppStateFromStorage();
+      const canonical = getCompletedCareOperationsFromEvents(state.careEvents || [], activeAquarium.id);
+      const legacy = getCompletedCareOperations();
+      setIsOperationCompleted(
+        canonical.some(item => item.id === topic.id)
+        || (!state.cloudMigrationConfirmed && legacy.some(item => item.id === topic.id
+          && (!item.aquariumId || item.aquariumId === activeAquarium.id))),
+      );
+    };
+    syncOperationCompletion();
+    return subscribeToAppState(syncOperationCompletion);
+  }, [activeAquarium?.id, topic.id]);
+
   const primaryCtaLabel = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
       ? isOperationCompleted ? (isEn ? 'Completed Acclimation' : '已完成过水') : (isEn ? 'Mark Acclimation Done' : '标记已完成过水')
@@ -3153,24 +3178,54 @@ export function CareArticleDetail({
     if (saved) setReminderSheet(null);
   };
 
-  const markOperationCompleted = (label: string) => {
-    const completed = getCompletedCareOperations();
-    const next = [
-      { id: topic.id, title: getDisplayTitle(topic), label, aquariumId: activeAquarium?.id, completedAt: new Date().toISOString() },
-      ...completed.filter(item => item.id !== topic.id),
-    ].slice(0, 50);
+  const markOperationCompleted = async (label: string) => {
+    if (!activeAquarium?.id) {
+      setCtaFeedback(isEn ? 'Select or create a tank before recording this operation.' : '请先创建或选择鱼缸，再记录这次操作。');
+      window.setTimeout(() => setCtaFeedback(''), 2500);
+      return;
+    }
+    const occurredAt = new Date().toISOString();
     try {
-      setCompletedCareOperations(next);
+      const mode = await resolveRepositoryMode();
+      const repository = getAquaGuideRepository(mode);
+      await repository.saveCareEvent({
+        aquariumId: activeAquarium.id,
+        eventType: 'care_operation_completed',
+        title: isEn ? `Completed care operation: ${getDisplayTitle(topic)}` : `完成养护操作：${getDisplayTitle(topic)}`,
+        label,
+        payload: {
+          topicId: topic.id,
+          operationKind: isNewFishAcclimationTopic(topic) ? 'acclimation' : isFilterGuide ? 'cleaning' : 'procedure',
+        },
+        occurredAt,
+        sourceType: 'care_operation',
+        sourceId: topic.id,
+        isInferred: false,
+        operationId: `care-operation:v1:${activeAquarium.id}:${topic.id}`,
+      });
+      const events = await repository.getCareEvents();
+      if (mode === 'cloud') {
+        setCompletedCareOperations(getCompletedCareOperationsFromEvents(events));
+      } else {
+        const completed = getCompletedCareOperations();
+        setCompletedCareOperations([
+          { id: topic.id, title: getDisplayTitle(topic), label, aquariumId: activeAquarium.id, completedAt: occurredAt },
+          ...completed.filter(item => item.id !== topic.id || (Boolean(item.aquariumId) && item.aquariumId !== activeAquarium.id)),
+        ].slice(0, 50));
+      }
+      patchLocalAppState({ careEvents: events });
       setIsOperationCompleted(true);
       setCtaFeedback(
-        label.includes('换水') || label.toLowerCase().includes('water')
-          ? (isEn ? 'Water change logged' : '已记录本次换水') 
-          : (isEn ? 'Marked completed' : '已标记完成')
+        isNewFishAcclimationTopic(topic)
+          ? (isEn ? 'Acclimation recorded' : '已记录本次过水操作')
+          : isFilterGuide
+            ? (isEn ? 'Cleaning recorded' : '已记录本次清洗操作')
+            : (isEn ? 'Operation recorded' : '已记录本次养护操作'),
       );
     } catch (error) {
       setCtaFeedback(isEn ? 'Could not save the operation. Try again.' : '操作记录保存失败，请重试。');
     }
-    window.setTimeout(() => setCtaFeedback(''), 1800);
+    window.setTimeout(() => setCtaFeedback(''), 2500);
   };
 
   const saveChecklist = () => {
@@ -3233,10 +3288,10 @@ export function CareArticleDetail({
         return;
       }
       if (isNewFishAcclimationTopic(topic)) {
-        markOperationCompleted(isEn ? 'Acclimation completed' : '已完成过水');
+        void markOperationCompleted(isEn ? 'Acclimation completed' : '已完成过水');
         return;
       }
-      markOperationCompleted(
+      void markOperationCompleted(
         isWaterChangeGuide 
           ? (isEn ? 'Water change completed' : '已完成换水') 
           : isFilterGuide 

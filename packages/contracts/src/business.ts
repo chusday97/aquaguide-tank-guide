@@ -199,7 +199,7 @@ export const careReminderUpdateSchema = z.object({
 
 export const careEventCreateSchema = z.object({
   aquariumId: uuidSchema.optional(),
-  eventType: z.enum(['aquarium_created', 'settings_updated', 'species_added', 'species_removed', 'life_stage_updated', 'water_change', 'feeding', 'observation', 'daily_check', 'checklist_completed', 'care_plan_completed']),
+  eventType: z.enum(['aquarium_created', 'settings_updated', 'species_added', 'species_removed', 'life_stage_updated', 'water_change', 'feeding', 'observation', 'daily_check', 'checklist_completed', 'care_plan_completed', 'care_operation_completed']),
   title: z.string().trim().min(1).max(160),
   label: z.string().trim().max(160).optional(),
   payload: z.record(z.string(), z.unknown()).default({}),

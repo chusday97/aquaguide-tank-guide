@@ -19,7 +19,8 @@ export type CareEventType =
   | 'observation'
   | 'daily_check'
   | 'checklist_completed'
-  | 'care_plan_completed';
+  | 'care_plan_completed'
+  | 'care_operation_completed';
 export type EvidenceSourceType = 'government' | 'peer_reviewed' | 'university' | 'professional_association' | 'curated_husbandry';
 export type EvidenceReviewStatus = 'draft' | 'reviewed' | 'rejected';
 export type EvidenceConfidence = 'high' | 'medium' | 'low' | 'unknown';
