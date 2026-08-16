@@ -1157,8 +1157,28 @@ const getTankVolumeLiters = (aquarium?: Aquarium | null) => {
   const length = Number(aquarium.dimensions.length);
   const width = Number(aquarium.dimensions.width);
   const height = Number(aquarium.dimensions.height);
-  if (![length, width, height].every(Number.isFinite)) return 0;
+  if (![length, width, height].every(value => Number.isFinite(value) && value > 0)) return 0;
   return Math.round((length * width * height * 0.85) / 1000);
+};
+
+const formatTankVolumeFact = (aquarium: Aquarium | null | undefined, isEn: boolean) => {
+  const liters = getTankVolumeLiters(aquarium);
+  return liters > 0
+    ? (isEn ? `~${liters}L` : `约 ${liters}L`)
+    : (isEn ? 'Volume unknown' : '容量未记录');
+};
+
+const formatWaterTypeFact = (aquarium: Aquarium | null | undefined, isEn: boolean) => {
+  if (aquarium?.waterType === 'Saltwater') return isEn ? 'Saltwater' : '海水';
+  if (aquarium?.waterType === 'Freshwater') return isEn ? 'Freshwater' : '淡水';
+  return isEn ? 'Water type unknown' : '水体类型未记录';
+};
+
+const formatTargetTemperatureFact = (aquarium: Aquarium | null | undefined, isEn: boolean) => {
+  const value = aquarium?.targetTemperature?.trim();
+  return value
+    ? `${value}°C`
+    : (isEn ? 'Target temp unknown' : '目标水温未记录');
 };
 
 const getCurrentLivestock = (aquarium?: Aquarium | null) => (
@@ -1319,9 +1339,9 @@ const buildStepDiagnosisResult = ({
     ...(aquarium 
       ? [
           isEn ? `Active Tank: ${aquarium.name}` : `当前鱼缸：${aquarium.name}`, 
-          isEn 
-            ? `Water volume: ~${volumeLiters}L · ${aquarium.waterType === 'Saltwater' ? 'Saltwater' : 'Freshwater'} · ${aquarium.targetTemperature || 25}°C`
-            : `当前水体：约 ${volumeLiters}L · ${aquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · ${aquarium.targetTemperature || 25}°C`
+          isEn
+            ? `Water facts: ${formatTankVolumeFact(aquarium, true)} · ${formatWaterTypeFact(aquarium, true)} · ${formatTargetTemperatureFact(aquarium, true)}`
+            : `当前水体：${formatTankVolumeFact(aquarium, false)} · ${formatWaterTypeFact(aquarium, false)} · ${formatTargetTemperatureFact(aquarium, false)}`
         ] 
       : [isEn ? 'No aquarium selected' : '未选择鱼缸']),
     isEn ? `Current Livestock: ${livestockText}` : `当前活体：${livestockText}`,
@@ -1622,11 +1642,10 @@ export default function CareEncyclopedia() {
     || appStateSnapshot.aquariums[0]
     || null
   ), [appStateSnapshot]);
-  const aquariumVolumeLiters = getTankVolumeLiters(activeAquarium);
   const aquariumSummary = activeAquarium
     ? (isEn
-        ? `${aquariumVolumeLiters || 'Unset'}L · ${activeAquarium.targetTemperature || 25}°C · ${activeAquarium.waterType === 'Saltwater' ? 'Saltwater' : 'Freshwater'} · ${(activeAquarium.fishes || []).length} species stocked`
-        : `${aquariumVolumeLiters || '未设'}L · ${activeAquarium.targetTemperature || 25}°C · ${activeAquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · 已有 ${(activeAquarium.fishes || []).length} 种生物`)
+        ? `${formatTankVolumeFact(activeAquarium, true)} · ${formatTargetTemperatureFact(activeAquarium, true)} · ${formatWaterTypeFact(activeAquarium, true)} · ${(activeAquarium.fishes || []).length} species stocked`
+        : `${formatTankVolumeFact(activeAquarium, false)} · ${formatTargetTemperatureFact(activeAquarium, false)} · ${formatWaterTypeFact(activeAquarium, false)} · 已有 ${(activeAquarium.fishes || []).length} 种生物`)
     : (isEn ? 'No tank data loaded. Showing general care recommendations.' : '还没有当前鱼缸数据，先显示通用养护推荐');
   const careRecommendations = useMemo(() => getCareRecommendations(activeAquarium, careTopicsData), [activeAquarium]);
   const careSuggestionResult = useMemo(() => getSearchSuggestions({
