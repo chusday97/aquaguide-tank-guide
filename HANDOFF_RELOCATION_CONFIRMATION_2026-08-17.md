@@ -44,9 +44,33 @@ New entrypoint invariant:
 7. the opener must not pick `sourceRecordIds[0]` or `batches[0]` arbitrarily;
 8. the opener must not pass cached compatibility as `isSafe`, `allowed`, or another authorization field.
 
+### Implemented on branch
+
+- `src/lib/relocationConfirmationEntrypoint.ts`: pure fail-closed source/destination entrypoint builder.
+- `scripts/test-relocation-confirmation-entrypoint.ts`: exact eligible path plus multi-record, multi-batch, missing-batch, stale quantity, batch mismatch, non-compatible destination, invented destination and unresolved-source regressions.
+- `InterventionComparisonPanel`: optional `sourceAquarium` + `onOpenRelocationConfirmation(candidate)`; eligible target card exposes `进入迁移确认`; panel still contains no mutation dependency.
+- compatible destination + non-executable source scope now shows an explicit reason instead of silently hiding the limitation.
+- launch candidate contains IDs/facts/quantity only; no `operationId`, `isSafe`, `allowed`, cached verdict or compatibility authorization.
+- permanent read-only workflow added for entrypoint + inherited confirmation/policy/decision/type/build gates.
+
+### First CI run
+
+Run `31961302689`:
+
+- source-scope regression: **passed**;
+- UI static contract: **failed before later gates ran**.
+
+Failure classification: **test-harness assertion error, not product-policy failure**.
+
+The component correctly calls optional callback using JavaScript optional-call syntax:
+
+`onOpenRelocationConfirmation?.(entrypoint.candidate)`
+
+The static regex incorrectly expected `onOpenRelocationConfirmation?(...)` and therefore false-failed. The product code and source-scope gate were not relaxed. Static test was corrected to match `?.(` and the branch was pushed again for full CI.
+
 ### Architecture for this PR
 
-The panel will emit a **confirmation launch candidate**, not a mutation authorization. Candidate facts may contain source/destination/record/batch/quantity identifiers plus display labels, but no cached safety boolean and no mutation call.
+The panel emits a **confirmation launch candidate**, not a mutation authorization:
 
 `InterventionComparisonPanel → onOpenRelocationConfirmation(candidate)`
 
@@ -65,14 +89,11 @@ The panel itself remains repository/API/Supabase-free. A later Care integration 
 
 ## Immediate next implementation steps
 
-1. add a pure confirmation-entrypoint eligibility builder using `TankDecisionSupportResult + source Aquarium`;
-2. regression-test exact single-record/single-batch success and all fail-closed ambiguity cases;
-3. wire eligible destination CTA into `InterventionComparisonPanel` through an optional opener callback only;
-4. show a deterministic unavailable reason for multi-record / multi-batch cases instead of silently hiding the limitation;
-5. keep static contract forbidding repository/API/Supabase imports and cached-verdict authorization fields;
-6. run TypeScript/build and inherited decision regressions;
-7. open a Draft PR stacked on #64 only after those gates are green;
-8. run a disposable canonical audit before any Care-page repository-backed execution wiring.
+1. rerun full entrypoint CI after the static-regex correction;
+2. if green, open a Draft PR stacked on #64;
+3. update handoff/badcase with final gate status;
+4. run a disposable canonical #62 + entrypoint-stack audit;
+5. only after that, design the Care-page integration that creates one operation ID and injects PR #63 execution policy.
 
 ## Non-negotiable constraints
 
