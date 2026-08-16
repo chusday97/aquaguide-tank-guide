@@ -1,0 +1,98 @@
+name: Canonical Lionfish Integration Audit
+
+on:
+  push:
+    branches:
+      - integration/canonical-decision-support-audit
+    paths:
+      - '.github/workflows/canonical-lionfish-integration-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integration/canonical-decision-support-audit
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dry-run merge lionfish decision/evidence stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "integration-audit"
+          git config user.email "integration-audit@users.noreply.github.com"
+          git rev-parse HEAD > /tmp/integration_audit_base_head
+          git fetch origin agent/reviewed-lionfish-predation-evidence
+
+          set +e
+          git merge --no-commit --no-ff origin/agent/reviewed-lionfish-predation-evidence
+          merge_status=$?
+          set -e
+
+          if [ "$merge_status" -ne 0 ]; then
+            mapfile -t conflicts < <(git diff --name-only --diff-filter=U | sort)
+            expected=(
+              ".github/workflows/product-golden-path.yml"
+              "src/services/aquarium/water-change.service.ts"
+            )
+            printf '%s\n' "${expected[@]}" | sort > /tmp/expected_conflicts
+            printf '%s\n' "${conflicts[@]}" | sort > /tmp/actual_conflicts
+            echo "Observed integration conflicts:"
+            cat /tmp/actual_conflicts
+            diff -u /tmp/expected_conflicts /tmp/actual_conflicts || {
+              echo "Unexpected conflict set; audit refuses to guess."
+              exit 1
+            }
+
+            git checkout --ours .github/workflows/product-golden-path.yml
+            cp .integration-audit/water-change.service.resolved.ts src/services/aquarium/water-change.service.ts
+            git add .github/workflows/product-golden-path.yml src/services/aquarium/water-change.service.ts
+          fi
+
+          test -z "$(git diff --name-only --diff-filter=U)"
+          test -f .git/MERGE_HEAD
+          echo "Lionfish merged tree resolved locally; no merge commit/push will be created."
+
+      - run: npm ci
+
+      - name: Canonical water-change repository boundary
+        run: node --import tsx scripts/test-water-change-repository-boundary.ts
+      - name: Future-date water-change regression
+        run: node --import tsx scripts/test-water-change-history.ts
+      - name: Unresolved livestock contract
+        run: node --import tsx scripts/test-unresolved-existing-livestock.ts
+      - name: Livestock recording regression
+        run: node --import tsx scripts/test-livestock-recording.ts
+      - name: Tank decision context
+        run: node --import tsx scripts/test-tank-decision-context.ts
+      - name: Decision support orchestration
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Quick Diagnosis augmentation
+        run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
+      - name: Contextual behavior evidence
+        run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
+      - name: Lionfish reviewed predation
+        run: node --import tsx scripts/test-lionfish-reviewed-evidence.ts
+      - name: Five-fixture reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Whole-tree TypeScript
+        run: npm run lint
+      - name: Production build
+        run: npm run build
+
+      - name: Confirm no merge commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .git/MERGE_HEAD
+          test "$(git rev-parse HEAD)" = "$(cat /tmp/integration_audit_base_head)"
+          echo "Audit remained uncommitted and unpushed."
