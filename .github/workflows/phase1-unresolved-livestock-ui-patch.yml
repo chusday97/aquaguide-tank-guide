@@ -7,6 +7,8 @@ on:
     paths:
       - scripts/phase1-patch-unresolved-livestock-ui.mjs
       - scripts/phase1-fix-unresolved-ui-patch-anchor.mjs
+      - scripts/test-unresolved-livestock-ui-contract.mjs
+      - scripts/verify-unresolved-livestock-ui.mjs
       - .github/workflows/phase1-unresolved-livestock-ui-patch.yml
 
 permissions:
