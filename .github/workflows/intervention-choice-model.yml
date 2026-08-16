@@ -1,0 +1,36 @@
+name: Intervention Choice Model
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/interventionChoiceModel.ts'
+      - 'src/lib/conflictActionEngine.ts'
+      - 'src/lib/tankInterventionSimulator.ts'
+      - 'src/lib/communityConflictGraph.ts'
+      - 'scripts/test-intervention-choice-model.ts'
+      - 'scripts/test-conflict-action-engine.ts'
+      - 'scripts/test-tank-intervention-simulator.ts'
+      - '.github/workflows/intervention-choice-model.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  choice-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Keeper choice golden cases
+        run: node --import tsx scripts/test-intervention-choice-model.ts
+      - name: Conflict action regression
+        run: node --import tsx scripts/test-conflict-action-engine.ts
+      - name: Intervention simulator regression
+        run: node --import tsx scripts/test-tank-intervention-simulator.ts
+      - name: Type check
+        run: npm run lint
