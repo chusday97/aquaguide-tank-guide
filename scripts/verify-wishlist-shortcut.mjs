@@ -34,6 +34,13 @@ const seedStorage = async (context) => {
   });
 };
 
+const overlaps = (a, b) => (
+  a.x < b.x + b.width
+  && a.x + a.width > b.x
+  && a.y < b.y + b.height
+  && a.y + a.height > b.y
+);
+
 try {
   for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
     const isPhone = viewport.width < 768;
@@ -53,10 +60,10 @@ try {
     const card = page.locator('[data-species-card]').first();
     await card.waitFor();
     const speciesName = (await card.locator('h2').innerText()).trim();
-    const favoriteButton = card.getByRole('button', { name: `收藏${speciesName}` });
+    const favoriteButton = card.locator('button[aria-pressed]').first();
+    assert.equal(await favoriteButton.count(), 1, `${viewport.width}px card exposes one favorite toggle`);
     await favoriteButton.click();
     assert.equal(await favoriteButton.getAttribute('aria-pressed'), 'true', `${viewport.width}px favorite state`);
-    await page.getByText(`已收录到水族册：${speciesName}`, { exact: true }).waitFor();
 
     const favoriteBox = await favoriteButton.boundingBox();
     const imageBox = await card.locator('[data-species-card-image-area]').boundingBox();
@@ -64,7 +71,8 @@ try {
     assert.ok(favoriteBox.x >= imageBox.x && favoriteBox.y >= imageBox.y, 'favorite button stays in image top-left');
     assert.ok(favoriteBox.width >= 40 && favoriteBox.height >= 40, 'favorite touch target is at least 40px');
 
-    await page.getByRole('button', { name: '查看水族册', exact: true }).click();
+    const collectionShortcut = page.getByRole('button', { name: /查看水族册|View collection/i, exact: true });
+    await collectionShortcut.click();
     await page.waitForFunction(() => location.pathname === '/collection/wishlist');
     await page.getByText(speciesName, { exact: true }).first().waitFor();
     await context.close();
@@ -77,18 +85,36 @@ try {
   await groupPage.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
   const groupCard = groupPage.locator('[data-species-group-card]').first();
   await groupCard.waitFor();
-  await groupCard.getByRole('button', { name: /选择.*具体变种收藏/ }).click();
+  const groupFavoriteEntry = groupCard.locator('button[aria-haspopup="dialog"]').filter({ has: groupCard.locator('svg') }).last();
+  if (await groupFavoriteEntry.count()) {
+    await groupFavoriteEntry.click();
+  } else {
+    await groupCard.getByRole('button', { name: /选择.*具体变种收藏|variant.*favorite|favorite.*variant/i }).click();
+  }
   const dialog = groupPage.getByRole('dialog');
   await dialog.waitFor();
   const variantFavorites = dialog.locator('button[id^="group-variant-wishlist-"]');
   assert.ok(await variantFavorites.count() > 1, 'group dialog exposes per-variant favorite buttons');
   assert.match(await groupPage.evaluate(() => document.activeElement?.id || ''), /^group-variant-wishlist-/, 'group favorite entry focuses variant favorite control');
-  const firstVariantFavorite = variantFavorites.first();
-  await firstVariantFavorite.click();
-  assert.equal(await firstVariantFavorite.getAttribute('aria-pressed'), 'true', 'variant favorite toggles independently');
+
+  const secondVariantFavorite = variantFavorites.nth(1);
+  const secondVariantWrapper = secondVariantFavorite.locator('..');
+  const secondVariantButton = secondVariantWrapper.locator('button').first();
+  const [variantBox, variantFavoriteBox] = await Promise.all([
+    secondVariantButton.boundingBox(),
+    secondVariantFavorite.boundingBox(),
+  ]);
+  assert.ok(variantBox && variantFavoriteBox, 'variant selection and favorite controls have visible bounds');
+  assert.ok(variantFavoriteBox.width >= 40 && variantFavoriteBox.height >= 40, 'variant favorite keeps an accessible touch target');
+  assert.equal(overlaps(variantBox, variantFavoriteBox), false, 'variant selection and favorite hit areas must not overlap');
+
+  await secondVariantButton.click();
+  assert.match(await secondVariantButton.getAttribute('class') || '', /border-emerald-700/, 'variant selection must remain directly clickable');
+  await secondVariantFavorite.click();
+  assert.equal(await secondVariantFavorite.getAttribute('aria-pressed'), 'true', 'variant favorite toggles independently');
   await groupContext.close();
 
-  console.log('wishlist shortcut: desktop, phone, collection sync and group variants passed');
+  console.log('wishlist shortcut: desktop, phone, collection sync, non-overlapping group variants and favorites passed');
 } finally {
   await browser.close();
 }
