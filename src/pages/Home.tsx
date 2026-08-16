@@ -99,7 +99,11 @@ import { ThreeAquarium } from '../components/ThreeAquarium';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { getSpeciesDisplayImage, getSpeciesImageSurfaceClass, getSpeciesImageClass } from '../lib/speciesVisual';
-import { getSpeciesFavoriteIds, subscribeToFavorites, toggleSpeciesFavorite } from '../services/favorites/favorites.service';
+import { getSpeciesFavoriteIds, setSpeciesFavoriteIds } from '../services/favorites/favorites.service';
+import { getCollectionSnapshot, hydrateCollectionData, subscribeToCollection } from '../services/collection/collection.service';
+import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode } from '../services/repository/repository-provider';
+import { loadAppStateFromStorage, patchLocalAppState } from '../services/storage/local-app-state';
+import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.service';
 
 const getDifficultyLabel = (difficulty: string) => {
   switch (difficulty) {
@@ -121,63 +125,74 @@ export default function Home() {
   const [selectedFish, setSelectedFish] = useState<Fish | null>(null);
   const [storageError, setStorageError] = useState('');
 
-  useEffect(() => {
-    // Load aquariums
-    const saved = localStorage.getItem('aquariums');
-    if (saved) {
-      try {
-        const parsed: Aquarium[] = JSON.parse(saved);
-        if (parsed.length > 0) {
-          setDefaultAquarium(parsed[0]);
-          
-          // Collect owned fishes
-          const allAqFishes = parsed.flatMap(a => a.fishes);
-          const uniqueFishIds = Array.from(new Set(allAqFishes.map(af => af.fishId)));
-          const fishes = uniqueFishIds.map(id => fishData.find(f => f.id === id)).filter(Boolean) as Fish[];
-          setOwnedFishes(fishes);
-        }
-      } catch (e) {
-        console.error('Failed to parse aquariums', e);
-        setStorageError('本地鱼缸数据读取失败，请返回“我的鱼缸”检查数据。');
-      }
-    }
-
-    // Load deceased records
-    const savedDeceased = localStorage.getItem('deceasedRecords');
-    if (savedDeceased) {
-      try {
-        setDeceasedRecords(JSON.parse(savedDeceased));
-      } catch (error) {
-        console.error('Failed to parse deceased records', error);
-        setStorageError('部分历史记录读取失败，其他功能仍可继续使用。');
-      }
-    }
-
-    const refreshWishlist = () => setWishlistFishIds(new Set(getSpeciesFavoriteIds()));
-    refreshWishlist();
-    return subscribeToFavorites(refreshWishlist);
-  }, []);
-
-  const toggleWishlist = (id: string) => {
-    const isFavorite = toggleSpeciesFavorite(id);
-    setWishlistFishIds(new Set(getSpeciesFavoriteIds()));
-    
-    // If the currently selected fish was just un-wishlisted, close the dialog
-    if (selectedFish && selectedFish.id === id && !isFavorite) {
-      setSelectedFish(null);
-    }
+  const applyHomeSnapshot = () => {
+    const snapshot = getCollectionSnapshot();
+    const selectedAquarium = selectAquariumSnapshot(snapshot.appState.aquariums, [snapshot.appState.currentAquariumId]);
+    setDefaultAquarium(selectedAquarium || null);
+    const allAquariumFishes = snapshot.appState.aquariums.flatMap(aquarium => aquarium.fishes);
+    const uniqueFishIds = Array.from(new Set(allAquariumFishes.map(record => record.fishId)));
+    setOwnedFishes(uniqueFishIds.map(id => fishData.find(fish => fish.id === id)).filter(Boolean) as Fish[]);
+    setDeceasedRecords(snapshot.memorials);
+    setWishlistFishIds(new Set(snapshot.wishlistIds));
   };
 
-  const emptyAquariumFallback: Aquarium = {
-    id: 'empty_fallback',
-    name: '默认鱼缸',
-    fishes: [],
-    dimensions: { length: '60', width: '40', height: '40' },
-    waterType: 'Freshwater',
-    substrate: '无',
-    plants: [],
-    hardscape: [],
-    equipment: { filter: '瀑布过滤', heater: true, oxygen: false, light: '普通灯' }
+  useEffect(() => {
+    let active = true;
+    const refresh = () => {
+      if (active) applyHomeSnapshot();
+    };
+    refresh();
+    const unsubscribe = subscribeToCollection(refresh);
+
+    void (async () => {
+      try {
+        const mode = await resolveRepositoryMode();
+        if (mode === 'cloud') {
+          const repository = getAquaGuideRepository(mode);
+          const aquariums = await repository.getAquariums();
+          const localState = loadAppStateFromStorage();
+          const selectedAquarium = selectAquariumSnapshot(aquariums, [localState.currentAquariumId]);
+          patchLocalAppState({
+            aquariums,
+            currentAquariumId: selectedAquarium?.id || '',
+          });
+        }
+        await hydrateCollectionData();
+        if (!active) return;
+        setStorageError('');
+        applyHomeSnapshot();
+      } catch (error) {
+        if (!active) return;
+        console.error('Failed to hydrate Home repository data', error);
+        applyHomeSnapshot();
+        setStorageError(isEn
+          ? 'Cloud sync is temporarily unavailable. Showing this device cache.'
+          : '云端同步暂时不可用，当前展示此设备缓存。');
+      }
+    })();
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [isEn]);
+
+  const toggleWishlist = async (id: string) => {
+    const favorite = !getSpeciesFavoriteIds().includes(id);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: id, favorite });
+      const favorites = await repository.getFavorites();
+      setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+      setWishlistFishIds(new Set(favorites.speciesCatalogKeys));
+      setStorageError('');
+      if (selectedFish && selectedFish.id === id && !favorite) setSelectedFish(null);
+    } catch (error) {
+      console.error('Failed to update Home wishlist', error);
+      setStorageError(isEn
+        ? 'Wishlist was not changed because it could not be saved.'
+        : '种草清单没有保存成功，本次修改未生效。');
+    }
   };
 
   const WishlistPreview = () => {
@@ -226,11 +241,25 @@ export default function Home() {
           </Link>
         </div>
         <div className="relative h-[250px] w-full bg-[#f8f9fa] overflow-hidden group">
-          <ThreeAquarium aquarium={defaultAquarium || emptyAquariumFallback} />
-          {/* Overlay to catch clicks and redirect, or leave interactive? */}
-          <Link to="/aquarium" className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm text-ink px-2 py-1 rounded-sm text-[10px] font-bold shadow-sm opacity-0 group-hover:opacity-100 transition-opacity z-10 border border-white/50">
-            {isEn ? 'View Details' : '进入详细管理'}
-          </Link>
+          {defaultAquarium ? (
+            <>
+              <ThreeAquarium aquarium={defaultAquarium} />
+              <Link to="/aquarium" className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm text-ink px-2 py-1 rounded-sm text-[10px] font-bold shadow-sm opacity-0 group-hover:opacity-100 transition-opacity z-10 border border-white/50">
+                {isEn ? 'View Details' : '进入详细管理'}
+              </Link>
+            </>
+          ) : (
+            <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+              <Droplets className="h-8 w-8 text-ink/25" />
+              <div>
+                <p className="text-sm font-bold text-ink">{isEn ? 'No aquarium recorded yet' : '还没有记录鱼缸'}</p>
+                <p className="mt-1 text-xs font-medium text-ink/50">{isEn ? 'Create a tank to start tracking real care facts.' : '创建鱼缸后，这里会展示真实的养护状态。'}</p>
+              </div>
+              <Link to="/aquarium" className="rounded-full bg-emerald-700 px-4 py-2 text-xs font-bold text-white">
+                {isEn ? 'Create aquarium' : '去创建鱼缸'}
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -388,7 +417,7 @@ export default function Home() {
                   <Button 
                     variant="outline" 
                     className={`flex-1 h-9 text-xs font-bold rounded-sm border-border ${wishlistFishIds.has(selectedFish.id) ? 'bg-rose-50 text-rose-500 border-rose-200 hover:bg-rose-100 hover:text-rose-600' : 'text-ink/70 hover:text-ink'}`}
-                    onClick={() => toggleWishlist(selectedFish.id)}
+                    onClick={() => void toggleWishlist(selectedFish.id)}
                   >
                     {wishlistFishIds.has(selectedFish.id) ? <Heart className="w-4 h-4 mr-1 fill-current" /> : <HeartOff className="w-4 h-4 mr-1" />}
                     {wishlistFishIds.has(selectedFish.id) ? '已种草' : '加入种草清单'}
