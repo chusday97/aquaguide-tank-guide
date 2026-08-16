@@ -24,17 +24,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Dry-run merge current Care relocation-destination stack
+      - name: Dry-run merge current Care browser-Golden-Path stack
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "integration-audit"
           git config user.email "integration-audit@users.noreply.github.com"
           git rev-parse HEAD > /tmp/integration_audit_base_head
-          git fetch origin agent/care-relocation-destinations
+          git fetch origin agent/care-decision-browser-golden-path
 
           set +e
-          git merge --no-commit --no-ff origin/agent/care-relocation-destinations
+          git merge --no-commit --no-ff origin/agent/care-decision-browser-golden-path
           merge_status=$?
           set -e
 
@@ -106,6 +106,22 @@ jobs:
         run: npm run lint
       - name: Production build
         run: npm run build
+
+      - name: Install Chromium for canonical browser acceptance
+        run: npx playwright install --with-deps chromium
+      - name: Start merged-tree preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-canonical-care-decision-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-canonical-care-decision-preview.log
+          exit 1
+      - name: Canonical Care decision browser Golden Path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-care-decision-browser-golden-path.mjs
 
       - name: Confirm no merge commit
         shell: bash
