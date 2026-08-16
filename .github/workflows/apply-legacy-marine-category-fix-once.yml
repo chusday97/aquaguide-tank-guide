@@ -49,3 +49,5 @@ jobs:
           git rm .github/workflows/apply-legacy-marine-category-fix-once.yml
           git commit -m "Fix stale marine categories for Tanganyika cichlids"
           git push origin HEAD:agent/fix-legacy-marine-category-contradictions
+
+# rerun after pinning lionfish regression to the audited marine control
