@@ -8,20 +8,18 @@
 
 Current product boundary remains deliberate: the Care page still does **not** have a repository-backed executable relocation path.
 
-## Stable foundations carried forward
+## Stable foundations
 
-- PR #62 returns mutation receipt only: `{ committed: true, replayed?: boolean }`; post-write canonical refresh is separate.
-- PR #63 never trusts a cached UI verdict and distinguishes `mutation_state_unknown` from `executed_post_state_unavailable`.
-- PR #64 confirmation UI binds displayed IDs/quantity to the actual request and has no direct repository/API/Supabase dependency or blind retry.
-- Previous disposable #62 + #63 + #64 canonical audit is green and created no merge commit.
+- PR #62 returns receipt only: `{ committed: true, replayed?: boolean }`; canonical refresh is separate.
+- PR #63 never trusts cached UI verdicts and truthfully distinguishes `mutation_state_unknown` from `executed_post_state_unavailable`.
+- PR #64 confirmation UI binds displayed IDs/quantity to the actual request, exposes no blind retry, and has no direct repository/API/Supabase dependency.
+- PR #65 converts a formal species-level option into a confirmation launch candidate only when it maps losslessly to one factual source record + one explicit positive batch representing the full formal quantity.
 
 ## PR #65 — confirmation entrypoint
 
 Draft PR: **#65 `Gate relocation confirmation entrypoint on factual source scope`**
 
 Branch: `agent/relocation-confirmation-entrypoint`, base `agent/relocation-confirmation-surface` (#64).
-
-The intervention model is canonical-species-level while #62 mutation is factual-record + factual-batch-level. PR #65 therefore fails closed unless a formal whole-subject option maps losslessly to exactly one factual source record and exactly one positive explicit batch with the same quantity.
 
 Entrypoint invariants:
 
@@ -36,46 +34,59 @@ Entrypoint invariants:
 
 Implemented:
 
-- `src/lib/relocationConfirmationEntrypoint.ts` pure fail-closed builder;
+- pure `relocationConfirmationEntrypoint` builder;
 - source-scope regression suite;
 - mutation-free UI static contract;
 - optional `sourceAquarium` + `onOpenRelocationConfirmation(candidate)` on `InterventionComparisonPanel`;
 - eligible cards expose `进入迁移确认`; click only emits the launch candidate;
 - compatible-but-non-executable source scope shows a deterministic limitation;
-- no repository/API/Supabase import or mutation in this PR.
+- no repository/API/Supabase import or mutation in PR #65.
 
-## CI history
+## PR #65 CI
 
-- `31961302689`: source-scope passed; new UI static regex false-failed optional-call syntax. Test-only fix.
-- `31961390757`: source/UI/state passed; stacked workflow referenced a non-existent inherited test file. CI-config-only fix.
-- `31961532732`: effective full-chain gate passed source-scope, entrypoint UI, #64 state/surface, #63 fresh policy + mutation uncertainty, Tank Decision Support, Destination Evaluator, severe-risk, TypeScript and production build. No business rule was loosened.
+Effective full-chain run `31961532732` passed:
 
-## Disposable canonical audit — in progress
+- confirmation entrypoint source scope ✅
+- entrypoint UI static contract ✅
+- PR #64 confirmation state/surface ✅
+- PR #63 fresh policy + mutation uncertainty ✅
+- Tank Decision Support + Destination Evaluator + severe-risk ✅
+- TypeScript ✅
+- production build ✅
 
-Audit workflow: `Canonical Relocation Entrypoint Integration Audit`
+Two earlier red runs were test/CI harness mistakes only: optional-call regex parsing and a guessed non-existent inherited verifier filename. No business rule was loosened.
+
+## Disposable canonical audit — GREEN
+
+Workflow: `Canonical Relocation Entrypoint Integration Audit`
 Run: `31961690289`
 Audit branch: `integration/canonical-decision-support-audit`
 
-It checks latest #62 mutation stack + full #65 stack only in the runner using `git merge --no-commit --no-ff`.
+Latest #62 mutation stack + full #65 stack were combined only in the runner using `git merge --no-commit --no-ff`.
 
-Expected conflict set remains exactly:
+Merge gate: **passed**. No new conflicts appeared; conflict set remained only the two previously known canonical/decision files:
 
 - `.github/workflows/product-golden-path.yml`
 - `src/services/aquarium/water-change.service.ts`
 
-Any additional conflict fails the audit instead of being guessed away.
+All disposable-tree gates passed:
 
-The disposable tree will rerun:
+- atomic relocation local regression ✅
+- atomic relocation SQL/security contract ✅
+- repository/API relocation wiring ✅
+- mutation receipt boundary ✅
+- fresh relocation execution policy ✅
+- ambiguous mutation outcome ✅
+- confirmation state + confirmation surface ✅
+- confirmation entrypoint source scope + UI contract ✅
+- Tank Decision Support + Destination Evaluator ✅
+- unresolved livestock + Care hydration + severe-risk ✅
+- real canonical repository → fresh policy TypeScript adapter ✅
+- API TypeScript ✅
+- production build ✅
+- final assertion that no merge commit was created ✅
 
-- atomic relocation local / SQL / repository wiring / receipt boundary;
-- fresh execution policy + ambiguous mutation outcome;
-- confirmation state/surface;
-- confirmation entrypoint source/UI;
-- decision support + destination evaluator;
-- unresolved livestock + Care hydration + severe-risk;
-- real repository → policy TypeScript adapter;
-- API TypeScript + production build;
-- final assertion that no merge commit was created.
+This clears PR #65's integration exit gate. It does **not** mean the stack is merged/live.
 
 ## Still intentionally blocked
 
@@ -83,20 +94,33 @@ The disposable tree will rerun:
 - multi-batch whole-subject relocation;
 - unresolved source livestock;
 - conditional / insufficient-data / not-recommended destinations;
-- direct UI → repository mutation;
 - stale destination card used as execution authorization;
 - automatic keeper choice;
-- blind retry after uncertain mutation outcome.
+- blind retry after uncertain mutation outcome;
+- direct Care UI → `repository.relocateLivestock()`.
 
-## Next safe step after audit
+## Next layer now authorized to design
 
-Only if the disposable canonical audit is green: design a **separate** Care-page integration that creates one operation ID per confirmation attempt and injects PR #63 `executeFreshRelocation`. That future layer still must not let the page call `repository.relocateLivestock()` directly.
+Create a separate Care-page confirmation wiring stack with this responsibility only:
+
+`#65 launch candidate → one confirmation attempt identity → #64 RelocationConfirmationDialog → injected #63 executeFreshRelocation`
+
+Requirements for that layer:
+
+1. one `operationId` is created per **confirmation attempt**, not per render;
+2. rerendering the dialog must not silently create a new operation identity;
+3. uncertain/reconciliation states preserve the same operation identity;
+4. a closed/cancelled idle attempt may be discarded; a completed or uncertain attempt must not be reused for a new move;
+5. Care page must not call `repository.relocateLivestock()` directly;
+6. repository mutation is reachable only inside the injected callback supplied to `executeFreshRelocation`;
+7. canonical reload used by #63 must come from repository-backed state, not current page/local mirror assumptions;
+8. success/reconciliation must refresh the page decision state from canonical repository data.
 
 ## Non-negotiable constraints
 
 - no merge/Ready without explicit user instruction;
 - no stale verdict as authorization;
-- no direct UI → repository relocation call in PR #65;
+- no direct UI → repository mutation;
 - no arbitrary first-record / first-batch selection;
 - no partial batch move described as whole-conflict resolution;
 - no second display-only quantity source;
