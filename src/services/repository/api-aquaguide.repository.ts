@@ -12,6 +12,7 @@ import type {
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
+  LivestockRelocationInput,
   LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
@@ -494,6 +495,26 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       },
     );
     return this.rememberAquarium(aquarium);
+  }
+
+  async relocateLivestock(input: LivestockRelocationInput) {
+    if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('迁移数量必须是正整数。');
+    const result = await apiRequest<{
+      sourceAquarium: ApiAquarium;
+      destinationAquarium: ApiAquarium;
+      relocation: { destinationSpeciesRecordId: string; destinationBatchId: string; replayed: boolean };
+    }>(`/aquariums/${input.sourceAquariumId}/species/${input.sourceAquariumFishId}/batches/${input.sourceBatchId}/relocate`, {
+      method: 'POST',
+      body: { destinationAquariumId: input.destinationAquariumId, quantity: input.quantity },
+      idempotencyKey: input.operationId,
+    });
+    return {
+      sourceAquarium: this.rememberAquarium(result.sourceAquarium),
+      destinationAquarium: this.rememberAquarium(result.destinationAquarium),
+      destinationFishId: result.relocation.destinationSpeciesRecordId,
+      destinationBatchId: result.relocation.destinationBatchId,
+      replayed: result.relocation.replayed,
+    };
   }
 
   private async resolveContentId(type: 'species' | 'care', catalogKey: string) {

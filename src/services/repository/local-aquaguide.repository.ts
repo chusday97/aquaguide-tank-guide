@@ -23,6 +23,7 @@ import {
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { persistAquariums } from '../aquarium/aquarium-state.service';
 import { appendSpeciesBatch, createSpeciesBatch, removeSpeciesBatchQuantity } from '../aquarium/species-batches.service';
+import { relocateLivestockInAquariums } from '../aquarium/livestock-relocation.service';
 import { applyWaterChangeHistory, isFutureWaterChangeDate, setWaterChangeDateRecorded, waterChangeDateToIso } from '../aquarium/water-change.service';
 import type {
   AquaGuideRepository,
@@ -33,6 +34,7 @@ import type {
   MemorialUpdateInput,
   LivestockMemorialSaveInput,
   LivestockRemovalInput,
+  LivestockRelocationInput,
   LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
@@ -169,6 +171,22 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
         : aquarium.fishes.filter(item => item.id !== current.id),
     };
     return this.saveAquarium(nextAquarium);
+  }
+
+  async relocateLivestock(input: LivestockRelocationInput) {
+    const state = loadAppStateFromStorage();
+    const result = relocateLivestockInAquariums(state.aquariums, input);
+    const persisted = persistAquariums(result.aquariums, state.currentAquariumId || input.sourceAquariumId);
+    const sourceAquarium = persisted.aquariums.find(item => item.id === input.sourceAquariumId);
+    const destinationAquarium = persisted.aquariums.find(item => item.id === input.destinationAquariumId);
+    if (!sourceAquarium || !destinationAquarium) throw new Error('迁移后鱼缸状态无法确认。');
+    return {
+      sourceAquarium,
+      destinationAquarium,
+      destinationFishId: result.destinationFishId,
+      destinationBatchId: result.destinationBatchId,
+      replayed: result.replayed,
+    };
   }
 
   async getFavorites() {

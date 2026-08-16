@@ -10,6 +10,7 @@ import {
   aquariumSpeciesBatchMergeSchema,
   aquariumSpeciesBatchRemovalSchema,
   livestockMemorialCreateSchema,
+  livestockRelocationSchema,
   aquariumSpeciesBatchUpdateSchema,
   aquariumSpeciesUpdateSchema,
   aquariumUpdateSchema,
@@ -457,6 +458,62 @@ aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/remove',
   if (aquariumError) throwDatabaseError(aquariumError, '鱼缸数据暂时无法刷新。');
   if (!aquarium) throw new ApiError(404, 'NOT_FOUND', '没有找到当前鱼缸。');
   return sendData(request, response, mapAquarium(aquarium));
+}));
+
+aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/relocate', asyncRoute(async (request, response) => {
+  const sourceAquariumId = parseId(request.params.id, '源鱼缸标识');
+  const sourceRecordId = parseId(request.params.recordId, '源物种记录标识');
+  const sourceBatchId = parseId(request.params.batchId, '源批次标识');
+  const parsed = livestockRelocationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '迁移信息无效。', parsed.error.flatten());
+  if (parsed.data.destinationAquariumId === sourceAquariumId) throw new ApiError(400, 'VALIDATION_ERROR', '源鱼缸和目标鱼缸必须不同。');
+
+  const client = userClientFor(request);
+  const userId = authenticatedRequest(request).authUser.id;
+  const operationKey = requireIdempotencyKey(request);
+  const newDestinationSpeciesRecordId = deterministicUuid(`${userId}:${parsed.data.destinationAquariumId}:relocation-species:${operationKey}`);
+  const newDestinationBatchId = deterministicUuid(`${userId}:${parsed.data.destinationAquariumId}:relocation-batch:${operationKey}`);
+
+  const { data, error } = await client.rpc('relocate_verified_aquarium_livestock', {
+    source_aquarium_id: sourceAquariumId,
+    source_species_record_id: sourceRecordId,
+    source_batch_id: sourceBatchId,
+    destination_aquarium_id: parsed.data.destinationAquariumId,
+    relocation_quantity: parsed.data.quantity,
+    new_destination_species_record_id: newDestinationSpeciesRecordId,
+    new_destination_batch_id: newDestinationBatchId,
+    operation_key: operationKey,
+    operation_request_hash: getRequestHash(request),
+  });
+
+  const message = error?.message || '';
+  if (message.includes('SAME_AQUARIUM') || message.includes('INVALID_RELOCATION_QUANTITY')) throw new ApiError(400, 'VALIDATION_ERROR', '迁移鱼缸或数量无效。');
+  if (message.includes('DUPLICATE_OPERATION_KEY')) throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一项迁移。');
+  if (message.includes('UNRESOLVED_SOURCE_SPECIES')) throw new ApiError(409, 'VERSION_CONFLICT', '这个生物的身份尚未确认，不能使用已验证物种迁移。');
+  if (message.includes('SOURCE_AQUARIUM_NOT_FOUND') || message.includes('SOURCE_SPECIES_NOT_FOUND') || message.includes('SOURCE_BATCH_NOT_FOUND')) throw new ApiError(404, 'NOT_FOUND', '没有找到需要迁移的源记录。');
+  if (message.includes('DESTINATION_AQUARIUM_NOT_FOUND')) throw new ApiError(404, 'NOT_FOUND', '没有找到目标鱼缸。');
+  if (error) throwDatabaseError(error, '迁移没有完成，源鱼缸和目标鱼缸均保持原状态。');
+
+  const relocation = data?.[0] as DbRow | undefined;
+  if (!relocation) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '迁移已经提交，但暂时无法确认结果。');
+
+  const [sourceResult, destinationResult] = await Promise.all([
+    client.from('aquariums').select(aquariumSelect).eq('id', sourceAquariumId).is('deleted_at', null).maybeSingle(),
+    client.from('aquariums').select(aquariumSelect).eq('id', parsed.data.destinationAquariumId).is('deleted_at', null).maybeSingle(),
+  ]);
+  if (sourceResult.error || destinationResult.error || !sourceResult.data || !destinationResult.data) {
+    throwDatabaseError(sourceResult.error || destinationResult.error, '迁移已完成，但最新鱼缸状态暂时无法读取。');
+  }
+
+  return sendData(request, response, {
+    sourceAquarium: mapAquarium(sourceResult.data),
+    destinationAquarium: mapAquarium(destinationResult.data),
+    relocation: {
+      destinationSpeciesRecordId: relocation.destination_species_record,
+      destinationBatchId: relocation.destination_batch,
+      replayed: Boolean(relocation.replayed),
+    },
+  });
 }));
 
 aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/memorial', asyncRoute(async (request, response) => {
