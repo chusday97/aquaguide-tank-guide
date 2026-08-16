@@ -33,6 +33,12 @@ replaceOnce(
 
 replaceOnce(
   'scripts/test-livestock-relocation-wiring.mjs',
+  `assert.match(apiRepository, /destinationSpeciesRecordId/);\n`,
+  `assert.match(apiRepository, /committed: true/);\n`,
+);
+
+replaceOnce(
+  'scripts/test-livestock-relocation-wiring.mjs',
   `assert.match(apiRoute, /sourceAquarium:/);\nassert.match(apiRoute, /destinationAquarium:/);\n`,
   `assert.match(apiRoute, /committed: true/);\nassert.doesNotMatch(apiRoute, /sourceAquarium:/);\nassert.doesNotMatch(apiRoute, /destinationAquarium:/);\n`,
 );
