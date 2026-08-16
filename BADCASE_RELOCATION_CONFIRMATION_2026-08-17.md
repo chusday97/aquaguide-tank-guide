@@ -35,48 +35,49 @@
 
 **Confirmed:** `ApiAquaGuideRepository.getAquariums()` fetches `/aquariums` and updates repository version caches through `rememberAquarium`, but it does **not** write the returned list into Care's `loadAppStateFromStorage()` mirror.
 
-**Risk:** #63 may return correct `postAquariums` while `StepDiagnosisPanel` continues rendering the pre-move local mirror and therefore stale conflicts/options.
-
 **Required page fix:**
-- on `executed`, immediately set the Care-visible aquarium set from `result.postAquariums`;
-- on reconciliation, set it from `await controller.reconcile()`;
-- canonical post-action state must take precedence over the local mirror for the current Care decision surface.
-
-**Status:** confirmed P0 page-wiring requirement; regression/static/browser coverage still required.
+- on `executed`, immediately use `result.postAquariums` for the Care-visible decision state;
+- on reconciliation, immediately use `await controller.reconcile()`;
+- after a canonical read succeeds, best-effort mirror that verified list through `patchLocalAppState` so the existing app-state subscription and other pages converge on the same facts.
 
 ### REL-045 — idle cancel and terminal attempt lifecycle are conflated
 One attempt identity is bound to one move intent. Idle unused cancel may discard it; completed/uncertain attempts cannot be repurposed.
 
 ### REL-046 — final Care wiring is implemented on the PR #65-only branch
-**Fix complete:** executable work moved to `agent/canonical-care-relocation-wiring`, created from latest #62 and populated with full #65 stack using guarded squash integration. Bootstrap `31962121116` is green; one-shot workflow self-deleted. No product PR/main merge occurred.
+**Fix complete:** executable work moved to `agent/canonical-care-relocation-wiring`; guarded bootstrap `31962121116` is green and no product PR/main merge occurred.
 
 ### REL-047 — repository mode/source changes inside one confirmation execution
-
-**Fix implemented in controller:** repository resolution is cached per attempt. Same repository instance owns pre-load → mutation → post-load → reconciliation. Controller regression proves repository resolver count is 1 for a resolved attempt.
-
-If repository resolution itself fails before any repository exists, no mutation is possible through it; the cache is cleared so a later recovery read may resolve again.
+**Fix implemented in controller:** same successfully resolved repository instance owns pre-load → mutation → post-load → reconciliation. Controller regression proves resolver count 1 for a resolved attempt.
 
 ### REL-048 — reconciliation-required dialog can be dismissed before canonical sync
 
-**Observed in current confirmation dialog:** `Dialog.onOpenChange` only blocks closing while `checking`. After `mutation_state_unknown`, `executed_post_state_unavailable`, or an unexpected thrown error sets reconciliation-required UI, external dialog close events are still forwarded to the parent.
+**Fix implemented, verification running:**
+- uncertainty/post-state-unavailable sets a non-dismissible close lock;
+- overlay/Escape/built-in close requests are ignored until canonical `onReconcile()` succeeds;
+- failed reconciliation stays locked and exposes sync retry only;
+- successful reconciliation enters explicit `data-relocation-reconciled` state and then allows Close;
+- reconciliation-complete/error state resets for a different operationId/open lifecycle.
 
-Also, a successful `onReconcile()` currently has no local `reconciled` terminal state; the dialog remains in the uncertainty panel indefinitely.
+The canonical confirmation verifier now asserts the close lock and reconciled terminal state. Full controller/confirmation/type/build rerun is in progress.
 
-**Risk:** user dismisses an unresolved attempt, parent discards the controller, then reopens the same move as a new attempt/operationId before canonical reconciliation. This defeats the stable-attempt lifecycle even though the controller itself is safe.
+### REL-049 — canonical refresh succeeds but compatibility-mirror persistence fails
 
-**Required:**
-- while reconciliation is required and not completed, reject close requests (overlay / escape / dialog close);
-- `handleReconcile` must mark reconciliation complete only after `onReconcile()` resolves successfully;
-- after successful canonical reconciliation, show a distinct synced/reconciled state and allow Close;
-- failed reconciliation remains non-dismissible and retry is **sync retry only**, never relocation retry;
-- opening a different `operationId` resets reconciliation-complete state.
+**Failure:** #63 returns `executed` with correct `postAquariums`, or reconciliation returns a correct canonical list, then `patchLocalAppState()` throws because localStorage is unavailable/quota-failed. Parent lets that exception propagate into the dialog execution callback.
 
-**Status:** P0 confirmation lifecycle fix required before Care JSX wiring.
+**Risk:** a confirmed canonical relocation is reclassified as an unexpected execution error/reconciliation state even though the database and canonical read are already known. Or the current Care page falls back to stale local mirror state.
+
+**Required page behavior:**
+1. set a direct React canonical aquarium override **before** attempting local mirror persistence;
+2. best-effort `patchLocalAppState({ aquariums: canonicalList, currentAquariumId })` only after canonical read success;
+3. if mirror persistence succeeds, update `appState`/subscription and the direct override can be released;
+4. if mirror persistence fails, retain the canonical React override for the current Care surface and do **not** throw/reclassify the relocation result;
+5. local mirror failure may be reported separately, but it is not a mutation/canonical-read failure.
+
+**Status:** page-wiring regression required.
 
 ## Controller verification
 
 Permanent run `31962344545` is fully GREEN:
-
 - Care relocation confirmation controller ✅
 - fresh execution policy ✅
 - mutation uncertainty ✅
@@ -86,12 +87,7 @@ Permanent run `31962344545` is fully GREEN:
 - API TypeScript ✅
 - production build ✅
 
-Controller regression additionally proves:
-- double execute returns the same Promise / one mutation;
-- success performs exactly pre + post canonical reads;
-- fresh destination invalidation performs zero writes;
-- unknown mutation outcome cannot write again during reconcile or repeated execute;
-- one repository session is preserved through attempt recovery.
+Controller regression proves double-execute idempotence, pre/post canonical reads, zero-write fresh blocks, read-only reconciliation after unknown outcome, and one repository session per attempt.
 
 ## Test infrastructure badcases
 
@@ -101,16 +97,17 @@ Controller regression additionally proves:
 ## Current verified baseline
 
 - #65 isolated run `31961532732`: green.
-- disposable #62 + #65 audit `31961690289`: green, no new conflicts/no merge commit.
-- saved canonical bootstrap `31962121116`: green, one-shot workflow deleted.
+- disposable #62 + #65 audit `31961690289`: green.
+- saved canonical bootstrap `31962121116`: green.
 - Care controller run `31962344545`: green.
 
 ## Remaining Care executable-layer exit gate
 
-- fix REL-048 and extend confirmation verifier;
+- finish REL-048 rerun;
 - no Care page direct `relocateLivestock()` call;
 - success/reconcile refreshes Care visible decision state from canonical data;
-- blocked fresh result never writes (controller covered; page flow still needs integration coverage);
+- mirror persistence failure cannot reclassify canonical success;
+- blocked fresh result never writes;
 - terminal attempt cannot be discarded/reopened as a fresh operation without required reconciliation;
 - browser Golden Path covers open → confirm → fresh block/success/reconcile;
 - handoff/badcase remain updated as failures are found.
