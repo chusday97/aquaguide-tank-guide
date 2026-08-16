@@ -20,8 +20,8 @@ const lionfishPreyRiskStudy: EvidenceSourceDto = {
 };
 
 const additionalProfiles: Record<string, AdditionalReviewedCompatibilityProfile> = {
-  sp_0130: {
-    speciesId: 'sp_0130',
+  sp_0453: {
+    speciesId: 'sp_0453',
     behaviorTraits: ['predatory'],
     predationTargets: ['small_fish'],
     confidence: 'medium',
