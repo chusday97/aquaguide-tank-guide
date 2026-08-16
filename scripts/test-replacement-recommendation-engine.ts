@@ -42,19 +42,31 @@ const openTankResult = recommendReplacementSpecies({
   aquarium: baseTank,
   rejectedSpecies: neon,
   catalog: [neon, cardinal],
-  candidateQuantity: 5,
 });
 assert.equal(openTankResult.evaluatedCandidateCount, 1);
 assert.equal(openTankResult.status, 'alternatives_found');
-assert.ok(
-  [...openTankResult.recommended, ...openTankResult.conditional].some(item => item.species.id === cardinal.id),
-  'same-role replacement should be surfaced when deterministic tank checks do not block it',
-);
+const cardinalAlternative = [...openTankResult.recommended, ...openTankResult.conditional]
+  .find(item => item.species.id === cardinal.id);
+assert.ok(cardinalAlternative, 'same-role replacement should be surfaced when deterministic tank checks do not block it');
+assert.equal(cardinalAlternative.evaluationQuantity, 5, 'reviewed schooling minimum should be the default simulation quantity');
 assert.equal(
   openTankResult.needsConfirmation.some(item => item.species.id === cardinal.id),
   false,
   'reviewed cardinal behavior evidence should not be demoted solely for missing profile coverage',
 );
+
+const explicitQuantityResult = recommendReplacementSpecies({
+  aquarium: baseTank,
+  rejectedSpecies: neon,
+  catalog: [neon, cardinal],
+  candidateQuantity: 7,
+});
+const explicitCardinal = [
+  ...explicitQuantityResult.recommended,
+  ...explicitQuantityResult.conditional,
+  ...explicitQuantityResult.needsConfirmation,
+].find(item => item.species.id === cardinal.id);
+assert.equal(explicitCardinal?.evaluationQuantity, 7, 'an explicit user simulation quantity must override the reviewed default');
 
 const predatorTank: Aquarium = {
   ...baseTank,
@@ -69,7 +81,6 @@ const predatorResult = recommendReplacementSpecies({
   aquarium: predatorTank,
   rejectedSpecies: neon,
   catalog: [predator, neon, cardinal],
-  candidateQuantity: 5,
 });
 assert.equal(predatorResult.evaluatedCandidateCount, 1);
 assert.equal(predatorResult.rejectedCandidateCount, 1);
@@ -91,7 +102,6 @@ const unresolvedResult = recommendReplacementSpecies({
   aquarium: unresolvedTank,
   rejectedSpecies: neon,
   catalog: [neon, cardinal],
-  candidateQuantity: 5,
 });
 assert.equal(unresolvedResult.status, 'insufficient_data');
 assert.deepEqual(unresolvedResult.unresolvedCurrentSpeciesIds, ['unresolved:real-animal-not-in-catalog']);
@@ -112,9 +122,8 @@ const unrelatedResult = recommendReplacementSpecies({
   aquarium: baseTank,
   rejectedSpecies: neon,
   catalog: [neon, unrelated],
-  candidateQuantity: 1,
 });
 assert.equal(unrelatedResult.evaluatedCandidateCount, 0, 'unrelated roles must not be inserted merely to fill recommendation slots');
 assert.equal(unrelatedResult.status, 'no_safe_same_intent_alternative');
 
-console.log('replacement recommendation MVP passed: intent is preserved, every candidate is re-evaluated, unresolved context fails closed, and zero alternatives is valid');
+console.log('replacement recommendation MVP passed: intent is preserved, reviewed group size drives default simulation, every candidate is re-evaluated, unresolved context fails closed, and zero alternatives is valid');
