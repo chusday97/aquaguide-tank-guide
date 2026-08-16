@@ -57,7 +57,7 @@ try {
   page.setDefaultTimeout(25000);
   await page.goto(`${baseUrl}/care?topic=guide_water_deteriorate`, { waitUntil: 'domcontentloaded' });
 
-  const startDiagnosis = page.locator('[data-care-first-screen-primary]').filter({ hasText: '开始快速评测' });
+  const startDiagnosis = page.locator('[data-care-first-screen-primary]').filter({ hasText: '开始快速检查' });
   await startDiagnosis.waitFor();
   await startDiagnosis.click();
 
