@@ -1,0 +1,46 @@
+name: Phase0 Stack Observation Into Auth
+
+on:
+  push:
+    branches:
+      - agent/auth-magic-link
+    paths:
+      - .github/workflows/phase0-stack-observation-auth.yml
+
+permissions:
+  contents: write
+
+jobs:
+  stack-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/auth-magic-link
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Merge latest canonical Phase-0 branch without committing
+        run: |
+          git fetch origin agent/fix-aquarium-completion-state
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-commit --no-ff origin/agent/fix-aquarium-completion-state
+      - name: Extend real two-device observation acceptance
+        run: node scripts/phase0-patch-auth-observation-harness.mjs
+      - run: npm ci
+      - name: Harness syntax
+        run: node --check scripts/verify-auth-two-device-cloud.mjs
+      - name: Observation canonical + reachability regression
+        run: npx tsx scripts/test-observation-canonical-state.ts
+      - name: Auth boundary regression
+        run: npm run test:auth-boundary
+      - name: Type check
+        run: npm run lint
+      - name: Commit verified stack
+        run: |
+          git add -A
+          git commit -m "Stack observation reachability into auth acceptance"
+          git push origin HEAD:agent/auth-magic-link
