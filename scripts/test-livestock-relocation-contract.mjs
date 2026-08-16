@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const migrationPath = 'supabase/migrations/20260816160000_atomic_verified_livestock_relocation.sql';
+const migrationPath = 'supabase/migrations/20260816160129_atomic_verified_livestock_relocation.sql';
 const sql = readFileSync(migrationPath, 'utf8');
 const contract = readFileSync('packages/contracts/src/livestock-relocation.ts', 'utf8');
 
