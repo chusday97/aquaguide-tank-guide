@@ -6,10 +6,16 @@ on:
       - agent/atomic-livestock-relocation-contract
   pull_request:
     paths:
+      - 'packages/contracts/src/index.ts'
       - 'packages/contracts/src/livestock-relocation.ts'
       - 'src/services/aquarium/livestock-relocation.service.ts'
+      - 'src/services/repository/aquaguide.repository.ts'
+      - 'src/services/repository/local-aquaguide.repository.ts'
+      - 'src/services/repository/api-aquaguide.repository.ts'
+      - 'apps/api/src/routes/aquariums.ts'
       - 'scripts/test-livestock-relocation.ts'
       - 'scripts/test-livestock-relocation-contract.mjs'
+      - 'scripts/test-livestock-relocation-wiring.mjs'
       - 'supabase/migrations/20260816160000_atomic_verified_livestock_relocation.sql'
       - '.github/workflows/livestock-relocation-contract.yml'
 
@@ -30,9 +36,15 @@ jobs:
         run: node --import tsx scripts/test-livestock-relocation.ts
       - name: SQL and public-contract safety regression
         run: node scripts/test-livestock-relocation-contract.mjs
+      - name: Repository/API wiring contract
+        run: node scripts/test-livestock-relocation-wiring.mjs
       - name: Existing unresolved livestock regression
         run: node --import tsx scripts/test-unresolved-existing-livestock.ts
       - name: Existing livestock recording regression
         run: node --import tsx scripts/test-livestock-recording.ts
-      - name: Type check
+      - name: API TypeScript
+        run: npm run check:api
+      - name: App TypeScript
         run: npm run lint
+      - name: Production build
+        run: npm run build
