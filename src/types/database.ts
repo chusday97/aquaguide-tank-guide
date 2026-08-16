@@ -19,7 +19,8 @@ export type CareEventType =
   | 'observation'
   | 'daily_check'
   | 'checklist_completed'
-  | 'care_plan_completed';
+  | 'care_plan_completed'
+  | 'care_operation_completed';
 export type EvidenceSourceType = 'government' | 'peer_reviewed' | 'university' | 'professional_association' | 'curated_husbandry';
 export type EvidenceReviewStatus = 'draft' | 'reviewed' | 'rejected';
 export type EvidenceConfidence = 'high' | 'medium' | 'low' | 'unknown';
@@ -422,6 +423,17 @@ export interface CareReminderRecordRow extends SyncFields {
   seriesId?: Uuid;
   repeatEnabled: boolean;
   repeatIntervalDays?: number;
+}
+
+export interface CareChecklistProgressRecord extends SyncFields {
+  id: Uuid;
+  ownerId: Uuid;
+  aquariumId?: Uuid;
+  topicId: string;
+  title: string;
+  actionKeys: string[];
+  legacyActions: string[];
+  savedAt: IsoDateTime;
 }
 
 export interface CareEventRecord extends SyncFields {

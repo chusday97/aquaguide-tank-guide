@@ -1,6 +1,6 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import type { Aquarium, AquariumFish, AquariumSpeciesBatch, DeceasedRecord } from '../../types';
-import type { CareReminderRecord } from '../care/care-activity.service';
+import type { CareReminderRecord, CareSavedChecklist } from '../care/care-activity.service';
 import { apiRequest, createIdempotencyKey } from '../api/api-client';
 import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
 import type {
@@ -15,6 +15,8 @@ import type {
   LivestockAddCommand,
   CareTimelineMutation,
   CareTimelineRecord,
+  CareChecklistProgressMutation,
+  WaterChangeMutation,
 } from './aquaguide.repository';
 
 type ApiAquariumSpecies = {
@@ -61,7 +63,31 @@ type ApiAquarium = {
   }>;
 };
 
-type ApiDiagnosis = DiagnosisRecord & { id: string; version: number; localDate: string; diagnosisKey: string };
+type ApiDiagnosis = Omit<DiagnosisRecord, 'diagnosisId' | 'source'> & {
+  id: string;
+  version: number;
+  localDate: string;
+  diagnosisKey: string;
+  sourceType?: string;
+  sourceTitle?: string;
+};
+type ApiMemorial = {
+  id: string;
+  speciesCatalogKey: string;
+  memorialDate: string;
+  causeCodes?: DeceasedRecord['causeCodes'];
+  reason?: string;
+  observation?: string;
+  improvement?: string;
+  version?: number;
+};
+type ApiFavorite = {
+  catalogKey: string;
+  title?: string;
+  favoritedAt: string;
+  version: number;
+};
+
 type ApiReminder = {
   id: string;
   sourceCatalogKey: string;
@@ -78,8 +104,50 @@ type ApiReminder = {
   version: number;
 };
 type ApiCareEvent = CareTimelineRecord & { version: number };
+type ApiCareChecklistProgress = {
+  id: string;
+  aquariumId?: string;
+  topicId: string;
+  title: string;
+  actionKeys: string[];
+  legacyActions?: string[];
+  savedAt: string;
+  version: number;
+};
 
 const isUuid = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+
+const getLocalDateKey = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) throw new Error('诊断时间无效。');
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const toDiagnosisRecord = (record: ApiDiagnosis): DiagnosisRecord => {
+  const { diagnosisKey, sourceType, sourceTitle, localDate: _localDate, version: _version, ...rest } = record;
+  const source: DiagnosisRecord['source'] = sourceType === 'manual'
+    ? { type: 'manual', title: sourceTitle }
+    : sourceType === 'care_article'
+      ? { type: 'care_article', title: sourceTitle }
+      : sourceType === 'home'
+        ? { type: 'home', title: sourceTitle }
+        : undefined;
+  return { ...rest, id: record.id, diagnosisId: diagnosisKey, source };
+};
+
+const toMemorialRecord = (record: ApiMemorial): DeceasedRecord => ({
+  id: record.id,
+  fishId: record.speciesCatalogKey,
+  date: record.memorialDate,
+  causeCodes: record.causeCodes,
+  reason: record.reason,
+  observation: record.observation,
+  improvement: record.improvement,
+  version: record.version,
+});
 
 const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
   const components = record.components || [];
@@ -271,6 +339,15 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return this.rememberAquarium(saved);
   }
 
+  async setWaterChange(input: WaterChangeMutation) {
+    const saved = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}/water-changes/${input.date}`, {
+      method: 'PUT',
+      body: { recorded: input.recorded },
+      idempotencyKey: input.operationId,
+    });
+    return this.rememberAquarium(saved);
+  }
+
   async saveAquarium(aquarium: Aquarium) {
     const dimensions = aquarium.dimensions;
     const baseInput = {
@@ -375,6 +452,21 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return this.rememberAquarium(saved);
   }
 
+  async deleteAquarium(aquariumId: string) {
+    if (!isUuid(aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    let version = this.aquariumVersions.get(aquariumId);
+    if (!version) {
+      const current = await apiRequest<ApiAquarium>(`/aquariums/${aquariumId}`);
+      this.rememberAquarium(current);
+      version = current.version;
+    }
+    await apiRequest(`/aquariums/${aquariumId}?version=${version}`, {
+      method: 'DELETE',
+      idempotencyKey: `aquarium-delete:${aquariumId}:v${version}`,
+    });
+    this.aquariumVersions.delete(aquariumId);
+  }
+
   async removeLivestock(input: LivestockRemovalInput) {
     if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('移出数量必须是正整数。');
     const aquarium = await apiRequest<ApiAquarium>(
@@ -398,6 +490,19 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return content.id;
   }
 
+  async getFavorites() {
+    const [speciesResponse, careResponse] = await Promise.all([
+      apiRequest<{ items: ApiFavorite[] }>('/favorites/species'),
+      apiRequest<{ items: ApiFavorite[] }>('/favorites/care'),
+    ]);
+    return {
+      speciesCatalogKeys: (speciesResponse.items || []).map(item => item.catalogKey),
+      careFavorites: (careResponse.items || [])
+        .filter(item => Boolean(item.catalogKey && item.title))
+        .map(item => ({ catalogKey: item.catalogKey, title: item.title!, favoritedAt: item.favoritedAt })),
+    };
+  }
+
   async updateFavorite(input: FavoriteMutation) {
     const id = await this.resolveContentId(input.type, input.catalogKey);
     const path = `/favorites/${input.type}/${id}`;
@@ -408,35 +513,57 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     }
   }
 
+  async getDiagnosisRecords(aquariumId: string) {
+    if (!isUuid(aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const result = await apiRequest<{ items: ApiDiagnosis[] }>(`/aquariums/${aquariumId}/diagnoses?limit=50`);
+    return (result.items || []).map(toDiagnosisRecord);
+  }
+
   async saveDiagnosis(record: DiagnosisRecord) {
-    const date = record.createdAt.slice(0, 10);
-    const current = await apiRequest<ApiDiagnosis | null>(`/aquariums/${record.aquariumId}/daily-checks/${date}`);
-    const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/daily-checks/${date}`, {
-      method: 'PUT',
-      idempotencyKey: createIdempotencyKey('daily-check'),
-      body: {
-        diagnosisKey: record.diagnosisId,
-        problemType: record.problemType,
-        sourceType: record.source?.type,
-        sourceTitle: record.source?.title,
-        answers: record.answers,
-        structuredAnswers: record.structuredAnswers || [],
-        resultSummary: record.resultSummary,
-        riskLevel: record.riskLevel,
-        riskCode: record.riskCode,
-        conclusion: record.conclusion,
-        keyMetrics: record.keyMetrics || [],
-        suggestedActions: record.suggestedActions,
-        avoidActions: record.avoidActions || [],
-        observeItems: record.observeItems || [],
-        missingInfo: record.missingInfo,
-        optionalMissingInfo: record.optionalMissingInfo || [],
-        nextCheckAt: record.nextCheckAt,
-        followUpNotes: record.followUpNotes,
-        version: current?.version,
-      },
+    if (!isUuid(record.aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const localDate = getLocalDateKey(record.createdAt);
+    const body = {
+      diagnosisKey: record.diagnosisId,
+      problemType: record.problemType,
+      sourceType: record.source?.type,
+      sourceTitle: record.source?.title,
+      answers: record.answers,
+      structuredAnswers: record.structuredAnswers || [],
+      resultSummary: record.resultSummary,
+      riskLevel: record.riskLevel,
+      riskCode: record.riskCode,
+      conclusion: record.conclusion,
+      keyMetrics: record.keyMetrics || [],
+      suggestedActions: record.suggestedActions,
+      avoidActions: record.avoidActions || [],
+      observeItems: record.observeItems || [],
+      missingInfo: record.missingInfo,
+      optionalMissingInfo: record.optionalMissingInfo || [],
+      nextCheckAt: record.nextCheckAt,
+      followUpNotes: record.followUpNotes,
+    };
+
+    if (record.problemType === '巡检') {
+      const current = await apiRequest<ApiDiagnosis | null>(`/aquariums/${record.aquariumId}/daily-checks/${localDate}`);
+      const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/daily-checks/${localDate}`, {
+        method: 'PUT',
+        idempotencyKey: `daily-check:${record.aquariumId}:${localDate}:v${current?.version || 0}`,
+        body: { ...body, version: current?.version },
+      });
+      return toDiagnosisRecord(saved);
+    }
+
+    const saved = await apiRequest<ApiDiagnosis>(`/aquariums/${record.aquariumId}/diagnoses/${localDate}`, {
+      method: 'POST',
+      idempotencyKey: `diagnosis:${record.diagnosisId}`,
+      body,
     });
-    return { ...record, id: saved.id, diagnosisId: saved.diagnosisKey || record.diagnosisId };
+    return toDiagnosisRecord(saved);
+  }
+
+  async getMemorialRecords() {
+    const response = await apiRequest<{ items: ApiMemorial[] }>('/memorial-records?limit=100');
+    return (response.items || []).map(toMemorialRecord);
   }
 
   async saveMemorial(input: MemorialSaveInput) {
@@ -631,6 +758,43 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       idempotencyKey: `care-reminder-${input.action}:${input.id}:v${version}`,
     });
     return this.rememberReminder(saved);
+  }
+
+  async getCareChecklistProgress(aquariumId?: string): Promise<CareSavedChecklist[]> {
+    if (aquariumId && !isUuid(aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const query = aquariumId ? `?aquariumId=${encodeURIComponent(aquariumId)}` : '';
+    const result = await apiRequest<{ items: ApiCareChecklistProgress[] }>(`/care-checklist-progress${query}`);
+    return (result.items || []).map(item => ({
+      id: item.topicId,
+      title: item.title,
+      savedAt: item.savedAt,
+      actionKeys: item.actionKeys || [],
+      actions: item.legacyActions || undefined,
+      aquariumId: item.aquariumId,
+    }));
+  }
+
+  async saveCareChecklistProgress(input: CareChecklistProgressMutation): Promise<CareSavedChecklist> {
+    if (input.aquariumId && !isUuid(input.aquariumId)) throw new Error('云端鱼缸标识无效，请刷新后重试。');
+    const saved = await apiRequest<ApiCareChecklistProgress>('/care-checklist-progress', {
+      method: 'PUT',
+      idempotencyKey: createIdempotencyKey('care-checklist-progress'),
+      body: {
+        aquariumId: input.aquariumId,
+        topicId: input.topicId,
+        title: input.title,
+        actionKeys: input.actionKeys,
+        legacyActions: input.legacyActions,
+      },
+    });
+    return {
+      id: saved.topicId,
+      title: saved.title,
+      savedAt: saved.savedAt,
+      actionKeys: saved.actionKeys || [],
+      actions: saved.legacyActions || undefined,
+      aquariumId: saved.aquariumId,
+    };
   }
 
   async getCareEvents(aquariumId?: string) {

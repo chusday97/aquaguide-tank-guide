@@ -1,11 +1,13 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
-import type { Aquarium } from '../../types';
+import type { Aquarium, DeceasedRecord } from '../../types';
 import {
   completeCareReminder,
   configureCareReminderRecurrence,
   deleteCareReminder,
   getCareReminders,
+  getSavedCareChecklists,
   rescheduleCareReminder,
+  setSavedCareChecklists,
   upsertCareReminder,
 } from '../care/care-activity.service';
 import { recordCareTimelineEvent, removeCareTimelineEvent } from '../care/care-timeline.service';
@@ -18,9 +20,10 @@ import {
   setCareFavorites,
   setSpeciesFavoriteIds,
 } from '../favorites/favorites.service';
-import { loadAppStateFromStorage } from '../storage/local-app-state';
+import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { persistAquariums } from '../aquarium/aquarium-state.service';
 import { appendSpeciesBatch, createSpeciesBatch, removeSpeciesBatchQuantity } from '../aquarium/species-batches.service';
+import { applyWaterChangeHistory, isFutureWaterChangeDate, setWaterChangeDateRecorded, waterChangeDateToIso } from '../aquarium/water-change.service';
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
@@ -32,6 +35,9 @@ import type {
   LivestockRemovalInput,
   LivestockAddCommand,
   CareTimelineMutation,
+  CareTimelineRecord,
+  CareChecklistProgressMutation,
+  WaterChangeMutation,
 } from './aquaguide.repository';
 
 export class LocalAquaGuideRepository implements AquaGuideRepository {
@@ -89,6 +95,40 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     });
   }
 
+  async setWaterChange(input: WaterChangeMutation) {
+    const state = loadAppStateFromStorage();
+    const aquarium = state.aquariums.find(item => item.id === input.aquariumId);
+    if (!aquarium) throw new Error('没有找到需要记录换水的鱼缸。');
+    if (isFutureWaterChangeDate(input.date)) throw new Error('只能记录今天或过去实际发生的换水。');
+    const occurredAt = waterChangeDateToIso(input.date);
+    if (!occurredAt) throw new Error('换水日期无效。');
+    const nextHistory = setWaterChangeDateRecorded(aquarium.waterChangeHistory || [], input.date, input.recorded);
+    const nextAquarium = applyWaterChangeHistory(aquarium, nextHistory);
+    const currentEvents = (state.careEvents || []) as CareTimelineRecord[];
+    const sameDayEvent = (event: CareTimelineRecord) => event.aquariumId === input.aquariumId
+      && event.eventType === 'water_change'
+      && event.sourceType === 'water_change_day'
+      && event.sourceId === input.date;
+    const retainedEvents = currentEvents.filter(event => !sameDayEvent(event));
+    const nextEvents: CareTimelineRecord[] = input.recorded
+      ? [{
+          id: `water-change:${input.aquariumId}:${input.date}`,
+          aquariumId: input.aquariumId,
+          eventType: 'water_change',
+          title: '换水记录',
+          label: input.date,
+          payload: { localDate: input.date },
+          occurredAt,
+          sourceType: 'water_change_day',
+          sourceId: input.date,
+          isInferred: false,
+        }, ...retainedEvents]
+      : retainedEvents;
+    const nextAquariums = state.aquariums.map(item => item.id === input.aquariumId ? nextAquarium : item);
+    patchLocalAppState({ aquariums: nextAquariums, careEvents: nextEvents });
+    return nextAquarium;
+  }
+
   async saveAquarium(aquarium: Aquarium) {
     const state = loadAppStateFromStorage();
     const exists = state.aquariums.some(item => item.id === aquarium.id);
@@ -96,6 +136,17 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
       ? state.aquariums.map(item => item.id === aquarium.id ? aquarium : item)
       : [...state.aquariums, aquarium];
     return persistAquariums(aquariums, aquarium.id).aquariums.find(item => item.id === aquarium.id)!;
+  }
+
+  async deleteAquarium(aquariumId: string) {
+    const state = loadAppStateFromStorage();
+    if (!state.aquariums.some(item => item.id === aquariumId)) return;
+    const remaining = state.aquariums.filter(item => item.id !== aquariumId);
+    if (remaining.length === 0) throw new Error('至少需要保留一个鱼缸。');
+    const nextActiveId = state.currentAquariumId && remaining.some(item => item.id === state.currentAquariumId)
+      ? state.currentAquariumId
+      : remaining[0].id;
+    persistAquariums(remaining, nextActiveId);
   }
 
   async removeLivestock(input: LivestockRemovalInput) {
@@ -114,6 +165,17 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     return this.saveAquarium(nextAquarium);
   }
 
+  async getFavorites() {
+    return {
+      speciesCatalogKeys: getSpeciesFavoriteIds(),
+      careFavorites: Object.values(getCareFavorites()).map(item => ({
+        catalogKey: item.id,
+        title: item.title,
+        favoritedAt: item.favoritedAt,
+      })),
+    };
+  }
+
   async updateFavorite(input: FavoriteMutation) {
     if (input.type === 'species') {
       if (input.favorite) addSpeciesFavorite(input.catalogKey);
@@ -126,10 +188,22 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     setCareFavorites(favorites);
   }
 
+  async getDiagnosisRecords(aquariumId: string) {
+    return (loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[])
+      .filter(record => record.aquariumId === aquariumId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
   async saveDiagnosis(record: DiagnosisRecord) {
     const current = loadAppStateFromStorage().diagnosisRecords as DiagnosisRecord[];
-    persistDiagnosisRecords(upsertDiagnosisRecord(current, record));
-    return record;
+    const next = upsertDiagnosisRecord(current, record);
+    persistDiagnosisRecords(next);
+    return next[0];
+  }
+
+  async getMemorialRecords() {
+    return [...(loadAppStateFromStorage().deceasedRecords as DeceasedRecord[])]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }
 
   async saveMemorial(input: MemorialSaveInput) {
@@ -173,6 +247,34 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     if (input.action === 'recurrence') return configureCareReminderRecurrence(input.id, input.repeatEnabled, input.repeatIntervalDays);
     deleteCareReminder(input.id);
     return null;
+  }
+
+  async getCareChecklistProgress(aquariumId?: string) {
+    const records = getSavedCareChecklists();
+    return aquariumId
+      ? records.filter(item => !item.aquariumId || item.aquariumId === aquariumId)
+      : records;
+  }
+
+  async saveCareChecklistProgress(input: CareChecklistProgressMutation) {
+    const record = {
+      id: input.topicId,
+      title: input.title,
+      savedAt: new Date().toISOString(),
+      actionKeys: [...input.actionKeys],
+      actions: input.legacyActions ? [...input.legacyActions] : undefined,
+      aquariumId: input.aquariumId,
+    };
+    const current = getSavedCareChecklists();
+    const next = [
+      record,
+      ...current.filter(item => !(
+        item.id === input.topicId
+        && (item.aquariumId || '') === (input.aquariumId || '')
+      )),
+    ].slice(0, 30);
+    setSavedCareChecklists(next);
+    return record;
   }
 
   async getCareEvents(aquariumId?: string) {

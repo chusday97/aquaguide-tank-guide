@@ -11,7 +11,7 @@ import type {
 import { fishData } from '../data/fishData';
 import i18n from '../i18n';
 import type { Aquarium, Fish } from '../types';
-import { loadAppStateFromStorage } from '../services/storage/local-app-state';
+import { loadAppStateFromStorage, patchLocalAppState, subscribeToAppState } from '../services/storage/local-app-state';
 import {
   getSpeciesDiagnosisStep,
   recognizeSpeciesImage,
@@ -24,7 +24,8 @@ import { VisualResultCard } from '../components/visual-results/VisualResultCard'
 import type { VisualResultStatus, VisualResultViewModel } from '../components/visual-results/visual-result.types';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { useToast } from '../components/common/ToastProvider';
-import { getSpeciesFavoriteIds, setSpeciesFavoriteIds } from '../services/favorites/favorites.service';
+import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { buildSpeciesDiagnosisContextAnswers, isSpeciesEligibleForHealthTriage, mapVisionCandidateToCatalog, type MappedRecognitionCandidate } from '../lib/speciesRecognition';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
@@ -121,8 +122,46 @@ export default function Identify() {
   const [pendingAnswer, setPendingAnswer] = useState<{ questionId: string; value: string } | null>(null);
   const hasUnsavedDiagnosis = shouldProtectDiagnosisDraft(stage, description);
 
-  const appState = useMemo(() => loadAppStateFromStorage(), []);
+  const [appState, setAppState] = useState(loadAppStateFromStorage);
+  const [favoriteIds, setFavoriteIds] = useState(() => new Set(getSpeciesFavoriteIds()));
+
+  useEffect(() => subscribeToAppState(() => {
+    setAppState(loadAppStateFromStorage());
+  }), []);
+
+  useEffect(() => subscribeToFavorites(() => {
+    setFavoriteIds(new Set(getSpeciesFavoriteIds()));
+  }), []);
+
+  useEffect(() => {
+    let active = true;
+    void getCurrentAquaGuideRepository()
+      .then(async repository => {
+        const [aquariums, favorites] = await Promise.all([
+          repository.getAquariums(),
+          repository.getFavorites(),
+        ]);
+        return { aquariums, favorites };
+      })
+      .then(({ aquariums, favorites }) => {
+        if (!active) return;
+        const cachedState = loadAppStateFromStorage();
+        const currentAquariumId = cachedState.currentAquariumId
+          && aquariums.some(item => item.id === cachedState.currentAquariumId)
+          ? cachedState.currentAquariumId
+          : (aquariums[0]?.id || '');
+        patchLocalAppState({ aquariums, currentAquariumId });
+        setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+        setFavoriteIds(new Set(favorites.speciesCatalogKeys));
+      })
+      .catch(() => {
+        if (active) showToast(isEn ? 'Tank and wishlist data could not sync. Showing this device cache.' : '鱼缸和种草数据暂时无法同步，当前显示本机缓存。', 'error');
+      });
+    return () => { active = false; };
+  }, []);
+
   const aquarium = useMemo(() => appState.aquariums.find(item => item.id === appState.currentAquariumId) || appState.aquariums[0] || null, [appState]);
+  const diagnosisAquariumIdRef = useRef(aquarium?.id || '');
   const manualSuggestionResult = useMemo(() => getSearchSuggestions({
     query: manualQuery,
     locale: isEn ? 'en' : 'zh-CN',
@@ -207,6 +246,24 @@ export default function Identify() {
     setIsDiagnosing(false);
     setPendingAnswer(null);
   };
+
+  useEffect(() => {
+    const nextAquariumId = aquarium?.id || '';
+    const previousAquariumId = diagnosisAquariumIdRef.current;
+    if (previousAquariumId === nextAquariumId) return;
+    diagnosisAquariumIdRef.current = nextAquariumId;
+    if (stage !== 'describe' && stage !== 'question' && stage !== 'result') return;
+    cancelDiagnosisSession();
+    setDescription('');
+    setAnswers({});
+    setAskedQuestionIds([]);
+    setQuestionHistory([]);
+    setDiagnosis(null);
+    setErrorMessage('');
+    setPendingAnswer(null);
+    setStage(selectedFish ? 'identified' : 'upload');
+    showToast(isEn ? 'Tank data changed, so the health check was reset.' : '鱼缸数据已更新，健康诊断已重置，请基于最新鱼缸状态重新开始。');
+  }, [aquarium?.id, stage, selectedFish, isEn, showToast]);
 
   const reset = () => {
     requestControllerRef.current?.abort();
@@ -481,11 +538,18 @@ export default function Identify() {
     navigateToRoute(path);
   };
 
-  const toggleWishlist = (fishId: string) => {
-    const ids = new Set(getSpeciesFavoriteIds());
-    if (ids.has(fishId)) ids.delete(fishId); else ids.add(fishId);
-    setSpeciesFavoriteIds(Array.from(ids));
-    showToast(ids.has(fishId) ? t('identify.saved') : t('identify.removed'));
+  const toggleWishlist = async (fishId: string) => {
+    const wasFavorite = favoriteIds.has(fishId);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: fishId, favorite: !wasFavorite });
+      const favorites = await repository.getFavorites();
+      setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+      setFavoriteIds(new Set(favorites.speciesCatalogKeys));
+      showToast(!wasFavorite ? t('identify.saved') : t('identify.removed'));
+    } catch {
+      showToast(isEn ? 'Could not update wishlist. Try again.' : '种草状态没有更新成功，请稍后重试。', 'error');
+    }
   };
 
   return (
@@ -629,7 +693,7 @@ export default function Identify() {
                   <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{selectedFish.category}</span>
                   {selectedRecognitionCandidate && <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{t(`identify.confidence.${selectedRecognitionCandidate.confidenceBand}`)}</span>}
                   {aquarium?.fishes.some(item => item.fishId === selectedFish.id) && <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{t('identify.alreadyInTank')}</span>}
-                  {getSpeciesFavoriteIds().includes(selectedFish.id) && <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{t('identify.alreadySaved')}</span>}
+                  {favoriteIds.has(selectedFish.id) && <span className="rounded-full bg-bg px-3 py-1.5 text-ink/58">{t('identify.alreadySaved')}</span>}
                 </div>
                 <p className="mt-4 rounded-[16px] bg-emerald-50 p-3 text-xs font-bold leading-5 text-emerald-900">{aquarium ? t('identify.tankContextReady', { name: aquarium.name }) : t('identify.needTankForCompatibility')}</p>
                 <div className="mt-5 grid gap-2 sm:grid-cols-2">
@@ -684,7 +748,7 @@ export default function Identify() {
         )}
       </div>
 
-      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
+      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && favoriteIds.has(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
       <ConfirmDialog
         open={Boolean(pendingNavigationPath)}
         title={t('identify.leaveTitle')}

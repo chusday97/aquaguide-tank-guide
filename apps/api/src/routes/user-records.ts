@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  careChecklistProgressSaveSchema,
   careEventCreateSchema,
   careReminderCreateSchema,
   careReminderUpdateSchema,
@@ -46,7 +47,7 @@ const parseLimit = (value: unknown) => {
 };
 
 export const userRecordsRouter = Router();
-const protectedPrefixes = ['/aquariums/', '/favorites/', '/memorial-records', '/care-reminders', '/care-events'];
+const protectedPrefixes = ['/aquariums/', '/favorites/', '/memorial-records', '/care-reminders', '/care-checklist-progress', '/care-events'];
 userRecordsRouter.use((request, response, next) => (
   protectedPrefixes.some(prefix => request.path.startsWith(prefix))
     ? requireAuth(request, response, next)
@@ -112,6 +113,52 @@ userRecordsRouter.put('/aquariums/:id/daily-checks/:localDate', asyncRoute(async
   return sendData(request, response, camelize(data), 201);
 }));
 
+userRecordsRouter.get('/aquariums/:id/diagnoses', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const limit = parseLimit(request.query.limit);
+  const client = userClientFor(request);
+  const { data, error } = await client.from('diagnosis_records')
+    .select('*')
+    .eq('aquarium_id', aquariumId)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) throwDatabaseError(error, '诊断历史暂时无法加载。');
+  return sendData(request, response, { items: camelize(data || []) });
+}));
+
+userRecordsRouter.post('/aquariums/:id/diagnoses/:localDate', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const localDate = isoDateSchema.safeParse(request.params.localDate);
+  if (!localDate.success) throw new ApiError(400, 'VALIDATION_ERROR', '诊断日期无效。');
+  const parsed = diagnosisSaveSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '诊断结果无效。', parsed.error.flatten());
+  if (parsed.data.problemType === '巡检') throw new ApiError(400, 'VALIDATION_ERROR', '每日巡检必须使用巡检保存接口。');
+  const idempotency = await beginIdempotentWrite(request);
+  const client = userClientFor(request);
+  const userId = authenticatedRequest(request).authUser.id;
+
+  if (idempotency.replay?.resourceId) {
+    const { data } = await client.from('diagnosis_records').select('*').eq('id', idempotency.replay.resourceId).maybeSingle();
+    if (data) return sendData(request, response, camelize(data));
+  }
+
+  const { version: _version, ...body } = parsed.data;
+  const id = deterministicUuid(`${userId}:diagnosis:${body.diagnosisKey}`);
+  const normalized = {
+    ...snakeize(body),
+    id,
+    owner_id: userId,
+    aquarium_id: aquariumId,
+    local_date: localDate.data,
+    problem_type: parsed.data.problemType,
+  };
+  const { data, error } = await client.from('diagnosis_records').insert(normalized).select('*').single();
+  if (error || !data) throwDatabaseError(error, '诊断记录没有保存成功。');
+  await finishIdempotentWrite(request, idempotency, 'diagnosis_record', id, 201);
+  return sendData(request, response, camelize(data), 201);
+}));
+
 const registerFavoriteRoutes = (type: 'species' | 'care') => {
   const table = type === 'species' ? 'species_favorites' : 'care_favorites';
   const idColumn = type === 'species' ? 'species_id' : 'article_id';
@@ -119,9 +166,62 @@ const registerFavoriteRoutes = (type: 'species' | 'care') => {
 
   userRecordsRouter.get(route, asyncRoute(async (request, response) => {
     const client = userClientFor(request);
-    const { data, error } = await client.from(table).select('*').is('deleted_at', null).order('created_at', { ascending: false });
+    if (type === 'species') {
+      const { data: favoriteRows, error } = await client
+        .from('species_favorites')
+        .select('species_id,created_at,version')
+        .is('deleted_at', null)
+        .order('created_at', { ascending: true });
+      if (error) throwDatabaseError(error, '收藏暂时无法加载。');
+      const speciesIds = (favoriteRows || []).map(row => row.species_id);
+      if (speciesIds.length === 0) return sendData(request, response, { items: [] });
+      const { data: speciesRows, error: speciesError } = await client
+        .from('species')
+        .select('id,catalog_key')
+        .in('id', speciesIds)
+        .is('deleted_at', null);
+      if (speciesError) throwDatabaseError(speciesError, '收藏内容暂时无法加载。');
+      const speciesById = new Map((speciesRows || []).map(item => [item.id, item]));
+      return sendData(request, response, {
+        items: (favoriteRows || []).flatMap(row => {
+          const content = speciesById.get(row.species_id);
+          if (!content?.catalog_key) return [];
+          return [{
+            catalogKey: content.catalog_key,
+            favoritedAt: row.created_at,
+            version: row.version,
+          }];
+        }),
+      });
+    }
+
+    const { data: favoriteRows, error } = await client
+      .from('care_favorites')
+      .select('article_id,created_at,version')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: true });
     if (error) throwDatabaseError(error, '收藏暂时无法加载。');
-    return sendData(request, response, camelize(data || []));
+    const articleIds = (favoriteRows || []).map(row => row.article_id);
+    if (articleIds.length === 0) return sendData(request, response, { items: [] });
+    const { data: articleRows, error: articleError } = await client
+      .from('care_articles')
+      .select('id,catalog_key,title')
+      .in('id', articleIds)
+      .is('deleted_at', null);
+    if (articleError) throwDatabaseError(articleError, '收藏内容暂时无法加载。');
+    const articleById = new Map((articleRows || []).map(item => [item.id, item]));
+    return sendData(request, response, {
+      items: (favoriteRows || []).flatMap(row => {
+        const content = articleById.get(row.article_id);
+        if (!content?.catalog_key || !content.title) return [];
+        return [{
+          catalogKey: content.catalog_key,
+          title: content.title,
+          favoritedAt: row.created_at,
+          version: row.version,
+        }];
+      }),
+    });
   }));
 
   userRecordsRouter.put(`${route}/:contentId`, asyncRoute(async (request, response) => {
@@ -339,6 +439,57 @@ userRecordsRouter.delete('/care-reminders/:id', asyncRoute(async (request, respo
   if (error) throwDatabaseError(error, '养护计划没有删除成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'care_reminders', id);
   return sendData(request, response, { deleted: true });
+}));
+
+userRecordsRouter.get('/care-checklist-progress', asyncRoute(async (request, response) => {
+  const client = userClientFor(request);
+  let builder = client
+    .from('care_checklist_progress')
+    .select('*')
+    .is('deleted_at', null)
+    .order('saved_at', { ascending: false })
+    .limit(100);
+  if (request.query.aquariumId) {
+    const aquariumId = parseId(String(request.query.aquariumId), '鱼缸标识');
+    builder = builder.or(`aquarium_id.eq.${aquariumId},aquarium_id.is.null`);
+  }
+  const { data, error } = await builder;
+  if (error) throwDatabaseError(error, '护理清单进度暂时无法加载。');
+  return sendData(request, response, { items: camelize(data || []) });
+}));
+
+userRecordsRouter.put('/care-checklist-progress', asyncRoute(async (request, response) => {
+  const parsed = careChecklistProgressSaveSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '护理清单进度无效。', parsed.error.flatten());
+  const idempotency = await beginIdempotentWrite(request);
+  const client = userClientFor(request);
+  const userId = authenticatedRequest(request).authUser.id;
+
+  if (idempotency.replay?.resourceId) {
+    const { data } = await client
+      .from('care_checklist_progress')
+      .select('*')
+      .eq('id', idempotency.replay.resourceId)
+      .maybeSingle();
+    if (data) return sendData(request, response, camelize(data));
+  }
+
+  const scopeKey = parsed.data.aquariumId || 'global';
+  const id = deterministicUuid(`${userId}:care-checklist-progress:${scopeKey}:${parsed.data.topicId}`);
+  const { data, error } = await client.from('care_checklist_progress').upsert({
+    id,
+    owner_id: userId,
+    aquarium_id: parsed.data.aquariumId,
+    topic_id: parsed.data.topicId,
+    title: parsed.data.title,
+    action_keys: parsed.data.actionKeys,
+    legacy_actions: parsed.data.legacyActions,
+    saved_at: new Date().toISOString(),
+    deleted_at: null,
+  }, { onConflict: 'id' }).select('*').single();
+  if (error || !data) throwDatabaseError(error, '护理清单进度没有保存成功。');
+  await finishIdempotentWrite(request, idempotency, 'care_checklist_progress', id, 200);
+  return sendData(request, response, camelize(data));
 }));
 
 userRecordsRouter.get('/care-events', asyncRoute(async (request, response) => {

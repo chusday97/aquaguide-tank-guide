@@ -197,9 +197,17 @@ export const careReminderUpdateSchema = z.object({
   version: versionSchema,
 }).refine(value => value.scheduledFor !== undefined || value.label !== undefined || value.completedAt !== undefined || value.repeatEnabled !== undefined || value.repeatIntervalDays !== undefined, '至少修改一个字段');
 
+export const careChecklistProgressSaveSchema = z.object({
+  aquariumId: uuidSchema.optional(),
+  topicId: z.string().trim().min(1).max(160),
+  title: z.string().trim().min(1).max(200),
+  actionKeys: z.array(z.string().trim().min(1).max(240)).max(50).default([]),
+  legacyActions: z.array(z.string().trim().min(1).max(1000)).max(50).default([]),
+}).refine(value => value.actionKeys.length > 0 || value.legacyActions.length > 0, '至少保存一项护理进度');
+
 export const careEventCreateSchema = z.object({
   aquariumId: uuidSchema.optional(),
-  eventType: z.enum(['aquarium_created', 'settings_updated', 'species_added', 'species_removed', 'life_stage_updated', 'water_change', 'feeding', 'observation', 'daily_check', 'checklist_completed', 'care_plan_completed']),
+  eventType: z.enum(['aquarium_created', 'settings_updated', 'species_added', 'species_removed', 'life_stage_updated', 'water_change', 'feeding', 'observation', 'daily_check', 'checklist_completed', 'care_plan_completed', 'care_operation_completed']),
   title: z.string().trim().min(1).max(160),
   label: z.string().trim().max(160).optional(),
   payload: z.record(z.string(), z.unknown()).default({}),
@@ -253,6 +261,7 @@ export type AquariumSpeciesBatchRemovalInput = z.infer<typeof aquariumSpeciesBat
 export type DiagnosisSaveInput = z.infer<typeof diagnosisSaveSchema>;
 export type MemorialCreateInput = z.infer<typeof memorialCreateSchema>;
 export type CareReminderCreateInput = z.infer<typeof careReminderCreateSchema>;
+export type CareChecklistProgressSaveInput = z.infer<typeof careChecklistProgressSaveSchema>;
 export type CareEventCreateInput = z.infer<typeof careEventCreateSchema>;
 export type FeedbackCreateInput = z.infer<typeof feedbackCreateSchema>;
 export type FeedbackStatusUpdateInput = z.infer<typeof feedbackStatusUpdateSchema>;

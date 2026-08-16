@@ -99,6 +99,6 @@ assert.match(aquariumSource, /disabled=\{isFuture[^}]*\}/, 'future calendar date
 assert.match(aquariumSource, /isFutureWaterChangeDate\(selectedWaterChangeDate\)/, 'footer save must reject future dates at the business boundary');
 assert.match(aquariumSource, /isDiagnosisRecordSaving/, 'daily-check save needs an explicit in-progress state');
 assert.match(aquariumSource, /diagnosisSaveError/, 'daily-check save needs an explicit failure state');
-assert.match(aquariumSource, /const saved = handleSaveDiagnosisRecord\(\);\s*if \(!saved\) return;/s, 'post-save primary action must stop when the daily check was not persisted');
+assert.match(aquariumSource, /const saved = await handleSaveDiagnosisRecord\(\);\s*if \(!saved\) return;/s, 'post-save primary action must await persistence and stop when the daily check was not persisted');
 
 console.log(`核心流程状态验收 v2 通过：${dataset.cases.length} 个 Case，覆盖换水记录与每日检查的至少 6 种状态。`);

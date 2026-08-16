@@ -29,9 +29,9 @@ import { fishData } from '../data/fishData';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import { getCareVisualSources } from '../lib/careVisual';
 import type { AchievementId, CollectionModule } from '../modules/collection/collection.types';
-import { getCollectionSnapshot, subscribeToCollection } from '../services/collection/collection.service';
+import { getCollectionSnapshot, hydrateCollectionData, hydrateCollectionMemorials, subscribeToCollection } from '../services/collection/collection.service';
 import { setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
-import { getCareFavorites, getSpeciesFavoriteIds, setSpeciesFavoriteIds, toggleCareFavorite } from '../services/favorites/favorites.service';
+import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { taskRoutes } from '../services/navigation/task-routes';
 import type { Aquarium, Fish } from '../types';
@@ -96,6 +96,16 @@ export default function Collection({ module }: { module: CollectionModule }) {
   useEffect(() => subscribeToCollection(() => {
     setSnapshot(getCollectionSnapshot());
   }), []);
+
+  useEffect(() => {
+    let active = true;
+    void hydrateCollectionMemorials()
+      .then(next => { if (active) setSnapshot(next); })
+      .catch(() => {
+        if (active && activeTab !== 'achievements') showToast(isEn ? 'Could not refresh collection data.' : '水族册暂时无法同步，正在显示本机缓存。', 'error');
+      });
+    return () => { active = false; };
+  }, [activeTab, isEn, showToast]);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
@@ -211,34 +221,40 @@ export default function Collection({ module }: { module: CollectionModule }) {
     if (context) void restoreContext(context);
   };
 
-  const removeFishFavorite = () => {
+  const removeFishFavorite = async () => {
     if (!pendingFishRemoval) return;
-    setSpeciesFavoriteIds(snapshot.wishlistIds.filter(id => id !== pendingFishRemoval.id));
-    if (getSpeciesFavoriteIds().includes(pendingFishRemoval.id)) {
+    const target = pendingFishRemoval;
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: target.id, favorite: false });
+      setSnapshot(await hydrateCollectionData());
+      setPendingFishRemoval(null);
+      if (deepLink?.module === 'wishlist' && deepLink.itemId === target.id) {
+        setSelectedFish(null);
+        clearDeepLinkItem();
+      }
+      showToast(isEn ? 'Removed from species wishlist' : '已从种草图鉴移除');
+    } catch {
       showToast(isEn ? 'Could not remove this item. Try again.' : '移除失败，请稍后重试。', 'error');
-      return;
     }
-    setPendingFishRemoval(null);
-    if (deepLink?.module === 'wishlist' && deepLink.itemId === pendingFishRemoval.id) {
-      setSelectedFish(null);
-      clearDeepLinkItem();
-    }
-    showToast(isEn ? 'Removed from species wishlist' : '已从种草图鉴移除');
   };
 
-  const removeCareFavorite = () => {
+  const removeCareFavorite = async () => {
     if (!pendingCareRemoval) return;
-    toggleCareFavorite({ id: pendingCareRemoval.id, title: pendingCareRemoval.title, favoritedAt: new Date().toISOString() });
-    if (getCareFavorites()[pendingCareRemoval.id]) {
+    const target = pendingCareRemoval;
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'care', catalogKey: target.id, title: target.title, favorite: false });
+      setSnapshot(await hydrateCollectionData());
+      setPendingCareRemoval(null);
+      if (deepLink?.module === 'care' && deepLink.itemId === target.id) {
+        setSelectedTopic(null);
+        clearDeepLinkItem();
+      }
+      showToast(isEn ? 'Removed from care collection' : '已从养护收藏移除');
+    } catch {
       showToast(isEn ? 'Could not remove this item. Try again.' : '移除失败，请稍后重试。', 'error');
-      return;
     }
-    setPendingCareRemoval(null);
-    if (deepLink?.module === 'care' && deepLink.itemId === pendingCareRemoval.id) {
-      setSelectedTopic(null);
-      clearDeepLinkItem();
-    }
-    showToast(isEn ? 'Removed from care collection' : '已从养护收藏移除');
   };
 
   const openCarePreview = (topic: CareTopic) => {

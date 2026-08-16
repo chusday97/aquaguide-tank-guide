@@ -1,11 +1,16 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import type { Aquarium, DeceasedRecord, LifeStage, MemorialCauseCode, ReproductiveState } from '../../types';
 import type { CareEventType } from '../../types/database';
-import type { CareReminderRecord } from '../care/care-activity.service';
+import type { CareReminderRecord, CareSavedChecklist } from '../care/care-activity.service';
 
 export type FavoriteMutation =
   | { type: 'species'; catalogKey: string; favorite: boolean }
   | { type: 'care'; catalogKey: string; title: string; favorite: boolean };
+
+export type FavoriteSnapshot = {
+  speciesCatalogKeys: string[];
+  careFavorites: Array<{ catalogKey: string; title: string; favoritedAt: string }>;
+};
 
 export type MemorialSaveInput = {
   aquariumId?: string;
@@ -59,6 +64,13 @@ export type LivestockAddCommand = {
   operationId: string;
 };
 
+export type WaterChangeMutation = {
+  aquariumId: string;
+  date: string;
+  recorded: boolean;
+  operationId: string;
+};
+
 export type CareReminderMutation =
   | { action: 'upsert'; record: Omit<CareReminderRecord, 'id' | 'createdAt'> }
   | { action: 'complete'; id: string; completedAt: string }
@@ -81,20 +93,35 @@ export type CareTimelineRecord = {
 
 export type CareTimelineMutation = Omit<CareTimelineRecord, 'id'> & { operationId: string };
 
+export type CareChecklistProgressMutation = {
+  topicId: string;
+  title: string;
+  actionKeys: string[];
+  legacyActions?: string[];
+  aquariumId?: string;
+};
+
 export interface AquaGuideRepository {
   getAquariums(): Promise<Aquarium[]>;
   createAquarium(input: AquariumCreateCommand): Promise<Aquarium>;
+  deleteAquarium(aquariumId: string): Promise<void>;
   addLivestock(input: LivestockAddCommand): Promise<Aquarium>;
+  setWaterChange(input: WaterChangeMutation): Promise<Aquarium>;
   /** @deprecated Aggregate synchronization retained for legacy profile and batch editors. */
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
   removeLivestock(input: LivestockRemovalInput): Promise<Aquarium>;
+  getFavorites(): Promise<FavoriteSnapshot>;
   updateFavorite(input: FavoriteMutation): Promise<void>;
+  getDiagnosisRecords(aquariumId: string): Promise<DiagnosisRecord[]>;
   saveDiagnosis(record: DiagnosisRecord): Promise<DiagnosisRecord>;
+  getMemorialRecords(): Promise<DeceasedRecord[]>;
   saveMemorial(input: MemorialSaveInput): Promise<DeceasedRecord>;
   saveLivestockMemorial(input: LivestockMemorialSaveInput): Promise<{ record: DeceasedRecord; aquarium: Aquarium }>;
   updateMemorial(input: MemorialUpdateInput): Promise<DeceasedRecord>;
   getCareReminders(): Promise<CareReminderRecord[]>;
   updateCareReminder(input: CareReminderMutation): Promise<CareReminderRecord | null>;
+  getCareChecklistProgress(aquariumId?: string): Promise<CareSavedChecklist[]>;
+  saveCareChecklistProgress(input: CareChecklistProgressMutation): Promise<CareSavedChecklist>;
   getCareEvents(aquariumId?: string): Promise<CareTimelineRecord[]>;
   saveCareEvent(input: CareTimelineMutation): Promise<CareTimelineRecord>;
   removeCareEventBySource(input: { aquariumId: string; sourceType: string; sourceId: string; operationId: string }): Promise<void>;

@@ -20,24 +20,29 @@ import type { Aquarium, AquariumFish, Fish as FishType } from '../types';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { getLifeType } from '../modules/species/species.service';
 import i18n from '../i18n';
-import { loadAppStateFromStorage } from '../services/storage/local-app-state';
+import { loadAppStateFromStorage, patchLocalAppState, subscribeToAppState } from '../services/storage/local-app-state';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { getCareVisualSources } from '../lib/careVisual';
 import { AdaptiveDetailContent } from '../components/common/AdaptiveDetailContent';
 import {
   getCareFavorites,
+  setCareFavorites,
   subscribeToFavorites,
-  toggleCareFavorite,
   type CareFavoriteMap,
 } from '../services/favorites/favorites.service';
 import {
   getCompletedCareOperations,
+  getCompletedCareOperationsFromEvents,
+  getCareChecklistActionKey,
+  getSavedCareChecklistForContext,
+  getSavedCareChecklistRestoredActions,
   getSavedCareChecklists,
   setCompletedCareOperations,
   setSavedCareChecklists,
+  subscribeToCareActivity,
 } from '../services/care/care-activity.service';
-import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
+import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode } from '../services/repository/repository-provider';
 import { useToast } from '../components/common/ToastProvider';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
@@ -1157,8 +1162,28 @@ const getTankVolumeLiters = (aquarium?: Aquarium | null) => {
   const length = Number(aquarium.dimensions.length);
   const width = Number(aquarium.dimensions.width);
   const height = Number(aquarium.dimensions.height);
-  if (![length, width, height].every(Number.isFinite)) return 0;
+  if (![length, width, height].every(value => Number.isFinite(value) && value > 0)) return 0;
   return Math.round((length * width * height * 0.85) / 1000);
+};
+
+const formatTankVolumeFact = (aquarium: Aquarium | null | undefined, isEn: boolean) => {
+  const liters = getTankVolumeLiters(aquarium);
+  return liters > 0
+    ? (isEn ? `~${liters}L` : `约 ${liters}L`)
+    : (isEn ? 'Volume unknown' : '容量未记录');
+};
+
+const formatWaterTypeFact = (aquarium: Aquarium | null | undefined, isEn: boolean) => {
+  if (aquarium?.waterType === 'Saltwater') return isEn ? 'Saltwater' : '海水';
+  if (aquarium?.waterType === 'Freshwater') return isEn ? 'Freshwater' : '淡水';
+  return isEn ? 'Water type unknown' : '水体类型未记录';
+};
+
+const formatTargetTemperatureFact = (aquarium: Aquarium | null | undefined, isEn: boolean) => {
+  const value = aquarium?.targetTemperature?.trim();
+  return value
+    ? `${value}°C`
+    : (isEn ? 'Target temp unknown' : '目标水温未记录');
 };
 
 const getCurrentLivestock = (aquarium?: Aquarium | null) => (
@@ -1319,9 +1344,9 @@ const buildStepDiagnosisResult = ({
     ...(aquarium 
       ? [
           isEn ? `Active Tank: ${aquarium.name}` : `当前鱼缸：${aquarium.name}`, 
-          isEn 
-            ? `Water volume: ~${volumeLiters}L · ${aquarium.waterType === 'Saltwater' ? 'Saltwater' : 'Freshwater'} · ${aquarium.targetTemperature || 25}°C`
-            : `当前水体：约 ${volumeLiters}L · ${aquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · ${aquarium.targetTemperature || 25}°C`
+          isEn
+            ? `Water facts: ${formatTankVolumeFact(aquarium, true)} · ${formatWaterTypeFact(aquarium, true)} · ${formatTargetTemperatureFact(aquarium, true)}`
+            : `当前水体：${formatTankVolumeFact(aquarium, false)} · ${formatWaterTypeFact(aquarium, false)} · ${formatTargetTemperatureFact(aquarium, false)}`
         ] 
       : [isEn ? 'No aquarium selected' : '未选择鱼缸']),
     isEn ? `Current Livestock: ${livestockText}` : `当前活体：${livestockText}`,
@@ -1612,17 +1637,20 @@ export default function CareEncyclopedia() {
   const contentListRef = useRef<HTMLElement | null>(null);
   const detailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
 
-  const appStateSnapshot = useMemo(() => loadAppStateFromStorage(), []);
+  const [appStateSnapshot, setAppStateSnapshot] = useState(loadAppStateFromStorage);
+
+  useEffect(() => subscribeToAppState(() => {
+    setAppStateSnapshot(loadAppStateFromStorage());
+  }), []);
   const activeAquarium = useMemo(() => (
     appStateSnapshot.aquariums.find(item => item.id === appStateSnapshot.currentAquariumId)
     || appStateSnapshot.aquariums[0]
     || null
   ), [appStateSnapshot]);
-  const aquariumVolumeLiters = getTankVolumeLiters(activeAquarium);
   const aquariumSummary = activeAquarium
     ? (isEn
-        ? `${aquariumVolumeLiters || 'Unset'}L · ${activeAquarium.targetTemperature || 25}°C · ${activeAquarium.waterType === 'Saltwater' ? 'Saltwater' : 'Freshwater'} · ${(activeAquarium.fishes || []).length} species stocked`
-        : `${aquariumVolumeLiters || '未设'}L · ${activeAquarium.targetTemperature || 25}°C · ${activeAquarium.waterType === 'Saltwater' ? '海水' : '淡水'} · 已有 ${(activeAquarium.fishes || []).length} 种生物`)
+        ? `${formatTankVolumeFact(activeAquarium, true)} · ${formatTargetTemperatureFact(activeAquarium, true)} · ${formatWaterTypeFact(activeAquarium, true)} · ${(activeAquarium.fishes || []).length} species stocked`
+        : `${formatTankVolumeFact(activeAquarium, false)} · ${formatTargetTemperatureFact(activeAquarium, false)} · ${formatWaterTypeFact(activeAquarium, false)} · 已有 ${(activeAquarium.fishes || []).length} 种生物`)
     : (isEn ? 'No tank data loaded. Showing general care recommendations.' : '还没有当前鱼缸数据，先显示通用养护推荐');
   const careRecommendations = useMemo(() => getCareRecommendations(activeAquarium, careTopicsData), [activeAquarium]);
   const careSuggestionResult = useMemo(() => getSearchSuggestions({
@@ -1669,6 +1697,78 @@ export default function CareEncyclopedia() {
   useEffect(() => subscribeToFavorites(() => {
     setFavorites(getCareFavorites());
   }), []);
+
+  useEffect(() => {
+    let active = true;
+    void resolveRepositoryMode()
+      .then(async mode => {
+        const repository = getAquaGuideRepository(mode);
+        const localChecklistProgress = getSavedCareChecklists();
+        let [favoriteSnapshot, aquariums, careEvents, checklistProgress] = await Promise.all([
+          repository.getFavorites(),
+          repository.getAquariums(),
+          repository.getCareEvents(),
+          repository.getCareChecklistProgress(),
+        ]);
+        if (mode === 'cloud' && localChecklistProgress.length > 0) {
+          const canonicalKeys = new Set(checklistProgress.map(item => `${item.aquariumId || 'global'}:${item.id}`));
+          const migratable = localChecklistProgress.filter(item => {
+            const scopeValid = !item.aquariumId || aquariums.some(aquarium => aquarium.id === item.aquariumId);
+            return scopeValid
+              && ((item.actionKeys?.length || 0) > 0 || (item.actions?.length || 0) > 0)
+              && !canonicalKeys.has(`${item.aquariumId || 'global'}:${item.id}`);
+          });
+          if (migratable.length > 0) {
+            await Promise.all(migratable.map(item => {
+              const legacyTopic = careTopicsData.find(topic => topic.id === item.id);
+              const legacyVisibleActions = legacyTopic ? buildCareGuide(legacyTopic).todayActions : [];
+              const legacyActionKeys = item.actionKeys?.length
+                ? item.actionKeys
+                : legacyVisibleActions.flatMap((action, index) =>
+                    (item.actions || []).some(saved => saved === action.description || saved.endsWith(`：${action.description}`))
+                      ? [getCareChecklistActionKey(item.id, index)]
+                      : []
+                  );
+              return repository.saveCareChecklistProgress({
+                topicId: item.id,
+                title: item.title,
+                actionKeys: legacyActionKeys,
+                legacyActions: (item.actions || [])
+                  .filter(action => typeof action === 'string' && action.trim().length > 0 && action.length <= 1000)
+                  .slice(0, 50),
+                aquariumId: item.aquariumId,
+              });
+            }));
+            checklistProgress = await repository.getCareChecklistProgress();
+          }
+        }
+        return { favoriteSnapshot, aquariums, careEvents, checklistProgress, mode };
+      })
+      .then(({ favoriteSnapshot, aquariums, careEvents, checklistProgress, mode }) => {
+        if (!active) return;
+        const cachedState = loadAppStateFromStorage();
+        const currentAquariumId = cachedState.currentAquariumId
+          && aquariums.some(item => item.id === cachedState.currentAquariumId)
+          ? cachedState.currentAquariumId
+          : (aquariums[0]?.id || '');
+        if (mode === 'cloud') {
+          setCompletedCareOperations(getCompletedCareOperationsFromEvents(careEvents));
+        }
+        setSavedCareChecklists(checklistProgress);
+        patchLocalAppState({ aquariums, currentAquariumId, careEvents });
+        const next = Object.fromEntries(favoriteSnapshot.careFavorites.map(item => [item.catalogKey, {
+          id: item.catalogKey,
+          title: item.title,
+          favoritedAt: item.favoritedAt,
+        }]));
+        setCareFavorites(next);
+        setFavorites(next);
+      })
+      .catch(() => {
+        if (active) showToast(isEn ? 'Tank data could not sync. Showing this device cache.' : '鱼缸数据暂时无法同步，当前显示本机缓存。', 'error');
+      });
+    return () => { active = false; };
+  }, []);
 
   const goToBanner = (index: number) => {
     setActiveBannerIndex((index + careRecommendations.length) % Math.max(1, careRecommendations.length));
@@ -1741,20 +1841,28 @@ export default function CareEncyclopedia() {
     }, 720);
   };
 
-  const toggleFavorite = (topic: CareTopic, source?: HTMLElement) => {
+  const toggleFavorite = async (topic: CareTopic, source?: HTMLElement) => {
     const isAdding = !favorites[topic.id];
-    if (isAdding) launchFavoriteFly(source);
-    const next = toggleCareFavorite({
-      id: topic.id,
-      title: getDisplayTitle(topic),
-      favoritedAt: new Date().toISOString(),
-    });
-    setFavorites(next);
-    showToast(isAdding ? '已收录到水族册' : '已从水族册移除');
-    if (isAdding) {
-      try {
-        posthog.capture('care_article_favorited', { topic_id: topic.id });
-      } catch (e) {}
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'care', catalogKey: topic.id, title: getDisplayTitle(topic), favorite: isAdding });
+      const snapshot = await repository.getFavorites();
+      const next = Object.fromEntries(snapshot.careFavorites.map(item => [item.catalogKey, {
+        id: item.catalogKey,
+        title: item.title,
+        favoritedAt: item.favoritedAt,
+      }]));
+      setCareFavorites(next);
+      setFavorites(next);
+      if (isAdding) launchFavoriteFly(source);
+      showToast(isAdding ? '已收录到水族册' : '已从水族册移除');
+      if (isAdding) {
+        try {
+          posthog.capture('care_article_favorited', { topic_id: topic.id });
+        } catch (e) {}
+      }
+    } catch {
+      showToast(isEn ? 'Could not update collection. Try again.' : '收藏没有更新成功，请稍后重试。', 'error');
     }
   };
 
@@ -2402,7 +2510,10 @@ function StepDiagnosisPanel({
 }) {
   const { t } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
-  const appState = useMemo(() => loadAppStateFromStorage(), []);
+  const [appState, setAppState] = useState(loadAppStateFromStorage);
+  useEffect(() => subscribeToAppState(() => {
+    setAppState(loadAppStateFromStorage());
+  }), []);
   const aquariums = appState.aquariums;
   const defaultAquariumId = appState.currentAquariumId || aquariums[0]?.id || '';
   const [diagnosisState, setDiagnosisState] = useState<StepDiagnosisState>(() => ({
@@ -2929,6 +3040,7 @@ export function CareArticleDetail({
   const [isDetailExpanded, setIsDetailExpanded] = useState(false);
   const [isDiagnosisStarted, setIsDiagnosisStarted] = useState(false);
   const [isChecklistSaved, setIsChecklistSaved] = useState(false);
+  const [isChecklistSaving, setIsChecklistSaving] = useState(false);
   const [isOperationCompleted, setIsOperationCompleted] = useState(false);
   const [reminderSheet, setReminderSheet] = useState<null | {
     title: string;
@@ -2949,16 +3061,44 @@ export function CareArticleDetail({
     setIsDiagnosisStarted(false);
     setIsDetailExpanded(false);
     setCtaFeedback('');
-    setIsOperationCompleted(getCompletedCareOperations().some(item => item.id === topic.id));
-    const savedChecklist = getSavedCareChecklists().find(item => item.id === topic.id);
-    const restoredActions = savedChecklist
-      ? visibleActions
-          .map(action => action.description)
-          .filter(description => savedChecklist.actions.some(saved => saved === description || saved.endsWith(`：${description}`)))
-      : [];
-    setIsChecklistSaved(restoredActions.length > 0);
-    onRestoreActions?.(restoredActions);
-  }, [onRestoreActions, topic.id]);
+    const syncChecklistProgress = () => {
+      const savedChecklist = getSavedCareChecklistForContext(
+        getSavedCareChecklists(),
+        topic.id,
+        activeAquarium?.id,
+      );
+      const restoredActions = getSavedCareChecklistRestoredActions(
+        savedChecklist,
+        topic.id,
+        visibleActions.map(action => action.description),
+      );
+      const isScopedSave = !activeAquarium?.id || savedChecklist?.aquariumId === activeAquarium.id;
+      setIsChecklistSaved(restoredActions.length > 0 && isScopedSave);
+      onRestoreActions?.(restoredActions);
+    };
+    syncChecklistProgress();
+    return subscribeToCareActivity(syncChecklistProgress);
+  }, [activeAquarium?.id, onRestoreActions, topic.id]);
+
+  useEffect(() => {
+    const syncOperationCompletion = () => {
+      if (!activeAquarium?.id) {
+        setIsOperationCompleted(false);
+        return;
+      }
+      const state = loadAppStateFromStorage();
+      const canonical = getCompletedCareOperationsFromEvents(state.careEvents || [], activeAquarium.id);
+      const legacy = getCompletedCareOperations();
+      setIsOperationCompleted(
+        canonical.some(item => item.id === topic.id)
+        || (!state.cloudMigrationConfirmed && legacy.some(item => item.id === topic.id
+          && (!item.aquariumId || item.aquariumId === activeAquarium.id))),
+      );
+    };
+    syncOperationCompletion();
+    return subscribeToAppState(syncOperationCompletion);
+  }, [activeAquarium?.id, topic.id]);
+
   const primaryCtaLabel = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
       ? isOperationCompleted ? (isEn ? 'Completed Acclimation' : '已完成过水') : (isEn ? 'Mark Acclimation Done' : '标记已完成过水')
@@ -2981,7 +3121,7 @@ export function CareArticleDetail({
             : (isEn ? 'Save Guide' : '收藏这篇指南')
           : (isEn ? 'Set Reminder' : '设置提醒');
   const isPrimaryDisabled = (meta.guideType === 'procedure' && isOperationCompleted && !isWaterChangeGuide)
-    || (meta.guideType === 'careChecklist' && (isChecklistSaved || completedVisibleActions === 0))
+    || (meta.guideType === 'careChecklist' && (isChecklistSaving || isChecklistSaved || completedVisibleActions === 0))
     || (meta.guideType === 'knowledge' && favorite && !onOpenCollection);
   const secondaryLabel: string | null = meta.guideType === 'procedure'
     ? isNewFishAcclimationTopic(topic)
@@ -3087,41 +3227,74 @@ export function CareArticleDetail({
     if (saved) setReminderSheet(null);
   };
 
-  const markOperationCompleted = (label: string) => {
-    const completed = getCompletedCareOperations();
-    const next = [
-      { id: topic.id, title: getDisplayTitle(topic), label, aquariumId: activeAquarium?.id, completedAt: new Date().toISOString() },
-      ...completed.filter(item => item.id !== topic.id),
-    ].slice(0, 50);
+  const markOperationCompleted = async (label: string) => {
+    if (!activeAquarium?.id) {
+      setCtaFeedback(isEn ? 'Select or create a tank before recording this operation.' : '请先创建或选择鱼缸，再记录这次操作。');
+      window.setTimeout(() => setCtaFeedback(''), 2500);
+      return;
+    }
+    const occurredAt = new Date().toISOString();
     try {
-      setCompletedCareOperations(next);
+      const mode = await resolveRepositoryMode();
+      const repository = getAquaGuideRepository(mode);
+      await repository.saveCareEvent({
+        aquariumId: activeAquarium.id,
+        eventType: 'care_operation_completed',
+        title: isEn ? `Completed care operation: ${getDisplayTitle(topic)}` : `完成养护操作：${getDisplayTitle(topic)}`,
+        label,
+        payload: {
+          topicId: topic.id,
+          operationKind: isNewFishAcclimationTopic(topic) ? 'acclimation' : isFilterGuide ? 'cleaning' : 'procedure',
+        },
+        occurredAt,
+        sourceType: 'care_operation',
+        sourceId: topic.id,
+        isInferred: false,
+        operationId: `care-operation:v1:${activeAquarium.id}:${topic.id}`,
+      });
+      const events = await repository.getCareEvents();
+      if (mode === 'cloud') {
+        setCompletedCareOperations(getCompletedCareOperationsFromEvents(events));
+      } else {
+        const completed = getCompletedCareOperations();
+        setCompletedCareOperations([
+          { id: topic.id, title: getDisplayTitle(topic), label, aquariumId: activeAquarium.id, completedAt: occurredAt },
+          ...completed.filter(item => item.id !== topic.id || (Boolean(item.aquariumId) && item.aquariumId !== activeAquarium.id)),
+        ].slice(0, 50));
+      }
+      patchLocalAppState({ careEvents: events });
       setIsOperationCompleted(true);
       setCtaFeedback(
-        label.includes('换水') || label.toLowerCase().includes('water')
-          ? (isEn ? 'Water change logged' : '已记录本次换水') 
-          : (isEn ? 'Marked completed' : '已标记完成')
+        isNewFishAcclimationTopic(topic)
+          ? (isEn ? 'Acclimation recorded' : '已记录本次过水操作')
+          : isFilterGuide
+            ? (isEn ? 'Cleaning recorded' : '已记录本次清洗操作')
+            : (isEn ? 'Operation recorded' : '已记录本次养护操作'),
       );
     } catch (error) {
       setCtaFeedback(isEn ? 'Could not save the operation. Try again.' : '操作记录保存失败，请重试。');
     }
-    window.setTimeout(() => setCtaFeedback(''), 1800);
+    window.setTimeout(() => setCtaFeedback(''), 2500);
   };
 
-  const saveChecklist = () => {
-    const saved = getSavedCareChecklists();
-    const next = [
-      {
-        id: topic.id,
-        title: getDisplayTitle(topic),
-        savedAt: new Date().toISOString(),
-        actions: visibleActions
-          .filter(action => checkedActions.includes(action.description))
-          .map(action => action.description),
-      },
-      ...saved.filter(item => item.id !== topic.id),
-    ].slice(0, 30);
+  const saveChecklist = async () => {
+    if (isChecklistSaving || completedVisibleActions === 0) return;
+    const actionKeys = visibleActions.flatMap((action, index) =>
+      checkedActions.includes(action.description)
+        ? [getCareChecklistActionKey(topic.id, index)]
+        : []
+    );
+    setIsChecklistSaving(true);
     try {
-      setSavedCareChecklists(next);
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.saveCareChecklistProgress({
+        topicId: topic.id,
+        title: getDisplayTitle(topic),
+        actionKeys,
+        aquariumId: activeAquarium?.id,
+      });
+      const checklistProgress = await repository.getCareChecklistProgress();
+      setSavedCareChecklists(checklistProgress);
       setIsChecklistSaved(true);
       setCtaFeedback(
         isEn
@@ -3130,8 +3303,10 @@ export function CareArticleDetail({
       );
     } catch (error) {
       setCtaFeedback(isEn ? 'Could not save the checklist. Try again.' : '护理清单保存失败，请重试。');
+    } finally {
+      setIsChecklistSaving(false);
+      window.setTimeout(() => setCtaFeedback(''), 1800);
     }
-    window.setTimeout(() => setCtaFeedback(''), 1800);
   };
 
   const handleSecondaryCta = () => {
@@ -3167,10 +3342,10 @@ export function CareArticleDetail({
         return;
       }
       if (isNewFishAcclimationTopic(topic)) {
-        markOperationCompleted(isEn ? 'Acclimation completed' : '已完成过水');
+        void markOperationCompleted(isEn ? 'Acclimation completed' : '已完成过水');
         return;
       }
-      markOperationCompleted(
+      void markOperationCompleted(
         isWaterChangeGuide 
           ? (isEn ? 'Water change completed' : '已完成换水') 
           : isFilterGuide 
@@ -3180,7 +3355,7 @@ export function CareArticleDetail({
       return;
     }
     if (meta.guideType === 'careChecklist') {
-      saveChecklist();
+      void saveChecklist();
       return;
     }
     if (meta.guideType === 'diagnosis') {

@@ -42,6 +42,14 @@ const parseId = (value: string, label: string) => {
   return parsed.data;
 };
 
+const parseLocalDate = (value: string) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new ApiError(400, 'VALIDATION_ERROR', '换水日期无效。');
+  const [year, month, day] = value.split('-').map(Number);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  if (parsed.getUTCFullYear() !== year || parsed.getUTCMonth() !== month - 1 || parsed.getUTCDate() !== day) throw new ApiError(400, 'VALIDATION_ERROR', '换水日期无效。');
+  return value;
+};
+
 const mapAquarium = (row: DbRow) => ({
   ...camelize<DbRow>(row),
   species: (row.aquarium_species || []).filter((item: DbRow) => !item.deleted_at).map(mapAquariumSpecies),
@@ -165,6 +173,28 @@ aquariumsRouter.delete('/aquariums/:id', asyncRoute(async (request, response) =>
   if (error) throwDatabaseError(error, '鱼缸没有删除成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'aquariums', id);
   return sendData(request, response, { deleted: true });
+}));
+
+aquariumsRouter.put('/aquariums/:id/water-changes/:localDate', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const localDate = parseLocalDate(request.params.localDate);
+  const recorded = request.body?.recorded;
+  if (typeof recorded !== 'boolean') throw new ApiError(400, 'VALIDATION_ERROR', '换水记录状态无效。');
+  const operationKey = requireIdempotencyKey(request);
+  const client = userClientFor(request);
+  const { error: mutationError } = await client.rpc('set_aquarium_water_change_day', {
+    target_aquarium_id: aquariumId,
+    water_change_date: localDate,
+    should_record: recorded,
+    operation_key: operationKey,
+    operation_request_hash: getRequestHash(request),
+  });
+  if (mutationError?.message?.includes('AQUARIUM_NOT_FOUND')) throw new ApiError(404, 'NOT_FOUND', '没有找到这个鱼缸。');
+  if (mutationError?.message?.includes('DUPLICATE_OPERATION_KEY')) throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个操作号已经用于另一项修改。');
+  if (mutationError) throwDatabaseError(mutationError, '换水记录没有完整保存，事件和鱼缸摘要均保持不变。');
+  const { data, error } = await client.from('aquariums').select(aquariumSelect).eq('id', aquariumId).is('deleted_at', null).maybeSingle();
+  if (error || !data) throwDatabaseError(error, '换水已提交，但鱼缸最新状态暂时无法读取。');
+  return sendData(request, response, mapAquarium(data));
 }));
 
 aquariumsRouter.post('/aquariums/:id/species', asyncRoute(async (request, response) => {

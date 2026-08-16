@@ -4,7 +4,10 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [main]
+    branches: [main, agent/fix-aquarium-completion-state]
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -24,6 +27,29 @@ jobs:
           npm run test:compatibility-evidence-coverage
           npm run test:task-entry
           npm run test:core-flow-state-eval
+          npm run test:aquarium-creation-semantics
+          npm run test:onboarding-activation
+          npm run test:onboarding-goal-paths
+          npm run test:feeding-canonical
+          npm run test:observation-canonical
+          npm run test:diagnosis-repository
+          npm run test:memorial-repository
+          npm run test:collection-memorial-hydration
+          npm run test:favorites-repository
+          node --import tsx scripts/test-collection-hub-hydration.ts
+          node --import tsx scripts/test-care-aquarium-hydration.ts
+          node --import tsx scripts/test-identify-repository-hydration.ts
+          node --import tsx scripts/test-search-aquarium-hydration.ts
+          node --import tsx scripts/test-onboarding-history-hydration.ts
+          node --import tsx scripts/test-home-repository-hydration.ts
+          node --import tsx scripts/test-assistant-favorites-hydration.ts
+          node --import tsx scripts/test-care-unknown-facts.ts
+          node --import tsx scripts/test-care-operation-canonical.ts
+          node --import tsx scripts/test-care-checklist-progress-canonical.ts
+          node scripts/test-aquarium-settings-boundary.mjs
+          node --import tsx scripts/test-aquarium-delete-boundary.ts
+          node --import tsx scripts/test-water-change-repository-boundary.ts
+          grep -q "const events = await repository.getCareEvents();" src/pages/Aquarium.tsx
       - name: Type check
         run: npm run lint
       - name: Build

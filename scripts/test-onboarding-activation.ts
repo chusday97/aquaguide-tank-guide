@@ -27,7 +27,28 @@ const aquarium = {
   name: '验证鱼缸',
   fishes: [{ id: 'stock-1', fishId: 'fish-1', quantity: 1, entryDate: '2026-08-01', lastWaterChangeDate: '2026-08-01' }],
   dimensions: { length: '40', width: '25', height: '30' },
+  waterType: 'Freshwater' as const,
+  targetTemperature: '25',
+  equipment: { filter: '无' as const },
 };
+
+const incompleteAquarium = {
+  ...aquarium,
+  id: 'tank-incomplete',
+  waterType: undefined,
+  targetTemperature: undefined,
+  equipment: undefined,
+};
+
+patchLocalAppState({
+  currentAquariumId: incompleteAquarium.id,
+  aquariums: [incompleteAquarium],
+  wishlist: [],
+  compatibilityRecords: [],
+  onboarding: { version: 1, status: 'pending', goal: 'build_tank', viewedSpecies: false, aquariumConfigured: true, taskCardDismissed: false },
+});
+let progress = buildOnboardingTaskProgress(loadAppStateFromStorage());
+assert.equal(progress.aquariumReady, false, '旧 aquariumConfigured=true 不能覆盖未完成的真实鱼缸配置');
 
 patchLocalAppState({
   currentAquariumId: aquarium.id,
@@ -38,7 +59,8 @@ patchLocalAppState({
 });
 
 let state = loadAppStateFromStorage();
-let progress = buildOnboardingTaskProgress(state);
+progress = buildOnboardingTaskProgress(state);
+assert.equal(progress.aquariumReady, true, '完整尺寸、水体、温度和过滤事实应视为鱼缸准备完成');
 assert.equal(progress.speciesChosen, true);
 assert.equal(progress.compatibilityCompleted, false, '收藏或已有生物不能替代完整适配');
 assert.deepEqual(getOnboardingTasks('build_tank', progress).map(task => task.id), ['setup_aquarium', 'choose_species', 'complete_compatibility', 'complete_daily_check']);
@@ -72,4 +94,4 @@ assert.equal(hasHistoricalUserActivity(loadAppStateFromStorage(), true), true, '
 const taskCardSource = readFileSync(resolve('src/components/onboarding/OnboardingTaskCard.tsx'), 'utf8');
 assert.match(taskCardSource, /getOnboardingTasks\(/, '任务卡必须使用统一任务定义');
 
-console.log('onboarding activation: goal order, real compatibility and legacy data passed');
+console.log('onboarding activation: factual tank readiness, goal order, real compatibility and legacy data passed');

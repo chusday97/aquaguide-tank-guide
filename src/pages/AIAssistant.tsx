@@ -8,7 +8,8 @@ import { Heart, Plus, Sparkles, Trash2 } from 'lucide-react';
 import { assistantService } from '../modules/assistant/assistant.service';
 import type { AssistantAskOutput } from '../modules/assistant/assistant.schema';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
-import { addSpeciesFavorite, getSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 
@@ -151,6 +152,7 @@ export default function AIAssistant() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => new Set(getSpeciesFavoriteIds()));
+  const [favoriteSyncError, setFavoriteSyncError] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -167,9 +169,36 @@ export default function AIAssistant() {
     localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages.slice(-80)));
   }, [messages]);
 
-  useEffect(() => subscribeToFavorites(() => {
-    setWishlistFishIds(new Set(getSpeciesFavoriteIds()));
-  }), []);
+  useEffect(() => {
+    let active = true;
+    const refreshLocal = () => {
+      if (active) setWishlistFishIds(new Set(getSpeciesFavoriteIds()));
+    };
+    refreshLocal();
+    const unsubscribe = subscribeToFavorites(refreshLocal);
+
+    void (async () => {
+      try {
+        const repository = await getCurrentAquaGuideRepository();
+        const favorites = await repository.getFavorites();
+        if (!active) return;
+        setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+        setWishlistFishIds(new Set(favorites.speciesCatalogKeys));
+        setFavoriteSyncError('');
+      } catch (error) {
+        if (!active) return;
+        console.error('Failed to hydrate Assistant favorites', error);
+        setFavoriteSyncError(isEn
+          ? 'Saved species could not be synced. Showing this device cache.'
+          : '收藏暂时无法同步，当前展示此设备缓存。');
+      }
+    })();
+
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [isEn]);
 
   const handleClearChat = () => setIsClearConfirmOpen(true);
   const confirmClearChat = () => {
@@ -178,9 +207,21 @@ export default function AIAssistant() {
     setIsClearConfirmOpen(false);
   };
 
-  const addToWishlist = (speciesId: string) => {
-    addSpeciesFavorite(speciesId);
-    setWishlistFishIds(new Set(getSpeciesFavoriteIds()));
+  const addToWishlist = async (speciesId: string) => {
+    if (wishlistFishIds.has(speciesId)) return;
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.updateFavorite({ type: 'species', catalogKey: speciesId, favorite: true });
+      const favorites = await repository.getFavorites();
+      setSpeciesFavoriteIds(favorites.speciesCatalogKeys);
+      setWishlistFishIds(new Set(favorites.speciesCatalogKeys));
+      setFavoriteSyncError('');
+    } catch (error) {
+      console.error('Failed to save Assistant favorite', error);
+      setFavoriteSyncError(isEn
+        ? 'Species was not saved because the favorite could not be persisted.'
+        : '收藏没有保存成功，本次修改未生效。');
+    }
   };
 
   const handleSend = async (textToSubmit?: string) => {
@@ -247,6 +288,11 @@ export default function AIAssistant() {
           </button>
         )}
       </header>
+      {favoriteSyncError && (
+        <div role="alert" className="mb-3 rounded-sm border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] font-bold text-amber-800">
+          {favoriteSyncError}
+        </div>
+      )}
       
       <div className="flex min-h-[560px] flex-1 flex-col overflow-hidden border border-border bg-white p-3 md:flex-row md:gap-4 md:p-4 lg:min-h-[680px]">
         <ScrollArea className="flex-1 pr-2 md:basis-[66%] md:pr-3" ref={scrollRef}>
@@ -286,7 +332,7 @@ export default function AIAssistant() {
                               </button>
                               <button
                                 type="button"
-                                onClick={() => addToWishlist(speciesId)}
+                                onClick={() => void addToWishlist(speciesId)}
                                 disabled={isAdded}
                                 aria-label={isAdded ? (isEn ? 'Saved' : '已收藏') : (isEn ? 'Save species' : '收藏物种')}
                                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-accent hover:bg-accent/10 disabled:cursor-default disabled:opacity-65"

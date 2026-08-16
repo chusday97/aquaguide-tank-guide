@@ -23,6 +23,34 @@ const normalizeEquipment = (equipment: Aquarium['equipment']) => {
   return Object.keys(normalized).length > 0 ? normalized : undefined;
 };
 
+export type AquariumSetupFacts = {
+  dimensionsKnown: boolean;
+  waterTypeKnown: boolean;
+  temperatureKnown: boolean;
+  substrateKnown: boolean;
+  filterKnown: boolean;
+  lightKnown: boolean;
+  heaterKnown: boolean;
+  oxygenKnown: boolean;
+};
+
+// Answer presence is intentionally different from truthiness:
+// undefined means unknown, while "无" and false are explicit user answers.
+export const getAquariumSetupFacts = (aquarium: Partial<Aquarium>): AquariumSetupFacts => ({
+  dimensionsKnown: Boolean(
+    nonEmpty(aquarium.dimensions?.length)
+    && nonEmpty(aquarium.dimensions?.width)
+    && nonEmpty(aquarium.dimensions?.height),
+  ),
+  waterTypeKnown: aquarium.waterType === 'Freshwater' || aquarium.waterType === 'Saltwater',
+  temperatureKnown: nonEmpty(aquarium.targetTemperature) && Number.isFinite(Number(aquarium.targetTemperature)),
+  substrateKnown: nonEmpty(aquarium.substrate),
+  filterKnown: nonEmpty(aquarium.equipment?.filter),
+  lightKnown: nonEmpty(aquarium.equipment?.light),
+  heaterKnown: typeof aquarium.equipment?.heater === 'boolean',
+  oxygenKnown: typeof aquarium.equipment?.oxygen === 'boolean',
+});
+
 export const normalizeAquariumRecord = (aquarium: Partial<Aquarium>, index = 0): Aquarium => ({
   id: nonEmpty(aquarium.id) ? aquarium.id : crypto.randomUUID(),
   name: nonEmpty(aquarium.name) ? aquarium.name.trim() : `我的鱼缸 ${index + 1}`,
@@ -52,14 +80,7 @@ export const createAquariumDraft = (name = '我的鱼缸', now = new Date()): Om
 });
 
 export const getAquariumSetupStatus = (aquarium: Aquarium): AquariumSetupStatus => {
-  const dimensionsComplete = Boolean(
-    nonEmpty(aquarium.dimensions?.length)
-    && nonEmpty(aquarium.dimensions?.width)
-    && nonEmpty(aquarium.dimensions?.height),
-  );
-  const waterTypeKnown = aquarium.waterType === 'Freshwater' || aquarium.waterType === 'Saltwater';
-  const temperatureKnown = nonEmpty(aquarium.targetTemperature) && Number.isFinite(Number(aquarium.targetTemperature));
-  const filterKnown = aquarium.equipment?.filter !== undefined;
+  const facts = getAquariumSetupFacts(aquarium);
   const hasAnyConfiguration = Boolean(
     aquarium.dimensions
     || aquarium.waterType
@@ -73,8 +94,8 @@ export const getAquariumSetupStatus = (aquarium: Aquarium): AquariumSetupStatus 
   );
 
   if (!hasAnyConfiguration && aquarium.fishes.length === 0) return 'empty';
-  if (!dimensionsComplete || !waterTypeKnown) return 'incomplete';
-  if (temperatureKnown && filterKnown) return 'complete';
+  if (!facts.dimensionsKnown || !facts.waterTypeKnown) return 'incomplete';
+  if (facts.temperatureKnown && facts.filterKnown) return 'complete';
   return 'usable';
 };
 
@@ -101,20 +122,15 @@ export const AQUARIUM_QUICK_SETUP_PRESETS = {
 
 export const getAquariumAiReadiness = (aquarium: Aquarium) => {
   const missing: AquariumAiMissingField[] = [];
-  const dimensionsComplete = Boolean(
-    nonEmpty(aquarium.dimensions?.length)
-    && nonEmpty(aquarium.dimensions?.width)
-    && nonEmpty(aquarium.dimensions?.height),
-  );
-  if (!dimensionsComplete) missing.push({ key: 'dimensions', label: '鱼缸尺寸 / 容量', panel: 'size' });
-  if (aquarium.waterType !== 'Freshwater' && aquarium.waterType !== 'Saltwater') {
+  const facts = getAquariumSetupFacts(aquarium);
+  if (!facts.dimensionsKnown) missing.push({ key: 'dimensions', label: '鱼缸尺寸 / 容量', panel: 'size' });
+  if (!facts.waterTypeKnown) {
     missing.push({ key: 'waterType', label: '水体类型', panel: 'parameters' });
   }
-  if (!nonEmpty(aquarium.targetTemperature) || !Number.isFinite(Number(aquarium.targetTemperature))) {
+  if (!facts.temperatureKnown) {
     missing.push({ key: 'temperature', label: '目标水温', panel: 'parameters' });
   }
-  // undefined means the user has not answered. The explicit value "无" is a real answer.
-  if (aquarium.equipment?.filter === undefined) {
+  if (!facts.filterKnown) {
     missing.push({ key: 'filter', label: '过滤设备', panel: 'equipment' });
   }
   return {
