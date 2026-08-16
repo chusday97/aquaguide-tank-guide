@@ -1,4 +1,4 @@
-name: Canonical Lionfish Integration Audit
+name: Canonical Decision Integration Audit
 
 on:
   push:
@@ -24,17 +24,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Dry-run merge current lionfish decision/evidence stack
+      - name: Dry-run merge current decision/evidence/water-correction stack
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "integration-audit"
           git config user.email "integration-audit@users.noreply.github.com"
           git rev-parse HEAD > /tmp/integration_audit_base_head
-          git fetch origin agent/reviewed-lionfish-predation-evidence
+          git fetch origin agent/fix-ambiguous-marine-water-type
 
           set +e
-          git merge --no-commit --no-ff origin/agent/reviewed-lionfish-predation-evidence
+          git merge --no-commit --no-ff origin/agent/fix-ambiguous-marine-water-type
           merge_status=$?
           set -e
 
@@ -60,7 +60,7 @@ jobs:
 
           test -z "$(git diff --name-only --diff-filter=U)"
           test -f .git/MERGE_HEAD
-          echo "Current lionfish merged tree resolved locally; no merge commit/push will be created."
+          echo "Current merged tree resolved locally; no merge commit/push will be created."
 
       - run: npm ci
 
@@ -72,6 +72,10 @@ jobs:
         run: node --import tsx scripts/test-unresolved-existing-livestock.ts
       - name: Livestock recording regression
         run: node --import tsx scripts/test-livestock-recording.ts
+      - name: Species water-type ambiguity regression
+        run: node --import tsx scripts/test-species-water-type-ambiguity.ts
+      - name: Taxonomy regression
+        run: node --import tsx scripts/assert_taxonomy_rules.ts
       - name: Tank decision context
         run: node --import tsx scripts/test-tank-decision-context.ts
       - name: Decision support orchestration
