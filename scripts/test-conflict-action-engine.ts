@@ -79,10 +79,13 @@ assert.ok(
   uncertaintyPlan.conditionActions.some(action => action.action === 'adjust_environment' && action.effect === 'addresses_condition'),
   'pH-range gaps should surface as an environment-condition action',
 );
-assert.equal(
-  uncertaintyPlan.conditionActions.some(action => action.action === 'relocate_species'),
-  false,
-  'relocation is reserved for counterfactually recomputed scenarios and must never be rule-mapped directly',
+assert.ok(
+  uncertaintyPlan.conditionActions.every(action => action.evidenceMode === 'rule_mapped'),
+  'all condition actions must stay rule-mapped rather than pretending to be counterfactual relocation results',
+);
+assert.ok(
+  predatorPlan.relocationOptions.every(option => option.evidenceMode === 'counterfactual_recomputed'),
+  'every relocation action must come from a counterfactually recomputed intervention scenario',
 );
 
 console.log('conflict action engine passed: relocation is counterfactually verified, fixability maps to the right action family, warnings stay warnings, and evidence gaps become information work');
