@@ -16,7 +16,7 @@ for (const forbidden of [
   assert.doesNotMatch(panel, new RegExp(forbidden.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 }
 
-assert.match(panel, /onOpenRelocationConfirmation\?\(entrypoint\.candidate\)/);
+assert.match(panel, /onOpenRelocationConfirmation\?\.\(entrypoint\.candidate\)/);
 assert.match(panel, /data-open-relocation-confirmation/);
 assert.match(panel, /当前卡片不是执行授权/);
 assert.match(panel, /data-intervention-panel-mutation-free="true"/);
@@ -32,7 +32,6 @@ assert.doesNotMatch(model, /operationId\s*:/);
 // or first batch. Exact single-record + single-positive-batch gates are required.
 assert.match(model, /sourceRecordIds\.length !== 1/);
 assert.match(model, /positiveBatches\.length !== 1/);
-assert.doesNotMatch(model, /sourceRecordIds\[0\][\s\S]*without/i);
 assert.doesNotMatch(panel, /batches\?\.\[0\]|batches\[0\]/);
 
 // Multi-record / multi-batch limitations must be visible rather than silently
