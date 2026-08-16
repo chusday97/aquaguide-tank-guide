@@ -23,7 +23,7 @@ jobs:
       - name: Ambiguous butterfly-fish water regression
         run: node --import tsx scripts/test-species-water-type-ambiguity.ts
       - name: Recommendation grounding regression
-        run: node --import tsx scripts/test-recommendation-catalog-grounding.ts
+        run: npx tsx scripts/test-catalog-grounding-contract.ts
       - name: Lionfish reviewed evidence regression
         run: node --import tsx scripts/test-lionfish-reviewed-evidence.ts
       - name: Type check
