@@ -18,7 +18,7 @@
 - Care attempt controller run `31962344545` green.
 - reconciliation lifecycle run `31962635712` green.
 
-## Care executable wiring — PERSISTED ON WORKING BRANCH
+## Care executable wiring — persisted on working branch
 
 Working branch: `agent/canonical-care-relocation-wiring`
 
@@ -39,32 +39,23 @@ Persisted safety:
 - canonical executed/reconciled state outranks the compatibility mirror;
 - mirror failure cannot reclassify canonical success.
 
-## Final Care wiring gate — FULL GREEN
+## Static / logic / type / build gates
 
 Run `31963163536` passed Care wiring static contract, mirror fallback, controller, confirmation lifecycle, entrypoint, fresh policy, uncertainty, Care hydration, severe-risk, App/API TypeScript, production build, one-shot self-delete and persisted branch commit.
 
 TEST-003 and TYPE-001 were resolved without weakening product/type semantics.
 
-## Real-catalog browser fixture audit — GREEN
-
-Run `31963516019` found reviewed eligible real-catalog scenarios. Primary fixture:
-
+Real-catalog fixture audit `31963516019` is green. Primary browser fixture is the reviewed community:
 - source `冲突缸`: `迷你鹦鹉鱼 sp_0021 ×1 + 虎皮鱼 sp_0439 ×6`;
 - target `安全目标缸`: empty freshwater tank;
-- one reviewed blocker;
-- formal intervention allowed;
-- `虎皮鱼 ×6 → target` = `compatible_by_current_evidence`;
-- #65 entrypoint = `eligible`.
+- reviewed blocker exists;
+- `虎皮鱼 ×6 → target` is `compatible_by_current_evidence` and #65 entrypoint `eligible`.
 
-Browser GP must use this real reviewed community and click the actual rendered #65 CTA. Synthetic request/component injection is not acceptable as GP proof.
+Browser marker gate `31963752488` is green; only non-semantic selectors were added.
 
-## Browser testability markers — GREEN
+## Browser Golden Path
 
-Run `31963752488` passed pre-marker red check, non-semantic marker patch, Care hydration, Care relocation static contract, TypeScript/build, self-delete and commit. Markers only stabilize selectors; they do not alter behavior.
-
-## Browser Golden Path implementation
-
-Playwright page-level suite starts at `/care?topic=guide_water_deteriorate` and follows the actual rendered path:
+Playwright starts at `/care?topic=guide_water_deteriorate` and follows the actual rendered path:
 
 `Care first-screen CTA → aggression diagnosis → real questions → diagnosis result → intervention comparison → #65 target CTA → #64 confirmation → Care/#63/#62 execution path`.
 
@@ -76,36 +67,50 @@ Cases:
 
 The suite counts actual `sp_0439` source→target state transitions rather than raw localStorage writes.
 
-## Browser run 1 — TEST-004 infrastructure failure
+### Browser run 1 — TEST-004 infrastructure only
 
-Run `31963987371` never entered product browser assertions because the workflow treated `npm run dev` as Vite even though it runs `scripts/dev-with-api.mjs`. Corrected to explicit `npx vite --host 127.0.0.1 --port 4173`; no product assertion was changed.
+Run `31963987371` never entered product assertions because workflow started the combined `npm run dev` orchestrator instead of plain Vite. Fixed to explicit Vite; no GP assertion changed.
 
-## Browser run 2 — first valid rendered run, partial boundary confirmed
+### Browser run 2 — first valid rendered run
 
-Run `31964201289` successfully installed Chromium and started the pure Vite frontend, so it is the first run that actually exercised the rendered Care relocation path.
+Run `31964201289` reached the real green relocation-completed dialog with correct `冲突缸 / 安全目标缸 / 虎皮鱼 / 6`, proving GP-REL-01 and execution through success UI. Exact assertion stderr was initially unavailable.
 
-The run failed inside the first case `gp-rel-01-02-success`, but the uploaded failure screenshot proves the flow had already reached the **completed relocation state**. The rendered confirmation shows:
+### Diagnostic rerun — exact failure recovered
 
-- source: `冲突缸`;
-- destination: `安全目标缸`;
-- livestock: `虎皮鱼`;
-- quantity: `6`;
-- green terminal state: `迁移已完成，并已重新计算两个鱼缸`.
+Run `31964475428` reran the **same unchanged browser assertions** with stdout/stderr captured into the diagnostics artifact.
 
-Therefore the current evidence supports these bounded conclusions:
+Exact failure:
 
-1. **GP-REL-01 is rendered-green**: real Care navigation reached the real #65 opener and the four visible confirmation facts are correct. Opening confirmation did not fail or bypass the real reviewed fixture path.
-2. **GP-REL-02 reached the executed/completed UI state**: confirm passed fresh execution and rendered success.
-3. The first failure occurred **after** `data-relocation-completed` became visible. Remaining possible assertions are narrowed to post-action local state quantities, business transition count, closing the dialog, or rendered Care decision redraw after Close.
-4. This is not enough evidence yet to label the failure REL-053 or to claim GP-REL-02 fully green.
+`getByRole('button', { name: '关闭' })` failed Playwright strict mode because it resolved to two elements:
+1. the explicit bottom action button with visible text `关闭`;
+2. Radix's built-in dialog-close control, whose accessible name is also `关闭`.
 
-Diagnostics limitation: Actions did not expose the Node assertion stderr through the available job-log interface, and the first artifact contained only the failure screenshot plus a healthy Vite log. The exact post-success assertion is therefore still unknown.
+Failure line: `scripts/test-care-relocation-browser-golden-path.mjs:242`, after the success-state assertions.
 
-Next action is diagnostic-only: rerun the **same unchanged browser assertions** while teeing browser stdout/stderr into the diagnostics artifact. No product code or GP assertion will be changed until the exact failing assertion is recovered.
+This is **TEST-005 locator ambiguity**, not a product relocation failure.
 
-## What remains unproven
+Crucially, because line 242 occurs after these assertions, run `31964475428` proves all of them passed before the locator failed:
 
-- GP-REL-02 exactly one business relocation transition + post-state redraw;
+- visible confirmation source = `冲突缸` ✅
+- destination = `安全目标缸` ✅
+- species = `虎皮鱼` ✅
+- quantity = `6` ✅
+- opening confirmation caused zero relocation transitions ✅
+- rapid double confirm reached `data-relocation-completed` ✅
+- source canonical/local test state has tiger-barb quantity `0` after success ✅
+- target state has tiger-barb quantity `6` after success ✅
+- **business relocation transition count is exactly `1`** despite rapid double click ✅
+
+Therefore:
+- **GP-REL-01 is green** in deterministic rendered browser acceptance.
+- **GP-REL-02's execution/idempotency core is green**: one relocation, not two.
+- The only remaining GP-REL-02 assertion not yet reached is the post-Close rendered Care decision redraw (`REL-053`).
+
+Next change is test-only: target the explicit bottom Close action by visible button text within the confirmation dialog instead of ambiguous accessible-name matching. No product code and no business assertion will change.
+
+## Still unproven
+
+- GP-REL-02 post-Close rendered Care decision redraw / REL-053;
 - GP-REL-03 stale target fresh-block;
 - GP-REL-04 rendered non-dismissible reconcile lifecycle;
 - GP-REL-05 visible multi-batch fail-closed limitation;
