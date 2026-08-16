@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
+import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, ShieldAlert, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
@@ -45,6 +45,9 @@ import { getSearchSuggestions } from '../services/search/search-suggestions.serv
 import { taskRoutes } from '../services/navigation/task-routes';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
+import { buildTankDecisionSupport } from '../lib/tankDecisionSupportOrchestrator';
+import { buildQuickDiagnosisConflictAugmentation } from '../lib/quickDiagnosisConflictAugmentation';
+import { InterventionComparisonPanel } from '../components/compatibility/InterventionComparisonPanel';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
@@ -2415,6 +2418,7 @@ function StepDiagnosisPanel({
     result: null,
   }));
   const [isResultDetailOpen, setIsResultDetailOpen] = useState(false);
+  const [isInterventionComparisonOpen, setIsInterventionComparisonOpen] = useState(false);
 
   useEffect(() => {
     setDiagnosisState({
@@ -2427,6 +2431,7 @@ function StepDiagnosisPanel({
       result: null,
     });
     setIsResultDetailOpen(false);
+    setIsInterventionComparisonOpen(false);
   }, [defaultAquariumId, topic.id]);
 
   const targetAquarium = aquariums.find(item => item.id === diagnosisState.targetAquariumId) || aquariums[0] || null;
@@ -2448,9 +2453,41 @@ function StepDiagnosisPanel({
     const selectedIds = new Set(diagnosisState.target.speciesIds);
     return currentLivestock.filter(item => selectedIds.has(item.fish.id));
   }, [currentLivestock, diagnosisState.target.scope, diagnosisState.target.speciesIds, requiresSpeciesScope]);
+  // CARE_CONFLICT_DECISION_SURFACE_START
+  // This first page integration intentionally omits allAquariums. Until the canonical #34
+  // hydration stack is formally converged, destination-list certainty stays unknown rather
+  // than turning a standalone Draft's device snapshot into a relocation claim.
+  const decisionSupport = useMemo(() => targetAquarium
+    ? buildTankDecisionSupport({ aquarium: targetAquarium, catalog: fishData })
+    : null, [targetAquarium]);
+  const conflictAugmentation = useMemo(() => decisionSupport
+    ? buildQuickDiagnosisConflictAugmentation({
+        issueType: diagnosisState.issueType,
+        decisionSupport,
+        targetSpeciesIds: diagnosisState.target.scope === 'whole_tank'
+          ? []
+          : diagnosisState.target.speciesIds,
+        isEn,
+      })
+    : null, [
+      decisionSupport,
+      diagnosisState.issueType,
+      diagnosisState.target.scope,
+      diagnosisState.target.speciesIds,
+      isEn,
+    ]);
   const diagnosisQuestions = useMemo(() => getStepDiagnosisQuestions(diagnosisState.issueType, isEn), [diagnosisState.issueType, isEn]);
   const answeredCount = diagnosisQuestions.filter(question => diagnosisState.answers[question.id]).length;
   const isResultStep = diagnosisState.currentStep === 2 && Boolean(diagnosisState.result);
+  const showConflictAugmentation = Boolean(
+    isResultStep
+    && conflictAugmentation
+    && (
+      conflictAugmentation.status === 'specific_conflict_evidence'
+      || conflictAugmentation.status === 'partial_specific_conflict_evidence'
+      || conflictAugmentation.status === 'community_identity_incomplete'
+    )
+  );
   const isTargetReady = !requiresSpeciesScope
     || diagnosisState.target.scope === 'whole_tank'
     || diagnosisState.target.speciesIds.length > 0;
@@ -2490,6 +2527,7 @@ function StepDiagnosisPanel({
 
   const updateAnswer = (key: keyof StepDiagnosisAnswers, value: StepDiagnosisAnswerValue) => {
     setIsResultDetailOpen(false);
+    setIsInterventionComparisonOpen(false);
     setDiagnosisState(prev => ({
       ...prev,
       answers: { ...prev.answers, [key]: value },
@@ -2506,11 +2544,13 @@ function StepDiagnosisPanel({
       issueType: diagnosisState.issueType,
     });
     setIsResultDetailOpen(false);
+    setIsInterventionComparisonOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 2, result }));
   };
 
   const resetDiagnosis = () => {
     setIsResultDetailOpen(false);
+    setIsInterventionComparisonOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 1, questionIndex: 0, answers: {}, result: null }));
   };
 
@@ -2772,6 +2812,58 @@ function StepDiagnosisPanel({
               </ol>
             </section>
 
+            {showConflictAugmentation && conflictAugmentation && (
+              <section
+                data-care-conflict-augmentation={conflictAugmentation.status}
+                className={`mt-3 rounded-[18px] border p-3 ${
+                  conflictAugmentation.priority === 'high'
+                    ? 'border-red-100 bg-red-50/75'
+                    : 'border-sky-100 bg-sky-50/80'
+                }`}
+              >
+                <div className="flex items-start gap-2">
+                  <ShieldAlert className={`mt-0.5 h-4 w-4 shrink-0 ${conflictAugmentation.priority === 'high' ? 'text-red-700' : 'text-sky-700'}`} aria-hidden="true" />
+                  <div className="min-w-0">
+                    <div className="text-[10px] font-black uppercase tracking-[0.1em] text-ink/45">
+                      {isEn ? 'Community conflict evidence' : '群落冲突证据'}
+                    </div>
+                    <h4 className="mt-1 text-[13px] font-black leading-relaxed text-ink">
+                      {conflictAugmentation.headline || (isEn ? 'Community identity is incomplete' : '当前群落身份信息不完整')}
+                    </h4>
+                    {conflictAugmentation.causeAdditions[0] && (
+                      <p className="mt-1 text-[11px] font-semibold leading-5 text-ink/65">{conflictAugmentation.causeAdditions[0]}</p>
+                    )}
+                  </div>
+                </div>
+
+                {conflictAugmentation.todayActionAdditions[0] && (
+                  <div className="mt-2 rounded-[13px] bg-white/85 px-3 py-2.5">
+                    <div className="text-[9px] font-black text-emerald-800">{isEn ? 'Decision-support next step' : '决策支持下一步'}</div>
+                    <p className="mt-0.5 text-[11px] font-bold leading-5 text-ink/68">{conflictAugmentation.todayActionAdditions[0]}</p>
+                  </div>
+                )}
+                {conflictAugmentation.avoidActionAdditions[0] && (
+                  <p className="mt-2 text-[10px] font-bold leading-5 text-amber-900/75">
+                    {isEn ? 'Boundary: ' : '边界：'}{conflictAugmentation.avoidActionAdditions[0]}
+                  </p>
+                )}
+                {conflictAugmentation.limitations[0] && (
+                  <p className="mt-1.5 text-[9px] font-semibold leading-4 text-sky-900/65">{conflictAugmentation.limitations[0]}</p>
+                )}
+                {conflictAugmentation.showInterventionComparison && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    data-open-intervention-comparison
+                    onClick={() => setIsInterventionComparisonOpen(true)}
+                    className="mt-3 h-10 w-full rounded-full border-emerald-200 bg-white text-[11px] font-black text-emerald-800 hover:bg-emerald-50"
+                  >
+                    {isEn ? 'Compare keep / relocation scenarios' : '查看保留 / 移出方案比较'}
+                  </Button>
+                )}
+              </section>
+            )}
+
             {diagnosisState.result.avoidActions[0] && (
               <section className="mt-3 rounded-[16px] bg-amber-50 px-3 py-2.5">
                 <div className="text-[10px] font-black text-amber-800">{isEn ? 'Avoid for now' : '暂时不要'}</div>
@@ -2841,6 +2933,16 @@ function StepDiagnosisPanel({
           </div>
         </section>
       )}
+
+      {decisionSupport && (
+        <InterventionComparisonPanel
+          open={isInterventionComparisonOpen}
+          result={decisionSupport}
+          isEn={isEn}
+          onOpenChange={setIsInterventionComparisonOpen}
+        />
+      )}
+      {/* CARE_CONFLICT_DECISION_SURFACE_END */}
     </section>
   );
 }
