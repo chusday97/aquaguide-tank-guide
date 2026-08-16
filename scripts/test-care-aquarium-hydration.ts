@@ -28,10 +28,16 @@ assert.match(care, /const activeAquarium = useMemo\(\(\) => \(\s+appStateSnapsho
 assert.match(care, /const careRecommendations = useMemo\(\(\) => getCareRecommendations\(activeAquarium, careTopicsData\), \[activeAquarium\]\)/);
 assert.doesNotMatch(care, /const appStateSnapshot = useMemo\(\(\) => loadAppStateFromStorage\(\), \[\]\)/);
 
-// Quick diagnosis remains live if cloud aquarium facts arrive after its dialog opened.
+// Quick diagnosis remains live if cloud/mirror aquarium facts arrive after its dialog opened.
+// Do not couple this regression to statement adjacency: Care may insert a direct canonical
+// override state between mirror initialization and the subscription while preserving both
+// capabilities.
 assert.match(care, /function StepDiagnosisPanel/);
-assert.match(care, /const \[appState, setAppState\] = useState\(loadAppStateFromStorage\);\s+useEffect\(\(\) => subscribeToAppState/s);
+assert.match(care, /const \[appState, setAppState\] = useState\(loadAppStateFromStorage\)/);
+assert.match(care, /useEffect\(\(\) => subscribeToAppState\(\(\) => \{\s+setAppState\(loadAppStateFromStorage\(\)\);\s+\}\), \[\]\)/s);
+assert.match(care, /const \[canonicalAquariums, setCanonicalAquariums\] = useState<Aquarium\[\] \| null>\(null\)/);
+assert.match(care, /const aquariums = canonicalAquariums \?\? appState\.aquariums/);
 assert.match(care, /\}, \[defaultAquariumId, topic\.id\]\);/);
 assert.doesNotMatch(care, /const appState = useMemo\(\(\) => loadAppStateFromStorage\(\), \[\]\)/);
 
-console.log('care aquarium hydration contract passed: direct Care entry hydrates favorites, aquarium facts, care events, and checklist progress');
+console.log('care aquarium hydration contract passed: direct Care entry hydrates account facts; StepDiagnosis preserves reactive mirror hydration while canonical post-action state can temporarily take precedence');
