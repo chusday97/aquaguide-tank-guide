@@ -1,130 +1,114 @@
 # AquaGuide Relocation Confirmation Badcases — 2026-08-17
 
-> Living regression record for the relocation path. PR #65's entrypoint layer is green in isolated and disposable canonical integration gates, but Care-page repository wiring is still a separate unimplemented risk boundary.
+> Living regression record for the relocation path. PR #65's entrypoint layer is green, but the Care executable layer must now be built on an intentional canonical combined tree.
 
 ## Existing protected badcases
 
-- REL-023 — RPC commits but post-write read fails: return mutation receipt; do not disguise committed write as mutation failure.
-- REL-024 — mutation transport rejects after write boundary: `mutation_state_unknown`, preserve operation ID, reconcile first.
-- REL-025 — display-only quantity differs from request quantity: display actual request quantity only.
-- REL-026 — confirmation component imports repository/API/Supabase directly: prohibited by static contract.
-- REL-027 — fresh policy blocks but UI reports success: blocked is distinct terminal outcome.
-- REL-028 — uncertain outcome exposes retry relocation: reconciliation only, no blind retry.
-- REL-029 — completed confirmation can fire again: completed is terminal.
-- REL-030 — blocked result retries stale proposal: return to a newly evaluated proposal instead.
-- REL-031 — labels and submitted IDs belong to different requests: IDs are request-bound; names are labels only.
-- REL-032 — unexpected thrown callback error assumed definitely pre-write: reconcile conservatively.
-- REL-033 — isolated confirmation passes but canonical mutation stack drifts: disposable canonical integration audit required.
+- REL-023 — committed RPC + failed post-read must not look like mutation failure.
+- REL-024 — rejected mutation transport may be post-write: `mutation_state_unknown`, preserve operation identity, reconcile first.
+- REL-025 — displayed quantity and submitted quantity must share one source.
+- REL-026 — confirmation UI cannot import repository/API/Supabase directly.
+- REL-027 — fresh policy blocked result cannot become success UI.
+- REL-028 — uncertain state exposes reconciliation only, never blind relocation retry.
+- REL-029 — completed confirmation cannot execute again.
+- REL-030 — blocked stale proposal must be re-evaluated before a new attempt.
+- REL-031 — request IDs are authoritative; names are display labels only.
+- REL-032 — unexpected callback error is treated conservatively as reconciliation-required.
+- REL-033 — isolated UI/policy green requires disposable canonical integration audit.
+- REL-034…REL-039 — PR #65 source-record/batch/quantity/cached-verdict entrypoint protections remain green in `31961532732` and canonical audit `31961690289`.
 
-## PR #65 protected badcases
+## Next-layer badcases already identified
 
-### REL-034 — formal species option aggregates multiple source records
-**Fix:** direct confirmation requires exactly one factual source record. Green in `31961532732` and canonical audit `31961690289`.
+### REL-040 — operationId regenerated on every render
+Create one operationId when a new confirmation attempt opens; stable for the attempt.
 
-### REL-035 — whole subject spans multiple batches
-**Fix:** exactly one positive explicit batch must represent the whole formal quantity; no `batches[0]` shortcut. Green in both gates.
+### REL-041 — reconciliation creates another mutation identity
+Reconciliation is canonical read/recovery only; no automatic second relocation.
 
-### REL-036 — current destination card becomes cached mutation authorization
-**Fix:** card status controls opener visibility only; candidate has no safety boolean/cached verdict/operationId. PR #63 still re-evaluates immediately before mutation. Green in both gates.
+### REL-042 — Care page calls `repository.relocateLivestock()` directly
+Page-level direct mutation bypass is forbidden; repository relocation may only be injected under `executeFreshRelocation`.
 
-### REL-037 — resolved / record / batch / formal quantities disagree
-**Fix:** quantities must agree for direct single-batch execution. Green in both gates.
+### REL-043 — “fresh” revalidation reads page/local state
+`loadAquariums` for #63 must call canonical repository `getAquariums()` at execution and post-execution time.
 
-### REL-038 — no explicit batch but UI invents one
-**Fix:** no explicit positive batch = no direct confirmation entry. Green in both gates.
+### REL-044 — successful relocation leaves Care decision UI stale
+Care must refresh canonical aquarium/decision state after execution or reconciliation.
 
-### REL-039 — contradictory multiple positive batches but one matching batch is selected
-**Fix:** exactly one positive batch is mandatory before matching quantity. Green in both gates.
+### REL-045 — idle-cancel and terminal attempt lifecycle are conflated
+Attempt identity is bound to one move intent; idle unused cancel may discard it, terminal attempts cannot be repurposed.
+
+## REL-046 — executable Care wiring is implemented on the PR #65-only branch
+
+**Observed architecture**
+
+PR #65's branch contains the decision/confirmation UI stack but not PR #62's canonical relocation repository contract. Its `StepDiagnosisPanel` still initializes aquarium state from a one-time local storage snapshot.
+
+PR #62's branch has the mutation/repository contract and improves Care to a subscribed local mirror, but that mirror is still not an execution-time canonical repository read.
+
+The repository interface on #62 exposes the correct fresh read:
+
+`getAquariums(): Promise<Aquarium[]>`
+
+**Failure**
+
+Implement the final Care handler directly on the PR #65-only branch and pass its local `aquariums`/`appState` into #63 as `loadAquariums`, or copy/imitate #62 mutation methods into the UI branch.
+
+**Risk**
+
+- “fresh revalidation” is only nominal and misses remote/session changes;
+- repository/mutation logic is duplicated across branches;
+- later merge can silently choose the wrong Care hydration semantics;
+- UI may compile in isolation yet violate the canonical architecture that the disposable audit proved only in the combined tree.
+
+**Required**
+
+Build the executable Care layer on a dedicated combined working branch:
+
+`latest #62 canonical mutation/repository base + full #65 confirmation-entrypoint stack`
+
+This is an implementation branch only; it does not merge any product PR into main. Reuse the already-audited two-file conflict set and fail on any new conflict.
+
+Within that combined tree:
+
+- pre/post `loadAquariums` must call repository `getAquariums()`;
+- repository relocation must only be reachable through #63's injected callback;
+- current page/local mirror is display/cache state, never mutation authorization state.
+
+**Status**
+
+New P0 architecture guard. Recorded before executable Care code is written. The initial `agent/care-relocation-confirmation-wiring` branch is investigation-only and should not become the final executable stack.
 
 ## Test infrastructure badcases
 
-### TEST-001 — static regex mis-parses optional callback syntax
-Test-only fix; no product rule relaxed.
+- TEST-001 — optional-call regex false failure; fixed without product-rule relaxation.
+- TEST-002 — stacked workflow guessed wrong parent verifier filename; fixed by reusing PR #64 canonical verifier.
 
-### TEST-002 — stacked workflow guesses a non-existent parent verifier filename
-Workflow now reuses PR #64's canonical `verify-relocation-confirmation-surface.mjs`. Confirmed green in `31961532732` and `31961690289`.
+## Canonical integration result for #65
 
-## Canonical integration result
+Disposable audit `31961690289` is GREEN:
 
-Disposable audit `31961690289` is **GREEN**:
-
-- no new merge conflicts beyond the two known canonical/decision files;
-- atomic local/SQL/wiring/receipt tests passed;
-- fresh policy + mutation uncertainty passed;
-- confirmation + entrypoint contracts passed;
+- no new conflicts beyond the two known canonical/decision files;
+- atomic mutation/SQL/wiring/receipt passed;
+- fresh policy + uncertainty passed;
+- confirmation + entrypoint passed;
 - unresolved/Care hydration/severe-risk passed;
-- real repository → policy TypeScript adapter passed;
-- API TypeScript + production build passed;
+- real repository→policy TypeScript adapter passed;
+- API TypeScript + build passed;
 - no merge commit created.
 
-REL-033 is therefore satisfied for PR #65's scope.
+## Care executable-layer exit gate
 
-## New next-layer badcases to protect before Care wiring
+Before the next layer can be called safe:
 
-### REL-040 — operationId regenerated on every render
-**Failure:** launch candidate enters Care; component creates `createIdempotencyKey()` during render or every state recomputation.
-
-**Risk:** the same user confirmation can produce multiple operation identities; an uncertain first request followed by rerender/retry can move livestock twice.
-
-**Required:** create one operationId when a new confirmation attempt is opened; keep it stable for that attempt until terminal resolution/reconciliation.
-
-**Status:** regression required before repository-backed wiring.
-
-### REL-041 — uncertain attempt gets a new operationId when user presses sync/reconcile
-**Failure:** `mutation_state_unknown` or post-state-unavailable path rebuilds request with a new operation ID.
-
-**Risk:** reconciliation turns into a second mutation identity rather than state recovery.
-
-**Required:** reconciliation performs canonical reload only and preserves the original operation identity for diagnostic/idempotency context; no new relocation mutation is sent automatically.
-
-**Status:** regression required.
-
-### REL-042 — Care page calls `repository.relocateLivestock()` directly
-**Failure:** page handler bypasses PR #63 and uses the launch candidate as a write command.
-
-**Risk:** cached card status becomes practical authorization despite architecture contracts.
-
-**Required:** page may inject a callback into `executeFreshRelocation`; direct page-level relocation call is prohibited by static contract.
-
-**Status:** regression/static contract required.
-
-### REL-043 — PR #63 fresh load uses current page state instead of repository-backed canonical hydration
-**Failure:** `loadAquariums` returns React state/local mirror captured when the panel opened.
-
-**Risk:** fresh revalidation is only nominal; source/destination changes made on another device/session are missed.
-
-**Required:** execution integration's `loadAquariums` must call the repository's canonical aquarium loader at execution and post-execution time.
-
-**Status:** integration regression required.
-
-### REL-044 — successful relocation does not refresh Care decision state
-**Failure:** #63 returns `executed`, but Care continues displaying the pre-move decision/result until navigation/reload.
-
-**Risk:** UI immediately shows stale conflicts/options after a confirmed write.
-
-**Required:** completed result must replace/rebuild Care aquarium/decision state from `postAquariums` / recomputed decisions, or trigger the canonical page hydration path before another action.
-
-**Status:** browser/integration regression required.
-
-### REL-045 — idle cancel and terminal attempt lifecycle are conflated
-**Failure:** cancelling before execution permanently consumes an operation identity, or a completed/uncertain request object is reused for a different move.
-
-**Required:** attempt identity belongs to one `{source record, batch, destination, quantity}` confirmation intent. Idle cancel may discard it. New move = new attempt identity. Completed/uncertain attempt must never be repurposed.
-
-**Status:** state regression required.
-
-## Next-layer exit gate
-
-Before Care wiring can be described as safe:
-
-- stable operationId lifecycle is tested;
-- no operationId creation during render;
+- implemented on the intentional combined canonical tree, not the PR #65-only branch;
+- stable operationId lifecycle tested;
+- no operationId generation during render;
 - uncertain/reconcile path sends no second mutation;
-- Care has no direct `relocateLivestock()` call;
-- fresh `loadAquariums` is repository-backed;
-- repository callback is only reachable inside `executeFreshRelocation`;
-- successful write refreshes Care decision state;
+- no page-level direct `relocateLivestock()` call;
+- pre/post fresh load is repository `getAquariums()`;
+- repository relocation is reachable only inside `executeFreshRelocation` dependency injection;
+- success/reconcile refreshes Care canonical decision state;
 - blocked fresh result never writes;
-- cancellation/new-intent lifecycle cannot reuse terminal attempt IDs;
-- browser Golden Path covers open confirmation → confirm → fresh block/success/reconcile states;
-- handoff/badcase are updated as failures are discovered.
+- cancel/new-intent lifecycle cannot reuse terminal attempt IDs;
+- browser Golden Path later covers open → confirm → fresh block/success/reconcile;
+- handoff/badcase are updated as each new failure is found.
