@@ -1,128 +1,89 @@
 # AquaGuide Relocation Confirmation Handoff — 2026-08-17
 
-> Living continuation record for PR #62 mutation receipt, PR #63 fresh execution policy, PR #64 confirmation surface, and PR #65 confirmation entrypoint. Draft/green CI is not main/production. No product PR is merged or Ready.
+> Living record. PR #62/#63/#64/#65 remain Draft/unmerged. Green branches/CI are not main or production.
 
 ## Current safe chain
 
-`read-only intervention → eligible confirmation entrypoint → confirmation facts → fresh canonical load → fresh source decision → fresh destination verdict → atomic relocation receipt → fresh canonical reload/recompute → confirmation outcome`
+`formal intervention → #65 confirmation entrypoint → #64 confirmation dialog → #63 fresh execution policy → #62 atomic receipt → fresh canonical reload/recompute`
 
-Current product boundary remains deliberate: the Care page still does **not** have a repository-backed executable relocation path.
+## Completed foundations
 
-## Stable foundations
+- #62: atomic verified single-batch relocation; receipt-only result.
+- #63: fresh source/destination recomputation; only `compatible_by_current_evidence` can mutate; unknown/post-state-unavailable require reconciliation.
+- #64: confirmation state/dialog; request-bound facts; no blind retry or repository import.
+- #65: opener only when the whole formal species option maps losslessly to exactly one factual record + one positive explicit batch with identical quantity; candidate contains no cached authorization.
+- #65 full-chain CI `31961532732`: green.
+- Disposable #62 + #65-stack audit `31961690289`: green; only the two known semantic conflicts; no merge commit.
 
-- PR #62 returns receipt only: `{ committed: true, replayed?: boolean }`; canonical refresh is separate.
-- PR #63 never trusts cached UI verdicts and truthfully distinguishes `mutation_state_unknown` from `executed_post_state_unavailable`.
-- PR #64 confirmation UI binds displayed IDs/quantity to the actual request, exposes no blind retry, and has no direct repository/API/Supabase dependency.
-- PR #65 converts a formal species-level option into a confirmation launch candidate only when it maps losslessly to one factual source record + one explicit positive batch representing the full formal quantity.
+## New canonical implementation baseline
 
-## PR #65 — confirmation entrypoint
+The first investigation branch cut from #65 exposed REL-046: its Care state is a page/local snapshot and #65 does not contain #62's mutation repository contract. It must not become the executable branch.
 
-Draft PR: **#65 `Gate relocation confirmation entrypoint on factual source scope`**
+A new implementation branch was therefore created from latest #62:
 
-Branch: `agent/relocation-confirmation-entrypoint`, base `agent/relocation-confirmation-surface` (#64).
+`agent/canonical-care-relocation-wiring`
 
-Entrypoint invariants:
+The full #65 stack was brought in via guarded **squash integration**, not by merging a product PR. Workflow run `31962121116` passed before saving the tree:
 
-1. formal intervention + exact option must exist;
-2. current `compatible_by_current_evidence` controls opener visibility only, never mutation authorization;
-3. exactly one factual source record;
-4. exactly one positive explicit batch;
-5. resolved, record, batch and formal quantities agree;
-6. multi-record / multi-batch / missing-batch / quantity-drift cases remain unavailable and explain why;
-7. no arbitrary first-record / first-batch selection;
-8. launch candidate has no `operationId`, cached verdict, `isSafe`, `allowed`, or expected compatibility.
-
-Implemented:
-
-- pure `relocationConfirmationEntrypoint` builder;
-- source-scope regression suite;
-- mutation-free UI static contract;
-- optional `sourceAquarium` + `onOpenRelocationConfirmation(candidate)` on `InterventionComparisonPanel`;
-- eligible cards expose `进入迁移确认`; click only emits the launch candidate;
-- compatible-but-non-executable source scope shows a deterministic limitation;
-- no repository/API/Supabase import or mutation in PR #65.
-
-## PR #65 CI
-
-Effective full-chain run `31961532732` passed:
-
-- confirmation entrypoint source scope ✅
-- entrypoint UI static contract ✅
-- PR #64 confirmation state/surface ✅
-- PR #63 fresh policy + mutation uncertainty ✅
-- Tank Decision Support + Destination Evaluator + severe-risk ✅
-- TypeScript ✅
-- production build ✅
-
-Two earlier red runs were test/CI harness mistakes only: optional-call regex parsing and a guessed non-existent inherited verifier filename. No business rule was loosened.
-
-## Disposable canonical audit — GREEN
-
-Workflow: `Canonical Relocation Entrypoint Integration Audit`
-Run: `31961690289`
-Audit branch: `integration/canonical-decision-support-audit`
-
-Latest #62 mutation stack + full #65 stack were combined only in the runner using `git merge --no-commit --no-ff`.
-
-Merge gate: **passed**. No new conflicts appeared; conflict set remained only the two previously known canonical/decision files:
-
-- `.github/workflows/product-golden-path.yml`
-- `src/services/aquarium/water-change.service.ts`
-
-All disposable-tree gates passed:
-
-- atomic relocation local regression ✅
-- atomic relocation SQL/security contract ✅
-- repository/API relocation wiring ✅
-- mutation receipt boundary ✅
-- fresh relocation execution policy ✅
-- ambiguous mutation outcome ✅
-- confirmation state + confirmation surface ✅
-- confirmation entrypoint source scope + UI contract ✅
-- Tank Decision Support + Destination Evaluator ✅
-- unresolved livestock + Care hydration + severe-risk ✅
-- real canonical repository → fresh policy TypeScript adapter ✅
+- atomic receipt boundary ✅
+- fresh execution policy ✅
+- mutation uncertainty ✅
+- confirmation surface ✅
+- confirmation entrypoint source/UI ✅
+- unresolved livestock ✅
+- Care hydration regression ✅
+- app TypeScript ✅
 - API TypeScript ✅
 - production build ✅
-- final assertion that no merge commit was created ✅
 
-This clears PR #65's integration exit gate. It does **not** mean the stack is merged/live.
+The one-shot bootstrap workflow self-deleted. Saved combined-tree head: `8ccc6a33fe2788e4c06cf633b7229908ad5b1e07`.
 
-## Still intentionally blocked
+No PR was merged, no PR was marked Ready, and main was not changed.
 
-- multi-record whole-subject relocation;
-- multi-batch whole-subject relocation;
-- unresolved source livestock;
-- conditional / insufficient-data / not-recommended destinations;
-- stale destination card used as execution authorization;
-- automatic keeper choice;
-- blind retry after uncertain mutation outcome;
-- direct Care UI → `repository.relocateLivestock()`.
+## Fresh canonical execution rule
 
-## Next layer now authorized to design
+Care/local React state is never the authorization source. The combined repository interface provides:
 
-Create a separate Care-page confirmation wiring stack with this responsibility only:
+`getAquariums(): Promise<Aquarium[]>`
 
-`#65 launch candidate → one confirmation attempt identity → #64 RelocationConfirmationDialog → injected #63 executeFreshRelocation`
+and
 
-Requirements for that layer:
+`relocateLivestock(input): Promise<{ committed: true; replayed?: boolean }>`.
 
-1. one `operationId` is created per **confirmation attempt**, not per render;
-2. rerendering the dialog must not silently create a new operation identity;
-3. uncertain/reconciliation states preserve the same operation identity;
-4. a closed/cancelled idle attempt may be discarded; a completed or uncertain attempt must not be reused for a new move;
-5. Care page must not call `repository.relocateLivestock()` directly;
-6. repository mutation is reachable only inside the injected callback supplied to `executeFreshRelocation`;
-7. canonical reload used by #63 must come from repository-backed state, not current page/local mirror assumptions;
-8. success/reconciliation must refresh the page decision state from canonical repository data.
+The execution controller must resolve the current repository **once when the user confirms the attempt**. That same repository instance must be used for:
+
+`repository.getAquariums() pre-load → #63 revalidation → repository.relocateLivestock() callback → repository.getAquariums() post-load`.
+
+Do not resolve repository mode separately for pre-load/mutation/post-load; otherwise an auth/mode change could split one attempt across different truth sources.
+
+## Operation-attempt contract to implement before JSX
+
+A confirmation attempt owns exactly one operation identity and exactly one launch candidate:
+
+- create operationId only when opening a new confirmation attempt, never during render;
+- rerenders keep the same operationId;
+- one attempt = one `{source aquarium, source record, source batch, destination, quantity}` intent;
+- uncertain/post-state-unavailable reconciliation sends no second mutation;
+- idle unused cancel may discard the attempt;
+- completed/uncertain terminal attempt cannot be repurposed for another move;
+- a new move creates a new attempt and operationId.
+
+## Next implementation order
+
+1. add a pure Care relocation attempt model/controller;
+2. add repository-backed execution adapter that injects `getAquariums` + `relocateLivestock` only under #63;
+3. regression-test operationId stability, repository resolution count, pre/post canonical load and no-mutation reconcile;
+4. only after those tests pass, wire `StepDiagnosisPanel → InterventionComparisonPanel → RelocationConfirmationDialog`;
+5. refresh Care decision state from canonical result after success/reconciliation;
+6. then add browser Golden Path.
 
 ## Non-negotiable constraints
 
 - no merge/Ready without explicit user instruction;
-- no stale verdict as authorization;
-- no direct UI → repository mutation;
-- no arbitrary first-record / first-batch selection;
-- no partial batch move described as whole-conflict resolution;
-- no second display-only quantity source;
+- no stale destination card as mutation authorization;
+- no direct Care JSX/page handler → `repository.relocateLivestock()`;
+- no local mirror presented as fresh canonical execution state;
+- no arbitrary first record/batch selection;
+- no partial move described as whole-conflict resolution;
 - no `conditional` override;
-- no Draft/CI result described as production rollout.
+- no blind retry after uncertain mutation outcome.
