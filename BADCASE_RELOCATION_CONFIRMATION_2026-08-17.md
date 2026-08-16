@@ -20,6 +20,22 @@ REL-023…REL-049 remain active:
 - TEST-003 Care hydration source-line adjacency — replaced with capability assertions; green in `31963163536`.
 - TYPE-001 mirror-result false-branch narrowing — explicit `mirrorPersisted === false`; no union weakening; app/API TS + build green.
 
+## TEST-004 — browser workflow starts the wrong development command
+
+**Observed in first browser run `31963987371`:** Playwright/Chromium installation completed, but the `Start AquaGuide Vite server` step failed and the actual browser Golden Path step was skipped. Therefore no GP-REL product assertion ran.
+
+**Root cause confirmed from `package.json`:** workflow used `npm run dev -- --host ... --port ...`, but this repository defines:
+
+`"dev": "node scripts/dev-with-api.mjs"`
+
+So the browser harness accidentally invoked the combined API+web dev orchestrator rather than the intended deterministic plain Vite frontend server.
+
+**Classification:** browser test infrastructure error, not a Care relocation product failure.
+
+**Required fix:** start frontend explicitly with `npx vite --host 127.0.0.1 --port 4173` (or an equivalent pure `dev:web` invocation), use a bounded curl readiness probe, and leave every GP-REL browser assertion unchanged.
+
+**Status:** workflow correction in progress. Do not add or relax product logic based on run `31963987371`.
+
 ## Persisted Care wiring verification
 
 Branch: `agent/canonical-care-relocation-wiring`
