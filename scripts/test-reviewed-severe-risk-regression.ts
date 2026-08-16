@@ -41,6 +41,7 @@ type ReviewedSevereCase = {
 };
 
 const predator = byId('sp_0049');
+const oscar = byId('sp_0451');
 const neon = byId('sp_0431');
 const cardinal = byId('sp_0432');
 const territorialCichlid = byId('sp_0021');
@@ -67,6 +68,17 @@ const severeCases: ReviewedSevereCase[] = [
     expectedRelation: 'predation',
     expectedDirection: 'one_way',
     expectedSourceSpeciesId: predator.id,
+    diagnosisIssue: 'death',
+  },
+  {
+    id: 'reviewed-oscar-neon-predation',
+    left: oscar,
+    leftQuantity: 1,
+    right: neon,
+    rightQuantity: 5,
+    expectedRelation: 'predation',
+    expectedDirection: 'one_way',
+    expectedSourceSpeciesId: oscar.id,
     diagnosisIssue: 'death',
   },
   {
