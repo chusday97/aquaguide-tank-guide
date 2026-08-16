@@ -1,0 +1,99 @@
+name: Bootstrap Canonical Care Relocation Once
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+    paths:
+      - '.github/workflows/bootstrap-canonical-care-relocation-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/canonical-care-relocation-wiring
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Squash full confirmation entrypoint stack onto canonical mutation base
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin agent/relocation-confirmation-entrypoint integration/canonical-decision-support-audit
+          git show origin/integration/canonical-decision-support-audit:.integration-audit/water-change.service.resolved.ts > /tmp/water-change.service.resolved.ts
+
+          set +e
+          git merge --squash --no-commit origin/agent/relocation-confirmation-entrypoint
+          merge_status=$?
+          set -e
+
+          if [ "$merge_status" -ne 0 ]; then
+            mapfile -t conflicts < <(git diff --name-only --diff-filter=U | sort)
+            expected=(
+              ".github/workflows/product-golden-path.yml"
+              "src/services/aquarium/water-change.service.ts"
+            )
+            printf '%s\n' "${expected[@]}" | sort > /tmp/expected_conflicts
+            printf '%s\n' "${conflicts[@]}" | sort > /tmp/actual_conflicts
+            echo "Observed canonical Care bootstrap conflicts:"
+            cat /tmp/actual_conflicts
+            diff -u /tmp/expected_conflicts /tmp/actual_conflicts || {
+              echo "Unexpected conflict set; bootstrap refuses to guess."
+              exit 1
+            }
+
+            git checkout --ours .github/workflows/product-golden-path.yml
+            cp /tmp/water-change.service.resolved.ts src/services/aquarium/water-change.service.ts
+            git add .github/workflows/product-golden-path.yml src/services/aquarium/water-change.service.ts
+          fi
+
+          test -z "$(git diff --name-only --diff-filter=U)"
+          test ! -f .git/MERGE_HEAD
+          echo "Full #65 stack is staged as a squash integration; no PR merge commit is being created."
+
+      - run: npm ci
+
+      - name: Atomic relocation receipt boundary
+        run: node scripts/test-livestock-relocation-receipt-boundary.mjs
+      - name: Fresh relocation execution policy
+        run: node --import tsx scripts/test-relocation-execution-policy.ts
+      - name: Ambiguous mutation outcome
+        run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
+      - name: Confirmation surface
+        run: node scripts/verify-relocation-confirmation-surface.mjs
+      - name: Confirmation entrypoint source scope
+        run: node --import tsx scripts/test-relocation-confirmation-entrypoint.ts
+      - name: Confirmation entrypoint UI
+        run: node scripts/test-relocation-confirmation-entrypoint-ui.mjs
+      - name: Canonical unresolved livestock
+        run: node --import tsx scripts/test-unresolved-existing-livestock.ts
+      - name: Care hydration regression
+        run: node --import tsx scripts/test-care-aquarium-hydration.ts
+      - name: TypeScript
+        run: npm run lint
+      - name: API TypeScript
+        run: npm run check:api
+      - name: Production build
+        run: npm run build
+
+      - name: Remove one-shot bootstrap workflow
+        run: rm .github/workflows/bootstrap-canonical-care-relocation-once.yml
+
+      - name: Commit verified combined working tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -A
+          git diff --cached --quiet && { echo "No integration changes to commit"; exit 1; }
+          git commit -m "Integrate canonical relocation and confirmation stack for Care wiring"
+          git push origin HEAD:agent/canonical-care-relocation-wiring
