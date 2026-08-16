@@ -1,0 +1,52 @@
+name: Compatibility Evidence Gap Audit
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/compatibilityEvidence.ts'
+      - 'src/data/fishData.ts'
+      - 'src/modules/species/species.service.ts'
+      - 'scripts/audit-compatibility-evidence-gaps.ts'
+      - '.github/workflows/compatibility-evidence-gap-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-gap-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generate research-only evidence priority queue
+        shell: bash
+        env:
+          EVIDENCE_QUEUE_OUTPUT: /tmp/compatibility-evidence-research-queue.json
+        run: |
+          set -euo pipefail
+          node --import tsx scripts/audit-compatibility-evidence-gaps.ts | tee /tmp/evidence-gap-audit-output.txt
+          {
+            echo '### Compatibility evidence research queue'
+            echo
+            echo 'Research priority only — this output is not runtime compatibility evidence.'
+            echo
+            echo '```json'
+            sed '$d' /tmp/evidence-gap-audit-output.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload machine-readable research queue
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-evidence-research-queue
+          path: /tmp/compatibility-evidence-research-queue.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Contextual evidence regression
+        run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
+      - name: Type check
+        run: npm run lint
