@@ -119,6 +119,9 @@ export const assessSpeciesAddition = ({
     const species = catalogById.get(record.fishId);
     return species ? [{ species, record: { quantity: Math.max(1, record.quantity || 1) } }] : [];
   });
+  const unresolvedExistingSpecies = aquarium.fishes
+    .filter(record => record.identityStatus === 'unresolved' || !catalogById.has(record.fishId))
+    .map(record => ({ id: record.id, rawName: record.rawName }));
 
   const evaluations = normalizedItems.flatMap(item => {
     const fish = catalogById.get(item.fishId);
@@ -134,6 +137,7 @@ export const assessSpeciesAddition = ({
       result: evaluateTankCompatibility({
         tank: aquarium,
         existingSpecies: [...existingFromTank, ...otherAdditions],
+        unresolvedExistingSpecies,
         candidateSpecies: fish,
         candidateQuantity: item.quantity,
       }),

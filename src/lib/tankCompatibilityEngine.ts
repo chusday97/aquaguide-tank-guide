@@ -36,6 +36,7 @@ export type TankCompatibilityResult = {
 export type EvaluateTankCompatibilityInput = {
   tank?: Aquarium | null;
   existingSpecies?: Array<Fish | { species?: Fish | null; record?: { quantity?: number } | null }>;
+  unresolvedExistingSpecies?: Array<{ id?: string; rawName?: string }>;
   candidateSpecies?: Fish | null;
   candidateQuantity?: number;
   scope?: TankCompatibilityScope;
@@ -170,6 +171,7 @@ const dedupeRules = (rules: TankCompatibilityRule[]) => {
 export const evaluateTankCompatibility = ({
   tank,
   existingSpecies = [],
+  unresolvedExistingSpecies = [],
   candidateSpecies,
   candidateQuantity = 1,
   scope = 'tank',
@@ -199,6 +201,18 @@ export const evaluateTankCompatibility = ({
       suggestions: ['先选择一个候选生物。'],
       metadata,
     };
+  }
+
+  if (unresolvedExistingSpecies.length > 0) {
+    const names = unresolvedExistingSpecies.map(item => item.rawName?.trim()).filter(Boolean) as string[];
+    const label = names.length > 0 ? names.join('、') : `${unresolvedExistingSpecies.length} 个未确认生物`;
+    missingData.push(asRule(
+      'unresolved_existing_livestock',
+      '缸内存在未确认生物',
+      `当前鱼缸包含 ${label}，其物种身份与行为资料尚未确认，不能据此给出完整混养结论。`,
+      'medium',
+      { basis: 'rule_inference', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [] },
+    ));
   }
 
   const currentLivestock = normalizeExistingSpecies(existingSpecies);

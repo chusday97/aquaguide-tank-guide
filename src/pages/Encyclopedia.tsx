@@ -46,7 +46,11 @@ import {
 import {
   reviewSpeciesAdditions,
 } from '../services/aquarium/species-addition.service';
-import { recordExistingLivestock } from '../services/aquarium/livestock-recording.service';
+import {
+  getExistingLivestockItemLabel,
+  isVerifiedExistingLivestockItem,
+  recordExistingLivestock,
+} from '../services/aquarium/livestock-recording.service';
 import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import {
@@ -1149,12 +1153,12 @@ export default function Encyclopedia() {
     setTargetAquariumId(activeAquarium.id);
     setOwnedFishIds(prev => {
       const next = new Set(prev);
-      recorded.savedItems.forEach(item => next.add(item.fishId));
+      recorded.savedItems.filter(isVerifiedExistingLivestockItem).forEach(item => next.add(item.fishId));
       return next;
     });
     if (recorded.failedItems.length > 0) {
       const failedNames = recorded.failedItems
-        .map(item => fishData.find(fish => fish.id === item.fishId)?.name || item.fishId)
+        .map(item => getExistingLivestockItemLabel(item, fishData))
         .join('、');
       throw new Error(i18n.language?.startsWith('en')
         ? `${recorded.savedItems.length} species were recorded; ${recorded.failedItems.length} still need retrying.`

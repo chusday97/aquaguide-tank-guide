@@ -31,14 +31,27 @@ export const reproductiveStateSchema = z.enum([
   'postpartum_recovery',
 ]);
 
-export const aquariumSpeciesCreateSchema = z.object({
-  speciesCatalogKey: z.string().trim().min(1).max(160),
+const aquariumSpeciesCreateBaseSchema = z.object({
   quantity: z.number().int().positive().max(100000),
   entryDate: isoDateSchema,
   lastWaterChangeAt: isoDateTimeSchema.optional(),
   lifeStage: lifeStageSchema.default('unknown'),
   reproductiveState: reproductiveStateSchema.default('unknown'),
 });
+
+export const aquariumSpeciesCreateSchema = z.union([
+  aquariumSpeciesCreateBaseSchema.extend({
+    identityStatus: z.literal('verified').default('verified'),
+    speciesCatalogKey: z.string().trim().min(1).max(160),
+    rawName: z.never().optional(),
+  }),
+  aquariumSpeciesCreateBaseSchema.extend({
+    identityStatus: z.literal('unresolved'),
+    rawName: z.string().trim().min(1).max(160),
+    speciesCatalogKey: z.never().optional(),
+    lastWaterChangeAt: z.never().optional(),
+  }),
+]);
 
 export const aquariumSpeciesUpdateSchema = z.object({
   quantity: z.number().int().positive().max(100000).optional(),

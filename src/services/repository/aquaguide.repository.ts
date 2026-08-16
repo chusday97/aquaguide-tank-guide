@@ -54,15 +54,19 @@ export type AquariumCreateCommand = {
   operationId: string;
 };
 
-export type LivestockAddCommand = {
+type LivestockAddCommandBase = {
   aquariumId: string;
-  speciesCatalogKey: string;
   quantity: number;
   entryDate: string;
   lifeStage?: LifeStage;
   reproductiveState?: ReproductiveState;
   operationId: string;
 };
+
+export type LivestockAddCommand = LivestockAddCommandBase & (
+  | { identityStatus?: 'verified'; speciesCatalogKey: string; rawName?: never }
+  | { identityStatus: 'unresolved'; rawName: string; speciesCatalogKey?: never }
+);
 
 export type WaterChangeMutation = {
   aquariumId: string;

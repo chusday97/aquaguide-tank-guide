@@ -65,7 +65,11 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
     if (!aquarium) throw new Error('没有找到需要记录生物的鱼缸。');
     const batchId = `livestock_${input.operationId}`;
     if (aquarium.fishes.some(item => item.batches?.some(batch => batch.id === batchId))) return aquarium;
-    const current = aquarium.fishes.find(item => item.fishId === input.speciesCatalogKey);
+
+    const unresolved = input.identityStatus === 'unresolved';
+    const current = unresolved ? undefined : aquarium.fishes.find(item => item.fishId === input.speciesCatalogKey);
+    const recordId = `species_${input.operationId}`;
+    const mirrorFishId = unresolved ? `unresolved:${recordId}` : input.speciesCatalogKey;
     const nextRecord = current
       ? appendSpeciesBatch(current, {
           id: batchId,
@@ -75,8 +79,10 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
           reproductiveState: input.reproductiveState,
         })
       : {
-          id: `species_${input.operationId}`,
-          fishId: input.speciesCatalogKey,
+          id: recordId,
+          fishId: mirrorFishId,
+          identityStatus: unresolved ? 'unresolved' as const : 'verified' as const,
+          rawName: unresolved ? input.rawName.trim() : undefined,
           quantity: input.quantity,
           entryDate: input.entryDate,
           batches: [createSpeciesBatch({

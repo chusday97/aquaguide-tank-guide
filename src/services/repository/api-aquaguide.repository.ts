@@ -21,7 +21,9 @@ import type {
 
 type ApiAquariumSpecies = {
   id: string;
-  speciesCatalogKey: string;
+  speciesCatalogKey?: string;
+  identityStatus?: 'verified' | 'unresolved';
+  rawName?: string;
   quantity: number;
   entryDate: string;
   lastWaterChangeAt?: string;
@@ -159,7 +161,11 @@ const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
     name: record.name,
     fishes: (record.species || []).map<ApiAquariumFish>(item => ({
       id: item.id,
-      fishId: item.speciesCatalogKey,
+      fishId: item.identityStatus === 'unresolved' || !item.speciesCatalogKey
+        ? `unresolved:${item.id}`
+        : item.speciesCatalogKey,
+      identityStatus: item.identityStatus || 'verified',
+      rawName: item.rawName,
       quantity: item.quantity,
       entryDate: item.entryDate,
       lastWaterChangeDate: item.lastWaterChangeAt,
@@ -326,13 +332,23 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('记录数量必须是正整数。');
     await apiRequest(`/aquariums/${input.aquariumId}/species`, {
       method: 'POST',
-      body: {
-        speciesCatalogKey: input.speciesCatalogKey,
-        quantity: input.quantity,
-        entryDate: input.entryDate.slice(0, 10),
-        lifeStage: input.lifeStage,
-        reproductiveState: input.reproductiveState,
-      },
+      body: input.identityStatus === 'unresolved'
+        ? {
+            identityStatus: 'unresolved',
+            rawName: input.rawName,
+            quantity: input.quantity,
+            entryDate: input.entryDate.slice(0, 10),
+            lifeStage: input.lifeStage,
+            reproductiveState: input.reproductiveState,
+          }
+        : {
+            identityStatus: 'verified',
+            speciesCatalogKey: input.speciesCatalogKey,
+            quantity: input.quantity,
+            entryDate: input.entryDate.slice(0, 10),
+            lifeStage: input.lifeStage,
+            reproductiveState: input.reproductiveState,
+          },
       idempotencyKey: input.operationId,
     });
     const saved = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
