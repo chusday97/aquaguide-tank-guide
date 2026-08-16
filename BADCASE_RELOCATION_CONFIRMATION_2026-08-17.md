@@ -30,6 +30,12 @@ Full one-shot run `31963163536`: **GREEN** through page static contract, canonic
 
 This closes static/logic/type/build, not browser/hosted acceptance.
 
+## Browser testability gate
+
+Run `31963752488` is **GREEN**. It proved the pre-marker source did not satisfy the marker verifier, then applied only non-semantic `data-*` selectors to the real StepDiagnosis path. Care hydration, Care relocation static contract, App TypeScript and production build remained green. One-shot marker tooling self-deleted and the marker commit was pushed.
+
+Markers are not a product-behavior shortcut and do not close any browser badcase by themselves. They only provide stable selectors so the Playwright suite can traverse the actual Care diagnosis/intervention/confirmation path.
+
 ## Browser acceptance badcases
 
 ### REL-050 — opening confirmation mutates immediately
