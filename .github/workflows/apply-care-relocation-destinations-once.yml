@@ -26,7 +26,7 @@ jobs:
         run: node scripts/apply-care-relocation-destinations.mjs
       - name: Care relocation destination contract
         run: node scripts/test-care-relocation-destination-surface.mjs
-      - name: Existing Care decision-surface contract
+      - name: Evolved Care decision-surface contract
         run: node scripts/test-care-conflict-decision-surface.mjs
       - name: Relocation destination evaluator regression
         run: node --import tsx scripts/test-relocation-destination-evaluator.ts
