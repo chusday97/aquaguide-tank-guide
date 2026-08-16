@@ -7,23 +7,13 @@ on:
     branches: [main, agent/fix-aquarium-completion-state]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply one-time care checklist progress repair
-        if: github.event_name == 'push' && hashFiles('.agent-care-checklist-progress-trigger') != ''
-        run: |
-          python3 scripts/agent-care-checklist-progress-01-core.py
-          python3 scripts/agent-care-checklist-progress-02-api-repo.py
-          python3 scripts/agent-care-checklist-progress-03-api-contract.py
-          python3 scripts/agent-care-checklist-progress-04-care-page.py
-          python3 scripts/agent-care-checklist-progress-05-artifacts.py
-          python3 scripts/agent-care-checklist-progress-06-hydration-regression.py
-          git diff --check
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -55,7 +45,7 @@ jobs:
           node --import tsx scripts/test-assistant-favorites-hydration.ts
           node --import tsx scripts/test-care-unknown-facts.ts
           node --import tsx scripts/test-care-operation-canonical.ts
-          if [ -f scripts/test-care-checklist-progress-canonical.ts ]; then node --import tsx scripts/test-care-checklist-progress-canonical.ts; fi
+          node --import tsx scripts/test-care-checklist-progress-canonical.ts
           node scripts/test-aquarium-settings-boundary.mjs
           node --import tsx scripts/test-aquarium-delete-boundary.ts
           node --import tsx scripts/test-water-change-repository-boundary.ts
@@ -77,13 +67,3 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: npm run test:golden-path-gp002-ui
-      - name: Commit canonical care checklist progress repair
-        if: github.event_name == 'push' && hashFiles('.agent-care-checklist-progress-trigger') != ''
-        shell: bash
-        run: |
-          git config user.name "AquaGuide Agent"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .agent-care-checklist-progress-trigger .agent-care-checklist-progress-patch.gz.b64 scripts/agent-care-checklist-progress-01-core.py scripts/agent-care-checklist-progress-02-api-repo.py scripts/agent-care-checklist-progress-03-api-contract.py scripts/agent-care-checklist-progress-04-care-page.py scripts/agent-care-checklist-progress-05-artifacts.py scripts/agent-care-checklist-progress-06-hydration-regression.py
-          git add src/services/care/care-activity.service.ts src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts packages/contracts/src/business.ts src/types/database.ts apps/api/src/routes/user-records.ts src/pages/CareEncyclopedia.tsx supabase/migrations/20260816072000_care_checklist_progress.sql scripts/test-care-checklist-progress-canonical.ts scripts/test-care-aquarium-hydration.ts
-          git commit -m "fix: persist care checklist progress canonically"
-          git push origin HEAD:agent/fix-aquarium-completion-state
