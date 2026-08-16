@@ -6,6 +6,7 @@ on:
       - agent/unresolved-existing-livestock
     paths:
       - scripts/phase1-patch-unresolved-existing-livestock.mjs
+      - scripts/phase1-fix-unresolved-result-callers.mjs
       - .github/workflows/phase1-unresolved-livestock-patch.yml
 
 permissions:
@@ -26,10 +27,14 @@ jobs:
       - run: npm ci
       - name: Apply guarded cross-stack patch
         run: node scripts/phase1-patch-unresolved-existing-livestock.mjs
+      - name: Narrow unresolved result callsites
+        run: node scripts/phase1-fix-unresolved-result-callers.mjs
       - name: Unresolved existing-livestock contract
         run: npx tsx scripts/test-unresolved-existing-livestock.ts
       - name: Existing livestock recording regression
         run: npx tsx scripts/test-livestock-recording.ts
+      - name: Existing core-flow regression
+        run: npx tsx scripts/test-core-flow-state-eval-v1.ts
       - name: Existing atomic livestock contract
         run: npx tsx scripts/test-atomic-livestock-addition.ts
       - name: API type check
@@ -40,6 +45,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/types.ts src/types/database.ts src/services/repository/aquaguide.repository.ts packages/contracts/src/business.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts apps/api/src/routes/aquariums.ts src/lib/tankCompatibilityEngine.ts src/services/aquarium/species-addition.service.ts src/services/aquarium/livestock-recording.service.ts
+          git add src/types.ts src/types/database.ts src/services/repository/aquaguide.repository.ts packages/contracts/src/business.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts apps/api/src/routes/aquariums.ts src/lib/tankCompatibilityEngine.ts src/services/aquarium/species-addition.service.ts src/services/aquarium/livestock-recording.service.ts src/pages/Aquarium.tsx src/pages/Encyclopedia.tsx scripts/test-livestock-recording.ts scripts/test-core-flow-state-eval-v1.ts
           git commit -m "Support unresolved existing livestock end to end"
           git push origin HEAD:agent/unresolved-existing-livestock
