@@ -66,29 +66,47 @@ Passed:
 - one-shot write tooling self-delete ✅
 - verified Care wiring commit/push ✅
 
-TEST-003 (hydration test adjacency coupling) and TYPE-001 (explicit mirror-result discrimination) are resolved without weakening product or type semantics.
+TEST-003 and TYPE-001 are resolved without weakening product or type semantics.
 
 ## Real-catalog browser fixture audit — GREEN
 
-Synthetic catalog controls are **not** accepted for the rendered browser Golden Path. A read-only real-catalog audit was added and run as `31963516019`.
+Synthetic catalog controls are **not** accepted for the rendered browser Golden Path. Read-only audit run `31963516019` found reviewed eligible scenarios.
 
-Reviewed real scenarios found:
+Primary fixture:
+- source: `迷你鹦鹉鱼 sp_0021 ×1 + 虎皮鱼 sp_0439 ×6`;
+- known blocker count 1, formal intervention allowed;
+- `虎皮鱼 sp_0439 ×6 → empty freshwater target` = `compatible_by_current_evidence`;
+- #65 entrypoint = `eligible`.
 
-1. source: `迷你鹦鹉鱼 sp_0021 ×1 + 虎皮鱼 sp_0439 ×6`
-   - known blocker count: 1;
-   - formal intervention allowed;
-   - `虎皮鱼 sp_0439 ×6 → empty freshwater target` = `compatible_by_current_evidence`;
-   - #65 entrypoint = `eligible`.
+Secondary fixture:
+- `珍珠赤雷龙 sp_0049 ×1 + 红绿灯 sp_0431 ×6`;
+- `红绿灯 ×6 → empty target` = eligible.
 
-2. source: `珍珠赤雷龙 sp_0049 ×1 + 红绿灯 sp_0431 ×6`
-   - known blocker count: 1;
-   - formal intervention allowed;
-   - `红绿灯 sp_0431 ×6 → empty freshwater target` = `compatible_by_current_evidence`;
-   - #65 entrypoint = `eligible`.
+Primary browser path uses `sp_0021 + sp_0439` because the source blocker is backed by the reviewed pair rule. Browser test must begin at rendered Care/intervention card and may not inject a synthetic request/dialog.
 
-Primary browser fixture will use **迷你鹦鹉鱼 + 虎皮鱼**, because the source conflict is backed by the reviewed pair rule rather than relying only on generic predation inference.
+## Browser testability markers — GREEN AND PERSISTED
 
-The browser test must seed these actual catalog IDs and begin at the rendered intervention/destination card. It may not call `RelocationConfirmationDialog` directly or inject a synthetic species/request.
+Run `31963752488` completed **success**.
+
+It first proved the marker verifier failed on the pre-marker Care source, then applied only non-semantic `data-*` selectors and passed:
+- browser marker static contract ✅
+- Care hydration regression ✅
+- Care relocation wiring static contract ✅
+- App TypeScript ✅
+- production build ✅
+- one-shot marker tooling self-delete ✅
+- marker commit/push ✅
+
+Current branch head after marker commit: `751d883edab9d578165317b4fa55c1851cab9b0e`.
+
+Persisted selectors:
+- `data-care-step-diagnosis="true"`
+- `data-care-diagnosis-issue={issue.id}`
+- `data-care-diagnosis-question={question.id}`
+- `data-care-diagnosis-option={`${question.id}:${option.value}`}`
+- `data-care-diagnosis-submit="true"`
+
+These markers change no diagnosis/relocation semantics. They only let the browser suite exercise the actual user path without brittle Tailwind/text-structure selectors.
 
 ## What this does NOT prove yet
 
