@@ -18,111 +18,71 @@
 
 ## REL-034 — Formal species option aggregates multiple source records, opener picks the first record
 
-**Failure**
+**Failure:** `TankDecisionContext` resolves two factual records to the same canonical species and produces one formal option such as `A ×5`; UI constructs a request with the first source record.
 
-`TankDecisionContext` resolves two factual records to the same canonical species and produces one formal option such as `A ×5`. Entry UI constructs a request with `sourceRecordIds[0]`.
+**Risk:** user sees a whole-species counterfactual, but mutation targets only one factual record and can leave the blocker intact.
 
-**Risk**
+**Required:** direct confirmation only when the formal subject maps to exactly one factual source record.
 
-The user sees a whole-species counterfactual, but the mutation targets only one factual record. Remaining animals can preserve the conflict while UI implies the full intervention was selected.
-
-**Required**
-
-Direct confirmation entry is allowed only when the formal subject maps to exactly one factual source record under the current single-record mutation contract. Multi-record subjects must show an explicit unavailable boundary.
-
-**Status**
-
-New entrypoint regression required.
+**Current fix:** `buildRelocationConfirmationEntrypoint()` requires `sourceRecordIds.length === 1`; multi-record regression passed in CI run `31961302689`.
 
 ## REL-035 — Formal whole-subject quantity spans multiple batches, opener picks the first batch
 
-**Failure**
+**Failure:** one source record has total 5 stored as batch A=3 + batch B=2; UI submits the first batch.
 
-One factual source record has total quantity 5, stored as batch A=3 and batch B=2. Entry UI submits batch A because it is first.
+**Risk:** a partial move is presented as the whole formal intervention.
 
-**Risk**
+**Required:** never use `batches[0]`; direct confirmation requires exactly one positive source batch representing the entire formal option.
 
-Only part of the formal subject moves, but the decision card described a whole-subject intervention and its blocker reduction no longer holds.
-
-**Required**
-
-Do not use `batches[0]`. Direct confirmation requires one explicit batch whose quantity equals the full formal option quantity and the factual record quantity. Otherwise show “当前需要多批次处理，暂不能直接执行”.
-
-**Status**
-
-Known architectural boundary from PR #63; now must be enforced before the confirmation opener is displayed.
+**Current fix:** entrypoint requires exactly one positive batch and panel explicitly explains the multi-batch limitation. Regression passed in CI run `31961302689`.
 
 ## REL-036 — Destination card status is copied into candidate as execution authorization
 
-**Failure**
+**Failure:** entrypoint emits `{ isSafe: true }`, `{ allowed: true }`, cached verdict, or expected compatibility and a later layer treats it as permission to mutate.
 
-The entrypoint emits `{ isSafe: true }`, `{ allowed: true }`, `expectedCompatibility`, or cached verdict data and a later layer treats it as permission to mutate.
+**Risk:** destination can change between render and actual execution.
 
-**Risk**
+**Required:** current `compatible_by_current_evidence` may only decide whether an opener is displayed. Launch candidate contains identifiers/facts, not authorization. PR #63 re-evaluates again before mutation.
 
-A destination can change between panel render and confirmation click/execution.
-
-**Required**
-
-The opener may use current `compatible_by_current_evidence` only to decide whether the confirmation entry is worth showing. The launch candidate carries identifiers/facts, not an authorization boolean. PR #63 must recompute the destination again immediately before mutation.
-
-**Status**
-
-Static contract required.
+**Current fix:** candidate has no `operationId`, safety boolean or cached verdict. Pure entrypoint regression checks serialized candidate. UI static contract also guards this boundary.
 
 ## REL-037 — Record quantity, batch quantity and formal option quantity disagree
 
-**Failure**
+**Failure:** factual record, selected batch and formal option disagree but opener still proceeds.
 
-A legacy/inconsistent local record says quantity 5, selected batch says 6, formal option says 5; entrypoint still opens confirmation because one number happens to satisfy a loose comparison.
+**Required:** fail closed unless factual record quantity and selected batch quantity both equal the formal whole-subject quantity.
 
-**Risk**
-
-Confirmation scope is not a truthful representation of canonical/factual storage.
-
-**Required**
-
-Fail closed unless `record.quantity === formalOption.quantity === selectedBatch.quantity` for the direct single-batch path.
-
-**Status**
-
-Regression required.
+**Current fix:** separate record-quantity and batch-quantity guards; both regressions passed in CI run `31961302689`.
 
 ## REL-038 — Source record has no explicit batches but opener fabricates a batch identity
 
-**Failure**
+**Failure:** legacy factual record has quantity but no `batches`; UI invents a batch identity.
 
-Legacy factual record has a quantity but no `batches`; UI synthesizes an ID or submits the record ID as batch ID.
+**Required:** no explicit factual batch = no direct confirmation entry under #62 v1.
 
-**Risk**
+**Current fix:** `source_batch_missing`; regression passed in CI run `31961302689`.
 
-Mutation contract no longer addresses a canonical source batch and may fail or target an invented object.
+## REL-039 — Multiple positive batches exist but one matching batch is accepted despite contradictory storage
 
-**Required**
+**Failure:** eligibility searches only for a matching batch and ignores additional positive batches.
 
-No explicit canonical batch = no direct confirmation entry under #62 v1. Keep the plan visible but explain that execution is unavailable until factual batch state is normalized.
+**Required:** exactly one positive source batch, not merely one matching batch.
 
-**Status**
+**Current fix:** `positiveBatches.length === 1` is mandatory before quantity matching; regression passed in CI run `31961302689`.
 
-Regression required.
+## TEST-001 — Static UI contract mis-parses optional callback syntax
 
-## REL-039 — Multiple positive batches exist but one batch accidentally equals formal total because storage is inconsistent
+**Observed in first entrypoint CI run:** source-scope regression passed, UI static contract failed because the regex expected:
 
-**Failure**
+`onOpenRelocationConfirmation?(candidate)`
 
-Entry eligibility only searches for `batch.quantity === option.quantity` and ignores other positive batches.
+while valid TypeScript/JavaScript optional-call syntax is:
 
-**Risk**
+`onOpenRelocationConfirmation?.(candidate)`
 
-The opener accepts internally contradictory storage and may leave undisclosed livestock behind.
+**Classification:** test-harness false failure, not product-policy failure.
 
-**Required**
-
-For the direct path require exactly one positive source batch, not merely one matching batch. Also require factual record quantity equality.
-
-**Status**
-
-Regression required.
+**Fix:** static regex corrected to `?.(`. No product gate was relaxed.
 
 ## Entry-point exit gate
 
@@ -140,4 +100,5 @@ Before this layer can be described as safe:
 - `InterventionComparisonPanel` imports no repository/API/Supabase code;
 - clicking the entry calls only the provided confirmation-opener callback;
 - no mutation is executed by this PR;
+- full confirmation/policy/decision/type/build gates pass after the static-contract fix;
 - handoff/badcase remain updated as new failures are found.
