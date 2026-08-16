@@ -24,7 +24,7 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Dry-run merge lionfish decision/evidence stack
+      - name: Dry-run merge current lionfish decision/evidence stack
         shell: bash
         run: |
           set -euo pipefail
@@ -60,7 +60,7 @@ jobs:
 
           test -z "$(git diff --name-only --diff-filter=U)"
           test -f .git/MERGE_HEAD
-          echo "Lionfish merged tree resolved locally; no merge commit/push will be created."
+          echo "Current lionfish merged tree resolved locally; no merge commit/push will be created."
 
       - run: npm ci
 
@@ -80,9 +80,9 @@ jobs:
         run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
       - name: Contextual behavior evidence
         run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
-      - name: Lionfish reviewed predation
+      - name: Canonical lionfish reviewed predation
         run: node --import tsx scripts/test-lionfish-reviewed-evidence.ts
-      - name: Five-fixture reviewed severe-risk regression
+      - name: Four-fixture reviewed severe-risk regression
         run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
       - name: Whole-tree TypeScript
         run: npm run lint
