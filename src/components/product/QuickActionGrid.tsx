@@ -7,6 +7,7 @@ export type QuickActionItem = {
   onClick: () => void;
   tone?: 'normal' | 'warning' | 'danger' | 'info' | 'muted';
   active?: boolean;
+  disabled?: boolean;
 };
 
 type QuickActionGridProps = {
@@ -37,7 +38,8 @@ export function QuickActionGrid({ actions }: QuickActionGridProps) {
           key={action.label}
           type="button"
           onClick={action.onClick}
-          className={`grid min-h-[78px] min-w-0 grid-cols-[38px_minmax(0,1fr)] items-center gap-2 rounded-[16px] px-3 py-2.5 text-left shadow-sm transition-colors md:min-h-[82px] ${
+          disabled={action.disabled}
+          className={`grid min-h-[78px] min-w-0 grid-cols-[38px_minmax(0,1fr)] items-center gap-2 rounded-[16px] px-3 py-2.5 text-left shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-45 md:min-h-[82px] ${
             action.active ? activeToneClassName[action.tone || 'muted'] : toneClassName[action.tone || 'muted']
           }`}
         >
