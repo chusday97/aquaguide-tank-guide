@@ -20,10 +20,10 @@ const businessStorageKeys = [
   'aquarium_diagnosis_records',
   'deceasedRecords',
   'aquapediaDiscoveryDeck',
-  'aquaguide_care_favorites',
-  'aquaguide_care_reminders',
-  'aquaguide_care_completed_operations',
-  'aquaguide_care_saved_checklists',
+  'aqua_care_favorites',
+  'aqua_care_reminders',
+  'aqua_care_completed_operations',
+  'aqua_care_saved_checklists',
 ];
 
 const readAppState = page => page.evaluate(() => {
@@ -144,6 +144,18 @@ try {
   await pageA.keyboard.press('Escape').catch(() => {});
   const secondAquarium = await createAquariumFromUi(pageA);
   assert.notEqual(firstAquarium.id, secondAquarium.id, 'two UI creates must produce distinct canonical ids');
+  await pageA.waitForFunction(
+    aquariumId => {
+      try {
+        const state = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');
+        return state.currentAquariumId === aquariumId;
+      } catch {
+        return false;
+      }
+    },
+    secondAquarium.id,
+    { timeout: 10_000 },
+  );
   console.log('✓ device A created two repository-backed aquariums');
 
   // Device B receives ONLY the Supabase auth storage, never the local AquaGuide business mirror.
