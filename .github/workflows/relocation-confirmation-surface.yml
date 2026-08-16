@@ -1,0 +1,39 @@
+name: Relocation Confirmation Surface
+
+on:
+  push:
+    branches:
+      - agent/relocation-confirmation-surface
+  pull_request:
+    paths:
+      - 'src/lib/relocationConfirmationState.ts'
+      - 'src/components/compatibility/RelocationConfirmationDialog.tsx'
+      - 'scripts/test-relocation-confirmation-state.ts'
+      - 'scripts/verify-relocation-confirmation-surface.mjs'
+      - '.github/workflows/relocation-confirmation-surface.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  confirmation-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Confirmation state regression
+        run: node --import tsx scripts/test-relocation-confirmation-state.ts
+      - name: Confirmation UI static contract
+        run: node scripts/verify-relocation-confirmation-surface.mjs
+      - name: Fresh execution policy regression
+        run: node --import tsx scripts/test-relocation-execution-policy.ts
+      - name: Ambiguous mutation outcome regression
+        run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
+      - name: TypeScript
+        run: npm run lint
+      - name: Production build
+        run: npm run build
