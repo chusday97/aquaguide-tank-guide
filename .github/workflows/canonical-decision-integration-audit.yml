@@ -6,6 +6,7 @@ on:
       - integration/canonical-decision-support-audit
     paths:
       - '.github/workflows/canonical-decision-integration-audit.yml'
+      - '.integration-audit/water-change.service.resolved.ts'
   workflow_dispatch:
 
 permissions:
@@ -24,29 +25,65 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Dry-run merge decision stack without committing
+      - name: Dry-run merge and resolve only audited conflicts
         shell: bash
         run: |
-          set -u
+          set -euo pipefail
           git config user.name "integration-audit"
           git config user.email "integration-audit@users.noreply.github.com"
+          git rev-parse HEAD > /tmp/integration_audit_base_head
           git fetch origin agent/quick-diagnosis-conflict-augmentation
+
           set +e
           git merge --no-commit --no-ff origin/agent/quick-diagnosis-conflict-augmentation
           merge_status=$?
           set -e
+
           if [ "$merge_status" -ne 0 ]; then
-            echo "Canonical/decision integration has merge conflicts:"
-            git diff --name-only --diff-filter=U
-            echo "--- conflict status ---"
-            git status --short
-            exit "$merge_status"
+            mapfile -t conflicts < <(git diff --name-only --diff-filter=U | sort)
+            expected=(
+              ".github/workflows/product-golden-path.yml"
+              "src/services/aquarium/water-change.service.ts"
+            )
+            printf '%s\n' "${expected[@]}" | sort > /tmp/expected_conflicts
+            printf '%s\n' "${conflicts[@]}" | sort > /tmp/actual_conflicts
+            echo "Observed integration conflicts:"
+            cat /tmp/actual_conflicts
+            if ! diff -u /tmp/expected_conflicts /tmp/actual_conflicts; then
+              echo "Unexpected conflict set; audit refuses to guess a resolution."
+              exit 1
+            fi
+
+            # Product Golden Path is CI orchestration rather than runtime code.
+            # Keep the canonical-stack version inside this disposable merge and
+            # run the decision-stack gates explicitly below.
+            git checkout --ours .github/workflows/product-golden-path.yml
+
+            # Runtime water-change conflict has an audited semantic-union template:
+            # canonical care-event hydration + future/invalid date normalization.
+            cp .integration-audit/water-change.service.resolved.ts src/services/aquarium/water-change.service.ts
+            git add .github/workflows/product-golden-path.yml src/services/aquarium/water-change.service.ts
           fi
-          echo "Dry-run merge is conflict-free. No merge commit will be created or pushed."
+
+          remaining_conflicts="$(git diff --name-only --diff-filter=U)"
+          if [ -n "$remaining_conflicts" ]; then
+            echo "Unresolved conflicts remain:"
+            printf '%s\n' "$remaining_conflicts"
+            exit 1
+          fi
+
+          test -f .git/MERGE_HEAD
+          echo "Dry-run merge tree resolved locally. No merge commit will be created or pushed."
           git status --short
 
       - name: Install merged-tree dependencies
         run: npm ci
+
+      - name: Canonical water-change repository boundary
+        run: node --import tsx scripts/test-water-change-repository-boundary.ts
+
+      - name: Future-date water-change regression
+        run: node --import tsx scripts/test-water-change-history.ts
 
       - name: Unresolved livestock contract on merged tree
         run: node --import tsx scripts/test-unresolved-existing-livestock.ts
@@ -75,5 +112,7 @@ jobs:
       - name: Confirm audit did not create a merge commit
         shell: bash
         run: |
+          set -euo pipefail
           test -f .git/MERGE_HEAD
+          test "$(git rev-parse HEAD)" = "$(cat /tmp/integration_audit_base_head)"
           echo "Merge remained uncommitted inside the disposable runner as intended."
