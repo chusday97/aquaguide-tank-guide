@@ -75,8 +75,12 @@ jobs:
         run: node scripts/test-livestock-relocation-contract.mjs
       - name: Repository/API relocation wiring contract
         run: node scripts/test-livestock-relocation-wiring.mjs
+      - name: Mutation receipt boundary regression
+        run: node scripts/test-livestock-relocation-receipt-boundary.mjs
       - name: Fresh relocation execution policy
         run: node --import tsx scripts/test-relocation-execution-policy.ts
+      - name: Ambiguous mutation outcome regression
+        run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
       - name: Tank decision support regression
         run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
       - name: Relocation destination evaluator
