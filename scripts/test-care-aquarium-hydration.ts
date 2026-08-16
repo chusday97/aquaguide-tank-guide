@@ -7,10 +7,10 @@ assert.match(care, /loadAppStateFromStorage, patchLocalAppState, subscribeToAppS
 assert.match(care, /const \[appStateSnapshot, setAppStateSnapshot\] = useState\(loadAppStateFromStorage\)/);
 assert.match(care, /subscribeToAppState\(\(\) => \{\s+setAppStateSnapshot\(loadAppStateFromStorage\(\)\);\s+\}\)/s);
 
-// Direct Care entry hydrates both collection favorites and canonical aquarium facts.
-assert.match(care, /const \[favoriteSnapshot, aquariums\] = await Promise\.all\(\[\s+repository\.getFavorites\(\),\s+repository\.getAquariums\(\),\s+\]\)/s);
+// Direct Care entry hydrates collection favorites, canonical aquarium facts, and canonical care events.
+assert.match(care, /const \[favoriteSnapshot, aquariums, careEvents\] = await Promise\.all\(\[\s+repository\.getFavorites\(\),\s+repository\.getAquariums\(\),\s+repository\.getCareEvents\(\),\s+\]\)/s);
 assert.match(care, /const currentAquariumId = cachedState\.currentAquariumId\s+&& aquariums\.some\(item => item\.id === cachedState\.currentAquariumId\)/s);
-assert.match(care, /patchLocalAppState\(\{ aquariums, currentAquariumId \}\);/);
+assert.match(care, /patchLocalAppState\(\{ aquariums, currentAquariumId, careEvents \}\);/);
 assert.match(care, /鱼缸数据暂时无法同步，当前显示本机缓存。/);
 
 // Recommendations are derived from the reactive snapshot, not a one-time localStorage read.
@@ -24,4 +24,4 @@ assert.match(care, /const \[appState, setAppState\] = useState\(loadAppStateFrom
 assert.match(care, /\}, \[defaultAquariumId, topic\.id\]\);/);
 assert.doesNotMatch(care, /const appState = useMemo\(\(\) => loadAppStateFromStorage\(\), \[\]\)/);
 
-console.log('care aquarium hydration contract passed: direct care entry and quick diagnosis use repository-hydrated aquarium facts');
+console.log('care aquarium hydration contract passed: direct Care entry hydrates repository aquarium facts and canonical care events');
