@@ -495,24 +495,9 @@ aquariumsRouter.post('/aquariums/:id/species/:recordId/batches/:batchId/relocate
   if (error) throwDatabaseError(error, '迁移没有完成，源鱼缸和目标鱼缸均保持原状态。');
 
   const relocation = data?.[0] as DbRow | undefined;
-  if (!relocation) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '迁移已经提交，但暂时无法确认结果。');
-
-  const [sourceResult, destinationResult] = await Promise.all([
-    client.from('aquariums').select(aquariumSelect).eq('id', sourceAquariumId).is('deleted_at', null).maybeSingle(),
-    client.from('aquariums').select(aquariumSelect).eq('id', parsed.data.destinationAquariumId).is('deleted_at', null).maybeSingle(),
-  ]);
-  if (sourceResult.error || destinationResult.error || !sourceResult.data || !destinationResult.data) {
-    throwDatabaseError(sourceResult.error || destinationResult.error, '迁移已完成，但最新鱼缸状态暂时无法读取。');
-  }
-
   return sendData(request, response, {
-    sourceAquarium: mapAquarium(sourceResult.data),
-    destinationAquarium: mapAquarium(destinationResult.data),
-    relocation: {
-      destinationSpeciesRecordId: relocation.destination_species_record,
-      destinationBatchId: relocation.destination_batch,
-      replayed: Boolean(relocation.replayed),
-    },
+    committed: true,
+    ...(relocation ? { replayed: Boolean(relocation.replayed) } : {}),
   });
 }));
 

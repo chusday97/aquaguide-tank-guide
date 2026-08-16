@@ -176,17 +176,8 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
   async relocateLivestock(input: LivestockRelocationInput) {
     const state = loadAppStateFromStorage();
     const result = relocateLivestockInAquariums(state.aquariums, input);
-    const persisted = persistAquariums(result.aquariums, state.currentAquariumId || input.sourceAquariumId);
-    const sourceAquarium = persisted.aquariums.find(item => item.id === input.sourceAquariumId);
-    const destinationAquarium = persisted.aquariums.find(item => item.id === input.destinationAquariumId);
-    if (!sourceAquarium || !destinationAquarium) throw new Error('迁移后鱼缸状态无法确认。');
-    return {
-      sourceAquarium,
-      destinationAquarium,
-      destinationFishId: result.destinationFishId,
-      destinationBatchId: result.destinationBatchId,
-      replayed: result.replayed,
-    };
+    persistAquariums(result.aquariums, state.currentAquariumId || input.sourceAquariumId);
+    return { committed: true as const, replayed: result.replayed };
   }
 
   async getFavorites() {

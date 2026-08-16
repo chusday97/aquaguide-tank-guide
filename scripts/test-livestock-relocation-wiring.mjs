@@ -13,13 +13,14 @@ assert.match(repository, /relocateLivestock\(input: LivestockRelocationInput\)/)
 assert.match(localRepository, /relocateLivestockInAquariums/);
 assert.match(localRepository, /async relocateLivestock\(input: LivestockRelocationInput\)/);
 assert.match(apiRepository, /\/relocate`/);
-assert.match(apiRepository, /destinationSpeciesRecordId/);
+assert.match(apiRepository, /committed: true/);
 assert.match(apiRoute, /livestockRelocationSchema/);
 assert.match(apiRoute, /relocate_verified_aquarium_livestock/);
-assert.match(apiRoute, /sourceAquarium:/);
-assert.match(apiRoute, /destinationAquarium:/);
+assert.match(apiRoute, /committed: true/);
+assert.doesNotMatch(apiRoute, /sourceAquarium:/);
+assert.doesNotMatch(apiRoute, /destinationAquarium:/);
 assert.match(apiRoute, /UNRESOLVED_SOURCE_SPECIES/);
 assert.match(apiRoute, /DUPLICATE_OPERATION_KEY/);
 assert.doesNotMatch(apiRoute, /source_batch_version/);
 
-console.log('livestock relocation wiring contract passed: shared contract, repository implementations, atomic API route, canonical dual-tank response');
+console.log('livestock relocation wiring contract passed: shared contract, repository implementations, atomic API route, mutation receipt boundary');

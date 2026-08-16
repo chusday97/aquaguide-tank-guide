@@ -57,11 +57,8 @@ export type LivestockRelocationInput = {
 };
 
 export type LivestockRelocationMutationResult = {
-  sourceAquarium: Aquarium;
-  destinationAquarium: Aquarium;
-  destinationFishId: string;
-  destinationBatchId: string;
-  replayed: boolean;
+  committed: true;
+  replayed?: boolean;
 };
 
 export type AquariumCreateCommand = {
