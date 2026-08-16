@@ -1,0 +1,134 @@
+name: Canonical Relocation Entrypoint Integration Audit
+
+on:
+  push:
+    branches:
+      - integration/canonical-decision-support-audit
+    paths:
+      - '.github/workflows/canonical-relocation-entrypoint-integration-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dry-run-entrypoint-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integration/canonical-decision-support-audit
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dry-run merge full confirmation entrypoint stack into canonical relocation stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "integration-audit"
+          git config user.email "integration-audit@users.noreply.github.com"
+          git fetch origin agent/atomic-livestock-relocation-contract agent/relocation-confirmation-entrypoint
+          git show HEAD:.integration-audit/water-change.service.resolved.ts > /tmp/water-change.service.resolved.ts
+
+          git checkout --detach origin/agent/atomic-livestock-relocation-contract
+          git rev-parse HEAD > /tmp/integration_audit_base_head
+
+          set +e
+          git merge --no-commit --no-ff origin/agent/relocation-confirmation-entrypoint
+          merge_status=$?
+          set -e
+
+          if [ "$merge_status" -ne 0 ]; then
+            mapfile -t conflicts < <(git diff --name-only --diff-filter=U | sort)
+            expected=(
+              ".github/workflows/product-golden-path.yml"
+              "src/services/aquarium/water-change.service.ts"
+            )
+            printf '%s\n' "${expected[@]}" | sort > /tmp/expected_conflicts
+            printf '%s\n' "${conflicts[@]}" | sort > /tmp/actual_conflicts
+            echo "Observed relocation entrypoint integration conflicts:"
+            cat /tmp/actual_conflicts
+            diff -u /tmp/expected_conflicts /tmp/actual_conflicts || {
+              echo "Unexpected conflict set; audit refuses to guess."
+              exit 1
+            }
+
+            git checkout --ours .github/workflows/product-golden-path.yml
+            cp /tmp/water-change.service.resolved.ts src/services/aquarium/water-change.service.ts
+            git add .github/workflows/product-golden-path.yml src/services/aquarium/water-change.service.ts
+          fi
+
+          test -z "$(git diff --name-only --diff-filter=U)"
+          test -f .git/MERGE_HEAD
+          echo "Canonical mutation + full confirmation entrypoint stack resolved only in runner; no merge commit/push will be created."
+
+      - run: npm ci
+
+      - name: Atomic relocation local regression
+        run: node --import tsx scripts/test-livestock-relocation.ts
+      - name: Atomic relocation SQL/security contract
+        run: node scripts/test-livestock-relocation-contract.mjs
+      - name: Repository/API relocation wiring contract
+        run: node scripts/test-livestock-relocation-wiring.mjs
+      - name: Atomic relocation mutation receipt boundary
+        run: node scripts/test-livestock-relocation-receipt-boundary.mjs
+
+      - name: Fresh relocation execution policy
+        run: node --import tsx scripts/test-relocation-execution-policy.ts
+      - name: Ambiguous mutation outcome regression
+        run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
+
+      - name: Confirmation state regression
+        run: node --import tsx scripts/test-relocation-confirmation-state.ts
+      - name: Confirmation surface static contract
+        run: node scripts/verify-relocation-confirmation-surface.mjs
+
+      - name: Confirmation entrypoint source-scope regression
+        run: node --import tsx scripts/test-relocation-confirmation-entrypoint.ts
+      - name: Confirmation entrypoint UI static contract
+        run: node scripts/test-relocation-confirmation-entrypoint-ui.mjs
+
+      - name: Tank decision support regression
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Relocation destination evaluator
+        run: node --import tsx scripts/test-relocation-destination-evaluator.ts
+      - name: Canonical unresolved livestock contract
+        run: node --import tsx scripts/test-unresolved-existing-livestock.ts
+      - name: Canonical Care hydration contract
+        run: node --import tsx scripts/test-care-aquarium-hydration.ts
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+
+      - name: Compile canonical repository to fresh policy callback contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > src/lib/__relocation-entrypoint-repository-integration.tmp.ts <<'EOF'
+          import type { AquaGuideRepository } from '../services/repository/aquaguide.repository';
+          import type {
+            RelocationExecutionRequest,
+            RelocationMutationReceipt,
+          } from './relocationExecutionPolicy';
+
+          export const bindCanonicalRelocationMutation = (repository: AquaGuideRepository) => (
+            request: RelocationExecutionRequest,
+          ): Promise<RelocationMutationReceipt> => repository.relocateLivestock(request);
+          EOF
+          npm run lint
+          rm src/lib/__relocation-entrypoint-repository-integration.tmp.ts
+
+      - name: API TypeScript
+        run: npm run check:api
+      - name: Production build
+        run: npm run build
+
+      - name: Confirm audit created no merge commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .git/MERGE_HEAD
+          test "$(git rev-parse HEAD)" = "$(cat /tmp/integration_audit_base_head)"
+          echo "Entrypoint audit remained uncommitted and unpushed."
