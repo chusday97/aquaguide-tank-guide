@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import type { Fish } from '../src/types';
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
@@ -9,6 +8,7 @@ import { resolveCanonicalSpeciesId } from '../src/modules/species/speciesAliases
 const lionfish = fishData.find(item => item.id === 'sp_0453');
 assert.ok(lionfish, 'missing canonical lionfish catalog fixture sp_0453');
 assert.equal(lionfish.scientificName, 'Pterois volitans');
+assert.equal(lionfish.category, '海水鱼');
 assert.equal(getSpeciesWaterType(lionfish), 'saltwater');
 
 // sp_0130 is a legacy duplicate ID for Opsariichthys bidens/马口鱼, not lionfish.
@@ -16,26 +16,17 @@ assert.equal(getSpeciesWaterType(lionfish), 'saltwater');
 assert.equal(resolveCanonicalSpeciesId('sp_0130'), 'sp_0038');
 assert.equal(getReviewedCompatibilityProfile('sp_0130'), undefined);
 
-const catalogSmallMarineFish = fishData.find(item => (
+// Fixture selection must not trust water classification alone: a classification regression
+// must never make a freshwater fish a valid marine-control fixture for this evidence test.
+const marineSmallFish = fishData.find(item => (
   item.id !== lionfish.id
+  && item.category === '海水鱼'
   && getLifeType(item) === 'fish'
   && getSpeciesWaterType(item) === 'saltwater'
   && item.size === 'Small'
 ));
-const ocellarisTemplate = fishData.find(item => (
-  item.scientificName === 'Amphiprion ocellaris'
-  && getLifeType(item) === 'fish'
-  && getSpeciesWaterType(item) === 'saltwater'
-));
-assert.ok(ocellarisTemplate, 'missing saltwater fish template Amphiprion ocellaris');
-
-const marineSmallFish: Fish = catalogSmallMarineFish || {
-  ...ocellarisTemplate,
-  id: 'eval-synthetic-small-marine-target',
-  name: 'Eval Synthetic Small Marine Fish',
-  scientificName: 'Syntheticus marinus',
-  size: 'Small',
-};
+assert.ok(marineSmallFish, 'missing catalog Small marine-fish fixture');
+assert.equal(marineSmallFish.category, '海水鱼');
 assert.equal(getLifeType(marineSmallFish), 'fish');
 assert.equal(getSpeciesWaterType(marineSmallFish), 'saltwater');
 assert.equal(marineSmallFish.size, 'Small');
@@ -65,4 +56,4 @@ assert.ok(predationBlock.citations.some(source => source.id === 'lionfish-prey-r
 assert.match(predationBlock.evidence, new RegExp(lionfish.name));
 assert.match(predationBlock.evidence, new RegExp(marineSmallFish.name));
 
-console.log(`lionfish reviewed evidence passed: ${lionfish.name} (${lionfish.id}) -> ${marineSmallFish.name} remains a same-water Small-target high predation blocker with reviewed citation provenance; target fixture=${catalogSmallMarineFish ? 'catalog' : 'synthetic-rule-level'}; legacy sp_0130 remains mapped to non-lionfish canonical identity`);
+console.log(`lionfish reviewed evidence passed: ${lionfish.name} (${lionfish.id}) -> ${marineSmallFish.name} (${marineSmallFish.id}) remains a same-water Small-target high predation blocker with reviewed citation provenance; fixture requires explicit marine catalog category; legacy sp_0130 remains mapped to non-lionfish canonical identity`);
