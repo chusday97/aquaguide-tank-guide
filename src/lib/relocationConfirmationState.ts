@@ -47,6 +47,13 @@ export const toRelocationConfirmationOutcome = (
   };
 };
 
-export const relocationOutcomeAllowsMutationRetry = (
+export const relocationOutcomeRequiresReconciliation = (
   outcome: RelocationConfirmationOutcome,
-) => outcome.phase !== 'reconcile_required';
+) => outcome.phase === 'reconcile_required';
+
+// Confirmation UI never blindly retries a mutation from a terminal outcome.
+// A blocked case needs a newly evaluated proposal; a completed case is done;
+// an uncertain case must reconcile canonical state first.
+export const relocationOutcomeAllowsBlindMutationRetry = (
+  _outcome: RelocationConfirmationOutcome,
+) => false;
