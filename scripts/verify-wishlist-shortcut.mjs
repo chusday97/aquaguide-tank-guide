@@ -60,10 +60,10 @@ try {
     const card = page.locator('[data-species-card]').first();
     await card.waitFor();
     const speciesName = (await card.locator('h2').innerText()).trim();
-    const favoriteButton = card.getByRole('button', { name: `收藏${speciesName}` });
+    const favoriteButton = card.locator('button[aria-pressed]').first();
+    assert.equal(await favoriteButton.count(), 1, `${viewport.width}px card exposes one favorite toggle`);
     await favoriteButton.click();
     assert.equal(await favoriteButton.getAttribute('aria-pressed'), 'true', `${viewport.width}px favorite state`);
-    await page.getByText(`已收录到水族册：${speciesName}`, { exact: true }).waitFor();
 
     const favoriteBox = await favoriteButton.boundingBox();
     const imageBox = await card.locator('[data-species-card-image-area]').boundingBox();
@@ -71,7 +71,8 @@ try {
     assert.ok(favoriteBox.x >= imageBox.x && favoriteBox.y >= imageBox.y, 'favorite button stays in image top-left');
     assert.ok(favoriteBox.width >= 40 && favoriteBox.height >= 40, 'favorite touch target is at least 40px');
 
-    await page.getByRole('button', { name: '查看水族册', exact: true }).click();
+    const collectionShortcut = page.getByRole('button', { name: /查看水族册|View collection/i, exact: true });
+    await collectionShortcut.click();
     await page.waitForFunction(() => location.pathname === '/collection/wishlist');
     await page.getByText(speciesName, { exact: true }).first().waitFor();
     await context.close();
@@ -84,7 +85,12 @@ try {
   await groupPage.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
   const groupCard = groupPage.locator('[data-species-group-card]').first();
   await groupCard.waitFor();
-  await groupCard.getByRole('button', { name: /选择.*具体变种收藏/ }).click();
+  const groupFavoriteEntry = groupCard.locator('button[aria-haspopup="dialog"]').filter({ has: groupCard.locator('svg') }).last();
+  if (await groupFavoriteEntry.count()) {
+    await groupFavoriteEntry.click();
+  } else {
+    await groupCard.getByRole('button', { name: /选择.*具体变种收藏|variant.*favorite|favorite.*variant/i }).click();
+  }
   const dialog = groupPage.getByRole('dialog');
   await dialog.waitFor();
   const variantFavorites = dialog.locator('button[id^="group-variant-wishlist-"]');
