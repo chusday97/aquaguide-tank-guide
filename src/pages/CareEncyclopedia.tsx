@@ -2707,7 +2707,7 @@ function StepDiagnosisPanel({
   };
 
   return (
-    <section className="mt-4 rounded-[22px] border border-emerald-100 bg-[#F8FCF8] p-3 shadow-sm">
+    <section data-care-step-diagnosis="true" className="mt-4 rounded-[22px] border border-emerald-100 bg-[#F8FCF8] p-3 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="text-[16px] font-black text-ink">{isEn ? 'Quick check' : '快速检查'}</div>
@@ -2743,6 +2743,7 @@ function StepDiagnosisPanel({
                   <button
                     key={issue.id}
                     type="button"
+                    data-care-diagnosis-issue={issue.id}
                     onClick={() => setDiagnosisState(prev => ({
                       ...prev,
                       issueType: issue.id,
@@ -2858,7 +2859,7 @@ function StepDiagnosisPanel({
 
           <div className="grid gap-2">
             {diagnosisQuestions.map((question, index) => (
-              <div key={question.id} className="rounded-[18px] bg-white p-3 shadow-sm">
+              <div key={question.id} data-care-diagnosis-question={question.id} className="rounded-[18px] bg-white p-3 shadow-sm">
                 <div className="flex items-start gap-2">
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-[10px] font-black text-emerald-700">
                     {index + 1}
@@ -2875,6 +2876,7 @@ function StepDiagnosisPanel({
                       <button
                         key={option.value}
                         type="button"
+                        data-care-diagnosis-option={`${question.id}:${option.value}`}
                         onClick={() => updateAnswer(question.id, option.value)}
                         className={`rounded-full border px-3 py-2 text-[11px] font-black transition-colors ${
                           selected ? 'border-emerald-700 bg-emerald-700 text-white' : 'border-border bg-bg text-ink/55'
@@ -2891,6 +2893,7 @@ function StepDiagnosisPanel({
 
           <Button
             type="button"
+            data-care-diagnosis-submit="true"
             onClick={showResult}
             disabled={!isReady}
             className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800 disabled:bg-ink/15 disabled:text-ink/35"
