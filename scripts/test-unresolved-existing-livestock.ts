@@ -37,7 +37,7 @@ const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   ...overrides,
 });
 
-const migration = await readFile(new URL('../supabase/migrations/20260816100000_unresolved_existing_livestock.sql', import.meta.url), 'utf8');
+const migration = await readFile(new URL('../supabase/migrations/20260816103423_unresolved_existing_livestock.sql', import.meta.url), 'utf8');
 assert.match(migration, /identity_status public\.livestock_identity_status not null default 'verified'/);
 assert.match(migration, /add column raw_name text/);
 assert.match(migration, /alter column species_catalog_key drop not null/);
