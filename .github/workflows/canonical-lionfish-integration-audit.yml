@@ -24,17 +24,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Dry-run merge current Care decision-surface stack
+      - name: Dry-run merge current Care relocation-destination stack
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "integration-audit"
           git config user.email "integration-audit@users.noreply.github.com"
           git rev-parse HEAD > /tmp/integration_audit_base_head
-          git fetch origin agent/care-conflict-decision-surface
+          git fetch origin agent/care-relocation-destinations
 
           set +e
-          git merge --no-commit --no-ff origin/agent/care-conflict-decision-surface
+          git merge --no-commit --no-ff origin/agent/care-relocation-destinations
           merge_status=$?
           set -e
 
@@ -84,10 +84,14 @@ jobs:
         run: node --import tsx scripts/test-care-unknown-facts.ts
       - name: Care conflict decision-surface contract
         run: node scripts/test-care-conflict-decision-surface.mjs
+      - name: Care relocation destination contract
+        run: node scripts/test-care-relocation-destination-surface.mjs
       - name: Tank decision context
         run: node --import tsx scripts/test-tank-decision-context.ts
       - name: Decision support orchestration
         run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Relocation destination evaluator
+        run: node --import tsx scripts/test-relocation-destination-evaluator.ts
       - name: Quick Diagnosis augmentation
         run: node --import tsx scripts/test-quick-diagnosis-conflict-augmentation.ts
       - name: Read-only Intervention UI contract
