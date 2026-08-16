@@ -24,7 +24,19 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Generate research-only evidence priority queue
-        run: node --import tsx scripts/audit-compatibility-evidence-gaps.ts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --import tsx scripts/audit-compatibility-evidence-gaps.ts | tee /tmp/evidence-gap-audit-output.txt
+          {
+            echo '### Compatibility evidence research queue'
+            echo
+            echo 'Research priority only — this output is not runtime compatibility evidence.'
+            echo
+            echo '```json'
+            sed '$d' /tmp/evidence-gap-audit-output.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Contextual evidence regression
         run: node --import tsx scripts/test-contextual-compatibility-evidence.ts
       - name: Type check
