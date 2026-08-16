@@ -50,10 +50,16 @@ assert.equal(complete.formalChoiceComparison.kind, 'unique_strongest_single_chan
 assert.equal(complete.destinationSetProvided, true);
 const predatorDestination = complete.relocationDestinations.find(item => item.subjectSpeciesId === predator.id);
 assert.ok(predatorDestination, 'formal predator relocation choice should receive destination evaluation');
+const emptyTargetEvaluation = predatorDestination.destinations.evaluations.find(item => item.aquariumId === emptyTarget.id);
 assert.ok(
-  predatorDestination.destinations.compatibleDestinationIds.includes(emptyTarget.id),
-  'an explicitly provided compatible target should be evaluated for the formal relocation option',
+  emptyTargetEvaluation,
+  'an explicitly supplied target must be re-evaluated for the formal relocation option rather than assumed suitable or omitted',
 );
+assert.ok(
+  ['compatible_by_current_evidence', 'conditional', 'insufficient_data', 'not_recommended'].includes(emptyTargetEvaluation.status),
+  'the orchestrator must preserve the destination evaluator verdict instead of pre-classifying an empty tank as safe',
+);
+assert.deepEqual(predatorDestination.destinations.excludedSourceTankIds, [completeSource.id]);
 
 const destinationUnknown = buildTankDecisionSupport({
   aquarium: completeSource,
