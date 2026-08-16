@@ -6,6 +6,7 @@ on:
       - agent/unresolved-existing-livestock
     paths:
       - scripts/phase1-patch-unresolved-livestock-ui.mjs
+      - scripts/phase1-fix-unresolved-ui-patch-anchor.mjs
       - .github/workflows/phase1-unresolved-livestock-ui-patch.yml
 
 permissions:
@@ -24,6 +25,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Disambiguate guarded patch anchor
+        run: node scripts/phase1-fix-unresolved-ui-patch-anchor.mjs
       - name: Apply guarded unresolved livestock UI patch
         run: node scripts/phase1-patch-unresolved-livestock-ui.mjs
       - name: Unresolved livestock UI contract
