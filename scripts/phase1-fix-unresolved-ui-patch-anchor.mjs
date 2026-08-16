@@ -16,17 +16,17 @@ const oldBlock = `  next = replaceOnce(
     'open species addition reset',
   );
 `;
-const newBlock = `  {
+const newBlock = String.raw`  {
     const functionStart = next.indexOf("  const openSpeciesAddition = (intent: SpeciesAdditionIntent, speciesId?: string) => {");
     const functionEnd = next.indexOf("\n  const buildAddFishCompatibilityReview", functionStart);
     if (functionStart < 0 || functionEnd < 0) throw new Error('openSpeciesAddition function scope not found');
     const scope = next.slice(functionStart, functionEnd);
-    const reset = "    setFishSearchTerm('');\\n    setAddFishCategory('all');";
+    const reset = "    setFishSearchTerm('');\n    setAddFishCategory('all');";
     const resetCount = scope.split(reset).length - 1;
-    if (resetCount !== 1) throw new Error(\`openSpeciesAddition reset: expected one scoped reset, found \${resetCount}\`);
+    if (resetCount !== 1) throw new Error('openSpeciesAddition reset: expected one scoped reset, found ' + resetCount);
     const patchedScope = scope.replace(
       reset,
-      "    setFishSearchTerm('');\\n    setUnresolvedLivestockQuantity(1);\\n    setAddFishCategory('all');",
+      "    setFishSearchTerm('');\n    setUnresolvedLivestockQuantity(1);\n    setAddFishCategory('all');",
     );
     next = next.slice(0, functionStart) + patchedScope + next.slice(functionEnd);
   }
@@ -34,4 +34,4 @@ const newBlock = `  {
 const count = source.split(oldBlock).length - 1;
 if (count !== 1) throw new Error(`Expected one ambiguous reset patch block, found ${count}`);
 await writeFile(path, source.replace(oldBlock, newBlock), 'utf8');
-console.log('Scoped openSpeciesAddition reset patch to the function body without evaluating source templates');
+console.log('Scoped openSpeciesAddition reset patch with literal escapes preserved');
