@@ -14,10 +14,11 @@ export type RelocationExecutionRequest = {
   operationId: string;
 };
 
+// The decision layer needs only an acknowledgement that the mutation callback
+// resolved. Canonical source/destination state is deliberately reloaded after
+// the mutation instead of being trusted from a write response.
 export type RelocationMutationReceipt = {
-  destinationFishId: string;
-  destinationBatchId: string;
-  replayed: boolean;
+  replayed?: boolean;
 };
 
 export type RelocationExecutionBlockReason =
@@ -61,10 +62,19 @@ export type RelocationExecutionPostStateUnavailableResult = {
   errorMessage: string;
 };
 
+export type RelocationExecutionMutationStateUnknownResult = {
+  status: 'mutation_state_unknown';
+  operationId: string;
+  freshSourceDecision: TankDecisionSupportResult;
+  freshDestinationEvaluation: RelocationDestinationEvaluation;
+  errorMessage: string;
+};
+
 export type RelocationExecutionResult =
   | RelocationExecutionBlockedResult
   | RelocationExecutionCompletedResult
-  | RelocationExecutionPostStateUnavailableResult;
+  | RelocationExecutionPostStateUnavailableResult
+  | RelocationExecutionMutationStateUnknownResult;
 
 type RelocationMutation = (request: RelocationExecutionRequest) => Promise<RelocationMutationReceipt>;
 
@@ -166,10 +176,21 @@ export const executeFreshRelocation = async ({
     );
   }
 
-  // The mutation callback is intentionally structural. The later canonical
-  // integration can pass repository.relocateLivestock without copying the
-  // repository implementation into the decision stack.
-  const receipt = await relocate(request);
+  // A rejected network/API promise cannot prove that the database did not
+  // commit. Preserve the same operation ID and force reconciliation before any
+  // later retry; never translate an ambiguous transport failure into “not moved”.
+  let receipt: RelocationMutationReceipt;
+  try {
+    receipt = await relocate(request);
+  } catch (error) {
+    return {
+      status: 'mutation_state_unknown',
+      operationId: request.operationId,
+      freshSourceDecision,
+      freshDestinationEvaluation,
+      errorMessage: error instanceof Error ? error.message : String(error),
+    };
+  }
 
   try {
     const postAquariums = await loadAquariums();
