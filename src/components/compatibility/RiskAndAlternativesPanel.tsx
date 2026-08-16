@@ -15,7 +15,7 @@ export type RiskAndAlternativesPanelProps = {
   replacementResult: ReplacementRecommendationResult;
   isEn?: boolean;
   onOpenChange: (open: boolean) => void;
-  onSimulateCandidate?: (species: Fish, quantity: number) => void;
+  onViewCandidate?: (species: Fish) => void;
 };
 
 const intentMatchLabel = (match: string, isEn: boolean) => {
@@ -39,12 +39,12 @@ function CandidateCard({
   candidate,
   tone,
   isEn,
-  onSimulateCandidate,
+  onViewCandidate,
 }: {
   candidate: ReplacementCandidate;
   tone: 'recommended' | 'conditional' | 'confirmation';
   isEn: boolean;
-  onSimulateCandidate?: (species: Fish, quantity: number) => void;
+  onViewCandidate?: (species: Fish) => void;
 }) {
   const toneClass = tone === 'recommended'
     ? 'border-emerald-100 bg-emerald-50/70'
@@ -66,7 +66,7 @@ function CandidateCard({
           <p className="mt-0.5 truncate text-[11px] font-medium italic text-ink/45">{candidate.species.scientificName}</p>
         </div>
         <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-ink/58 shadow-sm">
-          {isEn ? `Simulate ×${candidate.evaluationQuantity}` : `按 ${candidate.evaluationQuantity} 只模拟`}
+          {isEn ? `Evaluated at ×${candidate.evaluationQuantity}` : `按 ${candidate.evaluationQuantity} 只评估`}
         </span>
       </div>
 
@@ -86,14 +86,14 @@ function CandidateCard({
         {evidenceLabel(candidate, isEn)}
       </div>
 
-      {onSimulateCandidate && (
+      {onViewCandidate && (
         <Button
           type="button"
           variant="outline"
           className="mt-3 min-h-11 w-full rounded-full bg-white text-[12px] font-black"
-          onClick={() => onSimulateCandidate(candidate.species, candidate.evaluationQuantity)}
+          onClick={() => onViewCandidate(candidate.species)}
         >
-          {isEn ? 'Simulate in this aquarium' : '模拟加入这个鱼缸'}
+          {isEn ? 'View candidate details' : '查看候选详情'}
         </Button>
       )}
     </article>
@@ -107,7 +107,7 @@ export function RiskAndAlternativesPanel({
   replacementResult,
   isEn = false,
   onOpenChange,
-  onSimulateCandidate,
+  onViewCandidate,
 }: RiskAndAlternativesPanelProps) {
   const primaryRisk = rejectedCompatibility.blockingRules[0]
     || rejectedCompatibility.warningRules[0]
@@ -219,13 +219,13 @@ export function RiskAndAlternativesPanel({
             {totalCandidates > 0 && (
               <div className="mt-3 grid gap-3">
                 {replacementResult.recommended.map(candidate => (
-                  <CandidateCard key={candidate.species.id} candidate={candidate} tone="recommended" isEn={isEn} onSimulateCandidate={onSimulateCandidate} />
+                  <CandidateCard key={candidate.species.id} candidate={candidate} tone="recommended" isEn={isEn} onViewCandidate={onViewCandidate} />
                 ))}
                 {replacementResult.conditional.map(candidate => (
-                  <CandidateCard key={candidate.species.id} candidate={candidate} tone="conditional" isEn={isEn} onSimulateCandidate={onSimulateCandidate} />
+                  <CandidateCard key={candidate.species.id} candidate={candidate} tone="conditional" isEn={isEn} onViewCandidate={onViewCandidate} />
                 ))}
                 {replacementResult.needsConfirmation.map(candidate => (
-                  <CandidateCard key={candidate.species.id} candidate={candidate} tone="confirmation" isEn={isEn} onSimulateCandidate={onSimulateCandidate} />
+                  <CandidateCard key={candidate.species.id} candidate={candidate} tone="confirmation" isEn={isEn} onViewCandidate={onViewCandidate} />
                 ))}
               </div>
             )}
