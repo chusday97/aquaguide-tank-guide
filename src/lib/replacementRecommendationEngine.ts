@@ -4,6 +4,7 @@ import {
   evaluateTankCompatibility,
   type TankCompatibilityResult,
 } from './tankCompatibilityEngine';
+import { buildTankDecisionContext } from './tankDecisionContext';
 import {
   getLifeType,
   getSecondaryCategory,
@@ -117,16 +118,12 @@ export const recommendReplacementSpecies = ({
   candidateQuantity,
 }: ReplacementRecommendationInput): ReplacementRecommendationResult => {
   const intent = deriveReplacementIntent(rejectedSpecies);
-  const catalogById = new Map(catalog.map(species => [species.id, species]));
-  const unresolvedCurrentSpeciesIds = Array.from(new Set(
-    aquarium.fishes
-      .map(record => record.fishId)
-      .filter((id): id is string => Boolean(id) && !catalogById.has(id)),
-  ));
-  const existingSpecies = aquarium.fishes.flatMap(record => {
-    const species = catalogById.get(record.fishId);
-    return species ? [{ species, record: { quantity: Math.max(1, record.quantity || 1) } }] : [];
-  });
+  const decisionContext = buildTankDecisionContext({ aquarium, catalog });
+  const unresolvedCurrentSpeciesIds = decisionContext.unresolvedCurrentSpeciesIds;
+  const existingSpecies = decisionContext.resolvedLivestock.map(item => ({
+    species: item.species,
+    record: { quantity: item.quantity },
+  }));
 
   // Replacement MVP is intentionally strict: preserve the user's original role,
   // life type and water context instead of filling a carousel with unrelated but
