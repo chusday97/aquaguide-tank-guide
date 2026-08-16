@@ -1,0 +1,29 @@
+name: Unresolved Livestock Guard
+
+on:
+  pull_request:
+    branches:
+      - agent/fix-aquarium-completion-state
+  push:
+    branches:
+      - agent/unresolved-livestock-guard
+
+permissions:
+  contents: read
+
+jobs:
+  unresolved-livestock-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Unresolved current livestock regression
+        run: node --import tsx scripts/test-unresolved-current-livestock.ts
+      - name: Existing livestock recording regression
+        run: npm run test:livestock-recording
+      - name: Type check
+        run: npm run lint
