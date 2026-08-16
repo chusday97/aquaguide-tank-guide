@@ -1,0 +1,53 @@
+name: Apply Care Relocation Destinations Once
+
+on:
+  push:
+    branches:
+      - agent/care-relocation-destinations
+    paths:
+      - '.github/workflows/apply-care-relocation-destinations-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verify-and-self-clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/care-relocation-destinations
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply exact Care destination patch
+        run: node scripts/apply-care-relocation-destinations.mjs
+      - name: Care relocation destination contract
+        run: node scripts/test-care-relocation-destination-surface.mjs
+      - name: Existing Care decision-surface contract
+        run: node scripts/test-care-conflict-decision-surface.mjs
+      - name: Relocation destination evaluator regression
+        run: node --import tsx scripts/test-relocation-destination-evaluator.ts
+      - name: Tank Decision Support regression
+        run: node --import tsx scripts/test-tank-decision-support-orchestrator.ts
+      - name: Read-only Intervention UI contract
+        run: node scripts/test-intervention-comparison-ui-contract.mjs
+      - name: Reviewed severe-risk regression
+        run: node --import tsx scripts/test-reviewed-severe-risk-regression.ts
+      - name: Type check
+        run: npm run lint
+      - name: Production build
+        run: npm run build
+      - name: Commit verified destination integration and remove write tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/CareEncyclopedia.tsx
+          git rm scripts/apply-care-relocation-destinations.mjs
+          git rm .github/workflows/apply-care-relocation-destinations-once.yml
+          git commit -m "Enable read-only relocation destinations in Care"
+          git push origin HEAD:agent/care-relocation-destinations
