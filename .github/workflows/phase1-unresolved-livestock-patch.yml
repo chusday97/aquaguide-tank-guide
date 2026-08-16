@@ -7,6 +7,7 @@ on:
     paths:
       - scripts/phase1-patch-unresolved-existing-livestock.mjs
       - scripts/phase1-fix-unresolved-result-callers.mjs
+      - scripts/phase1-fix-unresolved-retry-narrowing.mjs
       - .github/workflows/phase1-unresolved-livestock-patch.yml
 
 permissions:
@@ -31,6 +32,8 @@ jobs:
         run: node -e 'const fs=require("fs"); const p="scripts/phase1-fix-unresolved-result-callers.mjs"; let s=fs.readFileSync(p,"utf8"); s=s.replaceAll("${input.operationId}", "\\${input.operationId}"); fs.writeFileSync(p,s);'
       - name: Narrow unresolved result callsites
         run: node scripts/phase1-fix-unresolved-result-callers.mjs
+      - name: Narrow retry selection
+        run: node scripts/phase1-fix-unresolved-retry-narrowing.mjs
       - name: Unresolved existing-livestock contract
         run: npx tsx scripts/test-unresolved-existing-livestock.ts
       - name: Existing livestock recording regression
