@@ -68,7 +68,6 @@ try {
   await quantity.fill('2');
   await recordDialog.getByRole('button', { name: '按此名称记录', exact: true }).click();
   await recordDialog.getByText('已记录', { exact: true }).waitFor({ timeout: 10_000 });
-  await recordDialog.getByText(/身份确认前/).waitFor();
 
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}'));
   const savedRecord = stored.aquariums?.[0]?.fishes?.find(item => item.identityStatus === 'unresolved');
@@ -84,6 +83,7 @@ try {
   const unresolvedCard = roster.locator('[data-livestock-identity="unresolved"]');
   await unresolvedCard.getByText(rawName, { exact: true }).waitFor();
   await unresolvedCard.getByText('待确认身份', { exact: true }).waitFor();
+  await unresolvedCard.getByText(/身份确认前，完整混养判断会保持信息不足/).waitFor();
   assert.equal(await unresolvedCard.getByRole('button', { name: /查看|详情|调整体态/ }).count(), 0,
     'unresolved record must not expose canonical species detail/edit actions');
   await roster.getByRole('button', { name: `将${rawName}移出鱼缸` }).waitFor();
