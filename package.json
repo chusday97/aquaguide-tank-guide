@@ -117,7 +117,8 @@
     "test:compatibility-evidence-coverage": "tsx scripts/test-compatibility-evidence-coverage.ts",
     "test:compatibility-coverage-scorecard": "node --import tsx scripts/test-compatibility-coverage-scorecard.ts",
     "test:golden-path-gp001-ui": "node scripts/verify-golden-path-first-tank-setup.mjs",
-    "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs"
+    "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs",
+    "test:golden-path-gp003-ui": "node scripts/verify-golden-path-returning-user-daily-check.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
