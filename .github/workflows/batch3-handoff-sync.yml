@@ -1,0 +1,38 @@
+name: Batch 3 Handoff Sync
+
+on:
+  push:
+    branches:
+      - agent/compatibility-evidence-batch-3-channa-rhodeus
+
+permissions:
+  contents: write
+
+jobs:
+  sync-test-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/compatibility-evidence-batch-3-channa-rhodeus
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Apply exact-anchor Handoff sync
+        run: python3 scripts/_tmp_batch3_handoff_patch.py
+      - name: Product registry regression
+        run: npm run test:product-evaluation
+      - name: Compatibility evidence regression
+        run: npm run test:compatibility-evidence-coverage
+      - name: Commit Handoff and self-delete temporary tooling
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/batch3-handoff-sync.yml scripts/_tmp_batch3_handoff_patch.py
+          git add HANDOFF-2026-08-17.md
+          git commit -m 'docs: record compatibility evidence batch 3'
+          git push origin HEAD:agent/compatibility-evidence-batch-3-channa-rhodeus
