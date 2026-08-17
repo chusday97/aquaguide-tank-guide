@@ -132,7 +132,7 @@
         "test:collection-hub-ui",
         "test:responsive-detail-surface"
       ],
-      "coverage": "mostly_covered"
+      "coverage": "covered"
     }
   ]
 }
