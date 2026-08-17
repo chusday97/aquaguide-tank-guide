@@ -21,7 +21,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - name: Apply exact-anchor Batch 3 patch
+      - name: Apply exact-anchor Batch 3 product patch
         shell: bash
         run: |
           python3 <<'PY'
@@ -36,17 +36,8 @@ jobs:
 
           evidence_path = Path('src/data/compatibilityEvidence.ts')
           text = evidence_path.read_text()
-          source_anchor = """const oscarZebrafishDevelopmentStudy: EvidenceSourceDto = {
-            id: 'oscar-zebrafish-development-predator-study',
-            title: 'Modulation of Cortisol Responses to an Acute Stressor in Zebrafish Visually Exposed to Heterospecific Fish During Development',
-            publisher: 'Zebrafish',
-            url: 'https://journals.sagepub.com/doi/10.1089/zeb.2017.1509',
-            sourceType: 'peer_reviewed',
-            reviewStatus: 'reviewed',
-          };
-          """
-          source_new = source_anchor + """
-          const channaRhodeusInformationDynamicsStudy: EvidenceSourceDto = {
+          profile_anchor = "const profiles: Record<string, ReviewedCompatibilityProfile> = {"
+          sources = """const channaRhodeusInformationDynamicsStudy: EvidenceSourceDto = {
             id: 'channa-rhodeus-information-dynamics-study',
             title: 'Information Dynamics in the Interaction between a Prey and a Predator Fish',
             publisher: 'Entropy',
@@ -63,36 +54,13 @@ jobs:
             sourceType: 'peer_reviewed',
             reviewStatus: 'reviewed',
           };
-          """
-          text = replace_once(text, source_anchor, source_new, 'evidence source insertion')
 
-          rule_anchor = """  {
-            speciesIds: ['sp_0451', 'sp_0435'],
-            verdict: 'not_recommended',
-            riskType: 'predation_threat',
-            reason: '多项斑马鱼 predator-response 实验明确把地图鱼 Astronotus ocellatus 作为 Danio rerio 的捕食者刺激；活体地图鱼可诱发稳定回避/恐惧反应，长期视觉暴露研究也将该组合定义为 predator–prey 模型。证据支持存在明确捕食威胁，但这些实验并不是家庭水族箱中的长期同缸吞食试验。',
-            mitigation: ['不要把地图鱼与斑马鱼作为长期同缸组合；优先物理分缸。', '不要用增加躲避物或“先试试看”替代捕食风险隔离。'],
-            basis: 'pair_rule',
-            confidence: 'medium',
-            reviewStatus: 'reviewed',
-            affectedSpeciesIds: ['sp_0451', 'sp_0435'],
-            citations: [oscarZebrafishLivePredatorStudy, oscarZebrafishDevelopmentStudy],
-          },
-          ];
           """
-          rule_new = """  {
-            speciesIds: ['sp_0451', 'sp_0435'],
-            verdict: 'not_recommended',
-            riskType: 'predation_threat',
-            reason: '多项斑马鱼 predator-response 实验明确把地图鱼 Astronotus ocellatus 作为 Danio rerio 的捕食者刺激；活体地图鱼可诱发稳定回避/恐惧反应，长期视觉暴露研究也将该组合定义为 predator–prey 模型。证据支持存在明确捕食威胁，但这些实验并不是家庭水族箱中的长期同缸吞食试验。',
-            mitigation: ['不要把地图鱼与斑马鱼作为长期同缸组合；优先物理分缸。', '不要用增加躲避物或“先试试看”替代捕食风险隔离。'],
-            basis: 'pair_rule',
-            confidence: 'medium',
-            reviewStatus: 'reviewed',
-            affectedSpeciesIds: ['sp_0451', 'sp_0435'],
-            citations: [oscarZebrafishLivePredatorStudy, oscarZebrafishDevelopmentStudy],
-          },
-            {
+          text = replace_once(text, profile_anchor, sources + profile_anchor, 'evidence source insertion')
+          pair_end = "];
+
+export const getReviewedCompatibilityProfile"
+          new_rule = """  {
             speciesIds: ['sp_0224', 'sp_0475'],
             verdict: 'not_recommended',
             riskType: 'predation_threat',
@@ -105,8 +73,9 @@ jobs:
             citations: [channaRhodeusInformationDynamicsStudy, channaRhodeusPredationStressStudy],
           },
           ];
-          """
-          text = replace_once(text, rule_anchor, rule_new, 'pair rule insertion')
+
+          export const getReviewedCompatibilityProfile"""
+          text = replace_once(text, pair_end, new_rule, 'pair rule insertion')
           evidence_path.write_text(text)
 
           test_path = Path('scripts/test-compatibility-evidence-coverage.ts')
@@ -117,9 +86,7 @@ jobs:
               "assert.ok(evidenceAudit.reviewedPairRules.length >= 4, 'Batch 3 must preserve at least four reviewed pair rules after adding direct Channa–Rhodeus evidence');",
               'pair evidence floor',
           )
-          audit_anchor = """assert.equal(auditedOscarZebrafishRule.reviewStatus, 'reviewed');
-
-          const tetraPair"""
+          audit_anchor = "assert.equal(auditedOscarZebrafishRule.reviewStatus, 'reviewed');\n\nconst tetraPair"
           audit_new = """assert.equal(auditedOscarZebrafishRule.reviewStatus, 'reviewed');
 
           const auditedChannaRhodeusRule = evidenceAudit.reviewedPairRules.find(rule => (
@@ -132,9 +99,7 @@ jobs:
 
           const tetraPair"""
           text = replace_once(text, audit_anchor, audit_new, 'pair audit regression')
-          decision_anchor = """assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');
-
-          const recordable"""
+          decision_anchor = "assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');\n\nconst recordable"
           decision_new = """assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');
 
           const channa = fishData.find(fish => fish.id === 'sp_0224');
@@ -160,12 +125,6 @@ jobs:
 
           const recordable"""
           text = replace_once(text, decision_anchor, decision_new, 'direct decision regression')
-          log_anchor = """console.log(`Reviewed pair evidence floor passed: ${evidenceAudit.reviewedPairRules.length} reviewed pair rules.`);
-          console.log(`Direct reviewed blocked pair passed: ${oscar.name}/${oscar.id} + ${zebrafish.name}/${zebrafish.id} = ${oscarZebrafishPair.status}.`);"""
-          log_new = """console.log(`Reviewed pair evidence floor passed: ${evidenceAudit.reviewedPairRules.length} reviewed pair rules.`);
-          console.log(`Direct reviewed blocked pair passed: ${oscar.name}/${oscar.id} + ${zebrafish.name}/${zebrafish.id} = ${oscarZebrafishPair.status}.`);
-          console.log(`Batch 3 direct reviewed blocked pair passed: ${channa.name}/${channa.id} + ${rhodeus.name}/${rhodeus.id} = ${channaRhodeusPair.status}.`);"""
-          text = replace_once(text, log_anchor, log_new, 'coverage log')
           test_path.write_text(text)
 
           score_path = Path('scripts/test-compatibility-coverage-scorecard.ts')
@@ -191,37 +150,6 @@ jobs:
           obj['regression'] = 'Batch 3 guard：sp_0224 Channa argus + sp_0475 Rhodeus ocellatus 必须为 reviewed pair_rule / not_recommended / predation_threat，保留两篇 peer-reviewed citation 与 lab→home-aquarium limitation；reviewed profile floor=7、pair-rule floor=4；priority cohort recordable 必须继续=2。PUI-BC-025 保持 investigating；新增阻断型 evidence 不代表 broad coverage 已完成。'
           lines[i] = json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
           badcase_path.write_text('\n'.join(lines) + '\n')
-
-          handoff_path = Path('HANDOFF-2026-08-17.md')
-          text = handoff_path.read_text()
-          text = replace_once(text, '7 个 reviewed profile / **3 条 reviewed pair rule**；priority cohort 132 个有向组合仍只有 2 个 recordable direction。', '7 个 reviewed profile / **4 条 reviewed pair rule**；priority cohort 132 个有向组合仍只有 2 个 recordable direction。', 'handoff top count')
-          text = replace_once(text, 'reviewed species profile 保持 7，reviewed pair rule 从 2 增到 3；新增的是有直接 predator–prey 实验证据支持的阻断型 pair，不代表 broad compatibility coverage 已完成。', 'reviewed species profile 保持 7，reviewed pair rule 已从 2 增到 4；新增的是有直接 predator–prey 实验证据支持的阻断型 pair，不代表 broad compatibility coverage 已完成。', 'handoff top claim')
-          batch3 = """
-          ### Evidence Batch 3 — Channa argus × Rhodeus ocellatus direct pair — branch verification
-
-          Usage-first selector 先检查当前 PostHog taxonomy：**尚未观察到 `compatibility_pair_evaluated` 事件**。因此当前仍没有可用于 pair-frequency 排序的真实 usage 样本，本批不得把任何 pair 称为“高频用户需求”。Prospective telemetry 已在产品代码中，但事件是否尚未由已部署版本触发/是否尚无真实 exposure 需要后续继续观察；telemetry 不计入 knowledge coverage。
-
-          按既定 research-only risk fallback 转到 `Channa argus`。研究中主动排除 `Carassius auratus` / `Cyprinus carpio` 的直接捕食文献作为本批落库对象：AquaGuide 对金鱼/锦鲤按多个观赏品系 ID 建模，直接复制同一 taxon-level evidence 会虚增 pair-rule coverage，只挂到任一品系又会造成任意性。
-
-          本批选择 catalog 唯一映射：`sp_0224 / 白金雷龙 / Channa argus` + `sp_0475 / 高体鳑鲏 / Rhodeus ocellatus`。
-
-          - 2015 Entropy exact-species predator–prey experiment：prey=`Rhodeus ocellatus`，predator=`Channa argus`；猎物表现出远离捕食者的行为。
-          - 2026 Comparative Biochemistry and Physiology Part A：将 `Channa argus` 明确描述为 `Rhodeus ocellatus` 的 natural predator，并进行 20-day 持续视觉/化学捕食压力处理。
-          - verdict=`not_recommended`；riskType=`predation_threat`；basis=`pair_rule`；confidence=`medium`；reviewStatus=`reviewed`。
-          - 证据边界：两项实验均为物理隔离/非家庭缸长期同缸条件，因此只支持明确 predation threat，不得改写成“已观察到家庭缸内吞食”。
-
-          Coverage 目标：reviewed profiles **7 → 7**；reviewed pair rules **3 → 4**；priority recordable directions 继续 **2 / 132**，priority status matrix 不因本批阻断证据被放宽。scorecard non-regression floor 同步从 profiles=5 / pairRules=2 提升到当前已验证底线 profiles=7 / pairRules=4，避免未来 CI 静默回退 evidence。
-
-          `PUI-BC-025` 继续 **investigating**：本批解决的是一条高风险 exact pair 的 evidence 缺口，并未解决 broad compatibility coverage；usage-driven selector 也仍在等待真实 `compatibility_pair_evaluated` 样本。
-
-          """
-          heading = '## PUI-BC-023 — Daily Check connected closure / Regression\n'
-          if text.count(heading) != 1:
-              raise SystemExit(f'handoff Batch 3 insertion: expected heading once, found {text.count(heading)}')
-          if '### Evidence Batch 3 — Channa argus × Rhodeus ocellatus direct pair' in text:
-              raise SystemExit('handoff Batch 3 section already exists')
-          text = text.replace(heading, batch3 + heading, 1)
-          handoff_path.write_text(text)
           PY
       - name: Product registry regression
         run: npm run test:product-evaluation
@@ -237,6 +165,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git rm .github/workflows/batch3-channa-rhodeus-guard.yml
-          git add src/data/compatibilityEvidence.ts scripts/test-compatibility-evidence-coverage.ts scripts/test-compatibility-coverage-scorecard.ts evaluation/product/badcases.v1.jsonl HANDOFF-2026-08-17.md
+          git add src/data/compatibilityEvidence.ts scripts/test-compatibility-evidence-coverage.ts scripts/test-compatibility-coverage-scorecard.ts evaluation/product/badcases.v1.jsonl
           git commit -m 'feat: add Channa Rhodeus compatibility evidence'
           git push origin HEAD:agent/compatibility-evidence-batch-3-channa-rhodeus
