@@ -1,0 +1,73 @@
+name: One-shot Sync PUI-BC-023 Closure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/one-shot-sync-pui-bc-023.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event.head_commit.message == 'chore: sync PUI-BC-023 connected closure'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Patch badcase registry and handoff from current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+
+          const badcasePath = 'evaluation/product/badcases.v1.jsonl';
+          const original = fs.readFileSync(badcasePath, 'utf8');
+          const trailingNewline = original.endsWith('\n');
+          const lines = original.replace(/\n$/, '').split('\n');
+          let matched = 0;
+          const patched = lines.map((line) => {
+            const entry = JSON.parse(line);
+            if (entry.id !== 'PUI-BC-023') return line;
+            matched += 1;
+            if (entry.status !== 'open') {
+              throw new Error(`Expected PUI-BC-023 status=open, found ${entry.status}`);
+            }
+            entry.status = 'regression_verified';
+            entry.fixedBy = '2add55a54402afc18b642b572d8ee8351ab72c53';
+            entry.regression = 'EvalPilot same-case blind-daily-check-risk connected retest Run 32035944562 on AquaGuide 3d73c033b6899e3a92144f6de99a05db8babde78: protocolHealthy=true, Hybrid pass/failureSource=null, semantic pass+complete, 6/6 deterministic assertions PASS. EvalPilot actual promoter regression case case-regression-pui-bc-023 is locked by commit 2d994e22200215c03a14e999d3288c3c41cdc211 and CI Run 32038227247 full PASS. AI-blind evidence only; not a human failure-rate estimate.';
+            entry.verification = 'Run 32035944562 entered the real Daily Aquarium Check on the first route, completed and saved the record; provider/evaluator/unknown failures=0, actorOracleLeakCount=0, judgeOracleVisible=true. PUI-BC-024 output guards also remained green.';
+            return JSON.stringify(entry);
+          });
+          if (matched !== 1) throw new Error(`Expected exactly one PUI-BC-023 row, found ${matched}`);
+          fs.writeFileSync(badcasePath, patched.join('\n') + (trailingNewline ? '\n' : ''));
+
+          const handoffPath = 'HANDOFF-2026-08-17.md';
+          let handoff = fs.readFileSync(handoffPath, 'utf8');
+          const nextStep = '4. `PUI-BC-023` 继续等待真实 connected blind rerun；没有 workflow dispatch 能力时不伪造证据。';
+          if (!handoff.includes(nextStep)) throw new Error('Expected PUI-BC-023 waiting handoff line not found.');
+          handoff = handoff.replace(nextStep, '4. **PUI-BC-023 已闭环并进入 Regression**：connected same-case Run `32035944562` 在 AquaGuide `3d73c033b6899e3a92144f6de99a05db8babde78` 上完整 PASS；EvalPilot `case-regression-pui-bc-023` promoter CI `32038227247` 全绿。后续只做 coverage expansion，不再重复跑同一 baseline。');
+
+          const anchor = '## PUI-BC-026 — Sparse species profile incorrectly clears pair evidence';
+          if (!handoff.includes(anchor)) throw new Error('Expected PUI-BC-026 handoff anchor not found.');
+          const closure = `## PUI-BC-023 — Daily Check connected closure / Regression\n\n- Connected retest：EvalPilot Run **32035944562**，target AquaGuide **3d73c033b6899e3a92144f6de99a05db8babde78**。\n- 同一 EvalCase：\`blind-daily-check-risk\`。\n- 协议：\`protocolHealthy=true\`；Actor Oracle leak=0；Judge Oracle visible=true；provider/evaluator/unknown failures=0。\n- 产品：Hybrid **PASS**，\`failureSource=null\`；semantic Judge **pass + complete**（0.95）；6/6 deterministic assertions PASS。\n- Blind Actor 第一跳直接进入真实 Daily Aquarium Check，完成 6 项观察并保存当天记录，不再误入 Care Guide / Quick Check。\n- PUI-BC-024 的端到端保护同时通过：正确 breathing-only summary；错误“水体异常” summary 与 20%-30% 换水动作均未出现。\n- EvalPilot commit **2d994e22200215c03a14e999d3288c3c41cdc211** 已通过 actual \`promoteFixedBadcaseToRegression()\` 生成稳定 Regression **case-regression-pui-bc-023**；CI Run **32038227247** 全绿。\n- Issue #66 已按 connected same-case PASS 证据关闭为 completed。\n- 边界：这是 AI-blind connected evidence，不外推真人失败率。\n\n`;
+          handoff = handoff.replace(anchor, closure + anchor);
+          fs.writeFileSync(handoffPath, handoff);
+          NODE
+
+      - name: Commit lifecycle sync and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/one-shot-sync-pui-bc-023.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add evaluation/product/badcases.v1.jsonl HANDOFF-2026-08-17.md .github/workflows/one-shot-sync-pui-bc-023.yml
+          git diff --cached --check
+          git commit -m 'docs: close PUI-BC-023 connected regression'
+          git push origin HEAD:main
