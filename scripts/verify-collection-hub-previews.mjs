@@ -46,8 +46,11 @@ try {
   assert.equal(await desktop.locator('[data-preview-item="care"]').count(), 2, '养护模块应预览两篇文章');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').count(), 2, '生命纪念应预览两条记录');
   assert.equal(await desktop.locator('[data-preview-item="achievements"]').count(), 0, '建设中的成就模块不得展示真实勋章或进度');
-  const achievementCopy = await desktop.locator('[data-collection-module="achievements"]').textContent();
+  const achievementModule = desktop.locator('[data-collection-module="achievements"]');
+  const achievementCopy = await achievementModule.textContent();
   assert.ok(achievementCopy?.includes('成就勋章') && achievementCopy.includes('建设中') && achievementCopy.includes('暂未开放'), '轨道末端的成就模块必须保持建设中状态');
+  assert.equal(await achievementModule.getAttribute('data-feature-status'), 'building', '建设中模块必须显式声明 feature status');
+  assert.equal(await achievementModule.locator('button').count(), 0, '暂未开放的成就模块不能伪装成可执行按钮');
   assert.equal(await desktop.locator('[data-preview-item="wishlist"]').first().getAttribute('data-preview-id'), 'sp_0004', '最新加入的种草物种应排在最前');
   assert.equal(await desktop.locator('[data-preview-item="care"]').first().getAttribute('data-preview-id'), 'guide_pregnant_care', '养护收藏应按 favoritedAt 倒序');
   assert.equal(await desktop.locator('[data-preview-item="memorial"]').first().getAttribute('data-preview-id'), 'memorial-3', '生命纪念应按记录日期倒序');
