@@ -47,9 +47,23 @@ try {
       .filter(button => !(button.getAttribute('aria-label') || button.getAttribute('title') || button.textContent?.trim()))
       .length);
     assert.equal(unnamed, 0, `${route} 存在没有可理解名称的可点击按钮`);
+    const invalidBuildingActions = await page.locator('[data-feature-status="building"] button:not([data-building-action])').count();
+    assert.equal(invalidBuildingActions, 0, `${route} 建设中功能仍暴露了未声明用途的业务按钮`);
     assert.equal(errors.length, 0, `${route} 页面错误：${errors.join('; ')}`);
     await page.close();
   }
+
+  const settingsPage = await context.newPage();
+  await settingsPage.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
+  const sharingBuildingNav = settingsPage.locator('[data-settings-building-nav="sharing"]');
+  await sharingBuildingNav.waitFor();
+  assert.match((await sharingBuildingNav.innerText()), /分享与隐私/);
+  assert.match((await sharingBuildingNav.innerText()), /建设中/);
+  assert.equal(await settingsPage.getByRole('button', { name: '分享与隐私', exact: true }).count(), 0, '建设中的分享与隐私不能继续伪装成普通设置导航按钮');
+  const sharingSection = settingsPage.locator('#shared-reports');
+  assert.equal(await sharingSection.getAttribute('data-feature-status'), 'building', '分享与隐私 section 必须显式声明 building');
+  assert.equal(await sharingSection.getByRole('button', { name: '了解功能', exact: true }).getAttribute('data-building-action'), 'learn', 'building surface 只允许明确的元动作');
+  await settingsPage.close();
 
   const page = await context.newPage();
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
@@ -72,11 +86,11 @@ try {
   await discovery.getByRole('button', { name: '取消收藏物种', exact: true }).waitFor();
   assert.equal((await discovery.locator('h3').innerText()).trim().length > 0, true, 'mutation 动作后推荐对象消失');
 
-  await page.getByRole('button', { name: '添加生物', exact: true }).first().click();
-  const dialog = page.getByRole('dialog').filter({ hasText: '添加生物' });
+  await page.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
+  await page.getByRole('button', { name: '了解功能', exact: true }).click();
+  const dialog = page.getByRole('dialog').filter({ hasText: '分享与隐私' });
   await dialog.waitFor();
-  await dialog.getByRole('button', { name: '关闭', exact: true }).click();
-  await dialog.waitFor({ state: 'hidden' });
+  assert.equal(await dialog.isVisible(), true, 'building 元动作没有打开真实说明弹层');
 
   await page.goto(`${baseUrl}/aquarium?action=timeline&tank=action-runtime-tank`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('heading', { name: '操作时间线', exact: true }).waitFor();
