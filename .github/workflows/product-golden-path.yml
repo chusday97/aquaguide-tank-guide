@@ -25,6 +25,7 @@ jobs:
           npm run test:compatibility-coverage-scorecard
           npm run test:task-entry
           npm run test:core-flow-state-eval
+          npm run test:daily-check
       - name: Type check
         run: npm run lint
       - name: Build
