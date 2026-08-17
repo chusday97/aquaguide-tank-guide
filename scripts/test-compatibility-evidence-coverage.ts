@@ -28,6 +28,10 @@ type Row = {
   candidateName: string;
   status: string;
   blockingCodes: string[];
+  warningCodes: string[];
+  missingCodes: string[];
+  passedCodes: string[];
+  warningEvidence: string[];
 };
 
 const rows: Row[] = [];
@@ -50,6 +54,10 @@ for (const existing of commonSpecies) {
       candidateName: candidate.name,
       status: pair.status,
       blockingCodes: pair.rawResult.blockingRules.map(item => item.code),
+      warningCodes: pair.rawResult.warningRules.map(item => item.code),
+      missingCodes: pair.rawResult.missingData.map(item => item.code),
+      passedCodes: pair.rawResult.passedRules.map(item => item.code),
+      warningEvidence: pair.rawResult.warningRules.map(item => item.evidence),
     });
   }
 }
@@ -73,12 +81,24 @@ for (const row of recordable) {
     getReviewedCompatibilityProfile(row.candidateId),
     `recordable pair ${row.existingName} → ${row.candidateName} is missing reviewed candidate-species evidence`,
   );
+  assert.equal(
+    row.missingCodes.length,
+    0,
+    `recordable pair ${row.existingName} → ${row.candidateName} must not retain unresolved missing-data rules`,
+  );
 }
 
 const counts = rows.reduce<Record<string, number>>((acc, row) => {
   acc[row.status] = (acc[row.status] || 0) + 1;
   return acc;
 }, {});
-const recordableDirections = recordable.map(row => `${row.existingId}/${row.existingName} -> ${row.candidateId}/${row.candidateName} [${row.status}]`);
+const recordableDirections = recordable.map(row => ({
+  direction: `${row.existingId}/${row.existingName} -> ${row.candidateId}/${row.candidateName}`,
+  status: row.status,
+  warningCodes: row.warningCodes,
+  missingCodes: row.missingCodes,
+  passedCodes: row.passedCodes,
+  warningEvidence: row.warningEvidence,
+}));
 console.log(`Compatibility evidence coverage passed: ${rows.length} real common-species directions; recordable=${recordable.length}; statuses=${JSON.stringify(counts)}.`);
-console.log(`Recordable priority directions: ${JSON.stringify(recordableDirections)}`);
+console.log(`Recordable priority direction audit: ${JSON.stringify(recordableDirections)}`);
