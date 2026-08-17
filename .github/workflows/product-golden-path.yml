@@ -53,4 +53,4 @@ jobs:
       - name: GP-004 abnormal care browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
-        run: node scripts/verify-golden-path-abnormal-care.mjs
+        run: npm run test:golden-path-gp004-ui
