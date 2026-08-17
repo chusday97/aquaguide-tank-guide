@@ -1,7 +1,7 @@
 import type { Aquarium, Fish } from '../types';
 import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
-import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../data/compatibilityEvidence';
+import { getReviewedCompatibilityProfile, getReviewedPairRule, type ReviewedPairRule } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
@@ -167,6 +167,10 @@ const dedupeRules = (rules: TankCompatibilityRule[]) => {
   });
 };
 
+const formatReviewedPairRuleEvidence = (rule: ReviewedPairRule) => rule.basis === 'pair_rule'
+  ? `${rule.reason} 该结论有直接配对或捕食风险实验支持；实验条件不等于家庭水族箱长期同缸，因此不外推为“已观察到长期同缸捕食”。`
+  : `${rule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`;
+
 export const evaluateTankCompatibility = ({
   tank,
   existingSpecies = [],
@@ -257,7 +261,7 @@ export const evaluateTankCompatibility = ({
         target.push(asRule(
           `pair_rule_${reviewedPairRule.riskType}`,
           reviewedPairRule.verdict === 'not_recommended' ? '已审核的行为冲突' : '已审核的配对结论',
-          `${reviewedPairRule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`,
+          formatReviewedPairRuleEvidence(reviewedPairRule),
           reviewedPairRule.verdict === 'not_recommended' ? 'high' : reviewedPairRule.verdict === 'caution' ? 'medium' : 'info',
           reviewedPairRule,
         ));
@@ -412,7 +416,7 @@ export const evaluateTankCompatibility = ({
       target.push(asRule(
         `pair_rule_${pairRule.riskType}`,
         pairRule.verdict === 'not_recommended' ? '已审核的行为冲突' : '已审核的配对结论',
-        `${pairRule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`,
+        formatReviewedPairRuleEvidence(pairRule),
         pairRule.verdict === 'not_recommended' ? 'high' : pairRule.verdict === 'caution' ? 'medium' : 'info',
         pairRule,
       ));
