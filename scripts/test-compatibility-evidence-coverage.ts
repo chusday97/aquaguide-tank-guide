@@ -79,4 +79,6 @@ const counts = rows.reduce<Record<string, number>>((acc, row) => {
   acc[row.status] = (acc[row.status] || 0) + 1;
   return acc;
 }, {});
+const recordableDirections = recordable.map(row => `${row.existingId}/${row.existingName} -> ${row.candidateId}/${row.candidateName} [${row.status}]`);
 console.log(`Compatibility evidence coverage passed: ${rows.length} real common-species directions; recordable=${recordable.length}; statuses=${JSON.stringify(counts)}.`);
+console.log(`Recordable priority directions: ${JSON.stringify(recordableDirections)}`);
