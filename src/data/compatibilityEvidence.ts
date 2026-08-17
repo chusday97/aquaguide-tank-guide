@@ -63,6 +63,42 @@ const cardinalTetraFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const whiteCloudFishBase: EvidenceSourceDto = {
+  id: 'fishbase-tanichthys-albonubes',
+  title: 'Tanichthys albonubes (White cloud mountain minnow) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Tanichthys-albonubes.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const whiteCloudShoalingStudy: EvidenceSourceDto = {
+  id: 'white-cloud-shoaling-study',
+  title: 'Shoaling in White Cloud Mountain minnows, Tanichthys albonubes: effects of predation risk and prey hunger',
+  publisher: 'Animal Behaviour',
+  url: 'https://www.sciencedirect.com/science/article/pii/S0003347284712917',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const guppyFishBase: EvidenceSourceDto = {
+  id: 'fishbase-poecilia-reticulata',
+  title: 'Poecilia reticulata (Guppy) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Poecilia-reticulata.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const guppyShoalingStudy: EvidenceSourceDto = {
+  id: 'guppy-schooling-learning-study',
+  title: 'Schooling and learning: early social environment predicts social learning ability in the guppy, Poecilia reticulata',
+  publisher: 'Animal Behaviour',
+  url: 'https://www.sciencedirect.com/science/article/abs/pii/S0003347208002364',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0439: {
     speciesId: 'sp_0439',
@@ -106,6 +142,24 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [cardinalTetraFishBase],
+  },
+  sp_0434: {
+    speciesId: 'sp_0434',
+    behaviorTraits: ['shoaling'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [whiteCloudFishBase, whiteCloudShoalingStudy],
+  },
+  sp_0436: {
+    speciesId: 'sp_0436',
+    behaviorTraits: ['shoaling'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [guppyFishBase, guppyShoalingStudy],
   },
 };
 

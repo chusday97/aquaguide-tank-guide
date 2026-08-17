@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
 
 export type CompatibilityItem = {
@@ -119,6 +120,44 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
   };
 };
 
+const enforcePairEvidenceBoundary = (
+  result: TankCompatibilityResult,
+  itemA: CompatibilityItem,
+  itemB: CompatibilityItem,
+): TankCompatibilityResult => {
+  if (result.status === 'not_recommended' || getReviewedPairRule(itemA.species.id, itemB.species.id)) {
+    return result;
+  }
+
+  const profileA = getReviewedCompatibilityProfile(itemA.species.id);
+  const profileB = getReviewedCompatibilityProfile(itemB.species.id);
+  if (!profileA || !profileB) return result;
+
+  const pairEvidenceRule: TankCompatibilityRule = {
+    code: 'pair_evidence_unreviewed',
+    title: '配对证据尚未审核',
+    evidence: `${itemA.species.name} 与 ${itemB.species.name} 虽各自已有审核物种资料，但缺少已审核的配对结论；物种 profile 未记录风险不能视为已证明不存在配对风险。`,
+    severity: 'medium',
+    basis: 'rule_inference',
+    confidence: 'unknown',
+    reviewStatus: 'draft',
+    affectedSpeciesIds: [itemA.species.id, itemB.species.id],
+    citations: [...profileA.citations, ...profileB.citations],
+  };
+
+  return {
+    ...result,
+    status: 'insufficient_data',
+    riskLevel: 'unknown',
+    summary: pairEvidenceRule.evidence,
+    missingData: uniqueRules([...result.missingData, pairEvidenceRule]),
+    suggestions: Array.from(new Set([
+      '先补充该物种组合的已审核配对证据，再把结果提升为可记录的 compatible/caution。',
+      ...result.suggestions,
+    ])).slice(0, 5),
+  };
+};
+
 const buildPairResult = (
   tank: Aquarium | null | undefined,
   itemA: CompatibilityItem,
@@ -138,7 +177,11 @@ const buildPairResult = (
     candidateSpecies: itemA.species,
     candidateQuantity: quantityA,
   });
-  const rawResult = mergeDirectionalResults([forwardResult, reverseResult]);
+  const rawResult = enforcePairEvidenceBoundary(
+    mergeDirectionalResults([forwardResult, reverseResult]),
+    itemA,
+    itemB,
+  );
 
   const blocking = rawResult.blockingRules.map(rule => toRelationship(rule, 'not_recommended', rawResult.suggestions));
   const warnings = rawResult.warningRules.map(rule => toRelationship(rule, 'conditional', rawResult.suggestions));

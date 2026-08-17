@@ -4,7 +4,7 @@
   "status": "limited_knowledge_coverage",
   "baseline": {
     "catalogObjects": 486,
-    "reviewedSpeciesProfiles": 5,
+    "reviewedSpeciesProfiles": 7,
     "reviewedPairRules": 2,
     "minimumRecordablePriorityDirections": 2
   },
