@@ -1,0 +1,49 @@
+name: Append Relocation Request Builder Journal Once
+
+on:
+  push:
+    branches:
+      - agent/relocation-confirmation-surface
+    paths:
+      - '.github/workflows/append-relocation-request-builder-journal-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  journal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/relocation-confirmation-surface
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Append request-builder badcase and handoff checkpoint
+        shell: bash
+        run: |
+          cat >> evaluation/product/badcases.v1.jsonl <<'EOF'
+          {"id":"PUI-BC-024","featureId":"compatibility","discoveredAt":"2026-08-17","source":"request_builder_audit","severity":"critical","symptom":"formal relocation option 按整个 canonical 物种总量计算，但真实源缸可能存在多个 source record 或多个 batch；若 Care 页面直接选第一个 record/batch 构造请求，会只迁走部分个体却把动作包装成完整冲突解决。","trigger":"同一 canonical 物种由 alias/历史记录形成多个 AquariumFish record，或一个 AquariumFish 下存在多个正数量 batch；用户从 formal relocation option 打开迁移确认。","expected":"request-builder 只有在 formal subject 能唯一映射到一个 verified source record，且完整 formal quantity 能由一个明确 batch 一次性承载时才返回 ready；多 record、多 batch、缺 batch、数量不一致一律 fail closed，并明确当前版本需要重新整理批次或未来 multi-batch contract。","actual":"当前 Care 页面尚未实现 request-builder；若直接使用 find() / batches[0] 接线会产生 partial-relocation-as-full-resolution 风险。","rootCauseLayer":"canonical_identity_and_batch_mapping","status":"open","regression":"test:relocation-confirmation-request-builder + relocation confirmation CI + canonical confirmation integration audit"}
+          EOF
+          cat >> HANDOFF.md <<'EOF'
+
+          ## 2026-08-17 Relocation request-builder — checkpoint 3
+
+          - 已开始下一层：把 comparison intent 转成真实 `RelocationExecutionRequest` 之前，先登记 `PUI-BC-024`，状态 `open`。
+          - 关键边界：formal relocation quantity 是 canonical 物种在源缸的总量；不能用第一个 `AquariumFish` record 或 `batches[0]` 偷换成部分迁移。
+          - 第一版 request-builder 只允许“唯一 source record + 唯一可承载完整 formal quantity 的 batch”进入 ready；多 source record / 多 batch / 缺 batch / 数量不一致必须 fail closed。
+          - request-builder 不是安全授权层：它只构造确认所需事实与 request；真正执行仍由 PR #63 `executeFreshRelocation()` 再次 fresh load + source/destination revalidation。
+          - `operationId` 不应由每次点击/重试临时重建；builder 接收外部稳定 operationId，后续 reconciliation 必须复用同一 identity。
+          EOF
+      - name: Validate product evaluation registry
+        run: npm run test:product-evaluation
+      - name: Commit journal checkpoint
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add HANDOFF.md evaluation/product/badcases.v1.jsonl
+          git commit -m "Journal relocation request-builder boundary"
+          git push origin HEAD:agent/relocation-confirmation-surface
