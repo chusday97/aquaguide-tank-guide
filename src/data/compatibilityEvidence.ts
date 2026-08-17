@@ -99,6 +99,24 @@ const guppyShoalingStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const oscarZebrafishLivePredatorStudy: EvidenceSourceDto = {
+  id: 'oscar-zebrafish-live-predator-study',
+  title: 'Live Predators, Robots, and Computer-Animated Images Elicit Differential Avoidance Responses in Zebrafish',
+  publisher: 'Zebrafish',
+  url: 'https://journals.sagepub.com/doi/10.1089/zeb.2014.1041',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const oscarZebrafishDevelopmentStudy: EvidenceSourceDto = {
+  id: 'oscar-zebrafish-development-predator-study',
+  title: 'Modulation of Cortisol Responses to an Acute Stressor in Zebrafish Visually Exposed to Heterospecific Fish During Development',
+  publisher: 'Zebrafish',
+  url: 'https://journals.sagepub.com/doi/10.1089/zeb.2017.1509',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0439: {
     speciesId: 'sp_0439',
@@ -187,6 +205,18 @@ const pairRules: ReviewedPairRule[] = [
     reviewStatus: 'reviewed',
     affectedSpeciesIds: ['sp_0431', 'sp_0432'],
     citations: [neonTetraFishBase, cardinalTetraFishBase],
+  },
+  {
+    speciesIds: ['sp_0451', 'sp_0435'],
+    verdict: 'not_recommended',
+    riskType: 'predation_threat',
+    reason: '多项斑马鱼 predator-response 实验明确把地图鱼 Astronotus ocellatus 作为 Danio rerio 的捕食者刺激；活体地图鱼可诱发稳定回避/恐惧反应，长期视觉暴露研究也将该组合定义为 predator–prey 模型。证据支持存在明确捕食威胁，但这些实验并不是家庭水族箱中的长期同缸吞食试验。',
+    mitigation: ['不要把地图鱼与斑马鱼作为长期同缸组合；优先物理分缸。', '不要用增加躲避物或“先试试看”替代捕食风险隔离。'],
+    basis: 'pair_rule',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0451', 'sp_0435'],
+    citations: [oscarZebrafishLivePredatorStudy, oscarZebrafishDevelopmentStudy],
   },
 ];
 
