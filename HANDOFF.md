@@ -518,3 +518,12 @@
 - 第一版 request-builder 只允许“唯一 source record + 唯一可承载完整 formal quantity 的 batch”进入 ready；多 source record / 多 batch / 缺 batch / 数量不一致必须 fail closed。
 - request-builder 不是安全授权层：它只构造确认所需事实与 request；真正执行仍由 PR #63 `executeFreshRelocation()` 再次 fresh load + source/destination revalidation。
 - `operationId` 不应由每次点击/重试临时重建；builder 接收外部稳定 operationId，后续 reconciliation 必须复用同一 identity。
+
+## 2026-08-17 Relocation request-builder — checkpoint 4
+
+- `PUI-BC-024` 已完成回归验证并更新为 `regression_verified`。
+- 新增 `buildRelocationConfirmationRequest(...)` 纯 request-builder：它不做安全授权，只把 formal whole-subject intent 映射到 v1 可表达的 factual request。
+- `ready` 只允许：canonical subject 数量未漂移 + 唯一 `sourceRecordId` + record 数量等于 formal quantity + 恰好一个正数量 batch + batch 数量等于 formal quantity + 外部传入稳定非空 `operationId`。
+- fail-closed 已覆盖：多 source record、多 batch、缺 batch、formal quantity 漂移、record/batch 数量不一致、空 operationId。没有 `find-first` / `batches[0]` 兜底。
+- permanent confirmation CI 已同时通过：confirmation trigger、request-builder、confirmation state/UI、fresh execution policy、mutation uncertainty、TypeScript、production build。
+- 下一步暂不直接 Care 接线：发现 Draft PR #65 已存在高度重叠的 factual-source `buildRelocationConfirmationEntrypoint`。必须先比较 #65 与最新 #64，选择唯一 source-scope boundary，避免维护两套 request/entrypoint 逻辑。
