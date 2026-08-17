@@ -1,0 +1,37 @@
+name: Temporary Batch 2 Final Handoff Sync
+
+on:
+  push:
+    branches:
+      - agent/compatibility-evidence-batch-2-oscar-zebrafish
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/compatibility-evidence-batch-2-oscar-zebrafish
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Sync final Handoff
+        run: node scripts/tmp-sync-batch2-handoff-final.mjs
+      - name: Verify product registry
+        run: npm run test:product-evaluation
+      - name: Commit Handoff and self-delete temporary tooling
+        run: |
+          rm scripts/tmp-sync-batch2-handoff-final.mjs
+          rm .github/workflows/tmp-sync-batch2-handoff-final.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add HANDOFF-2026-08-17.md scripts/tmp-sync-batch2-handoff-final.mjs .github/workflows/tmp-sync-batch2-handoff-final.yml
+          git diff --cached --quiet && exit 1
+          git commit -m "Sync verified Batch 2 handoff"
+          git push origin HEAD:agent/compatibility-evidence-batch-2-oscar-zebrafish
