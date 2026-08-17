@@ -1,0 +1,40 @@
+name: Temporary close PUI-BC-030
+on:
+  push:
+    branches: [agent/functional-cta-closure-v1]
+permissions:
+  contents: write
+jobs:
+  close:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/functional-cta-closure-v1
+      - name: Update badcase and handoff
+        shell: python
+        run: |
+          from pathlib import Path
+          bad=Path('evaluation/product/badcases.v1.jsonl')
+          text=bad.read_text()
+          old='"id":"PUI-BC-030","featureId":"collection","discoveredAt":"2026-08-18","source":"functional_cta_audit","severity":"medium","symptom":"水族册首页把明确标记“建设中/暂未开放”的成就模块头部继续渲染成可点击按钮并显示前进箭头，点击后只进入另一个建设中页面；视觉 affordance 暗示存在可完成任务，但没有真实业务结果。","trigger":"进入 /collection，看到“成就勋章 · 建设中”卡片并点击卡片头部。","expected":"building feature 不得伪装成业务 CTA；未开放模块应为非交互信息面，只有“了解功能/返回”等明确元动作可以保持可点击。","actual":"CollectionModuleCard 对 achievements 与 live module 共用 openModule 按钮和 ChevronRight，虽然正文写“暂未开放”，仍把整张入口表现为可执行功能。","rootCauseLayer":"ui_affordance","status":"fixed","fixedBy":"agent/functional-cta-closure-v1","regression":"Collection hub browser regression要求 building achievements 卡显式 data-feature-status=building 且内部 0 button；最终 head CI 通过后再升级 regression_verified。"'
+          assert text.count(old)==1
+          new=old.replace('"status":"fixed"','"status":"regression_verified"').replace('Collection hub browser regression要求 building achievements 卡显式 data-feature-status=building 且内部 0 button；最终 head CI 通过后再升级 regression_verified。','Temporary functional CTA run 32047291318 PASS：Collection browser regression 要求 building achievements 卡显式 data-feature-status=building 且内部 0 button；PR #85 Product Golden Path #584 / run 32047532712 在 head 37966890be9ff689045a296fe292563eed41d8f6 上 29 Badcases、typecheck、build、GP-001～GP-005 全 PASS。')
+          bad.write_text(text.replace(old,new,1))
+          hand=Path('HANDOFF-2026-08-17.md')
+          h=hand.read_text().rstrip()
+          anchor='`PUI-BC-030` 先记为 `fixed`，等待 collection browser regression 和最终 PR head CI 后再改 `regression_verified`。'
+          assert h.count(anchor)==1
+          replacement='`PUI-BC-030` 已 `regression_verified`：temporary functional CTA Run `32047291318` 通过 Collection browser regression；PR #85 Product Golden Path **#584 / run `32047532712`** 在 head `37966890be9ff689045a296fe292563eed41d8f6` 上验证 **29 Badcases**、typecheck、build、GP-001～GP-005 全 PASS。'
+          hand.write_text(h.replace(anchor,replacement,1)+'\n')
+      - run: npm ci
+      - run: npm run test:product-evaluation
+      - name: Commit and self-delete
+        run: |
+          rm .github/workflows/tmp-close-pui-bc-030.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add evaluation/product/badcases.v1.jsonl HANDOFF-2026-08-17.md .github/workflows/tmp-close-pui-bc-030.yml
+          git commit -m "docs: close PUI-BC-030 regression"
+          git push origin HEAD:agent/functional-cta-closure-v1
