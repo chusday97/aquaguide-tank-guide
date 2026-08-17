@@ -409,3 +409,11 @@ CI 方向：
 - Convergence work remains focused on one source-scope policy: #65 `buildRelocationConfirmationEntrypoint` + canonical Care controller. #64 `buildRelocationConfirmationRequest` must not become a second independently evolving authorization/mapping path.
 - The first attempt to journal this checkpoint failed before any job because the temporary workflow YAML embedded an unindented heredoc. That was a process/tooling failure, not product evidence; this corrected workflow records it rather than hiding it.
 - Next gate: run latest canonical Care relocation browser Golden Path with an explicit uniqueness assertion for the business footer close locator, then use that evidence to decide `PUI-BC-025/026` closure and request-builder de-duplication.
+
+## 2026-08-17 Relocation topology convergence — checkpoint 7
+
+- Code-level convergence audit found #65 + canonical controller does not yet cover one #64 request-builder invariant: blank/invalid `operationId`.
+- #64 rejects blank operationId before building an execution request. The current canonical controller generates an id and assumes it is valid; its regression proves stability/reuse but not fail-close when the generator returns an empty string.
+- New badcase `PUI-BC-027` records this gap. #64 request-builder must not be removed until controller-level operation identity validation and regression exist.
+- Required fix: validate generated operation identity synchronously at controller creation, before repository resolution/read/write; add a regression proving blank id causes zero repository resolutions, zero reads and zero mutations.
+- Browser run `31995177363` is separately validating the close-locator fix on head `a515736...`; its result can close PUI-BC-026 but cannot by itself close PUI-BC-025.
