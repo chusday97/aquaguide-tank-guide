@@ -68,6 +68,13 @@ for (const existing of commonSpecies) {
 assert.ok(rows.length > 0, 'compatibility evidence gate must evaluate real catalog pairs');
 const evidenceAudit = getCompatibilityEvidenceAudit();
 assert.ok(evidenceAudit.reviewedPairRules.length >= 3, 'Batch 2 must preserve at least three reviewed pair rules after adding direct Oscar–zebrafish evidence');
+const auditedOscarZebrafishRule = evidenceAudit.reviewedPairRules.find(rule => (
+  rule.speciesIds.includes('sp_0451') && rule.speciesIds.includes('sp_0435')
+));
+assert.ok(auditedOscarZebrafishRule, 'reviewed evidence audit must retain the Oscar–zebrafish pair rule');
+assert.equal(auditedOscarZebrafishRule.basis, 'pair_rule', 'Oscar–zebrafish audit evidence must remain direct pair_rule provenance');
+assert.equal(auditedOscarZebrafishRule.verdict, 'not_recommended');
+assert.equal(auditedOscarZebrafishRule.reviewStatus, 'reviewed');
 
 const tetraPair = rows.find(row => row.existingId === 'sp_0431' && row.candidateId === 'sp_0432');
 assert.ok(tetraPair, 'reviewed 红绿灯 → 宝莲灯 pair must exist in the catalog matrix');
