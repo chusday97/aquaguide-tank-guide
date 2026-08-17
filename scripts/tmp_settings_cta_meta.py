@@ -2,8 +2,8 @@ from pathlib import Path
 import json
 
 # Harden a pre-existing runtime test assumption discovered by this audit.
-# The old fixture waited for a conditional "添加生物" button, although the seeded tank does not guarantee that CTA.
-# Daily Tank Check is a stable quick action for the same dialog-action contract.
+# The old fixture waited for a conditional Aquarium CTA. Use the explicit Settings building meta-action instead:
+# it is stable for this seed and still proves that a visible dialog action opens a real dialog.
 runtime=Path('scripts/verify-action-kind-runtime.mjs')
 r=runtime.read_text()
 old="""  await page.getByRole('button', { name: '添加生物', exact: true }).first().click();
@@ -11,10 +11,11 @@ old="""  await page.getByRole('button', { name: '添加生物', exact: true }).f
   await dialog.waitFor();
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
   await dialog.waitFor({ state: 'hidden' });"""
-new="""  await page.getByRole('button', { name: '每日鱼缸检查', exact: true }).first().click();
-  const dialog = page.getByRole('dialog').filter({ hasText: '每日鱼缸检查' });
+new="""  await page.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
+  await page.getByRole('button', { name: '了解功能', exact: true }).click();
+  const dialog = page.getByRole('dialog').filter({ hasText: '分享与隐私' });
   await dialog.waitFor();
-  assert.equal(await dialog.isVisible(), true, 'dialog 动作没有打开真实任务弹层');"""
+  assert.equal(await dialog.isVisible(), true, 'building 元动作没有打开真实说明弹层');"""
 assert r.count(old)==1, r.count(old)
 runtime.write_text(r.replace(old,new,1))
 
@@ -27,5 +28,5 @@ bad.write_text(text.rstrip()+'\n'+json.dumps(case,ensure_ascii=False,separators=
 hand=Path('HANDOFF-2026-08-17.md')
 h=hand.read_text().rstrip()
 assert 'PUI-BC-031' not in h
-h+='''\n\n### Functional CTA Audit v2\n\nPR #85 已 squash merge 到 main：`5bf9800c5554b476bf7e8441560d8744eaefa9b8`。最终 head `fc9c44e2bcf5e37c2b22783ceb21bef97fb63743` 的 Product Golden Path **#587 / run `32048161702`** 全 PASS，`PUI-BC-030` 保持 `regression_verified`。\n\n随后用 temporary CTA effect discovery Run `32049127307` 对 Aquarium / Care / Collection / Identify / Settings / Encyclopedia 首屏 **195 个可见、非破坏性内容按钮**逐个隔离点击。通用 no-effect 候选只有 6 个：Identify 图片入口属于系统 file chooser；Settings 4 个 section navigation 实际调用 `scrollIntoView + focus`，审计未记录嵌套 workspace scroll/focus；当前“简体中文”是已选 radio，再点击无变化属于合法 selected-state 行为。因此本轮没有把这些误报登记为 dead CTA。\n\n但 promise-level 审核发现 `PUI-BC-031`：Settings 的“分享与隐私”本身是 `building`，左侧导航却仍与 live setting 共用普通 button + ChevronRight，点击后只落到“功能建设中”说明。修复为非交互 building row + 显式“建设中”，去掉前进箭头；`#shared-reports` 标记 `data-feature-status=building`，仅“了解功能”保留为 `data-building-action=learn` 元动作。`PUI-BC-031` 先记 `fixed`，待 runtime + final Product Golden Path 后再升级。\n\n首次 runtime guard Run `32049668517` 的 Settings 新断言本身已通过，但随后被旧测试 fixture 的条件式“添加生物”按钮超时拦截；该 seeded tank 并不保证此 CTA 出现。测试保持原“可见 dialog action 必须打开真实弹层”语义，改用 seeded state 下稳定存在的“每日鱼缸检查”入口，不调整产品条件。'''
+h+='''\n\n### Functional CTA Audit v2\n\nPR #85 已 squash merge 到 main：`5bf9800c5554b476bf7e8441560d8744eaefa9b8`。最终 head `fc9c44e2bcf5e37c2b22783ceb21bef97fb63743` 的 Product Golden Path **#587 / run `32048161702`** 全 PASS，`PUI-BC-030` 保持 `regression_verified`。\n\n随后用 temporary CTA effect discovery Run `32049127307` 对 Aquarium / Care / Collection / Identify / Settings / Encyclopedia 首屏 **195 个可见、非破坏性内容按钮**逐个隔离点击。通用 no-effect 候选只有 6 个：Identify 图片入口属于系统 file chooser；Settings 4 个 section navigation 实际调用 `scrollIntoView + focus`，审计未记录嵌套 workspace scroll/focus；当前“简体中文”是已选 radio，再点击无变化属于合法 selected-state 行为。因此本轮没有把这些误报登记为 dead CTA。\n\n但 promise-level 审核发现 `PUI-BC-031`：Settings 的“分享与隐私”本身是 `building`，左侧导航却仍与 live setting 共用普通 button + ChevronRight，点击后只落到“功能建设中”说明。修复为非交互 building row + 显式“建设中”，去掉前进箭头；`#shared-reports` 标记 `data-feature-status=building`，仅“了解功能”保留为 `data-building-action=learn` 元动作。`PUI-BC-031` 先记 `fixed`，待 runtime + final Product Golden Path 后再升级。\n\n首次 runtime guard Run `32049668517` 的 Settings 新断言本身已通过，但随后被旧测试 fixture 的条件式“添加生物”按钮超时拦截；Run `32050114155` 进一步证明把它替换为另一个 Aquarium CTA 仍依赖 seeded tank 可见状态。测试不再猜 Aquarium 文案：保留原“visible dialog action 必须打开真实弹层”语义，改用本次页面中稳定且明确允许的 `了解功能 → 分享与隐私说明 Dialog`，不调整产品业务条件。'''
 hand.write_text(h+'\n')
