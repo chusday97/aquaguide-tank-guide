@@ -54,3 +54,7 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: npm run test:golden-path-gp004-ui
+      - name: GP-005 collection context browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-golden-path-collection-context.mjs
