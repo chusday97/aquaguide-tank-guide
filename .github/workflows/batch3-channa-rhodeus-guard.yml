@@ -21,136 +21,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - name: Apply exact-anchor Batch 3 product patch
-        shell: bash
-        run: |
-          python3 <<'PY'
-          from pathlib import Path
-          import json
-
-          def replace_once(text: str, old: str, new: str, label: str) -> str:
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f'{label}: expected exactly one anchor, found {count}')
-              return text.replace(old, new, 1)
-
-          evidence_path = Path('src/data/compatibilityEvidence.ts')
-          text = evidence_path.read_text()
-          profile_anchor = "const profiles: Record<string, ReviewedCompatibilityProfile> = {"
-          sources = """const channaRhodeusInformationDynamicsStudy: EvidenceSourceDto = {
-            id: 'channa-rhodeus-information-dynamics-study',
-            title: 'Information Dynamics in the Interaction between a Prey and a Predator Fish',
-            publisher: 'Entropy',
-            url: 'https://doi.org/10.3390/e17107230',
-            sourceType: 'peer_reviewed',
-            reviewStatus: 'reviewed',
-          };
-
-          const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
-            id: 'channa-rhodeus-predation-stress-study',
-            title: 'Effects of predation stress and sex on growth, metabolism, personality traits, and reproductive investment in the rosy bitterling (Rhodeus ocellatus)',
-            publisher: 'Comparative Biochemistry and Physiology Part A: Molecular & Integrative Physiology',
-            url: 'https://doi.org/10.1016/j.cbpa.2026.111986',
-            sourceType: 'peer_reviewed',
-            reviewStatus: 'reviewed',
-          };
-
-          """
-          text = replace_once(text, profile_anchor, sources + profile_anchor, 'evidence source insertion')
-          pair_end = "];
-
-export const getReviewedCompatibilityProfile"
-          new_rule = """  {
-            speciesIds: ['sp_0224', 'sp_0475'],
-            verdict: 'not_recommended',
-            riskType: 'predation_threat',
-            reason: '2015 年 predator–prey 实验直接使用高体鳑鲏 Rhodeus ocellatus 作为 prey、乌鳢 Channa argus 作为 predator，并记录到猎物倾向远离捕食者；2026 年研究进一步将乌鳢明确描述为高体鳑鲏的 natural predator，并以 20 天持续视觉/化学线索暴露研究非消耗性捕食压力。证据支持明确捕食威胁，但两项实验均采用物理隔离，不是家庭水族箱长期同缸吞食试验。',
-            mitigation: ['不要把白金雷龙与高体鳑鲏作为长期同缸组合；优先物理分缸。', '不要用躲避物、体型暂时接近或短期未追逐来替代捕食风险隔离。'],
-            basis: 'pair_rule',
-            confidence: 'medium',
-            reviewStatus: 'reviewed',
-            affectedSpeciesIds: ['sp_0224', 'sp_0475'],
-            citations: [channaRhodeusInformationDynamicsStudy, channaRhodeusPredationStressStudy],
-          },
-          ];
-
-          export const getReviewedCompatibilityProfile"""
-          text = replace_once(text, pair_end, new_rule, 'pair rule insertion')
-          evidence_path.write_text(text)
-
-          test_path = Path('scripts/test-compatibility-evidence-coverage.ts')
-          text = test_path.read_text()
-          text = replace_once(
-              text,
-              "assert.ok(evidenceAudit.reviewedPairRules.length >= 3, 'Batch 2 must preserve at least three reviewed pair rules after adding direct Oscar–zebrafish evidence');",
-              "assert.ok(evidenceAudit.reviewedPairRules.length >= 4, 'Batch 3 must preserve at least four reviewed pair rules after adding direct Channa–Rhodeus evidence');",
-              'pair evidence floor',
-          )
-          audit_anchor = "assert.equal(auditedOscarZebrafishRule.reviewStatus, 'reviewed');\n\nconst tetraPair"
-          audit_new = """assert.equal(auditedOscarZebrafishRule.reviewStatus, 'reviewed');
-
-          const auditedChannaRhodeusRule = evidenceAudit.reviewedPairRules.find(rule => (
-            rule.speciesIds.includes('sp_0224') && rule.speciesIds.includes('sp_0475')
-          ));
-          assert.ok(auditedChannaRhodeusRule, 'reviewed evidence audit must retain the Channa argus–Rhodeus ocellatus pair rule');
-          assert.equal(auditedChannaRhodeusRule.basis, 'pair_rule', 'Channa–Rhodeus audit evidence must remain direct pair_rule provenance');
-          assert.equal(auditedChannaRhodeusRule.verdict, 'not_recommended');
-          assert.equal(auditedChannaRhodeusRule.reviewStatus, 'reviewed');
-
-          const tetraPair"""
-          text = replace_once(text, audit_anchor, audit_new, 'pair audit regression')
-          decision_anchor = "assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');\n\nconst recordable"
-          decision_new = """assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');
-
-          const channa = fishData.find(fish => fish.id === 'sp_0224');
-          const rhodeus = fishData.find(fish => fish.id === 'sp_0475');
-          assert.ok(channa && rhodeus, 'Channa argus and Rhodeus ocellatus direct-evidence pair must exist in the catalog');
-          const channaRhodeusDecision = evaluateCompatibilityDecision({
-            tank,
-            items: [
-              { species: channa, quantity: 1, origin: 'existing' },
-              { species: rhodeus, quantity: 6, origin: 'candidate' },
-            ],
-          });
-          const channaRhodeusPair = channaRhodeusDecision.pairResults[0];
-          assert.ok(channaRhodeusPair, 'Channa argus → Rhodeus ocellatus must produce a pair result');
-          assert.equal(channaRhodeusPair.status, 'not_recommended', 'direct predator–prey evidence must block Channa argus + Rhodeus ocellatus cohabitation');
-          const channaDirectPairRule = channaRhodeusPair.rawResult.blockingRules.find(item => item.code === 'pair_rule_predation_threat');
-          assert.ok(channaDirectPairRule, 'Channa argus + Rhodeus ocellatus must expose reviewed pair-level predation evidence');
-          assert.equal(channaDirectPairRule.basis, 'pair_rule');
-          assert.equal(channaDirectPairRule.reviewStatus, 'reviewed');
-          assert.ok(channaDirectPairRule.citations.length >= 2, 'Channa–Rhodeus pair rule must retain both peer-reviewed citations');
-          assert.equal(channaDirectPairRule.evidence.includes('并非直接配对实验'), false, 'direct Channa–Rhodeus evidence must not be mislabeled as indirect evidence');
-          assert.ok(channaDirectPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'Channa–Rhodeus direct evidence must preserve the laboratory-to-husbandry limitation');
-
-          const recordable"""
-          text = replace_once(text, decision_anchor, decision_new, 'direct decision regression')
-          test_path.write_text(text)
-
-          score_path = Path('scripts/test-compatibility-coverage-scorecard.ts')
-          text = score_path.read_text()
-          text = replace_once(text, 'reviewedSpeciesProfiles: 5,', 'reviewedSpeciesProfiles: 7,', 'profile baseline')
-          text = replace_once(text, 'reviewedPairRules: 2,', 'reviewedPairRules: 4,', 'pair baseline')
-          score_path.write_text(text)
-
-          badcase_path = Path('evaluation/product/badcases.v1.jsonl')
-          lines = badcase_path.read_text().splitlines()
-          matches = []
-          for i, line in enumerate(lines):
-              obj = json.loads(line)
-              if obj.get('id') == 'PUI-BC-025':
-                  matches.append((i, obj))
-          if len(matches) != 1:
-              raise SystemExit(f'PUI-BC-025: expected exactly one object, found {len(matches)}')
-          i, obj = matches[0]
-          if obj.get('status') != 'investigating':
-              raise SystemExit(f"PUI-BC-025 status drifted: {obj.get('status')}")
-          obj['actual'] = 'Evidence Batch 1 将 reviewed profile 5→7；Batch 2 将 reviewed pair rule 2→3。Batch 3 检查当前 PostHog taxonomy 后仍未观察到 compatibility_pair_evaluated，因此没有足够真实 usage pair 数据，不能声称任何 pair 为高频；按 research-only risk fallback 转向 Channa argus。为避免 Carassius/Cyprinus 多品系 ID 把同一 taxon-level 证据重复计数，本批选择 catalog 唯一映射的 sp_0224 白金雷龙 / Channa argus + sp_0475 高体鳑鲏 / Rhodeus ocellatus，并基于 exact-species predator–prey primary research 增加 reviewed not_recommended pair rule。profiles 仍为 7，pair rules 3→4；priority common cohort 仍不得因本批阻断证据放宽 recordable coverage。'
-          obj['fixedBy'] = 'agent/compatibility-coverage-scorecard + agent/compatibility-evidence-batch-1 + agent/compatibility-pair-telemetry + agent/compatibility-evidence-batch-2-oscar-zebrafish + agent/compatibility-evidence-batch-3-channa-rhodeus'
-          obj['regression'] = 'Batch 3 guard：sp_0224 Channa argus + sp_0475 Rhodeus ocellatus 必须为 reviewed pair_rule / not_recommended / predation_threat，保留两篇 peer-reviewed citation 与 lab→home-aquarium limitation；reviewed profile floor=7、pair-rule floor=4；priority cohort recordable 必须继续=2。PUI-BC-025 保持 investigating；新增阻断型 evidence 不代表 broad coverage 已完成。'
-          lines[i] = json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
-          badcase_path.write_text('\n'.join(lines) + '\n')
-          PY
+      - name: Apply exact-anchor Batch 3 patch
+        run: python3 scripts/_tmp_batch3_channa_rhodeus_patch.py
       - name: Product registry regression
         run: npm run test:product-evaluation
       - name: Compatibility evidence regression
@@ -159,12 +31,12 @@ export const getReviewedCompatibilityProfile"
         run: npm run test:compatibility-coverage-scorecard
       - name: TypeScript
         run: npm run lint
-      - name: Commit guarded Batch 3 and self-delete workflow
+      - name: Commit guarded Batch 3 and self-delete temporary tooling
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git rm .github/workflows/batch3-channa-rhodeus-guard.yml
+          git rm .github/workflows/batch3-channa-rhodeus-guard.yml scripts/_tmp_batch3_channa_rhodeus_patch.py
           git add src/data/compatibilityEvidence.ts scripts/test-compatibility-evidence-coverage.ts scripts/test-compatibility-coverage-scorecard.ts evaluation/product/badcases.v1.jsonl
           git commit -m 'feat: add Channa Rhodeus compatibility evidence'
           git push origin HEAD:agent/compatibility-evidence-batch-3-channa-rhodeus
