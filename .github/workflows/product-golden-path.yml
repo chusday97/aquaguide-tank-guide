@@ -24,6 +24,7 @@ jobs:
           npm run test:compatibility-evidence-coverage
           npm run test:task-entry
           npm run test:core-flow-state-eval
+          npm run test:daily-check-task-separation
       - name: Type check
         run: npm run lint
       - name: Build
@@ -37,6 +38,10 @@ jobs:
           done
           cat /tmp/aquaguide-preview.log
           exit 1
+      - name: Daily check task separation browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:daily-check-task-separation-ui
       - name: GP-002 continuous browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173

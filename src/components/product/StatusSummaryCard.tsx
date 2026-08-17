@@ -114,9 +114,10 @@ export function StatusSummaryCard({
   onDeleteCarePlan,
   onBrowseCare,
 }: StatusSummaryCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
   const hasPrimaryAction = Boolean(action.task.primaryLabel);
+  const isDailyCheckTask = action.task.actionType === 'daily_check';
   const hasOverflowCarePlans = carePlan.activeCount > 1;
   const careItems = hasOverflowCarePlans && showCarePlan
     ? carePlan.visibleItems
@@ -159,6 +160,16 @@ export function StatusSummaryCard({
       <div className="mt-4 rounded-[17px] bg-white/78 p-4">
         <h2 className="text-[18px] font-black leading-snug text-ink [text-wrap:pretty]">{action.task.title}</h2>
         <p className="mt-2 text-[12px] font-bold leading-5 text-ink/60">{action.task.reason}</p>
+        {isDailyCheckTask && (
+          <p
+            data-daily-check-scope="records-today"
+            className="mt-3 rounded-[12px] border border-sky-100 bg-sky-50/80 px-3 py-2 text-[11px] font-bold leading-5 text-sky-800"
+          >
+            {i18n.language?.startsWith('en')
+              ? 'Daily Tank Check records today’s aquarium status. Care Guide Quick Check is symptom troubleshooting and does not complete today’s check.'
+              : '每日鱼缸检查会写入今天的巡检记录；养护指南里的快速检查只用于症状排查，不会完成今日巡检。'}
+          </p>
+        )}
         {action.level === 'urgent' && action.reasoning.length > 0 && (
           <div className="mt-3 rounded-[14px] border border-red-100 bg-red-50/70 p-3" aria-live="polite">
             <ul className="grid gap-2">
