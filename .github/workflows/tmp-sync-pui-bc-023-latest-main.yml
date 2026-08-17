@@ -1,0 +1,39 @@
+name: Temporary Latest-main PUI-BC-023 Sync
+
+on:
+  push:
+    branches:
+      - agent/compatibility-evidence-batch-2-oscar-zebrafish
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/compatibility-evidence-batch-2-oscar-zebrafish
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Sync latest-main PUI-BC-023 closure
+        run: node scripts/tmp-sync-pui-bc-023-latest-main.mjs
+      - name: Verify registry and compatibility evidence
+        run: |
+          npm run test:product-evaluation
+          npm run test:compatibility-evidence-coverage
+      - name: Commit synced closure and self-delete temporary tooling
+        run: |
+          rm scripts/tmp-sync-pui-bc-023-latest-main.mjs
+          rm .github/workflows/tmp-sync-pui-bc-023-latest-main.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add HANDOFF-2026-08-17.md evaluation/product/badcases.v1.jsonl scripts/tmp-sync-pui-bc-023-latest-main.mjs .github/workflows/tmp-sync-pui-bc-023-latest-main.yml
+          git diff --cached --quiet && exit 1
+          git commit -m "Sync latest PUI-BC-023 regression closure"
+          git push origin HEAD:agent/compatibility-evidence-batch-2-oscar-zebrafish
