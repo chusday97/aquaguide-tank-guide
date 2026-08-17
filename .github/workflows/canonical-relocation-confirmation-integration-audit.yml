@@ -45,6 +45,7 @@ jobs:
             mapfile -t conflicts < <(git diff --name-only --diff-filter=U | sort)
             expected=(
               ".github/workflows/product-golden-path.yml"
+              "HANDOFF.md"
               "src/services/aquarium/water-change.service.ts"
             )
             printf '%s\n' "${expected[@]}" | sort > /tmp/expected_conflicts
@@ -57,13 +58,14 @@ jobs:
             }
 
             git checkout --ours .github/workflows/product-golden-path.yml
+            git checkout --theirs HANDOFF.md
             cp /tmp/water-change.service.resolved.ts src/services/aquarium/water-change.service.ts
-            git add .github/workflows/product-golden-path.yml src/services/aquarium/water-change.service.ts
+            git add .github/workflows/product-golden-path.yml HANDOFF.md src/services/aquarium/water-change.service.ts
           fi
 
           test -z "$(git diff --name-only --diff-filter=U)"
           test -f .git/MERGE_HEAD
-          echo "Canonical mutation + confirmation stack resolved only in runner; no merge commit/push will be created."
+          echo "Canonical mutation + confirmation stack resolved only in runner; HANDOFF uses the confirmation branch journal, and no merge commit/push will be created."
 
       - run: npm ci
 
