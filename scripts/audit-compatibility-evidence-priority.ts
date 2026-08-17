@@ -7,10 +7,12 @@ export type CompatibilityEvidenceResearchPriority = {
   speciesId: string;
   name: string;
   scientificName: string;
+  researchGroupKey: string;
   lifeType: ReturnType<typeof getLifeType>;
   role: string;
   priorityScore: number;
   researchSignals: string[];
+  catalogVariantCount: number;
 };
 
 const BEHAVIOR_TEXT_SIGNAL = /捕食|吞食|活鱼|肉食|鱼食|凶猛|攻击|领地|单养|predat|piscivor|carnivor|aggress|territor|solitary/i;
@@ -49,8 +51,14 @@ const scoreSignals = (signals: string[]) => {
   return score;
 };
 
-export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidenceResearchPriority[] => fishData
-  .flatMap<CompatibilityEvidenceResearchPriority>(species => {
+const getResearchGroupKey = (species: (typeof fishData)[number]) => {
+  const scientificName = species.scientificName.trim();
+  const binomial = scientificName.match(/^([A-Z][A-Za-z-]+)\s+([a-z][A-Za-z-]+)/);
+  return binomial ? `${binomial[1]} ${binomial[2]}` : `catalog:${species.id}`;
+};
+
+export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidenceResearchPriority[] => {
+  const candidates = fishData.flatMap<Omit<CompatibilityEvidenceResearchPriority, 'catalogVariantCount'>>(species => {
     const lifeType = getLifeType(species);
     if (lifeType === 'plant' || lifeType === 'hardscape') return [];
     if (getReviewedCompatibilityProfile(species.id)) return [];
@@ -63,31 +71,62 @@ export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidence
       speciesId: species.id,
       name: species.name,
       scientificName: species.scientificName,
+      researchGroupKey: getResearchGroupKey(species),
       lifeType,
       role: getSecondaryCategory(species),
       priorityScore,
       researchSignals,
     }];
-  })
-  .sort((left, right) => (
-    right.priorityScore - left.priorityScore
-    || left.speciesId.localeCompare(right.speciesId)
-  ));
+  });
+
+  const groups = new Map<string, typeof candidates>();
+  candidates.forEach(candidate => {
+    const group = groups.get(candidate.researchGroupKey) || [];
+    group.push(candidate);
+    groups.set(candidate.researchGroupKey, group);
+  });
+
+  return Array.from(groups.values())
+    .map(group => {
+      const representative = [...group].sort((left, right) => (
+        right.priorityScore - left.priorityScore
+        || left.speciesId.localeCompare(right.speciesId)
+      ))[0];
+      return {
+        ...representative,
+        researchSignals: Array.from(new Set(group.flatMap(item => item.researchSignals))).sort(),
+        priorityScore: Math.max(...group.map(item => item.priorityScore)),
+        catalogVariantCount: group.length,
+      };
+    })
+    .sort((left, right) => (
+      right.priorityScore - left.priorityScore
+      || left.researchGroupKey.localeCompare(right.researchGroupKey)
+      || left.speciesId.localeCompare(right.speciesId)
+    ));
+};
 
 const queue = buildCompatibilityEvidenceResearchQueue();
 assert.ok(queue.length > 0, 'research-only evidence queue should identify at least one unreviewed high-signal animal');
 assert.ok(queue.every(item => !getReviewedCompatibilityProfile(item.speciesId)), 'reviewed deterministic profiles must never re-enter the research queue');
 assert.ok(queue.every(item => item.lifeType !== 'plant' && item.lifeType !== 'hardscape'), 'plants and hardscape must stay out of animal compatibility research');
 assert.ok(queue.every(item => item.priorityScore > 0 && item.researchSignals.length > 0), 'every research priority needs an explicit catalog signal');
+assert.equal(new Set(queue.map(item => item.researchGroupKey)).size, queue.length, 'base-species research groups must be unique so catalog variants cannot crowd the queue');
+assert.ok(queue.some(item => item.catalogVariantCount > 1), 'the audit should prove at least one catalog variety was collapsed into a base-species research group');
 
 const summary = {
   policy: 'research_only_not_runtime_evidence',
   rankingSource: 'catalog_risk_signals_fallback_until_pair_usage_is_sufficient',
+  deduplication: 'base_binomial_scientific_name',
   catalogAnimalCount: fishData.filter(species => !['plant', 'hardscape'].includes(getLifeType(species))).length,
   directReviewedProfileCount: fishData.filter(species => Boolean(getReviewedCompatibilityProfile(species.id))).length,
-  highSignalResearchQueueCount: queue.length,
+  highSignalCatalogEntryCount: fishData.filter(species => {
+    const lifeType = getLifeType(species);
+    return lifeType !== 'plant' && lifeType !== 'hardscape' && !getReviewedCompatibilityProfile(species.id) && scoreSignals(researchSignalsFor(species)) > 0;
+  }).length,
+  highSignalResearchGroupCount: queue.length,
   topResearchQueue: queue.slice(0, 30),
 };
 
 console.log(JSON.stringify(summary, null, 2));
-console.log('compatibility evidence priority audit passed: catalog signals rank research work only and are never consumed as runtime compatibility evidence');
+console.log('compatibility evidence priority audit passed: catalog signals rank deduplicated research groups only and are never consumed as runtime compatibility evidence');
