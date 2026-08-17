@@ -58,10 +58,18 @@ const getResearchGroupKey = (species: (typeof fishData)[number]) => {
 };
 
 export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidenceResearchPriority[] => {
+  const reviewedResearchGroupKeys = new Set(
+    fishData
+      .filter(species => Boolean(getReviewedCompatibilityProfile(species.id)))
+      .map(getResearchGroupKey),
+  );
+
   const candidates = fishData.flatMap<Omit<CompatibilityEvidenceResearchPriority, 'catalogVariantCount'>>(species => {
     const lifeType = getLifeType(species);
     if (lifeType === 'plant' || lifeType === 'hardscape') return [];
-    if (getReviewedCompatibilityProfile(species.id)) return [];
+
+    const researchGroupKey = getResearchGroupKey(species);
+    if (reviewedResearchGroupKeys.has(researchGroupKey)) return [];
 
     const researchSignals = researchSignalsFor(species);
     const priorityScore = scoreSignals(researchSignals);
@@ -71,7 +79,7 @@ export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidence
       speciesId: species.id,
       name: species.name,
       scientificName: species.scientificName,
-      researchGroupKey: getResearchGroupKey(species),
+      researchGroupKey,
       lifeType,
       role: getSecondaryCategory(species),
       priorityScore,
@@ -106,27 +114,39 @@ export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidence
     ));
 };
 
+const reviewedResearchGroupKeys = new Set(
+  fishData
+    .filter(species => Boolean(getReviewedCompatibilityProfile(species.id)))
+    .map(getResearchGroupKey),
+);
 const queue = buildCompatibilityEvidenceResearchQueue();
 assert.ok(queue.length > 0, 'research-only evidence queue should identify at least one unreviewed high-signal animal');
-assert.ok(queue.every(item => !getReviewedCompatibilityProfile(item.speciesId)), 'reviewed deterministic profiles must never re-enter the research queue');
+assert.ok(queue.every(item => !reviewedResearchGroupKeys.has(item.researchGroupKey)), 'a reviewed base-species group must never re-enter fallback research through an unreviewed catalog variant');
 assert.ok(queue.every(item => item.lifeType !== 'plant' && item.lifeType !== 'hardscape'), 'plants and hardscape must stay out of animal compatibility research');
 assert.ok(queue.every(item => item.priorityScore > 0 && item.researchSignals.length > 0), 'every research priority needs an explicit catalog signal');
 assert.equal(new Set(queue.map(item => item.researchGroupKey)).size, queue.length, 'base-species research groups must be unique so catalog variants cannot crowd the queue');
 assert.ok(queue.some(item => item.catalogVariantCount > 1), 'the audit should prove at least one catalog variety was collapsed into a base-species research group');
+assert.ok(reviewedResearchGroupKeys.has('Channa asiatica'), 'regression fixture requires a reviewed Channa asiatica base-species group');
+assert.ok(!queue.some(item => item.researchGroupKey === 'Channa asiatica'), 'reviewed Channa asiatica must not re-enter fallback through an unreviewed variety');
 
 const summary = {
   policy: 'research_only_not_runtime_evidence',
   rankingSource: 'catalog_risk_signals_fallback_until_pair_usage_is_sufficient',
   deduplication: 'base_binomial_scientific_name',
+  reviewedGroupExclusion: 'exclude_base_species_when_any_catalog_variant_has_reviewed_profile',
   catalogAnimalCount: fishData.filter(species => !['plant', 'hardscape'].includes(getLifeType(species))).length,
   directReviewedProfileCount: fishData.filter(species => Boolean(getReviewedCompatibilityProfile(species.id))).length,
+  reviewedResearchGroupCount: reviewedResearchGroupKeys.size,
   highSignalCatalogEntryCount: fishData.filter(species => {
     const lifeType = getLifeType(species);
-    return lifeType !== 'plant' && lifeType !== 'hardscape' && !getReviewedCompatibilityProfile(species.id) && scoreSignals(researchSignalsFor(species)) > 0;
+    return lifeType !== 'plant'
+      && lifeType !== 'hardscape'
+      && !reviewedResearchGroupKeys.has(getResearchGroupKey(species))
+      && scoreSignals(researchSignalsFor(species)) > 0;
   }).length,
   highSignalResearchGroupCount: queue.length,
   topResearchQueue: queue.slice(0, 30),
 };
 
 console.log(JSON.stringify(summary, null, 2));
-console.log('compatibility evidence priority audit passed: catalog signals rank deduplicated research groups only and are never consumed as runtime compatibility evidence');
+console.log('compatibility evidence priority audit passed: reviewed base-species groups stay excluded, catalog variants are deduplicated, and fallback signals never enter runtime verdicts');
