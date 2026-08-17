@@ -22,7 +22,7 @@ jobs:
           npm run test:product-evaluation
           npm run test:golden-path-contract
           npm run test:compatibility-evidence-coverage
-          node --import tsx scripts/test-compatibility-coverage-scorecard.ts
+          npm run test:compatibility-coverage-scorecard
           npm run test:task-entry
           npm run test:core-flow-state-eval
       - name: Type check
@@ -41,7 +41,7 @@ jobs:
       - name: GP-001 first tank setup browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
-        run: node scripts/verify-golden-path-first-tank-setup.mjs
+        run: npm run test:golden-path-gp001-ui
       - name: GP-002 continuous browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
