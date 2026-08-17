@@ -536,3 +536,10 @@
 - 新登记 `PUI-BC-025`：禁止 #64 request-builder 与 #65 entrypoint 长期作为两套独立 source-scope 策略并行演进。状态先保持 `open`。
 - 下一步不是删除代码，而是 convergence audit：证明 #65 + canonical controller 覆盖 PUI-BC-023/024 的全部 fail-closed case，并在当前 head 跑 Care relocation browser Golden Path；只有全部通过后才决定冗余 mapper 的收敛方式。
 - 现有 canonical browser workflow 历史最后一次自动 run 是失败状态；随后已有 `Disambiguate browser confirmation Close action` 修复，但该 bot push 未自动触发新 run。因此必须对最新 head 重新执行 browser acceptance，不能引用旧 green/旧 failure 代替。
+
+## 2026-08-17 Care relocation browser acceptance — checkpoint 6
+
+- 最新 canonical Care branch `7e21632a...` 的 module/controller gate 已通过 controller、fresh policy、mutation uncertainty、confirmation surface、#65 entrypoint、TypeScript、API TypeScript 与 production build。
+- 真实浏览器 run `31994745260` 仍为红，但失败点发生在 GP-REL-01/02 **成功迁移之后**：测试用 `button` + `/^关闭$/` 同时匹配页脚“关闭”和 Radix Dialog 内建 Close，Playwright strict mode 报 2 elements。
+- 新登记 `PUI-BC-026`，状态 `open`。这是 browser-test locator 歧义，不是 mutation/fresh gate/canonical refresh 失败；但 browser acceptance 未全绿前，PUI-BC-025 仍不能标记收敛完成。
+- 修复原则：给页脚业务关闭按钮增加专用 `data-close-relocation-confirmation="true"`，browser test 只点击该 locator；禁止用 `.first()` / nth 猜按钮，避免未来 UI DOM 变化掩盖错误。
