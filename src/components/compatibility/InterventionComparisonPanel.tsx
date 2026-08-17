@@ -5,11 +5,20 @@ import type { RuleMappedActionOption } from '../../lib/conflictActionEngine';
 import type { InterventionChoiceOption } from '../../lib/interventionChoiceModel';
 import type { TankDecisionDestinationEvaluation, TankDecisionSupportResult } from '../../lib/tankDecisionSupportOrchestrator';
 
+export type RelocationConfirmationIntent = {
+  subjectSpeciesId: string;
+  subjectName: string;
+  quantity: number;
+  destinationAquariumId: string;
+  destinationAquariumName: string;
+};
+
 export type InterventionComparisonPanelProps = {
   open: boolean;
   result: TankDecisionSupportResult;
   isEn?: boolean;
   onOpenChange: (open: boolean) => void;
+  onRequestRelocationConfirmation?: (intent: RelocationConfirmationIntent) => void;
 };
 
 const relationLabel = (relation: ConflictEdge['relation'], isEn: boolean) => {
@@ -83,7 +92,17 @@ function ConflictRow({
   );
 }
 
-function DestinationList({ destination, isEn }: { destination?: TankDecisionDestinationEvaluation; isEn: boolean }) {
+function DestinationList({
+  destination,
+  option,
+  isEn,
+  onRequestRelocationConfirmation,
+}: {
+  destination?: TankDecisionDestinationEvaluation;
+  option: InterventionChoiceOption;
+  isEn: boolean;
+  onRequestRelocationConfirmation?: (intent: RelocationConfirmationIntent) => void;
+}) {
   if (!destination) return null;
   if (destination.destinations.status === 'no_existing_destination') {
     return <div className="mt-3 rounded-[14px] border border-slate-200 bg-white px-3 py-2.5 text-[11px] font-bold text-ink/58">{isEn ? 'No other supplied aquarium can be evaluated as a destination.' : '当前提供的鱼缸中没有其他可评估的目标缸。'}</div>;
@@ -106,6 +125,22 @@ function DestinationList({ destination, isEn }: { destination?: TankDecisionDest
           </div>
           <p className="mt-1.5 text-[10px] font-medium leading-relaxed text-ink/58">{item.compatibility.summary}</p>
           {item.failClosedForUnresolvedResidents && <p className="mt-1 text-[9px] font-bold text-sky-700">{isEn ? 'This destination has unresolved residents, so it cannot be formally confirmed yet.' : '该目标缸还有身份未确认的生物，因此暂不能正式确认去向。'}</p>}
+          {item.status === 'compatible_by_current_evidence' && onRequestRelocationConfirmation && (
+            <button
+              type="button"
+              className="mt-2.5 w-full rounded-[11px] border border-emerald-200 bg-emerald-50 px-3 py-2 text-[10px] font-black text-emerald-800 hover:bg-emerald-100"
+              data-open-relocation-confirmation={item.aquariumId}
+              onClick={() => onRequestRelocationConfirmation({
+                subjectSpeciesId: option.subjectSpeciesId,
+                subjectName: option.subjectName,
+                quantity: option.quantity,
+                destinationAquariumId: item.aquariumId,
+                destinationAquariumName: item.aquariumName,
+              })}
+            >
+              {isEn ? 'Open relocation confirmation' : '打开迁移确认'}
+            </button>
+          )}
         </div>
       ))}
     </div>
@@ -116,10 +151,12 @@ function ChoiceCard({
   option,
   destination,
   isEn,
+  onRequestRelocationConfirmation,
 }: {
   option: InterventionChoiceOption;
   destination?: TankDecisionDestinationEvaluation;
   isEn: boolean;
+  onRequestRelocationConfirmation?: (intent: RelocationConfirmationIntent) => void;
 }) {
   return (
     <article className={`rounded-[18px] border p-4 ${option.strongestSingleChange ? 'border-emerald-200 bg-emerald-50/70' : 'border-border bg-white'}`} data-intervention-choice-id={option.id}>
@@ -144,12 +181,23 @@ function ChoiceCard({
         ))}
       </div>
       <p className="mt-3 text-[10px] font-bold leading-relaxed text-ink/55">{isEn ? 'This is a comparison result, not an instruction to remove this animal. Keeper preference and rehoming feasibility are not encoded here.' : '这是方案比较结果，不是要求你移出该生物。系统没有替你编码偏好、个体价值或送养难度。'}</p>
-      <DestinationList destination={destination} isEn={isEn} />
+      <DestinationList
+        destination={destination}
+        option={option}
+        isEn={isEn}
+        onRequestRelocationConfirmation={onRequestRelocationConfirmation}
+      />
     </article>
   );
 }
 
-export function InterventionComparisonPanel({ open, result, isEn = false, onOpenChange }: InterventionComparisonPanelProps) {
+export function InterventionComparisonPanel({
+  open,
+  result,
+  isEn = false,
+  onOpenChange,
+  onRequestRelocationConfirmation,
+}: InterventionComparisonPanelProps) {
   const graph = result.knownSubsetActionPlan.graph;
   const blockers = graph.edges.filter(edge => edge.outcome === 'blocker');
   const formalChoices = result.formalChoiceComparison?.options || [];
@@ -157,13 +205,17 @@ export function InterventionComparisonPanel({ open, result, isEn = false, onOpen
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90dvh] w-[95vw] max-w-[760px] flex-col overflow-hidden rounded-[24px] border-border bg-bg p-0" data-intervention-panel-readonly="true">
+      <DialogContent
+        className="flex max-h-[90dvh] w-[95vw] max-w-[760px] flex-col overflow-hidden rounded-[24px] border-border bg-bg p-0"
+        data-intervention-panel-readonly="true"
+        data-intervention-panel-mutation-free="true"
+      >
         <DialogHeader className="shrink-0 border-b border-border/70 bg-white px-5 py-4 text-left">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2 text-ink/52"><ShieldAlert className="h-4 w-4" /><span className="text-[10px] font-black uppercase tracking-[0.14em]">{isEn ? 'Current community intervention' : '当前群落调整比较'}</span></div>
               <DialogTitle className="mt-1 text-xl font-black text-ink">{isEn ? 'What changes would actually reduce current conflicts?' : '哪些调整真的会减少当前冲突？'}</DialogTitle>
-              <DialogDescription className="mt-1 text-[12px] font-medium leading-relaxed text-ink/55">{isEn ? 'Each option recomputes the remaining community. This panel is read-only and never moves livestock automatically.' : '每个方案都会重新计算调整后的剩余群落。这个面板只做比较，不会自动移动或删除任何生物。'}</DialogDescription>
+              <DialogDescription className="mt-1 text-[12px] font-medium leading-relaxed text-ink/55">{isEn ? 'Each option recomputes the remaining community. Compatible existing-tank destinations may open a separate confirmation step, but this comparison panel never mutates livestock.' : '每个方案都会重新计算调整后的剩余群落。满足当前证据门槛的现有目标缸可以打开独立确认步骤，但这个比较面板本身不会移动或删除任何生物。'}</DialogDescription>
             </div>
             <button type="button" aria-label={isEn ? 'Close intervention comparison' : '关闭调整比较'} onClick={() => onOpenChange(false)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-bg text-ink/55"><X className="h-4 w-4" /></button>
           </div>
@@ -185,7 +237,7 @@ export function InterventionComparisonPanel({ open, result, isEn = false, onOpen
           {result.formalChoiceComparison && formalChoices.length > 0 && (
             <section className="mt-5" data-formal-intervention-choices>
               <div className="flex items-start gap-2"><AlertTriangle className="mt-0.5 h-4 w-4 text-amber-600" /><div><h3 className="text-[15px] font-black text-ink">{isEn ? 'Compare one-species relocation scenarios' : '比较单一物种移出方案'}</h3><p className="mt-0.5 text-[10px] font-bold leading-relaxed text-ink/48">{result.formalChoiceComparison.kind === 'multiple_equal_single_change_options' ? (isEn ? 'Multiple options reduce the same number of blockers. The choice stays with you.' : '有多个方案减少的阻断数量相同，系统不会替你强行选其中一个。') : (isEn ? 'The highlighted option removes the most blocker edges among simulated one-species changes; it is not a command.' : '高亮方案只表示在单次移出一种生物的模拟中减少阻断最多，并不代表必须执行。')}</p></div></div>
-              <div className="mt-3 grid gap-3">{formalChoices.map(option => <ChoiceCard key={option.id} option={option} destination={result.relocationDestinations.find(item => item.subjectSpeciesId === option.subjectSpeciesId)} isEn={isEn} />)}</div>
+              <div className="mt-3 grid gap-3">{formalChoices.map(option => <ChoiceCard key={option.id} option={option} destination={result.relocationDestinations.find(item => item.subjectSpeciesId === option.subjectSpeciesId)} isEn={isEn} onRequestRelocationConfirmation={onRequestRelocationConfirmation} />)}</div>
               {!result.destinationSetProvided && <div className="mt-3 rounded-[14px] border border-sky-100 bg-sky-50 px-3 py-2.5 text-[10px] font-bold text-sky-800">{isEn ? 'Other aquarium data was not supplied, so no destination conclusion is shown.' : '当前没有提供其他鱼缸数据，因此这里不会把“未知去向”写成“没有可用鱼缸”。'}</div>}
             </section>
           )}

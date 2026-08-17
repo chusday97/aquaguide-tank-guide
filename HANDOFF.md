@@ -489,3 +489,57 @@
 - 根因：旧 `foreignObjectRendering` 在离屏 1080px 克隆上生成全透明画布；常规 html2canvas 又会被 Tailwind `oklch` 阻断。
 - 修复：记录卡使用 Canvas API 固定 1080px 直接绘制，不读取响应式页面 CSS；实际 PNG 为 1080×1000，深色像素和通道对比度门禁通过。
 - 验证：导出模型、分享隐私契约、390/600/1280px 布局和真实下载像素检查。
+
+## 2026-08-17 Relocation confirmation CTA wiring — checkpoint 1
+
+- 当前执行目标：把 PR #64 的迁移确认层入口接到 `InterventionComparisonPanel`，但比较面板本身继续保持 mutation-free，不 import/call Repository、API 或 Supabase。
+- 新登记 P0 Badcase：`PUI-BC-023`。旧目标缸 verdict 只能决定“是否显示打开确认入口”，绝不能作为 mutation 授权；真正执行必须进入 PR #63 `executeFreshRelocation()` fresh revalidation。
+- CTA 可见性约束：只有当前 formal relocation option 对应的 destination 且卡片状态为 `compatible_by_current_evidence` 才能显示“打开迁移确认”；`conditional / insufficient_data / not_recommended` 一律不显示执行入口。
+- 当前尚未修复：`InterventionComparisonPanel` 仍未提供 confirmation intent callback；本 checkpoint 先登记再改代码，Badcase 状态保持 `open`。
+- 禁止：不得从 destination card 直接调用 `repository.relocateLivestock()`；不得把 cached verdict 传入执行 policy 作为授权字段；不得自动替用户选择目标缸。
+
+## 2026-08-17 Relocation confirmation CTA wiring — checkpoint 1.5
+
+- 第一次 guarded apply 的产品代码与全部回归均通过，但最终 push 被 GitHub 拒绝：GitHub App token 没有 `workflows` 权限，不能在 runner push 中修改 `.github/workflows/relocation-confirmation-surface.yml`。
+- 这是发布/写入权限边界，不是产品逻辑失败。修复方式是不扩大 token 权限：runner 只提交已验证的产品代码、测试、HANDOFF 与 Badcase；永久 workflow gate 由 GitHub connector 单独更新。
+
+## 2026-08-17 Relocation confirmation CTA wiring — checkpoint 2
+
+- `InterventionComparisonPanel` 已增加 mutation-free confirmation intent callback；比较面板本身仍不 import/call Repository、API、Supabase 或 `executeFreshRelocation()`。
+- 入口只存在于 formal relocation option 的 destination evaluation，且仅当卡片状态为 `compatible_by_current_evidence` 时显示“打开迁移确认 / Open relocation confirmation”。`conditional / insufficient_data / not_recommended` 没有执行入口。
+- 点击入口只传递 `subjectSpeciesId / subjectName / quantity / destinationAquariumId / destinationAquariumName`，不携带 oldVerdict/isSafe/expectedCompatibility 等授权字段；真正 mutation 仍必须由上层构造 request 并进入 PR #63 fresh execution policy。
+- `PUI-BC-023` 已从 `open` 更新为 `regression_verified`：新增 trigger contract 先在旧面板上失败，再在 patch 后通过；confirmation state/UI、fresh execution policy、mutation uncertainty、product eval、TypeScript 与 production build 同步通过。
+- 当前仍未完成：Care 页面尚未把 confirmation intent 转成真实 `RelocationExecutionRequest`；因此用户仍不能从正式产品路径执行迁移。下一步只做 request-builder + dialog-open wiring，并继续禁止 destination card 直接 mutation。
+
+## 2026-08-17 Relocation request-builder — checkpoint 3
+
+- 已开始下一层：把 comparison intent 转成真实 `RelocationExecutionRequest` 之前，先登记 `PUI-BC-024`，状态 `open`。
+- 关键边界：formal relocation quantity 是 canonical 物种在源缸的总量；不能用第一个 `AquariumFish` record 或 `batches[0]` 偷换成部分迁移。
+- 第一版 request-builder 只允许“唯一 source record + 唯一可承载完整 formal quantity 的 batch”进入 ready；多 source record / 多 batch / 缺 batch / 数量不一致必须 fail closed。
+- request-builder 不是安全授权层：它只构造确认所需事实与 request；真正执行仍由 PR #63 `executeFreshRelocation()` 再次 fresh load + source/destination revalidation。
+- `operationId` 不应由每次点击/重试临时重建；builder 接收外部稳定 operationId，后续 reconciliation 必须复用同一 identity。
+
+## 2026-08-17 Relocation request-builder — checkpoint 4
+
+- `PUI-BC-024` 已完成回归验证并更新为 `regression_verified`。
+- 新增 `buildRelocationConfirmationRequest(...)` 纯 request-builder：它不做安全授权，只把 formal whole-subject intent 映射到 v1 可表达的 factual request。
+- `ready` 只允许：canonical subject 数量未漂移 + 唯一 `sourceRecordId` + record 数量等于 formal quantity + 恰好一个正数量 batch + batch 数量等于 formal quantity + 外部传入稳定非空 `operationId`。
+- fail-closed 已覆盖：多 source record、多 batch、缺 batch、formal quantity 漂移、record/batch 数量不一致、空 operationId。没有 `find-first` / `batches[0]` 兜底。
+- permanent confirmation CI 已同时通过：confirmation trigger、request-builder、confirmation state/UI、fresh execution policy、mutation uncertainty、TypeScript、production build。
+- 下一步暂不直接 Care 接线：发现 Draft PR #65 已存在高度重叠的 factual-source `buildRelocationConfirmationEntrypoint`。必须先比较 #65 与最新 #64，选择唯一 source-scope boundary，避免维护两套 request/entrypoint 逻辑。
+
+## 2026-08-17 Relocation topology convergence — checkpoint 5
+
+- 发现已有 Draft #65 `agent/relocation-confirmation-entrypoint` 与更后续的 `agent/canonical-care-relocation-wiring`。因此停止在 #64 上继续平行堆 Care executable wiring。
+- #65 `buildRelocationConfirmationEntrypoint(...)` 的 source-scope gate 比 #64 新 request-builder 更完整：除唯一 record/batch/quantity 外，还绑定 formal option、decision source aquarium、formal destination result 和 `compatible_by_current_evidence` opener gate；candidate 不携带 cached verdict / allowed / operationId。
+- `agent/canonical-care-relocation-wiring` 已有 `createCareRelocationConfirmationController(...)`：在 open-confirmation event 创建稳定 operationId；同一 repository 实例提供 pre/post `getAquariums()`、relocate callback 与 reconcile；实际 mutation 仍只能进入 #63 `executeFreshRelocation()`。
+- 新登记 `PUI-BC-025`：禁止 #64 request-builder 与 #65 entrypoint 长期作为两套独立 source-scope 策略并行演进。状态先保持 `open`。
+- 下一步不是删除代码，而是 convergence audit：证明 #65 + canonical controller 覆盖 PUI-BC-023/024 的全部 fail-closed case，并在当前 head 跑 Care relocation browser Golden Path；只有全部通过后才决定冗余 mapper 的收敛方式。
+- 现有 canonical browser workflow 历史最后一次自动 run 是失败状态；随后已有 `Disambiguate browser confirmation Close action` 修复，但该 bot push 未自动触发新 run。因此必须对最新 head 重新执行 browser acceptance，不能引用旧 green/旧 failure 代替。
+
+## 2026-08-17 Care relocation browser acceptance — checkpoint 6
+
+- 最新 canonical Care branch `7e21632a...` 的 module/controller gate 已通过 controller、fresh policy、mutation uncertainty、confirmation surface、#65 entrypoint、TypeScript、API TypeScript 与 production build。
+- 真实浏览器 run `31994745260` 仍为红，但失败点发生在 GP-REL-01/02 **成功迁移之后**：测试用 `button` + `/^关闭$/` 同时匹配页脚“关闭”和 Radix Dialog 内建 Close，Playwright strict mode 报 2 elements。
+- 新登记 `PUI-BC-026`，状态 `open`。这是 browser-test locator 歧义，不是 mutation/fresh gate/canonical refresh 失败；但 browser acceptance 未全绿前，PUI-BC-025 仍不能标记收敛完成。
+- 修复原则：给页脚业务关闭按钮增加专用 `data-close-relocation-confirmation="true"`，browser test 只点击该 locator；禁止用 `.first()` / nth 猜按钮，避免未来 UI DOM 变化掩盖错误。
