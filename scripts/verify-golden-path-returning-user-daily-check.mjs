@@ -133,15 +133,25 @@ try {
   }
   await dialog.waitFor({ state: 'detached' });
 
-  await page.getByText('今日已检查', { exact: true }).first().waitFor();
+  await page.waitForFunction(() => document.querySelector('[data-daily-action="daily_check"]') === null);
   assert.equal(
     await page.locator('[data-daily-action="daily_check"]').count(),
     0,
-    'After a successful Daily Check save, the Today primary task must update instead of still asking for the same check.',
+    'After a successful Daily Check save, the Today primary task must advance instead of asking for the same check.',
   );
+
+  const dailyCheckAction = page.getByText('每日鱼缸检查', { exact: true }).first().locator('..');
+  await dailyCheckAction.waitFor();
+  const statusText = (await dailyCheckAction.textContent()) || '';
+  assert.match(
+    statusText,
+    /(今日已检查|建议重新检查)/,
+    'After persistence, Daily Tank Check status must move from 今日未检查 to either 今日已检查 or 建议重新检查 according to risk.',
+  );
+  assert.doesNotMatch(statusText, /今日未检查/, 'Persisted Daily Check must not remain in the unchecked state.');
   assert.deepEqual(pageErrors, [], `GP-003 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-003 continuous E2E passed: returning user → Today Daily Check → complete required answers → persist patrol → Today status updates.');
+  console.log('GP-003 continuous E2E passed: returning user → Today Daily Check → complete required answers → persist patrol → Today status advances.');
 } finally {
   await browser.close();
 }
