@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-13",
+  "updatedAt": "2026-08-17",
   "status": "coverage_audit",
   "paths": [
     {
@@ -76,7 +76,9 @@
       "existingAutomation": [
         "test:core-flow-state-ui",
         "test:daily-check",
-        "test:daily-discovery"
+        "test:daily-discovery",
+        "test:daily-check-task-separation",
+        "test:daily-check-task-separation-ui"
       ],
       "coverage": "partial"
     },
