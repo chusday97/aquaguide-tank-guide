@@ -104,9 +104,10 @@
       "existingAutomation": [
         "test:daily-check",
         "test:care-first-screen",
-        "test:task-entry"
+        "test:task-entry",
+        "test:golden-path-gp004-ui"
       ],
-      "coverage": "partial"
+      "coverage": "covered"
     },
     {
       "id": "GP-005",
