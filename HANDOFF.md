@@ -417,3 +417,12 @@ CI 方向：
 - New badcase `PUI-BC-027` records this gap. #64 request-builder must not be removed until controller-level operation identity validation and regression exist.
 - Required fix: validate generated operation identity synchronously at controller creation, before repository resolution/read/write; add a regression proving blank id causes zero repository resolutions, zero reads and zero mutations.
 - Browser run `31995177363` is separately validating the close-locator fix on head `a515736...`; its result can close PUI-BC-026 but cannot by itself close PUI-BC-025.
+
+## 2026-08-17 Relocation topology convergence — checkpoint 8
+
+- Latest real Chromium run `31995177363` on head `a515736...` passed the permanent close-locator uniqueness gate, GP-REL-01/02 success flow, and GP-REL-03 stale-destination blocking.
+- GP-REL-04 failed with `Escape must not dismiss uncertain dialog`: the confirmation surface was already marked `data-relocation-close-locked=true`, yet Escape detached it before canonical reconciliation. This is a distinct runtime lifecycle defect, not the earlier text-locator ambiguity.
+- `PUI-BC-026` locator ambiguity is therefore regression-verified as a subproblem, while the full browser suite remains blocked by new `PUI-BC-028`.
+- A guarded repair attempt (`31995381732`) proved the new blank-operation-id regression fails on the old controller and passes after adding a synchronous non-empty operation identity guard. However the same runner was stopped by TypeScript before commit because this project's `DialogContent` exposes `DialogPopupProps`, which does not accept the assumed Radix `onEscapeKeyDown` prop.
+- Consequently the operation-id and uncertain-dialog product patches from that runner are **not committed**. `PUI-BC-027` has fail-before-fix + runner-only post-fix evidence but remains pending a type-correct committed implementation; `PUI-BC-028` remains open.
+- Next step is to inspect the project's actual Dialog implementation / underlying UI library and fix close locking with supported lifecycle primitives, then rerun controller/static/type/build and the real Chromium GP-REL-04/05 path.
