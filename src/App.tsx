@@ -280,7 +280,7 @@ function DesktopSidebar({
   const location = useLocation();
   const { navigateToRoute, navigateToView } = useWorkspaceNavigation();
   const { showToast } = useToast();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [searchDraft, setSearchDraft] = useState('');
   const [sidebarSuggestions, setSidebarSuggestions] = useState<SearchSuggestion[]>([]);
   const [sidebarSpeciesTotal, setSidebarSpeciesTotal] = useState(0);
