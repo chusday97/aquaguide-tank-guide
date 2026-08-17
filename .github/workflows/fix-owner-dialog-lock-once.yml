@@ -1,0 +1,124 @@
+name: Fix Owner Dialog Lock Once
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+    paths:
+      - '.github/workflows/fix-owner-dialog-lock-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/canonical-care-relocation-wiring
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply owner-dialog lock patch and static regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+
+          const panelPath = 'src/components/compatibility/InterventionComparisonPanel.tsx';
+          let panel = fs.readFileSync(panelPath, 'utf8');
+          const propsBefore = `  onOpenChange: (open: boolean) => void;\n  onOpenRelocationConfirmation?: (candidate: RelocationConfirmationLaunchCandidate) => void;\n};`;
+          const propsAfter = `  onOpenChange: (open: boolean) => void;\n  onOpenRelocationConfirmation?: (candidate: RelocationConfirmationLaunchCandidate) => void;\n  closeLocked?: boolean;\n};`;
+          if ((panel.split(propsBefore).length - 1) !== 1) throw new Error('panel props anchor must be unique');
+          panel = panel.replace(propsBefore, propsAfter);
+
+          const destructBefore = `  onOpenChange,\n  onOpenRelocationConfirmation,\n}: InterventionComparisonPanelProps) {`;
+          const destructAfter = `  onOpenChange,\n  onOpenRelocationConfirmation,\n  closeLocked = false,\n}: InterventionComparisonPanelProps) {`;
+          if ((panel.split(destructBefore).length - 1) !== 1) throw new Error('panel destructure anchor must be unique');
+          panel = panel.replace(destructBefore, destructAfter);
+
+          const rootBefore = `    <Dialog open={open} onOpenChange={onOpenChange}>`;
+          const rootAfter = `    <Dialog\n      open={open}\n      disablePointerDismissal={closeLocked}\n      onOpenChange={(nextOpen, eventDetails) => {\n        if (!nextOpen && closeLocked) {\n          eventDetails.cancel();\n          return;\n        }\n        onOpenChange(nextOpen);\n      }}\n    >`;
+          if ((panel.split(rootBefore).length - 1) !== 1) throw new Error('panel root anchor must be unique');
+          panel = panel.replace(rootBefore, rootAfter);
+
+          const buttonBefore = `<button type="button" aria-label={isEn ? 'Close intervention comparison' : '关闭调整比较'} onClick={() => onOpenChange(false)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-bg text-ink/55"><X className="h-4 w-4" /></button>`;
+          const buttonAfter = `<button type="button" aria-label={isEn ? 'Close intervention comparison' : '关闭调整比较'} onClick={() => { if (!closeLocked) onOpenChange(false); }} disabled={closeLocked} data-intervention-close-locked={closeLocked ? 'true' : 'false'} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-bg text-ink/55 disabled:cursor-not-allowed disabled:opacity-40"><X className="h-4 w-4" /></button>`;
+          if ((panel.split(buttonBefore).length - 1) !== 1) throw new Error('panel close button anchor must be unique');
+          panel = panel.replace(buttonBefore, buttonAfter);
+          fs.writeFileSync(panelPath, panel);
+
+          const carePath = 'src/pages/CareEncyclopedia.tsx';
+          let care = fs.readFileSync(carePath, 'utf8');
+          const careBefore = `          onOpenChange={setIsInterventionComparisonOpen}\n          onOpenRelocationConfirmation={openRelocationConfirmation}\n        />`;
+          const careAfter = `          onOpenChange={setIsInterventionComparisonOpen}\n          onOpenRelocationConfirmation={openRelocationConfirmation}\n          closeLocked={Boolean(relocationController)}\n        />`;
+          if ((care.split(careBefore).length - 1) !== 1) throw new Error('Care wiring anchor must be unique');
+          care = care.replace(careBefore, careAfter);
+          fs.writeFileSync(carePath, care);
+
+          const verifyPath = 'scripts/verify-relocation-confirmation-surface.mjs';
+          let verify = fs.readFileSync(verifyPath, 'utf8');
+          verify += `\n// Owner dialog must stay mounted while a relocation confirmation controller exists.\n{\n  const panel = readFileSync('src/components/compatibility/InterventionComparisonPanel.tsx', 'utf8');\n  const care = readFileSync('src/pages/CareEncyclopedia.tsx', 'utf8');\n  assert.match(panel, /closeLocked\\?: boolean/);\n  assert.match(panel, /disablePointerDismissal=\\{closeLocked\\}/);\n  assert.match(panel, /eventDetails\\.cancel\\(\\)/);\n  assert.match(panel, /data-intervention-close-locked=\\{closeLocked \\? 'true' : 'false'\\}/);\n  assert.match(care, /closeLocked=\\{Boolean\\(relocationController\\)\\}/);\n}\n`;
+          fs.writeFileSync(verifyPath, verify);
+
+          fs.appendFileSync('HANDOFF.md', [
+            '',
+            '## 2026-08-17 Relocation topology convergence — checkpoint 11',
+            '',
+            '- Topology audit confirmed the runtime owner relationship: `InterventionComparisonPanel` and `RelocationConfirmationDialog` are sibling Base UI Dialog roots in Care; while confirmation exists, the intervention panel previously remained freely dismissible via `onOpenChange={setIsInterventionComparisonOpen}`.',
+            '- PUI-BC-028 repair now locks the owner panel from the single lifecycle source of truth `Boolean(relocationController)`. The panel cancels Base UI close requests, disables pointer dismissal, and disables its explicit header close button while a confirmation controller exists.',
+            '- The confirmation dialog keeps its own stricter reconciliation lock. Parent lock solves ownership/orphaning; child lock solves mutation-uncertainty recovery. They have different responsibilities but share the same controller-backed lifecycle rather than independent guessed booleans.',
+            '- This patch is not complete until static/type/build pass and the real Chromium suite passes GP-REL-04 Escape + overlay + reconcile and then reaches/passes GP-REL-05 multibatch fail-close.',
+            '',
+          ].join('\n'));
+
+          const badcasePath = 'evaluation/product/badcases.v1.jsonl';
+          const lines = fs.readFileSync(badcasePath, 'utf8').trimEnd().split('\n').map(line => {
+            const item = JSON.parse(line);
+            if (item.id === 'PUI-BC-028') {
+              return JSON.stringify({
+                ...item,
+                actual: '拓扑审计确认 InterventionComparisonPanel 与确认层是 sibling Base UI Dialog。修复改为 controller-backed owner lock：Care 传 closeLocked={Boolean(relocationController)}，owner Dialog cancel close + disable pointer dismissal + header X disabled；等待真实 Chromium GP-REL-04/05。',
+                status: 'fix_in_progress_owner_lock',
+              });
+            }
+            return line;
+          });
+          fs.writeFileSync(badcasePath, `${lines.join('\n')}\n`);
+          NODE
+      - name: Confirmation/owner static contract
+        run: node scripts/verify-relocation-confirmation-surface.mjs
+      - name: Controller regression
+        run: node --import tsx scripts/test-care-relocation-confirmation-controller.ts
+      - name: TypeScript
+        run: npm run lint
+      - name: API TypeScript
+        run: npm run check:api
+      - name: Production build
+        run: npm run build
+      - name: Mark owner fix committed pending Chromium
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'evaluation/product/badcases.v1.jsonl';
+          const lines = fs.readFileSync(path, 'utf8').trimEnd().split('\n').map(line => {
+            const item = JSON.parse(line);
+            if (item.id === 'PUI-BC-028') return JSON.stringify({ ...item, status: 'fix_committed_revalidation_pending' });
+            return line;
+          });
+          fs.writeFileSync(path, `${lines.join('\n')}\n`);
+          NODE
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/fix-owner-dialog-lock-once.yml
+      - name: Commit verified owner lock
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Lock intervention owner during relocation confirmation"
+          git push origin HEAD:agent/canonical-care-relocation-wiring
