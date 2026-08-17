@@ -67,13 +67,23 @@ for (const existing of commonSpecies) {
 
 assert.ok(rows.length > 0, 'compatibility evidence gate must evaluate real catalog pairs');
 
-const target = rows.find(row => row.existingId === 'sp_0431' && row.candidateId === 'sp_0432');
-assert.ok(target, 'reviewed 红绿灯 → 宝莲灯 pair must exist in the catalog matrix');
-assert.equal(target.status, 'caution', 'reviewed 红绿灯 → 宝莲灯 inference must stay caution, not absolute compatible or blocked');
-assert.equal(target.blockingRules.some(item => item.code === 'predation_risk'), false, 'peaceful small tetra pair must not regress into a predation block');
+const tetraPair = rows.find(row => row.existingId === 'sp_0431' && row.candidateId === 'sp_0432');
+assert.ok(tetraPair, 'reviewed 红绿灯 → 宝莲灯 pair must exist in the catalog matrix');
+assert.equal(tetraPair.status, 'caution', 'explicitly reviewed 红绿灯 → 宝莲灯 pair must stay caution, not absolute compatible or blocked');
+assert.equal(tetraPair.blockingRules.some(item => item.code === 'predation_risk'), false, 'peaceful small tetra pair must not regress into a predation block');
+
+const guppyNeon = rows.find(row => row.existingId === 'sp_0436' && row.candidateId === 'sp_0431');
+assert.ok(guppyNeon, 'reviewed guppy and neon profiles must be present in the priority matrix');
+assert.equal(guppyNeon.status, 'insufficient_data', 'reviewed species profiles without a reviewed pair rule must not become recordable by absence-of-risk inference');
+assert.ok(guppyNeon.missingRules.some(item => item.code === 'pair_evidence_unreviewed' && item.severity === 'medium'), 'guppy → neon must expose the missing pair-evidence boundary');
+
+const whiteCloudGuppy = rows.find(row => row.existingId === 'sp_0434' && row.candidateId === 'sp_0436');
+assert.ok(whiteCloudGuppy, 'reviewed white-cloud and guppy profiles must be present in the priority matrix');
+assert.equal(whiteCloudGuppy.status, 'insufficient_data', 'two reviewed species profiles still require pair-level evidence before recordable compatibility');
+assert.ok(whiteCloudGuppy.missingRules.some(item => item.code === 'pair_evidence_unreviewed'), 'white cloud → guppy must stay gated on pair evidence');
 
 const recordable = rows.filter(row => row.status === 'compatible' || row.status === 'caution');
-assert.ok(recordable.length >= 2, 'at least one reviewed real pair must remain reachable in both directions');
+assert.equal(recordable.length, 2, 'Batch 1 adds species-profile coverage only; recordable priority directions must remain the explicit tetra pair in both directions.');
 
 for (const row of recordable) {
   assert.ok(
