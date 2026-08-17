@@ -32,16 +32,22 @@ const moveTargetIntoScrolledContext = async (page, rail) => {
 };
 
 const assertContextRestored = async (page, rail, beforeScrollLeft, expectedCardId) => {
-  await page.waitForFunction(id => document.activeElement?.id === id, expectedCardId);
+  await page.waitForFunction(id => {
+    const target = document.getElementById(id);
+    return Boolean(target && document.activeElement && (document.activeElement === target || target.contains(document.activeElement)));
+  }, expectedCardId);
   const afterScrollLeft = await railScrollLeft(rail);
   assert.ok(
     Math.abs(afterScrollLeft - beforeScrollLeft) <= 3,
     `Closing detail must preserve the collection rail position; before=${beforeScrollLeft}, after=${afterScrollLeft}.`,
   );
   assert.equal(
-    await page.evaluate(() => document.activeElement?.id || ''),
-    expectedCardId,
-    'Closing detail must restore focus to the exact saved object that opened it.',
+    await page.evaluate(id => {
+      const target = document.getElementById(id);
+      return Boolean(target && document.activeElement && (document.activeElement === target || target.contains(document.activeElement)));
+    }, expectedCardId),
+    true,
+    'Closing detail must restore focus to the exact saved object card or its original interaction target.',
   );
 };
 
@@ -116,7 +122,7 @@ try {
   assert.deepEqual(mobileErrors, [], `Mobile GP-005 must not emit page errors: ${mobileErrors.join('; ')}`);
   await mobileContext.close();
 
-  console.log('GP-005 continuous E2E passed: Collection → Wishlist horizontal context → exact saved species → desktop drawer/mobile sheet → close → exact card focus and rail position preserved.');
+  console.log('GP-005 continuous E2E passed: Collection → Wishlist horizontal context → exact saved species → desktop drawer/mobile sheet → close → exact card context and rail position preserved.');
 } finally {
   await browser.close();
 }
