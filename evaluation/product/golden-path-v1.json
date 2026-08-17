@@ -7,130 +7,45 @@
       "id": "GP-001",
       "name": "首次使用 → 建鱼缸 → 补参数",
       "goal": "新用户从零进入真实鱼缸，并知道下一步需要补哪些必要参数。",
-      "milestones": [
-        "welcome_start",
-        "create_aquarium",
-        "enter_real_aquarium",
-        "setup_task",
-        "save_required_parameters",
-        "return_to_aquarium"
-      ],
-      "forbidden": [
-        "创建后落到无明确下一步的大页面",
-        "用伪默认温度/尺寸替代用户输入",
-        "保存失败却显示配置完成"
-      ],
-      "existingAutomation": [
-        "test:guided-navigation-ui",
-        "test:onboarding-goal-paths",
-        "test:task-entry",
-        "test:golden-path-gp001-ui"
-      ],
+      "milestones": ["welcome_start", "create_aquarium", "enter_real_aquarium", "setup_task", "save_required_parameters", "return_to_aquarium"],
+      "forbidden": ["创建后落到无明确下一步的大页面", "用伪默认温度/尺寸替代用户输入", "保存失败却显示配置完成"],
+      "existingAutomation": ["test:guided-navigation-ui", "test:onboarding-goal-paths", "test:task-entry", "test:golden-path-gp001-ui"],
       "coverage": "covered"
     },
     {
       "id": "GP-002",
       "name": "找物种 → 看详情 → 加入混养 → 入缸",
       "goal": "用户从搜索具体物种开始，完成理解、混养判断和真实入缸记录。",
-      "milestones": [
-        "search_species",
-        "open_exact_species",
-        "open_compatibility_drawer",
-        "review_tank_baseline_and_candidate",
-        "resolve_result_state",
-        "record_actual_stocking",
-        "tank_quantity_updated"
-      ],
-      "forbidden": [
-        "功能 CTA 把用户丢到图鉴或混养首页自己寻找",
-        "确定性阻断被 AI 解释覆盖",
-        "保存失败后仍显示已入缸",
-        "重试造成重复数量"
-      ],
-      "existingAutomation": [
-        "test:guided-navigation-ui",
-        "test:task-entry",
-        "test:core-flow-state-eval",
-        "test:livestock-recording",
-        "test:golden-path-gp002-ui",
-        "test:compatibility-evidence-coverage",
-        "test:compatibility-coverage-scorecard"
-      ],
+      "milestones": ["search_species", "open_exact_species", "open_compatibility_drawer", "review_tank_baseline_and_candidate", "resolve_result_state", "record_actual_stocking", "tank_quantity_updated"],
+      "forbidden": ["功能 CTA 把用户丢到图鉴或混养首页自己寻找", "确定性阻断被 AI 解释覆盖", "保存失败后仍显示已入缸", "重试造成重复数量"],
+      "existingAutomation": ["test:guided-navigation-ui", "test:task-entry", "test:core-flow-state-eval", "test:livestock-recording", "test:golden-path-gp002-ui", "test:compatibility-evidence-coverage", "test:compatibility-coverage-scorecard"],
       "coverage": "covered"
     },
     {
       "id": "GP-003",
       "name": "老用户回访 → 今日任务 → 完成一次养护动作",
       "goal": "已有鱼缸用户回来后能从首页今日任务直接完成真实养护动作并看到状态更新。",
-      "milestones": [
-        "returning_user_aquarium",
-        "see_today_primary_task",
-        "open_exact_task",
-        "complete_water_feed_or_check",
-        "persist_state",
-        "today_status_updates"
-      ],
-      "forbidden": [
-        "今日任务 CTA 只跳页面顶部",
-        "动作成功但状态卡仍不更新",
-        "失败后把任务标记完成"
-      ],
-      "existingAutomation": [
-        "test:core-flow-state-ui",
-        "test:daily-check",
-        "test:daily-discovery",
-        "test:golden-path-gp003-ui"
-      ],
+      "milestones": ["returning_user_aquarium", "see_today_primary_task", "open_exact_task", "complete_water_feed_or_check", "persist_state", "today_status_updates"],
+      "forbidden": ["今日任务 CTA 只跳页面顶部", "动作成功但状态卡仍不更新", "失败后把任务标记完成"],
+      "existingAutomation": ["test:core-flow-state-ui", "test:daily-check", "test:daily-discovery", "test:golden-path-gp003-ui"],
       "coverage": "covered"
     },
     {
       "id": "GP-004",
       "name": "发现异常 → 快速检查 → 养护指南 → 立即行动",
       "goal": "用户发现鱼缸/鱼只异常后，不需要理解内部模型即可得到检查结论和可执行下一步。",
-      "milestones": [
-        "open_quick_check",
-        "answer_minimum_questions",
-        "see_first_screen_conclusion",
-        "persist_check_when_required",
-        "open_relevant_care_guide",
-        "see_immediate_action_first_screen"
-      ],
-      "forbidden": [
-        "检查结果需要滚动到底才知道下一步",
-        "保存失败仍执行 post-save 主行动",
-        "普通 UI 展示 provider/raw error",
-        "养护指南先突出收藏而不是行动"
-      ],
-      "existingAutomation": [
-        "test:daily-check",
-        "test:care-first-screen",
-        "test:task-entry"
-      ],
-      "coverage": "partial"
+      "milestones": ["open_quick_check", "answer_minimum_questions", "see_first_screen_conclusion", "persist_check_when_required", "open_relevant_care_guide", "see_immediate_action_first_screen"],
+      "forbidden": ["检查结果需要滚动到底才知道下一步", "保存失败仍执行 post-save 主行动", "普通 UI 展示 provider/raw error", "养护指南先突出收藏而不是行动"],
+      "existingAutomation": ["test:daily-check", "test:care-first-screen", "test:task-entry", "test:golden-path-gp004-ui"],
+      "coverage": "covered"
     },
     {
       "id": "GP-005",
       "name": "水族册 → 滑动收藏 → 打开具体对象 → 返回原位置",
       "goal": "用户连续浏览收藏内容，打开具体对象后能自然返回收藏上下文。",
-      "milestones": [
-        "open_collection",
-        "horizontal_swipe",
-        "open_exact_saved_object",
-        "detail_drawer",
-        "close_detail",
-        "collection_context_preserved"
-      ],
-      "forbidden": [
-        "收藏退化成纵向密集清单",
-        "点击卡片只打开收藏分类首页",
-        "关闭详情后丢失收藏上下文",
-        "手机横向溢出整个页面"
-      ],
-      "existingAutomation": [
-        "test:collection-swipe-cards",
-        "test:collection-hub-ui",
-        "test:responsive-detail-surface"
-      ],
+      "milestones": ["open_collection", "horizontal_swipe", "open_exact_saved_object", "detail_drawer", "close_detail", "collection_context_preserved"],
+      "forbidden": ["收藏退化成纵向密集清单", "点击卡片只打开收藏分类首页", "关闭详情后丢失收藏上下文", "手机横向溢出整个页面"],
+      "existingAutomation": ["test:collection-swipe-cards", "test:collection-hub-ui", "test:responsive-detail-surface"],
       "coverage": "mostly_covered"
     }
   ]
