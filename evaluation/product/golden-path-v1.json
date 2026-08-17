@@ -78,9 +78,10 @@
       "existingAutomation": [
         "test:core-flow-state-ui",
         "test:daily-check",
-        "test:daily-discovery"
+        "test:daily-discovery",
+        "test:golden-path-gp003-ui"
       ],
-      "coverage": "partial"
+      "coverage": "covered"
     },
     {
       "id": "GP-004",
