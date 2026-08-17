@@ -31,6 +31,21 @@ jobs:
       - name: Confirm tested branch head
         run: git rev-parse HEAD
       - run: npm ci
+      - name: Relocation close locator uniqueness contract
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const dialog = fs.readFileSync('src/components/compatibility/RelocationConfirmationDialog.tsx', 'utf8');
+          const browser = fs.readFileSync('scripts/test-care-relocation-browser-golden-path.mjs', 'utf8');
+          const marker = 'data-close-relocation-confirmation="true"';
+          const dialogCount = dialog.split(marker).length - 1;
+          const browserCount = browser.split("[data-close-relocation-confirmation=\"true\"]").length - 1;
+          if (dialogCount !== 1) throw new Error(`expected one business footer close locator, found ${dialogCount}`);
+          if (browserCount !== 2) throw new Error(`expected two browser uses of the unique close locator, found ${browserCount}`);
+          if (browser.includes("filter({ hasText: /^关闭$/ })")) throw new Error('text-only Close locator must not return');
+          console.log('relocation close locator uniqueness contract passed');
+          NODE
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
       - name: Start AquaGuide Vite server
