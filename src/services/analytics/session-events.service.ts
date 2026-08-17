@@ -14,6 +14,7 @@ export type AquaGuideEventName =
   | 'aquarium_setup_completed'
   | 'species_candidate_selected'
   | 'compatibility_started'
+  | 'compatibility_pair_evaluated'
   | 'compatibility_completed'
   | 'activation_completed'
   | 'identification_completed'
@@ -59,6 +60,7 @@ export type SafeAnalyticsProperties = {
   candidateCount?: number;
   appVersion?: string;
   filterType?: AiSafetyFilterType;
+  pairKey?: string;
 };
 
 export type AquaGuideEvent = SafeAnalyticsProperties & {
@@ -79,6 +81,17 @@ const appVersion = () => {
 const trim = (value: unknown, length: number) => typeof value === 'string' && value.trim()
   ? value.trim().slice(0, length)
   : undefined;
+
+const sanitizePairKey = (value: unknown) => {
+  const raw = trim(value, 100);
+  if (!raw) return undefined;
+  const parts = raw.split('__');
+  if (parts.length !== 2) return undefined;
+  if (!parts.every(part => /^[A-Za-z0-9_-]{1,40}$/.test(part))) return undefined;
+  const [left, right] = [...parts].sort();
+  if (!left || !right || left === right) return undefined;
+  return `${left}__${right}`;
+};
 
 const sanitizeProperties = (properties: SafeAnalyticsProperties): SafeAnalyticsProperties => {
   const source = properties.source === 'model' || properties.source === 'fallback' || properties.source === 'rules'
@@ -109,6 +122,7 @@ const sanitizeProperties = (properties: SafeAnalyticsProperties): SafeAnalyticsP
     candidateCount,
     appVersion: trim(properties.appVersion, 40) || appVersion(),
     filterType,
+    pairKey: sanitizePairKey(properties.pairKey),
   };
 };
 

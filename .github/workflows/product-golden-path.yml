@@ -23,6 +23,8 @@ jobs:
           npm run test:golden-path-contract
           npm run test:compatibility-evidence-coverage
           npm run test:compatibility-coverage-scorecard
+          npm run test:session-events
+          node --import tsx scripts/audit-compatibility-evidence-priority.ts
           npm run test:task-entry
           npm run test:core-flow-state-eval
           npm run test:daily-check

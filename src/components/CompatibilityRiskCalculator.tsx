@@ -344,8 +344,17 @@ export function CompatibilityRiskCalculator({
       source: 'rules',
       candidateCount: ids.length,
     });
+    relevantPairs.forEach(pair => {
+      trackSessionEvent('compatibility_pair_evaluated', {
+        action: 'evaluate_pair',
+        status: pair.status,
+        entry: 'compatibility_v2',
+        source: 'rules',
+        pairKey: `${pair.speciesA.id}__${pair.speciesB.id}`,
+      });
+    });
     onEvaluationRecorded?.();
-  }, [candidateSpecies, onEvaluationRecorded, relevantPairs.length, resultStatus, selectedAquarium, selectedSpecies]);
+  }, [candidateSpecies, onEvaluationRecorded, relevantPairs, resultStatus, selectedAquarium, selectedSpecies]);
 
   const requestMissingTankInfo = () => {
     if (!readiness || readiness.ready) return;
