@@ -46,6 +46,7 @@ function CollectionModuleCard({
   tone,
   remainingCount,
   moreLabel,
+  building = false,
   children,
 }: {
   id: CollectionModule;
@@ -55,6 +56,7 @@ function CollectionModuleCard({
   tone: string;
   remainingCount: number;
   moreLabel: string;
+  building?: boolean;
   children: ReactNode;
 }) {
   const navigate = useNavigate();
@@ -64,25 +66,36 @@ function CollectionModuleCard({
   return (
     <section
       data-collection-module={id}
+      data-feature-status={building ? 'building' : undefined}
       className={`flex min-h-[326px] min-w-0 flex-col rounded-[24px] border p-4 text-left ${id === 'achievements' ? 'border-slate-200 bg-slate-50 text-slate-500 shadow-none' : 'border-white/90 bg-white shadow-sm'}`}
     >
-      <button
-        type="button"
-        onClick={openModule}
-        className="group flex w-full items-center gap-3 rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-        aria-label={`${title}，${count}`}
-      >
-        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] ${tone}`}>{icon}</span>
-        <span className="min-w-0 flex-1 text-[17px] font-black text-ink">
-          {title}
-          <span className="ml-2 text-[13px] text-ink/45">· {count}</span>
-        </span>
-        <ChevronRight className="h-5 w-5 shrink-0 text-ink/25 transition-transform group-hover:translate-x-0.5" />
-      </button>
+      {building ? (
+        <div className="flex w-full items-center gap-3 rounded-[16px] text-left" aria-label={`${title}，${count}`}>
+          <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] ${tone}`}>{icon}</span>
+          <span className="min-w-0 flex-1 text-[17px] font-black text-ink">
+            {title}
+            <span className="ml-2 text-[13px] text-ink/45">· {count}</span>
+          </span>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={openModule}
+          className="group flex w-full items-center gap-3 rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+          aria-label={`${title}，${count}`}
+        >
+          <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] ${tone}`}>{icon}</span>
+          <span className="min-w-0 flex-1 text-[17px] font-black text-ink">
+            {title}
+            <span className="ml-2 text-[13px] text-ink/45">· {count}</span>
+          </span>
+          <ChevronRight className="h-5 w-5 shrink-0 text-ink/25 transition-transform group-hover:translate-x-0.5" />
+        </button>
+      )}
       <span className="mt-3 flex min-h-0 w-full flex-1 flex-col overflow-hidden rounded-[18px] border border-slate-100 bg-[#fbfcfb]">
         {children}
       </span>
-      {remainingCount > 0 && (
+      {!building && remainingCount > 0 && (
         <button
           type="button"
           onClick={openModule}
@@ -307,6 +320,7 @@ export default function CollectionHub() {
           tone="bg-slate-100 text-slate-400"
           remainingCount={0}
           moreLabel=""
+          building
         >
           <PreviewEmpty
             icon={<Medal className="h-5 w-5" />}
