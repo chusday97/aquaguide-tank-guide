@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
-import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
+import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { getLifeType } from '../src/modules/species/species.service';
 import type { Aquarium } from '../src/types';
 
@@ -66,6 +66,8 @@ for (const existing of commonSpecies) {
 }
 
 assert.ok(rows.length > 0, 'compatibility evidence gate must evaluate real catalog pairs');
+const evidenceAudit = getCompatibilityEvidenceAudit();
+assert.ok(evidenceAudit.reviewedPairRules.length >= 3, 'Batch 2 must preserve at least three reviewed pair rules after adding direct Oscar–zebrafish evidence');
 
 const tetraPair = rows.find(row => row.existingId === 'sp_0431' && row.candidateId === 'sp_0432');
 assert.ok(tetraPair, 'reviewed 红绿灯 → 宝莲灯 pair must exist in the catalog matrix');
@@ -142,5 +144,6 @@ const recordableDirections = recordable.map(row => ({
   passedRules: row.passedRules,
 }));
 console.log(`Compatibility evidence coverage passed: ${rows.length} real common-species directions; recordable=${recordable.length}; statuses=${JSON.stringify(counts)}.`);
+console.log(`Reviewed pair evidence floor passed: ${evidenceAudit.reviewedPairRules.length} reviewed pair rules.`);
 console.log(`Direct reviewed blocked pair passed: ${oscar.name}/${oscar.id} + ${zebrafish.name}/${zebrafish.id} = ${oscarZebrafishPair.status}.`);
 console.log(`Recordable priority direction audit: ${JSON.stringify(recordableDirections)}`);
