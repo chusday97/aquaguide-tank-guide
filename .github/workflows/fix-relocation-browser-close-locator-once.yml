@@ -1,0 +1,70 @@
+name: Fix Relocation Browser Close Locator Once
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+    paths:
+      - '.github/workflows/fix-relocation-browser-close-locator-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/canonical-care-relocation-wiring
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply unique close locator patch
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const dialogPath = 'src/components/compatibility/RelocationConfirmationDialog.tsx';
+          let dialog = fs.readFileSync(dialogPath, 'utf8');
+          const buttonAnchor = `                className="rounded-[13px] border border-border bg-white px-4 py-2.5 text-[11px] font-black text-ink/65 disabled:opacity-50"\n              >`;
+          const buttonReplacement = `                className="rounded-[13px] border border-border bg-white px-4 py-2.5 text-[11px] font-black text-ink/65 disabled:opacity-50"\n                data-close-relocation-confirmation="true"\n              >`;
+          if ((dialog.split(buttonAnchor).length - 1) !== 1) throw new Error('footer close button anchor must be unique');
+          dialog = dialog.replace(buttonAnchor, buttonReplacement);
+          fs.writeFileSync(dialogPath, dialog);
+
+          const browserPath = 'scripts/test-care-relocation-browser-golden-path.mjs';
+          let browser = fs.readFileSync(browserPath, 'utf8');
+          const oldLocator = `page.locator('[data-relocation-confirmation-dialog="true"] button').filter({ hasText: /^关闭$/ })`;
+          const count = browser.split(oldLocator).length - 1;
+          if (count !== 2) throw new Error(`expected exactly two ambiguous close locators, found ${count}`);
+          browser = browser.split(oldLocator).join(`page.locator('[data-close-relocation-confirmation="true"]')`);
+          fs.writeFileSync(browserPath, browser);
+
+          const verifyPath = 'scripts/verify-relocation-confirmation-surface.mjs';
+          let verify = fs.readFileSync(verifyPath, 'utf8');
+          const markerAnchor = `  'data-relocation-reconciled',\n]) {`;
+          const markerReplacement = `  'data-relocation-reconciled',\n  'data-close-relocation-confirmation',\n]) {`;
+          if ((verify.split(markerAnchor).length - 1) !== 1) throw new Error('confirmation marker anchor must be unique');
+          verify = verify.replace(markerAnchor, markerReplacement);
+          fs.writeFileSync(verifyPath, verify);
+          NODE
+      - name: Confirmation surface static contract
+        run: node scripts/verify-relocation-confirmation-surface.mjs
+      - name: Care relocation confirmation controller
+        run: node --import tsx scripts/test-care-relocation-confirmation-controller.ts
+      - name: TypeScript
+        run: npm run lint
+      - name: API TypeScript
+        run: npm run check:api
+      - name: Production build
+        run: npm run build
+      - name: Commit verified product/test locator fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/compatibility/RelocationConfirmationDialog.tsx scripts/test-care-relocation-browser-golden-path.mjs scripts/verify-relocation-confirmation-surface.mjs
+          git commit -m "Disambiguate relocation confirmation footer close"
+          git push origin HEAD:agent/canonical-care-relocation-wiring
