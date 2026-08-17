@@ -1,0 +1,160 @@
+name: Fix Relocation Close Lock And Operation Identity Once
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+    paths:
+      - '.github/workflows/fix-relocation-close-lock-operation-id-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/canonical-care-relocation-wiring
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Add regression and journal entries before product patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+
+          const controllerTestPath = 'scripts/test-care-relocation-confirmation-controller.ts';
+          let controllerTest = fs.readFileSync(controllerTestPath, 'utf8');
+          const testAnchor = `\nconsole.log('Care relocation confirmation controller passed: one attempt owns one operation id and one repository session; fresh pre/post loads are repository-backed; reconcile never mutates');\n`;
+          const blankIdCase = `\n// Invalid operation identity must fail before repository resolution or any read/write.\n{\n  let repositoryResolutionCalls = 0;\n  const harness = makeRepository();\n  assert.throws(() => createCareRelocationConfirmationController({\n    candidate: launchCandidate,\n    catalog,\n    createOperationId: () => '   ',\n    getRepository: async () => {\n      repositoryResolutionCalls += 1;\n      return harness.repository;\n    },\n  }), /operation identity/i);\n  assert.equal(repositoryResolutionCalls, 0);\n  assert.equal(harness.calls.getAquariums, 0);\n  assert.equal(harness.calls.relocateLivestock, 0);\n}\n`;
+          if ((controllerTest.split(testAnchor).length - 1) !== 1) throw new Error('controller test anchor must be unique');
+          controllerTest = controllerTest.replace(testAnchor, `${blankIdCase}${testAnchor}`);
+          fs.writeFileSync(controllerTestPath, controllerTest);
+
+          fs.appendFileSync('HANDOFF.md', [
+            '',
+            '## 2026-08-17 Relocation topology convergence — checkpoint 8',
+            '',
+            '- Latest Chromium run `31995177363` tested head `a515736...`: GP-REL-01/02 success and GP-REL-03 stale-destination passed; GP-REL-04 failed because pressing Escape dismissed a dialog whose own `data-relocation-close-locked` state was already true.',
+            '- The previous text-locator ambiguity is therefore fixed, but the uncertainty close-lock lifecycle still has a separate runtime defect. New `PUI-BC-028` tracks Escape / pointer-outside dismissal independently from `PUI-BC-026`.',
+            '- `PUI-BC-027` operation identity gap is being fixed in the same convergence patch: blank generated operationId must throw synchronously before repository resolution, canonical reads or mutation.',
+            '- Product fix strategy for PUI-BC-028: keep the existing `Dialog.onOpenChange` guard and additionally prevent Radix `onEscapeKeyDown` and `onPointerDownOutside` at DialogContent while `canClose` is false. This makes the visible lock state and actual dismiss behavior share one predicate.',
+            '- This patch is not considered verified until controller/static/type/build pass and a subsequent real Care relocation Chromium Golden Path passes GP-REL-04 and GP-REL-05.',
+            '',
+          ].join('\n'));
+
+          const badcasePath = 'evaluation/product/badcases.v1.jsonl';
+          const lines = fs.readFileSync(badcasePath, 'utf8').trimEnd().split('\n');
+          const has028 = lines.some(line => JSON.parse(line).id === 'PUI-BC-028');
+          const updated = lines.map(line => {
+            const item = JSON.parse(line);
+            if (item.id === 'PUI-BC-026') {
+              return JSON.stringify({
+                ...item,
+                actual: '业务 footer close locator 已唯一化，永久 uniqueness gate 在 run 31995177363 通过；同一 Chromium run 随后通过 GP-REL-01/02 与 GP-REL-03，失败发生在独立的 uncertain Escape close-lock 问题，因此 locator 子问题已修复但整条 browser gate 尚未全绿。',
+                status: 'locator_regression_verified_browser_suite_pending_other_badcase',
+                verification: 'run 31995177363 close-locator uniqueness passed; GP-REL-01/02 and GP-REL-03 passed before independent PUI-BC-028 failure',
+              });
+            }
+            if (item.id === 'PUI-BC-027') {
+              return JSON.stringify({ ...item, status: 'fix_in_progress' });
+            }
+            return line;
+          });
+          if (!has028) {
+            updated.push(JSON.stringify({
+              id: 'PUI-BC-028',
+              featureId: 'compatibility',
+              discoveredAt: '2026-08-17',
+              source: 'browser_golden_path',
+              severity: 'critical',
+              symptom: '迁移结果处于 mutation_state_unknown / reconciliation-required 时，Dialog 已标记 data-relocation-close-locked=true，但按 Escape 仍会卸载确认层，用户可丢失原 operationId/controller 上下文并形成后续盲重试风险。',
+              trigger: 'GP-REL-04 强制本地持久化异常进入不确定态后，在尚未 canonical reconcile 前按 Escape（overlay click 同属必须阻止的 dismiss 向量）。',
+              expected: 'reconciliation-required 时所有 dismiss 向量都被同一 canClose predicate 阻止；只有 canonical reconcile 成功后才能 Escape/overlay/footer close。',
+              actual: 'run 31995177363 中 close-lock marker 已为 true，但 Escape 后 dialog 被 detached；现有 Dialog.onOpenChange guard 不足以可靠拦截 Radix dismiss event。',
+              rootCauseLayer: 'ui_modal_lifecycle_and_operation_identity',
+              status: 'fix_in_progress',
+              regression: 'Care relocation Chromium GP-REL-04 Escape + overlay + reconcile unlock; confirmation surface static dismiss-event contract',
+            }));
+          }
+          fs.writeFileSync(badcasePath, `${updated.join('\n')}\n`);
+          NODE
+      - name: Confirm blank operation id regression fails before patch
+        shell: bash
+        run: |
+          set +e
+          node --import tsx scripts/test-care-relocation-confirmation-controller.ts
+          status=$?
+          set -e
+          test "$status" -ne 0
+      - name: Apply exact product safety patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+
+          const controllerPath = 'src/services/care/care-relocation-confirmation.controller.ts';
+          let controller = fs.readFileSync(controllerPath, 'utf8');
+          const opAnchor = `  const operationId = createOperationId();\n  const request: RelocationExecutionRequest = {`;
+          const opReplacement = `  const operationId = createOperationId();\n  if (!operationId.trim()) {\n    throw new Error('Relocation operation identity must be a non-empty string.');\n  }\n  const request: RelocationExecutionRequest = {`;
+          if ((controller.split(opAnchor).length - 1) !== 1) throw new Error('operation id anchor must be unique');
+          controller = controller.replace(opAnchor, opReplacement);
+          fs.writeFileSync(controllerPath, controller);
+
+          const dialogPath = 'src/components/compatibility/RelocationConfirmationDialog.tsx';
+          let dialog = fs.readFileSync(dialogPath, 'utf8');
+          const contentAnchor = `      <DialogContent\n        className="w-[94vw] max-w-[560px] rounded-[24px] border-border bg-bg p-0"`;
+          const contentReplacement = `      <DialogContent\n        onEscapeKeyDown={(event) => {\n          if (!canClose) event.preventDefault();\n        }}\n        onPointerDownOutside={(event) => {\n          if (!canClose) event.preventDefault();\n        }}\n        className="w-[94vw] max-w-[560px] rounded-[24px] border-border bg-bg p-0"`;
+          if ((dialog.split(contentAnchor).length - 1) !== 1) throw new Error('dialog content anchor must be unique');
+          dialog = dialog.replace(contentAnchor, contentReplacement);
+          fs.writeFileSync(dialogPath, dialog);
+
+          const verifyPath = 'scripts/verify-relocation-confirmation-surface.mjs';
+          let verify = fs.readFileSync(verifyPath, 'utf8');
+          const verifyAnchor = `assert.match(component, /if \\(!nextOpen && !canClose\\) return/);\n`;
+          const verifyReplacement = `${verifyAnchor}assert.match(component, /onEscapeKeyDown=\\{\\(event\\) => \\{[\\s\\S]*if \\(!canClose\\) event\\.preventDefault\\(\\)/);\nassert.match(component, /onPointerDownOutside=\\{\\(event\\) => \\{[\\s\\S]*if \\(!canClose\\) event\\.preventDefault\\(\\)/);\n`;
+          if ((verify.split(verifyAnchor).length - 1) !== 1) throw new Error('verification anchor must be unique');
+          verify = verify.replace(verifyAnchor, verifyReplacement);
+          fs.writeFileSync(verifyPath, verify);
+          NODE
+      - name: Controller regression
+        run: node --import tsx scripts/test-care-relocation-confirmation-controller.ts
+      - name: Confirmation surface static contract
+        run: node scripts/verify-relocation-confirmation-surface.mjs
+      - name: TypeScript
+        run: npm run lint
+      - name: API TypeScript
+        run: npm run check:api
+      - name: Production build
+        run: npm run build
+      - name: Mark in-progress badcases fixed pending browser
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'evaluation/product/badcases.v1.jsonl';
+          const lines = fs.readFileSync(path, 'utf8').trimEnd().split('\n').map(line => {
+            const item = JSON.parse(line);
+            if (item.id === 'PUI-BC-027' || item.id === 'PUI-BC-028') {
+              return JSON.stringify({ ...item, status: 'fix_committed_revalidation_pending' });
+            }
+            return line;
+          });
+          fs.writeFileSync(path, `${lines.join('\n')}\n`);
+          NODE
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/fix-relocation-close-lock-operation-id-once.yml
+      - name: Commit verified patch and journals
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Lock uncertain relocation dialog and validate operation identity"
+          git push origin HEAD:agent/canonical-care-relocation-wiring
