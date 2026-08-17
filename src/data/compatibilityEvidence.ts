@@ -117,6 +117,24 @@ const oscarZebrafishDevelopmentStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const channaRhodeusInformationDynamicsStudy: EvidenceSourceDto = {
+  id: 'channa-rhodeus-information-dynamics-study',
+  title: 'Information Dynamics in the Interaction between a Prey and a Predator Fish',
+  publisher: 'Entropy',
+  url: 'https://doi.org/10.3390/e17107230',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
+  id: 'channa-rhodeus-predation-stress-study',
+  title: 'Effects of predation stress and sex on growth, metabolism, personality traits, and reproductive investment in the rosy bitterling (Rhodeus ocellatus)',
+  publisher: 'Comparative Biochemistry and Physiology Part A: Molecular & Integrative Physiology',
+  url: 'https://doi.org/10.1016/j.cbpa.2026.111986',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0439: {
     speciesId: 'sp_0439',
@@ -217,6 +235,18 @@ const pairRules: ReviewedPairRule[] = [
     reviewStatus: 'reviewed',
     affectedSpeciesIds: ['sp_0451', 'sp_0435'],
     citations: [oscarZebrafishLivePredatorStudy, oscarZebrafishDevelopmentStudy],
+  },
+  {
+    speciesIds: ['sp_0224', 'sp_0475'],
+    verdict: 'not_recommended',
+    riskType: 'predation_threat',
+    reason: '2015 年 predator–prey 实验直接使用高体鳑鲏 Rhodeus ocellatus 作为 prey、乌鳢 Channa argus 作为 predator，并记录到猎物倾向远离捕食者；2026 年研究进一步将乌鳢明确描述为高体鳑鲏的 natural predator，并以 20 天持续视觉/化学线索暴露研究非消耗性捕食压力。证据支持明确捕食威胁，但两项实验均采用物理隔离，不是家庭水族箱长期同缸吞食试验。',
+    mitigation: ['不要把白金雷龙与高体鳑鲏作为长期同缸组合；优先物理分缸。', '不要用躲避物、体型暂时接近或短期未追逐来替代捕食风险隔离。'],
+    basis: 'pair_rule',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0224', 'sp_0475'],
+    citations: [channaRhodeusInformationDynamicsStudy, channaRhodeusPredationStressStudy],
   },
 ];
 

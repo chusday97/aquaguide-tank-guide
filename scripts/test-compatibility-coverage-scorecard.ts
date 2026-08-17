@@ -7,8 +7,8 @@ import type { Aquarium } from '../src/types';
 
 const baseline = {
   catalogObjects: 486,
-  reviewedSpeciesProfiles: 5,
-  reviewedPairRules: 2,
+  reviewedSpeciesProfiles: 7,
+  reviewedPairRules: 4,
   minimumRecordablePriorityDirections: 2,
 } as const;
 
