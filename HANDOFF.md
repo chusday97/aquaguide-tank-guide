@@ -527,3 +527,12 @@
 - fail-closed 已覆盖：多 source record、多 batch、缺 batch、formal quantity 漂移、record/batch 数量不一致、空 operationId。没有 `find-first` / `batches[0]` 兜底。
 - permanent confirmation CI 已同时通过：confirmation trigger、request-builder、confirmation state/UI、fresh execution policy、mutation uncertainty、TypeScript、production build。
 - 下一步暂不直接 Care 接线：发现 Draft PR #65 已存在高度重叠的 factual-source `buildRelocationConfirmationEntrypoint`。必须先比较 #65 与最新 #64，选择唯一 source-scope boundary，避免维护两套 request/entrypoint 逻辑。
+
+## 2026-08-17 Relocation topology convergence — checkpoint 5
+
+- 发现已有 Draft #65 `agent/relocation-confirmation-entrypoint` 与更后续的 `agent/canonical-care-relocation-wiring`。因此停止在 #64 上继续平行堆 Care executable wiring。
+- #65 `buildRelocationConfirmationEntrypoint(...)` 的 source-scope gate 比 #64 新 request-builder 更完整：除唯一 record/batch/quantity 外，还绑定 formal option、decision source aquarium、formal destination result 和 `compatible_by_current_evidence` opener gate；candidate 不携带 cached verdict / allowed / operationId。
+- `agent/canonical-care-relocation-wiring` 已有 `createCareRelocationConfirmationController(...)`：在 open-confirmation event 创建稳定 operationId；同一 repository 实例提供 pre/post `getAquariums()`、relocate callback 与 reconcile；实际 mutation 仍只能进入 #63 `executeFreshRelocation()`。
+- 新登记 `PUI-BC-025`：禁止 #64 request-builder 与 #65 entrypoint 长期作为两套独立 source-scope 策略并行演进。状态先保持 `open`。
+- 下一步不是删除代码，而是 convergence audit：证明 #65 + canonical controller 覆盖 PUI-BC-023/024 的全部 fail-closed case，并在当前 head 跑 Care relocation browser Golden Path；只有全部通过后才决定冗余 mapper 的收敛方式。
+- 现有 canonical browser workflow 历史最后一次自动 run 是失败状态；随后已有 `Disambiguate browser confirmation Close action` 修复，但该 bot push 未自动触发新 run。因此必须对最新 head 重新执行 browser acceptance，不能引用旧 green/旧 failure 代替。
