@@ -30,8 +30,8 @@ jobs:
           const fs = require('fs');
           const dialogPath = 'src/components/compatibility/RelocationConfirmationDialog.tsx';
           let dialog = fs.readFileSync(dialogPath, 'utf8');
-          const anchor = `  const canClose = !checking && !reconciliationRequired;\n\n  return (`;
-          const replacement = `  const canClose = !checking && !reconciliationRequired;\n\n  useEffect(() => {\n    if (canClose) return undefined;\n    const blockEscape = (event: KeyboardEvent) => {\n      if (event.key !== 'Escape') return;\n      event.preventDefault();\n      event.stopPropagation();\n      event.stopImmediatePropagation();\n    };\n    window.addEventListener('keydown', blockEscape, true);\n    return () => window.removeEventListener('keydown', blockEscape, true);\n  }, [canClose]);\n\n  return (`;
+          const anchor = `  const canClose = !checking && !reconciling && !reconciliationRequired;\n\n  return (`;
+          const replacement = `  const canClose = !checking && !reconciling && !reconciliationRequired;\n\n  useEffect(() => {\n    if (canClose) return undefined;\n    const blockEscape = (event: KeyboardEvent) => {\n      if (event.key !== 'Escape') return;\n      event.preventDefault();\n      event.stopPropagation();\n      event.stopImmediatePropagation();\n    };\n    window.addEventListener('keydown', blockEscape, true);\n    return () => window.removeEventListener('keydown', blockEscape, true);\n  }, [canClose]);\n\n  return (`;
           if ((dialog.split(anchor).length - 1) !== 1) throw new Error('canClose anchor must be unique');
           dialog = dialog.replace(anchor, replacement);
           fs.writeFileSync(dialogPath, dialog);
@@ -49,6 +49,7 @@ jobs:
             '- Source inspection confirms there is no third relocation Dialog owner around these components: InterventionComparisonPanel and RelocationConfirmationDialog are sibling roots mounted directly in the Care result section.',
             '- Repeated failure after both Base UI roots cancel close requests indicates Root-level cancellation alone is insufficient for this sibling modal topology. The next safety boundary is application-level Escape capture only while confirmation `canClose=false`.',
             '- Locked confirmation now installs a window capture-phase keydown listener that prevents default, stops propagation and stops immediate propagation for Escape; listener is removed as soon as reconciliation unlocks the dialog. Pointer dismissal remains governed by Base UI `disablePointerDismissal` at child and owner roots.',
+            '- The first one-shot attempt to apply this capture (`31996252425`) failed before modifying product files because its exact anchor omitted the existing `!reconciling` term. The guarded workflow correctly aborted and committed nothing; this retry uses the actual source anchor.',
             '- PUI-BC-028 stays open until this exact latest-head Chromium GP-REL-04 passes Escape + overlay + reconcile and the suite reaches GP-REL-05.',
             '',
           ].join('\n'));
@@ -59,7 +60,7 @@ jobs:
             if (item.id === 'PUI-BC-028') {
               return JSON.stringify({
                 ...item,
-                actual: 'child Base UI lock + owner panel lock 均通过静态/type/build，但 Chromium run 31996135520 仍在 Escape 处失败；已确认两者是直接 sibling roots。下一修复在 confirmation canClose=false 时通过 window capture phase 截断 Escape，避免事件继续进入 sibling Base UI roots。',
+                actual: 'child Base UI lock + owner panel lock 均通过静态/type/build，但 Chromium run 31996135520 仍在 Escape 处失败；已确认两者是直接 sibling roots。下一修复在 confirmation canClose=false 时通过 window capture phase 截断 Escape。首次 one-shot 因 exact anchor 漏掉 !reconciling 而安全中止，未提交产品改动。',
                 status: 'fix_in_progress_escape_capture',
               });
             }
