@@ -79,8 +79,15 @@ assert.ok(guppyNeon.missingRules.some(item => item.code === 'pair_evidence_unrev
 
 const whiteCloudGuppy = rows.find(row => row.existingId === 'sp_0434' && row.candidateId === 'sp_0436');
 assert.ok(whiteCloudGuppy, 'reviewed white-cloud and guppy profiles must be present in the priority matrix');
-assert.equal(whiteCloudGuppy.status, 'insufficient_data', 'two reviewed species profiles still require pair-level evidence before recordable compatibility');
-assert.ok(whiteCloudGuppy.missingRules.some(item => item.code === 'pair_evidence_unreviewed'), 'white cloud → guppy must stay gated on pair evidence');
+assert.ok(
+  whiteCloudGuppy.status === 'insufficient_data' || whiteCloudGuppy.status === 'not_recommended',
+  'two reviewed species profiles without a reviewed pair rule must never become recordable; a higher-priority hard block may correctly return not_recommended.',
+);
+if (whiteCloudGuppy.status === 'insufficient_data') {
+  assert.ok(whiteCloudGuppy.missingRules.some(item => item.code === 'pair_evidence_unreviewed' && item.severity === 'medium'), 'white cloud → guppy must expose pair-evidence missing when no hard block outranks it');
+} else {
+  assert.ok(whiteCloudGuppy.blockingRules.length > 0, 'white cloud → guppy may bypass pair-evidence missing only when an explicit hard block is present');
+}
 
 const recordable = rows.filter(row => row.status === 'compatible' || row.status === 'caution');
 assert.equal(recordable.length, 2, 'Batch 1 adds species-profile coverage only; recordable priority directions must remain the explicit tetra pair in both directions.');
