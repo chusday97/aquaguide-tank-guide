@@ -89,8 +89,29 @@ if (whiteCloudGuppy.status === 'insufficient_data') {
   assert.ok(whiteCloudGuppy.blockingRules.length > 0, 'white cloud → guppy may bypass pair-evidence missing only when an explicit hard block is present');
 }
 
+const oscar = fishData.find(fish => fish.id === 'sp_0451');
+const zebrafish = fishData.find(fish => fish.id === 'sp_0435');
+assert.ok(oscar && zebrafish, 'Oscar and zebrafish direct-evidence pair must exist in the catalog');
+const oscarZebrafishDecision = evaluateCompatibilityDecision({
+  tank,
+  items: [
+    { species: oscar, quantity: 1, origin: 'existing' },
+    { species: zebrafish, quantity: 6, origin: 'candidate' },
+  ],
+});
+const oscarZebrafishPair = oscarZebrafishDecision.pairResults[0];
+assert.ok(oscarZebrafishPair, 'Oscar → zebrafish must produce a pair result');
+assert.equal(oscarZebrafishPair.status, 'not_recommended', 'direct predator–prey evidence must block Oscar + zebrafish cohabitation');
+const directPairRule = oscarZebrafishPair.rawResult.blockingRules.find(item => item.code === 'pair_rule_predation_threat');
+assert.ok(directPairRule, 'Oscar + zebrafish must expose its reviewed pair-level predation evidence');
+assert.equal(directPairRule.basis, 'pair_rule', 'direct predator–prey evidence must retain pair_rule provenance');
+assert.equal(directPairRule.reviewStatus, 'reviewed');
+assert.ok(directPairRule.citations.length >= 2, 'direct pair rule must retain its peer-reviewed citations');
+assert.equal(directPairRule.evidence.includes('并非直接配对实验'), false, 'direct pair evidence must not be mislabeled as indirect evidence');
+assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');
+
 const recordable = rows.filter(row => row.status === 'compatible' || row.status === 'caution');
-assert.equal(recordable.length, 2, 'Batch 1 adds species-profile coverage only; recordable priority directions must remain the explicit tetra pair in both directions.');
+assert.equal(recordable.length, 2, 'Batch 2 adds a reviewed blocked pair outside the priority cohort; recordable priority directions must remain the explicit tetra pair in both directions.');
 
 for (const row of recordable) {
   assert.ok(
@@ -121,4 +142,5 @@ const recordableDirections = recordable.map(row => ({
   passedRules: row.passedRules,
 }));
 console.log(`Compatibility evidence coverage passed: ${rows.length} real common-species directions; recordable=${recordable.length}; statuses=${JSON.stringify(counts)}.`);
+console.log(`Direct reviewed blocked pair passed: ${oscar.name}/${oscar.id} + ${zebrafish.name}/${zebrafish.id} = ${oscarZebrafishPair.status}.`);
 console.log(`Recordable priority direction audit: ${JSON.stringify(recordableDirections)}`);
