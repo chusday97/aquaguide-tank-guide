@@ -115,6 +115,8 @@
     "test:core-flow-state-ui": "node scripts/verify-core-flow-v1-v2-ui.mjs",
     "test:golden-path-contract": "node scripts/test-golden-path-acceptance.mjs",
     "test:compatibility-evidence-coverage": "tsx scripts/test-compatibility-evidence-coverage.ts",
+    "test:compatibility-coverage-scorecard": "node --import tsx scripts/test-compatibility-coverage-scorecard.ts",
+    "test:golden-path-gp001-ui": "node scripts/verify-golden-path-first-tank-setup.mjs",
     "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs"
   },
   "dependencies": {
