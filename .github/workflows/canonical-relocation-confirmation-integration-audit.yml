@@ -73,6 +73,8 @@ jobs:
         run: node --import tsx scripts/test-relocation-execution-policy.ts
       - name: Ambiguous mutation outcome regression
         run: node --import tsx scripts/test-relocation-mutation-uncertainty.ts
+      - name: Confirmation trigger regression
+        run: node scripts/test-relocation-confirmation-trigger.mjs
       - name: Confirmation state regression
         run: node --import tsx scripts/test-relocation-confirmation-state.ts
       - name: Confirmation UI static contract
