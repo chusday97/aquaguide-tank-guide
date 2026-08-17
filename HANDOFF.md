@@ -433,3 +433,11 @@ CI 方向：
 - PUI-BC-028 fix now uses Base UI Root semantics: `eventDetails.cancel()` cancels blocked close requests (including Escape), while `disablePointerDismissal={!canClose}` blocks outside presses. Both are driven by the existing single `canClose` predicate.
 - PUI-BC-027 fix validates generated operationId synchronously before constructing the execution request; its regression first failed on the old controller and now proves zero repository resolution/read/write on blank identity.
 - Controller regression, confirmation static contract, app TypeScript, API TypeScript and production build passed before commit. PUI-BC-027/028 remain browser-revalidation pending until latest-head Care relocation Chromium GP-REL-04/05 pass.
+
+## 2026-08-17 Relocation topology convergence — checkpoint 10
+
+- Latest Chromium run `31995724881` tested head `1cbd4f9...`. The permanent Base UI close-lock static gate passed, GP-REL-01/02 and GP-REL-03 passed again, but GP-REL-04 still failed on `Escape must not dismiss uncertain dialog`.
+- This disproves the narrower hypothesis that the confirmation Dialog Root alone owned the Escape lifecycle. The child confirmation now correctly calls `eventDetails.cancel()` and sets `disablePointerDismissal={!canClose}`, yet the rendered confirmation is still removed after Escape.
+- Failure screenshot falls back to the underlying Care detail surface rather than leaving the intervention/confirmation stack visible. Current leading hypothesis is multi-dialog topology: the sibling/ancestor InterventionComparisonPanel also handles the same Escape and its close callback tears down the confirmation controller/intent.
+- PUI-BC-028 remains open. Next repair must lock the intervention comparison layer while a relocation confirmation is active/reconciliation-locked, using the same explicit state rather than another independent boolean guess.
+- This checkpoint also starts a one-shot source audit that prints the real Care-page mount/callback context before editing, so the next patch is anchored to actual component topology.
