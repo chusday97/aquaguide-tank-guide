@@ -67,7 +67,7 @@ for (const existing of commonSpecies) {
 
 assert.ok(rows.length > 0, 'compatibility evidence gate must evaluate real catalog pairs');
 const evidenceAudit = getCompatibilityEvidenceAudit();
-assert.ok(evidenceAudit.reviewedPairRules.length >= 3, 'Batch 2 must preserve at least three reviewed pair rules after adding direct Oscar–zebrafish evidence');
+assert.ok(evidenceAudit.reviewedPairRules.length >= 4, 'Batch 3 must preserve at least four reviewed pair rules after adding direct Channa–Rhodeus evidence');
 const auditedOscarZebrafishRule = evidenceAudit.reviewedPairRules.find(rule => (
   rule.speciesIds.includes('sp_0451') && rule.speciesIds.includes('sp_0435')
 ));
@@ -75,6 +75,14 @@ assert.ok(auditedOscarZebrafishRule, 'reviewed evidence audit must retain the Os
 assert.equal(auditedOscarZebrafishRule.basis, 'pair_rule', 'Oscar–zebrafish audit evidence must remain direct pair_rule provenance');
 assert.equal(auditedOscarZebrafishRule.verdict, 'not_recommended');
 assert.equal(auditedOscarZebrafishRule.reviewStatus, 'reviewed');
+
+const auditedChannaRhodeusRule = evidenceAudit.reviewedPairRules.find(rule => (
+  rule.speciesIds.includes('sp_0224') && rule.speciesIds.includes('sp_0475')
+));
+assert.ok(auditedChannaRhodeusRule, 'reviewed evidence audit must retain the Channa argus–Rhodeus ocellatus pair rule');
+assert.equal(auditedChannaRhodeusRule.basis, 'pair_rule', 'Channa–Rhodeus audit evidence must remain direct pair_rule provenance');
+assert.equal(auditedChannaRhodeusRule.verdict, 'not_recommended');
+assert.equal(auditedChannaRhodeusRule.reviewStatus, 'reviewed');
 
 const tetraPair = rows.find(row => row.existingId === 'sp_0431' && row.candidateId === 'sp_0432');
 assert.ok(tetraPair, 'reviewed 红绿灯 → 宝莲灯 pair must exist in the catalog matrix');
@@ -118,6 +126,27 @@ assert.equal(directPairRule.reviewStatus, 'reviewed');
 assert.ok(directPairRule.citations.length >= 2, 'direct pair rule must retain its peer-reviewed citations');
 assert.equal(directPairRule.evidence.includes('并非直接配对实验'), false, 'direct pair evidence must not be mislabeled as indirect evidence');
 assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');
+
+const channa = fishData.find(fish => fish.id === 'sp_0224');
+const rhodeus = fishData.find(fish => fish.id === 'sp_0475');
+assert.ok(channa && rhodeus, 'Channa argus and Rhodeus ocellatus direct-evidence pair must exist in the catalog');
+const channaRhodeusDecision = evaluateCompatibilityDecision({
+  tank,
+  items: [
+    { species: channa, quantity: 1, origin: 'existing' },
+    { species: rhodeus, quantity: 6, origin: 'candidate' },
+  ],
+});
+const channaRhodeusPair = channaRhodeusDecision.pairResults[0];
+assert.ok(channaRhodeusPair, 'Channa argus → Rhodeus ocellatus must produce a pair result');
+assert.equal(channaRhodeusPair.status, 'not_recommended', 'direct predator–prey evidence must block Channa argus + Rhodeus ocellatus cohabitation');
+const channaDirectPairRule = channaRhodeusPair.rawResult.blockingRules.find(item => item.code === 'pair_rule_predation_threat');
+assert.ok(channaDirectPairRule, 'Channa argus + Rhodeus ocellatus must expose reviewed pair-level predation evidence');
+assert.equal(channaDirectPairRule.basis, 'pair_rule');
+assert.equal(channaDirectPairRule.reviewStatus, 'reviewed');
+assert.ok(channaDirectPairRule.citations.length >= 2, 'Channa–Rhodeus pair rule must retain both peer-reviewed citations');
+assert.equal(channaDirectPairRule.evidence.includes('并非直接配对实验'), false, 'direct Channa–Rhodeus evidence must not be mislabeled as indirect evidence');
+assert.ok(channaDirectPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'Channa–Rhodeus direct evidence must preserve the laboratory-to-husbandry limitation');
 
 const recordable = rows.filter(row => row.status === 'compatible' || row.status === 'caution');
 assert.equal(recordable.length, 2, 'Batch 2 adds a reviewed blocked pair outside the priority cohort; recordable priority directions must remain the explicit tetra pair in both directions.');
