@@ -31,7 +31,7 @@ jobs:
       - name: Confirm tested branch head
         run: git rev-parse HEAD
       - run: npm ci
-      - name: Relocation close locator uniqueness contract
+      - name: Relocation close locator and Base UI lock contract
         shell: bash
         run: |
           node <<'NODE'
@@ -44,7 +44,10 @@ jobs:
           if (dialogCount !== 1) throw new Error(`expected one business footer close locator, found ${dialogCount}`);
           if (browserCount !== 2) throw new Error(`expected two browser uses of the unique close locator, found ${browserCount}`);
           if (browser.includes("filter({ hasText: /^关闭$/ })")) throw new Error('text-only Close locator must not return');
-          console.log('relocation close locator uniqueness contract passed');
+          if (!dialog.includes('disablePointerDismissal={!canClose}')) throw new Error('uncertain dialog must disable Base UI pointer dismissal');
+          if (!dialog.includes('eventDetails.cancel()')) throw new Error('blocked Base UI close requests must be canceled at Dialog.Root');
+          if (dialog.includes('onEscapeKeyDown=')) throw new Error('Radix-only popup escape handler must not be reintroduced');
+          console.log('relocation close locator + Base UI close-lock contract passed');
           NODE
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
