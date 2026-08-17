@@ -21,21 +21,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat >> HANDOFF.md <<'EOF'
-
-## 2026-08-17 Relocation topology convergence — checkpoint 6
-
-- Fresh revalidation corrected a documentation timing error: commit `a28616dd...` only installed the guarded one-shot close-locator patch workflow; it was not itself the product/test locator fix.
-- The one-shot run `31994975816` later succeeded and produced real fix commit `8960468085bc1bf539c57076fea33357d79e4b4d` (`Disambiguate relocation confirmation footer close`). The business footer button and browser test now use `data-close-relocation-confirmation` instead of text-only `关闭` matching.
-- `PUI-BC-026` is therefore in **fix committed / browser revalidation pending** state, not regression-verified yet. A green static/type/build run is not sufficient; latest-head Care relocation Chromium acceptance must still pass.
-- Convergence work remains focused on one source-scope policy: #65 `buildRelocationConfirmationEntrypoint` + canonical Care controller. #64 `buildRelocationConfirmationRequest` must not become a second independently evolving authorization/mapping path.
-- Next gate: run latest canonical Care relocation browser Golden Path with an explicit uniqueness assertion for the business footer close locator, then use that evidence to decide `PUI-BC-025/026` closure and request-builder de-duplication.
-EOF
-
           node <<'NODE'
           const fs = require('fs');
-          const path = 'evaluation/product/badcases.v1.jsonl';
-          const lines = fs.readFileSync(path, 'utf8').trimEnd().split('\n');
+          const handoff = 'HANDOFF.md';
+          const checkpoint = [
+            '',
+            '## 2026-08-17 Relocation topology convergence — checkpoint 6',
+            '',
+            '- Fresh revalidation corrected a documentation timing error: commit `a28616dd...` only installed the guarded one-shot close-locator patch workflow; it was not itself the product/test locator fix.',
+            '- The one-shot run `31994975816` later succeeded and produced real fix commit `8960468085bc1bf539c57076fea33357d79e4b4d` (`Disambiguate relocation confirmation footer close`). The business footer button and browser test now use `data-close-relocation-confirmation` instead of text-only `关闭` matching.',
+            '- `PUI-BC-026` is therefore in **fix committed / browser revalidation pending** state, not regression-verified yet. A green static/type/build run is not sufficient; latest-head Care relocation Chromium acceptance must still pass.',
+            '- Convergence work remains focused on one source-scope policy: #65 `buildRelocationConfirmationEntrypoint` + canonical Care controller. #64 `buildRelocationConfirmationRequest` must not become a second independently evolving authorization/mapping path.',
+            '- The first attempt to journal this checkpoint failed before any job because the temporary workflow YAML embedded an unindented heredoc. That was a process/tooling failure, not product evidence; this corrected workflow records it rather than hiding it.',
+            '- Next gate: run latest canonical Care relocation browser Golden Path with an explicit uniqueness assertion for the business footer close locator, then use that evidence to decide `PUI-BC-025/026` closure and request-builder de-duplication.',
+            '',
+          ].join('\n');
+          fs.appendFileSync(handoff, checkpoint);
+
+          const badcasePath = 'evaluation/product/badcases.v1.jsonl';
+          const lines = fs.readFileSync(badcasePath, 'utf8').trimEnd().split('\n');
           const updated = lines.map(line => {
             const item = JSON.parse(line);
             if (item.id === 'PUI-BC-026') {
@@ -55,7 +59,7 @@ EOF
             }
             return line;
           });
-          fs.writeFileSync(path, `${updated.join('\n')}\n`);
+          fs.writeFileSync(badcasePath, `${updated.join('\n')}\n`);
           NODE
       - name: Remove one-shot workflow
         run: rm .github/workflows/journal-relocation-convergence-once.yml
