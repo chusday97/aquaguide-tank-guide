@@ -98,9 +98,11 @@ try {
   assert.equal(await generate.isEnabled(), true, 'Daily Check result generation must enable after all required questions are answered.');
   await generate.click();
 
-  const save = dialog.getByRole('button', { name: '保存今天记录', exact: true });
-  await save.waitFor();
-  await save.click();
+  // Daily Check primary actions share one contract: save first, then optionally open a remedy article.
+  // Depending on the deterministic result/candidate article set, the label can be one of these states.
+  const primary = dialog.getByRole('button', { name: /^(保存今天记录|更新今天记录|查看补救步骤)$/ });
+  await primary.waitFor();
+  await primary.click();
 
   await page.waitForFunction(() => {
     const raw = localStorage.getItem('aquarium_app_state_v1');
@@ -124,7 +126,11 @@ try {
   assert.equal(patrolRecords[0].answers.behavior, '正常游动和进食');
   assert.equal(patrolRecords[0].answers.recentAction, '没有特别操作');
 
+  // If a remedy article opened after the save, close it first; then close the Daily Check result surface.
   await page.keyboard.press('Escape');
+  if (await dialog.isVisible().catch(() => false)) {
+    await page.keyboard.press('Escape');
+  }
   await dialog.waitFor({ state: 'detached' });
 
   await page.getByText('今日已检查', { exact: true }).first().waitFor();
