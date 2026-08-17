@@ -1,0 +1,60 @@
+name: One-shot Sync PUI-BC-023 Challenge Handoff
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/one-shot-sync-pui-bc-023-challenge.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Patch challenge handoff from current main
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = 'HANDOFF-2026-08-17.md';
+          let handoff = fs.readFileSync(path, 'utf8');
+
+          const stale = `## PUI-BC-023 — Daily Check navigation ambiguity\n\n状态：**open**。\n\n正确入口后的产品闭环已由 GP-003 证明；但 autonomous actor 是否仍会误选 Care Guide Quick Check 尚未真实复跑。当前 GitHub connector 仍没有 workflow dispatch 写接口，没有 connected blind 证据前不得标 \`regression_verified\`。`;
+          const current = `## PUI-BC-023 — Daily Check navigation ambiguity\n\n状态：**regression_verified → challenge_expansion**。\n\nSame-case connected Run \`32035944562\` 已完整 PASS，PUI-BC-023 已通过 EvalPilot actual promoter 进入稳定 Regression \`case-regression-pui-bc-023\`。当前不再重复 baseline；后续只把新的 coverage candidate 当 candidate，直到真实执行后才计入 verified coverage。`;
+          if (!handoff.includes(stale)) throw new Error('Stale PUI-BC-023 open section not found.');
+          handoff = handoff.replace(stale, current);
+
+          const anchor = '## PUI-BC-026 — Sparse species profile incorrectly clears pair evidence';
+          if (!handoff.includes(anchor)) throw new Error('PUI-BC-026 anchor not found.');
+          const expansion = `### Challenge expansion — candidate generation corrected\n\n- EvalPilot commit **be6a70789f21d1a4b16a218b9b5ace3e5c472bc7** 修复 Challenge generator gap selection：source case coverageDimensions 稀疏时，优先按目标 missingValue 选择 gap，而不是误拿该维度第一个 gap。\n- CI Run **32039192110** 全绿：Node 20 / Node 24 / Chromium 均 PASS；新增 \`connected-aquaguide-pui-bc-023-challenge.test.ts\` 3 / 3 PASS。\n- 生成 3 个未执行 Challenge candidates：\n  1. \`case-challenge-blind-daily-check-risk-boundary\` → \`input_quality=boundary\`；\n  2. \`case-challenge-blind-daily-check-risk-journey\` → \`journey_stage=backtrack\`；\n  3. \`case-challenge-blind-daily-check-risk-persona\` → \`persona=persona-low-patience\`。\n- 首选下一条：**low-patience persona**。原因是它直接攻击 PUI-BC-023 原始 information-architecture 风险，同时保持已验证 Daily Check 输入与 Oracle 不变。\n- boundary / backtrack 暂时只保留 candidate：generic mutation 还不足以构成具体可执行的 Daily-specific interaction contract。\n- 最新 connected PASS 的 \`observedPreFailureSignals=[]\`；因此 Run #10 的 \`/api/ai/chat 500\` 不升级为本轮首要 Challenge，也不登记新 Product Badcase。\n- 当前状态严格为 **candidate_not_run**；没有新 connected execution，就不能声称 Challenge coverage PASS。\n\n`;
+          if (!handoff.includes('### Challenge expansion — candidate generation corrected')) {
+            handoff = handoff.replace(anchor, expansion + anchor);
+          }
+
+          const oldNext = '4. **PUI-BC-023 已闭环并进入 Regression**：connected same-case Run `32035944562` 在 AquaGuide `3d73c033b6899e3a92144f6de99a05db8babde78` 上完整 PASS；EvalPilot `case-regression-pui-bc-023` promoter CI `32038227247` 全绿。后续只做 coverage expansion，不再重复跑同一 baseline。';
+          const newNext = '4. **PUI-BC-023 已进入 Challenge expansion**：Regression 保持稳定；EvalPilot `be6a7078…` / CI `32039192110` 已生成并校正 3 个 Challenge candidates。下一条优先 `case-challenge-blind-daily-check-risk-persona`，但当前仍是 `candidate_not_run`，不得计入 verified coverage。';
+          if (!handoff.includes(oldNext)) throw new Error('Expected PUI-BC-023 next-step line not found.');
+          handoff = handoff.replace(oldNext, newNext);
+
+          fs.writeFileSync(path, handoff);
+          NODE
+
+      - name: Commit handoff sync and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/one-shot-sync-pui-bc-023-challenge.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add HANDOFF-2026-08-17.md .github/workflows/one-shot-sync-pui-bc-023-challenge.yml
+          git diff --cached --check
+          git commit -m 'docs: advance PUI-BC-023 challenge expansion'
+          git push origin HEAD:main
