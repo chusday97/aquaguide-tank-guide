@@ -7,9 +7,11 @@ on:
   pull_request:
     paths:
       - 'src/lib/relocationConfirmationState.ts'
+      - 'src/lib/relocationConfirmationRequestBuilder.ts'
       - 'src/components/compatibility/RelocationConfirmationDialog.tsx'
       - 'src/components/compatibility/InterventionComparisonPanel.tsx'
       - 'scripts/test-relocation-confirmation-state.ts'
+      - 'scripts/test-relocation-confirmation-request-builder.ts'
       - 'scripts/test-relocation-confirmation-trigger.mjs'
       - 'scripts/verify-relocation-confirmation-surface.mjs'
       - '.github/workflows/relocation-confirmation-surface.yml'
@@ -29,6 +31,8 @@ jobs:
       - run: npm ci
       - name: Confirmation trigger regression
         run: node scripts/test-relocation-confirmation-trigger.mjs
+      - name: Confirmation request-builder regression
+        run: node --import tsx scripts/test-relocation-confirmation-request-builder.ts
       - name: Confirmation state regression
         run: node --import tsx scripts/test-relocation-confirmation-state.ts
       - name: Confirmation UI static contract
