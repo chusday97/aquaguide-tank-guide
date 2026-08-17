@@ -20,6 +20,7 @@ for (const marker of [
   'data-relocation-result',
   'data-relocation-close-locked',
   'data-relocation-reconciled',
+  'data-close-relocation-confirmation',
 ]) {
   assert.match(component, new RegExp(marker));
 }

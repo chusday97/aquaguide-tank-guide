@@ -252,6 +252,7 @@ export function RelocationConfirmationDialog({
                 onClick={() => onOpenChange(false)}
                 disabled={checking || reconciling}
                 className="rounded-[13px] border border-border bg-white px-4 py-2.5 text-[11px] font-black text-ink/65 disabled:opacity-50"
+                data-close-relocation-confirmation="true"
               >
                 {completed || blocked || reconciliationComplete ? (isEn ? 'Close' : '关闭') : (isEn ? 'Cancel' : '取消')}
               </button>

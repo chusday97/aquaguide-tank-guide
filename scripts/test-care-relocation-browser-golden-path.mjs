@@ -239,7 +239,7 @@ try {
     assert.equal(speciesQuantity(after, 'target', 'sp_0439'), 6, 'target should contain exactly the six moved tiger barbs');
     assert.equal(await readTransitionCount(page), 1, 'rapid double confirm must produce one business relocation transition');
 
-    await page.locator('[data-relocation-confirmation-dialog="true"] button').filter({ hasText: /^关闭$/ }).click();
+    await page.locator('[data-close-relocation-confirmation="true"]').click();
     await page.locator('[data-relocation-confirmation-dialog="true"]').waitFor({ state: 'detached' });
     await assertEventually(
       async () => (await page.locator('[data-open-intervention-comparison]').count()) === 0,
@@ -298,7 +298,7 @@ try {
     const afterSync = await readAppState(page);
     assert.equal(speciesQuantity(afterSync, 'source', 'sp_0439'), 6);
     assert.equal(speciesQuantity(afterSync, 'target', 'sp_0439'), 0);
-    await page.locator('[data-relocation-confirmation-dialog="true"] button').filter({ hasText: /^关闭$/ }).click();
+    await page.locator('[data-close-relocation-confirmation="true"]').click();
     await dialog.waitFor({ state: 'detached' });
   });
 
