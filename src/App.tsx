@@ -204,6 +204,9 @@ const desktopSubMenus: Record<string, Array<{
   hash?: string;
   path?: string;
 }>> = {
+  '/aquarium': [
+    { id: 'daily-check', labelKey: 'aquarium.dailyCheck', descriptionKey: 'aquarium.dailyCheckDesc', icon: BookOpenCheck, path: taskRoutes.aquarium.dailyCheck },
+  ],
   '/encyclopedia': [
     { id: 'browse', labelKey: 'nav.browse', descriptionKey: 'nav.browseDescription', icon: BookOpen, path: taskRoutes.encyclopedia.browse },
     { id: 'compatibility', labelKey: 'nav.compatibility', descriptionKey: 'nav.compatibilityDescription', icon: Activity, path: taskRoutes.encyclopedia.compatibility },
@@ -277,7 +280,7 @@ function DesktopSidebar({
   const location = useLocation();
   const { navigateToRoute, navigateToView } = useWorkspaceNavigation();
   const { showToast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [searchDraft, setSearchDraft] = useState('');
   const [sidebarSuggestions, setSidebarSuggestions] = useState<SearchSuggestion[]>([]);
   const [sidebarSpeciesTotal, setSidebarSpeciesTotal] = useState(0);
