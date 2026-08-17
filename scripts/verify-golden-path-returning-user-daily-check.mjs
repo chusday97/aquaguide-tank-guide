@@ -98,8 +98,6 @@ try {
   assert.equal(await generate.isEnabled(), true, 'Daily Check result generation must enable after all required questions are answered.');
   await generate.click();
 
-  // Daily Check primary actions share one contract: save first, then optionally open a remedy article.
-  // Depending on the deterministic result/candidate article set, the label can be one of these states.
   const primary = dialog.getByRole('button', { name: /^(保存今天记录|更新今天记录|查看补救步骤)$/ });
   await primary.waitFor();
   await primary.click();
@@ -126,7 +124,6 @@ try {
   assert.equal(patrolRecords[0].answers.behavior, '正常游动和进食');
   assert.equal(patrolRecords[0].answers.recentAction, '没有特别操作');
 
-  // If a remedy article opened after the save, close it first; then close the Daily Check result surface.
   await page.keyboard.press('Escape');
   if (await dialog.isVisible().catch(() => false)) {
     await page.keyboard.press('Escape');
@@ -140,15 +137,13 @@ try {
     'After a successful Daily Check save, the Today primary task must advance instead of asking for the same check.',
   );
 
-  const dailyCheckAction = page.getByText('每日鱼缸检查', { exact: true }).first().locator('..');
-  await dailyCheckAction.waitFor();
-  const statusText = (await dailyCheckAction.textContent()) || '';
-  assert.match(
-    statusText,
-    /(今日已检查|建议重新检查)/,
-    'After persistence, Daily Tank Check status must move from 今日未检查 to either 今日已检查 or 建议重新检查 according to risk.',
+  const advancedStatus = page.getByText(/^(今日已检查|建议重新检查)$/, { exact: true }).first();
+  await advancedStatus.waitFor();
+  assert.equal(
+    await page.getByText('今日未检查', { exact: true }).count(),
+    0,
+    'Persisted Daily Check must not remain in the unchecked state.',
   );
-  assert.doesNotMatch(statusText, /今日未检查/, 'Persisted Daily Check must not remain in the unchecked state.');
   assert.deepEqual(pageErrors, [], `GP-003 must not emit page errors: ${pageErrors.join('; ')}`);
 
   console.log('GP-003 continuous E2E passed: returning user → Today Daily Check → complete required answers → persist patrol → Today status advances.');
