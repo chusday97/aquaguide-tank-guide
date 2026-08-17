@@ -1,0 +1,121 @@
+name: Temporary Settings building CTA fix
+on:
+  push:
+    branches: [agent/functional-cta-audit-v2]
+permissions:
+  contents: write
+jobs:
+  patch-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/functional-cta-audit-v2
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Patch Settings building affordance
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+
+          def repl(path, old, new):
+              p=Path(path); text=p.read_text(); n=text.count(old); assert n==1,(path,n); p.write_text(text.replace(old,new,1))
+
+          repl('src/pages/Settings.tsx', '''            ].map(item => {
+              const Icon = item.icon;
+              return (
+                <button key={item.id} type="button" onClick={() => focusSection(item.id)} className="flex min-h-11 w-full items-center gap-3 rounded-[12px] px-3 text-left text-sm font-black text-ink/60 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
+                  <Icon className="h-4 w-4 shrink-0" /><span className="min-w-0 flex-1">{item.label}</span><ChevronRight className="h-4 w-4 text-ink/20" />
+                </button>
+              );
+            })}''', '''            ].map(item => {
+              const Icon = item.icon;
+              if (item.id === 'shared-reports') {
+                return (
+                  <div key={item.id} data-settings-building-nav="sharing" aria-disabled="true" className="flex min-h-11 w-full items-center gap-3 rounded-[12px] px-3 text-left text-sm font-black text-slate-400">
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="min-w-0 flex-1">{item.label}</span>
+                    <span className="rounded-full bg-slate-100 px-2 py-1 text-[9px] font-black text-slate-400">{isEn ? 'BUILDING' : '建设中'}</span>
+                  </div>
+                );
+              }
+              return (
+                <button key={item.id} type="button" onClick={() => focusSection(item.id)} className="flex min-h-11 w-full items-center gap-3 rounded-[12px] px-3 text-left text-sm font-black text-ink/60 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
+                  <Icon className="h-4 w-4 shrink-0" /><span className="min-w-0 flex-1">{item.label}</span><ChevronRight className="h-4 w-4 text-ink/20" />
+                </button>
+              );
+            })}''')
+
+          repl('src/pages/Settings.tsx', '''          <section id="shared-reports" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200 bg-slate-50 p-4 text-slate-500 shadow-none sm:p-5" aria-labelledby="settings-share-title">''', '''          <section id="shared-reports" data-feature-status="building" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200 bg-slate-50 p-4 text-slate-500 shadow-none sm:p-5" aria-labelledby="settings-share-title">''')
+          repl('src/pages/Settings.tsx', '''            <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="mt-4 min-h-11 rounded-full border border-slate-200 bg-slate-100 px-4 text-sm font-black text-slate-400 shadow-none">''', '''            <button type="button" data-building-action="learn" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="mt-4 min-h-11 rounded-full border border-slate-200 bg-slate-100 px-4 text-sm font-black text-slate-400 shadow-none">''')
+
+          repl('scripts/verify-action-kind-runtime.mjs', '''    assert.equal(unnamed, 0, `${route} 存在没有可理解名称的可点击按钮`);
+    assert.equal(errors.length, 0, `${route} 页面错误：${errors.join('; ')}`);''', '''    assert.equal(unnamed, 0, `${route} 存在没有可理解名称的可点击按钮`);
+    const invalidBuildingActions = await page.locator('[data-feature-status="building"] button:not([data-building-action])').count();
+    assert.equal(invalidBuildingActions, 0, `${route} 建设中功能仍暴露了未声明用途的业务按钮`);
+    assert.equal(errors.length, 0, `${route} 页面错误：${errors.join('; ')}`);''')
+
+          repl('scripts/verify-action-kind-runtime.mjs', '''  const page = await context.newPage();
+  await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });''', '''  const settingsPage = await context.newPage();
+  await settingsPage.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
+  const sharingBuildingNav = settingsPage.locator('[data-settings-building-nav="sharing"]');
+  await sharingBuildingNav.waitFor();
+  assert.match((await sharingBuildingNav.innerText()), /分享与隐私/);
+  assert.match((await sharingBuildingNav.innerText()), /建设中/);
+  assert.equal(await settingsPage.getByRole('button', { name: '分享与隐私', exact: true }).count(), 0, '建设中的分享与隐私不能继续伪装成普通设置导航按钮');
+  const sharingSection = settingsPage.locator('#shared-reports');
+  assert.equal(await sharingSection.getAttribute('data-feature-status'), 'building', '分享与隐私 section 必须显式声明 building');
+  assert.equal(await sharingSection.getByRole('button', { name: '了解功能', exact: true }).getAttribute('data-building-action'), 'learn', 'building surface 只允许明确的元动作');
+  await settingsPage.close();
+
+  const page = await context.newPage();
+  await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });''')
+
+          bad=Path('evaluation/product/badcases.v1.jsonl')
+          text=bad.read_text()
+          assert '"id":"PUI-BC-031"' not in text
+          case={
+            'id':'PUI-BC-031','featureId':'task_entry_navigation','discoveredAt':'2026-08-18','source':'functional_cta_audit','severity':'medium',
+            'symptom':'设置页把明确尚未开放的“分享与隐私”与通用/新手引导/意见反馈并列渲染成普通可点击分类，并显示前进箭头；点击只滚到“功能建设中”说明，没有可完成的分享或隐私任务。',
+            'trigger':'桌面进入 /settings，点击左侧“分享与隐私”。',
+            'expected':'building feature 不应伪装成 live task navigation；导航层直接标记建设中并取消业务 CTA affordance，说明区只保留“了解功能”等明确元动作。',
+            'actual':'旧导航使用与 live settings section 相同的 button + ChevronRight，并调用 focusSection(shared-reports)，视觉上承诺可进入设置任务但实际只有建设中说明。',
+            'rootCauseLayer':'ui_affordance','status':'fixed','fixedBy':'agent/functional-cta-audit-v2',
+            'regression':'runtime action audit 要求 building surface 内无未声明业务按钮；Settings 分享与隐私导航必须为非 button building row，说明区 Learn action 必须显式 data-building-action=learn。最终 head CI 后升级 regression_verified。'
+          }
+          bad.write_text(text.rstrip()+'\n'+json.dumps(case,ensure_ascii=False,separators=(',',':'))+'\n')
+
+          hand=Path('HANDOFF-2026-08-17.md')
+          h=hand.read_text().rstrip()
+          assert 'PUI-BC-031' not in h
+          h += '''\n\n### Functional CTA Audit v2\n\nPR #85 已 squash merge 到 main：`5bf9800c5554b476bf7e8441560d8744eaefa9b8`。最终 head `fc9c44e2bcf5e37c2b22783ceb21bef97fb63743` 的 Product Golden Path **#587 / run `32048161702`** 全 PASS，`PUI-BC-030` 保持 `regression_verified`。\n\n随后用 temporary CTA effect discovery Run `32049127307` 对 Aquarium / Care / Collection / Identify / Settings / Encyclopedia 首屏 **195 个可见、非破坏性内容按钮**逐个隔离点击。通用 no-effect 候选只有 6 个：Identify 图片入口属于系统 file chooser；Settings 4 个 section navigation 实际调用 `scrollIntoView + focus`，审计未记录嵌套 workspace scroll/focus；当前“简体中文”是已选 radio，再点击无变化属于合法 selected-state 行为。因此本轮没有把这些误报登记为 dead CTA。\n\n但 promise-level 审核发现 `PUI-BC-031`：Settings 的“分享与隐私”本身是 `building`，左侧导航却仍与 live setting 共用普通 button + ChevronRight，点击后只落到“功能建设中”说明。修复为非交互 building row + 显式“建设中”，去掉前进箭头；`#shared-reports` 标记 `data-feature-status=building`，仅“了解功能”保留为 `data-building-action=learn` 元动作。`PUI-BC-031` 先记 `fixed`，待 runtime + final Product Golden Path 后再升级。'''
+          hand.write_text(h+'\n')
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Product contracts and build
+        run: |
+          npm run test:product-evaluation
+          npm run test:product-actions
+          npm run lint
+          npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/preview.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/preview.log
+          exit 1
+      - name: Runtime action regression
+        run: AQUAGUIDE_PREVIEW_URL=http://127.0.0.1:4173 npm run test:product-actions-runtime
+      - name: Commit verified patch and self-delete
+        run: |
+          rm .github/workflows/tmp-fix-settings-building-cta.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/pages/Settings.tsx scripts/verify-action-kind-runtime.mjs evaluation/product/badcases.v1.jsonl HANDOFF-2026-08-17.md .github/workflows/tmp-fix-settings-building-cta.yml
+          git commit -m "fix Settings building feature affordance"
+          git push origin HEAD:agent/functional-cta-audit-v2
