@@ -489,3 +489,11 @@
 - 根因：旧 `foreignObjectRendering` 在离屏 1080px 克隆上生成全透明画布；常规 html2canvas 又会被 Tailwind `oklch` 阻断。
 - 修复：记录卡使用 Canvas API 固定 1080px 直接绘制，不读取响应式页面 CSS；实际 PNG 为 1080×1000，深色像素和通道对比度门禁通过。
 - 验证：导出模型、分享隐私契约、390/600/1280px 布局和真实下载像素检查。
+
+## 2026-08-17 Relocation confirmation CTA wiring — checkpoint 1
+
+- 当前执行目标：把 PR #64 的迁移确认层入口接到 `InterventionComparisonPanel`，但比较面板本身继续保持 mutation-free，不 import/call Repository、API 或 Supabase。
+- 新登记 P0 Badcase：`PUI-BC-023`。旧目标缸 verdict 只能决定“是否显示打开确认入口”，绝不能作为 mutation 授权；真正执行必须进入 PR #63 `executeFreshRelocation()` fresh revalidation。
+- CTA 可见性约束：只有当前 formal relocation option 对应的 destination 且卡片状态为 `compatible_by_current_evidence` 才能显示“打开迁移确认”；`conditional / insufficient_data / not_recommended` 一律不显示执行入口。
+- 当前尚未修复：`InterventionComparisonPanel` 仍未提供 confirmation intent callback；本 checkpoint 先登记再改代码，Badcase 状态保持 `open`。
+- 禁止：不得从 destination card 直接调用 `repository.relocateLivestock()`；不得把 cached verdict 传入执行 policy 作为授权字段；不得自动替用户选择目标缸。
