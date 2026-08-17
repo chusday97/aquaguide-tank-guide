@@ -510,3 +510,11 @@
 - 点击入口只传递 `subjectSpeciesId / subjectName / quantity / destinationAquariumId / destinationAquariumName`，不携带 oldVerdict/isSafe/expectedCompatibility 等授权字段；真正 mutation 仍必须由上层构造 request 并进入 PR #63 fresh execution policy。
 - `PUI-BC-023` 已从 `open` 更新为 `regression_verified`：新增 trigger contract 先在旧面板上失败，再在 patch 后通过；confirmation state/UI、fresh execution policy、mutation uncertainty、product eval、TypeScript 与 production build 同步通过。
 - 当前仍未完成：Care 页面尚未把 confirmation intent 转成真实 `RelocationExecutionRequest`；因此用户仍不能从正式产品路径执行迁移。下一步只做 request-builder + dialog-open wiring，并继续禁止 destination card 直接 mutation。
+
+## 2026-08-17 Relocation request-builder — checkpoint 3
+
+- 已开始下一层：把 comparison intent 转成真实 `RelocationExecutionRequest` 之前，先登记 `PUI-BC-024`，状态 `open`。
+- 关键边界：formal relocation quantity 是 canonical 物种在源缸的总量；不能用第一个 `AquariumFish` record 或 `batches[0]` 偷换成部分迁移。
+- 第一版 request-builder 只允许“唯一 source record + 唯一可承载完整 formal quantity 的 batch”进入 ready；多 source record / 多 batch / 缺 batch / 数量不一致必须 fail closed。
+- request-builder 不是安全授权层：它只构造确认所需事实与 request；真正执行仍由 PR #63 `executeFreshRelocation()` 再次 fresh load + source/destination revalidation。
+- `operationId` 不应由每次点击/重试临时重建；builder 接收外部稳定 operationId，后续 reconciliation 必须复用同一 identity。
