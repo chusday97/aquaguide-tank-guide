@@ -1,0 +1,53 @@
+name: Temporary care card action closure guard
+on:
+  push:
+    branches:
+      - agent/care-card-action-closure
+permissions:
+  contents: write
+jobs:
+  validate:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/care-card-action-closure
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply exact patch
+        run: python scripts/tmp_care_card_patch.py
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Product and Care contracts
+        run: |
+          npm run test:product-evaluation
+          npm run test:product-actions
+          npm run test:care-first-screen
+          npm run test:care-guide-types
+          npm run lint
+          npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/preview.log
+          exit 1
+      - name: Care card browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:care-card-action-ui
+      - name: Commit verified patch and self-delete
+        run: |
+          rm scripts/tmp_care_card_patch.py .github/workflows/tmp-care-card-patch-guard.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "wire reachable local care card action"
+          git push origin HEAD:agent/care-card-action-closure
