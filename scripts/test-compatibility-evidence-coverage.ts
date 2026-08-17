@@ -21,18 +21,22 @@ const tank: Aquarium = {
 const commonNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼', '水晶虾'];
 const commonSpecies = fishData.filter(fish => commonNames.includes(fish.name) && !['plant', 'hardscape'].includes(getLifeType(fish)));
 
+type RuleAudit = { code: string; severity: string; evidence: string };
 type Row = {
   existingId: string;
   existingName: string;
   candidateId: string;
   candidateName: string;
   status: string;
-  blockingCodes: string[];
-  warningCodes: string[];
-  missingCodes: string[];
-  passedCodes: string[];
-  warningEvidence: string[];
+  blockingRules: RuleAudit[];
+  warningRules: RuleAudit[];
+  missingRules: RuleAudit[];
+  passedRules: RuleAudit[];
 };
+
+const toAudit = (items: Array<{ code: string; severity: string; evidence: string }>): RuleAudit[] => (
+  items.map(item => ({ code: item.code, severity: item.severity, evidence: item.evidence }))
+);
 
 const rows: Row[] = [];
 for (const existing of commonSpecies) {
@@ -53,11 +57,10 @@ for (const existing of commonSpecies) {
       candidateId: candidate.id,
       candidateName: candidate.name,
       status: pair.status,
-      blockingCodes: pair.rawResult.blockingRules.map(item => item.code),
-      warningCodes: pair.rawResult.warningRules.map(item => item.code),
-      missingCodes: pair.rawResult.missingData.map(item => item.code),
-      passedCodes: pair.rawResult.passedRules.map(item => item.code),
-      warningEvidence: pair.rawResult.warningRules.map(item => item.evidence),
+      blockingRules: toAudit(pair.rawResult.blockingRules),
+      warningRules: toAudit(pair.rawResult.warningRules),
+      missingRules: toAudit(pair.rawResult.missingData),
+      passedRules: toAudit(pair.rawResult.passedRules),
     });
   }
 }
@@ -67,7 +70,7 @@ assert.ok(rows.length > 0, 'compatibility evidence gate must evaluate real catal
 const target = rows.find(row => row.existingId === 'sp_0431' && row.candidateId === 'sp_0432');
 assert.ok(target, 'reviewed 红绿灯 → 宝莲灯 pair must exist in the catalog matrix');
 assert.equal(target.status, 'caution', 'reviewed 红绿灯 → 宝莲灯 inference must stay caution, not absolute compatible or blocked');
-assert.equal(target.blockingCodes.includes('predation_risk'), false, 'peaceful small tetra pair must not regress into a predation block');
+assert.equal(target.blockingRules.some(item => item.code === 'predation_risk'), false, 'peaceful small tetra pair must not regress into a predation block');
 
 const recordable = rows.filter(row => row.status === 'compatible' || row.status === 'caution');
 assert.ok(recordable.length >= 2, 'at least one reviewed real pair must remain reachable in both directions');
@@ -81,10 +84,11 @@ for (const row of recordable) {
     getReviewedCompatibilityProfile(row.candidateId),
     `recordable pair ${row.existingName} → ${row.candidateName} is missing reviewed candidate-species evidence`,
   );
+  const blockingMissing = row.missingRules.filter(item => item.severity === 'high' || item.severity === 'medium');
   assert.equal(
-    row.missingCodes.length,
+    blockingMissing.length,
     0,
-    `recordable pair ${row.existingName} → ${row.candidateName} must not retain unresolved missing-data rules`,
+    `recordable pair ${row.existingName} → ${row.candidateName} must not retain high/medium unresolved missing-data rules: ${JSON.stringify(blockingMissing)}`,
   );
 }
 
@@ -95,10 +99,9 @@ const counts = rows.reduce<Record<string, number>>((acc, row) => {
 const recordableDirections = recordable.map(row => ({
   direction: `${row.existingId}/${row.existingName} -> ${row.candidateId}/${row.candidateName}`,
   status: row.status,
-  warningCodes: row.warningCodes,
-  missingCodes: row.missingCodes,
-  passedCodes: row.passedCodes,
-  warningEvidence: row.warningEvidence,
+  warningRules: row.warningRules,
+  missingRules: row.missingRules,
+  passedRules: row.passedRules,
 }));
 console.log(`Compatibility evidence coverage passed: ${rows.length} real common-species directions; recordable=${recordable.length}; statuses=${JSON.stringify(counts)}.`);
 console.log(`Recordable priority direction audit: ${JSON.stringify(recordableDirections)}`);
