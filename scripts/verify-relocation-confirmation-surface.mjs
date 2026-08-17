@@ -79,3 +79,8 @@ console.log('relocation confirmation surface contract passed: request-bound fact
   assert.match(panel, /data-intervention-close-locked=\{closeLocked \? 'true' : 'false'\}/);
   assert.match(care, /closeLocked=\{Boolean\(relocationController\)\}/);
 }
+
+// Locked reconciliation state must stop Escape before sibling Base UI roots can consume it.
+assert.match(component, /window\.addEventListener\('keydown', blockEscape, true\)/);
+assert.match(component, /event\.stopImmediatePropagation\(\)/);
+assert.match(component, /window\.removeEventListener\('keydown', blockEscape, true\)/);

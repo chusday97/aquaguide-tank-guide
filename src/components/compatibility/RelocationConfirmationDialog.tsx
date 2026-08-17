@@ -120,6 +120,18 @@ export function RelocationConfirmationDialog({
   const blocked = outcome?.phase === 'blocked' ? outcome : null;
   const canClose = !checking && !reconciling && !reconciliationRequired;
 
+  useEffect(() => {
+    if (canClose) return undefined;
+    const blockEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    };
+    window.addEventListener('keydown', blockEscape, true);
+    return () => window.removeEventListener('keydown', blockEscape, true);
+  }, [canClose]);
+
   return (
     <Dialog
       open={open}

@@ -448,3 +448,12 @@ CI 方向：
 - PUI-BC-028 repair now locks the owner panel from the single lifecycle source of truth `Boolean(relocationController)`. The panel cancels Base UI close requests, disables pointer dismissal, and disables its explicit header close button while a confirmation controller exists.
 - The confirmation dialog keeps its own stricter reconciliation lock. Parent lock solves ownership/orphaning; child lock solves mutation-uncertainty recovery. They have different responsibilities but share the same controller-backed lifecycle rather than independent guessed booleans.
 - This patch is not complete until static/type/build pass and the real Chromium suite passes GP-REL-04 Escape + overlay + reconcile and then reaches/passes GP-REL-05 multibatch fail-close.
+
+## 2026-08-17 Relocation topology convergence — checkpoint 12
+
+- Browser run `31996135520` tested owner-lock head `1f9a1bf...`: permanent child+owner static lock contract passed, GP-REL-01/02 and GP-REL-03 passed, but GP-REL-04 still failed at the same Escape assertion.
+- Source inspection confirms there is no third relocation Dialog owner around these components: InterventionComparisonPanel and RelocationConfirmationDialog are sibling roots mounted directly in the Care result section.
+- Repeated failure after both Base UI roots cancel close requests indicates Root-level cancellation alone is insufficient for this sibling modal topology. The next safety boundary is application-level Escape capture only while confirmation `canClose=false`.
+- Locked confirmation now installs a window capture-phase keydown listener that prevents default, stops propagation and stops immediate propagation for Escape; listener is removed as soon as reconciliation unlocks the dialog. Pointer dismissal remains governed by Base UI `disablePointerDismissal` at child and owner roots.
+- The first one-shot attempt to apply this capture (`31996252425`) failed before modifying product files because its exact anchor omitted the existing `!reconciling` term. The guarded workflow correctly aborted and committed nothing; this retry uses the actual source anchor.
+- PUI-BC-028 stays open until this exact latest-head Chromium GP-REL-04 passes Escape + overlay + reconcile and the suite reaches GP-REL-05.
