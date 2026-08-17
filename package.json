@@ -36,6 +36,7 @@
     "test:mini-compatibility": "tsx scripts/test-mini-compatibility.ts",
     "test:visual-results": "tsx scripts/test-visual-results.ts",
     "test:daily-check": "tsx scripts/test-daily-check-contract.ts",
+    "test:daily-check-task-separation": "node scripts/test-daily-check-task-separation.mjs",
     "test:species-diagnosis": "tsx scripts/test-species-diagnosis.ts",
     "test:species-identification-ui": "node scripts/verify-species-identification.mjs",
     "test:identify-flow-separation": "node scripts/verify-identify-flow-separation.mjs",
