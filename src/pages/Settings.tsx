@@ -92,6 +92,15 @@ export default function SettingsPage() {
               { id: 'feedback', label: isEn ? 'Feedback' : '意见反馈', icon: MessageSquareText },
             ].map(item => {
               const Icon = item.icon;
+              if (item.id === 'shared-reports') {
+                return (
+                  <div key={item.id} data-settings-building-nav="sharing" aria-disabled="true" className="flex min-h-11 w-full items-center gap-3 rounded-[12px] px-3 text-left text-sm font-black text-slate-400">
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="min-w-0 flex-1">{item.label}</span>
+                    <span className="rounded-full bg-slate-100 px-2 py-1 text-[9px] font-black text-slate-400">{isEn ? 'BUILDING' : '建设中'}</span>
+                  </div>
+                );
+              }
               return (
                 <button key={item.id} type="button" onClick={() => focusSection(item.id)} className="flex min-h-11 w-full items-center gap-3 rounded-[12px] px-3 text-left text-sm font-black text-ink/60 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
                   <Icon className="h-4 w-4 shrink-0" /><span className="min-w-0 flex-1">{item.label}</span><ChevronRight className="h-4 w-4 text-ink/20" />
@@ -138,7 +147,7 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          <section id="shared-reports" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200 bg-slate-50 p-4 text-slate-500 shadow-none sm:p-5" aria-labelledby="settings-share-title">
+          <section id="shared-reports" data-feature-status="building" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200 bg-slate-50 p-4 text-slate-500 shadow-none sm:p-5" aria-labelledby="settings-share-title">
             <div className="flex items-start gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-slate-100 text-slate-400"><Link2 className="h-5 w-5" /></span>
               <div className="min-w-0 flex-1">
@@ -146,7 +155,7 @@ export default function SettingsPage() {
                 <h2 id="settings-share-title" className="mt-2 text-base font-black text-slate-600">{isEn ? 'Sharing & privacy' : '分享与隐私'}</h2>
               </div>
             </div>
-            <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="mt-4 min-h-11 rounded-full border border-slate-200 bg-slate-100 px-4 text-sm font-black text-slate-400 shadow-none">{isEn ? 'Learn about feature' : '了解功能'}</button>
+            <button type="button" data-building-action="learn" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} className="mt-4 min-h-11 rounded-full border border-slate-200 bg-slate-100 px-4 text-sm font-black text-slate-400 shadow-none">{isEn ? 'Learn about feature' : '了解功能'}</button>
           </section>
 
           <section id="feedback" tabIndex={-1} className="scroll-mt-6 rounded-[18px] border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5" aria-labelledby="settings-feedback-title">
