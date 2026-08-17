@@ -1,0 +1,71 @@
+name: Temporary evidence-priority sync
+on:
+  push:
+    branches: [agent/compatibility-evidence-priority-reviewed-groups]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/compatibility-evidence-priority-reviewed-groups
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Patch Badcase and Handoff
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+
+          badcase_path = Path('evaluation/product/badcases.v1.jsonl')
+          lines = [line for line in badcase_path.read_text().splitlines() if line.strip()]
+          records = [json.loads(line) for line in lines]
+          assert len(records) == 27, f'expected 27 existing badcases, got {len(records)}'
+          assert not any(item['id'] == 'PUI-BC-028' for item in records), 'PUI-BC-028 already exists'
+          pui_025 = next(item for item in records if item['id'] == 'PUI-BC-025')
+          assert pui_025['status'] == 'investigating', 'PUI-BC-025 must remain investigating'
+          records.append({
+            'id':'PUI-BC-028',
+            'featureId':'compatibility',
+            'discoveredAt':'2026-08-18',
+            'source':'evidence_prioritization_audit',
+            'severity':'medium',
+            'symptom':'research-only compatibility fallback 先按 catalog ID 排除 reviewed evidence、再按基础二名法聚类，导致已完成 reviewed profile 的 base species 可通过未审核品系重新进入队列；仅有 reviewed pair evidence、没有 species profile 的已研究物种也会持续占据队首，造成重复研究与 backlog 排序失真。',
+            'trigger':'Evidence Batch 3 合入后重跑 fallback queue：Channa asiatica 已有 reviewed profile 但可由另一个品系重新进入；Astronotus ocellatus 与 Channa argus 已有 reviewed direct pair evidence，但仍会继续进入下一批 breadth fallback。',
+            'expected':'breadth fallback 以 base species research group 为单位推进；任一 catalog variant 已有 reviewed species profile，或该 base species 已参与 reviewed pair rule，都应从“下一批 breadth research”退出。此规则只用于 research backlog，不得把证据跨品系传播到 runtime compatibility verdict。',
+            'actual':'旧 selector 只用 getReviewedCompatibilityProfile(species.id) 过滤单个 catalog ID，因此 base-species dedupe 发生得太晚，且 pair-only research 完全不会被视为已完成 research group。',
+            'rootCauseLayer':'research_prioritization',
+            'status':'regression_verified',
+            'fixedBy':'agent/compatibility-evidence-priority-reviewed-groups',
+            'regression':'Product Golden Path #577 / run 32044515710 on PR #83 head 6594e11272c7e734ef6ee63cd142b77591c40269: completed base-species groups now union reviewed profile + reviewed pair-rule groups; Channa asiatica, Astronotus ocellatus, Channa argus explicitly excluded from breadth fallback; high-signal research groups 168→164; runtime evidence propagation=none; 7 profiles / 4 pair rules / priority recordable=2/132 unchanged; contracts/typecheck/build/GP-001～GP-005 all PASS.'
+          })
+          badcase_path.write_text('\n'.join(json.dumps(item, ensure_ascii=False, separators=(',',':')) for item in records) + '\n')
+
+          handoff_path = Path('HANDOFF-2026-08-17.md')
+          text = handoff_path.read_text()
+          marker = '## 下一步\n'
+          assert text.count(marker) == 1, 'expected exactly one next-step marker'
+          prefix, _ = text.split(marker, 1)
+          section = '''## PUI-BC-028 — Compatibility evidence fallback repeated research\n\n状态：**regression_verified**。\n\nEvidence Batch 3 后审计 research-only fallback，发现旧 selector 在 base-species 聚类前按单个 catalog ID 排除 reviewed profile，而且完全不知道 reviewed pair rule 已经完成过某个 base species 的直接 evidence research。结果是 `Channa asiatica` 可通过未审核品系重新进入队列，`Astronotus ocellatus` / `Channa argus` 虽已完成 direct-pair research 仍会继续占据 breadth fallback 前列。\n\nPR #83 将 breadth backlog 的“已完成 research group”定义为 **reviewed species profile groups ∪ reviewed pair-rule groups**，再按基础二名法排除整个 group。这个排除只服务 research planning：`runtimeEvidencePropagation=none_research_backlog_only`，不会把某个品系或 pair 的证据外推成其他运行时组合的安全结论。\n\n#577 / run `32044515710` 已验证：completed research groups=11；high-signal catalog entries=286；high-signal research groups **168 → 164**；`Channa asiatica`、`Astronotus ocellatus`、`Channa argus` 均不会重新进入 breadth fallback。新 Top 5 为：\n\n1. `Channa aurantimaculata / 眼镜蛇雷龙` — score 18，3 variants\n2. `Channa barca / 巴卡雷龙` — score 18\n3. `Channa lorti / 蓝月光雷龙` — score 18\n4. `Gymnotus carapo` — score 18\n5. `Nimbochromis livingstonii` — score 18\n\n同一 run 中 compatibility coverage 无漂移：7 reviewed profiles / 4 reviewed pair rules / priority recordable 2/132 / statuses=`108 insufficient_data / 22 not_recommended / 2 caution`，contracts / typecheck / build / GP-001～GP-005 全 PASS。\n\n'''
+          next_steps = '''## 下一步\n\n1. **Usage-first 仍优先**：继续查询 PostHog `compatibility_pair_evaluated`；当前 taxonomy 仍未观察到该事件，因此不得声称存在真实高频 pair。\n2. 若 usage 样本仍不可用，Batch 4 breadth fallback 从修正后的 Top 1 **`Channa aurantimaculata / 眼镜蛇雷龙`** 开始，但必须优先找 exact-species / pair-level reviewed evidence；找不到就记录 research outcome，不为凑 coverage 生成 verdict。\n3. `PUI-BC-025` 继续 `investigating`。7 profiles / 4 pair rules / priority recordable 2/132 仍是 limited knowledge coverage；PUI-BC-028 只修 research backlog 重复研究，不提高 runtime knowledge coverage。\n4. PUI-BC-023 保持 regression maintenance / challenge expansion；新的 persona candidate 只有真实 connected run 后才计入 verified coverage。\n'''
+          handoff_path.write_text(prefix + section + next_steps)
+      - name: Verify registry and research selector
+        run: |
+          npm run test:product-evaluation
+          node --import tsx scripts/audit-compatibility-evidence-priority.ts
+          npm run lint
+      - name: Commit and self-delete
+        run: |
+          rm .github/workflows/tmp-sync-priority-badcase.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add HANDOFF-2026-08-17.md evaluation/product/badcases.v1.jsonl scripts/audit-compatibility-evidence-priority.ts .github/workflows/tmp-sync-priority-badcase.yml
+          git commit -m "Record compatibility evidence priority regression"
+          git push origin HEAD:agent/compatibility-evidence-priority-reviewed-groups
