@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
-import { getLifeType, getSecondaryCategory, getSpeciesWaterType } from '../src/modules/species/species.service';
+import { getLifeType, getSecondaryCategory } from '../src/modules/species/species.service';
 
 export type CompatibilityEvidenceResearchPriority = {
   speciesId: string;
   name: string;
   scientificName: string;
   lifeType: ReturnType<typeof getLifeType>;
-  waterType: ReturnType<typeof getSpeciesWaterType>;
   role: string;
   priorityScore: number;
   researchSignals: string[];
@@ -65,7 +64,6 @@ export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidence
       name: species.name,
       scientificName: species.scientificName,
       lifeType,
-      waterType: getSpeciesWaterType(species),
       role: getSecondaryCategory(species),
       priorityScore,
       researchSignals,
