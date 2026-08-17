@@ -497,3 +497,16 @@
 - CTA 可见性约束：只有当前 formal relocation option 对应的 destination 且卡片状态为 `compatible_by_current_evidence` 才能显示“打开迁移确认”；`conditional / insufficient_data / not_recommended` 一律不显示执行入口。
 - 当前尚未修复：`InterventionComparisonPanel` 仍未提供 confirmation intent callback；本 checkpoint 先登记再改代码，Badcase 状态保持 `open`。
 - 禁止：不得从 destination card 直接调用 `repository.relocateLivestock()`；不得把 cached verdict 传入执行 policy 作为授权字段；不得自动替用户选择目标缸。
+
+## 2026-08-17 Relocation confirmation CTA wiring — checkpoint 1.5
+
+- 第一次 guarded apply 的产品代码与全部回归均通过，但最终 push 被 GitHub 拒绝：GitHub App token 没有 `workflows` 权限，不能在 runner push 中修改 `.github/workflows/relocation-confirmation-surface.yml`。
+- 这是发布/写入权限边界，不是产品逻辑失败。修复方式是不扩大 token 权限：runner 只提交已验证的产品代码、测试、HANDOFF 与 Badcase；永久 workflow gate 由 GitHub connector 单独更新。
+
+## 2026-08-17 Relocation confirmation CTA wiring — checkpoint 2
+
+- `InterventionComparisonPanel` 已增加 mutation-free confirmation intent callback；比较面板本身仍不 import/call Repository、API、Supabase 或 `executeFreshRelocation()`。
+- 入口只存在于 formal relocation option 的 destination evaluation，且仅当卡片状态为 `compatible_by_current_evidence` 时显示“打开迁移确认 / Open relocation confirmation”。`conditional / insufficient_data / not_recommended` 没有执行入口。
+- 点击入口只传递 `subjectSpeciesId / subjectName / quantity / destinationAquariumId / destinationAquariumName`，不携带 oldVerdict/isSafe/expectedCompatibility 等授权字段；真正 mutation 仍必须由上层构造 request 并进入 PR #63 fresh execution policy。
+- `PUI-BC-023` 已从 `open` 更新为 `regression_verified`：新增 trigger contract 先在旧面板上失败，再在 patch 后通过；confirmation state/UI、fresh execution policy、mutation uncertainty、product eval、TypeScript 与 production build 同步通过。
+- 当前仍未完成：Care 页面尚未把 confirmation intent 转成真实 `RelocationExecutionRequest`；因此用户仍不能从正式产品路径执行迁移。下一步只做 request-builder + dialog-open wiring，并继续禁止 destination card 直接 mutation。
