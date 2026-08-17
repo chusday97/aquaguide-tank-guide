@@ -22,12 +22,11 @@ jobs:
         run: python scripts/tmp_care_card_patch.py
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - name: Product and Care contracts
+      - name: Product and static Care contracts
         run: |
           npm run test:product-evaluation
           npm run test:product-actions
           npm run test:care-first-screen
-          npm run test:care-guide-types
           npm run lint
           npm run build
       - name: Start preview
@@ -39,6 +38,10 @@ jobs:
           done
           cat /tmp/preview.log
           exit 1
+      - name: Existing Care guide browser contract
+        env:
+          AQUAGUIDE_PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:care-guide-types
       - name: Care card browser regression
         env:
           PREVIEW_URL: http://127.0.0.1:4173
