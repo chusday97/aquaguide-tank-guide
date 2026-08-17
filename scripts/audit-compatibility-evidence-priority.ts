@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
-import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
+import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { getLifeType, getSecondaryCategory } from '../src/modules/species/species.service';
 
 export type CompatibilityEvidenceResearchPriority = {
@@ -57,11 +57,35 @@ const getResearchGroupKey = (species: (typeof fishData)[number]) => {
   return binomial ? `${binomial[1]} ${binomial[2]}` : `catalog:${species.id}`;
 };
 
+const speciesById = new Map(fishData.map(species => [species.id, species] as const));
+
+const reviewedProfileGroupKeys = new Set(
+  fishData
+    .filter(species => Boolean(getReviewedCompatibilityProfile(species.id)))
+    .map(getResearchGroupKey),
+);
+
+const reviewedPairGroupKeys = new Set(
+  getCompatibilityEvidenceAudit().reviewedPairRules.flatMap(rule => (
+    rule.speciesIds.flatMap(speciesId => {
+      const species = speciesById.get(speciesId);
+      return species ? [getResearchGroupKey(species)] : [];
+    })
+  )),
+);
+
+const completedResearchGroupKeys = new Set([
+  ...reviewedProfileGroupKeys,
+  ...reviewedPairGroupKeys,
+]);
+
 export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidenceResearchPriority[] => {
   const candidates = fishData.flatMap<Omit<CompatibilityEvidenceResearchPriority, 'catalogVariantCount'>>(species => {
     const lifeType = getLifeType(species);
     if (lifeType === 'plant' || lifeType === 'hardscape') return [];
-    if (getReviewedCompatibilityProfile(species.id)) return [];
+
+    const researchGroupKey = getResearchGroupKey(species);
+    if (completedResearchGroupKeys.has(researchGroupKey)) return [];
 
     const researchSignals = researchSignalsFor(species);
     const priorityScore = scoreSignals(researchSignals);
@@ -71,7 +95,7 @@ export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidence
       speciesId: species.id,
       name: species.name,
       scientificName: species.scientificName,
-      researchGroupKey: getResearchGroupKey(species),
+      researchGroupKey,
       lifeType,
       role: getSecondaryCategory(species),
       priorityScore,
@@ -108,25 +132,39 @@ export const buildCompatibilityEvidenceResearchQueue = (): CompatibilityEvidence
 
 const queue = buildCompatibilityEvidenceResearchQueue();
 assert.ok(queue.length > 0, 'research-only evidence queue should identify at least one unreviewed high-signal animal');
-assert.ok(queue.every(item => !getReviewedCompatibilityProfile(item.speciesId)), 'reviewed deterministic profiles must never re-enter the research queue');
+assert.ok(queue.every(item => !completedResearchGroupKeys.has(item.researchGroupKey)), 'a completed base-species research group must never re-enter breadth fallback through another catalog variant');
 assert.ok(queue.every(item => item.lifeType !== 'plant' && item.lifeType !== 'hardscape'), 'plants and hardscape must stay out of animal compatibility research');
 assert.ok(queue.every(item => item.priorityScore > 0 && item.researchSignals.length > 0), 'every research priority needs an explicit catalog signal');
 assert.equal(new Set(queue.map(item => item.researchGroupKey)).size, queue.length, 'base-species research groups must be unique so catalog variants cannot crowd the queue');
 assert.ok(queue.some(item => item.catalogVariantCount > 1), 'the audit should prove at least one catalog variety was collapsed into a base-species research group');
+assert.ok(reviewedProfileGroupKeys.has('Channa asiatica'), 'regression fixture requires Channa asiatica to be complete through a reviewed species profile');
+assert.ok(reviewedPairGroupKeys.has('Astronotus ocellatus'), 'regression fixture requires Astronotus ocellatus to be complete through reviewed pair evidence');
+assert.ok(reviewedPairGroupKeys.has('Channa argus'), 'regression fixture requires Channa argus to be complete through reviewed pair evidence');
+assert.ok(!queue.some(item => item.researchGroupKey === 'Channa asiatica'), 'reviewed Channa asiatica must not re-enter fallback through an unreviewed variety');
+assert.ok(!queue.some(item => item.researchGroupKey === 'Astronotus ocellatus'), 'researched Astronotus ocellatus must not remain at the front of breadth fallback after direct pair evidence lands');
+assert.ok(!queue.some(item => item.researchGroupKey === 'Channa argus'), 'researched Channa argus must not remain at the front of breadth fallback after direct pair evidence lands');
 
 const summary = {
   policy: 'research_only_not_runtime_evidence',
   rankingSource: 'catalog_risk_signals_fallback_until_pair_usage_is_sufficient',
   deduplication: 'base_binomial_scientific_name',
+  completedGroupExclusion: 'exclude_base_species_with_reviewed_profile_or_reviewed_pair_rule',
+  runtimeEvidencePropagation: 'none_research_backlog_only',
   catalogAnimalCount: fishData.filter(species => !['plant', 'hardscape'].includes(getLifeType(species))).length,
   directReviewedProfileCount: fishData.filter(species => Boolean(getReviewedCompatibilityProfile(species.id))).length,
+  reviewedProfileGroupCount: reviewedProfileGroupKeys.size,
+  reviewedPairGroupCount: reviewedPairGroupKeys.size,
+  completedResearchGroupCount: completedResearchGroupKeys.size,
   highSignalCatalogEntryCount: fishData.filter(species => {
     const lifeType = getLifeType(species);
-    return lifeType !== 'plant' && lifeType !== 'hardscape' && !getReviewedCompatibilityProfile(species.id) && scoreSignals(researchSignalsFor(species)) > 0;
+    return lifeType !== 'plant'
+      && lifeType !== 'hardscape'
+      && !completedResearchGroupKeys.has(getResearchGroupKey(species))
+      && scoreSignals(researchSignalsFor(species)) > 0;
   }).length,
   highSignalResearchGroupCount: queue.length,
   topResearchQueue: queue.slice(0, 30),
 };
 
 console.log(JSON.stringify(summary, null, 2));
-console.log('compatibility evidence priority audit passed: catalog signals rank deduplicated research groups only and are never consumed as runtime compatibility evidence');
+console.log('compatibility evidence priority audit passed: completed base-species research groups stay out of breadth fallback, catalog variants are deduplicated, and no evidence is propagated into runtime verdicts');
