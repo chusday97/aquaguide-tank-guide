@@ -1,0 +1,66 @@
+name: Journal Relocation Operation Identity Once
+
+on:
+  push:
+    branches:
+      - agent/canonical-care-relocation-wiring
+    paths:
+      - '.github/workflows/journal-relocation-operation-id-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  journal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/canonical-care-relocation-wiring
+      - name: Journal operation identity gap
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          fs.appendFileSync('HANDOFF.md', [
+            '',
+            '## 2026-08-17 Relocation topology convergence — checkpoint 7',
+            '',
+            '- Code-level convergence audit found #65 + canonical controller does not yet cover one #64 request-builder invariant: blank/invalid `operationId`.',
+            '- #64 rejects blank operationId before building an execution request. The current canonical controller generates an id and assumes it is valid; its regression proves stability/reuse but not fail-close when the generator returns an empty string.',
+            '- New badcase `PUI-BC-027` records this gap. #64 request-builder must not be removed until controller-level operation identity validation and regression exist.',
+            '- Required fix: validate generated operation identity synchronously at controller creation, before repository resolution/read/write; add a regression proving blank id causes zero repository resolutions, zero reads and zero mutations.',
+            '- Browser run `31995177363` is separately validating the close-locator fix on head `a515736...`; its result can close PUI-BC-026 but cannot by itself close PUI-BC-025.',
+            '',
+          ].join('\n'));
+
+          const path = 'evaluation/product/badcases.v1.jsonl';
+          const lines = fs.readFileSync(path, 'utf8').trimEnd().split('\n');
+          if (!lines.some(line => JSON.parse(line).id === 'PUI-BC-027')) {
+            lines.push(JSON.stringify({
+              id: 'PUI-BC-027',
+              featureId: 'compatibility',
+              discoveredAt: '2026-08-17',
+              source: 'branch_topology_convergence_audit',
+              severity: 'high',
+              symptom: '#65 entrypoint + canonical Care controller 若 operationId 生成器返回空字符串，当前 controller 会直接构造请求；#64 request-builder 原有 invalid_operation_id fail-close 尚未被主线替代。',
+              trigger: 'createCareRelocationConfirmationController 的 createOperationId 返回空白字符串；后续用户确认执行。',
+              expected: 'controller 创建阶段立即拒绝无效 operation identity，且在任何 repository resolution/getAquariums/relocateLivestock 之前 fail closed；不能依赖后端或 API 最后兜底。',
+              actual: '当前 controller 对 createOperationId() 结果不做 trim/non-empty 校验；现有测试只验证正常 ID 的稳定复用。',
+              rootCauseLayer: 'operation_identity_boundary',
+              status: 'open',
+              regression: 'Care relocation confirmation controller blank-operation-id regression + zero repository side-effect assertion',
+            }));
+          }
+          fs.writeFileSync(path, `${lines.join('\n')}\n`);
+          NODE
+      - name: Remove one-shot workflow
+        run: rm .github/workflows/journal-relocation-operation-id-once.yml
+      - name: Commit journal updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add HANDOFF.md evaluation/product/badcases.v1.jsonl .github/workflows/journal-relocation-operation-id-once.yml
+          git commit -m "Journal relocation operation identity gap"
+          git push origin HEAD:agent/canonical-care-relocation-wiring
