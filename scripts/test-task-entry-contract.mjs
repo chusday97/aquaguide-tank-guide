@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
-const [routes, onboarding, statusCard, aquarium, search, identify, care] = await Promise.all([
+const [routes, onboarding, statusCard, aquarium, search, identify, care, app] = await Promise.all([
   read('src/services/navigation/task-routes.ts'),
   read('src/services/onboarding/onboarding-paths.ts'),
   read('src/components/product/StatusSummaryCard.tsx'),
@@ -11,6 +11,7 @@ const [routes, onboarding, statusCard, aquarium, search, identify, care] = await
   read('src/pages/Search.tsx'),
   read('src/pages/Identify.tsx'),
   read('src/pages/CareEncyclopedia.tsx'),
+  read('src/App.tsx'),
 ]);
 
 for (const required of [
@@ -44,5 +45,10 @@ assert.ok(identify.includes("taskRoutes.aquarium.create('identify')"), '识别�
 assert.ok(care.includes("location.hash === '#care-recommendations'"), '养护页必须消费推荐区 deep link');
 assert.ok(care.includes("location.hash === '#care-search'"), '养护页必须消费搜索/检查区 deep link');
 assert.ok(care.includes("location.hash === '#care-favorites'"), '养护页必须消费收藏 deep link');
+
+assert.ok(app.includes("'/aquarium': ["), '桌面鱼缸导航必须暴露任务级子菜单，不能只依赖一级 My Aquarium / 我的鱼缸入口');
+assert.ok(app.includes("labelKey: 'aquarium.dailyCheck'"), '鱼缸子菜单必须明确命名 Daily Aquarium Check / 每日鱼缸检查');
+assert.ok(app.includes("descriptionKey: 'aquarium.dailyCheckDesc'"), '每日检查子菜单必须解释它是实际巡检任务，而不是 Care troubleshooting');
+assert.ok(app.includes('path: taskRoutes.aquarium.dailyCheck'), '每日检查子菜单必须直达真实 daily-check route');
 
 console.log('全项目 Task-entry / Deep-link Contract 检查通过。');
