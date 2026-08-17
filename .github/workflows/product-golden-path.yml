@@ -49,4 +49,4 @@ jobs:
       - name: GP-003 returning user Daily Check browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
-        run: node scripts/verify-golden-path-returning-user-daily-check.mjs
+        run: npm run test:golden-path-gp003-ui
