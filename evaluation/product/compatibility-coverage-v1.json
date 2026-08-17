@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-17",
+  "status": "limited_knowledge_coverage",
+  "baseline": {
+    "catalogObjects": 486,
+    "reviewedSpeciesProfiles": 5,
+    "reviewedPairRules": 2,
+    "minimumRecordablePriorityDirections": 2
+  },
+  "interpretation": {
+    "decisionEngine": "stable_under_regression",
+    "goldenPathGp002": "covered",
+    "knowledgeCoverage": "limited",
+    "claimBoundary": "A green compatibility CI proves fail-closed decision behavior and the GP-002 path, not broad species-pair knowledge coverage."
+  },
+  "expansionPolicy": {
+    "primarySignal": "observed compatibility queries or user demand",
+    "fallbackBenchmark": "the existing common-species regression cohort",
+    "rule": "Add reviewed evidence before increasing recordable coverage; never loosen insufficient_data only to improve coverage metrics."
+  }
+}

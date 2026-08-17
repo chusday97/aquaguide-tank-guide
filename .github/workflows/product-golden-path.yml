@@ -22,6 +22,7 @@ jobs:
           npm run test:product-evaluation
           npm run test:golden-path-contract
           npm run test:compatibility-evidence-coverage
+          node --import tsx scripts/test-compatibility-coverage-scorecard.ts
           npm run test:task-entry
           npm run test:core-flow-state-eval
       - name: Type check
