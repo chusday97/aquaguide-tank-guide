@@ -21,6 +21,7 @@ export type InterventionComparisonPanelProps = {
   isEn?: boolean;
   onOpenChange: (open: boolean) => void;
   onOpenRelocationConfirmation?: (candidate: RelocationConfirmationLaunchCandidate) => void;
+  closeLocked?: boolean;
 };
 
 const relationLabel = (relation: ConflictEdge['relation'], isEn: boolean) => {
@@ -259,6 +260,7 @@ export function InterventionComparisonPanel({
   isEn = false,
   onOpenChange,
   onOpenRelocationConfirmation,
+  closeLocked = false,
 }: InterventionComparisonPanelProps) {
   const graph = result.knownSubsetActionPlan.graph;
   const blockers = graph.edges.filter(edge => edge.outcome === 'blocker');
@@ -266,7 +268,17 @@ export function InterventionComparisonPanel({
   const nodeNameById = new Map(graph.nodes.map(node => [node.speciesId, node.name]));
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      disablePointerDismissal={closeLocked}
+      onOpenChange={(nextOpen, eventDetails) => {
+        if (!nextOpen && closeLocked) {
+          eventDetails.cancel();
+          return;
+        }
+        onOpenChange(nextOpen);
+      }}
+    >
       <DialogContent className="flex max-h-[90dvh] w-[95vw] max-w-[760px] flex-col overflow-hidden rounded-[24px] border-border bg-bg p-0" data-intervention-panel-mutation-free="true">
         <DialogHeader className="shrink-0 border-b border-border/70 bg-white px-5 py-4 text-left">
           <div className="flex items-start justify-between gap-3">
@@ -275,7 +287,7 @@ export function InterventionComparisonPanel({
               <DialogTitle className="mt-1 text-xl font-black text-ink">{isEn ? 'What changes would actually reduce current conflicts?' : '哪些调整真的会减少当前冲突？'}</DialogTitle>
               <DialogDescription className="mt-1 text-[12px] font-medium leading-relaxed text-ink/55">{isEn ? 'Each option recomputes the remaining community. Eligible destinations may open a separate confirmation step, but this panel never moves livestock itself.' : '每个方案都会重新计算调整后的剩余群落。符合入口条件的目标缸可以进入独立确认步骤，但这个面板本身不会移动或删除任何生物。'}</DialogDescription>
             </div>
-            <button type="button" aria-label={isEn ? 'Close intervention comparison' : '关闭调整比较'} onClick={() => onOpenChange(false)} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-bg text-ink/55"><X className="h-4 w-4" /></button>
+            <button type="button" aria-label={isEn ? 'Close intervention comparison' : '关闭调整比较'} onClick={() => { if (!closeLocked) onOpenChange(false); }} disabled={closeLocked} data-intervention-close-locked={closeLocked ? 'true' : 'false'} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-bg text-ink/55 disabled:cursor-not-allowed disabled:opacity-40"><X className="h-4 w-4" /></button>
           </div>
         </DialogHeader>
 

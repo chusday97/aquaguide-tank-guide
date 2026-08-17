@@ -68,3 +68,14 @@ for (const forbidden of [
 }
 
 console.log('relocation confirmation surface contract passed: request-bound facts, policy-only execution, locked uncertainty lifecycle until canonical reconciliation, and no direct repository/blind retry path');
+
+// Owner dialog must stay mounted while a relocation confirmation controller exists.
+{
+  const panel = readFileSync('src/components/compatibility/InterventionComparisonPanel.tsx', 'utf8');
+  const care = readFileSync('src/pages/CareEncyclopedia.tsx', 'utf8');
+  assert.match(panel, /closeLocked\?: boolean/);
+  assert.match(panel, /disablePointerDismissal=\{closeLocked\}/);
+  assert.match(panel, /eventDetails\.cancel\(\)/);
+  assert.match(panel, /data-intervention-close-locked=\{closeLocked \? 'true' : 'false'\}/);
+  assert.match(care, /closeLocked=\{Boolean\(relocationController\)\}/);
+}

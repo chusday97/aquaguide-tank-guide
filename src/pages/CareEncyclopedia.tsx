@@ -3097,6 +3097,7 @@ function StepDiagnosisPanel({
           isEn={isEn}
           onOpenChange={setIsInterventionComparisonOpen}
           onOpenRelocationConfirmation={openRelocationConfirmation}
+          closeLocked={Boolean(relocationController)}
         />
       )}
 

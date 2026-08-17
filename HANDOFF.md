@@ -441,3 +441,10 @@ CI 方向：
 - Failure screenshot falls back to the underlying Care detail surface rather than leaving the intervention/confirmation stack visible. Current leading hypothesis is multi-dialog topology: the sibling/ancestor InterventionComparisonPanel also handles the same Escape and its close callback tears down the confirmation controller/intent.
 - PUI-BC-028 remains open. Next repair must lock the intervention comparison layer while a relocation confirmation is active/reconciliation-locked, using the same explicit state rather than another independent boolean guess.
 - This checkpoint also starts a one-shot source audit that prints the real Care-page mount/callback context before editing, so the next patch is anchored to actual component topology.
+
+## 2026-08-17 Relocation topology convergence — checkpoint 11
+
+- Topology audit confirmed the runtime owner relationship: `InterventionComparisonPanel` and `RelocationConfirmationDialog` are sibling Base UI Dialog roots in Care; while confirmation exists, the intervention panel previously remained freely dismissible via `onOpenChange={setIsInterventionComparisonOpen}`.
+- PUI-BC-028 repair now locks the owner panel from the single lifecycle source of truth `Boolean(relocationController)`. The panel cancels Base UI close requests, disables pointer dismissal, and disables its explicit header close button while a confirmation controller exists.
+- The confirmation dialog keeps its own stricter reconciliation lock. Parent lock solves ownership/orphaning; child lock solves mutation-uncertainty recovery. They have different responsibilities but share the same controller-backed lifecycle rather than independent guessed booleans.
+- This patch is not complete until static/type/build pass and the real Chromium suite passes GP-REL-04 Escape + overlay + reconcile and then reaches/passes GP-REL-05 multibatch fail-close.
