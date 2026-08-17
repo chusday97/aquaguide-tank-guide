@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-13",
+  "updatedAt": "2026-08-17",
   "status": "coverage_audit",
   "paths": [
     {
@@ -23,9 +23,10 @@
       "existingAutomation": [
         "test:guided-navigation-ui",
         "test:onboarding-goal-paths",
-        "test:task-entry"
+        "test:task-entry",
+        "verify-golden-path-first-tank-setup.mjs"
       ],
-      "coverage": "partial"
+      "coverage": "covered"
     },
     {
       "id": "GP-002",
@@ -52,7 +53,8 @@
         "test:core-flow-state-eval",
         "test:livestock-recording",
         "test:golden-path-gp002-ui",
-        "test:compatibility-evidence-coverage"
+        "test:compatibility-evidence-coverage",
+        "test-compatibility-coverage-scorecard.ts"
       ],
       "coverage": "covered"
     },
