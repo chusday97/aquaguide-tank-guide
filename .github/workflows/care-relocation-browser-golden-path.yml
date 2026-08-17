@@ -28,6 +28,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Confirm tested branch head
+        run: git rev-parse HEAD
       - run: npm ci
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
