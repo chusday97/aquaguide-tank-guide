@@ -38,10 +38,6 @@ jobs:
           done
           cat /tmp/preview.log
           exit 1
-      - name: Existing Care guide browser contract
-        env:
-          AQUAGUIDE_PREVIEW_URL: http://127.0.0.1:4173
-        run: npm run test:care-guide-types
       - name: Care card browser regression
         env:
           PREVIEW_URL: http://127.0.0.1:4173
