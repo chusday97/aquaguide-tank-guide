@@ -24,6 +24,7 @@ jobs:
           npm run test:compatibility-evidence-coverage
           npm run test:task-entry
           npm run test:core-flow-state-eval
+          npm run test:daily-check-task-separation
       - name: Type check
         run: npm run lint
       - name: Build
