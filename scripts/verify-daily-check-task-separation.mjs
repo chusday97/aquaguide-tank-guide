@@ -89,10 +89,14 @@ try {
   );
   await page.keyboard.press('Escape');
 
-  await page.goto(`${baseUrl}/care#care-search`, { waitUntil: 'domcontentloaded' });
-  await page.getByText('快速检查', { exact: true }).first().waitFor();
+  // Care Quick Check is a detail-level diagnosis action, not a root /care#care-search control.
+  // Use the same topic deep-link contract exercised elsewhere in the Care browser regressions.
+  await page.goto(`${baseUrl}/care?topic=guide_water_deteriorate`, { waitUntil: 'domcontentloaded' });
+  const careDialog = page.getByRole('dialog').filter({ hasText: '水质变差怎么办？' });
+  await careDialog.waitFor();
+  await careDialog.getByRole('button', { name: '开始快速检查', exact: true }).waitFor();
   assert.equal(
-    await page.locator('[data-daily-check-scope="records-today"]').count(),
+    await careDialog.locator('[data-daily-check-scope="records-today"]').count(),
     0,
     'Care symptom Quick Check must not present itself as the record-producing Daily Tank Check.',
   );
