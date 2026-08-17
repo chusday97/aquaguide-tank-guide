@@ -38,13 +38,6 @@ replace_once(
     '    "test:product-actions-runtime": "node scripts/verify-action-kind-runtime.mjs",\n    "test:care-card-action-ui": "node scripts/verify-care-card-action.mjs",\n',
 )
 
-workflow = '.github/workflows/product-golden-path.yml'
-replace_once(
-    workflow,
-    '''      - name: GP-001 first tank setup browser path\n        env:\n          PREVIEW_URL: http://127.0.0.1:4173\n        run: npm run test:golden-path-gp001-ui\n''',
-    '''      - name: Care card action regression\n        env:\n          PREVIEW_URL: http://127.0.0.1:4173\n        run: npm run test:care-card-action-ui\n      - name: GP-001 first tank setup browser path\n        env:\n          PREVIEW_URL: http://127.0.0.1:4173\n        run: npm run test:golden-path-gp001-ui\n''',
-)
-
 bad = Path('evaluation/product/badcases.v1.jsonl')
 bad_text = bad.read_text()
 assert '"id":"PUI-BC-032"' not in bad_text
@@ -68,5 +61,5 @@ bad.write_text(bad_text.rstrip() + '\n' + json.dumps(case, ensure_ascii=False, s
 handoff = Path('HANDOFF-2026-08-17.md')
 h = handoff.read_text().rstrip()
 assert 'PUI-BC-032' not in h
-h += '''\n\n### Functional CTA Audit v3 — Care card action closure\n\nPR #86 `Mark Settings sharing as building instead of live CTA` 已 squash merge 到 main：`daadc2a3647ed394f70a4b8858af3b32cd68ba70`。最终 head `bb010840fa7772f9029eead2f76603b823f10a0e` 的 Product Golden Path **#592 / run `32051036636`** 验证 30 Badcases、typecheck/build、GP-001～GP-005 全 PASS；`PUI-BC-031` 为 `regression_verified`。\n\n继续审计 Care 时发现 `PUI-BC-032`：页面已经存在 `shareTopic` state、`CareShareCardPreview`、`buildCareCardCopyText(...)`、`copyShareText(...)` 与“生成养护卡/复制文字” Dialog，但没有任何用户动作把 `shareTopic` 设为当前 topic；`CareArticleDetail` 的 `onOpenShare` 还被耦合到完整 `sharing` building feature preview。Temporary fail-before-fix Run **`32051446275`** 在 build + preview PASS 后明确失败于“生成养护卡”入口 count **0 != 1**。\n\n修复只开放已经真实存在的窄能力：Care 文章详情新增 **“生成养护卡”** utility，使用独立可选 `onOpenCareCard` 调用 `setShareTopic(selectedTopic)` 打开现有本地预览，并保留真实 `复制文字`；Collection 复用的文章详情未提供该 prop，因此不会错误显示一个仍指向 building sharing preview 的养护卡按钮。文案明确“不会创建公开分享链接”。完整 Sharing & Privacy 继续保持 `building`，没有生成公开链接、权限或发布动作。新增永久 browser regression 并接入 Product Golden Path。`PUI-BC-032` 暂记 `fixed`，待最终 PR head 全绿后升级 `regression_verified`。'''
+h += '''\n\n### Functional CTA Audit v3 — Care card action closure\n\nPR #86 `Mark Settings sharing as building instead of live CTA` 已 squash merge 到 main：`daadc2a3647ed394f70a4b8858af3b32cd68ba70`。最终 head `bb010840fa7772f9029eead2f76603b823f10a0e` 的 Product Golden Path **#592 / run `32051036636`** 验证 30 Badcases、typecheck/build、GP-001～GP-005 全 PASS；`PUI-BC-031` 为 `regression_verified`。\n\n继续审计 Care 时发现 `PUI-BC-032`：页面已经存在 `shareTopic` state、`CareShareCardPreview`、`buildCareCardCopyText(...)`、`copyShareText(...)` 与“生成养护卡/复制文字” Dialog，但没有任何用户动作把 `shareTopic` 设为当前 topic；`CareArticleDetail` 的 `onOpenShare` 还被耦合到完整 `sharing` building feature preview。Temporary fail-before-fix Run **`32051446275`** 在 build + preview PASS 后明确失败于“生成养护卡”入口 count **0 != 1**。\n\n修复只开放已经真实存在的窄能力：Care 文章详情新增 **“生成养护卡”** utility，使用独立可选 `onOpenCareCard` 调用 `setShareTopic(selectedTopic)` 打开现有本地预览，并保留真实 `复制文字`；Collection 复用的文章详情未提供该 prop，因此不会错误显示一个仍指向 building sharing preview 的养护卡按钮。文案明确“不会创建公开分享链接”。完整 Sharing & Privacy 继续保持 `building`，没有生成公开链接、权限或发布动作。新增永久 browser regression；永久 Product Golden Path 接入由 connector 单独写入 workflow，避免 Actions token 的 workflow-write 权限限制。`PUI-BC-032` 暂记 `fixed`，待最终 PR head 全绿后升级 `regression_verified`。'''
 handoff.write_text(h + '\n')
