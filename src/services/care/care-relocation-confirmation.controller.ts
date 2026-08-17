@@ -61,6 +61,9 @@ export const createCareRelocationConfirmationController = ({
   createOperationId = defaultOperationId,
 }: CareRelocationConfirmationControllerInput): CareRelocationConfirmationController => {
   const operationId = createOperationId();
+  if (!operationId.trim()) {
+    throw new Error('Relocation operation identity must be a non-empty string.');
+  }
   const request: RelocationExecutionRequest = {
     sourceAquariumId: candidate.sourceAquariumId,
     sourceAquariumFishId: candidate.sourceAquariumFishId,

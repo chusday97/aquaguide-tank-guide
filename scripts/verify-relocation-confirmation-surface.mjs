@@ -45,7 +45,8 @@ assert.match(component, /const \[reconciliationComplete, setReconciliationComple
 assert.match(component, /const rawReconciliationRequired =/);
 assert.match(component, /const reconciliationRequired = rawReconciliationRequired && !reconciliationComplete/);
 assert.match(component, /const canClose = !checking && !reconciling && !reconciliationRequired/);
-assert.match(component, /if \(!nextOpen && !canClose\) return/);
+assert.match(component, /disablePointerDismissal=\{!canClose\}/);
+assert.match(component, /onOpenChange=\{\(nextOpen, eventDetails\) => \{[\s\S]*if \(!nextOpen && !canClose\) \{[\s\S]*eventDetails\.cancel\(\)/);
 assert.match(component, /await onReconcile\(\);[\s\S]*setReconciliationComplete\(true\)/);
 assert.match(component, /setReconciliationComplete\(false\)/);
 assert.match(component, /setReconciliationError/);

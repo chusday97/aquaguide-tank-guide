@@ -426,3 +426,10 @@ CI 方向：
 - A guarded repair attempt (`31995381732`) proved the new blank-operation-id regression fails on the old controller and passes after adding a synchronous non-empty operation identity guard. However the same runner was stopped by TypeScript before commit because this project's `DialogContent` exposes `DialogPopupProps`, which does not accept the assumed Radix `onEscapeKeyDown` prop.
 - Consequently the operation-id and uncertain-dialog product patches from that runner are **not committed**. `PUI-BC-027` has fail-before-fix + runner-only post-fix evidence but remains pending a type-correct committed implementation; `PUI-BC-028` remains open.
 - Next step is to inspect the project's actual Dialog implementation / underlying UI library and fix close locking with supported lifecycle primitives, then rerun controller/static/type/build and the real Chromium GP-REL-04/05 path.
+
+## 2026-08-17 Relocation topology convergence — checkpoint 9
+
+- Correct UI-library contract confirmed: project dialog wrapper is `@base-ui/react/dialog` 1.4, and `DialogContent` is a `Dialog.Popup`; the failed Radix-style popup-event patch was discarded.
+- PUI-BC-028 fix now uses Base UI Root semantics: `eventDetails.cancel()` cancels blocked close requests (including Escape), while `disablePointerDismissal={!canClose}` blocks outside presses. Both are driven by the existing single `canClose` predicate.
+- PUI-BC-027 fix validates generated operationId synchronously before constructing the execution request; its regression first failed on the old controller and now proves zero repository resolution/read/write on blank identity.
+- Controller regression, confirmation static contract, app TypeScript, API TypeScript and production build passed before commit. PUI-BC-027/028 remain browser-revalidation pending until latest-head Care relocation Chromium GP-REL-04/05 pass.

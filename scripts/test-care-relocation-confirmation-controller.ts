@@ -260,4 +260,22 @@ const makeRepository = ({
   assert.equal(harness.calls.getAquariums, 1);
 }
 
+// Invalid operation identity must fail before repository resolution or any read/write.
+{
+  let repositoryResolutionCalls = 0;
+  const harness = makeRepository();
+  assert.throws(() => createCareRelocationConfirmationController({
+    candidate: launchCandidate,
+    catalog,
+    createOperationId: () => '   ',
+    getRepository: async () => {
+      repositoryResolutionCalls += 1;
+      return harness.repository;
+    },
+  }), /operation identity/i);
+  assert.equal(repositoryResolutionCalls, 0);
+  assert.equal(harness.calls.getAquariums, 0);
+  assert.equal(harness.calls.relocateLivestock, 0);
+}
+
 console.log('Care relocation confirmation controller passed: one attempt owns one operation id and one repository session; fresh pre/post loads are repository-backed; reconcile never mutates');

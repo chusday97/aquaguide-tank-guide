@@ -123,8 +123,12 @@ export function RelocationConfirmationDialog({
   return (
     <Dialog
       open={open}
-      onOpenChange={(nextOpen) => {
-        if (!nextOpen && !canClose) return;
+      disablePointerDismissal={!canClose}
+      onOpenChange={(nextOpen, eventDetails) => {
+        if (!nextOpen && !canClose) {
+          eventDetails.cancel();
+          return;
+        }
         onOpenChange(nextOpen);
       }}
     >
