@@ -45,6 +45,11 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: npm run test:care-card-action-ui
+      - name: Search show-all action regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+          SEARCH_UI_GROUP: entries
+        run: node scripts/verify-search-and-inline-filter.mjs
       - name: GP-001 first tank setup browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
