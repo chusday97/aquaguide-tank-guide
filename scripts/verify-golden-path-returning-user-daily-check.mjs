@@ -137,10 +137,10 @@ try {
     'After a successful Daily Check save, the Today primary task must advance instead of asking for the same check.',
   );
 
-  // UI V2 intentionally suppresses Quick Action descriptions when their container is compact.
-  // Validate the state semantics in the action itself instead of forcing secondary copy to stay visible.
-  const dailyCheckAction = page.locator('.quick-action-button').filter({ hasText: '每日检查' }).first();
-  await dailyCheckAction.waitFor();
+  // UI V2 may suppress secondary descriptions visually in compact containers.
+  // Bind the regression to the action's stable semantic id rather than translated display copy.
+  const dailyCheckAction = page.locator('[data-quick-action-id="dailyTankCheck"]');
+  await dailyCheckAction.waitFor({ state: 'attached' });
   const dailyCheckState = (await dailyCheckAction.textContent()) || '';
   assert.match(
     dailyCheckState,
@@ -154,7 +154,7 @@ try {
   );
   assert.deepEqual(pageErrors, [], `GP-003 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-003 continuous E2E passed: returning user → Today Daily Check → complete required answers → persist patrol → Today task advances while compact UI may hide secondary status copy.');
+  console.log('GP-003 continuous E2E passed: returning user → Today Daily Check → complete required answers → persist patrol → Today task advances via stable quick-action semantics.');
 } finally {
   await browser.close();
 }
