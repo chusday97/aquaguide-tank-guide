@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const source = fs.readFileSync('src/pages/Aquarium.tsx', 'utf8');
 const statusCardSource = fs.readFileSync('src/components/product/StatusSummaryCard.tsx', 'utf8');
+const aquariumComponentStyles = fs.readFileSync('src/styles/ui-v2-aquarium-components.css', 'utf8');
 
 const required = [
   'className="aquarium-dashboard-v2"',
@@ -24,7 +25,7 @@ const manageIndex = source.indexOf('id="aquarium-manage-zone"', dashboardStart);
 const secondaryIndex = source.indexOf('data-dashboard-priority="secondary"', dashboardStart);
 
 if (!(todayIndex < contextIndex && contextIndex < manageIndex && manageIndex < secondaryIndex)) {
-  throw new Error('Dashboard priority order must be today -> context -> manage -> secondary.');
+  throw new Error('Dashboard DOM order must remain today -> context -> manage -> secondary; responsive CSS may reprioritize mobile presentation.');
 }
 
 const workspaceSlice = source.slice(
@@ -53,4 +54,21 @@ if (statusCardSource.includes('carePlan.visibleItems.slice(0, 1)')) {
   throw new Error('Daily decision card must not render the first care-plan item before the user expands details.');
 }
 
-console.log('Aquarium Dashboard V2 source IA contract passed (decision-first + collapsed care-plan detail).');
+const nestedSurfacePatterns = [
+  /status-summary-task[^\n]*bg-white/,
+  /id="care-plan"[^\n]*border[^\n]*bg-white/,
+];
+for (const pattern of nestedSurfacePatterns) {
+  if (pattern.test(statusCardSource)) {
+    throw new Error(`Today decision card must remain one continuous surface; nested card styling returned: ${pattern}`);
+  }
+}
+
+if (!/\.status-summary-task\s*\{[^}]*border-top:[^}]*padding:\s*16px 0 0;/s.test(aquariumComponentStyles)) {
+  throw new Error('Today task content must use a lightweight divider instead of a nested card surface.');
+}
+if (!/#care-plan\s*\{[^}]*border-top:[^}]*padding:\s*13px 0 0;/s.test(aquariumComponentStyles)) {
+  throw new Error('Care-plan summary must remain a divider row inside Today instead of a nested panel.');
+}
+
+console.log('Aquarium Dashboard V2 source IA contract passed (decision-first + collapsed care-plan detail + flat Today surface).');
