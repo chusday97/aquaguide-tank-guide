@@ -1,0 +1,80 @@
+name: Apply Aquarium Settings Integration
+
+on:
+  push:
+    branches:
+      - integration/aquarium-persistence-v1
+    paths:
+      - .github/workflows/integration-apply-settings.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: integration/aquarium-persistence-v1
+          fetch-depth: 0
+      - name: Apply PR92 product delta without overwriting PR91
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "aquaguide-integration-bot"
+          git config user.email "integration-bot@users.noreply.github.com"
+          git fetch origin agent/aquarium-settings-repository-closure
+
+          source_ref=origin/agent/aquarium-settings-repository-closure
+          base_ref=ed0cf38025652db901ee81aa697ca55b1c1584b6
+
+          git show "$source_ref:HANDOFF-2026-08-18-PUI-BC-037.md" > HANDOFF-2026-08-18-PUI-BC-037.md
+          git show "$source_ref:scripts/test-aquarium-settings-repository-contract.mjs" > scripts/test-aquarium-settings-repository-contract.mjs
+
+          git diff "$base_ref" "$source_ref" -- src/pages/Aquarium.tsx > /tmp/pr92-aquarium.patch
+          git apply --3way /tmp/pr92-aquarium.patch
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          workflow = Path('.github/workflows/product-golden-path.yml')
+          text = workflow.read_text()
+          settings_step = "      - name: Aquarium settings repository contract\n        run: node scripts/test-aquarium-settings-repository-contract.mjs\n"
+          if 'Aquarium settings repository contract' not in text:
+              delete_step = "      - name: Aquarium delete repository contract\n        run: node scripts/test-aquarium-delete-repository-contract.mjs\n"
+              daily_anchor = "          npm run test:daily-check\n"
+              if delete_step in text:
+                  text = text.replace(delete_step, delete_step + settings_step, 1)
+              elif daily_anchor in text:
+                  text = text.replace(daily_anchor, daily_anchor + settings_step, 1)
+              else:
+                  raise SystemExit('Golden Path anchor missing while integrating PR92')
+              workflow.write_text(text)
+
+          current_badcases = Path('evaluation/product/badcases.v1.jsonl')
+          current = current_badcases.read_text().rstrip('\n')
+          source = Path('/tmp/pr92-badcases.jsonl')
+          PY
+
+          git show "$source_ref:evaluation/product/badcases.v1.jsonl" > /tmp/pr92-badcases.jsonl
+          python3 - <<'PY'
+          from pathlib import Path
+          current_path = Path('evaluation/product/badcases.v1.jsonl')
+          current_lines = current_path.read_text().splitlines()
+          source_lines = Path('/tmp/pr92-badcases.jsonl').read_text().splitlines()
+          if not any('"id":"PUI-BC-037"' in line for line in current_lines):
+              line = next((line for line in source_lines if '"id":"PUI-BC-037"' in line), None)
+              if line is None:
+                  raise SystemExit('PUI-BC-037 missing from PR92 source registry')
+              current_lines.append(line)
+              current_path.write_text('\n'.join(current_lines) + '\n')
+          PY
+
+          git add src/pages/Aquarium.tsx scripts/test-aquarium-settings-repository-contract.mjs HANDOFF-2026-08-18-PUI-BC-037.md .github/workflows/product-golden-path.yml evaluation/product/badcases.v1.jsonl
+          node scripts/test-aquarium-delete-repository-contract.mjs
+          node scripts/test-aquarium-settings-repository-contract.mjs
+          npm run lint
+          npm run build
+          git commit -m "Integrate aquarium settings repository persistence"
+          git push origin HEAD:integration/aquarium-persistence-v1
