@@ -19,8 +19,12 @@ import type {
   WorkspaceSectionId,
 } from '../../types/navigation';
 
+type NavigateToRouteOptions = {
+  returnContext?: WorkspaceNavigationContext;
+};
+
 type WorkspaceNavigationValue = {
-  navigateToRoute: (path: string) => void;
+  navigateToRoute: (path: string, options?: NavigateToRouteOptions) => void;
   navigateToView: (path: string, hash?: string) => void;
   navigateToSection: (sectionId: WorkspaceSectionId, options?: NavigateToSectionOptions) => Promise<boolean>;
   registerSection: (sectionId: WorkspaceSectionId, element: HTMLElement | null) => () => void;
@@ -176,7 +180,7 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
 
   const canNavigate = useCallback((targetPath: string) => navigationGuardRef.current?.(targetPath) ?? true, []);
 
-  const navigateToRoute = useCallback((path: string) => {
+  const navigateToRoute = useCallback((path: string, options: NavigateToRouteOptions = {}) => {
     if (/^\/login(?:[/?#]|$)/.test(path)) {
       showFeaturePreview('auth');
       return;
@@ -186,8 +190,18 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
       return;
     }
     if (!canNavigate(path)) return;
-    navigate(path);
-  }, [canNavigate, navigate, showFeaturePreview]);
+    const isSpecificAquariumTask = /^\/aquarium\?[^#]*\baction=/.test(path);
+    const autoReturnContext = isSpecificAquariumTask && location.pathname !== '/aquarium'
+      ? {
+          route: location.pathname,
+          query: location.search,
+          hash: location.hash,
+          scrollTop: getScrollTop(),
+        } satisfies WorkspaceNavigationContext
+      : undefined;
+    const workspaceReturnContext = options.returnContext ?? autoReturnContext;
+    navigate(path, workspaceReturnContext ? { state: { workspaceReturnContext } } : undefined);
+  }, [canNavigate, location.hash, location.pathname, location.search, navigate, showFeaturePreview]);
 
   const navigateToView = useCallback((path: string, hash = '') => {
     const targetPath = `${path}${hash}`;
@@ -303,9 +317,28 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
     registerNavigationGuard,
   }), [captureContext, navigateToRoute, navigateToSection, navigateToView, registerNavigationGuard, registerSection, restoreContext]);
 
+  const workspaceReturnContext = (location.state as { workspaceReturnContext?: WorkspaceNavigationContext } | null)?.workspaceReturnContext;
+  const workspaceReturnLabel = workspaceReturnContext?.route === '/encyclopedia'
+    ? (new URLSearchParams(workspaceReturnContext.query).get('species')
+      ? (isEnglishUi() ? 'Back to species detail' : '返回物种详情')
+      : new URLSearchParams(workspaceReturnContext.query).get('mode') === 'compatibility'
+        ? (isEnglishUi() ? 'Back to compatibility' : '返回混养结果')
+        : (isEnglishUi() ? 'Back to species' : '返回物种页'))
+    : (isEnglishUi() ? 'Back to previous task' : '返回上一任务');
+
   return (
     <WorkspaceNavigationContextValue.Provider value={value}>
       {children}
+      {workspaceReturnContext && location.pathname === '/aquarium' && (
+        <button
+          type="button"
+          data-workspace-return
+          onClick={() => void restoreContext(workspaceReturnContext)}
+          className="fixed left-3 top-[68px] z-[96] inline-flex min-h-10 items-center gap-1.5 rounded-full border border-emerald-100 bg-white/95 px-3 text-xs font-black text-emerald-800 shadow-md backdrop-blur md:left-[calc(var(--desktop-sidebar-width,280px)+20px)]"
+        >
+          <span aria-hidden="true">←</span>{workspaceReturnLabel}
+        </button>
+      )}
       {featurePreview && (
         <div className="fixed inset-0 z-[140] flex items-center justify-center p-4" role="presentation">
           <button type="button" aria-label={isEnglishUi() ? 'Close preview' : '关闭说明'} className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" onClick={() => setFeaturePreview(null)} />

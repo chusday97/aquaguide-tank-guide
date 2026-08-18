@@ -257,7 +257,8 @@ export function LivestockBatchCard({
     || targetLifeStage !== selectedSourceBatch.lifeStage
     || (reproductiveApplicable && targetReproductiveState !== selectedSourceBatch.reproductiveState)
   );
-  const hasUnsavedChanges = hasPendingSelection || JSON.stringify(draft) !== JSON.stringify(record);
+  const hasDraftChanges = JSON.stringify(draft) !== JSON.stringify(record);
+  const hasUnsavedChanges = hasPendingSelection || hasDraftChanges;
   useEffect(() => {
     onDirtyChange?.(isEditing && hasUnsavedChanges);
     return () => onDirtyChange?.(false);
@@ -484,9 +485,17 @@ export function LivestockBatchCard({
               {taskStep === 1 ? (
                 <button type="button" onClick={() => setTaskStep(2)} className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white">{isEn ? 'Next: choose state' : '下一步：选择体态'}</button>
               ) : taskStep === 2 ? (
-                <button type="button" onClick={prepareReview} disabled={!hasPendingSelection} className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white disabled:opacity-50">{isEn ? 'Review changes' : '核对修改'}</button>
+                <button type="button" onClick={prepareReview} disabled={!selectedSourceBatch} data-livestock-review-default-valid className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white disabled:opacity-50">{isEn ? 'Review state' : '核对体态'}</button>
               ) : (
-                <button type="button" onClick={() => void save()} disabled={isSaving || JSON.stringify(draft) === JSON.stringify(record)} className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white disabled:opacity-50">{isSaving ? t('livestock.saving') : t('livestock.saveChanges')}</button>
+                <button
+                  type="button"
+                  data-livestock-finish-mode={hasDraftChanges ? 'save' : 'done'}
+                  onClick={() => hasDraftChanges ? void save() : onEditingChange(false)}
+                  disabled={isSaving}
+                  className="min-h-11 rounded-full bg-emerald-700 px-5 text-sm font-black text-white disabled:opacity-50"
+                >
+                  {isSaving ? t('livestock.saving') : hasDraftChanges ? t('livestock.saveChanges') : (isEn ? 'Done' : '完成')}
+                </button>
               )}
             </footer>
           </div>
