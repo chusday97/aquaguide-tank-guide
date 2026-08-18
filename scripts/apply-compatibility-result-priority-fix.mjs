@@ -1,9 +1,15 @@
 import fs from 'node:fs';
 
-const path = 'src/components/CompatibilityRiskCalculator.tsx';
-let source = fs.readFileSync(path, 'utf8');
+const replaceOnce = (path, before, after, label) => {
+  const source = fs.readFileSync(path, 'utf8');
+  if (source.includes(after)) return;
+  if (!source.includes(before)) throw new Error(`${label}: anchor not found in ${path}`);
+  fs.writeFileSync(path, source.replace(before, after));
+  console.log(`patched ${label}`);
+};
 
-const replacements = [
+const productPath = 'src/components/CompatibilityRiskCalculator.tsx';
+const productReplacements = [
   [
     '<header className="flex flex-wrap items-start justify-between gap-3 pr-12">',
     '<header className="order-1 flex flex-wrap items-start justify-between gap-3 pr-12">',
@@ -31,12 +37,27 @@ const replacements = [
   ],
 ];
 
-for (const [before, after, label] of replacements) {
-  if (source.includes(after)) continue;
-  if (!source.includes(before)) throw new Error(`${label}: anchor not found`);
-  source = source.replace(before, after);
+let product = fs.readFileSync(productPath, 'utf8');
+for (const [before, after, label] of productReplacements) {
+  if (product.includes(after)) continue;
+  if (!product.includes(before)) throw new Error(`${label}: anchor not found in ${productPath}`);
+  product = product.replace(before, after);
   console.log(`patched ${label}`);
 }
+fs.writeFileSync(productPath, product);
 
-fs.writeFileSync(path, source);
-console.log('PASS: compatibility result now moves ahead of the selector only when an evaluable verdict exists.');
+replaceOnce(
+  'scripts/test-ui-interaction-repair-v1.mjs',
+  `assert(compatibility.includes('data-verdict-symbol={verdictCue?.symbol}'), 'Compatibility verdict must provide a scan-first symbol');\nassert(compatibility.includes('信息不足 ≠ 安全'), 'Unknown must not visually/semantically collapse into safe');`,
+  `assert(compatibility.includes('data-verdict-symbol={verdictCue?.symbol}'), 'Compatibility verdict must provide a scan-first symbol');\nassert(compatibility.includes('data-compatibility-result'), 'Compatibility result must expose a stable primary-result section');\nassert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-3' : 'order-4'"), 'Evaluable compatibility result must move ahead of the species selector');\nassert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-4' : 'order-3'"), 'Species selector must move behind an existing compatibility result');\nassert(compatibility.includes('信息不足 ≠ 安全'), 'Unknown must not visually/semantically collapse into safe');`,
+  'source contract result priority',
+);
+
+replaceOnce(
+  'scripts/verify-ui-interaction-repair-v1.mjs',
+  `    const symbolBox = await symbol.boundingBox();\n    assert.ok(symbolBox && symbolBox.width >= 50 && symbolBox.height >= 50, 'Compatibility verdict symbol must visually dominate paragraph copy.');\n    assert.equal(await page.locator('dialog').filter({ hasText: '为什么会这样' }).count(), 0, 'Compatibility explanation must not pre-render as a nested dialog.');`,
+  `    const symbolBox = await symbol.boundingBox();\n    assert.ok(symbolBox && symbolBox.width >= 50 && symbolBox.height >= 50, 'Compatibility verdict symbol must visually dominate paragraph copy.');\n    const verdictBox = await verdict.boundingBox();\n    const selectorBox = await page.locator('[data-compatibility-selection]').boundingBox();\n    assert.ok(verdictBox && selectorBox && verdictBox.y < selectorBox.y, \`Compatibility result must appear before the selector once a verdict exists; verdictY=\${verdictBox?.y}, selectorY=\${selectorBox?.y}.\`);\n    assert.equal(await page.locator('dialog').filter({ hasText: '为什么会这样' }).count(), 0, 'Compatibility explanation must not pre-render as a nested dialog.');`,
+  'browser geometry result priority',
+);
+
+console.log('PASS: compatibility result now moves ahead of the selector only when an evaluable verdict exists, with source/browser regressions updated.');
