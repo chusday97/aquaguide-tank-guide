@@ -81,13 +81,13 @@ try {
     const identityRect = identity.getBoundingClientRect();
     return {
       headerHeight: Math.round(headerRect.height),
-      identityTop: Math.round(identityRect.top),
-      timelineTop: Math.round(timelineRect.top),
+      identityCenter: Math.round(identityRect.top + identityRect.height / 2),
+      timelineCenter: Math.round(timelineRect.top + timelineRect.height / 2),
       timelineWidth: Math.round(timelineRect.width),
       headerWidth: Math.round(headerRect.width),
     };
   });
-  assert.ok(mediumHeader && Math.abs(mediumHeader.identityTop - mediumHeader.timelineTop) <= 12, `900px Aquarium header must keep identity and timeline in the same row: ${JSON.stringify(mediumHeader)}`);
+  assert.ok(mediumHeader && Math.abs(mediumHeader.identityCenter - mediumHeader.timelineCenter) <= 4, `900px Aquarium header must vertically align identity and timeline control on one row: ${JSON.stringify(mediumHeader)}`);
   assert.ok(mediumHeader && mediumHeader.headerHeight <= 110, `900px Aquarium header must stay compact instead of becoming a second hero card: ${JSON.stringify(mediumHeader)}`);
   assert.ok(mediumHeader && mediumHeader.timelineWidth < mediumHeader.headerWidth * 0.42, `timeline control must remain a compact action at 900px: ${JSON.stringify(mediumHeader)}`);
 
