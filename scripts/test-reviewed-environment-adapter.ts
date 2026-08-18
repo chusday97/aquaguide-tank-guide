@@ -98,13 +98,12 @@ const aquarium = (overrides: Partial<Aquarium> = {}): Aquarium => ({
   assert.equal(result.status, 'ready');
   if (result.status !== 'ready') throw new Error('expected reviewed Sewellia decision');
   const oxygenation = result.decision.equipment.find(item => item.type === 'oxygenation');
-  assert.equal(oxygenation?.level, 'unknown');
-  assert.ok(oxygenation?.reasons.some(reason => reason.code === 'oxygen_support_unknown'));
   assert.equal(
-    oxygenation?.level === 'required',
-    false,
-    'reviewed adapter must not translate high oxygen demand into a mandatory air pump',
+    oxygenation?.level,
+    'unknown',
+    'reviewed adapter must not translate high oxygen demand into a mandatory air pump when support evidence is missing',
   );
+  assert.ok(oxygenation?.reasons.some(reason => reason.code === 'oxygen_support_unknown'));
 }
 
 // 7. Observed tank values may be supplied through the normalized context override
