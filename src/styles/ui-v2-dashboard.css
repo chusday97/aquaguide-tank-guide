@@ -25,22 +25,25 @@
 .aquarium-dashboard-v2__context { order: 2; }
 
 .aquarium-dashboard-v2__section {
+  position: relative;
   min-width: 0;
-  padding-top: 4px;
+  padding-top: 0;
 }
 
+/* The section heading remains in the accessibility tree and keeps aria-labelledby
+   stable, but the visible cards already provide the user's meaningful headings
+   (Quick Actions / Today's Pick). Avoid repeating a second heading band. */
 .aquarium-dashboard-v2__section-heading {
-  display: flex;
-  min-width: 0;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
-  padding-inline: 2px;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-/* Section labels were adding another competing text level without helping navigation.
-   Keep the semantic DOM hook, but let the visible hierarchy be title -> description -> content. */
 .aquarium-dashboard-v2__section-kicker {
   display: none;
 }
@@ -247,8 +250,6 @@
   .aquarium-dashboard-v2__context { order: 3; }
   .aquarium-dashboard-v2__secondary { order: 4; }
 
-  .aquarium-dashboard-v2__section { padding-top: 2px; }
-  .aquarium-dashboard-v2__section-heading { margin-bottom: 7px; }
   .aquarium-dashboard-v2__context .aquarium-tank { height: 150px; }
 }
 
