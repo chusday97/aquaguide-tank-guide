@@ -29,6 +29,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Repair migration template escaping in runner
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/apply-ui-interaction-repair-v1.mjs')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace(r'\`${location.pathname}', r'\`\${location.pathname}')
+          text = text.replace(r'\${location.search}', r'\${location.search}')
+          text = text.replace(r'\${location.hash}', r'\${location.hash}')
+          path.write_text(text, encoding='utf-8')
+          PY
+
       - name: Apply deterministic interaction migration once
         shell: bash
         run: |
