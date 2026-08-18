@@ -8,6 +8,7 @@ on:
       - 'components/ui/input.tsx'
       - 'src/App.tsx'
       - 'src/components/layout/LayoutModeProvider.tsx'
+      - 'src/components/onboarding/OnboardingTaskCard.tsx'
       - 'src/components/product/QuickActionGrid.tsx'
       - 'src/components/product/StatusSummaryCard.tsx'
       - 'src/pages/Aquarium.tsx'
