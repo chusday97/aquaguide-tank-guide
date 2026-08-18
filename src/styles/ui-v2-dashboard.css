@@ -216,6 +216,29 @@
   }
 }
 
+@media (min-width: 768px) and (max-width: 1049px) {
+  /* Legacy workspace CSS stacked this header and expanded every direct child to 100%.
+     UI V2 keeps the tank identity and timeline action in one compact row. */
+  .aquarium-desktop-header {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+
+  .aquarium-desktop-header > div:first-child {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    flex: 1 1 auto;
+  }
+
+  .aquarium-desktop-header > button:last-child {
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: 220px !important;
+    flex: 0 0 auto;
+  }
+}
+
 @media (max-width: 639px) {
   .aquarium-dashboard-v2 { gap: 14px; }
   .aquarium-dashboard-v2__section { padding-top: 14px; }
