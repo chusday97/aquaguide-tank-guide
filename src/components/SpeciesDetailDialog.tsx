@@ -520,6 +520,7 @@ export function SpeciesDetailDialog({
 
   const sexIdentificationGuide = useMemo(() => fish ? getSexIdentificationGuide(fish) : null, [fish]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
+  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');
   const compatibilityPairs = useMemo(() => {
     if (!fish || !aquariumContext) return [];
     const selectedQuantity = aquariumContext.fishes.find(item => item.fishId === fish.id)?.quantity || 1;
@@ -536,6 +537,7 @@ export function SpeciesDetailDialog({
   }, [fish, aquariumContext]);
 
   const mainActionLabel = useMemo(() => {
+    if (isPlant) return isEn ? 'View plant care' : '查看植物养护';
     if (!displayFit || !aquariumContext) return t('encyclopedia.btnGoSetTank');
     if (owned || displayFit.alreadyInTank || displayFit.status === 'alreadyInTank') {
       return source === 'aquarium' ? t('encyclopedia.viewCareEssentials') : t('aquarium.tankContentsTitle');
@@ -544,7 +546,7 @@ export function SpeciesDetailDialog({
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk') return t('encyclopedia.viewRiskAndAlternatives');
     if (displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
     return t('encyclopedia.btnCompleteSetup');
-  }, [aquariumContext, displayFit, owned, source, t]);
+  }, [aquariumContext, displayFit, isEn, isPlant, owned, source, t]);
   const verdictReasons = useMemo(() => {
     if (!displayFit || !aquariumContext) return [];
     const actionableConfirmations = displayFit.confirmations.filter(item => item.type !== 'water_parameter');
@@ -617,7 +619,15 @@ export function SpeciesDetailDialog({
   };
 
   const handleMainAction = () => {
-    if (!fish || !displayFit) return;
+    if (!fish) return;
+    if (isPlant) {
+      window.requestAnimationFrame(() => {
+        careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        careSectionButtonRef.current?.focus({ preventScroll: true });
+      });
+      return;
+    }
+    if (!displayFit) return;
     if (!aquariumContext) {
       onOpenTankSettings?.('size');
       return;
@@ -756,7 +766,7 @@ export function SpeciesDetailDialog({
                         <p className="mt-3 hidden text-[12px] font-bold leading-relaxed text-ink/62 min-[760px]:block">{getLocalizedSpeciesRole(fish, t)}</p>
 
                         {getLifeType(fish) === 'plant' ? (
-                <section data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3" aria-labelledby="species-plant-care-summary-title">
+                <section ref={careSectionButtonRef} tabIndex={-1} data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3" aria-labelledby="species-plant-care-summary-title">
                   <div className="flex items-center justify-between gap-2">
                     <h3 id="species-plant-care-summary-title" className="text-[11px] font-black text-emerald-900">{isEn ? 'Plant care at a glance' : '植物养护速览'}</h3>
                     {carePresentation && (
@@ -797,6 +807,8 @@ export function SpeciesDetailDialog({
                 </section>
               )}
 
+                        {!isPlant && (
+                          <>
                         <div data-visual-result-status={mapFitStatus(displayFit.status)} className={`mt-2 rounded-[16px] border p-2.5 min-[760px]:mt-4 min-[760px]:rounded-[18px] min-[760px]:p-3 ${
                           displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
                             ? 'border-emerald-100 bg-emerald-50/85'
@@ -829,6 +841,9 @@ export function SpeciesDetailDialog({
                           </div>
                         )}
 
+                          </>
+                        )}
+
                         <div className="mt-2 flex flex-wrap gap-2 min-[760px]:mt-3">
                           <button
                             type="button"
@@ -841,7 +856,7 @@ export function SpeciesDetailDialog({
                             {inWishlist ? <Heart className="h-4 w-4 fill-current" /> : <HeartOff className="h-4 w-4" />}
                             {inWishlist ? t('encyclopedia.inWishlistBtn') : t('encyclopedia.addToWishlistBtn')}
                           </button>
-                          {onRecordDeath && (
+                          {!isPlant && onRecordDeath && (
                             <button
                               type="button"
                               onClick={() => {
@@ -1002,6 +1017,7 @@ export function SpeciesDetailDialog({
                       )}
                     </section>
 
+                    {!isPlant && (
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
@@ -1039,7 +1055,9 @@ export function SpeciesDetailDialog({
                       )}
                     </section>
 
-                    {sexIdentificationGuide && (
+                    )}
+
+                    {!isPlant && sexIdentificationGuide && (
                       <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
                           {sexIdentificationGuide.title === '暂无可靠的公母辨别资料' ? t('encyclopedia.sexTitlePlaceholder') : sexIdentificationGuide.title}
