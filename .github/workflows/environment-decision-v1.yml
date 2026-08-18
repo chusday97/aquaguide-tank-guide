@@ -15,6 +15,7 @@ on:
       - 'scripts/test-environment-decision-engine.ts'
       - 'scripts/test-environment-profile-registry.ts'
       - 'scripts/test-environment-profile-catalog-identity.ts'
+      - 'scripts/test-reviewed-environment-adapter.ts'
       - 'scripts/test-species-detail-care-boundary.mjs'
       - 'scripts/test-plant-catalog-care-boundary.ts'
       - '.github/workflows/environment-decision-v1.yml'
@@ -54,6 +55,9 @@ jobs:
 
       - name: Environment profile catalog identity regression
         run: npx tsx scripts/test-environment-profile-catalog-identity.ts
+
+      - name: Reviewed-only Environment adapter regression
+        run: npx tsx scripts/test-reviewed-environment-adapter.ts
 
       - name: Species detail care boundary regression
         run: node scripts/test-species-detail-care-boundary.mjs
