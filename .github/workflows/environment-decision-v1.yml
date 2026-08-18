@@ -15,6 +15,7 @@ on:
       - 'scripts/test-environment-decision-engine.ts'
       - 'scripts/test-environment-profile-registry.ts'
       - 'scripts/test-species-detail-care-boundary.mjs'
+      - 'scripts/test-plant-catalog-care-boundary.ts'
       - '.github/workflows/environment-decision-v1.yml'
       - 'HANDOFF-2026-08-18-ENVIRONMENT-DECISION-V1.md'
 
@@ -52,3 +53,6 @@ jobs:
 
       - name: Species detail care boundary regression
         run: node scripts/test-species-detail-care-boundary.mjs
+
+      - name: Plant catalog care boundary regression
+        run: npx tsx scripts/test-plant-catalog-care-boundary.ts
