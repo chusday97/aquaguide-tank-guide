@@ -1,11 +1,9 @@
 name: Aquarium Persistence Integration Probe
 
 on:
-  push:
+  pull_request:
     branches:
       - integration/aquarium-persistence-v1
-    paths:
-      - .github/workflows/integration-conflict-probe.yml
   workflow_dispatch:
 
 permissions:
@@ -18,14 +16,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Probe PR92 source merge conflicts
+      - name: Probe source merge conflicts
         shell: bash
         run: |
           set +e
           git config user.name "aquaguide-integration-probe"
           git config user.email "integration-probe@users.noreply.github.com"
-          git fetch origin integration/source-aquarium-settings
-          git merge --no-commit --no-ff origin/integration/source-aquarium-settings
+          git fetch origin "${GITHUB_HEAD_REF}"
+          git checkout "${GITHUB_BASE_REF}"
+          git merge --no-commit --no-ff "origin/${GITHUB_HEAD_REF}"
           status=$?
           echo "merge_exit=$status"
           echo "unmerged_files:"
