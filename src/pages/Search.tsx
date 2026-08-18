@@ -31,6 +31,23 @@ const getSpeciesNameLocalized = (species: any, isEn = false): string => {
 
 const normalize = (value: string) => value.trim().toLocaleLowerCase();
 const originalValue = (record: object, key: string) => String((record as Record<string, unknown>)[key] ?? '');
+const getSpeciesSearchResults = (value: string) => {
+  const normalizedQuery = normalize(value);
+  if (!normalizedQuery) return [];
+  return fishData.filter(fish => normalize([
+    fish.name,
+    fish.scientificName,
+    fish.category,
+    fish.description,
+    originalValue(fish, '_originalName'),
+    originalValue(fish, '_originalCategory'),
+    originalValue(fish, '_originalDescription'),
+    englishTranslations[fish.id]?.name,
+    englishTranslations[fish.id]?.description,
+    autoTranslations[fish.id]?.name,
+    autoTranslations[fish.id]?.description,
+  ].join(' ')).includes(normalizedQuery));
+};
 
 export default function SearchPage() {
   const { t, i18n } = useTranslation();
@@ -57,6 +74,7 @@ export default function SearchPage() {
     careTopics: careTopicsData,
     ownedQuantityBySpeciesId,
   }), [draft, isEn, ownedQuantityBySpeciesId]);
+  const draftSpeciesMatchCount = useMemo(() => getSpeciesSearchResults(draft).length, [draft]);
 
   useEffect(() => {
     const sourceId = sessionStorage.getItem('aquaguide_search_return_focus');
@@ -74,21 +92,7 @@ export default function SearchPage() {
     navigateToRoute(path);
   };
 
-  const allSpeciesResults = useMemo(() => normalizedQuery
-    ? fishData.filter(fish => normalize([
-      fish.name,
-      fish.scientificName,
-      fish.category,
-      fish.description,
-      originalValue(fish, '_originalName'),
-      originalValue(fish, '_originalCategory'),
-      originalValue(fish, '_originalDescription'),
-      englishTranslations[fish.id]?.name,
-      englishTranslations[fish.id]?.description,
-      autoTranslations[fish.id]?.name,
-      autoTranslations[fish.id]?.description,
-    ].join(' ')).includes(normalizedQuery))
-    : [], [normalizedQuery]);
+  const allSpeciesResults = useMemo(() => getSpeciesSearchResults(query), [query]);
   const speciesResults = showAllSpecies ? allSpeciesResults : allSpeciesResults.slice(0, 18);
   const allCareResults = useMemo(() => normalizedQuery
     ? careTopicsData.filter(topic => normalize([
@@ -162,7 +166,7 @@ export default function SearchPage() {
           relatedGroupLabel={t('searchPage.relatedSearches')}
           filterGroupLabel={t('searchPage.filterSuggestions')}
           ownedLabel={quantity => t('searchPage.ownedQuantity', { count: quantity })}
-          totalSpeciesMatches={suggestionResult.totalSpeciesMatches}
+          totalSpeciesMatches={draftSpeciesMatchCount}
           viewAllSpeciesLabel={count => t('searchPage.viewAllSpecies', { count })}
           onValueChange={value => {
             setDraft(value);
