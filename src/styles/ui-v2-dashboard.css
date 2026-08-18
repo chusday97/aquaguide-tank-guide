@@ -21,13 +21,8 @@
   min-width: 0;
 }
 
-.aquarium-dashboard-v2__decision {
-  order: 1;
-}
-
-.aquarium-dashboard-v2__context {
-  order: 2;
-}
+.aquarium-dashboard-v2__decision { order: 1; }
+.aquarium-dashboard-v2__context { order: 2; }
 
 .aquarium-dashboard-v2__section {
   min-width: 0;
@@ -71,11 +66,8 @@
   line-height: 1.5;
 }
 
-.aquarium-dashboard-v2__secondary {
-  opacity: 0.94;
-}
+.aquarium-dashboard-v2__secondary { opacity: 0.94; }
 
-/* Child cards already own their surfaces. The dashboard should not wrap them in another card. */
 .aquarium-dashboard-v2 .aquarium-actions,
 .aquarium-dashboard-v2 .aquarium-archive,
 .aquarium-dashboard-v2 .aquarium-discovery,
@@ -84,14 +76,12 @@
   margin: 0;
 }
 
-/* Make the decision card visually dominant without making it louder. */
 .aquarium-dashboard-v2__decision .status-summary-card {
   min-height: 100%;
   border-radius: 22px;
   box-shadow: 0 14px 36px rgba(27, 77, 62, 0.07);
 }
 
-/* 3D is context, not the primary task. */
 .aquarium-dashboard-v2__context .aquarium-tank {
   height: 260px;
   border-radius: 22px;
@@ -104,10 +94,83 @@
   border-radius: 20px;
 }
 
+/* Legacy DOM fallback: PR #95 originally kept Observe / Manage / Learn as equal-weight zones.
+   Until the source transform lands, make that DOM render with the same decision-first priority. */
+.aquarium-observe-zone,
+.aquarium-manage-zone,
+.aquarium-learn-zone {
+  min-width: 0;
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.aquarium-observe-zone > .aquarium-zone-header {
+  display: none;
+}
+
+.aquarium-observe-grid {
+  display: grid !important;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 12px !important;
+}
+
+.aquarium-observe-grid > .aquarium-status { order: 1 !important; }
+.aquarium-observe-grid > .aquarium-tank { order: 2 !important; }
+.aquarium-observe-grid > .aquarium-archive { order: 3 !important; }
+
+.aquarium-observe-grid > .aquarium-status .status-summary-card {
+  border-radius: 22px;
+  box-shadow: 0 14px 36px rgba(27, 77, 62, 0.07);
+}
+
+.aquarium-observe-grid > .aquarium-tank {
+  height: 230px !important;
+  min-height: 0 !important;
+  border-radius: 22px !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.055) !important;
+}
+
+.aquarium-followup-grid {
+  display: grid !important;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 16px !important;
+}
+
+.aquarium-followup-grid > .aquarium-manage-zone { order: 1; }
+.aquarium-followup-grid > .aquarium-learn-zone { order: 2; opacity: 0.94; }
+
+.aquarium-manage-zone > .aquarium-zone-header,
+.aquarium-learn-zone > .aquarium-zone-header {
+  margin: 0 0 9px;
+  padding: 14px 2px 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-border, #dfe7e2) 72%, transparent);
+}
+
+.aquarium-manage-zone .aquarium-zone-index,
+.aquarium-learn-zone .aquarium-zone-index {
+  display: none !important;
+}
+
+.aquarium-manage-grid,
+.aquarium-learn-grid {
+  display: grid !important;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 12px !important;
+}
+
+.aquarium-observe-grid > .aquarium-archive,
+.aquarium-manage-grid .aquarium-actions,
+.aquarium-learn-grid .aquarium-discovery {
+  border-radius: 20px !important;
+}
+
 @container aquarium-home (min-width: 720px) {
-  .aquarium-dashboard-v2 {
-    gap: 20px;
-  }
+  .aquarium-dashboard-v2 { gap: 20px; }
 
   .aquarium-dashboard-v2__hero {
     grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
@@ -116,9 +179,7 @@
   }
 
   .aquarium-dashboard-v2__decision,
-  .aquarium-dashboard-v2__context {
-    order: initial;
-  }
+  .aquarium-dashboard-v2__context { order: initial; }
 
   .aquarium-dashboard-v2__context .aquarium-tank {
     height: 100%;
@@ -131,28 +192,46 @@
     align-items: start;
     gap: 16px;
   }
+
+  .aquarium-observe-grid {
+    grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr) !important;
+    align-items: stretch;
+    gap: 16px !important;
+  }
+
+  .aquarium-observe-grid > .aquarium-status {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .aquarium-observe-grid > .aquarium-tank {
+    grid-column: 2;
+    grid-row: 1;
+    height: 100% !important;
+    min-height: 390px !important;
+    max-height: 500px !important;
+  }
+
+  .aquarium-observe-grid > .aquarium-archive {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
 }
 
 @container aquarium-home (min-width: 1080px) {
-  .aquarium-dashboard-v2__hero {
-    grid-template-columns: minmax(360px, 0.82fr) minmax(0, 1.18fr);
+  .aquarium-dashboard-v2__hero,
+  .aquarium-observe-grid {
+    grid-template-columns: minmax(360px, 0.82fr) minmax(0, 1.18fr) !important;
   }
 }
 
 @media (max-width: 639px) {
-  .aquarium-dashboard-v2 {
-    gap: 14px;
-  }
+  .aquarium-dashboard-v2 { gap: 14px; }
+  .aquarium-dashboard-v2__section { padding-top: 14px; }
+  .aquarium-dashboard-v2__section-heading { margin-bottom: 8px; }
+  .aquarium-dashboard-v2__context .aquarium-tank { height: 230px; }
 
-  .aquarium-dashboard-v2__section {
-    padding-top: 14px;
-  }
-
-  .aquarium-dashboard-v2__section-heading {
-    margin-bottom: 8px;
-  }
-
-  .aquarium-dashboard-v2__context .aquarium-tank {
-    height: 230px;
+  .aquarium-observe-grid > .aquarium-tank {
+    height: 220px !important;
   }
 }
