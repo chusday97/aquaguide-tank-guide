@@ -1,0 +1,52 @@
+name: Temporary Care Card Promise Patch
+
+on:
+  push:
+    branches:
+      - agent/care-card-promise-closure
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/care-card-promise-closure
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Align Care card promise with real actions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/pages/CareEncyclopedia.tsx')
+          text = path.read_text()
+
+          old_copy = "提取关键步骤，生成可复制、可保存的移动端卡片。"
+          new_copy = "提取关键步骤，生成可复制的移动端卡片。"
+          old_footer = 'modalFooter sticky bottom-0 grid shrink-0 grid-cols-2 gap-2 border-t border-[#EEF2E8] bg-white'
+          new_footer = 'modalFooter sticky bottom-0 grid shrink-0 grid-cols-1 gap-2 border-t border-[#EEF2E8] bg-white'
+
+          if old_copy not in text:
+              raise SystemExit('Expected Care card save-promise copy not found')
+          if old_footer not in text:
+              raise SystemExit('Expected Care card two-column footer not found')
+
+          text = text.replace(old_copy, new_copy, 1)
+          text = text.replace(old_footer, new_footer, 1)
+          path.write_text(text)
+          PY
+      - name: Commit product patch
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/CareEncyclopedia.tsx
+          git commit -m "fix: align Care card promise with real actions"
+          git push origin HEAD:agent/care-card-promise-closure
