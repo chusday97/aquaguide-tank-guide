@@ -26,7 +26,8 @@ Acceptance unit:
   - `settings_updated` timeline persistence now happens only after the aquarium fact is saved; if the timeline write fails, the UI explicitly says the settings were saved but the timeline entry was not recorded instead of reversing the primary fact result.
 - Product verification: Product Golden Path #644 / run `32111424988` — baseline Product evaluation contracts (`18 features / 108 states / 31 Badcases`), Aquarium settings repository contract, typecheck, build, Care card regression, and GP-001～GP-005 all PASS.
 - Permanent regression: `scripts/test-aquarium-settings-repository-contract.mjs` plus Product Golden Path step `Aquarium settings repository contract`.
-- Registry target: `PUI-BC-037`, `aquarium_setup`, `high`, `ui_persistence_contract`, `regression_verified`.
+- Registry: `PUI-BC-037`, `aquarium_setup`, `high`, `ui_persistence_contract`, `regression_verified`.
+- Final registry verification: Product Golden Path #649 / run `32112046403` on cleanup head `e3fcd9af8e89ff7ad920255f20ffae04ae17673e` — `18 features / 108 states / 32 Badcases`, Aquarium settings repository contract, typecheck, build, Care card regression, and GP-001～GP-005 all PASS. Temporary registry workflow had already been removed before this run.
 - Evidence limitation: this is deterministic repository/architecture regression coverage. It proves that Save Settings is wired through the active repository and that UI success is ordered after repository persistence; it is not a connected production-cloud E2E measurement.
 - PR #92 remains Draft/open/unmerged.
 
@@ -57,7 +58,3 @@ These branches were intentionally developed independently from the same `main` b
 ## Next candidate
 
 Continue Action Completeness at the persistence/promise layer. The next audit target is Aquarium `Data & Backup`: verify whether its user-facing promise is explicitly local-browser-only or whether Import/Clear/Backup can claim success while cloud repository state remains authoritative and later overwrites the local result. Do not register another badcase without deterministic fail-before evidence.
-
-## Final registry verification target
-
-After registering PUI-BC-037, latest-head Product Golden Path on this independent branch must report `18 features / 108 states / 32 Badcases`, Aquarium settings repository contract PASS, typecheck/build PASS, Care card regression PASS, and GP-001～GP-005 PASS.
