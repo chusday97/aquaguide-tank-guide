@@ -19,6 +19,7 @@ Acceptance unit:
 - Product verification: Product Golden Path #611 / run `32104536496` — Care card regression, typecheck/build, and GP-001～GP-005 all PASS.
 - Permanent browser regression: no save promise without a save action; a lone real footer action must occupy at least 85% of footer width; real clipboard content is still verified.
 - Registry: `PUI-BC-035`, `care`, `regression_verified`, fixed by `b4c0453c487681c3b188682f3774565d1468641a`.
+- Final latest-head acceptance target: product evaluation must report `18 features / 108 states / 32 Badcases`, with Care card regression, typecheck/build, and GP-001～GP-005 all PASS.
 - PR #90 remains Draft/open/unmerged.
 
 ## Open Draft PR ordering
