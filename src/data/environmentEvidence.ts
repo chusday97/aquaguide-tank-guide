@@ -47,4 +47,32 @@ export const environmentEvidenceSources: Record<string, EnvironmentEvidenceRecor
     ],
     notes: 'Used as an independent husbandry corroboration source for oxygenation and flow demand.',
   },
+  'microsorum-pteropus-tropica-4408': {
+    id: 'microsorum-pteropus-tropica-4408',
+    title: 'Tropica — Microsorum pteropus (008)',
+    kind: 'expert_husbandry',
+    url: 'https://tropica.com/en/plants/plantdetails/Microsorumpteropus%28008%29/4408',
+    supports: [
+      'rhizomatous growth',
+      'attach to root or stone',
+      'rhizome must not be buried',
+      'low light demand',
+      'low CO2 demand',
+    ],
+    notes: 'Used for planting mode and low-demand husbandry traits; avoid converting supplier ranges into unsupported precision.',
+  },
+  'microsorum-pteropus-aquarium-coop': {
+    id: 'microsorum-pteropus-aquarium-coop',
+    title: 'Aquarium Co-Op — Java Fern (Microsorum pteropus)',
+    kind: 'expert_husbandry',
+    url: 'https://www.aquariumcoop.com/collections/live-aquarium-plants/products/java-fern',
+    supports: [
+      'attach to rocks or wood',
+      'low light',
+      'CO2 not required',
+      'hardy leaves',
+      'cover for fish and fry',
+    ],
+    notes: 'Independent husbandry corroboration for epiphytic placement, low light/CO2 demand, leaf durability and habitat value.',
+  },
 };
