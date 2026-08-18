@@ -1,0 +1,90 @@
+name: Patch Plant Fit Engine Bypass
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-plant-fit-engine-bypass.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/environment-decision-v1
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Bypass legacy livestock fit engine for plants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/components/SpeciesDetailDialog.tsx')
+          source = path.read_text()
+
+          old_fit_block = "  const careSectionButtonRef = useRef<HTMLElement | null>(null);\n  const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);\n"
+          new_fit_block = "  const careSectionButtonRef = useRef<HTMLElement | null>(null);\n  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');\n  const selectedFit = useMemo(() => fish && !isPlant ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, isPlant, t]);\n"
+          assert old_fit_block in source, 'legacy selectedFit block not found'
+          source = source.replace(old_fit_block, new_fit_block, 1)
+
+          duplicate_is_plant = "  const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);\n  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');\n"
+          replacement = "  const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);\n"
+          assert duplicate_is_plant in source, 'later isPlant declaration not found'
+          source = source.replace(duplicate_is_plant, replacement, 1)
+
+          outer = "          {fish && displayFit && ("
+          assert outer in source, 'outer detail render guard not found'
+          source = source.replace(outer, "          {fish && (isPlant || displayFit) && (", 1)
+
+          verdict = "                        {!isPlant && (\n                          <>\n                        <div data-visual-result-status="
+          assert verdict in source, 'plant verdict guard not found'
+          source = source.replace(verdict, "                        {!isPlant && displayFit && (\n                          <>\n                        <div data-visual-result-status=", 1)
+
+          details_marker = '<div className="mt-4 grid gap-2" data-species-detail-sections>'
+          details_index = source.index(details_marker)
+          fit_guard = "                    {!isPlant && (\n                    <section"
+          fit_guard_index = source.index(fit_guard, details_index)
+          source = source[:fit_guard_index] + source[fit_guard_index:].replace(fit_guard, "                    {!isPlant && displayFit && (\n                    <section", 1)
+
+          compatibility_marker = "aria-expanded={expandedSection === 'compatibility'}"
+          compatibility_index = source.index(compatibility_marker)
+          compatibility_guard_index = source.rfind("                    {!isPlant && (", details_index, compatibility_index)
+          assert compatibility_guard_index >= 0, 'compatibility plant guard not found'
+          before = source[:compatibility_guard_index]
+          after = source[compatibility_guard_index:]
+          after = after.replace("                    {!isPlant && (", "                    {!isPlant && displayFit && (", 1)
+          source = before + after
+
+          path.write_text(source)
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Care boundary regression
+        run: node scripts/test-species-detail-care-boundary.mjs
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Commit patch and remove one-shot workflow
+        run: |
+          rm .github/workflows/patch-plant-fit-engine-bypass.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/SpeciesDetailDialog.tsx .github/workflows/patch-plant-fit-engine-bypass.yml
+          git commit -m "Bypass legacy fit engine for plant details"
+          git push origin HEAD:agent/environment-decision-v1
