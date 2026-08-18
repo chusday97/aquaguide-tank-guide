@@ -47,6 +47,15 @@ jobs:
             node scripts/apply-aquarium-action-return-state-fix.mjs
           fi
 
+      - name: Use semantic livestock dirty state
+        shell: bash
+        run: |
+          if grep -q 'const hasDraftChanges = hasPendingSelection;' src/components/aquarium/LivestockBatchCard.tsx; then
+            echo 'Livestock semantic dirty-state fix already applied.'
+          else
+            node scripts/apply-livestock-default-semantic-dirty-fix.mjs
+          fi
+
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
 
@@ -56,10 +65,11 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: Commit navigation-state fixes
+      - name: Commit interaction fixes
         shell: bash
         run: |
           git add src/components/aquarium/LivestockRosterDialog.tsx \
+            src/components/aquarium/LivestockBatchCard.tsx \
             src/components/layout/WorkspaceNavigationProvider.tsx \
             src/pages/Aquarium.tsx \
             scripts/test-ui-interaction-repair-v1.mjs \
@@ -69,7 +79,7 @@ jobs:
           else
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'Preserve return state across Aquarium tasks'
+            git commit -m 'Align livestock defaults with semantic dirty state'
             git push origin HEAD:agent/ui-interaction-repair-v1
           fi
 
