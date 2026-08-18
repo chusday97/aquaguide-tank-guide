@@ -75,4 +75,30 @@ export const environmentEvidenceSources: Record<string, EnvironmentEvidenceRecor
     ],
     notes: 'Independent husbandry corroboration for epiphytic placement, low light/CO2 demand, leaf durability and habitat value.',
   },
+  'micranthemum-callitrichoides-tropica-4478': {
+    id: 'micranthemum-callitrichoides-tropica-4478',
+    title: "Tropica — Micranthemum callitrichoides 'Cuba' (formerly Hemianthus callitrichoides)",
+    kind: 'expert_husbandry',
+    url: 'https://tropica.com/en/plants/plantdetails/Hemianthuscallitrichoides%27Cuba%27%28048BTC%29/4478',
+    supports: [
+      'carpeting growth habit',
+      'planted into substrate in small clumps',
+      'high light demand',
+      'added CO2 required for strong growth',
+      'water circulation and fertilizer support',
+    ],
+    notes: 'The source uses the current Micranthemum name while the legacy catalog retains the older Hemianthus combination.',
+  },
+  'micranthemum-callitrichoides-aquarium-coop': {
+    id: 'micranthemum-callitrichoides-aquarium-coop',
+    title: 'Aquarium Co-Op — High-tech planted tanks: Dwarf Baby Tears',
+    kind: 'expert_husbandry',
+    url: 'https://www.aquariumcoop.com/blogs/aquarium/high-tech-plants',
+    supports: [
+      'dwarf baby tears identity',
+      'high light for dense carpeting',
+      'pressurized CO2 for strongest success',
+    ],
+    notes: 'Used as independent husbandry corroboration for the high-demand carpeting profile, not for exact chemistry ranges.',
+  },
 };
