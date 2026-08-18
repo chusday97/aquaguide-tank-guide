@@ -6,6 +6,7 @@ import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
+  AquariumDeleteCommand,
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
@@ -252,6 +253,29 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       idempotencyKey: input.operationId,
     });
     return this.rememberAquarium(saved);
+  }
+
+  async deleteAquarium(input: AquariumDeleteCommand) {
+    const version = this.aquariumVersions.get(input.aquariumId);
+    if (!version) throw new Error('鱼缸版本未知，请刷新后重试。');
+    try {
+      await apiRequest(`/aquariums/${input.aquariumId}?version=${version}`, {
+        method: 'DELETE',
+        idempotencyKey: input.operationId,
+      });
+    } catch (error) {
+      try {
+        const remaining = await this.getAquariums();
+        if (!remaining.some(item => item.id === input.aquariumId)) {
+          this.aquariumVersions.delete(input.aquariumId);
+          return;
+        }
+      } catch {
+        // Preserve the original deletion error when persistence cannot be verified.
+      }
+      throw error;
+    }
+    this.aquariumVersions.delete(input.aquariumId);
   }
 
   async addLivestock(input: LivestockAddCommand) {

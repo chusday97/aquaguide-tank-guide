@@ -49,6 +49,11 @@ export type AquariumCreateCommand = {
   operationId: string;
 };
 
+export type AquariumDeleteCommand = {
+  aquariumId: string;
+  operationId: string;
+};
+
 export type LivestockAddCommand = {
   aquariumId: string;
   speciesCatalogKey: string;
@@ -84,6 +89,7 @@ export type CareTimelineMutation = Omit<CareTimelineRecord, 'id'> & { operationI
 export interface AquaGuideRepository {
   getAquariums(): Promise<Aquarium[]>;
   createAquarium(input: AquariumCreateCommand): Promise<Aquarium>;
+  deleteAquarium(input: AquariumDeleteCommand): Promise<void>;
   addLivestock(input: LivestockAddCommand): Promise<Aquarium>;
   /** @deprecated Aggregate synchronization retained for legacy profile and batch editors. */
   saveAquarium(aquarium: Aquarium): Promise<Aquarium>;
