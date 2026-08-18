@@ -1,0 +1,66 @@
+name: Temporary Data Storage Mode Fix
+
+on:
+  push:
+    branches:
+      - agent/cloud-data-storage-promise-closure
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.head_commit.message != 'fix: respect repository mode in data storage'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/cloud-data-storage-promise-closure
+      - name: Apply focused repository-mode patch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/pages/Aquarium.tsx')
+          text = path.read_text()
+
+          def replace_once(old, new):
+              global text
+              if old not in text:
+                  raise SystemExit(f'marker not found: {old[:140]!r}')
+              text = text.replace(old, new, 1)
+
+          replace_once(
+              "  const [isLocalDataOpen, setIsLocalDataOpen] = useState(false);\n  const [localDataText, setLocalDataText] = useState('');\n  const [localDataMessage, setLocalDataMessage] = useState('');\n",
+              "  const [isLocalDataOpen, setIsLocalDataOpen] = useState(false);\n  const [localDataText, setLocalDataText] = useState('');\n  const [localDataMessage, setLocalDataMessage] = useState('');\n  const [repositoryMode, setRepositoryMode] = useState<'local' | 'cloud'>('local');\n",
+          )
+
+          replace_once(
+              "        const resolvedMode = mode ?? await resolveRepositoryMode();\n        const repository = getAquaGuideRepository(resolvedMode);",
+              "        const resolvedMode = mode ?? await resolveRepositoryMode();\n        if (active) setRepositoryMode(resolvedMode);\n        const repository = getAquaGuideRepository(resolvedMode);",
+          )
+
+          replace_once(
+              "  const handleImportLocalData = () => {\n    try {\n      importLocalAppState(localDataText);",
+              "  const handleImportLocalData = () => {\n    if (repositoryMode === 'cloud') {\n      setLocalDataMessage(Boolean(i18n.language?.startsWith('en'))\n        ? 'Cloud sync is active. Browser-only import is disabled because cloud data remains the source of truth after reload.'\n        : '当前已启用云端同步。本机数据导入已停用，因为刷新后仍会以云端数据为准。');\n      return;\n    }\n    try {\n      importLocalAppState(localDataText);",
+          )
+
+          replace_once(
+              "  const handleClearLocalData = () => {\n    const confirmed = window.confirm(Boolean(i18n.language?.startsWith('en')) ? 'Are you sure you want to clear local data? Tank, stocking, diagnosis, and logs cannot be recovered.' : '确认清除本地数据吗？清除后鱼缸、种草、诊断和记录都不会恢复。');",
+              "  const handleClearLocalData = () => {\n    if (repositoryMode === 'cloud') {\n      setLocalDataMessage(Boolean(i18n.language?.startsWith('en'))\n        ? 'Cloud sync is active. Clearing this browser would not delete cloud data, so this local-only action is disabled.'\n        : '当前已启用云端同步。清除本机数据不会删除云端数据，因此这里已停用该本机操作。');\n      return;\n    }\n    const confirmed = window.confirm(Boolean(i18n.language?.startsWith('en')) ? 'Are you sure you want to clear local data? Tank, stocking, diagnosis, and logs cannot be recovered.' : '确认清除本地数据吗？清除后鱼缸、种草、诊断和记录都不会恢复。');",
+          )
+
+          replace_once(
+              "              {t('aquarium.dataSavingDesc')}\n",
+              "              {repositoryMode === 'cloud'\n                ? (isEn\n                  ? 'Cloud sync is active. Cloud aquarium data remains the source of truth; browser-only import and clear do not modify cloud data.'\n                  : '当前已启用云端同步。云端鱼缸数据仍是事实源；仅本机的导入和清除不会修改云端数据。')\n                : t('aquarium.dataSavingDesc')}\n",
+          )
+
+          path.write_text(text)
+          PY
+      - name: Commit focused fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/Aquarium.tsx
+          git commit -m "fix: respect repository mode in data storage"
+          git push origin HEAD:agent/cloud-data-storage-promise-closure
