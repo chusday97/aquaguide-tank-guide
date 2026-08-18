@@ -1,16 +1,15 @@
 name: Temporary Aquarium Delete Fix
 
 on:
-  push:
-    branches:
-      - agent/aquarium-delete-repository-closure
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   apply:
-    if: github.event.head_commit.message != 'fix: close aquarium delete persistence'
+    if: github.head_ref == 'agent/aquarium-delete-repository-closure'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
