@@ -75,6 +75,7 @@ export type TankContext = {
   water: {
     type?: 'freshwater' | 'saltwater';
     volumeLiters?: number;
+    tankLengthCm?: number;
     targetTemperature?: number;
     lowestObservedTemperature?: number;
     highestObservedTemperature?: number;
