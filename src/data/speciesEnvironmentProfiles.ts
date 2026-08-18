@@ -19,6 +19,22 @@ export const speciesEnvironmentProfiles: SpeciesEnvironmentProfile[] = [
         'sewellia-lineolata-practical-fishkeeping',
         'sewellia-lineolata-fishkeeper',
       ],
+      claimRefs: {
+        'environment.waterType': ['sewellia-lineolata-fishbase-40433'],
+        'environment.oxygenDemand': [
+          'sewellia-lineolata-practical-fishkeeping',
+          'sewellia-lineolata-fishkeeper',
+        ],
+        'environment.flowPreference': [
+          'sewellia-lineolata-fishbase-40433',
+          'sewellia-lineolata-practical-fishkeeping',
+          'sewellia-lineolata-fishkeeper',
+        ],
+        'habitat.substratePreference': [
+          'sewellia-lineolata-fishbase-40433',
+          'sewellia-lineolata-practical-fishkeeping',
+        ],
+      },
     },
   },
 ];
