@@ -6,6 +6,7 @@ on:
       - agent/environment-decision-v1
   pull_request:
     paths:
+      - 'src/components/SpeciesDetailDialog.tsx'
       - 'src/modules/environment/**'
       - 'src/modules/knowledge/speciesCarePresentation.ts'
       - 'src/data/environmentEvidence.ts'
@@ -13,6 +14,7 @@ on:
       - 'src/data/plantEnvironmentProfiles.ts'
       - 'scripts/test-environment-decision-engine.ts'
       - 'scripts/test-environment-profile-registry.ts'
+      - 'scripts/test-species-detail-care-boundary.mjs'
       - '.github/workflows/environment-decision-v1.yml'
       - 'HANDOFF-2026-08-18-ENVIRONMENT-DECISION-V1.md'
 
@@ -44,3 +46,6 @@ jobs:
 
       - name: Environment profile evidence regression
         run: npx tsx scripts/test-environment-profile-registry.ts
+
+      - name: Species detail care boundary regression
+        run: node scripts/test-species-detail-care-boundary.mjs
