@@ -4,7 +4,7 @@ Date: 2026-08-18
 Branch: `agent/environment-decision-v1`
 Base: `main@ed0cf38025652db901ee81aa697ca55b1c1584b6`
 Draft PR: #96 `Add Environment Decision Engine V1`
-Status: implementation complete; verification in progress
+Status: implementation complete; verified before final handoff commit
 
 ## Goal
 Build a deterministic environment decision layer for AquaGuide so plant, habitat and equipment guidance is derived from structured requirements instead of scattered text heuristics.
@@ -67,6 +67,27 @@ V1 separates engine correctness from husbandry knowledge coverage. The regressio
 7. high plant-eating risk + delicate plant -> `not_recommended`;
 8. end-to-end decision keeps environment, plant and equipment outputs separate.
 
+## Real fail-before / correction history
+Environment Decision V1 run #4 / `32124295758` failed only in regression case 8 after typecheck and build had already passed. The fixture used `lowestObservedTemperature = 25` for a species with a 24°C lower bound, while the implemented rule intentionally treats a <=1°C margin as `recommended`. The test incorrectly expected `not_needed`.
+
+The rule was **not** weakened. The end-to-end fixture was changed to 26°C so that case 8 tests output separation rather than the near-minimum heating threshold.
+
+## Verified runs before final handoff commit
+- Environment Decision V1 #6 / run `32124458740`: **SUCCESS**
+  - typecheck PASS
+  - build PASS
+  - 8 deterministic environment regressions PASS
+- Product Golden Path #689 / run `32124458805`: **SUCCESS**
+  - Product evaluation contracts PASS
+  - typecheck PASS
+  - build PASS
+  - Care card action regression PASS
+  - GP-001 PASS
+  - GP-002 PASS
+  - GP-003 PASS
+  - GP-004 PASS
+  - GP-005 PASS
+
 ## Progress
 - [x] Isolated branch created from main.
 - [x] Scope and evidence boundary recorded before implementation.
@@ -77,8 +98,8 @@ V1 separates engine correctness from husbandry knowledge coverage. The regressio
 - [x] Heating / oxygenation derivation implemented.
 - [x] Regression tests added.
 - [x] Dedicated CI workflow added.
-- [ ] Latest-head typecheck/build/regression green.
-- [ ] Latest-head Product Golden Path green.
+- [x] Typecheck/build/environment regression green on implementation head.
+- [x] Product Golden Path green on implementation head.
 - [x] Production migration decision recorded: do not wire into `speciesFitEngine` until a reviewed pilot profile cohort exists.
 
 ## Production migration decision
@@ -86,5 +107,7 @@ Do **not** replace the current production heater/oxygen/plant behavior in this P
 
 The next production step is a small evidence-backed cohort (roughly 10-20 common livestock + 10-15 common plants). Once that cohort passes coverage and decision regressions, migrate only those reviewed profiles to the new engine and keep all other species fail-closed/legacy until coverage expands.
 
-## Verification status
-Draft PR #96 is open and unmerged. A Product Golden Path run was queued after PR creation. The Environment Decision V1 workflow is configured for this branch/PR; latest-head results must be recorded here before this handoff is marked complete.
+## Final-head note
+This handoff update itself creates one documentation-only commit after the verified implementation head. Re-check the PR's latest-head workflows after this commit; do not treat this note as a substitute for CI status.
+
+Draft PR #96 remains open and unmerged. Do not merge without explicit authorization.
