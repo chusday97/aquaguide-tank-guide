@@ -1,5 +1,4 @@
 from pathlib import Path
-import re
 
 path = Path('src/pages/Aquarium.tsx')
 text = path.read_text()
@@ -55,14 +54,11 @@ handler = """  const handleSaveAquariumSettings = async () => {
 """
 replace_once(handler_marker, handler + handler_marker, 'settings handler insertion')
 
-text, dialog_count = re.subn(
-    r'<Dialog open=\{isSettingsOpen\} onOpenChange=\{setIsSettingsOpen\}>',
+replace_once(
+    "<Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>",
     "<Dialog open={isSettingsOpen} onOpenChange={(open) => { if (!isSettingsSaving || open) setIsSettingsOpen(open); }}>",
-    text,
-    count=1,
+    'settings dialog guard',
 )
-if dialog_count != 1:
-    raise SystemExit(f'settings dialog guard: expected one replacement, got {dialog_count}')
 
 old_footer = """          <DialogFooter className=\"shrink-0 border-t border-white bg-white/95 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:px-6\">
             <Button variant=\"outline\" onClick={() => setIsSettingsOpen(false)} className=\"h-10 min-w-[112px] rounded-full text-sm font-bold\">{isEn ? \"Cancel\" : \"取消\"}</Button>
