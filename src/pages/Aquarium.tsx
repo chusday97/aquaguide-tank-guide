@@ -221,18 +221,6 @@ const getAddFishCategory = (fish: Fish): 'fish' | 'shrimp' | 'snail' | 'crab' | 
   return 'other';
 };
 
-function AquariumZoneHeader({ index, title, subtitle, titleId }: { index: number; title: string; subtitle: string; titleId: string }) {
-  return (
-    <header className="aquarium-zone-header">
-      <span className="aquarium-zone-index" aria-hidden="true">{index}</span>
-      <span className="min-w-0">
-        <h2 id={titleId} className="type-card-title block text-ink">{title}</h2>
-        {subtitle && <span className="type-meta mt-1 block text-ink/48">{subtitle}</span>}
-      </span>
-    </header>
-  );
-}
-
 function AquariumWorkspace({
   observeTitle,
   observeSubtitle,
@@ -280,24 +268,54 @@ function AquariumWorkspace({
   }, [location.hash, location.search]);
 
   return (
-    <>
-      <section className="aquarium-workspace-zone aquarium-observe-zone" aria-labelledby="aquarium-observe-title">
-        <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
-        <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}{archive}</div>
+    <main className="aquarium-dashboard-v2" data-aquarium-dashboard-v2>
+      <section className="aquarium-dashboard-v2__hero" aria-label={observeTitle}>
+        <div className="aquarium-dashboard-v2__decision" data-dashboard-priority="today">
+          {status}
+        </div>
+        <div className="aquarium-dashboard-v2__context" data-dashboard-priority="context">
+          {tank}
+        </div>
       </section>
-      <div className="aquarium-followup-grid">
-        <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
-          <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-          <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
+
+      <section
+        id="aquarium-manage-zone"
+        tabIndex={-1}
+        className="aquarium-dashboard-v2__section aquarium-dashboard-v2__manage"
+        aria-labelledby="aquarium-manage-title"
+      >
+        <header className="aquarium-dashboard-v2__section-heading">
+          <div className="min-w-0">
+            <div className="aquarium-dashboard-v2__section-kicker">{observeSubtitle}</div>
+            <h2 id="aquarium-manage-title" className="aquarium-dashboard-v2__section-title">{manageTitle}</h2>
+            {manageSubtitle && <p className="aquarium-dashboard-v2__section-copy">{manageSubtitle}</p>}
+          </div>
+        </header>
+        <div className="aquarium-dashboard-v2__manage-grid">
+          <div className="aquarium-dashboard-v2__manage-primary">{actions}</div>
+          <div className="aquarium-dashboard-v2__manage-secondary">{archive}</div>
+        </div>
+      </section>
+
+      {discovery && (
+        <section
+          id="aquarium-learn-zone"
+          tabIndex={-1}
+          className="aquarium-dashboard-v2__section aquarium-dashboard-v2__secondary"
+          aria-labelledby="aquarium-learn-title"
+          data-dashboard-priority="secondary"
+        >
+          <header className="aquarium-dashboard-v2__section-heading">
+            <div className="min-w-0">
+              <div className="aquarium-dashboard-v2__section-kicker">Explore</div>
+              <h2 id="aquarium-learn-title" className="aquarium-dashboard-v2__section-title">{learnTitle}</h2>
+              {learnSubtitle && <p className="aquarium-dashboard-v2__section-copy">{learnSubtitle}</p>}
+            </div>
+          </header>
+          <div className="aquarium-dashboard-v2__secondary-content">{discovery}</div>
         </section>
-        {discovery && (
-          <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-            <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
-          </section>
-        )}
-      </div>
-    </>
+      )}
+    </main>
   );
 }
 
