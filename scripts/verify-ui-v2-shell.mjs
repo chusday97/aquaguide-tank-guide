@@ -37,24 +37,32 @@ try {
 
   const mobileHeader = page.locator('[data-shell="mobile-header"]');
   const mobileBottomNav = page.locator('[data-shell="mobile-bottom-nav"]');
-  await mobileHeader.waitFor();
   await mobileBottomNav.waitFor();
 
-  const utilityActions = mobileHeader.locator('button[data-shell-action]');
-  assert.equal(await utilityActions.count(), 3, 'mobile utility header must expose exactly search / identify / settings actions');
-  assert.deepEqual(
-    await utilityActions.evaluateAll(nodes => nodes.map(node => node.getAttribute('data-shell-action'))),
-    ['search', 'identify', 'settings'],
-    'mobile header actions must keep stable semantic ordering'
+  assert.equal(
+    await mobileHeader.count(),
+    0,
+    'Aquarium owns a route-specific mobile toolbar, so the generic utility header must not reserve a second row above it.',
   );
 
-  const utilitySizes = await utilityActions.evaluateAll(nodes => nodes.map(node => {
+  const aquariumMore = page.getByRole('button', { name: '更多鱼缸操作', exact: true });
+  await aquariumMore.waitFor();
+  await aquariumMore.click();
+  const aquariumUtilities = page.locator('button[data-mobile-aquarium-utility]');
+  assert.equal(await aquariumUtilities.count(), 3, 'Aquarium more menu must preserve search / identify / settings after the generic header is removed.');
+  assert.deepEqual(
+    await aquariumUtilities.evaluateAll(nodes => nodes.map(node => node.getAttribute('data-mobile-aquarium-utility'))),
+    ['search', 'identify', 'settings'],
+    'Aquarium route utilities must keep stable semantic ordering',
+  );
+  const aquariumUtilitySizes = await aquariumUtilities.evaluateAll(nodes => nodes.map(node => {
     const rect = node.getBoundingClientRect();
     return { width: rect.width, height: rect.height };
   }));
-  for (const size of utilitySizes) {
-    assert.ok(size.width >= 44 && size.height >= 44, `mobile utility action must be at least 44×44, got ${JSON.stringify(size)}`);
+  for (const size of aquariumUtilitySizes) {
+    assert.ok(size.width >= 44 && size.height >= 44, `Aquarium utility action must remain touchable, got ${JSON.stringify(size)}`);
   }
+  await aquariumMore.click();
 
   const mobileTabs = mobileBottomNav.locator('button[data-shell-nav-item]');
   assert.equal(await mobileTabs.count(), 4, 'mobile bottom navigation must remain four primary destinations');
@@ -82,6 +90,22 @@ try {
   ));
   assert.equal(await careMobileTab.getAttribute('aria-current'), 'page', 'mobile active state must follow route changes');
   assert.equal(await aquariumMobileTab.getAttribute('aria-current'), null, 'previous mobile destination must clear aria-current after navigation');
+
+  await mobileHeader.waitFor();
+  const utilityActions = mobileHeader.locator('button[data-shell-action]');
+  assert.equal(await utilityActions.count(), 3, 'non-Aquarium mobile routes must keep exactly search / identify / settings utility actions');
+  assert.deepEqual(
+    await utilityActions.evaluateAll(nodes => nodes.map(node => node.getAttribute('data-shell-action'))),
+    ['search', 'identify', 'settings'],
+    'generic mobile header actions must keep stable semantic ordering',
+  );
+  const utilitySizes = await utilityActions.evaluateAll(nodes => nodes.map(node => {
+    const rect = node.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
+  }));
+  for (const size of utilitySizes) {
+    assert.ok(size.width >= 44 && size.height >= 44, `generic mobile utility action must be at least 44×44, got ${JSON.stringify(size)}`);
+  }
 
   const phoneOverflow = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, width: window.innerWidth }));
   assert.ok(phoneOverflow.scrollWidth <= phoneOverflow.width + 1, `phone shell must not overflow horizontally: ${JSON.stringify(phoneOverflow)}`);
@@ -139,7 +163,7 @@ try {
   assert.ok(collapsedTargets.every(width => width >= 44 && width <= 60), `collapsed desktop navigation targets must stay compact but touchable, got ${collapsedTargets.join(', ')}`);
 
   assert.deepEqual(pageErrors, [], `UI V2 shell path must not emit page errors: ${pageErrors.join('; ')}`);
-  console.log('AquaGuide UI V2 shell regression: PASS (semantic controls + mobile chrome + desktop sidebar + active states).');
+  console.log('AquaGuide UI V2 shell regression: PASS (single Aquarium toolbar + preserved route utilities + desktop sidebar semantics).');
 } finally {
   await browser.close();
 }
