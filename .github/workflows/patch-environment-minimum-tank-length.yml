@@ -1,0 +1,92 @@
+name: Patch Environment Minimum Tank Length
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-environment-minimum-tank-length.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/environment-decision-v1
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Enforce reviewed minimum tank length
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/modules/environment/environmentDecisionEngine.ts')
+          source = path.read_text()
+          if "code: 'tank_length_too_short'" in source:
+              print('minimum tank-length rule already applied')
+              raise SystemExit(0)
+
+          marker = "\n  return { status: statusFromReasons(reasons), reasons };\n};\n\nexport const evaluatePlantMatch"
+          assert marker in source, 'evaluateEnvironmentFit return marker not found'
+          block = '''
+
+  const minimumTankLength = profile.environment.minimumTankLengthCm;
+  if (minimumTankLength) {
+    const currentTankLength = tank.water.tankLengthCm;
+    if (currentTankLength === undefined) {
+      reasons.push({
+        code: 'missing_tank_length',
+        message: `缺少鱼缸物理长度，无法确认最低 ${minimumTankLength}cm 的空间要求。`,
+        severity: 'medium',
+      });
+    } else if (currentTankLength < minimumTankLength) {
+      reasons.push({
+        code: 'tank_length_too_short',
+        message: `当前鱼缸长度 ${currentTankLength}cm，低于最低 ${minimumTankLength}cm。`,
+        severity: 'high',
+      });
+    } else {
+      reasons.push({
+        code: 'tank_length_match',
+        message: `当前鱼缸长度 ${currentTankLength}cm，满足最低 ${minimumTankLength}cm。`,
+        severity: 'info',
+      });
+    }
+  }
+'''
+          source = source.replace(marker, block + marker, 1)
+          path.write_text(source)
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Minimum tank-length regression
+        run: npx tsx scripts/test-environment-minimum-tank-length.ts
+
+      - name: Reviewed adapter regression
+        run: npx tsx scripts/test-reviewed-environment-adapter.ts
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Commit patch and remove one-shot workflow
+        run: |
+          rm .github/workflows/patch-environment-minimum-tank-length.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/modules/environment/environmentDecisionEngine.ts .github/workflows/patch-environment-minimum-tank-length.yml
+          git commit -m "Enforce minimum tank length in Environment decisions"
+          git push origin HEAD:agent/environment-decision-v1
