@@ -42,3 +42,5 @@ jobs:
           git add evaluation/product/badcases.v1.jsonl
           git commit -m "Classify PUI-BC-038 under water change"
           git push origin HEAD:agent/water-change-cloud-persistence
+
+# Temporary taxonomy migration; remove after the canonical registry commit lands.
