@@ -198,19 +198,9 @@ export default function AdminContent() {
             <button type="button" aria-label="返回我的鱼缸" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/aquarium'); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
             <div><h1 className="text-xl font-black">内容后台</h1><p className="text-xs font-bold text-ink/45">编辑物种与养护资料，发布后才对用户可见。</p></div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              data-admin-quality-link
-              onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开内容编辑吗？')) navigate('/admin/feedback'); }}
-              className="min-h-10 rounded-full border border-emerald-100 bg-white px-4 text-sm font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-            >
-              用户反馈
-            </button>
-            <div className="flex rounded-full bg-bg p-1">
-              <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('species'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种</button>
-              <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('care'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
-            </div>
+          <div className="flex rounded-full bg-bg p-1">
+            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('species'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种</button>
+            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('care'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
           </div>
         </header>
 

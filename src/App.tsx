@@ -48,7 +48,6 @@ const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadLogin = () => import('./pages/Login');
 const loadAdminContent = () => import('./pages/AdminContent');
-const loadAdminFeedback = () => import('./pages/AdminFeedback');
 const loadIdentify = () => import('./pages/Identify');
 const loadSearch = () => import('./pages/Search');
 const loadSettings = () => import('./pages/Settings');
@@ -63,7 +62,6 @@ const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
-const AdminFeedback = lazyWithRecovery(loadAdminFeedback, 'admin-feedback');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
 const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
@@ -637,7 +635,7 @@ function AppShell() {
   const { isPhoneLayout } = useLayoutMode();
   const [preferencesReady, setPreferencesReady] = useState(false);
   const isLogin = location.pathname === '/login';
-  const isAdminContent = location.pathname.startsWith('/admin/');
+  const isAdminContent = location.pathname === '/admin/content';
   const isWelcome = location.pathname === '/welcome';
   const isSharedReport = location.pathname.startsWith('/report/');
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(() => {
@@ -766,7 +764,6 @@ function AppShell() {
       <Suspense fallback={<PageLoading />}>
         <Routes>
           <Route path="/admin/content" element={<RouteErrorBoundary page="admin-content"><AdminContent /></RouteErrorBoundary>} />
-          <Route path="/admin/feedback" element={<RouteErrorBoundary page="admin-feedback"><AdminFeedback /></RouteErrorBoundary>} />
           <Route path="*" element={<Navigate to="/admin/content" replace />} />
         </Routes>
       </Suspense>
@@ -862,7 +859,6 @@ function WorkspaceRoutes() {
           <Route path="/care-favorites" element={<Navigate to="/collection/care" replace />} />
           <Route path="/aquarium" element={shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
           <Route path="/admin/content" element={page(<AdminContent />, 'admin-content')} />
-          <Route path="/admin/feedback" element={page(<AdminFeedback />, 'admin-feedback')} />
           <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>
       </Suspense>
