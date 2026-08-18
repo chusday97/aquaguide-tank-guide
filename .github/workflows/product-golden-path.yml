@@ -6,27 +6,7 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: write
-
 jobs:
-  apply-water-change-fix:
-    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'agent/water-change-cloud-persistence' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: agent/water-change-cloud-persistence
-      - name: Apply focused persistence patch
-        run: python3 scripts/apply-water-change-cloud-fix.py
-      - name: Commit product fix
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/Aquarium.tsx src/services/repository/api-aquaguide.repository.ts packages/contracts/src/business.ts
-          git commit -m "fix: persist water-change history across cloud reloads"
-          git push origin HEAD:agent/water-change-cloud-persistence
-
   validate:
     runs-on: ubuntu-latest
     steps:
