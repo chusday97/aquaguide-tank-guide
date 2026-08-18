@@ -42,6 +42,7 @@ export const buildTankContext = (
         ? 'freshwater'
         : undefined,
     volumeLiters: getAquariumVolumeLiters(aquarium),
+    tankLengthCm: toFiniteNumber(aquarium.dimensions?.length),
     targetTemperature: toFiniteNumber(aquarium.targetTemperature),
     lowestObservedTemperature: toFiniteNumber(overrides.lowestObservedTemperature),
     highestObservedTemperature: toFiniteNumber(overrides.highestObservedTemperature),
