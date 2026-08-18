@@ -101,4 +101,33 @@ export const environmentEvidenceSources: Record<string, EnvironmentEvidenceRecor
     ],
     notes: 'Used as independent husbandry corroboration for the high-demand carpeting profile, not for exact chemistry ranges.',
   },
+  'anubias-barteri-nana-tropica-4546': {
+    id: 'anubias-barteri-nana-tropica-4546',
+    title: 'Tropica — Anubias barteri var. nana',
+    kind: 'expert_husbandry',
+    url: 'https://tropica.com/en/plants/plantdetails/Anubiasbarterivar.nana%28101YLS%29/4546',
+    supports: [
+      'rhizomatous growth',
+      'attach to stone or tree root',
+      'rhizome must not be buried',
+      'low light demand',
+      'low CO2 demand',
+      'durable leaves not readily eaten by herbivorous fish',
+    ],
+    notes: 'Supports low-demand epiphytic traits; supplier ranges are not promoted into exact chemistry requirements.',
+  },
+  'anubias-barteri-nana-aquarium-coop': {
+    id: 'anubias-barteri-nana-aquarium-coop',
+    title: 'Aquarium Co-Op — Anubias Nana',
+    kind: 'expert_husbandry',
+    url: 'https://www.aquariumcoop.com/products/anubias-nana',
+    supports: [
+      'attach to rocks, wood, or decor',
+      'rhizome must not be buried',
+      'low light',
+      'CO2 not required',
+      'hardy leaves',
+    ],
+    notes: 'Independent husbandry corroboration for placement, low-light care, non-required CO2 and leaf durability.',
+  },
 };
