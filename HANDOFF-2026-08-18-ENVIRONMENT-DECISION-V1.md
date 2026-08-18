@@ -3,7 +3,8 @@
 Date: 2026-08-18
 Branch: `agent/environment-decision-v1`
 Base: `main@ed0cf38025652db901ee81aa697ca55b1c1584b6`
-Status: in progress
+Draft PR: #96 `Add Environment Decision Engine V1`
+Status: implementation complete; verification in progress
 
 ## Goal
 Build a deterministic environment decision layer for AquaGuide so plant, habitat and equipment guidance is derived from structured requirements instead of scattered text heuristics.
@@ -26,22 +27,64 @@ Build a deterministic environment decision layer for AquaGuide so plant, habitat
 - No UI redesign in this branch.
 
 ## Evidence boundary
-V1 separates engine correctness from husbandry knowledge coverage. Tests may use synthetic profiles to prove rule behavior, but synthetic fixtures are not catalog facts. Production profiles must carry confidence/review metadata before they are treated as reviewed knowledge.
+V1 separates engine correctness from husbandry knowledge coverage. The regression suite uses synthetic profiles to prove rule behavior; those fixtures are not catalog facts and must not be promoted into reviewed husbandry data. Production profiles must carry confidence, review status and source references before they are treated as reviewed knowledge.
 
 ## Current known problem being replaced
-`src/lib/speciesFitEngine.ts` currently mixes deterministic environment checks with coarse equipment heuristics. In particular, heater need is approximated from species minimum temperature, while oxygen guidance can depend on keywords in free text. This iteration establishes a replacement contract before production call sites are migrated.
+`src/lib/speciesFitEngine.ts` currently mixes deterministic environment checks with coarse equipment heuristics. In particular, heater need is approximated from species minimum temperature, while oxygen guidance can depend on keywords in free text. V1 establishes the replacement contract before production call sites are migrated.
+
+## Implemented contract
+### Profile layer
+`src/modules/environment/environment.types.ts`
+- `SpeciesEnvironmentProfile`
+- `PlantEnvironmentProfile`
+- `TankContext`
+- `EnvironmentFitResult`
+- `PlantMatchResult`
+- `EquipmentRequirement`
+- explicit confidence/review metadata
+
+### Tank context
+`src/modules/environment/buildTankContext.ts`
+- normalizes water type, effective volume, target temperature, observed min/max temperature, pH, substrate, plants, hardscape and equipment;
+- keeps `surfaceAgitation` separate from `airPump`;
+- only infers medium surface agitation for a small explicit set of filter cases; otherwise remains `unknown`.
+
+### Decision engine
+`src/modules/environment/environmentDecisionEngine.ts`
+- environment fit: water type, temperature, pH and volume;
+- plant match: shared environment window, uprooting/digging/plant-eating interactions, cover/shelter benefits;
+- heating: requires measured/estimated low-temperature evidence before concluding `required`/`not_needed`, except when the configured target itself is already below the species minimum;
+- oxygenation: combines structured oxygen demand, temperature, load and surface agitation; it recommends oxygenation support rather than equating the requirement with an air pump.
+
+## Regression cases
+`scripts/test-environment-decision-engine.ts`
+1. measured minimum below species range -> heating `required`;
+2. target temperature without low-temperature evidence -> heating `unknown`;
+3. high oxygen demand + warm water + high load + weak surface agitation -> oxygenation `recommended`;
+4. high oxygen demand without support/risk observations -> oxygenation `unknown`, not automatic air-pump requirement;
+5. high uprooting risk + rooted plant -> `caution`;
+6. same animal + tough epiphyte -> not blocked solely by uprooting and cover benefit remains visible;
+7. high plant-eating risk + delicate plant -> `not_recommended`;
+8. end-to-end decision keeps environment, plant and equipment outputs separate.
 
 ## Progress
 - [x] Isolated branch created from main.
 - [x] Scope and evidence boundary recorded before implementation.
-- [ ] Profile schema implemented.
-- [ ] TankContext builder implemented.
-- [ ] Environment decision engine implemented.
-- [ ] Plant matching implemented.
-- [ ] Heating / oxygenation derivation implemented.
-- [ ] Regression tests added and run.
-- [ ] CI gate added and green.
-- [ ] Production migration decision recorded.
+- [x] Profile schema implemented.
+- [x] TankContext builder implemented.
+- [x] Environment decision engine implemented.
+- [x] Plant matching implemented.
+- [x] Heating / oxygenation derivation implemented.
+- [x] Regression tests added.
+- [x] Dedicated CI workflow added.
+- [ ] Latest-head typecheck/build/regression green.
+- [ ] Latest-head Product Golden Path green.
+- [x] Production migration decision recorded: do not wire into `speciesFitEngine` until a reviewed pilot profile cohort exists.
 
-## Next decision after V1
-Choose a small reviewed pilot cohort (roughly 10-20 common livestock + 10-15 plants) and add evidence-backed profiles. Only after that should `speciesFitEngine` migrate heater/oxygen/plant guidance to the new engine.
+## Production migration decision
+Do **not** replace the current production heater/oxygen/plant behavior in this PR. The new engine is deliberately introduced behind a clean module boundary first. Wiring it into user-facing recommendations before reviewed profile coverage exists would convert missing knowledge into silent behavior loss or false certainty.
+
+The next production step is a small evidence-backed cohort (roughly 10-20 common livestock + 10-15 common plants). Once that cohort passes coverage and decision regressions, migrate only those reviewed profiles to the new engine and keep all other species fail-closed/legacy until coverage expands.
+
+## Verification status
+Draft PR #96 is open and unmerged. A Product Golden Path run was queued after PR creation. The Environment Decision V1 workflow is configured for this branch/PR; latest-head results must be recorded here before this handoff is marked complete.
