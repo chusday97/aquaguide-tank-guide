@@ -38,6 +38,15 @@ jobs:
             node scripts/apply-dialog-return-fix.mjs
           fi
 
+      - name: Preserve return state while consuming Aquarium task actions
+        shell: bash
+        run: |
+          if grep -q "replace: true, state: routeLocation.state" src/pages/Aquarium.tsx; then
+            echo 'Aquarium action return-state preservation already applied.'
+          else
+            node scripts/apply-aquarium-action-return-state-fix.mjs
+          fi
+
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
 
@@ -47,11 +56,12 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: Commit modal-local return fix
+      - name: Commit navigation-state fixes
         shell: bash
         run: |
           git add src/components/aquarium/LivestockRosterDialog.tsx \
             src/components/layout/WorkspaceNavigationProvider.tsx \
+            src/pages/Aquarium.tsx \
             scripts/test-ui-interaction-repair-v1.mjs \
             scripts/verify-ui-interaction-repair-v1.mjs
           if git diff --cached --quiet; then
@@ -59,7 +69,7 @@ jobs:
           else
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'Keep task return inside active dialog'
+            git commit -m 'Preserve return state across Aquarium tasks'
             git push origin HEAD:agent/ui-interaction-repair-v1
           fi
 
