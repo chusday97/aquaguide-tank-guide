@@ -1,0 +1,44 @@
+name: Fix PUI-BC-038 Feature Taxonomy
+
+on:
+  push:
+    branches:
+      - agent/water-change-cloud-persistence
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix-taxonomy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/water-change-cloud-persistence
+          fetch-depth: 0
+      - name: Use canonical water_change feature id
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('evaluation/product/badcases.v1.jsonl')
+          text = path.read_text()
+          old = '"id":"PUI-BC-038","featureId":"water_change_cloud_persistence"'
+          new = '"id":"PUI-BC-038","featureId":"water_change"'
+          if old in text:
+              path.write_text(text.replace(old, new))
+          elif new not in text:
+              raise SystemExit('PUI-BC-038 taxonomy anchor not found')
+          PY
+      - name: Re-run product evaluation contract
+        run: node scripts/test-product-evaluation.mjs
+      - name: Commit taxonomy correction when needed
+        run: |
+          if git diff --quiet -- evaluation/product/badcases.v1.jsonl; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evaluation/product/badcases.v1.jsonl
+          git commit -m "Classify PUI-BC-038 under water change"
+          git push origin HEAD:agent/water-change-cloud-persistence
