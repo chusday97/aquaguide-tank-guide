@@ -100,7 +100,7 @@ import { trackSessionEvent } from '../services/analytics/session-events.service'
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode, subscribeToRepositoryMode } from '../services/repository/repository-provider';
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
-import { applyWaterChangeHistory, isFutureWaterChangeDate, toggleWaterChangeDate } from '../services/aquarium/water-change.service';
+import { applyWaterChangeHistory, hydrateWaterChangeHistoryFromEvents, isFutureWaterChangeDate, toggleWaterChangeDate, waterChangeDateToIso } from '../services/aquarium/water-change.service';
 import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
 import {
   getCareReminders,
@@ -1304,7 +1304,7 @@ export default function AquariumManager() {
           : [loadAppStateFromStorage().aquariums, await repository.getCareReminders(), await repository.getCareEvents()];
         if (!active) return;
         if (resolvedMode === 'cloud') patchLocalAppState({ cloudMigrationConfirmed: true });
-        const normalized = normalizeAquariumPlants(repositoryAquariums);
+        const normalized = normalizeAquariumPlants(repositoryAquariums).map(aquarium => hydrateWaterChangeHistoryFromEvents(aquarium, repositoryEvents));
         setAquariums(normalized);
         setCareRemindersState(repositoryReminders);
         setCareTimelineEvents(repositoryEvents);
@@ -2275,35 +2275,34 @@ export default function AquariumManager() {
     setWaterChangeError('');
     setWaterChangeFeedback('');
     try {
-      saveAquariums(aquariums.map(aquarium => aquarium.id === activeId ? nextAquarium : aquarium));
-      try {
-        if (hasTodayRecord) {
-          await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', todayStr);
-          await persistCareTimelineEvent({
-            aquariumId: activeAquarium.id,
-            eventType: 'water_change',
-            title: isEn ? "Undid today's water-change record" : '撤回今日换水记录',
-            payload: { reversed: true },
-            occurredAt: now,
-            sourceType: 'water_change_reversal',
-            sourceId: todayStr,
-            isInferred: false,
-          });
-        } else {
-          await persistCareTimelineEvent({
-            aquariumId: activeAquarium.id,
-            eventType: 'water_change',
-            title: isEn ? 'Logged water change' : '记录换水',
-            payload: {},
-            occurredAt: now,
-            sourceType: 'water_change_day',
-            sourceId: todayStr,
-            isInferred: false,
-          });
-        }
-      } catch {
-        showToast(isEn ? 'Water change was saved, but the timeline could not be updated.' : '换水已保存，但养护时间线没有更新成功。', 'error');
+      if (hasTodayRecord) {
+        await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', todayStr);
+        await persistCareTimelineEvent({
+          aquariumId: activeAquarium.id,
+          eventType: 'water_change',
+          title: isEn ? "Undid today's water-change record" : '撤回今日换水记录',
+          payload: { reversed: true },
+          occurredAt: now,
+          sourceType: 'water_change_reversal',
+          sourceId: todayStr,
+          isInferred: false,
+        });
+      } else {
+        await persistCareTimelineEvent({
+          aquariumId: activeAquarium.id,
+          eventType: 'water_change',
+          title: isEn ? 'Logged water change' : '记录换水',
+          payload: {},
+          occurredAt: now,
+          sourceType: 'water_change_day',
+          sourceId: todayStr,
+          isInferred: false,
+        });
       }
+      const repository = await getCurrentAquaGuideRepository();
+      const savedAquarium = await repository.saveAquarium(nextAquarium);
+      const hydratedSaved = applyWaterChangeHistory(savedAquarium, newHistory);
+      setAquariums(current => current.map(aquarium => aquarium.id === activeId ? hydratedSaved : aquarium));
       setTankActionMessage(hasTodayRecord
         ? (isEn ? "Recalled today's water change record" : '已撤回今日换水记录')
         : (isEn ? `Logged water change: ${format(new Date(), 'yyyy-MM-dd HH:mm')}` : `已记录换水：${format(new Date(), 'yyyy-MM-dd HH:mm')}`));
@@ -2385,12 +2384,35 @@ export default function AquariumManager() {
       : `正在评估「${template.name}」里的规划生物；环境和生物都尚未写入真实鱼缸。`);
   };
 
-  const handleToggleWaterChangeDate = (dateStr: string): boolean => {
+  const handleToggleWaterChangeDate = async (dateStr: string): Promise<boolean> => {
     if (!activeAquarium || isFutureWaterChangeDate(dateStr)) return false;
-    const newHistory = toggleWaterChangeDate(activeAquarium.waterChangeHistory || [], dateStr);
+    const previousHistory = activeAquarium.waterChangeHistory || [];
+    const newHistory = toggleWaterChangeDate(previousHistory, dateStr);
+    const isAdding = newHistory.includes(dateStr);
     const nextAquarium = applyWaterChangeHistory(activeAquarium, newHistory);
-    saveAquariums(aquariums.map(aquarium => aquarium.id === activeId ? nextAquarium : aquarium));
-    return true;
+    try {
+      if (isAdding) {
+        await persistCareTimelineEvent({
+          aquariumId: activeAquarium.id,
+          eventType: 'water_change',
+          title: isEn ? 'Logged water change' : '记录换水',
+          payload: { date: dateStr },
+          occurredAt: waterChangeDateToIso(dateStr) || new Date().toISOString(),
+          sourceType: 'water_change_day',
+          sourceId: dateStr,
+          isInferred: false,
+        });
+      } else {
+        await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', dateStr);
+      }
+      const repository = await getCurrentAquaGuideRepository();
+      const savedAquarium = await repository.saveAquarium(nextAquarium);
+      const hydratedSaved = applyWaterChangeHistory(savedAquarium, newHistory);
+      setAquariums(current => current.map(aquarium => aquarium.id === activeId ? hydratedSaved : aquarium));
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   const getConflicts = (_fishes: AquariumFish[]): string[] => {
@@ -7351,7 +7373,7 @@ export default function AquariumManager() {
                 setWaterChangeError('');
                 setWaterChangeFeedback('');
                 try {
-                  const saved = handleToggleWaterChangeDate(selectedWaterChangeDate);
+                  const saved = await handleToggleWaterChangeDate(selectedWaterChangeDate);
                   if (!saved) {
                     setWaterChangeError(isEn ? 'Could not save the water-change record. Try again.' : '换水记录没有保存成功，请重试。');
                     return;
