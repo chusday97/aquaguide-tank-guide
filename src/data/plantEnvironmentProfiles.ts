@@ -45,4 +45,25 @@ export const plantEnvironmentProfiles: PlantEnvironmentProfile[] = [
       ],
     },
   },
+  {
+    speciesId: 'sp_0075',
+    environment: {
+      waterType: 'freshwater',
+      light: 'low',
+      co2: 'optional',
+    },
+    planting: {
+      type: 'epiphyte',
+      substrateRequired: 'none',
+      leafDurability: 'tough',
+    },
+    evidence: {
+      confidence: 'medium',
+      reviewStatus: 'reviewed',
+      sourceRefs: [
+        'anubias-barteri-nana-tropica-4546',
+        'anubias-barteri-nana-aquarium-coop',
+      ],
+    },
+  },
 ];
