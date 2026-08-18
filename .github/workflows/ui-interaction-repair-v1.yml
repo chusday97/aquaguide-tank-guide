@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate:
@@ -18,7 +18,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: agent/ui-interaction-repair-v1
-          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -29,15 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Apply compatibility result priority once
-        shell: bash
-        run: |
-          if grep -q 'data-compatibility-result' src/components/CompatibilityRiskCalculator.tsx; then
-            echo 'Compatibility result priority already applied.'
-          else
-            node scripts/apply-compatibility-result-priority-fix.mjs
-          fi
-
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
 
@@ -46,21 +36,6 @@ jobs:
 
       - name: Production build
         run: npm run build
-
-      - name: Commit result-first layout
-        shell: bash
-        run: |
-          git add src/components/CompatibilityRiskCalculator.tsx \
-            scripts/test-ui-interaction-repair-v1.mjs \
-            scripts/verify-ui-interaction-repair-v1.mjs
-          if git diff --cached --quiet; then
-            echo 'No result-priority changes to commit.'
-          else
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'Prioritize compatibility verdict before selection'
-            git push origin HEAD:agent/ui-interaction-repair-v1
-          fi
 
       - name: Install Chromium
         run: npx playwright install chromium
