@@ -55,3 +55,33 @@ export const applyWaterChangeHistory = (aquarium: Aquarium, history: string[]): 
     })),
   };
 };
+
+type WaterChangeCareEvent = {
+  aquariumId?: string;
+  eventType: string;
+  sourceType?: string;
+  sourceId?: string;
+};
+
+export const hydrateWaterChangeHistoryFromEvents = (
+  aquarium: Aquarium,
+  events: WaterChangeCareEvent[],
+): Aquarium => {
+  const fallbackHistory = [...(aquarium.waterChangeHistory || [])];
+  if (aquarium.lastWaterChangeDate) {
+    const parsed = new Date(aquarium.lastWaterChangeDate);
+    if (!Number.isNaN(parsed.getTime())) fallbackHistory.push(toLocalDateKey(parsed));
+  }
+
+  const persistedHistory = events
+    .filter(event => (
+      event.aquariumId === aquarium.id
+      && event.eventType === 'water_change'
+      && event.sourceType === 'water_change_day'
+      && typeof event.sourceId === 'string'
+      && isValidDateKey(event.sourceId)
+    ))
+    .map(event => event.sourceId as string);
+
+  return applyWaterChangeHistory(aquarium, [...fallbackHistory, ...persistedHistory]);
+};

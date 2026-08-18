@@ -28,6 +28,8 @@ jobs:
           npm run test:task-entry
           npm run test:core-flow-state-eval
           npm run test:daily-check
+      - name: Water-change cloud persistence contract
+        run: node scripts/test-water-change-cloud-persistence-contract.mjs
       - name: Type check
         run: npm run lint
       - name: Build
