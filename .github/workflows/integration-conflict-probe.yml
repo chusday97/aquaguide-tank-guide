@@ -1,0 +1,36 @@
+name: Aquarium Persistence Integration Probe
+
+on:
+  push:
+    branches:
+      - integration/aquarium-persistence-v1
+    paths:
+      - .github/workflows/integration-conflict-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe-settings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Probe PR92 source merge conflicts
+        shell: bash
+        run: |
+          set +e
+          git config user.name "aquaguide-integration-probe"
+          git config user.email "integration-probe@users.noreply.github.com"
+          git fetch origin integration/source-aquarium-settings
+          git merge --no-commit --no-ff origin/integration/source-aquarium-settings
+          status=$?
+          echo "merge_exit=$status"
+          echo "unmerged_files:"
+          git diff --name-only --diff-filter=U
+          echo "conflict_markers:"
+          git diff --cc -- src/pages/Aquarium.tsx .github/workflows/product-golden-path.yml evaluation/product/badcases.v1.jsonl || true
+          git merge --abort >/dev/null 2>&1 || true
+          exit $status
