@@ -35,6 +35,16 @@ assert.match(
 );
 assert.match(
   source,
+  /const selectedFit = useMemo\(\(\) => fish && !isPlant \? getSpeciesFitAssessment/,
+  'plants must stop before the legacy getSpeciesFitAssessment engine executes',
+);
+assert.match(
+  source,
+  /\{fish && \(isPlant \|\| displayFit\) && \(/,
+  'plant detail rendering must not depend on a fake legacy fit assessment',
+);
+assert.match(
+  source,
   /if \(isPlant\) return isEn \? 'View plant care' : '查看植物养护'/,
   'plant footer action must describe plant care rather than add-to-tank or fish compatibility actions',
 );
@@ -45,8 +55,8 @@ assert.match(
 );
 assert.match(
   source,
-  /\{!isPlant && \(\s*<>\s*<div data-visual-result-status/,
-  'fish-fit verdict must be hidden for plants until a reviewed plant-to-tank adapter exists',
+  /\{!isPlant && displayFit && \(\s*<>\s*<div data-visual-result-status/,
+  'fish-fit verdict must require an actual livestock fit result and stay hidden for plants',
 );
 assert.match(
   source,
@@ -55,13 +65,13 @@ assert.match(
 );
 assert.match(
   source,
-  /data-species-detail-sections>\s*\{!isPlant && \(\s*<section[\s\S]{0,500}?aria-expanded=\{expandedSection === 'fit'\}/,
-  'legacy fish-fit explanation accordion must not appear on plant details',
+  /data-species-detail-sections>\s*\{!isPlant && displayFit && \(\s*<section[\s\S]{0,500}?aria-expanded=\{expandedSection === 'fit'\}/,
+  'legacy fish-fit explanation accordion must require an actual livestock fit result and stay hidden for plants',
 );
 assert.match(
   source,
-  /\{!isPlant && \(\s*<section className="overflow-hidden rounded-\[18px\] border border-border bg-white">\s*<button[\s\S]{0,500}?aria-expanded=\{expandedSection === 'compatibility'\}/,
-  'fish compatibility accordion must be hidden for plants',
+  /\{!isPlant && displayFit && \(\s*<section className="overflow-hidden rounded-\[18px\] border border-border bg-white">\s*<button[\s\S]{0,500}?aria-expanded=\{expandedSection === 'compatibility'\}/,
+  'fish compatibility accordion must require an actual livestock fit result and stay hidden for plants',
 );
 assert.match(
   source,
@@ -84,4 +94,4 @@ assert.match(
   'plant details must not build an animal compatibility result model',
 );
 
-console.log('Species detail care boundary: PASS (reviewed plant care is isolated from legacy feeding, fish-fit and animal-only evaluation surfaces).');
+console.log('Species detail care boundary: PASS (plants bypass legacy fit/feeding/compatibility/sex engines and render only reviewed plant-care surfaces).');
