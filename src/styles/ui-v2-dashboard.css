@@ -40,17 +40,14 @@
   padding-inline: 2px;
 }
 
+/* Section labels were adding another competing text level without helping navigation.
+   Keep the semantic DOM hook, but let the visible hierarchy be title -> description -> content. */
 .aquarium-dashboard-v2__section-kicker {
-  color: color-mix(in srgb, var(--color-accent, #1b4d3e) 84%, black);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  text-transform: uppercase;
+  display: none;
 }
 
 .aquarium-dashboard-v2__section-title {
-  margin: 3px 0 0;
+  margin: 0;
   color: var(--color-ink, #1a1a1a);
   font-size: clamp(16px, 1.45vw, 20px);
   font-weight: 780;
@@ -59,14 +56,14 @@
 
 .aquarium-dashboard-v2__section-copy {
   margin: 4px 0 0;
-  max-width: 58ch;
+  max-width: 52ch;
   color: color-mix(in srgb, var(--color-ink, #1a1a1a) 48%, transparent);
   font-size: 11px;
   font-weight: 620;
   line-height: 1.5;
 }
 
-.aquarium-dashboard-v2__secondary { opacity: 0.94; }
+.aquarium-dashboard-v2__secondary { opacity: 0.9; }
 
 .aquarium-dashboard-v2 .aquarium-actions,
 .aquarium-dashboard-v2 .aquarium-archive,
@@ -78,21 +75,21 @@
 
 .aquarium-dashboard-v2__decision .status-summary-card {
   min-height: 100%;
-  border-radius: 22px;
+  border-radius: 20px;
   box-shadow: 0 14px 36px rgba(27, 77, 62, 0.07);
 }
 
-/* Tank art is context for the decision card, not the visual owner of the page. */
+/* Tank art is contextual identity, not the primary decision surface. */
 .aquarium-dashboard-v2__context .aquarium-tank {
-  height: 230px;
-  border-radius: 22px;
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+  height: 180px;
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
 }
 
 .aquarium-dashboard-v2__manage .aquarium-actions,
 .aquarium-dashboard-v2__manage .aquarium-archive,
 .aquarium-dashboard-v2__secondary .aquarium-discovery {
-  border-radius: 20px;
+  border-radius: 18px;
 }
 
 /* Quick actions: only recurrent tank maintenance remains permanently visible.
@@ -151,7 +148,7 @@
   .aquarium-dashboard-v2 { gap: 20px; }
 
   .aquarium-dashboard-v2__hero {
-    grid-template-columns: minmax(320px, 1.02fr) minmax(0, 0.98fr);
+    grid-template-columns: minmax(360px, 1.18fr) minmax(0, 0.82fr);
     align-items: start;
     gap: 16px;
   }
@@ -160,13 +157,13 @@
   .aquarium-dashboard-v2__context { order: initial; }
 
   .aquarium-dashboard-v2__context .aquarium-tank {
-    height: clamp(320px, 34dvh, 390px);
-    min-height: 320px;
-    max-height: 390px;
+    height: clamp(260px, 28dvh, 340px);
+    min-height: 260px;
+    max-height: 340px;
   }
 
   .aquarium-dashboard-v2__manage-grid {
-    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+    grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
     align-items: start;
     gap: 16px;
   }
@@ -174,7 +171,7 @@
 
 @container aquarium-home (min-width: 1080px) {
   .aquarium-dashboard-v2__hero {
-    grid-template-columns: minmax(380px, 1.06fr) minmax(0, 0.94fr);
+    grid-template-columns: minmax(420px, 1.22fr) minmax(0, 0.78fr);
   }
 }
 
@@ -243,7 +240,7 @@
   .aquarium-dashboard-v2 { gap: 14px; }
   .aquarium-dashboard-v2__section { padding-top: 14px; }
   .aquarium-dashboard-v2__section-heading { margin-bottom: 8px; }
-  .aquarium-dashboard-v2__context .aquarium-tank { height: 210px; }
+  .aquarium-dashboard-v2__context .aquarium-tank { height: 170px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
