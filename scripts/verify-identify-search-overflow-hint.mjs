@@ -9,10 +9,29 @@ try {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.addInitScript(() => localStorage.setItem('aquaguide_locale', 'zh-CN'));
+  await page.route('**/api/v1/ai/species-recognition', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          recognitionId: '00000000-0000-4000-8000-000000000001',
+          imageFingerprint: '0'.repeat(64),
+          status: 'unmatched',
+          candidates: [],
+          requiresConfirmation: true,
+          source: 'fallback',
+          failureReason: 'not_configured',
+          generatedAt: '2026-08-18T00:00:00.000Z',
+        },
+        requestId: 'identify-overflow-regression',
+      }),
+    });
+  });
 
   await page.goto(`${baseUrl}/identify`, { waitUntil: 'networkidle' });
   await page.locator('input[type="file"]').setInputFiles('public/responsive/care/pregnant_fish_breeder_box_realistic-960.webp');
-  await page.locator('[data-identify-stage="candidates"]').waitFor({ state: 'visible', timeout: 20_000 });
+  await page.locator('[data-identify-stage="candidates"]').waitFor({ state: 'visible', timeout: 10_000 });
 
   const input = page.getByLabel('没有合适候选？手动搜索物种库');
   await input.fill('鱼');
