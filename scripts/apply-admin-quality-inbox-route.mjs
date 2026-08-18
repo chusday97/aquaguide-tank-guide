@@ -1,3 +1,4 @@
+// One-shot deterministic migration. Remove after the source anchors are applied.
 import fs from 'node:fs';
 
 const appPath = 'src/App.tsx';
