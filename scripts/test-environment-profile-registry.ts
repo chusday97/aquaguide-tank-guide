@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { plantEnvironmentProfiles } from '../src/data/plantEnvironmentProfiles';
 import { speciesEnvironmentProfiles } from '../src/data/speciesEnvironmentProfiles';
+import { isAquaticPlantSpecies } from '../src/lib/speciesClassification';
+import { buildSpeciesCarePresentation } from '../src/modules/knowledge/speciesCarePresentation';
 import {
   auditPlantEnvironmentProfiles,
   auditSpeciesEnvironmentProfiles,
@@ -45,14 +47,33 @@ const javaFernCatalog = fishData.find(item => item.id === 'sp_0081');
 assert.ok(javaFernCatalog, 'reviewed plant profile must resolve to a catalog record');
 assert.equal(javaFernCatalog.scientificName, 'Microsorum pteropus');
 assert.equal(
-  javaFernCatalog.category,
-  '水草',
-  'reviewed Microsorum pteropus must not remain misclassified as fish in the legacy catalog',
+  isAquaticPlantSpecies(javaFernCatalog),
+  true,
+  'legacy catalog anomalies must still classify Microsorum pteropus as a plant before presentation',
 );
+const javaFernCare = buildSpeciesCarePresentation(javaFernCatalog);
+assert.equal(javaFernCare.sourceStatus, 'verified');
+assert.equal(javaFernCare.sourceLabel, '已核验植物资料');
+assert.equal(javaFernCare.feedingItems.length, 0, 'plant care must not expose animal feeding fallback fields');
+assert.ok(javaFernCare.environmentItems.some(item => item.label === '光照'));
+assert.ok(javaFernCare.environmentItems.some(item => item.label === 'CO₂'));
+assert.ok(javaFernCare.environmentItems.some(item => item.label === '种植方式'));
+assert.ok(javaFernCare.environmentItems.some(item => item.label === '底床'));
+assert.doesNotMatch(
+  JSON.stringify(javaFernCare),
+  /冻虾|鱼肉|高蛋白肉食|投喂频率/,
+  'reviewed plant presentation must not leak the legacy carnivore feeding template',
+);
+
+const unreviewedPlantCatalog = fishData.find(item => item.id === 'sp_0080');
+assert.ok(unreviewedPlantCatalog && isAquaticPlantSpecies(unreviewedPlantCatalog));
+const unreviewedPlantCare = buildSpeciesCarePresentation(unreviewedPlantCatalog);
+assert.equal(unreviewedPlantCare.sourceStatus, 'pending');
+assert.equal(unreviewedPlantCare.feedingItems.length, 0);
 assert.equal(
-  javaFernCatalog.feedingProfile?.dietType,
-  'Autotroph',
-  'reviewed plant must not retain the legacy carnivore feeding fallback',
+  unreviewedPlantCare.hasStructuredProfile,
+  false,
+  'unreviewed plants must remain fail-closed rather than reusing legacy feeding data',
 );
 
 const invalidReviewedProfile: SpeciesEnvironmentProfile = {
@@ -115,4 +136,4 @@ assert.equal(coverage.plantTotalProfiles, 1);
 assert.equal(coverage.plantReviewedProfiles, 1);
 assert.deepEqual(coverage.auditIssues, []);
 
-console.log('Environment profile registry regression: PASS (species + plant review gates, catalog identity, evidence resolution, fail-closed lookup).');
+console.log('Environment profile registry regression: PASS (species + plant review gates, safe plant presentation, evidence resolution, fail-closed lookup).');
