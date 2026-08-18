@@ -1271,6 +1271,7 @@ export default function AquariumManager() {
   const [isLocalDataOpen, setIsLocalDataOpen] = useState(false);
   const [localDataText, setLocalDataText] = useState('');
   const [localDataMessage, setLocalDataMessage] = useState('');
+  const [repositoryMode, setRepositoryMode] = useState<'local' | 'cloud'>('local');
   const [localWeather, setLocalWeather] = useState<LocalWeatherOutput | null>(null);
   const [weatherStatus, setWeatherStatus] = useState<'loading' | 'ready' | 'unavailable'>('loading');
   useEffect(() => {
@@ -1298,6 +1299,7 @@ export default function AquariumManager() {
     const loadRepositoryAquariums = async (mode?: 'local' | 'cloud') => {
       try {
         const resolvedMode = mode ?? await resolveRepositoryMode();
+        if (active) setRepositoryMode(resolvedMode);
         const repository = getAquaGuideRepository(resolvedMode);
         const [repositoryAquariums, repositoryReminders, repositoryEvents] = resolvedMode === 'cloud'
           ? await Promise.all([repository.getAquariums(), repository.getCareReminders(), repository.getCareEvents()])
@@ -1670,6 +1672,12 @@ export default function AquariumManager() {
   }, [activeSettingsPanel, isSettingsOpen]);
 
   const handleImportLocalData = () => {
+    if (repositoryMode === 'cloud') {
+      setLocalDataMessage(Boolean(i18n.language?.startsWith('en'))
+        ? 'Cloud sync is active. Browser-only import is disabled because cloud data remains the source of truth after reload.'
+        : '当前已启用云端同步。本机数据导入已停用，因为刷新后仍会以云端数据为准。');
+      return;
+    }
     try {
       importLocalAppState(localDataText);
       setLocalDataMessage(Boolean(i18n.language?.startsWith('en')) ? 'Import successful, reloading...' : '导入成功，正在重新加载。');
@@ -1680,6 +1688,12 @@ export default function AquariumManager() {
   };
 
   const handleClearLocalData = () => {
+    if (repositoryMode === 'cloud') {
+      setLocalDataMessage(Boolean(i18n.language?.startsWith('en'))
+        ? 'Cloud sync is active. Clearing this browser would not delete cloud data, so this local-only action is disabled.'
+        : '当前已启用云端同步。清除本机数据不会删除云端数据，因此这里已停用该本机操作。');
+      return;
+    }
     const confirmed = window.confirm(Boolean(i18n.language?.startsWith('en')) ? 'Are you sure you want to clear local data? Tank, stocking, diagnosis, and logs cannot be recovered.' : '确认清除本地数据吗？清除后鱼缸、种草、诊断和记录都不会恢复。');
     if (!confirmed) return;
     clearLocalAppState();
@@ -5522,7 +5536,11 @@ export default function AquariumManager() {
           <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
             <DialogTitle className="text-xl font-black text-ink">{t('aquarium.dataSavingTitle')}</DialogTitle>
             <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">
-              {t('aquarium.dataSavingDesc')}
+              {repositoryMode === 'cloud'
+                ? (isEn
+                  ? 'Cloud sync is active. Cloud aquarium data remains the source of truth; browser-only import and clear do not modify cloud data.'
+                  : '当前已启用云端同步。云端鱼缸数据仍是事实源；仅本机的导入和清除不会修改云端数据。')
+                : t('aquarium.dataSavingDesc')}
             </DialogDescription>
           </DialogHeader>
           <div className="min-h-0 flex-1 overflow-y-auto p-4">
