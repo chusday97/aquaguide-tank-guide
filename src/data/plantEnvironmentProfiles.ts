@@ -35,7 +35,6 @@ export const plantEnvironmentProfiles: PlantEnvironmentProfile[] = [
     },
     planting: {
       type: 'rooted',
-      substrateRequired: 'soil',
     },
     evidence: {
       confidence: 'medium',
