@@ -257,8 +257,9 @@ export function LivestockBatchCard({
     || targetLifeStage !== selectedSourceBatch.lifeStage
     || (reproductiveApplicable && targetReproductiveState !== selectedSourceBatch.reproductiveState)
   );
-  const hasDraftChanges = JSON.stringify(draft) !== JSON.stringify(record);
-  const hasUnsavedChanges = hasPendingSelection || hasDraftChanges;
+  // Dirty state follows user-visible selection changes, not internal metadata such as stateUpdatedAt.
+  const hasDraftChanges = hasPendingSelection;
+  const hasUnsavedChanges = hasPendingSelection;
   useEffect(() => {
     onDirtyChange?.(isEditing && hasUnsavedChanges);
     return () => onDirtyChange?.(false);
