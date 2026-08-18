@@ -1,0 +1,66 @@
+name: Environment Decision V1
+
+on:
+  push:
+    branches:
+      - agent/environment-decision-v1
+  pull_request:
+    paths:
+      - 'src/components/SpeciesDetailDialog.tsx'
+      - 'src/modules/environment/**'
+      - 'src/modules/knowledge/speciesCarePresentation.ts'
+      - 'src/data/environmentEvidence.ts'
+      - 'src/data/speciesEnvironmentProfiles.ts'
+      - 'src/data/plantEnvironmentProfiles.ts'
+      - 'scripts/test-environment-decision-engine.ts'
+      - 'scripts/test-environment-profile-registry.ts'
+      - 'scripts/test-environment-profile-catalog-identity.ts'
+      - 'scripts/test-reviewed-environment-adapter.ts'
+      - 'scripts/test-species-detail-care-boundary.mjs'
+      - 'scripts/test-plant-catalog-care-boundary.ts'
+      - '.github/workflows/environment-decision-v1.yml'
+      - 'HANDOFF-2026-08-18-ENVIRONMENT-DECISION-V1.md'
+
+permissions:
+  contents: read
+
+jobs:
+  environment-decision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Environment decision regression
+        run: npx tsx scripts/test-environment-decision-engine.ts
+
+      - name: Environment profile evidence regression
+        run: npx tsx scripts/test-environment-profile-registry.ts
+
+      - name: Environment profile catalog identity regression
+        run: npx tsx scripts/test-environment-profile-catalog-identity.ts
+
+      - name: Reviewed-only Environment adapter regression
+        run: npx tsx scripts/test-reviewed-environment-adapter.ts
+
+      - name: Species detail care boundary regression
+        run: node scripts/test-species-detail-care-boundary.mjs
+
+      - name: Plant catalog care boundary regression
+        run: npx tsx scripts/test-plant-catalog-care-boundary.ts
