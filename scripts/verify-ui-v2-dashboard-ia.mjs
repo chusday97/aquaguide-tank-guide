@@ -3,6 +3,7 @@ import fs from 'node:fs';
 const source = fs.readFileSync('src/pages/Aquarium.tsx', 'utf8');
 const statusCardSource = fs.readFileSync('src/components/product/StatusSummaryCard.tsx', 'utf8');
 const aquariumComponentStyles = fs.readFileSync('src/styles/ui-v2-aquarium-components.css', 'utf8');
+const dashboardStyles = fs.readFileSync('src/styles/ui-v2-dashboard.css', 'utf8');
 
 const required = [
   'className="aquarium-dashboard-v2"',
@@ -71,4 +72,17 @@ if (!/#care-plan\s*\{[^}]*border-top:[^}]*padding:\s*13px 0 0;/s.test(aquariumCo
   throw new Error('Care-plan summary must remain a divider row inside Today instead of a nested panel.');
 }
 
-console.log('Aquarium Dashboard V2 source IA contract passed (decision-first + collapsed care-plan detail + flat Today surface).');
+const semanticHeadingRule = dashboardStyles.match(/\.aquarium-dashboard-v2__section-heading\s*\{([^}]*)\}/s)?.[1] || '';
+for (const declaration of [
+  'position: absolute',
+  'width: 1px',
+  'height: 1px',
+  'overflow: hidden',
+  'clip-path: inset(50%)',
+]) {
+  if (!semanticHeadingRule.includes(declaration)) {
+    throw new Error(`Dashboard outer section heading must remain semantic-only so content cards own the visible hierarchy: ${declaration}`);
+  }
+}
+
+console.log('Aquarium Dashboard V2 source IA contract passed (decision-first + flat Today + one visible heading per content section).');
