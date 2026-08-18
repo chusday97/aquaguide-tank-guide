@@ -154,7 +154,7 @@ export function StatusSummaryCard({
         </div>
       </div>
 
-      <div className="status-summary-task mt-5 bg-white/72">
+      <div className="status-summary-task mt-4">
         <h2 className="type-section-title text-ink">{action.task.title}</h2>
         <p className="type-body mt-2 text-ink/58">{action.task.reason}</p>
         {action.level === 'urgent' && action.reasoning.length > 0 && (
@@ -182,7 +182,7 @@ export function StatusSummaryCard({
       )}
 
       {carePlan.activeCount === 0 ? (
-        <div id="care-plan" className="care-plan-empty-strip mt-4 flex min-h-12 items-center gap-3 rounded-[14px] border border-emerald-100/70 bg-white/68 px-3 py-2 text-ink">
+        <div id="care-plan" className="care-plan-empty-strip mt-4 flex min-h-12 items-center gap-3 text-ink">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-emerald-50 text-emerald-700">
             <CalendarDays className="h-4 w-4" />
           </span>
@@ -199,7 +199,7 @@ export function StatusSummaryCard({
           </button>
         </div>
       ) : (
-        <section id="care-plan" className="mt-4 border border-white/80 bg-white/68 text-ink shadow-[0_3px_14px_rgba(18,56,45,0.035)]">
+        <section id="care-plan" className="mt-4 text-ink">
           <button
             type="button"
             onClick={onToggleCarePlan}
