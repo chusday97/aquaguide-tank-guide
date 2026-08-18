@@ -1727,20 +1727,20 @@ export default function AquariumManager() {
     handledAddSpeciesRequestRef.current = requestKey;
     if (!speciesId) {
       openSpeciesAddition(intent);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     const fish = fishData.find(item => item.id === speciesId);
     if (!fish) {
       showToast(Boolean(i18n.language?.startsWith('en')) ? 'No corresponding species found for this memorial' : '没有找到这条生命纪念对应的物种', 'error');
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     openSpeciesAddition(intent, fish.id);
     showToast(intent === 'record_existing'
       ? (isEn ? `Selected "${fish.name}". Confirm quantity and entry date.` : `已选择“${fish.name}”，请确认数量和入缸日期。`)
       : (isEn ? `Selected "${fish.name}". Review the risk first.` : `已选择“${fish.name}”，请先查看风险。`));
-    routeNavigate('/aquarium', { replace: true });
+    routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
   }, [activeAquarium, activeId, aquariums, routeLocation.search, routeNavigate, showToast]);
 
   useEffect(() => {
@@ -2916,7 +2916,7 @@ export default function AquariumManager() {
 
     if (action === 'create') {
       void handleAddAquarium().then(created => {
-        if (created) routeNavigate('/aquarium', { replace: true });
+        if (created) routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       });
       return;
     }
@@ -2924,23 +2924,23 @@ export default function AquariumManager() {
     if (action === 'daily-check') {
       setIsDiagnosisOpen(true);
       handleStartDiagnosisQuiz('巡检');
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     if (action === 'livestock') {
       setIsTankArchiveExpanded(true);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     if (action === 'water-change') {
       setSelectedWaterChangeDate(format(new Date(), 'yyyy-MM-dd'));
       setWaterChangeFeedback('');
       setIsCalendarOpen(true);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     openAquariumSettings('size');
-    routeNavigate('/aquarium', { replace: true });
+    routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
   }, [activeAquarium?.id, routeLocation.search]);
 
   const handleDiagnosisAnswer = (questionId: string, answer: string) => {
