@@ -37,4 +37,31 @@ export const speciesEnvironmentProfiles: SpeciesEnvironmentProfile[] = [
       },
     },
   },
+  {
+    speciesId: 'sp_0431',
+    environment: {
+      waterType: 'freshwater',
+      temperature: { min: 20, max: 26 },
+      minimumTankLengthCm: 60,
+    },
+    evidence: {
+      confidence: 'medium',
+      reviewStatus: 'reviewed',
+      sourceRefs: [
+        'paracheirodon-innesi-fishbase-10691',
+        'paracheirodon-innesi-fishkeeper',
+      ],
+      claimRefs: {
+        'environment.waterType': [
+          'paracheirodon-innesi-fishbase-10691',
+          'paracheirodon-innesi-fishkeeper',
+        ],
+        'environment.temperature': [
+          'paracheirodon-innesi-fishbase-10691',
+          'paracheirodon-innesi-fishkeeper',
+        ],
+        'environment.minimumTankLengthCm': ['paracheirodon-innesi-fishbase-10691'],
+      },
+    },
+  },
 ];
