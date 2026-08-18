@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
+// Permanent regression for repository-mode-aware Data & backup semantics.
 const root = new URL('../', import.meta.url);
 const aquariumSource = await readFile(new URL('src/pages/Aquarium.tsx', root), 'utf8');
 
