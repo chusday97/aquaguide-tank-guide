@@ -64,4 +64,31 @@ export const speciesEnvironmentProfiles: SpeciesEnvironmentProfile[] = [
       },
     },
   },
+  {
+    speciesId: 'sp_0468',
+    environment: {
+      waterType: 'freshwater',
+      ph: { min: 5, max: 7 },
+      minimumTankLengthCm: 60,
+    },
+    evidence: {
+      confidence: 'medium',
+      reviewStatus: 'reviewed',
+      sourceRefs: [
+        'trigonostigma-heteromorpha-fishbase-10881',
+        'trigonostigma-heteromorpha-fishkeeper',
+      ],
+      claimRefs: {
+        'environment.waterType': [
+          'trigonostigma-heteromorpha-fishbase-10881',
+          'trigonostigma-heteromorpha-fishkeeper',
+        ],
+        'environment.ph': [
+          'trigonostigma-heteromorpha-fishbase-10881',
+          'trigonostigma-heteromorpha-fishkeeper',
+        ],
+        'environment.minimumTankLengthCm': ['trigonostigma-heteromorpha-fishbase-10881'],
+      },
+    },
+  },
 ];
