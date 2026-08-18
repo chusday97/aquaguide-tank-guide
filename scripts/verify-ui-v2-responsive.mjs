@@ -33,6 +33,11 @@ try {
   await context.waitFor();
   assert.equal(await page.locator('.aquarium-zone-index').count(), 0, 'Decision-first Aquarium must not reintroduce numbered Observe / Manage / Learn zones');
 
+  const onboardingCompact = page.locator('[data-onboarding-compact]');
+  await onboardingCompact.waitFor();
+  const onboardingHeight = await onboardingCompact.evaluate(element => Math.round(element.getBoundingClientRect().height));
+  assert.ok(onboardingHeight <= 112, `mobile onboarding must stay a compact progress strip instead of pushing Today's decision below the fold, got ${onboardingHeight}px`);
+
   const compactPriority = await page.evaluate(() => {
     const todayElement = document.querySelector('[data-dashboard-priority="today"]');
     const contextElement = document.querySelector('[data-dashboard-priority="context"]');
@@ -119,6 +124,8 @@ try {
 
   const sectionKickerDisplay = await page.locator('.aquarium-dashboard-v2__section-kicker').first().evaluate(element => getComputedStyle(element).display);
   assert.equal(sectionKickerDisplay, 'none', 'Aquarium sections must not add a redundant kicker text level above the section title');
+  const sectionBorderTopWidth = await page.locator('.aquarium-dashboard-v2__section').first().evaluate(element => getComputedStyle(element).borderTopWidth);
+  assert.equal(sectionBorderTopWidth, '0px', 'Aquarium sections must not use full-width divider bands that fragment the dashboard into form-like rows');
 
   const mediumOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -146,7 +153,7 @@ try {
   assert.ok(wideOverflow.scrollWidth <= wideOverflow.viewportWidth + 1, `wide Aquarium must not overflow horizontally: ${JSON.stringify(wideOverflow)}`);
   assert.deepEqual(pageErrors, [], `UI V2 responsive path must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + contextual tank + compact actions/header across 390/900/1600).');
+  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + compact onboarding + contextual tank + quiet sections across 390/900/1600).');
 } finally {
   await browser.close();
 }
