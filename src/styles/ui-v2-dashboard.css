@@ -1,0 +1,158 @@
+/* Aquarium Dashboard V2: decision-first hierarchy. */
+
+.aquarium-dashboard-v2 {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
+.aquarium-dashboard-v2__hero,
+.aquarium-dashboard-v2__manage-grid {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+.aquarium-dashboard-v2__decision,
+.aquarium-dashboard-v2__context,
+.aquarium-dashboard-v2__manage-primary,
+.aquarium-dashboard-v2__manage-secondary,
+.aquarium-dashboard-v2__secondary-content {
+  min-width: 0;
+}
+
+.aquarium-dashboard-v2__decision {
+  order: 1;
+}
+
+.aquarium-dashboard-v2__context {
+  order: 2;
+}
+
+.aquarium-dashboard-v2__section {
+  min-width: 0;
+  border-top: 1px solid color-mix(in srgb, var(--color-border, #dfe7e2) 72%, transparent);
+  padding-top: 16px;
+}
+
+.aquarium-dashboard-v2__section-heading {
+  display: flex;
+  min-width: 0;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding-inline: 2px;
+}
+
+.aquarium-dashboard-v2__section-kicker {
+  color: color-mix(in srgb, var(--color-accent, #1b4d3e) 84%, black);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.aquarium-dashboard-v2__section-title {
+  margin: 3px 0 0;
+  color: var(--color-ink, #1a1a1a);
+  font-size: clamp(16px, 1.45vw, 20px);
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.aquarium-dashboard-v2__section-copy {
+  margin: 4px 0 0;
+  max-width: 58ch;
+  color: color-mix(in srgb, var(--color-ink, #1a1a1a) 48%, transparent);
+  font-size: 11px;
+  font-weight: 620;
+  line-height: 1.5;
+}
+
+.aquarium-dashboard-v2__secondary {
+  opacity: 0.94;
+}
+
+/* Child cards already own their surfaces. The dashboard should not wrap them in another card. */
+.aquarium-dashboard-v2 .aquarium-actions,
+.aquarium-dashboard-v2 .aquarium-archive,
+.aquarium-dashboard-v2 .aquarium-discovery,
+.aquarium-dashboard-v2 .aquarium-status,
+.aquarium-dashboard-v2 .aquarium-tank {
+  margin: 0;
+}
+
+/* Make the decision card visually dominant without making it louder. */
+.aquarium-dashboard-v2__decision .status-summary-card {
+  min-height: 100%;
+  border-radius: 22px;
+  box-shadow: 0 14px 36px rgba(27, 77, 62, 0.07);
+}
+
+/* 3D is context, not the primary task. */
+.aquarium-dashboard-v2__context .aquarium-tank {
+  height: 260px;
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.055);
+}
+
+.aquarium-dashboard-v2__manage .aquarium-actions,
+.aquarium-dashboard-v2__manage .aquarium-archive,
+.aquarium-dashboard-v2__secondary .aquarium-discovery {
+  border-radius: 20px;
+}
+
+@container aquarium-home (min-width: 720px) {
+  .aquarium-dashboard-v2 {
+    gap: 20px;
+  }
+
+  .aquarium-dashboard-v2__hero {
+    grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .aquarium-dashboard-v2__decision,
+  .aquarium-dashboard-v2__context {
+    order: initial;
+  }
+
+  .aquarium-dashboard-v2__context .aquarium-tank {
+    height: 100%;
+    min-height: 390px;
+    max-height: 500px;
+  }
+
+  .aquarium-dashboard-v2__manage-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+    align-items: start;
+    gap: 16px;
+  }
+}
+
+@container aquarium-home (min-width: 1080px) {
+  .aquarium-dashboard-v2__hero {
+    grid-template-columns: minmax(360px, 0.82fr) minmax(0, 1.18fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .aquarium-dashboard-v2 {
+    gap: 14px;
+  }
+
+  .aquarium-dashboard-v2__section {
+    padding-top: 14px;
+  }
+
+  .aquarium-dashboard-v2__section-heading {
+    margin-bottom: 8px;
+  }
+
+  .aquarium-dashboard-v2__context .aquarium-tank {
+    height: 230px;
+  }
+}
