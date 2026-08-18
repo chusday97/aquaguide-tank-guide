@@ -36,6 +36,18 @@ assert.equal(
 );
 assert.equal((reviewedNeon.evidence.claimRefs?.['environment.temperature'] || []).length, 2);
 
+const reviewedHarlequin = getReviewedSpeciesEnvironmentProfile('sp_0468');
+assert.ok(reviewedHarlequin, 'reviewed Trigonostigma heteromorpha profile should be available');
+assert.equal(reviewedHarlequin.environment.waterType, 'freshwater');
+assert.deepEqual(reviewedHarlequin.environment.ph, { min: 5, max: 7 });
+assert.equal(reviewedHarlequin.environment.minimumTankLengthCm, 60);
+assert.equal(
+  reviewedHarlequin.environment.temperature,
+  undefined,
+  'reviewed Harlequin rasbora profile must not collapse 22-25 C and 22-26 C source ranges into fake precision',
+);
+assert.equal((reviewedHarlequin.evidence.claimRefs?.['environment.ph'] || []).length, 2);
+
 assert.equal(
   getReviewedSpeciesEnvironmentProfile('species-without-reviewed-profile'),
   null,
@@ -249,10 +261,10 @@ const productionAuditIssues = [
 assert.deepEqual(productionAuditIssues, [], `production environment profiles must pass evidence audit: ${JSON.stringify(productionAuditIssues)}`);
 
 const coverage = getEnvironmentProfileCoverage();
-assert.equal(coverage.totalProfiles, 5);
-assert.equal(coverage.reviewedProfiles, 5);
-assert.equal(coverage.speciesTotalProfiles, 2);
-assert.equal(coverage.speciesReviewedProfiles, 2);
+assert.equal(coverage.totalProfiles, 6);
+assert.equal(coverage.reviewedProfiles, 6);
+assert.equal(coverage.speciesTotalProfiles, 3);
+assert.equal(coverage.speciesReviewedProfiles, 3);
 assert.equal(coverage.plantTotalProfiles, 3);
 assert.equal(coverage.plantReviewedProfiles, 3);
 assert.deepEqual(coverage.auditIssues, []);
