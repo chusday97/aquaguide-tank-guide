@@ -12,7 +12,7 @@ try {
 
   await page.goto(`${baseUrl}/identify`, { waitUntil: 'networkidle' });
   await page.locator('input[type="file"]').setInputFiles('public/responsive/care/pregnant_fish_breeder_box_realistic-960.webp');
-  await page.getByText('视觉模型未配置或暂不可用').waitFor({ timeout: 20_000 });
+  await page.locator('[data-identify-stage="candidates"]').waitFor({ state: 'visible', timeout: 20_000 });
 
   const input = page.getByLabel('没有合适候选？手动搜索物种库');
   await input.fill('鱼');
