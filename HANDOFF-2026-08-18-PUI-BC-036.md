@@ -58,4 +58,4 @@ Continue Action Completeness at the persistence layer. Prefer actions that curre
 
 ## Final registry verification target
 
-Latest-head Product Golden Path must report 18 features / 108 states / 32 Badcases on this independent branch, the Aquarium delete repository contract PASS, typecheck/build PASS, and GP-001～GP-005 PASS.
+Latest-head Product Golden Path must report 18 features / 108 states / 32 Badcases on this independent branch, keep `PUI-BC-036.featureId=aquarium_setup`, pass the Aquarium delete repository contract, pass typecheck/build, and pass GP-001～GP-005.
