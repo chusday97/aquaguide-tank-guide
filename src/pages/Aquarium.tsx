@@ -1111,6 +1111,8 @@ export default function AquariumManager() {
   const [aquariums, setAquariums] = useState<Aquarium[]>([]);
   const [activeId, setActiveId] = useState<string>('');
   const [pendingDeleteAquariumId, setPendingDeleteAquariumId] = useState<string | null>(null);
+  const [isDeletingAquarium, setIsDeletingAquarium] = useState(false);
+  const deleteAquariumOperationIdRef = useRef('');
   
   // UI States
   const [isAquariumMenuOpen, setIsAquariumMenuOpen] = useState(false);
@@ -1617,14 +1619,29 @@ export default function AquariumManager() {
     setPendingDeleteAquariumId(id);
   };
 
-  const confirmDeleteAquarium = () => {
-    if (!pendingDeleteAquariumId || aquariums.length <= 1) return;
-    const updated = aquariums.filter(a => a.id !== pendingDeleteAquariumId);
-    saveAquariums(updated);
-    if (activeId === pendingDeleteAquariumId) {
-      setActiveId(updated[0]?.id || '');
+  const confirmDeleteAquarium = async () => {
+    if (!pendingDeleteAquariumId || aquariums.length <= 1 || isDeletingAquarium) return;
+    const targetId = pendingDeleteAquariumId;
+    if (!deleteAquariumOperationIdRef.current) {
+      deleteAquariumOperationIdRef.current = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? `aquarium-delete:${crypto.randomUUID()}`
+        : `aquarium-delete:${targetId}:${Date.now()}`;
     }
-    setPendingDeleteAquariumId(null);
+    setIsDeletingAquarium(true);
+    try {
+      const repository = await getCurrentAquaGuideRepository();
+      await repository.deleteAquarium({ aquariumId: targetId, operationId: deleteAquariumOperationIdRef.current });
+      deleteAquariumOperationIdRef.current = '';
+      const updated = aquariums.filter(aquarium => aquarium.id !== targetId);
+      setAquariums(updated);
+      if (activeId === targetId) setActiveId(updated[0]?.id || '');
+      setPendingDeleteAquariumId(null);
+      showToast(isEn ? 'Aquarium deleted' : '鱼缸删除成功');
+    } catch (error) {
+      showToast(isEn ? 'Could not delete the aquarium. Please try again.' : '鱼缸没有删除成功，请重试。', 'error');
+    } finally {
+      setIsDeletingAquarium(false);
+    }
   };
 
   const openLocalDataManager = () => {
@@ -5508,10 +5525,11 @@ export default function AquariumManager() {
             <Button
               type="button"
               className="min-h-11 rounded-full bg-red-600 text-sm font-bold text-white hover:bg-red-700 disabled:bg-red-100 disabled:text-red-300"
-              disabled={aquariums.length <= 1}
-              onClick={confirmDeleteAquarium}
+              disabled={aquariums.length <= 1 || isDeletingAquarium}
+              aria-busy={isDeletingAquarium}
+              onClick={() => void confirmDeleteAquarium()}
             >
-              {t('aquarium.confirmDelete')}
+              {isDeletingAquarium ? (isEn ? 'Deleting…' : '删除中…') : t('aquarium.confirmDelete')}
             </Button>
           </DialogFooter>
         </DialogContent>
