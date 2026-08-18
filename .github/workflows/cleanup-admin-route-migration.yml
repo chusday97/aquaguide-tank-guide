@@ -1,3 +1,4 @@
+# One-shot cleanup: remove after App/AdminContent match main.
 name: Cleanup Admin Route Migration
 
 on:
