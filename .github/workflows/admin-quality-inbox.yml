@@ -1,0 +1,33 @@
+name: Admin Quality Inbox V1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/App.tsx'
+      - 'src/pages/AdminContent.tsx'
+      - 'src/pages/AdminFeedback.tsx'
+      - 'src/services/admin/feedback-admin.service.ts'
+      - 'apps/api/src/routes/feedback.ts'
+      - 'scripts/verify-admin-quality-inbox-contract.mjs'
+      - '.github/workflows/admin-quality-inbox.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Admin Quality Inbox contract
+        run: node scripts/verify-admin-quality-inbox-contract.mjs
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
