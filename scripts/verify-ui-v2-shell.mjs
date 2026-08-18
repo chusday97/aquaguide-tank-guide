@@ -77,6 +77,9 @@ try {
   const careMobileTab = mobileBottomNav.locator('[data-shell-nav-item="/care"]');
   await careMobileTab.click();
   await page.waitForURL(url => url.pathname === '/care');
+  await page.waitForFunction(() => (
+    document.querySelector('[data-shell="mobile-bottom-nav"] [data-shell-nav-item="/care"]')?.getAttribute('aria-current') === 'page'
+  ));
   assert.equal(await careMobileTab.getAttribute('aria-current'), 'page', 'mobile active state must follow route changes');
   assert.equal(await aquariumMobileTab.getAttribute('aria-current'), null, 'previous mobile destination must clear aria-current after navigation');
 
@@ -92,6 +95,9 @@ try {
   assert.equal(await desktopPrimaryNav.count(), 4, 'desktop sidebar must expose four primary destinations');
 
   const careDesktopNav = desktopSidebar.locator('[data-shell-nav-item="/care"]');
+  await page.waitForFunction(() => (
+    document.querySelector('[data-shell="desktop-sidebar"] [data-shell-nav-item="/care"]')?.getAttribute('aria-current') === 'page'
+  ));
   assert.equal(await careDesktopNav.getAttribute('aria-current'), 'page', 'desktop current destination must expose aria-current=page');
   const desktopNavSizes = await desktopPrimaryNav.evaluateAll(nodes => nodes.map(node => {
     const rect = node.getBoundingClientRect();
@@ -104,6 +110,9 @@ try {
   const encyclopediaDesktopNav = desktopSidebar.locator('[data-shell-nav-item="/encyclopedia"]');
   await encyclopediaDesktopNav.click();
   await page.waitForURL(url => url.pathname === '/encyclopedia');
+  await page.waitForFunction(() => (
+    document.querySelector('[data-shell="desktop-sidebar"] [data-shell-nav-item="/encyclopedia"]')?.getAttribute('aria-current') === 'page'
+  ));
   assert.equal(await encyclopediaDesktopNav.getAttribute('aria-current'), 'page', 'desktop active state must follow route changes');
   assert.equal(await careDesktopNav.getAttribute('aria-current'), null, 'previous desktop destination must clear aria-current after navigation');
 
