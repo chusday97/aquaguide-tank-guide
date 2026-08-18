@@ -50,6 +50,15 @@ assert.equal(
 );
 assert.ok(reviewedDwarfBabyTears.evidence.sourceRefs.length >= 2);
 
+const reviewedAnubias = getReviewedPlantEnvironmentProfile('sp_0075');
+assert.ok(reviewedAnubias, 'reviewed Anubias nana profile should be available');
+assert.equal(reviewedAnubias.environment.light, 'low');
+assert.equal(reviewedAnubias.environment.co2, 'optional');
+assert.equal(reviewedAnubias.planting.type, 'epiphyte');
+assert.equal(reviewedAnubias.planting.substrateRequired, 'none');
+assert.equal(reviewedAnubias.planting.leafDurability, 'tough');
+assert.ok(reviewedAnubias.evidence.sourceRefs.length >= 2);
+
 assert.equal(
   getReviewedPlantEnvironmentProfile('plant-without-reviewed-profile'),
   null,
@@ -91,6 +100,16 @@ assert.equal(
   false,
   'unsourced substrate material must stay absent from the reviewed presentation',
 );
+
+const anubiasCatalog = fishData.find(item => item.id === 'sp_0075');
+assert.ok(anubiasCatalog && isAquaticPlantSpecies(anubiasCatalog));
+const anubiasCare = buildSpeciesCarePresentation(anubiasCatalog);
+assert.equal(anubiasCare.sourceStatus, 'verified');
+assert.equal(anubiasCare.feedingItems.length, 0);
+assert.ok(anubiasCare.environmentItems.some(item => item.label === '光照' && item.value === '低光'));
+assert.ok(anubiasCare.environmentItems.some(item => item.label === 'CO₂' && item.value.includes('可选')));
+assert.ok(anubiasCare.environmentItems.some(item => item.label === '种植方式' && item.value.includes('附生')));
+assert.ok(anubiasCare.environmentItems.some(item => item.label === '底床' && item.value.includes('不依赖')));
 
 const unreviewedPlantCatalog = fishData.find(item => item.id === 'sp_0080');
 assert.ok(unreviewedPlantCatalog && isAquaticPlantSpecies(unreviewedPlantCatalog));
@@ -155,12 +174,12 @@ const productionAuditIssues = [
 assert.deepEqual(productionAuditIssues, [], `production environment profiles must pass evidence audit: ${JSON.stringify(productionAuditIssues)}`);
 
 const coverage = getEnvironmentProfileCoverage();
-assert.equal(coverage.totalProfiles, 3);
-assert.equal(coverage.reviewedProfiles, 3);
+assert.equal(coverage.totalProfiles, 4);
+assert.equal(coverage.reviewedProfiles, 4);
 assert.equal(coverage.speciesTotalProfiles, 1);
 assert.equal(coverage.speciesReviewedProfiles, 1);
-assert.equal(coverage.plantTotalProfiles, 2);
-assert.equal(coverage.plantReviewedProfiles, 2);
+assert.equal(coverage.plantTotalProfiles, 3);
+assert.equal(coverage.plantReviewedProfiles, 3);
 assert.deepEqual(coverage.auditIssues, []);
 
 console.log('Environment profile registry regression: PASS (species + plant review gates, safe plant presentation, evidence resolution, fail-closed lookup).');
