@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
       - name: Start preview
         run: |
           npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-ui-v2-preview.log 2>&1 &
