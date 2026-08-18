@@ -184,47 +184,53 @@ export function StatusSummaryCard({
         </Button>
       )}
 
-      <section id="care-plan" className="mt-4 border border-white/80 bg-white/68 text-ink shadow-[0_3px_14px_rgba(18,56,45,0.035)]">
-        <div className="flex min-h-11 w-full items-center justify-between gap-3 text-left">
-          <span className="flex min-w-0 items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-emerald-50 text-emerald-700">
-              <CalendarDays className="h-4 w-4" />
-            </span>
-            <span className="min-w-0">
-              <span className="type-card-title block text-ink">{t('aquarium.carePlan')}</span>
-              <span className="type-meta mt-0.5 block text-ink/45">{careSummary}</span>
-            </span>
+      {carePlan.activeCount === 0 ? (
+        <div id="care-plan" className="care-plan-empty-strip mt-4 flex min-h-12 items-center gap-3 rounded-[14px] border border-emerald-100/70 bg-white/68 px-3 py-2 text-ink">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-emerald-50 text-emerald-700">
+            <CalendarDays className="h-4 w-4" />
           </span>
-          {hasOverflowCarePlans && (
-            <button
-              type="button"
-              onClick={onToggleCarePlan}
-              aria-expanded={showCarePlan}
-              data-disclosure-purpose="overflow_list"
-              className="inline-flex shrink-0 items-center gap-1.5 px-2 text-ink/52 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-            >
-              <span className="type-meta">
-                {showCarePlan
-                  ? t('aquarium.collapse')
-                  : t('aquarium.carePlanMore', { count: carePlan.activeCount - 1 })}
-              </span>
-              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
-            </button>
-          )}
+          <span className="min-w-0 flex-1">
+            <span className="type-card-title block text-ink">{t('aquarium.carePlan')}</span>
+            <span className="type-meta mt-0.5 block text-ink/45">{careSummary}</span>
+          </span>
+          <button
+            type="button"
+            onClick={onBrowseCare}
+            className="care-plan-empty-action shrink-0 rounded-full px-2.5 py-2 text-[11px] font-black text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+          >
+            {t('aquarium.browseCare')}
+          </button>
         </div>
-
-        {carePlan.activeCount === 0 ? (
-          <div className="care-plan-empty mt-3 flex items-center justify-between gap-3 bg-bg/65">
-            <span className="type-meta text-ink/48">{t('aquarium.carePlanEmptyHint')}</span>
-            <button
-              type="button"
-              onClick={onBrowseCare}
-              className="care-plan-secondary-action shrink-0 bg-white text-emerald-700 shadow-sm"
-            >
-              {t('aquarium.browseCare')}
-            </button>
+      ) : (
+        <section id="care-plan" className="mt-4 border border-white/80 bg-white/68 text-ink shadow-[0_3px_14px_rgba(18,56,45,0.035)]">
+          <div className="flex min-h-11 w-full items-center justify-between gap-3 text-left">
+            <span className="flex min-w-0 items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-emerald-50 text-emerald-700">
+                <CalendarDays className="h-4 w-4" />
+              </span>
+              <span className="min-w-0">
+                <span className="type-card-title block text-ink">{t('aquarium.carePlan')}</span>
+                <span className="type-meta mt-0.5 block text-ink/45">{careSummary}</span>
+              </span>
+            </span>
+            {hasOverflowCarePlans && (
+              <button
+                type="button"
+                onClick={onToggleCarePlan}
+                aria-expanded={showCarePlan}
+                data-disclosure-purpose="overflow_list"
+                className="inline-flex shrink-0 items-center gap-1.5 px-2 text-ink/52 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+              >
+                <span className="type-meta">
+                  {showCarePlan
+                    ? t('aquarium.collapse')
+                    : t('aquarium.carePlanMore', { count: carePlan.activeCount - 1 })}
+                </span>
+                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
+              </button>
+            )}
           </div>
-        ) : (
+
           <div className="mt-3 grid gap-2.5">
             {careItems.map(item => (
               <article key={item.id} data-care-plan-visible className="care-plan-item border border-border/60 bg-white/88">
@@ -254,8 +260,8 @@ export function StatusSummaryCard({
               </article>
             ))}
           </div>
-        )}
-      </section>
+        </section>
+      )}
     </section>
   );
 }
