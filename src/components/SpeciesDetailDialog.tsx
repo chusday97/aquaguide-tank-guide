@@ -449,7 +449,8 @@ export function SpeciesDetailDialog({
   const [isRecordingDeath, setIsRecordingDeath] = useState(false);
   const deathReasonRef = useRef<HTMLTextAreaElement | null>(null);
   const careSectionButtonRef = useRef<HTMLElement | null>(null);
-  const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);
+  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');
+  const selectedFit = useMemo(() => fish && !isPlant ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, isPlant, t]);
   const displayFit = selectedFit;
   const selectedTaxonomy = fish ? getCareTaxonomyPath(fish) : null;
   const resolvedImageSrc = fish ? (imageSrc || getSpeciesDisplayImage(fish)) : '';
@@ -520,7 +521,6 @@ export function SpeciesDetailDialog({
 
   const sexIdentificationGuide = useMemo(() => fish && getLifeType(fish) !== 'plant' ? getSexIdentificationGuide(fish) : null, [fish]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
-  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');
   const compatibilityPairs = useMemo(() => {
     if (!fish || !aquariumContext || getLifeType(fish) === 'plant') return [];
     const selectedQuantity = aquariumContext.fishes.find(item => item.fishId === fish.id)?.quantity || 1;
@@ -714,7 +714,7 @@ export function SpeciesDetailDialog({
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <AdaptiveDetailContent showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
-          {fish && displayFit && (
+          {fish && (isPlant || displayFit) && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
               <SurfaceHeader
                 className="modalHeader species-detail-header"
@@ -807,7 +807,7 @@ export function SpeciesDetailDialog({
                 </section>
               )}
 
-                        {!isPlant && (
+                        {!isPlant && displayFit && (
                           <>
                         <div data-visual-result-status={mapFitStatus(displayFit.status)} className={`mt-2 rounded-[16px] border p-2.5 min-[760px]:mt-4 min-[760px]:rounded-[18px] min-[760px]:p-3 ${
                           displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
@@ -961,7 +961,7 @@ export function SpeciesDetailDialog({
                   )}
 
                   <div className="mt-4 grid gap-2" data-species-detail-sections>
-                    {!isPlant && (
+                    {!isPlant && displayFit && (
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
@@ -1020,7 +1020,7 @@ export function SpeciesDetailDialog({
 
                     )}
 
-                    {!isPlant && (
+                    {!isPlant && displayFit && (
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
