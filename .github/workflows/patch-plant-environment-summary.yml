@@ -1,0 +1,66 @@
+name: Patch Plant Environment Summary Boundary
+
+on:
+  push:
+    branches:
+      - agent/environment-decision-v1
+    paths:
+      - '.github/workflows/patch-plant-environment-summary.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Keep legacy fish environment summary off plant details
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('src/components/SpeciesDetailDialog.tsx')
+          source = path.read_text()
+          pattern = re.compile(r'''                  <section\n                    ref=\{careSectionButtonRef\}[\s\S]*?                  </section>''')
+          match = pattern.search(source)
+          if not match:
+              raise SystemExit('environment summary section not found')
+          block = match.group(0)
+          if 'data-species-environment-summary' not in block:
+              raise SystemExit('matched section is not the environment summary')
+          replacement = "                  {getLifeType(fish) !== 'plant' && (\n" + block + "\n                  )}"
+          source = source[:match.start()] + replacement + source[match.end():]
+          path.write_text(source)
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify care boundary
+        run: node scripts/test-species-detail-care-boundary.mjs
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Commit patch and remove one-shot workflow
+        run: |
+          rm .github/workflows/patch-plant-environment-summary.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/SpeciesDetailDialog.tsx .github/workflows/patch-plant-environment-summary.yml
+          git commit -m "Hide legacy environment summary for plants"
+          git push origin HEAD:agent/environment-decision-v1
