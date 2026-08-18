@@ -7363,7 +7363,7 @@ export default function AquariumManager() {
             <Button
               disabled={isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)}
               className={`min-h-11 rounded-full text-sm font-bold text-white ${selectedWaterDateHasRecord ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-700 hover:bg-emerald-800'}`}
-              onClick={() => {
+              onClick={async () => {
                 if (isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)) {
                   setWaterChangeError(isEn ? 'Only today or past water changes can be recorded.' : '只能记录今天或过去实际发生的换水。');
                   return;
