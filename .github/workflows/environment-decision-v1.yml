@@ -60,7 +60,7 @@ jobs:
 
           action_start = "  const handleMainAction = () => {\n    if (!fish || !displayFit) return;\n"
           assert action_start in source, 'handleMainAction start not found'
-          source = source.replace(action_start, action_start + "    if (isPlant) {\n      window.requestAnimationFrame(() => {\n        careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });\n        careSectionButtonRef.current?.focus({ preventScroll: true });\n      });\n      return;\n    }\n", 1)
+          source = source.replace(action_start, "  const handleMainAction = () => {\n    if (!fish) return;\n    if (isPlant) {\n      window.requestAnimationFrame(() => {\n        careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });\n        careSectionButtonRef.current?.focus({ preventScroll: true });\n      });\n      return;\n    }\n    if (!displayFit) return;\n", 1)
 
           verdict_start = source.index('                        <div data-visual-result-status=')
           actions_marker = '                        <div className="mt-2 flex flex-wrap gap-2 min-[760px]:mt-3">'
@@ -72,14 +72,12 @@ jobs:
           assert death_gate in source, 'death record control not found'
           source = source.replace(death_gate, '{!isPlant && onRecordDeath && (', 1)
 
-          compatibility_start_text = '''                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
-                      <button
-                        type="button"
-                        data-disclosure-purpose="secondary_evidence"
-                        aria-expanded={expandedSection === 'compatibility'}'''
-          compatibility_start = source.index(compatibility_start_text)
+          compatibility_marker = "aria-expanded={expandedSection === 'compatibility'}"
+          compatibility_marker_index = source.index(compatibility_marker)
+          compatibility_start = source.rfind('                    <section', 0, compatibility_marker_index)
+          assert compatibility_start >= 0, 'compatibility section start not found'
           sex_marker = '                    {sexIdentificationGuide && ('
-          compatibility_end = source.index(sex_marker, compatibility_start)
+          compatibility_end = source.index(sex_marker, compatibility_marker_index)
           compatibility_block = source[compatibility_start:compatibility_end]
           source = source[:compatibility_start] + "                    {!isPlant && (\n" + compatibility_block + "                    )}\n\n" + source[compatibility_end:]
           assert sex_marker in source, 'sex identification control not found'
