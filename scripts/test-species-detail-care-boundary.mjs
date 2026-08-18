@@ -63,5 +63,20 @@ assert.match(
   /\{!isPlant && sexIdentificationGuide && \(/,
   'animal sex-identification content must not appear on plant details',
 );
+assert.match(
+  source,
+  /const sexIdentificationGuide = useMemo\(\(\) => fish && getLifeType\(fish\) !== 'plant' \? getSexIdentificationGuide\(fish\) : null/,
+  'plant details must not execute animal sex-identification knowledge lookup',
+);
+assert.match(
+  source,
+  /const compatibilityPairs = useMemo\(\(\) => \{\s*if \(!fish \|\| !aquariumContext \|\| getLifeType\(fish\) === 'plant'\) return \[\];/,
+  'plant details must stop before pair compatibility evaluation',
+);
+assert.match(
+  source,
+  /const compatibilityVisualModel = useMemo<VisualResultViewModel \| null>\(\(\) => \{\s*if \(!fish \|\| isPlant\) return null;/,
+  'plant details must not build an animal compatibility result model',
+);
 
-console.log('Species detail care boundary: PASS (reviewed plant care is isolated from legacy feeding, fish-fit and animal-only surfaces).');
+console.log('Species detail care boundary: PASS (reviewed plant care is isolated from legacy feeding, fish-fit and animal-only evaluation surfaces).');
