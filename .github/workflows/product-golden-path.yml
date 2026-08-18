@@ -41,6 +41,10 @@ jobs:
           done
           cat /tmp/aquaguide-preview.log
           exit 1
+      - name: Care card action regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:care-card-action-ui
       - name: GP-001 first tank setup browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173

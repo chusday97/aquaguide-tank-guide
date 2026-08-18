@@ -2106,6 +2106,7 @@ export default function CareEncyclopedia() {
               onToggleAction={(value) => toggleValue(value, setCheckedActions)}
               onToggleFavorite={(source) => toggleFavorite(selectedTopic, source)}
               onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
+              onOpenCareCard={() => setShareTopic(selectedTopic)}
               onPreview={() => openPreview(selectedTopic)}
               onSelectRelated={(topic) => openCareDetail(topic.id, undefined, false)}
               onOpenCollection={() => navigateToRoute(taskRoutes.collection.care)}
@@ -2892,6 +2893,7 @@ export function CareArticleDetail({
   onToggleAction,
   onToggleFavorite,
   onOpenShare,
+  onOpenCareCard,
   onPreview,
   onSelectRelated,
   onOpenCollection,
@@ -2905,6 +2907,7 @@ export function CareArticleDetail({
   onToggleAction: (value: string) => void;
   onToggleFavorite: (source: HTMLElement) => void;
   onOpenShare: () => void;
+  onOpenCareCard?: () => void;
   onPreview: () => void;
   onSelectRelated: (topic: CareTopic) => void;
   onOpenCollection?: () => void;
@@ -3466,6 +3469,28 @@ export function CareArticleDetail({
               ))}
             </div>
           </section>
+
+          {onOpenCareCard && (
+            <section data-care-card-utility className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/35 p-3">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <div className="text-[12px] font-black text-ink">{isEn ? 'Take this guide with you' : '带走这份指南'}</div>
+                  <p className="mt-0.5 text-[10px] font-bold leading-relaxed text-ink/45">
+                    {isEn ? 'Generate a local care card you can preview and copy. This does not create a public share link.' : '生成可预览、可复制的本地养护卡；不会创建公开分享链接。'}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onOpenCareCard}
+                  className="h-10 shrink-0 rounded-full border-emerald-200 bg-white px-4 text-[12px] font-black text-emerald-800 hover:bg-emerald-50"
+                >
+                  <Copy className="mr-1 h-4 w-4" />
+                  {isEn ? 'Generate Care Card' : '生成养护卡'}
+                </Button>
+              </div>
+            </section>
+          )}
 
           {relatedTopics.length > 0 && (
             <section className="mt-3 rounded-[18px] border border-border bg-white p-3">
