@@ -18,7 +18,7 @@ assert.match(
 );
 assert.match(
   waterChangeService,
-  /sourceType\s*===\s*['"]water_change_day['"]/,
+  /sourceType\s*===\s*['"]water_change_day['"]/, 
   'Only canonical water_change_day care events may rebuild the exact calendar history.',
 );
 
@@ -36,6 +36,16 @@ assert.doesNotMatch(tankHandler, /saveAquariums\(/, 'Today water-change action m
 assert.match(tankHandler, /getCurrentAquaGuideRepository\(\)/, 'Today water-change action must resolve the active repository.');
 assert.match(tankHandler, /await repository\.saveAquarium\(/, 'Today water-change action must await the aquarium fact save before success.');
 assert.match(tankHandler, /water_change_day/, 'Today water-change action must persist the exact date as a canonical care event.');
+assert.match(
+  tankHandler,
+  /const rollbackActions: Array<\(\) => Promise<void>> = \[\]/,
+  'Today water-change action must stage compensating care-event rollbacks before repository persistence can fail.',
+);
+assert.match(
+  tankHandler,
+  /await runWaterChangeRollbacks\(rollbackActions\)/,
+  'Today water-change failure path must execute compensating care-event rollbacks instead of leaving a half-persisted event.',
+);
 
 assert.match(
   aquariumPage,
@@ -50,6 +60,22 @@ assert.doesNotMatch(calendarHandler, /saveAquariums\(/, 'Calendar water-change a
 assert.match(calendarHandler, /getCurrentAquaGuideRepository\(\)/, 'Calendar water-change action must resolve the active repository.');
 assert.match(calendarHandler, /await repository\.saveAquarium\(/, 'Calendar water-change action must await the aquarium summary fact save.');
 assert.match(calendarHandler, /persistCareTimelineEvent|removeCareTimelineEventBySource/, 'Calendar water-change action must persist or remove the exact date care event.');
+assert.match(
+  calendarHandler,
+  /const rollbackActions: Array<\(\) => Promise<void>> = \[\]/,
+  'Calendar water-change action must stage a compensating rollback for each care-event mutation.',
+);
+assert.match(
+  calendarHandler,
+  /await runWaterChangeRollbacks\(rollbackActions\)/,
+  'Calendar water-change failure path must compensate the exact-date care event when aquarium persistence fails.',
+);
+
+assert.match(
+  aquariumPage,
+  /const runWaterChangeRollbacks = async \(rollbackActions: Array<\(\) => Promise<void>>\)/,
+  'Aquarium page must provide a shared best-effort rollback runner for multi-write water-change mutations.',
+);
 
 assert.match(
   businessContracts,
