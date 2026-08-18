@@ -961,6 +961,7 @@ export function SpeciesDetailDialog({
                   )}
 
                   <div className="mt-4 grid gap-2" data-species-detail-sections>
+                    {!isPlant && (
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
@@ -1016,6 +1017,8 @@ export function SpeciesDetailDialog({
                         </div>
                       )}
                     </section>
+
+                    )}
 
                     {!isPlant && (
                     <section className="overflow-hidden rounded-[18px] border border-border bg-white">
