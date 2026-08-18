@@ -31,6 +31,18 @@ jobs:
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
 
+      - name: Product evaluation contracts
+        run: |
+          npm run test:product-evaluation
+          npm run test:golden-path-contract
+          npm run test:compatibility-evidence-coverage
+          npm run test:compatibility-coverage-scorecard
+          npm run test:session-events
+          node --import tsx scripts/audit-compatibility-evidence-priority.ts
+          npm run test:task-entry
+          npm run test:core-flow-state-eval
+          npm run test:daily-check
+
       - name: Type check
         run: npm run lint
 
@@ -54,7 +66,39 @@ jobs:
           exit 1
 
       - name: UI interaction browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-ui-interaction-repair-v1.mjs
+
+      - name: Care card action regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:care-card-action-ui
+
+      - name: GP-001 first tank setup browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp001-ui
+
+      - name: GP-002 continuous browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp002-ui
+
+      - name: GP-003 returning user Daily Check browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp003-ui
+
+      - name: GP-004 abnormal care browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp004-ui
+
+      - name: GP-005 collection context browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-golden-path-collection-context.mjs
 
       - name: Upload interaction screenshots
         if: always()
