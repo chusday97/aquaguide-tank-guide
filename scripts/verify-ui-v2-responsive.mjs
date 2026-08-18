@@ -28,8 +28,10 @@ try {
   const dashboard = page.locator('[data-aquarium-dashboard-v2]');
   const today = page.locator('[data-dashboard-priority="today"]');
   const context = page.locator('[data-dashboard-priority="context"]');
+  const manage = page.locator('#aquarium-manage-zone');
   await dashboard.waitFor();
   await today.waitFor();
+  await manage.waitFor();
   await context.waitFor();
   assert.equal(await page.locator('.aquarium-zone-index').count(), 0, 'Decision-first Aquarium must not reintroduce numbered Observe / Manage / Learn zones');
 
@@ -40,16 +42,26 @@ try {
 
   const compactPriority = await page.evaluate(() => {
     const todayElement = document.querySelector('[data-dashboard-priority="today"]');
+    const manageElement = document.querySelector('#aquarium-manage-zone');
     const contextElement = document.querySelector('[data-dashboard-priority="context"]');
     const tankElement = contextElement?.querySelector('.aquarium-tank');
-    if (!(todayElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement) || !(tankElement instanceof HTMLElement)) return null;
+    if (!(todayElement instanceof HTMLElement) || !(manageElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement) || !(tankElement instanceof HTMLElement)) return null;
     const todayRect = todayElement.getBoundingClientRect();
+    const manageRect = manageElement.getBoundingClientRect();
     const contextRect = contextElement.getBoundingClientRect();
     const tankRect = tankElement.getBoundingClientRect();
-    return { todayTop: todayRect.top, contextTop: contextRect.top, tankHeight: Math.round(tankRect.height) };
+    return {
+      todayTop: Math.round(todayRect.top),
+      manageTop: Math.round(manageRect.top),
+      contextTop: Math.round(contextRect.top),
+      tankHeight: Math.round(tankRect.height),
+    };
   });
-  assert.ok(compactPriority && compactPriority.todayTop <= compactPriority.contextTop, `mobile dashboard must show Today's decision area before tank context: ${JSON.stringify(compactPriority)}`);
-  assert.ok(compactPriority && compactPriority.tankHeight <= 190, `mobile tank preview must remain contextual rather than becoming a second hero, got ${JSON.stringify(compactPriority)}`);
+  assert.ok(
+    compactPriority && compactPriority.todayTop < compactPriority.manageTop && compactPriority.manageTop < compactPriority.contextTop,
+    `mobile dashboard must prioritize Today's decision -> management -> tank context, got ${JSON.stringify(compactPriority)}`,
+  );
+  assert.ok(compactPriority && compactPriority.tankHeight <= 160, `mobile tank preview must remain contextual and below recurrent management, got ${JSON.stringify(compactPriority)}`);
 
   const grid = page.locator('.quick-action-primary');
   await grid.waitFor();
@@ -153,7 +165,7 @@ try {
   assert.ok(wideOverflow.scrollWidth <= wideOverflow.viewportWidth + 1, `wide Aquarium must not overflow horizontally: ${JSON.stringify(wideOverflow)}`);
   assert.deepEqual(pageErrors, [], `UI V2 responsive path must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + compact onboarding + contextual tank + quiet sections across 390/900/1600).');
+  console.log('AquaGuide UI V2 responsive regression: PASS (task-first mobile hierarchy + compact onboarding + contextual tank + quiet sections across 390/900/1600).');
 } finally {
   await browser.close();
 }
