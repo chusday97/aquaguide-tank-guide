@@ -184,6 +184,29 @@ await withBrowser(async browser => {
     console.log('✓ sidebar search');
     await page.close();
 });
+
+await withBrowser(async browser => {
+    const { page, errors } = await createPage(browser, { width: 1100, height: 850 });
+    await page.goto(`${baseUrl}/search`, { waitUntil: 'networkidle' });
+    const input = page.locator('main [role="combobox"]');
+    await input.fill('鱼');
+    const listbox = page.locator('main [role="listbox"]');
+    await listbox.waitFor({ state: 'visible' });
+    const showAllAction = listbox.locator('button:not([role="option"])');
+    assert.equal(await showAllAction.count(), 1, '超过联想上限时必须只有一个明确的“查看全部物种”动作');
+    const showAllLabel = (await showAllAction.innerText()).trim();
+    const advertisedTotal = Number(showAllLabel.match(/\d+/)?.[0] || 0);
+    assert.ok(advertisedTotal > 18, `宽泛搜索应产生超过18个物种以验证查看全部闭环，实际文案：${showAllLabel}`);
+    await showAllAction.click();
+    await page.waitForURL(url => url.pathname === '/search' && url.searchParams.get('q') === '鱼');
+    const speciesSection = page.locator('section[aria-labelledby="species-results-title"]');
+    await speciesSection.waitFor({ state: 'visible' });
+    const resultCards = speciesSection.locator('div.mt-3 > button');
+    assert.equal(await resultCards.count(), advertisedTotal, `点击“查看全部 ${advertisedTotal} 个物种”后必须真实显示全部匹配结果，而不是继续截断为18条`);
+    assert.deepEqual(errors, [], `查看全部物种动作不应产生页面错误：${errors.join(' | ')}`);
+    console.log(`✓ global search show-all action (${advertisedTotal})`);
+    await page.close();
+});
 }
 
 if (group === 'identify') {
