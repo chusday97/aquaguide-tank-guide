@@ -19,25 +19,11 @@ jobs:
           ref: agent/water-change-cloud-persistence
       - name: Apply focused persistence patch
         run: python3 scripts/apply-water-change-cloud-fix.py
-      - name: Restore permanent-only workflow and commit product fix
+      - name: Commit product fix
         run: |
-          git fetch origin main --depth=1
-          git show origin/main:.github/workflows/product-golden-path.yml > /tmp/product-golden-path.yml
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('/tmp/product-golden-path.yml')
-          text = path.read_text()
-          marker = "          npm run test:daily-check\n      - name: Type check"
-          replacement = "          npm run test:daily-check\n      - name: Water-change cloud persistence contract\n        run: node scripts/test-water-change-cloud-persistence-contract.mjs\n      - name: Type check"
-          if marker not in text:
-              raise SystemExit('permanent workflow insertion marker not found')
-          path.write_text(text.replace(marker, replacement, 1))
-          PY
-          cp /tmp/product-golden-path.yml .github/workflows/product-golden-path.yml
-          git rm scripts/apply-water-change-cloud-fix.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/Aquarium.tsx src/services/repository/api-aquaguide.repository.ts packages/contracts/src/business.ts .github/workflows/product-golden-path.yml
+          git add src/pages/Aquarium.tsx src/services/repository/api-aquaguide.repository.ts packages/contracts/src/business.ts
           git commit -m "fix: persist water-change history across cloud reloads"
           git push origin HEAD:agent/water-change-cloud-persistence
 
