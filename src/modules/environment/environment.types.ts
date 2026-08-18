@@ -15,6 +15,13 @@ export type EvidenceMeta = {
   confidence: TraitConfidence;
   reviewStatus: ReviewStatus;
   sourceRefs: string[];
+  /**
+   * Trait-level provenance for reviewed knowledge.
+   * Keys use the profile path, for example `environment.temperature`
+   * or `planting.type`. A reviewed explicit trait is not production-safe
+   * unless at least one registered source is attached to that exact claim.
+   */
+  claimRefs?: Record<string, string[]>;
 };
 
 export type SpeciesEnvironmentProfile = {
