@@ -42,3 +42,5 @@ jobs:
           git add src/pages/Aquarium.tsx
           git commit -m "Compensate partial water-change writes"
           git push origin HEAD:agent/water-change-cloud-persistence
+
+# Branch-scoped migration workflow; remove after the compensation source commit lands.
