@@ -42,3 +42,5 @@ jobs:
           git add src/pages/Aquarium.tsx
           git commit -m "Restructure Aquarium into decision-first dashboard"
           git push origin HEAD:agent/ui-v2-aquarium-foundation
+
+# This workflow is intentionally branch-scoped: it transforms only the Draft UI V2 branch.
