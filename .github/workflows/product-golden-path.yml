@@ -6,46 +6,7 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: write
-
 jobs:
-  apply-calendar-caller-fix:
-    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'agent/water-change-cloud-persistence' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: agent/water-change-cloud-persistence
-      - name: Make calendar save callback async
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('src/pages/Aquarium.tsx')
-          text = path.read_text()
-          marker = "if (isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)) {"
-          marker_index = text.find(marker)
-          if marker_index < 0:
-              raise SystemExit('calendar persistence marker not found')
-          callback = 'onClick={() => {'
-          async_callback = 'onClick={async () => {'
-          callback_index = text.rfind(callback, 0, marker_index)
-          async_index = text.rfind(async_callback, 0, marker_index)
-          if callback_index >= 0 and callback_index > async_index:
-              text = text[:callback_index] + async_callback + text[callback_index + len(callback):]
-              path.write_text(text)
-          elif async_index < 0:
-              raise SystemExit('calendar callback marker not found')
-          PY
-      - name: Commit caller fix when needed
-        run: |
-          if git diff --quiet -- src/pages/Aquarium.tsx; then exit 0; fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/Aquarium.tsx
-          git commit -m "fix: await calendar water-change persistence"
-          git push origin HEAD:agent/water-change-cloud-persistence
-
   validate:
     runs-on: ubuntu-latest
     steps:
