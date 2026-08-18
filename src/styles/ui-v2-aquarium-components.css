@@ -10,8 +10,9 @@
 }
 
 .status-summary-task {
-  border-radius: 16px;
-  padding: 16px;
+  border-top: 1px solid rgba(27, 77, 62, 0.08);
+  border-radius: 0;
+  padding: 16px 0 0;
 }
 
 .status-primary-action {
@@ -27,7 +28,8 @@
 }
 
 #care-plan {
-  padding: 13px;
+  border-top: 1px solid rgba(27, 77, 62, 0.08);
+  padding: 13px 0 0;
 }
 
 .care-plan-empty {
@@ -384,11 +386,11 @@
 
 @container aquarium-home (min-width: 940px) {
   .status-summary-task {
-    padding: 18px;
+    padding: 18px 0 0;
   }
 
   #care-plan {
-    padding: 14px;
+    padding: 14px 0 0;
   }
 }
 
