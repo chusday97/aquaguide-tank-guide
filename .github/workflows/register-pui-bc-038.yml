@@ -37,3 +37,5 @@ jobs:
           git add evaluation/product/badcases.v1.jsonl
           git commit -m "Register PUI-BC-038 water-change partial writes"
           git push origin HEAD:agent/water-change-cloud-persistence
+
+# Temporary branch-scoped registry writer; remove after the JSONL commit lands.
