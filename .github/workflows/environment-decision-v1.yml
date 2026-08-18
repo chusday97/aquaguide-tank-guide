@@ -1,0 +1,38 @@
+name: Environment Decision V1
+
+on:
+  push:
+    branches:
+      - agent/environment-decision-v1
+  pull_request:
+    paths:
+      - 'src/modules/environment/**'
+      - 'scripts/test-environment-decision-engine.ts'
+      - '.github/workflows/environment-decision-v1.yml'
+      - 'HANDOFF-2026-08-18-ENVIRONMENT-DECISION-V1.md'
+
+jobs:
+  environment-decision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Environment decision regression
+        run: npx tsx scripts/test-environment-decision-engine.ts
