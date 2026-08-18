@@ -467,7 +467,7 @@ export function CompatibilityRiskCalculator({
           <X className="h-4 w-4" />
         </button>
       )}
-      <header className="flex flex-wrap items-start justify-between gap-3 pr-12">
+      <header className="order-1 flex flex-wrap items-start justify-between gap-3 pr-12">
         <div>
           <h2 className="mt-1 text-[22px] font-black text-ink">{isEn ? 'Can these species live together?' : '这些生物能不能一起养？'}</h2>
           <p className="mt-1 max-w-[680px] text-[12px] font-semibold leading-5 text-ink/52">
@@ -487,7 +487,7 @@ export function CompatibilityRiskCalculator({
         )}
       </header>
 
-      <section className="rounded-[18px] bg-bg/65 p-3">
+      <section className="order-2 rounded-[18px] bg-bg/65 p-3">
         <div className="flex items-center justify-between gap-2">
           <div className="text-[12px] font-black text-ink">{isEn ? 'Evaluation baseline' : '当前鱼缸'}</div>
           {selectedAquarium && onViewAquarium && (
@@ -507,7 +507,7 @@ export function CompatibilityRiskCalculator({
         )}
       </section>
 
-      <section className="grid gap-3 rounded-[18px] border border-border/70 p-3">
+      <section data-compatibility-selection className={`${canEvaluate && resultStatus && meta ? 'order-4' : 'order-3'} grid gap-3 rounded-[18px] border border-border/70 p-3`}>
         <div>
           <div className="text-[13px] font-black text-ink">{selectedAquarium && existingLivestock.length > 0 ? (isEn ? 'What do you want to add?' : '你准备加入什么？') : (isEn ? 'Select species to compare' : '选择要比较的生物')}</div>
           <div className="mt-1 text-[10px] font-bold text-ink/42">
@@ -568,7 +568,7 @@ export function CompatibilityRiskCalculator({
         <button type="button" onClick={onBrowseAtlas} className="w-fit text-[11px] font-black text-emerald-700">{isEn ? 'Browse all species →' : '从完整图鉴继续选择 →'}</button>
       </section>
 
-      <section className="grid gap-3">
+      <section data-compatibility-result className={`${canEvaluate && resultStatus && meta ? 'order-3' : 'order-4'} grid gap-3`}>
         <div className="flex items-center justify-between gap-2">
           <div className="text-[13px] font-black text-ink">{isEn ? 'Compatibility result' : '混养结果'}</div>
         </div>
@@ -688,7 +688,7 @@ export function CompatibilityRiskCalculator({
       </section>
 
       {aiOpen && (
-        <section data-ai-advice-inline className="rounded-[22px] border border-violet-100 bg-violet-50/55 p-4 sm:p-5">
+        <section data-ai-advice-inline className="order-5 rounded-[22px] border border-violet-100 bg-violet-50/55 p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="inline-flex items-center gap-1.5 text-[10px] font-black tracking-[0.16em] text-violet-700"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'AI INTERPRETATION' : 'AI 建议'}</div>

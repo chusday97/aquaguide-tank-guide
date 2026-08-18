@@ -169,6 +169,9 @@ try {
     assert.ok(['✓', '!', '?', '×'].includes(symbolValue || ''), `Compatibility verdict must expose a compact semantic symbol; got ${symbolValue}`);
     const symbolBox = await symbol.boundingBox();
     assert.ok(symbolBox && symbolBox.width >= 50 && symbolBox.height >= 50, 'Compatibility verdict symbol must visually dominate paragraph copy.');
+    const verdictBox = await verdict.boundingBox();
+    const selectorBox = await page.locator('[data-compatibility-selection]').boundingBox();
+    assert.ok(verdictBox && selectorBox && verdictBox.y < selectorBox.y, `Compatibility result must appear before the selector once a verdict exists; verdictY=${verdictBox?.y}, selectorY=${selectorBox?.y}.`);
     assert.equal(await page.locator('dialog').filter({ hasText: '为什么会这样' }).count(), 0, 'Compatibility explanation must not pre-render as a nested dialog.');
     await page.screenshot({ path: `${outputDir}/compatibility-verdict-900.png`, fullPage: false });
     assert.deepEqual(errors, [], `Compatibility verdict flow emitted page errors: ${errors.join('; ')}`);

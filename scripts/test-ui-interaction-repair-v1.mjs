@@ -28,6 +28,9 @@ assert(!livestock.includes('onClick={prepareReview} disabled={!hasPendingSelecti
 
 assert(compatibility.includes('data-compatibility-verdict={resultStatus}'), 'Compatibility result must expose a dominant semantic verdict');
 assert(compatibility.includes('data-verdict-symbol={verdictCue?.symbol}'), 'Compatibility verdict must provide a scan-first symbol');
+assert(compatibility.includes('data-compatibility-result'), 'Compatibility result must expose a stable primary-result section');
+assert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-3' : 'order-4'"), 'Evaluable compatibility result must move ahead of the species selector');
+assert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-4' : 'order-3'"), 'Species selector must move behind an existing compatibility result');
 assert(compatibility.includes('信息不足 ≠ 安全'), 'Unknown must not visually/semantically collapse into safe');
 assert(compatibility.includes('data-ai-advice-inline'), 'AI explanation must be inline/progressive disclosure');
 assert(!compatibility.includes('<Dialog open={aiOpen}'), 'Non-blocking compatibility explanation must not open another Dialog');
