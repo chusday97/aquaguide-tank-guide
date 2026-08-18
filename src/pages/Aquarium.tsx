@@ -1239,6 +1239,19 @@ export default function AquariumManager() {
     setCareTimelineRevision(value => value + 1);
   };
 
+  const runWaterChangeRollbacks = async (rollbackActions: Array<() => Promise<void>>) => {
+    let rollbackSucceeded = true;
+    for (const rollback of [...rollbackActions].reverse()) {
+      try {
+        await rollback();
+      } catch (error) {
+        rollbackSucceeded = false;
+        console.error('AquaGuide water-change rollback failed', error);
+      }
+    }
+    return rollbackSucceeded;
+  };
+
   const openAquariumSpeciesDetail = (fish: Fish, aqFish: AquariumFish, sourceId?: string) => {
     speciesDetailNavigationContextRef.current = captureContext(sourceId);
     setSelectedWishlistFish(null);
@@ -2270,6 +2283,7 @@ export default function AquariumManager() {
     const hasTodayRecord = history.includes(todayStr);
     const newHistory = toggleWaterChangeDate(history, todayStr);
     const nextAquarium = applyWaterChangeHistory(activeAquarium, newHistory);
+    const rollbackActions: Array<() => Promise<void>> = [];
 
     setIsWaterChangeSaving(true);
     setWaterChangeError('');
@@ -2277,6 +2291,18 @@ export default function AquariumManager() {
     try {
       if (hasTodayRecord) {
         await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', todayStr);
+        rollbackActions.push(async () => {
+          await persistCareTimelineEvent({
+            aquariumId: activeAquarium.id,
+            eventType: 'water_change',
+            title: isEn ? 'Logged water change' : '记录换水',
+            payload: { date: todayStr },
+            occurredAt: waterChangeDateToIso(todayStr) || now,
+            sourceType: 'water_change_day',
+            sourceId: todayStr,
+            isInferred: false,
+          });
+        });
         await persistCareTimelineEvent({
           aquariumId: activeAquarium.id,
           eventType: 'water_change',
@@ -2286,6 +2312,9 @@ export default function AquariumManager() {
           sourceType: 'water_change_reversal',
           sourceId: todayStr,
           isInferred: false,
+        });
+        rollbackActions.push(async () => {
+          await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_reversal', todayStr);
         });
       } else {
         await persistCareTimelineEvent({
@@ -2298,6 +2327,9 @@ export default function AquariumManager() {
           sourceId: todayStr,
           isInferred: false,
         });
+        rollbackActions.push(async () => {
+          await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', todayStr);
+        });
       }
       const repository = await getCurrentAquaGuideRepository();
       const savedAquarium = await repository.saveAquarium(nextAquarium);
@@ -2308,7 +2340,10 @@ export default function AquariumManager() {
         : (isEn ? `Logged water change: ${format(new Date(), 'yyyy-MM-dd HH:mm')}` : `已记录换水：${format(new Date(), 'yyyy-MM-dd HH:mm')}`));
       return true;
     } catch {
-      const message = isEn ? 'Could not save the water-change record. Try again.' : '换水记录没有保存成功，请重试。';
+      const rollbackSucceeded = await runWaterChangeRollbacks(rollbackActions);
+      const message = rollbackSucceeded
+        ? (isEn ? 'Could not save the water-change record. Try again.' : '换水记录没有保存成功，请重试。')
+        : (isEn ? 'Save failed and the care timeline could not be fully restored. Refresh before retrying.' : '换水保存失败，且养护时间线未能完全恢复。请刷新确认后再重试。');
       setWaterChangeError(message);
       showToast(message, 'error');
       return false;
@@ -2390,6 +2425,7 @@ export default function AquariumManager() {
     const newHistory = toggleWaterChangeDate(previousHistory, dateStr);
     const isAdding = newHistory.includes(dateStr);
     const nextAquarium = applyWaterChangeHistory(activeAquarium, newHistory);
+    const rollbackActions: Array<() => Promise<void>> = [];
     try {
       if (isAdding) {
         await persistCareTimelineEvent({
@@ -2402,8 +2438,23 @@ export default function AquariumManager() {
           sourceId: dateStr,
           isInferred: false,
         });
+        rollbackActions.push(async () => {
+          await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', dateStr);
+        });
       } else {
         await removeCareTimelineEventBySource(activeAquarium.id, 'water_change_day', dateStr);
+        rollbackActions.push(async () => {
+          await persistCareTimelineEvent({
+            aquariumId: activeAquarium.id,
+            eventType: 'water_change',
+            title: isEn ? 'Logged water change' : '记录换水',
+            payload: { date: dateStr },
+            occurredAt: waterChangeDateToIso(dateStr) || new Date().toISOString(),
+            sourceType: 'water_change_day',
+            sourceId: dateStr,
+            isInferred: false,
+          });
+        });
       }
       const repository = await getCurrentAquaGuideRepository();
       const savedAquarium = await repository.saveAquarium(nextAquarium);
@@ -2411,6 +2462,7 @@ export default function AquariumManager() {
       setAquariums(current => current.map(aquarium => aquarium.id === activeId ? hydratedSaved : aquarium));
       return true;
     } catch {
+      await runWaterChangeRollbacks(rollbackActions);
       return false;
     }
   };
