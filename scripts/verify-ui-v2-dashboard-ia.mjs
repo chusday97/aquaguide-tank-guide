@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
 const source = fs.readFileSync('src/pages/Aquarium.tsx', 'utf8');
+const statusCardSource = fs.readFileSync('src/components/product/StatusSummaryCard.tsx', 'utf8');
 
 const required = [
   'className="aquarium-dashboard-v2"',
@@ -35,4 +36,21 @@ if (/AquariumZoneHeader|aquarium-observe-zone|aquarium-followup-grid/.test(works
   throw new Error('Legacy equal-weight Observe / Manage / Learn workspace structure returned.');
 }
 
-console.log('Aquarium Dashboard V2 source IA contract passed.');
+const carePlanMarkers = [
+  'data-disclosure-purpose="care_plan_details"',
+  'data-care-plan-details',
+  'const careItems = showCarePlan ? carePlan.visibleItems : [];',
+  '{showCarePlan && (',
+];
+
+for (const marker of carePlanMarkers) {
+  if (!statusCardSource.includes(marker)) {
+    throw new Error(`Daily decision card must keep care-plan detail behind disclosure: ${marker}`);
+  }
+}
+
+if (statusCardSource.includes('carePlan.visibleItems.slice(0, 1)')) {
+  throw new Error('Daily decision card must not render the first care-plan item before the user expands details.');
+}
+
+console.log('Aquarium Dashboard V2 source IA contract passed (decision-first + collapsed care-plan detail).');
