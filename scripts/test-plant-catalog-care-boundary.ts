@@ -61,12 +61,25 @@ for (const profile of plantEnvironmentProfiles) {
 const categoryAnomalies = plants.filter(plant => !/水草|植物|plant/i.test(plant.category || ''));
 const rawFeedingProfileAnomalies = plants.filter(plant => Boolean(plant.feedingProfile));
 
+// Baseline captured by Environment Decision V1 #95 on 2026-08-18.
+// Legacy debt may shrink, but new catalog work must not increase it.
+assert.ok(
+  categoryAnomalies.length <= 30,
+  `raw plant category debt must not grow beyond the audited baseline of 30; got ${categoryAnomalies.length}`,
+);
+assert.ok(
+  rawFeedingProfileAnomalies.length <= 65,
+  `raw animal feeding-profile debt on plants must not grow beyond the audited baseline of 65; got ${rawFeedingProfileAnomalies.length}`,
+);
+
 console.log(JSON.stringify({
   classifiedPlants: plants.length,
   reviewedPlantProfiles: reviewedPlantIds.size,
   rawCategoryAnomalies: categoryAnomalies.length,
   rawAnimalFeedingProfileAnomalies: rawFeedingProfileAnomalies.length,
+  categoryDebtBudget: 30,
+  animalFeedingProfileDebtBudget: 65,
   categoryAnomalyIds: categoryAnomalies.slice(0, 20).map(item => item.id),
   feedingProfileAnomalyIds: rawFeedingProfileAnomalies.slice(0, 20).map(item => item.id),
 }, null, 2));
-console.log('Plant catalog care boundary: PASS (all classified plants fail closed against animal feeding fallbacks).');
+console.log('Plant catalog care boundary: PASS (all classified plants fail closed; legacy plant-data debt cannot increase).');
