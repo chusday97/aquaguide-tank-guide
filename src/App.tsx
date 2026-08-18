@@ -915,17 +915,21 @@ function DesktopAppShell({
 function MobileAppShell() {
   const { navigateToRoute } = useWorkspaceNavigation();
   const { t } = useTranslation();
+  const location = useLocation();
+  const isAquariumWorkspace = location.pathname === '/aquarium';
   return (
     <div
       className="aquaguide-app phone-shell-active flex min-h-[100dvh] flex-col overflow-x-hidden bg-[#dfe8e5] text-ink"
       data-layout-mode="phone"
     >
       <div className="app-main-shell mx-auto flex min-h-0 w-full max-w-[430px] flex-1 flex-col overflow-hidden bg-bg shadow-2xl">
-        <header data-shell="mobile-header" className="flex shrink-0 items-center justify-end gap-1 border-b border-ink/5 bg-white/92 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] backdrop-blur-md">
+        {!isAquariumWorkspace && (
+          <header data-shell="mobile-header" className="flex shrink-0 items-center justify-end gap-1 border-b border-ink/5 bg-white/92 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] backdrop-blur-md">
           <button type="button" data-shell-action="search" onClick={() => navigateToRoute('/search')} aria-label={t('searchPage.title')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><SearchIcon className="h-5 w-5" /></button>
           <button type="button" data-shell-action="identify" onClick={() => navigateToRoute('/identify')} aria-label={t('identify.entry')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><Camera className="h-5 w-5" /></button>
           <button type="button" data-shell-action="settings" onClick={() => navigateToRoute('/settings')} aria-label={t('common.settings')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><Settings className="h-5 w-5" /></button>
-        </header>
+          </header>
+        )}
         <main className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-[calc(88px+env(safe-area-inset-bottom))] pt-3">
           <div className="mx-auto w-full max-w-full min-w-0 overflow-x-hidden">
             <WorkspaceRoutes />
