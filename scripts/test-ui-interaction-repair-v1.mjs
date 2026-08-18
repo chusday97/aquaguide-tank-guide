@@ -22,6 +22,8 @@ assert(species.includes('desktopSize="wide" data-detail-kind="species"'), 'Speci
 
 assert(livestock.includes('data-livestock-review-default-valid'), 'Livestock default state must be accepted by review CTA');
 assert(livestock.includes("data-livestock-finish-mode={hasDraftChanges ? 'save' : 'done'}"), 'Unchanged valid defaults need a Done path');
+assert(livestock.includes('const hasDraftChanges = hasPendingSelection;'), 'Livestock dirty/save mode must follow semantic user selection changes');
+assert(!livestock.includes('JSON.stringify(draft) !== JSON.stringify(record)'), 'Internal metadata changes must not masquerade as user edits');
 assert(!livestock.includes('onClick={prepareReview} disabled={!hasPendingSelection}'), 'Review must not require users to manufacture a state change');
 
 assert(compatibility.includes('data-compatibility-verdict={resultStatus}'), 'Compatibility result must expose a dominant semantic verdict');
