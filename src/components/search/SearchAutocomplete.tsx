@@ -95,6 +95,8 @@ export function SearchAutocomplete({
     filter: filterGroupLabel,
   };
 
+  const hasSpeciesOverflow = totalSpeciesMatches > suggestions.filter(item => item.kind === 'species').length && Boolean(viewAllSpeciesLabel);
+
   return (
     <div ref={containerRef} className={`relative min-w-0 ${className}`}>
       <div className={`flex min-w-0 items-center gap-2 border border-white/80 bg-white shadow-sm ${compact ? 'rounded-2xl px-3' : 'rounded-[22px] p-2'}`}>
@@ -207,10 +209,16 @@ export function SearchAutocomplete({
               </section>
             );
           })}
-          {totalSpeciesMatches > suggestions.filter(item => item.kind === 'species').length && viewAllSpeciesLabel && onViewAllSpecies && (
-            <button type="button" onClick={() => { setOpen(false); onViewAllSpecies(); }} className="mt-2 min-h-11 w-full rounded-[14px] border border-emerald-100 bg-emerald-50 px-3 text-xs font-black text-emerald-800">
-              {viewAllSpeciesLabel(totalSpeciesMatches)}
-            </button>
+          {hasSpeciesOverflow && viewAllSpeciesLabel && (
+            onViewAllSpecies ? (
+              <button type="button" onClick={() => { setOpen(false); onViewAllSpecies(); }} className="mt-2 min-h-11 w-full rounded-[14px] border border-emerald-100 bg-emerald-50 px-3 text-xs font-black text-emerald-800">
+                {viewAllSpeciesLabel(totalSpeciesMatches)}
+              </button>
+            ) : (
+              <div data-search-overflow-hint="true" className="mt-2 min-h-11 w-full rounded-[14px] border border-emerald-100 bg-emerald-50 px-3 py-3 text-center text-xs font-black text-emerald-800">
+                {viewAllSpeciesLabel(totalSpeciesMatches)}
+              </div>
+            )
           )}
         </div>
       )}
