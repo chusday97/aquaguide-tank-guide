@@ -1,0 +1,47 @@
+name: UI V2 Aquarium
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/components/layout/LayoutModeProvider.tsx'
+      - 'src/components/product/QuickActionGrid.tsx'
+      - 'src/components/product/StatusSummaryCard.tsx'
+      - 'src/styles/ui-v2-*.css'
+      - 'src/main.tsx'
+      - 'scripts/verify-ui-v2-responsive.mjs'
+      - '.github/workflows/ui-v2-aquarium.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  responsive-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-ui-v2-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-ui-v2-preview.log
+          exit 1
+      - name: Responsive browser contract
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-v2-responsive.mjs
