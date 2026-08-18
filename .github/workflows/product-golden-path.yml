@@ -23,14 +23,19 @@ jobs:
           from pathlib import Path
           path = Path('src/pages/Aquarium.tsx')
           text = path.read_text()
-          old = """              onClick={() => {
-                if (isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)) {"""
-          new = """              onClick={async () => {
-                if (isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)) {"""
-          if old in text:
-              path.write_text(text.replace(old, new, 1))
-          elif new not in text:
-              raise SystemExit('calendar async callback marker not found')
+          marker = "if (isWaterChangeSaving || isFutureWaterChangeDate(selectedWaterChangeDate)) {"
+          marker_index = text.find(marker)
+          if marker_index < 0:
+              raise SystemExit('calendar persistence marker not found')
+          callback = 'onClick={() => {'
+          async_callback = 'onClick={async () => {'
+          callback_index = text.rfind(callback, 0, marker_index)
+          async_index = text.rfind(async_callback, 0, marker_index)
+          if callback_index >= 0 and callback_index > async_index:
+              text = text[:callback_index] + async_callback + text[callback_index + len(callback):]
+              path.write_text(text)
+          elif async_index < 0:
+              raise SystemExit('calendar callback marker not found')
           PY
       - name: Commit caller fix when needed
         run: |
