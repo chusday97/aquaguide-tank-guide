@@ -24,7 +24,8 @@ Acceptance unit:
   - Aquarium UI awaits repository deletion before mutating visible state, keeps the dialog retryable on failure, exposes stable success/error feedback, and disables duplicate submission while deleting.
 - Product verification: Product Golden Path #621 / run `32107779534` — Aquarium delete repository contract, typecheck, build, Care card regression, and GP-001～GP-005 all PASS.
 - Permanent regression: `scripts/test-aquarium-delete-repository-contract.mjs` plus Product Golden Path step `Aquarium delete repository contract`.
-- Registry: `PUI-BC-036`, `aquarium`, `high`, `ui_persistence_contract`, `regression_verified`.
+- Registry: `PUI-BC-036`, `aquarium_setup`, `high`, `ui_persistence_contract`, `regression_verified`.
+- Registry validation note: Product Golden Path #625 / run `32108127302` failed before the Aquarium contract because `featureId=aquarium` was not a registered product feature. The record is now mapped to the existing `aquarium_setup` feature; this was metadata correction only and did not change product code.
 - Evidence limitation: this is deterministic repository/architecture regression coverage. It proves that the cloud path is wired to the existing API delete capability; it is not a connected production-cloud E2E measurement.
 - PR #91 remains Draft/open/unmerged.
 
