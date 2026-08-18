@@ -14,7 +14,7 @@ on:
       - 'src/pages/Search.tsx'
       - 'src/styles/ui-v2-*.css'
       - 'src/main.tsx'
-      - 'scripts/apply-aquarium-dashboard-v2.mjs'
+      - 'scripts/capture-ui-v2-dashboard.mjs'
       - 'scripts/verify-ui-v2-dashboard-ia.mjs'
       - 'scripts/verify-ui-v2-responsive.mjs'
       - 'scripts/verify-ui-v2-shell.mjs'
@@ -52,6 +52,10 @@ jobs:
           done
           cat /tmp/aquaguide-ui-v2-preview.log
           exit 1
+      - name: Capture Dashboard visual snapshots
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/capture-ui-v2-dashboard.mjs
       - name: Responsive browser contract
         env:
           PREVIEW_URL: http://127.0.0.1:4173
@@ -64,3 +68,11 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-ui-v2-species-search.mjs
+      - name: Upload Dashboard visual snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquarium-dashboard-v2-snapshots
+          path: artifacts/ui-v2-dashboard/*.png
+          if-no-files-found: warn
+          retention-days: 7
