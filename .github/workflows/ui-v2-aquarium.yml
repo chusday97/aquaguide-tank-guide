@@ -4,12 +4,16 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'components/ui/button.tsx'
+      - 'components/ui/input.tsx'
+      - 'src/App.tsx'
       - 'src/components/layout/LayoutModeProvider.tsx'
       - 'src/components/product/QuickActionGrid.tsx'
       - 'src/components/product/StatusSummaryCard.tsx'
       - 'src/styles/ui-v2-*.css'
       - 'src/main.tsx'
       - 'scripts/verify-ui-v2-responsive.mjs'
+      - 'scripts/verify-ui-v2-shell.mjs'
       - '.github/workflows/ui-v2-aquarium.yml'
 
 permissions:
@@ -45,3 +49,7 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-ui-v2-responsive.mjs
+      - name: App shell browser contract
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-v2-shell.mjs
