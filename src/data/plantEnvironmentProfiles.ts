@@ -26,4 +26,24 @@ export const plantEnvironmentProfiles: PlantEnvironmentProfile[] = [
       ],
     },
   },
+  {
+    speciesId: 'sp_0071',
+    environment: {
+      waterType: 'freshwater',
+      light: 'high',
+      co2: 'recommended',
+    },
+    planting: {
+      type: 'rooted',
+      substrateRequired: 'soil',
+    },
+    evidence: {
+      confidence: 'medium',
+      reviewStatus: 'reviewed',
+      sourceRefs: [
+        'micranthemum-callitrichoides-tropica-4478',
+        'micranthemum-callitrichoides-aquarium-coop',
+      ],
+    },
+  },
 ];
