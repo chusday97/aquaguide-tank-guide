@@ -1,17 +1,16 @@
 name: Apply Aquarium Settings Integration
 
 on:
-  push:
+  pull_request:
     branches:
-      - integration/aquarium-persistence-v1
-    paths:
-      - .github/workflows/integration-apply-settings.yml
+      - main
 
 permissions:
   contents: write
 
 jobs:
   apply:
+    if: github.head_ref == 'integration/aquarium-persistence-v1'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +21,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if grep -q "const \[isSettingsSaving, setIsSettingsSaving\]" src/pages/Aquarium.tsx \
+            && test -f scripts/test-aquarium-settings-repository-contract.mjs; then
+            echo "PR92 settings persistence already integrated; no write needed."
+            exit 0
+          fi
+
           git config user.name "aquaguide-integration-bot"
           git config user.email "integration-bot@users.noreply.github.com"
           git fetch origin agent/aquarium-settings-repository-closure
@@ -35,6 +40,7 @@ jobs:
           git diff "$base_ref" "$source_ref" -- src/pages/Aquarium.tsx > /tmp/pr92-aquarium.patch
           git apply --3way /tmp/pr92-aquarium.patch
 
+          git show "$source_ref:evaluation/product/badcases.v1.jsonl" > /tmp/pr92-badcases.jsonl
           python3 - <<'PY'
           from pathlib import Path
 
@@ -52,14 +58,6 @@ jobs:
                   raise SystemExit('Golden Path anchor missing while integrating PR92')
               workflow.write_text(text)
 
-          current_badcases = Path('evaluation/product/badcases.v1.jsonl')
-          current = current_badcases.read_text().rstrip('\n')
-          source = Path('/tmp/pr92-badcases.jsonl')
-          PY
-
-          git show "$source_ref:evaluation/product/badcases.v1.jsonl" > /tmp/pr92-badcases.jsonl
-          python3 - <<'PY'
-          from pathlib import Path
           current_path = Path('evaluation/product/badcases.v1.jsonl')
           current_lines = current_path.read_text().splitlines()
           source_lines = Path('/tmp/pr92-badcases.jsonl').read_text().splitlines()
