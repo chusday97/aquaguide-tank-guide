@@ -11,6 +11,7 @@ const livestock = read('src/components/aquarium/LivestockBatchCard.tsx');
 const compatibility = read('src/components/CompatibilityRiskCalculator.tsx');
 const navigation = read('src/components/layout/WorkspaceNavigationProvider.tsx');
 const roster = read('src/components/aquarium/LivestockRosterDialog.tsx');
+const aquarium = read('src/pages/Aquarium.tsx');
 const encyclopedia = read('src/pages/Encyclopedia.tsx');
 const skill = read('.agents/skills/aquaguide-ui-ux/SKILL.md');
 
@@ -35,6 +36,8 @@ assert(navigation.includes("get('action') !== 'livestock'"), 'Global return must
 assert(navigation.includes("isSpecificAquariumTask"), 'Aquarium task routes must be distinguished from the generic Aquarium home');
 assert(roster.includes('data-workspace-dialog-return'), 'Modal task destinations must place their return action inside the active Dialog layer');
 assert(roster.includes('restoreContext(workspaceReturnContext)'), 'Livestock modal return must restore the exact caller context');
+assert(aquarium.includes("routeNavigate('/aquarium', { replace: true, state: routeLocation.state });"), 'Consuming an Aquarium task action must preserve route state');
+assert(!aquarium.includes("routeNavigate('/aquarium', { replace: true });"), 'Aquarium task consumption must not erase return state when removing one-time action queries');
 
 assert(encyclopedia.includes("params.set('source', 'atlas-detail')"), 'Atlas entity detail must be route-addressable');
 assert(encyclopedia.includes("navigateToRoute(taskRoutes.aquarium.livestock, { returnContext })"), 'View tank must carry exact caller context');
