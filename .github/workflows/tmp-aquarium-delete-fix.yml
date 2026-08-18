@@ -1,0 +1,86 @@
+name: Temporary Aquarium Delete Fix
+
+on:
+  push:
+    branches:
+      - agent/aquarium-delete-repository-closure
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.event.head_commit.message != 'fix: close aquarium delete persistence'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/aquarium-delete-repository-closure
+      - name: Apply focused repository deletion patch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f'marker not found in {path}: {old[:100]!r}')
+              p.write_text(text.replace(old, new, 1))
+
+          replace_once(
+              'src/services/repository/aquaguide.repository.ts',
+              "export type AquariumCreateCommand = {\n  name: string;\n  startedAt: string;\n  startedAtSource: 'created';\n  operationId: string;\n};\n",
+              "export type AquariumCreateCommand = {\n  name: string;\n  startedAt: string;\n  startedAtSource: 'created';\n  operationId: string;\n};\n\nexport type AquariumDeleteCommand = {\n  aquariumId: string;\n  operationId: string;\n};\n",
+          )
+          replace_once(
+              'src/services/repository/aquaguide.repository.ts',
+              "  createAquarium(input: AquariumCreateCommand): Promise<Aquarium>;\n  addLivestock(input: LivestockAddCommand): Promise<Aquarium>;",
+              "  createAquarium(input: AquariumCreateCommand): Promise<Aquarium>;\n  deleteAquarium(input: AquariumDeleteCommand): Promise<void>;\n  addLivestock(input: LivestockAddCommand): Promise<Aquarium>;",
+          )
+
+          replace_once(
+              'src/services/repository/local-aquaguide.repository.ts',
+              "  AquariumCreateCommand,\n  CareReminderMutation,",
+              "  AquariumCreateCommand,\n  AquariumDeleteCommand,\n  CareReminderMutation,",
+          )
+          replace_once(
+              'src/services/repository/local-aquaguide.repository.ts',
+              "  async addLivestock(input: LivestockAddCommand) {",
+              "  async deleteAquarium(input: AquariumDeleteCommand) {\n    const state = loadAppStateFromStorage();\n    const exists = state.aquariums.some(item => item.id === input.aquariumId);\n    if (!exists) return;\n    if (state.aquariums.length <= 1) throw new Error('至少需要保留一个鱼缸。');\n    const aquariums = state.aquariums.filter(item => item.id !== input.aquariumId);\n    const currentAquariumId = state.currentAquariumId === input.aquariumId\n      ? aquariums[0]?.id || ''\n      : state.currentAquariumId;\n    persistAquariums(aquariums, currentAquariumId);\n  }\n\n  async addLivestock(input: LivestockAddCommand) {",
+          )
+
+          replace_once(
+              'src/services/repository/api-aquaguide.repository.ts',
+              "  AquariumCreateCommand,\n  CareReminderMutation,",
+              "  AquariumCreateCommand,\n  AquariumDeleteCommand,\n  CareReminderMutation,",
+          )
+          replace_once(
+              'src/services/repository/api-aquaguide.repository.ts',
+              "  async addLivestock(input: LivestockAddCommand) {",
+              "  async deleteAquarium(input: AquariumDeleteCommand) {\n    const version = this.aquariumVersions.get(input.aquariumId);\n    if (!version) throw new Error('鱼缸版本未知，请刷新后重试。');\n    try {\n      await apiRequest(`/aquariums/${input.aquariumId}?version=${version}`, {\n        method: 'DELETE',\n        idempotencyKey: input.operationId,\n      });\n    } catch (error) {\n      try {\n        const remaining = await this.getAquariums();\n        if (!remaining.some(item => item.id === input.aquariumId)) {\n          this.aquariumVersions.delete(input.aquariumId);\n          return;\n        }\n      } catch {\n        // Preserve the original deletion error when persistence cannot be verified.\n      }\n      throw error;\n    }\n    this.aquariumVersions.delete(input.aquariumId);\n  }\n\n  async addLivestock(input: LivestockAddCommand) {",
+          )
+
+          replace_once(
+              'src/pages/Aquarium.tsx',
+              "  const [pendingDeleteAquariumId, setPendingDeleteAquariumId] = useState<string | null>(null);\n",
+              "  const [pendingDeleteAquariumId, setPendingDeleteAquariumId] = useState<string | null>(null);\n  const [isDeletingAquarium, setIsDeletingAquarium] = useState(false);\n  const deleteAquariumOperationIdRef = useRef('');\n",
+          )
+          replace_once(
+              'src/pages/Aquarium.tsx',
+              "  const confirmDeleteAquarium = () => {\n    if (!pendingDeleteAquariumId || aquariums.length <= 1) return;\n    const updated = aquariums.filter(a => a.id !== pendingDeleteAquariumId);\n    saveAquariums(updated);\n    if (activeId === pendingDeleteAquariumId) {\n      setActiveId(updated[0]?.id || '');\n    }\n    setPendingDeleteAquariumId(null);\n  };",
+              "  const confirmDeleteAquarium = async () => {\n    if (!pendingDeleteAquariumId || aquariums.length <= 1 || isDeletingAquarium) return;\n    const targetId = pendingDeleteAquariumId;\n    if (!deleteAquariumOperationIdRef.current) {\n      deleteAquariumOperationIdRef.current = typeof crypto !== 'undefined' && 'randomUUID' in crypto\n        ? `aquarium-delete:${crypto.randomUUID()}`\n        : `aquarium-delete:${targetId}:${Date.now()}`;\n    }\n    setIsDeletingAquarium(true);\n    try {\n      const repository = await getCurrentAquaGuideRepository();\n      await repository.deleteAquarium({ aquariumId: targetId, operationId: deleteAquariumOperationIdRef.current });\n      deleteAquariumOperationIdRef.current = '';\n      const updated = aquariums.filter(aquarium => aquarium.id !== targetId);\n      setAquariums(updated);\n      if (activeId === targetId) setActiveId(updated[0]?.id || '');\n      setPendingDeleteAquariumId(null);\n      showToast(isEn ? 'Aquarium deleted' : '鱼缸删除成功');\n    } catch (error) {\n      showToast(isEn ? 'Could not delete the aquarium. Please try again.' : '鱼缸没有删除成功，请重试。', 'error');\n    } finally {\n      setIsDeletingAquarium(false);\n    }\n  };",
+          )
+          replace_once(
+              'src/pages/Aquarium.tsx',
+              "              disabled={aquariums.length <= 1}\n              onClick={confirmDeleteAquarium}\n            >\n              {t('aquarium.confirmDelete')}\n",
+              "              disabled={aquariums.length <= 1 || isDeletingAquarium}\n              aria-busy={isDeletingAquarium}\n              onClick={() => void confirmDeleteAquarium()}\n            >\n              {isDeletingAquarium ? (isEn ? 'Deleting…' : '删除中…') : t('aquarium.confirmDelete')}\n",
+          )
+          PY
+      - name: Commit focused fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/services/repository/aquaguide.repository.ts src/services/repository/local-aquaguide.repository.ts src/services/repository/api-aquaguide.repository.ts src/pages/Aquarium.tsx
+          git commit -m "fix: close aquarium delete persistence"
+          git push origin HEAD:agent/aquarium-delete-repository-closure
