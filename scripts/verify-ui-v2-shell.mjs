@@ -115,13 +115,17 @@ try {
   ));
   assert.equal(await encyclopediaDesktopNav.getAttribute('aria-current'), 'page', 'desktop active state must follow route changes');
   assert.equal(await careDesktopNav.getAttribute('aria-current'), null, 'previous desktop destination must clear aria-current after navigation');
+  await page.waitForFunction(() => {
+    const active = document.querySelector('[data-shell="desktop-sidebar"] [data-shell-nav-item="/encyclopedia"]');
+    return active ? getComputedStyle(active).backgroundColor === 'rgb(27, 77, 62)' : false;
+  });
 
   const activeDesktopStyle = await encyclopediaDesktopNav.evaluate(element => ({
     backgroundColor: getComputedStyle(element).backgroundColor,
     color: getComputedStyle(element).color,
     fontFamily: getComputedStyle(element).fontFamily,
   }));
-  assert.equal(activeDesktopStyle.backgroundColor, 'rgb(27, 77, 62)', `desktop primary active state must remain visually decisive, got ${activeDesktopStyle.backgroundColor}`);
+  assert.equal(activeDesktopStyle.backgroundColor, 'rgb(27, 77, 62)', `desktop primary active state must settle on the decisive shell color, got ${activeDesktopStyle.backgroundColor}`);
   assert.ok(/Segoe UI|PingFang|Microsoft YaHei|Noto Sans|Arial|system-ui|-apple-system/i.test(activeDesktopStyle.fontFamily), `desktop shell must use the UI font stack, got ${activeDesktopStyle.fontFamily}`);
 
   const desktopOverflow = await page.evaluate(() => ({ scrollWidth: document.documentElement.scrollWidth, width: window.innerWidth }));
