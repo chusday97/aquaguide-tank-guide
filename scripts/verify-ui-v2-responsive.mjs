@@ -36,12 +36,15 @@ try {
   const compactPriority = await page.evaluate(() => {
     const todayElement = document.querySelector('[data-dashboard-priority="today"]');
     const contextElement = document.querySelector('[data-dashboard-priority="context"]');
-    if (!(todayElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement)) return null;
+    const tankElement = contextElement?.querySelector('.aquarium-tank');
+    if (!(todayElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement) || !(tankElement instanceof HTMLElement)) return null;
     const todayRect = todayElement.getBoundingClientRect();
     const contextRect = contextElement.getBoundingClientRect();
-    return { todayTop: todayRect.top, contextTop: contextRect.top };
+    const tankRect = tankElement.getBoundingClientRect();
+    return { todayTop: todayRect.top, contextTop: contextRect.top, tankHeight: Math.round(tankRect.height) };
   });
   assert.ok(compactPriority && compactPriority.todayTop <= compactPriority.contextTop, `mobile dashboard must show Today's decision area before tank context: ${JSON.stringify(compactPriority)}`);
+  assert.ok(compactPriority && compactPriority.tankHeight <= 190, `mobile tank preview must remain contextual rather than becoming a second hero, got ${JSON.stringify(compactPriority)}`);
 
   const grid = page.locator('.quick-action-primary');
   await grid.waitFor();
@@ -94,9 +97,11 @@ try {
   const desktopHero = await page.evaluate(() => {
     const todayElement = document.querySelector('[data-dashboard-priority="today"]');
     const contextElement = document.querySelector('[data-dashboard-priority="context"]');
-    if (!(todayElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement)) return null;
+    const tankElement = contextElement?.querySelector('.aquarium-tank');
+    if (!(todayElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement) || !(tankElement instanceof HTMLElement)) return null;
     const todayRect = todayElement.getBoundingClientRect();
     const contextRect = contextElement.getBoundingClientRect();
+    const tankRect = tankElement.getBoundingClientRect();
     return {
       todayTop: Math.round(todayRect.top),
       contextTop: Math.round(contextRect.top),
@@ -104,11 +109,16 @@ try {
       contextLeft: Math.round(contextRect.left),
       todayWidth: Math.round(todayRect.width),
       contextWidth: Math.round(contextRect.width),
+      tankHeight: Math.round(tankRect.height),
     };
   });
   assert.ok(desktopHero && Math.abs(desktopHero.todayTop - desktopHero.contextTop) <= 2, `desktop decision and context areas must share a stable hero row: ${JSON.stringify(desktopHero)}`);
   assert.ok(desktopHero && desktopHero.todayRight <= desktopHero.contextLeft + 2, `desktop decision area must remain visually distinct from tank context: ${JSON.stringify(desktopHero)}`);
-  assert.ok(desktopHero && desktopHero.todayWidth >= desktopHero.contextWidth, `desktop tank context must not be wider than Today's decision area: ${JSON.stringify(desktopHero)}`);
+  assert.ok(desktopHero && desktopHero.todayWidth >= desktopHero.contextWidth * 1.12, `desktop Today's decision area must be materially wider than tank context: ${JSON.stringify(desktopHero)}`);
+  assert.ok(desktopHero && desktopHero.tankHeight <= 350, `desktop tank preview must remain contextual rather than dominating the fold: ${JSON.stringify(desktopHero)}`);
+
+  const sectionKickerDisplay = await page.locator('.aquarium-dashboard-v2__section-kicker').first().evaluate(element => getComputedStyle(element).display);
+  assert.equal(sectionKickerDisplay, 'none', 'Aquarium sections must not add a redundant kicker text level above the section title');
 
   const mediumOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -136,7 +146,7 @@ try {
   assert.ok(wideOverflow.scrollWidth <= wideOverflow.viewportWidth + 1, `wide Aquarium must not overflow horizontally: ${JSON.stringify(wideOverflow)}`);
   assert.deepEqual(pageErrors, [], `UI V2 responsive path must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + compact actions/header across 390/900/1600).');
+  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + contextual tank + compact actions/header across 390/900/1600).');
 } finally {
   await browser.close();
 }
