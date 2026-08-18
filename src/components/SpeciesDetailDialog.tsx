@@ -860,6 +860,7 @@ export function SpeciesDetailDialog({
                     </div>
                   </section>
 
+                  {getLifeType(fish) !== 'plant' && (
                   <section
                     ref={careSectionButtonRef}
                     tabIndex={-1}
@@ -893,6 +894,7 @@ export function SpeciesDetailDialog({
             </p>
           )}
                   </section>
+                  )}
 
                   {speciesGroup && speciesGroupVariants.length > 1 && onSelectSpecies && (
                     <section className="mt-3 rounded-[18px] border border-border bg-[#F8F7F2] p-2.5 min-[760px]:p-3" aria-label={isEn ? `Other ${speciesGroup.groupName} variants` : `${speciesGroup.groupName}的其他类型`}>
