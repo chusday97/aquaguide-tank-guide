@@ -53,6 +53,11 @@ try {
   assert.equal(await moreActions.evaluate(element => element.hasAttribute('open')), false, 'secondary Aquarium actions must be collapsed by default');
   assert.equal(await page.locator('.quick-action-secondary .quick-action-button').count(), 4, 'secondary actions must remain available without competing on first scan');
 
+  const emptyCarePlan = page.locator('.care-plan-empty-strip');
+  await emptyCarePlan.waitFor();
+  const emptyCarePlanHeight = await emptyCarePlan.evaluate(element => Math.round(element.getBoundingClientRect().height));
+  assert.ok(emptyCarePlanHeight <= 72, `empty care plan must stay a compact strip instead of a nested empty-state panel, got ${emptyCarePlanHeight}px`);
+
   const compactOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     viewportWidth: window.innerWidth,
@@ -65,6 +70,26 @@ try {
   await grid.waitFor();
   const mediumColumns = await grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length);
   assert.equal(mediumColumns, 2, `medium Aquarium primary actions must use two columns, got ${mediumColumns}`);
+
+  const mediumHeader = await page.evaluate(() => {
+    const header = document.querySelector('.aquarium-desktop-header');
+    const timelineButton = header?.querySelector(':scope > button:last-child');
+    const identity = header?.querySelector(':scope > div:first-child');
+    if (!(header instanceof HTMLElement) || !(timelineButton instanceof HTMLElement) || !(identity instanceof HTMLElement)) return null;
+    const headerRect = header.getBoundingClientRect();
+    const timelineRect = timelineButton.getBoundingClientRect();
+    const identityRect = identity.getBoundingClientRect();
+    return {
+      headerHeight: Math.round(headerRect.height),
+      identityTop: Math.round(identityRect.top),
+      timelineTop: Math.round(timelineRect.top),
+      timelineWidth: Math.round(timelineRect.width),
+      headerWidth: Math.round(headerRect.width),
+    };
+  });
+  assert.ok(mediumHeader && Math.abs(mediumHeader.identityTop - mediumHeader.timelineTop) <= 12, `900px Aquarium header must keep identity and timeline in the same row: ${JSON.stringify(mediumHeader)}`);
+  assert.ok(mediumHeader && mediumHeader.headerHeight <= 110, `900px Aquarium header must stay compact instead of becoming a second hero card: ${JSON.stringify(mediumHeader)}`);
+  assert.ok(mediumHeader && mediumHeader.timelineWidth < mediumHeader.headerWidth * 0.42, `timeline control must remain a compact action at 900px: ${JSON.stringify(mediumHeader)}`);
 
   const desktopHero = await page.evaluate(() => {
     const todayElement = document.querySelector('[data-dashboard-priority="today"]');
@@ -111,7 +136,7 @@ try {
   assert.ok(wideOverflow.scrollWidth <= wideOverflow.viewportWidth + 1, `wide Aquarium must not overflow horizontally: ${JSON.stringify(wideOverflow)}`);
   assert.deepEqual(pageErrors, [], `UI V2 responsive path must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + compact primary actions across 390/900/1600).');
+  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + compact actions/header across 390/900/1600).');
 } finally {
   await browser.close();
 }
