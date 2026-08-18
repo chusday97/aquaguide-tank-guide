@@ -232,7 +232,7 @@ function BottomNavigation() {
   return (
     <>
       {/* ── 移动端：底部标签栏 ── */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-white/95 px-2 pb-[calc(8px+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(26,26,26,0.06)] backdrop-blur-md">
+      <nav data-shell="mobile-bottom-nav" className="fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-white/95 px-2 pb-[calc(8px+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(26,26,26,0.06)] backdrop-blur-md">
         <div className="grid grid-cols-4 gap-1">
           {mobileNavItems.map((item) => {
             const isActive = item.path === '/collection'
@@ -244,6 +244,7 @@ function BottomNavigation() {
                 key={item.path}
                 type="button"
                 aria-current={isActive ? 'page' : undefined}
+                  data-shell-nav-item={item.path}
                   onClick={() => navigateToRoute(item.path)}
                   onMouseEnter={() => preloadRoute(item.path)}
                   onFocus={() => preloadRoute(item.path)}
@@ -365,6 +366,7 @@ function DesktopSidebar({
   return (
     <aside
       aria-label="AquaGuide 桌面导航"
+      data-shell="desktop-sidebar"
       className={cn(
         'desktop-sidebar fixed inset-y-0 left-0 z-50 hidden border-r border-white/70 bg-[#F8FAF8]/95 shadow-[18px_0_48px_rgba(27,77,62,0.08)] backdrop-blur-xl md:flex',
         collapsed ? 'w-[76px]' : 'w-[280px]'
@@ -464,6 +466,8 @@ function DesktopSidebar({
                   onMouseEnter={() => preloadRoute(item.path)}
                   onFocus={() => preloadRoute(item.path)}
                   title={collapsed ? t(item.labelKey) : undefined}
+                  aria-current={isActive ? 'page' : undefined}
+                  data-shell-nav-item={item.path}
                   className={cn(
                     'flex min-h-[58px] w-full items-center gap-3 rounded-[20px] px-3 text-left transition-colors',
                     collapsed && 'justify-center px-2',
@@ -549,6 +553,8 @@ function DesktopSidebar({
                     key={item.id}
                     type="button"
                       title={collapsed ? t(item.labelKey) : undefined}
+                    aria-current={isActive ? 'location' : undefined}
+                    data-shell-subnav-item={item.id}
                     onClick={() => handleSubNav(item)}
                     className={cn(
                       'flex min-h-[50px] items-center gap-3 rounded-[16px] px-3 text-left transition-colors',
@@ -915,10 +921,10 @@ function MobileAppShell() {
       data-layout-mode="phone"
     >
       <div className="app-main-shell mx-auto flex min-h-0 w-full max-w-[430px] flex-1 flex-col overflow-hidden bg-bg shadow-2xl">
-        <header className="flex shrink-0 items-center justify-end gap-1 border-b border-ink/5 bg-white/92 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] backdrop-blur-md">
-          <button type="button" onClick={() => navigateToRoute('/search')} aria-label={t('searchPage.title')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><SearchIcon className="h-5 w-5" /></button>
-          <button type="button" onClick={() => navigateToRoute('/identify')} aria-label={t('identify.entry')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><Camera className="h-5 w-5" /></button>
-          <button type="button" onClick={() => navigateToRoute('/settings')} aria-label={t('common.settings')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><Settings className="h-5 w-5" /></button>
+        <header data-shell="mobile-header" className="flex shrink-0 items-center justify-end gap-1 border-b border-ink/5 bg-white/92 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] backdrop-blur-md">
+          <button type="button" data-shell-action="search" onClick={() => navigateToRoute('/search')} aria-label={t('searchPage.title')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><SearchIcon className="h-5 w-5" /></button>
+          <button type="button" data-shell-action="identify" onClick={() => navigateToRoute('/identify')} aria-label={t('identify.entry')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><Camera className="h-5 w-5" /></button>
+          <button type="button" data-shell-action="settings" onClick={() => navigateToRoute('/settings')} aria-label={t('common.settings')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><Settings className="h-5 w-5" /></button>
         </header>
         <main className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 pb-[calc(88px+env(safe-area-inset-bottom))] pt-3">
           <div className="mx-auto w-full max-w-full min-w-0 overflow-x-hidden">
