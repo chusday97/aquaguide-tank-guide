@@ -1,0 +1,115 @@
+name: Patch Species Detail Care Boundary
+
+on:
+  push:
+    branches:
+      - agent/environment-decision-v1
+    paths:
+      - '.github/workflows/patch-species-detail-care.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Replace unsafe plant feeding UI with reviewed care presentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('src/components/SpeciesDetailDialog.tsx')
+          source = path.read_text()
+
+          pattern = re.compile(r'''                        <section data-species-feeding-summary.*?                        </section>''', re.S)
+          replacement = '''                        {getLifeType(fish) === 'plant' ? (
+                          <section data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3" aria-labelledby="species-plant-care-summary-title">
+                            <div className="flex items-center justify-between gap-2">
+                              <h3 id="species-plant-care-summary-title" className="text-[11px] font-black text-emerald-900">{isEn ? 'Plant care at a glance' : '植物养护速览'}</h3>
+                              {carePresentation && (
+                                <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
+                                  {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
+                                </span>
+                              )}
+                            </div>
+                            {carePresentation?.environmentItems.length ? (
+                              <div className="mt-2 grid grid-cols-2 gap-1.5 text-[10px] font-semibold leading-4 text-ink/58">
+                                {carePresentation.environmentItems.slice(0, 4).map(item => (
+                                  <div key={item.label} className="rounded-[10px] bg-white/80 px-2 py-1.5">
+                                    <strong className="block text-ink/72">{isEn ? (({ '光照': 'Light', 'CO₂': 'CO₂', '种植方式': 'Placement', '底床': 'Substrate', '叶片特性': 'Leaf durability' } as Record<string, string>)[item.label] || item.label) : item.label}</strong>
+                                    {item.value}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="mt-2 break-words text-[10px] font-semibold leading-4 text-emerald-950/62">{carePresentation?.sourceDetail || (isEn ? 'Reviewed plant-care data is not available yet.' : '植物养护资料仍待核验。')}</p>
+                            )}
+                          </section>
+                        ) : (
+                          <section data-species-feeding-summary className="mt-2 rounded-[16px] border border-amber-100 bg-amber-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3" aria-labelledby="species-feeding-summary-title">
+                            <div className="flex items-center justify-between gap-2">
+                              <h3 id="species-feeding-summary-title" className="text-[11px] font-black text-amber-900">{isEn ? 'Feeding at a glance' : '喂养速览'}</h3>
+                              {carePresentation && (
+                                <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
+                                  {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 break-words text-[11px] font-bold leading-4 text-ink/70">{carePresentation?.feedingItems.find(item => item.label === '推荐食物' || item.label === '基础资料')?.value || carePresentation?.sourceDetail || (isEn ? 'Feeding data pending review.' : '喂养资料待核验。')}</p>
+                            <div className="mt-1.5 grid grid-cols-2 gap-1.5 text-[10px] font-semibold leading-4 text-ink/58">
+                              <div className="rounded-[10px] bg-white/80 px-2 py-1.5"><strong className="block text-ink/72">{isEn ? 'Frequency' : '频率'}</strong>{carePresentation?.feedingItems.find(item => item.label === '投喂频率')?.value || (isEn ? 'Pending review' : '待核验')}</div>
+                              <div className="rounded-[10px] bg-white/80 px-2 py-1.5"><strong className="block text-ink/72">{isEn ? 'Portion' : '单次份量'}</strong>{carePresentation?.feedingItems.find(item => item.label === '单次份量')?.value || (isEn ? 'Pending review' : '待核验')}</div>
+                            </div>
+                            <p className="mt-1.5 break-words text-[10px] font-semibold leading-4 text-amber-950/62"><strong>{isEn ? 'Avoid: ' : '避免：'}</strong>{carePresentation?.feedingItems.find(item => item.label === '避免食物')?.value || (isEn ? 'Pending review' : '待核验')}</p>
+                          </section>
+                        )}'''
+
+          source, count = pattern.subn(replacement, source, count=1)
+          if count != 1:
+              raise SystemExit(f'expected one feeding summary block, replaced {count}')
+
+          notes_pattern = re.compile(r'''                    \{fish\.feedingProfile\?\.specialNotes && \(\n                      <p className="mt-2 rounded-\[12px\] bg-emerald-50 px-3 py-2 text-\[10px\] font-semibold leading-4 text-emerald-950/68">\n                        <strong>\{isEn \? 'Observe: ' : '观察：'\}</strong>\{fish\.feedingProfile\.specialNotes\}\n                      </p>\n                    \)\}''')
+          notes_replacement = '''                    {carePresentation?.feedingItems.find(item => item.label === '特别提醒')?.value && (
+                      <p className="mt-2 rounded-[12px] bg-emerald-50 px-3 py-2 text-[10px] font-semibold leading-4 text-emerald-950/68">
+                        <strong>{isEn ? 'Observe: ' : '观察：'}</strong>{carePresentation.feedingItems.find(item => item.label === '特别提醒')?.value}
+                      </p>
+                    )}'''
+          source, notes_count = notes_pattern.subn(notes_replacement, source, count=1)
+          if notes_count != 1:
+              raise SystemExit(f'expected one direct specialNotes block, replaced {notes_count}')
+
+          path.write_text(source)
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify care boundary
+        run: node scripts/test-species-detail-care-boundary.mjs
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Commit patch and remove one-shot workflow
+        run: |
+          rm .github/workflows/patch-species-detail-care.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/SpeciesDetailDialog.tsx .github/workflows/patch-species-detail-care.yml
+          git commit -m "Fail closed plant care in species detail"
+          git push origin HEAD:agent/environment-decision-v1
