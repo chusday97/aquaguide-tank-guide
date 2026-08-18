@@ -55,6 +55,11 @@ assert.match(
 );
 assert.match(
   source,
+  /data-species-detail-sections>\s*\{!isPlant && \(\s*<section[\s\S]{0,500}?aria-expanded=\{expandedSection === 'fit'\}/,
+  'legacy fish-fit explanation accordion must not appear on plant details',
+);
+assert.match(
+  source,
   /\{!isPlant && \(\s*<section className="overflow-hidden rounded-\[18px\] border border-border bg-white">\s*<button[\s\S]{0,500}?aria-expanded=\{expandedSection === 'compatibility'\}/,
   'fish compatibility accordion must be hidden for plants',
 );
