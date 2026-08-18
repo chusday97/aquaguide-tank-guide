@@ -6,50 +6,11 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: write
-
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: agent/cloud-data-storage-promise-closure
-      - name: Append verified PUI-BC-037 registry entry
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import json
-          path = Path('evaluation/product/badcases.v1.jsonl')
-          text = path.read_text().rstrip('\n')
-          if '"id":"PUI-BC-037"' not in text:
-              record = {
-                "id":"PUI-BC-037",
-                "featureId":"aquarium_setup",
-                "discoveredAt":"2026-08-18",
-                "source":"functional_cta_audit",
-                "severity":"high",
-                "symptom":"Aquarium 的“数据与备份”仍按 local-only 产品描述运行：cloud repository 模式下，本机导入仍提示导入成功并 reload，本机清除仍警告鱼缸/种草/诊断/记录不可恢复并宣称返回空鱼缸状态；但这些动作只改浏览器 LocalAppState，reload 后 cloud aquariums/reminders/events 会重新成为事实源，可能形成云端事实恢复而本地专属数据已改变或丢失的混合状态。",
-                "trigger":"启用 cloud repository 后进入 Aquarium → 数据与备份，尝试导入本机 JSON 或执行清除本地数据，再 reload/重新读取 repository。",
-                "expected":"Data & backup 必须识别当前 repository mode。cloud 模式明确说明云端数据仍是事实源，并阻止把 browser-only import/clear 伪装成云端恢复或删除；local 模式保留原本地导入/清除行为。",
-                "actual":"旧 handleImportLocalData 直接 importLocalAppState + 通用“导入成功”+ reload；旧 handleClearLocalData 直接 clearLocalAppState + “不可恢复/返回空鱼缸”+ reload。两者都没有 repository mode 判断，而 clearLocalAppState/importLocalAppState 只操作浏览器存储。",
-                "rootCauseLayer":"ui_persistence_contract",
-                "status":"regression_verified",
-                "fixedBy":"282b1615b54a4449ed1510012ff43b2de42f3ae0",
-                "regression":"Fail-before-fix: Product Golden Path #663 / run 32116622533 — 既有 Product evaluation contracts PASS（18 features / 108 states / 31 Badcases）后，Data storage repository-mode contract FAIL：Data storage import must be repository-mode aware; cloud mode cannot silently import browser-only state and then report generic success. Product fix verification: Product Golden Path #669 / run 32117306466 — Product contracts、Data storage repository-mode contract、typecheck、build、Care card regression、GP-001～GP-005 全 PASS。永久 regression 同时锁定 import/clear mode awareness 与 cloud/local boundary copy；未新增或宣称 cloud backup/import/delete-all 能力。"
-              }
-              path.write_text(text + '\n' + json.dumps(record, ensure_ascii=False, separators=(',', ':')) + '\n')
-          PY
-          if git diff --quiet -- evaluation/product/badcases.v1.jsonl; then
-            echo "PUI-BC-037 already registered."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add evaluation/product/badcases.v1.jsonl
-            git commit -m "test: register PUI-BC-037"
-            git push origin HEAD:agent/cloud-data-storage-promise-closure
-          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
