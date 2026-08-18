@@ -30,9 +30,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: agent/environment-decision-v1
 
       - name: Apply one-time plant detail boundary patch
-        if: github.event_name == 'push'
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -113,7 +113,6 @@ jobs:
         run: node scripts/test-species-detail-care-boundary.mjs
 
       - name: Persist one-time plant detail boundary patch
-        if: github.event_name == 'push'
         run: |
           if git diff --quiet -- src/components/SpeciesDetailDialog.tsx; then
             echo 'no component patch to persist'
