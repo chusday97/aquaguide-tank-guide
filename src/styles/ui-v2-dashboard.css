@@ -82,10 +82,11 @@
   box-shadow: 0 14px 36px rgba(27, 77, 62, 0.07);
 }
 
+/* Tank art is context for the decision card, not the visual owner of the page. */
 .aquarium-dashboard-v2__context .aquarium-tank {
-  height: 260px;
+  height: 230px;
   border-radius: 22px;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.055);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
 }
 
 .aquarium-dashboard-v2__manage .aquarium-actions,
@@ -94,12 +95,64 @@
   border-radius: 20px;
 }
 
+/* Quick actions: only recurrent tank maintenance remains permanently visible.
+   Secondary tools are still available, but no longer compete with Today's decision. */
+.quick-action-stack {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.quick-action-more {
+  min-width: 0;
+  border-top: 1px solid rgba(27, 77, 62, 0.07);
+  padding-top: 8px;
+}
+
+.quick-action-more-summary {
+  display: flex;
+  min-height: 42px;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: rgba(26, 26, 26, 0.56);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.quick-action-more-summary::-webkit-details-marker { display: none; }
+.quick-action-more-summary:hover { background: rgba(255, 255, 255, 0.72); color: rgba(27, 77, 62, 0.9); }
+
+.quick-action-more-count {
+  display: inline-flex;
+  min-width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(27, 77, 62, 0.06);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.quick-action-more-chevron {
+  margin-left: auto;
+  transition: transform 160ms ease;
+}
+
+.quick-action-more[open] .quick-action-more-chevron { transform: rotate(180deg); }
+.quick-action-secondary { margin-top: 8px; }
+
 @container aquarium-home (min-width: 720px) {
   .aquarium-dashboard-v2 { gap: 20px; }
 
   .aquarium-dashboard-v2__hero {
-    grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
-    align-items: stretch;
+    grid-template-columns: minmax(320px, 1.02fr) minmax(0, 0.98fr);
+    align-items: start;
     gap: 16px;
   }
 
@@ -107,9 +160,9 @@
   .aquarium-dashboard-v2__context { order: initial; }
 
   .aquarium-dashboard-v2__context .aquarium-tank {
-    height: 100%;
-    min-height: 390px;
-    max-height: 500px;
+    height: clamp(320px, 34dvh, 390px);
+    min-height: 320px;
+    max-height: 390px;
   }
 
   .aquarium-dashboard-v2__manage-grid {
@@ -121,7 +174,45 @@
 
 @container aquarium-home (min-width: 1080px) {
   .aquarium-dashboard-v2__hero {
-    grid-template-columns: minmax(360px, 0.82fr) minmax(0, 1.18fr);
+    grid-template-columns: minmax(380px, 1.06fr) minmax(0, 0.94fr);
+  }
+}
+
+@container aquarium-home (max-width: 559px) {
+  .quick-action-primary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .quick-action-primary > .quick-action-button {
+    min-height: 60px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 15px;
+  }
+
+  .quick-action-primary > .quick-action-button:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .quick-action-primary .quick-action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+
+  .quick-action-primary .type-card-title {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .quick-action-primary .quick-action-description {
+    display: none;
+  }
+
+  .quick-action-secondary {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -129,5 +220,9 @@
   .aquarium-dashboard-v2 { gap: 14px; }
   .aquarium-dashboard-v2__section { padding-top: 14px; }
   .aquarium-dashboard-v2__section-heading { margin-bottom: 8px; }
-  .aquarium-dashboard-v2__context .aquarium-tank { height: 230px; }
+  .aquarium-dashboard-v2__context .aquarium-tank { height: 210px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-action-more-chevron { transition: none; }
 }
