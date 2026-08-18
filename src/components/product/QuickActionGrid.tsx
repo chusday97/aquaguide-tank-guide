@@ -38,6 +38,7 @@ function QuickActionButton({ action }: { action: QuickActionItem }) {
   return (
     <button
       type="button"
+      data-quick-action-id={action.id || undefined}
       onClick={action.onClick}
       className={`quick-action-button grid min-w-0 grid-cols-[40px_minmax(0,1fr)] items-center gap-3 text-left ${
         action.active ? activeToneClassName[action.tone || 'muted'] : toneClassName[action.tone || 'muted']
