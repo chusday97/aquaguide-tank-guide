@@ -23,5 +23,10 @@ assert.match(
   /data-species-feeding-summary/,
   'animal feeding summary must remain available after separating plant care',
 );
+assert.match(
+  source,
+  /\{getLifeType\(fish\) !== 'plant' && \(\s*<section[\s\S]{0,700}?data-species-environment-summary/,
+  'legacy fish environment summary must be hidden for plants so reviewed plant care remains the only visible plant fact source',
+);
 
-console.log('Species detail care boundary: PASS (no direct feeding-profile bypass; plant and animal summaries separated).');
+console.log('Species detail care boundary: PASS (reviewed plant care is isolated from legacy feeding/environment surfaces).');
