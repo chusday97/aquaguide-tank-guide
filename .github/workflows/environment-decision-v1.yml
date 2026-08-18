@@ -7,7 +7,10 @@ on:
   pull_request:
     paths:
       - 'src/modules/environment/**'
+      - 'src/data/environmentEvidence.ts'
+      - 'src/data/speciesEnvironmentProfiles.ts'
       - 'scripts/test-environment-decision-engine.ts'
+      - 'scripts/test-environment-profile-registry.ts'
       - '.github/workflows/environment-decision-v1.yml'
       - 'HANDOFF-2026-08-18-ENVIRONMENT-DECISION-V1.md'
 
@@ -36,3 +39,6 @@ jobs:
 
       - name: Environment decision regression
         run: npx tsx scripts/test-environment-decision-engine.ts
+
+      - name: Environment profile evidence regression
+        run: npx tsx scripts/test-environment-profile-registry.ts
