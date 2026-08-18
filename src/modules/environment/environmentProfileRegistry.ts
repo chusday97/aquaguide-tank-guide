@@ -16,7 +16,11 @@ export type EnvironmentProfileAuditIssue = {
     | 'missing_evidence_source'
     | 'invalid_range'
     | 'empty_profile'
-    | 'unknown_planting_type';
+    | 'unknown_planting_type'
+    | 'missing_claim_evidence'
+    | 'claim_source_not_profile_source'
+    | 'orphan_claim_evidence'
+    | 'high_confidence_single_source_claim';
   message: string;
 };
 
@@ -30,20 +34,96 @@ const isValidRange = (range?: Range) => (
   )
 );
 
-const hasSpeciesExplicitTrait = (profile: SpeciesEnvironmentProfile) => (
-  Object.values(profile.environment).some(value => value !== undefined)
-  || Object.values(profile.habitat || {}).some(value => value !== undefined)
+const explicitKeys = (prefix: string, record?: Record<string, unknown>) => (
+  Object.entries(record || {})
+    .filter(([, value]) => value !== undefined)
+    .map(([key]) => `${prefix}.${key}`)
 );
 
-const hasPlantExplicitTrait = (profile: PlantEnvironmentProfile) => (
-  Object.values(profile.environment).some(value => value !== undefined)
-  || Object.values(profile.planting).some(value => value !== undefined)
-  || Object.values(profile.habitatValue || {}).some(value => value !== undefined)
-);
+const getSpeciesTraitKeys = (profile: SpeciesEnvironmentProfile) => [
+  ...explicitKeys('environment', profile.environment),
+  ...explicitKeys('habitat', profile.habitat),
+];
+
+const getPlantTraitKeys = (profile: PlantEnvironmentProfile) => [
+  ...explicitKeys('environment', profile.environment),
+  ...explicitKeys('planting', profile.planting),
+  ...explicitKeys('habitatValue', profile.habitatValue),
+];
+
+const hasSpeciesExplicitTrait = (profile: SpeciesEnvironmentProfile) => getSpeciesTraitKeys(profile).length > 0;
+const hasPlantExplicitTrait = (profile: PlantEnvironmentProfile) => getPlantTraitKeys(profile).length > 0;
+
+const auditClaimEvidence = (
+  profile: AuditableEnvironmentProfile,
+  profileKind: 'species' | 'plant',
+  traitKeys: string[],
+): EnvironmentProfileAuditIssue[] => {
+  if (profile.evidence.reviewStatus !== 'reviewed') return [];
+
+  const issues: EnvironmentProfileAuditIssue[] = [];
+  const claimRefs = profile.evidence.claimRefs || {};
+  const traitKeySet = new Set(traitKeys);
+  const profileSourceSet = new Set(profile.evidence.sourceRefs);
+
+  traitKeys.forEach(traitKey => {
+    const refs = claimRefs[traitKey] || [];
+    if (!refs.length) {
+      issues.push({
+        speciesId: profile.speciesId,
+        profileKind,
+        code: 'missing_claim_evidence',
+        message: `Reviewed trait ${traitKey} requires explicit claim-level evidence.`,
+      });
+      return;
+    }
+
+    if (profile.evidence.confidence === 'high' && new Set(refs).size < 2) {
+      issues.push({
+        speciesId: profile.speciesId,
+        profileKind,
+        code: 'high_confidence_single_source_claim',
+        message: `High-confidence trait ${traitKey} requires at least two independent evidence sources.`,
+      });
+    }
+
+    refs.forEach(sourceRef => {
+      if (!profileSourceSet.has(sourceRef)) {
+        issues.push({
+          speciesId: profile.speciesId,
+          profileKind,
+          code: 'claim_source_not_profile_source',
+          message: `Claim ${traitKey} cites ${sourceRef}, but the source is not declared in profile sourceRefs.`,
+        });
+      }
+      if (!environmentEvidenceSources[sourceRef]) {
+        issues.push({
+          speciesId: profile.speciesId,
+          profileKind,
+          code: 'missing_evidence_source',
+          message: `Claim ${traitKey} cites unregistered evidence source ${sourceRef}.`,
+        });
+      }
+    });
+  });
+
+  Object.keys(claimRefs).forEach(traitKey => {
+    if (traitKeySet.has(traitKey)) return;
+    issues.push({
+      speciesId: profile.speciesId,
+      profileKind,
+      code: 'orphan_claim_evidence',
+      message: `Claim evidence exists for ${traitKey}, but the profile does not expose that trait.`,
+    });
+  });
+
+  return issues;
+};
 
 const auditEvidence = (
   profile: AuditableEnvironmentProfile,
   profileKind: 'species' | 'plant',
+  traitKeys: string[],
 ): EnvironmentProfileAuditIssue[] => {
   if (profile.evidence.reviewStatus !== 'reviewed') return [];
 
@@ -76,6 +156,7 @@ const auditEvidence = (
     });
   });
 
+  issues.push(...auditClaimEvidence(profile, profileKind, traitKeys));
   return issues;
 };
 
@@ -85,6 +166,7 @@ export const auditSpeciesEnvironmentProfiles = (
   const issues: EnvironmentProfileAuditIssue[] = [];
 
   profiles.forEach(profile => {
+    const traitKeys = getSpeciesTraitKeys(profile);
     if (!hasSpeciesExplicitTrait(profile)) {
       issues.push({
         speciesId: profile.speciesId,
@@ -103,7 +185,7 @@ export const auditSpeciesEnvironmentProfiles = (
       });
     }
 
-    issues.push(...auditEvidence(profile, 'species'));
+    issues.push(...auditEvidence(profile, 'species', traitKeys));
   });
 
   return issues;
@@ -115,6 +197,7 @@ export const auditPlantEnvironmentProfiles = (
   const issues: EnvironmentProfileAuditIssue[] = [];
 
   profiles.forEach(profile => {
+    const traitKeys = getPlantTraitKeys(profile);
     if (!hasPlantExplicitTrait(profile)) {
       issues.push({
         speciesId: profile.speciesId,
@@ -142,7 +225,7 @@ export const auditPlantEnvironmentProfiles = (
       });
     }
 
-    issues.push(...auditEvidence(profile, 'plant'));
+    issues.push(...auditEvidence(profile, 'plant', traitKeys));
   });
 
   return issues;
