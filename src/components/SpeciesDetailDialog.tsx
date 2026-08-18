@@ -518,11 +518,11 @@ export function SpeciesDetailDialog({
     ].filter(Boolean) as Array<FitDimension & { icon: typeof Waves }>;
   }, [displayFit]);
 
-  const sexIdentificationGuide = useMemo(() => fish ? getSexIdentificationGuide(fish) : null, [fish]);
+  const sexIdentificationGuide = useMemo(() => fish && getLifeType(fish) !== 'plant' ? getSexIdentificationGuide(fish) : null, [fish]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
   const isPlant = Boolean(fish && getLifeType(fish) === 'plant');
   const compatibilityPairs = useMemo(() => {
-    if (!fish || !aquariumContext) return [];
+    if (!fish || !aquariumContext || getLifeType(fish) === 'plant') return [];
     const selectedQuantity = aquariumContext.fishes.find(item => item.fishId === fish.id)?.quantity || 1;
     return getExistingLivestock(aquariumContext)
       .filter(item => item.fish.id !== fish.id)
@@ -562,7 +562,7 @@ export function SpeciesDetailDialog({
       .slice(0, 3);
   }, [aquariumContext, displayFit]);
   const compatibilityVisualModel = useMemo<VisualResultViewModel | null>(() => {
-    if (!fish) return null;
+    if (!fish || isPlant) return null;
     const statusRank = { compatible: 0, caution: 1, insufficient_data: 2, not_recommended: 3 } as const;
     const status = compatibilityPairs.length === 0
       ? 'insufficient_data'
