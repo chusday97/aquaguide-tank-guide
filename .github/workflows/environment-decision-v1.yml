@@ -19,7 +19,7 @@ on:
       - 'HANDOFF-2026-08-18-ENVIRONMENT-DECISION-V1.md'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   environment-decision:
@@ -28,63 +28,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: agent/environment-decision-v1
-
-      - name: Apply one-time plant detail boundary patch
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path('src/components/SpeciesDetailDialog.tsx')
-          source = path.read_text()
-          if "const isPlant = Boolean(fish && getLifeType(fish) === 'plant')" in source:
-              print('plant detail boundary already applied')
-              raise SystemExit(0)
-
-          care_line = "  const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);\n"
-          assert care_line in source, 'carePresentation declaration not found'
-          source = source.replace(care_line, care_line + "  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');\n", 1)
-
-          plant_section = '<section data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3"'
-          assert plant_section in source, 'plant care section not found'
-          source = source.replace(plant_section, '<section ref={careSectionButtonRef} tabIndex={-1} data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3"', 1)
-
-          main_label = "  const mainActionLabel = useMemo(() => {\n"
-          assert main_label in source, 'mainActionLabel not found'
-          source = source.replace(main_label, main_label + "    if (isPlant) return isEn ? 'View plant care' : '查看植物养护';\n", 1)
-          old_deps = "  }, [aquariumContext, displayFit, owned, source, t]);\n"
-          assert old_deps in source, 'mainActionLabel dependency list not found'
-          source = source.replace(old_deps, "  }, [aquariumContext, displayFit, isEn, isPlant, owned, source, t]);\n", 1)
-
-          action_start = "  const handleMainAction = () => {\n    if (!fish || !displayFit) return;\n"
-          assert action_start in source, 'handleMainAction start not found'
-          source = source.replace(action_start, "  const handleMainAction = () => {\n    if (!fish) return;\n    if (isPlant) {\n      window.requestAnimationFrame(() => {\n        careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });\n        careSectionButtonRef.current?.focus({ preventScroll: true });\n      });\n      return;\n    }\n    if (!displayFit) return;\n", 1)
-
-          verdict_start = source.index('                        <div data-visual-result-status=')
-          actions_marker = '                        <div className="mt-2 flex flex-wrap gap-2 min-[760px]:mt-3">'
-          verdict_end = source.index(actions_marker, verdict_start)
-          verdict_block = source[verdict_start:verdict_end]
-          source = source[:verdict_start] + "                        {!isPlant && (\n                          <>\n" + verdict_block + "                          </>\n                        )}\n\n" + source[verdict_end:]
-
-          death_gate = '{onRecordDeath && ('
-          assert death_gate in source, 'death record control not found'
-          source = source.replace(death_gate, '{!isPlant && onRecordDeath && (', 1)
-
-          compatibility_marker = "aria-expanded={expandedSection === 'compatibility'}"
-          compatibility_marker_index = source.index(compatibility_marker)
-          compatibility_start = source.rfind('                    <section', 0, compatibility_marker_index)
-          assert compatibility_start >= 0, 'compatibility section start not found'
-          sex_marker = '                    {sexIdentificationGuide && ('
-          compatibility_end = source.index(sex_marker, compatibility_marker_index)
-          compatibility_block = source[compatibility_start:compatibility_end]
-          source = source[:compatibility_start] + "                    {!isPlant && (\n" + compatibility_block + "                    )}\n\n" + source[compatibility_end:]
-          assert sex_marker in source, 'sex identification control not found'
-          source = source.replace(sex_marker, "                    {!isPlant && sexIdentificationGuide && (", 1)
-
-          path.write_text(source)
-          PY
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -109,15 +52,3 @@ jobs:
 
       - name: Species detail care boundary regression
         run: node scripts/test-species-detail-care-boundary.mjs
-
-      - name: Persist one-time plant detail boundary patch
-        run: |
-          if git diff --quiet -- src/components/SpeciesDetailDialog.tsx; then
-            echo 'no component patch to persist'
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/components/SpeciesDetailDialog.tsx
-          git commit -m "Fail closed plant detail animal-only actions"
-          git push origin HEAD:agent/environment-decision-v1
