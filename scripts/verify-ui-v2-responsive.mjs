@@ -43,10 +43,15 @@ try {
   });
   assert.ok(compactPriority && compactPriority.todayTop <= compactPriority.contextTop, `mobile dashboard must show Today's decision area before tank context: ${JSON.stringify(compactPriority)}`);
 
-  const grid = page.locator('.quick-action-grid').first();
+  const grid = page.locator('.quick-action-primary');
   await grid.waitFor();
+  assert.equal(await grid.locator('.quick-action-button').count(), 3, 'Aquarium home must keep exactly three recurrent maintenance actions permanently visible');
   const compactColumns = await grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length);
-  assert.equal(compactColumns, 1, `compact Aquarium quick actions must use one adaptive column, got ${compactColumns}`);
+  assert.equal(compactColumns, 2, `compact Aquarium primary actions must use two concise columns, got ${compactColumns}`);
+  const moreActions = page.locator('.quick-action-more');
+  await moreActions.waitFor();
+  assert.equal(await moreActions.evaluate(element => element.hasAttribute('open')), false, 'secondary Aquarium actions must be collapsed by default');
+  assert.equal(await page.locator('.quick-action-secondary .quick-action-button').count(), 4, 'secondary actions must remain available without competing on first scan');
 
   const compactOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -59,7 +64,7 @@ try {
   assert.equal(await app.getAttribute('data-layout-mode'), 'desktop', '900px viewport must switch to desktop shell without reload');
   await grid.waitFor();
   const mediumColumns = await grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length);
-  assert.equal(mediumColumns, 2, `medium Aquarium quick actions must use two columns, got ${mediumColumns}`);
+  assert.equal(mediumColumns, 2, `medium Aquarium primary actions must use two columns, got ${mediumColumns}`);
 
   const desktopHero = await page.evaluate(() => {
     const todayElement = document.querySelector('[data-dashboard-priority="today"]');
@@ -72,10 +77,13 @@ try {
       contextTop: Math.round(contextRect.top),
       todayRight: Math.round(todayRect.right),
       contextLeft: Math.round(contextRect.left),
+      todayWidth: Math.round(todayRect.width),
+      contextWidth: Math.round(contextRect.width),
     };
   });
   assert.ok(desktopHero && Math.abs(desktopHero.todayTop - desktopHero.contextTop) <= 2, `desktop decision and context areas must share a stable hero row: ${JSON.stringify(desktopHero)}`);
   assert.ok(desktopHero && desktopHero.todayRight <= desktopHero.contextLeft + 2, `desktop decision area must remain visually distinct from tank context: ${JSON.stringify(desktopHero)}`);
+  assert.ok(desktopHero && desktopHero.todayWidth >= desktopHero.contextWidth, `desktop tank context must not be wider than Today's decision area: ${JSON.stringify(desktopHero)}`);
 
   const mediumOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -87,7 +95,7 @@ try {
   await page.waitForFunction(() => document.querySelector('.aquaguide-app')?.getAttribute('data-layout-mode') === 'desktop');
   await grid.waitFor();
   const wideColumns = await grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length);
-  assert.ok(wideColumns >= 2 && wideColumns <= 3, `wide Aquarium quick actions must stay scan-friendly at two or three columns, got ${wideColumns}`);
+  assert.equal(wideColumns, 3, `wide Aquarium primary actions must use three concise columns, got ${wideColumns}`);
 
   const sectionTypography = await page.locator('.aquarium-dashboard-v2__section-title').first().evaluate(element => {
     const style = getComputedStyle(element);
@@ -103,7 +111,7 @@ try {
   assert.ok(wideOverflow.scrollWidth <= wideOverflow.viewportWidth + 1, `wide Aquarium must not overflow horizontally: ${JSON.stringify(wideOverflow)}`);
   assert.deepEqual(pageErrors, [], `UI V2 responsive path must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first 390px phone → 900px medium → 1600px wide, no reload).');
+  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first hierarchy + compact primary actions across 390/900/1600).');
 } finally {
   await browser.close();
 }
