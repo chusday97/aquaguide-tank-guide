@@ -10,9 +10,12 @@ on:
       - 'src/components/layout/LayoutModeProvider.tsx'
       - 'src/components/product/QuickActionGrid.tsx'
       - 'src/components/product/StatusSummaryCard.tsx'
+      - 'src/pages/Aquarium.tsx'
       - 'src/pages/Search.tsx'
       - 'src/styles/ui-v2-*.css'
       - 'src/main.tsx'
+      - 'scripts/apply-aquarium-dashboard-v2.mjs'
+      - 'scripts/verify-ui-v2-dashboard-ia.mjs'
       - 'scripts/verify-ui-v2-responsive.mjs'
       - 'scripts/verify-ui-v2-shell.mjs'
       - 'scripts/verify-ui-v2-species-search.mjs'
@@ -32,6 +35,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Dashboard IA contract
+        run: node scripts/verify-ui-v2-dashboard-ia.mjs
       - name: Type check
         run: npm run lint
       - name: Build
