@@ -48,14 +48,10 @@ jobs:
           text = workflow.read_text()
           settings_step = "      - name: Aquarium settings repository contract\n        run: node scripts/test-aquarium-settings-repository-contract.mjs\n"
           if 'Aquarium settings repository contract' not in text:
-              delete_step = "      - name: Aquarium delete repository contract\n        run: node scripts/test-aquarium-delete-repository-contract.mjs\n"
-              daily_anchor = "          npm run test:daily-check\n"
-              if delete_step in text:
-                  text = text.replace(delete_step, delete_step + settings_step, 1)
-              elif daily_anchor in text:
-                  text = text.replace(daily_anchor, daily_anchor + settings_step, 1)
-              else:
-                  raise SystemExit('Golden Path anchor missing while integrating PR92')
+              type_check_anchor = "      - name: Type check\n"
+              if type_check_anchor not in text:
+                  raise SystemExit('Stable Type check anchor missing while integrating PR92')
+              text = text.replace(type_check_anchor, settings_step + type_check_anchor, 1)
               workflow.write_text(text)
 
           current_path = Path('evaluation/product/badcases.v1.jsonl')
