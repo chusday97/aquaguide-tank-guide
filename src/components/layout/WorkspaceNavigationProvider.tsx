@@ -329,7 +329,7 @@ export function WorkspaceNavigationProvider({ children }: { children: ReactNode 
   return (
     <WorkspaceNavigationContextValue.Provider value={value}>
       {children}
-      {workspaceReturnContext && location.pathname === '/aquarium' && (
+      {workspaceReturnContext && location.pathname === '/aquarium' && new URLSearchParams(location.search).get('action') !== 'livestock' && (
         <button
           type="button"
           data-workspace-return

@@ -10,6 +10,7 @@ const species = read('src/components/SpeciesDetailDialog.tsx');
 const livestock = read('src/components/aquarium/LivestockBatchCard.tsx');
 const compatibility = read('src/components/CompatibilityRiskCalculator.tsx');
 const navigation = read('src/components/layout/WorkspaceNavigationProvider.tsx');
+const roster = read('src/components/aquarium/LivestockRosterDialog.tsx');
 const encyclopedia = read('src/pages/Encyclopedia.tsx');
 const skill = read('.agents/skills/aquaguide-ui-ux/SKILL.md');
 
@@ -29,8 +30,11 @@ assert(compatibility.includes('data-ai-advice-inline'), 'AI explanation must be 
 assert(!compatibility.includes('<Dialog open={aiOpen}'), 'Non-blocking compatibility explanation must not open another Dialog');
 
 assert(navigation.includes('workspaceReturnContext'), 'Specific cross-route tasks must preserve a return context');
-assert(navigation.includes('data-workspace-return'), 'Destination must expose an explicit return affordance');
+assert(navigation.includes('data-workspace-return'), 'Non-modal destinations must expose an explicit return affordance');
+assert(navigation.includes("get('action') !== 'livestock'"), 'Global return must not render behind the livestock modal');
 assert(navigation.includes("isSpecificAquariumTask"), 'Aquarium task routes must be distinguished from the generic Aquarium home');
+assert(roster.includes('data-workspace-dialog-return'), 'Modal task destinations must place their return action inside the active Dialog layer');
+assert(roster.includes('restoreContext(workspaceReturnContext)'), 'Livestock modal return must restore the exact caller context');
 
 assert(encyclopedia.includes("params.set('source', 'atlas-detail')"), 'Atlas entity detail must be route-addressable');
 assert(encyclopedia.includes("navigateToRoute(taskRoutes.aquarium.livestock, { returnContext })"), 'View tank must carry exact caller context');

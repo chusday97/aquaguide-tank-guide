@@ -93,9 +93,11 @@ try {
     await primary.click();
     await page.waitForURL(url => url.pathname === '/aquarium' && url.searchParams.get('action') === 'livestock');
 
-    const returnButton = page.locator('[data-workspace-return]');
+    assert.equal(await page.locator('[data-workspace-return]').count(), 0, 'Global return must not sit inert behind the livestock Dialog.');
+    const returnButton = page.locator('[data-workspace-dialog-return]');
     await returnButton.waitFor();
-    assert.match((await returnButton.textContent()) || '', /返回物种详情/, 'Aquarium task must explain that it returns to the species detail, not a generic home.');
+    assert.equal(await returnButton.getAttribute('aria-hidden'), null, 'Dialog-local return must remain in the active accessibility tree.');
+    assert.match((await returnButton.getAttribute('aria-label')) || '', /返回物种详情/, 'Aquarium task must explain that it returns to the species detail, not a generic home.');
     await returnButton.click();
     await page.waitForURL(url => `${url.pathname}${url.search}` === detailUrl);
     await page.locator('[data-detail-kind="species"]').waitFor();
