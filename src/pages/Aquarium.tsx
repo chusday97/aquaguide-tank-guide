@@ -221,18 +221,6 @@ const getAddFishCategory = (fish: Fish): 'fish' | 'shrimp' | 'snail' | 'crab' | 
   return 'other';
 };
 
-function AquariumZoneHeader({ index, title, subtitle, titleId }: { index: number; title: string; subtitle: string; titleId: string }) {
-  return (
-    <header className="aquarium-zone-header">
-      <span className="aquarium-zone-index" aria-hidden="true">{index}</span>
-      <span className="min-w-0">
-        <h2 id={titleId} className="type-card-title block text-ink">{title}</h2>
-        {subtitle && <span className="type-meta mt-1 block text-ink/48">{subtitle}</span>}
-      </span>
-    </header>
-  );
-}
-
 function AquariumWorkspace({
   observeTitle,
   observeSubtitle,
@@ -280,24 +268,54 @@ function AquariumWorkspace({
   }, [location.hash, location.search]);
 
   return (
-    <>
-      <section className="aquarium-workspace-zone aquarium-observe-zone" aria-labelledby="aquarium-observe-title">
-        <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
-        <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}{archive}</div>
+    <main className="aquarium-dashboard-v2" data-aquarium-dashboard-v2>
+      <section className="aquarium-dashboard-v2__hero" aria-label={observeTitle}>
+        <div className="aquarium-dashboard-v2__decision" data-dashboard-priority="today">
+          {status}
+        </div>
+        <div className="aquarium-dashboard-v2__context" data-dashboard-priority="context">
+          {tank}
+        </div>
       </section>
-      <div className="aquarium-followup-grid">
-        <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
-          <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-          <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
+
+      <section
+        id="aquarium-manage-zone"
+        tabIndex={-1}
+        className="aquarium-dashboard-v2__section aquarium-dashboard-v2__manage"
+        aria-labelledby="aquarium-manage-title"
+      >
+        <header className="aquarium-dashboard-v2__section-heading">
+          <div className="min-w-0">
+            <div className="aquarium-dashboard-v2__section-kicker">{observeSubtitle}</div>
+            <h2 id="aquarium-manage-title" className="aquarium-dashboard-v2__section-title">{manageTitle}</h2>
+            {manageSubtitle && <p className="aquarium-dashboard-v2__section-copy">{manageSubtitle}</p>}
+          </div>
+        </header>
+        <div className="aquarium-dashboard-v2__manage-grid">
+          <div className="aquarium-dashboard-v2__manage-primary">{actions}</div>
+          <div className="aquarium-dashboard-v2__manage-secondary">{archive}</div>
+        </div>
+      </section>
+
+      {discovery && (
+        <section
+          id="aquarium-learn-zone"
+          tabIndex={-1}
+          className="aquarium-dashboard-v2__section aquarium-dashboard-v2__secondary"
+          aria-labelledby="aquarium-learn-title"
+          data-dashboard-priority="secondary"
+        >
+          <header className="aquarium-dashboard-v2__section-heading">
+            <div className="min-w-0">
+              <div className="aquarium-dashboard-v2__section-kicker">Explore</div>
+              <h2 id="aquarium-learn-title" className="aquarium-dashboard-v2__section-title">{learnTitle}</h2>
+              {learnSubtitle && <p className="aquarium-dashboard-v2__section-copy">{learnSubtitle}</p>}
+            </div>
+          </header>
+          <div className="aquarium-dashboard-v2__secondary-content">{discovery}</div>
         </section>
-        {discovery && (
-          <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-            <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
-          </section>
-        )}
-      </div>
-    </>
+      )}
+    </main>
   );
 }
 
@@ -5101,6 +5119,17 @@ export default function AquariumManager() {
               </button>
               {isMobileMoreOpen && (
                 <div className="absolute right-0 top-[calc(100%+8px)] z-[80] w-[240px] rounded-[18px] border border-white/80 bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.16)] ring-1 ring-ink/5">
+                  <div className="mb-2 grid grid-cols-3 gap-1.5 border-b border-border/60 pb-2" aria-label={isEn ? 'App utilities' : '应用工具'}>
+                    <button type="button" data-mobile-aquarium-utility="search" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/search'); }} className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[12px] text-[10px] font-black text-ink/58 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
+                      <Search className="h-4 w-4" /><span>{isEn ? 'Search' : '搜索'}</span>
+                    </button>
+                    <button type="button" data-mobile-aquarium-utility="identify" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/identify'); }} className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[12px] text-[10px] font-black text-ink/58 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
+                      <Sparkles className="h-4 w-4" /><span>{isEn ? 'Identify' : '识别'}</span>
+                    </button>
+                    <button type="button" data-mobile-aquarium-utility="settings" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/settings'); }} className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[12px] text-[10px] font-black text-ink/58 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
+                      <Settings className="h-4 w-4" /><span>{isEn ? 'Settings' : '设置'}</span>
+                    </button>
+                  </div>
                   {isEditingName ? (
                     <form className="grid gap-2 p-1" onSubmit={event => { event.preventDefault(); void handleRenameSubmit().then(() => setIsMobileMoreOpen(false)); }}>
                       <Input autoFocus value={editNameValue} onChange={event => setEditNameValue(event.target.value)} maxLength={40} aria-label={isEn ? 'Aquarium name' : '鱼缸名称'} className="h-11 rounded-[14px]" />
