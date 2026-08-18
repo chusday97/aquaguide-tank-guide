@@ -1,0 +1,66 @@
+name: UI Interaction Repair V1
+
+on:
+  pull_request:
+    branches:
+      - agent/ui-v2-aquarium-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair-and-validate:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/ui-interaction-repair-v1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout interaction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/ui-interaction-repair-v1
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply deterministic interaction migration once
+        shell: bash
+        run: |
+          if grep -q 'data-compatibility-verdict' src/components/CompatibilityRiskCalculator.tsx; then
+            echo 'Interaction repair already applied; skipping migration.'
+          else
+            node scripts/apply-ui-interaction-repair-v1.mjs
+          fi
+
+      - name: UI interaction contract
+        run: node scripts/test-ui-interaction-repair-v1.mjs
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Commit migrated product source
+        shell: bash
+        run: |
+          git add src/components/common/AdaptiveDetailContent.tsx \
+            src/components/SpeciesDetailDialog.tsx \
+            src/components/aquarium/LivestockBatchCard.tsx \
+            src/components/CompatibilityRiskCalculator.tsx \
+            src/components/layout/WorkspaceNavigationProvider.tsx \
+            src/pages/Encyclopedia.tsx
+          if git diff --cached --quiet; then
+            echo 'No product source changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Repair UI task continuity and result hierarchy'
+          git push origin HEAD:agent/ui-interaction-repair-v1
