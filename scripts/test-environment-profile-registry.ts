@@ -37,6 +37,19 @@ assert.equal(reviewedJavaFern.planting.type, 'epiphyte');
 assert.equal(reviewedJavaFern.planting.substrateRequired, 'none');
 assert.equal(reviewedJavaFern.planting.leafDurability, 'tough');
 assert.ok(reviewedJavaFern.evidence.sourceRefs.length >= 2);
+
+const reviewedDwarfBabyTears = getReviewedPlantEnvironmentProfile('sp_0071');
+assert.ok(reviewedDwarfBabyTears, 'reviewed dwarf baby tears profile should be available');
+assert.equal(reviewedDwarfBabyTears.environment.light, 'high');
+assert.equal(reviewedDwarfBabyTears.environment.co2, 'recommended');
+assert.equal(reviewedDwarfBabyTears.planting.type, 'rooted');
+assert.equal(
+  reviewedDwarfBabyTears.planting.substrateRequired,
+  undefined,
+  'reviewed profile must not invent a substrate material when sources only establish rooted carpeting growth',
+);
+assert.ok(reviewedDwarfBabyTears.evidence.sourceRefs.length >= 2);
+
 assert.equal(
   getReviewedPlantEnvironmentProfile('plant-without-reviewed-profile'),
   null,
@@ -63,6 +76,20 @@ assert.doesNotMatch(
   JSON.stringify(javaFernCare),
   /冻虾|鱼肉|高蛋白肉食|投喂频率/,
   'reviewed plant presentation must not leak the legacy carnivore feeding template',
+);
+
+const dwarfBabyTearsCatalog = fishData.find(item => item.id === 'sp_0071');
+assert.ok(dwarfBabyTearsCatalog && isAquaticPlantSpecies(dwarfBabyTearsCatalog));
+const dwarfBabyTearsCare = buildSpeciesCarePresentation(dwarfBabyTearsCatalog);
+assert.equal(dwarfBabyTearsCare.sourceStatus, 'verified');
+assert.equal(dwarfBabyTearsCare.feedingItems.length, 0);
+assert.ok(dwarfBabyTearsCare.environmentItems.some(item => item.label === '光照' && item.value === '高光'));
+assert.ok(dwarfBabyTearsCare.environmentItems.some(item => item.label === 'CO₂' && item.value.includes('建议')));
+assert.ok(dwarfBabyTearsCare.environmentItems.some(item => item.label === '种植方式' && item.value.includes('扎根')));
+assert.equal(
+  dwarfBabyTearsCare.environmentItems.some(item => item.label === '底床'),
+  false,
+  'unsourced substrate material must stay absent from the reviewed presentation',
 );
 
 const unreviewedPlantCatalog = fishData.find(item => item.id === 'sp_0080');
@@ -128,12 +155,12 @@ const productionAuditIssues = [
 assert.deepEqual(productionAuditIssues, [], `production environment profiles must pass evidence audit: ${JSON.stringify(productionAuditIssues)}`);
 
 const coverage = getEnvironmentProfileCoverage();
-assert.equal(coverage.totalProfiles, 2);
-assert.equal(coverage.reviewedProfiles, 2);
+assert.equal(coverage.totalProfiles, 3);
+assert.equal(coverage.reviewedProfiles, 3);
 assert.equal(coverage.speciesTotalProfiles, 1);
 assert.equal(coverage.speciesReviewedProfiles, 1);
-assert.equal(coverage.plantTotalProfiles, 1);
-assert.equal(coverage.plantReviewedProfiles, 1);
+assert.equal(coverage.plantTotalProfiles, 2);
+assert.equal(coverage.plantReviewedProfiles, 2);
 assert.deepEqual(coverage.auditIssues, []);
 
 console.log('Environment profile registry regression: PASS (species + plant review gates, safe plant presentation, evidence resolution, fail-closed lookup).');
