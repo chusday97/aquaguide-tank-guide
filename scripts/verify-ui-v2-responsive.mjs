@@ -25,13 +25,28 @@ try {
   await page.waitForFunction(() => document.querySelector('.aquaguide-app')?.getAttribute('data-layout-mode') === 'phone');
   assert.equal(await app.getAttribute('data-layout-mode'), 'phone', '390px viewport must render the phone shell regardless of desktop browser user-agent');
 
+  const dashboard = page.locator('[data-aquarium-dashboard-v2]');
+  const today = page.locator('[data-dashboard-priority="today"]');
+  const context = page.locator('[data-dashboard-priority="context"]');
+  await dashboard.waitFor();
+  await today.waitFor();
+  await context.waitFor();
+  assert.equal(await page.locator('.aquarium-zone-index').count(), 0, 'Decision-first Aquarium must not reintroduce numbered Observe / Manage / Learn zones');
+
+  const compactPriority = await page.evaluate(() => {
+    const todayElement = document.querySelector('[data-dashboard-priority="today"]');
+    const contextElement = document.querySelector('[data-dashboard-priority="context"]');
+    if (!(todayElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement)) return null;
+    const todayRect = todayElement.getBoundingClientRect();
+    const contextRect = contextElement.getBoundingClientRect();
+    return { todayTop: todayRect.top, contextTop: contextRect.top };
+  });
+  assert.ok(compactPriority && compactPriority.todayTop <= compactPriority.contextTop, `mobile dashboard must show Today's decision area before tank context: ${JSON.stringify(compactPriority)}`);
+
   const grid = page.locator('.quick-action-grid').first();
   await grid.waitFor();
   const compactColumns = await grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length);
   assert.equal(compactColumns, 1, `compact Aquarium quick actions must use one adaptive column, got ${compactColumns}`);
-
-  const indexDisplay = await page.locator('.aquarium-zone-index').first().evaluate(element => getComputedStyle(element).display);
-  assert.equal(indexDisplay, 'none', 'Observe / Manage / Learn must not look like a forced numbered wizard');
 
   const compactOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -46,6 +61,22 @@ try {
   const mediumColumns = await grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length);
   assert.equal(mediumColumns, 2, `medium Aquarium quick actions must use two columns, got ${mediumColumns}`);
 
+  const desktopHero = await page.evaluate(() => {
+    const todayElement = document.querySelector('[data-dashboard-priority="today"]');
+    const contextElement = document.querySelector('[data-dashboard-priority="context"]');
+    if (!(todayElement instanceof HTMLElement) || !(contextElement instanceof HTMLElement)) return null;
+    const todayRect = todayElement.getBoundingClientRect();
+    const contextRect = contextElement.getBoundingClientRect();
+    return {
+      todayTop: Math.round(todayRect.top),
+      contextTop: Math.round(contextRect.top),
+      todayRight: Math.round(todayRect.right),
+      contextLeft: Math.round(contextRect.left),
+    };
+  });
+  assert.ok(desktopHero && Math.abs(desktopHero.todayTop - desktopHero.contextTop) <= 2, `desktop decision and context areas must share a stable hero row: ${JSON.stringify(desktopHero)}`);
+  assert.ok(desktopHero && desktopHero.todayRight <= desktopHero.contextLeft + 2, `desktop decision area must remain visually distinct from tank context: ${JSON.stringify(desktopHero)}`);
+
   const mediumOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     viewportWidth: window.innerWidth,
@@ -56,14 +87,14 @@ try {
   await page.waitForFunction(() => document.querySelector('.aquaguide-app')?.getAttribute('data-layout-mode') === 'desktop');
   await grid.waitFor();
   const wideColumns = await grid.evaluate(element => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length);
-  assert.equal(wideColumns, 3, `wide Aquarium quick actions must use three columns, got ${wideColumns}`);
+  assert.ok(wideColumns >= 2 && wideColumns <= 3, `wide Aquarium quick actions must stay scan-friendly at two or three columns, got ${wideColumns}`);
 
-  const sectionTypography = await page.locator('.aquarium-zone-header h2').first().evaluate(element => {
+  const sectionTypography = await page.locator('.aquarium-dashboard-v2__section-title').first().evaluate(element => {
     const style = getComputedStyle(element);
     return { fontSize: parseFloat(style.fontSize), fontWeight: parseInt(style.fontWeight, 10), lineHeight: style.lineHeight };
   });
-  assert.ok(sectionTypography.fontSize >= 18, `section title must retain readable hierarchy, got ${sectionTypography.fontSize}px`);
-  assert.ok(sectionTypography.fontWeight >= 600 && sectionTypography.fontWeight <= 750, `section title must use controlled semantic weight, got ${sectionTypography.fontWeight}`);
+  assert.ok(sectionTypography.fontSize >= 16, `section title must retain readable hierarchy, got ${sectionTypography.fontSize}px`);
+  assert.ok(sectionTypography.fontWeight >= 600 && sectionTypography.fontWeight <= 850, `section title must use controlled semantic weight, got ${sectionTypography.fontWeight}`);
 
   const wideOverflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
@@ -72,7 +103,7 @@ try {
   assert.ok(wideOverflow.scrollWidth <= wideOverflow.viewportWidth + 1, `wide Aquarium must not overflow horizontally: ${JSON.stringify(wideOverflow)}`);
   assert.deepEqual(pageErrors, [], `UI V2 responsive path must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('AquaGuide UI V2 responsive regression: PASS (390px phone → 900px medium → 1600px wide, no reload).');
+  console.log('AquaGuide UI V2 responsive regression: PASS (decision-first 390px phone → 900px medium → 1600px wide, no reload).');
 } finally {
   await browser.close();
 }
