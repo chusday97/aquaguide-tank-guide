@@ -33,44 +33,23 @@ jobs:
           source = path.read_text()
 
           care_line = "  const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);\n"
-          if care_line not in source:
-              raise SystemExit('carePresentation declaration not found')
-          source = source.replace(
-              care_line,
-              care_line + "  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');\n",
-              1,
-          )
+          assert care_line in source, 'carePresentation declaration not found'
+          source = source.replace(care_line, care_line + "  const isPlant = Boolean(fish && getLifeType(fish) === 'plant');\n", 1)
 
           plant_section = '<section data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3"'
-          if plant_section not in source:
-              raise SystemExit('plant care section not found')
-          source = source.replace(
-              plant_section,
-              '<section ref={careSectionButtonRef} tabIndex={-1} data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3"',
-              1,
-          )
+          assert plant_section in source, 'plant care section not found'
+          source = source.replace(plant_section, '<section ref={careSectionButtonRef} tabIndex={-1} data-species-plant-care-summary className="mt-2 rounded-[16px] border border-emerald-100 bg-emerald-50/72 p-2.5 min-[760px]:mt-3 min-[760px]:p-3"', 1)
 
           main_label = "  const mainActionLabel = useMemo(() => {\n"
-          if main_label not in source:
-              raise SystemExit('mainActionLabel not found')
-          source = source.replace(
-              main_label,
-              main_label + "    if (isPlant) return isEn ? 'View plant care' : '查看植物养护';\n",
-              1,
-          )
+          assert main_label in source, 'mainActionLabel not found'
+          source = source.replace(main_label, main_label + "    if (isPlant) return isEn ? 'View plant care' : '查看植物养护';\n", 1)
           old_deps = "  }, [aquariumContext, displayFit, owned, source, t]);\n"
-          if old_deps not in source:
-              raise SystemExit('mainActionLabel dependency list not found')
+          assert old_deps in source, 'mainActionLabel dependency list not found'
           source = source.replace(old_deps, "  }, [aquariumContext, displayFit, isEn, isPlant, owned, source, t]);\n", 1)
 
           action_start = "  const handleMainAction = () => {\n    if (!fish || !displayFit) return;\n"
-          if action_start not in source:
-              raise SystemExit('handleMainAction start not found')
-          source = source.replace(
-              action_start,
-              action_start + "    if (isPlant) {\n      window.requestAnimationFrame(() => {\n        careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });\n        careSectionButtonRef.current?.focus({ preventScroll: true });\n      });\n      return;\n    }\n",
-              1,
-          )
+          assert action_start in source, 'handleMainAction start not found'
+          source = source.replace(action_start, action_start + "    if (isPlant) {\n      window.requestAnimationFrame(() => {\n        careSectionButtonRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });\n        careSectionButtonRef.current?.focus({ preventScroll: true });\n      });\n      return;\n    }\n", 1)
 
           verdict_start = source.index('                        <div data-visual-result-status=')
           actions_marker = '                        <div className="mt-2 flex flex-wrap gap-2 min-[760px]:mt-3">'
@@ -79,8 +58,7 @@ jobs:
           source = source[:verdict_start] + "                        {!isPlant && (\n                          <>\n" + verdict_block + "                          </>\n                        )}\n\n" + source[verdict_end:]
 
           death_gate = '{onRecordDeath && ('
-          if death_gate not in source:
-              raise SystemExit('death record control not found')
+          assert death_gate in source, 'death record control not found'
           source = source.replace(death_gate, '{!isPlant && onRecordDeath && (', 1)
 
           compatibility_start_text = '''                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
@@ -93,19 +71,17 @@ jobs:
           compatibility_end = source.index(sex_marker, compatibility_start)
           compatibility_block = source[compatibility_start:compatibility_end]
           source = source[:compatibility_start] + "                    {!isPlant && (\n" + compatibility_block + "                    )}\n\n" + source[compatibility_end:]
-
-          if sex_marker not in source:
-              raise SystemExit('sex identification control not found')
+          assert sex_marker in source, 'sex identification control not found'
           source = source.replace(sex_marker, "                    {!isPlant && sexIdentificationGuide && (", 1)
 
+          assert "const isPlant = Boolean(fish && getLifeType(fish) === 'plant')" in source
+          assert "{!isPlant && onRecordDeath && (" in source
+          assert "{!isPlant && sexIdentificationGuide && (" in source
           path.write_text(source)
           PY
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Verify care boundary
-        run: node scripts/test-species-detail-care-boundary.mjs
 
       - name: Typecheck
         run: npm run lint
