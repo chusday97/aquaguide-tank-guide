@@ -45,7 +45,7 @@ assert.match(
 );
 assert.match(
   source,
-  /\{!isPlant && \(\s*<div data-visual-result-status/,
+  /\{!isPlant && \(\s*<>\s*<div data-visual-result-status/,
   'fish-fit verdict must be hidden for plants until a reviewed plant-to-tank adapter exists',
 );
 assert.match(
