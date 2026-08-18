@@ -40,6 +40,7 @@ export default function SearchPage() {
   const query = searchParams.get('q') ?? '';
   const [draft, setDraft] = useState(query);
   const [selectedSpecies, setSelectedSpecies] = useState<SearchSuggestion | null>(null);
+  const [showAllSpecies, setShowAllSpecies] = useState(false);
   const normalizedQuery = normalize(query);
   const aquarium = useMemo(() => {
     const state = loadAppStateFromStorage();
@@ -88,7 +89,7 @@ export default function SearchPage() {
       autoTranslations[fish.id]?.description,
     ].join(' ')).includes(normalizedQuery))
     : [], [normalizedQuery]);
-  const speciesResults = allSpeciesResults.slice(0, 18);
+  const speciesResults = showAllSpecies ? allSpeciesResults : allSpeciesResults.slice(0, 18);
   const allCareResults = useMemo(() => normalizedQuery
     ? careTopicsData.filter(topic => normalize([
       topic.title,
@@ -108,12 +109,21 @@ export default function SearchPage() {
   const submit = (event: FormEvent) => {
     event.preventDefault();
     const next = draft.trim();
+    setShowAllSpecies(false);
     setSearchParams(next ? { q: next } : {});
   };
 
   const submitValue = (value: string) => {
     const next = value.trim();
+    setShowAllSpecies(false);
     setSearchParams(next ? { q: next } : {});
+  };
+
+  const showAllSpeciesResults = () => {
+    const next = draft.trim();
+    if (!next) return;
+    setSearchParams({ q: next });
+    setShowAllSpecies(true);
   };
 
   const selectSuggestion = (suggestion: SearchSuggestion) => {
@@ -157,12 +167,13 @@ export default function SearchPage() {
           onValueChange={value => {
             setDraft(value);
             setSelectedSpecies(null);
+            setShowAllSpecies(false);
           }}
           onSelectSuggestion={selectSuggestion}
           onSubmit={submitValue}
           onViewSelected={suggestion => suggestion.targetId && openSearchResult(`/encyclopedia?species=${encodeURIComponent(suggestion.targetId)}&source=search`, `search-species-${suggestion.targetId}`)}
           onReselect={() => setSelectedSpecies(null)}
-          onViewAllSpecies={() => submitValue(draft)}
+          onViewAllSpecies={showAllSpeciesResults}
         />
       </form>
 
