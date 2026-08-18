@@ -208,7 +208,7 @@ const tank = (overrides: Partial<TankContext> = {}): TankContext => ({
         type: 'freshwater',
         volumeLiters: 60,
         targetTemperature: 25,
-        lowestObservedTemperature: 25,
+        lowestObservedTemperature: 26,
       },
     }),
     plant: basePlant,
