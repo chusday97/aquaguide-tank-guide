@@ -28,6 +28,8 @@ jobs:
           npm run test:task-entry
           npm run test:core-flow-state-eval
           npm run test:daily-check
+      - name: Data storage repository-mode contract
+        run: node scripts/test-data-storage-repository-mode-contract.mjs
       - name: Type check
         run: npm run lint
       - name: Build
