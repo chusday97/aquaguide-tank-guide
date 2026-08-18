@@ -22,6 +22,19 @@ assert.ok(
   reviewedSewellia.evidence.sourceRefs.length >= 2,
   'reviewed profile must preserve multiple evidence references',
 );
+assert.ok((reviewedSewellia.evidence.claimRefs?.['environment.flowPreference'] || []).length >= 2);
+
+const reviewedNeon = getReviewedSpeciesEnvironmentProfile('sp_0431');
+assert.ok(reviewedNeon, 'reviewed Paracheirodon innesi profile should be available');
+assert.equal(reviewedNeon.environment.waterType, 'freshwater');
+assert.deepEqual(reviewedNeon.environment.temperature, { min: 20, max: 26 });
+assert.equal(reviewedNeon.environment.minimumTankLengthCm, 60);
+assert.equal(
+  reviewedNeon.environment.ph,
+  undefined,
+  'reviewed Neon tetra profile must not collapse conflicting pH upper bounds into fake precision',
+);
+assert.equal((reviewedNeon.evidence.claimRefs?.['environment.temperature'] || []).length, 2);
 
 assert.equal(
   getReviewedSpeciesEnvironmentProfile('species-without-reviewed-profile'),
@@ -33,6 +46,7 @@ const reviewedJavaFern = getReviewedPlantEnvironmentProfile('sp_0081');
 assert.ok(reviewedJavaFern, 'reviewed Microsorum pteropus profile should be available');
 assert.equal(reviewedJavaFern.environment.light, 'low');
 assert.equal(reviewedJavaFern.environment.co2, 'optional');
+assert.equal(reviewedJavaFern.environment.waterType, undefined);
 assert.equal(reviewedJavaFern.planting.type, 'epiphyte');
 assert.equal(reviewedJavaFern.planting.substrateRequired, 'none');
 assert.equal(reviewedJavaFern.planting.leafDurability, 'tough');
@@ -122,6 +136,65 @@ assert.equal(
   'unreviewed plants must remain fail-closed rather than reusing legacy feeding data',
 );
 
+const missingClaimProfile: SpeciesEnvironmentProfile = {
+  speciesId: 'synthetic-missing-claim',
+  environment: { waterType: 'freshwater' },
+  evidence: {
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    sourceRefs: [
+      'sewellia-lineolata-fishbase-40433',
+      'sewellia-lineolata-fishkeeper',
+    ],
+  },
+};
+const missingClaimIssues = auditSpeciesEnvironmentProfiles([missingClaimProfile]);
+assert.ok(
+  missingClaimIssues.some(issue => issue.code === 'missing_claim_evidence'),
+  'reviewed explicit traits without claim-level evidence must fail audit',
+);
+
+const orphanClaimProfile: SpeciesEnvironmentProfile = {
+  speciesId: 'synthetic-orphan-claim',
+  environment: { waterType: 'freshwater' },
+  evidence: {
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    sourceRefs: [
+      'sewellia-lineolata-fishbase-40433',
+      'sewellia-lineolata-fishkeeper',
+    ],
+    claimRefs: {
+      'environment.waterType': ['sewellia-lineolata-fishbase-40433'],
+      'environment.temperature': ['sewellia-lineolata-fishbase-40433'],
+    },
+  },
+};
+assert.ok(
+  auditSpeciesEnvironmentProfiles([orphanClaimProfile]).some(issue => issue.code === 'orphan_claim_evidence'),
+  'evidence for a trait not exposed by the profile must fail audit',
+);
+
+const highConfidenceSingleSourceClaim: SpeciesEnvironmentProfile = {
+  speciesId: 'synthetic-high-single-source',
+  environment: { waterType: 'freshwater' },
+  evidence: {
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    sourceRefs: [
+      'sewellia-lineolata-fishbase-40433',
+      'sewellia-lineolata-fishkeeper',
+    ],
+    claimRefs: {
+      'environment.waterType': ['sewellia-lineolata-fishbase-40433'],
+    },
+  },
+};
+assert.ok(
+  auditSpeciesEnvironmentProfiles([highConfidenceSingleSourceClaim]).some(issue => issue.code === 'high_confidence_single_source_claim'),
+  'high-confidence reviewed claims must be independently corroborated',
+);
+
 const invalidReviewedProfile: SpeciesEnvironmentProfile = {
   speciesId: 'synthetic-invalid-reviewed',
   environment: { temperature: { min: 28, max: 22 } },
@@ -136,6 +209,7 @@ assert.ok(invalidIssues.some(issue => issue.code === 'invalid_range'));
 assert.ok(invalidIssues.some(issue => issue.code === 'reviewed_without_sources'));
 assert.ok(invalidIssues.some(issue => issue.code === 'reviewed_with_weak_confidence'));
 assert.ok(invalidIssues.some(issue => issue.code === 'missing_evidence_source'));
+assert.ok(invalidIssues.some(issue => issue.code === 'missing_claim_evidence'));
 
 const invalidPlantProfile: PlantEnvironmentProfile = {
   speciesId: 'synthetic-invalid-plant',
@@ -151,6 +225,7 @@ const invalidPlantIssues = auditPlantEnvironmentProfiles([invalidPlantProfile]);
 assert.ok(invalidPlantIssues.some(issue => issue.code === 'unknown_planting_type'));
 assert.ok(invalidPlantIssues.some(issue => issue.code === 'reviewed_without_sources'));
 assert.ok(invalidPlantIssues.some(issue => issue.code === 'missing_evidence_source'));
+assert.ok(invalidPlantIssues.some(issue => issue.code === 'missing_claim_evidence'));
 
 const draftWithoutSources: SpeciesEnvironmentProfile = {
   speciesId: 'synthetic-draft',
@@ -174,12 +249,12 @@ const productionAuditIssues = [
 assert.deepEqual(productionAuditIssues, [], `production environment profiles must pass evidence audit: ${JSON.stringify(productionAuditIssues)}`);
 
 const coverage = getEnvironmentProfileCoverage();
-assert.equal(coverage.totalProfiles, 4);
-assert.equal(coverage.reviewedProfiles, 4);
-assert.equal(coverage.speciesTotalProfiles, 1);
-assert.equal(coverage.speciesReviewedProfiles, 1);
+assert.equal(coverage.totalProfiles, 5);
+assert.equal(coverage.reviewedProfiles, 5);
+assert.equal(coverage.speciesTotalProfiles, 2);
+assert.equal(coverage.speciesReviewedProfiles, 2);
 assert.equal(coverage.plantTotalProfiles, 3);
 assert.equal(coverage.plantReviewedProfiles, 3);
 assert.deepEqual(coverage.auditIssues, []);
 
-console.log('Environment profile registry regression: PASS (species + plant review gates, safe plant presentation, evidence resolution, fail-closed lookup).');
+console.log('Environment profile registry regression: PASS (trait provenance + species/plant review gates + safe plant presentation + fail-closed lookup).');
