@@ -1,6 +1,7 @@
 // Permanent regression: Save Settings must persist through the active repository before UI success.
 // The aquarium fact is primary; the timeline entry is secondary evidence after persistence succeeds.
 // Fail-before proof is Product Golden Path #629 / run 32109567946.
+// A later Product Golden Path run may be retried when runner dependency installation stalls before product assertions.
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
