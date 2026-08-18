@@ -137,16 +137,24 @@ try {
     'After a successful Daily Check save, the Today primary task must advance instead of asking for the same check.',
   );
 
-  const advancedStatus = page.getByText(/^(今日已检查|建议重新检查)$/, { exact: true }).first();
-  await advancedStatus.waitFor();
-  assert.equal(
-    await page.getByText('今日未检查', { exact: true }).count(),
-    0,
+  // UI V2 intentionally suppresses Quick Action descriptions when their container is compact.
+  // Validate the state semantics in the action itself instead of forcing secondary copy to stay visible.
+  const dailyCheckAction = page.locator('.quick-action-button').filter({ hasText: '每日检查' }).first();
+  await dailyCheckAction.waitFor();
+  const dailyCheckState = (await dailyCheckAction.textContent()) || '';
+  assert.match(
+    dailyCheckState,
+    /(今日已检查|建议重新检查)/,
+    'Persisted Daily Check must advance the recurring action to a checked/recheck state even when secondary description copy is visually collapsed.',
+  );
+  assert.doesNotMatch(
+    dailyCheckState,
+    /今日未检查/,
     'Persisted Daily Check must not remain in the unchecked state.',
   );
   assert.deepEqual(pageErrors, [], `GP-003 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-003 continuous E2E passed: returning user → Today Daily Check → complete required answers → persist patrol → Today status advances.');
+  console.log('GP-003 continuous E2E passed: returning user → Today Daily Check → complete required answers → persist patrol → Today task advances while compact UI may hide secondary status copy.');
 } finally {
   await browser.close();
 }
