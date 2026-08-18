@@ -117,10 +117,7 @@ export function StatusSummaryCard({
   const { t } = useTranslation();
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
   const hasPrimaryAction = Boolean(action.task.primaryLabel);
-  const hasOverflowCarePlans = carePlan.activeCount > 1;
-  const careItems = hasOverflowCarePlans && showCarePlan
-    ? carePlan.visibleItems
-    : carePlan.visibleItems.slice(0, 1);
+  const careItems = showCarePlan ? carePlan.visibleItems : [];
   const careSummary = carePlan.overdueCount > 0
     ? t('aquarium.carePlanOverdueCount', { count: carePlan.overdueCount })
     : carePlan.dueCount > 0
@@ -203,9 +200,15 @@ export function StatusSummaryCard({
         </div>
       ) : (
         <section id="care-plan" className="mt-4 border border-white/80 bg-white/68 text-ink shadow-[0_3px_14px_rgba(18,56,45,0.035)]">
-          <div className="flex min-h-11 w-full items-center justify-between gap-3 text-left">
+          <button
+            type="button"
+            onClick={onToggleCarePlan}
+            aria-expanded={showCarePlan}
+            data-disclosure-purpose="care_plan_details"
+            className="flex min-h-12 w-full items-center justify-between gap-3 rounded-[12px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+          >
             <span className="flex min-w-0 items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-emerald-50 text-emerald-700">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] bg-emerald-50 text-emerald-700">
                 <CalendarDays className="h-4 w-4" />
               </span>
               <span className="min-w-0">
@@ -213,53 +216,40 @@ export function StatusSummaryCard({
                 <span className="type-meta mt-0.5 block text-ink/45">{careSummary}</span>
               </span>
             </span>
-            {hasOverflowCarePlans && (
-              <button
-                type="button"
-                onClick={onToggleCarePlan}
-                aria-expanded={showCarePlan}
-                data-disclosure-purpose="overflow_list"
-                className="inline-flex shrink-0 items-center gap-1.5 px-2 text-ink/52 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
-              >
-                <span className="type-meta">
-                  {showCarePlan
-                    ? t('aquarium.collapse')
-                    : t('aquarium.carePlanMore', { count: carePlan.activeCount - 1 })}
-                </span>
-                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
-              </button>
-            )}
-          </div>
+            <ChevronDown className={`h-4 w-4 shrink-0 text-ink/42 transition-transform duration-200 ${showCarePlan ? 'rotate-180' : ''}`} />
+          </button>
 
-          <div className="mt-3 grid gap-2.5">
-            {careItems.map(item => (
-              <article key={item.id} data-care-plan-visible className="care-plan-item border border-border/60 bg-white/88">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="type-card-title text-ink">{item.title}</div>
-                    <div className="type-meta mt-1 text-ink/44">{item.dateLabel} · {item.detail}</div>
+          {showCarePlan && (
+            <div className="mt-3 grid gap-2.5" data-care-plan-details>
+              {careItems.map(item => (
+                <article key={item.id} data-care-plan-visible className="care-plan-item border border-border/60 bg-white/88">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="type-card-title text-ink">{item.title}</div>
+                      <div className="type-meta mt-1 text-ink/44">{item.dateLabel} · {item.detail}</div>
+                    </div>
+                    <span className={`type-meta shrink-0 rounded-full px-2 py-1 ${careStatusStyle[item.status]}`}>
+                      {careStatusLabel[item.status]}
+                    </span>
                   </div>
-                  <span className={`type-meta shrink-0 rounded-full px-2 py-1 ${careStatusStyle[item.status]}`}>
-                    {careStatusLabel[item.status]}
-                  </span>
-                </div>
-                <div className="care-plan-action-row mt-3">
-                  <button type="button" onClick={() => onOpenCarePlan(item.id)} className="care-plan-primary-action bg-emerald-700 text-white">
-                    {t('aquarium.viewGuide')}
-                  </button>
-                  <button type="button" onClick={() => onCompleteCarePlan(item.id)} className="care-plan-secondary-action inline-flex items-center justify-center gap-1 bg-emerald-50 text-emerald-700">
-                    <Check className="h-3.5 w-3.5" />{t('aquarium.complete')}
-                  </button>
-                  <button type="button" onClick={() => onRescheduleCarePlan(item.id)} className="care-plan-tertiary-action inline-flex items-center justify-center gap-1 text-ink/52 hover:bg-bg">
-                    <Clock3 className="h-3.5 w-3.5" />{t('aquarium.reschedule')}
-                  </button>
-                  <button type="button" onClick={() => onDeleteCarePlan(item.id)} className="care-plan-tertiary-action inline-flex items-center justify-center gap-1 text-red-500 hover:bg-red-50">
-                    <Trash2 className="h-3.5 w-3.5" />{t('aquarium.delete')}
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="care-plan-action-row mt-3">
+                    <button type="button" onClick={() => onOpenCarePlan(item.id)} className="care-plan-primary-action bg-emerald-700 text-white">
+                      {t('aquarium.viewGuide')}
+                    </button>
+                    <button type="button" onClick={() => onCompleteCarePlan(item.id)} className="care-plan-secondary-action inline-flex items-center justify-center gap-1 bg-emerald-50 text-emerald-700">
+                      <Check className="h-3.5 w-3.5" />{t('aquarium.complete')}
+                    </button>
+                    <button type="button" onClick={() => onRescheduleCarePlan(item.id)} className="care-plan-tertiary-action inline-flex items-center justify-center gap-1 text-ink/52 hover:bg-bg">
+                      <Clock3 className="h-3.5 w-3.5" />{t('aquarium.reschedule')}
+                    </button>
+                    <button type="button" onClick={() => onDeleteCarePlan(item.id)} className="care-plan-tertiary-action inline-flex items-center justify-center gap-1 text-red-500 hover:bg-red-50">
+                      <Trash2 className="h-3.5 w-3.5" />{t('aquarium.delete')}
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       )}
     </section>
