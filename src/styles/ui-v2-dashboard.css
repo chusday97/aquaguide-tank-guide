@@ -26,8 +26,7 @@
 
 .aquarium-dashboard-v2__section {
   min-width: 0;
-  border-top: 1px solid color-mix(in srgb, var(--color-border, #dfe7e2) 72%, transparent);
-  padding-top: 16px;
+  padding-top: 4px;
 }
 
 .aquarium-dashboard-v2__section-heading {
@@ -36,7 +35,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding-inline: 2px;
 }
 
@@ -237,9 +236,9 @@
 }
 
 @media (max-width: 639px) {
-  .aquarium-dashboard-v2 { gap: 14px; }
-  .aquarium-dashboard-v2__section { padding-top: 14px; }
-  .aquarium-dashboard-v2__section-heading { margin-bottom: 8px; }
+  .aquarium-dashboard-v2 { gap: 12px; }
+  .aquarium-dashboard-v2__section { padding-top: 2px; }
+  .aquarium-dashboard-v2__section-heading { margin-bottom: 7px; }
   .aquarium-dashboard-v2__context .aquarium-tank { height: 170px; }
 }
 
