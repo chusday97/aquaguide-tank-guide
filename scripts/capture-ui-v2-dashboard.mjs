@@ -22,13 +22,26 @@ try {
   await page.getByRole('button', { name: /建立第一个鱼缸/ }).click();
   await page.locator('[data-aquarium-dashboard-v2]').waitFor();
 
+  // Capture the settled product state rather than a transient creation toast.
+  await page.waitForTimeout(3000);
+
   for (const viewport of [
     { name: 'phone-390', width: 390, height: 844 },
     { name: 'desktop-900', width: 900, height: 900 },
     { name: 'wide-1600', width: 1600, height: 1000 },
   ]) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.waitForTimeout(250);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
+
+    if (viewport.name === 'phone-390') {
+      await page.screenshot({
+        path: path.join(outputDir, 'phone-390-fold.png'),
+        fullPage: false,
+        animations: 'disabled',
+      });
+    }
+
     await page.screenshot({
       path: path.join(outputDir, `${viewport.name}.png`),
       fullPage: true,
@@ -36,7 +49,7 @@ try {
     });
   }
 
-  console.log(`Saved Aquarium Dashboard V2 screenshots to ${outputDir}`);
+  console.log(`Saved settled Aquarium Dashboard V2 screenshots to ${outputDir}`);
 } finally {
   await browser.close();
 }
