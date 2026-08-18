@@ -608,7 +608,6 @@ export default function Identify() {
                   if (fish) void confirmFish(fish);
                 }}
                 onReselect={() => setSelectedManualSpecies(null)}
-                onViewAllSpecies={() => undefined}
               />
             </div>
             {candidates.every(item => !item.fish) && <button type="button" onClick={() => requestNavigation(taskRoutes.aquarium.dailyCheck)} className="min-h-11 rounded-full border border-red-200 bg-red-50 px-4 text-xs font-black text-red-700">{t('identify.checkUrgentFirst')}</button>}
