@@ -6,6 +6,7 @@ import './services/navigation/history-navigation-guard.service';
 import './index.css';
 import './styles/ui-v2-foundation.css';
 import './styles/ui-v2-aquarium-components.css';
+import './styles/ui-v2-shell.css';
 import { initializeSessionAnalytics } from './services/analytics/session-events.service';
 
 const isSyntheticTest = typeof window !== 'undefined' && window.location.search.includes('synthetic_test=1');
