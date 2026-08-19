@@ -48,8 +48,20 @@ assert(encyclopedia.includes("params.set('source', 'atlas-detail')"), 'Atlas ent
 assert(encyclopedia.includes("navigateToRoute(taskRoutes.aquarium.livestock, { returnContext })"), 'View tank must carry exact caller context');
 assert(encyclopedia.includes("params.get('source') === 'atlas-detail'"), 'Closing atlas detail must preserve the prior route instead of hard-resetting to Encyclopedia home');
 
+const calculatorHandlerStart = encyclopedia.indexOf('const handleAddToCalculator =');
+const calculatorHandlerEnd = encyclopedia.indexOf('\n  const ', calculatorHandlerStart + 10);
+const calculatorHandler = encyclopedia.slice(calculatorHandlerStart, calculatorHandlerEnd > calculatorHandlerStart ? calculatorHandlerEnd : undefined);
+assert(calculatorHandlerStart >= 0, 'Encyclopedia must expose an explicit calculator-selection handler');
+assert(!calculatorHandler.includes('closeAtlasDetail('), 'Selecting a species for compatibility must not close a browsing detail automatically');
+assert(!calculatorHandler.includes("setViewMode('compatibility')"), 'Selecting a species must not switch the user into compatibility mode automatically');
+assert(!calculatorHandler.includes('navigateToRoute('), 'Selecting a species must not navigate before the user explicitly asks to view compatibility results');
+assert(species.includes("return inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.addToCalcBtn');"), 'Risk detail CTA must name the decision explicitly: add first, view results second');
+assert(species.includes('data-species-detail-compatibility-action'), 'Species detail must expose a stable explicit compatibility-decision CTA');
+assert(!species.includes("if (!inCalculator) onAddToCalculator(fish);\n    onGoCalculator?.();"), 'Species detail must not combine add-to-selection and navigation in one implicit action');
+
 assert(skill.includes('Preserve task context.'), 'UI skill must govern navigation continuity');
 assert(skill.includes('Result first, explanation second.'), 'UI skill must govern scan-first result hierarchy');
 assert(skill.includes('Form state and CTA state must agree.'), 'UI skill must govern default/CTA consistency');
+assert(skill.includes('Browsing is not selection.'), 'UI skill must separate low-intent browsing from explicit decision actions');
 
 console.log('PASS: UI interaction repair V1 contract');
