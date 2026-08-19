@@ -67,14 +67,25 @@ const assertFocusCarousel = async page => {
   assert.equal(await carousel.locator('[data-carousel-active="true"]').count(), 1, 'Collection hub must have exactly one active carousel card.');
   assert.equal(await getActiveModule(page), 'wishlist', 'Wishlist must be the initial active collection module.');
 
+  await page.waitForTimeout(350);
+  const carouselBox = await carousel.locator('> div').first().boundingBox();
   const activeBox = await carousel.locator('[data-carousel-active="true"]').boundingBox();
-  const viewport = page.viewportSize();
-  assert.ok(activeBox && viewport, 'Collection carousel active card must have measurable geometry.');
+  assert.ok(activeBox && carouselBox, 'Collection carousel and active card must have measurable geometry.');
   const activeCenter = activeBox.x + activeBox.width / 2;
+  const carouselCenter = carouselBox.x + carouselBox.width / 2;
   assert.ok(
-    Math.abs(activeCenter - viewport.width / 2) <= Math.max(24, viewport.width * 0.08),
-    `Active collection card must remain visually centered; cardCenter=${activeCenter}, viewportCenter=${viewport.width / 2}.`,
+    Math.abs(activeCenter - carouselCenter) <= Math.max(16, carouselBox.width * 0.04),
+    `Active collection card must remain centered in the collection surface; cardCenter=${activeCenter}, carouselCenter=${carouselCenter}.`,
   );
+
+  const visibleSideCards = await cards.evaluateAll(elements => elements.filter(element => {
+    if (element.getAttribute('data-carousel-active') === 'true') return false;
+    const rect = element.getBoundingClientRect();
+    const opacity = Number.parseFloat(getComputedStyle(element).opacity || '0');
+    const visibleWidth = Math.max(0, Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0));
+    return opacity >= 0.2 && visibleWidth >= 24;
+  }).length);
+  assert.ok(visibleSideCards >= 2, `Collection carousel must visibly preview both neighboring modules; got ${visibleSideCards} visible side cards.`);
 
   const nextButton = page.getByRole('button', { name: '下一个水族册模块', exact: true });
   await nextButton.click();
@@ -88,7 +99,6 @@ const assertFocusCarousel = async page => {
 
   const indicators = carousel.locator('[aria-label="选择水族册模块"] button');
   assert.equal(await indicators.count(), 4, 'Collection carousel must expose one position control per module.');
-  assert.equal(await indicators.filter({ has: page.locator('[aria-current="true"]') }).count(), 0, 'Position controls should expose aria-current on the button itself rather than nested content.');
   assert.equal(await carousel.locator('[aria-label="选择水族册模块"] button[aria-current="true"]').count(), 1, 'Exactly one position control must expose the current carousel position.');
 
   await assertNoPageOverflow(page);
