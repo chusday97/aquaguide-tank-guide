@@ -91,7 +91,7 @@ try {
   await archiveButton.waitFor();
   await archiveButton.click();
   const rosterDialog = page.locator('[role="dialog"]:visible');
-  await rosterDialog.getByRole('heading', { name: '缸内物种', exact: true }).waitFor();
+  await rosterDialog.getByText('缸内物种', { exact: true }).first().waitFor();
   const residentProfileButton = rosterDialog.locator('button').filter({ has: page.locator('img[alt="极火虾"]') }).first();
   await residentProfileButton.waitFor();
   await residentProfileButton.click();
