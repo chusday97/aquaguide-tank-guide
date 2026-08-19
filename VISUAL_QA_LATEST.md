@@ -138,6 +138,29 @@ After PUI-BC-049 was appended to the canonical product badcase registry:
 
 The canonical registry change was verified as exactly **+1 line / -0 lines**; historical PUI-BC-032 still uses the original `guide_safe_water_change` trigger.
 
+## CJK snapshot-font cache
+
+CJK readability remains a hard evidence requirement, but repeated apt downloads are no longer required after the first cache population.
+
+Implementation commit: `da8cf1310f87a768edbf3c9c494a31ce3b489152`.
+
+Both V2 and V3 now:
+
+1. restore `~/.cache/aquaguide-noto-cjk` through `actions/cache@v4`;
+2. run `scripts/ensure-cjk-font.sh`;
+3. on cache miss only, install `fonts-noto-cjk` through retrying apt and copy `NotoSansCJK-*.ttc` into the cache;
+4. copy cached TTC files into the runner user-font directory and rebuild fontconfig;
+5. require `fc-match` to resolve `Noto Sans CJK SC` before visual tests continue.
+
+Evidence:
+
+- V2 #44 / run `32268929911` first attempt: cache miss, apt fallback, font match PASS, 48-screenshot run PASS, and the cache was saved.
+- Manual rerun of V2 #44, job `96122316264`: `Cache hit for aquaguide-noto-cjk-Linux-X64-20230817-v1`; ~27MB cache restored; `Restoring 2 cached Noto Sans CJK TTC file(s).`; `CJK font match: Noto Sans CJK SC`; no apt path executed.
+- The cache-hit rerun still passed Aquarium hierarchy, Search density and all 48 screenshots; artifact `9371672874`, digest `sha256:86aa10ac69152dbb2f0a639c9c368822c6185b18bf8c6a2b4ae6f33d17eada3e`.
+- System #61 / run `32268929844`: PASS after the workflow change.
+
+This optimization changes delivery cost, not evidence semantics. A missing/corrupt cache still falls back to apt, and unreadable CJK still fails the visual workflow.
+
 ## Baseline update policy
 
 Do not update a `.sig` only to make CI green. A golden change is acceptable only when:
@@ -154,6 +177,5 @@ If a state becomes intrinsically noisy, prefer a narrow documented mask or remov
 - Golden V3 is a regression detector, not an aesthetic/perceptual design score.
 - Only eight stable fold states are golden; the full 48-image V2 baseline remains review evidence rather than a golden contract.
 - Current/reference/diff PNG artifacts retain for 7 days; compact signatures are what remain versioned in Git.
-- `fonts-noto-cjk` is a ~61MB package and runner download speed is still a CI-latency risk. The readability gate should stay; caching/vendor strategy is a separate engineering follow-up.
 - Bundle/code-splitting warnings and existing npm audit findings remain separate debt.
 - PR #104 remains Draft, unmerged and undeployed.

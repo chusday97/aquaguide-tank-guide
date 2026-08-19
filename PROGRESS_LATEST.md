@@ -72,12 +72,22 @@ Authoritative V2: #19 / run `32259734301` — PASS, artifact `9367824682`.
 - [x] Golden artifact `9370832138`, digest `sha256:09728cd8efb33476c423e53ddb22adcc8f077edf48953940e3eef272891b7a11`.
 - [x] `VISUAL_QA_LATEST.md`, `BADCASE_LATEST.md`, `PROGRESS_LATEST.md`, `HANDOFF_LATEST.md` updated for V3.
 
+## CJK visual-test cache completed
+
+- [x] Added executable `scripts/ensure-cjk-font.sh`.
+- [x] Added `actions/cache@v4` to both Visual V2 and Golden V3 workflows.
+- [x] Cache key: `aquaguide-noto-cjk-${{ runner.os }}-${{ runner.arch }}-20230817-v1`.
+- [x] Cache miss remains fail-closed: apt installs `fonts-noto-cjk`, copies `NotoSansCJK-*.ttc`, then validates with `fc-match`.
+- [x] First V2 #44 run / `32268929911` populated the cache after a miss and still passed all 48 screenshots + Aquarium/Search structural checks.
+- [x] Manual rerun of the same V2 job proved a real cache hit: job `96122316264` restored ~27MB / 2 TTC files, printed `Restoring 2 cached Noto Sans CJK TTC file(s).`, matched `Noto Sans CJK SC`, and skipped apt entirely.
+- [x] Cache-hit rerun still passed TypeScript, build, Chromium, Aquarium hierarchy, Search density and all 48 screenshots; artifact `9371672874`.
+- [x] System #61 / run `32268929844`: PASS after the cache workflow changes.
+
 ## Still intentionally not done
 
 - [ ] Expand golden cohort indiscriminately to all 48 V2 screenshots — intentionally avoided.
 - [ ] Perceptual/aesthetic scoring — Golden V3 is regression detection, not design judgment.
 - [ ] Commit raw PNG baselines — compact signatures are versioned; raw current/reference/diff evidence remains a 7-day artifact.
-- [ ] Optimize/cache the ~61MB CJK package installation.
 - [ ] Bundle/chunk optimization.
 - [ ] Existing dependency vulnerability remediation.
 - [ ] Merge #104 into RC1/main.

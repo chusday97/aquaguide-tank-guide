@@ -7,7 +7,7 @@
 
 ## Current state
 
-The UI/UX system layer, broad Visual QA V2 baseline, and small Golden V3 regression cohort are implemented on top of RC1. The PR remains **Draft**, is **not merged** into RC1 or `main`, and is **not deployed**.
+The UI/UX system layer, broad Visual QA V2 baseline, small Golden V3 regression cohort, and CJK visual-test cache are implemented on top of RC1. The PR remains **Draft**, is **not merged** into RC1 or `main`, and is **not deployed**.
 
 The visual-evaluation stack now has three different responsibilities:
 
@@ -34,14 +34,7 @@ PUI-BC-040..044 remain closed.
 
 ## Visual QA V2
 
-V2 captures:
-
-- 390×844
-- 768×900
-- 1024×900
-- 1440×1000
-
-across Aquarium, Encyclopedia, Care, Search, Collection and Settings, with both fold and full-page images: **48 screenshots**.
+V2 captures 390×844 / 768×900 / 1024×900 / 1440×1000 across Aquarium, Encyclopedia, Care, Search, Collection and Settings, with fold + full-page images: **48 screenshots**.
 
 Authoritative implementation evidence:
 
@@ -51,20 +44,13 @@ Authoritative implementation evidence:
 - result PASS
 - artifact `9367824682`
 
-V2 closed:
-
-- PUI-BC-045 Aquarium narrow-workspace task hierarchy
-- PUI-BC-046 1024 sidebar width cliff
-- PUI-BC-047 Search viewport/content-width mismatch
-- PUI-BC-048 return-context overlap
+V2 closed PUI-BC-045..048: Aquarium narrow-workspace task hierarchy, 1024 sidebar width cliff, Search viewport/content-width mismatch and return-context overlap.
 
 The V2 harness rejects Welcome-as-Aquarium screenshots, missing CJK fonts and false wrapper-box overlap measurements.
 
 ## Visual QA V3 Golden Cohort
 
-### Why only eight cases
-
-Do not turn the whole 48-image V2 matrix into a hard pixel contract. Long content, recommendations and WebGL create brittle noise. The approved Golden Cohort v1 is:
+Approved Golden Cohort v1:
 
 - Aquarium 390 / 768 / 1024 / 1440
 - Search 1024 / 1440
@@ -72,88 +58,79 @@ Do not turn the whole 48-image V2 matrix into a hard pixel contract. Long conten
 
 Reference source: approved V2 #19 fold screenshots.
 
-### Versioned reference representation
+`evaluation/visual/golden-v1/` stores the policy, manifest and eight zlib/base64 grayscale `.sig` files. Raw reference PNGs are not committed; CI generates current full screenshots, reconstructed reference/current/diff thumbnails and `report.json` as 7-day artifacts.
 
-`evaluation/visual/golden-v1/` stores:
+Normalization contract:
 
-- `README.md` baseline/update policy
-- `manifest.json`
-- eight zlib/base64 grayscale `.sig` files
-
-Raw reference PNGs are not committed. CI generates current full screenshots plus reconstructed reference/current/diff thumbnails and `report.json` as a 7-day artifact.
-
-### Normalization contract
-
-- zh-CN locale
+- zh-CN
 - first-aquarium seed
 - reduced motion
 - `Noto Sans CJK SC` required
-- fixed documented masks only
-- 128px-wide grayscale thumbnail
-- formula `(77*r + 150*g + 29*b) >> 8`
-- per-pixel noise threshold `24`
-- manifest `thumbWidth/thumbHeight` is authoritative geometry
+- documented fixed masks only
+- 128px grayscale signature
+- `(77*r + 150*g + 29*b) >> 8`
+- pixel delta threshold 24
+- manifest dimensions authoritative
 
-Final changed-pixel tolerances:
+Final tolerances:
 
 - Aquarium ≤0.50%
 - Search ≤0.35%
 - Collection ≤0.30%
 
-### PUI-BC-049 evaluation fail-before
+### PUI-BC-049
 
-Golden V3 #1 / run `32264392607` exposed an evaluator bug, not UI drift. At 1024×900, normalized height is mathematically 112.5. Python reference generation used banker’s rounding (112) while JavaScript `Math.round()` produced 113. The two 1024 cases failed before real pixel comparison; all other six cases were already 0% changed.
+Golden V3 #1 / run `32264392607` exposed a comparator bug, not UI drift: Python banker’s rounding made the 1024 reference 128×112 while JavaScript `Math.round()` re-derived 128×113. Other six cases were already 0% changed.
 
-Fix commit: `1eea45dfea367a571daf123836348c79f67e517f`.
+Fix: `1eea45dfea367a571daf123836348c79f67e517f`. Manifest thumbnail dimensions are now the cross-language contract.
 
-The verifier now consumes manifest dimensions directly. PUI-BC-049 is canonical `evaluation_system / evaluation_contract / regression_verified`.
+PUI-BC-049 is canonical `evaluation_system / evaluation_contract / regression_verified`.
 
-## Authoritative validation
+## Authoritative V3 validation
 
-### V3 implementation / threshold calibration
+- Golden #3 / `32265296046` on `6bd1e045dcac709e0da7425a21b7b217142abb20`: 8/8 PASS, every case 0% changed under final thresholds.
+- System #58 / `32265296159`: PASS on the same implementation head.
+- Canonical PUI-049 commit `08a2d31944919c51fb087400002c446fcc88097e` changed the registry by exactly +1/-0; PUI-032 remains `guide_safe_water_change`.
+- System #59 / `32267440195`: PASS.
+- Golden #4 / `32267440206`: PASS; artifact `9370832138`, digest `sha256:09728cd8efb33476c423e53ddb22adcc8f077edf48953940e3eef272891b7a11`.
 
-`UI UX Golden V3 #3` / run `32265296046` on head `6bd1e045dcac709e0da7425a21b7b217142abb20`:
+## CJK visual-test cache
 
-- 8/8 PASS
-- every case 0% changed
-- tightened final thresholds active
+Commit `da8cf1310f87a768edbf3c9c494a31ce3b489152` closes the V2/V3 CJK download bottleneck without weakening readability validation.
 
-Same-head `UI UX System Refactor V1 #58` / run `32265296159`: PASS.
+Implementation:
 
-### Final canonical closeout
+- `scripts/ensure-cjk-font.sh`
+- `actions/cache@v4` in both Visual V2 and Golden V3
+- cache key `aquaguide-noto-cjk-${{ runner.os }}-${{ runner.arch }}-20230817-v1`
+- miss → retrying apt install → copy `NotoSansCJK-*.ttc` into cache
+- hit → restore cached TTC into user font directory → `fc-cache`
+- both paths must pass `fc-match` for `Noto Sans CJK SC`
 
-Canonical PUI-BC-049 commit:
+Evidence:
 
-`08a2d31944919c51fb087400002c446fcc88097e`
+- V2 #44 / run `32268929911` first attempt: cache miss, apt fallback, visual suite PASS, then cache saved.
+- Manual rerun of the same workflow, job `96122316264`: cache hit restored ~27MB / 2 TTC files; helper printed `Restoring 2 cached Noto Sans CJK TTC file(s).` and `CJK font match: Noto Sans CJK SC`; apt was skipped.
+- The hit run still passed TypeScript/build, Aquarium hierarchy, Search density and all 48 screenshots; artifact `9371672874`.
+- System #61 / run `32268929844`: PASS after the cache workflow changes.
 
-The canonical registry diff was explicitly checked as **+1 line / -0 lines**. Historical PUI-BC-032 still contains the original `guide_safe_water_change` trigger.
-
-Final canonical-head workflows:
-
-- `UI UX System Refactor V1 #59` / run `32267440195` — **PASS**
-- `UI UX Golden V3 #4` / run `32267440206` — **PASS**
-- Golden artifact ID `9370832138`
-- digest `sha256:09728cd8efb33476c423e53ddb22adcc8f077edf48953940e3eef272891b7a11`
-
-System #59 passed canonical product evaluation, static UI/UX contracts, TypeScript, production build, Search/Collection browser regressions, GP-005 and the 7 profiles × 17 routes responsive scan.
+Important: never replace the font-readiness gate with a soft warning. Cache is an optimization only; corrupt/missing cache must fall back to apt, and missing CJK must still fail visual evidence generation.
 
 ## Baseline maintenance rule
 
-Never update a golden signature just to make CI green. When a Golden V3 case changes:
-
-1. determine whether structural regressions also fail;
-2. inspect current/reference/diff evidence;
-3. decide whether the visual change is intentional;
-4. manually review the affected fold state;
-5. update only the affected signature/mask/tolerance with a PR explanation.
+Never update a golden signature just to make CI green. For a Golden V3 change: inspect structural gates and diff evidence, confirm intent, manually review the fold state, then update only the affected signature/mask/tolerance with an explicit PR explanation.
 
 Prefer a narrow documented mask or replacing an unstable case over raising global tolerance.
 
 ## Next safe work
 
-The strongest next engineering improvement is **CJK snapshot-font delivery optimization** because `fonts-noto-cjk` is ~61MB and runner download speed has already dominated V2/V3 runtime. Preserve the font-readiness gate; improve caching/vendor/install strategy rather than accepting tofu screenshots.
+Do **not** expand the golden cohort merely because the infrastructure exists. Add a new golden case only after a real regression shows the current eight + structural contracts missed something important.
 
-A later visual expansion should be evidence-driven: add a new golden state only after a real regression demonstrates that structural assertions plus the existing eight cases do not cover it.
+The next technically valuable work is separate from visual correctness:
+
+1. bundle/chunk investigation — current Vite output still contains large chunks, including the 3D/React bundle;
+2. existing dependency vulnerability triage;
+3. only after review, decide whether #104 should move out of Draft and merge into RC1.
 
 ## Explicit non-claims / residual debt
 
@@ -161,6 +138,6 @@ A later visual expansion should be evidence-driven: add a new golden state only 
 - No production deployment.
 - Golden V3 is not a perceptual/aesthetic score.
 - Only eight stable fold states are hard golden references; V2 retains broader review coverage.
-- Raw PNG evidence is not committed and expires after 7 days; compact signatures are versioned in Git.
+- Raw PNG evidence expires after 7 days; compact signatures remain versioned in Git.
 - Bundle/code-splitting warnings remain.
 - Existing npm audit vulnerabilities remain outside this UI/UX scope.
