@@ -3,6 +3,14 @@
  * that should remain consistent across the whole application.
  */
 
+/* Any control that needs an accessible name is a deliberate interaction target. Keep a
+ * 44px minimum target across mouse, touch and pen input rather than repairing each page. */
+.aquaguide-app button[aria-label],
+.aquaguide-app a[aria-label] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
 /* Desktop workspaces are long-lived task surfaces. Keep a subtle scroll-position affordance
  * instead of globally hiding the scrollbar; phone surfaces remain visually minimal. */
 @media (min-width: 768px) {
