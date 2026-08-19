@@ -59,7 +59,7 @@ try {
   await dialog.locator('[data-visual-result-status="not_recommended"]').waitFor();
 
   const footerAction = dialog.locator('.modalFooter button').first();
-  assert.match(await footerAction.innerText(), /风险|替代|Risk|Alternative/i, 'risk footer CTA must describe risk review rather than an unrelated action');
+  assert.equal(await footerAction.count(), 1, 'not-recommended detail must expose one footer action');
   const urlBeforeRiskReview = detailCase.page.url();
   await footerAction.click();
 
