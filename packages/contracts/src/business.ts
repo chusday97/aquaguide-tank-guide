@@ -15,7 +15,7 @@ export const aquariumCreateSchema = z.object({
   widthCm: z.number().positive().max(10000).optional(),
   heightCm: z.number().positive().max(10000).optional(),
   targetTemperatureC: z.number().min(-10).max(60).optional(),
-  lastWaterChangeAt: isoDateTimeSchema.optional(),
+  lastWaterChangeAt: isoDateTimeSchema.nullable().optional(),
   lastWaterStoredAt: isoDateTimeSchema.optional(),
 });
 
@@ -35,7 +35,7 @@ export const aquariumSpeciesCreateSchema = z.object({
   speciesCatalogKey: z.string().trim().min(1).max(160),
   quantity: z.number().int().positive().max(100000),
   entryDate: isoDateSchema,
-  lastWaterChangeAt: isoDateTimeSchema.optional(),
+  lastWaterChangeAt: isoDateTimeSchema.nullable().optional(),
   lifeStage: lifeStageSchema.default('unknown'),
   reproductiveState: reproductiveStateSchema.default('unknown'),
 });
@@ -43,7 +43,7 @@ export const aquariumSpeciesCreateSchema = z.object({
 export const aquariumSpeciesUpdateSchema = z.object({
   quantity: z.number().int().positive().max(100000).optional(),
   entryDate: isoDateSchema.optional(),
-  lastWaterChangeAt: isoDateTimeSchema.optional(),
+  lastWaterChangeAt: isoDateTimeSchema.nullable().optional(),
   version: versionSchema,
 }).refine(value => Object.keys(value).some(key => key !== 'version'), '至少修改一个字段');
 
