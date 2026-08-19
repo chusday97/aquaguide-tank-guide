@@ -49,6 +49,7 @@ try {
         today: rect('[data-dashboard-priority="today"]'),
         manage: rect('#aquarium-manage-zone'),
         context: rect('[data-dashboard-priority="context"]'),
+        returnContext: rect('[data-workspace-return]'),
         main,
         sidebar,
         aquariumLayout,
@@ -59,6 +60,14 @@ try {
 
     assert.ok(geometry.today && geometry.manage && geometry.context, `${testCase.name}: missing dashboard priority surface`);
     assert.ok(geometry.documentWidth <= geometry.viewportWidth + 1, `${testCase.name}: page overflows horizontally`);
+
+    if (geometry.returnContext) {
+      assert.ok(geometry.aquariumLayout, `${testCase.name}: aquarium layout missing while return context is visible`);
+      assert.ok(
+        geometry.returnContext.bottom + 4 <= geometry.aquariumLayout.top,
+        `${testCase.name}: return-context control overlaps Aquarium content (${geometry.returnContext.bottom}px > ${geometry.aquariumLayout.top}px)`,
+      );
+    }
 
     if (testCase.maxSidebarWidth !== undefined) {
       assert.ok(geometry.sidebar, `${testCase.name}: desktop sidebar missing`);
