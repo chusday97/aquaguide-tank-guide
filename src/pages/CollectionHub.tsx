@@ -66,6 +66,7 @@ function CollectionCarousel({
               data-carousel-card
               data-carousel-active={isActive ? 'true' : 'false'}
               aria-hidden={!isActive}
+              inert={!isActive}
               initial={false}
               animate={{
                 x: `${offset * 80}%`,
@@ -160,7 +161,7 @@ function CollectionModuleCard({
       <button
         type="button"
         onClick={openModule}
-        className="group flex w-full items-center gap-3 rounded-[var(--ui-radius-control)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+        className="group flex min-h-11 w-full items-center gap-3 rounded-[var(--ui-radius-control)] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
         aria-label={`${title}，${count}`}
       >
         <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[var(--ui-radius-control)] ${tone}`}>{icon}</span>
@@ -177,7 +178,7 @@ function CollectionModuleCard({
         <button
           type="button"
           onClick={openModule}
-          className="type-action mt-3 inline-flex min-h-10 w-full items-center justify-center gap-1 rounded-full text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+          className="type-action mt-3 inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-full text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
         >
           {moreLabel}<ChevronRight className="h-3.5 w-3.5" />
         </button>
