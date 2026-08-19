@@ -1,0 +1,77 @@
+name: UI UX System Refactor V1
+
+on:
+  pull_request:
+    branches: [main, integration/aquaguide-rc1]
+    paths:
+      - 'src/App.tsx'
+      - 'src/main.tsx'
+      - 'src/components/layout/**'
+      - 'src/components/product/**'
+      - 'src/pages/Aquarium.tsx'
+      - 'src/pages/Search.tsx'
+      - 'src/pages/CollectionHub.tsx'
+      - 'src/pages/Collection.tsx'
+      - 'src/styles/**'
+      - 'scripts/assert_layout_mode_policy.ts'
+      - 'scripts/test-typography-system.mjs'
+      - 'scripts/test-collection-swipe-cards.mjs'
+      - 'scripts/test-uiux-system-contract.mjs'
+      - 'scripts/verify-search-show-all-v2.mjs'
+      - 'scripts/verify-collection-hub-previews.mjs'
+      - 'scripts/verify-golden-path-collection-context.mjs'
+      - 'scripts/verify-responsive-route-scan.mjs'
+      - '.github/workflows/uiux-system-refactor-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  system-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Static UI UX contracts
+        run: |
+          npm run test:layout-mode
+          npm run test:typography-system
+          npm run test:interaction-consistency
+          npm run test:collection-swipe-cards
+          node scripts/test-uiux-system-contract.mjs
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-uiux-system-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-uiux-system-preview.log
+          exit 1
+      - name: Search hierarchy browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-search-show-all-v2.mjs
+      - name: Collection IA browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-collection-hub-previews.mjs
+      - name: GP-005 collection context regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-golden-path-collection-context.mjs
+      - name: Full responsive route scan
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:responsive-routes
