@@ -60,6 +60,12 @@ Use this skill before changing any AquaGuide user-facing interaction. The goal i
    - “加入判断” and “查看判断结果” are separate intents. Model them as separate states/actions instead of a hidden chained side effect.
    - If an item is already selected, the UI may expose “查看混养结果” or “从判断中移除”; never infer the next action from merely opening the detail.
 
+10. **One CTA, one intent.**
+   - A primary action must do the thing its label promises and no hidden second task.
+   - “保存记录” must save; it must not also open an article, navigate elsewhere, select another entity, or launch a new workflow.
+   - If a next step is useful after completion, expose it as a separate visible CTA or inline disclosure after the first action succeeds.
+   - Do not increase content exposure by chaining a second Dialog onto a successful mutation.
+
 ## Surface decision rubric
 
 Before adding a modal, answer in order:
@@ -147,10 +153,11 @@ For every wizard/step form:
 5. Check primary result scanability at 1-second glance.
 6. Check CTA state vs visible selected state.
 7. Check low-intent browse actions do not mutate high-intent selection/persistence state.
-8. Check 390/900/1600 layout.
-9. Add a source/browser regression before or with the fix.
-10. Run typecheck + build + relevant Product Golden Path.
-11. Do a screenshot/manual visual pass; green CI is not sufficient for visual acceptance.
+8. Check whether one CTA is secretly doing more than one intent.
+9. Check 390/900/1600 layout.
+10. Add a source/browser regression before or with the fix.
+11. Run typecheck + build + relevant Product Golden Path.
+12. Do a screenshot/manual visual pass; green CI is not sufficient for visual acceptance.
 
 ## AquaGuide badcases this skill must prevent
 
@@ -158,6 +165,7 @@ For every wizard/step form:
 - “查看我的鱼缸” leaves a specific Encyclopedia/compatibility/detail state and cannot return to it;
 - opening a species detail silently adds that species to compatibility judgement;
 - “加入混养判断” immediately throws the user into a different page without a separate navigation intent;
+- saving a Daily Check immediately launches a separate care-article Dialog;
 - compatibility result is paragraph-first and visually flat;
 - species detail uses an overly narrow right-side drawer so the old layout becomes cramped;
 - a body-shape/default choice looks selected but Next remains disabled;
