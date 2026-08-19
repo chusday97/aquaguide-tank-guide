@@ -32,6 +32,8 @@ jobs:
         run: node scripts/test-aquarium-delete-repository-contract.mjs
       - name: Aquarium settings repository contract
         run: node scripts/test-aquarium-settings-repository-contract.mjs
+      - name: Water-change cloud persistence contract
+        run: node scripts/test-water-change-cloud-persistence-contract.mjs
       - name: Type check
         run: npm run lint
       - name: Build
