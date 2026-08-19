@@ -1,0 +1,39 @@
+name: Bundle Audit V1
+
+on:
+  pull_request:
+    branches: [main, integration/aquaguide-rc1]
+    paths:
+      - 'src/**'
+      - 'components/**'
+      - 'vite.config.ts'
+      - 'scripts/vite-bundle-audit-plugin.mjs'
+      - '.github/workflows/bundle-audit-v1.yml'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+jobs:
+  bundle-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build with bundle composition audit
+        env:
+          BUNDLE_AUDIT: '1'
+        run: npm run build
+      - name: Upload bundle audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaguide-bundle-audit-v1
+          path: artifacts/bundle-audit.json
+          if-no-files-found: error
+          retention-days: 7
