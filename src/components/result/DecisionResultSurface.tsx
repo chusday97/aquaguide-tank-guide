@@ -22,6 +22,7 @@ export type DecisionAction = {
 
 type DecisionResultSurfaceProps = {
   testId?: string;
+  isEn?: boolean;
   tone?: DecisionResultTone;
   eyebrow?: string;
   statusLabel?: string;
@@ -38,11 +39,7 @@ type DecisionResultSurfaceProps = {
   children?: ReactNode;
 };
 
-const toneStyles: Record<DecisionResultTone, {
-  shell: string;
-  badge: string;
-  icon: string;
-}> = {
+const toneStyles: Record<DecisionResultTone, { shell: string; badge: string; icon: string }> = {
   success: {
     shell: 'border-emerald-100 bg-emerald-50/70',
     badge: 'bg-white text-emerald-800 ring-1 ring-emerald-100',
@@ -67,9 +64,13 @@ const toneStyles: Record<DecisionResultTone, {
 
 const unique = <T extends string>(items: T[]) => Array.from(new Set(items.filter(Boolean)));
 
-function SourceLine({ source }: { source?: DecisionSource }) {
+function SourceLine({ source, isEn }: { source?: DecisionSource; isEn: boolean }) {
   if (!source) return null;
-  const statusText = source.status === 'reviewed' ? '已核验' : source.status === 'candidate' ? '待逐条核验' : '';
+  const statusText = source.status === 'reviewed'
+    ? (isEn ? 'Verified' : '已核验')
+    : source.status === 'candidate'
+      ? (isEn ? 'Needs action-level review' : '待逐条核验')
+      : '';
   const content = (
     <>
       <span className="truncate">{source.label}</span>
@@ -100,8 +101,9 @@ function SourceLine({ source }: { source?: DecisionSource }) {
 
 export function DecisionResultSurface({
   testId,
+  isEn = false,
   tone = 'info',
-  eyebrow = '现在先做',
+  eyebrow,
   statusLabel,
   title,
   summary,
@@ -123,6 +125,23 @@ export function DecisionResultSurface({
   const visibleEvidence = unique(evidence).slice(0, 5);
   const visibleSources = Array.from(new Map(sources.map(source => [source.id, source])).values()).slice(0, 5);
   const StatusIcon = tone === 'success' ? CheckCircle2 : tone === 'info' ? Info : AlertTriangle;
+  const labels = isEn ? {
+    eyebrow: 'DO THIS FIRST',
+    next: 'Then do',
+    watch: 'What to watch next',
+    escalate: 'Escalate if you see',
+    avoid: 'Avoid for now',
+    why: 'Why this result?',
+    sources: 'Sources',
+  } : {
+    eyebrow: '现在先做',
+    next: '接着做',
+    watch: '接下来观察',
+    escalate: '出现这些情况就升级处理',
+    avoid: '暂时不要',
+    why: '为什么是这个结果？',
+    sources: '信息来源',
+  };
 
   return (
     <article data-result-ux="decision" data-testid={testId} className="overflow-hidden rounded-[24px] border border-border/70 bg-white shadow-sm">
@@ -133,12 +152,12 @@ export function DecisionResultSurface({
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-black tracking-[0.16em] text-ink/45">{eyebrow}</span>
+              <span className="text-[10px] font-black tracking-[0.16em] text-ink/45">{eyebrow || labels.eyebrow}</span>
               {statusLabel && <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${styles.badge}`}>{statusLabel}</span>}
             </div>
             <h3 className="mt-2 text-[20px] font-black leading-tight text-ink sm:text-[22px]">{title}</h3>
             {summary && <p className="mt-1.5 line-clamp-2 text-[12px] font-semibold leading-5 text-ink/58">{summary}</p>}
-            <SourceLine source={primarySource} />
+            <SourceLine source={primarySource} isEn={isEn} />
             {primaryControl && <div className="mt-3">{primaryControl}</div>}
           </div>
         </div>
@@ -147,7 +166,7 @@ export function DecisionResultSurface({
       <div className="grid gap-3 p-3 sm:p-4">
         {visibleActions.length > 0 && (
           <section data-result-ux-actions>
-            <div className="mb-2 text-[11px] font-black text-ink/48">接着做</div>
+            <div className="mb-2 text-[11px] font-black text-ink/48">{labels.next}</div>
             <ol className="grid gap-2">
               {visibleActions.map((action, index) => (
                 <li key={action.id || `${action.title}-${index}`} className="grid grid-cols-[28px_minmax(0,1fr)] gap-2 rounded-[16px] border border-border/70 bg-bg/55 px-3 py-3">
@@ -155,7 +174,7 @@ export function DecisionResultSurface({
                   <span className="min-w-0">
                     <span className="block text-[12px] font-black leading-5 text-ink">{action.title}</span>
                     {action.detail && <span className="mt-0.5 block line-clamp-2 text-[10px] font-semibold leading-4 text-ink/50">{action.detail}</span>}
-                    <SourceLine source={action.source} />
+                    <SourceLine source={action.source} isEn={isEn} />
                     {action.control && <span className="mt-2 block">{action.control}</span>}
                   </span>
                 </li>
@@ -168,7 +187,7 @@ export function DecisionResultSurface({
           <section className="grid gap-2 sm:grid-cols-2" data-result-ux-guardrails>
             {visibleWatch.length > 0 && (
               <div className="rounded-[16px] bg-sky-50 px-3 py-3">
-                <div className="text-[11px] font-black text-sky-800">接下来观察</div>
+                <div className="text-[11px] font-black text-sky-800">{labels.watch}</div>
                 <ul className="mt-1.5 grid gap-1">
                   {visibleWatch.map(item => <li key={item} className="text-[11px] font-bold leading-5 text-sky-950/70">· {item}</li>)}
                 </ul>
@@ -176,7 +195,7 @@ export function DecisionResultSurface({
             )}
             {visibleEscalation.length > 0 && (
               <div className="rounded-[16px] bg-red-50 px-3 py-3">
-                <div className="text-[11px] font-black text-red-800">出现这些情况就升级处理</div>
+                <div className="text-[11px] font-black text-red-800">{labels.escalate}</div>
                 <ul className="mt-1.5 grid gap-1">
                   {visibleEscalation.map(item => <li key={item} className="text-[11px] font-bold leading-5 text-red-950/70">· {item}</li>)}
                 </ul>
@@ -187,7 +206,7 @@ export function DecisionResultSurface({
 
         {visibleAvoid.length > 0 && (
           <section className="rounded-[16px] bg-amber-50 px-3 py-3" data-result-ux-avoid>
-            <div className="text-[11px] font-black text-amber-800">暂时不要</div>
+            <div className="text-[11px] font-black text-amber-800">{labels.avoid}</div>
             <div className="mt-1.5 grid gap-1">
               {visibleAvoid.map(item => <div key={item} className="text-[11px] font-bold leading-5 text-amber-950/72">· {item}</div>)}
             </div>
@@ -199,7 +218,7 @@ export function DecisionResultSurface({
             {visibleEvidence.length > 0 && (
               <details className="rounded-[15px] border border-border/70 bg-white px-3 py-2.5">
                 <summary className="flex min-h-8 cursor-pointer list-none items-center justify-between gap-3 text-[11px] font-black text-ink/62">
-                  <span>为什么是这个结果？</span>
+                  <span>{labels.why}</span>
                   <ChevronDown className="h-4 w-4 shrink-0" aria-hidden="true" />
                 </summary>
                 <ul className="mt-2 grid gap-1 border-t border-border/60 pt-2">
@@ -210,13 +229,13 @@ export function DecisionResultSurface({
             {visibleSources.length > 0 && (
               <details className="rounded-[15px] border border-border/70 bg-white px-3 py-2.5">
                 <summary className="flex min-h-8 cursor-pointer list-none items-center justify-between gap-3 text-[11px] font-black text-ink/62">
-                  <span>信息来源 · {visibleSources.length}</span>
+                  <span>{labels.sources} · {visibleSources.length}</span>
                   <ChevronDown className="h-4 w-4 shrink-0" aria-hidden="true" />
                 </summary>
                 <div className="mt-2 grid gap-2 border-t border-border/60 pt-2">
                   {visibleSources.map(source => (
                     <div key={source.id} className="rounded-[12px] bg-bg/60 px-2.5 py-2">
-                      <SourceLine source={source} />
+                      <SourceLine source={source} isEn={isEn} />
                       {source.detail && <p className="mt-1 text-[10px] font-semibold leading-4 text-ink/45">{source.detail}</p>}
                     </div>
                   ))}
