@@ -10,14 +10,17 @@ await context.addInitScript(() => localStorage.setItem('aquaguide_locale', 'zh-C
 try {
   const page = await context.newPage();
   await page.goto(`${baseUrl}/care?topic=guide_safe_water_change`, { waitUntil: 'domcontentloaded', timeout: 60_000 });
-  await page.getByRole('dialog').waitFor({ timeout: 15_000 });
+  const articleDetail = page.locator('[data-care-workspace-detail]');
+  await articleDetail.waitFor({ timeout: 15_000 });
+  assert.equal(await page.locator('[role="dialog"]:visible').count(), 0, 'Long-form Care article browsing must not open a Dialog before a transactional sub-action.');
 
-  const entry = page.getByRole('button', { name: '生成养护卡', exact: true });
+  const entry = articleDetail.getByRole('button', { name: '生成养护卡', exact: true });
   assert.equal(await entry.count(), 1, '文章详情必须暴露唯一、明确的“生成养护卡”入口');
   await entry.click();
 
   const cardDialog = page.getByRole('dialog').filter({ hasText: '生成养护卡' });
   await cardDialog.waitFor({ timeout: 5_000 });
+  assert.equal(await page.locator('[role="dialog"]:visible').count(), 1, '生成养护卡可以使用一个短事务 Dialog，但不能与文章浏览 Dialog 叠加。');
   const copyButton = cardDialog.getByRole('button', { name: '复制文字', exact: true });
   assert.equal(await copyButton.count(), 1, '养护卡必须提供真实复制动作');
   assert.equal(await cardDialog.getByRole('button', { name: /生成分享链接|公开分享|发布/ }).count(), 0, '本地养护卡不得伪装成尚未上线的公开分享能力');
