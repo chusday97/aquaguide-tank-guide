@@ -13,6 +13,7 @@ const navigation = read('src/components/layout/WorkspaceNavigationProvider.tsx')
 const roster = read('src/components/aquarium/LivestockRosterDialog.tsx');
 const aquarium = read('src/pages/Aquarium.tsx');
 const encyclopedia = read('src/pages/Encyclopedia.tsx');
+const visualResult = read('src/components/visual-results/VisualResultCard.tsx');
 const skill = read('.agents/skills/aquaguide-ui-ux/SKILL.md');
 
 assert(adaptive.includes("desktopSize?: 'reading' | 'wide'"), 'Adaptive detail must expose semantic wide mode');
@@ -59,9 +60,16 @@ assert(species.includes("return inCalculator ? t('encyclopedia.goToCalcBtn') : t
 assert(species.includes('data-species-detail-compatibility-action'), 'Species detail must expose a stable explicit compatibility-decision CTA');
 assert(!species.includes("if (!inCalculator) onAddToCalculator(fish);\n    onGoCalculator?.();"), 'Species detail must not combine add-to-selection and navigation in one implicit action');
 
+assert(!aquarium.includes('selectedDailyCheckArticle'), 'Daily Check reference guidance must not require a second article Dialog state');
+assert(!aquarium.includes("primaryActionType: diagnosisIssueType === '巡检' && dailyCheckArticles[0] ? 'dialog' : 'mutation'"), 'Daily Check primary action must not be modeled as an implicit Dialog launch');
+assert(aquarium.includes("id: 'care-article'"), 'Daily Check matched care guidance must be embedded into the result evidence');
+assert(aquarium.includes("primaryActionType: 'mutation'"), 'Daily Check primary CTA must remain a single save/update mutation');
+assert(visualResult.includes('data-visual-detail-section-id={section.id}'), 'Inline result evidence must expose a stable semantic section id for browser regression');
+
 assert(skill.includes('Preserve task context.'), 'UI skill must govern navigation continuity');
 assert(skill.includes('Result first, explanation second.'), 'UI skill must govern scan-first result hierarchy');
 assert(skill.includes('Form state and CTA state must agree.'), 'UI skill must govern default/CTA consistency');
 assert(skill.includes('Browsing is not selection.'), 'UI skill must separate low-intent browsing from explicit decision actions');
+assert(skill.includes('One CTA, one intent.'), 'UI skill must reject chained save-plus-modal actions');
 
 console.log('PASS: UI interaction repair V1 contract');
