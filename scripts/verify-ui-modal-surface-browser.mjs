@@ -71,7 +71,9 @@ try {
   await page.getByText('数据与备份', { exact: true }).last().waitFor();
 
   assert.equal(await page.getByRole('button', { name: '保存设置', exact: true }).count(), 0, 'Read-only Data panel must not expose a fake Save Settings CTA.');
-  await page.getByRole('button', { name: '关闭', exact: true }).waitFor();
+  const explicitClose = visibleDialogs.locator('button').filter({ hasText: /^关闭$/ }).first();
+  await explicitClose.waitFor();
+  assert.equal((await explicitClose.textContent())?.trim(), '关闭', 'Read-only Data panel must expose an explicit Close action instead of Save Settings.');
 
   assert.deepEqual(pageErrors, [], `Data & Backup Settings path must not emit page errors: ${pageErrors.join('; ')}`);
   console.log('UI modal surface browser contract PASS: mobile Data & Backup reuses one Settings surface with read-only close semantics.');
