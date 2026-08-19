@@ -49,21 +49,11 @@ jobs:
 
           python - <<'PY'
           from pathlib import Path
-
-          workflow = Path('.github/workflows/product-golden-path.yml')
-          text = workflow.read_text()
-          settings_step = "      - name: Aquarium settings repository contract\n        run: node scripts/test-aquarium-settings-repository-contract.mjs\n"
-          if settings_step not in text:
-              delete_step = "      - name: Aquarium delete repository contract\n        run: node scripts/test-aquarium-delete-repository-contract.mjs\n"
-              if delete_step not in text:
-                  raise SystemExit('delete repository contract anchor missing from RC1 Golden Path')
-              text = text.replace(delete_step, delete_step + settings_step, 1)
-              workflow.write_text(text)
+          import subprocess
 
           badcases = Path('evaluation/product/badcases.v1.jsonl')
           current = badcases.read_text()
           if '"id":"PUI-BC-037"' not in current:
-              import subprocess
               source = subprocess.check_output([
                   'git','show',
                   'FETCH_HEAD:evaluation/product/badcases.v1.jsonl'
@@ -82,18 +72,20 @@ jobs:
           npm run lint
           npm run build
 
-      - name: Commit RC1 settings integration and remove staging workflow
+      - name: Commit RC1 settings product integration
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .github/workflows/rc1-integrate-settings.yml
           git add \
             src/pages/Aquarium.tsx \
-            .github/workflows/product-golden-path.yml \
             evaluation/product/badcases.v1.jsonl \
             HANDOFF-2026-08-18-PUI-BC-037.md \
             scripts/test-aquarium-settings-repository-contract.mjs
+          if git diff --cached --quiet; then
+            echo "No product changes to commit."
+            exit 0
+          fi
           git commit -m "Integrate aquarium settings persistence into RC1"
           git push origin HEAD:integration/aquaguide-rc1
