@@ -33,6 +33,7 @@ try {
         const element = document.querySelector(selector);
         if (!element) return null;
         const box = element.getBoundingClientRect();
+        if (box.width < 1 || box.height < 1) return null;
         return {
           top: Math.round(box.top),
           bottom: Math.round(box.bottom),
@@ -44,16 +45,16 @@ try {
       };
       const main = rect('.desktop-workspace-scroll') || rect('main');
       const sidebar = rect('.desktop-sidebar');
-      const aquariumLayout = rect('.aquarium-desktop-layout');
       return {
         today: rect('[data-dashboard-priority="today"]'),
         manage: rect('#aquarium-manage-zone'),
         context: rect('[data-dashboard-priority="context"]'),
         returnContext: rect('[data-workspace-return]'),
         phoneToolbar: rect('.aquarium-toolbar'),
+        onboardingStrip: rect('.aquarium-onboarding-strip'),
+        desktopHeader: rect('.aquarium-desktop-header'),
         main,
         sidebar,
-        aquariumLayout,
         documentWidth: document.documentElement.scrollWidth,
         viewportWidth: innerWidth,
       };
@@ -63,15 +64,22 @@ try {
     assert.ok(geometry.documentWidth <= geometry.viewportWidth + 1, `${testCase.name}: page overflows horizontally`);
 
     if (geometry.returnContext) {
-      assert.ok(geometry.aquariumLayout, `${testCase.name}: aquarium layout missing while return context is visible`);
-      assert.ok(
-        geometry.returnContext.bottom + 4 <= geometry.aquariumLayout.top,
-        `${testCase.name}: return-context control overlaps Aquarium content (${geometry.returnContext.bottom}px > ${geometry.aquariumLayout.top}px)`,
-      );
-      if (testCase.width < 768 && geometry.phoneToolbar) {
+      if (testCase.width < 768) {
+        assert.ok(geometry.phoneToolbar, `${testCase.name}: phone Aquarium toolbar missing while return context is visible`);
         assert.ok(
           geometry.returnContext.top >= geometry.phoneToolbar.bottom + 4,
           `${testCase.name}: return-context control overlaps the phone Aquarium toolbar (${geometry.returnContext.top}px < ${geometry.phoneToolbar.bottom}px)`,
+        );
+        const firstPhoneContent = geometry.onboardingStrip ?? geometry.today;
+        assert.ok(
+          geometry.returnContext.bottom + 4 <= firstPhoneContent.top,
+          `${testCase.name}: return-context control overlaps first visible Aquarium content (${geometry.returnContext.bottom}px > ${firstPhoneContent.top}px)`,
+        );
+      } else {
+        assert.ok(geometry.desktopHeader, `${testCase.name}: desktop Aquarium header missing while return context is visible`);
+        assert.ok(
+          geometry.returnContext.bottom + 4 <= geometry.desktopHeader.top,
+          `${testCase.name}: return-context control overlaps desktop Aquarium header (${geometry.returnContext.bottom}px > ${geometry.desktopHeader.top}px)`,
         );
       }
     }
