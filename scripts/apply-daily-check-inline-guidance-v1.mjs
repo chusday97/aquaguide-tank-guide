@@ -26,8 +26,8 @@ aquarium = replaceExact(
 aquarium = replaceExact(
   aquarium,
   `  const handleVisualDiagnosisPrimary = () => {\n    const saved = handleSaveDiagnosisRecord();\n    if (!saved) return;\n    if (diagnosisIssueType === '巡检' && dailyCheckArticles[0] && structuredDiagnosis) {\n      setSelectedDailyCheckArticle(dailyCheckArticles[0]);\n      trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });\n    }\n  };`,
-  `  const handleVisualDiagnosisPrimary = () => {\n    handleSaveDiagnosisRecord();\n  };`,
-  'Keep Daily Check primary CTA to one save intent',
+  `  const handleVisualDiagnosisPrimary = () => {\n    const saved = handleSaveDiagnosisRecord();\n    if (!saved) return;\n  };`,
+  'Keep Daily Check primary CTA to one save intent while preserving save failure guard',
 );
 
 const modalStart = `      <Dialog open={Boolean(selectedDailyCheckArticle)} onOpenChange={(open) => !open && setSelectedDailyCheckArticle(null)}>`;
