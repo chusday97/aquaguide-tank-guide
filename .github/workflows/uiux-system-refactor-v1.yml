@@ -13,6 +13,7 @@ on:
       - 'src/pages/CollectionHub.tsx'
       - 'src/pages/Collection.tsx'
       - 'src/styles/**'
+      - 'evaluation/product/badcases.v1.jsonl'
       - 'scripts/assert_layout_mode_policy.ts'
       - 'scripts/test-typography-system.mjs'
       - 'scripts/test-collection-swipe-cards.mjs'
@@ -39,6 +40,7 @@ jobs:
       - run: npm ci
       - name: Static UI UX contracts
         run: |
+          npm run test:product-evaluation
           npm run test:layout-mode
           npm run test:typography-system
           npm run test:interaction-consistency
