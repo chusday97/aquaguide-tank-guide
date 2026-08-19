@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate:
@@ -27,9 +27,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Apply Daily Check inline-guidance migration
-        run: node scripts/apply-daily-check-inline-guidance-v1.mjs
 
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
@@ -102,20 +99,6 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-golden-path-collection-context.mjs
-
-      - name: Commit repaired product behavior
-        if: success()
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/Aquarium.tsx src/components/visual-results/VisualResultCard.tsx
-          if git diff --cached --quiet; then
-            echo "No remaining product migrations to commit."
-            exit 0
-          fi
-          git commit -m "Inline Daily Check guidance"
-          git push origin HEAD:agent/ui-interaction-repair-v1
 
       - name: Upload interaction screenshots
         if: always()
