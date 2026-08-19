@@ -1265,9 +1265,6 @@ export default function Encyclopedia() {
     setCalculatorFeedback(nextCount >= 2 ? t('encyclopedia.addedToCalcMany', { count: nextCount }) : t('encyclopedia.addedToCalcSingle', { name: fish.name }));
     setDetailFeedback(nextCount >= 2 ? t('encyclopedia.addedToCalcMany', { count: nextCount }) : t('encyclopedia.addedToCalcSingle', { name: fish.name }));
     setCalculatorSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
-    closeAtlasDetail(false);
-    setViewMode('compatibility');
-    navigateToRoute(taskRoutes.encyclopedia.compatibility);
   };
 
   const applyFunctionFilter = (label: string) => {
