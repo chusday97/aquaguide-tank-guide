@@ -1,0 +1,53 @@
+name: Canonical Navigation Context Append
+
+on:
+  push:
+    branches: [agent/uiux-system-refactor-v1]
+    paths:
+      - '.github/workflows/canonical-navigation-context-append.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  append-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/uiux-system-refactor-v1
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Append PUI-BC-051 and PUI-BC-052 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          file='evaluation/product/badcases.v1.jsonl'
+          if grep -q '"id":"PUI-BC-051"' "$file" || grep -q '"id":"PUI-BC-052"' "$file"; then
+            echo 'PUI-BC-051/052 already present; refusing duplicate append.'
+            exit 1
+          fi
+          before="$(wc -l < "$file")"
+          cat >> "$file" <<'EOF'
+          {"id":"PUI-BC-051","featureId":"species_search","discoveredAt":"2026-08-20","source":"navigation_context_audit","severity":"medium","symptom":"Search 显式查看全部后打开 preview 边界之外的 Species/Care 结果，关闭详情返回 Search 时列表重新折叠，原结果不再存在于 DOM，旧 sourceId focus restore 因此失效且真实 workspace scroll 丢失。","trigger":"/search?q=鱼 → 查看全部 Species → 打开第 19 个以后结果 → 关闭详情；同样验证 Care 第 13 篇以后结果。","expected":"返回 Search 时保留同一 query、Species/Care 两个展开状态、原 source result、真实 workspace scroll 与键盘焦点。","actual":"旧实现只保存 aquaguide_search_return_focus=sourceId；Search remount 后 showAllSpecies/showAllCare 都恢复 false，再执行 scrollIntoView/focus，深层结果根本不在 DOM。","rootCauseLayer":"navigation_state","status":"regression_verified","fixedBy":"9feaac4d90fef5ce2e4665154f9554759e15f591","regression":"Fail-before Navigation Context V1 #1 / run 32280048039：深层 Species 返回后等待 45 秒仍不存在于 DOM。Playwright actionability auto-scroll evaluator artifact 由 7a736ef6349b4b77dceaf240c1fc61f96f769b98 修正。Final Navigation Context V1 #9 / run 32282629416 on head 0c7d28ec647359f3b6e4a1afd1fd1e9a908f4bfc PASS：Species/Care expansion、source target、exact workspace scroll、focus 全恢复；same-head System #81、Visual V2 #64、Golden V3 #26、Bundle Audit #19 PASS。"}
+          {"id":"PUI-BC-052","featureId":"livestock_state_task","discoveredAt":"2026-08-20","source":"navigation_context_audit","severity":"medium","symptom":"Aquarium → 缸内物种 roster → 某物种详情 → 关闭详情会掉回鱼缸首页的缸内物种入口，而不是返回刚才的父 roster，嵌套任务上下文少一层。","trigger":"已有至少一条缸内生物记录，打开缸内物种 roster，点击该生物 profile，再关闭 Species Detail。","expected":"child detail 完全退出后重新打开 originating roster，恢复 roster 内部 scroll 与原物种 profile button 焦点，同时保持底层 Aquarium workspace context；其他 Species Detail 入口不应误触发 roster return。","actual":"旧 roster 打开 detail 前先关闭自身；Aquarium 的 WorkspaceNavigationContext 只记录页面级 #aquarium-records，closeAquariumSpeciesDetail 只能恢复底层 launcher scroll/focus，不知道 originating roster record 或内部 scroll。","rootCauseLayer":"nested_surface_navigation","status":"regression_verified","fixedBy":"28fb8a796bfd1b6b290daf74284945296daff9a3 + dbf5546e99306ba078a723115451dcf12123a3b7","regression":"Evaluator #4 先排除父 drawer exit animation 与 child drawer 同时 :visible 的定位歧义。True fail-before Navigation Context #5 / run 32281408153：child detail 关闭后 45 秒 parent roster 未恢复。Final Navigation Context V1 #9 / run 32282629416 PASS：roster reopen、underlying Aquarium context、exact original profile focus 全通过；#8 的 TypeScript-generic-in-browser-JS 仅为 evaluator syntax bug，不计产品失败。"}
+          EOF
+          after="$(wc -l < "$file")"
+          test "$after" -eq $((before + 2))
+          git diff --numstat -- "$file" | grep -Eq '^2[[:space:]]+0[[:space:]]+evaluation/product/badcases\.v1\.jsonl$'
+          grep -F '"id":"PUI-BC-032"' "$file" | grep -F 'guide_safe_water_change' >/dev/null
+      - name: Validate canonical product evaluation
+        run: npm run test:product-evaluation
+      - name: Commit append-only registry change
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add evaluation/product/badcases.v1.jsonl
+          git commit -m 'test: append navigation context badcases'
+          git push origin HEAD:agent/uiux-system-refactor-v1
