@@ -51,6 +51,36 @@ const createPage = async () => {
   return { context, page, errors };
 };
 
+const assertCompatibilitySurface = async page => {
+  const drawer = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
+  await drawer.waitFor();
+  await page.waitForFunction(() => {
+    const calculatorNode = document.getElementById('compatibility-calculator');
+    const browseSurface = calculatorNode?.previousElementSibling;
+    return browseSurface instanceof HTMLElement
+      && browseSurface.dataset.encyclopediaBrowseSurfaceHidden === 'true'
+      && browseSurface.style.display === 'none';
+  });
+  await page.waitForTimeout(150);
+
+  const workspace = page.locator('.desktop-workspace-scroll');
+  const [scrollState, drawerBox] = await Promise.all([
+    workspace.evaluate(element => ({
+      top: element.scrollTop,
+      max: Math.max(0, element.scrollHeight - element.clientHeight),
+    })),
+    drawer.boundingBox(),
+  ]);
+
+  assert.ok(drawerBox, 'compatibility drawer must be visible');
+  assert.ok(drawerBox.y <= 10, `compatibility drawer must start at the viewport top, got y=${drawerBox.y}`);
+  assert.ok(drawerBox.height >= 760, `compatibility drawer must occupy the workspace height, got height=${drawerBox.height}`);
+  assert.ok(scrollState.top <= 120, `compatibility mode must reset the Atlas workspace near the top, got scrollTop=${scrollState.top}`);
+  if (scrollState.max > 240) {
+    assert.ok(scrollState.top < scrollState.max * 0.35, `compatibility mode must not restore a near-bottom Atlas scroll position (${scrollState.top}/${scrollState.max})`);
+  }
+};
+
 try {
   const detailCase = await createPage();
   await detailCase.page.goto(`${baseUrl}/encyclopedia?species=sp_0001&source=atlas-detail`, { waitUntil: 'domcontentloaded' });
@@ -61,8 +91,9 @@ try {
   const footerAction = dialog.locator('.modalFooter button').first();
   assert.equal(await footerAction.count(), 1, 'not-recommended detail must expose one footer action');
   const urlBeforeRiskReview = detailCase.page.url();
-  await footerAction.click();
 
+  // Stage 1: reviewing risk must stay inside the species detail.
+  await footerAction.click();
   const compatibilityDisclosure = dialog.getByRole('button', { name: /混养关系|Compatibility/i });
   await detailCase.page.waitForFunction(() => {
     const candidates = [...document.querySelectorAll('[data-detail-kind="species"] button[data-disclosure-purpose="secondary_evidence"]')];
@@ -70,40 +101,25 @@ try {
     return compatibility?.getAttribute('aria-expanded') === 'true';
   });
   assert.equal(await compatibilityDisclosure.getAttribute('aria-expanded'), 'true', 'risk CTA must expand in-dialog compatibility evidence');
-  assert.equal(detailCase.page.url(), urlBeforeRiskReview, 'risk review must not silently navigate to compatibility mode');
-  assert.equal(await dialog.isVisible(), true, 'risk review must keep the species detail open');
-  assert.equal(detailCase.errors.length, 0, `risk review emitted page errors: ${detailCase.errors.join(' | ')}`);
+  assert.equal(detailCase.page.url(), urlBeforeRiskReview, 'first risk review must not silently navigate to compatibility mode');
+  assert.equal(await dialog.isVisible(), true, 'first risk review must keep the species detail open');
+
+  // Stage 2: after evidence has been reviewed, the same CTA may open the full calculator.
+  await footerAction.click();
+  await detailCase.page.waitForURL(/\/encyclopedia\?mode=compatibility/);
+  await assertCompatibilitySurface(detailCase.page);
+  assert.equal(await dialog.isVisible(), false, 'full compatibility mode must close the species detail');
+  assert.equal(detailCase.errors.length, 0, `risk-to-compatibility flow emitted page errors: ${detailCase.errors.join(' | ')}`);
   await detailCase.context.close();
 
-  const compatibilityCase = await createPage();
-  await compatibilityCase.page.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded' });
-  const calculator = compatibilityCase.page.locator('#compatibility-calculator');
-  await calculator.waitFor();
-  await compatibilityCase.page.waitForFunction(() => {
-    const calculatorNode = document.getElementById('compatibility-calculator');
-    const browseSurface = calculatorNode?.previousElementSibling;
-    return browseSurface instanceof HTMLElement
-      && browseSurface.dataset.encyclopediaBrowseSurfaceHidden === 'true'
-      && browseSurface.style.display === 'none';
-  });
+  // Direct/sidebar navigation must obey the same top-level surface contract.
+  const directCase = await createPage();
+  await directCase.page.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded' });
+  await assertCompatibilitySurface(directCase.page);
+  assert.equal(directCase.errors.length, 0, `direct compatibility mode emitted page errors: ${directCase.errors.join(' | ')}`);
+  await directCase.context.close();
 
-  await compatibilityCase.page.waitForTimeout(150);
-  const workspace = compatibilityCase.page.locator('.desktop-workspace-scroll');
-  const scrollState = await workspace.evaluate(element => ({
-    top: element.scrollTop,
-    max: Math.max(0, element.scrollHeight - element.clientHeight),
-  }));
-  const calculatorBox = await calculator.boundingBox();
-  assert.ok(calculatorBox, 'compatibility calculator must be visible');
-  assert.ok(scrollState.top <= 120, `compatibility mode must start near workspace top, got scrollTop=${scrollState.top}`);
-  assert.ok(calculatorBox.y < 260, `compatibility calculator must occupy the top workspace surface, got y=${calculatorBox.y}`);
-  if (scrollState.max > 240) {
-    assert.ok(scrollState.top < scrollState.max * 0.35, `compatibility mode must not restore a near-bottom atlas scroll position (${scrollState.top}/${scrollState.max})`);
-  }
-  assert.equal(compatibilityCase.errors.length, 0, `compatibility mode emitted page errors: ${compatibilityCase.errors.join(' | ')}`);
-  await compatibilityCase.context.close();
-
-  console.log('encyclopedia risk navigation verified: in-context evidence + top-level compatibility surface');
+  console.log('encyclopedia risk navigation verified: in-context risk review + top-level compatibility drawer without Atlas bottom-scroll restoration');
 } finally {
   await browser.close();
 }
