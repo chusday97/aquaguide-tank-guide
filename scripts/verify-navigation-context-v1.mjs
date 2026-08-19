@@ -4,6 +4,39 @@ import { chromium } from 'playwright';
 const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
 const browser = await chromium.launch({ headless: true });
 
+const aquariumState = {
+  version: 1,
+  currentAquariumId: 'nav-context-tank',
+  aquariums: [{
+    id: 'nav-context-tank',
+    name: '导航上下文测试缸',
+    fishes: [{
+      id: 'stock-1',
+      fishId: 'sp_0001',
+      quantity: 4,
+      entryDate: '2026-07-20T00:00:00.000Z',
+      batches: [{ id: 'batch-1', quantity: 4, entryDate: '2026-07-20T00:00:00.000Z', lifeStage: 'unknown', reproductiveState: 'unknown', stateUpdatedAt: '2026-07-20T00:00:00.000Z' }],
+    }],
+    dimensions: { length: '60', width: '40', height: '40' },
+    waterType: 'Freshwater',
+    targetTemperature: '25',
+    substrate: '无',
+    plants: [],
+    hardscape: [],
+    equipment: { filter: '瀑布过滤', heater: true, oxygen: false, light: '普通灯' },
+  }],
+  wishlist: [],
+  dismissedRecommendations: [],
+  diagnosisRecords: [],
+  compatibilityRecords: [],
+  deceasedRecords: [],
+  feedingRecords: [],
+  observationRecords: [],
+  riskReminderState: {},
+  onboarding: { version: 1, status: 'completed', viewedSpecies: true, taskCardDismissed: true, aquariumConfigured: true },
+  updatedAt: '2026-08-19T00:00:00.000Z',
+};
+
 const getWorkspaceScrollTop = page => page.locator('.desktop-workspace-scroll').evaluate(element => element.scrollTop);
 
 const scrollCardIntoStablePosition = async (page, card) => {
@@ -98,9 +131,46 @@ try {
     minCount: 13,
   });
 
-  assert.deepEqual(pageErrors, [], `navigation context flow emitted page errors: ${pageErrors.join(' | ')}`);
-  console.log('navigation context V1 PASS: expanded Search species/Care state, source focus and workspace scroll survive detail return');
+  assert.deepEqual(pageErrors, [], `search navigation context flow emitted page errors: ${pageErrors.join(' | ')}`);
   await context.close();
+
+  // Aquarium: detail opened from the livestock roster must return to the roster, not drop a context layer.
+  const aquariumContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'zh-CN' });
+  await aquariumContext.addInitScript(saved => {
+    localStorage.clear();
+    sessionStorage.clear();
+    localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
+    localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
+    localStorage.setItem('aquaguide_locale', 'zh-CN');
+  }, aquariumState);
+  const aquariumPage = await aquariumContext.newPage();
+  aquariumPage.setDefaultTimeout(45_000);
+  const aquariumErrors = [];
+  aquariumPage.on('pageerror', error => aquariumErrors.push(String(error)));
+  await aquariumPage.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+
+  const archiveSource = aquariumPage.locator('#aquarium-records');
+  await archiveSource.waitFor();
+  const archiveScrollTop = await scrollCardIntoStablePosition(aquariumPage, archiveSource);
+  await archiveSource.locator(':scope > button').click();
+  const roster = aquariumPage.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  await roster.waitFor();
+  const profileButton = roster.locator('button:has(img)').first();
+  assert.equal(await profileButton.count(), 1, 'livestock roster must expose a species profile opener');
+  await profileButton.click();
+  await roster.waitFor({ state: 'hidden' });
+  const detail = aquariumPage.locator('[role="dialog"][data-surface]:visible');
+  await detail.waitFor();
+  await aquariumPage.keyboard.press('Escape');
+
+  const restoredRoster = aquariumPage.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  await restoredRoster.waitFor();
+  const restoredArchiveScrollTop = await getWorkspaceScrollTop(aquariumPage);
+  assert.ok(Math.abs(restoredArchiveScrollTop - archiveScrollTop) <= 96, `closing Aquarium species detail must keep the underlying archive scroll context; before=${archiveScrollTop}, after=${restoredArchiveScrollTop}`);
+  assert.deepEqual(aquariumErrors, [], `aquarium detail return flow emitted page errors: ${aquariumErrors.join(' | ')}`);
+  await aquariumContext.close();
+
+  console.log('navigation context V1 PASS: Search deep results preserve expansion/focus/scroll and Aquarium roster detail returns to its originating roster');
 } finally {
   await browser.close();
 }
