@@ -1162,7 +1162,6 @@ export default function AquariumManager() {
   const speciesDetailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSettingsSaving, setIsSettingsSaving] = useState(false);
-  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isBuildPlanOpen, setIsBuildPlanOpen] = useState(false);
   const [isTankPreviewOpen, setIsTankPreviewOpen] = useState(false);
   const [shouldLoadThreeAquarium, setShouldLoadThreeAquarium] = useState(false);
@@ -1195,7 +1194,7 @@ export default function AquariumManager() {
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
   const [isSavingStartedAt, setIsSavingStartedAt] = useState(false);
   const [settingsForm, setSettingsForm] = useState<Partial<Aquarium>>({});
-  const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | null>(null);
+  const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | 'data' | null>(null);
   const [isPlantListExpanded, setIsPlantListExpanded] = useState(false);
   const [isScapeListExpanded, setIsScapeListExpanded] = useState(false);
   const settingsBodyRef = useRef<HTMLDivElement | null>(null);
@@ -1296,12 +1295,10 @@ export default function AquariumManager() {
   const [fedToday, setFedToday] = useState(false);
   const [priorityTaskStatus, setPriorityTaskStatus] = useState<Record<string, string>>({});
   const [isCarePlanExpanded, setIsCarePlanExpanded] = useState(false);
-  const [isRiskReminderOpen, setIsRiskReminderOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
   const [observationChecks, setObservationChecks] = useState<string[]>([]);
   const [feedingRecords, setFeedingRecords] = useState<LocalEventRecord[]>([]);
   const [observationRecords, setObservationRecords] = useState<LocalEventRecord[]>([]);
-  const [isLocalDataOpen, setIsLocalDataOpen] = useState(false);
   const [localDataText, setLocalDataText] = useState('');
   const [localDataMessage, setLocalDataMessage] = useState('');
   const [repositoryMode, setRepositoryMode] = useState<'local' | 'cloud'>('local');
@@ -1680,7 +1677,7 @@ export default function AquariumManager() {
   const openLocalDataManager = () => {
     setLocalDataText('');
     setLocalDataMessage('');
-    setIsLocalDataOpen(true);
+    openAquariumSettings('data');
   };
 
   const openAquariumSettings = (panel: typeof activeSettingsPanel = null) => {
@@ -3959,6 +3956,14 @@ export default function AquariumManager() {
     configured: boolean;
   }> = [
     {
+      id: 'data',
+      title: isEn ? 'Data & Backup' : '数据与备份',
+      summary: repositoryMode === 'cloud'
+        ? (isEn ? 'Cloud sync · cloud remains source of truth' : '云端同步 · 云端仍是事实源')
+        : (isEn ? 'Local storage · this browser only' : '本机存储 · 仅当前浏览器'),
+      configured: true,
+    },
+    {
       id: 'size',
       title: isEn ? 'Dimensions' : '尺寸',
       summary: settingsEstimatedWaterLiters > 0
@@ -4012,6 +4017,34 @@ export default function AquariumManager() {
     },
   ];
   const renderSettingsPanel = (panel: NonNullable<typeof activeSettingsPanel>) => {
+    if (panel === 'data') {
+      return (
+        <ConfigSection
+          title={isEn ? 'Data & Backup' : '数据与备份'}
+          subtitle={repositoryMode === 'cloud'
+            ? (isEn
+              ? 'Cloud sync is active. Cloud aquarium data remains the source of truth.'
+              : '当前已启用云端同步，云端鱼缸数据仍是事实源。')
+            : (isEn
+              ? 'This aquarium is currently stored in this browser.'
+              : '当前鱼缸数据保存在这个浏览器中。')}
+        >
+          <div data-settings-storage-panel className="grid gap-3">
+            <div className="rounded-[18px] border border-emerald-100 bg-emerald-50/70 p-4">
+              <div className="flex items-center gap-2 text-[14px] font-black text-emerald-800">
+                <Info className="h-4 w-4" />
+                {t('aquarium.dataSavingDetailTitle1')}
+              </div>
+              <p className="mt-2 text-[12px] font-medium leading-relaxed text-ink/64">{t('aquarium.dataSavingDetailDesc1')}</p>
+            </div>
+            <div className="rounded-[18px] border border-amber-100 bg-amber-50/70 p-4">
+              <div className="text-[14px] font-black text-amber-900">{t('aquarium.dataSavingDetailTitle2')}</div>
+              <p className="mt-2 text-[12px] font-medium leading-relaxed text-ink/64">{t('aquarium.dataSavingDetailDesc2')}</p>
+            </div>
+          </div>
+        </ConfigSection>
+      );
+    }
     if (panel === 'size') {
       return (
         <ConfigSection title={isEn ? "Dimensions" : "尺寸"} subtitle={isEn ? "Used for volume estimation and care advice." : "用于估算容量和后续养护建议。"}>
@@ -5691,40 +5724,6 @@ export default function AquariumManager() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isLocalDataOpen} onOpenChange={setIsLocalDataOpen}>
-        <DialogContent className="flex max-h-[86dvh] w-[92vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[22px] border-border bg-bg p-0">
-          <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
-            <DialogTitle className="text-xl font-black text-ink">{t('aquarium.dataSavingTitle')}</DialogTitle>
-            <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">
-              {repositoryMode === 'cloud'
-                ? (isEn
-                  ? 'Cloud sync is active. Cloud aquarium data remains the source of truth; browser-only import and clear do not modify cloud data.'
-                  : '当前已启用云端同步。云端鱼缸数据仍是事实源；仅本机的导入和清除不会修改云端数据。')
-                : t('aquarium.dataSavingDesc')}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="min-h-0 flex-1 overflow-y-auto p-4">
-            <div className="grid gap-3 text-[13px] font-medium leading-relaxed text-ink/64">
-              <div className="rounded-[18px] border border-emerald-100 bg-emerald-50/70 p-4">
-                <div className="flex items-center gap-2 text-[14px] font-black text-emerald-800">
-                  <Info className="h-4 w-4" />
-                  {t('aquarium.dataSavingDetailTitle1')}
-                </div>
-                <p className="mt-2">
-                  {t('aquarium.dataSavingDetailDesc1')}
-                </p>
-              </div>
-              <div className="rounded-[18px] border border-amber-100 bg-amber-50/70 p-4">
-                <div className="text-[14px] font-black text-amber-900">{t('aquarium.dataSavingDetailTitle2')}</div>
-                <p className="mt-2">
-                  {t('aquarium.dataSavingDetailDesc2')}
-                </p>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       <Dialog open={isTankPreviewOpen} onOpenChange={setIsTankPreviewOpen}>
         <DialogContent className="h-[92dvh] w-[96vw] max-w-[1180px] overflow-hidden rounded-[24px] border-border p-0 md:h-[calc(100dvh-24px)] md:w-[calc(100vw-32px)] md:max-w-[1480px]">
           <DialogHeader className="sr-only">
@@ -6214,61 +6213,6 @@ export default function AquariumManager() {
               {isEn ? 'Exit and discard' : '退出并放弃'}
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isRiskReminderOpen} onOpenChange={setIsRiskReminderOpen}>
-        <DialogContent className="flex max-h-[82dvh] w-[90vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[20px] border-border bg-bg p-0">
-          <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
-            <DialogTitle className="font-serif text-xl font-bold italic text-ink">{isEn ? 'All Reminders' : '全部提醒'}</DialogTitle>
-            <DialogDescription className="text-xs font-medium text-ink/55">
-              不是所有提醒都需要立即处理，先完成最明确的一项。
-            </DialogDescription>
-          </DialogHeader>
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-            <div className="grid gap-2">
-              {riskReminders.map(task => {
-                const toneClass = task.tone === 'danger'
-                  ? 'border-red-100 bg-red-50 text-red-700'
-                  : task.tone === 'warning'
-                    ? 'border-amber-100 bg-amber-50 text-amber-700'
-                    : 'border-sky-100 bg-sky-50 text-sky-700';
-                const isDone = task.actionText.startsWith('已');
-                return (
-                  <div key={task.id} className="rounded-[16px] border border-border/70 bg-white p-3">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <span className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-black ${isDone ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : toneClass}`}>
-                          {isDone ? task.actionText : task.level}
-                        </span>
-                        <h3 className="mt-2 text-[14px] font-black leading-tight text-ink">{task.title}</h3>
-                        <p className="mt-1 line-clamp-2 text-[11px] font-medium leading-relaxed text-ink/58">{task.reason}</p>
-                      </div>
-                      <Button
-                        type="button"
-                        variant={isDone ? 'outline' : 'default'}
-                        onClick={() => {
-                          setIsRiskReminderOpen(false);
-                          task.onClick();
-                        }}
-                        className={`h-8 shrink-0 rounded-full px-3 text-[11px] font-black shadow-none ${
-                          isDone
-                            ? 'border-emerald-100 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                            : task.tone === 'danger'
-                              ? 'bg-red-600 text-white hover:bg-red-700'
-                              : task.tone === 'warning'
-                                ? 'bg-amber-600 text-white hover:bg-amber-700'
-                                : 'bg-sky-600 text-white hover:bg-sky-700'
-                        }`}
-                      >
-                        {task.actionText}
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
         </DialogContent>
       </Dialog>
 
@@ -8109,7 +8053,8 @@ export default function AquariumManager() {
             </div>
           </div>
           <DialogFooter className="shrink-0 border-t border-white bg-white/95 px-5 pb-[calc(20px+env(safe-area-inset-bottom))] pt-3 md:px-6">
-            <Button variant="outline" disabled={isSettingsSaving} onClick={() => setIsSettingsOpen(false)} className="h-10 min-w-[112px] rounded-full text-sm font-bold">{isEn ? "Cancel" : "取消"}</Button>
+            <Button variant="outline" disabled={isSettingsSaving} onClick={() => setIsSettingsOpen(false)} className="h-10 min-w-[112px] rounded-full text-sm font-bold">{activeSettingsPanel === 'data' ? (isEn ? 'Close' : '关闭') : (isEn ? 'Cancel' : '取消')}</Button>
+            {activeSettingsPanel !== 'data' && (
             <Button
               disabled={isSettingsSaving}
               onClick={() => void handleSaveAquariumSettings()}
@@ -8118,121 +8063,10 @@ export default function AquariumManager() {
               {isSettingsSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSettingsSaving ? (isEn ? 'Saving…' : '保存中…') : (isEn ? 'Save Settings' : '保存设置')}
             </Button>
+            )}
           </DialogFooter>
         </AdaptiveTaskContent>
       </Dialog>
-
-      {/* Guide Modal */}
-      <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
-        <DialogContent className="w-[90vw] max-w-[500px] rounded-sm border-border p-5">
-          <DialogHeader>
-            <DialogTitle className="font-serif italic text-xl text-ink font-bold flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-accent" />
-              换水与囤水提示
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex flex-col gap-4 py-2">
-            <div className="relative h-28 overflow-hidden rounded-sm border border-accent/15 bg-gradient-to-b from-sky-50 to-emerald-50">
-              <div className="absolute left-5 top-5 h-12 w-10 animate-bounce rounded-b-lg rounded-t-sm border-2 border-accent/35 bg-white/70">
-                <div className="absolute -right-4 top-4 h-2 w-8 rotate-[-18deg] rounded-full bg-accent/30" />
-              </div>
-              <div className="absolute left-20 top-7 h-12 w-24 rounded-sm border-2 border-accent/25 bg-white/60">
-                <div className="absolute inset-x-1 bottom-1 h-5 animate-pulse rounded-sm bg-sky-200/70" />
-                <div className="absolute left-4 top-5 h-2 w-2 animate-ping rounded-full bg-accent/40" />
-                <div className="absolute right-5 top-4 h-2 w-2 animate-ping rounded-full bg-accent/30 [animation-delay:500ms]" />
-              </div>
-              <div className="absolute right-5 top-5 h-14 w-8 rounded-full border-2 border-ink/15 bg-white/70">
-                <div className="absolute bottom-2 left-1/2 h-7 w-2 -translate-x-1/2 animate-pulse rounded-full bg-red-400/70" />
-              </div>
-              <div className="absolute bottom-3 left-4 right-4 text-[10px] font-bold text-ink/50">
-                囤水 → 除氯 → 对温 → 少量换水
-              </div>
-            </div>
-            <div className="bg-blue-50 p-3 rounded-sm border border-blue-100">
-              <h4 className="text-sm font-bold text-blue-800 mb-1 flex items-center gap-1"><Info className="w-4 h-4 text-blue-600" /> 囤水小贴士</h4>
-              <p className="text-xs text-blue-900/80 leading-relaxed font-medium">{isEn ? 'Age water 24 hours prior to remove chlorine and match tank temp.' : '换水前建议提前 24 小时囤水，除氯并调到接近缸内水温后再换。冬季或温差较大时，优先保证新水温度稳定。'}</p>
-            </div>
-            <div className="bg-bg p-3 rounded-sm border border-border">
-              <h4 className="text-sm font-bold text-ink mb-1 flex items-center gap-1"><Info className="w-4 h-4 text-accent" /> 新鱼入缸换水方法</h4>
-              <p className="text-xs text-ink/80 leading-relaxed font-medium">{isEn ? 'Acclimate new fish carefully. Do not feed or change water for 3 days.' : '新鱼入缸前需严格过温过水。建议入缸后前三天不喂食、不换水，保持水质稳定，减少应激。第四天可进行第一次少量换水（约10%）。'}</p>
-            </div>
-            <div className="bg-bg p-3 rounded-sm border border-border">
-              <h4 className="text-sm font-bold text-ink mb-1 flex items-center gap-1"><Info className="w-4 h-4 text-accent" /> 周期换水方法</h4>
-              <p className="text-xs text-ink/80 leading-relaxed font-medium">{isEn ? 'Change 20%-30% water weekly or bi-weekly. Never change 100% at once.' : '根据过滤系统能力和生物密度，建议每周或每两周换水 20%-30%。切忌一次性全缸换水，以免破坏硝化系统。'}</p>
-            </div>
-            <div className="bg-bg p-3 rounded-sm border border-border">
-              <h4 className="text-sm font-bold text-ink mb-1 flex items-center gap-1"><Info className="w-4 h-4 text-accent" /> 温度控制</h4>
-              <p className="text-xs text-ink/80 leading-relaxed font-medium">{isEn ? 'Match new water temp within 1-2°C. Pre-heat in winter.' : '换水时，新水温度应与缸内水温尽量保持一致，温差不应超过 1-2°C。冬季换水建议提前加热新水。'}</p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Unified species detail for aquarium and wishlist entries */}
-      <SpeciesDetailDialog
-        fish={selectedAqFish?.fish || selectedWishlistFish}
-        open={!!selectedAqFish || !!selectedWishlistFish}
-        source="aquarium"
-        aquariumContext={activeAquarium}
-        imageSrc={selectedAqFish ? getSpeciesDisplayImage(selectedAqFish.fish) : selectedWishlistFish ? getSpeciesDisplayImage(selectedWishlistFish) : ''}
-        owned={Boolean(selectedAqFish)}
-        inCalculator={(selectedAqFish || selectedWishlistFish) ? selectedAddFishItems.some(item => item.fishId === (selectedAqFish?.fish.id || selectedWishlistFish?.id)) : false}
-        inWishlist={(selectedAqFish || selectedWishlistFish) ? wishlistFishIds.has(selectedAqFish?.fish.id || selectedWishlistFish?.id || '') : false}
-        detailFeedback={tankActionMessage}
-        onOpenChange={(open) => {
-          if (!open) closeAquariumSpeciesDetail();
-        }}
-        onSelectSpecies={(nextFish) => {
-          const ownedRecord = activeAquarium.fishes.find(record => record.fishId === nextFish.id);
-          if (ownedRecord) {
-            setSelectedAqFish({ fish: nextFish, aqFish: ownedRecord });
-            setSelectedWishlistFish(null);
-          } else {
-            setSelectedAqFish(null);
-            setSelectedWishlistFish(nextFish);
-          }
-        }}
-        onAddToCalculator={(fish) => {
-          const nextCompatibilitySelection = new Set(getCompatibilitySelection());
-          nextCompatibilitySelection.add(fish.id);
-          setCompatibilitySelection(nextCompatibilitySelection);
-          setSelectedAddFishItems(prev => (
-            prev.some(item => item.fishId === fish.id)
-              ? prev.filter(item => item.fishId !== fish.id)
-              : [...prev, { fishId: fish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd') }]
-          ));
-          setTankActionMessage(selectedAddFishItems.some(item => item.fishId === fish.id) ? `已撤回 ${fish.name} 的混养计算选择。` : `已选择 ${fish.name} 参与混养计算。`);
-        }}
-        onToggleWishlist={(fishId) => toggleWishlist(fishId)}
-        onGoCalculator={() => {
-          closeAquariumSpeciesDetail(false);
-          navigateToRoute(taskRoutes.encyclopedia.compatibility);
-        }}
-        onOpenTankSettings={(panel) => {
-          closeAquariumSpeciesDetail(false);
-          openAquariumSettings(panel);
-        }}
-        onRecordDeath={selectedAqFish ? (fish, input) => {
-          if (!selectedAqFish) return;
-          const batchId = input.batchId || selectedAqFish.aqFish.batches?.[0]?.id || `${selectedAqFish.aqFish.id}_legacy`;
-          return getCurrentAquaGuideRepository().then(repository => repository.saveLivestockMemorial({
-            speciesCatalogKey: fish.id,
-            date: input.date,
-            causeCodes: input.causeCodes,
-            reason: input.reason,
-            batchId,
-            aquariumId: activeAquarium.id,
-            aquariumFishId: selectedAqFish.aqFish.id,
-            operationId: input.operationId,
-          })).then(result => {
-            setAquariums(current => current.map(item => item.id === result.aquarium.id ? result.aquarium : item));
-            setDeceasedRecords(current => [...current, result.record]);
-            if (!result.aquarium.fishes.some(item => item.id === selectedAqFish.aqFish.id)) {
-              closeAquariumSpeciesDetail();
-            }
-          });
-        } : undefined}
-      />
 
       {/* Legacy fish detail modal is intentionally disabled; aquarium entries now use SpeciesDetailDialog. */}
       <Dialog open={false} onOpenChange={(open) => !open && setSelectedAqFish(null)}>
