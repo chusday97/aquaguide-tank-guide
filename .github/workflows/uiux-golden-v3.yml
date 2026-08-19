@@ -8,6 +8,7 @@ on:
       - 'components/**'
       - 'evaluation/visual/golden-v1/**'
       - 'scripts/verify-uiux-golden-cohort.mjs'
+      - 'scripts/ensure-cjk-font.sh'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/uiux-golden-v3.yml'
@@ -26,12 +27,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Install CJK snapshot font
-        run: |
-          APT_RETRY='-o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60'
-          timeout 180s sudo apt-get $APT_RETRY update
-          timeout 600s sudo apt-get $APT_RETRY install -y --no-install-recommends fonts-noto-cjk
-          fc-match 'Noto Sans CJK SC'
+      - name: Restore CJK snapshot font cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/aquaguide-noto-cjk
+          key: aquaguide-noto-cjk-${{ runner.os }}-${{ runner.arch }}-20230817-v1
+      - name: Ensure CJK snapshot font
+        run: bash scripts/ensure-cjk-font.sh
       - name: Build
         run: npm run build
       - name: Install Chromium
