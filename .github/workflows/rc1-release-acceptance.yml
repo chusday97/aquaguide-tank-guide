@@ -45,6 +45,9 @@ jobs:
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
 
+      - name: UI modal surface contract
+        run: node scripts/test-ui-modal-surface-contract.mjs
+
       - name: Product evaluation contracts
         run: npm run test:product-evaluation
 
