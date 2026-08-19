@@ -32,7 +32,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE_BASE=ed0cf38025652db901ee81aa697ca55b1c1584b6
           SOURCE_BRANCH=agent/functional-cta-search-show-all
           git fetch origin "$SOURCE_BRANCH"
           SOURCE_HEAD="$(git rev-parse FETCH_HEAD)"
@@ -47,19 +46,142 @@ jobs:
           git show "$SOURCE_HEAD:scripts/verify-search-and-inline-filter.mjs" > scripts/verify-search-and-inline-filter.mjs
           git show "$SOURCE_HEAD:HANDOFF-2026-08-18.md" > HANDOFF-2026-08-18-PUI-BC-033.md
 
-          git diff "$SOURCE_BASE" "$SOURCE_HEAD" -- src/pages/Search.tsx > /tmp/search-show-all.patch
-          git apply --check /tmp/search-show-all.patch
-          git apply /tmp/search-show-all.patch
-
           python - <<'PY'
           from pathlib import Path
           import subprocess
 
+          path = Path('src/pages/Search.tsx')
+          source = path.read_text()
+
+          def replace_once(before: str, after: str, label: str):
+              global source
+              count = source.count(before)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected exactly one anchor, found {count}')
+              source = source.replace(before, after, 1)
+
+          replace_once(
+              "const originalValue = (record: object, key: string) => String((record as Record<string, unknown>)[key] ?? '');\n\nexport default function SearchPage() {",
+              """const originalValue = (record: object, key: string) => String((record as Record<string, unknown>)[key] ?? '');
+const getSpeciesSearchResults = (value: string) => {
+  const normalizedQuery = normalize(value);
+  if (!normalizedQuery) return [];
+  return fishData.filter(fish => normalize([
+    fish.name,
+    fish.scientificName,
+    fish.category,
+    fish.description,
+    originalValue(fish, '_originalName'),
+    originalValue(fish, '_originalCategory'),
+    originalValue(fish, '_originalDescription'),
+    englishTranslations[fish.id]?.name,
+    englishTranslations[fish.id]?.description,
+    autoTranslations[fish.id]?.name,
+    autoTranslations[fish.id]?.description,
+  ].join(' ')).includes(normalizedQuery));
+};
+
+export default function SearchPage() {""",
+              'shared species search matcher',
+          )
+          replace_once(
+              "  const [selectedSpecies, setSelectedSpecies] = useState<SearchSuggestion | null>(null);\n  const normalizedQuery = normalize(query);",
+              "  const [selectedSpecies, setSelectedSpecies] = useState<SearchSuggestion | null>(null);\n  const [showAllSpecies, setShowAllSpecies] = useState(false);\n  const normalizedQuery = normalize(query);",
+              'show-all state',
+          )
+          replace_once(
+              "  }), [draft, isEn, ownedQuantityBySpeciesId]);\n\n  useEffect(() => {",
+              "  }), [draft, isEn, ownedQuantityBySpeciesId]);\n  const draftSpeciesMatchCount = useMemo(() => getSpeciesSearchResults(draft).length, [draft]);\n\n  useEffect(() => {",
+              'draft match count',
+          )
+          old_results = """  const allSpeciesResults = useMemo(() => normalizedQuery
+    ? fishData.filter(fish => normalize([
+      fish.name,
+      fish.scientificName,
+      fish.category,
+      fish.description,
+      originalValue(fish, '_originalName'),
+      originalValue(fish, '_originalCategory'),
+      originalValue(fish, '_originalDescription'),
+      englishTranslations[fish.id]?.name,
+      englishTranslations[fish.id]?.description,
+      autoTranslations[fish.id]?.name,
+      autoTranslations[fish.id]?.description,
+    ].join(' ')).includes(normalizedQuery))
+    : [], [normalizedQuery]);
+  const speciesResults = allSpeciesResults.slice(0, 18);"""
+          replace_once(
+              old_results,
+              """  const allSpeciesResults = useMemo(() => getSpeciesSearchResults(query), [query]);
+  const speciesResults = showAllSpecies ? allSpeciesResults : allSpeciesResults.slice(0, 18);""",
+              'species results expansion',
+          )
+          replace_once(
+              """  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    const next = draft.trim();
+    setSearchParams(next ? { q: next } : {});
+  };""",
+              """  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    const next = draft.trim();
+    setShowAllSpecies(false);
+    setSearchParams(next ? { q: next } : {});
+  };""",
+              'submit reset',
+          )
+          replace_once(
+              """  const submitValue = (value: string) => {
+    const next = value.trim();
+    setSearchParams(next ? { q: next } : {});
+  };
+
+  const selectSuggestion""",
+              """  const submitValue = (value: string) => {
+    const next = value.trim();
+    setShowAllSpecies(false);
+    setSearchParams(next ? { q: next } : {});
+  };
+
+  const showAllSpeciesResults = () => {
+    const next = draft.trim();
+    if (!next) return;
+    setSearchParams({ q: next });
+    setShowAllSpecies(true);
+  };
+
+  const selectSuggestion""",
+              'show-all handler',
+          )
+          replace_once(
+              "          totalSpeciesMatches={suggestionResult.totalSpeciesMatches}",
+              "          totalSpeciesMatches={draftSpeciesMatchCount}",
+              'shared advertised count',
+          )
+          replace_once(
+              """          onValueChange={value => {
+            setDraft(value);
+            setSelectedSpecies(null);
+          }}""",
+              """          onValueChange={value => {
+            setDraft(value);
+            setSelectedSpecies(null);
+            setShowAllSpecies(false);
+          }}""",
+              'editing resets show-all',
+          )
+          replace_once(
+              "          onViewAllSpecies={() => submitValue(draft)}",
+              "          onViewAllSpecies={showAllSpeciesResults}",
+              'real show-all action',
+          )
+          path.write_text(source)
+
           badcases = Path('evaluation/product/badcases.v1.jsonl')
           current = badcases.read_text()
           if '"id":"PUI-BC-033"' not in current:
-              source = subprocess.check_output(['git','show','FETCH_HEAD:evaluation/product/badcases.v1.jsonl'], text=True)
-              matches = [line for line in source.splitlines() if '"id":"PUI-BC-033"' in line]
+              upstream = subprocess.check_output(['git','show','FETCH_HEAD:evaluation/product/badcases.v1.jsonl'], text=True)
+              matches = [line for line in upstream.splitlines() if '"id":"PUI-BC-033"' in line]
               if len(matches) != 1:
                   raise SystemExit(f'expected exactly one PUI-BC-033 source line, found {len(matches)}')
               badcases.write_text(current.rstrip('\n') + '\n' + matches[0] + '\n')
@@ -76,6 +198,25 @@ jobs:
           node scripts/verify-ui-v2-dashboard-ia.mjs
           npm run lint
           npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-search-rc1-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/search >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-search-rc1-preview.log
+          exit 1
+
+      - name: Search show-all browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+          SEARCH_UI_GROUP: entries
+        run: node scripts/verify-search-and-inline-filter.mjs
 
       - name: Commit RC1 Search show-all integration
         shell: bash
