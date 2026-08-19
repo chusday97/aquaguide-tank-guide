@@ -90,9 +90,9 @@ try {
   const archiveButton = page.locator('#aquarium-records > button');
   await archiveButton.waitFor();
   await archiveButton.click();
-  const rosterDialog = page.locator('[role="dialog"]:visible');
-  await rosterDialog.getByText('缸内物种', { exact: true }).first().waitFor();
-  const residentProfileButton = rosterDialog.locator('button').filter({ has: page.locator('img[alt="极火虾"]') }).first();
+  const rosterSurface = page.locator('.livestock-roster-surface');
+  await rosterSurface.getByText('缸内物种', { exact: true }).first().waitFor();
+  const residentProfileButton = rosterSurface.locator('button').filter({ has: page.locator('img[alt="极火虾"]') }).first();
   await residentProfileButton.waitFor();
   await residentProfileButton.click();
 
@@ -104,8 +104,9 @@ try {
     [],
     'Opening an owned species detail from the Aquarium roster must not implicitly add it to compatibility selection.',
   );
+  await rosterSurface.waitFor({ state: 'hidden', timeout: 2_000 });
   visibleDialogs = page.locator('[role="dialog"]:visible');
-  assert.equal(await visibleDialogs.count(), 1, 'Opening species detail from the roster must replace the roster surface rather than nest another modal.');
+  assert.equal(await visibleDialogs.count(), 1, 'After the Roster exit transition completes, species detail must be the only visible dialog.');
 
   await page.keyboard.press('Escape');
   await speciesDetail.waitFor({ state: 'hidden' });
@@ -113,7 +114,7 @@ try {
   await page.locator('#aquarium-records').waitFor();
 
   assert.deepEqual(pageErrors, [], `RC1 modal/detail paths must not emit page errors: ${pageErrors.join('; ')}`);
-  console.log('UI modal/detail browser contract PASS: Data reuses Settings; Aquarium roster opens one shared species detail; browsing does not mutate compatibility selection.');
+  console.log('UI modal/detail browser contract PASS: Data reuses Settings; Aquarium roster exits before shared species detail remains; browsing does not mutate compatibility selection.');
 } finally {
   await browser.close();
 }
