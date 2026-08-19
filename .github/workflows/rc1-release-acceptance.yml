@@ -36,6 +36,9 @@ jobs:
       - name: Production cloud runtime contract
         run: node scripts/test-production-cloud-runtime-contract.mjs
 
+      - name: Production cloud runtime smoke
+        run: node --import tsx scripts/test-production-cloud-runtime-smoke.ts
+
       - name: Admin Quality source contract
         run: node scripts/verify-admin-quality-inbox-contract.mjs
 
