@@ -35,6 +35,8 @@ for (const duplicate of ['--type-display-size:', '--type-section-size:', '--type
 }
 assert.ok(main.indexOf("./styles/uiux-system-refactor.css") > main.indexOf("./styles/ui-v2-shell.css"), 'cross-surface UX contract must load after page/shell V2 styles');
 assert.ok(systemCss.includes('.desktop-workspace-scroll::-webkit-scrollbar'), 'desktop workspace must expose a scroll-position affordance');
+assert.ok(systemCss.includes('.aquaguide-app button[aria-label]'), 'named interactive controls must inherit a system-level minimum target');
+assert.ok(systemCss.includes('min-width: 44px') && systemCss.includes('min-height: 44px'), 'system-level named controls must meet the 44px interaction target');
 assert.ok(systemCss.includes('@media (prefers-reduced-motion: reduce)'), 'system layer must honor reduced-motion preferences');
 
 assert.ok(layoutProvider.includes('PHONE_LAYOUT_MAX_WIDTH'), 'layout system must expose one compact-width boundary');
@@ -47,6 +49,7 @@ assert.ok(quickActions.includes('<details className="quick-action-more">'), 'sec
 
 assert.ok(collectionHub.includes('function CollectionCarousel'), 'collection hub must use focus-carousel IA');
 assert.ok(collectionHub.includes('useReducedMotion'), 'collection carousel must respect reduced motion');
+assert.ok(collectionHub.includes('inert={!isActive}'), 'inactive carousel cards must be removed from keyboard focus order');
 assert.equal((collectionHub.match(/<CollectionModuleCard/g) || []).length, 3, 'collection primary IA must contain three live modules');
 assert.ok(collectionHub.includes('data-collection-coming-soon'), 'building achievements must live outside primary carousel IA');
 
@@ -55,4 +58,4 @@ assert.ok(search.includes('const [showAllCare, setShowAllCare]'), 'search must s
 assert.ok(search.includes('data-search-show-all="species"'), 'species result section must expose a discoverable show-all control');
 assert.ok(search.includes('data-search-show-all="care"'), 'care result section must expose a discoverable show-all control');
 
-console.log('AquaGuide UI/UX system contract PASS: canonical tokens, width-driven layout, progressive disclosure, focus carousel IA, complete search expansion, reduced motion and desktop scroll affordance.');
+console.log('AquaGuide UI/UX system contract PASS: canonical tokens, width-driven layout, progressive disclosure, focus carousel IA, complete search expansion, 44px controls, reduced motion and desktop scroll affordance.');
