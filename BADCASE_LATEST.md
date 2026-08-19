@@ -1,118 +1,124 @@
-# AquaGuide UI/UX System Refactor — Badcases
+# AquaGuide UI/UX — Latest Badcases
 
 **Date:** 2026-08-19  
 **Branch:** `agent/uiux-system-refactor-v1`  
 **Draft PR:** #104  
-**Final implementation validation:** UI UX System Refactor V1 #9 / run `32251342843` — PASS
+**Visual implementation head:** `ef69d85e48712d27990423fcc85e23a4047f0756`  
+**Visual QA:** #19 / run `32259734301` — PASS  
+**System regression:** #36 / run `32259734291` — PASS
 
-## PUI-BC-040 · Collection 主 IA 有横滑能力，但缺少唯一视觉焦点
+This file summarizes the new Visual QA V2 closures. PUI-BC-040..044 remain closed from the preceding UI/UX System Refactor and are still present in the canonical registry.
 
-- **featureId:** `collection`
+## PUI-BC-045 · Aquarium 在窄真实工作区重新把 3D 提到常用操作之前
+
+- **featureId:** `daily_check`
 - **severity:** medium
-- **source:** `uiux_system_refactor`
-- **rootCauseLayer:** `information_architecture`
-- **status:** `regression_verified`
-
-**Symptom**  
-水族册已经能横向浏览，但顶层仍是 rail/list 心智模型，没有唯一 active card；同时 Achievements 建设中模块继续占据主浏览 IA 的四分之一。
-
-**Expected**  
-顶层只保留可完成的 live modules，以 center-focus carousel 表达当前对象；building feature 退出主业务 IA，作为低权重 coming-next 信息面。
-
-**Fix**  
-Wishlist / Care / Memorial 三个 live module 进入 focus carousel；Achievements 移至独立 `data-collection-coming-soon` surface，无业务 CTA。详细 Wishlist/Care 内容继续使用 horizontal snap rails。
-
-**Regression evidence**  
-`test:collection-swipe-cards` + `verify-collection-hub-previews` + GP-005；最终 run `32251342843` 验证 390 / 600 / 1440 三个宽度、3 live modules、2 visible neighbors、1 active、无 page overflow、上下文恢复 PASS。
-
----
-
-## PUI-BC-041 · Design token 存在多个事实源
-
-- **featureId:** `typography_system`
-- **severity:** medium
-- **source:** `uiux_system_refactor`
-- **rootCauseLayer:** `design_system`
-- **status:** `regression_verified`
-
-**Symptom**  
-`ui-v2-foundation.css` 与 `typography-system.css` 同时定义 `--type-*` token，页面和共享组件可能从不同层拿到字号/字重，容易出现后续视觉漂移。
-
-**Expected**  
-UI V2 foundation 是 typography / spacing / radius / elevation 唯一 token source；semantic typography 只消费 token，不重新定义。
-
-**Fix**  
-移除 compatibility layer 中重复的 type token；保留 semantic roles 和 task-surface compatibility。Typography regression 改为验证最终 token ownership 与消费路径，而不是锁死旧 JSX class。
-
-**Regression evidence**  
-`test:typography-system` + `test-uiux-system-contract`；最终 run `32251342843` PASS。
-
----
-
-## PUI-BC-042 · Search 的 Care 结果有数量但没有完整访问路径
-
-- **featureId:** `species_search`
-- **severity:** medium
-- **source:** `uiux_system_refactor`
-- **rootCauseLayer:** `ui_action_wiring`
-- **status:** `regression_verified`
-
-**Symptom**  
-全局 Search 的 Care 结果会展示总数，但列表固定 `slice(0,12)`；Species 已有 show-all，Care 没有，两个结果域交互不对称。
-
-**Expected**  
-首屏仍保持有限 preview，但用户显式要求查看全部时，应使用同一计数口径渲染全部匹配结果。
-
-**Fix**  
-新增 `showAllCare` 与结果区 `data-search-show-all="care"`；同时保留 Species 的显式展开路径，并在新 query 时重置 expansion。
-
-**Regression evidence**  
-`verify-search-show-all-v2.mjs`；最终 run `32251342843`：`species=372; care(鱼)=33`，两组结果均从 preview 展开到全部 PASS。
-
----
-
-## PUI-BC-043 · 非 active 轮播卡仍可进入键盘焦点，且部分具名控件低于 44px
-
-- **featureId:** `responsive_detail_surface`
-- **severity:** high
-- **source:** `responsive_regression`
-- **rootCauseLayer:** `accessibility`
-- **status:** `regression_verified`
-
-**Symptom**  
-初次 full responsive scan 发现两类问题：非 active carousel card 虽然 `aria-hidden` 且视觉弱化，但内部按钮仍可能进入键盘 focus order；Care 多个来源/图片具名控件只有 28×28、约 34px 宽或 40px 高。
-
-**Expected**  
-非 active carousel content 对键盘和辅助技术不可交互；明确具名交互目标至少达到 44×44px。
-
-**Fix**  
-非 active carousel wrapper 增加 `inert={!isActive}`；全站 `button[aria-label]` / `a[aria-label]` 统一获得 44px minimum target。Responsive scanner 只忽略真正位于 `[inert]` / `[aria-hidden=true]` 中的 intentionally inactive controls，不做 route-specific whitelist。
-
-**Regression evidence**  
-`test-uiux-system-contract` + `test:responsive-routes`；最终 run `32251342843` 完成 **7 profiles × 17 routes PASS**。
-
----
-
-## PUI-BC-044 · viewport 缺失时 iPad fallback 被 Mobile Safari 误判成 phone
-
-- **featureId:** `responsive_detail_surface`
-- **severity:** medium
-- **source:** `ci_fail_before`
+- **source:** `visual_qa`
 - **rootCauseLayer:** `responsive_layout`
 - **status:** `regression_verified`
 
 **Symptom**  
-真实浏览器已经 width-driven，但当 `viewportWidth` 不可用时，iPad UA 因包含 `Mobile Safari` 被 generic phone regex 提前命中。
+390px 手机已经是 Today → Manage → 3D，但 768/1024 进入 desktop shell 后，大块 3D context 会重新出现在常用操作之前，把高频养护动作推到首屏以下。
 
-**Expected**  
-正常浏览器始终使用可用宽度；只有 width 缺失时才使用 UA fallback，且 Tablet/iPad 判断优先于 generic mobile pattern。
+**Root cause**  
+Hero 是否并排已经使用 `aquarium-home` container width，但 task-first 排序仍由旧 viewport media query 控制。浏览器宽度和真实 workspace 宽度因此产生冲突。
 
 **Fix**  
-`LayoutModeProvider` 保持 viewport-first；fallback 顺序改为 Tablet/iPad → phone → UA Client Hint/default。
+`@container aquarium-home (max-width: 719px)` 固定 Today → Manage → Context → Learn；窄工作区 3D 限制为 140–170px。只有真实 Aquarium content width ≥720px 才允许 Today + 3D balanced hero。
+
+**Fixed by**  
+`f0ea9ecad4fbace00f9f0d1fdb3cecce277d31d7`
 
 **Regression evidence**  
-第一次 UI UX System CI fail-before 暴露问题；修复后 `test:layout-mode` 的 5 个 viewport cases + 4 个 fallback cases PASS，最终 run `32251342843` 全绿。
+`verify-uiux-aquarium-visual-hierarchy.mjs` + Visual QA #19；390/768 task-first，1024 不允许 full-width 3D 在 Manage 前成为主块，1440 恢复 balanced hero。
 
-## Residual risks
+---
 
-本轮没有把以下事项伪装成已完成：全站 pixel-diff visual baseline、bundle code-splitting、npm audit vulnerability remediation。它们是后续工程/视觉治理项，不属于上述 Badcase 的 closure 条件。
+## PUI-BC-046 · 1023→1024 时侧栏突然膨胀，工作区反而变窄
+
+- **featureId:** `responsive_detail_surface`
+- **severity:** medium
+- **source:** `visual_qa`
+- **rootCauseLayer:** `responsive_shell`
+- **status:** `regression_verified`
+
+**Symptom**  
+1023px 仍是约 76px collapsed rail；到 1024px 立即展开到约 280px，导致可用工作区出现反向宽度断崖。Aquarium、Search 等页面同时受影响。
+
+**Expected**  
+中等桌面宽度应该逐级增加信息密度，不能因为越过 1px breakpoint 反而损失数百像素业务工作区。
+
+**Fix**  
+1024–1199 使用 220px medium sidebar，保留文字导航、搜索和工具；1200+ 才恢复完整侧栏。
+
+**Fixed by**  
+`1ad85cd399634c3a9c81e39963fbd13d80a5f259`
+
+**Regression evidence**  
+1024 visual hierarchy 要求 sidebar ≤230px、workspace ≥790px；1440 要求 full sidebar ≥260px。Visual QA #19 PASS。
+
+---
+
+## PUI-BC-047 · Search 用 viewport 决定双列，实际内容区不足时卡片被压成窄条
+
+- **featureId:** `species_search`
+- **severity:** medium
+- **source:** `visual_qa`
+- **rootCauseLayer:** `responsive_layout`
+- **status:** `regression_verified`
+
+**Symptom**  
+1024 viewport 下，Search 外层已经进入 Species/Care 双列，但侧栏占宽后真实工作区仍不足；Species section 内部又分两列，卡片缩到约 180–200px，标题/学名接近竖向换行。
+
+**Expected**  
+嵌套信息架构必须根据自己的 content width，而不是浏览器 viewport 判断是否并列。
+
+**Fix**  
+`.search-v2-page` 设为 `search-workspace` inline-size container；真实 Search workspace <900px 时 Species/Care 单列，≥900px 才双列。
+
+**Fixed by**  
+`1cb91612541396ec5d2ad515cc5b8f70443f8573`
+
+**Regression evidence**  
+`verify-uiux-search-density.mjs`：768/1024 stacked、1440 side-by-side、Species card ≥220px、无 horizontal overflow。Visual QA #19 PASS。
+
+---
+
+## PUI-BC-048 · “返回上一个任务”悬浮导航覆盖 Aquarium toolbar / onboarding / desktop header
+
+- **featureId:** `task_entry_navigation`
+- **severity:** medium
+- **source:** `visual_qa`
+- **rootCauseLayer:** `ui_navigation_affordance`
+- **status:** `regression_verified`
+
+**Symptom**  
+全局 return-context pill 使用固定 top 值。实际截图中，手机会覆盖 Aquarium 顶部工具栏或新手起步区域，768/1024 会覆盖鱼缸身份 Header。
+
+**Expected**  
+Return context 属于 persistent navigation chrome，必须占据独立导航带，不得浮在业务内容之上。
+
+**Fix**  
+桌面为 return context 预留 top band；手机保持固定 Aquarium toolbar 原位，在 toolbar flow placeholder 之后额外预留 return band，最终 pill 从实测 toolbar 下沿之外开始，随后才进入 onboarding / Today 内容。
+
+**Fixed by**  
+`1abb9ace99284a2050560eeac919f9a09b8b82e8` + `f3c48352fcc77a09207885f8f9edae25ff7fa33d` + `ef69d85e48712d27990423fcc85e23a4047f0756`
+
+**Regression evidence**  
+`verify-uiux-aquarium-visual-hierarchy.mjs` 直接比较 return pill 与实际 `.aquarium-toolbar` / `.aquarium-onboarding-strip` / `.aquarium-desktop-header` 几何，不再用包含空白的外层 layout box。Visual QA #19 PASS；人工检查 390 / 768 / 1024 / 1440 fold screenshots 无重叠。
+
+## Visual QA evidence quality notes
+
+本轮还发现两类“评测证据本身”的问题，但没有把它们伪装成产品缺陷：
+
+1. 第一版 capture harness 在 `addInitScript` 中每次 navigation 都清空 storage，导致 Aquarium 截图实际变成 Welcome。该 artifact 被判无效并废弃；现在 `/aquarium` 必须重新验证真实 dashboard 存在。
+2. 第一版 return-overlap 断言拿 `.aquarium-desktop-layout` 外层 box 当可见内容边界，产生 false fail。现在只与真实可见 toolbar/onboarding/header 比较。
+3. CJK package 曾因 runner 下载慢超过旧 120s timeout；CI 现在保留字体 readiness gate，同时增加 apt retries/合理超时，而不是接受 tofu 字体截图。
+
+## Residual risks / non-claims
+
+- 当前是 **structural visual gates + screenshot baseline**，还不是 pixel-diff golden comparator。
+- Artifact retention 为 7 天；截图没有提交进仓库。
+- 没有完成每一张 full-page screenshot 的人工逐像素评分。
+- Bundle splitting / existing npm vulnerabilities 仍属于后续工程债务。
+- PR #104 仍 Draft，未 merge，未 production deploy。
