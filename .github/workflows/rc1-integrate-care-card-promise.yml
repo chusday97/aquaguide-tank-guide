@@ -1,0 +1,86 @@
+name: RC1 Integrate Care Card Promise
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-care-card-promise:
+    if: github.head_ref == 'integration/aquaguide-rc1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RC1
+        uses: actions/checkout@v4
+        with:
+          ref: integration/aquaguide-rc1
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Apply Care card promise-effect closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_BASE=ed0cf38025652db901ee81aa697ca55b1c1584b6
+          SOURCE_BRANCH=agent/care-card-promise-closure
+          git fetch origin "$SOURCE_BRANCH"
+          SOURCE_HEAD="$(git rev-parse FETCH_HEAD)"
+
+          git diff "$SOURCE_BASE" "$SOURCE_HEAD" -- \
+            src/pages/CareEncyclopedia.tsx \
+            scripts/verify-care-card-action.mjs \
+            > /tmp/care-card-promise.patch
+          git apply --check /tmp/care-card-promise.patch
+          git apply /tmp/care-card-promise.patch
+
+          git show "$SOURCE_HEAD:HANDOFF-2026-08-18-PUI-BC-035.md" > HANDOFF-2026-08-18-PUI-BC-035.md
+
+      - name: Validate combined RC1 source
+        run: |
+          npm run test:product-evaluation
+          node scripts/test-aquarium-delete-repository-contract.mjs
+          node scripts/test-aquarium-settings-repository-contract.mjs
+          node scripts/test-water-change-cloud-persistence-contract.mjs
+          node scripts/test-data-storage-repository-mode-contract.mjs
+          node scripts/test-ui-interaction-repair-v1.mjs
+          node scripts/verify-ui-v2-dashboard-ia.mjs
+          npm run lint
+          npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-care-card-rc1-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/care >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-care-card-rc1-preview.log
+          exit 1
+
+      - name: Care card browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-care-card-action.mjs
+
+      - name: Commit Care card promise integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/CareEncyclopedia.tsx scripts/verify-care-card-action.mjs HANDOFF-2026-08-18-PUI-BC-035.md
+          git commit -m "Integrate Care card promise closure into RC1"
+          git pull --rebase origin integration/aquaguide-rc1
+          git push origin HEAD:integration/aquaguide-rc1
