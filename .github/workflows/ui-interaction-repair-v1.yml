@@ -34,6 +34,9 @@ jobs:
       - name: Apply species detail selection decoupling
         run: node scripts/apply-species-detail-selection-decoupling-v1.mjs
 
+      - name: Align GP-002 with explicit compatibility selection
+        run: node scripts/apply-gp002-readonly-detail-flow-v1.mjs
+
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
 
@@ -112,9 +115,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/Aquarium.tsx src/components/visual-results/VisualResultCard.tsx src/components/SpeciesDetailDialog.tsx
+          git add src/pages/Aquarium.tsx src/components/visual-results/VisualResultCard.tsx src/components/SpeciesDetailDialog.tsx scripts/verify-golden-path-species-to-stocking.mjs
           if git diff --cached --quiet; then
-            echo "No product source changes to commit."
+            echo "No product/test source changes to commit."
             exit 0
           fi
           git commit -m "Decouple species detail from compatibility selection"
