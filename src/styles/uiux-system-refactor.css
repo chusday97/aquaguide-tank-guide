@@ -20,12 +20,11 @@
 }
 
 @media (max-width: 767px) {
-  /* Aquarium's fixed phone utility toolbar already owns the first ~58px and the outer
-   * `.aquarium-toolbar` supplies its flow placeholder. Keep the return pill immediately
-   * after that placeholder, and reserve the band by extending the toolbar's bottom margin.
-   * Do not pad the whole main: doing that moves the toolbar itself and recreates overlap. */
+  /* Aquarium's fixed phone utility toolbar resolves to roughly 74px on the regression
+   * viewport. Keep the return pill beyond that measured edge, and reserve the band by
+   * extending the toolbar flow placeholder rather than padding the whole main. */
   [data-workspace-return] {
-    top: 68px !important;
+    top: 82px !important;
     left: 12px !important;
   }
 
