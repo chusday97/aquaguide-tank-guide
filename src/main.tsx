@@ -1,7 +1,10 @@
-import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
+import { StrictMode, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import posthog from 'posthog-js';
 import App from './App.tsx';
+import AdminFeedback from './pages/AdminFeedback';
+import { ToastProvider } from './components/common/ToastProvider';
 import './services/navigation/history-navigation-guard.service';
 import './index.css';
 import './styles/ui-v2-foundation.css';
@@ -37,8 +40,47 @@ if (posthogKey) {
 
 initializeSessionAnalytics();
 
+function ReloadIntoPrimaryApp() {
+  useEffect(() => {
+    window.location.reload();
+  }, []);
+  return null;
+}
+
+function AdminFeedbackEntry() {
+  return (
+    <BrowserRouter>
+      <ToastProvider>
+        <Routes>
+          <Route path="/admin/feedback" element={<AdminFeedback />} />
+          <Route path="*" element={<ReloadIntoPrimaryApp />} />
+        </Routes>
+      </ToastProvider>
+    </BrowserRouter>
+  );
+}
+
+const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+const isAdminFeedback = pathname === '/admin/feedback';
+const showAdminQualityShortcut = pathname === '/admin/content';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    {isAdminFeedback ? (
+      <AdminFeedbackEntry />
+    ) : (
+      <>
+        <App />
+        {showAdminQualityShortcut && (
+          <a
+            href="/admin/feedback"
+            data-admin-quality-link
+            className="fixed bottom-5 right-5 z-[220] inline-flex min-h-11 items-center rounded-full border border-emerald-100 bg-emerald-800 px-5 text-sm font-black text-white shadow-[0_14px_36px_rgba(15,23,42,0.16)] transition hover:bg-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+          >
+            用户反馈
+          </a>
+        )}
+      </>
+    )}
   </StrictMode>,
 );
