@@ -1,0 +1,82 @@
+name: RC1 Integrate Final UI Stack
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-ui-stack:
+    if: github.head_ref == 'integration/aquaguide-rc1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RC1
+        uses: actions/checkout@v4
+        with:
+          ref: integration/aquaguide-rc1
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply final UI stack without workflow files
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_BASE=ed0cf38025652db901ee81aa697ca55b1c1584b6
+          SOURCE_BRANCH=agent/ui-interaction-repair-v1
+          git fetch origin "$SOURCE_BRANCH"
+          SOURCE_HEAD="$(git rev-parse FETCH_HEAD)"
+
+          if test -f .agents/skills/aquaguide-ui-ux/SKILL.md \
+             && test -f scripts/test-ui-interaction-repair-v1.mjs \
+             && grep -q 'data-species-detail-compatibility-action="open-calculator"' src/components/SpeciesDetailDialog.tsx; then
+            echo 'Final UI stack already integrated; validating existing RC1 state.'
+            exit 0
+          fi
+
+          git diff "$SOURCE_BASE" "$SOURCE_HEAD" -- \
+            .agents \
+            AGENTS.md \
+            components \
+            scripts \
+            src \
+            > /tmp/final-ui-stack.patch
+          git apply --check /tmp/final-ui-stack.patch
+          git apply /tmp/final-ui-stack.patch
+
+      - name: Validate combined source contracts
+        run: |
+          npm run test:product-evaluation
+          node scripts/test-aquarium-delete-repository-contract.mjs
+          node scripts/test-aquarium-settings-repository-contract.mjs
+          node scripts/test-water-change-cloud-persistence-contract.mjs
+          node scripts/test-data-storage-repository-mode-contract.mjs
+          node scripts/test-ui-interaction-repair-v1.mjs
+          node scripts/verify-ui-v2-dashboard-ia.mjs
+          npm run lint
+          npm run build
+
+      - name: Commit RC1 final UI product integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .agents AGENTS.md components scripts src
+          if git diff --cached --quiet; then
+            echo "No UI product changes to commit."
+            exit 0
+          fi
+          git commit -m "Integrate final UI stack into RC1"
+          git pull --rebase origin integration/aquaguide-rc1
+          git push origin HEAD:integration/aquaguide-rc1
