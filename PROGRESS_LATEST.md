@@ -1,49 +1,66 @@
-# AquaGuide Progress — UI/UX System + PUI-BC-050
+# AquaGuide Progress — Navigation Context Closure
 
-**Date:** 2026-08-19  
+**Date:** 2026-08-20  
 **Branch:** `agent/uiux-system-refactor-v1`  
 **Draft PR:** #104
 
-## Latest user-reported navigation repair
+## Latest navigation-context audit
 
-- [x] Reproduced/located why risky species footer action jumped directly into Compatibility.
-- [x] Located the second independent cause of the “Atlas jumps to bottom” symptom: `mode=compatibility` explicitly scrolled to the deep calculator anchor.
-- [x] Converted first risk-review action into in-detail Compatibility evidence expansion.
-- [x] Preserved second-stage full-calculator navigation after the user has already reviewed the evidence.
-- [x] Preserved dedicated calculator navigation paths.
-- [x] Made Compatibility behave as a top-level fixed drawer surface rather than a deep Atlas destination.
-- [x] Prevented underlying Atlas browse content from keeping the long layout active underneath Compatibility.
-- [x] Kept Atlas workspace scroll position near the top in Compatibility mode.
-- [x] Added deterministic browser regression for both the two-stage detail flow and direct Compatibility route.
-- [x] Corrected the regression to inspect the real fixed drawer rather than the zero-layout `#compatibility-calculator` wrapper.
-- [x] Updated static interaction audit to follow wrapper + Base implementation without weakening the existing sharing feature gate.
-- [x] TypeScript PASS.
-- [x] Production build PASS.
-- [x] Search regression PASS.
-- [x] Collection regression PASS.
-- [x] GP-005 PASS.
-- [x] Full 7×17 responsive route scan PASS.
-- [x] Visual QA V2 PASS.
-- [x] Golden V3 PASS.
-- [x] Bundle Audit PASS.
-- [x] Added PUI-BC-050 to canonical `evaluation/product/badcases.v1.jsonl`.
-- [x] Verified canonical registry commit is exactly +1 / -0 against implementation head.
-- [x] Updated `BADCASE_LATEST.md`, `PROGRESS_LATEST.md`, `HANDOFF_LATEST.md`.
+- [x] Preserved prior PUI-BC-050 Compatibility behavior: first risk-review click stays in detail; second stage may enter full Compatibility; Atlas no longer jumps to the deep calculator anchor.
+- [x] Added permanent `Navigation Context V1` browser workflow.
+- [x] Reproduced Search deep-result return failure after explicit show-all.
+- [x] Search now persists query, Species/Care expansion state, source result ID and exact workspace scroll before leaving for detail.
+- [x] Search return restores structure first, then exact scroll + focus.
+- [x] Species >18 and Care >12 return flows both pass.
+- [x] Distinguished a Playwright actionability auto-scroll evaluator artifact from the real Search product bug.
+- [x] Audited Aquarium → Tank livestock roster → Species Detail → close.
+- [x] Confirmed a real nested-surface failure: closing Species Detail dropped back to the Aquarium launcher instead of the parent roster.
+- [x] Added roster-scoped return context: record ID, fish ID and internal roster scroll.
+- [x] Child Species Detail dismissal now reopens only its originating Aquarium roster after child exit animation completes.
+- [x] Restores roster internal scroll and exact original profile-button focus.
+- [x] Other Species Detail entry points do not inherit the roster-specific return path.
+- [x] Refined browser evaluator to distinguish parent/child drawers during Radix exit animation.
+- [x] Corrected a browser-evaluator-only TypeScript-generic syntax mistake in `waitForFunction` without changing product behavior.
+- [x] Final combined Navigation Context V1 #9 PASS.
+- [x] Same implementation head passed System, broad Visual QA V2, Golden V3 and Bundle Audit.
 
-Implementation verification head: `34b4a898ea16dfd8fe85628c29a75265ef8bc409`.
+## Authoritative implementation head
 
-Authoritative runs on that implementation head:
+`0c7d28ec647359f3b6e4a1afd1fd1e9a908f4bfc`
 
-- UI UX System Refactor V1 #69 / `32275254732` — PASS
-- UI UX Visual QA V2 #52 — PASS
-- UI UX Golden V3 #14 — PASS
-- Bundle Audit V1 #7 — PASS
+Passed on this head:
 
-Canonical append:
+- Navigation Context V1 #9 / run `32282629416` — PASS
+- UI UX System Refactor V1 #81 / run `32282629391` — PASS
+- UI UX Visual QA V2 #64 / run `32282629417` — PASS
+- UI UX Golden V3 #26 / run `32282629479` — PASS
+- Bundle Audit V1 #19 / run `32282629407` — PASS
 
-- `1e7eea5d7f4326b161d6ecbd953ba3394e1fe564`
-- one file changed, +1 / -0
-- PUI-BC-050 = `regression_verified`
+## Fail-before trail retained
+
+### Search
+
+- Navigation Context #1 / run `32280048039`: deep Species result disappeared from DOM after detail return — **real product fail-before**.
+- Fix: `9feaac4d90fef5ce2e4665154f9554759e15f591`.
+- #2 exposed Playwright `.click()` auto-scroll between measurement and product capture — **evaluator artifact**.
+- Evaluator fix: `7a736ef6349b4b77dceaf240c1fc61f96f769b98`.
+- #3: Species + Care expansion/focus/scroll PASS.
+
+### Aquarium
+
+- #4: generic `right-drawer:visible` matched both roster exit animation and child Species Detail — **evaluator ambiguity**, not product evidence.
+- #5 / run `32281408153`: after exact parent/child discrimination, child detail closed but roster did not reappear for 45 seconds — **real product fail-before**.
+- Product fixes: `28fb8a796bfd1b6b290daf74284945296daff9a3` + `dbf5546e99306ba078a723115451dcf12123a3b7`.
+- #7: parent roster reopening PASS.
+- #8: exact-focus assertion used TypeScript generic syntax inside serialized browser JS — **evaluator bug**; product roster had already restored.
+- #9: parent roster + original profile focus + workspace context PASS.
+
+## Governance
+
+- [x] `BADCASE_LATEST.md` documents PUI-BC-051 and PUI-BC-052.
+- [ ] Append PUI-BC-051 / PUI-BC-052 to canonical `evaluation/product/badcases.v1.jsonl` without rewriting history.
+- [ ] Verify canonical delta is exactly +2 / -0 and PUI-BC-032 remains unchanged.
+- [ ] Update PR #104 description with final Navigation Context evidence.
 
 ## Existing system work retained
 
@@ -79,4 +96,4 @@ No bundle-size reduction is claimed yet.
 - [ ] Broad dependency vulnerability remediation.
 - [ ] Replace Golden V3 with aesthetic/perceptual scoring.
 - [ ] Expand Golden V3 indiscriminately to all V2 screenshots.
-- [ ] Refactor the current thin wrapper/Base surgical navigation fix back into the large original components without retaining the new regression coverage.
+- [ ] Refactor the thin wrapper/Base compatibility repair without retaining its navigation regression coverage.
