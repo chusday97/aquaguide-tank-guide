@@ -1,0 +1,79 @@
+name: UI V2 Aquarium
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'components/ui/button.tsx'
+      - 'components/ui/input.tsx'
+      - 'src/App.tsx'
+      - 'src/components/layout/LayoutModeProvider.tsx'
+      - 'src/components/onboarding/OnboardingTaskCard.tsx'
+      - 'src/components/product/QuickActionGrid.tsx'
+      - 'src/components/product/StatusSummaryCard.tsx'
+      - 'src/pages/Aquarium.tsx'
+      - 'src/pages/Search.tsx'
+      - 'src/styles/ui-v2-*.css'
+      - 'src/main.tsx'
+      - 'scripts/capture-ui-v2-dashboard.mjs'
+      - 'scripts/verify-ui-v2-dashboard-ia.mjs'
+      - 'scripts/verify-ui-v2-responsive.mjs'
+      - 'scripts/verify-ui-v2-shell.mjs'
+      - 'scripts/verify-ui-v2-species-search.mjs'
+      - '.github/workflows/ui-v2-aquarium.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  responsive-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Dashboard IA contract
+        run: node scripts/verify-ui-v2-dashboard-ia.mjs
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-ui-v2-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-ui-v2-preview.log
+          exit 1
+      - name: Capture Dashboard visual snapshots
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/capture-ui-v2-dashboard.mjs
+      - name: Responsive browser contract
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-v2-responsive.mjs
+      - name: App shell browser contract
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-v2-shell.mjs
+      - name: Species and Search browser contract
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-v2-species-search.mjs
+      - name: Upload Dashboard visual snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquarium-dashboard-v2-snapshots
+          path: artifacts/ui-v2-dashboard/*.png
+          if-no-files-found: warn
+          retention-days: 7
