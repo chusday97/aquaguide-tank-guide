@@ -54,6 +54,12 @@ Use this skill before changing any AquaGuide user-facing interaction. The goal i
    - Fixed headers/bottom bars must not cover content.
    - Desktop side panels must not be reused blindly on phone.
 
+9. **Browsing is not selection.**
+   - Opening a species/card/detail is a read-only exploration action and must not mutate compatibility selection, wishlist, aquarium contents, or another decision state.
+   - “加入混养判断” is an explicit decision action. It may update the selection, but must not also navigate away unless the CTA explicitly says it will open the result.
+   - “加入判断” and “查看判断结果” are separate intents. Model them as separate states/actions instead of a hidden chained side effect.
+   - If an item is already selected, the UI may expose “查看混养结果” or “从判断中移除”; never infer the next action from merely opening the detail.
+
 ## Surface decision rubric
 
 Before adding a modal, answer in order:
@@ -117,6 +123,12 @@ Mobile target behavior:
 - single-column content;
 - primary action reachable without covering content.
 
+Decision behavior:
+
+- opening the detail is read-only;
+- compatibility selection only changes after an explicit “加入混养判断 / 移出判断” action;
+- adding a species keeps the user in context; navigating to the calculator/result requires a separate explicit “查看混养结果” action.
+
 ## Form-state contract
 
 For every wizard/step form:
@@ -134,15 +146,18 @@ For every wizard/step form:
 4. Check state continuity after opening, completing, cancelling, and pressing Back.
 5. Check primary result scanability at 1-second glance.
 6. Check CTA state vs visible selected state.
-7. Check 390/900/1600 layout.
-8. Add a source/browser regression before or with the fix.
-9. Run typecheck + build + relevant Product Golden Path.
-10. Do a screenshot/manual visual pass; green CI is not sufficient for visual acceptance.
+7. Check low-intent browse actions do not mutate high-intent selection/persistence state.
+8. Check 390/900/1600 layout.
+9. Add a source/browser regression before or with the fix.
+10. Run typecheck + build + relevant Product Golden Path.
+11. Do a screenshot/manual visual pass; green CI is not sufficient for visual acceptance.
 
 ## AquaGuide badcases this skill must prevent
 
 - modal proliferation for non-blocking information;
 - “查看我的鱼缸” leaves a specific Encyclopedia/compatibility/detail state and cannot return to it;
+- opening a species detail silently adds that species to compatibility judgement;
+- “加入混养判断” immediately throws the user into a different page without a separate navigation intent;
 - compatibility result is paragraph-first and visually flat;
 - species detail uses an overly narrow right-side drawer so the old layout becomes cramped;
 - a body-shape/default choice looks selected but Next remains disabled;
