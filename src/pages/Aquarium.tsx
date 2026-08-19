@@ -1187,7 +1187,6 @@ export default function AquariumManager() {
   const [diagnosisBatchCareFocus, setDiagnosisBatchCareFocus] = useState<SpeciesBatchCareSignal | null>(null);
   const [dailyCheckInterpretation, setDailyCheckInterpretation] = useState<TankDailyCheckInterpretationData | null>(null);
   const [dailyCheckArticles, setDailyCheckArticles] = useState<typeof careTopicsData>([]);
-  const [selectedDailyCheckArticle, setSelectedDailyCheckArticle] = useState<(typeof careTopicsData)[number] | null>(null);
   const [careDiagnosisContext, setCareDiagnosisContext] = useState<CareDiagnosisContext | null>(null);
   const [selectedBuildTemplateId, setSelectedBuildTemplateId] = useState(localizedTemplates[0].id);
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
@@ -1727,20 +1726,20 @@ export default function AquariumManager() {
     handledAddSpeciesRequestRef.current = requestKey;
     if (!speciesId) {
       openSpeciesAddition(intent);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     const fish = fishData.find(item => item.id === speciesId);
     if (!fish) {
       showToast(Boolean(i18n.language?.startsWith('en')) ? 'No corresponding species found for this memorial' : '没有找到这条生命纪念对应的物种', 'error');
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     openSpeciesAddition(intent, fish.id);
     showToast(intent === 'record_existing'
       ? (isEn ? `Selected "${fish.name}". Confirm quantity and entry date.` : `已选择“${fish.name}”，请确认数量和入缸日期。`)
       : (isEn ? `Selected "${fish.name}". Review the risk first.` : `已选择“${fish.name}”，请先查看风险。`));
-    routeNavigate('/aquarium', { replace: true });
+    routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
   }, [activeAquarium, activeId, aquariums, routeLocation.search, routeNavigate, showToast]);
 
   useEffect(() => {
@@ -2916,7 +2915,7 @@ export default function AquariumManager() {
 
     if (action === 'create') {
       void handleAddAquarium().then(created => {
-        if (created) routeNavigate('/aquarium', { replace: true });
+        if (created) routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       });
       return;
     }
@@ -2924,23 +2923,23 @@ export default function AquariumManager() {
     if (action === 'daily-check') {
       setIsDiagnosisOpen(true);
       handleStartDiagnosisQuiz('巡检');
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     if (action === 'livestock') {
       setIsTankArchiveExpanded(true);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     if (action === 'water-change') {
       setSelectedWaterChangeDate(format(new Date(), 'yyyy-MM-dd'));
       setWaterChangeFeedback('');
       setIsCalendarOpen(true);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     openAquariumSettings('size');
-    routeNavigate('/aquarium', { replace: true });
+    routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
   }, [activeAquarium?.id, routeLocation.search]);
 
   const handleDiagnosisAnswer = (questionId: string, answer: string) => {
@@ -4813,13 +4812,24 @@ export default function AquariumManager() {
       answers: diagnosisQuizAnswers,
       aquariumName: diagnosisAquarium?.name || '当前鱼缸',
       livestock: getDiagnosisLivestock(diagnosisAquarium).map(item => item.fish),
-      primaryActionLabel: diagnosisIssueType === '巡检' && dailyCheckArticles[0]
-        ? '查看补救步骤'
-        : diagnosisIssueType === '巡检'
-          ? todayDailyCheckRecord ? '更新今天记录' : '保存今天记录'
-          : '保存本次诊断',
-      primaryActionType: diagnosisIssueType === '巡检' && dailyCheckArticles[0] ? 'dialog' : 'mutation',
+      primaryActionLabel: diagnosisIssueType === '巡检'
+        ? todayDailyCheckRecord ? '更新今天记录' : '保存今天记录'
+        : '保存本次诊断',
+      primaryActionType: 'mutation',
     });
+    const relatedCareArticle = diagnosisIssueType === '巡检' ? dailyCheckArticles[0] : undefined;
+    if (relatedCareArticle) {
+      model.detailSections.push({
+        id: 'care-article',
+        title: `相关护理 · ${relatedCareArticle.title}`,
+        items: [
+          relatedCareArticle.summary,
+          ...relatedCareArticle.firstSteps.slice(0, 3).map((step, index) => `步骤 ${index + 1} · ${step}`),
+          ...relatedCareArticle.avoid.slice(0, 2).map(item => `避免 · ${item}`),
+          relatedCareArticle.nextStep ? `下一步 · ${relatedCareArticle.nextStep}` : '',
+        ].filter(Boolean),
+      });
+    }
     if (dailyCheckInterpretation) {
       model.detailSections.push({
         id: 'interpretation',
@@ -4832,10 +4842,6 @@ export default function AquariumManager() {
   const handleVisualDiagnosisPrimary = () => {
     const saved = handleSaveDiagnosisRecord();
     if (!saved) return;
-    if (diagnosisIssueType === '巡检' && dailyCheckArticles[0] && structuredDiagnosis) {
-      setSelectedDailyCheckArticle(dailyCheckArticles[0]);
-      trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });
-    }
   };
   const isTimelineOpen = new URLSearchParams(routeLocation.search).get('action') === 'timeline';
   if (isTimelineOpen) {
@@ -6065,42 +6071,6 @@ export default function AquariumManager() {
               {isEn ? 'Exit and discard' : '退出并放弃'}
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={Boolean(selectedDailyCheckArticle)} onOpenChange={(open) => !open && setSelectedDailyCheckArticle(null)}>
-        <DialogContent className="flex max-h-[86dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden rounded-[22px] border-border bg-bg p-0">
-          <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
-            <DialogTitle className="text-xl font-black text-ink">{selectedDailyCheckArticle?.title}</DialogTitle>
-            <DialogDescription className="text-xs leading-relaxed text-ink/55">{t('aquarium.selectedDailyCheckArticleDesc')}</DialogDescription>
-          </DialogHeader>
-          {selectedDailyCheckArticle && (
-            <div className="min-h-0 flex-1 overflow-y-auto p-4">
-              <section className="rounded-[18px] border border-emerald-100 bg-emerald-50/70 p-3">
-                <div className="text-[11px] font-black text-emerald-800">{t('aquarium.keyConclusion')}</div>
-                <p className="mt-1 text-[13px] font-bold leading-relaxed text-ink">{selectedDailyCheckArticle.summary}</p>
-              </section>
-              <section className="mt-3 rounded-[18px] bg-white p-3 shadow-sm">
-                <div className="text-[13px] font-black text-ink">{t('aquarium.stepByStepActions')}</div>
-                <div className="mt-2 grid gap-2">
-                  {selectedDailyCheckArticle.firstSteps.map((step, index) => (
-                    <div key={step} className="grid grid-cols-[26px_1fr] gap-2 rounded-[13px] bg-bg p-2.5 text-[11px] font-medium leading-relaxed text-ink/68">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[10px] font-black text-white">{index + 1}</span>
-                      <span>{step}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-              <section className="mt-3 rounded-[18px] border border-red-100 bg-red-50 p-3">
-                <div className="text-[13px] font-black text-red-800">{isEn ? 'Avoid For Now' : '暂时不要做'}</div>
-                <div className="mt-2 grid gap-1.5">
-                  {selectedDailyCheckArticle.avoid.map(item => (
-                    <div key={item} className="rounded-[12px] bg-white/80 px-3 py-2 text-[11px] font-medium leading-relaxed text-red-900/72">{item}</div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          )}
         </DialogContent>
       </Dialog>
 

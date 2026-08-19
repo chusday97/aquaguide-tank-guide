@@ -1,0 +1,109 @@
+name: UI Interaction Repair V1
+
+on:
+  pull_request:
+    branches:
+      - agent/ui-v2-aquarium-foundation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/ui-interaction-repair-v1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout interaction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/ui-interaction-repair-v1
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: UI interaction source contract
+        run: node scripts/test-ui-interaction-repair-v1.mjs
+
+      - name: Product evaluation contracts
+        run: |
+          npm run test:product-evaluation
+          npm run test:golden-path-contract
+          npm run test:compatibility-evidence-coverage
+          npm run test:compatibility-coverage-scorecard
+          npm run test:session-events
+          node --import tsx scripts/audit-compatibility-evidence-priority.ts
+          npm run test:task-entry
+          npm run test:core-flow-state-eval
+          npm run test:daily-check
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Start preview
+        shell: bash
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-ui-interaction-preview.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/aquarium >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-ui-interaction-preview.log
+          exit 1
+
+      - name: UI interaction browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-interaction-repair-v1.mjs
+
+      - name: Care card action regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:care-card-action-ui
+
+      - name: GP-001 first tank setup browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp001-ui
+
+      - name: GP-002 continuous browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp002-ui
+
+      - name: GP-003 returning user Daily Check browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp003-ui
+
+      - name: GP-004 abnormal care browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp004-ui
+
+      - name: GP-005 collection context browser path
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-golden-path-collection-context.mjs
+
+      - name: Upload interaction screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-interaction-repair-v1-screenshots
+          path: output/ui-interaction-repair-v1
+          if-no-files-found: ignore

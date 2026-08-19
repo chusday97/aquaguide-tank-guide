@@ -541,10 +541,11 @@ export function SpeciesDetailDialog({
       return source === 'aquarium' ? t('encyclopedia.viewCareEssentials') : t('aquarium.tankContentsTitle');
     }
     if (displayFit.status === 'suitable') return t('encyclopedia.btnJoinTank');
-    if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk') return t('encyclopedia.viewRiskAndAlternatives');
-    if (displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
+    if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') {
+      return t('encyclopedia.goToCalcBtn');
+    }
     return t('encyclopedia.btnCompleteSetup');
-  }, [aquariumContext, displayFit, owned, source, t]);
+  }, [aquariumContext, displayFit, inCalculator, owned, source, t]);
   const verdictReasons = useMemo(() => {
     if (!displayFit || !aquariumContext) return [];
     const actionableConfirmations = displayFit.confirmations.filter(item => item.type !== 'water_parameter');
@@ -638,7 +639,6 @@ export function SpeciesDetailDialog({
       return;
     }
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') {
-      if (!inCalculator) onAddToCalculator(fish);
       onGoCalculator?.();
       return;
     }
@@ -653,7 +653,6 @@ export function SpeciesDetailDialog({
 
   const handleOpenCalculator = () => {
     if (!fish) return;
-    if (!inCalculator) onAddToCalculator(fish);
     onGoCalculator?.();
   };
 
@@ -703,7 +702,7 @@ export function SpeciesDetailDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <AdaptiveDetailContent showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
+        <AdaptiveDetailContent desktopSize="wide" data-detail-kind="species" showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
               <SurfaceHeader
@@ -1003,9 +1002,9 @@ export function SpeciesDetailDialog({
                             </div>
                           )}
                           {!['caution', 'unsuitable', 'conflictRisk'].includes(displayFit.status) && (
-                            <button type="button" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
+                            <button type="button" data-species-detail-compatibility-action="open-calculator" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
                               <Calculator className="h-4 w-4" />
-                              {inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.compatibilityCalc')}
+                              {t('encyclopedia.goToCalcBtn')}
                             </button>
                           )}
                         </div>

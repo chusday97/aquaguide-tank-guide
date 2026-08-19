@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Share2, X } from 'lucide-react';
+import { ArrowLeft, Share2, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { AquariumFish, Fish } from '../../types';
 import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '../../services/aquarium/livestock-removal-attempt.service';
@@ -8,6 +8,9 @@ import { LivestockBatchCard } from './LivestockBatchCard';
 import { SurfaceHeader } from '../common/SurfaceHeader';
 import { AdaptiveDetailContent } from '../common/AdaptiveDetailContent';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import { useWorkspaceNavigation } from '../layout/WorkspaceNavigationProvider';
+import type { WorkspaceNavigationContext } from '../../types/navigation';
 import { QuantityStepper } from '../forms/QuantityStepper';
 import { getLifeType } from '../../modules/species/species.service';
 
@@ -60,6 +63,16 @@ export function LivestockRosterDialog({
 }: Props) {
   const { i18n } = useTranslation();
   const isEn = i18n.language !== 'zh-CN';
+  const location = useLocation();
+  const { restoreContext } = useWorkspaceNavigation();
+  const workspaceReturnContext = (location.state as { workspaceReturnContext?: WorkspaceNavigationContext } | null)?.workspaceReturnContext;
+  const workspaceReturnLabel = workspaceReturnContext?.route === '/encyclopedia'
+    ? (new URLSearchParams(workspaceReturnContext.query).get('species')
+      ? (isEn ? 'Back to species detail' : '返回物种详情')
+      : new URLSearchParams(workspaceReturnContext.query).get('mode') === 'compatibility'
+        ? (isEn ? 'Back to compatibility' : '返回混养结果')
+        : (isEn ? 'Back to species' : '返回物种页'))
+    : (isEn ? 'Back to previous task' : '返回上一任务');
   const [removal, setRemoval] = useState<RemovalDraft | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
   const [removeError, setRemoveError] = useState('');
@@ -159,13 +172,26 @@ export function LivestockRosterDialog({
               : `${aquariumName} · ${visibleRecords.length} ${isEn ? 'species' : '种'} · ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} ${isEn ? 'animals' : '只/条'}`}
             onClose={() => requestRosterOpenChange(false)}
             actions={(
-              editingRecordId ? undefined : (
-                <>
-                <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} aria-label={isEn ? 'Sharing is coming' : '分享功能建设中'} title={isEn ? 'Sharing is coming' : '分享功能建设中'} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
-                  <Share2 className="h-4 w-4" />
-                </button>
-                                </>
-              )
+              <>
+                {workspaceReturnContext && !editingRecordId && (
+                  <button
+                    type="button"
+                    data-workspace-dialog-return
+                    onClick={() => void restoreContext(workspaceReturnContext)}
+                    aria-label={workspaceReturnLabel}
+                    title={workspaceReturnLabel}
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-3 text-xs font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    <span className="hidden sm:inline">{workspaceReturnLabel}</span>
+                  </button>
+                )}
+                {!editingRecordId && (
+                  <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} aria-label={isEn ? 'Sharing is coming' : '分享功能建设中'} title={isEn ? 'Sharing is coming' : '分享功能建设中'} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
+                    <Share2 className="h-4 w-4" />
+                  </button>
+                )}
+              </>
             )}
           />
           <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
