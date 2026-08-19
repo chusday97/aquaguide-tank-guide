@@ -1,107 +1,145 @@
-# AquaGuide UI/UX System Refactor — Handoff
+# AquaGuide Handoff — UI/UX System Refactor + Visual QA V2
 
 **Date:** 2026-08-19  
 **Branch:** `agent/uiux-system-refactor-v1`  
 **Draft PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
 **Base:** `integration/aquaguide-rc1`  
-**Validated implementation head:** `69a33c071a204c049bd0a5ad68097901d046d00c`
+**Latest validated implementation head:** `ef69d85e48712d27990423fcc85e23a4047f0756`
 
-## 1. Why this branch exists
+## Current state
 
-The earlier Collection carousel work in PR #103 was based on `main`. During the full UI/UX audit we found that `integration/aquaguide-rc1` already contained the newer UI V2 foundation, width-driven responsive layout, Aquarium progressive disclosure, and broader visual/browser regression work. Continuing to stack system work on #103 would increase branch divergence.
+The UI/UX system refactor is implemented on top of RC1 and now has a second visual-QA layer. The work remains **Draft**, is **not merged** into RC1 or `main`, and is **not deployed**.
 
-This branch therefore uses **RC1 as the product baseline** and ports the useful IceGlide-style Collection interaction onto that baseline. PR #103 remains an older main-based implementation and has not been merged or closed by this refactor.
+The earlier system refactor established canonical design tokens, width-driven layout, Aquarium progressive disclosure, Collection focus-carousel IA, Search show-all parity, 44×44 named controls, reduced-motion/inert behavior, desktop scroll affordance, and a dedicated deterministic system workflow.
 
-## 2. System decisions now enforced
+Visual QA V2 then added cross-surface screenshot evidence and closed medium-width layout regressions that were not visible in static contracts alone.
 
-### Design system
-- `src/styles/ui-v2-foundation.css` is the single source of truth for typography, spacing, radius, and elevation tokens.
-- `src/styles/typography-system.css` is now a semantic compatibility layer only: `type-page-title / type-section-title / type-card-title / type-body / type-meta / type-action`, task-surface widths, and saved-object rail behavior.
-- Duplicate `--type-*` token ownership was removed.
+## Visual QA V2 implementation
 
-### Responsive contract
-- Real viewport width is the product source of truth: `<=767px` compact/phone, `>=768px` desktop workspace.
-- The layout reacts to `matchMedia` changes.
-- UA parsing remains fallback-only; iPad/tablet is checked before generic `Mobile Safari` so viewportless fallback cannot misclassify iPad as phone.
+### Cross-surface baseline
 
-### Aquarium hierarchy
-RC1's progressive-disclosure fix is preserved as a system invariant:
-- Primary: record water change, record feeding, record existing species.
-- Secondary actions remain under `More actions`.
-- The system contract prevents a regression back to seven equal-weight primary actions.
+`UI UX Visual QA V2` captures four viewports across six core routes:
 
-### Collection information architecture
-- `/collection` primary carousel now contains exactly three **live** modules: Wishlist, Care, Memorial.
-- Achievements remains explicitly `building` but is moved outside the primary carousel into a quiet `Coming next` surface with no fake business CTA.
-- Carousel has one active card, visible neighbor previews, drag, arrows, position indicators, active scale/opacity hierarchy, and reduced-motion support.
-- Non-active cards use `inert` and `aria-hidden` so hidden/offscreen child controls do not remain in keyboard focus order.
-- Detailed Wishlist/Care saved objects remain horizontal snap rails; top-level focus carousel and object rails are intentionally different interaction patterns.
+- 390×844
+- 768×900
+- 1024×900
+- 1440×1000
 
-### Search hierarchy
-- Species keeps an 18-card preview and can explicitly expand to all results.
-- Care keeps a 12-card preview and now has the same explicit section-level show-all behavior.
-- Final browser fixture `鱼`: Species `372`, Care `33`; both expand to the full advertised set.
+Routes:
 
-### Cross-surface accessibility and affordance
-- Explicit named controls (`button[aria-label]`, `a[aria-label]`) inherit a `44×44px` minimum target.
-- This closed legacy Care source/image controls that were 28–40px in the full responsive scan.
-- Desktop workspaces restore a subtle scrollbar so long task surfaces expose scroll-position affordance.
-- Reduced-motion rules cover Collection rails/carousel and system transitions.
+- `/aquarium`
+- `/encyclopedia`
+- `/care`
+- `/search?q=鱼`
+- `/collection`
+- `/settings`
 
-## 3. Regression system added
+For every viewport/route pair the workflow saves one fold screenshot and one full-page screenshot: **4 × 6 × 2 = 48 screenshots**, plus a manifest.
 
-New dedicated workflow: `.github/workflows/uiux-system-refactor-v1.yml`.
+The capture harness is fail-closed:
 
-It runs on PRs targeting both `main` and `integration/aquaguide-rc1`, and gates:
-- width-driven layout policy;
-- canonical token ownership and semantic typography;
-- interaction consistency;
-- Collection IA/static contract;
-- cross-surface UI/UX system contract;
-- TypeScript and production build;
-- Search show-all browser regression;
-- Collection browser regression at 390 / 600 / 1440;
-- GP-005 Collection context restoration;
-- full responsive route scan.
+- `/aquarium` must still contain `[data-aquarium-dashboard-v2]` after route navigation, so a storage-reset bug cannot silently capture Welcome as Aquarium.
+- `Noto Sans CJK SC` must be available before screenshots are accepted.
+- CJK font installation uses apt retry/timeouts because the package is large and runner network speed is variable.
 
-## 4. Fail-before evidence from this refactor
+### PUI-BC-045 — Aquarium narrow-workspace task hierarchy
 
-The system gate caught real issues before turning green:
-1. **iPad fallback misclassification:** viewportless iPad UA hit generic `Mobile Safari` before tablet detection.
-2. **Evaluation drift:** old typography test required a JSX semantic class even though RC1 correctly applies Aquarium heading tokens through container-aware V2 CSS.
-3. **Ambiguous browser locator:** Collection heading test initially matched both sidebar text and page heading; locator was tightened to semantic heading.
-4. **Carousel focus bug:** non-active cards were visually hidden but child controls could remain keyboard-focusable/offscreen.
-5. **Touch-target debt:** Care had named source/image controls at 28×28 / ~34px / 40px instead of the 44px baseline.
+A valid baseline showed a responsive cliff: phone was correctly `Today → Manage → 3D`, but 768/1024 could promote a large contextual 3D tank above recurrent actions.
 
-These were fixed rather than hidden with route-specific scanner exceptions.
+Fix: `src/styles/ui-v2-dashboard.css` now uses the real `aquarium-home` container width. Below 720px of actual content width, the order is:
 
-## 5. Final validation
+1. Today
+2. Manage
+3. 3D context
+4. Learn/discovery
 
-**UI UX System Refactor V1 — Run #9**  
-**Run ID:** `32251342843`  
-**Result:** `success`
+The contextual 3D tank is limited to 140–170px in this stacked task-first mode. Only a genuinely wide content container restores the balanced Today + 3D hero.
 
-Verified in the successful run:
-- `layout mode policy: 5 viewport cases + 4 fallback cases passed`
-- canonical typography/token contract PASS
-- interaction consistency PASS
-- three-live-module Collection contract PASS
-- cross-surface UI/UX system contract PASS
-- TypeScript PASS
-- production build PASS
-- Search show-all: `species=372; care(鱼)=33`
-- Collection: focus carousel PASS at **390 / 600 / 1440**, building IA separated, saved-object rails preserved, no overflow
-- GP-005: exact saved object → desktop drawer/mobile sheet → Escape → exact focus + rail position restored
-- full responsive scan: **7 profiles × 17 routes PASS**
+Primary fix commit: `f0ea9ecad4fbace00f9f0d1fdb3cecce277d31d7`.
 
-## 6. Remaining debt / explicit non-claims
+### PUI-BC-046 — 1024px sidebar width cliff
 
-- PR #104 is still **Draft** and has not been merged into RC1/main.
-- Nothing in this refactor has been deployed to production.
-- RC1 already has Aquarium-specific screenshot visual regression, but this PR does **not** claim a complete pixel-diff visual baseline for every product surface. A future system-wide screenshot baseline is still useful.
-- Vite still reports large-chunk/code-splitting warnings; the main bundle remains a performance debt outside this UI/UX contract refactor.
-- `npm ci` reports dependency vulnerabilities. They were not introduced or remediated as part of this UI/UX scope.
+The shell previously auto-collapsed through 1023px, then jumped to a roughly 280px expanded rail at 1024px. That made the usable workspace narrower at 1024 than immediately below it.
 
-## 7. Recommended next decision
+Fix: 1024–1199 uses a 220px medium desktop sidebar. Search and labeled navigation remain available; 1200+ restores the full navigation rail.
 
-Review PR #104 as the UI/UX system layer on top of RC1. Do not continue visual refactors on PR #103. If RC1 remains the convergence branch, future page-level UI work should consume these system contracts rather than adding new page-specific spacing/radius/interaction rules.
+Primary fix commit: `1ad85cd399634c3a9c81e39963fbd13d80a5f259`.
+
+### PUI-BC-047 — Search nested layout used viewport instead of content width
+
+At 1024 the Search page could be classified as desktop even though the actual workspace after the sidebar was too narrow for Species and Care side-by-side. Species then split internally again and produced cramped cards.
+
+Fix: `.search-v2-page` is now a named inline-size container. Species/Care stay stacked until the actual Search workspace reaches 900px; 1440 restores side-by-side comparison.
+
+Primary fix commit: `1cb91612541396ec5d2ad515cc5b8f70443f8573`.
+
+### PUI-BC-048 — Return-context navigation covered Aquarium chrome/content
+
+`WorkspaceNavigationProvider` renders `返回上一个任务` as a global fixed control. The old fixed top position could overlap the phone aquarium toolbar/onboarding content and the desktop Aquarium identity header.
+
+Fix:
+
+- desktop return context gets a dedicated top navigation band before the Aquarium header;
+- phone keeps the fixed Aquarium toolbar in its existing position, then reserves a separate return band after the toolbar flow placeholder;
+- final phone regression measures the real toolbar bottom and keeps the return pill outside it and before first visible content.
+
+Relevant commits include `1abb9ace99284a2050560eeac919f9a09b8b82e8`, `f3c48352fcc77a09207885f8f9edae25ff7fa33d`, and final alignment `ef69d85e48712d27990423fcc85e23a4047f0756`.
+
+## Validation evidence
+
+### Visual QA implementation validation
+
+**UI UX Visual QA V2 #19**  
+Run ID: `32259734301`  
+Head: `ef69d85e48712d27990423fcc85e23a4047f0756`  
+Result: **PASS**  
+Artifact: `aquaguide-uiux-visual-baseline-v2` / ID `9367824682`
+
+Passed:
+
+- CJK font installation/readability gate
+- TypeScript
+- production build
+- Aquarium visual task hierarchy at 390 / 768 / 1024 / 1440
+- Search visual density at 768 / 1024 / 1440
+- cross-surface 48-screenshot capture
+- artifact upload
+
+Manual fold review also confirmed:
+
+- 390 Aquarium: toolbar → return context → onboarding → Today, without overlap
+- 768 Aquarium: Today and recurrent Manage actions precede 3D context
+- 1024 Aquarium: medium sidebar preserves usable workspace and Manage remains above fold
+- 1024 Search: Species cards are readable and Care follows below rather than squeezing beside it
+- 1440 Search: Species/Care side-by-side returns naturally
+- 1440 Aquarium: Today + contextual 3D hero remains balanced and Manage stays visible
+
+### System regression validation
+
+**UI UX System Refactor V1 #36**  
+Run ID: `32259734291`  
+Head: `ef69d85e48712d27990423fcc85e23a4047f0756`  
+Result: **PASS**
+
+Passed static contracts, TypeScript, build, Search regression, Collection regression, GP-005 and the 7 profiles × 17 routes responsive scan.
+
+## Evaluation lessons from this round
+
+The first visual capture run was technically green but invalid: the init script cleared localStorage on every navigation, so Aquarium screenshots silently became Welcome. That baseline was rejected rather than used as evidence. The harness now requires the real dashboard after navigation.
+
+A later return-context regression initially compared against the outer `.aquarium-desktop-layout` box and produced a false overlap because that box contains reserved whitespace. The regression was corrected to compare the pill against actual visible toolbar/onboarding/header surfaces rather than weakening the product constraint.
+
+The CJK install also had a runner-network timeout once; the solution was retry/timeout hardening, not disabling the font-readiness requirement.
+
+## Next safe step
+
+After canonical PUI-BC-045..048 and final documentation validation, #104 can be reviewed as the UI/UX-system + structural Visual-QA layer on top of RC1. Keep it Draft unless the user explicitly asks to mark ready or merge.
+
+## Explicit non-claims / residual debt
+
+- No merge to RC1 or `main` has happened.
+- No production deployment has happened.
+- This is a screenshot baseline plus structural/geometry gates, **not yet a committed pixel-diff golden-image comparator**.
+- Screenshots are workflow artifacts with 7-day retention, not repository assets.
+- Bundle/code-splitting warnings remain.
+- Existing npm audit vulnerabilities remain outside this UI/UX task.
