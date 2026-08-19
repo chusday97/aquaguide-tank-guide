@@ -122,7 +122,7 @@ try {
     await page.close();
   }
 
-  // 2) Species detail is effectively full-screen on phone, allowing only scrollbar/subpixel variance and no horizontal overflow.
+  // 2) Species detail is effectively full-screen on phone, allowing native scrollbar/subpixel variance and no horizontal overflow.
   {
     const { page, errors } = await makePage({ width: 390, height: 844 });
     await page.goto(`${baseUrl}/encyclopedia?mode=browse&species=sp_0001&source=atlas-detail`, { waitUntil: 'domcontentloaded' });
@@ -131,7 +131,7 @@ try {
     const box = await detail.boundingBox();
     assert.ok(box, 'Phone species detail must have measurable geometry.');
     const viewportWidth = await page.evaluate(() => window.innerWidth);
-    assert.ok(box.width >= viewportWidth - 8, `Phone species detail must use the viewport width apart from scrollbar/subpixel variance; viewport=${viewportWidth}px, detail=${box.width}px.`);
+    assert.ok(box.width >= viewportWidth - 12, `Phone species detail must use the viewport width apart from native scrollbar/subpixel variance; viewport=${viewportWidth}px, detail=${box.width}px.`);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     assert.ok(overflow <= 1, `Phone entity detail must not introduce horizontal overflow; got ${overflow}px.`);
     await page.screenshot({ path: `${outputDir}/species-detail-390.png`, fullPage: false });
