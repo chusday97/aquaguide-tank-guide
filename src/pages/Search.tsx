@@ -18,6 +18,44 @@ import {
 } from '../services/search/search-suggestions.service';
 import { loadAppStateFromStorage } from '../services/storage/local-app-state';
 
+const SEARCH_RETURN_CONTEXT_KEY = 'aquaguide_search_return_context_v1';
+
+type SearchReturnContext = {
+  query: string;
+  sourceId: string;
+  showAllSpecies: boolean;
+  showAllCare: boolean;
+  scrollTop: number;
+};
+
+const readSearchReturnContext = (query: string): SearchReturnContext | null => {
+  if (typeof window === 'undefined') return null;
+  const raw = window.sessionStorage.getItem(SEARCH_RETURN_CONTEXT_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as Partial<SearchReturnContext>;
+    if (
+      parsed.query !== query
+      || typeof parsed.sourceId !== 'string'
+      || typeof parsed.showAllSpecies !== 'boolean'
+      || typeof parsed.showAllCare !== 'boolean'
+      || typeof parsed.scrollTop !== 'number'
+    ) {
+      window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
+      return null;
+    }
+    return parsed as SearchReturnContext;
+  } catch {
+    window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
+    return null;
+  }
+};
+
+const getSearchWorkspace = () => {
+  const workspace = document.querySelector('.desktop-workspace-scroll');
+  return workspace instanceof HTMLElement ? workspace : null;
+};
+
 const getSpeciesNameLocalized = (species: any, isEn = false): string => {
   if (!species) return '';
   if (!isEn) return species.name || '';
@@ -54,10 +92,11 @@ export default function SearchPage() {
   const { navigateToRoute } = useWorkspaceNavigation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') ?? '';
+  const [returnContext] = useState<SearchReturnContext | null>(() => readSearchReturnContext(query));
   const [draft, setDraft] = useState(query);
   const [selectedSpecies, setSelectedSpecies] = useState<SearchSuggestion | null>(null);
-  const [showAllSpecies, setShowAllSpecies] = useState(false);
-  const [showAllCare, setShowAllCare] = useState(false);
+  const [showAllSpecies, setShowAllSpecies] = useState(() => returnContext?.showAllSpecies ?? false);
+  const [showAllCare, setShowAllCare] = useState(() => returnContext?.showAllCare ?? false);
   const normalizedQuery = normalize(query);
   const aquarium = useMemo(() => {
     const state = loadAppStateFromStorage();
@@ -77,18 +116,30 @@ export default function SearchPage() {
   const draftSpeciesMatchCount = useMemo(() => getSpeciesSearchResults(draft).length, [draft]);
 
   useEffect(() => {
-    const sourceId = sessionStorage.getItem('aquaguide_search_return_focus');
-    if (!sourceId) return;
-    window.requestAnimationFrame(() => {
-      const target = document.getElementById(sourceId);
-      target?.scrollIntoView({ block: 'center' });
-      target?.focus({ preventScroll: true });
-      sessionStorage.removeItem('aquaguide_search_return_focus');
+    if (!returnContext) return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(returnContext.sourceId);
+      if (!target) return;
+      const workspace = getSearchWorkspace();
+      if (workspace) workspace.scrollTo({ top: returnContext.scrollTop, behavior: 'auto' });
+      else window.scrollTo({ top: returnContext.scrollTop, behavior: 'auto' });
+      target.focus({ preventScroll: true });
+      window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
+      window.sessionStorage.removeItem('aquaguide_search_return_focus');
     });
-  }, []);
+    return () => window.cancelAnimationFrame(frame);
+  }, [returnContext]);
 
   const openSearchResult = (path: string, sourceId: string) => {
-    sessionStorage.setItem('aquaguide_search_return_focus', sourceId);
+    const workspace = getSearchWorkspace();
+    const context: SearchReturnContext = {
+      query,
+      sourceId,
+      showAllSpecies,
+      showAllCare,
+      scrollTop: workspace?.scrollTop ?? window.scrollY,
+    };
+    window.sessionStorage.setItem(SEARCH_RETURN_CONTEXT_KEY, JSON.stringify(context));
     navigateToRoute(path);
   };
 
@@ -111,6 +162,7 @@ export default function SearchPage() {
   const careResults = showAllCare ? allCareResults : allCareResults.slice(0, 12);
 
   const resetExpansion = () => {
+    window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
     setShowAllSpecies(false);
     setShowAllCare(false);
   };
