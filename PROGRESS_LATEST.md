@@ -1,94 +1,82 @@
-# AquaGuide Progress — UI/UX System Refactor + Visual QA V2/V3
+# AquaGuide Progress — UI/UX System + PUI-BC-050
 
 **Date:** 2026-08-19  
 **Branch:** `agent/uiux-system-refactor-v1`  
 **Draft PR:** #104
 
-## System refactor completed
+## Latest user-reported navigation repair
 
-- [x] UI/UX system based on `integration/aquaguide-rc1`.
-- [x] Canonical design-token ownership in `ui-v2-foundation.css`.
-- [x] Width-driven layout policy + viewportless iPad fallback.
-- [x] Aquarium three primary actions + progressive disclosure.
-- [x] Collection 3-live-module focus carousel; Achievements outside primary IA.
-- [x] Search Species/Care explicit show-all parity.
-- [x] 44×44 named-control baseline, reduced-motion and inactive-card `inert` behavior.
-- [x] Deterministic `UI UX System Refactor V1` CI.
-- [x] PUI-BC-040..044 closed.
+- [x] Reproduced/located why risky species footer action jumped directly into Compatibility.
+- [x] Located the second independent cause of the “Atlas jumps to bottom” symptom: `mode=compatibility` explicitly scrolled to the deep calculator anchor.
+- [x] Converted first risk-review action into in-detail Compatibility evidence expansion.
+- [x] Preserved second-stage full-calculator navigation after the user has already reviewed the evidence.
+- [x] Preserved dedicated calculator navigation paths.
+- [x] Made Compatibility behave as a top-level fixed drawer surface rather than a deep Atlas destination.
+- [x] Prevented underlying Atlas browse content from keeping the long layout active underneath Compatibility.
+- [x] Kept Atlas workspace scroll position near the top in Compatibility mode.
+- [x] Added deterministic browser regression for both the two-stage detail flow and direct Compatibility route.
+- [x] Corrected the regression to inspect the real fixed drawer rather than the zero-layout `#compatibility-calculator` wrapper.
+- [x] Updated static interaction audit to follow wrapper + Base implementation without weakening the existing sharing feature gate.
+- [x] TypeScript PASS.
+- [x] Production build PASS.
+- [x] Search regression PASS.
+- [x] Collection regression PASS.
+- [x] GP-005 PASS.
+- [x] Full 7×17 responsive route scan PASS.
+- [x] Visual QA V2 PASS.
+- [x] Golden V3 PASS.
+- [x] Bundle Audit PASS.
+- [x] Added PUI-BC-050 to canonical `evaluation/product/badcases.v1.jsonl`.
+- [x] Verified canonical registry commit is exactly +1 / -0 against implementation head.
+- [x] Updated `BADCASE_LATEST.md`, `PROGRESS_LATEST.md`, `HANDOFF_LATEST.md`.
 
-## Visual QA V2 completed
+Implementation verification head: `34b4a898ea16dfd8fe85628c29a75265ef8bc409`.
 
-- [x] 390 / 768 / 1024 / 1440 screenshot matrix.
-- [x] Aquarium / Encyclopedia / Care / Search / Collection / Settings.
-- [x] Fold + full page = 48 screenshots.
-- [x] CJK readiness fail-closed.
-- [x] Real Aquarium state fail-closed.
-- [x] Aquarium geometry regression.
-- [x] Search content-density regression.
-- [x] PUI-BC-045..048 closed.
-- [x] Manual review of highest-risk fold states.
+Authoritative runs on that implementation head:
 
-Authoritative V2: #19 / run `32259734301` — PASS, artifact `9367824682`.
+- UI UX System Refactor V1 #69 / `32275254732` — PASS
+- UI UX Visual QA V2 #52 — PASS
+- UI UX Golden V3 #14 — PASS
+- Bundle Audit V1 #7 — PASS
 
-## Visual QA V3 completed
+Canonical append:
 
-### Golden cohort
+- `1e7eea5d7f4326b161d6ecbd953ba3394e1fe564`
+- one file changed, +1 / -0
+- PUI-BC-050 = `regression_verified`
 
-- [x] Chose eight stable fold states instead of locking all 48 V2 screenshots.
-- [x] Aquarium: 390 / 768 / 1024 / 1440.
-- [x] Search: 1024 / 1440.
-- [x] Collection: 390 / 1440.
-- [x] Added `evaluation/visual/golden-v1/README.md`.
-- [x] Added `manifest.json` and eight compressed `.sig` references.
-- [x] Added `scripts/verify-uiux-golden-cohort.mjs`.
-- [x] Added `.github/workflows/uiux-golden-v3.yml`.
-- [x] Current/reference/diff thumbnails + current full screenshots + `report.json` uploaded on every run.
-- [x] Kept CJK readiness and reduced-motion requirements.
-- [x] Masked only documented WebGL/recommendation regions at Aquarium 1024/1440.
+## Existing system work retained
 
-### Fail-before
+- [x] Canonical UI typography/spacing/radius/elevation tokens.
+- [x] Width-driven layout system with tablet fallback guard.
+- [x] Aquarium progressive disclosure and task-first narrow-workspace hierarchy.
+- [x] Collection three-live-module focus carousel + quiet Achievements state.
+- [x] Species/Care Search show-all parity.
+- [x] 44×44 named interaction baseline.
+- [x] Inactive carousel `inert` / accessibility guard.
+- [x] Reduced-motion support.
+- [x] Desktop scroll-position affordance.
+- [x] Broad Visual QA V2: 48 screenshots across 390 / 768 / 1024 / 1440 and six core routes.
+- [x] Golden V3: eight stable fold states with strict normalized pixel-diff thresholds.
+- [x] CJK font readiness fail-closed + verified Actions cache miss→save→hit path.
+- [x] Bundle audit instrumentation with entry/module composition evidence.
 
-- [x] Golden V3 #1 / run `32264392607` failed only for 1024 thumbnail geometry before real pixel comparison.
-- [x] Identified Python banker’s rounding vs JavaScript `Math.round()` at exact `112.5`.
-- [x] PUI-BC-049 created as an `evaluation_system` badcase, not a product UI badcase.
-- [x] Manifest `thumbWidth/thumbHeight` made authoritative; verifier stopped re-deriving geometry.
+## Bundle performance state
 
-### Threshold calibration
+- [x] Established measured bundle baseline instead of guessing from Vite warning text.
+- [x] Confirmed large entry contributors include `fishData.ts`, localization data, PostHog and Supabase-related dependencies.
+- [x] Confirmed Three/React Three Fiber is largely isolated in a separate large chunk.
+- [ ] Remove low-risk eager PostHog load and re-measure.
+- [ ] Trace/decouple remaining root-level Supabase eager imports where safe.
+- [ ] Redesign synchronous i18n data mutation before attempting to lazy-load fish/care translation data.
 
-- [x] Golden V3 #2 / run `32264776117`: 8/8 PASS, all 0% changed.
-- [x] Initial provisional thresholds rejected as too loose.
-- [x] Final limits: Aquarium 0.50%, Search 0.35%, Collection 0.30%, grayscale delta threshold 24.
-- [x] Golden V3 #3 / run `32265296046`: 8/8 PASS, all 0% changed under tightened limits.
-- [x] Same-head System #58 / run `32265296159`: PASS.
-
-## Canonical governance closeout
-
-- [x] PUI-BC-049 appended to `evaluation/product/badcases.v1.jsonl`.
-- [x] Commit diff verified exactly `+1 / -0` for canonical registry.
-- [x] PUI-BC-032 rechecked: still `guide_safe_water_change` exactly.
-- [x] Canonical commit: `08a2d31944919c51fb087400002c446fcc88097e`.
-- [x] System #59 / run `32267440195`: PASS.
-- [x] Golden V3 #4 / run `32267440206`: PASS.
-- [x] Golden artifact `9370832138`, digest `sha256:09728cd8efb33476c423e53ddb22adcc8f077edf48953940e3eef272891b7a11`.
-- [x] `VISUAL_QA_LATEST.md`, `BADCASE_LATEST.md`, `PROGRESS_LATEST.md`, `HANDOFF_LATEST.md` updated for V3.
-
-## CJK visual-test cache completed
-
-- [x] Added executable `scripts/ensure-cjk-font.sh`.
-- [x] Added `actions/cache@v4` to both Visual V2 and Golden V3 workflows.
-- [x] Cache key: `aquaguide-noto-cjk-${{ runner.os }}-${{ runner.arch }}-20230817-v1`.
-- [x] Cache miss remains fail-closed: apt installs `fonts-noto-cjk`, copies `NotoSansCJK-*.ttc`, then validates with `fc-match`.
-- [x] First V2 #44 run / `32268929911` populated the cache after a miss and still passed all 48 screenshots + Aquarium/Search structural checks.
-- [x] Manual rerun of the same V2 job proved a real cache hit: job `96122316264` restored ~27MB / 2 TTC files, printed `Restoring 2 cached Noto Sans CJK TTC file(s).`, matched `Noto Sans CJK SC`, and skipped apt entirely.
-- [x] Cache-hit rerun still passed TypeScript, build, Chromium, Aquarium hierarchy, Search density and all 48 screenshots; artifact `9371672874`.
-- [x] System #61 / run `32268929844`: PASS after the cache workflow changes.
+No bundle-size reduction is claimed yet.
 
 ## Still intentionally not done
 
-- [ ] Expand golden cohort indiscriminately to all 48 V2 screenshots — intentionally avoided.
-- [ ] Perceptual/aesthetic scoring — Golden V3 is regression detection, not design judgment.
-- [ ] Commit raw PNG baselines — compact signatures are versioned; raw current/reference/diff evidence remains a 7-day artifact.
-- [ ] Bundle/chunk optimization.
-- [ ] Existing dependency vulnerability remediation.
-- [ ] Merge #104 into RC1/main.
+- [ ] Merge #104 into RC1 or main.
 - [ ] Production deploy.
+- [ ] Broad dependency vulnerability remediation.
+- [ ] Replace Golden V3 with aesthetic/perceptual scoring.
+- [ ] Expand Golden V3 indiscriminately to all V2 screenshots.
+- [ ] Refactor the current thin wrapper/Base surgical navigation fix back into the large original components without retaining the new regression coverage.

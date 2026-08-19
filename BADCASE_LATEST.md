@@ -6,109 +6,109 @@
 
 ## Current closure set
 
-PUI-BC-040..044 remain closed from the UI/UX System Refactor. Visual QA V2 closed PUI-BC-045..048. Visual QA V3 adds one evaluation-system badcase, PUI-BC-049; it is **not** a product UI failure.
+PUI-BC-040..050 are represented in the current UI/UX work. PUI-BC-049 is an evaluation-system failure; PUI-BC-050 is the latest product navigation failure reported by the user.
 
-Authoritative visual references:
+## PUI-BC-050 · 风险复核误跳混养 + 混养进入后 Atlas 跳到底部
 
-- V2 broad baseline: #19 / run `32259734301` — PASS
-- V3 tight-threshold golden validation: #3 / run `32265296046` — 8/8 PASS, all 0% changed
-- canonical-closeout Golden V3: #4 / run `32267440206` — PASS
-- canonical-closeout System: #59 / run `32267440195` — PASS
-
-## PUI-BC-045 · Aquarium 窄工作区任务层级回退
-
-- **featureId:** `daily_check`
+- **featureId:** `compatibility`
+- **source:** `user_review`
 - **severity:** medium
-- **rootCauseLayer:** `responsive_layout`
+- **rootCauseLayer:** `navigation_semantics`
 - **status:** `regression_verified`
 
-390px 已是 Today → Manage → 3D，但 768/1024 desktop shell 曾重新把大块 3D 放到常用动作之前。根因是 Hero 用 content container 判断，而 task-first 排序仍用 viewport media query。
+### Symptom
 
-Fix: `aquarium-home` container 驱动任务排序；窄真实工作区保持 Today → Manage → 3D → Learn，宽度足够才恢复 Today + 3D balanced hero。
+在 `not_recommended` 物种详情中，底部风险/混养行动会直接跳到完整混养计算，而不是先让用户查看当前物种的风险与替代/混养证据。与此同时，进入 `/encyclopedia?mode=compatibility` 后，Atlas 会主动滚到页面深处的 `#compatibility-calculator`，造成“图鉴被下拉到最底部”的体验。
 
-Primary fix: `f0ea9ecad4fbace00f9f0d1fdb3cecce277d31d7`.
+### Root cause
 
-## PUI-BC-046 · 1024px sidebar width cliff
+两个独立导航行为叠加：
 
-- **featureId:** `responsive_detail_surface`
-- **severity:** medium
-- **rootCauseLayer:** `responsive_shell`
-- **status:** `regression_verified`
+1. `SpeciesDetailDialog` 对 unsuitable / conflictRisk / caution footer action 直接调用 `onGoCalculator()`。
+2. `Encyclopedia` 在 `mode=compatibility` 时又调用 `navigateToSection('compatibility-calculator')`。但真正的 `CompatibilityRiskCalculator` 本身是 fixed top-level drawer，因此这个深锚点滚动既没有必要，也会污染 Atlas 的 scroll context。
 
-1023px 约 76px collapsed rail，1024px 曾直接膨胀到约 280px，导致越过 breakpoint 后业务工作区反而更窄。
+### Fix
 
-Fix: 1024–1199 使用 220px medium sidebar；1200+ 才恢复 full sidebar。
+详情风险复核改成二阶段：
 
-Primary fix: `1ad85cd399634c3a9c81e39963fbd13d80a5f259`.
+- 第一次点击：不换 URL、不关闭详情，展开现有 `混养关系 / Compatibility` disclosure。
+- 用户已经明确展开并看过 Compatibility evidence 后，再次执行 footer action 才允许进入完整计算器。
+- Dedicated calculator action 仍保留原有完整计算器导航。
 
-## PUI-BC-047 · Search 用 viewport 判断嵌套双列
+Compatibility 模式则作为顶层工作面处理：
 
-- **featureId:** `species_search`
-- **severity:** medium
-- **rootCauseLayer:** `responsive_layout`
-- **status:** `regression_verified`
+- full calculator 继续使用现有 fixed `compatibility-checkout-drawer`；
+- Atlas browse surface 在该模式下退出底层布局；
+- underlying `.desktop-workspace-scroll` 保持靠近顶部，不恢复深部/底部 Atlas scroll；
+- direct `/encyclopedia?mode=compatibility` 与详情二阶段跳转遵守同一规则。
 
-1024 下实际 Search workspace 不足，却曾先按 viewport 进入 Species/Care 双列，内部 Species 再双列，结果卡被压到约 180–200px。
+### Fixed by
 
-Fix: `.search-v2-page` 使用 named inline-size container；真实 Search workspace <900px 时纵向，≥900px 才并列。
+- `d91a227a58ea6383a2f654d70b54d946f0d2f121`
+- `0c0189edb9dd707a8e83409dee15b3705ef78d29`
 
-Primary fix: `1cb91612541396ec5d2ad515cc5b8f70443f8573`.
+Regression/evaluator support:
 
-## PUI-BC-048 · Return-context 覆盖 Aquarium chrome/content
+- `c5e9e8762a66150e62217125bb7c7245ee53d137`
+- `61dc5acacbfa388cd2ac049ecd99ddc412bda3dc`
+- `240b74080164c8756b071528a25d73d2491a49c2`
+- `34b4a898ea16dfd8fe85628c29a75265ef8bc409`
 
-- **featureId:** `task_entry_navigation`
-- **severity:** medium
-- **rootCauseLayer:** `ui_navigation_affordance`
-- **status:** `regression_verified`
+### Regression evidence
 
-全局 `返回上一个任务` fixed pill 曾覆盖手机 Aquarium toolbar/onboarding 或桌面 Aquarium identity header。
+`UI UX System Refactor V1 #69` / run `32275254732` on implementation head `34b4a898ea16dfd8fe85628c29a75265ef8bc409` passed all of the following:
 
-Fix: return context 获得独立 navigation band。手机顺序为 toolbar → return → onboarding/Today；桌面为 return → Aquarium header。回归直接比较真实可见 toolbar/onboarding/header 矩形，而不是外层 layout 空白区。
+- first not-recommended footer click keeps URL unchanged;
+- species detail stays visible for in-context review;
+- Compatibility evidence becomes `aria-expanded=true`;
+- second-stage navigation reaches `/encyclopedia?mode=compatibility`;
+- actual `[data-surface="compatibility-checkout-drawer"]` is visible from the viewport top;
+- drawer occupies the expected workspace height;
+- Atlas workspace `scrollTop <= 120` and is not near its maximum scroll depth;
+- direct Compatibility route obeys the same surface contract;
+- no page errors in the two flows;
+- Search hierarchy, Collection IA, GP-005 and the full 7×17 responsive route scan also pass.
 
-Relevant fixes: `1abb9ace99284a2050560eeac919f9a09b8b82e8`, `f3c48352fcc77a09207885f8f9edae25ff7fa33d`, `ef69d85e48712d27990423fcc85e23a4047f0756`.
+Same implementation head also passed:
 
-## PUI-BC-049 · Golden comparator 的 1024 缩略图出现跨语言舍入假失败
+- UI UX Visual QA V2 #52
+- UI UX Golden V3 #14
+- Bundle Audit V1 #7
+
+Canonical registry append commit: `1e7eea5d7f4326b161d6ecbd953ba3394e1fe564`. Compare against the implementation head is exactly **+1 / -0**, so historical badcases were not rewritten.
+
+## PUI-BC-049 · Golden comparator 1024 跨语言舍入假失败
 
 - **featureId:** `evaluation_system`
 - **severity:** medium
-- **source:** `ci_fail_before`
 - **rootCauseLayer:** `evaluation_contract`
 - **status:** `regression_verified`
 
-**Symptom**  
-Golden V3 #1 / run `32264392607` 中，Aquarium/Search 的 1024×900 case 在真正像素 diff 前就失败：reference 是 128×112，JavaScript verifier 却要求 128×113。
+Python banker’s rounding and JavaScript `Math.round()` disagreed on `112.5`, so approved 1024×900 reference geometry became 128×112 vs 128×113. `manifest.json` thumbnail dimensions are now authoritative. Tight Golden V3 cohort remains green; this was evaluator drift, not UI drift.
 
-**Root cause**  
-`900 × 128 / 1024 = 112.5`。reference 生成使用 Python `round()`（banker’s rounding → 112），verifier 使用 JavaScript `Math.round()`（→113）。同一个批准 UI 因实现语言的舍入语义不同而被误判。
+## Prior UI/UX closure retained
 
-**Evidence this was evaluator failure, not UI drift**  
-同一 #1 run 的其余 6 个 golden case 已是 0% changed。
+- PUI-BC-040 — Collection top-level IA moved from rail/list semantics to 3-live-module focus carousel; Achievements removed from primary business IA.
+- PUI-BC-041 — typography/design token ownership converged on the foundation layer.
+- PUI-BC-042 — Search Care results gained explicit show-all parity.
+- PUI-BC-043 — inactive carousel focusability + sub-44px named controls closed.
+- PUI-BC-044 — iPad widthless UA fallback ordering corrected.
+- PUI-BC-045 — narrow Aquarium workspace keeps task-first hierarchy.
+- PUI-BC-046 — 1024 sidebar width cliff removed.
+- PUI-BC-047 — Search nested layout now follows real content width.
+- PUI-BC-048 — return-context navigation band no longer overlaps Aquarium chrome/content.
 
-**Fix**  
-`manifest.json` 的 `thumbWidth` / `thumbHeight` 成为唯一、显式、语言无关的 normalization geometry contract；verifier 不再重新计算高度。
+## Evidence-quality rules retained
 
-**Fixed by**  
-`1eea45dfea367a571daf123836348c79f67e517f`
+- Do not validate user-visible state from labels alone when deterministic status/data attributes exist.
+- Test the real visible surface, not a zero-layout wrapper around a fixed child.
+- Navigation tests must distinguish “review evidence” from “change task/mode”.
+- Scroll restoration is part of navigation correctness; a route may be technically correct while landing the user in the wrong viewport position.
+- Canonical badcase updates must be append-only unless a separately justified correction is explicitly required.
 
-**Regression evidence**  
-- Golden V3 #2 / run `32264776117`: 8/8 PASS, all 0%
-- Golden V3 #3 / run `32265296046`: 收紧到 Aquarium 0.50%、Search 0.35%、Collection 0.30% 后仍 8/8=0%
-- Golden V3 #4 / run `32267440206`: canonical-closeout head 仍 PASS
-- System #59 / run `32267440195`: canonical product evaluation + system regressions PASS
+## Non-claims
 
-Canonical append commit `08a2d31944919c51fb087400002c446fcc88097e` was verified as exactly **+1 / -0**. PUI-BC-032 remains unchanged with `guide_safe_water_change`.
-
-## Evidence-quality lessons retained
-
-- Storage-reset screenshots that silently captured Welcome instead of Aquarium are invalid evidence and remain fail-closed.
-- CJK tofu screenshots are invalid evidence; font readiness remains mandatory.
-- Geometry tests must compare actual visible surfaces, not wrapper boxes containing reserved whitespace.
-- A golden comparator can itself produce badcases; evaluator semantics must be versioned just like product logic.
-
-## Residual risks / non-claims
-
-- Golden V3 covers eight stable fold states, not every V2 screenshot or every dialog/error state.
-- It detects approved rendering drift; it does not score aesthetics.
-- Raw diff artifacts retain for 7 days; compact `.sig` references are versioned in Git.
-- CJK package download latency remains CI infrastructure debt.
-- PR #104 remains Draft, not merged and not deployed.
+- PR #104 remains Draft.
+- No merge to RC1/main.
+- No production deploy.
+- Current PUI-BC-050 evidence is deterministic PR-browser evidence, not production telemetry.

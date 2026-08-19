@@ -1,4 +1,4 @@
-# AquaGuide Handoff — UI/UX System Refactor + Visual QA V2/V3
+# AquaGuide Handoff — UI/UX System + Encyclopedia Navigation Fix
 
 **Date:** 2026-08-19  
 **Branch:** `agent/uiux-system-refactor-v1`  
@@ -7,137 +7,116 @@
 
 ## Current state
 
-The UI/UX system layer, broad Visual QA V2 baseline, small Golden V3 regression cohort, and CJK visual-test cache are implemented on top of RC1. The PR remains **Draft**, is **not merged** into RC1 or `main`, and is **not deployed**.
+PR #104 remains **Draft**, is **not merged** into RC1 or `main`, and is **not deployed**.
 
-The visual-evaluation stack now has three different responsibilities:
+The UI/UX system refactor, Visual QA V2, Golden V3, CJK visual-test cache, bundle audit instrumentation, and the latest Encyclopedia/Compatibility navigation repair are present on this branch.
 
-1. **System contracts** — token ownership, layout policy, interaction/accessibility rules and route-level browser regressions.
-2. **Visual QA V2** — broad 48-screenshot evidence across 4 viewports × 6 routes.
-3. **Golden V3** — eight stable fold states with normalized pixel-diff regression thresholds.
+## Latest user-reported issue — PUI-BC-050
 
-Do not collapse these into one test. Structural rules remain the primary guard for business-critical layout; Golden V3 detects approved visual drift in a deliberately small stable cohort.
+Two related navigation failures were reported:
 
-## UI/UX system state retained
+1. In a risky species detail, the footer action for reviewing risk/alternatives jumped straight into Compatibility instead of first showing the evidence in the current detail.
+2. Entering `/encyclopedia?mode=compatibility` caused Atlas to scroll to the deep `#compatibility-calculator` anchor, making the Encyclopedia workspace appear to jump to the bottom.
 
-- canonical typography/spacing/radius/elevation tokens
-- width-driven layout policy
-- Aquarium progressive disclosure with three recurrent primary actions
-- Collection 3-live-module focus carousel and quiet Achievements coming-next state
-- Search Species/Care show-all parity
-- 44×44 named interaction targets
-- inactive carousel `inert` + `aria-hidden`
-- reduced-motion support
-- desktop scroll-position affordance
-- deterministic `UI UX System Refactor V1` workflow
+### Root cause
 
-PUI-BC-040..044 remain closed.
+- `SpeciesDetailDialog` directly called `onGoCalculator()` for unsuitable/conflict-risk/caution states.
+- `Encyclopedia` synchronized `mode=compatibility` by calling `navigateToSection('compatibility-calculator')` even though `CompatibilityRiskCalculator` is itself a fixed top-level drawer.
 
-## Visual QA V2
+### Current behavior
 
-V2 captures 390×844 / 768×900 / 1024×900 / 1440×1000 across Aquarium, Encyclopedia, Care, Search, Collection and Settings, with fold + full-page images: **48 screenshots**.
+The interaction is now deliberately two-stage:
 
-Authoritative implementation evidence:
+- **First footer click in a not-recommended detail:** URL stays unchanged, the detail remains open, and the existing `混养关系 / Compatibility` evidence disclosure expands in context.
+- **After the user has reviewed that evidence:** the footer action may enter the full Compatibility calculator.
+- **Full Compatibility mode:** presents the fixed `compatibility-checkout-drawer` from the viewport top; Atlas browse content is removed from layout underneath it and the underlying workspace is kept near the top rather than restoring a deep/bottom scroll position.
+- Direct `/encyclopedia?mode=compatibility` navigation follows the same surface/scroll contract.
 
-- `UI UX Visual QA V2 #19`
-- run `32259734301`
-- head `ef69d85e48712d27990423fcc85e23a4047f0756`
-- result PASS
-- artifact `9367824682`
+### Implementation
 
-V2 closed PUI-BC-045..048: Aquarium narrow-workspace task hierarchy, 1024 sidebar width cliff, Search viewport/content-width mismatch and return-context overlap.
+Primary product commits:
 
-The V2 harness rejects Welcome-as-Aquarium screenshots, missing CJK fonts and false wrapper-box overlap measurements.
+- `d91a227a58ea6383a2f654d70b54d946f0d2f121` — keep initial risk review in context; introduce thin navigation guards around the existing large implementations.
+- `0c0189edb9dd707a8e83409dee15b3705ef78d29` — preserve the existing second-stage route after Compatibility evidence has already been deliberately reviewed.
 
-## Visual QA V3 Golden Cohort
+Supporting regression commits:
 
-Approved Golden Cohort v1:
+- `c5e9e8762a66150e62217125bb7c7245ee53d137` — make static interaction audit follow the thin wrapper + Base implementation structure rather than falsely losing the sharing feature gate.
+- `61dc5acacbfa388cd2ac049ecd99ddc412bda3dc`, `240b74080164c8756b071528a25d73d2491a49c2`, `34b4a898ea16dfd8fe85628c29a75265ef8bc409` — converge the Playwright regression on user-visible behavior and the actual fixed drawer rather than its zero-layout wrapper.
+
+Relevant files:
+
+- `src/components/SpeciesDetailDialog.tsx` — thin interaction guard.
+- `src/components/SpeciesDetailDialogBase.tsx` — preserved pre-fix detail implementation.
+- `src/pages/Encyclopedia.tsx` — thin Compatibility surface/scroll guard.
+- `src/pages/EncyclopediaBase.tsx` — preserved pre-fix Atlas implementation.
+- `scripts/verify-encyclopedia-risk-navigation.mjs` — deterministic two-stage navigation + scroll regression.
+- `.github/workflows/uiux-system-refactor-v1.yml` — regression is mandatory in System CI.
+
+The wrapper/Base split is a surgical low-diff repair, not the preferred long-term architecture. A future cleanup may move the two guards into the original large components once the surrounding Atlas/detail code is safer to refactor.
+
+## Authoritative validation for PUI-BC-050
+
+Implementation head: `34b4a898ea16dfd8fe85628c29a75265ef8bc409`.
+
+All passed on that head:
+
+- **UI UX System Refactor V1 #69** / run `32275254732`
+  - static UI/UX contracts PASS
+  - TypeScript PASS
+  - production build PASS
+  - Encyclopedia risk navigation regression PASS
+  - Search hierarchy PASS
+  - Collection IA PASS
+  - GP-005 PASS
+  - full 7×17 responsive route scan PASS
+- **UI UX Visual QA V2 #52** — PASS
+- **UI UX Golden V3 #14** — PASS
+- **Bundle Audit V1 #7** — PASS
+
+Canonical badcase append:
+
+- commit `1e7eea5d7f4326b161d6ecbd953ba3394e1fe564`
+- `evaluation/product/badcases.v1.jsonl`
+- compare against implementation head: exactly **+1 / -0**
+- PUI-BC-050 status: `regression_verified`
+
+## UI/UX / Visual evaluation baseline retained
+
+System responsibilities remain separated:
+
+1. **System contracts** — tokens, layout, interaction/accessibility, route browser regressions.
+2. **Visual QA V2** — broad 48-screenshot matrix across 390 / 768 / 1024 / 1440 and six primary routes.
+3. **Golden V3** — eight stable normalized fold signatures with strict pixel-diff thresholds.
+
+Golden V3 approved cohort remains:
 
 - Aquarium 390 / 768 / 1024 / 1440
 - Search 1024 / 1440
 - Collection 390 / 1440
 
-Reference source: approved V2 #19 fold screenshots.
+Final thresholds remain Aquarium ≤0.50%, Search ≤0.35%, Collection ≤0.30%, grayscale delta 24. Do not widen thresholds or update signatures merely to make CI green.
 
-`evaluation/visual/golden-v1/` stores the policy, manifest and eight zlib/base64 grayscale `.sig` files. Raw reference PNGs are not committed; CI generates current full screenshots, reconstructed reference/current/diff thumbnails and `report.json` as 7-day artifacts.
+CJK rendering remains fail-closed. `scripts/ensure-cjk-font.sh` + Actions cache may optimize font provisioning, but `fc-match` for `Noto Sans CJK SC` is still mandatory.
 
-Normalization contract:
+## Bundle audit state
 
-- zh-CN
-- first-aquarium seed
-- reduced motion
-- `Noto Sans CJK SC` required
-- documented fixed masks only
-- 128px grayscale signature
-- `(77*r + 150*g + 29*b) >> 8`
-- pixel delta threshold 24
-- manifest dimensions authoritative
+Bundle audit is measurement-only so far; no bundle-size improvement should be claimed yet.
 
-Final tolerances:
+Known baseline findings:
 
-- Aquarium ≤0.50%
-- Search ≤0.35%
-- Collection ≤0.30%
+- entry chunk roughly 2.1 MiB in normal Vite output
+- `fishData.ts` and localization data are major entry contributors through root-level synchronous localization dependencies
+- PostHog is another removable eager dependency candidate
+- Three/React Three Fiber is largely already isolated in its own large chunk
 
-### PUI-BC-049
+The next safe performance work is to remove low-risk eager dependencies first and compare against the established audit baseline. The synchronous locale/data mutation path should not be made async without explicitly handling locale-race/flicker behavior.
 
-Golden V3 #1 / run `32264392607` exposed a comparator bug, not UI drift: Python banker’s rounding made the 1024 reference 128×112 while JavaScript `Math.round()` re-derived 128×113. Other six cases were already 0% changed.
-
-Fix: `1eea45dfea367a571daf123836348c79f67e517f`. Manifest thumbnail dimensions are now the cross-language contract.
-
-PUI-BC-049 is canonical `evaluation_system / evaluation_contract / regression_verified`.
-
-## Authoritative V3 validation
-
-- Golden #3 / `32265296046` on `6bd1e045dcac709e0da7425a21b7b217142abb20`: 8/8 PASS, every case 0% changed under final thresholds.
-- System #58 / `32265296159`: PASS on the same implementation head.
-- Canonical PUI-049 commit `08a2d31944919c51fb087400002c446fcc88097e` changed the registry by exactly +1/-0; PUI-032 remains `guide_safe_water_change`.
-- System #59 / `32267440195`: PASS.
-- Golden #4 / `32267440206`: PASS; artifact `9370832138`, digest `sha256:09728cd8efb33476c423e53ddb22adcc8f077edf48953940e3eef272891b7a11`.
-
-## CJK visual-test cache
-
-Commit `da8cf1310f87a768edbf3c9c494a31ce3b489152` closes the V2/V3 CJK download bottleneck without weakening readability validation.
-
-Implementation:
-
-- `scripts/ensure-cjk-font.sh`
-- `actions/cache@v4` in both Visual V2 and Golden V3
-- cache key `aquaguide-noto-cjk-${{ runner.os }}-${{ runner.arch }}-20230817-v1`
-- miss → retrying apt install → copy `NotoSansCJK-*.ttc` into cache
-- hit → restore cached TTC into user font directory → `fc-cache`
-- both paths must pass `fc-match` for `Noto Sans CJK SC`
-
-Evidence:
-
-- V2 #44 / run `32268929911` first attempt: cache miss, apt fallback, visual suite PASS, then cache saved.
-- Manual rerun of the same workflow, job `96122316264`: cache hit restored ~27MB / 2 TTC files; helper printed `Restoring 2 cached Noto Sans CJK TTC file(s).` and `CJK font match: Noto Sans CJK SC`; apt was skipped.
-- The hit run still passed TypeScript/build, Aquarium hierarchy, Search density and all 48 screenshots; artifact `9371672874`.
-- System #61 / run `32268929844`: PASS after the cache workflow changes.
-
-Important: never replace the font-readiness gate with a soft warning. Cache is an optimization only; corrupt/missing cache must fall back to apt, and missing CJK must still fail visual evidence generation.
-
-## Baseline maintenance rule
-
-Never update a golden signature just to make CI green. For a Golden V3 change: inspect structural gates and diff evidence, confirm intent, manually review the fold state, then update only the affected signature/mask/tolerance with an explicit PR explanation.
-
-Prefer a narrow documented mask or replacing an unstable case over raising global tolerance.
-
-## Next safe work
-
-Do **not** expand the golden cohort merely because the infrastructure exists. Add a new golden case only after a real regression shows the current eight + structural contracts missed something important.
-
-The next technically valuable work is separate from visual correctness:
-
-1. bundle/chunk investigation — current Vite output still contains large chunks, including the 3D/React bundle;
-2. existing dependency vulnerability triage;
-3. only after review, decide whether #104 should move out of Draft and merge into RC1.
-
-## Explicit non-claims / residual debt
+## Explicit non-claims / remaining work
 
 - No merge to RC1 or `main`.
 - No production deployment.
-- Golden V3 is not a perceptual/aesthetic score.
-- Only eight stable fold states are hard golden references; V2 retains broader review coverage.
-- Raw PNG evidence expires after 7 days; compact signatures remain versioned in Git.
-- Bundle/code-splitting warnings remain.
-- Existing npm audit vulnerabilities remain outside this UI/UX scope.
+- PUI-BC-050 is browser-regression verified on the Draft PR; it is not yet a production observation.
+- Bundle/chunk optimization is not complete.
+- Existing dependency vulnerabilities remain separate debt.
+- The wrapper/Base repair should eventually be simplified after behavior is stable, but must not be refactored without retaining the new two-stage navigation and scroll regressions.
