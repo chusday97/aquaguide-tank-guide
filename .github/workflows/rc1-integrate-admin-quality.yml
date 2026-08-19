@@ -1,16 +1,15 @@
 name: RC1 Integrate Admin Quality Inbox
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - integration/aquaguide-rc1
 
 permissions:
   contents: write
 
 jobs:
   integrate-admin-quality:
-    if: github.head_ref == 'integration/aquaguide-rc1'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -34,6 +33,13 @@ jobs:
           SOURCE_BRANCH=agent/admin-quality-inbox-v1
           git fetch origin "$SOURCE_BRANCH"
           SOURCE_HEAD="$(git rev-parse FETCH_HEAD)"
+
+          if test -f src/pages/AdminFeedback.tsx \
+             && test -f src/services/admin/feedback-admin.service.ts \
+             && grep -q 'const isAdminFeedback = pathname === .*/admin/feedback' src/main.tsx; then
+            echo 'Admin Quality Inbox already integrated; validating existing RC1 state.'
+            exit 0
+          fi
 
           for path in \
             src/pages/AdminFeedback.tsx \
@@ -118,13 +124,12 @@ createRoot(document.getElementById('root')!).render(
               'Admin entry render',
           )
 
-          required_css = [
+          for css in [
               "./styles/ui-v2-foundation.css",
               "./styles/ui-v2-aquarium-components.css",
               "./styles/ui-v2-dashboard.css",
               "./styles/ui-v2-shell.css",
-          ]
-          for css in required_css:
+          ]:
               if css not in source:
                   raise SystemExit(f'UI V2 CSS import lost during Admin merge: {css}')
           path.write_text(source)
@@ -174,6 +179,10 @@ createRoot(document.getElementById('root')!).render(
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/main.tsx src/pages/AdminFeedback.tsx src/services/admin/feedback-admin.service.ts scripts/verify-admin-quality-inbox-contract.mjs scripts/verify-admin-quality-inbox-browser.mjs
+          if git diff --cached --quiet; then
+            echo 'Admin Quality Inbox already committed.'
+            exit 0
+          fi
           git commit -m "Integrate Admin Quality Inbox into RC1"
           git pull --rebase origin integration/aquaguide-rc1
           git push origin HEAD:integration/aquaguide-rc1
