@@ -118,7 +118,7 @@ try {
   await seedCollection(desktop);
 
   await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
-  await desktop.getByText('我的水族册', { exact: true }).waitFor();
+  await desktop.getByRole('heading', { name: '我的水族册', exact: true }).waitFor();
   await assertFocusCarousel(desktop);
   await desktop.getByRole('button', { name: '种草图鉴，4', exact: true }).click();
   await desktop.waitForURL(url => url.pathname === '/collection/wishlist');
@@ -157,7 +157,7 @@ try {
   await seedCollection(mobile);
 
   await mobile.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
-  await mobile.getByText('我的水族册', { exact: true }).waitFor();
+  await mobile.getByRole('heading', { name: '我的水族册', exact: true }).waitFor();
   await assertFocusCarousel(mobile);
   await mobile.getByRole('button', { name: '种草图鉴，4', exact: true }).click();
   await mobile.waitForURL(url => url.pathname === '/collection/wishlist');
