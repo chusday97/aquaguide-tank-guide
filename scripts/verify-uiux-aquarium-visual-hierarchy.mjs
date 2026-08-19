@@ -50,6 +50,7 @@ try {
         manage: rect('#aquarium-manage-zone'),
         context: rect('[data-dashboard-priority="context"]'),
         returnContext: rect('[data-workspace-return]'),
+        phoneToolbar: rect('.aquarium-toolbar'),
         main,
         sidebar,
         aquariumLayout,
@@ -67,6 +68,12 @@ try {
         geometry.returnContext.bottom + 4 <= geometry.aquariumLayout.top,
         `${testCase.name}: return-context control overlaps Aquarium content (${geometry.returnContext.bottom}px > ${geometry.aquariumLayout.top}px)`,
       );
+      if (testCase.width < 768 && geometry.phoneToolbar) {
+        assert.ok(
+          geometry.returnContext.top >= geometry.phoneToolbar.bottom + 4,
+          `${testCase.name}: return-context control overlaps the phone Aquarium toolbar (${geometry.returnContext.top}px < ${geometry.phoneToolbar.bottom}px)`,
+        );
+      }
     }
 
     if (testCase.maxSidebarWidth !== undefined) {
