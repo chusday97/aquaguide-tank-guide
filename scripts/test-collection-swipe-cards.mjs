@@ -20,7 +20,17 @@ assert.ok(styles.includes('scroll-snap-type: x mandatory'), 'collection rails mu
 assert.ok(styles.includes('scroll-snap-align: start'), 'collection cards must expose snap positions');
 assert.ok(styles.includes('min(82vw, 320px)'), 'phone wishlist cards must leave the next card peeking into view');
 assert.ok(styles.includes('min(86vw, 360px)'), 'phone care cards must leave the next card peeking into view');
-assert.ok(styles.includes('.collection-hub > section[aria-label]'), 'collection hub module cards must also form a swipeable rail');
 assert.equal(styles.includes('.collection-memorial-grid,\n.collection-achievement-grid {\n  display: flex !important'), false, 'memorial and achievement modules must not be silently converted into favorites rails');
 
-console.log('Collection swipe-card contract verified: hub, wishlist and care use horizontal snap rails while memorial remains independent.');
+assert.ok(hub.includes('function CollectionCarousel'), 'collection hub must use a dedicated focus carousel');
+assert.ok(hub.includes('data-carousel-card'), 'collection carousel cards must expose a stable test target');
+assert.ok(hub.includes('data-carousel-active'), 'collection carousel must expose the active-card state');
+assert.ok(hub.includes('drag="x"'), 'collection carousel must support horizontal drag gestures');
+assert.ok(hub.includes("scale: isActive ? 1 : 0.86"), 'active collection module must be visually emphasized over side cards');
+assert.ok(hub.includes("filter: isActive ? 'blur(0px)' : 'blur(2px)'"), 'side collection modules must be visually de-emphasized');
+assert.ok(hub.includes("aria-label={isEn ? 'Previous collection module' : '上一个水族册模块'}"), 'collection carousel must provide an accessible previous control');
+assert.ok(hub.includes("aria-label={isEn ? 'Next collection module' : '下一个水族册模块'}"), 'collection carousel must provide an accessible next control');
+assert.ok(hub.includes("aria-current={index === activeIndex ? 'true' : undefined}"), 'collection carousel indicators must expose current position');
+assert.ok(hub.includes("左右滑动或点击箭头，浏览你的水族册。"), 'collection hub must make swipe discoverability explicit');
+
+console.log('Collection interaction contract verified: detail rails keep scroll-snap while the collection hub uses an IceGlide-style focus carousel.');
