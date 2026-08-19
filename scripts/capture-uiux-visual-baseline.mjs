@@ -33,9 +33,9 @@ try {
       hasTouch: viewport.width < 768,
       isMobile: viewport.width < 768,
     });
+    // A fresh browser context already starts with empty storage. Only seed locale here;
+    // clearing storage in an init script would wipe the aquarium again on every navigation.
     await context.addInitScript(() => {
-      localStorage.clear();
-      sessionStorage.clear();
       localStorage.setItem('aquaguide_locale', 'zh-CN');
     });
 
