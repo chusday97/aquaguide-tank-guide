@@ -27,8 +27,9 @@ jobs:
       - run: npm ci
       - name: Install CJK snapshot font
         run: |
-          timeout 120s sudo apt-get update
-          timeout 120s sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+          APT_RETRY='-o Acquire::Retries=3 -o Acquire::http::Timeout=60 -o Acquire::https::Timeout=60'
+          timeout 180s sudo apt-get $APT_RETRY update
+          timeout 360s sudo apt-get $APT_RETRY install -y --no-install-recommends fonts-noto-cjk
           fc-match 'Noto Sans CJK SC'
       - name: Type check
         run: npm run lint
