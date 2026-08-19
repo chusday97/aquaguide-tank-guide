@@ -56,6 +56,44 @@ const assertNoPageOverflow = async page => {
   assert.ok(overflow <= 1, `Collection journey must not create page-level horizontal overflow; got ${overflow}px.`);
 };
 
+const getActiveModule = page => page.locator('[data-carousel-active="true"] [data-collection-module]').getAttribute('data-collection-module');
+
+const assertFocusCarousel = async page => {
+  const carousel = page.locator('.collection-hub-carousel');
+  await carousel.waitFor();
+
+  const cards = carousel.locator('[data-carousel-card]');
+  assert.equal(await cards.count(), 4, 'Collection hub must expose four carousel module cards.');
+  assert.equal(await carousel.locator('[data-carousel-active="true"]').count(), 1, 'Collection hub must have exactly one active carousel card.');
+  assert.equal(await getActiveModule(page), 'wishlist', 'Wishlist must be the initial active collection module.');
+
+  const activeBox = await carousel.locator('[data-carousel-active="true"]').boundingBox();
+  const viewport = page.viewportSize();
+  assert.ok(activeBox && viewport, 'Collection carousel active card must have measurable geometry.');
+  const activeCenter = activeBox.x + activeBox.width / 2;
+  assert.ok(
+    Math.abs(activeCenter - viewport.width / 2) <= Math.max(24, viewport.width * 0.08),
+    `Active collection card must remain visually centered; cardCenter=${activeCenter}, viewportCenter=${viewport.width / 2}.`,
+  );
+
+  const nextButton = page.getByRole('button', { name: '下一个水族册模块', exact: true });
+  await nextButton.click();
+  await page.waitForFunction(() => document.querySelector('[data-carousel-active="true"] [data-collection-module="care"]'));
+  assert.equal(await getActiveModule(page), 'care', 'Next control must advance the active collection module to care.');
+
+  const previousButton = page.getByRole('button', { name: '上一个水族册模块', exact: true });
+  await previousButton.click();
+  await page.waitForFunction(() => document.querySelector('[data-carousel-active="true"] [data-collection-module="wishlist"]'));
+  assert.equal(await getActiveModule(page), 'wishlist', 'Previous control must restore wishlist as the active collection module.');
+
+  const indicators = carousel.locator('[aria-label="选择水族册模块"] button');
+  assert.equal(await indicators.count(), 4, 'Collection carousel must expose one position control per module.');
+  assert.equal(await indicators.filter({ has: page.locator('[aria-current="true"]') }).count(), 0, 'Position controls should expose aria-current on the button itself rather than nested content.');
+  assert.equal(await carousel.locator('[aria-label="选择水族册模块"] button[aria-current="true"]').count(), 1, 'Exactly one position control must expose the current carousel position.');
+
+  await assertNoPageOverflow(page);
+};
+
 const browser = await chromium.launch({ headless: true });
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'zh-CN' });
@@ -66,6 +104,7 @@ try {
 
   await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
   await desktop.getByText('我的水族册', { exact: true }).waitFor();
+  await assertFocusCarousel(desktop);
   await desktop.getByRole('button', { name: '种草图鉴，4', exact: true }).click();
   await desktop.waitForURL(url => url.pathname === '/collection/wishlist');
 
@@ -103,6 +142,8 @@ try {
   await seedCollection(mobile);
 
   await mobile.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
+  await mobile.getByText('我的水族册', { exact: true }).waitFor();
+  await assertFocusCarousel(mobile);
   await mobile.getByRole('button', { name: '种草图鉴，4', exact: true }).click();
   await mobile.waitForURL(url => url.pathname === '/collection/wishlist');
 
@@ -122,7 +163,7 @@ try {
   assert.deepEqual(mobileErrors, [], `Mobile GP-005 must not emit page errors: ${mobileErrors.join('; ')}`);
   await mobileContext.close();
 
-  console.log('GP-005 continuous E2E passed: Collection → Wishlist horizontal context → exact saved species → desktop drawer/mobile sheet → close → exact card context and rail position preserved.');
+  console.log('GP-005 continuous E2E passed: Collection focus carousel → Wishlist horizontal context → exact saved species → desktop drawer/mobile sheet → close → exact card context and rail position preserved.');
 } finally {
   await browser.close();
 }
