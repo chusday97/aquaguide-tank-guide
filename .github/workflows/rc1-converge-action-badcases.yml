@@ -1,0 +1,80 @@
+name: RC1 Converge Action Badcases
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  converge-badcases:
+    if: github.head_ref == 'integration/aquaguide-rc1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RC1
+        uses: actions/checkout@v4
+        with:
+          ref: integration/aquaguide-rc1
+          fetch-depth: 0
+
+      - name: Append validated action-completeness badcases
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+
+          registry = Path('evaluation/product/badcases.v1.jsonl')
+          lines = [line for line in registry.read_text().splitlines() if line.strip()]
+          records = [json.loads(line) for line in lines]
+          existing = {record['id'] for record in records}
+
+          sources = {
+              'PUI-BC-033': 'agent/functional-cta-search-show-all',
+              'PUI-BC-034': 'agent/identify-search-overflow-hint',
+              'PUI-BC-035': 'agent/care-card-promise-closure',
+          }
+
+          for badcase_id, branch in sources.items():
+              if badcase_id in existing:
+                  continue
+              subprocess.run(['git', 'fetch', 'origin', branch], check=True, stdout=subprocess.DEVNULL)
+              source = subprocess.check_output([
+                  'git', 'show', 'FETCH_HEAD:evaluation/product/badcases.v1.jsonl'
+              ], text=True)
+              matches = [json.loads(line) for line in source.splitlines() if line.strip() and json.loads(line).get('id') == badcase_id]
+              if len(matches) != 1:
+                  raise SystemExit(f'{badcase_id}: expected exactly one source record, found {len(matches)}')
+              records.append(matches[0])
+              existing.add(badcase_id)
+
+          ids = [record['id'] for record in records]
+          for n in range(33, 40):
+              badcase_id = f'PUI-BC-{n:03d}'
+              count = ids.count(badcase_id)
+              if count != 1:
+                  raise SystemExit(f'{badcase_id}: expected exactly one RC1 registry record, found {count}')
+
+          registry.write_text('\n'.join(json.dumps(record, ensure_ascii=False, separators=(',', ':')) for record in records) + '\n')
+          PY
+
+      - name: Validate product registry
+        run: npm run test:product-evaluation
+
+      - name: Commit registry convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evaluation/product/badcases.v1.jsonl
+          if git diff --cached --quiet; then
+            echo 'Registry already converged.'
+            exit 0
+          fi
+          git commit -m "Converge RC1 action-completeness badcases"
+          git pull --rebase origin integration/aquaguide-rc1
+          git push origin HEAD:integration/aquaguide-rc1
