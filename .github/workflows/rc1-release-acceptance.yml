@@ -48,6 +48,9 @@ jobs:
       - name: UI modal surface contract
         run: node scripts/test-ui-modal-surface-contract.mjs
 
+      - name: Aquarium species detail source contract
+        run: node scripts/test-aquarium-species-detail-surface-contract.mjs
+
       - name: Product evaluation contracts
         run: npm run test:product-evaluation
 
