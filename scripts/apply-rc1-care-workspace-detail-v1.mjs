@@ -16,6 +16,55 @@ replaceExact(
 );
 
 replaceExact(
+`  useEffect(() => {
+    const topicId = new URLSearchParams(location.search).get('topic');
+    if (!topicId || selectedTopic?.id === topicId) return;
+    openCareDetail(topicId, undefined, false);
+  }, [location.search, selectedTopic?.id]);
+
+  const closeCareDetail = () => {
+    setSelectedTopic(null);
+    if (new URLSearchParams(location.search).has('topic')) {
+      if (new URLSearchParams(location.search).get('source') === 'search') {
+        navigate(-1);
+        return;
+      }
+      navigateToRoute('/care');
+      return;
+    }
+    const context = detailNavigationContextRef.current;
+    detailNavigationContextRef.current = null;
+    if (context) void restoreContext(context);
+  };`,
+`  useEffect(() => {
+    const topicId = new URLSearchParams(location.search).get('topic');
+    if (!topicId) {
+      if (selectedTopic) setSelectedTopic(null);
+      return;
+    }
+    if (selectedTopic?.id === topicId) return;
+    openCareDetail(topicId, undefined, false);
+  }, [location.search, selectedTopic?.id]);
+
+  const closeCareDetail = () => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.has('topic')) {
+      if (searchParams.get('source') === 'search') {
+        navigate(-1);
+        return;
+      }
+      navigateToRoute('/care');
+      return;
+    }
+    setSelectedTopic(null);
+    const context = detailNavigationContextRef.current;
+    detailNavigationContextRef.current = null;
+    if (context) void restoreContext(context);
+  };`,
+  'Keep Care topic URL as source of truth during detail close',
+);
+
+replaceExact(
 `  activeAquarium,
 }: {
   topic: CareTopic;`,
@@ -128,4 +177,4 @@ const newDetailBlock = `      </div>
 replaceExact(oldDetailBlock, newDetailBlock, 'Replace Care article Dialog with workspace detail surface');
 
 fs.writeFileSync(path, source);
-console.log('Applied RC1 Care workspace detail migration: long-form article browsing no longer owns a Dialog.');
+console.log('Applied RC1 Care workspace detail migration: long-form article browsing no longer owns a Dialog and topic URL controls deeplink close.');
