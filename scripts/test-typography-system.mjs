@@ -4,13 +4,12 @@ import { readFile } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root), 'utf8');
 
-const [indexCss, typography, foundation, surfaceHeader, sectionHeader, aquarium] = await Promise.all([
+const [indexCss, typography, foundation, surfaceHeader, sectionHeader] = await Promise.all([
   read('src/index.css'),
   read('src/styles/typography-system.css'),
   read('src/styles/ui-v2-foundation.css'),
   read('src/components/common/SurfaceHeader.tsx'),
   read('src/components/product/SectionHeader.tsx'),
-  read('src/pages/Aquarium.tsx'),
 ]);
 
 assert.ok(indexCss.includes('@import "./styles/typography-system.css";'), 'global stylesheet must import semantic typography roles');
@@ -30,7 +29,10 @@ assert.ok(surfaceHeader.includes('type-card-title'), 'surface titles must use se
 assert.ok(surfaceHeader.includes('type-meta'), 'surface descriptions must use semantic typography');
 assert.ok(sectionHeader.includes('type-card-title'), 'section title must use semantic typography');
 assert.ok(sectionHeader.includes('type-meta'), 'section subtitle must use semantic typography');
-assert.ok(aquarium.includes('type-card-title'), 'aquarium zone title must use the shared card-title hierarchy');
-assert.ok(aquarium.includes('type-meta'), 'aquarium zone subtitle must use the shared meta hierarchy');
 
-console.log('UI typography system verified: ui-v2-foundation owns tokens and semantic roles consume them without duplicate token definitions.');
+const aquariumHeadingRule = foundation.slice(foundation.indexOf('.aquarium-zone-header h2'), foundation.indexOf('.aquarium-workspace-zone'));
+assert.ok(aquariumHeadingRule.includes('font-size: var(--type-section-size)'), 'Aquarium zone headings must resolve the canonical section-size token through the V2 foundation');
+assert.ok(aquariumHeadingRule.includes('font-weight: var(--type-title-weight)'), 'Aquarium zone headings must resolve the canonical title-weight token through the V2 foundation');
+assert.ok(foundation.includes('.aquarium-zone-header .type-meta'), 'Aquarium zone subtitles must continue to use the semantic meta role');
+
+console.log('UI typography system verified: ui-v2-foundation owns tokens and both semantic components and Aquarium container-aware headings consume them.');
