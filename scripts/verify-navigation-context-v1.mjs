@@ -174,12 +174,18 @@ try {
   // Returning from a child detail should re-open the exact parent task surface, not merely focus its launcher card.
   await roster.waitFor({ state: 'visible' });
   assert.notEqual(await roster.getAttribute('data-open'), null, 'closing species detail must reopen the originating livestock roster');
+  await aquariumPage.waitForFunction(() => {
+    const active = document.activeElement;
+    return active instanceof HTMLButtonElement
+      && active.closest<HTMLElement>('[data-livestock-record-id]')?.dataset.livestockRecordId === 'stock-1'
+      && Boolean(active.querySelector('img'));
+  });
   const restoredArchiveScrollTop = await getWorkspaceScrollTop(aquariumPage);
   assert.ok(Math.abs(restoredArchiveScrollTop - archiveScrollTop) <= 96, `closing Aquarium species detail must keep the underlying archive scroll context; before=${archiveScrollTop}, after=${restoredArchiveScrollTop}`);
   assert.deepEqual(aquariumErrors, [], `aquarium detail return flow emitted page errors: ${aquariumErrors.join(' | ')}`);
   await aquariumContext.close();
 
-  console.log('navigation context V1 PASS: Search deep results preserve expansion/focus/scroll and Aquarium roster detail returns to its originating roster');
+  console.log('navigation context V1 PASS: Search deep results preserve expansion/focus/scroll and Aquarium roster detail returns to its originating roster with exact profile focus');
 } finally {
   await browser.close();
 }
