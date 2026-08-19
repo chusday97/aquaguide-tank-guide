@@ -41,9 +41,9 @@
 Artifact ID: `9367824682`  
 Implementation head: `ef69d85e48712d27990423fcc85e23a4047f0756`
 
-**System regression:** `UI UX System Refactor V1 #36` / run `32259734291` — **PASS**
+**Same-head system regression:** `UI UX System Refactor V1 #36` / run `32259734291` — **PASS**
 
-System regression still passes static contracts, TypeScript, production build, Search/Collection browser regressions, GP-005 and 7 profiles × 17 routes.
+Passed static contracts, TypeScript, production build, Search/Collection browser regressions, GP-005 and 7 profiles × 17 routes.
 
 ## Governance closeout
 
@@ -53,8 +53,8 @@ System regression still passes static contracts, TypeScript, production build, S
 - [x] `VISUAL_QA_LATEST.md` created as the dedicated baseline/evidence record.
 - [x] PUI-BC-045..048 appended to canonical `evaluation/product/badcases.v1.jsonl`.
 - [x] Historical PUI-BC-032 trigger restored exactly after an append-time text drift was detected; new badcases remain intact.
-- [ ] Final canonical `test:product-evaluation` + system regression on the registry closeout head.
-- [ ] Update PR #104 body with authoritative Visual QA and final canonical validation.
+- [x] Final canonical `test:product-evaluation` + full system regression: `UI UX System Refactor V1 #42` / run `32261277358` — **PASS** on canonical validation commit `b2186ac060156d53e2687f6a92fdbfa11bf3eae6`.
+- [x] PR #104 body updated with Visual QA V2, PUI-BC-045..048, authoritative run IDs, artifact ID and explicit non-claims.
 
 ## Still intentionally not done
 
