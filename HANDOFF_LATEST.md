@@ -1,6 +1,6 @@
-# AquaGuide Handoff — UI/UX System + Encyclopedia Navigation Fix
+# AquaGuide Handoff — Navigation Context Closure
 
-**Date:** 2026-08-19  
+**Date:** 2026-08-20  
 **Branch:** `agent/uiux-system-refactor-v1`  
 **Draft PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
 **Base:** `integration/aquaguide-rc1`
@@ -9,114 +9,108 @@
 
 PR #104 remains **Draft**, is **not merged** into RC1 or `main`, and is **not deployed**.
 
-The UI/UX system refactor, Visual QA V2, Golden V3, CJK visual-test cache, bundle audit instrumentation, and the latest Encyclopedia/Compatibility navigation repair are present on this branch.
+The branch now contains the UI/UX system refactor, Visual QA V2, Golden V3, CJK visual-test cache, bundle audit instrumentation, PUI-BC-050 Compatibility navigation repair, and the new Navigation Context V1 closure for Search and Aquarium nested detail flows.
 
-## Latest user-reported issue — PUI-BC-050
+## Latest closure — Navigation Context V1
 
-Two related navigation failures were reported:
+The audit intentionally tested more than route correctness. A return path must restore the immediate task context: expanded/collapsed state, exact source object, scroll and keyboard focus.
 
-1. In a risky species detail, the footer action for reviewing risk/alternatives jumped straight into Compatibility instead of first showing the evidence in the current detail.
-2. Entering `/encyclopedia?mode=compatibility` caused Atlas to scroll to the deep `#compatibility-calculator` anchor, making the Encyclopedia workspace appear to jump to the bottom.
+### Search deep results — PUI-BC-051
 
-### Root cause
+Fail-before:
 
-- `SpeciesDetailDialog` directly called `onGoCalculator()` for unsuitable/conflict-risk/caution states.
-- `Encyclopedia` synchronized `mode=compatibility` by calling `navigateToSection('compatibility-calculator')` even though `CompatibilityRiskCalculator` is itself a fixed top-level drawer.
+- `/search?q=鱼` → explicit “View all” → open a Species result after the 18-item preview → close detail.
+- Search remounted with `showAllSpecies=false`; the deep source result was no longer in the DOM, so the old source-ID-only focus restore could never work.
+- Care had the same latent issue for results after the 12-item preview.
+- Navigation Context #1 / run `32280048039` is the real fail-before.
 
-### Current behavior
+Current behavior:
 
-The interaction is now deliberately two-stage:
+- Search stores `query + sourceId + showAllSpecies + showAllCare + workspace scrollTop` in one return-context record before opening a detail.
+- Returning Search hydrates expansion state before DOM restoration, then restores exact workspace scroll and focus with `preventScroll`.
+- Query changes clear stale return context.
+- Species and Care use the same contract.
 
-- **First footer click in a not-recommended detail:** URL stays unchanged, the detail remains open, and the existing `混养关系 / Compatibility` evidence disclosure expands in context.
-- **After the user has reviewed that evidence:** the footer action may enter the full Compatibility calculator.
-- **Full Compatibility mode:** presents the fixed `compatibility-checkout-drawer` from the viewport top; Atlas browse content is removed from layout underneath it and the underlying workspace is kept near the top rather than restoring a deep/bottom scroll position.
-- Direct `/encyclopedia?mode=compatibility` navigation follows the same surface/scroll contract.
+Implementation:
 
-### Implementation
+- `src/pages/Search.tsx`
+- fix commit `9feaac4d90fef5ce2e4665154f9554759e15f591`
 
-Primary product commits:
+Evaluator note:
 
-- `d91a227a58ea6383a2f654d70b54d946f0d2f121` — keep initial risk review in context; introduce thin navigation guards around the existing large implementations.
-- `0c0189edb9dd707a8e83409dee15b3705ef78d29` — preserve the existing second-stage route after Compatibility evidence has already been deliberately reviewed.
+- Navigation #2 initially reported a Care scroll mismatch because Playwright `.click()` auto-scrolled the target after the test measured scroll but before the product handler captured it.
+- `7a736ef6349b4b77dceaf240c1fc61f96f769b98` changed the evaluator to click an already-visible card by screen coordinates, so it compares the same user-visible state instead of two different instants.
+- Navigation #3 then passed deep Species + Care expansion/focus/scroll.
 
-Supporting regression commits:
+### Aquarium roster → Species Detail → roster — PUI-BC-052
 
-- `c5e9e8762a66150e62217125bb7c7245ee53d137` — make static interaction audit follow the thin wrapper + Base implementation structure rather than falsely losing the sharing feature gate.
-- `61dc5acacbfa388cd2ac049ecd99ddc412bda3dc`, `240b74080164c8756b071528a25d73d2491a49c2`, `34b4a898ea16dfd8fe85628c29a75265ef8bc409` — converge the Playwright regression on user-visible behavior and the actual fixed drawer rather than its zero-layout wrapper.
+Fail-before:
 
-Relevant files:
+- `Aquarium → 缸内物种 roster → one species profile → close Species Detail` dropped the user back to the Aquarium archive launcher instead of returning to the parent roster.
+- Parent roster was intentionally closed before opening the child detail; the existing page-level navigation context only knew about `#aquarium-records`, not the originating roster record or roster internal scroll.
+- After correcting the evaluator to distinguish the parent roster from its exit animation and the child `data-detail-kind="species"` drawer, Navigation Context #5 / run `32281408153` waited 45 seconds and the roster still never returned. This is the genuine product fail-before.
 
-- `src/components/SpeciesDetailDialog.tsx` — thin interaction guard.
-- `src/components/SpeciesDetailDialogBase.tsx` — preserved pre-fix detail implementation.
-- `src/pages/Encyclopedia.tsx` — thin Compatibility surface/scroll guard.
-- `src/pages/EncyclopediaBase.tsx` — preserved pre-fix Atlas implementation.
-- `scripts/verify-encyclopedia-risk-navigation.mjs` — deterministic two-stage navigation + scroll regression.
-- `.github/workflows/uiux-system-refactor-v1.yml` — regression is mandatory in System CI.
+Current behavior:
 
-The wrapper/Base split is a surgical low-diff repair, not the preferred long-term architecture. A future cleanup may move the two guards into the original large components once the surrounding Atlas/detail code is safer to refactor.
+- `LivestockRosterDialog` captures `recordId + fishId + roster scrollTop` only when a Species Detail originates from the roster.
+- `SpeciesDetailDialog` emits a scoped dismissal signal only for an actual user close.
+- The roster waits until the child drawer has physically completed its exit animation before reopening, preventing overlapping focus traps.
+- It then restores its internal scroll and the exact original species profile button focus.
+- Species Details opened from other Aquarium contexts such as the 3D surface do not inherit this roster-specific return path.
 
-## Authoritative validation for PUI-BC-050
+Implementation:
 
-Implementation head: `34b4a898ea16dfd8fe85628c29a75265ef8bc409`.
+- `src/components/SpeciesDetailDialog.tsx`
+- `src/components/aquarium/LivestockRosterDialog.tsx`
+- product commits `28fb8a796bfd1b6b290daf74284945296daff9a3` + `dbf5546e99306ba078a723115451dcf12123a3b7`
+
+Evaluator note:
+
+- Navigation #4 was a locator ambiguity caused by Radix exit animation; it is not counted as product evidence.
+- Navigation #8 used TypeScript generic syntax inside `page.waitForFunction`, which executes as plain browser JavaScript; that evaluator bug was corrected without changing product behavior.
+
+## Authoritative implementation validation
+
+Implementation/evaluator head: `0c7d28ec647359f3b6e4a1afd1fd1e9a908f4bfc`.
 
 All passed on that head:
 
-- **UI UX System Refactor V1 #69** / run `32275254732`
-  - static UI/UX contracts PASS
-  - TypeScript PASS
-  - production build PASS
-  - Encyclopedia risk navigation regression PASS
-  - Search hierarchy PASS
-  - Collection IA PASS
-  - GP-005 PASS
-  - full 7×17 responsive route scan PASS
-- **UI UX Visual QA V2 #52** — PASS
-- **UI UX Golden V3 #14** — PASS
-- **Bundle Audit V1 #7** — PASS
+- **Navigation Context V1 #9** / run `32282629416` — Search deep Species/Care restore + Aquarium roster child-detail return + exact focus PASS.
+- **UI UX System Refactor V1 #81** / run `32282629391` — PASS.
+- **UI UX Visual QA V2 #64** / run `32282629417` — PASS.
+- **UI UX Golden V3 #26** / run `32282629479` — PASS.
+- **Bundle Audit V1 #19** / run `32282629407` — PASS.
 
-Canonical badcase append:
+The product build still reports the known bundle warnings. This Navigation Context work does **not** claim bundle reduction or dependency remediation.
 
-- commit `1e7eea5d7f4326b161d6ecbd953ba3394e1fe564`
-- `evaluation/product/badcases.v1.jsonl`
-- compare against implementation head: exactly **+1 / -0**
-- PUI-BC-050 status: `regression_verified`
+## Prior PUI-BC-050 behavior retained
 
-## UI/UX / Visual evaluation baseline retained
+The risky Species Detail interaction remains deliberately two-stage:
 
-System responsibilities remain separated:
+- first “risk / alternatives” action stays in the detail and reveals Compatibility evidence;
+- after the evidence has been reviewed, the user may enter the full Compatibility calculator;
+- full Compatibility is a top-level fixed drawer and does not deep-scroll the underlying Atlas.
 
-1. **System contracts** — tokens, layout, interaction/accessibility, route browser regressions.
-2. **Visual QA V2** — broad 48-screenshot matrix across 390 / 768 / 1024 / 1440 and six primary routes.
-3. **Golden V3** — eight stable normalized fold signatures with strict pixel-diff thresholds.
+Permanent regression remains `scripts/verify-encyclopedia-risk-navigation.mjs` in System CI.
 
-Golden V3 approved cohort remains:
+## Evaluation layers retained
 
-- Aquarium 390 / 768 / 1024 / 1440
-- Search 1024 / 1440
-- Collection 390 / 1440
+1. **System contracts** — tokens, layout, interaction/accessibility, route regressions.
+2. **Navigation Context V1** — task-return semantics across nested/search detail flows.
+3. **Visual QA V2** — 48 screenshots across 390 / 768 / 1024 / 1440 and six primary routes.
+4. **Golden V3** — eight stable normalized fold signatures with strict pixel-diff thresholds.
+5. **Bundle Audit V1** — measurement only; not yet an optimization claim.
 
-Final thresholds remain Aquarium ≤0.50%, Search ≤0.35%, Collection ≤0.30%, grayscale delta 24. Do not widen thresholds or update signatures merely to make CI green.
+## Governance status
 
-CJK rendering remains fail-closed. `scripts/ensure-cjk-font.sh` + Actions cache may optimize font provisioning, but `fc-match` for `Noto Sans CJK SC` is still mandatory.
+- `BADCASE_LATEST.md` documents PUI-BC-051 and PUI-BC-052.
+- `PROGRESS_LATEST.md` records fail-before, evaluator corrections and final green evidence.
+- Canonical `evaluation/product/badcases.v1.jsonl` still needs PUI-BC-051/052 appended as an exact +2 / -0 change before this audit is fully closed.
+- After canonical append, re-run the mandatory System gate and update PR #104 body.
 
-## Bundle audit state
+## Explicit remaining work
 
-Bundle audit is measurement-only so far; no bundle-size improvement should be claimed yet.
-
-Known baseline findings:
-
-- entry chunk roughly 2.1 MiB in normal Vite output
-- `fishData.ts` and localization data are major entry contributors through root-level synchronous localization dependencies
-- PostHog is another removable eager dependency candidate
-- Three/React Three Fiber is largely already isolated in its own large chunk
-
-The next safe performance work is to remove low-risk eager dependencies first and compare against the established audit baseline. The synchronous locale/data mutation path should not be made async without explicitly handling locale-race/flicker behavior.
-
-## Explicit non-claims / remaining work
-
-- No merge to RC1 or `main`.
-- No production deployment.
-- PUI-BC-050 is browser-regression verified on the Draft PR; it is not yet a production observation.
-- Bundle/chunk optimization is not complete.
-- Existing dependency vulnerabilities remain separate debt.
-- The wrapper/Base repair should eventually be simplified after behavior is stable, but must not be refactored without retaining the new two-stage navigation and scroll regressions.
+- Do not merge or deploy until canonical Navigation Context governance is complete and latest mandatory checks are green.
+- After this closure, perform **#104 Merge Readiness** before adding more UI features: scope audit, temporary wrapper/Base review, obsolete test cleanup, and final mandatory-check matrix.
+- Bundle/code-splitting remains a separate measured debt: entry is still roughly 2.1 MiB and synchronous localization/data dependencies remain the major structural obstacle.
+- Existing npm audit findings remain separate debt.
