@@ -56,9 +56,11 @@ assert(calculatorHandlerStart >= 0, 'Encyclopedia must expose an explicit calcul
 assert(!calculatorHandler.includes('closeAtlasDetail('), 'Selecting a species for compatibility must not close a browsing detail automatically');
 assert(!calculatorHandler.includes("setViewMode('compatibility')"), 'Selecting a species must not switch the user into compatibility mode automatically');
 assert(!calculatorHandler.includes('navigateToRoute('), 'Selecting a species must not navigate before the user explicitly asks to view compatibility results');
-assert(species.includes("return inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.addToCalcBtn');"), 'Risk detail CTA must name the decision explicitly: add first, view results second');
-assert(species.includes('data-species-detail-compatibility-action'), 'Species detail must expose a stable explicit compatibility-decision CTA');
-assert(!species.includes("if (!inCalculator) onAddToCalculator(fish);\n    onGoCalculator?.();"), 'Species detail must not combine add-to-selection and navigation in one implicit action');
+assert(!species.includes('onAddToCalculator(fish);'), 'Opening or acting inside species detail must never mutate compatibility selection');
+assert(species.includes("return t('encyclopedia.goToCalcBtn');"), 'Risk detail CTA must navigate to the compatibility tool rather than preselecting the species');
+assert(species.includes("data-species-detail-compatibility-action=\"open-calculator\""), 'Species detail compatibility entry must be navigation-only');
+assert(!species.includes("data-species-detail-compatibility-action={inCalculator ? 'view-result' : 'add-selection'}"), 'Species detail must not expose an implicit add-selection state');
+assert(species.includes("const handleOpenCalculator = () => {\n    if (!fish) return;\n    onGoCalculator?.();\n  };"), 'Species detail calculator entry must be read-only navigation');
 
 assert(!aquarium.includes('selectedDailyCheckArticle'), 'Daily Check reference guidance must not require a second article Dialog state');
 assert(!aquarium.includes("primaryActionType: diagnosisIssueType === '巡检' && dailyCheckArticles[0] ? 'dialog' : 'mutation'"), 'Daily Check primary action must not be modeled as an implicit Dialog launch');
