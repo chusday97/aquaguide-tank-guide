@@ -8,7 +8,9 @@ on:
       - 'src/main.tsx'
       - 'src/components/layout/**'
       - 'src/components/product/**'
+      - 'src/components/SpeciesDetailDialog*.tsx'
       - 'src/pages/Aquarium.tsx'
+      - 'src/pages/Encyclopedia*.tsx'
       - 'src/pages/Search.tsx'
       - 'src/pages/CollectionHub.tsx'
       - 'src/pages/Collection.tsx'
@@ -18,6 +20,7 @@ on:
       - 'scripts/test-typography-system.mjs'
       - 'scripts/test-collection-swipe-cards.mjs'
       - 'scripts/test-uiux-system-contract.mjs'
+      - 'scripts/verify-encyclopedia-risk-navigation.mjs'
       - 'scripts/verify-search-show-all-v2.mjs'
       - 'scripts/verify-collection-hub-previews.mjs'
       - 'scripts/verify-golden-path-collection-context.mjs'
@@ -61,6 +64,10 @@ jobs:
           done
           cat /tmp/aquaguide-uiux-system-preview.log
           exit 1
+      - name: Encyclopedia risk navigation regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-encyclopedia-risk-navigation.mjs
       - name: Search hierarchy browser regression
         env:
           PREVIEW_URL: http://127.0.0.1:4173
