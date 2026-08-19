@@ -31,7 +31,7 @@
       "route": "/aquarium",
       "sourceFile": "phone-390__aquarium__fold.png",
       "masks": [],
-      "maxDiffRatio": 0.025,
+      "maxDiffRatio": 0.005,
       "reference": {
         "sourceWidth": 390,
         "sourceHeight": 844,
@@ -46,7 +46,7 @@
       "route": "/aquarium",
       "sourceFile": "compact-desktop-768__aquarium__fold.png",
       "masks": [],
-      "maxDiffRatio": 0.025,
+      "maxDiffRatio": 0.005,
       "reference": {
         "sourceWidth": 768,
         "sourceHeight": 900,
@@ -64,7 +64,7 @@
         { "x": 794, "y": 166, "width": 220, "height": 194, "reason": "WebGL tank context" },
         { "x": 219, "y": 790, "width": 805, "height": 110, "reason": "daily recommendation content" }
       ],
-      "maxDiffRatio": 0.025,
+      "maxDiffRatio": 0.005,
       "reference": {
         "sourceWidth": 1024,
         "sourceHeight": 900,
@@ -82,7 +82,7 @@
         { "x": 1158, "y": 170, "width": 266, "height": 218, "reason": "WebGL tank context" },
         { "x": 279, "y": 821, "width": 1161, "height": 179, "reason": "daily recommendation content" }
       ],
-      "maxDiffRatio": 0.025,
+      "maxDiffRatio": 0.005,
       "reference": {
         "sourceWidth": 1440,
         "sourceHeight": 1000,
@@ -97,7 +97,7 @@
       "route": "/search?q=%E9%B1%BC",
       "sourceFile": "desktop-1024__search__fold.png",
       "masks": [],
-      "maxDiffRatio": 0.02,
+      "maxDiffRatio": 0.0035,
       "reference": {
         "sourceWidth": 1024,
         "sourceHeight": 900,
@@ -112,7 +112,7 @@
       "route": "/search?q=%E9%B1%BC",
       "sourceFile": "wide-1440__search__fold.png",
       "masks": [],
-      "maxDiffRatio": 0.02,
+      "maxDiffRatio": 0.0035,
       "reference": {
         "sourceWidth": 1440,
         "sourceHeight": 1000,
@@ -127,7 +127,7 @@
       "route": "/collection",
       "sourceFile": "phone-390__collection__fold.png",
       "masks": [],
-      "maxDiffRatio": 0.018,
+      "maxDiffRatio": 0.003,
       "reference": {
         "sourceWidth": 390,
         "sourceHeight": 844,
@@ -142,7 +142,7 @@
       "route": "/collection",
       "sourceFile": "wide-1440__collection__fold.png",
       "masks": [],
-      "maxDiffRatio": 0.018,
+      "maxDiffRatio": 0.003,
       "reference": {
         "sourceWidth": 1440,
         "sourceHeight": 1000,
