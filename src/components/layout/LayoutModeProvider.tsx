@@ -20,8 +20,12 @@ export const detectLayoutMode = (
 
   if (!navigatorLike) return 'desktop';
   const userAgent = navigatorLike.userAgent || '';
-  if (/iPhone|iPod|Windows Phone|Android.+Mobile|Mobile.+Safari/i.test(userAgent)) return 'phone';
+
+  // Viewport width is the product source of truth. UA parsing exists only as a fallback for
+  // environments where width is unavailable, so tablets must be checked before generic
+  // "Mobile Safari" patterns that also occur in iPad user agents.
   if (/iPad|Tablet|PlayBook|Silk/i.test(userAgent)) return 'desktop';
+  if (/iPhone|iPod|Windows Phone|Android.+Mobile|Mobile.+Safari/i.test(userAgent)) return 'phone';
 
   if (typeof navigatorLike.userAgentData?.mobile === 'boolean') {
     return navigatorLike.userAgentData.mobile ? 'phone' : 'desktop';
