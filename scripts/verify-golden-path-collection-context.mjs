@@ -68,7 +68,7 @@ const assertFocusCarousel = async page => {
   assert.equal(await getActiveModule(page), 'wishlist', 'Wishlist must be the initial active collection module.');
 
   await page.waitForTimeout(350);
-  const carouselBox = await carousel.locator('> div').first().boundingBox();
+  const carouselBox = await carousel.locator(':scope > div').first().boundingBox();
   const activeBox = await carousel.locator('[data-carousel-active="true"]').boundingBox();
   assert.ok(activeBox && carouselBox, 'Collection carousel and active card must have measurable geometry.');
   const activeCenter = activeBox.x + activeBox.width / 2;
