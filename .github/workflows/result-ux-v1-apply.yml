@@ -7,6 +7,14 @@ on:
     paths:
       - scripts/apply-result-ux-v1.mjs
       - .github/workflows/result-ux-v1-apply.yml
+  pull_request:
+    branches:
+      - agent/uiux-system-refactor-v1
+    paths:
+      - scripts/apply-result-ux-v1.mjs
+      - .github/workflows/result-ux-v1-apply.yml
+      - src/components/result/**
+      - src/modules/result/**
 
 permissions:
   contents: write
