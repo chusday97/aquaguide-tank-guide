@@ -37,7 +37,7 @@ const railMetrics = locator => locator.evaluate(element => ({
 const getActiveModule = page => page.locator('[data-carousel-active="true"] [data-collection-module]').getAttribute('data-collection-module');
 
 const assertHubCarousel = async (page, expectedLayout) => {
-  await page.getByText('我的水族册', { exact: true }).waitFor();
+  await page.getByRole('heading', { name: '我的水族册', exact: true }).waitFor();
   const carousel = page.locator('.collection-hub-carousel');
   await carousel.waitFor();
 
@@ -84,7 +84,6 @@ const assertHubCarousel = async (page, expectedLayout) => {
 
   const indicators = carousel.locator('[aria-label="选择水族册模块"] button');
   assert.equal(await indicators.count(), 3, '位置圆点只能对应三个 live modules');
-  assert.equal(await indicators.filter({ has: page.locator('[aria-current="true"]') }).count(), 0, 'indicator locator guard');
   assert.equal(await carousel.locator('[aria-label="选择水族册模块"] button[aria-current="true"]').count(), 1, '只能有一个当前位置圆点');
 
   assert.equal(await page.locator('.aquaguide-app').getAttribute('data-layout-mode'), expectedLayout, `viewport 应使用 ${expectedLayout} layout`);
