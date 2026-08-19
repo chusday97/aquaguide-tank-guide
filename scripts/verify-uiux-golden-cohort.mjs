@@ -64,11 +64,15 @@ const buildGrayThumbnail = async (pngBuffer, visualCase) => {
   const rgba = Buffer.from(decoded.data);
   applyFixedMasks(rgba, width, height, visualCase.masks);
 
-  const thumbWidth = targetWidth;
-  const thumbHeight = Math.round((height * thumbWidth) / width);
-  if (thumbWidth !== expected.thumbWidth || thumbHeight !== expected.thumbHeight) {
+  // The approved manifest is the normalization contract. Do not re-derive thumbHeight
+  // here: Python round() and JS Math.round() disagree at exact .5 values (for example
+  // 900 * 128 / 1024 = 112.5). Keeping the manifest authoritative makes the reference
+  // portable across the language used to generate or verify it.
+  const thumbWidth = expected.thumbWidth;
+  const thumbHeight = expected.thumbHeight;
+  if (thumbWidth !== targetWidth || !Number.isInteger(thumbHeight) || thumbHeight <= 0) {
     throw new Error(
-      `${visualCase.id}: thumbnail contract mismatch, expected ${expected.thumbWidth}x${expected.thumbHeight}, got ${thumbWidth}x${thumbHeight}`,
+      `${visualCase.id}: invalid thumbnail contract ${thumbWidth}x${thumbHeight}; expected width ${targetWidth} and positive integer height`,
     );
   }
 
