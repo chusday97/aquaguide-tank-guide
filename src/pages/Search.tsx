@@ -30,6 +30,23 @@ const getSpeciesNameLocalized = (species: any, isEn = false): string => {
 
 const normalize = (value: string) => value.trim().toLocaleLowerCase();
 const originalValue = (record: object, key: string) => String((record as Record<string, unknown>)[key] ?? '');
+const getSpeciesSearchResults = (value: string) => {
+  const normalizedQuery = normalize(value);
+  if (!normalizedQuery) return [];
+  return fishData.filter(fish => normalize([
+    fish.name,
+    fish.scientificName,
+    fish.category,
+    fish.description,
+    originalValue(fish, '_originalName'),
+    originalValue(fish, '_originalCategory'),
+    originalValue(fish, '_originalDescription'),
+    englishTranslations[fish.id]?.name,
+    englishTranslations[fish.id]?.description,
+    autoTranslations[fish.id]?.name,
+    autoTranslations[fish.id]?.description,
+  ].join(' ')).includes(normalizedQuery));
+};
 
 export default function SearchPage() {
   const { t, i18n } = useTranslation();
@@ -39,6 +56,7 @@ export default function SearchPage() {
   const query = searchParams.get('q') ?? '';
   const [draft, setDraft] = useState(query);
   const [selectedSpecies, setSelectedSpecies] = useState<SearchSuggestion | null>(null);
+  const [showAllSpecies, setShowAllSpecies] = useState(false);
   const normalizedQuery = normalize(query);
   const aquarium = useMemo(() => {
     const state = loadAppStateFromStorage();
@@ -55,6 +73,7 @@ export default function SearchPage() {
     careTopics: careTopicsData,
     ownedQuantityBySpeciesId,
   }), [draft, isEn, ownedQuantityBySpeciesId]);
+  const draftSpeciesMatchCount = useMemo(() => getSpeciesSearchResults(draft).length, [draft]);
 
   useEffect(() => {
     const sourceId = sessionStorage.getItem('aquaguide_search_return_focus');
@@ -72,22 +91,8 @@ export default function SearchPage() {
     navigateToRoute(path);
   };
 
-  const allSpeciesResults = useMemo(() => normalizedQuery
-    ? fishData.filter(fish => normalize([
-      fish.name,
-      fish.scientificName,
-      fish.category,
-      fish.description,
-      originalValue(fish, '_originalName'),
-      originalValue(fish, '_originalCategory'),
-      originalValue(fish, '_originalDescription'),
-      englishTranslations[fish.id]?.name,
-      englishTranslations[fish.id]?.description,
-      autoTranslations[fish.id]?.name,
-      autoTranslations[fish.id]?.description,
-    ].join(' ')).includes(normalizedQuery))
-    : [], [normalizedQuery]);
-  const speciesResults = allSpeciesResults.slice(0, 18);
+  const allSpeciesResults = useMemo(() => getSpeciesSearchResults(query), [query]);
+  const speciesResults = showAllSpecies ? allSpeciesResults : allSpeciesResults.slice(0, 18);
   const allCareResults = useMemo(() => normalizedQuery
     ? careTopicsData.filter(topic => normalize([
       topic.title,
@@ -107,12 +112,21 @@ export default function SearchPage() {
   const submit = (event: FormEvent) => {
     event.preventDefault();
     const next = draft.trim();
+    setShowAllSpecies(false);
     setSearchParams(next ? { q: next } : {});
   };
 
   const submitValue = (value: string) => {
     const next = value.trim();
+    setShowAllSpecies(false);
     setSearchParams(next ? { q: next } : {});
+  };
+
+  const showAllSpeciesResults = () => {
+    const next = draft.trim();
+    if (!next) return;
+    setSearchParams({ q: next });
+    setShowAllSpecies(true);
   };
 
   const selectSuggestion = (suggestion: SearchSuggestion) => {
@@ -158,17 +172,18 @@ export default function SearchPage() {
           relatedGroupLabel={t('searchPage.relatedSearches')}
           filterGroupLabel={t('searchPage.filterSuggestions')}
           ownedLabel={quantity => t('searchPage.ownedQuantity', { count: quantity })}
-          totalSpeciesMatches={suggestionResult.totalSpeciesMatches}
+          totalSpeciesMatches={draftSpeciesMatchCount}
           viewAllSpeciesLabel={count => t('searchPage.viewAllSpecies', { count })}
           onValueChange={value => {
             setDraft(value);
             setSelectedSpecies(null);
+            setShowAllSpecies(false);
           }}
           onSelectSuggestion={selectSuggestion}
           onSubmit={submitValue}
           onViewSelected={suggestion => suggestion.targetId && openSearchResult(`/encyclopedia?species=${encodeURIComponent(suggestion.targetId)}&source=search`, `search-species-${suggestion.targetId}`)}
           onReselect={() => setSelectedSpecies(null)}
-          onViewAllSpecies={() => submitValue(draft)}
+          onViewAllSpecies={showAllSpeciesResults}
         />
       </form>
 
