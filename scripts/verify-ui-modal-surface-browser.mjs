@@ -10,7 +10,14 @@ const aquariumState = {
   aquariums: [{
     id: 'tank-modal-rc1',
     name: '弹窗回归测试缸',
-    fishes: [],
+    fishes: [{
+      id: 'aqf-modal-1',
+      fishId: 'sp_0001',
+      quantity: 2,
+      entryDate: now,
+      createdAt: now,
+      updatedAt: now,
+    }],
     lastWaterChangeDate: today,
     waterChangeHistory: [today],
     dimensions: { length: '60', width: '30', height: '30' },
@@ -57,6 +64,8 @@ try {
   }, aquariumState);
 
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+
+  // Read-only Data & Backup reuses Settings instead of opening a second modal.
   const moreButton = page.getByRole('button', { name: '更多鱼缸操作', exact: true });
   await moreButton.waitFor();
   await moreButton.click();
@@ -65,7 +74,7 @@ try {
   const storagePanel = page.locator('[data-settings-storage-panel]');
   await storagePanel.waitFor();
 
-  const visibleDialogs = page.locator('[role="dialog"]:visible');
+  let visibleDialogs = page.locator('[role="dialog"]:visible');
   assert.equal(await visibleDialogs.count(), 1, 'Data & Backup must reuse exactly one Settings surface, not open a nested/standalone dialog.');
   await page.getByRole('heading', { name: '鱼缸设置', exact: true }).waitFor();
   await page.getByText('数据与备份', { exact: true }).last().waitFor();
@@ -74,9 +83,37 @@ try {
   const explicitClose = visibleDialogs.locator('button').filter({ hasText: /^关闭$/ }).first();
   await explicitClose.waitFor();
   assert.equal((await explicitClose.textContent())?.trim(), '关闭', 'Read-only Data panel must expose an explicit Close action instead of Save Settings.');
+  await explicitClose.click();
+  await storagePanel.waitFor({ state: 'hidden' });
 
-  assert.deepEqual(pageErrors, [], `Data & Backup Settings path must not emit page errors: ${pageErrors.join('; ')}`);
-  console.log('UI modal surface browser contract PASS: mobile Data & Backup reuses one Settings surface with read-only close semantics.');
+  // Aquarium roster must open the real shared species detail; viewing must not mutate compatibility selection.
+  const archiveButton = page.locator('#aquarium-records > button');
+  await archiveButton.waitFor();
+  await archiveButton.click();
+  const rosterDialog = page.locator('[role="dialog"]:visible');
+  await rosterDialog.getByRole('heading', { name: '缸内物种', exact: true }).waitFor();
+  const residentProfileButton = rosterDialog.locator('button').filter({ has: page.locator('img[alt="极火虾"]') }).first();
+  await residentProfileButton.waitFor();
+  await residentProfileButton.click();
+
+  const speciesDetail = page.locator('[data-detail-kind="species"]:visible');
+  await speciesDetail.waitFor();
+  await speciesDetail.getByText('极火虾', { exact: true }).first().waitFor();
+  assert.deepEqual(
+    await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]')),
+    [],
+    'Opening an owned species detail from the Aquarium roster must not implicitly add it to compatibility selection.',
+  );
+  visibleDialogs = page.locator('[role="dialog"]:visible');
+  assert.equal(await visibleDialogs.count(), 1, 'Opening species detail from the roster must replace the roster surface rather than nest another modal.');
+
+  await page.keyboard.press('Escape');
+  await speciesDetail.waitFor({ state: 'hidden' });
+  assert.equal(new URL(page.url()).pathname, '/aquarium', 'Closing Aquarium species detail must preserve the Aquarium route.');
+  await page.locator('#aquarium-records').waitFor();
+
+  assert.deepEqual(pageErrors, [], `RC1 modal/detail paths must not emit page errors: ${pageErrors.join('; ')}`);
+  console.log('UI modal/detail browser contract PASS: Data reuses Settings; Aquarium roster opens one shared species detail; browsing does not mutate compatibility selection.');
 } finally {
   await browser.close();
 }
