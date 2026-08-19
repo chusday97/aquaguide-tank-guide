@@ -11,6 +11,35 @@
   min-height: 44px;
 }
 
+/* Return-context navigation is persistent chrome, not page content. Reserve a dedicated
+ * band whenever it exists so the floating pill cannot cover the aquarium identity header,
+ * onboarding card or first task surface. The normal page keeps its original spacing when
+ * there is no return context. */
+[data-workspace-return] {
+  min-height: 44px !important;
+}
+
+@media (max-width: 767px) {
+  [data-workspace-return] {
+    top: 10px !important;
+    left: 12px !important;
+  }
+
+  body:has([data-workspace-return]) .phone-shell-active .app-main-shell > main {
+    padding-top: 66px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  [data-workspace-return] {
+    top: 14px !important;
+  }
+
+  body:has([data-workspace-return]) .aquaguide-app.desktop-shell-active .desktop-workspace-scroll {
+    padding-top: 72px !important;
+  }
+}
+
 /* Search is a nested information surface: the page can be on a desktop viewport while the
  * actual workspace is still narrow because of the sidebar. Use content width instead of
  * viewport breakpoints so Species and Care never squeeze each other into unreadable cards. */
