@@ -27,6 +27,18 @@ export function SpeciesDetailDialog(props: SpeciesDetailDialogProps) {
     calculatorIntentRef.current = target.closest('.modalFooter') ? 'footer' : null;
   };
 
+  const handleOpenChange: NonNullable<SpeciesDetailDialogProps['onOpenChange']> = open => {
+    props.onOpenChange?.(open);
+    if (!open && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('aquaguide:species-detail-dismissed', {
+        detail: {
+          source: props.source,
+          fishId: props.fish?.id || '',
+        },
+      }));
+    }
+  };
+
   const handleGoCalculator = () => {
     const intent = calculatorIntentRef.current;
     calculatorIntentRef.current = null;
@@ -57,7 +69,11 @@ export function SpeciesDetailDialog(props: SpeciesDetailDialogProps) {
 
   return (
     <div style={{ display: 'contents' }} onClickCapture={handleClickCapture}>
-      <BaseSpeciesDetailDialog {...props} onGoCalculator={handleGoCalculator} />
+      <BaseSpeciesDetailDialog
+        {...props}
+        onOpenChange={handleOpenChange}
+        onGoCalculator={handleGoCalculator}
+      />
     </div>
   );
 }
