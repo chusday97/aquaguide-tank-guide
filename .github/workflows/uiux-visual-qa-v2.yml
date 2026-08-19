@@ -8,6 +8,7 @@ on:
       - 'components/**'
       - 'scripts/capture-uiux-visual-baseline.mjs'
       - 'scripts/verify-uiux-aquarium-visual-hierarchy.mjs'
+      - 'scripts/verify-uiux-search-density.mjs'
       - '.github/workflows/uiux-visual-qa-v2.yml'
 
 permissions:
@@ -48,6 +49,10 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-uiux-aquarium-visual-hierarchy.mjs
+      - name: Search medium-workspace density
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-uiux-search-density.mjs
       - name: Capture cross-surface visual baseline
         env:
           PREVIEW_URL: http://127.0.0.1:4173
