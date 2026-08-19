@@ -542,7 +542,7 @@ export function SpeciesDetailDialog({
     }
     if (displayFit.status === 'suitable') return t('encyclopedia.btnJoinTank');
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') {
-      return inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.addToCalcBtn');
+      return t('encyclopedia.goToCalcBtn');
     }
     return t('encyclopedia.btnCompleteSetup');
   }, [aquariumContext, displayFit, inCalculator, owned, source, t]);
@@ -639,10 +639,6 @@ export function SpeciesDetailDialog({
       return;
     }
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') {
-      if (!inCalculator) {
-        onAddToCalculator(fish);
-        return;
-      }
       onGoCalculator?.();
       return;
     }
@@ -657,10 +653,6 @@ export function SpeciesDetailDialog({
 
   const handleOpenCalculator = () => {
     if (!fish) return;
-    if (!inCalculator) {
-      onAddToCalculator(fish);
-      return;
-    }
     onGoCalculator?.();
   };
 
@@ -1010,9 +1002,9 @@ export function SpeciesDetailDialog({
                             </div>
                           )}
                           {!['caution', 'unsuitable', 'conflictRisk'].includes(displayFit.status) && (
-                            <button type="button" data-species-detail-compatibility-action={inCalculator ? 'view-result' : 'add-selection'} onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
+                            <button type="button" data-species-detail-compatibility-action="open-calculator" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
                               <Calculator className="h-4 w-4" />
-                              {inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.addToCalcBtn')}
+                              {t('encyclopedia.goToCalcBtn')}
                             </button>
                           )}
                         </div>

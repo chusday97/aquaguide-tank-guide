@@ -68,34 +68,36 @@ try {
     'opening the species detail must not silently mutate compatibility selection',
   );
 
-  // Milestone 3: selection and navigation are separate intents.
-  // First click explicitly adds 宝莲灯 to the compatibility selection and keeps the detail open.
-  let mainTaskAction = detail.locator('.modalFooter button').first();
+  // Milestone 3: browsing and compatibility selection are separate intents.
+  // Species detail can only open the compatibility tool; it must not preselect 宝莲灯.
+  const mainTaskAction = detail.locator('.modalFooter button').first();
   await mainTaskAction.waitFor();
-  const addLabel = (await mainTaskAction.textContent())?.trim() || '';
-  assert.match(addLabel, /加入.*混养|加入.*判断/, `first compatibility CTA must explicitly add the species, got: ${addLabel}`);
+  const resultLabel = (await mainTaskAction.textContent())?.trim() || '';
+  assert.match(resultLabel, /查看.*混养|混养.*结果|查看.*判断/, `species detail CTA must only open the compatibility tool, got: ${resultLabel}`);
   await mainTaskAction.click();
 
+  const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
+  await calculator.waitFor();
+  assert.deepEqual(
+    await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]')),
+    [],
+    'opening the compatibility tool from species detail must still not preselect the browsed species',
+  );
+
+  // The user now makes the higher-commitment choice explicitly inside the compatibility tool.
+  const selector = calculator.locator('[data-compatibility-selection]');
+  const searchInput = selector.getByPlaceholder('搜索鱼、虾、螺等生物');
+  await searchInput.waitFor();
+  await searchInput.fill('宝莲灯');
+  const candidateChoice = selector.getByRole('button', { name: /宝莲灯/ }).first();
+  await candidateChoice.waitFor();
+  await candidateChoice.click();
   await page.waitForFunction(() => {
     const selected = JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]');
     return Array.isArray(selected) && selected.includes('sp_0432');
   });
-  assert.match(page.url(), /species=sp_0432/, 'adding to compatibility selection must preserve the species detail route');
-  await detail.waitFor();
 
-  // The same explicit task CTA now advances to the second intent: view the compatibility result.
-  mainTaskAction = detail.locator('.modalFooter button').first();
-  await page.waitForFunction(() => {
-    const button = document.querySelector('[data-detail-kind="species"] .modalFooter button');
-    return /查看.*混养|混养.*结果|查看.*判断/.test(button?.textContent || '');
-  });
-  const resultLabel = (await mainTaskAction.textContent())?.trim() || '';
-  assert.match(resultLabel, /查看.*混养|混养.*结果|查看.*判断/, `second compatibility CTA must explicitly open the result, got: ${resultLabel}`);
-  await mainTaskAction.click();
-
-  // Milestones 4–5: the decision drawer must retain the real tank baseline and exact candidate.
-  const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
-  await calculator.waitFor();
+  // Milestones 4–5: after explicit selection, the decision drawer retains the real tank baseline and exact candidate.
   await calculator.getByText('当前鱼缸', { exact: true }).waitFor();
   await calculator.getByText('红绿灯', { exact: true }).first().waitFor();
   const candidateName = calculator.getByText('宝莲灯', { exact: true }).first();
@@ -145,7 +147,7 @@ try {
   assert.equal(tank.fishes?.find(item => item.fishId === 'sp_0431')?.quantity, 6, 'existing 红绿灯 quantity must remain unchanged');
   assert.deepEqual(pageErrors, [], `GP-002 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-002 continuous E2E passed: search 宝莲灯 → read-only detail → explicit add to compatibility → explicit view result → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
+  console.log('GP-002 continuous E2E passed: search 宝莲灯 → read-only detail → open compatibility tool without selection → explicit selection inside tool → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
 } finally {
   await browser.close();
 }
