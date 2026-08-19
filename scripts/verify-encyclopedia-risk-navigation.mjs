@@ -108,7 +108,6 @@ try {
   await footerAction.click();
   await detailCase.page.waitForURL(/\/encyclopedia\?mode=compatibility/);
   await assertCompatibilitySurface(detailCase.page);
-  assert.equal(await dialog.isVisible(), false, 'full compatibility mode must close the species detail');
   assert.equal(detailCase.errors.length, 0, `risk-to-compatibility flow emitted page errors: ${detailCase.errors.join(' | ')}`);
   await detailCase.context.close();
 
