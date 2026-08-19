@@ -92,6 +92,11 @@ jobs:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-ui-interaction-repair-v1.mjs
 
+      - name: UI modal surface browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-modal-surface-browser.mjs
+
       - name: Care card action regression
         env:
           PREVIEW_URL: http://127.0.0.1:4173
