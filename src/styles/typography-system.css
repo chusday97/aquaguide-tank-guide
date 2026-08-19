@@ -1,6 +1,6 @@
 /* AquaGuide UI foundation
  * Typography is migrated component-by-component instead of globally rewriting every legacy
- * font utility. Surface widths are task-aware and collection content uses swipeable card rails.
+ * font utility. Surface widths are task-aware and saved-item collections use swipeable rails.
  */
 
 :root,
@@ -78,8 +78,8 @@
   }
 }
 
-/* Collection browsing contract: saved content is a horizontal snap rail, not a dense grid.
- * The next card deliberately peeks into view on phones; desktop trackpads can scroll the rail. */
+/* Saved-object browsing remains a horizontal snap rail. The collection hub itself now uses
+ * an explicit focus carousel in CollectionHub.tsx, so it must not inherit these rail rules. */
 .collection-wishlist-grid,
 .collection-care-grid {
   display: flex !important;
@@ -96,8 +96,7 @@
 }
 
 .collection-wishlist-grid::-webkit-scrollbar,
-.collection-care-grid::-webkit-scrollbar,
-.collection-hub > section[aria-label]::-webkit-scrollbar {
+.collection-care-grid::-webkit-scrollbar {
   display: none;
 }
 
@@ -115,24 +114,8 @@
   flex: 0 0 min(86vw, 360px);
 }
 
-.collection-hub > section[aria-label] {
-  display: flex !important;
-  min-width: 0;
-  gap: 14px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 2px 42px 10px 2px;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.collection-hub > section[aria-label] > section {
-  flex: 0 0 min(88vw, 390px);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+.collection-hub-carousel [data-carousel-card] {
+  touch-action: pan-y;
 }
 
 @media (min-width: 768px) {
@@ -142,10 +125,6 @@
 
   .collection-care-grid > article {
     flex-basis: 360px;
-  }
-
-  .collection-hub > section[aria-label] > section {
-    flex-basis: 390px;
   }
 }
 

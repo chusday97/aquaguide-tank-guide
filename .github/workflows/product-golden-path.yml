@@ -28,6 +28,7 @@ jobs:
           npm run test:task-entry
           npm run test:core-flow-state-eval
           npm run test:daily-check
+          npm run test:collection-swipe-cards
       - name: Type check
         run: npm run lint
       - name: Build

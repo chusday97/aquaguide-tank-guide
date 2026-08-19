@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Children, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion, type PanInfo } from 'motion/react';
 import {
   BookHeart,
   BookOpenCheck,
   Check,
+  ChevronLeft,
   ChevronRight,
   Heart,
   Medal,
@@ -38,6 +40,109 @@ const achievementIcons: Record<AchievementId, typeof Medal> = {
   life_reflection: Medal,
 };
 
+function CollectionCarousel({
+  children,
+  isEn,
+}: {
+  children: ReactNode;
+  isEn: boolean;
+}) {
+  const items = Children.toArray(children);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const count = items.length;
+
+  if (count === 0) return null;
+
+  const activeIndex = ((currentIndex % count) + count) % count;
+  const move = (delta: number) => setCurrentIndex(previous => previous + delta);
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipe = info.offset.x + info.velocity.x * 0.18;
+    if (swipe < -50) move(1);
+    if (swipe > 50) move(-1);
+  };
+
+  return (
+    <div className="collection-hub-carousel" aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
+      <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden sm:h-[410px]">
+        {items.map((item, index) => {
+          let offset = index - activeIndex;
+          if (offset > Math.floor(count / 2)) offset -= count;
+          if (offset < -Math.floor(count / 2)) offset += count;
+
+          const isActive = offset === 0;
+          const distance = Math.abs(offset);
+          const opacity = distance >= 2 ? 0.04 : (isActive ? 1 : 0.3);
+
+          return (
+            <motion.div
+              key={index}
+              data-carousel-card
+              data-carousel-active={isActive ? 'true' : 'false'}
+              aria-hidden={!isActive}
+              initial={false}
+              animate={{
+                x: `${offset * 80}%`,
+                scale: isActive ? 1 : 0.86,
+                opacity,
+                filter: isActive ? 'blur(0px)' : 'blur(2px)',
+                zIndex: 20 - distance,
+              }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleDragEnd}
+              onClick={() => {
+                if (!isActive) setCurrentIndex(previous => previous + offset);
+              }}
+              className="absolute h-[356px] w-[min(80vw,390px)] origin-center cursor-grab active:cursor-grabbing sm:h-[374px] sm:w-[390px]"
+            >
+              <div className={isActive ? 'h-full' : 'pointer-events-none h-full select-none'}>
+                {item}
+              </div>
+            </motion.div>
+          );
+        })}
+
+        <div className="pointer-events-none absolute inset-x-0 z-30 flex items-center justify-between px-1 sm:px-8">
+          <button
+            type="button"
+            onClick={() => move(-1)}
+            aria-label={isEn ? 'Previous collection module' : '上一个水族册模块'}
+            className="pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-ink/55 shadow-md backdrop-blur transition hover:scale-105 hover:border-emerald-300 hover:text-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => move(1)}
+            aria-label={isEn ? 'Next collection module' : '下一个水族册模块'}
+            className="pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-ink/55 shadow-md backdrop-blur transition hover:scale-105 hover:border-emerald-300 hover:text-emerald-700 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-1 flex items-center justify-center gap-2" aria-label={isEn ? 'Choose collection module' : '选择水族册模块'}>
+        {items.map((_item, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => setCurrentIndex(previous => previous + (index - activeIndex))}
+            aria-label={isEn ? `Show collection module ${index + 1}` : `查看第 ${index + 1} 个水族册模块`}
+            aria-current={index === activeIndex ? 'true' : undefined}
+            className={`h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 ${index === activeIndex ? 'w-7 bg-emerald-700' : 'w-2 bg-slate-300 hover:bg-slate-400'}`}
+          />
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[11px] font-bold text-ink/38">
+        {isEn ? 'Swipe or use the arrows to browse your collection.' : '左右滑动或点击箭头，浏览你的水族册。'}
+      </p>
+    </div>
+  );
+}
+
 function CollectionModuleCard({
   id,
   title,
@@ -67,7 +172,7 @@ function CollectionModuleCard({
     <section
       data-collection-module={id}
       data-feature-status={building ? 'building' : undefined}
-      className={`flex min-h-[326px] min-w-0 flex-col rounded-[24px] border p-4 text-left ${id === 'achievements' ? 'border-slate-200 bg-slate-50 text-slate-500 shadow-none' : 'border-white/90 bg-white shadow-sm'}`}
+      className={`flex h-full min-h-0 min-w-0 flex-col rounded-[24px] border p-4 text-left ${id === 'achievements' ? 'border-slate-200 bg-slate-50 text-slate-500 shadow-none' : 'border-white/90 bg-white shadow-sm'}`}
     >
       {building ? (
         <div className="flex w-full items-center gap-3 rounded-[16px] text-left" aria-label={`${title}，${count}`}>
@@ -161,6 +266,8 @@ export default function CollectionHub() {
       .filter((item, index, items) => items.findIndex(candidate => candidate.id === item.id) === index)
       .slice(0, 2);
   }, [nextAchievement, snapshot.achievements, unlockedAchievement]);
+  void achievementPreviews;
+
   const openItem = (module: CollectionModule, itemId: string) => {
     if (module === 'memorial') {
       navigate(`/collection/memorial/${encodeURIComponent(itemId)}`);
@@ -181,7 +288,7 @@ export default function CollectionHub() {
         <p className="mt-1 text-[12px] font-bold text-ink/48">{isEn ? 'Wishlist · Care · Memorials' : '种草 · 养护 · 纪念'}</p>
       </header>
 
-      <section className="grid min-w-0 gap-3 min-[900px]:grid-cols-2" aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
+      <CollectionCarousel isEn={isEn}>
         <CollectionModuleCard
           id="wishlist"
           title={isEn ? 'Species Wishlist' : '种草图鉴'}
@@ -328,7 +435,7 @@ export default function CollectionHub() {
             description={isEn ? 'Track long-term care milestones.' : '记录你的养护里程碑。'}
           />
         </CollectionModuleCard>
-      </section>
+      </CollectionCarousel>
     </div>
   );
 }
