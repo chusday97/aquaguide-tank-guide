@@ -50,9 +50,10 @@ System regression still passes static contracts, TypeScript, production build, S
 - [x] `HANDOFF_LATEST.md` updated for Visual QA V2.
 - [x] `BADCASE_LATEST.md` updated with PUI-BC-045..048.
 - [x] `PROGRESS_LATEST.md` updated.
-- [ ] `VISUAL_QA_LATEST.md` create dedicated baseline record.
-- [ ] Append PUI-BC-045..048 to canonical `evaluation/product/badcases.v1.jsonl`.
-- [ ] Run final canonical `test:product-evaluation` on documentation/registry head.
+- [x] `VISUAL_QA_LATEST.md` created as the dedicated baseline/evidence record.
+- [x] PUI-BC-045..048 appended to canonical `evaluation/product/badcases.v1.jsonl`.
+- [x] Historical PUI-BC-032 trigger restored exactly after an append-time text drift was detected; new badcases remain intact.
+- [ ] Final canonical `test:product-evaluation` + system regression on the registry closeout head.
 - [ ] Update PR #104 body with authoritative Visual QA and final canonical validation.
 
 ## Still intentionally not done
