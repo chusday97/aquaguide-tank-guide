@@ -11,6 +11,25 @@
   min-height: 44px;
 }
 
+/* Search is a nested information surface: the page can be on a desktop viewport while the
+ * actual workspace is still narrow because of the sidebar. Use content width instead of
+ * viewport breakpoints so Species and Care never squeeze each other into unreadable cards. */
+.search-v2-page {
+  container: search-workspace / inline-size;
+}
+
+.search-v2-results {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: var(--ui-space-4);
+}
+
+@container search-workspace (min-width: 900px) {
+  .search-v2-results {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
 /* Desktop workspaces are long-lived task surfaces. Keep a subtle scroll-position affordance
  * instead of globally hiding the scrollbar; phone surfaces remain visually minimal. */
 @media (min-width: 768px) {
