@@ -3,7 +3,7 @@
 .aquarium-dashboard-v2 {
   display: grid;
   min-width: 0;
-  gap: 16px;
+  gap: 14px;
 }
 
 .aquarium-dashboard-v2__hero,
@@ -65,7 +65,8 @@
   line-height: 1.5;
 }
 
-.aquarium-dashboard-v2__secondary { opacity: 0.9; }
+/* Learning/discovery is intentionally tertiary on the tank-management home. */
+.aquarium-dashboard-v2__secondary { opacity: 0.84; }
 
 .aquarium-dashboard-v2 .aquarium-actions,
 .aquarium-dashboard-v2 .aquarium-archive,
@@ -83,9 +84,9 @@
 
 /* Tank art is contextual identity, not the primary decision surface. */
 .aquarium-dashboard-v2__context .aquarium-tank {
-  height: 180px;
+  height: 168px;
   border-radius: 18px;
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.035);
 }
 
 .aquarium-dashboard-v2__manage .aquarium-actions,
@@ -99,24 +100,24 @@
 .quick-action-stack {
   display: grid;
   min-width: 0;
-  gap: 10px;
+  gap: 8px;
 }
 
 .quick-action-more {
   min-width: 0;
   border-top: 1px solid rgba(27, 77, 62, 0.07);
-  padding-top: 8px;
+  padding-top: 6px;
 }
 
 .quick-action-more-summary {
   display: flex;
-  min-height: 42px;
+  min-height: 40px;
   cursor: pointer;
   list-style: none;
   align-items: center;
   gap: 8px;
   border-radius: 12px;
-  padding: 8px 10px;
+  padding: 7px 10px;
   color: rgba(26, 26, 26, 0.56);
   font-size: 12px;
   font-weight: 700;
@@ -147,34 +148,40 @@
 .quick-action-secondary { margin-top: 8px; }
 
 @container aquarium-home (min-width: 720px) {
-  .aquarium-dashboard-v2 { gap: 20px; }
+  .aquarium-dashboard-v2 { gap: 16px; }
 
+  /* Today is the hero. The 3D tank remains visible as identity/context, but it
+     must not look like an equally important task card. */
   .aquarium-dashboard-v2__hero {
     display: grid;
-    grid-template-columns: minmax(360px, 1.18fr) minmax(0, 0.82fr);
+    grid-template-columns: minmax(420px, 1.48fr) minmax(220px, 0.52fr);
     align-items: start;
-    gap: 16px;
+    gap: 14px;
   }
 
   .aquarium-dashboard-v2__decision,
   .aquarium-dashboard-v2__context { order: initial; }
 
   .aquarium-dashboard-v2__context .aquarium-tank {
-    height: clamp(260px, 28dvh, 340px);
-    min-height: 260px;
-    max-height: 340px;
+    height: clamp(190px, 21dvh, 230px);
+    min-height: 190px;
+    max-height: 230px;
   }
 
   .aquarium-dashboard-v2__manage-grid {
-    grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+    grid-template-columns: minmax(0, 1.42fr) minmax(240px, 0.58fr);
     align-items: start;
-    gap: 16px;
+    gap: 14px;
   }
 }
 
 @container aquarium-home (min-width: 1080px) {
   .aquarium-dashboard-v2__hero {
-    grid-template-columns: minmax(420px, 1.22fr) minmax(0, 0.78fr);
+    grid-template-columns: minmax(500px, 1.58fr) minmax(260px, 0.42fr);
+  }
+
+  .aquarium-dashboard-v2__manage-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.5fr);
   }
 }
 
@@ -250,7 +257,7 @@
   .aquarium-dashboard-v2__context { order: 3; }
   .aquarium-dashboard-v2__secondary { order: 4; }
 
-  .aquarium-dashboard-v2__context .aquarium-tank { height: 150px; }
+  .aquarium-dashboard-v2__context .aquarium-tank { height: 140px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
