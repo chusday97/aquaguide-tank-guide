@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
@@ -1703,14 +1703,15 @@ export default function CareEncyclopedia() {
 
   useEffect(() => {
     const topicId = new URLSearchParams(location.search).get('topic');
-    if (!topicId || selectedTopic?.id === topicId) return;
+    if (!topicId) return;
     openCareDetail(topicId, undefined, false);
-  }, [location.search, selectedTopic?.id]);
+  }, [location.search]);
 
   const closeCareDetail = () => {
+    const searchParams = new URLSearchParams(location.search);
     setSelectedTopic(null);
-    if (new URLSearchParams(location.search).has('topic')) {
-      if (new URLSearchParams(location.search).get('source') === 'search') {
+    if (searchParams.has('topic')) {
+      if (searchParams.get('source') === 'search') {
         navigate(-1);
         return;
       }
@@ -1887,6 +1888,7 @@ export default function CareEncyclopedia() {
   return (
     <div className="page-frame-wide care-workspace-shell min-w-0 overflow-x-hidden">
       <div className="care-workspace-grid flex min-w-0 flex-col gap-3 pb-4 md:pb-8">
+      <div data-care-browse-surface className={selectedTopic ? 'hidden' : 'contents'}>
       <section className="px-1 py-1 md:hidden">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -2094,28 +2096,46 @@ export default function CareEncyclopedia() {
         )}
       </section>
 
-      <Dialog open={!!selectedTopic} onOpenChange={(open) => !open && closeCareDetail()}>
-        <AdaptiveDetailContent>
-          {selectedTopic && (
-            <CareArticleDetail
-              key={selectedTopic.id}
-              topic={selectedTopic}
-              scrollRef={detailScrollRef}
-              checkedActions={checkedActions}
-              favorite={Boolean(favorites[selectedTopic.id])}
-              onToggleAction={(value) => toggleValue(value, setCheckedActions)}
-              onToggleFavorite={(source) => toggleFavorite(selectedTopic, source)}
-              onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
-              onOpenCareCard={() => setShareTopic(selectedTopic)}
-              onPreview={() => openPreview(selectedTopic)}
-              onSelectRelated={(topic) => openCareDetail(topic.id, undefined, false)}
-              onOpenCollection={() => navigateToRoute(taskRoutes.collection.care)}
-              onRestoreActions={setCheckedActions}
-              activeAquarium={activeAquarium}
-            />
-          )}
-        </AdaptiveDetailContent>
-      </Dialog>
+      </div>
+
+      {selectedTopic && (
+        <section
+          data-care-workspace-detail
+          className="min-w-0 overflow-hidden rounded-[24px] border border-white/80 bg-white shadow-sm"
+        >
+          <div className="sticky top-0 z-20 flex min-h-14 items-center justify-between gap-3 border-b border-border/70 bg-white/95 px-3 py-2 backdrop-blur md:px-4">
+            <button
+              type="button"
+              data-care-detail-back
+              onClick={closeCareDetail}
+              className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              {isEn ? 'Back to Care' : '返回养护'}
+            </button>
+            <div className="min-w-0 truncate text-[11px] font-bold text-ink/40">
+              {isEn ? 'Care detail' : '养护详情'}
+            </div>
+          </div>
+          <CareArticleDetail
+            key={selectedTopic.id}
+            topic={selectedTopic}
+            scrollRef={detailScrollRef}
+            checkedActions={checkedActions}
+            favorite={Boolean(favorites[selectedTopic.id])}
+            onToggleAction={(value) => toggleValue(value, setCheckedActions)}
+            onToggleFavorite={(source) => toggleFavorite(selectedTopic, source)}
+            onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
+            onOpenCareCard={() => setShareTopic(selectedTopic)}
+            onPreview={() => openPreview(selectedTopic)}
+            onSelectRelated={(topic) => openCareDetail(topic.id, undefined, false)}
+            onOpenCollection={() => navigateToRoute(taskRoutes.collection.care)}
+            onRestoreActions={setCheckedActions}
+            activeAquarium={activeAquarium}
+            embedded
+          />
+        </section>
+      )}
 
       {flyingFavorites.map(item => (
         <div
@@ -2899,6 +2919,7 @@ export function CareArticleDetail({
   onOpenCollection,
   onRestoreActions,
   activeAquarium,
+  embedded = false,
 }: {
   topic: CareTopic;
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -2913,6 +2934,7 @@ export function CareArticleDetail({
   onOpenCollection?: () => void;
   onRestoreActions?: (values: string[]) => void;
   activeAquarium: Aquarium | null;
+  embedded?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
@@ -3226,8 +3248,13 @@ export function CareArticleDetail({
         };
 
   return (
-    <div className="flex max-h-[88vh] flex-col bg-white">
-      <div ref={scrollRef} className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+    <div className={embedded ? 'flex min-h-0 flex-col bg-white' : 'flex max-h-[88vh] flex-col bg-white'}>
+      <div
+        ref={scrollRef}
+        className={embedded
+          ? 'app-scrollbar-hidden min-h-0 max-h-[calc(100dvh-170px)] flex-1 overflow-y-auto overflow-x-hidden md:max-h-[calc(100dvh-150px)]'
+          : 'app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden'}
+      >
         <div className="mx-auto max-w-[850px] p-4 pb-8 pt-7">
           <div className="grid gap-3 md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] md:items-stretch">
             <button type="button" onClick={onPreview} data-care-detail-hero className="order-2 block min-w-0 md:order-1" aria-label={isEn ? `View large image of ${topic.title}` : `查看${topic.title}大图`}>
