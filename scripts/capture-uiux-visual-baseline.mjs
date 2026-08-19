@@ -51,6 +51,11 @@ try {
 
     for (const route of routes) {
       await page.goto(`${baseUrl}${route.path}`, { waitUntil: 'domcontentloaded' });
+      if (route.name === 'aquarium') {
+        // A valid visual baseline must preserve the seeded aquarium across route changes.
+        // This would have failed the original harness bug that silently captured Welcome.
+        await page.locator('[data-aquarium-dashboard-v2]').waitFor();
+      }
       await page.waitForTimeout(route.name === 'aquarium' ? 1400 : 700);
       await page.evaluate(async () => {
         if ('fonts' in document) await document.fonts.ready;
@@ -75,6 +80,10 @@ try {
           cjkFontReady: document.fonts?.check('16px "Noto Sans CJK SC"', '鱼缸养护') ?? false,
         };
       });
+
+      if (!metrics.cjkFontReady) {
+        throw new Error(`${viewport.name}/${route.name}: CJK snapshot font unavailable; refusing unreadable visual evidence`);
+      }
 
       const baseName = `${viewport.name}__${route.name}`;
       await page.screenshot({
