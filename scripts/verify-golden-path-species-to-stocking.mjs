@@ -47,6 +47,7 @@ try {
   await page.addInitScript(saved => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquaguide_locale', 'zh-CN');
+    sessionStorage.setItem('aquaguide_compatibility_selection', JSON.stringify([]));
   }, state);
 
   // GP-002 milestone 1: search an exact species from the real search page.
@@ -55,19 +56,41 @@ try {
   await resultCard.waitFor();
   assert.ok(await resultCard.isVisible(), 'exact 宝莲灯 search result must be visible');
 
-  // Milestone 2: open the exact object, not the atlas home.
+  // Milestone 2: open the exact object, not the atlas home. Opening detail is read-only.
   await resultCard.click();
   await page.waitForURL(url => url.pathname === '/encyclopedia' && url.searchParams.get('species') === 'sp_0432');
-  const detail = page.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  const detail = page.locator('[data-detail-kind="species"]:visible');
   await detail.waitFor();
   await detail.getByText('宝莲灯', { exact: true }).first().waitFor();
+  assert.deepEqual(
+    await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]')),
+    [],
+    'opening the species detail must not silently mutate compatibility selection',
+  );
 
-  // Milestone 3: use the species detail PRIMARY task CTA. The footer action is the canonical
-  // transition into full compatibility checkout, including caution states.
-  const mainTaskAction = detail.locator('.modalFooter button').first();
+  // Milestone 3: selection and navigation are separate intents.
+  // First click explicitly adds 宝莲灯 to the compatibility selection and keeps the detail open.
+  let mainTaskAction = detail.locator('.modalFooter button').first();
   await mainTaskAction.waitFor();
-  const mainTaskLabel = (await mainTaskAction.textContent())?.trim() || '';
-  assert.match(mainTaskLabel, /风险|混养|加入/, `detail primary CTA must lead toward compatibility, got: ${mainTaskLabel}`);
+  const addLabel = (await mainTaskAction.textContent())?.trim() || '';
+  assert.match(addLabel, /加入.*混养|加入.*判断/, `first compatibility CTA must explicitly add the species, got: ${addLabel}`);
+  await mainTaskAction.click();
+
+  await page.waitForFunction(() => {
+    const selected = JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]');
+    return Array.isArray(selected) && selected.includes('sp_0432');
+  });
+  assert.match(page.url(), /species=sp_0432/, 'adding to compatibility selection must preserve the species detail route');
+  await detail.waitFor();
+
+  // The same explicit task CTA now advances to the second intent: view the compatibility result.
+  mainTaskAction = detail.locator('.modalFooter button').first();
+  await page.waitForFunction(() => {
+    const button = document.querySelector('[data-detail-kind="species"] .modalFooter button');
+    return /查看.*混养|混养.*结果|查看.*判断/.test(button?.textContent || '');
+  });
+  const resultLabel = (await mainTaskAction.textContent())?.trim() || '';
+  assert.match(resultLabel, /查看.*混养|混养.*结果|查看.*判断/, `second compatibility CTA must explicitly open the result, got: ${resultLabel}`);
   await mainTaskAction.click();
 
   // Milestones 4–5: the decision drawer must retain the real tank baseline and exact candidate.
@@ -122,7 +145,7 @@ try {
   assert.equal(tank.fishes?.find(item => item.fishId === 'sp_0431')?.quantity, 6, 'existing 红绿灯 quantity must remain unchanged');
   assert.deepEqual(pageErrors, [], `GP-002 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-002 continuous E2E passed: search 宝莲灯 → exact detail → compatibility → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
+  console.log('GP-002 continuous E2E passed: search 宝莲灯 → read-only detail → explicit add to compatibility → explicit view result → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
 } finally {
   await browser.close();
 }
