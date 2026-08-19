@@ -1,16 +1,15 @@
 name: RC1 Integrate Search Show All
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - integration/aquaguide-rc1
 
 permissions:
   contents: write
 
 jobs:
   integrate-search-show-all:
-    if: github.head_ref == 'integration/aquaguide-rc1'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout RC1
