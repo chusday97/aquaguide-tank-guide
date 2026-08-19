@@ -611,7 +611,13 @@ export default function Encyclopedia() {
       if (!restoreReturnContext) return;
       if (params.get('source') === 'search') navigate(-1);
       else if (params.get('source') === 'daily-discovery' && location.state?.dailyDiscoveryReturn && Number(window.history.state?.idx) > 0) navigate(-1);
-      else navigateToRoute('/encyclopedia');
+      else if (params.get('source') === 'atlas-detail' && Number(window.history.state?.idx) > 0) navigate(-1);
+      else {
+        params.delete('species');
+        if (params.get('source') === 'atlas-detail') params.delete('source');
+        const nextQuery = params.toString();
+        navigate(`${location.pathname}${nextQuery ? `?${nextQuery}` : ''}${location.hash}`, { replace: true });
+      }
       return;
     }
     const context = detailNavigationContextRef.current;
@@ -622,12 +628,19 @@ export default function Encyclopedia() {
   const openSpeciesDetail = (fish: Fish, sourceId?: string) => {
     detailNavigationContextRef.current = captureContext(sourceId);
     setSelectedFish(fish);
+    const params = new URLSearchParams(location.search);
+    params.set('species', fish.id);
+    if (!params.get('source')) params.set('source', 'atlas-detail');
+    const target = `${location.pathname}?${params.toString()}${location.hash}`;
+    if (`${location.pathname}${location.search}${location.hash}` !== target) navigate(target);
   };
 
   useEffect(() => {
     const speciesId = new URLSearchParams(location.search).get('species');
     if (!speciesId) {
       closingDetailRef.current = false;
+      if (selectedFish) setSelectedFish(null);
+      if (selectedGroup) setSelectedGroup(null);
       return;
     }
     if (closingDetailRef.current) return;
@@ -1252,9 +1265,6 @@ export default function Encyclopedia() {
     setCalculatorFeedback(nextCount >= 2 ? t('encyclopedia.addedToCalcMany', { count: nextCount }) : t('encyclopedia.addedToCalcSingle', { name: fish.name }));
     setDetailFeedback(nextCount >= 2 ? t('encyclopedia.addedToCalcMany', { count: nextCount }) : t('encyclopedia.addedToCalcSingle', { name: fish.name }));
     setCalculatorSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
-    closeAtlasDetail(false);
-    setViewMode('compatibility');
-    navigateToRoute(taskRoutes.encyclopedia.compatibility);
   };
 
   const applyFunctionFilter = (label: string) => {
@@ -2304,8 +2314,9 @@ export default function Encyclopedia() {
           navigateToRoute(taskRoutes.encyclopedia.compatibility);
         }}
         onViewInTank={() => {
+          const returnContext = captureContext();
           closeAtlasDetail(false);
-          navigateToRoute(taskRoutes.aquarium.livestock);
+          navigateToRoute(taskRoutes.aquarium.livestock, { returnContext });
         }}
         onOpenTankSettings={(panel) => {
           closeAtlasDetail(false);

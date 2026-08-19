@@ -1,0 +1,335 @@
+/* AquaGuide UI/UX V2 foundation
+ * First reference surface: Aquarium.
+ * This file intentionally loads after the legacy stylesheet so the migration can happen
+ * incrementally without another round of page-specific !important patches.
+ */
+
+:root,
+.aquaguide-app {
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", Arial, sans-serif;
+
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 24px;
+  --ui-space-6: 32px;
+  --ui-space-7: 48px;
+
+  --ui-radius-control: 12px;
+  --ui-radius-card: 18px;
+  --ui-radius-surface: 24px;
+
+  --ui-shadow-card: 0 8px 26px rgba(18, 56, 45, 0.06);
+  --ui-shadow-card-hover: 0 14px 34px rgba(18, 56, 45, 0.10);
+
+  --type-display-size: clamp(1.5rem, 1.28rem + 0.72vw, 2rem);
+  --type-section-size: clamp(1.125rem, 1.02rem + 0.32vw, 1.375rem);
+  --type-card-size: clamp(0.975rem, 0.93rem + 0.14vw, 1.0625rem);
+  --type-body-size: clamp(0.875rem, 0.84rem + 0.10vw, 0.9375rem);
+  --type-meta-size: clamp(0.75rem, 0.72rem + 0.08vw, 0.8125rem);
+  --type-action-size: clamp(0.875rem, 0.84rem + 0.10vw, 0.9375rem);
+
+  --type-display-weight: 720;
+  --type-title-weight: 650;
+  --type-body-weight: 400;
+  --type-meta-weight: 500;
+  --type-action-weight: 650;
+}
+
+html,
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-ui);
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  font-synthesis-weight: none;
+}
+
+.type-page-title,
+.type-section-title,
+.type-card-title {
+  text-wrap: balance;
+}
+
+.type-body,
+.type-meta {
+  text-wrap: pretty;
+}
+
+/* Buttons: text is allowed to adapt to available width. Compact surfaces keep a 44px
+ * touch target; wide surfaces can return to content-fit actions. */
+.aquaguide-app button,
+.aquaguide-app [role="button"] {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.aquaguide-app button:not([aria-label]):not([title]) {
+  white-space: normal;
+}
+
+.aquarium-desktop-layout {
+  container: aquarium-home / inline-size;
+  gap: clamp(var(--ui-space-3), 1.6cqi, var(--ui-space-5));
+}
+
+/* Observe / Manage / Learn are product zones, not a three-step wizard. */
+.aquarium-zone-index {
+  display: none;
+}
+
+.aquarium-zone-header {
+  gap: 0;
+  padding: 0;
+  align-items: end;
+}
+
+.aquarium-zone-header h2 {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-title-weight);
+  letter-spacing: -0.018em;
+  line-height: 1.25;
+}
+
+.aquarium-zone-header .type-meta {
+  max-width: 62ch;
+  margin-top: 5px;
+  color: rgb(26 26 26 / 0.52);
+  font-weight: 480;
+  line-height: 1.55;
+}
+
+.aquarium-workspace-zone {
+  gap: clamp(var(--ui-space-3), 1.4cqi, var(--ui-space-4));
+}
+
+.aquarium-zone-grid,
+.aquarium-followup-grid {
+  gap: clamp(var(--ui-space-3), 1.5cqi, var(--ui-space-5));
+}
+
+/* The status surface becomes the visual hierarchy anchor instead of another same-weight box. */
+.aquarium-status > section[data-daily-action] {
+  min-height: 0;
+  border-radius: var(--ui-radius-surface);
+  border-color: rgb(27 77 62 / 0.08);
+  padding: clamp(16px, 2.1cqi, 22px);
+  box-shadow: var(--ui-shadow-card);
+}
+
+.aquarium-status [data-daily-action] h2 {
+  font-size: clamp(1.125rem, 1.02rem + 0.36cqi, 1.375rem);
+  font-weight: 680;
+  line-height: 1.32;
+  letter-spacing: -0.018em;
+}
+
+.aquarium-status [data-daily-action] p {
+  font-size: var(--type-body-size);
+  font-weight: 430;
+  line-height: 1.65;
+}
+
+.aquarium-status [data-daily-action] > button {
+  min-height: 46px;
+  border-radius: var(--ui-radius-control);
+  font-size: var(--type-action-size);
+  font-weight: var(--type-action-weight);
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.aquarium-status [data-daily-action] > button:active {
+  transform: scale(0.985);
+}
+
+#care-plan {
+  border-radius: var(--ui-radius-card);
+}
+
+#care-plan button {
+  min-height: 42px;
+  border-radius: 11px;
+  font-size: max(0.75rem, var(--type-meta-size));
+  font-weight: 620;
+}
+
+/* Quick actions are responsive task rows/cards, not four fixed tiles. */
+.quick-action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: clamp(8px, 1.2cqi, 12px);
+}
+
+.quick-action-button {
+  min-height: 72px;
+  border: 1px solid rgb(27 77 62 / 0.07);
+  border-radius: var(--ui-radius-card);
+  padding: 12px 14px;
+  box-shadow: 0 3px 14px rgba(18, 56, 45, 0.035);
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.quick-action-button:hover {
+  transform: translateY(-2px);
+  border-color: rgb(27 77 62 / 0.13);
+  box-shadow: var(--ui-shadow-card-hover);
+}
+
+.quick-action-button:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.quick-action-icon {
+  width: 38px;
+  height: 38px;
+}
+
+.quick-action-description {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--type-meta-size);
+  font-weight: 480;
+  line-height: 1.45;
+  opacity: 0.56;
+}
+
+/* Cards share a quiet elevation language. The aquarium visual remains the hero instead of
+ * every utility card competing with the same heavy border/shadow treatment. */
+.aquarium-archive,
+.aquarium-actions,
+.aquarium-discovery {
+  border-radius: var(--ui-radius-surface);
+}
+
+.aquarium-tank,
+.aquarium-status,
+.aquarium-archive,
+.aquarium-actions,
+.aquarium-discovery {
+  min-width: 0;
+}
+
+.aquarium-followup-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Compact: phone and narrow split-screen/browser windows. */
+@container aquarium-home (max-width: 559px) {
+  .aquarium-zone-grid,
+  .aquarium-followup-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .quick-action-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .quick-action-button {
+    min-height: 68px;
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding: 12px 14px;
+  }
+
+  .aquarium-discovery-card {
+    grid-template-columns: minmax(96px, 32%) minmax(0, 1fr);
+  }
+
+  .aquarium-status [data-daily-action] > button {
+    width: 100%;
+  }
+}
+
+/* Medium: tablets and narrow laptop workspaces. */
+@container aquarium-home (min-width: 560px) {
+  .quick-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .aquarium-status [data-daily-action] > button {
+    width: fit-content;
+    min-width: 168px;
+    align-self: flex-start;
+    padding-inline: 18px;
+  }
+}
+
+@container aquarium-home (min-width: 720px) {
+  .aquarium-observe-grid {
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.8fr);
+    grid-template-areas:
+      "tank status"
+      "archive status";
+    align-items: stretch;
+  }
+
+  .aquarium-observe-grid > .aquarium-tank {
+    grid-area: tank;
+    min-height: 330px !important;
+    height: min(44dvh, 460px) !important;
+  }
+
+  .aquarium-observe-grid > .aquarium-status {
+    grid-area: status;
+  }
+
+  .aquarium-observe-grid > .aquarium-archive {
+    grid-area: archive;
+  }
+
+  .aquarium-observe-grid > .aquarium-status > section {
+    height: 100%;
+  }
+}
+
+/* Wide: desktop workspaces can compare Manage and Learn without forcing all content into
+ * three equal columns. */
+@container aquarium-home (min-width: 940px) {
+  .aquarium-followup-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: start;
+  }
+}
+
+@container aquarium-home (min-width: 1120px) {
+  .quick-action-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .aquarium-observe-grid {
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.72fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .aquarium-desktop-layout {
+    gap: 18px;
+  }
+
+  .aquarium-zone-header h2 {
+    font-size: 1.125rem;
+  }
+
+  .aquarium-zone-header .type-meta {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-action-button,
+  .aquarium-status [data-daily-action] > button {
+    transition: none;
+  }
+
+  .quick-action-button:hover,
+  .quick-action-button:active,
+  .aquarium-status [data-daily-action] > button:active {
+    transform: none;
+  }
+}

@@ -221,18 +221,6 @@ const getAddFishCategory = (fish: Fish): 'fish' | 'shrimp' | 'snail' | 'crab' | 
   return 'other';
 };
 
-function AquariumZoneHeader({ index, title, subtitle, titleId }: { index: number; title: string; subtitle: string; titleId: string }) {
-  return (
-    <header className="aquarium-zone-header">
-      <span className="aquarium-zone-index" aria-hidden="true">{index}</span>
-      <span className="min-w-0">
-        <h2 id={titleId} className="type-card-title block text-ink">{title}</h2>
-        {subtitle && <span className="type-meta mt-1 block text-ink/48">{subtitle}</span>}
-      </span>
-    </header>
-  );
-}
-
 function AquariumWorkspace({
   observeTitle,
   observeSubtitle,
@@ -280,24 +268,54 @@ function AquariumWorkspace({
   }, [location.hash, location.search]);
 
   return (
-    <>
-      <section className="aquarium-workspace-zone aquarium-observe-zone" aria-labelledby="aquarium-observe-title">
-        <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
-        <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}{archive}</div>
+    <main className="aquarium-dashboard-v2" data-aquarium-dashboard-v2>
+      <section className="aquarium-dashboard-v2__hero" aria-label={observeTitle}>
+        <div className="aquarium-dashboard-v2__decision" data-dashboard-priority="today">
+          {status}
+        </div>
+        <div className="aquarium-dashboard-v2__context" data-dashboard-priority="context">
+          {tank}
+        </div>
       </section>
-      <div className="aquarium-followup-grid">
-        <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
-          <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-          <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
+
+      <section
+        id="aquarium-manage-zone"
+        tabIndex={-1}
+        className="aquarium-dashboard-v2__section aquarium-dashboard-v2__manage"
+        aria-labelledby="aquarium-manage-title"
+      >
+        <header className="aquarium-dashboard-v2__section-heading">
+          <div className="min-w-0">
+            <div className="aquarium-dashboard-v2__section-kicker">{observeSubtitle}</div>
+            <h2 id="aquarium-manage-title" className="aquarium-dashboard-v2__section-title">{manageTitle}</h2>
+            {manageSubtitle && <p className="aquarium-dashboard-v2__section-copy">{manageSubtitle}</p>}
+          </div>
+        </header>
+        <div className="aquarium-dashboard-v2__manage-grid">
+          <div className="aquarium-dashboard-v2__manage-primary">{actions}</div>
+          <div className="aquarium-dashboard-v2__manage-secondary">{archive}</div>
+        </div>
+      </section>
+
+      {discovery && (
+        <section
+          id="aquarium-learn-zone"
+          tabIndex={-1}
+          className="aquarium-dashboard-v2__section aquarium-dashboard-v2__secondary"
+          aria-labelledby="aquarium-learn-title"
+          data-dashboard-priority="secondary"
+        >
+          <header className="aquarium-dashboard-v2__section-heading">
+            <div className="min-w-0">
+              <div className="aquarium-dashboard-v2__section-kicker">Explore</div>
+              <h2 id="aquarium-learn-title" className="aquarium-dashboard-v2__section-title">{learnTitle}</h2>
+              {learnSubtitle && <p className="aquarium-dashboard-v2__section-copy">{learnSubtitle}</p>}
+            </div>
+          </header>
+          <div className="aquarium-dashboard-v2__secondary-content">{discovery}</div>
         </section>
-        {discovery && (
-          <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-            <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
-          </section>
-        )}
-      </div>
-    </>
+      )}
+    </main>
   );
 }
 
@@ -1172,7 +1190,6 @@ export default function AquariumManager() {
   const [diagnosisBatchCareFocus, setDiagnosisBatchCareFocus] = useState<SpeciesBatchCareSignal | null>(null);
   const [dailyCheckInterpretation, setDailyCheckInterpretation] = useState<TankDailyCheckInterpretationData | null>(null);
   const [dailyCheckArticles, setDailyCheckArticles] = useState<typeof careTopicsData>([]);
-  const [selectedDailyCheckArticle, setSelectedDailyCheckArticle] = useState<(typeof careTopicsData)[number] | null>(null);
   const [careDiagnosisContext, setCareDiagnosisContext] = useState<CareDiagnosisContext | null>(null);
   const [selectedBuildTemplateId, setSelectedBuildTemplateId] = useState(localizedTemplates[0].id);
   const [isTankArchiveExpanded, setIsTankArchiveExpanded] = useState(false);
@@ -1754,20 +1771,20 @@ export default function AquariumManager() {
     handledAddSpeciesRequestRef.current = requestKey;
     if (!speciesId) {
       openSpeciesAddition(intent);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     const fish = fishData.find(item => item.id === speciesId);
     if (!fish) {
       showToast(Boolean(i18n.language?.startsWith('en')) ? 'No corresponding species found for this memorial' : '没有找到这条生命纪念对应的物种', 'error');
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     openSpeciesAddition(intent, fish.id);
     showToast(intent === 'record_existing'
       ? (isEn ? `Selected "${fish.name}". Confirm quantity and entry date.` : `已选择“${fish.name}”，请确认数量和入缸日期。`)
       : (isEn ? `Selected "${fish.name}". Review the risk first.` : `已选择“${fish.name}”，请先查看风险。`));
-    routeNavigate('/aquarium', { replace: true });
+    routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
   }, [activeAquarium, activeId, aquariums, routeLocation.search, routeNavigate, showToast]);
 
   useEffect(() => {
@@ -3036,7 +3053,7 @@ export default function AquariumManager() {
 
     if (action === 'create') {
       void handleAddAquarium().then(created => {
-        if (created) routeNavigate('/aquarium', { replace: true });
+        if (created) routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       });
       return;
     }
@@ -3044,23 +3061,23 @@ export default function AquariumManager() {
     if (action === 'daily-check') {
       setIsDiagnosisOpen(true);
       handleStartDiagnosisQuiz('巡检');
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     if (action === 'livestock') {
       setIsTankArchiveExpanded(true);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     if (action === 'water-change') {
       setSelectedWaterChangeDate(format(new Date(), 'yyyy-MM-dd'));
       setWaterChangeFeedback('');
       setIsCalendarOpen(true);
-      routeNavigate('/aquarium', { replace: true });
+      routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
       return;
     }
     openAquariumSettings('size');
-    routeNavigate('/aquarium', { replace: true });
+    routeNavigate('/aquarium', { replace: true, state: routeLocation.state });
   }, [activeAquarium?.id, routeLocation.search]);
 
   const handleDiagnosisAnswer = (questionId: string, answer: string) => {
@@ -4933,13 +4950,24 @@ export default function AquariumManager() {
       answers: diagnosisQuizAnswers,
       aquariumName: diagnosisAquarium?.name || '当前鱼缸',
       livestock: getDiagnosisLivestock(diagnosisAquarium).map(item => item.fish),
-      primaryActionLabel: diagnosisIssueType === '巡检' && dailyCheckArticles[0]
-        ? '查看补救步骤'
-        : diagnosisIssueType === '巡检'
-          ? todayDailyCheckRecord ? '更新今天记录' : '保存今天记录'
-          : '保存本次诊断',
-      primaryActionType: diagnosisIssueType === '巡检' && dailyCheckArticles[0] ? 'dialog' : 'mutation',
+      primaryActionLabel: diagnosisIssueType === '巡检'
+        ? todayDailyCheckRecord ? '更新今天记录' : '保存今天记录'
+        : '保存本次诊断',
+      primaryActionType: 'mutation',
     });
+    const relatedCareArticle = diagnosisIssueType === '巡检' ? dailyCheckArticles[0] : undefined;
+    if (relatedCareArticle) {
+      model.detailSections.push({
+        id: 'care-article',
+        title: `相关护理 · ${relatedCareArticle.title}`,
+        items: [
+          relatedCareArticle.summary,
+          ...relatedCareArticle.firstSteps.slice(0, 3).map((step, index) => `步骤 ${index + 1} · ${step}`),
+          ...relatedCareArticle.avoid.slice(0, 2).map(item => `避免 · ${item}`),
+          relatedCareArticle.nextStep ? `下一步 · ${relatedCareArticle.nextStep}` : '',
+        ].filter(Boolean),
+      });
+    }
     if (dailyCheckInterpretation) {
       model.detailSections.push({
         id: 'interpretation',
@@ -4952,10 +4980,6 @@ export default function AquariumManager() {
   const handleVisualDiagnosisPrimary = () => {
     const saved = handleSaveDiagnosisRecord();
     if (!saved) return;
-    if (diagnosisIssueType === '巡检' && dailyCheckArticles[0] && structuredDiagnosis) {
-      setSelectedDailyCheckArticle(dailyCheckArticles[0]);
-      trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });
-    }
   };
   const isTimelineOpen = new URLSearchParams(routeLocation.search).get('action') === 'timeline';
   if (isTimelineOpen) {
@@ -5239,6 +5263,17 @@ export default function AquariumManager() {
               </button>
               {isMobileMoreOpen && (
                 <div className="absolute right-0 top-[calc(100%+8px)] z-[80] w-[240px] rounded-[18px] border border-white/80 bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.16)] ring-1 ring-ink/5">
+                  <div className="mb-2 grid grid-cols-3 gap-1.5 border-b border-border/60 pb-2" aria-label={isEn ? 'App utilities' : '应用工具'}>
+                    <button type="button" data-mobile-aquarium-utility="search" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/search'); }} className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[12px] text-[10px] font-black text-ink/58 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
+                      <Search className="h-4 w-4" /><span>{isEn ? 'Search' : '搜索'}</span>
+                    </button>
+                    <button type="button" data-mobile-aquarium-utility="identify" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/identify'); }} className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[12px] text-[10px] font-black text-ink/58 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
+                      <Sparkles className="h-4 w-4" /><span>{isEn ? 'Identify' : '识别'}</span>
+                    </button>
+                    <button type="button" data-mobile-aquarium-utility="settings" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/settings'); }} className="flex min-h-12 flex-col items-center justify-center gap-1 rounded-[12px] text-[10px] font-black text-ink/58 hover:bg-emerald-50 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
+                      <Settings className="h-4 w-4" /><span>{isEn ? 'Settings' : '设置'}</span>
+                    </button>
+                  </div>
                   {isEditingName ? (
                     <form className="grid gap-2 p-1" onSubmit={event => { event.preventDefault(); void handleRenameSubmit().then(() => setIsMobileMoreOpen(false)); }}>
                       <Input autoFocus value={editNameValue} onChange={event => setEditNameValue(event.target.value)} maxLength={40} aria-label={isEn ? 'Aquarium name' : '鱼缸名称'} className="h-11 rounded-[14px]" />
@@ -6179,42 +6214,6 @@ export default function AquariumManager() {
               {isEn ? 'Exit and discard' : '退出并放弃'}
             </Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={Boolean(selectedDailyCheckArticle)} onOpenChange={(open) => !open && setSelectedDailyCheckArticle(null)}>
-        <DialogContent className="flex max-h-[86dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden rounded-[22px] border-border bg-bg p-0">
-          <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
-            <DialogTitle className="text-xl font-black text-ink">{selectedDailyCheckArticle?.title}</DialogTitle>
-            <DialogDescription className="text-xs leading-relaxed text-ink/55">{t('aquarium.selectedDailyCheckArticleDesc')}</DialogDescription>
-          </DialogHeader>
-          {selectedDailyCheckArticle && (
-            <div className="min-h-0 flex-1 overflow-y-auto p-4">
-              <section className="rounded-[18px] border border-emerald-100 bg-emerald-50/70 p-3">
-                <div className="text-[11px] font-black text-emerald-800">{t('aquarium.keyConclusion')}</div>
-                <p className="mt-1 text-[13px] font-bold leading-relaxed text-ink">{selectedDailyCheckArticle.summary}</p>
-              </section>
-              <section className="mt-3 rounded-[18px] bg-white p-3 shadow-sm">
-                <div className="text-[13px] font-black text-ink">{t('aquarium.stepByStepActions')}</div>
-                <div className="mt-2 grid gap-2">
-                  {selectedDailyCheckArticle.firstSteps.map((step, index) => (
-                    <div key={step} className="grid grid-cols-[26px_1fr] gap-2 rounded-[13px] bg-bg p-2.5 text-[11px] font-medium leading-relaxed text-ink/68">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[10px] font-black text-white">{index + 1}</span>
-                      <span>{step}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-              <section className="mt-3 rounded-[18px] border border-red-100 bg-red-50 p-3">
-                <div className="text-[13px] font-black text-red-800">{isEn ? 'Avoid For Now' : '暂时不要做'}</div>
-                <div className="mt-2 grid gap-1.5">
-                  {selectedDailyCheckArticle.avoid.map(item => (
-                    <div key={item} className="rounded-[12px] bg-white/80 px-3 py-2 text-[11px] font-medium leading-relaxed text-red-900/72">{item}</div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          )}
         </DialogContent>
       </Dialog>
 

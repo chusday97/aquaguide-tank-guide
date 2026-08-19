@@ -1,0 +1,258 @@
+/* Aquarium Dashboard V2: decision-first hierarchy. */
+
+.aquarium-dashboard-v2 {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
+.aquarium-dashboard-v2__hero,
+.aquarium-dashboard-v2__manage-grid {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+.aquarium-dashboard-v2__decision,
+.aquarium-dashboard-v2__context,
+.aquarium-dashboard-v2__manage-primary,
+.aquarium-dashboard-v2__manage-secondary,
+.aquarium-dashboard-v2__secondary-content {
+  min-width: 0;
+}
+
+.aquarium-dashboard-v2__decision { order: 1; }
+.aquarium-dashboard-v2__context { order: 2; }
+
+.aquarium-dashboard-v2__section {
+  position: relative;
+  min-width: 0;
+  padding-top: 0;
+}
+
+/* The section heading remains in the accessibility tree and keeps aria-labelledby
+   stable, but the visible cards already provide the user's meaningful headings
+   (Quick Actions / Today's Pick). Avoid repeating a second heading band. */
+.aquarium-dashboard-v2__section-heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.aquarium-dashboard-v2__section-kicker {
+  display: none;
+}
+
+.aquarium-dashboard-v2__section-title {
+  margin: 0;
+  color: var(--color-ink, #1a1a1a);
+  font-size: clamp(16px, 1.45vw, 20px);
+  font-weight: 780;
+  line-height: 1.2;
+}
+
+.aquarium-dashboard-v2__section-copy {
+  margin: 4px 0 0;
+  max-width: 52ch;
+  color: color-mix(in srgb, var(--color-ink, #1a1a1a) 48%, transparent);
+  font-size: 11px;
+  font-weight: 620;
+  line-height: 1.5;
+}
+
+.aquarium-dashboard-v2__secondary { opacity: 0.9; }
+
+.aquarium-dashboard-v2 .aquarium-actions,
+.aquarium-dashboard-v2 .aquarium-archive,
+.aquarium-dashboard-v2 .aquarium-discovery,
+.aquarium-dashboard-v2 .aquarium-status,
+.aquarium-dashboard-v2 .aquarium-tank {
+  margin: 0;
+}
+
+.aquarium-dashboard-v2__decision .status-summary-card {
+  min-height: 100%;
+  border-radius: 20px;
+  box-shadow: 0 14px 36px rgba(27, 77, 62, 0.07);
+}
+
+/* Tank art is contextual identity, not the primary decision surface. */
+.aquarium-dashboard-v2__context .aquarium-tank {
+  height: 180px;
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+}
+
+.aquarium-dashboard-v2__manage .aquarium-actions,
+.aquarium-dashboard-v2__manage .aquarium-archive,
+.aquarium-dashboard-v2__secondary .aquarium-discovery {
+  border-radius: 18px;
+}
+
+/* Quick actions: only recurrent tank maintenance remains permanently visible.
+   Secondary tools are still available, but no longer compete with Today's decision. */
+.quick-action-stack {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.quick-action-more {
+  min-width: 0;
+  border-top: 1px solid rgba(27, 77, 62, 0.07);
+  padding-top: 8px;
+}
+
+.quick-action-more-summary {
+  display: flex;
+  min-height: 42px;
+  cursor: pointer;
+  list-style: none;
+  align-items: center;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: rgba(26, 26, 26, 0.56);
+  font-size: 12px;
+  font-weight: 700;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.quick-action-more-summary::-webkit-details-marker { display: none; }
+.quick-action-more-summary:hover { background: rgba(255, 255, 255, 0.72); color: rgba(27, 77, 62, 0.9); }
+
+.quick-action-more-count {
+  display: inline-flex;
+  min-width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(27, 77, 62, 0.06);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.quick-action-more-chevron {
+  margin-left: auto;
+  transition: transform 160ms ease;
+}
+
+.quick-action-more[open] .quick-action-more-chevron { transform: rotate(180deg); }
+.quick-action-secondary { margin-top: 8px; }
+
+@container aquarium-home (min-width: 720px) {
+  .aquarium-dashboard-v2 { gap: 20px; }
+
+  .aquarium-dashboard-v2__hero {
+    display: grid;
+    grid-template-columns: minmax(360px, 1.18fr) minmax(0, 0.82fr);
+    align-items: start;
+    gap: 16px;
+  }
+
+  .aquarium-dashboard-v2__decision,
+  .aquarium-dashboard-v2__context { order: initial; }
+
+  .aquarium-dashboard-v2__context .aquarium-tank {
+    height: clamp(260px, 28dvh, 340px);
+    min-height: 260px;
+    max-height: 340px;
+  }
+
+  .aquarium-dashboard-v2__manage-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+    align-items: start;
+    gap: 16px;
+  }
+}
+
+@container aquarium-home (min-width: 1080px) {
+  .aquarium-dashboard-v2__hero {
+    grid-template-columns: minmax(420px, 1.22fr) minmax(0, 0.78fr);
+  }
+}
+
+@container aquarium-home (max-width: 559px) {
+  .quick-action-primary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .quick-action-primary > .quick-action-button {
+    min-height: 60px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 15px;
+  }
+
+  .quick-action-primary > .quick-action-button:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .quick-action-primary .quick-action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+
+  .quick-action-primary .type-card-title {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .quick-action-primary .quick-action-description {
+    display: none;
+  }
+
+  .quick-action-secondary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1049px) {
+  /* Legacy workspace CSS stacked this header and expanded every direct child to 100%.
+     UI V2 keeps the tank identity and timeline action in one compact row. */
+  .aquarium-desktop-header {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+
+  .aquarium-desktop-header > div:first-child {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    flex: 1 1 auto;
+  }
+
+  .aquarium-desktop-header > button:last-child {
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: 220px !important;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 639px) {
+  .aquarium-dashboard-v2 { gap: 12px; }
+
+  /* Mobile is a task list, not a miniature desktop hero. Flatten the hero so
+     recurrent management can sit before the decorative/contextual 3D tank. */
+  .aquarium-dashboard-v2__hero { display: contents; }
+  .aquarium-dashboard-v2__decision { order: 1; }
+  .aquarium-dashboard-v2__manage { order: 2; }
+  .aquarium-dashboard-v2__context { order: 3; }
+  .aquarium-dashboard-v2__secondary { order: 4; }
+
+  .aquarium-dashboard-v2__context .aquarium-tank { height: 150px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-action-more-chevron { transition: none; }
+}

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, CheckCircle2, ChevronRight, Info, Loader2, Search, Sparkles, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { Aquarium, Fish } from '../types';
 import { fishData } from '../data/fishData';
 import i18n from '../i18n';
@@ -221,6 +220,15 @@ export function CompatibilityRiskCalculator({
   const cautionPairs = useMemo(() => relevantPairs.filter(pair => pair.status === 'caution'), [relevantPairs]);
   const missingPairs = useMemo(() => relevantPairs.filter(pair => pair.status === 'insufficient_data'), [relevantPairs]);
   const meta = resultStatus ? statusMeta(resultStatus, isEn) : null;
+  const verdictCue = resultStatus === 'not_recommended'
+    ? { symbol: '×', eyebrow: isEn ? 'DANGER' : '危险', metric: isEn ? `${blockingPairs.length} blocked pair${blockingPairs.length === 1 ? '' : 's'}` : `${blockingPairs.length} 组明确冲突` }
+    : resultStatus === 'caution'
+      ? { symbol: '!', eyebrow: isEn ? 'CAUTION' : '谨慎', metric: isEn ? `${cautionPairs.length} caution pair${cautionPairs.length === 1 ? '' : 's'}` : `${cautionPairs.length} 组需留意` }
+      : resultStatus === 'insufficient_data'
+        ? { symbol: '?', eyebrow: isEn ? 'UNKNOWN' : '待确认', metric: isEn ? 'Evidence incomplete' : '信息不足 ≠ 安全' }
+        : resultStatus === 'compatible'
+          ? { symbol: '✓', eyebrow: isEn ? 'COMPATIBLE' : '可混养', metric: isEn ? `${relevantPairs.length} pair${relevantPairs.length === 1 ? '' : 's'} checked` : `已检查 ${relevantPairs.length} 组关系` }
+          : null;
 
   const readiness = useMemo(() => selectedAquarium ? getAquariumAiReadiness(selectedAquarium) : null, [selectedAquarium]);
   const aiReady = Boolean(selectedAquarium && readiness?.ready && resultStatus);
@@ -459,7 +467,7 @@ export function CompatibilityRiskCalculator({
           <X className="h-4 w-4" />
         </button>
       )}
-      <header className="flex flex-wrap items-start justify-between gap-3 pr-12">
+      <header className="order-1 flex flex-wrap items-start justify-between gap-3 pr-12">
         <div>
           <h2 className="mt-1 text-[22px] font-black text-ink">{isEn ? 'Can these species live together?' : '这些生物能不能一起养？'}</h2>
           <p className="mt-1 max-w-[680px] text-[12px] font-semibold leading-5 text-ink/52">
@@ -479,7 +487,7 @@ export function CompatibilityRiskCalculator({
         )}
       </header>
 
-      <section className="rounded-[18px] bg-bg/65 p-3">
+      <section className="order-2 rounded-[18px] bg-bg/65 p-3">
         <div className="flex items-center justify-between gap-2">
           <div className="text-[12px] font-black text-ink">{isEn ? 'Evaluation baseline' : '当前鱼缸'}</div>
           {selectedAquarium && onViewAquarium && (
@@ -499,7 +507,7 @@ export function CompatibilityRiskCalculator({
         )}
       </section>
 
-      <section className="grid gap-3 rounded-[18px] border border-border/70 p-3">
+      <section data-compatibility-selection className={`${canEvaluate && resultStatus && meta ? 'order-4' : 'order-3'} grid gap-3 rounded-[18px] border border-border/70 p-3`}>
         <div>
           <div className="text-[13px] font-black text-ink">{selectedAquarium && existingLivestock.length > 0 ? (isEn ? 'What do you want to add?' : '你准备加入什么？') : (isEn ? 'Select species to compare' : '选择要比较的生物')}</div>
           <div className="mt-1 text-[10px] font-bold text-ink/42">
@@ -560,7 +568,7 @@ export function CompatibilityRiskCalculator({
         <button type="button" onClick={onBrowseAtlas} className="w-fit text-[11px] font-black text-emerald-700">{isEn ? 'Browse all species →' : '从完整图鉴继续选择 →'}</button>
       </section>
 
-      <section className="grid gap-3">
+      <section data-compatibility-result className={`${canEvaluate && resultStatus && meta ? 'order-3' : 'order-4'} grid gap-3`}>
         <div className="flex items-center justify-between gap-2">
           <div className="text-[13px] font-black text-ink">{isEn ? 'Compatibility result' : '混养结果'}</div>
         </div>
@@ -575,14 +583,21 @@ export function CompatibilityRiskCalculator({
           </div>
         ) : (
           <>
-            <div className={`rounded-[20px] border p-4 ${meta.box}`}>
-              <div className={`flex items-start gap-3 ${meta.text}`}>
-                <span className="mt-0.5">{meta.icon}</span>
-                <div>
-                  <div className={`font-black ${resultStatus === 'not_recommended' ? 'text-[26px] leading-tight' : 'text-[20px]'}`}>{meta.label}</div>
-                  <p className="mt-1 text-[12px] font-bold leading-5 opacity-85">{meta.description}</p>
+            <div data-compatibility-verdict={resultStatus} className={`rounded-[22px] border p-4 sm:p-5 ${meta.box}`}>
+              <div className={`flex items-center gap-4 ${meta.text}`}>
+                <div data-verdict-symbol={verdictCue?.symbol} aria-hidden="true" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/85 text-[34px] font-black leading-none shadow-sm">
+                  {verdictCue?.symbol}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[10px] font-black tracking-[0.18em] opacity-70">{verdictCue?.eyebrow}</div>
+                  <div className={`mt-0.5 font-black ${resultStatus === 'not_recommended' ? 'text-[30px] leading-tight' : 'text-[25px] leading-tight'}`}>{meta.label}</div>
+                  <div className="mt-2 inline-flex rounded-full bg-white/75 px-2.5 py-1 text-[10px] font-black">{verdictCue?.metric}</div>
                 </div>
               </div>
+              <details className="mt-3 border-t border-current/10 pt-3">
+                <summary className="cursor-pointer text-[11px] font-black opacity-80">{isEn ? 'Why this result' : '展开判断依据'}</summary>
+                <p className="mt-2 text-[11px] font-bold leading-5 opacity-80">{meta.description}</p>
+              </details>
             </div>
 
             {blockingPairs.length > 0 && (
@@ -672,58 +687,36 @@ export function CompatibilityRiskCalculator({
         )}
       </section>
 
-      <Dialog open={aiOpen} onOpenChange={setAiOpen}>
-        <DialogContent className="w-[92vw] max-w-[560px] rounded-[24px] border-violet-100 bg-white p-0">
-          <DialogHeader className="border-b border-violet-100 bg-violet-50/70 px-5 py-4 text-left">
-            <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-violet-700"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'AI INTERPRETATION' : 'AI 建议'}</div>
-            <DialogTitle className="mt-2 text-[20px] font-black text-ink">{isEn ? 'Why this result, and what can I change?' : '为什么会这样？我具体可以怎么改？'}</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[62dvh] overflow-y-auto px-5 py-4">
-            {aiLoading && <div className="flex min-h-[180px] items-center justify-center gap-2 text-sm font-black text-violet-700"><Loader2 className="h-5 w-5 animate-spin" />{isEn ? 'Generating suggestions…' : '正在生成建议…'}</div>}
-            {!aiLoading && aiResult && (
-              <div className="grid gap-3">
-                <div className={`rounded-[16px] px-3 py-2 text-[11px] font-black ${aiResult.source === 'model' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
-                  {aiResult.source === 'model' ? (isEn ? 'AI generated' : 'AI 已生成') : (isEn ? 'AI unavailable. Please try again later.' : 'AI 暂不可用，请稍后再试')}
-                </div>
-                <div className="rounded-[16px] bg-violet-50 p-3">
-                  <div className="text-[11px] font-black text-violet-800">{isEn ? 'Overview' : '建议概览'}</div>
-                  <p className="mt-1 text-[13px] font-bold leading-6 text-ink">{aiResult.summary}</p>
-                </div>
-                {aiResult.reasons.length > 0 && (
-                  <section>
-                    <div className="text-[12px] font-black text-ink">{isEn ? 'Why' : '为什么'}</div>
-                    <div className="mt-2 grid gap-2">
-                      {aiResult.reasons.slice(0, 4).map((item, index) => (
-                        <div key={`${item.title}-${index}`} className="rounded-[14px] border border-border bg-white p-3">
-                          <div className="text-[11px] font-black text-ink">{item.title}</div>
-                          <p className="mt-1 text-[11px] font-semibold leading-5 text-ink/58">{item.detail}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-                {aiResult.suggestions.length > 0 && (
-                  <section>
-                    <div className="text-[12px] font-black text-ink">{isEn ? 'Adjustment options' : '调整建议'}</div>
-                    <div className="mt-2 grid gap-2">
-                      {aiResult.suggestions.slice(0, 4).map((item, index) => (
-                        <div key={`${item.title}-${index}`} className="rounded-[14px] bg-emerald-50 px-3 py-2">
-                          <div className="text-[11px] font-black text-emerald-800">{item.title}</div>
-                          <p className="mt-1 text-[11px] font-semibold leading-5 text-emerald-950/70">{item.detail}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-                <div className="rounded-[14px] bg-slate-50 px-3 py-2 text-[10px] font-bold leading-5 text-ink/45">{isEn ? 'Check the advice against actual water conditions and livestock behavior.' : '请结合实际水质和生物状态判断。'}</div>
-              </div>
-            )}
+      {aiOpen && (
+        <section data-ai-advice-inline className="order-5 rounded-[22px] border border-violet-100 bg-violet-50/55 p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-black tracking-[0.16em] text-violet-700"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'AI INTERPRETATION' : 'AI 建议'}</div>
+              <h3 className="mt-1 text-[16px] font-black text-ink">{isEn ? 'Why this result, and what can I change?' : '为什么会这样？我具体可以怎么改？'}</h3>
+            </div>
+            <button type="button" onClick={() => setAiOpen(false)} aria-label={isEn ? 'Collapse AI advice' : '收起 AI 建议'} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-ink/45 hover:text-ink"><X className="h-4 w-4" /></button>
           </div>
-          <DialogFooter className="border-t border-border px-5 py-4">
-            <Button type="button" variant="outline" onClick={() => setAiOpen(false)} className="h-11 w-full rounded-full text-sm font-black">{isEn ? 'Close' : '关闭'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          {aiLoading && <div className="mt-4 flex min-h-[110px] items-center justify-center gap-2 text-sm font-black text-violet-700"><Loader2 className="h-5 w-5 animate-spin" />{isEn ? 'Generating suggestions…' : '正在生成建议…'}</div>}
+          {!aiLoading && aiResult && (
+            <div className="mt-4 grid gap-3">
+              <div className={`w-fit rounded-full px-3 py-1 text-[10px] font-black ${aiResult.source === 'model' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
+                {aiResult.source === 'model' ? (isEn ? 'AI generated' : 'AI 已生成') : (isEn ? 'AI unavailable. Please try again later.' : 'AI 暂不可用，请稍后再试')}
+              </div>
+              <p className="text-[13px] font-bold leading-6 text-ink">{aiResult.summary}</p>
+              {aiResult.reasons.length > 0 && (
+                <details className="rounded-[16px] bg-white p-3">
+                  <summary className="cursor-pointer text-[11px] font-black text-ink">{isEn ? 'Why' : '查看原因'}</summary>
+                  <div className="mt-2 grid gap-2">{aiResult.reasons.slice(0, 4).map((item, index) => <div key={`${item.title}-${index}`}><div className="text-[11px] font-black text-ink">{item.title}</div><p className="mt-0.5 text-[11px] font-semibold leading-5 text-ink/58">{item.detail}</p></div>)}</div>
+                </details>
+              )}
+              {aiResult.suggestions.length > 0 && (
+                <div className="grid gap-2 sm:grid-cols-2">{aiResult.suggestions.slice(0, 4).map((item, index) => <div key={`${item.title}-${index}`} className="rounded-[14px] bg-emerald-50 px-3 py-2"><div className="text-[11px] font-black text-emerald-800">{item.title}</div><p className="mt-1 text-[11px] font-semibold leading-5 text-emerald-950/70">{item.detail}</p></div>)}</div>
+              )}
+              <div className="text-[10px] font-bold leading-5 text-ink/45">{isEn ? 'Check the advice against actual water conditions and livestock behavior.' : '请结合实际水质和生物状态判断。'}</div>
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }
