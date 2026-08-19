@@ -20,15 +20,17 @@
 }
 
 @media (max-width: 767px) {
-  /* Aquarium's phone utility toolbar occupies the first ~60px. Keep return context below
-   * that toolbar, then push page content down so the pill has a real navigation band. */
+  /* Aquarium's fixed phone utility toolbar already owns the first ~58px and the outer
+   * `.aquarium-toolbar` supplies its flow placeholder. Keep the return pill immediately
+   * after that placeholder, and reserve the band by extending the toolbar's bottom margin.
+   * Do not pad the whole main: doing that moves the toolbar itself and recreates overlap. */
   [data-workspace-return] {
     top: 68px !important;
     left: 12px !important;
   }
 
-  body:has([data-workspace-return]) .phone-shell-active .app-main-shell > main {
-    padding-top: 66px !important;
+  body:has([data-workspace-return]) .phone-shell-active .aquarium-toolbar {
+    margin-bottom: 58px !important;
   }
 }
 
