@@ -29,7 +29,7 @@ Wishlist / Care / Memorial 三个 live module 进入 focus carousel；Achievemen
 
 ## PUI-BC-041 · Design token 存在多个事实源
 
-- **featureId:** `design_system`
+- **featureId:** `typography_system`
 - **severity:** medium
 - **source:** `uiux_system_refactor`
 - **rootCauseLayer:** `design_system`
@@ -73,7 +73,7 @@ UI V2 foundation 是 typography / spacing / radius / elevation 唯一 token sour
 
 ## PUI-BC-043 · 非 active 轮播卡仍可进入键盘焦点，且部分具名控件低于 44px
 
-- **featureId:** `accessibility`
+- **featureId:** `responsive_detail_surface`
 - **severity:** high
 - **source:** `responsive_regression`
 - **rootCauseLayer:** `accessibility`
@@ -95,7 +95,7 @@ UI V2 foundation 是 typography / spacing / radius / elevation 唯一 token sour
 
 ## PUI-BC-044 · viewport 缺失时 iPad fallback 被 Mobile Safari 误判成 phone
 
-- **featureId:** `responsive_layout`
+- **featureId:** `responsive_detail_surface`
 - **severity:** medium
 - **source:** `ci_fail_before`
 - **rootCauseLayer:** `responsive_layout`
