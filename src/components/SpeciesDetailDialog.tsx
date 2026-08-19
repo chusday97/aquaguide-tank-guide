@@ -31,16 +31,23 @@ export function SpeciesDetailDialog(props: SpeciesDetailDialogProps) {
     const intent = calculatorIntentRef.current;
     calculatorIntentRef.current = null;
 
-    // The footer CTA says “View risks & alternatives”. Keep that action in-context:
-    // reveal the existing compatibility evidence instead of silently changing routes.
     if (intent === 'footer') {
       const disclosure = findCompatibilityDisclosure();
       if (!disclosure) return;
-      if (disclosure.getAttribute('aria-expanded') !== 'true') disclosure.click();
-      window.requestAnimationFrame(() => {
-        disclosure.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-        disclosure.focus({ preventScroll: true });
-      });
+
+      // First click on “View risks & alternatives”: stay in context and reveal evidence.
+      if (disclosure.getAttribute('aria-expanded') !== 'true') {
+        disclosure.click();
+        window.requestAnimationFrame(() => {
+          disclosure.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          disclosure.focus({ preventScroll: true });
+        });
+        return;
+      }
+
+      // Once the user has deliberately reviewed the compatibility evidence, preserve
+      // the existing second-stage route to the full calculator.
+      props.onGoCalculator?.();
       return;
     }
 
