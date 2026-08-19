@@ -1,0 +1,55 @@
+/* AquaGuide UI/UX system contract — cross-surface rules only.
+ * Page-specific visual language stays in the V2 page styles. This layer owns affordances
+ * that should remain consistent across the whole application.
+ */
+
+/* Desktop workspaces are long-lived task surfaces. Keep a subtle scroll-position affordance
+ * instead of globally hiding the scrollbar; phone surfaces remain visually minimal. */
+@media (min-width: 768px) {
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgb(27 77 62 / 0.24) transparent !important;
+  }
+
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll::-webkit-scrollbar {
+    display: block !important;
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgb(27 77 62 / 0.22);
+  }
+
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgb(27 77 62 / 0.36);
+  }
+}
+
+/* Building features may describe future value, but they must remain visually quieter than
+ * live task surfaces and must not inherit primary-card hover elevation. */
+[data-feature-status="building"],
+[data-collection-coming-soon] {
+  box-shadow: none;
+}
+
+/* Horizontal saved-object rails and animated carousels must stop smooth motion when the
+ * operating system requests reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .collection-wishlist-grid,
+  .collection-care-grid {
+    scroll-behavior: auto;
+  }
+
+  .collection-hub-carousel *,
+  [data-search-show-all] {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
