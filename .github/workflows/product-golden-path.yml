@@ -30,6 +30,8 @@ jobs:
           npm run test:daily-check
       - name: Aquarium delete repository contract
         run: node scripts/test-aquarium-delete-repository-contract.mjs
+      - name: Aquarium settings repository contract
+        run: node scripts/test-aquarium-settings-repository-contract.mjs
       - name: Type check
         run: npm run lint
       - name: Build
