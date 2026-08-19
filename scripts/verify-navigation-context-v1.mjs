@@ -12,6 +12,15 @@ const scrollCardIntoStablePosition = async (page, card) => {
   return getWorkspaceScrollTop(page);
 };
 
+const clickVisibleCardWithoutAutoScroll = async (page, card) => {
+  const box = await card.boundingBox();
+  assert.ok(box, 'result card must have a visible bounding box before click');
+  const viewport = page.viewportSize();
+  assert.ok(viewport, 'navigation context test requires a fixed viewport');
+  assert.ok(box.y >= 0 && box.y + box.height <= viewport.height, `result card must already be vertically visible before click; y=${box.y}, height=${box.height}`);
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+};
+
 const assertReturnedSearchContext = async ({ page, sourceId, previousScrollTop, kind, minCount }) => {
   await page.waitForURL(url => url.pathname === '/search' && url.searchParams.get('q') === '鱼');
   const selector = kind === 'species' ? '.search-v2-species-card' : '.search-v2-care-card';
@@ -52,7 +61,7 @@ try {
   const speciesSourceId = await speciesSource.getAttribute('id');
   assert.ok(speciesSourceId, 'expanded species result must have a stable source id');
   const speciesScrollTop = await scrollCardIntoStablePosition(page, speciesSource);
-  await speciesSource.click();
+  await clickVisibleCardWithoutAutoScroll(page, speciesSource);
   await page.waitForURL(/\/encyclopedia\?species=.*source=search/);
   await page.locator('[role="dialog"]:visible').waitFor();
   await page.keyboard.press('Escape');
@@ -76,7 +85,7 @@ try {
   const careSourceId = await careSource.getAttribute('id');
   assert.ok(careSourceId, 'expanded Care result must have a stable source id');
   const careScrollTop = await scrollCardIntoStablePosition(page, careSource);
-  await careSource.click();
+  await clickVisibleCardWithoutAutoScroll(page, careSource);
   await page.waitForURL(/\/care\?topic=.*source=search/);
   const careDetail = page.locator('[data-care-workspace-detail]');
   await careDetail.waitFor();
