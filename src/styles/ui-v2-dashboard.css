@@ -223,6 +223,20 @@
   }
 }
 
+@media (min-width: 768px) {
+  /* The page shell already establishes that this is the active aquarium.
+     Keep the identity header to two meaningful lines instead of repeating a
+     third micro-label above the aquarium name. */
+  .aquarium-desktop-header {
+    padding: 8px 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .aquarium-desktop-header > div:first-child > div.min-w-0 > span:first-child {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) and (max-width: 1049px) {
   /* Legacy workspace CSS stacked this header and expanded every direct child to 100%.
      UI V2 keeps the tank identity and timeline action in one compact row. */
