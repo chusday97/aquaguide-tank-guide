@@ -27,7 +27,9 @@ jobs:
       - run: npm ci
 
       - name: Apply exact-anchor Care workspace detail migration
-        run: node scripts/apply-rc1-care-workspace-detail-v1.mjs
+        run: |
+          node scripts/apply-rc1-care-workspace-detail-v1.mjs
+          node scripts/patch-rc1-care-topic-sync-v2.mjs
 
       - name: Care workspace detail source contract
         run: node scripts/test-care-workspace-detail-contract.mjs
