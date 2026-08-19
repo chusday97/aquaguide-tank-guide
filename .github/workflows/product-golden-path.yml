@@ -57,6 +57,10 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-search-show-all-v2.mjs
+      - name: Identify overflow hint regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-identify-search-overflow-hint.mjs
       - name: GP-001 first tank setup browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173
