@@ -69,28 +69,33 @@ try {
 
   await page.goto(`${baseUrl}/care?topic=guide_water_deteriorate`, { waitUntil: 'domcontentloaded' });
 
-  const dialog = page.getByRole('dialog').filter({ hasText: '水质变差怎么办？' });
-  await dialog.waitFor();
+  const detail = page.locator('[data-care-workspace-detail]').filter({ hasText: '水质变差怎么办？' });
+  await detail.waitFor();
+  assert.equal(
+    await page.locator('[role="dialog"]:visible').count(),
+    0,
+    'Long-form abnormal-care browsing must remain a workspace detail, not reopen the removed article Dialog.',
+  );
 
-  const firstScreen = dialog.locator('[data-care-first-screen]');
+  const firstScreen = detail.locator('[data-care-first-screen]');
   await firstScreen.waitFor();
   await firstScreen.getByText('先做快速评测', { exact: true }).waitFor();
 
-  const start = dialog.getByRole('button', { name: '开始快速检查', exact: true });
+  const start = detail.getByRole('button', { name: '开始快速检查', exact: true });
   await start.waitFor();
   await start.click();
 
-  await dialog.getByText('水体是否浑浊或有异味？', { exact: true }).waitFor();
-  await dialog.getByRole('button', { name: '明显', exact: true }).click();
-  await dialog.getByRole('button', { name: '大量换水', exact: true }).click();
-  await dialog.getByRole('button', { name: '有', exact: true }).click();
+  await detail.getByText('水体是否浑浊或有异味？', { exact: true }).waitFor();
+  await detail.getByRole('button', { name: '明显', exact: true }).click();
+  await detail.getByRole('button', { name: '大量换水', exact: true }).click();
+  await detail.getByRole('button', { name: '有', exact: true }).click();
 
-  const viewRecommendations = dialog.getByRole('button', { name: '查看处理建议', exact: true });
+  const viewRecommendations = detail.getByRole('button', { name: '查看处理建议', exact: true });
   await viewRecommendations.waitFor();
   assert.equal(await viewRecommendations.isEnabled(), true, 'Quick Check must become actionable after the minimum required answers are complete.');
   await viewRecommendations.click();
 
-  const result = dialog.locator('[data-care-assessment-result]');
+  const result = detail.locator('[data-care-assessment-result]');
   await result.waitFor();
   await result.getByText('检查完成', { exact: true }).waitFor();
 
@@ -117,7 +122,7 @@ try {
   );
   assert.deepEqual(pageErrors, [], `GP-004 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-004 continuous E2E passed: abnormal care guide → Quick Check → minimum answers → actionable risk result → immediate steps and recheck guidance.');
+  console.log('GP-004 continuous E2E passed: abnormal care workspace detail → Quick Check → minimum answers → actionable risk result → immediate steps and recheck guidance.');
 } finally {
   await browser.close();
 }
