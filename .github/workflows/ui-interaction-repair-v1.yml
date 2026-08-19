@@ -31,6 +31,9 @@ jobs:
       - name: Apply Daily Check inline-guidance migration
         run: node scripts/apply-daily-check-inline-guidance-v1.mjs
 
+      - name: Apply species detail selection decoupling
+        run: node scripts/apply-species-detail-selection-decoupling-v1.mjs
+
       - name: UI interaction source contract
         run: node scripts/test-ui-interaction-repair-v1.mjs
 
@@ -103,18 +106,18 @@ jobs:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-golden-path-collection-context.mjs
 
-      - name: Commit inline-guidance product behavior
+      - name: Commit repaired product behavior
         if: success()
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/pages/Aquarium.tsx src/components/visual-results/VisualResultCard.tsx
+          git add src/pages/Aquarium.tsx src/components/visual-results/VisualResultCard.tsx src/components/SpeciesDetailDialog.tsx
           if git diff --cached --quiet; then
             echo "No product source changes to commit."
             exit 0
           fi
-          git commit -m "Keep Daily Check care guidance inline"
+          git commit -m "Decouple species detail from compatibility selection"
           git push origin HEAD:agent/ui-interaction-repair-v1
 
       - name: Upload interaction screenshots
