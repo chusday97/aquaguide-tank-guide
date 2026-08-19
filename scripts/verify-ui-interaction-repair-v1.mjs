@@ -74,6 +74,23 @@ try {
     return { page, errors };
   };
 
+  // 0) Opening a species detail is read-only. Browsing must never pre-commit a compatibility decision.
+  {
+    const { page, errors } = await makePage({ width: 1280, height: 900 });
+    await page.addInitScript(() => {
+      sessionStorage.setItem('aquaguide_compatibility_selection', JSON.stringify([]));
+    });
+    await page.goto(`${baseUrl}/encyclopedia?mode=browse&species=sp_0002&source=atlas-detail`, { waitUntil: 'domcontentloaded' });
+    const detail = page.locator('[data-detail-kind="species"]');
+    await detail.waitFor();
+    await page.waitForTimeout(150);
+    const selection = await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]'));
+    assert.deepEqual(selection, [], 'Opening a species detail must not silently add that species to compatibility selection.');
+    assert.match(page.url(), /species=sp_0002/, 'Read-only detail browsing must preserve the species detail route.');
+    assert.deepEqual(errors, [], `Read-only species detail emitted page errors: ${errors.join('; ')}`);
+    await page.close();
+  }
+
   // 1) Entity detail width + exact task return path on desktop.
   {
     const { page, errors } = await makePage({ width: 1600, height: 1000 });
@@ -178,7 +195,7 @@ try {
     await page.close();
   }
 
-  console.log('PASS: UI interaction browser regression — exact return path, responsive species detail, default-state CTA consistency, scan-first compatibility verdict.');
+  console.log('PASS: UI interaction browser regression — read-only species browsing, exact return path, responsive species detail, default-state CTA consistency, scan-first compatibility verdict.');
 } finally {
   await browser.close();
 }
