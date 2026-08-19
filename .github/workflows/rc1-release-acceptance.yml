@@ -33,6 +33,9 @@ jobs:
           node scripts/test-water-change-cloud-persistence-contract.mjs
           node scripts/test-data-storage-repository-mode-contract.mjs
 
+      - name: Production cloud runtime contract
+        run: node scripts/test-production-cloud-runtime-contract.mjs
+
       - name: Admin Quality source contract
         run: node scripts/verify-admin-quality-inbox-contract.mjs
 
@@ -41,6 +44,9 @@ jobs:
 
       - name: Product evaluation contracts
         run: npm run test:product-evaluation
+
+      - name: API type check
+        run: npm run check:api
 
       - name: Type check
         run: npm run lint
