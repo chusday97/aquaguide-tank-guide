@@ -2189,7 +2189,7 @@ export default function CareEncyclopedia() {
             <>
               <div className="shrink-0 border-b border-white bg-white px-4 py-3">
                 <div className="text-[16px] font-black text-ink">{isEn ? 'Generate Care Card' : '生成养护卡'}</div>
-                <div className="mt-0.5 text-[11px] font-bold text-ink/45">{isEn ? 'Extract key steps to generate a copyable mobile card.' : '提取关键步骤，生成可复制、可保存的移动端卡片。'}</div>
+                <div className="mt-0.5 text-[11px] font-bold text-ink/45">{isEn ? 'Extract key steps to generate a copyable mobile card.' : '提取关键步骤，生成可复制的移动端卡片。'}</div>
               </div>
               <div className="aqua-care-card-modal-body min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-[#F7F4EC]/55 px-3 py-4">
                 <CareShareCardPreview topic={shareTopic} />
@@ -2199,7 +2199,7 @@ export default function CareEncyclopedia() {
                   </div>
                 )}
               </div>
-              <div className="modalFooter sticky bottom-0 grid shrink-0 grid-cols-2 gap-2 border-t border-[#EEF2E8] bg-white">
+              <div className="modalFooter sticky bottom-0 grid shrink-0 grid-cols-1 gap-2 border-t border-[#EEF2E8] bg-white">
                 <Button
                   type="button"
                   variant="outline"
