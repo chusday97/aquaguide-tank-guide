@@ -51,6 +51,9 @@ jobs:
       - name: Aquarium species detail source contract
         run: node scripts/test-aquarium-species-detail-surface-contract.mjs
 
+      - name: Care workspace detail source contract
+        run: node scripts/test-care-workspace-detail-contract.mjs
+
       - name: Product evaluation contracts
         run: npm run test:product-evaluation
 
@@ -99,6 +102,11 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-ui-modal-surface-browser.mjs
+
+      - name: Care workspace detail browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-care-workspace-detail.mjs
 
       - name: Care card action regression
         env:
