@@ -5,8 +5,8 @@ const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
 const cases = [
   { name: 'phone-390', width: 390, height: 844, expected: 'stacked-task-first' },
   { name: 'compact-desktop-768', width: 768, height: 900, expected: 'stacked-task-first' },
-  { name: 'desktop-1024', width: 1024, height: 900, expected: 'stacked-task-first-or-balanced' },
-  { name: 'wide-1440', width: 1440, height: 1000, expected: 'balanced-hero' },
+  { name: 'desktop-1024', width: 1024, height: 900, expected: 'stacked-task-first-or-balanced', maxSidebarWidth: 230, minWorkspaceWidth: 790 },
+  { name: 'wide-1440', width: 1440, height: 1000, expected: 'balanced-hero', minSidebarWidth: 260 },
 ];
 
 const browser = await chromium.launch({ headless: true });
@@ -59,6 +59,19 @@ try {
 
     assert.ok(geometry.today && geometry.manage && geometry.context, `${testCase.name}: missing dashboard priority surface`);
     assert.ok(geometry.documentWidth <= geometry.viewportWidth + 1, `${testCase.name}: page overflows horizontally`);
+
+    if (testCase.maxSidebarWidth !== undefined) {
+      assert.ok(geometry.sidebar, `${testCase.name}: desktop sidebar missing`);
+      assert.ok(geometry.sidebar.width <= testCase.maxSidebarWidth, `${testCase.name}: sidebar consumes too much medium-desktop width (${geometry.sidebar.width}px)`);
+    }
+    if (testCase.minSidebarWidth !== undefined) {
+      assert.ok(geometry.sidebar, `${testCase.name}: desktop sidebar missing`);
+      assert.ok(geometry.sidebar.width >= testCase.minSidebarWidth, `${testCase.name}: wide desktop should restore the full navigation rail (${geometry.sidebar.width}px)`);
+    }
+    if (testCase.minWorkspaceWidth !== undefined) {
+      assert.ok(geometry.main, `${testCase.name}: desktop workspace missing`);
+      assert.ok(geometry.main.width >= testCase.minWorkspaceWidth, `${testCase.name}: workspace is too narrow after sidebar allocation (${geometry.main.width}px)`);
+    }
 
     const today = geometry.today;
     const manage = geometry.manage;
