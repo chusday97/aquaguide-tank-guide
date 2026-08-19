@@ -153,18 +153,27 @@ try {
   await archiveSource.waitFor();
   const archiveScrollTop = await scrollCardIntoStablePosition(aquariumPage, archiveSource);
   await archiveSource.locator(':scope > button').click();
-  const roster = aquariumPage.locator('[role="dialog"][data-surface="right-drawer"]:visible');
-  await roster.waitFor();
+
+  const roster = aquariumPage
+    .locator('[role="dialog"][data-surface="right-drawer"]:not([data-detail-kind])')
+    .filter({ hasText: '缸内物种' })
+    .first();
+  await roster.waitFor({ state: 'visible' });
+  assert.notEqual(await roster.getAttribute('data-open'), null, 'livestock roster must be in its open state before opening a profile');
+
   const profileButton = roster.locator('button:has(img)').first();
   assert.equal(await profileButton.count(), 1, 'livestock roster must expose a species profile opener');
   await profileButton.click();
-  await roster.waitFor({ state: 'hidden' });
-  const detail = aquariumPage.locator('[role="dialog"][data-surface]:visible');
-  await detail.waitFor();
-  await aquariumPage.keyboard.press('Escape');
 
-  const restoredRoster = aquariumPage.locator('[role="dialog"][data-surface="right-drawer"]:visible');
-  await restoredRoster.waitFor();
+  const detail = aquariumPage.locator('[role="dialog"][data-detail-kind="species"]:visible');
+  await detail.waitFor();
+  await roster.waitFor({ state: 'hidden' });
+  await aquariumPage.keyboard.press('Escape');
+  await detail.waitFor({ state: 'hidden' });
+
+  // Returning from a child detail should re-open the exact parent task surface, not merely focus its launcher card.
+  await roster.waitFor({ state: 'visible' });
+  assert.notEqual(await roster.getAttribute('data-open'), null, 'closing species detail must reopen the originating livestock roster');
   const restoredArchiveScrollTop = await getWorkspaceScrollTop(aquariumPage);
   assert.ok(Math.abs(restoredArchiveScrollTop - archiveScrollTop) <= 96, `closing Aquarium species detail must keep the underlying archive scroll context; before=${archiveScrollTop}, after=${restoredArchiveScrollTop}`);
   assert.deepEqual(aquariumErrors, [], `aquarium detail return flow emitted page errors: ${aquariumErrors.join(' | ')}`);
