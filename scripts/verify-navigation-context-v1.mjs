@@ -176,8 +176,10 @@ try {
   assert.notEqual(await roster.getAttribute('data-open'), null, 'closing species detail must reopen the originating livestock roster');
   await aquariumPage.waitForFunction(() => {
     const active = document.activeElement;
-    return active instanceof HTMLButtonElement
-      && active.closest<HTMLElement>('[data-livestock-record-id]')?.dataset.livestockRecordId === 'stock-1'
+    if (!(active instanceof HTMLButtonElement)) return false;
+    const row = active.closest('[data-livestock-record-id]');
+    return row instanceof HTMLElement
+      && row.dataset.livestockRecordId === 'stock-1'
       && Boolean(active.querySelector('img'));
   });
   const restoredArchiveScrollTop = await getWorkspaceScrollTop(aquariumPage);
