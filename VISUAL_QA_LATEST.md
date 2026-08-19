@@ -1,24 +1,26 @@
-# AquaGuide Visual QA V2 — Latest Baseline
+# AquaGuide Visual QA — V2 Baseline + V3 Golden Cohort
 
 **Date:** 2026-08-19  
 **Branch:** `agent/uiux-system-refactor-v1`  
-**Draft PR:** #104  
-**Validated implementation head:** `ef69d85e48712d27990423fcc85e23a4047f0756`
+**Draft PR:** #104
 
-## Purpose
+## Current visual maturity
 
-This round turns visual review from ad-hoc screenshots into reproducible evidence. It does **not** claim pixel-perfect visual regression yet; it establishes a reliable cross-surface screenshot baseline plus deterministic geometry contracts for the highest-risk responsive failures discovered in review.
+AquaGuide now has two complementary visual-QA layers:
 
-## Baseline matrix
+1. **Visual QA V2 = broad review evidence.** Four viewports × six core routes × fold/full-page = 48 screenshots, plus geometry contracts for Aquarium and Search.
+2. **Golden V3 = small regression gate.** Eight deliberately stable fold states are normalized and pixel-diffed against reviewed V2 references.
+
+V3 does **not** replace V2. V2 answers “what does the product look like across the core surfaces?”; V3 answers “did a small set of approved responsive states unexpectedly drift?”
+
+## V2 broad baseline
 
 Viewports:
 
-| Profile | Viewport |
-| --- | --- |
-| Phone | 390×844 |
-| Compact desktop | 768×900 |
-| Medium desktop | 1024×900 |
-| Wide desktop | 1440×1000 |
+- 390×844
+- 768×900
+- 1024×900
+- 1440×1000
 
 Routes:
 
@@ -29,128 +31,129 @@ Routes:
 - `/collection`
 - `/settings`
 
-Evidence per case:
+Authoritative V2 implementation run:
 
-- one viewport/fold screenshot
-- one full-page screenshot
-- layout/width/height/basic DOM manifest
+- `UI UX Visual QA V2 #19`
+- run `32259734301`
+- head `ef69d85e48712d27990423fcc85e23a4047f0756`
+- artifact `9367824682`
+- result: **PASS**
 
-Total: **4 viewports × 6 routes × 2 screenshots = 48 screenshots**.
+The V2 harness remains fail-closed: real Aquarium dashboard state must exist, CJK font readiness is required, and structural Aquarium/Search geometry checks run before accepting evidence.
 
-## Authoritative run
+## V3 Golden Cohort v1
 
-**Workflow:** `UI UX Visual QA V2 #19`  
-**Run ID:** `32259734301`  
-**Result:** PASS  
-**Artifact:** `aquaguide-uiux-visual-baseline-v2`  
-**Artifact ID:** `9367824682`  
-**Artifact retention:** 7 days
+The full 48-image matrix is intentionally **not** a pixel-diff contract. Long pages, recommendation text and WebGL would make that brittle. V3 locks only eight high-signal fold states:
 
-The run passed:
+| Surface | 390 | 768 | 1024 | 1440 |
+| --- | --- | --- | --- | --- |
+| Aquarium | Golden | Golden | Golden | Golden |
+| Search | — | — | Golden | Golden |
+| Collection | Golden | — | — | Golden |
 
-- CJK font install/readability gate
-- TypeScript
-- production build
-- Aquarium visual task hierarchy
-- Search medium-workspace density
-- cross-surface capture
-- artifact upload
+Reference source: the approved V2 #19 fold screenshots.
 
-## Structural visual contracts
+### Repository contract
 
-### Aquarium
+`evaluation/visual/golden-v1/` contains:
 
-`verify-uiux-aquarium-visual-hierarchy.mjs` checks:
+- `manifest.json`
+- eight compressed `.sig` reference files
+- baseline/update policy in `README.md`
 
-- no page horizontal overflow
-- 390/768 task-first ordering
-- 1024 medium sidebar ≤230px
-- 1024 workspace ≥790px
-- 1440 full sidebar restored
-- contextual 3D tank remains subordinate
-- return-context pill cannot overlap actual phone toolbar, onboarding content or desktop Aquarium header
+Raw reference PNGs are not committed. CI still uploads current screenshots and diff evidence for human review, while Git stores compact deterministic pixel signatures.
 
-### Search
+### Normalization algorithm
 
-`verify-uiux-search-density.mjs` checks:
+For each case:
 
-- 768 and 1024 use one outer Species/Care column
-- 1440 restores two outer columns
-- Species result card width stays ≥220px
-- no horizontal overflow
+1. capture the approved route/state with the same first-aquarium seed, zh-CN locale and reduced motion;
+2. require `Noto Sans CJK SC`;
+3. apply only explicitly documented fixed masks;
+4. sample to a 128px-wide grayscale thumbnail;
+5. grayscale formula: `(77*r + 150*g + 29*b) >> 8`;
+6. compare against the zlib-compressed reviewed signature;
+7. a pixel counts as changed only when grayscale delta is greater than `24`;
+8. fail when changed-pixel ratio exceeds the per-surface tolerance.
 
-## Manual fold review
+The manifest owns both `thumbWidth` and `thumbHeight`; verifier code must not re-derive approved thumbnail geometry.
 
-The deterministic gates were followed by manual inspection of the final artifact.
+### Fixed masks
 
-### 390 Aquarium
+Masks exist only where deterministic pixel comparison would otherwise measure content noise instead of layout:
 
-Observed hierarchy:
+- Aquarium 1024: WebGL context + lower recommendation content
+- Aquarium 1440: WebGL context + lower recommendation content
 
-1. fixed aquarium toolbar
-2. `返回上一个任务` navigation band
-3. onboarding card
-4. Today decision surface
-5. recurrent quick actions
+The mask coordinates are fixed to the approved screenshot. Moving or resizing a masked region is therefore not silently ignored; new pixels outside the original rectangle still contribute to the diff.
 
-No toolbar/return/onboarding overlap remained.
+### Final thresholds
 
-### 768 Aquarium
+- Aquarium: **≤0.50% changed pixels**
+- Search: **≤0.35%**
+- Collection: **≤0.30%**
+- per-pixel grayscale noise threshold: `24`
 
-Today remains first and recurrent Manage actions are fully visible before the contextual 3D tank. The collapsed rail preserves workspace width.
+These are deliberately much tighter than the initial provisional 1.8%–2.5% limits because repeated approved-state runs produced 0% changed pixels across all eight cases.
 
-### 1024 Aquarium
+## V3 fail-before and correction
 
-The medium 220px sidebar preserves enough content width for a useful Today + context composition while keeping Manage above the fold. Return context has its own desktop top band.
+### PUI-BC-049 — cross-language thumbnail rounding false failure
 
-### 1024 Search
+Golden V3 #1 / run `32264392607` failed before real pixel comparison for only the two 1024×900 cases:
 
-Species uses the full outer content column, with readable two-up result cards. Care follows below instead of squeezing alongside the Species section.
+- approved Python reference: `900 × 128 / 1024 = 112.5` → banker’s rounding → 112
+- JavaScript verifier: `Math.round(112.5)` → 113
 
-### 1440 Search
+The UI itself had not drifted: the other six cases were already exactly 0% changed.
 
-Species and Care return to a side-by-side comparison layout once the actual Search workspace is genuinely wide enough.
+Fix commit: `1eea45dfea367a571daf123836348c79f67e517f`.
 
-### 1440 Aquarium
+The manifest is now the language-independent geometry contract. Golden V3 #2 / run `32264776117` then passed 8/8 at 0% changed.
 
-Today + contextual 3D form a balanced hero, with Manage immediately below and visible in the fold. The 3D surface remains visually secondary rather than taking over the page.
+## Authoritative final V3 evidence
 
-## Invalid evidence explicitly rejected during this round
+### Tight-threshold implementation validation
 
-### Storage-reset capture bug
+`UI UX Golden V3 #3` / run `32265296046` on head `6bd1e045dcac709e0da7425a21b7b217142abb20`:
 
-The first capture harness used `localStorage.clear()` in `addInitScript`. Because init scripts run on every navigation, it deleted the seeded aquarium before `/aquarium` was captured, silently producing Welcome screenshots.
+- 8/8 cases PASS
+- every case = **0% changed**
+- Aquarium limit 0.50%
+- Search limit 0.35%
+- Collection limit 0.30%
 
-That artifact was rejected. The final harness now requires `[data-aquarium-dashboard-v2]` after navigating back to `/aquarium`.
+Same-head `UI UX System Refactor V1 #58` / run `32265296159` also passed.
 
-### Missing CJK font
+### Canonical-closeout validation
 
-Old RC1 screenshots rendered Chinese as tofu boxes. Visual QA V2 installs `fonts-noto-cjk` and refuses capture when `Noto Sans CJK SC` is unavailable.
+After PUI-BC-049 was appended to the canonical product badcase registry:
 
-A runner once timed out downloading the 61.2MB package. The fix was apt retry/timeout hardening, not removing the font gate.
+- canonical commit: `08a2d31944919c51fb087400002c446fcc88097e`
+- `UI UX System Refactor V1 #59` / run `32267440195`: **PASS**
+- `UI UX Golden V3 #4` / run `32267440206`: **PASS**
+- Golden artifact ID: `9370832138`
+- artifact digest: `sha256:09728cd8efb33476c423e53ddb22adcc8f077edf48953940e3eef272891b7a11`
+- artifact retention: 7 days
 
-### Wrong overlap reference box
+The canonical registry change was verified as exactly **+1 line / -0 lines**; historical PUI-BC-032 still uses the original `guide_safe_water_change` trigger.
 
-An intermediate return-context regression compared the floating pill against the outer `.aquarium-desktop-layout` box. That container included reserved whitespace and generated a false overlap failure.
+## Baseline update policy
 
-The final regression compares against actual visible `.aquarium-toolbar`, `.aquarium-onboarding-strip`, and `.aquarium-desktop-header` surfaces.
+Do not update a `.sig` only to make CI green. A golden change is acceptable only when:
 
-## Product badcases closed
+- the visual change is intentional;
+- structural browser regressions still pass;
+- the affected fold screenshot is manually reviewed;
+- the PR explains which golden case changed and why.
 
-- PUI-BC-045 — Aquarium narrow-workspace task hierarchy
-- PUI-BC-046 — 1024 sidebar width cliff
-- PUI-BC-047 — Search viewport/content-width mismatch
-- PUI-BC-048 — workspace return-context overlap
+If a state becomes intrinsically noisy, prefer a narrow documented mask or removing/replacing that case rather than increasing global tolerance.
 
-## Non-claims / next visual maturity step
+## Non-claims / residual debt
 
-This baseline is intentionally **not** described as a full visual-regression system yet.
-
-Still missing:
-
-- committed golden screenshots or durable external baseline storage
-- automatic pixel-diff comparison with reviewed tolerance/masks
-- a human visual score for every full-page screenshot
-- visual checks for every dialog/drawer/empty/error state
-
-The next mature step is to choose a small stable golden cohort, define acceptable dynamic regions, and introduce reviewed pixel-diff thresholds without making CI brittle.
+- Golden V3 is a regression detector, not an aesthetic/perceptual design score.
+- Only eight stable fold states are golden; the full 48-image V2 baseline remains review evidence rather than a golden contract.
+- Current/reference/diff PNG artifacts retain for 7 days; compact signatures are what remain versioned in Git.
+- `fonts-noto-cjk` is a ~61MB package and runner download speed is still a CI-latency risk. The readability gate should stay; caching/vendor strategy is a separate engineering follow-up.
+- Bundle/code-splitting warnings and existing npm audit findings remain separate debt.
+- PR #104 remains Draft, unmerged and undeployed.

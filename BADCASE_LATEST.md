@@ -2,123 +2,113 @@
 
 **Date:** 2026-08-19  
 **Branch:** `agent/uiux-system-refactor-v1`  
-**Draft PR:** #104  
-**Visual implementation head:** `ef69d85e48712d27990423fcc85e23a4047f0756`  
-**Visual QA:** #19 / run `32259734301` — PASS  
-**System regression:** #36 / run `32259734291` — PASS
+**Draft PR:** #104
 
-This file summarizes the new Visual QA V2 closures. PUI-BC-040..044 remain closed from the preceding UI/UX System Refactor and are still present in the canonical registry.
+## Current closure set
 
-## PUI-BC-045 · Aquarium 在窄真实工作区重新把 3D 提到常用操作之前
+PUI-BC-040..044 remain closed from the UI/UX System Refactor. Visual QA V2 closed PUI-BC-045..048. Visual QA V3 adds one evaluation-system badcase, PUI-BC-049; it is **not** a product UI failure.
+
+Authoritative visual references:
+
+- V2 broad baseline: #19 / run `32259734301` — PASS
+- V3 tight-threshold golden validation: #3 / run `32265296046` — 8/8 PASS, all 0% changed
+- canonical-closeout Golden V3: #4 / run `32267440206` — PASS
+- canonical-closeout System: #59 / run `32267440195` — PASS
+
+## PUI-BC-045 · Aquarium 窄工作区任务层级回退
 
 - **featureId:** `daily_check`
 - **severity:** medium
-- **source:** `visual_qa`
 - **rootCauseLayer:** `responsive_layout`
 - **status:** `regression_verified`
 
-**Symptom**  
-390px 手机已经是 Today → Manage → 3D，但 768/1024 进入 desktop shell 后，大块 3D context 会重新出现在常用操作之前，把高频养护动作推到首屏以下。
+390px 已是 Today → Manage → 3D，但 768/1024 desktop shell 曾重新把大块 3D 放到常用动作之前。根因是 Hero 用 content container 判断，而 task-first 排序仍用 viewport media query。
 
-**Root cause**  
-Hero 是否并排已经使用 `aquarium-home` container width，但 task-first 排序仍由旧 viewport media query 控制。浏览器宽度和真实 workspace 宽度因此产生冲突。
+Fix: `aquarium-home` container 驱动任务排序；窄真实工作区保持 Today → Manage → 3D → Learn，宽度足够才恢复 Today + 3D balanced hero。
 
-**Fix**  
-`@container aquarium-home (max-width: 719px)` 固定 Today → Manage → Context → Learn；窄工作区 3D 限制为 140–170px。只有真实 Aquarium content width ≥720px 才允许 Today + 3D balanced hero。
+Primary fix: `f0ea9ecad4fbace00f9f0d1fdb3cecce277d31d7`.
 
-**Fixed by**  
-`f0ea9ecad4fbace00f9f0d1fdb3cecce277d31d7`
-
-**Regression evidence**  
-`verify-uiux-aquarium-visual-hierarchy.mjs` + Visual QA #19；390/768 task-first，1024 不允许 full-width 3D 在 Manage 前成为主块，1440 恢复 balanced hero。
-
----
-
-## PUI-BC-046 · 1023→1024 时侧栏突然膨胀，工作区反而变窄
+## PUI-BC-046 · 1024px sidebar width cliff
 
 - **featureId:** `responsive_detail_surface`
 - **severity:** medium
-- **source:** `visual_qa`
 - **rootCauseLayer:** `responsive_shell`
 - **status:** `regression_verified`
 
-**Symptom**  
-1023px 仍是约 76px collapsed rail；到 1024px 立即展开到约 280px，导致可用工作区出现反向宽度断崖。Aquarium、Search 等页面同时受影响。
+1023px 约 76px collapsed rail，1024px 曾直接膨胀到约 280px，导致越过 breakpoint 后业务工作区反而更窄。
 
-**Expected**  
-中等桌面宽度应该逐级增加信息密度，不能因为越过 1px breakpoint 反而损失数百像素业务工作区。
+Fix: 1024–1199 使用 220px medium sidebar；1200+ 才恢复 full sidebar。
 
-**Fix**  
-1024–1199 使用 220px medium sidebar，保留文字导航、搜索和工具；1200+ 才恢复完整侧栏。
+Primary fix: `1ad85cd399634c3a9c81e39963fbd13d80a5f259`.
 
-**Fixed by**  
-`1ad85cd399634c3a9c81e39963fbd13d80a5f259`
-
-**Regression evidence**  
-1024 visual hierarchy 要求 sidebar ≤230px、workspace ≥790px；1440 要求 full sidebar ≥260px。Visual QA #19 PASS。
-
----
-
-## PUI-BC-047 · Search 用 viewport 决定双列，实际内容区不足时卡片被压成窄条
+## PUI-BC-047 · Search 用 viewport 判断嵌套双列
 
 - **featureId:** `species_search`
 - **severity:** medium
-- **source:** `visual_qa`
 - **rootCauseLayer:** `responsive_layout`
 - **status:** `regression_verified`
 
-**Symptom**  
-1024 viewport 下，Search 外层已经进入 Species/Care 双列，但侧栏占宽后真实工作区仍不足；Species section 内部又分两列，卡片缩到约 180–200px，标题/学名接近竖向换行。
+1024 下实际 Search workspace 不足，却曾先按 viewport 进入 Species/Care 双列，内部 Species 再双列，结果卡被压到约 180–200px。
 
-**Expected**  
-嵌套信息架构必须根据自己的 content width，而不是浏览器 viewport 判断是否并列。
+Fix: `.search-v2-page` 使用 named inline-size container；真实 Search workspace <900px 时纵向，≥900px 才并列。
 
-**Fix**  
-`.search-v2-page` 设为 `search-workspace` inline-size container；真实 Search workspace <900px 时 Species/Care 单列，≥900px 才双列。
+Primary fix: `1cb91612541396ec5d2ad515cc5b8f70443f8573`.
 
-**Fixed by**  
-`1cb91612541396ec5d2ad515cc5b8f70443f8573`
-
-**Regression evidence**  
-`verify-uiux-search-density.mjs`：768/1024 stacked、1440 side-by-side、Species card ≥220px、无 horizontal overflow。Visual QA #19 PASS。
-
----
-
-## PUI-BC-048 · “返回上一个任务”悬浮导航覆盖 Aquarium toolbar / onboarding / desktop header
+## PUI-BC-048 · Return-context 覆盖 Aquarium chrome/content
 
 - **featureId:** `task_entry_navigation`
 - **severity:** medium
-- **source:** `visual_qa`
 - **rootCauseLayer:** `ui_navigation_affordance`
 - **status:** `regression_verified`
 
-**Symptom**  
-全局 return-context pill 使用固定 top 值。实际截图中，手机会覆盖 Aquarium 顶部工具栏或新手起步区域，768/1024 会覆盖鱼缸身份 Header。
+全局 `返回上一个任务` fixed pill 曾覆盖手机 Aquarium toolbar/onboarding 或桌面 Aquarium identity header。
 
-**Expected**  
-Return context 属于 persistent navigation chrome，必须占据独立导航带，不得浮在业务内容之上。
+Fix: return context 获得独立 navigation band。手机顺序为 toolbar → return → onboarding/Today；桌面为 return → Aquarium header。回归直接比较真实可见 toolbar/onboarding/header 矩形，而不是外层 layout 空白区。
+
+Relevant fixes: `1abb9ace99284a2050560eeac919f9a09b8b82e8`, `f3c48352fcc77a09207885f8f9edae25ff7fa33d`, `ef69d85e48712d27990423fcc85e23a4047f0756`.
+
+## PUI-BC-049 · Golden comparator 的 1024 缩略图出现跨语言舍入假失败
+
+- **featureId:** `evaluation_system`
+- **severity:** medium
+- **source:** `ci_fail_before`
+- **rootCauseLayer:** `evaluation_contract`
+- **status:** `regression_verified`
+
+**Symptom**  
+Golden V3 #1 / run `32264392607` 中，Aquarium/Search 的 1024×900 case 在真正像素 diff 前就失败：reference 是 128×112，JavaScript verifier 却要求 128×113。
+
+**Root cause**  
+`900 × 128 / 1024 = 112.5`。reference 生成使用 Python `round()`（banker’s rounding → 112），verifier 使用 JavaScript `Math.round()`（→113）。同一个批准 UI 因实现语言的舍入语义不同而被误判。
+
+**Evidence this was evaluator failure, not UI drift**  
+同一 #1 run 的其余 6 个 golden case 已是 0% changed。
 
 **Fix**  
-桌面为 return context 预留 top band；手机保持固定 Aquarium toolbar 原位，在 toolbar flow placeholder 之后额外预留 return band，最终 pill 从实测 toolbar 下沿之外开始，随后才进入 onboarding / Today 内容。
+`manifest.json` 的 `thumbWidth` / `thumbHeight` 成为唯一、显式、语言无关的 normalization geometry contract；verifier 不再重新计算高度。
 
 **Fixed by**  
-`1abb9ace99284a2050560eeac919f9a09b8b82e8` + `f3c48352fcc77a09207885f8f9edae25ff7fa33d` + `ef69d85e48712d27990423fcc85e23a4047f0756`
+`1eea45dfea367a571daf123836348c79f67e517f`
 
 **Regression evidence**  
-`verify-uiux-aquarium-visual-hierarchy.mjs` 直接比较 return pill 与实际 `.aquarium-toolbar` / `.aquarium-onboarding-strip` / `.aquarium-desktop-header` 几何，不再用包含空白的外层 layout box。Visual QA #19 PASS；人工检查 390 / 768 / 1024 / 1440 fold screenshots 无重叠。
+- Golden V3 #2 / run `32264776117`: 8/8 PASS, all 0%
+- Golden V3 #3 / run `32265296046`: 收紧到 Aquarium 0.50%、Search 0.35%、Collection 0.30% 后仍 8/8=0%
+- Golden V3 #4 / run `32267440206`: canonical-closeout head 仍 PASS
+- System #59 / run `32267440195`: canonical product evaluation + system regressions PASS
 
-## Visual QA evidence quality notes
+Canonical append commit `08a2d31944919c51fb087400002c446fcc88097e` was verified as exactly **+1 / -0**. PUI-BC-032 remains unchanged with `guide_safe_water_change`.
 
-本轮还发现两类“评测证据本身”的问题，但没有把它们伪装成产品缺陷：
+## Evidence-quality lessons retained
 
-1. 第一版 capture harness 在 `addInitScript` 中每次 navigation 都清空 storage，导致 Aquarium 截图实际变成 Welcome。该 artifact 被判无效并废弃；现在 `/aquarium` 必须重新验证真实 dashboard 存在。
-2. 第一版 return-overlap 断言拿 `.aquarium-desktop-layout` 外层 box 当可见内容边界，产生 false fail。现在只与真实可见 toolbar/onboarding/header 比较。
-3. CJK package 曾因 runner 下载慢超过旧 120s timeout；CI 现在保留字体 readiness gate，同时增加 apt retries/合理超时，而不是接受 tofu 字体截图。
+- Storage-reset screenshots that silently captured Welcome instead of Aquarium are invalid evidence and remain fail-closed.
+- CJK tofu screenshots are invalid evidence; font readiness remains mandatory.
+- Geometry tests must compare actual visible surfaces, not wrapper boxes containing reserved whitespace.
+- A golden comparator can itself produce badcases; evaluator semantics must be versioned just like product logic.
 
 ## Residual risks / non-claims
 
-- 当前是 **structural visual gates + screenshot baseline**，还不是 pixel-diff golden comparator。
-- Artifact retention 为 7 天；截图没有提交进仓库。
-- 没有完成每一张 full-page screenshot 的人工逐像素评分。
-- Bundle splitting / existing npm vulnerabilities 仍属于后续工程债务。
-- PR #104 仍 Draft，未 merge，未 production deploy。
+- Golden V3 covers eight stable fold states, not every V2 screenshot or every dialog/error state.
+- It detects approved rendering drift; it does not score aesthetics.
+- Raw diff artifacts retain for 7 days; compact `.sig` references are versioned in Git.
+- CJK package download latency remains CI infrastructure debt.
+- PR #104 remains Draft, not merged and not deployed.

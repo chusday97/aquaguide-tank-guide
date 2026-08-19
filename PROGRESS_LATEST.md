@@ -1,65 +1,83 @@
-# AquaGuide Progress — UI/UX System Refactor + Visual QA V2
+# AquaGuide Progress — UI/UX System Refactor + Visual QA V2/V3
 
 **Date:** 2026-08-19  
 **Branch:** `agent/uiux-system-refactor-v1`  
 **Draft PR:** #104
 
-## Completed
+## System refactor completed
 
-- [x] Rebased UI/UX system work conceptually on `integration/aquaguide-rc1` instead of the older main-only Collection branch.
-- [x] Consolidated design-token ownership in `ui-v2-foundation.css`.
-- [x] Locked width-driven layout policy and viewportless iPad fallback.
-- [x] Preserved Aquarium 3 primary actions + progressive disclosure.
-- [x] Ported Collection into a 3-live-module focus carousel; Achievements remains outside primary IA.
-- [x] Added Search Species/Care explicit show-all parity.
-- [x] Added 44×44 named-control baseline, reduced-motion and inactive-carousel `inert` behavior.
-- [x] Added `UI UX System Refactor V1` deterministic CI.
-- [x] Closed PUI-BC-040..044.
+- [x] UI/UX system based on `integration/aquaguide-rc1`.
+- [x] Canonical design-token ownership in `ui-v2-foundation.css`.
+- [x] Width-driven layout policy + viewportless iPad fallback.
+- [x] Aquarium three primary actions + progressive disclosure.
+- [x] Collection 3-live-module focus carousel; Achievements outside primary IA.
+- [x] Search Species/Care explicit show-all parity.
+- [x] 44×44 named-control baseline, reduced-motion and inactive-card `inert` behavior.
+- [x] Deterministic `UI UX System Refactor V1` CI.
+- [x] PUI-BC-040..044 closed.
 
 ## Visual QA V2 completed
 
-- [x] Added cross-surface capture script for 390 / 768 / 1024 / 1440.
-- [x] Covered Aquarium / Encyclopedia / Care / Search / Collection / Settings.
-- [x] Captured fold + full-page per route/viewport = 48 screenshots.
-- [x] Installed Noto CJK in CI so Chinese baseline is readable.
-- [x] Made screenshot capture fail if Aquarium state was accidentally wiped.
-- [x] Made screenshot capture fail if CJK font is unavailable.
-- [x] Fixed invalid first capture harness that cleared storage on every navigation.
-- [x] Added Aquarium visual hierarchy geometry regression.
-- [x] Added Search content-density geometry regression.
-- [x] PUI-BC-045: narrow real Aquarium workspace remains Today → Manage → 3D.
-- [x] PUI-BC-046: 1024–1199 uses 220px medium sidebar instead of 280px width cliff.
-- [x] PUI-BC-047: Search Species/Care uses actual content width; 768/1024 stacked, 1440 side-by-side.
-- [x] PUI-BC-048: return-context navigation no longer overlays phone toolbar/onboarding or desktop Aquarium header.
-- [x] Corrected false return-overlap regression to compare against visible surfaces, not the outer layout box.
-- [x] Hardened CJK package install with apt retries/timeouts while keeping readability fail-closed.
-- [x] Manual fold review completed for the highest-risk final screenshots.
+- [x] 390 / 768 / 1024 / 1440 screenshot matrix.
+- [x] Aquarium / Encyclopedia / Care / Search / Collection / Settings.
+- [x] Fold + full page = 48 screenshots.
+- [x] CJK readiness fail-closed.
+- [x] Real Aquarium state fail-closed.
+- [x] Aquarium geometry regression.
+- [x] Search content-density regression.
+- [x] PUI-BC-045..048 closed.
+- [x] Manual review of highest-risk fold states.
 
-## Implementation validation
+Authoritative V2: #19 / run `32259734301` — PASS, artifact `9367824682`.
 
-**Visual QA:** `UI UX Visual QA V2 #19` / run `32259734301` — **PASS**  
-Artifact ID: `9367824682`  
-Implementation head: `ef69d85e48712d27990423fcc85e23a4047f0756`
+## Visual QA V3 completed
 
-**Same-head system regression:** `UI UX System Refactor V1 #36` / run `32259734291` — **PASS**
+### Golden cohort
 
-Passed static contracts, TypeScript, production build, Search/Collection browser regressions, GP-005 and 7 profiles × 17 routes.
+- [x] Chose eight stable fold states instead of locking all 48 V2 screenshots.
+- [x] Aquarium: 390 / 768 / 1024 / 1440.
+- [x] Search: 1024 / 1440.
+- [x] Collection: 390 / 1440.
+- [x] Added `evaluation/visual/golden-v1/README.md`.
+- [x] Added `manifest.json` and eight compressed `.sig` references.
+- [x] Added `scripts/verify-uiux-golden-cohort.mjs`.
+- [x] Added `.github/workflows/uiux-golden-v3.yml`.
+- [x] Current/reference/diff thumbnails + current full screenshots + `report.json` uploaded on every run.
+- [x] Kept CJK readiness and reduced-motion requirements.
+- [x] Masked only documented WebGL/recommendation regions at Aquarium 1024/1440.
 
-## Governance closeout
+### Fail-before
 
-- [x] `HANDOFF_LATEST.md` updated for Visual QA V2.
-- [x] `BADCASE_LATEST.md` updated with PUI-BC-045..048.
-- [x] `PROGRESS_LATEST.md` updated.
-- [x] `VISUAL_QA_LATEST.md` created as the dedicated baseline/evidence record.
-- [x] PUI-BC-045..048 appended to canonical `evaluation/product/badcases.v1.jsonl`.
-- [x] Historical PUI-BC-032 trigger restored exactly after an append-time text drift was detected; new badcases remain intact.
-- [x] Final canonical `test:product-evaluation` + full system regression: `UI UX System Refactor V1 #42` / run `32261277358` — **PASS** on canonical validation commit `b2186ac060156d53e2687f6a92fdbfa11bf3eae6`.
-- [x] PR #104 body updated with Visual QA V2, PUI-BC-045..048, authoritative run IDs, artifact ID and explicit non-claims.
+- [x] Golden V3 #1 / run `32264392607` failed only for 1024 thumbnail geometry before real pixel comparison.
+- [x] Identified Python banker’s rounding vs JavaScript `Math.round()` at exact `112.5`.
+- [x] PUI-BC-049 created as an `evaluation_system` badcase, not a product UI badcase.
+- [x] Manifest `thumbWidth/thumbHeight` made authoritative; verifier stopped re-deriving geometry.
+
+### Threshold calibration
+
+- [x] Golden V3 #2 / run `32264776117`: 8/8 PASS, all 0% changed.
+- [x] Initial provisional thresholds rejected as too loose.
+- [x] Final limits: Aquarium 0.50%, Search 0.35%, Collection 0.30%, grayscale delta threshold 24.
+- [x] Golden V3 #3 / run `32265296046`: 8/8 PASS, all 0% changed under tightened limits.
+- [x] Same-head System #58 / run `32265296159`: PASS.
+
+## Canonical governance closeout
+
+- [x] PUI-BC-049 appended to `evaluation/product/badcases.v1.jsonl`.
+- [x] Commit diff verified exactly `+1 / -0` for canonical registry.
+- [x] PUI-BC-032 rechecked: still `guide_safe_water_change` exactly.
+- [x] Canonical commit: `08a2d31944919c51fb087400002c446fcc88097e`.
+- [x] System #59 / run `32267440195`: PASS.
+- [x] Golden V3 #4 / run `32267440206`: PASS.
+- [x] Golden artifact `9370832138`, digest `sha256:09728cd8efb33476c423e53ddb22adcc8f077edf48953940e3eef272891b7a11`.
+- [x] `VISUAL_QA_LATEST.md`, `BADCASE_LATEST.md`, `PROGRESS_LATEST.md`, `HANDOFF_LATEST.md` updated for V3.
 
 ## Still intentionally not done
 
-- [ ] Pixel-diff golden-image comparator with committed baselines/tolerance.
-- [ ] Repository storage of screenshot images; current artifact retention is 7 days.
+- [ ] Expand golden cohort indiscriminately to all 48 V2 screenshots — intentionally avoided.
+- [ ] Perceptual/aesthetic scoring — Golden V3 is regression detection, not design judgment.
+- [ ] Commit raw PNG baselines — compact signatures are versioned; raw current/reference/diff evidence remains a 7-day artifact.
+- [ ] Optimize/cache the ~61MB CJK package installation.
 - [ ] Bundle/chunk optimization.
 - [ ] Existing dependency vulnerability remediation.
 - [ ] Merge #104 into RC1/main.
