@@ -5,6 +5,7 @@ const adapters = fs.readFileSync('src/modules/result/resultAdapters.ts', 'utf8')
 const care = fs.readFileSync('src/pages/CareEncyclopedia.tsx', 'utf8');
 const compatibility = fs.readFileSync('src/components/CompatibilityRiskCalculator.tsx', 'utf8');
 const speciesDetail = fs.readFileSync('src/components/SpeciesDetailDialogBase.tsx', 'utf8');
+const identify = fs.readFileSync('src/pages/Identify.tsx', 'utf8');
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Result UX contract failed: ${message}`);
@@ -71,5 +72,18 @@ assert(!speciesDetail.includes("aria-label={isEn ? 'Key reasons' : '关键原因
 assert((speciesDetail.match(/data-species-detail-primary-action/g) || []).length === 1, 'Species Detail must expose exactly one stable primary CTA selector');
 assert(speciesDetail.includes('data-species-detail-edit-tank-record'), 'Aquarium-owned Species Detail must preserve the tank-record edit action');
 assert(speciesDetail.includes('data-disclosure-purpose="secondary_evidence"'), 'Species Detail fit/compatibility evidence must remain collapsed behind disclosure');
+
+assert(identify.includes("import { DecisionResultSurface } from '../components/result/DecisionResultSurface';"), 'Identification must import the shared decision surface');
+assert(identify.includes('testId="identify-decision"'), 'Identification candidate review must consume the shared decision-first surface');
+assert(identify.includes("eyebrow={isEn ? 'NEEDS CONFIRMATION' : '需要你确认'}"), 'Identification must explicitly frame AI output as requiring user confirmation');
+assert(identify.includes("recognition?.status === 'ambiguous'"), 'Identification must preserve ambiguous recognition as an explicit UI state');
+assert(identify.includes("AI candidates are not confirmed species until you choose one."), 'Identification summary must state that AI candidates are not confirmed species');
+assert(identify.includes('data-identify-candidate-options'), 'Identification must preserve a stable multi-candidate choice set');
+assert(identify.includes('data-identify-candidate-confirm'), 'Identification candidate confirmation must remain an explicit user action');
+assert(identify.includes('onClick={() => void confirmFish(candidate.fish!)}'), 'Visual candidate confirmation must continue through confirmFish');
+assert(identify.includes("setStage('identified')"), 'Only the explicit confirmation path may move the flow into identified state');
+assert(identify.includes('onClick={startHealthTriage}'), 'Health triage must remain a separate explicit user action after identification');
+assert(identify.includes("stage === 'candidates'") && identify.includes("stage === 'identified'"), 'Candidate review and confirmed identification must remain separate stages');
+assert(!identify.includes('primaryControl={<button'), 'Identification shared surface must not auto-promote one candidate as the primary confirmed choice');
 
 console.log('Result UX V1 contract: PASS');
