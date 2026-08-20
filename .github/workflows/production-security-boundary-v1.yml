@@ -7,7 +7,7 @@ on:
       - integration/aquaguide-rc1
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-production-security-boundary:
@@ -25,6 +25,42 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Guarded product badcase registry migration
+        shell: bash
+        run: |
+          node scripts/migrate-product-badcases-054-055.mjs
+          if git diff --quiet; then
+            echo "Registry migration already applied; no write required."
+            exit 0
+          fi
+
+          mapfile -t changed < <(git diff --name-only | sort)
+          expected=(
+            "evaluation/product/badcases.v1.jsonl"
+            "evaluation/product/feature-states.v1.json"
+          )
+          if [[ "${changed[*]}" != "${expected[*]}" ]]; then
+            printf 'Unexpected migration diff: %s\n' "${changed[*]}"
+            exit 1
+          fi
+
+          read -r adds deletes _ < <(git diff --numstat -- evaluation/product/badcases.v1.jsonl)
+          if [[ "$adds" != "2" || "$deletes" != "0" ]]; then
+            echo "Badcase registry must be append-only (+2/-0), got +${adds}/-${deletes}."
+            exit 1
+          fi
+
+          npm run test:product-evaluation
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evaluation/product/feature-states.v1.json evaluation/product/badcases.v1.jsonl
+          git commit -m "Register Result UX production badcases"
+          git push origin HEAD:agent/result-ux-v1
+
+      - name: Product evaluation registry contract
+        run: npm run test:product-evaluation
 
       - name: Share-report secret boundary
         run: npm run test:share-report-contract
