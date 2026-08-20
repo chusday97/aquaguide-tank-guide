@@ -7,7 +7,7 @@
 
 ## Current phase
 
-The project is in **Result UX convergence + final consumer closure**.
+The project is in **Result UX final-consumer closure**.
 
 PR #105 remains **Draft / open / mergeable / not merged**. No production deployment is claimed.
 
@@ -17,11 +17,14 @@ PR #105 remains **Draft / open / mergeable / not merged**. No production deploym
 - [x] Compatibility
 - [x] Knowledge
 - [x] Procedure
+- [x] Species Detail
+- [x] Identification
+- [ ] Live AI Tank Copilot
 
-Authoritative clean four-consumer baseline:
+Authoritative clean six-consumer baseline:
 
-- head `bcf2f24911b7516d08dc077a86fcec05b0333c10`;
-- Result UX V1 / run `32345353470` — **PASS**:
+- head `6d311ed18fde2241a9aa27400809634155921fa6`;
+- Result UX V1 / run `32357720875` — **PASS**:
   - static contract;
   - TypeScript;
   - production build;
@@ -29,121 +32,136 @@ Authoritative clean four-consumer baseline:
   - Compatibility browser regression;
   - Knowledge browser regression;
   - Procedure browser regression;
+  - Species Detail + parent-context browser regression;
+  - Identification uncertainty + explicit-confirmation browser regression;
   - evidence artifact upload.
 
-Same-head legacy safety check:
+Same-head safety baselines:
 
-- Plant Roster Edit Fix / run `32345353485` — **PASS**:
-  - plant contract;
-  - TypeScript / production build;
-  - plant quantity + edit browser regression;
-  - existing Navigation Context regression.
+- Plant Roster Edit Fix / run `32357720873` — **PASS**, including plant quantity/edit and existing Navigation Context regression.
+- Compatibility Stage Risk V1 / run `32357720857` — **PASS**, including same-species adult-control → fry-treatment browser regression.
 
-## Procedure — DONE
+## Species Detail — DONE
 
 Fail-before:
 
-- run `32341637554` — expected FAIL only at Procedure.
+- Result UX run `32346056247` — expected FAIL only because the old surface lacked `species-detail-decision`.
 
-Product migration:
+Product / permanent closure:
 
-- `49fd00385126fd4adef3d533ac87d302a3df9943` — first operational step moved into shared Result UX.
+- `0e7f1dd1e2b8850d473d97f166579f5803889ccd` — decision-first migration;
+- `d4e325ad05206f3850ce1845f27ea2e09c32f975` — permanent contract and cleanup;
+- clean run `32347457450` — Result UX PASS;
+- Plant run `32347457511` — Plant + Navigation Context PASS.
 
 Closure checks:
 
-- [x] first step is decision hero;
-- [x] next steps capped at two;
-- [x] immediate evidence indexes preserved;
-- [x] observation exposed as watch guidance;
-- [x] reminders exposed as bounded avoid guidance;
-- [x] duplicate legacy first-three-step block removed;
-- [x] completion/record CTA remains after operation;
-- [x] detailed description remains collapsed;
-- [x] permanent Procedure static assertions added;
-- [x] temporary write-enabled migration workflow removed;
-- [x] Result UX workflow restored to `contents: read`;
-- [x] clean browser regression PASS.
+- [x] tank-fit result is first-screen decision;
+- [x] one stable primary CTA;
+- [x] owned tank record action preserved;
+- [x] evidence collapsed;
+- [x] exact originating roster reopens;
+- [x] focus returns to originating opener;
+- [x] workspace scroll restoration remains within 96px tolerance.
 
-## Species Detail — ACTIVE
+## Identification — DONE
 
-Fail-before is now established before product UI changes:
+Fail-before:
 
-- commit `a242a13e0c0183bfbbdb33828cb6a81a14f325f1` adds `verify-result-ux-species-detail.mjs` and the permanent Result UX gate step;
-- Result UX V1 / run `32346056247` — **expected FAIL only at Species Detail**;
-- static contract, TypeScript, production build, Diagnosis, Compatibility, Knowledge and Procedure all passed;
-- failure was the expected absence of `[data-testid="species-detail-decision"]` in the old Species Detail implementation.
+- commit `7d57057b65ba712fd68fe095e9815a3b0723fc39` added Identification browser acceptance;
+- Result UX run `32348162424` — expected FAIL at missing `identify-decision` only.
 
-The new Species Detail browser contract is intentionally coupled to PUI-BC-052. After a shared decision surface exists, the same test must also prove:
+Product / permanent closure:
 
-- Aquarium-owned detail retains `data-species-detail-edit-tank-record`;
-- Result UX evidence starts collapsed;
-- decision surface begins in the initial desktop dialog viewport;
-- closing the child detail reopens the exact originating livestock roster;
-- focus returns to the `stock-1` profile opener;
-- Aquarium workspace scroll returns within the existing 96px tolerance.
+- `95538f6cc23afc6e9dc6d3156c489647ca3cb45d` — shared decision-first candidate review;
+- `fd4a9de553a43d09d560115867c3636cc9e2be38` — permanent uncertainty/static contract;
+- `4f2fa3fa9aa41889b124b1c8097e4fe106c8ea26` — stable species-bound confirmed-state contract;
+- `6d311ed18fde2241a9aa27400809634155921fa6` — read-only cleanup.
 
-Product migration may proceed only without weakening these parent-context assertions.
+Final closure checks:
 
-## Existing closures retained
+- [x] AI candidates are explicitly framed as needing user confirmation;
+- [x] ambiguous recognition preserves multiple choices;
+- [x] no candidate is confirmed before explicit click;
+- [x] confirmation resolves through `confirmFish`;
+- [x] confirmed UI binds to the selected species via `data-identify-confirmed`;
+- [x] identification and health triage remain separate stages;
+- [x] health triage does not auto-start;
+- [x] final six-consumer clean Result UX baseline PASS.
 
-### Plant / navigation
+The intermediate wait-for failure on `物种已确认` was an evaluator literal mismatch; product rendered `已确认物种`. The permanent test now verifies semantic confirmed state instead of translated copy.
 
-- [x] Product save state is correct.
-- [x] Reload false failure was evaluator fixture re-seeding, recorded as PUI-BC-053.
-- [x] Plant quantity/edit browser path remains green.
-- [x] Navigation Context regression remains green.
+## Compatibility life-stage false-negative closure — DONE
 
-### Result UX evidence semantics
+Same-species compatibility now carries lifecycle stage through all relevant add-species paths.
 
-- [x] Care evidence remains action-scoped.
-- [x] Candidate references stay fail-closed.
-- [x] Compatibility Verified requires reviewed rule + reviewed reference.
-- [x] Knowledge and Procedure retain original action evidence identity/indexes.
+- existing and planned additions capture the five-stage contract: unknown / fry / juvenile / subadult / adult;
+- retry paths preserve stage;
+- build-template imports use explicit unknown stage;
+- same-species adult + adult is not blocked merely because IDs match;
+- changing only the candidate to fry triggers the reviewed blocking risk;
+- a blocked fry plan cannot expose the normal safe-record CTA;
+- high-risk override remains separate and does not mutate tank state before explicit confirmation.
+
+Authoritative clean run: Compatibility Stage Risk V1 / `32357720857` — **PASS**.
+
+## Final AI consumer — ACTIVE
+
+The authoritative live AI surface is the **AI Tank Copilot embedded in `src/pages/Aquarium.tsx`**.
+
+Important architecture finding:
+
+- `src/pages/AIAssistant.tsx` exists but is not routed by `App.tsx` and has no `taskRoutes` entry;
+- README defines the implemented module as **AI Tank Copilot**;
+- therefore Result UX V1 will migrate/test the live Aquarium Copilot rather than resurrecting legacy dead UI.
+
+Existing safety contracts that must remain untouched:
+
+- deterministic recommendation data defines the candidate pool;
+- `sanitizeTankCopilotResponse` removes model-selected candidates outside that pool;
+- only locally allowed missing-information questions survive;
+- executable Copilot actions are allowlisted and their labels are local-fixed;
+- Copilot actions are bounded;
+- model failure falls back to local output.
+
+Result UX acceptance to establish before product changes:
+
+- [ ] live Copilot entry is reachable from Aquarium;
+- [ ] one direct answer/action-first surface is visually primary;
+- [ ] no more than two follow-up actions are promoted;
+- [ ] long goal interpretation / explanation is secondary disclosure;
+- [ ] the UI visibly labels model content as AI assistance, not deterministic truth;
+- [ ] no model-originated text is rendered as Verified or as a compatibility/risk verdict;
+- [ ] deterministic candidate/action sanitization remains unchanged.
 
 ## Vercel deployment-frequency policy
 
-- [x] `git.deploymentEnabled: false` in `vercel.json`.
-- [x] Documentation commits do not automatically create Vercel deployments.
-- [x] Test / workflow / intermediate code commits do not automatically create Vercel deployments.
-- [x] GitHub Actions is the iterative validation layer.
-- [x] Hosted Preview / Production are explicit milestone actions.
+- [x] `git.deploymentEnabled: false` in `vercel.json`;
+- [x] GitHub Actions is the iterative validation layer;
+- [x] hosted Preview / Production are explicit milestone actions.
 
-## Remaining Result UX consumers
+## Engineering debt / non-blockers
 
-- [ ] Species Detail — fail-before established; migration active
-- [ ] Identification
-- [ ] AI Assistant
-
-Remaining sequence:
-
-1. migrate Species Detail without breaking immediate-parent roster return, focus or scroll context;
-2. lock Species Detail into static + browser regression after migration;
-3. Identification — preserve uncertainty/confidence semantics;
-4. AI Assistant — direct answer/action first without presenting model output as deterministic truth;
-5. final integration / retarget-rebase gate after remaining consumers are complete.
-
-## Current engineering debt / non-blockers
-
-- large entry bundle remains;
+- npm audit: 18 vulnerabilities (2 low, 6 moderate, 10 high);
 - mixed dynamic/static Vite import warnings remain;
-- npm audit dependency debt remains outside this Result UX slice;
+- large entry chunks remain;
 - #105 still depends on #104 and must rerun combined gates after any retarget/rebase.
 
 ## Merge-readiness judgment
 
-**Four Result UX consumers are verified; Species Detail has a clean fail-before; PR #105 remains Draft.**
+**Six Result UX consumers are verified. The live AI Tank Copilot is the final Result UX blocker. PR #105 remains Draft.**
 
-Remaining blockers to this repair slice:
+Remaining blockers:
 
-1. Species Detail migration is not yet verified;
-2. Identification is not migrated;
-3. AI Assistant is not migrated;
-4. upstream #104 branch disposition / final integration gate remains pending.
+1. live Copilot fail-before and migration;
+2. final combined clean gates after Copilot;
+3. upstream #104 disposition / integration gate;
+4. production-readiness review and explicit deployment decision.
 
 ## Next execution order
 
-1. Run the guarded Species Detail product migration against the proven fail-before.
-2. Require Result UX + PUI-BC-052 browser checks to pass together.
-3. Restore the Result UX workflow to read-only verification and add permanent Species Detail static assertions.
-4. Continue Identification and AI Assistant one at a time.
-5. Do not merge or production-deploy yet.
+1. Add live Copilot fail-before browser acceptance.
+2. Prove the old Copilot surface fails only the intended Result UX hierarchy/authority contract.
+3. Migrate Copilot without weakening deterministic sanitization.
+4. Lock permanent static + browser contract and restore read-only validation.
+5. Run final combined gates, then update merge/deployment readiness.
