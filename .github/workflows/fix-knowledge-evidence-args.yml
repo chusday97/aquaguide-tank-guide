@@ -1,0 +1,59 @@
+name: Fix Knowledge Evidence Args
+
+on:
+  push:
+    branches:
+      - agent/result-ux-v1
+    paths:
+      - .github/workflows/fix-knowledge-evidence-args.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/result-ux-v1
+          fetch-depth: 1
+
+      - name: Apply exact evidence API fix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('src/pages/CareEncyclopedia.tsx')
+          source = path.read_text()
+          replacements = [
+              (
+                  "careEvidenceSource(getCareActionEvidenceForText(topic, visibleActions[0]?.description || visibleActions[0]?.title || careGuide.summary))",
+                  "careEvidenceSource(getCareActionEvidenceForText(topic, 'immediate', visibleActions[0]?.description || visibleActions[0]?.title || careGuide.summary, 0))",
+              ),
+              (
+                  "careEvidenceSource(getCareActionEvidenceForText(topic, item.description || item.title))",
+                  "careEvidenceSource(getCareActionEvidenceForText(topic, 'immediate', item.description || item.title, index + 1))",
+              ),
+          ]
+          for old, new in replacements:
+              count = source.count(old)
+              if count != 1:
+                  raise SystemExit(f'expected exactly one match, got {count}: {old}')
+              source = source.replace(old, new, 1)
+          path.write_text(source)
+          PY
+
+      - name: Guard changed-file scope
+        run: |
+          changed="$(git diff --name-only)"
+          printf 'Changed files:\n%s\n' "$changed"
+          test "$changed" = "src/pages/CareEncyclopedia.tsx"
+
+      - name: Commit evidence API fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- src/pages/CareEncyclopedia.tsx
+          git commit -m "Fix Knowledge action evidence mapping"
+          git push origin HEAD:agent/result-ux-v1
