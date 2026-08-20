@@ -1,0 +1,84 @@
+name: Sync AquaGuide status 2026-08-20
+
+on:
+  push:
+    branches:
+      - docs/handoff-2026-08-20
+    paths:
+      - .github/workflows/sync-aquaguide-status-2026-08-20.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/handoff-2026-08-20
+          fetch-depth: 0
+
+      - name: Sync progress and badcase registry
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          progress_path = Path('PROGRESS.md')
+          progress = progress_path.read_text(encoding='utf-8')
+          marker = '## 2026-08-20 当前状态同步'
+          block = '''## 2026-08-20 当前状态同步
+
+- 当前阶段：AquaGuide 已从“核心功能补齐”进入 **产品可信性 + UI/UX 完成度 + Functional CTA 行为闭环审计**。自动化 regression PASS 只能证明既有契约没有回退，不能等价为真实用户 UI/UX 验收通过。
+- Golden Path：GP-001～GP-005 继续保持 5/5 covered；最新正式验证为 Product Golden Path #594 / run `32053031556`，Care card action regression、31 Badcases、typecheck、build、GP-001～GP-005 全 PASS。
+- Functional CTA Audit：PUI-BC-030（成就建设中假 CTA）、PUI-BC-031（Settings 分享与隐私假导航）、PUI-BC-032（Care 已有养护卡能力不可达）均已 `regression_verified`。后续审计继续按 `Trigger → Execution → Observable Result → Persistence → Failure / Retry`，不能再以“存在 onClick”作为功能完成标准。
+- UI/UX：水族册已有 `test:collection-swipe-cards` / `test:collection-hub-ui` 等机械交互回归，但 2026-08-20 用户复核仍认为整体 UI、信息层级与互动完成度未达到产品验收标准。新增 `PUI-BC-033`，状态 `investigating`；旧 `PUI-BC-017` 只证明“纵向列表 → 横向 swipe card”的特定历史问题已修，不代表水族册整体体验已完成。
+- 混养知识：Decision Engine 与 GP-002 保持稳定，但 PUI-BC-025 继续 `investigating`。当前 reviewed profiles=7、reviewed pair rules=4、priority recordable=2/132；未审核组合继续 fail closed，不得把 CI 稳定描述成 broad knowledge coverage。
+- 外部门禁：真实 Supabase migration/RLS/RPC、41 篇养护内容 228 条动作的专家显式审核、真人/真机 UI 验收仍未完成，不能包装成生产级已验证。
+- 下一步优先级：**P0 水族册与全站 UI/UX acceptance audit → P0 Functional CTA Audit v4 → P1 真实 Supabase 验证 → P1 养护内容专家审核 → P1 usage-grounded compatibility evidence 扩张。**
+
+> 注：以下 `当前任务目标 / 已完成` 为历史累计进度，保留用于追溯；当前执行入口以本节与 `HANDOFF-2026-08-20.md` 为准。
+
+'''
+          if marker not in progress:
+              progress_path.write_text(block + progress, encoding='utf-8')
+
+          badcase_path = Path('evaluation/product/badcases.v1.jsonl')
+          lines = badcase_path.read_text(encoding='utf-8').splitlines()
+          if not any('"id":"PUI-BC-033"' in line for line in lines):
+              case = {
+                  'id': 'PUI-BC-033',
+                  'featureId': 'collection_ui_acceptance',
+                  'discoveredAt': '2026-08-20',
+                  'source': 'user_review',
+                  'severity': 'high',
+                  'symptom': '水族册的横向 swipe-card 契约和浏览器几何回归已经通过，但真实用户复核仍认为整体 UI 不够可看、信息层级与互动感不足；现有自动化结果被误读成“水族册 UI 已完成”。',
+                  'trigger': '在已有 collection swipe-card regression PASS 的版本中，实际浏览水族册首页、种草收藏与养护收藏，并从整体视觉层级、信息密度、可发现性和操作流畅度进行用户复核。',
+                  'expected': '把“机械交互契约通过”和“UI/UX 产品验收通过”拆成两层。水族册除横向滑动可用外，还需通过桌面与手机真实视觉层级、卡片节奏、下一张提示、详情进入/返回、空态/建设中状态及连续浏览体验验收；只有用户验收或明确 acceptance rubric 通过后才能标记 UI/UX complete。',
+                  'actual': 'PUI-BC-017 的 regression 只证明特定纵向 grid/list 问题已改成横向可滑动卡片；它没有覆盖整体视觉质量与交互完成度。2026-08-20 用户复核仍不接受当前 UI，因此项目状态必须继续 open/investigating，而不能由旧 browser regression 自动关闭。',
+                  'rootCauseLayer': 'ux_acceptance',
+                  'status': 'investigating',
+                  'regression': '待建立 collection/full-app UI acceptance rubric：390px/600px/1280px 真实浏览器视觉与交互评审 + 核心任务完成 + 信息层级/密度/可发现性检查。现有 test:collection-swipe-cards、test:collection-hub-ui 仅作为下层 non-regression，不足以单独关闭 PUI-BC-033。'
+              }
+              with badcase_path.open('a', encoding='utf-8') as f:
+                  if lines:
+                      f.write('\n')
+                  f.write(json.dumps(case, ensure_ascii=False, separators=(',', ':')))
+
+          workflow = Path('.github/workflows/sync-aquaguide-status-2026-08-20.yml')
+          if workflow.exists():
+              workflow.unlink()
+          PY
+
+      - name: Commit synced status
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- PROGRESS.md evaluation/product/badcases.v1.jsonl .github/workflows/sync-aquaguide-status-2026-08-20.yml
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "docs: sync 2026-08-20 progress and badcase"
+          git push origin HEAD:docs/handoff-2026-08-20
