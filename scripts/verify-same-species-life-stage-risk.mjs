@@ -81,7 +81,9 @@ try {
 
   const search = dialog.getByPlaceholder('搜索鱼、虾、螺或学名');
   await search.fill('孔雀鱼');
-  const candidate = dialog.getByRole('button', { name: /孔雀鱼/ }).first();
+  const exactCandidateName = dialog.getByText('孔雀鱼', { exact: true }).first();
+  await exactCandidateName.waitFor();
+  const candidate = exactCandidateName.locator('xpath=ancestor::button[1]');
   await candidate.waitFor();
   await candidate.click();
 
