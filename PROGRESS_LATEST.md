@@ -7,138 +7,139 @@
 
 ## Current phase
 
-The project has moved beyond page-by-page UI repair into **result-system convergence + regression closure**.
+The project is in **result-system convergence + regression closure**, not page-by-page cosmetic repair.
 
-The active objective is to make result-heavy surfaces answer the user’s decision first, while preserving deterministic product logic, navigation context, and fail-closed evidence semantics.
+PR #105 remains **Draft / open / mergeable / not merged**. No production deployment is claimed.
 
-PR #105 remains **Draft / open / mergeable / not merged**. No production deployment is claimed here.
+## Result UX shared system
 
-## Result UX V1
+- [x] `DecisionResultSurface` provides one primary verdict/action, maximum two follow-up actions, bounded summary, guardrails, avoid list and progressive disclosure.
+- [x] Care evidence status remains action-scoped; candidate references stay fail-closed.
+- [x] Compatibility reviewed status still requires both reviewed deterministic rule and reviewed citation.
+- [x] Static Result UX contract exists.
+- [x] Permanent `.github/workflows/result-ux-v1.yml` browser gate exists.
 
-### Shared system
+## Migrated consumers
 
-- [x] Added `src/components/result/DecisionResultSurface.tsx`.
-- [x] Added shared result adapters in `src/modules/result/resultAdapters.ts`.
-- [x] Enforced one primary verdict/action, maximum two follow-up actions, guardrails, avoid list, and progressive disclosure.
-- [x] Preserved action-scoped evidence semantics: reviewed evidence can be marked verified; candidate evidence remains explicitly unverified.
-- [x] Added static Result UX contract test.
-- [x] Added permanent `.github/workflows/result-ux-v1.yml` browser gate.
+### Diagnosis — verified
 
-### Diagnosis
-
-- [x] Migrated Diagnosis consumer to `DecisionResultSurface`.
-- [x] Primary action appears before causal explanation.
-- [x] Follow-up action count remains bounded.
-- [x] Watch / escalation boundaries remain visible.
-- [x] Existing diagnosis context is preserved.
+- [x] Shared decision surface.
+- [x] Primary action before causal explanation.
+- [x] Bounded follow-up actions.
+- [x] Watch / escalation boundaries retained.
+- [x] Existing diagnosis context preserved.
 - [x] Browser regression PASS.
 
-### Compatibility
+### Compatibility — verified
 
-- [x] Migrated Compatibility consumer to `DecisionResultSurface`.
-- [x] Compatibility verdict is surfaced first.
+- [x] Shared decision surface.
+- [x] Verdict first.
 - [x] Deterministic blocking / safety rules remain authoritative.
-- [x] Primary recommendation appears before detailed reasoning.
 - [x] Candidate evidence remains fail-closed.
 - [x] Browser regression PASS.
 
-### Authoritative Result UX evidence
+### Knowledge — verified
 
-Verified code head: `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`.
+Fail-before first:
 
-- Result UX V1 / run `32338616508` — **PASS**
-  - Result UX contract — PASS
-  - Type check — PASS
-  - Production build — PASS
-  - Diagnosis decision-first regression — PASS
-  - Compatibility decision-first regression — PASS
+- Result UX V1 / run `32340512920` — **FAIL only at Knowledge**.
+- Static contract, TypeScript, build, Diagnosis and Compatibility all passed.
+- The old Knowledge page did not expose the shared `care-knowledge-decision` surface.
 
-The PR head may advance through docs-only commits; `34ed3ea...` remains the latest explicitly browser-verified code baseline unless a newer code-bearing head is validated.
+Migration:
+
+- [x] Knowledge uses `DecisionResultSurface`.
+- [x] Key takeaway / first action precedes long explanation.
+- [x] Primary CTA remains on the first decision surface.
+- [x] Shared follow-up actions capped at two.
+- [x] Long detailed explanation is collapsed by default.
+- [x] Knowledge Care evidence keeps the original `immediate` kind and action index.
+- [x] One-off self-modifying migration/fix workflows were removed after use.
+- [x] Browser regression PASS.
+
+Authoritative three-consumer baseline:
+
+- verified code head `ec55754dbbacf038d7b5e48d1a663f9e1a8cea18`;
+- Result UX V1 / run `32341238477` — **PASS**:
+  - Result UX contract;
+  - TypeScript;
+  - production build;
+  - Diagnosis browser regression;
+  - Compatibility browser regression;
+  - Knowledge browser regression;
+  - evidence artifact upload.
 
 ## Plant roster / legacy plant closure
 
-- [x] Reproduced legacy `plants[]` quantity-edit regression path.
-- [x] Added diagnostics before changing persistence logic.
-- [x] Proved the product save path already persisted `record.quantity = 2`, batch quantity `2`, and visible roster text `共 2株` immediately after save.
-- [x] Isolated reload failure to the Playwright fixture, not product state.
-- [x] Corrected fixture seeding so localStorage is initialized only once per browser context.
-- [x] Verified edit + reload persistence for legacy plant data.
-- [x] Removed the disproven local-aquarium load-race self-modifying workflow/script.
+- [x] Product save state proved correct immediately after edit.
+- [x] Reload false failure traced to Playwright fixture re-seeding original localStorage.
+- [x] Fixture now seeds once per browser context.
+- [x] Structured + legacy plant edit/reload browser path PASS.
+- [x] Disproven local-aquarium load-race automation removed.
+- [x] Evaluator defect recorded as PUI-BC-053 in `BADCASE_LATEST.md`.
 
-Authoritative evidence:
+Authoritative plant evidence:
 
-- Plant Roster Edit Fix / run `32338616480` — **PASS**
-  - Plant livestock contract — PASS
-  - Type check — PASS
-  - Production build — PASS
-  - Plant quantity/edit browser regression — PASS
-  - Existing navigation-context regression — PASS
+- Plant Roster Edit Fix / run `32338616480` — **PASS**.
 
-## Upstream #104 closure retained
+## Upstream #104 contracts retained
 
-The Result UX branch still inherits the completed UI/UX-system work from #104, including:
+The branch still inherits and must preserve:
 
 - PUI-BC-050 Compatibility risk-review/navigation semantics;
 - PUI-BC-051 Search deep-result return context;
 - PUI-BC-052 Aquarium roster → Species Detail → parent roster return;
-- permanent Navigation Context browser regression;
-- responsive/system/visual/golden/bundle audit evidence.
-
-Do not weaken these contracts while migrating additional Result UX consumers.
+- responsive/system/visual/golden contracts established in #104.
 
 ## Documentation / governance
 
-- [x] Updated `HANDOFF_LATEST.md` to Result UX V1 current state.
-- [x] Updated PR #105 body so it no longer falsely claims Diagnosis / Compatibility are unmigrated.
-- [x] Updated `RESULT_UX_V1.md` current rollout boundary.
-- [x] Update `PROGRESS_LATEST.md` to the active #105 branch and current evidence.
-- [ ] Add the plant fixture false-negative as the next evaluator badcase in `BADCASE_LATEST.md`.
-- [ ] Decide whether evaluator-only badcase should also enter the canonical product badcase JSONL; do not append it automatically without checking registry semantics.
+- [x] `BADCASE_LATEST.md` includes evaluator PUI-BC-053.
+- [x] PR #105 body matches Diagnosis + Compatibility + Knowledge implementation status.
+- [x] `RESULT_UX_V1.md` matches the three-consumer verified boundary.
+- [x] `PROGRESS_LATEST.md` matches active #105 state.
+- [ ] `HANDOFF_LATEST.md` still needs the Knowledge verified baseline in this documentation pass.
+- [ ] Do not append PUI-BC-053 to the canonical product badcase JSONL until evaluator-vs-product registry scope is explicitly checked.
 
 ## Remaining Result UX consumers
 
-Not yet declared migrated:
-
-- [ ] Knowledge / Procedure
+- [ ] Procedure
 - [ ] Species Detail
 - [ ] Identification
 - [ ] AI Assistant
 
-Rule for continuation: **one consumer at a time**. Add or extend its contract/browser regression before claiming migration complete.
+Rule: **one consumer at a time; fail-before contract first; product migration second; browser proof third.**
 
 ## Current engineering debt / non-blockers
 
-- Large entry bundle remains; Result UX V1 does not claim bundle-size reduction.
-- Vite still reports mixed dynamic/static import warnings around existing data dependencies.
+- Large entry bundle remains; Result UX does not claim bundle-size reduction.
+- Vite mixed dynamic/static import warnings remain.
 - Existing npm audit debt remains outside this Result UX slice.
-- Vercel free-plan preview quota has previously blocked previews; that is external infrastructure state, not equivalent to a product build failure.
-- Thin wrapper/Base structures inherited from #104 remain deliberate risk-containment debt and should not be recombined inside this already-large PR without regression protection.
+- Vercel free-plan preview quota can fail externally; do not classify that as an application build failure.
+- Thin wrapper/Base structures inherited from #104 remain deliberate risk-containment debt.
 
-## Merge-readiness classification
+## Merge-readiness judgment
 
-### Current judgment
-
-**The first Result UX migration slice is browser verified, but PR #105 is not yet declared merge-ready.**
+**Diagnosis + Compatibility + Knowledge are verified, but PR #105 is still not declared merge-ready.**
 
 Reasons to keep Draft:
 
-1. #105 still depends on #104 as its base; final upstream branch disposition is not yet settled.
-2. Remaining Result UX consumers are intentionally out of scope for the first verified slice and should not be silently implied complete.
-3. Any retarget/rebase must rerun permanent gates before readiness is reassessed.
+1. #105 still depends on #104 as its base and final upstream branch disposition is unresolved.
+2. Procedure / Species Detail / Identification / AI Assistant remain explicitly unmigrated.
+3. Any retarget/rebase requires permanent gates to be rerun.
+4. Species Detail migration must not regress the nested Aquarium roster return contract.
 
 ## Next execution order
 
-1. Record the evaluator fixture false-negative in `BADCASE_LATEST.md`.
-2. Inspect Knowledge / Procedure and Species Detail implementation coupling.
-3. Choose the safer third Result UX consumer based on deterministic logic, existing evidence model, and navigation-regression risk.
-4. Add that consumer’s contract/browser test first.
-5. Migrate only that consumer.
-6. Rerun Result UX + relevant upstream navigation/system gates.
-7. Update handoff/progress/badcase again before any Ready-for-Review decision.
+1. Update `HANDOFF_LATEST.md` with the three-consumer verified baseline.
+2. Inspect Procedure against the existing Knowledge/Care evidence and CTA model.
+3. If Procedure can reuse the same hierarchy without changing domain truth logic, add its fail-before browser contract.
+4. Migrate Procedure only after that fail-before is proven.
+5. Leave Species Detail until its navigation-return regressions are explicitly included in the migration acceptance.
+6. Keep PR #105 Draft; do not merge or production-deploy in this phase.
 
 ## Non-claims
 
 - PR #105 is not merged.
 - No production deploy is claimed.
-- A green Result UX workflow for Diagnosis + Compatibility does not imply every result surface follows Result UX V1.
-- The corrected plant test proves the covered browser persistence path, not production telemetry.
+- Three green consumer regressions do not imply every AquaGuide result surface follows Result UX V1.
+- Browser evidence is deterministic PR evidence, not production telemetry.
