@@ -4,7 +4,7 @@
 
 Result UX V1 standardizes AquaGuide result-heavy surfaces so users see the practical decision before long explanations.
 
-The first screen should prioritize:
+The first screen prioritizes:
 
 1. one result / verdict or first operational step;
 2. one primary action;
@@ -24,7 +24,7 @@ The first screen should prioritize:
 - reasoning and sources collapsed by default;
 - explicit reviewed vs candidate evidence state.
 
-Evidence remains action-scoped and fail-closed. A publisher or source name alone never upgrades a recommendation to Verified.
+Evidence remains action-scoped and fail-closed. A publisher/source name or model output alone never upgrades a recommendation to Verified.
 
 ## Migrated and browser-verified consumers
 
@@ -71,7 +71,7 @@ Contract:
 
 ### Species Detail — DONE
 
-Fail-before: Result UX run `32346056247` — expected FAIL only because the old implementation lacked `species-detail-decision`.
+Fail-before: Result UX run `32346056247`.
 
 Product / permanent commits:
 
@@ -88,7 +88,7 @@ Contract:
 
 ### Identification — DONE
 
-Fail-before: Result UX run `32348162424` — expected FAIL only at the absent `identify-decision` in the old implementation.
+Fail-before: Result UX run `32348162424`.
 
 Product / permanent commits:
 
@@ -107,17 +107,45 @@ Contract:
 - candidate review and confirmed identity remain separate stages;
 - health triage remains a separate explicit action and does not auto-start.
 
-The intermediate failure waiting for `物种已确认` was an evaluator copy mismatch. The permanent browser test now verifies semantic confirmed state rather than translated literal text.
+### Live AI Tank Copilot — DONE
 
-## Authoritative six-consumer baseline
+The authoritative live AI surface is the **AI Tank Copilot embedded in `src/pages/Aquarium.tsx`**. `src/pages/AIAssistant.tsx` remains unrouted legacy code and was not reintroduced.
+
+Fail-before:
+
+- `2fbdfcb373a9e32ebe274c090c9fdbf8397a6354` — live Copilot Result UX browser contract;
+- run `32358918838` — all earlier consumers passed, while the live Copilot step failed because the visible quick action did not open the real dialog.
+
+Product / permanent commits:
+
+- `582e9e341b0231ae30c6d37fa6536ef0d0498de7` — live entry + decision-first AI-boundary migration;
+- `e33bf81e205e85ec7f4ba59dfd3381f859b0d94c` — temporary migration removed and workflow restored to read-only;
+- `4a4388f41ffafa902bf6f9bc25e2d2130cd09498` — evaluator correction for closed disclosure DOM reads.
+
+Contract:
+
+- visible `AI 建缸助手` entry opens the real Copilot dialog;
+- generated result consumes shared `DecisionResultSurface`;
+- the hero title/summary and primary action come from locally controlled action semantics;
+- model `goalUnderstanding` and `planSummary` start behind progressive disclosure;
+- model-originated supporting context is `candidate`, never Verified;
+- one stable `data-tank-copilot-primary-action` is exposed;
+- `data-tank-copilot-ai-boundary` explicitly states that compatibility, risk level and whether an addition is allowed remain governed by local product rules;
+- `sanitizeTankCopilotResponse`, candidate filtering, action allowlist and local fallback remain intact;
+- no model text is allowed to become the authoritative compatibility/risk verdict.
+
+PUI-BC-054 records the real reachability defect discovered by this fail-before.
+
+## Authoritative seven-consumer baseline
 
 Clean head:
 
-- `6d311ed18fde2241a9aa27400809634155921fa6`
+- `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`
 
-Result UX V1 / run `32357720875` — **PASS**:
+Result UX V1 / run `32359908856` — **PASS**:
 
 - static Result UX contract;
+- Tank Copilot deterministic boundary contract;
 - TypeScript;
 - production build;
 - Diagnosis browser regression;
@@ -126,49 +154,35 @@ Result UX V1 / run `32357720875` — **PASS**:
 - Procedure browser regression;
 - Species Detail + parent-context browser regression;
 - Identification uncertainty + explicit-confirmation browser regression;
+- Tank Copilot live-entry + AI-authority browser regression;
 - evidence artifact upload.
 
 Same-head safety gates:
 
-- Plant Roster Edit Fix / run `32357720873` — **PASS** including Navigation Context;
-- Compatibility Stage Risk V1 / run `32357720857` — **PASS** including adult-control → fry-treatment browser regression.
+- Plant Roster Edit Fix / run `32359908896` — **PASS** including Navigation Context;
+- Compatibility Stage Risk V1 / run `32359909061` — **PASS** including adult-control → fry-treatment browser regression.
 
 All permanent Result UX workflow validation is read-only (`contents: read`).
 
-## Final live consumer: AI Tank Copilot
+## Migration status
 
-The last Result UX consumer is the **live AI Tank Copilot embedded in `src/pages/Aquarium.tsx`**.
+All intended live Result UX consumers are complete.
 
-Architecture clarification:
-
-- `src/pages/AIAssistant.tsx` exists as legacy code but has no route in `App.tsx` and no `taskRoutes` entry;
-- README defines the implemented AI module as **AI Tank Copilot**;
-- Result UX V1 therefore targets the live Aquarium Copilot rather than reintroducing the unrouted legacy page.
-
-The Copilot already has deterministic safety containment that must not be weakened:
-
-- model-selected species are sanitized against the local deterministic candidate pool;
-- missing questions are restricted to locally allowed information keys;
-- actions are allowlisted and locally labeled;
-- actions are bounded;
-- fallback output is generated locally when the model is unavailable.
-
-Remaining presentation acceptance:
-
-- direct actionable answer/result first;
-- one primary action and at most two follow-ups;
-- long interpretation/explanation behind disclosure;
-- visible AI-assistance label / authority boundary;
-- model text must never present itself as a Verified compatibility/risk verdict or override deterministic product truth.
-
-## Migration rule
-
-Continue one consumer at a time:
+The migration sequence remains the required pattern for future result-heavy surfaces:
 
 **fail-before contract → product migration → browser proof → permanent contract → documentation update.**
-
-For the final Copilot consumer, the fail-before must be written against the live Aquarium surface before product hierarchy changes.
 
 ## Deployment policy during repair
 
 Vercel automatic Git deployments are disabled via `git.deploymentEnabled: false`. GitHub Actions is the iterative validation layer; hosted Preview and Production are explicit milestone actions only.
+
+## Next phase
+
+Result UX itself is no longer the blocker. The remaining work is upstream/integration/production-readiness closure:
+
+1. inspect #104 and the intended integration/RC target;
+2. compare branch deltas for conflicts or stale duplicated work;
+3. inspect review threads and required checks;
+4. resolve evidenced integration blockers only;
+5. rerun combined permanent gates after any retarget/rebase;
+6. make an explicit merge/deployment decision only when readiness is proven.

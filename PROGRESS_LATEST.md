@@ -7,7 +7,7 @@
 
 ## Current phase
 
-The project is in **Result UX final-consumer closure**.
+The project has completed **Result UX consumer migration** and is entering **integration / production-readiness closure**.
 
 PR #105 remains **Draft / open / mergeable / not merged**. No production deployment is claimed.
 
@@ -19,126 +19,97 @@ PR #105 remains **Draft / open / mergeable / not merged**. No production deploym
 - [x] Procedure
 - [x] Species Detail
 - [x] Identification
-- [ ] Live AI Tank Copilot
+- [x] Live AI Tank Copilot
 
-Authoritative clean six-consumer baseline:
+## Authoritative clean seven-consumer baseline
 
-- head `6d311ed18fde2241a9aa27400809634155921fa6`;
-- Result UX V1 / run `32357720875` — **PASS**:
+Head `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`:
+
+- Result UX V1 / run `32359908856` — **PASS**
   - static contract;
+  - Tank Copilot deterministic boundary contract;
   - TypeScript;
   - production build;
-  - Diagnosis browser regression;
-  - Compatibility browser regression;
-  - Knowledge browser regression;
-  - Procedure browser regression;
-  - Species Detail + parent-context browser regression;
-  - Identification uncertainty + explicit-confirmation browser regression;
+  - Diagnosis;
+  - Compatibility;
+  - Knowledge;
+  - Procedure;
+  - Species Detail + parent-context;
+  - Identification uncertainty + explicit confirmation;
+  - Tank Copilot live-entry + AI-authority regression;
   - evidence artifact upload.
+- Plant Roster Edit Fix / run `32359908896` — **PASS**, including plant quantity/edit and Navigation Context regression.
+- Compatibility Stage Risk V1 / run `32359909061` — **PASS**, including same-species adult-control → fry-treatment regression.
 
-Same-head safety baselines:
-
-- Plant Roster Edit Fix / run `32357720873` — **PASS**, including plant quantity/edit and existing Navigation Context regression.
-- Compatibility Stage Risk V1 / run `32357720857` — **PASS**, including same-species adult-control → fry-treatment browser regression.
+All three final gates are green on the same read-only head.
 
 ## Species Detail — DONE
 
-Fail-before:
-
-- Result UX run `32346056247` — expected FAIL only because the old surface lacked `species-detail-decision`.
-
-Product / permanent closure:
-
-- `0e7f1dd1e2b8850d473d97f166579f5803889ccd` — decision-first migration;
-- `d4e325ad05206f3850ce1845f27ea2e09c32f975` — permanent contract and cleanup;
-- clean run `32347457450` — Result UX PASS;
-- Plant run `32347457511` — Plant + Navigation Context PASS.
-
-Closure checks:
-
-- [x] tank-fit result is first-screen decision;
-- [x] one stable primary CTA;
-- [x] owned tank record action preserved;
-- [x] evidence collapsed;
-- [x] exact originating roster reopens;
-- [x] focus returns to originating opener;
-- [x] workspace scroll restoration remains within 96px tolerance.
+- fail-before run `32346056247`;
+- migration `0e7f1dd1e2b8850d473d97f166579f5803889ccd`;
+- permanent contract `d4e325ad05206f3850ce1845f27ea2e09c32f975`;
+- exact originating roster, focus and scroll return remain protected by PUI-BC-052.
 
 ## Identification — DONE
 
-Fail-before:
-
-- commit `7d57057b65ba712fd68fe095e9815a3b0723fc39` added Identification browser acceptance;
-- Result UX run `32348162424` — expected FAIL at missing `identify-decision` only.
-
-Product / permanent closure:
-
-- `95538f6cc23afc6e9dc6d3156c489647ca3cb45d` — shared decision-first candidate review;
-- `fd4a9de553a43d09d560115867c3636cc9e2be38` — permanent uncertainty/static contract;
-- `4f2fa3fa9aa41889b124b1c8097e4fe106c8ea26` — stable species-bound confirmed-state contract;
-- `6d311ed18fde2241a9aa27400809634155921fa6` — read-only cleanup.
-
-Final closure checks:
-
-- [x] AI candidates are explicitly framed as needing user confirmation;
-- [x] ambiguous recognition preserves multiple choices;
-- [x] no candidate is confirmed before explicit click;
-- [x] confirmation resolves through `confirmFish`;
-- [x] confirmed UI binds to the selected species via `data-identify-confirmed`;
-- [x] identification and health triage remain separate stages;
-- [x] health triage does not auto-start;
-- [x] final six-consumer clean Result UX baseline PASS.
-
-The intermediate wait-for failure on `物种已确认` was an evaluator literal mismatch; product rendered `已确认物种`. The permanent test now verifies semantic confirmed state instead of translated copy.
+- fail-before commit `7d57057b65ba712fd68fe095e9815a3b0723fc39` / run `32348162424`;
+- migration `95538f6cc23afc6e9dc6d3156c489647ca3cb45d`;
+- stable species-bound confirmed-state contract `4f2fa3fa9aa41889b124b1c8097e4fe106c8ea26`;
+- health triage remains a separate explicit action;
+- no AI candidate is confirmed before the user chooses it.
 
 ## Compatibility life-stage false-negative closure — DONE
 
-Same-species compatibility now carries lifecycle stage through all relevant add-species paths.
-
-- existing and planned additions capture the five-stage contract: unknown / fry / juvenile / subadult / adult;
+- five-stage lifecycle contract: unknown / fry / juvenile / subadult / adult;
 - retry paths preserve stage;
-- build-template imports use explicit unknown stage;
-- same-species adult + adult is not blocked merely because IDs match;
-- changing only the candidate to fry triggers the reviewed blocking risk;
-- a blocked fry plan cannot expose the normal safe-record CTA;
-- high-risk override remains separate and does not mutate tank state before explicit confirmation.
+- adult + adult same-species control remains allowed when no reviewed risk blocks it;
+- changing only candidate stage to fry triggers the reviewed blocking risk;
+- blocked fry plan cannot expose normal safe-record CTA;
+- high-risk override remains explicit and does not mutate tank state before confirmation.
 
-Authoritative clean run: Compatibility Stage Risk V1 / `32357720857` — **PASS**.
+Final same-head run: `32359909061` — **PASS**.
 
-## Final AI consumer — ACTIVE
+## Live AI Tank Copilot — DONE
 
-The authoritative live AI surface is the **AI Tank Copilot embedded in `src/pages/Aquarium.tsx`**.
+### Fail-before
 
-Important architecture finding:
+Commit `2fbdfcb373a9e32ebe274c090c9fdbf8397a6354` added the live Copilot browser contract.
 
-- `src/pages/AIAssistant.tsx` exists but is not routed by `App.tsx` and has no `taskRoutes` entry;
-- README defines the implemented module as **AI Tank Copilot**;
-- therefore Result UX V1 will migrate/test the live Aquarium Copilot rather than resurrecting legacy dead UI.
+Result UX run `32358918838` isolated a real product failure after every prior Result UX consumer passed: clicking the visible `AI 建缸助手` entry did not open the existing Copilot dialog.
 
-Existing safety contracts that must remain untouched:
+Root cause: `openTankBuildCopilot()` dispatched `aquaguide:feature-preview` instead of setting the live dialog open state.
 
-- deterministic recommendation data defines the candidate pool;
-- `sanitizeTankCopilotResponse` removes model-selected candidates outside that pool;
-- only locally allowed missing-information questions survive;
-- executable Copilot actions are allowlisted and their labels are local-fixed;
-- Copilot actions are bounded;
-- model failure falls back to local output.
+### Product / permanent closure
 
-Result UX acceptance to establish before product changes:
+- `582e9e341b0231ae30c6d37fa6536ef0d0498de7` — live entry + decision-first AI-boundary migration;
+- `e33bf81e205e85ec7f4ba59dfd3381f859b0d94c` — temporary migration removed, read-only workflow restored;
+- `4a4388f41ffafa902bf6f9bc25e2d2130cd09498` — closed-disclosure evaluator correction;
+- final run `32359908856` — **PASS**.
 
-- [ ] live Copilot entry is reachable from Aquarium;
-- [ ] one direct answer/action-first surface is visually primary;
-- [ ] no more than two follow-up actions are promoted;
-- [ ] long goal interpretation / explanation is secondary disclosure;
-- [ ] the UI visibly labels model content as AI assistance, not deterministic truth;
-- [ ] no model-originated text is rendered as Verified or as a compatibility/risk verdict;
-- [ ] deterministic candidate/action sanitization remains unchanged.
+Closure checks:
+
+- [x] live Aquarium Copilot entry opens the real dialog;
+- [x] generated result uses shared `DecisionResultSurface`;
+- [x] one local-rule-owned primary action is visually first;
+- [x] no more than two follow-up actions can be promoted;
+- [x] model interpretation / plan summary starts behind disclosure;
+- [x] model-originated source is `candidate`, never Verified;
+- [x] explicit AI-vs-local-rule authority boundary is visible;
+- [x] deterministic candidate/action sanitization remains unchanged;
+- [x] old unrouted `AIAssistant.tsx` was not resurrected.
+
+The two intermediate post-migration reds were evaluator reads of closed `<details>` content, not product regressions. They are not recorded as product badcases.
+
+## Product badcase added
+
+- [x] **PUI-BC-054** — advertised live AI Tank Copilot entry existed but was wired only to feature-preview and therefore could not open the real Copilot dialog. Fixed and browser-regression protected.
 
 ## Vercel deployment-frequency policy
 
 - [x] `git.deploymentEnabled: false` in `vercel.json`;
-- [x] GitHub Actions is the iterative validation layer;
-- [x] hosted Preview / Production are explicit milestone actions.
+- [x] GitHub Actions remains the iterative validation layer;
+- [x] hosted Preview / Production remain explicit milestone actions;
+- [x] no Vercel deploy was triggered during Result UX closure.
 
 ## Engineering debt / non-blockers
 
@@ -149,19 +120,21 @@ Result UX acceptance to establish before product changes:
 
 ## Merge-readiness judgment
 
-**Six Result UX consumers are verified. The live AI Tank Copilot is the final Result UX blocker. PR #105 remains Draft.**
+**All seven Result UX consumers are now verified. Result UX itself is no longer the blocker. PR #105 remains Draft because upstream/integration/production-readiness has not yet been closed.**
 
 Remaining blockers:
 
-1. live Copilot fail-before and migration;
-2. final combined clean gates after Copilot;
-3. upstream #104 disposition / integration gate;
-4. production-readiness review and explicit deployment decision.
+1. inspect #104 disposition and integration branch relationship;
+2. compare #105 against the intended integration target for conflicts/stale duplication;
+3. inspect open review threads and required checks;
+4. separate production blockers from non-blocking dependency/bundle debt;
+5. make an explicit merge/deployment decision only after those checks.
 
 ## Next execution order
 
-1. Add live Copilot fail-before browser acceptance.
-2. Prove the old Copilot surface fails only the intended Result UX hierarchy/authority contract.
-3. Migrate Copilot without weakening deterministic sanitization.
-4. Lock permanent static + browser contract and restore read-only validation.
-5. Run final combined gates, then update merge/deployment readiness.
+1. Audit #104 and current integration/RC target.
+2. Compare branches and changed files.
+3. Inspect review/check state.
+4. Resolve only evidenced integration blockers.
+5. Rerun combined permanent gates on the final integration candidate.
+6. Keep #105 Draft until merge readiness is actually proven.
