@@ -33,7 +33,7 @@ PUI-BC-054 records the real feature-entry defect in `BADCASE_LATEST.md`.
 
 ## Integration audit — current focus
 
-The branch stack is clean:
+The current pre-merge stack is clean:
 
 - `integration/aquaguide-rc1` → `agent/uiux-system-refactor-v1` (#104): ahead 102 / behind 0;
 - `agent/uiux-system-refactor-v1` → `agent/result-ux-v1` (#105): ahead-only / behind 0 at audit time.
@@ -42,7 +42,7 @@ The branch stack is clean:
 
 ### Retarget blocker found and fixed
 
-The three #105 permanent workflows originally triggered only when the PR base was `agent/uiux-system-refactor-v1`. After #104 merges and #105 is retargeted to RC1, those gates would have silently stopped running.
+The three #105 permanent workflows originally triggered only when the PR base was `agent/uiux-system-refactor-v1`. After #104 is integrated and #105 is retargeted to RC1, those gates would have silently stopped running.
 
 Commit `a8e402b0f6b6d83dbed5927ca39e7507fd232548` makes all three workflows listen to both the stacked parent branch and `integration/aquaguide-rc1`. Permissions remain `contents: read`.
 
@@ -58,11 +58,13 @@ Verified on `a8e402b0...`:
 2. review/approve #104 as its bounded UI/UX-system PR;
 3. only with explicit authorization, merge #104 into `integration/aquaguide-rc1`;
 4. retarget #105 to `integration/aquaguide-rc1`;
-5. rerun the same three #105 gates on the retargeted PR;
-6. review #105 separately;
-7. merge/deploy only after explicit approval.
+5. compare the new RC1 base with #105 and inspect merge-base/conflicts;
+6. if the chosen #104 merge method creates a new merge/squash commit, #105 may legitimately become behind/diverged; reconcile the new RC1 baseline explicitly instead of assuming behind>0 is a regression;
+7. rerun the same three #105 gates on the reconciled RC1-based candidate;
+8. review #105 separately;
+9. merge/deploy only after explicit approval.
 
-Do not merge #105 into #104 merely to flatten the stack.
+Do not merge #105 into #104 merely to flatten the stack. Post-parent-merge readiness means **clean merge-base/conflict resolution + all permanent gates PASS**, not necessarily ahead-only history.
 
 ## Production policy still unresolved
 
@@ -92,4 +94,4 @@ Do not broaden the stacked PRs with unrelated dependency, bundle or architectura
 
 ## Next owner action
 
-Integration readiness is now documented in `MERGE_READINESS_LATEST.md`. The next state-changing action would be an explicit decision on #104 review/merge; until then, continue no further feature expansion on #105.
+Integration readiness is documented in `MERGE_READINESS_LATEST.md`. The next state-changing action would be an explicit decision on #104 review/merge; until then, do not expand #105 with new feature work.

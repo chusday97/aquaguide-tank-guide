@@ -27,8 +27,8 @@ Product closure baseline `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`:
 
 ## Integration audit
 
-- [x] #104 is cleanly ahead of RC1: 102 / behind 0.
-- [x] #105 is cleanly ahead of #104: behind 0 at audit time.
+- [x] #104 currently cleanly ahead of RC1: 102 / behind 0.
+- [x] #105 currently cleanly ahead of #104: behind 0 at audit time.
 - [x] #104 has no submitted reviews or unresolved review threads.
 - [x] #105 has no submitted reviews or unresolved review threads.
 - [x] #104 Vercel red status identified as build-rate-limit infrastructure, not application build failure.
@@ -36,7 +36,7 @@ Product closure baseline `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`:
 - [x] Found post-retarget trigger gap: workflows listened only to #104 branch.
 - [x] Fixed trigger gap in `a8e402b0f6b6d83dbed5927ca39e7507fd232548`.
 - [x] Permanent CI still uses `contents: read`.
-- [x] Retarget-safe validation PASS:
+- [x] Retarget-safe trigger validation PASS:
   - Result UX `32362579152`
   - Plant / Navigation `32362579154`
   - Stage Risk `32362579151`
@@ -46,12 +46,16 @@ Product closure baseline `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`:
 - [ ] explicit review/merge decision for #104
 - [ ] merge #104 to RC1 only after authorization
 - [ ] retarget #105 to RC1
-- [ ] confirm mergeable + ahead-only after retarget
+- [ ] inspect new merge-base and compare histories
+- [ ] if merge/squash history makes #105 behind/diverged, reconcile the new RC1 baseline explicitly
+- [ ] confirm no unresolved code conflicts or duplicated parent changes
 - [ ] rerun three permanent #105 gates on RC1 base
 - [ ] separate #105 review/merge decision
 - [ ] explicit deployment decision
 
 #105 stays Draft while #104 is open.
+
+Important: current ahead-only history is a **pre-parent-merge fact**. After #104 is merged, a merge commit or squash strategy can legitimately change the ancestry. Post-retarget readiness is based on clean reconciliation + gate PASS, not a requirement that `behind_by` remain zero.
 
 ## Production decision not yet made
 

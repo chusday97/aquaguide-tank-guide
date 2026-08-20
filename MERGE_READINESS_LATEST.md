@@ -8,16 +8,16 @@
 
 **PRODUCT / RESULT UX: READY. STACK INTEGRATION: READY FOR ORDERED REVIEW, NOT YET APPROVED TO MERGE OR DEPLOY.**
 
-All live Result UX consumers are closed and the child branch remains a clean descendant of the parent branch. The remaining repository work is an ordered stacked-PR transition plus an explicit deployment-policy decision.
+All live Result UX consumers are closed and the current pre-merge stack is clean. The remaining repository work is an ordered parent→child transition plus an explicit deployment-policy decision.
 
-## Stack topology
+## Current pre-merge topology
 
 ### Layer 1 — #104
 
 - base: `integration/aquaguide-rc1`
 - head: `agent/uiux-system-refactor-v1`
 - head: `1c2b5a383da3b0d6a90ba72537395fb41deb7841`
-- compare against RC1: **ahead 102 / behind 0**
+- current compare against RC1: **ahead 102 / behind 0**
 - PR state: open, mergeable, non-draft
 - submitted reviews: none
 - unresolved inline review threads: none
@@ -26,18 +26,18 @@ All live Result UX consumers are closed and the child branch remains a clean des
 
 ### Layer 2 — #105
 
-- base: `agent/uiux-system-refactor-v1`
+- current base: `agent/uiux-system-refactor-v1`
 - head: `agent/result-ux-v1`
-- compare against #104 at audit time: **ahead-only / behind 0**
+- current compare against #104: **ahead-only / behind 0** at audit time
 - PR state: open, mergeable, Draft
 - submitted reviews: none
 - unresolved inline review threads: none
 
-No branch divergence or rebase requirement was found in the current stack.
+No branch divergence or rebase requirement exists **before #104 is merged**.
 
 ## #105 final product gate matrix
 
-The seven-consumer Result UX closure was first proven on `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`:
+The seven-consumer Result UX closure was proven on `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`:
 
 | Gate | Run | Result |
 | --- | --- | --- |
@@ -45,16 +45,16 @@ The seven-consumer Result UX closure was first proven on `4a4388f41ffafa902bf6f9
 | Plant Roster Edit Fix + Navigation Context | `32359908896` | PASS |
 | Compatibility Stage Risk V1 | `32359909061` | PASS |
 
-The integration audit then found that these workflows only listened to PRs targeting `agent/uiux-system-refactor-v1`. That would have silently disabled the permanent gates after #104 merges and #105 is retargeted to RC1.
+The integration audit then found that these workflows only listened to PRs targeting `agent/uiux-system-refactor-v1`. That would have silently disabled the permanent gates after #104 is integrated and #105 is retargeted to RC1.
 
-Commit `a8e402b0f6b6d83dbed5927ca39e7507fd232548` fixes that integration blocker by making all three permanent workflows listen to both:
+Commit `a8e402b0f6b6d83dbed5927ca39e7507fd232548` fixes that blocker by making all three permanent workflows listen to both:
 
 - `agent/uiux-system-refactor-v1`
 - `integration/aquaguide-rc1`
 
 Permissions remain `contents: read`.
 
-Retarget-safe validation on `a8e402b0...`:
+Retarget-safe trigger validation on `a8e402b0...`:
 
 | Gate | Run | Result |
 | --- | --- | --- |
@@ -64,19 +64,23 @@ Retarget-safe validation on `a8e402b0...`:
 
 Result UX #84 passed the static contract, deterministic Copilot contract, TypeScript, production build and all seven browser consumers including live Tank Copilot.
 
-## Correct merge sequence
+## Correct parent→child transition
 
 Do **not** merge #105 into #104 merely to collapse the stack. That would widen #104 after its review boundary was deliberately frozen.
 
 Correct sequence:
 
 1. review #104 as its bounded UI/UX-system change;
-2. when explicitly approved, merge #104 into `integration/aquaguide-rc1`;
+2. when explicitly approved, merge #104 into `integration/aquaguide-rc1` using the chosen repository merge method;
 3. retarget #105 from `agent/uiux-system-refactor-v1` to `integration/aquaguide-rc1`;
-4. confirm the retargeted #105 remains mergeable and ahead-only;
-5. require the same three permanent #105 gates to pass against the RC1 target;
-6. review #105 as the separate Result UX / lifecycle / plant-fix layer;
-7. merge #105 only after an explicit approval decision.
+4. immediately compare the new RC1 base with #105 and inspect the merge-base;
+5. if the parent merge method introduced a new merge/squash commit, #105 may legitimately show behind/diverged even when code is compatible; integrate the new RC1 baseline into #105 using an explicit rebase/merge strategy rather than treating `behind > 0` itself as a product failure;
+6. confirm there are no unresolved code conflicts or duplicated parent changes;
+7. require the same three permanent #105 gates to pass against the RC1 target;
+8. review #105 as the separate Result UX / lifecycle / plant-fix layer;
+9. merge #105 only after an explicit approval decision.
+
+The post-parent-merge condition is therefore **clean merge-base + no unresolved conflicts + full gate PASS**, not “ahead-only at all costs.”
 
 No merge is performed by this readiness document.
 
@@ -124,9 +128,10 @@ A temporary write-enabled append workflow was tested and removed because its tri
 ## Current blockers before any merge/deploy
 
 1. human / explicit approval of #104 merge into RC1;
-2. #105 retarget after #104 merge and same-gate revalidation on the new base;
-3. explicit choice of Vercel deployment policy before production;
-4. explicit merge/deployment authorization.
+2. post-merge retarget of #105 plus merge-base/conflict reconciliation appropriate to the merge method;
+3. same three #105 permanent gates passing on the resulting RC1-based candidate;
+4. explicit choice of Vercel deployment policy before production;
+5. explicit merge/deployment authorization.
 
 ## Current recommendation
 
