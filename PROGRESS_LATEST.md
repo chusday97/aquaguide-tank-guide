@@ -1,92 +1,144 @@
-# AquaGuide Progress — Merge Readiness
+# AquaGuide Progress — Result UX V1
 
 **Date:** 2026-08-20  
-**Branch:** `agent/uiux-system-refactor-v1`  
-**PR:** #104
+**Branch:** `agent/result-ux-v1`  
+**PR:** #105 `Introduce decision-first Result UX V1`  
+**Base:** `agent/uiux-system-refactor-v1` (#104)
 
-## Navigation Context closure
+## Current phase
 
-- [x] Preserved PUI-BC-050 Compatibility behavior: first risk-review click stays in detail; second stage may enter full Compatibility; Atlas no longer jumps to the deep calculator anchor.
-- [x] Added permanent `Navigation Context V1` browser workflow.
-- [x] Reproduced and fixed Search deep-result return failure after explicit show-all.
-- [x] Search now persists query, Species/Care expansion state, source result ID and exact workspace scroll before leaving for detail.
-- [x] Search return restores structure first, then exact scroll + focus.
-- [x] Species >18 and Care >12 return flows both pass.
-- [x] Distinguished Playwright actionability auto-scroll from the real Search product bug.
-- [x] Reproduced and fixed Aquarium → Tank livestock roster → Species Detail → close losing the immediate parent roster.
-- [x] Added roster-scoped return context: record ID, fish ID and internal roster scroll.
-- [x] Child Species Detail dismissal reopens only its originating Aquarium roster after child exit animation completes.
-- [x] Restores roster internal scroll and exact original profile-button focus.
-- [x] Other Species Detail entry points do not inherit the roster-specific return path.
-- [x] Final combined Navigation Context V1 regression passes.
+The project has moved beyond page-by-page UI repair into **result-system convergence + regression closure**.
 
-## Canonical governance
+The active objective is to make result-heavy surfaces answer the user’s decision first, while preserving deterministic product logic, navigation context, and fail-closed evidence semantics.
 
-- [x] `BADCASE_LATEST.md` documents PUI-BC-051 and PUI-BC-052.
-- [x] PUI-BC-051 / PUI-BC-052 appended to `evaluation/product/badcases.v1.jsonl` by a one-off fail-closed append workflow.
-- [x] Canonical commit `5ccdb3e2ebf96437bf0a671cbec180b4c583a8df` changes exactly one file with **+2 / -0**.
-- [x] Historical PUI-BC-032 still contains its original `guide_safe_water_change` trigger.
-- [x] The one-off canonical append workflow was removed immediately after success; cleanup head `20157e0c786becf92dce2442c208e711da8cf60c`.
+PR #105 remains **Draft / open / mergeable / not merged**. No production deployment is claimed here.
 
-## Authoritative latest-head validation
+## Result UX V1
 
-Current validated code/governance head: `20157e0c786becf92dce2442c208e711da8cf60c`.
+### Shared system
 
-All primary PR engineering gates are green on that head:
+- [x] Added `src/components/result/DecisionResultSurface.tsx`.
+- [x] Added shared result adapters in `src/modules/result/resultAdapters.ts`.
+- [x] Enforced one primary verdict/action, maximum two follow-up actions, guardrails, avoid list, and progressive disclosure.
+- [x] Preserved action-scoped evidence semantics: reviewed evidence can be marked verified; candidate evidence remains explicitly unverified.
+- [x] Added static Result UX contract test.
+- [x] Added permanent `.github/workflows/result-ux-v1.yml` browser gate.
 
-- Navigation Context V1 #15 / run `32283514536` — PASS
-- UI UX System Refactor V1 #87 / run `32283514511` — PASS
-- UI UX Visual QA V2 #70 / run `32283514530` — PASS
-- UI UX Golden V3 #32 / run `32283514489` — PASS after retry
-- Bundle Audit V1 #25 / run `32283514480` — PASS
+### Diagnosis
 
-Golden #32 first attempt did **not** reach pixel comparison: a `westus3` runner received Playwright CDN 403 `service is not available in your location`. The failed job was rerun without product/reference/tolerance changes on an `eastus` runner. Retry passed Chromium install and all eight Golden cases at **0% changed**. Artifact ID `9376839397`, digest `sha256:b5d5d9218a78bd5aee264e02a2242d1a17398000cc0b2486158b5961b3059067`.
+- [x] Migrated Diagnosis consumer to `DecisionResultSurface`.
+- [x] Primary action appears before causal explanation.
+- [x] Follow-up action count remains bounded.
+- [x] Watch / escalation boundaries remain visible.
+- [x] Existing diagnosis context is preserved.
+- [x] Browser regression PASS.
 
-## Preview / review state
+### Compatibility
 
-- [x] Cloudflare Pages preview for commit `20157e0` succeeded.
-- [x] No submitted PR reviews.
-- [x] No unresolved inline review threads.
-- [ ] Vercel preview is unavailable because the free account exceeded the daily deployment limit (>100). This is an external preview-quota condition, not a product build failure.
+- [x] Migrated Compatibility consumer to `DecisionResultSurface`.
+- [x] Compatibility verdict is surfaced first.
+- [x] Deterministic blocking / safety rules remain authoritative.
+- [x] Primary recommendation appears before detailed reasoning.
+- [x] Candidate evidence remains fail-closed.
+- [x] Browser regression PASS.
+
+### Authoritative Result UX evidence
+
+Verified code head: `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`.
+
+- Result UX V1 / run `32338616508` — **PASS**
+  - Result UX contract — PASS
+  - Type check — PASS
+  - Production build — PASS
+  - Diagnosis decision-first regression — PASS
+  - Compatibility decision-first regression — PASS
+
+The PR head may advance through docs-only commits; `34ed3ea...` remains the latest explicitly browser-verified code baseline unless a newer code-bearing head is validated.
+
+## Plant roster / legacy plant closure
+
+- [x] Reproduced legacy `plants[]` quantity-edit regression path.
+- [x] Added diagnostics before changing persistence logic.
+- [x] Proved the product save path already persisted `record.quantity = 2`, batch quantity `2`, and visible roster text `共 2株` immediately after save.
+- [x] Isolated reload failure to the Playwright fixture, not product state.
+- [x] Corrected fixture seeding so localStorage is initialized only once per browser context.
+- [x] Verified edit + reload persistence for legacy plant data.
+- [x] Removed the disproven local-aquarium load-race self-modifying workflow/script.
+
+Authoritative evidence:
+
+- Plant Roster Edit Fix / run `32338616480` — **PASS**
+  - Plant livestock contract — PASS
+  - Type check — PASS
+  - Production build — PASS
+  - Plant quantity/edit browser regression — PASS
+  - Existing navigation-context regression — PASS
+
+## Upstream #104 closure retained
+
+The Result UX branch still inherits the completed UI/UX-system work from #104, including:
+
+- PUI-BC-050 Compatibility risk-review/navigation semantics;
+- PUI-BC-051 Search deep-result return context;
+- PUI-BC-052 Aquarium roster → Species Detail → parent roster return;
+- permanent Navigation Context browser regression;
+- responsive/system/visual/golden/bundle audit evidence.
+
+Do not weaken these contracts while migrating additional Result UX consumers.
+
+## Documentation / governance
+
+- [x] Updated `HANDOFF_LATEST.md` to Result UX V1 current state.
+- [x] Updated PR #105 body so it no longer falsely claims Diagnosis / Compatibility are unmigrated.
+- [x] Updated `RESULT_UX_V1.md` current rollout boundary.
+- [x] Update `PROGRESS_LATEST.md` to the active #105 branch and current evidence.
+- [ ] Add the plant fixture false-negative as the next evaluator badcase in `BADCASE_LATEST.md`.
+- [ ] Decide whether evaluator-only badcase should also enter the canonical product badcase JSONL; do not append it automatically without checking registry semantics.
+
+## Remaining Result UX consumers
+
+Not yet declared migrated:
+
+- [ ] Knowledge / Procedure
+- [ ] Species Detail
+- [ ] Identification
+- [ ] AI Assistant
+
+Rule for continuation: **one consumer at a time**. Add or extend its contract/browser regression before claiming migration complete.
+
+## Current engineering debt / non-blockers
+
+- Large entry bundle remains; Result UX V1 does not claim bundle-size reduction.
+- Vite still reports mixed dynamic/static import warnings around existing data dependencies.
+- Existing npm audit debt remains outside this Result UX slice.
+- Vercel free-plan preview quota has previously blocked previews; that is external infrastructure state, not equivalent to a product build failure.
+- Thin wrapper/Base structures inherited from #104 remain deliberate risk-containment debt and should not be recombined inside this already-large PR without regression protection.
 
 ## Merge-readiness classification
 
-### No current product blocker
+### Current judgment
 
-The latest navigation fixes, canonical registry, system contracts, broad visual capture, Golden cohort and bundle measurement all pass. No known user-facing regression from this audit remains unclosed.
+**The first Result UX migration slice is browser verified, but PR #105 is not yet declared merge-ready.**
 
-### Accepted non-blocking debt
+Reasons to keep Draft:
 
-- Thin wrapper/Base repair structure remains in `SpeciesDetailDialog.tsx` + `SpeciesDetailDialogBase.tsx` and `Encyclopedia.tsx` + `EncyclopediaBase.tsx`. Recombining thousand-line legacy files now would create more merge risk than value; preserve regressions and clean up in a follow-up PR.
-- Bundle entry remains roughly 2.1 MiB. Bundle Audit measured the problem; #104 does not claim size reduction.
-- `fishData.ts` / `careTopicsData.ts` remain both dynamically and statically imported through shared localization/page dependencies.
-- Existing npm audit output remains 18 vulnerabilities (2 low / 6 moderate / 10 high). `package.json` / `package-lock.json` are not part of this PR's changes, so this is pre-existing dependency debt, not introduced by #104.
-- Vercel free-plan deployment quota is external infrastructure debt; Cloudflare preview is available.
+1. #105 still depends on #104 as its base; final upstream branch disposition is not yet settled.
+2. Remaining Result UX consumers are intentionally out of scope for the first verified slice and should not be silently implied complete.
+3. Any retarget/rebase must rerun permanent gates before readiness is reassessed.
 
-## Fail-before trail retained
+## Next execution order
 
-### Search — PUI-BC-051
+1. Record the evaluator fixture false-negative in `BADCASE_LATEST.md`.
+2. Inspect Knowledge / Procedure and Species Detail implementation coupling.
+3. Choose the safer third Result UX consumer based on deterministic logic, existing evidence model, and navigation-regression risk.
+4. Add that consumer’s contract/browser test first.
+5. Migrate only that consumer.
+6. Rerun Result UX + relevant upstream navigation/system gates.
+7. Update handoff/progress/badcase again before any Ready-for-Review decision.
 
-- Navigation Context #1 / run `32280048039`: deep Species result disappeared from DOM after detail return — **real product fail-before**.
-- Fix: `9feaac4d90fef5ce2e4665154f9554759e15f591`.
-- #2 exposed Playwright `.click()` auto-scroll between measurement and product capture — **evaluator artifact**.
-- Evaluator fix: `7a736ef6349b4b77dceaf240c1fc61f96f769b98`.
-- #3: Species + Care expansion/focus/scroll PASS.
+## Non-claims
 
-### Aquarium — PUI-BC-052
-
-- #4: generic `right-drawer:visible` matched both roster exit animation and child Species Detail — **evaluator ambiguity**, not product evidence.
-- #5 / run `32281408153`: after exact parent/child discrimination, child detail closed but roster did not reappear for 45 seconds — **real product fail-before**.
-- Product fixes: `28fb8a796bfd1b6b290daf74284945296daff9a3` + `dbf5546e99306ba078a723115451dcf12123a3b7`.
-- #7: parent roster reopening PASS.
-- #8: exact-focus assertion used TypeScript generic syntax inside serialized browser JS — **evaluator bug**; product roster had already restored.
-- #9: parent roster + original profile focus + workspace context PASS.
-
-## Decision
-
-- [x] Stop adding page-level features or bundle optimizations to #104.
-- [x] Treat bundle optimization and wrapper/Base consolidation as follow-up work, not reasons to enlarge this PR.
-- [ ] Update PR #104 description with Navigation Context + Merge Readiness evidence.
-- [ ] Transition #104 from Draft to **Ready for Review** after the PR description is updated.
-- [ ] Do **not** merge into RC1/main in this step.
-- [ ] Do **not** deploy to production in this step.
+- PR #105 is not merged.
+- No production deploy is claimed.
+- A green Result UX workflow for Diagnosis + Compatibility does not imply every result surface follows Result UX V1.
+- The corrected plant test proves the covered browser persistence path, not production telemetry.
