@@ -70,15 +70,16 @@ try {
   assert.match(await decision.innerText(), /需要你确认|确认候选|确认/, 'candidate result must explicitly frame the model output as requiring user confirmation');
   assert.equal(await page.locator('[data-identify-candidate-options]').count(), 1, 'candidate choice set needs one stable container');
   assert.equal(await confirmButtons.count(), 2, 'ambiguous fixture must preserve both candidate choices instead of auto-selecting one');
-  assert.equal(await page.getByText('物种已确认', { exact: true }).count(), 0, 'no candidate may be presented as confirmed before the user chooses it');
+  assert.equal(await page.locator('[data-identify-confirmed]').count(), 0, 'no candidate may be presented as confirmed before the user chooses it');
   assert.equal(await page.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, 'candidate review must remain separate from health triage');
 
   await page.screenshot({ path: resolve(artifactDir, 'candidates-before-confirm.png'), fullPage: true });
   await writeFile(resolve(artifactDir, 'decision-text.txt'), await decision.innerText(), 'utf8');
 
   await confirmButtons.first().click();
-  await page.getByText('物种已确认', { exact: true }).waitFor();
-  await page.getByRole('heading', { name: '极火虾' }).waitFor();
+  const confirmedState = page.locator('[data-identify-confirmed="sp_0001"]');
+  await confirmedState.waitFor();
+  await confirmedState.getByRole('heading', { name: '极火虾' }).waitFor();
   assert.equal(await page.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, 'explicit species confirmation must still not auto-start health triage');
   assert.deepEqual(pageErrors, [], `identification Result UX emitted page errors: ${pageErrors.join(' | ')}`);
 

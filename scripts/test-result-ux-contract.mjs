@@ -82,6 +82,7 @@ assert(identify.includes('data-identify-candidate-options'), 'Identification mus
 assert(identify.includes('data-identify-candidate-confirm'), 'Identification candidate confirmation must remain an explicit user action');
 assert(identify.includes('onClick={() => void confirmFish(candidate.fish!)}'), 'Visual candidate confirmation must continue through confirmFish');
 assert(identify.includes("setStage('identified')"), 'Only the explicit confirmation path may move the flow into identified state');
+assert(identify.includes('data-identify-confirmed={selectedFish.id}'), 'Confirmed Identification state must expose a stable species-bound selector only after explicit confirmation');
 assert(identify.includes('onClick={startHealthTriage}'), 'Health triage must remain a separate explicit user action after identification');
 assert(identify.includes("stage === 'candidates'") && identify.includes("stage === 'identified'"), 'Candidate review and confirmed identification must remain separate stages');
 assert(!identify.includes('primaryControl={<button'), 'Identification shared surface must not auto-promote one candidate as the primary confirmed choice');

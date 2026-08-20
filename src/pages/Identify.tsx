@@ -633,7 +633,7 @@ export default function Identify() {
         )}
 
         {stage === 'identified' && selectedFish && (
-          <section className="overflow-hidden rounded-[26px] border border-emerald-100 bg-white p-4 shadow-sm md:p-6">
+          <section data-identify-confirmed={selectedFish.id} className="overflow-hidden rounded-[26px] border border-emerald-100 bg-white p-4 shadow-sm md:p-6">
             <div className="grid gap-5 md:grid-cols-[minmax(260px,.85fr)_minmax(0,1.15fr)] md:items-center">
               <div className="relative min-h-[280px] overflow-hidden rounded-[22px] bg-gradient-to-b from-emerald-50 to-bg p-4">
                 <ResilientImage src={getSpeciesDisplayImage(selectedFish)} alt={selectedFish.name} className="h-[250px] w-full object-contain" />
