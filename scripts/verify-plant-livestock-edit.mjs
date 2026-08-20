@@ -83,7 +83,7 @@ const openRoster = async page => {
   await archiveSource.waitFor();
   await archiveSource.locator(':scope > button').click();
   const roster = page
-    .locator('[role="dialog"][data-surface="right-drawer"]:not([data-detail-kind])')
+    .locator('[role="dialog"][data-surface="right-drawer"]:not([data-detail-kind]):visible')
     .filter({ hasText: '缸内物种' })
     .first();
   await roster.waitFor({ state: 'visible' });
