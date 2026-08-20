@@ -82,3 +82,5 @@ jobs:
           fi
           git commit -m "docs: sync 2026-08-20 progress and badcase"
           git push origin HEAD:docs/handoff-2026-08-20
+
+# trigger: 2026-08-20
