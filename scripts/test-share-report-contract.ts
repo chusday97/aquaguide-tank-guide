@@ -51,6 +51,11 @@ assert.doesNotMatch(
   /shareTokenSecret:[^\n]*SUPABASE_SERVICE_ROLE_KEY/,
   'Supabase service-role credentials must never be reused as the share-token signing secret',
 );
+assert.match(
+  apiConfigSource,
+  /isShareReportsConfigured[\s\S]*apiConfig\.webBaseUrl/,
+  'share-report production readiness must require WEB_BASE_URL so generated public links cannot fall back to request Origin or localhost',
+);
 
 const releaseAcceptance = readFileSync(resolve('.github/workflows/rc1-release-acceptance.yml'), 'utf8');
 assert.match(
