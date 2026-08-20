@@ -6,6 +6,7 @@ const care = fs.readFileSync('src/pages/CareEncyclopedia.tsx', 'utf8');
 const compatibility = fs.readFileSync('src/components/CompatibilityRiskCalculator.tsx', 'utf8');
 const speciesDetail = fs.readFileSync('src/components/SpeciesDetailDialogBase.tsx', 'utf8');
 const identify = fs.readFileSync('src/pages/Identify.tsx', 'utf8');
+const aquarium = fs.readFileSync('src/pages/Aquarium.tsx', 'utf8');
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Result UX contract failed: ${message}`);
@@ -86,5 +87,16 @@ assert(identify.includes('data-identify-confirmed={selectedFish.id}'), 'Confirme
 assert(identify.includes('onClick={startHealthTriage}'), 'Health triage must remain a separate explicit user action after identification');
 assert(identify.includes("stage === 'candidates'") && identify.includes("stage === 'identified'"), 'Candidate review and confirmed identification must remain separate stages');
 assert(!identify.includes('primaryControl={<button'), 'Identification shared surface must not auto-promote one candidate as the primary confirmed choice');
+
+assert(aquarium.includes("import { DecisionResultSurface } from '../components/result/DecisionResultSurface';"), 'Live Tank Copilot must import the shared decision surface');
+assert(aquarium.includes("const openTankBuildCopilot = () => {\n    setIsTankCopilotOpen(true);\n  };"), 'Live Tank Copilot quick action must open the real Copilot dialog');
+assert(aquarium.includes('testId="tank-copilot-decision"'), 'Live Tank Copilot must expose a shared decision-first result');
+assert(aquarium.includes('data-tank-copilot-primary-action'), 'Tank Copilot decision must expose one stable primary-action selector');
+assert(aquarium.includes('data-tank-copilot-ai-boundary'), 'Tank Copilot must expose an explicit AI-vs-local-rule authority boundary');
+assert(aquarium.includes("label: isEn ? 'AI-generated supporting context' : 'AI 生成的辅助解释'"), 'Model-originated Copilot context must be visibly identified as AI-generated');
+assert(aquarium.includes("status: 'candidate'"), 'Model-originated Copilot context must remain candidate evidence, never Verified');
+assert(aquarium.includes('tankCopilotResult.goalUnderstanding') && aquarium.includes("tankCopilotResult.planSummary || ''"), 'Model interpretation and plan summary must move behind shared progressive disclosure');
+assert(!aquarium.includes("isEn ? 'Recommended Direction' : '推荐方向'"), 'Legacy always-visible model plan-summary card must stay removed');
+assert(aquarium.includes("tankCopilotResult && !tankCopilotNeedsAnswers ? 'hidden' : ''"), 'Legacy footer primary must not duplicate the decision-surface primary action');
 
 console.log('Result UX V1 contract: PASS');

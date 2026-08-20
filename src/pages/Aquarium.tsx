@@ -78,6 +78,7 @@ import { getOnboardingState, getOnboardingTaskProgress, getOnboardingTasks, mark
 import { LivestockRosterDialog } from '../components/aquarium/LivestockRosterDialog';
 import { AquariumTimeline } from '../components/aquarium/AquariumTimeline';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
+import { DecisionResultSurface } from '../components/result/DecisionResultSurface';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
 import {
   getTankCompatibilityAddPolicy,
@@ -2583,7 +2584,7 @@ export default function AquariumManager() {
   };
 
   const openTankBuildCopilot = () => {
-    window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'ai-care' } }));
+    setIsTankCopilotOpen(true);
   };
 
   const handleTankCopilotGenerate = async (goalOverride?: string, answerOverride?: Record<string, string>) => {
@@ -6976,15 +6977,58 @@ export default function AquariumManager() {
 
               {tankCopilotResult ? (
                 <>
-                  <section className="rounded-[20px] border border-emerald-100 bg-emerald-50/70 p-4">
+                  {!tankCopilotNeedsAnswers && (
+                    <DecisionResultSurface
+                      testId="tank-copilot-decision"
+                      isEn={isEn}
+                      tone="info"
+                      eyebrow={isEn ? 'AI ASSISTED' : 'AI 辅助'}
+                      statusLabel={tankCopilotResult.source === 'model'
+                        ? (isEn ? 'AI suggestion · local rules stay authoritative' : 'AI 建议 · 本地规则仍为准')
+                        : (isEn ? 'Local fallback' : '本地回退')}
+                      title={tankCopilotActionView.label}
+                      summary={tankCopilotActionView.description}
+                      primarySource={tankCopilotResult.source === 'model'
+                        ? {
+                            id: 'tank-copilot-model-context',
+                            label: isEn ? 'AI-generated supporting context' : 'AI 生成的辅助解释',
+                            status: 'candidate',
+                          }
+                        : undefined}
+                      primaryControl={(
+                        <Button
+                          type="button"
+                          data-tank-copilot-primary-action
+                          className="h-11 w-full rounded-full bg-accent px-6 text-sm font-black text-white sm:w-auto"
+                          disabled={isTankCopilotPrimaryDisabled}
+                          onClick={handleTankCopilotPrimaryAction}
+                        >
+                          {tankCopilotPrimaryLabel}
+                        </Button>
+                      )}
+                      evidence={[
+                        tankCopilotResult.goalUnderstanding,
+                        tankCopilotResult.planSummary || '',
+                      ]}
+                    >
+                      <p data-tank-copilot-ai-boundary className="rounded-[14px] bg-slate-50 px-3 py-2 text-[10px] font-bold leading-5 text-ink/55">
+                        {isEn
+                          ? 'AI organizes the plan only. Species compatibility, risk level, and whether an addition is allowed remain governed by local product rules.'
+                          : 'AI 只负责整理方案；物种兼容、风险等级与是否允许加入仍以本地规则结果为准。'}
+                      </p>
+                    </DecisionResultSurface>
+                  )}
+                  <section className={`${tankCopilotNeedsAnswers ? '' : 'hidden'} rounded-[20px] border border-emerald-100 bg-emerald-50/70 p-4`}>
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-black text-accent">{isEn ? 'Goal Interpretation' : '目标理解'}</div>
 
                     </div>
                     <p className="mt-2 text-sm font-bold leading-relaxed text-ink">
-                      {tankCopilotResult.source === 'model'
-                        ? tankCopilotResult.goalUnderstanding
-                        : 'AI 暂不可用，请查看下方建议。'}
+                      {tankCopilotNeedsAnswers
+                        ? (tankCopilotResult.source === 'model'
+                            ? tankCopilotResult.goalUnderstanding
+                            : 'AI 暂不可用，请查看下方建议。')
+                        : null}
                     </p>
                     {tankCopilotNeedsAnswers && (
                       <div className="mt-3 rounded-[16px] bg-white/85 p-3">
@@ -7022,14 +7066,6 @@ export default function AquariumManager() {
                     )}
                   </section>
 
-                  {!tankCopilotNeedsAnswers && Boolean(tankCopilotResult.planSummary?.trim()) && (
-                    <section className="rounded-[20px] border border-border bg-white p-4">
-                      <div className="text-sm font-black text-ink">{isEn ? 'Recommended Direction' : '推荐方向'}</div>
-                      <div className="mt-3 rounded-[14px] bg-bg px-3 py-2 text-xs font-bold leading-relaxed text-ink/65">
-                        {tankCopilotResult.planSummary}
-                      </div>
-                    </section>
-                  )}
 
                   {!tankCopilotNeedsAnswers && tankCopilotAllowedCandidates.length > 0 && (
                     <section className="rounded-[20px] border border-border bg-white p-4">
@@ -7068,8 +7104,8 @@ export default function AquariumManager() {
 
                   {!tankCopilotNeedsAnswers && (
                   <section className="rounded-[20px] border border-border bg-white p-4">
-                    <div className="text-sm font-black text-ink">{isEn ? 'Next step' : '下一步'}</div>
-                    <div className="mt-3 rounded-[16px] bg-emerald-50 px-3 py-3">
+                    <div className="hidden text-sm font-black text-ink">{isEn ? 'Next step' : '下一步'}</div>
+                    <div className="hidden mt-3 rounded-[16px] bg-emerald-50 px-3 py-3">
                       <div className="text-xs font-black text-emerald-700">{isEn ? 'Recommended First' : '建议先做'}</div>
                       <div className="mt-1 text-sm font-black text-ink">{tankCopilotActionView.label}</div>
                       <div className="mt-1 text-[11px] font-bold leading-relaxed text-ink/55">
@@ -7103,7 +7139,7 @@ export default function AquariumManager() {
           <DialogFooter className="shrink-0 border-t border-border/70 px-5 pb-5 pt-4 sm:justify-end">
             <Button
               type="button"
-              className="h-11 rounded-full bg-accent px-6 text-sm font-black text-white"
+              className={`${tankCopilotResult && !tankCopilotNeedsAnswers ? 'hidden' : ''} h-11 rounded-full bg-accent px-6 text-sm font-black text-white`}
               disabled={isTankCopilotPrimaryDisabled}
               onClick={handleTankCopilotPrimaryAction}
               title={tankCopilotNeedsAnswers && !tankCopilotHasAnswer ? '先补充至少一项信息' : undefined}
