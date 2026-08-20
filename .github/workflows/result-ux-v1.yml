@@ -28,6 +28,9 @@ jobs:
       - name: Result UX contract
         run: node scripts/test-result-ux-contract.mjs
 
+      - name: Tank Copilot deterministic boundary contract
+        run: npm run test:copilot-contract
+
       - name: Type check
         run: npm run lint
 
@@ -77,6 +80,11 @@ jobs:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-result-ux-identification.mjs
 
+      - name: Tank Copilot decision-first + AI-authority regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-tank-copilot.mjs
+
       - name: Upload Result UX evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -89,5 +97,6 @@ jobs:
             artifacts/result-ux-procedure/**
             artifacts/result-ux-species-detail/**
             artifacts/result-ux-identification/**
+            artifacts/result-ux-tank-copilot/**
           if-no-files-found: warn
           retention-days: 7
