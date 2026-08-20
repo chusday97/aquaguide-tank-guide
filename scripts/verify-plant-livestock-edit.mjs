@@ -67,8 +67,13 @@ try {
   page.setDefaultNavigationTimeout(45_000);
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(String(error)));
+  fs.mkdirSync('artifacts/plant-livestock-edit', { recursive: true });
 
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  const storedBeforeOpen = await page.evaluate(() => JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}'));
+  assert.equal(storedBeforeOpen.currentAquariumId, 'plant-edit-tank', 'browser fixture must keep the plant tank active');
+  assert.equal(storedBeforeOpen.aquariums?.[0]?.fishes?.[0]?.fishId, 'sp_0073', 'browser fixture must contain the aquatic plant before roster open');
+
   const archiveSource = page.locator('#aquarium-records');
   await archiveSource.waitFor();
   await archiveSource.locator(':scope > button').click();
@@ -78,9 +83,14 @@ try {
     .filter({ hasText: '缸内物种' })
     .first();
   await roster.waitFor({ state: 'visible' });
+  await page.screenshot({ path: 'artifacts/plant-livestock-edit/01-roster-open.png', fullPage: true });
+
+  const visibleRecordIds = await roster.locator('[data-livestock-record-id]').evaluateAll(nodes => nodes.map(node => node.getAttribute('data-livestock-record-id')));
+  const rosterText = ((await roster.textContent()) || '').replace(/\s+/g, ' ').trim();
+  console.log('Plant roster diagnostic:', JSON.stringify({ visibleRecordIds, rosterText: rosterText.slice(0, 1600) }));
+  assert.ok(visibleRecordIds.includes('plant-stock-1'), `plant record must be present in the livestock roster; visible=${visibleRecordIds.join(',')}; text=${rosterText.slice(0, 500)}`);
 
   const plantRow = roster.locator('[data-livestock-record-id="plant-stock-1"]');
-  await plantRow.waitFor();
   await plantRow.getByText('挖耳草', { exact: true }).waitFor();
   await plantRow.getByText('共 1株', { exact: true }).waitFor();
   assert.equal(await plantRow.getByText(/共 1(?:只|条|只\/条|条\/只)/).count(), 0, 'aquatic plant must not use animal quantity units in the roster');
@@ -96,6 +106,7 @@ try {
   const editFromDetail = detail.locator('[data-species-detail-edit-tank-record]');
   await editFromDetail.waitFor();
   assert.match((await editFromDetail.textContent()) || '', /修改水草记录/, 'owned aquatic plant detail must expose a plant-record edit action');
+  await page.screenshot({ path: 'artifacts/plant-livestock-edit/02-plant-detail-edit-entry.png', fullPage: true });
   await editFromDetail.click();
 
   await detail.waitFor({ state: 'hidden' });
@@ -105,6 +116,7 @@ try {
   await editor.getByText('修改水草记录', { exact: true }).waitFor();
   await editor.getByText('1株', { exact: true }).waitFor();
   assert.equal(await editor.getByText(/体态|繁殖状态|怀孕|抱卵/).count(), 0, 'plant editor must not expose fish life-stage or reproductive controls');
+  await page.screenshot({ path: 'artifacts/plant-livestock-edit/03-plant-editor-1.png', fullPage: true });
 
   await editor.getByRole('button', { name: '植株数量 + 1', exact: true }).click();
   await editor.getByText('2株', { exact: true }).waitFor();
@@ -121,8 +133,7 @@ try {
   assert.equal(persistedPlant?.batches?.[0]?.quantity, 2, 'plant batch quantity must persist as 2');
   assert.equal(persistedPlant?.batches?.[0]?.reproductiveState, 'not_applicable', 'plant record must remain outside animal reproductive semantics');
 
-  fs.mkdirSync('artifacts/plant-livestock-edit', { recursive: true });
-  await page.screenshot({ path: 'artifacts/plant-livestock-edit/plant-roster-2-plants.png', fullPage: true });
+  await page.screenshot({ path: 'artifacts/plant-livestock-edit/04-plant-roster-2-plants.png', fullPage: true });
   assert.deepEqual(pageErrors, [], `plant livestock edit flow emitted page errors: ${pageErrors.join(' | ')}`);
 
   console.log('Plant livestock edit PASS: 1株 roster → plant detail edit entry → plant-specific editor → 2株 saved and persisted.');
