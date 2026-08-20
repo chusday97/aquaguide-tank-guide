@@ -186,6 +186,22 @@ try {
   await migratedEditor.getByText('2株', { exact: true }).waitFor();
   await migratedEditor.getByRole('button', { name: '保存水草记录', exact: true }).click();
   await migratedEditor.waitFor({ state: 'hidden' });
+
+  const postSaveDiagnostic = await legacyPage.evaluate(recordId => {
+    const state = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');
+    const aquarium = state.aquariums?.find(item => item.id === 'legacy-plant-tank');
+    const record = aquarium?.fishes?.find(item => item.id === recordId);
+    return {
+      currentAquariumId: state.currentAquariumId,
+      recordQuantity: record?.quantity,
+      batchQuantity: record?.batches?.[0]?.quantity,
+      plantMirror: aquarium?.plants,
+      allRecordIds: aquarium?.fishes?.map(item => item.id),
+    };
+  }, migratedId);
+  const postSaveRosterText = ((await legacyRoster.textContent()) || '').replace(/\s+/g, ' ').trim();
+  console.log('Legacy plant post-save diagnostic:', JSON.stringify({ ...postSaveDiagnostic, rosterText: postSaveRosterText.slice(0, 1600) }));
+
   await legacyRoster.locator(`[data-livestock-record-id="${migratedId}"]`).getByText('共 2株', { exact: true }).waitFor();
 
   const migratedPersisted = await legacyPage.evaluate(() => JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}'));
