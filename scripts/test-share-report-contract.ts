@@ -52,4 +52,11 @@ assert.doesNotMatch(
   'Supabase service-role credentials must never be reused as the share-token signing secret',
 );
 
+const releaseAcceptance = readFileSync(resolve('.github/workflows/rc1-release-acceptance.yml'), 'utf8');
+assert.match(
+  releaseAcceptance,
+  /npm run test:share-report-contract/,
+  'RC1 release acceptance must enforce the share-report security contract before production',
+);
+
 console.log('share report contract: ok');
