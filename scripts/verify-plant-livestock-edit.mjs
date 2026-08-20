@@ -115,7 +115,8 @@ try {
   await editor.waitFor({ state: 'visible' });
   await editor.getByText('修改水草记录', { exact: true }).waitFor();
   await editor.getByText('1株', { exact: true }).waitFor();
-  assert.equal(await editor.getByText(/体态|繁殖状态|怀孕|抱卵/).count(), 0, 'plant editor must not expose fish life-stage or reproductive controls');
+  assert.equal(await editor.locator('[role="radiogroup"]').count(), 0, 'plant editor must not render animal life-stage choice groups');
+  assert.equal(await editor.getByRole('button', { name: /幼年|成年|怀孕|抱卵|生产|繁殖中|产后/ }).count(), 0, 'plant editor must not expose animal life-stage or reproductive choice buttons');
   await page.screenshot({ path: 'artifacts/plant-livestock-edit/03-plant-editor-1.png', fullPage: true });
 
   await editor.getByRole('button', { name: '植株数量 + 1', exact: true }).click();
