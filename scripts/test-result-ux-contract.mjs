@@ -4,6 +4,7 @@ const surface = fs.readFileSync('src/components/result/DecisionResultSurface.tsx
 const adapters = fs.readFileSync('src/modules/result/resultAdapters.ts', 'utf8');
 const care = fs.readFileSync('src/pages/CareEncyclopedia.tsx', 'utf8');
 const compatibility = fs.readFileSync('src/components/CompatibilityRiskCalculator.tsx', 'utf8');
+const speciesDetail = fs.readFileSync('src/components/SpeciesDetailDialogBase.tsx', 'utf8');
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Result UX contract failed: ${message}`);
@@ -59,5 +60,16 @@ assert(compatibility.includes("resultStatus === 'insufficient_data'"), 'Compatib
 assert(compatibility.includes("if (resultStatus === 'not_recommended' || resultStatus === 'insufficient_data') return;"), 'Compatibility recording must remain fail-closed for blocked or incomplete decisions');
 assert(!compatibility.includes('data-compatibility-verdict={resultStatus}'), 'Legacy report-style Compatibility verdict must stay removed');
 assert(compatibility.includes('data-compatibility-pair-details'), 'Pair-level detail must remain available behind progressive disclosure');
+
+assert(speciesDetail.includes("import { DecisionResultSurface } from './result/DecisionResultSurface';"), 'Species Detail must import the shared decision surface');
+assert(speciesDetail.includes('testId="species-detail-decision"'), 'Species Detail must consume the shared decision-first surface');
+assert(speciesDetail.includes('data-species-detail-decision-result'), 'Species Detail needs a stable fit-decision wrapper selector');
+assert(speciesDetail.includes('title={displayFit.title}'), 'Species Detail decision hero must come from the tank-fit conclusion, not the species title');
+assert(speciesDetail.includes("summary={aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank')}"), 'Species Detail must preserve the contextual fit summary');
+assert(speciesDetail.includes('evidence={verdictReasons.map(reason => `${reason.label} · ${reason.text}`)}'), 'Species Detail key reasons must move behind shared progressive disclosure');
+assert(!speciesDetail.includes("aria-label={isEn ? 'Key reasons' : '关键原因'}"), 'Legacy always-visible Species Detail reasons must stay removed');
+assert((speciesDetail.match(/data-species-detail-primary-action/g) || []).length === 1, 'Species Detail must expose exactly one stable primary CTA selector');
+assert(speciesDetail.includes('data-species-detail-edit-tank-record'), 'Aquarium-owned Species Detail must preserve the tank-record edit action');
+assert(speciesDetail.includes('data-disclosure-purpose="secondary_evidence"'), 'Species Detail fit/compatibility evidence must remain collapsed behind disclosure');
 
 console.log('Result UX V1 contract: PASS');
