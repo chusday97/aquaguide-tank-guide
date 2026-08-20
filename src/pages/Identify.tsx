@@ -21,6 +21,7 @@ import {
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
+import { DecisionResultSurface } from '../components/result/DecisionResultSurface';
 import type { VisualResultStatus, VisualResultViewModel } from '../components/visual-results/visual-result.types';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
 import { useToast } from '../components/common/ToastProvider';
@@ -556,10 +557,27 @@ export default function Identify() {
             <div className="grid gap-4 md:grid-cols-[240px_1fr]">
               <div className="h-[240px] overflow-hidden rounded-[20px] bg-bg">{previewUrl && <img src={previewUrl} alt={t('identify.uploadPreview')} className="h-full w-full object-contain" />}</div>
               <div className="min-w-0">
-                <div className="flex items-start gap-2"><Sparkles className="mt-0.5 h-5 w-5 text-emerald-700" /><div><h2 className="text-lg font-black">{t('identify.candidateTitle')}</h2><p className="mt-1 text-xs leading-5 text-ink/50">{t('identify.confirmHint')}</p></div></div>
+                <DecisionResultSurface
+                  testId="identify-decision"
+                  isEn={isEn}
+                  tone={recognition?.status === 'matched' ? 'info' : 'warning'}
+                  eyebrow={isEn ? 'NEEDS CONFIRMATION' : '需要你确认'}
+                  statusLabel={
+                    recognition?.source === 'fallback'
+                      ? (isEn ? 'Manual review needed' : '需要手动核对')
+                      : recognition?.status === 'matched'
+                        ? (isEn ? 'Likely match' : '较可能匹配')
+                        : recognition?.status === 'ambiguous'
+                          ? (isEn ? 'Multiple possible matches' : '多个可能候选')
+                          : (isEn ? 'Low certainty' : '匹配不确定')
+                  }
+                  title={t('identify.candidateTitle')}
+                  summary={`${t('identify.confirmHint')} ${isEn ? 'AI candidates are not confirmed species until you choose one.' : 'AI 候选并不是已确认物种，需要由你选择后才会进入确认结果。'}`}
+                  avoid={[isEn ? 'Do not treat the first candidate or its confidence as a confirmed identification.' : '不要把第一候选或置信度直接当成已确认识别结果。']}
+                />
                 {recognition?.source === 'fallback' && <div className="mt-3 rounded-[14px] border border-amber-100 bg-amber-50 p-3 text-xs font-bold text-amber-800"><AlertTriangle className="mr-1 inline h-4 w-4" />{t('identify.manualFallback')}</div>}
                 {cloudNotice && <div className="mt-2 text-[11px] font-bold text-amber-700">{cloudNotice}</div>}
-                <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <div data-identify-candidate-options className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                   {candidates.filter(item => item.fish).map((candidate, index) => (
                     <article key={`${candidate.commonName}-${index}`} className="min-w-0 rounded-[18px] border border-border bg-bg p-3">
                       <div className="mx-auto h-28 w-full"><ResilientImage src={getSpeciesDisplayImage(candidate.fish!)} alt={candidate.fish!.name} className="h-full w-full object-contain" /></div>
@@ -567,7 +585,7 @@ export default function Identify() {
                       <div className="truncate text-[10px] italic text-ink/42">{candidate.fish!.scientificName}</div>
                       <div className="mt-2 text-[10px] font-bold text-ink/50">{t(`identify.confidence.${candidate.confidenceBand}`)}</div>
                       <button type="button" onClick={() => setDetailFish(candidate.fish!)} className="mt-3 min-h-10 w-full rounded-full border border-emerald-200 bg-white px-3 text-[11px] font-black text-emerald-800">{t('identify.viewDetails')}</button>
-                      <button type="button" onClick={() => void confirmFish(candidate.fish!)} className="mt-2 min-h-11 w-full rounded-full bg-emerald-700 px-3 text-[11px] font-black text-white">{t('identify.confirmSpecies')}</button>
+                      <button type="button" data-identify-candidate-confirm data-identify-candidate-id={candidate.fish!.id} onClick={() => void confirmFish(candidate.fish!)} className="mt-2 min-h-11 w-full rounded-full bg-emerald-700 px-3 text-[11px] font-black text-white">{t('identify.confirmSpecies')}</button>
                     </article>
                   ))}
                 </div>
