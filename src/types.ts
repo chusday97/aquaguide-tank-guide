@@ -43,7 +43,7 @@ export interface AquariumFish {
   batches?: AquariumSpeciesBatch[];
 }
 
-export type LifeStage = 'unknown' | 'juvenile' | 'adult';
+export type LifeStage = 'unknown' | 'fry' | 'juvenile' | 'subadult' | 'adult';
 
 export type ReproductiveState =
   | 'unknown'
