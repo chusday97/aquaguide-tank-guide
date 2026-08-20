@@ -6,7 +6,7 @@ on:
       - agent/uiux-system-refactor-v1
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate-stage-risk:
@@ -16,6 +16,38 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: agent/result-ux-v1
+          fetch-depth: 0
+
+      - name: Guarded same-species stage-risk migration
+        shell: bash
+        run: |
+          python3 scripts/migrate-same-species-stage-risk.py
+          if git diff --quiet -- \
+            src/types.ts \
+            packages/contracts/src/business.ts \
+            src/data/compatibilityEvidence.ts \
+            src/lib/tankCompatibilityEngine.ts \
+            src/services/aquarium/species-addition.service.ts; then
+            exit 0
+          fi
+          changed="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' \
+            packages/contracts/src/business.ts \
+            src/data/compatibilityEvidence.ts \
+            src/lib/tankCompatibilityEngine.ts \
+            src/services/aquarium/species-addition.service.ts \
+            src/types.ts | sort)"
+          test "$changed" = "$expected"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            src/types.ts \
+            packages/contracts/src/business.ts \
+            src/data/compatibilityEvidence.ts \
+            src/lib/tankCompatibilityEngine.ts \
+            src/services/aquarium/species-addition.service.ts
+          git commit -m "Add same-species life-stage compatibility rules"
+          git push origin HEAD:agent/result-ux-v1
 
       - uses: actions/setup-node@v4
         with:
@@ -27,6 +59,9 @@ jobs:
 
       - name: Same-species life-stage risk contract
         run: npx tsx scripts/test-same-species-stage-risk.ts
+
+      - name: Existing compatibility engine regression
+        run: npm run test:compatibility
 
       - name: Type check
         run: npm run lint
