@@ -2159,6 +2159,7 @@ export default function AquariumManager() {
         fishId: item.fishId,
         quantity: item.quantity,
         entryDate: item.entryDate || format(new Date(), 'yyyy-MM-dd'),
+        lifeStage: item.lifeStage ?? 'unknown',
       })));
       setFishSearchTerm('');
       setAddFishDatePicker(null);
@@ -2511,7 +2512,7 @@ export default function AquariumManager() {
     setAddFishCompatibilityReview(null);
     setFishSearchTerm('');
     setAddFishCategory('all');
-    setSelectedAddFishItems(templateFish.map(({ fish, quantity }) => ({ fishId: fish.id, quantity, entryDate })));
+    setSelectedAddFishItems(templateFish.map(({ fish, quantity }) => ({ fishId: fish.id, quantity, entryDate, lifeStage: 'unknown' })));
     setIsAddFishOpen(true);
     setTankActionMessage(isEn
       ? `Reviewing livestock planned in "${template.name}". The environment and livestock have not been written to the aquarium.`
