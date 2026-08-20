@@ -131,14 +131,15 @@ try {
   assert.ok((await evidenceDetails.count()) >= 1, 'Copilot explanation must be available behind progressive disclosure');
   const openEvidence = await evidenceDetails.evaluateAll(nodes => nodes.filter(node => node.hasAttribute('open')).length);
   assert.equal(openEvidence, 0, 'Copilot explanation/evidence must start collapsed');
-  const evidenceText = await evidenceRoot.innerText();
-  assert.ok(evidenceText.includes(modelGoalUnderstanding), 'model goal interpretation must remain available inside shared secondary evidence');
-  assert.ok(evidenceText.includes(modelPlanSummary), 'model plan summary must remain available inside shared secondary evidence');
+  const evidenceText = await evidenceRoot.textContent();
+  assert.ok(evidenceText?.includes(modelGoalUnderstanding), 'model goal interpretation must remain available inside shared secondary evidence');
+  assert.ok(evidenceText?.includes(modelPlanSummary), 'model plan summary must remain available inside shared secondary evidence');
 
   const alternativePlan = copilotDialog.locator('details[data-disclosure-purpose="alternative_plan"]');
   await alternativePlan.waitFor();
   assert.equal(await alternativePlan.evaluate(node => node.hasAttribute('open')), false, 'model blocked explanation must start collapsed');
-  assert.ok((await alternativePlan.innerText()).includes(modelBoundaryProbe), 'model blocked explanation must remain inspectable behind disclosure');
+  const alternativeText = await alternativePlan.textContent();
+  assert.ok(alternativeText?.includes(modelBoundaryProbe), 'model blocked explanation must remain inspectable behind disclosure');
 
   assert.deepEqual(pageErrors, [], `Tank Copilot Result UX emitted page errors: ${pageErrors.join(' | ')}`);
   await page.screenshot({ path: `${artifactDir}/decision-first-ai-boundary.png`, fullPage: true });
