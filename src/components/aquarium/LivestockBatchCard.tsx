@@ -28,6 +28,8 @@ import {
 } from '../../services/aquarium/species-batches.service';
 import { QuantityStepper } from '../forms/QuantityStepper';
 import { QuickDatePicker } from '../forms/QuickDatePicker';
+import { getLifeType } from '../../modules/species/species.service';
+import { formatSpeciesQuantity } from '../../lib/speciesQuantityUnit';
 
 type Props = {
   fish: Fish;
@@ -44,9 +46,11 @@ const lifeStageOptions: LifeStage[] = ['unknown', 'juvenile', 'adult'];
 
 const reproductiveOptions: ReproductiveState[] = ['unknown', 'normal', 'pregnant_or_gravid', 'in_labor_or_spawning', 'postpartum_recovery'];
 
-const summarize = (record: AquariumFish, t: TFunction) => {
+const summarize = (record: AquariumFish, t: TFunction, fish: Fish, isEn: boolean) => {
   const summary = summarizeSpeciesBatches(record);
-  const parts = [t('livestock.summaryTotal', { count: summary.total })];
+  const lifeType = getLifeType(fish);
+  const parts = [isEn ? formatSpeciesQuantity(fish, summary.total, true) : '共 ' + formatSpeciesQuantity(fish, summary.total, false)];
+  if (lifeType === 'plant' || lifeType === 'hardscape') return parts.join(' · ');
   if (summary.juvenile) parts.push(t('livestock.summaryJuvenile', { count: summary.juvenile }));
   if (summary.adult) parts.push(t('livestock.summaryAdult', { count: summary.adult }));
   if (summary.pregnant) parts.push(t('livestock.summaryPregnant', { count: summary.pregnant }));
@@ -372,10 +376,10 @@ export function LivestockBatchCard({
             </button>
             <div className="min-w-0 flex-1 pr-10">
               <h3 className="truncate text-sm font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</h3>
-              <p className="mt-1 text-[11px] font-bold leading-5 text-ink/48">{summarize(record, t)}</p>
+              <p className="mt-1 text-[11px] font-bold leading-5 text-ink/48">{summarize(record, t, fish, isEn)}</p>
               {observation && <p className="mt-1 line-clamp-2 text-[10px] font-semibold leading-4 text-amber-700">{t('livestock.observePrefix')}{observation}</p>}
               <button type="button" onClick={() => onEditingChange(true)} className="mt-2 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-emerald-50 px-3 text-xs font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                <Pencil className="h-3.5 w-3.5" />{t('livestock.manageGroups')}
+                <Pencil className="h-3.5 w-3.5" />{getLifeType(fish) === 'plant' ? (isEn ? 'Edit plant record' : '修改水草记录') : t('livestock.manageGroups')}
               </button>
             </div>
           </div>
@@ -465,11 +469,11 @@ export function LivestockBatchCard({
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     <div className="rounded-2xl bg-bg px-3 py-3">
                       <div className="text-[10px] font-black uppercase tracking-wide text-ink/40">{isEn ? 'Before' : '修改前'}</div>
-                      <p className="mt-1 text-xs font-bold leading-5 text-ink/65">{summarize(record, t)}</p>
+                      <p className="mt-1 text-xs font-bold leading-5 text-ink/65">{summarize(record, t, fish, isEn)}</p>
                     </div>
                     <div className="rounded-2xl bg-emerald-50 px-3 py-3">
                       <div className="text-[10px] font-black uppercase tracking-wide text-emerald-700">{isEn ? 'After' : '修改后'}</div>
-                      <p className="mt-1 text-xs font-black leading-5 text-emerald-900">{summarize(draft, t)}</p>
+                      <p className="mt-1 text-xs font-black leading-5 text-emerald-900">{summarize(draft, t, fish, isEn)}</p>
                     </div>
                   </div>
                   <p className="mt-3 rounded-2xl bg-amber-50 px-3 py-3 text-xs font-semibold leading-5 text-amber-900">{targetQuantity < (selectedSourceBatch?.quantity || 0)

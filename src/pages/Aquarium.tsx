@@ -1159,6 +1159,7 @@ export default function AquariumManager() {
   const [editNameValue, setEditNameValue] = useState('');
   const [isRenamingName, setIsRenamingName] = useState(false);
   const [selectedAqFish, setSelectedAqFish] = useState<{fish: Fish, aqFish: AquariumFish} | null>(null);
+  const [livestockEditRequestId, setLivestockEditRequestId] = useState<string | null>(null);
   const speciesDetailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSettingsSaving, setIsSettingsSaving] = useState(false);
@@ -8090,6 +8091,13 @@ export default function AquariumManager() {
           if (!current.includes(fish.id)) setCompatibilitySelection([...current, fish.id]);
         }}
         onToggleWishlist={toggleWishlist}
+        onEditInTank={() => {
+          if (!selectedAqFish) return;
+          const recordId = selectedAqFish.aqFish.id;
+          closeAquariumSpeciesDetail(false);
+          setLivestockEditRequestId(recordId);
+          setIsTankArchiveExpanded(true);
+        }}
         onGoCalculator={() => {
           const returnContext = speciesDetailNavigationContextRef.current;
           closeAquariumSpeciesDetail(false);
@@ -8114,6 +8122,8 @@ export default function AquariumManager() {
           setIsTankArchiveExpanded(false);
           openAquariumSpeciesDetail(fish, record, 'aquarium-records');
         }}
+        editRecordRequestId={livestockEditRequestId}
+        onEditRecordRequestHandled={() => setLivestockEditRequestId(null)}
         onSave={saveLivestockBatches}
         onRemove={removeLivestockQuantity}
         onAdd={() => {

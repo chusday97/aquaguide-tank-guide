@@ -76,6 +76,7 @@ type SpeciesDetailDialogProps = {
   onToggleWishlist: (fishId: string) => void;
   onGoCalculator?: () => void;
   onViewInTank?: () => void;
+  onEditInTank?: () => void;
   onOpenTankSettings?: (panel: 'size' | 'parameters' | 'equipment') => void;
   onRecordDeath?: (fish: Fish, input: { date: string; causeCodes: MemorialCauseCode[]; reason?: string; batchId?: string; operationId: string }) => void | Promise<void>;
 };
@@ -416,6 +417,7 @@ export function SpeciesDetailDialog({
   onToggleWishlist,
   onGoCalculator,
   onViewInTank,
+  onEditInTank,
   onOpenTankSettings,
   onRecordDeath,
 }: SpeciesDetailDialogProps) {
@@ -1034,7 +1036,15 @@ export function SpeciesDetailDialog({
               </div>
 
               <div className="modalFooter shrink-0 border-t border-border bg-white/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 min-[760px]:px-6">
-                <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {source === 'aquarium' && owned && onEditInTank && (
+                    <Button data-species-detail-edit-tank-record type="button" variant="outline" className="min-h-12 w-full rounded-full border-emerald-200 bg-white px-4 text-sm font-black text-emerald-800 hover:bg-emerald-50 min-[760px]:text-base" onClick={onEditInTank}>
+                      <SlidersHorizontal className="mr-2 h-4 w-4" />
+                      {getLifeType(fish) === 'plant' ? (isEn ? 'Edit plant record' : '修改水草记录') : (isEn ? 'Edit tank record' : '修改缸内记录')}
+                    </Button>
+                  )}
+                  <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
+                </div>
               </div>
 
               {isDeathFormOpen && (
