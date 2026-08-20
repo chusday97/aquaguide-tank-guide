@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - agent/uiux-system-refactor-v1
+      - integration/aquaguide-rc1
 
 permissions:
   contents: read
