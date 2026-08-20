@@ -43,12 +43,9 @@ jobs:
           git diff --check
           changed="$(git diff --name-only | sort)"
           expected="$(printf '%s\n' \
-            scripts/test-plant-livestock-edit-contract.mjs \
             src/components/SpeciesDetailDialogBase.tsx \
             src/components/aquarium/LivestockBatchCard.tsx \
             src/components/aquarium/LivestockRosterDialog.tsx \
-            src/components/aquarium/PlantRecordEditor.tsx \
-            src/lib/speciesQuantityUnit.ts \
             src/pages/Aquarium.tsx | sort)"
           echo "$changed"
           test "$changed" = "$expected"
@@ -58,12 +55,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- \
-            scripts/test-plant-livestock-edit-contract.mjs \
             src/components/SpeciesDetailDialogBase.tsx \
             src/components/aquarium/LivestockBatchCard.tsx \
             src/components/aquarium/LivestockRosterDialog.tsx \
-            src/components/aquarium/PlantRecordEditor.tsx \
-            src/lib/speciesQuantityUnit.ts \
             src/pages/Aquarium.tsx
           git commit -m "Fix plant quantity units and record editing"
           git push origin HEAD:agent/result-ux-v1
