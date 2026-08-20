@@ -90,6 +90,19 @@ const openRoster = async page => {
   return roster;
 };
 
+const waitForVisibleRecordText = async (page, recordId, expectedText) => {
+  await page.waitForFunction(({ recordId: targetId, expectedText: targetText }) => {
+    const rows = Array.from(document.querySelectorAll(`[data-livestock-record-id="${targetId}"]`));
+    return rows.some(row => {
+      if (!(row instanceof HTMLElement)) return false;
+      const style = window.getComputedStyle(row);
+      const visible = style.display !== 'none' && style.visibility !== 'hidden' && row.getClientRects().length > 0;
+      const text = (row.textContent || '').replace(/\s+/g, ' ');
+      return visible && text.includes(targetText);
+    });
+  }, { recordId, expectedText });
+};
+
 try {
   fs.mkdirSync('artifacts/plant-livestock-edit', { recursive: true });
 
@@ -202,7 +215,7 @@ try {
   const postSaveRosterText = ((await legacyRoster.textContent()) || '').replace(/\s+/g, ' ').trim();
   console.log('Legacy plant post-save diagnostic:', JSON.stringify({ ...postSaveDiagnostic, rosterText: postSaveRosterText.slice(0, 1600) }));
 
-  await legacyRoster.locator(`[data-livestock-record-id="${migratedId}"]`).getByText('共 2株', { exact: true }).waitFor();
+  await waitForVisibleRecordText(legacyPage, migratedId, '共 2株');
 
   const migratedPersisted = await legacyPage.evaluate(() => JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}'));
   const migratedPlant = migratedPersisted.aquariums?.[0]?.fishes?.find(record => record.id === 'plant-record:legacy-plant-tank:sp_0073');
@@ -213,7 +226,8 @@ try {
 
   await legacyPage.reload({ waitUntil: 'domcontentloaded' });
   const reloadedRoster = await openRoster(legacyPage);
-  await reloadedRoster.locator(`[data-livestock-record-id="${migratedId}"]`).getByText('共 2株', { exact: true }).waitFor();
+  await reloadedRoster.locator(`[data-livestock-record-id="${migratedId}"]`).waitFor({ state: 'visible' });
+  await waitForVisibleRecordText(legacyPage, migratedId, '共 2株');
   await legacyPage.screenshot({ path: 'artifacts/plant-livestock-edit/06-legacy-reload-2-plants.png', fullPage: true });
   assert.deepEqual(legacyErrors, [], `legacy plant migration emitted page errors: ${legacyErrors.join(' | ')}`);
   await legacyContext.close();
