@@ -30,5 +30,7 @@ assert(aquarium.includes("lifeStage: 'unknown'"), 'newly selected species must b
 assert(aquarium.includes('data-add-fish-life-stage={item.fishId}'), 'add-species review must expose a stable life-stage input');
 assert(aquarium.includes("(['unknown', 'fry', 'juvenile', 'subadult', 'adult'] as LifeStage[]).map"), 'add-species stage input must offer the same five-stage contract');
 assert(aquarium.includes("lifeStage: item.lifeStage"), 'normalized planned addition must preserve selected life stage into review/write');
+assert(aquarium.includes("lifeStage: item.lifeStage ?? 'unknown'"), 'record-existing retry items must preserve normalized life stage');
+assert(aquarium.includes("setSelectedAddFishItems(templateFish.map(({ fish, quantity }) => ({ fishId: fish.id, quantity, entryDate, lifeStage: 'unknown' })));"), 'build-template additions must start with explicit unknown stage');
 
 console.log('Life-stage UI contract: PASS');

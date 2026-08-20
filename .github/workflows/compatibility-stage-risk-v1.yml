@@ -18,43 +18,19 @@ jobs:
           ref: agent/result-ux-v1
           fetch-depth: 0
 
-      - name: Guarded life-stage capture UI migration
+      - name: Guarded residual life-stage capture migration
         shell: bash
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('scripts/migrate-life-stage-ui.py')
-          text = path.read_text()
-          broken = '        : <FishIcon className=\\"h-5 w-5\\" />,\n",'
-          fixed = '        : <FishIcon className=\\"h-5 w-5\\" />,\\n",'
-          if text.count(broken) != 2:
-              raise SystemExit(f'expected 2 malformed icon-string endings, found {text.count(broken)}')
-          path.write_text(text.replace(broken, fixed))
-          PY
-          python3 scripts/migrate-life-stage-ui.py
-          git checkout -- scripts/migrate-life-stage-ui.py
-          if git diff --quiet -- \
-            src/components/aquarium/LivestockBatchCard.tsx \
-            src/services/aquarium/species-batches.service.ts \
-            src/i18n/index.ts \
-            src/pages/Aquarium.tsx; then
+          python3 scripts/migrate-life-stage-ui-residuals.py
+          if git diff --quiet -- src/pages/Aquarium.tsx; then
             exit 0
           fi
-          changed="$(git diff --name-only | sort)"
-          expected="$(printf '%s\n' \
-            src/components/aquarium/LivestockBatchCard.tsx \
-            src/i18n/index.ts \
-            src/pages/Aquarium.tsx \
-            src/services/aquarium/species-batches.service.ts | sort)"
-          test "$changed" = "$expected"
+          changed="$(git diff --name-only)"
+          test "$changed" = "src/pages/Aquarium.tsx"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- \
-            src/components/aquarium/LivestockBatchCard.tsx \
-            src/services/aquarium/species-batches.service.ts \
-            src/i18n/index.ts \
-            src/pages/Aquarium.tsx
-          git commit -m "Expose life-stage capture across livestock flows"
+          git add -- src/pages/Aquarium.tsx
+          git commit -m "Preserve life stage across residual add-species paths"
           git push origin HEAD:agent/result-ux-v1
 
       - uses: actions/setup-node@v4
