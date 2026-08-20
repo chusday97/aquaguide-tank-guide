@@ -97,7 +97,6 @@ try {
   await copilotEntry.click();
   await page.screenshot({ path: `${artifactDir}/after-live-entry-click.png`, fullPage: true });
 
-  // The README declares AI Tank Copilot implemented, so the live Aquarium entry must open the real Copilot dialog.
   const copilotDialog = page.getByRole('dialog').filter({ hasText: 'AI 建缸助手' });
   await copilotDialog.waitFor({ state: 'visible', timeout: 10_000 });
 
@@ -127,26 +126,25 @@ try {
   const followUps = decision.locator('[data-result-ux-actions] li');
   assert.ok((await followUps.count()) <= 2, 'Copilot may promote at most two follow-up actions');
 
-  const evidenceDetails = decision.locator('[data-result-ux-evidence] details');
+  const evidenceRoot = decision.locator('[data-result-ux-evidence]');
+  const evidenceDetails = evidenceRoot.locator('details');
   assert.ok((await evidenceDetails.count()) >= 1, 'Copilot explanation must be available behind progressive disclosure');
   const openEvidence = await evidenceDetails.evaluateAll(nodes => nodes.filter(node => node.hasAttribute('open')).length);
   assert.equal(openEvidence, 0, 'Copilot explanation/evidence must start collapsed');
+  const evidenceText = await evidenceRoot.innerText();
+  assert.ok(evidenceText.includes(modelGoalUnderstanding), 'model goal interpretation must remain available inside shared secondary evidence');
+  assert.ok(evidenceText.includes(modelPlanSummary), 'model plan summary must remain available inside shared secondary evidence');
 
-  const goalInterpretation = copilotDialog.getByText(modelGoalUnderstanding, { exact: true });
-  assert.equal(await goalInterpretation.count(), 1, 'model goal interpretation must remain available as secondary explanation');
-  assert.equal(await goalInterpretation.isVisible(), false, 'model goal interpretation must not compete with the primary decision on first view');
-
-  const boundaryProbe = copilotDialog.getByText(modelBoundaryProbe, { exact: true });
-  assert.equal(await boundaryProbe.count(), 1, 'model explanation must remain inspectable');
-  assert.equal(await boundaryProbe.isVisible(), false, 'model explanation must start behind disclosure');
+  const alternativePlan = copilotDialog.locator('details[data-disclosure-purpose="alternative_plan"]');
+  await alternativePlan.waitFor();
+  assert.equal(await alternativePlan.evaluate(node => node.hasAttribute('open')), false, 'model blocked explanation must start collapsed');
+  assert.ok((await alternativePlan.innerText()).includes(modelBoundaryProbe), 'model blocked explanation must remain inspectable behind disclosure');
 
   assert.deepEqual(pageErrors, [], `Tank Copilot Result UX emitted page errors: ${pageErrors.join(' | ')}`);
   await page.screenshot({ path: `${artifactDir}/decision-first-ai-boundary.png`, fullPage: true });
 
-  console.log('Tank Copilot Result UX passed: live entry → direct decision/action → bounded follow-ups → collapsed model explanation → explicit AI/local-rule authority boundary.');
+  console.log('Tank Copilot Result UX passed: live entry → local-rule-owned primary action → model context as candidate evidence → collapsed explanations → explicit AI/local-rule authority boundary.');
   await context.close();
-} catch (error) {
-  throw error;
 } finally {
   await browser.close();
 }
