@@ -72,6 +72,11 @@ jobs:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-result-ux-species-detail.mjs
 
+      - name: Identification uncertainty + explicit-confirmation regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-identification.mjs
+
       - name: Upload Result UX evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -83,5 +88,6 @@ jobs:
             artifacts/result-ux-knowledge/**
             artifacts/result-ux-procedure/**
             artifacts/result-ux-species-detail/**
+            artifacts/result-ux-identification/**
           if-no-files-found: warn
           retention-days: 7
