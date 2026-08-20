@@ -64,27 +64,40 @@ Authoritative three-consumer baseline:
 - [ ] Preserve completion CTA semantics; do not move `去记录本次换水` / completion actions ahead of the procedure itself.
 - [ ] Rerun four-consumer browser gate after migration.
 
-## Vercel preview frequency optimization
+## Vercel preview-frequency optimization
 
-Problem: Git integration was attempting a Preview on nearly every push, including docs, workflows, tests and intermediate repair commits. This caused free-plan build-rate-limit failures unrelated to application build correctness.
+### Root cause
 
-Implemented:
+The project was using Git-integrated Vercel Preview like a per-commit CI runner. Active `agent/*` branches generate many intermediate code, test, workflow and documentation pushes, so Vercel's free-plan build-admission limit was reached before a useful hosted Preview could be produced.
 
-- [x] commit `10aa2501163e976a74543e3dd3a8f00c10f9bbc4` — `Throttle Vercel preview deployments`;
-- [x] `vercel.json` now calls `bash scripts/vercel-ignore-build.sh` through `ignoreCommand`;
-- [x] non-production Preview branches require explicit `[vercel-preview]` in the triggering commit message;
-- [x] gate compares against `VERCEL_GIT_PREVIOUS_SHA` so accumulated deployable changes since the last successful deployment are not lost;
-- [x] docs / handoff / badcase / workflows / evaluation / browser-test-only changes are skipped by default;
-- [x] deploy-relevant paths include runtime code, public assets, API/workspaces, package manifests/locks and build/deploy config;
-- [x] production/main does not require `[vercel-preview]` and fails open if comparison history is unavailable.
+### Phase 1 — secondary filter only
 
-Operating policy:
+- [x] commit `10aa2501163e976a74543e3dd3a8f00c10f9bbc4` added `ignoreCommand` and `scripts/vercel-ignore-build.sh`.
+- [x] non-production allowed branches require `[vercel-preview]` in the triggering commit.
+- [x] the script compares against `VERCEL_GIT_PREVIOUS_SHA` and checks deploy-relevant paths.
+- [x] production fails open when comparison history is unavailable.
 
-- iterative validation → GitHub Actions;
-- hosted Preview → only at a browser-green milestone using `[vercel-preview]`;
-- production → normal production rule, independent of the preview marker.
+But:
 
-The policy commit itself had no preview marker and its GitHub Vercel status returned success rather than the prior build-rate-limit failure state.
+- [x] live validation disproved `ignoreCommand` as the primary rate-limit solution;
+- [x] documentation-only commit `ba559c3b446a12cba65b418dfed7cc35aa816267` still received Vercel `build-rate-limit` failure because admission happened before the ignored-build command could run.
+
+### Phase 2 — trigger-level fix
+
+- [x] commit `d86330eaabf888c0abd1618312ba8deb67dc4c4b` updated `vercel.json`;
+- [x] `git.deploymentEnabled["agent/*"] = false`;
+- [x] `git.deploymentEnabled["preview/*"] = true`;
+- [x] `ignoreCommand` remains only as a second gate on explicitly allowed preview branches;
+- [x] validation on `d86330ea...` returned **no Vercel status context**, unlike the immediately preceding rate-limited commit, proving that the active agent branch no longer created an automatic Vercel deployment attempt.
+
+### New operating policy
+
+- iterative development + browser contracts → GitHub Actions on `agent/*`;
+- automatic Vercel deployment → disabled on `agent/*`;
+- hosted visual checkpoint → deliberately use `preview/*`, with `[vercel-preview]` and deploy-relevant accumulated changes;
+- production/main → remains enabled and does not require the preview marker.
+
+No dedicated `preview/*` branch has been created yet.
 
 ## Plant roster / legacy plant closure
 
@@ -110,8 +123,8 @@ Must preserve:
 - [x] `BADCASE_LATEST.md` includes evaluator PUI-BC-053.
 - [x] PR #105 body matches the three verified consumers.
 - [x] `RESULT_UX_V1.md` matches the three-consumer verified boundary.
-- [x] `HANDOFF_LATEST.md` includes Knowledge, Procedure fail-before and Vercel preview policy.
-- [x] `PROGRESS_LATEST.md` includes Vercel deployment throttling.
+- [x] `HANDOFF_LATEST.md` includes Procedure fail-before and the corrected Vercel trigger-level policy.
+- [x] `PROGRESS_LATEST.md` includes the corrected Vercel deployment policy.
 
 ## Remaining Result UX consumers
 
@@ -127,7 +140,7 @@ Rule: **one consumer at a time; fail-before first; product migration second; bro
 - Large entry bundle remains.
 - Vite mixed dynamic/static import warnings remain.
 - Existing npm audit debt remains outside this Result UX slice.
-- Vercel quota failures are infrastructure state, not application build failures.
+- Historical Vercel quota failures are infrastructure state, not application build failures.
 - Thin wrapper/Base structures inherited from #104 remain deliberate risk-containment debt.
 
 ## Merge-readiness judgment
@@ -146,13 +159,15 @@ Reasons:
 1. Migrate Procedure from the already-proven fail-before state.
 2. Keep post-task completion controls after the actual Procedure steps.
 3. Run the four-consumer Result UX gate.
-4. Create a Vercel hosted Preview only when a milestone is green, using `[vercel-preview]`.
-5. Leave Species Detail until its navigation-return regressions are explicitly included.
-6. Keep PR #105 Draft; do not merge or production-deploy in this phase.
+4. Keep iterative commits on `agent/*` without Vercel Preview attempts.
+5. Use a dedicated `preview/*` checkpoint only when hosted visual review is needed.
+6. Leave Species Detail until its navigation-return regressions are explicitly included.
+7. Keep PR #105 Draft; do not merge or production-deploy in this phase.
 
 ## Non-claims
 
 - PR #105 is not merged.
 - No production deploy is claimed.
 - Procedure is not yet migrated.
-- Green GitHub browser evidence is deterministic PR evidence, not production telemetry.
+- `ignoreCommand` alone is not claimed to solve Vercel build-rate admission.
+- Browser evidence is deterministic PR evidence, not production telemetry.
