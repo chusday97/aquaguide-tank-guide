@@ -35,7 +35,8 @@ assert(care.includes('testId="care-knowledge-decision"'), 'Knowledge must consum
 assert(care.includes('data-care-result-primary'), 'Knowledge must expose one primary first-screen action');
 assert(care.includes('data-disclosure-purpose="secondary_explanation"'), 'Knowledge long-form explanation must be an explicit disclosure');
 assert(!care.includes("(meta.guideType === 'knowledge' || isDetailExpanded)"), 'Knowledge long-form explanation must not be expanded by default');
-assert(care.includes('getCareActionEvidenceForText(topic, visibleActions[0]'), 'Knowledge primary evidence must stay action-scoped');
+assert(care.includes("getCareActionEvidenceForText(topic, 'immediate', visibleActions[0]"), 'Knowledge primary evidence must stay action-scoped and use the Care evidence API kind');
+assert(care.includes("getCareActionEvidenceForText(topic, 'immediate', item.description || item.title, index + 1)"), 'Knowledge follow-up evidence must retain the original immediate-action index');
 assert(care.includes("visibleActions.slice(1, 3)"), 'Knowledge shared surface must feed at most two follow-up actions');
 
 assert(compatibility.includes('testId="compatibility-decision"'), 'Compatibility must consume the shared decision-first surface');
