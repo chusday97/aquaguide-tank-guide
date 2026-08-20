@@ -6,12 +6,93 @@
 
 ## Current closure set
 
-PUI-BC-040..054 are represented in the current UI/UX / Result UX work.
+PUI-BC-040..055 are represented in the current UI/UX / Result UX / production-readiness work.
 
 - PUI-BC-049 and PUI-BC-053 are evaluation-system failures, not user-facing product regressions.
 - PUI-BC-050 is the Compatibility navigation semantics repair.
 - PUI-BC-051/052 are Navigation Context closure cases inherited from #104.
 - PUI-BC-054 is the live AI Tank Copilot reachability defect discovered by the final Result UX fail-before.
+- PUI-BC-055 is the share-report credential-separation and release/deployment-readiness defect found in production audit.
+
+## PUI-BC-055 · Share-report signing reused a high-privilege database secret and release checks could not prove production readiness
+
+- **featureId:** `share_report`
+- **source:** `production_readiness_audit`
+- **severity:** high
+- **rootCauseLayer:** `secret_boundary_release_readiness`
+- **status:** `regression_verified`
+
+### Symptom
+
+The share-report route had a fail-closed path when its signing secret was absent, but `apps/api/src/config.ts` prevented that path from being reached by silently falling back from `SHARE_TOKEN_SECRET` to `SUPABASE_SERVICE_ROLE_KEY`.
+
+This created two problems:
+
+1. the highest-privilege database credential was reused for an unrelated HMAC signing purpose;
+2. production/release checks could report the API as healthy without proving that share-report signing, admin database access, and canonical public-link configuration were actually ready.
+
+The problem was not a leaked secret value. It was credential-role mixing plus insufficient release/deployment observability.
+
+### Root cause
+
+The old configuration included:
+
+`shareTokenSecret: process.env.SHARE_TOKEN_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || ''`
+
+The release pipeline also had three gaps:
+
+- RC1 Release Acceptance did not run `test:share-report-contract`;
+- `/api/v1/business-health` exposed only general database readiness;
+- post-deploy smoke therefore could not detect missing share-report dependencies or a missing canonical `WEB_BASE_URL`.
+
+### Fail-before evidence
+
+The defect was decomposed into four narrow fail-before checks rather than one broad speculative patch:
+
+1. Production Security / `32363518780` — FAIL exactly because service-role fallback still existed.
+2. Production Security / `32364388187` — FAIL exactly because RC1 Release Acceptance did not run the share-report security contract.
+3. Production Security / `32364742513` — FAIL exactly because business-health lacked a boolean share-report readiness signal.
+4. Production Security / `32365165728` — FAIL exactly because readiness did not require `WEB_BASE_URL`.
+
+Expected fail-before failures are evidence for this one underlying product/security badcase; they are not four additional badcases.
+
+### Fix
+
+Key commits:
+
+- `173530bdc5ea34abcea65d00700b145fc7cf88db` — require dedicated `SHARE_TOKEN_SECRET`; remove service-role fallback.
+- `8f9bccf3dc7ba85688c9d727dc551cd3898b60d6` — add `test:share-report-contract` to RC1 Release Acceptance.
+- `6f4f402414d36296a17b3087ed8ce4e550ba5208` — expose boolean-only `shareReportsConfigured` in business-health and require it in post-deploy smoke.
+- `1da62bb1ce11098ce38a489e6a7b95bc40995178` — require `WEB_BASE_URL` as part of share-report readiness.
+
+`shareReportsConfigured` is true only when business database configuration, service-role access, dedicated signing secret, and canonical web base URL are all present. The health response never includes secret values.
+
+### Final evidence
+
+Clean head:
+
+- `1da62bb1ce11098ce38a489e6a7b95bc40995178`
+
+Verified workflows:
+
+- Production Security Boundary V1 / `32365318251` — **PASS**;
+- Result UX V1 / `32365318222` — **PASS**;
+- Plant Roster Edit Fix / `32365318305` — **PASS**;
+- Compatibility Stage Risk V1 / `32365318290` — **PASS**.
+
+Security PASS includes share-report security/release/deployment source contracts plus API type, API boundary and business API checks.
+
+### Deployment caveat
+
+The connected Vercel account exposed the team but returned no projects through the available project listing. Therefore this repair does **not** claim that the real target environment already has `SHARE_TOKEN_SECRET` or `WEB_BASE_URL` configured.
+
+The deployed environment must still pass `RC1 Post-Deploy Smoke`, which now requires `shareReportsConfigured:true`.
+
+### Guardrail
+
+High-privilege infrastructure credentials must not be reused as convenience fallbacks for application signing/encryption purposes. A missing dedicated secret should fail closed.
+
+Release readiness and deployment readiness are different contracts: source code can require the right environment variables, but a post-deploy capability check must prove that the actual runtime has them without exposing their values.
 
 ## PUI-BC-054 · AI Tank Copilot quick action existed but could not open the real Copilot
 
@@ -29,15 +110,7 @@ The feature therefore looked available while its real task surface was unreachab
 
 ### Root cause
 
-`openTankBuildCopilot()` dispatched:
-
-`aquaguide:feature-preview`
-
-instead of opening the existing Copilot state with:
-
-`setIsTankCopilotOpen(true)`.
-
-The product had both the entry and the implementation, but the entry was still wired to preview semantics.
+`openTankBuildCopilot()` dispatched `aquaguide:feature-preview` instead of opening the existing Copilot state with `setIsTankCopilotOpen(true)`.
 
 ### Fail-before evidence
 
@@ -47,39 +120,29 @@ The product had both the entry and the implementation, but the entry was still w
 - Tank Copilot deterministic boundary contract — PASS;
 - TypeScript / production build — PASS;
 - all six earlier Result UX browser consumers — PASS;
-- Tank Copilot browser step — FAIL waiting for the real `AI 建缸助手` dialog after clicking the live entry.
-
-This isolated reachability as a real product defect rather than a Copilot policy/model failure.
+- Tank Copilot browser step — FAIL waiting for the real dialog after clicking the live entry.
 
 ### Fix
 
 Product migration `582e9e341b0231ae30c6d37fa6536ef0d0498de7`:
 
-- connects the visible quick action directly to the real Copilot dialog state;
-- keeps deterministic Copilot sanitization unchanged;
-- migrates generated output to shared `DecisionResultSurface`;
-- makes the locally controlled next action first-screen primary;
-- moves model interpretation/plan text behind disclosure;
+- connects the visible quick action to the real Copilot dialog;
+- preserves deterministic sanitization;
+- uses shared `DecisionResultSurface`;
+- keeps locally controlled next action primary;
+- puts model interpretation behind disclosure;
 - labels model-originated supporting context as `candidate`, never Verified;
-- adds an explicit AI/local-rule authority boundary.
+- makes the AI/local-rule authority boundary explicit.
 
 ### Final evidence
 
-Clean head:
-
-- `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`
-
-Verified workflows:
-
-- Result UX V1 / run `32359908856` — **PASS**, including live Tank Copilot entry + AI-authority browser regression;
-- Plant Roster Edit Fix / run `32359908896` — **PASS**;
-- Compatibility Stage Risk V1 / run `32359909061` — **PASS**.
+- Result UX V1 / `32359908856` — PASS including live Tank Copilot entry + authority regression;
+- Plant / `32359908896` — PASS;
+- Stage Risk / `32359909061` — PASS.
 
 ### Guardrail
 
-A user-visible feature entry must be browser-tested through the real product navigation path. The existence of an implementation, component, modal, service or README claim is not evidence that the feature is actually reachable.
-
-For AI features specifically, reachability and authority are separate contracts: the feature must open, and once open its model output must still remain subordinate to deterministic product safety rules.
+A user-visible feature entry must be browser-tested through the real product path. Existence of an implementation or README claim is not evidence that the feature is reachable. For AI features, reachability and authority are separate contracts.
 
 ## PUI-BC-053 · Reload persistence test re-seeded the original fixture and manufactured a false regression
 
@@ -91,64 +154,22 @@ For AI features specifically, reachability and authority are separate contracts:
 
 ### Symptom
 
-The browser regression for legacy `plants[]` data appeared to show:
-
-`1株 → edit → 2株 → reload → back to 1株`
-
-At first glance this looked like a product persistence or React state-sync failure.
-
-### Evidence that disproved the product-bug hypothesis
-
-Diagnostics captured immediately after save proved all relevant product state had already moved to `2`:
-
-- structured record quantity = `2`;
-- first batch quantity = `2`;
-- legacy `plants[]` mirror still referenced the correct plant species;
-- visible roster snapshot already contained `共 2株`.
-
-Therefore the product save path was not losing the edit before reload.
+The browser regression for legacy `plants[]` data appeared to show `1株 → edit → 2株 → reload → back to 1株`.
 
 ### Root cause
 
-The test helper used `context.addInitScript()` to seed localStorage and session state, but the script unconditionally executed:
+The test helper used `context.addInitScript()` to clear/reseed localStorage on every navigation/reload. The evaluator destroyed the persisted state it intended to verify.
 
-- `localStorage.clear()`;
-- original fixture write.
+### Fix / evidence
 
-Playwright runs init scripts on navigation/reload. The test therefore saved `2株`, then `reload()` itself cleared that persisted state and re-injected the original `1株` fixture.
+A per-browser-context `sessionStorage` sentinel now seeds once and returns early later.
 
-The evaluator destroyed the state it was attempting to verify.
-
-### Fix
-
-The fixture now uses a per-browser-context `sessionStorage` sentinel:
-
-- seed storage once for the context;
-- mark `aquaguide_fixture_seeded = 1`;
-- return early on subsequent reload/navigation in the same context.
-
-Reload now observes the product’s persisted state instead of overwriting it.
-
-### Evidence
-
-Implementation/evaluator fix head:
-
-- `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`
-
-Verified workflow:
-
-- Plant Roster Edit Fix / run `32338616480` — PASS
-  - Plant livestock contract — PASS
-  - Type check — PASS
-  - Production build — PASS
-  - Plant quantity/edit browser regression — PASS
-  - Existing navigation-context regression — PASS
+- evaluator fix head: `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`;
+- Plant Roster Edit Fix / `32338616480` — PASS including reload persistence and Navigation Context.
 
 ### Guardrail
 
-Do not change product persistence logic solely to satisfy a reload test until the fixture proves it does not mutate or reseed the state under test.
-
-The previously proposed local-aquarium load-race hypothesis was disproved and its temporary self-modifying workflow/script were removed. Do not revive that patch without new independent product evidence.
+Do not change product persistence solely to satisfy reload tests until the fixture proves it does not mutate the state under measurement.
 
 ## PUI-BC-052 · Aquarium child detail closed to the wrong parent level
 
@@ -162,15 +183,13 @@ The previously proposed local-aquarium load-race hypothesis was disproved and it
 
 `Aquarium → livestock roster → Species Detail → close` returned to the broad Aquarium page rather than reopening the immediate parent roster.
 
-### Fix
+### Fix / evidence
 
-Roster-scoped return context now records the originating record/fish and roster scroll, waits for the child detail exit to complete, reopens only the matching parent roster, restores its internal scroll, and returns focus to the original profile button.
+Roster-scoped return context records originating record/fish + roster scroll, reopens only the matching parent roster after child exit, restores scroll and returns focus to the original profile button.
 
-### Evidence
-
-- True fail-before: Navigation Context #5 / run `32281408153`.
-- Product fixes: `28fb8a796bfd1b6b290daf74284945296daff9a3` + `dbf5546e99306ba078a723115451dcf12123a3b7`.
-- Final combined verification: Navigation Context V1 #9 / run `32282629416` — PASS.
+- true fail-before: Navigation Context #5 / `32281408153`;
+- product fixes: `28fb8a796bfd1b6b290daf74284945296daff9a3` + `dbf5546e99306ba078a723115451dcf12123a3b7`;
+- final Navigation Context #9 / `32282629416` — PASS.
 
 ## PUI-BC-051 · Search deep-result return lost expanded-list context
 
@@ -182,18 +201,16 @@ Roster-scoped return context now records the originating record/fish and roster 
 
 ### Symptom
 
-After explicit “View all”, opening a deep Species/Care result and returning from detail collapsed the list; the original result no longer existed in the DOM, so source-ID focus restoration could not work.
+After explicit “View all”, opening a deep Species/Care result and returning collapsed the list, removing the original result from the DOM and breaking exact focus/scroll restoration.
 
-### Fix
+### Fix / evidence
 
-Search return context now preserves query, source ID, Species/Care expansion state and workspace scroll. It restores list structure first, then exact scroll + focus, and clears stale context when query changes.
+Search return context preserves query, source ID, Species/Care expansion state and workspace scroll, restores list structure first, then exact scroll/focus.
 
-### Evidence
-
-- Fail-before: Navigation Context V1 #1 / run `32280048039`.
-- Product fix: `9feaac4d90fef5ce2e4665154f9554759e15f591`.
-- Evaluator correction: `7a736ef6349b4b77dceaf240c1fc61f96f769b98`.
-- Final combined verification: Navigation Context V1 #9 / run `32282629416` — PASS.
+- fail-before Navigation Context #1 / `32280048039`;
+- fix `9feaac4d90fef5ce2e4665154f9554759e15f591`;
+- evaluator correction `7a736ef6349b4b77dceaf240c1fc61f96f769b98`;
+- final Navigation Context #9 / `32282629416` — PASS.
 
 ## PUI-BC-050 · Risk review jumped directly into Compatibility and deep-scrolled Atlas
 
@@ -205,16 +222,14 @@ Search return context now preserves query, source ID, Species/Care expansion sta
 
 ### Symptom
 
-For unsuitable / caution species, the first risk action jumped directly to the full Compatibility calculator; entering Compatibility could also deep-scroll the underlying Atlas surface.
+For unsuitable/caution species, the first risk action jumped directly to the full Compatibility calculator, and Compatibility could deep-scroll the underlying Atlas.
 
-### Fix
+### Fix / evidence
 
-Risk review is now two-stage: first action expands in-context Compatibility evidence without changing route; only an explicit second-stage action enters the full calculator. Compatibility is treated as a top-level working surface and no longer requires deep Atlas anchor scrolling.
+Risk review is two-stage: first expand in-context Compatibility evidence; only explicit second-stage action enters full calculator. Compatibility is a top-level working surface.
 
-### Evidence
-
-- Product fixes: `d91a227a58ea6383a2f654d70b54d946f0d2f121` + `0c0189edb9dd707a8e83409dee15b3705ef78d29`.
-- UI UX System Refactor V1 #69 / run `32275254732` — PASS.
+- fixes `d91a227a58ea6383a2f654d70b54d946f0d2f121` + `0c0189edb9dd707a8e83409dee15b3705ef78d29`;
+- UI UX System Refactor V1 #69 / `32275254732` — PASS.
 
 ## PUI-BC-049 · Golden comparator 1024 cross-language rounding false failure
 
@@ -223,7 +238,7 @@ Risk review is now two-stage: first action expands in-context Compatibility evid
 - **rootCauseLayer:** `evaluation_contract`
 - **status:** `regression_verified`
 
-Python banker’s rounding and JavaScript `Math.round()` disagreed on an approved thumbnail dimension. `manifest.json` thumbnail dimensions are now authoritative. This was evaluator drift, not UI drift.
+Python banker’s rounding and JavaScript `Math.round()` disagreed on approved thumbnail geometry. `manifest.json` dimensions are now authoritative. This was evaluator drift, not UI drift.
 
 ## Prior UI/UX closure retained
 
@@ -245,19 +260,22 @@ Python banker’s rounding and JavaScript `Math.round()` disagreed on an approve
 - Scroll restoration is part of navigation correctness.
 - Nested task surfaces must restore the immediate parent task before broader page context.
 - Browser code inside `waitForFunction/evaluate` must be plain browser-valid JavaScript.
-- Reload/persistence tests must prove their fixture does not mutate the persisted state being measured.
-- Closed disclosure content must be read from DOM text when the test is verifying retained hidden content; `innerText()` only reflects rendered text.
+- Reload/persistence tests must prove their fixture does not mutate persisted state.
+- Closed disclosure content should use DOM text when verifying retained hidden content.
+- Security-sensitive credentials must have one explicit role; missing dedicated secrets fail closed.
+- Release source contracts do not prove deployed environment configuration; use runtime health/post-deploy smoke.
 - Canonical product badcase updates remain append-only unless a separately justified correction is required.
 
 ## Canonical registry note
 
-PUI-BC-053 is recorded here as an **evaluator-only** badcase. Do not automatically append it to `evaluation/product/badcases.v1.jsonl` until the registry’s intended scope for evaluator failures is explicitly checked.
+PUI-BC-053 is evaluator-only and should not be mixed into a product-only canonical registry by convenience.
 
-PUI-BC-054 is a genuine product badcase, but this handoff does not claim it has been appended to the canonical JSONL registry unless that registry is separately inspected and updated.
+PUI-BC-054 and PUI-BC-055 are genuine product/security badcases, but this document does not claim they have been appended to `evaluation/product/badcases.v1.jsonl`. Any canonical append must be separately inspected, observable and append-only.
 
 ## Non-claims
 
 - PR #105 remains Draft.
 - No merge to RC1/main.
 - No production deploy.
-- Browser evidence is deterministic PR regression evidence, not production telemetry.
+- Repository CI evidence is not production telemetry.
+- The current Vercel connector could not verify actual project environment-variable configuration.
