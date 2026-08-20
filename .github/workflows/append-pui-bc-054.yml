@@ -1,9 +1,9 @@
 name: Append PUI-BC-054
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/result-ux-v1
+      - agent/uiux-system-refactor-v1
 
 permissions:
   contents: write
