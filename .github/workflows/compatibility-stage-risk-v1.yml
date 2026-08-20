@@ -6,7 +6,7 @@ on:
       - agent/uiux-system-refactor-v1
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate-stage-risk:
@@ -16,49 +16,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: agent/result-ux-v1
-          fetch-depth: 0
-
-      - name: Guarded same-species stage-risk migration
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('scripts/migrate-same-species-stage-risk.py')
-          text = path.read_text()
-          old = "'src/lib/tankCompatibilityEngine.ts': ['candidateLifeStage', 'life_stage_evidence_unreviewed', 'conspecific_fry_predation'],"
-          new = "'src/lib/tankCompatibilityEngine.ts': ['candidateLifeStage', 'life_stage_evidence_unreviewed', 'reviewedStageRisk.riskType'],"
-          if old not in text:
-              raise SystemExit('stage-risk guard correction anchor missing')
-          path.write_text(text.replace(old, new, 1))
-          PY
-          python3 scripts/migrate-same-species-stage-risk.py
-          git checkout -- scripts/migrate-same-species-stage-risk.py
-          if git diff --quiet -- \
-            src/types.ts \
-            packages/contracts/src/business.ts \
-            src/data/compatibilityEvidence.ts \
-            src/lib/tankCompatibilityEngine.ts \
-            src/services/aquarium/species-addition.service.ts; then
-            exit 0
-          fi
-          changed="$(git diff --name-only | sort)"
-          expected="$(printf '%s\n' \
-            packages/contracts/src/business.ts \
-            src/data/compatibilityEvidence.ts \
-            src/lib/tankCompatibilityEngine.ts \
-            src/services/aquarium/species-addition.service.ts \
-            src/types.ts | sort)"
-          test "$changed" = "$expected"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- \
-            src/types.ts \
-            packages/contracts/src/business.ts \
-            src/data/compatibilityEvidence.ts \
-            src/lib/tankCompatibilityEngine.ts \
-            src/services/aquarium/species-addition.service.ts
-          git commit -m "Add same-species life-stage compatibility rules"
-          git push origin HEAD:agent/result-ux-v1
 
       - uses: actions/setup-node@v4
         with:
