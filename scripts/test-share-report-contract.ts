@@ -40,4 +40,16 @@ assert.doesNotMatch(insertLockMigration, /create policy .*insert/i);
 const shareRoute = readFileSync(resolve('apps/api/src/routes/share-reports.ts'), 'utf8');
 assert.match(shareRoute, /const adminClient = getAdminSupabase\(\);[\s\S]*adminClient[\s\S]*\.from\('aquarium_share_reports'\)[\s\S]*\.upsert/);
 
+const apiConfigSource = readFileSync(resolve('apps/api/src/config.ts'), 'utf8');
+assert.match(
+  apiConfigSource,
+  /shareTokenSecret:\s*process\.env\.SHARE_TOKEN_SECRET\s*\|\|\s*''/,
+  'share-report signing must require an explicit SHARE_TOKEN_SECRET',
+);
+assert.doesNotMatch(
+  apiConfigSource,
+  /shareTokenSecret:[^\n]*SUPABASE_SERVICE_ROLE_KEY/,
+  'Supabase service-role credentials must never be reused as the share-token signing secret',
+);
+
 console.log('share report contract: ok');
