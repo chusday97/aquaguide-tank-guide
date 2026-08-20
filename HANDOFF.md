@@ -5,7 +5,7 @@
 - 当前目标：鱼缸首页、物种图鉴和养护指南改为先点对象/先看下一步的互动入口，同时保留传统浏览兜底。首期不改数据库、API、混养规则或 AI 结论。
 - 已新增 `src/components/interactive/InteractiveAquariumHero.tsx`、`SpeciesSceneAtlas.tsx` 与 `KnowledgeSceneExplorer.tsx`，并接入三个正式页面。
 - 已把 `KnowledgeJourney` 展示契约写入 `CONTRACT.md` 与 `src/types.ts`；行动来源仍必须沿用现有文章和规则，`pending` 来源不得冒充已审核。
-- Builder 的 lint/build、隔离浏览器和移动/响应式回归均通过；独立 Critic 与 Evaluator 已 PASS，功能提交为 `5c03448`。下一步只需推送并核对远端 hash。
+- Builder 的 lint/build、隔离浏览器和移动/响应式回归均通过；独立 Critic 与 Evaluator 已 PASS，功能提交为 `5c03448`。远端 `main` 在推送前新增多组重叠 UI PR，自动合并在核心页面与详情表面冲突；为避免覆盖远端改动，本轮已安全推送为 `codex/interactive-knowledge-paths`，待以远端最新 UI 为基线人工整合。
 
 ## 2026-08-09 GitHub main 合并
 
