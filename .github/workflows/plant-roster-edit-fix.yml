@@ -1,0 +1,69 @@
+name: Plant Roster Edit Fix
+
+on:
+  push:
+    branches:
+      - agent/result-ux-v1
+
+permissions:
+  contents: write
+
+jobs:
+  apply-plant-roster-fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/result-ux-v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Apply guarded plant roster fix
+        run: node scripts/automation/apply-plant-roster-edit-fix.mjs
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Plant livestock contract
+        run: node scripts/test-plant-livestock-edit-contract.mjs
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Diff safety
+        run: |
+          git diff --check
+          changed="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' \
+            scripts/test-plant-livestock-edit-contract.mjs \
+            src/components/SpeciesDetailDialogBase.tsx \
+            src/components/aquarium/LivestockBatchCard.tsx \
+            src/components/aquarium/LivestockRosterDialog.tsx \
+            src/components/aquarium/PlantRecordEditor.tsx \
+            src/lib/speciesQuantityUnit.ts \
+            src/pages/Aquarium.tsx | sort)"
+          echo "$changed"
+          test "$changed" = "$expected"
+
+      - name: Commit plant roster fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            scripts/test-plant-livestock-edit-contract.mjs \
+            src/components/SpeciesDetailDialogBase.tsx \
+            src/components/aquarium/LivestockBatchCard.tsx \
+            src/components/aquarium/LivestockRosterDialog.tsx \
+            src/components/aquarium/PlantRecordEditor.tsx \
+            src/lib/speciesQuantityUnit.ts \
+            src/pages/Aquarium.tsx
+          git commit -m "Fix plant quantity units and record editing"
+          git push origin HEAD:agent/result-ux-v1
