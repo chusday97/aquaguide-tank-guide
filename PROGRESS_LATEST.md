@@ -1,4 +1,4 @@
-# AquaGuide Progress — Result UX + Production Readiness
+# AquaGuide Progress — Result UX + Backend Boundary + Knowledge Engine
 
 **Date:** 2026-08-20  
 **Branch:** `agent/result-ux-v1`  
@@ -7,108 +7,146 @@
 
 ## Phase
 
-**Result UX: COMPLETE. Production-security audit: COMPLETE on repository contracts. Product badcase registry: COMPLETE. Stack/release transition: ACTIVE.**
+**Result UX COMPLETE · production-security repository contracts COMPLETE · backend/server Phase 1 COMPLETE · Vercel Preview UNBLOCKED · Knowledge Engine V1 PLANNED.**
 
-## Completed Result UX consumers
+## Current validated head
 
-- [x] Diagnosis
-- [x] Compatibility
-- [x] Knowledge
-- [x] Procedure
-- [x] Species Detail
-- [x] Identification
-- [x] Live AI Tank Copilot
+Head `52018136bea61082dbf34d7aabf8666b0a1a670e`:
 
-## Current authoritative clean baseline
+- [x] Production Security Boundary V1 / `32377216683` — PASS
+- [x] Result UX V1 / `32377216642` — PASS
+- [x] Compatibility Stage Risk V1 / `32377216676` — PASS
+- [x] Plant Roster Edit Fix / `32377216744` — PASS
+- [x] Vercel Preview deployment `HCtZ4JFTKQJC3DEDppenTLzkqh9B` — SUCCESS
 
-Head `363e29bd9a93b4b87f2cd28af1351589a5b84681`:
+## Backend/server Phase 1 — COMPLETE
 
-- [x] Production Security Boundary V1 / `32368279920` — PASS
-- [x] Result UX V1 / `32368279929` — PASS
-- [x] Plant Roster Edit Fix + Navigation Context / `32368279880` — PASS
-- [x] Compatibility Stage Risk V1 / `32368279892` — PASS
+- [x] `apps/api/src/app.ts` no longer imports `server/index.mjs`.
+- [x] `apps/api` creates and owns its own Express app.
+- [x] `/api/v1/*` business router remains unchanged.
+- [x] request-id / error boundary preserved.
+- [x] `TRUST_PROXY_HOPS` preserved.
+- [x] `3mb` JSON boundary preserved.
+- [x] image-recognition route keeps its own `10mb` raw parser.
+- [x] `/api/health` and `/api/v1/health` compatibility response preserved.
+- [x] production API app does not serve frontend `dist`.
+- [x] permanent `test:api-boundary` guard rejects legacy-server/static-dist reintroduction.
+- [x] four permanent gates pass on repaired code head.
+- [x] Vercel no longer blocks this head on the prior 250 MB Function error.
 
-Permanent workflow permissions are read-only.
+Fix commits:
 
-## Production security — CLOSED at repository level
+- `c3937ee5def5fb880af6ff3f6b6b7e233b692d70` — detach API app from legacy server;
+- `52018136bea61082dbf34d7aabf8666b0a1a670e` — add permanent server-boundary regression guard.
 
-### Dedicated secret boundary
+## PUI-BC-056 — CLOSED for authoritative `/api/v1` production boundary
 
-- [x] fail-before `32363518780`: share-report contract detected `SUPABASE_SERVICE_ROLE_KEY` fallback.
-- [x] `173530bdc5ea34abcea65d00700b145fc7cf88db`: `SHARE_TOKEN_SECRET` is required independently.
-- [x] missing dedicated secret follows existing 503 fail-closed behavior.
+The new backend previously mounted itself onto legacy `server/index.mjs`, which also owned legacy AI and static SPA serving. This violated deployment boundaries and was discovered while Vercel reported one Function over the 250 MB uncompressed limit.
 
-### Release gate coverage
+Closure evidence:
 
-- [x] fail-before `32364388187`: RC1 release acceptance omitted share-report security.
-- [x] `8f9bccf3dc7ba85688c9d727dc551cd3898b60d6`: RC1 Release Acceptance runs `test:share-report-contract`.
+- [x] standalone API app implemented;
+- [x] API/security contracts PASS;
+- [x] Vercel Preview SUCCESS.
 
-### Post-deploy readiness
+Exact dependency byte attribution is not claimed without analyzer output. Remaining legacy bridge files are follow-up debt, not part of this Phase 1 closure.
 
-- [x] fail-before `32364742513`: business-health lacked share-report readiness.
-- [x] `6f4f402414d36296a17b3087ed8ce4e550ba5208`: health exposes only boolean `shareReportsConfigured`; post-deploy smoke requires true.
-- [x] fail-before `32365165728`: readiness omitted canonical `WEB_BASE_URL`.
-- [x] `1da62bb1ce11098ce38a489e6a7b95bc40995178`: readiness requires database + service-role + dedicated signing secret + canonical web URL.
+## Remaining legacy server migration — NOT STARTED
 
-### Environment verification limitation
+- [ ] inventory live consumers of `api/ai/chat.js`;
+- [ ] inventory `api/v1/health.js` routing precedence/use;
+- [ ] migrate live AI endpoints into `apps/api/src/ai` / `routes`;
+- [ ] verify equivalent API/browser behavior;
+- [ ] remove legacy bridge imports only after replacement proof;
+- [ ] retire `server/index.mjs` from production dependency graph completely.
 
-- [ ] verify `SHARE_TOKEN_SECRET` in the actual deployment environment.
-- [ ] verify `WEB_BASE_URL` in the actual deployment environment.
-- [ ] run RC1 Post-Deploy Smoke against the deployed URL.
+## Knowledge Engine V1 — planned
 
-The connected Vercel team was visible but its project listing returned empty, so these environment checks are not claimed complete.
+Current state: structured Supabase domain DB + reviewed evidence-source relations + user aquarium state. Classic document ingestion/chunking/vector retrieval is not yet the core retrieval architecture.
 
-## Product badcase governance — CLOSED
+### P0 provenance/versioning
 
-- [x] PUI-BC-054 canonicalized in `evaluation/product/badcases.v1.jsonl` with featureId `tank_copilot`.
-- [x] PUI-BC-055 canonicalized with featureId `share_report`.
-- [x] `share_report` added to `evaluation/product/feature-states.v1.json` with six required states.
-- [x] PUI-BC-053 remains evaluator-only and intentionally excluded from the product registry.
-- [x] append-only migration verified by `npm run test:product-evaluation`.
-- [x] one-time write migration removed; Security gate restored to `contents: read`.
+- [ ] `evidence_source_versions`
+- [ ] `evidence_chunks`
+- [ ] `knowledge_claims`
+- [ ] `claim_evidence`
+- [ ] exact claim → evidence traceability
 
-Canonical registry product commit: `e59a73ab85ba1f72a562c511675cc776aeb1725c`.  
-Clean read-only verification head: `363e29bd9a93b4b87f2cd28af1351589a5b84681`.
+### P1 ingestion/freshness
 
-## Integration audit
+- [ ] trusted-source registry
+- [ ] fetch/parse pipeline
+- [ ] content hash + diff
+- [ ] candidate-claim extraction
+- [ ] explicit review gate before rule/fact publication
+- [ ] freshness/source-health states
 
-- [x] #104 pre-merge topology clean against RC1 at audit time.
-- [x] #105 pre-merge topology clean against #104 at audit time.
-- [x] no submitted review / unresolved thread blocker found on #104/#105 at audit time.
-- [x] post-retarget workflow trigger gap fixed in `a8e402b0f6b6d83dbed5927ca39e7507fd232548`.
-- [x] all four permanent #105 workflows support the RC1 target and remain read-only.
+### P4 evaluation baseline — before broad vector rollout
 
-## Correct stacked transition
+- [ ] retrieval golden set
+- [ ] expected facts/sources/chunks
+- [ ] Recall@K / evidence hit rate
+- [ ] citation correctness
+- [ ] unsupported-claim rate / groundedness
+- [ ] deterministic decision consistency
+- [ ] stale-source detection
+- [ ] latency tracking
+
+### P2 hybrid retrieval
+
+- [ ] semantic embedding/index only after P0/P1 contracts
+- [ ] SQL structured retrieval
+- [ ] keyword/full-text retrieval
+- [ ] vector evidence retrieval
+- [ ] metadata/review/freshness filters
+- [ ] reranking
+
+### P3 grounded result
+
+- [ ] deterministic decision remains authoritative
+- [ ] retrieved reviewed evidence feeds AI explanation
+- [ ] exact citations on Result UX disclosure
+- [ ] candidate inference separated from verified facts
+
+### P5 knowledge operations
+
+- [ ] source freshness queue
+- [ ] source diff review
+- [ ] claim approval/rejection
+- [ ] evidence coverage gaps
+- [ ] stale/low-confidence rule queue
+- [ ] version rollback
+- [ ] retrieval badcase/eval dashboard
+
+## Existing completed product/security work retained
+
+- [x] seven Result UX consumers complete;
+- [x] PUI-BC-054 Tank Copilot reachability closed;
+- [x] PUI-BC-055 share-report secret/release/readiness boundary closed;
+- [x] machine product badcase registry append-only contract retained;
+- [x] share-report six-state feature contract retained.
+
+## Vercel configuration
+
+Preview-only variables currently configured by the project owner:
+
+- `VERCEL_SUPPORT_LARGE_FUNCTIONS=1`
+- `VERCEL_ANALYZE_BUILD_OUTPUT=1`
+
+Git-driven deployments are enabled on the branch. This is a Preview policy; it is not authorization to deploy Production.
+
+## Stack transition — still pending
 
 - [ ] explicit #104 review/merge decision
 - [ ] merge #104 to RC1 only after authorization
 - [ ] retarget #105 to RC1
-- [ ] inspect new merge-base after the actual parent merge method
-- [ ] reconcile legitimate behind/diverged ancestry if needed
-- [ ] confirm no unresolved conflicts / duplicated parent changes
-- [ ] rerun four #105 permanent gates on RC1 target
+- [ ] inspect/reconcile actual new ancestry
+- [ ] rerun four permanent gates on RC1 target
 - [ ] separate #105 review/merge decision
-- [ ] explicit deployment-policy decision
-- [ ] deployed environment + post-deploy smoke verification
-
-#105 remains Draft while #104 is open.
-
-## Vercel deployment policy
-
-`vercel.json` contains `git.deploymentEnabled: false` on #105.
-
-- [ ] retain manual/milestone deployment; **or**
-- [ ] deliberately restore Git-driven deployment before production.
-
-No automatic choice has been made.
-
-## Non-blocking debt
-
-- 18 npm audit findings (2 low, 6 moderate, 10 high)
-- mixed static/dynamic data imports
-- large build chunks
-- inherited wrapper/Base structure
+- [ ] verify real Production environment (`SHARE_TOKEN_SECRET`, `WEB_BASE_URL`, server-only service role)
+- [ ] Production deploy only after authorization
+- [ ] RC1 post-deploy smoke
 
 ## Current judgment
 
-**No known Result UX, product-registry, or repository-level production-security blocker remains on the current branch. Remaining blockers are ordered stack transition, actual deployment-environment configuration, explicit deployment policy, and explicit merge/deploy authorization.**
+**The prior 250 MB Preview blocker is closed on the current repaired code head. The next architecture work is no longer emergency deployment repair; it should be either controlled legacy-server Phase 2 migration or the separately scoped Knowledge Engine P0 provenance design.**

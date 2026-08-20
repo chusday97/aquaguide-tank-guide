@@ -1,233 +1,278 @@
-# AquaGuide Handoff — Result UX + Production Readiness
+# AquaGuide Handoff — Result UX + Backend Boundary + Knowledge Engine
 
 **Date:** 2026-08-20  
 **Branch:** `agent/result-ux-v1`  
 **PR:** #105 `Introduce decision-first Result UX V1`  
 **Parent PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
-**Latest fully validated product baseline:** `9f82b54ef1772239bbb4c37aa296f95f3edc7f18`  
-**Current branch head before this handoff sync:** `22366a1affc70ee7f8364ae47c47867859776436`
+**Latest fully validated code head:** `52018136bea61082dbf34d7aabf8666b0a1a670e`
 
 ## Current state
 
-Result UX, lifecycle/plant regressions, production-security contracts, and machine-readable badcase governance are complete. PR #105 remains **open / mergeable / Draft / not merged**. No production deployment has been performed.
+Result UX, plant/navigation regression coverage, life-stage compatibility, product badcase governance, repository-level share-report security, and **Phase 1 backend/server boundary repair** are complete on the current stacked branch.
 
-Verified live Result UX consumers:
+PR #105 remains **open / mergeable / Draft / unmerged**. No Production deployment or merge is authorized.
 
-1. Diagnosis — DONE
-2. Compatibility — DONE
-3. Knowledge — DONE
-4. Procedure — DONE
-5. Species Detail — DONE
-6. Identification — DONE
-7. Live AI Tank Copilot — DONE
+## Current validated gate matrix
 
-## Authoritative clean gate matrix
+Head `52018136bea61082dbf34d7aabf8666b0a1a670e`:
 
-Latest fully validated baseline `9f82b54ef1772239bbb4c37aa296f95f3edc7f18`:
+- Production Security Boundary V1 / `32377216683` — **PASS**
+- Result UX V1 / `32377216642` — **PASS**
+- Compatibility Stage Risk V1 / `32377216676` — **PASS**
+- Plant Roster Edit Fix / `32377216744` — **PASS**
 
-- Production Security Boundary V1 / `32368840837` — **PASS**
-- Result UX V1 / `32368840832` — **PASS**
-- Plant Roster Edit Fix / `32368840889` — **PASS**
-- Compatibility Stage Risk V1 / `32368840922` — **PASS**
+Production Security includes `check:api`, `test:api-boundary`, `test:business-api-contract`, product-evaluation governance and share-report security. The API boundary test now permanently guards the standalone production API server boundary.
 
-Permanent CI permissions remain `contents: read`.
+## Vercel Preview — UNBLOCKED
 
-## Product badcase registry — CLOSED
+Git-driven Preview was deliberately restored earlier by commit `22366a1affc70ee7f8364ae47c47867859776436`.
 
-The machine-readable product registry includes:
+Fail-before state: Vercel reported `1 function exceeded the uncompressed maximum size of 250 MB` on the branch after Git Preview was restored.
 
-- `PUI-BC-054` → `tank_copilot`;
-- `PUI-BC-055` → `share_report`.
-
-`evaluation/product/feature-states.v1.json` contains the six-state `share_report` contract. `PUI-BC-053` remains evaluator-only and intentionally excluded.
-
-Registry product commit: `e59a73ab85ba1f72a562c511675cc776aeb1725c`.
-
-## Production security closure — PUI-BC-055
-
-Repository-level security closure remains valid:
-
-1. dedicated `SHARE_TOKEN_SECRET` only — no service-role fallback;
-2. RC1 release acceptance enforces the share-report contract;
-3. `/api/v1/business-health` exposes boolean `shareReportsConfigured`;
-4. readiness requires database config + service-role + dedicated signing secret + canonical `WEB_BASE_URL`.
-
-Production must still pass `RC1 Post-Deploy Smoke`, including `shareReportsConfigured:true`.
-
-## Vercel Preview policy — CHANGED INTENTIONALLY
-
-The prior repair policy `vercel.json -> git.deploymentEnabled: false` was deliberately removed on commit:
-
-`22366a1affc70ee7f8364ae47c47867859776436` — `Restore Vercel preview deployments`
-
-This restores Git-driven Vercel deployments for the branch. It was an explicit Preview decision, not a production deploy decision.
-
-GitHub status now identifies the connected Vercel project as `aquaguide` and the push generated a Vercel deployment attempt. That deployment failed before a usable Preview URL was produced.
-
-### Current Preview blocker
-
-Vercel reports the **Function 250 MB size limit** as the deployment blocker.
-
-This is not currently treated as evidence that the frontend site itself is 250 MB. The relevant problem is the serverless function dependency/output bundle.
-
-Recommended Preview-only diagnostic flags in Vercel project environment settings:
+Preview-only project variables were configured by the project owner:
 
 - `VERCEL_SUPPORT_LARGE_FUNCTIONS=1`
 - `VERCEL_ANALYZE_BUILD_OUTPUT=1`
 
-Use them for **Preview only**, then redeploy to obtain real function-size/dependency output before making deeper bundle claims.
+Phase 1 server-boundary repair then produced a successful Vercel deployment for head `52018136...` (`HCtZ4JFTKQJC3DEDppenTLzkqh9B`). The previous 250 MB Preview blocker is therefore closed at deployment level for this head.
 
-## Current architecture — clarified
+Do not over-attribute the exact byte reduction without the analyzer breakdown: the successful deployment follows both the Preview environment configuration and the dependency-boundary repair. However, the architectural defect itself was real and is now permanently guarded.
 
-AquaGuide does have a backend. The current system should be understood as:
+## Architecture — current authoritative model
+
+AquaGuide is a full Web application, not a frontend-only or Supabase-only project:
 
 ```text
-React / Vite frontend
-  ├─ Supabase Auth (browser session / access token)
-  └─ /api/v1/*
-       ↓
-Vercel Functions (server runtime)
-       ↓
-AquaGuide backend: apps/api/src
-  ├─ auth / HTTP boundary
-  ├─ business routes
-  ├─ AI orchestration
-  ├─ admin / share reports / feedback
-  └─ Supabase clients
-       ↓
-Supabase PostgreSQL + Auth
-External: DeepSeek / Vision / Resend
+01 Frontend / Presentation
+React + Vite (`src/`)
+        ↓
+02 Application client
+frontend services + `src/services/api/api-client.ts`
+        ↓
+03 Backend
+`apps/api/src`
+Auth + HTTP contracts + business routes + AI orchestration
+        ↓ runs on
+04 Server runtime
+Vercel Functions
+        ↓
+05 Data / infrastructure
+Supabase PostgreSQL + Auth + Storage
+DeepSeek / Vision / Resend
 ```
 
-Layer meanings:
+Supabase supplies database/auth/storage infrastructure; it is not a replacement for AquaGuide's own backend.
 
-- **Frontend:** `src/` — React UI, client-side services and interaction;
-- **Frontend API SDK:** `src/services/api/api-client.ts` — calls `/api/v1/*` and forwards the Supabase access token;
-- **Backend:** `apps/api/src/` — business logic, authorization, API contracts, AI orchestration;
-- **Server/runtime:** Vercel Functions — where backend code executes;
-- **Database/auth infrastructure:** Supabase — PostgreSQL, Auth, user/public/admin data access;
-- **External services:** DeepSeek / Vision / Resend.
+## PUI-BC-056 — production API depended on the legacy all-in-one server
 
-Supabase is therefore not a replacement for the backend. It supplies database/auth infrastructure; AquaGuide still needs its own server-side business/API layer.
-
-## Architecture debt discovered during Preview debugging
-
-The main server-boundary problem is not the existence of a catch-all route by itself. The stronger problem is the dependency direction:
+### Original dependency
 
 ```text
 api/v1/[...path].ts
   ↓
 apps/api/src/app.ts
   ↓
-server/index.mjs   ← legacy server
+server/index.mjs
+  ├─ legacy AI routes / prompt logic
+  ├─ Express server setup
+  ├─ static `dist` serving
+  └─ SPA fallback
 ```
 
-`apps/api/src/app.ts` currently imports the legacy `server/index.mjs` and mounts the new `v1Router` onto it.
+This reversed the intended dependency direction: the new authoritative backend was mounted onto the old all-in-one server. It also made unrelated static/legacy concerns eligible for Vercel Function dependency tracing.
 
-The legacy server is not a pure backend module. It also contains:
+### Phase 1 fix
 
-- Express server setup;
-- legacy AI routes / prompt logic;
-- static `dist` serving;
-- SPA fallback handling.
+- `c3937ee5def5fb880af6ff3f6b6b7e233b692d70` — `Detach API app from legacy server`
+- `52018136bea61082dbf34d7aabf8666b0a1a670e` — `Guard standalone API server boundary`
 
-That means the production API dependency tree can pull legacy server concerns back into the Vercel Function. This is a plausible contributor to oversized function output and is an architecture issue even if it is not the sole 250 MB cause.
+`apps/api/src/app.ts` now:
 
-Additional duplicate legacy entry points remain, including paths such as:
+- creates its own `express()` app;
+- preserves `TRUST_PROXY_HOPS` behavior;
+- preserves the existing `3mb` JSON parser boundary;
+- keeps `/api/health` and `/api/v1/health` compatibility responses;
+- mounts the existing `/api/v1` router unchanged;
+- keeps existing request-id / structured error behavior;
+- does **not** import `server/index.mjs`;
+- does **not** serve frontend `dist`.
+
+No frontend UI, Supabase schema, deterministic domain rule, security rule, or public `/api/v1/*` business contract was changed.
+
+`test:api-boundary` now statically rejects reintroduction of `server/index.mjs` or static-dist ownership into the production API app, in addition to its existing runtime API assertions.
+
+### Remaining legacy debt
+
+Phase 1 does not claim complete legacy-server retirement. Separate bridge entries still exist, notably:
 
 - `api/ai/chat.js -> server/index.mjs`;
 - `api/v1/health.js -> server/index.mjs`.
 
-## Recommended backend/server refactor order
+These should be migrated only in Phase 2 after confirming their live consumers and replacement routes. Do not delete them opportunistically.
 
-Do **not** start by splitting every endpoint into a separate Vercel Function.
+## Current database / knowledge architecture
 
-### Phase 1 — detach the new backend from legacy server
+AquaGuide's knowledge layer is **not currently a classic vector-RAG knowledge base**. It is stronger on structured domain decisions and weaker on ingestion/retrieval infrastructure.
 
-Target:
+Current Supabase model contains three important knowledge/data classes:
 
-```text
-api/v1/[...path].ts
-  ↓
-apps/api/src/app.ts
-  ↓
-express() + v1Router
-```
+1. **Structured domain knowledge** — species, feeding profiles, care articles/steps, compatibility profiles/rules and assets;
+2. **Evidence provenance** — `evidence_sources`, compatibility-rule/source joins and care-article reference links with review state;
+3. **User state / business data** — profiles, aquariums, livestock, equipment, diagnosis, reminders, favorites, memorial/history records.
 
-`apps/api/src/app.ts` should create and own its own Express app. Production `/api/v1` must no longer import `server/index.mjs` or static `dist` handling.
+Current content ingestion is primarily repository-driven (`fishData`, `careTopicsData` → `scripts/content-import/import-catalog.ts` → Supabase). Search is predominantly relational/field search rather than chunk/embedding semantic retrieval.
 
-Keep the public API contract `/api/v1/*` unchanged.
+## Upgrade plan — Evidence-backed Vertical Knowledge Engine V1
 
-### Phase 2 — migrate remaining legacy AI/server responsibilities
-
-Move live AI endpoints and orchestration still living in `server/index.mjs` into `apps/api/src/ai` / `apps/api/src/routes`.
-
-Remove bridge entries that import the legacy server once equivalent new routes are verified.
-
-Keep `server/index.mjs` only as a local-development compatibility layer until it can be retired completely.
-
-### Phase 3 — remeasure the Vercel function bundle
-
-After Phase 1/2:
-
-1. rerun TypeScript/build/API contracts;
-2. rerun the four permanent #105 gates;
-3. redeploy Preview with build-output analysis;
-4. inspect actual Function size and dependency contributors.
-
-Only if the cleaned catch-all remains materially oversized should `/api/v1` be split into a few deployment domains such as core / AI / admin/share. Avoid one-function-per-endpoint overengineering.
-
-## Target architecture
+Do **not** replace the structured SQL model with a generic PDF/vector store. The target is a hybrid expert system:
 
 ```text
-01 Presentation
-React / Vite / UI
-        ↓
-02 Application client
-Frontend services + API client
-        ↓
-03 Backend
-apps/api/src
-Auth + business rules + API + AI orchestration
-        ↓
-04 Runtime
-Vercel Functions
-        ↓
-05 Data / external infrastructure
-Supabase PostgreSQL + Auth
-DeepSeek / Vision / Resend
+Trusted Sources
+      ↓
+Ingestion / Parse / Version / Diff
+      ↓
+┌──────────────────────┬────────────────────────┐
+│ Structured Knowledge│ Unstructured Evidence  │
+│ facts / rules        │ chunks / embeddings    │
+└──────────┬───────────┴────────────┬───────────┘
+           ↓                        ↓
+      deterministic SQL       semantic retrieval
+           └────────────┬───────────┘
+                        ↓
+                Decision Engine
+                        ↓
+                AI Explanation
+                        ↓
+              cited user action
 ```
 
-The immediate optimization goal is to make `apps/api` the single authoritative production backend and remove the reverse dependency on `server/index.mjs`.
+### P0 — provenance granularity
+
+Add a separately scoped schema migration later for:
+
+- `evidence_source_versions` — fetched snapshot, content hash, effective/fetched timestamps;
+- `evidence_chunks` — exact section/chunk text + source-version location;
+- `knowledge_claims` — normalized subject / predicate / value / unit / confidence / review state;
+- `claim_evidence` — exact claim ↔ evidence-chunk support relation.
+
+Goal: every decision-relevant fact can answer **which exact evidence supports this claim**.
+
+### P1 — trusted-source ingestion + freshness
+
+Build a controlled pipeline:
+
+```text
+trusted source registry
+→ fetch
+→ parse
+→ content hash / diff
+→ AI extracts candidate claims
+→ validation + human/review gate
+→ publish structured fact/rule
+```
+
+AI must never automatically overwrite reviewed compatibility/risk rules. Changed sources create candidate updates until review passes.
+
+Add source health/freshness states: `current`, `changed`, `stale`, `fetch_failed`, `review_required`.
+
+### P2 — hybrid retrieval
+
+Only after provenance/versioning exists:
+
+- enable semantic embeddings (Supabase pgvector or an equivalent index);
+- retain SQL/metadata filtering for exact facts and user state;
+- retrieve unstructured evidence semantically;
+- use keyword/full-text fallback;
+- add reranking for top evidence;
+- filter by review status, locale, species/category, source quality and freshness.
+
+Decision authority remains:
+
+```text
+structured reviewed rule > deterministic engine > retrieved evidence > LLM explanation
+```
+
+Vector similarity must never directly decide `canAdd`, risk level or compatibility.
+
+### P3 — grounded generation + citations
+
+AI output should receive:
+
+- deterministic decision;
+- relevant user aquarium state;
+- retrieved reviewed evidence;
+- source metadata.
+
+The result surface should expose exact citations behind progressive disclosure. Model-originated inference remains distinct from verified facts.
+
+### P4 — knowledge / retrieval evaluation
+
+Create a golden evaluation set containing:
+
+- user query;
+- expected structured facts;
+- expected supporting source/chunk;
+- acceptable decision/result;
+- forbidden unsupported claim.
+
+Measure at minimum:
+
+- Recall@K / hit rate for expected evidence;
+- citation correctness;
+- groundedness / unsupported-claim rate;
+- decision consistency with deterministic rules;
+- stale-source detection;
+- retrieval latency.
+
+Keep calculation/scoring deterministic; do not let an LLM invent evaluation metrics.
+
+### P5 — knowledge operations / admin
+
+Add an internal knowledge-maintenance surface after the data contracts stabilize:
+
+- source freshness queue;
+- changed-source diff review;
+- candidate claim approval/rejection;
+- evidence coverage gaps;
+- stale/low-confidence rules;
+- rollback/version history;
+- retrieval badcases and evaluation trend.
+
+This is a knowledge operations console, not a generic CMS.
+
+## Upgrade priority
+
+Recommended order:
+
+1. **P0 provenance + version model**;
+2. **P1 ingestion/freshness**;
+3. **P4 evaluation baseline** before broad semantic rollout;
+4. **P2 hybrid retrieval**;
+5. **P3 grounded answers/citations**;
+6. **P5 knowledge operations console**.
+
+Do not start by adding pgvector alone. A vector index without provenance, freshness and evaluation would make retrieval more flexible but not more trustworthy.
 
 ## Stack / integration state
 
-Current stacked topology remains:
+Current topology remains:
 
 - #104: `integration/aquaguide-rc1` → `agent/uiux-system-refactor-v1`;
 - #105: `agent/uiux-system-refactor-v1` → `agent/result-ux-v1`.
 
-Correct transition remains:
+Correct parent→child transition remains unchanged: explicit #104 merge decision → merge parent → retarget #105 → inspect/reconcile ancestry → rerun permanent gates → review #105 separately → explicit merge/Production-deploy decision.
 
-1. review #104 as its bounded UI/UX-system PR;
-2. merge #104 to RC1 only with explicit authorization;
-3. retarget #105 to RC1;
-4. inspect/reconcile actual new ancestry;
-5. rerun all four permanent #105 gates against RC1;
-6. review #105 separately;
-7. make explicit merge/deploy decisions.
+## Next engineering boundaries
 
-## Non-blocking engineering debt
+Completed now:
 
-- npm audit: 18 findings (2 low, 6 moderate, 10 high);
-- mixed dynamic/static Vite imports;
-- large main / react-three-fiber chunks;
-- wrapper/Base structures inherited from #104.
+- Phase 1: authoritative `apps/api` production backend detached from legacy server;
+- current Vercel Preview blocker closed;
+- Knowledge Engine V1 upgrade sequence documented.
 
-Do not blindly run `npm audit fix` or widen the stack without a validated reason.
+Next optional engineering work should be separately scoped:
 
-## Next engineering action
+1. Phase 2 legacy AI/server migration, beginning with consumer inventory for `api/ai/chat.js` and `api/v1/health.js`; **or**
+2. Knowledge Engine P0 schema/design work.
 
-The next architecture repair should be **Phase 1: make `apps/api/src/app.ts` independent from `server/index.mjs` while preserving `/api/v1/*` behavior and all deterministic/security contracts**.
-
-This is separate from the #104 merge decision. No merge or production deployment is authorized by this handoff update.
+Do not merge #104/#105 or deploy Production without explicit authorization.
