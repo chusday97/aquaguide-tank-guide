@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, useEffect, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Aquarium, AquariumFish, Fish, type SpeciesAdditionIntent } from '../types';
+import { Aquarium, AquariumFish, Fish, type LifeStage, type SpeciesAdditionIntent } from '../types';
 import { fishData } from '../data/fishData';
 import i18n from '../i18n';
 import { getLocalizedAquariumName, englishTranslations } from '../i18n/localizeData';
@@ -1086,7 +1086,7 @@ type CareDiagnosisContext = {
   prepInfo: string[];
 };
 
-type SelectedAddFishItem = { fishId: string; quantity: number; entryDate: string };
+type SelectedAddFishItem = { fishId: string; quantity: number; entryDate: string; lifeStage: LifeStage };
 
 const loadWishlistFishIds = () => {
   return new Set(getSpeciesFavoriteIds());
@@ -2076,6 +2076,7 @@ export default function AquariumManager() {
         ...item,
         quantity: Math.max(1, item.quantity || 1),
         entryDate: item.entryDate || format(new Date(), 'yyyy-MM-dd'),
+        lifeStage: item.lifeStage,
       }));
 
   const openSpeciesAddition = (intent: SpeciesAdditionIntent, speciesId?: string) => {
@@ -2088,7 +2089,7 @@ export default function AquariumManager() {
     setFishSearchTerm('');
     setAddFishCategory('all');
     setSelectedAddFishItems(selectedFish
-      ? [{ fishId: selectedFish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd') }]
+      ? [{ fishId: selectedFish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd'), lifeStage: 'unknown' }]
       : []);
     setIsAddFishOpen(true);
   };
@@ -3826,7 +3827,7 @@ export default function AquariumManager() {
       const fish = fishData.find(candidate => candidate.id === item.fishId);
       return fish ? { ...item, fish } : null;
     })
-    .filter((item): item is { fishId: string; quantity: number; entryDate: string; fish: Fish } => Boolean(item));
+    .filter((item): item is { fishId: string; quantity: number; entryDate: string; lifeStage: LifeStage; fish: Fish } => Boolean(item));
   const selectedAddSpeciesCount = selectedAddFishDetails.length;
   const selectedAddTotalQuantity = selectedAddFishItems.reduce((sum, item) => sum + Math.max(1, item.quantity || 1), 0);
   const todayAddFishDate = format(new Date(), 'yyyy-MM-dd');
@@ -3836,7 +3837,7 @@ export default function AquariumManager() {
     const formatted = format(date, 'yyyy/MM/dd');
     return dateValue === todayAddFishDate ? `今天 · ${formatted}` : formatted;
   };
-  const updateSelectedAddFishItem = (fishId: string, patch: Partial<{ quantity: number; entryDate: string }>) => {
+  const updateSelectedAddFishItem = (fishId: string, patch: Partial<{ quantity: number; entryDate: string; lifeStage: LifeStage }>) => {
     setAddFishCompatibilityReview(null);
     addFishOperationIdRef.current = '';
     setSelectedAddFishItems(prev => prev.map(item => (
@@ -3854,7 +3855,7 @@ export default function AquariumManager() {
       if (prev.some(item => item.fishId === fish.id)) {
         return prev.filter(item => item.fishId !== fish.id);
       }
-      return [...prev, { fishId: fish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd') }];
+      return [...prev, { fishId: fish.id, quantity: 1, entryDate: format(new Date(), 'yyyy-MM-dd'), lifeStage: 'unknown' }];
     });
   };
   const addFishIntro = additionIntent === 'record_existing'
@@ -6601,7 +6602,7 @@ export default function AquariumManager() {
                     )}
                   </div>
                   <p className="mt-0.5 text-[11px] font-medium leading-relaxed text-ink/50">
-                    {selectedAddSpeciesCount > 0 ? (isEn ? 'Confirm quantity and entry date before adding.' : '确认每种生物的数量和入缸日期后再添加。') : (isEn ? 'No species selected yet.' : '还没有选择生物。')}
+                    {selectedAddSpeciesCount > 0 ? (isEn ? 'Confirm life stage, quantity and entry date before adding.' : '确认每种生物的生长阶段、数量和入缸日期后再添加。') : (isEn ? 'No species selected yet.' : '还没有选择生物。')}
                   </p>
                 </div>
 
@@ -6638,6 +6639,20 @@ export default function AquariumManager() {
                           </div>
 
                           <div className="grid gap-2 md:grid-cols-[0.78fr_1.22fr]">
+                            <div className="rounded-[14px] bg-white p-2">
+                              <Label className="text-[10px] font-black text-ink/48">{isEn ? 'Life Stage' : '生长阶段'}</Label>
+                              <select
+                                data-add-fish-life-stage={item.fishId}
+                                value={item.lifeStage}
+                                onChange={(event) => updateSelectedAddFishItem(item.fishId, { lifeStage: event.target.value as LifeStage })}
+                                className="mt-1 h-10 w-full rounded-xl border border-border bg-bg px-3 text-[12px] font-black text-ink outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+                                aria-label={isEn ? `${getSpeciesNameLocalized(item.fish, true)} life stage` : `${item.fish.name} 生长阶段`}
+                              >
+                                {(['unknown', 'fry', 'juvenile', 'subadult', 'adult'] as LifeStage[]).map(stage => (
+                                  <option key={stage} value={stage}>{t(`livestock.lifeStage.${stage}`)}</option>
+                                ))}
+                              </select>
+                            </div>
                             <div className="rounded-[14px] bg-white p-2">
                               <Label className="text-[10px] font-black text-ink/48">{isEn ? "Quantity" : "数量"}</Label>
                               <div className="mt-1 grid h-10 grid-cols-[34px_1fr_34px] items-center gap-1 rounded-full bg-bg p-1">

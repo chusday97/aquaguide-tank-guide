@@ -42,7 +42,7 @@ type Props = {
   onSave: (record: AquariumFish | null) => void | Promise<void>;
 };
 
-const lifeStageOptions: LifeStage[] = ['unknown', 'juvenile', 'adult'];
+const lifeStageOptions: LifeStage[] = ['unknown', 'fry', 'juvenile', 'subadult', 'adult'];
 
 const reproductiveOptions: ReproductiveState[] = ['unknown', 'normal', 'pregnant_or_gravid', 'in_labor_or_spawning', 'postpartum_recovery'];
 
@@ -51,7 +51,9 @@ const summarize = (record: AquariumFish, t: TFunction, fish: Fish, isEn: boolean
   const lifeType = getLifeType(fish);
   const parts = [isEn ? formatSpeciesQuantity(fish, summary.total, true) : '共 ' + formatSpeciesQuantity(fish, summary.total, false)];
   if (lifeType === 'plant' || lifeType === 'hardscape') return parts.join(' · ');
+  if (summary.fry) parts.push(t('livestock.summaryFry', { count: summary.fry }));
   if (summary.juvenile) parts.push(t('livestock.summaryJuvenile', { count: summary.juvenile }));
+  if (summary.subadult) parts.push(t('livestock.summarySubadult', { count: summary.subadult }));
   if (summary.adult) parts.push(t('livestock.summaryAdult', { count: summary.adult }));
   if (summary.pregnant) parts.push(t('livestock.summaryPregnant', { count: summary.pregnant }));
   if (summary.spawning) parts.push(t('livestock.summarySpawning', { count: summary.spawning }));
@@ -156,7 +158,7 @@ export function LivestockBatchCard({
     label: t(`livestock.lifeStage.${option}`),
     icon: option === 'unknown'
       ? <CircleHelp className="h-5 w-5" />
-      : option === 'juvenile'
+      : option === 'fry' || option === 'juvenile'
         ? <Baby className="h-5 w-5" />
         : <FishIcon className="h-5 w-5" />,
   }));

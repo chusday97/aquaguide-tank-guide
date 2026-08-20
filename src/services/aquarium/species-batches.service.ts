@@ -149,7 +149,9 @@ export const summarizeSpeciesBatches = (record: AquariumFish) => {
     .reduce((sum, batch) => sum + batch.quantity, 0);
   return {
     total: count(() => true),
+    fry: count(batch => batch.lifeStage === 'fry'),
     juvenile: count(batch => batch.lifeStage === 'juvenile'),
+    subadult: count(batch => batch.lifeStage === 'subadult'),
     adult: count(batch => batch.lifeStage === 'adult'),
     pregnant: count(batch => batch.reproductiveState === 'pregnant_or_gravid'),
     spawning: count(batch => batch.reproductiveState === 'in_labor_or_spawning'),
@@ -161,7 +163,9 @@ export const summarizeSpeciesBatches = (record: AquariumFish) => {
 export const getSpeciesBatchContextLabel = (record: AquariumFish, isEn: boolean) => {
   const summary = summarizeSpeciesBatches(record);
   const parts: string[] = [];
+  if (summary.fry) parts.push(isEn ? `${summary.fry} fry` : `鱼苗 ${summary.fry}`);
   if (summary.juvenile) parts.push(isEn ? `${summary.juvenile} juvenile` : `幼年 ${summary.juvenile}`);
+  if (summary.subadult) parts.push(isEn ? `${summary.subadult} subadult` : `亚成 ${summary.subadult}`);
   if (summary.adult) parts.push(isEn ? `${summary.adult} adult` : `成年 ${summary.adult}`);
   if (summary.pregnant) parts.push(isEn ? `${summary.pregnant} pregnant/gravid` : `怀孕/抱卵 ${summary.pregnant}`);
   if (summary.spawning) parts.push(isEn ? `${summary.spawning} birthing/spawning` : `生产/繁殖 ${summary.spawning}`);
@@ -174,7 +178,9 @@ export const getSpeciesBatchObservation = (record: AquariumFish, isEn: boolean) 
   if (summary.spawning) return isEn ? 'Observe breathing, isolation, and whether birthing or spawning has finished.' : '观察呼吸、躲藏和生产/繁殖是否结束。';
   if (summary.pregnant) return isEn ? 'Watch appetite, chasing, hiding places, and signs of labor.' : '观察食欲、追咬、躲避空间和临产迹象。';
   if (summary.recovery) return isEn ? 'Watch appetite and energy while keeping water conditions stable.' : '观察食欲与活动量，保持水质稳定。';
-  if (summary.juvenile) return isEn ? 'Check feeding access, growth, and whether larger tank mates are chasing them.' : '观察鱼苗是否吃得到、生长正常，以及是否被大鱼追咬。';
+  if (summary.fry) return isEn ? 'Check fry feeding access, shelter, growth, and whether larger tank mates are chasing or swallowing them.' : '观察鱼苗是否吃得到、是否有足够躲避空间、生长是否正常，以及是否被较大个体追逐或吞食。';
+  if (summary.juvenile) return isEn ? 'Check juvenile feeding access, growth, and whether larger tank mates are chasing them.' : '观察幼年个体是否吃得到、生长正常，以及是否被较大个体追咬。';
+  if (summary.subadult) return isEn ? 'Check subadult growth, feeding competition, and whether territorial pressure is increasing.' : '观察亚成个体的生长、进食竞争，以及领地压力是否增加。';
   return '';
 };
 
