@@ -1,1 +1,1 @@
-Temporary trigger for the guarded Diagnosis Result UX migration. Retry after helper syntax correction; remove after validation.
+Temporary trigger for the guarded Diagnosis Result UX migration. Base refreshed to corrected helper; remove after validation.
