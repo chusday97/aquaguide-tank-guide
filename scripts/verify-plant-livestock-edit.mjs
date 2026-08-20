@@ -213,7 +213,9 @@ try {
   const reloadedRoster = await openRoster(legacyPage);
   const reloadedRow = reloadedRoster.locator(`[data-livestock-record-id="${migratedId}"]`);
   await reloadedRow.waitFor({ state: 'visible' });
-  await reloadedRow.getByText('共 2株', { exact: true }).waitFor();
+  const reloadedRowText = ((await reloadedRow.textContent()) || '').replace(/\s+/g, ' ').trim();
+  assert.match(reloadedRowText, /共 2株/, `reloaded visible plant row must show 2 plants; got: ${reloadedRowText}`);
+  assert.doesNotMatch(reloadedRowText, /共 2(?:只|条|只\/条|条\/只)/, 'reloaded visible plant row must keep the plant-specific unit');
   await legacyPage.screenshot({ path: 'artifacts/plant-livestock-edit/06-legacy-reload-2-plants.png', fullPage: true });
   assert.deepEqual(legacyErrors, [], `legacy plant migration emitted page errors: ${legacyErrors.join(' | ')}`);
   await legacyContext.close();
