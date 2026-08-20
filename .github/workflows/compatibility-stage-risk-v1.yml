@@ -21,7 +21,18 @@ jobs:
       - name: Guarded life-stage capture UI migration
         shell: bash
         run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/migrate-life-stage-ui.py')
+          text = path.read_text()
+          broken = '        : <FishIcon className=\\"h-5 w-5\\" />,\n",'
+          fixed = '        : <FishIcon className=\\"h-5 w-5\\" />,\\n",'
+          if text.count(broken) != 2:
+              raise SystemExit(f'expected 2 malformed icon-string endings, found {text.count(broken)}')
+          path.write_text(text.replace(broken, fixed))
+          PY
           python3 scripts/migrate-life-stage-ui.py
+          git checkout -- scripts/migrate-life-stage-ui.py
           if git diff --quiet -- \
             src/components/aquarium/LivestockBatchCard.tsx \
             src/services/aquarium/species-batches.service.ts \
