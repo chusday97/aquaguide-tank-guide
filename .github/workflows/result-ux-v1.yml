@@ -32,6 +32,9 @@ jobs:
       - name: Tank Copilot deterministic boundary contract
         run: npm run test:copilot-contract
 
+      - name: Production share-token secret boundary
+        run: npm run test:share-report-contract
+
       - name: Type check
         run: npm run lint
 
