@@ -2,6 +2,8 @@ import fs from 'node:fs';
 
 const surface = fs.readFileSync('src/components/result/DecisionResultSurface.tsx', 'utf8');
 const adapters = fs.readFileSync('src/modules/result/resultAdapters.ts', 'utf8');
+const care = fs.readFileSync('src/pages/CareEncyclopedia.tsx', 'utf8');
+const compatibility = fs.readFileSync('src/components/CompatibilityRiskCalculator.tsx', 'utf8');
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Result UX contract failed: ${message}`);
@@ -24,5 +26,17 @@ assert(adapters.includes("rule.reviewStatus === 'reviewed' && reference.reviewSt
 assert(adapters.includes("evidence?.reviewStatus === 'reviewed'"), 'Care source status must come from action-level evidence review status');
 assert(adapters.includes('diagnosisEscalationSignals'), 'diagnosis results must expose explicit escalation boundaries');
 assert(adapters.includes('compatibilityEscalationSignals'), 'compatibility results must expose explicit escalation boundaries');
+
+assert(care.includes('testId="care-diagnosis-decision"'), 'Diagnosis must consume the shared decision-first surface');
+assert(care.includes('diagnosisEscalationSignals(result.riskLevel, isEn)'), 'Diagnosis consumer must expose escalation boundaries');
+assert(!care.includes('isResultDetailOpen'), 'Diagnosis must not restore the legacy ad-hoc evidence disclosure');
+
+assert(compatibility.includes('testId="compatibility-decision"'), 'Compatibility must consume the shared decision-first surface');
+assert(compatibility.includes('compatibilityRuleSources(ruleItems)'), 'Compatibility consumer must map deterministic rules to action-level source status');
+assert(compatibility.includes("resultStatus === 'not_recommended'"), 'Compatibility must preserve the deterministic blocked status branch');
+assert(compatibility.includes("resultStatus === 'insufficient_data'"), 'Compatibility must preserve the complete-information status branch');
+assert(compatibility.includes("if (resultStatus === 'not_recommended' || resultStatus === 'insufficient_data') return;"), 'Compatibility recording must remain fail-closed for blocked or incomplete decisions');
+assert(!compatibility.includes('data-compatibility-verdict={resultStatus}'), 'Legacy report-style Compatibility verdict must stay removed');
+assert(compatibility.includes('data-compatibility-pair-details'), 'Pair-level detail must remain available behind progressive disclosure');
 
 console.log('Result UX V1 contract: PASS');
