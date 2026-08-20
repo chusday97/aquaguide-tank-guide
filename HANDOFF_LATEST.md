@@ -10,101 +10,130 @@
 
 PR #105 is **open, mergeable and Draft**. It is **not merged** and no production deployment is claimed.
 
-Result UX V1 now has three browser-verified consumers:
+Browser-verified Result UX consumers:
 
 1. Diagnosis;
 2. Compatibility;
 3. Knowledge.
 
-The project is no longer in a “shared component only” state. The permanent Result UX gate proves the first three consumers against the same decision-first contract.
+Procedure now has a valid fail-before browser contract but is **not yet migrated**.
 
-## Shared Result UX contract
+## Result UX verified baseline
 
-`src/components/result/DecisionResultSurface.tsx` establishes:
+Permanent workflow: `.github/workflows/result-ux-v1.yml`.
 
-- one primary result / verdict;
-- one primary action;
-- maximum two follow-up actions;
-- compact watch / escalation guardrails;
-- compact avoid list;
-- bounded hero explanation;
-- reasoning and sources behind progressive disclosure;
-- reviewed vs candidate evidence state.
+Result UX V1 / run `32341238477` — **PASS** on `ec55754dbbacf038d7b5e48d1a663f9e1a8cea18`:
 
-Evidence remains fail-closed and action-scoped. A publisher/source name by itself never upgrades a recommendation to Verified.
+- static Result UX contract — PASS;
+- TypeScript — PASS;
+- production build — PASS;
+- Diagnosis browser regression — PASS;
+- Compatibility browser regression — PASS;
+- Knowledge browser regression — PASS.
+
+Evidence remains fail-closed and action-scoped. A publisher/source name alone never upgrades a recommendation to Verified.
 
 ## Consumer status
 
-### Diagnosis — browser verified
+### Diagnosis — verified
 
-- primary action appears before causal explanation;
-- follow-up actions stay bounded;
-- watch/escalation boundaries remain available;
-- existing diagnosis context remains intact.
+- shared `DecisionResultSurface`;
+- primary action before causal explanation;
+- bounded follow-up actions;
+- watch / escalation boundaries retained.
 
-### Compatibility — browser verified
+### Compatibility — verified
 
-- verdict appears first;
-- deterministic blocking/safety rules remain authoritative;
-- AI presentation does not override deterministic rules;
-- candidate source state remains fail-closed.
+- shared `DecisionResultSurface`;
+- verdict first;
+- deterministic blocking remains authoritative;
+- AI presentation cannot override deterministic safety rules;
+- candidate evidence remains fail-closed.
 
-### Knowledge — browser verified
+### Knowledge — verified
 
-Fail-before was explicitly captured before product migration:
+Fail-before:
 
-- Result UX V1 / run `32340512920` — FAIL only at Knowledge;
-- contract, TypeScript, build, Diagnosis and Compatibility passed;
-- failure was the expected absence of `care-knowledge-decision` in the old Knowledge implementation.
+- run `32340512920` failed only at Knowledge because the old page had no `care-knowledge-decision` surface.
 
-Current Knowledge behavior:
+Current behavior:
 
-- shared `DecisionResultSurface` is used;
-- key takeaway / first action precedes the long explanation;
+- shared decision surface;
+- key takeaway / first action precedes long explanation;
 - primary CTA remains first-screen;
-- shared follow-up actions are capped at two;
-- detailed long-form explanation is collapsed by default;
-- action evidence retains the original Care `immediate` kind and action index so source identity is not changed by presentation reordering.
+- shared follow-up actions capped at two;
+- long detailed explanation collapsed by default;
+- Care evidence keeps the original `immediate` kind + action index.
 
-Implementation commit:
+### Procedure — fail-before established, migration pending
 
-- `472d53859726c9828caa5d73716f06ed9b198190` — migrate Knowledge to decision-first Result UX.
+Procedure contract was added before changing the product UI.
 
-Follow-up evidence API correction was required after TypeScript correctly rejected a two-argument `getCareActionEvidenceForText` call. The fixed implementation passes the explicit `immediate` kind and original index rather than weakening the type/evidence contract.
+Result UX V1 / run `32341637554`:
 
-## Authoritative Result UX evidence
-
-Verified code baseline:
-
-- `ec55754dbbacf038d7b5e48d1a663f9e1a8cea18`
-
-Permanent workflow:
-
-- `.github/workflows/result-ux-v1.yml`
-
-Result UX V1 / run `32341238477` — **PASS**:
-
-- Result UX static contract — PASS;
+- Result UX contract — PASS;
 - TypeScript — PASS;
 - production build — PASS;
-- Diagnosis decision-first browser regression — PASS;
-- Compatibility decision-first browser regression — PASS;
-- Knowledge decision-first browser regression — PASS;
-- Result UX evidence artifact upload — PASS.
+- Diagnosis — PASS;
+- Compatibility — PASS;
+- Knowledge — PASS;
+- **Procedure — expected FAIL** because the old Procedure implementation does not yet expose `care-procedure-decision`.
 
-The one-off migration workflow/scripts used to make surgical edits were removed after the product changes landed. There is no remaining Knowledge self-modifying workflow on the branch.
+Migration rule: the first procedure step can move into the shared decision surface, but completion actions such as `去记录本次换水` / `Mark operation done` must remain post-task actions and must not be promoted ahead of the actual procedure.
+
+## Vercel preview deployment policy — NEW
+
+Problem: Git-integrated Vercel Preview was starting on nearly every push. The branch contains many test, workflow, handoff, badcase and intermediate repair commits, so Vercel's free-plan build-rate limit could be exhausted even when the application build itself was healthy.
+
+Fix landed in commit:
+
+- `10aa2501163e976a74543e3dd3a8f00c10f9bbc4` — `Throttle Vercel preview deployments`
+
+Configuration:
+
+- `vercel.json` now uses `ignoreCommand: "bash scripts/vercel-ignore-build.sh"`;
+- `scripts/vercel-ignore-build.sh` is the source of truth for the gate.
+
+### Preview rule
+
+For non-production branches, **a normal push does not create a Vercel Preview**.
+
+A Preview is eligible only when the triggering commit message contains:
+
+`[vercel-preview]`
+
+Even then, the script compares the current commit against `VERCEL_GIT_PREVIOUS_SHA` (Vercel's last successful deployment SHA). It continues the build only if deploy-relevant inputs changed.
+
+Deploy-relevant inputs include:
+
+- `src/`, `public/`, `api/`, `apps/`, `packages/`;
+- `index.html`;
+- package manifests / lockfiles;
+- Vite / TypeScript / PostCSS / Tailwind build config;
+- `vercel.json`.
+
+The following can continue to push and run GitHub CI without consuming a Preview build by default:
+
+- handoff / progress / badcase docs;
+- `.github/workflows/**`;
+- evaluation artifacts;
+- browser-test scripts and other non-runtime scripts.
+
+### Production rule
+
+Production/main does **not** require `[vercel-preview]`. If deploy-relevant files changed, production remains fail-open and deploys normally. If the comparison SHA is unavailable for an explicit checkpoint or production, the script also fails open rather than suppressing a required release.
+
+### Operating rule going forward
+
+Do not use Vercel Preview as a per-commit CI runner.
+
+Use GitHub Actions for iterative validation. Add `[vercel-preview]` only to a **browser-green milestone/checkpoint commit** when a human-visible hosted Preview is actually needed.
+
+The first commit carrying this policy had no `[vercel-preview]` marker and its GitHub Vercel status returned success instead of the prior build-rate-limit failure state.
 
 ## Plant roster / legacy plant closure retained
 
-The prior legacy plant path:
-
-`1株 → edit → 2株 → reload`
-
-was investigated before changing product persistence logic.
-
-Diagnostics proved the saved record, batch quantity and visible roster were already `2` immediately after save. The reload failure came from the Playwright fixture re-running `localStorage.clear()` and restoring the original `1株` fixture on reload.
-
-Final evaluator fix seeds storage only once per browser context.
+The prior `1株 → edit → 2株 → reload` failure was an evaluator-fixture defect, not a product persistence defect. The Playwright fixture had re-seeded original localStorage on reload.
 
 - Plant Roster Edit Fix / run `32338616480` — PASS.
 - Evaluator defect is recorded as PUI-BC-053 in `BADCASE_LATEST.md`.
@@ -113,55 +142,51 @@ Do not reopen the disproven local-aquarium load-race hypothesis without new inde
 
 ## Upstream #104 relationship
 
-#105 still targets `agent/uiux-system-refactor-v1` (#104) and assumes its UI/UX system and navigation contracts.
+#105 still targets `agent/uiux-system-refactor-v1` (#104).
 
-Important inherited contracts include:
+Inherited contracts that must remain intact include:
 
 - PUI-BC-050 Compatibility risk-review/navigation semantics;
 - PUI-BC-051 Search deep-result return context;
 - PUI-BC-052 Aquarium roster → Species Detail → immediate-parent roster return.
 
-Any future Species Detail Result UX migration must explicitly preserve PUI-BC-052. Do not simplify the result UI by breaking nested parent return, focus restoration or roster context.
+Any future Species Detail Result UX migration must preserve PUI-BC-052.
 
 ## Remaining Result UX boundary
 
-Not yet declared migrated:
+- Procedure — fail-before established, product migration pending;
+- Species Detail — not started;
+- Identification — not started;
+- AI Assistant — not started.
 
-- Procedure;
-- Species Detail;
-- Identification;
-- AI Assistant.
-
-The continuation rule remains:
+Continuation rule:
 
 **one consumer → fail-before contract → product migration → browser proof → documentation update.**
 
-Procedure is the next candidate because it shares the CareEncyclopedia evidence/CTA model with Knowledge and has lower navigation regression risk than Species Detail. It must still receive its own fail-before proof before migration.
+## Current engineering debt / non-blockers
 
-## Current non-blockers / engineering debt
-
-- Vite still reports large-chunk and mixed dynamic/static-import warnings.
+- Vite large-chunk and mixed dynamic/static-import warnings remain.
 - Existing npm dependency vulnerability debt remains outside Result UX scope.
-- Vercel free-plan preview quota can fail externally; do not treat that as an application build failure.
+- Vercel quota failures must not be classified as application build failures.
 - Thin wrapper/Base structures inherited from #104 remain deliberate risk-containment debt.
 
 ## Merge-readiness judgment
 
-**The three-consumer Result UX slice is verified, but PR #105 is not yet declared merge-ready.**
+**Diagnosis + Compatibility + Knowledge are verified, but PR #105 remains Draft and is not declared merge-ready.**
 
-Keep Draft because:
+Reasons:
 
 1. #105 still depends on #104 and final upstream branch disposition is unresolved;
-2. four result consumers remain explicitly unmigrated;
-3. any retarget/rebase requires the permanent gates to rerun;
-4. Species Detail must retain #104 nested-navigation guarantees when its turn comes.
+2. Procedure migration is not complete;
+3. Species Detail / Identification / AI Assistant remain unmigrated;
+4. any retarget/rebase requires permanent gates to rerun.
 
 ## Next owner action
 
-1. Treat `ec55754...` + run `32341238477` as the current three-consumer verified Result UX baseline.
-2. Start Procedure with a fail-before browser contract, not a direct product rewrite.
-3. Keep Species Detail behind explicit Navigation Context acceptance criteria.
-4. Do not append evaluator-only PUI-BC-053 to a product-only canonical registry until registry scope is checked.
+1. Continue Procedure from the proven fail-before state; do not recreate that investigation.
+2. Preserve post-task Procedure CTA semantics while migrating the first-step hierarchy.
+3. Run the permanent Result UX gate after the product migration.
+4. Request a hosted Vercel Preview only at a green checkpoint by using `[vercel-preview]` on that checkpoint commit.
 5. Keep #105 Draft; do not merge or production-deploy from this handoff alone.
 
 ## Confidence snapshot
@@ -170,9 +195,10 @@ Keep Draft because:
 - Diagnosis migration: **verified**
 - Compatibility migration: **verified**
 - Knowledge migration: **verified**
-- Plant structured edit persistence: **verified**
-- Legacy `plants[]` edit + reload persistence: **verified**
-- Procedure migration: **not started**
+- Procedure fail-before: **verified**
+- Procedure migration: **pending**
+- Vercel preview frequency gate: **implemented**
+- Plant structured + legacy edit persistence: **verified**
 - Species Detail migration: **not started**
 - Identification migration: **not started**
 - AI Assistant migration: **not started**
