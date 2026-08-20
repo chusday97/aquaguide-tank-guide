@@ -69,7 +69,7 @@ Key commits:
 
 ### Final evidence
 
-Clean head:
+Initial security closure head:
 
 - `1da62bb1ce11098ce38a489e6a7b95bc40995178`
 
@@ -80,7 +80,7 @@ Verified workflows:
 - Plant Roster Edit Fix / `32365318305` — **PASS**;
 - Compatibility Stage Risk V1 / `32365318290` — **PASS**.
 
-Security PASS includes share-report security/release/deployment source contracts plus API type, API boundary and business API checks.
+Canonical registry + final read-only cleanup is additionally verified on head `363e29bd9a93b4b87f2cd28af1351589a5b84681` by Security `32368279920`, Result UX `32368279929`, Plant `32368279880`, and Stage Risk `32368279892`, all PASS.
 
 ### Deployment caveat
 
@@ -268,9 +268,9 @@ Python banker’s rounding and JavaScript `Math.round()` disagreed on approved t
 
 ## Canonical registry note
 
-PUI-BC-053 is evaluator-only and should not be mixed into a product-only canonical registry by convenience.
+PUI-BC-053 is evaluator-only and remains intentionally outside the product-only canonical registry.
 
-PUI-BC-054 and PUI-BC-055 are genuine product/security badcases, but this document does not claim they have been appended to `evaluation/product/badcases.v1.jsonl`. Any canonical append must be separately inspected, observable and append-only.
+PUI-BC-054 and PUI-BC-055 are now appended to `evaluation/product/badcases.v1.jsonl`. PUI-BC-055 is backed by the new six-state `share_report` feature contract in `evaluation/product/feature-states.v1.json`. The append was guarded as +2/-0, validated by `npm run test:product-evaluation`, and finalized under read-only CI on head `363e29bd9a93b4b87f2cd28af1351589a5b84681` / Security run `32368279920`.
 
 ## Non-claims
 
