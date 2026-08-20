@@ -31,18 +31,24 @@ jobs:
               print('Procedure Result UX already migrated; no product rewrite needed')
               raise SystemExit(0)
 
-          knowledge_tail = '''                  />
-                </section>
-              ) : (
-                <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
-                  <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
-                  <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
-                </section>
-              )}'''
+          knowledge_marker = 'testId="care-knowledge-decision"'
+          legacy_marker = '                <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">'
+          knowledge_pos = text.find(knowledge_marker)
+          if knowledge_pos == -1:
+              raise SystemExit('Knowledge decision marker not found; refusing migration')
+          legacy_pos = text.find(legacy_marker, knowledge_pos)
+          if legacy_pos == -1:
+              raise SystemExit('Legacy lead after Knowledge not found; refusing migration')
+          branch_start = text.rfind('              ) : (\n', knowledge_pos, legacy_pos)
+          if branch_start == -1:
+              raise SystemExit('Knowledge-to-legacy branch boundary not found; refusing migration')
+          branch_end_marker = '                </section>\n              )}'
+          branch_end = text.find(branch_end_marker, legacy_pos)
+          if branch_end == -1:
+              raise SystemExit('Legacy lead branch end not found; refusing migration')
+          branch_end += len(branch_end_marker)
 
-          procedure_tail = '''                  />
-                </section>
-              ) : meta.guideType === 'procedure' && procedureSteps.length > 0 ? (
+          procedure_branch = '''              ) : meta.guideType === 'procedure' && procedureSteps.length > 0 ? (
                 <section className="mt-3" data-care-procedure-result>
                   <DecisionResultSurface
                     testId="care-procedure-decision"
@@ -70,20 +76,13 @@ jobs:
                   <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
                 </section>
               )}'''
+          text = text[:branch_start] + procedure_branch + text[branch_end:]
 
-          if knowledge_tail not in text:
-              raise SystemExit('Knowledge/legacy decision tail anchor not found; refusing migration')
-          text = text.replace(knowledge_tail, procedure_tail, 1)
-
-          start_marker = "              {meta.guideType === 'procedure' && procedureSteps.length > 0 && (\n"
-          end_marker = "              )}\n            </div>\n          </div>\n\n          {meta.guideType === 'diagnosis' ? ("
-          start = text.find(start_marker)
-          if start == -1:
-              raise SystemExit('Legacy Procedure first-screen block start not found; refusing migration')
-          end = text.find(end_marker, start)
-          if end == -1:
-              raise SystemExit('Legacy Procedure first-screen block end not found; refusing migration')
-          text = text[:start] + "            </div>\n          </div>\n\n          {meta.guideType === 'diagnosis' ? (" + text[end + len(end_marker):]
+          old_card_start = text.find("              {meta.guideType === 'procedure' && procedureSteps.length > 0 && (\n")
+          first_screen_end = text.find("            </div>\n          </div>\n\n          {meta.guideType === 'diagnosis' ? (", old_card_start)
+          if old_card_start == -1 or first_screen_end == -1:
+              raise SystemExit('Legacy Procedure card boundary not found; refusing migration')
+          text = text[:old_card_start] + text[first_screen_end:]
 
           required = [
               'testId="care-procedure-decision"',
