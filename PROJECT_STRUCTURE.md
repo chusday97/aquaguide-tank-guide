@@ -39,7 +39,7 @@
 - `src/components/visual-results/`：混养、物种适配、巡检与养护自查共用的视觉结果卡、展示模型和规则适配器。
 - `src/components/interactive/`：场景化物种探索与养护鱼缸入口；以大型鱼缸背景、游动图片层和稳定点击热区触发现有路由/详情，不生成业务结论。首页不使用该场景组件。
 - `src/components/layout/LayoutModeProvider.tsx`：真实设备布局判定。
-- `src/pages/Aquarium.tsx`：我的鱼缸。
+- `src/pages/Aquarium.tsx`：我的鱼缸；桌面首页以现有 `ThreeAquarium` 为主舞台，右侧承接今日行动/推荐，底部承接高频任务。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
 - `src/pages/Identify.tsx`：拍照识别候选、手动兜底、物种确认、动态追问与可视化风险结果。
 - `src/pages/Search.tsx`：物种与养护指南的双语统一搜索，候选先确认具体物种再打开资料。

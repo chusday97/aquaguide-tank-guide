@@ -40,6 +40,13 @@ try {
   assert.equal(await aquariumToolbar.getByRole('button', { name: /水族册/ }).count(), 0, 'collection must not occupy the aquarium top bar');
   assert.equal(await aquariumToolbar.getByRole('button', { name: /语言设置|数据保存提醒/ }).count(), 0, 'settings and data must move under More');
 
+  const stageIntro = page.locator('[data-aquarium-stage-intro]');
+  const speciesEntry = page.locator('[data-tank-species-entry]');
+  assert.equal(await stageIntro.count(), 1, 'the 3D stage must retain one readable task intro');
+  assert.equal(await speciesEntry.count(), 1, 'the 3D stage must expose one livestock entry');
+  assert.equal(await speciesEntry.getAttribute('aria-haspopup'), 'dialog', 'the livestock entry must disclose its dialog result');
+  assert.equal(await page.locator('.aquarium-archive [aria-haspopup="dialog"]').count(), 0, 'the archive summary must not duplicate the livestock entry');
+
   await page.getByRole('button', { name: '更多鱼缸操作' }).click();
   for (const label of ['重命名鱼缸', '设置', '数据与备份', '删除鱼缸']) assert.ok(await aquariumToolbar.getByRole('button', { name: label, exact: true }).isVisible());
   await page.getByRole('button', { name: '更多鱼缸操作' }).click();

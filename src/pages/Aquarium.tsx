@@ -282,24 +282,28 @@ function AquariumWorkspace({
   }, [location.hash, location.search]);
 
   return (
-    <>
-      <section className="aquarium-workspace-zone aquarium-observe-zone" aria-labelledby="aquarium-observe-title">
+    <section className="aquarium-workspace-zone aquarium-observe-zone aquarium-dashboard" aria-labelledby="aquarium-observe-title">
         <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
-        <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}{archive}</div>
-      </section>
-      <div className="aquarium-followup-grid">
-        <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
-          <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-          <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
-        </section>
-        {discovery && (
-          <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-            <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
-          </section>
-        )}
-      </div>
-    </>
+        <div className="aquarium-dashboard-stage">
+          <div className="aquarium-dashboard-tank">
+            {tank}
+            <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-dashboard-actions" aria-labelledby="aquarium-manage-title">
+              <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
+              {actions}
+            </section>
+          </div>
+          <aside className="aquarium-dashboard-rail" aria-label={observeTitle}>
+            {status}
+            {discovery && (
+              <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-dashboard-discovery" aria-labelledby="aquarium-learn-title">
+                <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
+                {discovery}
+              </section>
+            )}
+          </aside>
+        </div>
+        <div className="aquarium-dashboard-archive">{archive}</div>
+    </section>
   );
 }
 
@@ -5006,6 +5010,10 @@ export default function AquariumManager() {
         >
           <History className="h-4 w-4" />{isEn ? 'Aquarium timeline' : '鱼缸记录'}
         </button>
+        <div className="aquarium-mode-indicator" aria-label={isEn ? 'Aquarium mode: standard' : '鱼缸模式：普通'}>
+          <span className="aquarium-mode-current">{isEn ? 'Standard' : '普通模式'}</span>
+          <span className="aquarium-mode-planned">{isEn ? 'Breeding · planned' : '怀孕模式 · 规划中'}</span>
+        </div>
       </section>
       {/* Aquarium Tabs */}
       <section className="aquarium-toolbar order-[0] min-w-0 pb-1 pt-[58px] md:pt-0 md:hidden">
@@ -5320,17 +5328,44 @@ export default function AquariumManager() {
             )}
           </div>
         )}
-        
-        {/* Environment Info Overlay */}
-        <div className="absolute left-2 top-2 z-10 flex max-w-[calc(100%-112px)] flex-wrap gap-1.5 pointer-events-none">
-          <div className="bg-white/80 backdrop-blur-sm px-2 py-1 rounded-sm text-[9px] font-bold text-ink shadow-sm border border-white/50">
-            {activeAquarium.waterType === 'Saltwater' ? '海水' : activeAquarium.waterType === 'Freshwater' ? '淡水' : '水体未记录'} | {activeAquarium.targetTemperature ? `目标 ${activeAquarium.targetTemperature}°C` : '目标温度未记录'}
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm px-2 py-1 rounded-sm text-[9px] font-bold text-ink shadow-sm border border-white/50">
-            {tankVolumeLiters > 0 ? `${activeAquarium.dimensions?.length}x${activeAquarium.dimensions?.width}x${activeAquarium.dimensions?.height}cm · 约${tankVolumeLiters}L` : '尺寸未记录'}
+
+        <div data-aquarium-stage-intro className="aquarium-stage-intro pointer-events-none absolute left-5 top-5 z-10 max-w-[min(72%,500px)] md:left-8 md:top-8">
+          <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-emerald-950/62">
+            {isEn ? `My Aquarium · ${format(new Date(), 'MMM d')}` : `我的鱼缸 · ${format(new Date(), 'M 月 d 日')}`}
+          </span>
+          <h1 className="mt-2 font-serif text-[clamp(25px,3.1vw,48px)] font-semibold leading-[1.02] tracking-[-0.04em] text-emerald-950 drop-shadow-[0_1px_0_rgba(255,255,255,0.28)]">
+            {dailyActionViewModel.level === 'urgent'
+              ? dailyActionViewModel.task.title
+              : (isEn ? 'Start with one calm observation' : '今天先完成一次观察')}
+          </h1>
+          <p className="mt-2 max-w-[43ch] text-[11px] font-bold leading-5 text-emerald-950/64 md:text-[12px]">
+            {dailyActionViewModel.level === 'urgent'
+              ? dailyActionViewModel.task.reason
+              : (isEn ? 'A quick check helps you notice changes before they become a problem.' : '先看看呼吸、水面和活动状态；没有异常，就不需要额外操作。')}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-black text-emerald-900">
+            <span className="rounded-full bg-white/78 px-3 py-2 shadow-sm backdrop-blur-sm">
+              {hasStockedAnimals
+                ? (isEn ? `${stockedSpeciesCount} species · ${totalStockedQuantity} total` : `${stockedSpeciesCount} 种 · ${totalStockedQuantity} 条/只`)
+                : (isEn ? 'No livestock recorded' : '尚未记录缸内生物')}
+            </span>
+            <span className="rounded-full bg-white/78 px-3 py-2 shadow-sm backdrop-blur-sm">
+              {dailyActionViewModel.label}
+            </span>
           </div>
         </div>
 
+        <button
+          type="button"
+          onClick={() => setIsTankArchiveExpanded(true)}
+          aria-haspopup="dialog"
+          data-tank-species-entry
+          className="absolute bottom-4 left-4 z-20 inline-flex min-h-11 items-center gap-2 rounded-full border border-white/75 bg-white/84 px-4 text-[11px] font-black text-emerald-900 shadow-[0_8px_24px_rgba(15,77,62,0.16)] backdrop-blur-sm transition-transform hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 md:bottom-5 md:left-6"
+        >
+          {isEn ? 'View tank species' : '查看缸内物种'}
+          <span className="rounded-full bg-emerald-900 px-1.5 py-0.5 text-[9px] text-white">{stockedSpeciesCount}</span>
+          <ChevronRight className="h-4 w-4" />
+        </button>
         {/* Species Sidebar Overlay for 3D navigation */}
         {activeAquarium && activeAquarium.fishes.length > 0 && (
           <div className="absolute top-12 left-2 z-10 bg-white/80 backdrop-blur-md border border-white/50 rounded-sm shadow-sm p-1.5 max-h-[60%] overflow-y-auto w-24 sm:w-28 custom-scrollbar flex flex-col gap-1 hidden md:flex">
@@ -5409,12 +5444,7 @@ export default function AquariumManager() {
         )}
         archive={(
       <section id="aquarium-records" className="aquarium-archive scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-[#F8F7F2] shadow-sm">
-        <button
-          type="button"
-          onClick={() => setIsTankArchiveExpanded(true)}
-          aria-haspopup="dialog"
-          className="flex w-full items-center justify-between gap-3 bg-[#E9E8E2] px-3 py-3 text-left transition-colors hover:bg-[#E4E2DB]"
-        >
+        <div className="flex w-full items-center justify-between gap-3 bg-[#E9E8E2] px-3 py-3 text-left">
           <div className="min-w-0">
             <div className="flex items-center gap-2 text-[14px] font-black text-ink">
               <BookOpen className="h-4 w-4 text-accent" />
@@ -5439,11 +5469,10 @@ export default function AquariumManager() {
               </div>
             )}
             <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black text-emerald-800 shadow-sm">
-              {isEn ? 'View all' : '查看全部'}
+              {isEn ? 'Tank summary' : '缸内摘要'}
             </span>
-            <ChevronRight className="h-4 w-4 text-ink/45" />
           </div>
-        </button>
+        </div>
         <div className="aquarium-archive-preview border-t border-white/70 bg-[#F4F2EC] p-3">
           {ownedArchivePreviewItems.length > 0 ? (
             <div className="grid min-w-0 gap-2 sm:grid-cols-3">
