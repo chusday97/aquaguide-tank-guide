@@ -1,0 +1,32 @@
+name: Compatibility Stage Risk V1
+
+on:
+  pull_request:
+    branches:
+      - agent/uiux-system-refactor-v1
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage-risk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/result-ux-v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Same-species life-stage risk contract
+        run: npx tsx scripts/test-same-species-stage-risk.ts
+
+      - name: Type check
+        run: npm run lint
