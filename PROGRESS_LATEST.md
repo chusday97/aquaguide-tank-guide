@@ -64,6 +64,26 @@ Closure checks:
 - [x] Result UX workflow restored to `contents: read`;
 - [x] clean browser regression PASS.
 
+## Species Detail — ACTIVE
+
+Fail-before is now established before product UI changes:
+
+- commit `a242a13e0c0183bfbbdb33828cb6a81a14f325f1` adds `verify-result-ux-species-detail.mjs` and the permanent Result UX gate step;
+- Result UX V1 / run `32346056247` — **expected FAIL only at Species Detail**;
+- static contract, TypeScript, production build, Diagnosis, Compatibility, Knowledge and Procedure all passed;
+- failure was the expected absence of `[data-testid="species-detail-decision"]` in the old Species Detail implementation.
+
+The new Species Detail browser contract is intentionally coupled to PUI-BC-052. After a shared decision surface exists, the same test must also prove:
+
+- Aquarium-owned detail retains `data-species-detail-edit-tank-record`;
+- Result UX evidence starts collapsed;
+- decision surface begins in the initial desktop dialog viewport;
+- closing the child detail reopens the exact originating livestock roster;
+- focus returns to the `stock-1` profile opener;
+- Aquarium workspace scroll returns within the existing 96px tolerance.
+
+Product migration may proceed only without weakening these parent-context assertions.
+
 ## Existing closures retained
 
 ### Plant / navigation
@@ -90,14 +110,14 @@ Closure checks:
 
 ## Remaining Result UX consumers
 
-- [ ] Species Detail
+- [ ] Species Detail — fail-before established; migration active
 - [ ] Identification
 - [ ] AI Assistant
 
 Remaining sequence:
 
-1. Species Detail — establish Result UX + PUI-BC-052 navigation fail-before;
-2. migrate Species Detail without breaking immediate-parent roster return, focus or scroll context;
+1. migrate Species Detail without breaking immediate-parent roster return, focus or scroll context;
+2. lock Species Detail into static + browser regression after migration;
 3. Identification — preserve uncertainty/confidence semantics;
 4. AI Assistant — direct answer/action first without presenting model output as deterministic truth;
 5. final integration / retarget-rebase gate after remaining consumers are complete.
@@ -111,19 +131,19 @@ Remaining sequence:
 
 ## Merge-readiness judgment
 
-**Four Result UX consumers are verified, but PR #105 remains Draft.**
+**Four Result UX consumers are verified; Species Detail has a clean fail-before; PR #105 remains Draft.**
 
 Remaining blockers to this repair slice:
 
-1. Species Detail is not migrated;
+1. Species Detail migration is not yet verified;
 2. Identification is not migrated;
 3. AI Assistant is not migrated;
 4. upstream #104 branch disposition / final integration gate remains pending.
 
 ## Next execution order
 
-1. Inspect Species Detail and current PUI-BC-052 browser contract.
-2. Add a true fail-before for Species Detail Result UX while retaining navigation-return assertions.
-3. Migrate Species Detail only after that proof.
+1. Run the guarded Species Detail product migration against the proven fail-before.
+2. Require Result UX + PUI-BC-052 browser checks to pass together.
+3. Restore the Result UX workflow to read-only verification and add permanent Species Detail static assertions.
 4. Continue Identification and AI Assistant one at a time.
 5. Do not merge or production-deploy yet.
