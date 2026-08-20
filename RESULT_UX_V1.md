@@ -12,7 +12,7 @@ The first screen should prioritize:
 4. what to watch next and when to escalate;
 5. evidence and sources behind progressive disclosure.
 
-## Shared surface
+## Shared contract
 
 `src/components/result/DecisionResultSurface.tsx` provides:
 
@@ -26,69 +26,81 @@ The first screen should prioritize:
 
 Evidence remains action-scoped and fail-closed. A publisher or source name alone never upgrades a recommendation to Verified.
 
-## Migrated consumers
+## Migrated and browser-verified consumers
 
-### Diagnosis — browser verified
+### Diagnosis
 
-- shared decision surface;
 - primary action before causal explanation;
 - bounded follow-up actions;
 - explicit watch / escalation boundaries;
 - existing diagnosis context retained.
 
-### Compatibility — browser verified
+### Compatibility
 
-- shared decision surface;
+- verdict first;
 - deterministic blocking / safety remains authoritative;
 - candidate evidence remains fail-closed;
 - pair-level details remain behind progressive disclosure.
 
-### Knowledge — browser verified
+### Knowledge
 
-- shared decision surface;
 - key takeaway / first action precedes long explanation;
-- primary CTA stays on the first decision surface;
+- primary CTA remains first-screen;
 - follow-up actions capped at two;
-- long detailed explanation collapsed by default;
-- Care evidence retains original `immediate` action kind and action index.
+- detailed explanation collapsed by default;
+- Care evidence retains original `immediate` action kind and index.
 
 Knowledge fail-before:
 
 - Result UX V1 / run `32340512920` — expected FAIL only at Knowledge.
 
-Three-consumer verified baseline:
+### Procedure
 
-- code head `ec55754dbbacf038d7b5e48d1a663f9e1a8cea18`;
-- Result UX V1 / run `32341238477` — PASS.
+Procedure fail-before:
 
-### Procedure — migrated, browser verification passed in migration run
+- Result UX V1 / run `32341637554` — expected FAIL only at Procedure because the old implementation did not expose `care-procedure-decision`.
 
-Procedure fail-before was established before changing product UI:
-
-- Result UX V1 / run `32341637554` — expected FAIL only at Procedure because the old implementation had no `care-procedure-decision` surface.
-
-Product migration commit:
+Product migration:
 
 - `49fd00385126fd4adef3d533ac87d302a3df9943` — `Migrate Procedure to decision-first Result UX`.
 
-Migration behavior:
+Procedure contract:
 
-- first concrete procedure step becomes the shared decision hero;
-- next two steps become bounded follow-up actions;
-- first-step and follow-up evidence preserve original immediate-action indexes;
-- post-operation observation is exposed as `watchFor`;
-- procedure reminders feed a bounded avoid list;
-- the old duplicate “Follow Steps Sequentially / 现在按顺序做” first-screen card is removed;
-- completion actions such as `去记录本次换水 / Record Water Change in Tank` remain post-task actions and are not promoted ahead of the actual operation;
-- detailed description remains collapsed behind `secondary_evidence` disclosure.
+- first concrete procedure step is the decision hero;
+- next two steps are bounded follow-ups;
+- evidence mapping preserves original immediate-action indexes;
+- post-operation observation is watch guidance;
+- reminders become compact avoid guidance;
+- legacy duplicate `Follow Steps Sequentially / 现在按顺序做` first-screen card is removed;
+- completion actions such as `去记录本次换水 / Record Water Change in Tank` remain after the operation;
+- detailed explanation remains collapsed behind `secondary_evidence`.
 
-Migration validation run:
+## Authoritative four-consumer baseline
 
-- Result UX V1 / run `32344881783` — Procedure browser regression PASS together with Diagnosis, Compatibility, Knowledge, TypeScript and production build.
+Clean head:
 
-Permanent static contract now includes Procedure-specific assertions and the one-off migration workflow has been removed. A clean pure-verification CI run on the post-cleanup head remains the final evidence before declaring Procedure fully closed.
+- `bcf2f24911b7516d08dc077a86fcec05b0333c10`
 
-## Remaining Result UX consumers
+Result UX V1 / run `32345353470` — **PASS**:
+
+- static Result UX contract — PASS;
+- TypeScript — PASS;
+- production build — PASS;
+- Diagnosis browser regression — PASS;
+- Compatibility browser regression — PASS;
+- Knowledge browser regression — PASS;
+- Procedure browser regression — PASS;
+- evidence artifact upload — PASS.
+
+Same-head Plant Roster Edit Fix / run `32345353485` — **PASS**, including plant quantity/edit and existing Navigation Context regression.
+
+Permanent cleanup is complete:
+
+- Procedure-specific assertions are in `scripts/test-result-ux-contract.mjs`;
+- `.github/workflows/result-ux-v1.yml` is read-only (`contents: read`);
+- temporary Procedure migration workflow is removed.
+
+## Remaining consumers
 
 - Species Detail
 - Identification
@@ -100,4 +112,13 @@ Continue one consumer at a time:
 
 **fail-before contract → product migration → browser proof → permanent contract → documentation update.**
 
-Species Detail must preserve the inherited Aquarium roster → Species Detail → immediate-parent roster return contract. Identification must preserve uncertainty semantics. AI Assistant must not present model output as deterministic product truth.
+Additional guardrails:
+
+- Species Detail must preserve Aquarium roster → Species Detail → immediate-parent roster return, including applicable focus/scroll context (PUI-BC-052).
+- Identification must preserve confidence and uncertainty semantics; uncertain recognition must not be displayed as certain identification.
+- AI Assistant must present direct answer/action before long reasoning and must not override deterministic product truth.
+- Result UX changes hierarchy and presentation, not underlying domain truth rules.
+
+## Deployment policy during repair
+
+Vercel automatic Git deployments are disabled via `git.deploymentEnabled: false`. GitHub Actions is the iterative validation layer; hosted Preview and Production are explicit milestone actions only.
