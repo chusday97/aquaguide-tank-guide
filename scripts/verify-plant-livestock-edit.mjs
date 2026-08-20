@@ -70,11 +70,13 @@ const legacyPlantsOnlyState = shellState('legacy-plant-tank', {
 
 const seedState = async (context, saved) => {
   await context.addInitScript(state => {
+    if (sessionStorage.getItem('aquaguide_fixture_seeded') === '1') return;
     localStorage.clear();
     sessionStorage.clear();
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(state));
     localStorage.setItem('aquariums', JSON.stringify(state.aquariums));
     localStorage.setItem('aquaguide_locale', 'zh-CN');
+    sessionStorage.setItem('aquaguide_fixture_seeded', '1');
   }, saved);
 };
 
