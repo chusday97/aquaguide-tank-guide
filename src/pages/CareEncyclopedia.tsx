@@ -3242,12 +3242,34 @@ export function CareArticleDetail({
                     sources={careEvidenceSources(careActionEvidence)}
                   />
                 </section>
-              ) : (
-                <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
-                  <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
-                  <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
-                </section>
-              )}
+              ) : meta.guideType === 'procedure' && procedureSteps.length > 0 ? (
+      <section className="mt-3" data-care-procedure-result>
+        <DecisionResultSurface
+          testId="care-procedure-decision"
+          isEn={isEn}
+          tone={meta.urgencyTag === '需要立即处理' ? 'danger' : (meta.urgencyTag === '谨慎操作' || meta.urgencyTag === '建议尽快处理') ? 'warning' : 'info'}
+          eyebrow={isEn ? 'DO THIS FIRST' : '现在先做'}
+          statusLabel={getUrgencyTagLabel(meta.urgencyTag, isEn)}
+          title={procedureSteps[0].title}
+          summary={procedureSteps[0].description}
+          primarySource={careEvidenceSource(immediateEvidence[0])}
+          actions={procedureSteps.slice(1, 3).map((item, index) => ({
+            id: 'procedure-next-' + index,
+            title: item.title,
+            detail: item.description,
+            source: careEvidenceSource(immediateEvidence[index + 1]),
+          }))}
+          watchFor={[getProcedureObservation(topic)]}
+          avoid={procedureReminders.slice(0, 2).map(item => item.title)}
+          sources={careEvidenceSources(careActionEvidence)}
+        />
+      </section>
+    ) : (
+      <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
+        <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
+        <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
+      </section>
+    )}
               {meta.guideType === 'diagnosis' && !isDiagnosisStarted && (
                 <Button
                   type="button"
@@ -3294,23 +3316,6 @@ export function CareArticleDetail({
                         <span className="min-w-0">
                           <span className="block text-[12px] font-black leading-5 text-ink">{item.title}</span>
                           {item.description && <span className="mt-0.5 block text-[10px] font-medium leading-4 text-ink/55">{item.description}</span>}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-              {meta.guideType === 'procedure' && procedureSteps.length > 0 && (
-                <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm">
-                  <div className="text-[12px] font-black text-ink">{isEn ? 'Follow Steps Sequentially' : '现在按顺序做'}</div>
-                  <div className="mt-2 grid gap-2">
-                    {procedureSteps.slice(0, 3).map((item, index) => (
-                      <div key={`${item.title}-${item.description}`} className="grid grid-cols-[26px_1fr] gap-2 rounded-[14px] bg-bg/70 p-2.5">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-black text-white">{index + 1}</span>
-                        <span className="min-w-0">
-                          <span className="block text-[12px] font-black text-ink break-words leading-tight">{item.title}</span>
-                          <span className="mt-0.5 line-clamp-2 block text-[10px] font-medium leading-relaxed text-ink/55">{item.description}</span>
-                          <ActionEvidenceInline evidence={immediateEvidence[index]} isEn={isEn} />
                         </span>
                       </div>
                     ))}
