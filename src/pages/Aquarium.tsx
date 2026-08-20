@@ -118,6 +118,13 @@ import {
   withNormalizedSpeciesBatches,
   type SpeciesBatchCareSignal,
 } from '../services/aquarium/species-batches.service';
+import {
+  applyPlantSettingsToAquarium,
+  getAquariumAnimalRecords,
+  normalizeAquariumPlantRecords,
+  removePlantMirrorForSpecies,
+} from '../services/aquarium/plant-record-sync.service';
+import { formatSpeciesQuantity } from '../lib/speciesQuantityUnit';
 
 
 const ThreeAquarium = lazy(() => import('../components/ThreeAquarium').then(module => ({ default: module.ThreeAquarium })));
@@ -935,26 +942,7 @@ const normalizeAquariumPlants = (aquariums: Partial<Aquarium>[]) => aquariums.ma
   const aquarium: Aquarium = normalized.startedAt || !inferredStartedAt
     ? normalized
     : { ...normalized, startedAt: inferredStartedAt, startedAtSource: 'inferred', startedAtConfirmedAt: undefined };
-  const plantIdsFromFishes = aquarium.fishes
-    .map(item => fishData.find(fish => fish.id === item.fishId))
-    .filter((fish): fish is Fish => Boolean(fish) && isAquaticPlantSpecies(fish))
-    .map(fish => fish.id);
-  const hardscapeIdsFromFishes = aquarium.fishes
-    .map(item => fishData.find(fish => fish.id === item.fishId))
-    .filter((fish): fish is Fish => Boolean(fish) && isHardscapeSpecies(fish))
-    .map(fish => fish.id);
-
-  if (plantIdsFromFishes.length === 0 && hardscapeIdsFromFishes.length === 0) return aquarium;
-
-  return {
-    ...aquarium,
-    fishes: aquarium.fishes.filter(item => {
-      const fish = fishData.find(species => species.id === item.fishId);
-      return !fish || (!isAquaticPlantSpecies(fish) && !isHardscapeSpecies(fish));
-    }),
-    plants: Array.from(new Set([...(aquarium.plants || []), ...plantIdsFromFishes])),
-    hardscape: Array.from(new Set([...(aquarium.hardscape || []), ...hardscapeIdsFromFishes])),
-  };
+  return normalizeAquariumPlantRecords(aquarium, fishData);
 });
 
 const parseLiters = (value: string | undefined, fallback = 0) => {
@@ -1468,23 +1456,32 @@ export default function AquariumManager() {
   const saveLivestockBatches = async (recordId: string, nextRecord: AquariumFish | null) => {
     const active = aquariums.find(aquarium => aquarium.id === activeId);
     if (!active) throw new Error(isEn ? 'No active aquarium was found.' : '没有找到当前鱼缸。');
-    const nextAquarium = {
+    const previousRecord = active.fishes.find(record => record.id === recordId);
+    const previousSpecies = previousRecord ? fishData.find(species => species.id === previousRecord.fishId) : undefined;
+    const baseNextAquarium: Aquarium = {
       ...active,
       fishes: nextRecord
         ? active.fishes.map(record => record.id === recordId ? nextRecord : record)
         : active.fishes.filter(record => record.id !== recordId),
     };
+    const mirrorSyncedAquarium = !nextRecord && previousSpecies && isAquaticPlantSpecies(previousSpecies)
+      ? removePlantMirrorForSpecies(baseNextAquarium, previousSpecies.id, fishData)
+      : baseNextAquarium;
+    const nextAquarium = normalizeAquariumPlantRecords(mirrorSyncedAquarium, fishData);
     const repository = await getCurrentAquaGuideRepository();
-    const savedAquarium = await repository.saveAquarium(nextAquarium);
+    const savedAquariumRaw = await repository.saveAquarium(nextAquarium);
+    const savedAquarium = normalizeAquariumPlantRecords(savedAquariumRaw, fishData);
     setAquariums(current => current.map(aquarium => aquarium.id === activeId ? savedAquarium : aquarium));
     if (nextRecord) {
       const latestStateUpdate = nextRecord.batches?.map(batch => batch.stateUpdatedAt).sort().at(-1) || new Date().toISOString();
+      const nextSpecies = previousSpecies || fishData.find(species => species.id === nextRecord.fishId);
+      const isPlantRecord = Boolean(nextSpecies && isAquaticPlantSpecies(nextSpecies));
       await persistCareTimelineEvent({
         aquariumId: active.id,
         eventType: 'life_stage_updated',
-        title: isEn ? 'Updated livestock state' : '调整缸内物种体态',
-        label: isEn ? 'Quantity and state changes saved' : '已保存数量与体态变化',
-        payload: { speciesRecordId: recordId },
+        title: isPlantRecord ? (isEn ? 'Updated plant record' : '修改水草记录') : (isEn ? 'Updated livestock state' : '调整缸内物种体态'),
+        label: isPlantRecord ? (isEn ? 'Plant quantity and added date saved' : '已保存植株数量与加入日期') : (isEn ? 'Quantity and state changes saved' : '已保存数量与体态变化'),
+        payload: { speciesRecordId: recordId, recordKind: isPlantRecord ? 'plant' : 'animal' },
         occurredAt: new Date().toISOString(),
         sourceType: 'livestock_state',
         sourceId: `${recordId}:${latestStateUpdate}`,
@@ -1492,34 +1489,50 @@ export default function AquariumManager() {
       });
     }
     showToast(nextRecord
-      ? (isEn ? 'Livestock group states updated' : '体态与数量已更新')
+      ? (previousSpecies && isAquaticPlantSpecies(previousSpecies)
+        ? (isEn ? 'Plant record updated' : '水草记录已更新')
+        : (isEn ? 'Livestock group states updated' : '体态与数量已更新'))
       : (isEn ? 'Species removed from this tank' : '该物种已移出鱼缸'));
   };
 
   const removeLivestockQuantity = async (input: { aquariumFishId: string; batchId: string; quantity: number; operationId: string }) => {
     const active = aquariums.find(aquarium => aquarium.id === activeId);
     if (!active) throw new Error('没有找到当前鱼缸。');
+    const targetRecord = active.fishes.find(record => record.id === input.aquariumFishId);
+    const targetSpecies = targetRecord ? fishData.find(species => species.id === targetRecord.fishId) : undefined;
     const repository = await getCurrentAquaGuideRepository();
-    const savedAquarium = await repository.removeLivestock({
+    let savedAquarium = await repository.removeLivestock({
       aquariumId: active.id,
       aquariumFishId: input.aquariumFishId,
       batchId: input.batchId,
       quantity: input.quantity,
       operationId: input.operationId,
     });
+    const plantRemovedCompletely = Boolean(
+      targetSpecies
+      && isAquaticPlantSpecies(targetSpecies)
+      && !savedAquarium.fishes.some(record => record.fishId === targetSpecies.id),
+    );
+    if (plantRemovedCompletely && targetSpecies) {
+      savedAquarium = await repository.saveAquarium(removePlantMirrorForSpecies(savedAquarium, targetSpecies.id, fishData));
+    }
+    savedAquarium = normalizeAquariumPlantRecords(savedAquarium, fishData);
     setAquariums(current => current.map(aquarium => aquarium.id === active.id ? savedAquarium : aquarium));
+    const quantityLabel = targetSpecies
+      ? formatSpeciesQuantity(targetSpecies, input.quantity, Boolean(isEn))
+      : (isEn ? `${input.quantity} animals` : `${input.quantity} 只/条`);
     await persistCareTimelineEvent({
       aquariumId: active.id,
       eventType: 'species_removed',
-      title: isEn ? 'Removed livestock' : '移出缸内生物',
-      label: isEn ? `${input.quantity} animals` : `${input.quantity} 只/条`,
+      title: targetSpecies && isAquaticPlantSpecies(targetSpecies) ? (isEn ? 'Removed plant' : '移出水草') : (isEn ? 'Removed livestock' : '移出缸内生物'),
+      label: quantityLabel,
       payload: { aquariumFishId: input.aquariumFishId, quantity: input.quantity },
       occurredAt: new Date().toISOString(),
       sourceType: 'livestock_removal',
       sourceId: input.operationId,
       isInferred: false,
     });
-    showToast(isEn ? `Removed ${input.quantity} livestock from aquarium log` : `已从鱼缸记录中移出 ${input.quantity} 只/条`);
+    showToast(isEn ? `Removed ${quantityLabel} from aquarium log` : `已从鱼缸记录中移出 ${quantityLabel}`);
   };
   const [isCreatingAquarium, setIsCreatingAquarium] = useState(false);
   const handleAddAquarium = async () => {
@@ -1836,7 +1849,6 @@ export default function AquariumManager() {
     if (!aquarium || aquarium.fishes.length === 0) return [];
     const risks: TankRiskItem[] = [];
     
-    const curFishes = aquarium.fishes.map(aqf => fishData.find(f => f.id === aqf.fishId)).filter(f => f !== undefined) as Fish[];
     const stockedItems = aquarium.fishes
       .map(aqFish => ({ aqFish, fish: fishData.find(f => f.id === aqFish.fishId) }))
       .filter(item => item.fish) as { aqFish: AquariumFish; fish: Fish }[];
@@ -1844,6 +1856,7 @@ export default function AquariumManager() {
       const lifeType = getLifeType(fish);
       return lifeType !== 'plant' && lifeType !== 'hardscape';
     });
+    const curFishes = animalItems.map(({ fish }) => fish);
 
     // 1. Temperament
     const hasAggressive = curFishes.some(f => f.temperament === 'Aggressive');
@@ -1989,7 +2002,13 @@ export default function AquariumManager() {
     setIsSettingsSaving(true);
     try {
       const repository = await getCurrentAquaGuideRepository();
-      const savedAquarium = await repository.saveAquarium({ ...activeAquarium, ...settingsForm });
+      const nextAquarium = applyPlantSettingsToAquarium(
+        { ...activeAquarium, ...settingsForm },
+        settingsForm.plants ?? activeAquarium.plants,
+        fishData,
+      );
+      const savedAquariumRaw = await repository.saveAquarium(nextAquarium);
+      const savedAquarium = normalizeAquariumPlantRecords(savedAquariumRaw, fishData);
       setAquariums(current => current.map(aquarium => aquarium.id === savedAquarium.id ? savedAquarium : aquarium));
       markAquariumConfigured();
       setIsSettingsOpen(false);
@@ -3520,7 +3539,8 @@ export default function AquariumManager() {
 
   const aquariumSetupStatus = getAquariumSetupStatus(activeAquarium);
 
-  const currentFishesDetails = activeAquarium.fishes.map(af => fishData.find(f => f.id === af.fishId)).filter(Boolean) as Fish[];
+  const activeAnimalRecords = getAquariumAnimalRecords(activeAquarium, fishData);
+  const currentFishesDetails = activeAnimalRecords.map(af => fishData.find(f => f.id === af.fishId)).filter(Boolean) as Fish[];
   const activeCareReminders = careReminders
     .filter(reminder => !reminder.completedAt && (!reminder.aquariumId || reminder.aquariumId === activeAquarium.id))
     .sort((a, b) => new Date(a.scheduledFor).getTime() - new Date(b.scheduledFor).getTime());
@@ -3540,7 +3560,7 @@ export default function AquariumManager() {
       };
     }),
   };
-  const heaterStockedItems = activeAquarium.fishes
+  const heaterStockedItems = activeAnimalRecords
     .map(aqFish => ({ aqFish, fish: fishData.find(f => f.id === aqFish.fishId) }))
     .filter((item): item is { aqFish: AquariumFish; fish: Fish } => Boolean(item.fish) && needsHeaterForSpecies(item.fish));
   const heaterSpeciesCount = new Set(heaterStockedItems.map(item => item.fish.id)).size;
@@ -4497,8 +4517,8 @@ export default function AquariumManager() {
     ? format(addDays(new Date(latestWaterChangeDate), shortestCycle), 'yyyy/MM/dd')
     : '暂无';
   const selectedWaterDateHasRecord = waterChangeHistory.includes(selectedWaterChangeDate);
-  const totalStockedQuantity = activeAquarium.fishes.reduce((sum, fish) => sum + Math.max(1, fish.quantity || 1), 0);
-  const stockedSpeciesCount = new Set(activeAquarium.fishes.map(fish => fish.fishId)).size;
+  const totalStockedQuantity = activeAnimalRecords.reduce((sum, record) => sum + Math.max(1, record.quantity || 1), 0);
+  const stockedSpeciesCount = new Set(activeAnimalRecords.map(record => record.fishId)).size;
   const hasStockedAnimals = totalStockedQuantity > 0;
   const hasDimensionConfig = Boolean(
     activeAquarium.dimensions?.length
@@ -5519,13 +5539,13 @@ export default function AquariumManager() {
         </div>
 
         {/* Species Sidebar Overlay for 3D navigation */}
-        {activeAquarium && activeAquarium.fishes.length > 0 && (
+        {activeAquarium && activeAnimalRecords.length > 0 && (
           <div className="absolute top-12 left-2 z-10 bg-white/80 backdrop-blur-md border border-white/50 rounded-sm shadow-sm p-1.5 max-h-[60%] overflow-y-auto w-24 sm:w-28 custom-scrollbar flex flex-col gap-1 hidden md:flex">
             <span className="text-[9px] font-bold text-ink/50 uppercase tracking-wider px-1 text-center mb-1">{isEn ? 'Switch Camera' : '切换镜头'}</span>
-            {Array.from(new Set(activeAquarium.fishes.map(f => f.fishId))).map(uId => {
+            {Array.from(new Set(activeAnimalRecords.map(f => f.fishId))).map(uId => {
               const fishInfo = fishData.find(f => f.id === uId);
               if (!fishInfo) return null;
-              const qty = activeAquarium.fishes.filter(f => f.fishId === uId).reduce((sum, item) => sum + (item.quantity||1), 0);
+              const qty = activeAnimalRecords.filter(f => f.fishId === uId).reduce((sum, item) => sum + (item.quantity||1), 0);
               const isActive = active3DSpecies === uId;
               return (
                 <button 
@@ -5755,10 +5775,10 @@ export default function AquariumManager() {
               </div>
             </div>
             <div className="app-scrollbar-hidden absolute inset-x-3 bottom-3 z-20 flex gap-2 overflow-x-auto rounded-[18px] bg-white/82 p-2 shadow-lg backdrop-blur-md md:hidden">
-              {Array.from(new Set(activeAquarium.fishes.map(item => item.fishId))).map(fishId => {
+              {Array.from(new Set(activeAnimalRecords.map(item => item.fishId))).map(fishId => {
                 const fishInfo = fishData.find(fish => fish.id === fishId);
                 if (!fishInfo) return null;
-                const quantity = activeAquarium.fishes.filter(item => item.fishId === fishId).reduce((sum, item) => sum + (item.quantity || 1), 0);
+                const quantity = activeAnimalRecords.filter(item => item.fishId === fishId).reduce((sum, item) => sum + (item.quantity || 1), 0);
                 return (
                   <button
                     key={fishId}
@@ -5771,7 +5791,7 @@ export default function AquariumManager() {
                   </button>
                 );
               })}
-              {activeAquarium.fishes.length === 0 && <div className="px-3 py-2 text-[11px] font-bold text-ink/45">{isEn ? 'No species in tank yet.' : '还没有缸内物种。'}</div>}
+              {activeAnimalRecords.length === 0 && <div className="px-3 py-2 text-[11px] font-bold text-ink/45">{isEn ? 'No species in tank yet.' : '还没有缸内物种。'}</div>}
             </div>
             </div>
             <aside className="hidden min-h-0 border-l border-white/70 bg-white/78 p-4 backdrop-blur md:block">
@@ -5781,7 +5801,7 @@ export default function AquariumManager() {
                 {[
                   `${activeAquarium.waterType === 'Saltwater' ? '海水' : activeAquarium.waterType === 'Freshwater' ? '淡水' : '水体未记录'} · ${activeAquarium.targetTemperature ? `目标 ${activeAquarium.targetTemperature}°C` : '目标温度未记录'}`,
                   tankVolumeLiters > 0 ? `${activeAquarium.dimensions?.length}x${activeAquarium.dimensions?.width}x${activeAquarium.dimensions?.height}cm · 约${tankVolumeLiters}L` : '尺寸未记录',
-                  `${activeAquarium.fishes.length} 条记录 · ${totalStockedQuantity} 只/条活体`,
+                  `${activeAnimalRecords.length} 条记录 · ${totalStockedQuantity} 只/条活体`,
                 ].map(item => (
                   <div key={item} className="rounded-[16px] bg-white px-3 py-2 text-[12px] font-black text-ink/70 shadow-sm">
                     {item}
@@ -5790,11 +5810,11 @@ export default function AquariumManager() {
               </div>
               <div className="mt-5 text-[13px] font-black text-ink">{isEn ? 'Camera Angle' : '镜头切换'}</div>
               <div className="app-scrollbar-hidden mt-2 grid max-h-[48dvh] gap-2 overflow-y-auto">
-                {Array.from(new Set(activeAquarium.fishes.map(f => f.fishId))).map(fishId => {
+                {Array.from(new Set(activeAnimalRecords.map(f => f.fishId))).map(fishId => {
                   const fishInfo = fishData.find(fish => fish.id === fishId);
                   if (!fishInfo) return null;
                   const isActive = active3DSpecies === fishId;
-                  const quantity = activeAquarium.fishes.filter(item => item.fishId === fishId).reduce((sum, item) => sum + (item.quantity || 1), 0);
+                  const quantity = activeAnimalRecords.filter(item => item.fishId === fishId).reduce((sum, item) => sum + (item.quantity || 1), 0);
                   return (
                     <button
                       key={fishId}
@@ -5814,7 +5834,7 @@ export default function AquariumManager() {
                     </button>
                   );
                 })}
-                {activeAquarium.fishes.length === 0 && (
+                {activeAnimalRecords.length === 0 && (
                   <div className="rounded-[16px] border border-dashed border-border bg-white px-3 py-5 text-center text-[12px] font-bold text-ink/42">
                     还没有活体生物。
                   </div>

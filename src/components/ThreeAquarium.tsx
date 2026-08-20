@@ -4,7 +4,7 @@ import { Billboard, Html, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { Aquarium, Fish } from '../types';
 import { fishData } from '../data/fishData';
-import { getAquariumHardscapeSpecies, getAquariumPlantSpecies } from '../lib/speciesClassification';
+import { getAquariumHardscapeSpecies, getAquariumPlantSpecies, isAquaticPlantSpecies, isHardscapeSpecies } from '../lib/speciesClassification';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 
 interface ThreeAquariumProps {
@@ -1007,7 +1007,7 @@ export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect }: Thre
     const items: SwimItem[] = [];
     aquarium.fishes.forEach((aqFish, aqIndex) => {
       const fishInfo = fishData.find((fish) => fish.id === aqFish.fishId);
-      if (!fishInfo) return;
+      if (!fishInfo || isAquaticPlantSpecies(fishInfo) || isHardscapeSpecies(fishInfo)) return;
 
       for (let index = 0; index < (aqFish.quantity || 1); index += 1) {
         const seed = `${aqFish.id}-${fishInfo.id}-${index}`;
