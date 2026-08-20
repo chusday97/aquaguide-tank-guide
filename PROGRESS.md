@@ -1,3 +1,15 @@
+## 2026-08-20 当前状态同步
+
+- 当前阶段：AquaGuide 已从“核心功能补齐”进入 **产品可信性 + UI/UX 完成度 + Functional CTA 行为闭环审计**。自动化 regression PASS 只能证明既有契约没有回退，不能等价为真实用户 UI/UX 验收通过。
+- Golden Path：GP-001～GP-005 继续保持 5/5 covered；最新正式验证为 Product Golden Path #594 / run `32053031556`，Care card action regression、31 Badcases、typecheck、build、GP-001～GP-005 全 PASS。
+- Functional CTA Audit：PUI-BC-030（成就建设中假 CTA）、PUI-BC-031（Settings 分享与隐私假导航）、PUI-BC-032（Care 已有养护卡能力不可达）均已 `regression_verified`。后续审计继续按 `Trigger → Execution → Observable Result → Persistence → Failure / Retry`，不能再以“存在 onClick”作为功能完成标准。
+- UI/UX：水族册已有 `test:collection-swipe-cards` / `test:collection-hub-ui` 等机械交互回归，但 2026-08-20 用户复核仍认为整体 UI、信息层级与互动完成度未达到产品验收标准。新增 `PUI-BC-033`，状态 `investigating`；旧 `PUI-BC-017` 只证明“纵向列表 → 横向 swipe card”的特定历史问题已修，不代表水族册整体体验已完成。
+- 混养知识：Decision Engine 与 GP-002 保持稳定，但 PUI-BC-025 继续 `investigating`。当前 reviewed profiles=7、reviewed pair rules=4、priority recordable=2/132；未审核组合继续 fail closed，不得把 CI 稳定描述成 broad knowledge coverage。
+- 外部门禁：真实 Supabase migration/RLS/RPC、41 篇养护内容 228 条动作的专家显式审核、真人/真机 UI 验收仍未完成，不能包装成生产级已验证。
+- 下一步优先级：**P0 水族册与全站 UI/UX acceptance audit → P0 Functional CTA Audit v4 → P1 真实 Supabase 验证 → P1 养护内容专家审核 → P1 usage-grounded compatibility evidence 扩张。**
+
+> 注：以下 `当前任务目标 / 已完成` 为历史累计进度，保留用于追溯；当前执行入口以本节与 `HANDOFF-2026-08-20.md` 为准。
+
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
@@ -217,38 +229,3 @@
 - 为 `sp_0357` 莫斯墙和 `sp_0452` 公子小丑生成候选透明源图；人工确认后才替换版本化素材并重跑图片、响应式和 2D/3D 一致性测试。
 - 按 `docs/04-planning/EXTERNAL_VALIDATION_PROTOCOL.md` 执行真实水族新手任务、真实鱼缸跨入口人工验收和低端真机 3D 五分钟采集。
 - 复核 93 组跨内容重复素材；确认迁移提交请求的数据携带方式后完成游客迁移/离线队列，再逐页把现有前端接入 Repository，并在测试 Supabase 项目执行 migration 与 RLS 验证。
-
-## 本轮已完成
-
-- 2026-07-28：按最终 C 方案重排鱼缸首页。桌面新手起步收进侧栏，侧栏统一鱼缸切换与新建；观察区改为左侧鱼缸＋三种物种预览、右侧今日行动，管理与学习并排，进阶检测横跨底部。修复侧栏 `action=create` 只开设置却不新建的问题。`npm run lint`、`npm run build` 与 `scripts/verify-aquarium-home-c.mjs`（1440/1000/600px 桌面、320–430px 真手机、物种弹窗、移出重试和风险向导）通过。（commit: `eb0fe80`）
-- 今日行动改为同一优先级选择器生成状态、原因和唯一主操作，长详情弹窗已删除，异常 AI 解释改为低频原位展开。
-- `/collection` 改为四张模块卡首页，四个模块使用独立地址；桌面侧栏提供直达二级标题，旧 query 与旧收藏路由兼容重定向。
-- 鱼缸页删除重复“死亡图鉴”；生命纪念详情的“再次加入”通过查询参数打开现有添加流程并预选物种，最终仍执行统一混养复核。
-- `npm run lint`、`npm run build` 与 1280/390px 浏览器直达回归通过，无页面错误。（commit: `917b80a`）
-- 核心路由增加独立错误边界，动态块加载先重试一次且自动刷新最多一次；损坏本地数据安全降级并提示，图片 404 只显示占位图。生产故障注入确认侧栏保留、无技术堆栈、无刷新循环。
-- 生成 486 个物种两档 WebP 与 54 张养护图两档 WebP；卡片缩略图均小于 100KB，3D 继续使用原版本化贴图。生产预览手机首屏图片为图鉴约 153KB、鱼缸约 45KB、养护约 148KB，核心内容约 1.1–1.6 秒可用；2G/节省流量不自动下载 3D。（commit: `b38508c`）
-- 完成混养跨入口自动一致性验收：统一引擎、选择顺序和添加策略测试通过；带真实缸内活体的页面点击仍按外部协议执行。
-- 将 AI 风险审计改为“用户点击后解释”，AI 不得自动影响最终结论。（基础链路、详情页调用和状态一致性校验已完成，后续可继续统一其它入口的命名与展示）
-- 继续验证有真实缸内活体时的“按鱼缸导入”与结果页写入交互；空缸空状态、本地候选推荐和非混养对象过滤已通过页面验证。
-- 18 张中优先级素材已逐张复核；16 张接受现状，2 张待重新生成。轻量飞入或 `+1` 动效继续作为 P1 增强，不影响快捷收藏 P0 闭环。
-- 继续按文章类型细化养护详情：操作型已采用大图与三步指引的“图示操作台”，诊断型自查与护理型清单后续结合真实文章逐项验收。
-- `risk_audit`、`risk_explanation`、`recommendation_assist` 只保留内部兼容，正式页面不再公开调用。
-- 清理或隔离外部项目目录，避免误提交非 AquaGuide 文件。
-- 后续性能优化先在真实低端设备完成 5 分钟帧率与 GPU 内存曲线，再决定是否拆分 `ThreeAquarium`、物种数据和图片资源；本轮未做大拆分。
-
-## 已知问题/阻塞点
-- Antigravity 的全局翻译任务已暂停且未完全完成；本轮只补了导航、引导、缸内物种与体态相关词条，不能宣称全站英文完成。
-- `aquarium_species_batches`、引导偏好同步和批次 RLS 只有静态契约/API/Repository 证据，尚未在真实 Supabase 测试项目执行。
-- 原子移出已通过代码、路由顺序和专项测试；尝试用隔离 Docker PostgreSQL 执行真实重放时，Docker daemon 连续从官方 registry 拉取镜像返回 EOF，因此真实数据库重放仍待测试 Supabase 或 registry 恢复。
-- 当前英文模式已覆盖应用壳、导航、错误恢复和设置，但业务页面大量固定文案及英文内容尚未审核完成；因此只能作为本地预览，不能标记为正式英文内容全覆盖。
-- 生产构建仍提示两个超过 500KB 的按需代码块：`species.service` 因静态依赖完整物种库约 739KB，`ThreeAquarium` 因 Three.js / React Three Fiber 运行时约 939KB。两者均已按路由或组件延后加载；进一步拆分需要物种仓库分层和 3D 模块边界重构，不属于本轮核心收口，未通过调高警告阈值掩盖。
-- 子项目此前缺失 `PROGRESS.md`，历史进度主要来自对话上下文和 git diff；本文件从当前状态开始补记。
-- 真实低端设备的 3D 五分钟帧率与 GPU 内存曲线尚未采集；当前只确认了构建体积、限帧、离屏/后台暂停和释放路径。
-
-## 关键决策记录
-- 国际化只改变展示语言，中文主数据继续供规则引擎使用；未发布英文翻译必须回退中文并显式标记，不允许机器草稿直接公开。
-- 不修改原始物种数据结构。
-- 2026-07-16 起迁移策略更新为：游客继续兼容现有 localStorage；登录用户业务数据与内容库进入 Supabase，前端只通过 Express API 访问业务表。
-- AI 只能解释规则结果，不能决定 `canAdd`、风险等级或推荐候选池。
-- 混养判断统一为四种状态：`compatible / caution / not_recommended / insufficient_data`。
-- 手机端按真实手机设备判定，不再按 `<768px` 判定；桌面缩窄仍保持桌面工作台，平板默认使用桌面布局。
