@@ -1,74 +1,133 @@
-# AquaGuide #104 — Merge Readiness
+# AquaGuide — Stacked Merge Readiness
 
 **Date:** 2026-08-20  
-**PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
-**Base:** `integration/aquaguide-rc1`  
-**Branch:** `agent/uiux-system-refactor-v1`
+**Parent PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
+**Child PR:** #105 `Introduce decision-first Result UX V1`
 
 ## Decision
 
-**READY FOR REVIEW — not yet approved to merge or deploy.**
+**PRODUCT / RESULT UX: READY. STACK INTEGRATION: READY FOR ORDERED REVIEW, NOT YET APPROVED TO MERGE OR DEPLOY.**
 
-The last code/governance head `20157e0c786becf92dce2442c208e711da8cf60c` passed all five engineering gates. Subsequent commits only refresh merge-readiness documentation.
+All live Result UX consumers are closed and the child branch remains a clean descendant of the parent branch. The remaining repository work is an ordered stacked-PR transition plus an explicit deployment-policy decision.
 
-## Mandatory gate matrix
+## Stack topology
+
+### Layer 1 — #104
+
+- base: `integration/aquaguide-rc1`
+- head: `agent/uiux-system-refactor-v1`
+- head: `1c2b5a383da3b0d6a90ba72537395fb41deb7841`
+- compare against RC1: **ahead 102 / behind 0**
+- PR state: open, mergeable, non-draft
+- submitted reviews: none
+- unresolved inline review threads: none
+
+#104’s established engineering gate matrix remains green on its validated code/governance head. Its visible Vercel failure is the documented free-plan build-rate-limit state, not an application build failure.
+
+### Layer 2 — #105
+
+- base: `agent/uiux-system-refactor-v1`
+- head: `agent/result-ux-v1`
+- compare against #104 at audit time: **ahead-only / behind 0**
+- PR state: open, mergeable, Draft
+- submitted reviews: none
+- unresolved inline review threads: none
+
+No branch divergence or rebase requirement was found in the current stack.
+
+## #105 final product gate matrix
+
+The seven-consumer Result UX closure was first proven on `4a4388f41ffafa902bf6f9bc25e2d2130cd09498`:
 
 | Gate | Run | Result |
 | --- | --- | --- |
-| Navigation Context V1 | #15 / `32283514536` | PASS |
-| UI UX System Refactor V1 | #87 / `32283514511` | PASS |
-| UI UX Visual QA V2 | #70 / `32283514530` | PASS |
-| UI UX Golden V3 | #32 / `32283514489` | PASS after infrastructure-only retry |
-| Bundle Audit V1 | #25 / `32283514480` | PASS |
+| Result UX V1 | `32359908856` | PASS |
+| Plant Roster Edit Fix + Navigation Context | `32359908896` | PASS |
+| Compatibility Stage Risk V1 | `32359909061` | PASS |
 
-Golden V3 retry note: first attempt was blocked at Playwright Chromium download by a GitHub runner/CDN regional 403 before pixel comparison. The job was rerun without code, reference or tolerance changes. Retry completed all eight cases at 0% changed.
+The integration audit then found that these workflows only listened to PRs targeting `agent/uiux-system-refactor-v1`. That would have silently disabled the permanent gates after #104 merges and #105 is retargeted to RC1.
 
-## Navigation-context acceptance
+Commit `a8e402b0f6b6d83dbed5927ca39e7507fd232548` fixes that integration blocker by making all three permanent workflows listen to both:
 
-- PUI-BC-050: risk review no longer silently changes task; full Compatibility no longer deep-scrolls the Atlas.
-- PUI-BC-051: Search deep Species/Care results restore explicit show-all state, exact source result, workspace scroll and focus.
-- PUI-BC-052: Aquarium child Species Detail returns to the immediate parent livestock roster, restores roster scroll and exact profile focus.
-- PUI-BC-051/052 are canonical; append commit `5ccdb3e2ebf96437bf0a671cbec180b4c583a8df` is exactly +2 / -0 in `evaluation/product/badcases.v1.jsonl`.
-- PUI-BC-032 historical trigger remains unchanged.
+- `agent/uiux-system-refactor-v1`
+- `integration/aquaguide-rc1`
 
-## Review / preview checks
+Permissions remain `contents: read`.
 
-- PR is mergeable according to GitHub.
-- No submitted reviews.
-- No unresolved inline review threads.
-- Cloudflare Pages preview for validated head `20157e0` succeeded.
-- Vercel preview failure is the free-plan daily deployment quota (>100), not an application build failure.
+Retarget-safe validation on `a8e402b0...`:
 
-## Accepted non-blocking debt
+| Gate | Run | Result |
+| --- | --- | --- |
+| Result UX V1 | `32362579152` | PASS |
+| Plant Roster Edit Fix + Navigation Context | `32362579154` | PASS |
+| Compatibility Stage Risk V1 | `32362579151` | PASS |
 
-### 1. Thin wrapper + Base structure
+Result UX #84 passed the static contract, deterministic Copilot contract, TypeScript, production build and all seven browser consumers including live Tank Copilot.
 
-`SpeciesDetailDialog.tsx` / `SpeciesDetailDialogBase.tsx` and `Encyclopedia.tsx` / `EncyclopediaBase.tsx` are intentionally surgical wrappers around large legacy components. They are not ideal final architecture, but consolidating thousand-line components inside this already-large PR has a worse risk/reward profile than retaining the wrappers with strong regressions.
+## Correct merge sequence
 
-**Disposition:** follow-up cleanup PR; retain Navigation Context and Compatibility regressions during any consolidation.
+Do **not** merge #105 into #104 merely to collapse the stack. That would widen #104 after its review boundary was deliberately frozen.
 
-### 2. Bundle size
+Correct sequence:
 
-The entry bundle remains roughly 2.1 MiB, with large fish/localization data plus analytics/data-service dependencies. Three/Fiber is largely isolated in its own large chunk. Bundle Audit V1 measures the problem but #104 does not solve it.
+1. review #104 as its bounded UI/UX-system change;
+2. when explicitly approved, merge #104 into `integration/aquaguide-rc1`;
+3. retarget #105 from `agent/uiux-system-refactor-v1` to `integration/aquaguide-rc1`;
+4. confirm the retargeted #105 remains mergeable and ahead-only;
+5. require the same three permanent #105 gates to pass against the RC1 target;
+6. review #105 as the separate Result UX / lifecycle / plant-fix layer;
+7. merge #105 only after an explicit approval decision.
 
-**Disposition:** separate performance PR. Do not widen #104 further.
+No merge is performed by this readiness document.
 
-### 3. Dependency audit
+## Production-readiness decision still required
 
-`npm ci` currently reports 18 vulnerabilities (2 low, 6 moderate, 10 high). `package.json` and `package-lock.json` are not changed by #104, so these are pre-existing dependency findings rather than regressions introduced here.
+### Vercel deployment policy
 
-**Disposition:** separate dependency-remediation audit.
+#105 adds:
 
-### 4. Preview infrastructure
+```json
+"git": {
+  "deploymentEnabled": false
+}
+```
 
-Vercel has exhausted its free daily deployment quota. Cloudflare branch preview succeeds.
+This was intentional during repair to prevent every development commit from consuming Vercel Preview/build quota. #104 does not contain this setting.
 
-**Disposition:** not a merge blocker; do not classify quota exhaustion as application failure.
+Before production, choose explicitly between:
 
-## Explicit non-goals before review
+- **manual / milestone deployment** — keep `deploymentEnabled: false`; or
+- **Git-driven deployment** — remove/adjust the setting only as a deliberate release-policy change.
 
-Do not add more UI features, bundle refactors, dependency upgrades, or wrapper/Base consolidation to #104. New work should use a follow-up branch/PR after this review boundary.
+Do not silently re-enable Vercel simply because the code is merge-ready.
 
-## Transition
+### Dependency / bundle debt
 
-The appropriate next repository action is to mark #104 **Ready for Review** while keeping it open and unmerged. A merge decision should occur only after review of this bounded scope.
+Still present and currently classified as non-blocking technical debt rather than regressions introduced by the Result UX slice:
+
+- npm audit: 18 vulnerabilities (2 low, 6 moderate, 10 high);
+- mixed static/dynamic imports for `fishData` and `careTopicsData`;
+- `react-three-fiber` chunk roughly 889 KB;
+- main entry roughly 2.12 MB / gzip ~475 KB;
+- thin wrapper/Base architecture inherited from #104.
+
+These need dedicated remediation work; do not broaden #104/#105 with opportunistic refactors or blind `npm audit fix`.
+
+## Badcase governance
+
+PUI-BC-054 is a genuine product badcase and is documented in `BADCASE_LATEST.md` with fail-before and final browser evidence.
+
+The machine-readable `evaluation/product/badcases.v1.jsonl` currently ends at PUI-BC-052. PUI-BC-053 is evaluator-only and correctly excluded. `tank_copilot` is a valid product-evaluation featureId, so PUI-BC-054 is eligible for a future append-only canonical update.
+
+A temporary write-enabled append workflow was tested and removed because its trigger was not reliably observable through the current PR workflow path. **No permanent write-enabled workflow remains.** Canonical append remains a governance follow-up, not a reason to weaken CI permissions.
+
+## Current blockers before any merge/deploy
+
+1. human / explicit approval of #104 merge into RC1;
+2. #105 retarget after #104 merge and same-gate revalidation on the new base;
+3. explicit choice of Vercel deployment policy before production;
+4. explicit merge/deployment authorization.
+
+## Current recommendation
+
+Keep #105 Draft while #104 is still open. The product implementation is closed; the remaining work is stack transition and release governance, not further Result UX feature work.
