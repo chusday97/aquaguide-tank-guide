@@ -88,6 +88,7 @@ type StatusSummaryCardProps = {
   onBrowseCare: () => void;
   onDownloadHealth?: () => void;
   onDownloadCarePlan?: () => void;
+  hideAction?: boolean;
 };
 
 const levelTone: Record<AquariumStatusLevel, TagPillTone> = {
@@ -117,6 +118,7 @@ export function StatusSummaryCard({
   onBrowseCare,
   onDownloadHealth,
   onDownloadCarePlan,
+  hideAction = false,
 }: StatusSummaryCardProps) {
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
@@ -145,8 +147,8 @@ export function StatusSummaryCard({
   } as const;
 
   return (
-    <section className={`flex min-h-[220px] flex-col rounded-[20px] border p-4 shadow-sm ${levelStyles[action.level]}`} data-daily-action={action.task.actionType}>
-      <div className="flex items-start justify-between gap-3">
+    <section className={`flex ${hideAction ? 'min-h-0' : 'min-h-[220px]'} flex-col rounded-[20px] border p-4 shadow-sm ${levelStyles[action.level]}`} data-daily-action={action.task.actionType}>
+      {!hideAction && <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-[13px] font-black text-ink">{t('aquarium.todayAction')}</div>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -164,9 +166,9 @@ export function StatusSummaryCard({
             <Icon className="h-5 w-5" />
           </div>
         </div>
-      </div>
+      </div>}
 
-      <div className="mt-4 rounded-[17px] bg-white/78 p-4">
+      {!hideAction && <div className="mt-4 rounded-[17px] bg-white/78 p-4">
         <h2 className="text-[18px] font-black leading-snug text-ink [text-wrap:pretty]">{action.task.title}</h2>
         <p className="mt-2 text-[12px] font-bold leading-5 text-ink/60">{action.task.reason}</p>
         {action.level === 'urgent' && action.reasoning.length > 0 && (
@@ -181,9 +183,9 @@ export function StatusSummaryCard({
             </ul>
           </div>
         )}
-      </div>
+      </div>}
 
-      {hasPrimaryAction && (
+      {!hideAction && hasPrimaryAction && (
         <Button
           type="button"
           onClick={onPrimaryAction}

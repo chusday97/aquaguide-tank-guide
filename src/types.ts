@@ -112,6 +112,49 @@ export type SpeciesAdditionPolicy =
   | 'complete_information'
   | 'block';
 
+/**
+ * 场景化知识入口只描述用户当前正在观察的对象；不写入鱼缸，也不替代诊断规则。
+ */
+export type KnowledgeObjectId =
+  | 'water_surface'
+  | 'water_body'
+  | 'livestock'
+  | 'filter'
+  | 'substrate'
+  | 'plants_equipment';
+
+export type KnowledgeUrgency = 'routine' | 'watch' | 'urgent';
+
+export interface KnowledgeJourneyAction {
+  id: string;
+  title: string;
+  instruction: string;
+  reviewStatus: 'reviewed' | 'pending';
+  sourceIds: string[];
+}
+
+export interface KnowledgeJourney {
+  id: string;
+  objectId: KnowledgeObjectId;
+  observationCodes: string[];
+  urgency: KnowledgeUrgency;
+  contextFacts: Array<{
+    label: string;
+    value: string;
+    status: 'confirmed' | 'unknown';
+  }>;
+  emergencyActions: KnowledgeJourneyAction[];
+  clarifyingQuestions: Array<{
+    id: string;
+    prompt: string;
+    options: Array<{ id: string; label: string }>;
+  }>;
+  possibleCauses: string[];
+  avoidActions: KnowledgeJourneyAction[];
+  recheck: { timing: string; signals: string[] };
+  relatedArticleIds: string[];
+}
+
 export type MemorialCauseCode =
   | 'water_quality_change'
   | 'oxygen_shortage'

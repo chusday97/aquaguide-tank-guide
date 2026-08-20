@@ -78,6 +78,7 @@ import { OnboardingTaskCard } from '../components/onboarding/OnboardingTaskCard'
 import { getOnboardingState, getOnboardingTaskProgress, getOnboardingTasks, markAquariumConfigured } from '../services/onboarding/onboarding.service';
 import { LivestockRosterDialog } from '../components/aquarium/LivestockRosterDialog';
 import { AquariumTimeline } from '../components/aquarium/AquariumTimeline';
+import { InteractiveAquariumHero } from '../components/interactive/InteractiveAquariumHero';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
 import {
@@ -5142,6 +5143,24 @@ export default function AquariumManager() {
 
       {isPhoneLayout && <OnboardingTaskCard />}
 
+      <InteractiveAquariumHero
+        aquarium={activeAquarium}
+        species={currentFishesDetails}
+        action={dailyActionViewModel}
+        carePlan={carePlanSummary}
+        isEn={isEn}
+        onPrimaryAction={handleDailyActionPrimary}
+        onOpenLivestock={() => setIsTankArchiveExpanded(true)}
+        onOpenDiscovery={() => {
+          const target = document.getElementById('aquarium-discovery');
+          if (!target) return;
+          target.classList.add('aquarium-zone-target');
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.focus({ preventScroll: true });
+          window.setTimeout(() => target.classList.remove('aquarium-zone-target'), 1200);
+        }}
+      />
+
       <AquariumWorkspace
         observeTitle={t('aquarium.zoneObserve')}
         observeSubtitle={t('aquarium.zoneObserveHint')}
@@ -5150,37 +5169,38 @@ export default function AquariumManager() {
         learnTitle={t('aquarium.zoneLearn')}
         learnSubtitle={t('aquarium.zoneLearnHint')}
         status={(
-      <div id="aquarium-overview" className="aquarium-status order-[2] scroll-mt-4 md:order-none">
-        <StatusSummaryCard
-          action={dailyActionViewModel}
-          carePlan={carePlanSummary}
-          showCarePlan={isCarePlanExpanded}
-          onPrimaryAction={handleDailyActionPrimary}
-          onToggleCarePlan={() => setIsCarePlanExpanded(open => !open)}
-          onOpenCarePlan={(id) => {
-            const reminder = activeCareReminders.find(item => item.id === id);
-            if (reminder) navigateToRoute(`/care?topic=${encodeURIComponent(reminder.sourceTopicId)}`);
-          }}
-          onCompleteCarePlan={(id) => {
-            const reminder = activeCareReminders.find(item => item.id === id);
-            if (reminder) handleCompleteReminder(reminder);
-          }}
-          onRescheduleCarePlan={(id) => {
-            const reminder = activeCareReminders.find(item => item.id === id);
-            if (reminder) setPendingReminderReschedule(reminder);
-          }}
-          onDeleteCarePlan={(id) => {
-            const reminder = activeCareReminders.find(item => item.id === id);
-            if (reminder) setPendingReminderDelete(reminder);
-          }}
-          onBrowseCare={() => navigateToRoute('/care')}
-          onDownloadHealth={() => openExportArtifact(buildHealthScoreArtifact(artifactContext))}
-          onDownloadCarePlan={() => openExportArtifact(buildWeeklyCareArtifact(artifactContext))}
-        />
-      </div>
+          <div id="aquarium-overview" className="aquarium-status order-[2] scroll-mt-4 md:order-none">
+            <StatusSummaryCard
+              action={dailyActionViewModel}
+              carePlan={carePlanSummary}
+              showCarePlan={isCarePlanExpanded}
+              hideAction
+              onPrimaryAction={handleDailyActionPrimary}
+              onToggleCarePlan={() => setIsCarePlanExpanded(open => !open)}
+              onOpenCarePlan={(id) => {
+                const reminder = activeCareReminders.find(item => item.id === id);
+                if (reminder) navigateToRoute(`/care?topic=${encodeURIComponent(reminder.sourceTopicId)}`);
+              }}
+              onCompleteCarePlan={(id) => {
+                const reminder = activeCareReminders.find(item => item.id === id);
+                if (reminder) handleCompleteReminder(reminder);
+              }}
+              onRescheduleCarePlan={(id) => {
+                const reminder = activeCareReminders.find(item => item.id === id);
+                if (reminder) setPendingReminderReschedule(reminder);
+              }}
+              onDeleteCarePlan={(id) => {
+                const reminder = activeCareReminders.find(item => item.id === id);
+                if (reminder) setPendingReminderDelete(reminder);
+              }}
+              onBrowseCare={() => navigateToRoute('/care')}
+              onDownloadHealth={() => openExportArtifact(buildHealthScoreArtifact(artifactContext))}
+              onDownloadCarePlan={() => openExportArtifact(buildWeeklyCareArtifact(artifactContext))}
+            />
+          </div>
         )}
         discovery={(
-      <section id="aquarium-discovery" className="aquarium-discovery order-[1] scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
+      <section id="aquarium-discovery" tabIndex={-1} className="aquarium-discovery order-[1] scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
         <div className="mb-2 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 text-[13px] font-black text-ink">
@@ -8178,7 +8198,10 @@ export default function AquariumManager() {
         aquariumName={activeAquarium.name}
         records={activeAquarium.fishes}
         species={fishData}
-        onOpenChange={setIsTankArchiveExpanded}
+        onOpenChange={(open) => {
+          setIsTankArchiveExpanded(open);
+          if (!open) window.setTimeout(() => document.querySelector<HTMLElement>('[data-interactive-livestock]')?.focus(), 0);
+        }}
         onOpenDetail={(fish, record) => {
           setIsTankArchiveExpanded(false);
           openAquariumSpeciesDetail(fish, record, 'aquarium-records');

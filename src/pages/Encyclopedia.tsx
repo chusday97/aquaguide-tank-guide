@@ -71,6 +71,7 @@ import {
 import { taskRoutes } from '../services/navigation/task-routes';
 import { getAquariumNavigationSnapshot } from '../services/aquarium/aquarium-navigation.service';
 import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.service';
+import { SpeciesSceneAtlas } from '../components/interactive/SpeciesSceneAtlas';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 
@@ -78,10 +79,10 @@ const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewMo
 const getSpeciesNameLocalized = (species: any, isEn = false): string => {
   if (!species) return '';
   if (!isEn) return species.name || '';
-  if (species.scientificName) return species.scientificName;
   const id = species.id || '';
   if (autoTranslations[id]?.name) return autoTranslations[id].name;
   if (englishTranslations[id]?.name) return englishTranslations[id].name;
+  if (species.scientificName) return species.scientificName;
   return species.name || '';
 };
 
@@ -589,7 +590,7 @@ export default function Encyclopedia() {
   const { captureContext, navigateToRoute, navigateToSection, navigateToView, restoreContext } = useWorkspaceNavigation();
   const location = useLocation();
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState<'browse' | 'compatibility'>('browse');
+  const [viewMode, setViewMode] = useState<'scene' | 'browse' | 'compatibility'>('scene');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSearchSpecies, setSelectedSearchSpecies] = useState<SearchSuggestion | null>(null);
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>(emptyActiveFilters);
@@ -1380,6 +1381,7 @@ export default function Encyclopedia() {
     setSelectedFish(fish);
   };
   const atlasModeItems = [
+    { id: 'scene' as const, label: isEn ? 'Explore scene' : '互动探索', description: isEn ? 'Start with a species you notice.' : '先点一条你感兴趣的鱼。' },
     { id: 'browse' as const, label: t('encyclopedia.browseAtlas'), description: t('encyclopedia.browseAtlasDesc') },
     { id: 'compatibility' as const, label: t('encyclopedia.compatibilityCalc'), description: t('encyclopedia.compatibilityCalcDesc') },
   ];
@@ -1388,18 +1390,18 @@ export default function Encyclopedia() {
     <div className="encyclopedia-workspace page-frame-wide flex min-w-0 flex-col gap-6 overflow-x-hidden pt-[58px] md:pt-0 md:overflow-visible">
       {!isOverlayOpen && (
       <div className="atlas-mobile-toolbar fixed inset-x-0 top-0 z-[60] mx-auto grid w-full max-w-[430px] grid-cols-[minmax(0,1fr)_auto_auto] gap-1.5 bg-bg/95 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] shadow-sm backdrop-blur-md md:sticky md:inset-auto md:top-3 md:max-w-[560px] md:rounded-[30px] md:p-2 md:hidden">
-        <div className="grid min-w-0 grid-cols-2 gap-1 rounded-full bg-white/90 p-1 ring-1 ring-border/70">
+        <div className="grid min-w-0 grid-cols-3 gap-1 rounded-full bg-white/90 p-1 ring-1 ring-border/70">
         {atlasModeItems.map(item => (
           <button
             key={item.id}
             id={item.id === 'compatibility' ? 'calculator-tab-target' : undefined}
             type="button"
             onClick={() => setViewMode(item.id as typeof viewMode)}
-            className={`h-10 rounded-full text-[14px] font-black transition-colors ${
+            className={`h-10 min-w-0 rounded-full px-1 text-[10px] font-black leading-tight transition-colors ${
               viewMode === item.id ? 'bg-accent text-white shadow-sm' : 'text-ink/55 hover:text-ink'
             }`}
           >
-            {isEn ? getDifficultyLabelLocalized(item.id, true) : item.label}
+            {item.label}
             {item.id === 'compatibility' && calculatorSpeciesIds.length > 0 && (
               <span className={`ml-1 inline-flex min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] transition-all ${
                 calculatorPulse
@@ -1492,7 +1494,7 @@ export default function Encyclopedia() {
                     }`}
                   >
                     <span className="flex items-center justify-between gap-2">
-                      <span className="text-[14px] font-black">{isEn ? getDifficultyLabelLocalized(item.id, true) : item.label}</span>
+                      <span className="text-[14px] font-black">{item.label}</span>
                       {item.id === 'compatibility' && calculatorSpeciesIds.length > 0 && (
                         <span className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-black ${
                           isActive ? 'bg-white/22 text-white' : 'bg-emerald-100 text-emerald-700'
@@ -1512,9 +1514,26 @@ export default function Encyclopedia() {
         </aside>
         <div className="min-w-0">
 
-      {viewMode === 'browse' ? (
+      {viewMode === 'scene' ? (
+      <SpeciesSceneAtlas
+        species={allFishes}
+        isEn={isEn}
+        getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
+        onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
+        onBrowseList={() => setViewMode('browse')}
+        onIdentify={() => navigateToRoute('/identify')}
+      />
+      ) : viewMode === 'browse' ? (
       <div className="flex flex-col gap-5">
       <div id="atlas-toolbar" data-workspace-sticky="true" className="atlas-sticky-toolbar flex flex-wrap gap-4 md:items-center md:gap-3 md:rounded-[22px] md:border md:border-white/80 md:bg-white/82 md:p-3 md:shadow-sm">
+        <button
+          type="button"
+          data-scene-return
+          onClick={() => setViewMode('scene')}
+          className="hidden h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 text-[12px] font-black text-emerald-800 shadow-sm transition hover:bg-emerald-100 md:inline-flex"
+        >
+          <ChevronLeft className="h-4 w-4" />{isEn ? 'Explore scene' : '回到互动探索'}
+        </button>
         <button
           type="button"
           onClick={() => navigateToRoute('/identify')}

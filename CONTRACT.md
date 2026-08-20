@@ -1,8 +1,8 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.6.0
+> 版本：2.7.0
 > 状态：已确认，实施中
-> 生效日期：2026-08-09
+> 生效日期：2026-08-21
 > SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090002_atomic_care_reminder_completion.sql`
 > TypeScript 来源：`src/types/database.ts`
 
@@ -605,7 +605,51 @@ interface WaterProfileEstimate {
 - 同日巡检保留更新时间较新的结构化记录。
 - 生命纪念按记录 ID 合并。
 
-## 10. 兼容与排除范围
+## 10. 场景化图鉴与知识旅程展示契约（2.7.0）
+
+互动图鉴、场景化养护入口与传统列表共享现有 `Fish`、`CareTopic`、混养引擎、诊断图和行动证据；首期不新增数据库表、API、存储键或自动诊断结论。
+
+```ts
+type KnowledgeObjectId =
+  | 'water_surface'
+  | 'water_body'
+  | 'livestock'
+  | 'filter'
+  | 'substrate'
+  | 'plants_equipment';
+
+type KnowledgeUrgency = 'routine' | 'watch' | 'urgent';
+
+interface KnowledgeJourneyAction {
+  id: string;
+  title: string;
+  instruction: string;
+  reviewStatus: 'reviewed' | 'pending';
+  sourceIds: string[];
+}
+
+interface KnowledgeJourney {
+  id: string;
+  objectId: KnowledgeObjectId;
+  observationCodes: string[];
+  urgency: KnowledgeUrgency;
+  contextFacts: Array<{ label: string; value: string; status: 'confirmed' | 'unknown' }>;
+  emergencyActions: KnowledgeJourneyAction[];
+  clarifyingQuestions: Array<{ id: string; prompt: string; options: Array<{ id: string; label: string }> }>;
+  possibleCauses: string[];
+  avoidActions: KnowledgeJourneyAction[];
+  recheck: { timing: string; signals: string[] };
+  relatedArticleIds: string[];
+}
+```
+
+- 所有“现在先做”动作必须来自既有诊断图或文章步骤；不能由展示层创造处理建议。
+- 行动来源为 `pending` 时，界面必须明确为“待专项复核”，不得显示为已审核知识。
+- 红旗路径先显示低风险应急动作；常规路径最多询问两项已有确定性问题。
+- 当前鱼缸字段缺失时应显示“未记录”，不能用示例值或推测值补齐。
+- 场景选择、视图模式和步骤进度仅为会话 UI 状态，不写入用户业务数据。
+
+## 11. 兼容与排除范围
 
 - 原 `Fish.id`、`CareTopic.id` 迁移为 `catalogKey`。
 - 原收藏、纪念、巡检和养护计划存储键继续供游客与迁移读取。
@@ -613,11 +657,11 @@ interface WaterProfileEstimate {
 - 简易后台不包含多人审核、版本历史或复杂 CMS。
 - 本期不新增开放式 AI 问答、系统通知、积分、排行或社交能力。
 
-## 11. 历史契约状态
+## 12. 历史契约状态
 
 本文件 2.1.0 替代此前“本轮不迁移 Supabase、不新增业务表”的阶段性约束。旧约束只适用于 2026-07-16 前的本地核心体验收口，不再作为云端架构实施依据。
 
-## 12. 鱼缸记录导出与隐私分享（2.4.0）
+## 13. 鱼缸记录导出与隐私分享（2.4.0）
 
 - `Aquarium` 增加 `startedAt / startedAtSource / startedAtConfirmedAt`；新缸使用创建日，旧缸推算后必须由用户确认，百日纪念只使用已确认日期。
 - 六类导出统一为客户端 PNG，只消费现有业务数据，不保存导出图片。

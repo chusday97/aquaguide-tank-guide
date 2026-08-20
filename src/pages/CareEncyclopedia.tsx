@@ -46,6 +46,7 @@ import { getSearchSuggestions } from '../services/search/search-suggestions.serv
 import { taskRoutes } from '../services/navigation/task-routes';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
+import { KnowledgeSceneExplorer } from '../components/interactive/KnowledgeSceneExplorer';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
@@ -1768,6 +1769,7 @@ export default function CareEncyclopedia() {
 
   const filteredTopics = useMemo(() => {
     const keyword = searchTerm.trim().toLowerCase();
+    const keywordTerms = keyword.split(/\s+/).filter(Boolean);
     return careTopicsData.filter(topic => {
       const matchesCategory = keyword ? true : matchesCareCategory(topic, activeCategory);
       const matchesView = careViewMode === 'all' || Boolean(favorites[topic.id]);
@@ -1780,7 +1782,7 @@ export default function CareEncyclopedia() {
         homeMeta.actionLevel,
         ...topic.keywords,
       ].join(' ').toLowerCase();
-      return matchesView && matchesCategory && (!keyword || searchable.includes(keyword));
+      return matchesView && matchesCategory && (!keyword || keywordTerms.some(term => searchable.includes(term)));
     });
   }, [activeCategory, careViewMode, favorites, searchTerm]);
 
@@ -1967,6 +1969,18 @@ export default function CareEncyclopedia() {
           </button>
         </div>
       </section>
+
+      {!searchTerm.trim() && careViewMode === 'all' && (
+        <KnowledgeSceneExplorer
+          isEn={isEn}
+          onOpenTopic={(topicId, sourceId) => openCareDetail(topicId, sourceId)}
+          onBrowseList={(query) => {
+            if (query) setSearchTerm(query);
+            setCareWorkspacePage('content');
+            void navigateToSection('care-results', { updateHash: false });
+          }}
+        />
+      )}
 
       <section id="care-recommendations" className={`care-left-panel w-full min-w-0 max-w-full scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white p-3 shadow-sm ${(!searchTerm.trim() && careWorkspacePage === 'home') ? '' : 'hidden md:block'}`}>
             <div className="mb-3 flex items-start justify-between gap-3">

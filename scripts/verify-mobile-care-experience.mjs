@@ -44,6 +44,9 @@ try {
     const page = await context.newPage();
     page.setDefaultTimeout(20000);
     await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
+    await page.getByText('互动图鉴', { exact: true }).waitFor();
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, `${width}px scene has no horizontal overflow`);
+    await page.locator('.atlas-mobile-toolbar > div button').nth(1).click();
     const pager = page.locator('#atlas-pagination-bottom > div:visible');
     await pager.waitFor();
     const buttonY = await pager.locator('button').evaluateAll(buttons => buttons.map(button => Math.round(button.getBoundingClientRect().top)));
@@ -63,6 +66,14 @@ try {
   const phonePage = await phoneContext.newPage();
   phonePage.setDefaultTimeout(20000);
   await phonePage.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
+  await phonePage.getByRole('button', { name: '水面 泡沫、油膜、浮头' }).click();
+  await phonePage.getByText('再确认一个现象').waitFor();
+  await phonePage.getByText('鱼浮头或呼吸急促').click();
+  await phonePage.getByText('优先处理').waitFor();
+  await phonePage.getByRole('button', { name: '打开优先处理指引' }).click();
+  await phonePage.getByRole('dialog').waitFor();
+  await phonePage.keyboard.press('Escape');
+  await phonePage.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
   const recommendation = phonePage.locator('[data-care-recommend-card]').first();
   await recommendation.waitFor();
   const recommendationCounter = phonePage.locator('#care-recommendations').getByText(/^[0-9]+\/[0-9]+$/);
@@ -76,6 +87,11 @@ try {
   await phonePage.getByRole('heading', { name: '养护收藏', exact: true }).waitFor();
 
   await phonePage.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
+  const interactivePrimary = phonePage.locator('[data-interactive-primary]');
+  await interactivePrimary.waitFor();
+  await interactivePrimary.click();
+  await phonePage.getByRole('dialog').waitFor();
+  await phonePage.keyboard.press('Escape');
   const phoneSpeciesEntry = phonePage.locator('#aquarium-records > button[aria-haspopup="dialog"]');
   await phoneSpeciesEntry.waitFor();
   assert.equal(await phoneSpeciesEntry.count(), 1, 'phone keeps one tank species entry');
@@ -113,8 +129,12 @@ try {
   await desktopPage.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
   await desktopPage.keyboard.press('Escape');
   await desktopPage.getByText('养护计划', { exact: true }).waitFor();
-  await desktopPage.getByText('如何安全给新鱼过水？', { exact: true }).waitFor();
-  assert.equal(await desktopPage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'desktop aquarium has no horizontal overflow');
+  await desktopPage.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
+  await desktopPage.getByText('互动图鉴', { exact: true }).waitFor();
+  await desktopPage.getByText('传统浏览', { exact: true }).first().click();
+  await desktopPage.locator('[data-scene-return]').click();
+  await desktopPage.getByText('互动图鉴', { exact: true }).waitFor();
+  assert.equal(await desktopPage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'desktop atlas has no horizontal overflow');
   await desktopContext.close();
 
   console.log('mobile care experience: pager, recommendations, collection, tank species and care plan passed');
