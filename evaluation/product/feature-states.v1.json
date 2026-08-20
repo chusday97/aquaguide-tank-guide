@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-13",
+  "updatedAt": "2026-08-20",
   "minimumStatesPerFeature": 6,
   "features": [
     {
@@ -217,6 +217,18 @@
         {"id":"success","scenario":"用户核对并保存体态/数量变化","expected":"真实鱼缸状态、批次和相关时间线按同一操作结果更新","forbidden":"只显示成功 Toast 但底层数量或批次未变化"},
         {"id":"failure","scenario":"保存或 Repository 写入失败","expected":"保留草稿、显示可理解提示并允许稳定重试","forbidden":"清空草稿、展示 raw error 或把失败状态当作已保存"},
         {"id":"partial_group_boundary","scenario":"只调整同一物种中的部分数量或存在多个批次","expected":"明确本次影响数量，保持总数量守恒并让用户核对目标批次","forbidden":"部分编辑意外覆盖全部生物，或拆分后总数量发生变化"}
+      ]
+    },
+    {
+      "id": "share_report",
+      "name": "鱼缸报告分享",
+      "states": [
+        {"id":"initial","scenario":"已登录用户从真实鱼缸发起分享报告","expected":"只基于当前鱼缸事实生成经过字段白名单清洗的报告快照","forbidden":"把 ownerId、内部记录 ID、用户自由文本或 AI 原始响应直接放入公开报告"},
+        {"id":"in_progress","scenario":"正在生成、签名并持久化分享报告","expected":"使用独立签名 secret、管理员数据边界和稳定幂等写入，界面保持生成中状态","forbidden":"暴露 service-role、签名 secret、token hash、数据库错误或产生重复报告副作用"},
+        {"id":"success","scenario":"分享报告生成成功且依赖配置完整","expected":"返回基于 WEB_BASE_URL 的规范公开链接、受限有效期和已清洗报告内容","forbidden":"生产环境回退到 localhost、请求 Origin 或不受控的任意域名作为正式分享链接"},
+        {"id":"dependency_missing","scenario":"数据库、service-role、SHARE_TOKEN_SECRET 或 WEB_BASE_URL 任一缺失","expected":"能力 readiness=false，并在需要该能力时 fail closed，不伪装分享成功","forbidden":"复用 SUPABASE_SERVICE_ROLE_KEY 充当签名 secret，或只因数据库可用就宣称分享能力就绪"},
+        {"id":"access_boundary","scenario":"匿名访问公开分享 token","expected":"只在 token 有效且未过期时返回 sanitized report，不暴露所有者或内部基础设施字段","forbidden":"允许无效/过期 token 读取报告，或返回 ownerId、service credentials、internalId 等内部信息"},
+        {"id":"deployment_boundary","scenario":"RC1 发布验收和部署后健康检查","expected":"release contract 必须覆盖 share-report security；post-deploy smoke 必须看到 shareReportsConfigured=true","forbidden":"源码测试通过但真实部署缺 secret/WEB_BASE_URL 时仍把 release 标记为 ready"}
       ]
     }
   ]
