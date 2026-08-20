@@ -17,6 +17,7 @@ import { AdaptiveDetailContent } from './common/AdaptiveDetailContent';
 import { SurfaceHeader } from './common/SurfaceHeader';
 import { ResilientImage } from './common/ResilientImage';
 import { VisualResultCard } from './visual-results/VisualResultCard';
+import { DecisionResultSurface } from './result/DecisionResultSurface';
 import { getVisualEmphasis, mapFitStatus } from './visual-results/visual-result.adapters';
 import type { VisualResultViewModel } from './visual-results/visual-result.types';
 import { markSpeciesViewed } from '../services/onboarding/onboarding.service';
@@ -773,37 +774,31 @@ export function SpeciesDetailDialog({
                           <p className="mt-1.5 break-words text-[10px] font-semibold leading-4 text-amber-950/62"><strong>{isEn ? 'Avoid: ' : '避免：'}</strong>{fish.feedingProfile?.avoidFoods || (isEn ? 'Overfeeding and uneaten food' : '过量投喂和长期残饵')}</p>
                         </section>
 
-                        <div data-visual-result-status={mapFitStatus(displayFit.status)} className={`mt-2 rounded-[16px] border p-2.5 min-[760px]:mt-4 min-[760px]:rounded-[18px] min-[760px]:p-3 ${
-                          displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
-                            ? 'border-emerald-100 bg-emerald-50/85'
-                            : displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk'
-                              ? 'border-red-100 bg-red-50/85'
-                              : displayFit.status === 'unknown' || displayFit.status === 'needConfirmation'
-                                ? 'border-sky-100 bg-sky-50/85'
-                                : 'border-amber-100 bg-amber-50/85'
-                        }`}>
-                          <div className="flex items-start gap-2 min-[760px]:gap-2.5">
-                            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-accent shadow-sm min-[760px]:h-8 min-[760px]:w-8">
-                              {displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank' ? <CheckCircle2 className="h-4.5 w-4.5" /> : displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' ? <AlertTriangle className="h-4.5 w-4.5 text-red-600" /> : <Info className="h-4.5 w-4.5" />}
-                            </span>
-                            <div className="min-w-0">
-                              <div className="text-[10px] font-black uppercase tracking-[0.12em] text-ink/42">{aquariumContext ? (isEn ? 'Fits my tank?' : '适合我的鱼缸吗？') : (isEn ? 'Tank not selected' : '尚未选择鱼缸')}</div>
-                              <p className="mt-0.5 text-[15px] font-black leading-snug text-ink min-[760px]:mt-1 min-[760px]:text-[17px]">{displayFit.title}</p>
-                              <p className="mt-0.5 line-clamp-2 text-[11px] font-bold leading-snug text-ink/64 min-[760px]:mt-1 min-[760px]:text-[12px] min-[760px]:leading-relaxed">{aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank')}</p>
-                            </div>
-                          </div>
+                        <div
+                          data-visual-result-status={mapFitStatus(displayFit.status)}
+                          data-species-detail-decision-result
+                          className="mt-2 min-[760px]:mt-4"
+                        >
+                          <DecisionResultSurface
+                            testId="species-detail-decision"
+                            isEn={isEn}
+                            tone={
+                              displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
+                                ? 'success'
+                                : displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk'
+                                  ? 'danger'
+                                  : displayFit.status === 'caution'
+                                    ? 'warning'
+                                    : 'info'
+                            }
+                            eyebrow={aquariumContext ? (isEn ? 'FITS MY TANK?' : '适合我的鱼缸吗？') : (isEn ? 'TANK NOT SELECTED' : '尚未选择鱼缸')}
+                            title={displayFit.title}
+                            summary={aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank')}
+                            watchFor={displayFit.risks.filter(item => item.status === 'warning').map(item => item.advice)}
+                            avoid={displayFit.risks.filter(item => item.status === 'danger').map(item => item.advice)}
+                            evidence={verdictReasons.map(reason => `${reason.label} · ${reason.text}`)}
+                          />
                         </div>
-
-                        {verdictReasons.length > 0 && (
-                          <div className="mt-2 grid gap-1 min-[760px]:mt-3 min-[760px]:gap-1.5" aria-label={isEn ? 'Key reasons' : '关键原因'}>
-                            {verdictReasons.map(reason => (
-                              <div key={`${reason.label}-${reason.text}`} className="flex min-w-0 items-start gap-1.5 rounded-[10px] bg-white/75 px-2 py-1 text-[10px] leading-snug text-ink/62 min-[760px]:gap-2 min-[760px]:rounded-[12px] min-[760px]:px-3 min-[760px]:py-2 min-[760px]:text-[11px] min-[760px]:leading-relaxed">
-                                <span className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full min-[760px]:mt-1.5 min-[760px]:h-2 min-[760px]:w-2 ${reason.status === 'danger' ? 'bg-red-500' : reason.status === 'warning' ? 'bg-amber-500' : reason.status === 'ok' ? 'bg-emerald-500' : 'bg-sky-500'}`} />
-                                <span className="min-w-0"><strong className="text-ink">{reason.label}</strong> · {reason.text}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
 
                         <div className="mt-2 flex flex-wrap gap-2 min-[760px]:mt-3">
                           <button
@@ -1043,7 +1038,7 @@ export function SpeciesDetailDialog({
                       {getLifeType(fish) === 'plant' ? (isEn ? 'Edit plant record' : '修改水草记录') : (isEn ? 'Edit tank record' : '修改缸内记录')}
                     </Button>
                   )}
-                  <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
+                  <Button data-species-detail-primary-action className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
                 </div>
               </div>
 
