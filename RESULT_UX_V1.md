@@ -2,7 +2,7 @@
 
 ## Problem
 
-AquaGuide result-heavy surfaces currently expose too many sections at the same visual priority. The information is often correct but expensive to scan: users must read the explanation before they can answer the practical question, “what should I do now?”
+AquaGuide result-heavy surfaces historically exposed too many sections at the same visual priority. The information could be correct but still expensive to scan because users had to read explanation before they could answer the practical question, “what should I do now?”
 
 Result UX V1 changes the information architecture from **report-first** to **decision-first**.
 
@@ -19,7 +19,7 @@ A result surface must let a user answer these questions in roughly five seconds:
 The first screen therefore has a hard hierarchy:
 
 - one verdict or primary action;
-- one short summary, visually capped at two lines;
+- one short summary, visually capped;
 - at most two additional actions (three actions total including the primary action);
 - compact watch / escalation guardrails;
 - at most two “avoid for now” items;
@@ -49,7 +49,7 @@ Use the strongest visual weight only once:
 
 - compact severity/status token;
 - one action-oriented title;
-- optional two-line explanation;
+- optional bounded explanation;
 - optional action-level source line.
 
 Do not place multiple same-weight headings above the primary action.
@@ -86,18 +86,40 @@ The shared hierarchy stays the same, but the hero answers a different user quest
 | Identification | “这是什么？” | top match + confidence / uncertainty |
 | AI Assistant | “直接回答我” | answer + primary next action |
 
-## Rollout order
+## Current rollout status
 
-Result UX V1 intentionally starts with **Diagnosis** and **Compatibility** because they are the highest-decision-cost surfaces and already have deterministic evidence structures.
+### Migrated and browser verified
 
-After those are validated in browser QA, migrate:
+1. **Diagnosis**
+   - shared `DecisionResultSurface` is live in the consumer;
+   - verdict / primary action precedes causal explanation;
+   - follow-up actions stay bounded;
+   - watch and escalation guardrails remain available;
+   - existing diagnosis context is preserved.
+
+2. **Compatibility**
+   - shared `DecisionResultSurface` is live in the consumer;
+   - verdict and safest next action come first;
+   - deterministic safety blocking remains authoritative;
+   - candidate evidence remains fail-closed;
+   - AI presentation does not override deterministic compatibility rules.
+
+Permanent evidence gate: `.github/workflows/result-ux-v1.yml`.
+
+Verified code head: `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`.
+
+- Result UX V1 / run `32338616508` — PASS.
+
+### Not yet migrated
+
+Migrate one consumer at a time, with a browser contract before claiming completion:
 
 1. Knowledge / Procedure;
 2. Species Detail;
 3. Identification;
 4. AI Assistant.
 
-Do not migrate all result pages at once. The first two surfaces establish the pattern and reveal whether the hierarchy is actually faster to scan.
+The order may change only if code coupling or evidence semantics make a different consumer materially safer to migrate first. Do not migrate all remaining surfaces in one change.
 
 ## Acceptance criteria
 
@@ -111,6 +133,10 @@ A migrated result surface fails Result UX V1 if any of these are true:
 - a paragraph in the hero is allowed to grow into a long report;
 - visual hierarchy depends only on color rather than ordering, typography, spacing, and labels.
 
-## Current implementation boundary
+## Guardrails for the next migration
 
-`DecisionResultSurface` and `src/modules/result/resultAdapters.ts` establish the shared UI and evidence semantics. The Diagnosis and Compatibility consumer migration remains a separate implementation step and must be browser-validated before this Draft PR is marked ready for review.
+- Extend the contract/test first, then migrate the consumer.
+- Preserve the consumer's deterministic or domain-specific decision logic; Result UX changes hierarchy, not truth semantics.
+- Do not weaken existing Navigation Context behavior inherited from #104.
+- Do not promote generic publisher-level evidence into action-level verification.
+- Keep PR #105 Draft until the upstream #104 branch/base disposition is settled and combined gates are rerun after any retarget/rebase.
