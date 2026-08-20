@@ -3217,7 +3217,7 @@ export function CareArticleDetail({
                     statusLabel={getUrgencyTagLabel(meta.urgencyTag, isEn)}
                     title={visibleActions[0]?.title || (isEn ? 'Understand the key constraint first' : '先确认关键限制')}
                     summary={visibleActions[0]?.description || detailLead.text}
-                    primarySource={careEvidenceSource(getCareActionEvidenceForText(topic, visibleActions[0]?.description || visibleActions[0]?.title || careGuide.summary))}
+                    primarySource={careEvidenceSource(getCareActionEvidenceForText(topic, 'immediate', visibleActions[0]?.description || visibleActions[0]?.title || careGuide.summary, 0))}
                     primaryControl={(
                       <Button
                         type="button"
@@ -3234,7 +3234,7 @@ export function CareArticleDetail({
                       id: 'knowledge-follow-up-' + index,
                       title: item.title,
                       detail: item.description,
-                      source: careEvidenceSource(getCareActionEvidenceForText(topic, item.description || item.title)),
+                      source: careEvidenceSource(getCareActionEvidenceForText(topic, 'immediate', item.description || item.title, index + 1)),
                     }))}
                     watchFor={careGuide.warningSigns.slice(0, 2).map(item => item.sign)}
                     escalateIf={careGuide.warningSigns.slice(0, 2).map(item => item.action)}
