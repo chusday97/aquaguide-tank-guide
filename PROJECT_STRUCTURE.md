@@ -37,7 +37,7 @@
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
 - `src/components/visual-results/`：混养、物种适配、巡检与养护自查共用的视觉结果卡、展示模型和规则适配器。
-- `src/components/interactive/`：互动鱼缸首页、场景化物种探索与养护场景入口；只负责会话展示和既有路由/详情触发，不生成业务结论。
+- `src/components/interactive/`：场景化物种探索与养护鱼缸入口；以大型鱼缸背景、游动图片层和稳定点击热区触发现有路由/详情，不生成业务结论。首页不使用该场景组件。
 - `src/components/layout/LayoutModeProvider.tsx`：真实设备布局判定。
 - `src/pages/Aquarium.tsx`：我的鱼缸。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。

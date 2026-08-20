@@ -78,7 +78,6 @@ import { OnboardingTaskCard } from '../components/onboarding/OnboardingTaskCard'
 import { getOnboardingState, getOnboardingTaskProgress, getOnboardingTasks, markAquariumConfigured } from '../services/onboarding/onboarding.service';
 import { LivestockRosterDialog } from '../components/aquarium/LivestockRosterDialog';
 import { AquariumTimeline } from '../components/aquarium/AquariumTimeline';
-import { InteractiveAquariumHero } from '../components/interactive/InteractiveAquariumHero';
 import { VisualResultCard } from '../components/visual-results/VisualResultCard';
 import { buildDiagnosisVisualResult } from '../components/visual-results/visual-result.adapters';
 import {
@@ -5143,24 +5142,6 @@ export default function AquariumManager() {
 
       {isPhoneLayout && <OnboardingTaskCard />}
 
-      <InteractiveAquariumHero
-        aquarium={activeAquarium}
-        species={currentFishesDetails}
-        action={dailyActionViewModel}
-        carePlan={carePlanSummary}
-        isEn={isEn}
-        onPrimaryAction={handleDailyActionPrimary}
-        onOpenLivestock={() => setIsTankArchiveExpanded(true)}
-        onOpenDiscovery={() => {
-          const target = document.getElementById('aquarium-discovery');
-          if (!target) return;
-          target.classList.add('aquarium-zone-target');
-          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          target.focus({ preventScroll: true });
-          window.setTimeout(() => target.classList.remove('aquarium-zone-target'), 1200);
-        }}
-      />
-
       <AquariumWorkspace
         observeTitle={t('aquarium.zoneObserve')}
         observeSubtitle={t('aquarium.zoneObserveHint')}
@@ -5174,7 +5155,6 @@ export default function AquariumManager() {
               action={dailyActionViewModel}
               carePlan={carePlanSummary}
               showCarePlan={isCarePlanExpanded}
-              hideAction
               onPrimaryAction={handleDailyActionPrimary}
               onToggleCarePlan={() => setIsCarePlanExpanded(open => !open)}
               onOpenCarePlan={(id) => {

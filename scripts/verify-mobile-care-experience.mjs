@@ -44,9 +44,9 @@ try {
     const page = await context.newPage();
     page.setDefaultTimeout(20000);
     await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
-    await page.getByText('互动图鉴', { exact: true }).waitFor();
+    await page.getByRole('button', { name: '传统浏览' }).waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, `${width}px scene has no horizontal overflow`);
-    await page.locator('.atlas-mobile-toolbar > div button').nth(1).click();
+    await page.getByRole('button', { name: '传统浏览' }).click();
     const pager = page.locator('#atlas-pagination-bottom > div:visible');
     await pager.waitFor();
     const buttonY = await pager.locator('button').evaluateAll(buttons => buttons.map(button => Math.round(button.getBoundingClientRect().top)));
@@ -70,6 +70,11 @@ try {
   await phonePage.getByText('再确认一个现象').waitFor();
   await phonePage.getByText('鱼浮头或呼吸急促').click();
   await phonePage.getByText('优先处理').waitFor();
+  const sceneBrowse = phonePage.getByRole('button', { name: '传统浏览全部指南' });
+  const sceneSource = phonePage.locator('.interactive-care-source');
+  const [browseBox, sourceBox] = await Promise.all([sceneBrowse.boundingBox(), sceneSource.boundingBox()]);
+  assert.ok(browseBox && sourceBox, 'scene keeps browse and source feedback visible');
+  assert.ok(browseBox.bottom <= sourceBox.top || sourceBox.bottom <= browseBox.top, 'scene browse control does not overlap source feedback');
   await phonePage.getByRole('button', { name: '打开优先处理指引' }).click();
   await phonePage.getByRole('dialog').waitFor();
   await phonePage.keyboard.press('Escape');
@@ -87,11 +92,7 @@ try {
   await phonePage.getByRole('heading', { name: '养护收藏', exact: true }).waitFor();
 
   await phonePage.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  const interactivePrimary = phonePage.locator('[data-interactive-primary]');
-  await interactivePrimary.waitFor();
-  await interactivePrimary.click();
-  await phonePage.getByRole('dialog').waitFor();
-  await phonePage.keyboard.press('Escape');
+  assert.equal(await phonePage.locator('[data-interactive-primary]').count(), 0, 'home does not render an extra interactive aquarium hero');
   const phoneSpeciesEntry = phonePage.locator('#aquarium-records > button[aria-haspopup="dialog"]');
   await phoneSpeciesEntry.waitFor();
   assert.equal(await phoneSpeciesEntry.count(), 1, 'phone keeps one tank species entry');
@@ -130,14 +131,14 @@ try {
   await desktopPage.keyboard.press('Escape');
   await desktopPage.getByText('养护计划', { exact: true }).waitFor();
   await desktopPage.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
-  await desktopPage.getByText('互动图鉴', { exact: true }).waitFor();
-  await desktopPage.getByText('传统浏览', { exact: true }).first().click();
+  await desktopPage.getByRole('button', { name: '传统浏览' }).waitFor();
+  await desktopPage.getByRole('button', { name: '传统浏览' }).click();
   await desktopPage.locator('[data-scene-return]').click();
-  await desktopPage.getByText('互动图鉴', { exact: true }).waitFor();
+  await desktopPage.getByRole('button', { name: '传统浏览' }).waitFor();
   assert.equal(await desktopPage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'desktop atlas has no horizontal overflow');
   await desktopContext.close();
 
-  console.log('mobile care experience: pager, recommendations, collection, tank species and care plan passed');
+  console.log('mobile care experience: scene, pager, recommendations, collection, tank species and care plan passed');
 } finally {
   await browser.close();
 }
