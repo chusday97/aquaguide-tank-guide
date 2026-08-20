@@ -3207,10 +3207,47 @@ export function CareArticleDetail({
                   <Heart className={`h-4 w-4 ${favorite ? 'fill-current' : ''}`} />
                 </button>
               </div>
-              <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
-                <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
-                <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
-              </section>
+              {meta.guideType === 'knowledge' ? (
+                <section className="mt-3" data-care-knowledge-result>
+                  <DecisionResultSurface
+                    testId="care-knowledge-decision"
+                    isEn={isEn}
+                    tone={meta.urgencyTag === '需要立即处理' ? 'danger' : (meta.urgencyTag === '谨慎操作' || meta.urgencyTag === '建议尽快处理') ? 'warning' : 'info'}
+                    eyebrow={isEn ? 'KEY TAKEAWAY' : '先看结论'}
+                    statusLabel={getUrgencyTagLabel(meta.urgencyTag, isEn)}
+                    title={visibleActions[0]?.title || (isEn ? 'Understand the key constraint first' : '先确认关键限制')}
+                    summary={visibleActions[0]?.description || detailLead.text}
+                    primarySource={careEvidenceSource(getCareActionEvidenceForText(topic, visibleActions[0]?.description || visibleActions[0]?.title || careGuide.summary))}
+                    primaryControl={(
+                      <Button
+                        type="button"
+                        data-care-result-primary
+                        onClick={(event) => handlePrimaryCta(event.currentTarget)}
+                        disabled={isPrimaryDisabled}
+                        className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800"
+                      >
+                        {primaryCtaLabel}
+                        <ChevronRight className="ml-1 h-4 w-4" />
+                      </Button>
+                    )}
+                    actions={visibleActions.slice(1, 3).map((item, index) => ({
+                      id: 'knowledge-follow-up-' + index,
+                      title: item.title,
+                      detail: item.description,
+                      source: careEvidenceSource(getCareActionEvidenceForText(topic, item.description || item.title)),
+                    }))}
+                    watchFor={careGuide.warningSigns.slice(0, 2).map(item => item.sign)}
+                    escalateIf={careGuide.warningSigns.slice(0, 2).map(item => item.action)}
+                    avoid={careGuide.avoidActions.slice(0, 2).map(item => item.title)}
+                    sources={careEvidenceSources(careActionEvidence)}
+                  />
+                </section>
+              ) : (
+                <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
+                  <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
+                  <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
+                </section>
+              )}
               {meta.guideType === 'diagnosis' && !isDiagnosisStarted && (
                 <Button
                   type="button"
@@ -3247,11 +3284,11 @@ export function CareArticleDetail({
                   )}
                 </section>
               )}
-              {meta.guideType === 'knowledge' && visibleActions.length > 0 && (
+              {meta.guideType === 'knowledge' && visibleActions.length > 3 && (
                 <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm" data-care-first-screen-key-points>
                   <div className="text-[12px] font-black text-ink">{isEn ? 'Key points' : '关键要点'}</div>
                   <div className="mt-2 grid gap-2">
-                    {visibleActions.slice(0, 2).map((item, index) => (
+                    {visibleActions.slice(3, 5).map((item, index) => (
                       <div key={`key-point-${item.title}-${item.description}`} className="grid grid-cols-[24px_minmax(0,1fr)] gap-2 rounded-[13px] bg-bg/70 px-2.5 py-2.5">
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 text-[10px] font-black text-emerald-800">{index + 1}</span>
                         <span className="min-w-0">
@@ -3373,7 +3410,18 @@ export function CareArticleDetail({
 
           <section className="mt-3 rounded-[18px] border border-border bg-white p-3">
             {meta.guideType === 'knowledge' ? (
-              <div className="text-[13px] font-black text-ink">{isEn ? 'Detailed Description' : '详细说明'}</div>
+              <button
+                type="button"
+                data-disclosure-purpose="secondary_explanation"
+                aria-expanded={isDetailExpanded}
+                onClick={() => setIsDetailExpanded(prev => !prev)}
+                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-[12px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+              >
+                <span className="text-[13px] font-black text-ink">{isEn ? 'Detailed explanation' : '详细说明'}</span>
+                <span className="rounded-full bg-bg px-2.5 py-1 text-[10px] font-black text-ink/50">
+                  {isDetailExpanded ? (isEn ? 'Collapse' : '收起') : (isEn ? 'Expand' : '展开')}
+                </span>
+              </button>
             ) : (
               <button
                 type="button"
@@ -3388,7 +3436,7 @@ export function CareArticleDetail({
                 </span>
               </button>
             )}
-            {(meta.guideType === 'knowledge' || isDetailExpanded) && (
+            {isDetailExpanded && (
               <div className="mt-3 grid gap-2">
                 {procedureDetails.map(item => (
                   <div key={`${item.title}-${item.description}`} className="rounded-[14px] bg-bg px-3 py-2.5">
