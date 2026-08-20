@@ -31,3 +31,9 @@ export const apiConfig = {
 export const isBusinessDatabaseConfigured = () => Boolean(
   apiConfig.supabaseUrl && apiConfig.supabaseAnonKey,
 );
+
+export const isShareReportsConfigured = () => Boolean(
+  isBusinessDatabaseConfigured() &&
+  apiConfig.supabaseServiceRoleKey &&
+  apiConfig.shareTokenSecret,
+);
