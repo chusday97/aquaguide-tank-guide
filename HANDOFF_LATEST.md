@@ -81,55 +81,63 @@ Result UX V1 / run `32341637554`:
 
 Migration rule: the first procedure step can move into the shared decision surface, but completion actions such as `去记录本次换水` / `Mark operation done` must remain post-task actions and must not be promoted ahead of the actual procedure.
 
-## Vercel preview deployment policy — NEW
+## Vercel deployment-frequency policy — VERIFIED FIX
 
-Problem: Git-integrated Vercel Preview was starting on nearly every push. The branch contains many test, workflow, handoff, badcase and intermediate repair commits, so Vercel's free-plan build-rate limit could be exhausted even when the application build itself was healthy.
+### Problem
 
-Fix landed in commit:
+Git-integrated Vercel Preview was being requested for nearly every push on active `agent/*` development branches. This branch intentionally contains many test, workflow, handoff, badcase and intermediate repair commits, so free-plan build-rate limits were hit even when the application itself built successfully in GitHub Actions.
 
-- `10aa2501163e976a74543e3dd3a8f00c10f9bbc4` — `Throttle Vercel preview deployments`
+### Disproved first attempt
 
-Configuration:
+Commit `10aa2501163e976a74543e3dd3a8f00c10f9bbc4` added an `ignoreCommand` with a `[vercel-preview]` checkpoint marker and deploy-relevant diff filtering.
 
-- `vercel.json` now uses `ignoreCommand: "bash scripts/vercel-ignore-build.sh"`;
-- `scripts/vercel-ignore-build.sh` is the source of truth for the gate.
+That layer is useful **after a Vercel deployment has already been admitted**, but it is too late to solve Vercel's build-rate admission limit. A later documentation-only commit (`ba559c3b446a12cba65b418dfed7cc35aa816267`) still received a Vercel `build-rate-limit` failure before the ignored-build command could protect it.
 
-### Preview rule
+Therefore `ignoreCommand` must not be treated as the primary frequency control.
 
-For non-production branches, **a normal push does not create a Vercel Preview**.
+### Final trigger-level fix
 
-A Preview is eligible only when the triggering commit message contains:
+Commit:
 
-`[vercel-preview]`
+- `d86330eaabf888c0abd1618312ba8deb67dc4c4b` — `Disable Vercel auto deploys on agent branches`
 
-Even then, the script compares the current commit against `VERCEL_GIT_PREVIOUS_SHA` (Vercel's last successful deployment SHA). It continues the build only if deploy-relevant inputs changed.
+`vercel.json` now contains:
 
-Deploy-relevant inputs include:
+- `git.deploymentEnabled["agent/*"] = false`;
+- `git.deploymentEnabled["preview/*"] = true`;
+- the existing `ignoreCommand` remains as a secondary filter for explicitly allowed preview branches.
 
-- `src/`, `public/`, `api/`, `apps/`, `packages/`;
-- `index.html`;
-- package manifests / lockfiles;
-- Vite / TypeScript / PostCSS / Tailwind build config;
-- `vercel.json`.
+This moves the decision to the **Git deployment trigger layer**, before a Preview build is created or placed into Vercel's build queue.
 
-The following can continue to push and run GitHub CI without consuming a Preview build by default:
+Validation on `d86330ea...`:
 
-- handoff / progress / badcase docs;
-- `.github/workflows/**`;
-- evaluation artifacts;
-- browser-test scripts and other non-runtime scripts.
+- GitHub returned **no Vercel status context** for the commit;
+- the immediately preceding doc-only commit still showed a Vercel build-rate-limit failure;
+- therefore the active `agent/result-ux-v1` branch is no longer creating automatic Vercel Preview attempts on every push.
 
-### Production rule
+### Operating model going forward
 
-Production/main does **not** require `[vercel-preview]`. If deploy-relevant files changed, production remains fail-open and deploys normally. If the comparison SHA is unavailable for an explicit checkpoint or production, the script also fails open rather than suppressing a required release.
+**Development / CI**
 
-### Operating rule going forward
+- keep working on `agent/*` branches;
+- GitHub Actions remains the iterative validation system;
+- no automatic Vercel Preview is created from these branches.
 
-Do not use Vercel Preview as a per-commit CI runner.
+**Hosted Preview checkpoint**
 
-Use GitHub Actions for iterative validation. Add `[vercel-preview]` only to a **browser-green milestone/checkpoint commit** when a human-visible hosted Preview is actually needed.
+- use a deliberately created `preview/*` branch only when a hosted visual checkpoint is actually needed;
+- the secondary `ignoreCommand` requires `[vercel-preview]` in the triggering commit and confirms deploy-relevant changes exist since Vercel's last successful deployment;
+- no dedicated preview branch has been created in this handoff.
 
-The first commit carrying this policy had no `[vercel-preview]` marker and its GitHub Vercel status returned success instead of the prior build-rate-limit failure state.
+**Production**
+
+- production/main remains outside the `agent/*` disable rule;
+- production does not require `[vercel-preview]`;
+- the secondary ignore script fails open if comparison history is unavailable rather than suppressing an intentional production release.
+
+### Why this is safer
+
+Vercel is no longer being used as a per-commit CI runner. Intermediate code and documentation changes are validated by GitHub Actions, and hosted Preview capacity is reserved for deliberate visual checkpoints.
 
 ## Plant roster / legacy plant closure retained
 
@@ -167,7 +175,7 @@ Continuation rule:
 
 - Vite large-chunk and mixed dynamic/static-import warnings remain.
 - Existing npm dependency vulnerability debt remains outside Result UX scope.
-- Vercel quota failures must not be classified as application build failures.
+- Historical Vercel quota failures are infrastructure state, not application build failures.
 - Thin wrapper/Base structures inherited from #104 remain deliberate risk-containment debt.
 
 ## Merge-readiness judgment
@@ -186,8 +194,9 @@ Reasons:
 1. Continue Procedure from the proven fail-before state; do not recreate that investigation.
 2. Preserve post-task Procedure CTA semantics while migrating the first-step hierarchy.
 3. Run the permanent Result UX gate after the product migration.
-4. Request a hosted Vercel Preview only at a green checkpoint by using `[vercel-preview]` on that checkpoint commit.
-5. Keep #105 Draft; do not merge or production-deploy from this handoff alone.
+4. Keep iterative commits on `agent/*`; do not expect or require Vercel Preview there.
+5. Create/use a `preview/*` checkpoint only when a hosted visual review is needed.
+6. Keep #105 Draft; do not merge or production-deploy from this handoff alone.
 
 ## Confidence snapshot
 
@@ -197,7 +206,8 @@ Reasons:
 - Knowledge migration: **verified**
 - Procedure fail-before: **verified**
 - Procedure migration: **pending**
-- Vercel preview frequency gate: **implemented**
+- Vercel `agent/*` trigger-level deployment suppression: **verified**
+- Vercel `ignoreCommand`: **secondary filter only**
 - Plant structured + legacy edit persistence: **verified**
 - Species Detail migration: **not started**
 - Identification migration: **not started**
