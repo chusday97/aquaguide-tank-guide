@@ -21,7 +21,18 @@ jobs:
       - name: Guarded same-species stage-risk migration
         shell: bash
         run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/migrate-same-species-stage-risk.py')
+          text = path.read_text()
+          old = "'src/lib/tankCompatibilityEngine.ts': ['candidateLifeStage', 'life_stage_evidence_unreviewed', 'conspecific_fry_predation'],"
+          new = "'src/lib/tankCompatibilityEngine.ts': ['candidateLifeStage', 'life_stage_evidence_unreviewed', 'reviewedStageRisk.riskType'],"
+          if old not in text:
+              raise SystemExit('stage-risk guard correction anchor missing')
+          path.write_text(text.replace(old, new, 1))
+          PY
           python3 scripts/migrate-same-species-stage-risk.py
+          git checkout -- scripts/migrate-same-species-stage-risk.py
           if git diff --quiet -- \
             src/types.ts \
             packages/contracts/src/business.ts \
