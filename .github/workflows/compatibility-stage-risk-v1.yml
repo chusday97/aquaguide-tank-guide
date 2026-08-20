@@ -28,6 +28,9 @@ jobs:
       - name: Same-species life-stage risk contract
         run: npx tsx scripts/test-same-species-stage-risk.ts
 
+      - name: Life-stage capture UI contract
+        run: node scripts/test-life-stage-ui-contract.mjs
+
       - name: Existing compatibility engine regression
         run: npm run test:compatibility
 
