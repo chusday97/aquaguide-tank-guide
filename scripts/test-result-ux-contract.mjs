@@ -39,6 +39,19 @@ assert(care.includes("getCareActionEvidenceForText(topic, 'immediate', visibleAc
 assert(care.includes("getCareActionEvidenceForText(topic, 'immediate', item.description || item.title, index + 1)"), 'Knowledge follow-up evidence must retain the original immediate-action index');
 assert(care.includes("visibleActions.slice(1, 3)"), 'Knowledge shared surface must feed at most two follow-up actions');
 
+assert(care.includes('testId="care-procedure-decision"'), 'Procedure must consume the shared decision-first surface');
+assert(care.includes('data-care-procedure-result'), 'Procedure needs a stable first-screen result selector');
+assert(care.includes("eyebrow={isEn ? 'DO THIS FIRST' : '现在先做'}"), 'Procedure must explicitly frame the first operational step as the action to take now');
+assert(care.includes('title={procedureSteps[0].title}') && care.includes('summary={procedureSteps[0].description}'), 'Procedure hero must come from the first concrete step');
+assert(care.includes('primarySource={careEvidenceSource(immediateEvidence[0])}'), 'Procedure primary source must remain tied to the first immediate action');
+assert(care.includes('procedureSteps.slice(1, 3)'), 'Procedure shared surface must feed at most two next steps');
+assert(care.includes('source: careEvidenceSource(immediateEvidence[index + 1])'), 'Procedure follow-up sources must retain original action indexes');
+assert(care.includes('watchFor={[getProcedureObservation(topic)]}'), 'Procedure must expose what to observe after the operation');
+assert(care.includes('avoid={procedureReminders.slice(0, 2).map(item => item.title)}'), 'Procedure must preserve bounded avoid guidance');
+assert(!care.includes('Follow Steps Sequentially') && !care.includes('现在按顺序做'), 'Legacy duplicate Procedure first-screen step card must stay removed');
+assert(care.includes("isEn ? 'Record Water Change in Tank' : '去记录本次换水'"), 'Procedure completion/record CTA must remain after the operational steps');
+assert(care.includes('data-disclosure-purpose="secondary_evidence"'), 'Procedure detailed explanation must remain behind disclosure');
+
 assert(compatibility.includes('testId="compatibility-decision"'), 'Compatibility must consume the shared decision-first surface');
 assert(compatibility.includes('compatibilityRuleSources(ruleItems)'), 'Compatibility consumer must map deterministic rules to action-level source status');
 assert(compatibility.includes("resultStatus === 'not_recommended'"), 'Compatibility must preserve the deterministic blocked status branch');
