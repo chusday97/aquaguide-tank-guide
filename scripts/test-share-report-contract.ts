@@ -59,4 +59,18 @@ assert.match(
   'RC1 release acceptance must enforce the share-report security contract before production',
 );
 
+const healthRoute = readFileSync(resolve('apps/api/src/routes/index.ts'), 'utf8');
+assert.match(
+  healthRoute,
+  /shareReportsConfigured:\s*isShareReportsConfigured\(\)/,
+  'business-health must expose a boolean share-report readiness signal without exposing secret values',
+);
+
+const postDeploySmoke = readFileSync(resolve('scripts/verify-rc1-deployment.mjs'), 'utf8');
+assert.match(
+  postDeploySmoke,
+  /"shareReportsConfigured":true/,
+  'post-deploy smoke must fail if the deployed share-report signing/admin dependencies are not configured',
+);
+
 console.log('share report contract: ok');
