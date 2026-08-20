@@ -62,6 +62,11 @@ jobs:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-result-ux-knowledge.mjs
 
+      - name: Procedure decision-first regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-procedure.mjs
+
       - name: Upload Result UX evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -71,5 +76,6 @@ jobs:
             artifacts/result-ux-diagnosis/**
             artifacts/result-ux-compatibility/**
             artifacts/result-ux-knowledge/**
+            artifacts/result-ux-procedure/**
           if-no-files-found: warn
           retention-days: 7
