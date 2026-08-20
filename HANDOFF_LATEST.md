@@ -1,102 +1,191 @@
-# AquaGuide Handoff — Merge Readiness
+# AquaGuide Handoff — Result UX V1
 
 **Date:** 2026-08-20  
-**Branch:** `agent/uiux-system-refactor-v1`  
-**PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
-**Base:** `integration/aquaguide-rc1`
+**Branch:** `agent/result-ux-v1`  
+**PR:** #105 `Introduce decision-first Result UX V1`  
+**Base:** `agent/uiux-system-refactor-v1` (#104)  
+**Latest browser-verified code head:** `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`
 
 ## Current state
 
-The UI/UX branch has completed its Navigation Context closure and canonical governance. The last code/governance head before docs-only readiness updates is `20157e0c786becf92dce2442c208e711da8cf60c`.
+The active work has moved from #104 UI/UX-system closure to #105 Result UX V1.
 
-#104 is still **not merged** into RC1 or `main` and is **not deployed to production**. The intended next state is Ready for Review, not merge.
+PR #105 is still **open, mergeable and Draft**. It is **not merged** and no production deployment is claimed in this handoff.
 
-## What #104 contains
+The important status change since the previous handoff is that Diagnosis and Compatibility are no longer only foundation targets: both consumers are now connected to the shared decision-first result system and have browser-regression evidence.
 
-- UI/UX system contracts: canonical typography/spacing/radius/elevation ownership, width-driven layout, 44×44 named targets, reduced-motion and inactive-carousel accessibility guards.
-- Aquarium task hierarchy and responsive workspace corrections.
-- Collection three-live-module focus carousel and quiet Achievements state.
-- Search Species/Care show-all parity and content-width-driven layout.
-- PUI-BC-050 risk-review/Compatibility navigation repair.
-- PUI-BC-051 Search deep-result return-context repair.
-- PUI-BC-052 Aquarium roster → Species Detail → roster nested-parent return repair.
-- Visual QA V2 broad capture: 48 screenshots.
-- Golden V3: eight stable normalized fold references.
-- CJK screenshot-font fail-closed policy + verified Actions cache.
-- Bundle Audit V1 measurement instrumentation; no bundle-size reduction claim.
+The plant roster red CI investigated during this branch is also closed: the product persistence path was correct; the final failure was caused by the browser fixture reseeding legacy data on every reload. The evaluator now seeds each browser context only once, so reload verifies real persistence instead of overwriting the saved state.
 
-## Navigation Context closure
+## Result UX V1 — implemented
 
-### PUI-BC-051 — Search deep results
+### Shared result system
 
-Old behavior: after explicit “View all”, opening a Species result beyond the first 18 or Care result beyond the first 12 and returning from detail collapsed the list. The source result no longer existed in the DOM, so source-ID-only focus restoration could not work.
+- `src/components/result/DecisionResultSurface.tsx`
+  - one primary verdict / result at the top;
+  - one primary action;
+  - maximum two follow-up actions;
+  - watch-next and escalation guardrails;
+  - compact avoid list;
+  - reasoning and source detail behind progressive disclosure;
+  - reviewed vs candidate evidence status remains visible.
+- `src/modules/result/resultAdapters.ts`
+  - Diagnosis and Compatibility adapters;
+  - deterministic tone / severity mapping;
+  - explicit escalation boundaries;
+  - action-level Care evidence mapping;
+  - deterministic Compatibility citation mapping.
 
-Current behavior:
+### Diagnosis consumer
 
-- persist `query + sourceId + showAllSpecies + showAllCare + workspace scrollTop`;
-- restore expanded list structure before DOM restoration;
-- restore exact workspace scroll and source focus with `preventScroll`;
-- clear stale context when query changes.
+Diagnosis now uses the shared decision-first result surface rather than presenting all explanation blocks at equal priority.
 
-Real fail-before: Navigation Context #1 / run `32280048039`.
-Fix: `9feaac4d90fef5ce2e4665154f9554759e15f591`.
+Acceptance verified in browser:
 
-### PUI-BC-052 — Aquarium nested parent
+- verdict is visible before causal explanation;
+- primary action is visible in the first decision surface;
+- follow-up actions remain bounded;
+- watch/escalation information remains available;
+- existing diagnosis context is preserved.
 
-Old behavior: `Aquarium → 缸内物种 roster → Species Detail → close` dropped to the Aquarium launcher instead of returning to the immediate parent roster.
+### Compatibility consumer
 
-Current behavior:
+Compatibility now uses the same result hierarchy while retaining deterministic safety semantics.
 
-- roster captures originating record/fish and roster-internal scroll;
-- only matching Aquarium species-detail dismissal triggers parent return;
-- parent waits for child exit animation to complete before reopening;
-- restores roster scroll and exact original profile-button focus;
-- non-roster Species Detail entry points are unaffected.
+Acceptance verified in browser:
 
-True fail-before: Navigation Context #5 / run `32281408153` after evaluator ambiguity was removed.
-Fixes: `28fb8a796bfd1b6b290daf74284945296daff9a3` + `dbf5546e99306ba078a723115451dcf12123a3b7`.
+- compatibility verdict is surfaced first;
+- deterministic blocking/safety rules remain authoritative;
+- primary recommendation is visible before detailed reasoning;
+- source/review status remains fail-closed;
+- AI presentation does not override deterministic Compatibility rules.
 
-## Canonical governance
+## Result UX permanent regression gate
 
-- PUI-BC-051 and PUI-BC-052 are now in `evaluation/product/badcases.v1.jsonl`.
-- They were appended by a one-time guarded workflow that required exactly **+2 / -0**, checked PUI-BC-032's historic `guide_safe_water_change`, and ran `test:product-evaluation` before pushing.
-- Canonical append commit: `5ccdb3e2ebf96437bf0a671cbec180b4c583a8df`.
-- The temporary append workflow was then removed; cleanup head: `20157e0c786becf92dce2442c208e711da8cf60c`.
+A permanent workflow now exists at:
 
-## Latest mandatory evidence
+- `.github/workflows/result-ux-v1.yml`
 
-All primary gates passed on `20157e0c786becf92dce2442c208e711da8cf60c`:
+It runs:
 
-- Navigation Context V1 #15 / run `32283514536` — PASS
-- UI UX System Refactor V1 #87 / run `32283514511` — PASS
-- UI UX Visual QA V2 #70 / run `32283514530` — PASS
-- UI UX Golden V3 #32 / run `32283514489` — PASS after infrastructure-only retry
-- Bundle Audit V1 #25 / run `32283514480` — PASS
+1. Result UX static contract;
+2. TypeScript check;
+3. production build;
+4. Diagnosis decision-first Playwright regression;
+5. Compatibility decision-first Playwright regression;
+6. browser-evidence artifact upload.
 
-Golden #32 first attempt failed before Chromium installation because a `westus3` GitHub runner received Playwright CDN 403 `service is not available in your location`. No product/reference/tolerance changes were made. Job-only retry on `eastus` succeeded, and all eight Golden signatures were **0% changed**. Artifact `9376839397`, digest `sha256:b5d5d9218a78bd5aee264e02a2242d1a17398000cc0b2486158b5961b3059067`.
+Latest verified run on `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`:
 
-## Preview / review status
+- **Result UX V1 / run `32338616508` — PASS**
+  - Result UX contract — PASS
+  - Type check — PASS
+  - Production build — PASS
+  - Diagnosis decision-first regression — PASS
+  - Compatibility decision-first regression — PASS
 
-- Cloudflare Pages preview for `20157e0` succeeded.
-- Vercel preview is currently blocked by the free account's >100 deployments/day quota; the bot explicitly reports a resource limit rather than a build error.
-- No submitted PR reviews.
-- No unresolved inline review threads.
+This means Diagnosis + Compatibility migration is now a browser-verified implementation, not a documentation-only claim.
 
-## Merge-readiness judgment
+## Plant roster / legacy plant regression closure
 
-**No current product blocker was found.** The branch is suitable to move from Draft to Ready for Review once this readiness documentation and PR body are current.
+### Symptom
 
-### Accepted non-blockers
+The legacy `plants[]`-only browser case repeatedly failed around:
 
-1. `SpeciesDetailDialog.tsx` + `SpeciesDetailDialogBase.tsx` and `Encyclopedia.tsx` + `EncyclopediaBase.tsx` remain thin-guard/Base structures. They were chosen to make surgical navigation fixes without rewriting thousand-line legacy components. Recombining them now would materially increase merge risk; clean them up in a follow-up PR only with the current regressions retained.
-2. Bundle entry remains roughly 2.1 MiB; measured major contributors include fish/localization data and eager analytics/data-service dependencies. Do not start this refactor inside #104.
-3. Vite still warns that fish/care data are both dynamically and statically imported.
-4. `npm ci` still reports 18 existing vulnerabilities (2 low / 6 moderate / 10 high). `package.json` and `package-lock.json` are not changed by #104, so this is pre-existing dependency debt.
-5. Vercel preview quota failure is external infrastructure state; Cloudflare preview is available.
+`1株 → edit → 2株 → reload`
+
+Initial CI appearance suggested a possible persistence or React state-sync bug.
+
+### Evidence gathered
+
+Before changing product persistence logic, diagnostics proved that immediately after save:
+
+- `record.quantity = 2`;
+- first batch quantity = `2`;
+- `plants[]` mirror still contains the plant species;
+- roster text snapshot already reads `共 2株`.
+
+Therefore the save path itself was working.
+
+### Root cause
+
+`seedState()` used `context.addInitScript()` with unconditional:
+
+- `localStorage.clear()`;
+- original fixture write.
+
+Playwright runs that init script on every navigation/reload. The regression test therefore saved `2株`, then `reload()` executed the fixture again and restored the original `1株` state. The evaluator was destroying the state it was supposed to verify.
+
+This was a **test-fixture defect, not a product persistence defect**.
+
+### Final fix
+
+Commit:
+
+- `34ed3ea9025511a2419f0dd93ed6559bb276d8bb`
+
+The fixture now marks the browser context as seeded in `sessionStorage` and initializes localStorage only once per context. A reload therefore tests the saved product state instead of re-injecting the original fixture.
+
+Latest verified run:
+
+- **Plant Roster Edit Fix / run `32338616480` — PASS**
+  - Plant livestock contract — PASS
+  - Type check — PASS
+  - Production build — PASS
+  - Plant quantity/edit browser regression — PASS
+  - Existing navigation-context regression — PASS
+
+The regression now proves both structured plant records and legacy `plants[]` migration survive edit + reload with plant-specific quantity units.
+
+## Discarded hypothesis / cleanup
+
+A temporary hypothesis proposed a local-aquarium load race as the cause of the plant failure. CI evidence disproved it.
+
+The temporary self-modifying workflow and automation script were removed before they could write an unnecessary product-state patch:
+
+- removed `.github/workflows/local-aquarium-load-race-fix.yml`;
+- removed `scripts/automation/fix-local-aquarium-load-race.mjs`.
+
+Do **not** revive that race-condition patch unless new independent evidence demonstrates an actual product race.
+
+## Upstream #104 relationship
+
+#105 still targets `agent/uiux-system-refactor-v1` (#104). The Result UX work assumes #104's UI/UX system and navigation contracts.
+
+Do not merge #105 independently into an incompatible base. After #104's final branch disposition is decided, retarget/rebase #105 deliberately and rerun the permanent gates.
+
+## Known documentation mismatch
+
+The current PR #105 body still contains an outdated statement saying Diagnosis and Compatibility have not yet been migrated. That statement is no longer true.
+
+The source of truth after this handoff is:
+
+- Diagnosis migrated — browser verified;
+- Compatibility migrated — browser verified;
+- Result UX permanent workflow — green;
+- plant legacy regression — green after fixture correction.
+
+Update the PR body before moving #105 to Ready for Review.
+
+## Current non-blockers / debt
+
+- Vite still reports large-chunk and mixed dynamic/static-import warnings; no bundle-size reduction is claimed here.
+- Existing dependency vulnerability debt is outside the Result UX migration scope.
+- Species Detail, Identify, Knowledge and AI Assistant have **not** been declared migrated to Result UX V1 in this handoff.
+- Evidence remains action-scoped: a publisher/source name alone does not imply every recommendation is reviewed.
 
 ## Next owner action
 
-- Update PR #104 body with Navigation Context / canonical / latest-head readiness evidence.
-- Move #104 from Draft to **Ready for Review**.
-- Do **not** merge or production-deploy as part of that transition.
-- Keep bundle optimization, dependency remediation and wrapper/Base consolidation in separate follow-up work so this already-large PR stops growing.
+1. Update PR #105 body so it no longer says Diagnosis / Compatibility are unmigrated.
+2. Keep #105 Draft until the upstream #104 branch/base disposition is settled and the combined branch relationship is reviewed.
+3. If the next Result UX migration continues, take **one consumer at a time** (Species Detail / Identify / Knowledge / AI Assistant), add its browser contract first, then migrate it.
+4. Do not reopen the legacy plant persistence issue unless a new reproduction fails with a fixture that does not reseed storage.
+5. Do not merge or production-deploy solely from this handoff update.
+
+## Latest confidence snapshot
+
+- Result UX shared contract: **verified**
+- Diagnosis migration: **verified**
+- Compatibility migration: **verified**
+- plant structured edit persistence: **verified**
+- legacy `plants[]` → structured plant edit + reload persistence: **verified**
+- #105 merge readiness: **not yet declared**; PR remains Draft and its body is stale
