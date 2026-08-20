@@ -1,8 +1,9 @@
 # AquaGuide 交接文档
 
-## 2026-08-21 互动图鉴与场景化知识系统（实施中）
+## 2026-08-21 互动图鉴与场景化知识系统（已验证，待整合 main）
 
 - 当前目标：物种图鉴和养护指南以“先点对象 / 先看下一步”的互动鱼缸场景作为默认入口，并保留传统浏览兜底。鱼缸首页不再承载新增的场景鱼缸，继续使用既有的行动、管理和学习工作区。首期不改数据库、API、混养规则或 AI 结论。
+- 最新实现：`af76a6f`。独立 Critic 与 Evaluator 已复核通过；待推送至 `codex/interactive-knowledge-paths`，之后再处理与远端 `main` 的重叠 UI 改动整合。
 - 已新增 `src/components/interactive/SpeciesSceneAtlas.tsx` 与 `KnowledgeSceneExplorer.tsx`：前者以可点选、游动的物种抠图进入现有物种档案；后者以鱼缸热点进入既有养护路径。两者共享稳定点击热区，游动动画只位于图片层。
 - 已把 `KnowledgeJourney` 展示契约写入 `CONTRACT.md` 与 `src/types.ts`；行动来源仍必须沿用现有文章和规则，`pending` 来源不得冒充已审核。
 - Builder 的 lint/build、隔离浏览器和移动/响应式回归均通过；独立 Critic 与 Evaluator 已 PASS，功能提交为 `5c03448`。2026-08-21 根据用户实际体验移除首页场景鱼缸，并重做图鉴/养护场景为大型鱼缸；iPhone Chromium 已验证无横向溢出、物种点选显示档案动作、养护热点可进入现象与下一步。远端 `main` 在推送前新增多组重叠 UI PR，自动合并在核心页面与详情表面冲突；为避免覆盖远端改动，本轮已安全推送为 `codex/interactive-knowledge-paths`，待以远端最新 UI 为基线人工整合。
