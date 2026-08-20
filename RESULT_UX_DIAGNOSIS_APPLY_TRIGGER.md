@@ -1,1 +1,1 @@
-Temporary trigger for the guarded Diagnosis Result UX migration. Base refreshed to corrected helper; remove after validation.
+Temporary trigger for the guarded Diagnosis Result UX migration. Exact-count guard enabled; remove after validation.
