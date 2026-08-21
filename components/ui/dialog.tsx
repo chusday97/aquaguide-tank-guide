@@ -17,6 +17,18 @@ type SurfaceAwareChildProps = {
   children?: React.ReactNode
 }
 
+let activeModalBodyLocks = 0
+
+function acquireModalBodyLock() {
+  if (typeof document === "undefined") return () => undefined
+  activeModalBodyLocks += 1
+  document.body.classList.add("modal-open")
+  return () => {
+    activeModalBodyLocks = Math.max(0, activeModalBodyLocks - 1)
+    if (activeModalBodyLocks === 0) document.body.classList.remove("modal-open")
+  }
+}
+
 function inferSurface(surface: DialogSurfaceKind, showCloseButton: boolean, className?: string): ResolvedDialogSurface {
   if (surface !== "auto") return surface
   if (className?.includes("max-w-[1180px]") || className?.includes("max-w-[1480px]")) return "fullscreen"
@@ -77,8 +89,7 @@ function Dialog({ modal, disablePointerDismissal, children, ...props }: DialogPr
 
   React.useEffect(() => {
     if (!props.open || !resolvedModal) return
-    document.body.classList.add("modal-open")
-    return () => document.body.classList.remove("modal-open")
+    return acquireModalBodyLock()
   }, [props.open, resolvedModal])
 
   return (
