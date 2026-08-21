@@ -1,6 +1,6 @@
-import { useEffect, useId, useRef } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 
 export type FilterSheetOption = {
   label: string;
@@ -42,57 +42,35 @@ export function FilterBottomSheet({
   resetLabel = 'Reset',
   applyLabel = 'Apply Filters',
 }: FilterBottomSheetProps) {
-  const titleId = useId();
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    previousFocusRef.current = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null;
-    const frame = window.requestAnimationFrame(() => closeButtonRef.current?.focus());
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      previousFocusRef.current?.focus();
-    };
-  }, [open]);
-
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-[180] flex items-end justify-center bg-ink/28 px-4 pb-[calc(16px+env(safe-area-inset-bottom))] backdrop-blur-sm md:px-6 md:pb-[calc(24px+env(safe-area-inset-bottom))]">
-      <button type="button" aria-label="Close filters" className="absolute inset-0" onClick={onClose} />
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        className="relative z-[181] flex max-h-[82vh] w-full max-w-[430px] flex-col overflow-hidden rounded-t-[26px] border border-white/80 bg-white shadow-[0_-20px_60px_rgba(15,23,42,0.18)] md:max-w-[600px] md:rounded-[26px]"
+    <Dialog open={open} onOpenChange={next => !next && onClose()}>
+      <DialogContent
+        surface="task"
+        showCloseButton={false}
+        data-surface="filter-task"
+        className="flex min-h-0 flex-col overflow-hidden border-white/80 bg-white p-0"
       >
-        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-border/70 px-4 py-3">
-          <div className="min-w-0">
-            <h2 id={titleId} className="text-[16px] font-black text-ink">{title}</h2>
-            {subtitle && <p className="mt-0.5 text-[11px] font-bold leading-relaxed text-ink/45">{subtitle}</p>}
+        <header className="flex shrink-0 items-start justify-between gap-3 border-b border-border/70 bg-white px-4 py-3 md:px-5 md:py-4">
+          <div className="min-w-0 flex-1">
+            <DialogTitle className="text-[16px] font-black text-ink md:text-[18px]">{title}</DialogTitle>
+            {subtitle && <DialogDescription className="mt-1 text-[11px] font-bold leading-relaxed text-ink/45">{subtitle}</DialogDescription>}
           </div>
           <button
-            ref={closeButtonRef}
             type="button"
             onClick={onClose}
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-bg text-ink/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-            aria-label="Close"
+            aria-label="Close filters"
           >
             <X className="h-4 w-4" />
           </button>
-        </div>
+        </header>
 
-        <div className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 pb-8">
-          <div className="grid gap-4">
+        <div className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 pb-8 md:px-5">
+          <div className="grid gap-5">
             {groups.map(group => (
-              <section key={group.title} className="grid gap-2">
+              <section key={group.title} className="grid gap-2.5">
                 <div className="text-[12px] font-black text-ink/70">{group.title}</div>
-                <div className="grid grid-cols-2 gap-2 min-[390px]:grid-cols-3">
+                <div className="grid grid-cols-2 gap-2 min-[390px]:grid-cols-3 md:grid-cols-2 lg:grid-cols-3">
                   {group.options.map(option => {
                     const optionValue = option.value ?? option.label;
                     const isAllOption = option.value === '全部' || option.label === 'All' || option.value === null;
@@ -104,7 +82,7 @@ export function FilterBottomSheet({
                         type="button"
                         onClick={() => group.onSelect(optionValue)}
                         disabled={disabled}
-                        className={`min-h-10 rounded-[14px] border px-2.5 py-2 text-left transition-colors ${
+                        className={`min-h-11 rounded-[14px] border px-3 py-2.5 text-left transition-colors ${
                           selected
                             ? 'border-emerald-700 bg-emerald-700 text-white'
                             : disabled
@@ -134,15 +112,15 @@ export function FilterBottomSheet({
           </div>
         </div>
 
-        <div className="modalFooter flex shrink-0 gap-2 border-t border-border/70 bg-white">
-          <Button type="button" variant="outline" onClick={onReset} className="h-10 flex-1 rounded-full text-[13px] font-black">
+        <footer className="modalFooter flex shrink-0 gap-2 border-t border-border/70 bg-white">
+          <Button type="button" variant="outline" onClick={onReset} className="h-11 flex-1 rounded-full text-[13px] font-black">
             {resetLabel}
           </Button>
-          <Button type="button" onClick={onApply} className="h-10 flex-[1.4] rounded-full bg-emerald-700 text-[13px] font-black text-white hover:bg-emerald-800">
+          <Button type="button" onClick={onApply} className="h-11 flex-[1.4] rounded-full bg-emerald-700 text-[13px] font-black text-white hover:bg-emerald-800">
             {applyLabel}
           </Button>
-        </div>
-      </section>
-    </div>
+        </footer>
+      </DialogContent>
+    </Dialog>
   );
 }
