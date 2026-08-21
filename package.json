@@ -33,6 +33,7 @@
     "eval:all": "npm run eval:deterministic && npm run eval:mocked && npm run eval:report",
     "eval:register-badcase": "tsx scripts/register-evaluation-badcase.ts",
     "test:3d-assets": "tsx scripts/assert_3d_species_assets.ts",
+    "test:three-stage-framing": "tsx scripts/test-three-stage-framing.ts",
     "test:interactive-discovery": "tsx scripts/test-interactive-discovery-batches.ts",
     "test:interactive-scene-assets": "tsx scripts/assert_interactive_scene_assets.ts",
     "test:interactive-scenes-ui": "node scripts/verify-interactive-scenes.mjs",
