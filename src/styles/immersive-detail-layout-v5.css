@@ -1,139 +1,108 @@
 /*
- * Immersive detail layout V5
+ * Persistent detail surface system.
  *
- * One viewport contract for desktop/tablet detail surfaces:
- * - the workspace reaches the bottom edge;
- * - only the detail body scrolls;
- * - the underlying discovery scene is not shortened by a selected-result dock;
- * - phone bottom sheets keep their own 92dvh behavior.
+ * Desktop browsing details are non-modal right rails: the underlying page stays
+ * visible and interactive, and selecting another object replaces rail content
+ * instead of dismissing the surface. Phone details use a bottom sheet.
+ * Blocking confirmations continue to use the centered DialogContent contract.
  */
 
-@media (min-width: 768px) {
-  /* Any AdaptiveDetailContent workspace owns the full content viewport. This
-     generic selector prevents Species, Care, Aquarium and later detail pages
-     from each inventing a different bottom gap. */
-  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll:has([data-detail-viewport="workspace"]) {
-    height: 100dvh !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .page-frame-wide:has(> [data-detail-viewport="workspace"]),
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]),
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) {
-    width: 100% !important;
-    max-width: none !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
-    margin: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    gap: 0 !important;
-    overflow: hidden !important;
-  }
-
-  [data-detail-viewport="workspace"] {
-    align-self: stretch !important;
-    box-sizing: border-box;
-    height: 100dvh !important;
-    min-height: 0 !important;
-    max-height: 100dvh !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    overflow: hidden !important;
-  }
-
-  /* Desktop side panels use the same bottom-edge contract even when a page is
-     intentionally modal rather than a split workspace. */
-  [data-detail-viewport="desktop-panel"] {
-    top: 0 !important;
-    bottom: 0 !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-  }
-
-  [data-detail-viewport="workspace"] .species-detail-body,
-  [data-detail-viewport="workspace"] .modalBody,
-  [data-detail-viewport="desktop-panel"] .species-detail-body,
-  [data-detail-viewport="desktop-panel"] .modalBody {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    overscroll-behavior: contain;
-  }
-
-  [data-detail-viewport="workspace"] .care-detail-surface,
-  [data-detail-viewport="desktop-panel"] .care-detail-surface {
-    height: 100% !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: hidden !important;
-  }
-
-  [data-detail-viewport="workspace"] .care-detail-surface > .app-scrollbar-hidden,
-  [data-detail-viewport="desktop-panel"] .care-detail-surface > .app-scrollbar-hidden {
-    flex: 1 1 auto !important;
-    min-height: 0 !important;
-    height: 100% !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    overscroll-behavior: contain;
-  }
+[data-detail-viewport="desktop-rail"] {
+  box-sizing: border-box;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: auto !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  transform: none;
+  overflow: hidden !important;
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  background: #fdfcf8 !important;
 }
 
+[data-detail-viewport="desktop-rail"] .modalBody,
+[data-detail-viewport="desktop-rail"] .species-detail-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+[data-detail-viewport="desktop-rail"] .care-detail-surface {
+  display: flex !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+[data-detail-viewport="desktop-rail"] .care-detail-surface > .app-scrollbar-hidden {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+/* The old detail layout switched to two columns based on viewport width, not
+   rail width. A 1440px browser therefore squeezed two desktop columns into a
+   ~600px rail. The rail owns a vertical information hierarchy instead. */
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 16px 18px 28px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] > section:first-child > div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] > section:first-child > div > :first-child {
+  padding: 8px 0 14px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] > section:first-child > div > :nth-child(2) {
+  border-left: 0 !important;
+  padding: 4px 0 18px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-hero] {
+  height: clamp(190px, 27dvh, 250px) !important;
+  min-height: 190px !important;
+  max-height: 250px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-sections] {
+  margin-top: 14px !important;
+}
+
+[data-detail-viewport="desktop-rail"] .species-workspace-close {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40 !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  background: rgba(253, 252, 248, 0.96) !important;
+  backdrop-filter: blur(16px);
+}
+
+/* A selected discovery result remains inside the scene instead of pushing the
+   underwater canvas upward. This behavior is independent from the right rail. */
 @media (min-width: 1024px) {
-  /* True desktop split workspace. Both columns share one viewport-height row. */
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]),
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) {
-    display: grid !important;
-    grid-template-columns: minmax(0, 52fr) minmax(500px, 48fr) !important;
-    grid-template-rows: minmax(0, 1fr) !important;
-    align-items: stretch !important;
-  }
-
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]) > [data-detail-viewport="workspace"],
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) > [data-detail-viewport="workspace"] {
-    grid-column: 2 !important;
-    grid-row: 1 / span 100 !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    border-left: 1px solid rgba(26, 26, 26, 0.08) !important;
-  }
-
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]) > :not([data-detail-viewport="workspace"]),
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) > .care-workspace-grid {
-    grid-column: 1 !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    max-height: 100dvh !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-  }
-
-  /* Immersive discovery/care scenes. Selection content overlays the scene so
-     choosing an item never pushes the underwater image upward. */
   .encyclopedia-workspace .interactive-tank-shell,
   .care-workspace-shell .interactive-tank-shell {
     position: relative !important;
-    display: block !important;
-    min-height: clamp(620px, calc(100dvh - 28px), 900px) !important;
     overflow: hidden !important;
-  }
-
-  .encyclopedia-workspace .interactive-tank-stage,
-  .care-workspace-shell .interactive-tank-stage {
-    height: clamp(620px, calc(100dvh - 28px), 900px) !important;
-    min-height: clamp(620px, calc(100dvh - 28px), 900px) !important;
   }
 
   .encyclopedia-workspace .interactive-tank-dock.is-visible,
@@ -144,7 +113,7 @@
     left: 22px !important;
     bottom: 48px !important;
     display: flex !important;
-    max-height: min(40%, 300px) !important;
+    max-height: min(38%, 280px) !important;
     overflow-y: auto !important;
     border: 1px solid rgba(255, 255, 255, 0.78) !important;
     border-radius: 24px !important;
@@ -168,56 +137,41 @@
     background: rgba(247, 252, 249, 0.92) !important;
     backdrop-filter: blur(14px);
   }
-
-  /* When a detail is open, the scene column itself occupies the same viewport
-     height as the detail. No exposed page strip may remain underneath. */
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]) .interactive-tank-shell,
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) .interactive-tank-shell,
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]) .interactive-tank-stage,
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) .interactive-tank-stage {
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
-  }
 }
 
-/* Narrow desktop keeps a useful scene column; the detail is not allowed to
-   squeeze it into a decorative sliver. */
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]),
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) {
-    grid-template-columns: minmax(0, 46fr) minmax(480px, 54fr) !important;
-  }
-
-  .encyclopedia-workspace .interactive-tank-copy,
-  .care-workspace-shell .interactive-tank-copy {
-    max-width: min(390px, calc(100% - 32px));
-  }
-
-  .encyclopedia-workspace .interactive-tank-dock.is-visible,
-  .care-workspace-shell .interactive-tank-dock.is-visible {
-    right: 14px !important;
-    left: 14px !important;
-  }
+/* Mobile is a bottom sheet rather than a full-screen desktop rail. Long detail
+   content scrolls inside the sheet while the underlying page remains spatially
+   understandable. */
+[data-detail-viewport="phone-sheet"] {
+  box-sizing: border-box;
+  overflow: hidden !important;
 }
 
-/* Tablet uses one full-height detail surface rather than a squeezed two-column
-   desktop approximation. */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]),
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) {
-    display: block !important;
-  }
+[data-detail-viewport="phone-sheet"]::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  z-index: 60;
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.16);
+  transform: translateX(-50%);
+}
 
-  .encyclopedia-workspace:has(> [data-detail-viewport="workspace"]) > :not([data-detail-viewport="workspace"]),
-  .care-workspace-shell:has(> [data-detail-viewport="workspace"]) > .care-workspace-grid {
-    display: none !important;
-  }
+[data-detail-viewport="phone-sheet"] .modalBody,
+[data-detail-viewport="phone-sheet"] .species-detail-body,
+[data-detail-viewport="phone-sheet"] .care-detail-surface > .app-scrollbar-hidden {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
 
-  [data-detail-viewport="workspace"] {
-    width: 100% !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
+@media (max-width: 767px) {
+  [data-detail-viewport="phone-sheet"] [data-species-detail-layout] {
+    padding-top: 18px !important;
   }
 }
