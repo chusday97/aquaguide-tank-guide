@@ -60,6 +60,13 @@ jobs:
             echo 'Identify must not reintroduce a private aria-modal confirmation.' >&2
             exit 1
           fi
+          grep -q 'surface="blocking"' src/pages/AIAssistant.tsx
+          if grep -Eq '(^|[^[:alnum:]_])confirm\(' src/pages/AIAssistant.tsx; then
+            echo 'AIAssistant clear-history confirmation must use the shared blocking surface.' >&2
+            exit 1
+          fi
+          grep -Fq 'max-w-[920px]' components/ui/dialog.tsx
+          grep -Fq '[data-dialog-surface="detail"]:not([data-detail-viewport])' src/styles/immersive-detail-layout-v5.css
           grep -q 'data-detail-viewport="desktop-rail"' src/styles/immersive-detail-layout-v5.css
           grep -q 'data-dialog-surface="task"' src/styles/immersive-detail-layout-v5.css
           echo 'Surface contract OK'

@@ -4,102 +4,87 @@
 
 ## 当前结论
 
-当前主线仍是 **全站 Surface System 收口**，不是单页弹窗位置微调。当前代码 head 为 `d6bb055efe3242c9cc54ce8e93bbcfeeafddd71d`。
+当前 Surface 主线已经从“到处位置不一致”进入 **已知 residual 收口 + browser acceptance** 阶段。当前产品代码 head：`c603159b4dc5dd4a1a61a2ad019022a103782487`。
 
 状态：
 
-- Shared Surface architecture：已建立并加固。
-- Private Surface migration：主用户入口已进一步减少。
-- Settings unsaved-feedback confirmation：已迁移并 build-verified。
-- Identify unsaved-diagnosis confirmation：已迁移，latest preview 受 build-rate-limit 阻塞。
+- Shared Surface architecture：已建立。
+- 用户主路径 private modal/native confirm：已进一步清理。
+- Encyclopedia species-group：已从 legacy Task inference 改为 Browsing Detail bridge。
+- Aquarium semantic legacy surfaces：仍待收口。
 - Human visual acceptance：NOT PASS。
 - Release readiness：NOT READY。
 
 ## 本轮完成
 
-### 1. Settings native confirm migration
+### 1. AIAssistant clear-history confirmation
 
-`a087dce9da01658287ad29cd40cf18c3bccbdc98`
+`da195046f4803b1ff167d78cb1d0e2b59971aea2`
 
-- 移除 Settings 产品级 `window.confirm`。
-- Navigation guard 改成 pending target + 一次性放行机制。
-- 新增 `DialogContent surface="blocking"`。
-- 撤销分享链接也显式 `surface="blocking"`。
-- Vercel status：success。
+- native `confirm` → shared `surface="blocking"`。
+- 只新增 pending state 与确认 UI；AI 调用、消息历史和收藏逻辑未修改。
+- diff 已复核。
+- Vercel：build-rate-limit。
 
-### 2. Identify private modal migration
+### 2. Encyclopedia species-group detail bridge
 
-`d6bb055efe3242c9cc54ce8e93bbcfeeafddd71d`
+`c603159b4dc5dd4a1a61a2ad019022a103782487`
 
-- 删除手写 `fixed inset-0 + role="dialog" + aria-modal="true"`。
-- 改为 shared `DialogContent surface="blocking"`。
-- 原 reset / history back / cancel diagnosis / route navigation 行为保持。
-- 整文件写入前读取完整 blob，提交后 diff 复核只包含 import + modal replacement。
-- Vercel status：free-plan build-rate-limit；不能标 build-verified。
+- Shared Dialog 对唯一已知 legacy signature `max-w-[920px] + rounded-[24px]` 推断为 Browsing Detail。
+- Desktop：persistent non-modal right rail。
+- Mobile：68dvh bottom sheet。
+- Legacy group detail 的 `modalBody` 独立滚动。
+- 原桌面双列强制为单列，避免窄 Rail 内横向挤压。
+- 未整写大型 Encyclopedia 页面，也未改物种/收藏/兼容性业务逻辑。
+- diff 已复核。
+- Vercel：build-rate-limit。
 
-### 3. Shared Media / nested modal / CI foundation
+### 3. 此前已完成
 
-- `cbb6eaa`：Image Preview → shared Media Surface；Vercel READY。
-- `96cadb3`：nested modal body-lock reference count。
-- `2b3dfdc`：Surface CI 首版。
+- `a087dce` Settings unsaved-feedback → Blocking；Vercel success。
+- `d6bb055` Identify unsaved-diagnosis → Blocking。
+- `cbb6eaa` Image Preview → Media；Vercel READY。
+- `96cadb3` nested modal body lock。
+- `25c7ea9 / 0206e3a / a936233 / 6807029` persistent Detail / Task rails & mobile sheets。
 
-## 当前 Surface Inventory
+## 当前合规矩阵
 
-### 已确认合规
+- Species detail：Browsing Detail
+- Care detail：Browsing Detail
+- Collection Care detail：Browsing Detail
+- Encyclopedia species-group：Browsing Detail bridge
+- Livestock roster：Task
+- Settings/Identify/AIAssistant destructive or discard confirmations：Blocking
+- Image / Export preview：Media
+- Search / CollectionHub：无 private top-level popup
 
-- SpeciesDetailDialog → Browsing Detail
-- Care main detail → Browsing Detail
-- Collection Care detail → Browsing Detail
-- Livestock roster → Task Flow
-- Collection favorite removal → Blocking Confirmation
-- Livestock removal / dirty-close → Blocking Confirmation
-- Compatibility clear selection → Blocking Confirmation
-- Settings revoke share → Blocking Confirmation
-- Settings unsaved feedback leave → Blocking Confirmation
-- Identify unsaved diagnosis leave → Blocking Confirmation
-- Export / image preview → Media
-- Search / CollectionHub → 无私有顶层 popup
+## 当前 residual
 
-### 已确认待收口
+1. **Aquarium legacy direct DialogContent**：文章、指南、任务、阻断确认、3D preview 仍需语义分类。
+2. **AdminContent native confirms**：内部后台 debt，P2。
+3. **Browser acceptance**：最新 head 仍没有 1440/1280/1024/768/390 完整证据。
+4. **Aquarium 3D stage**：用户明确反馈的视觉 P0 仍未通过。
 
-1. Encyclopedia `selectedGroup`：legacy direct DialogContent；语义应为 Browsing Detail，当前会被 auto inference 当 Task。
-2. Aquarium legacy direct DialogContent：文章/指南、任务、阻断确认仍需显式分类。
-3. AIAssistant clear-chat：仍是 native `confirm`，属于 legacy 用户入口 debt。
-4. AdminContent：内部后台有多处 `window.confirm`，属于 admin debt。
-
-## 仍待 latest-head browser acceptance
-
-- `25c7ea9`：desktop non-modal detail rail 不因底层点击自动关闭。
-- `0206e3a`：desktop persistent detail rail / mobile bottom sheet。
-- `a936233`：窄 Rail 内详情纵向层级。
-- `6807029`：mobile Task bottom sheet / desktop task rail。
-- `96cadb3`：nested modal body lock。
-- `a087dce`：Settings shared blocking confirmation。
-- `d6bb055`：Identify shared blocking confirmation。
-
-这些是 implementation / build evidence，不等于人工视觉 PASS。
-
-## Deployment / Preview
-
-当前证据：
+## Deployment evidence
 
 - `cbb6eaa`：Vercel READY。
 - `a087dce`：Vercel success。
-- `d6bb055`：Vercel build-rate-limit。
+- `d6bb055`：build-rate-limit。
+- `da195046`：build-rate-limit。
+- `c603159`：build-rate-limit。
 
-因此基础设施问题应继续表述为 **intermittent build-rate-limit**，不是产品编译失败。
+因此基础设施仍是 **intermittent build-rate-limit**，不等于产品编译失败。
 
 ## 下一步 P0
 
-1. Encyclopedia selectedGroup → explicit Browsing Detail，并消除 Rail 内双列挤压。
-2. Aquarium legacy Surface 显式分类；大文件只做完整读取 + 严格 diff 的安全修改。
-3. Surface CI 加 Settings / Identify 防回退。
-4. latest deploy 可用后跑 1440 / 1024 / 390 regression。
-5. Aquarium 3D framing 单独继续视觉复核。
+1. 回到 Aquarium 3D 主舞台适配，重新核对实际 DOM / stage wrapper / ThreeAquarium sizing，而不是继续抽象讨论。
+2. 目标仍是：单一 full-width aquarium stage，标题/今日行动/物种入口/底部 dock 作为 scene overlay，不允许右侧卡片继续占 grid column 挤压 3D。
+3. 建立 1440/1280/1024/768/390 responsive acceptance；尤其验证 canvas 宽度不被 action card 缩小。
+4. 与 Aquarium 直接相关的 legacy Surface 同批语义化；Admin 后台 debt 延后。
 
-## Merge / release boundary
+## Merge boundary
 
 - 不合并 `main`。
-- 不把 `a087dce success` 误写成 `d6bb055 success`。
-- 不用 AI 47/47 证明 UI Surface PASS。
-- 当前分支仍需与 RC1/#104/#105 做 semantic reconciliation。
+- 不把 code/diff-verified 写成 browser PASS。
+- 不把 Vercel rate limit 写成 compile failure。
+- 当前 branch 与 RC1/#104/#105 仍需后续 semantic reconciliation。

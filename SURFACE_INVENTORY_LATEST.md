@@ -6,97 +6,101 @@
 
 AquaGuide 只允许以下四类顶层 Surface：
 
-1. **Browsing Detail** — Desktop persistent right Rail；Mobile bottom sheet；底层浏览页面可继续交互。
-2. **Task Flow** — Desktop right Task Rail；Mobile high bottom sheet；任务独立滚动。
+1. **Browsing Detail** — Desktop persistent right Rail；Mobile 约 68dvh bottom sheet；desktop 底层页面可继续交互。
+2. **Task Flow** — Desktop right Task Rail；Mobile 约 82dvh high bottom sheet；任务独立滚动。
 3. **Blocking Confirmation** — centered modal；允许 overlay / focus lock；用于删除、放弃未保存、不可逆动作。
-4. **Media / Fullscreen** — 图片、导出预览、3D 等视觉内容；允许居中或全屏，但必须显式标记。
+4. **Media / Fullscreen** — 图片、导出预览、3D 等视觉内容；允许居中或全屏，但必须显式标记或进入严格 legacy allowlist。
 
-未归类的 `DialogContent`、私有 modal Portal、`fixed inset-0` + dialog semantics、产品级 native confirm 都视为 Surface debt；普通布局 Portal（例如把过滤面板挂到页面内 host）不等同于 private modal。
+未归类的 direct `DialogContent`、private modal Portal、`fixed inset-0` + dialog semantics、产品级 native confirm 都视为 Surface debt。普通布局 Portal（例如把过滤面板挂到页面内 host）不等同于 private modal。
 
 ## 已收口的共享 Surface
 
 - `components/ui/dialog.tsx`
-  - 统一 `detail / task / blocking / media / fullscreen` 语义。
-  - Detail / Task 在 desktop 默认 non-modal；phone 为 modal sheet。
-  - nested modal body lock 使用引用计数。
-- `src/components/common/AdaptiveDetailContent.tsx` — explicit `surface="detail"`。
-- `src/components/common/AdaptiveTaskContent.tsx` — explicit `surface="task"`。
-- `src/components/common/FilterBottomSheet.tsx` — Task Surface。
-- `src/components/common/ImagePreviewModal.tsx` — `cbb6eaa` 已迁入 `surface="media"`。
-- `src/components/export/ExportArtifactDialog.tsx` — Media。
+  - `detail / task / blocking / media / fullscreen`。
+  - desktop Detail/Task 默认 non-modal；phone 为 modal sheet。
+  - nested modal body lock reference count。
+  - `c603159` 新增严格 legacy Encyclopedia group signature → Detail bridge。
+- `AdaptiveDetailContent.tsx` → explicit Detail。
+- `AdaptiveTaskContent.tsx` → explicit Task。
+- `FilterBottomSheet.tsx` → Task。
+- `ImagePreviewModal.tsx` → Media。
+- `ExportArtifactDialog.tsx` → Media。
 
 ## 高频入口检查结果
 
 | Area | Current classification | State |
 | --- | --- | --- |
-| SpeciesDetailDialog | Browsing Detail / AdaptiveDetailContent | compliant |
-| Care main detail | Browsing Detail / AdaptiveDetailContent | compliant |
-| Collection Care detail | Browsing Detail / AdaptiveDetailContent | compliant |
-| Livestock roster | Task / AdaptiveTaskContent | compliant |
-| Livestock remove / discard changes | Blocking Confirmation | compliant |
-| Compatibility clear selection | Blocking Confirmation | compliant |
-| Collection remove wishlist/care favorite | Blocking Confirmation | compliant |
-| Settings revoke share link | Blocking Confirmation | compliant |
-| Settings unsaved feedback leave | Blocking Confirmation | migrated `a087dce`; build-verified |
-| Identify unsaved diagnosis leave | Blocking Confirmation | migrated `d6bb055`; latest preview blocked by rate limit |
-| Search page | no top-level popup; routes to target | compliant |
-| CollectionHub | no top-level popup/fixed overlay | compliant |
-| Image preview | Media / shared Dialog | migrated; READY evidence at `cbb6eaa` |
+| SpeciesDetailDialog | Browsing Detail | compliant |
+| Care main detail | Browsing Detail | compliant |
+| Collection Care detail | Browsing Detail | compliant |
+| Encyclopedia species-group | Browsing Detail via strict legacy bridge | code/diff-verified; browser pending |
+| Livestock roster | Task | compliant |
+| Livestock remove / discard changes | Blocking | compliant |
+| Compatibility clear selection | Blocking | compliant |
+| Collection remove favorite | Blocking | compliant |
+| Settings revoke share | Blocking | compliant |
+| Settings unsaved feedback leave | Blocking | migrated `a087dce`; build-verified |
+| Identify unsaved diagnosis leave | Blocking | migrated `d6bb055`; browser pending |
+| AIAssistant clear history | Blocking | migrated `da195046`; browser pending |
+| Search | no top-level popup | compliant |
+| CollectionHub | no top-level popup | compliant |
+| Image / export preview | Media | compliant |
 
-## 已确认残留
+## Encyclopedia legacy bridge
 
-### R1 — Encyclopedia selectedGroup is still legacy direct DialogContent
+`src/pages/Encyclopedia.tsx` 暂不整文件重写。`c603159` 在 shared layer 对唯一已知 species-group signature：
 
-`src/pages/Encyclopedia.tsx` 的 `selectedGroup` 仍为：
-
-- direct `DialogContent`
 - `max-w-[920px]`
-- 内部 `md:grid-cols-[minmax(0,1fr)_minmax(280px,0.82fr)]`
+- `rounded-[24px]`
 
-它本质是 **Browsing Detail**，但 auto inference 当前会按 Task 处理。不能只加 `surface="detail"` 就结束：480–600px Detail Rail 内若保留双列，内容会再次被挤压。迁移必须同时把 group detail 收敛为窄 Rail 的纵向布局。
+判定为 Browsing Detail。并在 CSS 中对 `[data-dialog-surface="detail"]:not([data-detail-viewport])` 做：
 
-### R2 — Aquarium legacy direct DialogContent remains semantically implicit
+- desktop 480–600px right rail；
+- mobile 68dvh bottom sheet；
+- `modalBody` 独立滚动；
+- `modalBody > .grid` 强制单列，覆盖旧 desktop 双列。
 
-`src/pages/Aquarium.tsx` 仍有多处 direct `DialogContent`。共享层已统一大部分物理行为，但长期不能依赖 auto inference：
+这是明确 allowlist，不是泛化“所有 920px dialog 都变 detail”的长期设计。页面未来可安全 patch 时，应改成 explicit `AdaptiveDetailContent` / `surface="detail"` 后删除该 legacy signature。
 
-- Daily Check article / 巡检文章 → Browsing Detail
-- Water-change guidance / 换水与囤水提示 → Browsing Detail
-- reminders / observation / smart recommendation / conflict handling → Task Flow
-- delete aquarium / delete reminder / diagnosis exit → Blocking Confirmation
-- 3D tank preview → Fullscreen / Media
+## 已确认 residual
 
-该文件约 460KB；只在完整读取、可严格复核 diff 的情况下迁移，不做盲目整文件写入。
+### R1 — Aquarium legacy direct DialogContent
 
-### R3 — AIAssistant clear-chat native confirm
+`src/pages/Aquarium.tsx` 仍有多处 direct DialogContent：
 
-`src/pages/AIAssistant.tsx` 清空本地 AI 对话仍使用 native `confirm`。语义为 Blocking Confirmation。它是 legacy 用户入口 debt，优先级低于 Encyclopedia/Aquarium 主浏览路径，但不能忽略。
+- Daily Check article / 巡检文章 → Detail
+- Water-change guidance / 换水与囤水提示 → Detail
+- reminders / observation / smart recommendation / conflict handling → Task
+- delete aquarium / delete reminder / diagnosis exit → Blocking
+- 3D preview → Fullscreen / Media
 
-### R4 — AdminContent native confirms
+该文件约 460KB；只在完整读取、严格 diff 或小组件/shared-layer bridge 条件下修改。
 
-`src/pages/AdminContent.tsx` 在切换内容、新建、返回、切换栏目时仍使用 `window.confirm`。属于内部后台 Blocking Confirmation debt。它不影响普通用户详情 Rail，但全仓 governance 关闭前需要迁移或明确 admin allowlist。
+### R2 — AdminContent native confirms
 
-### 已迁移，不再作为残留
+`src/pages/AdminContent.tsx` 的切换内容、新建、返回、切换栏目仍使用 `window.confirm`。属于 admin debt / P2，不影响普通用户详情 Rail。
 
-- Identify 未保存诊断确认：`d6bb055` 已从 private fixed/aria-modal → shared Blocking Dialog。
-- Settings 未提交反馈确认：`a087dce` 已从 `window.confirm` → shared Blocking Dialog，并保留 navigation guard 的一次性放行逻辑。
+### R3 — Final unknown-surface scan + browser acceptance
+
+已知主用户入口大部分已经分类，但尚未完成全仓最终扫描，也没有 latest-head 1440/1024/390 browser regression，因此不能关闭治理 badcase。
 
 ## Infra / validation evidence
 
-- `cbb6eaab0eb82a8d0fcc806579f20853f24feb1c`：Image Preview → shared media；Vercel READY。
-- `96cadb39d1560e543f6eedb596a89d757919ca84`：nested modal body lock 修复。
-- `2b3dfdcda422565e4997a466c3a5bb9c929f265e`：Surface CI 首版。
-- `a087dce9da01658287ad29cd40cf18c3bccbdc98`：Settings Blocking migration；Vercel success。
-- `d6bb055efe3242c9cc54ce8e93bbcfeeafddd71d`：Identify Blocking migration；Vercel build-rate-limit。
+- `cbb6eaa`：Image Preview → Media；Vercel READY。
+- `a087dce`：Settings Blocking migration；Vercel success。
+- `d6bb055`：Identify Blocking migration；Vercel build-rate-limit。
+- `da195046`：AIAssistant Blocking migration；Vercel build-rate-limit。
+- `c603159`：Encyclopedia group Detail bridge；Vercel build-rate-limit。
 
 ## PUI-BC-059 关闭条件
 
-PUI-BC-059 当前状态：**migration_reduced_validation_pending**。
+当前：**migration_reduced_validation_pending**。
 
-关闭前必须同时满足：
+关闭前必须：
 
-- Encyclopedia selectedGroup explicit Browsing Detail + Rail 内布局适配；
-- Aquarium semantic legacy Surface 显式分类或建立严格 allowlist；
-- legacy 用户端 native confirm 清理或 allowlist；
-- 全仓扫描不存在未知 private modal / drawer / sheet；
+- Aquarium semantic legacy Surface 收口或进入严格 allowlist；
+- 完成全仓未知 private Surface 扫描；
 - latest head 有可运行 build；
-- 1440 / 1024 / 390 至少完成一轮浏览器 Surface 回归。
+- 1440 / 1024 / 390 browser Surface regression 通过。
+
+AdminContent 可作为 admin governance 单独关闭，不应阻塞当前用户 3D 舞台 P0 的继续修复。
