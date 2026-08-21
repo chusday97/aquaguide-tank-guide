@@ -2,8 +2,8 @@
  * Aquarium Stage Layout V4
  *
  * The aquarium home is one visual stage, not a split content grid.
- * ThreeAquarium already owns camera framing; this CSS may crop the scene a
- * little for immersion, but must not apply a second extreme zoom.
+ * ThreeAquarium owns camera framing. CSS controls only stage geometry and
+ * overlay placement; it must never apply a second zoom to the WebGL canvas.
  */
 
 .aquarium-dashboard-stage,
@@ -61,15 +61,14 @@
     box-shadow: none;
   }
 
-  /*
-   * stage-cover already fits the 3D tank to the viewport. Keep only a modest
-   * presentation crop so fish stay readable without turning the glass tank
-   * into an oversized, washed-out background.
-   */
+  /* stage-cover in ThreeAquarium is the single framing owner. Keeping the
+     canvas at 1:1 CSS scale prevents the tank from jumping in size when a
+     viewport crosses 960/1280/1600 breakpoints and keeps R3F pointer geometry
+     aligned with what the user sees. */
   .aquarium-dashboard-tank > .aquarium-tank canvas {
     width: 100% !important;
     height: 100% !important;
-    transform: translate3d(0, 1.5%, 0) scale(1.22);
+    transform: none !important;
     transform-origin: 50% 50%;
   }
 
@@ -161,17 +160,7 @@
   }
 }
 
-@media (min-width: 1600px) {
-  .aquarium-dashboard-tank > .aquarium-tank canvas {
-    transform: translate3d(0, 1.5%, 0) scale(1.30);
-  }
-}
-
 @media (min-width: 1280px) and (max-width: 1599px) {
-  .aquarium-dashboard-tank > .aquarium-tank canvas {
-    transform: translate3d(0, 1.5%, 0) scale(1.26);
-  }
-
   .aquarium-dashboard-rail {
     width: clamp(330px, 26vw, 440px);
   }
@@ -180,10 +169,6 @@
 @media (min-width: 960px) and (max-width: 1279px) {
   .aquarium-dashboard-tank {
     min-height: clamp(600px, calc(100dvh - 86px), 760px);
-  }
-
-  .aquarium-dashboard-tank > .aquarium-tank canvas {
-    transform: translate3d(0, 1%, 0) scale(1.16);
   }
 
   .aquarium-dashboard-rail {
@@ -249,7 +234,7 @@
   .aquarium-dashboard-tank > .aquarium-tank canvas {
     width: 100% !important;
     height: 100% !important;
-    transform: translate3d(0, 0.5%, 0) scale(1.08);
+    transform: none !important;
     transform-origin: 50% 50%;
   }
 
