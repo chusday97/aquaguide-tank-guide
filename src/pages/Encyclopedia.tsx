@@ -2432,7 +2432,8 @@ export default function Encyclopedia() {
                     </div>
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {[selectedTaxonomy?.variety, selectedFish.housingMode, ...getToolFunctions(selectedFish)].filter(Boolean).slice(0, 3).map(tag => {
-                        const displayTag = tag === '主题生物' ? '观赏鱼' : tag === '单独饲养' ? '建议单养' : tag;
+                        const localizedHousingTag = tag === selectedFish.housingMode ? getHousingModeLocalized(selectedFish.housingMode, isEn) : tag;
+                        const displayTag = localizedHousingTag === '主题生物' ? '观赏鱼' : localizedHousingTag === '单独饲养' ? '建议单养' : localizedHousingTag;
                         const translatedTag = filterLabelKeys[displayTag] ? t('encyclopedia.' + filterLabelKeys[displayTag]) : displayTag;
                         return (
                           <span key={tag} className="rounded-full border border-border bg-white px-2 py-1 text-[10px] font-bold text-ink/60">
@@ -2577,7 +2578,7 @@ export default function Encyclopedia() {
                     <div className="mt-3 grid gap-2">
                       <div className="rounded-[12px] bg-bg p-2">
                         <div className="text-[10px] font-bold text-ink/42">{t('encyclopedia.temperamentMixing')}</div>
-                        <div className="mt-1 text-[12px] font-black text-ink">{getTemperamentLabel(selectedFish.temperament, isEn)} · {selectedFish.housingMode || (isEn ? 'Observe' : '需观察')}</div>
+                        <div className="mt-1 text-[12px] font-black text-ink">{getTemperamentLabel(selectedFish.temperament, isEn)} · {selectedFish.housingMode ? getHousingModeLocalized(selectedFish.housingMode, isEn) : (isEn ? 'Observe' : '需观察')}</div>
                       </div>
                       <p className="rounded-[12px] bg-bg p-2 text-[11px] font-medium leading-relaxed text-ink/65">
                         {selectedFish.housingReason || (isEn ? 'Recommended to run compatibility check first.' : '建议加入混养计算后再确认。')}

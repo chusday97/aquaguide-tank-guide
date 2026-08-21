@@ -1000,7 +1000,7 @@ export function CompatibilityRiskCalculator({
                     <span className="min-w-0">
                       <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
                       <span className="block truncate text-[10px] font-medium text-ink/45">
-                        {taxonomy.temperatureBand} · {taxonomy.size} · {fish.housingMode || (isEn ? 'Observe' : '混养待评估')}
+                        {taxonomy.temperatureBand} · {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Observe' : '混养待评估')}
                       </span>
                     </span>
                     <span className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-black text-amber-700">{isEn ? 'Add' : '加入'}</span>
@@ -1041,7 +1041,7 @@ export function CompatibilityRiskCalculator({
                     <span className="min-w-0">
                       <span className="block truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
                       <span className="mt-0.5 block truncate text-[9px] font-bold text-ink/42">
-                        {taxonomy.size} · {fish.housingMode || (isEn ? 'Assessable' : '可评估')}
+                        {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Assessable' : '可评估')}
                       </span>
                     </span>
                   </button>

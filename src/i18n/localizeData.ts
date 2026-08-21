@@ -261,8 +261,10 @@ export const applyLocalization = (lng: string) => {
       // Category translation mapping
       fish.category = categoryTranslations[(fish as any)._originalCategory] || (fish as any)._originalCategory;
       
-      // HousingMode translation mapping
-      fish.housingMode = housingModeTranslations[(fish as any)._originalHousingMode] || (fish as any)._originalHousingMode;
+      // Keep domain enums stable across locales. UI components localize housingMode
+      // at render time; business rules and Zod schemas must always see the
+      // canonical Chinese enum values.
+      fish.housingMode = (fish as any)._originalHousingMode;
       
       // Tank size translation (e.g. "至少 30 升" -> "At least 30 L")
       let tSize = (fish as any)._originalTankSize || "";
@@ -288,7 +290,8 @@ export const applyLocalization = (lng: string) => {
         // Fallback for untranslated species
         fish.description = `Care requirements: temperature ${fish.waterTemperature}, pH ${fish.phLevel}. Water changes: once every ${fish.waterChangeCycle} days.`;
         fish.diet = `Diet type: ${fish.feedingProfile?.dietType || 'Omnivore'}. Standard food: ${fish.feedingProfile?.recommendedFoods || 'Generic feed'}.`;
-        fish.housingReason = `Compatibility behavior: ${fish.housingMode}. Ensure compatible tank parameters.`;
+        const localizedHousingMode = housingModeTranslations[(fish as any)._originalHousingMode] || (fish as any)._originalHousingMode || 'Compatible';
+        fish.housingReason = `Compatibility behavior: ${localizedHousingMode}. Ensure compatible tank parameters.`;
         
         if (fish.feedingProfile) {
           // Translate feeding layer dynamically
