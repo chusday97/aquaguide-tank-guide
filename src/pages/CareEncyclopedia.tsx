@@ -1626,6 +1626,7 @@ export default function CareEncyclopedia() {
   const careSearchRef = useRef<HTMLElement | null>(null);
   const contentListRef = useRef<HTMLElement | null>(null);
   const detailNavigationContextRef = useRef<WorkspaceNavigationContext | null>(null);
+  const closingDetailRef = useRef(false);
 
   const appStateSnapshot = useMemo(() => loadAppStateFromStorage(), []);
   const activeAquarium = useMemo(() => (
@@ -1731,20 +1732,28 @@ export default function CareEncyclopedia() {
 
   useEffect(() => {
     const topicId = new URLSearchParams(location.search).get('topic');
-    if (!topicId || selectedTopic?.id === topicId) return;
+    if (!topicId) {
+      closingDetailRef.current = false;
+      return;
+    }
+    if (closingDetailRef.current || selectedTopic?.id === topicId) return;
     openCareDetail(topicId, undefined, false);
   }, [location.search, selectedTopic?.id]);
 
   const closeCareDetail = () => {
+    const params = new URLSearchParams(location.search);
+    const hasTopicRoute = params.has('topic');
+    closingDetailRef.current = hasTopicRoute;
     setSelectedTopic(null);
-    if (new URLSearchParams(location.search).has('topic')) {
-      if (new URLSearchParams(location.search).get('source') === 'search') {
+    if (hasTopicRoute) {
+      if (params.get('source') === 'search') {
         navigate(-1);
         return;
       }
       navigateToRoute(carePresentationMode === 'browse' ? '/care?mode=browse' : '/care');
       return;
     }
+    closingDetailRef.current = false;
     const context = detailNavigationContextRef.current;
     detailNavigationContextRef.current = null;
     if (context) void restoreContext(context);

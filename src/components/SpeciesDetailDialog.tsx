@@ -799,7 +799,7 @@ export function SpeciesDetailDialog({
             <div className="flex min-h-0 flex-1 flex-col bg-white">
               {useWorkspaceSurface ? (
                 <div className="species-workspace-close flex h-14 shrink-0 items-center justify-end border-b border-ink/8 px-3">
-                  <button type="button" onClick={() => onOpenChange(false)} className="flex h-11 w-11 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-ink/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.dismiss')}>
+                  <button type="button" onClick={() => onOpenChange(false)} className="flex h-11 w-11 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-ink/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('common.close')}>
                     <X className="h-5 w-5" />
                   </button>
                 </div>
@@ -808,7 +808,7 @@ export function SpeciesDetailDialog({
                   className="modalHeader species-detail-header"
                   title={isEn ? 'Species profile' : '物种档案'}
                   onClose={() => onOpenChange(false)}
-                  closeLabel={t('encyclopedia.dismiss')}
+                  closeLabel={t('common.close')}
                 />
               )}
 
