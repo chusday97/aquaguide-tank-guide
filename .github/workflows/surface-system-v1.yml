@@ -32,6 +32,9 @@ jobs:
       - name: Production build
         run: npm run build
 
+      - name: Aquarium stage contract
+        run: node --import tsx scripts/test-aquarium-stage-layout-contract.ts
+
       - name: Surface contract
         shell: bash
         run: |
