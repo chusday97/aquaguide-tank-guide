@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { Dialog, DialogContent, DialogOverlay, DialogPortal } from '@/components/ui/dialog';
 
 export type PreviewImage = {
   src: string;
@@ -18,7 +18,6 @@ type ImagePreviewModalProps = {
 export function ImagePreviewModal({ images, index, open, onClose, onIndexChange }: ImagePreviewModalProps) {
   const [isZoomed, setIsZoomed] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
   const canNavigate = images.length > 1;
 
   const safeIndex = useMemo(() => {
@@ -33,11 +32,9 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
   }, [open, index]);
 
   useEffect(() => {
-    if (!open) return;
-    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (!open || !image) return;
     const focusFrame = window.requestAnimationFrame(() => closeButtonRef.current?.focus());
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
       if (event.key === 'ArrowLeft' && canNavigate) onIndexChange((safeIndex - 1 + images.length) % images.length);
       if (event.key === 'ArrowRight' && canNavigate) onIndexChange((safeIndex + 1) % images.length);
     };
@@ -45,27 +42,26 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
     return () => {
       window.cancelAnimationFrame(focusFrame);
       window.removeEventListener('keydown', handleKeyDown);
-      previousFocusRef.current?.focus();
     };
-  }, [canNavigate, images.length, onClose, onIndexChange, open, safeIndex]);
+  }, [canNavigate, image, images.length, onIndexChange, open, safeIndex]);
 
-  const portalTarget = typeof document === 'undefined' ? null : document.body;
-
-  if (!open || !image || !portalTarget) return null;
+  if (!image) return null;
 
   const goPrevious = () => onIndexChange((safeIndex - 1 + images.length) % images.length);
   const goNext = () => onIndexChange((safeIndex + 1) % images.length);
 
-  return createPortal(
-    <div
-      className="fixed inset-0 isolate flex items-center justify-center bg-black/82 p-4 pb-[calc(16px+env(safe-area-inset-bottom))] md:p-6 md:pb-[calc(24px+env(safe-area-inset-bottom))]"
-      style={{ zIndex: 2147483647 }}
-      role="dialog"
-      aria-modal="true"
-    >
-      <button type="button" aria-label="关闭图片预览" className="absolute inset-0 cursor-default" onClick={onClose} />
-
-      <div className="relative z-10 flex h-full max-h-[92dvh] w-full max-w-[min(1100px,calc(100vw-48px))] flex-col overflow-hidden rounded-[22px] bg-neutral-950 shadow-2xl">
+  return (
+    <Dialog open={open} onOpenChange={next => !next && onClose()}>
+      <DialogPortal>
+        <DialogOverlay className="!z-[219] bg-black/82 backdrop-blur-none" />
+      </DialogPortal>
+      <DialogContent
+        surface="media"
+        withOverlay={false}
+        showCloseButton={false}
+        data-surface="image-preview-media"
+        className="!z-[220] flex h-[min(92dvh,920px)] w-[min(1100px,calc(100vw-32px))] max-w-[min(1100px,calc(100vw-32px))] flex-col overflow-hidden rounded-[22px] border-0 bg-neutral-950 p-0 text-white ring-0 shadow-2xl md:w-[min(1100px,calc(100vw-48px))] md:max-w-[min(1100px,calc(100vw-48px))]"
+      >
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-3 py-2 text-white">
           <div className="min-w-0">
             <div className="truncate text-sm font-black">{image.title}</div>
@@ -118,7 +114,6 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
           <button
             type="button"
             onDoubleClick={() => setIsZoomed(prev => !prev)}
-            onClick={(event) => event.stopPropagation()}
             className={`mx-auto flex h-full min-h-[58dvh] items-center justify-center ${isZoomed ? 'w-max min-w-full cursor-zoom-out' : 'w-full cursor-zoom-in'}`}
             title="双击放大/恢复"
           >
@@ -130,8 +125,7 @@ export function ImagePreviewModal({ images, index, open, onClose, onIndexChange 
             />
           </button>
         </div>
-      </div>
-    </div>,
-    portalTarget
+      </DialogContent>
+    </Dialog>
   );
 }
