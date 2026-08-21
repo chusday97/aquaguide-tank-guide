@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
 const browser = await chromium.launch({ headless: true });
 
 const openSpecies = async ({ speciesId, locale, width }) => {
@@ -26,8 +26,8 @@ const openSpecies = async ({ speciesId, locale, width }) => {
   const page = await context.newPage();
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
-  await page.goto(`${baseUrl}/encyclopedia?species=${speciesId}`, { waitUntil: 'domcontentloaded' });
-  const surface = page.locator('[data-surface="detail-drawer"], [data-surface="bottom-sheet"]');
+  await page.goto(`${baseUrl}/encyclopedia?mode=browse&species=${speciesId}`, { waitUntil: 'domcontentloaded' });
+  const surface = page.locator('[data-detail-viewport="desktop-rail"], [data-detail-viewport="phone-sheet"]').last();
   await surface.waitFor({ state: 'visible' });
   return { context, page, surface, pageErrors };
 };
@@ -37,10 +37,25 @@ try {
     const current = await openSpecies({ speciesId: 'sp_0330', locale, width: 1280 });
     const text = await current.surface.innerText();
     assert.match(text, locale === 'en' ? /Reef Coral \/ Marine Ecosystem/ : /礁岩珊瑚 \/ 海水生态/);
-    assert.match(text, /纽扣\/菇类珊瑚/);
+    assert.match(text, locale === 'en' ? /Zoanthids \/ Mushroom Corals/ : /纽扣\/菇类珊瑚/);
     assert.doesNotMatch(text, /小型观赏鱼|Small Fish|群游搭配|Schooling Mix/);
     assert.equal(current.pageErrors.length, 0);
     await current.context.close();
+  }
+
+
+  for (const [speciesId, expectedEnglish, forbiddenChinese] of [
+    ['sp_0439', 'Barbs / Small Cyprinids', '鲃类/小型鲤科'],
+    ['sp_0039', 'Loaches / Hillstream Loaches', '鳅类/吸鳅'],
+    ['sp_0119', 'Arowanas / Ancient Fish', '龙鱼/古代鱼'],
+  ]) {
+    const englishSpecies = await openSpecies({ speciesId, locale: 'en', width: 1440 });
+    const englishText = await englishSpecies.surface.innerText();
+    assert.match(englishText, new RegExp(expectedEnglish.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+    assert.match(englishText, /Freshwater/);
+    assert.equal(englishText.includes(forbiddenChinese), false, `${speciesId} must not expose canonical Chinese taxonomy in English UI`);
+    assert.equal(englishSpecies.pageErrors.length, 0);
+    await englishSpecies.context.close();
   }
 
   const phone = await openSpecies({ speciesId: 'sp_0330', locale: 'zh-CN', width: 390 });
@@ -65,7 +80,7 @@ try {
     await frogfish.context.close();
   }
 
-  console.log('taxonomy UI verified: coral roles, 丁香珊瑚 source priority and both frogfish classifications');
+  console.log('taxonomy UI verified: localized taxonomy, coral roles, source priority and frogfish classifications');
 } finally {
   await browser.close();
 }

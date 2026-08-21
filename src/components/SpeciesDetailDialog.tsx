@@ -6,6 +6,7 @@ import { Dialog, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import type { Aquarium, Fish, MemorialCauseCode } from '../types';
 import { fishData } from '../data/fishData';
 import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions } from '../modules/species/species.service';
+import { localizeTaxonomyLabel } from '../modules/species/species-taxonomy.presentation';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/tankCompatibilityEngine';
 import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
@@ -326,7 +327,7 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
     type: alreadyInTank ? 'livestock_status' : 'compatibility',
     label: isEn ? "Compatibility" : "混养",
     current: alreadyInTank ? t('encyclopedia.inTankAlready') : t('encyclopedia.livestockCount', { count: existingLivestock.length }),
-    requirement: fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.fitCaution'),
+    requirement: fish.housingMode ? translateTag(fish.housingMode, t, isEn) : t('encyclopedia.fitCaution'),
     status: alreadyInTank ? 'ok' : fish.housingMode === '建议单养' ? 'danger' : fish.housingMode === '谨慎混养' ? 'warning' : 'ok',
     advice: alreadyInTank ? t('encyclopedia.adviceLivestockInTank') : fish.housingReason || t('encyclopedia.adviceHousingDefault'),
   }];
@@ -387,7 +388,9 @@ const roleLabelKeys: Record<string, string> = {
   '观赏生物 / 鱼缸搭配': 'roleGeneralLivestock',
 };
 
-const translateTag = (tag: string, t: any) => {
+const translateTag = (tag: string, t: any, isEn: boolean) => {
+  const taxonomyLabel = localizeTaxonomyLabel(tag, isEn);
+  if (taxonomyLabel !== tag) return taxonomyLabel;
   if (tag === '适合混养') return t('encyclopedia.compatible');
   if (tag === '谨慎混养') return t('encyclopedia.cautionMix');
   if (tag === '建议单养' || tag === '单独饲养') return t('encyclopedia.singleSpecimen');
@@ -841,7 +844,7 @@ export function SpeciesDetailDialog({
                         </div>
                         <div className="mt-2 flex flex-wrap gap-1 min-[760px]:mt-3 min-[760px]:gap-1.5">
                           {[selectedTaxonomy?.variety, fish.housingMode, ...getToolFunctions(fish)].filter(Boolean).slice(0, 3).map(tag => {
-                            const displayTag = translateTag(tag, t);
+                            const displayTag = translateTag(tag, t, isEn);
                             return <span key={tag} className="rounded-full border border-border bg-white px-2 py-1 text-[10px] font-bold text-ink/60">{displayTag}</span>;
                           })}
                         </div>
@@ -953,7 +956,7 @@ export function SpeciesDetailDialog({
                     <div className="mt-2 grid grid-cols-2 gap-2 min-[760px]:grid-cols-4">
                       {[
                         { label: isEn ? 'Temperature' : '水温', value: fish.waterTemperature },
-                        { label: isEn ? 'Water' : '水体', value: selectedTaxonomy?.waterType || fish.category },
+                        { label: isEn ? 'Water' : '水体', value: localizeTaxonomyLabel(selectedTaxonomy?.waterType || fish.category, isEn) },
                         { label: isEn ? 'Space' : '空间', value: fish.tankSize },
                         { label: isEn ? 'Water change' : '换水', value: t('encyclopedia.careWaterChangeValue', { days: fish.waterChangeCycle }) },
                       ].map(item => (
@@ -1099,7 +1102,7 @@ export function SpeciesDetailDialog({
                           {compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
                           {(fish.housingMode || fish.housingReason) && (
                             <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
-                              <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.adviceHousingDefault')}</div>
+                              <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t, isEn) : t('encyclopedia.adviceHousingDefault')}</div>
                               {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
                             </div>
                           )}
@@ -1210,7 +1213,7 @@ export function SpeciesDetailDialog({
                             <section className="rounded-[15px] bg-[#ECF5F0] p-3">
                               <h5 className="text-[11px] font-black text-[#173E33]">{isEn ? 'Environment' : '环境'}</h5>
                               <dl className="mt-2 grid grid-cols-2 gap-2 text-[9px] leading-4">
-                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Water' : '水体'}</dt><dd className="font-semibold">{selectedTaxonomy?.waterType || fish.category}</dd></div>
+                                <div><dt className="font-black text-[#6A766F]">{isEn ? 'Water' : '水体'}</dt><dd className="font-semibold">{localizeTaxonomyLabel(selectedTaxonomy?.waterType || fish.category, isEn)}</dd></div>
                                 <div><dt className="font-black text-[#6A766F]">{isEn ? 'Temperature' : '水温'}</dt><dd className="font-semibold">{fish.waterTemperature}</dd></div>
                                 <div><dt className="font-black text-[#6A766F]">{isEn ? 'Tank size' : '空间'}</dt><dd className="font-semibold">{fish.tankSize}</dd></div>
                                 <div><dt className="font-black text-[#6A766F]">{isEn ? 'Water change' : '换水'}</dt><dd className="font-semibold">{isEn ? `Every ${fish.waterChangeCycle} days` : `约 ${fish.waterChangeCycle} 天一次`}</dd></div>

@@ -1,3 +1,4 @@
+import { localizeTaxonomyLabel } from '../modules/species/species-taxonomy.presentation';
 import { lazy, Suspense, useState, useEffect, useMemo, useRef } from 'react';
 import posthog from 'posthog-js';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -2434,7 +2435,7 @@ export default function Encyclopedia() {
                       {[selectedTaxonomy?.variety, selectedFish.housingMode, ...getToolFunctions(selectedFish)].filter(Boolean).slice(0, 3).map(tag => {
                         const localizedHousingTag = tag === selectedFish.housingMode ? getHousingModeLocalized(selectedFish.housingMode, isEn) : tag;
                         const displayTag = localizedHousingTag === '主题生物' ? '观赏鱼' : localizedHousingTag === '单独饲养' ? '建议单养' : localizedHousingTag;
-                        const translatedTag = filterLabelKeys[displayTag] ? t('encyclopedia.' + filterLabelKeys[displayTag]) : displayTag;
+                        const translatedTag = filterLabelKeys[displayTag] ? t('encyclopedia.' + filterLabelKeys[displayTag]) : localizeTaxonomyLabel(displayTag, isEn);
                         return (
                           <span key={tag} className="rounded-full border border-border bg-white px-2 py-1 text-[10px] font-bold text-ink/60">
                             {translatedTag}

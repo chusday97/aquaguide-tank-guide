@@ -1,5 +1,6 @@
 import { fishData } from '../src/data/fishData';
 import { applyLocalization } from '../src/i18n/localizeData';
+import { localizeTaxonomyLabel } from '../src/modules/species/species-taxonomy.presentation';
 import type { Fish } from '../src/types';
 import {
   getCareTaxonomyPath,
@@ -158,6 +159,31 @@ if (!africanButterflyFish) {
     name: africanButterflyFish.name,
     details: `saltwater=${isSaltwaterSpecies(africanButterflyFish)}, encyclopediaLifeType=${getEncyclopediaLifeType(africanButterflyFish)}, secondary=${getSecondaryCategory(africanButterflyFish)}`,
   });
+}
+
+const hanCharacter = /[\u3400-\u9fff]/;
+for (const fish of fishData) {
+  const secondaryCategory = getSecondaryCategory(fish);
+  if (secondaryCategory) {
+    const englishLabel = localizeTaxonomyLabel(secondaryCategory, true);
+    if (hanCharacter.test(englishLabel)) {
+      fail({
+        rule: 'English taxonomy presentation must not expose canonical Chinese labels',
+        speciesId: fish.id,
+        name: fish.name,
+        details: `canonical=${secondaryCategory}, english=${englishLabel}`,
+      });
+    }
+  }
+  const englishWater = localizeTaxonomyLabel(getCareTaxonomyPath(fish).waterType, true);
+  if (hanCharacter.test(englishWater)) {
+    fail({
+      rule: 'English water taxonomy presentation must be localized without mutating domain values',
+      speciesId: fish.id,
+      name: fish.name,
+      details: `englishWater=${englishWater}`,
+    });
+  }
 }
 
 const canonicalTaxonomyById = new Map(fishData.map(fish => [fish.id, {

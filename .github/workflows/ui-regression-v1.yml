@@ -74,6 +74,11 @@ jobs:
           AQUAGUIDE_URL: http://127.0.0.1:4173
         run: npm run test:collection-hub-ui
 
+      - name: Taxonomy presentation browser regression
+        env:
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: node scripts/verify-taxonomy-ui.mjs
+
       - name: Mobile aquarium regression
         env:
           PREVIEW_URL: http://127.0.0.1:4173
