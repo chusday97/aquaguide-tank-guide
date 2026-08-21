@@ -21,6 +21,16 @@ const aiRequestTimeoutMs = Number(process.env.AI_TIMEOUT_MS || 20 * 1000);
 const aiRateLimitBuckets = new Map();
 const isConfiguredApiKey = (apiKey) => Boolean(apiKey && apiKey !== 'MY_DEEPSEEK_API_KEY' && apiKey !== 'MY_AI_API_KEY');
 const pickConfiguredApiKey = (...keys) => keys.find(isConfiguredApiKey) || '';
+const getAiCapabilityStatus = () => {
+  const textConfigured = Boolean(pickConfiguredApiKey(process.env.AI_API_KEY, process.env.DEEPSEEK_API_KEY));
+  const visionConfigured = Boolean(pickConfiguredApiKey(process.env.VISION_API_KEY)
+    && process.env.VISION_BASE_URL
+    && process.env.VISION_MODEL);
+  return {
+    text: { configured: textConfigured, provider: aiProvider, model: aiModel },
+    vision: { configured: visionConfigured, mode: visionConfigured ? 'model' : 'manual_confirmation' },
+  };
+};
 
 const getClientId = (req) => {
   const forwardedFor = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
@@ -48,13 +58,15 @@ const checkAiRateLimit = (clientId) => {
 app.use(express.json({ limit: '3mb' }));
 
 app.get(['/api/health', '/api/v1/health'], (_req, res) => {
+  const capabilities = getAiCapabilityStatus();
   res.json({
     ok: true,
     provider: aiProvider,
     aiProvider,
     model: aiModel,
-    configured: Boolean(pickConfiguredApiKey(process.env.AI_API_KEY, process.env.DEEPSEEK_API_KEY)),
+    configured: capabilities.text.configured,
     timeoutMs: aiRequestTimeoutMs,
+    ...capabilities,
   });
 });
 

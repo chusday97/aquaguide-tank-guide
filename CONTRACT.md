@@ -504,6 +504,17 @@ interface AquariumSpeciesBatchRecord extends SyncFields {
 现有 `/api/health` 和 `/api/ai/chat` 保留兼容；新增 `/api/v1/health` 与 `/api/v1/ai/chat` 别名。
 AI 请求增加 `locale`，只控制输出语言；混养、巡检、今日行动和成就结论仍由共享规则决定。
 
+`GET /api/health` 与 `GET /api/v1/health` 同时返回文本和视觉能力，且绝不返回密钥：
+
+```ts
+interface AiCapabilityStatus {
+  text: { configured: boolean; provider: string; model: string };
+  vision: { configured: boolean; mode: 'model' | 'manual_confirmation' };
+}
+```
+
+旧的 `configured / provider / aiProvider / model` 字段继续保留，仅代表文字 AI，保证现有客户端兼容。视觉未配置时，识图入口必须明确为手动物种确认模式。
+
 ### 7.5 物种识别与状态判断
 
 | Method | Path | Request | Response | 主要错误 |

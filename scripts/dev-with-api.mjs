@@ -8,18 +8,22 @@ const binDir = path.join(rootDir, 'node_modules', '.bin');
 const viteBin = path.join(binDir, process.platform === 'win32' ? 'vite.cmd' : 'vite');
 const tsxBin = path.join(binDir, process.platform === 'win32' ? 'tsx.cmd' : 'tsx');
 
-const children = [
-  spawn(tsxBin, ['apps/api/src/index.ts'], {
-    cwd: rootDir,
-    stdio: 'inherit',
-    env: { ...process.env, API_PORT: process.env.API_PORT || '8787' },
-  }),
-  spawn(viteBin, ['--port=3000', '--host=0.0.0.0'], {
-    cwd: rootDir,
-    stdio: 'inherit',
-    env: process.env,
-  }),
-];
+const children = [];
+const apiPort = process.env.API_PORT || '8787';
+
+const waitForApi = async () => {
+  const healthUrl = `http://127.0.0.1:${apiPort}/api/health`;
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    try {
+      const response = await fetch(healthUrl);
+      if (response.ok) return;
+    } catch {
+      // The API process is still starting. The next bounded retry is intentional.
+    }
+    await new Promise(resolve => setTimeout(resolve, 250));
+  }
+  throw new Error(`API health check did not become ready: ${healthUrl}`);
+};
 
 const stopAll = () => {
   for (const child of children) {
@@ -37,11 +41,37 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-for (const child of children) {
+const observeChild = (child) => {
   child.on('exit', code => {
     if (code && code !== 0) {
       stopAll();
       process.exit(code);
     }
   });
-}
+};
+
+const start = async () => {
+  const api = spawn(tsxBin, ['apps/api/src/index.ts'], {
+    cwd: rootDir,
+    stdio: 'inherit',
+    env: { ...process.env, API_PORT: apiPort },
+  });
+  children.push(api);
+  observeChild(api);
+  await waitForApi();
+  console.log(`AquaGuide API ready: http://127.0.0.1:${apiPort}/api/health`);
+
+  const vite = spawn(viteBin, ['--port=3000', '--host=0.0.0.0'], {
+    cwd: rootDir,
+    stdio: 'inherit',
+    env: process.env,
+  });
+  children.push(vite);
+  observeChild(vite);
+};
+
+void start().catch(error => {
+  console.error(error.message);
+  stopAll();
+  process.exit(1);
+});

@@ -3,7 +3,8 @@
 
 ## 2026-08-21 当前交接快照
 
-- 当前分支：`codex/interactive-parity-v3`，远端同步到 `7551824`。
+- 当前分支：`codex/interactive-parity-v3`，远端同步到 `07b945c`。
+- 进行中：AI 能力状态拆分与互动养护呈现收口。文字 AI 与视觉 AI 将分别报告配置状态；视觉未配置时必须明确回退为手动物种确认，不能把“文字 AI 已可用”误解为识图已启用。
 - 已完成互动视觉一致性的四个前端阶段：3D 鱼缸主舞台（`debc081`）、水下翻页书册（`b7c03d1`）、非模态双屏详情（`0828560`）、互动图鉴每日发现（`ebce70f`）。
 - 验证已执行：`lint`、生产构建；桌面物种/养护详情为无 Overlay 的右侧工作区，iPhone UA 保持底部详情面板；AI 评测 47/47 通过。
 - Badcase：`evaluation/badcases/registry.jsonl` 为 0 条。本轮没有真实 AI 失败，详见 `evaluation/badcases/LATEST_STATUS.md`。

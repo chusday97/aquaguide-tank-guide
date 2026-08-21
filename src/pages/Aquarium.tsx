@@ -4856,7 +4856,7 @@ export default function AquariumManager() {
   }
 
   return (
-    <div className="page-frame-wide aquarium-desktop-layout flex min-w-0 flex-col gap-4 overflow-x-hidden text-[13px] leading-relaxed">
+    <div className="page-frame-wide aquarium-page-frame aquarium-desktop-layout flex min-w-0 flex-col gap-4 overflow-x-hidden text-[13px] leading-relaxed">
       <aside className="aquarium-side hidden">
         <div className="grid gap-2">
           <div className="relative">

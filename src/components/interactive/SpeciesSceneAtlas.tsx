@@ -72,9 +72,10 @@ export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSel
               style={{ left: position.left, top: position.top, width: position.width, '--scene-delay': position.delay } as CSSProperties}
             >
               <ResilientImage
-                src={getSpeciesVisualSources(fish).detail}
+                src={getSpeciesVisualSources(fish).texture}
                 alt={getDisplayName(fish)}
                 className={`h-full w-full object-contain ${getSpeciesImageClass(fish)}`}
+                loadingSurface="transparent"
                 loading={index > 2 ? 'lazy' : 'eager'}
               />
               <span className="interactive-tank-creature-label">{getDisplayName(fish)}</span>
@@ -86,7 +87,7 @@ export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSel
       <div className={`interactive-tank-dock ${selected ? 'is-visible' : ''}`} aria-live="polite">
         {selected && <>
           <div className="interactive-tank-dock-image">
-            <ResilientImage src={getSpeciesVisualSources(selected).detail} alt="" className={`h-full w-full object-contain ${getSpeciesImageClass(selected)}`} />
+            <ResilientImage src={getSpeciesVisualSources(selected).texture} alt="" className={`h-full w-full object-contain ${getSpeciesImageClass(selected)}`} loadingSurface="transparent" />
           </div>
           <div className="min-w-0"><span className="interactive-tank-dock-kicker">{isEn ? 'You selected' : '你正在观察'}</span><h2>{getDisplayName(selected)}</h2><p>{isEn ? 'See feeding, environment, and compatibility before deciding what to do next.' : '先看喂养、环境与混养关系，再决定下一步。'}</p></div>
           <button type="button" onClick={() => onSelect(selected)} className="interactive-tank-primary">{isEn ? 'View species profile' : '查看物种档案'}<ArrowRight className="h-4 w-4" /></button>

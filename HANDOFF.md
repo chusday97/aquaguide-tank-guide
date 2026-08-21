@@ -2,7 +2,8 @@
 
 ## 2026-08-21 最新交接快照：互动视觉一致性
 
-- 当前工作分支：`codex/interactive-parity-v3@7551824`，已推送至同名 GitHub 分支；不要将其直接合并 `main`，需先完成视觉一致性验收。
+- 当前工作分支：`codex/interactive-parity-v3@07b945c`，已推送至同名 GitHub 分支；不要将其直接合并 `main`，需先完成视觉一致性验收。
+- 当前进行中：文字 AI/视觉 AI 能力状态、全幅 3D 首页、透明互动图鉴与养护双模式。已在本机确认 DeepSeek 文字 API 可响应；视觉环境变量未配置时必须显示手动物种确认，不能声称拍照识别已可用。
 - 已完成：首页为真实 `ThreeAquarium` 主舞台（`debc081`）；`/collection` 为水下翻页书册（`b7c03d1`）；物种/养护详情桌面为无模态双屏工作区，手机仍为底部面板（`0828560`）；每日十项发现迁入互动图鉴并支持“换一批”（`ebce70f`）。
 - 已验证：`lint`、生产构建、桌面 1440px 双屏详情 `overlay=0 / modal-open=false`、iPhone UA 底部面板 `overlay=1 / modal-open=true`。构建仍有既有物种库与 Three.js 大包告警，未提高阈值掩盖。
 - AI Badcase：本轮 `npm run eval:all` 为 47/47 通过，`evaluation/badcases/registry.jsonl` 保持 0 条；不把尚未完成的 UI 视觉验收写成 AI Badcase，详见 `evaluation/badcases/LATEST_STATUS.md`。

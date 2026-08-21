@@ -906,7 +906,7 @@ function DesktopAppShell({
       </div>
       <div className="app-main-shell flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-transparent">
         <main className="app-scrollbar-hidden desktop-workspace-scroll min-h-0 flex-1 overflow-y-auto">
-          <div className="desktop-canvas mx-auto w-full">
+          <div className={`desktop-canvas mx-auto w-full ${window.location.pathname === '/aquarium' ? 'desktop-canvas--aquarium' : ''}`}>
             <WorkspaceRoutes />
           </div>
         </main>

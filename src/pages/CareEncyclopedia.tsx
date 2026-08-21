@@ -52,6 +52,7 @@ import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
 type CareViewMode = 'all' | 'favorites';
+type CarePresentationMode = 'scene' | 'browse';
 type FlyingFavorite = { id: string; startX: number; startY: number; endX: number; endY: number };
 type CareGuideView = {
   title: string;
@@ -1609,6 +1610,9 @@ export default function CareEncyclopedia() {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [careViewMode, setCareViewMode] = useState<CareViewMode>('all');
+  const [carePresentationMode, setCarePresentationMode] = useState<CarePresentationMode>(() => (
+    new URLSearchParams(location.search).get('mode') === 'browse' ? 'browse' : 'scene'
+  ));
   const [favorites, setFavorites] = useState<CareFavoriteMap>(() => getCareFavorites());
   const [shareTopic, setShareTopic] = useState<CareTopic | null>(null);
   const [isSavingShareCard, setIsSavingShareCard] = useState(false);
@@ -1643,6 +1647,18 @@ export default function CareEncyclopedia() {
     species: fishData,
     careTopics: careTopicsData,
   }), [isEn, searchTerm]);
+
+  useEffect(() => {
+    setCarePresentationMode(new URLSearchParams(location.search).get('mode') === 'browse' ? 'browse' : 'scene');
+  }, [location.search]);
+
+  const changeCarePresentation = (mode: CarePresentationMode) => {
+    setCarePresentationMode(mode);
+    const params = new URLSearchParams(location.search);
+    if (mode === 'browse') params.set('mode', 'browse');
+    else params.delete('mode');
+    navigate({ pathname: '/care', search: params.toString() ? `?${params.toString()}` : '' });
+  };
 
   useEffect(() => {
     if (!location.hash) return;
@@ -1686,6 +1702,7 @@ export default function CareEncyclopedia() {
   };
 
   const handleSelectCareCategory = (categoryId: CareCategoryId) => {
+    changeCarePresentation('browse');
     setActiveCategory(categoryId);
     setCareViewMode('all');
     setCareWorkspacePage('content');
@@ -1725,7 +1742,7 @@ export default function CareEncyclopedia() {
         navigate(-1);
         return;
       }
-      navigateToRoute('/care');
+      navigateToRoute(carePresentationMode === 'browse' ? '/care?mode=browse' : '/care');
       return;
     }
     const context = detailNavigationContextRef.current;
@@ -1972,18 +1989,28 @@ export default function CareEncyclopedia() {
         </div>
       </section>
 
-      {!searchTerm.trim() && careViewMode === 'all' && (
+      <section className="flex items-center justify-between gap-2 px-1" aria-label={isEn ? 'Care presentation' : '养护呈现方式'}>
+        <div className="inline-flex rounded-full border border-emerald-900/10 bg-white/70 p-1 shadow-sm">
+          <button type="button" aria-pressed={carePresentationMode === 'scene'} onClick={() => changeCarePresentation('scene')} className={`min-h-9 rounded-full px-3 text-[11px] font-black ${carePresentationMode === 'scene' ? 'bg-emerald-800 text-white' : 'text-ink/58'}`}>{isEn ? 'Interactive check' : '互动排查'}</button>
+          <button type="button" aria-pressed={carePresentationMode === 'browse'} onClick={() => changeCarePresentation('browse')} className={`min-h-9 rounded-full px-3 text-[11px] font-black ${carePresentationMode === 'browse' ? 'bg-emerald-800 text-white' : 'text-ink/58'}`}>{isEn ? 'Browse guides' : '传统浏览'}</button>
+        </div>
+        <button type="button" onClick={() => navigateToRoute('/collection/care')} className="hidden min-h-11 rounded-full px-3 text-[11px] font-black text-emerald-800 hover:bg-white/70 md:inline-flex">{isEn ? 'Saved guides' : '养护收藏'}<ChevronRight className="ml-0.5 h-3.5 w-3.5" /></button>
+      </section>
+
+      {carePresentationMode === 'scene' && (
         <KnowledgeSceneExplorer
           isEn={isEn}
           onOpenTopic={(topicId, sourceId) => openCareDetail(topicId, sourceId)}
           onBrowseList={(query) => {
             if (query) setSearchTerm(query);
+            changeCarePresentation('browse');
             setCareWorkspacePage('content');
             void navigateToSection('care-results', { updateHash: false });
           }}
         />
       )}
 
+      <div className={carePresentationMode === 'browse' ? 'contents' : 'hidden'}>
       <section id="care-recommendations" className={`care-left-panel w-full min-w-0 max-w-full scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white p-3 shadow-sm ${(!searchTerm.trim() && careWorkspacePage === 'home') ? '' : 'hidden md:block'}`}>
             <div className="mb-3 flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -2174,6 +2201,8 @@ export default function CareEncyclopedia() {
           </div>
         )}
       </section>
+
+      </div>
 
       <Dialog open={!!selectedTopic} modal={isPhoneLayout} onOpenChange={(open) => !open && closeCareDetail()}>
         <AdaptiveDetailContent>

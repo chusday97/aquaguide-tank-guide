@@ -8,7 +8,11 @@ const withRetryToken = (src: string) => {
   return `${src}${separator}retry=1`;
 };
 
-export function ResilientImage({ src = '', alt = '', className = '', onLoad, ...props }: ImgHTMLAttributes<HTMLImageElement>) {
+type ResilientImageProps = ImgHTMLAttributes<HTMLImageElement> & {
+  loadingSurface?: 'neutral' | 'transparent';
+};
+
+export function ResilientImage({ src = '', alt = '', className = '', onLoad, loadingSurface = 'neutral', ...props }: ResilientImageProps) {
   const [attempt, setAttempt] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
@@ -20,8 +24,8 @@ export function ResilientImage({ src = '', alt = '', className = '', onLoad, ...
   const resolvedSrc = attempt === 0 ? src : attempt === 1 ? withRetryToken(src) : FALLBACK_IMAGE;
 
   return (
-    <span className="relative block h-full w-full overflow-hidden">
-      {!loaded && <span className="absolute inset-0 animate-pulse bg-slate-100" aria-hidden="true" />}
+    <span className={`relative block h-full w-full overflow-hidden ${loadingSurface === 'transparent' ? 'resilient-image-transparent' : ''}`}>
+      {!loaded && <span className={`absolute inset-0 animate-pulse ${loadingSurface === 'transparent' ? 'resilient-image-transparent-loader' : 'bg-slate-100'}`} aria-hidden="true" />}
       <img
         {...props}
         src={resolvedSrc}

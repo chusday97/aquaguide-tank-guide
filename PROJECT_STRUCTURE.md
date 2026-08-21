@@ -5,6 +5,7 @@
 ## 核心入口
 
 - `apps/api/`：Express TypeScript 业务 API 入口、统一错误、Supabase 客户端、鉴权和版本化路由。
+- `server/index.mjs` / `api/health.js` / `functions/api/health.js`：本地 Express、Vercel 与 Pages 兼容健康接口；公开文字/视觉 AI 能力状态，但不暴露 Secret。
 - `apps/api/src/feedback-rate-limit.ts`：意见反馈单实例有界限流；生产多实例由入口网关提供共享额度。
 - `apps/api/src/routes/admin.ts`：受管理员权限保护的物种、养护文章、发布状态与版本化图片处理接口。
 - `apps/api/src/routes/species-ai.ts`：物种图片识别、匿名未命中和动态症状判断 API。
@@ -59,14 +60,14 @@
 - `src/components/aquarium/LivestockRosterDialog.tsx`：首页唯一缸内物种详情；桌面中央/手机全高管理体态，并按数量二次确认移出。
 - `src/components/aquarium/AquariumTimeline.tsx`：鱼缸操作时间线与循环养护工作区，桌面双栏、手机单列。
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
-- `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
+- `src/pages/CareEncyclopedia.tsx`：养护百科、互动排查/传统浏览两种呈现状态与共享养护详情。
 - `src/data/careEvidence.ts`：41 篇养护内容的确定性来源映射、审核状态与复查动作兜底。
 - `src/pages/CollectionHub.tsx`：水族册模块首页，以水下展开书册承载种草、养护收藏、生命纪念与成就；章节原位展开，具体条目使用稳定深链，剩余内容通过“更多”进入模块。
 - `src/pages/Collection.tsx`：四个独立水族册模块的排序列表、物种/养护详情深链、纪念旧地址兼容跳转、勋章定位与空状态。
 - `src/pages/MemorialDetail.tsx`：生命纪念独立档案页；结构化复盘补录/编辑、未保存保护、列表返回与再次加入统一复核。
 - `src/pages/AdminContent.tsx`：受管理员权限保护的独立内容后台页面，不进入普通用户导航。
 - `src/components/common/RouteErrorBoundary.tsx`：核心路由隔离、友好重试、会话诊断复制与坏数据恢复提示。
-- `src/components/common/ResilientImage.tsx`：图片骨架、单次重试与本地占位兜底。
+- `src/components/common/ResilientImage.tsx`：图片骨架、单次重试与本地占位兜底；互动场景可使用透明加载表面，避免出现白色方块。
 - `src/services/diagnostics/`：`chunk / render / image / data` 会话级失败分类与脱敏诊断。
 - `public/responsive/`：物种 256/768px 与养护 480/960px WebP 衍生资源；原图继续保留。
 
