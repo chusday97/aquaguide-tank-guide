@@ -432,6 +432,12 @@
 - 当前分支：`codex/interactive-parity-v3`；首页 3D 舞台提交为 `debc081`，水族册阶段待独立提交。
 - 验证：`npm run lint`、`npm run build`、`git diff --check` 均通过；构建仅保留既有大块告警。后续先补完整浏览器翻页/手机回归，再实施桌面非模态双屏详情。
 - 禁忌：不要把水族册章节重新做成 `Dialog` 或用遮罩/背景模糊；不要复制一份收藏数据或改变既有 `item` 深链。
+
+## 2026-08-21 互动视觉一致性：双屏详情阶段
+
+- 已完成：`AdaptiveDetailContent` 在桌面转为 48% 宽无模态右侧工作区；`SpeciesDetailDialog` 与 `CareEncyclopedia` 仅在真实手机设备启用模态与遮罩。桌面左侧继续可见、可滚动、可切换对象。
+- 验证：桌面 1440px 物种和养护详情均为 `split-workspace-panel`、`overlay=0`、`modal-open=false`、无横向溢出；iPhone UA 为 `bottom-sheet`、`overlay=1`、`modal-open=true`。`lint`、生产构建和 `git diff --check` 通过。
+- 待办：将今日推荐展示入口从首页迁入互动图鉴；增加使用正式组件的内部视觉预览与完整视觉回归。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。

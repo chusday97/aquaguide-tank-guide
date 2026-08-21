@@ -24,6 +24,7 @@ import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.se
 import { deriveSpeciesGroups, findGroupForSpecies, getVariantLabel } from '../lib/speciesGrouping';
 import { QuickDatePicker } from './forms/QuickDatePicker';
 import { MemorialCauseSelector } from './memorial/MemorialCauseSelector';
+import { useLayoutMode } from './layout/LayoutModeProvider';
 
 const ImagePreviewModal = lazy(() => import('./common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const Interactive3DFishWrapper = lazy(() => import('./Interactive3DFishWrapper'));
@@ -420,6 +421,7 @@ export function SpeciesDetailDialog({
   onRecordDeath,
 }: SpeciesDetailDialogProps) {
   const { t, i18n } = useTranslation();
+  const { isPhoneLayout } = useLayoutMode();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const translateLabel = (label: string) => {
     if (label === '水体类型') return t('encyclopedia.waterType');
@@ -788,7 +790,7 @@ export function SpeciesDetailDialog({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} modal={isPhoneLayout} onOpenChange={onOpenChange}>
         <AdaptiveDetailContent showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">

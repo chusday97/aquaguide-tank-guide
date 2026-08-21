@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
-function Dialog({ ...props }: DialogPrimitive.Root.Props) {
+function Dialog({ modal = true, ...props }: DialogPrimitive.Root.Props) {
   React.useEffect(() => {
-    if (!props.open) return
+    if (!props.open || !modal) return
     document.body.classList.add("modal-open")
     return () => document.body.classList.remove("modal-open")
-  }, [props.open])
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+  }, [modal, props.open])
+  return <DialogPrimitive.Root data-slot="dialog" modal={modal} {...props} />
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
@@ -47,14 +47,16 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  withOverlay = true,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
+  withOverlay?: boolean
 }) {
   const { t } = useTranslation()
   return (
     <DialogPortal>
-      <DialogOverlay />
+      {withOverlay && <DialogOverlay />}
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(

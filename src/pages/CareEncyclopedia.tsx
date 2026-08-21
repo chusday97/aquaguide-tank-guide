@@ -47,6 +47,7 @@ import { taskRoutes } from '../services/navigation/task-routes';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
 import { KnowledgeSceneExplorer } from '../components/interactive/KnowledgeSceneExplorer';
+import { useLayoutMode } from '../components/layout/LayoutModeProvider';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
@@ -1526,6 +1527,7 @@ const buildStepDiagnosisResult = ({
 
 export default function CareEncyclopedia() {
   const { t, i18n } = useTranslation();
+  const { isPhoneLayout } = useLayoutMode();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const navigate = useNavigate();
 
@@ -2173,7 +2175,7 @@ export default function CareEncyclopedia() {
         )}
       </section>
 
-      <Dialog open={!!selectedTopic} onOpenChange={(open) => !open && closeCareDetail()}>
+      <Dialog open={!!selectedTopic} modal={isPhoneLayout} onOpenChange={(open) => !open && closeCareDetail()}>
         <AdaptiveDetailContent>
           {selectedTopic && (
             <CareArticleDetail
