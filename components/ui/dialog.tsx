@@ -89,7 +89,8 @@ function usePhoneViewport() {
 
 function Dialog({ modal, disablePointerDismissal, children, ...props }: DialogPrimitive.Root.Props) {
   const isPhoneViewport = usePhoneViewport()
-  const markedSurface = React.useMemo(() => getMarkedSurface(children), [children])
+  const surfaceChildren = typeof children === "function" ? null : children
+  const markedSurface = React.useMemo(() => getMarkedSurface(surfaceChildren), [surfaceChildren])
   const isRailSurface = markedSurface === "detail" || markedSurface === "task"
   const resolvedModal = modal ?? (isRailSurface ? isPhoneViewport : true)
   const keepNonModalSurfaceOpen = disablePointerDismissal ?? resolvedModal === false
@@ -150,7 +151,8 @@ function DialogContent({
 }) {
   const { t } = useTranslation()
   const isPhoneViewport = usePhoneViewport()
-  const resolvedSurface = inferSurface(surface, showCloseButton, className)
+  const staticClassName = typeof className === "string" ? className : undefined
+  const resolvedSurface = inferSurface(surface, showCloseButton, staticClassName)
   const isRailSurface = resolvedSurface === "detail" || resolvedSurface === "task"
   const resolvedOverlay = withOverlay ?? (!isRailSurface || isPhoneViewport)
 

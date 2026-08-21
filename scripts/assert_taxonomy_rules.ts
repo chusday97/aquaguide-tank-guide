@@ -110,6 +110,29 @@ for (const item of encyclopediaItems) {
   }
 }
 
+
+const taxonomyIdentityCases = [
+  { id: 'sp_0436', expected: '孔雀/月光/玛丽/剑尾', label: '孔雀鱼' },
+  { id: 'sp_0439', expected: '鲃类/小型鲤科', label: '虎皮鱼' },
+  { id: 'sp_0440', expected: '鲃类/小型鲤科', label: '一眉道人' },
+];
+for (const expected of taxonomyIdentityCases) {
+  const fish = fishData.find(item => item.id === expected.id);
+  if (!fish) {
+    fail({ rule: 'taxonomy identity regression fixture must exist', speciesId: expected.id, name: expected.label });
+    continue;
+  }
+  const actual = getSecondaryCategory(fish);
+  if (actual !== expected.expected) {
+    fail({
+      rule: 'secondary taxonomy must follow species identity, not names mentioned in description',
+      speciesId: fish.id,
+      name: fish.name,
+      details: `expected=${expected.expected}, actual=${actual}`,
+    });
+  }
+}
+
 const frogfishItems = fishData.filter(fish => /五彩青蛙|Synchiropus/i.test(`${fish.name} ${fish.scientificName}`));
 if (frogfishItems.length === 0) {
   fail({ rule: '必须存在五彩青蛙/青蛙鱼数据' });

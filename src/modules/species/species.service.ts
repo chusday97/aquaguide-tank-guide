@@ -119,7 +119,10 @@ export const getLifeType = (fish: Fish) => {
 };
 
 export const getSecondaryCategory = (fish: Fish) => {
-  const text = `${fish.name} ${fish.scientificName} ${fish.description}`;
+  // Taxonomy must be derived from identity fields only. Description text often
+  // names incompatible tank mates (for example tiger barb mentions guppies),
+  // which must never change what species this record is classified as.
+  const text = `${fish.name} ${fish.scientificName}`;
   const lifeType = getLifeType(fish);
 
   if (lifeType === 'fish') {
@@ -135,6 +138,7 @@ export const getSecondaryCategory = (fish: Fish) => {
     if (/红绿灯|宝莲灯|红鼻|剪刀|黑裙|红裙|樱桃灯|柠檬灯|红莲灯|琥珀灯|蓝眼灯|血心灯|帝王灯|红眼灯|金灯|黄金灯|霓虹灯|红十字灯|玻璃灯|刚果美人|Hyphessobrycon|Paracheirodon|Hemigrammus|Gymnocorymbus|Moenkhausia|Nematobrycon|Phenacogrammus|Boehlkea|Prionobrama|Aphyocharax/i.test(text)) return '灯科鱼';
     if (/白云金丝|唐鱼|Tanichthys/i.test(text)) return '白云金丝';
     if (/斑马鱼|Danio/i.test(text)) return '斑马鱼';
+    if (/虎皮鱼|一眉道人|Puntigrus|Puntius|Pethia|Desmopuntius|Sahyadria|Barbus/i.test(text)) return '鲃类/小型鲤科';
     if (/孔雀|月光鱼|玛丽|剑尾|红剑|皮球|Poecilia|Xiphophorus/i.test(text)) return '孔雀/月光/玛丽/剑尾';
     if (/鳉|Epiplatys|Sawbwa|Dario|Badis|Poropanchax/i.test(text)) return '鳉鱼';
     if (/斗鱼|Betta/i.test(text)) return '斗鱼';
