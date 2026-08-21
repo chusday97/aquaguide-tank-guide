@@ -94,7 +94,8 @@
 
 /* Legacy direct DialogContent task surfaces are normalized here. This prevents
    old per-page max-width / top-left utilities from making each dialog land in a
-   different place. */
+   different place. Legacy content defaults to whole-rail scrolling so pages
+   without a standard body wrapper cannot be clipped at the bottom. */
 @media (min-width: 768px) {
   [data-dialog-surface="task"] {
     box-sizing: border-box !important;
@@ -113,13 +114,22 @@
     margin: 0 !important;
     padding: 0 !important;
     transform: none !important;
-    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
     border-top: 0 !important;
     border-right: 0 !important;
     border-bottom: 0 !important;
     border-radius: 28px 0 0 28px !important;
     background: #fdfcf8 !important;
     box-shadow: -22px 0 64px rgba(15, 23, 42, 0.16) !important;
+  }
+
+  /* Migrated task surfaces own an explicit body scroller, so their chrome can
+     remain fixed while only the body scrolls. */
+  [data-dialog-surface="task"][data-surface="task-flow"],
+  [data-dialog-surface="task"][data-surface="filter-task"] {
+    overflow: hidden !important;
   }
 
   [data-dialog-surface="task"] > [data-slot="dialog-header"] {
@@ -157,10 +167,17 @@
     margin: 0 !important;
     padding: 0 !important;
     transform: translateX(-50%) !important;
-    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
     border-radius: 28px 28px 0 0 !important;
     background: #fdfcf8 !important;
     box-shadow: 0 -18px 56px rgba(15, 23, 42, 0.18) !important;
+  }
+
+  [data-dialog-surface="task"][data-surface="task-flow"],
+  [data-dialog-surface="task"][data-surface="filter-task"] {
+    overflow: hidden !important;
   }
 
   [data-dialog-surface="task"]::before,
