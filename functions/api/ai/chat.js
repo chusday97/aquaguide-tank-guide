@@ -178,13 +178,13 @@ const buildTankDailyCheckPrompt = (context = {}) => ({
 const parseJsonObject = (text) => {
   try {
     const parsed = JSON.parse(text);
-    if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') throw new Error('AI 返回的内容不是对象。');
+    if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') throw new Error('invalid_json');
     return parsed;
   } catch {
     const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('AI 返回的内容不是 JSON。');
+    if (!match) throw new Error('invalid_json');
     const parsed = JSON.parse(match[0]);
-    if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') throw new Error('AI 返回的内容不是对象。');
+    if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') throw new Error('invalid_json');
     return parsed;
   }
 };
@@ -306,7 +306,7 @@ export async function onRequestPost({ request, env }) {
   const aiModel = env.AI_MODEL || env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
 
   if (!isConfiguredApiKey(apiKey)) {
-    return json({ ok: false, error: 'AI provider is not configured' }, { status: 503 });
+    return json({ ok: false, error: 'AI provider is not configured', failureReason: 'not_configured' }, { status: 503 });
   }
 
   const body = await request.json().catch(() => ({}));
@@ -359,8 +359,10 @@ export async function onRequestPost({ request, env }) {
       return json(task ? {
         ok: false,
         error: `AI 请求失败：${responseText.slice(0, 300)}`,
+        failureReason: 'network',
       } : {
         error: `DeepSeek 请求失败：${responseText.slice(0, 300)}`,
+        failureReason: 'network',
       }, { status: 502 });
     }
 
@@ -399,7 +401,10 @@ export async function onRequestPost({ request, env }) {
       usage: data.usage,
     });
   } catch (error) {
-    const failureReason = error?.name === 'AbortError' ? 'timeout' : (String(error?.message || '').toLowerCase().includes('json') ? 'invalid_json' : 'unknown');
+    const message = String(error?.message || '').toLowerCase();
+    const failureReason = error?.name === 'AbortError'
+      ? 'timeout'
+      : (message.includes('json') ? 'invalid_json' : (message.includes('fetch') || message.includes('network') || message.includes('econn') ? 'network' : 'unknown'));
     return json(body.task ? {
       ok: false,
       error: error?.name === 'AbortError' ? 'AI request timed out' : 'AI request failed',

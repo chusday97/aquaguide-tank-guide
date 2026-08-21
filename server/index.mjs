@@ -256,11 +256,15 @@ const buildTankDailyCheckPrompt = (context = {}) => {
 
 const parseJsonObject = (text) => {
   try {
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+    if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') throw new Error('invalid_json');
+    return parsed;
   } catch {
     const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('AI 返回的内容不是 JSON。');
-    return JSON.parse(match[0]);
+    if (!match) throw new Error('invalid_json');
+    const parsed = JSON.parse(match[0]);
+    if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') throw new Error('invalid_json');
+    return parsed;
   }
 };
 

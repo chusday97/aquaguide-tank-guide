@@ -900,6 +900,7 @@ function DesktopAppShell({
   onToggleCollapsed: () => void;
   style: CSSProperties;
 }) {
+  const location = useLocation();
   return (
     <div
       className="aquaguide-app desktop-shell-active flex min-h-[100dvh] flex-col overflow-hidden bg-[#dfe8e5] text-ink"
@@ -920,7 +921,7 @@ function DesktopAppShell({
       </div>
       <div className="app-main-shell flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-transparent">
         <main className="app-scrollbar-hidden desktop-workspace-scroll min-h-0 flex-1 overflow-y-auto">
-          <div className={`desktop-canvas mx-auto w-full ${window.location.pathname === '/aquarium' ? 'desktop-canvas--aquarium' : ''}`}>
+          <div className={`desktop-canvas mx-auto w-full ${location.pathname === '/aquarium' ? 'desktop-canvas--aquarium' : ''}`}>
             <WorkspaceRoutes />
           </div>
         </main>

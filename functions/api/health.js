@@ -7,8 +7,8 @@ const json = (body, init = {}) => new Response(JSON.stringify(body), {
 });
 
 export function onRequestGet({ env }) {
-  const apiKey = env.AI_API_KEY || env.DEEPSEEK_API_KEY;
-  const textConfigured = Boolean(apiKey && apiKey !== 'MY_DEEPSEEK_API_KEY' && apiKey !== 'MY_AI_API_KEY');
+  const isConfiguredApiKey = (apiKey) => Boolean(apiKey && apiKey !== 'MY_DEEPSEEK_API_KEY' && apiKey !== 'MY_AI_API_KEY');
+  const textConfigured = isConfiguredApiKey(env.AI_API_KEY) || isConfiguredApiKey(env.DEEPSEEK_API_KEY);
   const visionConfigured = Boolean(env.VISION_API_KEY && env.VISION_BASE_URL && env.VISION_MODEL);
   return json({
     ok: true,
