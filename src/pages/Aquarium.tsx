@@ -5489,7 +5489,7 @@ export default function AquariumManager() {
       />
 
       <Dialog open={Boolean(pendingReminderReschedule)} onOpenChange={(open) => !open && setPendingReminderReschedule(null)}>
-        <DialogContent className="w-[90vw] max-w-[380px] rounded-[22px] border-border bg-white p-5">
+        <DialogContent surface="task" className="border-border bg-white p-5">
           <DialogHeader>
             <DialogTitle className="text-lg font-black text-ink">{t('aquarium.rescheduleReminderTitle')}</DialogTitle>
             <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">{t('aquarium.rescheduleReminderDesc')}</DialogDescription>
@@ -5505,7 +5505,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={Boolean(pendingReminderDelete)} onOpenChange={(open) => !open && setPendingReminderDelete(null)}>
-        <DialogContent showCloseButton={false} className="w-[90vw] max-w-[380px] rounded-[22px] border-red-100 bg-white p-5">
+        <DialogContent surface="blocking" showCloseButton={false} className="border-red-100 bg-white p-5">
           <DialogHeader>
             <DialogTitle className="text-lg font-black text-ink">{t('aquarium.deleteReminderTitle')}</DialogTitle>
             <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">{t('aquarium.deleteReminderDesc', { title: pendingReminderDelete?.title })}</DialogDescription>
@@ -5518,7 +5518,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={!!pendingDeleteAquariumId} onOpenChange={(open) => !open && setPendingDeleteAquariumId(null)}>
-        <DialogContent showCloseButton={false} className="w-[90vw] max-w-[380px] rounded-[22px] border-red-100 bg-white p-5">
+        <DialogContent surface="blocking" showCloseButton={false} className="border-red-100 bg-white p-5">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg font-black text-ink">
               <X className="h-5 w-5 rounded-full bg-red-50 p-1 text-red-600" />
@@ -5557,7 +5557,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={isLocalDataOpen} onOpenChange={setIsLocalDataOpen}>
-        <DialogContent className="flex max-h-[86dvh] w-[92vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[22px] border-border bg-bg p-0">
+        <DialogContent surface="task" data-surface="task-flow" className="overflow-hidden border-border bg-bg p-0">
           <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
             <DialogTitle className="text-xl font-black text-ink">{t('aquarium.dataSavingTitle')}</DialogTitle>
             <DialogDescription className="text-xs font-medium leading-relaxed text-ink/55">
@@ -5587,7 +5587,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={isTankPreviewOpen} onOpenChange={setIsTankPreviewOpen}>
-        <DialogContent className="h-[92dvh] w-[96vw] max-w-[1180px] overflow-hidden rounded-[24px] border-border p-0 md:h-[calc(100dvh-24px)] md:w-[calc(100vw-32px)] md:max-w-[1480px]">
+        <DialogContent surface="media" className="h-[92dvh] w-[96vw] max-w-[1180px] overflow-hidden rounded-[24px] border-border p-0 md:h-[calc(100dvh-24px)] md:w-[calc(100vw-32px)] md:max-w-[1480px]">
           <DialogHeader className="sr-only">
             <DialogTitle>{isEn ? 'Full Screen Preview' : '鱼缸全屏预览'}</DialogTitle>
             <DialogDescription>{isEn ? 'Enlarge to view current 3D tank scene.' : '放大查看当前鱼缸 3D 画面。'}</DialogDescription>
@@ -6058,7 +6058,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={isDiagnosisExitConfirmOpen} onOpenChange={setIsDiagnosisExitConfirmOpen}>
-        <DialogContent showCloseButton={false} className="w-[min(420px,calc(100vw-32px))] rounded-[24px] border-border bg-white">
+        <DialogContent surface="blocking" showCloseButton={false} className="border-border bg-white">
           <DialogHeader>
             <DialogTitle>{isEn ? 'Exit this check?' : '退出本次检查？'}</DialogTitle>
             <DialogDescription>
@@ -6077,7 +6077,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={Boolean(selectedDailyCheckArticle)} onOpenChange={(open) => !open && setSelectedDailyCheckArticle(null)}>
-        <DialogContent className="flex max-h-[86dvh] w-[92vw] max-w-[560px] flex-col overflow-hidden rounded-[22px] border-border bg-bg p-0">
+        <DialogContent surface="detail" data-surface="detail-rail" className="overflow-hidden border-border bg-bg p-0">
           <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
             <DialogTitle className="text-xl font-black text-ink">{selectedDailyCheckArticle?.title}</DialogTitle>
             <DialogDescription className="text-xs leading-relaxed text-ink/55">{t('aquarium.selectedDailyCheckArticleDesc')}</DialogDescription>
@@ -6113,7 +6113,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={isRiskReminderOpen} onOpenChange={setIsRiskReminderOpen}>
-        <DialogContent className="flex max-h-[82dvh] w-[90vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[20px] border-border bg-bg p-0">
+        <DialogContent surface="task" data-surface="task-flow" className="overflow-hidden border-border bg-bg p-0">
           <DialogHeader className="shrink-0 border-b border-white bg-white px-5 py-4 text-left">
             <DialogTitle className="font-serif text-xl font-bold italic text-ink">{isEn ? 'All Reminders' : '全部提醒'}</DialogTitle>
             <DialogDescription className="text-xs font-medium text-ink/55">
@@ -6168,7 +6168,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={isObservationOpen} onOpenChange={setIsObservationOpen}>
-        <DialogContent className="w-[90vw] max-w-[420px] overflow-hidden rounded-[20px] border-border p-0">
+        <DialogContent surface="task" className="overflow-hidden border-border p-0">
           <DialogHeader className="border-b border-border bg-white px-5 py-4 text-left">
             <DialogTitle className="font-serif text-xl font-bold italic text-ink">{isEn ? 'Observe Fish Condition' : '观察鱼的状态'}</DialogTitle>
             <DialogDescription className="text-xs font-medium text-ink/55">
@@ -6985,7 +6985,7 @@ export default function AquariumManager() {
           setSmartCandidateScopeIds(null);
         }
       }}>
-        <DialogContent className="flex max-h-[88dvh] w-[94vw] max-w-[920px] flex-col overflow-hidden rounded-[24px] border-border bg-white p-0">
+        <DialogContent surface="task" data-surface="task-flow" className="overflow-hidden border-border bg-white p-0">
           <DialogHeader className="shrink-0 border-b border-border/70 px-5 py-4 text-left">
             <DialogTitle className="flex items-center gap-2 text-xl font-black text-ink">
               <Sparkles className="h-5 w-5 text-accent" />
@@ -7223,7 +7223,7 @@ export default function AquariumManager() {
           setWaterChangeFeedback('');
         }
       }}>
-        <DialogContent showCloseButton={false} className="flex h-[86dvh] max-h-[calc(100dvh-24px)] w-[92vw] max-w-[430px] md:max-w-[600px] flex-col overflow-hidden rounded-[20px] border-border bg-bg p-0">
+        <DialogContent surface="task" data-surface="task-flow" showCloseButton={false} className="overflow-hidden border-border bg-bg p-0">
           <DialogHeader className="shrink-0 border-b border-white px-4 pb-3 pt-4">
             <DialogTitle className="text-xl font-black text-ink">{isEn ? 'Water Change Log' : '换水记录'}</DialogTitle>
             <DialogDescription className="text-xs leading-relaxed text-ink/60">
@@ -7943,7 +7943,7 @@ export default function AquariumManager() {
 
       {/* Guide Modal */}
       <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
-        <DialogContent className="w-[90vw] max-w-[500px] rounded-sm border-border p-5">
+        <DialogContent surface="detail" data-surface="detail-rail" className="border-border p-5">
           <DialogHeader>
             <DialogTitle className="font-serif italic text-xl text-ink font-bold flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-accent" />
@@ -8053,152 +8053,6 @@ export default function AquariumManager() {
         } : undefined}
       />
 
-      {/* Legacy fish detail modal is intentionally disabled; aquarium entries now use SpeciesDetailDialog. */}
-      <Dialog open={false} onOpenChange={(open) => !open && setSelectedAqFish(null)}>
-        <DialogContent className="w-[90vw] max-w-[600px] p-0 overflow-hidden border-border rounded-sm">
-          {selectedAqFish && (
-            <ScrollArea className="max-h-[85vh]">
-              <div className="h-[180px] md:h-[240px] bg-bg relative border-b border-border">
-                <img 
-                  src={getSpeciesDisplayImage(selectedAqFish.fish)} 
-                  alt={selectedAqFish.fish.name} 
-                  className="object-contain w-full h-full p-4 opacity-95"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div className="p-5 md:p-8 flex flex-col gap-5 bg-white">
-                <div>
-                  <div className="flex items-start justify-between mb-1">
-                    <div>
-                      <DialogTitle className="font-serif text-2xl md:text-3xl italic text-ink font-bold">{selectedAqFish.fish.name}</DialogTitle>
-                      <DialogDescription className="text-xs text-ink/70 mt-1 font-medium">{selectedAqFish.fish.scientificName}</DialogDescription>
-                    </div>
-                    <span className="text-[11px] font-bold px-2 py-1 bg-accent-light text-accent rounded-sm whitespace-nowrap border border-accent/20">
-                      {getDifficultyLabel(selectedAqFish.fish.difficulty)}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-sm md:text-[14px] leading-relaxed text-ink font-medium">
-                  {selectedAqFish.fish.description}
-                </p>
-
-                <div className="grid grid-cols-2 gap-3 text-[12px] border-t border-b border-border py-4 bg-bg/50 px-3 rounded-sm">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-ink/60 uppercase tracking-wider text-[10px] font-bold">{isEn ? 'Water Temp' : '水温'}</span>
-                    <span className="text-ink font-bold">{selectedAqFish.fish.waterTemperature}</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-ink/60 uppercase tracking-wider text-[10px] font-bold">{isEn ? 'pH Level' : '酸碱度 (pH)'}</span>
-                    <span className="text-ink font-bold">{selectedAqFish.fish.phLevel}</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-ink/60 uppercase tracking-wider text-[10px] font-bold">{isEn ? 'Water Change Cycle' : '换水周期'}</span>
-                    <span className="text-ink font-bold">约 {selectedAqFish.fish.waterChangeCycle} 天</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-ink/60 uppercase tracking-wider text-[10px] font-bold">{isEn ? 'Tank Size' : '鱼缸尺寸'}</span>
-                    <span className="text-ink font-bold">{selectedAqFish.fish.tankSize}</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-ink/60 uppercase tracking-wider text-[10px] font-bold">{isEn ? 'Temperament' : '性情'}</span>
-                    <span className="text-ink font-bold">{selectedAqFish.fish.temperament === 'Peaceful' ? (isEn ? 'Peaceful' : '温和') : selectedAqFish.fish.temperament === 'Aggressive' ? (isEn ? 'Aggressive' : '凶猛') : (isEn ? 'Territorial' : '领地意识强')}</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-ink/60 uppercase tracking-wider text-[10px] font-bold">{isEn ? 'Size' : '体型'}</span>
-                    <span className="text-ink font-bold">{selectedAqFish.fish.size === 'Small' ? (isEn ? 'Small' : '小型') : selectedAqFish.fish.size === 'Medium' ? (isEn ? 'Medium' : '中型') : (isEn ? 'Large' : '大型')}</span>
-                  </div>
-                </div>
-
-                <div className="border border-amber-200 bg-amber-50/60 p-4 rounded-sm">
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <h4 className="text-[11px] uppercase tracking-[1px] text-amber-800 font-bold">{isEn ? 'Diet & Feeding' : '饮食习惯'}</h4>
-                    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white/80 text-amber-800 border border-amber-200">
-                      {selectedAqFish.fish.feedingProfile?.feedingType || '杂食性'}
-                    </span>
-                  </div>
-                  <div className="grid gap-3 text-sm md:text-[14px] text-ink">
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-ink/55 font-bold mb-1">{isEn ? 'Recommended Foods' : '推荐食物'}</div>
-                      <p className="font-medium leading-relaxed">{selectedAqFish.fish.feedingProfile?.recommendedFoods || selectedAqFish.fish.diet}</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-ink/55 font-bold mb-1">{isEn ? 'Frequency' : '喂食频率'}</div>
-                        <p className="font-medium leading-relaxed">{selectedAqFish.fish.feedingProfile?.feedingFrequency || '每天1-2次'}</p>
-                      </div>
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-ink/55 font-bold mb-1">{isEn ? 'Portion Rule' : '投喂量'}</div>
-                        <p className="font-medium leading-relaxed">{selectedAqFish.fish.feedingProfile?.portionRule || '2-3分钟内吃完，残饵及时清理'}</p>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-ink/55 font-bold mb-1">{isEn ? 'Avoid Foods' : '禁忌'}</div>
-                      <p className="font-medium leading-relaxed">{selectedAqFish.fish.feedingProfile?.avoidFoods || '过量投喂；变质饲料；长期残饵'}</p>
-                    </div>
-                    {selectedAqFish.fish.feedingProfile?.specialNotes && (
-                      <div>
-                        <div className="text-[10px] uppercase tracking-wider text-ink/55 font-bold mb-1">{isEn ? 'Special Notes' : '特殊提醒'}</div>
-                        <p className="font-medium leading-relaxed">{selectedAqFish.fish.feedingProfile.specialNotes}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-accent-light/30 border border-accent/20 p-4 rounded-sm flex flex-col gap-3">
-                  <h4 className="text-[11px] uppercase tracking-[1px] text-ink/60 font-bold">{isEn ? 'Stocking Management' : '入缸管理'}</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-[10px] text-ink/60 font-bold mb-1 block">{isEn ? 'Entry Date' : '入缸日期'}</Label>
-                      <Input 
-                        type="date" 
-                        className="h-9 text-sm bg-white" 
-                        value={format(new Date(selectedAqFish.aqFish.entryDate), 'yyyy-MM-dd')} 
-                        onChange={(e) => handleUpdateEntryDate(selectedAqFish.aqFish.id, e.target.value)}
-                        max={format(new Date(), 'yyyy-MM-dd')}
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-[10px] text-ink/60 font-bold mb-1 block">{isEn ? 'Quantity (pcs)' : '数量 (条/只)'}</Label>
-                      <Input 
-                        type="number" 
-                        min="1"
-                        className="h-9 text-sm bg-white" 
-                        value={selectedAqFish.aqFish.quantity || 1} 
-                        onChange={(e) => handleUpdateQuantity(selectedAqFish.aqFish.id, parseInt(e.target.value) || 1)}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center text-sm font-bold text-ink bg-white/50 p-2 rounded-sm mt-1">
-                    <span>{isEn ? 'Days in tank:' : '已入缸时间:'}</span>
-                    <span className="font-serif text-lg">{differenceInDays(new Date(), new Date(selectedAqFish.aqFish.entryDate))} 天</span>
-                  </div>
-                  <div className="flex gap-2 mt-2">
-                    <Button 
-                      variant="ghost" 
-                      className="flex-1 text-[#D32F2F] hover:bg-[#FFF4F4] hover:text-[#D32F2F] text-xs font-bold border border-[#FFD6D6]"
-                      onClick={() => {
-                        setSelectedAqFish(null);
-                        setIsTankArchiveExpanded(true);
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" /> {isEn ? 'Remove from Tank' : '移出鱼缸'}
-                    </Button>
-                  </div>
-                </div>
-                
-                <Button 
-                  className="w-full rounded-sm bg-ink hover:bg-ink/90 text-white mt-2 font-bold h-12"
-                  onClick={() => setSelectedAqFish(null)}
-                >
-                  关闭
-                </Button>
-              </div>
-            </ScrollArea>
-          )}
-        </DialogContent>
-      </Dialog>
-
       <LivestockRosterDialog
         open={isTankArchiveExpanded}
         aquariumName={activeAquarium.name}
@@ -8239,7 +8093,7 @@ export default function AquariumManager() {
       />
 
       <Dialog open={Boolean(shareUrl)} onOpenChange={open => { if (!open) setShareUrl(''); }}>
-        <DialogContent className="w-[min(92vw,520px)] max-w-[520px] rounded-[26px]">
+        <DialogContent surface="task">
           <DialogHeader>
             <DialogTitle>{isEn ? 'Privacy-safe report created' : '脱敏报告链接已生成'}</DialogTitle>
             <DialogDescription>{isEn ? 'The link expires after 7 days and can be revoked in Settings. It does not include the custom aquarium name, identity, free text or internal record IDs.' : '链接 7 天后自动失效，可在设置中提前撤销。报告不会显示鱼缸名称、用户身份、自由描述或内部记录 ID。'}</DialogDescription>
@@ -8256,7 +8110,7 @@ export default function AquariumManager() {
       </Dialog>
 
       <Dialog open={isConflictDialogOpen} onOpenChange={setIsConflictDialogOpen}>
-        <DialogContent className="flex max-h-[88dvh] w-[min(94vw,820px)] max-w-[820px] flex-col overflow-hidden rounded-[28px] border-amber-100 bg-[#FBFAF6] p-0">
+        <DialogContent surface="task" data-surface="task-flow" className="overflow-hidden border-amber-100 bg-[#FBFAF6] p-0">
           <DialogHeader className="shrink-0 border-b border-border bg-white px-5 pb-4 pt-5 text-left">
             <div className="flex items-center gap-2 text-amber-700">
               <AlertTriangle className="h-5 w-5" />

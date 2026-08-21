@@ -9,6 +9,7 @@ const adaptive = await read('src/components/common/AdaptiveDetailContent.tsx');
 const layoutProvider = await read('src/components/layout/LayoutModeProvider.tsx');
 const layoutContract = await read('lib/layout-mode.ts');
 const dialog = await read('components/ui/dialog.tsx');
+const aquarium = await read('src/pages/Aquarium.tsx');
 const indexCss = await read('src/index.css');
 const splitStatic = await read('scripts/verify-split-workspace-detail.mjs');
 const splitRuntime = await read('scripts/verify-split-workspace-runtime.mjs');
@@ -51,7 +52,40 @@ if (!layoutProvider.includes("@/lib/layout-mode")) fail('LayoutModeProvider must
 if (!dialog.includes("@/lib/layout-mode")) fail('Dialog must consume the shared responsive contract.');
 if (/userAgentData|iPhone|iPad|Android\.\+Mobile|Mobile\.\+Safari/.test(layoutProvider)) fail('Product layout must not regress to UA/device inference.');
 if (dialog.includes('(max-width: 767px)')) fail('Dialog must not duplicate the phone breakpoint literal.');
-if (!dialog.includes('max-h-[88dvh]') || !dialog.includes('return "task"')) fail('Aquarium smart recommendation must remain classified as Task while legacy inference exists.');
+if (dialog.includes("Aquarium's legacy smart-recommendation workflow")) fail('Aquarium visual-signature surface inference must not return; its dialogs are explicit.');
+
+const aquariumDialogTags = [...aquarium.matchAll(/<DialogContent\b([^>]*)>/g)];
+for (const match of aquariumDialogTags) {
+  if (!/\bsurface=/.test(match[1])) {
+    fail(`Aquarium DialogContent must declare an explicit surface: ${match[0].slice(0, 140)}`);
+  }
+}
+if (aquarium.includes('<Dialog open={false}')) fail('Disabled legacy Aquarium dialogs must be deleted, not kept as dead modal code.');
+
+const aquariumSurfaceContract = [
+  ['<Dialog open={Boolean(pendingReminderReschedule)}', 'task'],
+  ['<Dialog open={Boolean(pendingReminderDelete)}', 'blocking'],
+  ['<Dialog open={!!pendingDeleteAquariumId}', 'blocking'],
+  ['<Dialog open={isLocalDataOpen}', 'task'],
+  ['<Dialog open={isTankPreviewOpen}', 'media'],
+  ['<Dialog open={isDiagnosisExitConfirmOpen}', 'blocking'],
+  ['<Dialog open={Boolean(selectedDailyCheckArticle)}', 'detail'],
+  ['<Dialog open={isRiskReminderOpen}', 'task'],
+  ['<Dialog open={isObservationOpen}', 'task'],
+  ['<Dialog open={isSmartRecommendOpen}', 'task'],
+  ['<Dialog open={isCalendarOpen}', 'task'],
+  ['<Dialog open={isGuideOpen}', 'detail'],
+  ['<Dialog open={Boolean(shareUrl)}', 'task'],
+  ['<Dialog open={isConflictDialogOpen}', 'task'],
+];
+for (const [openMarker, expectedSurface] of aquariumSurfaceContract) {
+  const markerIndex = aquarium.indexOf(openMarker);
+  if (markerIndex < 0) fail(`Aquarium surface contract marker missing: ${openMarker}`);
+  const nearby = aquarium.slice(markerIndex, markerIndex + 900);
+  if (!nearby.includes(`surface="${expectedSurface}"`)) {
+    fail(`Aquarium ${openMarker} must remain surface="${expectedSurface}".`);
+  }
+}
 
 const modalCardBlocks = [...indexCss.matchAll(/\.modalCard(?:\.[\w-]+)?\s*\{([^}]*)\}/g)];
 for (const [, body] of modalCardBlocks) {
