@@ -6,13 +6,23 @@ import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
-function Dialog({ modal = true, ...props }: DialogPrimitive.Root.Props) {
+function Dialog({ modal = true, disablePointerDismissal, ...props }: DialogPrimitive.Root.Props) {
+  const keepNonModalSurfaceOpen = disablePointerDismissal ?? modal === false
+
   React.useEffect(() => {
     if (!props.open || !modal) return
     document.body.classList.add("modal-open")
     return () => document.body.classList.remove("modal-open")
   }, [modal, props.open])
-  return <DialogPrimitive.Root data-slot="dialog" modal={modal} {...props} />
+
+  return (
+    <DialogPrimitive.Root
+      data-slot="dialog"
+      modal={modal}
+      disablePointerDismissal={keepNonModalSurfaceOpen}
+      {...props}
+    />
+  )
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
