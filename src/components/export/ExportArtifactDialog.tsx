@@ -50,7 +50,7 @@ export function ExportArtifactDialog({
 
   return (
     <Dialog open={open} onOpenChange={(next) => !isDownloading && onOpenChange(next)}>
-      <DialogContent className="flex max-h-[90dvh] w-[94vw] max-w-[760px] flex-col overflow-hidden rounded-[24px] bg-[#eef3f0] p-0">
+      <DialogContent surface="media" className="flex max-h-[90dvh] w-[94vw] max-w-[760px] flex-col overflow-hidden rounded-[24px] bg-[#eef3f0] p-0">
         <DialogHeader className="border-b border-white bg-white px-5 py-4 text-left">
           <DialogTitle className="text-lg font-black">{isEn ? 'Download image' : '下载图片'}</DialogTitle>
           <DialogDescription>{isEn ? 'Preview the privacy-safe card before saving.' : '保存前可预览本次生成的记录卡。'}</DialogDescription>
@@ -74,7 +74,7 @@ export function ExportArtifactDialog({
                 }`}>
                   <h3 className="text-[15px] font-black">{section.title}</h3>
                   <div className="mt-2 grid gap-2">
-                    {section.items.length ? section.items.map(item => <div key={item} className="text-[13px] font-bold leading-6 text-[#253d33]">• {item}</div>) : <div className="text-[13px] font-bold text-[#4e6259]">—</div>}
+                    {content.sections.length && section.items.length ? section.items.map(item => <div key={item} className="text-[13px] font-bold leading-6 text-[#253d33]">• {item}</div>) : <div className="text-[13px] font-bold text-[#4e6259]">—</div>}
                   </div>
                 </section>
               ))}
