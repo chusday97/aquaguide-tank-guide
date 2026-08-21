@@ -1,12 +1,12 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-21 20:14 +08:00
+更新时间：2026-08-21 21:24 +08:00
 
 ## 当前工作基线
 
 - 当前分支：`codex/interactive-parity-v3`
-- 当前产品代码 head：`8e6417f4d1b5143a12daef97831113e7938dc981`
-- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `8e6417f` 为最新产品代码基线。
+- 当前产品代码 head：`3145922`
+- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `3145922` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非视觉 PASS**。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
@@ -67,7 +67,7 @@
 
 本地验证：
 
-- taxonomy 全量 486 条 PASS；
+- taxonomy 当前全量 **501 条 PASS**；
 - `tsc --noEmit` PASS；
 - production build PASS；
 - 4317 浏览器直达虎皮鱼详情，已显示：
@@ -139,21 +139,21 @@
 
 ## 2026-08-21 晚间新增完成项
 
-- `cbb1e35`：taxonomy identity/water/life 全部改为 canonical identity；方氏拟腹吸鳅与古代蝴蝶鱼淡水误判修复；486 条 locale taxonomy drift = 0。
+- `cbb1e35`：taxonomy identity/water/life 全部改为 canonical identity；方氏拟腹吸鳅与古代蝴蝶鱼淡水误判修复；locale taxonomy drift = 0。
 - `9a09163`：退役 `.modalCard` 720px geometry owner；Species Detail Rail 1440px 实测 600px；Care close race 同步修复。
 - `b896c23`：核心 runtime tests 统一 Preview URL source，避免测试悄悄跑旧 localhost。
 - `563397e`：Aquarium 14 个 active Dialog 全部显式 `surface=`；删除约 160 行永远关闭的 legacy fish detail modal；删除 Smart Recommendation visual-signature inference。
 - `8e6417f`：Collection desktop 改为 creature-first navigation；1024/1440 无 center overlap；768/390 compact fallback；删除 502 行 dead `collection-book-*` CSS；旧书页 browser regression 已改为 creature-navigation contract 并接入 UI workflow。
+- `7274da4`：taxonomy presentation helper 完成；英文 Species Detail / taxonomy UI 显示英文 label，但 canonical domain taxonomy 保持稳定。
+- `44168a6` + `cc0960f`：远端新增 27 个水草透明素材，并注册 `sp_0487~sp_0501` 水草数据。
+- `3145922`：恢复 Aquarium 主舞台 `+ 添加生物` 与 `⚙ 鱼缸设置` 常驻 icon；桌面保留全屏预览 icon；底砂/造景与水草增加内嵌搜索；搜索已覆盖新增水草（含 `sp_0498 金鱼藻`）；新增专用 browser regression。
+- 同 `3145922`：`isAquaticPlantSpecies` / `isHardscapeSpecies` 改为 canonical identity 判定，修复新增水草在英文模式被误判为 fish 的 locale drift；501 条 taxonomy PASS。
 
 ## 当前最重要的未修问题
 
-### P1 — English taxonomy labels 仍有 presentation gap
-
-Domain taxonomy 已经 locale-invariant，但英文 Species Detail 里二级 taxonomy 文本仍可能显示中文，例如 `鳅类/吸鳅`、`龙鱼/古代鱼`、`鲃类/小型鲤科`。这已不是数据分类错误，而是展示层翻译缺口。下一步应增加 taxonomy label localization helper；底层 canonical taxonomy 值继续保持中文/稳定枚举，不允许再次把翻译写回 domain data。
-
 ### P1 — Full-page runtime alignment 仍需继续扩展
 
-当前主路由 smoke 在 1440/1024/768/390 已完成基础 overflow/page-error 检查，核心 runtime gates 也通过；但仍需要继续覆盖：Collection 子页、Identify 完整流程、Settings 导航 guard、Search → Detail、Aquarium 各显式 Surface 的真实打开/关闭行为。
+当前主路由 smoke 在 1440/1024/768/390 已完成基础 overflow/page-error 检查，核心 runtime gates 也通过；仍需继续覆盖：Aquarium 四类显式 Surface 的代表路径、Collection 子页、Identify 完整流程、Settings 导航 guard、Search → Detail。
 
 ### P2 — Shared Dialog legacy inference 尚未全部退役
 
@@ -165,10 +165,10 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 
 ## 当前测试 / 证据状态
 
-当前最新本地 product build（基于 `8e6417f`）：
+当前最新本地 product build（基于 `3145922`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
-- `npm run test:taxonomy`：PASS（486 条；source/life/water 冲突 0；locale taxonomy drift 0；普通鱼类误判海水 0）
+- `npm run test:taxonomy`：PASS（**501 条**；locale taxonomy drift 0；新增水草在中英文下保持 plant taxonomy）
 - `npm run test:layout-mode`：PASS
 - `npm run test:three-stage-framing`：PASS
 - UI regression governance：PASS
@@ -179,6 +179,8 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 - Aquarium immersive stage browser geometry：PASS
 - Collection creature-navigation runtime：PASS（1440/1024 creature nav；768/390 compact fallback；hover 不裁切；node 不覆盖 center）
 - Tiger barb / hillstream loach / African butterfly fish browser taxonomy：PASS
+- Aquarium primary tools runtime：PASS（1440/1024/390 添加 + 设置可见、在舞台内且不覆盖缸内物种入口）
+- Aquarium settings inline search runtime：PASS（底砂 `溪流砂`、水草 `小水榕`、新增水草 `金鱼藻` 均可过滤命中）
 
 注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
 
@@ -196,15 +198,7 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 ## 下一步执行顺序
 
-### Step 1 — English taxonomy presentation localization
-
-- 新增 taxonomy label presentation helper；
-- 英文页面翻译 secondary taxonomy / water labels；
-- canonical domain taxonomy 值保持稳定；
-- 486 条 locale-invariant test 必须继续 PASS；
-- browser 验证虎皮鱼、方氏拟腹吸鳅、古代蝴蝶鱼中英文显示。
-
-### Step 2 — 扩展真实 runtime alignment matrix
+### Step 1 — 扩展真实 runtime alignment matrix
 
 优先覆盖：
 
@@ -217,21 +211,21 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 所有结果记录为 `PASS / REGRESSION / PARTIAL / NOT VERIFIED`，不再以 source audit 代替 runtime。
 
-### Step 3 — 退役剩余 Dialog visual inference
+### Step 2 — 退役剩余 Dialog visual inference
 
 - Encyclopedia species-group 改为显式 Detail Surface；
 - 扫描其他 direct `DialogContent`；
 - 当所有用户主路径均显式后，删除 `max-width/radius` inference；
 - CI 禁止新增 visual-signature inference。
 
-### Step 4 — Human visual baseline + Vercel parity
+### Step 3 — Human visual baseline + Vercel parity
 
 - 继续使用 `http://127.0.0.1:4317/` 作为开发验收源；
 - 用户确认当前视觉后才建立 screenshot golden baseline；
 - Vercel 恢复时 deployed SHA 必须等于已验收 product SHA；
 - Local / Vercel 使用同一 state seed 与 browser regression 做 parity。
 
-### Step 5 — 最后清内部 debt
+### Step 4 — 最后清内部 debt
 
 - Admin native confirm；
 - 其他 dead CSS / stale test；
