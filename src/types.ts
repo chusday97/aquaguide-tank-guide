@@ -155,6 +155,17 @@ export interface KnowledgeJourney {
   relatedArticleIds: string[];
 }
 
+/**
+ * 互动图鉴的本地浏览批次；与旧单项每日推荐队列共用同一存储记录，
+ * 但不影响推荐、混养或收藏结论。
+ */
+export interface InteractiveDiscoveryBatchState {
+  sceneBatchIds: string[];
+  sceneSeenIds: string[];
+  sceneBatchIndex: number;
+  sceneComplete: boolean;
+}
+
 export type MemorialCauseCode =
   | 'water_quality_change'
   | 'oxygen_shortage'

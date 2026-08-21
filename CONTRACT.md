@@ -660,6 +660,24 @@ interface KnowledgeJourney {
 - 当前鱼缸字段缺失时应显示“未记录”，不能用示例值或推测值补齐。
 - 场景选择、视图模式和步骤进度仅为会话 UI 状态，不写入用户业务数据。
 
+### 10.1 互动图鉴批次状态（2.7.1）
+
+互动图鉴继续复用 `aquapediaDiscoveryDeck`，不新增数据库、API 或独立 localStorage 键。旧的单项每日推荐字段 `queueIds / consumedIds` 保持兼容；场景只读取以下独立批次字段，避免“换一批”误变成跳过一条：
+
+```ts
+interface InteractiveDiscoveryBatchState {
+  sceneBatchIds: string[]; // 当前屏幕正在展示的 0–6 个物种
+  sceneSeenIds: string[]; // 当日已完整替换过的批次集合
+  sceneBatchIndex: number;
+  sceneComplete: boolean;
+}
+```
+
+- 首屏与每次替换最多显示 6 个具体物种；替换动作先把整批加入 `sceneSeenIds`，新旧批次交集必须为 0。
+- 仅排除已收藏、水草、硬景和没有有效场景图片的条目；可用条目不足 6 个时展示余量。
+- 当天全部浏览后保持明确完成状态；只有用户点“重新开始”才清除 `sceneSeenIds`。
+- 当前批次、已浏览集合和批次序号会随现有键刷新恢复；它们只用于浏览体验，不参与推荐、混养或收藏业务结论。
+
 ## 11. 兼容与排除范围
 
 - 原 `Fish.id`、`CareTopic.id` 迁移为 `catalogKey`。

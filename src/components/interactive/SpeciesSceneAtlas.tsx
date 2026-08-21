@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { ArrowRight, Camera, Compass, List, RefreshCw, Sparkles } from 'lucide-react';
 import type { Fish } from '../../types';
 import { ResilientImage } from '../common/ResilientImage';
@@ -12,7 +12,8 @@ type Props = {
   onBrowseList: () => void;
   onIdentify: () => void;
   onRefreshDiscoveries?: () => void;
-  discoveryProgress?: { current: number; total: number };
+  onRestartDiscoveries?: () => void;
+  discoveryBatch?: { size: number; seenCount: number; complete: boolean; index: number };
 };
 
 const creaturePositions = [
@@ -24,9 +25,13 @@ const creaturePositions = [
   { left: '78%', top: '19%', width: '13%', delay: '-4s' },
 ] as const;
 
-export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSelect, onBrowseList, onIdentify, onRefreshDiscoveries, discoveryProgress }: Props) {
+export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSelect, onBrowseList, onIdentify, onRefreshDiscoveries, onRestartDiscoveries, discoveryBatch }: Props) {
   const items = species.slice(0, creaturePositions.length);
   const [selected, setSelected] = useState<Fish | null>(null);
+
+  useEffect(() => {
+    setSelected(null);
+  }, [discoveryBatch?.index]);
 
   const selectCreature = (fish: Fish) => {
     setSelected(fish);
@@ -41,8 +46,8 @@ export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSel
       </div>
       <div className="interactive-tank-tools">
         {onRefreshDiscoveries && (
-          <button type="button" onClick={onRefreshDiscoveries} className="interactive-tank-tool" aria-label={isEn ? 'Show another group of discoveries' : '换一批今日发现'}>
-            <RefreshCw className="h-4 w-4" />{isEn ? `Discover ${discoveryProgress?.current || 1}/${discoveryProgress?.total || 10}` : `换一批 · ${discoveryProgress?.current || 1}/${discoveryProgress?.total || 10}`}
+          <button type="button" onClick={discoveryBatch?.complete ? onRestartDiscoveries : onRefreshDiscoveries} className="interactive-tank-tool" aria-label={discoveryBatch?.complete ? (isEn ? 'Restart today\'s discoveries' : '重新开始今天的探索') : (isEn ? 'Show a new group of discoveries' : '换一批物种')}>
+            <RefreshCw className="h-4 w-4" />{discoveryBatch?.complete ? (isEn ? 'Restart' : '重新开始') : (isEn ? 'New group' : '换一批')}
           </button>
         )}
         <button type="button" onClick={onBrowseList} className="interactive-tank-tool"><List className="h-4 w-4" />{isEn ? 'Browse list' : '传统浏览'}</button>
@@ -82,6 +87,7 @@ export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSel
             </button>
           );
         })}
+        {discoveryBatch?.complete && <p className="interactive-tank-complete" role="status">{isEn ? 'You have explored every available creature today. Restart to browse them again.' : '今天可探索的物种已全部看完；点击“重新开始”后可以再次浏览。'}</p>}
       </div>
 
       <div className={`interactive-tank-dock ${selected ? 'is-visible' : ''}`} aria-live="polite">
@@ -93,7 +99,7 @@ export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSel
           <button type="button" onClick={() => onSelect(selected)} className="interactive-tank-primary">{isEn ? 'View species profile' : '查看物种档案'}<ArrowRight className="h-4 w-4" /></button>
         </>}
       </div>
-      <p className="interactive-tank-note"><Sparkles className="h-4 w-4 text-amber-500" />{isEn ? 'This scene helps discovery; it is not a recommendation ranking.' : '这是发现兴趣的入口，不是推荐排序。'}</p>
+      <p className="interactive-tank-note"><Sparkles className="h-4 w-4 text-amber-500" />{discoveryBatch ? (isEn ? `This group: ${discoveryBatch.size} · Seen today: ${discoveryBatch.seenCount}` : `本批 ${discoveryBatch.size} 种 · 今天已浏览 ${discoveryBatch.seenCount} 种`) : (isEn ? 'This scene helps discovery; it is not a recommendation ranking.' : '这是发现兴趣的入口，不是推荐排序。')}</p>
     </section>
   );
 }

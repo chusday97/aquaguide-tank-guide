@@ -73,7 +73,7 @@ import { getAquariumNavigationSnapshot } from '../services/aquarium/aquarium-nav
 import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.service';
 import { SpeciesSceneAtlas } from '../components/interactive/SpeciesSceneAtlas';
 import {
-  DISCOVERY_DAILY_LIMIT,
+  INTERACTIVE_DISCOVERY_BATCH_SIZE,
   DISCOVERY_STORAGE_KEY,
   normalizeDiscoveryState,
   recommendationService,
@@ -816,27 +816,35 @@ export default function Encyclopedia() {
   }), [allFishes]);
   useEffect(() => {
     setDiscoveryState(previous => {
-      const output = recommendationService.createDiscoveryDeck({
+      const output = recommendationService.createInteractiveDiscoveryBatch({
         speciesPool: discoveryPool,
         wishlistIds: Array.from(wishlistFishIds),
         state: previous,
+        batchSize: INTERACTIVE_DISCOVERY_BATCH_SIZE,
       });
       saveDiscoveryState(output.state);
       return output.state;
     });
   }, [discoveryPool, wishlistFishIds]);
-  const discoverySpecies = useMemo(() => discoveryState.queueIds
+  const discoverySpecies = useMemo(() => discoveryState.sceneBatchIds
     .map(id => discoveryPool.find(fish => fish.id === id))
-    .filter((fish): fish is Fish => Boolean(fish)), [discoveryPool, discoveryState.queueIds]);
+    .filter((fish): fish is Fish => Boolean(fish)), [discoveryPool, discoveryState.sceneBatchIds]);
   const refreshDiscoveries = () => {
-    const current = discoverySpecies[0];
-    if (!current) return;
-    const output = recommendationService.advanceDiscoveryDeck({
-      speciesId: current.id,
-      action: 'skip',
+    const output = recommendationService.replaceInteractiveDiscoveryBatch({
       speciesPool: discoveryPool,
       wishlistIds: Array.from(wishlistFishIds),
       state: discoveryState,
+      batchSize: INTERACTIVE_DISCOVERY_BATCH_SIZE,
+    });
+    saveDiscoveryState(output.state);
+    setDiscoveryState(output.state);
+  };
+  const restartDiscoveries = () => {
+    const output = recommendationService.restartInteractiveDiscoveryBatches({
+      speciesPool: discoveryPool,
+      wishlistIds: Array.from(wishlistFishIds),
+      state: discoveryState,
+      batchSize: INTERACTIVE_DISCOVERY_BATCH_SIZE,
     });
     saveDiscoveryState(output.state);
     setDiscoveryState(output.state);
@@ -1567,16 +1575,19 @@ export default function Encyclopedia() {
 
       {viewMode === 'scene' ? (
       <SpeciesSceneAtlas
-        species={discoverySpecies.length ? discoverySpecies : discoveryPool}
+        species={discoverySpecies}
         isEn={isEn}
         getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
         onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
         onBrowseList={() => setViewMode('browse')}
         onIdentify={() => navigateToRoute('/identify')}
         onRefreshDiscoveries={refreshDiscoveries}
-        discoveryProgress={{
-          current: Math.min(DISCOVERY_DAILY_LIMIT, discoveryState.consumedIds.length + 1),
-          total: DISCOVERY_DAILY_LIMIT,
+        onRestartDiscoveries={restartDiscoveries}
+        discoveryBatch={{
+          size: discoverySpecies.length,
+          seenCount: discoveryState.sceneSeenIds.length + discoverySpecies.length,
+          complete: discoveryState.sceneComplete,
+          index: discoveryState.sceneBatchIndex,
         }}
       />
       ) : viewMode === 'browse' ? (

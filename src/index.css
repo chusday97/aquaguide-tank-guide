@@ -296,9 +296,34 @@ body,
 }
 
 .resilient-image-transparent-loader {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
   border: 1px solid rgb(255 255 255 / 0.28);
-  border-radius: inherit;
-  background: radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.18), transparent 68%);
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.78) 0 18%, transparent 23%);
+  box-shadow: 0 0 0 7px rgb(255 255 255 / 0.11);
+  transform: translate(-50%, -50%);
+}
+
+.resilient-image-transparent-fallback {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px dashed rgb(255 255 255 / 0.78);
+  border-radius: 999px;
+  color: rgb(255 255 255 / 0.9);
+  font-size: 19px;
+  line-height: 1;
+  transform: translate(-50%, -50%);
 }
 
 .interactive-tank-creature-label {
@@ -468,23 +493,44 @@ body,
   left: 50%;
   width: max-content;
   max-width: 170px;
-  transform: translateX(-50%) translateY(4px);
+  transform: translateX(-50%);
   border-radius: 12px;
   background: rgb(255 255 255 / 0.93);
   padding: 7px 9px;
   color: var(--color-ink);
   box-shadow: 0 9px 22px rgb(16 66 53 / 0.14);
-  opacity: 0;
-  transition: opacity 160ms ease, transform 160ms ease;
+  opacity: 1;
+  transition: transform 160ms ease;
 }
 
 .interactive-care-hotspot-label b,
 .interactive-care-hotspot-label small { display: block; }
 .interactive-care-hotspot-label b { font-size: 11px; font-weight: 900; }
-.interactive-care-hotspot-label small { margin-top: 2px; color: rgb(26 26 26 / 0.55); font-size: 10px; font-weight: 700; }
+.interactive-care-hotspot-label small { max-height: 0; margin-top: 0; overflow: hidden; color: rgb(26 26 26 / 0.55); font-size: 10px; font-weight: 700; opacity: 0; transition: max-height 160ms ease, margin 160ms ease, opacity 160ms ease; }
 .interactive-care-hotspot:hover .interactive-care-hotspot-label,
 .interactive-care-hotspot:focus-visible .interactive-care-hotspot-label,
-.interactive-care-hotspot.is-selected .interactive-care-hotspot-label { opacity: 1; transform: translateX(-50%) translateY(0); }
+.interactive-care-hotspot.is-selected .interactive-care-hotspot-label { transform: translateX(-50%) translateY(-2px); }
+.interactive-care-hotspot:hover .interactive-care-hotspot-label small,
+.interactive-care-hotspot:focus-visible .interactive-care-hotspot-label small,
+.interactive-care-hotspot.is-selected .interactive-care-hotspot-label small { max-height: 36px; margin-top: 2px; opacity: 1; }
+
+.interactive-tank-complete {
+  position: absolute;
+  z-index: 8;
+  right: 20px;
+  bottom: 18px;
+  left: 20px;
+  margin: 0;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.88);
+  padding: 12px 14px;
+  color: rgb(22 78 65);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.55;
+  text-align: center;
+}
 
 .interactive-care-dock { position: relative; min-height: 156px; align-items: flex-start; }
 .interactive-dock-back { display: inline-flex; min-height: 38px; align-items: center; gap: 5px; border: 0; border-radius: 12px; background: transparent; color: rgb(6 95 70); font-size: 11px; font-weight: 900; }
@@ -534,7 +580,11 @@ body,
   .interactive-care-stage::after { top: 31%; right: 5%; width: 56px; height: 175px; }
   .interactive-care-filter { top: 39%; right: calc(5% + 48px); height: 94px; }
   .interactive-care-hotspot { width: 46px; height: 46px; }
-  .interactive-care-hotspot-label { display: none; }
+  .interactive-care-hotspot-label { top: calc(100% + 5px); max-width: 92px; padding: 5px 7px; text-align: center; }
+  .interactive-care-hotspot-label b { font-size: 9px; line-height: 1.2; }
+  .interactive-care-hotspot-label small { font-size: 9px; line-height: 1.25; }
+  .interactive-care-hotspot:nth-of-type(8) .interactive-care-hotspot-label,
+  .interactive-care-hotspot:nth-of-type(9) .interactive-care-hotspot-label { top: auto; bottom: calc(100% + 5px); }
   .interactive-tank-dock { gap: 12px; padding: 14px; }
   .interactive-tank-dock-image { width: 58px; height: 58px; border-radius: 16px; }
   .interactive-tank-dock h2, .interactive-tank-dock h3 { font-size: 20px; }
