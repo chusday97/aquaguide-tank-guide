@@ -9,6 +9,7 @@ const secondaryCategoryOrder: Record<string, string[]> = {
     '灯科鱼',
     '白云金丝',
     '斑马鱼',
+    '鲃类/小型鲤科',
     '孔雀/月光/玛丽/剑尾',
     '鳉鱼',
     '斗鱼',
@@ -33,6 +34,7 @@ const secondaryCategoryOrder: Record<string, string[]> = {
     '灯科鱼',
     '白云金丝',
     '斑马鱼',
+    '鲃类/小型鲤科',
     '孔雀/月光/玛丽/剑尾',
     '鳉鱼',
     '斗鱼',
@@ -60,7 +62,7 @@ const secondaryCategoryOrder: Record<string, string[]> = {
 };
 
 const isMarineFishText = (text: string) => (
-  /小丑|倒吊|蓝魔鬼|雀鲷|蝶鱼|炮弹|狮子鱼|红利|泗水玫瑰|五彩青蛙|虾虎|Pseudochromis|Amphiprion|Zebrasoma|Paracanthurus|Chaetodon|Chrysiptera|Pterois|Lutjanus|Pterapogon|Xanthichthys|Centropyge|Pomacanthus|Synchiropus|Gobiodon/i.test(text)
+  /小丑|倒吊|蓝魔鬼|雀鲷|炮弹|狮子鱼|红利|泗水玫瑰|五彩青蛙|虾虎|Pseudochromis|Amphiprion|Zebrasoma|Paracanthurus|Chaetodon|Chrysiptera|Pterois|Lutjanus|Pterapogon|Xanthichthys|Centropyge|Pomacanthus|Synchiropus|Gobiodon/i.test(text)
 );
 
 const parseTemperatureRange = (temperature?: string) => {
@@ -99,7 +101,8 @@ export const getDifficultyLabel = (fish: Fish) => {
 
 export const getLifeType = (fish: Fish) => {
   const origCategory = (fish as any)._originalCategory || fish.category;
-  const text = `${fish.name} ${fish.scientificName} ${fish.category} ${origCategory}`;
+  const origName = (fish as any)._originalName || fish.name;
+  const text = `${origName} ${fish.scientificName} ${origCategory}`;
 
   // Source taxonomy must win over ambiguous common-name tokens such as “丁香”.
   if (origCategory === '珊瑚/海水无脊椎' || fish.category === '珊瑚/海水无脊椎') return 'coral';
@@ -122,7 +125,8 @@ export const getSecondaryCategory = (fish: Fish) => {
   // Taxonomy must be derived from identity fields only. Description text often
   // names incompatible tank mates (for example tiger barb mentions guppies),
   // which must never change what species this record is classified as.
-  const text = `${fish.name} ${fish.scientificName}`;
+  const originalName = (fish as Fish & { _originalName?: string })._originalName || fish.name;
+  const text = `${originalName} ${fish.scientificName}`;
   const lifeType = getLifeType(fish);
 
   if (lifeType === 'fish') {
@@ -202,8 +206,18 @@ export const getSecondaryCategory = (fish: Fish) => {
 
 export const isSaltwaterSpecies = (fish: Fish) => {
   const lifeType = getLifeType(fish);
-  const text = `${fish.name} ${fish.scientificName} ${fish.category} ${fish.description}`;
-  return fish.category === '海水鱼' || lifeType === 'coral' || /海水/.test(fish.name) || (lifeType === 'fish' && isMarineFishText(text));
+  const originalName = (fish as Fish & { _originalName?: string })._originalName || fish.name;
+  const originalCategory = (fish as Fish & { _originalCategory?: string })._originalCategory || fish.category;
+  const identity = `${originalName} ${fish.scientificName} ${originalCategory}`;
+
+  // Water taxonomy is identity data. Description/care/compatibility copy can
+  // mention unrelated marine species and must never turn this record saltwater.
+  return originalCategory === '海水鱼'
+    || fish.category === '海水鱼'
+    || fish.category === 'Marine Fish'
+    || lifeType === 'coral'
+    || /海水/.test(originalName)
+    || (lifeType === 'fish' && isMarineFishText(identity));
 };
 
 export const getCareTaxonomyPath = (fish: Fish) => ({

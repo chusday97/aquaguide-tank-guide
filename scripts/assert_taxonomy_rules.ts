@@ -1,6 +1,8 @@
 import { fishData } from '../src/data/fishData';
+import { applyLocalization } from '../src/i18n/localizeData';
 import type { Fish } from '../src/types';
 import {
+  getCareTaxonomyPath,
   getDisplayableSpecies,
   getEncyclopediaLifeType,
   getLifeType,
@@ -9,6 +11,7 @@ import {
   getSpeciesPositioning,
   getToolFunctions,
   getSecondaryCategory,
+  isSaltwaterSpecies,
   isSpeciesCompatibleWithWaterType,
   speciesService,
 } from '../src/modules/species/species.service';
@@ -132,6 +135,56 @@ for (const expected of taxonomyIdentityCases) {
     });
   }
 }
+
+const hillstreamLoach = fishData.find(item => item.id === 'sp_0039');
+if (!hillstreamLoach) {
+  fail({ rule: '方氏拟腹吸鳅 regression fixture must exist', speciesId: 'sp_0039' });
+} else if (isSaltwaterSpecies(hillstreamLoach) || getEncyclopediaLifeType(hillstreamLoach) !== 'freshwaterFish') {
+  fail({
+    rule: 'water taxonomy must follow species identity, not marine words mentioned in description',
+    speciesId: hillstreamLoach.id,
+    name: hillstreamLoach.name,
+    details: `saltwater=${isSaltwaterSpecies(hillstreamLoach)}, encyclopediaLifeType=${getEncyclopediaLifeType(hillstreamLoach)}`,
+  });
+}
+
+const africanButterflyFish = fishData.find(item => item.id === 'sp_0119');
+if (!africanButterflyFish) {
+  fail({ rule: '古代蝴蝶鱼 regression fixture must exist', speciesId: 'sp_0119' });
+} else if (isSaltwaterSpecies(africanButterflyFish) || getEncyclopediaLifeType(africanButterflyFish) !== 'freshwaterFish' || getSecondaryCategory(africanButterflyFish) !== '龙鱼/古代鱼') {
+  fail({
+    rule: 'freshwater butterfly fish identity must not match generic marine butterfly-fish wording',
+    speciesId: africanButterflyFish.id,
+    name: africanButterflyFish.name,
+    details: `saltwater=${isSaltwaterSpecies(africanButterflyFish)}, encyclopediaLifeType=${getEncyclopediaLifeType(africanButterflyFish)}, secondary=${getSecondaryCategory(africanButterflyFish)}`,
+  });
+}
+
+const canonicalTaxonomyById = new Map(fishData.map(fish => [fish.id, {
+  lifeType: getLifeType(fish),
+  encyclopediaLifeType: getEncyclopediaLifeType(fish),
+  waterType: getCareTaxonomyPath(fish).waterType,
+  secondaryCategory: getSecondaryCategory(fish),
+}]));
+applyLocalization('en');
+for (const fish of fishData) {
+  const canonical = canonicalTaxonomyById.get(fish.id);
+  const localized = {
+    lifeType: getLifeType(fish),
+    encyclopediaLifeType: getEncyclopediaLifeType(fish),
+    waterType: getCareTaxonomyPath(fish).waterType,
+    secondaryCategory: getSecondaryCategory(fish),
+  };
+  if (canonical && JSON.stringify(canonical) !== JSON.stringify(localized)) {
+    fail({
+      rule: 'locale switch must not mutate species domain taxonomy',
+      speciesId: fish.id,
+      name: (fish as Fish & { _originalName?: string })._originalName || fish.name,
+      details: `canonical=${JSON.stringify(canonical)}, en=${JSON.stringify(localized)}`,
+    });
+  }
+}
+applyLocalization('zh-CN');
 
 const frogfishItems = fishData.filter(fish => /五彩青蛙|Synchiropus/i.test(`${fish.name} ${fish.scientificName}`));
 if (frogfishItems.length === 0) {
