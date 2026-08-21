@@ -1,89 +1,114 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-21 15:06 +08:00
+更新时间：2026-08-21
 
 ## 当前工作基线
 
 - 当前分支：`codex/interactive-parity-v3`
-- 本轮产品代码基线：`68070298e01ffe2547cac444c9cf85df0173d773`
-- 不合并 `main`；当前分支与 `main`、RC1/#104/#105 栈存在历史分叉，后续必须做 semantic reconciliation，不能直接互相 merge。
-- 当前状态：**代码返修进行中 / 非 release-ready / 非视觉 PASS**。
-- Vercel：本轮第一步 `25c7ea9` 已有 READY 预览；`0206e3a`、`a936233`、`6807029` 的完整 Surface 重构在同步时仍受 Vercel build-rate-limit 影响，不能把旧预览当成最新视觉验收。
+- 当前代码 head：`2b3dfdcda422565e4997a466c3a5bb9c929f265e`
+- 不合并 `main`；当前分支与 `main`、RC1/#104/#105 栈存在历史分叉，后续必须做 semantic reconciliation，不能直接覆盖式 merge。
+- 当前状态：**Surface 返修继续 / 非 release-ready / 非视觉 PASS**。
+- 最新可确认 READY 的 Vercel 代码为 `cbb6eaab0eb82a8d0fcc806579f20853f24feb1c`；后续 `96cadb3` 与 `2b3dfdc` 再次遭遇 free-plan build-rate-limit。因此“部署一度恢复”不等于 latest head 已部署。
 
-## 2026-08-21 最新产品决策：统一 Surface System
+## 统一 Surface System
 
-用户明确反馈：全站详情/弹窗一会儿左、一会儿右、一会儿内嵌双栏；内容被压窄；点击另一物种时详情消失；移动端方向不一致。这不是单页 CSS 问题，而是 Surface 架构问题。
+AquaGuide 当前只允许四类顶层 Surface：
 
-现在统一为三类：
+1. **Browsing Detail**
+   - Desktop：persistent right Rail。
+   - 左侧页面保持可见、可滚动、可继续点击。
+   - 点击另一个物种/指南时 Rail 保持打开并替换内容。
+   - Mobile：约 68dvh bottom sheet。
 
-1. **Browsing Detail / 浏览详情**
-   - Desktop：固定从右侧拉出的 persistent Detail Rail。
-   - 底层左侧页面保持可见、可滚动、可继续点击。
-   - 用户点击另一物种/养护对象时，Rail 不关闭，只替换内容。
-   - 只有显式关闭按钮才结束当前详情浏览。
-   - 无黑色 Overlay，不锁 body。
+2. **Task Flow**
+   - Desktop：right Task Rail。
+   - Mobile：约 82dvh high bottom sheet。
+   - Desktop 不因为任务打开而锁死左侧上下文。
 
-2. **Task Flow / 任务流**
-   - Desktop：右侧 Task Rail。
-   - Mobile：从底部上拉的高 Sheet。
-   - 允许用户理解自己仍处于原页面上下文，但任务本身拥有独立滚动区域。
+3. **Blocking Confirmation**
+   - 删除、撤销、放弃未保存、危险动作等继续居中 Modal。
+   - 允许 overlay / focus lock。
 
-3. **Blocking Confirmation / 阻断确认**
-   - 删除、放弃未保存、危险操作等仍使用居中 Modal。
-   - 这类确认允许遮罩和焦点锁；不能为了“统一右侧”而失去阻断语义。
+4. **Media / Fullscreen**
+   - 图片、导出预览、3D 等视觉内容保持居中/全屏，但必须显式标记，不能自己维护第二套 Portal。
 
-## 本轮关键实现
+## 本轮新增修复
 
-- `25c7ea9` — `fix(ui): keep nonmodal detail rails open during background browsing`
-  - 修复 Base UI 非模态 Dialog 在 outside-press / focus-out 后自动关闭的问题。
-  - `modal=false` 默认开启 `disablePointerDismissal`，支持左侧继续浏览时右侧 Rail 常驻。
+### `cbb6eaa` — Image Preview 迁入共享 Media Surface
 
-- `0206e3a` — `refactor(ui): make desktop details persistent right rails`
-  - `AdaptiveDetailContent` 不再使用页面内 split-workspace `section`。
-  - Desktop 统一为右侧 Rail：`clamp(480px, 42vw, 600px)`，全高 `100dvh`。
-  - Mobile 浏览详情统一为底部 Sheet，目标高度约 `68dvh`。
+- `ImagePreviewModal` 删除私有 `createPortal + fixed inset-0 + role=dialog` 基础设施。
+- 改为共享 `Dialog surface="media"`。
+- 保留深色遮罩、左右切图、缩放、关闭按钮和键盘箭头操作。
+- Vercel 对该 commit 已 `READY`；这证明 build/preview 可生成，不代表人工视觉 PASS。
 
-- `a936233` — `refactor(ui): replace split workspace with persistent detail rail system`
-  - 移除旧 50/50 双屏 workspace 的强制网格逻辑。
-  - 物种详情在窄 Rail 内改成纵向信息层级，避免按整个浏览器 viewport 触发双列布局后被挤压。
-  - 详情正文内部滚动；关闭区 sticky；场景选择结果保持 overlay，不再把互动鱼缸画面向上顶短。
+### `96cadb3` — 修复 nested modal body lock
 
-- `6807029` — `refactor(ui): standardize mobile task sheets from bottom`
-  - Mobile Task Flow 从旧的左侧/整屏结构统一成底部高 Sheet（约 `82dvh`）。
-  - Desktop Task Rail 最大宽度收敛到 760px，避免吞掉底层页面。
+发现移动端父 Task Sheet + 子 Blocking Confirmation 叠加时，旧逻辑每个 Dialog 都独立 add/remove `body.modal-open`。关闭子确认框可能错误解除仍然打开的父 Sheet body lock。
 
-## 同日其他重要改动
+修复：
 
-- `3a6bb9a` — 统一 detail viewport 并重新平衡 Aquarium 3D framing；已撤销此前过度 `1.66–1.78x` CSS 二次放大。
-- `1031517` — `/collection` 改为悬浮海洋生物导航：hover/focus 展开细分，点击把对应收藏模块置于中央，保留原有收藏/养护/纪念/成就真实数据与深链。
+- `components/ui/dialog.tsx` 增加 `activeModalBodyLocks` 引用计数。
+- 只有最后一个 modal 关闭时才移除 `modal-open`。
+- 这直接覆盖 Livestock roster 等“任务 Sheet 内再次删除/放弃确认”的真实路径。
 
-## 当前仍未关闭的问题
+该 commit 的 Vercel status 是 build-rate-limit；不能宣称 latest preview 已验证。
 
-1. **全站 Surface 人工验收未完成**：必须实际验证 Encyclopedia、Care、Aquarium roster、Search/Collection 进入详情时是否全部遵守右侧 Rail / 手机 bottom sheet 规范。
-2. **“切换物种时 Rail 保持展开”尚缺最新完整部署浏览器证据**：代码根因已修，但不能仅凭代码宣布 PASS。
-3. **物种详情信息密度需要最新视觉复核**：目标是右侧窄 Rail 内清晰纵向阅读，不能再次出现图片/标题/风险卡被横向压缩。
-4. **Aquarium 3D framing 仍未获用户视觉确认**：此前用户反馈初始鱼缸过大、缩放后又变得看不清，当前属于继续观察项，不标记完成。
-5. **Vercel build-rate-limit** 阻塞最新三段 Surface 改动的 branch preview；属于部署/验收阻塞，不是代码成功证明。
-6. **分支整合风险**：`interactive-parity-v3` 与 Result UX / RC1 栈存在明显 diverged ancestry。不要直接覆盖或合并。
+### `2b3dfdc` — 增强 Surface contract
 
-## 下一步验收矩阵
+`.github/workflows/surface-system-v1.yml` 新增静态契约：
 
-最新预览可用后按顺序验证：
+- shared Dialog 必须保留 nested body-lock 逻辑；
+- Image Preview 必须使用 `surface="media"`；
+- Image Preview 不允许重新出现 `createPortal`。
 
-- 1440px `/encyclopedia`：打开 A → 左侧点击 B → Rail 保持展开并切换为 B；左侧仍可滚动/点击。
-- 1440px `/encyclopedia?mode=browse` 或传统浏览：连续切换卡片，Rail 不消失。
-- 1440px `/care` 与 `/care?mode=browse`：右侧详情位置、宽度、滚动一致。
-- Aquarium roster → Species Detail：右侧 Rail；关闭后回到 roster；滚动/焦点不丢。
-- 1024px：底层浏览区域不能被 Rail 压成不可用窄条。
-- 390px：物种/养护详情从底部上拉；普通详情约 68dvh，任务流约 82dvh；无横向溢出。
-- 居中 Modal 仅用于阻断确认；所有浏览详情不得出现无意义 Overlay/body lock。
-- 检查 Esc、显式 X、返回路径、滚动恢复、焦点恢复。
+## Surface Inventory 当前结论
+
+已经确认合规：
+
+- SpeciesDetailDialog → AdaptiveDetailContent
+- Care 主详情 → AdaptiveDetailContent
+- Collection Care 详情 → AdaptiveDetailContent
+- Livestock roster → AdaptiveTaskContent
+- Collection 删除收藏 / Livestock 移出 / Compatibility 清空 / Settings 撤销分享 → Blocking Confirmation
+- Export preview → Media
+- Search / CollectionHub → 无私有顶层弹层
+
+已确认残留：
+
+1. `Identify.tsx` 未保存诊断离开确认仍手写 `fixed inset-0 + role="dialog" + aria-modal`；语义是 Blocking Confirmation，但绕开共享 Dialog。
+2. `Settings.tsx` 未提交反馈离开页面仍使用原生 `window.confirm`；需要与 WorkspaceNavigation guard 一起重构。
+3. `Aquarium.tsx` 仍有多处 legacy direct `DialogContent`；共享层已统一物理行为，但 Daily Check article / 换水提示等仍应后续显式标记为 Detail，而不是依赖 auto inference。
+4. `Encyclopedia.tsx` 的 selectedGroup 详情仍是 legacy direct DialogContent，本质应为 Browsing Detail；主 SpeciesDetail 已经合规。
+
+完整清单见 `SURFACE_INVENTORY_LATEST.md`。
+
+## 当前 Badcase 状态
+
+- PUI-BC-056 浏览详情位置/切换对象：代码修复已实现，latest-head 浏览器验证待补。
+- PUI-BC-057 窄 Rail 双列挤压：代码修复已实现，latest-head 浏览器验证待补。
+- PUI-BC-058 Mobile Surface 方向：代码修复已实现，latest-head 浏览器验证待补。
+- PUI-BC-059 全站 Surface Inventory：**inventory_in_progress / migration_pending**；不能关闭。
+- PUI-BC-060 Aquarium 3D framing：仍 investigating，用户视觉确认未完成。
+- INFRA-BC-001 Vercel build-rate-limit：仍 open，且表现为间歇性；`cbb6eaa` READY 后，`96cadb3` / `2b3dfdc` 又被限频。
+
+## 下一步执行顺序
+
+1. 迁移 Identify 的私有离开确认到 shared Blocking Dialog。
+2. 改造 Settings navigation guard，去掉产品级 `window.confirm`。
+3. 对 Aquarium / Encyclopedia 的 legacy direct Dialog 做显式 Surface 分类，优先浏览文章/组详情，不盲改 460 KB 大文件。
+4. 等 latest head 可部署后，跑：
+   - 1440 Encyclopedia A → B 连续切换；
+   - Care 连续切换；
+   - Aquarium roster → Species Detail → nested confirm；
+   - 1024 desktop rail 可用性；
+   - 390 Detail 68dvh / Task 82dvh / nested blocking modal body lock。
+5. 3D framing 单独继续视觉验收，不和弹窗 PASS 混为一谈。
 
 ## 可信边界
 
-- GitHub 代码已更新 ≠ Vercel 最新预览已更新。
-- Vercel READY ≠ 用户视觉 PASS。
-- 自动构建/类型检查 PASS ≠ Surface 交互正确。
-- AI `47/47` 与 `registry.jsonl = 0` 只代表已有 AI/规则评测，不代表 UI Badcase 关闭。
+- GitHub commit 存在 ≠ latest Vercel 页面已部署。
+- Vercel READY ≠ 人工视觉 PASS。
+- 静态 Surface contract ≠ browser interaction regression。
+- AI 47/47 与 UI Surface 无直接证明关系。
 
-详见：`BADCASE_LATEST.md`、`PROGRESS_LATEST.md`、`evaluation/badcases/LATEST_STATUS.md`。
+详见：`BADCASE_LATEST.md`、`PROGRESS_LATEST.md`、`SURFACE_INVENTORY_LATEST.md`。
