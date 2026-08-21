@@ -1,12 +1,12 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-21 18:53 +08:00
+更新时间：2026-08-21 20:14 +08:00
 
 ## 当前工作基线
 
 - 当前分支：`codex/interactive-parity-v3`
-- 当前产品代码 head：`aa1e1d9ecc2ff2e84a3ea6c3ce726097e90d6d36`
-- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `aa1e1d9` 为最新产品代码基线。
+- 当前产品代码 head：`8e6417f4d1b5143a12daef97831113e7938dc981`
+- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `8e6417f` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非视觉 PASS**。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
@@ -137,79 +137,50 @@
 - selection dock/note overlay 扩展至整个 `>=768px` desktop range；
 - 768–1023 采用 compact inset/image/action geometry。
 
+## 2026-08-21 晚间新增完成项
+
+- `cbb1e35`：taxonomy identity/water/life 全部改为 canonical identity；方氏拟腹吸鳅与古代蝴蝶鱼淡水误判修复；486 条 locale taxonomy drift = 0。
+- `9a09163`：退役 `.modalCard` 720px geometry owner；Species Detail Rail 1440px 实测 600px；Care close race 同步修复。
+- `b896c23`：核心 runtime tests 统一 Preview URL source，避免测试悄悄跑旧 localhost。
+- `563397e`：Aquarium 14 个 active Dialog 全部显式 `surface=`；删除约 160 行永远关闭的 legacy fish detail modal；删除 Smart Recommendation visual-signature inference。
+- `8e6417f`：Collection desktop 改为 creature-first navigation；1024/1440 无 center overlap；768/390 compact fallback；删除 502 行 dead `collection-book-*` CSS；旧书页 browser regression 已改为 creature-navigation contract 并接入 UI workflow。
+
 ## 当前最重要的未修问题
 
-### P0 — Species Detail Rail 实际宽度仍为 720px
+### P1 — English taxonomy labels 仍有 presentation gap
 
-本地 4317 browser regression 已真实测到：
+Domain taxonomy 已经 locale-invariant，但英文 Species Detail 里二级 taxonomy 文本仍可能显示中文，例如 `鳅类/吸鳅`、`龙鱼/古代鱼`、`鲃类/小型鲤科`。这已不是数据分类错误，而是展示层翻译缺口。下一步应增加 taxonomy label localization helper；底层 canonical taxonomy 值继续保持中文/稳定枚举，不允许再次把翻译写回 domain data。
 
-- viewport：1440px
-- Detail DOM 已有：
-  - `data-dialog-surface="detail"`
-  - `data-surface="detail-rail"`
-  - `data-detail-behavior="persistent-browse-rail"`
-- class 中也包含目标 `w-[clamp(480px,42vw,600px)]`
-- **但浏览器最终 computed width = 720px，left = 720px**。
+### P1 — Full-page runtime alignment 仍需继续扩展
 
-这说明仍有 legacy CSS / split-workspace rule 在 cascade 中覆盖 shared Rail geometry。
+当前主路由 smoke 在 1440/1024/768/390 已完成基础 overflow/page-error 检查，核心 runtime gates 也通过；但仍需要继续覆盖：Collection 子页、Identify 完整流程、Settings 导航 guard、Search → Detail、Aquarium 各显式 Surface 的真实打开/关闭行为。
 
-产品契约要求：1440px 下应真实落在 **480–600px**，不得使用 50vw / 720px。
+### P2 — Shared Dialog legacy inference 尚未全部退役
 
-下一步必须：
+Aquarium 已不再依赖 visual signature inference；但 Encyclopedia species-group 等少数 legacy direct Dialog 仍通过 `max-w/radius` 临时推断 Detail。最终目标仍是所有业务 callsite 显式声明 `surface=` 后删除这类视觉猜测。
 
-1. 找到最终覆盖 width 的 legacy selector/source；
-2. 删除错误 owner，不允许再追加一个 `!important width:600px` 补丁；
-3. browser regression 在 1440/1024/768/390 读取 `getComputedStyle + boundingBox`；
-4. 1440 desktop Rail 宽度必须 480–600px；
-5. 左侧仍可点击另一物种且 Rail 不关闭。
+### P2 — 后台与 legacy confirm debt
 
-### P1 — Aquarium legacy Surface semantics 仍未显式化
-
-`Aquarium.tsx` 仍有大量 direct `DialogContent`，目前部分依赖 auto inference。
-
-目标分类：
-
-- Daily Check article / water-change guide => Detail
-- all reminders / observation / Smart Recommendation / conflict resolution / data backup => Task
-- delete / exit draft => Blocking
-- tank preview => Fullscreen/Media
-
-要求：逐步改成显式 `surface=`，最终删除基于 `max-width/radius` 的 legacy visual-class inference。
-
-### P1 — Collection Hub visual completion
-
-当前交互已有：
-
-- marine nodes；
-- hover/focus subdivision；
-- active module；
-- center content；
-- mobile fallback。
-
-但 desktop 仍偏“鱼 + 玻璃卡片”，未完成用户要求的“海洋生物本身就是悬浮导航”。
-
-### P1 — Full-page runtime alignment 尚未重新验收
-
-source-level audit 不能代替浏览器验收。用户已明确反馈“很多以前的问题仍存在/又回退”。
-
-后续必须按 runtime matrix 重新检查，而不是从源码推断“应该已经修好”。
+AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation debt；不影响当前普通用户主路径，但在 release candidate 前应统一。
 
 ## 当前测试 / 证据状态
 
-当前最新本地 product build（基于 `aa1e1d9`）：
+当前最新本地 product build（基于 `8e6417f`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
-- `npm run test:taxonomy`：PASS（486 条）
+- `npm run test:taxonomy`：PASS（486 条；source/life/water 冲突 0；locale taxonomy drift 0；普通鱼类误判海水 0）
 - `npm run test:layout-mode`：PASS
 - `npm run test:three-stage-framing`：PASS
-- static persistent detail contract：PASS
+- UI regression governance：PASS
 - production `npm run build`：PASS
+- Species Detail persistent Rail runtime：PASS（1440px computed width 600px，贴右、满高、背景不锁、切换物种不关闭）
+- Care Detail Rail open/close runtime：PASS（URL close race 已修）
+- Interactive Encyclopedia scene：PASS
 - Aquarium immersive stage browser geometry：PASS
-- English interactive scene：PASS，6 nodes
-- Tiger barb taxonomy browser check：PASS
-- Detail Rail browser geometry：**FAIL — 720px**
+- Collection creature-navigation runtime：PASS（1440/1024 creature nav；768/390 compact fallback；hover 不裁切；node 不覆盖 center）
+- Tiger barb / hillstream loach / African butterfly fish browser taxonomy：PASS
 
-注意：部分 browser regression 脚本仍含旧交互假设，已在本地开始修正；测试若与当前明确产品契约冲突，先修 test contract，不能为了过旧测试把产品改回旧交互。
+注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
 
 ## Local → Vercel parity 规则
 
@@ -225,78 +196,46 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 ## 下一步执行顺序
 
-### Step 1 — P0：彻底修掉 720px Detail Rail 回退
+### Step 1 — English taxonomy presentation localization
 
-- 定位 cascade/source；
-- 删除 legacy 50vw/720px owner；
-- 不新增 override 文件；
-- 1440/1024/768/390 browser geometry regression；
-- 连续切换物种验证 Rail 保持打开。
+- 新增 taxonomy label presentation helper；
+- 英文页面翻译 secondary taxonomy / water labels；
+- canonical domain taxonomy 值保持稳定；
+- 486 条 locale-invariant test 必须继续 PASS；
+- browser 验证虎皮鱼、方氏拟腹吸鳅、古代蝴蝶鱼中英文显示。
 
-**退出条件：** 1440 width ∈ [480,600]；height 到 viewport 底部；left page 可交互；切换物种不关闭。
+### Step 2 — 扩展真实 runtime alignment matrix
 
-### Step 2 — P0/P1：做一轮真实页面 runtime alignment matrix
+优先覆盖：
 
-逐页检查：
+1. Aquarium 14 个 explicit Surface 的关键代表路径（Task / Detail / Blocking / Media）；
+2. Collection wishlist/care/memorial 子页和返回路径；
+3. Identify 未保存退出；
+4. Settings 未提交反馈导航 guard；
+5. Search → Species Detail；
+6. 1440 / 1024 / 768 / 390 的 popup geometry 与 horizontal overflow。
 
-- Aquarium
-- Encyclopedia
-- Care
-- Collection Hub
-- Collection wishlist/care/memorial
-- Identify
-- Settings
-- Search
+所有结果记录为 `PASS / REGRESSION / PARTIAL / NOT VERIFIED`，不再以 source audit 代替 runtime。
 
-每页记录：`PASS / REGRESSION / PARTIAL / NOT VERIFIED`，并给截图/geometry/interaction 证据。
+### Step 3 — 退役剩余 Dialog visual inference
 
-优先关注用户反复指出的问题：
+- Encyclopedia species-group 改为显式 Detail Surface；
+- 扫描其他 direct `DialogContent`；
+- 当所有用户主路径均显式后，删除 `max-width/radius` inference；
+- CI 禁止新增 visual-signature inference。
 
-- Popup direction/width/height；
-- scene 是否到底；
-- background 是否可操作；
-- object switching 是否保持 detail；
-- 1024 / 768 是否再次退回 stacked layout；
-- 数据/类型是否随语言或状态改变。
+### Step 4 — Human visual baseline + Vercel parity
 
-### Step 3 — Aquarium Surface explicit semantics
+- 继续使用 `http://127.0.0.1:4317/` 作为开发验收源；
+- 用户确认当前视觉后才建立 screenshot golden baseline；
+- Vercel 恢复时 deployed SHA 必须等于已验收 product SHA；
+- Local / Vercel 使用同一 state seed 与 browser regression 做 parity。
 
-先处理用户主路径，不碰后台：
+### Step 5 — 最后清内部 debt
 
-1. Smart Recommendation
-2. Daily Check article
-3. water-change guide
-4. observation
-5. reminders
-6. conflict resolution
-7. fullscreen/media preview
-8. destructive confirmation
-
-每一个都显式声明 surface，不再依赖 class inference。
-
-### Step 4 — Collection Hub visual completion
-
-在结构稳定后再做：
-
-- 弱化/移除玻璃卡片；
-- 海洋生物图形成为真正导航主体；
-- hover/focus 才露出标签与细分；
-- active node 有空间移动/聚焦，而不是普通 card selected state。
-
-### Step 5 — Human visual baseline + Vercel parity
-
-- 本地 4317 人工确认一版；
-- 才建立 screenshot golden baseline；
-- 等 Vercel 可部署时，确认 deployed SHA 完全相同；
-- 同一 regression matrix 对比 Local/Vercel；
-- 通过后才进入 release candidate。
-
-### Step 6 — 最后清 debt
-
-- 删除 `.collection-book-*`、旧 aquarium grid、旧 split-workspace 等 dead CSS；
-- 删除 Dialog visual signature inference；
-- 处理 Admin native confirm；
-- 做 main/RC1/#104/#105 semantic reconciliation。
+- Admin native confirm；
+- 其他 dead CSS / stale test；
+- main/RC1/#104/#105 semantic reconciliation，禁止覆盖式 merge。
 
 ## 禁止事项
 
@@ -314,6 +253,6 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - browser regression PASS ≠ human visual acceptance。
 - Vercel success ≠ deployed SHA 一定是当前 review SHA。
 - source audit ≠ runtime audit。
-- 当前最明确仍未关闭的 UI P0：**Detail Rail 720px regression**。
+- 当前已无已知 720px Detail Rail P0；最高优先未完成项转为 **English taxonomy presentation + extended runtime alignment**。
 
 同时参考：`ALIGNMENT_AUDIT_LATEST.md`、`UI_REGRESSION_CONTRACT.md`、`BADCASE_LATEST.md`、`PROGRESS_LATEST.md`、`SURFACE_INVENTORY_LATEST.md`。
