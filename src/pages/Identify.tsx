@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Camera, CheckCircle2, ChevronLeft, Fish as FishIcon, HeartPulse, Loader2, ShieldAlert, Sparkles, X } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type {
   SpeciesDiagnosisStepInput,
   SpeciesDiagnosisStepOutput,
@@ -685,15 +686,25 @@ export default function Identify() {
       </div>
 
       <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
-      {pendingNavigationPath && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm" role="presentation">
-          <section role="dialog" aria-modal="true" aria-labelledby="identify-leave-title" className="w-full max-w-[420px] rounded-[22px] bg-white p-5 shadow-2xl">
-            <h2 id="identify-leave-title" className="text-lg font-black">{t('identify.leaveTitle')}</h2>
-            <p className="mt-2 text-sm leading-6 text-ink/55">{t('identify.leaveHint')}</p>
-            <div className="mt-5 grid grid-cols-2 gap-2"><button type="button" onClick={() => { pendingHistoryDeltaRef.current = null; setPendingNavigationPath(''); }} className="min-h-11 rounded-full border border-border bg-white text-xs font-black">{t('identify.stay')}</button><button type="button" onClick={() => { const path = pendingNavigationPath; const historyDelta = pendingHistoryDeltaRef.current; pendingHistoryDeltaRef.current = null; setPendingNavigationPath(''); cancelDiagnosisSession(); if (path === '__reset__') { reset(); return; } if (path === '__history_back__') { if (historyDelta !== null) { allowHistoryNavigationRef.current = true; window.history.go(historyDelta); } else navigate('/encyclopedia', { replace: true }); return; } navigate(path); }} className="min-h-11 rounded-full bg-red-600 text-xs font-black text-white">{t('identify.leave')}</button></div>
-          </section>
-        </div>
-      )}
+      <Dialog
+        open={Boolean(pendingNavigationPath)}
+        onOpenChange={open => {
+          if (open) return;
+          pendingHistoryDeltaRef.current = null;
+          setPendingNavigationPath('');
+        }}
+      >
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[min(92vw,420px)] max-w-[420px] rounded-[22px]">
+          <DialogHeader>
+            <DialogTitle>{t('identify.leaveTitle')}</DialogTitle>
+            <DialogDescription>{t('identify.leaveHint')}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <button type="button" autoFocus onClick={() => { pendingHistoryDeltaRef.current = null; setPendingNavigationPath(''); }} className="min-h-11 rounded-full border border-border bg-white text-xs font-black">{t('identify.stay')}</button>
+            <button type="button" onClick={() => { const path = pendingNavigationPath; const historyDelta = pendingHistoryDeltaRef.current; pendingHistoryDeltaRef.current = null; setPendingNavigationPath(''); cancelDiagnosisSession(); if (path === '__reset__') { reset(); return; } if (path === '__history_back__') { if (historyDelta !== null) { allowHistoryNavigationRef.current = true; window.history.go(historyDelta); } else navigate('/encyclopedia', { replace: true }); return; } navigate(path); }} className="min-h-11 rounded-full bg-red-600 text-xs font-black text-white">{t('identify.leave')}</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
