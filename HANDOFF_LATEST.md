@@ -1,113 +1,87 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-21
+更新时间：2026-08-21 16:12 +08:00
 
 ## 当前工作基线
 
 - 当前分支：`codex/interactive-parity-v3`
-- 当前代码 head：`2b3dfdcda422565e4997a466c3a5bb9c929f265e`
+- 当前代码 head：`d6bb055efe3242c9cc54ce8e93bbcfeeafddd71d`
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 栈存在历史分叉，后续必须做 semantic reconciliation，不能直接覆盖式 merge。
-- 当前状态：**Surface 返修继续 / 非 release-ready / 非视觉 PASS**。
-- 最新可确认 READY 的 Vercel 代码为 `cbb6eaab0eb82a8d0fcc806579f20853f24feb1c`；后续 `96cadb3` 与 `2b3dfdc` 再次遭遇 free-plan build-rate-limit。因此“部署一度恢复”不等于 latest head 已部署。
+- 当前状态：**Surface 收口继续 / 非 release-ready / 非视觉 PASS**。
+- 最新部署证据：`a087dce` 的 Vercel preview 为 success；`d6bb055` 再次触发 free-plan build-rate-limit。因此当前准确表述是：Settings 修复 build-verified；Identify 修复 code/diff-verified 但 latest preview 未生成。
 
 ## 统一 Surface System
 
-AquaGuide 当前只允许四类顶层 Surface：
+AquaGuide 顶层 Surface 只允许四类：
 
-1. **Browsing Detail**
-   - Desktop：persistent right Rail。
-   - 左侧页面保持可见、可滚动、可继续点击。
-   - 点击另一个物种/指南时 Rail 保持打开并替换内容。
-   - Mobile：约 68dvh bottom sheet。
-
-2. **Task Flow**
-   - Desktop：right Task Rail。
-   - Mobile：约 82dvh high bottom sheet。
-   - Desktop 不因为任务打开而锁死左侧上下文。
-
-3. **Blocking Confirmation**
-   - 删除、撤销、放弃未保存、危险动作等继续居中 Modal。
-   - 允许 overlay / focus lock。
-
-4. **Media / Fullscreen**
-   - 图片、导出预览、3D 等视觉内容保持居中/全屏，但必须显式标记，不能自己维护第二套 Portal。
+1. **Browsing Detail**：Desktop persistent right Rail；Mobile bottom sheet；底层浏览页继续可交互。
+2. **Task Flow**：Desktop right Task Rail；Mobile high bottom sheet；任务拥有独立滚动。
+3. **Blocking Confirmation**：删除、撤销、放弃未保存、不可逆动作使用 centered modal；允许 overlay / focus lock。
+4. **Media / Fullscreen**：图片、导出预览、3D 等视觉内容；必须显式标记，不能维护第二套 Portal。
 
 ## 本轮新增修复
 
-### `cbb6eaa` — Image Preview 迁入共享 Media Surface
+### `a087dce` — Settings 原生 confirm 迁入 shared Blocking Surface
 
-- `ImagePreviewModal` 删除私有 `createPortal + fixed inset-0 + role=dialog` 基础设施。
-- 改为共享 `Dialog surface="media"`。
-- 保留深色遮罩、左右切图、缩放、关闭按钮和键盘箭头操作。
-- Vercel 对该 commit 已 `READY`；这证明 build/preview 可生成，不代表人工视觉 PASS。
+- 删除未提交反馈离开页面时的 `window.confirm`。
+- Navigation guard 改为 pending-path + 一次性放行 ref，避免用户确认离开后被 guard 再次拦截。
+- 新增 shared `DialogContent surface="blocking"`。
+- Settings 的撤销分享链接也显式标为 `surface="blocking"`。
+- Vercel 对该 commit 为 success；这证明 build/preview 可生成，不代表人工视觉 PASS。
 
-### `96cadb3` — 修复 nested modal body lock
+### `d6bb055` — Identify 私有离开确认迁入 shared Blocking Surface
 
-发现移动端父 Task Sheet + 子 Blocking Confirmation 叠加时，旧逻辑每个 Dialog 都独立 add/remove `body.modal-open`。关闭子确认框可能错误解除仍然打开的父 Sheet body lock。
+- 删除手写 `fixed inset-0 + role="dialog" + aria-modal="true"`。
+- 改为 shared `DialogContent surface="blocking"`。
+- 保留 reset、history back、诊断取消、普通 route navigation 的原逻辑。
+- 对 50KB+ 文件先读取完整 blob 再整文件写回，并复核 commit diff；差异仅为 shared Dialog import 与文件尾弹窗替换。
+- 该 commit 的 Vercel status 为 build-rate-limit，不能宣称 latest preview 已验证。
 
-修复：
+### 之前已完成
 
-- `components/ui/dialog.tsx` 增加 `activeModalBodyLocks` 引用计数。
-- 只有最后一个 modal 关闭时才移除 `modal-open`。
-- 这直接覆盖 Livestock roster 等“任务 Sheet 内再次删除/放弃确认”的真实路径。
+- `cbb6eaa`：Image Preview → shared Media Surface；Vercel READY。
+- `96cadb3`：nested modal body lock 引用计数修复。
+- `2b3dfdc`：Surface CI 首版，锁定 media/private-portal/body-lock 契约。
 
-该 commit 的 Vercel status 是 build-rate-limit；不能宣称 latest preview 已验证。
+## 当前 Surface Inventory
 
-### `2b3dfdc` — 增强 Surface contract
+已确认合规：
 
-`.github/workflows/surface-system-v1.yml` 新增静态契约：
+- SpeciesDetailDialog / Care main detail / Collection Care detail → Browsing Detail。
+- Livestock roster → Task Flow。
+- Collection 删除收藏 / Livestock 删除与 dirty-close / Compatibility 清空 / Settings 撤销分享 / Settings 未提交反馈 / Identify 未保存诊断 → Blocking Confirmation。
+- Export preview / Image preview → Media。
+- Search / CollectionHub → 无私有顶层弹层。
 
-- shared Dialog 必须保留 nested body-lock 逻辑；
-- Image Preview 必须使用 `surface="media"`；
-- Image Preview 不允许重新出现 `createPortal`。
+已确认剩余 debt：
 
-## Surface Inventory 当前结论
+1. `Encyclopedia.tsx` 的 `selectedGroup` 仍是 legacy direct `DialogContent`，本质应为 Browsing Detail；当前 auto inference 会按 Task 处理。
+2. `Aquarium.tsx` 多个 legacy direct `DialogContent` 仍依赖 auto inference；Daily Check article / 换水提示等浏览内容应显式 Detail，reminder/observation/recommendation 应显式 Task，删除/退出应显式 Blocking。
+3. `AIAssistant.tsx` 仍有“清空聊天”原生 `confirm`，属于 legacy 用户入口 debt，优先级低于主浏览 Surface。
+4. `AdminContent.tsx` 内部后台仍有多处 `window.confirm`；属于 admin debt，不影响普通用户详情 Rail，但不能算全仓 clean。
 
-已经确认合规：
+## Badcase 状态
 
-- SpeciesDetailDialog → AdaptiveDetailContent
-- Care 主详情 → AdaptiveDetailContent
-- Collection Care 详情 → AdaptiveDetailContent
-- Livestock roster → AdaptiveTaskContent
-- Collection 删除收藏 / Livestock 移出 / Compatibility 清空 / Settings 撤销分享 → Blocking Confirmation
-- Export preview → Media
-- Search / CollectionHub → 无私有顶层弹层
-
-已确认残留：
-
-1. `Identify.tsx` 未保存诊断离开确认仍手写 `fixed inset-0 + role="dialog" + aria-modal`；语义是 Blocking Confirmation，但绕开共享 Dialog。
-2. `Settings.tsx` 未提交反馈离开页面仍使用原生 `window.confirm`；需要与 WorkspaceNavigation guard 一起重构。
-3. `Aquarium.tsx` 仍有多处 legacy direct `DialogContent`；共享层已统一物理行为，但 Daily Check article / 换水提示等仍应后续显式标记为 Detail，而不是依赖 auto inference。
-4. `Encyclopedia.tsx` 的 selectedGroup 详情仍是 legacy direct DialogContent，本质应为 Browsing Detail；主 SpeciesDetail 已经合规。
-
-完整清单见 `SURFACE_INVENTORY_LATEST.md`。
-
-## 当前 Badcase 状态
-
-- PUI-BC-056 浏览详情位置/切换对象：代码修复已实现，latest-head 浏览器验证待补。
-- PUI-BC-057 窄 Rail 双列挤压：代码修复已实现，latest-head 浏览器验证待补。
-- PUI-BC-058 Mobile Surface 方向：代码修复已实现，latest-head 浏览器验证待补。
-- PUI-BC-059 全站 Surface Inventory：**inventory_in_progress / migration_pending**；不能关闭。
-- PUI-BC-060 Aquarium 3D framing：仍 investigating，用户视觉确认未完成。
-- INFRA-BC-001 Vercel build-rate-limit：仍 open，且表现为间歇性；`cbb6eaa` READY 后，`96cadb3` / `2b3dfdc` 又被限频。
+- PUI-BC-056 浏览详情位置/切换对象：`fix_implemented_validation_pending`。
+- PUI-BC-057 窄 Rail 挤压：`fix_implemented_validation_pending`。
+- PUI-BC-058 Mobile Surface 方向：`fix_implemented_validation_pending`。
+- PUI-BC-059 全站 Surface governance：**migration_reduced_validation_pending**；Identify/Settings 已迁，Encyclopedia/Aquarium/legacy confirm 尚未全部收口。
+- PUI-BC-061 nested modal body lock：`fix_implemented_validation_pending`。
+- PUI-BC-060 Aquarium 3D framing：仍 investigating；不要和 Surface PASS 混为一谈。
+- INFRA-BC-001 Vercel build-rate-limit：仍 intermittent/open。
 
 ## 下一步执行顺序
 
-1. 迁移 Identify 的私有离开确认到 shared Blocking Dialog。
-2. 改造 Settings navigation guard，去掉产品级 `window.confirm`。
-3. 对 Aquarium / Encyclopedia 的 legacy direct Dialog 做显式 Surface 分类，优先浏览文章/组详情，不盲改 460 KB 大文件。
-4. 等 latest head 可部署后，跑：
-   - 1440 Encyclopedia A → B 连续切换；
-   - Care 连续切换；
-   - Aquarium roster → Species Detail → nested confirm；
-   - 1024 desktop rail 可用性；
-   - 390 Detail 68dvh / Task 82dvh / nested blocking modal body lock。
-5. 3D framing 单独继续视觉验收，不和弹窗 PASS 混为一谈。
+1. 将 Encyclopedia `selectedGroup` 从 legacy Task inference 改为 explicit Browsing Detail，且避免在 480–600px Rail 内继续双列挤压。
+2. 对 Aquarium legacy direct Dialog 做语义分类；由于文件约 460KB，只在能完整读取并严格 diff 的情况下改，不做盲目整文件重写。
+3. 把 Settings / Identify 防回退写入 Surface CI：Settings 禁止重新出现 `window.confirm`，Identify 禁止重新出现 private `aria-modal`，二者必须存在 shared `surface="blocking"`。
+4. latest deploy 可用后跑 1440 / 1024 / 390 browser Surface regression，包括 nested modal body lock。
+5. 单独继续 Aquarium 3D framing 视觉验收。
 
 ## 可信边界
 
 - GitHub commit 存在 ≠ latest Vercel 页面已部署。
-- Vercel READY ≠ 人工视觉 PASS。
+- Vercel READY/success ≠ 人工视觉 PASS。
 - 静态 Surface contract ≠ browser interaction regression。
 - AI 47/47 与 UI Surface 无直接证明关系。
 

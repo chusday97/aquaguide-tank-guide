@@ -50,6 +50,16 @@ jobs:
             echo 'ImagePreviewModal must use the shared media surface, not a private portal.' >&2
             exit 1
           fi
+          grep -q 'surface="blocking"' src/pages/Settings.tsx
+          if grep -q 'window.confirm' src/pages/Settings.tsx; then
+            echo 'Settings product confirmation must use the shared blocking surface.' >&2
+            exit 1
+          fi
+          grep -q 'surface="blocking"' src/pages/Identify.tsx
+          if grep -q 'aria-modal="true"' src/pages/Identify.tsx; then
+            echo 'Identify must not reintroduce a private aria-modal confirmation.' >&2
+            exit 1
+          fi
           grep -q 'data-detail-viewport="desktop-rail"' src/styles/immersive-detail-layout-v5.css
           grep -q 'data-dialog-surface="task"' src/styles/immersive-detail-layout-v5.css
           echo 'Surface contract OK'

@@ -1,6 +1,6 @@
 # AquaGuide Badcase — Latest
 
-更新时间：2026-08-21
+更新时间：2026-08-21 16:12 +08:00
 
 > 本文件记录产品/UI/交互 Badcase。`evaluation/badcases/registry.jsonl` 只记录真实 AI/规则评测失败；UI Surface 问题不能混入 AI registry。
 
@@ -20,7 +20,8 @@
 - **Severity**：P0 / High
 - **Feature**：`species_detail`
 - **Status**：`fix_implemented_validation_pending`
-- **Fix**：`a936233` 将 Rail 内首屏和正文收敛为纵向信息层级并独立滚动。
+- **Fix**：`a936233` 将主 Species Detail 在 Rail 内收敛为纵向信息层级并独立滚动。
+- **剩余相关 debt**：Encyclopedia `selectedGroup` 仍保留 legacy 双列结构，迁入 Detail Rail 时必须同步改成单列/窄 Rail 适配。
 - **仍需证据**：latest head 下中文长名称、风险区、CTA、底部内容均可读可达。
 
 ## PUI-BC-058 — Mobile Surface 方向和高度不一致
@@ -28,45 +29,49 @@
 - **Severity**：P1 / High
 - **Feature**：`mobile_surface_system`
 - **Status**：`fix_implemented_validation_pending`
-- **Fix**：Detail 约 68dvh bottom sheet；Task 约 82dvh bottom sheet；Blocking Confirmation 继续居中。
+- **Fix**：Detail 约 68dvh bottom sheet；Task 约 82dvh bottom sheet；Blocking Confirmation 居中。
 - **仍需证据**：390px 实际浏览器验收，无左滑旧结构、横向溢出或正文截断。
 
 ## PUI-BC-059 — 全站 Surface Inventory / private popup debt
 
 - **Severity**：P0 / High
 - **Feature**：`global_surface_governance`
-- **Status**：`inventory_in_progress_migration_pending`
+- **Status**：`migration_reduced_validation_pending`
 
 ### 已修复
 
-- `FilterBottomSheet` 已迁入 shared Task Surface。
-- `cbb6eaa`：`ImagePreviewModal` 从私有 `createPortal` 迁入 shared `surface="media"`。
-- `96cadb3`：修复 mobile parent Task Sheet + nested Blocking Confirmation 的 body-lock 引用计数问题，避免子 modal 关闭后错误解锁父 Sheet。
-- `2b3dfdc`：Surface workflow 增加 media/private-portal/nested-body-lock 静态契约。
+- `FilterBottomSheet` → shared Task Surface。
+- `cbb6eaa`：`ImagePreviewModal` 从私有 `createPortal` → shared `surface="media"`。
+- `96cadb3`：nested modal body-lock 引用计数。
+- `2b3dfdc`：Surface workflow 首版。
+- `a087dce`：Settings 未提交反馈离开确认从 `window.confirm` → shared `surface="blocking"`；Vercel success。
+- `d6bb055`：Identify 未保存诊断离开确认从私有 `fixed/aria-modal` → shared `surface="blocking"`；diff 已复核，Vercel 因 build-rate-limit 未生成 latest preview。
 
 ### 已确认残留
 
-1. **Identify private leave confirmation**
-   - `src/pages/Identify.tsx` 仍手写 `fixed inset-0 + role="dialog" + aria-modal="true"`。
-   - 语义应为 Blocking Confirmation，但绕开 shared Dialog。
+1. **Encyclopedia selectedGroup**
+   - `src/pages/Encyclopedia.tsx` 仍为 legacy direct `DialogContent max-w-[920px]`。
+   - 本质是 Browsing Detail，auto inference 当前按 Task 处理。
+   - 内部仍有 desktop 双列内容；直接切为窄 Rail 会造成压缩，必须和布局一起改。
 
-2. **Settings native browser confirm**
-   - 未提交反馈离开页面使用 `window.confirm`。
-   - 语义应为 Blocking Confirmation，但视觉/焦点/布局完全不可控。
+2. **Aquarium legacy direct DialogContent**
+   - 多数已被 shared auto inference 统一到 Task / Blocking / Fullscreen 的物理位置。
+   - Daily Check article、换水提示等浏览内容仍应显式 Detail；reminder / observation / smart recommendation 等应显式 Task；删除/退出应显式 Blocking。
+   - 文件约 460KB，不做盲目整文件重写。
 
-3. **Aquarium legacy direct DialogContent**
-   - 多数已被 shared auto inference 收敛为 Task / Blocking / Fullscreen 的正确物理位置。
-   - Daily Check article、换水提示等浏览内容仍需显式标为 Detail；不能长期依赖 auto inference。
+3. **AIAssistant native confirm**
+   - 清空 AI 助手历史仍使用 `confirm`。
+   - 属于 legacy 用户入口 Surface debt，优先级低于 Encyclopedia/Aquarium 主路径。
 
-4. **Encyclopedia selectedGroup**
-   - 仍为 legacy direct DialogContent；本质应为 Browsing Detail。
-   - 主 SpeciesDetailDialog 已合规，不要把两者混为同一问题。
+4. **AdminContent native confirms**
+   - 内部后台的切换内容、新建、离开、切换栏目仍有 `window.confirm`。
+   - 属于 admin debt；不影响普通用户详情 Rail，但意味着“全仓无 native confirm”尚未成立。
 
 ### 关闭条件
 
-- Identify 私有 modal 完成迁移。
-- Settings 产品级 `window.confirm` 移除。
-- Aquarium / Encyclopedia legacy Surface 完成显式分类或受明确自动化 allowlist 管理。
+- Encyclopedia selectedGroup 显式归类为 Browsing Detail，并完成 Rail 内布局适配。
+- Aquarium legacy Surface 完成显式分类或受明确自动化 allowlist 管理。
+- 用户端 legacy native confirm 清理或明确 allowlist。
 - 全仓无未知 private modal/drawer/sheet。
 - latest head build 可运行。
 - 1440 / 1024 / 390 浏览器 Surface 回归通过。
@@ -79,9 +84,8 @@
 - **Feature**：`nested_modal_lock`
 - **Status**：`fix_implemented_validation_pending`
 - **真实路径**：Mobile Task Sheet（例如 Livestock roster）仍打开时，再打开删除/放弃确认；关闭子确认框后父 Sheet 仍在。
-- **根因**：旧 shared Dialog 每个 modal 独立 `add modal-open` / cleanup `remove modal-open`，没有嵌套计数。
 - **Fix**：`96cadb39d1560e543f6eedb596a89d757919ca84` 引入 `activeModalBodyLocks` 引用计数；最后一个 modal 关闭时才解除 body lock。
-- **验证边界**：代码已修；该 commit Vercel 因 build-rate-limit 没有 latest preview，因此不能标 `regression_verified`。
+- **验证边界**：代码已修；仍缺 latest browser regression。
 
 ## PUI-BC-060 — Aquarium 3D framing 在不同 viewport 下视觉尺寸不稳定
 
@@ -95,9 +99,10 @@
 
 - **Type**：Infrastructure / Acceptance blocker
 - **Status**：`open_intermittent`
-- `cbb6eaa` 已成功获得 READY deployment，说明限频曾解除。
-- 随后 `96cadb3`、`2b3dfdc` 又返回 free-plan build-rate-limit。
-- 因此不能写“Vercel 已恢复”或“latest head 构建失败”；准确结论是 **最新 head 的 preview 仍被间歇性限频阻塞**。
+- `cbb6eaa` 有 READY deployment。
+- `a087dce` 有 success deployment。
+- `d6bb055` 再次返回 free-plan build-rate-limit。
+- 因此准确结论是 **限频间歇出现**；它不是产品编译失败证明，也不是已解决。
 
 ## AI Badcase 边界
 
@@ -107,5 +112,5 @@
 
 - `fix_implemented` ≠ `regression_verified`。
 - GitHub commit ≠ latest deployment。
-- Vercel READY ≠ 人工视觉验收。
+- Vercel READY/success ≠ 人工视觉验收。
 - 静态契约 ≠ browser interaction acceptance。
