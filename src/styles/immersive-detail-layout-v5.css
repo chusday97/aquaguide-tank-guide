@@ -1,0 +1,212 @@
+/*
+ * Immersive detail layout V5
+ *
+ * Goals:
+ * 1. Desktop/tablet detail workspaces consume the full available viewport instead
+ *    of ending above the bottom edge.
+ * 2. The browse scene remains an immersive canvas. Selection/result docks overlay
+ *    the scene instead of shortening the aquarium illustration.
+ * 3. Only the detail body scrolls; the detail surface itself stays top-to-bottom.
+ *
+ * This layer intentionally leaves phone bottom sheets (<768px) unchanged.
+ */
+
+@media (min-width: 768px) {
+  /* A detail-open route owns the workspace viewport. Remove the outer vertical
+     padding that otherwise creates the visible strip underneath the detail. */
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll:has(.encyclopedia-workspace [data-surface="split-workspace-detail"]),
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll:has(.care-workspace-shell > [data-surface="split-workspace-detail"]) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]),
+  .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+  }
+
+  [data-surface="split-workspace-detail"] {
+    align-self: stretch !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+
+  /* The species and care chrome remains fixed while only the long body scrolls. */
+  [data-surface="split-workspace-detail"] .species-detail-body,
+  [data-surface="split-workspace-detail"] .modalBody {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+  }
+
+  [data-surface="split-workspace-detail"] .care-detail-surface {
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  [data-surface="split-workspace-detail"] .care-detail-surface > .app-scrollbar-hidden {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+  }
+
+  /* Tablet detail mode is intentionally single-surface. It still fills the
+     viewport rather than inheriting content height from the hidden browse area. */
+  @media (max-width: 1023px) {
+    .encyclopedia-workspace:has([data-surface="split-workspace-detail"]),
+    .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) {
+      display: block !important;
+    }
+
+    .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) > [data-surface="split-workspace-detail"],
+    .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) > [data-surface="split-workspace-detail"] {
+      width: 100% !important;
+      height: 100dvh !important;
+      min-height: 100dvh !important;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  /* True split workspace: both columns share exactly one viewport-height row. */
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 52fr) minmax(520px, 48fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+  }
+
+  .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 52fr) minmax(520px, 48fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) > :not([data-surface="split-workspace-detail"]),
+  .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) > .care-workspace-grid {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) > [data-surface="split-workspace-detail"],
+  .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) > [data-surface="split-workspace-detail"] {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    border-left: 1px solid rgba(26, 26, 26, 0.08) !important;
+  }
+
+  /* Immersive discovery/care scenes: the aquarium image owns the full surface;
+     selection content floats over it instead of consuming document height. */
+  .encyclopedia-workspace .interactive-tank-shell,
+  .care-workspace-shell .interactive-tank-shell {
+    position: relative !important;
+    display: block !important;
+    min-height: clamp(650px, calc(100dvh - 32px), 960px) !important;
+    overflow: hidden !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-stage,
+  .care-workspace-shell .interactive-tank-stage {
+    height: clamp(650px, calc(100dvh - 32px), 960px) !important;
+    min-height: clamp(650px, calc(100dvh - 32px), 960px) !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-dock.is-visible,
+  .care-workspace-shell .interactive-tank-dock.is-visible {
+    position: absolute !important;
+    z-index: 30 !important;
+    right: 22px !important;
+    left: 22px !important;
+    bottom: 52px !important;
+    display: flex !important;
+    max-height: min(42%, 320px) !important;
+    overflow-y: auto !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 24px !important;
+    background: rgba(252, 255, 253, 0.9) !important;
+    box-shadow: 0 18px 44px rgba(15, 70, 56, 0.16) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  .care-workspace-shell .interactive-care-scene .interactive-tank-dock.is-visible {
+    bottom: 22px !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-note {
+    position: absolute !important;
+    z-index: 31 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    min-height: 38px;
+    border-top: 1px solid rgba(255, 255, 255, 0.72) !important;
+    background: rgba(247, 252, 249, 0.9) !important;
+    backdrop-filter: blur(14px);
+  }
+
+  /* When a detail is open, keep the scene column itself full-height instead of
+     allowing the old page-flow blocks to expose the background underneath. */
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) .interactive-tank-shell,
+  .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) .interactive-tank-shell {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) .interactive-tank-stage,
+  .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) .interactive-tank-stage {
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+  }
+}
+
+/* Narrow desktop: preserve a real two-column split without letting the detail
+   squeeze the scene into a sliver. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]),
+  .care-workspace-shell:has(> [data-surface="split-workspace-detail"]) {
+    grid-template-columns: minmax(0, 47fr) minmax(500px, 53fr) !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-copy,
+  .care-workspace-shell .interactive-tank-copy {
+    max-width: min(410px, calc(100% - 36px));
+  }
+
+  .encyclopedia-workspace .interactive-tank-dock.is-visible,
+  .care-workspace-shell .interactive-tank-dock.is-visible {
+    right: 14px !important;
+    left: 14px !important;
+  }
+}
