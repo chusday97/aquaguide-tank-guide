@@ -4,6 +4,26 @@ import { chromium } from 'playwright';
 const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4201';
 const browser = await chromium.launch({ headless: true });
 
+const assertAtlasDockOverlay = async (width) => {
+  const page = await browser.newPage({ viewport: { width, height: 900 } });
+  await page.addInitScript(() => localStorage.removeItem('aquapediaDiscoveryDeck'));
+  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => document.querySelectorAll('[data-scene-node]').length > 0);
+  await page.locator('[data-scene-node]').first().click();
+
+  const stage = page.locator('.interactive-tank-stage').first();
+  const dock = page.locator('.interactive-tank-dock.is-visible').first();
+  await dock.waitFor({ state: 'visible' });
+  assert.equal(await dock.evaluate(node => getComputedStyle(node).position), 'absolute', `${width}px selected result dock must overlay the scene`);
+
+  const stageBox = await stage.boundingBox();
+  const dockBox = await dock.boundingBox();
+  assert.ok(stageBox && dockBox, `${width}px stage and dock must have measurable geometry`);
+  assert.ok(dockBox.y >= stageBox.y - 1, `${width}px dock must start inside the scene`);
+  assert.ok(dockBox.y + dockBox.height <= stageBox.y + stageBox.height + 2, `${width}px dock must not extend below the scene canvas`);
+  await page.close();
+};
+
 try {
   const atlas = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await atlas.addInitScript(() => localStorage.removeItem('aquapediaDiscoveryDeck'));
@@ -31,6 +51,8 @@ try {
   const fallback = atlas.locator('.resilient-image-transparent-fallback').first();
   await assert.doesNotReject(() => fallback.waitFor({ state: 'visible' }), '透明场景图片失败后必须显示无底板占位');
   assert.equal(await fallback.evaluate(node => getComputedStyle(node.parentElement).backgroundColor), 'rgba(0, 0, 0, 0)', '透明失败占位的容器必须保持透明');
+
+  for (const width of [768, 1024, 1440]) await assertAtlasDockOverlay(width);
 
   const care = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await care.goto(`${baseUrl}/care`, { waitUntil: 'networkidle' });
