@@ -23,7 +23,7 @@ function inferSurface(surface: DialogSurfaceKind, showCloseButton: boolean, clas
   // Some long task flows intentionally hide the corner close button and use an
   // explicit footer action instead. Treat flexible full-height content as a task,
   // not as a destructive confirmation.
-  if (showCloseButton === false && !className?.includes("flex h-[") && !className?.includes("flex max-h[")) return "blocking"
+  if (showCloseButton === false && !className?.includes("flex h-[") && !className?.includes("flex max-h-[")) return "blocking"
   return "task"
 }
 
@@ -31,18 +31,18 @@ function getMarkedSurface(children: React.ReactNode): ResolvedDialogSurface | nu
   let result: ResolvedDialogSurface | null = null
   React.Children.forEach(children, child => {
     if (result || !React.isValidElement(child)) return
-    const type = child.type as MarkedElementType
     const childProps = child.props as SurfaceAwareChildProps
-
-    if (type && typeof type !== "string" && type.dialogSurface) {
-      result = type.dialogSurface
-      return
-    }
 
     // Direct DialogContent users are legacy surfaces. Infer their semantics at
     // the root as well as at the popup so modal/overlay behavior stays aligned.
-    if (type === DialogContent) {
+    if (child.type === DialogContent) {
       result = inferSurface(childProps.surface ?? "auto", childProps.showCloseButton ?? true, childProps.className)
+      return
+    }
+
+    const childType = child.type as MarkedElementType
+    if (childType && typeof childType !== "string" && childType.dialogSurface) {
+      result = childType.dialogSurface
       return
     }
 
