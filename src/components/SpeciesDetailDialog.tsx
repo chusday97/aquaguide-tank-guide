@@ -794,7 +794,7 @@ export function SpeciesDetailDialog({
   return (
     <>
       <Dialog open={open} modal={isPhoneLayout} onOpenChange={onOpenChange}>
-        <AdaptiveDetailContent workspace={useWorkspaceSurface} showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
+        <AdaptiveDetailContent workspace={useWorkspaceSurface} workspaceOpen={open} showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
               {useWorkspaceSurface ? (

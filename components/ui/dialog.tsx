@@ -48,17 +48,14 @@ function DialogContent({
   children,
   showCloseButton = true,
   withOverlay = true,
-  portal = true,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
   withOverlay?: boolean
-  /** Keep a non-modal workspace detail in the page grid instead of a portal. */
-  portal?: boolean
 }) {
   const { t } = useTranslation()
-  const popup = (
-    <>
+  return (
+    <DialogPortal>
       {withOverlay && <DialogOverlay />}
       <DialogPrimitive.Popup
         data-slot="dialog-content"
@@ -86,9 +83,8 @@ function DialogContent({
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
-    </>
+    </DialogPortal>
   )
-  return portal ? <DialogPortal>{popup}</DialogPortal> : popup
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {

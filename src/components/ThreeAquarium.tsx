@@ -196,7 +196,11 @@ export function getAquariumCameraFrame({
   const halfWidth = length * 0.56;
   const fitHeight = halfHeight / Math.tan(fov / 2);
   const fitWidth = halfWidth / Math.max(0.35, Math.tan(fov / 2) * aspect);
-  const distance = (framing === 'stage-cover' ? Math.min(fitHeight, fitWidth) : Math.max(fitHeight, fitWidth)) * 1.08;
+  // A stage is allowed to crop the outer glass: use the smaller fit distance so
+  // the tank interior covers the available viewport instead of leaving a margin.
+  const distance = framing === 'stage-cover'
+    ? Math.min(fitHeight, fitWidth) * 0.96
+    : Math.max(fitHeight, fitWidth) * 1.08;
   return new THREE.Vector3(length * 0.08, height * 0.04, width * 0.52 + distance);
 }
 

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Share2, Stethoscope, Waves } from 'lucide-react';
+import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Download, Droplets, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Share2, Stethoscope, Waves, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { careTopicsData, type CareTopic } from '../data/careTopicsData';
@@ -2205,9 +2205,15 @@ export default function CareEncyclopedia() {
       </div>
 
       <Dialog open={!!selectedTopic} modal={isPhoneLayout} onOpenChange={(open) => !open && closeCareDetail()}>
-        <AdaptiveDetailContent workspace={!isPhoneLayout}>
+        <AdaptiveDetailContent workspace={!isPhoneLayout} workspaceOpen={!!selectedTopic} showCloseButton={isPhoneLayout}>
           {selectedTopic && (
-            <CareArticleDetail
+            <>
+              {!isPhoneLayout && (
+                <button type="button" onClick={closeCareDetail} className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-ink/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={isEn ? 'Close guide' : '关闭指南'}>
+                  <X className="h-5 w-5" />
+                </button>
+              )}
+              <CareArticleDetail
               key={selectedTopic.id}
               topic={selectedTopic}
               scrollRef={detailScrollRef}
@@ -2226,7 +2232,8 @@ export default function CareEncyclopedia() {
               onRestoreActions={setCheckedActions}
               activeAquarium={activeAquarium}
               workspace={!isPhoneLayout}
-            />
+              />
+            </>
           )}
         </AdaptiveDetailContent>
       </Dialog>

@@ -14,11 +14,13 @@ const expect = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
-expect(files.dialog.includes('portal = true'), 'DialogContent must support inline rendering for a workspace detail.');
-expect(files.adaptive.includes('portal={!workspace || isPhoneLayout}'), 'Desktop workspace details must not render through DialogPortal.');
+expect(!files.dialog.includes('portal = true'), 'DialogContent must keep Base UI popups inside their Portal context.');
+expect(files.adaptive.includes('data-surface="split-workspace-detail"'), 'Workspace details must render as an inline page region.');
+expect(files.adaptive.includes('workspaceOpen'), 'Workspace details must be mounted only while their page detail is open.');
 expect(files.species.includes("desktopSurface === 'workspace'"), 'Species detail must have a desktop workspace mode.');
 expect(files.atlas.includes('desktopSurface="workspace"'), 'Atlas must request the species workspace surface.');
 expect(files.care.includes('workspace={!isPhoneLayout}'), 'Care detail must use a workspace surface on desktop.');
+expect(files.styles.includes('.care-workspace-shell:has(> [data-surface="split-workspace-detail"])'), 'Care workspace must reflow from its actual page shell.');
 expect(files.styles.includes('grid-template-columns: minmax(0, 54fr) minmax(0, 46fr)'), 'Species workspace must allocate actual two-pane geometry.');
 expect(files.three.includes("framing?: 'contain' | 'stage-cover'"), 'ThreeAquarium must expose framing.');
 
