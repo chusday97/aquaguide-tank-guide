@@ -166,7 +166,9 @@
     max-height: 92dvh !important;
     margin: 0 !important;
     padding: 0 !important;
-    transform: translateX(-50%) !important;
+    /* DialogContent already owns horizontal centering via Tailwind translate.
+       A second transform here shifts the sheet another 50% off-screen. */
+    transform: none !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
     overscroll-behavior: contain;
@@ -356,7 +358,8 @@
     height: min(68dvh, calc(100dvh - 12px)) !important;
     min-height: 52dvh !important;
     max-height: 82dvh !important;
-    transform: translateX(-50%) !important;
+    /* DialogContent surface classes already apply -translate-x-1/2. */
+    transform: none !important;
     border-radius: 28px 28px 0 0 !important;
     box-shadow: 0 -18px 56px rgba(15, 23, 42, 0.18) !important;
   }

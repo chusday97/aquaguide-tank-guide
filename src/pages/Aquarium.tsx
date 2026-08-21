@@ -1634,6 +1634,10 @@ export default function AquariumManager() {
       showToast(Boolean(i18n.language?.startsWith('en')) ? 'Cannot open settings, please select an aquarium first.' : '暂时无法打开设置，请先选择一个鱼缸。', 'error');
       return;
     }
+    // Primary task rails are mutually exclusive. A new workflow replaces the current rail
+    // instead of stacking two right-side task surfaces on top of each other.
+    setIsAddFishOpen(false);
+    setIsTankArchiveExpanded(false);
     setSettingsForm(activeAquarium);
     setIsPlantListExpanded(panel === 'plants');
     setIsScapeListExpanded(panel === 'substrate');
@@ -1970,6 +1974,9 @@ export default function AquariumManager() {
 
   const openSpeciesAddition = (intent: SpeciesAdditionIntent, speciesId?: string) => {
     const selectedFish = speciesId ? fishData.find(item => item.id === speciesId) : undefined;
+    // Replace any open primary task rail before opening livestock addition.
+    setIsSettingsOpen(false);
+    setIsTankArchiveExpanded(false);
     setAdditionIntent(intent);
     addFishOperationIdRef.current = `livestock-add:${crypto.randomUUID()}`;
     setAddFishSuccess(null);
