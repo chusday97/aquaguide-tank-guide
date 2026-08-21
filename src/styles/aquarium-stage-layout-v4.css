@@ -119,7 +119,7 @@
   }
 
   /* The dock itself is the section chrome; suppress the old numbered management
-     header and the nested white card so the bottom reads as one control strip. */
+     header and nested card/title so the bottom reads as one control strip. */
   .aquarium-dashboard-actions > .aquarium-zone-header {
     display: none !important;
   }
@@ -134,9 +134,12 @@
     box-shadow: none !important;
   }
 
-  .aquarium-dashboard-actions > .aquarium-actions > [class*="SectionHeader"],
-  .aquarium-dashboard-actions .section-header {
+  .aquarium-dashboard-actions > .aquarium-actions > :first-child {
     display: none !important;
+  }
+
+  .aquarium-dashboard-actions > .aquarium-actions > :nth-child(2) {
+    margin-top: 0 !important;
   }
 
   .aquarium-dashboard-actions .desktop-card-grid {
