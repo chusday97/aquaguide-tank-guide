@@ -16,6 +16,7 @@ export function AdaptiveDetailContent({ className, workspace = false, workspaceO
 
   return (
     <DialogContent
+      surface="detail"
       data-surface={isPhoneLayout ? 'bottom-sheet' : 'detail-rail'}
       data-detail-viewport={isPhoneLayout ? 'phone-sheet' : 'desktop-rail'}
       data-detail-behavior={isPhoneLayout ? 'bottom-sheet' : 'persistent-browse-rail'}
@@ -33,3 +34,5 @@ export function AdaptiveDetailContent({ className, workspace = false, workspaceO
     </DialogContent>
   );
 }
+
+(AdaptiveDetailContent as typeof AdaptiveDetailContent & { dialogSurface?: 'detail' }).dialogSurface = 'detail';
