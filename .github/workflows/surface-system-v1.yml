@@ -42,6 +42,14 @@ jobs:
           grep -q "dialogSurface = 'task'" src/components/common/AdaptiveTaskContent.tsx
           grep -q 'disablePointerDismissal' components/ui/dialog.tsx
           grep -q 'data-dialog-surface' components/ui/dialog.tsx
+          grep -q 'activeModalBodyLocks' components/ui/dialog.tsx
+          grep -q 'acquireModalBodyLock' components/ui/dialog.tsx
+          grep -q 'surface="media"' src/components/common/ImagePreviewModal.tsx
+          grep -q 'data-surface="image-preview-media"' src/components/common/ImagePreviewModal.tsx
+          if grep -q 'createPortal' src/components/common/ImagePreviewModal.tsx; then
+            echo 'ImagePreviewModal must use the shared media surface, not a private portal.' >&2
+            exit 1
+          fi
           grep -q 'data-detail-viewport="desktop-rail"' src/styles/immersive-detail-layout-v5.css
           grep -q 'data-dialog-surface="task"' src/styles/immersive-detail-layout-v5.css
           echo 'Surface contract OK'
