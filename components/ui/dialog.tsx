@@ -32,6 +32,10 @@ function acquireModalBodyLock() {
 function inferSurface(surface: DialogSurfaceKind, showCloseButton: boolean, className?: string): ResolvedDialogSurface {
   if (surface !== "auto") return surface
   if (className?.includes("max-w-[1180px]") || className?.includes("max-w-[1480px]")) return "fullscreen"
+  // Known legacy Encyclopedia species-group detail. Keep the signature narrow so
+  // unrelated task dialogs do not silently change semantics while the large page
+  // remains unsafe to rewrite through whole-file GitHub updates.
+  if (className?.includes("max-w-[920px]") && className?.includes("rounded-[24px]")) return "detail"
   // Some long task flows intentionally hide the corner close button and use an
   // explicit footer action instead. Treat flexible full-height content as a task,
   // not as a destructive confirmation.
@@ -152,8 +156,18 @@ function DialogContent({
     : resolvedSurface === "fullscreen" || resolvedSurface === "media"
       ? "top-1/2 left-1/2 max-w-[calc(100vw-32px)] -translate-x-1/2 -translate-y-1/2 rounded-[28px]"
       : resolvedSurface === "detail"
-        ? "bottom-0 left-auto right-0 top-0 translate-x-0 translate-y-0"
+        ? isPhoneViewport
+          ? "bottom-0 left-1/2 top-auto h-[68dvh] min-h-[52dvh] max-h-[82dvh] w-[min(100vw,430px)] max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px]"
+          : "bottom-0 left-auto right-0 top-0 h-[100dvh] max-h-[100dvh] w-[clamp(480px,42vw,600px)] max-w-[calc(100vw-280px)] translate-x-0 translate-y-0 rounded-l-[28px] rounded-r-none"
         : "bottom-0 left-1/2 top-auto h-[82dvh] max-h-[92dvh] w-[min(100vw,430px)] max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px] md:left-auto md:right-0 md:top-0 md:h-[100dvh] md:max-h-[100dvh] md:w-[min(760px,calc(100vw-320px))] md:max-w-[760px] md:translate-x-0 md:rounded-l-[28px] md:rounded-r-none"
+
+  const motionClass = resolvedSurface === "task"
+    ? "data-open:slide-in-from-bottom data-closed:slide-out-to-bottom md:data-open:slide-in-from-right md:data-closed:slide-out-to-right"
+    : resolvedSurface === "detail"
+      ? isPhoneViewport
+        ? "data-open:zoom-in-100 data-open:slide-in-from-bottom data-closed:zoom-out-100 data-closed:slide-out-to-bottom"
+        : "data-open:zoom-in-100 data-open:slide-in-from-right data-closed:zoom-out-100 data-closed:slide-out-to-right"
+      : "data-open:zoom-in-95 data-closed:zoom-out-95"
 
   return (
     <DialogPortal>
@@ -164,7 +178,7 @@ function DialogContent({
         className={cn(
           "modalCard fixed z-[161] gap-0 bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
           surfaceClass,
-          resolvedSurface === "task" ? "data-open:slide-in-from-bottom data-closed:slide-out-to-bottom md:data-open:slide-in-from-right md:data-closed:slide-out-to-right" : "data-open:zoom-in-95 data-closed:zoom-out-95",
+          motionClass,
           className,
         )}
         {...props}

@@ -267,3 +267,86 @@
     padding-top: 18px !important;
   }
 }
+
+/* Legacy direct browsing-detail allowlist. The Encyclopedia species-group dialog
+   is inferred as detail by its narrow legacy signature until the large page can
+   be safely rewritten. Keep its chrome fixed and its content single-column so a
+   480–600px rail never recreates the old squeezed 50/50 layout. */
+[data-dialog-surface="detail"]:not([data-detail-viewport]) {
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #fdfcf8 !important;
+}
+
+[data-dialog-surface="detail"]:not([data-detail-viewport]) > .flex {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  overflow: hidden !important;
+}
+
+[data-dialog-surface="detail"]:not([data-detail-viewport]) .modalBody {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+[data-dialog-surface="detail"]:not([data-detail-viewport]) .modalBody > .grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+@media (min-width: 768px) {
+  [data-dialog-surface="detail"]:not([data-detail-viewport]) {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: clamp(480px, 42vw, 600px) !important;
+    max-width: calc(100vw - 280px) !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    transform: none !important;
+    border-radius: 28px 0 0 28px !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    box-shadow: -22px 0 64px rgba(15, 23, 42, 0.16) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  [data-dialog-surface="detail"]:not([data-detail-viewport]) {
+    top: auto !important;
+    right: auto !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    width: min(100vw, 430px) !important;
+    max-width: 430px !important;
+    height: min(68dvh, calc(100dvh - 12px)) !important;
+    min-height: 52dvh !important;
+    max-height: 82dvh !important;
+    transform: translateX(-50%) !important;
+    border-radius: 28px 28px 0 0 !important;
+    box-shadow: 0 -18px 56px rgba(15, 23, 42, 0.18) !important;
+  }
+
+  [data-dialog-surface="detail"]:not([data-detail-viewport])::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    z-index: 60;
+    width: 42px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.16);
+    transform: translateX(-50%);
+  }
+}
