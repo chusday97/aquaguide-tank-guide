@@ -2,6 +2,9 @@
 
 ## 2026-08-21 最新交接快照：互动视觉一致性
 
+- 当前工作：互动图鉴批次、透明素材与养护热点修复已实现（`8577511`）。场景探索已从旧“跳过一条”的每日推荐队列拆为同一存储键中的 `sceneBatchIds / sceneSeenIds` 批次：换一批替换整批 6 个、同日不重、完成后需用户明确重新开始。透明图片已取消整块骨架，失败时显示透明轮廓；场景资源脚本检查 Alpha 和四角透明。养护热点已改为类型名称常驻、症状在 hover/focus/selected 后展开，手机不再隐藏名称。
+- 当前验证：`npm run lint`、`npm run test:interactive-discovery`、`npm run test:interactive-scene-assets`、`npm run build` 与生产预览 `test:interactive-scenes-ui` 已通过；下一步为独立 Critic → Builder 修复（如有）→ 同线程复验 → Evaluator。不要合并 main。
+
 - 当前工作分支：`codex/interactive-parity-v3@adf3082`，已推送至同名 GitHub 分支；不要将其直接合并 `main`，需先完成用户视觉一致性确认。
 - 当前进行中：文字 AI/视觉 AI 能力状态、全幅 3D 首页、透明互动图鉴与养护双模式。已在本机确认 DeepSeek 文字 API 可响应；视觉环境变量未配置时必须显示手动物种确认，不能声称拍照识别已可用。
 - 最新实现：`b2e1dcc` 已让 `/api/health`、Pages 和 Vercel health 返回文本/视觉能力状态，`npm run dev` 先等 API 健康通过。`/care` 现在默认互动排查；`/care?mode=browse` 才展示传统推荐/搜索/分类/列表。图鉴和养护场景统一消费透明 texture，选中不再对其他生物模糊；桌面鱼缸页解除通用画布宽度限制。验证：lint、API 类型、production build 与 4201 的四路桌面无错误/无溢出检查通过。

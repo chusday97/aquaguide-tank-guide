@@ -38,7 +38,8 @@
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
 - `src/components/visual-results/`：混养、物种适配、巡检与养护自查共用的视觉结果卡、展示模型和规则适配器。
-- `src/components/interactive/`：场景化物种探索与养护鱼缸入口；以大型鱼缸背景、游动图片层和稳定点击热区触发现有路由/详情，不生成业务结论。首页不使用该场景组件。
+- `src/components/interactive/`：场景化物种探索与养护鱼缸入口；图鉴以现有发现存储中的独立 6 个物种批次整批替换，场景贴图与加载/失败态均保持透明；养护热点始终显示类型名称、按需展开症状。两者只触发现有路由/详情，不生成业务结论。首页不使用该场景组件。
+- `scripts/test-interactive-discovery-batches.ts` / `scripts/assert_interactive_scene_assets.ts` / `scripts/verify-interactive-scenes.mjs`：分别门禁互动批次无交集、411 个场景资源的 Alpha/透明角像素，以及生产预览的图鉴换批与手机养护热点呈现。
 - `src/components/layout/LayoutModeProvider.tsx`：真实设备布局判定。
 - `src/pages/Aquarium.tsx`：我的鱼缸；桌面首页以现有 `ThreeAquarium` 为主舞台，右侧承接今日行动/推荐，底部承接高频任务。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
