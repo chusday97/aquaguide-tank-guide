@@ -634,6 +634,7 @@ function AppShell() {
   const isAdminContent = location.pathname === '/admin/content';
   const isWelcome = location.pathname === '/welcome';
   const isSharedReport = location.pathname.startsWith('/report/');
+  const isAquariumHomepage = location.pathname === '/aquarium';
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(() => {
     try {
       return localStorage.getItem('aquaguide_desktop_sidebar_collapsed') === 'true';
@@ -672,7 +673,7 @@ function AppShell() {
     };
   }, [showToast, t]);
 
-  const effectiveSidebarCollapsed = isNarrowDesktop || isDesktopSidebarCollapsed;
+  const effectiveSidebarCollapsed = isNarrowDesktop || isAquariumHomepage || isDesktopSidebarCollapsed;
   const desktopShellStyle = useMemo(() => ({
     '--desktop-sidebar-width': effectiveSidebarCollapsed ? '76px' : '280px',
   }) as CSSProperties, [effectiveSidebarCollapsed]);
@@ -793,7 +794,7 @@ function AppShell() {
     <>
       <DesktopAppShell
         collapsed={effectiveSidebarCollapsed}
-        autoCollapsed={isNarrowDesktop}
+        autoCollapsed={isNarrowDesktop || isAquariumHomepage}
         onToggleCollapsed={toggleDesktopSidebar}
         style={desktopShellStyle}
       />

@@ -2081,22 +2081,30 @@ body::-webkit-scrollbar {
   }
 
   .aquarium-dashboard-stage {
-    grid-template-columns: minmax(0, 1.72fr) minmax(340px, 0.82fr);
-    align-items: stretch;
-    gap: 16px;
+    display: block;
   }
 
   .aquarium-dashboard-tank {
     position: relative;
-    min-height: 630px;
+    min-height: min(760px, calc(100dvh - 116px));
   }
 
   .aquarium-dashboard-tank > .aquarium-tank {
     height: 100% !important;
-    min-height: 630px !important;
+    min-height: min(760px, calc(100dvh - 116px)) !important;
     border: 0;
     border-radius: 34px;
     box-shadow: 0 22px 48px rgba(22, 82, 63, 0.14);
+  }
+
+  .aquarium-dashboard-rail {
+    position: absolute;
+    z-index: 40;
+    top: 46px;
+    right: 42px;
+    width: min(33%, 510px);
+    min-width: 340px;
+    pointer-events: auto;
   }
 
   .aquarium-stage-intro {
@@ -2179,39 +2187,20 @@ body::-webkit-scrollbar {
     padding: 24px;
   }
 
-  .aquarium-dashboard-discovery > .aquarium-zone-header {
-    display: none;
-  }
-
-  .aquarium-dashboard-discovery .aquarium-discovery {
-    padding: 14px;
-  }
-
-  .aquarium-dashboard-discovery .aquarium-discovery-card {
-    min-height: 222px;
-    grid-template-columns: minmax(130px, 43%) minmax(0, 1fr);
-  }
-
-  .aquarium-dashboard-discovery .aquarium-discovery-visual {
-    min-height: 222px;
-  }
-
-  .aquarium-dashboard-discovery .aquarium-discovery-card img {
-    max-height: 176px;
-  }
-
-  .aquarium-dashboard-archive {
-    margin-top: 16px;
-  }
-
-  .aquarium-dashboard-archive .aquarium-archive {
-    border-radius: 24px;
-  }
 }
 
 @media (max-width: 1049px) {
   .aquarium-dashboard-actions .aquarium-actions {
     margin-top: 8px;
+  }
+}
+
+@media (min-width: 1050px) and (max-width: 1260px) {
+  .aquarium-dashboard-rail {
+    top: 32px;
+    right: 26px;
+    width: min(37%, 430px);
+    min-width: 300px;
   }
 }
 

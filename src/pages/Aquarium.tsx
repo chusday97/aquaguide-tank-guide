@@ -240,25 +240,21 @@ function AquariumWorkspace({
   observeSubtitle,
   manageTitle,
   manageSubtitle,
-  learnTitle,
-  learnSubtitle,
   tank,
   status,
-  archive,
   actions,
-  discovery,
 }: {
   observeTitle: string;
   observeSubtitle: string;
   manageTitle: string;
   manageSubtitle: string;
-  learnTitle: string;
-  learnSubtitle: string;
+  learnTitle?: string;
+  learnSubtitle?: string;
   tank: ReactNode;
   status: ReactNode;
-  archive: ReactNode;
+  archive?: ReactNode;
   actions: ReactNode;
-  discovery: ReactNode;
+  discovery?: ReactNode;
 }) {
   const location = useLocation();
 
@@ -287,22 +283,15 @@ function AquariumWorkspace({
         <div className="aquarium-dashboard-stage">
           <div className="aquarium-dashboard-tank">
             {tank}
+            <aside className="aquarium-dashboard-rail" aria-label={observeTitle}>
+              {status}
+            </aside>
             <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-dashboard-actions" aria-labelledby="aquarium-manage-title">
               <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
               {actions}
             </section>
           </div>
-          <aside className="aquarium-dashboard-rail" aria-label={observeTitle}>
-            {status}
-            {discovery && (
-              <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-dashboard-discovery" aria-labelledby="aquarium-learn-title">
-                <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-                {discovery}
-              </section>
-            )}
-          </aside>
         </div>
-        <div className="aquarium-dashboard-archive">{archive}</div>
     </section>
   );
 }
@@ -4724,13 +4713,15 @@ export default function AquariumManager() {
       tone: 'info' as const,
     },
   ];
-  const visibleAquariumActions = commonActions.map(action => ({
+  const visibleAquariumActions = commonActions
+    .filter(action => action.id !== 'smartRecommend')
+    .map(action => ({
     ...action,
     onClick: () => {
       trackSessionEvent('aquarium_primary_action_clicked', { action: action.id, status: action.active ? 'active' : 'available', entry: 'aquarium-home' });
       action.onClick();
     },
-  }));
+    }));
   const markPriorityTask = (id: string, status: string) => {
     setPriorityTaskStatus(prev => {
       const next = { ...prev, [id]: status };
@@ -5182,8 +5173,6 @@ export default function AquariumManager() {
                 if (reminder) setPendingReminderDelete(reminder);
               }}
               onBrowseCare={() => navigateToRoute('/care')}
-              onDownloadHealth={() => openExportArtifact(buildHealthScoreArtifact(artifactContext))}
-              onDownloadCarePlan={() => openExportArtifact(buildWeeklyCareArtifact(artifactContext))}
             />
           </div>
         )}
@@ -5368,7 +5357,7 @@ export default function AquariumManager() {
         </button>
         {/* Species Sidebar Overlay for 3D navigation */}
         {activeAquarium && activeAquarium.fishes.length > 0 && (
-          <div className="absolute top-12 left-2 z-10 bg-white/80 backdrop-blur-md border border-white/50 rounded-sm shadow-sm p-1.5 max-h-[60%] overflow-y-auto w-24 sm:w-28 custom-scrollbar flex flex-col gap-1 hidden md:flex">
+          <div className="absolute top-12 left-2 z-10 hidden bg-white/80 backdrop-blur-md border border-white/50 rounded-sm shadow-sm p-1.5 max-h-[60%] overflow-y-auto w-24 sm:w-28 custom-scrollbar flex-col gap-1">
             <span className="text-[9px] font-bold text-ink/50 uppercase tracking-wider px-1 text-center mb-1">{isEn ? 'Switch Camera' : '切换镜头'}</span>
             {Array.from(new Set(activeAquarium.fishes.map(f => f.fishId))).map(uId => {
               const fishInfo = fishData.find(f => f.id === uId);
@@ -5392,7 +5381,7 @@ export default function AquariumManager() {
         )}
 
         {/* Tank Action Toolbar */}
-        <div className="absolute right-2 top-2 z-20 flex flex-col gap-2">
+        <div className="absolute right-2 top-2 z-20 hidden flex-col gap-2">
           <Button
             aria-label={isEn ? 'Record Existing Livestock' : '记录已有生物'}
             title={isEn ? 'Record Existing Livestock' : '记录已有生物'}

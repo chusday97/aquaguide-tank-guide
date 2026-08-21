@@ -144,6 +144,13 @@
 
 ## 2026-08-09 核心鱼缸事实链路重构
 
+## 2026-08-21 互动视觉一致性阶段 1
+
+- 当前分支：`codex/interactive-parity-v3`，从 `main@5a25c32` 创建。阶段 1 将首页从“3D 缸 + 右侧栏 + 下方档案”的拼装布局收口为单一舞台；保留真实 `ThreeAquarium`，仅改变展示层级。
+- 首页已完成：桌面首页自动使用 76px 图标侧栏，今日行动进入鱼缸右上悬浮区，底部只保留六项真实操作；今日推荐和鱼缸档案均不再首页渲染。普通/怀孕规划模式为状态提示，后者不可点击。
+- 验证：`npm run lint`、`npm run build`、`npm run test:aquarium-home-c`、`npm run test:product-actions` 通过；后者审计 52 个正式交互表面。构建仍有既有鱼类数据和 Three.js 大块警告。
+- 下一步：重做 `/collection` 的真实翻页状态，再将桌面物种和养护详情从模态 Dialog 改为可协作的双屏详情工作区。
+
 - 当前目标：把“现实中已经存在的生物”和“未来准备加入的生物”拆成不同 Intent；事实必须先保存，混养判断只能生成保存后的风险提示。
 - 已完成：2.6.0 契约、鱼缸资料 `empty / incomplete / usable / complete` 派生规则、`AquariumFish.lastWaterChangeDate` 可空语义和两类 Intent 策略测试。（commit: `56c486b`）
 - 已完成：Local/API Repository 增加 `createAquarium` 与幂等 `addLivestock` 命令；现实记录按照“先写入、再基于写入前快照评估”执行，评估失败不会回滚已保存事实。（commit: `7284008`）
