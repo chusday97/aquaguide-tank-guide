@@ -61,6 +61,7 @@
 - `src/components/aquarium/AquariumTimeline.tsx`：鱼缸操作时间线与循环养护工作区，桌面双栏、手机单列。
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科、互动排查/传统浏览两种呈现状态与共享养护详情。
+- `src/pages/InteractivePreview.tsx`：只供内部视觉验收的 React 预览页；直接复用正式互动图鉴和互动养护组件，不维护独立静态原型。
 - `src/data/careEvidence.ts`：41 篇养护内容的确定性来源映射、审核状态与复查动作兜底。
 - `src/pages/CollectionHub.tsx`：水族册模块首页，以水下展开书册承载种草、养护收藏、生命纪念与成就；章节原位展开，具体条目使用稳定深链，剩余内容通过“更多”进入模块。
 - `src/pages/Collection.tsx`：四个独立水族册模块的排序列表、物种/养护详情深链、纪念旧地址兼容跳转、勋章定位与空状态。

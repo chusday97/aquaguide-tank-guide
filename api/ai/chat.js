@@ -150,6 +150,35 @@ const buildRecommendationAssistPrompt = (context = {}) => {
   return { system, messages: [{ role: 'user', content: user }], temperature: 0.2, maxTokens: 1000, thinking: 'disabled' };
 };
 
+const buildTankCopilotPrompt = (context = {}) => ({
+  system: [
+    '你是 AquaGuide 的 AI 建缸规划助手。只能组织本地规则已经筛出的安全候选，不能重新判断风险或虚构物种、设备与数据。',
+    '缺失信息较多时最多追问 3 个关键问题。输出合法 JSON，不要 Markdown。',
+  ].join('\n'),
+  messages: [{ role: 'user', content: JSON.stringify({
+    instruction: '生成简短、可执行的建缸方案。recommendedActions 最多两个；selectedCandidateIds 只能来自安全候选；missingQuestions 最多三个。',
+    format: { goalUnderstanding: '', missingQuestions: [{ id: '', prompt: '', informationKey: 'tank_size' }], planSummary: '', recommendedActions: [{ type: 'complete_tank_info', label: '' }], selectedCandidateIds: [], blockedExplanation: [] },
+    context,
+  }) }],
+  temperature: 0.2,
+  maxTokens: 1100,
+  thinking: 'disabled',
+});
+
+const buildTankDailyCheckPrompt = (context = {}) => ({
+  system: [
+    '你是 AquaGuide 的每日鱼缸检查解释助手。本地规则已决定风险、立即动作、禁止动作与候选百科。',
+    '不能降低风险、弱化安全动作、诊断疾病、自动用药，或推荐候选列表以外文章。输出合法 JSON，不要 Markdown。',
+  ].join('\n'),
+  messages: [{ role: 'user', content: JSON.stringify({
+    format: { summary: '', priority: 'watch', reasoning: [], recommendedArticleIds: [], clarifyingQuestions: [], disclaimer: '这是风险分诊和养护引导，不是疾病确诊或用药建议。' },
+    context,
+  }) }],
+  temperature: 0.15,
+  maxTokens: 900,
+  thinking: 'disabled',
+});
+
 const parseJsonObject = (text) => {
   try {
     return JSON.parse(text);
@@ -235,6 +264,35 @@ const normalizeRecommendationAssistData = (data) => ({
     : [],
 });
 
+const normalizeTankCopilotData = (data) => {
+  const allowedActions = new Set(['complete_tank_info', 'view_safe_candidates', 'start_addition_simulation', 'restart_goal']);
+  const allowedInformationKeys = new Set(['tank_size', 'water_type', 'temperature', 'filter', 'preference', 'other']);
+  return {
+    goalUnderstanding: typeof data?.goalUnderstanding === 'string' && data.goalUnderstanding.trim() ? data.goalUnderstanding.trim() : '我会先按本地规则检查鱼缸条件，再给出可执行建缸方案。',
+    missingQuestions: Array.isArray(data?.missingQuestions) ? data.missingQuestions.slice(0, 3).map((item, index) => ({
+      id: typeof item?.id === 'string' && item.id.trim() ? item.id.trim() : `question-${index + 1}`,
+      prompt: typeof item?.prompt === 'string' ? item.prompt.trim() : '',
+      informationKey: allowedInformationKeys.has(item?.informationKey) ? item.informationKey : 'other',
+    })).filter(item => item.prompt) : [],
+    planSummary: typeof data?.planSummary === 'string' ? data.planSummary.trim() : '',
+    recommendedActions: Array.isArray(data?.recommendedActions) ? data.recommendedActions.slice(0, 2).map(item => ({
+      type: allowedActions.has(item?.type) ? item.type : 'restart_goal',
+      label: typeof item?.label === 'string' && item.label.trim() ? item.label.trim() : '重新描述目标',
+    })) : [],
+    selectedCandidateIds: Array.isArray(data?.selectedCandidateIds) ? data.selectedCandidateIds.filter(item => typeof item === 'string' && item.trim()).slice(0, 6) : [],
+    blockedExplanation: Array.isArray(data?.blockedExplanation) ? data.blockedExplanation.filter(item => typeof item === 'string' && item.trim()).slice(0, 5) : [],
+  };
+};
+
+const normalizeTankDailyCheckData = (data) => ({
+  summary: typeof data?.summary === 'string' ? data.summary.trim() : '',
+  priority: ['routine', 'watch', 'urgent'].includes(data?.priority) ? data.priority : 'watch',
+  reasoning: Array.isArray(data?.reasoning) ? data.reasoning.filter(item => typeof item === 'string').slice(0, 5) : [],
+  recommendedArticleIds: Array.isArray(data?.recommendedArticleIds) ? data.recommendedArticleIds.filter(item => typeof item === 'string').slice(0, 3) : [],
+  clarifyingQuestions: Array.isArray(data?.clarifyingQuestions) ? data.clarifyingQuestions.filter(item => typeof item === 'string').slice(0, 3) : [],
+  disclaimer: '这是风险分诊和养护引导，不是疾病确诊或用药建议。',
+});
+
 const fetchWithTimeout = async (url, options, timeoutMs = aiRequestTimeoutMs) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -243,6 +301,14 @@ const fetchWithTimeout = async (url, options, timeoutMs = aiRequestTimeoutMs) =>
   } finally {
     clearTimeout(timeout);
   }
+};
+
+const failureReasonFromError = (error) => {
+  if (error?.name === 'AbortError') return 'timeout';
+  const message = String(error?.message || '').toLowerCase();
+  if (message.includes('json') || message.includes('unexpected')) return 'invalid_json';
+  if (message.includes('fetch') || message.includes('network') || message.includes('econn')) return 'network';
+  return 'unknown';
 };
 
 const parseBody = (body) => {
@@ -274,7 +340,7 @@ export default async function handler(req, res) {
   const aiModel = process.env.AI_MODEL || process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
 
   if (!isConfiguredApiKey(apiKey)) {
-    return res.status(503).json({ ok: false, error: 'AI provider is not configured' });
+    return res.status(503).json({ ok: false, error: 'AI provider is not configured', failureReason: 'not_configured' });
   }
 
   const body = parseBody(req.body);
@@ -283,8 +349,12 @@ export default async function handler(req, res) {
     ? buildRiskExplanationPrompt(context)
     : task === 'risk_audit'
       ? buildRiskAuditPrompt(context)
-      : task === 'recommendation_assist'
-        ? buildRecommendationAssistPrompt(context)
+    : task === 'recommendation_assist'
+      ? buildRecommendationAssistPrompt(context)
+      : task === 'build_tank_copilot'
+        ? buildTankCopilotPrompt(context)
+        : task === 'tank_daily_check_interpretation'
+          ? buildTankDailyCheckPrompt(context)
         : body;
   const { messages, system, temperature = 0.4, maxTokens = 1200, thinking = 'disabled' } = requestInput;
 
@@ -323,8 +393,10 @@ export default async function handler(req, res) {
       return res.status(502).json(task ? {
         ok: false,
         error: `AI 请求失败：${responseText.slice(0, 300)}`,
+        failureReason: 'network',
       } : {
         error: `DeepSeek 请求失败：${responseText.slice(0, 300)}`,
+        failureReason: 'network',
       });
     }
 
@@ -335,7 +407,7 @@ export default async function handler(req, res) {
       return res.json({
         ok: true,
         task: 'risk_explanation',
-        data: normalizeRiskExplanationData(parsed),
+        source: 'model', generatedAt: new Date().toISOString(), data: normalizeRiskExplanationData(parsed),
       });
     }
     if (task === 'risk_audit') {
@@ -343,7 +415,7 @@ export default async function handler(req, res) {
       return res.json({
         ok: true,
         task: 'risk_audit',
-        data: normalizeRiskAuditData(parsed),
+        source: 'model', generatedAt: new Date().toISOString(), data: normalizeRiskAuditData(parsed),
       });
     }
     if (task === 'recommendation_assist') {
@@ -351,8 +423,16 @@ export default async function handler(req, res) {
       return res.json({
         ok: true,
         task: 'recommendation_assist',
-        data: normalizeRecommendationAssistData(parsed),
+        source: 'model', generatedAt: new Date().toISOString(), data: normalizeRecommendationAssistData(parsed),
       });
+    }
+    if (task === 'build_tank_copilot') {
+      const parsed = parseJsonObject(content);
+      return res.json({ ok: true, task, source: 'model', generatedAt: new Date().toISOString(), data: normalizeTankCopilotData(parsed) });
+    }
+    if (task === 'tank_daily_check_interpretation') {
+      const parsed = parseJsonObject(content);
+      return res.json({ ok: true, task, source: 'model', generatedAt: new Date().toISOString(), data: normalizeTankDailyCheckData(parsed) });
     }
 
     return res.json({
@@ -361,12 +441,15 @@ export default async function handler(req, res) {
       usage: data.usage,
     });
   } catch (error) {
+    const failureReason = failureReasonFromError(error);
     return res.status(500).json(task ? {
       ok: false,
       error: error?.name === 'AbortError' ? 'AI request timed out' : 'AI request failed',
+      failureReason,
     } : {
       ok: false,
       error: error?.name === 'AbortError' ? 'AI request timed out' : 'AI request failed',
+      failureReason,
     });
   }
 }

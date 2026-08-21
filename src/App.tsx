@@ -47,6 +47,7 @@ const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadProjectStructure = () => import('./pages/ProjectStructurePreview');
+const loadInteractivePreview = () => import('./pages/InteractivePreview');
 const loadLogin = () => import('./pages/Login');
 const loadAdminContent = () => import('./pages/AdminContent');
 const loadIdentify = () => import('./pages/Identify');
@@ -63,6 +64,7 @@ const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const ProjectStructurePreview = lazyWithRecovery(loadProjectStructure, 'project-structure');
+const InteractivePreview = lazyWithRecovery(loadInteractivePreview, 'interactive-preview');
 const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
@@ -630,6 +632,7 @@ function AppShell() {
   const { isPhoneLayout } = useLayoutMode();
   const [preferencesReady, setPreferencesReady] = useState(false);
   const isStructurePreview = location.pathname === '/project-structure';
+  const isInteractivePreview = location.pathname === '/_preview/interactive';
   const isLogin = location.pathname === '/login';
   const isAdminContent = location.pathname === '/admin/content';
   const isWelcome = location.pathname === '/welcome';
@@ -731,7 +734,7 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isStructurePreview && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
+  if (!preferencesReady && !isStructurePreview && !isInteractivePreview && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
 
   if (isSharedReport) {
     return (
@@ -750,6 +753,17 @@ function AppShell() {
         <Routes>
           <Route path="/project-structure" element={<ProjectStructurePreview />} />
           <Route path="*" element={<Navigate to="/project-structure" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  if (isInteractivePreview) {
+    return (
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/_preview/interactive" element={<InteractivePreview />} />
+          <Route path="*" element={<Navigate to="/_preview/interactive" replace />} />
         </Routes>
       </Suspense>
     );

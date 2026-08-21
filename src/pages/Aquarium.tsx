@@ -6831,6 +6831,13 @@ export default function AquariumManager() {
                         ? tankCopilotResult.goalUnderstanding
                         : 'AI 暂不可用，系统规则仍可使用。'}
                     </p>
+                    {tankCopilotResult.source !== 'model' && tankCopilotResult.failureReason && (
+                      <p className="mt-2 text-[11px] font-bold text-amber-800">
+                        {isEn
+                          ? `Using the local safety fallback: ${tankCopilotResult.failureReason}.`
+                          : `已使用本地安全兜底：${tankCopilotResult.failureReason}。`}
+                      </p>
+                    )}
                     {tankCopilotNeedsAnswers && (
                       <div className="mt-3 rounded-[16px] bg-white/85 p-3">
                         <div className="flex items-center justify-between gap-2">
