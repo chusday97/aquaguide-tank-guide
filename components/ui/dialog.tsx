@@ -2,6 +2,7 @@ import * as React from "react"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "@/lib/utils"
+import { getPhoneViewportSnapshot, subscribeToPhoneViewport } from "@/lib/layout-mode"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -32,6 +33,17 @@ function acquireModalBodyLock() {
 function inferSurface(surface: DialogSurfaceKind, showCloseButton: boolean, className?: string): ResolvedDialogSurface {
   if (surface !== "auto") return surface
   if (className?.includes("max-w-[1180px]") || className?.includes("max-w-[1480px]")) return "fullscreen"
+
+  // Aquarium's legacy smart-recommendation workflow happens to share the old
+  // Encyclopedia 920px/24px visual signature. It is a task, not browse detail.
+  // Keep this exception ahead of the temporary Encyclopedia bridge until the
+  // large Aquarium page is migrated to explicit surface="task".
+  if (
+    className?.includes("max-w-[920px]")
+    && className?.includes("max-h-[88dvh]")
+    && className?.includes("flex-col")
+  ) return "task"
+
   // Known legacy Encyclopedia species-group detail. Keep the signature narrow so
   // unrelated task dialogs do not silently change semantics while the large page
   // remains unsafe to rewrite through whole-file GitHub updates.
@@ -67,21 +79,12 @@ function getMarkedSurface(children: React.ReactNode): ResolvedDialogSurface | nu
   return result
 }
 
-function canUseMatchMedia() {
-  return typeof window !== "undefined" && typeof window.matchMedia === "function"
-}
-
 function usePhoneViewport() {
-  const getSnapshot = React.useCallback(() => (
-    canUseMatchMedia() ? window.matchMedia("(max-width: 767px)").matches : false
-  ), [])
-  const subscribe = React.useCallback((onStoreChange: () => void) => {
-    if (!canUseMatchMedia()) return () => undefined
-    const query = window.matchMedia("(max-width: 767px)")
-    query.addEventListener("change", onStoreChange)
-    return () => query.removeEventListener("change", onStoreChange)
-  }, [])
-  return React.useSyncExternalStore(subscribe, getSnapshot, () => false)
+  return React.useSyncExternalStore(
+    subscribeToPhoneViewport,
+    getPhoneViewportSnapshot,
+    () => false,
+  )
 }
 
 function Dialog({ modal, disablePointerDismissal, children, ...props }: DialogPrimitive.Root.Props) {
