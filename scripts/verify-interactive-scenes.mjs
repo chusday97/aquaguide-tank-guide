@@ -18,8 +18,19 @@ try {
   const second = await getSceneSources();
   assert.equal(second.length, 6, '换一批后必须仍展示六个物种');
   assert.equal(first.some(source => second.includes(source)), false, '换一批必须完整替换当前批次');
+  await atlas.reload({ waitUntil: 'networkidle' });
+  await atlas.waitForFunction(() => document.querySelectorAll('[data-scene-node]').length > 0);
+  assert.deepEqual(await getSceneSources(), second, '刷新后必须保留当前批次');
   const transparentBackgrounds = await atlas.locator('.interactive-tank-creature .resilient-image-transparent').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).backgroundColor));
   assert.ok(transparentBackgrounds.every(color => color === 'rgba(0, 0, 0, 0)'), '场景图片容器必须保持透明');
+  const firstSceneImage = atlas.locator('[data-scene-node] img').first();
+  await firstSceneImage.evaluate(image => image.dispatchEvent(new Event('error', { bubbles: true })));
+  await atlas.waitForTimeout(20);
+  await firstSceneImage.evaluate(image => image.dispatchEvent(new Event('error', { bubbles: true })));
+  await atlas.waitForTimeout(20);
+  const fallback = atlas.locator('.resilient-image-transparent-fallback').first();
+  await assert.doesNotReject(() => fallback.waitFor({ state: 'visible' }), '透明场景图片失败后必须显示无底板占位');
+  assert.equal(await fallback.evaluate(node => getComputedStyle(node.parentElement).backgroundColor), 'rgba(0, 0, 0, 0)', '透明失败占位的容器必须保持透明');
 
   const care = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await care.goto(`${baseUrl}/care`, { waitUntil: 'networkidle' });
