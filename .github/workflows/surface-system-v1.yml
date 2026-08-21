@@ -1,0 +1,47 @@
+name: Surface System V1
+
+on:
+  push:
+    branches:
+      - codex/interactive-parity-v3
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: TypeScript
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Surface contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'surface="detail"' src/components/common/AdaptiveDetailContent.tsx
+          grep -q "dialogSurface = 'detail'" src/components/common/AdaptiveDetailContent.tsx
+          grep -q 'surface="task"' src/components/common/AdaptiveTaskContent.tsx
+          grep -q "dialogSurface = 'task'" src/components/common/AdaptiveTaskContent.tsx
+          grep -q 'disablePointerDismissal' components/ui/dialog.tsx
+          grep -q 'data-dialog-surface' components/ui/dialog.tsx
+          grep -q 'data-detail-viewport="desktop-rail"' src/styles/immersive-detail-layout-v5.css
+          grep -q 'data-dialog-surface="task"' src/styles/immersive-detail-layout-v5.css
+          echo 'Surface contract OK'
