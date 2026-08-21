@@ -2,11 +2,11 @@
 
 ## 2026-08-21 最新交接快照：互动视觉一致性
 
-- 当前工作分支：`codex/interactive-parity-v3@07b945c`，已推送至同名 GitHub 分支；不要将其直接合并 `main`，需先完成视觉一致性验收。
+- 当前工作分支：`codex/interactive-parity-v3@4c54f74`，本轮审查修复待 Critic 复验并推送；不要将其直接合并 `main`，需先完成视觉一致性验收。
 - 当前进行中：文字 AI/视觉 AI 能力状态、全幅 3D 首页、透明互动图鉴与养护双模式。已在本机确认 DeepSeek 文字 API 可响应；视觉环境变量未配置时必须显示手动物种确认，不能声称拍照识别已可用。
 - 最新实现：`b2e1dcc` 已让 `/api/health`、Pages 和 Vercel health 返回文本/视觉能力状态，`npm run dev` 先等 API 健康通过。`/care` 现在默认互动排查；`/care?mode=browse` 才展示传统推荐/搜索/分类/列表。图鉴和养护场景统一消费透明 texture，选中不再对其他生物模糊；桌面鱼缸页解除通用画布宽度限制。验证：lint、API 类型、production build 与 4201 的四路桌面无错误/无溢出检查通过。
-- 后续补充（待提交）：`/_preview/interactive` 是正式组件的内部 React 预览入口；Vercel AI handler 现具备 `build_tank_copilot` 与 `tank_daily_check_interpretation` 的结构化协议，避免本机 Express 与部署端能力漂移。隔离端口 8789 实测健康响应证实 DeepSeek 文字模型已配置、视觉仍处于 `manual_confirmation`；不要将后者误表述为识图可用。
-- Critic 修复待复验：Vercel health 已与 chat 使用相同占位密钥识别；Cloudflare Pages chat 已对齐两项结构化任务及 `source / generatedAt / failureReason`；空/数组 JSON 将以 `invalid_json` 失败而不是标记模型成功。`npm run test:ai-capabilities` 覆盖三种能力矩阵，lint/API type/build 已通过。
+- 已补正式预览与部署协议：`/_preview/interactive` 是正式组件的内部 React 预览入口；Vercel AI handler 具备 `build_tank_copilot` 与 `tank_daily_check_interpretation` 的结构化协议。隔离端口 8789 实测健康响应证实 DeepSeek 文字模型已配置、视觉仍处于 `manual_confirmation`；不要将后者误表述为识图可用。
+- `4c54f74` 关闭 Critic 的部署一致性阻塞：Vercel/Pages 均忽略占位密钥但识别有效回退密钥；两端 handler 对成功、未配置、网络与非法 JSON 统一返回 `source / generatedAt / failureReason`。`test:ai-capabilities` 直接模拟调用双方 handler，`lint`、API 类型、build、手机养护与 3D 素材测试通过；下一步只剩同线程 Critic 复验与推送。
 - 已完成：首页为真实 `ThreeAquarium` 主舞台（`debc081`）；`/collection` 为水下翻页书册（`b7c03d1`）；物种/养护详情桌面为无模态双屏工作区，手机仍为底部面板（`0828560`）；每日十项发现迁入互动图鉴并支持“换一批”（`ebce70f`）。
 - 已验证：`lint`、生产构建、桌面 1440px 双屏详情 `overlay=0 / modal-open=false`、iPhone UA 底部面板 `overlay=1 / modal-open=true`。构建仍有既有物种库与 Three.js 大包告警，未提高阈值掩盖。
 - AI Badcase：本轮 `npm run eval:all` 为 47/47 通过，`evaluation/badcases/registry.jsonl` 保持 0 条；不把尚未完成的 UI 视觉验收写成 AI Badcase，详见 `evaluation/badcases/LATEST_STATUS.md`。

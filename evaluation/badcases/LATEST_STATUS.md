@@ -7,6 +7,7 @@
 - 模拟 Provider 评测：10 / 10 通过。
 - 合计：47 / 47 通过。
 - `registry.jsonl` 当前为 0 条；本轮没有新增 AI Badcase。
+- 部署 handler 的配置、结构化成功、非法 JSON、未配置和网络失败已由 `test:ai-capabilities` 覆盖；该协议回归不等同于真实模型失败，因此不新增 Badcase。
 
 ## 记录边界
 

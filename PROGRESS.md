@@ -3,14 +3,14 @@
 
 ## 2026-08-21 当前交接快照
 
-- 当前分支：`codex/interactive-parity-v3`，远端同步到 `07b945c`。
+- 当前分支：`codex/interactive-parity-v3`，待将本轮审查修复推送到远端。
 - 进行中：AI 能力状态拆分与互动养护呈现收口。文字 AI 与视觉 AI 将分别报告配置状态；视觉未配置时必须明确回退为手动物种确认，不能把“文字 AI 已可用”误解为识图已启用。
 
 ## 2026-08-21 本轮进展
 
 - 已完成 `b2e1dcc feat(interactive): expose AI status and care modes`：本地 Express、Pages 与 Vercel health 接口都可分别返回文字/视觉 AI 能力，开发启动脚本先等 API 健康成功；`/care` 默认互动排查，`/care?mode=browse` 为传统浏览。互动图鉴与养护场景读取透明 texture，选中状态不再模糊其他生物；鱼缸桌面工作区解除 1280px 画布限制。`lint`、API 类型检查与生产构建通过；4201 实际 AquaGuide 预览下 `/care`、`/care?mode=browse`、`/encyclopedia`、`/aquarium` 无页面错误且 1440px 无横向溢出。
 - 已补正式预览和部署 AI 协议：`/_preview/interactive` 直接复用正式互动图鉴与养护组件；Vercel AI handler 现支持建缸助手与每日检查结构化任务，并返回 `source / generatedAt / failureReason`。隔离 API `http://127.0.0.1:8789/api/health` 实测文字 `configured=true`、视觉 `configured=false / manual_confirmation`；视觉模型仍等待外部配置。
-- Critic 发现的部署边界已修复待复验：Vercel health 不再把 `MY_AI_API_KEY` 等占位符当作已配置；Cloudflare AI handler 与 Vercel 对齐建缸助手/每日检查任务、来源与失败语义；非对象 JSON 不再冒充模型结果。新增 `test:ai-capabilities` 覆盖占位、文本-only 与视觉配置矩阵。
+- 已完成 `4c54f74 fix(ai): close deployment capability fallbacks`：Vercel 和 Pages 都会忽略占位密钥并识别可用回退文本密钥；两端建缸助手与每日检查均返回一致的来源、生成时间与失败语义，空/数组 JSON、未配置、网络失败不会冒充模型成功。`test:ai-capabilities` 现直接调用两种部署 handler 覆盖成功、未配置、网络和非法 JSON；`lint`、API 类型、生产构建、手机养护与 3D 素材回归通过。等待 Critic 复验后推送。
 - 已完成互动视觉一致性的四个前端阶段：3D 鱼缸主舞台（`debc081`）、水下翻页书册（`b7c03d1`）、非模态双屏详情（`0828560`）、互动图鉴每日发现（`ebce70f`）。
 - 验证已执行：`lint`、生产构建；桌面物种/养护详情为无 Overlay 的右侧工作区，iPhone UA 保持底部详情面板；AI 评测 47/47 通过。
 - Badcase：`evaluation/badcases/registry.jsonl` 为 0 条。本轮没有真实 AI 失败，详见 `evaluation/badcases/LATEST_STATUS.md`。
