@@ -5,8 +5,8 @@
 ## 当前工作基线
 
 - 当前分支：`codex/interactive-parity-v3`
-- 当前产品代码 head：`3145922`
-- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `3145922` 为最新产品代码基线。
+- 当前产品代码 head：`f34eb29`
+- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `f34eb29` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非视觉 PASS**。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
@@ -147,6 +147,7 @@
 - `7274da4`：taxonomy presentation helper 完成；英文 Species Detail / taxonomy UI 显示英文 label，但 canonical domain taxonomy 保持稳定。
 - `44168a6` + `cc0960f`：远端新增 27 个水草透明素材，并注册 `sp_0487~sp_0501` 水草数据。
 - `3145922`：恢复 Aquarium 主舞台 `+ 添加生物` 与 `⚙ 鱼缸设置` 常驻 icon；桌面保留全屏预览 icon；底砂/造景与水草增加内嵌搜索；搜索已覆盖新增水草（含 `sp_0498 金鱼藻`）；新增专用 browser regression。
+- `f34eb29`：修复 mobile Task Sheet 双重 translate 导致半屏移出 viewport；Aquarium primary Task 入口互斥，禁止设置/添加/缸内物种 Task Rail 同时叠开；新增 Task / Detail / Blocking / Media 四类 runtime matrix 并接入 UI regression workflow。
 - 同 `3145922`：`isAquaticPlantSpecies` / `isHardscapeSpecies` 改为 canonical identity 判定，修复新增水草在英文模式被误判为 fish 的 locale drift；501 条 taxonomy PASS。
 
 ## 当前最重要的未修问题
@@ -165,7 +166,7 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 
 ## 当前测试 / 证据状态
 
-当前最新本地 product build（基于 `3145922`）：
+当前最新本地 product build（基于 `f34eb29`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
 - `npm run test:taxonomy`：PASS（**501 条**；locale taxonomy drift 0；新增水草在中英文下保持 plant taxonomy）
@@ -181,6 +182,7 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 - Tiger barb / hillstream loach / African butterfly fish browser taxonomy：PASS
 - Aquarium primary tools runtime：PASS（1440/1024/390 添加 + 设置可见、在舞台内且不覆盖缸内物种入口）
 - Aquarium settings inline search runtime：PASS（底砂 `溪流砂`、水草 `小水榕`、新增水草 `金鱼藻` 均可过滤命中）
+- Aquarium Surface runtime matrix：PASS（desktop Task 单 Rail/无 overlay；mobile Task 完整贴底；Blocking 居中 modal；Media 居中 modal；desktop Detail 600px Rail；mobile Detail 68dvh bottom sheet；Task→Detail 不叠层）
 
 注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
 
