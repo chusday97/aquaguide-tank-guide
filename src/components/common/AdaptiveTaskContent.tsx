@@ -9,6 +9,7 @@ export function AdaptiveTaskContent({ className, ...props }: AdaptiveTaskContent
   const { isPhoneLayout } = useLayoutMode();
   return (
     <DialogContent
+      surface="task"
       data-surface="task-flow"
       data-task-viewport={isPhoneLayout ? 'phone-sheet' : 'desktop-rail'}
       className={cn(
@@ -22,3 +23,5 @@ export function AdaptiveTaskContent({ className, ...props }: AdaptiveTaskContent
     />
   );
 }
+
+(AdaptiveTaskContent as typeof AdaptiveTaskContent & { dialogSurface?: 'task' }).dialogSurface = 'task';
