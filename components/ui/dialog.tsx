@@ -7,21 +7,46 @@ import { XIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 export type DialogSurfaceKind = "auto" | "detail" | "task" | "blocking" | "fullscreen" | "media"
+type ResolvedDialogSurface = Exclude<DialogSurfaceKind, "auto">
+type MarkedElementType = { dialogSurface?: "detail" | "task" }
 
-type SurfaceMarker = Exclude<DialogSurfaceKind, "auto" | "blocking" | "fullscreen" | "media">
-type MarkedElementType = { dialogSurface?: SurfaceMarker }
+type SurfaceAwareChildProps = {
+  surface?: DialogSurfaceKind
+  showCloseButton?: boolean
+  className?: string
+  children?: React.ReactNode
+}
 
-function getMarkedSurface(children: React.ReactNode): SurfaceMarker | null {
-  let result: SurfaceMarker | null = null
+function inferSurface(surface: DialogSurfaceKind, showCloseButton: boolean, className?: string): ResolvedDialogSurface {
+  if (surface !== "auto") return surface
+  if (className?.includes("max-w-[1180px]") || className?.includes("max-w-[1480px]")) return "fullscreen"
+  // Some long task flows intentionally hide the corner close button and use an
+  // explicit footer action instead. Treat flexible full-height content as a task,
+  // not as a destructive confirmation.
+  if (showCloseButton === false && !className?.includes("flex h-[") && !className?.includes("flex max-h[")) return "blocking"
+  return "task"
+}
+
+function getMarkedSurface(children: React.ReactNode): ResolvedDialogSurface | null {
+  let result: ResolvedDialogSurface | null = null
   React.Children.forEach(children, child => {
     if (result || !React.isValidElement(child)) return
     const type = child.type as MarkedElementType
+    const childProps = child.props as SurfaceAwareChildProps
+
     if (type && typeof type !== "string" && type.dialogSurface) {
       result = type.dialogSurface
       return
     }
-    const nestedChildren = (child.props as { children?: React.ReactNode })?.children
-    if (nestedChildren) result = getMarkedSurface(nestedChildren)
+
+    // Direct DialogContent users are legacy surfaces. Infer their semantics at
+    // the root as well as at the popup so modal/overlay behavior stays aligned.
+    if (type === DialogContent) {
+      result = inferSurface(childProps.surface ?? "auto", childProps.showCloseButton ?? true, childProps.className)
+      return
+    }
+
+    if (childProps.children) result = getMarkedSurface(childProps.children)
   })
   return result
 }
@@ -42,7 +67,8 @@ function usePhoneViewport() {
 function Dialog({ modal, disablePointerDismissal, children, ...props }: DialogPrimitive.Root.Props) {
   const isPhoneViewport = usePhoneViewport()
   const markedSurface = React.useMemo(() => getMarkedSurface(children), [children])
-  const resolvedModal = modal ?? (markedSurface === "detail" ? isPhoneViewport : true)
+  const isRailSurface = markedSurface === "detail" || markedSurface === "task"
+  const resolvedModal = modal ?? (isRailSurface ? isPhoneViewport : true)
   const keepNonModalSurfaceOpen = disablePointerDismissal ?? resolvedModal === false
 
   React.useEffect(() => {
@@ -88,18 +114,11 @@ function DialogOverlay({ className, ...props }: DialogPrimitive.Backdrop.Props) 
   )
 }
 
-function inferSurface(surface: DialogSurfaceKind, showCloseButton: boolean, className?: string) {
-  if (surface !== "auto") return surface
-  if (showCloseButton === false) return "blocking"
-  if (className?.includes("max-w-[1180px]") || className?.includes("max-w-[1480px]")) return "fullscreen"
-  return "task"
-}
-
 function DialogContent({
   className,
   children,
   showCloseButton = true,
-  withOverlay = true,
+  withOverlay,
   surface = "auto",
   ...props
 }: DialogPrimitive.Popup.Props & {
@@ -108,7 +127,11 @@ function DialogContent({
   surface?: DialogSurfaceKind
 }) {
   const { t } = useTranslation()
+  const isPhoneViewport = usePhoneViewport()
   const resolvedSurface = inferSurface(surface, showCloseButton, className)
+  const isRailSurface = resolvedSurface === "detail" || resolvedSurface === "task"
+  const resolvedOverlay = withOverlay ?? (!isRailSurface || isPhoneViewport)
+
   const surfaceClass = resolvedSurface === "blocking"
     ? "top-1/2 left-1/2 w-[min(480px,calc(100vw-32px))] max-w-[calc(100vw-32px)] -translate-x-1/2 -translate-y-1/2 rounded-[28px]"
     : resolvedSurface === "fullscreen" || resolvedSurface === "media"
@@ -119,7 +142,7 @@ function DialogContent({
 
   return (
     <DialogPortal>
-      {withOverlay && <DialogOverlay />}
+      {resolvedOverlay && <DialogOverlay />}
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         data-dialog-surface={resolvedSurface}
