@@ -466,7 +466,7 @@
 - `CareEncyclopedia` 的详情是 `care-workspace-shell` 的同级节点，不是 `care-workspace-grid` 的子节点；布局选择器已改为 shell 级真实双栏。不得再把它改回固定右抽屉或仅修改内部 grid。
 - `stage-cover` 相机距离现在小于最小 fit 距离，允许裁掉鱼缸玻璃边缘以填满主舞台；`contain` 仍保留完整外框。
 - 已执行：`npm run lint`、`npm run test:split-workspace`、`npm run test:three-stage-framing`、`npm run build`、`PREVIEW_URL=http://127.0.0.1:3002 npm run test:split-workspace-runtime`。构建仅保留既有包体警告。
-- 下一步：提交审查修复并推送；将 diff、测试结果交给同一 Critic 复验，随后交给 Evaluator 对照三张失败截图裁决。
+- 最终状态：`fe8c4aa`、`fa54b7c`、`d988380` 已推送到 `origin/codex/interactive-parity-v3`。同一 Critic 六维复验 PASS；独立 Evaluator 对照三张失败截图最终 PASS。后续不要为“方便”把页面内 workspace 改回 `DialogContent portal=false` 或固定右抽屉。
 
 ## 2026-08-21 互动视觉一致性：图鉴发现阶段
 
