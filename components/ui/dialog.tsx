@@ -51,12 +51,16 @@ function getMarkedSurface(children: React.ReactNode): ResolvedDialogSurface | nu
   return result
 }
 
+function canUseMatchMedia() {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function"
+}
+
 function usePhoneViewport() {
   const getSnapshot = React.useCallback(() => (
-    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+    canUseMatchMedia() ? window.matchMedia("(max-width: 767px)").matches : false
   ), [])
   const subscribe = React.useCallback((onStoreChange: () => void) => {
-    if (typeof window === "undefined") return () => undefined
+    if (!canUseMatchMedia()) return () => undefined
     const query = window.matchMedia("(max-width: 767px)")
     query.addEventListener("change", onStoreChange)
     return () => query.removeEventListener("change", onStoreChange)
