@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:3002';
+const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
 const browser = await chromium.launch({ headless: true });
 
 async function assertPersistentDetailRail(page, path, openDetail, switchDetail, closeDetail) {
@@ -56,7 +56,7 @@ try {
         await detailButtons.nth(1).click();
       }
     },
-    async page => page.getByRole('button', { name: /关闭物种档案|close species/i }).click(),
+    async page => page.locator('.species-workspace-close button').click(),
   );
 
   const care = await browser.newPage({ viewport: { width: 1440, height: 900 } });

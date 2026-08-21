@@ -9,6 +9,7 @@ const adaptive = await read('src/components/common/AdaptiveDetailContent.tsx');
 const layoutProvider = await read('src/components/layout/LayoutModeProvider.tsx');
 const layoutContract = await read('lib/layout-mode.ts');
 const dialog = await read('components/ui/dialog.tsx');
+const indexCss = await read('src/index.css');
 const splitStatic = await read('scripts/verify-split-workspace-detail.mjs');
 const splitRuntime = await read('scripts/verify-split-workspace-runtime.mjs');
 const styles = await readdir(new URL('src/styles/', root));
@@ -34,7 +35,6 @@ for (const name of allowedVersionedLayoutFiles) {
 const stalePhrases = [
   'must participate in page layout',
   'actual two-pane geometry',
-  'grid-template-columns: minmax(0, 54fr) minmax(0, 46fr)',
 ];
 for (const phrase of stalePhrases) {
   if (splitStatic.includes(phrase) || splitRuntime.includes(phrase)) {
@@ -52,5 +52,12 @@ if (!dialog.includes("@/lib/layout-mode")) fail('Dialog must consume the shared 
 if (/userAgentData|iPhone|iPad|Android\.\+Mobile|Mobile\.\+Safari/.test(layoutProvider)) fail('Product layout must not regress to UA/device inference.');
 if (dialog.includes('(max-width: 767px)')) fail('Dialog must not duplicate the phone breakpoint literal.');
 if (!dialog.includes('max-h-[88dvh]') || !dialog.includes('return "task"')) fail('Aquarium smart recommendation must remain classified as Task while legacy inference exists.');
+
+const modalCardBlocks = [...indexCss.matchAll(/\.modalCard(?:\.[\w-]+)?\s*\{([^}]*)\}/g)];
+for (const [, body] of modalCardBlocks) {
+  if (/(?:^|\s)(?:width|max-width|max-height|border-radius)\s*:/.test(body)) {
+    fail('Global .modalCard must remain visual-only; geometry belongs to explicit Dialog surfaces.');
+  }
+}
 
 console.log('ui regression governance contract: PASS');

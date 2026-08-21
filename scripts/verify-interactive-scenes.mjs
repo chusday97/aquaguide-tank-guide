@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4201';
+const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
 const browser = await chromium.launch({ headless: true });
 
 const assertAtlasDockOverlay = async (width) => {
