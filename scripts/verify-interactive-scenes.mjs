@@ -26,9 +26,15 @@ const assertAtlasDockOverlay = async (width) => {
 
 try {
   const atlas = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-  await atlas.addInitScript(() => localStorage.removeItem('aquapediaDiscoveryDeck'));
+  // Clear discovery only on the first document. sessionStorage survives reload,
+  // so the persistence assertion does not erase the state it is meant to test.
+  await atlas.addInitScript(() => {
+    if (sessionStorage.getItem('aquaguide_discovery_test_seeded') === '1') return;
+    localStorage.removeItem('aquapediaDiscoveryDeck');
+    sessionStorage.setItem('aquaguide_discovery_test_seeded', '1');
+  });
   await atlas.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
-  await atlas.waitForFunction(() => document.querySelectorAll('[data-scene-node]').length > 0);
+  await atlas.waitForFunction(() => document.querySelectorAll('[data-scene-node]').length === 6);
 
   const getSceneSources = () => atlas.locator('[data-scene-node] img').evaluateAll(images => images.map(image => image.getAttribute('src')));
   const first = await getSceneSources();
@@ -39,7 +45,7 @@ try {
   assert.equal(second.length, 6, '换一批后必须仍展示六个物种');
   assert.equal(first.some(source => second.includes(source)), false, '换一批必须完整替换当前批次');
   await atlas.reload({ waitUntil: 'networkidle' });
-  await atlas.waitForFunction(() => document.querySelectorAll('[data-scene-node]').length > 0);
+  await atlas.waitForFunction(() => document.querySelectorAll('[data-scene-node]').length === 6);
   assert.deepEqual(await getSceneSources(), second, '刷新后必须保留当前批次');
   const transparentBackgrounds = await atlas.locator('.interactive-tank-creature .resilient-image-transparent').evaluateAll(nodes => nodes.map(node => getComputedStyle(node).backgroundColor));
   assert.ok(transparentBackgrounds.every(color => color === 'rgba(0, 0, 0, 0)'), '场景图片容器必须保持透明');

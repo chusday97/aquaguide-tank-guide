@@ -43,11 +43,18 @@ try {
   const atlas = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await assertPersistentDetailRail(
     atlas,
-    '/encyclopedia',
-    async page => page.locator('[data-scene-node]').first().click(),
+    '/encyclopedia?mode=browse',
     async page => {
-      const nodes = page.locator('[data-scene-node]');
-      if (await nodes.count() > 1) await nodes.nth(1).click();
+      const detailButtons = page.locator('[id^="atlas-species-"]');
+      await detailButtons.first().waitFor({ state: 'visible' });
+      await detailButtons.first().click();
+    },
+    async page => {
+      const detailButtons = page.locator('[id^="atlas-species-"]');
+      if (await detailButtons.count() > 1) {
+        await detailButtons.nth(1).scrollIntoViewIfNeeded();
+        await detailButtons.nth(1).click();
+      }
     },
     async page => page.getByRole('button', { name: /关闭物种档案|close species/i }).click(),
   );
