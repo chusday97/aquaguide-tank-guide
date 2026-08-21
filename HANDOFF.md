@@ -460,6 +460,14 @@
 - 验证：桌面 1440px 物种和养护详情均为 `split-workspace-panel`、`overlay=0`、`modal-open=false`、无横向溢出；iPhone UA 为 `bottom-sheet`、`overlay=1`、`modal-open=true`。`lint`、生产构建和 `git diff --check` 通过。
 - 待办：将今日推荐展示入口从首页迁入互动图鉴；增加使用正式组件的内部视觉预览与完整视觉回归。
 
+## 2026-08-21 三处核心视觉结构返修：审查修复中
+
+- 首轮审查已确认 `DialogPrimitive.Popup` 不能脱离 `DialogPortal` 直接渲染；此前把 Popup 内联会使 `/encyclopedia` 与 `/care` 进入错误边界。现改为 `AdaptiveDetailContent` 在桌面工作区返回原生页面内 `section`，普通 Dialog 仍始终通过 Portal。
+- `CareEncyclopedia` 的详情是 `care-workspace-shell` 的同级节点，不是 `care-workspace-grid` 的子节点；布局选择器已改为 shell 级真实双栏。不得再把它改回固定右抽屉或仅修改内部 grid。
+- `stage-cover` 相机距离现在小于最小 fit 距离，允许裁掉鱼缸玻璃边缘以填满主舞台；`contain` 仍保留完整外框。
+- 已执行：`npm run lint`、`npm run test:split-workspace`、`npm run test:three-stage-framing`、`npm run build`、`PREVIEW_URL=http://127.0.0.1:3002 npm run test:split-workspace-runtime`。构建仅保留既有包体警告。
+- 下一步：提交审查修复并推送；将 diff、测试结果交给同一 Critic 复验，随后交给 Evaluator 对照三张失败截图裁决。
+
 ## 2026-08-21 互动视觉一致性：图鉴发现阶段
 
 - 已完成：互动图鉴的场景物种改为复用 `recommendationService` 的每日候选队列，场景工具栏新增“换一批 / Discover N/10”。候选、历史排除与种草收藏仍使用既有状态键；首页不输出这套推荐 UI。

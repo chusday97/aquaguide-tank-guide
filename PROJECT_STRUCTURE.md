@@ -5,6 +5,7 @@
 - `src/components/common/AdaptiveDetailContent.tsx`：手机底部面板与桌面页面内双屏详情的表面适配。
 - `src/components/ThreeAquarium.tsx`：`contain` / `stage-cover` 响应式相机取景。
 - `scripts/verify-split-workspace-detail.mjs`：阻止桌面详情退回 Portal 固定抽屉的结构门禁。
+- `scripts/verify-split-workspace-runtime.mjs`：在正式预览中打开物种/养护详情，断言其为页面内非固定双屏区域、无 Portal、无滚动锁并可关闭。
 
 根目录 `vercel.json`：Vercel 生产部署的 SPA 路由回退配置，确保 `/aquarium` 等前端深链接直接访问时返回应用入口。
 
