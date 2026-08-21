@@ -87,6 +87,14 @@ try {
     const primaryLabel = locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸';
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
     assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
+    if (locale === 'zh-CN') {
+      const [displayTitle, scientificName] = await Promise.all([
+        dialog.getByRole('heading', { name: '孔雀鱼', exact: true }),
+        dialog.locator('[data-scientific-name]').first(),
+      ]);
+      assert.equal(await displayTitle.evaluate(node => getComputedStyle(node).fontStyle), 'normal', '中文物种名不应被强制斜体');
+      assert.equal(await scientificName.evaluate(node => getComputedStyle(node).fontStyle), 'italic', '学名必须保持斜体以区分科学名称');
+    }
     if (locale === 'en') {
       const [dialogBox, actionBox, heroBox, feedingBox, verdictBox, reasonBoxes] = await Promise.all([
         dialog.boundingBox(),

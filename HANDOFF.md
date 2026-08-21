@@ -1,5 +1,12 @@
 # AquaGuide 交接文档
 
+## 2026-08-21 互动水族册与文字系统（已验证，待提交）
+
+- `/collection` 已从普通卡片网格改为水下展开书册：种草、养护、生命纪念、成就保留原有快照、最近排序、预览数量和深链；点击章节只在当前页展开，返回会恢复四章总览，不使用内容弹窗。
+- `src/index.css` 现明确分离展示字体（`Noto Serif SC / Songti SC / Georgia`）与功能文字（`Geist Variable / PingFang SC / Microsoft YaHei`）；科学名称保持斜体，中文展示标题不再因旧 `.font-serif` 规则被斜体化。
+- 验证：`npm run lint`、`npm run build`、`npm run test:memorial`、`PREVIEW_URL=http://127.0.0.1:3001 npm run test:collection-hub-ui`、`PREVIEW_URL=http://127.0.0.1:3001 npm run test:species-detail-ui` 均通过。1440px 桌面、600px 窄桌面与 iPhone 390px Chromium 无横向溢出；章节展开/返回、四个“更多”深链、生命纪念未知原因保存、中文物种名正常体/科学名斜体均有浏览器断言。
+- 预览文件：`/Users/chuchu/.codex/visualizations/2026/07/13/019f5bf6-d4a5-7eb3-9008-8a3576c6e328/aquaguide-interactive-concept-v2.html`，由本机静态地址 `http://127.0.0.1:4195/aquaguide-interactive-concept-v2.html` 提供。
+
 ## 2026-08-21 首页 3D 主舞台重排（已验证，待提交）
 
 - 用户参考图的目标不是添加第二个鱼缸，而是把既有真实鱼缸改成视觉主舞台：左侧保留 `ThreeAquarium`，右侧为今日行动与今日推荐，底部为直接可见的快捷任务。实现提交为 `6c064bd`。

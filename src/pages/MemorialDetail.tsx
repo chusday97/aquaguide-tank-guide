@@ -192,7 +192,10 @@ export default function MemorialDetail() {
       const saved = await repository.updateMemorial({
         id: record.id,
         date: draft.date,
-        causeCodes: draft.causeCodes,
+        // A reflection can be useful before the cause is known. Persist the
+        // explicit “unknown for now” option so the service keeps the record
+        // valid without pretending the user identified a cause.
+        causeCodes: draft.causeCodes.length ? draft.causeCodes : ['unknown'],
         observation: draft.observation,
         reason: draft.reason,
         improvement: draft.improvement,

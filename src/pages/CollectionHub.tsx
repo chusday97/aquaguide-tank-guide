@@ -47,6 +47,8 @@ function CollectionModuleCard({
   remainingCount,
   moreLabel,
   children,
+  isOpen,
+  onOpen,
 }: {
   id: CollectionModule;
   title: string;
@@ -56,34 +58,37 @@ function CollectionModuleCard({
   remainingCount: number;
   moreLabel: string;
   children: ReactNode;
+  isOpen: boolean;
+  onOpen: () => void;
 }) {
   const navigate = useNavigate();
   return (
     <section
       data-collection-module={id}
-      className="flex min-h-[326px] min-w-0 flex-col rounded-[24px] border border-white/90 bg-white p-4 text-left shadow-sm"
+      className={`collection-book-chapter collection-book-chapter-${id} ${isOpen ? 'is-open' : ''}`}
     >
       <button
         type="button"
-        onClick={() => navigate(moduleRoutes[id])}
-        className="group flex w-full items-center gap-3 rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-        aria-label={`${title}，${count}`}
+        onClick={onOpen}
+        className="collection-book-chapter-title"
+        aria-current={isOpen ? 'true' : undefined}
+        aria-label={`${title}，${count}，${isOpen ? '当前章节已打开；使用返回全部章节回到总览' : '聚焦查看本章'}`}
       >
-        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] ${tone}`}>{icon}</span>
-        <span className="min-w-0 flex-1 text-[17px] font-black text-ink">
+        <span className={`collection-book-chapter-mark ${tone}`}>{icon}</span>
+        <span className="collection-book-chapter-name">
           {title}
-          <span className="ml-2 text-[13px] text-ink/45">· {count}</span>
+          <span>· {count}</span>
         </span>
-        <ChevronRight className="h-5 w-5 shrink-0 text-ink/25 transition-transform group-hover:translate-x-0.5" />
+        <ChevronRight className="collection-book-chapter-arrow h-5 w-5 shrink-0" />
       </button>
-      <span className="mt-3 flex min-h-0 w-full flex-1 flex-col overflow-hidden rounded-[18px] border border-slate-100 bg-[#fbfcfb]">
+      <span className="collection-book-chapter-content">
         {children}
       </span>
       {remainingCount > 0 && (
         <button
           type="button"
           onClick={() => navigate(moduleRoutes[id])}
-          className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-1 rounded-full text-[12px] font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+          className="collection-book-chapter-more"
         >
           {moreLabel}<ChevronRight className="h-3.5 w-3.5" />
         </button>
@@ -115,6 +120,7 @@ export default function CollectionHub() {
   const navigate = useNavigate();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
+  const [openModule, setOpenModule] = useState<CollectionModule | null>(null);
 
   useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);
 
@@ -159,16 +165,30 @@ export default function CollectionHub() {
   };
 
   return (
-    <div className="collection-hub page-frame mx-auto flex w-full min-w-0 max-w-[1180px] flex-col gap-4 pb-24">
-      <header className="px-1 py-1">
-        <div className="inline-flex items-center gap-1.5 text-[10px] font-black text-emerald-800">
+    <div className="collection-hub collection-book-page page-frame mx-auto flex w-full min-w-0 max-w-[1180px] flex-col gap-4 pb-24">
+      <header className="collection-book-heading px-1 py-1">
+        <div className="collection-book-eyebrow">
           <BookHeart className="h-3.5 w-3.5" /> {isEn ? 'Aqua Collection' : '自然水族册'}
         </div>
-        <h1 className="mt-2 text-[25px] font-black tracking-tight text-ink">{isEn ? 'My Collection' : '我的水族册'}</h1>
-        <p className="mt-1 text-[12px] font-bold text-ink/48">{isEn ? 'Wishlist · Care · Memorials · Badges' : '种草 · 养护 · 纪念 · 勋章'}</p>
+        <h1>{isEn ? 'My Collection' : '我的水族册'}</h1>
+        <p>{isEn ? 'Open one chapter, then continue with a real item.' : '翻开一个章节，再从最近收录的内容继续。'}</p>
       </header>
 
-      <section className="grid min-w-0 gap-3 min-[900px]:grid-cols-2" aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
+      <section className={`collection-book-shell ${openModule ? 'has-open-chapter' : ''}`} aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
+        <span aria-hidden="true" className="collection-book-water-glow collection-book-water-glow-one" />
+        <span aria-hidden="true" className="collection-book-water-glow collection-book-water-glow-two" />
+        <span aria-hidden="true" className="collection-book-plant collection-book-plant-left" />
+        <span aria-hidden="true" className="collection-book-plant collection-book-plant-right" />
+        {openModule && (
+          <button
+            type="button"
+            onClick={() => setOpenModule(null)}
+            className="collection-book-return"
+          >
+            {isEn ? 'Back to all chapters' : '返回全部章节'}
+          </button>
+        )}
+        <div className="collection-book-spread">
         <CollectionModuleCard
           id="wishlist"
           title={isEn ? 'Species Wishlist' : '种草图鉴'}
@@ -177,6 +197,8 @@ export default function CollectionHub() {
           tone="bg-rose-50 text-rose-600"
           remainingCount={Math.max(0, snapshot.counts.wishlist - 3)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.wishlist - 3)} species` : `更多 ${Math.max(0, snapshot.counts.wishlist - 3)} 种`}
+          isOpen={openModule === 'wishlist'}
+          onOpen={() => setOpenModule('wishlist')}
         >
           {wishlistFishes.length ? wishlistFishes.map(fish => (
             <button
@@ -218,6 +240,8 @@ export default function CollectionHub() {
           tone="bg-sky-50 text-sky-700"
           remainingCount={Math.max(0, snapshot.counts.care - 2)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.care - 2)} guides` : `更多 ${Math.max(0, snapshot.counts.care - 2)} 篇`}
+          isOpen={openModule === 'care'}
+          onOpen={() => setOpenModule('care')}
         >
           {careTopics.length ? careTopics.map(topic => (
             <button
@@ -259,6 +283,8 @@ export default function CollectionHub() {
           tone="bg-slate-100 text-slate-600"
           remainingCount={Math.max(0, snapshot.counts.memorial - 2)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.memorial - 2)} records` : `更多 ${Math.max(0, snapshot.counts.memorial - 2)} 条`}
+          isOpen={openModule === 'memorial'}
+          onOpen={() => setOpenModule('memorial')}
         >
           {recentMemorials.length ? recentMemorials.map(record => {
             const fish = fishData.find(item => item.id === record.fishId);
@@ -307,6 +333,8 @@ export default function CollectionHub() {
           tone="bg-amber-50 text-amber-700"
           remainingCount={Math.max(0, snapshot.achievements.length - 2)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.achievements.length - 2)} badges` : `更多 ${Math.max(0, snapshot.achievements.length - 2)} 枚`}
+          isOpen={openModule === 'achievements'}
+          onOpen={() => setOpenModule('achievements')}
         >
           <span className="flex min-h-0 flex-1 flex-col p-2.5">
             {achievementPreviews.map((achievement, index) => {
@@ -339,6 +367,7 @@ export default function CollectionHub() {
             <span className="mt-auto pt-3 text-center text-[10px] font-black text-amber-800">{isEn ? 'Unlocks automatically · no claiming needed' : '自动解锁，无需领取'}</span>
           </span>
         </CollectionModuleCard>
+        </div>
       </section>
     </div>
   );

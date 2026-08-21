@@ -68,6 +68,18 @@ try {
   await assertNoHorizontalOverflow(desktop);
   assert.deepEqual(desktopErrors, [], `桌面不应出现页面错误：${desktopErrors.join('; ')}`);
 
+  for (const [label, path] of [
+    ['更多 1 种', '/collection/wishlist'],
+    ['更多 1 篇', '/collection/care'],
+    ['更多 1 条', '/collection/memorial'],
+    ['更多 6 枚', '/collection/achievements'],
+  ]) {
+    await desktop.getByRole('button', { name: label }).click();
+    await desktop.waitForURL(url => url.pathname === path);
+    await desktop.goBack();
+    await desktop.waitForURL(url => url.pathname === '/collection');
+  }
+
   await desktop.locator('[data-preview-item="wishlist"]').first().click();
   await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && url.searchParams.get('item') === 'sp_0004');
   await desktop.locator('[data-surface="detail-drawer"]').waitFor();
@@ -140,8 +152,13 @@ try {
   await desktop.getByText('该内容已不存在或已移出水族册。', { exact: true }).waitFor();
 
   await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle' });
-  await desktop.locator('[data-collection-module="wishlist"] > button').first().click();
-  await desktop.waitForURL(url => url.pathname === '/collection/wishlist' && !url.searchParams.has('item'));
+  await desktop.locator('[data-collection-module="wishlist"] .collection-book-chapter-title').click();
+  await desktop.locator('.collection-book-shell.has-open-chapter').waitFor();
+  assert.equal(await desktop.locator('[data-collection-module="wishlist"].is-open').count(), 1, '点击章节应在书页内展开对应内容');
+  assert.equal(await desktop.locator('[data-collection-module="wishlist"] .collection-book-chapter-title').getAttribute('aria-current'), 'true', '打开章节应暴露当前章节状态');
+  assert.equal(new URL(desktop.url()).pathname, '/collection', '展开章节不应产生额外路由或弹窗');
+  await desktop.getByRole('button', { name: '返回全部章节' }).click();
+  assert.equal(await desktop.locator('.collection-book-shell.has-open-chapter').count(), 0, '返回后应恢复四个章节总览');
   await desktop.close();
 
   const narrowDesktop = await browser.newPage({ viewport: { width: 600, height: 900 } });
@@ -168,6 +185,18 @@ try {
   await mobile.locator('[data-collection-module="wishlist"]').waitFor();
   assert.equal(await mobile.locator('[data-collection-module]').count(), 4, '手机也应显示四个完整模块');
   await assertNoHorizontalOverflow(mobile);
+  await mobile.locator('[data-collection-module="care"] .collection-book-chapter-title').click();
+  await mobile.locator('.collection-book-shell.has-open-chapter').waitFor();
+  assert.equal(await mobile.locator('[data-collection-module="care"].is-open').count(), 1, '手机点击章节应原位聚焦对应章节');
+  const mobileReturn = mobile.getByRole('button', { name: '返回全部章节' });
+  const [mobileReturnBox, mobileViewport] = await Promise.all([
+    mobileReturn.boundingBox(),
+    mobile.evaluate(() => ({ width: window.innerWidth, height: window.innerHeight })),
+  ]);
+  assert.ok(mobileReturnBox && mobileReturnBox.width >= 44 && mobileReturnBox.height >= 44, '手机返回按钮必须保留至少 44px 点击区域');
+  assert.ok(mobileReturnBox && mobileReturnBox.y >= 0 && mobileReturnBox.y + mobileReturnBox.height <= mobileViewport.height, '手机返回按钮不能被底部导航遮挡');
+  await mobileReturn.click();
+  assert.equal(await mobile.locator('.collection-book-shell.has-open-chapter').count(), 0, '手机返回后应恢复章节总览');
   await mobile.locator('[data-preview-item="memorial"]').first().click();
   await mobile.waitForURL(url => url.pathname === '/collection/memorial/memorial-3');
   await mobile.locator('[data-memorial-detail="memorial-3"]').waitFor();

@@ -821,8 +821,8 @@ export function SpeciesDetailDialog({
                       <div className="flex min-w-0 flex-col py-3 min-[620px]:justify-center min-[620px]:border-l min-[620px]:border-ink/10 min-[620px]:py-5 min-[620px]:pl-5">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <DialogTitle className="break-words font-serif text-[21px] font-bold italic leading-tight text-ink min-[760px]:text-[30px]">{fish.name}</DialogTitle>
-                            <DialogDescription className="mt-0.5 text-[11px] font-medium leading-tight text-ink/55 min-[760px]:mt-1 min-[760px]:text-[12px]">{fish.scientificName}</DialogDescription>
+                            <DialogTitle className="break-words font-serif text-[21px] font-bold leading-tight text-ink min-[760px]:text-[30px]">{fish.name}</DialogTitle>
+                            <DialogDescription data-scientific-name className="mt-0.5 text-[11px] font-medium leading-tight text-ink/55 min-[760px]:mt-1 min-[760px]:text-[12px]">{fish.scientificName}</DialogDescription>
                           </div>
                           <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getDifficultyBadgeClass(fish.difficulty)}`}>{fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort')}</span>
                         </div>
@@ -1174,8 +1174,8 @@ export function SpeciesDetailDialog({
                             </div>
                             <div className="min-w-0">
                               <div className="text-[9px] font-black tracking-[0.16em] text-emerald-800/55">AQUAGUIDE SPECIES CARD</div>
-                              <h4 className="mt-2 break-words font-serif text-[26px] font-bold italic leading-tight">{fish.name}</h4>
-                              <p className="mt-1 break-words text-[10px] font-semibold text-[#64716B]">{fish.scientificName}</p>
+                              <h4 className="mt-2 break-words font-serif text-[26px] font-bold leading-tight">{fish.name}</h4>
+                              <p data-scientific-name className="mt-1 break-words text-[10px] font-semibold text-[#64716B]">{fish.scientificName}</p>
                               <div className="mt-3 flex flex-wrap gap-1.5">
                                 {[fish.category, fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort'), fish.size].filter(Boolean).map(item => (
                                   <span key={item} className="rounded-full border border-[#D9E8DF] bg-[#F1F8F4] px-2 py-1 text-[9px] font-black text-[#275A48]">{item}</span>
