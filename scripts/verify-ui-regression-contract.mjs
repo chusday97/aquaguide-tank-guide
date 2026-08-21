@@ -10,6 +10,7 @@ const layoutProvider = await read('src/components/layout/LayoutModeProvider.tsx'
 const layoutContract = await read('lib/layout-mode.ts');
 const dialog = await read('components/ui/dialog.tsx');
 const aquarium = await read('src/pages/Aquarium.tsx');
+const collectionHub = await read('src/pages/CollectionHub.tsx');
 const indexCss = await read('src/index.css');
 const splitStatic = await read('scripts/verify-split-workspace-detail.mjs');
 const splitRuntime = await read('scripts/verify-split-workspace-runtime.mjs');
@@ -61,6 +62,10 @@ for (const match of aquariumDialogTags) {
   }
 }
 if (aquarium.includes('<Dialog open={false}')) fail('Disabled legacy Aquarium dialogs must be deleted, not kept as dead modal code.');
+
+if (!collectionHub.includes('data-node-visual="creature"')) fail('Collection desktop navigation must remain creature-first, not card-first.');
+if (!collectionHub.includes('data-collection-node={module}')) fail('Collection creature nodes must expose stable runtime hooks.');
+if (indexCss.includes('.collection-book-')) fail('Retired Collection book-layout CSS must not return.');
 
 const aquariumSurfaceContract = [
   ['<Dialog open={Boolean(pendingReminderReschedule)}', 'task'],

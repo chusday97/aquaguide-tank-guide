@@ -47,10 +47,10 @@ const marineVisualIndexes: Record<CollectionModule, number> = {
 };
 
 const desktopNodePositions: Record<CollectionModule, string> = {
-  wishlist: 'left-[6%] top-[16%]',
-  care: 'right-[5%] top-[15%]',
-  memorial: 'left-[8%] bottom-[13%]',
-  achievements: 'right-[7%] bottom-[12%]',
+  wishlist: 'left-[1%] top-[16%] xl:left-[4%]',
+  care: 'right-[1%] top-[15%] xl:right-[4%]',
+  memorial: 'left-[1%] bottom-[13%] xl:left-[4%]',
+  achievements: 'right-[1%] bottom-[12%] xl:right-[4%]',
 };
 
 type HoverItem = {
@@ -208,6 +208,8 @@ export default function CollectionHub() {
               key={fish.id}
               type="button"
               onClick={() => openItem('wishlist', fish.id)}
+              data-preview-item="wishlist"
+              data-preview-id={fish.id}
               className={`group flex min-w-0 items-center gap-3 rounded-[22px] border bg-white/78 p-3 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 ${focusedItemId === fish.id ? 'border-rose-300 ring-2 ring-rose-100' : 'border-white/80'}`}
             >
               <span className="flex h-[88px] w-[116px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] bg-white/90">
@@ -236,6 +238,8 @@ export default function CollectionHub() {
               key={topic.id}
               type="button"
               onClick={() => openItem('care', topic.id)}
+              data-preview-item="care"
+              data-preview-id={topic.id}
               className={`group overflow-hidden rounded-[22px] border bg-white/78 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${focusedItemId === topic.id ? 'border-sky-300 ring-2 ring-sky-100' : 'border-white/80'}`}
             >
               <span className="block h-[120px] overflow-hidden bg-white/70">
@@ -268,6 +272,8 @@ export default function CollectionHub() {
                 key={record.id}
                 type="button"
                 onClick={() => openItem('memorial', record.id)}
+                data-preview-item="memorial"
+                data-preview-id={record.id}
                 className={`group flex min-h-[132px] items-center gap-4 rounded-[22px] border bg-white/76 p-4 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 ${focusedItemId === record.id ? 'border-stone-400 ring-2 ring-stone-100' : 'border-white/80'}`}
               >
                 <span className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-stone-50">
@@ -299,6 +305,8 @@ export default function CollectionHub() {
                 if (item.nextAction?.route) navigate(item.nextAction.route);
                 else navigate(moduleRoutes.achievements);
               }}
+              data-preview-item="achievements"
+              data-preview-id={item.id}
               className={`group rounded-[22px] border bg-white/78 p-4 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${focusedItemId === item.id ? 'border-amber-300 ring-2 ring-amber-100' : 'border-white/80'}`}
             >
               <span className="flex items-start gap-3">
@@ -338,7 +346,7 @@ export default function CollectionHub() {
         <span aria-hidden="true" className="absolute bottom-[6%] left-[9%] h-[16%] w-3 origin-bottom rotate-6 rounded-t-full bg-emerald-800/55" />
         <span aria-hidden="true" className="absolute bottom-[5%] right-[6%] h-[26%] w-4 origin-bottom rotate-12 rounded-t-full bg-emerald-700/60" />
 
-        <div className="relative z-20 grid grid-cols-2 gap-3 p-4 md:hidden">
+        <div className="relative z-20 grid grid-cols-2 gap-3 p-4 lg:hidden">
           {moduleOrder.map(module => {
             const meta = moduleMeta[module];
             const fish = fishData[marineVisualIndexes[module]] || fishData[0];
@@ -348,6 +356,7 @@ export default function CollectionHub() {
                 type="button"
                 onClick={() => selectModule(module)}
                 aria-pressed={activeModule === module}
+                data-collection-compact={module}
                 className={`flex min-h-[116px] flex-col items-center justify-center rounded-[24px] border bg-white/68 p-3 backdrop-blur-xl transition-all ${activeModule === module ? 'border-emerald-400 ring-2 ring-emerald-100' : 'border-white/80'}`}
               >
                 <span className="relative flex h-14 w-24 items-center justify-center">
@@ -360,28 +369,37 @@ export default function CollectionHub() {
           })}
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           {moduleOrder.map(module => {
             const meta = moduleMeta[module];
             const fish = fishData[marineVisualIndexes[module]] || fishData[0];
             const hoverItems = getHoverItems(module);
+            const hoverPanelAlign = module === 'wishlist' || module === 'memorial'
+              ? 'left-0 translate-x-0'
+              : 'right-0 left-auto translate-x-0';
             return (
               <div key={module} className={`group absolute z-30 ${desktopNodePositions[module]}`}>
                 <button
                   type="button"
                   onClick={() => selectModule(module)}
                   aria-pressed={activeModule === module}
-                  className={`relative flex min-h-[112px] min-w-[150px] flex-col items-center justify-center rounded-[30px] border px-4 py-3 transition-all duration-300 hover:-translate-y-2 focus-visible:-translate-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${activeModule === module ? 'border-white bg-white/88 shadow-[0_18px_45px_rgba(11,88,66,0.22)]' : 'border-white/55 bg-white/38 shadow-[0_14px_34px_rgba(13,79,61,0.10)] backdrop-blur-md'}`}
+                  data-collection-node={module}
+                  data-node-visual="creature"
+                  className="relative flex min-h-[120px] min-w-[140px] flex-col items-center justify-center bg-transparent px-1 py-2 transition-transform duration-300 hover:-translate-y-2 focus-visible:-translate-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent xl:min-h-[132px] xl:min-w-[160px]"
                 >
-                  <span className="relative flex h-[72px] w-[122px] items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                    {fish && <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt="" className={`h-full w-full object-contain drop-shadow-[0_14px_12px_rgba(13,68,54,0.24)] ${getSpeciesImageClass(fish)}`} loading="lazy" decoding="async" />}
-                    <span className={`absolute -right-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-sm ${meta.accentClass}`}>{meta.icon}</span>
+                  <span aria-hidden="true" className={`absolute left-1/2 top-[42%] h-[82px] w-[126px] xl:h-[92px] xl:w-[144px] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-xl transition-all duration-300 ${activeModule === module ? 'bg-white/58 opacity-100 scale-110' : 'bg-white/24 opacity-55 group-hover:opacity-90'}`} />
+                  <span className={`relative flex h-[82px] w-[128px] items-center justify-center xl:h-[94px] xl:w-[150px] transition-all duration-300 ${activeModule === module ? 'scale-110 -translate-y-1' : 'group-hover:scale-110'}`}>
+                    {fish && <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt="" className={`h-full w-full object-contain drop-shadow-[0_18px_14px_rgba(13,68,54,0.28)] ${getSpeciesImageClass(fish)}`} loading="lazy" decoding="async" />}
                   </span>
-                  <span className="mt-1 text-[12px] font-black text-ink">{meta.shortLabel}</span>
-                  <span className="text-[10px] font-bold text-ink/46">{meta.countLabel}</span>
+                  <span className={`relative mt-1 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-black shadow-[0_8px_20px_rgba(13,68,54,0.10)] backdrop-blur-md transition-all ${activeModule === module ? 'border-white/90 bg-white/88 text-ink' : 'border-white/60 bg-white/58 text-ink/72 group-hover:bg-white/78 group-hover:text-ink'}`}>
+                    <span className={meta.accentClass}>{meta.icon}</span>
+                    <span>{meta.shortLabel}</span>
+                    <span className="text-[9px] font-bold text-ink/42">· {meta.countLabel}</span>
+                  </span>
                 </button>
 
-                <div className="pointer-events-none absolute left-1/2 top-[calc(100%+10px)] z-50 w-[236px] -translate-x-1/2 translate-y-2 rounded-[22px] border border-white/80 bg-white/92 p-2 opacity-0 shadow-[0_20px_55px_rgba(12,70,55,0.18)] backdrop-blur-xl transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                <div data-collection-hover={module}
+                  className={`pointer-events-none absolute top-[calc(100%+10px)] z-50 w-[236px] translate-y-2 rounded-[22px] ${hoverPanelAlign} border border-white/80 bg-white/92 p-2 opacity-0 shadow-[0_20px_55px_rgba(12,70,55,0.18)] backdrop-blur-xl transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100`}>
                   <div className="px-2 pb-1.5 pt-1 text-[10px] font-black tracking-[0.12em] text-ink/38 uppercase">{isEn ? 'Inside this collection' : '这里面的细分'}</div>
                   {hoverItems.map(item => (
                     <button
@@ -403,7 +421,7 @@ export default function CollectionHub() {
           })}
         </div>
 
-        <div className="relative z-20 mx-4 mb-5 mt-3 md:absolute md:left-1/2 md:top-1/2 md:m-0 md:w-[min(58%,720px)] md:-translate-x-1/2 md:-translate-y-1/2">
+        <div className="relative z-20 mx-4 mb-5 mt-3 lg:absolute lg:left-1/2 lg:top-1/2 lg:m-0 lg:w-[min(50%,720px)] lg:-translate-x-1/2 lg:-translate-y-1/2 xl:w-[min(56%,720px)]">
           <section key={activeModule} className="overflow-hidden rounded-[32px] border border-white/80 bg-[#fdfcf8]/94 p-4 shadow-[0_26px_72px_rgba(13,67,54,0.18)] backdrop-blur-2xl md:p-6" aria-live="polite" data-collection-focus={activeModule}>
             <div className="flex items-start justify-between gap-4 border-b border-ink/8 pb-4">
               <div className="min-w-0">
@@ -420,7 +438,7 @@ export default function CollectionHub() {
           </section>
         </div>
 
-        <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/65 bg-white/50 px-3 py-2 text-[10px] font-bold text-emerald-950/55 backdrop-blur-md md:flex"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'Hover to peek · click to focus' : '悬停预览 · 点击聚焦到中央'}</div>
+        <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/65 bg-white/50 px-3 py-2 text-[10px] font-bold text-emerald-950/55 backdrop-blur-md lg:flex"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'Hover to peek · click to focus' : '悬停预览 · 点击聚焦到中央'}</div>
       </section>
     </div>
   );
