@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { fishData } from '../data/fishData';
 import { Heart, Plus, Sparkles, Trash2 } from 'lucide-react';
 import { assistantService } from '../modules/assistant/assistant.service';
@@ -137,6 +138,7 @@ export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>(loadSavedMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [clearChatPending, setClearChatPending] = useState(false);
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => new Set(getSpeciesFavoriteIds()));
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -155,9 +157,13 @@ export default function AIAssistant() {
   }), []);
 
   const handleClearChat = () => {
-    if (!confirm('确定要清空 AI 助手的历史对话吗？')) return;
+    setClearChatPending(true);
+  };
+
+  const confirmClearChat = () => {
     setMessages([welcomeMessage]);
     localStorage.removeItem(CHAT_STORAGE_KEY);
+    setClearChatPending(false);
   };
 
   const addToWishlist = (speciesId: string) => {
@@ -324,6 +330,21 @@ export default function AIAssistant() {
           </form>
         </div>
       </div>
+
+      <Dialog open={clearChatPending} onOpenChange={setClearChatPending}>
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[min(92vw,440px)] max-w-[440px] rounded-[24px]">
+          <DialogHeader>
+            <DialogTitle>{isEn ? 'Clear conversation history?' : '清空 AI 助手历史对话？'}</DialogTitle>
+            <DialogDescription>
+              {isEn ? 'This removes the locally saved conversation history and cannot be undone.' : '这会删除保存在本机的历史对话，操作后无法恢复。'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setClearChatPending(false)}>{isEn ? 'Keep history' : '保留记录'}</Button>
+            <Button variant="destructive" onClick={confirmClearChat}>{isEn ? 'Clear permanently' : '确认清空'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
