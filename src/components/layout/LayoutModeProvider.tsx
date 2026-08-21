@@ -1,22 +1,22 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  getLayoutModeForViewportWidth,
+  getPhoneViewportSnapshot,
+  subscribeToPhoneViewport,
+} from '@/lib/layout-mode';
 
 export type LayoutMode = 'phone' | 'desktop';
 
-type NavigatorLike = {
-  userAgent?: string;
-  userAgentData?: { mobile?: boolean };
-};
-
-export const detectLayoutMode = (navigatorLike?: NavigatorLike | null): LayoutMode => {
-  if (!navigatorLike) return 'desktop';
-  const userAgent = navigatorLike.userAgent || '';
-  if (/iPad|Tablet|PlayBook|Silk/i.test(userAgent)) return 'desktop';
-  if (/iPhone|iPod|Windows Phone|Android.+Mobile|Mobile.+Safari/i.test(userAgent)) return 'phone';
-
-  if (typeof navigatorLike.userAgentData?.mobile === 'boolean') {
-    return navigatorLike.userAgentData.mobile ? 'phone' : 'desktop';
-  }
-  return 'desktop';
+/**
+ * Pure helper retained for deterministic tests and callers that need to resolve
+ * a layout mode from a known viewport width. Product layout is viewport-based,
+ * never inferred from device identity or user-agent strings.
+ */
+export const detectLayoutMode = (viewportWidth?: number): LayoutMode => {
+  const width = viewportWidth ?? (
+    typeof window !== 'undefined' ? window.innerWidth : Number.POSITIVE_INFINITY
+  );
+  return getLayoutModeForViewportWidth(width);
 };
 
 type LayoutModeContextValue = {
@@ -27,13 +27,16 @@ type LayoutModeContextValue = {
 const LayoutModeContext = createContext<LayoutModeContextValue | null>(null);
 
 export function LayoutModeProvider({ children }: { children: ReactNode }) {
-  const [layoutMode] = useState<LayoutMode>(() => (
-    typeof navigator === 'undefined' ? 'desktop' : detectLayoutMode(navigator)
-  ));
+  const isPhoneLayout = useSyncExternalStore(
+    subscribeToPhoneViewport,
+    getPhoneViewportSnapshot,
+    () => false,
+  );
+  const layoutMode: LayoutMode = isPhoneLayout ? 'phone' : 'desktop';
   const value = useMemo(() => ({
     layoutMode,
-    isPhoneLayout: layoutMode === 'phone',
-  }), [layoutMode]);
+    isPhoneLayout,
+  }), [isPhoneLayout, layoutMode]);
 
   return <LayoutModeContext.Provider value={value}>{children}</LayoutModeContext.Provider>;
 }
