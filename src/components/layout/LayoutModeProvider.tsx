@@ -1,36 +1,22 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  getLayoutModeForViewportWidth,
+  getPhoneViewportSnapshot,
+  subscribeToPhoneViewport,
+} from '@/lib/layout-mode';
 
 export type LayoutMode = 'phone' | 'desktop';
 
-type NavigatorLike = {
-  userAgent?: string;
-  userAgentData?: { mobile?: boolean };
-};
-
-export const PHONE_LAYOUT_MAX_WIDTH = 767;
-export const PHONE_LAYOUT_MEDIA_QUERY = `(max-width: ${PHONE_LAYOUT_MAX_WIDTH}px)`;
-
-export const detectLayoutMode = (
-  navigatorLike?: NavigatorLike | null,
-  viewportWidth?: number | null,
-): LayoutMode => {
-  if (typeof viewportWidth === 'number' && Number.isFinite(viewportWidth)) {
-    return viewportWidth <= PHONE_LAYOUT_MAX_WIDTH ? 'phone' : 'desktop';
-  }
-
-  if (!navigatorLike) return 'desktop';
-  const userAgent = navigatorLike.userAgent || '';
-
-  // Viewport width is the product source of truth. UA parsing exists only as a fallback for
-  // environments where width is unavailable, so tablets must be checked before generic
-  // "Mobile Safari" patterns that also occur in iPad user agents.
-  if (/iPad|Tablet|PlayBook|Silk/i.test(userAgent)) return 'desktop';
-  if (/iPhone|iPod|Windows Phone|Android.+Mobile|Mobile.+Safari/i.test(userAgent)) return 'phone';
-
-  if (typeof navigatorLike.userAgentData?.mobile === 'boolean') {
-    return navigatorLike.userAgentData.mobile ? 'phone' : 'desktop';
-  }
-  return 'desktop';
+/**
+ * Pure helper retained for deterministic tests and callers that need to resolve
+ * a layout mode from a known viewport width. Product layout is viewport-based,
+ * never inferred from device identity or user-agent strings.
+ */
+export const detectLayoutMode = (viewportWidth?: number): LayoutMode => {
+  const width = viewportWidth ?? (
+    typeof window !== 'undefined' ? window.innerWidth : Number.POSITIVE_INFINITY
+  );
+  return getLayoutModeForViewportWidth(width);
 };
 
 type LayoutModeContextValue = {
@@ -40,28 +26,17 @@ type LayoutModeContextValue = {
 
 const LayoutModeContext = createContext<LayoutModeContextValue | null>(null);
 
-const getCurrentLayoutMode = (): LayoutMode => {
-  if (typeof window === 'undefined') {
-    return typeof navigator === 'undefined' ? 'desktop' : detectLayoutMode(navigator);
-  }
-  return detectLayoutMode(typeof navigator === 'undefined' ? null : navigator, window.innerWidth);
-};
-
 export function LayoutModeProvider({ children }: { children: ReactNode }) {
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>(getCurrentLayoutMode);
-
-  useEffect(() => {
-    const media = window.matchMedia(PHONE_LAYOUT_MEDIA_QUERY);
-    const sync = () => setLayoutMode(media.matches ? 'phone' : 'desktop');
-    sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, []);
-
+  const isPhoneLayout = useSyncExternalStore(
+    subscribeToPhoneViewport,
+    getPhoneViewportSnapshot,
+    () => false,
+  );
+  const layoutMode: LayoutMode = isPhoneLayout ? 'phone' : 'desktop';
   const value = useMemo(() => ({
     layoutMode,
-    isPhoneLayout: layoutMode === 'phone',
-  }), [layoutMode]);
+    isPhoneLayout,
+  }), [isPhoneLayout, layoutMode]);
 
   return <LayoutModeContext.Provider value={value}>{children}</LayoutModeContext.Provider>;
 }
