@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from 'react';
-import { ArrowRight, Camera, Compass, List, Sparkles } from 'lucide-react';
+import { ArrowRight, Camera, Compass, List, RefreshCw, Sparkles } from 'lucide-react';
 import type { Fish } from '../../types';
 import { ResilientImage } from '../common/ResilientImage';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../../lib/speciesVisual';
@@ -11,6 +11,8 @@ type Props = {
   onSelect: (fish: Fish) => void;
   onBrowseList: () => void;
   onIdentify: () => void;
+  onRefreshDiscoveries?: () => void;
+  discoveryProgress?: { current: number; total: number };
 };
 
 const creaturePositions = [
@@ -22,7 +24,7 @@ const creaturePositions = [
   { left: '78%', top: '19%', width: '13%', delay: '-4s' },
 ] as const;
 
-export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSelect, onBrowseList, onIdentify }: Props) {
+export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSelect, onBrowseList, onIdentify, onRefreshDiscoveries, discoveryProgress }: Props) {
   const items = species.slice(0, creaturePositions.length);
   const [selected, setSelected] = useState<Fish | null>(null);
 
@@ -38,6 +40,11 @@ export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSel
         <p>{isEn ? 'Choose one in the aquarium first. Its complete profile opens only when you ask for it.' : '先点选你感兴趣的生物；确认后再打开完整档案。'}</p>
       </div>
       <div className="interactive-tank-tools">
+        {onRefreshDiscoveries && (
+          <button type="button" onClick={onRefreshDiscoveries} className="interactive-tank-tool" aria-label={isEn ? 'Show another group of discoveries' : '换一批今日发现'}>
+            <RefreshCw className="h-4 w-4" />{isEn ? `Discover ${discoveryProgress?.current || 1}/${discoveryProgress?.total || 10}` : `换一批 · ${discoveryProgress?.current || 1}/${discoveryProgress?.total || 10}`}
+          </button>
+        )}
         <button type="button" onClick={onBrowseList} className="interactive-tank-tool"><List className="h-4 w-4" />{isEn ? 'Browse list' : '传统浏览'}</button>
         <button type="button" onClick={onIdentify} className="interactive-tank-tool"><Camera className="h-4 w-4" />{isEn ? 'Identify' : '拍照识别'}</button>
       </div>

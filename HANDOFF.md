@@ -438,6 +438,11 @@
 - 已完成：`AdaptiveDetailContent` 在桌面转为 48% 宽无模态右侧工作区；`SpeciesDetailDialog` 与 `CareEncyclopedia` 仅在真实手机设备启用模态与遮罩。桌面左侧继续可见、可滚动、可切换对象。
 - 验证：桌面 1440px 物种和养护详情均为 `split-workspace-panel`、`overlay=0`、`modal-open=false`、无横向溢出；iPhone UA 为 `bottom-sheet`、`overlay=1`、`modal-open=true`。`lint`、生产构建和 `git diff --check` 通过。
 - 待办：将今日推荐展示入口从首页迁入互动图鉴；增加使用正式组件的内部视觉预览与完整视觉回归。
+
+## 2026-08-21 互动视觉一致性：图鉴发现阶段
+
+- 已完成：互动图鉴的场景物种改为复用 `recommendationService` 的每日候选队列，场景工具栏新增“换一批 / Discover N/10”。候选、历史排除与种草收藏仍使用既有状态键；首页不输出这套推荐 UI。
+- 验证：`lint` 与生产构建通过。后续需为同一正式组件增加固定演示数据的内部预览路由，并完成宽/窄桌面与手机视觉回归。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。

@@ -72,8 +72,27 @@ import { taskRoutes } from '../services/navigation/task-routes';
 import { getAquariumNavigationSnapshot } from '../services/aquarium/aquarium-navigation.service';
 import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.service';
 import { SpeciesSceneAtlas } from '../components/interactive/SpeciesSceneAtlas';
+import {
+  DISCOVERY_DAILY_LIMIT,
+  DISCOVERY_STORAGE_KEY,
+  normalizeDiscoveryState,
+  recommendationService,
+} from '../modules/recommendation/recommendation.service';
+import type { DiscoveryDeckState } from '../modules/recommendation/recommendation.schema';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
+
+const loadDiscoveryState = (): DiscoveryDeckState => {
+  try {
+    return normalizeDiscoveryState(JSON.parse(localStorage.getItem(DISCOVERY_STORAGE_KEY) || 'null'));
+  } catch {
+    return normalizeDiscoveryState();
+  }
+};
+
+const saveDiscoveryState = (state: DiscoveryDeckState) => {
+  localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state));
+};
 
 
 const getSpeciesNameLocalized = (species: any, isEn = false): string => {
@@ -654,6 +673,7 @@ export default function Encyclopedia() {
 
   const [ownedFishIds, setOwnedFishIds] = useState<Set<string>>(new Set());
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => loadWishlistIds());
+  const [discoveryState, setDiscoveryState] = useState<DiscoveryDeckState>(() => loadDiscoveryState());
   const [isWishlistExpanded, setIsWishlistExpanded] = useState(false);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
   const [isMoreFilterOpen, setIsMoreFilterOpen] = useState(false);
@@ -790,6 +810,37 @@ export default function Encyclopedia() {
     []
   );
   const allFishes = encyclopediaCatalog.allItems;
+  const discoveryPool = useMemo(() => allFishes.filter(fish => {
+    const lifeType = getLifeType(fish);
+    return lifeType !== 'plant' && lifeType !== 'hardscape';
+  }), [allFishes]);
+  useEffect(() => {
+    setDiscoveryState(previous => {
+      const output = recommendationService.createDiscoveryDeck({
+        speciesPool: discoveryPool,
+        wishlistIds: Array.from(wishlistFishIds),
+        state: previous,
+      });
+      saveDiscoveryState(output.state);
+      return output.state;
+    });
+  }, [discoveryPool, wishlistFishIds]);
+  const discoverySpecies = useMemo(() => discoveryState.queueIds
+    .map(id => discoveryPool.find(fish => fish.id === id))
+    .filter((fish): fish is Fish => Boolean(fish)), [discoveryPool, discoveryState.queueIds]);
+  const refreshDiscoveries = () => {
+    const current = discoverySpecies[0];
+    if (!current) return;
+    const output = recommendationService.advanceDiscoveryDeck({
+      speciesId: current.id,
+      action: 'skip',
+      speciesPool: discoveryPool,
+      wishlistIds: Array.from(wishlistFishIds),
+      state: discoveryState,
+    });
+    saveDiscoveryState(output.state);
+    setDiscoveryState(output.state);
+  };
   const ownedQuantityBySpeciesId = useMemo(() => new Map(
     (currentAquarium?.fishes || []).map(item => [item.fishId, item.quantity]),
   ), [currentAquarium]);
@@ -1516,12 +1567,17 @@ export default function Encyclopedia() {
 
       {viewMode === 'scene' ? (
       <SpeciesSceneAtlas
-        species={allFishes}
+        species={discoverySpecies.length ? discoverySpecies : discoveryPool}
         isEn={isEn}
         getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
         onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
         onBrowseList={() => setViewMode('browse')}
         onIdentify={() => navigateToRoute('/identify')}
+        onRefreshDiscoveries={refreshDiscoveries}
+        discoveryProgress={{
+          current: Math.min(DISCOVERY_DAILY_LIMIT, discoveryState.consumedIds.length + 1),
+          total: DISCOVERY_DAILY_LIMIT,
+        }}
       />
       ) : viewMode === 'browse' ? (
       <div className="flex flex-col gap-5">
