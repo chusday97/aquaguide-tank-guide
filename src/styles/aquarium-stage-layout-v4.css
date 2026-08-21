@@ -2,8 +2,8 @@
  * Aquarium Stage Layout V4
  *
  * The aquarium home is one visual stage, not a split content grid.
- * This layer intentionally loads after index.css so legacy desktop/tablet
- * rules cannot squeeze the 3D scene back into a card-sized viewport.
+ * ThreeAquarium already owns camera framing; this CSS may crop the scene a
+ * little for immersion, but must not apply a second extreme zoom.
  */
 
 .aquarium-dashboard-stage,
@@ -28,7 +28,7 @@
     position: relative;
     isolation: isolate;
     width: 100%;
-    min-height: clamp(690px, calc(100dvh - 92px), 920px);
+    min-height: clamp(640px, calc(100dvh - 92px), 840px);
     overflow: hidden;
     border-radius: 32px 32px 0 0;
   }
@@ -47,15 +47,15 @@
   }
 
   /*
-   * stage-cover must read as an underwater environment, not as a small glass
-   * object centered inside a large page.  Scaling only the WebGL canvas keeps
-   * DOM actions, accessibility targets and overlays at their intended size.
+   * stage-cover already fits the 3D tank to the viewport. Keep only a modest
+   * presentation crop so fish stay readable without turning the glass tank
+   * into an oversized, washed-out background.
    */
   .aquarium-dashboard-tank > .aquarium-tank canvas {
     width: 100% !important;
     height: 100% !important;
-    transform: translate3d(0, 4%, 0) scale(1.66);
-    transform-origin: 50% 48%;
+    transform: translate3d(0, 1.5%, 0) scale(1.22);
+    transform-origin: 50% 50%;
   }
 
   .aquarium-stage-intro {
@@ -71,7 +71,7 @@
     z-index: 40;
     top: 32px;
     right: 32px;
-    width: clamp(330px, 28vw, 470px);
+    width: clamp(320px, 26vw, 430px);
     min-width: 0;
     max-width: calc(100% - 64px);
     pointer-events: auto;
@@ -119,29 +119,35 @@
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1600px) {
   .aquarium-dashboard-tank > .aquarium-tank canvas {
-    transform: translate3d(0, 4%, 0) scale(1.78);
+    transform: translate3d(0, 1.5%, 0) scale(1.30);
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1599px) {
+  .aquarium-dashboard-tank > .aquarium-tank canvas {
+    transform: translate3d(0, 1.5%, 0) scale(1.26);
   }
 
   .aquarium-dashboard-rail {
-    width: clamp(350px, 27vw, 480px);
+    width: clamp(330px, 26vw, 440px);
   }
 }
 
 @media (min-width: 1050px) and (max-width: 1279px) {
   .aquarium-dashboard-tank {
-    min-height: clamp(650px, calc(100dvh - 86px), 820px);
+    min-height: clamp(600px, calc(100dvh - 86px), 760px);
   }
 
   .aquarium-dashboard-tank > .aquarium-tank canvas {
-    transform: translate3d(0, 3%, 0) scale(1.54);
+    transform: translate3d(0, 1%, 0) scale(1.16);
   }
 
   .aquarium-dashboard-rail {
     top: 24px;
     right: 24px;
-    width: clamp(300px, 31vw, 390px);
+    width: clamp(300px, 30vw, 380px);
     max-width: calc(100% - 48px);
   }
 
@@ -179,8 +185,8 @@
   .aquarium-dashboard-tank > .aquarium-tank {
     position: relative;
     width: 100% !important;
-    height: min(62dvh, 620px) !important;
-    min-height: 500px !important;
+    height: min(58dvh, 560px) !important;
+    min-height: 420px !important;
     overflow: hidden;
     border-radius: 28px;
   }
@@ -188,8 +194,8 @@
   .aquarium-dashboard-tank > .aquarium-tank canvas {
     width: 100% !important;
     height: 100% !important;
-    transform: translate3d(0, 2%, 0) scale(1.26);
-    transform-origin: 50% 48%;
+    transform: translate3d(0, 0.5%, 0) scale(1.08);
+    transform-origin: 50% 50%;
   }
 
   .aquarium-dashboard-rail,
@@ -232,6 +238,7 @@
   .aquarium-dashboard-tank > .aquarium-tank canvas {
     width: 100% !important;
     height: 100% !important;
+    transform: none !important;
   }
 }
 

@@ -4,29 +4,37 @@ import { cn } from '@/lib/utils';
 import { useLayoutMode } from '../layout/LayoutModeProvider';
 
 type AdaptiveDetailContentProps = ComponentProps<typeof DialogContent> & {
-  /** Desktop details that must participate in the page grid, never a fixed portal. */
+  /** Desktop details that participate in the page workspace instead of a fixed portal. */
   workspace?: boolean;
   workspaceOpen?: boolean;
 };
 
 export function AdaptiveDetailContent({ className, workspace = false, workspaceOpen = false, children, ...props }: AdaptiveDetailContentProps) {
   const { isPhoneLayout } = useLayoutMode();
-  if (workspace && !isPhoneLayout) {
+  const useWorkspace = workspace && !isPhoneLayout;
+
+  if (useWorkspace) {
     if (!workspaceOpen) return null;
     return (
       <section
         data-surface="split-workspace-detail"
+        data-detail-viewport="workspace"
         role="region"
         aria-label="Detail workspace"
-        className={cn('relative flex h-full min-h-0 w-full max-w-none flex-col overflow-hidden border-l border-border/70 bg-[#FDFCF8]', className)}
+        className={cn(
+          'relative flex h-[100dvh] max-h-[100dvh] min-h-0 w-full max-w-none self-stretch flex-col overflow-hidden border-l border-border/70 bg-[#FDFCF8]',
+          className,
+        )}
       >
         {children as ReactNode}
       </section>
     );
   }
+
   return (
     <DialogContent
       data-surface={isPhoneLayout ? 'bottom-sheet' : workspace ? 'split-workspace-detail' : 'split-workspace-panel'}
+      data-detail-viewport={isPhoneLayout ? 'phone-sheet' : 'desktop-panel'}
       withOverlay={isPhoneLayout}
       className={cn(
         'flex flex-col overflow-hidden border-border bg-[#FDFCF8] p-0 shadow-[0_20px_60px_rgba(15,23,42,0.16)] duration-200',
