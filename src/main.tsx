@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './services/navigation/history-navigation-guard.service';
 import './index.css';
 import './styles/aquarium-stage-layout-v4.css';
+import './styles/immersive-detail-layout-v5.css';
 import { initializeSessionAnalytics } from './services/analytics/session-events.service';
 
 const isSyntheticTest = typeof window !== 'undefined' && window.location.search.includes('synthetic_test=1');
