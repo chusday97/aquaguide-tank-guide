@@ -21,8 +21,14 @@ async function assertSplitPage(page, path, openDetail, closeDetail) {
   const workspace = page.locator(path.startsWith('/care') ? '.care-workspace-shell' : '.encyclopedia-workspace');
   const workspaceBox = await workspace.boundingBox();
   assert.ok(workspaceBox, `${path} must keep a workspace root`);
+  const browse = path.startsWith('/care')
+    ? workspace.locator(':scope > .care-workspace-grid')
+    : workspace.locator(':scope > :not([data-surface="split-workspace-detail"])').first();
+  const browseBox = await browse.boundingBox();
+  assert.ok(browseBox, `${path} must keep a visible browse pane beside the detail`);
   assert.ok(detailBox.x > workspaceBox.x + workspaceBox.width * 0.42, `${path} detail must occupy the right side of its workspace`);
   assert.ok(detailBox.x + detailBox.width <= workspaceBox.x + workspaceBox.width + 2, `${path} detail must stay inside its workspace`);
+  assert.ok(browseBox.x + browseBox.width <= detailBox.x + 1, `${path} browse and detail panes must not overlap`);
   assert.equal(pageErrors.length, 0, `${path} must not throw while opening a detail: ${pageErrors.join('; ')}`);
 
   await closeDetail(page);
