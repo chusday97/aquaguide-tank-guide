@@ -1,0 +1,79 @@
+name: UI Regression V1
+
+on:
+  push:
+    branches:
+      - codex/interactive-parity-v3
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ui-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: UI ownership and stale-contract guard
+        run: node scripts/verify-ui-regression-contract.mjs
+
+      - name: Detail rail static contract
+        run: npm run test:split-workspace
+
+      - name: Aquarium stage static contract
+        run: npx tsx scripts/test-aquarium-stage-layout-contract.ts
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start isolated preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          nohup npx vite preview --host 127.0.0.1 --port 4173 > /tmp/aquaguide-preview.log 2>&1 &
+          echo $! > /tmp/aquaguide-preview.pid
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-preview.log
+          exit 1
+
+      - name: Persistent detail rail browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:split-workspace-runtime
+
+      - name: Aquarium stage browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-aquarium-stage-layout-runtime.mjs
+
+      - name: Mobile aquarium regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:mobile-aquarium-priorities
+
+      - name: Preview log on failure
+        if: failure()
+        run: cat /tmp/aquaguide-preview.log || true
