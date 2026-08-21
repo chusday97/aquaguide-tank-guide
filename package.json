@@ -36,6 +36,7 @@
     "test:interactive-discovery": "tsx scripts/test-interactive-discovery-batches.ts",
     "test:interactive-scene-assets": "tsx scripts/assert_interactive_scene_assets.ts",
     "test:interactive-scenes-ui": "node scripts/verify-interactive-scenes.mjs",
+    "test:split-workspace": "node scripts/verify-split-workspace-detail.mjs",
     "test:layout-mode": "tsx scripts/assert_layout_mode_policy.ts",
     "test:mini-compatibility": "tsx scripts/test-mini-compatibility.ts",
     "test:visual-results": "tsx scripts/test-visual-results.ts",

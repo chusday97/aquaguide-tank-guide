@@ -2368,6 +2368,7 @@ export default function Encyclopedia() {
       <SpeciesDetailDialog
         fish={selectedFish}
         open={!!selectedFish}
+        desktopSurface="workspace"
         source="atlas"
         aquariumContext={referenceAquarium}
         imageSrc={selectedFish ? getEncyclopediaImage(selectedFish) : ''}

@@ -2830,3 +2830,101 @@ select {
     @apply font-sans;
     }
 }
+
+/* A detail workspace must consume real layout space.  A fixed portal only
+   looks like a split view while it still covers the browsing surface. */
+@media (min-width: 1024px) {
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]),
+  .care-workspace-grid:has([data-surface="split-workspace-detail"]) {
+    display: grid;
+    grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0;
+    height: calc(100dvh - 24px);
+    min-height: 680px;
+    overflow: hidden;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) > :not([data-surface="split-workspace-detail"]),
+  .care-workspace-grid:has([data-surface="split-workspace-detail"]) > :not([data-surface="split-workspace-detail"]) {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) > [data-surface="split-workspace-detail"],
+  .care-workspace-grid:has([data-surface="split-workspace-detail"]) > [data-surface="split-workspace-detail"] {
+    grid-column: 2;
+    grid-row: 1 / span 100;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #fdfcf8;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) > :not([data-surface="split-workspace-detail"]),
+  .care-workspace-grid:has([data-surface="split-workspace-detail"]) > :not([data-surface="split-workspace-detail"]) {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+
+  .care-workspace-grid:has([data-surface="split-workspace-detail"]) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  [data-species-detail-layout="split-workspace-profile"] {
+    padding: 18px 22px 30px;
+  }
+
+  [data-species-detail-layout="split-workspace-profile"] > section:first-child {
+    border-top: 0;
+  }
+
+  [data-species-detail-layout="split-workspace-profile"] > section:first-child > div {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  [data-species-detail-layout="split-workspace-profile"] [data-species-detail-hero] {
+    height: 250px;
+    border: 0;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none;
+  }
+
+  [data-species-detail-layout="split-workspace-profile"] [data-species-detail-hero] img {
+    filter: none;
+  }
+
+  .care-detail-workspace-content {
+    max-width: none;
+    padding: 18px 22px 30px;
+  }
+
+  .care-detail-workspace-hero {
+    grid-template-columns: minmax(175px, 0.64fr) minmax(0, 1.36fr);
+    align-items: start;
+  }
+
+  .care-detail-workspace-image {
+    height: min(30dvh, 220px) !important;
+    min-height: 0 !important;
+    object-fit: cover;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]),
+  .care-workspace-grid:has([data-surface="split-workspace-detail"]) {
+    display: block;
+  }
+
+  .encyclopedia-workspace:has([data-surface="split-workspace-detail"]) > :not([data-surface="split-workspace-detail"]),
+  .care-workspace-grid:has([data-surface="split-workspace-detail"]) > :not([data-surface="split-workspace-detail"]) {
+    display: none;
+  }
+
+  [data-surface="split-workspace-detail"] {
+    min-height: calc(100dvh - 24px);
+  }
+}

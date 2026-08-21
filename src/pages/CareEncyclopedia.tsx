@@ -2205,7 +2205,7 @@ export default function CareEncyclopedia() {
       </div>
 
       <Dialog open={!!selectedTopic} modal={isPhoneLayout} onOpenChange={(open) => !open && closeCareDetail()}>
-        <AdaptiveDetailContent>
+        <AdaptiveDetailContent workspace={!isPhoneLayout}>
           {selectedTopic && (
             <CareArticleDetail
               key={selectedTopic.id}
@@ -2225,6 +2225,7 @@ export default function CareEncyclopedia() {
               onOpenCollection={() => navigateToRoute('/collection/care')}
               onRestoreActions={setCheckedActions}
               activeAquarium={activeAquarium}
+              workspace={!isPhoneLayout}
             />
           )}
         </AdaptiveDetailContent>
@@ -3032,6 +3033,7 @@ export function CareArticleDetail({
   onOpenCollection,
   onRestoreActions,
   activeAquarium,
+  workspace = false,
 }: {
   topic: CareTopic;
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -3045,6 +3047,7 @@ export function CareArticleDetail({
   onOpenCollection?: () => void;
   onRestoreActions?: (values: string[]) => void;
   activeAquarium: Aquarium | null;
+  workspace?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
@@ -3359,12 +3362,12 @@ export function CareArticleDetail({
         };
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-[#FDFCF8]">
+    <div className={`care-detail-surface flex h-full min-h-0 flex-col bg-[#FDFCF8]${workspace ? ' care-detail-surface--workspace' : ''}`}>
       <div ref={scrollRef} className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
-        <div className="mx-auto max-w-[850px] p-4 pb-8 pt-7">
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] md:items-stretch">
+        <div className={`mx-auto max-w-[850px] p-4 pb-8 pt-7${workspace ? ' care-detail-workspace-content' : ''}`}>
+          <div className={`grid gap-4 md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] md:items-stretch${workspace ? ' care-detail-workspace-hero' : ''}`}>
             <button type="button" onClick={onPreview} data-care-detail-hero className="block min-w-0" aria-label={isEn ? `View large image of ${topic.title}` : `查看${topic.title}大图`}>
-              <CareImage topic={topic} className="h-[270px] w-full rounded-[20px] md:h-full md:min-h-[430px]" showPreviewHint />
+              <CareImage topic={topic} className={`h-[270px] w-full rounded-[20px] md:h-full md:min-h-[430px]${workspace ? ' care-detail-workspace-image' : ''}`} showPreviewHint />
             </button>
 
             <div className="min-w-0">

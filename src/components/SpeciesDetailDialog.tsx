@@ -79,6 +79,7 @@ type SpeciesDetailDialogProps = {
   onViewInTank?: () => void;
   onOpenTankSettings?: (panel: 'size' | 'parameters' | 'equipment') => void;
   onRecordDeath?: (fish: Fish, input: { date: string; causeCodes: MemorialCauseCode[]; reason?: string; batchId?: string; operationId: string }) => void | Promise<void>;
+  desktopSurface?: 'dialog' | 'workspace';
 };
 
 const getLocalDateValue = () => {
@@ -419,9 +420,11 @@ export function SpeciesDetailDialog({
   onViewInTank,
   onOpenTankSettings,
   onRecordDeath,
+  desktopSurface = 'dialog',
 }: SpeciesDetailDialogProps) {
   const { t, i18n } = useTranslation();
   const { isPhoneLayout } = useLayoutMode();
+  const useWorkspaceSurface = desktopSurface === 'workspace' && !isPhoneLayout;
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const translateLabel = (label: string) => {
     if (label === '水体类型') return t('encyclopedia.waterType');
@@ -791,18 +794,26 @@ export function SpeciesDetailDialog({
   return (
     <>
       <Dialog open={open} modal={isPhoneLayout} onOpenChange={onOpenChange}>
-        <AdaptiveDetailContent showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
+        <AdaptiveDetailContent workspace={useWorkspaceSurface} showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
-              <SurfaceHeader
-                className="modalHeader species-detail-header"
-                title={isEn ? 'Species profile' : '物种档案'}
-                onClose={() => onOpenChange(false)}
-                closeLabel={t('encyclopedia.dismiss')}
-              />
+              {useWorkspaceSurface ? (
+                <div className="species-workspace-close flex h-14 shrink-0 items-center justify-end border-b border-ink/8 px-3">
+                  <button type="button" onClick={() => onOpenChange(false)} className="flex h-11 w-11 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-ink/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={t('encyclopedia.dismiss')}>
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              ) : (
+                <SurfaceHeader
+                  className="modalHeader species-detail-header"
+                  title={isEn ? 'Species profile' : '物种档案'}
+                  onClose={() => onOpenChange(false)}
+                  closeLabel={t('encyclopedia.dismiss')}
+                />
+              )}
 
               <div className="modalBody species-detail-body app-scrollbar-hidden p-0">
-                <div className="p-3 min-[760px]:p-5" data-species-detail-layout="single-screen-profile">
+                <div className="p-3 min-[760px]:p-5" data-species-detail-layout={useWorkspaceSurface ? 'split-workspace-profile' : 'single-screen-profile'}>
                   <section className="overflow-hidden border-y border-ink/10 bg-transparent">
                     <div className="grid min-w-0 grid-cols-1 min-[620px]:grid-cols-[minmax(250px,0.92fr)_minmax(0,1.08fr)]">
                       <div className="min-w-0 py-3 min-[620px]:py-5 min-[620px]:pr-5">

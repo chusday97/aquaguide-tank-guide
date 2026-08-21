@@ -1,5 +1,11 @@
 # AquaGuide 项目结构
 
+## 本轮交互结构
+
+- `src/components/common/AdaptiveDetailContent.tsx`：手机底部面板与桌面页面内双屏详情的表面适配。
+- `src/components/ThreeAquarium.tsx`：`contain` / `stage-cover` 响应式相机取景。
+- `scripts/verify-split-workspace-detail.mjs`：阻止桌面详情退回 Portal 固定抽屉的结构门禁。
+
 根目录 `vercel.json`：Vercel 生产部署的 SPA 路由回退配置，确保 `/aquarium` 等前端深链接直接访问时返回应用入口。
 
 ## 核心入口

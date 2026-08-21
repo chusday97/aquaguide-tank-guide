@@ -5303,6 +5303,7 @@ export default function AquariumManager() {
               aquarium={activeAquarium}
               activeSpecies={active3DSpecies}
               onSpeciesSelect={handleAquariumSpeciesSelect}
+              framing="stage-cover"
             />
           </Suspense>
         ) : (
