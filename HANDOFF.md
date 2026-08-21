@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-21 最新交接快照：互动视觉一致性
+
+- 当前工作分支：`codex/interactive-parity-v3@7551824`，已推送至同名 GitHub 分支；不要将其直接合并 `main`，需先完成视觉一致性验收。
+- 已完成：首页为真实 `ThreeAquarium` 主舞台（`debc081`）；`/collection` 为水下翻页书册（`b7c03d1`）；物种/养护详情桌面为无模态双屏工作区，手机仍为底部面板（`0828560`）；每日十项发现迁入互动图鉴并支持“换一批”（`ebce70f`）。
+- 已验证：`lint`、生产构建、桌面 1440px 双屏详情 `overlay=0 / modal-open=false`、iPhone UA 底部面板 `overlay=1 / modal-open=true`。构建仍有既有物种库与 Three.js 大包告警，未提高阈值掩盖。
+- AI Badcase：本轮 `npm run eval:all` 为 47/47 通过，`evaluation/badcases/registry.jsonl` 保持 0 条；不把尚未完成的 UI 视觉验收写成 AI Badcase，详见 `evaluation/badcases/LATEST_STATUS.md`。
+- 下一步：使用同一正式 React 组件建立内部预览页，再完成 390/600/768/1024/1440px 视觉回归与用户视觉确认；这两项完成后才评估是否合并 `main`。
+
 ## 2026-08-21 互动水族册与文字系统（已提交，独立验收 PASS）
 
 - `/collection` 已从普通卡片网格改为水下展开书册：种草、养护、生命纪念、成就保留原有快照、最近排序、预览数量和深链；点击章节只在当前页展开，返回会恢复四章总览，不使用内容弹窗。
