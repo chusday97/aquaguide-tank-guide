@@ -25,6 +25,7 @@
     "test:ai-entry-policy": "tsx scripts/assert_ai_entry_policy.ts",
     "test:copilot-contract": "tsx scripts/assert_tank_copilot_contract.ts",
     "test:copilot-evaluation": "tsx scripts/evaluate_tank_copilot.ts",
+    "test:ai-capabilities": "node scripts/test-ai-capability-contract.mjs",
     "eval:deterministic": "tsx evaluation/runners/run-deterministic.ts",
     "eval:mocked": "tsx evaluation/runners/run-mocked-provider.ts",
     "eval:live": "tsx evaluation/runners/run-live-provider.ts",

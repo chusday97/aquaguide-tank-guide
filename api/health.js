@@ -5,7 +5,8 @@ export default function handler(req, res) {
     return;
   }
 
-  const textConfigured = Boolean(process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY);
+  const isConfiguredApiKey = (value) => Boolean(value && value !== 'MY_DEEPSEEK_API_KEY' && value !== 'MY_AI_API_KEY');
+  const textConfigured = isConfiguredApiKey(process.env.AI_API_KEY) || isConfiguredApiKey(process.env.DEEPSEEK_API_KEY);
   const visionConfigured = Boolean(process.env.VISION_API_KEY && process.env.VISION_BASE_URL && process.env.VISION_MODEL);
   const provider = 'deepseek';
   const model = process.env.AI_MODEL || process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
