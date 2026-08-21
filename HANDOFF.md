@@ -3,8 +3,8 @@
 ## 2026-08-21 当前返修：三处核心视觉结构
 
 - **范围**：只修复桌面详情覆盖、3D 相机留白、养护详情行动层级；不改业务数据、规则或 API。
-- **实现中**：`DialogContent` 支持不经 Portal 的页面内 surface；图鉴与养护详情在桌面走 `split-workspace-detail`；首页 `ThreeAquarium` 增加 `stage-cover` 相机取景。
-- **验收待补**：正式浏览器几何/截图、`/_preview/interactive` 场景、Critic 复验与 Evaluator。不要把“无黑色遮罩的固定抽屉”误判为真双屏。
+- **已实现并推送**：`5d6feb1`（页面内双屏与 stage-cover）、`9dc815d`（正式 React 预览）、`bf1e2a5`（3D 取景门禁）。
+- **验收待补**：正式浏览器几何/截图、Critic 复验与 Evaluator。不要把“无黑色遮罩的固定抽屉”误判为真双屏。
 
 ## 2026-08-21 最新交接快照：互动视觉一致性
 
