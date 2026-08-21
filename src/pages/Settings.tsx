@@ -36,6 +36,8 @@ export default function SettingsPage() {
   const [shareError, setShareError] = useState('');
   const [revokingShareId, setRevokingShareId] = useState('');
   const [pendingRevokeShareId, setPendingRevokeShareId] = useState('');
+  const [pendingFeedbackNavigationPath, setPendingFeedbackNavigationPath] = useState('');
+  const allowFeedbackNavigationRef = useRef(false);
   const hasUnsavedFeedback = feedbackMessage.trim().length > 0;
 
   useEffect(() => {
@@ -49,7 +51,14 @@ export default function SettingsPage() {
   }, [hasUnsavedFeedback]);
 
   useEffect(() => registerNavigationGuard(hasUnsavedFeedback
-    ? () => window.confirm(isEn ? 'Your feedback has not been submitted. Leave this page?' : '反馈还没有提交，确定要离开吗？')
+    ? (targetPath) => {
+      if (allowFeedbackNavigationRef.current) {
+        allowFeedbackNavigationRef.current = false;
+        return true;
+      }
+      setPendingFeedbackNavigationPath(targetPath);
+      return false;
+    }
     : null), [hasUnsavedFeedback, registerNavigationGuard]);
 
   useEffect(() => {
@@ -119,6 +128,15 @@ export default function SettingsPage() {
     if (!section) return;
     section.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     section.focus({ preventScroll: true });
+  };
+
+  const leaveFeedbackPage = () => {
+    const path = pendingFeedbackNavigationPath;
+    if (!path) return;
+    allowFeedbackNavigationRef.current = true;
+    setFeedbackMessage('');
+    setPendingFeedbackNavigationPath('');
+    navigateToRoute(path);
   };
 
   return (
@@ -277,8 +295,22 @@ export default function SettingsPage() {
           </section>
         </div>
       </div>
+
+      <Dialog open={Boolean(pendingFeedbackNavigationPath)} onOpenChange={open => { if (!open) setPendingFeedbackNavigationPath(''); }}>
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
+          <DialogHeader>
+            <DialogTitle>{isEn ? 'Leave without submitting feedback?' : '反馈还没有提交，确定离开？'}</DialogTitle>
+            <DialogDescription>{isEn ? 'Your current feedback draft will be discarded. Stay here if you want to submit it first.' : '当前填写的反馈草稿会被丢弃。如果还要提交，请留在这一页。'}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button type="button" autoFocus onClick={() => setPendingFeedbackNavigationPath('')} className="min-h-11 rounded-xl border border-border px-4 text-sm font-black">{isEn ? 'Keep editing' : '继续填写'}</button>
+            <button type="button" onClick={leaveFeedbackPage} className="min-h-11 rounded-xl bg-rose-600 px-4 text-sm font-black text-white">{isEn ? 'Discard and leave' : '放弃并离开'}</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={Boolean(pendingRevokeShareId)} onOpenChange={open => { if (!open && !revokingShareId) setPendingRevokeShareId(''); }}>
-        <DialogContent showCloseButton={false} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[min(92vw,460px)] max-w-[460px] rounded-[26px]">
           <DialogHeader>
             <DialogTitle>{isEn ? 'Revoke this report link?' : '撤销这条报告链接？'}</DialogTitle>
             <DialogDescription>{isEn ? 'The original link will stop working immediately and cannot be restored. Create a new report if you need to share again.' : '原链接会立即失效且无法恢复。如需再次分享，请重新生成一份报告。'}</DialogDescription>
