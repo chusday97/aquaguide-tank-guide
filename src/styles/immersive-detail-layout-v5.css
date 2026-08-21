@@ -1,10 +1,9 @@
 /*
- * Persistent detail surface system.
+ * Unified AquaGuide surface system.
  *
- * Desktop browsing details are non-modal right rails: the underlying page stays
- * visible and interactive, and selecting another object replaces rail content
- * instead of dismissing the surface. Phone details use a bottom sheet.
- * Blocking confirmations continue to use the centered DialogContent contract.
+ * - Browsing detail: persistent non-modal right rail on desktop, bottom sheet on phone.
+ * - Task flow: right rail on desktop, high bottom sheet on phone.
+ * - Blocking confirmation: centered modal (owned by DialogContent itself).
  */
 
 [data-detail-viewport="desktop-rail"] {
@@ -16,7 +15,7 @@
   height: 100dvh !important;
   max-height: 100dvh !important;
   margin: 0 !important;
-  transform: none;
+  transform: none !important;
   overflow: hidden !important;
   border-top: 0 !important;
   border-right: 0 !important;
@@ -53,9 +52,6 @@
   overscroll-behavior: contain;
 }
 
-/* The old detail layout switched to two columns based on viewport width, not
-   rail width. A 1440px browser therefore squeezed two desktop columns into a
-   ~600px rail. The rail owns a vertical information hierarchy instead. */
 [data-detail-viewport="desktop-rail"] [data-species-detail-layout] {
   width: 100% !important;
   max-width: none !important;
@@ -96,8 +92,103 @@
   backdrop-filter: blur(16px);
 }
 
-/* A selected discovery result remains inside the scene instead of pushing the
-   underwater canvas upward. This behavior is independent from the right rail. */
+/* Legacy direct DialogContent task surfaces are normalized here. This prevents
+   old per-page max-width / top-left utilities from making each dialog land in a
+   different place. */
+@media (min-width: 768px) {
+  [data-dialog-surface="task"] {
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: min(760px, calc(100vw - 320px)) !important;
+    min-width: min(520px, calc(100vw - 320px)) !important;
+    max-width: 760px !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    overflow: hidden !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    border-radius: 28px 0 0 28px !important;
+    background: #fdfcf8 !important;
+    box-shadow: -22px 0 64px rgba(15, 23, 42, 0.16) !important;
+  }
+
+  [data-dialog-surface="task"] > [data-slot="dialog-header"] {
+    flex: 0 0 auto;
+  }
+
+  [data-dialog-surface="task"] > [data-slot="dialog-footer"] {
+    flex: 0 0 auto;
+  }
+
+  [data-dialog-surface="task"] .modalBody,
+  [data-dialog-surface="task"] > .app-scrollbar-hidden,
+  [data-dialog-surface="task"] > .min-h-0.flex-1 {
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (max-width: 767px) {
+  [data-dialog-surface="task"] {
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    width: min(100vw, 430px) !important;
+    max-width: 430px !important;
+    height: min(82dvh, calc(100dvh - 12px)) !important;
+    min-height: min(58dvh, 480px) !important;
+    max-height: 92dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translateX(-50%) !important;
+    overflow: hidden !important;
+    border-radius: 28px 28px 0 0 !important;
+    background: #fdfcf8 !important;
+    box-shadow: 0 -18px 56px rgba(15, 23, 42, 0.18) !important;
+  }
+
+  [data-dialog-surface="task"]::before,
+  [data-detail-viewport="phone-sheet"]::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    z-index: 60;
+    width: 42px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.16);
+    transform: translateX(-50%);
+  }
+
+  [data-dialog-surface="task"] .modalBody,
+  [data-dialog-surface="task"] > .app-scrollbar-hidden,
+  [data-dialog-surface="task"] > .min-h-0.flex-1 {
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+  }
+}
+
+/* A selected discovery result stays inside the scene instead of shortening the
+   underwater canvas. */
 @media (min-width: 1024px) {
   .encyclopedia-workspace .interactive-tank-shell,
   .care-workspace-shell .interactive-tank-shell {
@@ -139,25 +230,9 @@
   }
 }
 
-/* Mobile is a bottom sheet rather than a full-screen desktop rail. Long detail
-   content scrolls inside the sheet while the underlying page remains spatially
-   understandable. */
 [data-detail-viewport="phone-sheet"] {
   box-sizing: border-box;
   overflow: hidden !important;
-}
-
-[data-detail-viewport="phone-sheet"]::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  z-index: 60;
-  width: 42px;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.16);
-  transform: translateX(-50%);
 }
 
 [data-detail-viewport="phone-sheet"] .modalBody,
