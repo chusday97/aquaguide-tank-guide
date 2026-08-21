@@ -7,9 +7,10 @@ const hardscapeScientificPattern = /Hardscape|Seiryu|Ohko|Lava|Driftwood|Aqua So
 const hardscapeNamePattern = /青龙石|松皮石|火山石|沉木|流木|水草泥|溪流砂|化妆砂|景观板|景观组|景观树|底床/;
 
 export const isAquaticPlantSpecies = (fish: Fish) => {
-  const name = fish.name || '';
+  const canonical = fish as Fish & { _originalName?: string; _originalCategory?: string };
+  const name = canonical._originalName || fish.name || '';
   const scientificName = fish.scientificName || '';
-  const category = fish.category || '';
+  const category = canonical._originalCategory || fish.category || '';
 
   if (category === '硬景/底床') return false;
   if (category === '水草' && !/水草泥|底床|硬景|沉木|石|砂/.test(name)) {
@@ -21,11 +22,13 @@ export const isAquaticPlantSpecies = (fish: Fish) => {
 };
 
 export const isHardscapeSpecies = (fish: Fish) => {
-  const name = fish.name || '';
+  const canonical = fish as Fish & { _originalName?: string; _originalCategory?: string };
+  const name = canonical._originalName || fish.name || '';
   const scientificName = fish.scientificName || '';
-  const text = `${name} ${scientificName} ${fish.category || ''}`;
+  const category = canonical._originalCategory || fish.category || '';
+  const text = `${name} ${scientificName} ${category}`;
 
-  if (fish.category === '水草' && /水草泥|底床|硬景|沉木|石|砂/.test(name)) return true;
+  if (category === '水草' && /水草泥|底床|硬景|沉木|石|砂/.test(name)) return true;
   if (hardscapeScientificPattern.test(scientificName)) return true;
   return /硬景|底床|Hardscape/i.test(text) && hardscapeNamePattern.test(name);
 };

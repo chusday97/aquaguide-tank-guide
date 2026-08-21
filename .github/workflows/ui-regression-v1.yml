@@ -69,6 +69,11 @@ jobs:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-aquarium-stage-layout-runtime.mjs
 
+      - name: Aquarium primary tools and settings search
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:aquarium-primary-tools
+
       - name: Collection creature-navigation regression
         env:
           AQUAGUIDE_URL: http://127.0.0.1:4173

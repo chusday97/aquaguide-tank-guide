@@ -1174,6 +1174,8 @@ export default function AquariumManager() {
   const [activeSettingsPanel, setActiveSettingsPanel] = useState<'size' | 'parameters' | 'substrate' | 'plants' | 'lighting' | 'equipment' | null>(null);
   const [isPlantListExpanded, setIsPlantListExpanded] = useState(false);
   const [isScapeListExpanded, setIsScapeListExpanded] = useState(false);
+  const [plantSearchQuery, setPlantSearchQuery] = useState('');
+  const [scapeSearchQuery, setScapeSearchQuery] = useState('');
   const settingsBodyRef = useRef<HTMLDivElement | null>(null);
   const settingPanelRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const handledAddSpeciesRequestRef = useRef('');
@@ -1346,6 +1348,8 @@ export default function AquariumManager() {
   useEffect(() => {
     if (!isSettingsOpen) {
       setActiveSettingsPanel(null);
+      setPlantSearchQuery('');
+      setScapeSearchQuery('');
     }
   }, [isSettingsOpen]);
 
@@ -3696,8 +3700,17 @@ export default function AquariumManager() {
         : settingsForm.hardscape,
     });
   };
-  const visiblePlantOptions = isPlantListExpanded ? availablePlantOptions : availablePlantOptions.slice(0, 4);
-  const hiddenPlantCount = Math.max(availablePlantOptions.length - visiblePlantOptions.length, 0);
+  const normalizedPlantSearch = plantSearchQuery.trim().toLowerCase();
+  const filteredPlantOptions = normalizedPlantSearch
+    ? availablePlantOptions.filter(plant => {
+        const originalName = (plant as Fish & { _originalName?: string })._originalName || '';
+        return `${plant.name} ${originalName} ${plant.scientificName}`.toLowerCase().includes(normalizedPlantSearch);
+      })
+    : availablePlantOptions;
+  const visiblePlantOptions = normalizedPlantSearch
+    ? filteredPlantOptions
+    : isPlantListExpanded ? filteredPlantOptions : filteredPlantOptions.slice(0, 4);
+  const hiddenPlantCount = Math.max(filteredPlantOptions.length - visiblePlantOptions.length, 0);
   const selectedHardscapeCount = settingsForm.hardscape?.length || 0;
   const currentSubstrate = settingsForm.substrate || '无';
   const scapeOptions = [
@@ -3727,8 +3740,14 @@ export default function AquariumManager() {
       : (settingsForm.hardscape || []).includes(b.value);
     return Number(bSelected) - Number(aSelected);
   });
-  const visibleScapeOptions = isScapeListExpanded ? sortedScapeOptions : sortedScapeOptions.slice(0, 4);
-  const hiddenScapeCount = Math.max(sortedScapeOptions.length - visibleScapeOptions.length, 0);
+  const normalizedScapeSearch = scapeSearchQuery.trim().toLowerCase();
+  const filteredScapeOptions = normalizedScapeSearch
+    ? sortedScapeOptions.filter(option => `${option.label} ${option.value} ${option.hint}`.toLowerCase().includes(normalizedScapeSearch))
+    : sortedScapeOptions;
+  const visibleScapeOptions = normalizedScapeSearch
+    ? filteredScapeOptions
+    : isScapeListExpanded ? filteredScapeOptions : filteredScapeOptions.slice(0, 4);
+  const hiddenScapeCount = Math.max(filteredScapeOptions.length - visibleScapeOptions.length, 0);
   const selectedPlantNames = (settingsForm.plants || [])
     .map(value => fishData.find(item => item.id === value || item.name === value)?.name || value)
     .slice(0, 3);
@@ -3883,9 +3902,23 @@ export default function AquariumManager() {
         <ConfigSection
           title={isEn ? "Substrate / Hardscape" : "底砂 / 造景"}
           subtitle={isEn ? "Select one substrate type. Hardscape items can be multi-selected." : "底砂单选，硬景可多选。"}
-          actionText={isScapeListExpanded ? '收起' : '查看全部'}
-          onAction={() => setIsScapeListExpanded(prev => !prev)}
+          actionText={normalizedScapeSearch ? undefined : (isScapeListExpanded ? (isEn ? 'Collapse' : '收起') : (isEn ? 'View all' : '查看全部'))}
+          onAction={normalizedScapeSearch ? undefined : () => setIsScapeListExpanded(prev => !prev)}
         >
+          <div className="mb-2 flex items-center justify-end">
+            <label data-settings-search="substrate" className="group flex w-[min(100%,220px)] items-center gap-2 border-b border-ink/15 px-0.5 pb-1 transition-colors focus-within:border-emerald-600">
+              <Search className="h-3.5 w-3.5 shrink-0 text-ink/32 transition-colors group-focus-within:text-emerald-700" />
+              <input
+                type="search"
+                value={scapeSearchQuery}
+                onChange={event => setScapeSearchQuery(event.target.value)}
+                aria-label={isEn ? 'Search substrate or hardscape' : '搜索底砂或造景'}
+                placeholder={isEn ? 'Search substrate / hardscape' : '搜索底砂 / 造景'}
+                className="h-7 min-w-0 flex-1 bg-transparent text-[11px] font-semibold text-ink outline-none placeholder:text-ink/30"
+              />
+            </label>
+          </div>
+          {visibleScapeOptions.length > 0 ? (
           <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
             {visibleScapeOptions.map(option => {
               const currentHardscape = settingsForm.hardscape || [];
@@ -3927,6 +3960,11 @@ export default function AquariumManager() {
               );
             })}
           </div>
+          ) : (
+            <div className="rounded-[12px] border border-dashed border-ink/12 px-3 py-5 text-center text-[11px] font-semibold text-ink/42">
+              {isEn ? 'No matching substrate or hardscape.' : '没有找到对应的底砂或造景。'}
+            </div>
+          )}
         </ConfigSection>
       );
     }
@@ -3936,9 +3974,23 @@ export default function AquariumManager() {
         <ConfigSection
           title={isEn ? "Aquatic Plants" : "水草"}
           subtitle={isEn ? "Select aquatic plant species currently in the tank." : "选择当前鱼缸里的水草种类。"}
-          actionText={isPlantListExpanded ? '收起' : '查看全部'}
-          onAction={() => setIsPlantListExpanded(prev => !prev)}
+          actionText={normalizedPlantSearch ? undefined : (isPlantListExpanded ? (isEn ? 'Collapse' : '收起') : (isEn ? 'View all' : '查看全部'))}
+          onAction={normalizedPlantSearch ? undefined : () => setIsPlantListExpanded(prev => !prev)}
         >
+          <div className="mb-2 flex items-center justify-end">
+            <label data-settings-search="plants" className="group flex w-[min(100%,220px)] items-center gap-2 border-b border-ink/15 px-0.5 pb-1 transition-colors focus-within:border-emerald-600">
+              <Search className="h-3.5 w-3.5 shrink-0 text-ink/32 transition-colors group-focus-within:text-emerald-700" />
+              <input
+                type="search"
+                value={plantSearchQuery}
+                onChange={event => setPlantSearchQuery(event.target.value)}
+                aria-label={isEn ? 'Search aquatic plants' : '搜索水草物种'}
+                placeholder={isEn ? 'Search plant species' : '搜索水草物种'}
+                className="h-7 min-w-0 flex-1 bg-transparent text-[11px] font-semibold text-ink outline-none placeholder:text-ink/30"
+              />
+            </label>
+          </div>
+          {visiblePlantOptions.length > 0 ? (
           <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
             {visiblePlantOptions.map(plant => {
               const current = settingsForm.plants || [];
@@ -3963,6 +4015,11 @@ export default function AquariumManager() {
               );
             })}
           </div>
+          ) : (
+            <div className="rounded-[12px] border border-dashed border-ink/12 px-3 py-5 text-center text-[11px] font-semibold text-ink/42">
+              {isEn ? 'No matching plant species.' : '没有找到对应的水草物种。'}
+            </div>
+          )}
         </ConfigSection>
       );
     }
@@ -5381,37 +5438,32 @@ export default function AquariumManager() {
           </div>
         )}
 
-        {/* Tank Action Toolbar */}
-        <div className="absolute right-2 top-2 z-20 hidden flex-col gap-2">
+        {/* Primary tank tools stay visible: add livestock + tank settings. */}
+        <div data-tank-primary-tools className="absolute right-3 top-3 z-30 flex flex-col gap-2 md:bottom-[92px] md:left-6 md:right-auto md:top-auto">
           <Button
-            aria-label={isEn ? 'Record Existing Livestock' : '记录已有生物'}
-            title={isEn ? 'Record Existing Livestock' : '记录已有生物'}
+            data-tank-primary-action="add"
+            aria-label={isEn ? 'Add Livestock' : '添加生物'}
+            title={isEn ? 'Add Livestock' : '添加生物'}
             onClick={() => openSpeciesAddition('record_existing')}
-            className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
+            className="h-11 w-11 rounded-full border border-white/70 bg-white/72 p-0 text-emerald-900 shadow-[0_8px_22px_rgba(15,77,62,0.12)] backdrop-blur-md hover:bg-white hover:text-accent"
           >
             <Plus className="h-4 w-4" />
           </Button>
           <Button
-            aria-label={isEn ? 'Plan Livestock' : '规划想养的生物'}
-            title={isEn ? 'Plan Livestock' : '规划想养的生物'}
-            onClick={() => openSpeciesAddition('planned_addition')}
-            className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
-          >
-            <BookOpen className="h-4 w-4" />
-          </Button>
-          <Button
+            data-tank-primary-action="fullscreen"
             aria-label={isEn ? "Fullscreen Preview" : "全屏预览"}
             title={isEn ? "Fullscreen Preview" : "全屏预览"}
             onClick={() => { setShouldLoadThreeAquarium(true); setRequiresManualThreeLoad(false); setIsTankPreviewOpen(true); }}
-            className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
+            className="hidden h-11 w-11 rounded-full border border-white/70 bg-white/72 p-0 text-emerald-900 shadow-[0_8px_22px_rgba(15,77,62,0.12)] backdrop-blur-md hover:bg-white hover:text-accent md:inline-flex"
           >
             <Maximize2 className="h-4 w-4" />
           </Button>
           <Button
+            data-tank-primary-action="settings"
             aria-label={isEn ? 'Tank Settings' : '鱼缸设置'}
             title={isEn ? 'Tank Settings' : '鱼缸设置'}
             onClick={() => openAquariumSettings()}
-            className="h-11 w-11 rounded-full border border-white/50 bg-white/55 p-0 text-ink/55 shadow-none backdrop-blur-sm hover:bg-white hover:text-accent"
+            className="h-11 w-11 rounded-full border border-white/70 bg-white/72 p-0 text-emerald-900 shadow-[0_8px_22px_rgba(15,77,62,0.12)] backdrop-blur-md hover:bg-white hover:text-accent"
           >
             <Settings className="h-4 w-4" />
           </Button>
@@ -7568,6 +7620,7 @@ export default function AquariumManager() {
                     <div key={item.id} ref={node => { settingPanelRefs.current[item.id] = node; }} className="grid scroll-mt-4 gap-2">
                       <button
                         type="button"
+                        data-settings-panel={item.id}
                         onClick={() => openSettingsPanel(item.id)}
                         className={`flex items-center justify-between gap-3 rounded-[16px] border bg-white px-3 py-3 text-left shadow-sm transition-colors ${
                           isActive ? 'border-accent/40 ring-2 ring-accent-light' : 'border-white hover:border-accent/25'

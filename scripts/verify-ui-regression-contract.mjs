@@ -62,6 +62,8 @@ for (const match of aquariumDialogTags) {
   }
 }
 if (aquarium.includes('<Dialog open={false}')) fail('Disabled legacy Aquarium dialogs must be deleted, not kept as dead modal code.');
+if (!aquarium.includes('data-tank-primary-action="add"') || !aquarium.includes('data-tank-primary-action="settings"')) fail('Aquarium add/settings primary tools must remain visible in the tank stage.');
+if (!aquarium.includes('data-settings-search="substrate"') || !aquarium.includes('data-settings-search="plants"')) fail('Aquarium substrate/plants inline search must remain available.');
 
 if (!collectionHub.includes('data-node-visual="creature"')) fail('Collection desktop navigation must remain creature-first, not card-first.');
 if (!collectionHub.includes('data-collection-node={module}')) fail('Collection creature nodes must expose stable runtime hooks.');
