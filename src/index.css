@@ -675,6 +675,10 @@ body,
   isolation: isolate;
 }
 
+.collection-book-shell::selection {
+  background: rgba(67, 151, 123, 0.18);
+}
+
 .collection-book-shell::before,
 .collection-book-shell::after {
   position: absolute;
@@ -728,6 +732,21 @@ body,
 .collection-book-plant-left { left: 6%; height: 38%; transform: rotate(-12deg); }
 .collection-book-plant-right { right: 9%; height: 31%; transform: rotate(11deg); }
 
+.collection-book-creature {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  width: 116px;
+  height: 72px;
+  opacity: 0.75;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 11px rgba(15, 70, 57, 0.16));
+  animation: collection-creature-swim 12s ease-in-out infinite alternate;
+}
+
+.collection-book-creature-one { top: 19%; left: 6%; transform: rotate(6deg); }
+.collection-book-creature-two { right: 5%; bottom: 20%; width: 92px; height: 58px; animation-delay: -5s; transform: scaleX(-1) rotate(4deg); }
+
 .collection-book-spread {
   position: relative;
   z-index: 1;
@@ -745,6 +764,16 @@ body,
   border-radius: 12px 12px 26px 26px;
   background: rgba(109, 89, 58, 0.26);
   box-shadow: 0 28px 48px rgba(27, 59, 48, 0.22), inset 0 1px rgba(255, 255, 255, 0.72);
+  transform-style: preserve-3d;
+  transform-origin: center;
+}
+
+.collection-book-spread.is-turning {
+  animation: collection-spread-turn 420ms cubic-bezier(0.58, 0, 0.18, 1) both;
+}
+
+.collection-book-spread.is-returning {
+  animation: collection-spread-return 360ms cubic-bezier(0.58, 0, 0.18, 1) both;
 }
 
 .collection-book-spread::before {
@@ -774,6 +803,60 @@ body,
     var(--collection-paper);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.56);
   transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  transform-origin: center;
+}
+
+.collection-book-chapter::before {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  pointer-events: none;
+}
+
+.collection-book-chapter-wishlist::before {
+  right: 28px;
+  bottom: 26px;
+  width: 116px;
+  height: 78px;
+  border: 1px solid rgba(192, 78, 106, 0.18);
+  border-radius: 8px 18px 12px 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.68), rgba(255,237,242,0.44));
+  box-shadow: 8px 9px 0 rgba(192, 78, 106, 0.07);
+  transform: rotate(-5deg);
+}
+
+.collection-book-chapter-care::before {
+  right: 28px;
+  bottom: 22px;
+  width: 104px;
+  height: 68px;
+  border-radius: 4px;
+  background: repeating-linear-gradient(180deg, rgba(92, 154, 190, 0.2) 0 1px, transparent 1px 15px), #eef9ff;
+  box-shadow: 7px 8px 0 rgba(45, 120, 156, 0.07);
+  transform: rotate(4deg);
+}
+
+.collection-book-chapter-memorial::before {
+  right: 28px;
+  bottom: 23px;
+  width: 116px;
+  height: 80px;
+  border: 8px solid rgba(255, 255, 255, 0.65);
+  border-radius: 3px;
+  background: linear-gradient(145deg, rgba(117, 139, 147, 0.24), rgba(255,255,255,0.16));
+  box-shadow: 6px 9px 0 rgba(54, 75, 81, 0.09);
+  transform: rotate(-4deg);
+}
+
+.collection-book-chapter-achievements::before {
+  right: 36px;
+  bottom: 28px;
+  width: 72px;
+  height: 72px;
+  border: 10px double rgba(176, 113, 54, 0.34);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #fff3c9, #c98d3c 70%);
+  box-shadow: 0 12px 18px rgba(123, 76, 35, 0.16);
 }
 
 .collection-book-chapter::after {
@@ -802,6 +885,11 @@ body,
   z-index: 5;
   transform: translateY(-4px) rotate(-0.25deg);
   box-shadow: 0 18px 30px rgba(36, 79, 65, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.collection-book-chapter-title:hover + .collection-book-chapter-content,
+.collection-book-chapter:focus-within .collection-book-chapter-content {
+  border-top-color: rgba(26, 109, 83, 0.34);
 }
 
 .collection-book-chapter-title {
@@ -916,6 +1004,32 @@ body,
   font-weight: 800;
 }
 
+.collection-book-bookmarks {
+  position: absolute;
+  z-index: 9;
+  top: 20px;
+  right: 22px;
+  display: none;
+  gap: 5px;
+}
+
+.collection-book-bookmarks button {
+  min-height: 38px;
+  border: 1px solid rgba(255,255,255,0.76);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.78);
+  color: rgba(25, 72, 59, 0.68);
+  padding: 0 11px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.collection-book-bookmarks button[aria-pressed='true'] {
+  background: #17644f;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(15, 86, 64, 0.2);
+}
+
 .collection-book-shell.has-open-chapter .collection-book-spread {
   display: block;
   width: min(100% - 76px, 960px);
@@ -946,9 +1060,26 @@ body,
   to { opacity: 1; transform: perspective(900px) rotateY(0) translateX(0); }
 }
 
+@keyframes collection-spread-turn {
+  0% { opacity: 1; transform: perspective(1400px) rotateY(0deg) scale(1); }
+  48% { opacity: 0.42; transform: perspective(1400px) rotateY(-52deg) scale(0.985); }
+  100% { opacity: 0; transform: perspective(1400px) rotateY(-88deg) scale(0.97); }
+}
+
+@keyframes collection-spread-return {
+  0% { opacity: 1; transform: perspective(1400px) rotateY(0deg) scale(1); }
+  48% { opacity: 0.36; transform: perspective(1400px) rotateY(52deg) scale(0.985); }
+  100% { opacity: 0; transform: perspective(1400px) rotateY(88deg) scale(0.97); }
+}
+
 @keyframes collection-water-drift {
   from { transform: translate3d(-14px, -4px, 0) scale(0.96); }
   to { transform: translate3d(24px, 16px, 0) scale(1.08); }
+}
+
+@keyframes collection-creature-swim {
+  from { translate: -10px 0; }
+  to { translate: 28px -10px; }
 }
 
 @media (max-width: 760px) {
@@ -960,27 +1091,34 @@ body,
 
   .collection-book-spread,
   .collection-book-shell.has-open-chapter .collection-book-spread {
-    display: grid;
-    grid-template-areas: 'wishlist' 'care' 'memorial' 'achievements';
-    grid-template-columns: minmax(0, 1fr);
+    display: block;
     width: calc(100% - 24px);
     min-height: 0;
-    margin: 56px auto 16px;
+    margin: 66px auto 16px;
     overflow: visible;
     border-radius: 18px;
   }
 
   .collection-book-spread::before { display: none; }
-  .collection-book-chapter { min-height: 230px; padding: 16px; }
+  .collection-book-chapter { display: none; min-height: 350px; padding: 18px; }
+  .collection-book-chapter:first-child,
+  .collection-book-shell.has-open-chapter .collection-book-chapter.is-open { display: flex; }
   .collection-book-shell.has-open-chapter .collection-book-chapter.is-open { min-height: 430px; padding: 20px; }
   .collection-book-chapter-name { font-size: 21px; }
+  .collection-book-creature-one { top: 7%; left: 4%; width: 76px; height: 48px; }
+  .collection-book-creature-two { right: 4%; bottom: 7%; width: 68px; height: 42px; }
   .collection-book-heading h1 { font-size: 32px; }
   .collection-book-heading p { font-size: 13px; }
+  .collection-book-bookmarks { display: flex; right: 14px; left: 14px; top: 14px; overflow-x: auto; padding-bottom: 2px; }
+  .collection-book-bookmarks button { flex: 1 0 auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .collection-book-water-glow,
-  .collection-book-shell.has-open-chapter .collection-book-chapter.is-open { animation: none; }
+.collection-book-water-glow,
+  .collection-book-creature,
+  .collection-book-shell.has-open-chapter .collection-book-chapter.is-open,
+  .collection-book-spread.is-turning,
+  .collection-book-spread.is-returning { animation: none; }
   .collection-book-chapter,
   .collection-book-chapter-arrow { transition: none; }
 }

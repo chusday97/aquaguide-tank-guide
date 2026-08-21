@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type AnimationEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   BookHeart,
@@ -38,6 +38,12 @@ const achievementIcons: Record<AchievementId, typeof Medal> = {
   life_reflection: Medal,
 };
 
+type CollectionBookView =
+  | { mode: 'overview' }
+  | { mode: 'turning'; target: CollectionModule }
+  | { mode: 'chapter'; chapter: CollectionModule }
+  | { mode: 'returning'; chapter: CollectionModule };
+
 function CollectionModuleCard({
   id,
   title,
@@ -59,7 +65,7 @@ function CollectionModuleCard({
   moreLabel: string;
   children: ReactNode;
   isOpen: boolean;
-  onOpen: () => void;
+  onOpen: (trigger: HTMLButtonElement) => void;
 }) {
   const navigate = useNavigate();
   return (
@@ -69,7 +75,7 @@ function CollectionModuleCard({
     >
       <button
         type="button"
-        onClick={onOpen}
+        onClick={event => onOpen(event.currentTarget)}
         className="collection-book-chapter-title"
         aria-current={isOpen ? 'true' : undefined}
         aria-label={`${title}，${count}，${isOpen ? '当前章节已打开；使用返回全部章节回到总览' : '聚焦查看本章'}`}
@@ -120,7 +126,8 @@ export default function CollectionHub() {
   const navigate = useNavigate();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
-  const [openModule, setOpenModule] = useState<CollectionModule | null>(null);
+  const [bookView, setBookView] = useState<CollectionBookView>({ mode: 'overview' });
+  const chapterTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);
 
@@ -163,6 +170,30 @@ export default function CollectionHub() {
     if (Number.isNaN(date.getTime())) return value;
     return new Intl.DateTimeFormat(isEn ? 'en' : 'zh-CN', { month: 'short', day: 'numeric' }).format(date);
   };
+  const chapter = bookView.mode === 'chapter' || bookView.mode === 'returning'
+    ? bookView.chapter
+    : null;
+  const isTurning = bookView.mode === 'turning';
+  const openChapter = (module: CollectionModule, trigger: HTMLButtonElement) => {
+    if (bookView.mode === 'turning' || bookView.mode === 'returning' || chapter === module) return;
+    chapterTriggerRef.current = trigger;
+    setBookView({ mode: 'turning', target: module });
+  };
+  const closeChapter = () => {
+    if (bookView.mode !== 'chapter') return;
+    setBookView({ mode: 'returning', chapter: bookView.chapter });
+  };
+  const handleBookAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) return;
+    if (bookView.mode === 'turning') {
+      setBookView({ mode: 'chapter', chapter: bookView.target });
+      return;
+    }
+    if (bookView.mode === 'returning') {
+      setBookView({ mode: 'overview' });
+      window.requestAnimationFrame(() => chapterTriggerRef.current?.focus());
+    }
+  };
 
   return (
     <div className="collection-hub collection-book-page page-frame mx-auto flex w-full min-w-0 max-w-[1180px] flex-col gap-4 pb-24">
@@ -174,21 +205,56 @@ export default function CollectionHub() {
         <p>{isEn ? 'Open one chapter, then continue with a real item.' : '翻开一个章节，再从最近收录的内容继续。'}</p>
       </header>
 
-      <section className={`collection-book-shell ${openModule ? 'has-open-chapter' : ''}`} aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
+      <section className={`collection-book-shell collection-book-view-${bookView.mode} ${chapter ? 'has-open-chapter' : ''}`} aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
         <span aria-hidden="true" className="collection-book-water-glow collection-book-water-glow-one" />
         <span aria-hidden="true" className="collection-book-water-glow collection-book-water-glow-two" />
         <span aria-hidden="true" className="collection-book-plant collection-book-plant-left" />
         <span aria-hidden="true" className="collection-book-plant collection-book-plant-right" />
-        {openModule && (
+        <span aria-hidden="true" className="collection-book-creature collection-book-creature-one">
+          <ResilientImage
+            src={getSpeciesVisualSources(fishData[0]).thumbnail}
+            alt=""
+            className="h-full w-full object-contain"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+        <span aria-hidden="true" className="collection-book-creature collection-book-creature-two">
+          <ResilientImage
+            src={getSpeciesVisualSources(fishData[1]).thumbnail}
+            alt=""
+            className="h-full w-full object-contain"
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+        {chapter && (
           <button
             type="button"
-            onClick={() => setOpenModule(null)}
+            onClick={closeChapter}
             className="collection-book-return"
           >
             {isEn ? 'Back to all chapters' : '返回全部章节'}
           </button>
         )}
-        <div className="collection-book-spread">
+        <div className="collection-book-bookmarks" aria-label={isEn ? 'Collection chapters' : '水族册章节'}>
+          {([
+            ['wishlist', isEn ? 'Wishlist' : '种草'],
+            ['care', isEn ? 'Care' : '养护'],
+            ['memorial', isEn ? 'Memorials' : '纪念'],
+            ['achievements', isEn ? 'Badges' : '勋章'],
+          ] as Array<[CollectionModule, string]>).map(([module, label]) => (
+            <button
+              key={module}
+              type="button"
+              aria-pressed={chapter === module}
+              onClick={event => openChapter(module, event.currentTarget)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className={`collection-book-spread ${isTurning ? 'is-turning' : ''} ${bookView.mode === 'returning' ? 'is-returning' : ''}`} onAnimationEnd={handleBookAnimationEnd}>
         <CollectionModuleCard
           id="wishlist"
           title={isEn ? 'Species Wishlist' : '种草图鉴'}
@@ -197,8 +263,8 @@ export default function CollectionHub() {
           tone="bg-rose-50 text-rose-600"
           remainingCount={Math.max(0, snapshot.counts.wishlist - 3)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.wishlist - 3)} species` : `更多 ${Math.max(0, snapshot.counts.wishlist - 3)} 种`}
-          isOpen={openModule === 'wishlist'}
-          onOpen={() => setOpenModule('wishlist')}
+          isOpen={chapter === 'wishlist'}
+          onOpen={trigger => openChapter('wishlist', trigger)}
         >
           {wishlistFishes.length ? wishlistFishes.map(fish => (
             <button
@@ -240,8 +306,8 @@ export default function CollectionHub() {
           tone="bg-sky-50 text-sky-700"
           remainingCount={Math.max(0, snapshot.counts.care - 2)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.care - 2)} guides` : `更多 ${Math.max(0, snapshot.counts.care - 2)} 篇`}
-          isOpen={openModule === 'care'}
-          onOpen={() => setOpenModule('care')}
+          isOpen={chapter === 'care'}
+          onOpen={trigger => openChapter('care', trigger)}
         >
           {careTopics.length ? careTopics.map(topic => (
             <button
@@ -283,8 +349,8 @@ export default function CollectionHub() {
           tone="bg-slate-100 text-slate-600"
           remainingCount={Math.max(0, snapshot.counts.memorial - 2)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.memorial - 2)} records` : `更多 ${Math.max(0, snapshot.counts.memorial - 2)} 条`}
-          isOpen={openModule === 'memorial'}
-          onOpen={() => setOpenModule('memorial')}
+          isOpen={chapter === 'memorial'}
+          onOpen={trigger => openChapter('memorial', trigger)}
         >
           {recentMemorials.length ? recentMemorials.map(record => {
             const fish = fishData.find(item => item.id === record.fishId);
@@ -333,8 +399,8 @@ export default function CollectionHub() {
           tone="bg-amber-50 text-amber-700"
           remainingCount={Math.max(0, snapshot.achievements.length - 2)}
           moreLabel={isEn ? `More ${Math.max(0, snapshot.achievements.length - 2)} badges` : `更多 ${Math.max(0, snapshot.achievements.length - 2)} 枚`}
-          isOpen={openModule === 'achievements'}
-          onOpen={() => setOpenModule('achievements')}
+          isOpen={chapter === 'achievements'}
+          onOpen={trigger => openChapter('achievements', trigger)}
         >
           <span className="flex min-h-0 flex-1 flex-col p-2.5">
             {achievementPreviews.map((achievement, index) => {
