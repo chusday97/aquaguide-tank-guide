@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { getAquariumCameraFrame } from '../src/components/ThreeAquarium';
 
 for (const aspect of [0.5, 0.75, 1, 16 / 9, 2.4]) {
@@ -8,4 +9,12 @@ for (const aspect of [0.5, 0.75, 1, 16 / 9, 2.4]) {
   }
 }
 
-console.log('three stage framing: PASS');
+const stageCss = readFileSync(new URL('../src/styles/aquarium-stage-layout-v4.css', import.meta.url), 'utf8');
+const canvasRulePattern = /\.aquarium-dashboard-tank\s*>\s*\.aquarium-tank canvas\s*\{([^}]*)\}/gs;
+for (const match of stageCss.matchAll(canvasRulePattern)) {
+  if (/scale\s*\(/.test(match[1])) {
+    throw new Error('Aquarium framing must be camera-owned; CSS canvas scale() creates duplicate zoom and breakpoint drift.');
+  }
+}
+
+console.log('three stage framing: PASS — camera owns framing and CSS does not apply a second zoom');
