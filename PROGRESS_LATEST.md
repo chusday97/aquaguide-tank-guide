@@ -1,152 +1,73 @@
-# AquaGuide Progress — Result UX + Backend Boundary + Knowledge Engine
+# AquaGuide — Latest Progress
 
-**Date:** 2026-08-20  
+**Updated:** 2026-08-22  
 **Branch:** `agent/result-ux-v1`  
-**PR:** #105  
-**Parent:** #104 → `integration/aquaguide-rc1`
+**PR:** #105 (Draft)  
+**Latest fully validated product-code head:** `dbaab622371494a89effafe1e982598c46b2d1f7`
 
-## Phase
+## Current phase
 
-**Result UX COMPLETE · production-security repository contracts COMPLETE · backend/server Phase 1 COMPLETE · Vercel Preview UNBLOCKED · Knowledge Engine V1 PLANNED.**
+**RC1 convergence complete in feature branches → UI/UX system complete → Result UX complete → Layout Recovery complete → release-baseline maintenance next.**
 
-## Current validated head
+No production merge or deployment has been authorized.
 
-Head `52018136bea61082dbf34d7aabf8666b0a1a670e`:
+## Verification status
 
-- [x] Production Security Boundary V1 / `32377216683` — PASS
-- [x] Result UX V1 / `32377216642` — PASS
-- [x] Compatibility Stage Risk V1 / `32377216676` — PASS
-- [x] Plant Roster Edit Fix / `32377216744` — PASS
-- [x] Vercel Preview deployment `HCtZ4JFTKQJC3DEDppenTLzkqh9B` — SUCCESS
+| Gate | Result | Run |
+|---|---|---:|
+| Production Security Boundary V1 | PASS | 32568805732 |
+| Result UX V1 | PASS | 32568805769 |
+| Compatibility Stage Risk V1 | PASS | 32568805704 |
+| Plant Roster Edit Fix | PASS | 32568805727 |
+| Vercel Preview | SUCCESS | head `dbaab622` |
 
-## Backend/server Phase 1 — COMPLETE
+Result UX run #113 passed the complete browser sequence including Layout Recovery, Identification, and Tank Copilot.
 
-- [x] `apps/api/src/app.ts` no longer imports `server/index.mjs`.
-- [x] `apps/api` creates and owns its own Express app.
-- [x] `/api/v1/*` business router remains unchanged.
-- [x] request-id / error boundary preserved.
-- [x] `TRUST_PROXY_HOPS` preserved.
-- [x] `3mb` JSON boundary preserved.
-- [x] image-recognition route keeps its own `10mb` raw parser.
-- [x] `/api/health` and `/api/v1/health` compatibility response preserved.
-- [x] production API app does not serve frontend `dist`.
-- [x] permanent `test:api-boundary` guard rejects legacy-server/static-dist reintroduction.
-- [x] four permanent gates pass on repaired code head.
-- [x] Vercel no longer blocks this head on the prior 250 MB Function error.
+## Completed in this repair cycle
 
-Fix commits:
+- [x] Added Layout Recovery V1 to the permanent Result UX workflow.
+- [x] Reproduced wide Care guide regression at about 340px.
+- [x] Made the selected Care detail span the workspace and made decision content primary.
+- [x] Kept the original regression threshold; first repair exposed a second 850px legacy corridor instead of weakening the test.
+- [x] Removed that corridor only in truly wide Care workspaces.
+- [x] Exposed the next hidden failure: 768px Aquarium ordered management before tank context.
+- [x] Restored narrow-desktop `Today → Context → Manage` hierarchy while preserving phone ordering.
+- [x] Re-ran all four permanent gates to green.
+- [x] Confirmed Vercel Preview success on the verified product head.
 
-- `c3937ee5def5fb880af6ff3f6b6b7e233b692d70` — detach API app from legacy server;
-- `52018136bea61082dbf34d7aabf8666b0a1a670e` — add permanent server-boundary regression guard.
+## Current release readiness
 
-## PUI-BC-056 — CLOSED for authoritative `/api/v1` production boundary
+### Green
 
-The new backend previously mounted itself onto legacy `server/index.mjs`, which also owned legacy AI and static SPA serving. This violated deployment boundaries and was discovered while Vercel reported one Function over the 250 MB uncompressed limit.
+- deterministic compatibility / stage-risk boundary;
+- plant roster edit path;
+- decision-first Result UX paths;
+- repository-level share-report secret contract;
+- Vercel preview build;
+- Atlas/Care/Aquarium layout recovery regression.
 
-Closure evidence:
+### Not yet closed
 
-- [x] standalone API app implemented;
-- [x] API/security contracts PASS;
-- [x] Vercel Preview SUCCESS.
+- [ ] classify current npm audit findings by runtime reachability and fix only justified dependencies;
+- [ ] perform #104 → #105 stack convergence after explicit authorization;
+- [ ] rerun four gates after final retargeted ancestry;
+- [ ] verify production environment/secrets;
+- [ ] perform production golden-path smoke after explicit deployment authorization;
+- [ ] inventory remaining `server/index.mjs` bridge consumers;
+- [ ] start Knowledge Engine P0 only after release-baseline work is closed.
 
-Exact dependency byte attribution is not claimed without analyzer output. Remaining legacy bridge files are follow-up debt, not part of this Phase 1 closure.
+## Next sequence
 
-## Remaining legacy server migration — NOT STARTED
+1. Dependency-security triage: distinguish dev-only, transitive, runtime reachable, and actually exploitable findings.
+2. Stack convergence: #104 decision first, then retarget/reconcile #105; no opportunistic feature changes in either PR.
+3. Production readiness: env matrix + post-deploy smoke after authorization.
+4. Backend Phase 2: legacy bridge consumer inventory and one-at-a-time migration with regression coverage.
+5. Knowledge architecture: P0 → P1 → P4 → P2 → P3 → P5.
 
-- [ ] inventory live consumers of `api/ai/chat.js`;
-- [ ] inventory `api/v1/health.js` routing precedence/use;
-- [ ] migrate live AI endpoints into `apps/api/src/ai` / `routes`;
-- [ ] verify equivalent API/browser behavior;
-- [ ] remove legacy bridge imports only after replacement proof;
-- [ ] retire `server/index.mjs` from production dependency graph completely.
+## Guardrails
 
-## Knowledge Engine V1 — planned
-
-Current state: structured Supabase domain DB + reviewed evidence-source relations + user aquarium state. Classic document ingestion/chunking/vector retrieval is not yet the core retrieval architecture.
-
-### P0 provenance/versioning
-
-- [ ] `evidence_source_versions`
-- [ ] `evidence_chunks`
-- [ ] `knowledge_claims`
-- [ ] `claim_evidence`
-- [ ] exact claim → evidence traceability
-
-### P1 ingestion/freshness
-
-- [ ] trusted-source registry
-- [ ] fetch/parse pipeline
-- [ ] content hash + diff
-- [ ] candidate-claim extraction
-- [ ] explicit review gate before rule/fact publication
-- [ ] freshness/source-health states
-
-### P4 evaluation baseline — before broad vector rollout
-
-- [ ] retrieval golden set
-- [ ] expected facts/sources/chunks
-- [ ] Recall@K / evidence hit rate
-- [ ] citation correctness
-- [ ] unsupported-claim rate / groundedness
-- [ ] deterministic decision consistency
-- [ ] stale-source detection
-- [ ] latency tracking
-
-### P2 hybrid retrieval
-
-- [ ] semantic embedding/index only after P0/P1 contracts
-- [ ] SQL structured retrieval
-- [ ] keyword/full-text retrieval
-- [ ] vector evidence retrieval
-- [ ] metadata/review/freshness filters
-- [ ] reranking
-
-### P3 grounded result
-
-- [ ] deterministic decision remains authoritative
-- [ ] retrieved reviewed evidence feeds AI explanation
-- [ ] exact citations on Result UX disclosure
-- [ ] candidate inference separated from verified facts
-
-### P5 knowledge operations
-
-- [ ] source freshness queue
-- [ ] source diff review
-- [ ] claim approval/rejection
-- [ ] evidence coverage gaps
-- [ ] stale/low-confidence rule queue
-- [ ] version rollback
-- [ ] retrieval badcase/eval dashboard
-
-## Existing completed product/security work retained
-
-- [x] seven Result UX consumers complete;
-- [x] PUI-BC-054 Tank Copilot reachability closed;
-- [x] PUI-BC-055 share-report secret/release/readiness boundary closed;
-- [x] machine product badcase registry append-only contract retained;
-- [x] share-report six-state feature contract retained.
-
-## Vercel configuration
-
-Preview-only variables currently configured by the project owner:
-
-- `VERCEL_SUPPORT_LARGE_FUNCTIONS=1`
-- `VERCEL_ANALYZE_BUILD_OUTPUT=1`
-
-Git-driven deployments are enabled on the branch. This is a Preview policy; it is not authorization to deploy Production.
-
-## Stack transition — still pending
-
-- [ ] explicit #104 review/merge decision
-- [ ] merge #104 to RC1 only after authorization
-- [ ] retarget #105 to RC1
-- [ ] inspect/reconcile actual new ancestry
-- [ ] rerun four permanent gates on RC1 target
-- [ ] separate #105 review/merge decision
-- [ ] verify real Production environment (`SHARE_TOKEN_SECRET`, `WEB_BASE_URL`, server-only service role)
-- [ ] Production deploy only after authorization
-- [ ] RC1 post-deploy smoke
-
-## Current judgment
-
-**The prior 250 MB Preview blocker is closed on the current repaired code head. The next architecture work is no longer emergency deployment repair; it should be either controlled legacy-server Phase 2 migration or the separately scoped Knowledge Engine P0 provenance design.**
+- Do not lower regression thresholds to turn CI green.
+- Do not use AI output as the authority for deterministic safety blocks.
+- Do not delete legacy API bridges before consumer inventory/replacement proof.
+- Do not use preview success as a proxy for production validation.
+- Do not broaden scope until the release baseline is reproducible.

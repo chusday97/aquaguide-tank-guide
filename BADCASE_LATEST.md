@@ -1,160 +1,91 @@
 # AquaGuide — Latest Badcases
 
-**Date:** 2026-08-20  
+**Updated:** 2026-08-22  
 **Branch:** `agent/result-ux-v1`  
-**Draft PR:** #105
+**Purpose:** current handoff-level badcase ledger. Canonical historical product registry remains under `evaluation/product/`.
 
-## Current closure set
+## PUI-BC-057 — Wide Care guide stayed narrow inside a wide workspace
 
-PUI-BC-040..056 are represented in the current UI/UX / Result UX / production-readiness / deployment-boundary work.
-
-- PUI-BC-049 and PUI-BC-053 are evaluation-system failures, not user-facing product regressions.
-- PUI-BC-054 is the live Tank Copilot reachability defect.
-- PUI-BC-055 is the share-report credential/release/deployment-readiness defect.
-- **PUI-BC-056 is the production API → legacy all-in-one server dependency-boundary defect discovered through the Vercel 250 MB Preview failure.**
-
-## PUI-BC-056 · Authoritative `/api/v1` backend depended on the legacy all-in-one server
-
-- **featureId:** `api_runtime_boundary`
-- **source:** `vercel_preview_deployment`
-- **severity:** high
-- **rootCauseLayer:** `server_dependency_boundary`
-- **status:** `regression_verified`
+- **Feature:** Care / Result UX
+- **Severity:** high
+- **Source:** CI layout-recovery fail-before
+- **Status:** regression_verified
+- **Discovered on:** `4b24e7d88b6cc21847a21ea31eb3f8447671e91c`
+- **Fixed by:** `4ecd3cb6741aaa61d76388ea26ec4aa7d1461a17` + `1c8acbcbfa175687dba81d144485ea08a0ee3f89`
+- **Regression:** Result UX V1 run `32568805769`, Layout Recovery step PASS
 
 ### Symptom
 
-After Git-driven Preview was restored, Vercel failed deployment with:
+At 1440px desktop, `.care-workspace-shell` was already wide enough, but the actionable first-screen content measured only about 340px.
 
-`1 function exceeded the uncompressed maximum size of 250 MB.`
+### Expected
 
-The failure was a serverless Function packaging problem, not evidence that the browser frontend itself was 250 MB.
+A selected guide in a wide Care workspace should use the workspace as a decision surface. The first-screen actionable content should be at least 940px wide under the regression fixture; supporting imagery must not force the action content into a narrow secondary column.
 
-### Root cause / architecture defect
+### Root causes
 
-The authoritative production entry was:
+1. Legacy hero layout: `md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)]` kept the decision content in the right column.
+2. After the first fix, a second legacy `max-w-[850px]` content corridor still capped the body; measured width improved from ~340px to ~818px but remained below the existing contract.
 
-```text
-api/v1/[...path].ts
-  ↓
-apps/api/src/app.ts
-  ↓
-server/index.mjs
-```
+### Repair rule
 
-`server/index.mjs` was not a narrow reusable backend module. It combined:
+- selected desktop detail spans the full Care workspace;
+- decision-first content spans the full inner grid and appears before supporting media;
+- the 850px cap is removed only for Care workspace containers >=1000px;
+- original >=940px regression threshold was not weakened;
+- phone ordering remains unchanged.
 
-- legacy AI endpoints/prompt logic;
-- Express server setup;
-- frontend `dist` static serving;
-- SPA fallback behavior.
+## PUI-BC-058 — Narrow desktop Aquarium pushed tank context below management
 
-Therefore the new `apps/api` backend depended backwards on a legacy all-in-one server, making unrelated server/static concerns part of the production Function dependency boundary.
+- **Feature:** Aquarium home hierarchy
+- **Severity:** high
+- **Source:** CI layout-recovery continuation after PUI-BC-057 was fixed
+- **Status:** regression_verified
+- **Discovered on:** `1c8acbcbfa175687dba81d144485ea08a0ee3f89`
+- **Fixed by:** `dbaab622371494a89effafe1e982598c46b2d1f7`
+- **Regression:** Result UX V1 run `32568805769`, Layout Recovery step PASS
 
-This dependency direction is independently defective even without assigning an exact byte count to each traced dependency.
+### Symptom
 
-### Scope constraint
+At the 768px desktop regression fixture:
 
-The repair was intentionally narrow:
+- Today: top 115
+- Manage: top 428
+- Context: top 893
 
-- no frontend UI changes;
-- no Supabase schema changes;
-- no deterministic compatibility/risk changes;
-- no share-report/security semantic changes;
-- no public `/api/v1/*` business-route changes.
+The page showed management controls before the tank identity/context, so the previous home hero hierarchy was lost.
 
-### Fix
+### Expected
 
-`c3937ee5def5fb880af6ff3f6b6b7e233b692d70` — `Detach API app from legacy server`
+Once the desktop shell is active, a narrow desktop should still present the current decision and tank context before the management stack. The phone-specific task-first ordering may remain different.
 
-`apps/api/src/app.ts` now creates its own Express app and directly mounts the existing `v1Router`. It preserves trust-proxy configuration, the existing `3mb` JSON boundary, request-id/error middleware, and legacy/versioned health compatibility. It does not import `server/index.mjs` and does not serve `dist`.
+### Root cause
 
-`52018136bea61082dbf34d7aabf8666b0a1a670e` — `Guard standalone API server boundary`
+`ui-v2-dashboard.css` had a container rule for `aquarium-home <=719px` that explicitly ordered `Today → Manage → Context → Secondary`. A 768px viewport can still produce a <=719px content container after the desktop shell/sidebar is applied, so the phone/narrow-workspace rule unintentionally governed desktop hierarchy.
 
-`test:api-boundary` now permanently asserts that the production API app source cannot re-import `server/index.mjs` or take ownership of frontend static `dist`, while continuing to exercise business-health, content fallback, auth guards, public-share validation and legacy health compatibility.
+### Repair rule
 
-### Final evidence
+For viewport >=768px and `aquarium-home <=719px`, override only the desktop ordering to:
 
-Head `52018136bea61082dbf34d7aabf8666b0a1a670e`:
+`Today → Context → Manage → Secondary`
 
-- Production Security Boundary V1 / `32377216683` — **PASS**;
-- Result UX V1 / `32377216642` — **PASS**;
-- Compatibility Stage Risk V1 / `32377216676` — **PASS**;
-- Plant Roster Edit Fix / `32377216744` — **PASS**;
-- Vercel Preview `HCtZ4JFTKQJC3DEDppenTLzkqh9B` — **SUCCESS**.
+Phone ordering is intentionally preserved.
 
-The previous 250 MB deployment blocker no longer reproduces on this repaired head.
+## Verification evidence
 
-### Attribution caveat
+Final product-code head `dbaab622371494a89effafe1e982598c46b2d1f7`:
 
-Preview-only `VERCEL_SUPPORT_LARGE_FUNCTIONS=1` and `VERCEL_ANALYZE_BUILD_OUTPUT=1` were also configured before the successful deployment. Without the analyzer breakdown, do not claim a precise number of megabytes removed by the code repair or that one import was the only possible size contributor.
+- Production Security Boundary V1 — PASS (`32568805732`)
+- Result UX V1 — PASS (`32568805769`)
+- Compatibility Stage Risk V1 — PASS (`32568805704`)
+- Plant Roster Edit Fix — PASS (`32568805727`)
+- Vercel Preview — SUCCESS
 
-The defensible claim is narrower: the legacy dependency boundary was real, it has been removed from the authoritative `/api/v1` app, permanent API/security gates pass, and the subsequent Preview deployment succeeds.
+The final Result UX run executed Layout Recovery successfully and continued through Identification and Tank Copilot, proving the fix did not merely move the failure to the next unchecked step.
 
-### Remaining debt
+## Carry-forward badcase discipline
 
-This badcase does **not** claim total `server/index.mjs` retirement. Separate legacy bridge entries remain, including:
-
-- `api/ai/chat.js -> server/index.mjs`;
-- `api/v1/health.js -> server/index.mjs`.
-
-They require consumer inventory and verified replacement before deletion.
-
-### Guardrail
-
-The authoritative production backend must own only backend/runtime concerns. It must not import a development/legacy server that also owns frontend static serving.
-
-A deployment-size failure should be fixed by dependency-boundary evidence first; increasing platform limits is a mitigation, not a substitute for correcting an invalid production dependency graph.
-
-### Canonical registry note
-
-PUI-BC-056 is an infrastructure/deployment-boundary badcase and is **not automatically appended to the product-only machine registry**. Do not widen `evaluation/product/badcases.v1.jsonl` unless a separately justified product feature-state mapping is defined.
-
-## PUI-BC-055 · Share-report signing secret / release readiness
-
-**Status: regression_verified.** Dedicated `SHARE_TOKEN_SECRET` is required; service-role fallback is removed; RC1 release acceptance enforces the share-report contract; business-health exposes boolean `shareReportsConfigured`; post-deploy smoke requires the database/service-role/signing-secret/`WEB_BASE_URL` readiness chain.
-
-Key fixes:
-
-- `173530bdc5ea34abcea65d00700b145fc7cf88db`
-- `8f9bccf3dc7ba85688c9d727dc551cd3898b60d6`
-- `6f4f402414d36296a17b3087ed8ce4e550ba5208`
-- `1da62bb1ce11098ce38a489e6a7b95bc40995178`
-
-PUI-BC-055 is canonicalized in the product badcase registry as `share_report`.
-
-## PUI-BC-054 · Live Tank Copilot entry did not open the real Copilot
-
-**Status: regression_verified.** The visible quick action previously dispatched feature-preview instead of opening the implemented Copilot dialog. Fix `582e9e341b0231ae30c6d37fa6536ef0d0498de7` connects the live entry, preserves deterministic authority and uses shared Result UX. PUI-BC-054 is canonicalized as `tank_copilot`.
-
-## PUI-BC-053 · Reload persistence evaluator re-seeded its own fixture
-
-**Evaluator-only.** Session-scoped seeding fixed the false regression. It remains intentionally outside the product-only machine registry.
-
-## PUI-BC-050..052 navigation closure retained
-
-- PUI-BC-050 — Compatibility risk review now expands evidence in context before explicit calculator entry.
-- PUI-BC-051 — Search return context preserves expanded result structure, scroll and focus.
-- PUI-BC-052 — Aquarium child Species Detail returns to the immediate parent roster with correct scroll/focus.
-
-## PUI-BC-040..049 retained
-
-Earlier UI/UX system, responsive layout, search, carousel, typography, focus-target and evaluator-contract closures remain protected by their permanent workflows. PUI-BC-049 is evaluator-only.
-
-## Current evidence-quality / architecture rules
-
-- deterministic product state outranks labels and model prose;
-- AI explanations cannot override compatibility/risk/addition authority;
-- credentials have one explicit role; missing dedicated secrets fail closed;
-- deployed readiness requires runtime proof, not repository configuration claims;
-- production backend dependency graphs must exclude frontend static serving;
-- architecture badcases do not enter the product-only registry without a valid feature-state mapping;
-- source → claim → rule → decision provenance is the next knowledge-quality target;
-- semantic retrieval must not become decision authority.
-
-## Non-claims
-
-- PR #105 remains Draft/unmerged.
-- No merge to RC1/main.
-- No Production deploy.
-- Successful Preview is not Production readiness.
-- Remaining legacy server bridges are not yet retired.
+- Keep fail-before evidence; do not lower thresholds to close a badcase.
+- Split separate user-visible root causes into separate badcases even when one regression script discovers them sequentially.
+- A green preview/build does not close a badcase unless the relevant product/browser regression also passes.
+- When adding new machine-readable entries, preserve the append-only historical registry and valid feature-state mapping; do not destructively rewrite prior cases.
