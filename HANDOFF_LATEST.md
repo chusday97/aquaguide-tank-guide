@@ -2,138 +2,132 @@
 
 **Updated:** 2026-08-22  
 **Repository:** `chusday97/aquaguide-tank-guide`  
-**Active branch:** `agent/rc1-post-105-evaluator-repair`  
-**Active PR:** #107 `Repair post-#105 RC1 evaluator drift`  
-**Base:** `integration/aquaguide-rc1`  
-**RC1 head:** `e5a9dd1ccc18a296075521fdd01b0407341af617`  
-**Release rule:** #105 is merged to RC1. Do not merge #107, merge RC1 to `main`, or deploy production without explicit authorization.
+**Sync branch:** `agent/rc1-post-110-release-sync`  
+**Release candidate branch:** `integration/aquaguide-rc1`  
+**Current RC1 head:** `5e605fb7a68001ecd80096ef42f063909cf5aa03`  
+**Release rule:** RC1 is code/regression clean after #110. Do not merge RC1 to `main` or deploy production without separate explicit authorization.
 
-## 1. Current stack state
+## 0. Latest delta — #110 merged and substrate regression closed on RC1
 
-PR #104 and PR #105 are both merged into `integration/aquaguide-rc1`.
+- #110 `Render substrate as a tank-bottom surface` merged into RC1 via `5e605fb7a68001ecd80096ef42f063909cf5aa03`.
+- Product rule is now explicit: substrate is a continuous tank-bottom surface/material layer; hardscape remains object-based.
+- Bare bottom stays explicit as `none`; the renderer consumes persisted `aquarium.substrate` directly and no longer invents River Sand / Coral Sand defaults.
+- The previous per-grain pebble mesh cloud was removed; configured substrate keeps a full-width/full-depth bed and top surface.
+- PR-head Substrate Surface V1 gate `32579395579` — PASS.
+- Earlier targeted diagnostic `32579071402` — PASS for source contract, repository settings contract, TypeScript, production build and Chromium save-to-3D flow.
+- Exact merged RC1 head `5e605fb7...` was also re-run locally on an isolated AquaGuide preview port and passed the browser path: `bare bottom none → choose 黑金沙 → save → repository substrate=黑金沙 → 3D data-substrate=黑金沙`.
+- An initial exact-head browser retry on port 4173 timed out because that port was serving an unrelated IceGlide preview. The diagnostic showed IceGlide page content and no AquaGuide controls; re-running on isolated port 4189 passed. This is recorded as test-environment contamination, not product regression.
 
-- #104 merge commit: `2f07075e447778ea37229ca07ef485d8c0686d9c`
-- #105 merge commit: `e5a9dd1ccc18a296075521fdd01b0407341af617`
-- comparison of `e5a9dd1c...` vs `integration/aquaguide-rc1`: **identical / ahead 0 / behind 0**
+## 1. Current RC1 convergence state
 
-This means the RC1 branch now contains the full UI/UX System + Result UX product stack. `main` and production remain untouched.
+The repair/release line is now converged into RC1 through #110:
 
-## 2. Post-#105 merge validation exposed evaluator drift
+- #104 merged via `2f07075e447778ea37229ca07ef485d8c0686d9c`.
+- #105 merged via `e5a9dd1ccc18a296075521fdd01b0407341af617`.
+- #107 merged via `8d506fae4b165fdd4aed5f7a04101dc16d5d7d7f`.
+- #109 merged via `1e455a82a6542b7a8fb684c69da06221ef6bdba0`.
+- #110 merged via `5e605fb7a68001ecd80096ef42f063909cf5aa03`.
+- `main` remains unchanged by this step.
+- No production deployment has been performed.
 
-After #105 merged, the real RC1→main synthetic validation exposed three red workflows:
+## 2. Final RC1→main synthetic release matrix after #110
 
-- RC1 Release Acceptance — run `32575093543` — FAIL
-- UI Interaction Repair V1 — run `32575093548` — FAIL
-- Product Golden Path — run `32575093550` — FAIL
+The actual RC1→main validation re-ran automatically on `5e605fb7...` and finished **9/9 PASS**:
 
-Investigation showed stale evaluator assumptions after earlier architectural/interaction migrations, not a newly discovered product-code regression:
+| Gate | Result | Run |
+|---|---|---:|
+| RC1 Release Acceptance | PASS | 32579834369 |
+| Product Golden Path | PASS | 32579834368 |
+| UI Interaction Repair V1 | PASS | 32579834400 |
+| UI UX System Refactor V1 | PASS | 32579834362 |
+| UI UX Visual QA V2 | PASS | 32579834402 |
+| UI UX Golden V3 | PASS | 32579834371 |
+| UI V2 Aquarium | PASS | 32579834499 |
+| Navigation Context V1 | PASS | 32579834412 |
+| Bundle Audit V1 | PASS | 32579834439 |
 
-1. production runtime source contract still expected `legacyApp.use('/api/v1', ...)`, while the canonical API app now correctly uses `app.use('/api/v1', ...)`;
-2. UI source/browser contracts still assumed old Species Detail / Encyclopedia file ownership and the removed `[data-compatibility-verdict]` DOM structure;
-3. GP-002 still assumed one-click Species Detail → compatibility drawer, while current product behavior intentionally uses two stages: reveal in-context compatibility evidence, then explicitly enter the full calculator.
+No visual/browser threshold was lowered to obtain this result.
 
-This is tracked as **EVAL-BC-002**.
+## 3. PUI-BC-060 — CLOSED on RC1
 
-## 3. PR #107 repair scope
+**Saved substrate was not visibly applied to the 3D aquarium.**
 
-PR #107 currently changes evaluator/test code only. No product CSS, runtime behavior, deterministic compatibility logic, persistence logic, secrets, deployment policy, or production environment is changed.
+Root causes:
 
-Final functional repair files:
+1. the renderer silently substituted a default substrate when the saved value was empty;
+2. substrate semantics were mixed with discrete decoration/grain meshes;
+3. there was no stable runtime marker proving which persisted substrate the 3D renderer consumed.
 
-- `scripts/test-production-cloud-runtime-contract.mjs`
-- `scripts/test-ui-interaction-repair-v1.mjs`
-- `scripts/verify-ui-interaction-repair-v1.mjs`
-- `scripts/verify-golden-path-species-to-stocking.mjs`
+Closed behavior:
 
-The temporary diagnostic workflow used during investigation was deleted after producing executable proof and is not part of the final PR diff.
+- `none` means bare bottom;
+- saved substrate is the renderer source of truth;
+- substrate fills the floor as a continuous layer;
+- hardscape remains discrete objects;
+- settings persistence and 3D consumption are covered by one browser path.
 
-## 4. Executable evidence for #107
+Status: `regression_verified` on actual RC1 ancestry.
 
-Temporary diagnostic run `32575689962` — **PASS** end to end:
+## 4. #109 production-bundle baseline remains preserved
 
-- Production cloud runtime source contract — PASS
-- Production cloud runtime smoke — PASS
-- UI interaction source contract — PASS
-- TypeScript — PASS
-- Production build — PASS
-- UI interaction browser regression — PASS
-- GP-002 continuous browser path — PASS
+#109 reduced the two legacy Vercel bridge bundles without changing the canonical API bundle:
 
-The GP-002 path still proves:
+- `/api/v1/health` — 1.13 MB
+- `/api/ai/chat` — 1.13 MB
+- canonical `/api/v1/[...path]` — 40.13 MB
 
-`search species → read-only detail → reveal compatibility evidence → explicitly enter compatibility tool → explicit species selection → quantity ×6 → risk confirmation when required → real persisted aquarium write`
+The post-#110 Bundle Audit remains PASS, so #110 did not regress that repository-level baseline.
 
-Opening a Species Detail remains read-only and does not silently mutate compatibility selection.
+## 5. Dependency / security baseline
 
-## 5. Permanent gate proof on the repaired evaluator head
+- production dependency audit remains at **0 findings** under the permanent release gate;
+- full developer/build graph still carries **12 dev-only findings** = 7 high / 2 moderate / 3 low;
+- do not use broad `npm audit fix` merely to make the repository-wide total zero;
+- AI/security authority boundaries remain unchanged.
 
-Verified evaluator head before this documentation refresh: `13ef3b4c2fd3c7df9fb43127da4dcf153e1bfc7a`.
-
-Permanent gates on that head:
-
-- Production Security Boundary V1 — **PASS**, run `32575784071`
-- Dependency Release Baseline V1 — **PASS**, run `32575784098`
-- Compatibility Stage Risk V1 — **PASS**, run `32575784108`
-- Plant Roster Edit Fix — **PASS**, run `32575784097`
-- Result UX V1 — **PASS**, run `32575784082`
-
-Result UX includes Diagnosis, Compatibility, Knowledge, Procedure, Species Detail + parent-context return, Layout Recovery, Identification explicit confirmation, and Tank Copilot authority/usefulness regressions.
-
-## 6. Dependency/security baseline
-
-Production dependency audit remains **0 findings**.
-
-Full developer/build graph still contains **12 dev-only findings**:
-
-- 7 high
-- 2 moderate
-- 3 low
-
-The permanent read-only Dependency Release Baseline gate blocks production high/critical findings. Do not use broad `npm audit fix` merely to force total vulnerability count to zero.
-
-## 7. Product baseline carried forward
+## 6. Product contracts carried forward
 
 - deterministic compatibility and life-stage risk remain authoritative;
-- AI cannot override hard safety decisions;
-- Tank Copilot has separate schema, deterministic-safety, and usefulness contracts;
+- AI cannot override hard-safety decisions;
+- Tank Copilot keeps separate schema, deterministic-safety and usefulness contracts;
 - plant roster editing remains covered;
 - share-report server-secret boundary remains covered;
-- Care wide-desktop layout recovery remains covered;
-- narrow-desktop Aquarium hierarchy remains `Today → Context → Manage` while phone stays task-first;
+- Care wide-desktop recovery remains covered;
+- narrow-desktop Aquarium hierarchy remains `Today → Context → Manage`, while phone stays task-first;
 - identification uncertainty requires explicit confirmation;
 - Species Detail browsing remains separate from compatibility selection;
-- exact return context remains covered across cross-route tasks.
+- exact return context remains covered across cross-route tasks;
+- substrate now has a dedicated surface/rendering regression contract.
 
-## 8. Backend/runtime boundary
+## 7. Backend/runtime boundary
 
 Phase 1 authoritative path remains:
 
 `frontend → api client → apps/api/src → Vercel Functions → Supabase / AI / Resend`
 
-Known legacy bridges still exist:
+Legacy bridges still exist:
 
 - `api/ai/chat.js -> server/index.mjs`
 - `api/v1/health.js -> server/index.mjs`
 
-Do not delete these before Phase 2 consumer inventory and one-bridge-at-a-time migration.
+Do not delete them before Phase 2 consumer inventory and one-bridge-at-a-time migration.
 
-## 9. Remaining release risks
+## 8. Remaining release risks
 
-1. **#107 is not merged into RC1 yet.** The three original RC1→main red workflows therefore remain expected on the current RC1 head.
-2. **Final RC1→main acceptance has not been re-proven after #107.** After a separately authorized #107 merge, rerun Release Acceptance, UI Interaction, Product Golden, and the permanent product/security gates on final ancestry.
-3. **Live AI provider usefulness remains unmeasured.** Repository fixtures prove encoded behavior, not representative real-provider quality.
-4. **Production smoke is still incomplete.** Preview/build green is not production proof.
+1. **Production deployment is not authorized and has not been performed.** RC1 synthetic/browser green is not production proof.
+2. **Current Vercel Hobby build-rate-limit can suppress new preview builds.** The #110 product-equivalent preview `fa41972e...` was READY before the limit; no fresh `5e605fb7...` preview was available during this merge verification.
+3. **Live AI provider usefulness remains unmeasured.** Repository fixtures prove encoded behavior, not representative provider quality.
+4. **Production env/secrets and deployed Supabase/auth/persistence/share-report behavior remain to be proven in the actual deployment environment.**
 5. **Legacy server Phase 2 has not started.**
 6. **Knowledge Engine remains planned, not implemented.**
 
-## 10. Next execution order
+## 9. Next execution order
 
-1. **#107 review state** — keep scope evaluator-only, verify final diff/gates, then make it review-ready. No merge without explicit authorization.
-2. **#107 merge decision** — if explicitly authorized, merge to `integration/aquaguide-rc1` with expected head locking.
-3. **Final RC1 acceptance** — rerun/observe the actual RC1→main Release Acceptance, UI Interaction, Product Golden and permanent gates on the new RC1 head. Exit criterion: no red gate and no threshold weakening.
-4. **Live AI usefulness evaluation** — representative configured-provider cohort for blocking-fact priority, candidate-drop, hallucinated preference, generic-answer, invalid JSON, timeout and fallback behavior.
-5. **Production readiness** — only after explicit deployment authorization: verify production env/secrets, Supabase/auth/persistence, live AI/fallback, Resend/share reports, then run post-deploy golden paths.
-6. **Legacy server Phase 2** — inventory consumers, migrate one bridge at a time, regression before deletion.
-7. **Knowledge Engine** — provenance/version schema → trusted ingestion/freshness → evaluation → hybrid retrieval → grounded citations/results → knowledge ops.
+1. Keep RC1 frozen except for production-readiness defects; do not start unrelated feature work before release readiness is understood.
+2. Complete live AI usefulness evaluation with representative configured-provider cases.
+3. Resolve/observe Vercel preview capacity and obtain a real current-RC1 preview when available; re-check legacy bundle sizes and protected env behavior.
+4. Only after explicit production authorization: verify env/secrets, Supabase/auth/persistence, live AI/fallback, Resend/share reports, then run post-deploy golden paths.
+5. RC1→`main` remains a separate explicit merge decision.
+6. After release foundation is stable: legacy server Phase 2, then Knowledge Engine.
 
-The immediate objective is **not new feature work**. It is to make the merged RC1 stack reproducibly clean under the actual release evaluators, then prove live-provider and production behavior separately.
+The immediate project state is **RC1 code/regression clean through #110; production readiness remains the next boundary**.
