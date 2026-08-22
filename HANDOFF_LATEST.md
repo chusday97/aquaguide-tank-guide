@@ -9,65 +9,89 @@
 
 ## 1. Current verified release baseline
 
-Latest fully verified post-remediation head: `74738962b3f23631b48973b6d7467276789b4241`.
+Latest fully verified product-code head: `e4068dc805422ed4bf797d5223ad0bdd44c2835f`.
 
 Permanent gates on that head:
 
-- Production Security Boundary V1 — **PASS**, run `32573206862`
-- Dependency Release Baseline V1 — **PASS**, run `32573206901`
-- Result UX V1 — **PASS**, run `32573206841`
-- Compatibility Stage Risk V1 — **PASS**, run `32573206824`
-- Plant Roster Edit Fix — **PASS**, run `32573206969`
+- Production Security Boundary V1 — **PASS**, run `32573927291`
+- Dependency Release Baseline V1 — **PASS**, run `32573927275`
+- Compatibility Stage Risk V1 — **PASS**, run `32573927293`
+- Plant Roster Edit Fix — **PASS**, run `32573927318`
+- Result UX V1 — **PASS**, run `32573927306`
 
-The dependency-security P0 is therefore **closed for the current feature-branch release baseline**: production audit is clean, and the same descendant head also passes normal product/browser regressions.
+Result UX now includes a permanent **Tank Copilot usefulness contract** in addition to the existing deterministic-authority and browser regressions.
 
-## 2. Dependency-security repair completed
+## 2. PUI-BC-059 — AI parsing could be valid but unusable
 
-### Before remediation
+The user-visible issue was real: the previous AI path could return syntactically valid structured output while still giving the user no useful next result.
 
-`npm audit --omit=dev` and the full audit both reported:
+### Fail-before evidence
 
-- 18 total findings
-- 10 high
-- 6 moderate
-- 2 low
-- 0 critical
+Head `ab5243404a3c770ce5a8ed8905008a973de37dfa`, Result UX run `32573810707` failed at the new `Tank Copilot usefulness contract` while the older Result UX contract and deterministic Copilot boundary both passed.
 
-The original production audit therefore could not be dismissed as dev-tooling noise.
+The failing case was deliberately simple:
 
-### Remediation landed
+- deterministic local rules already provided safe candidates;
+- the model returned `selectedCandidateIds: []`;
+- the model returned `restart_goal` as the action;
+- the old sanitizer accepted that response because it was schema-valid and did not violate hard safety rules.
 
-Landed dependency commit: `5c277cec1f99f5bb507b7d50b2018d5d571ef0f1`.
+This proved the prior suite guarded **safety and shape**, but not **semantic usefulness**.
 
-- `react-router-dom`: `^7.14.1 → ^7.18.2`
-- root `express`: `^4.21.2 → ^4.22.2`
-- `apps/api` `express`: `^4.21.2 → ^4.22.2`
-- `vite`: moved to `devDependencies` and raised to `^6.4.3`
-- build-only packages moved out of production dependency classification: `@tailwindcss/vite`, `@types/three`, `@vitejs/plugin-react`, `shadcn`, `vite`
-- transitive `dompurify` lock resolution advanced to patched `3.4.14` in the validated graph
+### Repair
 
-Validated remediation candidate run `32572924271` passed `npm ci`, TypeScript, production build, ancestry tracing, and audit summarization. Candidate production audit was **0 findings**; full audit remained **12 dev-only findings** = 7 high + 2 moderate + 3 low.
+Policy repair: `ef843ef384d09cb79d8ac7df62372e21db0241e8`.
 
-A one-time writer then reproduced and landed the exact remediation only after requiring install/types/build plus zero production findings. Apply run `32573063116` passed, and its workflow self-deleted in the same landed commit.
+- If required tank facts are missing, deterministic questions for size/volume, water type, temperature and filter are restored ahead of preference chatter.
+- Missing required facts force `complete_tank_info` as the primary action.
+- If the tank is sufficiently configured and local rules already expose safe/adjustable candidates, a model response that drops all candidates is recovered to the deterministic candidate pool.
+- With usable candidates, `restart_goal` cannot remain the primary action; the next step becomes `view_safe_candidates` or an executable addition simulation.
+- Recovered IDs are still restricted to the local deterministic candidate pool; AI receives no new safety authority.
 
-Commit `8bd327bf69d7a7b74d9ff91f601accddc0ffe7cb` then converted the dependency check into a permanent read-only release gate. Future #105 heads install the locked graph, run lint/build, summarize audits, and block release if production high/critical findings reappear.
+Prompt repair landed in `4814e8a0b565f18d9bde7623fd4ebda68049f988`.
 
-The 12 remaining full-audit findings stay visible as dev/build tooling debt, mainly under `shadcn → @modelcontextprotocol/sdk` and build chains. They are not production-runtime blockers under the corrected manifest and are not being blindly auto-fixed.
+The model is now explicitly required to:
 
-## 3. Product correctness/UI baseline carried forward
+- parse only user-stated maintenance, experience, visual-style and target-organism preferences;
+- prioritize blocking tank facts before subjective preferences;
+- select at least one local candidate when the tank is ready and a candidate pool exists;
+- make `planSummary` concrete by naming candidates and quantities instead of returning workflow filler such as “view candidates and decide later”;
+- state required adjustments when an adjustable/caution candidate is used.
 
-The same verified head preserves the prior product contracts:
+The temporary write workflow self-deleted after validation; no permanent `contents: write` workflow remains.
 
-- Care wide-desktop actionable guide no longer collapses into the 340/850px legacy corridor.
-- Aquarium narrow desktop preserves `Today → Context → Manage` while phone task ordering remains unchanged.
-- deterministic compatibility and life-stage risk boundaries remain authoritative.
-- plant roster edit regression remains covered.
-- share-report secret/readiness contract remains covered.
-- AI remains explanatory/candidate evidence; it does not override deterministic hard-safety decisions.
+### Permanent regression
 
-Result UX browser verification continues through Diagnosis, Compatibility, Knowledge, Procedure, Species Detail, Layout Recovery, Identification, and Tank Copilot.
+`Result UX V1` now runs `scripts/test-tank-copilot-usability.ts` permanently. The final normal verification head `e4068dc...` passed that contract plus the complete Result UX browser chain.
 
-## 4. Backend/runtime boundary
+### Important boundary
+
+Repository CI does **not** prove the quality of every live DeepSeek response. The real provider still needs configured-environment smoke/evaluation before production. What is now guaranteed at product level is narrower and important: common schema-valid but non-actionable outputs cannot be consumed blindly for the tested failure modes.
+
+## 3. Dependency-security baseline remains closed
+
+Production dependency audit remains **0 findings** on the current verified head. The full developer/build graph still has 12 dev-only findings (7 high / 2 moderate / 3 low) and remains a separate tooling-debt queue.
+
+Landed dependency remediation remains:
+
+- `react-router-dom` `^7.18.2`
+- root/API `express` `^4.22.2`
+- Vite dev-only `^6.4.3`
+- build-only packages outside runtime dependencies
+- patched transitive DOMPurify resolution
+
+The permanent dependency release gate remains read-only and blocks production high/critical findings.
+
+## 4. Product correctness/UI baseline carried forward
+
+- deterministic compatibility and life-stage risk remain authoritative;
+- plant roster editing remains covered;
+- share-report security/readiness contracts remain covered;
+- Care wide-desktop 340/850px corridor regression remains closed;
+- Aquarium narrow-desktop `Today → Context → Manage` hierarchy remains closed;
+- Result UX browser coverage still includes Diagnosis, Compatibility, Knowledge, Procedure, Species Detail, Layout Recovery, Identification and Tank Copilot.
+
+## 5. Backend/runtime boundary
 
 Phase 1 authoritative path remains:
 
@@ -78,19 +102,14 @@ Known legacy bridges still exist and must not be removed before consumer proof:
 - `api/ai/chat.js -> server/index.mjs`
 - `api/v1/health.js -> server/index.mjs`
 
-## 5. Remaining release risks
+The AI usefulness repair touched `server/index.mjs` because `/api/ai/chat` still consumes that legacy bridge. This is not permission to delete or broadly rewrite the legacy server before Phase 2 inventory.
 
-1. **Stack convergence is now the next blocker.** #105 remains stacked on #104; no merge/retarget sequence has been authorized.
-2. **Production smoke is not complete.** Repository/CI correctness is not proof that real production env variables, auth, persistence, share links, AI provider, Supabase, or Resend are configured correctly.
-3. **Dev/build dependency debt remains.** Full audit still has 12 dev-only findings; manage this separately from production runtime risk.
-4. **Legacy server Phase 2 is not started.** Consumer inventory is required before bridge removal.
-5. **Knowledge Engine remains planned, not implemented.** Do not jump to vector retrieval before provenance, trusted ingestion, and evaluation exist.
+## 6. Remaining release risks / next order
 
-## 6. Next execution order
+1. **Live AI quality validation** — before production, run representative real-provider cases against the configured runtime and measure usefulness, fallback, invalid JSON, timeout and contradiction behavior. Repository fixtures alone are insufficient.
+2. **Stack convergence** — only after explicit merge authorization: merge/reconcile #104 first, retarget #105, inspect ancestry/conflicts and rerun all permanent gates.
+3. **Production readiness** — only after explicit deployment authorization: verify production env/secrets, Supabase/auth/persistence, AI provider, Resend/share reports and post-deploy golden paths.
+4. **Legacy server Phase 2** — inventory consumers and migrate one bridge at a time with regression proof.
+5. **Knowledge Engine** — provenance/version schema → trusted ingestion/freshness → evaluation baseline → hybrid retrieval → grounded result/citations → knowledge ops.
 
-1. **Stack convergence** — only after explicit merge authorization: review/merge #104, retarget #105, inspect ancestry/conflicts, rerun all permanent gates.
-2. **Production readiness** — only after explicit deployment authorization: verify env/secrets and execute post-deploy golden paths.
-3. **Legacy server Phase 2** — inventory consumers, add regression contract, migrate one bridge at a time.
-4. **Knowledge Engine** — `P0 provenance/version schema → P1 trusted ingestion/freshness → P4 evaluation baseline → P2 hybrid retrieval → P3 grounded result/citations → P5 knowledge ops console`.
-
-Do not add broad new feature scope before stack convergence and production readiness are resolved.
+Do not interpret “AI usefulness guard is green” as proof that live model quality is solved. The next AI-specific engineering task is a small, representative live evaluation set, not more prompt decoration or a new AI page.

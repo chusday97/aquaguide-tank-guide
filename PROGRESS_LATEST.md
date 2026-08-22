@@ -3,11 +3,11 @@
 **Updated:** 2026-08-22  
 **Branch:** `agent/result-ux-v1`  
 **PR:** #105 (Draft / open / unmerged)  
-**Latest fully verified post-remediation head:** `74738962b3f23631b48973b6d7467276789b4241`
+**Latest fully verified product-code head:** `e4068dc805422ed4bf797d5223ad0bdd44c2835f`
 
 ## Current phase
 
-**RC1 feature convergence → UI/UX system → Result UX → Layout Recovery → dependency release baseline CLOSED → stack convergence next, pending explicit merge authorization.**
+**RC1 feature convergence → UI/UX system → Result UX → Layout Recovery → dependency release baseline CLOSED → Tank Copilot usefulness repair CLOSED for tested failure modes → live AI evaluation + stack convergence next.**
 
 No production merge or deployment has been authorized.
 
@@ -15,87 +15,76 @@ No production merge or deployment has been authorized.
 
 | Gate | Result | Run |
 |---|---|---:|
-| Production Security Boundary V1 | PASS | 32573206862 |
-| Dependency Release Baseline V1 | PASS | 32573206901 |
-| Result UX V1 | PASS | 32573206841 |
-| Compatibility Stage Risk V1 | PASS | 32573206824 |
-| Plant Roster Edit Fix | PASS | 32573206969 |
+| Production Security Boundary V1 | PASS | 32573927291 |
+| Dependency Release Baseline V1 | PASS | 32573927275 |
+| Compatibility Stage Risk V1 | PASS | 32573927293 |
+| Plant Roster Edit Fix | PASS | 32573927318 |
+| Result UX V1 | PASS | 32573927306 |
 
-The Result UX run passed the complete browser chain including Layout Recovery, Identification, and Tank Copilot on the post-remediation dependency graph.
+Result UX additionally passed the new permanent `Tank Copilot usefulness contract`, TypeScript/build, and the full browser chain through Tank Copilot.
 
-## Dependency-security P0 — completed
+## PUI-BC-059 — completed for repository-level failure modes
 
-Original production/full audit:
+- [x] Added a usefulness regression rather than relying on schema validity.
+- [x] Captured true fail-before: Result UX run `32573810707` failed when a model returned zero candidates despite a deterministic safe pool.
+- [x] Prevented `restart_goal` from becoming the primary action when a ready tank already has usable local candidates.
+- [x] Restored deterministic missing-fact questions when the model asks only preference questions.
+- [x] Kept all recovered candidates inside the local safe/adjustable pool.
+- [x] Strengthened Tank Copilot prompt to require concrete candidate/quantity planning and prohibit generic workflow filler.
+- [x] Required adjustable/caution recommendations to carry their required adjustments.
+- [x] Self-removed temporary write workflow after validation.
+- [x] Re-ran all five permanent gates on a normal user-authored descendant head; all passed.
 
-| Scope | High | Moderate | Low | Total |
-|---|---:|---:|---:|---:|
-| `npm audit --omit=dev` | 10 | 6 | 2 | 18 |
-| full audit | 10 | 6 | 2 | 18 |
+Fix lineage:
 
-Completed remediation:
+- policy: `ef843ef384d09cb79d8ac7df62372e21db0241e8`
+- prompt + self-cleanup: `4814e8a0b565f18d9bde7623fd4ebda68049f988`
+- normal full-verification head: `e4068dc805422ed4bf797d5223ad0bdd44c2835f`
 
-- [x] Moved build-only tooling out of root production dependencies.
-- [x] Upgraded `react-router-dom` to `^7.18.2`.
-- [x] Upgraded root/API `express` to `^4.22.2`.
-- [x] Upgraded/reclassified Vite to dev-only `^6.4.3`.
-- [x] Advanced transitive DOMPurify lock resolution to patched `3.4.14` in the validated graph.
-- [x] Validated candidate with `npm ci`, TypeScript, and production build.
-- [x] Reduced production audit to **0 findings**.
-- [x] Preserved remaining full-audit findings as dev/build debt rather than hiding them.
-- [x] Landed the exact lockfile through a one-time writer that self-deleted.
-- [x] Replaced the remediation workflow with a permanent read-only dependency release gate.
-- [x] Re-ran all normal permanent product gates on a post-remediation descendant head; all passed.
+## What remains unsolved about AI
 
-Dependency candidate proof: run `32572924271` — PASS.  
-One-time apply proof: run `32573063116` — PASS.  
-Permanent post-remediation dependency gate: run `32573206901` — PASS.
+Repository tests now block known non-actionable structured outputs, but they do not measure live-provider quality. Still required before production:
 
-Full audit still reports 12 dev-only findings: 7 high, 2 moderate, 3 low. These mainly originate from shadcn/MCP SDK and build-tool chains and remain in a separate tooling debt queue.
+- [ ] run real configured-provider cases rather than only mocks/fixtures;
+- [ ] cover broad vs specific user goals;
+- [ ] cover missing tank facts;
+- [ ] cover safe / adjustable / no-candidate scenarios;
+- [ ] measure invalid JSON, timeout/network fallback, contradiction and generic-answer rates;
+- [ ] define a usefulness acceptance rubric instead of judging prose subjectively.
+
+The target is not “AI sounds smart”. A result is usable only when it correctly identifies missing blocking facts or advances the user to a valid local candidate/action without inventing facts or weakening deterministic safety.
+
+## Dependency-security P0 — still closed
+
+- production audit: 0 findings;
+- full audit: 12 dev-only findings = 7 high / 2 moderate / 3 low;
+- permanent dependency gate remains active and read-only.
 
 ## Product baseline carried forward
 
 - [x] deterministic compatibility / stage-risk boundary;
 - [x] plant roster edit path;
-- [x] decision-first Result UX paths;
+- [x] decision-first Result UX;
 - [x] share-report production security contract;
 - [x] Layout Recovery for Atlas/Care/Aquarium;
-- [x] identification uncertainty/confirmation;
+- [x] identification uncertainty / explicit confirmation;
 - [x] Tank Copilot authority boundary;
-- [x] Care 340px/850px corridor regression fixed without lowering thresholds;
-- [x] Aquarium 768px context hierarchy restored without changing phone ordering.
+- [x] Tank Copilot usefulness guard for empty-candidate and missing-fact failure modes.
 
-## Current release readiness
+## Still required
 
-### Closed on feature branch
-
-- production dependency audit and permanent regression gate;
-- dependency install/types/build;
-- product/browser gates on remediated dependency graph;
-- production-security repository contracts;
-- Result UX/Layout Recovery regression suite.
-
-### Still required
-
-- [ ] perform #104 → #105 stack convergence only after explicit merge authorization;
-- [ ] rerun all gates after final retargeted ancestry;
-- [ ] verify real production environment/secrets only after deployment authorization;
-- [ ] perform production golden-path smoke after authorized deployment;
-- [ ] inventory remaining `server/index.mjs` consumers;
-- [ ] start Knowledge Engine P0 only after release/stack work is closed.
-
-## Next sequence
-
-1. Stack convergence: #104 decision first, then retarget/reconcile #105. No merge without explicit authorization.
-2. Production readiness: environment matrix + post-deploy smoke after explicit authorization.
-3. Backend Phase 2: legacy bridge consumer inventory and one-at-a-time migration with regression coverage.
-4. Knowledge architecture: P0 → P1 → P4 → P2 → P3 → P5.
+1. Live AI evaluation set and configured-runtime smoke.
+2. #104 → #105 stack convergence after explicit merge authorization.
+3. Full gate rerun after final retargeted ancestry.
+4. Production env/secrets + golden-path smoke after deployment authorization.
+5. Legacy `server/index.mjs` consumer inventory and one-at-a-time Phase 2 migration.
+6. Knowledge Engine only after release/stack foundation is stable.
 
 ## Guardrails
 
-- No blind `npm audit fix`.
-- No lowering regression thresholds.
-- Do not confuse dev/build severity with shipped runtime reachability.
+- Schema-valid AI output is not automatically product-valid.
 - AI cannot override deterministic safety rules.
-- Do not delete legacy API bridges before consumer proof.
-- Do not use repository/preview success as a proxy for production validation.
-- No production merge/deployment without explicit authorization.
+- Required factual gaps outrank preference questions.
+- Do not let model emptiness erase deterministic safe candidates.
+- Do not use mocks as proof of live-provider quality.
+- No blind dependency fixes, regression-threshold lowering, legacy bridge deletion, main merge or production deployment without the corresponding evidence/authorization.

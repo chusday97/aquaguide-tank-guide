@@ -4,60 +4,94 @@
 **Branch:** `agent/result-ux-v1`  
 **Purpose:** current handoff-level badcase ledger. Canonical historical product registry remains under `evaluation/product/`.
 
+## PUI-BC-059 — Tank Copilot accepted schema-valid but non-actionable AI parsing
+
+- **Feature:** Tank Copilot / AI result usefulness
+- **Severity:** high
+- **Source:** permanent usefulness CI fail-before
+- **Status:** regression_verified for tested failure modes
+- **Fail-before head:** `ab5243404a3c770ce5a8ed8905008a973de37dfa`
+- **Fail-before Result UX:** run `32573810707` — FAIL at `Tank Copilot usefulness contract`
+- **Policy fix:** `ef843ef384d09cb79d8ac7df62372e21db0241e8`
+- **Prompt + cleanup fix:** `4814e8a0b565f18d9bde7623fd4ebda68049f988`
+- **Full regression head:** `e4068dc805422ed4bf797d5223ad0bdd44c2835f`
+- **Result UX regression:** run `32573927306` — PASS
+
+### Symptom
+
+The old path treated “valid JSON + no deterministic safety violation” as sufficient. A model could return:
+
+- an acceptable-sounding goal summary;
+- `selectedCandidateIds: []` even though local rules had safe candidates;
+- `restart_goal` as the primary action;
+- generic plan prose such as “先看看候选，再决定下一步”.
+
+That result was safe but not useful. The existing Result UX browser test still passed because it validated AI/local-rule authority, disclosure and action count rather than semantic usefulness.
+
+A second failure mode allowed subjective preference questions to survive even when deterministic tank facts such as size/volume or target temperature were still missing.
+
+### Root causes
+
+1. **Schema validity was confused with product validity.** Normalization checked type/shape but not whether the response advanced the user.
+2. **Safety tests dominated the AI contract.** They correctly prevented the model from overriding local rules but did not require useful selection or clarification.
+3. **Model emptiness could erase local opportunity.** Empty model selection was accepted instead of falling back to the already-approved candidate pool.
+4. **Question priority was model-led.** Required tank facts were not guaranteed to outrank preference chatter.
+5. **Prompt allowed workflow filler.** It did not require candidate names/quantities or a concrete fit explanation when a usable candidate pool existed.
+
+### Repair
+
+Product policy now enforces:
+
+- missing deterministic tank facts first;
+- `complete_tank_info` when those facts are missing;
+- recovery to local safe/adjustable candidates when the model returns an empty selection despite a usable pool;
+- `view_safe_candidates` / executable simulation instead of unnecessary `restart_goal` when candidates exist;
+- all recovery remains inside the deterministic candidate pool.
+
+Prompt now requires:
+
+- only user-stated preferences to be interpreted;
+- at least one local candidate when the tank is ready and candidates exist;
+- candidate names + `recommendedQuantity` in concrete plan output;
+- no generic “view / simulate / decide later” filler as the entire plan;
+- required adjustments to remain explicit for caution/adjustable candidates.
+
+Permanent Result UX now runs `scripts/test-tank-copilot-usability.ts`.
+
+### Verification
+
+True fail-before run `32573810707` failed exactly because the old sanitizer did not recover deterministic candidates.
+
+On final normal verification head `e4068dc...`:
+
+- Production Security Boundary V1 — PASS (`32573927291`)
+- Dependency Release Baseline V1 — PASS (`32573927275`)
+- Compatibility Stage Risk V1 — PASS (`32573927293`)
+- Plant Roster Edit Fix — PASS (`32573927318`)
+- Result UX V1 — PASS (`32573927306`), including:
+  - Tank Copilot deterministic boundary contract
+  - Tank Copilot usefulness contract
+  - TypeScript/build
+  - Diagnosis/Compatibility/Knowledge/Procedure/Species Detail/Layout Recovery/Identification browser paths
+  - Tank Copilot decision-first + AI-authority browser regression
+
+### Remaining boundary
+
+This badcase is closed only for the encoded repository-level failure modes. It does **not** prove that every live provider response is high quality. A live evaluation set with configured provider access is still required before production to measure generic-answer, contradiction, invalid-JSON, fallback and actionability rates.
+
+---
+
 ## REL-BC-001 — Production dependency graph contained untriaged high-severity findings
 
 - **Area:** release baseline / dependency security
 - **Severity:** high
-- **Source:** `npm audit --omit=dev` release-baseline evidence
 - **Status:** regression_verified
-- **Baseline:** 18 production-graph findings = 10 high + 6 moderate + 2 low
-- **Candidate proof:** Dependency Release Baseline V1 run `32572924271` — PASS
 - **Landed by:** `5c277cec1f99f5bb507b7d50b2018d5d571ef0f1`
-- **Apply proof:** Apply Dependency Remediation Once run `32573063116` — PASS
-- **Permanent regression:** Dependency Release Baseline V1 run `32573206901` — PASS
-- **Post-remediation product regression head:** `74738962b3f23631b48973b6d7467276789b4241`
+- **Permanent dependency regression:** PASS on current verified head
 
-### Symptom
+Original production/full audit both reported 18 findings (10 high / 6 moderate / 2 low). Build-only tooling was misclassified as runtime dependencies, direct runtime packages were stale, and the lockfile retained a vulnerable DOMPurify resolution. The repair reclassified build tools, minimally upgraded runtime dependencies, advanced the lockfile, and added a permanent read-only production dependency gate.
 
-The same 18 findings appeared in both the full audit and `npm audit --omit=dev`. Treating the count as generic dev-tooling noise would therefore have been unsafe.
-
-Notable production-graph findings included direct `react-router-dom`, direct `express`, direct `vite`, plus transitive `react-router`, `qs`, `dompurify`, `hono`, `postcss`, and others.
-
-### Root causes
-
-1. Build-only tooling (`vite`, `shadcn`, Tailwind/Vite plugins, type packages) was classified under root production dependencies, inflating the production graph and making build-chain vulnerabilities appear runtime-reachable.
-2. Runtime direct dependencies had stale vulnerable ranges (`react-router-dom`, `express`).
-3. The lockfile retained a vulnerable transitive DOMPurify release through PostHog.
-4. A first remediation artifact workflow had its own packaging bug: two different `package.json` files were copied into the same flat artifact directory, causing a false CI failure after the candidate itself had already built successfully.
-
-### Repair
-
-- reclassified build-only packages to `devDependencies` rather than suppressing audit output;
-- upgraded `react-router-dom` to `^7.18.2`;
-- upgraded root and API `express` to `^4.22.2`;
-- moved/upgraded Vite to dev-only `^6.4.3`;
-- regenerated the lockfile and advanced DOMPurify to patched `3.4.14` in the validated dependency graph;
-- fixed the artifact directory structure so root and API manifests are preserved separately;
-- added package ancestry traces to distinguish shipped/runtime dependencies from tooling chains;
-- landed the exact validated lockfile through a one-time workflow that required zero production audit findings and self-deleted after commit;
-- replaced the one-time remediation machinery with a permanent read-only dependency release gate that blocks production high/critical findings.
-
-### Result
-
-Post-remediation release baseline:
-
-- production audit: **0 findings**;
-- full audit: **12 dev-only findings** = 7 high + 2 moderate + 3 low;
-- `npm ci`: PASS;
-- TypeScript/lint: PASS;
-- production build: PASS;
-- Production Security Boundary: PASS (`32573206862`);
-- Result UX browser regression: PASS (`32573206841`);
-- Compatibility Stage Risk: PASS (`32573206824`);
-- Plant Roster Edit Fix: PASS (`32573206969`);
-- Dependency Release Baseline: PASS (`32573206901`).
-
-The 12 remaining findings are retained as tooling debt, principally under shadcn/MCP SDK and build-tool dependency chains. They are not production-runtime blockers under the corrected manifest, but they are not erased from the ledger.
+Current state: production audit 0; full audit 12 dev-only findings (7 high / 2 moderate / 3 low).
 
 ---
 
@@ -84,8 +118,9 @@ At a 768px desktop fixture, the <=719px aquarium container rule applied phone-st
 ## Carry-forward discipline
 
 - Keep fail-before evidence; never lower a regression threshold merely to turn CI green.
-- Separate product/browser badcases from release/tooling badcases; do not force release dependency findings into the product feature-state registry without a valid feature mapping.
-- A dependency fix is not closed by a clean audit/build alone; normal product/browser gates must pass on the remediated graph.
-- Do not use raw severity counts without dependency classification and runtime reachability.
-- Do not blindly run `npm audit fix`; prefer minimal, explainable dependency changes with lockfile and regression proof.
-- Preserve the append-only canonical product badcase registry under `evaluation/product/` when product entries are added.
+- Treat **schema-valid**, **safe**, and **useful** as separate AI quality dimensions.
+- AI cannot override deterministic hard-safety rules, but safety alone is not a sufficient acceptance criterion.
+- Required facts must outrank subjective preference questions.
+- Do not let model omissions erase deterministic safe candidates.
+- A mock/browser fixture proves product behavior under that fixture, not live-provider quality.
+- Separate product/browser badcases from release/tooling badcases and preserve the append-only canonical product registry.
