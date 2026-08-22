@@ -73,6 +73,9 @@ for (const file of [...await collectTsx('src'), ...await collectTsx('components'
   for (const match of source.matchAll(/<DialogContent\b[^>]*>/gs)) {
     if (!/\bsurface=/.test(match[0])) fail(`${file} has DialogContent without explicit surface semantics.`);
   }
+  if (/role=\"dialog\"|aria-modal=\"true\"/.test(source)) {
+    fail(`${file} contains hand-built dialog semantics; use the shared Dialog surface primitive.`);
+  }
 }
 
 const aquariumDialogTags = [...aquarium.matchAll(/<DialogContent\b([^>]*)>/g)];

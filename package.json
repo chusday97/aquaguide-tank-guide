@@ -110,7 +110,8 @@
     "test:aquarium-primary-tools": "node scripts/verify-aquarium-primary-tools.mjs",
     "test:aquarium-surfaces": "node scripts/verify-aquarium-surface-runtime.mjs",
     "test:page-runtime-matrix": "node scripts/verify-page-runtime-matrix.mjs",
-    "test:admin-content-dialogs": "node scripts/verify-admin-content-dialogs.mjs"
+    "test:admin-content-dialogs": "node scripts/verify-admin-content-dialogs.mjs",
+    "test:species-export-card": "node scripts/verify-species-export-card.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

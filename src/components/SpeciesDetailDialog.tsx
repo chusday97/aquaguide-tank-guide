@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Box, Calculator, CheckCircle2, ChevronLeft, ChevronRight, Download, Flame, Heart, HeartOff, Info, Printer, Share2, Skull, SlidersHorizontal, Thermometer, Waves, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import type { Aquarium, Fish, MemorialCauseCode } from '../types';
 import { fishData } from '../data/fishData';
 import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions } from '../modules/species/species.service';
@@ -1162,10 +1162,8 @@ export function SpeciesDetailDialog({
                 </div>
               )}
 
-              {isExportOpen && (
-                <div className="fixed inset-0 z-[190] flex items-center justify-center bg-black/35 px-3 py-4" role="dialog" aria-modal="true" aria-labelledby="species-export-title">
-                  <button type="button" className="absolute inset-0" aria-label={isEn ? 'Close export card' : '关闭导出卡片'} onClick={() => !isExportingCard && setIsExportOpen(false)} />
-                  <div className="relative flex max-h-[92dvh] w-full max-w-[760px] flex-col overflow-hidden rounded-[26px] bg-[#F5F2E9] shadow-[0_28px_80px_rgba(15,23,42,0.28)]">
+              <Dialog open={isExportOpen} onOpenChange={open => { if (!open && isExportingCard) return; setIsExportOpen(open); }}>
+                <DialogContent surface="media" showCloseButton={false} aria-labelledby="species-export-title" className="flex max-h-[92dvh] w-[min(94vw,760px)] max-w-[760px] flex-col overflow-hidden rounded-[26px] bg-[#F5F2E9] p-0 shadow-[0_28px_80px_rgba(15,23,42,0.28)]">
                     <div className="flex shrink-0 items-center justify-between border-b border-black/5 bg-white/90 px-4 py-3">
                       <div>
                         <h3 id="species-export-title" className="text-[16px] font-black text-ink">{isEn ? 'Export species card' : '导出物种卡片'}</h3>
@@ -1236,9 +1234,8 @@ export function SpeciesDetailDialog({
                         {isEn ? 'Print card' : '打印卡片'}
                       </Button>
                     </div>
-                  </div>
-                </div>
-              )}
+                </DialogContent>
+              </Dialog>
             </div>
           )}
         </AdaptiveDetailContent>

@@ -41,6 +41,9 @@ jobs:
       - name: Aquarium stage static contract
         run: npx tsx scripts/test-aquarium-stage-layout-contract.ts
 
+      - name: Compatibility evidence coverage audit
+        run: npm run audit:compatibility-evidence
+
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
@@ -98,6 +101,11 @@ jobs:
         env:
           AQUAGUIDE_URL: http://127.0.0.1:4173
         run: node scripts/verify-taxonomy-ui.mjs
+
+      - name: Species export Media regression
+        env:
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: npm run test:species-export-card
 
       - name: Identify flow and unsaved navigation guard
         env:

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:3000';
+const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({
   viewport: { width: 1280, height: 900 },
@@ -57,9 +57,9 @@ try {
   assert.notEqual(nextSpeciesName, firstSpeciesName, 'next variant must update the detail in place');
   assert.equal(await detail.count(), 1, 'variant switching must keep the same detail surface open');
 
-  await detail.getByRole('button', { name: '导出物种卡片' }).click();
+  await detail.getByRole('button', { name: '下载', exact: true }).click();
 
-  const exportDialog = page.locator('[role="dialog"][aria-labelledby="species-export-title"]:visible');
+  const exportDialog = page.locator('[data-dialog-surface="media"][data-open][aria-labelledby="species-export-title"]');
   await exportDialog.waitFor();
   const card = exportDialog.locator('[data-species-export-card]');
   const cardText = await card.innerText();

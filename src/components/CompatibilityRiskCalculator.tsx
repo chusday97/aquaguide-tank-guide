@@ -111,7 +111,7 @@ const getDisplayImage = getSpeciesDisplayImage;
 const isCompatibilityLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
 
 type CompatibilityRiskLevel = 'empty' | TankCompatibilityStatus;
-type ResultModal = null | 'adjustment' | 'conflictDetail';
+type ResultModal = null | 'adjustment';
 type SelectedCompatibilityItem = { species: Fish; quantity: number };
 type MainConflict = {
   key: string;
@@ -385,16 +385,6 @@ const getSpeciesActionGroups = (
   };
 };
 
-const getConflictType = (reason: string) => {
-  if (reason.includes('水体')) return '水体类型';
-  if (reason.includes('pH')) return '水质差异';
-  if (reason.includes('水温')) return '温度差异';
-  if (reason.includes('性情') || reason.includes('追咬') || reason.includes('攻击')) return '攻击性';
-  if (reason.includes('体型') || reason.includes('捕食') || reason.includes('吞食')) return '捕食风险';
-  if (reason.includes('空间') || reason.includes('躲避') || reason.includes('领地')) return '空间竞争';
-  return '混养条件';
-};
-
 const getRiskExplanation = (tags: string[], reasons: string[]) => {
   if (reasons.length === 0) return '当前组合未发现明显冲突，但仍建议先少量加入并观察。';
   const tagText = tags.length > 0 ? tags.slice(0, 4).join('、') : '水质、空间或性情';
@@ -408,9 +398,7 @@ function CompatibilityBottomSheet({
   meta,
   riskConclusion,
   conflictTags,
-  mainConflicts,
   actionHints,
-  selectedSpecies,
   acceptLabel,
   isEn,
   onAccept,
@@ -422,9 +410,7 @@ function CompatibilityBottomSheet({
   meta: ReturnType<typeof getRiskMeta>;
   riskConclusion: string;
   conflictTags: string[];
-  mainConflicts: MainConflict[];
   actionHints: string[];
-  selectedSpecies: Fish[];
   acceptLabel?: string;
   isEn: boolean;
   onAccept: () => void;
@@ -433,59 +419,17 @@ function CompatibilityBottomSheet({
   if (!activeModal) return null;
   const resolvedAcceptLabel = acceptLabel ?? (isEn ? 'Got it' : '我知道了');
 
-  const isAdjustment = activeModal === 'adjustment';
-  const fallbackReason = result.reasons[0] || '未发现明显对象冲突，仍建议少量加入并观察。';
-  const fallbackConflict: MainConflict = {
-    key: 'summary-conflict',
-    pair: selectedSpecies.map(item => item.name).join(' × ') || '当前组合',
-    reason: fallbackReason,
-    reasons: [fallbackReason],
-  };
-  const conflicts = mainConflicts.length > 0 ? mainConflicts : [fallbackConflict];
-  const primaryConflict = conflicts[0];
-  const primaryReasons = Array.from(new Set(primaryConflict.reasons?.length ? primaryConflict.reasons : [primaryConflict.reason])).slice(0, 3);
-  const mergedConflictCount = Math.max(0, conflicts.length - 1);
-  const mergedReasonCount = Math.max(
-    0,
-    conflicts.reduce((sum, conflict) => sum + (conflict.reasons?.length || 1), 0) - primaryReasons.length
-  );
-  const sheetTitle = isEn ? (isAdjustment ? 'Adjustment Recommendations' : 'Housing Risk Warnings') : (isAdjustment ? '调整建议' : '混养提醒');
+  const sheetTitle = isEn ? 'Adjustment Recommendations' : '调整建议';
 
   return (
-    <div className="fixed inset-0 z-[230] flex items-end justify-center">
-      <button
-        type="button"
-        className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
-        aria-label={isEn ? 'Close dialog' : '关闭弹窗'}
-        onClick={onClose}
-      />
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="compatibility-sheet-title"
-        className="relative z-10 flex max-h-[85dvh] min-h-[70dvh] w-full max-w-[430px] animate-[compatSheetUp_180ms_ease-out] flex-col overflow-hidden rounded-t-[24px] bg-bg shadow-2xl"
-        onPointerDown={(event) => {
-          const startY = event.clientY;
-          const handleMove = (moveEvent: PointerEvent) => {
-            if (moveEvent.clientY - startY > 90) {
-              onClose();
-              window.removeEventListener('pointermove', handleMove);
-            }
-          };
-          const handleUp = () => {
-            window.removeEventListener('pointermove', handleMove);
-            window.removeEventListener('pointerup', handleUp);
-          };
-          window.addEventListener('pointermove', handleMove);
-          window.addEventListener('pointerup', handleUp);
-        }}
-      >
+    <Dialog open={Boolean(activeModal)} onOpenChange={open => !open && onClose()}>
+      <DialogContent surface="task" data-surface="task-flow" showCloseButton={false} className="overflow-hidden border-border bg-bg p-0">
         <div className="shrink-0 border-b border-white bg-white px-4 pb-3 pt-2">
           <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-ink/12" />
           <div className="flex items-center justify-between gap-3">
             <div>
               <h3 id="compatibility-sheet-title" className="text-[18px] font-black text-ink">{sheetTitle}</h3>
-              <p className="mt-0.5 text-[11px] font-bold text-ink/45">{isAdjustment ? '只看现在能做什么。' : '看清是哪组生物需要谨慎。'}</p>
+              <p className="mt-0.5 text-[11px] font-bold text-ink/45">{isEn ? 'Focus on the next safe actions.' : '只看现在能做什么。'}</p>
             </div>
             <button type="button" onClick={onClose} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={isEn ? 'Close' : '关闭'}>
               <X className="h-4 w-4" />
@@ -494,7 +438,6 @@ function CompatibilityBottomSheet({
         </div>
 
         <div className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 pb-6">
-          {isAdjustment ? (
             <div className="grid gap-3">
               <section className={`rounded-[18px] border p-3 ${meta.tone}`}>
                 <div className="text-[10px] font-black opacity-65">{isEn ? 'Current Assessment' : '当前结论'}</div>
@@ -518,46 +461,7 @@ function CompatibilityBottomSheet({
                 </div>
               </section>
             </div>
-          ) : (
-            <div className="grid gap-3">
-              <section className={`rounded-[18px] border p-3 ${meta.tone}`}>
-                <div className="text-[10px] font-black opacity-60">{isEn ? 'Current Assessment' : '当前结论'}</div>
-                <div className="mt-1 text-[15px] font-black">{meta.label}：{riskConclusion}</div>
-              </section>
-              <section className="rounded-[18px] bg-white p-3 shadow-sm">
-                <div className="text-[10px] font-black text-ink/42">{isEn ? 'Key Species Warnings' : '主要提醒对象'}</div>
-                <div className="mt-1 text-[15px] font-black text-ink">{primaryConflict.pair}</div>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {primaryReasons.map(reason => (
-                    <span key={reason} className="rounded-full bg-red-50 px-2 py-1 text-[10px] font-black text-red-600">
-                      {getConflictType(reason)}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-2 grid gap-1.5 rounded-[14px] bg-bg px-3 py-2">
-                  {primaryReasons.map(reason => (
-                    <p key={reason} className="text-[12px] font-medium leading-relaxed text-ink/64">{reason}</p>
-                  ))}
-                </div>
-                {(mergedConflictCount > 0 || mergedReasonCount > 0) && (
-                  <div className="mt-2 rounded-[14px] bg-amber-50 px-3 py-2 text-[11px] font-bold leading-relaxed text-amber-700">
-                    另有 {mergedConflictCount > 0 ? `${mergedConflictCount} 组对象` : ''}{mergedConflictCount > 0 && mergedReasonCount > 0 ? '、' : ''}{mergedReasonCount > 0 ? `${mergedReasonCount} 条依据` : ''}，可在结果页展开查看。
-                  </div>
-                )}
-              </section>
-              <section className="rounded-[18px] bg-white p-3 shadow-sm">
-                <div className="text-[13px] font-black text-ink">{isEn ? 'Action Plan' : '现在怎么做'}</div>
-                <div className="mt-2 grid gap-2">
-                  {actionHints.slice(0, 2).map((step, stepIndex) => (
-                    <div key={step} className="flex gap-2 rounded-[14px] bg-emerald-50 px-3 py-2 text-[12px] font-bold leading-relaxed text-emerald-900">
-                      <span className="shrink-0">{stepIndex + 1}.</span>
-                      <span>{step}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
-          )}
+
         </div>
 
         <div className="modalFooter grid shrink-0 grid-cols-2 gap-2 border-t border-white bg-white/95 backdrop-blur">
@@ -568,14 +472,8 @@ function CompatibilityBottomSheet({
             返回修改组合
           </button>
         </div>
-      </section>
-      <style>{`
-        @keyframes compatSheetUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
-      `}</style>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -1312,9 +1210,7 @@ export function CompatibilityRiskCalculator({
       meta={meta}
       riskConclusion={riskConclusion}
       conflictTags={conflictTags}
-      mainConflicts={mainConflicts}
       actionHints={actionHints}
-      selectedSpecies={selectedSpecies}
       acceptLabel={confirmingCautionAdd ? (isEn ? 'Actually stocked, record now' : '已经实际入缸，确认记录') : (isEn ? 'Got it' : '我知道了')}
       onAccept={() => {
         if (confirmingCautionAdd) {
