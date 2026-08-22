@@ -79,6 +79,11 @@ jobs:
           PREVIEW_URL: http://127.0.0.1:4173
         run: npm run test:aquarium-surfaces
 
+      - name: Full page runtime matrix
+        env:
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: npm run test:page-runtime-matrix
+
       - name: Collection creature-navigation regression
         env:
           AQUAGUIDE_URL: http://127.0.0.1:4173
