@@ -10,6 +10,7 @@ const species = read('src/components/SpeciesDetailDialog.tsx');
 const speciesBase = read('src/components/SpeciesDetailDialogBase.tsx');
 const livestock = read('src/components/aquarium/LivestockBatchCard.tsx');
 const compatibility = read('src/components/CompatibilityRiskCalculator.tsx');
+const decisionResult = read('src/components/result/DecisionResultSurface.tsx');
 const navigation = read('src/components/layout/WorkspaceNavigationProvider.tsx');
 const roster = read('src/components/aquarium/LivestockRosterDialog.tsx');
 const aquarium = read('src/pages/Aquarium.tsx');
@@ -28,8 +29,11 @@ assert(livestock.includes('const hasDraftChanges = hasPendingSelection;'), 'Live
 assert(!livestock.includes('JSON.stringify(draft) !== JSON.stringify(record)'), 'Internal metadata changes must not masquerade as user edits');
 assert(!livestock.includes('onClick={prepareReview} disabled={!hasPendingSelection}'), 'Review must not require users to manufacture a state change');
 
-assert(compatibility.includes('data-compatibility-verdict={resultStatus}'), 'Compatibility result must expose a dominant semantic verdict');
-assert(compatibility.includes('data-verdict-symbol={verdictCue?.symbol}'), 'Compatibility verdict must provide a scan-first symbol');
+assert(compatibility.includes('<DecisionResultSurface'), 'Compatibility result must use the shared decision-first result surface');
+assert(compatibility.includes('testId="compatibility-decision"'), 'Compatibility result must expose a stable dominant decision test id');
+assert(compatibility.includes('statusLabel={[meta.label, verdictCue?.metric].filter(Boolean).join'), 'Compatibility decision must expose verdict plus scan-first metric');
+assert(decisionResult.includes('data-result-ux="decision"'), 'Shared decision surface must expose a stable semantic result boundary');
+assert(decisionResult.includes("const StatusIcon = tone === 'success' ? CheckCircle2 : tone === 'info' ? Info : AlertTriangle;"), 'Shared decision surface must retain a scan-first status icon derived from verdict tone');
 assert(compatibility.includes('data-compatibility-result'), 'Compatibility result must expose a stable primary-result section');
 assert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-3' : 'order-4'"), 'Evaluable compatibility result must move ahead of the species selector');
 assert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-4' : 'order-3'"), 'Species selector must move behind an existing compatibility result');
