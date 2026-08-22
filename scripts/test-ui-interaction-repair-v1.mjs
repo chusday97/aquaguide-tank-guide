@@ -7,19 +7,22 @@ const assert = (condition, message) => {
 
 const adaptive = read('src/components/common/AdaptiveDetailContent.tsx');
 const species = read('src/components/SpeciesDetailDialog.tsx');
+const speciesBase = read('src/components/SpeciesDetailDialogBase.tsx');
 const livestock = read('src/components/aquarium/LivestockBatchCard.tsx');
 const compatibility = read('src/components/CompatibilityRiskCalculator.tsx');
+const decisionResult = read('src/components/result/DecisionResultSurface.tsx');
 const navigation = read('src/components/layout/WorkspaceNavigationProvider.tsx');
 const roster = read('src/components/aquarium/LivestockRosterDialog.tsx');
 const aquarium = read('src/pages/Aquarium.tsx');
 const encyclopedia = read('src/pages/Encyclopedia.tsx');
+const encyclopediaBase = read('src/pages/EncyclopediaBase.tsx');
 const visualResult = read('src/components/visual-results/VisualResultCard.tsx');
 const skill = read('.agents/skills/aquaguide-ui-ux/SKILL.md');
 
 assert(adaptive.includes("desktopSize?: 'reading' | 'wide'"), 'Adaptive detail must expose semantic wide mode');
 assert(adaptive.includes("desktopSize === 'wide' ? '860px'"), 'Wide desktop detail must use an information-dense width');
 assert(adaptive.includes('!w-screen !max-w-none'), 'Wide phone detail must be full-screen rather than a squeezed drawer');
-assert(species.includes('desktopSize="wide" data-detail-kind="species"'), 'Species detail must opt into wide/full-screen entity detail');
+assert(speciesBase.includes('desktopSize="wide" data-detail-kind="species"'), 'Species detail base must opt into wide/full-screen entity detail');
 
 assert(livestock.includes('data-livestock-review-default-valid'), 'Livestock default state must be accepted by review CTA');
 assert(livestock.includes("data-livestock-finish-mode={hasDraftChanges ? 'save' : 'done'}"), 'Unchanged valid defaults need a Done path');
@@ -27,8 +30,11 @@ assert(livestock.includes('const hasDraftChanges = hasPendingSelection;'), 'Live
 assert(!livestock.includes('JSON.stringify(draft) !== JSON.stringify(record)'), 'Internal metadata changes must not masquerade as user edits');
 assert(!livestock.includes('onClick={prepareReview} disabled={!hasPendingSelection}'), 'Review must not require users to manufacture a state change');
 
-assert(compatibility.includes('data-compatibility-verdict={resultStatus}'), 'Compatibility result must expose a dominant semantic verdict');
-assert(compatibility.includes('data-verdict-symbol={verdictCue?.symbol}'), 'Compatibility verdict must provide a scan-first symbol');
+assert(compatibility.includes('<DecisionResultSurface'), 'Compatibility result must use the shared decision-first result surface');
+assert(compatibility.includes('testId="compatibility-decision"'), 'Compatibility result must expose a stable dominant decision test id');
+assert(compatibility.includes('statusLabel={[meta.label, verdictCue?.metric].filter(Boolean).join'), 'Compatibility decision must expose verdict plus scan-first metric');
+assert(decisionResult.includes('data-result-ux="decision"'), 'Shared decision surface must expose a stable semantic result boundary');
+assert(decisionResult.includes("const StatusIcon = tone === 'success' ? CheckCircle2 : tone === 'info' ? Info : AlertTriangle;"), 'Shared decision surface must retain a scan-first status icon derived from verdict tone');
 assert(compatibility.includes('data-compatibility-result'), 'Compatibility result must expose a stable primary-result section');
 assert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-3' : 'order-4'"), 'Evaluable compatibility result must move ahead of the species selector');
 assert(compatibility.includes("canEvaluate && resultStatus && meta ? 'order-4' : 'order-3'"), 'Species selector must move behind an existing compatibility result');
@@ -45,22 +51,23 @@ assert(roster.includes('restoreContext(workspaceReturnContext)'), 'Livestock mod
 assert(aquarium.includes("routeNavigate('/aquarium', { replace: true, state: routeLocation.state });"), 'Consuming an Aquarium task action must preserve route state');
 assert(!aquarium.includes("routeNavigate('/aquarium', { replace: true });"), 'Aquarium task consumption must not erase return state when removing one-time action queries');
 
-assert(encyclopedia.includes("params.set('source', 'atlas-detail')"), 'Atlas entity detail must be route-addressable');
-assert(encyclopedia.includes("navigateToRoute(taskRoutes.aquarium.livestock, { returnContext })"), 'View tank must carry exact caller context');
-assert(encyclopedia.includes("params.get('source') === 'atlas-detail'"), 'Closing atlas detail must preserve the prior route instead of hard-resetting to Encyclopedia home');
+assert(encyclopedia.includes('data-encyclopedia-navigation-guard'), 'Atlas wrapper must retain the top-level compatibility navigation guard');
+assert(encyclopediaBase.includes("params.set('source', 'atlas-detail')"), 'Atlas entity detail must be route-addressable');
+assert(encyclopediaBase.includes("navigateToRoute(taskRoutes.aquarium.livestock, { returnContext })"), 'View tank must carry exact caller context');
+assert(encyclopediaBase.includes("params.get('source') === 'atlas-detail'"), 'Closing atlas detail must preserve the prior route instead of hard-resetting to Encyclopedia home');
 
-const calculatorHandlerStart = encyclopedia.indexOf('const handleAddToCalculator =');
-const calculatorHandlerEnd = encyclopedia.indexOf('\n  const ', calculatorHandlerStart + 10);
-const calculatorHandler = encyclopedia.slice(calculatorHandlerStart, calculatorHandlerEnd > calculatorHandlerStart ? calculatorHandlerEnd : undefined);
-assert(calculatorHandlerStart >= 0, 'Encyclopedia must expose an explicit calculator-selection handler');
+const calculatorHandlerStart = encyclopediaBase.indexOf('const handleAddToCalculator =');
+const calculatorHandlerEnd = encyclopediaBase.indexOf('\n  const ', calculatorHandlerStart + 10);
+const calculatorHandler = encyclopediaBase.slice(calculatorHandlerStart, calculatorHandlerEnd > calculatorHandlerStart ? calculatorHandlerEnd : undefined);
+assert(calculatorHandlerStart >= 0, 'Encyclopedia base must expose an explicit calculator-selection handler');
 assert(!calculatorHandler.includes('closeAtlasDetail('), 'Selecting a species for compatibility must not close a browsing detail automatically');
 assert(!calculatorHandler.includes("setViewMode('compatibility')"), 'Selecting a species must not switch the user into compatibility mode automatically');
 assert(!calculatorHandler.includes('navigateToRoute('), 'Selecting a species must not navigate before the user explicitly asks to view compatibility results');
 assert(!species.includes('onAddToCalculator(fish);'), 'Opening or acting inside species detail must never mutate compatibility selection');
-assert(species.includes("return t('encyclopedia.goToCalcBtn');"), 'Risk detail CTA must navigate to the compatibility tool rather than preselecting the species');
-assert(species.includes("data-species-detail-compatibility-action=\"open-calculator\""), 'Species detail compatibility entry must be navigation-only');
-assert(!species.includes("data-species-detail-compatibility-action={inCalculator ? 'view-result' : 'add-selection'}"), 'Species detail must not expose an implicit add-selection state');
-assert(species.includes("const handleOpenCalculator = () => {\n    if (!fish) return;\n    onGoCalculator?.();\n  };"), 'Species detail calculator entry must be read-only navigation');
+assert(speciesBase.includes("return t('encyclopedia.goToCalcBtn');"), 'Risk detail CTA must navigate to the compatibility tool rather than preselecting the species');
+assert(speciesBase.includes("data-species-detail-compatibility-action=\"open-calculator\""), 'Species detail compatibility entry must be navigation-only');
+assert(!speciesBase.includes("data-species-detail-compatibility-action={inCalculator ? 'view-result' : 'add-selection'}"), 'Species detail must not expose an implicit add-selection state');
+assert(speciesBase.includes("const handleOpenCalculator = () => {\n    if (!fish) return;\n    onGoCalculator?.();\n  };"), 'Species detail calculator entry must be read-only navigation');
 
 assert(!aquarium.includes('selectedDailyCheckArticle'), 'Daily Check reference guidance must not require a second article Dialog state');
 assert(!aquarium.includes("primaryActionType: diagnosisIssueType === '巡检' && dailyCheckArticles[0] ? 'dialog' : 'mutation'"), 'Daily Check primary action must not be modeled as an implicit Dialog launch');

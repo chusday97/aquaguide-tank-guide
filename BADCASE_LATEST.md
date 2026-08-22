@@ -1,64 +1,97 @@
 # AquaGuide — Latest Badcases
 
 **Updated:** 2026-08-22  
-**Branch:** `agent/result-ux-v1`  
+**Branch:** `agent/rc1-post-105-evaluator-repair`  
 **Purpose:** current handoff-level badcase ledger. Canonical historical product registry remains under `evaluation/product/`.
+
+## EVAL-BC-002 — Post-#105 RC1 evaluator drift after real merge
+
+- **Area:** release evaluation / stacked architecture migration
+- **Severity:** high
+- **Source:** actual RC1→main synthetic validation after #105 merged
+- **Status:** regression_verified on repair branch; RC1 closure pending #107 merge authorization
+- **RC1 head at fail-before:** `e5a9dd1ccc18a296075521fdd01b0407341af617`
+- **RC1 Release Acceptance:** `32575093543` — FAIL
+- **UI Interaction Repair V1:** `32575093548` — FAIL
+- **Product Golden Path:** `32575093550` — FAIL
+- **Repair PR:** #107 `Repair post-#105 RC1 evaluator drift`
+- **Executable diagnostic:** `32575689962` — PASS
+- **Verified repair head before docs refresh:** `13ef3b4c2fd3c7df9fb43127da4dcf153e1bfc7a`
+- **Permanent gates on verified repair head:** Security `32575784071`, Dependency `32575784098`, Compatibility `32575784108`, Plant `32575784097`, Result UX `32575784082` — all PASS
+
+### Symptoms
+
+Three different workflows failed immediately after #105 was actually merged into RC1. The failures appeared release-critical because they touched production runtime, UI interaction and GP-002.
+
+### Root causes
+
+The failures were evaluator drift caused by legitimate prior migrations:
+
+1. **Canonical API app ownership moved.** The production runtime source contract still searched for `legacyApp.use('/api/v1', ...)`, while the canonical Express app now mounts V1 with `app.use('/api/v1', ...)`.
+2. **Species Detail implementation moved behind wrapper/Base separation.** Wide/full-screen detail behavior lives in `SpeciesDetailDialogBase.tsx`, while the legacy evaluator scanned only the wrapper.
+3. **Atlas implementation moved behind wrapper/Base separation.** Route addressing, return context and compatibility-selection handler live in `EncyclopediaBase.tsx`; `Encyclopedia.tsx` now owns a narrower navigation/surface guard role.
+4. **Compatibility Result UX changed its stable semantic boundary.** The old `[data-compatibility-verdict]` + large symbol DOM structure was removed. The current stable result boundary is `DecisionResultSurface`, exposed through `[data-testid="compatibility-decision"][data-result-ux="decision"]` with a status icon/verdict pill and result-first ordering.
+5. **GP-002 interaction intentionally became two-stage.** Species Detail first reveals in-context compatibility evidence; a second explicit action enters the full calculator. Browsing still must not silently preselect the species.
+
+### Repair rule
+
+- migrate source assertions to the component/file that now owns the behavior;
+- preserve the original semantic contract rather than deleting assertions;
+- validate current `DecisionResultSurface` semantics instead of obsolete DOM markers;
+- keep result-before-selector ordering, Unknown != Safe, inline AI explanation, browsing-not-selection and exact return-context contracts;
+- update GP-002 to follow the current explicit two-stage intent while still proving persisted stocking behavior;
+- do not modify product runtime/CSS/persistence/rules merely to satisfy stale evaluators;
+- do not weaken thresholds.
+
+### Verification
+
+Temporary PR-only diagnostic run `32575689962` passed:
+
+- production cloud runtime source contract;
+- production cloud runtime smoke;
+- UI interaction source contract;
+- TypeScript;
+- production build;
+- UI interaction browser regression;
+- GP-002 continuous browser path.
+
+The temporary diagnostic workflow was then deleted from the PR.
+
+On repair head `13ef3b4c...`, all five permanent release/product gates also passed.
+
+### Remaining boundary
+
+This badcase is not closed on the RC1 branch yet because PR #107 is still separate from RC1. After a separately authorized #107 merge, the actual RC1→main Release Acceptance, UI Interaction and Product Golden workflows must run green on final ancestry before the badcase can be marked closed for the release candidate.
+
+---
 
 ## PUI-BC-059 — Tank Copilot accepted schema-valid but non-actionable AI parsing
 
 - **Feature:** Tank Copilot / AI result usefulness
 - **Severity:** high
-- **Source:** permanent usefulness CI fail-before
 - **Status:** regression_verified for encoded failure modes
 - **Fail-before head:** `ab5243404a3c770ce5a8ed8905008a973de37dfa`
-- **Fail-before Result UX:** `32573810707` — FAIL at `Tank Copilot usefulness contract`
+- **Fail-before Result UX:** `32573810707` — FAIL
 - **Policy fix:** `ef843ef384d09cb79d8ac7df62372e21db0241e8`
 - **Prompt + cleanup fix:** `4814e8a0b565f18d9bde7623fd4ebda68049f988`
-- **First normal full regression:** `e4068dc805422ed4bf797d5223ad0bdd44c2835f`, Result UX `32573927306` — PASS
-- **RC1-reconciled regression:** `b2b6830f1864f9600fd32a4f87bf6151970545a1`, Result UX `32574415605` — PASS
+- **RC1-reconciled proof:** Result UX `32574415605` — PASS
 
 ### Symptom
 
-The old path treated `valid JSON + no deterministic safety violation` as sufficient. A model could return:
-
-- a plausible goal summary;
-- `selectedCandidateIds: []` although local rules already exposed safe candidates;
-- `restart_goal` as the primary action;
-- generic plan prose such as “先看看候选，再决定下一步”.
-
-That result was safe but not useful. A second failure mode allowed subjective preference questions to survive even when deterministic tank facts such as size/volume or target temperature were missing.
-
-### Root causes
-
-1. **Schema validity was confused with product validity.**
-2. **Safety coverage did not require semantic usefulness.**
-3. **Model emptiness could erase deterministic local opportunity.**
-4. **Question priority was model-led instead of fact-led.**
-5. **Prompt allowed workflow filler instead of concrete candidate/quantity planning.**
+The old path treated `valid JSON + no deterministic safety violation` as sufficient. The model could still return no candidates despite a deterministic usable pool, use `restart_goal`, or output generic workflow filler.
 
 ### Repair rule
 
-Product policy now guarantees:
-
 - blocking deterministic tank facts first;
-- `complete_tank_info` when those facts are missing;
-- recovery to local safe/adjustable candidates when a model returns an empty selection despite a usable pool;
-- executable candidate-view/simulation actions instead of unnecessary `restart_goal` when candidates exist;
-- all recovery remains inside the deterministic candidate pool.
-
-Prompt now requires:
-
-- only user-stated preferences may be interpreted;
-- at least one local candidate when the tank is ready and candidates exist;
-- candidate names + `recommendedQuantity` in the plan;
-- no generic workflow filler as the entire result;
-- required adjustments remain explicit for caution/adjustable candidates.
-
-Permanent Result UX now runs `scripts/test-tank-copilot-usability.ts`.
+- `complete_tank_info` while those facts are missing;
+- recover only inside the deterministic safe/adjustable pool when the model drops all usable candidates;
+- reject unnecessary `restart_goal` when executable candidates exist;
+- require concrete candidate/quantity planning;
+- AI still receives no hard-safety authority.
 
 ### Remaining boundary
 
-This badcase is closed only for the encoded repository-level failure modes. It does **not** prove every live provider answer is high quality. Live evaluation is still required to measure generic-answer, contradiction, candidate-drop, invalid-JSON, timeout and fallback rates.
+Repository fixtures do not prove representative live-provider quality. Live usefulness evaluation is still required before production.
 
 ---
 
@@ -66,7 +99,6 @@ This badcase is closed only for the encoded repository-level failure modes. It d
 
 - **Area:** UI evaluation / stacked-PR migration
 - **Severity:** medium
-- **Source:** post-#104-merge / #105-retarget CI
 - **Status:** regression_verified
 - **Fail-before head:** `ff558c03c5af758b21bcf2098be074189ea7741b`
 - **Visual QA fail:** `32574163661`
@@ -76,35 +108,7 @@ This badcase is closed only for the encoded repository-level failure modes. It d
 - **Final Golden V3:** `32574415709` — PASS
 - **Final UI System:** `32574415630` — PASS
 
-### Symptom
-
-After #104 merged and #105 was retargeted/reconciled, the parent visual suite asserted:
-
-`compact-desktop-768: recurrent Manage actions must appear before contextual 3D tank`
-
-Golden V3 simultaneously reported:
-
-- `aquarium-compact-768`: 4.3958% changed vs 0.5% threshold;
-- other 7/8 golden cases: 0% changed.
-
-### Root cause
-
-The parent #104 visual contract predated PUI-BC-058. It still encoded 768px `Today → Manage → Context`, while the later approved desktop behavior intentionally used `Today → Context → Manage` whenever the desktop shell is active but the Aquarium container remains narrow. Phone remains task-first.
-
-### Repair rule
-
-- change only the 768px desktop hierarchy expectation;
-- preserve 390px phone ordering;
-- migrate only the `aquarium-compact-768` reference;
-- record badcase/run/artifact provenance in the visual manifest;
-- do not change the Golden threshold;
-- leave every other golden reference untouched.
-
-### Verification
-
-The migration kept the threshold at **0.5%** and produced PASS on Visual QA, Golden V3 and UI System at final reconciled head `b2b6830...`.
-
-This is an evaluator migration following an already approved product behavior, not a product regression and not a tolerance relaxation.
+The parent evaluator still expected 768px `Today → Manage → Context`, while approved PUI-BC-058 intentionally established desktop `Today → Context → Manage`. Only the 768px evaluator/reference was migrated; 390px phone ordering and the 0.5% Golden threshold were preserved.
 
 ---
 
@@ -114,14 +118,12 @@ This is an evaluator migration following an already approved product behavior, n
 - **Severity:** high
 - **Status:** regression_verified
 - **Landed by:** `5c277cec1f99f5bb507b7d50b2018d5d571ef0f1`
-- **Final reconciled dependency gate:** `32574415664` — PASS
-
-Original production/full audit both reported 18 findings (10 high / 6 moderate / 2 low). Build-only tooling was misclassified as runtime dependencies, direct runtime packages were stale, and the lockfile retained a vulnerable DOMPurify resolution.
 
 Current state:
 
 - production audit: 0 findings;
-- full developer/build graph: 12 dev-only findings = 7 high / 2 moderate / 3 low.
+- full developer/build graph: 12 dev-only findings = 7 high / 2 moderate / 3 low;
+- permanent production dependency gate remains green and read-only.
 
 ---
 
@@ -131,10 +133,8 @@ Current state:
 - **Severity:** high
 - **Status:** regression_verified
 - **Fixed by:** `4ecd3cb6741aaa61d76388ea26ec4aa7d1461a17` + `1c8acbcbfa175687dba81d144485ea08a0ee3f89`
-- **Original regression:** Result UX `32568805769` — PASS
-- **Current reconciled Result UX:** `32574415605` — PASS
 
-At 1440px, actionable Care content was first ~340px and then ~818px because two independent legacy constraints remained: the split hero grid and `max-w-[850px]`. Repair made decision content span the wide workspace without lowering the >=940px contract and preserved mobile ordering.
+At 1440px, actionable Care content was constrained first by the split grid and then by `max-w-[850px]`. Repair made the decision content span the wide workspace without lowering the >=940px contract and preserved mobile ordering.
 
 ---
 
@@ -144,19 +144,17 @@ At 1440px, actionable Care content was first ~340px and then ~818px because two 
 - **Severity:** high
 - **Status:** regression_verified
 - **Fixed by:** `dbaab622371494a89effafe1e982598c46b2d1f7`
-- **Original Result UX proof:** `32568805769` — PASS
-- **Parent visual evaluator migration:** `b2b6830f1864f9600fd32a4f87bf6151970545a1`
-- **Current Visual QA / Golden proof:** `32574415581` / `32574415709` — PASS
 
-At a 768px desktop fixture, the <=719px Aquarium container rule applied phone-style `Today → Manage → Context` ordering inside the desktop shell. The product fix established `Today → Context → Manage → Secondary` for narrow desktop while keeping phone ordering unchanged. Parent visual baselines now encode the same contract.
+Desktop >=768px now preserves `Today → Context → Manage → Secondary` when the Aquarium container is narrow, while phone remains task-first. Parent visual evaluators were later migrated to encode the same approved behavior.
 
 ## Carry-forward discipline
 
-- Keep fail-before evidence; never lower a regression threshold merely to turn CI green.
-- Treat **schema-valid**, **safe**, and **useful** as separate AI quality dimensions.
-- AI cannot override deterministic hard-safety rules, but safety alone is not a sufficient acceptance criterion.
-- Required facts must outrank subjective preference questions.
-- Do not let model omissions erase deterministic safe candidates.
-- A mock/browser fixture proves product behavior under that fixture, not live-provider quality.
-- When a visual baseline legitimately changes, migrate only the proven surface and record provenance; do not broadly regenerate goldens.
-- Separate product/browser badcases from release/evaluator badcases and preserve the append-only canonical product registry.
+- A merged PR is not automatically a release-ready RC.
+- Preserve fail-before evidence; do not lower thresholds merely to turn CI green.
+- When architecture moves, migrate evaluator ownership rather than deleting semantic assertions.
+- Browser evidence outranks source-file assumptions for user-visible behavior.
+- Treat schema-valid, safe and useful as separate AI quality dimensions.
+- AI cannot override deterministic hard-safety rules.
+- A fixture proves behavior under that fixture, not live-provider quality.
+- Separate product/browser badcases from release/evaluator badcases.
+- Do not mark EVAL-BC-002 closed on RC1 until #107 is explicitly merged and real RC1→main acceptance is green.
