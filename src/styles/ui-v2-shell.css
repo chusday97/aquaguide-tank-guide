@@ -243,6 +243,28 @@
   }
 }
 
+/* 1024px is not enough workspace for a full 280px utility rail plus two-column task
+ * content. Keep the expanded labels/search, but compress the rail until the viewport is
+ * genuinely wide. This avoids the 1023→1024 content-width cliff without changing shell
+ * behavior or hiding utilities. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .aquaguide-app.desktop-shell-active {
+    --desktop-sidebar-width: 220px !important;
+  }
+
+  .desktop-sidebar {
+    width: 220px !important;
+  }
+
+  .desktop-sidebar > div > div:first-child {
+    padding-inline: 12px;
+  }
+
+  .desktop-sidebar nav {
+    padding-inline: 8px !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .desktop-sidebar nav button,
   .phone-shell-active > nav button,

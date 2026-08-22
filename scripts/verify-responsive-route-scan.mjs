@@ -80,6 +80,7 @@ try {
         await page.goto(`${baseUrl}${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
         await page.waitForTimeout(350);
         const result = await page.evaluate(() => {
+          const isIntentionallyInactive = (element) => Boolean(element.closest('[inert], [aria-hidden="true"]'));
           const isInsideHorizontalScroller = (element) => {
             let parent = element.parentElement;
             while (parent && parent !== document.body) {
@@ -104,6 +105,7 @@ try {
           };
           const overflowingControls = [...document.querySelectorAll('button, a, input, select, textarea, [role="tab"]')]
             .filter(element => {
+              if (isIntentionallyInactive(element)) return false;
               const rect = element.getBoundingClientRect();
               if (rect.width < 1 || rect.height < 1 || rect.bottom < 0 || rect.top > innerHeight) return false;
               if (isFullyClipped(element)) return false;
@@ -116,6 +118,7 @@ try {
             }));
           const undersizedIconControls = [...document.querySelectorAll('button[aria-label], a[aria-label]')]
             .filter(element => {
+              if (isIntentionallyInactive(element)) return false;
               const rect = element.getBoundingClientRect();
               if (rect.width < 1 || rect.height < 1 || rect.bottom < 0 || rect.top > innerHeight) return false;
               const visibleText = [...element.childNodes]

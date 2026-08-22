@@ -18,6 +18,44 @@ import {
 } from '../services/search/search-suggestions.service';
 import { loadAppStateFromStorage } from '../services/storage/local-app-state';
 
+const SEARCH_RETURN_CONTEXT_KEY = 'aquaguide_search_return_context_v1';
+
+type SearchReturnContext = {
+  query: string;
+  sourceId: string;
+  showAllSpecies: boolean;
+  showAllCare: boolean;
+  scrollTop: number;
+};
+
+const readSearchReturnContext = (query: string): SearchReturnContext | null => {
+  if (typeof window === 'undefined') return null;
+  const raw = window.sessionStorage.getItem(SEARCH_RETURN_CONTEXT_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as Partial<SearchReturnContext>;
+    if (
+      parsed.query !== query
+      || typeof parsed.sourceId !== 'string'
+      || typeof parsed.showAllSpecies !== 'boolean'
+      || typeof parsed.showAllCare !== 'boolean'
+      || typeof parsed.scrollTop !== 'number'
+    ) {
+      window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
+      return null;
+    }
+    return parsed as SearchReturnContext;
+  } catch {
+    window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
+    return null;
+  }
+};
+
+const getSearchWorkspace = () => {
+  const workspace = document.querySelector('.desktop-workspace-scroll');
+  return workspace instanceof HTMLElement ? workspace : null;
+};
+
 const getSpeciesNameLocalized = (species: any, isEn = false): string => {
   if (!species) return '';
   if (!isEn) return species.name || '';
@@ -54,9 +92,11 @@ export default function SearchPage() {
   const { navigateToRoute } = useWorkspaceNavigation();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') ?? '';
+  const [returnContext] = useState<SearchReturnContext | null>(() => readSearchReturnContext(query));
   const [draft, setDraft] = useState(query);
   const [selectedSpecies, setSelectedSpecies] = useState<SearchSuggestion | null>(null);
-  const [showAllSpecies, setShowAllSpecies] = useState(false);
+  const [showAllSpecies, setShowAllSpecies] = useState(() => returnContext?.showAllSpecies ?? false);
+  const [showAllCare, setShowAllCare] = useState(() => returnContext?.showAllCare ?? false);
   const normalizedQuery = normalize(query);
   const aquarium = useMemo(() => {
     const state = loadAppStateFromStorage();
@@ -76,18 +116,30 @@ export default function SearchPage() {
   const draftSpeciesMatchCount = useMemo(() => getSpeciesSearchResults(draft).length, [draft]);
 
   useEffect(() => {
-    const sourceId = sessionStorage.getItem('aquaguide_search_return_focus');
-    if (!sourceId) return;
-    window.requestAnimationFrame(() => {
-      const target = document.getElementById(sourceId);
-      target?.scrollIntoView({ block: 'center' });
-      target?.focus({ preventScroll: true });
-      sessionStorage.removeItem('aquaguide_search_return_focus');
+    if (!returnContext) return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(returnContext.sourceId);
+      if (!target) return;
+      const workspace = getSearchWorkspace();
+      if (workspace) workspace.scrollTo({ top: returnContext.scrollTop, behavior: 'auto' });
+      else window.scrollTo({ top: returnContext.scrollTop, behavior: 'auto' });
+      target.focus({ preventScroll: true });
+      window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
+      window.sessionStorage.removeItem('aquaguide_search_return_focus');
     });
-  }, []);
+    return () => window.cancelAnimationFrame(frame);
+  }, [returnContext]);
 
   const openSearchResult = (path: string, sourceId: string) => {
-    sessionStorage.setItem('aquaguide_search_return_focus', sourceId);
+    const workspace = getSearchWorkspace();
+    const context: SearchReturnContext = {
+      query,
+      sourceId,
+      showAllSpecies,
+      showAllCare,
+      scrollTop: workspace?.scrollTop ?? window.scrollY,
+    };
+    window.sessionStorage.setItem(SEARCH_RETURN_CONTEXT_KEY, JSON.stringify(context));
     navigateToRoute(path);
   };
 
@@ -107,18 +159,24 @@ export default function SearchPage() {
       ...(careTranslations[topic.id]?.keywords || []),
     ].join(' ')).includes(normalizedQuery))
     : [], [normalizedQuery]);
-  const careResults = allCareResults.slice(0, 12);
+  const careResults = showAllCare ? allCareResults : allCareResults.slice(0, 12);
+
+  const resetExpansion = () => {
+    window.sessionStorage.removeItem(SEARCH_RETURN_CONTEXT_KEY);
+    setShowAllSpecies(false);
+    setShowAllCare(false);
+  };
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
     const next = draft.trim();
-    setShowAllSpecies(false);
+    resetExpansion();
     setSearchParams(next ? { q: next } : {});
   };
 
   const submitValue = (value: string) => {
     const next = value.trim();
-    setShowAllSpecies(false);
+    resetExpansion();
     setSearchParams(next ? { q: next } : {});
   };
 
@@ -147,9 +205,9 @@ export default function SearchPage() {
   return (
     <div className="search-v2-page mx-auto w-full max-w-6xl px-1 py-2 md:px-8 md:py-8">
       <header className="search-v2-header">
-        <h1 className="text-2xl font-black text-ink md:text-3xl">{t('searchPage.title')}</h1>
+        <h1 className="type-page-title text-ink">{t('searchPage.title')}</h1>
         {normalizedQuery && (
-          <p className="search-v2-summary" aria-live="polite">
+          <p className="search-v2-summary type-meta" aria-live="polite">
             <span>{t('searchPage.species')} <strong>{allSpeciesResults.length}</strong></span>
             <span aria-hidden="true">·</span>
             <span>{t('searchPage.care')} <strong>{allCareResults.length}</strong></span>
@@ -177,7 +235,7 @@ export default function SearchPage() {
           onValueChange={value => {
             setDraft(value);
             setSelectedSpecies(null);
-            setShowAllSpecies(false);
+            resetExpansion();
           }}
           onSelectSuggestion={selectSuggestion}
           onSubmit={submitValue}
@@ -188,17 +246,17 @@ export default function SearchPage() {
       </form>
 
       {!normalizedQuery && (
-        <div className="search-v2-empty mt-5 rounded-[24px] border border-dashed border-emerald-200 bg-emerald-50/55 p-6 text-center">
+        <div className="search-v2-empty mt-5 rounded-[var(--ui-radius-surface)] border border-dashed border-emerald-200 bg-emerald-50/55 p-6 text-center">
           <SearchIcon className="mx-auto h-7 w-7 text-emerald-700" />
-          <p className="mt-3 text-sm font-black text-ink">{t('searchPage.emptyPrompt')}</p>
-          <button type="button" onClick={() => navigateToRoute('/identify')} className="mt-4 inline-flex h-11 items-center gap-2 rounded-2xl border border-emerald-200 bg-white px-4 text-sm font-black text-emerald-800"><Camera className="h-4 w-4" />{t('identify.entry')}</button>
+          <p className="type-body mt-3 font-semibold text-ink">{t('searchPage.emptyPrompt')}</p>
+          <button type="button" onClick={() => navigateToRoute('/identify')} className="type-action mt-4 inline-flex h-11 items-center gap-2 rounded-[var(--ui-radius-control)] border border-emerald-200 bg-white px-4 text-emerald-800"><Camera className="h-4 w-4" />{t('identify.entry')}</button>
         </div>
       )}
 
       {normalizedQuery && speciesResults.length + careResults.length === 0 && (
-        <div className="search-v2-empty mt-5 rounded-[24px] bg-white p-7 text-center shadow-sm">
-          <p className="text-sm font-black text-ink">{t('searchPage.noResults')}</p>
-          <button type="button" onClick={() => navigateToRoute('/identify')} className="mt-4 h-11 rounded-2xl bg-emerald-700 px-4 text-sm font-black text-white">{t('searchPage.tryPhoto')}</button>
+        <div className="search-v2-empty mt-5 rounded-[var(--ui-radius-surface)] bg-white p-7 text-center shadow-[var(--ui-shadow-card)]">
+          <p className="type-body font-semibold text-ink">{t('searchPage.noResults')}</p>
+          <button type="button" onClick={() => navigateToRoute('/identify')} className="type-action mt-4 h-11 rounded-[var(--ui-radius-control)] bg-emerald-700 px-4 text-white">{t('searchPage.tryPhoto')}</button>
         </div>
       )}
 
@@ -210,7 +268,19 @@ export default function SearchPage() {
                 <span className="search-v2-section-kicker"><Fish className="h-4 w-4" />{t('searchPage.species')}</span>
                 <h2 id="species-results-title">{t('searchPage.species')}</h2>
               </div>
-              <span className="search-v2-count" aria-label={`${allSpeciesResults.length}`}>{allSpeciesResults.length}</span>
+              <div className="flex items-center gap-2">
+                {!showAllSpecies && allSpeciesResults.length > 18 && (
+                  <button
+                    type="button"
+                    data-search-show-all="species"
+                    onClick={() => setShowAllSpecies(true)}
+                    className="type-action min-h-10 rounded-full px-3 text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  >
+                    {isEn ? `View all ${allSpeciesResults.length}` : `查看全部 ${allSpeciesResults.length} 个`}
+                  </button>
+                )}
+                <span className="search-v2-count" aria-label={`${allSpeciesResults.length}`}>{allSpeciesResults.length}</span>
+              </div>
             </div>
             <div className="search-v2-species-grid">
               {speciesResults.map(fish => (
@@ -240,7 +310,19 @@ export default function SearchPage() {
                 <span className="search-v2-section-kicker"><BookOpenCheck className="h-4 w-4" />{t('searchPage.care')}</span>
                 <h2 id="care-results-title">{t('searchPage.care')}</h2>
               </div>
-              <span className="search-v2-count" aria-label={`${allCareResults.length}`}>{allCareResults.length}</span>
+              <div className="flex items-center gap-2">
+                {!showAllCare && allCareResults.length > 12 && (
+                  <button
+                    type="button"
+                    data-search-show-all="care"
+                    onClick={() => setShowAllCare(true)}
+                    className="type-action min-h-10 rounded-full px-3 text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  >
+                    {isEn ? `View all ${allCareResults.length}` : `查看全部 ${allCareResults.length} 篇`}
+                  </button>
+                )}
+                <span className="search-v2-count" aria-label={`${allCareResults.length}`}>{allCareResults.length}</span>
+              </div>
             </div>
             <div className="search-v2-care-grid">
               {careResults.map(topic => (

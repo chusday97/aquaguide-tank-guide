@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Share2, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { AquariumFish, Fish } from '../../types';
@@ -21,6 +21,12 @@ type RemovalDraft = {
   quantity: number;
   operationId: string;
   submitted: boolean;
+};
+
+type RosterDetailReturnContext = {
+  recordId: string;
+  fishId: string;
+  scrollTop: number;
 };
 
 type Props = {
@@ -81,6 +87,10 @@ export function LivestockRosterDialog({
   const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
   const [isEditingDirty, setIsEditingDirty] = useState(false);
   const [isRosterCloseConfirmOpen, setIsRosterCloseConfirmOpen] = useState(false);
+  const [detailReturnContext, setDetailReturnContext] = useState<RosterDetailReturnContext | null>(null);
+  const rosterScrollRef = useRef<HTMLDivElement | null>(null);
+  const pendingDetailReturnRef = useRef<RosterDetailReturnContext | null>(null);
+  const reopenFrameRef = useRef<number | null>(null);
   const speciesById = useMemo(() => new Map(species.map(item => [item.id, item])), [species]);
   const visibleRecords = useMemo(() => records
     .map(record => ({ record, fish: speciesById.get(record.fishId) }))
@@ -109,6 +119,57 @@ export function LivestockRosterDialog({
       setIsEditingDirty(false);
     }
   }, [editingRecordId, visibleRecords]);
+
+  useEffect(() => {
+    const handleSpeciesDetailDismissed = (event: Event) => {
+      const pending = pendingDetailReturnRef.current;
+      if (!pending) return;
+      const detail = (event as CustomEvent<{ source?: string; fishId?: string }>).detail;
+      if (detail?.source !== 'aquarium' || detail.fishId !== pending.fishId) return;
+      pendingDetailReturnRef.current = null;
+
+      const reopenAfterDetailExit = () => {
+        const detailStillVisible = Array.from(document.querySelectorAll<HTMLElement>('[data-detail-kind="species"]'))
+          .some(node => node.getClientRects().length > 0);
+        if (detailStillVisible) {
+          reopenFrameRef.current = window.requestAnimationFrame(reopenAfterDetailExit);
+          return;
+        }
+        reopenFrameRef.current = null;
+        setDetailReturnContext(pending);
+        onOpenChange(true);
+      };
+      reopenFrameRef.current = window.requestAnimationFrame(reopenAfterDetailExit);
+    };
+
+    window.addEventListener('aquaguide:species-detail-dismissed', handleSpeciesDetailDismissed);
+    return () => {
+      window.removeEventListener('aquaguide:species-detail-dismissed', handleSpeciesDetailDismissed);
+      if (reopenFrameRef.current !== null) window.cancelAnimationFrame(reopenFrameRef.current);
+    };
+  }, [onOpenChange]);
+
+  useEffect(() => {
+    if (!open || !detailReturnContext) return;
+    let secondFrame = 0;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        const scroller = rosterScrollRef.current;
+        if (scroller) scroller.scrollTo({ top: detailReturnContext.scrollTop, behavior: 'auto' });
+        const row = Array.from(scroller?.querySelectorAll<HTMLElement>('[data-livestock-record-id]') || [])
+          .find(node => node.dataset.livestockRecordId === detailReturnContext.recordId);
+        const profileButton = row
+          ? Array.from(row.querySelectorAll<HTMLButtonElement>('button')).find(button => Boolean(button.querySelector('img')))
+          : null;
+        profileButton?.focus({ preventScroll: true });
+        setDetailReturnContext(null);
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      if (secondFrame) window.cancelAnimationFrame(secondFrame);
+    };
+  }, [detailReturnContext, open]);
 
   const batches = removal ? normalizeSpeciesBatches(removal.record) : [];
   const selectedBatch = batches.find(batch => batch.id === removal?.batchId);
@@ -161,6 +222,15 @@ export function LivestockRosterDialog({
     onOpenChange(next);
   };
 
+  const openDetailFromRoster = (fish: Fish, record: AquariumFish) => {
+    pendingDetailReturnRef.current = {
+      recordId: record.id,
+      fishId: fish.id,
+      scrollTop: rosterScrollRef.current?.scrollTop || 0,
+    };
+    onOpenDetail(fish, record);
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={requestRosterOpenChange}>
@@ -194,7 +264,7 @@ export function LivestockRosterDialog({
               </>
             )}
           />
-          <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
+          <div ref={rosterScrollRef} data-livestock-roster-scroll className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
             {!editingRecordId && <section className="mb-4 rounded-[20px] border border-emerald-100 bg-white p-4">
               <div className="flex flex-wrap items-end gap-3">
                 <label className="min-w-[190px] flex-1 text-xs font-black text-ink/65">
@@ -219,7 +289,7 @@ export function LivestockRosterDialog({
             {displayedRecords.length > 0 ? (
               <div className={editingRecordId ? 'grid grid-cols-1 gap-3' : 'grid gap-3 md:grid-cols-2'}>
                 {displayedRecords.map(({ record, fish }) => (
-                  <div key={record.id} className="relative min-w-0">
+                  <div key={record.id} data-livestock-record-id={record.id} className="relative min-w-0">
                     {!editingRecordId && <button
                       type="button"
                       aria-label={isEn ? `Remove ${fish.name} from aquarium` : `将${fish.name}移出鱼缸`}
@@ -239,7 +309,7 @@ export function LivestockRosterDialog({
                         if (!editing) setIsEditingDirty(false);
                       }}
                       onDirtyChange={setIsEditingDirty}
-                      onOpenDetail={() => onOpenDetail(fish, record)}
+                      onOpenDetail={() => openDetailFromRoster(fish, record)}
                       onSave={next => onSave(record.id, next)}
                     />
                   </div>

@@ -1,0 +1,70 @@
+name: UI UX Visual QA V2
+
+on:
+  pull_request:
+    branches: [integration/aquaguide-rc1, main]
+    paths:
+      - 'src/**'
+      - 'components/**'
+      - 'scripts/capture-uiux-visual-baseline.mjs'
+      - 'scripts/verify-uiux-aquarium-visual-hierarchy.mjs'
+      - 'scripts/verify-uiux-search-density.mjs'
+      - 'scripts/ensure-cjk-font.sh'
+      - '.github/workflows/uiux-visual-qa-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  visual-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Restore CJK snapshot font cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/aquaguide-noto-cjk
+          key: aquaguide-noto-cjk-${{ runner.os }}-${{ runner.arch }}-20230817-v1
+      - name: Ensure CJK snapshot font
+        run: bash scripts/ensure-cjk-font.sh
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-uiux-visual.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-uiux-visual.log
+          exit 1
+      - name: Aquarium visual task hierarchy
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-uiux-aquarium-visual-hierarchy.mjs
+      - name: Search medium-workspace density
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-uiux-search-density.mjs
+      - name: Capture cross-surface visual baseline
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/capture-uiux-visual-baseline.mjs
+      - name: Upload visual baseline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaguide-uiux-visual-baseline-v2
+          path: artifacts/uiux-visual-baseline/**
+          if-no-files-found: error
+          retention-days: 7

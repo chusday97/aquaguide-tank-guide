@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "source": {
+    "workflow": "UI UX Visual QA V2",
+    "runNumber": 19,
+    "runId": 32259734301,
+    "artifactId": 9367824682,
+    "head": "ef69d85e48712d27990423fcc85e23a4047f0756",
+    "capturedAt": "2026-08-19"
+  },
+  "capture": {
+    "locale": "zh-CN",
+    "reducedMotion": true,
+    "seedFirstAquarium": true,
+    "routeOrder": [
+      "/aquarium",
+      "/encyclopedia",
+      "/care",
+      "/search?q=%E9%B1%BC",
+      "/collection",
+      "/settings"
+    ],
+    "thumbnailWidth": 128,
+    "grayFormula": "(77*r + 150*g + 29*b) >> 8",
+    "channelThreshold": 24
+  },
+  "cases": [
+    {
+      "id": "aquarium-phone-390",
+      "viewport": { "width": 390, "height": 844 },
+      "route": "/aquarium",
+      "sourceFile": "phone-390__aquarium__fold.png",
+      "masks": [],
+      "maxDiffRatio": 0.005,
+      "reference": {
+        "sourceWidth": 390,
+        "sourceHeight": 844,
+        "thumbWidth": 128,
+        "thumbHeight": 277,
+        "signatureFile": "aquarium-phone-390.sig"
+      }
+    },
+    {
+      "id": "aquarium-compact-768",
+      "viewport": { "width": 768, "height": 900 },
+      "route": "/aquarium",
+      "sourceFile": "compact-desktop-768__aquarium__fold.png",
+      "masks": [],
+      "maxDiffRatio": 0.005,
+      "reference": {
+        "sourceWidth": 768,
+        "sourceHeight": 900,
+        "thumbWidth": 128,
+        "thumbHeight": 150,
+        "signatureFile": "aquarium-compact-768.sig"
+      }
+    },
+    {
+      "id": "aquarium-desktop-1024",
+      "viewport": { "width": 1024, "height": 900 },
+      "route": "/aquarium",
+      "sourceFile": "desktop-1024__aquarium__fold.png",
+      "masks": [
+        { "x": 794, "y": 166, "width": 220, "height": 194, "reason": "WebGL tank context" },
+        { "x": 219, "y": 790, "width": 805, "height": 110, "reason": "daily recommendation content" }
+      ],
+      "maxDiffRatio": 0.005,
+      "reference": {
+        "sourceWidth": 1024,
+        "sourceHeight": 900,
+        "thumbWidth": 128,
+        "thumbHeight": 112,
+        "signatureFile": "aquarium-desktop-1024.sig"
+      }
+    },
+    {
+      "id": "aquarium-wide-1440",
+      "viewport": { "width": 1440, "height": 1000 },
+      "route": "/aquarium",
+      "sourceFile": "wide-1440__aquarium__fold.png",
+      "masks": [
+        { "x": 1158, "y": 170, "width": 266, "height": 218, "reason": "WebGL tank context" },
+        { "x": 279, "y": 821, "width": 1161, "height": 179, "reason": "daily recommendation content" }
+      ],
+      "maxDiffRatio": 0.005,
+      "reference": {
+        "sourceWidth": 1440,
+        "sourceHeight": 1000,
+        "thumbWidth": 128,
+        "thumbHeight": 89,
+        "signatureFile": "aquarium-wide-1440.sig"
+      }
+    },
+    {
+      "id": "search-desktop-1024",
+      "viewport": { "width": 1024, "height": 900 },
+      "route": "/search?q=%E9%B1%BC",
+      "sourceFile": "desktop-1024__search__fold.png",
+      "masks": [],
+      "maxDiffRatio": 0.0035,
+      "reference": {
+        "sourceWidth": 1024,
+        "sourceHeight": 900,
+        "thumbWidth": 128,
+        "thumbHeight": 112,
+        "signatureFile": "search-desktop-1024.sig"
+      }
+    },
+    {
+      "id": "search-wide-1440",
+      "viewport": { "width": 1440, "height": 1000 },
+      "route": "/search?q=%E9%B1%BC",
+      "sourceFile": "wide-1440__search__fold.png",
+      "masks": [],
+      "maxDiffRatio": 0.0035,
+      "reference": {
+        "sourceWidth": 1440,
+        "sourceHeight": 1000,
+        "thumbWidth": 128,
+        "thumbHeight": 89,
+        "signatureFile": "search-wide-1440.sig"
+      }
+    },
+    {
+      "id": "collection-phone-390",
+      "viewport": { "width": 390, "height": 844 },
+      "route": "/collection",
+      "sourceFile": "phone-390__collection__fold.png",
+      "masks": [],
+      "maxDiffRatio": 0.003,
+      "reference": {
+        "sourceWidth": 390,
+        "sourceHeight": 844,
+        "thumbWidth": 128,
+        "thumbHeight": 277,
+        "signatureFile": "collection-phone-390.sig"
+      }
+    },
+    {
+      "id": "collection-wide-1440",
+      "viewport": { "width": 1440, "height": 1000 },
+      "route": "/collection",
+      "sourceFile": "wide-1440__collection__fold.png",
+      "masks": [],
+      "maxDiffRatio": 0.003,
+      "reference": {
+        "sourceWidth": 1440,
+        "sourceHeight": 1000,
+        "thumbWidth": 128,
+        "thumbHeight": 89,
+        "signatureFile": "collection-wide-1440.sig"
+      }
+    }
+  ]
+}

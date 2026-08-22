@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 
 const read = (p) => fs.readFileSync(p, 'utf8');
+const readModule = (primary, base) => [
+  read(primary),
+  fs.existsSync(base) ? read(base) : '',
+].join('\n');
 const failures = [];
 const assert = (condition, message) => { if (!condition) failures.push(message); };
 
@@ -10,7 +14,7 @@ const settings = read('src/pages/Settings.tsx');
 const assistant = read('src/pages/AIAssistant.tsx');
 const search = read('src/pages/Search.tsx');
 const collectionHub = read('src/pages/CollectionHub.tsx');
-const speciesDetail = read('src/components/SpeciesDetailDialog.tsx');
+const speciesDetail = readModule('src/components/SpeciesDetailDialog.tsx', 'src/components/SpeciesDetailDialogBase.tsx');
 const care = read('src/pages/CareEncyclopedia.tsx');
 const collection = read('src/pages/Collection.tsx');
 const handoff = read('HANDOFF.md');
@@ -26,6 +30,7 @@ assert(search.includes('/encyclopedia?species=') && search.includes('&source=sea
 assert(assistant.includes('source=assistant'), 'AI species cards must open species profiles.');
 assert(assistant.includes('addToWishlist(speciesId)'), 'AI wishlist mutation must remain a separate control.');
 assert(speciesDetail.includes('data-feature-building="sharing"'), 'Species detail sharing must be explicitly gated.');
+assert(speciesDetail.includes('findCompatibilityDisclosure'), 'Species detail risk review must preserve the in-context compatibility disclosure guard.');
 assert(care.includes("detail: { feature: 'sharing' }"), 'Care sharing must use the building feature gate.');
 assert(collection.includes("detail: { feature: 'sharing' }"), 'Collection care sharing must use the building feature gate.');
 assert(collectionHub.includes('navigate(moduleRoutes[id])'), 'Collection hub building entry must navigate to its building page.');

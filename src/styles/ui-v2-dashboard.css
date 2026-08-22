@@ -147,6 +147,25 @@
 .quick-action-more[open] .quick-action-more-chevron { transform: rotate(180deg); }
 .quick-action-secondary { margin-top: 8px; }
 
+/* A narrow desktop workspace is still a task list. Use the actual aquarium container,
+   not the browser viewport, so an expanded sidebar or split-screen cannot promote the
+   contextual 3D tank above recurrent management. */
+@container aquarium-home (max-width: 719px) {
+  .aquarium-dashboard-v2 { gap: 12px; }
+
+  .aquarium-dashboard-v2__hero { display: contents; }
+  .aquarium-dashboard-v2__decision { order: 1; }
+  .aquarium-dashboard-v2__manage { order: 2; }
+  .aquarium-dashboard-v2__context { order: 3; }
+  .aquarium-dashboard-v2__secondary { order: 4; }
+
+  .aquarium-dashboard-v2__context .aquarium-tank {
+    height: clamp(140px, 22cqi, 170px) !important;
+    min-height: 0 !important;
+    max-height: 170px !important;
+  }
+}
+
 @container aquarium-home (min-width: 720px) {
   .aquarium-dashboard-v2 { gap: 16px; }
 
@@ -163,9 +182,9 @@
   .aquarium-dashboard-v2__context { order: initial; }
 
   .aquarium-dashboard-v2__context .aquarium-tank {
-    height: clamp(190px, 21dvh, 230px);
-    min-height: 190px;
-    max-height: 230px;
+    height: clamp(190px, 21dvh, 230px) !important;
+    min-height: 190px !important;
+    max-height: 230px !important;
   }
 
   .aquarium-dashboard-v2__manage-grid {
@@ -258,20 +277,6 @@
     max-width: 220px !important;
     flex: 0 0 auto;
   }
-}
-
-@media (max-width: 639px) {
-  .aquarium-dashboard-v2 { gap: 12px; }
-
-  /* Mobile is a task list, not a miniature desktop hero. Flatten the hero so
-     recurrent management can sit before the decorative/contextual 3D tank. */
-  .aquarium-dashboard-v2__hero { display: contents; }
-  .aquarium-dashboard-v2__decision { order: 1; }
-  .aquarium-dashboard-v2__manage { order: 2; }
-  .aquarium-dashboard-v2__context { order: 3; }
-  .aquarium-dashboard-v2__secondary { order: 4; }
-
-  .aquarium-dashboard-v2__context .aquarium-tank { height: 140px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

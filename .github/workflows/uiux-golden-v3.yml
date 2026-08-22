@@ -1,0 +1,61 @@
+name: UI UX Golden V3
+
+on:
+  pull_request:
+    branches: [main, integration/aquaguide-rc1]
+    paths:
+      - 'src/**'
+      - 'components/**'
+      - 'evaluation/visual/golden-v1/**'
+      - 'scripts/verify-uiux-golden-cohort.mjs'
+      - 'scripts/ensure-cjk-font.sh'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/uiux-golden-v3.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  golden-cohort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Restore CJK snapshot font cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/aquaguide-noto-cjk
+          key: aquaguide-noto-cjk-${{ runner.os }}-${{ runner.arch }}-20230817-v1
+      - name: Ensure CJK snapshot font
+        run: bash scripts/ensure-cjk-font.sh
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-uiux-golden.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-uiux-golden.log
+          exit 1
+      - name: Golden cohort pixel diff
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-uiux-golden-cohort.mjs
+      - name: Upload golden diff evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaguide-uiux-golden-v3
+          path: artifacts/uiux-golden-diff/**
+          if-no-files-found: warn
+          retention-days: 7
