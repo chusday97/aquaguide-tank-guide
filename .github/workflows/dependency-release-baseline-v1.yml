@@ -10,18 +10,26 @@ permissions:
   contents: read
 
 jobs:
-  audit-dependency-baseline:
+  production-dependency-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: agent/result-ux-v1
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Validate types and production build
+        run: |
+          npm run lint
+          npm run build
 
       - name: Capture production dependency audit
         shell: bash
@@ -41,83 +49,28 @@ jobs:
           echo "npm audit exit code: $status"
           exit 0
 
-      - name: Summarize current dependency reachability baseline
+      - name: Summarize dependency baseline
         run: node scripts/summarize-npm-audit.mjs /tmp/npm-audit-prod.json /tmp/npm-audit-all.json
 
-      - name: Preserve current dependency audit summary
-        run: mv dependency-audit-summary.json dependency-audit-current.json
-
-      - name: Prepare minimal remediation candidate
-        run: node scripts/prepare-dependency-remediation.mjs
-
-      - name: Regenerate lockfile for candidate
+      - name: Block production high and critical findings
         run: |
-          npm install --package-lock-only --ignore-scripts
-          npm update dompurify --package-lock-only --ignore-scripts
+          node - <<'NODE'
+          const fs = require('fs');
+          const summary = JSON.parse(fs.readFileSync('dependency-audit-summary.json', 'utf8'));
+          const counts = summary.productionCounts ?? {};
+          const critical = Number(counts.critical ?? 0);
+          const high = Number(counts.high ?? 0);
+          console.log(`Production audit counts: ${JSON.stringify(counts)}`);
+          if (critical > 0 || high > 0) {
+            console.error(`Release blocked: ${critical} critical / ${high} high production dependency findings.`);
+            process.exit(1);
+          }
+          NODE
 
-      - name: Show candidate dependency diff size
-        shell: bash
-        run: |
-          git diff --stat -- package.json apps/api/package.json package-lock.json
-          git diff -- package.json apps/api/package.json > /tmp/dependency-manifest.diff
-
-      - name: Validate candidate lock install
-        run: npm ci
-
-      - name: Trace remaining vulnerable package ancestry
-        shell: bash
-        run: |
-          {
-            echo '### dompurify'
-            npm explain dompurify || true
-            for package in vite hono fast-uri brace-expansion js-yaml nanoid postcss ip-address; do
-              echo "### $package"
-              npm explain "$package" || true
-            done
-          } | tee /tmp/dependency-provenance.txt
-
-      - name: Validate candidate types and build
-        run: |
-          npm run lint
-          npm run build
-
-      - name: Capture candidate production audit
-        shell: bash
-        run: |
-          set +e
-          npm audit --omit=dev --json > /tmp/npm-audit-candidate-prod.json
-          status=$?
-          echo "candidate npm audit --omit=dev exit code: $status"
-          exit 0
-
-      - name: Capture candidate full audit
-        shell: bash
-        run: |
-          set +e
-          npm audit --json > /tmp/npm-audit-candidate-all.json
-          status=$?
-          echo "candidate npm audit exit code: $status"
-          exit 0
-
-      - name: Summarize candidate dependency baseline
-        run: node scripts/summarize-npm-audit.mjs /tmp/npm-audit-candidate-prod.json /tmp/npm-audit-candidate-all.json
-
-      - name: Collect remediation candidate artifact
-        shell: bash
-        run: |
-          mkdir -p dependency-remediation-candidate/apps/api
-          cp package.json dependency-remediation-candidate/package.json
-          cp apps/api/package.json dependency-remediation-candidate/apps/api/package.json
-          cp package-lock.json dependency-remediation-candidate/package-lock.json
-          cp dependency-audit-current.json dependency-remediation-candidate/dependency-audit-current.json
-          cp dependency-audit-summary.json dependency-remediation-candidate/dependency-audit-candidate.json
-          cp /tmp/dependency-manifest.diff dependency-remediation-candidate/manifest.diff
-          cp /tmp/dependency-provenance.txt dependency-remediation-candidate/dependency-provenance.txt
-
-      - name: Upload dependency remediation candidate
+      - name: Upload dependency audit summary
         uses: actions/upload-artifact@v4
         with:
-          name: dependency-remediation-candidate
-          path: dependency-remediation-candidate
+          name: dependency-release-baseline
+          path: dependency-audit-summary.json
           if-no-files-found: error
           retention-days: 14
