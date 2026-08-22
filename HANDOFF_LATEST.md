@@ -157,13 +157,13 @@
 
 Identify 完整流程与未保存退出、Aquarium 四类 Surface、Collection 子页、Settings 未提交导航 guard、Search → Species Detail 均已完成真实 browser 验证；新的全页面 runtime matrix 已覆盖 Aquarium / Encyclopedia / Care / Collection / Identify / Settings / Search × 1440 / 1024 / 768 / 390，共 28 case，当前 28/28 PASS。剩余不再是基础 runtime 缺口，而是用户人工视觉验收、Vercel 同 SHA parity，以及后续新改动持续回归。
 
-### P2 — 后台与 legacy confirm debt
+### P2 — Remaining internal/stale-test debt
 
-AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation debt；不影响当前普通用户主路径，但在 release candidate 前应统一。
+`window.confirm` 已从 Aquarium 与 AdminContent 全部移除；Admin 未保存切换与发布/下线确认已统一到 shared Blocking Surface。剩余主要是手写 dialog/旧测试/死样式审计，以及最终分支语义 reconciliation。
 
 ## 当前测试 / 证据状态
 
-当前最新本地 product/test baseline（基于 `da6dfa6`）：
+当前最新本地 product/test baseline（基于 `519bb32`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
 - `npm run test:taxonomy`：PASS（**501 条**；locale taxonomy drift 0；新增水草在中英文下保持 plant taxonomy）
@@ -186,6 +186,7 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 - Mobile Care end-to-end regression：PASS
 - Identify identity→optional health triage + unsaved navigation guard：PASS
 - Full-page runtime matrix：PASS（7 routes × 4 viewports = **28/28**；无 horizontal overflow / initial dialog / body-lock / pageerror）
+- Admin unsaved-change / status confirmation：PASS（shared Blocking；全仓 `window.confirm` = 0）
 
 注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
 
@@ -212,7 +213,7 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 ### Step 2 — 清内部 / legacy debt
 
-- Admin native confirm；
+- 扫描并退役剩余手写 `role=dialog` / `aria-modal`；
 - 其他 dead CSS / stale test；
 - main/RC1/#104/#105 semantic reconciliation，禁止覆盖式 merge。
 
