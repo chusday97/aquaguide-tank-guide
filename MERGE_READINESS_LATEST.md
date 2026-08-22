@@ -1,140 +1,138 @@
 # AquaGuide — Stacked Merge & Release Readiness
 
-**Date:** 2026-08-20  
+**Updated:** 2026-08-22  
 **Parent PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
 **Child PR:** #105 `Introduce decision-first Result UX V1`  
-**Latest validated child head:** `363e29bd9a93b4b87f2cd28af1351589a5b84681`
+**Release rule:** no merge or production deployment without explicit authorization.
 
 ## Decision
 
-**PRODUCT / RESULT UX: READY. REPOSITORY-LEVEL PRODUCTION SECURITY: READY. PRODUCT BADCASE GOVERNANCE: READY. STACK INTEGRATION AND DEPLOYED-ENVIRONMENT VERIFICATION: NOT YET AUTHORIZED / COMPLETE.**
+**DEPENDENCY / RELEASE BASELINE: CLOSED ON THE CURRENT FEATURE-BRANCH STACK.  
+#104 MERGE-READINESS REVIEW: COMPLETE, NO CURRENT CODE-LEVEL BLOCKER FOUND.  
+STACK MERGE / RETARGET / PRODUCTION DEPLOYMENT: NOT AUTHORIZED.**
 
-No known code-level blocker remains on the current #105 head. Do not merge or deploy yet because the parent→child stack transition, deployment policy, and actual environment readiness still require explicit actions.
+The next engineering action is no longer dependency remediation or another UI feature. The safe work is complete through parent review; the next state transition requires an explicit merge decision.
 
-## Current clean gate matrix
+## 1. Parent PR #104 review result
 
-Head `363e29bd9a93b4b87f2cd28af1351589a5b84681`:
+Current topology:
+
+- base: `integration/aquaguide-rc1` @ `07a208b68065be1705ba3ee51cde3bbaa398bdaa`
+- head: `agent/uiux-system-refactor-v1` @ `1c2b5a383da3b0d6a90ba72537395fb41deb7841`
+- relation: **ahead 102 / behind 0**
+- GitHub mergeability: **mergeable=true**
+- PR state: **open / non-draft / unmerged**
+- scope size: **102 commits / 52 changed files**
+
+This is a large parent PR, so mergeability alone is not sufficient evidence. The review boundary remains frozen: do not add dependency upgrades, new UI features, bundle refactors, or wrapper/Base consolidation to #104.
+
+Importantly, `package.json` and `package-lock.json` are not part of the #104 diff. The dependency/security remediation completed on #105 must not be back-ported into the frozen parent just to make its historical audit output look newer.
+
+### #104 mandatory gate matrix
+
+All five parent gates are green on `1c2b5a38`:
 
 | Gate | Run | Result |
-| --- | --- | --- |
-| Production Security Boundary V1 | `32368279920` | PASS |
-| Result UX V1 | `32368279929` | PASS |
-| Plant Roster Edit Fix + Navigation Context | `32368279880` | PASS |
-| Compatibility Stage Risk V1 | `32368279892` | PASS |
+| --- | ---: | --- |
+| Navigation Context V1 | `32284228596` | PASS |
+| UI UX System Refactor V1 | `32284228697` | PASS |
+| UI UX Visual QA V2 | `32284228687` | PASS |
+| UI UX Golden V3 | `32284228628` | PASS |
+| Bundle Audit V1 | `32284228685` | PASS |
 
-Production Security now permanently runs the product-evaluation registry contract plus share-report security and API contracts. All permanent workflows use read-only repository permissions.
+No current ancestry divergence or merge conflict was found between #104 and its RC1 base. This review does **not** execute the merge.
 
-## Product badcase governance
+## 2. Child #105 dependency/release baseline
 
-The machine-readable product evaluation set is now current:
+Dependency remediation landed in `5c277cec1f99f5bb507b7d50b2018d5d571ef0f1` and the permanent read-only dependency gate was established in `8bd327bf69d7a7b74d9ff91f601accddc0ffe7cb`.
 
-- `PUI-BC-054` appended with featureId `tank_copilot`;
-- `PUI-BC-055` appended with featureId `share_report`;
-- `share_report` added to `feature-states.v1.json` with six baseline states;
-- `PUI-BC-053` remains evaluator-only and intentionally excluded from the product registry.
+Before remediation:
 
-The migration enforced append-only JSONL behavior (+2/-0), passed `npm run test:product-evaluation`, and then removed its one-time write helper. Product registry commit: `e59a73ab85ba1f72a562c511675cc776aeb1725c`; final read-only cleanup head: `363e29bd9a93b4b87f2cd28af1351589a5b84681`.
+- production audit: 18 findings = 10 high / 6 moderate / 2 low
+- full audit: the same 18 findings
 
-## PUI-BC-055 production-security closure
+After remediation:
 
-### Credential separation
+- production audit: **0 findings**
+- full audit: **12 dev/build-tooling findings = 7 high / 2 moderate / 3 low**
 
-Old config reused `SUPABASE_SERVICE_ROLE_KEY` as the share-token HMAC secret when `SHARE_TOKEN_SECRET` was missing.
+The remaining full-audit debt is kept visible rather than being represented as zero repository-wide security debt.
 
-- fail-before: Security `32363518780`;
-- fix: `173530bdc5ea34abcea65d00700b145fc7cf88db`;
-- result: dedicated `SHARE_TOKEN_SECRET` is mandatory and missing configuration fails closed.
+### Verified #105 descendant
 
-### Release-gate enforcement
+Head `74738962b3f23631b48973b6d7467276789b4241` passed all five permanent gates:
 
-RC1 Release Acceptance previously omitted the security contract.
+| Gate | Run | Result |
+| --- | ---: | --- |
+| Production Security Boundary V1 | `32573206862` | PASS |
+| Dependency Release Baseline V1 | `32573206901` | PASS |
+| Result UX V1 | `32573206841` | PASS |
+| Compatibility Stage Risk V1 | `32573206824` | PASS |
+| Plant Roster Edit Fix | `32573206969` | PASS |
 
-- fail-before: `32364388187`;
-- fix: `8f9bccf3dc7ba85688c9d727dc551cd3898b60d6`;
-- result: release acceptance runs `npm run test:share-report-contract`.
+The later docs-only head `9750464c449800153ffa8fdf0b6f3bbaafb53b91` also passed all five gates:
 
-### Deployment readiness
+| Gate | Run | Result |
+| --- | ---: | --- |
+| Production Security Boundary V1 | `32573357798` | PASS |
+| Dependency Release Baseline V1 | `32573357836` | PASS |
+| Compatibility Stage Risk V1 | `32573357801` | PASS |
+| Plant Roster Edit Fix | `32573357824` | PASS |
+| Result UX V1 | `32573357826` | PASS |
 
-Business health previously could look healthy while share reports were not deployable.
+Result UX continues to pass Diagnosis, Compatibility, Knowledge, Procedure, Species Detail, Layout Recovery, Identification, and Tank Copilot after dependency remediation.
 
-- fail-before: `32364742513`;
-- fix: `6f4f402414d36296a17b3087ed8ce4e550ba5208`;
-- result: health exposes only `shareReportsConfigured: boolean`; no secret value is returned; post-deploy smoke requires true.
+## 3. Current stacked topology
 
-Canonical report URLs also require `WEB_BASE_URL`:
+Pre-merge structure remains:
 
-- fail-before: `32365165728`;
-- fix: `1da62bb1ce11098ce38a489e6a7b95bc40995178`.
+- #104: `integration/aquaguide-rc1` → `agent/uiux-system-refactor-v1`
+- #105: `agent/uiux-system-refactor-v1` → `agent/result-ux-v1`
 
-Readiness is true only when business Supabase configuration, `SUPABASE_SERVICE_ROLE_KEY`, dedicated `SHARE_TOKEN_SECRET`, and `WEB_BASE_URL` are all present.
+The correct transition remains parent-first:
 
-## Deployed-environment verification is still a blocker
-
-Repository contracts cannot prove the target hosting environment has the required secrets/configuration. The connected Vercel account returned the team but no visible projects, so this audit could not inspect project environment variables.
-
-Before calling production ready:
-
-1. verify `SHARE_TOKEN_SECRET` is configured server-side;
-2. verify `WEB_BASE_URL` is the intended canonical production origin;
-3. verify Supabase service-role configuration remains server-only;
-4. deploy only through the explicitly chosen release policy;
-5. run `RC1 Post-Deploy Smoke` against the deployed URL and require `shareReportsConfigured:true`.
-
-## Stacked topology / transition
-
-Pre-parent-merge structure remains:
-
-- #104: `integration/aquaguide-rc1` → `agent/uiux-system-refactor-v1`;
-- #105: `agent/uiux-system-refactor-v1` → `agent/result-ux-v1`.
-
-The post-retarget CI blocker was fixed in `a8e402b0f6b6d83dbed5927ca39e7507fd232548`: Result UX, Plant, Stage Risk, and Production Security remain available when #105 targets `integration/aquaguide-rc1`.
-
-Correct transition:
-
-1. review #104 without widening its frozen scope;
-2. only after explicit approval, merge #104 to `integration/aquaguide-rc1`;
+1. explicit authorization to merge #104;
+2. merge #104 to `integration/aquaguide-rc1` using an ancestry-preserving method;
 3. retarget #105 to `integration/aquaguide-rc1`;
-4. inspect the actual new merge-base/history;
-5. reconcile legitimate ancestry changes introduced by the chosen parent merge method;
-6. check for conflicts and duplicated parent changes;
-7. rerun all four permanent #105 gates on the RC1-based candidate;
-8. review #105 separately;
-9. make an explicit release-policy and merge/deploy decision.
+4. inspect the actual post-merge merge-base/history;
+5. resolve only real conflicts or duplicated parent changes;
+6. rerun all five permanent #105 gates on the retargeted ancestry;
+7. review #105 separately;
+8. make an explicit #105 merge/deployment decision.
 
-A merge commit for #104 remains the least surprising ancestry-preserving option for this stack, but no merge method is executed here.
+A clean current comparison does not justify skipping the post-retarget verification: the chosen parent merge method can change ancestry even when the pre-merge branches are conflict-free.
 
-## Vercel deployment policy
+## 4. Production readiness remains separate
 
-#105 contains:
+Repository CI does not prove the deployed environment is ready. Before production, explicitly verify:
 
-```json
-"git": {
-  "deploymentEnabled": false
-}
-```
+- Supabase production configuration and server-only service-role usage;
+- `SHARE_TOKEN_SECRET`;
+- canonical `WEB_BASE_URL`;
+- auth and persistence;
+- AI provider behavior and failure fallback;
+- Resend configuration;
+- share-report readiness;
+- deployed golden path / `RC1 Post-Deploy Smoke`.
 
-This prevented per-commit Vercel builds during repair. Before production choose explicitly:
+`vercel.json` currently keeps Git deployment disabled for this repair stack. Do not silently change that release policy.
 
-- **manual / milestone deployment:** keep it; or
-- **Git-driven deployment:** deliberately remove/change it.
+## 5. Remaining blockers
 
-## Non-blocking technical debt
-
-- npm audit: 18 findings (2 low, 6 moderate, 10 high);
-- mixed static/dynamic imports for large data modules;
-- large main and react-three-fiber chunks;
-- thin wrapper/Base structures inherited from #104.
-
-Do not run blind `npm audit fix` or widen #104/#105 with unrelated architecture work.
-
-## Current blockers before merge/deploy
-
-1. explicit #104 review/merge authorization;
-2. #105 retarget/reconciliation after the actual #104 merge;
-3. all four #105 gates PASS on the RC1-based candidate;
-4. explicit Vercel deployment-policy choice;
-5. actual production environment configuration for share reports;
-6. post-deploy smoke PASS;
+1. explicit authorization for the #104 parent merge;
+2. #105 retarget/reconciliation after the real parent merge;
+3. all five #105 gates green on the final RC1-based ancestry;
+4. explicit deployment-policy choice;
+5. real production environment validation;
+6. post-deploy smoke;
 7. explicit #105 merge/deploy authorization.
 
-Until those steps occur, keep #105 Draft and do not deploy.
+## 6. Non-blocking debt
+
+- 12 remaining dev/build-tooling npm-audit findings;
+- mixed static/dynamic imports for fish/care data;
+- large main and react-three-fiber chunks;
+- thin wrapper/Base structures inherited from #104;
+- legacy `server/index.mjs` bridges pending Phase 2 consumer inventory.
+
+Do not widen #104/#105 with these debts during stack convergence. The next decision point is the parent merge authorization, not another repair branch expansion.
