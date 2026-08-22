@@ -9,11 +9,13 @@
 - **Area:** release baseline / dependency security
 - **Severity:** high
 - **Source:** `npm audit --omit=dev` release-baseline evidence
-- **Status:** remediation_landed / permanent_gate_verification_pending
+- **Status:** regression_verified
 - **Baseline:** 18 production-graph findings = 10 high + 6 moderate + 2 low
 - **Candidate proof:** Dependency Release Baseline V1 run `32572924271` — PASS
 - **Landed by:** `5c277cec1f99f5bb507b7d50b2018d5d571ef0f1`
 - **Apply proof:** Apply Dependency Remediation Once run `32573063116` — PASS
+- **Permanent regression:** Dependency Release Baseline V1 run `32573206901` — PASS
+- **Post-remediation product regression head:** `74738962b3f23631b48973b6d7467276789b4241`
 
 ### Symptom
 
@@ -37,23 +39,25 @@ Notable production-graph findings included direct `react-router-dom`, direct `ex
 - regenerated the lockfile and advanced DOMPurify to patched `3.4.14` in the validated dependency graph;
 - fixed the artifact directory structure so root and API manifests are preserved separately;
 - added package ancestry traces to distinguish shipped/runtime dependencies from tooling chains;
-- landed the exact validated lockfile through a one-time workflow that required zero production audit findings and self-deleted after commit.
+- landed the exact validated lockfile through a one-time workflow that required zero production audit findings and self-deleted after commit;
+- replaced the one-time remediation machinery with a permanent read-only dependency release gate that blocks production high/critical findings.
 
 ### Result
 
-Validated post-remediation candidate:
+Post-remediation release baseline:
 
 - production audit: **0 findings**;
 - full audit: **12 dev-only findings** = 7 high + 2 moderate + 3 low;
 - `npm ci`: PASS;
 - TypeScript/lint: PASS;
-- production build: PASS.
+- production build: PASS;
+- Production Security Boundary: PASS (`32573206862`);
+- Result UX browser regression: PASS (`32573206841`);
+- Compatibility Stage Risk: PASS (`32573206824`);
+- Plant Roster Edit Fix: PASS (`32573206969`);
+- Dependency Release Baseline: PASS (`32573206901`).
 
 The 12 remaining findings are retained as tooling debt, principally under shadcn/MCP SDK and build-tool dependency chains. They are not production-runtime blockers under the corrected manifest, but they are not erased from the ledger.
-
-### Closure rule
-
-REL-BC-001 becomes fully `regression_verified` only when normal permanent product gates also pass on a descendant of the landed dependency commit. Dependency audit/build success alone is not enough to prove user-facing behavior stayed intact.
 
 ---
 
@@ -81,7 +85,7 @@ At a 768px desktop fixture, the <=719px aquarium container rule applied phone-st
 
 - Keep fail-before evidence; never lower a regression threshold merely to turn CI green.
 - Separate product/browser badcases from release/tooling badcases; do not force release dependency findings into the product feature-state registry without a valid feature mapping.
-- A green audit/build does not close a user-facing regression; normal product/browser gates must still pass.
+- A dependency fix is not closed by a clean audit/build alone; normal product/browser gates must pass on the remediated graph.
 - Do not use raw severity counts without dependency classification and runtime reachability.
 - Do not blindly run `npm audit fix`; prefer minimal, explainable dependency changes with lockfile and regression proof.
 - Preserve the append-only canonical product badcase registry under `evaluation/product/` when product entries are added.

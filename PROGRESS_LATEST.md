@@ -3,17 +3,27 @@
 **Updated:** 2026-08-22  
 **Branch:** `agent/result-ux-v1`  
 **PR:** #105 (Draft / open / unmerged)  
-**Dependency baseline head:** `5c277cec1f99f5bb507b7d50b2018d5d571ef0f1`
+**Latest fully verified post-remediation head:** `74738962b3f23631b48973b6d7467276789b4241`
 
 ## Current phase
 
-**RC1 feature convergence → UI/UX system → Result UX → Layout Recovery → dependency release baseline landed → permanent post-remediation verification now.**
+**RC1 feature convergence → UI/UX system → Result UX → Layout Recovery → dependency release baseline CLOSED → stack convergence next, pending explicit merge authorization.**
 
 No production merge or deployment has been authorized.
 
-## Dependency-security progress
+## Verification status
 
-### Baseline evidence
+| Gate | Result | Run |
+|---|---|---:|
+| Production Security Boundary V1 | PASS | 32573206862 |
+| Dependency Release Baseline V1 | PASS | 32573206901 |
+| Result UX V1 | PASS | 32573206841 |
+| Compatibility Stage Risk V1 | PASS | 32573206824 |
+| Plant Roster Edit Fix | PASS | 32573206969 |
+
+The Result UX run passed the complete browser chain including Layout Recovery, Identification, and Tank Copilot on the post-remediation dependency graph.
+
+## Dependency-security P0 — completed
 
 Original production/full audit:
 
@@ -22,28 +32,27 @@ Original production/full audit:
 | `npm audit --omit=dev` | 10 | 6 | 2 | 18 |
 | full audit | 10 | 6 | 2 | 18 |
 
-This proved the original findings were present in npm's production dependency graph, not merely dev-only noise.
-
-### Landed remediation
+Completed remediation:
 
 - [x] Moved build-only tooling out of root production dependencies.
 - [x] Upgraded `react-router-dom` to `^7.18.2`.
 - [x] Upgraded root/API `express` to `^4.22.2`.
 - [x] Upgraded/reclassified Vite to dev-only `^6.4.3`.
-- [x] Advanced transitive DOMPurify lock resolution to patched `3.4.14` in the validated candidate.
+- [x] Advanced transitive DOMPurify lock resolution to patched `3.4.14` in the validated graph.
 - [x] Validated candidate with `npm ci`, TypeScript, and production build.
 - [x] Reduced production audit to **0 findings**.
 - [x] Preserved remaining full-audit findings as dev/build debt rather than hiding them.
-- [x] Used a one-time contents-write applier and self-deleted it in the same landed dependency commit.
+- [x] Landed the exact lockfile through a one-time writer that self-deleted.
+- [x] Replaced the remediation workflow with a permanent read-only dependency release gate.
+- [x] Re-ran all normal permanent product gates on a post-remediation descendant head; all passed.
 
-Candidate proof: Dependency Release Baseline V1 run `32572924271` — **PASS**.  
-Apply proof: Apply Dependency Remediation Once run `32573063116` — **PASS**.
+Dependency candidate proof: run `32572924271` — PASS.  
+One-time apply proof: run `32573063116` — PASS.  
+Permanent post-remediation dependency gate: run `32573206901` — PASS.
 
-After remediation, full audit remains 12 dev-only findings: 7 high, 2 moderate, 3 low. These are mainly in shadcn/MCP SDK and build-tool chains.
+Full audit still reports 12 dev-only findings: 7 high, 2 moderate, 3 low. These mainly originate from shadcn/MCP SDK and build-tool chains and remain in a separate tooling debt queue.
 
 ## Product baseline carried forward
-
-Completed before dependency P0:
 
 - [x] deterministic compatibility / stage-risk boundary;
 - [x] plant roster edit path;
@@ -57,39 +66,36 @@ Completed before dependency P0:
 
 ## Current release readiness
 
-### Green / materially closed
+### Closed on feature branch
 
-- production dependency candidate audit: zero findings;
-- dependency candidate install/types/build;
-- exact dependency remediation landed to the feature branch;
-- temporary write workflow removed;
-- earlier product correctness and UI regression baseline established.
+- production dependency audit and permanent regression gate;
+- dependency install/types/build;
+- product/browser gates on remediated dependency graph;
+- production-security repository contracts;
+- Result UX/Layout Recovery regression suite.
 
 ### Still required
 
-- [ ] confirm all normal permanent gates green on a post-remediation descendant head;
 - [ ] perform #104 → #105 stack convergence only after explicit merge authorization;
-- [ ] rerun gates after final retargeted ancestry;
+- [ ] rerun all gates after final retargeted ancestry;
 - [ ] verify real production environment/secrets only after deployment authorization;
 - [ ] perform production golden-path smoke after authorized deployment;
 - [ ] inventory remaining `server/index.mjs` consumers;
-- [ ] start Knowledge Engine P0 only after release baseline/stack work is closed.
+- [ ] start Knowledge Engine P0 only after release/stack work is closed.
 
 ## Next sequence
 
-1. Finish post-remediation permanent gate proof.
-2. Stop dependency churn once production audit remains zero; keep the 12 dev-only findings as a separate tooling debt queue.
-3. Await explicit authorization for #104/#105 stack convergence; do not merge on assumption.
-4. Production readiness after explicit deploy authorization.
-5. Backend Phase 2.
-6. Knowledge architecture P0 → P1 → P4 → P2 → P3 → P5.
+1. Stack convergence: #104 decision first, then retarget/reconcile #105. No merge without explicit authorization.
+2. Production readiness: environment matrix + post-deploy smoke after explicit authorization.
+3. Backend Phase 2: legacy bridge consumer inventory and one-at-a-time migration with regression coverage.
+4. Knowledge architecture: P0 → P1 → P4 → P2 → P3 → P5.
 
 ## Guardrails
 
 - No blind `npm audit fix`.
 - No lowering regression thresholds.
-- Build/dev audit findings do not become production blockers merely because their severity is high; classify by shipped/runtime reachability.
-- Conversely, do not label an `--omit=dev` finding as dev-only without correcting the manifest and validating the resulting production graph.
+- Do not confuse dev/build severity with shipped runtime reachability.
 - AI cannot override deterministic safety rules.
-- No deletion of legacy API bridges before consumer proof.
+- Do not delete legacy API bridges before consumer proof.
+- Do not use repository/preview success as a proxy for production validation.
 - No production merge/deployment without explicit authorization.
