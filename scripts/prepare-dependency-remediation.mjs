@@ -32,6 +32,7 @@ for (const name of buildOnly) {
 root.dependencies['react-router-dom'] = '^7.18.2';
 root.dependencies.express = '^4.22.2';
 api.dependencies.express = '^4.22.2';
+root.devDependencies.vite = '^6.4.3';
 
 function writeJson(path, value) {
   fs.writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
@@ -43,4 +44,5 @@ writeJson(apiPath, api);
 console.log('Prepared dependency remediation candidate:');
 console.log('- react-router-dom -> ^7.18.2');
 console.log('- express -> ^4.22.2 (root + apps/api)');
+console.log('- vite -> ^6.4.3 and devDependencies only');
 console.log(`- build-only moved to devDependencies: ${buildOnly.join(', ')}`);

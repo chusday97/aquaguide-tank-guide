@@ -62,6 +62,18 @@ jobs:
       - name: Validate candidate lock install
         run: npm ci
 
+      - name: Trace remaining vulnerable package ancestry
+        shell: bash
+        run: |
+          {
+            echo '### dompurify'
+            npm explain dompurify || true
+            for package in vite hono fast-uri brace-expansion js-yaml nanoid postcss ip-address; do
+              echo "### $package"
+              npm explain "$package" || true
+            done
+          } | tee /tmp/dependency-provenance.txt
+
       - name: Validate candidate types and build
         run: |
           npm run lint
@@ -92,9 +104,13 @@ jobs:
         shell: bash
         run: |
           mkdir -p dependency-remediation-candidate/apps/api
-          cp package.json package-lock.json dependency-audit-current.json dependency-audit-summary.json dependency-remediation-candidate/
+          cp package.json dependency-remediation-candidate/package.json
           cp apps/api/package.json dependency-remediation-candidate/apps/api/package.json
+          cp package-lock.json dependency-remediation-candidate/package-lock.json
+          cp dependency-audit-current.json dependency-remediation-candidate/dependency-audit-current.json
+          cp dependency-audit-summary.json dependency-remediation-candidate/dependency-audit-candidate.json
           cp /tmp/dependency-manifest.diff dependency-remediation-candidate/manifest.diff
+          cp /tmp/dependency-provenance.txt dependency-remediation-candidate/dependency-provenance.txt
 
       - name: Upload dependency remediation candidate
         uses: actions/upload-artifact@v4
