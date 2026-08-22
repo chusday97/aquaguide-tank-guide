@@ -7,6 +7,14 @@ import {
 } from '../../packages/contracts/src/index';
 import { useToast } from '../components/common/ToastProvider';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../../components/ui/dialog';
+import {
   contentAdminService,
   type AdminCareArticleRecord,
   type AdminSpeciesRecord,
@@ -16,6 +24,12 @@ import {
 
 type ContentType = 'species' | 'care';
 type StatusAction = 'published' | 'archived';
+type AdminItem = AdminSpeciesRecord | AdminCareArticleRecord;
+type PendingDiscardAction =
+  | { kind: 'select'; item: AdminItem }
+  | { kind: 'new' }
+  | { kind: 'navigate'; path: string }
+  | { kind: 'type'; contentType: ContentType };
 
 const emptySpecies = (): SpeciesAdminInput => ({
   catalogKey: '', name: '', scientificName: '', category: '', difficulty: 'Easy',
@@ -56,6 +70,7 @@ export default function AdminContent() {
   const [formError, setFormError] = useState('');
   const [isDirty, setIsDirty] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<StatusAction | null>(null);
+  const [pendingDiscardAction, setPendingDiscardAction] = useState<PendingDiscardAction | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
@@ -87,8 +102,7 @@ export default function AdminContent() {
     return () => window.removeEventListener('beforeunload', beforeUnload);
   }, [isDirty]);
 
-  const selectItem = (item: AdminSpeciesRecord | AdminCareArticleRecord) => {
-    if (isDirty && !window.confirm('当前修改尚未保存，确定切换内容吗？')) return;
+  const applySelectedItem = (item: AdminItem) => {
     setSelectedId(item.id);
     setFormError('');
     setIsDirty(false);
@@ -107,14 +121,57 @@ export default function AdminContent() {
     requestAnimationFrame(() => firstFieldRef.current?.focus());
   };
 
-  const startNew = () => {
-    if (isDirty && !window.confirm('当前修改尚未保存，确定新建内容吗？')) return;
+  const selectItem = (item: AdminItem) => {
+    if (isDirty) {
+      setPendingDiscardAction({ kind: 'select', item });
+      return;
+    }
+    applySelectedItem(item);
+  };
+
+  const applyStartNew = () => {
     setSelectedId(null);
     setSpeciesForm(emptySpecies());
     setCareForm(emptyCare());
     setFormError('');
     setIsDirty(false);
     requestAnimationFrame(() => firstFieldRef.current?.focus());
+  };
+
+  const startNew = () => {
+    if (isDirty) {
+      setPendingDiscardAction({ kind: 'new' });
+      return;
+    }
+    applyStartNew();
+  };
+
+  const requestTypeChange = (contentType: ContentType) => {
+    if (contentType === type) return;
+    if (isDirty) {
+      setPendingDiscardAction({ kind: 'type', contentType });
+      return;
+    }
+    setType(contentType);
+  };
+
+  const requestAdminNavigation = (path: string) => {
+    if (isDirty) {
+      setPendingDiscardAction({ kind: 'navigate', path });
+      return;
+    }
+    navigate(path);
+  };
+
+  const confirmDiscardAction = () => {
+    const action = pendingDiscardAction;
+    if (!action) return;
+    setPendingDiscardAction(null);
+    setIsDirty(false);
+    if (action.kind === 'select') applySelectedItem(action.item);
+    else if (action.kind === 'new') applyStartNew();
+    else if (action.kind === 'type') setType(action.contentType);
+    else navigate(action.path);
   };
 
   const save = async (event: FormEvent) => {
@@ -195,12 +252,12 @@ export default function AdminContent() {
       <div className="mx-auto max-w-[1440px]">
         <header className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white px-4 py-3 shadow-sm">
           <div className="flex items-center gap-3">
-            <button type="button" aria-label="返回我的鱼缸" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/aquarium'); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
+            <button type="button" aria-label="返回我的鱼缸" onClick={() => requestAdminNavigation('/aquarium')} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
             <div><h1 className="text-xl font-black">内容后台</h1><p className="text-xs font-bold text-ink/45">编辑物种与养护资料，发布后才对用户可见。</p></div>
           </div>
           <div className="flex rounded-full bg-bg p-1">
-            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('species'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种</button>
-            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('care'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
+            <button type="button" onClick={() => requestTypeChange('species')} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种</button>
+            <button type="button" onClick={() => requestTypeChange('care')} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
           </div>
         </header>
 
@@ -261,7 +318,31 @@ export default function AdminContent() {
         </main>
       </div>
 
-      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[420px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? '发布后普通用户可以立即看到这项内容。' : '下线后普通用户将无法继续打开这项内容。'}</p><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button></div></div></div>}
+      <Dialog open={Boolean(pendingDiscardAction)} onOpenChange={open => !open && setPendingDiscardAction(null)}>
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[min(92vw,420px)] max-w-[420px] rounded-[24px]">
+          <DialogHeader>
+            <DialogTitle>放弃未保存的修改？</DialogTitle>
+            <DialogDescription>当前修改尚未保存。继续后这些修改会丢失，且无法恢复。</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="grid grid-cols-2 gap-2">
+            <button type="button" autoFocus onClick={() => setPendingDiscardAction(null)} className="min-h-11 rounded-full border border-border bg-white px-4 text-sm font-black">继续编辑</button>
+            <button type="button" onClick={confirmDiscardAction} className="min-h-11 rounded-full bg-red-700 px-4 text-sm font-black text-white">放弃修改</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(pendingStatus && selected)} onOpenChange={open => !open && setPendingStatus(null)}>
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[min(92vw,420px)] max-w-[420px] rounded-[24px]">
+          <DialogHeader>
+            <DialogTitle>{pendingStatus === 'published' ? '确认发布' : '确认下线'}</DialogTitle>
+            <DialogDescription>{pendingStatus === 'published' ? '发布后普通用户可以立即看到这项内容。' : '下线后普通用户将无法继续打开这项内容。'}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end gap-2">
+            <button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button>
+            <button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

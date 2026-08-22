@@ -46,9 +46,6 @@ import { buildTankCopilotContext, getTankCopilotMissingInfo } from '../modules/c
 import { weatherService } from '../services/weather/weather.service';
 import type { LocalWeatherOutput } from '../services/weather/weather.schema';
 import {
-  clearLocalAppState,
-  exportLocalAppState,
-  importLocalAppState,
   loadAppStateFromStorage,
   patchLocalAppState,
   saveAppStateToStorage,
@@ -1263,8 +1260,6 @@ export default function AquariumManager() {
   const [feedingRecords, setFeedingRecords] = useState<LocalEventRecord[]>([]);
   const [observationRecords, setObservationRecords] = useState<LocalEventRecord[]>([]);
   const [isLocalDataOpen, setIsLocalDataOpen] = useState(false);
-  const [localDataText, setLocalDataText] = useState('');
-  const [localDataMessage, setLocalDataMessage] = useState('');
   const [localWeather, setLocalWeather] = useState<LocalWeatherOutput | null>(null);
   const [weatherStatus, setWeatherStatus] = useState<'loading' | 'ready' | 'unavailable'>('loading');
   useEffect(() => {
@@ -1624,8 +1619,6 @@ export default function AquariumManager() {
   };
 
   const openLocalDataManager = () => {
-    setLocalDataText('');
-    setLocalDataMessage('');
     setIsLocalDataOpen(true);
   };
 
@@ -1668,29 +1661,6 @@ export default function AquariumManager() {
       body.scrollTo({ top: Math.max(0, target.offsetTop - 10), behavior: 'smooth' });
     }, 140);
   }, [activeSettingsPanel, isSettingsOpen]);
-
-  const handleExportLocalData = () => {
-    setLocalDataText(exportLocalAppState());
-    setLocalDataMessage(Boolean(i18n.language?.startsWith('en')) ? 'Local data generated, copy to save.' : '已生成本地数据，可复制保存。');
-  };
-
-  const handleImportLocalData = () => {
-    try {
-      importLocalAppState(localDataText);
-      setLocalDataMessage(Boolean(i18n.language?.startsWith('en')) ? 'Import successful, reloading...' : '导入成功，正在重新加载。');
-      window.setTimeout(() => window.location.reload(), 300);
-    } catch (error) {
-      setLocalDataMessage(error instanceof Error ? error.message : (Boolean(i18n.language?.startsWith('en')) ? 'Import failed, please check JSON format.' : '导入失败，请检查 JSON 格式。'));
-    }
-  };
-
-  const handleClearLocalData = () => {
-    const confirmed = window.confirm(Boolean(i18n.language?.startsWith('en')) ? 'Are you sure you want to clear local data? Tank, stocking, diagnosis, and logs cannot be recovered.' : '确认清除本地数据吗？清除后鱼缸、种草、诊断和记录都不会恢复。');
-    if (!confirmed) return;
-    clearLocalAppState();
-    setLocalDataMessage(Boolean(i18n.language?.startsWith('en')) ? 'Local data cleared. Returning to the empty aquarium state...' : '已清除本地数据，正在返回空鱼缸状态。');
-    window.setTimeout(() => window.location.reload(), 300);
-  };
 
   const activeAquarium = aquariums.find(a => a.id === activeId);
 

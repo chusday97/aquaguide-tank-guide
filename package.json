@@ -109,7 +109,8 @@
     "refresh:species-assets": "python3 scripts/prepare_species_assets_and_data.py && python3 scripts/add_housing_profiles.py && python3 scripts/add_feeding_profiles_to_fish_data.py && python3 scripts/audit_species_images.py",
     "test:aquarium-primary-tools": "node scripts/verify-aquarium-primary-tools.mjs",
     "test:aquarium-surfaces": "node scripts/verify-aquarium-surface-runtime.mjs",
-    "test:page-runtime-matrix": "node scripts/verify-page-runtime-matrix.mjs"
+    "test:page-runtime-matrix": "node scripts/verify-page-runtime-matrix.mjs",
+    "test:admin-content-dialogs": "node scripts/verify-admin-content-dialogs.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

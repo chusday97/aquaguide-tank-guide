@@ -84,6 +84,11 @@ jobs:
           AQUAGUIDE_URL: http://127.0.0.1:4173
         run: npm run test:page-runtime-matrix
 
+      - name: Admin content Blocking regression
+        env:
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: npm run test:admin-content-dialogs
+
       - name: Collection creature-navigation regression
         env:
           AQUAGUIDE_URL: http://127.0.0.1:4173

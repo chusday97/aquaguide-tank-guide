@@ -10,6 +10,7 @@ const layoutProvider = await read('src/components/layout/LayoutModeProvider.tsx'
 const layoutContract = await read('lib/layout-mode.ts');
 const dialog = await read('components/ui/dialog.tsx');
 const aquarium = await read('src/pages/Aquarium.tsx');
+const adminContent = await read('src/pages/AdminContent.tsx');
 const collectionHub = await read('src/pages/CollectionHub.tsx');
 const indexCss = await read('src/index.css');
 const splitStatic = await read('scripts/verify-split-workspace-detail.mjs');
@@ -84,6 +85,10 @@ if (aquarium.includes('<Dialog open={false}')) fail('Disabled legacy Aquarium di
 if (!aquarium.includes('data-tank-primary-action="add"') || !aquarium.includes('data-tank-primary-action="settings"')) fail('Aquarium add/settings primary tools must remain visible in the tank stage.');
 if (!aquarium.includes('data-settings-search="substrate"') || !aquarium.includes('data-settings-search="plants"')) fail('Aquarium substrate/plants inline search must remain available.');
 if (!aquarium.includes('setIsAddFishOpen(false)') || !aquarium.includes('setIsSettingsOpen(false)')) fail('Aquarium primary task rails must stay mutually exclusive.');
+if (/window\.confirm\s*\(/.test(aquarium)) fail('Aquarium user flows must use shared Blocking surfaces, not window.confirm.');
+if (/window\.confirm\s*\(/.test(adminContent)) fail('Admin unsaved changes must use shared Blocking surfaces, not window.confirm.');
+if (!adminContent.includes('pendingDiscardAction') || (adminContent.match(/surface="blocking"/g) || []).length < 2) fail('Admin discard/status confirmations must use shared Blocking surfaces.');
+if (adminContent.includes('fixed inset-0 z-[400]')) fail('Admin must not restore hand-built fixed modal geometry.');
 
 if (!collectionHub.includes('data-node-visual="creature"')) fail('Collection desktop navigation must remain creature-first, not card-first.');
 if (!collectionHub.includes('data-collection-node={module}')) fail('Collection creature nodes must expose stable runtime hooks.');
