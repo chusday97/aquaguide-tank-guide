@@ -15,6 +15,7 @@ const navigation = read('src/components/layout/WorkspaceNavigationProvider.tsx')
 const roster = read('src/components/aquarium/LivestockRosterDialog.tsx');
 const aquarium = read('src/pages/Aquarium.tsx');
 const encyclopedia = read('src/pages/Encyclopedia.tsx');
+const encyclopediaBase = read('src/pages/EncyclopediaBase.tsx');
 const visualResult = read('src/components/visual-results/VisualResultCard.tsx');
 const skill = read('.agents/skills/aquaguide-ui-ux/SKILL.md');
 
@@ -50,14 +51,15 @@ assert(roster.includes('restoreContext(workspaceReturnContext)'), 'Livestock mod
 assert(aquarium.includes("routeNavigate('/aquarium', { replace: true, state: routeLocation.state });"), 'Consuming an Aquarium task action must preserve route state');
 assert(!aquarium.includes("routeNavigate('/aquarium', { replace: true });"), 'Aquarium task consumption must not erase return state when removing one-time action queries');
 
-assert(encyclopedia.includes("params.set('source', 'atlas-detail')"), 'Atlas entity detail must be route-addressable');
-assert(encyclopedia.includes("navigateToRoute(taskRoutes.aquarium.livestock, { returnContext })"), 'View tank must carry exact caller context');
-assert(encyclopedia.includes("params.get('source') === 'atlas-detail'"), 'Closing atlas detail must preserve the prior route instead of hard-resetting to Encyclopedia home');
+assert(encyclopedia.includes('data-encyclopedia-navigation-guard'), 'Atlas wrapper must retain the top-level compatibility navigation guard');
+assert(encyclopediaBase.includes("params.set('source', 'atlas-detail')"), 'Atlas entity detail must be route-addressable');
+assert(encyclopediaBase.includes("navigateToRoute(taskRoutes.aquarium.livestock, { returnContext })"), 'View tank must carry exact caller context');
+assert(encyclopediaBase.includes("params.get('source') === 'atlas-detail'"), 'Closing atlas detail must preserve the prior route instead of hard-resetting to Encyclopedia home');
 
-const calculatorHandlerStart = encyclopedia.indexOf('const handleAddToCalculator =');
-const calculatorHandlerEnd = encyclopedia.indexOf('\n  const ', calculatorHandlerStart + 10);
-const calculatorHandler = encyclopedia.slice(calculatorHandlerStart, calculatorHandlerEnd > calculatorHandlerStart ? calculatorHandlerEnd : undefined);
-assert(calculatorHandlerStart >= 0, 'Encyclopedia must expose an explicit calculator-selection handler');
+const calculatorHandlerStart = encyclopediaBase.indexOf('const handleAddToCalculator =');
+const calculatorHandlerEnd = encyclopediaBase.indexOf('\n  const ', calculatorHandlerStart + 10);
+const calculatorHandler = encyclopediaBase.slice(calculatorHandlerStart, calculatorHandlerEnd > calculatorHandlerStart ? calculatorHandlerEnd : undefined);
+assert(calculatorHandlerStart >= 0, 'Encyclopedia base must expose an explicit calculator-selection handler');
 assert(!calculatorHandler.includes('closeAtlasDetail('), 'Selecting a species for compatibility must not close a browsing detail automatically');
 assert(!calculatorHandler.includes("setViewMode('compatibility')"), 'Selecting a species must not switch the user into compatibility mode automatically');
 assert(!calculatorHandler.includes('navigateToRoute('), 'Selecting a species must not navigate before the user explicitly asks to view compatibility results');
