@@ -1,0 +1,115 @@
+name: Result UX V1
+
+on:
+  pull_request:
+    branches:
+      - agent/uiux-system-refactor-v1
+      - integration/aquaguide-rc1
+
+permissions:
+  contents: read
+
+jobs:
+  validate-result-ux-v1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/result-ux-v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Result UX contract
+        run: node scripts/test-result-ux-contract.mjs
+
+      - name: Tank Copilot deterministic boundary contract
+        run: npm run test:copilot-contract
+
+      - name: Tank Copilot usefulness contract
+        run: node --import tsx scripts/test-tank-copilot-usability.ts
+
+      - name: Production share-token secret boundary
+        run: npm run test:share-report-contract
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-result-ux.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-result-ux.log
+          exit 1
+
+      - name: Diagnosis decision-first regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-golden-path-abnormal-care.mjs
+
+      - name: Compatibility decision-first regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-compatibility.mjs
+
+      - name: Knowledge decision-first regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-knowledge.mjs
+
+      - name: Procedure decision-first regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-procedure.mjs
+
+      - name: Species Detail decision-first + parent-context regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-species-detail.mjs
+
+      - name: Layout recovery regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-layout-recovery-v1.mjs
+
+      - name: Identification uncertainty + explicit-confirmation regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-identification.mjs
+
+      - name: Tank Copilot decision-first + AI-authority regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-result-ux-tank-copilot.mjs
+
+      - name: Upload Result UX evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaguide-result-ux-v1
+          path: |
+            artifacts/result-ux-diagnosis/**
+            artifacts/result-ux-compatibility/**
+            artifacts/result-ux-knowledge/**
+            artifacts/result-ux-procedure/**
+            artifacts/result-ux-species-detail/**
+            artifacts/layout-recovery-v1/**
+            artifacts/result-ux-identification/**
+            artifacts/result-ux-tank-copilot/**
+          if-no-files-found: warn
+          retention-days: 7

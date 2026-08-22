@@ -17,6 +17,8 @@ import { generateRiskExplanation, type RiskExplanationData } from '../lib/aiClie
 import { getAquariumAiReadiness } from '../services/aquarium/aquarium-setup.service';
 import { recordTankCompatibility } from '../services/compatibility/compatibility-records.service';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
+import { DecisionResultSurface } from './result/DecisionResultSurface';
+import { compatibilityEscalationSignals, compatibilityRuleSources, compatibilityTone } from '../modules/result/resultAdapters';
 
 const getSpeciesName = (species: Fish, isEn: boolean) => {
   if (!isEn) return species.name;
@@ -581,110 +583,160 @@ export function CompatibilityRiskCalculator({
                 : (isEn ? 'Select at least two species.' : '选择至少 2 种生物后，这里会直接给出结论。')}
             </div>
           </div>
-        ) : (
-          <>
-            <div data-compatibility-verdict={resultStatus} className={`rounded-[22px] border p-4 sm:p-5 ${meta.box}`}>
-              <div className={`flex items-center gap-4 ${meta.text}`}>
-                <div data-verdict-symbol={verdictCue?.symbol} aria-hidden="true" className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/85 text-[34px] font-black leading-none shadow-sm">
-                  {verdictCue?.symbol}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[10px] font-black tracking-[0.18em] opacity-70">{verdictCue?.eyebrow}</div>
-                  <div className={`mt-0.5 font-black ${resultStatus === 'not_recommended' ? 'text-[30px] leading-tight' : 'text-[25px] leading-tight'}`}>{meta.label}</div>
-                  <div className="mt-2 inline-flex rounded-full bg-white/75 px-2.5 py-1 text-[10px] font-black">{verdictCue?.metric}</div>
-                </div>
-              </div>
-              <details className="mt-3 border-t border-current/10 pt-3">
-                <summary className="cursor-pointer text-[11px] font-black opacity-80">{isEn ? 'Why this result' : '展开判断依据'}</summary>
-                <p className="mt-2 text-[11px] font-bold leading-5 opacity-80">{meta.description}</p>
-              </details>
-            </div>
+        ) : (() => {
+          const ruleItems = relevantPairs.flatMap(pair => [
+            ...pair.rawResult.blockingRules,
+            ...pair.rawResult.warningRules,
+            ...pair.rawResult.missingData,
+            ...pair.rawResult.passedRules,
+          ]);
+          const reasonItems = unique(relevantPairs.flatMap(pair => getPairReasons(pair)));
+          const suggestionItems = unique(relevantPairs.flatMap(pair => [
+            ...pair.actions,
+            ...pair.rawResult.suggestions,
+          ]).filter(Boolean));
+          const resultRiskLevel = resultStatus === 'not_recommended'
+            ? 'high'
+            : resultStatus === 'caution'
+              ? 'medium'
+              : resultStatus === 'insufficient_data'
+                ? 'unknown'
+                : 'low';
+          const primaryConflictAction = conflictActions[0];
+          const primaryAction = resultStatus === 'not_recommended'
+            ? (primaryConflictAction?.title || (isEn ? 'Do not stock this combination yet' : '先不要把这个组合放进同一个鱼缸'))
+            : resultStatus === 'insufficient_data'
+              ? (isEn ? 'Complete the missing tank data before stocking' : '先补齐鱼缸参数，再决定是否入缸')
+              : resultStatus === 'caution'
+                ? (suggestionItems[0] || (isEn ? 'Meet the risk conditions before stocking' : '先满足风险条件，再考虑少量入缸'))
+                : (isEn ? 'Add gradually, then keep observing' : '可以少量加入，并继续观察');
 
-            {blockingPairs.length > 0 && (
-              <section className="grid gap-2">
-                <div className="text-[12px] font-black text-red-700">{isEn ? 'Conflicting pairs' : '不适合的组合'}</div>
-                {blockingPairs.slice(0, 4).map(pair => (
-                  <article key={pair.pairId} className="rounded-[18px] border-2 border-red-200 bg-white p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="text-[16px] font-black text-red-800">{getSpeciesName(pair.speciesA, isEn)} × {getSpeciesName(pair.speciesB, isEn)}</div>
-                      <span className="rounded-full bg-red-100 px-2.5 py-1 text-[10px] font-black text-red-700">{isEn ? 'Cannot recommend together' : '当前不建议同缸'}</span>
-                    </div>
-                    <div className="mt-3 grid gap-2">
-                      {getPairReasons(pair).map(reason => (
-                        <div key={reason} className="rounded-[13px] bg-red-50 px-3 py-2 text-[13px] font-bold leading-6 text-red-900">{reason}</div>
-                      ))}
-                    </div>
-                  </article>
-                ))}
-              </section>
-            )}
-
-            {cautionPairs.length > 0 && resultStatus !== 'not_recommended' && (
-              <section className="rounded-[18px] border border-amber-200 bg-amber-50/70 p-3">
-                <div className="text-[12px] font-black text-amber-800">{isEn ? 'Conditions to watch' : '需要满足的条件'}</div>
-                <div className="mt-2 grid gap-2">
-                  {unique(cautionPairs.flatMap(pair => [...getPairReasons(pair), ...pair.actions])).slice(0, 5).map(item => (
-                    <div key={item} className="rounded-[12px] bg-white px-3 py-2 text-[11px] font-bold leading-5 text-amber-900">{item}</div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {missingPairs.length > 0 && (
-              <section className="rounded-[18px] border border-sky-200 bg-sky-50 p-3">
-                <div className="text-[12px] font-black text-sky-800">{isEn ? 'Complete these details' : '补充这些信息'}</div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {unique(missingPairs.flatMap(pair => pair.rawResult.missingData.map(item => item.evidence || item.title))).slice(0, 5).map(item => (
-                    <span key={item} className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-sky-800">{item}</span>
-                  ))}
-                </div>
-                {onRequestTankInfo && <Button type="button" onClick={requestMissingTankInfo} className="mt-3 h-10 rounded-full bg-sky-700 px-4 text-xs font-black text-white">{isEn ? 'Complete tank settings' : '去完善鱼缸参数'}</Button>}
-              </section>
-            )}
-
-            {resultStatus === 'not_recommended' && (
-              <section className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
-                <div className="text-[13px] font-black text-ink">{isEn ? 'How to adjust?' : '怎么调整？'}</div>
-                <div className="mt-3 grid gap-2 md:grid-cols-2">
-                  {conflictActions.map(action => (
-                    <div key={action.id} className="rounded-[16px] border border-white bg-white p-3 shadow-sm">
-                      <div className={`text-[12px] font-black ${action.tone === 'danger' ? 'text-red-700' : action.tone === 'warning' ? 'text-amber-700' : 'text-sky-700'}`}>{action.title}</div>
-                      <p className="mt-1 text-[10px] font-semibold leading-5 text-ink/50">{action.detail}</p>
-                      {action.removeSpeciesId && (
-                        <Button type="button" variant="outline" onClick={() => removeSpecies(action.removeSpeciesId!)} className="mt-2 h-9 rounded-full border-red-200 px-3 text-[10px] font-black text-red-700">{getConflictActionLabel(action, isEn)}</Button>
-                      )}
-                      {!action.removeSpeciesId && onViewAquarium && (
-                        <Button type="button" variant="outline" onClick={onViewAquarium} className="mt-2 h-9 rounded-full px-3 text-[10px] font-black">{isEn ? 'Review current tank' : '查看当前鱼缸'}</Button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            <div className="grid gap-2 sm:grid-cols-2">
-              <Button type="button" onClick={() => void openAiAdvice()} disabled={aiLoading || !resultStatus} className="h-11 rounded-full bg-violet-700 text-sm font-black text-white hover:bg-violet-800">
-                {aiLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                {!selectedAquarium || !readiness?.ready ? (isEn ? 'Complete data before AI' : '完善参数后使用 AI') : (isEn ? 'Ask AI to explain & adjust' : 'AI 建议')}
+          const renderConflictControl = (action: ConflictAction | undefined) => {
+            if (action?.removeSpeciesId) return (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => removeSpecies(action.removeSpeciesId!)}
+                className="h-10 rounded-full border-red-200 bg-white px-4 text-[11px] font-black text-red-700 hover:bg-red-50"
+              >
+                {getConflictActionLabel(action, isEn)}
               </Button>
-              {candidateSpecies.length > 0 && resultStatus !== 'not_recommended' && resultStatus !== 'insufficient_data' && onAddToAquarium && (
-                <Button type="button" onClick={() => void recordActualStocking()} disabled={isRecording} className={`h-11 rounded-full text-sm font-black text-white ${resultStatus === 'caution' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-700 hover:bg-emerald-800'}`}>
+            );
+            if (action && onViewAquarium) return (
+              <Button type="button" variant="outline" onClick={onViewAquarium} className="h-10 rounded-full bg-white px-4 text-[11px] font-black">
+                {isEn ? 'Review current tank' : '查看当前鱼缸'}
+              </Button>
+            );
+            return undefined;
+          };
+
+          const primaryControl = resultStatus === 'not_recommended'
+            ? renderConflictControl(primaryConflictAction)
+            : resultStatus === 'insufficient_data'
+              ? (onRequestTankInfo && readiness && !readiness.ready ? (
+                <Button type="button" onClick={requestMissingTankInfo} className="h-10 rounded-full bg-sky-700 px-4 text-[11px] font-black text-white hover:bg-sky-800">
+                  {isEn ? 'Complete tank settings' : '去完善鱼缸参数'}
+                </Button>
+              ) : undefined)
+              : (candidateSpecies.length > 0 && onAddToAquarium ? (
+                <Button
+                  type="button"
+                  onClick={() => void recordActualStocking()}
+                  disabled={isRecording}
+                  className={`h-10 rounded-full px-4 text-[11px] font-black text-white ${resultStatus === 'caution' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-700 hover:bg-emerald-800'}`}
+                >
                   {isRecording && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {resultStatus === 'caution' && !cautionConfirmed ? (isEn ? 'Review risk before recording' : '确认风险后再记录') : (isEn ? 'Already stocked · record now' : '已经实际入缸，记录下来')}
                 </Button>
-              )}
-            </div>
+              ) : undefined);
 
-            {!aiReady && selectedAquarium && readiness && !readiness.ready && (
-              <div className="rounded-[14px] bg-violet-50 px-3 py-2 text-[10px] font-bold leading-5 text-violet-800">
-                {isEn ? 'AI uses verified tank data only. Missing: ' : '还缺：'}{readiness.missing.map(item => item.label).join(isEn ? ', ' : '、')}
+          const followUpActions = resultStatus === 'not_recommended'
+            ? conflictActions.slice(1, 3).map(action => ({
+              id: action.id,
+              title: action.title,
+              detail: action.detail,
+              control: renderConflictControl(action),
+            }))
+            : resultStatus === 'insufficient_data'
+              ? unique(missingPairs.flatMap(pair => pair.rawResult.missingData.map(item => item.evidence || item.title))).slice(0, 2).map((item, index) => ({
+                id: 'missing-' + index,
+                title: isEn ? `Complete: ${item}` : `补充：${item}` ,
+              }))
+              : suggestionItems.filter(item => item !== primaryAction).slice(0, 2).map((item, index) => ({
+                id: 'compatibility-action-' + index,
+                title: item,
+              }));
+
+          const watchItems = (resultStatus === 'compatible' || resultStatus === 'caution' || compareExistingOnly)
+            ? (isEn
+              ? ['Whether repeated chasing appears', 'Whether every animal can feed normally', 'Whether fin damage or persistent hiding appears']
+              : ['是否出现持续追咬', '是否每个个体都能正常进食', '是否出现伤鳍或持续躲藏'])
+            : [];
+          const avoidItems = resultStatus === 'not_recommended'
+            ? [isEn ? 'Do not stock before the blocking conflict is resolved' : '明确冲突解决前不要继续入缸']
+            : resultStatus === 'insufficient_data'
+              ? [isEn ? 'Do not treat missing evidence as a safe result' : '信息不足时不要把结果当作安全']
+              : resultStatus === 'caution'
+                ? (isEn ? ['Do not add a large group at once', 'Do not ignore repeated chasing or feeding exclusion'] : ['不要一次性大量加入', '不要忽略持续追咬或抢不到食物'])
+                : [isEn ? 'Do not add a large group at once' : '不要一次性大量加入'];
+
+          return (
+            <DecisionResultSurface
+              testId="compatibility-decision"
+              isEn={isEn}
+              tone={compatibilityTone(resultStatus)}
+              eyebrow={isEn ? 'COMPATIBILITY VERDICT' : '混养结论'}
+              statusLabel={[meta.label, verdictCue?.metric].filter(Boolean).join(' · ')}
+              title={primaryAction}
+              summary={[contextLabel, meta.description].filter(Boolean).join(' · ')}
+              primaryControl={primaryControl}
+              actions={followUpActions}
+              watchFor={watchItems}
+              escalateIf={compatibilityEscalationSignals(resultStatus, resultRiskLevel, isEn)}
+              avoid={avoidItems}
+              evidence={[meta.description, ...reasonItems, ...ruleItems.map(rule => rule.evidence)]}
+              sources={compatibilityRuleSources(ruleItems)}
+            >
+              <details data-compatibility-pair-details className="rounded-[15px] border border-border/70 bg-white px-3 py-2.5">
+                <summary className="flex min-h-8 cursor-pointer list-none items-center justify-between gap-3 text-[11px] font-black text-ink/62">
+                  <span>{isEn ? `Pair details · ${relevantPairs.length}` : `配对详情 · ${relevantPairs.length}`}</span>
+                  <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+                </summary>
+                <div className="mt-2 grid gap-2 border-t border-border/60 pt-2">
+                  {relevantPairs.slice(0, 6).map(pair => {
+                    const pairMeta = statusMeta(pair.status, isEn);
+                    return (
+                      <article key={pair.pairId} className="rounded-[13px] bg-bg/60 px-3 py-2.5">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="text-[11px] font-black text-ink">{getSpeciesName(pair.speciesA, isEn)} × {getSpeciesName(pair.speciesB, isEn)}</div>
+                          <span className={`rounded-full px-2 py-1 text-[9px] font-black ${pairMeta.box} ${pairMeta.text}`}>{pairMeta.label}</span>
+                        </div>
+                        <div className="mt-1.5 grid gap-1">
+                          {getPairReasons(pair).slice(0, 2).map(reason => <div key={reason} className="text-[10px] font-semibold leading-4 text-ink/56">· {reason}</div>)}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </details>
+
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Button type="button" variant="outline" onClick={() => void openAiAdvice()} disabled={aiLoading || !resultStatus} className="h-10 rounded-full border-violet-200 bg-white px-4 text-[11px] font-black text-violet-700 hover:bg-violet-50">
+                  {aiLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                  {!selectedAquarium || !readiness?.ready ? (isEn ? 'Complete data before AI' : '完善参数后使用 AI') : (isEn ? 'Ask AI to explain' : '让 AI 解释')}
+                </Button>
+                {onViewAquarium && <Button type="button" variant="outline" onClick={onViewAquarium} className="h-10 rounded-full bg-white px-4 text-[11px] font-black">{isEn ? 'View aquarium' : '查看鱼缸'}</Button>}
               </div>
-            )}
-
-            {feedback && <div className="rounded-[14px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-800">{feedback}</div>}
-            {recordError && <div role="alert" className="rounded-[14px] border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-black text-red-800">{recordError}</div>}
-          </>
-        )}
+              {!aiReady && selectedAquarium && readiness && !readiness.ready && (
+                <div className="mt-2 rounded-[14px] bg-violet-50 px-3 py-2 text-[10px] font-bold leading-5 text-violet-800">
+                  {isEn ? 'AI uses verified tank data only. Missing: ' : 'AI 解释还缺：'}{readiness.missing.map(item => item.label).join(isEn ? ', ' : '、')}
+                </div>
+              )}
+              {feedback && <div className="mt-2 rounded-[14px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-800">{feedback}</div>}
+              {recordError && <div role="alert" className="mt-2 rounded-[14px] border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-black text-red-800">{recordError}</div>}
+            </DecisionResultSurface>
+          );
+        })()}
       </section>
 
       {aiOpen && (

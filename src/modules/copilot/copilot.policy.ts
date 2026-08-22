@@ -46,6 +46,13 @@ const buildLocalQuestions = (context: TankCopilotContext): CopilotQuestion[] => 
   }, []);
 };
 
+const getLocalCandidateIds = (context: TankCopilotContext) => (
+  [...context.safeCandidates, ...context.adjustableCandidates]
+    .map(item => item.speciesId)
+    .filter(Boolean)
+    .slice(0, 6)
+);
+
 const fallbackAction = (context: TankCopilotContext, candidateIds: string[]): TankCopilotAction => {
   if (context.missingInformation.length > 0) {
     return { type: 'complete_tank_info', label: ACTION_LABELS.complete_tank_info };
@@ -57,10 +64,7 @@ const fallbackAction = (context: TankCopilotContext, candidateIds: string[]): Ta
 };
 
 export const buildLocalTankCopilotFallback = (context: TankCopilotContext): CopilotResponseCore => {
-  const candidateIds = [...context.safeCandidates, ...context.adjustableCandidates]
-    .map(item => item.speciesId)
-    .filter(Boolean)
-    .slice(0, 6);
+  const candidateIds = getLocalCandidateIds(context);
   const questions = buildLocalQuestions(context);
 
   return {
@@ -89,29 +93,59 @@ const isActionExecutable = (
   return type === 'restart_goal';
 };
 
+const mergeQuestionsByInformationKey = (
+  preferred: CopilotQuestion[],
+  secondary: CopilotQuestion[],
+) => {
+  const seen = new Set<CopilotQuestion['informationKey']>();
+  return [...preferred, ...secondary].reduce<CopilotQuestion[]>((questions, question) => {
+    if (questions.length >= 3 || seen.has(question.informationKey)) return questions;
+    seen.add(question.informationKey);
+    questions.push(question);
+    return questions;
+  }, []);
+};
+
 export const sanitizeTankCopilotResponse = (
   response: CopilotResponseCore,
   context: TankCopilotContext,
 ): CopilotResponseCore => {
-  const candidatePool = new Set(
-    [...context.safeCandidates, ...context.adjustableCandidates].map(item => item.speciesId),
-  );
-  const selectedCandidateIds = [...new Set(response.selectedCandidateIds)]
+  const localCandidateIds = getLocalCandidateIds(context);
+  const candidatePool = new Set(localCandidateIds);
+  const modelCandidateIds = [...new Set(response.selectedCandidateIds)]
     .filter(id => candidatePool.has(id))
     .slice(0, 6);
+
+  // A syntactically valid model response is still unusable if it throws away all
+  // locally-approved candidates. Recover to the deterministic pool rather than
+  // sending the user back to "restart goal" for no product reason.
+  const selectedCandidateIds = context.missingInformation.length === 0
+    && modelCandidateIds.length === 0
+    && localCandidateIds.length > 0
+      ? localCandidateIds
+      : modelCandidateIds;
+
   const allowedQuestionKeys = new Set<CopilotQuestion['informationKey']>(['preference']);
   context.missingInformation.forEach((item) => {
     const key = getMissingInformationKey(item);
     if (key) allowedQuestionKeys.add(key);
   });
-  const seenQuestionKeys = new Set<CopilotQuestion['informationKey']>();
-  const missingQuestions = response.missingQuestions.filter((question) => {
-    if (!allowedQuestionKeys.has(question.informationKey) || seenQuestionKeys.has(question.informationKey)) return false;
-    seenQuestionKeys.add(question.informationKey);
+
+  const seenModelQuestionKeys = new Set<CopilotQuestion['informationKey']>();
+  const modelQuestions = response.missingQuestions.filter((question) => {
+    if (!allowedQuestionKeys.has(question.informationKey) || seenModelQuestionKeys.has(question.informationKey)) return false;
+    seenModelQuestionKeys.add(question.informationKey);
     return true;
   }).slice(0, 3);
+
+  // Deterministic missing tank facts must outrank preference chatter. If the
+  // model ignores a required field, restore the product-owned clarification.
+  const missingQuestions = context.missingInformation.length > 0
+    ? mergeQuestionsByInformationKey(buildLocalQuestions(context), modelQuestions)
+    : modelQuestions;
+
   const seenActions = new Set<TankCopilotActionType>();
-  const recommendedActions = response.recommendedActions.reduce<TankCopilotAction[]>((actions, action) => {
+  const modelActions = response.recommendedActions.reduce<TankCopilotAction[]>((actions, action) => {
     if (actions.length >= 2 || seenActions.has(action.type)) return actions;
     if (!isActionExecutable(action.type, context, selectedCandidateIds)) return actions;
     seenActions.add(action.type);
@@ -119,13 +153,27 @@ export const sanitizeTankCopilotResponse = (
     return actions;
   }, []);
 
+  let recommendedActions: TankCopilotAction[];
+  if (context.missingInformation.length > 0) {
+    recommendedActions = [{ type: 'complete_tank_info', label: ACTION_LABELS.complete_tank_info }];
+  } else if (selectedCandidateIds.length > 0) {
+    const candidateAction = modelActions.find(action => (
+      action.type === 'start_addition_simulation' || action.type === 'view_safe_candidates'
+    ));
+    recommendedActions = candidateAction
+      ? [candidateAction]
+      : [{ type: 'view_safe_candidates', label: ACTION_LABELS.view_safe_candidates }];
+  } else {
+    recommendedActions = modelActions.length > 0
+      ? modelActions
+      : [{ type: 'restart_goal', label: ACTION_LABELS.restart_goal }];
+  }
+
   return {
     goalUnderstanding: response.goalUnderstanding,
     missingQuestions,
     planSummary: response.planSummary,
-    recommendedActions: recommendedActions.length > 0
-      ? recommendedActions
-      : [fallbackAction(context, selectedCandidateIds)],
+    recommendedActions,
     selectedCandidateIds,
     blockedExplanation: response.blockedExplanation.slice(0, 5),
   };

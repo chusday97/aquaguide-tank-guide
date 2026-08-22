@@ -45,6 +45,8 @@ import { getSearchSuggestions } from '../services/search/search-suggestions.serv
 import { taskRoutes } from '../services/navigation/task-routes';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
+import { DecisionResultSurface } from '../components/result/DecisionResultSurface';
+import { careEvidenceSource, careEvidenceSources, diagnosisEscalationSignals, riskTone } from '../modules/result/resultAdapters';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
@@ -2435,7 +2437,6 @@ function StepDiagnosisPanel({
     target: { scope: 'whole_tank', speciesIds: [] },
     result: null,
   }));
-  const [isResultDetailOpen, setIsResultDetailOpen] = useState(false);
 
   useEffect(() => {
     setDiagnosisState({
@@ -2447,7 +2448,6 @@ function StepDiagnosisPanel({
       target: { scope: 'whole_tank', speciesIds: [] },
       result: null,
     });
-    setIsResultDetailOpen(false);
   }, [defaultAquariumId, topic.id]);
 
   const targetAquarium = aquariums.find(item => item.id === diagnosisState.targetAquariumId) || aquariums[0] || null;
@@ -2485,32 +2485,7 @@ function StepDiagnosisPanel({
     : diagnosisState.target.scope === 'multiple_species'
       ? (isEn ? `${scopedLivestock.length} selected species` : `所选 ${scopedLivestock.length} 种生物`)
       : (targetAquarium?.name || (isEn ? 'Current aquarium' : '当前鱼缸'));
-  const resultTone = diagnosisState.result?.riskLevel === 'high'
-    ? {
-      badge: 'bg-red-50 text-red-700',
-      panel: 'border-red-100 bg-red-50/70',
-      icon: 'bg-red-600 text-white',
-    }
-    : diagnosisState.result?.riskLevel === 'medium'
-      ? {
-        badge: 'bg-amber-50 text-amber-700',
-        panel: 'border-amber-100 bg-amber-50/70',
-        icon: 'bg-amber-500 text-white',
-      }
-      : diagnosisState.result?.riskLevel === 'unknown'
-        ? {
-          badge: 'bg-sky-50 text-sky-700',
-          panel: 'border-sky-100 bg-sky-50/70',
-          icon: 'bg-sky-600 text-white',
-        }
-        : {
-          badge: 'bg-emerald-50 text-emerald-700',
-          panel: 'border-emerald-100 bg-emerald-50/70',
-          icon: 'bg-emerald-700 text-white',
-        };
-
   const updateAnswer = (key: keyof StepDiagnosisAnswers, value: StepDiagnosisAnswerValue) => {
-    setIsResultDetailOpen(false);
     setDiagnosisState(prev => ({
       ...prev,
       answers: { ...prev.answers, [key]: value },
@@ -2526,12 +2501,10 @@ function StepDiagnosisPanel({
       answers: diagnosisState.answers,
       issueType: diagnosisState.issueType,
     });
-    setIsResultDetailOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 2, result }));
   };
 
   const resetDiagnosis = () => {
-    setIsResultDetailOpen(false);
     setDiagnosisState(prev => ({ ...prev, currentStep: 1, questionIndex: 0, answers: {}, result: null }));
   };
 
@@ -2733,135 +2706,86 @@ function StepDiagnosisPanel({
         </div>
       )}
 
-      {isResultStep && diagnosisState.result && (
-        <section data-care-assessment-result className="mt-3 overflow-hidden rounded-[22px] border border-border bg-white shadow-sm">
-          <div className="p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-[11px] font-black text-emerald-800">{isEn ? 'Check complete' : '检查完成'}</div>
-                <h3 className="mt-0.5 text-[19px] font-black leading-tight text-ink">{diagnosisState.result.riskLabel}</h3>
-              </div>
-              <span className={`shrink-0 rounded-full px-2.5 py-1.5 text-[10px] font-black ${resultTone.badge}`}>
-                {issueMeta.label}
-              </span>
-            </div>
+      {isResultStep && diagnosisState.result && (() => {
+        const result = diagnosisState.result;
+        const actionEvidence = result.todayActions.slice(0, 3).map((action, index) =>
+          getCareActionEvidenceForText(topic, 'immediate', action, index)
+        );
+        const avoidActionEvidence = result.avoidActions[0]
+          ? getCareActionEvidenceForText(topic, 'avoid', result.avoidActions[0])
+          : undefined;
+        const observeActionEvidence = result.observeItems[0]
+          ? getCareActionEvidenceForText(topic, 'recheck', result.observeItems[0])
+          : undefined;
+        const allActionEvidence = [
+          ...actionEvidence,
+          avoidActionEvidence,
+          observeActionEvidence,
+        ].filter((item): item is CareActionEvidence => Boolean(item));
+        const primaryAction = result.todayActions[0]
+          || (result.riskLevel === 'unknown'
+            ? (isEn ? 'Complete the missing checks first' : '先补齐缺失检查')
+            : (isEn ? 'Keep the tank stable and observe' : '先保持环境稳定并观察'));
 
-            <div className="mt-3 flex min-w-0 items-center gap-3 rounded-[16px] bg-bg px-3 py-2.5">
-              <div className="flex shrink-0 -space-x-2">
-                {scopedLivestock.slice(0, 3).map(item => (
-                  <span key={item.fish.id} className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-white shadow-sm">
-                    <img src={getSpeciesDisplayImage(item.fish)} alt={item.fish.name} className="h-9 w-9 object-contain" />
-                  </span>
-                ))}
-                {scopedLivestock.length === 0 && (
-                  <span className={`flex h-11 w-11 items-center justify-center rounded-full ${resultTone.icon}`}>
-                    <Waves className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                )}
-              </div>
-              <div className="min-w-0">
-                <div className="break-words text-[12px] font-black text-ink">{resultScopeLabel}</div>
-                <p className="mt-0.5 text-[11px] font-semibold leading-5 text-ink/58">{diagnosisState.result.conclusion}</p>
-              </div>
-            </div>
-
-            <section className={`mt-3 rounded-[18px] border p-3 ${resultTone.panel}`} data-care-assessment-next>
-              <div className="flex items-center gap-2">
-                <span className={`flex h-7 w-7 items-center justify-center rounded-full ${resultTone.icon}`}>
-                  {diagnosisState.result.riskLevel === 'unknown'
-                    ? <HelpCircle className="h-4 w-4" aria-hidden="true" />
-                    : diagnosisState.result.riskLevel === 'low'
-                      ? <Check className="h-4 w-4" aria-hidden="true" />
-                      : <AlertTriangle className="h-4 w-4" aria-hidden="true" />}
-                </span>
-                <h4 className="text-[13px] font-black text-ink">
-                  {diagnosisState.result.riskLevel === 'unknown'
-                    ? (isEn ? 'Confirm these details first' : '先确认这些信息')
-                    : (isEn ? 'Do these steps now' : '现在按顺序做')}
-                </h4>
-              </div>
-              <ol className="mt-3 grid gap-2">
-                {diagnosisState.result.todayActions.slice(0, 3).map((action, index) => (
-                  <li key={action} className="grid grid-cols-[24px_minmax(0,1fr)] gap-2 rounded-[13px] bg-white/85 px-2.5 py-2.5">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[10px] font-black text-emerald-800 shadow-sm">{index + 1}</span>
-                    <span className="min-w-0 text-[12px] font-black leading-5 text-ink">
-                      <span data-care-action-text>{action}</span>
-                      <ActionEvidenceInline evidence={getCareActionEvidenceForText(topic, 'immediate', action, index)} isEn={isEn} />
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-
-            {diagnosisState.result.avoidActions[0] && (
-              <section className="mt-3 rounded-[16px] bg-amber-50 px-3 py-2.5">
-                <div className="text-[10px] font-black text-amber-800">{isEn ? 'Avoid for now' : '暂时不要'}</div>
-                <p className="mt-1 text-[11px] font-bold leading-5 text-amber-950/72">{diagnosisState.result.avoidActions[0]}</p>
-                <ActionEvidenceInline evidence={getCareActionEvidenceForText(topic, 'avoid', diagnosisState.result.avoidActions[0])} isEn={isEn} />
-              </section>
-            )}
-
-            <section className="mt-3 rounded-[16px] bg-sky-50 px-3 py-2.5">
-              <div className="text-[10px] font-black text-sky-800">{isEn ? 'Check again after handling' : '处理后复查'}</div>
-              <p className="mt-1 text-[11px] font-bold leading-5 text-sky-950/68">
-                {diagnosisState.result.observeItems[0] || (isEn ? 'Keep conditions stable and check whether the same symptom improves.' : '保持环境稳定，复查同一异常是否缓解。')}
-              </p>
-              <ActionEvidenceInline
-                evidence={getCareActionEvidenceForText(
-                  topic,
-                  'recheck',
-                  diagnosisState.result.observeItems[0] || (isEn ? 'Keep conditions stable and check whether the same symptom improves.' : '保持环境稳定，复查同一异常是否缓解。'),
-                )}
-                isEn={isEn}
-              />
-            </section>
-
-            <button
-              type="button"
-              data-disclosure-purpose="secondary_evidence"
-              aria-expanded={isResultDetailOpen}
-              onClick={() => setIsResultDetailOpen(value => !value)}
-              className="mt-3 flex min-h-11 w-full items-center justify-between gap-3 rounded-[14px] border border-border px-3 text-left text-[11px] font-black text-ink/62"
+        return (
+          <section data-care-assessment-result className="mt-3">
+            <DecisionResultSurface
+              testId="care-diagnosis-decision"
+              isEn={isEn}
+              tone={riskTone(result.riskLevel)}
+              eyebrow={isEn ? 'DO THIS FIRST' : '现在先做'}
+              statusLabel={[result.riskLabel, issueMeta.label].filter(Boolean).join(' · ')}
+              title={primaryAction}
+              summary={[resultScopeLabel, result.conclusion].filter(Boolean).join(' · ')}
+              primarySource={careEvidenceSource(actionEvidence[0])}
+              actions={result.todayActions.slice(1, 3).map((action, index) => ({
+                id: 'diagnosis-action-' + (index + 2),
+                title: action,
+                source: careEvidenceSource(actionEvidence[index + 1]),
+              }))}
+              watchFor={result.observeItems}
+              escalateIf={diagnosisEscalationSignals(result.riskLevel, isEn)}
+              avoid={result.avoidActions}
+              evidence={[...result.causes, ...result.evidence]}
+              sources={careEvidenceSources(allActionEvidence)}
             >
-              <span>{isEn ? 'Why this result?' : '为什么是这个结果？'}</span>
-              <ChevronDown className={`h-4 w-4 transition-transform motion-reduce:transition-none ${isResultDetailOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
-            </button>
-            {isResultDetailOpen && (
-              <div className="mt-2 grid gap-2 rounded-[14px] bg-bg p-3">
-                {diagnosisState.result.causes.length > 0 && (
-                  <div>
-                    <div className="text-[10px] font-black text-ink/55">{isEn ? 'Possible reasons' : '可能原因'}</div>
-                    <ul className="mt-1 grid gap-1">
-                      {diagnosisState.result.causes.slice(0, 3).map(item => <li key={item} className="text-[11px] font-semibold leading-5 text-ink/68">· {item}</li>)}
-                    </ul>
-                  </div>
+              <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                {result.riskLevel === 'unknown' ? (
+                  <Button
+                    type="button"
+                    onClick={resetDiagnosis}
+                    className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800"
+                  >
+                    {isEn ? 'Complete Key Checks' : '补充关键检查'}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    onClick={onScheduleFollowUp}
+                    className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800"
+                  >
+                    {isEn ? 'Set Follow-up Time' : '设置复查时间'}
+                  </Button>
                 )}
-                <div>
-                  <div className="text-[10px] font-black text-ink/55">{isEn ? 'Based on' : '判断依据'}</div>
-                  <ul className="mt-1 grid gap-1">
-                    {diagnosisState.result.evidence.slice(0, 4).map(item => <li key={item} className="text-[11px] font-semibold leading-5 text-ink/68">· {item}</li>)}
-                  </ul>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={resetDiagnosis}
+                  className="h-11 rounded-full border-emerald-100 bg-white px-4 text-sm font-black text-emerald-800 hover:bg-emerald-50"
+                >
+                  {isEn ? 'Check again' : '重新检查'}
+                </Button>
+              </div>
+              {followUpFeedback && (
+                <div role="status" className="mt-2 rounded-[15px] bg-emerald-50 px-3 py-2.5 text-center text-[11px] font-black text-emerald-800">
+                  {followUpFeedback}
                 </div>
-              </div>
-            )}
+              )}
+            </DecisionResultSurface>
+          </section>
+        );
+      })()}
 
-            {diagnosisState.result.riskLevel === 'unknown' ? (
-              <Button type="button" onClick={resetDiagnosis} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
-                {isEn ? 'Complete Key Checks' : '补充关键检查'}
-              </Button>
-            ) : (
-              <Button type="button" onClick={onScheduleFollowUp} className="mt-3 h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800">
-                {isEn ? 'Set Follow-up Time' : '设置复查时间'}
-              </Button>
-            )}
-            {followUpFeedback && (
-              <div role="status" className="mt-2 rounded-[15px] bg-emerald-50 px-3 py-2.5 text-center text-[11px] font-black text-emerald-800">
-                {followUpFeedback}
-              </div>
-            )}
-          </div>
-        </section>
-      )}
     </section>
   );
 }
@@ -3283,10 +3207,69 @@ export function CareArticleDetail({
                   <Heart className={`h-4 w-4 ${favorite ? 'fill-current' : ''}`} />
                 </button>
               </div>
-              <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
-                <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
-                <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
-              </section>
+              {meta.guideType === 'knowledge' ? (
+                <section className="mt-3" data-care-knowledge-result>
+                  <DecisionResultSurface
+                    testId="care-knowledge-decision"
+                    isEn={isEn}
+                    tone={meta.urgencyTag === '需要立即处理' ? 'danger' : (meta.urgencyTag === '谨慎操作' || meta.urgencyTag === '建议尽快处理') ? 'warning' : 'info'}
+                    eyebrow={isEn ? 'KEY TAKEAWAY' : '先看结论'}
+                    statusLabel={getUrgencyTagLabel(meta.urgencyTag, isEn)}
+                    title={visibleActions[0]?.title || (isEn ? 'Understand the key constraint first' : '先确认关键限制')}
+                    summary={visibleActions[0]?.description || detailLead.text}
+                    primarySource={careEvidenceSource(getCareActionEvidenceForText(topic, 'immediate', visibleActions[0]?.description || visibleActions[0]?.title || careGuide.summary, 0))}
+                    primaryControl={(
+                      <Button
+                        type="button"
+                        data-care-result-primary
+                        onClick={(event) => handlePrimaryCta(event.currentTarget)}
+                        disabled={isPrimaryDisabled}
+                        className="h-11 w-full rounded-full bg-emerald-700 text-sm font-black text-white hover:bg-emerald-800"
+                      >
+                        {primaryCtaLabel}
+                        <ChevronRight className="ml-1 h-4 w-4" />
+                      </Button>
+                    )}
+                    actions={visibleActions.slice(1, 3).map((item, index) => ({
+                      id: 'knowledge-follow-up-' + index,
+                      title: item.title,
+                      detail: item.description,
+                      source: careEvidenceSource(getCareActionEvidenceForText(topic, 'immediate', item.description || item.title, index + 1)),
+                    }))}
+                    watchFor={careGuide.warningSigns.slice(0, 2).map(item => item.sign)}
+                    escalateIf={careGuide.warningSigns.slice(0, 2).map(item => item.action)}
+                    avoid={careGuide.avoidActions.slice(0, 2).map(item => item.title)}
+                    sources={careEvidenceSources(careActionEvidence)}
+                  />
+                </section>
+              ) : meta.guideType === 'procedure' && procedureSteps.length > 0 ? (
+      <section className="mt-3" data-care-procedure-result>
+        <DecisionResultSurface
+          testId="care-procedure-decision"
+          isEn={isEn}
+          tone={meta.urgencyTag === '需要立即处理' ? 'danger' : (meta.urgencyTag === '谨慎操作' || meta.urgencyTag === '建议尽快处理') ? 'warning' : 'info'}
+          eyebrow={isEn ? 'DO THIS FIRST' : '现在先做'}
+          statusLabel={getUrgencyTagLabel(meta.urgencyTag, isEn)}
+          title={procedureSteps[0].title}
+          summary={procedureSteps[0].description}
+          primarySource={careEvidenceSource(immediateEvidence[0])}
+          actions={procedureSteps.slice(1, 3).map((item, index) => ({
+            id: 'procedure-next-' + index,
+            title: item.title,
+            detail: item.description,
+            source: careEvidenceSource(immediateEvidence[index + 1]),
+          }))}
+          watchFor={[getProcedureObservation(topic)]}
+          avoid={procedureReminders.slice(0, 2).map(item => item.title)}
+          sources={careEvidenceSources(careActionEvidence)}
+        />
+      </section>
+    ) : (
+      <section className="mt-3 rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3.5">
+        <div className="text-[12px] font-black text-emerald-800">{detailLead.label}</div>
+        <p className="mt-1 text-[14px] font-black leading-relaxed text-ink">{detailLead.text}</p>
+      </section>
+    )}
               {meta.guideType === 'diagnosis' && !isDiagnosisStarted && (
                 <Button
                   type="button"
@@ -3323,33 +3306,16 @@ export function CareArticleDetail({
                   )}
                 </section>
               )}
-              {meta.guideType === 'knowledge' && visibleActions.length > 0 && (
+              {meta.guideType === 'knowledge' && visibleActions.length > 3 && (
                 <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm" data-care-first-screen-key-points>
                   <div className="text-[12px] font-black text-ink">{isEn ? 'Key points' : '关键要点'}</div>
                   <div className="mt-2 grid gap-2">
-                    {visibleActions.slice(0, 2).map((item, index) => (
+                    {visibleActions.slice(3, 5).map((item, index) => (
                       <div key={`key-point-${item.title}-${item.description}`} className="grid grid-cols-[24px_minmax(0,1fr)] gap-2 rounded-[13px] bg-bg/70 px-2.5 py-2.5">
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 text-[10px] font-black text-emerald-800">{index + 1}</span>
                         <span className="min-w-0">
                           <span className="block text-[12px] font-black leading-5 text-ink">{item.title}</span>
                           {item.description && <span className="mt-0.5 block text-[10px] font-medium leading-4 text-ink/55">{item.description}</span>}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-              {meta.guideType === 'procedure' && procedureSteps.length > 0 && (
-                <section className="mt-3 rounded-[18px] border border-border bg-white p-3 shadow-sm">
-                  <div className="text-[12px] font-black text-ink">{isEn ? 'Follow Steps Sequentially' : '现在按顺序做'}</div>
-                  <div className="mt-2 grid gap-2">
-                    {procedureSteps.slice(0, 3).map((item, index) => (
-                      <div key={`${item.title}-${item.description}`} className="grid grid-cols-[26px_1fr] gap-2 rounded-[14px] bg-bg/70 p-2.5">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-black text-white">{index + 1}</span>
-                        <span className="min-w-0">
-                          <span className="block text-[12px] font-black text-ink break-words leading-tight">{item.title}</span>
-                          <span className="mt-0.5 line-clamp-2 block text-[10px] font-medium leading-relaxed text-ink/55">{item.description}</span>
-                          <ActionEvidenceInline evidence={immediateEvidence[index]} isEn={isEn} />
                         </span>
                       </div>
                     ))}
@@ -3449,7 +3415,18 @@ export function CareArticleDetail({
 
           <section className="mt-3 rounded-[18px] border border-border bg-white p-3">
             {meta.guideType === 'knowledge' ? (
-              <div className="text-[13px] font-black text-ink">{isEn ? 'Detailed Description' : '详细说明'}</div>
+              <button
+                type="button"
+                data-disclosure-purpose="secondary_explanation"
+                aria-expanded={isDetailExpanded}
+                onClick={() => setIsDetailExpanded(prev => !prev)}
+                className="flex min-h-11 w-full items-center justify-between gap-3 rounded-[12px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+              >
+                <span className="text-[13px] font-black text-ink">{isEn ? 'Detailed explanation' : '详细说明'}</span>
+                <span className="rounded-full bg-bg px-2.5 py-1 text-[10px] font-black text-ink/50">
+                  {isDetailExpanded ? (isEn ? 'Collapse' : '收起') : (isEn ? 'Expand' : '展开')}
+                </span>
+              </button>
             ) : (
               <button
                 type="button"
@@ -3464,7 +3441,7 @@ export function CareArticleDetail({
                 </span>
               </button>
             )}
-            {(meta.guideType === 'knowledge' || isDetailExpanded) && (
+            {isDetailExpanded && (
               <div className="mt-3 grid gap-2">
                 {procedureDetails.map(item => (
                   <div key={`${item.title}-${item.description}`} className="rounded-[14px] bg-bg px-3 py-2.5">

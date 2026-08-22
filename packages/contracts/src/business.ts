@@ -21,7 +21,7 @@ export const aquariumCreateSchema = z.object({
 
 export const aquariumUpdateSchema = aquariumCreateSchema.partial().extend({ version: versionSchema });
 
-export const lifeStageSchema = z.enum(['unknown', 'juvenile', 'adult']);
+export const lifeStageSchema = z.enum(['unknown', 'fry', 'juvenile', 'subadult', 'adult']);
 export const reproductiveStateSchema = z.enum([
   'unknown',
   'not_applicable',

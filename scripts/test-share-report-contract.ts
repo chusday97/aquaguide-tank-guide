@@ -40,4 +40,42 @@ assert.doesNotMatch(insertLockMigration, /create policy .*insert/i);
 const shareRoute = readFileSync(resolve('apps/api/src/routes/share-reports.ts'), 'utf8');
 assert.match(shareRoute, /const adminClient = getAdminSupabase\(\);[\s\S]*adminClient[\s\S]*\.from\('aquarium_share_reports'\)[\s\S]*\.upsert/);
 
+const apiConfigSource = readFileSync(resolve('apps/api/src/config.ts'), 'utf8');
+assert.match(
+  apiConfigSource,
+  /shareTokenSecret:\s*process\.env\.SHARE_TOKEN_SECRET\s*\|\|\s*''/,
+  'share-report signing must require an explicit SHARE_TOKEN_SECRET',
+);
+assert.doesNotMatch(
+  apiConfigSource,
+  /shareTokenSecret:[^\n]*SUPABASE_SERVICE_ROLE_KEY/,
+  'Supabase service-role credentials must never be reused as the share-token signing secret',
+);
+assert.match(
+  apiConfigSource,
+  /isShareReportsConfigured[\s\S]*apiConfig\.webBaseUrl/,
+  'share-report production readiness must require WEB_BASE_URL so generated public links cannot fall back to request Origin or localhost',
+);
+
+const releaseAcceptance = readFileSync(resolve('.github/workflows/rc1-release-acceptance.yml'), 'utf8');
+assert.match(
+  releaseAcceptance,
+  /npm run test:share-report-contract/,
+  'RC1 release acceptance must enforce the share-report security contract before production',
+);
+
+const healthRoute = readFileSync(resolve('apps/api/src/routes/index.ts'), 'utf8');
+assert.match(
+  healthRoute,
+  /shareReportsConfigured:\s*isShareReportsConfigured\(\)/,
+  'business-health must expose a boolean share-report readiness signal without exposing secret values',
+);
+
+const postDeploySmoke = readFileSync(resolve('scripts/verify-rc1-deployment.mjs'), 'utf8');
+assert.match(
+  postDeploySmoke,
+  /"shareReportsConfigured":true/,
+  'post-deploy smoke must fail if the deployed share-report signing/admin dependencies are not configured',
+);
+
 console.log('share report contract: ok');

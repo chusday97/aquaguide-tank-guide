@@ -39,6 +39,9 @@ jobs:
       - name: Production cloud runtime smoke
         run: node --import tsx scripts/test-production-cloud-runtime-smoke.ts
 
+      - name: Share-report security contract
+        run: npm run test:share-report-contract
+
       - name: Admin Quality source contract
         run: node scripts/verify-admin-quality-inbox-contract.mjs
 

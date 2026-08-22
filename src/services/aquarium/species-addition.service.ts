@@ -1,4 +1,4 @@
-import type { Aquarium, Fish } from '../../types';
+import type { Aquarium, Fish, LifeStage } from '../../types';
 import { appendSpeciesBatch, createSpeciesBatch } from './species-batches.service';
 import {
   evaluateTankCompatibility,
@@ -14,6 +14,7 @@ export type SpeciesAdditionItem = {
   fishId: string;
   quantity: number;
   entryDate?: string;
+  lifeStage?: LifeStage;
 };
 
 export type SpeciesAdditionEvaluation = {
@@ -73,11 +74,14 @@ export const normalizeSpeciesAdditionItems = (items: SpeciesAdditionItem[], spec
   items.forEach(item => {
     if (!knownIds.has(item.fishId)) return;
     const quantity = Math.max(1, Math.round(Number(item.quantity) || 1));
-    const existing = grouped.get(item.fishId);
-    grouped.set(item.fishId, {
+    const lifeStage = item.lifeStage ?? 'unknown';
+    const groupingKey = `${item.fishId}::${lifeStage}`;
+    const existing = grouped.get(groupingKey);
+    grouped.set(groupingKey, {
       fishId: item.fishId,
       quantity: (existing?.quantity || 0) + quantity,
       entryDate: item.entryDate || existing?.entryDate,
+      lifeStage,
     });
   });
 
@@ -117,7 +121,7 @@ export const assessSpeciesAddition = ({
   const catalogById = new Map(speciesCatalog.map(fish => [fish.id, fish]));
   const existingFromTank = aquarium.fishes.flatMap(record => {
     const species = catalogById.get(record.fishId);
-    return species ? [{ species, record: { quantity: Math.max(1, record.quantity || 1) } }] : [];
+    return species ? [{ species, record: { quantity: Math.max(1, record.quantity || 1), batches: record.batches } }] : [];
   });
 
   const evaluations = normalizedItems.flatMap(item => {
@@ -136,6 +140,7 @@ export const assessSpeciesAddition = ({
         existingSpecies: [...existingFromTank, ...otherAdditions],
         candidateSpecies: fish,
         candidateQuantity: item.quantity,
+        candidateLifeStage: item.lifeStage,
       }),
     }];
   });
@@ -199,6 +204,7 @@ export const executeSpeciesAddition = ({
         nextFishes[existingIndex] = appendSpeciesBatch(nextFishes[existingIndex], {
           quantity: addition.quantity,
           entryDate,
+          lifeStage: addition.lifeStage,
         });
         return;
       }
@@ -208,7 +214,7 @@ export const executeSpeciesAddition = ({
         fishId: addition.fishId,
         quantity: addition.quantity,
         entryDate,
-        batches: [createSpeciesBatch({ quantity: addition.quantity, entryDate })],
+        batches: [createSpeciesBatch({ quantity: addition.quantity, entryDate, lifeStage: addition.lifeStage })],
       });
     });
     return { ...item, fishes: nextFishes };

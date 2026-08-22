@@ -13,6 +13,8 @@ import { useWorkspaceNavigation } from '../layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../../types/navigation';
 import { QuantityStepper } from '../forms/QuantityStepper';
 import { getLifeType } from '../../modules/species/species.service';
+import { formatSpeciesQuantity, getSpeciesQuantityUnit } from '../../lib/speciesQuantityUnit';
+import { PlantRecordEditor } from './PlantRecordEditor';
 
 type RemovalDraft = {
   record: AquariumFish;
@@ -36,6 +38,8 @@ type Props = {
   species: Fish[];
   onOpenChange: (open: boolean) => void;
   onOpenDetail: (fish: Fish, record: AquariumFish) => void;
+  editRecordRequestId?: string | null;
+  onEditRecordRequestHandled?: () => void;
   onSave: (recordId: string, nextRecord: AquariumFish | null) => Promise<void>;
   onRemove: (input: {
     aquariumFishId: string;
@@ -58,6 +62,8 @@ export function LivestockRosterDialog({
   species,
   onOpenChange,
   onOpenDetail,
+  editRecordRequestId = null,
+  onEditRecordRequestHandled,
   onSave,
   onRemove,
   onAdd,
@@ -98,6 +104,18 @@ export function LivestockRosterDialog({
   const displayedRecords = editingRecordId
     ? visibleRecords.filter(item => item.record.id === editingRecordId)
     : visibleRecords;
+  const editingItem = editingRecordId ? visibleRecords.find(item => item.record.id === editingRecordId) : undefined;
+  const editingPlant = editingItem ? getLifeType(editingItem.fish) === 'plant' : false;
+  const quantitySummary = useMemo(() => {
+    const counts = new Map<string, number>();
+    visibleRecords.forEach(({ record, fish }) => {
+      const unit = getSpeciesQuantityUnit(fish, isEn, record.quantity);
+      counts.set(unit, (counts.get(unit) || 0) + record.quantity);
+    });
+    return Array.from(counts.entries())
+      .map(([unit, count]) => isEn ? String(count) + ' ' + unit : String(count) + unit)
+      .join(' · ');
+  }, [isEn, visibleRecords]);
 
   useEffect(() => {
     if (!removal) return;
@@ -106,6 +124,15 @@ export function LivestockRosterDialog({
   }, [records, removal]);
 
   useEffect(() => setStartedAtDraft(startedAt || ''), [startedAt]);
+  useEffect(() => {
+    if (!open || !editRecordRequestId) return;
+    if (!visibleRecords.some(item => item.record.id === editRecordRequestId)) return;
+    pendingDetailReturnRef.current = null;
+    setDetailReturnContext(null);
+    setEditingRecordId(editRecordRequestId);
+    setIsEditingDirty(false);
+    onEditRecordRequestHandled?.();
+  }, [editRecordRequestId, onEditRecordRequestHandled, open, visibleRecords]);
   useEffect(() => {
     if (!open) {
       setEditingRecordId(null);
@@ -236,10 +263,10 @@ export function LivestockRosterDialog({
       <Dialog open={open} onOpenChange={requestRosterOpenChange}>
         <AdaptiveDetailContent showCloseButton={false} className="livestock-roster-surface">
           <SurfaceHeader
-            title={editingRecordId ? (isEn ? 'Manage livestock state' : '调整缸内物种体态') : (isEn ? 'Tank livestock' : '缸内物种')}
+            title={editingRecordId ? (editingPlant ? (isEn ? 'Edit plant record' : '修改水草记录') : (isEn ? 'Manage livestock state' : '调整缸内物种体态')) : (isEn ? 'Tank livestock' : '缸内物种')}
             description={editingRecordId
-              ? (isEn ? 'Update one batch at a time, then review and save.' : '按批次调整，确认修改摘要后再保存。')
-              : `${aquariumName} · ${visibleRecords.length} ${isEn ? 'species' : '种'} · ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} ${isEn ? 'animals' : '只/条'}`}
+              ? (editingPlant ? (isEn ? 'Update plant quantity and added date.' : '修改植株数量和加入日期。') : (isEn ? 'Update one batch at a time, then review and save.' : '按批次调整，确认修改摘要后再保存。'))
+              : [aquariumName, String(visibleRecords.length) + (isEn ? ' species' : '种'), quantitySummary].filter(Boolean).join(' · ')}
             onClose={() => requestRosterOpenChange(false)}
             actions={(
               <>
@@ -299,7 +326,17 @@ export function LivestockRosterDialog({
                     >
                       <X className="h-5 w-5" />
                     </button>}
-                    <LivestockBatchCard
+                    {editingRecordId === record.id && getLifeType(fish) === 'plant' ? (
+                      <PlantRecordEditor
+                        fish={fish}
+                        record={record}
+                        isEn={isEn}
+                        onCancel={() => { setEditingRecordId(null); setIsEditingDirty(false); }}
+                        onDirtyChange={setIsEditingDirty}
+                        onSave={next => onSave(record.id, next)}
+                      />
+                    ) : (
+<LivestockBatchCard
                       fish={fish}
                       record={record}
                       reproductiveApplicable={['fish', 'invertebrate', 'reptile'].includes(getLifeType(fish))}
@@ -312,6 +349,7 @@ export function LivestockRosterDialog({
                       onOpenDetail={() => openDetailFromRoster(fish, record)}
                       onSave={next => onSave(record.id, next)}
                     />
+                    )}
                   </div>
                 ))}
               </div>
@@ -363,7 +401,7 @@ export function LivestockRosterDialog({
           </DialogHeader>
           {removal && (
             <div className="grid gap-3">
-              {batches.length > 1 && <fieldset className="grid gap-2"><legend className="text-xs font-black text-ink/65">从哪一组移出</legend><div className="grid gap-2 sm:grid-cols-2">{batches.map((batch, index) => <button key={batch.id} type="button" aria-pressed={removal.batchId === batch.id} disabled={removal.submitted} onClick={() => setRemoval(current => current ? { ...current, batchId: batch.id, quantity: 1 } : current)} className={`min-h-11 rounded-2xl border px-3 text-left text-xs font-black ${removal.batchId === batch.id ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-white text-ink/60'}`}>第 {index + 1} 组 · {batch.quantity} 只/条</button>)}</div></fieldset>}
+              {batches.length > 1 && <fieldset className="grid gap-2"><legend className="text-xs font-black text-ink/65">从哪一组移出</legend><div className="grid gap-2 sm:grid-cols-2">{batches.map((batch, index) => <button key={batch.id} type="button" aria-pressed={removal.batchId === batch.id} disabled={removal.submitted} onClick={() => setRemoval(current => current ? { ...current, batchId: batch.id, quantity: 1 } : current)} className={`min-h-11 rounded-2xl border px-3 text-left text-xs font-black ${removal.batchId === batch.id ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-white text-ink/60'}`}>第 {index + 1} 组 · {removal ? formatSpeciesQuantity(removal.fish, batch.quantity, false) : batch.quantity}</button>)}</div></fieldset>}
               <div className="grid gap-1.5 text-xs font-black text-ink/65"><span>移出数量</span><QuantityStepper label="移出数量" min={1} max={selectedBatch?.quantity ?? 1} disabled={removal.submitted} value={removal.quantity} onChange={quantity => setRemoval(current => current ? { ...current, quantity } : current)} /></div>
               <div className="rounded-2xl bg-amber-50 px-3 py-3 text-xs font-semibold leading-5 text-amber-900">
                 <strong>移出前准备：</strong>使用已循环的接收缸或确认可靠接收人；保持水温接近并缓慢过水。移出不是死亡记录，不会进入生命纪念。
@@ -377,7 +415,7 @@ export function LivestockRosterDialog({
           <DialogFooter>
             <button type="button" disabled={isRemoving} onClick={() => setRemoval(null)} className="min-h-11 rounded-2xl border border-border px-4 text-sm font-black disabled:opacity-50">暂不移出</button>
             <button type="button" disabled={isRemoving || !Number.isInteger(removal?.quantity)} onClick={() => void confirmRemoval()} className="min-h-11 rounded-2xl bg-rose-600 px-4 text-sm font-black text-white disabled:opacity-60">
-              {isRemoving ? '正在更新…' : `确认已移出 ${removal?.quantity ?? 0} 只/条`}
+              {isRemoving ? '正在更新…' : removal ? '确认已移出 ' + formatSpeciesQuantity(removal.fish, removal.quantity, false) : '确认移出'}
             </button>
           </DialogFooter>
         </DialogContent>

@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
 const cases = [
   { name: 'phone-390', width: 390, height: 844, expected: 'stacked-task-first' },
-  { name: 'compact-desktop-768', width: 768, height: 900, expected: 'stacked-task-first' },
+  { name: 'compact-desktop-768', width: 768, height: 900, expected: 'stacked-context-first' },
   { name: 'desktop-1024', width: 1024, height: 900, expected: 'stacked-task-first-or-balanced', maxSidebarWidth: 230, minWorkspaceWidth: 790 },
   { name: 'wide-1440', width: 1440, height: 1000, expected: 'balanced-hero', minSidebarWidth: 260 },
 ];
@@ -106,6 +106,13 @@ try {
       assert.ok(today.top < manage.top, `${testCase.name}: Today must precede Manage`);
       assert.ok(manage.top < contextBox.top, `${testCase.name}: recurrent Manage actions must appear before contextual 3D tank`);
       assert.ok(contextBox.height <= 180, `${testCase.name}: contextual 3D tank is too tall for a stacked task-first workspace (${contextBox.height}px)`);
+    } else if (testCase.expected === 'stacked-context-first') {
+      // PUI-BC-058 established a deliberate desktop-only contract: once the desktop shell
+      // is active, tank identity/context must precede management even when the content
+      // container remains narrow. Phone remains task-first.
+      assert.ok(today.top < contextBox.top, `${testCase.name}: Today must precede tank context`);
+      assert.ok(contextBox.top < manage.top, `${testCase.name}: narrow desktop tank context must appear before Manage`);
+      assert.ok(contextBox.height <= 220, `${testCase.name}: narrow-desktop contextual 3D tank is too tall (${contextBox.height}px)`);
     } else if (testCase.expected === 'stacked-task-first-or-balanced') {
       const taskFirst = today.top < manage.top && manage.top < contextBox.top;
       assert.ok(taskFirst || contextBesideToday, `${testCase.name}: 3D tank must be after Manage or beside Today, never a dominant full-width block before Manage`);
