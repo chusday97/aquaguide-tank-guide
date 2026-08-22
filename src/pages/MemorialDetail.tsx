@@ -335,7 +335,7 @@ export default function MemorialDetail() {
       </article>
     </main>
     <Dialog open={Boolean(discardRequest)} onOpenChange={open => { if (!open) continueEditing(); }}>
-      <DialogContent showCloseButton={false} className="max-w-md rounded-[26px]">
+      <DialogContent surface="blocking" showCloseButton={false} className="max-w-md rounded-[26px]">
         <DialogHeader>
           <DialogTitle>{isEn ? 'Discard unsaved reflection?' : '放弃未保存的复盘吗？'}</DialogTitle>
           <DialogDescription>{isEn ? 'Your latest edits have not been saved.' : '刚才填写的内容还没有保存。'}</DialogDescription>

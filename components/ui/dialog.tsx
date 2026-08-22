@@ -30,20 +30,11 @@ function acquireModalBodyLock() {
   }
 }
 
-function inferSurface(surface: DialogSurfaceKind, showCloseButton: boolean, className?: string): ResolvedDialogSurface {
-  if (surface !== "auto") return surface
-  if (className?.includes("max-w-[1180px]") || className?.includes("max-w-[1480px]")) return "fullscreen"
-
-
-  // Known legacy Encyclopedia species-group detail. Keep the signature narrow so
-  // unrelated task dialogs do not silently change semantics while the large page
-  // remains unsafe to rewrite through whole-file GitHub updates.
-  if (className?.includes("max-w-[920px]") && className?.includes("rounded-[24px]")) return "detail"
-  // Some long task flows intentionally hide the corner close button and use an
-  // explicit footer action instead. Treat flexible full-height content as a task,
-  // not as a destructive confirmation.
-  if (showCloseButton === false && !className?.includes("flex h-[") && !className?.includes("flex max-h-[")) return "blocking"
-  return "task"
+function inferSurface(surface: DialogSurfaceKind): ResolvedDialogSurface {
+  // Business callsites must declare their semantics explicitly. `auto` remains
+  // only as a conservative compatibility fallback for shared infrastructure;
+  // geometry/classes/close-button visibility must never decide surface meaning.
+  return surface === "auto" ? "task" : surface
 }
 
 function getMarkedSurface(children: React.ReactNode): ResolvedDialogSurface | null {
@@ -55,7 +46,7 @@ function getMarkedSurface(children: React.ReactNode): ResolvedDialogSurface | nu
     // Direct DialogContent users are legacy surfaces. Infer their semantics at
     // the root as well as at the popup so modal/overlay behavior stays aligned.
     if (child.type === DialogContent) {
-      result = inferSurface(childProps.surface ?? "auto", childProps.showCloseButton ?? true, childProps.className)
+      result = inferSurface(childProps.surface ?? "auto")
       return
     }
 
@@ -142,8 +133,7 @@ function DialogContent({
 }) {
   const { t } = useTranslation()
   const isPhoneViewport = usePhoneViewport()
-  const staticClassName = typeof className === "string" ? className : undefined
-  const resolvedSurface = inferSurface(surface, showCloseButton, staticClassName)
+  const resolvedSurface = inferSurface(surface)
   const isRailSurface = resolvedSurface === "detail" || resolvedSurface === "task"
   const resolvedOverlay = withOverlay ?? (!isRailSurface || isPhoneViewport)
 

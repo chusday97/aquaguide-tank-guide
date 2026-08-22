@@ -477,7 +477,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
       </Dialog>
 
       <Dialog open={Boolean(pendingFishRemoval)} onOpenChange={(open) => !open && setPendingFishRemoval(null)}>
-        <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
           <DialogHeader>
             <DialogTitle>{Boolean(i18n.language?.startsWith('en')) ? 'Remove this saved species?' : '移除这条种草？'}</DialogTitle>
             <DialogDescription>
@@ -494,7 +494,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
       </Dialog>
 
       <Dialog open={Boolean(pendingCareRemoval)} onOpenChange={(open) => !open && setPendingCareRemoval(null)}>
-        <DialogContent showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
+        <DialogContent surface="blocking" showCloseButton={false} className="w-[92vw] max-w-[420px] rounded-[22px]">
           <DialogHeader>
             <DialogTitle>{Boolean(i18n.language?.startsWith('en')) ? 'Remove this saved guide?' : '移除这篇收藏？'}</DialogTitle>
             <DialogDescription>

@@ -494,7 +494,7 @@ export function LivestockBatchCard({
       </article>
 
       <Dialog open={Boolean(pendingDelete)} onOpenChange={next => { if (!next && !isDeleting) setPendingDelete(null); }}>
-        <DialogContent showCloseButton={false} className="max-w-md rounded-[26px]">
+        <DialogContent surface="blocking" showCloseButton={false} className="max-w-md rounded-[26px]">
           <DialogHeader><DialogTitle>{t('livestock.deleteTitle')}</DialogTitle><DialogDescription>{batches.length === 1 ? t('livestock.deleteLastDescription', { name: fish.name }) : t('livestock.deleteDescription', { count: pendingDelete?.quantity ?? 0 })}</DialogDescription></DialogHeader>
           {error && <p role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700">{error}</p>}
           <DialogFooter><button type="button" onClick={() => setPendingDelete(null)} disabled={isDeleting} className="min-h-11 rounded-2xl border border-border px-4 text-sm font-black disabled:opacity-50">{t('livestock.keep')}</button><button type="button" onClick={() => void confirmDelete()} disabled={isDeleting} className="min-h-11 rounded-2xl bg-rose-600 px-4 text-sm font-black text-white disabled:opacity-60">{isDeleting ? t('livestock.removing') : t('livestock.deleteGroup')}</button></DialogFooter>
@@ -502,7 +502,7 @@ export function LivestockBatchCard({
       </Dialog>
 
       <Dialog open={isDiscardConfirmOpen} onOpenChange={next => { setIsDiscardConfirmOpen(next); if (!next) setPendingNavigationPath(null); }}>
-        <DialogContent showCloseButton={false} className="max-w-md rounded-[26px]">
+        <DialogContent surface="blocking" showCloseButton={false} className="max-w-md rounded-[26px]">
           <DialogHeader><DialogTitle>{t('livestock.discardTitle')}</DialogTitle><DialogDescription>{t('livestock.discardDescription')}</DialogDescription></DialogHeader>
           <DialogFooter><button type="button" onClick={continueEditing} className="min-h-11 rounded-2xl border border-border px-4 text-sm font-black">{t('livestock.continueEditing')}</button><button type="button" onClick={discardAndContinue} className="min-h-11 rounded-2xl bg-rose-600 px-4 text-sm font-black text-white">{t('livestock.discard')}</button></DialogFooter>
         </DialogContent>

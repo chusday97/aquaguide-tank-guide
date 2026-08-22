@@ -323,7 +323,7 @@ export default function Home() {
 
     {/* Fish Detail Dialog */}
     <Dialog open={!!selectedFish} onOpenChange={(open) => !open && setSelectedFish(null)}>
-      <DialogContent className="w-[90vw] max-w-[600px] p-0 overflow-hidden border-border rounded-sm">
+      <DialogContent surface="detail" data-surface="detail-rail" className="w-[90vw] max-w-[600px] p-0 overflow-hidden border-border rounded-sm">
         {selectedFish && (
           <ScrollArea className="max-h-[85vh]">
             <div className="h-[180px] md:h-[240px] bg-bg relative border-b border-border">

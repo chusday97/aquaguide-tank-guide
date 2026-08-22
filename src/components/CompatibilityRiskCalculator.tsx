@@ -1330,7 +1330,7 @@ export function CompatibilityRiskCalculator({
       }}
     />
     <Dialog open={isClearConfirmOpen} onOpenChange={setIsClearConfirmOpen}>
-      <DialogContent showCloseButton={false} className="w-[min(420px,calc(100vw-32px))] overflow-hidden rounded-[24px] border-border bg-white p-0">
+      <DialogContent surface="blocking" showCloseButton={false} className="w-[min(420px,calc(100vw-32px))] overflow-hidden rounded-[24px] border-border bg-white p-0">
         <DialogHeader className="border-b border-border/70 px-6 py-5 text-left">
           <DialogTitle className="text-[18px] font-black text-ink">{isEn ? 'Clear current species selection?' : '清空当前混养组合？'}</DialogTitle>
           <DialogDescription className="mt-1 text-[12px] font-bold leading-relaxed text-ink/55">

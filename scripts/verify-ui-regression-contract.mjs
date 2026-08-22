@@ -54,6 +54,25 @@ if (!dialog.includes("@/lib/layout-mode")) fail('Dialog must consume the shared 
 if (/userAgentData|iPhone|iPad|Android\.\+Mobile|Mobile\.\+Safari/.test(layoutProvider)) fail('Product layout must not regress to UA/device inference.');
 if (dialog.includes('(max-width: 767px)')) fail('Dialog must not duplicate the phone breakpoint literal.');
 if (dialog.includes("Aquarium's legacy smart-recommendation workflow")) fail('Aquarium visual-signature surface inference must not return; its dialogs are explicit.');
+if (/className\?\.includes\(|showCloseButton === false/.test(dialog)) fail('Dialog surface semantics must not be inferred from visual classes or close-button visibility.');
+
+const collectTsx = async (relativeDir) => {
+  const entries = await readdir(new URL(`${relativeDir}/`, root), { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const next = `${relativeDir}/${entry.name}`;
+    if (entry.isDirectory()) files.push(...await collectTsx(next));
+    else if (entry.isFile() && entry.name.endsWith('.tsx')) files.push(next);
+  }
+  return files;
+};
+for (const file of [...await collectTsx('src'), ...await collectTsx('components')]) {
+  if (file === 'components/ui/dialog.tsx') continue;
+  const source = await read(file);
+  for (const match of source.matchAll(/<DialogContent\b[^>]*>/gs)) {
+    if (!/\bsurface=/.test(match[0])) fail(`${file} has DialogContent without explicit surface semantics.`);
+  }
+}
 
 const aquariumDialogTags = [...aquarium.matchAll(/<DialogContent\b([^>]*)>/g)];
 for (const match of aquariumDialogTags) {

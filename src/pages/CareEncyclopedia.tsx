@@ -2315,7 +2315,7 @@ export default function CareEncyclopedia() {
           setCopyMessage('');
         }
       }}>
-        <DialogContent className="flex max-h-[82dvh] w-[min(480px,calc(100vw-32px))] max-w-[480px] flex-col overflow-hidden rounded-[28px] border-border bg-white p-0">
+        <DialogContent surface="task" className="flex max-h-[82dvh] w-[min(480px,calc(100vw-32px))] max-w-[480px] flex-col overflow-hidden rounded-[28px] border-border bg-white p-0">
           {shareTopic && (
             <>
               <div className="shrink-0 border-b border-white bg-white px-4 py-3">

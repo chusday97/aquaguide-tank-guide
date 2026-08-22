@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.AQUAGUIDE_URL || 'http://127.0.0.1:3000';
+const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
 const phoneUserAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1';
 const browser = await chromium.launch({ headless: true });
 
@@ -25,6 +25,7 @@ const seededState = {
   feedingRecords: [],
   observationRecords: [],
   riskReminderState: {},
+  onboarding: { version: 1, status: 'completed', viewedSpecies: true, aquariumConfigured: true, taskCardDismissed: true },
   updatedAt: new Date().toISOString(),
 };
 
@@ -66,7 +67,7 @@ try {
   const phonePage = await phoneContext.newPage();
   phonePage.setDefaultTimeout(20000);
   await phonePage.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
-  await phonePage.getByRole('button', { name: '水面 泡沫、油膜、浮头' }).click();
+  await phonePage.getByRole('button', { name: /水面.*泡沫、油膜、浮头/ }).click();
   await phonePage.getByText('再确认一个现象').waitFor();
   await phonePage.getByText('鱼浮头或呼吸急促').click();
   await phonePage.getByText('优先处理').waitFor();
@@ -74,11 +75,11 @@ try {
   const sceneSource = phonePage.locator('.interactive-care-source');
   const [browseBox, sourceBox] = await Promise.all([sceneBrowse.boundingBox(), sceneSource.boundingBox()]);
   assert.ok(browseBox && sourceBox, 'scene keeps browse and source feedback visible');
-  assert.ok(browseBox.bottom <= sourceBox.top || sourceBox.bottom <= browseBox.top, 'scene browse control does not overlap source feedback');
+  assert.ok(browseBox.y + browseBox.height <= sourceBox.y || sourceBox.y + sourceBox.height <= browseBox.y, 'scene browse control does not overlap source feedback');
   await phonePage.getByRole('button', { name: '打开优先处理指引' }).click();
   await phonePage.getByRole('dialog').waitFor();
   await phonePage.keyboard.press('Escape');
-  await phonePage.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
+  await phonePage.goto(`${baseUrl}/care?mode=browse`, { waitUntil: 'domcontentloaded' });
   const recommendation = phonePage.locator('[data-care-recommend-card]').first();
   await recommendation.waitFor();
   const recommendationCounter = phonePage.locator('#care-recommendations').getByText(/^[0-9]+\/[0-9]+$/);
@@ -93,17 +94,14 @@ try {
 
   await phonePage.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   assert.equal(await phonePage.locator('[data-interactive-primary]').count(), 0, 'home does not render an extra interactive aquarium hero');
-  const phoneSpeciesEntry = phonePage.locator('#aquarium-records > button[aria-haspopup="dialog"]');
+  const phoneSpeciesEntry = phonePage.locator('[data-tank-species-entry]');
   await phoneSpeciesEntry.waitFor();
   assert.equal(await phoneSpeciesEntry.count(), 1, 'phone keeps one tank species entry');
   assert.match(await phoneSpeciesEntry.innerText(), /缸内物种/);
   await phoneSpeciesEntry.click();
   await phonePage.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
   await phonePage.keyboard.press('Escape');
-  await phonePage.getByRole('button', { name: '全屏预览' }).click();
-  const tankPreview = phonePage.getByRole('dialog', { name: '鱼缸全屏预览' });
-  await tankPreview.waitFor();
-  await tankPreview.getByRole('button', { name: /极火虾.*6 只\/条/ }).waitFor();
+  assert.equal(await phonePage.getByRole('button', { name: '全屏预览' }).count(), 0, 'phone keeps only add/settings primary tank tools; fullscreen remains desktop-only');
   await phoneContext.close();
 
   const desktopContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'zh-CN' });
@@ -122,7 +120,7 @@ try {
 
   await desktopPage.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await desktopPage.getByRole('button', { name: /新建鱼缸/ }).waitFor();
-  const desktopSpeciesEntry = desktopPage.locator('#aquarium-records > button[aria-haspopup="dialog"]');
+  const desktopSpeciesEntry = desktopPage.locator('[data-tank-species-entry]');
   await desktopSpeciesEntry.waitFor();
   assert.equal(await desktopSpeciesEntry.count(), 1, 'desktop keeps one tank species entry');
   assert.match(await desktopSpeciesEntry.innerText(), /缸内物种/);

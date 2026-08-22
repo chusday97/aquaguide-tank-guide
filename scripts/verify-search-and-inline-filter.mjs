@@ -1,14 +1,24 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
+const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
 const group = process.env.SEARCH_UI_GROUP || 'atlas';
 
 const createPage = async (browser, viewport, locale = 'zh-CN') => {
   const page = await browser.newPage({ viewport });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.addInitScript(value => localStorage.setItem('aquaguide_locale', value), locale);
+  await page.addInitScript(value => {
+    localStorage.setItem('aquaguide_locale', value);
+    if (!localStorage.getItem('aquarium_app_state_v1')) {
+      localStorage.setItem('aquarium_app_state_v1', JSON.stringify({
+        version: 1, currentAquariumId: '', aquariums: [], wishlist: [], dismissedRecommendations: [],
+        diagnosisRecords: [], compatibilityRecords: [], deceasedRecords: [], feedingRecords: [], observationRecords: [], riskReminderState: {},
+        onboarding: { version: 1, status: 'completed', viewedSpecies: true, aquariumConfigured: true, taskCardDismissed: true },
+        updatedAt: new Date().toISOString(),
+      }));
+    }
+  }, locale);
   return { page, errors };
 };
 
@@ -24,7 +34,7 @@ const withBrowser = async (run) => {
 if (group === 'atlas') {
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 1280, height: 900 });
-    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'networkidle' });
     const input = page.locator('#atlas-toolbar [role="combobox"]');
     await input.fill('孔');
     const listbox = page.locator('#atlas-toolbar [role="listbox"]');
@@ -55,7 +65,7 @@ await withBrowser(async browser => {
 
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 1280, height: 900 });
-    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'networkidle' });
     const summaryBefore = await page.locator('#atlas-results').innerText();
     const overflowBefore = await page.locator('body').evaluate(node => getComputedStyle(node).overflow);
     await page.getByRole('button', { name: '更多筛选' }).click();
@@ -117,7 +127,7 @@ await withBrowser(async browser => {
 if (group === 'mobile') {
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 390, height: 844 }, 'en');
-    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'networkidle' });
     const input = page.locator('#atlas-toolbar [role="combobox"]');
     await input.fill('Poecilia');
     const options = page.locator('#atlas-toolbar [role="option"]');
@@ -135,7 +145,7 @@ await withBrowser(async browser => {
 if (group === 'care') {
 await withBrowser(async browser => {
     const { page: carePage, errors: careErrors } = await createPage(browser, { width: 390, height: 844 });
-    await carePage.goto(`${baseUrl}/care`, { waitUntil: 'networkidle' });
+    await carePage.goto(`${baseUrl}/care?mode=browse`, { waitUntil: 'networkidle' });
     const careInput = carePage.locator('#care-search [role="combobox"]');
     await careInput.fill('浮头');
     const careListbox = carePage.locator('#care-search [role="listbox"]');

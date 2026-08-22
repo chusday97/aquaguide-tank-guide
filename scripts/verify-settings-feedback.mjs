@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
 const browser = await chromium.launch({ headless: true });
 
 const seed = async (page, locale = 'zh-CN') => {
@@ -98,12 +98,18 @@ try {
   await failurePage.getByRole('button', { name: '提交反馈' }).click();
   await failurePage.locator('#feedback').getByRole('alert').waitFor();
   assert.equal(await failureInput.inputValue(), failureMessage, 'failed submission must preserve user input');
-  failurePage.once('dialog', dialog => dialog.dismiss());
   const guideNavigation = failurePage.locator('.desktop-sidebar').getByRole('button').filter({ hasText: /图鉴|Species/ }).first();
   await guideNavigation.click();
-  assert.match(failurePage.url(), /\/settings/, 'dismissing the unsaved warning must keep the settings page');
-  failurePage.once('dialog', dialog => dialog.accept());
+  const leaveGuard = failurePage.locator('[data-dialog-surface="blocking"][data-open]').filter({ hasText: '反馈还没有提交' });
+  await leaveGuard.waitFor();
+  assert.match(failurePage.url(), /\/settings/, 'unsaved feedback guard must keep the settings page until the user decides');
+  await leaveGuard.getByRole('button', { name: '继续填写' }).click();
+  await leaveGuard.waitFor({ state: 'hidden' });
+  assert.equal(await failureInput.inputValue(), failureMessage, 'keeping the draft must preserve feedback text');
   await guideNavigation.click();
+  const confirmLeave = failurePage.locator('[data-dialog-surface="blocking"][data-open]').filter({ hasText: '反馈还没有提交' });
+  await confirmLeave.waitFor();
+  await confirmLeave.getByRole('button', { name: '放弃并离开' }).click();
   await failurePage.waitForURL(/\/encyclopedia/);
   await failurePage.close();
 
