@@ -48,6 +48,15 @@ Forbidden regression:
 - Media/fullscreen preview: may use fullscreen/centered media behavior.
 - Mobile surfaces must never reintroduce a left-edge drawer for these flows.
 
+### Surface semantics ownership
+
+Every business `DialogContent` must declare an explicit `surface="detail|task|blocking|media|fullscreen"`. Shared Dialog infrastructure may keep `auto` only as a conservative compatibility fallback; business semantics must never be inferred from CSS width/radius classes, visual signatures, or whether the corner close button is hidden.
+
+Forbidden regression:
+- `max-w-*`, `rounded-*`, or other visual classes deciding Detail/Task/Blocking/Media meaning;
+- `showCloseButton={false}` being treated as proof that a flow is destructive/blocking;
+- adding a business `DialogContent` without explicit `surface=`.
+
 ## 4. Interactive discovery scenes
 
 For Encyclopedia and Care at every desktop/tablet workspace width `>= 768px`:

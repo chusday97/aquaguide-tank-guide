@@ -5,8 +5,8 @@
 ## 当前工作基线
 
 - 当前分支：`codex/interactive-parity-v3`
-- 当前产品代码 head：`f34eb29`
-- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `f34eb29` 为最新产品代码基线。
+- 当前产品代码 head：`90c1ad6`
+- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `90c1ad6` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非视觉 PASS**。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
@@ -149,16 +149,13 @@
 - `3145922`：恢复 Aquarium 主舞台 `+ 添加生物` 与 `⚙ 鱼缸设置` 常驻 icon；桌面保留全屏预览 icon；底砂/造景与水草增加内嵌搜索；搜索已覆盖新增水草（含 `sp_0498 金鱼藻`）；新增专用 browser regression。
 - `f34eb29`：修复 mobile Task Sheet 双重 translate 导致半屏移出 viewport；Aquarium primary Task 入口互斥，禁止设置/添加/缸内物种 Task Rail 同时叠开；新增 Task / Detail / Blocking / Media 四类 runtime matrix 并接入 UI regression workflow。
 - 同 `3145922`：`isAquaticPlantSpecies` / `isHardscapeSpecies` 改为 canonical identity 判定，修复新增水草在英文模式被误判为 fish 的 locale drift；501 条 taxonomy PASS。
+- `90c1ad6`：所有业务 `DialogContent` 已显式声明 `surface=`；删除 shared Dialog 的 class/尺寸/close-button visual inference；删除 Encyclopedia 约 229 行永远关闭的 legacy detail；旧 Settings/Search/mobile Care browser tests 同步到当前真实交互。
 
 ## 当前最重要的未修问题
 
 ### P1 — Full-page runtime alignment 仍需继续扩展
 
-当前主路由 smoke 在 1440/1024/768/390 已完成基础 overflow/page-error 检查，核心 runtime gates 也通过；仍需继续覆盖：Aquarium 四类显式 Surface 的代表路径、Collection 子页、Identify 完整流程、Settings 导航 guard、Search → Detail。
-
-### P2 — Shared Dialog legacy inference 尚未全部退役
-
-Aquarium 已不再依赖 visual signature inference；但 Encyclopedia species-group 等少数 legacy direct Dialog 仍通过 `max-w/radius` 临时推断 Detail。最终目标仍是所有业务 callsite 显式声明 `surface=` 后删除这类视觉猜测。
+Aquarium 四类 Surface、Collection 子页、Settings 未提交导航 guard、Search → Species Detail 已完成真实 browser 验证。当前主要未覆盖项收敛为：Identify 完整流程，以及更广泛的 1440 / 1024 / 768 / 390 全页面 popup/overflow matrix。
 
 ### P2 — 后台与 legacy confirm debt
 
@@ -166,7 +163,7 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 
 ## 当前测试 / 证据状态
 
-当前最新本地 product build（基于 `f34eb29`）：
+当前最新本地 product build（基于 `90c1ad6`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
 - `npm run test:taxonomy`：PASS（**501 条**；locale taxonomy drift 0；新增水草在中英文下保持 plant taxonomy）
@@ -183,6 +180,10 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 - Aquarium primary tools runtime：PASS（1440/1024/390 添加 + 设置可见、在舞台内且不覆盖缸内物种入口）
 - Aquarium settings inline search runtime：PASS（底砂 `溪流砂`、水草 `小水榕`、新增水草 `金鱼藻` 均可过滤命中）
 - Aquarium Surface runtime matrix：PASS（desktop Task 单 Rail/无 overlay；mobile Task 完整贴底；Blocking 居中 modal；Media 居中 modal；desktop Detail 600px Rail；mobile Detail 68dvh bottom sheet；Task→Detail 不叠层）
+- Settings unsaved-feedback navigation guard：PASS（shared Blocking，不再依赖 native confirm）
+- Search → Species Detail：PASS；Atlas/Care/global/sidebar search regressions 已对齐当前 scene→browse 产品路径
+- Collection wishlist/care/memorial 子页与返回路径：PASS
+- Mobile Care end-to-end regression：PASS
 
 注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
 
@@ -200,34 +201,24 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 ## 下一步执行顺序
 
-### Step 1 — 扩展真实 runtime alignment matrix
+### Step 1 — 完成剩余 runtime alignment
 
 优先覆盖：
 
-1. Aquarium 14 个 explicit Surface 的关键代表路径（Task / Detail / Blocking / Media）；
-2. Collection wishlist/care/memorial 子页和返回路径；
-3. Identify 未保存退出；
-4. Settings 未提交反馈导航 guard；
-5. Search → Species Detail；
-6. 1440 / 1024 / 768 / 390 的 popup geometry 与 horizontal overflow。
+1. Identify 未保存退出与结果路径；
+2. 1440 / 1024 / 768 / 390 的全页面 popup geometry 与 horizontal overflow；
+3. 对新发现的真实 runtime 回归继续执行 fail-before-fix → patch → browser regression。
 
 所有结果记录为 `PASS / REGRESSION / PARTIAL / NOT VERIFIED`，不再以 source audit 代替 runtime。
 
-### Step 2 — 退役剩余 Dialog visual inference
-
-- Encyclopedia species-group 改为显式 Detail Surface；
-- 扫描其他 direct `DialogContent`；
-- 当所有用户主路径均显式后，删除 `max-width/radius` inference；
-- CI 禁止新增 visual-signature inference。
-
-### Step 3 — Human visual baseline + Vercel parity
+### Step 2 — Human visual baseline + Vercel parity
 
 - 继续使用 `http://127.0.0.1:4317/` 作为开发验收源；
 - 用户确认当前视觉后才建立 screenshot golden baseline；
 - Vercel 恢复时 deployed SHA 必须等于已验收 product SHA；
 - Local / Vercel 使用同一 state seed 与 browser regression 做 parity。
 
-### Step 4 — 最后清内部 debt
+### Step 3 — 最后清内部 debt
 
 - Admin native confirm；
 - 其他 dead CSS / stale test；
