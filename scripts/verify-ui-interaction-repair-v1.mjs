@@ -171,22 +171,21 @@ try {
     await page.close();
   }
 
-  // 4) Compatibility result is scan-first: a dominant semantic verdict/symbol is visible before details.
+  // 4) Compatibility result is scan-first: the shared decision surface must lead with a visible verdict/status before details and selection controls.
   {
     const { page, errors } = await makePage({ width: 900, height: 900 });
     await page.addInitScript(() => {
       sessionStorage.setItem('aquaguide_compatibility_selection', JSON.stringify(['sp_0002']));
     });
     await page.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded' });
-    const verdict = page.locator('[data-compatibility-verdict]');
+    const verdict = page.locator('[data-testid="compatibility-decision"][data-result-ux="decision"]');
     await verdict.waitFor();
-    const status = await verdict.getAttribute('data-compatibility-verdict');
-    assert.ok(['compatible', 'caution', 'insufficient_data', 'not_recommended'].includes(status || ''), `Unexpected compatibility verdict: ${status}`);
-    const symbol = verdict.locator('[data-verdict-symbol]');
-    const symbolValue = await symbol.getAttribute('data-verdict-symbol');
-    assert.ok(['✓', '!', '?', '×'].includes(symbolValue || ''), `Compatibility verdict must expose a compact semantic symbol; got ${symbolValue}`);
-    const symbolBox = await symbol.boundingBox();
-    assert.ok(symbolBox && symbolBox.width >= 50 && symbolBox.height >= 50, 'Compatibility verdict symbol must visually dominate paragraph copy.');
+    const verdictText = ((await verdict.textContent()) || '').replace(/\s+/g, ' ');
+    assert.match(verdictText, /当前可混养|有条件可尝试|需要补充鱼缸信息|不建议混养/, `Compatibility decision must expose one of the four semantic verdicts; got: ${verdictText}`);
+    const statusIcon = verdict.locator('section').first().locator('svg').first();
+    await statusIcon.waitFor();
+    const iconBox = await statusIcon.boundingBox();
+    assert.ok(iconBox && iconBox.width >= 14 && iconBox.height >= 14, 'Compatibility decision must retain a visible scan-first status icon.');
     const verdictBox = await verdict.boundingBox();
     const selectorBox = await page.locator('[data-compatibility-selection]').boundingBox();
     assert.ok(verdictBox && selectorBox && verdictBox.y < selectorBox.y, `Compatibility result must appear before the selector once a verdict exists; verdictY=${verdictBox?.y}, selectorY=${selectorBox?.y}.`);
@@ -196,7 +195,7 @@ try {
     await page.close();
   }
 
-  console.log('PASS: UI interaction browser regression — read-only species browsing, exact return path, responsive species detail, default-state CTA consistency, scan-first compatibility verdict.');
+  console.log('PASS: UI interaction browser regression — read-only species browsing, exact return path, responsive species detail, default-state CTA consistency, scan-first compatibility decision.');
 } finally {
   await browser.close();
 }
