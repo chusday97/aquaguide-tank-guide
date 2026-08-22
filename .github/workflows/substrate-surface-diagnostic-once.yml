@@ -6,10 +6,11 @@ on:
       - agent/substrate-surface-v1
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -52,3 +53,28 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-substrate-surface-browser.mjs
+
+      - name: Record passing evidence and remove diagnostic
+        run: |
+          mkdir -p artifacts/substrate-surface
+          cat > artifacts/substrate-surface/README.md <<EOF
+          # Substrate Surface V1 evidence
+
+          Run: ${GITHUB_RUN_ID}
+          Commit tested: ${GITHUB_SHA}
+
+          PASS:
+          - substrate surface source contract
+          - aquarium settings repository contract
+          - TypeScript
+          - production build
+          - Chromium save-to-3D browser regression
+          - bare bottom renders as none
+          - selecting and saving 黑金沙 persists and becomes the 3D renderer substrate
+          EOF
+          rm .github/workflows/substrate-surface-diagnostic-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add artifacts/substrate-surface/README.md .github/workflows/substrate-surface-diagnostic-once.yml
+          git commit -m "Record substrate surface browser evidence"
+          git push origin HEAD:agent/substrate-surface-v1
