@@ -1,0 +1,67 @@
+name: Sync substrate handoff once
+
+on:
+  push:
+    branches:
+      - agent/rc1-post-107-release-sync
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update Handoff Progress Badcase
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          rc1_head = '1e455a82a6542b7a8fb684c69da06221ef6bdba0'
+
+          handoff = Path('HANDOFF_LATEST.md')
+          text = handoff.read_text()
+          text = text.replace('**Current RC1 head:** `8d506fae4b165fdd4aed5f7a04101dc16d5d7d7f`', f'**Current RC1 head:** `{rc1_head}`')
+          section = '''\n## 0. Latest delta — #109 merged + substrate candidate\n\n- #109 `Trim legacy Vercel function bundles before production` merged to RC1 via `1e455a82a6542b7a8fb684c69da06221ef6bdba0`.\n- Real RC1 Vercel proof keeps `/api/v1/health` and `/api/ai/chat` at **1.13 MB** each; canonical `/api/v1/[...path]` remains **40.13 MB**.\n- The real RC1→main release matrix re-ran on `1e455a82...` and remains **9/9 PASS**.\n- New product badcase PUI-BC-060: saved substrate could be visually indistinguishable because the renderer invented a default substrate and modeled substrate as discrete grain meshes.\n- Candidate #110 (`agent/substrate-surface-v1`) changes substrate semantics to an explicit full-bottom surface/material layer.\n- Targeted run `32579071402` PASS proves: bare bottom `none` → choose `黑金沙` in Tank Settings → save through repository → 3D renderer consumes `黑金沙`.\n- #110 remains Ready for review / open / unmerged. Production and RC1→main remain unauthorized.\n\n'''
+          marker = '## 1. Current stack state\n'
+          if '## 0. Latest delta — #109 merged + substrate candidate' not in text:
+              text = text.replace(marker, section + marker, 1)
+          handoff.write_text(text)
+
+          progress = Path('PROGRESS_LATEST.md')
+          text = progress.read_text()
+          text = text.replace('**Current RC1 head:** `8d506fae4b165fdd4aed5f7a04101dc16d5d7d7f`', f'**Current RC1 head:** `{rc1_head}`')
+          section = '''\n## Latest production / Aquarium visualization progress\n\n- [x] #109 merged to RC1; legacy Vercel function bundle bloat fixed in RC1.\n- [x] RC1 `1e455a82...` release matrix re-proven 9/9 PASS.\n- [x] PUI-BC-060 root cause isolated: fake default substrate + grain-mesh rendering semantics.\n- [x] #110 candidate renders substrate as an explicit continuous tank-bottom surface.\n- [x] Browser run `32579071402` proves Tank Settings → select `黑金沙` → repository save → 3D `data-substrate="黑金沙"`.\n- [ ] #110 merged to RC1 — not authorized / not done.\n- [ ] final Vercel deployment for #110 cleanup-only head — blocked by Hobby build-rate-limit, not a code failure; product-equivalent preview `fa41972e...` is READY.\n\n'''
+          marker = '## Current phase\n'
+          if '## Latest production / Aquarium visualization progress' not in text:
+              text = text.replace(marker, section + marker, 1)
+          progress.write_text(text)
+
+          badcase = Path('BADCASE_LATEST.md')
+          text = badcase.read_text()
+          section = '''\n## PUI-BC-060 — Saved substrate was not visibly applied to the 3D aquarium\n\n- **Feature:** Aquarium / Tank Settings / 3D visualization\n- **Severity:** high\n- **Status:** `candidate_regression_verified`\n- **Repair PR:** #110 `Render substrate as a tank-bottom surface`\n- **Candidate browser proof:** `32579071402` — PASS\n\n### Fail-before / root cause\n\n1. `ThreeAquarium` silently rendered River Sand for freshwater or Coral Sand for saltwater when `aquarium.substrate` was empty, so a later real selection could look unchanged.\n2. Substrate was partly modeled as hundreds of individual pebble/grain meshes, conflicting with the product meaning of substrate as a continuous tank-floor layer.\n3. There was no stable runtime marker proving that the persisted substrate value was the value consumed by the 3D renderer.\n\n### Repair rule\n\n- bare bottom must remain explicit (`none`), with no invented substrate;\n- renderer must consume `aquarium.substrate` directly;\n- configured substrate must fill the tank bottom as a continuous bed/surface layer;\n- hardscape remains object-based; substrate is not a discrete decoration object;\n- settings persistence and 3D consumption must be covered by one browser path.\n\n### Candidate verification\n\nRun `32579071402` passed source contract, repository settings contract, TypeScript, production build and Chromium browser regression. The browser flow proved: bare bottom → open Tank Settings → choose `黑金沙` → save → persisted aquarium `substrate=黑金沙` → rendered 3D `data-substrate=黑金沙`.\n\nThe candidate is verified on #110 but is **not yet in RC1**, so this badcase does not move to `regression_verified` until #110 is explicitly merged and RC1 regression is re-proven.\n\n---\n\n'''
+          marker = '## EVAL-BC-002'
+          if '## PUI-BC-060 — Saved substrate was not visibly applied to the 3D aquarium' not in text:
+              text = text.replace(marker, section + marker, 1)
+          badcase.write_text(text)
+
+          readiness = Path('PRODUCTION_READINESS_LATEST.md')
+          if readiness.exists():
+              text = readiness.read_text()
+              section = '''\n## Latest delta — #109 landed; #110 substrate candidate\n\n- #109 is now merged into RC1 as `1e455a82a6542b7a8fb684c69da06221ef6bdba0`.\n- RC1 Vercel bundle proof remains 1.13 MB / 1.13 MB for the two legacy bridges, with canonical V1 at 40.13 MB.\n- RC1→main release matrix remains 9/9 PASS after #109.\n- #110 is a separate Aquarium visualization candidate; it is not a production deployment and is not merged.\n- #110 targeted browser proof: run `32579071402` PASS.\n\n'''
+              if '## Latest delta — #109 landed; #110 substrate candidate' not in text:
+                  text += section
+              readiness.write_text(text)
+          PY
+
+      - name: Commit docs and remove one-time workflow
+        run: |
+          rm .github/workflows/sync-substrate-handoff-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add HANDOFF_LATEST.md PROGRESS_LATEST.md BADCASE_LATEST.md PRODUCTION_READINESS_LATEST.md .github/workflows/sync-substrate-handoff-once.yml
+          git commit -m "Sync #109 RC1 and substrate candidate handoff"
+          git push origin HEAD:agent/rc1-post-107-release-sync
