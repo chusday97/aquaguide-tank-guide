@@ -1,0 +1,40 @@
+name: Interactive Atlas Detail V2
+
+on:
+  pull_request:
+    branches:
+      - integration/aquaguide-rc1
+
+permissions:
+  contents: read
+
+jobs:
+  verify-interactive-atlas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npm run lint
+      - name: Production build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4208 > /tmp/aquaguide-interactive-atlas.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4208 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-interactive-atlas.log
+          exit 1
+      - name: Interactive atlas browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4208
+        run: node scripts/verify-interactive-atlas-detail-v2.mjs
