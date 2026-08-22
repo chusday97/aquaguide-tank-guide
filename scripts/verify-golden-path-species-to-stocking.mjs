@@ -69,13 +69,31 @@ try {
   );
 
   // Milestone 3: browsing and compatibility selection are separate intents.
-  // Species detail can only open the compatibility tool; it must not preselect 宝莲灯.
+  // The first footer action reveals in-context compatibility evidence. Only the second
+  // deliberate action advances to the full calculator, and neither action preselects 宝莲灯.
   const mainTaskAction = detail.locator('.modalFooter button').first();
   await mainTaskAction.waitFor();
   const resultLabel = (await mainTaskAction.textContent())?.trim() || '';
-  assert.match(resultLabel, /查看.*混养|混养.*结果|查看.*判断/, `species detail CTA must only open the compatibility tool, got: ${resultLabel}`);
+  assert.match(resultLabel, /查看.*混养|混养.*结果|查看.*判断/, `species detail CTA must expose compatibility review, got: ${resultLabel}`);
   await mainTaskAction.click();
 
+  const compatibilityDisclosure = detail
+    .locator('button[data-disclosure-purpose="secondary_evidence"]')
+    .filter({ hasText: /混养关系|Compatibility/ })
+    .first();
+  await compatibilityDisclosure.waitFor();
+  await page.waitForFunction(() => {
+    const buttons = Array.from(document.querySelectorAll('[data-detail-kind="species"] button[data-disclosure-purpose="secondary_evidence"]'));
+    const target = buttons.find(button => /混养关系|Compatibility/i.test(button.textContent || ''));
+    return target?.getAttribute('aria-expanded') === 'true';
+  });
+  assert.deepEqual(
+    await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]')),
+    [],
+    'reviewing compatibility evidence must not preselect the browsed species',
+  );
+
+  await mainTaskAction.click();
   const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
   await calculator.waitFor();
   assert.deepEqual(
@@ -147,7 +165,7 @@ try {
   assert.equal(tank.fishes?.find(item => item.fishId === 'sp_0431')?.quantity, 6, 'existing 红绿灯 quantity must remain unchanged');
   assert.deepEqual(pageErrors, [], `GP-002 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-002 continuous E2E passed: search 宝莲灯 → read-only detail → open compatibility tool without selection → explicit selection inside tool → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
+  console.log('GP-002 continuous E2E passed: search 宝莲灯 → read-only detail → review in-context compatibility evidence → open compatibility tool without selection → explicit selection inside tool → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
 } finally {
   await browser.close();
 }
