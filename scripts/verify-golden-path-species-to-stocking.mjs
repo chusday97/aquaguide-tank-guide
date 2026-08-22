@@ -47,6 +47,7 @@ try {
   await page.addInitScript(saved => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquaguide_locale', 'zh-CN');
+    sessionStorage.setItem('aquaguide_compatibility_selection', JSON.stringify([]));
   }, state);
 
   // GP-002 milestone 1: search an exact species from the real search page.
@@ -55,24 +56,66 @@ try {
   await resultCard.waitFor();
   assert.ok(await resultCard.isVisible(), 'exact 宝莲灯 search result must be visible');
 
-  // Milestone 2: open the exact object, not the atlas home.
+  // Milestone 2: open the exact object, not the atlas home. Opening detail is read-only.
   await resultCard.click();
   await page.waitForURL(url => url.pathname === '/encyclopedia' && url.searchParams.get('species') === 'sp_0432');
-  const detail = page.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  const detail = page.locator('[data-detail-kind="species"]:visible');
   await detail.waitFor();
   await detail.getByText('宝莲灯', { exact: true }).first().waitFor();
+  assert.deepEqual(
+    await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]')),
+    [],
+    'opening the species detail must not silently mutate compatibility selection',
+  );
 
-  // Milestone 3: use the species detail PRIMARY task CTA. The footer action is the canonical
-  // transition into full compatibility checkout, including caution states.
+  // Milestone 3: browsing and compatibility selection are separate intents.
+  // The first footer action reveals in-context compatibility evidence. Only the second
+  // deliberate action advances to the full calculator, and neither action preselects 宝莲灯.
   const mainTaskAction = detail.locator('.modalFooter button').first();
   await mainTaskAction.waitFor();
-  const mainTaskLabel = (await mainTaskAction.textContent())?.trim() || '';
-  assert.match(mainTaskLabel, /风险|混养|加入/, `detail primary CTA must lead toward compatibility, got: ${mainTaskLabel}`);
+  const resultLabel = (await mainTaskAction.textContent())?.trim() || '';
+  assert.match(resultLabel, /查看.*混养|混养.*结果|查看.*判断/, `species detail CTA must expose compatibility review, got: ${resultLabel}`);
   await mainTaskAction.click();
 
-  // Milestones 4–5: the decision drawer must retain the real tank baseline and exact candidate.
+  const compatibilityDisclosure = detail
+    .locator('button[data-disclosure-purpose="secondary_evidence"]')
+    .filter({ hasText: /混养关系|Compatibility/ })
+    .first();
+  await compatibilityDisclosure.waitFor();
+  await page.waitForFunction(() => {
+    const buttons = Array.from(document.querySelectorAll('[data-detail-kind="species"] button[data-disclosure-purpose="secondary_evidence"]'));
+    const target = buttons.find(button => /混养关系|Compatibility/i.test(button.textContent || ''));
+    return target?.getAttribute('aria-expanded') === 'true';
+  });
+  assert.deepEqual(
+    await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]')),
+    [],
+    'reviewing compatibility evidence must not preselect the browsed species',
+  );
+
+  await mainTaskAction.click();
   const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
   await calculator.waitFor();
+  assert.deepEqual(
+    await page.evaluate(() => JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]')),
+    [],
+    'opening the compatibility tool from species detail must still not preselect the browsed species',
+  );
+
+  // The user now makes the higher-commitment choice explicitly inside the compatibility tool.
+  const selector = calculator.locator('[data-compatibility-selection]');
+  const searchInput = selector.getByPlaceholder('搜索鱼、虾、螺等生物');
+  await searchInput.waitFor();
+  await searchInput.fill('宝莲灯');
+  const candidateChoice = selector.getByRole('button', { name: /宝莲灯/ }).first();
+  await candidateChoice.waitFor();
+  await candidateChoice.click();
+  await page.waitForFunction(() => {
+    const selected = JSON.parse(sessionStorage.getItem('aquaguide_compatibility_selection') || '[]');
+    return Array.isArray(selected) && selected.includes('sp_0432');
+  });
+
+  // Milestones 4–5: after explicit selection, the decision drawer retains the real tank baseline and exact candidate.
   await calculator.getByText('当前鱼缸', { exact: true }).waitFor();
   await calculator.getByText('红绿灯', { exact: true }).first().waitFor();
   const candidateName = calculator.getByText('宝莲灯', { exact: true }).first();
@@ -122,7 +165,7 @@ try {
   assert.equal(tank.fishes?.find(item => item.fishId === 'sp_0431')?.quantity, 6, 'existing 红绿灯 quantity must remain unchanged');
   assert.deepEqual(pageErrors, [], `GP-002 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-002 continuous E2E passed: search 宝莲灯 → exact detail → compatibility → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
+  console.log('GP-002 continuous E2E passed: search 宝莲灯 → read-only detail → review in-context compatibility evidence → open compatibility tool without selection → explicit selection inside tool → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
 } finally {
   await browser.close();
 }

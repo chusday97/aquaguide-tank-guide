@@ -1,0 +1,279 @@
+/* AquaGuide UI/UX V2 — app shell
+ * Migrates navigation chrome after the Aquarium reference implementation.
+ * Keep behavior/routes unchanged; this file only defines hierarchy, control sizing and states.
+ */
+
+:root,
+.aquaguide-app {
+  --shell-surface: rgba(250, 252, 250, 0.96);
+  --shell-surface-strong: #ffffff;
+  --shell-border: rgba(27, 77, 62, 0.08);
+  --shell-muted: rgba(26, 26, 26, 0.50);
+  --shell-muted-soft: rgba(26, 26, 26, 0.36);
+  --shell-active: #1b4d3e;
+  --shell-active-soft: #edf6f1;
+  --shell-focus: rgba(16, 185, 129, 0.28);
+}
+
+/* Every persistent shell affordance should be comfortably clickable even if legacy
+ * utility classes requested something smaller. */
+.desktop-sidebar button,
+.phone-shell-active > nav button,
+.phone-shell-active header button {
+  min-width: 44px;
+  min-height: 44px;
+  font-family: var(--font-ui);
+  font-weight: var(--type-action-weight);
+  line-height: 1.25;
+  outline: none;
+}
+
+.desktop-sidebar button:focus-visible,
+.phone-shell-active > nav button:focus-visible,
+.phone-shell-active header button:focus-visible {
+  box-shadow: 0 0 0 3px var(--shell-focus);
+}
+
+/* Desktop sidebar: quiet tool rail, with one clear active state instead of every item
+ * competing through heavy filled cards and font-black labels. */
+.desktop-sidebar {
+  border-right: 1px solid var(--shell-border) !important;
+  background: var(--shell-surface) !important;
+  box-shadow: 12px 0 36px rgba(20, 61, 49, 0.055) !important;
+  backdrop-filter: blur(18px);
+}
+
+.desktop-sidebar > div > div:first-child {
+  padding-top: 20px;
+  padding-bottom: 18px;
+}
+
+.desktop-sidebar > div > div:first-child > div:first-child {
+  border-radius: 14px !important;
+  box-shadow: 0 8px 20px rgba(27, 77, 62, 0.16) !important;
+}
+
+.desktop-sidebar > div > div:first-child > div:last-child > div:first-child {
+  font-size: 1.0625rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.018em;
+}
+
+.desktop-sidebar > div > div:first-child > div:last-child > div:last-child {
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: var(--shell-muted-soft) !important;
+}
+
+.desktop-sidebar nav {
+  padding-inline: 10px !important;
+}
+
+.desktop-sidebar nav button {
+  border-radius: 14px !important;
+  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.desktop-sidebar nav button:hover {
+  transform: translateY(-1px);
+}
+
+.desktop-sidebar nav button:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.desktop-sidebar nav button[aria-current] {
+  background: var(--shell-active) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 20px rgba(27, 77, 62, 0.14), inset 3px 0 0 rgba(255,255,255,0.62) !important;
+}
+
+.desktop-sidebar nav button[aria-current="true"] {
+  background: var(--shell-active-soft) !important;
+  color: #155b43 !important;
+  box-shadow: inset 3px 0 0 #2f8b68 !important;
+}
+
+.desktop-sidebar nav button > span > span:first-child,
+.desktop-sidebar nav button > span:first-child + span > span:first-child {
+  font-size: 0.875rem !important;
+  font-weight: 650 !important;
+  letter-spacing: -0.01em;
+}
+
+.desktop-sidebar nav button > span > span:last-child,
+.desktop-sidebar nav button > span:first-child + span > span:last-child {
+  margin-top: 3px !important;
+  font-size: 0.6875rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+}
+
+.desktop-sidebar nav button:not([aria-current]) > span > span:last-child,
+.desktop-sidebar nav button:not([aria-current]) > span:first-child + span > span:last-child {
+  color: var(--shell-muted-soft) !important;
+}
+
+/* Search / camera / settings / sidebar collapse are icon actions: same geometry, quiet
+ * default surface, stronger hover/focus only when the user approaches them. */
+.desktop-sidebar button[aria-label],
+.phone-shell-active header button[aria-label] {
+  border: 1px solid transparent;
+  border-radius: var(--ui-radius-control) !important;
+  background: transparent;
+  color: var(--shell-muted);
+  box-shadow: none !important;
+}
+
+.desktop-sidebar button[aria-label]:hover,
+.phone-shell-active header button[aria-label]:hover {
+  border-color: rgba(27, 77, 62, 0.08);
+  background: var(--shell-active-soft) !important;
+  color: #166247 !important;
+}
+
+/* Footer settings stays a secondary surface, not a second primary navigation block. */
+.desktop-sidebar > div > div:last-child {
+  border-top-color: var(--shell-border) !important;
+}
+
+.desktop-sidebar > div > div:last-child > button {
+  border: 1px solid var(--shell-border);
+  border-radius: var(--ui-radius-control) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  box-shadow: 0 3px 12px rgba(20, 61, 49, 0.04) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+}
+
+.desktop-sidebar > div > div:last-child > div {
+  font-weight: 500 !important;
+}
+
+/* Mobile top bar: utility strip, not another card. */
+.phone-shell-active .app-main-shell {
+  box-shadow: none !important;
+}
+
+.phone-shell-active header {
+  min-height: calc(60px + env(safe-area-inset-top));
+  gap: 4px !important;
+  padding-inline: 12px !important;
+  border-bottom: 1px solid var(--shell-border) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 5px 18px rgba(20, 61, 49, 0.035);
+}
+
+.phone-shell-active header button {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: var(--ui-radius-control) !important;
+}
+
+/* Bottom navigation is a stable four-destination tab bar. Active state uses a quiet
+ * indicator rather than turning the whole item into a large filled green tile. */
+.phone-shell-active > nav {
+  padding: 7px 8px calc(7px + env(safe-area-inset-bottom)) !important;
+  border-top: 1px solid var(--shell-border) !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 -8px 24px rgba(20, 61, 49, 0.05) !important;
+  backdrop-filter: blur(18px);
+}
+
+.phone-shell-active > nav > div {
+  gap: 4px !important;
+}
+
+.phone-shell-active > nav button {
+  position: relative;
+  height: 58px !important;
+  padding: 6px 4px 5px;
+  border-radius: 13px !important;
+  background: transparent !important;
+  color: rgba(26, 26, 26, 0.48) !important;
+  box-shadow: none !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.phone-shell-active > nav button:hover {
+  background: var(--shell-active-soft) !important;
+  color: #176047 !important;
+}
+
+.phone-shell-active > nav button[aria-current="page"] {
+  background: var(--shell-active-soft) !important;
+  color: #155b43 !important;
+}
+
+.phone-shell-active > nav button[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  width: 22px;
+  height: 3px;
+  border-radius: 999px;
+  background: #2f8b68;
+  transform: translateX(-50%);
+}
+
+.phone-shell-active > nav button[aria-current="page"] svg {
+  stroke: currentColor !important;
+}
+
+.phone-shell-active > nav button span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
+
+/* Narrow desktop auto-collapses the rail; persistent controls stay centered and never
+ * inherit text layout assumptions from the expanded sidebar. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .desktop-sidebar {
+    box-shadow: 8px 0 24px rgba(20, 61, 49, 0.045) !important;
+  }
+
+  .desktop-sidebar nav button {
+    width: 52px;
+    margin-inline: auto;
+  }
+}
+
+/* 1024px is not enough workspace for a full 280px utility rail plus two-column task
+ * content. Keep the expanded labels/search, but compress the rail until the viewport is
+ * genuinely wide. This avoids the 1023→1024 content-width cliff without changing shell
+ * behavior or hiding utilities. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .aquaguide-app.desktop-shell-active {
+    --desktop-sidebar-width: 220px !important;
+  }
+
+  .desktop-sidebar {
+    width: 220px !important;
+  }
+
+  .desktop-sidebar > div > div:first-child {
+    padding-inline: 12px;
+  }
+
+  .desktop-sidebar nav {
+    padding-inline: 8px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-sidebar nav button,
+  .phone-shell-active > nav button,
+  .phone-shell-active header button {
+    transition: none;
+  }
+
+  .desktop-sidebar nav button:hover,
+  .desktop-sidebar nav button:active {
+    transform: none;
+  }
+}

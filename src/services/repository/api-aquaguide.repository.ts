@@ -6,6 +6,7 @@ import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
+  AquariumDeleteCommand,
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
@@ -22,7 +23,7 @@ type ApiAquariumSpecies = {
   speciesCatalogKey: string;
   quantity: number;
   entryDate: string;
-  lastWaterChangeAt?: string;
+  lastWaterChangeAt?: string | null;
   version: number;
   batches: ApiAquariumSpeciesBatch[];
 };
@@ -37,7 +38,7 @@ type ApiAquarium = {
   widthCm?: number;
   heightCm?: number;
   targetTemperatureC?: number;
-  lastWaterChangeAt?: string;
+  lastWaterChangeAt?: string | null;
   lastWaterStoredAt?: string;
   startedAt?: string;
   startedAtSource?: 'created' | 'inferred' | 'user';
@@ -94,7 +95,7 @@ const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
       fishId: item.speciesCatalogKey,
       quantity: item.quantity,
       entryDate: item.entryDate,
-      lastWaterChangeDate: item.lastWaterChangeAt,
+      lastWaterChangeDate: item.lastWaterChangeAt || undefined,
       batches: (item.batches || []).map(batch => ({
         id: batch.id,
         quantity: batch.quantity,
@@ -104,7 +105,7 @@ const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
         stateUpdatedAt: batch.stateUpdatedAt,
       })),
     })),
-    lastWaterChangeDate: record.lastWaterChangeAt,
+    lastWaterChangeDate: record.lastWaterChangeAt || undefined,
     lastWaterStoredDate: record.lastWaterStoredAt,
     startedAt: record.startedAt,
     startedAtSource: record.startedAtSource,
@@ -254,6 +255,29 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     return this.rememberAquarium(saved);
   }
 
+  async deleteAquarium(input: AquariumDeleteCommand) {
+    const version = this.aquariumVersions.get(input.aquariumId);
+    if (!version) throw new Error('鱼缸版本未知，请刷新后重试。');
+    try {
+      await apiRequest(`/aquariums/${input.aquariumId}?version=${version}`, {
+        method: 'DELETE',
+        idempotencyKey: input.operationId,
+      });
+    } catch (error) {
+      try {
+        const remaining = await this.getAquariums();
+        if (!remaining.some(item => item.id === input.aquariumId)) {
+          this.aquariumVersions.delete(input.aquariumId);
+          return;
+        }
+      } catch {
+        // Preserve the original deletion error when persistence cannot be verified.
+      }
+      throw error;
+    }
+    this.aquariumVersions.delete(input.aquariumId);
+  }
+
   async addLivestock(input: LivestockAddCommand) {
     if (!Number.isInteger(input.quantity) || input.quantity < 1) throw new Error('记录数量必须是正整数。');
     await apiRequest(`/aquariums/${input.aquariumId}/species`, {
@@ -280,7 +304,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       widthCm: dimensions?.width ? Number(dimensions.width) : undefined,
       heightCm: dimensions?.height ? Number(dimensions.height) : undefined,
       targetTemperatureC: aquarium.targetTemperature ? Number(aquarium.targetTemperature) : undefined,
-      lastWaterChangeAt: aquarium.lastWaterChangeDate,
+      lastWaterChangeAt: aquarium.lastWaterChangeDate ?? null,
       lastWaterStoredAt: aquarium.lastWaterStoredDate,
       startedAt: aquarium.startedAt,
       startedAtSource: aquarium.startedAtSource,
@@ -305,13 +329,13 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       if (current) {
         retained.add(current.id);
         const usesBatches = Boolean(fish.batches?.length);
-        if ((!usesBatches && current.quantity !== fish.quantity) || current.entryDate !== fish.entryDate || current.lastWaterChangeAt !== fish.lastWaterChangeDate) {
+        if ((!usesBatches && current.quantity !== fish.quantity) || current.entryDate !== fish.entryDate || (current.lastWaterChangeAt || undefined) !== fish.lastWaterChangeDate) {
           const updated = await apiRequest<ApiAquariumSpecies>(`/aquariums/${saved.id}/species/${current.id}`, {
             method: 'PATCH',
             body: {
               ...(!usesBatches ? { quantity: fish.quantity } : {}),
               entryDate: fish.entryDate.slice(0, 10),
-              lastWaterChangeAt: fish.lastWaterChangeDate,
+              lastWaterChangeAt: fish.lastWaterChangeDate ?? null,
               version: current.version,
             },
             idempotencyKey: createIdempotencyKey('aquarium-species-update'),
@@ -328,7 +352,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
             speciesCatalogKey: fish.fishId,
             quantity: initialBatch?.quantity ?? fish.quantity,
             entryDate: (initialBatch?.entryDate ?? fish.entryDate).slice(0, 10),
-            lastWaterChangeAt: fish.lastWaterChangeDate,
+            lastWaterChangeAt: fish.lastWaterChangeDate ?? null,
             lifeStage: initialBatch?.lifeStage,
             reproductiveState: initialBatch?.reproductiveState,
           },

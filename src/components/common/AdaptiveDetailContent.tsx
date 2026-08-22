@@ -3,11 +3,14 @@ import { DialogContent } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useLayoutMode } from '../layout/LayoutModeProvider';
 
-type AdaptiveDetailContentProps = ComponentProps<typeof DialogContent>;
+type AdaptiveDetailContentProps = ComponentProps<typeof DialogContent> & {
+  desktopSize?: 'reading' | 'wide';
+};
 
-export function AdaptiveDetailContent({ className, style, ...props }: AdaptiveDetailContentProps) {
+export function AdaptiveDetailContent({ className, style, desktopSize = 'reading', ...props }: AdaptiveDetailContentProps) {
   const { isPhoneLayout } = useLayoutMode();
-  const desktopWidth = 'min(var(--adaptive-surface-width, var(--surface-reading-width, 520px)), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px))';
+  const desktopFallbackWidth = desktopSize === 'wide' ? '860px' : 'var(--surface-reading-width, 520px)';
+  const desktopWidth = `min(var(--adaptive-surface-width, ${desktopFallbackWidth}), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px))`;
   const surfaceStyle = isPhoneLayout
     ? style
     : {
@@ -27,7 +30,9 @@ export function AdaptiveDetailContent({ className, style, ...props }: AdaptiveDe
       className={cn(
         'flex flex-col overflow-hidden border-border bg-white p-0 shadow-[0_20px_60px_rgba(15,23,42,0.16)] duration-200',
         isPhoneLayout
-          ? 'bottom-0 left-1/2 top-auto h-[92dvh] max-h-[92dvh] !w-full !max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px]'
+          ? desktopSize === 'wide'
+            ? 'inset-0 h-[100dvh] max-h-[100dvh] !w-screen !max-w-none translate-x-0 translate-y-0 rounded-none'
+            : 'bottom-0 left-1/2 top-auto h-[92dvh] max-h-[92dvh] !w-full !max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px]'
           : 'bottom-0 left-auto right-0 top-0 h-[100dvh] max-h-[100dvh] min-w-0 translate-x-0 translate-y-0 rounded-none rounded-l-[24px] data-open:zoom-in-100 data-closed:zoom-out-100 data-open:slide-in-from-right-full data-closed:slide-out-to-right-full',
         className,
       )}

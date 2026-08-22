@@ -16,7 +16,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install chromium
       - name: Product evaluation contracts
         run: |
           npm run test:product-evaluation
@@ -28,6 +28,14 @@ jobs:
           npm run test:task-entry
           npm run test:core-flow-state-eval
           npm run test:daily-check
+      - name: Aquarium delete repository contract
+        run: node scripts/test-aquarium-delete-repository-contract.mjs
+      - name: Aquarium settings repository contract
+        run: node scripts/test-aquarium-settings-repository-contract.mjs
+      - name: Water-change cloud persistence contract
+        run: node scripts/test-water-change-cloud-persistence-contract.mjs
+      - name: Data storage repository-mode contract
+        run: node scripts/test-data-storage-repository-mode-contract.mjs
       - name: Type check
         run: npm run lint
       - name: Build
@@ -45,6 +53,14 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: npm run test:care-card-action-ui
+      - name: Search show-all V2 regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-search-show-all-v2.mjs
+      - name: Identify overflow hint regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-identify-search-overflow-hint.mjs
       - name: GP-001 first tank setup browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173

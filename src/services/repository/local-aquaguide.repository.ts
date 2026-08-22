@@ -24,6 +24,7 @@ import { appendSpeciesBatch, createSpeciesBatch, removeSpeciesBatchQuantity } fr
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
+  AquariumDeleteCommand,
   CareReminderMutation,
   FavoriteMutation,
   MemorialSaveInput,
@@ -50,6 +51,18 @@ export class LocalAquaGuideRepository implements AquaGuideRepository {
       startedAt: input.startedAt,
       startedAtSource: input.startedAtSource,
     });
+  }
+
+  async deleteAquarium(input: AquariumDeleteCommand) {
+    const state = loadAppStateFromStorage();
+    const exists = state.aquariums.some(item => item.id === input.aquariumId);
+    if (!exists) return;
+    if (state.aquariums.length <= 1) throw new Error('至少需要保留一个鱼缸。');
+    const aquariums = state.aquariums.filter(item => item.id !== input.aquariumId);
+    const currentAquariumId = state.currentAquariumId === input.aquariumId
+      ? aquariums[0]?.id || ''
+      : state.currentAquariumId;
+    persistAquariums(aquariums, currentAquariumId);
   }
 
   async addLivestock(input: LivestockAddCommand) {

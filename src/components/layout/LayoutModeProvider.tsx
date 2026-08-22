@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 export type LayoutMode = 'phone' | 'desktop';
 
@@ -7,9 +7,23 @@ type NavigatorLike = {
   userAgentData?: { mobile?: boolean };
 };
 
-export const detectLayoutMode = (navigatorLike?: NavigatorLike | null): LayoutMode => {
+export const PHONE_LAYOUT_MAX_WIDTH = 767;
+export const PHONE_LAYOUT_MEDIA_QUERY = `(max-width: ${PHONE_LAYOUT_MAX_WIDTH}px)`;
+
+export const detectLayoutMode = (
+  navigatorLike?: NavigatorLike | null,
+  viewportWidth?: number | null,
+): LayoutMode => {
+  if (typeof viewportWidth === 'number' && Number.isFinite(viewportWidth)) {
+    return viewportWidth <= PHONE_LAYOUT_MAX_WIDTH ? 'phone' : 'desktop';
+  }
+
   if (!navigatorLike) return 'desktop';
   const userAgent = navigatorLike.userAgent || '';
+
+  // Viewport width is the product source of truth. UA parsing exists only as a fallback for
+  // environments where width is unavailable, so tablets must be checked before generic
+  // "Mobile Safari" patterns that also occur in iPad user agents.
   if (/iPad|Tablet|PlayBook|Silk/i.test(userAgent)) return 'desktop';
   if (/iPhone|iPod|Windows Phone|Android.+Mobile|Mobile.+Safari/i.test(userAgent)) return 'phone';
 
@@ -26,10 +40,24 @@ type LayoutModeContextValue = {
 
 const LayoutModeContext = createContext<LayoutModeContextValue | null>(null);
 
+const getCurrentLayoutMode = (): LayoutMode => {
+  if (typeof window === 'undefined') {
+    return typeof navigator === 'undefined' ? 'desktop' : detectLayoutMode(navigator);
+  }
+  return detectLayoutMode(typeof navigator === 'undefined' ? null : navigator, window.innerWidth);
+};
+
 export function LayoutModeProvider({ children }: { children: ReactNode }) {
-  const [layoutMode] = useState<LayoutMode>(() => (
-    typeof navigator === 'undefined' ? 'desktop' : detectLayoutMode(navigator)
-  ));
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>(getCurrentLayoutMode);
+
+  useEffect(() => {
+    const media = window.matchMedia(PHONE_LAYOUT_MEDIA_QUERY);
+    const sync = () => setLayoutMode(media.matches ? 'phone' : 'desktop');
+    sync();
+    media.addEventListener('change', sync);
+    return () => media.removeEventListener('change', sync);
+  }, []);
+
   const value = useMemo(() => ({
     layoutMode,
     isPhoneLayout: layoutMode === 'phone',

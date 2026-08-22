@@ -235,7 +235,7 @@ export function VisualResultCard({
           {detailsOpen && (
             <div className="grid gap-2 border-t border-border bg-bg/45 p-3 min-[640px]:grid-cols-2">
               {model.detailSections.map(section => (
-                <section key={section.id} className="rounded-[13px] bg-white p-3">
+                <section key={section.id} data-visual-detail-section-id={section.id} className="rounded-[13px] bg-white p-3">
                   <h4 className="text-[11px] font-black text-ink">{section.title}</h4>
                   <div className="mt-1.5 grid gap-1">
                     {section.items.map(item => <p key={item} className="text-[10px] font-medium leading-relaxed text-ink/62">{item}</p>)}

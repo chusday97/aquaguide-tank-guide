@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Share2, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, Share2, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { AquariumFish, Fish } from '../../types';
 import { createLivestockRemovalAttempt, markLivestockRemovalSubmitted } from '../../services/aquarium/livestock-removal-attempt.service';
@@ -8,8 +8,13 @@ import { LivestockBatchCard } from './LivestockBatchCard';
 import { SurfaceHeader } from '../common/SurfaceHeader';
 import { AdaptiveDetailContent } from '../common/AdaptiveDetailContent';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import { useWorkspaceNavigation } from '../layout/WorkspaceNavigationProvider';
+import type { WorkspaceNavigationContext } from '../../types/navigation';
 import { QuantityStepper } from '../forms/QuantityStepper';
 import { getLifeType } from '../../modules/species/species.service';
+import { formatSpeciesQuantity, getSpeciesQuantityUnit } from '../../lib/speciesQuantityUnit';
+import { PlantRecordEditor } from './PlantRecordEditor';
 
 type RemovalDraft = {
   record: AquariumFish;
@@ -20,6 +25,12 @@ type RemovalDraft = {
   submitted: boolean;
 };
 
+type RosterDetailReturnContext = {
+  recordId: string;
+  fishId: string;
+  scrollTop: number;
+};
+
 type Props = {
   open: boolean;
   aquariumName: string;
@@ -27,6 +38,8 @@ type Props = {
   species: Fish[];
   onOpenChange: (open: boolean) => void;
   onOpenDetail: (fish: Fish, record: AquariumFish) => void;
+  editRecordRequestId?: string | null;
+  onEditRecordRequestHandled?: () => void;
   onSave: (recordId: string, nextRecord: AquariumFish | null) => Promise<void>;
   onRemove: (input: {
     aquariumFishId: string;
@@ -49,6 +62,8 @@ export function LivestockRosterDialog({
   species,
   onOpenChange,
   onOpenDetail,
+  editRecordRequestId = null,
+  onEditRecordRequestHandled,
   onSave,
   onRemove,
   onAdd,
@@ -60,6 +75,16 @@ export function LivestockRosterDialog({
 }: Props) {
   const { i18n } = useTranslation();
   const isEn = i18n.language !== 'zh-CN';
+  const location = useLocation();
+  const { restoreContext } = useWorkspaceNavigation();
+  const workspaceReturnContext = (location.state as { workspaceReturnContext?: WorkspaceNavigationContext } | null)?.workspaceReturnContext;
+  const workspaceReturnLabel = workspaceReturnContext?.route === '/encyclopedia'
+    ? (new URLSearchParams(workspaceReturnContext.query).get('species')
+      ? (isEn ? 'Back to species detail' : '返回物种详情')
+      : new URLSearchParams(workspaceReturnContext.query).get('mode') === 'compatibility'
+        ? (isEn ? 'Back to compatibility' : '返回混养结果')
+        : (isEn ? 'Back to species' : '返回物种页'))
+    : (isEn ? 'Back to previous task' : '返回上一任务');
   const [removal, setRemoval] = useState<RemovalDraft | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
   const [removeError, setRemoveError] = useState('');
@@ -68,6 +93,10 @@ export function LivestockRosterDialog({
   const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
   const [isEditingDirty, setIsEditingDirty] = useState(false);
   const [isRosterCloseConfirmOpen, setIsRosterCloseConfirmOpen] = useState(false);
+  const [detailReturnContext, setDetailReturnContext] = useState<RosterDetailReturnContext | null>(null);
+  const rosterScrollRef = useRef<HTMLDivElement | null>(null);
+  const pendingDetailReturnRef = useRef<RosterDetailReturnContext | null>(null);
+  const reopenFrameRef = useRef<number | null>(null);
   const speciesById = useMemo(() => new Map(species.map(item => [item.id, item])), [species]);
   const visibleRecords = useMemo(() => records
     .map(record => ({ record, fish: speciesById.get(record.fishId) }))
@@ -75,6 +104,18 @@ export function LivestockRosterDialog({
   const displayedRecords = editingRecordId
     ? visibleRecords.filter(item => item.record.id === editingRecordId)
     : visibleRecords;
+  const editingItem = editingRecordId ? visibleRecords.find(item => item.record.id === editingRecordId) : undefined;
+  const editingPlant = editingItem ? getLifeType(editingItem.fish) === 'plant' : false;
+  const quantitySummary = useMemo(() => {
+    const counts = new Map<string, number>();
+    visibleRecords.forEach(({ record, fish }) => {
+      const unit = getSpeciesQuantityUnit(fish, isEn, record.quantity);
+      counts.set(unit, (counts.get(unit) || 0) + record.quantity);
+    });
+    return Array.from(counts.entries())
+      .map(([unit, count]) => isEn ? String(count) + ' ' + unit : String(count) + unit)
+      .join(' · ');
+  }, [isEn, visibleRecords]);
 
   useEffect(() => {
     if (!removal) return;
@@ -83,6 +124,15 @@ export function LivestockRosterDialog({
   }, [records, removal]);
 
   useEffect(() => setStartedAtDraft(startedAt || ''), [startedAt]);
+  useEffect(() => {
+    if (!open || !editRecordRequestId) return;
+    if (!visibleRecords.some(item => item.record.id === editRecordRequestId)) return;
+    pendingDetailReturnRef.current = null;
+    setDetailReturnContext(null);
+    setEditingRecordId(editRecordRequestId);
+    setIsEditingDirty(false);
+    onEditRecordRequestHandled?.();
+  }, [editRecordRequestId, onEditRecordRequestHandled, open, visibleRecords]);
   useEffect(() => {
     if (!open) {
       setEditingRecordId(null);
@@ -96,6 +146,57 @@ export function LivestockRosterDialog({
       setIsEditingDirty(false);
     }
   }, [editingRecordId, visibleRecords]);
+
+  useEffect(() => {
+    const handleSpeciesDetailDismissed = (event: Event) => {
+      const pending = pendingDetailReturnRef.current;
+      if (!pending) return;
+      const detail = (event as CustomEvent<{ source?: string; fishId?: string }>).detail;
+      if (detail?.source !== 'aquarium' || detail.fishId !== pending.fishId) return;
+      pendingDetailReturnRef.current = null;
+
+      const reopenAfterDetailExit = () => {
+        const detailStillVisible = Array.from(document.querySelectorAll<HTMLElement>('[data-detail-kind="species"]'))
+          .some(node => node.getClientRects().length > 0);
+        if (detailStillVisible) {
+          reopenFrameRef.current = window.requestAnimationFrame(reopenAfterDetailExit);
+          return;
+        }
+        reopenFrameRef.current = null;
+        setDetailReturnContext(pending);
+        onOpenChange(true);
+      };
+      reopenFrameRef.current = window.requestAnimationFrame(reopenAfterDetailExit);
+    };
+
+    window.addEventListener('aquaguide:species-detail-dismissed', handleSpeciesDetailDismissed);
+    return () => {
+      window.removeEventListener('aquaguide:species-detail-dismissed', handleSpeciesDetailDismissed);
+      if (reopenFrameRef.current !== null) window.cancelAnimationFrame(reopenFrameRef.current);
+    };
+  }, [onOpenChange]);
+
+  useEffect(() => {
+    if (!open || !detailReturnContext) return;
+    let secondFrame = 0;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        const scroller = rosterScrollRef.current;
+        if (scroller) scroller.scrollTo({ top: detailReturnContext.scrollTop, behavior: 'auto' });
+        const row = Array.from(scroller?.querySelectorAll<HTMLElement>('[data-livestock-record-id]') || [])
+          .find(node => node.dataset.livestockRecordId === detailReturnContext.recordId);
+        const profileButton = row
+          ? Array.from(row.querySelectorAll<HTMLButtonElement>('button')).find(button => Boolean(button.querySelector('img')))
+          : null;
+        profileButton?.focus({ preventScroll: true });
+        setDetailReturnContext(null);
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      if (secondFrame) window.cancelAnimationFrame(secondFrame);
+    };
+  }, [detailReturnContext, open]);
 
   const batches = removal ? normalizeSpeciesBatches(removal.record) : [];
   const selectedBatch = batches.find(batch => batch.id === removal?.batchId);
@@ -148,27 +249,49 @@ export function LivestockRosterDialog({
     onOpenChange(next);
   };
 
+  const openDetailFromRoster = (fish: Fish, record: AquariumFish) => {
+    pendingDetailReturnRef.current = {
+      recordId: record.id,
+      fishId: fish.id,
+      scrollTop: rosterScrollRef.current?.scrollTop || 0,
+    };
+    onOpenDetail(fish, record);
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={requestRosterOpenChange}>
         <AdaptiveDetailContent showCloseButton={false} className="livestock-roster-surface">
           <SurfaceHeader
-            title={editingRecordId ? (isEn ? 'Manage livestock state' : '调整缸内物种体态') : (isEn ? 'Tank livestock' : '缸内物种')}
+            title={editingRecordId ? (editingPlant ? (isEn ? 'Edit plant record' : '修改水草记录') : (isEn ? 'Manage livestock state' : '调整缸内物种体态')) : (isEn ? 'Tank livestock' : '缸内物种')}
             description={editingRecordId
-              ? (isEn ? 'Update one batch at a time, then review and save.' : '按批次调整，确认修改摘要后再保存。')
-              : `${aquariumName} · ${visibleRecords.length} ${isEn ? 'species' : '种'} · ${visibleRecords.reduce((sum, item) => sum + item.record.quantity, 0)} ${isEn ? 'animals' : '只/条'}`}
+              ? (editingPlant ? (isEn ? 'Update plant quantity and added date.' : '修改植株数量和加入日期。') : (isEn ? 'Update one batch at a time, then review and save.' : '按批次调整，确认修改摘要后再保存。'))
+              : [aquariumName, String(visibleRecords.length) + (isEn ? ' species' : '种'), quantitySummary].filter(Boolean).join(' · ')}
             onClose={() => requestRosterOpenChange(false)}
             actions={(
-              editingRecordId ? undefined : (
-                <>
-                <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} aria-label={isEn ? 'Sharing is coming' : '分享功能建设中'} title={isEn ? 'Sharing is coming' : '分享功能建设中'} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
-                  <Share2 className="h-4 w-4" />
-                </button>
-                                </>
-              )
+              <>
+                {workspaceReturnContext && !editingRecordId && (
+                  <button
+                    type="button"
+                    data-workspace-dialog-return
+                    onClick={() => void restoreContext(workspaceReturnContext)}
+                    aria-label={workspaceReturnLabel}
+                    title={workspaceReturnLabel}
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-3 text-xs font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    <span className="hidden sm:inline">{workspaceReturnLabel}</span>
+                  </button>
+                )}
+                {!editingRecordId && (
+                  <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))} aria-label={isEn ? 'Sharing is coming' : '分享功能建设中'} title={isEn ? 'Sharing is coming' : '分享功能建设中'} className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-400 shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
+                    <Share2 className="h-4 w-4" />
+                  </button>
+                )}
+              </>
             )}
           />
-          <div className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
+          <div ref={rosterScrollRef} data-livestock-roster-scroll className="app-scrollbar-hidden min-h-0 overflow-y-auto bg-[#FBFAF6] px-4 py-4 md:px-5">
             {!editingRecordId && <section className="mb-4 rounded-[20px] border border-emerald-100 bg-white p-4">
               <div className="flex flex-wrap items-end gap-3">
                 <label className="min-w-[190px] flex-1 text-xs font-black text-ink/65">
@@ -193,7 +316,7 @@ export function LivestockRosterDialog({
             {displayedRecords.length > 0 ? (
               <div className={editingRecordId ? 'grid grid-cols-1 gap-3' : 'grid gap-3 md:grid-cols-2'}>
                 {displayedRecords.map(({ record, fish }) => (
-                  <div key={record.id} className="relative min-w-0">
+                  <div key={record.id} data-livestock-record-id={record.id} className="relative min-w-0">
                     {!editingRecordId && <button
                       type="button"
                       aria-label={isEn ? `Remove ${fish.name} from aquarium` : `将${fish.name}移出鱼缸`}
@@ -203,7 +326,17 @@ export function LivestockRosterDialog({
                     >
                       <X className="h-5 w-5" />
                     </button>}
-                    <LivestockBatchCard
+                    {editingRecordId === record.id && getLifeType(fish) === 'plant' ? (
+                      <PlantRecordEditor
+                        fish={fish}
+                        record={record}
+                        isEn={isEn}
+                        onCancel={() => { setEditingRecordId(null); setIsEditingDirty(false); }}
+                        onDirtyChange={setIsEditingDirty}
+                        onSave={next => onSave(record.id, next)}
+                      />
+                    ) : (
+<LivestockBatchCard
                       fish={fish}
                       record={record}
                       reproductiveApplicable={['fish', 'invertebrate', 'reptile'].includes(getLifeType(fish))}
@@ -213,9 +346,10 @@ export function LivestockRosterDialog({
                         if (!editing) setIsEditingDirty(false);
                       }}
                       onDirtyChange={setIsEditingDirty}
-                      onOpenDetail={() => onOpenDetail(fish, record)}
+                      onOpenDetail={() => openDetailFromRoster(fish, record)}
                       onSave={next => onSave(record.id, next)}
                     />
+                    )}
                   </div>
                 ))}
               </div>
@@ -267,7 +401,7 @@ export function LivestockRosterDialog({
           </DialogHeader>
           {removal && (
             <div className="grid gap-3">
-              {batches.length > 1 && <fieldset className="grid gap-2"><legend className="text-xs font-black text-ink/65">从哪一组移出</legend><div className="grid gap-2 sm:grid-cols-2">{batches.map((batch, index) => <button key={batch.id} type="button" aria-pressed={removal.batchId === batch.id} disabled={removal.submitted} onClick={() => setRemoval(current => current ? { ...current, batchId: batch.id, quantity: 1 } : current)} className={`min-h-11 rounded-2xl border px-3 text-left text-xs font-black ${removal.batchId === batch.id ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-white text-ink/60'}`}>第 {index + 1} 组 · {batch.quantity} 只/条</button>)}</div></fieldset>}
+              {batches.length > 1 && <fieldset className="grid gap-2"><legend className="text-xs font-black text-ink/65">从哪一组移出</legend><div className="grid gap-2 sm:grid-cols-2">{batches.map((batch, index) => <button key={batch.id} type="button" aria-pressed={removal.batchId === batch.id} disabled={removal.submitted} onClick={() => setRemoval(current => current ? { ...current, batchId: batch.id, quantity: 1 } : current)} className={`min-h-11 rounded-2xl border px-3 text-left text-xs font-black ${removal.batchId === batch.id ? 'border-emerald-700 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-white text-ink/60'}`}>第 {index + 1} 组 · {removal ? formatSpeciesQuantity(removal.fish, batch.quantity, false) : batch.quantity}</button>)}</div></fieldset>}
               <div className="grid gap-1.5 text-xs font-black text-ink/65"><span>移出数量</span><QuantityStepper label="移出数量" min={1} max={selectedBatch?.quantity ?? 1} disabled={removal.submitted} value={removal.quantity} onChange={quantity => setRemoval(current => current ? { ...current, quantity } : current)} /></div>
               <div className="rounded-2xl bg-amber-50 px-3 py-3 text-xs font-semibold leading-5 text-amber-900">
                 <strong>移出前准备：</strong>使用已循环的接收缸或确认可靠接收人；保持水温接近并缓慢过水。移出不是死亡记录，不会进入生命纪念。
@@ -281,7 +415,7 @@ export function LivestockRosterDialog({
           <DialogFooter>
             <button type="button" disabled={isRemoving} onClick={() => setRemoval(null)} className="min-h-11 rounded-2xl border border-border px-4 text-sm font-black disabled:opacity-50">暂不移出</button>
             <button type="button" disabled={isRemoving || !Number.isInteger(removal?.quantity)} onClick={() => void confirmRemoval()} className="min-h-11 rounded-2xl bg-rose-600 px-4 text-sm font-black text-white disabled:opacity-60">
-              {isRemoving ? '正在更新…' : `确认已移出 ${removal?.quantity ?? 0} 只/条`}
+              {isRemoving ? '正在更新…' : removal ? '确认已移出 ' + formatSpeciesQuantity(removal.fish, removal.quantity, false) : '确认移出'}
             </button>
           </DialogFooter>
         </DialogContent>

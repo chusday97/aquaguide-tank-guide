@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isBusinessDatabaseConfigured } from '../config';
+import { isBusinessDatabaseConfigured, isShareReportsConfigured } from '../config';
 import { sendData } from '../http';
 import { contentRouter } from './content';
 import { aquariumsRouter } from './aquariums';
@@ -15,6 +15,7 @@ export const v1Router = Router();
 v1Router.get('/business-health', (request, response) => sendData(request, response, {
   ok: true,
   databaseConfigured: isBusinessDatabaseConfigured(),
+  shareReportsConfigured: isShareReportsConfigured(),
   architecture: 'web-api-supabase',
 }));
 

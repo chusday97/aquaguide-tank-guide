@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import type { AddressInfo } from 'node:net';
 import { createApiApp } from '../apps/api/src/app';
+
+const appSource = await readFile(new URL('../apps/api/src/app.ts', import.meta.url), 'utf8');
+assert.doesNotMatch(appSource, /server\/index\.mjs/, 'Production API app must not import the legacy server.');
+assert.doesNotMatch(appSource, /express\.static|distPath|\.\.\/\.\.\/\.\.\/dist/, 'Production API app must not own frontend static dist serving.');
 
 const app = createApiApp();
 const server = app.listen(0, '127.0.0.1');
@@ -70,7 +75,10 @@ try {
   const legacyHealthResponse = await fetch(`${baseUrl}/api/health`);
   assert.equal(legacyHealthResponse.status, 200);
 
-  console.log('API boundary verified: versioned health, user/profile/admin/share auth guards, public share validation, structured errors, content dependency fallback and legacy health');
+  const versionedLegacyHealthResponse = await fetch(`${baseUrl}/api/v1/health`);
+  assert.equal(versionedLegacyHealthResponse.status, 200);
+
+  console.log('API boundary verified: standalone apps/api server boundary, versioned health, user/profile/admin/share auth guards, public share validation, structured errors, content dependency fallback and legacy health compatibility');
 } finally {
   if (server.listening) {
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

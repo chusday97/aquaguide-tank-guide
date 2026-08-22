@@ -1,0 +1,50 @@
+name: Navigation Context V1
+
+on:
+  pull_request:
+    branches: [main, integration/aquaguide-rc1]
+    paths:
+      - 'src/pages/Search.tsx'
+      - 'src/pages/Encyclopedia*.tsx'
+      - 'src/pages/CareEncyclopedia.tsx'
+      - 'src/pages/Aquarium.tsx'
+      - 'src/components/layout/WorkspaceNavigationProvider.tsx'
+      - 'src/services/navigation/**'
+      - 'scripts/verify-navigation-context-v1.mjs'
+      - '.github/workflows/navigation-context-v1.yml'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+jobs:
+  navigation-context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Type check
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-navigation-context.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-navigation-context.log
+          exit 1
+      - name: Search/detail return-context regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-navigation-context-v1.mjs

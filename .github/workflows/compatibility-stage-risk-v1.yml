@@ -1,0 +1,69 @@
+name: Compatibility Stage Risk V1
+
+on:
+  pull_request:
+    branches:
+      - agent/uiux-system-refactor-v1
+      - integration/aquaguide-rc1
+
+permissions:
+  contents: read
+
+jobs:
+  validate-stage-risk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/result-ux-v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Same-species life-stage risk contract
+        run: npx tsx scripts/test-same-species-stage-risk.ts
+
+      - name: Life-stage capture UI contract
+        run: node scripts/test-life-stage-ui-contract.mjs
+
+      - name: Existing compatibility engine regression
+        run: npm run test:compatibility
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-stage-risk.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-stage-risk.log
+          exit 1
+
+      - name: Same-species life-stage browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-same-species-life-stage-risk.mjs
+
+      - name: Upload stage-risk evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaguide-compatibility-stage-risk-v1
+          path: artifacts/compatibility-stage-risk/**
+          if-no-files-found: warn
+          retention-days: 7

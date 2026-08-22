@@ -1,0 +1,117 @@
+name: RC1 Release Acceptance
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-acceptance:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'integration/aquaguide-rc1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout RC1
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Persistence contracts
+        run: |
+          node scripts/test-aquarium-delete-repository-contract.mjs
+          node scripts/test-aquarium-settings-repository-contract.mjs
+          node scripts/test-water-change-cloud-persistence-contract.mjs
+          node scripts/test-data-storage-repository-mode-contract.mjs
+
+      - name: Production cloud runtime contract
+        run: node scripts/test-production-cloud-runtime-contract.mjs
+
+      - name: Production cloud runtime smoke
+        run: node --import tsx scripts/test-production-cloud-runtime-smoke.ts
+
+      - name: Share-report security contract
+        run: npm run test:share-report-contract
+
+      - name: Admin Quality source contract
+        run: node scripts/verify-admin-quality-inbox-contract.mjs
+
+      - name: UI interaction source contract
+        run: node scripts/test-ui-interaction-repair-v1.mjs
+
+      - name: UI modal surface contract
+        run: node scripts/test-ui-modal-surface-contract.mjs
+
+      - name: Aquarium species detail source contract
+        run: node scripts/test-aquarium-species-detail-surface-contract.mjs
+
+      - name: Care workspace detail source contract
+        run: node scripts/test-care-workspace-detail-contract.mjs
+
+      - name: Product evaluation contracts
+        run: npm run test:product-evaluation
+
+      - name: API type check
+        run: npm run check:api
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Build synthetic unauthenticated release preview
+        env:
+          VITE_SUPABASE_URL: https://synthetic-auth.supabase.co
+          VITE_SUPABASE_ANON_KEY: synthetic-anon-key-for-browser-contract
+        run: npm run build
+
+      - name: Start release preview
+        shell: bash
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-rc1-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-rc1-preview.log
+          exit 1
+
+      - name: Admin Quality browser boundary
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-admin-quality-inbox-browser.mjs
+
+      - name: UI interaction browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-interaction-repair-v1.mjs
+
+      - name: UI modal surface browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-ui-modal-surface-browser.mjs
+
+      - name: Care workspace detail browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-care-workspace-detail.mjs
+
+      - name: Care card action regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:care-card-action-ui

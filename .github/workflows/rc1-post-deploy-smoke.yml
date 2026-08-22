@@ -1,0 +1,28 @@
+name: RC1 Post-Deploy Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Deployed AquaGuide base URL, e.g. https://aqua.example.com'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify deployed RC1
+        env:
+          AQUAGUIDE_BASE_URL: ${{ inputs.base_url }}
+        run: node scripts/verify-rc1-deployment.mjs

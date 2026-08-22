@@ -13,7 +13,7 @@ export const apiConfig = {
   supabaseUrl: process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '',
   supabaseAnonKey: process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '',
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-  shareTokenSecret: process.env.SHARE_TOKEN_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+  shareTokenSecret: process.env.SHARE_TOKEN_SECRET || '',
   webBaseUrl: process.env.WEB_BASE_URL || '',
   aiApiKey: process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY || '',
   aiBaseUrl: (process.env.AI_BASE_URL || process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, ''),
@@ -30,4 +30,11 @@ export const apiConfig = {
 
 export const isBusinessDatabaseConfigured = () => Boolean(
   apiConfig.supabaseUrl && apiConfig.supabaseAnonKey,
+);
+
+export const isShareReportsConfigured = () => Boolean(
+  isBusinessDatabaseConfigured() &&
+  apiConfig.supabaseServiceRoleKey &&
+  apiConfig.shareTokenSecret &&
+  apiConfig.webBaseUrl,
 );

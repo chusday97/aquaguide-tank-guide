@@ -1,0 +1,136 @@
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+
+const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
+const cases = [
+  { name: 'phone-390', width: 390, height: 844, expected: 'stacked-task-first' },
+  { name: 'compact-desktop-768', width: 768, height: 900, expected: 'stacked-context-first' },
+  { name: 'desktop-1024', width: 1024, height: 900, expected: 'stacked-task-first-or-balanced', maxSidebarWidth: 230, minWorkspaceWidth: 790 },
+  { name: 'wide-1440', width: 1440, height: 1000, expected: 'balanced-hero', minSidebarWidth: 260 },
+];
+
+const browser = await chromium.launch({ headless: true });
+const results = [];
+
+try {
+  for (const testCase of cases) {
+    const context = await browser.newContext({
+      viewport: { width: testCase.width, height: testCase.height },
+      locale: 'zh-CN',
+      hasTouch: testCase.width < 768,
+      isMobile: testCase.width < 768,
+    });
+    await context.addInitScript(() => localStorage.setItem('aquaguide_locale', 'zh-CN'));
+    const page = await context.newPage();
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(`${baseUrl}/welcome`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('button', { name: /建立第一个鱼缸/ }).click();
+    await page.locator('[data-aquarium-dashboard-v2]').waitFor();
+    await page.waitForTimeout(1200);
+
+    const geometry = await page.evaluate(() => {
+      const rect = selector => {
+        const element = document.querySelector(selector);
+        if (!element) return null;
+        const box = element.getBoundingClientRect();
+        if (box.width < 1 || box.height < 1) return null;
+        return {
+          top: Math.round(box.top),
+          bottom: Math.round(box.bottom),
+          left: Math.round(box.left),
+          right: Math.round(box.right),
+          width: Math.round(box.width),
+          height: Math.round(box.height),
+        };
+      };
+      const main = rect('.desktop-workspace-scroll') || rect('main');
+      const sidebar = rect('.desktop-sidebar');
+      return {
+        today: rect('[data-dashboard-priority="today"]'),
+        manage: rect('#aquarium-manage-zone'),
+        context: rect('[data-dashboard-priority="context"]'),
+        returnContext: rect('[data-workspace-return]'),
+        phoneToolbar: rect('.aquarium-toolbar'),
+        onboardingStrip: rect('.aquarium-onboarding-strip'),
+        desktopHeader: rect('.aquarium-desktop-header'),
+        main,
+        sidebar,
+        documentWidth: document.documentElement.scrollWidth,
+        viewportWidth: innerWidth,
+      };
+    });
+
+    assert.ok(geometry.today && geometry.manage && geometry.context, `${testCase.name}: missing dashboard priority surface`);
+    assert.ok(geometry.documentWidth <= geometry.viewportWidth + 1, `${testCase.name}: page overflows horizontally`);
+
+    if (geometry.returnContext) {
+      if (testCase.width < 768) {
+        assert.ok(geometry.phoneToolbar, `${testCase.name}: phone Aquarium toolbar missing while return context is visible`);
+        assert.ok(
+          geometry.returnContext.top >= geometry.phoneToolbar.bottom + 4,
+          `${testCase.name}: return-context control overlaps the phone Aquarium toolbar (${geometry.returnContext.top}px < ${geometry.phoneToolbar.bottom}px)`,
+        );
+        const firstPhoneContent = geometry.onboardingStrip ?? geometry.today;
+        assert.ok(
+          geometry.returnContext.bottom + 4 <= firstPhoneContent.top,
+          `${testCase.name}: return-context control overlaps first visible Aquarium content (${geometry.returnContext.bottom}px > ${firstPhoneContent.top}px)`,
+        );
+      } else {
+        assert.ok(geometry.desktopHeader, `${testCase.name}: desktop Aquarium header missing while return context is visible`);
+        assert.ok(
+          geometry.returnContext.bottom + 4 <= geometry.desktopHeader.top,
+          `${testCase.name}: return-context control overlaps desktop Aquarium header (${geometry.returnContext.bottom}px > ${geometry.desktopHeader.top}px)`,
+        );
+      }
+    }
+
+    if (testCase.maxSidebarWidth !== undefined) {
+      assert.ok(geometry.sidebar, `${testCase.name}: desktop sidebar missing`);
+      assert.ok(geometry.sidebar.width <= testCase.maxSidebarWidth, `${testCase.name}: sidebar consumes too much medium-desktop width (${geometry.sidebar.width}px)`);
+    }
+    if (testCase.minSidebarWidth !== undefined) {
+      assert.ok(geometry.sidebar, `${testCase.name}: desktop sidebar missing`);
+      assert.ok(geometry.sidebar.width >= testCase.minSidebarWidth, `${testCase.name}: wide desktop should restore the full navigation rail (${geometry.sidebar.width}px)`);
+    }
+    if (testCase.minWorkspaceWidth !== undefined) {
+      assert.ok(geometry.main, `${testCase.name}: desktop workspace missing`);
+      assert.ok(geometry.main.width >= testCase.minWorkspaceWidth, `${testCase.name}: workspace is too narrow after sidebar allocation (${geometry.main.width}px)`);
+    }
+
+    const today = geometry.today;
+    const manage = geometry.manage;
+    const contextBox = geometry.context;
+    const contextBesideToday = Math.abs(contextBox.top - today.top) <= 40 && contextBox.left > today.left;
+
+    if (testCase.expected === 'stacked-task-first') {
+      assert.ok(today.top < manage.top, `${testCase.name}: Today must precede Manage`);
+      assert.ok(manage.top < contextBox.top, `${testCase.name}: recurrent Manage actions must appear before contextual 3D tank`);
+      assert.ok(contextBox.height <= 180, `${testCase.name}: contextual 3D tank is too tall for a stacked task-first workspace (${contextBox.height}px)`);
+    } else if (testCase.expected === 'stacked-context-first') {
+      // PUI-BC-058 established a deliberate desktop-only contract: once the desktop shell
+      // is active, tank identity/context must precede management even when the content
+      // container remains narrow. Phone remains task-first.
+      assert.ok(today.top < contextBox.top, `${testCase.name}: Today must precede tank context`);
+      assert.ok(contextBox.top < manage.top, `${testCase.name}: narrow desktop tank context must appear before Manage`);
+      assert.ok(contextBox.height <= 220, `${testCase.name}: narrow-desktop contextual 3D tank is too tall (${contextBox.height}px)`);
+    } else if (testCase.expected === 'stacked-task-first-or-balanced') {
+      const taskFirst = today.top < manage.top && manage.top < contextBox.top;
+      assert.ok(taskFirst || contextBesideToday, `${testCase.name}: 3D tank must be after Manage or beside Today, never a dominant full-width block before Manage`);
+      if (!contextBesideToday) {
+        assert.ok(contextBox.height <= 180, `${testCase.name}: stacked contextual 3D tank is too tall (${contextBox.height}px)`);
+      }
+    } else {
+      assert.ok(contextBesideToday, `${testCase.name}: wide workspace should balance Today and tank context side-by-side`);
+      assert.ok(manage.top >= Math.min(today.bottom, contextBox.bottom) - 24, `${testCase.name}: Manage should follow the hero row`);
+      assert.ok(contextBox.height <= 250, `${testCase.name}: wide contextual 3D tank should remain visually subordinate (${contextBox.height}px)`);
+    }
+
+    results.push({ name: testCase.name, ...geometry, contextBesideToday });
+    await context.close();
+  }
+} finally {
+  await browser.close();
+}
+
+console.log('Aquarium visual hierarchy PASS');
+console.log(JSON.stringify(results, null, 2));

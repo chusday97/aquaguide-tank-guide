@@ -4,7 +4,7 @@ import { Billboard, Html, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { Aquarium, Fish } from '../types';
 import { fishData } from '../data/fishData';
-import { getAquariumHardscapeSpecies, getAquariumPlantSpecies } from '../lib/speciesClassification';
+import { getAquariumHardscapeSpecies, getAquariumPlantSpecies, isAquaticPlantSpecies, isHardscapeSpecies } from '../lib/speciesClassification';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 
 interface ThreeAquariumProps {
@@ -303,24 +303,6 @@ function SubstrateBed({ length, width, height, substrate }: { length: number; wi
   const bedY = -height / 2 + config.height / 2 + 0.02;
   const topY = -height / 2 + config.height + 0.08;
 
-  const pebbles = useMemo(() => {
-    const count = Math.min(360, Math.floor(length * width * config.count));
-    return Array.from({ length: count }, (_, index) => {
-      const sx = seededRandom(`pebble-x-${index}-${length}-${width}`);
-      const sz = seededRandom(`pebble-z-${index}-${length}-${width}`);
-      const ss = seededRandom(`pebble-s-${index}-${length}-${width}`);
-      const tone = seededRandom(`pebble-tone-${index}-${substrate}`);
-      const z = (sz - 0.5) * (width - 0.18);
-      const frontLift = (z / (width - 0.18) + 0.5) * 0.08;
-      return {
-        x: (sx - 0.5) * (length - 0.18),
-        z,
-        yLift: frontLift + seededRandom(`pebble-y-${index}-${substrate}`) * 0.035,
-        scale: config.particle * (0.65 + ss * 0.9),
-        color: tone > 0.55 ? config.accent : config.color,
-      };
-    });
-  }, [length, width, substrate, config.accent, config.color, config.count, config.particle]);
 
   if (!hasSubstrate) {
     return (
@@ -368,12 +350,6 @@ function SubstrateBed({ length, width, height, substrate }: { length: number; wi
         </mesh>
       ))}
 
-      {pebbles.map((pebble, index) => (
-        <mesh key={index} position={[pebble.x, topY + pebble.yLift, pebble.z]} scale={[pebble.scale * 1.35, pebble.scale * 0.55, pebble.scale]}>
-          <sphereGeometry args={[1, 8, 6]} />
-          <meshStandardMaterial color={pebble.color} roughness={0.95} />
-        </mesh>
-      ))}
     </group>
   );
 }
@@ -1007,7 +983,7 @@ export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect }: Thre
     const items: SwimItem[] = [];
     aquarium.fishes.forEach((aqFish, aqIndex) => {
       const fishInfo = fishData.find((fish) => fish.id === aqFish.fishId);
-      if (!fishInfo) return;
+      if (!fishInfo || isAquaticPlantSpecies(fishInfo) || isHardscapeSpecies(fishInfo)) return;
 
       for (let index = 0; index < (aqFish.quantity || 1); index += 1) {
         const seed = `${aqFish.id}-${fishInfo.id}-${index}`;
@@ -1039,7 +1015,7 @@ export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect }: Thre
   }, [activeSpecies]);
 
   return (
-    <div ref={containerRef} className="relative h-full w-full overflow-hidden bg-[#eef7f5]" style={{ touchAction: 'none' }}>
+    <div ref={containerRef} data-substrate={aquarium.substrate || 'none'} className="relative h-full w-full overflow-hidden bg-[#eef7f5]" style={{ touchAction: 'none' }}>
       <Canvas
         shadows
         frameloop="demand"
@@ -1069,7 +1045,7 @@ export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect }: Thre
         <Backdrop length={length} width={width} height={height} isSaltwater={isSaltwater} />
         <TankFrame length={length} width={width} height={height} isSaltwater={isSaltwater} />
         <WaterVolume length={length} width={width} height={height} isSaltwater={isSaltwater} />
-        <SubstrateBed length={length} width={width} height={height} substrate={aquarium.substrate || (isSaltwater ? '珊瑚砂' : '河沙')} />
+        <SubstrateBed length={length} width={width} height={height} substrate={aquarium.substrate} />
         {(!aquarium.hardscape || aquarium.hardscape.length === 0) && (
           <RockCluster length={length} width={width} height={height} isSaltwater={isSaltwater} />
         )}

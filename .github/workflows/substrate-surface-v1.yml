@@ -1,0 +1,60 @@
+name: Substrate Surface V1
+
+on:
+  pull_request:
+    branches:
+      - integration/aquaguide-rc1
+    paths:
+      - 'src/components/ThreeAquarium.tsx'
+      - 'src/pages/Aquarium.tsx'
+      - 'scripts/verify-substrate-surface-v1.mjs'
+      - 'scripts/verify-substrate-surface-browser.mjs'
+      - '.github/workflows/substrate-surface-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-substrate-surface:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Substrate surface source contract
+        run: node scripts/verify-substrate-surface-v1.mjs
+
+      - name: Aquarium settings repository contract
+        run: node scripts/test-aquarium-settings-repository-contract.mjs
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-substrate.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-substrate.log
+          exit 1
+
+      - name: Substrate save-to-3D browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-substrate-surface-browser.mjs

@@ -1,0 +1,68 @@
+name: Plant Roster Edit Fix
+
+on:
+  pull_request:
+    branches:
+      - agent/uiux-system-refactor-v1
+      - integration/aquaguide-rc1
+
+permissions:
+  contents: read
+
+jobs:
+  validate-plant-roster-fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/result-ux-v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Plant livestock contract
+        run: node scripts/test-plant-livestock-edit-contract.mjs
+
+      - name: Type check
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install chromium
+
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-plant-roster.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-plant-roster.log
+          exit 1
+
+      - name: Plant quantity and edit browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-plant-livestock-edit.mjs
+
+      - name: Existing navigation context regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-navigation-context-v1.mjs
+
+      - name: Upload plant roster evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquaguide-plant-roster-edit
+          path: artifacts/plant-livestock-edit/**
+          if-no-files-found: warn
+          retention-days: 7
