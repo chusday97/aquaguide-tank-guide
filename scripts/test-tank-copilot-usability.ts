@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { sanitizeTankCopilotResponse, type CopilotResponseCore } from '../src/modules/copilot/copilot.policy';
 import type { TankCopilotContext } from '../src/modules/copilot/copilot.types';
 
+// PUI-BC-059: syntactically valid AI output is not acceptable unless it remains product-actionable.
 const baseContext: TankCopilotContext = {
   goal: '新手低维护淡水缸，想要有群游感，不想频繁打理',
   answers: {},
