@@ -1,0 +1,53 @@
+name: Dependency Release Baseline V1
+
+on:
+  pull_request:
+    branches:
+      - agent/uiux-system-refactor-v1
+      - integration/aquaguide-rc1
+
+permissions:
+  contents: read
+
+jobs:
+  audit-dependency-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/result-ux-v1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Capture production dependency audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --omit=dev --json > /tmp/npm-audit-prod.json
+          status=$?
+          echo "npm audit --omit=dev exit code: $status"
+          exit 0
+
+      - name: Capture full dependency audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > /tmp/npm-audit-all.json
+          status=$?
+          echo "npm audit exit code: $status"
+          exit 0
+
+      - name: Summarize dependency reachability baseline
+        run: node scripts/summarize-npm-audit.mjs /tmp/npm-audit-prod.json /tmp/npm-audit-all.json
+
+      - name: Upload dependency audit summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-release-baseline
+          path: dependency-audit-summary.json
+          if-no-files-found: error
+          retention-days: 14
