@@ -51,7 +51,9 @@ jobs:
         run: node scripts/prepare-dependency-remediation.mjs
 
       - name: Regenerate lockfile for candidate
-        run: npm install --package-lock-only --ignore-scripts
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          npm update dompurify --package-lock-only --ignore-scripts
 
       - name: Show candidate dependency diff size
         shell: bash
