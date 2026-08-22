@@ -4,8 +4,19 @@
 **Repository:** `chusday97/aquaguide-tank-guide`  
 **Sync branch:** `agent/rc1-post-107-release-sync`  
 **Release candidate branch:** `integration/aquaguide-rc1`  
-**Current RC1 head:** `8d506fae4b165fdd4aed5f7a04101dc16d5d7d7f`  
+**Current RC1 head:** `1e455a82a6542b7a8fb684c69da06221ef6bdba0`  
 **Release rule:** RC1 is code/regression clean. Do not merge RC1 to `main` or deploy production without separate explicit authorization.
+
+
+## 0. Latest delta — #109 merged + substrate candidate
+
+- #109 `Trim legacy Vercel function bundles before production` merged to RC1 via `1e455a82a6542b7a8fb684c69da06221ef6bdba0`.
+- Real RC1 Vercel proof keeps `/api/v1/health` and `/api/ai/chat` at **1.13 MB** each; canonical `/api/v1/[...path]` remains **40.13 MB**.
+- The real RC1→main release matrix re-ran on `1e455a82...` and remains **9/9 PASS**.
+- New product badcase PUI-BC-060: saved substrate could be visually indistinguishable because the renderer invented a default substrate and modeled substrate as discrete grain meshes.
+- Candidate #110 (`agent/substrate-surface-v1`) changes substrate semantics to an explicit full-bottom surface/material layer.
+- Targeted run `32579071402` PASS proves: bare bottom `none` → choose `黑金沙` in Tank Settings → save through repository → 3D renderer consumes `黑金沙`.
+- #110 remains Ready for review / open / unmerged. Production and RC1→main remain unauthorized.
 
 ## 1. Current stack state
 

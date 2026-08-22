@@ -66,3 +66,12 @@ The repository `RC1 Post-Deploy Smoke` requires root HTML, `/api/v1/business-hea
 6. Make the separate RC1→main release decision.
 
 No production deployment or main merge is authorized by this document.
+
+## Latest delta — #109 landed; #110 substrate candidate
+
+- #109 is now merged into RC1 as `1e455a82a6542b7a8fb684c69da06221ef6bdba0`.
+- RC1 Vercel bundle proof remains 1.13 MB / 1.13 MB for the two legacy bridges, with canonical V1 at 40.13 MB.
+- RC1→main release matrix remains 9/9 PASS after #109.
+- #110 is a separate Aquarium visualization candidate; it is not a production deployment and is not merged.
+- #110 targeted browser proof: run `32579071402` PASS.
+

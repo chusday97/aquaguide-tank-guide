@@ -3,7 +3,18 @@
 **Updated:** 2026-08-22  
 **Sync branch:** `agent/rc1-post-107-release-sync`  
 **Release candidate branch:** `integration/aquaguide-rc1`  
-**Current RC1 head:** `8d506fae4b165fdd4aed5f7a04101dc16d5d7d7f`
+**Current RC1 head:** `1e455a82a6542b7a8fb684c69da06221ef6bdba0`
+
+
+## Latest production / Aquarium visualization progress
+
+- [x] #109 merged to RC1; legacy Vercel function bundle bloat fixed in RC1.
+- [x] RC1 `1e455a82...` release matrix re-proven 9/9 PASS.
+- [x] PUI-BC-060 root cause isolated: fake default substrate + grain-mesh rendering semantics.
+- [x] #110 candidate renders substrate as an explicit continuous tank-bottom surface.
+- [x] Browser run `32579071402` proves Tank Settings → select `黑金沙` → repository save → 3D `data-substrate="黑金沙"`.
+- [ ] #110 merged to RC1 — not authorized / not done.
+- [ ] final Vercel deployment for #110 cleanup-only head — blocked by Hobby build-rate-limit, not a code failure; product-equivalent preview `fa41972e...` is READY.
 
 ## Current phase
 

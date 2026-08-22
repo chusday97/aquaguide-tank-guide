@@ -4,6 +4,37 @@
 **Sync branch:** `agent/rc1-post-107-release-sync`  
 **Purpose:** current handoff-level badcase ledger. Canonical historical product registry remains under `evaluation/product/`.
 
+
+## PUI-BC-060 — Saved substrate was not visibly applied to the 3D aquarium
+
+- **Feature:** Aquarium / Tank Settings / 3D visualization
+- **Severity:** high
+- **Status:** `candidate_regression_verified`
+- **Repair PR:** #110 `Render substrate as a tank-bottom surface`
+- **Candidate browser proof:** `32579071402` — PASS
+
+### Fail-before / root cause
+
+1. `ThreeAquarium` silently rendered River Sand for freshwater or Coral Sand for saltwater when `aquarium.substrate` was empty, so a later real selection could look unchanged.
+2. Substrate was partly modeled as hundreds of individual pebble/grain meshes, conflicting with the product meaning of substrate as a continuous tank-floor layer.
+3. There was no stable runtime marker proving that the persisted substrate value was the value consumed by the 3D renderer.
+
+### Repair rule
+
+- bare bottom must remain explicit (`none`), with no invented substrate;
+- renderer must consume `aquarium.substrate` directly;
+- configured substrate must fill the tank bottom as a continuous bed/surface layer;
+- hardscape remains object-based; substrate is not a discrete decoration object;
+- settings persistence and 3D consumption must be covered by one browser path.
+
+### Candidate verification
+
+Run `32579071402` passed source contract, repository settings contract, TypeScript, production build and Chromium browser regression. The browser flow proved: bare bottom → open Tank Settings → choose `黑金沙` → save → persisted aquarium `substrate=黑金沙` → rendered 3D `data-substrate=黑金沙`.
+
+The candidate is verified on #110 but is **not yet in RC1**, so this badcase does not move to `regression_verified` until #110 is explicitly merged and RC1 regression is re-proven.
+
+---
+
 ## EVAL-BC-002 — Post-#105 RC1 evaluator drift after real merge
 
 - **Area:** release evaluation / stacked architecture migration
