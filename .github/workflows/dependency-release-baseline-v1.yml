@@ -12,7 +12,7 @@ permissions:
 jobs:
   audit-dependency-baseline:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,13 +41,64 @@ jobs:
           echo "npm audit exit code: $status"
           exit 0
 
-      - name: Summarize dependency reachability baseline
+      - name: Summarize current dependency reachability baseline
         run: node scripts/summarize-npm-audit.mjs /tmp/npm-audit-prod.json /tmp/npm-audit-all.json
 
-      - name: Upload dependency audit summary
+      - name: Preserve current dependency audit summary
+        run: mv dependency-audit-summary.json dependency-audit-current.json
+
+      - name: Prepare minimal remediation candidate
+        run: node scripts/prepare-dependency-remediation.mjs
+
+      - name: Regenerate lockfile for candidate
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Show candidate dependency diff size
+        shell: bash
+        run: |
+          git diff --stat -- package.json apps/api/package.json package-lock.json
+          git diff -- package.json apps/api/package.json > /tmp/dependency-manifest.diff
+
+      - name: Validate candidate lock install
+        run: npm ci
+
+      - name: Validate candidate types and build
+        run: |
+          npm run lint
+          npm run build
+
+      - name: Capture candidate production audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --omit=dev --json > /tmp/npm-audit-candidate-prod.json
+          status=$?
+          echo "candidate npm audit --omit=dev exit code: $status"
+          exit 0
+
+      - name: Capture candidate full audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > /tmp/npm-audit-candidate-all.json
+          status=$?
+          echo "candidate npm audit exit code: $status"
+          exit 0
+
+      - name: Summarize candidate dependency baseline
+        run: node scripts/summarize-npm-audit.mjs /tmp/npm-audit-candidate-prod.json /tmp/npm-audit-candidate-all.json
+
+      - name: Collect remediation candidate artifact
+        shell: bash
+        run: |
+          mkdir -p dependency-remediation-candidate
+          cp package.json apps/api/package.json package-lock.json dependency-audit-current.json dependency-audit-summary.json dependency-remediation-candidate/
+          cp /tmp/dependency-manifest.diff dependency-remediation-candidate/manifest.diff
+
+      - name: Upload dependency remediation candidate
         uses: actions/upload-artifact@v4
         with:
-          name: dependency-release-baseline
-          path: dependency-audit-summary.json
+          name: dependency-remediation-candidate
+          path: dependency-remediation-candidate
           if-no-files-found: error
           retention-days: 14
