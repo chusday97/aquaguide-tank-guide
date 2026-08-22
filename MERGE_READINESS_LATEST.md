@@ -3,136 +3,131 @@
 **Updated:** 2026-08-22  
 **Parent PR:** #104 `Converge AquaGuide UI/UX system on RC1`  
 **Child PR:** #105 `Introduce decision-first Result UX V1`  
-**Release rule:** no merge or production deployment without explicit authorization.
+**Release rule:** #105 merge and production deployment require separate explicit authorization.
 
 ## Decision
 
-**DEPENDENCY / RELEASE BASELINE: CLOSED ON THE CURRENT FEATURE-BRANCH STACK.  
-#104 MERGE-READINESS REVIEW: COMPLETE, NO CURRENT CODE-LEVEL BLOCKER FOUND.  
-STACK MERGE / RETARGET / PRODUCTION DEPLOYMENT: NOT AUTHORIZED.**
+**#104 PARENT MERGE: COMPLETE.  
+#105 RETARGET / ANCESTRY RECONCILIATION: COMPLETE.  
+FULL RC1-BASED PARENT + CHILD REGRESSION: 10/10 PASS.  
+#105 MERGE: NOT EXECUTED.  
+PRODUCTION DEPLOYMENT: NOT EXECUTED.**
 
-The next engineering action is no longer dependency remediation or another UI feature. The safe work is complete through parent review; the next state transition requires an explicit merge decision.
+Stack convergence is now technically complete on the feature branch. The remaining state transition is a separate #105 merge decision, followed later by a separate production-readiness/deployment decision.
 
-## 1. Parent PR #104 review result
+## 1. #104 merged into RC1
 
-Current topology:
+#104 was merged with an ancestry-preserving merge commit:
 
-- base: `integration/aquaguide-rc1` @ `07a208b68065be1705ba3ee51cde3bbaa398bdaa`
-- head: `agent/uiux-system-refactor-v1` @ `1c2b5a383da3b0d6a90ba72537395fb41deb7841`
-- relation: **ahead 102 / behind 0**
-- GitHub mergeability: **mergeable=true**
-- PR state: **open / non-draft / unmerged**
-- scope size: **102 commits / 52 changed files**
+`2f07075e447778ea37229ca07ef485d8c0686d9c`
 
-This is a large parent PR, so mergeability alone is not sufficient evidence. The review boundary remains frozen: do not add dependency upgrades, new UI features, bundle refactors, or wrapper/Base consolidation to #104.
+The merge-commit tree matched the reviewed #104 head tree, so the parent merge introduced no unexpected content drift.
 
-Importantly, `package.json` and `package-lock.json` are not part of the #104 diff. The dependency/security remediation completed on #105 must not be back-ported into the frozen parent just to make its historical audit output look newer.
+## 2. #105 retargeted and reconciled
 
-### #104 mandatory gate matrix
+#105 now targets:
 
-All five parent gates are green on `1c2b5a38`:
+`integration/aquaguide-rc1`
 
-| Gate | Run | Result |
-| --- | ---: | --- |
-| Navigation Context V1 | `32284228596` | PASS |
-| UI UX System Refactor V1 | `32284228697` | PASS |
-| UI UX Visual QA V2 | `32284228687` | PASS |
-| UI UX Golden V3 | `32284228628` | PASS |
-| Bundle Audit V1 | `32284228685` | PASS |
+After retarget, the first comparison was **ahead 185 / behind 1**. The one behind commit was the new #104 merge commit; there was no product-code conflict.
 
-No current ancestry divergence or merge conflict was found between #104 and its RC1 base. This review does **not** execute the merge.
+A concurrent child update landed during the first reconciliation attempt. GitHub correctly rejected the stale ref update as non-fast-forward, and no force push was used. The latest child tree was preserved and connected to the merged RC1 parent with ancestry-only two-parent commit:
 
-## 2. Child #105 dependency/release baseline
+`ff558c03c5af758b21bcf2098be074189ea7741b`
 
-Dependency remediation landed in `5c277cec1f99f5bb507b7d50b2018d5d571ef0f1` and the permanent read-only dependency gate was established in `8bd327bf69d7a7b74d9ff91f601accddc0ffe7cb`.
+After reconciliation:
 
-Before remediation:
+- merge-base = `2f07075e447778ea37229ca07ef485d8c0686d9c`
+- behind = **0**
+- PR #105 remains Draft / open / mergeable / unmerged
 
-- production audit: 18 findings = 10 high / 6 moderate / 2 low
-- full audit: the same 18 findings
+At verified product head `b2b6830f1864f9600fd32a4f87bf6151970545a1`, #105 was **ahead 188 / behind 0** relative to RC1.
 
-After remediation:
+## 3. Integration fail-before and evaluator migration
 
-- production audit: **0 findings**
-- full audit: **12 dev/build-tooling findings = 7 high / 2 moderate / 3 low**
-
-The remaining full-audit debt is kept visible rather than being represented as zero repository-wide security debt.
-
-### Verified #105 descendant
-
-Head `74738962b3f23631b48973b6d7467276789b4241` passed all five permanent gates:
+The first RC1-based integration head `ff558c03...` exposed two stale parent visual contracts:
 
 | Gate | Run | Result |
 | --- | ---: | --- |
-| Production Security Boundary V1 | `32573206862` | PASS |
-| Dependency Release Baseline V1 | `32573206901` | PASS |
-| Result UX V1 | `32573206841` | PASS |
-| Compatibility Stage Risk V1 | `32573206824` | PASS |
-| Plant Roster Edit Fix | `32573206969` | PASS |
+| UI UX Visual QA V2 | `32574163661` | FAIL |
+| UI UX Golden V3 | `32574163627` | FAIL |
 
-The later docs-only head `9750464c449800153ffa8fdf0b6f3bbaafb53b91` also passed all five gates:
+Security, Dependency, Result UX, Compatibility, Plant, Navigation, Bundle and UI System were green on that integration attempt.
+
+### Root cause
+
+Visual QA still encoded compact-desktop `Today → Manage → Context` at 768px, while approved PUI-BC-058 had already established `Today → Context → Manage` once the desktop shell is active. Phone remains task-first.
+
+Golden V3 changed exactly one state:
+
+- `aquarium-compact-768`: **4.3958% changed**
+- the other 7 golden states: **0% changed**
+
+Artifact inspection confirmed the change was the intended Context/Manage reorder, not unrelated drift.
+
+### Repair
+
+Commit `b2b6830f1864f9600fd32a4f87bf6151970545a1`:
+
+- changes only the 768 semantic expectation to `stacked-context-first`;
+- preserves phone `stacked-task-first`;
+- migrates only `aquarium-compact-768.sig`;
+- records PUI-BC-058/run/artifact/head provenance in the manifest;
+- keeps Golden `maxDiffRatio` at **0.005**;
+- does not change product CSS/layout.
+
+## 4. Final RC1-based full gate matrix
+
+All ten triggered parent + child gates passed on `b2b6830f...`:
 
 | Gate | Run | Result |
 | --- | ---: | --- |
-| Production Security Boundary V1 | `32573357798` | PASS |
-| Dependency Release Baseline V1 | `32573357836` | PASS |
-| Compatibility Stage Risk V1 | `32573357801` | PASS |
-| Plant Roster Edit Fix | `32573357824` | PASS |
-| Result UX V1 | `32573357826` | PASS |
+| Production Security Boundary V1 | `32574415632` | PASS |
+| Dependency Release Baseline V1 | `32574415664` | PASS |
+| Result UX V1 | `32574415605` | PASS |
+| Compatibility Stage Risk V1 | `32574415639` | PASS |
+| Plant Roster Edit Fix | `32574415644` | PASS |
+| Navigation Context V1 | `32574415647` | PASS |
+| Bundle Audit V1 | `32574415704` | PASS |
+| UI UX Golden V3 | `32574415709` | PASS |
+| UI UX Visual QA V2 | `32574415581` | PASS |
+| UI UX System Refactor V1 | `32574415630` | PASS |
 
-Result UX continues to pass Diagnosis, Compatibility, Knowledge, Procedure, Species Detail, Layout Recovery, Identification, and Tank Copilot after dependency remediation.
+This verifies the actual merged-parent + retargeted-child composition rather than the old stacked ancestry.
 
-## 3. Current stacked topology
+## 5. Ready for #105 review / merge decision
 
-Pre-merge structure remains:
+Evidence currently supports a separate #105 merge decision because:
 
-- #104: `integration/aquaguide-rc1` → `agent/uiux-system-refactor-v1`
-- #105: `agent/uiux-system-refactor-v1` → `agent/result-ux-v1`
+- the real RC1 ancestry is reconciled;
+- behind count is 0;
+- GitHub reports the PR mergeable;
+- all ten parent + child gates are green together;
+- dependency production audit remains 0;
+- PUI-BC-058 now agrees across Result UX, Visual QA and Golden;
+- Tank Copilot deterministic-authority and usefulness contracts remain green.
 
-The correct transition remains parent-first:
+This document does **not** authorize or execute #105 merge.
 
-1. explicit authorization to merge #104;
-2. merge #104 to `integration/aquaguide-rc1` using an ancestry-preserving method;
-3. retarget #105 to `integration/aquaguide-rc1`;
-4. inspect the actual post-merge merge-base/history;
-5. resolve only real conflicts or duplicated parent changes;
-6. rerun all five permanent #105 gates on the retargeted ancestry;
-7. review #105 separately;
-8. make an explicit #105 merge/deployment decision.
+## 6. Not production-ready yet
 
-A clean current comparison does not justify skipping the post-retarget verification: the chosen parent merge method can change ancestry even when the pre-merge branches are conflict-free.
+Repository CI cannot prove the real deployment environment. Before production still verify:
 
-## 4. Production readiness remains separate
-
-Repository CI does not prove the deployed environment is ready. Before production, explicitly verify:
-
-- Supabase production configuration and server-only service-role usage;
-- `SHARE_TOKEN_SECRET`;
+- Supabase production configuration and server-only service-role use;
+- auth + persistence;
+- dedicated `SHARE_TOKEN_SECRET`;
 - canonical `WEB_BASE_URL`;
-- auth and persistence;
-- AI provider behavior and failure fallback;
-- Resend configuration;
-- share-report readiness;
-- deployed golden path / `RC1 Post-Deploy Smoke`.
+- configured AI provider behavior, invalid JSON, timeout/fallback and usefulness;
+- Resend/share-report readiness;
+- explicit deployment policy (`vercel.json` still suppresses Git deployment for this repair stack);
+- `RC1 Post-Deploy Smoke` against the real deployed URL.
 
-`vercel.json` currently keeps Git deployment disabled for this repair stack. Do not silently change that release policy.
+## 7. Remaining decisions / debt
 
-## 5. Remaining blockers
+1. Explicit #105 merge decision.
+2. After any authorized #105 merge, verify the resulting RC1 head/release acceptance rather than assuming PR-head proof transfers automatically.
+3. Separate explicit production deployment decision and real environment smoke.
+4. Live Tank Copilot evaluation before production sign-off.
+5. After release foundation: 12 dev/build audit findings, mixed imports, bundle debt, thin wrappers, legacy `server/index.mjs` bridges, then Knowledge Engine work.
 
-1. explicit authorization for the #104 parent merge;
-2. #105 retarget/reconciliation after the real parent merge;
-3. all five #105 gates green on the final RC1-based ancestry;
-4. explicit deployment-policy choice;
-5. real production environment validation;
-6. post-deploy smoke;
-7. explicit #105 merge/deploy authorization.
-
-## 6. Non-blocking debt
-
-- 12 remaining dev/build-tooling npm-audit findings;
-- mixed static/dynamic imports for fish/care data;
-- large main and react-three-fiber chunks;
-- thin wrapper/Base structures inherited from #104;
-- legacy `server/index.mjs` bridges pending Phase 2 consumer inventory.
-
-Do not widen #104/#105 with these debts during stack convergence. The next decision point is the parent merge authorization, not another repair branch expansion.
+Do not widen #105 with unrelated technical debt before the merge decision. The stack itself is converged and verified.
