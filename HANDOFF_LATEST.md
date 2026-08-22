@@ -153,9 +153,9 @@
 
 ## 当前最重要的未修问题
 
-### P1 — Full-page runtime alignment 仍需继续扩展
+### P1 — Human visual acceptance / deployment parity 尚未完成
 
-Aquarium 四类 Surface、Collection 子页、Settings 未提交导航 guard、Search → Species Detail 已完成真实 browser 验证。当前主要未覆盖项收敛为：Identify 完整流程，以及更广泛的 1440 / 1024 / 768 / 390 全页面 popup/overflow matrix。
+Identify 完整流程与未保存退出、Aquarium 四类 Surface、Collection 子页、Settings 未提交导航 guard、Search → Species Detail 均已完成真实 browser 验证；新的全页面 runtime matrix 已覆盖 Aquarium / Encyclopedia / Care / Collection / Identify / Settings / Search × 1440 / 1024 / 768 / 390，共 28 case，当前 28/28 PASS。剩余不再是基础 runtime 缺口，而是用户人工视觉验收、Vercel 同 SHA parity，以及后续新改动持续回归。
 
 ### P2 — 后台与 legacy confirm debt
 
@@ -163,7 +163,7 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 
 ## 当前测试 / 证据状态
 
-当前最新本地 product build（基于 `90c1ad6`）：
+当前最新本地 product/test baseline（基于 `da6dfa6`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
 - `npm run test:taxonomy`：PASS（**501 条**；locale taxonomy drift 0；新增水草在中英文下保持 plant taxonomy）
@@ -184,6 +184,8 @@ AdminContent 等内部页面仍有原生 `window.confirm`/legacy confirmation de
 - Search → Species Detail：PASS；Atlas/Care/global/sidebar search regressions 已对齐当前 scene→browse 产品路径
 - Collection wishlist/care/memorial 子页与返回路径：PASS
 - Mobile Care end-to-end regression：PASS
+- Identify identity→optional health triage + unsaved navigation guard：PASS
+- Full-page runtime matrix：PASS（7 routes × 4 viewports = **28/28**；无 horizontal overflow / initial dialog / body-lock / pageerror）
 
 注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
 
@@ -201,24 +203,14 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 ## 下一步执行顺序
 
-### Step 1 — 完成剩余 runtime alignment
-
-优先覆盖：
-
-1. Identify 未保存退出与结果路径；
-2. 1440 / 1024 / 768 / 390 的全页面 popup geometry 与 horizontal overflow；
-3. 对新发现的真实 runtime 回归继续执行 fail-before-fix → patch → browser regression。
-
-所有结果记录为 `PASS / REGRESSION / PARTIAL / NOT VERIFIED`，不再以 source audit 代替 runtime。
-
-### Step 2 — Human visual baseline + Vercel parity
+### Step 1 — Human visual baseline + Vercel parity
 
 - 继续使用 `http://127.0.0.1:4317/` 作为开发验收源；
 - 用户确认当前视觉后才建立 screenshot golden baseline；
 - Vercel 恢复时 deployed SHA 必须等于已验收 product SHA；
 - Local / Vercel 使用同一 state seed 与 browser regression 做 parity。
 
-### Step 3 — 最后清内部 debt
+### Step 2 — 清内部 / legacy debt
 
 - Admin native confirm；
 - 其他 dead CSS / stale test；
