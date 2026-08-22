@@ -6,6 +6,12 @@
     width: 100%;
   }
 
+  /* Remove the legacy 850px reading corridor only when the Care workspace is truly wide. */
+  [data-care-workspace-detail] .max-w-\[850px\] {
+    max-width: none !important;
+    width: 100%;
+  }
+
   [data-care-workspace-detail] [data-care-first-screen] {
     grid-column: 1 / -1;
     order: 1 !important;
