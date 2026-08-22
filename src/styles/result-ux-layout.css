@@ -37,3 +37,14 @@
     object-fit: cover;
   }
 }
+
+/* Narrow desktop still needs tank identity/context before the management stack.
+   Preserve the existing phone task order; this override applies only once the desktop shell is active. */
+@media (min-width: 768px) {
+  @container aquarium-home (max-width: 719px) {
+    .aquarium-dashboard-v2__decision { order: 1; }
+    .aquarium-dashboard-v2__context { order: 2; }
+    .aquarium-dashboard-v2__manage { order: 3; }
+    .aquarium-dashboard-v2__secondary { order: 4; }
+  }
+}
