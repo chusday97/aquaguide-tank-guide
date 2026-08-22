@@ -1,5 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/ai/chat.js": {
+      "excludeFiles": "dist/**"
+    },
+    "api/v1/health.js": {
+      "excludeFiles": "dist/**"
+    }
+  },
   "headers": [
     {
       "source": "/responsive/(.*)",
