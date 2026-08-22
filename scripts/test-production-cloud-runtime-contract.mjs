@@ -17,7 +17,7 @@ if (/\.listen\s*\(/.test(adapter)) {
   throw new Error('Vercel adapter must not start its own listener.');
 }
 
-requireMarker(apiApp, "legacyApp.use('/api/v1', requestIdMiddleware, v1Router, notFoundHandler);", 'Canonical API app must mount the V1 router under /api/v1.');
+requireMarker(apiApp, "app.use('/api/v1', requestIdMiddleware, v1Router, notFoundHandler);", 'Canonical API app must mount the V1 router under /api/v1.');
 
 const rewrites = Array.isArray(vercel.rewrites) ? vercel.rewrites : [];
 const apiRewriteIndex = rewrites.findIndex(route => route?.source === '/api/v1/:path*' && route?.destination === '/api/v1/[...path]');
