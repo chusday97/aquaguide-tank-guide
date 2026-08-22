@@ -91,8 +91,9 @@ jobs:
       - name: Collect remediation candidate artifact
         shell: bash
         run: |
-          mkdir -p dependency-remediation-candidate
-          cp package.json apps/api/package.json package-lock.json dependency-audit-current.json dependency-audit-summary.json dependency-remediation-candidate/
+          mkdir -p dependency-remediation-candidate/apps/api
+          cp package.json package-lock.json dependency-audit-current.json dependency-audit-summary.json dependency-remediation-candidate/
+          cp apps/api/package.json dependency-remediation-candidate/apps/api/package.json
           cp /tmp/dependency-manifest.diff dependency-remediation-candidate/manifest.diff
 
       - name: Upload dependency remediation candidate
