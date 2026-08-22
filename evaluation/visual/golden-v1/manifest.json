@@ -47,6 +47,14 @@
       "sourceFile": "compact-desktop-768__aquarium__fold.png",
       "masks": [],
       "maxDiffRatio": 0.005,
+      "referenceMigration": {
+        "badcase": "PUI-BC-058",
+        "reason": "At desktop viewport >=768px, tank context intentionally precedes Manage when the Aquarium workspace container remains narrow; phone remains task-first.",
+        "behaviorProofRunId": 32568805769,
+        "visualCaptureRunId": 32574163627,
+        "visualArtifactId": 9476119033,
+        "capturedHead": "ff558c03c5af758b21bcf2098be074189ea7741b"
+      },
       "reference": {
         "sourceWidth": 768,
         "sourceHeight": 900,
