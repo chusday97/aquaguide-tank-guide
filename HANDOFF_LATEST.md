@@ -2,109 +2,88 @@
 
 **Updated:** 2026-08-22  
 **Repository:** `chusday97/aquaguide-tank-guide`  
-**Active branch:** `agent/rc1-post-105-evaluator-repair`  
-**Active PR:** #107 `Repair post-#105 RC1 evaluator drift`  
-**Base:** `integration/aquaguide-rc1`  
-**RC1 head:** `e5a9dd1ccc18a296075521fdd01b0407341af617`  
-**Release rule:** #105 is merged to RC1. Do not merge #107, merge RC1 to `main`, or deploy production without explicit authorization.
+**Sync branch:** `agent/rc1-post-107-release-sync`  
+**Release candidate branch:** `integration/aquaguide-rc1`  
+**Current RC1 head:** `8d506fae4b165fdd4aed5f7a04101dc16d5d7d7f`  
+**Release rule:** RC1 is code/regression clean. Do not merge RC1 to `main` or deploy production without separate explicit authorization.
 
 ## 1. Current stack state
 
-PR #104 and PR #105 are both merged into `integration/aquaguide-rc1`.
+The stacked repair line is now fully converged into RC1:
 
-- #104 merge commit: `2f07075e447778ea37229ca07ef485d8c0686d9c`
-- #105 merge commit: `e5a9dd1ccc18a296075521fdd01b0407341af617`
-- comparison of `e5a9dd1c...` vs `integration/aquaguide-rc1`: **identical / ahead 0 / behind 0**
+- #104 merged to RC1 via `2f07075e447778ea37229ca07ef485d8c0686d9c`.
+- #105 merged to RC1 via `e5a9dd1ccc18a296075521fdd01b0407341af617`.
+- #107 `Repair post-#105 RC1 evaluator drift` merged to RC1 via `8d506fae4b165fdd4aed5f7a04101dc16d5d7d7f`.
+- `main` remains unchanged.
+- No production deployment has been performed.
 
-This means the RC1 branch now contains the full UI/UX System + Result UX product stack. `main` and production remain untouched.
+## 2. Final RC1→main release validation
 
-## 2. Post-#105 merge validation exposed evaluator drift
+After #107 merged, the real RC1→main PR (#102) re-ran the full release/UI matrix on final RC1 ancestry. **9/9 workflows passed**:
 
-After #105 merged, the real RC1→main synthetic validation exposed three red workflows:
+| Gate | Result | Run |
+|---|---|---:|
+| RC1 Release Acceptance | PASS | 32576580996 |
+| Product Golden Path | PASS | 32576580976 |
+| UI Interaction Repair V1 | PASS | 32576580968 |
+| UI UX System Refactor V1 | PASS | 32576580986 |
+| UI UX Visual QA V2 | PASS | 32576580966 |
+| UI UX Golden V3 | PASS | 32576581069 |
+| UI V2 Aquarium | PASS | 32576580983 |
+| Navigation Context V1 | PASS | 32576580972 |
+| Bundle Audit V1 | PASS | 32576580993 |
 
-- RC1 Release Acceptance — run `32575093543` — FAIL
-- UI Interaction Repair V1 — run `32575093548` — FAIL
-- Product Golden Path — run `32575093550` — FAIL
+Critical closure evidence:
 
-Investigation showed stale evaluator assumptions after earlier architectural/interaction migrations, not a newly discovered product-code regression:
+- RC1 Release Acceptance passed persistence contracts, canonical cloud runtime source + runtime smoke, share-report security, Admin/UI source contracts, API typecheck, production build and browser boundaries.
+- Product Golden Path passed GP-001 through GP-005 on final ancestry.
+- GP-002 passed the current two-stage path: read-only species detail → reveal compatibility evidence → explicitly enter the compatibility tool → explicit selection → quantity write → persisted aquarium state.
+- UI Interaction browser regression passed the current `DecisionResultSurface` semantics and navigation/CTA contracts.
+- UI System responsive route scan passed.
+- Visual QA and Golden V3 passed without threshold weakening.
 
-1. production runtime source contract still expected `legacyApp.use('/api/v1', ...)`, while the canonical API app now correctly uses `app.use('/api/v1', ...)`;
-2. UI source/browser contracts still assumed old Species Detail / Encyclopedia file ownership and the removed `[data-compatibility-verdict]` DOM structure;
-3. GP-002 still assumed one-click Species Detail → compatibility drawer, while current product behavior intentionally uses two stages: reveal in-context compatibility evidence, then explicitly enter the full calculator.
+## 3. EVAL-BC-002 — CLOSED for RC code/regression
 
-This is tracked as **EVAL-BC-002**.
+Fail-before after #105 merge:
 
-## 3. PR #107 repair scope
+- RC1 Release Acceptance `32575093543` — FAIL
+- UI Interaction Repair V1 `32575093548` — FAIL
+- Product Golden Path `32575093550` — FAIL
 
-PR #107 currently changes evaluator/test code only. No product CSS, runtime behavior, deterministic compatibility logic, persistence logic, secrets, deployment policy, or production environment is changed.
+Root cause was evaluator drift after legitimate architecture / Result UX migrations, not a newly discovered runtime product regression.
 
-Final functional repair files:
+Repair in #107 migrated assertions to current owners and semantics without changing product CSS/runtime/persistence/rules or relaxing thresholds. A temporary targeted diagnostic `32575689962` passed source contracts, runtime smoke, TypeScript/build, UI browser regression and GP-002 before the repair was merged.
 
-- `scripts/test-production-cloud-runtime-contract.mjs`
-- `scripts/test-ui-interaction-repair-v1.mjs`
-- `scripts/verify-ui-interaction-repair-v1.mjs`
-- `scripts/verify-golden-path-species-to-stocking.mjs`
+Because #107 is now merged and all real RC1→main gates pass, **EVAL-BC-002 is closed for the release-candidate code/regression layer**.
 
-The temporary diagnostic workflow used during investigation was deleted after producing executable proof and is not part of the final PR diff.
+## 4. Permanent product/security baseline
 
-## 4. Executable evidence for #107
+The #107 final head also passed the permanent child gates before merge:
 
-Temporary diagnostic run `32575689962` — **PASS** end to end:
+- Production Security Boundary V1 — PASS `32576188012`
+- Dependency Release Baseline V1 — PASS `32576188054`
+- Compatibility Stage Risk V1 — PASS `32576188009`
+- Plant Roster Edit Fix — PASS `32576188004`
+- Result UX V1 — PASS `32576188011`
 
-- Production cloud runtime source contract — PASS
-- Production cloud runtime smoke — PASS
-- UI interaction source contract — PASS
-- TypeScript — PASS
-- Production build — PASS
-- UI interaction browser regression — PASS
-- GP-002 continuous browser path — PASS
+Production dependency audit remains **0 findings**. The full developer/build graph still contains 12 dev-only findings (7 high / 2 moderate / 3 low), tracked as tooling debt rather than production-runtime release findings.
 
-The GP-002 path still proves:
-
-`search species → read-only detail → reveal compatibility evidence → explicitly enter compatibility tool → explicit species selection → quantity ×6 → risk confirmation when required → real persisted aquarium write`
-
-Opening a Species Detail remains read-only and does not silently mutate compatibility selection.
-
-## 5. Permanent gate proof on the repaired evaluator head
-
-Verified evaluator head before this documentation refresh: `13ef3b4c2fd3c7df9fb43127da4dcf153e1bfc7a`.
-
-Permanent gates on that head:
-
-- Production Security Boundary V1 — **PASS**, run `32575784071`
-- Dependency Release Baseline V1 — **PASS**, run `32575784098`
-- Compatibility Stage Risk V1 — **PASS**, run `32575784108`
-- Plant Roster Edit Fix — **PASS**, run `32575784097`
-- Result UX V1 — **PASS**, run `32575784082`
-
-Result UX includes Diagnosis, Compatibility, Knowledge, Procedure, Species Detail + parent-context return, Layout Recovery, Identification explicit confirmation, and Tank Copilot authority/usefulness regressions.
-
-## 6. Dependency/security baseline
-
-Production dependency audit remains **0 findings**.
-
-Full developer/build graph still contains **12 dev-only findings**:
-
-- 7 high
-- 2 moderate
-- 3 low
-
-The permanent read-only Dependency Release Baseline gate blocks production high/critical findings. Do not use broad `npm audit fix` merely to force total vulnerability count to zero.
-
-## 7. Product baseline carried forward
+## 5. Product baseline carried forward
 
 - deterministic compatibility and life-stage risk remain authoritative;
 - AI cannot override hard safety decisions;
-- Tank Copilot has separate schema, deterministic-safety, and usefulness contracts;
-- plant roster editing remains covered;
+- Tank Copilot has separate schema, deterministic-safety and usefulness contracts;
+- missing blocking tank facts outrank subjective preference questions;
+- model omissions cannot erase deterministic safe/adjustable candidates;
+- plant roster edit remains covered;
 - share-report server-secret boundary remains covered;
 - Care wide-desktop layout recovery remains covered;
-- narrow-desktop Aquarium hierarchy remains `Today → Context → Manage` while phone stays task-first;
+- narrow-desktop Aquarium uses `Today → Context → Manage`, while phone remains task-first;
+- Species Detail browsing is read-only with respect to compatibility selection;
 - identification uncertainty requires explicit confirmation;
-- Species Detail browsing remains separate from compatibility selection;
 - exact return context remains covered across cross-route tasks.
 
-## 8. Backend/runtime boundary
+## 6. Backend/runtime boundary
 
 Phase 1 authoritative path remains:
 
@@ -115,25 +94,28 @@ Known legacy bridges still exist:
 - `api/ai/chat.js -> server/index.mjs`
 - `api/v1/health.js -> server/index.mjs`
 
-Do not delete these before Phase 2 consumer inventory and one-bridge-at-a-time migration.
+Do not remove them before Phase 2 consumer inventory and one-bridge-at-a-time migration.
 
-## 9. Remaining release risks
+## 7. Release status: code clean, production not yet proven
 
-1. **#107 is not merged into RC1 yet.** The three original RC1→main red workflows therefore remain expected on the current RC1 head.
-2. **Final RC1→main acceptance has not been re-proven after #107.** After a separately authorized #107 merge, rerun Release Acceptance, UI Interaction, Product Golden, and the permanent product/security gates on final ancestry.
-3. **Live AI provider usefulness remains unmeasured.** Repository fixtures prove encoded behavior, not representative real-provider quality.
-4. **Production smoke is still incomplete.** Preview/build green is not production proof.
-5. **Legacy server Phase 2 has not started.**
-6. **Knowledge Engine remains planned, not implemented.**
+**Current classification:** `release-candidate clean` for repository code, browser regression and synthetic release acceptance.
 
-## 10. Next execution order
+This is **not** the same as `production-ready` because the real deployed environment has not yet been accepted.
 
-1. **#107 review state** — keep scope evaluator-only, verify final diff/gates, then make it review-ready. No merge without explicit authorization.
-2. **#107 merge decision** — if explicitly authorized, merge to `integration/aquaguide-rc1` with expected head locking.
-3. **Final RC1 acceptance** — rerun/observe the actual RC1→main Release Acceptance, UI Interaction, Product Golden and permanent gates on the new RC1 head. Exit criterion: no red gate and no threshold weakening.
-4. **Live AI usefulness evaluation** — representative configured-provider cohort for blocking-fact priority, candidate-drop, hallucinated preference, generic-answer, invalid JSON, timeout and fallback behavior.
-5. **Production readiness** — only after explicit deployment authorization: verify production env/secrets, Supabase/auth/persistence, live AI/fallback, Resend/share reports, then run post-deploy golden paths.
-6. **Legacy server Phase 2** — inventory consumers, migrate one bridge at a time, regression before deletion.
-7. **Knowledge Engine** — provenance/version schema → trusted ingestion/freshness → evaluation → hybrid retrieval → grounded citations/results → knowledge ops.
+Still required before production release:
 
-The immediate objective is **not new feature work**. It is to make the merged RC1 stack reproducibly clean under the actual release evaluators, then prove live-provider and production behavior separately.
+1. representative live-provider Tank Copilot usefulness evaluation;
+2. production env/secrets verification, including Supabase/Auth/persistence, `SHARE_TOKEN_SECRET`, `WEB_BASE_URL`, AI provider/fallback and Resend/share-report configuration;
+3. real deployed RC1 Post-Deploy Smoke requiring frontend HTML, `/api/v1/business-health` JSON, `databaseConfigured=true`, and JSON 404 for unknown `/api/v1/*`;
+4. post-deploy golden-path acceptance on the actual release URL.
+
+## 8. Next execution order
+
+1. Keep RC1 frozen from new feature work while release readiness is evaluated.
+2. Run live AI usefulness cohort and record fail/pass cases separately from deterministic safety.
+3. Prepare production environment matrix and deployment checklist.
+4. Only after explicit deployment authorization, deploy RC1 and run Post-Deploy Smoke + production golden paths.
+5. If production acceptance is green, make the separate RC1→`main` release decision.
+6. Then proceed to legacy server Phase 2 and Knowledge Engine work.
+
+The immediate objective is no longer stack convergence. It is **prove the same clean behavior against the real provider and real production environment without weakening deterministic safety or release gates**.
