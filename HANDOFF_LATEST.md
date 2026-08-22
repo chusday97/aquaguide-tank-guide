@@ -150,20 +150,25 @@
 - `f34eb29`：修复 mobile Task Sheet 双重 translate 导致半屏移出 viewport；Aquarium primary Task 入口互斥，禁止设置/添加/缸内物种 Task Rail 同时叠开；新增 Task / Detail / Blocking / Media 四类 runtime matrix 并接入 UI regression workflow。
 - 同 `3145922`：`isAquaticPlantSpecies` / `isHardscapeSpecies` 改为 canonical identity 判定，修复新增水草在英文模式被误判为 fish 的 locale drift；501 条 taxonomy PASS。
 - `90c1ad6`：所有业务 `DialogContent` 已显式声明 `surface=`；删除 shared Dialog 的 class/尺寸/close-button visual inference；删除 Encyclopedia 约 229 行永远关闭的 legacy detail；旧 Settings/Search/mobile Care browser tests 同步到当前真实交互。
+- `2086059`：退役最后两套手写 Dialog；Species Export → Media，Compatibility Adjustment → Task；删除不可达 `conflictDetail` 分支；业务手写 `role=dialog/aria-modal` = 0；compatibility evidence audit 更新到 501 条。
 
 ## 当前最重要的未修问题
 
+### P1 — Compatibility evidence coverage 只有 0.60%
+
+当前 501 条物种只有 3 条 reviewed behavior profile、1 条 reviewed pair rule。抽样 12,000 个真实组合时 `behavior_evidence_unreviewed` 是主要 medium missing-data；抽样 30,000 个真实组合没有出现 `caution`。这不是 UI bug，而是证据覆盖不足。禁止降低 evidence gate 来制造“可尝试”结果；下一步应扩 reviewed evidence + citation + confidence。
+
 ### P1 — Human visual acceptance / deployment parity 尚未完成
 
-Identify 完整流程与未保存退出、Aquarium 四类 Surface、Collection 子页、Settings 未提交导航 guard、Search → Species Detail 均已完成真实 browser 验证；新的全页面 runtime matrix 已覆盖 Aquarium / Encyclopedia / Care / Collection / Identify / Settings / Search × 1440 / 1024 / 768 / 390，共 28 case，当前 28/28 PASS。剩余不再是基础 runtime 缺口，而是用户人工视觉验收、Vercel 同 SHA parity，以及后续新改动持续回归。
+Identify、Aquarium Surface、Collection 子页、Settings guard、Search → Detail 与 28-case 全页面 matrix 均已 browser 验证。剩余是用户人工视觉验收、Vercel 同 SHA parity，以及后续新改动持续回归。
 
-### P2 — Remaining internal/stale-test debt
+### P2 — Remaining stale-test / dead-style debt
 
-`window.confirm` 已从 Aquarium 与 AdminContent 全部移除；Admin 未保存切换与发布/下线确认已统一到 shared Blocking Surface。剩余主要是手写 dialog/旧测试/死样式审计，以及最终分支语义 reconciliation。
+`window.confirm` = 0；业务手写 `role=dialog` / `aria-modal` = 0；所有业务 DialogContent 显式 `surface=`。剩余主要是旧测试/死样式和最终分支 semantic reconciliation。
 
 ## 当前测试 / 证据状态
 
-当前最新本地 product/test baseline（基于 `519bb32`）：
+当前最新本地 product/test baseline（基于 `2086059`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
 - `npm run test:taxonomy`：PASS（**501 条**；locale taxonomy drift 0；新增水草在中英文下保持 plant taxonomy）
@@ -187,6 +192,9 @@ Identify 完整流程与未保存退出、Aquarium 四类 Surface、Collection �
 - Identify identity→optional health triage + unsaved navigation guard：PASS
 - Full-page runtime matrix：PASS（7 routes × 4 viewports = **28/28**；无 horizontal overflow / initial dialog / body-lock / pageerror）
 - Admin unsaved-change / status confirmation：PASS（shared Blocking；全仓 `window.confirm` = 0）
+- Species export Media regression：PASS（variant switch / PNG / print）
+- Business hand-built dialog semantics：0；governance PASS
+- Compatibility evidence audit：501 total / 3 reviewed / 1 pair rule / **0.60% coverage_gap**
 
 注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
 
@@ -204,17 +212,23 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 ## 下一步执行顺序
 
-### Step 1 — Human visual baseline + Vercel parity
+### Step 1 — 扩 Compatibility reviewed evidence
+
+- 保持 `behavior_evidence_unreviewed` 的严格门槛，不通过降级规则制造可用结果；
+- 优先补高频淡水物种的 reviewed behavior profile；
+- 每条必须有 citation / confidence / reviewStatus；
+- 持续运行 evidence coverage audit，覆盖率只能上升不能回退。
+
+### Step 2 — Human visual baseline + Vercel parity
 
 - 继续使用 `http://127.0.0.1:4317/` 作为开发验收源；
 - 用户确认当前视觉后才建立 screenshot golden baseline；
-- Vercel 恢复时 deployed SHA 必须等于已验收 product SHA；
-- Local / Vercel 使用同一 state seed 与 browser regression 做 parity。
+- Vercel deployed SHA 必须等于已验收 product SHA；
+- Local / Vercel 使用同一 seed 与 regression 做 parity。
 
-### Step 2 — 清内部 / legacy debt
+### Step 3 — stale test / dead CSS / branch reconciliation
 
-- 扫描并退役剩余手写 `role=dialog` / `aria-modal`；
-- 其他 dead CSS / stale test；
+- 清其他 dead CSS / stale test；
 - main/RC1/#104/#105 semantic reconciliation，禁止覆盖式 merge。
 
 ## 禁止事项
@@ -233,6 +247,6 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - browser regression PASS ≠ human visual acceptance。
 - Vercel success ≠ deployed SHA 一定是当前 review SHA。
 - source audit ≠ runtime audit。
-- 当前已无已知 720px Detail Rail P0；最高优先未完成项转为 **English taxonomy presentation + extended runtime alignment**。
+- 当前已无已知 720px Detail Rail / Surface runtime P0；最高优先未完成项转为 **Compatibility reviewed evidence coverage + human visual/Vercel parity**。
 
 同时参考：`ALIGNMENT_AUDIT_LATEST.md`、`UI_REGRESSION_CONTRACT.md`、`BADCASE_LATEST.md`、`PROGRESS_LATEST.md`、`SURFACE_INVENTORY_LATEST.md`。
