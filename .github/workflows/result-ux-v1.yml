@@ -32,6 +32,9 @@ jobs:
       - name: Tank Copilot deterministic boundary contract
         run: npm run test:copilot-contract
 
+      - name: Tank Copilot usefulness contract
+        run: node --import tsx scripts/test-tank-copilot-usability.ts
+
       - name: Production share-token secret boundary
         run: npm run test:share-report-contract
 
