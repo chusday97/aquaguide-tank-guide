@@ -1,104 +1,95 @@
 # AquaGuide — Latest Progress
 
 **Updated:** 2026-08-22  
-**Branch:** `agent/rc1-post-105-evaluator-repair`  
-**PR:** #107 `Repair post-#105 RC1 evaluator drift`  
-**Base:** `integration/aquaguide-rc1`  
-**Current RC1 head:** `e5a9dd1ccc18a296075521fdd01b0407341af617`
+**Sync branch:** `agent/rc1-post-110-release-sync`  
+**Release candidate:** `integration/aquaguide-rc1`  
+**Current RC1 head:** `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 
 ## Current phase
 
-**#104 merged → #105 merged to RC1 → post-merge evaluator drift reproduced → evaluator repair verified in #107 → final RC1 acceptance blocked only on #107 merge decision.**
+**RC1 feature/UI/evaluator/bundle/substrate repair is converged and regression-clean through #110. Next phase is production readiness, not unrelated feature expansion.**
 
 No merge to `main` and no production deployment has been performed.
 
-## Stack convergence
+## Convergence checklist
 
-- [x] #104 merged to RC1 via `2f07075e447778ea37229ca07ef485d8c0686d9c`.
-- [x] #105 reconciled against the merged #104 ancestry.
-- [x] #105 merged to RC1 via `e5a9dd1ccc18a296075521fdd01b0407341af617`.
-- [x] RC1 branch verified identical to #105 merge commit after merge.
-- [ ] #107 merged to RC1 — **not authorized / not done**.
-- [ ] RC1→main acceptance re-proven after #107 — blocked until the previous item is explicitly authorized.
+- [x] #104 merged to RC1 — UI/UX system convergence.
+- [x] #105 merged to RC1 — Result UX V1.
+- [x] #107 merged to RC1 — post-#105 evaluator drift repair.
+- [x] #109 merged to RC1 — legacy Vercel function bundle trim.
+- [x] #110 merged to RC1 — substrate as explicit tank-bottom surface/material.
+- [x] RC1 head after #110: `5e605fb7a68001ecd80096ef42f063909cf5aa03`.
+- [x] Real RC1→main synthetic release matrix re-run after #110.
+- [x] Exact merged-head substrate browser path re-run on isolated AquaGuide preview.
+- [ ] RC1→main merge — not authorized.
+- [ ] Production deploy — not authorized.
 
-## Post-merge fail-before evidence
-
-The real RC1→main synthetic checks surfaced three failures after #105 merged:
-
-| Gate | Result | Run | Classification |
-|---|---|---:|---|
-| RC1 Release Acceptance | FAIL | 32575093543 | evaluator drift |
-| UI Interaction Repair V1 | FAIL | 32575093548 | evaluator drift |
-| Product Golden Path | FAIL | 32575093550 | evaluator drift |
-
-Root causes were stale assumptions about:
-
-- canonical API app variable/mount ownership;
-- Species Detail and Encyclopedia wrapper/Base file ownership;
-- removed legacy Compatibility verdict DOM markers;
-- one-click Species Detail → calculator behavior instead of the current two-stage evidence → calculator intent.
-
-No product-code rollback or threshold relaxation was used.
-
-## #107 evaluator repair
-
-Final functional repair scope is limited to four evaluator/test files:
-
-- [x] `scripts/test-production-cloud-runtime-contract.mjs`
-- [x] `scripts/test-ui-interaction-repair-v1.mjs`
-- [x] `scripts/verify-ui-interaction-repair-v1.mjs`
-- [x] `scripts/verify-golden-path-species-to-stocking.mjs`
-
-No product runtime/CSS/persistence/rule/security/deployment code is part of the repair.
-
-## Executable diagnostic proof
-
-Temporary PR-only diagnostic run `32575689962` — **PASS**:
-
-- [x] production cloud runtime source contract
-- [x] production cloud runtime smoke
-- [x] UI interaction source contract
-- [x] TypeScript
-- [x] production build
-- [x] UI interaction browser regression
-- [x] GP-002 continuous browser path
-
-The temporary workflow was deleted after validation and is not part of the final PR diff.
-
-## Permanent gate matrix on verified repair head
-
-Verified repair head before documentation refresh: `13ef3b4c2fd3c7df9fb43127da4dcf153e1bfc7a`.
+## Post-#110 RC1 release matrix
 
 | Gate | Result | Run |
 |---|---|---:|
-| Production Security Boundary V1 | PASS | 32575784071 |
-| Dependency Release Baseline V1 | PASS | 32575784098 |
-| Compatibility Stage Risk V1 | PASS | 32575784108 |
-| Plant Roster Edit Fix | PASS | 32575784097 |
-| Result UX V1 | PASS | 32575784082 |
+| RC1 Release Acceptance | PASS | 32579834369 |
+| Product Golden Path | PASS | 32579834368 |
+| UI Interaction Repair V1 | PASS | 32579834400 |
+| UI UX System Refactor V1 | PASS | 32579834362 |
+| UI UX Visual QA V2 | PASS | 32579834402 |
+| UI UX Golden V3 | PASS | 32579834371 |
+| UI V2 Aquarium | PASS | 32579834499 |
+| Navigation Context V1 | PASS | 32579834412 |
+| Bundle Audit V1 | PASS | 32579834439 |
 
-## EVAL-BC-002 — post-#105 evaluator drift
+Result: **9/9 PASS** on actual RC1 ancestry after #110.
 
-- [x] Captured real post-merge failures instead of assuming #105 merge was release-clean.
-- [x] Kept source-contract assertions but migrated them to current owners.
-- [x] Replaced removed Compatibility DOM marker checks with current `DecisionResultSurface` semantics.
-- [x] Preserved result-first ordering, Unknown != Safe, inline AI explanation and exact navigation-context rules.
-- [x] Updated GP-002 to the current deliberate two-stage compatibility intent.
-- [x] Proved browser behavior after the migration.
-- [x] Removed temporary diagnostic workflow.
-- [ ] Merge #107 — requires separate explicit authorization.
-- [ ] Re-run actual RC1→main acceptance after merge.
+## Substrate Surface V1 closure
+
+- [x] PR-head permanent gate `32579395579` — PASS.
+- [x] Targeted diagnostic `32579071402` — PASS.
+- [x] Source contract: no invented substrate fallback; full-bed surface semantics; no grain-mesh cloud.
+- [x] Aquarium settings repository contract — PASS.
+- [x] TypeScript — PASS.
+- [x] Production build — PASS.
+- [x] Browser path on merged RC1 head — PASS: `none → 黑金沙 → repository save → 3D consumes 黑金沙`.
+
+An earlier merged-head browser retry on port 4173 timed out because that port was serving IceGlide instead of AquaGuide. A diagnostic confirmed IceGlide page content and missing AquaGuide controls. Re-run on isolated port 4189 passed. This is treated as test-environment contamination, not product failure.
+
+## PUI-BC-060
+
+- [x] Fail mode identified: saved substrate could be visually indistinguishable from an invented default.
+- [x] Root semantic mismatch identified: substrate was partly treated like discrete decoration objects.
+- [x] Renderer now consumes persisted substrate directly.
+- [x] Bare bottom is explicit `none`.
+- [x] Configured substrate fills the tank floor as a continuous material layer.
+- [x] Browser regression proves persistence and 3D consumption in one path.
+- [x] Merged into RC1 and re-proven on final ancestry.
+
+Status: **`regression_verified`**.
+
+## #109 bundle baseline carried forward
+
+- [x] `/api/v1/health` legacy function reduced to 1.13 MB in the verified #109/RC1 preview.
+- [x] `/api/ai/chat` legacy function reduced to 1.13 MB.
+- [x] canonical `/api/v1/[...path]` stayed 40.13 MB.
+- [x] Post-#110 Bundle Audit remains green.
+
+A fresh `5e605fb7...` Vercel preview was not observed during this step because the Hobby project had recently hit build-rate-limit. Do not treat missing preview creation as a product regression.
+
+## Dependency / security baseline
+
+- production audit: **0 findings**;
+- full developer/build graph: **12 dev-only findings** = 7 high / 2 moderate / 3 low;
+- permanent dependency release gate remains the authority for production dependency blocking;
+- broad `npm audit fix` remains disallowed as a shortcut.
 
 ## AI usefulness baseline
 
-PUI-BC-059 remains closed for encoded repository-level failure modes:
+Encoded repository-level failure modes remain guarded:
 
 - [x] schema-valid is not treated as sufficient;
-- [x] deterministic safety remains authoritative;
-- [x] missing blocking tank facts outrank subjective preference chatter;
-- [x] model empty selection cannot erase deterministic safe/adjustable candidates;
+- [x] deterministic safety stays authoritative;
+- [x] blocking tank facts outrank subjective preference chatter;
+- [x] candidate-drop recovery is constrained to deterministic safe/adjustable pools;
 - [x] unnecessary `restart_goal` is rejected when executable candidates exist;
-- [x] prompt requires concrete candidate/quantity planning.
+- [x] concrete candidate/quantity planning is required.
 
 Still open before production:
 
@@ -110,44 +101,29 @@ Still open before production:
 - [ ] invalid JSON recovery;
 - [ ] timeout/network fallback behavior.
 
-## Dependency-security baseline
+## Production-readiness backlog
 
-- production audit: **0 findings**;
-- full developer/build graph: **12 dev-only findings** = 7 high / 2 moderate / 3 low;
-- permanent production dependency gate remains read-only and green.
+- [ ] obtain a current-RC1 Vercel preview once build capacity is available;
+- [ ] re-check legacy function bundle sizes on that preview;
+- [ ] verify production env/secrets rather than assuming Preview settings match Production;
+- [ ] verify Supabase auth and persistence in deployed environment;
+- [ ] verify live AI provider + fallback behavior;
+- [ ] verify Resend/share-report path;
+- [ ] run post-deploy golden paths only after explicit deployment authorization;
+- [ ] keep RC1→main as a separate explicit merge decision.
 
-## Product baseline carried forward
+## Later maintenance
 
-- [x] deterministic compatibility / stage-risk authority boundary;
-- [x] plant roster edit;
-- [x] decision-first Result UX;
-- [x] share-report server-secret boundary;
-- [x] Care wide-desktop layout recovery;
-- [x] narrow-desktop Aquarium `Today → Context → Manage` hierarchy;
-- [x] phone task-first hierarchy preserved;
-- [x] identification uncertainty / explicit confirmation;
-- [x] Species Detail browsing separated from compatibility selection;
-- [x] exact return context across cross-route tasks;
-- [x] Tank Copilot authority + usefulness guards.
-
-## Next sequence
-
-1. Make #107 review-ready after final diff/gate confirmation.
-2. Await explicit #107 merge authorization.
-3. If authorized, merge #107 to RC1 with expected-head protection.
-4. Validate the actual RC1→main Release Acceptance / UI Interaction / Product Golden / permanent gates on final ancestry.
-5. Run live AI usefulness evaluation.
-6. Production env/secrets + post-deploy golden paths only after deployment authorization.
-7. Legacy `server/index.mjs` Phase 2 consumer inventory/migration.
-8. Knowledge Engine after the release foundation is reproducible.
+- [ ] legacy `server/index.mjs` Phase 2 consumer inventory and one-bridge-at-a-time migration;
+- [ ] developer/build dependency debt cleanup without expanding production risk;
+- [ ] Knowledge Engine: provenance/version schema → trusted ingestion/freshness → evaluation → hybrid retrieval → grounded results → knowledge ops.
 
 ## Guardrails
 
-- A merged PR is not automatically a release-ready RC.
-- Source-contract failures must be classified before modifying product code.
-- Browser evidence outranks assumptions from file layout.
-- Do not delete assertions merely because architecture moved; migrate them to the real owner.
-- Do not weaken visual or browser thresholds to make CI green.
-- Preview/build success is not production proof.
+- A merged PR is not automatically production-ready.
+- Browser evidence outranks source assumptions for user-visible behavior.
+- Test-environment contamination must be separated from product regressions.
+- Do not weaken visual/browser thresholds to make CI green.
+- Preview/build green is not production proof.
 - AI cannot override deterministic safety rules.
-- Do not merge #107, merge RC1 to `main`, or deploy production without explicit authorization.
+- Do not merge RC1 to `main` or deploy production without explicit authorization.
