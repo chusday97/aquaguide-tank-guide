@@ -39,6 +39,7 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - #120 Compatibility Evidence Provenance V1 removes lossy duplicate `pair_rule_* -> tank_condition` conversion and keeps direct reviewed pair rules evidence-aware exactly once.
 - `test:compatibility-evidence-coverage` now passes on 132 priority directions and is part of the permanent P0 Compatibility workflow.
 - #120 permanent gates PASS on `f4c02d0`: Compatibility `32640983537`, Whole-Tank `32640983542`, Tank State `32640983524`.
+- Full Product Golden workflow revalidation PASS on #120 stack: product evaluation (19 features / 114 states / 53 badcases), Golden Path contract, compatibility evidence/coverage audits, repository persistence contracts, lint/build, Care/Search/Identify browser regressions, and GP-001/002/003/004/005 continuous browser paths.
 
 ## Current Regression Proof
 
@@ -77,9 +78,9 @@ Latest local regression PASS:
 
 ## Next Execution Order
 
-1. Re-run P0 acceptance + Product Golden/GP-001/GP-002/GP-003/GP-004 on the full stack.
-2. Review remaining non-authoritative legacy health-score/support surfaces against P0 exit criteria; do not let them regain decision authority.
-3. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+1. Review remaining non-authoritative legacy health-score/support surfaces against P0 exit criteria; do not let them regain decision authority.
+2. If that review finds no decision-authority leak, P0 decision-layer exit criteria are green and the next step is stacked-PR landing strategy.
+3. Resume #112 UI work only after the stack landing decision is explicitly authorized.
 
 ## Branch note
 

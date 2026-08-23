@@ -244,3 +244,5 @@ Still open before production:
 - Draft stacked PR #120 opened against #119. No verdict threshold, UI, RC1/main branch or production state changed.
 - #120 final-head permanent gates PASS: Compatibility `32640983537`, Whole-Tank `32640983542`, Tank State `32640983524`.
 - `AQ-BC-EVAL-002` is regression-verified; next step is full-stack P0 acceptance / Product Golden browser revalidation.
+- Full Product Golden local revalidation PASS on #120 stack: all contract/persistence checks plus Care/Search/Identify and GP-001/002/003/004/005 browser paths.
+- No known P0 gate is red; remaining exit review is legacy health-score/support-surface authority only.
