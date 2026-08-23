@@ -284,3 +284,14 @@ Still open before production:
 - Atlas authority contract PASS; Product Evaluation (19/114/53), Golden Path contract (5 journeys), P0 Compatibility 5/5, Tank State 11/11, Water Change 8/8, TypeScript, production build and diff-check PASS.
 - Responsive browser regression PASS at 390/900/1600 with no horizontal overflow and exact discovery-scene restoration; final screenshots were manually reviewed.
 - `AQ-BC-ATLAS-001` added as regression-verified. Next step is GitHub gates on #122; no RC1/main merge or production deployment performed.
+
+## 2026-08-24 — Interactive Atlas landing completed
+
+- Final #122 candidate head `d2a6167ee49324b776c551476d717e8c8fccc7c5` included Context Sync and passed 12/12 triggered GitHub workflows; Interactive Atlas Re-entry run `32652829940` PASS.
+- Final authority review against RC1 showed 8 changed files / +465 -13; no Aquarium decision owner, Compatibility engine, Tank State, Water Change, domain-rules or aquarium decision service files were modified.
+- Old PR #112 was explicitly marked superseded and closed unmerged.
+- #122 was marked Ready and merged to `integration/aquaguide-rc1` with a normal merge commit and expected-head protection; runtime RC1 head became `d3e9ee54f7d0820d2fa06ac25431a429eddc4bac`.
+- Exact merged RC1 P0 gates PASS: Compatibility `32653084013`, Tank State `32653084081`, Tank Evidence `32653084020`, Existing Tank `32653084011`, Water Change `32653084097`, Whole-Tank `32653083976`.
+- Exact merged RC1 release matrix PASS: RC1 Release Acceptance `32653084047`, Product Golden `32653083913`, UI Interaction `32653084003`, UI UX System `32653084112`, UI UX Visual QA `32653084006`, UI UX Golden V3 `32653084133`, UI V2 Aquarium `32653084060`, Navigation `32653084051`, Bundle Audit `32653083984`.
+- Result: **15/15 PASS** on Atlas runtime head. `AQ-BC-ATLAS-001` is regression-verified on RC1. No RC1→main merge or production deployment performed.
+- Next phase: continue UI/UX refinement from current RC1 while preserving the landed decision authorities.
