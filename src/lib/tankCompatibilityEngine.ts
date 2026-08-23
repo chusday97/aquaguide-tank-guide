@@ -418,9 +418,10 @@ export const evaluateTankCompatibility = ({
   const livestock = currentLivestock.map(item => ({ species: item.species, record: { quantity: item.quantity } }));
   const fit = evaluateSpeciesForAquarium(candidateSpecies, tank, livestock);
 
-  fit.matchedItems.forEach(item => passedRules.push(convertFitItem(item, 'info')));
-  fit.warnings.forEach(item => warningRules.push(convertFitItem(item, item.severity || 'medium')));
-  fit.hardBlocks.forEach(item => blockingRules.push(convertFitItem(item, item.severity || 'high')));
+  const isPairRuleFitItem = (item: { type: string }) => item.type.startsWith('pair_rule_');
+  fit.matchedItems.filter(item => !isPairRuleFitItem(item)).forEach(item => passedRules.push(convertFitItem(item, 'info')));
+  fit.warnings.filter(item => !isPairRuleFitItem(item)).forEach(item => warningRules.push(convertFitItem(item, item.severity || 'medium')));
+  fit.hardBlocks.filter(item => !isPairRuleFitItem(item)).forEach(item => blockingRules.push(convertFitItem(item, item.severity || 'high')));
   fit.confirmations.forEach(item => missingData.push(convertFitItem(item, 'low')));
 
   const tankVolume = getAquariumVolumeLiters(tank);

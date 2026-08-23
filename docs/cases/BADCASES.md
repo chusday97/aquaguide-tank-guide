@@ -118,11 +118,11 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 
 ---
 
-## AQ-BC-EVAL-002 — Compatibility evidence provenance coverage is red on the upstream baseline
+## AQ-BC-EVAL-002 — Direct reviewed pair evidence loses provenance through species-fit duplication
 
-**Status:** `OPEN`
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-compatibility-evidence-provenance-v1`
 **Related Rules:** compatibility evidence provenance / evaluator integrity
-**Observed behavior:** `test:compatibility-evidence-coverage` expects direct predator-prey evidence provenance `pair_rule`, while #116 baseline and the current stack return `tank_condition`.
-**Expected behavior:** The evidence model and evaluator must agree on the canonical provenance for reviewed predator-prey evidence without weakening the actual predation block.
-**Root cause:** Pre-existing upstream evaluator/model drift; reproduced unchanged on #116 head `249d5b6`.
-**Regression:** Baseline reproduction is documented; intentionally not repaired inside Existing Tank Authority wiring because this PR does not change Compatibility provenance.
+**Observed behavior:** `test:compatibility-evidence-coverage` expected direct predator-prey evidence provenance `pair_rule`, but the first matching `pair_rule_predation_threat` was a lossy duplicate marked `tank_condition` with empty citations.
+**Expected behavior:** Direct reviewed pair evidence is emitted once by the evidence-aware Compatibility owner, retains `basis = pair_rule`, reviewed status, affected species and citations, and preserves the laboratory-to-husbandry limitation without changing the blocking verdict.
+**Root cause:** `speciesFitEngine` surfaced a `pair_rule_*` fit item for standalone fit UX; `tankCompatibilityEngine` then re-imported that item through generic `convertFitItem()` as `tank_condition` before independently adding the canonical reviewed pair rule. The result contained two rules with the same code but different provenance quality.
+**Regression:** #119 head `79b06c7` reproduces the failure. `test:compatibility-evidence-coverage` now requires exactly one evidence-aware direct pair rule for Oscar–zebrafish and Channa–Rhodeus, with `basis = pair_rule` and retained peer-reviewed citations. The P0 Compatibility permanent gate now runs this coverage test.

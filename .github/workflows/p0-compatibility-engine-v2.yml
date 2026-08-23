@@ -31,6 +31,8 @@ jobs:
         run: npm run test:p0-compatibility
       - name: Compatibility regression
         run: npm run test:compatibility
+      - name: Compatibility evidence provenance coverage
+        run: npm run test:compatibility-evidence-coverage
       - name: Species-fit regression
         run: npx tsx scripts/test-species-fit-engine.ts
       - name: Addition-intent contract

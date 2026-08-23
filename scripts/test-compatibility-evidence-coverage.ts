@@ -119,8 +119,9 @@ const oscarZebrafishDecision = evaluateCompatibilityDecision({
 const oscarZebrafishPair = oscarZebrafishDecision.pairResults[0];
 assert.ok(oscarZebrafishPair, 'Oscar → zebrafish must produce a pair result');
 assert.equal(oscarZebrafishPair.status, 'not_recommended', 'direct predator–prey evidence must block Oscar + zebrafish cohabitation');
-const directPairRule = oscarZebrafishPair.rawResult.blockingRules.find(item => item.code === 'pair_rule_predation_threat');
-assert.ok(directPairRule, 'Oscar + zebrafish must expose its reviewed pair-level predation evidence');
+const directPairRules = oscarZebrafishPair.rawResult.blockingRules.filter(item => item.code === 'pair_rule_predation_threat');
+assert.equal(directPairRules.length, 1, 'Oscar + zebrafish must expose exactly one evidence-aware pair rule, not a lossy species-fit duplicate');
+const directPairRule = directPairRules[0];
 assert.equal(directPairRule.basis, 'pair_rule', 'direct predator–prey evidence must retain pair_rule provenance');
 assert.equal(directPairRule.reviewStatus, 'reviewed');
 assert.ok(directPairRule.citations.length >= 2, 'direct pair rule must retain its peer-reviewed citations');
@@ -140,8 +141,9 @@ const channaRhodeusDecision = evaluateCompatibilityDecision({
 const channaRhodeusPair = channaRhodeusDecision.pairResults[0];
 assert.ok(channaRhodeusPair, 'Channa argus → Rhodeus ocellatus must produce a pair result');
 assert.equal(channaRhodeusPair.status, 'not_recommended', 'direct predator–prey evidence must block Channa argus + Rhodeus ocellatus cohabitation');
-const channaDirectPairRule = channaRhodeusPair.rawResult.blockingRules.find(item => item.code === 'pair_rule_predation_threat');
-assert.ok(channaDirectPairRule, 'Channa argus + Rhodeus ocellatus must expose reviewed pair-level predation evidence');
+const channaDirectPairRules = channaRhodeusPair.rawResult.blockingRules.filter(item => item.code === 'pair_rule_predation_threat');
+assert.equal(channaDirectPairRules.length, 1, 'Channa + Rhodeus must expose exactly one evidence-aware pair rule, not a lossy species-fit duplicate');
+const channaDirectPairRule = channaDirectPairRules[0];
 assert.equal(channaDirectPairRule.basis, 'pair_rule');
 assert.equal(channaDirectPairRule.reviewStatus, 'reviewed');
 assert.ok(channaDirectPairRule.citations.length >= 2, 'Channa–Rhodeus pair rule must retain both peer-reviewed citations');
