@@ -1,14 +1,14 @@
 # AquaGuide — Latest Progress
 
 **Updated:** 2026-08-23
-**Branch:** `agent/p0-water-change-authority-v1`
-**PR:** #118 `Route Water Change through deterministic authority V1`
-**Base:** `agent/p0-existing-tank-authority-wiring-v1` (#117)
+**Branch:** `agent/p0-whole-tank-feasibility-v2`
+**PR:** #119 `Complete Whole-Tank Feasibility dimensions V2`
+**Base:** `agent/p0-water-change-authority-v1` (#118)
 **Current RC1 head:** `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 
 ## Current phase
 
-**P0 decision-layer consolidation is active: #114 Compatibility → #115 Tank State → #116 Tank Evidence → #117 Existing Tank Authority → #118 Water Change Authority. #118 is Draft and awaiting permanent gates.**
+**P0 decision-layer consolidation is active: #114 Compatibility → #115 Tank State → #116 Tank Evidence → #117 Existing Tank Authority → #118 Water Change Authority → #119 Whole-Tank Feasibility V2. #119 is Draft and awaiting permanent gates.**
 
 No P0 stack merge to RC1, no merge to `main`, and no production deployment has been performed.
 
@@ -216,3 +216,19 @@ Still open before production:
 - Unconfirmed AQ-WATER-005/006 from that parallel branch were intentionally excluded from #118 in accordance with Context Sync acceptance rules.
 - #118 final-head permanent gates PASS: Water Change `32638235738`, Existing Tank `32638235771`, Evidence `32638235730`, Tank State `32638235711`, Compatibility `32638235721`.
 - #118 remains Draft/unmerged; next P0 implementation target is the remaining Whole-Tank Feasibility dimensions.
+
+## 2026-08-23 — P0 Whole-Tank Feasibility V2
+
+- fail-before commit `0fe6e4e` reproduces 0/3 gaps on #118 head: no Whole-Tank reviewed group calculation, no separate physical-space dimension, and no explicit equipment-sufficiency evidence boundary.
+- implementation commit `e67bc9e` expands Whole-Tank Feasibility into group / physical-space / equipment / bioload dimensions with separate passed/warning/missing rule sets.
+- reviewed `minimumGroupSize` is authoritative; the Red Neon Tetra 5-vs-legacy-6 contradiction was reproduced and removed.
+- generic `tankSize` remains planning pressure only; it is not promoted into a hard physical constraint.
+- configured equipment is not treated as proof of sufficiency when species-specific reviewed equipment requirements are absent.
+- Recommendation no longer reintroduces temperament-based bioload inflation or keyword group-size thresholds.
+- Existing Tank adapter consumes Whole-Tank warning rules only; pass/missing rules cannot manufacture medium priors.
+- permanent regression `test:p0-whole-tank-feasibility` passes 7/7.
+- full local P0/Compatibility/Species Fit/Addition/Livestock/Tank Evidence/Tank State/Existing Tank/Water Change/Core Flow/Visual/Golden Path/type/build/diff-check suite remains green.
+- Draft stacked PR #119 opened against #118. No merge or deployment performed.
+- reviewed knowledge coverage for equipment requirements and hard physical-space constraints remains incomplete; this is now represented as explicit unknown, not silently guessed.
+- #119 final-head permanent gates PASS: Whole-Tank `32640537915`, Compatibility `32640537970`, Evidence `32640537930`, Tank State `32640537933`, Existing Tank `32640537926`, Water Change `32640537939`.
+- #119 remains Draft/unmerged; next P0 target is `AQ-BC-EVAL-002` compatibility evidence provenance drift.

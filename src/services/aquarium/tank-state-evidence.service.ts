@@ -161,17 +161,19 @@ export const buildTankPriorsFromCompatibilityDecision = (decision: Compatibility
     });
   });
 
-  decision.wholeTankFeasibility.rules.forEach(rule => {
+  decision.wholeTankFeasibility.warningRules.forEach(rule => {
     if (HARD_CONSTRAINT_CODES.has(rule.code)) return;
     const kind: TankPriorRiskKind = /bioload|负荷|负载/.test(`${rule.code} ${rule.title}`)
       ? 'bioload'
       : /space|volume|容量|空间/.test(`${rule.code} ${rule.title}`)
         ? 'space'
-        : 'other';
+        : /equipment|过滤|加热|设备/.test(`${rule.code} ${rule.title}`)
+          ? 'equipment'
+          : 'other';
     priors.push({
       code: rule.code,
       kind,
-      level: rule.severity === 'high' ? 'high' : 'medium',
+      level: rule.severity === 'high' ? 'high' : rule.severity === 'medium' ? 'medium' : 'low',
       evidence: rule.evidence,
     });
   });

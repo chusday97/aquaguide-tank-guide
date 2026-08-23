@@ -3,7 +3,7 @@ import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompa
 import { getAquariumVolumeLiters } from '../../lib/speciesFitEngine';
 import { assessBioloadScreening } from '../../../packages/domain-rules/src';
 import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
-import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult, WholeTankFeasibility } from './knowledge.types';
+import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult, WholeTankFeasibility, WholeTankFeasibilityDimension } from './knowledge.types';
 
 export type CompatibilityItem = {
   species: Fish;
@@ -207,15 +207,232 @@ const buildPairResult = (
   };
 };
 
-const buildWholeTankFeasibility = (
+const dimensionResult = ({
+  passedRules = [],
+  warningRules = [],
+  missingData = [],
+}: Partial<Omit<WholeTankFeasibilityDimension, 'status'>> = {}): WholeTankFeasibilityDimension => ({
+  status: warningRules.length > 0
+    ? 'caution'
+    : missingData.length > 0
+      ? 'unknown'
+      : passedRules.length > 0
+        ? 'pass'
+        : 'not_applicable',
+  passedRules,
+  warningRules,
+  missingData,
+});
+
+const parseGenericMinVolumeLiters = (value?: string) => {
+  if (!value) return null;
+  const match = value.match(/(\d+(?:\.\d+)?)\s*(?:升|l(?:iters?)?\b)/i);
+  if (!match) return null;
+  const parsed = Number(match[1]);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+};
+
+const uniqueWholeTankItems = (items: CompatibilityItem[]) => {
+  const bySpecies = new Map<string, { species: Fish; quantity: number }>();
+  items.forEach(item => {
+    const quantity = getQuantity(item.quantity);
+    const existing = bySpecies.get(item.species.id);
+    bySpecies.set(item.species.id, {
+      species: item.species,
+      quantity: (existing?.quantity || 0) + quantity,
+    });
+  });
+  return Array.from(bySpecies.values());
+};
+
+const buildGroupRequirementDimension = (items: CompatibilityItem[]): WholeTankFeasibilityDimension => {
+  const passedRules: TankCompatibilityRule[] = [];
+  const warningRules: TankCompatibilityRule[] = [];
+  const missingData: TankCompatibilityRule[] = [];
+
+  uniqueWholeTankItems(items).forEach(({ species, quantity }) => {
+    const profile = getReviewedCompatibilityProfile(species.id);
+    if (!profile || profile.reviewStatus !== 'reviewed') {
+      missingData.push({
+        code: 'whole_tank_group_requirement_unreviewed',
+        title: '群体数量证据尚未审核',
+        evidence: `${species.name} 暂无已审核的 minimumGroupSize；当前不从名称、描述或“群游”关键词猜测最低数量。`,
+        severity: 'low',
+        basis: 'species_trait',
+        confidence: 'unknown',
+        reviewStatus: 'draft',
+        affectedSpeciesIds: [species.id],
+        citations: [],
+      });
+      return;
+    }
+
+    const minimumGroupSize = Number(profile.minimumGroupSize);
+    if (!Number.isFinite(minimumGroupSize) || minimumGroupSize <= 1) {
+      if (profile.behaviorTraits.includes('shoaling')) {
+        missingData.push({
+          code: 'whole_tank_group_requirement_missing_threshold',
+          title: '群游物种缺少已审核最低数量',
+          evidence: `${species.name} 的已审核资料记录了 shoaling，但没有可用 minimumGroupSize；不能自行补成 5、6 或其他数量。`,
+          severity: 'medium',
+          basis: 'species_trait',
+          confidence: profile.confidence,
+          reviewStatus: profile.reviewStatus,
+          affectedSpeciesIds: [species.id],
+          citations: profile.citations,
+        });
+      }
+      return;
+    }
+
+    if (quantity < minimumGroupSize) {
+      warningRules.push({
+        code: 'whole_tank_group_requirement_gap',
+        title: '整缸群体数量未达到已审核建议',
+        evidence: `${species.name} 当前整缸计划合计 ${quantity} 只/条，已审核 minimumGroupSize 为 ${minimumGroupSize}；该数量按整缸一次汇总，不按 pair 重复计算。`,
+        severity: 'medium',
+        basis: 'species_trait',
+        confidence: profile.confidence,
+        reviewStatus: profile.reviewStatus,
+        affectedSpeciesIds: [species.id],
+        citations: profile.citations,
+      });
+    } else {
+      passedRules.push({
+        code: 'whole_tank_group_requirement_met',
+        title: '整缸群体数量达到已审核建议',
+        evidence: `${species.name} 当前整缸计划合计 ${quantity} 只/条，达到已审核 minimumGroupSize ${minimumGroupSize}。`,
+        severity: 'info',
+        basis: 'species_trait',
+        confidence: profile.confidence,
+        reviewStatus: profile.reviewStatus,
+        affectedSpeciesIds: [species.id],
+        citations: profile.citations,
+      });
+    }
+  });
+
+  return dimensionResult({ passedRules, warningRules, missingData });
+};
+
+const buildPhysicalSpaceDimension = (
   tank: Aquarium | null | undefined,
   items: CompatibilityItem[],
-): WholeTankFeasibility => {
-  const totalQuantity = items.reduce((sum, item) => sum + getQuantity(item.quantity), 0);
-  if (!tank || items.length === 0) {
-    return { status: 'not_applicable', totalQuantity, bioloadPressure: 'unknown', rules: [] };
+): WholeTankFeasibilityDimension => {
+  const passedRules: TankCompatibilityRule[] = [];
+  const warningRules: TankCompatibilityRule[] = [];
+  const missingData: TankCompatibilityRule[] = [];
+  const volumeLiters = getAquariumVolumeLiters(tank);
+  const uniqueItems = uniqueWholeTankItems(items);
+
+  if (!volumeLiters) {
+    missingData.push({
+      code: 'whole_tank_space_context_missing',
+      title: '整缸物理空间资料不足',
+      evidence: '当前鱼缸尺寸不完整，无法建立整缸物理空间 planning prior。',
+      severity: 'medium',
+      basis: 'tank_condition',
+      confidence: 'unknown',
+      reviewStatus: 'draft',
+      affectedSpeciesIds: uniqueItems.map(item => item.species.id),
+      citations: [],
+    });
+    return dimensionResult({ passedRules, warningRules, missingData });
   }
 
+  const unparsedSpecies: Fish[] = [];
+  uniqueItems.forEach(({ species }) => {
+    const genericMinVolume = parseGenericMinVolumeLiters(species.tankSize);
+    if (!genericMinVolume) {
+      unparsedSpecies.push(species);
+      return;
+    }
+    if (volumeLiters < genericMinVolume) {
+      warningRules.push({
+        code: 'whole_tank_space_guideline_pressure',
+        title: '整缸存在通用空间建议压力',
+        evidence: `${species.name} 的资料包含约 ${genericMinVolume}L 通用缸容建议，当前有效水体约 ${volumeLiters}L；这里只作为 planning space prior，不是已审核 hard physical constraint，也不证明当前鱼缸已经失败。`,
+        severity: 'medium',
+        basis: 'rule_inference',
+        confidence: 'low',
+        reviewStatus: 'draft',
+        affectedSpeciesIds: [species.id],
+        citations: [],
+      });
+    }
+  });
+
+  if (warningRules.length === 0) {
+    missingData.push({
+      code: 'whole_tank_reviewed_space_constraint_unavailable',
+      title: '尚无已审核物理空间约束',
+      evidence: '当前未发现通用缸容建议缺口，但本地 Compatibility 输入没有已审核的 footprint / swimming-length hard constraint；不能据此宣称物理空间已被证明充足。',
+      severity: 'low',
+      basis: 'rule_inference',
+      confidence: 'unknown',
+      reviewStatus: 'draft',
+      affectedSpeciesIds: uniqueItems.map(item => item.species.id),
+      citations: [],
+    });
+  }
+  if (unparsedSpecies.length > 0) {
+    missingData.push({
+      code: 'whole_tank_space_guideline_unavailable',
+      title: '部分物种缺少可解析空间建议',
+      evidence: `${unparsedSpecies.map(species => species.name).join('、')} 缺少可解析的升数型通用缸容建议；不会用体型标签或描述文字补造精确空间阈值。`,
+      severity: 'low',
+      basis: 'species_trait',
+      confidence: 'unknown',
+      reviewStatus: 'draft',
+      affectedSpeciesIds: unparsedSpecies.map(species => species.id),
+      citations: [],
+    });
+  }
+
+  return dimensionResult({ passedRules, warningRules, missingData });
+};
+
+const buildEquipmentDimension = (
+  tank: Aquarium | null | undefined,
+  items: CompatibilityItem[],
+): WholeTankFeasibilityDimension => {
+  const missingData: TankCompatibilityRule[] = [];
+  const affectedSpeciesIds = uniqueWholeTankItems(items).map(item => item.species.id);
+
+  if (!tank?.equipment || tank.equipment.filter === undefined) {
+    missingData.push({
+      code: 'whole_tank_equipment_context_missing',
+      title: '整缸设备信息不完整',
+      evidence: '当前未完整记录过滤设备，无法完成 Whole-Tank equipment sufficiency 复核。',
+      severity: 'medium',
+      basis: 'tank_condition',
+      confidence: 'unknown',
+      reviewStatus: 'draft',
+      affectedSpeciesIds,
+      citations: [],
+    });
+  } else {
+    missingData.push({
+      code: 'whole_tank_equipment_requirement_unreviewed',
+      title: '物种设备需求证据尚未审核',
+      evidence: `当前设备事实已记录（过滤：${tank.equipment.filter}），但 Compatibility profile 尚没有 reviewed species equipment requirement；因此本层不把“已配置设备”直接等同于“设备足够”。`,
+      severity: 'low',
+      basis: 'species_trait',
+      confidence: 'unknown',
+      reviewStatus: 'draft',
+      affectedSpeciesIds,
+      citations: [],
+    });
+  }
+
+  return dimensionResult({ missingData });
+};
+
+const buildBioloadDimension = (
+  tank: Aquarium | null | undefined,
+  items: CompatibilityItem[],
+  totalQuantity: number,
+): { dimension: WholeTankFeasibilityDimension; pressure: WholeTankFeasibility['bioloadPressure'] } => {
   const screening = assessBioloadScreening(
     items.map(item => ({ size: item.species.size, quantity: getQuantity(item.quantity) })),
     getAquariumVolumeLiters(tank),
@@ -229,26 +446,74 @@ const buildWholeTankFeasibility = (
   };
 
   if (screening.pressure === 'unknown') {
-    return {
-      status: 'unknown', totalQuantity, bioloadPressure: 'unknown',
-      rules: [{ code: 'whole_tank_bioload_unknown', title: '整缸负荷资料不足', evidence: '缺少可用水体信息，无法完成整缸粗略负荷筛查。', severity: 'medium', ...evidenceBase }],
-    };
+    const rule: TankCompatibilityRule = { code: 'whole_tank_bioload_unknown', title: '整缸负荷资料不足', evidence: '缺少可用水体信息，无法完成整缸粗略负荷筛查。', severity: 'medium', ...evidenceBase };
+    return { pressure: 'unknown', dimension: dimensionResult({ missingData: [rule] }) };
   }
   if (screening.pressure === 'high') {
-    return {
-      status: 'caution', totalQuantity, bioloadPressure: 'high',
-      rules: [{ code: 'whole_tank_bioload_screen_high', title: '整缸粗略负荷筛查偏高', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总，而不是重复累加 pair；该信号仅用于加入前复核，不等于已证明水质过载。`, severity: 'medium', ...evidenceBase }],
-    };
+    const rule: TankCompatibilityRule = { code: 'whole_tank_bioload_screen_high', title: '整缸粗略负荷筛查偏高', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总，而不是重复累加 pair；该信号仅用于加入前复核，不等于已证明水质过载。`, severity: 'medium', ...evidenceBase };
+    return { pressure: 'high', dimension: dimensionResult({ warningRules: [rule] }) };
   }
   if (screening.pressure === 'elevated') {
+    const rule: TankCompatibilityRule = { code: 'whole_tank_bioload_screen_elevated', title: '整缸粗略负荷需要复核', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总；加入前应结合过滤、喂食和实际水质。`, severity: 'low', ...evidenceBase };
+    return { pressure: 'elevated', dimension: dimensionResult({ warningRules: [rule] }) };
+  }
+  const rule: TankCompatibilityRule = { code: 'whole_tank_bioload_screen_low', title: '整缸粗略负荷未见高压信号', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总；该结果仍不是水质安全证明。`, severity: 'info', ...evidenceBase };
+  return { pressure: 'low', dimension: dimensionResult({ passedRules: [rule] }) };
+};
+
+const buildWholeTankFeasibility = (
+  tank: Aquarium | null | undefined,
+  items: CompatibilityItem[],
+): WholeTankFeasibility => {
+  const totalQuantity = items.reduce((sum, item) => sum + getQuantity(item.quantity), 0);
+  const emptyDimension = dimensionResult();
+  if (items.length === 0) {
     return {
-      status: 'caution', totalQuantity, bioloadPressure: 'elevated',
-      rules: [{ code: 'whole_tank_bioload_screen_elevated', title: '整缸粗略负荷需要复核', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总；加入前应结合过滤、喂食和实际水质。`, severity: 'low', ...evidenceBase }],
+      status: 'not_applicable',
+      totalQuantity,
+      bioloadPressure: 'unknown',
+      dimensions: {
+        groupRequirement: emptyDimension,
+        physicalSpace: emptyDimension,
+        equipment: emptyDimension,
+        bioload: emptyDimension,
+      },
+      passedRules: [],
+      warningRules: [],
+      missingData: [],
+      rules: [],
     };
   }
+
+  const groupRequirement = buildGroupRequirementDimension(items);
+  const physicalSpace = buildPhysicalSpaceDimension(tank, items);
+  const equipment = buildEquipmentDimension(tank, items);
+  const bioloadResult = buildBioloadDimension(tank, items, totalQuantity);
+  const dimensions = {
+    groupRequirement,
+    physicalSpace,
+    equipment,
+    bioload: bioloadResult.dimension,
+  };
+  const passedRules = uniqueRules(Object.values(dimensions).flatMap(dimension => dimension.passedRules));
+  const warningRules = uniqueRules(Object.values(dimensions).flatMap(dimension => dimension.warningRules));
+  const missingData = uniqueRules(Object.values(dimensions).flatMap(dimension => dimension.missingData));
+  const hasMaterialMissingData = missingData.some(rule => rule.severity === 'medium' || rule.severity === 'high');
+  const status: WholeTankFeasibility['status'] = hasMaterialMissingData
+    ? 'unknown'
+    : warningRules.length > 0
+      ? 'caution'
+      : 'pass';
+
   return {
-    status: 'pass', totalQuantity, bioloadPressure: 'low',
-    rules: [{ code: 'whole_tank_bioload_screen_low', title: '整缸粗略负荷未见高压信号', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总；该结果仍不是水质安全证明。`, severity: 'info', ...evidenceBase }],
+    status,
+    totalQuantity,
+    bioloadPressure: bioloadResult.pressure,
+    dimensions,
+    passedRules,
+    warningRules,
+    missingData,
+    rules: uniqueRules([...warningRules, ...missingData, ...passedRules]),
   };
 };
 
@@ -257,12 +522,18 @@ const mergeWholeTankFeasibility = (
   wholeTank: WholeTankFeasibility,
 ): TankCompatibilityResult => {
   if (wholeTank.status === 'not_applicable') return aggregate;
-  const warningRules = wholeTank.status === 'caution' ? uniqueRules([...aggregate.warningRules, ...wholeTank.rules]) : aggregate.warningRules;
-  const passedRules = wholeTank.status === 'pass' ? uniqueRules([...aggregate.passedRules, ...wholeTank.rules]) : aggregate.passedRules;
-  const missingData = wholeTank.status === 'unknown' ? uniqueRules([...aggregate.missingData, ...wholeTank.rules]) : aggregate.missingData;
+  const warningRules = uniqueRules([...aggregate.warningRules, ...wholeTank.warningRules]);
+  const passedRules = uniqueRules([...aggregate.passedRules, ...wholeTank.passedRules]);
+  const missingData = uniqueRules([...aggregate.missingData, ...wholeTank.missingData]);
+  const hasMaterialWholeTankUnknown = wholeTank.missingData.some(rule => rule.severity === 'medium' || rule.severity === 'high');
   let status = aggregate.status;
-  if (status === 'compatible' && wholeTank.status === 'caution') status = 'caution';
-  if (status === 'compatible' && wholeTank.status === 'unknown') status = 'insufficient_data';
+  if (status !== 'not_recommended' && hasMaterialWholeTankUnknown) status = 'insufficient_data';
+  else if (status === 'compatible' && wholeTank.warningRules.length > 0) status = 'caution';
+  const changedSummary = status !== aggregate.status
+    ? status === 'insufficient_data'
+      ? wholeTank.missingData.find(rule => rule.severity === 'medium' || rule.severity === 'high')?.evidence
+      : wholeTank.warningRules[0]?.evidence
+    : null;
   return {
     ...aggregate,
     status,
@@ -270,7 +541,7 @@ const mergeWholeTankFeasibility = (
     warningRules,
     passedRules,
     missingData,
-    summary: status === aggregate.status ? aggregate.summary : wholeTank.rules[0]?.evidence || aggregate.summary,
+    summary: changedSummary || aggregate.summary,
   };
 };
 

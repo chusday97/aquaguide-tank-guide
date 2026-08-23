@@ -1,0 +1,44 @@
+name: P0 Whole-Tank Feasibility V2
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'src/modules/knowledge/compatibilityKnowledge.ts'
+      - 'src/modules/knowledge/knowledge.types.ts'
+      - 'src/modules/recommendation/recommendation.service.ts'
+      - 'src/services/aquarium/tank-state-evidence.service.ts'
+      - 'scripts/test-p0-whole-tank-feasibility-v2.ts'
+      - 'package.json'
+      - '.github/workflows/p0-whole-tank-feasibility-v2.yml'
+  workflow_dispatch:
+
+jobs:
+  whole-tank-feasibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Whole-Tank V2 regression
+        run: npm run test:p0-whole-tank-feasibility
+      - name: Compatibility authority regressions
+        run: |
+          npm run test:p0-compatibility
+          npm run test:compatibility
+          npm run test:addition-intents
+          npm run test:livestock-recording
+          npm run test:visual-results
+      - name: Existing Tank isolation regressions
+        run: |
+          npm run test:p0-tank-evidence
+          npm run test:p0-tank-state
+          npm run test:p0-existing-tank-authority
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Production build
+        run: npm run build

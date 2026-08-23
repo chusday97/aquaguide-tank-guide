@@ -75,10 +75,26 @@ export type PairCompatibilityResult = {
   actions: string[];
 };
 
+export type WholeTankFeasibilityDimension = {
+  status: 'pass' | 'caution' | 'unknown' | 'not_applicable';
+  passedRules: TankCompatibilityRule[];
+  warningRules: TankCompatibilityRule[];
+  missingData: TankCompatibilityRule[];
+};
+
 export type WholeTankFeasibility = {
   status: 'pass' | 'caution' | 'unknown' | 'not_applicable';
   totalQuantity: number;
   bioloadPressure: 'low' | 'elevated' | 'high' | 'unknown';
+  dimensions: {
+    groupRequirement: WholeTankFeasibilityDimension;
+    physicalSpace: WholeTankFeasibilityDimension;
+    equipment: WholeTankFeasibilityDimension;
+    bioload: WholeTankFeasibilityDimension;
+  };
+  passedRules: TankCompatibilityRule[];
+  warningRules: TankCompatibilityRule[];
+  missingData: TankCompatibilityRule[];
   rules: TankCompatibilityRule[];
 };
 
