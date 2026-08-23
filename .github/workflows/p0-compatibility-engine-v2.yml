@@ -1,0 +1,45 @@
+name: P0 Compatibility Engine V2
+
+on:
+  pull_request:
+    paths:
+      - 'packages/domain-rules/**'
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'src/lib/speciesFitEngine.ts'
+      - 'src/modules/knowledge/compatibilityKnowledge.ts'
+      - 'src/modules/knowledge/knowledge.types.ts'
+      - 'scripts/test-p0-compatibility-product-truth.ts'
+      - 'scripts/test-tank-compatibility-engine.ts'
+      - 'scripts/test-species-fit-engine.ts'
+      - 'scripts/test-addition-intents.ts'
+      - 'scripts/test-visual-results.ts'
+      - 'package.json'
+      - '.github/workflows/p0-compatibility-engine-v2.yml'
+
+jobs:
+  validate-p0-compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: P0 product-truth regression
+        run: npm run test:p0-compatibility
+      - name: Compatibility regression
+        run: npm run test:compatibility
+      - name: Species-fit regression
+        run: npx tsx scripts/test-species-fit-engine.ts
+      - name: Addition-intent contract
+        run: npm run test:addition-intents
+      - name: Livestock-recording contract
+        run: npm run test:livestock-recording
+      - name: Visual-result regression
+        run: npm run test:visual-results
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Production build
+        run: npm run build

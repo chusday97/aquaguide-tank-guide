@@ -1,60 +1,56 @@
 # AquaGuide — Latest Handoff
 
-**Updated:** 2026-08-23  
-**Repository:** `chusday97/aquaguide-tank-guide`  
-**Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`  
-**Active context/product-truth PR:** #113 `Adopt AquaGuide Context Sync protocol`  
-**Phase:** `P0 Product Truth / decision-layer consolidation`  
-**Release boundary:** do not merge RC1 to `main` or deploy production without separate explicit authorization.
+**Updated:** 2026-08-23
+**Repository:** `chusday97/aquaguide-tank-guide`
+**Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
+**Product-truth branch/PR:** `agent/context-sync-protocol-v1` / #113
+**Active P0 implementation branch:** `agent/p0-compatibility-engine-v2`
+**Phase:** `P0 decision-layer consolidation`
+**Release boundary:** no RC1→main merge or production deploy without separate explicit authorization.
 
-## Current product direction
+## Current status
 
-Canonical source-of-truth documents now live under `docs/product/*`, `docs/rules/*`, `docs/cases/*`, `docs/decisions/*`, with routing defined by `docs/CONTEXT_ROUTING.md`.
+- Context Sync canonical structure is established on #113.
+- P0 Compatibility Product Truth is accepted under `AQ-MIX-*`, `AQ-SPACE-*`, `AQ-STATE-*`.
+- P0-2 Contract Alignment landed on the #113 stack at commit `4d4a238`: Planning Compatibility and Current Tank State are separate authorities.
+- Fail-before proof commit `9ed2d76` reproduced 4/4 shared model failures: temperament→bioload, Large→predator, generic tankSize→hard block, pair-only aggregate missing whole-tank quantity.
+- `agent/p0-compatibility-engine-v2` now implements shared bioload screening plus explicit `wholeTankFeasibility` and migrates stale species-fit/evaluator assumptions.
+- #112 Interactive Atlas remains Draft/frozen until P0 exit criteria are met.
 
-P0 is focused on replacing duplicated compatibility/capacity/current-risk heuristics with one authoritative decision model while preserving existing UI surfaces.
+## Verified candidate behavior
 
-Relevant accepted rules:
+- `AQ-SPACE-003`: temperament no longer changes bioload screening.
+- `AQ-MIX-003`: Large/Aggressive metadata alone no longer proves predation; reviewed evidence remains authoritative.
+- `AQ-MIX-007`: generic tank-size guidance no longer becomes an implicit hard block.
+- `AQ-MIX-006`: pair relationships and whole-tank feasibility are separate; full quantity is aggregated once.
+- heuristic bioload can raise planning caution but cannot hard-block by itself.
+- existing reality recording remains save-first; planned additions remain four-state safety-gated.
 
-- `AQ-PRINCIPLE-001` — manage the real tank, not only species theory;
-- `AQ-MIX-001` — planning compatibility != current tank state;
-- `AQ-MIX-006` — pair relationships != whole-tank feasibility;
-- `AQ-MIX-009` — existing-tank compatibility becomes Prior Risk input to Tank State;
-- `AQ-SPACE-002` — physical space, territory and bioload are separate dimensions;
-- `AQ-STATE-001` — Prior Risk + Tank Context + Observed Evidence + Time -> Current Tank State;
-- `AQ-AI-001` — AI does not own deterministic product authority.
+## Validation
 
-## P0 freeze
+Candidate local validation passed:
 
-Per `AQ-SEQ-001`:
+- `test:p0-compatibility` — 5/5 PASS
+- `test:compatibility` — PASS
+- species-fit regression — PASS
+- addition-intent contract — PASS after baseline evaluator drift migration
+- livestock-recording contract — PASS
+- visual-results regression — PASS with reviewed predator fixture
+- TypeScript — PASS
+- production build — PASS
 
-- PR #112 Interactive Atlas remains Draft and frozen; no further UI expansion during P0;
-- isolated capacity fixes are paused unless they implement the shared domain model;
-- isolated species-detail fixes are paused unless required to prevent false semantics;
-- current UI/layout is preserved while the decision source is rebuilt.
+## Still open in P0
 
-## Compatibility next
+- `AQ-BC-MIX-001`: Existing Aquarium still needs Tank State wiring so static prior cannot become current red conflict/Today Action.
+- `AQ-BC-SPACE-001`: Existing Aquarium page still needs current-state semantics; generic planning guidance must not generate current removal/upgrade action by itself.
+- Tank State domain evaluator is not yet implemented.
+- Whole-tank feasibility v1 currently establishes the separate layer and bioload screening; group/equipment/space dimensions still need migration into that layer.
 
-Compatibility becomes the Planning / Prior Risk engine.
+## Next execution order
 
-Canonical planning flow:
-
-`hard constraints -> pair relationships -> whole-tank feasibility -> evidence completeness -> compatible/caution/not_recommended/insufficient_data`
-
-For an existing aquarium, compatibility output is not the final verdict. It is combined with tank context, observations and history by the Tank State layer.
-
-## Next implementation order
-
-1. Finish P0-1 Product Truth and contract alignment.
-2. Introduce domain-level Tank State types/evaluator with fail-before acceptance cases.
-3. Split Compatibility Prior from Existing Tank current-state interpretation.
-4. Separate pair compatibility from whole-tank feasibility.
-5. Extract Space / Territory / Bioload into shared domain rules; remove temperament-as-bioload and duplicate page heuristics.
-6. Wire existing Aquarium / Visual Result surfaces to the new authoritative outputs without redesigning layout.
-7. Only after P0 exit criteria are met, resume paused UI work such as #112.
-
-## Current boundaries
-
-- #113 is docs/agent-instruction only and remains Draft/unmerged.
-- #112 remains Draft/unmerged and is explicitly paused for P0.
-- `main` is untouched by this P0 work.
-- production is not deployed by this work.
+1. Open/validate the P0 Compatibility Engine V2 stacked PR; do not merge without explicit authorization.
+2. Implement Tank State domain types/evaluator against `BC-STATE-*` fail-before cases.
+3. Route Existing Aquarium prior + observations + history through Tank State.
+4. Move remaining whole-tank group/equipment/space checks into `wholeTankFeasibility`.
+5. Rewire existing Visual Result/Aquarium data sources without redesigning layout.
+6. Resume #112 only after P0 exit criteria pass.

@@ -3,6 +3,7 @@ import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
 import { getReviewedCompatibilityProfile, getReviewedPairRule, getReviewedStageRiskProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
+import { assessBioloadScreening, estimateBioloadUnits } from '../../packages/domain-rules/src';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
@@ -126,11 +127,9 @@ const getQuantity = (value?: number) => {
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 1;
 };
 
-const estimateBioload = (fish: Fish, quantity = 1) => {
-  const base = fish.size === 'Large' ? 8 : fish.size === 'Medium' ? 4 : 1.5;
-  const temperament = fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1;
-  return base * temperament * getQuantity(quantity);
-};
+const estimateBioload = (fish: Fish, quantity = 1) => (
+  estimateBioloadUnits(fish.size, getQuantity(quantity))
+);
 
 const isSchoolingSpecies = (fish: Fish) => /群游|灯|红鼻|斑马|白云|鼠鱼|宝莲|红绿|tetra|rasbora|cory/i.test(
   `${fish.name} ${fish.category} ${fish.description} ${fish.housingMode || ''}`,
@@ -522,15 +521,31 @@ export const evaluateTankCompatibility = ({
   }
 
   if (tankVolume) {
-    const currentLoad = currentLivestock.reduce((sum, item) => sum + estimateBioload(item.species, item.quantity), 0);
-    const nextLoad = currentLoad + estimateBioload(candidateSpecies, candidateQuantity);
-    const loadRate = Math.round((nextLoad / Math.max(1, tankVolume)) * 100);
-    if (loadRate >= 90) {
-      blockingRules.push(asRule('bioload_over_limit', '生物负荷接近上限', `模拟加入后负载约 ${loadRate}%，不建议继续增加。`, 'high'));
-    } else if (loadRate >= 70) {
-      warningRules.push(asRule('bioload_near_limit', '生物负荷偏高', `模拟加入后负载约 ${loadRate}%，建议减少数量或加强过滤。`, 'medium'));
-    } else {
-      passedRules.push(asRule('bioload_ok', '生物负荷可接受', `模拟加入后负载约 ${loadRate}%。`, 'info'));
+    const screening = assessBioloadScreening([
+      ...currentLivestock.map(item => ({ size: item.species.size, quantity: item.quantity })),
+      { size: candidateSpecies.size, quantity: candidateQuantity },
+    ], tankVolume);
+    if (screening.pressure === 'high') {
+      warningRules.push(asRule(
+        'bioload_screen_high',
+        '粗略负荷筛查偏高',
+        '按体型与数量做的粗略筛查偏高；这不是水质过载证明，加入前应结合过滤、喂食和实际水质复核。',
+        'medium',
+      ));
+    } else if (screening.pressure === 'elevated') {
+      warningRules.push(asRule(
+        'bioload_screen_elevated',
+        '粗略负荷筛查需要复核',
+        '按体型与数量做的粗略筛查进入需要复核区间；这不是精确负荷百分比。',
+        'low',
+      ));
+    } else if (screening.pressure === 'low') {
+      passedRules.push(asRule(
+        'bioload_screen_low',
+        '粗略负荷筛查未发现高压信号',
+        '当前体型与数量的粗略筛查未发现高压信号；仍需结合过滤、喂食和实际水质。',
+        'info',
+      ));
     }
   }
 

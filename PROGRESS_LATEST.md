@@ -151,3 +151,14 @@ Still open before production:
 - Preview/build success is not production proof.
 - AI cannot override deterministic safety rules.
 - Do not merge #107, merge RC1 to `main`, or deploy production without explicit authorization.
+
+## 2026-08-23 — P0 Compatibility decision-layer refactor
+
+- P0-2 Contract Alignment: Planning Compatibility and Current Tank State separated in `CONTRACT.md` (`4d4a238`).
+- Fail-before proof `9ed2d76`: 0/4 Product Truth checks passed on the legacy model.
+- Candidate P0 engine extracts temperament-independent bioload screening to `packages/domain-rules`.
+- `CompatibilityDecision` now carries explicit `wholeTankFeasibility`; 3 × 7 quantity regression proves full-tank aggregation occurs once outside pair loops.
+- Generic free-text tank-size guidance is planning pressure, not an implicit hard block.
+- Species-fit predation now requires reviewed pair/profile evidence rather than `Large`/`Aggressive` proxy inference.
+- Stale addition-intent and visual-result fixtures were migrated without changing UI.
+- Targeted compatibility/species-fit/addition/livestock/visual/type/build validation is green locally.

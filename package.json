@@ -17,6 +17,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
+    "test:p0-compatibility": "tsx scripts/test-p0-compatibility-product-truth.ts",
     "audit:compatibility-evidence": "node --import tsx scripts/audit_compatibility_evidence.ts",
     "test:favorites": "tsx scripts/test-favorites-service.ts",
     "test:taxonomy": "tsx scripts/assert_taxonomy_rules.ts",

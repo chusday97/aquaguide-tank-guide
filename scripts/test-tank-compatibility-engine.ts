@@ -248,8 +248,9 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: species,
         candidateQuantity: 10,
       });
-      return result.status === 'not_recommended'
-        && result.blockingRules.some(rule => rule.code === 'bioload_over_limit')
+      return result.status === 'caution'
+        && result.warningRules.some(rule => rule.code === 'bioload_screen_high')
+        && result.blockingRules.every(rule => !rule.code.startsWith('bioload_'))
         && result.blockingRules.every(rule => !['territorial_conflict', 'single_housing_required'].includes(rule.code));
     },
   },

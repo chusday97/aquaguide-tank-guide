@@ -31,7 +31,7 @@ assert.equal(
 
 const calculatorSource = readFileSync(new URL('../src/components/CompatibilityRiskCalculator.tsx', import.meta.url), 'utf8');
 assert.match(calculatorSource, /已经实际入缸，记录下来/);
-assert.match(calculatorSource, /已经实际入缸，确认记录/);
+assert.match(calculatorSource, /确认风险后再记录/);
 assert.doesNotMatch(calculatorSource, /添加选中的新生物|确认风险后添加/);
 
 console.log('addition intent policies verified: facts never block and plans remain safety-gated');

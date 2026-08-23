@@ -75,11 +75,19 @@ export type PairCompatibilityResult = {
   actions: string[];
 };
 
+export type WholeTankFeasibility = {
+  status: 'pass' | 'caution' | 'unknown' | 'not_applicable';
+  totalQuantity: number;
+  bioloadPressure: 'low' | 'elevated' | 'high' | 'unknown';
+  rules: TankCompatibilityRule[];
+};
+
 export type CompatibilityDecision = {
   status: TankCompatibilityStatus;
   riskLevel: TankCompatibilityResult['riskLevel'];
   summary: string;
   pairResults: PairCompatibilityResult[];
+  wholeTankFeasibility: WholeTankFeasibility;
   primaryConflict?: PairCompatibilityResult;
   blockedReasons: CompatibilityRelationship[];
   adjustableReasons: CompatibilityRelationship[];
