@@ -127,7 +127,8 @@
     "test:p0-existing-tank-authority": "tsx scripts/test-p0-existing-tank-authority.ts",
     "test:p0-existing-tank-authority-ui": "node scripts/verify-p0-existing-tank-authority-browser.mjs",
     "test:p0-water-change": "tsx scripts/test-p0-water-change-engine.ts && tsx scripts/test-p0-water-change-authority.ts",
-    "test:p0-water-change-ui": "node scripts/verify-p0-water-change-browser.mjs"
+    "test:p0-water-change-ui": "node scripts/verify-p0-water-change-browser.mjs",
+    "test:p0-whole-tank-feasibility": "tsx scripts/test-p0-whole-tank-feasibility-v2.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

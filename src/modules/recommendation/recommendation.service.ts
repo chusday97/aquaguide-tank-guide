@@ -21,6 +21,7 @@ import {
 import { evaluateSpeciesForAquarium } from '../../lib/speciesFitEngine';
 import { evaluateTankCompatibility } from '../../lib/tankCompatibilityEngine';
 import { RECOMMENDATION_LIMITS, TANK_CAPACITY_MULTIPLIER, TANK_LOAD_THRESHOLDS } from './recommendation.config';
+import { getReviewedCompatibilityProfile } from '../../data/compatibilityEvidence';
 
 export const DISCOVERY_DAILY_LIMIT = 10;
 export const DISCOVERY_HISTORY_DAYS = 7;
@@ -96,9 +97,7 @@ const getBioLoadLiters = (fish: Fish) => {
   if (lifeType === 'coral') return 8;
   if (lifeType === 'reptile') return 60;
 
-  const base = fish.size === 'Large' ? 35 : fish.size === 'Medium' ? 9 : 2.5;
-  const temperamentMultiplier = fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1;
-  return base * temperamentMultiplier;
+  return fish.size === 'Large' ? 35 : fish.size === 'Medium' ? 9 : 2.5;
 };
 
 const isRecommendableSpecies = (fish: Fish) => {
@@ -149,11 +148,8 @@ const getWaterLayer = (fish: Fish) => {
 };
 
 const getMinimumGroupQuantity = (fish: Fish) => {
-  const text = `${fish.name} ${fish.category} ${fish.housingMode} ${fish.description}`;
-  if (/灯|群游|斑马|红鼻|宝莲|红绿|鼠/.test(text)) return 6;
-  if (/虾/.test(text)) return 5;
-  if (/螺|斗鱼|短鲷|鳌虾/.test(text)) return 1;
-  return 1;
+  const reviewedMinimum = Number(getReviewedCompatibilityProfile(fish.id)?.minimumGroupSize);
+  return Number.isFinite(reviewedMinimum) && reviewedMinimum > 1 ? reviewedMinimum : 1;
 };
 
 const getRecommendedQuantity = (fish: Fish, remainingCapacity: number) => {

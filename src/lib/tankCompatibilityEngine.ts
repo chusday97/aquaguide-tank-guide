@@ -131,10 +131,6 @@ const estimateBioload = (fish: Fish, quantity = 1) => (
   estimateBioloadUnits(fish.size, getQuantity(quantity))
 );
 
-const isSchoolingSpecies = (fish: Fish) => /群游|灯|红鼻|斑马|白云|鼠鱼|宝莲|红绿|tetra|rasbora|cory/i.test(
-  `${fish.name} ${fish.category} ${fish.description} ${fish.housingMode || ''}`,
-);
-
 const convertFitItem = (
   item: { type: string; title: string; detail: string; severity?: 'low' | 'medium' | 'high' },
   fallbackSeverity: TankCompatibilityRule['severity'],
@@ -553,16 +549,18 @@ export const evaluateTankCompatibility = ({
     .filter(item => item.species.id === candidateSpecies.id)
     .reduce((sum, item) => sum + item.quantity, 0);
   const totalCandidateSpeciesQuantity = sameSpeciesExistingQuantity + getQuantity(candidateQuantity);
-  if (isSchoolingSpecies(candidateSpecies) && totalCandidateSpeciesQuantity < 6) {
+  const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
+  const reviewedMinimumGroupSize = Number(candidateProfile?.minimumGroupSize);
+  if (Number.isFinite(reviewedMinimumGroupSize) && reviewedMinimumGroupSize > 1 && totalCandidateSpeciesQuantity < reviewedMinimumGroupSize) {
     warningRules.push(asRule(
-      'schooling_quantity_low',
-      '群游数量不足',
-      `${candidateSpecies.name} 可能需要 6 只/条左右成群更稳定，当前模拟合计 ${totalCandidateSpeciesQuantity}。`,
-      'low',
+      'group_requirement_gap',
+      '群体数量未达到已审核建议',
+      `${candidateSpecies.name} 当前模拟合计 ${totalCandidateSpeciesQuantity} 只/条，已审核 minimumGroupSize 为 ${reviewedMinimumGroupSize}。`,
+      'medium',
+      evidenceFromProfile(candidateSpecies.id),
     ));
   }
 
-  const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
   if (candidateProfile?.behaviorTraits.includes('solitary_required') && currentSpecies.length > 0) {
     blockingRules.push(asRule(
       'single_housing_required',

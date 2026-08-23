@@ -65,12 +65,34 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 
 ## AQ-BC-MIX-002 — Pair aggregation omitted whole-tank feasibility
 
-**Status:** `REGRESSION_VERIFIED` on `agent/p0-compatibility-engine-v2`
-**Related Rules:** `AQ-MIX-006`, `AQ-MIX-008`, `AQ-SPACE-002`
-**Observed behavior:** `evaluateCompatibilityDecision()` evaluated every pair and used the worst pair as the aggregate result; a 3-species plan could therefore inspect only pair-level quantities and never evaluate the complete planned stocking once.
-**Expected behavior:** Pair relationships and whole-tank feasibility are separate calculations; full planned quantities are aggregated exactly once for whole-tank screening.
-**Root cause:** The aggregate decision was built exclusively from `pairResults`.
-**Regression:** `wholeTankFeasibility.totalQuantity` and `whole_tank_bioload_screen_*` are verified by `scripts/test-p0-compatibility-product-truth.ts` using 3 × 7 small fish.
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-whole-tank-feasibility-v2`
+**Related Rules:** `AQ-MIX-005`, `AQ-MIX-006`, `AQ-MIX-008`, `AQ-SPACE-002`
+**Observed behavior:** `evaluateCompatibilityDecision()` originally evaluated every pair and used the worst pair as the aggregate result; the first Whole-Tank extraction added only total quantity + bioload, leaving group requirement, physical-space pressure and equipment sufficiency implicit or owned by older per-species heuristics.
+**Expected behavior:** Pair relationships and Whole-Tank Feasibility are separate calculations; full planned quantities are aggregated exactly once and the group / physical-space / equipment / bioload dimensions stay inspectable rather than collapsing into one pair score.
+**Root cause:** Whole-Tank V1 stopped at bioload screening while older consumers still held group and equipment/space heuristics.
+**Regression:** `test:p0-whole-tank-feasibility` verifies reviewed group-size aggregation, generic space pressure as a non-hard planning prior, explicit equipment unknown, one-pass bioload, and separation of passed/warning/missing rules.
+
+---
+
+## AQ-BC-GROUP-001 — Keyword group-size heuristic overrides reviewed minimumGroupSize
+
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-whole-tank-feasibility-v2`
+**Related Rules:** `AQ-MIX-004`, `AQ-MIX-005`, `AQ-MIX-006`
+**Observed behavior:** `tankCompatibilityEngine` and Recommendation used name/description regexes to assign a default schooling minimum of 6. A reviewed Red Neon Tetra profile with `minimumGroupSize = 5` therefore passed the new Whole-Tank group check at 5 but was immediately downgraded again by the legacy “6 fish” heuristic.
+**Expected behavior:** When a reviewed `minimumGroupSize` exists, it is the group requirement authority. Missing reviewed group evidence remains unknown/low-confidence; keyword text must not silently invent a competing threshold.
+**Root cause:** Group requirement had multiple rule owners with different evidence quality.
+**Regression:** `test:p0-whole-tank-feasibility` proves 5 × 红绿灯 satisfies reviewed minimumGroupSize 5 and no `schooling_quantity_low` rule is emitted; Recommendation now reads the reviewed profile instead of regex group-size guesses.
+
+---
+
+## AQ-BC-STATE-002 — Whole-Tank pass/missing rules become Current Tank medium priors
+
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-whole-tank-feasibility-v2`
+**Related Rules:** `AQ-MIX-009`, `AQ-STATE-001`, `AQ-SPACE-002`
+**Observed behavior:** `tank-state-evidence.service.ts` consumed every `wholeTankFeasibility.rules` entry as at least a medium Prior Risk, including `whole_tank_bioload_screen_low` pass evidence.
+**Expected behavior:** Only Whole-Tank warning rules become planning priors for Existing Tank state. Passed evidence and low-confidence missing evidence must not manufacture a medium risk prior.
+**Root cause:** Whole-Tank V1 exposed one undifferentiated `rules` array and the adapter had no semantic separation.
+**Regression:** Whole-Tank V2 carries `passedRules / warningRules / missingData` per dimension; `test:p0-whole-tank-feasibility` proves low-bioload and group-pass rules do not enter Current Tank priors.
 
 ---
 
