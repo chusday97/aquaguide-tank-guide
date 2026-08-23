@@ -1432,11 +1432,16 @@ export default function Encyclopedia() {
         </div>
         <button
           type="button"
-          onClick={() => navigateToRoute('/collection/wishlist')}
-          aria-label={`${t('encyclopedia.wishlistShort')} ${wishlistFishIds.size}`}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-rose-500 ring-1 ring-rose-100"
+          data-atlas-mobile-search
+          onClick={() => {
+            const toolbar = document.getElementById('atlas-toolbar');
+            toolbar?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+            window.setTimeout(() => toolbar?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true }), 350);
+          }}
+          aria-label={t('encyclopedia.search')}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-emerald-700 ring-1 ring-emerald-100"
         >
-          <Heart className="h-4 w-4" />
+          <Search className="h-4 w-4" />
         </button>
         <button
           type="button"

@@ -44,6 +44,14 @@ try {
     assert.match(await atlas.innerText(), /非混养建议/, 'discovery scene must disclose that it is not a compatibility recommendation');
     await page.locator('[data-traditional-browse-guide]').waitFor({ state: 'visible' });
     assert.equal(await page.locator('[data-interactive-atlas-knowledge]').count(), 0, 'knowledge panel must be closed in exploration state');
+    if (viewport.width < 768) {
+      const mobileSearch = page.locator('[data-atlas-mobile-search]');
+      await mobileSearch.waitFor({ state: 'visible' });
+      await mobileSearch.click();
+      await page.waitForFunction(() => document.activeElement?.tagName === 'INPUT' && Boolean(document.activeElement?.closest('#atlas-toolbar')));
+      const toolbarBox = await page.locator('#atlas-toolbar').boundingBox();
+      assert.ok(toolbarBox && toolbarBox.y < 180, `mobile species search must become immediately reachable from the top toolbar; y=${toolbarBox?.y}`);
+    }
     await assertNoHorizontalOverflow(page, viewport.label, 'exploring');
 
     const firstShortcut = page.locator('[data-atlas-species-shortcut]').first();
