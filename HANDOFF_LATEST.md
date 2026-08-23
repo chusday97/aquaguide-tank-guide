@@ -40,6 +40,8 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - `test:compatibility-evidence-coverage` now passes on 132 priority directions and is part of the permanent P0 Compatibility workflow.
 - #120 permanent gates PASS on `f4c02d0`: Compatibility `32640983537`, Whole-Tank `32640983542`, Tank State `32640983524`.
 - Full Product Golden workflow revalidation PASS on #120 stack: product evaluation (19 features / 114 states / 53 badcases), Golden Path contract, compatibility evidence/coverage audits, repository persistence contracts, lint/build, Care/Search/Identify browser regressions, and GP-001/002/003/004/005 continuous browser paths.
+- Legacy authority exit review PASS: current `conflicts` comes only from `buildCurrentTankRiskItems(Current Tank State)`; `healthScore / tankHealthStatus / riskReminders` are unconsumed legacy code and diagnosis does not read `healthScore/riskCount`. They have no current decision authority.
+- P0 decision-layer exit criteria are green on the current stack. Knowledge coverage remains intentionally limited/fail-closed and is not equivalent to broad husbandry completeness.
 
 ## Current Regression Proof
 
@@ -72,15 +74,15 @@ Latest local regression PASS:
 - #119 Whole-Tank Feasibility V2 is open as Draft; all six permanent GitHub gates are green. It remains unmerged.
 - #120 Compatibility Evidence Provenance V1 is open as Draft; local full regression and all triggered permanent gates are green. It remains unmerged.
 - Reviewed knowledge coverage is still incomplete for species-specific equipment requirements and hard physical-space constraints; the engine now represents those gaps as explicit unknown rather than inventing thresholds.
-- Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
+- Legacy `healthScore / tankHealthStatus / riskReminders` code is non-authoritative and currently unconsumed; remove it in later cleanup, not as a P0 decision blocker.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
 - #112 Interactive Atlas remains frozen until P0 exit criteria pass.
 
 ## Next Execution Order
 
-1. Review remaining non-authoritative legacy health-score/support surfaces against P0 exit criteria; do not let them regain decision authority.
-2. If that review finds no decision-authority leak, P0 decision-layer exit criteria are green and the next step is stacked-PR landing strategy.
-3. Resume #112 UI work only after the stack landing decision is explicitly authorized.
+1. Audit stacked PR ancestry / mergeability and prepare the exact landing order with expected-head protection.
+2. Do not merge any P0 PR, RC1, main, or deploy without explicit authorization.
+3. After an authorized stack landing and revalidation, resume #112 UI work.
 
 ## Branch note
 

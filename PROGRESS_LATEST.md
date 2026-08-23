@@ -246,3 +246,5 @@ Still open before production:
 - `AQ-BC-EVAL-002` is regression-verified; next step is full-stack P0 acceptance / Product Golden browser revalidation.
 - Full Product Golden local revalidation PASS on #120 stack: all contract/persistence checks plus Care/Search/Identify and GP-001/002/003/004/005 browser paths.
 - No known P0 gate is red; remaining exit review is legacy health-score/support-surface authority only.
+- Legacy authority exit review PASS: `conflicts` is Current-Tank-State-derived; legacy health score / risk reminder variables are unconsumed and diagnosis ignores their snapshot fields.
+- P0 decision-layer exit criteria are green on the current unmerged stack. Next action is landing-order audit only; no merge authorization has been given.
