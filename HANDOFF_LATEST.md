@@ -4,8 +4,8 @@
 **Repository:** `chusday97/aquaguide-tank-guide`
 **Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 **Product Truth / Context Sync:** #113 `agent/context-sync-protocol-v1`
-**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → current Existing Tank Authority Wiring V1
-**Active branch:** `agent/p0-existing-tank-authority-wiring-v1`
+**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → current Water Change Engine V1
+**Active branch:** `agent/p0-water-change-engine-v1`
 **Phase:** `P0 decision-layer consolidation`
 **Release boundary:** no P0 stack merge to RC1, no RC1→main merge, and no production deploy without separate explicit authorization.
 
@@ -58,8 +58,17 @@ Existing GP-003 returning Daily Check and GP-004 abnormal-care browser paths als
 
 ## Next Execution Order
 
-1. Validate the current Existing Tank Authority PR on GitHub permanent gates.
-2. Introduce Water Change Engine without changing layout.
+1. Validate #117 Existing Tank Authority and the current Water Change Engine stacked gates.
+2. Wire Water Change Engine into existing Aquarium Today Action without changing layout.
 3. Finish remaining Whole-Tank Feasibility dimensions.
 4. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
 5. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+
+## Latest Water Change delta
+
+- Water Change Engine V1 defines `not_needed / due_soon / recommended / urgent / unknown`.
+- Species shortest `waterChangeCycle` is retained only as a maintenance baseline.
+- Calendar overdue alone is `recommended / medium`, not urgent/high.
+- Structured cloudy-water/odor evidence can recommend earlier action; water abnormality plus acute respiratory/death evidence may be urgent.
+- Respiratory distress alone does not automatically become a water-change instruction.
+- `AQ-BC-WATER-001` remains OPEN until Aquarium Today Action consumes this engine.

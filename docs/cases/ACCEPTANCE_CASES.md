@@ -280,3 +280,39 @@ The saved deterministic patrol remains low/normal and the Tank Evidence Adapter 
 
 **MUST NOT**
 Upgrade the patrol to medium merely because a static `riskCount`, old health score or species prior exists.
+
+---
+
+## BC-WATER-002 — Calendar overdue is maintenance, not emergency
+
+**Verifies:** `AQ-WATER-002`, `AQ-WATER-004`, `AQ-WATER-005`
+
+**GIVEN**
+The water-change maintenance baseline is overdue, but Current Tank State is stable and there is no cloudy water, odor, respiratory distress or death evidence.
+
+**WHEN**
+Water Change recommendation is evaluated.
+
+**THEN**
+The result may be `recommended` with normal/medium maintenance priority.
+
+**MUST NOT**
+Become `urgent` or a high-priority emergency solely because the calendar baseline is late.
+
+---
+
+## BC-WATER-003 — Acute symptom alone does not force water change
+
+**Verifies:** `AQ-WATER-004`, `AQ-WATER-006`
+
+**GIVEN**
+A current observation records respiratory distress, but no structured water-quality abnormality such as cloudiness or odor is present.
+
+**WHEN**
+Water Change recommendation is evaluated.
+
+**THEN**
+The maintenance engine does not invent urgent water-change advice; diagnosis/Tank State remains responsible for the acute symptom.
+
+**MUST NOT**
+Translate every urgent physiological signal into “change water now”.

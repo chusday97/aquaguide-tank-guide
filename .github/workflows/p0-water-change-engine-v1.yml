@@ -1,0 +1,38 @@
+name: P0 Water Change Engine V1
+
+on:
+  pull_request:
+    paths:
+      - 'packages/domain-rules/src/water-change.ts'
+      - 'packages/domain-rules/src/index.ts'
+      - 'src/services/aquarium/water-change-recommendation.service.ts'
+      - 'src/services/aquarium/water-change.service.ts'
+      - 'scripts/test-p0-water-change-engine.ts'
+      - 'docs/rules/WATER_CHANGE.md'
+      - 'docs/cases/ACCEPTANCE_CASES.md'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  water-change-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Water Change domain regression
+        run: npm run test:p0-water-change
+      - name: Current State regressions
+        run: |
+          npm run test:p0-existing-tank-authority
+          npm run test:p0-tank-evidence
+          npm run test:p0-tank-state
+          npm run test:daily-check
+          npm run test:care-timeline
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Production build
+        run: npm run build

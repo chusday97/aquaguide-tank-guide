@@ -196,3 +196,15 @@ Still open before production:
 - Existing GP-003 returning Daily Check and GP-004 abnormal-care browser paths PASS after wiring.
 - `AQ-BC-SPACE-001`, `AQ-BC-MIX-001`, `AQ-BC-STATE-001` upgraded to regression-verified on this candidate.
 - Pre-existing `test:compatibility-evidence-coverage` provenance drift reproduced on #116 baseline and logged as `AQ-BC-EVAL-002`; intentionally not mixed into this fix.
+
+## 2026-08-23 — P0 Water Change Engine V1
+
+- fail-before commit `971474d` reproduces 0/3 gaps: shortest species cycle as sole authority, calendar overdue -> high priority, and no separate recommendation engine.
+- added deterministic `packages/domain-rules/src/water-change.ts` with `not_needed / due_soon / recommended / urgent / unknown`.
+- calendar overdue alone is `recommended / medium`, never urgent/high.
+- cloudy water or odor can recommend water change before the calendar due date.
+- water-quality abnormality plus respiratory/death acute evidence can make water change urgent.
+- respiratory distress alone does not automatically become urgent water-change advice.
+- missing history/baseline returns unknown rather than fake schedule certainty.
+- added aquarium adapter using existing water-change history, Current Tank State signals and whole-tank bioload pressure as context.
+- `test:p0-water-change` passes 9/9; TypeScript passes. Aquarium Today Action wiring is intentionally deferred to the next stacked PR.

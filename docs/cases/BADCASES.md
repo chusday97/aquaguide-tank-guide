@@ -93,3 +93,14 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Expected behavior:** The evidence model and evaluator must agree on the canonical provenance for reviewed predator-prey evidence without weakening the actual predation block.
 **Root cause:** Pre-existing upstream evaluator/model drift; reproduced unchanged on #116 head `249d5b6`.
 **Regression:** Baseline reproduction is documented; intentionally not repaired inside Existing Tank Authority wiring because this PR does not change Compatibility provenance.
+
+---
+
+## AQ-BC-WATER-001 — Species shortest cycle directly becomes a high-priority Today Action
+
+**Status:** `OPEN` until Water Change Engine is wired into Aquarium
+**Related Rules:** `AQ-WATER-001`, `AQ-WATER-002`, `AQ-WATER-004`, `AQ-WATER-005`
+**Observed behavior:** Aquarium currently takes the shortest `waterChangeCycle` across stocked species, derives `isChangeOverdue`, and can create a high-priority water-change Today Action from calendar lateness alone.
+**Expected behavior:** Species cycle is a maintenance baseline. A dedicated Water Change Engine combines history, current structured water-quality evidence, Tank State and time; calendar overdue alone is recommended maintenance, not emergency.
+**Root cause:** Historical scheduling and recommendation authority are coupled inside `Aquarium.tsx`.
+**Regression:** Fail-before commit `971474d` reproduces 0/3 rule gaps. Domain candidate `agent/p0-water-change-engine-v1` passes `test:p0-water-change` 9/9; Aquarium wiring remains pending, so this badcase stays OPEN.
