@@ -1,8 +1,8 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.6.0
+> 版本：2.7.0
 > 状态：已确认，实施中
-> 生效日期：2026-08-09
+> 生效日期：2026-08-23
 > SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090002_atomic_care_reminder_completion.sql`
 > TypeScript 来源：`src/types/database.ts`
 
@@ -29,8 +29,10 @@ flowchart LR
 - 数据库使用 `snake_case`；API、共享类型和前端统一使用 `camelCase`，转换只发生在 API 层。
 - 中文主数据继续作为确定性规则的稳定输入；本地化只改变展示文本，不改变规则结论。
 - 侧栏与页头的任务入口只能进入正式路由或可定位模块，不得由导航直接打开业务弹窗。
-- 缸内体态属于养护与诊断上下文，不得改变混养四态结论。
-- 现实中已经存在的缸内生物属于事实记录；混养结论只能生成保存后的风险提示，不能阻止事实写入。未来规划仍受四态添加策略约束。
+- 混养四态属于 **Planning Compatibility**：`compatible / caution / not_recommended / insufficient_data`，回答“未来是否适合计划加入”，不得直接等同于现实鱼缸当前状态。
+- 缸内观察、体态与时间线不得篡改 Planning Compatibility 的物种/组合 prior；它们进入独立的 **Current Tank State** 计算，输出 `stable / watch / intervene / urgent / unknown`。
+- 现实中已经存在的缸内生物属于事实记录；Planning Compatibility 只能生成保存后的 prior / 风险提示，不能阻止事实写入。未来规划仍受四态添加策略约束。
+- Existing Tank 的 Today Action 必须读取 Current Tank State 与真实维护上下文；普通 planning prior 不得绕过 Current Tank State 直接成为当前红色警告或移除生物指令。
 
 ### 1.1 任务式路由
 
@@ -58,6 +60,57 @@ interface OnboardingState {
   completedAt?: string;
 }
 ```
+
+### 1.3 决策层双契约（P0）
+
+AquaGuide 将“加入前规划”与“现实鱼缸当前状态”定义为两个不同 authority。完整产品规则见 `docs/rules/COMPATIBILITY.md` 与 `docs/rules/TANK_STATE.md`。
+
+```ts
+type PlanningCompatibilityStatus =
+  | 'compatible'
+  | 'caution'
+  | 'not_recommended'
+  | 'insufficient_data';
+
+type CurrentTankState =
+  | 'stable'
+  | 'watch'
+  | 'intervene'
+  | 'urgent'
+  | 'unknown';
+```
+
+Planning Compatibility 的 canonical pipeline：
+
+```text
+Hard constraints
+→ Pair relationship assessment
+→ Whole-tank feasibility
+→ Evidence completeness
+→ PlanningCompatibilityStatus
+```
+
+Current Tank State 的 canonical pipeline：
+
+```text
+Compatibility Prior
++ Tank Context
++ Observed Evidence
++ Time / History
+→ CurrentTankState
+→ Today Action
+```
+
+边界：
+
+- pair relationship 与 whole-tank feasibility 必须分开计算；两两通过不代表整缸可行；
+- whole-tank bioload 不得通过 pairwise 循环重复计算个体数量；
+- `Aggressive` / `Territorial` 不得作为 bioload 乘数，也不得自动等价为 `predatory`;
+- 普通 tank-size 建议、性情标签、heuristic load 不属于隐式 hard constraint；
+- 缺少会显著影响规划结论的 reviewed evidence 时，应保留 `insufficient_data`，不得因为数据库没有记录风险就自动判安全；
+- P0 不新增 Current Tank State 持久化表。若未来需要持久化派生状态，必须另行更新数据契约；当前状态应能由已有 aquarium context、diagnosis/observation、care/timeline 等事实重新派生。
+
+现有 `LocalAppState.compatibilityRecords` 在迁移前继续兼容 `{ aquariumId, speciesIds, status, scope: 'tank', evaluatedAt }`。其中 `status` 仅解释为 **planning assessment snapshot**；任何 Existing Tank 当前诊断或 Today Action 都 **MUST NOT** 直接把该字段当成 Current Tank State。
 
 ### 2.1 语言与回退
 
