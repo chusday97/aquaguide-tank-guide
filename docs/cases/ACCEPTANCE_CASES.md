@@ -58,6 +58,87 @@ Promote the label alone into an active predation diagnosis or a guaranteed curre
 
 ---
 
+## BC-MIX-002 — Same combination, different intent
+
+**Verifies:** `AQ-MIX-001`, `AQ-MIX-002`, `AQ-MIX-009`
+
+**GIVEN**  
+The same two species produce a `caution` planning compatibility prior.
+
+**WHEN A — future plan**  
+The user is considering adding the second species.
+
+**THEN A**  
+The planning flow may require explicit confirmation and show the theoretical risk before addition.
+
+**WHEN B — existing reality**  
+The two species are already present and current observations show normal feeding/activity with no persistent chasing, injury or hiding pressure.
+
+**THEN B**  
+The factual livestock record remains saved, the theoretical caution remains available as prior context, and Current Tank State may remain `stable` or `watch` according to observed evidence.
+
+**MUST NOT**  
+Reuse the planning `caution` status as automatic proof that the existing aquarium is currently in conflict.
+
+---
+
+## BC-MIX-003 — Pairwise pass does not prove whole-tank feasibility
+
+**Verifies:** `AQ-MIX-005`, `AQ-MIX-006`, `AQ-SPACE-002`
+
+**GIVEN**  
+A proposed aquarium contains several species and each individual pair has no reviewed blocking relationship.
+
+**WHEN**  
+The complete planned quantities create a meaningful whole-tank space, group-size, equipment or bioload pressure.
+
+**THEN**  
+The final planning result reflects the whole-tank feasibility concern separately from pair compatibility.
+
+**MUST NOT**  
+Return `compatible` solely because every pair result passed.
+
+**MUST NOT**  
+Calculate the whole-tank bioload by repeatedly counting the same animals through pairwise combinations.
+
+---
+
+## BC-MIX-004 — Hard constraint remains blocking
+
+**Verifies:** `AQ-MIX-007`, `AQ-STATE-004`
+
+**GIVEN**  
+A proposed or existing aquarium contains an explicitly defined non-negotiable environmental incompatibility, such as freshwater and marine species requiring mutually exclusive water conditions.
+
+**WHEN**  
+The hard-constraint rule is supported by the deterministic model.
+
+**THEN**  
+Planning returns `not_recommended`; an existing-tank Current State may escalate without waiting for repeated behavioral observations.
+
+**MUST NOT**  
+Downgrade the hard constraint merely because no chasing or injury has been observed.
+
+---
+
+## BC-MIX-005 — Missing reviewed pair evidence remains unknown
+
+**Verifies:** `AQ-MIX-004`, `AQ-MIX-008`
+
+**GIVEN**  
+Two species each have individual reviewed profiles, but the planning decision materially depends on a pair-specific relationship that has no reviewed evidence.
+
+**WHEN**  
+No deterministic rule can establish that relationship from other reviewed facts.
+
+**THEN**  
+The engine keeps the relevant reason unknown and may return `insufficient_data` when that uncertainty is decision-critical.
+
+**MUST NOT**  
+Treat “no risk found in the database” as proof that the pair is safe.
+
+---
+
 ## BC-WATER-001 — Maintenance baseline overdue without abnormal evidence
 
 **Verifies:** `AQ-WATER-001`, `AQ-WATER-002`, `AQ-WATER-004`
