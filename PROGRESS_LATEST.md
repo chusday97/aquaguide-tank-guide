@@ -248,3 +248,13 @@ Still open before production:
 - No known P0 gate is red; remaining exit review is legacy health-score/support-surface authority only.
 - Legacy authority exit review PASS: `conflicts` is Current-Tank-State-derived; legacy health score / risk reminder variables are unconsumed and diagnosis ignores their snapshot fields.
 - P0 decision-layer exit criteria are green on the current unmerged stack. Next action is landing-order audit only; no merge authorization has been given.
+
+## 2026-08-23 — P0 Stacked Landing Audit
+
+- Explicit remote refs were materialized for RC1 and #113-#120; Git ancestry was checked locally with `git merge-base --is-ancestor`.
+- Strict linear ancestry PASS for every edge: RC1→113→114→115→116→117→118→119→120; every merge-base equals the previous layer head.
+- Dry-run incremental diff fingerprints recorded: #113 18 commits/15 files/+1016-123; #114 2/16/+423-140; #115 2/10/+541-11; #116 1/8/+493-9; #117 1/14/+512-252; #118 5/12/+626-75; #119 4/11/+562-67; #120 5/6/+53-25.
+- Repository settings confirm normal merge commits are allowed. Stacked landing must use merge commits only; squash/rebase would break ancestry and can reintroduce already-landed commits into later PR diffs.
+- Safe procedure: merge #113 to RC1, then retarget only the next PR to RC1, verify its incremental diff + mergeability + gates, merge with expected-head protection, and repeat through #120. Never rebase/update the stacked head branches during landing.
+- After #120, the exact new RC1 must re-run all P0 gates and the existing RC1→main release/Product Golden matrix before any main/deploy decision.
+- No PR base was changed and no merge/deployment was performed during this audit. Landing remains unauthorized pending explicit user approval.

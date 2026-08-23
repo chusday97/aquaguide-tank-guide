@@ -78,11 +78,40 @@ Latest local regression PASS:
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
 - #112 Interactive Atlas remains frozen until P0 exit criteria pass.
 
+## Stacked PR Landing Audit — READY, NOT AUTHORIZED
+
+Git ancestry proof: `RC1 -> #113 -> #114 -> #115 -> #116 -> #117 -> #118 -> #119 -> #120` is strictly linear. Every `git merge-base --is-ancestor` check passes and each merge-base equals the previous layer head.
+
+Landing rule: use **merge commit only**. Do not squash or rebase any layer; those methods would break stacked ancestry and can make already-landed commits reappear when the next PR is retargeted. Repository settings allow normal merge commits.
+
+| PR | Expected head | Incremental baseline | Dry-run delta |
+| --- | --- | --- | --- |
+| #113 | `4d4a23896e47` | RC1 `5e605fb7a680` | 18 commits / 15 files / +1016 -123 |
+| #114 | `53f3729b54bb` | #113 head | 2 / 16 / +423 -140 |
+| #115 | `8249dfe6cc04` | #114 head | 2 / 10 / +541 -11 |
+| #116 | `249d5b6d8d50` | #115 head | 1 / 8 / +493 -9 |
+| #117 | `63334e0b00d9` | #116 head | 1 / 14 / +512 -252 |
+| #118 | `0d7b04d8c3f3` | #117 head | 5 / 12 / +626 -75 |
+| #119 | `79b06c72f246` | #118 head | 4 / 11 / +562 -67 |
+| #120 | audited code/docs head `a44616e995d1`; re-read live head before merge | #119 head | pre-sync 5 / 6 / +53 -25; landing-audit docs add a docs-only delta |
+
+Authorized landing procedure, one layer at a time:
+
+1. Verify RC1 still starts at the expected pre-landing head and the target PR head still equals the table above.
+2. For #113, merge to `integration/aquaguide-rc1` using a normal merge commit with expected-head protection.
+3. Before each later PR (#114..#120), retarget its base to `integration/aquaguide-rc1`; do not update/rebase the PR branch.
+4. After retarget, verify the PR diff matches the recorded incremental baseline/delta, mergeability is true, and all triggered permanent gates are green. Any unexpected extra files/commits stops landing.
+5. Merge that PR using a normal merge commit and its expected-head SHA; then repeat for the next layer.
+6. After #120 lands, treat the new RC1 as a new release candidate: re-run all P0 permanent gates plus the existing RC1->main release matrix / Product Golden workflows on the exact RC1 head. Do not merge RC1 to `main` or deploy as part of this procedure.
+
+No landing step above is authorized yet.
+
 ## Next Execution Order
 
-1. Audit stacked PR ancestry / mergeability and prepare the exact landing order with expected-head protection.
-2. Do not merge any P0 PR, RC1, main, or deploy without explicit authorization.
-3. After an authorized stack landing and revalidation, resume #112 UI work.
+1. Landing audit is complete and ready; wait for explicit authorization before retargeting or merging #113-#120.
+2. If authorized, land #113 -> #120 one layer at a time using the merge-commit-only procedure above.
+3. Revalidate the exact landed RC1 with P0 permanent gates + the RC1->main release matrix before any main/deploy decision.
+4. After an authorized landing and revalidation, resume #112 UI work.
 
 ## Branch note
 
