@@ -162,3 +162,14 @@ Still open before production:
 - Species-fit predation now requires reviewed pair/profile evidence rather than `Large`/`Aggressive` proxy inference.
 - Stale addition-intent and visual-result fixtures were migrated without changing UI.
 - Targeted compatibility/species-fit/addition/livestock/visual/type/build validation is green locally.
+
+## 2026-08-23 — P0 Tank State Engine V1
+
+- #114 P0 Compatibility dedicated workflow PASS: `32620810633`.
+- fail-before commit `72ae99e` reproduced 0/3 Existing Tank authority failures: static aggression -> danger/removal, generic tank-size guidance -> upgrade/move instruction, static compatibility danger -> high-priority Today Action.
+- added deterministic `packages/domain-rules/src/tank-state.ts`.
+- canonical states: `stable / watch / intervene / urgent / unknown`.
+- recent normal evidence can keep a prior-risk tank stable; weak single abnormality watches; repeated/correlated abnormality intervenes; urgent physiological evidence and true hard constraints retain immediate authority.
+- cohabitation duration alone never proves stability.
+- `test:p0-tank-state` passes 11/11 together with P0 Compatibility, Compatibility, Daily Check, Species Diagnosis and TypeScript.
+- Aquarium UI is intentionally not rewired in this candidate; `AQ-BC-MIX-001`, `AQ-BC-SPACE-001`, `AQ-BC-STATE-001` remain OPEN until the Existing Tank wiring PR.
