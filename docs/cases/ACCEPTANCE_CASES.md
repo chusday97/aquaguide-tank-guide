@@ -262,3 +262,21 @@ The final product result preserves the deterministic minimum and the blocking fa
 
 **MUST NOT**  
 Let the model downgrade or erase deterministic safety/state output.
+
+---
+
+## BC-DIAG-001 — Static prior cannot turn a normal Daily Check into abnormal evidence
+
+**Verifies:** `AQ-DIAG-001`, `AQ-DIAG-006`, `AQ-STATE-009`
+
+**GIVEN**
+An existing aquarium has a theoretical compatibility/space prior or a legacy non-zero aggregate risk counter.
+
+**WHEN**
+The user explicitly reports normal breathing, clear water, no odor and normal activity/feeding in the current Daily Check.
+
+**THEN**
+The saved deterministic patrol remains low/normal and the Tank Evidence Adapter emits normal observations.
+
+**MUST NOT**
+Upgrade the patrol to medium merely because a static `riskCount`, old health score or species prior exists.

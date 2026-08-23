@@ -66,3 +66,7 @@ If no recent observation is available, elapsed cohabitation time alone must not 
 The evidence adapter may promote explicit user selections and deterministic persisted facts into Tank State observation codes.
 
 AI summaries, free-text result summaries and prose explanations do not become authoritative observation codes merely because they contain words such as “chasing”, “injury” or “stable”. They may remain explanatory context; structured interpretation requires a separately governed deterministic/AI-interpretation boundary.
+
+## AQ-STATE-010 — Existing Tank presentation consumes Current Tank State
+
+Aquarium Today Action, current-risk surfaces and current-status severity must consume `Current Tank State`, not raw species temperament, generic tank-size guidance, pairwise planning verdicts or heuristic bioload. Static priors may remain available as background evidence, but only `watch / intervene / urgent` current-state output or a true hard constraint may create a current-risk surface.

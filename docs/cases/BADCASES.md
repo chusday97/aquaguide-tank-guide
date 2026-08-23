@@ -10,12 +10,12 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 
 ## AQ-BC-SPACE-001 — Recommended tank size becomes a current removal instruction
 
-**Status:** `OPEN`
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-existing-tank-authority-wiring-v1`
 **Related Rules:** `AQ-SPACE-001`, `AQ-STATE-001`, `AQ-STATE-005`
 **Observed behavior:** Current Aquarium logic can treat the gap between effective tank volume and a species' recommended minimum as a current “space pressure” problem and immediately recommend reducing/removing livestock or upgrading the tank.
 **Expected behavior:** For an existing aquarium, a general recommendation gap remains prior/space evidence unless a hard physical constraint or observed current problem supports intervention.
 **Root cause:** Planning/recommendation heuristics are consumed directly by the existing-tank risk/Today Action layer.
-**Regression:** Domain acceptance now exists in `test:p0-tank-state` and returns stable for a normal observed tank with a generic space prior. Aquarium wiring is still pending, so this badcase remains OPEN.
+**Regression:** Domain acceptance plus `test:p0-existing-tank-authority` and the browser gate verify 40cm + 2 mini-parrots + normal patrol stays `routine / 今天没有必须处理`; no space-upgrade/removal current warning is rendered.
 
 ---
 
@@ -32,12 +32,12 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 
 ## AQ-BC-MIX-001 — Static aggression metadata becomes active current conflict
 
-**Status:** `OPEN`
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-existing-tank-authority-wiring-v1`
 **Related Rules:** `AQ-MIX-003`, `AQ-DIAG-001`, `AQ-STATE-001`
 **Observed behavior:** Current Aquarium risk logic can classify `Aggressive + Peaceful` stocked species as a danger and recommend removal/separation without first requiring observed chasing, injury, feeding exclusion or reviewed predation evidence.
 **Expected behavior:** The metadata creates an aggression/territory prior and observation target. Current conflict/intervention requires observed evidence or a true deterministic hard constraint.
 **Root cause:** Existing-tank `getTankRiskItems()` mixes planning priors with current-state diagnosis.
-**Regression:** Domain acceptance now exists in `test:p0-tank-state`: static aggression prior alone is watch, and recent normal evidence can be stable. Aquarium wiring is still pending, so this badcase remains OPEN.
+**Regression:** Domain acceptance plus browser regression verify reviewed tiger-barb + mini-parrot planning conflict remains prior context while a normal current patrol produces `routine`, not an automatic removal/current-conflict action.
 
 ---
 
@@ -76,9 +76,20 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 
 ## AQ-BC-STATE-001 — Static compatibility danger bypasses Current Tank State in Today Action
 
-**Status:** `OPEN`
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-existing-tank-authority-wiring-v1`
 **Related Rules:** `AQ-STATE-001`, `AQ-STATE-005`, `AQ-MIX-009`
 **Observed behavior:** Aquarium currently finds a static `danger` risk and directly creates a high-priority `compatibility_review` Today Action before a Current Tank State evaluation exists.
 **Expected behavior:** Compatibility output is Prior Risk for stocked livestock. Today Action is derived only after combining prior, tank context, observed evidence, time/history and hard constraints.
 **Root cause:** Existing `blockingCompatibilityRisk` bypasses the missing Tank State authority.
-**Regression:** Fail-before commit `72ae99e` proves the bypass. Domain candidate `agent/p0-tank-state-engine-v1` adds Current Tank State semantics; Aquarium wiring is still pending, so this badcase remains OPEN.
+**Regression:** Fail-before commit `72ae99e` proves the bypass; source contract now forbids `blockingCompatibilityRisk`, and the 3-scenario browser regression proves Current Tank State owns Today Action while true water-type hard constraints remain urgent.
+
+---
+
+## AQ-BC-EVAL-002 — Compatibility evidence provenance coverage is red on the upstream baseline
+
+**Status:** `OPEN`
+**Related Rules:** compatibility evidence provenance / evaluator integrity
+**Observed behavior:** `test:compatibility-evidence-coverage` expects direct predator-prey evidence provenance `pair_rule`, while #116 baseline and the current stack return `tank_condition`.
+**Expected behavior:** The evidence model and evaluator must agree on the canonical provenance for reviewed predator-prey evidence without weakening the actual predation block.
+**Root cause:** Pre-existing upstream evaluator/model drift; reproduced unchanged on #116 head `249d5b6`.
+**Regression:** Baseline reproduction is documented; intentionally not repaired inside Existing Tank Authority wiring because this PR does not change Compatibility provenance.

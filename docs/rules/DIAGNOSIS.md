@@ -36,3 +36,7 @@ If required current evidence is missing, report the relevant unknowns instead of
 ## AQ-DIAG-005 — Daily Check is a real observation record
 
 A saved Daily Check belongs to the active aquarium and becomes part of its observation history. Repeating a Daily Check on the same local day should update the day's observation rather than create misleading duplicate state history.
+
+## AQ-DIAG-006 — Static priors must not contaminate normal observations
+
+A Daily Check that contains no current abnormal structured answer must remain a normal/low observation even when the aquarium has theoretical compatibility or husbandry priors. Legacy aggregate fields such as `riskCount` or `healthScore` may be shown as context, but they must not upgrade an otherwise normal patrol into a current abnormal observation. This prevents prior-risk feedback loops from manufacturing evidence for Tank State.

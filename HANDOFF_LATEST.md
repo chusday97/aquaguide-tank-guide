@@ -3,56 +3,63 @@
 **Updated:** 2026-08-23
 **Repository:** `chusday97/aquaguide-tank-guide`
 **Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
-**Product-truth branch/PR:** `agent/context-sync-protocol-v1` / #113
-**Active P0 implementation branch:** `agent/p0-tank-evidence-adapter-v1`
+**Product Truth / Context Sync:** #113 `agent/context-sync-protocol-v1`
+**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → current Existing Tank Authority Wiring V1
+**Active branch:** `agent/p0-existing-tank-authority-wiring-v1`
 **Phase:** `P0 decision-layer consolidation`
-**Release boundary:** no RC1→main merge or production deploy without separate explicit authorization.
+**Release boundary:** no P0 stack merge to RC1, no RC1→main merge, and no production deploy without separate explicit authorization.
 
-## Current status
+## Current Product Truth
 
-- Context Sync canonical structure is established on #113.
-- P0 Compatibility Product Truth is accepted under `AQ-MIX-*`, `AQ-SPACE-*`, `AQ-STATE-*`.
-- P0-2 Contract Alignment landed on the #113 stack at commit `4d4a238`: Planning Compatibility and Current Tank State are separate authorities.
-- Fail-before proof commit `9ed2d76` reproduced 4/4 shared model failures: temperament→bioload, Large→predator, generic tankSize→hard block, pair-only aggregate missing whole-tank quantity.
-- #114 `agent/p0-compatibility-engine-v2` implements shared bioload screening plus explicit `wholeTankFeasibility`; dedicated workflow `32620810633` is PASS.
-- Tank State fail-before commit `72ae99e` reproduces 0/3 Existing Tank authority failures.
-- #115 `agent/p0-tank-state-engine-v1` adds deterministic `stable / watch / intervene / urgent / unknown` state semantics; dedicated Tank State + Compatibility gates are PASS.
-- `agent/p0-tank-evidence-adapter-v1` maps persisted structured diagnosis answers and Planning Compatibility output into Tank Observations, Prior Risk and narrow true Hard Constraints without parsing AI prose.
-- #112 Interactive Atlas remains Draft/frozen until P0 exit criteria are met.
+Planning Compatibility and Existing Tank Current State are separate authorities.
 
-## Verified candidate behavior
+`Planning: hard constraints + pair relationships + whole-tank feasibility + evidence completeness -> compatible / caution / not_recommended / insufficient_data`
 
-- `AQ-SPACE-003`: temperament no longer changes bioload screening.
-- `AQ-MIX-003`: Large/Aggressive metadata alone no longer proves predation; reviewed evidence remains authoritative.
-- `AQ-MIX-007`: generic tank-size guidance no longer becomes an implicit hard block.
-- `AQ-MIX-006`: pair relationships and whole-tank feasibility are separate; full quantity is aggregated once.
-- heuristic bioload can raise planning caution but cannot hard-block by itself.
-- existing reality recording remains save-first; planned additions remain four-state safety-gated.
+`Existing Tank: Prior Risk + Tank Context + structured Observed Evidence + Time/History + Hard Constraints -> stable / watch / intervene / urgent / unknown`
 
-## Validation
+Static temperament, generic tank-size guidance, pairwise planning verdicts and heuristic bioload cannot directly create a current danger or Today Action.
 
-Candidate local validation passed:
+## Verified P0 Stack
 
-- `test:p0-compatibility` — 5/5 PASS
-- `test:compatibility` — PASS
-- species-fit regression — PASS
-- addition-intent contract — PASS after baseline evaluator drift migration
-- livestock-recording contract — PASS
-- visual-results regression — PASS with reviewed predator fixture
-- TypeScript — PASS
-- production build — PASS
+- #114 dedicated Compatibility gate PASS: `32620810633`; later stacked reruns also PASS.
+- #115 Tank State V1 gates PASS: Tank State `32621472344`, Compatibility `32621472315`.
+- #116 Evidence Adapter gates PASS: Evidence `32621938239`, Compatibility `32621938236`, Tank State `32621938229`.
+- Current wiring candidate replaces Aquarium page-level static current-risk authority with `deriveCurrentTankState()` plus a presentation adapter.
+- Daily Check normal-patrol no longer inherits static `riskCount` as a medium diagnosis.
+- AI/result-summary prose does not manufacture authoritative observation codes.
 
-## Still open in P0
+## Current User-Visible Regression Proof
 
-- `AQ-BC-MIX-001`: Existing Aquarium still needs Tank State wiring so static prior cannot become current red conflict/Today Action.
-- `AQ-BC-SPACE-001`: Existing Aquarium page still needs current-state semantics; generic planning guidance must not generate current removal/upgrade action by itself.
-- Tank State domain evaluator is implemented in the current candidate and passes 11/11; Existing Aquarium evidence/wiring is still pending.
-- Whole-tank feasibility v1 currently establishes the separate layer and bioload screening; group/equipment/space dimensions still need migration into that layer.
+Browser regression PASS 3/3 on the current wiring candidate:
 
-## Next execution order
+1. `40×25×30cm + 2 × 迷你鹦鹉 + normal patrol` → `routine / 今天没有必须处理`; no space-upgrade, fake overload or removal warning.
+2. reviewed `虎皮鱼 + 迷你鹦鹉` planning conflict + normal patrol → remains current routine; theoretical prior does not become active conflict.
+3. freshwater + marine hard constraint + normal behavioral observation → remains current high-priority review.
 
-1. Validate the Tank Evidence Adapter stacked PR; do not merge without explicit authorization.
-2. Route Existing Aquarium prior + observations + history through Tank State, replacing the direct `blockingCompatibilityRisk -> Today Action` authority.
-3. Remove duplicate page heuristics only after Tank State browser/regression proof.
-4. Introduce Water Change Engine and combine maintenance context with Tank State for Today Action priority.
-5. Resume #112 only after P0 exit criteria pass.
+Existing GP-003 returning Daily Check and GP-004 abnormal-care browser paths also PASS.
+
+## Badcase Status
+
+- `AQ-BC-BIOLOAD-001` — regression-verified on #114 stack.
+- `AQ-BC-SPACE-002` — regression-verified on #114 stack.
+- `AQ-BC-MIX-002` — regression-verified on #114 stack.
+- `AQ-BC-SPACE-001` — regression-verified on current Existing Tank wiring candidate.
+- `AQ-BC-MIX-001` — regression-verified on current Existing Tank wiring candidate.
+- `AQ-BC-STATE-001` — regression-verified on current Existing Tank wiring candidate.
+- `AQ-BC-EVAL-002` — OPEN; pre-existing Compatibility evidence provenance drift reproduced unchanged on #116 baseline.
+
+## Still Open in P0
+
+- Water Change still uses the existing schedule/shortest-cycle decision and has not yet been migrated to a dedicated Water Change Engine.
+- Whole-Tank Feasibility v1 separates the layer and bioload screening; group-size, equipment-capacity and reviewed physical-space dimensions still need migration.
+- Existing health-score legacy surfaces remain non-authoritative UI/support calculations and should be reduced after Today Action/Current State wiring is stable.
+- P0 stack is still Draft/unmerged; RC1 is unchanged.
+- #112 Interactive Atlas remains frozen until P0 exit criteria pass.
+
+## Next Execution Order
+
+1. Validate the current Existing Tank Authority PR on GitHub permanent gates.
+2. Introduce Water Change Engine without changing layout.
+3. Finish remaining Whole-Tank Feasibility dimensions.
+4. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
+5. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
