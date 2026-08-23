@@ -21,6 +21,8 @@ jobs:
       - run: npm ci
       - name: Atlas authority contract
         run: node scripts/test-interactive-atlas-authority-contract.mjs
+      - name: Mobile Encyclopedia entry contract
+        run: node scripts/test-mobile-encyclopedia-entry-contract.mjs
       - name: Product contracts
         run: |
           npm run test:product-evaluation
