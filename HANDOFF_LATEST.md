@@ -4,8 +4,8 @@
 **Repository:** `chusday97/aquaguide-tank-guide`
 **Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 **Product Truth / Context Sync:** #113 `agent/context-sync-protocol-v1`
-**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → #118 Water Change Authority V1
-**Active branch:** `agent/p0-water-change-authority-v1`
+**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → #118 Water Change Authority V1 → #119 Whole-Tank Feasibility V2
+**Active branch:** `agent/p0-whole-tank-feasibility-v2`
 **Phase:** `P0 decision-layer consolidation`
 **Release boundary:** no P0 stack merge to RC1, no RC1→main merge, and no production deploy without separate explicit authorization.
 
@@ -31,22 +31,30 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - #118 permanent gates PASS on `c6f17e5`: Water Change `32638235738`, Existing Tank `32638235771`, Evidence `32638235730`, Tank State `32638235711`, Compatibility `32638235721`.
 - Water Change candidate removes Aquarium page-level `shortestCycle -> overdue -> high-priority/current-risk` authority and routes schedule semantics through a deterministic engine.
 - Overdue-days health-score deduction is removed; maintenance lateness stays maintenance unless current evidence independently supports escalation.
+- Whole-Tank V2 fail-before commit `0fe6e4e` reproduces 0/3 missing-dimension gaps on #118 head.
+- #119 Whole-Tank Feasibility V2 adds inspectable group / physical-space / equipment / bioload dimensions with separate passed/warning/missing semantics.
+- Reviewed `minimumGroupSize` is authoritative; keyword group-size guesses and temperament-bioload inflation are removed from downstream consumers.
+- Generic `tankSize` stays planning space guidance. Missing reviewed equipment or hard physical-space requirements remain explicit unknown rather than fabricated pass/block.
 
 ## Current Regression Proof
 
-Water Change local/browser validation PASS:
+Latest local regression PASS:
 
-1. baseline overdue + normal patrol → medium maintenance action; explicitly not current urgent state.
-2. Water Change Engine domain cases → 8/8 PASS, including no-history, no-baseline, due, overdue, future-history and current-water-signal cases.
-3. responsive browser regression → 390 / 900 / 1600px PASS with no horizontal overflow.
-4. Existing Tank browser regression remains 3/3 PASS.
-5. GP-003 returning Daily Check and GP-004 abnormal care remain PASS.
+1. Whole-Tank Feasibility V2 → 7/7 PASS.
+2. reviewed group minimum 5 is not overwritten by legacy keyword 6.
+3. generic physical-space guidance remains non-hard; equipment sufficiency stays unknown without reviewed requirements.
+4. Whole-Tank pass/missing rules do not manufacture Current Tank medium priors.
+5. P0 Compatibility 5/5, Compatibility, Species Fit, Addition Intent, Livestock Recording, Tank Evidence, Tank State 11/11, Existing Tank Authority and Water Change 8/8 remain PASS.
+6. Core Flow v1/v2, Visual Results, Golden Path contract, TypeScript, production build and `git diff --check` PASS.
+7. Existing Water Change responsive browser regression and GP-003/GP-004 remain proven on #118; no UI surface changed in #119.
 
 ## Badcase Status
 
 - `AQ-BC-BIOLOAD-001` — REGRESSION_VERIFIED.
 - `AQ-BC-SPACE-002` — REGRESSION_VERIFIED.
-- `AQ-BC-MIX-002` — REGRESSION_VERIFIED.
+- `AQ-BC-MIX-002` — REGRESSION_VERIFIED on #119.
+- `AQ-BC-GROUP-001` — REGRESSION_VERIFIED on #119.
+- `AQ-BC-STATE-002` — REGRESSION_VERIFIED on #119.
 - `AQ-BC-SPACE-001` — REGRESSION_VERIFIED on #117.
 - `AQ-BC-MIX-001` — REGRESSION_VERIFIED on #117.
 - `AQ-BC-STATE-001` — REGRESSION_VERIFIED on #117.
@@ -56,16 +64,18 @@ Water Change local/browser validation PASS:
 ## Still Open in P0
 
 - #118 Water Change Authority V1 is open as Draft and permanent gates are green; it remains unmerged.
-- Whole-Tank Feasibility v1 still needs group-size, equipment-capacity and reviewed physical-space dimensions.
+- #119 Whole-Tank Feasibility V2 is open as Draft; local implementation/regression is green and permanent GitHub gates are pending.
+- Reviewed knowledge coverage is still incomplete for species-specific equipment requirements and hard physical-space constraints; the engine now represents those gaps as explicit unknown rather than inventing thresholds.
 - Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
 - #112 Interactive Atlas remains frozen until P0 exit criteria pass.
 
 ## Next Execution Order
 
-1. Finish remaining Whole-Tank Feasibility dimensions: group-size, equipment-capacity and reviewed physical-space constraints.
-2. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
-3. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+1. Validate #119 Whole-Tank Feasibility V2 permanent GitHub gates.
+2. Resolve the still-open `AQ-BC-EVAL-002` Compatibility evidence-provenance drift.
+3. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
+4. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
 
 ## Branch note
 
