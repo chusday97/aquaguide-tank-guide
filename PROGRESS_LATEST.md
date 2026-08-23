@@ -196,3 +196,17 @@ Still open before production:
 - Existing GP-003 returning Daily Check and GP-004 abnormal-care browser paths PASS after wiring.
 - `AQ-BC-SPACE-001`, `AQ-BC-MIX-001`, `AQ-BC-STATE-001` upgraded to regression-verified on this candidate.
 - Pre-existing `test:compatibility-evidence-coverage` provenance drift reproduced on #116 baseline and logged as `AQ-BC-EVAL-002`; intentionally not mixed into this fix.
+
+## 2026-08-23 — P0 Water Change Engine V1
+
+- #117 Existing Tank Authority permanent gates confirmed PASS before this layer: Existing Tank `32623274776`, Evidence `32623274708`, Tank State `32623274730`, Compatibility `32623274742`.
+- Added deterministic `packages/domain-rules/src/water-change.ts` plus Aquarium adapter `water-change-decision.service.ts`.
+- Completed-water-change history and derived recommendation are now separate; future dates are ignored as completed history by the decision engine.
+- Stocked-species `waterChangeCycle` remains a maintenance baseline; Aquarium no longer owns a fallback `shortestCycle -> overdue -> high priority` decision chain.
+- Removed overdue-days health-score deduction so maintenance lateness is not silently presented as current biological danger.
+- Baseline overdue without abnormal evidence produces a medium maintenance task and explicitly does not imply urgent Current Tank State.
+- Current water/physiological signals remain evidence inputs, while Existing Tank Current State keeps higher authority in the Today Action ordering.
+- `test:p0-water-change` PASS 8/8; authority source contract PASS; Existing Tank/Tank Evidence/Tank State/Compatibility/Daily Check/Core Flow/Visual Results remain green.
+- TypeScript and production build PASS.
+- Browser regression PASS at 390/900/1600px; Existing Tank browser 3/3, GP-003 and GP-004 remain PASS.
+- `AQ-BC-WATER-001` migrated into the canonical badcase ledger as REGRESSION_VERIFIED on this candidate.
