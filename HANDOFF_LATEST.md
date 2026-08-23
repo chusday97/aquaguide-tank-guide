@@ -4,8 +4,8 @@
 **Repository:** `chusday97/aquaguide-tank-guide`
 **Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 **Product Truth / Context Sync:** #113 `agent/context-sync-protocol-v1`
-**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → current Water Change Engine V1
-**Active branch:** `agent/p0-water-change-engine-v1`
+**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → current Water Change Authority V1
+**Active branch:** `agent/p0-water-change-authority-v1`
 **Phase:** `P0 decision-layer consolidation`
 **Release boundary:** no P0 stack merge to RC1, no RC1→main merge, and no production deploy without separate explicit authorization.
 
@@ -27,6 +27,7 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - #115 Tank State gates PASS.
 - #116 Evidence Adapter gates PASS.
 - #117 Existing Tank Authority permanent gates PASS: Existing Tank `32623274776`, Evidence `32623274708`, Tank State `32623274730`, Compatibility `32623274742`.
+- Fail-before commit `1afcd15` reproduces 0/3 Water Change authority gaps on #117 head.
 - Water Change candidate removes Aquarium page-level `shortestCycle -> overdue -> high-priority/current-risk` authority and routes schedule semantics through a deterministic engine.
 - Overdue-days health-score deduction is removed; maintenance lateness stays maintenance unless current evidence independently supports escalation.
 
@@ -53,7 +54,7 @@ Water Change local/browser validation PASS:
 
 ## Still Open in P0
 
-- Water Change candidate still needs commit/push, stacked PR creation and GitHub permanent gates.
+- Water Change Authority candidate is committed locally; push, stacked PR creation and GitHub permanent gates are still pending.
 - Whole-Tank Feasibility v1 still needs group-size, equipment-capacity and reviewed physical-space dimensions.
 - Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
@@ -61,7 +62,7 @@ Water Change local/browser validation PASS:
 
 ## Next Execution Order
 
-1. Commit/push Water Change Engine V1 and open a Draft stacked PR on #117 head.
+1. Push Water Change Authority V1 and open a Draft stacked PR on #117 head.
 2. Validate its permanent GitHub gates.
 3. Finish remaining Whole-Tank Feasibility dimensions.
 4. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.

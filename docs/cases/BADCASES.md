@@ -87,12 +87,12 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 
 ## AQ-BC-WATER-001 — Maintenance baseline overdue becomes current high-priority risk
 
-**Status:** `REGRESSION_VERIFIED` on `agent/p0-water-change-engine-v1`
+**Status:** `REGRESSION_VERIFIED` on `agent/p0-water-change-authority-v1`
 **Related Rules:** `AQ-WATER-001`, `AQ-WATER-002`, `AQ-WATER-004`
 **Observed behavior:** Aquarium directly derived `isChangeOverdue` from the shortest stocked-species `waterChangeCycle`, deducted health score by overdue days, and created a `high`-priority Water Change Today Action even when the current structured patrol was normal.
 **Expected behavior:** Water-change history remains factual history; species cycle is a maintenance baseline only. Calendar overdue may surface a maintenance recommendation, but without current abnormal evidence it must not classify the aquarium as urgent/currently unsafe.
 **Root cause:** Page-level schedule arithmetic owned Today Action and health semantics instead of a dedicated Water Change decision layer that combines baseline, real history and current evidence.
-**Regression:** `test:p0-water-change` verifies the domain boundary and `test:p0-water-change-ui` proves an overdue baseline + normal patrol renders a maintenance action, explicitly says overdue alone is not urgent, and remains responsive at 390/900/1600px.
+**Regression:** Fail-before commit `1afcd15` reproduces 0/3 authority gaps; `test:p0-water-change` verifies the domain boundary and `test:p0-water-change-ui` proves an overdue baseline + normal patrol renders a maintenance action, explicitly says overdue alone is not urgent, and remains responsive at 390/900/1600px.
 
 ---
 

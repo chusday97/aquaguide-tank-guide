@@ -199,6 +199,7 @@ Still open before production:
 
 ## 2026-08-23 — P0 Water Change Engine V1
 
+- fail-before commit `1afcd15` reproduces 0/3 gaps on #117 head: shortest species cycle as page authority, calendar overdue -> high priority, and no distinct recommendation engine.
 - #117 Existing Tank Authority permanent gates confirmed PASS before this layer: Existing Tank `32623274776`, Evidence `32623274708`, Tank State `32623274730`, Compatibility `32623274742`.
 - Added deterministic `packages/domain-rules/src/water-change.ts` plus Aquarium adapter `water-change-decision.service.ts`.
 - Completed-water-change history and derived recommendation are now separate; future dates are ignored as completed history by the decision engine.
