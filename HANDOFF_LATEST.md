@@ -4,7 +4,7 @@
 **Repository:** `chusday97/aquaguide-tank-guide`
 **Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 **Product-truth branch/PR:** `agent/context-sync-protocol-v1` / #113
-**Active P0 implementation branch:** `agent/p0-tank-state-engine-v1`
+**Active P0 implementation branch:** `agent/p0-tank-evidence-adapter-v1`
 **Phase:** `P0 decision-layer consolidation`
 **Release boundary:** no RC1→main merge or production deploy without separate explicit authorization.
 
@@ -16,7 +16,8 @@
 - Fail-before proof commit `9ed2d76` reproduced 4/4 shared model failures: temperament→bioload, Large→predator, generic tankSize→hard block, pair-only aggregate missing whole-tank quantity.
 - #114 `agent/p0-compatibility-engine-v2` implements shared bioload screening plus explicit `wholeTankFeasibility`; dedicated workflow `32620810633` is PASS.
 - Tank State fail-before commit `72ae99e` reproduces 0/3 Existing Tank authority failures.
-- `agent/p0-tank-state-engine-v1` now adds deterministic `stable / watch / intervene / urgent / unknown` state semantics without changing Aquarium UI.
+- #115 `agent/p0-tank-state-engine-v1` adds deterministic `stable / watch / intervene / urgent / unknown` state semantics; dedicated Tank State + Compatibility gates are PASS.
+- `agent/p0-tank-evidence-adapter-v1` maps persisted structured diagnosis answers and Planning Compatibility output into Tank Observations, Prior Risk and narrow true Hard Constraints without parsing AI prose.
 - #112 Interactive Atlas remains Draft/frozen until P0 exit criteria are met.
 
 ## Verified candidate behavior
@@ -50,9 +51,8 @@ Candidate local validation passed:
 
 ## Next execution order
 
-1. Open/validate the Tank State Engine V1 stacked PR; do not merge without explicit authorization.
-2. Build an Existing Tank evidence adapter from diagnosis/timeline facts into structured observations.
-3. Route Existing Aquarium prior + observations + history through Tank State, replacing the direct `blockingCompatibilityRisk -> Today Action` authority.
-4. Remove duplicate page heuristics only after Tank State browser/regression proof.
-5. Introduce Water Change Engine and combine maintenance context with Tank State for Today Action priority.
-6. Resume #112 only after P0 exit criteria pass.
+1. Validate the Tank Evidence Adapter stacked PR; do not merge without explicit authorization.
+2. Route Existing Aquarium prior + observations + history through Tank State, replacing the direct `blockingCompatibilityRisk -> Today Action` authority.
+3. Remove duplicate page heuristics only after Tank State browser/regression proof.
+4. Introduce Water Change Engine and combine maintenance context with Tank State for Today Action priority.
+5. Resume #112 only after P0 exit criteria pass.
