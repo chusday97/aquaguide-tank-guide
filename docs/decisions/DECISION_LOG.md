@@ -65,3 +65,9 @@ The current repository contains multiple overlapping sources of compatibility, c
 ### Exit condition
 
 P0 is complete only when the canonical rules are reflected in domain-level implementation and acceptance/regression coverage strongly enough that UI surfaces can consume one authoritative result instead of re-implementing product logic locally.
+
+### Exit outcome
+
+**Satisfied:** 2026-08-23. The complete #113–#120 P0 stack was landed into `integration/aquaguide-rc1` and the final implementation head passed all six P0 permanent gates plus the nine-workflow RC1 release matrix.
+
+The P0 UI freeze is therefore lifted for **re-entry review**. PR #112 may be revisited only after its stale diff is audited against the landed Planning Compatibility / Current Tank State / Water Change authority boundaries; it must not be merged as-is or allowed to reintroduce page-level heuristics.

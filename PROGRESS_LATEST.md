@@ -258,3 +258,16 @@ Still open before production:
 - Safe procedure: merge #113 to RC1, then retarget only the next PR to RC1, verify its incremental diff + mergeability + gates, merge with expected-head protection, and repeat through #120. Never rebase/update the stacked head branches during landing.
 - After #120, the exact new RC1 must re-run all P0 gates and the existing RC1→main release/Product Golden matrix before any main/deploy decision.
 - No PR base was changed and no merge/deployment was performed during this audit. Landing remains unauthorized pending explicit user approval.
+
+## 2026-08-23 — P0 Stack Landing Completed
+
+- User explicitly authorized landing of the audited P0 stack into `integration/aquaguide-rc1`; `main` and production deployment remained out of scope.
+- All layers were landed with **normal merge commits only**, expected-head protection, and one-at-a-time retargeting to RC1.
+- Merge sequence/result: #113 → `17fc3ceb`; #114 → `f126a823`; #115 → `47f3318a`; #116 → `400b111e`; #117 → `d1777894`; #118 → `e056ac9c`; #119 → `d09abd48`; #120 → `adf44c08`.
+- Every retargeted PR kept its audited incremental diff fingerprint; no stacked head branch was rebased or squash-merged.
+- Intermediate #114–#119 RC1 heads consistently had only the already-tracked `AQ-BC-EVAL-002` failure in Product Golden/UI Interaction; all other triggered P0/release checks remained green.
+- #120 closed the evidence-provenance duplicate; on final implementation head `adf44c082a833d51bf1ffa10ff41cb0d123aaea1`, Product Golden and UI Interaction returned to PASS.
+- Final P0 permanent gates PASS: Compatibility `32644603008`, Tank State `32644603012`, Tank Evidence `32644603024`, Existing Tank `32644603056`, Water Change `32644602993`, Whole-Tank `32644603019`.
+- Final RC1 release matrix PASS: RC1 Release Acceptance `32644602987`, Product Golden `32644603004`, UI Interaction `32644602969`, UI UX System `32644603040`, UI UX Visual QA `32644602976`, UI UX Golden V3 `32644603010`, UI V2 Aquarium `32644602991`, Navigation `32644602981`, Bundle Audit `32644602972`.
+- Final implementation-head result: **15/15 PASS**. P0 decision-layer landing is complete; no RC1→main merge or production deployment was performed.
+- Next phase is #112 Interactive Atlas re-entry review against the landed decision layer; the old UI branch must not be merged as-is.
