@@ -242,3 +242,5 @@ Still open before production:
 - P0 Compatibility workflow now runs the evidence-coverage test.
 - full local Whole-Tank / Compatibility / Species Fit / Addition / Livestock / Tank Evidence / Tank State / Existing Tank / Water Change / Core Flow / Visual / Golden Path / type / build / diff-check suite remains green.
 - Draft stacked PR #120 opened against #119. No verdict threshold, UI, RC1/main branch or production state changed.
+- #120 final-head permanent gates PASS: Compatibility `32640983537`, Whole-Tank `32640983542`, Tank State `32640983524`.
+- `AQ-BC-EVAL-002` is regression-verified; next step is full-stack P0 acceptance / Product Golden browser revalidation.

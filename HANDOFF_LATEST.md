@@ -38,6 +38,7 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - Generic `tankSize` stays planning space guidance. Missing reviewed equipment or hard physical-space requirements remain explicit unknown rather than fabricated pass/block.
 - #120 Compatibility Evidence Provenance V1 removes lossy duplicate `pair_rule_* -> tank_condition` conversion and keeps direct reviewed pair rules evidence-aware exactly once.
 - `test:compatibility-evidence-coverage` now passes on 132 priority directions and is part of the permanent P0 Compatibility workflow.
+- #120 permanent gates PASS on `f4c02d0`: Compatibility `32640983537`, Whole-Tank `32640983542`, Tank State `32640983524`.
 
 ## Current Regression Proof
 
@@ -62,13 +63,13 @@ Latest local regression PASS:
 - `AQ-BC-MIX-001` — REGRESSION_VERIFIED on #117.
 - `AQ-BC-STATE-001` — REGRESSION_VERIFIED on #117.
 - `AQ-BC-WATER-001` — REGRESSION_VERIFIED on current Water Change candidate.
-- `AQ-BC-EVAL-002` — REGRESSION_VERIFIED on #120 locally; permanent gates pending.
+- `AQ-BC-EVAL-002` — REGRESSION_VERIFIED on #120; permanent gates PASS.
 
 ## Still Open in P0
 
 - #118 Water Change Authority V1 is open as Draft and permanent gates are green; it remains unmerged.
 - #119 Whole-Tank Feasibility V2 is open as Draft; all six permanent GitHub gates are green. It remains unmerged.
-- #120 Compatibility Evidence Provenance V1 is open as Draft; local full regression is green and permanent gates are pending.
+- #120 Compatibility Evidence Provenance V1 is open as Draft; local full regression and all triggered permanent gates are green. It remains unmerged.
 - Reviewed knowledge coverage is still incomplete for species-specific equipment requirements and hard physical-space constraints; the engine now represents those gaps as explicit unknown rather than inventing thresholds.
 - Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
@@ -76,10 +77,9 @@ Latest local regression PASS:
 
 ## Next Execution Order
 
-1. Validate #120 Compatibility Evidence Provenance permanent GitHub gates.
-2. Re-run P0 acceptance + Product Golden/GP-001/GP-002/GP-003/GP-004 on the full stack.
-3. Review remaining non-authoritative legacy health-score/support surfaces against P0 exit criteria; do not let them regain decision authority.
-4. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+1. Re-run P0 acceptance + Product Golden/GP-001/GP-002/GP-003/GP-004 on the full stack.
+2. Review remaining non-authoritative legacy health-score/support surfaces against P0 exit criteria; do not let them regain decision authority.
+3. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
 
 ## Branch note
 
