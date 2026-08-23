@@ -28,6 +28,7 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - #116 Evidence Adapter gates PASS.
 - #117 Existing Tank Authority permanent gates PASS: Existing Tank `32623274776`, Evidence `32623274708`, Tank State `32623274730`, Compatibility `32623274742`.
 - Fail-before commit `1afcd15` reproduces 0/3 Water Change authority gaps on #117 head.
+- #118 permanent gates PASS on `c6f17e5`: Water Change `32638235738`, Existing Tank `32638235771`, Evidence `32638235730`, Tank State `32638235711`, Compatibility `32638235721`.
 - Water Change candidate removes Aquarium page-level `shortestCycle -> overdue -> high-priority/current-risk` authority and routes schedule semantics through a deterministic engine.
 - Overdue-days health-score deduction is removed; maintenance lateness stays maintenance unless current evidence independently supports escalation.
 
@@ -54,7 +55,7 @@ Water Change local/browser validation PASS:
 
 ## Still Open in P0
 
-- #118 Water Change Authority V1 is open as Draft on `agent/p0-water-change-authority-v1`; permanent GitHub gates are pending on the final documentation head.
+- #118 Water Change Authority V1 is open as Draft and permanent gates are green; it remains unmerged.
 - Whole-Tank Feasibility v1 still needs group-size, equipment-capacity and reviewed physical-space dimensions.
 - Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
@@ -62,10 +63,9 @@ Water Change local/browser validation PASS:
 
 ## Next Execution Order
 
-1. Validate #118 Water Change Authority V1 permanent GitHub gates.
-2. If green, finish remaining Whole-Tank Feasibility dimensions.
-3. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
-4. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+1. Finish remaining Whole-Tank Feasibility dimensions: group-size, equipment-capacity and reviewed physical-space constraints.
+2. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
+3. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
 
 ## Branch note
 

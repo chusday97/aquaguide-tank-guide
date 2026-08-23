@@ -214,3 +214,5 @@ Still open before production:
 - Draft stacked PR #118 `Route Water Change through deterministic authority V1` opened against #117 head.
 - Final PR branch is `agent/p0-water-change-authority-v1`; the parallel `agent/p0-water-change-engine-v1` remains unreviewed and is not used as Product Truth.
 - Unconfirmed AQ-WATER-005/006 from that parallel branch were intentionally excluded from #118 in accordance with Context Sync acceptance rules.
+- #118 final-head permanent gates PASS: Water Change `32638235738`, Existing Tank `32638235771`, Evidence `32638235730`, Tank State `32638235711`, Compatibility `32638235721`.
+- #118 remains Draft/unmerged; next P0 implementation target is the remaining Whole-Tank Feasibility dimensions.
