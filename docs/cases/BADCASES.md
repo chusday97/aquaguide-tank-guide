@@ -126,3 +126,14 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Expected behavior:** Direct reviewed pair evidence is emitted once by the evidence-aware Compatibility owner, retains `basis = pair_rule`, reviewed status, affected species and citations, and preserves the laboratory-to-husbandry limitation without changing the blocking verdict.
 **Root cause:** `speciesFitEngine` surfaced a `pair_rule_*` fit item for standalone fit UX; `tankCompatibilityEngine` then re-imported that item through generic `convertFitItem()` as `tank_condition` before independently adding the canonical reviewed pair rule. The result contained two rules with the same code but different provenance quality.
 **Regression:** #119 head `79b06c7` reproduces the failure. `test:compatibility-evidence-coverage` now requires exactly one evidence-aware direct pair rule for Oscar–zebrafish and Channa–Rhodeus, with `basis = pair_rule` and retained peer-reviewed citations. The P0 Compatibility permanent gate now runs this coverage test.
+
+---
+
+## AQ-BC-ATLAS-001 — Interactive Atlas visual scene leaks decision semantics and loses mobile exit affordance
+
+**Status:** `REGRESSION_VERIFIED` on `agent/interactive-atlas-reentry-v1` / Draft PR #122
+**Related Rules:** `AQ-SEQ-001`, Planning Compatibility / Current Tank State / Water Change authority separation
+**Observed behavior:** The pre-P0 Atlas implementation reused a synthetic `Aquarium` to render six random species together, presented `tankSize` as “空间” and `waterChangeCycle` as “换水”, and relied on an in-panel sticky close control whose position could be captured by page overflow on mobile. The resulting UI could look like a compatibility recommendation or current-tank instruction, while the close affordance could sit under the global mobile navigation.
+**Expected behavior:** The discovery aquarium is explicitly a visual exploration scene only. Co-display does not imply compatibility. Species tank-size and water-change values are labeled as references, Compatibility requires explicit user intent, and the knowledge panel must remain safely dismissible at responsive viewports.
+**Root cause:** The original #112 UI intent predated the landed P0 authority model and reused the product `Aquarium` shape as a rendering adapter without a presentation-only semantic boundary; mobile dismissal also depended on sticky positioning inside a global overflow layout.
+**Regression:** `scripts/test-interactive-atlas-authority-contract.mjs` protects visual-only/reference/explicit-intent semantics. `scripts/verify-interactive-atlas-detail-v2.mjs` verifies the full Atlas interaction at 390/900/1600px, including no horizontal overflow, a viewport-safe mobile close control, variant preview/commit, and exact restoration of the same discovery scene after close.
