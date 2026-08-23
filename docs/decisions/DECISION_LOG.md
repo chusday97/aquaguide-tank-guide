@@ -37,3 +37,31 @@ Do not bulk-duplicate legacy Handoff, Progress or Badcase text. Migrate a fact w
 ### Supersedes
 
 The previous informal workflow in which the user had to repeatedly request “update Handoff / Badcase / Progress” and those files accumulated product logic alongside implementation status.
+
+---
+
+## AQ-SEQ-001 — Complete P0 decision truth before expanding UI or isolated badcase patches
+
+**Status:** `ACCEPTED`  
+**Date:** 2026-08-23  
+**Scope:** implementation sequencing
+
+### Decision
+
+AquaGuide enters P0 Product Truth / decision-layer consolidation before continuing additional UI expansion or isolated capacity/species-detail patches.
+
+During P0:
+
+- pause further expansion of PR #112 Interactive Atlas UI;
+- pause one-off capacity fixes that do not establish the shared domain model;
+- pause species-detail-only fixes that depend on the same unresolved compatibility/space semantics;
+- preserve existing UI surfaces unless a minimal semantic correction is required;
+- prioritize canonical product rules, Tank State, Compatibility Prior, and Space/Territory/Bioload separation.
+
+### Rationale
+
+The current repository contains multiple overlapping sources of compatibility, capacity and current-risk conclusions. Continuing to patch individual screens before establishing one authoritative model increases evaluator drift, duplicated heuristics and contradictory user outcomes.
+
+### Exit condition
+
+P0 is complete only when the canonical rules are reflected in domain-level implementation and acceptance/regression coverage strongly enough that UI surfaces can consume one authoritative result instead of re-implementing product logic locally.
