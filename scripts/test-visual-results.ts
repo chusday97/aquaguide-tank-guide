@@ -26,7 +26,7 @@ const makeFish = (overrides: Partial<Fish> & Pick<Fish, 'id' | 'name'>): Fish =>
 const focus = makeFish({ id: 'focus', name: '孔雀鱼' });
 const peaceful = makeFish({ id: 'peaceful', name: '红绿灯' });
 const cautious = makeFish({ id: 'cautious', name: '领地鱼', temperament: 'Territorial', housingMode: '谨慎混养' });
-const predator = makeFish({ id: 'predator', name: '大型捕食鱼', size: 'Large', temperament: 'Aggressive', description: '会吞食小鱼' });
+const predator = makeFish({ id: 'sp_0049', name: '大型捕食鱼', size: 'Large', temperament: 'Aggressive', description: '已审核捕食型物种测试替身' });
 const extra = makeFish({ id: 'extra', name: '斑马鱼' });
 const species = [peaceful, cautious, predator, extra, focus];
 const aquarium: Aquarium = {

@@ -2,6 +2,7 @@ import type { Aquarium, Fish } from '../types';
 import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
 import { estimateWaterProfile } from './waterProfileEstimate';
+import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../data/compatibilityEvidence';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -120,42 +121,51 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
     Boolean(item?.species?.id) && item.species?.id !== species.id
   ));
   if (validLivestock.length === 0) return null;
-  const speciesText = textOf(species);
+
   const selectedIsSmall = species.size === 'Small';
-  const selectedIsLongFin = /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
-  const predator = validLivestock.find(item => {
-    const predatorIdentity = `${item.species.name} ${item.species.category}`;
-    return item.species.temperament === 'Aggressive'
-      || item.species.size === 'Large'
-      || /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗/i.test(predatorIdentity);
-  });
-  if (predator && selectedIsSmall) {
-    return {
-      type: 'predation_risk',
-      title: '存在捕食或吞食风险',
-      detail: `当前鱼缸已有 ${predator.species.name}，不建议再加入体型明显更小的 ${species.name}。`,
-      severity: 'high',
-    };
-  }
+  const candidateProfile = getReviewedCompatibilityProfile(species.id);
 
-  const nipper = validLivestock.find(item => /虎皮|黑裙|红十字|彩裙|玫瑰鲫|啄鳍|追咬/i.test(textOf(item.species)));
-  if (nipper && selectedIsLongFin) {
-    return {
-      type: 'fin_nipping_risk',
-      title: '长鳍被啄咬风险',
-      detail: `当前鱼缸已有 ${nipper.species.name}，长鳍或慢游鱼可能被追咬。`,
-      severity: 'medium',
-    };
-  }
+  for (const item of validLivestock) {
+    const existing = item.species;
+    const pairRule = getReviewedPairRule(existing.id, species.id);
+    if (pairRule?.verdict === 'not_recommended') {
+      return {
+        type: `pair_rule_${pairRule.riskType}`,
+        title: pairRule.riskType === 'predation' ? '存在已审核的捕食风险' : '存在已审核的混养阻断',
+        detail: pairRule.reason,
+        severity: 'high',
+      };
+    }
+    if (pairRule?.verdict === 'caution') {
+      return {
+        type: `pair_rule_${pairRule.riskType}`,
+        title: '存在已审核的混养注意项',
+        detail: pairRule.reason,
+        severity: 'medium',
+      };
+    }
 
-  const territorial = validLivestock.find(item => item.species?.temperament === 'Territorial' || item.species?.housingMode === '建议单养');
-  if (territorial && (species.temperament === 'Territorial' || species.housingMode === '建议单养')) {
-    return {
-      type: 'territorial_conflict',
-      title: '领地冲突风险',
-      detail: `当前已有 ${territorial.species.name}，不建议再加入强领地或建议单养物种。`,
-      severity: 'high',
-    };
+    const existingProfile = getReviewedCompatibilityProfile(existing.id);
+    if (selectedIsSmall && existingProfile?.behaviorTraits.includes('predatory')) {
+      return {
+        type: 'predation_risk',
+        title: '存在已审核的捕食或吞食风险',
+        detail: `${existing.name} 的已审核行为资料包含捕食特征，不建议直接加入体型明显更小的 ${species.name}。`,
+        severity: 'high',
+      };
+    }
+
+    if (
+      existingProfile?.behaviorTraits.includes('territorial')
+      && candidateProfile?.behaviorTraits.includes('territorial')
+    ) {
+      return {
+        type: 'territorial_pressure',
+        title: '领地压力需要复核',
+        detail: `${existing.name} 与 ${species.name} 均有已审核的领地特征；在没有 pair-specific 阻断证据时先按注意项处理。`,
+        severity: 'medium',
+      };
+    }
   }
 
   return null;
@@ -218,12 +228,23 @@ export const evaluateSpeciesForAquarium = (
     confirmations.push({ type: 'missing_volume', title: '需要确认水体容量', detail: '当前鱼缸或物种缺少可靠容量数据。' });
     score -= 8;
   } else if (volumeLiters < minVolume * 0.8) {
-    hardBlocks.push({ type: 'volume_too_small', title: '水体严重不足', detail: `当前约 ${volumeLiters}L，低于该物种最低 ${minVolume}L 要求。`, severity: 'high' });
+    warnings.push({
+      type: 'volume_guideline_gap_high',
+      title: '空间建议差距较大',
+      detail: `当前约 ${volumeLiters}L，低于资料中的 ${minVolume}L 通用建议；该建议作为 planning prior，不自动视为硬性失败。`,
+      severity: 'high',
+    });
+    score -= 24;
   } else if (volumeLiters < minVolume) {
-    warnings.push({ type: 'volume_needs_adjustment', title: '水体略小', detail: `当前约 ${volumeLiters}L，建议至少 ${minVolume}L。`, severity: 'medium' });
+    warnings.push({
+      type: 'volume_guideline_gap',
+      title: '空间建议需要复核',
+      detail: `当前约 ${volumeLiters}L，低于资料中的 ${minVolume}L 通用建议；需结合缸长、成体尺寸与领地需求判断。`,
+      severity: 'medium',
+    });
     score -= 16;
   } else {
-    matchedItems.push({ type: 'volume', title: '水体容量匹配', detail: `当前约 ${volumeLiters}L，满足最低 ${minVolume}L。` });
+    matchedItems.push({ type: 'volume', title: '容量建议匹配', detail: `当前约 ${volumeLiters}L，达到资料中的 ${minVolume}L 通用建议。` });
     score += 16;
   }
 
@@ -309,12 +330,6 @@ export const evaluateSpeciesForAquarium = (
   } else {
     matchedItems.push({ type: 'compatibility', title: '未发现明确混养冲突', detail: '已有活体中未发现明确捕食、吞食或强领地冲突。' });
     score += 8;
-  }
-
-  const livestockCount = currentLivestock.reduce((sum, item) => sum + (item.record?.quantity || 1), 0);
-  if (volumeLiters && livestockCount > 0 && livestockCount >= Math.max(20, volumeLiters / 3)) {
-    warnings.push({ type: 'density_high', title: '当前密度偏高', detail: `当前已有约 ${livestockCount} 只/条活体，新增前建议先复核密度。`, severity: 'medium' });
-    score -= 14;
   }
 
   if (species.difficulty === 'Easy') score += 8;

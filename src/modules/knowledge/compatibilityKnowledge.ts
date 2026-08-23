@@ -1,7 +1,9 @@
 import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import { getAquariumVolumeLiters } from '../../lib/speciesFitEngine';
+import { assessBioloadScreening } from '../../../packages/domain-rules/src';
 import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
-import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
+import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult, WholeTankFeasibility } from './knowledge.types';
 
 export type CompatibilityItem = {
   species: Fish;
@@ -205,6 +207,73 @@ const buildPairResult = (
   };
 };
 
+const buildWholeTankFeasibility = (
+  tank: Aquarium | null | undefined,
+  items: CompatibilityItem[],
+): WholeTankFeasibility => {
+  const totalQuantity = items.reduce((sum, item) => sum + getQuantity(item.quantity), 0);
+  if (!tank || items.length === 0) {
+    return { status: 'not_applicable', totalQuantity, bioloadPressure: 'unknown', rules: [] };
+  }
+
+  const screening = assessBioloadScreening(
+    items.map(item => ({ size: item.species.size, quantity: getQuantity(item.quantity) })),
+    getAquariumVolumeLiters(tank),
+  );
+  const evidenceBase = {
+    basis: 'rule_inference' as const,
+    confidence: 'low' as const,
+    reviewStatus: 'draft' as const,
+    affectedSpeciesIds: items.map(item => item.species.id),
+    citations: [],
+  };
+
+  if (screening.pressure === 'unknown') {
+    return {
+      status: 'unknown', totalQuantity, bioloadPressure: 'unknown',
+      rules: [{ code: 'whole_tank_bioload_unknown', title: '整缸负荷资料不足', evidence: '缺少可用水体信息，无法完成整缸粗略负荷筛查。', severity: 'medium', ...evidenceBase }],
+    };
+  }
+  if (screening.pressure === 'high') {
+    return {
+      status: 'caution', totalQuantity, bioloadPressure: 'high',
+      rules: [{ code: 'whole_tank_bioload_screen_high', title: '整缸粗略负荷筛查偏高', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总，而不是重复累加 pair；该信号仅用于加入前复核，不等于已证明水质过载。`, severity: 'medium', ...evidenceBase }],
+    };
+  }
+  if (screening.pressure === 'elevated') {
+    return {
+      status: 'caution', totalQuantity, bioloadPressure: 'elevated',
+      rules: [{ code: 'whole_tank_bioload_screen_elevated', title: '整缸粗略负荷需要复核', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总；加入前应结合过滤、喂食和实际水质。`, severity: 'low', ...evidenceBase }],
+    };
+  }
+  return {
+    status: 'pass', totalQuantity, bioloadPressure: 'low',
+    rules: [{ code: 'whole_tank_bioload_screen_low', title: '整缸粗略负荷未见高压信号', evidence: `已按整缸 ${totalQuantity} 只/条一次性汇总；该结果仍不是水质安全证明。`, severity: 'info', ...evidenceBase }],
+  };
+};
+
+const mergeWholeTankFeasibility = (
+  aggregate: TankCompatibilityResult,
+  wholeTank: WholeTankFeasibility,
+): TankCompatibilityResult => {
+  if (wholeTank.status === 'not_applicable') return aggregate;
+  const warningRules = wholeTank.status === 'caution' ? uniqueRules([...aggregate.warningRules, ...wholeTank.rules]) : aggregate.warningRules;
+  const passedRules = wholeTank.status === 'pass' ? uniqueRules([...aggregate.passedRules, ...wholeTank.rules]) : aggregate.passedRules;
+  const missingData = wholeTank.status === 'unknown' ? uniqueRules([...aggregate.missingData, ...wholeTank.rules]) : aggregate.missingData;
+  let status = aggregate.status;
+  if (status === 'compatible' && wholeTank.status === 'caution') status = 'caution';
+  if (status === 'compatible' && wholeTank.status === 'unknown') status = 'insufficient_data';
+  return {
+    ...aggregate,
+    status,
+    riskLevel: status === 'not_recommended' ? 'high' : status === 'insufficient_data' ? 'unknown' : status === 'caution' ? 'medium' : 'none',
+    warningRules,
+    passedRules,
+    missingData,
+    summary: status === aggregate.status ? aggregate.summary : wholeTank.rules[0]?.evidence || aggregate.summary,
+  };
+};
+
 const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompatibilityResult => {
   const status = pairResults.reduce<TankCompatibilityStatus>((current, pair) => (
     statusRank[pair.status] > statusRank[current] ? pair.status : current
@@ -260,9 +329,11 @@ export const evaluateCompatibilityDecision = ({
     }
   }
 
-  const aggregateResult = pairResults.length > 0
+  const pairAggregateResult = pairResults.length > 0
     ? buildAggregateResult(pairResults)
     : evaluateTankCompatibility({ tank, candidateSpecies: normalized[0]?.species || null, candidateQuantity: normalized[0]?.quantity });
+  const wholeTankFeasibility = buildWholeTankFeasibility(tank, normalized);
+  const aggregateResult = mergeWholeTankFeasibility(pairAggregateResult, wholeTankFeasibility);
   const primaryConflict = pairResults
     .filter(pair => pair.primaryReason)
     .sort((a, b) => severityRank(b.primaryReason!) - severityRank(a.primaryReason!))[0];
@@ -278,6 +349,7 @@ export const evaluateCompatibilityDecision = ({
     riskLevel: aggregateResult.riskLevel,
     summary: aggregateResult.summary,
     pairResults,
+    wholeTankFeasibility,
     primaryConflict,
     blockedReasons,
     adjustableReasons,

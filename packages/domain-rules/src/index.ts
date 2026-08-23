@@ -36,3 +36,5 @@ export const highestRisk = (...risks: DiagnosisRiskCode[]): DiagnosisRiskCode =>
 );
 
 export * from './species-diagnosis';
+
+export * from './bioload';

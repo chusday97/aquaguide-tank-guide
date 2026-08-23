@@ -29,7 +29,7 @@ const coral = findSpecies(fish => /珊瑚/.test(fish.name) || /珊瑚/.test(fish
 const jellyfish = findSpecies(fish => /水母/.test(`${fish.name} ${fish.category}`), 'jellyfish');
 const neon = findSpecies(fish => fish.name === '红绿灯' || fish.name === '长鳍红绿灯', 'neon tetra');
 const largeFish = findSpecies(fish => /至少\s*(120|160|200|240|320|400|480|600|640|720|800)\s*升/.test(fish.tankSize) && fish.size === 'Large', 'large fish');
-const predator = findSpecies(fish => fish.temperament === 'Aggressive' || /掠食|捕食|龙鱼|雷龙|地图/.test(`${fish.name} ${fish.description}`), 'predator');
+const predator = findSpecies(fish => fish.id === 'sp_0049', 'reviewed predator sp_0049');
 const sensitive = findSpecies(fish => /水晶虾|苏拉威西|七彩|短鲷/.test(`${fish.name} ${fish.category} ${fish.description}`), 'ph sensitive');
 
 const unknownSpecies: Fish = {
@@ -61,9 +61,10 @@ const cases = [
     expect: (result: ReturnType<typeof evaluateSpeciesForAquarium>) => result.status !== 'unsuitable' && result.hardBlocks.length === 0,
   },
   {
-    name: 'small tank excludes large fish',
+    name: 'small tank keeps generic volume guidance as planning pressure, not hard block',
     result: evaluateSpeciesForAquarium(largeFish, freshwater30, []),
-    expect: (result: ReturnType<typeof evaluateSpeciesForAquarium>) => result.status === 'unsuitable' && result.hardBlocks.some(item => item.type === 'volume_too_small'),
+    expect: (result: ReturnType<typeof evaluateSpeciesForAquarium>) => result.hardBlocks.every(item => item.type !== 'volume_too_small')
+      && result.warnings.some(item => item.type === 'volume_guideline_gap_high' || item.type === 'volume_guideline_gap'),
   },
   {
     name: 'empty tank has no compatibility conflict',
