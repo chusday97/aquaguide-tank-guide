@@ -271,3 +271,16 @@ Still open before production:
 - Final RC1 release matrix PASS: RC1 Release Acceptance `32644602987`, Product Golden `32644603004`, UI Interaction `32644602969`, UI UX System `32644603040`, UI UX Visual QA `32644602976`, UI UX Golden V3 `32644603010`, UI V2 Aquarium `32644602991`, Navigation `32644602981`, Bundle Audit `32644602972`.
 - Final implementation-head result: **15/15 PASS**. P0 decision-layer landing is complete; no RC1→main merge or production deployment was performed.
 - Next phase is #112 Interactive Atlas re-entry review against the landed decision layer; the old UI branch must not be merged as-is.
+
+## 2026-08-24 — Interactive Atlas post-P0 re-entry
+
+- P0/Context Sync RC1 is `d426cb6`; exact-head repository acceptance remains 15/15 PASS.
+- Old Draft PR #112 was audited as stale against the pre-P0 RC1 and is not safe to merge as-is.
+- Fresh branch `agent/interactive-atlas-reentry-v1` was created from final RC1; old #112 UI intent was replayed as commit `cd0d5fe`, then hardened in `3f66036`.
+- Draft PR #122 opened against `integration/aquaguide-rc1`; initial head `3f6603616a0c8d3adbdea6fb8e8d2a0bc058ec87`, 2 commits / 5 files.
+- Re-entry separates the random 3D discovery scene from Compatibility truth, relabels species space/water-change values as references, and keeps Compatibility behind explicit user intent.
+- Multi-variant discovery anchor is deterministic and scene selection avoids duplicate species groups.
+- Mobile close control was moved to a `document.body` portal after real browser debugging showed global `html/body` overflow prevented nested sticky positioning from reliably clearing the fixed mobile navigation.
+- Atlas authority contract PASS; Product Evaluation (19/114/53), Golden Path contract (5 journeys), P0 Compatibility 5/5, Tank State 11/11, Water Change 8/8, TypeScript, production build and diff-check PASS.
+- Responsive browser regression PASS at 390/900/1600 with no horizontal overflow and exact discovery-scene restoration; final screenshots were manually reviewed.
+- `AQ-BC-ATLAS-001` added as regression-verified. Next step is GitHub gates on #122; no RC1/main merge or production deployment performed.
