@@ -33,6 +33,7 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - Overdue-days health-score deduction is removed; maintenance lateness stays maintenance unless current evidence independently supports escalation.
 - Whole-Tank V2 fail-before commit `0fe6e4e` reproduces 0/3 missing-dimension gaps on #118 head.
 - #119 Whole-Tank Feasibility V2 adds inspectable group / physical-space / equipment / bioload dimensions with separate passed/warning/missing semantics.
+- #119 permanent gates PASS on `0b72b9a`: Whole-Tank `32640537915`, Compatibility `32640537970`, Evidence `32640537930`, Tank State `32640537933`, Existing Tank `32640537926`, Water Change `32640537939`.
 - Reviewed `minimumGroupSize` is authoritative; keyword group-size guesses and temperament-bioload inflation are removed from downstream consumers.
 - Generic `tankSize` stays planning space guidance. Missing reviewed equipment or hard physical-space requirements remain explicit unknown rather than fabricated pass/block.
 
@@ -64,7 +65,7 @@ Latest local regression PASS:
 ## Still Open in P0
 
 - #118 Water Change Authority V1 is open as Draft and permanent gates are green; it remains unmerged.
-- #119 Whole-Tank Feasibility V2 is open as Draft; local implementation/regression is green and permanent GitHub gates are pending.
+- #119 Whole-Tank Feasibility V2 is open as Draft; local regression and all six permanent GitHub gates are green. It remains unmerged.
 - Reviewed knowledge coverage is still incomplete for species-specific equipment requirements and hard physical-space constraints; the engine now represents those gaps as explicit unknown rather than inventing thresholds.
 - Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
@@ -72,10 +73,9 @@ Latest local regression PASS:
 
 ## Next Execution Order
 
-1. Validate #119 Whole-Tank Feasibility V2 permanent GitHub gates.
-2. Resolve the still-open `AQ-BC-EVAL-002` Compatibility evidence-provenance drift.
-3. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
-4. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+1. Resolve the still-open `AQ-BC-EVAL-002` Compatibility evidence-provenance drift.
+2. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
+3. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
 
 ## Branch note
 

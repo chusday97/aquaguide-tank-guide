@@ -230,3 +230,5 @@ Still open before production:
 - full local P0/Compatibility/Species Fit/Addition/Livestock/Tank Evidence/Tank State/Existing Tank/Water Change/Core Flow/Visual/Golden Path/type/build/diff-check suite remains green.
 - Draft stacked PR #119 opened against #118. No merge or deployment performed.
 - reviewed knowledge coverage for equipment requirements and hard physical-space constraints remains incomplete; this is now represented as explicit unknown, not silently guessed.
+- #119 final-head permanent gates PASS: Whole-Tank `32640537915`, Compatibility `32640537970`, Evidence `32640537930`, Tank State `32640537933`, Existing Tank `32640537926`, Water Change `32640537939`.
+- #119 remains Draft/unmerged; next P0 target is `AQ-BC-EVAL-002` compatibility evidence provenance drift.
