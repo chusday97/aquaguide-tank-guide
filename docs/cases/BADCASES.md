@@ -15,7 +15,7 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Observed behavior:** Current Aquarium logic can treat the gap between effective tank volume and a species' recommended minimum as a current “space pressure” problem and immediately recommend reducing/removing livestock or upgrading the tank.
 **Expected behavior:** For an existing aquarium, a general recommendation gap remains prior/space evidence unless a hard physical constraint or observed current problem supports intervention.
 **Root cause:** Planning/recommendation heuristics are consumed directly by the existing-tank risk/Today Action layer.
-**Regression:** `BC-SPACE-001` defined; executable regression not yet added.
+**Regression:** Domain acceptance now exists in `test:p0-tank-state` and returns stable for a normal observed tank with a generic space prior. Aquarium wiring is still pending, so this badcase remains OPEN.
 
 ---
 
@@ -37,7 +37,7 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Observed behavior:** Current Aquarium risk logic can classify `Aggressive + Peaceful` stocked species as a danger and recommend removal/separation without first requiring observed chasing, injury, feeding exclusion or reviewed predation evidence.
 **Expected behavior:** The metadata creates an aggression/territory prior and observation target. Current conflict/intervention requires observed evidence or a true deterministic hard constraint.
 **Root cause:** Existing-tank `getTankRiskItems()` mixes planning priors with current-state diagnosis.
-**Regression:** `BC-MIX-001` defined; executable regression not yet added.
+**Regression:** Domain acceptance now exists in `test:p0-tank-state`: static aggression prior alone is watch, and recent normal evidence can be stable. Aquarium wiring is still pending, so this badcase remains OPEN.
 
 ---
 
@@ -71,3 +71,14 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Expected behavior:** Pair relationships and whole-tank feasibility are separate calculations; full planned quantities are aggregated exactly once for whole-tank screening.
 **Root cause:** The aggregate decision was built exclusively from `pairResults`.
 **Regression:** `wholeTankFeasibility.totalQuantity` and `whole_tank_bioload_screen_*` are verified by `scripts/test-p0-compatibility-product-truth.ts` using 3 × 7 small fish.
+
+---
+
+## AQ-BC-STATE-001 — Static compatibility danger bypasses Current Tank State in Today Action
+
+**Status:** `OPEN`
+**Related Rules:** `AQ-STATE-001`, `AQ-STATE-005`, `AQ-MIX-009`
+**Observed behavior:** Aquarium currently finds a static `danger` risk and directly creates a high-priority `compatibility_review` Today Action before a Current Tank State evaluation exists.
+**Expected behavior:** Compatibility output is Prior Risk for stocked livestock. Today Action is derived only after combining prior, tank context, observed evidence, time/history and hard constraints.
+**Root cause:** Existing `blockingCompatibilityRisk` bypasses the missing Tank State authority.
+**Regression:** Fail-before commit `72ae99e` proves the bypass. Domain candidate `agent/p0-tank-state-engine-v1` adds Current Tank State semantics; Aquarium wiring is still pending, so this badcase remains OPEN.

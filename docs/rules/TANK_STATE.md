@@ -41,3 +41,23 @@ The current-state engine may therefore escalate without waiting for repeated obs
 The first action on an existing aquarium should be derived from current state plus real maintenance/observation context.
 
 A static prior warning must not automatically become the first Today Action when the aquarium has no current evidence requiring intervention.
+
+## AQ-STATE-006 — Weak signals watch; repeated/correlated abnormalities intervene
+
+A single weak behavioral or maintenance-related abnormal signal normally creates `watch`, not an automatic removal or emergency instruction.
+
+Repeated abnormal observations within a recent window, or correlated signals that support the same current problem (for example persistent chasing plus hiding/feeding exclusion), may escalate to `intervene`.
+
+Current injury is intervention evidence even without repetition.
+
+## AQ-STATE-007 — Immediate physiological danger can be urgent
+
+Observed signals such as respiratory distress, severe injury or multiple recent deaths may produce `urgent` without waiting for repeated observations. This authority comes from current observed evidence, not species temperament metadata.
+
+## AQ-STATE-008 — Missing recent observation is not hidden stability
+
+If no recent observation is available, elapsed cohabitation time alone must not produce `stable`.
+
+- meaningful prior risk + no recent observation -> normally `watch` with a request to observe;
+- no meaningful prior and no recent observation -> `unknown` / complete the current check;
+- recent normal observations may support `stable` when no hard constraint or current abnormal evidence is present.

@@ -139,6 +139,60 @@ Treat “no risk found in the database” as proof that the pair is safe.
 
 ---
 
+## BC-STATE-002 — Repeated behavioral abnormality becomes intervention evidence
+
+**Verifies:** `AQ-STATE-006`
+
+**GIVEN**
+A combination has a territory/aggression prior.
+
+**WHEN**
+Persistent chasing is observed repeatedly in the recent history, or chasing is accompanied by hiding pressure / feeding exclusion.
+
+**THEN**
+Current Tank State may escalate to `intervene` and return a concrete adjustment path.
+
+**MUST NOT**
+Require the user to wait for severe injury before acknowledging a repeated current conflict.
+
+---
+
+## BC-STATE-003 — Cohabitation duration alone is not stability evidence
+
+**Verifies:** `AQ-STATE-003`, `AQ-STATE-008`
+
+**GIVEN**
+Two species have lived in the same aquarium for 180 days and a meaningful theoretical prior exists.
+
+**WHEN**
+There are no recent normal or abnormal observations.
+
+**THEN**
+Current Tank State remains an observation state such as `watch`; the duration can be shown as context.
+
+**MUST NOT**
+Translate “180 days together” into “180 days confirmed stable”.
+
+---
+
+## BC-STATE-004 — Current urgent evidence outranks normal prior semantics
+
+**Verifies:** `AQ-STATE-004`, `AQ-STATE-007`
+
+**GIVEN**
+The aquarium has current respiratory distress, severe injury, multiple recent deaths, or an active deterministic hard constraint.
+
+**WHEN**
+Tank State is evaluated.
+
+**THEN**
+The result can be `urgent` immediately with the observed/hard-constraint reason attached.
+
+**MUST NOT**
+Downgrade the result merely because compatibility priors are low or older observations were normal.
+
+---
+
 ## BC-WATER-001 — Maintenance baseline overdue without abnormal evidence
 
 **Verifies:** `AQ-WATER-001`, `AQ-WATER-002`, `AQ-WATER-004`

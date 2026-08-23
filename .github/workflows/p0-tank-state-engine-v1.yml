@@ -1,0 +1,39 @@
+name: P0 Tank State Engine V1
+
+on:
+  pull_request:
+    paths:
+      - 'packages/domain-rules/src/tank-state.ts'
+      - 'packages/domain-rules/src/index.ts'
+      - 'scripts/test-p0-tank-state-engine.ts'
+      - 'docs/rules/TANK_STATE.md'
+      - 'docs/cases/ACCEPTANCE_CASES.md'
+      - 'docs/cases/BADCASES.md'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  tank-state:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Tank State product-truth regression
+        run: npm run test:p0-tank-state
+      - name: Compatibility product-truth regression
+        run: npm run test:p0-compatibility
+      - name: Compatibility regression
+        run: npm run test:compatibility
+      - name: Daily Check regression
+        run: npm run test:daily-check
+      - name: Species diagnosis regression
+        run: npm run test:species-diagnosis
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Production build
+        run: npm run build
