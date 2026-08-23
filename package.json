@@ -123,7 +123,9 @@
     "test:golden-path-gp003-ui": "node scripts/verify-golden-path-returning-user-daily-check.mjs",
     "test:golden-path-gp004-ui": "node scripts/verify-golden-path-abnormal-care.mjs",
     "test:p0-tank-state": "tsx scripts/test-p0-tank-state-engine.ts",
-    "test:p0-tank-evidence": "tsx scripts/test-p0-tank-evidence-adapter.ts"
+    "test:p0-tank-evidence": "tsx scripts/test-p0-tank-evidence-adapter.ts",
+    "test:p0-existing-tank-authority": "tsx scripts/test-p0-existing-tank-authority.ts",
+    "test:p0-existing-tank-authority-ui": "node scripts/verify-p0-existing-tank-authority-browser.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

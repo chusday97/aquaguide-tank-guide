@@ -103,6 +103,13 @@ import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositor
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import { applyWaterChangeHistory, hydrateWaterChangeHistoryFromEvents, isFutureWaterChangeDate, toggleWaterChangeDate, waterChangeDateToIso } from '../services/aquarium/water-change.service';
 import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
+import { deriveCurrentTankState } from '../services/aquarium/tank-state-evidence.service';
+import {
+  buildCurrentTankRiskItems,
+  getCurrentTankRiskCount,
+  getCurrentTankRiskLevel,
+  type CurrentTankRiskItem,
+} from '../services/aquarium/tank-state-presentation.service';
 import {
   getCareReminders,
   getCareReminderStatus,
@@ -1832,167 +1839,18 @@ export default function AquariumManager() {
     setFedToday(feedingRecords.some(record => record.aquariumId === activeId && record.createdAt.startsWith(today)));
   }, [activeId, feedingRecords]);
 
-  type TankRiskItem = {
-    group: '容量风险' | '水质参数冲突' | '混养风险' | '信息不足';
-    severity: 'info' | 'warning' | 'danger';
-    title: string;
-    detail: string;
-    nextStep: string;
-    subjects: Array<{ id: string; name: string; quantity: number }>;
-    actionSteps: string[];
-    avoidActions: string[];
-    primaryAction: 'open_roster' | 'open_settings';
-    primaryLabel: string;
-  };
+  type TankRiskItem = CurrentTankRiskItem;
 
-  // --- COMPATIBILITY LOGIC ---
-  const getTankRiskItems = (aquarium: Aquarium | undefined): TankRiskItem[] => {
-    if (!aquarium || aquarium.fishes.length === 0) return [];
-    const risks: TankRiskItem[] = [];
-    
-    const stockedItems = aquarium.fishes
-      .map(aqFish => ({ aqFish, fish: fishData.find(f => f.id === aqFish.fishId) }))
-      .filter(item => item.fish) as { aqFish: AquariumFish; fish: Fish }[];
-    const animalItems = stockedItems.filter(({ fish }) => {
-      const lifeType = getLifeType(fish);
-      return lifeType !== 'plant' && lifeType !== 'hardscape';
-    });
-    const curFishes = animalItems.map(({ fish }) => fish);
-
-    // 1. Temperament
-    const hasAggressive = curFishes.some(f => f.temperament === 'Aggressive');
-    const hasPeaceful = curFishes.some(f => f.temperament === 'Peaceful');
-    const hasSmall = curFishes.some(f => f.size === 'Small');
-    const hasLarge = curFishes.some(f => f.size === 'Large');
-
-    const isEn = i18n.language?.startsWith('en');
-    if (hasAggressive && hasPeaceful) {
-      const aggressiveItems = animalItems.filter(({ fish }) => fish.temperament === 'Aggressive');
-      const aggressiveNames = aggressiveItems.map(({ fish }) => fish.name).slice(0, 3).join(isEn ? ', ' : '、');
-      risks.push({
-        group: isEn ? '混养风险' : '混养风险', // Keep internal key matching if needed, or map display
-        severity: 'danger',
-        title: isEn ? 'Aggressive & Peaceful Species Mixed' : '攻击性和温和生物同缸',
-        detail: isEn 
-          ? `${aggressiveNames || 'Aggressive species'} housed with peaceful small species carries a high risk of nipping, chasing, or predation.`
-          : `${aggressiveNames || '攻击性生物'} 与温和小型生物同缸，发生撕咬、追逐或吞食的风险较高。`,
-        nextStep: isEn ? 'Prioritize removing aggressive species or setup a separate theme tank.' : '优先移除攻击性生物，或单独规划主题缸。',
-        subjects: aggressiveItems.map(({ fish, aqFish }) => ({ id: fish.id, name: fish.name, quantity: aqFish.quantity })),
-        actionSteps: ['先暂停继续加鱼，并观察是否正在追咬或堵住食物。', `为 ${aggressiveNames || '攻击性生物'} 准备已循环的独立缸、隔离区或可靠接收人。`, '现实中完成转移后，再在缸内物种中更新移出数量。'],
-        avoidActions: ['不要直接放生', '不要为压制攻击行为盲目加药', '不要在未循环的小容器里长期隔离'],
-        primaryAction: 'open_roster',
-        primaryLabel: '选择需要移出的生物',
-      });
-    }
-    if (hasLarge && hasSmall && !hasAggressive) { // if aggressive already marked, avoid spam
-      const largeItems = animalItems.filter(({ fish }) => fish.size === 'Large');
-      risks.push({
-        group: isEn ? '混养风险' : '混养风险',
-        severity: 'danger',
-        title: isEn ? 'Extremely Large Size Difference' : '体型差异过大',
-        detail: isEn
-          ? 'Large and small species co-exist; small fish or shrimp may be chased, outcompeted, or eaten.'
-          : '当前同时存在大型和小型生物，小型鱼虾可能被追逐、抢食或吞食。',
-        nextStep: isEn ? 'Reduce large fish or build a separate tank for small species.' : '减少大型鱼，或为小型生物单独开缸。',
-        subjects: largeItems.map(({ fish, aqFish }) => ({ id: fish.id, name: fish.name, quantity: aqFish.quantity })),
-        actionSteps: ['先确认小型鱼虾有没有躲藏、拒食或被追赶。', '为大型鱼或小型生物准备尺寸合适且已循环的接收缸。', '完成转移后更新缸内数量，并连续观察 3 天。'],
-        avoidActions: ['不要仅靠增加躲避物维持明显捕食组合', '不要把小型生物临时放进未循环容器', '不要放生'],
-        primaryAction: 'open_roster',
-        primaryLabel: '调整缸内数量',
-      });
-    }
-
-    // 2. Water Type. pH is intentionally excluded here: without a measured
-    // value, species reference ranges must not create a second blocking rule.
-    const waterTypes = new Set(curFishes.map(f => f.category === '海水鱼' ? 'Saltwater' : 'Freshwater'));
-    if (waterTypes.size > 1) {
-      const waterConflictSubjects = animalItems.map(({ fish, aqFish }) => ({ id: fish.id, name: fish.name, quantity: aqFish.quantity }));
-      risks.push({
-        group: isEn ? '水质参数冲突' : '水质参数冲突',
-        severity: 'danger',
-        title: isEn ? 'Water Type Conflict' : '水体类型冲突',
-        detail: isEn ? 'Both saltwater and freshwater species are present; water conditions cannot satisfy both.' : '当前同时存在海水与淡水生物，水体类型无法同时满足。',
-        nextStep: isEn ? 'Separate saltwater and freshwater species into different tanks.' : '把海水生物和淡水生物分缸管理。',
-        subjects: waterConflictSubjects,
-        actionSteps: ['立即停止继续加入生物，不要尝试用同一水体折中。', '按淡水与海水需求准备两个稳定、已循环的环境。', '完成转移后更新缸内记录，再分别观察呼吸和活动状态。'],
-        avoidActions: ['不要把盐度快速来回调整', '不要让淡水与海水生物长期共用同一水体', '不要放生'],
-        primaryAction: 'open_roster',
-        primaryLabel: '选择需要分缸的生物',
-      });
-    }
-
-    // 4. Tank volume / stocking density
-    const tankLiters = getTankVolumeLiters(aquarium);
-    if (tankLiters > 0 && animalItems.length > 0) {
-      const minRequiredLiters = Math.max(...animalItems.map(({ fish }) => parseLiters(fish.tankSize, 30)));
-      const bioLoadLiters = animalItems.reduce((sum, { aqFish, fish }) => {
-        return sum + getBioLoadLiters(fish) * Math.max(aqFish.quantity || 1, 1);
-      }, 0);
-      const totalQuantity = animalItems.reduce((sum, { aqFish }) => sum + Math.max(aqFish.quantity || 1, 1), 0);
-      const loadSources = animalItems
-        .map(({ aqFish, fish }) => ({
-          id: fish.id,
-          name: fish.name,
-          load: getBioLoadLiters(fish) * Math.max(aqFish.quantity || 1, 1),
-          unitLoad: getBioLoadLiters(fish),
-          quantity: Math.max(aqFish.quantity || 1, 1),
-        }))
-        .sort((a, b) => b.load - a.load);
-      const loadSourceLabel = loadSources.slice(0, 3).map(item => `${item.name}×${item.quantity}`).join('、');
-
-      if (tankLiters < minRequiredLiters) {
-        risks.push({
-          group: '容量风险',
-          severity: 'warning',
-          title: '空间需求偏紧',
-          detail: `鱼缸有效水体约 ${tankLiters}L，小于当前动物最低建议缸容 ${Math.round(minRequiredLiters)}L。`,
-          nextStep: '优先减少空间需求最高的生物，或升级缸体。',
-          subjects: loadSources.slice(0, 3).map(item => ({ id: item.id, name: item.name, quantity: item.quantity })),
-          actionSteps: ['先暂停添加新生物，并确认是否已有追咬、拒食或活动受限。', `优先为 ${loadSources[0]?.name || '空间需求最高的生物'} 准备更大的已循环鱼缸或可靠接收人。`, '转移完成后更新数量，并重新运行混养判断。'],
-          avoidActions: ['不要只靠增加过滤解决活动空间不足', '不要长期使用过小隔离盒代替鱼缸', '不要放生'],
-          primaryAction: 'open_roster',
-          primaryLabel: '查看空间需求最高的生物',
-        });
-      }
-      if (bioLoadLiters > tankLiters) {
-        const primarySource = loadSources[0];
-        const excessLoad = bioLoadLiters - tankLiters;
-        const suggestedRemoval = primarySource
-          ? Math.min(primarySource.quantity, Math.max(1, Math.ceil(excessLoad / Math.max(primarySource.unitLoad, 1))))
-          : 1;
-        risks.push({
-          group: '容量风险',
-          severity: 'danger',
-          title: '动物负载超过当前水体',
-          detail: `当前约 ${totalQuantity} 只/条动物，估算动物负载需要约 ${Math.round(bioLoadLiters)}L，当前有效水体 ${tankLiters}L。主要负载来源：${loadSourceLabel || '当前动物记录'}。`,
-          nextStep: '先减少数量最多或负载最高的动物，再加强过滤和换水。',
-          subjects: loadSources.slice(0, 3).map(item => ({ id: item.id, name: item.name, quantity: item.quantity })),
-          actionSteps: [`先停止加鱼和过量喂食，检查是否浮头、浑浊或异味。`, `建议优先为 ${primarySource?.name || '负载最高的生物'} 转移约 ${suggestedRemoval} 只/条，接收环境需已循环。`, '转移后分次换水并观察 3 天，再决定是否继续调整。'],
-          avoidActions: ['不要一次性全换水', '不要只增加过滤后继续加鱼', '不要把生物放生'],
-          primaryAction: 'open_roster',
-          primaryLabel: `调整 ${primarySource?.name || '缸内生物'} 数量`,
-        });
-      } else if (bioLoadLiters > tankLiters * 0.75) {
-        risks.push({
-          group: '容量风险',
-          severity: 'warning',
-          title: '动物负载接近上限',
-          detail: `当前约 ${totalQuantity} 只/条动物，估算动物负载需要约 ${Math.round(bioLoadLiters)}L，鱼缸有效水体约 ${tankLiters}L。`,
-          nextStep: '暂缓继续加生物，观察氨氮、亚硝酸盐和溶氧。',
-          subjects: loadSources.slice(0, 3).map(item => ({ id: item.id, name: item.name, quantity: item.quantity })),
-          actionSteps: ['暂停继续添加生物和过量喂食。', '连续 3 天观察浮头、异味、浑浊和食欲。', '若出现异常，先执行增氧和分次换水，再考虑转移高负载生物。'],
-          avoidActions: ['不要因暂时正常就继续加鱼', '不要一次性清洗全部滤材', '不要盲目加药'],
-          primaryAction: 'open_roster',
-          primaryLabel: '查看当前负载来源',
-        });
-      }
-    }
-
-    const severityRank = { danger: 0, warning: 1, info: 2 } as const;
-    return risks.sort((a, b) => severityRank[a.severity] - severityRank[b.severity]);
-  };
-
-  const tankRiskItems = getTankRiskItems(activeAquarium);
+  // Current aquarium authority comes from the Tank State layer. Species metadata and
+  // planning compatibility remain prior context; they do not manufacture current danger here.
+  const tankStateEvidence = useMemo(() => (
+    activeAquarium
+      ? deriveCurrentTankState({ aquarium: activeAquarium, speciesCatalog: fishData, diagnosisRecords })
+      : null
+  ), [activeAquarium, diagnosisRecords]);
+  const tankRiskItems: TankRiskItem[] = activeAquarium
+    ? buildCurrentTankRiskItems({ aquarium: activeAquarium, speciesCatalog: fishData, evidence: tankStateEvidence })
+    : [];
   const conflicts = tankRiskItems.filter(item => item.severity !== 'info').map(item => `${item.title}：${item.detail}`);
   const [isConflictDialogOpen, setIsConflictDialogOpen] = useState(false);
   const [activeTankRiskIndex, setActiveTankRiskIndex] = useState(0);
@@ -2465,7 +2323,7 @@ export default function AquariumManager() {
       }
       return;
     }
-    if (task.actionType === 'compatibility_review') {
+    if (task.actionType === 'current_state_review') {
       setIsConflictDialogOpen(true);
       return;
     }
@@ -2929,7 +2787,7 @@ export default function AquariumManager() {
       recentFeeding: diagnosisTankSummary.recentFeeding,
       recentAddedSpecies: diagnosisTankSummary.recentAddedSpecies,
       healthScore,
-      riskCount: riskReminderCount,
+      riskCount: currentTankRiskCount,
     };
     const output: DiagnosisOutput = buildDiagnosisResult({
       aquarium: targetAquarium,
@@ -3178,7 +3036,7 @@ export default function AquariumManager() {
       equipment: summary.equipment,
       livestockCount: summary.livestockCount,
       healthScore,
-      riskCount: riskReminderCount,
+      riskCount: currentTankRiskCount,
     };
     const localOutput = buildDiagnosisResult({
       aquarium: diagnosisAquarium,
@@ -4600,12 +4458,12 @@ export default function AquariumManager() {
     ...(!latestWaterChangeDate ? ['上次换水记录'] : []),
     ...(!activeAquarium.targetTemperature ? ['当前水温'] : []),
   ];
-  const knownRiskLevel = conflicts.length >= 3 ? 'high' : conflicts.length > 0 ? 'medium' : 'none_recorded';
+  const knownRiskLevel = getCurrentTankRiskLevel(tankStateEvidence);
+  const currentTankRiskCount = getCurrentTankRiskCount(tankStateEvidence);
   const todayDailyCheckRecord = scorePatrolRecord;
-  const unresolvedPatrol = todayDailyCheckRecord && ['high', 'medium', 'unknown'].includes(todayDailyCheckRecord.riskCode || 'unknown')
-    ? todayDailyCheckRecord
-    : null;
-  const blockingCompatibilityRisk = tankRiskItems.find(item => item.severity === 'danger');
+  const currentTankState = tankStateEvidence?.result ?? null;
+  const currentStateHasObservedSignals = Boolean(currentTankState?.activeSignals.length);
+  const currentStateHasHardConstraint = Boolean(tankStateEvidence?.hardConstraints.length);
   const overdueCareReminder = activeCareReminders.find(reminder => getCareReminderStatus(reminder) === 'overdue');
   const todayCareReminder = activeCareReminders.find(reminder => getCareReminderStatus(reminder) === 'today');
   const batchCareSignal = getAquariumBatchCareSignal(activeAquarium.fishes, Boolean(isEn));
@@ -4618,28 +4476,30 @@ export default function AquariumManager() {
     : '';
 
   let dailyActionTask: DailyActionTask;
-  if (unresolvedPatrol) {
+  if (currentTankState?.state === 'urgent' && currentStateHasObservedSignals) {
     dailyActionTask = {
-      id: unresolvedPatrol.diagnosisId,
+      id: `tank-state-${activeAquarium.id}`,
       actionType: 'urgent_recovery',
-      title: '继续处理今天发现的异常',
+      title: '优先处理当前观察到的异常',
       priority: 'high',
-      reason: unresolvedPatrol.resultSummary || '今天的巡检仍有需要继续观察或处理的异常。',
-      evidence: '来自今天保存的每日鱼缸检查',
-      primaryLabel: '继续处理异常',
-      targetId: unresolvedPatrol.diagnosisId,
+      reason: currentTankState.summary,
+      evidence: currentTankState.reasons[0] || '来自当前鱼缸的结构化观察记录',
+      primaryLabel: todayDailyCheckRecord ? '查看当前检查' : '开始当前检查',
+      targetId: todayDailyCheckRecord?.diagnosisId,
       trigger: { type: 'user_reported_abnormality', source: 'user_observation' },
     };
-  } else if (blockingCompatibilityRisk) {
+  } else if (currentTankState?.state === 'urgent' || currentTankState?.state === 'intervene') {
     dailyActionTask = {
-      id: `compatibility-${activeAquarium.id}`,
-      actionType: 'compatibility_review',
-      title: '先处理缸内混养风险',
+      id: `tank-state-${activeAquarium.id}`,
+      actionType: 'current_state_review',
+      title: currentTankState.state === 'urgent' ? '先处理当前鱼缸硬约束' : '处理当前已确认的异常',
       priority: 'high',
-      reason: blockingCompatibilityRisk.title,
-      evidence: blockingCompatibilityRisk.detail,
-      primaryLabel: '查看混养风险',
-      trigger: { type: 'new_species_added', source: 'aquarium_stock' },
+      reason: currentTankState.summary,
+      evidence: currentTankState.reasons[0] || '来自 Current Tank State',
+      primaryLabel: '查看当前状态依据',
+      trigger: currentStateHasHardConstraint
+        ? { type: 'new_species_added', source: 'aquarium_stock' }
+        : { type: 'user_reported_abnormality', source: 'user_observation' },
     };
   } else if (overdueCareReminder) {
     dailyActionTask = {
@@ -4710,6 +4570,28 @@ export default function AquariumManager() {
         value: batchCareSignal ? { lifeStageSignal: batchCareSignal.code } : undefined,
       },
     };
+  } else if (currentTankState?.state === 'watch' && currentStateHasObservedSignals) {
+    dailyActionTask = {
+      id: `tank-state-watch-${activeAquarium.id}`,
+      actionType: 'current_state_review',
+      title: '继续观察当前信号',
+      priority: 'medium',
+      reason: currentTankState.summary,
+      evidence: currentTankState.reasons[0] || '来自当前鱼缸的结构化观察记录',
+      primaryLabel: '查看观察重点',
+      trigger: { type: 'user_reported_abnormality', source: 'user_observation' },
+    };
+  } else if (currentTankState?.state === 'unknown') {
+    dailyActionTask = {
+      id: `tank-state-check-${activeAquarium.id}`,
+      actionType: 'daily_check',
+      title: '补充当前鱼缸检查',
+      priority: 'normal',
+      reason: currentTankState.summary,
+      evidence: '当前缺少足够近期现实观察',
+      primaryLabel: '开始当前检查',
+      trigger: { type: 'missing_important_data', source: 'user_observation' },
+    };
   } else if (batchCareSignal) {
     dailyActionTask = {
       id: `life-stage-${batchCareSignal.speciesRecordId}-${batchCareSignal.code}`,
@@ -4732,13 +4614,13 @@ export default function AquariumManager() {
       actionType: 'routine',
       title: '今天没有必须处理',
       priority: 'normal',
-      reason: '今日检查已完成，当前没有到期计划或阻断级风险。',
-      evidence: '基于今天的巡检、养护计划和混养规则记录',
+      reason: '今日检查已完成，当前状态没有需要处理的异常。',
+      evidence: '基于今天的巡检、养护计划和 Current Tank State',
       trigger: { type: 'scheduled_task', source: 'aquarium_stock' },
     };
   }
 
-  const dailyActionLevel: AquariumStatusLevel = ['urgent_recovery', 'compatibility_review'].includes(dailyActionTask.actionType)
+  const dailyActionLevel: AquariumStatusLevel = dailyActionTask.actionType === 'urgent_recovery' || (dailyActionTask.actionType === 'current_state_review' && dailyActionTask.priority === 'high')
     ? 'urgent'
     : dailyActionTask.priority === 'high' || dailyActionTask.priority === 'medium'
       ? 'needs_attention'
@@ -4746,7 +4628,7 @@ export default function AquariumManager() {
   const dailyActionViewModel: DailyActionViewModel = {
     level: dailyActionLevel,
     label: dailyActionLevel === 'urgent' ? '优先处理' : dailyActionLevel === 'needs_attention' ? '今天完成' : dailyActionTask.actionType === 'routine' ? '已完成' : '今日待办',
-    sourceLabel: dailyActionTask.actionType === 'care_plan' || dailyActionTask.actionType === 'water_change' ? '基于养护记录' : dailyActionTask.actionType === 'urgent_recovery' || dailyActionTask.actionType === 'daily_check' ? '基于巡检记录' : '基于鱼缸规则',
+    sourceLabel: dailyActionTask.actionType === 'care_plan' || dailyActionTask.actionType === 'water_change' ? '基于养护记录' : dailyActionTask.actionType === 'urgent_recovery' || dailyActionTask.actionType === 'daily_check' || dailyActionTask.actionType === 'current_state_review' ? '基于当前状态与巡检' : '基于鱼缸记录',
     status: {
       pendingTaskCount: dailyActionTask.actionType === 'routine' ? 0 : 1,
       maintenanceStatus: waterChangedToday ? 'normal' : isChangeOverdue ? 'overdue' : daysUntilChange !== null && daysUntilChange <= 1 ? 'due' : 'normal',
@@ -4757,7 +4639,7 @@ export default function AquariumManager() {
     task: dailyActionTask,
     reasoning: [
       dailyActionTask.evidence,
-      conflicts.length > 0 ? `当前记录了 ${conflicts.length} 条混养提醒。` : '当前没有阻断级混养记录。',
+      currentTankState ? `Current Tank State：${currentTankState.state}。` : '当前状态尚未建立。',
       dailyAdviceMissingData.length > 0 ? `尚缺：${dailyAdviceMissingData.join('、')}。` : '关键维护信息已有记录。',
     ],
   };
@@ -8277,6 +8159,7 @@ export default function AquariumManager() {
                     onClick={() => {
                       setIsConflictDialogOpen(false);
                       if (activeTankRisk.primaryAction === 'open_settings') openAquariumSettings();
+                      else if (activeTankRisk.primaryAction === 'open_daily_check') handleOpenDailyCheck();
                       else setIsTankArchiveExpanded(true);
                     }}
                     className="mt-4 min-h-12 w-full rounded-2xl bg-emerald-700 px-4 text-sm font-black text-white hover:bg-emerald-800"

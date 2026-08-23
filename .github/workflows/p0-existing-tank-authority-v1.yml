@@ -1,0 +1,63 @@
+name: P0 Existing Tank Authority V1
+
+on:
+  pull_request:
+    paths:
+      - 'src/pages/Aquarium.tsx'
+      - 'src/components/product/StatusSummaryCard.tsx'
+      - 'src/modules/diagnosis/diagnosis.rules.ts'
+      - 'src/services/aquarium/tank-state-presentation.service.ts'
+      - 'src/services/aquarium/tank-state-evidence.service.ts'
+      - 'packages/domain-rules/src/tank-state.ts'
+      - 'scripts/test-p0-existing-tank-authority.ts'
+      - 'scripts/verify-p0-existing-tank-authority-browser.mjs'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  existing-tank-authority:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: P0 current-state contracts
+        run: |
+          npm run test:p0-existing-tank-authority
+          npm run test:p0-tank-evidence
+          npm run test:p0-tank-state
+          npm run test:p0-compatibility
+          npm run test:daily-check
+          npm run test:core-flow-state-eval
+          npm run test:visual-results
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Production build
+        run: npm run build
+      - name: Start preview
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-p0-existing-tank.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/aquarium >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-p0-existing-tank.log
+          exit 1
+      - name: Existing Tank authority browser regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:p0-existing-tank-authority-ui
+      - name: GP-003 returning user Daily Check
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp003-ui
+      - name: GP-004 abnormal care
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:golden-path-gp004-ui

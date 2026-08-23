@@ -242,11 +242,11 @@ export const evaluateDiagnosisRules = (input: BuildDiagnosisInput): DiagnosisRul
   if (input.problemType === '巡检' && rules.length === 0) {
     addRule({
       ruleId: 'normal-patrol',
-      riskLevel: input.snapshot.riskCount && input.snapshot.riskCount > 0 ? 'medium' : 'low',
-      summary: input.snapshot.riskCount && input.snapshot.riskCount > 0 ? '当前鱼缸有提醒，建议先做轻量观察。' : '当前未发现明显异常，可以正常观察。',
-      actions: input.snapshot.riskCount && input.snapshot.riskCount > 0 ? ['观察鱼是否浮头或趴缸', '检查水体是否异味', '记录今日状态'] : ['正常观察', '记录喂食或换水', '发现异常再进入对应诊断'],
+      riskLevel: 'low',
+      summary: '当前结构化巡检未发现明显异常，可以正常观察。',
+      actions: ['正常观察', '记录喂食或换水', '发现异常再进入对应诊断'],
       avoidActions: ['不要无症状盲目下药', '不要频繁大换水'],
-      possibleCauses: input.snapshot.riskCount && input.snapshot.riskCount > 0 ? ['混养或水体提醒'] : ['暂无明显异常'],
+      possibleCauses: ['暂无明确当前异常'],
       observeItems: ['呼吸频率', '抢食状态', '水体异味'],
       missingInfo: [],
       matchedArticleIds: articleIds,

@@ -184,3 +184,15 @@ Still open before production:
 - prose/AI/result-summary keywords are not promoted into authoritative observation codes.
 - regression includes the concrete 40cm + 2 mini-parrot case: space guidance remains prior and recent normal reality yields current `stable`, not immediate intervention.
 - Aquarium UI/Today Action wiring remains intentionally pending for the next stacked PR.
+
+## 2026-08-23 — P0 Existing Tank Authority Wiring V1
+
+- #116 stacked gates confirmed PASS before wiring: Evidence `32621938239`, Compatibility `32621938236`, Tank State `32621938229`.
+- Replaced Aquarium page-level static `Aggressive/Large/tankSize/heuristic bioload` current-risk authority with `deriveCurrentTankState()` + presentation adapter.
+- Removed `blockingCompatibilityRisk -> Today Action` bypass; Current Tank State now owns current risk and Today Action semantics.
+- Normal patrol no longer upgrades to medium from inherited `riskCount`; explicit structured answers remain the observation authority.
+- Added permanent source contract plus browser regression for Existing Tank authority.
+- Browser PASS 3/3: 40cm + 2 mini-parrots normal -> routine; reviewed tiger-barb + mini-parrot prior normal -> routine; freshwater/marine hard constraint -> high-priority current review.
+- Existing GP-003 returning Daily Check and GP-004 abnormal-care browser paths PASS after wiring.
+- `AQ-BC-SPACE-001`, `AQ-BC-MIX-001`, `AQ-BC-STATE-001` upgraded to regression-verified on this candidate.
+- Pre-existing `test:compatibility-evidence-coverage` provenance drift reproduced on #116 baseline and logged as `AQ-BC-EVAL-002`; intentionally not mixed into this fix.
