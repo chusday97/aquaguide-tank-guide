@@ -1,4 +1,4 @@
-name: Interactive Atlas Detail V2
+name: Interactive Atlas Re-entry V1
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ permissions:
 jobs:
   verify-interactive-atlas:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,6 +19,17 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Atlas authority contract
+        run: node scripts/test-interactive-atlas-authority-contract.mjs
+      - name: Product contracts
+        run: |
+          npm run test:product-evaluation
+          npm run test:golden-path-contract
+      - name: P0 decision-boundary regressions
+        run: |
+          npm run test:p0-compatibility
+          npm run test:p0-tank-state
+          npm run test:p0-water-change
       - name: Type check
         run: npm run lint
       - name: Production build
@@ -34,7 +45,7 @@ jobs:
           done
           cat /tmp/aquaguide-interactive-atlas.log
           exit 1
-      - name: Interactive atlas browser regression
+      - name: Interactive atlas responsive browser regression
         env:
           PREVIEW_URL: http://127.0.0.1:4208
         run: node scripts/verify-interactive-atlas-detail-v2.mjs
