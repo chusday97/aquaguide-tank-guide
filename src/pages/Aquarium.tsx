@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { format, differenceInDays, addDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
+import { format, differenceInDays, isPast, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
 import { Plus, Trash2, AlertTriangle, Edit2, Calendar, Droplets, Sparkles, Search, ChevronDown, ChevronLeft, ChevronRight, Settings, BookOpen, Info, Crown, Activity, HelpCircle, Skull, Heart, HeartOff, RefreshCw, X, Layers3, Maximize2, CheckCircle2, MoreHorizontal, History, Loader2 } from 'lucide-react';
 import { DeceasedRecord } from '../types';
 import { useLayoutMode } from '../components/layout/LayoutModeProvider';
@@ -102,6 +102,7 @@ import { getCompatibilitySelection, setCompatibilitySelection } from '../service
 import { getAquaGuideRepository, getCurrentAquaGuideRepository, resolveRepositoryMode, subscribeToRepositoryMode } from '../services/repository/repository-provider';
 import { persistAquariums } from '../services/aquarium/aquarium-state.service';
 import { applyWaterChangeHistory, hydrateWaterChangeHistoryFromEvents, isFutureWaterChangeDate, toggleWaterChangeDate, waterChangeDateToIso } from '../services/aquarium/water-change.service';
+import { deriveWaterChangeDecision } from '../services/aquarium/water-change-decision.service';
 import { publishAquariumNavigation } from '../services/aquarium/aquarium-navigation.service';
 import { deriveCurrentTankState } from '../services/aquarium/tank-state-evidence.service';
 import {
@@ -4329,23 +4330,19 @@ export default function AquariumManager() {
     .filter(item => item.fish)
     .slice(0, 4);
   const hasEnvironmentContent = tankConfiguredContentItems.some(item => ['水草', '底砂', '造景', '设备'].includes(item.category));
-  // Water change calculation
-  const shortestCycle = currentFishesDetails.length > 0 ? Math.min(...currentFishesDetails.map(f => f.waterChangeCycle)) : 7;
-  const lastChangeDate = activeAquarium.lastWaterChangeDate ? new Date(activeAquarium.lastWaterChangeDate) : null;
-  const nextChangeDate = lastChangeDate ? addDays(lastChangeDate, shortestCycle) : null;
-  const daysUntilChange = nextChangeDate ? differenceInDays(nextChangeDate, new Date()) : null;
-  const isChangeOverdue = daysUntilChange !== null && daysUntilChange < 0;
+  const waterChangeDecision = deriveWaterChangeDecision({
+    aquarium: activeAquarium,
+    speciesCatalog: fishData,
+    tankStateEvidence,
+  });
+  const daysUntilChange = waterChangeDecision.daysUntilBaseline;
+  const isChangeOverdue = waterChangeDecision.scheduleStatus === 'overdue';
   const scorePatrolRecord = findDailyPatrolRecord(diagnosisRecords, activeAquarium.id);
 
   const calculateHealthScore = () => {
     if (!activeAquarium) return 100;
     let score = 100;
     
-    // Deduct for overdue water change
-    if (isChangeOverdue) {
-      score -= Math.min(Math.abs(daysUntilChange || 0) * 5, 30); // up to 30 points
-    }
-
     // Deduct for conflicts
     if (conflicts.length > 0) {
       score -= conflicts.length * 15;
@@ -4367,15 +4364,11 @@ export default function AquariumManager() {
   };
 
   const healthScore = calculateHealthScore();
-  const waterChangedToday = (activeAquarium.waterChangeHistory || []).includes(format(new Date(), 'yyyy-MM-dd'));
+  const waterChangedToday = waterChangeDecision.scheduleStatus === 'complete';
   const waterChangeHistory = activeAquarium.waterChangeHistory || [];
-  const latestWaterChangeDate = waterChangeHistory.length > 0
-    ? waterChangeHistory[waterChangeHistory.length - 1]
-    : activeAquarium.lastWaterChangeDate
-      ? format(new Date(activeAquarium.lastWaterChangeDate), 'yyyy-MM-dd')
-      : '';
-  const nextSuggestedWaterChangeDate = latestWaterChangeDate
-    ? format(addDays(new Date(latestWaterChangeDate), shortestCycle), 'yyyy/MM/dd')
+  const latestWaterChangeDate = waterChangeDecision.latestChangeDate || '';
+  const nextSuggestedWaterChangeDate = waterChangeDecision.nextBaselineDate
+    ? waterChangeDecision.nextBaselineDate.replaceAll('-', '/')
     : '暂无';
   const selectedWaterDateHasRecord = waterChangeHistory.includes(selectedWaterChangeDate);
   const totalStockedQuantity = activeAnimalRecords.reduce((sum, record) => sum + Math.max(1, record.quantity || 1), 0);
@@ -4405,7 +4398,7 @@ export default function AquariumManager() {
   const hasFishLikeSpecies = currentFishesDetails.some(fish => ['freshwaterFish', 'saltwaterFish', 'reptile'].includes(getLifeType(fish)));
   const hasOnlyInvertebrates = hasStockedAnimals && !hasFishLikeSpecies && currentFishesDetails.some(fish => getLifeType(fish) === 'invertebrate');
   const tankHealthStatus = healthScore < 60 || conflicts.length > 0 ? '风险' : healthScore < 80 || isChangeOverdue || (daysUntilChange !== null && daysUntilChange <= 1) ? '提醒' : '正常';
-  const waterTaskStatus: TodayTaskStatus = waterChangedToday ? '已完成' : isChangeOverdue ? '建议处理' : daysUntilChange !== null && daysUntilChange <= 1 ? '待处理' : '观察';
+  const waterTaskStatus: TodayTaskStatus = waterChangedToday ? '已完成' : waterChangeDecision.action === 'check_water_quality' ? '建议处理' : isChangeOverdue ? '建议处理' : waterChangeDecision.scheduleStatus === 'due' ? '待处理' : '观察';
   const feedingTaskStatus: TodayTaskStatus = !hasStockedAnimals ? '观察' : fedToday ? '已完成' : '观察';
   const heaterNeedsAttention = heaterSpeciesCount > 0 && !activeAquarium.equipment?.heater;
   const equipmentTaskStatus: TodayTaskStatus = heaterNeedsAttention ? '建议处理' : '已完成';
@@ -4453,7 +4446,7 @@ export default function AquariumManager() {
     observeTaskStatus,
   ]
     .filter(status => status === '待处理' || status === '建议处理').length;
-  const waterChangeOverdueDays = isChangeOverdue ? Math.abs(daysUntilChange || 0) : 0;
+  const waterChangeOverdueDays = waterChangeDecision.overdueDays;
   const dailyAdviceMissingData = [
     ...(!latestWaterChangeDate ? ['上次换水记录'] : []),
     ...(!activeAquarium.targetTemperature ? ['当前水温'] : []),
@@ -4513,14 +4506,16 @@ export default function AquariumManager() {
       targetId: overdueCareReminder.id,
       trigger: { type: 'maintenance_overdue', source: 'maintenance_schedule' },
     };
-  } else if (!waterChangedToday && isChangeOverdue) {
+  } else if (waterChangeDecision.action === 'record_water_change' && waterChangeDecision.scheduleStatus === 'overdue') {
     dailyActionTask = {
       id: `water-change-${activeAquarium.id}`,
       actionType: 'water_change',
       title: '记录本次换水',
-      priority: 'high',
-      reason: `换水计划已逾期 ${waterChangeOverdueDays} 天。`,
-      evidence: latestWaterChangeDate ? `上次换水：${latestWaterChangeDate}` : '还没有可用的上次换水记录',
+      priority: waterChangeDecision.priority,
+      reason: waterChangeDecision.summary,
+      evidence: latestWaterChangeDate
+        ? `上次换水：${latestWaterChangeDate} · 参考维护日期已过去 ${waterChangeOverdueDays} 天`
+        : '还没有可用的上次换水记录',
       primaryLabel: '记录本次换水',
       trigger: { type: 'maintenance_overdue', source: latestWaterChangeDate ? 'water_change_record' : 'maintenance_schedule' },
     };
@@ -4536,13 +4531,13 @@ export default function AquariumManager() {
       targetId: todayCareReminder.id,
       trigger: { type: 'maintenance_due', source: 'maintenance_schedule' },
     };
-  } else if (!waterChangedToday && daysUntilChange !== null && daysUntilChange <= 1) {
+  } else if (waterChangeDecision.action === 'record_water_change' && waterChangeDecision.scheduleStatus === 'due') {
     dailyActionTask = {
       id: `water-change-${activeAquarium.id}`,
       actionType: 'water_change',
       title: '记录本次换水',
-      priority: 'medium',
-      reason: '换水计划今天需要处理。',
+      priority: waterChangeDecision.priority,
+      reason: waterChangeDecision.summary,
       evidence: latestWaterChangeDate ? `上次换水：${latestWaterChangeDate}` : '还没有可用的上次换水记录',
       primaryLabel: '记录本次换水',
       trigger: { type: 'maintenance_due', source: latestWaterChangeDate ? 'water_change_record' : 'maintenance_schedule' },
@@ -4631,7 +4626,7 @@ export default function AquariumManager() {
     sourceLabel: dailyActionTask.actionType === 'care_plan' || dailyActionTask.actionType === 'water_change' ? '基于养护记录' : dailyActionTask.actionType === 'urgent_recovery' || dailyActionTask.actionType === 'daily_check' || dailyActionTask.actionType === 'current_state_review' ? '基于当前状态与巡检' : '基于鱼缸记录',
     status: {
       pendingTaskCount: dailyActionTask.actionType === 'routine' ? 0 : 1,
-      maintenanceStatus: waterChangedToday ? 'normal' : isChangeOverdue ? 'overdue' : daysUntilChange !== null && daysUntilChange <= 1 ? 'due' : 'normal',
+      maintenanceStatus: waterChangeDecision.scheduleStatus === 'overdue' ? 'overdue' : waterChangeDecision.scheduleStatus === 'due' ? 'due' : 'normal',
       knownRiskLevel,
       dataStatus: dailyAdviceMissingData.length === 0 ? 'sufficient' : dailyAdviceMissingData.length >= 2 ? 'insufficient' : 'partial',
       missingData: dailyAdviceMissingData,
@@ -4854,7 +4849,7 @@ export default function AquariumManager() {
         markPriorityTask('viewMixingRisk', '已查看');
       },
     }] : []),
-    ...((healthScore < 85 || isChangeOverdue) ? [{
+    ...((healthScore < 85 || waterChangeDecision.action === 'check_water_quality') ? [{
       id: 'checkWater',
       level: '建议检查',
       title: '检查水体状态',
@@ -7295,8 +7290,8 @@ export default function AquariumManager() {
                     <div className="mt-1 text-[12px] font-black text-ink">{nextSuggestedWaterChangeDate}</div>
                   </div>
                   <div className="rounded-[14px] bg-bg px-3 py-2">
-                    <div className="text-[10px] font-black text-ink/42">{isEn ? 'Cycle' : '周期'}</div>
-                    <div className="mt-1 text-[12px] font-black text-ink">约 {shortestCycle} 天</div>
+                    <div className="text-[10px] font-black text-ink/42">{isEn ? 'Baseline' : '参考周期'}</div>
+                    <div className="mt-1 text-[12px] font-black text-ink">{waterChangeDecision.baselineDays ? (isEn ? `About ${waterChangeDecision.baselineDays} days` : `约 ${waterChangeDecision.baselineDays} 天`) : (isEn ? 'Not available' : '暂无')}</div>
                   </div>
                   <div className={`rounded-[14px] px-3 py-2 ${waterChangedToday ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
                     <div className="text-[10px] font-black opacity-60">{isEn ? 'Today Status' : '今日状态'}</div>
@@ -7399,7 +7394,9 @@ export default function AquariumManager() {
                   }
                   setWaterChangeFeedback(wasRecorded
                     ? `已取消 ${format(new Date(selectedWaterChangeDate), 'yyyy/MM/dd')} 的换水记录。`
-                    : `已记录换水，下次建议约 ${shortestCycle} 天后。`
+                    : waterChangeDecision.baselineDays
+                      ? `已记录换水，下次参考维护周期约 ${waterChangeDecision.baselineDays} 天后。`
+                      : '已记录换水；当前没有可用的维护 baseline。'
                   );
                 } catch {
                   setWaterChangeError(isEn ? 'Could not save the water-change record. Try again.' : '换水记录没有保存成功，请重试。');

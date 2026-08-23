@@ -1,16 +1,16 @@
 # AquaGuide — Latest Progress
 
-**Updated:** 2026-08-22  
-**Branch:** `agent/rc1-post-105-evaluator-repair`  
-**PR:** #107 `Repair post-#105 RC1 evaluator drift`  
-**Base:** `integration/aquaguide-rc1`  
-**Current RC1 head:** `e5a9dd1ccc18a296075521fdd01b0407341af617`
+**Updated:** 2026-08-23
+**Branch:** `agent/p0-water-change-authority-v1`
+**PR:** #118 `Route Water Change through deterministic authority V1`
+**Base:** `agent/p0-existing-tank-authority-wiring-v1` (#117)
+**Current RC1 head:** `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 
 ## Current phase
 
-**#104 merged → #105 merged to RC1 → post-merge evaluator drift reproduced → evaluator repair verified in #107 → final RC1 acceptance blocked only on #107 merge decision.**
+**P0 decision-layer consolidation is active: #114 Compatibility → #115 Tank State → #116 Tank Evidence → #117 Existing Tank Authority → #118 Water Change Authority. #118 is Draft and awaiting permanent gates.**
 
-No merge to `main` and no production deployment has been performed.
+No P0 stack merge to RC1, no merge to `main`, and no production deployment has been performed.
 
 ## Stack convergence
 
@@ -196,3 +196,23 @@ Still open before production:
 - Existing GP-003 returning Daily Check and GP-004 abnormal-care browser paths PASS after wiring.
 - `AQ-BC-SPACE-001`, `AQ-BC-MIX-001`, `AQ-BC-STATE-001` upgraded to regression-verified on this candidate.
 - Pre-existing `test:compatibility-evidence-coverage` provenance drift reproduced on #116 baseline and logged as `AQ-BC-EVAL-002`; intentionally not mixed into this fix.
+
+## 2026-08-23 — P0 Water Change Engine V1
+
+- fail-before commit `1afcd15` reproduces 0/3 gaps on #117 head: shortest species cycle as page authority, calendar overdue -> high priority, and no distinct recommendation engine.
+- #117 Existing Tank Authority permanent gates confirmed PASS before this layer: Existing Tank `32623274776`, Evidence `32623274708`, Tank State `32623274730`, Compatibility `32623274742`.
+- Added deterministic `packages/domain-rules/src/water-change.ts` plus Aquarium adapter `water-change-decision.service.ts`.
+- Completed-water-change history and derived recommendation are now separate; future dates are ignored as completed history by the decision engine.
+- Stocked-species `waterChangeCycle` remains a maintenance baseline; Aquarium no longer owns a fallback `shortestCycle -> overdue -> high priority` decision chain.
+- Removed overdue-days health-score deduction so maintenance lateness is not silently presented as current biological danger.
+- Baseline overdue without abnormal evidence produces a medium maintenance task and explicitly does not imply urgent Current Tank State.
+- Current water/physiological signals remain evidence inputs, while Existing Tank Current State keeps higher authority in the Today Action ordering.
+- `test:p0-water-change` PASS 8/8; authority source contract PASS; Existing Tank/Tank Evidence/Tank State/Compatibility/Daily Check/Core Flow/Visual Results remain green.
+- TypeScript and production build PASS.
+- Browser regression PASS at 390/900/1600px; Existing Tank browser 3/3, GP-003 and GP-004 remain PASS.
+- `AQ-BC-WATER-001` migrated into the canonical badcase ledger as REGRESSION_VERIFIED on this candidate.
+- Draft stacked PR #118 `Route Water Change through deterministic authority V1` opened against #117 head.
+- Final PR branch is `agent/p0-water-change-authority-v1`; the parallel `agent/p0-water-change-engine-v1` remains unreviewed and is not used as Product Truth.
+- Unconfirmed AQ-WATER-005/006 from that parallel branch were intentionally excluded from #118 in accordance with Context Sync acceptance rules.
+- #118 final-head permanent gates PASS: Water Change `32638235738`, Existing Tank `32638235771`, Evidence `32638235730`, Tank State `32638235711`, Compatibility `32638235721`.
+- #118 remains Draft/unmerged; next P0 implementation target is the remaining Whole-Tank Feasibility dimensions.
