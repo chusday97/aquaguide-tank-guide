@@ -4,8 +4,8 @@
 **Repository:** `chusday97/aquaguide-tank-guide`
 **Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 **Product Truth / Context Sync:** #113 `agent/context-sync-protocol-v1`
-**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → #118 Water Change Authority V1 → #119 Whole-Tank Feasibility V2
-**Active branch:** `agent/p0-whole-tank-feasibility-v2`
+**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → #118 Water Change Authority V1 → #119 Whole-Tank Feasibility V2 → #120 Evidence Provenance V1
+**Active branch:** `agent/p0-compatibility-evidence-provenance-v1`
 **Phase:** `P0 decision-layer consolidation`
 **Release boundary:** no P0 stack merge to RC1, no RC1→main merge, and no production deploy without separate explicit authorization.
 
@@ -36,6 +36,8 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - #119 permanent gates PASS on `0b72b9a`: Whole-Tank `32640537915`, Compatibility `32640537970`, Evidence `32640537930`, Tank State `32640537933`, Existing Tank `32640537926`, Water Change `32640537939`.
 - Reviewed `minimumGroupSize` is authoritative; keyword group-size guesses and temperament-bioload inflation are removed from downstream consumers.
 - Generic `tankSize` stays planning space guidance. Missing reviewed equipment or hard physical-space requirements remain explicit unknown rather than fabricated pass/block.
+- #120 Compatibility Evidence Provenance V1 removes lossy duplicate `pair_rule_* -> tank_condition` conversion and keeps direct reviewed pair rules evidence-aware exactly once.
+- `test:compatibility-evidence-coverage` now passes on 132 priority directions and is part of the permanent P0 Compatibility workflow.
 
 ## Current Regression Proof
 
@@ -60,12 +62,13 @@ Latest local regression PASS:
 - `AQ-BC-MIX-001` — REGRESSION_VERIFIED on #117.
 - `AQ-BC-STATE-001` — REGRESSION_VERIFIED on #117.
 - `AQ-BC-WATER-001` — REGRESSION_VERIFIED on current Water Change candidate.
-- `AQ-BC-EVAL-002` — OPEN; pre-existing Compatibility evidence provenance drift.
+- `AQ-BC-EVAL-002` — REGRESSION_VERIFIED on #120 locally; permanent gates pending.
 
 ## Still Open in P0
 
 - #118 Water Change Authority V1 is open as Draft and permanent gates are green; it remains unmerged.
-- #119 Whole-Tank Feasibility V2 is open as Draft; local regression and all six permanent GitHub gates are green. It remains unmerged.
+- #119 Whole-Tank Feasibility V2 is open as Draft; all six permanent GitHub gates are green. It remains unmerged.
+- #120 Compatibility Evidence Provenance V1 is open as Draft; local full regression is green and permanent gates are pending.
 - Reviewed knowledge coverage is still incomplete for species-specific equipment requirements and hard physical-space constraints; the engine now represents those gaps as explicit unknown rather than inventing thresholds.
 - Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
@@ -73,9 +76,10 @@ Latest local regression PASS:
 
 ## Next Execution Order
 
-1. Resolve the still-open `AQ-BC-EVAL-002` Compatibility evidence-provenance drift.
-2. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
-3. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+1. Validate #120 Compatibility Evidence Provenance permanent GitHub gates.
+2. Re-run P0 acceptance + Product Golden/GP-001/GP-002/GP-003/GP-004 on the full stack.
+3. Review remaining non-authoritative legacy health-score/support surfaces against P0 exit criteria; do not let them regain decision authority.
+4. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
 
 ## Branch note
 

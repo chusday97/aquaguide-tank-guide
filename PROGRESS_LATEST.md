@@ -1,14 +1,14 @@
 # AquaGuide — Latest Progress
 
 **Updated:** 2026-08-23
-**Branch:** `agent/p0-whole-tank-feasibility-v2`
-**PR:** #119 `Complete Whole-Tank Feasibility dimensions V2`
-**Base:** `agent/p0-water-change-authority-v1` (#118)
+**Branch:** `agent/p0-compatibility-evidence-provenance-v1`
+**PR:** #120 `Repair Compatibility evidence provenance V1`
+**Base:** `agent/p0-whole-tank-feasibility-v2` (#119)
 **Current RC1 head:** `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 
 ## Current phase
 
-**P0 decision-layer consolidation is active: #114 Compatibility → #115 Tank State → #116 Tank Evidence → #117 Existing Tank Authority → #118 Water Change Authority → #119 Whole-Tank Feasibility V2. #119 is Draft and awaiting permanent gates.**
+**P0 decision-layer consolidation is active: #114 Compatibility → #115 Tank State → #116 Tank Evidence → #117 Existing Tank Authority → #118 Water Change Authority → #119 Whole-Tank Feasibility V2 → #120 Evidence Provenance V1. #120 is Draft and awaiting permanent gates.**
 
 No P0 stack merge to RC1, no merge to `main`, and no production deployment has been performed.
 
@@ -232,3 +232,13 @@ Still open before production:
 - reviewed knowledge coverage for equipment requirements and hard physical-space constraints remains incomplete; this is now represented as explicit unknown, not silently guessed.
 - #119 final-head permanent gates PASS: Whole-Tank `32640537915`, Compatibility `32640537970`, Evidence `32640537930`, Tank State `32640537933`, Existing Tank `32640537926`, Water Change `32640537939`.
 - #119 remains Draft/unmerged; next P0 target is `AQ-BC-EVAL-002` compatibility evidence provenance drift.
+## 2026-08-23 — P0 Compatibility Evidence Provenance V1
+
+- #119 head `79b06c7` reproduces `AQ-BC-EVAL-002`: direct reviewed predator–prey rule is found first as lossy `tank_condition` instead of `pair_rule`.
+- root cause: `speciesFitEngine` emitted a `pair_rule_*` fit item for standalone UX, then `tankCompatibilityEngine` generically converted that item before adding the evidence-aware reviewed pair rule again.
+- fix keeps standalone Species Fit behavior but prevents Tank Compatibility from importing lossy `pair_rule_*` duplicates.
+- direct Oscar–zebrafish and Channa–Rhodeus rules now appear exactly once with `basis = pair_rule`, reviewed status and retained citations.
+- `test:compatibility-evidence-coverage` now permanently asserts uniqueness + provenance and passes across 132 priority directions.
+- P0 Compatibility workflow now runs the evidence-coverage test.
+- full local Whole-Tank / Compatibility / Species Fit / Addition / Livestock / Tank Evidence / Tank State / Existing Tank / Water Change / Core Flow / Visual / Golden Path / type / build / diff-check suite remains green.
+- Draft stacked PR #120 opened against #119. No verdict threshold, UI, RC1/main branch or production state changed.
