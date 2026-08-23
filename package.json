@@ -122,7 +122,8 @@
     "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs",
     "test:golden-path-gp003-ui": "node scripts/verify-golden-path-returning-user-daily-check.mjs",
     "test:golden-path-gp004-ui": "node scripts/verify-golden-path-abnormal-care.mjs",
-    "test:p0-tank-state": "tsx scripts/test-p0-tank-state-engine.ts"
+    "test:p0-tank-state": "tsx scripts/test-p0-tank-state-engine.ts",
+    "test:p0-tank-evidence": "tsx scripts/test-p0-tank-evidence-adapter.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

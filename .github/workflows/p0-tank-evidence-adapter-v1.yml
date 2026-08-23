@@ -1,0 +1,38 @@
+name: P0 Tank Evidence Adapter V1
+
+on:
+  pull_request:
+    paths:
+      - 'src/services/aquarium/tank-state-evidence.service.ts'
+      - 'scripts/test-p0-tank-evidence-adapter.ts'
+      - 'packages/domain-rules/src/tank-state.ts'
+      - 'docs/rules/TANK_STATE.md'
+      - 'docs/cases/ACCEPTANCE_CASES.md'
+      - 'package.json'
+  workflow_dispatch:
+
+jobs:
+  evidence-adapter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Tank evidence adapter regression
+        run: npm run test:p0-tank-evidence
+      - name: Tank State regression
+        run: npm run test:p0-tank-state
+      - name: Compatibility product-truth regression
+        run: npm run test:p0-compatibility
+      - name: Daily Check regression
+        run: npm run test:daily-check
+      - name: Care Timeline regression
+        run: npm run test:care-timeline
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Production build
+        run: npm run build

@@ -193,6 +193,24 @@ Downgrade the result merely because compatibility priors are low or older observ
 
 ---
 
+## BC-STATE-005 — Free-text summary cannot silently become current-state evidence
+
+**Verifies:** `AQ-STATE-009`, `AQ-AI-001`
+
+**GIVEN**
+A persisted check contains explicit structured normal answers while a prose/AI summary happens to contain words such as “追咬” or “受伤”.
+
+**WHEN**
+The Tank Evidence Adapter builds observation codes.
+
+**THEN**
+Only the explicit structured answers are promoted to current-state observations.
+
+**MUST NOT**
+Create `persistent_chasing`, `injury` or another authoritative signal by keyword-parsing explanatory prose.
+
+---
+
 ## BC-WATER-001 — Maintenance baseline overdue without abnormal evidence
 
 **Verifies:** `AQ-WATER-001`, `AQ-WATER-002`, `AQ-WATER-004`

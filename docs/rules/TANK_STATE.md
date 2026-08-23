@@ -61,3 +61,8 @@ If no recent observation is available, elapsed cohabitation time alone must not 
 - meaningful prior risk + no recent observation -> normally `watch` with a request to observe;
 - no meaningful prior and no recent observation -> `unknown` / complete the current check;
 - recent normal observations may support `stable` when no hard constraint or current abnormal evidence is present.
+## AQ-STATE-009 — Current-state evidence must come from explicit structured facts
+
+The evidence adapter may promote explicit user selections and deterministic persisted facts into Tank State observation codes.
+
+AI summaries, free-text result summaries and prose explanations do not become authoritative observation codes merely because they contain words such as “chasing”, “injury” or “stable”. They may remain explanatory context; structured interpretation requires a separately governed deterministic/AI-interpretation boundary.

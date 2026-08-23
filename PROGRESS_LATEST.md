@@ -173,3 +173,14 @@ Still open before production:
 - cohabitation duration alone never proves stability.
 - `test:p0-tank-state` passes 11/11 together with P0 Compatibility, Compatibility, Daily Check, Species Diagnosis and TypeScript.
 - Aquarium UI is intentionally not rewired in this candidate; `AQ-BC-MIX-001`, `AQ-BC-SPACE-001`, `AQ-BC-STATE-001` remain OPEN until the Existing Tank wiring PR.
+
+## 2026-08-23 — P0 Tank Evidence Adapter V1
+
+- #115 Tank State candidate gates PASS: Tank State `32621472344`, Compatibility `32621472315`.
+- added `tank-state-evidence.service.ts` to translate existing persisted facts into Tank State inputs.
+- explicit Daily Check / diagnosis answers map to normal, chasing, hiding, appetite, injury, respiratory, death and water-condition observations.
+- Planning Compatibility output becomes Prior Risk; only narrow deterministic freshwater/marine rule codes become immediate hard constraints in v1.
+- current combination age starts at the latest entry of the currently stocked combination, not the first animal ever added.
+- prose/AI/result-summary keywords are not promoted into authoritative observation codes.
+- regression includes the concrete 40cm + 2 mini-parrot case: space guidance remains prior and recent normal reality yields current `stable`, not immediate intervention.
+- Aquarium UI/Today Action wiring remains intentionally pending for the next stacked PR.
