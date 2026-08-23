@@ -4,7 +4,7 @@
 **Repository:** `chusday97/aquaguide-tank-guide`
 **Current RC1:** `integration/aquaguide-rc1` @ `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 **Product Truth / Context Sync:** #113 `agent/context-sync-protocol-v1`
-**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → current Water Change Authority V1
+**P0 stack:** #114 Compatibility V2 → #115 Tank State V1 → #116 Tank Evidence Adapter V1 → #117 Existing Tank Authority Wiring V1 → #118 Water Change Authority V1
 **Active branch:** `agent/p0-water-change-authority-v1`
 **Phase:** `P0 decision-layer consolidation`
 **Release boundary:** no P0 stack merge to RC1, no RC1→main merge, and no production deploy without separate explicit authorization.
@@ -54,7 +54,7 @@ Water Change local/browser validation PASS:
 
 ## Still Open in P0
 
-- Water Change Authority candidate is committed locally; push, stacked PR creation and GitHub permanent gates are still pending.
+- #118 Water Change Authority V1 is open as Draft on `agent/p0-water-change-authority-v1`; permanent GitHub gates are pending on the final documentation head.
 - Whole-Tank Feasibility v1 still needs group-size, equipment-capacity and reviewed physical-space dimensions.
 - Existing health-score legacy surfaces remain non-authoritative support UI and should be reduced after Today Action/Current State/Water Change authority is stable.
 - P0 stack remains Draft/unmerged; RC1 is unchanged.
@@ -62,8 +62,12 @@ Water Change local/browser validation PASS:
 
 ## Next Execution Order
 
-1. Push Water Change Authority V1 and open a Draft stacked PR on #117 head.
-2. Validate its permanent GitHub gates.
-3. Finish remaining Whole-Tank Feasibility dimensions.
-4. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
-5. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+1. Validate #118 Water Change Authority V1 permanent GitHub gates.
+2. If green, finish remaining Whole-Tank Feasibility dimensions.
+3. Re-run P0 acceptance + Product Golden/GP-003/GP-004 on the full stack.
+4. Only after P0 exit criteria are green, decide how to land the stacked PRs and then resume #112 UI work.
+
+## Branch note
+
+- Parallel `agent/p0-water-change-engine-v1` is an unreviewed earlier candidate and is not the active PR branch.
+- Its `AQ-WATER-005/006` additions were never explicitly confirmed by the user and are intentionally absent from #118; do not treat them as accepted Product Truth.

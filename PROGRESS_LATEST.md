@@ -1,16 +1,16 @@
 # AquaGuide — Latest Progress
 
-**Updated:** 2026-08-22  
-**Branch:** `agent/rc1-post-105-evaluator-repair`  
-**PR:** #107 `Repair post-#105 RC1 evaluator drift`  
-**Base:** `integration/aquaguide-rc1`  
-**Current RC1 head:** `e5a9dd1ccc18a296075521fdd01b0407341af617`
+**Updated:** 2026-08-23
+**Branch:** `agent/p0-water-change-authority-v1`
+**PR:** #118 `Route Water Change through deterministic authority V1`
+**Base:** `agent/p0-existing-tank-authority-wiring-v1` (#117)
+**Current RC1 head:** `5e605fb7a68001ecd80096ef42f063909cf5aa03`
 
 ## Current phase
 
-**#104 merged → #105 merged to RC1 → post-merge evaluator drift reproduced → evaluator repair verified in #107 → final RC1 acceptance blocked only on #107 merge decision.**
+**P0 decision-layer consolidation is active: #114 Compatibility → #115 Tank State → #116 Tank Evidence → #117 Existing Tank Authority → #118 Water Change Authority. #118 is Draft and awaiting permanent gates.**
 
-No merge to `main` and no production deployment has been performed.
+No P0 stack merge to RC1, no merge to `main`, and no production deployment has been performed.
 
 ## Stack convergence
 
@@ -211,3 +211,6 @@ Still open before production:
 - TypeScript and production build PASS.
 - Browser regression PASS at 390/900/1600px; Existing Tank browser 3/3, GP-003 and GP-004 remain PASS.
 - `AQ-BC-WATER-001` migrated into the canonical badcase ledger as REGRESSION_VERIFIED on this candidate.
+- Draft stacked PR #118 `Route Water Change through deterministic authority V1` opened against #117 head.
+- Final PR branch is `agent/p0-water-change-authority-v1`; the parallel `agent/p0-water-change-engine-v1` remains unreviewed and is not used as Product Truth.
+- Unconfirmed AQ-WATER-005/006 from that parallel branch were intentionally excluded from #118 in accordance with Context Sync acceptance rules.
