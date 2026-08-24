@@ -6,11 +6,13 @@ on:
       - 'packages/domain-rules/**'
       - 'src/lib/tankCompatibilityEngine.ts'
       - 'src/lib/speciesFitEngine.ts'
+      - 'src/modules/recommendation/recommendation.service.ts'
       - 'src/modules/knowledge/compatibilityKnowledge.ts'
       - 'src/modules/knowledge/knowledge.types.ts'
       - 'scripts/test-p0-compatibility-product-truth.ts'
       - 'scripts/test-tank-compatibility-engine.ts'
       - 'scripts/test-species-fit-engine.ts'
+      - 'scripts/test-recommendation-authority.ts'
       - 'scripts/test-addition-intents.ts'
       - 'scripts/test-visual-results.ts'
       - 'package.json'
@@ -35,6 +37,8 @@ jobs:
         run: npm run test:compatibility-evidence-coverage
       - name: Species-fit regression
         run: npx tsx scripts/test-species-fit-engine.ts
+      - name: Recommendation authority contract
+        run: npm run test:recommendation-authority
       - name: Addition-intent contract
         run: npm run test:addition-intents
       - name: Livestock-recording contract

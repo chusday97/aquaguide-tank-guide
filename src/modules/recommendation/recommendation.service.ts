@@ -102,7 +102,7 @@ const getBioLoadLiters = (fish: Fish) => {
 
 const isRecommendableSpecies = (fish: Fish) => {
   const lifeType = getLifeType(fish);
-  return !['plant', 'hardscape', 'reptile'].includes(lifeType) && fish.housingMode !== '建议单养';
+  return !['plant', 'hardscape', 'reptile'].includes(lifeType);
 };
 
 const getRecommendationReason = (candidate: Fish, aquarium: Aquarium, speciesPool: Fish[]) => {
@@ -598,7 +598,6 @@ export const recommendationService = {
     const basePool = input.speciesPool.filter(fish => {
       if (!isLivestockSpecies(fish)) return false;
       if (input.aquarium.fishes.some(item => item.fishId === fish.id)) return false;
-      if (fish.housingMode === '建议单养' && input.aquarium.fishes.length > 0) return false;
       return true;
     });
     const rawCandidates = basePool.map(fish => buildCandidate(fish, input.aquarium, profile, input.speciesPool));

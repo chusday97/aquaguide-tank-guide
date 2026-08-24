@@ -18,6 +18,7 @@
     "lint": "tsc --noEmit",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
     "test:p0-compatibility": "tsx scripts/test-p0-compatibility-product-truth.ts",
+    "test:recommendation-authority": "tsx scripts/test-recommendation-authority.ts",
     "audit:compatibility-evidence": "node --import tsx scripts/audit_compatibility_evidence.ts",
     "test:favorites": "tsx scripts/test-favorites-service.ts",
     "test:taxonomy": "tsx scripts/assert_taxonomy_rules.ts",
