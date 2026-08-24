@@ -324,3 +324,16 @@ Still open before production:
 - Exact merged RC1 result: **15/15 PASS**. P0: Compatibility `32695640422`, Tank State `32695640283`, Tank Evidence `32695640241`, Existing Tank `32695640353`, Water Change `32695640274`, Whole-Tank `32695640299`. Release/UI: RC1 Release `32695640335`, Product Golden `32695640359`, UI Interaction `32695640281`, UI UX System `32695640349`, UI UX Visual QA `32695640304`, UI UX Golden V3 `32695640360`, UI V2 Aquarium `32695640294`, Navigation `32695640362`, Bundle `32695640329`.
 - `AQ-BC-UI-HEADER-001` is regression-verified on RC1. No RC1→main merge or production deployment was performed.
 - Separate first-fold audit found no persistent Aquarium regression for configured returning users; Care/Search/Collection likewise have no current browser evidence supporting broad redesign. Continue UI work only from reproducible badcases.
+
+## 2026-08-24 — Mobile Encyclopedia top-toolbar ownership
+
+- Cross-route browser audit found two simultaneous 390px top headers on `/encyclopedia`: the global shell occupied y=0–61 while the Atlas toolbar occupied y=0–64 at z-index 60.
+- The Atlas toolbar visually covered the global shell, but global Search / Photo ID / Settings remained keyboard-focusable; Search and Photo ID appeared twice in the DOM and hidden Settings was the third Tab stop.
+- Fail-before commit `c800ec6` added source and browser ownership contracts and reproduced both failures on final RC1.
+- Implementation commit `a936323` makes `/encyclopedia` the owner of its mobile top toolbar: App suppresses the global utility header only for that route, while the Atlas toolbar exposes Browse / Compatibility + Search / Photo ID / Settings.
+- Ordinary routes such as `/care` continue to render the global utility header.
+- Local validation PASS: ownership source/browser contracts, mobile shell-header scope, Atlas authority, UI UX system contract, TypeScript, production build, Atlas 390/900/1600, and full responsive scan 7 profiles × 17 routes. At 390px the two mode buttons remain >=70px and no horizontal overflow is introduced.
+- #128 final candidate `a93632388b2d37232a8b3af8c9bdce9b1955a21f` passed **17/17** triggered PR workflows, including UI UX System `32698572750`, Visual QA `32698572700`, Interactive Atlas `32698572781`, Golden V3 `32698572724`, Navigation `32698572745`, all P0 gates, Security/Dependency/Bundle, Result UX, Plant Roster and Stage Risk.
+- #128 merged to RC1 with a normal merge commit + expected-head protection; runtime RC1 became `1bf6c015eb2a3addf986c0d742729dce95046ac0`.
+- Exact merged RC1 result: **15/15 PASS**. P0: Compatibility `32698873159`, Tank State `32698873163`, Tank Evidence `32698873193`, Existing Tank `32698873212`, Water Change `32698873172`, Whole-Tank `32698873128`. Release/UI: RC1 Release `32698873151`, Product Golden `32698873170`, UI Interaction `32698873145`, UI UX System `32698873147`, UI UX Visual QA `32698873103`, UI UX Golden V3 `32698873162`, UI V2 Aquarium `32698873194`, Navigation `32698873218`, Bundle `32698873148`.
+- `AQ-BC-UI-TOOLBAR-001` is regression-verified on RC1. No RC1→main merge or production deployment was performed.
