@@ -549,19 +549,20 @@ export function SpeciesDetailDialog({
     }
     return t('encyclopedia.btnCompleteSetup');
   }, [aquariumContext, displayFit, inCalculator, owned, source, t]);
-  const verdictReasons = useMemo(() => {
-    if (!displayFit || !aquariumContext) return [];
-    const actionableConfirmations = displayFit.confirmations.filter(item => item.type !== 'water_parameter');
-    const priorityItems = [...displayFit.risks, ...actionableConfirmations];
-    const fallbackItems = displayFit.items.filter(item => item.status === 'ok');
-    return [...priorityItems, ...fallbackItems]
-      .map(item => ({
-        label: translateLabel(item.label),
-        text: item.advice || `${item.current} · ${item.requirement}`,
-        status: item.status,
-      }))
-      .filter((item, index, list) => list.findIndex(other => other.label === item.label && other.text === item.text) === index)
-      .slice(0, 3);
+  const canonicalDecisionEvidence = useMemo(() => {
+    if (!displayFit || !aquariumContext) return { watch: [], avoid: [], evidence: [] };
+    const { compatibilityResult } = displayFit;
+    const formatRule = (rule: TankCompatibilityResult['warningRules'][number]) => `${rule.title} · ${rule.evidence}`;
+    return {
+      watch: compatibilityResult.warningRules.map(rule => rule.evidence),
+      avoid: compatibilityResult.blockingRules.map(rule => rule.evidence),
+      evidence: [
+        ...compatibilityResult.blockingRules,
+        ...compatibilityResult.warningRules,
+        ...compatibilityResult.missingData,
+        ...compatibilityResult.passedRules,
+      ].map(formatRule),
+    };
   }, [aquariumContext, displayFit]);
   const compatibilityVisualModel = useMemo<VisualResultViewModel | null>(() => {
     if (!fish) return null;
@@ -794,9 +795,9 @@ export function SpeciesDetailDialog({
                             eyebrow={aquariumContext ? (isEn ? 'FITS MY TANK?' : '适合我的鱼缸吗？') : (isEn ? 'TANK NOT SELECTED' : '尚未选择鱼缸')}
                             title={displayFit.title}
                             summary={aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank')}
-                            watchFor={displayFit.risks.filter(item => item.status === 'warning').map(item => item.advice)}
-                            avoid={displayFit.risks.filter(item => item.status === 'danger').map(item => item.advice)}
-                            evidence={verdictReasons.map(reason => `${reason.label} · ${reason.text}`)}
+                            watchFor={canonicalDecisionEvidence.watch}
+                            avoid={canonicalDecisionEvidence.avoid}
+                            evidence={canonicalDecisionEvidence.evidence}
                           />
                         </div>
 
@@ -915,7 +916,7 @@ export function SpeciesDetailDialog({
                   )}
 
                   <div className="mt-4 grid gap-2" data-species-detail-sections>
-                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
+                    <section data-species-fit-reference className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
                         data-disclosure-purpose="secondary_evidence"
@@ -924,10 +925,10 @@ export function SpeciesDetailDialog({
                         className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
                       >
                         <span className="min-w-0">
-                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Why?' : '为什么？'}</span>
+                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Tank context reference' : '鱼缸条件参考'}</span>
                           <span className="mt-0.5 block text-[11px] font-bold text-ink/45">
                             {aquariumContext
-                              ? (() => { const count = metricCards.filter(item => item.status !== 'ok').length; return count === 0 ? (isEn ? 'No obvious issues' : '目前没有明显问题') : (isEn ? `${count} items need attention` : `${count} 项需要留意`); })()
+                              ? (isEn ? 'Recorded values for setup reference; they do not override the Compatibility verdict.' : '当前记录仅作设置参考，不覆盖上方混养判断。')
                               : t('encyclopedia.noTankSelected')}
                           </span>
                         </span>
@@ -938,15 +939,15 @@ export function SpeciesDetailDialog({
                           <div className="grid grid-cols-2 gap-2 min-[760px]:grid-cols-3">
                             {metricCards.map(metric => {
                               const settingsPanel = getMetricSettingsPanel(metric);
-                              const canOpenSettings = metric.status !== 'ok' && Boolean(settingsPanel && onOpenTankSettings);
+                              const canOpenSettings = Boolean(settingsPanel && onOpenTankSettings);
                               const content = (
                                 <>
                                   <div className="flex items-center justify-between gap-2">
                                     <span className="min-w-0 break-words text-[11px] font-black text-ink">{translateLabel(metric.label)}</span>
-                                    <span className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-black ${getFitStatusClass(metric.status)}`}>{getFitStatusLabel(metric.status, isEn)}</span>
+                                    <span className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[9px] font-black text-slate-600">{isEn ? 'Reference' : '参考'}</span>
                                   </div>
-                                  <p className={`mt-2 break-words text-[11px] font-bold leading-relaxed ${getFitCurrentClass(metric.status)}`}>{metric.current || t('encyclopedia.noTankSelected')}</p>
-                                  {metric.status !== 'ok' && <p className="mt-1 text-[10px] font-medium leading-relaxed text-ink/48">{metric.advice || metric.requirement}</p>}
+                                  <p className="mt-2 break-words text-[11px] font-bold leading-relaxed text-ink/68">{metric.current || t('encyclopedia.noTankSelected')}</p>
+                                  <p className="mt-1 text-[10px] font-medium leading-relaxed text-ink/48">{isEn ? 'Species reference: ' : '物种资料：'}{metric.requirement}</p>
                                 </>
                               );
                               return canOpenSettings ? (
