@@ -308,3 +308,19 @@ Still open before production:
 - Exact merged RC1 result: **15/15 PASS**. P0: Compatibility `32656473719`, Tank State `32656473746`, Tank Evidence `32656473727`, Existing Tank `32656474634`, Water Change `32656473724`, Whole-Tank `32656473735`. Release/UI: RC1 Release `32656473713`, Product Golden `32656473751`, UI Interaction `32656473716`, UI UX System `32656473765`, UI UX Visual QA `32656473797`, UI UX Golden V3 `32656473758`, UI V2 Aquarium `32656473810`, Navigation `32656473748`, Bundle `32656473715`.
 - `AQ-BC-ATLAS-002` is regression-verified on RC1. Next audit target is Aquarium first-fold competition for configured returning users.
 - No RC1→main merge or production deployment was performed.
+
+## 2026-08-24 — Mobile shell header scope / Identify 390px repair
+
+- Global UI/UX audit found a reproducible 390px Identify defect: “返回物种图鉴” was forced into a 44×44 box, rendered vertically, and visually collided with the “拍照识别” heading.
+- Browser geometry before fix: back action 44×44, `white-space: normal`, button y=16–60, title top y=68.
+- Root cause was shared shell CSS, not Identify recognition logic: `.phone-shell-active header...` selectors matched arbitrary page `<header>` elements instead of only the persistent mobile utility header.
+- Fail-before commit `de5bc96` added a source contract that fails on broad mobile-header selectors plus a permanent Identify geometry browser regression.
+- Implementation commit `f09ece0` scopes all persistent mobile-header rules to `header[data-shell="mobile-header"]`; Identify back action becomes content-fit/non-shrinking.
+- Local post-fix evidence: Identify back action 132×40, button bottom y=56, title top y=64; 390px screenshot manually reviewed; Identify 390/900/1600 regression PASS; full responsive route scan PASS (7 profiles × 17 routes); TypeScript/build and UI contracts PASS.
+- #126 initial head exposed one expected Golden V3 mismatch only: `collection-phone-390` changed 3.3704% because the old reference preserved the same invalid shell chrome on the Collection page header; the other 7 golden cases passed.
+- Golden migration used the failing GitHub Linux runner current screenshot, preserved the existing 0.3% tolerance, changed only `collection-phone-390.sig`, and added a small `referenceMigration` audit block. Signature self-check reported `diffPixels: 0` against the runner screenshot.
+- Final #126 candidate `6a70e7eaa71f6b2d33a6bb64e848dbd685ad4cb2` passed **17/17** triggered PR workflows; Golden V3 recovered to PASS (`32695362070`).
+- #126 merged to RC1 with a normal merge commit + expected-head protection; runtime RC1 became `80985ca27d7b21df4bc0062e7765a1d5e9a96756`.
+- Exact merged RC1 result: **15/15 PASS**. P0: Compatibility `32695640422`, Tank State `32695640283`, Tank Evidence `32695640241`, Existing Tank `32695640353`, Water Change `32695640274`, Whole-Tank `32695640299`. Release/UI: RC1 Release `32695640335`, Product Golden `32695640359`, UI Interaction `32695640281`, UI UX System `32695640349`, UI UX Visual QA `32695640304`, UI UX Golden V3 `32695640360`, UI V2 Aquarium `32695640294`, Navigation `32695640362`, Bundle `32695640329`.
+- `AQ-BC-UI-HEADER-001` is regression-verified on RC1. No RC1→main merge or production deployment was performed.
+- Separate first-fold audit found no persistent Aquarium regression for configured returning users; Care/Search/Collection likewise have no current browser evidence supporting broad redesign. Continue UI work only from reproducible badcases.

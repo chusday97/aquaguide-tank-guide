@@ -148,3 +148,14 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Expected behavior:** Mobile Encyclopedia exposes a first-class Search action without duplicating search state. Tapping it moves directly to the existing canonical search toolbar and focuses its input. Atlas remains available as discovery, Wishlist remains reachable through Collection, and desktop Atlas layout is unchanged.
 **Root cause:** The Atlas re-entry optimized immersive exploration and authority separation, but the mobile IA kept the pre-audit shortcut allocation; no regression asserted that the primary species-finding task remained immediately reachable when the Atlas occupied the first fold.
 **Regression:** Fail-before commit `98e91b8` proves the mobile toolbar lacked a Search action. `scripts/test-mobile-encyclopedia-entry-contract.mjs` protects search ownership and prevents Wishlist from displacing it. `scripts/verify-interactive-atlas-detail-v2.mjs` verifies 390px Search scroll/focus plus the existing 390/900/1600 Atlas interaction chain. #124 candidate passed 11/11 triggered workflows; exact merged RC1 `cf63e7f` passed 15/15 P0 + release checks.
+
+---
+
+## AQ-BC-UI-HEADER-001 — Mobile shell CSS captures page-level text headers
+
+**Status:** `REGRESSION_VERIFIED` on RC1 via merged PR #126
+**Related Rules:** Post-P0 UI hierarchy / shell ownership; responsive interaction consistency
+**Observed behavior:** At 390px on Identify, the page-level “返回物种图鉴” text action was forced into a 44×44 icon-button box, wrapped vertically, and visually crowded the “拍照识别” title. The same broad selector also applied mobile-shell chrome to other page `<header>` elements, including Collection.
+**Expected behavior:** Persistent shell styles apply only to the actual mobile utility header. Page headers keep their own content-fit geometry; the Identify back action remains a readable single-line text action with a valid touch target and no title overlap.
+**Root cause:** `ui-v2-shell.css` used `.phone-shell-active header...` selectors even though the true persistent header already exposed `data-shell="mobile-header"`. The selector therefore treated arbitrary nested page headers as shell UI.
+**Regression:** Fail-before commit `de5bc96` captures the broad-selector bug. `scripts/test-mobile-shell-header-scope.mjs` forbids arbitrary page-header ownership, and `scripts/verify-identify-mobile-header.mjs` verifies Identify geometry at 390/900/1600. The fix scopes shell rules to `header[data-shell="mobile-header"]`. The 390px back action changed from 44×44 to 132×40 with button bottom y=56 before title top y=64. The Collection 390 golden reference was migrated from GitHub runner evidence without relaxing its 0.3% threshold; final #126 head passed 17/17 PR workflows and exact merged RC1 `80985ca` passed 15/15 P0 + release checks.
