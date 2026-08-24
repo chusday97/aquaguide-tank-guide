@@ -25,6 +25,8 @@ on:
       - 'scripts/verify-identify-mobile-header.mjs'
       - 'scripts/test-mobile-encyclopedia-toolbar-ownership.mjs'
       - 'scripts/verify-mobile-encyclopedia-toolbar-ownership.mjs'
+      - 'scripts/test-species-detail-authority-presentation.mjs'
+      - 'scripts/verify-species-detail-authority-presentation.mjs'
       - 'scripts/verify-encyclopedia-risk-navigation.mjs'
       - 'scripts/verify-search-show-all-v2.mjs'
       - 'scripts/verify-collection-hub-previews.mjs'
@@ -56,6 +58,7 @@ jobs:
           node scripts/test-uiux-system-contract.mjs
           npm run test:mobile-shell-header-scope
           npm run test:mobile-encyclopedia-toolbar-ownership
+          node scripts/test-species-detail-authority-presentation.mjs
       - name: Type check
         run: npm run lint
       - name: Build
@@ -95,6 +98,10 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: npm run test:mobile-encyclopedia-toolbar-browser
+      - name: Species Detail authority presentation regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: node scripts/verify-species-detail-authority-presentation.mjs
       - name: Full responsive route scan
         env:
           PREVIEW_URL: http://127.0.0.1:4173
