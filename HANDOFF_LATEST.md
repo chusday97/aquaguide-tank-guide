@@ -2,9 +2,9 @@
 
 **Updated:** 2026-08-24
 **Repository:** `chusday97/aquaguide-tank-guide`
-**RC1 runtime baseline:** `integration/aquaguide-rc1` runtime head `c491effd9cd65bdde3ee860dd133a9cc716ed6af`
-**Active branch:** `docs/context-sync-result-ux-head-integrity-v1` — docs-only #132 landing sync
-**Phase:** `post-P0 UI/UX refinement / Result UX candidate-head integrity restored`
+**RC1 runtime baseline:** `integration/aquaguide-rc1` runtime head `b69c3c3e3a34f846edf6b59b3007de2ef9f85ad5`
+**Active branch:** `docs/context-sync-recommendation-authority-v2` — docs-only #134/#135 Recommendation authority sync
+**Phase:** `RC1 convergence / Recommendation authority aligned / production acceptance next`
 **Release boundary:** no RC1→`main` merge and no production deployment without separate explicit authorization.
 
 ## Current Product Truth
@@ -22,11 +22,11 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 ## Repository Acceptance
 
 - P0 decision-layer stack #113→#120 is landed in RC1.
-- Post-P0 landings include #122 Interactive Atlas, #124 mobile Encyclopedia Search, #126 shell-header scope, #128 Encyclopedia toolbar ownership, #130 Species Detail authority presentation, and #132 Result UX head integrity.
-- Current runtime head `c491effd` passed **16/16** exact-head GitHub checks: the previous 15-check baseline plus candidate-head Result UX.
-- P0 gates PASS: Compatibility `32708929731`, Tank State `32708929674`, Tank Evidence `32708929745`, Existing Tank `32708929634`, Water Change `32708929852`, Whole-Tank `32708929726`.
-- Release/UI PASS: RC1 Release `32708929579`, Product Golden `32708929733`, UI Interaction `32708929659`, UI UX System `32708929656`, UI UX Visual QA `32708929663`, UI UX Golden V3 `32708929608`, UI V2 Aquarium `32708929720`, Navigation `32708929775`, Bundle Audit `32708929669`.
-- Result UX candidate-head gate PASS: `32708929859`.
+- Post-P0 landings include #122 Interactive Atlas, #124 mobile Encyclopedia Search, #126 shell-header scope, #128 Encyclopedia toolbar ownership, #130 Species Detail authority presentation, #132 Result UX head integrity, #134 Recommendation prefilter authority, and #135 Recommendation severity alignment.
+- Current runtime head `b69c3c3` passed **16/16** exact-head GitHub checks; Recommendation authority is permanently covered by P0 Compatibility.
+- P0 gates PASS: Compatibility `32719324560`, Tank State `32719324505`, Tank Evidence `32719324495`, Existing Tank `32719324538`, Water Change `32719324544`, Whole-Tank `32719324512`.
+- Release/UI PASS: RC1 Release `32719324574`, Product Golden `32719324491`, UI Interaction `32719324513`, UI UX System `32719324624`, UI UX Visual QA `32719324529`, UI UX Golden V3 `32719324585`, UI V2 Aquarium `32719324578`, Navigation `32719324461`, Bundle Audit `32719324479`.
+- Result UX candidate-head gate PASS: `32719324489`.
 
 ## UI / Authority / CI Status
 
@@ -35,6 +35,9 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 - The first real candidate-head run exposed a stale Result UX evaluator that still required removed heuristic `verdictReasons`; the evaluator was corrected to assert canonical `canonicalDecisionEvidence` instead of restoring the old product behavior.
 - Species Detail verdict/watch/avoid/evidence remain owned by canonical `TankCompatibilityResult`; local setup metrics remain reference-only context.
 - Result UX now protects both RC1-bound and `main`-bound PRs, so repository acceptance includes its real candidate-head suite rather than treating it as a compatibility-only signal.
+- `AQ-BC-REC-001` is regression-verified via #134: static `housingMode = 建议单养` no longer suppresses a non-blocked candidate before canonical Compatibility.
+- `AQ-BC-REC-002` is regression-verified via #135: heuristic load thresholds and reviewed min-group gaps remain warning/adjustment context and cannot override a canonical non-blocked result to `blocked` or clear the adjustable candidate pool.
+- No currently reproduced Recommendation hard-block bypass remains in the audited live path; further Recommendation changes require a new canonical-vs-consumer contradiction.
 
 ## Known Bounded Gaps
 
@@ -45,8 +48,8 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 
 ## Next Execution Order
 
-1. Continue evidence-driven cross-route UI/authority audit now that Result UX candidate-head integrity is trustworthy; require a reproducible browser/semantic badcase before changing already-cleared surfaces.
-2. Prioritize live surfaces where presentation may combine canonical decisions with static metadata or local heuristics; distinguish live consumers from dead code before acting.
-3. Keep 390 / 900 / 1600 geometry, full responsive-route scan, Product Golden, and candidate-head Result UX as the acceptance floor for relevant UI changes.
-4. Keep all UI work consuming landed Planning Compatibility / Current Tank State / Water Change authorities; static metadata may be reference context but cannot create a competing verdict.
+1. Stop broad authority/UI refactoring unless a new reproducible canonical-vs-consumer contradiction appears.
+2. Move to Production Acceptance: representative live-provider Tank Copilot usefulness evaluation, production env/secrets verification, deployed RC1 smoke, and production golden paths.
+3. Keep 390 / 900 / 1600 geometry, full responsive-route scan, Product Golden, candidate-head Result UX, and Recommendation authority regression as the acceptance floor for any release fix.
+4. Keep Planning Compatibility / Current Tank State / Water Change as separate authorities; static metadata remains reference context, not a competing verdict.
 5. Do not merge RC1 to `main` and do not deploy production without separate explicit authorization.

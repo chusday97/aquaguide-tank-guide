@@ -192,3 +192,25 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Expected behavior:** Result UX must validate the exact pull-request head, verify the checked-out SHA at runtime, and keep its evaluator aligned with current accepted authority boundaries. A stale evaluator must be fixed rather than restoring superseded product behavior.
 **Root cause:** An experimental workflow branch was permanently hard-coded into `actions/checkout`, and the fixed checkout allowed its source-shape assertions to drift away from the actual RC1 implementation without failing candidate acceptance.
 **Regression:** Fail-before commit `e11e78e` captures the fixed legacy checkout. #132 binds checkout to `${{ github.event.pull_request.head.sha }}`, adds an explicit `git rev-parse HEAD` equality check, and wires an independent head-integrity contract into UI UX System. The first real run on `261897d` correctly failed the stale `verdictReasons` assertion; evaluator-only commit `c4df38e` updates Result UX to require canonical `canonicalDecisionEvidence` from Compatibility rule buckets. Final #132 candidate passed 7/7 workflows, and merged RC1 `c491effd` passed the expanded 16/16 exact-head matrix including Result UX `32708929859`.
+
+---
+
+## AQ-BC-REC-001 — Recommendation suppresses a non-blocked candidate before canonical Compatibility
+
+**Status:** `REGRESSION_VERIFIED` on RC1 via merged PR #134
+**Related Rules:** `AQ-MIX-004`, `AQ-MIX-005`, `AQ-MIX-007`; Recommendation / Compatibility authority separation
+**Observed behavior:** In a 120L freshwater tank already containing `sp_0431` 红绿灯, candidate `sp_0016` 金波子 carried static `housingMode = 建议单养`. Canonical Compatibility returned `insufficient_data` with `blockingRules=[]`, warning-only `hard_species / single_housing`, and missing evidence. Ordinary Recommendation returned zero candidates and Smart Recommendation omitted the species from direct / adjustable / blocked entirely.
+**Expected behavior:** Static housing metadata may contribute warning/context but must not silently remove a candidate before canonical Compatibility. A candidate with no canonical hard block remains representable; `caution / insufficient_data` may flow to the adjustable path.
+**Root cause:** `isRecommendableSpecies()` and Smart Recommendation `basePool` each used `housingMode === 建议单养` as a pre-evaluation exclusion, escalating a planning warning into candidate suppression and removing it from Tank Copilot's local candidate pool.
+**Regression:** `scripts/test-recommendation-authority.ts` reproduces the 120L + 红绿灯 + 金波子 case and requires both Recommendation paths to preserve the candidate when canonical `blockingRules=[]`. #134 removed only the two housing-mode prefilters. Candidate passed 16/16 triggered workflows; merged RC1 `dfa095f3` passed 16/16 exact-head checks.
+
+---
+
+## AQ-BC-REC-002 — Recommendation upgrades heuristic load / min-group warnings into hard blocks
+
+**Status:** `REGRESSION_VERIFIED` on RC1 via merged PR #135
+**Related Rules:** `AQ-SPACE-002`, `AQ-SPACE-003`, `AQ-SPACE-004`, `AQ-MIX-005`, `AQ-MIX-006`, `AQ-MIX-007`; Recommendation / Compatibility authority separation
+**Observed behavior:** Three live Smart Recommendation cases contradicted canonical Compatibility: (1) near-limit heuristic load produced canonical `caution` with no blocking rules but Smart `blocked`; (2) a reviewed group-size gap produced canonical `insufficient_data` with no blocking rules but Smart `blocked`; (3) heuristic current load around 95% produced canonical `insufficient_data`, `blockingRules=[]`, while Smart both marked the candidate blocked and had a post-processing path that cleared direct/adjustable candidates.
+**Expected behavior:** Heuristic load pressure and reviewed min-group gaps remain warning / adjustment information unless canonical Compatibility emits a hard blocking rule. Smart Recommendation must not manufacture `blocked`, erase adjustable candidates, or present a hard-stop summary from local load thresholds alone.
+**Root cause:** `buildCandidate()` overwrote canonical classification with `status = blocked` when local `profile.load.loadRate >= nearLimit` or `minGroup > recommendedQuantity`; `recommendSmartForAquarium()` then independently used `loadBlocked` to clear direct/adjustable lists and emit a hard-stop summary.
+**Regression:** Fail-before `7d6e85c` extends `scripts/test-recommendation-authority.ts` with near-limit, reviewed min-group, and 95% heuristic-load fixtures. Implementation `7a85b5c` preserves load/min-group risk text but removes their classification authority and the Smart post-filter hard stop. #135 candidate passed 11/11 workflows; exact merged RC1 `b69c3c3` passed 16/16 checks, including P0 Compatibility `32719324560` and Result UX `32719324489`.
