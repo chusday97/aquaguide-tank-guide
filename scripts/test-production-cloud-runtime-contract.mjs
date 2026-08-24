@@ -11,7 +11,7 @@ const requireMarker = (source, marker, message) => {
   if (!source.includes(marker)) throw new Error(message || `Missing marker: ${marker}`);
 };
 
-requireMarker(adapter, "import { createApiApp } from '../../apps/api/src/app';", 'Vercel V1 catch-all must reuse the canonical Express API app.');
+requireMarker(adapter, "import { createApiApp } from '../../apps/api/src/app.js';", 'Vercel V1 catch-all must reuse the canonical Express API app through an ESM-safe runtime specifier.');
 requireMarker(adapter, 'export default app;', 'Vercel V1 catch-all must default-export the Express app.');
 if (/\.listen\s*\(/.test(adapter)) {
   throw new Error('Vercel adapter must not start its own listener.');
