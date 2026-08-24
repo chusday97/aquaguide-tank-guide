@@ -137,3 +137,14 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Expected behavior:** The discovery aquarium is explicitly a visual exploration scene only. Co-display does not imply compatibility. Species tank-size and water-change values are labeled as references, Compatibility requires explicit user intent, and the knowledge panel must remain safely dismissible at responsive viewports.
 **Root cause:** The original #112 UI intent predated the landed P0 authority model and reused the product `Aquarium` shape as a rendering adapter without a presentation-only semantic boundary; mobile dismissal also depended on sticky positioning inside a global overflow layout.
 **Regression:** `scripts/test-interactive-atlas-authority-contract.mjs` protects visual-only/reference/explicit-intent semantics. `scripts/verify-interactive-atlas-detail-v2.mjs` verifies the full Atlas interaction at 390/900/1600px, including no horizontal overflow, a viewport-safe mobile close control, variant preview/commit, and exact restoration of the same discovery scene after close. #122 passed 12/12 triggered PR workflows; after merge, exact RC1 `d3e9ee5` passed the full 15/15 P0 + release matrix.
+
+---
+
+## AQ-BC-ATLAS-002 — Mobile Encyclopedia hides core species search behind discovery fold
+
+**Status:** `REGRESSION_VERIFIED` on RC1 via merged PR #124
+**Related Rules:** Post-P0 UI hierarchy; Interactive Atlas authority boundary
+**Observed behavior:** On the 390px final-RC1 visual baseline, the 560px Interactive Atlas occupied almost the entire first fold while the canonical `SearchAutocomplete` sat below it. The fixed Atlas toolbar used its limited secondary shortcut for Wishlist, even though Wishlist already had persistent Collection / 水族册 navigation. The core “find a species” task therefore required extra scrolling while a secondary collection task stayed first-fold.
+**Expected behavior:** Mobile Encyclopedia exposes a first-class Search action without duplicating search state. Tapping it moves directly to the existing canonical search toolbar and focuses its input. Atlas remains available as discovery, Wishlist remains reachable through Collection, and desktop Atlas layout is unchanged.
+**Root cause:** The Atlas re-entry optimized immersive exploration and authority separation, but the mobile IA kept the pre-audit shortcut allocation; no regression asserted that the primary species-finding task remained immediately reachable when the Atlas occupied the first fold.
+**Regression:** Fail-before commit `98e91b8` proves the mobile toolbar lacked a Search action. `scripts/test-mobile-encyclopedia-entry-contract.mjs` protects search ownership and prevents Wishlist from displacing it. `scripts/verify-interactive-atlas-detail-v2.mjs` verifies 390px Search scroll/focus plus the existing 390/900/1600 Atlas interaction chain. #124 candidate passed 11/11 triggered workflows; exact merged RC1 `cf63e7f` passed 15/15 P0 + release checks.
