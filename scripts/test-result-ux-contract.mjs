@@ -68,7 +68,12 @@ assert(speciesDetail.includes('testId="species-detail-decision"'), 'Species Deta
 assert(speciesDetail.includes('data-species-detail-decision-result'), 'Species Detail needs a stable fit-decision wrapper selector');
 assert(speciesDetail.includes('title={displayFit.title}'), 'Species Detail decision hero must come from the tank-fit conclusion, not the species title');
 assert(speciesDetail.includes("summary={aquariumContext ? displayFit.conclusion : t('encyclopedia.conclusionNoTank')}"), 'Species Detail must preserve the contextual fit summary');
-assert(speciesDetail.includes('evidence={verdictReasons.map(reason => `${reason.label} · ${reason.text}`)}'), 'Species Detail key reasons must move behind shared progressive disclosure');
+assert(speciesDetail.includes('watchFor={canonicalDecisionEvidence.watch}'), 'Species Detail watch guidance must come from canonical Compatibility evidence');
+assert(speciesDetail.includes('avoid={canonicalDecisionEvidence.avoid}'), 'Species Detail avoid guidance must come from canonical Compatibility blocking rules');
+assert(speciesDetail.includes('evidence={canonicalDecisionEvidence.evidence}'), 'Species Detail canonical reasons must remain behind shared progressive disclosure');
+assert(speciesDetail.includes('compatibilityResult.warningRules') && speciesDetail.includes('compatibilityResult.blockingRules') && speciesDetail.includes('compatibilityResult.missingData') && speciesDetail.includes('compatibilityResult.passedRules'), 'Species Detail explanation must be assembled from canonical Compatibility rule buckets');
+assert(!speciesDetail.includes('verdictReasons'), 'Legacy heuristic verdictReasons must stay removed from Species Detail decision evidence');
+assert(speciesDetail.includes('data-species-fit-reference'), 'Local fit metrics must remain explicitly reference-only context');
 assert(!speciesDetail.includes("aria-label={isEn ? 'Key reasons' : '关键原因'}"), 'Legacy always-visible Species Detail reasons must stay removed');
 assert((speciesDetail.match(/data-species-detail-primary-action/g) || []).length === 1, 'Species Detail must expose exactly one stable primary CTA selector');
 assert(speciesDetail.includes('data-species-detail-edit-tank-record'), 'Aquarium-owned Species Detail must preserve the tank-record edit action');
