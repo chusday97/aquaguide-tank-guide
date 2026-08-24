@@ -80,6 +80,7 @@
     "test:three-tier-contract": "node --import tsx scripts/test-three-tier-contract.ts",
     "test:api-boundary": "node --import tsx scripts/test-api-boundary.ts",
     "test:business-api-contract": "node --import tsx scripts/test-business-api-contract.ts",
+    "test:vercel-business-api-esm": "node scripts/test-vercel-business-api-esm.mjs",
     "test:species-batches": "node --import tsx scripts/test-species-batches.ts",
     "test:aquarium-creation-semantics": "node --import tsx scripts/test-aquarium-creation-semantics.ts",
     "test:aquarium-factual-flow": "node scripts/verify-aquarium-factual-flow.mjs",

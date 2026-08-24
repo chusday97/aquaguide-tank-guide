@@ -63,6 +63,9 @@ jobs:
       - name: API type check
         run: npm run check:api
 
+      - name: Vercel Business API ESM contract
+        run: npm run test:vercel-business-api-esm
+
       - name: Type check
         run: npm run lint
 

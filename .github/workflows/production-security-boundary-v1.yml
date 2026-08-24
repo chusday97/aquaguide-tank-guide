@@ -16,7 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: agent/result-ux-v1
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate head checkout
+        shell: bash
+        run: |
+          expected="${{ github.event.pull_request.head.sha }}"
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$expected"
 
       - uses: actions/setup-node@v4
         with:
@@ -40,3 +47,6 @@ jobs:
 
       - name: Business API contract
         run: npm run test:business-api-contract
+
+      - name: Vercel Business API ESM contract
+        run: npm run test:vercel-business-api-esm
