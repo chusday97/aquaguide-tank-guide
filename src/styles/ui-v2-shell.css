@@ -19,7 +19,7 @@
  * utility classes requested something smaller. */
 .desktop-sidebar button,
 .phone-shell-active > nav button,
-.phone-shell-active header button {
+.phone-shell-active header[data-shell="mobile-header"] button {
   min-width: 44px;
   min-height: 44px;
   font-family: var(--font-ui);
@@ -30,7 +30,7 @@
 
 .desktop-sidebar button:focus-visible,
 .phone-shell-active > nav button:focus-visible,
-.phone-shell-active header button:focus-visible {
+.phone-shell-active header[data-shell="mobile-header"] button:focus-visible {
   box-shadow: 0 0 0 3px var(--shell-focus);
 }
 
@@ -117,7 +117,7 @@
 /* Search / camera / settings / sidebar collapse are icon actions: same geometry, quiet
  * default surface, stronger hover/focus only when the user approaches them. */
 .desktop-sidebar button[aria-label],
-.phone-shell-active header button[aria-label] {
+.phone-shell-active header[data-shell="mobile-header"] button[aria-label] {
   border: 1px solid transparent;
   border-radius: var(--ui-radius-control) !important;
   background: transparent;
@@ -126,7 +126,7 @@
 }
 
 .desktop-sidebar button[aria-label]:hover,
-.phone-shell-active header button[aria-label]:hover {
+.phone-shell-active header[data-shell="mobile-header"] button[aria-label]:hover {
   border-color: rgba(27, 77, 62, 0.08);
   background: var(--shell-active-soft) !important;
   color: #166247 !important;
@@ -155,7 +155,7 @@
   box-shadow: none !important;
 }
 
-.phone-shell-active header {
+.phone-shell-active header[data-shell="mobile-header"] {
   min-height: calc(60px + env(safe-area-inset-top));
   gap: 4px !important;
   padding-inline: 12px !important;
@@ -164,7 +164,7 @@
   box-shadow: 0 5px 18px rgba(20, 61, 49, 0.035);
 }
 
-.phone-shell-active header button {
+.phone-shell-active header[data-shell="mobile-header"] button {
   width: 44px !important;
   height: 44px !important;
   border-radius: var(--ui-radius-control) !important;
@@ -268,7 +268,7 @@
 @media (prefers-reduced-motion: reduce) {
   .desktop-sidebar nav button,
   .phone-shell-active > nav button,
-  .phone-shell-active header button {
+  .phone-shell-active header[data-shell="mobile-header"] button {
     transition: none;
   }
 
