@@ -21,6 +21,13 @@ try {
 
   const topControls = await toolbar.locator('button').count();
   assert.equal(topControls, 5, 'Encyclopedia toolbar should expose two modes plus Search, Photo ID, and Settings');
+  const modeButtons = toolbar.locator('div.grid button');
+  for (let index = 0; index < 2; index += 1) {
+    const box = await modeButtons.nth(index).boundingBox();
+    assert.ok(box && box.width >= 70, `mode button ${index} must stay readable at 390px`);
+  }
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  assert.ok(overflow <= 1, `Encyclopedia toolbar must not introduce horizontal overflow (delta=${overflow})`);
 
   await page.goto(`${baseUrl}/care`, { waitUntil: 'networkidle' });
   const shell = page.locator('[data-shell="mobile-header"]');
