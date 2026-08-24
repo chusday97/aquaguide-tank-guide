@@ -2,9 +2,9 @@
 
 **Updated:** 2026-08-24
 **Repository:** `chusday97/aquaguide-tank-guide`
-**RC1 runtime baseline:** `integration/aquaguide-rc1` runtime head `cf63e7f82da0d26cbb94acb4680a20ee848c8ab8`
-**Active branch:** `agent/mobile-encyclopedia-context-sync-v1` — docs-only #124 landing sync
-**Phase:** `post-P0 UI/UX refinement / mobile Encyclopedia search landed`
+**RC1 runtime baseline:** `integration/aquaguide-rc1` runtime head `80985ca27d7b21df4bc0062e7765a1d5e9a96756`
+**Active branch:** `agent/uiux-identify-header-context-sync-v1` — docs-only #126 landing sync
+**Phase:** `post-P0 UI/UX refinement / mobile shell header scope repaired`
 **Release boundary:** no RC1→`main` merge and no production deployment without separate explicit authorization.
 
 ## Current Product Truth
@@ -22,19 +22,19 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 ## Repository Acceptance
 
 - P0 decision-layer stack #113→#120 is landed in RC1.
-- Interactive Atlas refreshed re-entry #122 is landed; old #112 is closed superseded and was never merged.
-- Mobile Encyclopedia search hierarchy repair #124 is landed in RC1.
-- Current runtime head `cf63e7f` passed **15/15** exact-head GitHub checks.
-- P0 gates PASS: Compatibility `32656473719`, Tank State `32656473746`, Tank Evidence `32656473727`, Existing Tank `32656474634`, Water Change `32656473724`, Whole-Tank `32656473735`.
-- Release/UI matrix PASS: RC1 Release `32656473713`, Product Golden `32656473751`, UI Interaction `32656473716`, UI UX System `32656473765`, UI UX Visual QA `32656473797`, UI UX Golden V3 `32656473758`, UI V2 Aquarium `32656473810`, Navigation `32656473748`, Bundle Audit `32656473715`.
+- Interactive Atlas #122, mobile Encyclopedia Search #124, and mobile shell-header scope repair #126 are landed in RC1.
+- Old Atlas #112 is closed superseded and was never merged.
+- Current runtime head `80985ca` passed **15/15** exact-head GitHub checks.
+- P0 gates PASS: Compatibility `32695640422`, Tank State `32695640283`, Tank Evidence `32695640241`, Existing Tank `32695640353`, Water Change `32695640274`, Whole-Tank `32695640299`.
+- Release/UI matrix PASS: RC1 Release `32695640335`, Product Golden `32695640359`, UI Interaction `32695640281`, UI UX System `32695640349`, UI UX Visual QA `32695640304`, UI UX Golden V3 `32695640360`, UI V2 Aquarium `32695640294`, Navigation `32695640362`, Bundle Audit `32695640329`.
 
 ## UI/UX Status
 
-- `AQ-BC-ATLAS-001` remains regression-verified: Atlas random 3D co-display is visual-only, species tank-size/water-change values are references, Compatibility is explicit secondary intent, and the mobile detail close control is viewport-safe.
-- `AQ-BC-ATLAS-002` is regression-verified via #124: on mobile, species Search is now a first-class top-toolbar action; it scrolls to and focuses the existing canonical SearchAutocomplete instead of creating duplicate search state.
-- Wishlist remains reachable through persistent Collection / 水族册 navigation and no longer competes with the core “find a species” action in the mobile Atlas toolbar.
-- Desktop Interactive Atlas presentation remains unchanged.
-- Care and Search first-fold visual baselines are currently comparatively clear; no broad redesign is justified without new browser evidence.
+- `AQ-BC-ATLAS-001` and `AQ-BC-ATLAS-002` remain regression-verified on RC1.
+- `AQ-BC-UI-HEADER-001` is regression-verified via #126: persistent mobile-shell header CSS is scoped to `header[data-shell="mobile-header"]`; arbitrary page headers no longer inherit 44×44 icon-button geometry or shell chrome.
+- Identify 390px back action is content-fit (132×40 in regression evidence), single-line, and separated from the page title; 390/900/1600 regression is permanent in UI UX System.
+- The Collection 390 golden reference was migrated only after runner artifact review proved the old baseline preserved the same shell-scope bug; tolerance stayed unchanged and the other seven golden cases were untouched.
+- Aquarium configured-returning-user first fold is task-first with no persistent return-context/onboarding competition; Care, Search, and Collection currently have no browser evidence justifying broad IA redesign.
 
 ## Known Bounded Gaps
 
@@ -45,8 +45,8 @@ Static temperament, generic tank-size guidance, pairwise planning verdicts, heur
 
 ## Next Execution Order
 
-1. Audit Aquarium first-fold competition on current RC1, specifically return-context affordance + onboarding strip + Today Action for already-configured returning users.
-2. Distinguish legitimate one-time onboarding from persistent task competition using real 390/1600 browser fixtures before changing layout.
-3. Continue cross-route Encyclopedia/Care/Collection/Search/Identify IA review only where browser/visual evidence shows real friction.
+1. Continue evidence-driven cross-route UI/UX audit from current RC1; do not redesign Aquarium/Care/Search/Collection without a reproducible browser or interaction badcase.
+2. Prioritize remaining real responsive/navigation defects, especially shared-shell selectors or duplicated task-entry semantics that can affect multiple routes.
+3. Keep 390 / 900 / 1600 geometry and full responsive-route scans as the acceptance floor for cross-route UI changes.
 4. Keep all UI work consuming the landed Planning Compatibility / Current Tank State / Water Change authorities; do not recreate page-level heuristics.
 5. Do not merge RC1 to `main` and do not deploy production without separate explicit authorization.
