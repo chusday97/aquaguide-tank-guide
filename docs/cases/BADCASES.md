@@ -159,3 +159,14 @@ Historical entries in `BADCASE_LATEST.md`, evaluation fixtures and older Handoff
 **Expected behavior:** Persistent shell styles apply only to the actual mobile utility header. Page headers keep their own content-fit geometry; the Identify back action remains a readable single-line text action with a valid touch target and no title overlap.
 **Root cause:** `ui-v2-shell.css` used `.phone-shell-active header...` selectors even though the true persistent header already exposed `data-shell="mobile-header"`. The selector therefore treated arbitrary nested page headers as shell UI.
 **Regression:** Fail-before commit `de5bc96` captures the broad-selector bug. `scripts/test-mobile-shell-header-scope.mjs` forbids arbitrary page-header ownership, and `scripts/verify-identify-mobile-header.mjs` verifies Identify geometry at 390/900/1600. The fix scopes shell rules to `header[data-shell="mobile-header"]`. The 390px back action changed from 44×44 to 132×40 with button bottom y=56 before title top y=64. The Collection 390 golden reference was migrated from GitHub runner evidence without relaxing its 0.3% threshold; final #126 head passed 17/17 PR workflows and exact merged RC1 `80985ca` passed 15/15 P0 + release checks.
+
+---
+
+## AQ-BC-UI-TOOLBAR-001 — Mobile Encyclopedia keeps an obscured global toolbar in the tab order
+
+**Status:** `REGRESSION_VERIFIED` on RC1 via merged PR #128
+**Related Rules:** Post-P0 UI hierarchy / route-level toolbar ownership; responsive accessibility consistency
+**Observed behavior:** At 390px, `/encyclopedia` rendered the global mobile shell header at y=0–61 and the Atlas toolbar at y=0–64 with z-index 60. The Atlas toolbar visually covered the shell, but the shell Search / Photo ID / Settings buttons stayed focusable. Search and Photo ID therefore existed twice, while invisible Settings remained the third keyboard Tab stop.
+**Expected behavior:** A mobile route has one visible top-toolbar owner. Encyclopedia exposes Browse / Compatibility plus Search / Photo ID / Settings in its visible Atlas toolbar; no obscured global utility controls remain in the DOM or keyboard order. Other routes keep the normal global utility header.
+**Root cause:** Interactive Atlas introduced a route-specific fixed toolbar, but `MobileAppShell` still rendered its global mobile header for `/encyclopedia`. Visual z-index hid the duplicate instead of transferring ownership.
+**Regression:** Fail-before commit `c800ec6` captures the duplicate-toolbar source and browser failures. `scripts/test-mobile-encyclopedia-toolbar-ownership.mjs` protects route ownership, while `scripts/verify-mobile-encyclopedia-toolbar-ownership.mjs` verifies no hidden global header, five visible top actions, >=44px utility targets, readable 390px mode buttons, no horizontal overflow, and preservation of the normal global header on `/care`. Final #128 head passed 17/17 PR workflows; exact merged RC1 `1bf6c015` passed 15/15 P0 + release checks.
