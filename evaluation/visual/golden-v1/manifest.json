@@ -142,6 +142,13 @@
         "thumbWidth": 128,
         "thumbHeight": 277,
         "signatureFile": "collection-phone-390.sig"
+      },
+      "referenceMigration": {
+        "badcase": "AQ-BC-UI-HEADER-001",
+        "reason": "Mobile shell header styles are now scoped to the persistent data-shell mobile header; CollectionHub page headers no longer inherit shell chrome.",
+        "goldenFailureRunId": 32694686511,
+        "visualArtifactId": 9508448350,
+        "capturedHead": "f09ece0b9075ff201079209680205751ed8b7f41"
       }
     },
     {
