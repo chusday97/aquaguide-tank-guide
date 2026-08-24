@@ -26,6 +26,7 @@ on:
       - 'scripts/test-mobile-encyclopedia-toolbar-ownership.mjs'
       - 'scripts/verify-mobile-encyclopedia-toolbar-ownership.mjs'
       - 'scripts/test-species-detail-authority-presentation.mjs'
+      - 'scripts/test-result-ux-workflow-head-integrity.mjs'
       - 'scripts/verify-species-detail-authority-presentation.mjs'
       - 'scripts/verify-encyclopedia-risk-navigation.mjs'
       - 'scripts/verify-search-show-all-v2.mjs'
@@ -33,6 +34,7 @@ on:
       - 'scripts/verify-golden-path-collection-context.mjs'
       - 'scripts/verify-responsive-route-scan.mjs'
       - '.github/workflows/uiux-system-refactor-v1.yml'
+      - '.github/workflows/result-ux-v1.yml'
 
 permissions:
   contents: read
@@ -59,6 +61,7 @@ jobs:
           npm run test:mobile-shell-header-scope
           npm run test:mobile-encyclopedia-toolbar-ownership
           node scripts/test-species-detail-authority-presentation.mjs
+          node scripts/test-result-ux-workflow-head-integrity.mjs
       - name: Type check
         run: npm run lint
       - name: Build
