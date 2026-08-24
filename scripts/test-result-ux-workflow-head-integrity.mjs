@@ -13,6 +13,11 @@ assert.ok(
   'Result UX checkout must bind to the current pull-request head SHA',
 );
 assert.ok(
+  workflow.includes('EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}')
+    && workflow.includes('git rev-parse HEAD'),
+  'Result UX must verify the checked-out commit matches the current pull-request head SHA',
+);
+assert.ok(
   workflow.includes('      - main') && workflow.includes('      - integration/aquaguide-rc1'),
   'Result UX must protect both main-bound release PRs and RC1-bound candidate PRs',
 );
