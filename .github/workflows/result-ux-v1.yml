@@ -3,7 +3,7 @@ name: Result UX V1
 on:
   pull_request:
     branches:
-      - agent/uiux-system-refactor-v1
+      - main
       - integration/aquaguide-rc1
 
 permissions:
@@ -16,7 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: agent/result-ux-v1
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate head checkout
+        env:
+          EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
 
       - uses: actions/setup-node@v4
         with:
