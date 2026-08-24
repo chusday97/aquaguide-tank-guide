@@ -42,6 +42,8 @@
     "test:identify-flow-separation": "node scripts/verify-identify-flow-separation.mjs",
     "test:mobile-shell-header-scope": "node scripts/test-mobile-shell-header-scope.mjs",
     "test:identify-mobile-header": "node scripts/verify-identify-mobile-header.mjs",
+    "test:mobile-encyclopedia-toolbar-ownership": "node scripts/test-mobile-encyclopedia-toolbar-ownership.mjs",
+    "test:mobile-encyclopedia-toolbar-browser": "node scripts/verify-mobile-encyclopedia-toolbar-ownership.mjs",
     "test:identify-triage-separation": "node scripts/verify-identification-triage-separation.mjs",
     "test:session-events": "tsx scripts/test-session-events.ts",
     "test:onboarding-goal-paths": "tsx scripts/test-onboarding-goal-paths.ts",
