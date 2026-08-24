@@ -318,8 +318,6 @@ const buildCandidate = (
   if (compatibility.status === 'compatible' && risks.length === 0 && requiredAdjustments.length === 0) status = 'direct';
   if (compatibility.status === 'caution' || compatibility.status === 'insufficient_data' || (compatibility.status === 'compatible' && (risks.length > 0 || requiredAdjustments.length > 0))) status = 'adjustable';
   if (compatibility.status === 'not_recommended') status = 'blocked';
-  if (profile.load.loadRate >= TANK_LOAD_THRESHOLDS.nearLimit) status = 'blocked';
-  if (minGroup > recommendedQuantity && minGroup > 1) status = 'blocked';
 
   const currentFishes = aquarium.fishes.map(item => speciesPool.find(species => species.id === item.fishId)).filter(Boolean) as Fish[];
   return {
@@ -604,32 +602,26 @@ export const recommendationService = {
     const direct = sortCandidates(rawCandidates.filter(item => item.status === 'direct')).slice(0, RECOMMENDATION_LIMITS.direct);
     const adjustable = sortCandidates(rawCandidates.filter(item => item.status === 'adjustable')).slice(0, RECOMMENDATION_LIMITS.adjustable);
     const blocked = sortCandidates(rawCandidates.filter(item => item.status === 'blocked')).slice(0, RECOMMENDATION_LIMITS.blocked);
-    const loadBlocked = profile.load.loadRate >= TANK_LOAD_THRESHOLDS.nearLimit;
-    const blockedSummary = [
-      loadBlocked && '当前鱼缸已接近建议承载上限，暂不建议继续增加生物。',
-      ...blocked.slice(0, 4).map(item => `${item.name}：${item.risks[0] || item.requiredAdjustments[0] || '不满足当前鱼缸条件'}`),
-    ].filter(Boolean) as string[];
-    const safeDirect = loadBlocked ? [] : direct;
+    const blockedSummary = blocked.slice(0, 4)
+      .map(item => `${item.name}：${item.risks[0] || item.requiredAdjustments[0] || '不满足当前鱼缸条件'}`);
 
     return {
       mode,
       profile,
-      direct: safeDirect,
-      adjustable: loadBlocked ? [] : adjustable,
+      direct,
+      adjustable,
       blocked,
       emptyPlans: mode === 'empty_tank' && infoRequests.length === 0
-        ? buildEmptyTankPlans(safeDirect.length ? safeDirect : adjustable, input.speciesPool, profile)
+        ? buildEmptyTankPlans(direct.length ? direct : adjustable, input.speciesPool, profile)
         : [],
       blockedSummary,
       needsMoreInfo: infoRequests.length > 0,
       infoRequests,
-      localSummary: loadBlocked
-        ? '当前鱼缸负载偏高，系统暂不建议继续增加生物。'
-        : safeDirect.length > 0
-          ? `找到 ${safeDirect.length} 个可直接加入候选，建议先少量分批添加。`
-          : adjustable.length > 0
-            ? '当前没有完全直加候选，但有一些调整后可考虑的生物。'
-            : '当前信息或条件不足，暂未找到合适候选。',
+      localSummary: direct.length > 0
+        ? `找到 ${direct.length} 个可直接加入候选，建议先少量分批添加。`
+        : adjustable.length > 0
+          ? '当前没有完全直加候选，但有一些调整后可考虑的生物。'
+          : '当前信息或条件不足，暂未找到合适候选。',
     };
   },
 
