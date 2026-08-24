@@ -1,16 +1,17 @@
 # AquaGuide — Latest Progress
 
-**Updated:** 2026-08-23
-**Branch:** `agent/p0-compatibility-evidence-provenance-v1`
-**PR:** #120 `Repair Compatibility evidence provenance V1`
-**Base:** `agent/p0-whole-tank-feasibility-v2` (#119)
-**Current RC1 head:** `5e605fb7a68001ecd80096ef42f063909cf5aa03`
+**Updated:** 2026-08-24
+**Branch:** `agent/mobile-encyclopedia-context-sync-v1`
+**PR:** #124 `Surface mobile Encyclopedia search` — merged to RC1
+**Base:** `integration/aquaguide-rc1`
+**Current RC1 runtime head:** `cf63e7f82da0d26cbb94acb4680a20ee848c8ab8`
 
 ## Current phase
 
-**P0 decision-layer consolidation is active: #114 Compatibility → #115 Tank State → #116 Tank Evidence → #117 Existing Tank Authority → #118 Water Change Authority → #119 Whole-Tank Feasibility V2 → #120 Evidence Provenance V1. #120 is Draft and awaiting permanent gates.**
+**Post-P0 UI/UX refinement is active. #124 mobile Encyclopedia search hierarchy is landed and exact RC1 acceptance is 15/15 PASS.**
 
-No P0 stack merge to RC1, no merge to `main`, and no production deployment has been performed.
+P0 decision authorities remain landed and unchanged. RC1→`main` and production deployment remain separately blocked pending explicit authorization.
+
 
 ## Stack convergence
 
@@ -295,3 +296,15 @@ Still open before production:
 - Exact merged RC1 release matrix PASS: RC1 Release Acceptance `32653084047`, Product Golden `32653083913`, UI Interaction `32653084003`, UI UX System `32653084112`, UI UX Visual QA `32653084006`, UI UX Golden V3 `32653084133`, UI V2 Aquarium `32653084060`, Navigation `32653084051`, Bundle Audit `32653083984`.
 - Result: **15/15 PASS** on Atlas runtime head. `AQ-BC-ATLAS-001` is regression-verified on RC1. No RC1→main merge or production deployment performed.
 - Next phase: continue UI/UX refinement from current RC1 while preserving the landed decision authorities.
+
+## 2026-08-24 — Mobile Encyclopedia search hierarchy
+
+- Final RC1 visual audit showed the 390px Encyclopedia core SearchAutocomplete below the 560px Interactive Atlas while Wishlist occupied a scarce fixed-toolbar shortcut.
+- Fail-before commit `98e91b8` captured the missing first-class mobile Search action.
+- #124 replaced the toolbar Wishlist shortcut with Search; the action scrolls to and focuses the existing canonical search input, with no duplicate search state.
+- Wishlist remains available through persistent Collection / 水族册 navigation; desktop Atlas presentation and all decision authorities are unchanged.
+- #124 final candidate `66a9ab406043436fd4b024a3e65e75dde690eb7d` passed 11/11 triggered PR workflows, including Atlas authority, mobile-entry contract, P0 boundaries, TypeScript/build, 390/900/1600 browser regression, Visual QA, Navigation and UI System.
+- #124 merged to RC1 with a normal merge commit; runtime head became `cf63e7f82da0d26cbb94acb4680a20ee848c8ab8`.
+- Exact merged RC1 result: **15/15 PASS**. P0: Compatibility `32656473719`, Tank State `32656473746`, Tank Evidence `32656473727`, Existing Tank `32656474634`, Water Change `32656473724`, Whole-Tank `32656473735`. Release/UI: RC1 Release `32656473713`, Product Golden `32656473751`, UI Interaction `32656473716`, UI UX System `32656473765`, UI UX Visual QA `32656473797`, UI UX Golden V3 `32656473758`, UI V2 Aquarium `32656473810`, Navigation `32656473748`, Bundle `32656473715`.
+- `AQ-BC-ATLAS-002` is regression-verified on RC1. Next audit target is Aquarium first-fold competition for configured returning users.
+- No RC1→main merge or production deployment was performed.
