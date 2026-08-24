@@ -1,5 +1,5 @@
-import { createApiApp } from './app';
-import { apiConfig } from './config';
+import { createApiApp } from './app.js';
+import { apiConfig } from './config.js';
 
 const app = createApiApp();
 

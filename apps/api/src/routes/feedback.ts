@@ -3,12 +3,12 @@ import {
   feedbackCreateSchema,
   feedbackStatusUpdateSchema,
   uuidSchema,
-} from '../../../../packages/contracts/src/index';
-import { camelize, throwDatabaseError } from '../data-utils';
-import { FeedbackRateLimiter } from '../feedback-rate-limit';
-import { ApiError, asyncRoute, sendData } from '../http';
-import { getAdminSupabase } from '../supabase';
-import { sendFeedbackEmail } from '../email/feedback-email';
+} from '../../../../packages/contracts/src/index.js';
+import { camelize, throwDatabaseError } from '../data-utils.js';
+import { FeedbackRateLimiter } from '../feedback-rate-limit.js';
+import { ApiError, asyncRoute, sendData } from '../http.js';
+import { getAdminSupabase } from '../supabase.js';
+import { sendFeedbackEmail } from '../email/feedback-email.js';
 
 const HOUR_MS = 60 * 60 * 1000;
 const MAX_SUBMISSIONS_PER_HOUR = 5;

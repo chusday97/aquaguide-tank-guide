@@ -1,4 +1,4 @@
-import type { TankObservationCode } from './tank-state';
+import type { TankObservationCode } from './tank-state.js';
 
 export type WaterChangeScheduleStatus = 'unknown' | 'complete' | 'not_due' | 'due' | 'overdue';
 export type WaterChangeAction = 'none' | 'record_water_change' | 'check_water_quality';

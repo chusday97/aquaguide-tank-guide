@@ -5,7 +5,7 @@ import type {
   SpeciesDiagnosisStepInput,
   SpeciesDiagnosisStepOutput,
   SymptomObservation,
-} from '../../contracts/src/species-diagnosis';
+} from '../../contracts/src/species-diagnosis.js';
 
 type QuestionDefinition = DiagnosticFollowUpQuestion & {
   distinguishes: string[];

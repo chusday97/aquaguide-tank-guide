@@ -1,5 +1,5 @@
-import { throwDatabaseError } from './data-utils';
-import { ApiError } from './http';
+import { throwDatabaseError } from './data-utils.js';
+import { ApiError } from './http.js';
 
 type DatabaseError = { code?: string; message?: string } | null;
 
