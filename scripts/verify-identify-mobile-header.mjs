@@ -18,10 +18,14 @@ try {
       const button = header?.querySelector('button');
       const heading = header?.querySelector('h1');
       const b = button?.getBoundingClientRect(); const h = heading?.getBoundingClientRect();
-      return { width: b?.width ?? 0, bottom: b?.bottom ?? 0, titleTop: h?.top ?? 0, whiteSpace: button ? getComputedStyle(button).whiteSpace : '' };
+      const textNode = button ? [...button.childNodes].find(node => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) : null;
+      const range = textNode ? document.createRange() : null;
+      if (range && textNode) range.selectNodeContents(textNode);
+      return { width: b?.width ?? 0, height: b?.height ?? 0, bottom: b?.bottom ?? 0, titleTop: h?.top ?? 0, textLines: range ? range.getClientRects().length : 0 };
     });
     assert.ok(result.width >= 96, `${width}px back label must have text width; got ${result.width}`);
-    assert.equal(result.whiteSpace, 'nowrap', `${width}px back label must stay on one line`);
+    assert.ok(result.height <= 44, `${width}px back action must keep single-line control height; got ${result.height}`);
+    assert.equal(result.textLines, 1, `${width}px back label must render on one line`);
     assert.ok(result.bottom <= result.titleTop, `${width}px back button must not overlap title`);
     await page.close();
   }
