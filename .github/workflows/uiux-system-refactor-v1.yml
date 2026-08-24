@@ -12,6 +12,7 @@ on:
       - 'src/pages/Aquarium.tsx'
       - 'src/pages/Encyclopedia*.tsx'
       - 'src/pages/Search.tsx'
+      - 'src/pages/Identify.tsx'
       - 'src/pages/CollectionHub.tsx'
       - 'src/pages/Collection.tsx'
       - 'src/styles/**'
@@ -20,6 +21,8 @@ on:
       - 'scripts/test-typography-system.mjs'
       - 'scripts/test-collection-swipe-cards.mjs'
       - 'scripts/test-uiux-system-contract.mjs'
+      - 'scripts/test-mobile-shell-header-scope.mjs'
+      - 'scripts/verify-identify-mobile-header.mjs'
       - 'scripts/verify-encyclopedia-risk-navigation.mjs'
       - 'scripts/verify-search-show-all-v2.mjs'
       - 'scripts/verify-collection-hub-previews.mjs'
@@ -49,6 +52,7 @@ jobs:
           npm run test:interaction-consistency
           npm run test:collection-swipe-cards
           node scripts/test-uiux-system-contract.mjs
+          npm run test:mobile-shell-header-scope
       - name: Type check
         run: npm run lint
       - name: Build
@@ -80,6 +84,10 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
         run: node scripts/verify-golden-path-collection-context.mjs
+      - name: Identify mobile header regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: npm run test:identify-mobile-header
       - name: Full responsive route scan
         env:
           PREVIEW_URL: http://127.0.0.1:4173
