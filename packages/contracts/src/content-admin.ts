@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuidSchema, versionSchema } from './business';
+import { uuidSchema, versionSchema } from './business.js';
 
 export const speciesAdminInputSchema = z.object({
   catalogKey: z.string().trim().min(1).max(160).regex(/^[\w.-]+$/),

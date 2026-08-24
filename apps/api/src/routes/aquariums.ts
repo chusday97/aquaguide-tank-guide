@@ -15,8 +15,8 @@ import {
   aquariumUpdateSchema,
   uuidSchema,
   versionSchema,
-} from '../../../../packages/contracts/src/index';
-import { requireAuth } from '../auth';
+} from '../../../../packages/contracts/src/index.js';
+import { requireAuth } from '../auth.js';
 import {
   authenticatedRequest,
   beginIdempotentWrite,
@@ -29,10 +29,10 @@ import {
   throwDatabaseError,
   throwMissingOrVersionConflict,
   userClientFor,
-} from '../data-utils';
-import { ApiError, asyncRoute, sendData } from '../http';
-import { resolveLivestockMemorialReplay } from '../livestock-memorial-replay';
-import { throwLivestockAdditionRpcError } from '../livestock-addition-error';
+} from '../data-utils.js';
+import { ApiError, asyncRoute, sendData } from '../http.js';
+import { resolveLivestockMemorialReplay } from '../livestock-memorial-replay.js';
+import { throwLivestockAdditionRpcError } from '../livestock-addition-error.js';
 
 type DbRow = Record<string, any>;
 

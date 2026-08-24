@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import type { User } from '@supabase/supabase-js';
-import { ApiError, type ApiRequest } from './http';
-import { getUserSupabase } from './supabase';
+import { ApiError, type ApiRequest } from './http.js';
+import { getUserSupabase } from './supabase.js';
 
 export type AuthenticatedRequest = ApiRequest & {
   accessToken: string;

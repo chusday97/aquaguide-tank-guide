@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { supportedLocaleSchema } from './localization';
+import { supportedLocaleSchema } from './localization.js';
 
 const recognitionCatalogKeySchema = z.string().trim().min(1).max(160).regex(/^[\w.-]+$/);
 

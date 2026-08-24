@@ -1,6 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import { apiConfig, isBusinessDatabaseConfigured } from './config';
-import { ApiError } from './http';
+import { apiConfig, isBusinessDatabaseConfigured } from './config.js';
+import { ApiError } from './http.js';
 
 let publicClient: SupabaseClient | null = null;
 

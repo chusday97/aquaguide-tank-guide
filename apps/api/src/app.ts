@@ -1,7 +1,7 @@
 import express from 'express';
-import { apiConfig } from './config';
-import { apiErrorHandler, notFoundHandler, requestIdMiddleware } from './http';
-import { v1Router } from './routes/index';
+import { apiConfig } from './config.js';
+import { apiErrorHandler, notFoundHandler, requestIdMiddleware } from './http.js';
+import { v1Router } from './routes/index.js';
 
 const isConfiguredApiKey = (apiKey: string | undefined) => Boolean(
   apiKey

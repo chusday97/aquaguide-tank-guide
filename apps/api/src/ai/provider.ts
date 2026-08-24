@@ -1,4 +1,4 @@
-import { apiConfig } from '../config';
+import { apiConfig } from '../config.js';
 
 export type ProviderFailureReason = 'not_configured' | 'timeout' | 'network' | 'invalid_response';
 

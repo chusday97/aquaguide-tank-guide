@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { AuthenticatedRequest } from './auth';
-import { ApiError, type ApiRequest } from './http';
-import { getUserSupabase } from './supabase';
+import type { AuthenticatedRequest } from './auth.js';
+import { ApiError, type ApiRequest } from './http.js';
+import { getUserSupabase } from './supabase.js';
 
 type UnknownRecord = Record<string, unknown>;
 

@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
-import type { ApiErrorCode, ApiFailure, ApiSuccess } from '../../../packages/contracts/src/index';
+import type { ApiErrorCode, ApiFailure, ApiSuccess } from '../../../packages/contracts/src/index.js';
 
 export type ApiRequest = Request & { requestId?: string };
 

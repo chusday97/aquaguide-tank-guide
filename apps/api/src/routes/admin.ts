@@ -9,8 +9,8 @@ import {
   speciesAdminInputSchema,
   speciesAdminUpdateSchema,
   uuidSchema,
-} from '../../../../packages/contracts/src/index';
-import { requireAdmin, requireAuth } from '../auth';
+} from '../../../../packages/contracts/src/index.js';
+import { requireAdmin, requireAuth } from '../auth.js';
 import {
   beginIdempotentWrite,
   camelize,
@@ -20,10 +20,10 @@ import {
   snakeize,
   throwDatabaseError,
   throwMissingOrVersionConflict,
-} from '../data-utils';
-import { ApiError, asyncRoute, sendData } from '../http';
-import { getAdminSupabase } from '../supabase';
-import { adminFeedbackRouter } from './feedback';
+} from '../data-utils.js';
+import { ApiError, asyncRoute, sendData } from '../http.js';
+import { getAdminSupabase } from '../supabase.js';
+import { adminFeedbackRouter } from './feedback.js';
 
 const supportedMimeTypes = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const originalExtension: Record<string, string> = {

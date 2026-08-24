@@ -5,8 +5,8 @@ import type {
   SpeciesDetailDto,
   SpeciesSummaryDto,
   SupportedLocale,
-} from '../../../packages/contracts/src/index';
-import { apiConfig } from './config';
+} from '../../../packages/contracts/src/index.js';
+import { apiConfig } from './config.js';
 
 type DbRow = Record<string, any>;
 

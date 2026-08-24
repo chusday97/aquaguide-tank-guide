@@ -4,9 +4,9 @@ import {
   aquariumShareReportCreateSchema,
   sanitizedAquariumReportSchema,
   uuidSchema,
-} from '../../../../packages/contracts/src/index';
-import { requireAuth } from '../auth';
-import { apiConfig } from '../config';
+} from '../../../../packages/contracts/src/index.js';
+import { requireAuth } from '../auth.js';
+import { apiConfig } from '../config.js';
 import {
   authenticatedRequest,
   camelize,
@@ -14,9 +14,9 @@ import {
   requireIdempotencyKey,
   throwDatabaseError,
   userClientFor,
-} from '../data-utils';
-import { ApiError, asyncRoute, sendData } from '../http';
-import { getAdminSupabase } from '../supabase';
+} from '../data-utils.js';
+import { ApiError, asyncRoute, sendData } from '../http.js';
+import { getAdminSupabase } from '../supabase.js';
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const TOKEN_PATTERN = /^[A-Za-z0-9_-]{43}$/;
