@@ -121,6 +121,7 @@
 
 ## 文档与验证
 
+- `.ai/`：AI 持久化目标、任务队列、AI 变更记录与执行日志。
 - `.project-journal/`：按工作区证据规则维护可追溯事件、证据索引、事实卡和证据缺口；职业材料仅使用 verified 结论。
 - `docs/05-validation/`：证据矩阵、产品假设、真人测试结果与 AI Evaluation 当前状态；严格区分自动测试、真实模型和真人证据。
 - `evaluation/`：47 个版本化 JSONL Case、Zod 契约、deterministic/mocked/live Runner、统一报告与 Badcase Registry。
