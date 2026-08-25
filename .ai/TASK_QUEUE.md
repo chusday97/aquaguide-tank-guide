@@ -10,6 +10,7 @@
 - [ ] 只迁入有产品规则、测试和受影响文件证据的 RC 业务能力。
 - [x] 创建唯一 RC 目标 PR，并将本地预览、PR head 和状态入口对齐。
 - [x] 新增 `npm run project:status` 与 RC 收敛 CI，防止状态入口和分支漂移；GitHub Actions run `32846848569` 已真实通过。
+- [x] 对 56 个 GitHub open PR 建立登记表；#141 为唯一收敛入口，其余 55 个只作历史输入。
 
 ## Release Gate
 

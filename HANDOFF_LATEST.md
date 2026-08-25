@@ -10,6 +10,7 @@
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
 - **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；它在 P0 业务迁移和验收完成前不得转为 Ready 或合并。
 - **GitHub 门禁：** `RC Convergence V1` 已在 Actions run `32846848569` 通过（状态、lint、视觉契约、build）；统一分支每次相关推送自动复验。
+- **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 已冻结 2026-08-25 的 56 个 open PR；除 #141 外均为历史输入而非收敛路径。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
 
 - 当前分支：`codex/unified-rc-visual-v1`

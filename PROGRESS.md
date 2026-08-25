@@ -4,6 +4,8 @@
 
 - 2026-08-25：统一分支 CI 门禁已在 GitHub Actions run `32846848569` 实跑通过，包含状态一致性、lint、布局/取景视觉契约和 production build。该门禁现随 `codex/unified-rc-visual-v1` 的相关推送自动执行。
 
+- 2026-08-25：已将 56 个 open PR 分类为一个当前收敛入口（Draft #141）与 55 个历史输入；详见 `.ai/OPEN_PR_REGISTRY.md`。本轮未关闭任何其他 PR，也不将它们直接合并。
+
 - 2026-08-25：补齐 `.ai/` 八文件、`AI_PROJECT_PROTOCOL.md` 和 `docs/CONTEXT_ROUTING.md`；未修改产品代码，未推送远端。本地提交为 `de906c2`。
 
 - 2026-08-25：初始化 `.ai/` 上下文文件，整理当前视觉一致性目标与待办；未修改产品代码，未推送远端。本地提交为 `106cf83`。

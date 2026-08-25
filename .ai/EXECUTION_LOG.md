@@ -34,3 +34,9 @@
 
 - Added the canonical branch push trigger to `RC Convergence V1`, because a PR-only workflow not present on the default branch does not provide a usable gate for this Draft PR.
 - GitHub Actions run `32846848569` passed: canonical-state check, lint, layout-mode contract, three-stage framing contract, and production build.
+
+## 2026-08-25 — Open PR topology archived
+
+- Queried 56 open GitHub PRs and recorded `.ai/OPEN_PR_REGISTRY.md`.
+- Designated #141 as the only active convergence entry; the other 55 PRs remain traceable historical inputs and are not direct merge sources.
+- No historical PR was closed or otherwise modified.
