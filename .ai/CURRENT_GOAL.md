@@ -20,4 +20,4 @@
 
 ## 当前状态
 
-`IN_PROGRESS` — 阶段 1 正在建立 `docs/PROJECT_TRUTH.md` 路由和产品/UI/部署三份权威事实。统一分支为 `codex/unified-rc-visual-v1`；PR #140 不是验收线。
+`IN_PROGRESS` — 阶段 1–3 已完成：canonical routing、历史证据降级和 4317 UI 验收矩阵均已落地。当前进入阶段 4，统一功能状态。统一分支为 `codex/unified-rc-visual-v1`；PR #140 不是验收线。

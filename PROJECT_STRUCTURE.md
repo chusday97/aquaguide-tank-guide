@@ -133,6 +133,7 @@
 - `docs/01-definition/PRODUCT_TRUTH.md`：当前产品承诺与模块状态；旧 `CURRENT_PRODUCT_STATUS.md` 只保留为历史快照。
 - `docs/02-design/VISUAL_BASELINE.md`：用户确认的 4317 视觉验收基线与 UI owner。
 - `docs/03-development/DEPLOYMENT_STATE.md`：本地、GitHub、CI、Supabase 和部署 parity 的分层状态。
+- `docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md`：正确 UI 基线与浏览器/人工验收证据的可执行对应表。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。
 - `docs/02-design/USER_PATH_REGISTRY.md`：正式入口、三步上限、返回上下文与空状态登记。

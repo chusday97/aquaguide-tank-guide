@@ -55,3 +55,8 @@
 
 - Added a historical-evidence registry and supersession headers for legacy progress, Handoff, UI audit and cloud-planning records.
 - No historical file was deleted; the change makes their evidence role explicit.
+
+## 2026-08-25 — Truth consolidation phase 3 started
+
+- Added `docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md` to connect the user-confirmed 4317 UI baseline to regression commands, routes and human-review status.
+- Verified the local baseline: layout 6/6, framing, UI governance, interactive scenes, persistent detail rail, and page runtime matrix 28/28 all passed.

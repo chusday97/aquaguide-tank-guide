@@ -14,9 +14,9 @@
 
 ## Eight-phase truth consolidation
 
-- [ ] Phase 1: 建立项目、产品、UI、部署的 canonical truth 文件与总入口。
-- [ ] Phase 2: 将冲突/重复文档降级为历史入口或改为链接，不删除证据。
-- [ ] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口。
+- [x] Phase 1: 建立项目、产品、UI、部署的 canonical truth 文件与总入口。
+- [x] Phase 2: 将冲突/重复文档降级为历史入口或改为链接，不删除证据。
+- [x] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口；2026-08-25 自动门禁通过。
 - [ ] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
 - [ ] Phase 5: 只读核对当前统一分支与已部署 Supabase/Vercel 的环境、schema 和 SHA parity。
 - [ ] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线。
