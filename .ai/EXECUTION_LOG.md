@@ -54,7 +54,7 @@
 - Added a read-only GitHub API check requiring exactly open PR #141 with the canonical head/base and expected SHA in CI; local runs explicitly skip only when no token is available.
 - Added `pull-requests: read` permission and `.ai/OPEN_PR_REGISTRY.md`, `.ai/RC_MIGRATION_LEDGER.md`, `.ai/TASK_QUEUE.md` workflow paths.
 - Split the module inventory into Care, Identification/health triage and Text AI rows to match the canonical Feature Catalog.
-- Critic's remaining six-dimension recheck is required before declaring this milestone complete.
+- Critic rechecked the same diff and passed all six dimensions; GitHub Actions `32853545889` passed the real read-only PR topology API check on `642b007b`.
 
 ## 2026-08-25 — Supabase deployment status corrected
 
