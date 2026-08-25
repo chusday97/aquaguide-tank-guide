@@ -1,5 +1,7 @@
 # AquaGuide Alignment Audit — Latest
 
+> **历史 source audit（2026-08-21）：** 本文记录当时发现的回退与修复方向。它不表示这些问题仍存在，也不覆盖当前用户确认的视觉基线；当前 UI 事实请读 `docs/02-design/VISUAL_BASELINE.md` 与 `UI_REGRESSION_CONTRACT.md`。
+
 更新时间：2026-08-21 17:16 +08:00
 
 > 范围：当前 `codex/interactive-parity-v3` 源码状态 vs 已确认产品/交互要求。

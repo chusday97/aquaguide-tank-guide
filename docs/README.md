@@ -4,6 +4,8 @@
 
 > **先读：** [Project Truth](./PROJECT_TRUTH.md)。它定义当前唯一交付线和每类事实的 canonical home；本页其余旧文档按该路由理解。
 
+> 历史材料使用方式见 [Historical Evidence Registry](./HISTORICAL_EVIDENCE.md)；保留证据，不把它们误当成当前状态。
+
 ## 产品定位
 
 > 面向水族新手的鱼缸管理、物种选择、混养决策与养护补救助手。

@@ -1,6 +1,6 @@
 # AquaGuide 云同步方案评估（不实施）
 
-> 状态：方案评估。本文不是数据契约，不包含可执行迁移或建表 SQL；在用户确认 `CONTRACT.md`、字段、RLS 和迁移策略前，不接入 Supabase 业务数据。
+> **历史方案评估：** 本文不是当前数据或部署状态的权威，也不包含可执行迁移或建表 SQL。当前数据契约见 `CONTRACT.md`，部署事实见 `docs/03-development/DEPLOYMENT_STATE.md`。这里的早期“未接入”措辞不得覆盖用户确认的既有 Supabase 部署。
 
 ## 1. 建议同步的实体
 

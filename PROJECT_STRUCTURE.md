@@ -129,6 +129,7 @@
 - `evaluation/`：47 个版本化 JSONL Case、Zod 契约、deterministic/mocked/live Runner、统一报告与 Badcase Registry。
 - `docs/README.md`：当前产品文档总入口与事实来源说明。
 - `docs/PROJECT_TRUTH.md`：项目级 canonical routing，指向当前产品、UI、部署、数据、进度与历史证据的唯一入口。
+- `docs/HISTORICAL_EVIDENCE.md`：旧 Handoff、审计、计划与 PR 的可追溯历史登记；不作为当前事实来源。
 - `docs/01-definition/PRODUCT_TRUTH.md`：当前产品承诺与模块状态；旧 `CURRENT_PRODUCT_STATUS.md` 只保留为历史快照。
 - `docs/02-design/VISUAL_BASELINE.md`：用户确认的 4317 视觉验收基线与 UI owner。
 - `docs/03-development/DEPLOYMENT_STATE.md`：本地、GitHub、CI、Supabase 和部署 parity 的分层状态。

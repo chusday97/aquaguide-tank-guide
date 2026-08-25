@@ -1,3 +1,5 @@
+> **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
+
 ## 当前任务目标
 
 - 2026-08-25：统一本地与 GitHub 进度。唯一工作分支为 `codex/unified-rc-visual-v1`；日常本地目录已切换至该分支，并与 GitHub 同步到 `5b619a08`。正确视觉仍以 4317 interactive preview 的 `37a8d4d1` 为基线；RC 业务能力只可按 `.ai/RC_MIGRATION_LEDGER.md` 选择性迁移。唯一 GitHub 收敛入口为 Draft PR #141；尚未迁移 P0 业务代码，等待契约范围确认。

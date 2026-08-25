@@ -1,5 +1,7 @@
 # AquaGuide 交接文档
 
+> **历史交接账本：** 当前接手请先读 [Project Truth](docs/PROJECT_TRUTH.md) 和 `HANDOFF_LATEST.md`。本文件以下各阶段记录保留为证据，不得覆盖当前统一分支、视觉基线或部署状态。
+
 ## 2026-08-25 本地/GitHub 统一进度
 
 - 唯一工作分支是 `codex/unified-rc-visual-v1`；日常目录 `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切换到该分支，并与 `origin/codex/unified-rc-visual-v1` 同步到 `5b619a08`。

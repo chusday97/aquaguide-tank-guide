@@ -50,3 +50,8 @@
 
 - Added canonical project, product, visual and deployment documentation routes.
 - Reclassified the dated current-product snapshot as historical evidence; no product code, Supabase configuration or accepted visual baseline changed.
+
+## 2026-08-25 — Truth consolidation phase 2 started
+
+- Added a historical-evidence registry and supersession headers for legacy progress, Handoff, UI audit and cloud-planning records.
+- No historical file was deleted; the change makes their evidence role explicit.
