@@ -46,6 +46,7 @@ import { taskRoutes } from '../services/navigation/task-routes';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
 import { DecisionResultSurface } from '../components/result/DecisionResultSurface';
+import { KnowledgeSceneExplorer } from '../components/interactive/KnowledgeSceneExplorer';
 import { careEvidenceSource, careEvidenceSources, diagnosisEscalationSignals, riskTone } from '../modules/result/resultAdapters';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
@@ -1907,6 +1908,17 @@ export default function CareEncyclopedia() {
           </button>
         </div>
       </section>
+
+      <KnowledgeSceneExplorer
+        isEn={isEn}
+        onOpenTopic={(topicId, sourceId) => openCareDetail(topicId, sourceId)}
+        onBrowseList={(query) => {
+          setSearchTerm(query || '');
+          setCareWorkspacePage('content');
+          setCareResultPage(0);
+          void navigateToSection('care-results', { updateHash: false });
+        }}
+      />
 
       <section id="care-recommendations" className={`care-left-panel w-full min-w-0 max-w-full scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white p-3 shadow-sm ${(!searchTerm.trim() && careWorkspacePage === 'home') ? '' : 'hidden md:block'}`}>
             <div className="mb-3 flex items-start justify-between gap-3">

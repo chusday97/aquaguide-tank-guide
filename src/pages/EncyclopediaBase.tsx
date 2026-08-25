@@ -27,7 +27,7 @@ import { VisualResultMini } from '../components/visual-results/VisualResultCard'
 import type { VisualResultSubject } from '../components/visual-results/visual-result.types';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import { SpeciesDetailDialog } from '../components/SpeciesDetailDialog';
-import { InteractiveSpeciesAtlas } from '../components/InteractiveSpeciesAtlas';
+import { SpeciesSceneAtlas } from '../components/interactive/SpeciesSceneAtlas';
 import { AdaptiveDetailContent } from '../components/common/AdaptiveDetailContent';
 import { ResilientImage } from '../components/common/ResilientImage';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
@@ -1545,17 +1545,15 @@ export default function Encyclopedia() {
 
       <div className="flex flex-col gap-5">
       {viewMode === 'browse' && (
-        <InteractiveSpeciesAtlas
+        <SpeciesSceneAtlas
           species={allFishes}
           isEn={isEn}
-          onBrowse={() => {
+          getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
+          onSelect={(fish) => openSpeciesDetail(fish, 'species-scene')}
+          onBrowseList={() => {
             window.requestAnimationFrame(() => document.getElementById('atlas-toolbar')?.scrollIntoView({ block: 'start', behavior: 'smooth' }));
           }}
-          onOpenCompatibility={(fish) => {
-            setCompatibilitySelection([fish.id]);
-            setCalculatorSpeciesIds([fish.id]);
-            setViewMode('compatibility');
-          }}
+          onIdentify={() => navigateToRoute('/identify')}
         />
       )}
       <div id="atlas-toolbar" data-workspace-sticky="true" className="atlas-sticky-toolbar flex flex-wrap gap-4 md:items-center md:gap-3 md:rounded-[22px] md:border md:border-white/80 md:bg-white/82 md:p-3 md:shadow-sm">

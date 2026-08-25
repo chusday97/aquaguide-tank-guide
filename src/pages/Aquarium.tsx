@@ -5393,6 +5393,7 @@ export default function AquariumManager() {
               aquarium={activeAquarium}
               activeSpecies={active3DSpecies}
               onSpeciesSelect={handleAquariumSpeciesSelect}
+              framing="stage-cover"
             />
           </Suspense>
         ) : (
@@ -5644,6 +5645,7 @@ export default function AquariumManager() {
                 aquarium={activeAquarium}
                 activeSpecies={active3DSpecies}
                 onSpeciesSelect={handleAquariumSpeciesSelect}
+                framing="stage-cover"
               />
             </Suspense>
             <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5 pointer-events-none">

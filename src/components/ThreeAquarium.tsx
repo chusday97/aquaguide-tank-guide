@@ -178,6 +178,50 @@ function RendererLifecycle() {
   return null;
 }
 
+export function getAquariumCameraFrame({
+  length,
+  width,
+  height,
+  aspect,
+  framing,
+}: {
+  length: number;
+  width: number;
+  height: number;
+  aspect: number;
+  framing: 'contain' | 'stage-cover';
+}) {
+  const fov = 42 * (Math.PI / 180);
+  const halfHeight = height * 0.58;
+  const halfWidth = length * 0.56;
+  const fitHeight = halfHeight / Math.tan(fov / 2);
+  const fitWidth = halfWidth / Math.max(0.35, Math.tan(fov / 2) * aspect);
+  const distance = framing === 'stage-cover'
+    ? Math.min(fitHeight, fitWidth) * 0.96
+    : Math.max(fitHeight, fitWidth) * 1.08;
+  return new THREE.Vector3(length * 0.08, height * 0.04, width * 0.52 + distance);
+}
+
+function CameraFraming({ length, width, height, framing, targetPosition }: { length: number; width: number; height: number; framing: 'contain' | 'stage-cover'; targetPosition: THREE.Vector3 | null }) {
+  const { camera, size } = useThree();
+
+  useEffect(() => {
+    if (targetPosition || !(camera instanceof THREE.PerspectiveCamera)) return;
+    const position = getAquariumCameraFrame({
+      length,
+      width,
+      height,
+      aspect: Math.max(0.35, size.width / Math.max(1, size.height)),
+      framing,
+    });
+    camera.position.copy(position);
+    camera.lookAt(0, 0, 0);
+    camera.updateProjectionMatrix();
+  }, [camera, framing, height, length, size.height, size.width, targetPosition, width]);
+
+  return null;
+}
+
 function CameraRig({ targetPosition }: { targetPosition: THREE.Vector3 | null }) {
   const { camera } = useThree();
 
@@ -965,7 +1009,7 @@ function Backdrop({ length, width, height, isSaltwater }: { length: number; widt
   );
 }
 
-export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect, framing: _framing = 'contain' }: ThreeAquariumProps) {
+export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect, framing = 'contain' }: ThreeAquariumProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const length = parseDimension(aquarium.dimensions?.length, 6);
   const width = parseDimension(aquarium.dimensions?.width, 4);
@@ -1031,6 +1075,7 @@ export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect, framin
         <color attach="background" args={[isSaltwater ? '#eefcff' : '#f4fbf8']} />
 
         <SceneLights isSaltwater={isSaltwater} />
+        <CameraFraming length={length} width={width} height={height} framing={framing} targetPosition={targetPos} />
         <CameraRig targetPosition={targetPos} />
 
         <OrbitControls

@@ -34,6 +34,7 @@
     "eval:all": "npm run eval:deterministic && npm run eval:mocked && npm run eval:report",
     "eval:register-badcase": "tsx scripts/register-evaluation-badcase.ts",
     "test:3d-assets": "tsx scripts/assert_3d_species_assets.ts",
+    "test:three-stage-framing": "tsx scripts/test-three-stage-framing.ts",
     "test:layout-mode": "tsx scripts/assert_layout_mode_policy.ts",
     "test:mini-compatibility": "tsx scripts/test-mini-compatibility.ts",
     "test:visual-results": "tsx scripts/test-visual-results.ts",
