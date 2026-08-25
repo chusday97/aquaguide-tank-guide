@@ -29,4 +29,4 @@ The canonical per-module status, source locations and migration boundary are mai
 
 ## Next product change boundary
 
-The next proposed business unit is P0 compatibility, current tank state and derived water-change authority. It requires the contract confirmation described in `.ai/P0_MIGRATION_IMPACT.md` before implementation.
+The next proposed business unit is P0 compatibility, current tank state and derived water-change authority. It requires approval of [P0 Compatibility Contract](../decisions/P0_COMPATIBILITY_CONTRACT.md) before implementation.

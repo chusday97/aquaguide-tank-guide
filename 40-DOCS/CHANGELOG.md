@@ -9,6 +9,8 @@
 - 新增功能目录，以 `CURRENT_VERIFIED / DEPLOYED_REVERIFY_PENDING / PARTIAL_WITH_FALLBACK / RC_MIGRATION_PROPOSED / HISTORICAL_OR_EXCLUDED` 统一模块状态。
 - 部署状态新增非敏感审计：18 份 migration、31 表三层契约、Vercel Production Supabase/Postgres 变量名称及统一分支 Preview 均可追溯；精确 schema/RLS/SHA parity 保持待授权核验。
 - 新增 Git 交付协议、PR 模板与 `check:project-truth` 门禁，防止新 PR 再次绕开统一分支或遗漏产品/UI/数据影响记录。
+- 新增 P0 兼容性/当前鱼缸契约草案：仅提议本地生命阶段、证据与派生服务改动，明确不新增 SQL、API、Supabase 持久化或 UI 几何；等待用户确认。
+- 新增统一发布就绪表，分别记录本地 UI、CI、部署 SHA、Supabase parity、P0 契约与 main release 许可，禁止以单一绿灯宣称可发布。
 
 ### Fixed
 - 修复图鉴与养护桌面详情曾因脱离 Base UI Portal 而白屏、并且养护详情没有真实参与父级双栏网格的问题；现以页面内工作区区域重排，运行时门禁同时检查非固定、非 Portal、无滚动锁和左右不重叠。

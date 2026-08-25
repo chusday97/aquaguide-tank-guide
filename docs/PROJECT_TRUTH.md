@@ -24,8 +24,10 @@
 | What each feature's current status is | [Feature Catalog](./01-definition/FEATURE_CATALOG.md) | PR titles, commits, deployment history and old status tables |
 | What the accepted UI looks and behaves like | [Visual Baseline](./02-design/VISUAL_BASELINE.md) and [`UI_REGRESSION_CONTRACT.md`](../UI_REGRESSION_CONTRACT.md) | Old screenshots, prototype HTML, RC page CSS and stale browser tests |
 | What the data/API boundary is | [`CONTRACT.md`](../CONTRACT.md), `packages/contracts/`, `src/types/database.ts` | Planning-only database proposals |
+| Proposed product/data decisions | `docs/decisions/` | An unapproved implementation branch or PR |
 | What has been deployed and what has been re-verified | [Deployment State](./03-development/DEPLOYMENT_STATE.md) | A successful build or an old deployment URL alone |
 | How the visual baseline is accepted | [Visual Acceptance Matrix](./05-validation/VISUAL_ACCEPTANCE_MATRIX.md) | A single route, screenshot or build alone |
+| Whether release is actually allowed | [Unified Release Readiness](./05-validation/RELEASE_READINESS.md) | A green deployment or a historical release note |
 | What is being done now | `.ai/PROJECT_STATE.json` and `.ai/TASK_QUEUE.md` | `PROGRESS.md` entries |
 | What happened before | `PROGRESS.md`, `40-DOCS/CHANGELOG.md`, `HANDOFF.md` | None; they are evidence, not the current decision source |
 | How to accept a behavior | `docs/05-validation/`, `scripts/`, and `UI_REGRESSION_CONTRACT.md` | A passing lint/build alone |

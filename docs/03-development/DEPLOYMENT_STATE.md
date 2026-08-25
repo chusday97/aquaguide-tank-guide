@@ -21,6 +21,7 @@
 - Vercel Production contains configured Supabase/Postgres environment-variable names; values were not read or recorded.
 - A Ready Preview is aliased to `codex/unified-rc-visual-v1`.
 - The Vercel inspection response identifies the branch alias but does not expose an exact Git SHA, so branch Preview readiness is not accepted as exact SHA parity by itself.
+- GitHub Actions run `32849012409` passed the unified branch's project-truth, state, lint, layout, framing and production-build checks.
 
 ## Deployment rules
 

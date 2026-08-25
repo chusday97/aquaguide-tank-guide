@@ -51,7 +51,9 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 - [QA 验收](./03-development/QA_ACCEPTANCE.md)
 - [部署状态](./03-development/DEPLOYMENT_STATE.md)
 - [Git 交付协议](./03-development/GIT_DELIVERY_PROTOCOL.md)
+- [P0 兼容性契约（待确认）](./decisions/P0_COMPATIBILITY_CONTRACT.md)
 - [视觉验收矩阵](./05-validation/VISUAL_ACCEPTANCE_MATRIX.md)
+- [统一发布就绪表](./05-validation/RELEASE_READINESS.md)
 - [变更记录入口](./03-development/CHANGELOG.md)
 
 ### 04 计划

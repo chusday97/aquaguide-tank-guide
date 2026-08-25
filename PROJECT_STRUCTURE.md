@@ -137,6 +137,8 @@
 - `docs/03-development/GIT_DELIVERY_PROTOCOL.md` 与 `.github/pull_request_template.md`：唯一交付线、PR 必填事实和 branch-protection 前置条件。
 - `scripts/verify-project-truth.mjs`：检查 canonical truth 路由、统一分支、PR 与功能状态词汇。
 - `docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md`：正确 UI 基线与浏览器/人工验收证据的可执行对应表。
+- `docs/05-validation/RELEASE_READINESS.md`：统一分支进入 RC/main 前的可复核发布门禁。
+- `docs/decisions/`：未确认的产品、数据与迁移决策；只有用户确认后才能写入 `CONTRACT.md` 或实现。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。
 - `docs/02-design/USER_PATH_REGISTRY.md`：正式入口、三步上限、返回上下文与空状态登记。

@@ -2,6 +2,8 @@
 
 ## 当前任务目标
 
+- 2026-08-25：启动全项目八阶段事实收口。阶段 1–6 已完成：建立项目/产品/UI/部署 canonical truth、历史证据登记、4317 视觉矩阵、功能目录、非敏感部署审计、PR 模板和 CI truth gate；GitHub Actions `32849012409` 已通过。阶段 7 P0 契约为 `PROPOSED`，等待用户确认后再改代码；阶段 8 发布门禁已建立，尚待 exact Preview SHA、授权 Supabase schema/RLS parity、P0 实现和单独 release acceptance。
+
 - 2026-08-25：统一本地与 GitHub 进度。唯一工作分支为 `codex/unified-rc-visual-v1`；日常本地目录已切换至该分支，并与 GitHub 同步到 `5b619a08`。正确视觉仍以 4317 interactive preview 的 `37a8d4d1` 为基线；RC 业务能力只可按 `.ai/RC_MIGRATION_LEDGER.md` 选择性迁移。唯一 GitHub 收敛入口为 Draft PR #141；尚未迁移 P0 业务代码，等待契约范围确认。
 
 - 2026-08-25：统一分支 CI 门禁已在 GitHub Actions run `32846848569` 实跑通过，包含状态一致性、lint、布局/取景视觉契约和 production build。该门禁现随 `codex/unified-rc-visual-v1` 的相关推送自动执行。

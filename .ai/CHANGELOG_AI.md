@@ -29,3 +29,4 @@
 - Added a visual acceptance matrix so the approved 4317 direction is tied to route-level browser and human evidence instead of informal references.
 - Added the canonical Feature Catalog with one status vocabulary for current, deployed-but-unreverified, partial, proposed RC and archived capability.
 - Added a Git delivery protocol, PR template and project-truth verification gate; branch protection remains intentionally pending until the check can run from its base branch.
+- Added the Unified Release Readiness gate, separating local visual acceptance, CI, exact deployed SHA, Supabase parity, P0 migration and release authorization.

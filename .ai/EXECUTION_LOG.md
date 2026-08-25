@@ -74,3 +74,12 @@
 
 - Added PR evidence template, delivery protocol and a deterministic project-truth verifier.
 - Read the RC branch-protection API: the branch is not protected. Recorded the safe prerequisite rather than enabling a check that could block all PRs before it is runnable from the base branch.
+
+## 2026-08-25 — Truth consolidation phase 7 contract drafted
+
+- Read the RC domain-rule and evidence source; created a `PROPOSED` contract with exact types, no SQL/API/persistence change and explicit UI exclusions.
+- No P0 product code was migrated. User approval is required before this contract changes implementation or `CONTRACT.md`.
+
+## 2026-08-25 — Truth consolidation phase 8 gate established
+
+- Added `RELEASE_READINESS.md`; the unified line is intentionally `NOT_READY` until exact deployment parity, authorized Supabase parity, P0 contract implementation and a separate release acceptance are complete.

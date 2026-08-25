@@ -20,4 +20,4 @@
 
 ## 当前状态
 
-`IN_PROGRESS` — 阶段 1–4 已完成：canonical routing、历史证据降级、4317 UI 验收矩阵和功能目录均已落地。阶段 5 已确认已有部署和本地契约证据，等待授权的只读 schema/RLS parity。当前进入阶段 6，固化 Git/PR 门禁。统一分支为 `codex/unified-rc-visual-v1`；PR #140 不是验收线。
+`IN_PROGRESS` — 阶段 1–6 已完成：canonical routing、历史证据降级、4317 UI 验收矩阵、功能目录、非敏感部署审计和 Git/PR 门禁均已落地；Actions run `32849012409` 通过。阶段 7 的 P0 契约已为 `PROPOSED`，等待用户确认；阶段 8 已建立发布门禁，等待 exact Preview SHA、授权 schema/RLS parity、P0 实现和 release acceptance。统一分支为 `codex/unified-rc-visual-v1`。

@@ -4,6 +4,8 @@
 **Target:** `codex/unified-rc-visual-v1`  
 **Source:** `integration/aquaguide-rc1@895f2f39`
 
+**Canonical contract draft:** `docs/decisions/P0_COMPATIBILITY_CONTRACT.md`. This impact review remains supporting analysis; the decision is not accepted until the user approves the contract draft.
+
 ## Confirmed scope
 
 | Layer | RC change | Impact |

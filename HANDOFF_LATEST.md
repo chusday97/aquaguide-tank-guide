@@ -6,11 +6,14 @@
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
 - **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
+- **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
+- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约待确认，Supabase exact parity 和 release acceptance 仍未完成。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
 - **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；它在 P0 业务迁移和验收完成前不得转为 Ready 或合并。
 - **GitHub 门禁：** `RC Convergence V1` 已在 Actions run `32846848569` 通过（状态、lint、视觉契约、build）；统一分支每次相关推送自动复验。
+- **最新 GitHub 门禁：** Actions run `32849012409` 已通过 project truth、状态、lint、布局、3D 取景和 production build。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 已冻结 2026-08-25 的 56 个 open PR；除 #141 外均为历史输入而非收敛路径。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
 - **Supabase 状态校正：** 用户于 2026-08-25 确认既有 Supabase 工作已部署。旧文档中“待真实 Supabase 验证”只表示当前统一分支尚未重新核对连接环境、schema revision 与 RLS 回归，绝不表示 Supabase 没有部署。
