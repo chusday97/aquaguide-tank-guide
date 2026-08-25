@@ -16,6 +16,7 @@
 - **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；运行 `32854080645` 已在 `cc99ec47` 通过 project truth、状态、PR topology、lint、布局、3D 取景和 production build；当前 head 仅包含文档证据更新。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 与 `docs/03-development/PR_CLEANUP_RECORD.md` 已记录安全收敛结果；当前开放列表只剩 #141，其他 55 个历史 PR 已关闭但分支保留。
 - **分支收敛审计：** `98977966` 新增 `npm run audit:branch-convergence` 和 `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`。最新远端快照显示统一分支相对 `origin/main` 为 149/214、相对 RC1 为 149/742；这些是 Git 拓扑差异，不是缺失功能结论。后续必须按 `.ai/RC_MIGRATION_LEDGER.md` 逐项审查，禁止整体 merge/rebase。
+- **Parity 门禁：** `54f3e005`、`b39dbbd7`、`6e71cb05` 已加入 local/remote SHA、缺失 ref 和 detached CI 分支检查；统一分支已推送，当前 `project:status` 与 `check:branch-convergence` 均通过。当前环境无法连接 GitHub API，Actions 真实运行仍待外部观察。
 - **跨层事实盘点：** `docs/05-validation/MODULE_FACT_INVENTORY.md` 统一记录产品、UI、领域规则、Service、数据/API、测试和部署状态；任何新模块变更必须同步该索引和对应验收证据。
 - **治理提交：** `28142542`、`642b007b` 已加入只读 GitHub PR 拓扑检查、`.ai` 门禁触发范围和 PR 清理/模块盘点记录；Critic 六维复验通过，GitHub Actions `32853545889` 成功。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
@@ -31,6 +32,7 @@
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
 - 当前下一步：对 `origin/main` 独有提交和仍有价值的历史分支能力建立逐项迁移判定；未完成判定前不创建 `main` 发布合并。
+- 下一功能审查单元：`Species Detail evidence authority`；保持当前视觉基线，不迁移 RC 详情布局。
 - **视觉决策更新：** 用户确认当前 4317 版本可用作工作基线，但仍有后续视觉问题；后续修改必须按模块和视口渐进推进，并保留正式组件、Rail/Sheet/Blocking 语义。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
 - UI 不可变原则：`UI_REGRESSION_CONTRACT.md`。

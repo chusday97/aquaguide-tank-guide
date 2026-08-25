@@ -14,6 +14,12 @@
 - **Ledger:** Advanced the next review unit from the completed P0 group to Species Detail evidence authority.
 - **CI boundary:** The parity script uses `GITHUB_REF_NAME` for detached push checkouts and keeps the local Git branch name for workstation checks (`b39dbbd7`).
 
+## 2026-08-25 — Canonical parity restored
+
+- **Action:** Pushed `codex/unified-rc-visual-v1` through `6e71cb05`.
+- **Verification:** Local and `origin/codex/unified-rc-visual-v1` both resolve to the same SHA; `project:status` and `check:branch-convergence` pass.
+- **Evidence gap:** The current environment cannot reach the GitHub API, so the resulting Actions run has not been independently observed here.
+
 ## 2026-08-25 — Initialize `.ai/`
 
 - **Read:** 项目 `PROGRESS.md`、`HANDOFF.md`、`PROJECT_STRUCTURE.md`、`40-DOCS/CHANGELOG.md`。

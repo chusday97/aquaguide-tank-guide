@@ -6,6 +6,7 @@
 - 新增只读 `npm run audit:branch-convergence` 与分支收敛审计文档，记录统一分支和 `origin/main`/RC1 的拓扑差异；不执行整体合并，功能迁移仍以 `.ai/RC_MIGRATION_LEDGER.md` 为准。
 - 新增 `npm run check:branch-convergence` 本地/远端 SHA parity 阻断，并接入统一分支 push CI；缺少关键远端 ref 时输出明确错误。
 - 修复 push CI detached checkout 的分支识别，使用 `GITHUB_REF_NAME` 校验统一分支。
+- 已将 parity 门禁推送到统一远端分支；本地与远端 SHA 已一致，GitHub Actions 结果待外部观察。
 - 用户接受 P0 兼容性契约后，选择性迁入本地兼容性生命周期输入、审核阶段风险证据、当前鱼缸/换水纯规则与派生服务；共享 `LifeStage` 保持既有 API/数据库枚举，没有新增 SQL、API、Supabase、持久化字段或 UI 几何。
 - 建立 `docs/PROJECT_TRUTH.md` 作为项目级事实路由，并新增产品真相、视觉基线和部署状态文档；历史状态页保留为证据但不再覆盖当前统一分支事实。
 - 新增历史证据登记表，并将旧 Handoff、进度账本、UI 审计和云同步方案明确标为历史材料，避免旧结论覆盖当前基线。

@@ -7,6 +7,7 @@
 - Added the read-only `npm run audit:branch-convergence` command and its canonical snapshot document.
 - Added `npm run check:branch-convergence`, local/remote SHA parity reporting, missing-ref diagnostics and a push-workflow blocking step.
 - CI parity now handles detached `actions/checkout` by using `GITHUB_REF_NAME` for the expected canonical branch.
+- Pushed the reviewed parity gate to the canonical remote; local/remote SHA parity now passes. GitHub Actions observation remains pending because the current environment cannot reach the GitHub API.
 - Recorded that the unified branch and `origin/main` diverge by 149/214 commits and that graph differences are not missing-feature verdicts.
 - Kept migration decisions in `.ai/RC_MIGRATION_LEDGER.md`; no merge, rebase, push, database or product-code change was performed.
 
