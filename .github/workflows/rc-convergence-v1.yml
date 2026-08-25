@@ -1,6 +1,16 @@
 name: RC Convergence V1
 
 on:
+  push:
+    branches: [codex/unified-rc-visual-v1]
+    paths:
+      - 'src/**'
+      - 'packages/**'
+      - 'scripts/**'
+      - '.ai/PROJECT_STATE.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/rc-convergence-v1.yml'
   pull_request:
     branches: [integration/aquaguide-rc1, main]
     paths:
