@@ -29,6 +29,7 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 - [用户故事](./01-definition/USER_STORIES.md)：核心场景及验收口径。
 - [竞品分析](./01-definition/COMPETITIVE_ANALYSIS.md)：当前市场能力对比与差异化机会。
 - [产品真相](./01-definition/PRODUCT_TRUTH.md)：当前产品承诺与模块状态的唯一入口。
+- [功能目录](./01-definition/FEATURE_CATALOG.md)：每个模块的唯一状态清单、代码边界和迁入状态。
 - [当前产品状态（历史快照）](./01-definition/CURRENT_PRODUCT_STATUS.md)：2026-08-01 阶段快照，不覆盖产品真相。
 - [交互重构 PRD（专项）](./01-definition/UX_REFACTOR_PRD.md)：水族册和分层表面的历史专项定义。
 

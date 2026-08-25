@@ -16,17 +16,9 @@ AquaGuide helps aquarium keepers record a real tank, understand species and comp
 4. User-facing data writes go through the Repository/API boundary. The UI must not bypass it.
 5. The current user-approved UI is authoritative; business migration must adapt into it rather than replace it.
 
-## Current capability map
+## Current capability inventory
 
-| Module | Current status | Included promise | Deliberate boundary |
-| --- | --- | --- | --- |
-| Aquarium | Available | 3D tank stage, livestock, settings, tasks, records and care entry points | New RC authority changes are not yet migrated. |
-| Encyclopedia | Available | Species browse, search/filter, details, collection and compatibility entry points | Evidence coverage is incomplete; no fabricated certainty. |
-| Care | Available | Interactive exploration, browse fallback, articles, tasks, reminders and daily-check paths | Guidance evidence still needs broader human review. |
-| Identification | Partial | Image/manual candidate path, confirmation and safety triage | Visual provider may be unavailable; manual confirmation is mandatory. |
-| Collection | Available | Wishlist, care saves, memorials and achievements | Historical visual variants are not active design sources. |
-| Compatibility | Available with evidence gate | Deterministic planning/current-tank flows and safe insufficient-data outcomes | The reviewed-evidence expansion from RC is not yet migrated. |
-| Supabase-backed capability | Deployed, user-confirmed | Existing cloud architecture, migrations, RLS and API boundaries exist | Exact connected environment/schema/RLS parity with this unified branch is not yet re-verified. |
+The canonical per-module status, source locations and migration boundary are maintained in [FEATURE_CATALOG.md](./FEATURE_CATALOG.md). Do not duplicate status tables in product summaries or Handoffs.
 
 ## Not current product truth
 

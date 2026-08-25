@@ -20,6 +20,7 @@
 | Question | Canonical home | Historical material that must not override it |
 | --- | --- | --- |
 | What the product currently promises | [Product Truth](./01-definition/PRODUCT_TRUTH.md) | Historical PRDs, audits and old product-status snapshots |
+| What each feature's current status is | [Feature Catalog](./01-definition/FEATURE_CATALOG.md) | PR titles, commits, deployment history and old status tables |
 | What the accepted UI looks and behaves like | [Visual Baseline](./02-design/VISUAL_BASELINE.md) and [`UI_REGRESSION_CONTRACT.md`](../UI_REGRESSION_CONTRACT.md) | Old screenshots, prototype HTML, RC page CSS and stale browser tests |
 | What the data/API boundary is | [`CONTRACT.md`](../CONTRACT.md), `packages/contracts/`, `src/types/database.ts` | Planning-only database proposals |
 | What has been deployed and what has been re-verified | [Deployment State](./03-development/DEPLOYMENT_STATE.md) | A successful build or an old deployment URL alone |
