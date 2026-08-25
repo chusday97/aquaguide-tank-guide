@@ -5,6 +5,7 @@
 ## 当前工作基线
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
+- **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
@@ -22,6 +23,8 @@
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非视觉 PASS**。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
 - UI 不可变原则：`UI_REGRESSION_CONTRACT.md`。
+
+> 下文的旧阶段记录只保留为验证和决策证据。当前产品/UI/部署状态以 `docs/PROJECT_TRUTH.md` 链接的权威文件为准。
 
 ## 当前本地 Preview（开发验收源）
 

@@ -47,7 +47,7 @@
 - `src/components/visual-results/`：混养、物种适配、巡检与养护自查共用的视觉结果卡、展示模型和规则适配器。
 - `src/components/interactive/`：场景化物种探索与养护鱼缸入口；图鉴以现有发现存储中的独立 6 个物种批次整批替换，场景贴图与加载/失败态均保持透明；养护热点始终显示类型名称、按需展开症状。两者只触发现有路由/详情，不生成业务结论。首页不使用该场景组件。
 - `scripts/test-interactive-discovery-batches.ts` / `scripts/assert_interactive_scene_assets.ts` / `scripts/verify-interactive-scenes.mjs`：分别门禁互动批次无交集、411 个场景资源的 Alpha/透明角像素，以及生产预览的图鉴换批与手机养护热点呈现。
-- `src/components/layout/LayoutModeProvider.tsx`：真实设备布局判定。
+- `src/components/layout/LayoutModeProvider.tsx`：基于 viewport 的布局判定；不得恢复 UA/设备字符串作为布局事实来源。
 - `src/pages/Aquarium.tsx`：我的鱼缸；桌面首页以现有 `ThreeAquarium` 为主舞台，右侧承接今日行动/推荐，底部承接高频任务。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
 - `src/pages/Identify.tsx`：拍照识别候选、手动兜底、物种确认、动态追问与可视化风险结果。
@@ -128,6 +128,10 @@
 - `docs/05-validation/`：证据矩阵、产品假设、真人测试结果与 AI Evaluation 当前状态；严格区分自动测试、真实模型和真人证据。
 - `evaluation/`：47 个版本化 JSONL Case、Zod 契约、deterministic/mocked/live Runner、统一报告与 Badcase Registry。
 - `docs/README.md`：当前产品文档总入口与事实来源说明。
+- `docs/PROJECT_TRUTH.md`：项目级 canonical routing，指向当前产品、UI、部署、数据、进度与历史证据的唯一入口。
+- `docs/01-definition/PRODUCT_TRUTH.md`：当前产品承诺与模块状态；旧 `CURRENT_PRODUCT_STATUS.md` 只保留为历史快照。
+- `docs/02-design/VISUAL_BASELINE.md`：用户确认的 4317 视觉验收基线与 UI owner。
+- `docs/03-development/DEPLOYMENT_STATE.md`：本地、GitHub、CI、Supabase 和部署 parity 的分层状态。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。
 - `docs/02-design/USER_PATH_REGISTRY.md`：正式入口、三步上限、返回上下文与空状态登记。

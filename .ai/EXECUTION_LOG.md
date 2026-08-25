@@ -45,3 +45,8 @@
 
 - The user confirmed that the existing Supabase work had already been deployed.
 - Corrected the status distinction: deployed Supabase is a user-confirmed fact; re-validating the exact connected environment, schema revision and RLS behavior from the unified branch remains a separate verification task.
+
+## 2026-08-25 — Truth consolidation phase 1 started
+
+- Added canonical project, product, visual and deployment documentation routes.
+- Reclassified the dated current-product snapshot as historical evidence; no product code, Supabase configuration or accepted visual baseline changed.

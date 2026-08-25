@@ -24,3 +24,4 @@
 - Changed the official daily local worktree to the canonical branch; legacy `codex/rc1-visual-integration` is no longer a valid starting point.
 - Verified the RC Convergence CI in GitHub Actions run `32846848569`; the gate now runs on pushes to the canonical branch.
 - Added `.ai/OPEN_PR_REGISTRY.md` to classify all 56 open PRs and prevent old stacked branches from being treated as parallel delivery paths.
+- Started the eight-phase project truth consolidation: added canonical project, product, visual and deployment routing without changing UI, data or deployed environments.

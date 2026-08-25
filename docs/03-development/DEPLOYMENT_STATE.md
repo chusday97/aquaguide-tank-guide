@@ -1,0 +1,34 @@
+# AquaGuide Deployment State
+
+**Status:** Active  
+**Updated:** 2026-08-25
+
+## Evidence categories
+
+| Category | Meaning | Current fact |
+| --- | --- | --- |
+| Local preview | A local production build is running | User-approved interactive preview is `http://127.0.0.1:4317/_preview/interactive`. |
+| GitHub delivery | Current branch and PR can be traced | `codex/unified-rc-visual-v1` and Draft PR #141 are the only active delivery line. |
+| CI | Automated checks passed for a concrete SHA | GitHub Actions run `32846848569` passed state, lint, layout, framing and build checks. |
+| Supabase deployment | A cloud environment has been deployed | User-confirmed on 2026-08-25. Existing schema, RLS, API and repository work must not be described as undeployed. |
+| Environment parity | The current branch was verified against the connected cloud environment | Not yet re-verified. This is distinct from deployment. |
+| Human visual acceptance | A person accepted the rendered UI | The 4317 local interactive baseline is user-confirmed; a matching deployed-SHA review remains pending. |
+
+## Deployment rules
+
+- Never treat a Vercel/Cloudflare success as proof that its deployed SHA is the accepted review SHA.
+- Never expose Supabase URL, anon key, service role, deployment IDs with sensitive context, or any secret in this file.
+- Before a release, record: branch SHA, deployed SHA, Supabase environment identity (non-secret label only), schema revision, relevant RLS/API regression result, and the reviewer.
+- No redeploy is required merely to organize project truth.
+
+## Required future parity check
+
+1. Read the configured non-secret environment label/project reference.
+2. Compare applied migration revision with the current contract's expected migrations.
+3. Run the existing RLS/API smoke checks against that environment using authorized test credentials.
+4. Record only pass/fail, revision and timestamp here; never record credentials.
+5. Compare the deployed frontend SHA with the local accepted product SHA.
+
+## Current limitation
+
+The repository contains historical records that use phrases such as “real Supabase verification pending.” They mean the exact current-environment parity check above has not been repeated from the unified branch. They do not mean that Supabase was never deployed.

@@ -12,6 +12,17 @@
 - [x] 新增 `npm run project:status` 与 RC 收敛 CI，防止状态入口和分支漂移；GitHub Actions run `32846848569` 已真实通过。
 - [x] 对 56 个 GitHub open PR 建立登记表；#141 为唯一收敛入口，其余 55 个只作历史输入。
 
+## Eight-phase truth consolidation
+
+- [ ] Phase 1: 建立项目、产品、UI、部署的 canonical truth 文件与总入口。
+- [ ] Phase 2: 将冲突/重复文档降级为历史入口或改为链接，不删除证据。
+- [ ] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口。
+- [ ] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
+- [ ] Phase 5: 只读核对当前统一分支与已部署 Supabase/Vercel 的环境、schema 和 SHA parity。
+- [ ] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线。
+- [ ] Phase 7: 经契约确认后选择性迁入 RC P0 业务能力，保留现有 UI。
+- [ ] Phase 8: 用本地、GitHub、部署、Supabase 和人工视觉验收完成发布收口。
+
 ## Release Gate
 
 - [ ] 统一 RC 分支验收通过后，再单独评估是否合并 `main`。

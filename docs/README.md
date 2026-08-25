@@ -1,6 +1,8 @@
 # AquaGuide 产品文档索引
 
-> 最后核对：2026-07-15。当前代码、真实浏览器行为和自动测试优先于旧报告或历史对话。
+> 最后核对：2026-08-25。当前代码、真实浏览器行为和自动测试优先于旧报告或历史对话。
+
+> **先读：** [Project Truth](./PROJECT_TRUTH.md)。它定义当前唯一交付线和每类事实的 canonical home；本页其余旧文档按该路由理解。
 
 ## 产品定位
 
@@ -12,8 +14,8 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 
 | 读者 | 建议顺序 |
 | --- | --- |
-| 产品与设计 | [PRD](./01-definition/PRD.md) → [当前状态](./01-definition/CURRENT_PRODUCT_STATUS.md) → [信息架构](./02-design/INFORMATION_ARCHITECTURE.md) → [交互规范](./02-design/INTERACTION_SPEC.md) → [路线图](./04-planning/PRODUCT_GAPS_AND_ROADMAP.md) |
-| 开发 | [技术架构](./03-development/TECH_ARCHITECTURE.md) → [项目结构](./03-development/PROJECT_STRUCTURE.md) → [数据模型](./02-design/DATA_MODEL.md) → [AI 与 API](./02-design/AI_AND_API_SPEC.md) |
+| 产品与设计 | [项目真相](./PROJECT_TRUTH.md) → [产品真相](./01-definition/PRODUCT_TRUTH.md) → [视觉基线](./02-design/VISUAL_BASELINE.md) → [PRD](./01-definition/PRD.md) |
+| 开发 | [项目真相](./PROJECT_TRUTH.md) → [技术架构](./03-development/TECH_ARCHITECTURE.md) → [数据契约](../CONTRACT.md) → [部署状态](./03-development/DEPLOYMENT_STATE.md) |
 | 测试与验收 | [用户故事](./01-definition/USER_STORIES.md) → [QA 验收](./03-development/QA_ACCEPTANCE.md) → [外部验收协议](./04-planning/EXTERNAL_VALIDATION_PROTOCOL.md) → [交付检查](./delivery-checklist.md) |
 | 新成员 | [项目 README](../README.md) → 本页 → [本地配置](./03-development/SETUP.md) |
 
@@ -24,7 +26,8 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 - [PRD](./01-definition/PRD.md)：用户、问题、目标、功能优先级和成功指标。
 - [用户故事](./01-definition/USER_STORIES.md)：核心场景及验收口径。
 - [竞品分析](./01-definition/COMPETITIVE_ANALYSIS.md)：当前市场能力对比与差异化机会。
-- [当前产品状态](./01-definition/CURRENT_PRODUCT_STATUS.md)：已完成、部分完成、实验中和延后项。
+- [产品真相](./01-definition/PRODUCT_TRUTH.md)：当前产品承诺与模块状态的唯一入口。
+- [当前产品状态（历史快照）](./01-definition/CURRENT_PRODUCT_STATUS.md)：2026-08-01 阶段快照，不覆盖产品真相。
 - [交互重构 PRD（专项）](./01-definition/UX_REFACTOR_PRD.md)：水族册和分层表面的历史专项定义。
 
 ### 02 设计
@@ -33,6 +36,7 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 - [交互规范](./02-design/INTERACTION_SPEC.md)
 - [正式用户路径登记](./02-design/USER_PATH_REGISTRY.md)
 - [设计系统](./02-design/DESIGN_SYSTEM.md)
+- [视觉基线](./02-design/VISUAL_BASELINE.md)
 - [数据模型](./02-design/DATA_MODEL.md)
 - [AI 与 API](./02-design/AI_AND_API_SPEC.md)
 
@@ -42,6 +46,7 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 - [项目结构](./03-development/PROJECT_STRUCTURE.md)
 - [本地配置](./03-development/SETUP.md)
 - [QA 验收](./03-development/QA_ACCEPTANCE.md)
+- [部署状态](./03-development/DEPLOYMENT_STATE.md)
 - [变更记录入口](./03-development/CHANGELOG.md)
 
 ### 04 计划
@@ -57,10 +62,12 @@ AquaGuide 以“先用确定性规则给出安全边界，再由 AI 解释”为
 
 | 内容 | 事实来源 | 维护规则 |
 | --- | --- | --- |
-| 产品目标与范围 | `docs/01-definition/PRD.md` | 方向或优先级变化时更新 |
-| 交互行为 | `docs/02-design/INTERACTION_SPEC.md` + 工作区 `interaction-rules.md` | 新交互或踩坑时同步 |
+| 当前产品承诺与模块状态 | `docs/01-definition/PRODUCT_TRUTH.md` | 产品行为变化时更新 |
+| UI 基线与交互行为 | `docs/02-design/VISUAL_BASELINE.md` + `UI_REGRESSION_CONTRACT.md` + 工作区 `interaction-rules.md` | 用户确认视觉或新增交互规则时同步 |
 | 数据和 AI 契约 | [`CONTRACT.md`](../CONTRACT.md) + 类型文件 | 先改契约，再改实现和说明 |
-| 当前进度 | [`PROGRESS.md`](../PROGRESS.md) | 每个独立步骤完成后更新 |
+| 部署与环境证据 | `docs/03-development/DEPLOYMENT_STATE.md` | 部署、环境或 parity 验证变化时更新 |
+| 当前进度 | `.ai/PROJECT_STATE.json` + `.ai/TASK_QUEUE.md` | 每个独立步骤完成后更新 |
+| 长期历史 | [`PROGRESS.md`](../PROGRESS.md) | 只追加已完成历史，不定义当前状态 |
 | 项目结构 | [`PROJECT_STRUCTURE.md`](../PROJECT_STRUCTURE.md) | 新增、删除或移动模块时更新 |
 | 变更记录 | [`40-DOCS/CHANGELOG.md`](../40-DOCS/CHANGELOG.md) | 功能、修复和移除实时追加 |
 
