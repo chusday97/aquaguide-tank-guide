@@ -22,3 +22,4 @@
 - Added the P0 data/contract impact review; no P0 runtime code was migrated.
 - Added an executable project-status contract and RC convergence CI workflow.
 - Changed the official daily local worktree to the canonical branch; legacy `codex/rc1-visual-integration` is no longer a valid starting point.
+- Verified the RC Convergence CI in GitHub Actions run `32846848569`; the gate now runs on pushes to the canonical branch.
