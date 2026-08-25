@@ -5,6 +5,7 @@
 - [x] 建立 `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - [x] 建立 `.ai/PROJECT_STATE.json` 作为唯一状态入口。
 - [ ] 审计 RC 相对视觉基线的业务提交，形成逐项迁移清单。
+- [x] 审计 RC 提交并建立 `.ai/RC_MIGRATION_LEDGER.md`。
 - [ ] 只迁入有产品规则、测试和受影响文件证据的 RC 业务能力。
 - [ ] 创建唯一 RC 目标 PR，并将本地预览、PR head 和状态入口对齐。
 

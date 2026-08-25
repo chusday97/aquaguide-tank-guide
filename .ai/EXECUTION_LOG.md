@@ -19,3 +19,4 @@
 - Created `codex/unified-rc-visual-v1` from `37a8d4d1` after user confirmed the 4317 interactive preview as the correct visual result.
 - Recorded `integration/aquaguide-rc1@895f2f39` as a selective business reference only.
 - Recorded PR #140 as deprecated because its RC-first partial UI migration regressed the approved visual result.
+- Audited RC-only commits and grouped them into domain authority, recommendation, UI, interactive atlas, runtime/API, and workflow integrity categories.

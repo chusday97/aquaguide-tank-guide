@@ -17,3 +17,4 @@
 
 - Added `.ai/PROJECT_STATE.json` to name the one canonical branch, visual baseline, RC business reference, local preview, and deprecated integration PR.
 - Changed the active goal from partial visual convergence to local/GitHub progress unification.
+- Added a grouped RC migration ledger; API/persistence changes are explicitly held for contract review.
