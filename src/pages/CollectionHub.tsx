@@ -49,7 +49,7 @@ function CollectionCarousel({
   };
 
   return (
-    <div className="collection-hub-carousel" aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
+    <div className="collection-hub-book" aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
       <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden sm:h-[410px]">
         {items.map((item, index) => {
           let offset = index - activeIndex;
