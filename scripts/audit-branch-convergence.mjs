@@ -20,11 +20,12 @@ const count = (left, right) => {
 
 const canonical = `origin/${state.canonicalBranch}`;
 const localBranch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
+const effectiveBranch = process.env.GITHUB_REF_NAME || localBranch;
 const localSha = git(['rev-parse', 'HEAD']);
 const requiredRefs = [canonical, 'origin/main', 'origin/integration/aquaguide-rc1'];
 const missingRefs = requiredRefs.filter((ref) => !hasRef(ref));
 const remoteSha = hasRef(canonical) ? git(['rev-parse', canonical]) : null;
-const parity = localBranch === state.canonicalBranch && remoteSha === localSha;
+const parity = effectiveBranch === state.canonicalBranch && remoteSha === localSha;
 const remoteRefs = git([
   'for-each-ref',
   '--format=%(refname:short)',
@@ -55,6 +56,7 @@ console.log(JSON.stringify({
   generatedAt: new Date().toISOString(),
   canonicalBranch: state.canonicalBranch,
   localBranch,
+  effectiveBranch,
   localSha,
   remoteSha,
   parity,
@@ -66,6 +68,6 @@ console.log(JSON.stringify({
 
 if (process.argv.includes('--check') && (missingRefs.length > 0 || !parity)) {
   if (missingRefs.length > 0) console.error(`MISSING_REMOTE_REF: ${missingRefs.join(', ')}`);
-  if (!parity) console.error(`NOT_SYNCHRONIZED: local ${localSha} != remote ${remoteSha ?? 'missing'} or branch is ${localBranch}`);
+  if (!parity) console.error(`NOT_SYNCHRONIZED: local ${localSha} != remote ${remoteSha ?? 'missing'} or branch is ${effectiveBranch}`);
   process.exitCode = 1;
 }
