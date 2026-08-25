@@ -2,6 +2,12 @@
 
 ## 2026-08-25
 
+### Branch convergence audit
+
+- Added the read-only `npm run audit:branch-convergence` command and its canonical snapshot document.
+- Recorded that the unified branch and `origin/main` diverge by 149/214 commits and that graph differences are not missing-feature verdicts.
+- Kept migration decisions in `.ai/RC_MIGRATION_LEDGER.md`; no merge, rebase, push, database or product-code change was performed.
+
 ### Read-only parity evidence
 
 - Verified the configured Supabase project through GET-only PostgREST probes: 31/31 contract tables and latest contract columns responded successfully.

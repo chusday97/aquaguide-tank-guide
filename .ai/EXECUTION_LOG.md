@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-25 — Branch convergence audit gate
+
+- **Action:** Added `scripts/audit-branch-convergence.mjs`, `npm run audit:branch-convergence`, and `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`.
+- **Evidence:** The read-only audit reported 149 canonical-only and 214 `origin/main`-only commits, plus 149 canonical-only and 742 RC1-only commits.
+- **Decision:** Treat these as graph topology only; require capability-level review in `.ai/RC_MIGRATION_LEDGER.md` before any selective port.
+- **Commit:** `98977966`.
+
 ## 2026-08-25 — Initialize `.ai/`
 
 - **Read:** 项目 `PROGRESS.md`、`HANDOFF.md`、`PROJECT_STRUCTURE.md`、`40-DOCS/CHANGELOG.md`。

@@ -1,5 +1,7 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
 
+- 2026-08-25：完成分支收敛审计门禁（`98977966`）。新增 `npm run audit:branch-convergence` 与 `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`，记录统一分支与 `origin/main`（149/214）、RC1（149/742）及远端分支拓扑；该审计只提供 Git 图证据，不把分支差异当作缺失功能，也不执行 merge/rebase/push。下一步按 `.ai/RC_MIGRATION_LEDGER.md` 逐项完成来源能力审查。
+
 - 2026-08-25：用户确认当前 4317 版本可作为可用工作基线，但视觉仍有后续问题；已记录 D-AQUA-005。后续只按模块/视口渐进修改并复跑受影响回归，不整体替换当前视觉。
 
 ## 当前任务目标

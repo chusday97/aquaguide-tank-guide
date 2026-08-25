@@ -1,5 +1,10 @@
 # AquaGuide 项目结构
 
+## 收敛治理
+
+- `scripts/audit-branch-convergence.mjs`：只读比较统一分支、`origin/main`、RC1 和远端历史分支的 Git 拓扑，不能替代功能迁移判定。
+- `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`：分支差异快照、解释和逐项迁移规则。
+
 ## 本轮交互结构
 
 - `src/components/common/AdaptiveDetailContent.tsx`：手机底部面板与桌面页面内双屏详情的表面适配。
