@@ -1,6 +1,6 @@
 # P0 Compatibility and Current-Tank Contract
 
-**Status:** `PROPOSED — approval required before implementation`  
+**Status:** `ACCEPTED — user approved 2026-08-25`
 **Target:** `codex/unified-rc-visual-v1`  
 **Business reference:** `integration/aquaguide-rc1@895f2f39`
 
@@ -12,7 +12,7 @@ Port the reviewed compatibility evidence and derived current-tank/water-change d
 
 | Layer | Proposed change | Persistence/API impact |
 | --- | --- | --- |
-| Existing batch type | Expand `LifeStage` from `unknown / juvenile / adult` to `unknown / fry / juvenile / subadult / adult` | Existing values remain valid; no column/table/API shape change. |
+| Compatibility input type | Add local `CompatibilityLifeStage`: `unknown / fry / juvenile / subadult / adult` | Existing persisted `LifeStage` remains `unknown / juvenile / adult`; no column/table/API shape change. |
 | Local reviewed evidence | Add reviewed species, pair and stage-risk data in `src/data/compatibilityEvidence.ts` | Bundled evidence data only; no remote write. |
 | Domain rule | Add pure `TankState`, `WaterChangeDecision` and coarse bioload screening functions | Derived in memory from existing facts; no persistence. |
 | Aquarium services | Build priors from existing compatibility results and observations from existing diagnosis/care records | Reads existing models only; no new stored Current Tank State. |
@@ -29,7 +29,8 @@ If implementation discovers either is required, stop this unit and submit a new 
 ## Type definitions
 
 ```ts
-export type LifeStage = 'unknown' | 'fry' | 'juvenile' | 'subadult' | 'adult';
+export type LifeStage = 'unknown' | 'juvenile' | 'adult';
+export type CompatibilityLifeStage = LifeStage | 'fry' | 'subadult';
 
 export type TankState = 'stable' | 'watch' | 'intervene' | 'urgent' | 'unknown';
 export type TankStateAction = 'no_action' | 'observe' | 'adjust' | 'urgent_action' | 'complete_check';
@@ -68,8 +69,6 @@ export type WaterChangeAction = 'none' | 'record_water_change' | 'check_water_qu
 - Vercel runtime/deployment contract changes
 - Recommendation-authority migration (a later unit)
 
-## Approval question
+## Approval record
 
-Approve this contract exactly: **expand only the local `LifeStage` union and add pure/local derived evidence services; make no SQL, API, Supabase, persisted-state or UI-geometry change.**
-
-After approval, implementation will port the listed files with deterministic tests, then run the visual matrix to prove the 4317 baseline did not change.
+The user approved this exact scope on 2026-08-25. Implementation discovered that `LifeStage` is a shared API/database contract, so the accepted no-API/no-persistence boundary is preserved by using a separate local `CompatibilityLifeStage` input instead. Implementation remains limited to reviewed evidence, pure derived services and deterministic tests; it must not introduce SQL, API, Supabase, persisted-state or UI-geometry changes.

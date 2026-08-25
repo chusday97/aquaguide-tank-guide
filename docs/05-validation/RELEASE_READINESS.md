@@ -12,7 +12,7 @@
 | GitHub convergence CI | Actions run `32849012409` passed project truth, state, lint, layout, framing and build on the canonical branch | Pass | Rerun automatically for relevant future pushes. |
 | Exact Preview SHA parity | Branch Preview exists | Pending | Record the exact deployed SHA associated with the accepted review. |
 | Supabase schema/RLS parity | Deployment and environment variables are user-confirmed/non-secret-audited; local 31-table contract passes | Pending | Authorized read-only schema revision and RLS/API smoke check. |
-| P0 business migration | Contract draft exists | Pending | User approval, implementation, deterministic tests and UI-matrix regression. |
+| P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
 | RC/main merge | Not authorized | Blocked by release decision | Separate user release acceptance after all above gates pass. |
 
 ## Release rule

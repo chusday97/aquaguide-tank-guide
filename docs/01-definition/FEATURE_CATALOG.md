@@ -35,7 +35,7 @@
 
 | Capability | Status | Constraint |
 | --- | --- | --- |
-| Compatibility evidence, current tank state and water-change authority | `RC_MIGRATION_PROPOSED` | Requires P0 data contract confirmation; retain current UI. |
+| Compatibility evidence, current tank state and water-change authority | `PARTIAL_WITH_FALLBACK` | User-approved local rules and derived services are verified; existing UI geometry is unchanged and no new current-state UI surface is wired in this unit. |
 | Species Detail evidence authority | `RC_MIGRATION_PROPOSED` | Service/evidence adapters only; never copy RC detail layout. |
 | Recommendation authority/severity | `RC_MIGRATION_PROPOSED` | Only after P0 authority is present. |
 | API/Vercel runtime changes | `RC_MIGRATION_PROPOSED` | Separate deployment/API contract review required. |

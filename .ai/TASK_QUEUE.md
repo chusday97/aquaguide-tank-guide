@@ -6,8 +6,8 @@
 - [x] 建立 `.ai/PROJECT_STATE.json` 作为唯一状态入口。
 - [x] 审计 RC 提交并建立 `.ai/RC_MIGRATION_LEDGER.md`。
 - [x] 完成 P0 数据/契约影响评审 `.ai/P0_MIGRATION_IMPACT.md`。
-- [ ] 确认 P0 迁移的类型、证据和派生服务范围后再修改代码。
-- [ ] 只迁入有产品规则、测试和受影响文件证据的 RC 业务能力。
+- [x] 用户确认 P0 迁移的类型、证据和派生服务范围。
+- [x] 只迁入有产品规则、测试和受影响文件证据的 RC 业务能力。
 - [x] 创建唯一 RC 目标 PR，并将本地预览、PR head 和状态入口对齐。
 - [x] 新增 `npm run project:status` 与 RC 收敛 CI，防止状态入口和分支漂移；GitHub Actions run `32846848569` 已真实通过。
 - [x] 对 56 个 GitHub open PR 建立登记表；#141 为唯一收敛入口，其余 55 个只作历史输入。
@@ -20,8 +20,8 @@
 - [x] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
 - [ ] Phase 5: 已完成非敏感环境、18 份 migration、31 表契约和分支 Preview 审计；仍需授权只读核对已部署 Supabase 的 schema/RLS 与 exact SHA parity。
 - [x] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线；RC branch protection 等待 workflow 进入基分支后的管理员配置。
-- [ ] Phase 7: `docs/decisions/P0_COMPATIBILITY_CONTRACT.md` 已起草为 PROPOSED；等待用户确认后选择性迁入 RC P0 业务能力，保留现有 UI。
-- [ ] Phase 8: 发布就绪表已建立；等待 exact Preview SHA、授权 Supabase schema/RLS parity、P0 实现和单独 release acceptance。
+- [x] Phase 7: 用户已接受 P0 兼容性契约；已选择性迁入本地生命周期、审核证据、当前鱼缸/换水纯规则与派生服务，保留现有 UI。
+- [ ] Phase 8: 发布就绪表已建立；P0 实现已通过，仍等待 exact Preview SHA、授权 Supabase schema/RLS parity 和单独 release acceptance。
 
 ## Release Gate
 

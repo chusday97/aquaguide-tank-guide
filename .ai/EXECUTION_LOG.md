@@ -83,3 +83,11 @@
 ## 2026-08-25 — Truth consolidation phase 8 gate established
 
 - Added `RELEASE_READINESS.md`; the unified line is intentionally `NOT_READY` until exact deployment parity, authorized Supabase parity, P0 contract implementation and a separate release acceptance are complete.
+
+## 2026-08-25 — Accepted P0 compatibility authority migration
+
+- **Approval:** 用户明确批准 `docs/decisions/P0_COMPATIBILITY_CONTRACT.md`。
+- **Action:** 迁入本地 `CompatibilityLifeStage` 输入、审核阶段风险证据、纯 tank-state / water-change / bioload 规则和从既有鱼缸、诊断事实派生的服务；共享 `LifeStage` 保持 API/数据库原枚举，未导入 RC 页面、CSS、API、迁移、RLS 或写入逻辑。
+- **Verification:** `lint`、兼容性 16/16、tank-state 11/11、water-change 8/8、three-tier contract、production build 通过；4320 临时 build preview 的 layout、framing、interactive scenes、page runtime matrix 通过。
+- **Remote:** 尚未推送本次产品代码；`main` 未修改，发布仍受 Supabase parity 和单独 release acceptance 阻断。
+- **Independent review:** Critic initially found incomplete structured diagnosis mapping, a legacy bioload threshold regression, a shared lifecycle/API boundary leak, and free-text false positives. The builder restored the legacy multiplier, isolated `CompatibilityLifeStage`, mapped current structured question fields, excluded free text, and added regressions; the same Critic recheck passed.

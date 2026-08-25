@@ -4,6 +4,8 @@
 
 ### Added
 
+- 用户批准 P0 契约后，新增本地当前鱼缸/换水规则、审核阶段风险证据、派生服务和确定性回归；未改 UI、SQL、API 或 Supabase。
+
 - 初始化 `.ai/` 上下文目录及四个标准文件。
 - 补齐 `PRODUCT_CONTEXT.md`、`ARCHITECTURE.md`、`DECISION_LOG.md` 与 `BADCASES.md`。
 - 新增项目根目录 `AI_PROJECT_PROTOCOL.md`，明确编码前读取与变更后更新要求。

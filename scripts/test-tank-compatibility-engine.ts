@@ -254,6 +254,20 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'aggressive temperament keeps the legacy load threshold',
+    run: () => {
+      const aggressive = makeFish({ size: 'Large', temperament: 'Aggressive' });
+      const result = evaluateTankCompatibility({
+        tank: makeTank({ dimensions: { length: '70', width: '40', height: '25' } }),
+        existingSpecies: [{ species: aggressive, record: { quantity: 6 } }],
+        candidateSpecies: makeFish({ id: 'candidate-small', size: 'Small' }),
+        candidateQuantity: 1,
+      });
+      return result.status === 'not_recommended'
+        && result.blockingRules.some(rule => rule.code === 'bioload_over_limit');
+    },
+  },
+  {
     name: 'addition service blocks incompatible species before write',
     run: () => {
       const freshwater = makeFish();

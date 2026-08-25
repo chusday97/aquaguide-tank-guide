@@ -93,6 +93,8 @@
 - `src/services/collection/memorial.service.ts`：生命纪念校验、兼容存储写入与统一变更通知。
 - `src/modules/collection/`：水族册模块、纪念条目与成就进度类型。
 - `src/services/aquarium/`：鱼缸生物写入与复核。
+- `src/services/aquarium/tank-state-evidence.service.ts`、`tank-state-presentation.service.ts`：从既有混养/诊断事实派生当前状态；不新增持久化记录。
+- `src/services/aquarium/water-change*.service.ts`：基于既有历史和当前信号得出维护建议；不将日历逾期伪装为紧急诊断。
 - `src/services/onboarding/onboarding.service.ts`：新手引导状态、首次识别、真实任务进度与完成派生。
 - `src/services/aquarium/aquarium-state.service.ts`：鱼缸集合兼容存储、当前鱼缸校验与统一变更通知。
 - `src/services/aquarium/aquarium-navigation.service.ts`：本地/云端共用的会话级鱼缸列表与当前选择快照，供桌面侧栏订阅。
@@ -104,6 +106,7 @@
 - `src/services/diagnosis/`：巡检记录的同日更新策略。
 - `src/modules/diagnosis/`：每日检查问题、确定性规则与数据类型。
 - `src/lib/tankCompatibilityEngine.ts`：统一混养规则引擎。
+- `packages/domain-rules/src/{bioload,tank-state,water-change}.ts`：P0 本地确定性规则；与 UI 和云端存储解耦。
 - `src/lib/waterProfileEstimate.ts`：从水体类型、底床、造景和水草派生非数值水体倾向，供缺少 pH 时安全展示。
 - `src/lib/speciesVisual.ts`：二维与 3D 物种素材解析。
 - `src/lib/speciesRecognition.ts`：视觉候选与学名、名称、别名及模糊候选的本地物种库映射。
@@ -138,6 +141,7 @@
 - `scripts/verify-project-truth.mjs`：检查 canonical truth 路由、统一分支、PR 与功能状态词汇。
 - `docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md`：正确 UI 基线与浏览器/人工验收证据的可执行对应表。
 - `docs/05-validation/RELEASE_READINESS.md`：统一分支进入 RC/main 前的可复核发布门禁。
+- `docs/05-validation/P0_COMPATIBILITY_ACCEPTANCE.md`：已接受的本地 P0 迁移验收案例与边界。
 - `docs/decisions/`：未确认的产品、数据与迁移决策；只有用户确认后才能写入 `CONTRACT.md` 或实现。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。

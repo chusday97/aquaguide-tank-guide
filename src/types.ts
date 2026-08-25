@@ -45,6 +45,12 @@ export interface AquariumFish {
 
 export type LifeStage = 'unknown' | 'juvenile' | 'adult';
 
+/**
+ * Compatibility inputs may describe unpersisted stages. Stored livestock batches
+ * intentionally remain on the existing API/database LifeStage contract.
+ */
+export type CompatibilityLifeStage = LifeStage | 'fry' | 'subadult';
+
 export type ReproductiveState =
   | 'unknown'
   | 'not_applicable'
