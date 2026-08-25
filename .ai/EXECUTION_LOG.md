@@ -64,3 +64,13 @@
 ## 2026-08-25 — Truth consolidation phase 4 started
 
 - Added `FEATURE_CATALOG.md` as the single module-status inventory and removed the duplicate capability table from Product Truth.
+
+## 2026-08-25 — Truth consolidation phase 5 audited
+
+- Verified non-secret evidence: 18 tracked migrations, the 31-table three-tier contract test, configured Vercel Production Supabase/Postgres variable names, and a Ready unified-branch Preview.
+- Recorded exact deployed schema/RLS/SHA parity as an authorized read-only verification still required; no redeploy or configuration change was attempted.
+
+## 2026-08-25 — Truth consolidation phase 6 started
+
+- Added PR evidence template, delivery protocol and a deterministic project-truth verifier.
+- Read the RC branch-protection API: the branch is not protected. Recorded the safe prerequisite rather than enabling a check that could block all PRs before it is runnable from the base branch.

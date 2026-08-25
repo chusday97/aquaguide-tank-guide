@@ -134,6 +134,8 @@
 - `docs/01-definition/FEATURE_CATALOG.md`：当前模块功能状态与 RC 选择性迁移边界的唯一目录。
 - `docs/02-design/VISUAL_BASELINE.md`：用户确认的 4317 视觉验收基线与 UI owner。
 - `docs/03-development/DEPLOYMENT_STATE.md`：本地、GitHub、CI、Supabase 和部署 parity 的分层状态。
+- `docs/03-development/GIT_DELIVERY_PROTOCOL.md` 与 `.github/pull_request_template.md`：唯一交付线、PR 必填事实和 branch-protection 前置条件。
+- `scripts/verify-project-truth.mjs`：检查 canonical truth 路由、统一分支、PR 与功能状态词汇。
 - `docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md`：正确 UI 基线与浏览器/人工验收证据的可执行对应表。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。

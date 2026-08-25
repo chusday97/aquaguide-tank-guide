@@ -17,9 +17,9 @@
 - [x] Phase 1: 建立项目、产品、UI、部署的 canonical truth 文件与总入口。
 - [x] Phase 2: 将冲突/重复文档降级为历史入口或改为链接，不删除证据。
 - [x] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口；2026-08-25 自动门禁通过。
-- [ ] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
-- [ ] Phase 5: 只读核对当前统一分支与已部署 Supabase/Vercel 的环境、schema 和 SHA parity。
-- [ ] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线。
+- [x] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
+- [ ] Phase 5: 已完成非敏感环境、18 份 migration、31 表契约和分支 Preview 审计；仍需授权只读核对已部署 Supabase 的 schema/RLS 与 exact SHA parity。
+- [x] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线；RC branch protection 等待 workflow 进入基分支后的管理员配置。
 - [ ] Phase 7: 经契约确认后选择性迁入 RC P0 业务能力，保留现有 UI。
 - [ ] Phase 8: 用本地、GitHub、部署、Supabase 和人工视觉验收完成发布收口。
 

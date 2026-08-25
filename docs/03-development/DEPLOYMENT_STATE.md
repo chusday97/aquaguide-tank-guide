@@ -14,6 +14,14 @@
 | Environment parity | The current branch was verified against the connected cloud environment | Not yet re-verified. This is distinct from deployment. |
 | Human visual acceptance | A person accepted the rendered UI | The 4317 local interactive baseline is user-confirmed; a matching deployed-SHA review remains pending. |
 
+## 2026-08-25 non-secret deployment audit
+
+- The repository contains 18 tracked Supabase migration files, from `202607160001_core_schema.sql` through `202608090003_atomic_livestock_addition.sql`.
+- `npm run test:three-tier-contract` passed: 31 tables, RLS, Storage, API and shared types are internally aligned.
+- Vercel Production contains configured Supabase/Postgres environment-variable names; values were not read or recorded.
+- A Ready Preview is aliased to `codex/unified-rc-visual-v1`.
+- The Vercel inspection response identifies the branch alias but does not expose an exact Git SHA, so branch Preview readiness is not accepted as exact SHA parity by itself.
+
 ## Deployment rules
 
 - Never treat a Vercel/Cloudflare success as proof that its deployed SHA is the accepted review SHA.
@@ -32,3 +40,5 @@
 ## Current limitation
 
 The repository contains historical records that use phrases such as “real Supabase verification pending.” They mean the exact current-environment parity check above has not been repeated from the unified branch. They do not mean that Supabase was never deployed.
+
+The remaining parity evidence requires an authorized read-only Supabase schema/RLS inspection against the deployed project. No migration rename, schema change, environment-variable change or redeployment is authorized by this audit.

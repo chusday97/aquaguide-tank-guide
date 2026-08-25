@@ -8,6 +8,13 @@ on:
       - 'packages/**'
       - 'scripts/**'
       - '.ai/PROJECT_STATE.json'
+      - 'docs/PROJECT_TRUTH.md'
+      - 'docs/HISTORICAL_EVIDENCE.md'
+      - 'docs/01-definition/PRODUCT_TRUTH.md'
+      - 'docs/01-definition/FEATURE_CATALOG.md'
+      - 'docs/02-design/VISUAL_BASELINE.md'
+      - 'docs/03-development/DEPLOYMENT_STATE.md'
+      - 'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/rc-convergence-v1.yml'
@@ -18,6 +25,13 @@ on:
       - 'packages/**'
       - 'scripts/**'
       - '.ai/PROJECT_STATE.json'
+      - 'docs/PROJECT_TRUTH.md'
+      - 'docs/HISTORICAL_EVIDENCE.md'
+      - 'docs/01-definition/PRODUCT_TRUTH.md'
+      - 'docs/01-definition/FEATURE_CATALOG.md'
+      - 'docs/02-design/VISUAL_BASELINE.md'
+      - 'docs/03-development/DEPLOYMENT_STATE.md'
+      - 'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/rc-convergence-v1.yml'
@@ -38,6 +52,8 @@ jobs:
       - run: npm ci
       - name: Confirm convergence state
         run: npm run project:status
+      - name: Confirm project truth routing
+        run: npm run check:project-truth
       - name: Type check
         run: npm run lint
       - name: Visual viewport contract

@@ -7,6 +7,8 @@
 - 新增历史证据登记表，并将旧 Handoff、进度账本、UI 审计和云同步方案明确标为历史材料，避免旧结论覆盖当前基线。
 - 新增视觉验收矩阵，将 4317 用户确认的 UI 基线与路由、自动化回归和人工验收状态对应。
 - 新增功能目录，以 `CURRENT_VERIFIED / DEPLOYED_REVERIFY_PENDING / PARTIAL_WITH_FALLBACK / RC_MIGRATION_PROPOSED / HISTORICAL_OR_EXCLUDED` 统一模块状态。
+- 部署状态新增非敏感审计：18 份 migration、31 表三层契约、Vercel Production Supabase/Postgres 变量名称及统一分支 Preview 均可追溯；精确 schema/RLS/SHA parity 保持待授权核验。
+- 新增 Git 交付协议、PR 模板与 `check:project-truth` 门禁，防止新 PR 再次绕开统一分支或遗漏产品/UI/数据影响记录。
 
 ### Fixed
 - 修复图鉴与养护桌面详情曾因脱离 Base UI Portal 而白屏、并且养护详情没有真实参与父级双栏网格的问题；现以页面内工作区区域重排，运行时门禁同时检查非固定、非 Portal、无滚动锁和左右不重叠。

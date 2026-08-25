@@ -17,6 +17,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "project:status": "node scripts/project-status.mjs",
+    "check:project-truth": "node scripts/verify-project-truth.mjs",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
     "audit:compatibility-evidence": "node --import tsx scripts/audit_compatibility_evidence.ts",
     "test:favorites": "tsx scripts/test-favorites-service.ts",
