@@ -54,4 +54,32 @@ const empty = buildCompatibilityEvidencePresentation(undefined);
 assert.equal(empty.sourceStatus, 'pending');
 assert.equal(empty.items.length, 0);
 
+const rejectedResult: TankCompatibilityResult = {
+  ...result,
+  warningRules: [{
+    ...result.warningRules[0],
+    reviewStatus: 'rejected',
+  }],
+  missingData: [],
+};
+const rejected = buildCompatibilityEvidencePresentation(rejectedResult);
+assert.equal(rejected.sourceStatus, 'pending');
+assert.equal(rejected.items.length, 0, 'rejected evidence must not be shown as a key reason');
+assert.equal(rejected.reviewedCount, 0);
+assert.equal(rejected.pendingCount, 1);
+
+const reviewedAndRejected = buildCompatibilityEvidencePresentation({
+  ...rejectedResult,
+  passedRules: [{
+    code: 'water-match',
+    title: '水体匹配',
+    evidence: '当前为淡水鱼缸。',
+    severity: 'info',
+    ...baseRule,
+    reviewStatus: 'reviewed',
+  }],
+});
+assert.equal(reviewedAndRejected.sourceStatus, 'mixed');
+assert.equal(reviewedAndRejected.items.length, 1);
+
 console.log('compatibility evidence presentation assertions passed');

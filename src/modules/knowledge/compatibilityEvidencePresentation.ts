@@ -51,7 +51,8 @@ export const buildCompatibilityEvidencePresentation = (
   }
 
   const rules = uniqueRules(ruleGroups.flatMap(group => result[group.rules]));
-  const items = rules.map((rule, index) => ({
+  const displayRules = rules.filter(rule => rule.reviewStatus !== 'rejected');
+  const items = displayRules.map((rule, index) => ({
     code: rule.code,
     label: rule.title,
     text: rule.evidence || rule.title,
@@ -78,6 +79,6 @@ export const buildCompatibilityEvidencePresentation = (
     sourceStatus,
     reviewedCount,
     pendingCount,
-    citationCount: rules.reduce((count, rule) => count + rule.citations.length, 0),
+    citationCount: displayRules.reduce((count, rule) => count + rule.citations.length, 0),
   };
 };

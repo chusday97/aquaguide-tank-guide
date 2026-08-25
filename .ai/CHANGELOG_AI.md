@@ -7,6 +7,7 @@
 - Added `compatibilityEvidencePresentation.ts` to adapt canonical `TankCompatibilityResult` rules into ordered, status-aware detail evidence.
 - Species Detail key reasons no longer derive from local metric heuristics; profile `housingReason` is visibly reference-only and cannot override the compatibility result.
 - Added deterministic evidence-presentation regression and verified lint, compatibility, species knowledge, build, and 4317 browser detail checks.
+- Critic follow-up fixed the rejected-evidence boundary: rejected rules remain pending for provenance accounting but are excluded from user-facing key reasons; added rejected-only and reviewed/rejected mixed regressions.
 - Kept the overall compatibility module `PARTIAL_WITH_FALLBACK`; evidence coverage is still incomplete and remains a follow-up task.
 
 ### Branch convergence audit

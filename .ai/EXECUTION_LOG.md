@@ -7,6 +7,7 @@
 - **Action:** Ported only the RC evidence-authority semantics into the current Species Detail implementation. Added a pure adapter for ordered blocking/warning/missing/passed rules and review status; kept the current visual geometry and labeled `housingReason` as profile reference.
 - **Verification:** `npm run lint`; evidence presentation assertions; compatibility 17/17; species knowledge; production build; `PREVIEW_URL=http://127.0.0.1:4317 node scripts/verify-species-detail-experience.mjs` all passed. The browser command required escalated Playwright permissions in this environment.
 - **Evidence gap:** compatibility audit remains 501 species / 7 reviewed / 4 pair rules / 1.4% reviewed coverage; this migration does not claim full evidence completeness.
+- **Critic follow-up:** rejected evidence was found displayable despite being non-authoritative. Excluded rejected rules from detail key reasons while retaining pending source status; added rejected-only and mixed-state assertions.
 - **Next:** review Recommendation authority and severity.
 
 - **Action:** Added `scripts/audit-branch-convergence.mjs`, `npm run audit:branch-convergence`, and `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`.
