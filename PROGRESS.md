@@ -1,5 +1,7 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
 
+- 2026-08-25：用户确认当前 4317 版本可作为可用工作基线，但视觉仍有后续问题；已记录 D-AQUA-005。后续只按模块/视口渐进修改并复跑受影响回归，不整体替换当前视觉。
+
 ## 当前任务目标
 
 - 2026-08-25：完成只读 parity 核对尝试。Supabase PostgREST 31/31 契约表和最新字段探针均返回 200；`check:project-truth`、`project:status`、`test:three-tier-contract` 通过。Vercel 最新统一分支 Preview 与 `187d16ba` 仅有创建时间关联，Vercel 元数据未返回 exact Git SHA；生产 PostgreSQL 连接串被 Vercel 脱敏，无法从当前授权面读取 migration revision/RLS policy metadata。4317 当前视口 523×812 渲染完整 DOM、图片和 WebGL，无应用错误；人工视觉验收仍待用户确认。记录见 `docs/03-development/DEPLOYMENT_STATE.md`、`docs/05-validation/RELEASE_READINESS.md`。

@@ -7,7 +7,7 @@
 
 ## Baseline decision
 
-The user confirmed the interactive preview as the correct direction. This is the visual acceptance source for ongoing work. `integration/aquaguide-rc1`, PR #140, old mockups, and historical PR screenshots are not visual acceptance sources.
+The user confirmed the interactive preview as the correct **working direction**. It is the current visual acceptance source, not a claim that every visual detail is final; future issues will be corrected incrementally by module and viewport. `integration/aquaguide-rc1`, PR #140, old mockups, and historical PR screenshots are not visual acceptance sources.
 
 ## Required visual behavior
 

@@ -114,3 +114,9 @@
 - **Verification:** 31/31 contract tables returned HTTP 200; latest aquarium, livestock batch, care-action, recurring-event, compatibility-evidence and care-reference columns returned HTTP 200. `npm run check:project-truth`, `npm run project:status` and `npm run test:three-tier-contract` passed.
 - **Evidence gap:** Vercel masks PostgreSQL connection strings and the anon REST surface does not expose migration history or policy metadata, so exact schema revision/direct RLS policy verification remains pending. The latest Ready branch Preview is timing-correlated with `187d16ba` but its exact Git SHA was not returned by Vercel metadata.
 - **Human review:** 4317 preview rendered at 523×812 with complete DOM, images and WebGL canvas; no application errors. User visual acceptance remains pending.
+
+## 2026-08-25 — Visual baseline remains usable, not final
+
+- **User decision:** The current 4317 version is usable as the working visual baseline, while additional visual issues remain for later incremental work.
+- **Action:** Recorded D-AQUA-005 and clarified the Visual Baseline; no product code or UI geometry changed.
+- **Constraint:** Future visual work must be module-scoped, preserve formal component/surface semantics, and rerun only the affected viewport matrix before acceptance.

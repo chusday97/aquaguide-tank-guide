@@ -28,7 +28,8 @@
 - 当前产品代码 head：`90c1ad6`
 - 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `90c1ad6` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
-- 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非视觉 PASS**。
+- 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
+- **视觉决策更新：** 用户确认当前 4317 版本可用作工作基线，但仍有后续视觉问题；后续修改必须按模块和视口渐进推进，并保留正式组件、Rail/Sheet/Blocking 语义。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
 - UI 不可变原则：`UI_REGRESSION_CONTRACT.md`。
 

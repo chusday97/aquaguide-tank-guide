@@ -8,6 +8,10 @@
 - Recorded the remaining evidence gaps: exact migration revision, direct RLS policy metadata and exact Vercel Preview Git SHA are not exposed through the currently authorized surfaces.
 - Verified the claimed 4317 preview renders the interactive DOM, species images and WebGL canvas without application errors; human visual acceptance still requires user confirmation.
 
+### Visual baseline decision
+
+- Recorded that the current 4317 version is usable as a working baseline, not a final visual lock; future UI fixes must be incremental and module-scoped.
+
 ### Unified governance implementation
 
 - Added the cross-layer module fact inventory and routed it through the canonical truth map.
