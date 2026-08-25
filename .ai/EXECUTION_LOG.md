@@ -106,3 +106,11 @@
 - **Verification:** `lint`、兼容性 16/16、tank-state 11/11、water-change 8/8、three-tier contract、production build 通过；4320 临时 build preview 的 layout、framing、interactive scenes、page runtime matrix 通过。
 - **Remote:** 尚未推送本次产品代码；`main` 未修改，发布仍受 Supabase parity 和单独 release acceptance 阻断。
 - **Independent review:** Critic initially found incomplete structured diagnosis mapping, a legacy bioload threshold regression, a shared lifecycle/API boundary leak, and free-text false positives. The builder restored the legacy multiplier, isolated `CompatibilityLifeStage`, mapped current structured question fields, excluded free text, and added regressions; the same Critic recheck passed.
+
+## 2026-08-25 — Read-only Supabase and Preview parity attempt
+
+- **Read:** `DEPLOYMENT_STATE.md`, `RELEASE_READINESS.md`, `CONTRACT.md`, `test-three-tier-contract`, current canonical branch and Vercel project metadata.
+- **Action:** Pulled production environment names through the existing Vercel authorization into a temporary 600-permission file; queried Supabase PostgREST with the anon key using GET only. No migration, RPC mutation, INSERT, UPDATE, DELETE or RLS change was executed.
+- **Verification:** 31/31 contract tables returned HTTP 200; latest aquarium, livestock batch, care-action, recurring-event, compatibility-evidence and care-reference columns returned HTTP 200. `npm run check:project-truth`, `npm run project:status` and `npm run test:three-tier-contract` passed.
+- **Evidence gap:** Vercel masks PostgreSQL connection strings and the anon REST surface does not expose migration history or policy metadata, so exact schema revision/direct RLS policy verification remains pending. The latest Ready branch Preview is timing-correlated with `187d16ba` but its exact Git SHA was not returned by Vercel metadata.
+- **Human review:** 4317 preview rendered at 523×812 with complete DOM, images and WebGL canvas; no application errors. User visual acceptance remains pending.

@@ -7,7 +7,7 @@
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
 - **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
 - **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
-- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归，Supabase exact parity 和 release acceptance 仍未完成。
+- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。只读 PostgREST 已确认 31/31 契约表和最新字段存在，但 exact migration revision、直接 RLS policy metadata、exact Preview Git SHA 与用户 release acceptance 仍未完成。
 - **P0 独立审查：** Critic 已复验通过；曾发现的水质映射、侵略性负荷回归、共享类型边界与自由文本误判均已有回归用例和修复。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
@@ -19,6 +19,9 @@
 - **治理提交：** `28142542`、`642b007b` 已加入只读 GitHub PR 拓扑检查、`.ai` 门禁触发范围和 PR 清理/模块盘点记录；Critic 六维复验通过，GitHub Actions `32853545889` 成功。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
 - **Supabase 状态校正：** 用户于 2026-08-25 确认既有 Supabase 工作已部署。旧文档中“待真实 Supabase 验证”只表示当前统一分支尚未重新核对连接环境、schema revision 与 RLS 回归，绝不表示 Supabase 没有部署。
+- **Parity 核对结果（2026-08-25）：** 使用 Vercel 现有授权读取生产环境配置名，并以 anon key 对配置项目执行 GET-only PostgREST 探针；31/31 契约表、鱼缸/批次/换水、养护动作/循环、兼容证据和引用字段均返回 HTTP 200。Vercel 脱敏 PostgreSQL 连接串，anon REST 不公开 migration history/RLS policy metadata，因此不能把这次结果升级为 exact schema/RLS parity。
+- **Preview 核对结果（2026-08-25）：** 最新 Ready branch Preview `aquaguide-2kdgtap8s-chusday97s-projects.vercel.app` 绑定统一分支，创建时间与 `187d16ba` 提交时间相差 6 秒；Vercel 元数据接口未返回 Git SHA，只能记为 timing correlation，不能记为 exact SHA parity。
+- **人工验收状态（2026-08-25）：** 4317 已在当前 523×812 视口渲染完整互动预览、9 个物种图像和 592×728 WebGL canvas，浏览器无应用错误；Three.js 仅有弃用警告。用户仍需确认视觉是否通过，不能由自动检查代替。
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。

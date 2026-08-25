@@ -2,6 +2,12 @@
 
 ## 2026-08-25
 
+### Read-only parity evidence
+
+- Verified the configured Supabase project through GET-only PostgREST probes: 31/31 contract tables and latest contract columns responded successfully.
+- Recorded the remaining evidence gaps: exact migration revision, direct RLS policy metadata and exact Vercel Preview Git SHA are not exposed through the currently authorized surfaces.
+- Verified the claimed 4317 preview renders the interactive DOM, species images and WebGL canvas without application errors; human visual acceptance still requires user confirmation.
+
 ### Unified governance implementation
 
 - Added the cross-layer module fact inventory and routed it through the canonical truth map.

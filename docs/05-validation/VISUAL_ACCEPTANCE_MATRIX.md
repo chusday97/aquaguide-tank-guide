@@ -20,6 +20,8 @@ This matrix makes the visual baseline executable. It does not replace [`UI_REGRE
 - **User-confirmed:** the 4317 interactive preview is the correct local visual direction.
 - **Automated (2026-08-25):** `test:layout-mode` (6/6), `test:three-stage-framing`, `verify-ui-regression-contract`, `test:interactive-scenes-ui`, `verify-split-workspace-runtime`, and `verify-page-runtime-matrix` (28/28) passed against the local baseline.
 - **Automated policy:** this matrix is re-run whenever a UI owner, responsive behavior, scene or surface semantics changes.
+- **Fresh browser check (2026-08-25):** the claimed 4317 preview rendered the complete interactive preview DOM, 9 species images and a 592×728 WebGL canvas at the current 523×812 viewport; browser logs contained no application errors. The remaining Three.js messages are deprecation warnings only.
+- **Human review:** pending user confirmation of the fixed viewport appearance. Browser evidence is not substituted for the user's visual acceptance.
 - **Not yet a screenshot golden:** no screenshot baseline is promoted until a stored image set, viewport, locale and seed are all recorded.
 - **Deployment parity pending:** a deployed preview is accepted only when its SHA and rendered behavior match this baseline.
 

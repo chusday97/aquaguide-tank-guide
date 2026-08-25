@@ -20,10 +20,10 @@
 - [x] Phase 2: 将冲突/重复文档降级为历史入口或改为链接，不删除证据。
 - [x] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口；2026-08-25 自动门禁通过。
 - [x] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
-- [ ] Phase 5: 模块事实盘点已建立；已完成非敏感环境、18 份 migration、31 表契约和分支 Preview 审计；仍需授权只读核对已部署 Supabase 的 schema/RLS 与 exact SHA parity。
+- [ ] Phase 5: 模块事实盘点已建立；只读 PostgREST 已核对 31/31 契约表和最新字段，仍缺 exact migration revision、直接 RLS policy metadata 与 exact Preview Git SHA。
 - [x] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线；RC branch protection 等待 workflow 进入基分支后的管理员配置。
 - [x] Phase 7: 用户已接受 P0 兼容性契约；已选择性迁入本地生命周期、审核证据、当前鱼缸/换水纯规则与派生服务，保留现有 UI。
-- [ ] Phase 8: 发布就绪表已建立；P0 实现已通过，仍等待 exact Preview SHA、授权 Supabase schema/RLS parity 和单独 release acceptance。
+- [ ] Phase 8: 发布就绪表已建立；P0 实现已通过，仍等待 exact Preview SHA、授权 Supabase schema/RLS parity 和用户单独 release acceptance。
 
 ## Release Gate
 

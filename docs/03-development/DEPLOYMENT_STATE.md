@@ -23,6 +23,13 @@
 - The Vercel inspection response identifies the branch alias but does not expose an exact Git SHA, so branch Preview readiness is not accepted as exact SHA parity by itself.
 - GitHub Actions run `32854080645` passed the unified branch's project-truth, state, PR topology, lint, layout, framing and production-build checks on `cc99ec47`.
 
+## 2026-08-25 read-only parity attempt
+
+- Vercel production environment variable names were pulled through the existing project authorization into a temporary file; no values were recorded. The configured Supabase project returned `200` for read-only PostgREST probes against all **31/31** contract tables.
+- Read-only column probes for the latest unified fields passed for species identity, aquarium livestock and batch records, care action metadata, recurring reminders/events, compatibility evidence and care-article references. No write, RPC mutation, migration or RLS change was executed.
+- The Vercel environment pull masks the production PostgreSQL connection strings as `[SENSITIVE]`, and the Supabase anon REST surface does not expose migration history or policy metadata. Therefore the exact applied migration revision and direct RLS policy inspection remain **unverified**, not inferred from HTTP `200` responses.
+- The latest Ready branch Preview `aquaguide-2kdgtap8s-chusday97s-projects.vercel.app` is aliased to `codex/unified-rc-visual-v1` and was created at `21:35:47`; the unified commit `187d16ba` was created at `21:35:41`. This is a timing correlation only. Vercel API metadata access did not return the Git SHA, so exact Preview SHA parity remains **pending**.
+
 ## Deployment rules
 
 - Never treat a Vercel/Cloudflare success as proof that its deployed SHA is the accepted review SHA.

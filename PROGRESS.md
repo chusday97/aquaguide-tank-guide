@@ -2,6 +2,8 @@
 
 ## 当前任务目标
 
+- 2026-08-25：完成只读 parity 核对尝试。Supabase PostgREST 31/31 契约表和最新字段探针均返回 200；`check:project-truth`、`project:status`、`test:three-tier-contract` 通过。Vercel 最新统一分支 Preview 与 `187d16ba` 仅有创建时间关联，Vercel 元数据未返回 exact Git SHA；生产 PostgreSQL 连接串被 Vercel 脱敏，无法从当前授权面读取 migration revision/RLS policy metadata。4317 当前视口 523×812 渲染完整 DOM、图片和 WebGL，无应用错误；人工视觉验收仍待用户确认。记录见 `docs/03-development/DEPLOYMENT_STATE.md`、`docs/05-validation/RELEASE_READINESS.md`。
+
 - 2026-08-25：统一治理实施提交 `28142542`、`642b007b`：跨层模块事实盘点、只读 GitHub PR 拓扑门禁、CI `.ai` 输入触发范围、55 个历史 PR 关闭记录均已落地；Critic 六维复验通过，GitHub Actions `32853545889` 在 `642b007b` 上成功。
 
 - 2026-08-25：用户批准 P0 兼容性/当前鱼缸契约后，已在统一分支迁入本地 `CompatibilityLifeStage` 输入、审核阶段风险证据、当前鱼缸与换水纯规则、从既有诊断/鱼缸事实派生的服务和确定性测试（commit: `99865414`）。共享 `LifeStage` 保持既有 API/数据库枚举。`lint`、原兼容性 17/17、tank-state 11/11、tank-evidence 10/10、water-change 8/8、31 表三层契约、production build，以及 4320 临时 preview 的布局/取景/互动场景/页面运行矩阵均通过；独立 Critic 已复验通过。未修改 SQL、API、Supabase、持久化字段、页面组件或 CSS；阶段 8 仍待 exact Preview SHA、授权 schema/RLS parity 和单独 release acceptance。
