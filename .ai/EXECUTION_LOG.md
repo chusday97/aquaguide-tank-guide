@@ -22,3 +22,4 @@
 - Audited RC-only commits and grouped them into domain authority, recommendation, UI, interactive atlas, runtime/API, and workflow integrity categories.
 - Closed PR #140 and opened Draft PR #141 against `integration/aquaguide-rc1`.
 - Confirmed that P0 migration expands `LifeStage`, evidence data and planning semantics; paused code migration pending the required contract confirmation.
+- Added local/CI checks that report canonical branch, SHA, approved visual baseline, RC business reference and Draft PR.

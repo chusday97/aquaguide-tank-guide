@@ -1,0 +1,38 @@
+name: RC Convergence V1
+
+on:
+  pull_request:
+    branches: [integration/aquaguide-rc1, main]
+    paths:
+      - 'src/**'
+      - 'packages/**'
+      - 'scripts/**'
+      - '.ai/PROJECT_STATE.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/rc-convergence-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  convergence-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Confirm convergence state
+        run: npm run project:status
+      - name: Type check
+        run: npm run lint
+      - name: Visual viewport contract
+        run: npm run test:layout-mode
+      - name: Aquarium framing contract
+        run: npm run test:three-stage-framing
+      - name: Production build
+        run: npm run build
