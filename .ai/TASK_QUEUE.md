@@ -18,7 +18,8 @@
 - [ ] 对 `origin/main` 独有提交和历史来源按功能建立逐项迁移判定，不以提交数量或分支存在作为完成证据。
 - [x] 完成 Species Detail evidence authority：详情关键理由和混养证据来源改由统一规则结果驱动，物种档案文字标记为参考；新增结构化证据适配回归。
 - [x] 完成 Recommendation authority and severity：推荐候选保留与严重级别由统一混养结果裁决；新增 `npm run test:recommendation-authority`，未迁移旧推荐 UI。
-- [ ] 审查 Vercel/API runtime contract；只读核对部署/API 边界，未授权前不修改 Supabase schema、RLS 或 API 字段。
+- [x] 完成 Vercel/API runtime contract 本地迁移审查：新增 V1 catch-all、API-before-SPA rewrite、canonical Express runtime 和 ESM-safe imports；未修改 Supabase schema、RLS、LifeStage 或业务 API 字段。
+- [ ] 完成授权部署环境的 Vercel exact SHA 与 Supabase schema/RLS parity 复核。
 
 ## Eight-phase truth consolidation
 

@@ -8,7 +8,14 @@
 - Removed recommendation-local temperament, load and group-size hard-block authority; canonical `evaluateTankCompatibility` now owns severity while local calculations remain risk/adjustment context.
 - Routed candidate reasons through the canonical compatibility summary and added `scripts/test-recommendation-authority.ts` / `npm run test:recommendation-authority`.
 - Verified recommendation contract, compatibility 17/17, evidence presentation, lint, production build, diff check and delayed 4317 interactive preview rendering. Kept the current visual baseline and did not copy RC recommendation UI.
-- Next review unit is the Vercel/API runtime contract; exact Preview SHA, Supabase migration/RLS metadata and human release acceptance remain open.
+- Next review unit is Result UX workflow head integrity; exact Preview SHA, Supabase migration/RLS metadata and human release acceptance remain open.
+
+### Vercel/API runtime contract
+
+- Added the canonical `api/v1/[...path].ts` catch-all and placed the `/api/v1/:path*` rewrite before the SPA fallback.
+- Reused a standalone Express API app for Vercel instead of attaching routes to the legacy server; converted the API dependency graph to ESM-safe `.js` imports.
+- Added runtime contract and local HTTP smoke tests plus server/public environment examples. Deliberately excluded RC-only LifeStage, database-field and business-API semantic changes.
+- Verified API typecheck, runtime contract/smoke, business API, API boundary, AI capabilities, lint, build and project-truth checks. Independent Critic rechecked the health capability shape, AI aliases, fallback-key semantics and exact namespace-root rewrite with six-dimensional PASS. Deployed exact SHA and Supabase schema/RLS parity remain pending.
 
 ### Species Detail evidence authority
 

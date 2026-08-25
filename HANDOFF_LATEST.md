@@ -27,14 +27,15 @@
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
-- 当前产品代码 head：`9fcad4a2`
+- 当前产品代码 head：`039135ba`
 - 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `9fcad4a2` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
-- 当前下一步：审查 Vercel/API runtime contract；完成部署/API 边界证据前不修改 Supabase schema、RLS 或 API 字段，也不创建 `main` 发布合并。
+- 当前下一步：审查 Result UX workflow head integrity；完成 exact Preview SHA、Supabase schema/RLS parity 和人工验收前不创建 `main` 发布合并。
 - 最近完成：`Species Detail evidence authority`。详情关键理由、混养证据状态和来源提示消费统一 `TankCompatibilityResult`；`housingReason` 仅显示为档案参考并明确不覆盖计算结果。保持当前视觉基线，未迁移 RC 详情布局。新增 `src/modules/knowledge/compatibilityEvidencePresentation.ts` 与专项回归。
 - 最近完成：`Recommendation authority and severity`（`9fcad4a2`）。推荐候选保留与 direct/adjustable/blocked 严重级别消费统一 `TankCompatibilityResult`；“建议单养”、负载和群游局部启发式不再独立硬阻断，理由优先使用 canonical summary。保持当前视觉基线，未迁移 RC 推荐 UI；专项契约回归通过。
-- 下一功能审查单元：`Vercel/API runtime contract`；保持当前视觉基线，不自动改 Supabase schema/RLS 或 API 契约。
+- 最近完成：`Vercel/API runtime contract`（`039135ba`）。新增 V1 catch-all、精确 namespace root 与 nested API-before-SPA rewrites、standalone canonical Express runtime、ESM-safe imports、AI/health 兼容边界与本地 contract/smoke 回归；未迁移 RC 的 LifeStage、数据库字段或业务 API 语义变化，保持当前视觉基线。独立 Critic 六维复验 PASS；exact Preview SHA 仍是发布门禁。
+- 下一功能审查单元：`Result UX workflow head integrity`；保持当前视觉基线，不自动改 Supabase schema/RLS 或 API 契约。
 - **视觉决策更新：** 用户确认当前 4317 版本可用作工作基线，但仍有后续视觉问题；后续修改必须按模块和视口渐进推进，并保留正式组件、Rail/Sheet/Blocking 语义。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
 - UI 不可变原则：`UI_REGRESSION_CONTRACT.md`。

@@ -12,12 +12,14 @@
 - `scripts/verify-split-workspace-detail.mjs`：阻止桌面详情退回 Portal 固定抽屉的结构门禁。
 - `scripts/verify-split-workspace-runtime.mjs`：在正式预览中打开物种/养护详情，断言其为页面内非固定双屏区域、无 Portal、无滚动锁并可关闭。
 
-根目录 `vercel.json`：Vercel 生产部署的 SPA 路由回退配置，确保 `/aquarium` 等前端深链接直接访问时返回应用入口。
+根目录 `vercel.json`：Vercel 生产部署的 API-before-SPA rewrite 和 SPA 路由回退配置；`api/v1/[...path].ts` 复用 canonical Express API app。
 
 ## 核心入口
 
 - `src/modules/recommendation/recommendation.service.ts`：推荐候选与智能推荐服务；候选严重级别由统一混养引擎裁决，局部负载/群游计算只提供风险和调整提示。
 - `scripts/test-recommendation-authority.ts`：推荐权威边界回归，覆盖单养候选保留、canonical 严重级别、近负载候选和理由来源。
+- `api/v1/[...path].ts`：Vercel V1 API catch-all，不启动独立 listener。
+- `scripts/test-production-cloud-runtime-contract.mjs` / `scripts/test-production-cloud-runtime-smoke.ts`：API namespace root/nested before SPA、环境边界、JSON health/404、AI fallback 和 canonical Express runtime 回归。
 
 - `apps/api/`：Express TypeScript 业务 API 入口、统一错误、Supabase 客户端、鉴权和版本化路由。
 - `server/index.mjs` / `api/health.js` / `functions/api/health.js`：本地 Express、Vercel 与 Pages 兼容健康接口；公开文字/视觉 AI 能力状态，但不暴露 Secret。

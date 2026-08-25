@@ -9,6 +9,13 @@
 - **Critic:** Independent six-dimension review passed with no blocking or required fixes. Optional follow-up: add an explicit canonical-blocked and `riskLevel` mapping assertion.
 - **Next:** Vercel/API runtime contract review.
 
+## 2026-08-25 — Vercel/API runtime contract
+
+- **Action:** Ported only deployment-boundary semantics from RC #136–#138: V1 catch-all, API-before-SPA rewrite, standalone canonical Express runtime, ESM-safe imports and non-secret environment documentation. Excluded RC changes to LifeStage, database fields and business API semantics.
+- **Verification:** `test:production-cloud-runtime-contract`, `test:production-cloud-runtime-smoke`, `check:api`, `test:business-api-contract`, `test:api-boundary`, `test:ai-capabilities`, `lint`, `build`, `check:project-truth` and `git diff --check` passed.
+- **Boundary:** No Supabase read/write, migration, RLS, schema, deployed environment or visual baseline change. Independent Critic rechecked the health capability shape, AI aliases, fallback-key semantics and exact namespace-root rewrite; six dimensions passed. This is local runtime evidence only; exact deployed SHA and schema/RLS parity remain pending.
+- **Next:** Result UX workflow head integrity review.
+
 ## 2026-08-25 — Branch convergence audit gate
 
 ## 2026-08-25 — Species Detail evidence authority

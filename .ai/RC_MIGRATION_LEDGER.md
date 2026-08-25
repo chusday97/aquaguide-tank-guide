@@ -12,7 +12,7 @@
 | Recommendation authority and severity | #134–#135; `1f7b7732`, `7a85b5c0` | `MIGRATED_LOCAL_VERIFIED` | Recommendation candidates and severity now consume canonical compatibility status; local load/group heuristics remain risk or adjustment context only. RC recommendation UI/ranking copy was not copied. |
 | Mobile shell / Encyclopedia UI repairs | #124–#128; `66a9ab40`, `f09ece0b`, `a9363238` | `EXCLUDED_BY_DEFAULT` | The visual baseline already owns UI geometry; take only a demonstrated behavioral bug fix. |
 | Interactive Atlas RC implementation | #122; `cd0d5fe4`, `3f660361` | `EXCLUDED_BY_DEFAULT` | The approved visual branch already has its own interactive implementation. Do not replace it with RC UI. |
-| Vercel/API runtime contract | #136–#138; `daf4b59e`, `0364b290` | `CONTRACT_REVIEW_REQUIRED` | API and deployment boundary changes require a separate contract impact review before code migration. |
+| Vercel/API runtime contract | #136–#138; `daf4b59e`, `0364b290` | `MIGRATED_LOCAL_VERIFIED` | V1 catch-all, API-before-SPA routing, standalone canonical Express runtime and ESM-safe imports are locally verified. No LifeStage, database field or business API semantic changes were ported; deployed parity remains pending. |
 | Result UX workflow head integrity | #132; `35655d94`, `261897d5` | `NOT_REVIEWED` | Consider after the unified PR exists; retain candidate-head verification concept, not RC workflow wholesale. |
 
 ## Explicit exclusions
@@ -23,4 +23,4 @@
 
 ## Next review unit
 
-**Next review unit: Vercel/API runtime contract.** Review deployment/API boundary evidence separately; do not change Supabase schema, RLS or API fields without an approved contract delta.
+**Next review unit: Result UX workflow head integrity.** Retain candidate-head verification semantics only; do not copy RC workflow/UI wholesale. Exact deployed SHA and Supabase schema/RLS parity remain release blockers.
