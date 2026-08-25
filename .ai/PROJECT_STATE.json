@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-25",
+  "canonicalBranch": "codex/unified-rc-visual-v1",
+  "canonicalBase": {
+    "branch": "codex/interactive-parity-v3",
+    "sha": "37a8d4d16edbd0ada07a8736e9fd87bbee820a20",
+    "role": "user-approved visual baseline"
+  },
+  "businessReference": {
+    "branch": "integration/aquaguide-rc1",
+    "sha": "895f2f3959dc42b653fbb4f33cc25044e5785da3",
+    "role": "verified business capability source; migrate selectively"
+  },
+  "releaseBranch": "main",
+  "localPreview": "http://127.0.0.1:4317/_preview/interactive",
+  "activePullRequest": null,
+  "deprecatedIntegration": {
+    "branch": "codex/rc1-visual-convergence-v1",
+    "pullRequest": 140,
+    "reason": "RC-first partial UI migration is not an acceptable visual acceptance source."
+  },
+  "rules": [
+    "Do not use main, RC, or PR #140 as the visual acceptance source.",
+    "All new work starts from canonicalBranch.",
+    "Migrate RC behavior only when its product rule, tests, and affected files are identified.",
+    "Do not merge to main without a separately authorized release acceptance."
+  ]
+}
