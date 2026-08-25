@@ -7,6 +7,12 @@
 - **Decision:** Treat these as graph topology only; require capability-level review in `.ai/RC_MIGRATION_LEDGER.md` before any selective port.
 - **Commit:** `98977966`.
 
+## 2026-08-25 — Branch parity gate repair
+
+- **Action:** Added local/remote SHA output and `npm run check:branch-convergence`; the canonical push workflow now fetches full refs and runs the blocking check.
+- **Verification:** The check correctly fails locally while `HEAD=9c4d9500` is ahead of `origin/codex/unified-rc-visual-v1=589eb23c`; this prevents claiming GitHub parity before the push.
+- **Ledger:** Advanced the next review unit from the completed P0 group to Species Detail evidence authority.
+
 ## 2026-08-25 — Initialize `.ai/`
 
 - **Read:** 项目 `PROGRESS.md`、`HANDOFF.md`、`PROJECT_STRUCTURE.md`、`40-DOCS/CHANGELOG.md`。

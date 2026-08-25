@@ -17,6 +17,7 @@ on:
       - 'docs/01-definition/FEATURE_CATALOG.md'
       - 'docs/02-design/VISUAL_BASELINE.md'
       - 'docs/03-development/DEPLOYMENT_STATE.md'
+      - 'docs/03-development/BRANCH_CONVERGENCE_AUDIT.md'
       - 'docs/03-development/PR_CLEANUP_RECORD.md'
       - 'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md'
       - 'docs/05-validation/MODULE_FACT_INVENTORY.md'
@@ -41,6 +42,7 @@ on:
       - 'docs/01-definition/FEATURE_CATALOG.md'
       - 'docs/02-design/VISUAL_BASELINE.md'
       - 'docs/03-development/DEPLOYMENT_STATE.md'
+      - 'docs/03-development/BRANCH_CONVERGENCE_AUDIT.md'
       - 'docs/03-development/PR_CLEANUP_RECORD.md'
       - 'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md'
       - 'docs/05-validation/MODULE_FACT_INVENTORY.md'
@@ -64,6 +66,8 @@ jobs:
       EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -71,6 +75,9 @@ jobs:
       - run: npm ci
       - name: Confirm convergence state
         run: npm run project:status
+      - name: Confirm local and remote canonical parity
+        if: github.event_name == 'push'
+        run: npm run check:branch-convergence
       - name: Confirm project truth routing
         run: npm run check:project-truth
       - name: Confirm PR and cross-layer governance

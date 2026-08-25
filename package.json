@@ -18,6 +18,7 @@
     "lint": "tsc --noEmit",
     "project:status": "node scripts/project-status.mjs",
     "audit:branch-convergence": "node scripts/audit-branch-convergence.mjs",
+    "check:branch-convergence": "node scripts/audit-branch-convergence.mjs --check",
     "check:project-truth": "node scripts/verify-project-truth.mjs",
     "check:pr-governance": "node scripts/verify-pr-governance.mjs",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",

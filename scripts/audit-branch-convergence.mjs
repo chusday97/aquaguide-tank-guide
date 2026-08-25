@@ -3,6 +3,14 @@ import { readFileSync } from 'node:fs';
 
 const state = JSON.parse(readFileSync('.ai/PROJECT_STATE.json', 'utf8'));
 const git = (args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
+const hasRef = (ref) => {
+  try {
+    git(['show-ref', '--verify', '--quiet', `refs/remotes/${ref}`]);
+    return true;
+  } catch {
+    return false;
+  }
+};
 const count = (left, right) => {
   const [leftOnly, rightOnly] = git(['rev-list', '--left-right', '--count', `${left}...${right}`])
     .split(/\s+/)
@@ -11,6 +19,12 @@ const count = (left, right) => {
 };
 
 const canonical = `origin/${state.canonicalBranch}`;
+const localBranch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
+const localSha = git(['rev-parse', 'HEAD']);
+const requiredRefs = [canonical, 'origin/main', 'origin/integration/aquaguide-rc1'];
+const missingRefs = requiredRefs.filter((ref) => !hasRef(ref));
+const remoteSha = hasRef(canonical) ? git(['rev-parse', canonical]) : null;
+const parity = localBranch === state.canonicalBranch && remoteSha === localSha;
 const remoteRefs = git([
   'for-each-ref',
   '--format=%(refname:short)',
@@ -23,7 +37,7 @@ const remoteRefs = git([
 
 const comparisons = {};
 for (const ref of ['origin/main', 'origin/integration/aquaguide-rc1']) {
-  comparisons[ref] = count(canonical, ref);
+  comparisons[ref] = hasRef(ref) ? count(canonical, ref) : null;
 }
 
 const historicalBranches = remoteRefs
@@ -40,7 +54,18 @@ const historicalBranches = remoteRefs
 console.log(JSON.stringify({
   generatedAt: new Date().toISOString(),
   canonicalBranch: state.canonicalBranch,
-  canonicalSha: git(['rev-parse', canonical]),
+  localBranch,
+  localSha,
+  remoteSha,
+  parity,
+  status: missingRefs.length > 0 ? 'MISSING_REMOTE_REF' : parity ? 'SYNCHRONIZED' : 'NOT_SYNCHRONIZED',
+  missingRefs,
   comparisons,
   historicalBranches,
 }, null, 2));
+
+if (process.argv.includes('--check') && (missingRefs.length > 0 || !parity)) {
+  if (missingRefs.length > 0) console.error(`MISSING_REMOTE_REF: ${missingRefs.join(', ')}`);
+  if (!parity) console.error(`NOT_SYNCHRONIZED: local ${localSha} != remote ${remoteSha ?? 'missing'} or branch is ${localBranch}`);
+  process.exitCode = 1;
+}

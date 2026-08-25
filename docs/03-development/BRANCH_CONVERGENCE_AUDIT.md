@@ -1,9 +1,11 @@
 # Branch Convergence Audit
 
-**Status:** Active audit snapshot  
+**Status:** Active audit snapshot (captured before docs-only follow-up commits)
 **Generated:** 2026-08-25T14:26:01Z  
 **Canonical branch:** `codex/unified-rc-visual-v1`  
 **Canonical SHA:** `589eb23c8e20b920dfba6eba7396755dc0822980`
+
+At capture time, local and remote canonical SHA matched. The command below is the current source of truth for subsequent local/remote parity.
 
 ## What this report proves
 
@@ -16,7 +18,7 @@ git fetch origin --prune
 npm run audit:branch-convergence
 ```
 
-The command is read-only and compares the local remote-tracking refs; it does not merge, rebase, delete or push anything.
+The command is read-only and compares the local SHA, canonical remote-tracking SHA and remote refs; it does not merge, rebase, delete or push anything. To make local/remote parity a blocking check, run `npm run check:branch-convergence`.
 
 ## Snapshot
 

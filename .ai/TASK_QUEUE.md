@@ -14,6 +14,7 @@
 - [x] 建立 `docs/05-validation/MODULE_FACT_INVENTORY.md`，将产品、UI、领域规则、Service、数据/API、证据与部署状态放进同一模块事实索引。
 - [x] 关闭 55 个历史 PR，保留其远端分支；#141 是唯一开放的当前收敛 PR，记录见 `docs/03-development/PR_CLEANUP_RECORD.md`。
 - [x] 新增 `npm run audit:branch-convergence`，记录统一分支、`origin/main`、RC1 与远端分支的 Git 拓扑差异（`98977966`）。
+- [x] 新增 `npm run check:branch-convergence`，在本地/远端 canonical SHA 不一致或远端关键 ref 缺失时阻断；统一分支 push CI 执行该检查。
 - [ ] 对 `origin/main` 独有提交和历史来源按功能建立逐项迁移判定，不以提交数量或分支存在作为完成证据。
 
 ## Eight-phase truth consolidation

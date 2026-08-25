@@ -23,4 +23,4 @@
 
 ## Next review unit
 
-**P0 compatibility / tank state / water change / whole-tank authority.** Produce a file-level impact list and test map before making any code changes.
+**Species Detail evidence authority.** Produce a file-level impact list and test map before making any code changes; do not migrate RC detail layout.
