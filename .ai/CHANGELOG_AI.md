@@ -21,3 +21,4 @@
 - Closed deprecated PR #140 and created Draft PR #141 as the sole RC convergence entry.
 - Added the P0 data/contract impact review; no P0 runtime code was migrated.
 - Added an executable project-status contract and RC convergence CI workflow.
+- Changed the official daily local worktree to the canonical branch; legacy `codex/rc1-visual-integration` is no longer a valid starting point.

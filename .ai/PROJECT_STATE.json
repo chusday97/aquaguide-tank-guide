@@ -13,6 +13,7 @@
     "role": "verified business capability source; migrate selectively"
   },
   "releaseBranch": "main",
+  "officialLocalWorktree": "/Users/chuchu/Documents/New project/aquaguide_frontend",
   "localPreview": "http://127.0.0.1:4317/_preview/interactive",
   "activePullRequest": 141,
   "deprecatedIntegration": {
@@ -21,6 +22,9 @@
     "state": "closed",
     "reason": "RC-first partial UI migration is not an acceptable visual acceptance source."
   },
+  "legacyLocalBranches": [
+    "codex/rc1-visual-integration"
+  ],
   "rules": [
     "Do not use main, RC, or PR #140 as the visual acceptance source.",
     "All new work starts from canonicalBranch.",

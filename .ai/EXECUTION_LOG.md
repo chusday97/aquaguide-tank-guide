@@ -23,3 +23,9 @@
 - Closed PR #140 and opened Draft PR #141 against `integration/aquaguide-rc1`.
 - Confirmed that P0 migration expands `LifeStage`, evidence data and planning semantics; paused code migration pending the required contract confirmation.
 - Added local/CI checks that report canonical branch, SHA, approved visual baseline, RC business reference and Draft PR.
+
+## 2026-08-25 — Daily local worktree aligned
+
+- Switched `/Users/chuchu/Documents/New project/aquaguide_frontend` from legacy `codex/rc1-visual-integration` to `codex/unified-rc-visual-v1`.
+- Verified local `HEAD` and `origin/codex/unified-rc-visual-v1` both resolve to `5b619a08`; `npm run project:status` reports `dirty: false`.
+- The approved 4317 preview remains isolated on the user-approved visual baseline and was not changed.

@@ -1,6 +1,6 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-21 21:24 +08:00
+更新时间：2026-08-25 +08:00
 
 ## 当前工作基线
 
@@ -9,8 +9,10 @@
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
 - **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；它在 P0 业务迁移和验收完成前不得转为 Ready 或合并。
+- **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
 
-- 当前分支：`codex/interactive-parity-v3`
+- 当前分支：`codex/unified-rc-visual-v1`
+- 本地与 GitHub 已对齐提交：`5b619a08`（后续文档提交会同步更新两端）。
 - 当前产品代码 head：`90c1ad6`
 - 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `90c1ad6` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
