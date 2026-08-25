@@ -12,6 +12,7 @@
 - **Action:** Added local/remote SHA output and `npm run check:branch-convergence`; the canonical push workflow now fetches full refs and runs the blocking check.
 - **Verification:** The check correctly fails locally while `HEAD=9c4d9500` is ahead of `origin/codex/unified-rc-visual-v1=589eb23c`; this prevents claiming GitHub parity before the push.
 - **Ledger:** Advanced the next review unit from the completed P0 group to Species Detail evidence authority.
+- **CI boundary:** The parity script uses `GITHUB_REF_NAME` for detached push checkouts and keeps the local Git branch name for workstation checks (`b39dbbd7`).
 
 ## 2026-08-25 — Initialize `.ai/`
 
