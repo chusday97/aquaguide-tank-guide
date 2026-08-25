@@ -1,5 +1,11 @@
 # AquaGuide 交接文档
 
+## 2026-08-25 AI 项目协议标准化
+
+- 已补齐 `.ai/` 八文件、根目录 `AI_PROJECT_PROTOCOL.md` 和 `docs/CONTEXT_ROUTING.md`。
+- 编码前必须读取 `.ai/CURRENT_GOAL.md`、`.ai/PRODUCT_CONTEXT.md`、`.ai/DECISION_LOG.md`；变更后必须更新 `.ai/CHANGELOG_AI.md`、`.ai/EXECUTION_LOG.md`、`.ai/TASK_QUEUE.md`。
+- 本次未修改产品代码、业务数据或远端状态；本地提交为 `de906c2`。
+
 ## 2026-08-25 `.ai/` 上下文文件初始化
 
 - 已创建 `.ai/CURRENT_GOAL.md`、`.ai/TASK_QUEUE.md`、`.ai/CHANGELOG_AI.md` 与 `.ai/EXECUTION_LOG.md`。

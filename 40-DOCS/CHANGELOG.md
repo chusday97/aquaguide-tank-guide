@@ -20,6 +20,7 @@
 - 鱼缸首页工作区不再受通用 1280px 画布限制；桌面 3D 舞台铺满侧栏以外的工作区，保留顶部控制和场景 HUD。
 
 ### Added
+- 新增 `AI_PROJECT_PROTOCOL.md` 与 `docs/CONTEXT_ROUTING.md`，并补齐 `.ai/` 的产品上下文、架构摘要、决策和 Badcase 文件；仅影响 AI 协作与文档同步，不改变产品代码。
 - 新增 `.ai/` 上下文目录，包含当前目标、任务队列、AI 变更记录和执行日志；本次不改变产品代码或远端部署。
 - `split-workspace-detail` 结构门禁与 `stage-cover` 相机取景单测；`/_preview/interactive` 现在展示实际 ThreeAquarium 的全幅舞台、互动图鉴与互动养护组件。
 - 新增 `/_preview/interactive` 内部 React 预览入口，直接复用正式互动图鉴和互动养护组件，避免独立 HTML 概念稿与产品实现继续漂移。

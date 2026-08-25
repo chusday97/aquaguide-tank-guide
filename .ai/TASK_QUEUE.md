@@ -19,5 +19,6 @@
 
 ## Protocol Maintenance
 
+- [x] 建立八文件 `.ai/` 结构、项目协议和 Context Routing。
 - [ ] 每次编码前读取 `CURRENT_GOAL.md`、`PRODUCT_CONTEXT.md`、`DECISION_LOG.md`。
 - [ ] 每次变更后更新 `CHANGELOG_AI.md`、`EXECUTION_LOG.md`、`TASK_QUEUE.md`。
