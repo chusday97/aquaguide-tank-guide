@@ -16,6 +16,7 @@
 - **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；最近两次可复核运行 `32849012409`、`32849349859` 均通过（project truth、状态、lint、布局、3D 取景和 production build）。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 与 `docs/03-development/PR_CLEANUP_RECORD.md` 已记录安全收敛结果；当前开放列表只剩 #141，其他 55 个历史 PR 已关闭但分支保留。
 - **跨层事实盘点：** `docs/05-validation/MODULE_FACT_INVENTORY.md` 统一记录产品、UI、领域规则、Service、数据/API、测试和部署状态；任何新模块变更必须同步该索引和对应验收证据。
+- **治理提交：** `28142542` 已加入只读 GitHub PR 拓扑检查、`.ai` 门禁触发范围和 PR 清理/模块盘点记录；当前仍需等待该提交的 GitHub CI 复验。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
 - **Supabase 状态校正：** 用户于 2026-08-25 确认既有 Supabase 工作已部署。旧文档中“待真实 Supabase 验证”只表示当前统一分支尚未重新核对连接环境、schema revision 与 RLS 回归，绝不表示 Supabase 没有部署。
 

@@ -2,6 +2,8 @@
 
 ## 当前任务目标
 
+- 2026-08-25：统一治理实施提交 `28142542`：跨层模块事实盘点、只读 GitHub PR 拓扑门禁、CI `.ai` 输入触发范围、55 个历史 PR 关闭记录均已落地；Critic 初审发现的三项治理缺口已修复，最终复验待本轮完成。
+
 - 2026-08-25：用户批准 P0 兼容性/当前鱼缸契约后，已在统一分支迁入本地 `CompatibilityLifeStage` 输入、审核阶段风险证据、当前鱼缸与换水纯规则、从既有诊断/鱼缸事实派生的服务和确定性测试（commit: `99865414`）。共享 `LifeStage` 保持既有 API/数据库枚举。`lint`、原兼容性 17/17、tank-state 11/11、tank-evidence 10/10、water-change 8/8、31 表三层契约、production build，以及 4320 临时 preview 的布局/取景/互动场景/页面运行矩阵均通过；独立 Critic 已复验通过。未修改 SQL、API、Supabase、持久化字段、页面组件或 CSS；阶段 8 仍待 exact Preview SHA、授权 schema/RLS parity 和单独 release acceptance。
 
 - 2026-08-25：启动全项目八阶段事实收口。阶段 1–6 已完成：建立项目/产品/UI/部署 canonical truth、历史证据登记、4317 视觉矩阵、功能目录、非敏感部署审计、PR 模板和 CI truth gate；GitHub Actions `32849012409`、`32849349859` 已通过。该阶段 7 记录已被上方 `99865414` 的已接受 P0 实施状态取代；阶段 8 发布门禁仍待 exact Preview SHA、授权 Supabase schema/RLS parity 和单独 release acceptance。
