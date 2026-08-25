@@ -11,6 +11,7 @@ import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceCla
 import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/tankCompatibilityEngine';
 import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
 import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
+import { buildCompatibilityEvidencePresentation } from '../modules/knowledge/compatibilityEvidencePresentation';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
 import type { PairCompatibilityResult } from '../modules/knowledge/knowledge.types';
 import type { PreviewImage } from './common/ImagePreviewModal';
@@ -560,20 +561,18 @@ export function SpeciesDetailDialog({
     if (displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
     return t('encyclopedia.btnCompleteSetup');
   }, [aquariumContext, displayFit, owned, source, t]);
+  const compatibilityEvidence = useMemo(
+    () => buildCompatibilityEvidencePresentation(displayFit?.compatibilityResult),
+    [displayFit],
+  );
   const verdictReasons = useMemo(() => {
     if (!displayFit || !aquariumContext) return [];
-    const actionableConfirmations = displayFit.confirmations.filter(item => item.type !== 'water_parameter');
-    const priorityItems = [...displayFit.risks, ...actionableConfirmations];
-    const fallbackItems = displayFit.items.filter(item => item.status === 'ok');
-    return [...priorityItems, ...fallbackItems]
-      .map(item => ({
-        label: translateLabel(item.label),
-        text: item.advice || `${item.current} · ${item.requirement}`,
-        status: item.status,
-      }))
-      .filter((item, index, list) => list.findIndex(other => other.label === item.label && other.text === item.text) === index)
-      .slice(0, 3);
-  }, [aquariumContext, displayFit]);
+    return compatibilityEvidence.items.map(item => ({
+      label: item.label,
+      text: item.text,
+      status: item.status,
+    }));
+  }, [aquariumContext, compatibilityEvidence, displayFit]);
   const compatibilityVisualModel = useMemo<VisualResultViewModel | null>(() => {
     if (!fish) return null;
     const statusRank = { compatible: 0, caution: 1, insufficient_data: 2, not_recommended: 3 } as const;
@@ -1031,13 +1030,13 @@ export function SpeciesDetailDialog({
                         onClick={() => setExpandedSection(current => current === 'fit' ? null : 'fit')}
                         className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
                       >
-                        <span className="min-w-0">
-                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Tank fit evidence' : '适配依据'}</span>
-                          <span className="mt-0.5 block text-[11px] font-bold text-ink/45">
-                            {aquariumContext
-                              ? (isEn ? `${metricCards.filter(item => item.status !== 'ok').length} items need attention` : `${metricCards.filter(item => item.status !== 'ok').length} 项需要留意`)
+                          <span className="min-w-0">
+                            <span className="block text-[14px] font-black text-ink">{isEn ? 'Tank fit evidence' : '适配依据'}</span>
+                            <span className="mt-0.5 block text-[11px] font-bold text-ink/45">
+                              {aquariumContext
+                                ? (isEn ? `${metricCards.filter(item => item.status !== 'ok').length} reference items · does not override compatibility` : `${metricCards.filter(item => item.status !== 'ok').length} 项设置参考 · 不覆盖混养判断`)
                               : t('encyclopedia.noTankSelected')}
-                          </span>
+                            </span>
                         </span>
                         <ChevronRight className={`h-5 w-5 shrink-0 text-ink/35 transition-transform ${expandedSection === 'fit' ? 'rotate-90' : ''}`} />
                       </button>
@@ -1100,10 +1099,23 @@ export function SpeciesDetailDialog({
                       {expandedSection === 'compatibility' && (
                         <div className="grid gap-3 border-t border-border/70 p-3">
                           {compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
+                          {aquariumContext && (
+                            <div data-compatibility-evidence-source className="rounded-[14px] border border-sky-100 bg-sky-50/70 px-3 py-2 text-[10px] font-bold leading-relaxed text-sky-800">
+                              <span className="font-black">{isEn ? 'Evidence authority: ' : '证据来源：'}</span>
+                              {compatibilityEvidence.sourceStatus === 'reviewed'
+                                ? (isEn ? 'reviewed compatibility rules' : '已审核的混养规则')
+                                : compatibilityEvidence.sourceStatus === 'mixed'
+                                  ? (isEn ? 'mixed; some rules still need review' : '部分规则已审核，仍有资料待核验')
+                                  : (isEn ? 'pending review; do not treat profile text as a verdict' : '资料待核验；物种档案文字不作为最终结论')}
+                              {compatibilityEvidence.citationCount > 0 && <span className="ml-1 opacity-75">({compatibilityEvidence.citationCount} {isEn ? 'sources' : '条来源'})</span>}
+                            </div>
+                          )}
                           {(fish.housingMode || fish.housingReason) && (
                             <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
-                              <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t, isEn) : t('encyclopedia.adviceHousingDefault')}</div>
+                              <div className="font-black text-ink">{isEn ? 'Species profile reference' : '物种档案参考'}</div>
+                              <p className="mt-1">{fish.housingMode ? translateTag(fish.housingMode, t, isEn) : t('encyclopedia.adviceHousingDefault')}</p>
                               {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
+                              <p className="mt-1 text-[10px] font-bold text-ink/45">{isEn ? 'This profile note does not override the calculated compatibility result above.' : '这段档案说明仅作参考，不覆盖上方计算出的混养结论。'}</p>
                             </div>
                           )}
                           {!['caution', 'unsuitable', 'conflictRisk'].includes(displayFit.status) && (

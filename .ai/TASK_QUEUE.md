@@ -16,6 +16,8 @@
 - [x] 新增 `npm run audit:branch-convergence`，记录统一分支、`origin/main`、RC1 与远端分支的 Git 拓扑差异（`98977966`）。
 - [x] 新增 `npm run check:branch-convergence`，在本地/远端 canonical SHA 不一致或远端关键 ref 缺失时阻断；统一分支 push CI 执行该检查。
 - [ ] 对 `origin/main` 独有提交和历史来源按功能建立逐项迁移判定，不以提交数量或分支存在作为完成证据。
+- [x] 完成 Species Detail evidence authority：详情关键理由和混养证据来源改由统一规则结果驱动，物种档案文字标记为参考；新增结构化证据适配回归。
+- [ ] 审查 Recommendation authority and severity；只迁移服务/过滤规则和测试，不迁移旧推荐 UI。
 
 ## Eight-phase truth consolidation
 

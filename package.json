@@ -22,6 +22,7 @@
     "check:project-truth": "node scripts/verify-project-truth.mjs",
     "check:pr-governance": "node scripts/verify-pr-governance.mjs",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
+    "test:compatibility-evidence": "tsx scripts/test-compatibility-evidence-presentation.ts",
     "test:p0-tank-state": "tsx scripts/test-p0-tank-state-engine.ts",
     "test:p0-tank-evidence": "tsx scripts/test-p0-tank-evidence-adapter.ts",
     "test:p0-water-change": "tsx scripts/test-p0-water-change-engine.ts",

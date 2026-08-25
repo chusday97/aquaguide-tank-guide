@@ -4,6 +4,7 @@
 - 2026-08-25：修复 parity 检查的本地/远端 SHA、缺失 ref 和 detached CI 分支边界（`54f3e005`、`b39dbbd7`、`6e71cb05`）；已推送统一分支，`npm run project:status` 与 `npm run check:branch-convergence` 均确认本地/远端为同一 SHA。GitHub Actions 真实运行结果因当前环境无法连接 GitHub API，仍待外部观察。
 
 - 2026-08-25：用户确认当前 4317 版本可作为可用工作基线，但视觉仍有后续问题；已记录 D-AQUA-005。后续只按模块/视口渐进修改并复跑受影响回归，不整体替换当前视觉。
+- 2026-08-25：完成 Species Detail evidence authority 迁移：详情页最多三条关键理由现在直接来自 `TankCompatibilityResult` 的阻断/警告/缺失/通过规则；新增证据审核状态提示，物种 `housingReason` 仅保留为明确的档案参考，不再充当最终混养结论。未复制 RC 详情布局。新增证据适配回归，`lint`、混养 17/17、物种知识、生产构建和 4317 详情浏览器回归通过；证据覆盖率仍只有 1.4%，后续继续补审核资料。
 
 ## 当前任务目标
 

@@ -2,6 +2,13 @@
 
 ## 2026-08-25 — Branch convergence audit gate
 
+## 2026-08-25 — Species Detail evidence authority
+
+- **Action:** Ported only the RC evidence-authority semantics into the current Species Detail implementation. Added a pure adapter for ordered blocking/warning/missing/passed rules and review status; kept the current visual geometry and labeled `housingReason` as profile reference.
+- **Verification:** `npm run lint`; evidence presentation assertions; compatibility 17/17; species knowledge; production build; `PREVIEW_URL=http://127.0.0.1:4317 node scripts/verify-species-detail-experience.mjs` all passed. The browser command required escalated Playwright permissions in this environment.
+- **Evidence gap:** compatibility audit remains 501 species / 7 reviewed / 4 pair rules / 1.4% reviewed coverage; this migration does not claim full evidence completeness.
+- **Next:** review Recommendation authority and severity.
+
 - **Action:** Added `scripts/audit-branch-convergence.mjs`, `npm run audit:branch-convergence`, and `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`.
 - **Evidence:** The read-only audit reported 149 canonical-only and 214 `origin/main`-only commits, plus 149 canonical-only and 742 RC1-only commits.
 - **Decision:** Treat these as graph topology only; require capability-level review in `.ai/RC_MIGRATION_LEDGER.md` before any selective port.

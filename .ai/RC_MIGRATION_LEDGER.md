@@ -8,7 +8,7 @@
 | Group | RC evidence | Status | Migration rule |
 |---|---|---|---|
 | P0 compatibility / tank state / water change / whole-tank authority | #113–#120; `53f3729b` through `e67bc9ec` | `MIGRATED_LOCAL_VERIFIED` | User-approved local-only migration is verified in `99865414`; shared API/database `LifeStage` remains unchanged. |
-| Species Detail evidence authority | #130; `45e8e610` | `NOT_REVIEWED` | Migrate only canonical result/evidence adapters, not RC detail layout. |
+| Species Detail evidence authority | #130; `45e8e610` | `MIGRATED_LOCAL_VERIFIED` | Canonical compatibility evidence now drives key reasons and source-status display; profile notes remain explicitly reference-only. RC detail layout was not copied. |
 | Recommendation authority and severity | #134–#135; `1f7b7732`, `7a85b5c0` | `NOT_REVIEWED` | Migrate recommendation service and regression tests only after P0 authority is present. |
 | Mobile shell / Encyclopedia UI repairs | #124–#128; `66a9ab40`, `f09ece0b`, `a9363238` | `EXCLUDED_BY_DEFAULT` | The visual baseline already owns UI geometry; take only a demonstrated behavioral bug fix. |
 | Interactive Atlas RC implementation | #122; `cd0d5fe4`, `3f660361` | `EXCLUDED_BY_DEFAULT` | The approved visual branch already has its own interactive implementation. Do not replace it with RC UI. |
@@ -23,4 +23,4 @@
 
 ## Next review unit
 
-**Species Detail evidence authority.** Produce a file-level impact list and test map before making any code changes; do not migrate RC detail layout.
+**Recommendation authority and severity.** Review recommendation service/filters and regression tests next; do not migrate RC recommendation UI or ranking copy wholesale.

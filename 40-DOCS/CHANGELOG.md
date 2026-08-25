@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+- 物种详情的关键理由改为读取统一 `TankCompatibilityResult` 的结构化规则证据，并显示审核状态；`housingReason` 仅作为档案参考且明确不覆盖混养结论。保持当前 4317 视觉布局，未复制 RC 详情页。
+- 新增 `compatibilityEvidencePresentation` 纯适配器和回归测试，覆盖审核/待核验混合证据与空结果降级。
+
 ### Changed
 - 新增只读 `npm run audit:branch-convergence` 与分支收敛审计文档，记录统一分支和 `origin/main`/RC1 的拓扑差异；不执行整体合并，功能迁移仍以 `.ai/RC_MIGRATION_LEDGER.md` 为准。
 - 新增 `npm run check:branch-convergence` 本地/远端 SHA parity 阻断，并接入统一分支 push CI；缺少关键远端 ref 时输出明确错误。

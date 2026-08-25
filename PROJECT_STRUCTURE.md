@@ -111,6 +111,7 @@
 - `src/services/diagnosis/`：巡检记录的同日更新策略。
 - `src/modules/diagnosis/`：每日检查问题、确定性规则与数据类型。
 - `src/lib/tankCompatibilityEngine.ts`：统一混养规则引擎。
+- `src/modules/knowledge/compatibilityEvidencePresentation.ts`：把混养规则结果适配为详情页可展示的结构化证据与审核状态；不从物种自由文本推导结论。
 - `packages/domain-rules/src/{bioload,tank-state,water-change}.ts`：P0 本地确定性规则；与 UI 和云端存储解耦。
 - `src/lib/waterProfileEstimate.ts`：从水体类型、底床、造景和水草派生非数值水体倾向，供缺少 pH 时安全展示。
 - `src/lib/speciesVisual.ts`：二维与 3D 物种素材解析。
