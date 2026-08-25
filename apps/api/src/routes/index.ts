@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { isBusinessDatabaseConfigured } from '../config';
-import { sendData } from '../http';
-import { contentRouter } from './content';
-import { aquariumsRouter } from './aquariums';
-import { userRecordsRouter } from './user-records';
-import { adminRouter } from './admin';
-import { profileRouter } from './profile';
-import { speciesAiRouter } from './species-ai';
-import { feedbackRouter } from './feedback';
-import { shareReportsRouter } from './share-reports';
+import { isBusinessDatabaseConfigured } from '../config.js';
+import { sendData } from '../http.js';
+import { contentRouter } from './content.js';
+import { aquariumsRouter } from './aquariums.js';
+import { userRecordsRouter } from './user-records.js';
+import { adminRouter } from './admin.js';
+import { profileRouter } from './profile.js';
+import { speciesAiRouter } from './species-ai.js';
+import { feedbackRouter } from './feedback.js';
+import { shareReportsRouter } from './share-reports.js';
 
 export const v1Router = Router();
 

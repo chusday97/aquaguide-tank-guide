@@ -7,12 +7,12 @@ import {
   recognitionMissResolveSchema,
   speciesDiagnosisStepInputSchema,
   symptomObservationSchema,
-} from '../../../../packages/contracts/src/index';
-import { buildSpeciesDiagnosisStep } from '../../../../packages/domain-rules/src/index';
-import { apiConfig } from '../config';
-import { ApiError, asyncRoute, sendData } from '../http';
-import { getAdminSupabase } from '../supabase';
-import { ProviderError, requestSymptomObservations, requestVisionCandidates } from '../ai/provider';
+} from '../../../../packages/contracts/src/index.js';
+import { buildSpeciesDiagnosisStep } from '../../../../packages/domain-rules/src/index.js';
+import { apiConfig } from '../config.js';
+import { ApiError, asyncRoute, sendData } from '../http.js';
+import { getAdminSupabase } from '../supabase.js';
+import { ProviderError, requestSymptomObservations, requestVisionCandidates } from '../ai/provider.js';
 
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const sessionMisses = new Map<string, number>();

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isoDateTimeSchema, uuidSchema } from './business';
+import { isoDateTimeSchema, uuidSchema } from './business.js';
 
 export const exportArtifactKindSchema = z.enum([
   'health_score',

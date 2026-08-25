@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuidSchema, versionSchema } from './business';
+import { uuidSchema, versionSchema } from './business.js';
 
 export const supportedLocaleSchema = z.enum(['zh-CN', 'en']);
 export type SupportedLocale = z.infer<typeof supportedLocaleSchema>;

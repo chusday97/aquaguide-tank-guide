@@ -12,6 +12,8 @@
     "dev:web": "vite --port=3000 --host=0.0.0.0",
     "dev:api": "tsx apps/api/src/index.ts",
     "check:api": "tsc --noEmit -p apps/api/tsconfig.json",
+    "test:production-cloud-runtime-contract": "node scripts/test-production-cloud-runtime-contract.mjs",
+    "test:production-cloud-runtime-smoke": "node --import tsx scripts/test-production-cloud-runtime-smoke.ts",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",

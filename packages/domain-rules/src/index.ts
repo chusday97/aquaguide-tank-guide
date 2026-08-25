@@ -35,7 +35,7 @@ export const highestRisk = (...risks: DiagnosisRiskCode[]): DiagnosisRiskCode =>
   ), 'unknown')
 );
 
-export * from './species-diagnosis';
-export * from './bioload';
-export * from './tank-state';
-export * from './water-change';
+export * from './species-diagnosis.js';
+export * from './bioload.js';
+export * from './tank-state.js';
+export * from './water-change.js';

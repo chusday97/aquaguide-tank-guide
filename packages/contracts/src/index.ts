@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-export * from './business';
-export * from './content-admin';
-export * from './localization';
-export * from './species-diagnosis';
-export * from './share-reports';
+export * from './business.js';
+export * from './content-admin.js';
+export * from './localization.js';
+export * from './species-diagnosis.js';
+export * from './share-reports.js';
 
-import type { LocalizedContentMeta } from './localization';
-import { supportedLocaleSchema } from './localization';
+import type { LocalizedContentMeta } from './localization.js';
+import { supportedLocaleSchema } from './localization.js';
 
 export const apiErrorCodeSchema = z.enum([
   'VALIDATION_ERROR',

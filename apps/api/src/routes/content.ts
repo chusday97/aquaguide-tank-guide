@@ -4,10 +4,10 @@ import {
   catalogKeySchema,
   speciesListQuerySchema,
   supportedLocaleSchema,
-} from '../../../../packages/contracts/src/index';
-import { mapCareArticleDetail, mapCareArticleSummary, mapSpeciesDetail, mapSpeciesSummary } from '../content-mappers';
-import { ApiError, asyncRoute, sendData } from '../http';
-import { getPublicSupabase } from '../supabase';
+} from '../../../../packages/contracts/src/index.js';
+import { mapCareArticleDetail, mapCareArticleSummary, mapSpeciesDetail, mapSpeciesSummary } from '../content-mappers.js';
+import { ApiError, asyncRoute, sendData } from '../http.js';
+import { getPublicSupabase } from '../supabase.js';
 
 const decodeCursor = (cursor?: string) => {
   if (!cursor) return 0;

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { profilePreferencesUpdateSchema } from '../../../../packages/contracts/src/index';
-import { requireAuth } from '../auth';
+import { profilePreferencesUpdateSchema } from '../../../../packages/contracts/src/index.js';
+import { requireAuth } from '../auth.js';
 import {
   authenticatedRequest,
   beginIdempotentWrite,
@@ -10,8 +10,8 @@ import {
   throwDatabaseError,
   throwMissingOrVersionConflict,
   userClientFor,
-} from '../data-utils';
-import { ApiError, asyncRoute, sendData } from '../http';
+} from '../data-utils.js';
+import { ApiError, asyncRoute, sendData } from '../http.js';
 
 export const profileRouter = Router();
 
