@@ -8,13 +8,18 @@ on:
       - 'packages/**'
       - 'scripts/**'
       - '.ai/PROJECT_STATE.json'
+      - '.ai/OPEN_PR_REGISTRY.md'
+      - '.ai/RC_MIGRATION_LEDGER.md'
+      - '.ai/TASK_QUEUE.md'
       - 'docs/PROJECT_TRUTH.md'
       - 'docs/HISTORICAL_EVIDENCE.md'
       - 'docs/01-definition/PRODUCT_TRUTH.md'
       - 'docs/01-definition/FEATURE_CATALOG.md'
       - 'docs/02-design/VISUAL_BASELINE.md'
       - 'docs/03-development/DEPLOYMENT_STATE.md'
+      - 'docs/03-development/PR_CLEANUP_RECORD.md'
       - 'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md'
+      - 'docs/05-validation/MODULE_FACT_INVENTORY.md'
       - 'docs/05-validation/RELEASE_READINESS.md'
       - 'docs/decisions/**'
       - 'package.json'
@@ -27,13 +32,18 @@ on:
       - 'packages/**'
       - 'scripts/**'
       - '.ai/PROJECT_STATE.json'
+      - '.ai/OPEN_PR_REGISTRY.md'
+      - '.ai/RC_MIGRATION_LEDGER.md'
+      - '.ai/TASK_QUEUE.md'
       - 'docs/PROJECT_TRUTH.md'
       - 'docs/HISTORICAL_EVIDENCE.md'
       - 'docs/01-definition/PRODUCT_TRUTH.md'
       - 'docs/01-definition/FEATURE_CATALOG.md'
       - 'docs/02-design/VISUAL_BASELINE.md'
       - 'docs/03-development/DEPLOYMENT_STATE.md'
+      - 'docs/03-development/PR_CLEANUP_RECORD.md'
       - 'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md'
+      - 'docs/05-validation/MODULE_FACT_INVENTORY.md'
       - 'docs/05-validation/RELEASE_READINESS.md'
       - 'docs/decisions/**'
       - 'package.json'
@@ -42,11 +52,16 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   convergence-contract:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -58,6 +73,8 @@ jobs:
         run: npm run project:status
       - name: Confirm project truth routing
         run: npm run check:project-truth
+      - name: Confirm PR and cross-layer governance
+        run: npm run check:pr-governance
       - name: Type check
         run: npm run lint
       - name: Visual viewport contract

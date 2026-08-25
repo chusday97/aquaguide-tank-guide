@@ -41,6 +41,21 @@
 - Designated #141 as the only active convergence entry; the other 55 PRs remain traceable historical inputs and are not direct merge sources.
 - No historical PR was closed or otherwise modified.
 
+## 2026-08-25 — Unified cross-layer inventory and safe PR cleanup
+
+- Added `docs/05-validation/MODULE_FACT_INVENTORY.md` and routed it from `docs/PROJECT_TRUTH.md`; the inventory links each module's product/UI, domain/Service, data/API, evidence and deployment state.
+- Closed the 55 historical PRs from the original open-PR snapshot with a traceability comment; retained all branches and left #141 as the only open convergence PR.
+- Recorded the result in `docs/03-development/PR_CLEANUP_RECORD.md` and updated the task queue, handoff and changelog.
+- No SQL, Supabase, API, page component, CSS or remote branch deletion was performed.
+
+## 2026-08-25 — Independent review fixes for governance implementation
+
+- Critic found that the first governance script checked only document strings, that `.ai` registry/ledger edits did not trigger CI, and that Care/Identification/Text AI were combined into one ambiguous status row.
+- Added a read-only GitHub API check requiring exactly open PR #141 with the canonical head/base and expected SHA in CI; local runs explicitly skip only when no token is available.
+- Added `pull-requests: read` permission and `.ai/OPEN_PR_REGISTRY.md`, `.ai/RC_MIGRATION_LEDGER.md`, `.ai/TASK_QUEUE.md` workflow paths.
+- Split the module inventory into Care, Identification/health triage and Text AI rows to match the canonical Feature Catalog.
+- Critic's remaining six-dimension recheck is required before declaring this milestone complete.
+
 ## 2026-08-25 — Supabase deployment status corrected
 
 - The user confirmed that the existing Supabase work had already been deployed.

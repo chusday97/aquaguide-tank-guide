@@ -2,6 +2,13 @@
 
 ## 2026-08-25
 
+### Unified governance implementation
+
+- Added the cross-layer module fact inventory and routed it through the canonical truth map.
+- Added a read-only PR governance contract and CI trigger coverage for `.ai` governance inputs.
+- Closed the 55 historical PRs from the original snapshot, retained branches, and left #141 as the only open convergence PR.
+- Preserved the explicit release blockers: exact Preview SHA parity, authorized Supabase schema/RLS parity, and separate release acceptance.
+
 ### Added
 
 - 用户批准 P0 契约后，新增本地当前鱼缸/换水规则、审核阶段风险证据、派生服务和确定性回归；未改 UI、SQL、API 或 Supabase。

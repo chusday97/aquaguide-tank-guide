@@ -6,11 +6,13 @@
 
 - 2026-08-25：启动全项目八阶段事实收口。阶段 1–6 已完成：建立项目/产品/UI/部署 canonical truth、历史证据登记、4317 视觉矩阵、功能目录、非敏感部署审计、PR 模板和 CI truth gate；GitHub Actions `32849012409`、`32849349859` 已通过。该阶段 7 记录已被上方 `99865414` 的已接受 P0 实施状态取代；阶段 8 发布门禁仍待 exact Preview SHA、授权 Supabase schema/RLS parity 和单独 release acceptance。
 
-- 2026-08-25：统一本地与 GitHub 进度。唯一工作分支为 `codex/unified-rc-visual-v1`；日常本地目录已切换至该分支，本地与 GitHub 的同 SHA 状态每次由 `npm run project:status` 复核（当前一次复核为 `8c446d23`）。正确视觉仍以 4317 interactive preview 的 `37a8d4d1` 为基线；RC 业务能力只可按 `.ai/RC_MIGRATION_LEDGER.md` 选择性迁移。唯一 GitHub 收敛入口为 Draft PR #141；尚未迁移 P0 业务代码，等待契约范围确认。
+- 2026-08-25：统一本地与 GitHub 进度（历史快照，已由当前条目取代）。唯一工作分支为 `codex/unified-rc-visual-v1`；日常本地目录已切换至该分支，本地与 GitHub 的同 SHA 状态每次由 `npm run project:status` 复核。正确视觉仍以 4317 interactive preview 的 `37a8d4d1` 为基线；RC 业务能力只可按 `.ai/RC_MIGRATION_LEDGER.md` 选择性迁移。原先“尚未迁移 P0/等待确认”的状态已由 `99865414` 的已接受本地迁移记录取代。
 
 - 2026-08-25：统一分支 CI 门禁已在 GitHub Actions run `32846848569` 实跑通过，包含状态一致性、lint、布局/取景视觉契约和 production build。该门禁现随 `codex/unified-rc-visual-v1` 的相关推送自动执行。
 
-- 2026-08-25：已将 56 个 open PR 分类为一个当前收敛入口（Draft #141）与 55 个历史输入；详见 `.ai/OPEN_PR_REGISTRY.md`。本轮未关闭任何其他 PR，也不将它们直接合并。
+- 2026-08-25：已将 56 个 open PR 分类为一个当前收敛入口（Draft #141）与 55 个历史输入（历史快照）；之后已按 `docs/03-development/PR_CLEANUP_RECORD.md` 关闭其余 55 个 PR，分支保留。
+
+- 2026-08-25：完成安全 GitHub 收敛：除 Draft #141 外的 55 个历史 PR 已关闭，远端分支保留，未修改 `main`、`integration/aquaguide-rc1` 或统一分支；记录见 `docs/03-development/PR_CLEANUP_RECORD.md`。同时建立跨层模块事实盘点 `docs/05-validation/MODULE_FACT_INVENTORY.md`。
 
 - 2026-08-25：状态校正——用户确认既有 Supabase 工作已部署。历史“待真实 Supabase 验证”只保留为当前统一分支与已部署环境的 schema/RLS 回归未复验，不表示未部署。
 

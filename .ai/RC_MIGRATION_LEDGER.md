@@ -7,7 +7,7 @@
 
 | Group | RC evidence | Status | Migration rule |
 |---|---|---|---|
-| P0 compatibility / tank state / water change / whole-tank authority | #113–#120; `53f3729b` through `e67bc9ec` | `CONTRACT_REVIEW_READY` | Impact review: `.ai/P0_MIGRATION_IMPACT.md`. Code migration requires confirmation. |
+| P0 compatibility / tank state / water change / whole-tank authority | #113–#120; `53f3729b` through `e67bc9ec` | `MIGRATED_LOCAL_VERIFIED` | User-approved local-only migration is verified in `99865414`; shared API/database `LifeStage` remains unchanged. |
 | Species Detail evidence authority | #130; `45e8e610` | `NOT_REVIEWED` | Migrate only canonical result/evidence adapters, not RC detail layout. |
 | Recommendation authority and severity | #134–#135; `1f7b7732`, `7a85b5c0` | `NOT_REVIEWED` | Migrate recommendation service and regression tests only after P0 authority is present. |
 | Mobile shell / Encyclopedia UI repairs | #124–#128; `66a9ab40`, `f09ece0b`, `a9363238` | `EXCLUDED_BY_DEFAULT` | The visual baseline already owns UI geometry; take only a demonstrated behavioral bug fix. |

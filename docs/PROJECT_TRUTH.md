@@ -28,6 +28,7 @@
 | What has been deployed and what has been re-verified | [Deployment State](./03-development/DEPLOYMENT_STATE.md) | A successful build or an old deployment URL alone |
 | How the visual baseline is accepted | [Visual Acceptance Matrix](./05-validation/VISUAL_ACCEPTANCE_MATRIX.md) | A single route, screenshot or build alone |
 | Whether release is actually allowed | [Unified Release Readiness](./05-validation/RELEASE_READINESS.md) | A green deployment or a historical release note |
+| Cross-layer module facts | [Module Fact Inventory](./05-validation/MODULE_FACT_INVENTORY.md) | A PR title, branch recency or code presence alone |
 | What is being done now | `.ai/PROJECT_STATE.json` and `.ai/TASK_QUEUE.md` | `PROGRESS.md` entries |
 | What happened before | `PROGRESS.md`, `40-DOCS/CHANGELOG.md`, `HANDOFF.md` | None; they are evidence, not the current decision source |
 | How to accept a behavior | `docs/05-validation/`, `scripts/`, and `UI_REGRESSION_CONTRACT.md` | A passing lint/build alone |

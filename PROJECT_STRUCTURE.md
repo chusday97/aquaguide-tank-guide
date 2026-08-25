@@ -142,6 +142,8 @@
 - `docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md`：正确 UI 基线与浏览器/人工验收证据的可执行对应表。
 - `docs/05-validation/RELEASE_READINESS.md`：统一分支进入 RC/main 前的可复核发布门禁。
 - `docs/05-validation/P0_COMPATIBILITY_ACCEPTANCE.md`：已接受的本地 P0 迁移验收案例与边界。
+- `docs/05-validation/MODULE_FACT_INVENTORY.md`：跨层模块事实盘点，连接产品、UI、领域规则、Service、数据/API、测试与部署状态。
+- `docs/03-development/PR_CLEANUP_RECORD.md`：历史 PR 安全关闭记录与分支保留策略。
 - `docs/decisions/`：未确认的产品、数据与迁移决策；只有用户确认后才能写入 `CONTRACT.md` 或实现。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
 - `docs/02-design/`：信息架构、交互说明、设计系统、数据模型与 AI/API 边界。

@@ -10,6 +10,8 @@ const requiredFiles = [
   'docs/02-design/VISUAL_BASELINE.md',
   'docs/03-development/DEPLOYMENT_STATE.md',
   'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md',
+  'docs/05-validation/MODULE_FACT_INVENTORY.md',
+  'docs/03-development/PR_CLEANUP_RECORD.md',
   '.ai/PROJECT_STATE.json',
   '.ai/OPEN_PR_REGISTRY.md',
 ];
@@ -27,7 +29,7 @@ if (state.activePullRequest !== 141) {
 }
 
 const projectTruth = readFileSync(resolve(root, 'docs/PROJECT_TRUTH.md'), 'utf8');
-for (const label of ['Product Truth', 'Feature Catalog', 'Visual Baseline', 'Deployment State', 'Historical Evidence Registry']) {
+for (const label of ['Product Truth', 'Feature Catalog', 'Visual Baseline', 'Deployment State', 'Historical Evidence Registry', 'Module Fact Inventory']) {
   if (!projectTruth.includes(label)) throw new Error(`Project Truth is missing route: ${label}`);
 }
 

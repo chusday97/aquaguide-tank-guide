@@ -2,7 +2,7 @@
 
 **Snapshot:** 2026-08-25  
 **Source:** `gh pr list --state open --limit 100`  
-**Purpose:** prevent open historical PRs from becoming implicit progress sources.
+**Purpose:** prevent historical PRs from becoming implicit progress sources.
 
 ## One active convergence entry
 
@@ -10,9 +10,9 @@
 | --- | --- | --- | --- | --- |
 | #141 | `codex/unified-rc-visual-v1` | `integration/aquaguide-rc1` | Draft | The only allowed convergence entry. It starts from the user-approved visual baseline and may receive only selectively reviewed RC business migrations. |
 
-## Historical inputs — do not merge directly
+## Historical inputs — closed, do not merge directly
 
-There are **55** other open PRs in this snapshot. They are retained for traceability only. None is an approved merge source into the canonical branch, RC, or `main`.
+The 55 historical PRs in the original 2026-08-25 snapshot are now closed. Their branches are retained for traceability only. None is an approved merge source into the canonical branch, RC, or `main`.
 
 | Group | Open PRs | Why it is not a merge source | Allowed use |
 | --- | --- | --- | --- |
@@ -27,7 +27,11 @@ There are **55** other open PRs in this snapshot. They are retained for traceabi
 1. Start all work from `codex/unified-rc-visual-v1`.
 2. Use `.ai/RC_MIGRATION_LEDGER.md` to choose a capability, not a PR title or branch recency.
 3. A historical PR can supply evidence, but it cannot supply a merge base.
-4. Close/archive historical PRs only after a separate explicit authorization; this registry does not change their GitHub state.
+4. Historical PRs are closed for navigation safety; retain their branches until the separately confirmed observation-window cleanup.
+
+## Cleanup result
+
+The exact closure record is `docs/03-development/PR_CLEANUP_RECORD.md`. A fresh GitHub query must show only #141 as open. Remote branch deletion is explicitly deferred until a separate observation-window review.
 
 ## Verification
 
@@ -38,4 +42,4 @@ npm run project:status
 gh pr list --state open --limit 100
 ```
 
-Expected result: #141 is the only active convergence PR; all other open PRs remain historical inputs until explicitly reviewed.
+Expected result: #141 is the only active convergence PR; historical inputs are closed and remain available only through their retained branches and evidence records.
