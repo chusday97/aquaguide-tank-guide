@@ -22,6 +22,7 @@ import {
 } from './recommendation.schema';
 import { evaluateSpeciesForAquarium } from '../../lib/speciesFitEngine';
 import { evaluateTankCompatibility } from '../../lib/tankCompatibilityEngine';
+import { getReviewedCompatibilityProfile } from '../../data/compatibilityEvidence';
 import { RECOMMENDATION_LIMITS, TANK_CAPACITY_MULTIPLIER, TANK_LOAD_THRESHOLDS } from './recommendation.config';
 
 export const DISCOVERY_DAILY_LIMIT = 10;
@@ -99,14 +100,12 @@ const getBioLoadLiters = (fish: Fish) => {
   if (lifeType === 'coral') return 8;
   if (lifeType === 'reptile') return 60;
 
-  const base = fish.size === 'Large' ? 35 : fish.size === 'Medium' ? 9 : 2.5;
-  const temperamentMultiplier = fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1;
-  return base * temperamentMultiplier;
+  return fish.size === 'Large' ? 35 : fish.size === 'Medium' ? 9 : 2.5;
 };
 
 const isRecommendableSpecies = (fish: Fish) => {
   const lifeType = getLifeType(fish);
-  return !['plant', 'hardscape', 'reptile'].includes(lifeType) && fish.housingMode !== '建议单养';
+  return !['plant', 'hardscape', 'reptile'].includes(lifeType);
 };
 
 const getRecommendationReason = (candidate: Fish, aquarium: Aquarium, speciesPool: Fish[]) => {
@@ -152,11 +151,8 @@ const getWaterLayer = (fish: Fish) => {
 };
 
 const getMinimumGroupQuantity = (fish: Fish) => {
-  const text = `${fish.name} ${fish.category} ${fish.housingMode} ${fish.description}`;
-  if (/灯|群游|斑马|红鼻|宝莲|红绿|鼠/.test(text)) return 6;
-  if (/虾/.test(text)) return 5;
-  if (/螺|斗鱼|短鲷|鳌虾/.test(text)) return 1;
-  return 1;
+  const reviewedMinimum = Number(getReviewedCompatibilityProfile(fish.id)?.minimumGroupSize);
+  return Number.isFinite(reviewedMinimum) && reviewedMinimum > 1 ? reviewedMinimum : 1;
 };
 
 const getRecommendedQuantity = (fish: Fish, remainingCapacity: number) => {
@@ -325,8 +321,6 @@ const buildCandidate = (
   if (compatibility.status === 'compatible' && risks.length === 0 && requiredAdjustments.length === 0) status = 'direct';
   if (compatibility.status === 'caution' || compatibility.status === 'insufficient_data' || (compatibility.status === 'compatible' && (risks.length > 0 || requiredAdjustments.length > 0))) status = 'adjustable';
   if (compatibility.status === 'not_recommended') status = 'blocked';
-  if (profile.load.loadRate >= TANK_LOAD_THRESHOLDS.nearLimit) status = 'blocked';
-  if (minGroup > recommendedQuantity && minGroup > 1) status = 'blocked';
 
   const currentFishes = aquarium.fishes.map(item => speciesPool.find(species => species.id === item.fishId)).filter(Boolean) as Fish[];
   return {
@@ -335,7 +329,7 @@ const buildCandidate = (
     status,
     recommendedQuantity,
     fitScore: Math.max(0, Math.min(100, evaluation.score - (loadAfterAdd > 75 ? 12 : 0))),
-    reason: getRecommendationReason(fish, aquarium, speciesPool),
+    reason: compatibility.summary || getRecommendationReason(fish, aquarium, speciesPool),
     risks: Array.from(new Set([...risks, ...compatibility.warningRules.map(item => item.title), ...compatibility.blockingRules.map(item => item.title)])).slice(0, 5),
     requiredAdjustments: Array.from(new Set([...requiredAdjustments, ...compatibility.missingData.map(item => item.title)])).slice(0, 5),
     confidence: compatibility.status === 'insufficient_data' || evaluation.status === 'unknown' || currentFishes.length > 0 && requiredAdjustments.length > 0 ? 'medium' : 'high',
@@ -672,39 +666,32 @@ export const recommendationService = {
     const basePool = input.speciesPool.filter(fish => {
       if (!isLivestockSpecies(fish)) return false;
       if (input.aquarium.fishes.some(item => item.fishId === fish.id)) return false;
-      if (fish.housingMode === '建议单养' && input.aquarium.fishes.length > 0) return false;
       return true;
     });
     const rawCandidates = basePool.map(fish => buildCandidate(fish, input.aquarium, profile, input.speciesPool));
     const direct = sortCandidates(rawCandidates.filter(item => item.status === 'direct')).slice(0, RECOMMENDATION_LIMITS.direct);
     const adjustable = sortCandidates(rawCandidates.filter(item => item.status === 'adjustable')).slice(0, RECOMMENDATION_LIMITS.adjustable);
     const blocked = sortCandidates(rawCandidates.filter(item => item.status === 'blocked')).slice(0, RECOMMENDATION_LIMITS.blocked);
-    const loadBlocked = profile.load.loadRate >= TANK_LOAD_THRESHOLDS.nearLimit;
-    const blockedSummary = [
-      loadBlocked && '当前鱼缸已接近建议承载上限，暂不建议继续增加生物。',
-      ...blocked.slice(0, 4).map(item => `${item.name}：${item.risks[0] || item.requiredAdjustments[0] || '不满足当前鱼缸条件'}`),
-    ].filter(Boolean) as string[];
-    const safeDirect = loadBlocked ? [] : direct;
+    const blockedSummary = blocked.slice(0, 4)
+      .map(item => `${item.name}：${item.risks[0] || item.requiredAdjustments[0] || '不满足当前鱼缸条件'}`);
 
     return {
       mode,
       profile,
-      direct: safeDirect,
-      adjustable: loadBlocked ? [] : adjustable,
+      direct,
+      adjustable,
       blocked,
       emptyPlans: mode === 'empty_tank' && infoRequests.length === 0
-        ? buildEmptyTankPlans(safeDirect.length ? safeDirect : adjustable, input.speciesPool, profile)
+        ? buildEmptyTankPlans(direct.length ? direct : adjustable, input.speciesPool, profile)
         : [],
       blockedSummary,
       needsMoreInfo: infoRequests.length > 0,
       infoRequests,
-      localSummary: loadBlocked
-        ? '当前鱼缸负载偏高，系统暂不建议继续增加生物。'
-        : safeDirect.length > 0
-          ? `找到 ${safeDirect.length} 个可直接加入候选，建议先少量分批添加。`
-          : adjustable.length > 0
-            ? '当前没有完全直加候选，但有一些调整后可考虑的生物。'
-            : '当前信息或条件不足，暂未找到合适候选。',
+      localSummary: direct.length > 0
+        ? `找到 ${direct.length} 个可直接加入候选，建议先少量分批添加。`
+        : adjustable.length > 0
+          ? '当前没有完全直加候选，但有一些调整后可考虑的生物。'
+          : '当前信息或条件不足，暂未找到合适候选。',
     };
   },
 
