@@ -12,14 +12,13 @@
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
 - **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；它在 P0 业务迁移和验收完成前不得转为 Ready 或合并。
-- **GitHub 门禁：** `RC Convergence V1` 已在 Actions run `32846848569` 通过（状态、lint、视觉契约、build）；统一分支每次相关推送自动复验。
-- **最新 GitHub 门禁：** Actions run `32849012409` 已通过 project truth、状态、lint、布局、3D 取景和 production build。
+- **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；最近两次可复核运行 `32849012409`、`32849349859` 均通过（project truth、状态、lint、布局、3D 取景和 production build）。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 已冻结 2026-08-25 的 56 个 open PR；除 #141 外均为历史输入而非收敛路径。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
 - **Supabase 状态校正：** 用户于 2026-08-25 确认既有 Supabase 工作已部署。旧文档中“待真实 Supabase 验证”只表示当前统一分支尚未重新核对连接环境、schema revision 与 RLS 回归，绝不表示 Supabase 没有部署。
 
 - 当前分支：`codex/unified-rc-visual-v1`
-- 本地与 GitHub 已对齐提交：`5b619a08`（后续文档提交会同步更新两端）。
+- 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
 - 当前产品代码 head：`90c1ad6`
 - 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `90c1ad6` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
