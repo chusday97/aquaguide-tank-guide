@@ -9,6 +9,7 @@
 - Use Draft PR #141 as the only active convergence entry.
 - Do not merge `main`, `integration/aquaguide-rc1`, #140, or a historical feature branch wholesale into the unified branch.
 - Use `.ai/OPEN_PR_REGISTRY.md` and `.ai/RC_MIGRATION_LEDGER.md` as read-only evidence maps.
+- Before a release reconciliation, run `git fetch origin --prune` followed by `npm run audit:branch-convergence`; treat its output as graph evidence only.
 
 ## Required PR evidence
 

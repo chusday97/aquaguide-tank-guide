@@ -12,6 +12,7 @@ const requiredFiles = [
   'docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md',
   'docs/05-validation/MODULE_FACT_INVENTORY.md',
   'docs/03-development/PR_CLEANUP_RECORD.md',
+  'docs/03-development/BRANCH_CONVERGENCE_AUDIT.md',
   '.ai/PROJECT_STATE.json',
   '.ai/OPEN_PR_REGISTRY.md',
 ];

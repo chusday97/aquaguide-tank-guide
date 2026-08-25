@@ -10,6 +10,7 @@
 | --- | --- | --- |
 | Daily work branch | `codex/unified-rc-visual-v1` | All new work begins here. |
 | GitHub convergence | Draft PR #141 | The only active convergence PR. |
+| Branch reconciliation | [Branch Convergence Audit](./03-development/BRANCH_CONVERGENCE_AUDIT.md) | Commit counts alone; a graph difference is not a missing-feature verdict. |
 | Approved visual baseline | `37a8d4d1` and `http://127.0.0.1:4317/_preview/interactive` | No RC page/CSS may replace this visual baseline wholesale. |
 | Current state | `.ai/PROJECT_STATE.json` | Local branch, remote SHA, PR and preview must agree. |
 | Historical PRs | `.ai/OPEN_PR_REGISTRY.md` | Historical inputs only; never direct merge sources. |
