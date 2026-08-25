@@ -6,6 +6,18 @@ Decision statuses: `PROPOSED`, `ACCEPTED`, `DEPRECATED`.
 
 ---
 
+## AQ-UI-001 — Approved interactive visual baseline converges into RC without changing product authority
+
+**Status:** `ACCEPTED`  
+**Date:** 2026-08-25  
+**Scope:** RC visual convergence
+
+The user-approved visual reference is `baseline/visual-approved-2026-08-25` (`37a8d4d1`). Its interactive scene language may be reused in RC, but recommendation, compatibility, persistence and API behavior remain owned by `integration/aquaguide-rc1`.
+
+The RC convergence branch is the only integration target. `main` remains release-only and must not receive this work without separate authorization.
+
+---
+
 ## AQ-CTX-001 — Adopt repository-based Context Sync
 
 **Status:** `ACCEPTED`  

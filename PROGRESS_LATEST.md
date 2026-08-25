@@ -1,12 +1,14 @@
 # AquaGuide — Latest Progress
 
-**Updated:** 2026-08-24
+**Updated:** 2026-08-25
 **Branch:** `agent/mobile-encyclopedia-context-sync-v1`
 **PR:** #124 `Surface mobile Encyclopedia search` — merged to RC1
 **Base:** `integration/aquaguide-rc1`
 **Current RC1 runtime head:** `cf63e7f82da0d26cbb94acb4680a20ee848c8ab8`
 
 ## Current phase
+
+**RC visual convergence is active on `codex/rc1-visual-convergence-v1`.** Baseline tags were created for RC (`baseline/rc1-pre-convergence-2026-08-25`) and the user-approved visual source (`baseline/visual-approved-2026-08-25`). Commit `fcaaa4e9` connects interactive Species Guide and Care Guide scenes to their existing authority paths and adds camera-owned aquarium stage framing; `npm run lint`, `npm run test:layout-mode`, and `npm run test:three-stage-framing` pass.
 
 **Post-P0 UI/UX refinement is active. #124 mobile Encyclopedia search hierarchy is landed and exact RC1 acceptance is 15/15 PASS.**
 

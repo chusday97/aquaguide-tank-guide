@@ -4,6 +4,24 @@ Acceptance cases prove product rules. Use `GIVEN / WHEN / THEN / MUST NOT` and l
 
 ---
 
+## BC-UI-INTERACTIVE-001 — Scene discovery retains existing authority paths
+
+**Verifies:** `AQ-UI-001`
+
+**GIVEN**  
+The user opens Species Guide or Care Guide.
+
+**WHEN**  
+The user selects an item in the interactive scene.
+
+**THEN**  
+The existing species-detail or care-guide route opens through the existing handler.
+
+**MUST NOT**  
+Treat the visual scene as a compatibility recommendation, invent a diagnosis, or write aquarium data.
+
+---
+
 ## BC-STATE-001 — Prior risk without current abnormal evidence
 
 **Verifies:** `AQ-STATE-001`, `AQ-STATE-005`, `AQ-DIAG-001`

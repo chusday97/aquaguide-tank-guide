@@ -1,13 +1,15 @@
 # AquaGuide — Latest Handoff
 
-**Updated:** 2026-08-24
+**Updated:** 2026-08-25
 **Repository:** `chusday97/aquaguide-tank-guide`
 **RC1 runtime baseline:** `integration/aquaguide-rc1` runtime head `b69c3c3e3a34f846edf6b59b3007de2ef9f85ad5`
 **Active branch:** `docs/context-sync-recommendation-authority-v2` — docs-only #134/#135 Recommendation authority sync
-**Phase:** `RC1 convergence / Recommendation authority aligned / production acceptance next`
+**Phase:** `RC visual convergence / user-approved interactive baseline being integrated`
 **Release boundary:** no RC1→`main` merge and no production deployment without separate explicit authorization.
 
 ## Current Product Truth
+
+Visual convergence decision: the approved interactive baseline is tagged `baseline/visual-approved-2026-08-25` at `37a8d4d1`; RC business authority remains the source for recommendation, compatibility, persistence and API behavior. The active convergence branch is `codex/rc1-visual-convergence-v1`; do not merge it to `main`.
 
 Planning Compatibility, Existing Tank Current State, and Water Change maintenance remain separate authorities.
 
