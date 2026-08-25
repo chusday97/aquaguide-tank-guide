@@ -16,3 +16,8 @@
 
 - 不新增静态鱼缸。
 - 不改变业务数据、混养规则、API 或 Supabase 契约。
+
+## Protocol Maintenance
+
+- [ ] 每次编码前读取 `CURRENT_GOAL.md`、`PRODUCT_CONTEXT.md`、`DECISION_LOG.md`。
+- [ ] 每次变更后更新 `CHANGELOG_AI.md`、`EXECUTION_LOG.md`、`TASK_QUEUE.md`。
