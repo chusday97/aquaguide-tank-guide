@@ -20,3 +20,4 @@
 - Recorded `integration/aquaguide-rc1@895f2f39` as a selective business reference only.
 - Recorded PR #140 as deprecated because its RC-first partial UI migration regressed the approved visual result.
 - Audited RC-only commits and grouped them into domain authority, recommendation, UI, interactive atlas, runtime/API, and workflow integrity categories.
+- Closed PR #140 and opened Draft PR #141 against `integration/aquaguide-rc1`.
