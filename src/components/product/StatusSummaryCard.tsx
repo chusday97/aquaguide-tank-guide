@@ -7,7 +7,7 @@ export type AquariumStatusLevel = 'normal' | 'needs_attention' | 'urgent' | 'ins
 
 export type DailyActionType =
   | 'urgent_recovery'
-  | 'compatibility_review'
+  | 'current_state_review'
   | 'care_plan'
   | 'water_change'
   | 'daily_check'

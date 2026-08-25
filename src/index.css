@@ -2445,3 +2445,58 @@ select {
     min-height: calc(100dvh - 24px);
   }
 }
+
+/* Interactive Atlas detail reflow: accepted 2026-08-22 two-state contract.
+   Large desktop scene yields real space to the right detail rail instead of being covered by it. */
+@media (min-width: 1024px) {
+  [data-atlas-scene-context] {
+    width: 100%;
+    min-width: 0;
+  }
+
+  [data-atlas-scene-context][data-detail-open="true"] {
+    width: calc(100% - clamp(440px, 42vw, 600px) - 16px);
+  }
+
+  .atlas-species-detail-rail {
+    width: clamp(440px, 42vw, 600px) !important;
+    max-width: calc(100vw - 240px) !important;
+  }
+
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-stage {
+    min-height: 650px;
+  }
+
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-copy {
+    max-width: calc(100% - 28px);
+  }
+
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-copy h1,
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-copy h2 {
+    max-width: 320px;
+    font-size: clamp(24px, 2.5vw, 34px);
+  }
+
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-copy p,
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-tools,
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-note,
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-dock {
+    display: none !important;
+  }
+
+  [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-creature {
+    height: clamp(68px, 8vw, 98px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-atlas-scene-context] {
+    transition: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .encyclopedia-workspace [data-atlas-scene-context][data-detail-open="true"] .interactive-tank-dock.is-visible {
+    display: none !important;
+  }
+}

@@ -1,6 +1,75 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-21 21:24 +08:00
+## 2026-08-25 14:31 +0800 — Interactive Atlas detail reflow requirement recovered
+
+- Historical record confirmed: user explicitly required on 2026-08-22 that clicking the selected scene species' profile action narrows/collapses the aquarium into left context and slides Species Detail in from the right; closing restores the exact prior aquarium. Draft PR #112 (`agent/interactive-atlas-detail-v2`, head `ddc9db51`) encoded the same contract.
+- Reconciled semantically into the current UI instead of restoring the old RC1 knowledge panel: `SpeciesSceneAtlas` remains canonical scene; current authoritative `SpeciesDetailDialog` remains the detail surface.
+- Desktop >=1024 now yields real scene width to the Rail. Measured 1440: scene 1106px -> 490px, rail 600px, overlap 0. Measured 1024: scene 714px -> 258px, rail 440px, overlap 0.
+- Closing detail restores original scene width and the exact six-species discovery batch. Narrowed state hides the redundant in-scene selection dock. Phone keeps the existing bottom sheet.
+- Added `test:interactive-atlas-detail-reflow`; PASS. UI-014 = KEEP. Added PUI-BC-063 to prevent the generic no-reflow Rail contract from overriding this Atlas-specific behavior again.
+- No merge to `main`; no Production deployment.
+
+## 2026-08-25 14:20 +0800 — Interactive Atlas source-of-truth correction
+
+- User visual review caught a version-line regression: the unified branch had restored RC1's later `InteractiveSpeciesAtlas` knowledge-panel layout, but the accepted interactive UI had already advanced on 2026-08-21 to `SpeciesSceneAtlas`.
+- Canonical visual owner is now restored to `src/components/interactive/SpeciesSceneAtlas.tsx`; default Encyclopedia mode is `scene`, followed by explicit `browse` and `compatibility` modes.
+- Preserved accepted scene behavior: 6 transparent swimming creatures, first click selects in-scene, explicit profile CTA, whole-batch replacement, same-day no-repeat, refresh persistence, explicit restart after exhaustion, selected dock overlay.
+- Preserved non-conflicting later RC1/UI work: mobile direct Search, Identify, Settings, one Encyclopedia top toolbar, explicit Compatibility intent, current Species Detail authority.
+- `InteractiveSpeciesAtlas.tsx` is retired from the unified checkpoint; `test:interactive-atlas-runtime` points to the SpeciesSceneAtlas runtime regression and must not restore the superseded RC1 visual owner.
+- Verification PASS: authority contract, discovery batches, 411 transparent assets, interactive scene browser checks, mobile toolbar, page runtime matrix 28/28, TypeScript.
+- New badcase: PUI-BC-062 records the visual-owner regression so later reconciliation cannot replace the accepted scene merely because a donor commit is newer.
+- No merge to `main`; no Production deployment.
+
+## 2026-08-25 13:38 +0800 — UI requirement recovery V2 / Species Detail + Collection
+
+- UI Requirement Ledger remains the chronological UI authority; visual baseline SHA alone is not the complete requirement set.
+- UI-011 closed: Species Detail decision evidence now uses canonical Compatibility blocking/warning/missing/passed rules. Context metrics and `housingMode` are explicitly reference-only and cannot override the verdict.
+- UI-012 closed: 390px Species Detail first viewport now prioritizes Hero -> verdict -> primary action -> feeding/reference; full Species Detail browser regression PASS.
+- UI-005 implemented as semantic reconciliation, not rollback: current creature-first Collection is preserved while center-focus carousel interactions are restored (neighbor peeks, arrows, dots, spring, drag/swipe, `pan-y`). Status remains VERIFY pending user visual acceptance.
+- Collection mobile compact navigation condensed to one row so the focus card enters the first viewport while preserving four creature shortcuts.
+- Regression evidence: Collection creature-navigation PASS; focus-carousel PASS; Species Detail UI PASS; Species Detail authority PASS; page runtime matrix 28/28 PASS; TypeScript PASS; production build PASS.
+- Next UI target: UI-013 Aquarium hierarchy/state visual audit. No merge to `main`; no Production deployment.
+
+## 2026-08-25 02:29 +0800 — Post-baseline UI requirement recovery V1
+
+- Requirement source: `docs/02-design/UI_REQUIREMENT_LEDGER.md`; baseline SHA is no longer treated as the complete requirement set.
+- Restored accepted post-`a3f1664` UI decisions: Interactive Atlas re-entry, mobile Encyclopedia Search, single-toolbar ownership, Identify header isolation, explicit Compatibility intent.
+- `InteractiveSpeciesAtlas` is visual-only: random co-display != Compatibility; tankSize / waterChangeCycle are reference labels only; Compatibility begins only on explicit secondary action.
+- Runtime evidence: Atlas 390/900/1600 PASS; Mobile Encyclopedia toolbar PASS; Identify header PASS; full page matrix 28/28 PASS.
+- Static/build evidence: Interactive Atlas authority PASS; `tsc --noEmit` PASS; production build PASS.
+- Remaining UI ledger priorities: UI-012 Mobile Species Detail first viewport, UI-011 Species Detail authority presentation audit, UI-005 Collection IceGlide-like focus-carousel completion, UI-013 Aquarium hierarchy visual verification.
+- No merge to `main` and no Production deployment.
+
+
+更新时间：2026-08-25 00:33 +08:00
+
+## 2026-08-25 Unified RC1 基线
+
+- 当前整合分支：`reconcile/final-ui-rc1-v1`
+- 视觉 / 交互基线：`codex/interactive-parity-v3` @ `a3f1664`
+- 逻辑 / Production donor：`integration/aquaguide-rc1` @ `895f2f3`
+- 本地整合工作区：`~/aquaguide-final-ui-rc1`
+- 原 `~/aquaguide-preview-current` 保留，不覆盖其中未提交改动。
+- 新原则：**在 final interactive UI 基础上向前整合 RC1 逻辑，不再以 RC1 页面外观反向覆盖 UI。**
+- UI canonical：`docs/02-design/UI_SOURCE_OF_TRUTH.md`
+- Reconciliation plan：`docs/04-planning/RC1_UI_RECONCILIATION.md`
+
+### 已完成的第一阶段整合
+
+- Compatibility Product Truth + Whole-Tank Feasibility 已迁入。
+- Tank State Engine / Tank Evidence Adapter / Current Tank State presentation 已迁入并接到 Aquarium。
+- Water Change Engine / Water Change decision adapter 已迁入并接到 Aquarium。
+- Recommendation authority 已移除旧 temperament bioload、keyword minimum-group、static housingMode hard-block；Interactive Discovery 保留。
+- Today Action 不再由 `blockingCompatibilityRisk` 直接拥有，Current Tank State 成为当前风险 authority。
+- P0 Compatibility 5/5、Whole-Tank 7/7、Tank State 11/11、Tank Evidence、Existing Tank Authority、Water Change 8/8、Water Change Authority 全部 PASS。
+- `tsc --noEmit` PASS；`vite build` PASS。
+
+### Release boundary
+
+- 当前仍是 reconciliation branch，不是 production release。
+- 不 merge `main`，不覆盖 `codex/interactive-parity-v3`，不部署 Production，除非另有明确授权。
+
+---
 
 ## 当前工作基线
 

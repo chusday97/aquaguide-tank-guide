@@ -1,6 +1,90 @@
 # AquaGuide Progress — Latest
 
-更新时间：2026-08-22 +08:00
+## 2026-08-25 14:31 +0800 — Atlas detail reflow restored
+
+- UI-014 PASS: explicit profile action now transitions Interactive Atlas from full exploration scene to narrow left context + right Species Detail Rail.
+- 1440 and 1024 geometry: scene/rail overlap = 0; close restores original width and exact batch.
+- Redundant scene selection dock is hidden while the full detail Rail is open.
+- Phone remains bottom-sheet behavior.
+- New permanent regression: `test:interactive-atlas-detail-reflow` PASS.
+
+## 2026-08-25 14:20 +0800 — Interactive Atlas latest UI restored
+
+- Corrected visual source-of-truth: `SpeciesSceneAtlas` (accepted 2026-08-21 interaction line) replaces RC1 `InteractiveSpeciesAtlas` as the canonical Atlas visual owner.
+- Encyclopedia now defaults to `scene`; Browse and Compatibility remain explicit separate modes.
+- Mobile single toolbar semantically merges both lines: Scene/Browse/Compatibility + Search/Identify/Settings, all 44px controls.
+- Regression PASS: interactive atlas authority, 6-item batch persistence/no-repeat, 411 transparent scene assets, scene runtime including dock overlay, mobile toolbar, full page matrix 28/28, TypeScript.
+- RC1 `InteractiveSpeciesAtlas` implementation/runtime gate retired from the unified checkpoint; runtime alias points to `verify-interactive-scenes.mjs`.
+- Next only after Atlas visual confirmation: resume UI-013 Aquarium hierarchy.
+
+## 2026-08-25 13:38 +0800 — UI Recovery V2
+
+- UI-011 Species Detail authority presentation: PASS; canonical Compatibility owns decision evidence, contextual heuristics are reference-only.
+- UI-012 Mobile Species Detail first viewport: PASS; primary CTA is reachable before feeding/reference detail.
+- UI-005 Collection: creature-first + center-focus carousel implementation complete; browser drag/arrow/dot regressions PASS; status VERIFY pending human visual acceptance.
+- Mobile Collection creature shortcuts reduced from a tall 2x2 block to one compact row so center focus is visible earlier.
+- Page runtime matrix remains 28/28 PASS; TypeScript and production build PASS.
+- Next: UI-013 Aquarium hierarchy visual/state audit, then remaining Production runtime reconciliation.
+
+## 2026-08-25 02:29 +0800 — UI Requirement Recovery V1
+
+- Added `UI_REQUIREMENT_LEDGER.md` to separate visual baseline from the full chronological UI requirement set.
+- UI-006 Interactive Atlas: restored + authority/runtime PASS.
+- UI-007 Mobile Encyclopedia direct Search: restored + PASS.
+- UI-008 Encyclopedia single mobile toolbar: restored + PASS.
+- UI-009 Identify/mobile-header isolation: restored + PASS.
+- UI-010 Browse/detail does not implicitly become Compatibility intent: explicit secondary action protected.
+- Full page runtime matrix: 28/28 PASS after replacing stale old-scene selector with the accepted Interactive Atlas owner.
+- Production build and TypeScript remain green.
+- Next: UI-012 Mobile Species Detail first-viewport CTA; then UI-011, UI-005, UI-013.
+
+
+更新时间：2026-08-25 00:33 +08:00
+
+## 当前结论
+
+AquaGuide 已切换为 **Final UI 基线上的 RC1 semantic reconciliation**。
+
+- Working branch：`reconcile/final-ui-rc1-v1`
+- UI baseline：`a3f1664`
+- RC1 donor：`895f2f3`
+- 第一阶段 deterministic authority 已实际接线，不是 docs-only。
+- UI shell / Aquarium immersive stage / Surface system 保持旧 UI final 形态。
+- 当前 build PASS；尚未完成 unified branch 的全页面 browser visual matrix 与 human visual acceptance。
+
+## 2026-08-25 第一阶段完成
+
+1. Compatibility / Whole-Tank
+   - canonical Compatibility engine 已迁入；
+   - Whole-Tank group / space / equipment / bioload authority 已迁入；
+   - reviewed minimumGroupSize 替代关键词群游猜测；
+   - temperament 不再放大 bioload。
+2. Recommendation
+   - static `housingMode=建议单养` 不再在 Compatibility 之前屏蔽候选；
+   - heuristic load / group gap 不再自行升级为 `blocked`；
+   - Interactive Discovery 保留。
+3. Existing Tank
+   - Tank State Engine + Evidence Adapter + presentation service 已接入当前 UI；
+   - Today Action 当前风险由 Current Tank State 拥有；
+   - static planning risk 不再直接制造当前危险。
+4. Water Change
+   - deterministic Water Change Engine 已接入；
+   - Aquarium 不再用 shortest species cycle/default 7-day 作为 decision authority；
+   - calendar overdue alone 不再制造 high-priority current risk。
+5. Verification
+   - Compatibility 5/5 PASS；Whole-Tank 7/7 PASS；Tank State 11/11 PASS；
+   - Tank Evidence PASS；Existing Tank Authority PASS；Water Change 8/8 PASS；Water Change Authority PASS；
+   - TypeScript PASS；production build PASS。
+
+## 下一步
+
+- 跑 unified branch 的 Aquarium / Encyclopedia / Collection / Care runtime + visual matrix；
+- 完成 Current Tank State watch/unknown 与 Water Change 展示 parity；
+- 迁入 Recommendation #134/#135 永久 regression；
+- 再迁 Production runtime / Vercel ESM contracts；
+- 最后才进入 live provider + Production Acceptance。
+
+---
 
 ## 当前结论
 

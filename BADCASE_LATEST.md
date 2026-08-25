@@ -78,3 +78,25 @@
 - deterministic compatibility PASS ≠ evidence coverage 足够。
 - GitHub commit ≠ deployed latest SHA。
 - Local / Vercel parity 必须基于同 SHA、同 seed、同 viewport。
+
+## PUI-BC-062 — Interactive Atlas visual owner 被较新 donor 实现错误覆盖
+
+- **Severity**：P0 / High
+- **Status**：`fix_implemented_runtime_guarded_visual_pending`
+- **Reproduced**：Unified branch 一度以 2026-08-23 RC1 `InteractiveSpeciesAtlas` knowledge-panel/re-entry 作为互动图鉴首屏，覆盖了 2026-08-21 已接受的 `SpeciesSceneAtlas` 场景交互。
+- **Root cause**：错误地把“提交时间更晚”当成“视觉需求更晚”；donor recency 覆盖了已接受 UI contract。
+- **Canonical fix**：`SpeciesSceneAtlas` 恢复为互动图鉴视觉 owner；默认 `scene`，Browse / Compatibility 显式分离；保留 8/24 Search / Identify / Settings 单一移动顶栏和当前 Compatibility authority。
+- **Protected behavior**：6 个透明游动物种；首击仅场景选中；显式 CTA 打开档案；整批换一批；同日不重复；刷新保留；耗尽后显式重新开始；选中 dock 保持在场景内。
+- **Regression**：authority PASS；interactive discovery PASS；411 scene asset Alpha PASS；interactive scene browser PASS；mobile toolbar PASS；page runtime 28/28 PASS。
+- **关闭条件**：用户人工确认互动图鉴视觉与此前最新版本一致；在此之前不得标记 human visual PASS。
+
+## PUI-BC-063 — Interactive Atlas 打开详情后 Rail 覆盖鱼缸，未执行场景收窄
+
+- **Severity**：P0 / High
+- **Status**：`fix_implemented_runtime_guarded_visual_pending`
+- **Historical contract**：2026-08-22 用户明确要求，点击场景中的“查看物种档案”后，鱼缸收窄为左侧上下文，右侧自然拉出物种详情；关闭后恢复完全相同的鱼缸场景。Draft PR #112 (`ddc9db51`) 曾实现该两态交互。
+- **Reproduced**：恢复 `SpeciesSceneAtlas` 后，当前 generic persistent Rail 直接覆盖场景；1440 overlap 582px，1024 overlap 470px。
+- **Root cause**：通用 Detail Rail “背景保持原宽”规则覆盖了更晚、更具体的 Interactive Atlas observation-state exception。
+- **Canonical fix**：`SpeciesSceneAtlas` 仍是场景 owner；当前 `SpeciesDetailDialog` 仍是详情 authority。desktop >=1024 时 scene 主动收窄并为 Rail 让位；关闭恢复宽度和原 discovery batch；详情打开期间隐藏冗余 scene dock；phone 保持 bottom sheet。
+- **Regression**：`test:interactive-atlas-detail-reflow` PASS。1440 / 1024 scene-rail overlap = 0；close exact-scene restore PASS。
+- **关闭条件**：用户人工确认收窄比例、过渡和详情视觉符合此前版本；在此之前不得标记 human visual PASS。

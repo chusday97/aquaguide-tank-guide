@@ -89,7 +89,7 @@ try {
     assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
     if (locale === 'zh-CN') {
       const [displayTitle, scientificName] = await Promise.all([
-        dialog.getByRole('heading', { name: '孔雀鱼', exact: true }),
+        dialog.getByRole('heading', { name: '极火虾', exact: true }),
         dialog.locator('[data-scientific-name]').first(),
       ]);
       assert.equal(await displayTitle.evaluate(node => getComputedStyle(node).fontStyle), 'normal', '中文物种名不应被强制斜体');
@@ -110,16 +110,16 @@ try {
       assert.ok(dialogBox && actionBox && heroBox && feedingBox && verdictBox, 'phone primary information must have visible bounds');
       assert.ok(actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
       assert.equal(reasonBoxes.length, 3, 'phone detail must render three key reasons without claiming they all fit before scrolling');
-      assert.ok(heroBox.y + heroBox.height < feedingBox.y, 'phone hero and feeding summary must not overlap');
-      assert.ok(feedingBox.y + feedingBox.height < verdictBox.y, 'feeding summary must appear before the fit verdict');
+      assert.ok(heroBox.y + heroBox.height < verdictBox.y, 'phone hero must not overlap the fit verdict');
       assert.ok(verdictBox.y < actionBox.y, 'phone must show the fit verdict before the primary action');
+      assert.ok(actionBox.y + actionBox.height < feedingBox.y, 'phone reference feeding detail must follow the primary decision/action block');
       const lastReason = dialog.locator('[aria-label="Key reasons"] > div').last();
       await lastReason.evaluate(node => node.scrollIntoView({ block: 'center' }));
       await current.page.waitForTimeout(120);
       const [scrolledReasonBox, scrolledDialogBox] = await Promise.all([lastReason.boundingBox(), dialog.boundingBox()]);
       assert.ok(scrolledReasonBox && scrolledDialogBox && scrolledReasonBox.y >= scrolledDialogBox.y && scrolledReasonBox.y + scrolledReasonBox.height <= scrolledDialogBox.y + scrolledDialogBox.height, 'phone reasons must remain reachable after the inline primary action');
     }
-    const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank fit evidence/ : /适配依据/ });
+    const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank context reference/ : /鱼缸条件参考/ });
     assert.equal(await fitSection.getAttribute('aria-expanded'), 'false', 'fit evidence must be collapsed on first open');
     await fitSection.click();
     metricIdsByLocale[locale] = await dialog.locator('[data-species-fit-metric]').evaluateAll(nodes => nodes.map(node => node.getAttribute('data-species-fit-metric')).sort());
@@ -165,8 +165,8 @@ try {
           ...baseConfiguredState.aquariums[0],
           dimensions: { length: '300', width: '100', height: '100' },
           fishes: [{
-            id: 'predator-sp-0117',
-            fishId: 'sp_0117',
+            id: 'predator-sp-0049',
+            fishId: 'sp_0049',
             quantity: 1,
             entryDate: '2026-07-01',
             lastWaterChangeDate: '2026-07-20',
@@ -191,7 +191,7 @@ try {
     const action = dialog.getByRole('button', { name: testCase.action, exact: true });
     assert.equal(await action.count(), 1, `${testCase.name} must expose exactly one contextual action`);
     if (testCase.name === 'caution') {
-      await dialog.getByRole('button', { name: /Tank fit evidence/ }).click();
+      await dialog.getByRole('button', { name: /Tank context reference/ }).click();
       const temperatureMetric = dialog.locator('[data-species-fit-metric="fit-temperature"]');
       assert.equal(await temperatureMetric.evaluate(node => node.tagName), 'BUTTON', 'an abnormal temperature metric must be actionable');
       await temperatureMetric.click();
@@ -218,7 +218,7 @@ try {
 
   const ownedAquarium = await newSeededPage({ state: createState({ withTank: true, owned: true }) });
   await ownedAquarium.page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  await ownedAquarium.page.locator('.aquarium-archive button[aria-haspopup="dialog"]').click();
+  await ownedAquarium.page.locator('[data-tank-species-entry][aria-haspopup="dialog"]').click();
   const roster = ownedAquarium.page.locator('[role="dialog"][data-surface="task-flow"]:visible').first();
   await roster.locator('[data-livestock-open-profile]').click();
   const aquariumDetail = ownedAquarium.page.locator('[role="dialog"][data-surface]:visible');

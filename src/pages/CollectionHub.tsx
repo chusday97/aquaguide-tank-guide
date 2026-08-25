@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { motion, useReducedMotion, type PanInfo } from 'motion/react';
 import {
   BookHeart,
   BookOpenCheck,
   Check,
+  ChevronLeft,
   ChevronRight,
   Heart,
   Medal,
@@ -77,6 +79,10 @@ export default function CollectionHub() {
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
   const [activeModule, setActiveModule] = useState<CollectionModule>('wishlist');
   const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
+  const reduceMotion = useReducedMotion();
+  const activeIndex = Math.max(0, moduleOrder.indexOf(activeModule));
+  const previousModule = moduleOrder[(activeIndex - 1 + moduleOrder.length) % moduleOrder.length];
+  const nextModule = moduleOrder[(activeIndex + 1) % moduleOrder.length];
 
   useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);
 
@@ -162,6 +168,17 @@ export default function CollectionHub() {
   const selectModule = (module: CollectionModule, itemId?: string) => {
     setActiveModule(module);
     setFocusedItemId(itemId || null);
+  };
+
+  const moveModule = (delta: -1 | 1) => {
+    const nextIndex = (activeIndex + delta + moduleOrder.length) % moduleOrder.length;
+    selectModule(moduleOrder[nextIndex]);
+  };
+
+  const handleFocusDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    const swipeIntent = info.offset.x + info.velocity.x * 0.18;
+    if (swipeIntent <= -50) moveModule(1);
+    else if (swipeIntent >= 50) moveModule(-1);
   };
 
   const getHoverItems = (module: CollectionModule): HoverItem[] => {
@@ -328,6 +345,10 @@ export default function CollectionHub() {
   };
 
   const activeMeta = moduleMeta[activeModule];
+  const previousMeta = moduleMeta[previousModule];
+  const nextMeta = moduleMeta[nextModule];
+  const previousCreature = fishData[marineVisualIndexes[previousModule]] || fishData[0];
+  const nextCreature = fishData[marineVisualIndexes[nextModule]] || fishData[0];
 
   return (
     <div className="collection-hub page-frame-wide mx-auto flex w-full min-w-0 flex-col gap-4 pb-24">
@@ -346,7 +367,7 @@ export default function CollectionHub() {
         <span aria-hidden="true" className="absolute bottom-[6%] left-[9%] h-[16%] w-3 origin-bottom rotate-6 rounded-t-full bg-emerald-800/55" />
         <span aria-hidden="true" className="absolute bottom-[5%] right-[6%] h-[26%] w-4 origin-bottom rotate-12 rounded-t-full bg-emerald-700/60" />
 
-        <div className="relative z-20 grid grid-cols-2 gap-3 p-4 lg:hidden">
+        <div className="relative z-20 grid grid-cols-4 gap-2 p-3 lg:hidden">
           {moduleOrder.map(module => {
             const meta = moduleMeta[module];
             const fish = fishData[marineVisualIndexes[module]] || fishData[0];
@@ -357,13 +378,13 @@ export default function CollectionHub() {
                 onClick={() => selectModule(module)}
                 aria-pressed={activeModule === module}
                 data-collection-compact={module}
-                className={`flex min-h-[116px] flex-col items-center justify-center rounded-[24px] border bg-white/68 p-3 backdrop-blur-xl transition-all ${activeModule === module ? 'border-emerald-400 ring-2 ring-emerald-100' : 'border-white/80'}`}
+                className={`flex min-h-[92px] min-w-0 flex-col items-center justify-center rounded-[20px] border bg-white/68 px-1.5 py-2 backdrop-blur-xl transition-all ${activeModule === module ? 'border-emerald-400 ring-2 ring-emerald-100' : 'border-white/80'}`}
               >
-                <span className="relative flex h-14 w-24 items-center justify-center">
+                <span className="relative flex h-10 w-16 items-center justify-center">
                   {fish && <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt="" className={`h-full w-full object-contain drop-shadow-[0_10px_10px_rgba(18,70,57,0.18)] ${getSpeciesImageClass(fish)}`} loading="lazy" decoding="async" />}
                 </span>
-                <span className="mt-2 flex items-center gap-1.5 text-[12px] font-black text-ink">{meta.icon}{meta.shortLabel}</span>
-                <span className="mt-1 text-[10px] font-bold text-ink/45">{meta.countLabel}</span>
+                <span className="mt-1.5 flex min-w-0 items-center gap-1 text-[10px] font-black text-ink">{meta.icon}{meta.shortLabel}</span>
+                <span className="mt-0.5 text-[9px] font-bold text-ink/45">{meta.countLabel}</span>
               </button>
             );
           })}
@@ -421,21 +442,80 @@ export default function CollectionHub() {
           })}
         </div>
 
-        <div className="relative z-20 mx-4 mb-5 mt-3 lg:absolute lg:left-1/2 lg:top-1/2 lg:m-0 lg:w-[min(50%,720px)] lg:-translate-x-1/2 lg:-translate-y-1/2 xl:w-[min(56%,720px)]">
-          <section key={activeModule} className="overflow-hidden rounded-[32px] border border-white/80 bg-[#fdfcf8]/94 p-4 shadow-[0_26px_72px_rgba(13,67,54,0.18)] backdrop-blur-2xl md:p-6" aria-live="polite" data-collection-focus={activeModule}>
-            <div className="flex items-start justify-between gap-4 border-b border-ink/8 pb-4">
-              <div className="min-w-0">
-                <div className={`flex items-center gap-2 text-[11px] font-black ${activeMeta.accentClass}`}>{activeMeta.icon}{activeMeta.countLabel}</div>
-                <h2 className="mt-2 font-serif text-[27px] font-bold leading-tight text-ink md:text-[34px]">{activeMeta.title}</h2>
-                <p className="mt-2 max-w-[540px] text-[12px] font-semibold leading-6 text-ink/54">{activeMeta.description}</p>
+        <div className="relative z-20 mx-4 mb-5 mt-3 lg:absolute lg:left-1/2 lg:top-1/2 lg:m-0 lg:w-[min(50%,720px)] lg:-translate-x-1/2 lg:-translate-y-1/2 xl:w-[min(56%,720px)]" data-collection-carousel>
+          <button
+            type="button"
+            onClick={() => moveModule(-1)}
+            data-collection-neighbor="previous"
+            aria-label={isEn ? `Previous: ${previousMeta.title}` : `上一个：${previousMeta.title}`}
+            className="absolute left-0 top-1/2 z-10 hidden -translate-x-[42%] -translate-y-1/2 flex-col items-center lg:flex"
+          >
+            <span className="flex h-24 w-28 items-center justify-center opacity-55 blur-[0.3px] transition-all duration-300 hover:scale-105 hover:opacity-85">
+              <ResilientImage src={getSpeciesVisualSources(previousCreature).thumbnail} alt="" className={`h-full w-full object-contain drop-shadow-[0_14px_12px_rgba(13,68,54,0.18)] ${getSpeciesImageClass(previousCreature)}`} loading="lazy" decoding="async" />
+            </span>
+            <span className="mt-1 rounded-full border border-white/70 bg-white/72 px-2.5 py-1 text-[9px] font-black text-ink/55 shadow-sm backdrop-blur">{previousMeta.shortLabel}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => moveModule(1)}
+            data-collection-neighbor="next"
+            aria-label={isEn ? `Next: ${nextMeta.title}` : `下一个：${nextMeta.title}`}
+            className="absolute right-0 top-1/2 z-10 hidden translate-x-[42%] -translate-y-1/2 flex-col items-center lg:flex"
+          >
+            <span className="flex h-24 w-28 items-center justify-center opacity-55 blur-[0.3px] transition-all duration-300 hover:scale-105 hover:opacity-85">
+              <ResilientImage src={getSpeciesVisualSources(nextCreature).thumbnail} alt="" className={`h-full w-full object-contain drop-shadow-[0_14px_12px_rgba(13,68,54,0.18)] ${getSpeciesImageClass(nextCreature)}`} loading="lazy" decoding="async" />
+            </span>
+            <span className="mt-1 rounded-full border border-white/70 bg-white/72 px-2.5 py-1 text-[9px] font-black text-ink/55 shadow-sm backdrop-blur">{nextMeta.shortLabel}</span>
+          </button>
+
+          <motion.div
+            key={activeModule}
+            data-collection-focus-card
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.16}
+            onDragEnd={handleFocusDragEnd}
+            whileDrag={reduceMotion ? undefined : { scale: 0.985 }}
+            initial={reduceMotion ? false : { opacity: 0.72, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30 }}
+            style={{ touchAction: 'pan-y' }}
+          >
+            <section className="overflow-hidden rounded-[32px] border border-white/80 bg-[#fdfcf8]/94 p-4 shadow-[0_26px_72px_rgba(13,67,54,0.18)] backdrop-blur-2xl md:p-6" aria-live="polite" data-collection-focus={activeModule}>
+              <div className="flex items-start justify-between gap-4 border-b border-ink/8 pb-4">
+                <div className="min-w-0">
+                  <div className={`flex items-center gap-2 text-[11px] font-black ${activeMeta.accentClass}`}>{activeMeta.icon}{activeMeta.countLabel}</div>
+                  <h2 className="mt-2 font-serif text-[27px] font-bold leading-tight text-ink md:text-[34px]">{activeMeta.title}</h2>
+                  <p className="mt-2 max-w-[540px] text-[12px] font-semibold leading-6 text-ink/54">{activeMeta.description}</p>
+                </div>
+                <button type="button" onClick={() => navigate(moduleRoutes[activeModule])} className="hidden shrink-0 items-center gap-1 rounded-full border border-emerald-100 bg-white px-4 py-2.5 text-[11px] font-black text-emerald-800 shadow-sm transition-transform hover:-translate-y-0.5 sm:flex">{isEn ? 'Open full collection' : '打开完整模块'}<ChevronRight className="h-4 w-4" /></button>
               </div>
-              <button type="button" onClick={() => navigate(moduleRoutes[activeModule])} className="hidden shrink-0 items-center gap-1 rounded-full border border-emerald-100 bg-white px-4 py-2.5 text-[11px] font-black text-emerald-800 shadow-sm transition-transform hover:-translate-y-0.5 sm:flex">{isEn ? 'Open full collection' : '打开完整模块'}<ChevronRight className="h-4 w-4" /></button>
+
+              <div className="mt-4 max-h-[430px] overflow-y-auto pr-1">{renderCentralContent()}</div>
+
+              <button type="button" onClick={() => navigate(moduleRoutes[activeModule])} className="mt-4 flex w-full items-center justify-center gap-1 rounded-full bg-[#0b634d] px-4 py-3 text-[12px] font-black text-white sm:hidden">{isEn ? 'Open full collection' : '打开完整模块'}<ChevronRight className="h-4 w-4" /></button>
+            </section>
+          </motion.div>
+
+          <div className="mt-3 flex items-center justify-center gap-3" data-collection-carousel-controls>
+            <button type="button" data-collection-carousel-prev onClick={() => moveModule(-1)} aria-label={isEn ? 'Previous collection module' : '上一个水族册模块'} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/75 bg-white/78 text-emerald-900 shadow-sm backdrop-blur transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"><ChevronLeft className="h-4 w-4" /></button>
+            <div className="flex items-center gap-2" aria-label={isEn ? 'Choose collection module' : '选择水族册模块'}>
+              {moduleOrder.map(module => (
+                <button
+                  key={module}
+                  type="button"
+                  onClick={() => selectModule(module)}
+                  data-collection-dot={module}
+                  aria-current={activeModule === module ? 'true' : undefined}
+                  aria-label={moduleMeta[module].title}
+                  className={`h-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${activeModule === module ? 'w-7 bg-emerald-700' : 'w-2 bg-white/70 hover:bg-white'}`}
+                />
+              ))}
             </div>
-
-            <div className="mt-4 max-h-[430px] overflow-y-auto pr-1">{renderCentralContent()}</div>
-
-            <button type="button" onClick={() => navigate(moduleRoutes[activeModule])} className="mt-4 flex w-full items-center justify-center gap-1 rounded-full bg-[#0b634d] px-4 py-3 text-[12px] font-black text-white sm:hidden">{isEn ? 'Open full collection' : '打开完整模块'}<ChevronRight className="h-4 w-4" /></button>
-          </section>
+            <button type="button" data-collection-carousel-next onClick={() => moveModule(1)} aria-label={isEn ? 'Next collection module' : '下一个水族册模块'} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/75 bg-white/78 text-emerald-900 shadow-sm backdrop-blur transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"><ChevronRight className="h-4 w-4" /></button>
+          </div>
+          <p className="mt-1 text-center text-[10px] font-bold text-emerald-950/52">{isEn ? 'Swipe, drag, use arrows, or pick a creature.' : '滑动、拖拽、点击箭头，或直接选择周围的生物。'}</p>
         </div>
 
         <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/65 bg-white/50 px-3 py-2 text-[10px] font-bold text-emerald-950/55 backdrop-blur-md lg:flex"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'Hover to peek · click to focus' : '悬停预览 · 点击聚焦到中央'}</div>

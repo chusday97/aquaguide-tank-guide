@@ -22,7 +22,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, X, Heart, HeartOff, Skull, CheckCircle2, Plus, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal, AlertTriangle, Info, MoreHorizontal, Camera } from 'lucide-react';
+import { Search, X, Heart, HeartOff, Skull, CheckCircle2, Plus, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, SlidersHorizontal, AlertTriangle, Info, MoreHorizontal, Camera, Settings } from 'lucide-react';
 import { CompatibilityRiskCalculator } from '../components/CompatibilityRiskCalculator';
 import { VisualResultMini } from '../components/visual-results/VisualResultCard';
 import type { VisualResultSubject } from '../components/visual-results/visual-result.types';
@@ -1449,7 +1449,7 @@ export default function Encyclopedia() {
   return (
     <div className="encyclopedia-workspace page-frame-wide flex min-w-0 flex-col gap-6 overflow-x-hidden pt-[58px] md:pt-0 md:overflow-visible">
       {!isOverlayOpen && (
-      <div className="atlas-mobile-toolbar fixed inset-x-0 top-0 z-[60] mx-auto grid w-full max-w-[430px] grid-cols-[minmax(0,1fr)_auto_auto] gap-1.5 bg-bg/95 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] shadow-sm backdrop-blur-md md:sticky md:inset-auto md:top-3 md:max-w-[560px] md:rounded-[30px] md:p-2 md:hidden">
+      <div className="atlas-mobile-toolbar fixed inset-x-0 top-0 z-[60] mx-auto grid w-full max-w-[430px] grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-1.5 bg-bg/95 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] shadow-sm backdrop-blur-md md:sticky md:inset-auto md:top-3 md:max-w-[560px] md:rounded-[30px] md:p-2 md:hidden">
         <div className="grid min-w-0 grid-cols-3 gap-1 rounded-full bg-white/90 p-1 ring-1 ring-border/70">
         {atlasModeItems.map(item => (
           <button
@@ -1478,19 +1478,37 @@ export default function Encyclopedia() {
         </div>
         <button
           type="button"
-          onClick={() => navigateToRoute('/collection/wishlist')}
-          aria-label={`${t('encyclopedia.wishlistShort')} ${wishlistFishIds.size}`}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-rose-500 ring-1 ring-rose-100"
+          data-atlas-mobile-search
+          onClick={() => {
+            setViewMode('browse');
+            window.setTimeout(() => {
+              const toolbar = document.getElementById('atlas-toolbar');
+              toolbar?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+              window.setTimeout(() => toolbar?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true }), 300);
+            }, 50);
+          }}
+          aria-label={t('encyclopedia.search')}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-emerald-700 ring-1 ring-emerald-100"
         >
-          <Heart className="h-4 w-4" />
+          <Search className="h-4 w-4" />
         </button>
         <button
           type="button"
+          data-atlas-mobile-identify
           onClick={() => navigateToRoute('/identify')}
           aria-label={t('identify.entry')}
           className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-emerald-700 ring-1 ring-emerald-100"
         >
           <Camera className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          data-atlas-mobile-settings
+          onClick={() => navigateToRoute('/settings')}
+          aria-label={t('common.settings')}
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-emerald-700 ring-1 ring-emerald-100"
+        >
+          <Settings className="h-4 w-4" />
         </button>
       </div>
       )}
@@ -1575,22 +1593,28 @@ export default function Encyclopedia() {
         <div className="min-w-0">
 
       {viewMode === 'scene' ? (
-      <SpeciesSceneAtlas
-        species={discoverySpecies}
-        isEn={isEn}
-        getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
-        onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
-        onBrowseList={() => setViewMode('browse')}
-        onIdentify={() => navigateToRoute('/identify')}
-        onRefreshDiscoveries={refreshDiscoveries}
-        onRestartDiscoveries={restartDiscoveries}
-        discoveryBatch={{
-          size: discoverySpecies.length,
-          seenCount: discoveryState.sceneSeenIds.length + discoverySpecies.length,
-          complete: discoveryState.sceneComplete,
-          index: discoveryState.sceneBatchIndex,
-        }}
-      />
+      <div
+        data-atlas-scene-context
+        data-detail-open={selectedFish ? 'true' : 'false'}
+        className="min-w-0 transition-[width] duration-500 ease-out motion-reduce:transition-none"
+      >
+        <SpeciesSceneAtlas
+          species={discoverySpecies}
+          isEn={isEn}
+          getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
+          onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
+          onBrowseList={() => setViewMode('browse')}
+          onIdentify={() => navigateToRoute('/identify')}
+          onRefreshDiscoveries={refreshDiscoveries}
+          onRestartDiscoveries={restartDiscoveries}
+          discoveryBatch={{
+            size: discoverySpecies.length,
+            seenCount: discoveryState.sceneSeenIds.length + discoverySpecies.length,
+            complete: discoveryState.sceneComplete,
+            index: discoveryState.sceneBatchIndex,
+          }}
+        />
+      </div>
       ) : viewMode === 'browse' ? (
       <div className="flex flex-col gap-5">
       <div id="atlas-toolbar" data-workspace-sticky="true" className="atlas-sticky-toolbar flex flex-wrap gap-4 md:items-center md:gap-3 md:rounded-[22px] md:border md:border-white/80 md:bg-white/82 md:p-3 md:shadow-sm">

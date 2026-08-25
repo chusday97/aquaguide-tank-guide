@@ -23,7 +23,7 @@ const state = {
 
 const routes = [
   ['/aquarium', '#aquarium-tank'],
-  ['/encyclopedia', '.encyclopedia-workspace .interactive-tank-shell'],
+  ['/encyclopedia', '.encyclopedia-workspace [data-interactive-atlas]'],
   ['/care', '.care-workspace-shell .interactive-care-scene'],
   ['/collection', '[data-collection-focus]'],
   ['/identify', 'input[type="file"]'],

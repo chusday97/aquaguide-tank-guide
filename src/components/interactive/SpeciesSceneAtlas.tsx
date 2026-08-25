@@ -38,7 +38,7 @@ export function SpeciesSceneAtlas({ species, isEn = false, getDisplayName, onSel
   };
 
   return (
-    <section className="interactive-tank-shell" aria-label={isEn ? 'Interactive species aquarium' : '互动物种鱼缸'}>
+    <section data-interactive-atlas data-atlas-authority="visual-only" data-atlas-canonical="species-scene-v2" className="interactive-tank-shell" aria-label={isEn ? 'Interactive species aquarium' : '互动物种鱼缸'}>
       <div className="interactive-tank-copy">
         <div className="interactive-tank-eyebrow"><Compass className="h-4 w-4" />{isEn ? 'Interactive atlas' : '互动图鉴'}</div>
         <h1>{isEn ? 'Choose a fish that catches your eye.' : '点一条正在游动的生物。'}</h1>

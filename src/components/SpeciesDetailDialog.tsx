@@ -560,20 +560,31 @@ export function SpeciesDetailDialog({
     if (displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
     return t('encyclopedia.btnCompleteSetup');
   }, [aquariumContext, displayFit, owned, source, t]);
-  const verdictReasons = useMemo(() => {
-    if (!displayFit || !aquariumContext) return [];
-    const actionableConfirmations = displayFit.confirmations.filter(item => item.type !== 'water_parameter');
-    const priorityItems = [...displayFit.risks, ...actionableConfirmations];
-    const fallbackItems = displayFit.items.filter(item => item.status === 'ok');
-    return [...priorityItems, ...fallbackItems]
-      .map(item => ({
-        label: translateLabel(item.label),
-        text: item.advice || `${item.current} · ${item.requirement}`,
-        status: item.status,
-      }))
-      .filter((item, index, list) => list.findIndex(other => other.label === item.label && other.text === item.text) === index)
-      .slice(0, 3);
+  const canonicalDecisionEvidence = useMemo(() => {
+    if (!displayFit || !aquariumContext) return { watch: [], avoid: [], evidence: [], reasons: [] };
+    const { compatibilityResult } = displayFit;
+    const formatRule = (rule: TankCompatibilityResult['warningRules'][number]) => `${rule.title} · ${rule.evidence}`;
+    const reasons = [
+      ...compatibilityResult.blockingRules.map(rule => ({ label: rule.title, text: rule.evidence, status: 'danger' as const })),
+      ...compatibilityResult.warningRules.map(rule => ({ label: rule.title, text: rule.evidence, status: 'warning' as const })),
+      ...compatibilityResult.missingData.map(rule => ({ label: rule.title, text: rule.evidence, status: 'info' as const })),
+      ...compatibilityResult.passedRules.map(rule => ({ label: rule.title, text: rule.evidence, status: 'ok' as const })),
+    ];
+    return {
+      watch: compatibilityResult.warningRules.map(rule => rule.evidence),
+      avoid: compatibilityResult.blockingRules.map(rule => rule.evidence),
+      evidence: [
+        ...compatibilityResult.blockingRules,
+        ...compatibilityResult.warningRules,
+        ...compatibilityResult.missingData,
+        ...compatibilityResult.passedRules,
+      ].map(formatRule),
+      reasons: reasons
+        .filter((item, index, list) => list.findIndex(other => other.label === item.label && other.text === item.text) === index)
+        .slice(0, 3),
+    };
   }, [aquariumContext, displayFit]);
+  const verdictReasons = canonicalDecisionEvidence.reasons;
   const compatibilityVisualModel = useMemo<VisualResultViewModel | null>(() => {
     if (!fish) return null;
     const statusRank = { compatible: 0, caution: 1, insufficient_data: 2, not_recommended: 3 } as const;
@@ -797,7 +808,14 @@ export function SpeciesDetailDialog({
   return (
     <>
       <Dialog open={open} modal={isPhoneLayout} onOpenChange={onOpenChange}>
-        <AdaptiveDetailContent workspace={useWorkspaceSurface} workspaceOpen={open} showCloseButton={false} finalFocus={finalFocusElement ? () => finalFocusElement : undefined}>
+        <AdaptiveDetailContent
+          workspace={useWorkspaceSurface}
+          workspaceOpen={open}
+          showCloseButton={false}
+          finalFocus={finalFocusElement ? () => finalFocusElement : undefined}
+          data-atlas-detail-rail={source === 'atlas' && useWorkspaceSurface ? 'true' : undefined}
+          className={source === 'atlas' && useWorkspaceSurface ? 'atlas-species-detail-rail' : undefined}
+        >
           {fish && displayFit && (
             <div className="flex min-h-0 flex-1 flex-col bg-white">
               {useWorkspaceSurface ? (
@@ -821,14 +839,14 @@ export function SpeciesDetailDialog({
                     <div className="grid min-w-0 grid-cols-1 min-[620px]:grid-cols-[minmax(250px,0.92fr)_minmax(0,1.08fr)]">
                       <div className="min-w-0 py-3 min-[620px]:py-5 min-[620px]:pr-5">
                       {fish.id === 'sp_0260' ? (
-                        <Suspense fallback={<div className="flex h-[140px] items-center justify-center rounded-[18px] border border-border/70 bg-slate-50 text-[11px] text-slate-400 min-[760px]:h-[310px] min-[760px]:rounded-[20px]">{isEn ? 'Loading 3D...' : '3D 加载中...'}</div>}>
+                        <Suspense fallback={<div className="flex h-[112px] items-center justify-center rounded-[18px] border border-border/70 bg-slate-50 text-[11px] text-slate-400 min-[760px]:h-[310px] min-[760px]:rounded-[20px]">{isEn ? 'Loading 3D...' : '3D 加载中...'}</div>}>
                           <Interactive3DFishWrapper
                             imageUrl={resolvedImageSrc}
-                            className={`flex h-[140px] items-center justify-center overflow-hidden rounded-[18px] border border-border/70 min-[760px]:h-[310px] min-[760px]:rounded-[20px] ${getSpeciesImageSurfaceClass(fish)} p-0 shadow-sm`}
+                            className={`flex h-[112px] items-center justify-center overflow-hidden rounded-[18px] border border-border/70 min-[760px]:h-[310px] min-[760px]:rounded-[20px] ${getSpeciesImageSurfaceClass(fish)} p-0 shadow-sm`}
                           />
                         </Suspense>
                       ) : (
-                        <button type="button" onClick={openPreview} data-species-detail-hero className={`relative flex h-[140px] w-full items-center justify-center rounded-[18px] border border-border/70 min-[760px]:h-[310px] min-[760px]:rounded-[20px] ${getSpeciesImageSurfaceClass(fish)} p-2 min-[760px]:p-3 shadow-sm`} aria-label={isEn ? `Enlarge image of ${fish.name}` : `放大查看${fish.name}图片`}>
+                        <button type="button" onClick={openPreview} data-species-detail-hero className={`relative flex h-[112px] w-full items-center justify-center rounded-[18px] border border-border/70 min-[760px]:h-[310px] min-[760px]:rounded-[20px] ${getSpeciesImageSurfaceClass(fish)} p-2 min-[760px]:p-3 shadow-sm`} aria-label={isEn ? `Enlarge image of ${fish.name}` : `放大查看${fish.name}图片`}>
                           <ResilientImage src={resolvedImageSrc} alt={fish.name} className={`h-[88%] w-[88%] object-contain ${getSpeciesImageClass(fish)}`} />
                           <span className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-1 text-[9px] font-black text-white backdrop-blur-sm min-[760px]:bottom-3 min-[760px]:right-3 min-[760px]:px-2.5 min-[760px]:text-[10px]">{isEn ? 'View image' : '查看大图'}</span>
                         </button>
@@ -838,7 +856,7 @@ export function SpeciesDetailDialog({
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <DialogTitle className="break-words font-serif text-[21px] font-bold leading-tight text-ink min-[760px]:text-[30px]">{fish.name}</DialogTitle>
-                            <DialogDescription data-scientific-name className="mt-0.5 text-[11px] font-medium leading-tight text-ink/55 min-[760px]:mt-1 min-[760px]:text-[12px]">{fish.scientificName}</DialogDescription>
+                            <DialogDescription data-scientific-name className="italic [font-family:Georgia,serif] mt-0.5 text-[11px] font-medium leading-tight text-ink/55 min-[760px]:mt-1 min-[760px]:text-[12px]">{fish.scientificName}</DialogDescription>
                           </div>
                           <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getDifficultyBadgeClass(fish.difficulty)}`}>{fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort')}</span>
                         </div>
@@ -849,23 +867,6 @@ export function SpeciesDetailDialog({
                           })}
                         </div>
                         <p className="mt-3 hidden text-[12px] font-bold leading-relaxed text-ink/62 min-[760px]:block">{getLocalizedSpeciesRole(fish, t)}</p>
-
-                        <section data-species-feeding-summary className="mt-3 border-y border-amber-200/70 py-3" aria-labelledby="species-feeding-summary-title">
-                          <div className="flex items-center justify-between gap-2">
-                            <h3 id="species-feeding-summary-title" className="text-[11px] font-black text-amber-900">{isEn ? 'Feeding at a glance' : '喂养速览'}</h3>
-                            {carePresentation && (
-                              <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
-                                {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
-                              </span>
-                            )}
-                          </div>
-                          <p className="mt-1 break-words text-[11px] font-bold leading-4 text-ink/70">{fish.feedingProfile?.recommendedFoods || fish.diet}</p>
-                          <div className="mt-1.5 grid grid-cols-2 gap-1.5 text-[10px] font-semibold leading-4 text-ink/58">
-                            <div className="border-r border-ink/10 pr-2"><strong className="block text-ink/72">{isEn ? 'Frequency' : '频率'}</strong>{fish.feedingProfile?.feedingFrequency || (isEn ? 'Feed a small amount daily' : '每日少量投喂')}</div>
-                            <div className="pl-1"><strong className="block text-ink/72">{isEn ? 'Portion' : '单次份量'}</strong>{fish.feedingProfile?.portionRule || (isEn ? 'Finish within a few minutes' : '以数分钟内吃完为准')}</div>
-                          </div>
-                          <p className="mt-1.5 break-words text-[10px] font-semibold leading-4 text-amber-950/62"><strong>{isEn ? 'Avoid: ' : '避免：'}</strong>{fish.feedingProfile?.avoidFoods || (isEn ? 'Overfeeding and uneaten food' : '过量投喂和长期残饵')}</p>
-                        </section>
 
                         <div data-visual-result-status={mapFitStatus(displayFit.status)} className={`mt-2 rounded-[16px] border p-2.5 min-[760px]:mt-4 min-[760px]:rounded-[18px] min-[760px]:p-3 ${
                           displayFit.status === 'suitable' || displayFit.status === 'alreadyInTank'
@@ -897,6 +898,23 @@ export function SpeciesDetailDialog({
                           {mainActionLabel}
                           <ChevronRight className="ml-1 h-4 w-4" />
                         </Button>
+
+                        <section data-species-feeding-summary className="mt-3 border-y border-amber-200/70 py-3" aria-labelledby="species-feeding-summary-title">
+                          <div className="flex items-center justify-between gap-2">
+                            <h3 id="species-feeding-summary-title" className="text-[11px] font-black text-amber-900">{isEn ? 'Feeding at a glance' : '喂养速览'}</h3>
+                            {carePresentation && (
+                              <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
+                                {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1 break-words text-[11px] font-bold leading-4 text-ink/70">{fish.feedingProfile?.recommendedFoods || fish.diet}</p>
+                          <div className="mt-1.5 grid grid-cols-2 gap-1.5 text-[10px] font-semibold leading-4 text-ink/58">
+                            <div className="border-r border-ink/10 pr-2"><strong className="block text-ink/72">{isEn ? 'Frequency' : '频率'}</strong>{fish.feedingProfile?.feedingFrequency || (isEn ? 'Feed a small amount daily' : '每日少量投喂')}</div>
+                            <div className="pl-1"><strong className="block text-ink/72">{isEn ? 'Portion' : '单次份量'}</strong>{fish.feedingProfile?.portionRule || (isEn ? 'Finish within a few minutes' : '以数分钟内吃完为准')}</div>
+                          </div>
+                          <p className="mt-1.5 break-words text-[10px] font-semibold leading-4 text-amber-950/62"><strong>{isEn ? 'Avoid: ' : '避免：'}</strong>{fish.feedingProfile?.avoidFoods || (isEn ? 'Overfeeding and uneaten food' : '过量投喂和长期残饵')}</p>
+                        </section>
 
                         {verdictReasons.length > 0 && (
                           <div className="mt-2 grid gap-1 min-[760px]:mt-3 min-[760px]:gap-1.5" aria-label={isEn ? 'Key reasons' : '关键原因'}>
@@ -1023,7 +1041,7 @@ export function SpeciesDetailDialog({
                   )}
 
                   <div className="mt-4 grid gap-2" data-species-detail-sections>
-                    <section className="overflow-hidden rounded-[18px] border border-border bg-white">
+                    <section data-species-fit-reference className="overflow-hidden rounded-[18px] border border-border bg-white">
                       <button
                         type="button"
                         data-disclosure-purpose="secondary_evidence"
@@ -1032,10 +1050,10 @@ export function SpeciesDetailDialog({
                         className="flex min-h-16 w-full items-center justify-between gap-3 px-4 py-3 text-left"
                       >
                         <span className="min-w-0">
-                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Tank fit evidence' : '适配依据'}</span>
+                          <span className="block text-[14px] font-black text-ink">{isEn ? 'Tank context reference' : '鱼缸条件参考'}</span>
                           <span className="mt-0.5 block text-[11px] font-bold text-ink/45">
                             {aquariumContext
-                              ? (isEn ? `${metricCards.filter(item => item.status !== 'ok').length} items need attention` : `${metricCards.filter(item => item.status !== 'ok').length} 项需要留意`)
+                              ? (isEn ? 'Recorded values for setup reference; they do not override the Compatibility verdict.' : '当前记录仅作设置参考，不覆盖上方混养判断。')
                               : t('encyclopedia.noTankSelected')}
                           </span>
                         </span>
@@ -1046,15 +1064,15 @@ export function SpeciesDetailDialog({
                           <div className="grid grid-cols-2 gap-2 min-[760px]:grid-cols-3">
                             {metricCards.map(metric => {
                               const settingsPanel = getMetricSettingsPanel(metric);
-                              const canOpenSettings = metric.status !== 'ok' && Boolean(settingsPanel && onOpenTankSettings);
+                              const canOpenSettings = Boolean(settingsPanel && onOpenTankSettings);
                               const content = (
                                 <>
                                   <div className="flex items-center justify-between gap-2">
                                     <span className="min-w-0 break-words text-[11px] font-black text-ink">{translateLabel(metric.label)}</span>
-                                    <span className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-black ${getFitStatusClass(metric.status)}`}>{getFitStatusLabel(metric.status, isEn)}</span>
+                                    <span className="shrink-0 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[9px] font-black text-slate-600">{isEn ? 'Reference' : '参考'}</span>
                                   </div>
-                                  <p className={`mt-2 break-words text-[11px] font-bold leading-relaxed ${getFitCurrentClass(metric.status)}`}>{metric.current || t('encyclopedia.noTankSelected')}</p>
-                                  {metric.status !== 'ok' && <p className="mt-1 text-[10px] font-medium leading-relaxed text-ink/48">{metric.advice || metric.requirement}</p>}
+                                  <p className="mt-2 break-words text-[11px] font-bold leading-relaxed text-ink/68">{metric.current || t('encyclopedia.noTankSelected')}</p>
+                                  <p className="mt-1 text-[10px] font-medium leading-relaxed text-ink/48">{isEn ? 'Species reference: ' : '物种资料：'}{metric.requirement}</p>
                                 </>
                               );
                               return canOpenSettings ? (
@@ -1101,8 +1119,12 @@ export function SpeciesDetailDialog({
                         <div className="grid gap-3 border-t border-border/70 p-3">
                           {compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
                           {(fish.housingMode || fish.housingReason) && (
-                            <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
-                              <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t, isEn) : t('encyclopedia.adviceHousingDefault')}</div>
+                            <div data-species-prior-reference className="rounded-[14px] border border-slate-200 bg-slate-50/70 p-3 text-[12px] font-medium leading-relaxed text-ink/60">
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="font-black text-ink">{isEn ? 'Species reference' : '物种资料参考'}</div>
+                                <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[9px] font-black text-slate-600">{isEn ? 'Not the verdict' : '不代表当前结论'}</span>
+                              </div>
+                              <p className="mt-1 text-[10px] font-bold text-ink/46">{fish.housingMode ? translateTag(fish.housingMode, t, isEn) : t('encyclopedia.adviceHousingDefault')}</p>
                               {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
                             </div>
                           )}
@@ -1189,7 +1211,7 @@ export function SpeciesDetailDialog({
                             <div className="min-w-0">
                               <div className="text-[9px] font-black tracking-[0.16em] text-emerald-800/55">AQUAGUIDE SPECIES CARD</div>
                               <h4 className="mt-2 break-words font-serif text-[26px] font-bold leading-tight">{fish.name}</h4>
-                              <p data-scientific-name className="mt-1 break-words text-[10px] font-semibold text-[#64716B]">{fish.scientificName}</p>
+                              <p data-scientific-name className="italic [font-family:Georgia,serif] mt-1 break-words text-[10px] font-semibold text-[#64716B]">{fish.scientificName}</p>
                               <div className="mt-3 flex flex-wrap gap-1.5">
                                 {[fish.category, fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort'), fish.size].filter(Boolean).map(item => (
                                   <span key={item} className="rounded-full border border-[#D9E8DF] bg-[#F1F8F4] px-2 py-1 text-[9px] font-black text-[#275A48]">{item}</span>
