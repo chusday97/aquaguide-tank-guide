@@ -33,7 +33,7 @@ assert(speciesDetail.includes('data-feature-building="sharing"'), 'Species detai
 assert(speciesDetail.includes('findCompatibilityDisclosure'), 'Species detail risk review must preserve the in-context compatibility disclosure guard.');
 assert(care.includes("detail: { feature: 'sharing' }"), 'Care sharing must use the building feature gate.');
 assert(collection.includes("detail: { feature: 'sharing' }"), 'Collection care sharing must use the building feature gate.');
-assert(collectionHub.includes('navigate(moduleRoutes[id])'), 'Collection hub building entry must navigate to its building page.');
+assert(collectionHub.includes('navigate(moduleRoutes[module])'), 'Collection hub building entry must navigate to its building page.');
 assert(handoff.includes('2026-08-10 文案与交互一致性基线'), 'Handoff must include the current interaction baseline.');
 
 if (failures.length) {
