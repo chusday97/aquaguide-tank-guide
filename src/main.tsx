@@ -13,6 +13,8 @@ import './styles/ui-v2-dashboard.css';
 import './styles/ui-v2-shell.css';
 import './styles/uiux-system-refactor.css';
 import './styles/result-ux-layout.css';
+import './styles/aquarium-stage-layout-v4.css';
+import './styles/immersive-detail-layout-v5.css';
 import { initializeSessionAnalytics } from './services/analytics/session-events.service';
 
 const isSyntheticTest = typeof window !== 'undefined' && window.location.search.includes('synthetic_test=1');

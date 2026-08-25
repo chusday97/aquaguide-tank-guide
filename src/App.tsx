@@ -46,6 +46,7 @@ const loadCare = () => import('./pages/CareEncyclopedia');
 const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
+const loadInteractivePreview = () => import('./pages/InteractivePreview');
 const loadLogin = () => import('./pages/Login');
 const loadAdminContent = () => import('./pages/AdminContent');
 const loadIdentify = () => import('./pages/Identify');
@@ -60,6 +61,7 @@ const CareEncyclopedia = lazyWithRecovery(loadCare, 'care');
 const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
+const InteractivePreview = lazyWithRecovery(loadInteractivePreview, 'interactive-preview');
 const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
@@ -640,6 +642,7 @@ function AppShell() {
   const { showToast } = useToast();
   const { isPhoneLayout } = useLayoutMode();
   const [preferencesReady, setPreferencesReady] = useState(false);
+  const isInteractivePreview = location.pathname === '/_preview/interactive';
   const isLogin = location.pathname === '/login';
   const isAdminContent = location.pathname === '/admin/content';
   const isWelcome = location.pathname === '/welcome';
@@ -740,7 +743,7 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
+  if (!preferencesReady && !isInteractivePreview && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
 
   if (isSharedReport) {
     return (
@@ -748,6 +751,17 @@ function AppShell() {
         <Routes>
           <Route path="/report/:token" element={<RouteErrorBoundary page="shared-report"><SharedReportPage /></RouteErrorBoundary>} />
           <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  if (isInteractivePreview) {
+    return (
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/_preview/interactive" element={<InteractivePreview />} />
+          <Route path="*" element={<Navigate to="/_preview/interactive" replace />} />
         </Routes>
       </Suspense>
     );

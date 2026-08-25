@@ -11,6 +11,7 @@ interface ThreeAquariumProps {
   aquarium: Aquarium;
   activeSpecies?: string | null;
   onSpeciesSelect?: (fishId: string | null) => void;
+  framing?: 'contain' | 'stage-cover';
 }
 
 type SwimItem = {
@@ -964,7 +965,7 @@ function Backdrop({ length, width, height, isSaltwater }: { length: number; widt
   );
 }
 
-export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect }: ThreeAquariumProps) {
+export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect, framing: _framing = 'contain' }: ThreeAquariumProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const length = parseDimension(aquarium.dimensions?.length, 6);
   const width = parseDimension(aquarium.dimensions?.width, 4);

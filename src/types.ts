@@ -112,6 +112,39 @@ export type SpeciesAdditionPolicy =
   | 'complete_information'
   | 'block';
 
+/** Visual knowledge-scene selection only; it never writes aquarium state or overrides diagnosis rules. */
+export type KnowledgeObjectId =
+  | 'water_surface'
+  | 'water_body'
+  | 'livestock'
+  | 'filter'
+  | 'substrate'
+  | 'plants_equipment';
+
+export type KnowledgeUrgency = 'routine' | 'watch' | 'urgent';
+
+export interface KnowledgeJourneyAction {
+  id: string;
+  title: string;
+  instruction: string;
+  reviewStatus: 'reviewed' | 'pending';
+  sourceIds: string[];
+}
+
+export interface KnowledgeJourney {
+  id: string;
+  objectId: KnowledgeObjectId;
+  observationCodes: string[];
+  urgency: KnowledgeUrgency;
+  contextFacts: Array<{ label: string; value: string; status: 'confirmed' | 'unknown' }>;
+  emergencyActions: KnowledgeJourneyAction[];
+  clarifyingQuestions: Array<{ id: string; prompt: string; options: Array<{ id: string; label: string }> }>;
+  possibleCauses: string[];
+  avoidActions: KnowledgeJourneyAction[];
+  recheck: { timing: string; signals: string[] };
+  relatedArticleIds: string[];
+}
+
 export type MemorialCauseCode =
   | 'water_quality_change'
   | 'oxygen_shortage'

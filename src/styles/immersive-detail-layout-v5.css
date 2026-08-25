@@ -1,0 +1,380 @@
+/*
+ * Unified AquaGuide surface system.
+ *
+ * - Browsing detail: persistent non-modal right rail on desktop, bottom sheet on phone.
+ * - Task flow: right rail on desktop, high bottom sheet on phone.
+ * - Blocking confirmation: centered modal (owned by DialogContent itself).
+ */
+
+[data-detail-viewport="desktop-rail"] {
+  box-sizing: border-box;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: auto !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  transform: none !important;
+  overflow: hidden !important;
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  background: #fdfcf8 !important;
+}
+
+[data-detail-viewport="desktop-rail"] .modalBody,
+[data-detail-viewport="desktop-rail"] .species-detail-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+[data-detail-viewport="desktop-rail"] .care-detail-surface {
+  display: flex !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+[data-detail-viewport="desktop-rail"] .care-detail-surface > .app-scrollbar-hidden {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 16px 18px 28px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] > section:first-child > div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] > section:first-child > div > :first-child {
+  padding: 8px 0 14px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-layout] > section:first-child > div > :nth-child(2) {
+  border-left: 0 !important;
+  padding: 4px 0 18px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-hero] {
+  height: clamp(190px, 27dvh, 250px) !important;
+  min-height: 190px !important;
+  max-height: 250px !important;
+}
+
+[data-detail-viewport="desktop-rail"] [data-species-detail-sections] {
+  margin-top: 14px !important;
+}
+
+[data-detail-viewport="desktop-rail"] .species-workspace-close {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40 !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  background: rgba(253, 252, 248, 0.96) !important;
+  backdrop-filter: blur(16px);
+}
+
+/* Legacy direct DialogContent task surfaces are normalized here. This prevents
+   old per-page max-width / top-left utilities from making each dialog land in a
+   different place. Legacy content defaults to whole-rail scrolling so pages
+   without a standard body wrapper cannot be clipped at the bottom. */
+@media (min-width: 768px) {
+  [data-dialog-surface="task"] {
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: min(760px, calc(100vw - 320px)) !important;
+    min-width: min(520px, calc(100vw - 320px)) !important;
+    max-width: 760px !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: none !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    border-radius: 28px 0 0 28px !important;
+    background: #fdfcf8 !important;
+    box-shadow: -22px 0 64px rgba(15, 23, 42, 0.16) !important;
+  }
+
+  /* Migrated task surfaces own an explicit body scroller, so their chrome can
+     remain fixed while only the body scrolls. */
+  [data-dialog-surface="task"][data-surface="task-flow"],
+  [data-dialog-surface="task"][data-surface="filter-task"] {
+    overflow: hidden !important;
+  }
+
+  [data-dialog-surface="task"] > [data-slot="dialog-header"] {
+    flex: 0 0 auto;
+  }
+
+  [data-dialog-surface="task"] > [data-slot="dialog-footer"] {
+    flex: 0 0 auto;
+  }
+
+  [data-dialog-surface="task"] .modalBody,
+  [data-dialog-surface="task"] > .app-scrollbar-hidden,
+  [data-dialog-surface="task"] > .min-h-0.flex-1 {
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (max-width: 767px) {
+  [data-dialog-surface="task"] {
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    width: min(100vw, 430px) !important;
+    max-width: 430px !important;
+    height: min(82dvh, calc(100dvh - 12px)) !important;
+    min-height: min(58dvh, 480px) !important;
+    max-height: 92dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* DialogContent already owns horizontal centering via Tailwind translate.
+       A second transform here shifts the sheet another 50% off-screen. */
+    transform: none !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    border-radius: 28px 28px 0 0 !important;
+    background: #fdfcf8 !important;
+    box-shadow: 0 -18px 56px rgba(15, 23, 42, 0.18) !important;
+  }
+
+  [data-dialog-surface="task"][data-surface="task-flow"],
+  [data-dialog-surface="task"][data-surface="filter-task"] {
+    overflow: hidden !important;
+  }
+
+  [data-dialog-surface="task"]::before,
+  [data-detail-viewport="phone-sheet"]::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    z-index: 60;
+    width: 42px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.16);
+    transform: translateX(-50%);
+  }
+
+  [data-dialog-surface="task"] .modalBody,
+  [data-dialog-surface="task"] > .app-scrollbar-hidden,
+  [data-dialog-surface="task"] > .min-h-0.flex-1 {
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+  }
+}
+
+/* A selected discovery result stays inside the scene instead of shortening the
+   underwater canvas. The desktop product contract starts at 768px, so tablet
+   landscape and narrow desktop must use the same overlay model as 1024/1440. */
+@media (min-width: 768px) {
+  .encyclopedia-workspace .interactive-tank-shell,
+  .care-workspace-shell .interactive-tank-shell {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-dock.is-visible,
+  .care-workspace-shell .interactive-tank-dock.is-visible {
+    position: absolute !important;
+    z-index: 30 !important;
+    right: 22px !important;
+    left: 22px !important;
+    bottom: 48px !important;
+    display: flex !important;
+    max-height: min(38%, 280px) !important;
+    overflow-y: auto !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 24px !important;
+    background: rgba(252, 255, 253, 0.92) !important;
+    box-shadow: 0 18px 44px rgba(15, 70, 56, 0.16) !important;
+    backdrop-filter: blur(18px);
+  }
+
+  .care-workspace-shell .interactive-care-scene .interactive-tank-dock.is-visible {
+    bottom: 20px !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-note {
+    position: absolute !important;
+    z-index: 31 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    min-height: 38px;
+    border-top: 1px solid rgba(255, 255, 255, 0.72) !important;
+    background: rgba(247, 252, 249, 0.92) !important;
+    backdrop-filter: blur(14px);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .encyclopedia-workspace .interactive-tank-dock.is-visible,
+  .care-workspace-shell .interactive-tank-dock.is-visible {
+    right: 14px !important;
+    left: 14px !important;
+    max-height: min(44%, 300px) !important;
+    gap: 12px !important;
+    padding: 14px !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-dock-image,
+  .care-workspace-shell .interactive-tank-dock-image {
+    width: 58px !important;
+    height: 58px !important;
+  }
+
+  .encyclopedia-workspace .interactive-tank-primary,
+  .care-workspace-shell .interactive-tank-primary {
+    min-height: 44px !important;
+    padding-inline: 13px !important;
+  }
+}
+
+[data-detail-viewport="phone-sheet"] {
+  box-sizing: border-box;
+  overflow: hidden !important;
+}
+
+[data-detail-viewport="phone-sheet"] .modalBody,
+[data-detail-viewport="phone-sheet"] .species-detail-body,
+[data-detail-viewport="phone-sheet"] .care-detail-surface > .app-scrollbar-hidden {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 767px) {
+  [data-detail-viewport="phone-sheet"] [data-species-detail-layout] {
+    padding-top: 18px !important;
+  }
+}
+
+/* Legacy direct browsing-detail allowlist. The Encyclopedia species-group dialog
+   is inferred as detail by its narrow legacy signature until the large page can
+   be safely rewritten. Keep its chrome fixed and its content single-column so a
+   480–600px rail never recreates the old squeezed 50/50 layout. */
+[data-dialog-surface="detail"]:not([data-detail-viewport]) {
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #fdfcf8 !important;
+}
+
+[data-dialog-surface="detail"]:not([data-detail-viewport]) > .flex {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  overflow: hidden !important;
+}
+
+[data-dialog-surface="detail"]:not([data-detail-viewport]) .modalBody {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+}
+
+[data-dialog-surface="detail"]:not([data-detail-viewport]) .modalBody > .grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+@media (min-width: 768px) {
+  [data-dialog-surface="detail"]:not([data-detail-viewport]) {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: clamp(480px, 42vw, 600px) !important;
+    max-width: calc(100vw - 280px) !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    transform: none !important;
+    border-radius: 28px 0 0 28px !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    box-shadow: -22px 0 64px rgba(15, 23, 42, 0.16) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  [data-dialog-surface="detail"]:not([data-detail-viewport]) {
+    top: auto !important;
+    right: auto !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    width: min(100vw, 430px) !important;
+    max-width: 430px !important;
+    height: min(68dvh, calc(100dvh - 12px)) !important;
+    min-height: 52dvh !important;
+    max-height: 82dvh !important;
+    /* DialogContent surface classes already apply -translate-x-1/2. */
+    transform: none !important;
+    border-radius: 28px 28px 0 0 !important;
+    box-shadow: 0 -18px 56px rgba(15, 23, 42, 0.18) !important;
+  }
+
+  [data-dialog-surface="detail"]:not([data-detail-viewport])::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    z-index: 60;
+    width: 42px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.16);
+    transform: translateX(-50%);
+  }
+}
+
