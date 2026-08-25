@@ -9,7 +9,7 @@
 | One delivery line | Local branch, remote and Draft PR #141 are tracked by `project:status` | Pass | Keep all future work on the canonical branch. |
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | User-confirmed 4317 direction; layout/framing/scene/Rail/page matrix passed locally | Pass | Rerun affected matrix rows after any UI-owner change. |
-| GitHub convergence CI | Actions run `32853545889` passed project truth, state, PR topology, lint, layout, framing and build on the canonical branch at `642b007b` | Pass | Rerun automatically for relevant future pushes. |
+| GitHub convergence CI | Actions run `32854080645` passed project truth, state, PR topology, lint, layout, framing and build on the canonical branch at `cc99ec47` | Pass | Rerun automatically for relevant future pushes. |
 | Exact Preview SHA parity | Branch Preview exists | Pending | Record the exact deployed SHA associated with the accepted review. |
 | Supabase schema/RLS parity | Deployment and environment variables are user-confirmed/non-secret-audited; local 31-table contract passes | Pending | Authorized read-only schema revision and RLS/API smoke check. |
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
