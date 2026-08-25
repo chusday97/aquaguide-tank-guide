@@ -9,7 +9,7 @@
 |---|---|---|---|
 | P0 compatibility / tank state / water change / whole-tank authority | #113–#120; `53f3729b` through `e67bc9ec` | `MIGRATED_LOCAL_VERIFIED` | User-approved local-only migration is verified in `99865414`; shared API/database `LifeStage` remains unchanged. |
 | Species Detail evidence authority | #130; `45e8e610` | `MIGRATED_LOCAL_VERIFIED` | Canonical compatibility evidence now drives key reasons and source-status display; profile notes remain explicitly reference-only. RC detail layout was not copied. |
-| Recommendation authority and severity | #134–#135; `1f7b7732`, `7a85b5c0` | `NOT_REVIEWED` | Migrate recommendation service and regression tests only after P0 authority is present. |
+| Recommendation authority and severity | #134–#135; `1f7b7732`, `7a85b5c0` | `MIGRATED_LOCAL_VERIFIED` | Recommendation candidates and severity now consume canonical compatibility status; local load/group heuristics remain risk or adjustment context only. RC recommendation UI/ranking copy was not copied. |
 | Mobile shell / Encyclopedia UI repairs | #124–#128; `66a9ab40`, `f09ece0b`, `a9363238` | `EXCLUDED_BY_DEFAULT` | The visual baseline already owns UI geometry; take only a demonstrated behavioral bug fix. |
 | Interactive Atlas RC implementation | #122; `cd0d5fe4`, `3f660361` | `EXCLUDED_BY_DEFAULT` | The approved visual branch already has its own interactive implementation. Do not replace it with RC UI. |
 | Vercel/API runtime contract | #136–#138; `daf4b59e`, `0364b290` | `CONTRACT_REVIEW_REQUIRED` | API and deployment boundary changes require a separate contract impact review before code migration. |
@@ -23,4 +23,4 @@
 
 ## Next review unit
 
-**Recommendation authority and severity.** Review recommendation service/filters and regression tests next; do not migrate RC recommendation UI or ranking copy wholesale.
+**Next review unit: Vercel/API runtime contract.** Review deployment/API boundary evidence separately; do not change Supabase schema, RLS or API fields without an approved contract delta.

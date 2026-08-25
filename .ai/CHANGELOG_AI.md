@@ -2,6 +2,14 @@
 
 ## 2026-08-25
 
+### Recommendation authority and severity
+
+- Preserved non-blocked single-housing candidates instead of filtering them by a free-text planning label.
+- Removed recommendation-local temperament, load and group-size hard-block authority; canonical `evaluateTankCompatibility` now owns severity while local calculations remain risk/adjustment context.
+- Routed candidate reasons through the canonical compatibility summary and added `scripts/test-recommendation-authority.ts` / `npm run test:recommendation-authority`.
+- Verified recommendation contract, compatibility 17/17, evidence presentation, lint, production build, diff check and delayed 4317 interactive preview rendering. Kept the current visual baseline and did not copy RC recommendation UI.
+- Next review unit is the Vercel/API runtime contract; exact Preview SHA, Supabase migration/RLS metadata and human release acceptance remain open.
+
 ### Species Detail evidence authority
 
 - Added `compatibilityEvidencePresentation.ts` to adapt canonical `TankCompatibilityResult` rules into ordered, status-aware detail evidence.

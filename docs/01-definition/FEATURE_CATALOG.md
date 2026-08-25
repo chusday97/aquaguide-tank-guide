@@ -37,7 +37,7 @@
 | --- | --- | --- |
 | Compatibility evidence, current tank state and water-change authority | `PARTIAL_WITH_FALLBACK` | User-approved local rules and derived services are verified; existing UI geometry is unchanged and no new current-state UI surface is wired in this unit. |
 | Species Detail evidence authority | `CURRENT_VERIFIED` | Detail key reasons and compatibility evidence consume the canonical rule result; profile notes are reference-only. RC detail layout was not copied. |
-| Recommendation authority/severity | `RC_MIGRATION_PROPOSED` | Only after P0 authority is present. |
+| Recommendation authority/severity | `CURRENT_VERIFIED` | Candidate preservation and direct/adjustable/blocked severity consume canonical `TankCompatibilityResult`; local load/group calculations remain explanatory risk/adjustment context. Current recommendation UI geometry is unchanged. |
 | API/Vercel runtime changes | `RC_MIGRATION_PROPOSED` | Separate deployment/API contract review required. |
 
 ## Archived or excluded paths

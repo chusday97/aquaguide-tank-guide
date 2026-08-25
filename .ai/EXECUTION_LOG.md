@@ -1,5 +1,13 @@
 # AI Execution Log
 
+## 2026-08-25 — Recommendation authority and severity
+
+- **Action:** Ported only RC recommendation authority semantics into `recommendation.service.ts`; removed free-text single-housing suppression and local hard-block overrides, reused reviewed group-size evidence, and made candidate reasons prefer `TankCompatibilityResult.summary`.
+- **Verification:** `npm run test:recommendation-authority`; `npm run test:compatibility`; `npm run test:compatibility-evidence`; `npm run lint`; `npm run build`; `git diff --check`; and a read-only delayed render check against `http://127.0.0.1:4317/_preview/interactive` all passed. Build retained existing dynamic-import and large-chunk warnings only.
+- **Commit:** `9fcad4a2`.
+- **Boundary:** No UI geometry, SQL, API field, Supabase schema/RLS or deployed environment was changed. Compatibility evidence remains partial (501 species / 7 reviewed / approximately 1.4%).
+- **Next:** Vercel/API runtime contract review.
+
 ## 2026-08-25 — Branch convergence audit gate
 
 ## 2026-08-25 — Species Detail evidence authority

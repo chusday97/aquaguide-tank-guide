@@ -16,6 +16,9 @@
 
 ## 核心入口
 
+- `src/modules/recommendation/recommendation.service.ts`：推荐候选与智能推荐服务；候选严重级别由统一混养引擎裁决，局部负载/群游计算只提供风险和调整提示。
+- `scripts/test-recommendation-authority.ts`：推荐权威边界回归，覆盖单养候选保留、canonical 严重级别、近负载候选和理由来源。
+
 - `apps/api/`：Express TypeScript 业务 API 入口、统一错误、Supabase 客户端、鉴权和版本化路由。
 - `server/index.mjs` / `api/health.js` / `functions/api/health.js`：本地 Express、Vercel 与 Pages 兼容健康接口；公开文字/视觉 AI 能力状态，但不暴露 Secret。
 - `apps/api/src/feedback-rate-limit.ts`：意见反馈单实例有界限流；生产多实例由入口网关提供共享额度。

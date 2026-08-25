@@ -5,6 +5,7 @@
 
 - 2026-08-25：用户确认当前 4317 版本可作为可用工作基线，但视觉仍有后续问题；已记录 D-AQUA-005。后续只按模块/视口渐进修改并复跑受影响回归，不整体替换当前视觉。
 - 2026-08-25：完成 Species Detail evidence authority 迁移：详情页最多三条关键理由现在直接来自 `TankCompatibilityResult` 的阻断/警告/缺失/通过规则；新增证据审核状态提示，物种 `housingReason` 仅保留为明确的档案参考，不再充当最终混养结论。未复制 RC 详情布局。新增证据适配回归，`lint`、混养 17/17、物种知识、生产构建和 4317 详情浏览器回归通过；Critic 复验后补上 rejected 证据过滤（commits: `963c3547`, `22107807`）。证据覆盖率仍只有 1.4%，后续继续补审核资料。
+- 2026-08-25：完成 Recommendation authority and severity 迁移（`9fcad4a2`）：推荐候选不再因“建议单养”自由文本或局部负载/群游启发式被直接过滤/硬阻断；direct/adjustable/blocked 严重级别以 `evaluateTankCompatibility` 为准，推荐理由优先使用 canonical summary。新增 `npm run test:recommendation-authority`，并通过推荐契约、混养 17/17、证据展示、lint、production build、git diff 检查及 4317 互动预览延迟渲染检查。视觉布局未改；兼容性仍为 `PARTIAL_WITH_FALLBACK`（501 物种、7 reviewed、约 1.4% 证据覆盖）。下一步审查 Vercel/API runtime contract。
 
 ## 当前任务目标
 
