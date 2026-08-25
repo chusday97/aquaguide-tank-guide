@@ -9,7 +9,7 @@
 | --- | --- | --- |
 | Local preview | A local production build is running | User-approved interactive preview is `http://127.0.0.1:4317/_preview/interactive`. |
 | GitHub delivery | Current branch and PR can be traced | `codex/unified-rc-visual-v1` and Draft PR #141 are the only active delivery line. |
-| CI | Automated checks passed for a concrete SHA | GitHub Actions run `32846848569` passed state, lint, layout, framing and build checks. |
+| CI | Automated checks passed for a concrete SHA | GitHub Actions run `32853545889` passed state, PR topology, lint, layout, framing and build checks for `642b007b`; final `894a7d9b` contains documentation-only evidence updates. |
 | Supabase deployment | A cloud environment has been deployed | User-confirmed on 2026-08-25. Existing schema, RLS, API and repository work must not be described as undeployed. |
 | Environment parity | The current branch was verified against the connected cloud environment | Not yet re-verified. This is distinct from deployment. |
 | Human visual acceptance | A person accepted the rendered UI | The 4317 local interactive baseline is user-confirmed; a matching deployed-SHA review remains pending. |
@@ -21,7 +21,7 @@
 - Vercel Production contains configured Supabase/Postgres environment-variable names; values were not read or recorded.
 - A Ready Preview is aliased to `codex/unified-rc-visual-v1`.
 - The Vercel inspection response identifies the branch alias but does not expose an exact Git SHA, so branch Preview readiness is not accepted as exact SHA parity by itself.
-- GitHub Actions run `32849012409` passed the unified branch's project-truth, state, lint, layout, framing and production-build checks.
+- GitHub Actions run `32853545889` passed the unified branch's project-truth, state, PR topology, lint, layout, framing and production-build checks on `642b007b`.
 
 ## Deployment rules
 

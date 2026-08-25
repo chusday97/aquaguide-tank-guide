@@ -13,7 +13,7 @@
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
 - **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；P0 业务迁移已完成，仍不得在 Supabase parity 与单独 release acceptance 前转为 Ready 或合并。
-- **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；最近两次可复核运行 `32849012409`、`32849349859` 均通过（project truth、状态、lint、布局、3D 取景和 production build）。
+- **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；运行 `32853545889` 已在 `642b007b` 通过 project truth、状态、PR topology、lint、布局、3D 取景和 production build；`894a7d9b` 仅是文档证据更新。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 与 `docs/03-development/PR_CLEANUP_RECORD.md` 已记录安全收敛结果；当前开放列表只剩 #141，其他 55 个历史 PR 已关闭但分支保留。
 - **跨层事实盘点：** `docs/05-validation/MODULE_FACT_INVENTORY.md` 统一记录产品、UI、领域规则、Service、数据/API、测试和部署状态；任何新模块变更必须同步该索引和对应验收证据。
 - **治理提交：** `28142542`、`642b007b` 已加入只读 GitHub PR 拓扑检查、`.ai` 门禁触发范围和 PR 清理/模块盘点记录；Critic 六维复验通过，GitHub Actions `32853545889` 成功。
