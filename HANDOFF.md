@@ -8,6 +8,7 @@
 - `RC Convergence V1` 已在 GitHub Actions run `32846848569` 实跑通过，覆盖状态一致性、lint、两项视觉契约与生产构建；后续统一分支推送会自动运行同一门禁。
 - 56 个 open PR 已归档到 `.ai/OPEN_PR_REGISTRY.md`：只有 #141 可作为当前收敛入口；其余 55 个只可提供经验证的历史事实，不能直接 merge。
 - 下一步：按 `.ai/P0_MIGRATION_IMPACT.md` 完成契约范围确认后，才迁移 P0 业务代码；不可直接 merge/rebase RC 或 main。
+- 状态校正：用户确认既有 Supabase 工作已部署。后文历史记录里的“待真实 Supabase 验证”仅指未在当前统一分支重新验证具体环境/schema/RLS，不得解读为未部署。
 
 ## 2026-08-25 AI 项目协议标准化
 

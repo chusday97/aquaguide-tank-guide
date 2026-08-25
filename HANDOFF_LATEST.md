@@ -12,6 +12,7 @@
 - **GitHub 门禁：** `RC Convergence V1` 已在 Actions run `32846848569` 通过（状态、lint、视觉契约、build）；统一分支每次相关推送自动复验。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 已冻结 2026-08-25 的 56 个 open PR；除 #141 外均为历史输入而非收敛路径。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
+- **Supabase 状态校正：** 用户于 2026-08-25 确认既有 Supabase 工作已部署。旧文档中“待真实 Supabase 验证”只表示当前统一分支尚未重新核对连接环境、schema revision 与 RLS 回归，绝不表示 Supabase 没有部署。
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 已对齐提交：`5b619a08`（后续文档提交会同步更新两端）。

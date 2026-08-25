@@ -13,6 +13,11 @@
     "role": "verified business capability source; migrate selectively"
   },
   "releaseBranch": "main",
+  "supabaseDeployment": {
+    "status": "user_confirmed_deployed",
+    "confirmedAt": "2026-08-25",
+    "note": "The user confirmed that the existing Supabase work was deployed. The unified branch has not yet re-verified the exact environment, applied schema revision, or RLS behavior."
+  },
   "officialLocalWorktree": "/Users/chuchu/Documents/New project/aquaguide_frontend",
   "localPreview": "http://127.0.0.1:4317/_preview/interactive",
   "activePullRequest": 141,

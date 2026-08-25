@@ -40,3 +40,8 @@
 - Queried 56 open GitHub PRs and recorded `.ai/OPEN_PR_REGISTRY.md`.
 - Designated #141 as the only active convergence entry; the other 55 PRs remain traceable historical inputs and are not direct merge sources.
 - No historical PR was closed or otherwise modified.
+
+## 2026-08-25 — Supabase deployment status corrected
+
+- The user confirmed that the existing Supabase work had already been deployed.
+- Corrected the status distinction: deployed Supabase is a user-confirmed fact; re-validating the exact connected environment, schema revision and RLS behavior from the unified branch remains a separate verification task.
