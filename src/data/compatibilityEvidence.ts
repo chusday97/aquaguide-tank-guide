@@ -1,4 +1,5 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
+import type { CompatibilityLifeStage } from '../types';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -14,6 +15,16 @@ export type ReviewedPairRule = CompatibilityEvidenceDto & {
   speciesIds: [string, string];
   verdict: 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
   riskType: string;
+  reason: string;
+  mitigation: string[];
+};
+
+export type ReviewedStageRiskProfile = CompatibilityEvidenceDto & {
+  speciesId: string;
+  youngerStages: CompatibilityLifeStage[];
+  olderStages: CompatibilityLifeStage[];
+  verdict: 'caution' | 'not_recommended';
+  riskType: 'conspecific_fry_predation';
   reason: string;
   mitigation: string[];
 };
@@ -95,6 +106,24 @@ const guppyShoalingStudy: EvidenceSourceDto = {
   title: 'Schooling and learning: early social environment predicts social learning ability in the guppy, Poecilia reticulata',
   publisher: 'Animal Behaviour',
   url: 'https://www.sciencedirect.com/science/article/abs/pii/S0003347208002364',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const guppyCannibalismRefugeStudy: EvidenceSourceDto = {
+  id: 'guppy-cannibalism-refuge-study',
+  title: 'Guppy populations differ in cannibalistic degree and adaptation to structural environments',
+  publisher: 'Oecologia',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/21516310/',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const guppyFryYieldStudy: EvidenceSourceDto = {
+  id: 'guppy-fry-yield-cannibalism-study',
+  title: 'The effects of illumination and daily number of collections on fry yields in guppy breeding tanks',
+  publisher: 'Aquacultural Engineering',
+  url: 'https://www.sciencedirect.com/science/article/abs/pii/S0144860913000848',
   sourceType: 'peer_reviewed',
   reviewStatus: 'reviewed',
 };
@@ -199,6 +228,23 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
 };
 
+const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
+  sp_0436: {
+    speciesId: 'sp_0436',
+    youngerStages: ['fry'],
+    olderStages: ['adult'],
+    verdict: 'not_recommended',
+    riskType: 'conspecific_fry_predation',
+    reason: '孔雀鱼成体捕食同种幼体在水族箱实验与繁育研究中均有记录，且捕食程度会受到幼体体型与躲避结构影响。当前不应把成鱼与新生鱼苗直接同缸视为已证明安全。',
+    mitigation: ['鱼苗优先使用育苗隔离区或独立育苗缸。', '不要把水草躲避物当作能够消除同类吞食风险的保证。'],
+    basis: 'species_trait',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0436'],
+    citations: [guppyCannibalismRefugeStudy, guppyFryYieldStudy],
+  },
+};
+
 const pairRules: ReviewedPairRule[] = [
   {
     speciesIds: ['sp_0021', 'sp_0439'],
@@ -252,11 +298,14 @@ const pairRules: ReviewedPairRule[] = [
 
 export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
 
+export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];
+
 export const getReviewedPairRule = (leftId: string, rightId: string) => pairRules.find(rule => (
   rule.speciesIds.includes(leftId) && rule.speciesIds.includes(rightId)
 ));
 
 export const getCompatibilityEvidenceAudit = () => ({
   reviewedSpeciesIds: Object.keys(profiles),
+  reviewedStageRiskSpeciesIds: Object.keys(stageRiskProfiles),
   reviewedPairRules: pairRules,
 });
