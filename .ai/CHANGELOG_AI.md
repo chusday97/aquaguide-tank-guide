@@ -19,3 +19,4 @@
 - Changed the active goal from partial visual convergence to local/GitHub progress unification.
 - Added a grouped RC migration ledger; API/persistence changes are explicitly held for contract review.
 - Closed deprecated PR #140 and created Draft PR #141 as the sole RC convergence entry.
+- Added the P0 data/contract impact review; no P0 runtime code was migrated.
