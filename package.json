@@ -79,6 +79,7 @@
     "test:three-step-paths": "tsx scripts/test-three-step-paths.ts",
     "test:three-step-ui": "node scripts/verify-three-step-experience.mjs",
     "test:core-ui": "node scripts/verify-core-experience.mjs",
+    "test:ui-smoke": "node scripts/verify-ui-smoke.mjs",
     "test:mobile-care-ui": "node scripts/verify-mobile-care-experience.mjs",
     "test:care-guide-types": "node scripts/verify-care-guide-types.mjs",
     "test:care-guidance": "tsx scripts/test-care-assessment-guidance.ts",

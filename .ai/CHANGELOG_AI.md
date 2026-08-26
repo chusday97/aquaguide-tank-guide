@@ -15,6 +15,7 @@
 - Clarified in README/SETUP that 3000 is the development server while 4317 is the production Preview used by regression scripts.
 - Rebased Daily Discovery, action-kind runtime, and mobile Aquarium priority regressions on the current ownership contract: the six-item discovery scene is owned by Encyclopedia; Aquarium must not render a duplicate queue. Detail close, species favorite, livestock entry, and browse-mode filter assertions now use current observable actions.
 - Re-ran the affected browser suite plus core/page/navigation/interactive/settings gates on 4317; all passed, including page runtime matrix 28/28.
+- Replaced the unused legacy 3003 `verify-ui-smoke.mjs` with a canonical smoke that seeds a deterministic tank, checks formal routes/search, verifies six interactive atlas species, confirms the single livestock entry and rejects duplicate Aquarium discovery. Registered it as `npm run test:ui-smoke`; the smoke passes on 4317.
 
 ## 2026-08-26
 

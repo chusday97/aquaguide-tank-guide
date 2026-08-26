@@ -1,6 +1,7 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
 - 2026-08-26：第二轮陈旧回归审计完成并提交 `cb6446bc`：Care 分类、Daily Discovery、动作语义、手机鱼缸优先级与 Species Detail 断言均已对齐当前正式路由、互动图鉴发现归属、`detail-rail`/`bottom-sheet` 和 `data-tank-species-entry`。4317 上每日发现、动作运行时、手机优先级、核心体验、28/28 页面矩阵、导航、互动场景、设置反馈与统一门禁全部通过；未改产品数据、API、Supabase 或视觉几何。
 - 2026-08-26：上述回归与文档提交已推送统一分支；`npm run project:status`、`git ls-remote` 确认 local/remote 同步，4317 `/_preview/interactive` 返回 HTTP 200。具体 SHA 以命令实时输出为准。Vercel parity 仍因当前授权面返回 `AUTH_REQUIRED`，Supabase schema/RLS 与 release acceptance 继续 pending。
+- 2026-08-26：清理最后一条 3003 端口旧 smoke，新增并注册 `npm run test:ui-smoke`；在 4317 上验证正式路由、browse 搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐通过。未改产品数据、API、Supabase 或视觉几何。
 - 2026-08-26：新增 `npm run check:preview-parity` 自动门禁（`1a355c6c`），确认 local/remote 同步但 Vercel canonical Preview 仍停留在 `6b0e629d…`，命令以 `NOT_SYNCHRONIZED` 阻断误发布；未触发部署或 Supabase 变更。
 
 - 2026-08-26：执行 Vercel CLI 只读部署元数据复核。最新 Ready canonical-branch Preview `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` 明确绑定统一分支，但 `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`，落后于本地/GitHub `43f75e739655e8061fb880ed3415b741a90275c1`；确认 Preview 存在部署滞后，未触发重新部署，Supabase 仍未执行写操作或 migration。

@@ -13,7 +13,7 @@ This matrix makes the visual baseline executable. It does not replace [`UI_REGRE
 | Encyclopedia | Underwater scene stays visible; selected result overlays scene; browse detail stays in Rail/Sheet | `npm run test:interactive-scenes-ui`, `node scripts/verify-split-workspace-runtime.mjs` | Review a selected species at desktop and phone. |
 | Care | Interactive scene and traditional browse remain distinct; mobile task/detail geometry remains usable | `npm run test:mobile-care-ui`, `node scripts/verify-split-workspace-runtime.mjs` | Review `/care` and `/care?mode=browse`. |
 | Collection | Desktop creature-first navigation; compact phone fallback | `npm run test:collection-hub-ui` | Review 1440 and 390 navigation and return paths. |
-| Whole application | Required routes have no page errors, accidental dialogs, body lock or horizontal overflow | `node scripts/verify-page-runtime-matrix.mjs` | Spot-check the user-confirmed preview after material UI change. |
+| Whole application | Required routes have no page errors, accidental dialogs, body lock or horizontal overflow | `npm run test:ui-smoke`, `node scripts/verify-page-runtime-matrix.mjs` | Spot-check the user-confirmed preview after material UI change. |
 
 ## Evidence status
 

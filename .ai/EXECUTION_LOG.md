@@ -19,6 +19,11 @@
 - **Verification:** `npm run project:status` and `git ls-remote` report the same current SHA; worktree is clean; `/_preview/interactive` returns HTTP 200. `npm run check:preview-parity` confirms local/remote parity but remains `AUTH_REQUIRED` for Vercel deployment metadata.
 - **Boundary:** No `main` merge, Supabase request/migration/write, or deployment mutation was performed.
 
+## 2026-08-26 — Canonical UI smoke registration
+
+- **Action:** Replaced the stale 3003 UI smoke with a small 4317-targeted smoke and registered `npm run test:ui-smoke`; it covers formal routes, browse search, interactive atlas ownership and Aquarium's single livestock entry.
+- **Verification:** `npm run test:ui-smoke` passed against the production Preview. The smoke uses a deterministic local fixture and does not write cloud data.
+
 - **Action:** Rechecked canonical local/remote SHA and the local 4317 preview; attempted a read-only public GitHub PR metadata query.
 - **Verification:** `npm run project:status`, `npm run check:branch-convergence` and `curl -I http://127.0.0.1:4317/_preview/interactive` passed. GitHub API returned anonymous rate-limit protection, so no new remote check-run evidence was claimed.
 - **Boundary:** No Supabase request, migration, RPC mutation, data write or Vercel deployment change.

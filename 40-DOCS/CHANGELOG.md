@@ -4,6 +4,7 @@
 
 ### Fixed
 - 清理剩余 Care category、Daily Discovery、Species Detail 浏览器回归中的旧 detail surface/入口断言，并明确 3000 开发服务与 4317 production 验收 Preview 的区别。
+- 移除旧 3003 UI smoke 并注册 `npm run test:ui-smoke`；新 smoke 固定 4317，验证正式路由、browse 搜索、互动图鉴发现和鱼缸首页职责边界。
 - 修复浏览器回归使用陈旧 localhost 端口、600px 断点、旧 surface/路由和旧入口文案的问题；统一通过 `scripts/preview-url.mjs` 默认验证 4317 production Preview。
 - 恢复 AI 建缸助手在桌面沉浸式 Aquarium Dock 的第七个操作卡片，并保留移动端“更多鱼缸操作”入口。
 - Added read-only `npm run check:preview-parity` to compare local, canonical remote, and Vercel branch Preview SHAs; the current stale deployment is reported as `NOT_SYNCHRONIZED` rather than accepted.
