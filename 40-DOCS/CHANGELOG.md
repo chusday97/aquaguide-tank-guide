@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- 稳定 `check:preview-parity` 的 Vercel CLI 调用：默认固定已验证的 `vercel@59.6.2` 并保留 `VERCEL_CLI_PACKAGE` 覆盖，避免 unpinned `npx` 依赖解析失败导致误报 `AUTH_REQUIRED`。当前旧 READY 部署仍为 `3b33c773`，严格 current-head parity 继续如实返回 `NOT_SYNCHRONIZED`。
+
 ### Changed
 
 - 只读复核 PR #141 与 `integration/aquaguide-rc1` 的当前合并阻塞：`git merge-tree` 检出 64 个跨契约/API/领域/UI/服务冲突文件；最新 RC Convergence run `32991934463` 在 canonical head `0a9613a5` 通过。未整体 merge/rebase、未修改 main 或 Supabase。

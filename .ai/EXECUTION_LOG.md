@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-27 — Preview parity CLI stabilization
+
+- **Problem:** Unpinned `npx vercel` intermittently failed to resolve `@vercel/container@3.0.0`, causing `check:preview-parity` to return `AUTH_REQUIRED` without querying deployments.
+- **Action:** `scripts/check-preview-parity.mjs` now invokes `npm exec --yes --package=vercel@59.6.2 -- vercel ...`; `VERCEL_CLI_PACKAGE` permits a controlled version override.
+- **Verification:** `npm run check:preview-parity` reads Vercel READY deployment `3b33c773`; local/origin are synchronized at `d3b6b5aa`, so the honest result remains `NOT_SYNCHRONIZED` until a matching deployment exists. No manual deployment or cloud mutation.
+
 ## 2026-08-27 — Current merge-blocker recheck
 
 - **Verification:** `gh pr view 141` reports PR #141 `OPEN/Draft`, `mergeable=CONFLICTING`, `mergeStateStatus=DIRTY`; `git merge-tree --write-tree origin/integration/aquaguide-rc1 HEAD` reports 64 conflict paths. Push RC Convergence `32991934463` completed `success` on head `0a9613a5`.

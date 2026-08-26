@@ -9,9 +9,10 @@ const git = (args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
 const localSha = git(['rev-parse', 'HEAD']);
 const remoteSha = git(['rev-parse', `origin/${state.canonicalBranch}`]);
 const vercelBin = process.env.VERCEL_BIN || null;
+const vercelPackage = process.env.VERCEL_CLI_PACKAGE || 'vercel@59.6.2';
 const vercelArgs = (args) => vercelBin
   ? { file: vercelBin, args }
-  : { file: 'npx', args: ['--yes', 'vercel', ...args] };
+  : { file: 'npm', args: ['exec', '--yes', `--package=${vercelPackage}`, '--', 'vercel', ...args] };
 
 const result = {
   canonicalBranch: state.canonicalBranch,

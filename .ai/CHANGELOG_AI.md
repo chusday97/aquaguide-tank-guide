@@ -2,6 +2,13 @@
 
 ## 2026-08-27
 
+### Preview parity CLI stabilization
+
+- Pinned the default parity CLI to the verified `vercel@59.6.2` package through `npm exec`; `VERCEL_CLI_PACKAGE` remains available for controlled overrides.
+- The parity check now reads the existing READY deployment instead of failing during unpinned `npx` dependency resolution. Current head parity is still pending because Vercel remains at `3b33c773`.
+
+## 2026-08-27
+
 ### Current merge-blocker recheck
 
 - Read-only `git merge-tree --write-tree` against `origin/integration/aquaguide-rc1@895f2f39` finds 64 conflicts with canonical head `0a9613a5` across contracts, API, domain rules, pages, shared components and services.
