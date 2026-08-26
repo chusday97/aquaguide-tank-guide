@@ -51,7 +51,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          nohup npx vite preview --host 127.0.0.1 --port 4173 > /tmp/aquaguide-preview.log 2>&1 &
+          nohup env API_PORT=8787 npx tsx apps/api/src/index.ts > /tmp/aquaguide-api.log 2>&1 &
+          echo $! > /tmp/aquaguide-api.pid
+          for i in {1..40}; do
+            if curl --fail --silent http://127.0.0.1:8787/api/health >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://127.0.0.1:8787/api/health >/dev/null
+          nohup env API_PORT=8787 npx vite --host 127.0.0.1 --port 4173 > /tmp/aquaguide-preview.log 2>&1 &
           echo $! > /tmp/aquaguide-preview.pid
           for i in {1..40}; do
             if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
@@ -134,4 +143,6 @@ jobs:
 
       - name: Preview log on failure
         if: failure()
-        run: cat /tmp/aquaguide-preview.log || true
+        run: |
+          cat /tmp/aquaguide-preview.log || true
+          cat /tmp/aquaguide-api.log || true
