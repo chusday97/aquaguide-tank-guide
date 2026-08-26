@@ -85,7 +85,7 @@ async function verifySettingsSearch() {
 
   await page.keyboard.press('Escape');
   await page.getByRole('dialog', { name: '鱼缸设置' }).waitFor({ state: 'hidden' });
-  await page.locator('[data-tank-primary-action="add"]').click();
+  await page.locator('[data-tank-primary-action="add"]').click({ noWaitAfter: true });
   await page.getByRole('dialog', { name: '记录已有生物' }).waitFor({ state: 'visible' });
   await page.close();
 }
