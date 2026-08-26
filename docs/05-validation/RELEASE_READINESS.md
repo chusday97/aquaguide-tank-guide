@@ -1,7 +1,7 @@
 # Unified Release Readiness
 
 **Status:** `NOT_READY`  
-**Updated:** 2026-08-25  
+**Updated:** 2026-08-26
 **Scope:** final gate for a unified branch becoming eligible for a separately authorized RC/main release.
 
 | Gate | Current evidence | Status | What closes it |
@@ -15,6 +15,11 @@
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
 | Human visual acceptance | Local 4317 scene/DOM/Canvas rendered at 523×812 with no application errors; user confirmation of the current visual is still required | Pending | User confirms the fixed-view visual review, then record reviewer and timestamp. |
 | RC/main merge | Not authorized | Blocked by release decision | Separate user release acceptance after all above gates pass. |
+
+## 2026-08-26 parity follow-up
+
+- The recorded branch Preview returned `302 → Vercel SSO` without an exposed Git SHA; exact Preview SHA parity remains pending.
+- No authorized Supabase schema/RLS inspection surface was available; no database mutation was attempted. The existing 31/31 PostgREST evidence remains read-only table/column reachability only.
 
 ## Release rule
 

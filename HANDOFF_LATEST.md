@@ -32,6 +32,7 @@
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
 - 当前下一步：完成 exact Preview SHA、Supabase schema/RLS parity 和人工视觉验收；在这些门禁完成前不创建 `main` 发布合并。
+- 最新 parity 尝试（2026-08-26）：记录的 Vercel Preview 返回 `302 → Vercel SSO`，未暴露 Git SHA；当前环境没有授权 Supabase schema/RLS inspection surface。本轮未执行 Supabase 请求、migration、RPC 或写库，以上门禁仍为 pending。
 - 最近完成：`Species Detail evidence authority`。详情关键理由、混养证据状态和来源提示消费统一 `TankCompatibilityResult`；`housingReason` 仅显示为档案参考并明确不覆盖计算结果。保持当前视觉基线，未迁移 RC 详情布局。新增 `src/modules/knowledge/compatibilityEvidencePresentation.ts` 与专项回归。
 - 最近完成：`Recommendation authority and severity`（`9fcad4a2`）。推荐候选保留与 direct/adjustable/blocked 严重级别消费统一 `TankCompatibilityResult`；“建议单养”、负载和群游局部启发式不再独立硬阻断，理由优先使用 canonical summary。保持当前视觉基线，未迁移 RC 推荐 UI；专项契约回归通过。
 - 最近完成：`Vercel/API runtime contract`（`039135ba`）。新增 V1 catch-all、精确 namespace root 与 nested API-before-SPA rewrites、standalone canonical Express runtime、ESM-safe imports、AI/health 兼容边界与本地 contract/smoke 回归；未迁移 RC 的 LifeStage、数据库字段或业务 API 语义变化，保持当前视觉基线。独立 Critic 六维复验 PASS；exact Preview SHA 仍是发布门禁。

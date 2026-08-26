@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Preview/Supabase parity follow-up
+
+- **Action:** Attempted only read-only cloud parity checks against the recorded Vercel branch Preview and available local deployment context.
+- **Evidence:** The Preview returned `302 → Vercel SSO` without an exposed Git SHA. No authorized Supabase schema/RLS inspection surface was available; no Supabase request, migration, RPC mutation or data write was executed.
+- **Decision:** Keep exact Preview SHA and Supabase schema/RLS parity as `pending`; do not infer parity from a redirect, environment names or the prior 31/31 PostgREST reachability result.
+- **Next:** Obtain authorized Preview access exposing the deployed SHA, an authorized read-only Supabase schema/RLS inspection, then request human visual acceptance on 4317.
+
 ## 2026-08-26 — Result UX workflow head integrity
 
 - **Action:** Ported only the candidate-head verification concept from historical Result UX commits: the new workflow is configured to check out `${{ github.event.pull_request.head.sha || github.sha }}` and compare `git rev-parse HEAD` with the same expected SHA for PRs targeting `main`/`integration/aquaguide-rc1` and pushes to the canonical branch.
