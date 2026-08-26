@@ -17,7 +17,7 @@
 - **Action:** Fixed `check:preview-parity` to use `npx --yes vercel` when no system `vercel` binary is installed; `VERCEL_BIN` remains available for explicit overrides.
 - **Verification:** Read-only parity now reports `PASS`: local, origin, PR #141 and Vercel Ready Preview `aquaguide-k48ki2sbb-chusday97s-projects.vercel.app` all point to `f2a5ec4719dcc388985c845217d66eb8d1f46f47`.
 - **Boundary:** No deployment was triggered by the script and no Supabase migration/write/RLS change occurred. Direct schema/RLS metadata and user release acceptance remain pending; release stays `NOT_READY`.
-- **Follow-up:** The parity PASS applies to application head `f2a5ec47…`. After the docs/guard-only push to `16be50ed…`, Vercel still lists the prior Ready deployment; strict current-head parity is therefore pending until Git-connected deployment observes the new SHA.
+- **Follow-up:** The interim docs/guard-only head was observed pending briefly; Vercel then produced Ready deployment `aquaguide-jqfsw1rja-chusday97s-projects.vercel.app` for canonical head `9f1a543c…`. Strict current-head parity is now PASS.
 
 ## 2026-08-26 — Aquarium settings panel click synchronization
 

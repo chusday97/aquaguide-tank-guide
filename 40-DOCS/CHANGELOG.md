@@ -5,6 +5,7 @@
 ### Fixed
 - 修复 `check:preview-parity` 在环境仅提供 `npx vercel` 时误报 `AUTH_REQUIRED` 的命令解析；无 `VERCEL_BIN` 时现在使用 `npx --yes vercel`。只读验证确认 local/remote/PR #141/Vercel Ready Preview 同为 `f2a5ec47…`，未触发部署或 Supabase 变更。
 - 后续 docs/guard-only 提交将 canonical head 推进到 `16be50ed…`；Vercel 仍停留在已验证的应用 head `f2a5ec47…`，因此严格当前 head parity 暂为 pending，未手动部署。
+- Vercel 随后自动生成 `aquaguide-jqfsw1rja-chusday97s-projects.vercel.app` Ready Preview，绑定 canonical head `9f1a543c…`；`check:preview-parity` 恢复 `PASS`，未手动部署。
 - 记录 canonical head `ef878e25144c4cd12c461e0f3eadbd5182a1bada` 的四项远端门禁全部通过（UI `32948782199`、Surface `32948782231`、Result UX `32948782259`、RC `32948782285`）；本地/远端/PR SHA 一致，4317 预览 HTTP 200。Vercel Hobby 部署额度与 Supabase schema/RLS parity 仍阻断 release，不修改 main 或云端数据。
 - 修复 UI Regression 只启动静态 Vite Preview 导致 Identify `/api/v1` fallback 不可用的问题；workflow 现在启动 Express API 并经 Vite proxy 执行浏览器回归，production build 仍单独校验。提交 `0b52e947`，未执行 Supabase 写入或迁移。
 - 修复 Aquarium 设置内底砂/水草面板切换在慢速 CI 中被错误当作导航等待的问题，统一使用 `noWaitAfter` 并保留搜索结果断言。提交 `78160db3`，未改变产品 UI 或云端状态。

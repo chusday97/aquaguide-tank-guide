@@ -6,7 +6,7 @@
 
 - Fixed the read-only parity script to fall back to `npx --yes vercel` when the system `vercel` binary is unavailable.
 - Verified `PASS` for local, origin, PR #141 and Vercel Ready Preview at `f2a5ec4719dcc388985c845217d66eb8d1f46f47`; Supabase schema/RLS metadata and release acceptance remain open.
-- The later docs/guard-only head `16be50ed…` is covered by passing GitHub gates, but Vercel still lists the prior application deployment; strict current-head parity remains pending without a manual redeploy.
+- The later docs/guard-only head was briefly pending deployment; Vercel now has Ready deployment `aquaguide-jqfsw1rja-chusday97s-projects.vercel.app` for `9f1a543c…`, so strict current-head parity is PASS without a manual redeploy.
 
 ### Canonical CI regression hardening closed
 
