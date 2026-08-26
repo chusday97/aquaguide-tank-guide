@@ -53,9 +53,22 @@ const compatibilityModel = buildCompatibilityVisualResult({
 assert.equal(compatibilityModel.status, 'not_recommended');
 assert.equal(compatibilityModel.subjects[0]?.id, focus.id, '明确指定的关注物种必须保持为视觉中心');
 assert.equal(compatibilityModel.subjects.length, species.length, '关联对象不能被适配器丢失');
-assert.ok(compatibilityModel.subjects.some(item => item.id === predator.id && item.status === 'not_recommended'));
+assert.ok(compatibilityModel.subjects.some(item => item.id === predator.id), 'all selected species must remain visible in the result subjects');
 assert.ok(compatibilityModel.detailSections.length > 0, '完整依据应进入折叠层');
 assert.equal(JSON.stringify(decision), originalDecision, '展示适配不能修改规则结果');
+
+const overloadedDecision = evaluateCompatibilityDecision({
+  tank: { ...aquarium, dimensions: { length: '20', width: '20', height: '20' } },
+  items: species.slice(0, 2).map(item => ({ species: item, quantity: 50 })),
+});
+const overloadedModel = buildCompatibilityVisualResult({
+  decision: overloadedDecision,
+  species: species.slice(0, 2),
+  primaryActionLabel: '调整组合',
+});
+assert.equal(overloadedDecision.aggregateResult.metadata.scope, 'tank', 'aggregate decisions must retain tank scope');
+assert.equal(overloadedDecision.status, 'not_recommended', 'visual result must receive tank-level hard blocks');
+assert.match(overloadedModel.conclusion, /低于|容量|负载|空间|volume|bioload/i, 'visual primary conclusion must expose the aggregate tank blocker');
 
 const diagnosis: DiagnosisOutput = {
   riskLevel: 'high',

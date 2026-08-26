@@ -18,6 +18,7 @@
 
 - `src/modules/recommendation/recommendation.service.ts`：推荐候选与智能推荐服务；候选严重级别由统一混养引擎裁决，局部负载/群游计算只提供风险和调整提示。
 - `scripts/test-recommendation-authority.ts`：推荐权威边界回归，覆盖单养候选保留、canonical 严重级别、近负载候选和理由来源。
+- `scripts/test-compatibility-evidence-coverage.ts` / `scripts/test-compatibility-coverage-scorecard.ts`：验证已审核物种与未审核配对的 fail-closed 边界、直接配对证据优先级和优先物种矩阵覆盖；不代表全库知识已完成。
 - `api/v1/[...path].ts`：Vercel V1 API catch-all，不启动独立 listener。
 - `scripts/test-production-cloud-runtime-contract.mjs` / `scripts/test-production-cloud-runtime-smoke.ts`：API namespace root/nested before SPA、环境边界、JSON health/404、AI fallback 和 canonical Express runtime 回归。
 - `.github/workflows/result-ux-head-integrity-v1.yml` / `scripts/test-result-ux-workflow-head-integrity.mjs`：只验证 PR head 或规范推送 SHA 的精确 checkout；不承载历史 Result UX 页面或旧 UI workflow。

@@ -271,6 +271,24 @@ const getMainConflicts = (result: ReturnType<typeof calculateRisk>, species: Fis
   if (species.length < 2 || !result.ruleResult) return [];
   if (result.decision?.pairResults.length) {
     const grouped = new Map<string, MainConflict>();
+    const aggregateRules = [
+      ...result.ruleResult.blockingRules,
+      ...result.ruleResult.warningRules,
+      ...result.ruleResult.missingData,
+    ];
+    const aggregatePair = species.map(item => item.name).join(' × ');
+    aggregateRules.forEach((rule, index) => {
+      const reason = rule.evidence || rule.title;
+      const item = grouped.get(aggregatePair) || {
+        key: `aggregate-${index}`,
+        pair: aggregatePair,
+        reason,
+        reasons: [],
+      };
+      if (!item.reasons.includes(reason)) item.reasons.push(reason);
+      item.reason = item.reasons[0] || reason;
+      grouped.set(aggregatePair, item);
+    });
     result.decision.pairResults
       .filter(pair => pair.primaryReason || pair.secondaryReasons.length > 0)
       .forEach((pair, index) => {

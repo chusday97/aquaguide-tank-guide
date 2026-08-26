@@ -18,6 +18,7 @@
 - [ ] 对 `origin/main` 独有提交和历史来源按功能建立逐项迁移判定，不以提交数量或分支存在作为完成证据。
 - [x] 完成 Species Detail evidence authority：详情关键理由和混养证据来源改由统一规则结果驱动，物种档案文字标记为参考；新增结构化证据适配回归。
 - [x] 完成 Recommendation authority and severity：推荐候选保留与严重级别由统一混养结果裁决；新增 `npm run test:recommendation-authority`，未迁移旧推荐 UI。
+- [x] 完成 Compatibility evidence coverage boundary：配对判断显式使用 `species_only` scope，已审核物种但未审核配对时 fail closed；新增覆盖矩阵与 scorecard 回归，未整批合并 `origin/main`。
 - [x] 完成 Vercel/API runtime contract 本地迁移审查：新增 V1 catch-all、API-before-SPA rewrite、canonical Express runtime 和 ESM-safe imports；未修改 Supabase schema、RLS、LifeStage 或业务 API 字段。
 - [x] 完成 Result UX workflow head integrity 本地迁移审查：仅保留 PR head/推送 SHA checkout 与 `git rev-parse HEAD` 精确校验；未复制历史 Result UX 页面、旧 workflow 或 UI。
 - [ ] 获取可暴露部署 SHA 的 Vercel Preview 只读访问，并完成授权 Supabase schema/RLS 只读 parity；远端 CI 已通过，但本轮 exact SHA/schema/RLS 证据仍不足。

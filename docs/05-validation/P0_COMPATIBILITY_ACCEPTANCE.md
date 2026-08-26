@@ -12,7 +12,9 @@
 | Existing diagnosis records are the only source for derived observations and true water-type conflicts remain hard constraints | `test:p0-tank-evidence` 10 assertions | Pass |
 | Free description never overrides structured diagnosis choices or creates a severe signal | `test:p0-tank-evidence` free-text-negation case | Pass |
 | Water-change calendar does not become an emergency diagnosis | `test:p0-water-change` BC-WATER-001 / AQ-WATER-004 | Pass |
-| Existing compatibility load behavior remains intact | `test:compatibility` 16/16 | Pass |
+| Existing compatibility load behavior remains intact | `test:compatibility` 17/17 | Pass |
+| Reviewed species without reviewed pair evidence fail closed; explicit reviewed pair rules retain authority | `test:compatibility-evidence-coverage`, `test:compatibility-coverage-scorecard` | Pass |
+| Tank-level aggregate blocks remain visible to result UI when pair evaluation is species-only | `test:visual-results` aggregate blocker assertion | Pass |
 | Approved visual baseline geometry remains unchanged | 4320 build preview: layout, framing, interactive scenes and page matrix | Pass |
 
 ## Boundaries

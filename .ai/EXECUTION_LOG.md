@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Compatibility evidence boundary migration
+
+- **Action:** Selectively ported the reviewed-pair evidence boundary from `origin/main` history into the canonical branch. Pair decisions now call the compatibility engine with `scope: 'species_only'`; when both species have reviewed profiles but no reviewed pair rule, the result is explicitly `insufficient_data` instead of inferred recordable compatibility. Aggregate decisions still merge separate `scope: 'tank'` evaluations, so volume, equipment, temperature and bioload blocks cannot be lost; visual adapters consume the aggregate primary blocker.
+- **Verification:** `test:compatibility-evidence-coverage`, `test:compatibility-coverage-scorecard`, `test:compatibility`, `test:compatibility-evidence`, `test:recommendation-authority`, `test:visual-results`, `lint` and `build` passed. Coverage includes a tiny/high-load tank regression and aggregate visual authority assertion. The scorecard reports 501 catalog species, 7 reviewed profiles, 4 reviewed pair rules, 12 priority directions and 2 recordable directions.
+- **Boundary:** No SQL, API, Supabase, UI geometry or visual baseline change. Main-only evidence commits were not cherry-picked; current stage-risk evidence remains intact.
+- **Next:** Expand reviewed evidence only with cited sources and update the compatibility coverage audit; cloud parity remains a separate external gate.
+
 ## 2026-08-26 — Human visual baseline confirmation
 
 - **Decision:** User confirmed the current `http://127.0.0.1:4317/_preview/interactive` visual direction as the working baseline; this is not a final visual lock and future UI-owner changes require a new review.

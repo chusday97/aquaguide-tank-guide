@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
 
 export type CompatibilityItem = {
@@ -119,6 +120,44 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
   };
 };
 
+const enforcePairEvidenceBoundary = (
+  result: TankCompatibilityResult,
+  itemA: CompatibilityItem,
+  itemB: CompatibilityItem,
+): TankCompatibilityResult => {
+  if (result.status === 'not_recommended' || getReviewedPairRule(itemA.species.id, itemB.species.id)) {
+    return result;
+  }
+
+  const profileA = getReviewedCompatibilityProfile(itemA.species.id);
+  const profileB = getReviewedCompatibilityProfile(itemB.species.id);
+  if (!profileA || !profileB) return result;
+
+  const pairEvidenceRule: TankCompatibilityRule = {
+    code: 'pair_evidence_unreviewed',
+    title: '配对证据尚未审核',
+    evidence: `${itemA.species.name} 与 ${itemB.species.name} 虽各自已有审核物种资料，但缺少已审核的配对结论；物种 profile 未记录风险不能视为已证明不存在配对风险。`,
+    severity: 'medium',
+    basis: 'rule_inference',
+    confidence: 'unknown',
+    reviewStatus: 'draft',
+    affectedSpeciesIds: [itemA.species.id, itemB.species.id],
+    citations: [...profileA.citations, ...profileB.citations],
+  };
+
+  return {
+    ...result,
+    status: 'insufficient_data',
+    riskLevel: 'unknown',
+    summary: pairEvidenceRule.evidence,
+    missingData: uniqueRules([...result.missingData, pairEvidenceRule]),
+    suggestions: Array.from(new Set([
+      '先补充该物种组合的已审核配对证据，再把结果提升为可记录的 compatible/caution。',
+      ...result.suggestions,
+    ])).slice(0, 5),
+  };
+};
+
 const buildPairResult = (
   tank: Aquarium | null | undefined,
   itemA: CompatibilityItem,
@@ -131,14 +170,20 @@ const buildPairResult = (
     existingSpecies: [{ species: itemA.species, record: { quantity: quantityA } }],
     candidateSpecies: itemB.species,
     candidateQuantity: quantityB,
+    scope: 'species_only',
   });
   const reverseResult = evaluateTankCompatibility({
     tank,
     existingSpecies: [{ species: itemB.species, record: { quantity: quantityB } }],
     candidateSpecies: itemA.species,
     candidateQuantity: quantityA,
+    scope: 'species_only',
   });
-  const rawResult = mergeDirectionalResults([forwardResult, reverseResult]);
+  const rawResult = enforcePairEvidenceBoundary(
+    mergeDirectionalResults([forwardResult, reverseResult]),
+    itemA,
+    itemB,
+  );
 
   const blocking = rawResult.blockingRules.map(rule => toRelationship(rule, 'not_recommended', rawResult.suggestions));
   const warnings = rawResult.warningRules.map(rule => toRelationship(rule, 'conditional', rawResult.suggestions));
@@ -162,15 +207,20 @@ const buildPairResult = (
   };
 };
 
-const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompatibilityResult => {
-  const status = pairResults.reduce<TankCompatibilityStatus>((current, pair) => (
-    statusRank[pair.status] > statusRank[current] ? pair.status : current
+const buildAggregateResult = (
+  pairResults: PairCompatibilityResult[],
+  tankResults: TankCompatibilityResult[] = [],
+): TankCompatibilityResult => {
+  const pairRawResults = pairResults.map(pair => pair.rawResult);
+  const allResults = [...pairRawResults, ...tankResults];
+  const status = allResults.reduce<TankCompatibilityStatus>((current, result) => (
+    statusRank[result.status] > statusRank[current] ? result.status : current
   ), 'compatible');
-  const blockingRules = uniqueRules(pairResults.flatMap(pair => pair.rawResult.blockingRules));
-  const warningRules = uniqueRules(pairResults.flatMap(pair => pair.rawResult.warningRules));
-  const missingData = uniqueRules(pairResults.flatMap(pair => pair.rawResult.missingData));
-  const passedRules = uniqueRules(pairResults.flatMap(pair => pair.rawResult.passedRules));
-  const suggestions = Array.from(new Set(pairResults.flatMap(pair => pair.rawResult.suggestions))).slice(0, 5);
+  const blockingRules = uniqueRules(allResults.flatMap(result => result.blockingRules));
+  const warningRules = uniqueRules(allResults.flatMap(result => result.warningRules));
+  const missingData = uniqueRules(allResults.flatMap(result => result.missingData));
+  const passedRules = uniqueRules(allResults.flatMap(result => result.passedRules));
+  const suggestions = Array.from(new Set(allResults.flatMap(result => result.suggestions))).slice(0, 5);
   const riskLevel: TankCompatibilityResult['riskLevel'] = status === 'not_recommended'
     ? 'high'
     : status === 'caution'
@@ -196,13 +246,27 @@ const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompa
     missingData,
     suggestions,
     metadata: {
-      ruleVersion: pairResults[0]?.rawResult.metadata.ruleVersion || 'tank-compatibility-v1',
-      speciesDataVersion: pairResults[0]?.rawResult.metadata.speciesDataVersion || 'local-fish-data-v1',
+      ruleVersion: allResults[0]?.metadata.ruleVersion || 'tank-compatibility-v1',
+      speciesDataVersion: allResults[0]?.metadata.speciesDataVersion || 'local-fish-data-v1',
       calculatedAt: new Date().toISOString(),
-      scope: pairResults[0]?.rawResult.metadata.scope || 'tank',
+      scope: tankResults.length > 0 ? 'tank' : allResults[0]?.metadata.scope || 'tank',
     },
   };
 };
+
+const buildTankConstraintResults = (
+  tank: Aquarium | null | undefined,
+  items: CompatibilityItem[],
+): TankCompatibilityResult[] => items.map((item, index) => evaluateTankCompatibility({
+  tank,
+  existingSpecies: items.slice(0, index).map(existing => ({
+    species: existing.species,
+    record: { quantity: getQuantity(existing.quantity) },
+  })),
+  candidateSpecies: item.species,
+  candidateQuantity: getQuantity(item.quantity),
+  scope: 'tank',
+}));
 
 export const evaluateCompatibilityDecision = ({
   tank,
@@ -218,17 +282,22 @@ export const evaluateCompatibilityDecision = ({
   }
 
   const aggregateResult = pairResults.length > 0
-    ? buildAggregateResult(pairResults)
+    ? buildAggregateResult(pairResults, buildTankConstraintResults(tank, normalized))
     : evaluateTankCompatibility({ tank, candidateSpecies: normalized[0]?.species || null, candidateQuantity: normalized[0]?.quantity });
   const primaryConflict = pairResults
     .filter(pair => pair.primaryReason)
     .sort((a, b) => severityRank(b.primaryReason!) - severityRank(a.primaryReason!))[0];
-  const blockedReasons = pairResults.flatMap(pair => [pair.primaryReason, ...pair.secondaryReasons])
-    .filter((item): item is CompatibilityRelationship => Boolean(item && item.relationship === 'not_recommended'));
-  const adjustableReasons = pairResults.flatMap(pair => [pair.primaryReason, ...pair.secondaryReasons])
-    .filter((item): item is CompatibilityRelationship => Boolean(item && item.relationship === 'conditional'));
-  const missingInformation = pairResults.flatMap(pair => [pair.primaryReason, ...pair.secondaryReasons])
-    .filter((item): item is CompatibilityRelationship => Boolean(item && item.relationship === 'unknown'));
+  const pairRelationships = pairResults.flatMap(pair => [pair.primaryReason, ...pair.secondaryReasons])
+    .filter((item): item is CompatibilityRelationship => Boolean(item));
+  const aggregateRelationships = [
+    ...aggregateResult.blockingRules.map(rule => toRelationship(rule, 'not_recommended', aggregateResult.suggestions)),
+    ...aggregateResult.warningRules.map(rule => toRelationship(rule, 'conditional', aggregateResult.suggestions)),
+    ...aggregateResult.missingData.map(rule => toRelationship(rule, 'unknown', aggregateResult.suggestions)),
+  ];
+  const allRelationships = [...pairRelationships, ...aggregateRelationships];
+  const blockedReasons = allRelationships.filter(item => item.relationship === 'not_recommended');
+  const adjustableReasons = allRelationships.filter(item => item.relationship === 'conditional');
+  const missingInformation = allRelationships.filter(item => item.relationship === 'unknown');
 
   return {
     status: aggregateResult.status,

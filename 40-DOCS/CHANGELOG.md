@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- 混养配对判断统一使用 `species_only` scope，避免把鱼缸级负载/捕食启发式误套到物种配对；聚合结果另行合并 `tank` scope，保留容量、设备、温度和负载硬约束，并让视觉结果展示聚合主阻断；已审核物种但未审核配对时明确返回 `insufficient_data`。证据 getter 显式过滤非 `reviewed` 状态，新增覆盖、高负载和视觉权威回归，未修改数据库、API 或当前视觉几何。
 - Parity follow-up recorded: the protected Vercel Preview returned `302 → Vercel SSO` without a deploy SHA; no authorized Supabase schema/RLS inspection was available and no database mutation was attempted. Release remains `NOT_READY`.
 - Result UX head integrity 收口：新增候选 PR head/规范推送 SHA checkout 与精确 `git rev-parse HEAD` 校验 workflow 及本地契约测试；未复制历史 Result UX 页面/旧 workflow，未改变 UI、API、数据库或视觉基线。
 - Vercel/API runtime 收口（`039135ba`）：新增精确 `/api/v1` 与 nested catch-all 并置于 SPA fallback 之前，业务 API 改由 standalone canonical Express app 提供；补齐 ESM-safe imports、AI/health 兼容边界与 runtime contract/smoke 回归，未改变 Supabase schema、RLS、LifeStage 或业务 API 字段。独立 Critic 六维复验通过。

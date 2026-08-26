@@ -27,13 +27,15 @@
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
-- 当前产品代码 head：`039135ba`
-- 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `9fcad4a2` 为最新产品代码基线。
+- 当前统一代码与文档 head：`4b09a225`
+- 本次提交同时包含兼容性聚合修复、证据状态门禁、回归脚本与交接文档；后续判断产品行为以该提交及其验证证据为准。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
 - 当前下一步：完成 exact Preview SHA 与 Supabase schema/RLS parity；在这些门禁及单独 release acceptance 完成前不创建 `main` 发布合并。
 - 最新 parity 尝试（2026-08-26）：记录的 Vercel Preview 返回 `302 → Vercel SSO`，未暴露 Git SHA；当前环境没有授权 Supabase schema/RLS inspection surface。本轮未执行 Supabase 请求、migration、RPC 或写库，以上门禁仍为 pending。
 - 最新远端 CI 证据（2026-08-26）：PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a`；`RC Convergence V1` run `32915252842`、`Result UX Head Integrity V1` run `32915252831` 均通过。Vercel/Cloudflare 状态通过，但 exact Preview Git SHA 与 Supabase schema/RLS 仍 pending；当前视觉基线人工验收已通过，后续 UI 变更需复验。
+- 最近完成：`Compatibility evidence boundary migration`（`70f216cd`）。配对判断显式固定为 `species_only`，避免鱼缸级捕食/负载启发式污染逐对结论；聚合结果额外合并 `tank` scope，保留容量、设备、温度和负载硬约束，视觉适配器展示聚合主阻断；证据 getter 只暴露 `reviewed` 状态。已审核物种但没有已审核配对规则时统一返回 `insufficient_data`，显式已审核配对规则继续保留阻断/谨慎权威。新增覆盖回归、优先级 scorecard、高负载与视觉权威测试：501 条物种、7 个 reviewed profiles、4 个 reviewed pair rules、12 个优先方向，其中 2 个可记录结论、8 个资料不足、2 个不建议。未改 API、数据库、Supabase 或视觉几何。
+- 最近完成：`Species Detail` 回归脚本对齐当前产品契约（待本地提交）。测试 fixture 使用当前孔雀鱼 ID `sp_0436`，当前缸内谨慎路径验证“查看风险后确认添加 → 混养计算”，鱼缸入口改用 `data-tank-species-entry`；手机布局断言改为验证结论后动作顺序，避免把已淘汰的首屏按钮可见性和旧样式当作当前真相。
 - 最近完成：`Species Detail evidence authority`。详情关键理由、混养证据状态和来源提示消费统一 `TankCompatibilityResult`；`housingReason` 仅显示为档案参考并明确不覆盖计算结果。保持当前视觉基线，未迁移 RC 详情布局。新增 `src/modules/knowledge/compatibilityEvidencePresentation.ts` 与专项回归。
 - 最近完成：`Recommendation authority and severity`（`9fcad4a2`）。推荐候选保留与 direct/adjustable/blocked 严重级别消费统一 `TankCompatibilityResult`；“建议单养”、负载和群游局部启发式不再独立硬阻断，理由优先使用 canonical summary。保持当前视觉基线，未迁移 RC 推荐 UI；专项契约回归通过。
 - 最近完成：`Vercel/API runtime contract`（`039135ba`）。新增 V1 catch-all、精确 namespace root 与 nested API-before-SPA rewrites、standalone canonical Express runtime、ESM-safe imports、AI/health 兼容边界与本地 contract/smoke 回归；未迁移 RC 的 LifeStage、数据库字段或业务 API 语义变化，保持当前视觉基线。独立 Critic 六维复验 PASS；exact Preview SHA 仍是发布门禁。
@@ -188,9 +190,9 @@
 
 ## 当前最重要的未修问题
 
-### P1 — Compatibility evidence coverage 只有 0.60%
+### P1 — Compatibility evidence coverage 只有 1.4%
 
-当前 501 条物种只有 3 条 reviewed behavior profile、1 条 reviewed pair rule。抽样 12,000 个真实组合时 `behavior_evidence_unreviewed` 是主要 medium missing-data；抽样 30,000 个真实组合没有出现 `caution`。这不是 UI bug，而是证据覆盖不足。禁止降低 evidence gate 来制造“可尝试”结果；下一步应扩 reviewed evidence + citation + confidence。
+当前 501 条物种有 7 条 reviewed behavior profile、4 条 reviewed pair rule，仍有 494 条物种没有审核画像，广泛配对覆盖仍不足。优先矩阵 12 个方向中只有 2 个可记录结论，8 个 fail closed 为 `insufficient_data`，2 个为 `not_recommended`。这不是 UI bug，而是证据覆盖不足。禁止降低 evidence gate 来制造“可尝试”结果；下一步应扩 reviewed evidence + citation + confidence。
 
 ### P1 — Deployment parity 尚未完成
 
@@ -205,6 +207,13 @@ Identify、Aquarium Surface、Collection 子页、Settings guard、Search → De
 当前最新本地 product/test baseline（基于 `2086059`）：
 
 - `npm run lint` / `tsc --noEmit`：PASS
+- `npm run test:compatibility-evidence-coverage`：PASS（501 / 7 / 4；未审核配对 fail closed）
+- `npm run test:compatibility-coverage-scorecard`：PASS（12 个优先方向；2 个可记录）
+- `npm run test:compatibility`：PASS（17 个兼容性断言）
+- `npm run test:compatibility-evidence`：PASS
+- `npm run test:recommendation-authority`：PASS
+- `PREVIEW_URL=http://127.0.0.1:4317 node scripts/verify-species-detail-experience.mjs`：PASS
+- `node scripts/verify-page-runtime-matrix.mjs`：PASS（28/28）
 - `npm run test:taxonomy`：PASS（**501 条**；locale taxonomy drift 0；新增水草在中英文下保持 plant taxonomy）
 - `npm run test:layout-mode`：PASS
 - `npm run test:three-stage-framing`：PASS
@@ -228,7 +237,7 @@ Identify、Aquarium Surface、Collection 子页、Settings guard、Search → De
 - Admin unsaved-change / status confirmation：PASS（shared Blocking；全仓 `window.confirm` = 0）
 - Species export Media regression：PASS（variant switch / PNG / print）
 - Business hand-built dialog semantics：0；governance PASS
-- Compatibility evidence audit：501 total / 3 reviewed / 1 pair rule / **0.60% coverage_gap**
+- Compatibility evidence audit：501 total / 7 reviewed profiles / 4 reviewed pair rules / **1.4% profile coverage**；优先矩阵 12 个方向中 2 个可记录、8 个资料不足、2 个不建议。
 
 注意：以上属于 local build/browser evidence；用户已对当前 4317 工作基线完成视觉确认，但这不等于部署 parity 或 `main` release acceptance。
 

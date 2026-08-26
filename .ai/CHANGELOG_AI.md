@@ -2,6 +2,11 @@
 
 ## 2026-08-26
 
+### Compatibility evidence boundary migration
+
+- Selectively retained the reviewed-pair evidence boundary from historical main batches: pair evaluation uses `species_only` scope, and reviewed species without a reviewed pair rule remain `insufficient_data`.
+- Added `test:compatibility-evidence-coverage` and `test:compatibility-coverage-scorecard`; 501 catalog species, 7 reviewed profiles, 4 reviewed pair rules and 2 recordable priority directions are verified. No UI, API, SQL or Supabase change.
+
 ### Human visual baseline confirmation
 
 - User confirmed the current 4317 visual direction as the working baseline; later visual changes remain allowed but must be incremental and re-reviewed.

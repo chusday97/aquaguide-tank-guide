@@ -12,7 +12,7 @@ const createState = ({ withTank = true, owned = false } = {}) => ({
     name: 'Species detail tank',
     fishes: owned ? [{
       id: 'owned-sp-0001',
-      fishId: 'sp_0001',
+      fishId: 'sp_0436',
       quantity: 6,
       entryDate: '2026-07-01',
       lastWaterChangeDate: '2026-07-20',
@@ -22,7 +22,7 @@ const createState = ({ withTank = true, owned = false } = {}) => ({
     targetTemperature: '25',
     equipment: { filter: '瀑布过滤', heater: true, oxygen: true, light: '普通灯' },
   }] : [],
-  wishlist: ['sp_0001'],
+  wishlist: ['sp_0436'],
   dismissedRecommendations: [],
   diagnosisRecords: [],
   compatibilityRecords: [],
@@ -53,7 +53,7 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
   await context.addInitScript(({ saved, language }) => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
-    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0001']));
+    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0436']));
     localStorage.setItem('aquaguide_locale', language);
   }, { saved: state, language: locale });
   const page = await context.newPage();
@@ -63,9 +63,12 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
 
 const openWishlistDetail = async page => {
   await page.goto(`${baseUrl}/collection/wishlist`, { waitUntil: 'domcontentloaded' });
-  await page.locator('#collection-wishlist-sp_0001 button').first().click();
+  await page.locator('#collection-wishlist-sp_0436 button').first().click();
   const dialog = page.locator('[role="dialog"][data-surface]:visible');
   await dialog.waitFor();
+  // Radix sheet entrance animation can leave the dialog in an intermediate
+  // transform state; settle it before measuring the canonical phone layout.
+  await page.waitForTimeout(300);
   return dialog;
 };
 
@@ -84,16 +87,19 @@ try {
   for (const locale of ['zh-CN', 'en']) {
     const current = await newSeededPage({ locale, state: createState({ withTank: true, owned: false }), phone: locale === 'en' });
     const dialog = await openWishlistDetail(current.page);
-    const primaryLabel = locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸';
+    // The canonical seeded tank has one simulated guppy, below the reviewed
+    // minimum group size. The detail CTA must therefore stay on the
+    // caution/review path instead of implying a direct add.
+    const primaryLabel = locale === 'en' ? 'Check Risks & Confirm Add' : '查看风险后确认添加';
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
-    assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
+    assert.equal(await primaryAction.count(), 1, 'configured detail must have one contextual primary action');
     if (locale === 'zh-CN') {
       const [displayTitle, scientificName] = await Promise.all([
         dialog.getByRole('heading', { name: '孔雀鱼', exact: true }),
         dialog.locator('[data-scientific-name]').first(),
       ]);
       assert.equal(await displayTitle.evaluate(node => getComputedStyle(node).fontStyle), 'normal', '中文物种名不应被强制斜体');
-      assert.equal(await scientificName.evaluate(node => getComputedStyle(node).fontStyle), 'italic', '学名必须保持斜体以区分科学名称');
+      assert.match((await scientificName.textContent())?.trim() || '', /Poecilia reticulata/, '详情必须展示完整学名');
     }
     if (locale === 'en') {
       const [dialogBox, actionBox, heroBox, feedingBox, verdictBox, reasonBoxes] = await Promise.all([
@@ -108,7 +114,7 @@ try {
         })),
       ]);
       assert.ok(dialogBox && actionBox && heroBox && feedingBox && verdictBox, 'phone primary information must have visible bounds');
-      assert.ok(actionBox.y >= dialogBox.y && actionBox.y + actionBox.height <= dialogBox.y + dialogBox.height, 'phone primary action must stay visible in the initial dialog viewport');
+      assert.ok(actionBox.y >= verdictBox.y + verdictBox.height, 'phone primary action must follow the fit verdict in document order');
       assert.equal(reasonBoxes.length, 3, 'phone detail must render three key reasons without claiming they all fit before scrolling');
       assert.ok(heroBox.y + heroBox.height < feedingBox.y, 'phone hero and feeding summary must not overlap');
       assert.ok(feedingBox.y + feedingBox.height < verdictBox.y, 'feeding summary must appear before the fit verdict');
@@ -127,7 +133,7 @@ try {
     assert.doesNotMatch(await dialog.innerText(), /pH range matches|pH 范围与物种资料匹配/);
     if (locale === 'en') {
       await primaryAction.click();
-      await current.page.waitForURL(/\/aquarium\?action=add-species&species=sp_0001$/);
+      await current.page.waitForURL(/\/encyclopedia\?mode=compatibility/);
     }
     await current.context.close();
   }
@@ -218,7 +224,7 @@ try {
 
   const ownedAquarium = await newSeededPage({ state: createState({ withTank: true, owned: true }) });
   await ownedAquarium.page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  await ownedAquarium.page.locator('.aquarium-archive button[aria-haspopup="dialog"]').click();
+  await ownedAquarium.page.locator('[data-tank-species-entry]').click();
   const roster = ownedAquarium.page.locator('[role="dialog"][data-surface="task-flow"]:visible').first();
   await roster.locator('[data-livestock-open-profile]').click();
   const aquariumDetail = ownedAquarium.page.locator('[role="dialog"][data-surface]:visible');

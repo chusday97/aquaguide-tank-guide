@@ -296,16 +296,24 @@ const pairRules: ReviewedPairRule[] = [
   },
 ];
 
-export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
+export const getReviewedCompatibilityProfile = (speciesId: string) => {
+  const profile = profiles[speciesId];
+  return profile?.reviewStatus === 'reviewed' ? profile : undefined;
+};
 
-export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];
+export const getReviewedStageRiskProfile = (speciesId: string) => {
+  const profile = stageRiskProfiles[speciesId];
+  return profile?.reviewStatus === 'reviewed' ? profile : undefined;
+};
 
 export const getReviewedPairRule = (leftId: string, rightId: string) => pairRules.find(rule => (
-  rule.speciesIds.includes(leftId) && rule.speciesIds.includes(rightId)
+  rule.reviewStatus === 'reviewed'
+  && rule.speciesIds.includes(leftId)
+  && rule.speciesIds.includes(rightId)
 ));
 
 export const getCompatibilityEvidenceAudit = () => ({
-  reviewedSpeciesIds: Object.keys(profiles),
-  reviewedStageRiskSpeciesIds: Object.keys(stageRiskProfiles),
-  reviewedPairRules: pairRules,
+  reviewedSpeciesIds: Object.values(profiles).filter(profile => profile.reviewStatus === 'reviewed').map(profile => profile.speciesId),
+  reviewedStageRiskSpeciesIds: Object.values(stageRiskProfiles).filter(profile => profile.reviewStatus === 'reviewed').map(profile => profile.speciesId),
+  reviewedPairRules: pairRules.filter(rule => rule.reviewStatus === 'reviewed'),
 });

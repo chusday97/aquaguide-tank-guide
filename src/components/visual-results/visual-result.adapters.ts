@@ -58,6 +58,15 @@ const getPairBadge = (pair?: PairCompatibilityResult) => (
     : compatibilityStatusLabels[pair?.status || 'compatible']
 );
 
+const getAggregateReason = (decision: CompatibilityDecision) => {
+  const primaryRule = decision.status === 'not_recommended'
+    ? decision.blockingRules[0]
+    : decision.status === 'insufficient_data'
+      ? decision.missingData[0]
+      : decision.warningRules[0];
+  return primaryRule?.evidence || primaryRule?.title;
+};
+
 export function buildCompatibilityVisualResult({
   decision,
   species,
@@ -75,7 +84,7 @@ export function buildCompatibilityVisualResult({
   const focus = species.find(item => item.id === focusSpeciesId)
     || primaryPair?.speciesB
     || species[species.length - 1];
-  const focusReason = primaryPair ? getPairReason(primaryPair) : decision.summary;
+  const focusReason = getAggregateReason(decision) || (primaryPair ? getPairReason(primaryPair) : decision.summary);
   const related = species.filter(item => item.id !== focus?.id).map<VisualResultSubject>(item => {
     const pair = focus ? findPairForFocus(decision.pairResults, focus.id, item.id) : undefined;
     const reason = getPairReason(pair);

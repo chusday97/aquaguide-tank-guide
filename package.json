@@ -26,6 +26,8 @@
     "check:pr-governance": "node scripts/verify-pr-governance.mjs",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
     "test:compatibility-evidence": "tsx scripts/test-compatibility-evidence-presentation.ts",
+    "test:compatibility-evidence-coverage": "tsx scripts/test-compatibility-evidence-coverage.ts",
+    "test:compatibility-coverage-scorecard": "node --import tsx scripts/test-compatibility-coverage-scorecard.ts",
     "test:recommendation-authority": "tsx scripts/test-recommendation-authority.ts",
     "test:p0-tank-state": "tsx scripts/test-p0-tank-state-engine.ts",
     "test:p0-tank-evidence": "tsx scripts/test-p0-tank-evidence-adapter.ts",
