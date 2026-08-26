@@ -10,7 +10,7 @@
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | User-confirmed 4317 direction; layout/framing/scene/Rail/page matrix passed locally | Pass | Rerun affected matrix rows after any UI-owner change. |
 | GitHub convergence CI | PR #141 head `f2a5ec47`; `RC Convergence V1` run `32949623270`, `Result UX Head Integrity V1` run `32949623304`, `Surface System V1` run `32949623328`, and `UI Regression V1` run `32949623297` passed | Pass | Rerun automatically for relevant future pushes. |
-| Exact Preview SHA parity | Read-only `npm run check:preview-parity` reports `PASS`; Vercel Ready Preview `aquaguide-k48ki2sbb-chusday97s-projects.vercel.app` exposes `githubCommitSha=f2a5ec4719dcc388985c845217d66eb8d1f46f47`, equal to local/remote/PR #141 | Pass | Rerun after each canonical push. |
+| Exact Preview SHA parity | Application head `f2a5ec4719dcc388985c845217d66eb8d1f46f47` matched local/remote/PR #141 and Vercel Ready Preview; current docs/guard head is `16be50ed02f686937741f83bcdb664c5343439c9`, while Vercel remains on `f2a5ec47…`; `npm run check:preview-parity` is `NOT_SYNCHRONIZED` | Pending | Observe a deployment for the current canonical SHA, then rerun the read-only parity command. |
 | Supabase schema/RLS parity | Read-only PostgREST probes: 31/31 contract tables and latest contract columns returned 200; migration revision/RLS policy metadata unavailable from authorized surfaces | Pending | Authorized read-only schema revision and direct RLS/API smoke check. |
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
 | Human visual acceptance | User confirmed the current 4317 visual as the working baseline on 2026-08-26; future visual changes require a new review | Pass (baseline only) | Re-run human review after any visual-owner change; this does not approve `main` release. |
@@ -32,7 +32,8 @@
 ## 2026-08-26 final parity evidence
 
 - The canonical documentation head `f2a5ec4719dcc388985c845217d66eb8d1f46f47` passed all four GitHub gates: UI `32949623297`, Surface `32949623328`, Result UX `32949623304`, and RC `32949623270`.
-- The repaired read-only parity command uses `npx --yes vercel` when no system `vercel` binary exists and reports `PASS` for local, origin, PR #141, and the Ready Preview `aquaguide-k48ki2sbb-chusday97s-projects.vercel.app`.
+- The repaired read-only parity command uses `npx --yes vercel` when no system `vercel` binary exists and reported `PASS` for local, origin, PR #141, and the Ready Preview `aquaguide-k48ki2sbb-chusday97s-projects.vercel.app` at application head `f2a5ec47…`.
+- A subsequent docs/guard-only push advanced the canonical head to `16be50ed…`; Vercel still reports the prior Ready deployment, so the strict current-head gate is pending and no manual deployment was triggered.
 - Supabase migration revision/direct RLS policy metadata and user release acceptance remain pending; release status stays `NOT_READY`.
 
 ## Release rule
