@@ -1,0 +1,34 @@
+name: Result UX Head Integrity V1
+
+on:
+  pull_request:
+    branches:
+      - main
+      - integration/aquaguide-rc1
+  push:
+    branches:
+      - codex/unified-rc-visual-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  verify-candidate-head:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Verify candidate head checkout
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD_SHA"
+
+      - name: Verify Result UX workflow contract
+        run: node scripts/test-result-ux-workflow-head-integrity.mjs

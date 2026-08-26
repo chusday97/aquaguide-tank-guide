@@ -22,6 +22,7 @@
     "audit:branch-convergence": "node scripts/audit-branch-convergence.mjs",
     "check:branch-convergence": "node scripts/audit-branch-convergence.mjs --check",
     "check:project-truth": "node scripts/verify-project-truth.mjs",
+    "test:result-ux-head-integrity": "node scripts/test-result-ux-workflow-head-integrity.mjs",
     "check:pr-governance": "node scripts/verify-pr-governance.mjs",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
     "test:compatibility-evidence": "tsx scripts/test-compatibility-evidence-presentation.ts",

@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Result UX workflow head integrity
+
+- **Action:** Ported only the candidate-head verification concept from historical Result UX commits: the new workflow checks out `${{ github.event.pull_request.head.sha || github.sha }}` and compares `git rev-parse HEAD` with the same expected SHA. It runs for PRs targeting `main`/`integration/aquaguide-rc1` and pushes to the canonical branch.
+- **Verification:** `npm run test:result-ux-head-integrity` and `git diff --check` passed.
+- **Boundary:** No product UI, domain rule, API contract, database, Supabase environment or visual baseline changed. Historical Result UX pages and workflow steps were not copied.
+- **Next:** Verify exact Vercel Preview SHA, authorized Supabase schema/RLS parity and human visual acceptance.
+
 ## 2026-08-25 — Recommendation authority and severity
 
 - **Action:** Ported only RC recommendation authority semantics into `recommendation.service.ts`; removed free-text single-housing suppression and local hard-block overrides, reused reviewed group-size evidence, and made candidate reasons prefer `TankCompatibilityResult.summary`.

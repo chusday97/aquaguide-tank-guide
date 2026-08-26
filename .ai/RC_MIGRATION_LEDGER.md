@@ -13,7 +13,7 @@
 | Mobile shell / Encyclopedia UI repairs | #124–#128; `66a9ab40`, `f09ece0b`, `a9363238` | `EXCLUDED_BY_DEFAULT` | The visual baseline already owns UI geometry; take only a demonstrated behavioral bug fix. |
 | Interactive Atlas RC implementation | #122; `cd0d5fe4`, `3f660361` | `EXCLUDED_BY_DEFAULT` | The approved visual branch already has its own interactive implementation. Do not replace it with RC UI. |
 | Vercel/API runtime contract | #136–#138; `daf4b59e`, `0364b290` | `MIGRATED_LOCAL_VERIFIED` | V1 catch-all, API-before-SPA routing, standalone canonical Express runtime and ESM-safe imports are locally verified. No LifeStage, database field or business API semantic changes were ported; deployed parity remains pending. |
-| Result UX workflow head integrity | #132; `35655d94`, `261897d5` | `NOT_REVIEWED` | Consider after the unified PR exists; retain candidate-head verification concept, not RC workflow wholesale. |
+| Result UX workflow head integrity | #132; `35655d94`, `261897d5` | `MIGRATED_LOCAL_VERIFIED` | Retained only candidate-head checkout and exact SHA verification in `.github/workflows/result-ux-head-integrity-v1.yml`; did not copy the historical Result UX workflow, pages or UI. |
 
 ## Explicit exclusions
 
@@ -23,4 +23,4 @@
 
 ## Next review unit
 
-**Next review unit: Result UX workflow head integrity.** Retain candidate-head verification semantics only; do not copy RC workflow/UI wholesale. Exact deployed SHA and Supabase schema/RLS parity remain release blockers.
+**Next review unit: Preview/Supabase parity and human visual acceptance.** Result UX candidate-head verification is locally verified; do not copy the historical workflow/UI wholesale. Exact deployed SHA and Supabase schema/RLS parity remain release blockers.

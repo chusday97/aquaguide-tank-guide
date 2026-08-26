@@ -31,11 +31,12 @@
 - 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `9fcad4a2` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
-- 当前下一步：审查 Result UX workflow head integrity；完成 exact Preview SHA、Supabase schema/RLS parity 和人工验收前不创建 `main` 发布合并。
+- 当前下一步：完成 exact Preview SHA、Supabase schema/RLS parity 和人工视觉验收；在这些门禁完成前不创建 `main` 发布合并。
 - 最近完成：`Species Detail evidence authority`。详情关键理由、混养证据状态和来源提示消费统一 `TankCompatibilityResult`；`housingReason` 仅显示为档案参考并明确不覆盖计算结果。保持当前视觉基线，未迁移 RC 详情布局。新增 `src/modules/knowledge/compatibilityEvidencePresentation.ts` 与专项回归。
 - 最近完成：`Recommendation authority and severity`（`9fcad4a2`）。推荐候选保留与 direct/adjustable/blocked 严重级别消费统一 `TankCompatibilityResult`；“建议单养”、负载和群游局部启发式不再独立硬阻断，理由优先使用 canonical summary。保持当前视觉基线，未迁移 RC 推荐 UI；专项契约回归通过。
 - 最近完成：`Vercel/API runtime contract`（`039135ba`）。新增 V1 catch-all、精确 namespace root 与 nested API-before-SPA rewrites、standalone canonical Express runtime、ESM-safe imports、AI/health 兼容边界与本地 contract/smoke 回归；未迁移 RC 的 LifeStage、数据库字段或业务 API 语义变化，保持当前视觉基线。独立 Critic 六维复验 PASS；exact Preview SHA 仍是发布门禁。
-- 下一功能审查单元：`Result UX workflow head integrity`；保持当前视觉基线，不自动改 Supabase schema/RLS 或 API 契约。
+- 最近完成：`Result UX workflow head integrity`。仅保留候选 PR head/规范推送 SHA checkout 与 `git rev-parse HEAD` 精确校验，新增 `.github/workflows/result-ux-head-integrity-v1.yml` 和本地静态契约；未复制历史 Result UX 页面、旧 workflow 或 UI，未改 Supabase/API/视觉基线。
+- 下一功能审查单元：Preview/Supabase parity 与人工视觉验收；保持当前视觉基线，不自动改 Supabase schema/RLS 或 API 契约。
 - **视觉决策更新：** 用户确认当前 4317 版本可用作工作基线，但仍有后续视觉问题；后续修改必须按模块和视口渐进推进，并保留正式组件、Rail/Sheet/Blocking 语义。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
 - UI 不可变原则：`UI_REGRESSION_CONTRACT.md`。

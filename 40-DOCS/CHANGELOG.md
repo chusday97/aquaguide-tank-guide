@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- Result UX head integrity 收口：新增候选 PR head/规范推送 SHA checkout 与精确 `git rev-parse HEAD` 校验 workflow 及本地契约测试；未复制历史 Result UX 页面/旧 workflow，未改变 UI、API、数据库或视觉基线。
 - Vercel/API runtime 收口（`039135ba`）：新增精确 `/api/v1` 与 nested catch-all 并置于 SPA fallback 之前，业务 API 改由 standalone canonical Express app 提供；补齐 ESM-safe imports、AI/health 兼容边界与 runtime contract/smoke 回归，未改变 Supabase schema、RLS、LifeStage 或业务 API 字段。独立 Critic 六维复验通过。
 - 推荐候选与严重级别统一读取 `TankCompatibilityResult`：不再用“建议单养”自由文本、局部负载或群游启发式直接过滤/硬阻断；推荐理由优先使用 canonical summary。新增 `npm run test:recommendation-authority` 回归，未改变当前 4317 视觉布局。
 - 物种详情的关键理由改为读取统一 `TankCompatibilityResult` 的结构化规则证据，并显示审核状态；`housingReason` 仅作为档案参考且明确不覆盖混养结论。保持当前 4317 视觉布局，未复制 RC 详情页。
