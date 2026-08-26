@@ -7,6 +7,7 @@
 
 ### Changed
 - Expanded `RC Convergence V1` push/PR path filters to include canonical progress, handoff, AI logs, changelog and evidence files; this keeps docs-only synchronization on the same verification chain.
+- Changed UI Regression V1 Chromium setup to install the browser without `--with-deps` system package provisioning, reducing CI stalls on hosted runners.
 
 ### Fixed
 - 完成 `f465cb76` 的 Preview SHA parity 收口：Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` 与 local/remote/PR #141 同 SHA，四项 GitHub Actions 全部通过；Supabase schema/RLS 与 release acceptance 仍 pending。

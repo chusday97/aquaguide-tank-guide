@@ -33,6 +33,7 @@
 - [x] 复核 `origin/main@daadc2a3` Settings sharing 状态：统一分支保留已实现的脱敏报告流程，不复制“建设中”降级，并用 Settings → 导出与分享浏览器回归守住真实入口。
 - [x] 将核心三层契约、API、混养、当前鱼缸、水质、证据、推荐和分享回归纳入 `RC Convergence V1` canonical CI。
 - [x] 将 canonical 进度、交接和证据文件纳入 `RC Convergence V1` push/PR 路径过滤，避免文档同步后沿用旧 SHA 的 RC 结果。
+- [x] 修复 UI Regression V1 的 Chromium 安装阻塞：仅安装 Playwright Chromium，避免 runner 重复执行系统依赖安装。
 - [x] 修复 Surface workflow 陈旧 `max-w-[920px]` 断言与 Aquarium 设置关闭后的 CI 点击竞态；本地回归通过，提交 `a7b85171` 已推送。
 - [x] 根据远端日志修复 Aquarium 添加生物点击后的导航等待竞态；本地回归通过，提交 `a90911fa` 已推送。
 - [x] 根据远端日志将 Aquarium 两个设置面板切换点击设为 `noWaitAfter`；本地回归通过，提交 `78160db3` 已推送。

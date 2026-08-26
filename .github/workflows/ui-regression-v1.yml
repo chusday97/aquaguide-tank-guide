@@ -45,7 +45,7 @@ jobs:
         run: npm run audit:compatibility-evidence
 
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       - name: Start isolated preview
         shell: bash

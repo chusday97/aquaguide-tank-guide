@@ -2,6 +2,12 @@
 
 ## 2026-08-26
 
+### UI CI Chromium install unblock
+
+- Removed the unnecessary `--with-deps` system package installation from UI Regression V1, reducing the GitHub runner stall surface while preserving Playwright browser installation.
+
+## 2026-08-26
+
 ### Canonical documentation trigger coverage
 
 - Added canonical progress, handoff, AI log, changelog and evidence paths to `RC Convergence V1` push/PR filters so documentation synchronization receives same-SHA domain/API checks.

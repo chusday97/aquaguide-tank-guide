@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — UI CI Chromium install unblock
+
+- **Problem:** UI Regression run `32958817853` remained in `Install Chromium` for several minutes before any browser test started.
+- **Action:** Changed the workflow from `npx playwright install --with-deps chromium` to `npx playwright install chromium`; the hosted Ubuntu runner supplies the required system dependencies, so the extra apt installation is unnecessary.
+- **Verification:** Workflow diff check and project truth validation pass; a new remote UI run is required to verify runtime completion.
+- **Boundary:** No product UI, domain rule, API, database, Supabase or visual-baseline change.
+
 ## 2026-08-26 — Canonical documentation trigger coverage
 
 - **Problem:** `RC Convergence V1` path filters omitted the canonical progress, handoff and evidence files, so a docs-only synchronization could leave the PR displaying an older SHA's RC result.

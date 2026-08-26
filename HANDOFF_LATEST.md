@@ -4,6 +4,7 @@
 
 ## 当前工作基线
 
+- **CI 环境修复（2026-08-26）：** UI Regression V1 的 Chromium 安装已去除 `--with-deps` 系统包安装，仅保留 Playwright 浏览器下载；此前 run `32958817853` 在该步骤长时间停滞，需以新 run 结果确认修复。
 - **CI 触发修复（2026-08-26）：** `RC Convergence V1` 已将 `PROGRESS.md`、`HANDOFF_LATEST.md`、`.ai` 执行/变更记录、`40-DOCS/CHANGELOG.md` 与 `.project-journal/**` 纳入 push/PR 路径过滤；后续文档同步会产生同一 SHA 的底层门禁结果，不再沿用旧 head 的 RC 结果。
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
