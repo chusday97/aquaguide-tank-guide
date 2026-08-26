@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Preview URL and stale regression repair
+
+- **Action:** Added the canonical `scripts/preview-url.mjs` resolver (default `http://127.0.0.1:4317`) and migrated browser scripts away from mixed 3000/4173/localhost defaults. Repaired stale 600px, detail surface, compatibility route, Aquarium search/entry and dialog-name assertions. Restored the existing AI Tank Copilot as the desktop Dock seventh action and mobile more-actions entry.
+- **Verification:** `npm run build`; `npm run test:core-ui`; `npm run test:page-runtime-matrix` (28/28); `npm run test:guided-navigation-ui`; `npm run test:settings-feedback`; `npm run test:interactive-scenes-ui`; `npm run lint`; `npx tsc --noEmit`; `npm run check:project-truth`; `npm run check:branch-convergence`; `git diff --check` all passed. 4317 serves the rebuilt production output and the Copilot dialog opens in Chromium.
+- **Boundary:** Current visual baseline remains unchanged; no SQL, API, Supabase, main merge, or Vercel deployment was performed. Vercel exact SHA and Supabase schema/RLS parity remain external release gates.
+
 ## 2026-08-26 — Latest parity check
 
 - **Action:** Rechecked canonical local/remote SHA and the local 4317 preview; attempted a read-only public GitHub PR metadata query.

@@ -1,6 +1,7 @@
 import { chromium } from 'playwright';
+import { getPreviewUrl } from './preview-url.mjs';
 
-const baseUrl = process.env.AQUAGUIDE_PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = getPreviewUrl();
 const browser = await chromium.launch({ headless: true });
 const state = {
   version: 1,

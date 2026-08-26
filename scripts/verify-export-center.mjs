@@ -1,16 +1,18 @@
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import { chromium } from 'playwright';
+import { getPreviewUrl } from './preview-url.mjs';
 
+const baseUrl = getPreviewUrl();
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.addInitScript(() => localStorage.setItem('aquaguide_locale', 'zh-CN'));
-  await page.goto('http://localhost:3000/aquarium?action=exports', { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}/aquarium?action=exports`, { waitUntil: 'networkidle' });
   if (page.url().includes('/welcome')) {
     await page.getByRole('button', { name: '先跳过，直接进入我的鱼缸' }).click();
     await page.waitForURL(/\/aquarium/);
-    await page.goto('http://localhost:3000/aquarium?action=exports', { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/aquarium?action=exports`, { waitUntil: 'networkidle' });
   }
   await page.getByRole('heading', { name: '导出与分享' }).waitFor();
   assert.equal(await page.locator('article').count(), 6);

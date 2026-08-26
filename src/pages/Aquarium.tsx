@@ -4748,7 +4748,7 @@ export default function AquariumManager() {
     },
   ];
   const visibleAquariumActions = commonActions
-    .filter(action => action.id !== 'smartRecommend')
+    .filter(action => !isPhoneLayout || action.id !== 'smartRecommend')
     .map(action => ({
     ...action,
     onClick: () => {
@@ -5160,6 +5160,7 @@ export default function AquariumManager() {
                   ) : (
                     <div className="grid gap-1">
                       <button type="button" onClick={() => { setEditNameValue(activeAquarium.name); setIsEditingName(true); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black hover:bg-bg"><Edit2 className="h-4 w-4 text-emerald-700" />{isEn ? 'Rename aquarium' : '重命名鱼缸'}</button>
+                      <button type="button" onClick={() => { setIsMobileMoreOpen(false); openTankBuildCopilot(); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black hover:bg-bg"><Sparkles className="h-4 w-4 text-emerald-700" />{isEn ? 'AI Tank Copilot' : 'AI 建缸助手'}</button>
                       <button type="button" onClick={() => { setIsMobileMoreOpen(false); navigateToRoute('/settings'); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black hover:bg-bg"><Settings className="h-4 w-4 text-emerald-700" />{isEn ? 'Settings' : '设置'}</button>
                       <button type="button" onClick={() => { setIsMobileMoreOpen(false); openLocalDataManager(); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black hover:bg-bg"><Info className="h-4 w-4 text-sky-700" />{isEn ? 'Data & backup' : '数据与备份'}</button>
                       <button type="button" onClick={() => { setIsMobileMoreOpen(false); requestDeleteAquarium(activeAquarium.id); }} className="flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-left text-xs font-black text-red-600 hover:bg-red-50"><Trash2 className="h-4 w-4" />{isEn ? 'Delete aquarium' : '删除鱼缸'}</button>

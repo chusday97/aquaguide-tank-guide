@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import sharp from 'sharp';
+import { getPreviewUrl } from './preview-url.mjs';
 
 const report = {
   snapshotVersion: 1,
@@ -13,6 +14,7 @@ const report = {
 };
 
 const browser = await chromium.launch({ headless: true });
+const baseUrl = getPreviewUrl();
 for (const width of [390, 1280]) {
   const page = await browser.newPage({ viewport: { width, height: 844 }, acceptDownloads: true });
   const errors = [];
@@ -22,7 +24,7 @@ for (const width of [390, 1280]) {
     contentType: 'application/json',
     body: JSON.stringify({ data: report, requestId: 'share-ui-test' }),
   }));
-  await page.goto('http://localhost:3000/report/test-token', { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}/report/test-token`, { waitUntil: 'networkidle' });
   const body = await page.locator('body').innerText();
   if (!(body.includes('我的鱼缸报告') || body.includes('My aquarium report')) || !body.includes('孔雀鱼 × 6')) throw new Error(`report content missing at ${width}px`);
   if (body.includes('客厅缸') || body.includes('ownerId')) throw new Error(`private field visible at ${width}px`);

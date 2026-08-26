@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+import { getPreviewUrl } from './preview-url.mjs';
 
-const baseUrl = process.env.AQUAGUIDE_URL || process.env.AQUAGUIDE_PREVIEW_URL || process.env.PREVIEW_URL || 'http://127.0.0.1:4317';
+const baseUrl = getPreviewUrl();
 const browser = await chromium.launch({ headless: true });
 
 const seed = async (page, locale = 'zh-CN') => {
@@ -113,12 +114,12 @@ try {
   await failurePage.waitForURL(/\/encyclopedia/);
   await failurePage.close();
 
-  const englishNarrow = await browser.newPage({ viewport: { width: 600, height: 900 }, locale: 'en-US' });
+  const englishNarrow = await browser.newPage({ viewport: { width: 768, height: 900 }, locale: 'en-US' });
   await seed(englishNarrow, 'en');
   await englishNarrow.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
   await englishNarrow.getByRole('heading', { name: 'Feedback' }).waitFor();
-  assert.equal(await englishNarrow.locator('[data-settings-navigation]').isVisible(), false, '600px desktop should keep a compact single-column settings workspace');
-  assert.equal(await englishNarrow.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, '600px English settings must not overflow');
+  assert.equal(await englishNarrow.locator('[data-settings-navigation]').isVisible(), false, '768px desktop should keep a compact single-column settings workspace');
+  assert.equal(await englishNarrow.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, '768px English settings must not overflow');
   await englishNarrow.close();
 
   console.log('settings feedback verified: validation, metadata, success, responsive layout and failure recovery');

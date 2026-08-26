@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Fixed
+- 修复浏览器回归使用陈旧 localhost 端口、600px 断点、旧 surface/路由和旧入口文案的问题；统一通过 `scripts/preview-url.mjs` 默认验证 4317 production Preview。
+- 恢复 AI 建缸助手在桌面沉浸式 Aquarium Dock 的第七个操作卡片，并保留移动端“更多鱼缸操作”入口。
 - Added read-only `npm run check:preview-parity` to compare local, canonical remote, and Vercel branch Preview SHAs; the current stale deployment is reported as `NOT_SYNCHRONIZED` rather than accepted.
 - Vercel parity audit now records the latest canonical-branch Preview's exact `githubCommitSha` (`6b0e629d…`) and the confirmed lag behind local/GitHub `43f75e73…`; no redeploy or cloud mutation was performed.
 - After pushing the parity evidence commit, a second read-only Vercel listing still found no deployment matching the current canonical head; Preview remains on the older SHA and release stays `NOT_READY`.
@@ -404,3 +406,12 @@
 
 - 独立种草图鉴与养护收藏页面实现，旧 URL 仅保留兼容重定向。
 - 路由页面中的空点击、仅日志处理、原生 `alert` 和无可观察结果的按钮。
+[Unreleased]
+
+### Changed
+
+- Browser regression scripts now resolve the canonical local Preview through `scripts/preview-url.mjs` (4317 by default), preventing silent fallback to stale localhost ports.
+
+### Fixed
+
+- Repaired stale responsive/route/surface assertions and restored the existing AI Tank Copilot entry in the desktop Aquarium Dock and mobile more-actions menu.

@@ -23,6 +23,7 @@
 - [x] 完成 Result UX workflow head integrity 本地迁移审查：仅保留 PR head/推送 SHA checkout 与 `git rev-parse HEAD` 精确校验；未复制历史 Result UX 页面、旧 workflow 或 UI。
 - [ ] 获取可暴露部署 SHA 的 Vercel Preview 只读访问，并完成授权 Supabase schema/RLS 只读 parity；远端 CI 已通过，但本轮 exact SHA/schema/RLS 证据仍不足。
 - [x] 新增 `npm run check:preview-parity`，自动比较 local/remote/Vercel branch Preview SHA；当前结果明确报告 `NOT_SYNCHRONIZED`，不把旧 Preview 误报为通过。
+- [x] 统一浏览器回归的 Preview URL 入口为 `scripts/preview-url.mjs`（默认 4317），并修复核心/导航脚本中已淘汰的断点、入口和 surface 断言；桌面沉浸式 Dock 恢复可见 AI 建缸助手卡片，移动端保留“更多操作”入口。
 - [ ] 完成授权部署环境的 Vercel exact SHA 与 Supabase schema/RLS parity 复核。
 
 ## Eight-phase truth consolidation

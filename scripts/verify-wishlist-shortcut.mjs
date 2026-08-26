@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+import { getPreviewUrl } from './preview-url.mjs';
 
-const baseUrl = process.env.AQUAGUIDE_URL || 'http://127.0.0.1:3000';
+const baseUrl = getPreviewUrl();
 const browser = await chromium.launch({ headless: true });
 
 const seedStorage = async (context) => {

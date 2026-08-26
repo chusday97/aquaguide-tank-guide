@@ -2,6 +2,15 @@
 
 ## 2026-08-26
 
+### Preview target and runtime regression alignment
+
+- Added `scripts/preview-url.mjs` as the single browser-regression target; scripts now default to the canonical 4317 production Preview and accept an explicit `AQUAGUIDE_URL`/`AQUAGUIDE_PREVIEW_URL`/`PREVIEW_URL` override.
+- Updated stale 600px, detail surface, compatibility route, and Aquarium entry assertions to match the current viewport and UI contracts. Guided navigation now uses the current Search route and `data-tank-species-entry` instead of retired Aquarium/sidebar labels.
+- Restored the existing AI Tank Copilot capability as the seventh desktop Aquarium Dock action and the existing mobile “更多鱼缸操作” action. No second page or new business rule was added.
+- Verified core experience, page runtime matrix (28/28), guided navigation, settings feedback, interactive scenes, typecheck, project truth, branch convergence, and production build.
+
+## 2026-08-26
+
 ### Automated Preview SHA parity gate
 
 - Added `scripts/check-preview-parity.mjs` and `npm run check:preview-parity` to compare local HEAD, `origin/codex/unified-rc-visual-v1`, and the latest Vercel deployment for that branch using `githubCommitSha`.

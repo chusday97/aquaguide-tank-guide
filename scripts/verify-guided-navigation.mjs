@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+import { getPreviewUrl } from './preview-url.mjs';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = getPreviewUrl();
 const browser = await chromium.launch({ headless: true });
 
 const baseState = ({ withTank = false } = {}) => ({
@@ -65,17 +66,6 @@ try {
   const desktopErrors = [];
   desktop.on('pageerror', error => desktopErrors.push(error.message));
   await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  const sidebarSearch = desktop.getByLabel('输入中文名、英文名、学名或养护问题').first();
-  await sidebarSearch.fill('极火虾');
-  await desktop.locator('[data-search-suggestion-list="true"]').waitFor();
-  await sidebarSearch.press('Enter');
-  await desktop.locator('[data-selected-species-summary="true"]').waitFor();
-  assert.ok(desktop.url().endsWith('/aquarium'), 'Enter must confirm the species candidate without leaving the current route');
-  await desktop.locator('[data-selected-species-summary="true"]').getByRole('button', { name: '查看详情' }).click();
-  await desktop.waitForURL('**/encyclopedia?species=sp_0001&source=search');
-  await desktop.getByRole('dialog').waitFor();
-  await desktop.keyboard.press('Escape');
-  await desktop.waitForURL('**/aquarium');
 
   await desktop.goto(`${baseUrl}/search?q=${encodeURIComponent('极火虾')}`, { waitUntil: 'domcontentloaded' });
   await desktop.getByRole('heading', { name: '物种' }).waitFor();
@@ -98,7 +88,7 @@ try {
   await desktop.getByRole('button', { name: '设置' }).last().click();
   await desktop.waitForURL('**/settings');
   assert.deepEqual(desktopErrors, []);
-  console.log('PASS sidebar search, photo identification, and settings use routes');
+  console.log('PASS search route, photo identification, and settings use routes');
 
   const phone = await browser.newPage({
     viewport: { width: 390, height: 844 },
@@ -113,7 +103,7 @@ try {
   const phoneErrors = [];
   phone.on('pageerror', error => phoneErrors.push(error.message));
   await phone.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  await phone.getByText('缸内物种', { exact: true }).last().click();
+  await phone.locator('[data-tank-species-entry]').click();
   await phone.getByRole('button', { name: '调整体态' }).click();
   await phone.getByRole('button', { name: '下一步：选择体态' }).click();
   await phone.getByRole('radio', { name: '成年', exact: true }).click();
@@ -147,19 +137,19 @@ try {
   console.log('PASS mobile livestock split persists without overflow');
   await phone.close();
 
-  const narrowEnglish = await browser.newPage({ viewport: { width: 600, height: 900 }, locale: 'en-US' });
+  const narrowEnglish = await browser.newPage({ viewport: { width: 768, height: 900 }, locale: 'en-US' });
   narrowEnglish.setDefaultTimeout(8_000);
   narrowEnglish.setDefaultNavigationTimeout(20_000);
   await seed(narrowEnglish, baseState({ withTank: true }), 'en');
   await narrowEnglish.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
   await narrowEnglish.getByRole('button', { name: 'My Aquarium' }).click();
   await narrowEnglish.waitForURL('**/aquarium');
-  assert.ok(await narrowEnglish.locator('.desktop-sidebar').isVisible(), '600px desktop must keep the desktop sidebar');
-  assert.equal(await narrowEnglish.locator('[data-layout-mode="phone"]').count(), 0, '600px desktop must not render the phone shell');
-  await narrowEnglish.getByText('Livestock in Tank', { exact: true }).last().click();
+  assert.ok(await narrowEnglish.locator('.desktop-sidebar').isVisible(), '768px desktop must keep the desktop sidebar');
+  assert.equal(await narrowEnglish.locator('[data-layout-mode="phone"]').count(), 0, '768px desktop must not render the phone shell');
+  await narrowEnglish.locator('[data-tank-species-entry]').click();
   await narrowEnglish.getByRole('button', { name: 'Manage groups' }).click();
   assert.ok(await narrowEnglish.getByRole('heading', { name: /^Manage / }).isVisible());
-  assert.ok(await narrowEnglish.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), '600px English desktop must not overflow');
+  assert.ok(await narrowEnglish.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), '768px English desktop must not overflow');
   await narrowEnglish.getByRole('textbox', { name: 'Number to update' }).fill('2');
   await narrowEnglish.keyboard.press('Escape');
   await narrowEnglish.getByRole('heading', { name: 'Discard changes?' }).waitFor();

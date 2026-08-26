@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+import { getPreviewUrl } from './preview-url.mjs';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
+const baseUrl = getPreviewUrl();
 const browser = await chromium.launch({ headless: true });
 
 const seed = async (page, locale) => {

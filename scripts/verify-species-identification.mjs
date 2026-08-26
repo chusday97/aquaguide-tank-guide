@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
+import { getPreviewUrl } from './preview-url.mjs';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = getPreviewUrl();
 const fixture = resolve('public/responsive/care/pregnant_fish_breeder_box_realistic-960.webp');
 const browser = await chromium.launch({ headless: true });
 
