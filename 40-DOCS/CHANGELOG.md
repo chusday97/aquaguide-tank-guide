@@ -5,6 +5,7 @@
 ### Changed
 
 - 记录 `b2613bdd` 的 main 合并门禁复核：PR #141 checks 全部通过且 Preview SHA parity PASS，但 PR 仍为 Draft/CONFLICTING；与 integration 只读合并检出 62 个冲突文件，暂不创建 main 合并。
+- 记录 `6df43a50` 推送后的 Preview 额度阻塞：local/remote 同步，Vercel 因 Hobby `build-rate-limit` 保持上一已验证 Preview `b2613bdd`，当前 parity 为 `NOT_SYNCHRONIZED`。
 
 ### Verified
 - 审计 `origin/main@2eaa20c2` / `e8d6c652` 的兼容性研究延期：确认其属于未接入当前产品的 research-only backlog，标记为 `HISTORICAL_OR_EXCLUDED`，不传播到运行时混养结论。

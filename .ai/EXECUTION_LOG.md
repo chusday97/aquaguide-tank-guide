@@ -7,6 +7,12 @@
 - **Topology:** unified branch is 742/224 against `origin/integration/aquaguide-rc1` and 214/224 against `origin/main`; read-only merge-tree reports 62 conflicts against integration. No main PR or merge/rebase was created.
 - **Boundary:** Supabase schema/RLS parity and release acceptance remain pending; no database, Supabase, production or `main` mutation.
 
+## 2026-08-26 — post-push Preview quota observation
+
+- **Verification:** After pushing `6df43a504c44918dc7f03f2e0baf77a197759320`, local and origin remained synchronized. PR #141 RC Convergence, validate, candidate-head and Cloudflare passed; UI Regression was pending at observation time.
+- **Preview:** `check:preview-parity` reported `NOT_SYNCHRONIZED`: Vercel retained READY deployment SHA `b2613bdd` and GitHub reported `Deployment rate limited — retry in 24 hours`.
+- **Boundary:** This is an external Vercel quota blocker, not a code or mergeability result; no manual deployment, Supabase write, or `main` mutation was performed.
+
 ## 2026-08-26 — Compatibility research backlog reconciliation
 
 - **Problem:** Historical `origin/main` commits defer no-pair-evidence research groups, which could be mistaken for runtime compatibility evidence if copied wholesale.

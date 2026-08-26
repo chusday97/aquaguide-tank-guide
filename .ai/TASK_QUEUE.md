@@ -25,7 +25,7 @@
 - [x] 完成 Vercel/API runtime contract 本地迁移审查：新增 V1 catch-all、API-before-SPA rewrite、canonical Express runtime 和 ESM-safe imports；未修改 Supabase schema、RLS、LifeStage 或业务 API 字段。
 - [x] 完成 Result UX workflow head integrity 本地迁移审查：仅保留 PR head/推送 SHA checkout 与 `git rev-parse HEAD` 精确校验；未复制历史 Result UX 页面、旧 workflow 或 UI。
 - [ ] 完成授权 Supabase schema/RLS 只读 parity；Vercel exact Preview SHA parity 已在 `f465cb76…` 通过只读门禁，当前仍等待授权 schema/RLS 证据。
-- [x] 新增 `npm run check:preview-parity`，自动比较 local/remote/Vercel branch Preview SHA；当前 `b2613bdd` 结果为 `PASS`，不把旧 Preview 误报为通过。
+- [x] 新增 `npm run check:preview-parity`，自动比较 local/remote/Vercel branch Preview SHA；应用 head `b2613bdd` 曾为 `PASS`，文档 head `6df43a50` 当前因 Vercel Hobby 限额为 `NOT_SYNCHRONIZED`，不把旧 Preview 误报为通过。
 - [x] 统一浏览器回归的 Preview URL 入口为 `scripts/preview-url.mjs`（默认 4317），并修复核心/导航脚本中已淘汰的断点、入口和 surface 断言；桌面沉浸式 Dock 恢复可见 AI 建缸助手卡片，移动端保留“更多操作”入口。
 - [x] 第二轮陈旧回归审计：修复 Care category、Daily Discovery、Species Detail、动作语义和手机优先级中残留的旧 detail surface/首页推荐/英文入口断言，并把 3000 开发地址与 4317 production 验收地址在 README/SETUP 中明确区分；受影响回归与全页面矩阵 28/28 已通过。
 - [x] 注册 canonical UI smoke：移除旧 3003 端口和过时默认图鉴搜索假设，新增 `npm run test:ui-smoke`，覆盖正式路由、搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐。
