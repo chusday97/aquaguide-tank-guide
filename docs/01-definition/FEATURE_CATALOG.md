@@ -39,7 +39,7 @@
 | Species Detail evidence authority | `CURRENT_VERIFIED` | Detail key reasons and compatibility evidence consume the canonical rule result; profile notes are reference-only. RC detail layout was not copied. |
 | Recommendation authority/severity | `CURRENT_VERIFIED` | Candidate preservation and direct/adjustable/blocked severity consume canonical `TankCompatibilityResult`; local load/group calculations remain explanatory risk/adjustment context. Current recommendation UI geometry is unchanged. |
 | API/Vercel runtime contract | `DEPLOYED_REVERIFY_PENDING` | Canonical local V1 runtime, API-before-SPA routing, health/AI compatibility and ESM graph are verified; exact deployed SHA and cloud parity remain pending. |
-| Result UX workflow head integrity | `CURRENT_VERIFIED` | CI validates the exact PR head or canonical push SHA before any Result UX contract runs; historical Result UX pages and UI workflow are excluded. |
+| Result UX workflow head integrity | `CURRENT_VERIFIED` | CI workflow is configured to validate the exact PR head or canonical push SHA before any Result UX contract runs; local contract is verified, while the remote PR run is pending its base/default delivery path. Historical Result UX pages and UI workflow are excluded. |
 
 ## Archived or excluded paths
 

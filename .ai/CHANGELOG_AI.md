@@ -7,7 +7,7 @@
 - Retained only the candidate-head verification semantics from the historical Result UX branch: pull-request head or canonical push SHA checkout, followed by an exact `git rev-parse HEAD` assertion.
 - Added `result-ux-head-integrity-v1.yml`, `scripts/test-result-ux-workflow-head-integrity.mjs` and `npm run test:result-ux-head-integrity`.
 - Deliberately did not copy the historical Result UX page workflow, UI or release-path assumptions; current PR #141 remains the only convergence entry.
-- Local contract passed. Exact Preview SHA, Supabase migration/RLS metadata and human release acceptance remain open.
+- Local contract passed. The workflow is configured for PR/push events, but its remote run remains pending until the file is available on the PR base/default delivery path. Exact Preview SHA, Supabase migration/RLS metadata and human release acceptance remain open.
 
 ### Recommendation authority and severity
 

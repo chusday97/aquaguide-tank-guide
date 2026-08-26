@@ -2,9 +2,9 @@
 
 ## 2026-08-26 — Result UX workflow head integrity
 
-- **Action:** Ported only the candidate-head verification concept from historical Result UX commits: the new workflow checks out `${{ github.event.pull_request.head.sha || github.sha }}` and compares `git rev-parse HEAD` with the same expected SHA. It runs for PRs targeting `main`/`integration/aquaguide-rc1` and pushes to the canonical branch.
+- **Action:** Ported only the candidate-head verification concept from historical Result UX commits: the new workflow is configured to check out `${{ github.event.pull_request.head.sha || github.sha }}` and compare `git rev-parse HEAD` with the same expected SHA for PRs targeting `main`/`integration/aquaguide-rc1` and pushes to the canonical branch.
 - **Verification:** `npm run test:result-ux-head-integrity` and `git diff --check` passed.
-- **Boundary:** No product UI, domain rule, API contract, database, Supabase environment or visual baseline changed. Historical Result UX pages and workflow steps were not copied.
+- **Boundary:** No product UI, domain rule, API contract, database, Supabase environment or visual baseline changed. Historical Result UX pages and workflow steps were not copied. Because this workflow is new on the feature branch, its remote PR run is pending until it is present on the PR base/default delivery path; local static verification is not a remote CI result.
 - **Next:** Verify exact Vercel Preview SHA, authorized Supabase schema/RLS parity and human visual acceptance.
 
 ## 2026-08-25 — Recommendation authority and severity

@@ -4,6 +4,21 @@ import fs from 'node:fs';
 const workflowPath = '.github/workflows/result-ux-head-integrity-v1.yml';
 const workflow = fs.readFileSync(workflowPath, 'utf8');
 
+assert.match(workflow, /\non:\n/,
+  'Result UX head-integrity workflow must declare an event block',
+);
+assert.match(workflow, /\n  pull_request:\n/,
+  'Result UX head-integrity must run for pull requests',
+);
+assert.match(workflow, /\n  push:\n/,
+  'Result UX head-integrity must run for canonical branch pushes',
+);
+assert.doesNotMatch(workflow, /pull_request_target:/,
+  'Result UX head-integrity must not use pull_request_target',
+);
+assert.match(workflow, /permissions:\n[\s\S]*?contents: read[\s\S]*?pull-requests: read/,
+  'Result UX head-integrity must use read-only contents and pull-request permissions',
+);
 assert.ok(
   workflow.includes('ref: ${{ github.event.pull_request.head.sha || github.sha }}'),
   'Result UX checkout must bind to the pull-request head or the exact pushed SHA',
