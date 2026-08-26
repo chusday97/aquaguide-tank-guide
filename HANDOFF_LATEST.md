@@ -7,6 +7,7 @@
 - **当前合并阻塞（实时只读复核）：** `origin/integration/aquaguide-rc1@895f2f39` 与 canonical head `0a9613a5` 的 `git merge-tree --write-tree` 检出 **64 个冲突文件**，覆盖 `CONTRACT.md`、API、domain-rules、页面、共享组件、服务与 `vercel.json`；这不是可安全“一键同步”的文档差异。PR #141 仍 `OPEN/Draft`、`mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`，因此继续禁止整体 merge/rebase 或合并 `main`。
 - **最新门禁：** push 触发的 RC Convergence run `32991934463` 已在 head `0a9613a5` 上 `success`；本地与 origin SHA 一致且工作区 clean。Vercel 当前 READY 部署仍为 `3b33c773`，所以严格 `npm run check:preview-parity` 暂为 `NOT_SYNCHRONIZED`；本地 4317 预览可用（HTTP 200）。
 - **文档提交后复验：** 交接/证据同步提交 `6fc42dd9` 已推送；RC Convergence workflow_dispatch run `32992520843` 在该精确 head 上 `success`，完整契约、领域、storage、telemetry、视觉契约和 production build 步骤通过。该提交只更新记录，不改变产品代码。
+- **Preview 查询边界：** 当前 head `6fa6359b` 的 `npm run check:preview-parity` 因 Vercel CLI 依赖 `@vercel/container@3.0.0` 无可用版本而返回 `AUTH_REQUIRED`；最近已验证的 READY 部署仍是 `3b33c773`，不能升级为当前 head parity。需待 CLI/部署环境恢复后重跑。
 
 - 修复 P0-07 迁移期跨标签页刷新缺口：`subscribeToAppState` 同时监听 canonical app-state 与 Aquarium/图鉴仍在兼容期使用的 legacy 镜像键；无关 storage key 不触发页面回流。
 - `npm run test:discovery-storage-boundary` 新增 legacy/unrelated storage event 回归；专项测试、lint、build、project truth、4317 UI smoke 与 product-actions runtime 均通过。

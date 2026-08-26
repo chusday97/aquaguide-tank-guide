@@ -6,6 +6,7 @@
 
 - 只读复核 PR #141 与 `integration/aquaguide-rc1` 的当前合并阻塞：`git merge-tree` 检出 64 个跨契约/API/领域/UI/服务冲突文件；最新 RC Convergence run `32991934463` 在 canonical head `0a9613a5` 通过。未整体 merge/rebase、未修改 main 或 Supabase。
 - 记录当前 Preview 状态：local/origin 已同步，Vercel READY 仍为 `3b33c773`，严格 parity 暂为 `NOT_SYNCHRONIZED`；4317 本地预览 HTTP 200。
+- 记录当前 Preview 校验环境缺口：`check:preview-parity` 因 Vercel CLI 无法解析 `@vercel/container@3.0.0` 返回 `AUTH_REQUIRED`；保留 `3b33c773` 为最近已验证 READY 证据，不把它当作当前 head parity。
 
 ### Changed
 

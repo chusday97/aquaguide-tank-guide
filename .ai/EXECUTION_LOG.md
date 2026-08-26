@@ -6,6 +6,11 @@
 - **Preview:** `npm run check:preview-parity` reports local/origin `0a9613a5`, Vercel READY `3b33c773`, status `NOT_SYNCHRONIZED`; local 4317 interactive preview returns HTTP 200.
 - **Boundary:** Conflict scope is too broad for an automatic merge. No merge/rebase, `main` mutation, Supabase write/migration or manual deployment was performed.
 
+## 2026-08-27 — Preview parity CLI boundary
+
+- **Verification:** `npm run project:status` reports local/origin `6fa6359b` and clean; 4317 interactive preview returns HTTP 200. `npm run check:preview-parity` cannot resolve Vercel CLI dependency `@vercel/container@3.0.0` and returns `AUTH_REQUIRED`.
+- **Interpretation:** The latest previously verified READY deployment is `3b33c773`; it is historical evidence only and does not prove current-head parity. No manual deploy or cloud mutation was attempted.
+
 ## 2026-08-26 — Discovery storage boundary
 
 - **Problem:** Encyclopedia wrote the discovery deck only to the legacy localStorage key, while Aquarium also patched canonical app state; cross-page state could diverge.
