@@ -24,6 +24,11 @@
 
 - Docs evidence commit `59d4f0ae` is synchronized between local and origin; Vercel READY remains at `3330c02d`, so strict Preview parity is temporarily `NOT_SYNCHRONIZED` until automatic deployment catches up.
 
+### Manual RC Convergence verification
+
+- Dispatched RC Convergence run `32990488781` against the canonical ref; current PR head `33e8bbfe` passed all contract, domain, storage, telemetry, visual-contract and production-build checks.
+- Earlier stale-head failures are historical run evidence only; no product/API/database/Supabase/visual change was introduced by the dispatch.
+
 ## 2026-08-26
 
 ### Discovery storage boundary

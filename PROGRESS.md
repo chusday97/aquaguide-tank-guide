@@ -3,6 +3,7 @@
 2026-08-27：文档证据提交 `59d4f0ae` 已推送且 local/origin 同步；Vercel READY Preview 仍停在 `3330c02d`，自动部署等待中，当前严格 `check:preview-parity` 为 `NOT_SYNCHRONIZED`。未手动部署、未合并 `main`、未修改 Supabase。
 2026-08-27：修复 RC Convergence 旧 run 竞态：`.github/workflows/rc-convergence-v1.yml` 按 PR/ref 启用 `cancel-in-progress`，新提交会取消旧门禁运行，同时保留最新 head exact SHA 校验；project truth、Result UX workflow contract 与 diff check 通过。
 2026-08-27：为 RC Convergence 增加 `workflow_dispatch`，可对指定 canonical ref 做可追溯手动复验，解决 push 事件延迟时当前 head 没有 workflow run 的运维缺口。
+2026-08-27：手动复验 run `32990488781` 在当前 PR head `33e8bbfe` 上成功；RC Convergence 全部底层契约、领域、storage、telemetry、视觉契约与 production build 门禁通过。旧 stale-head 红色 run 仅作历史证据，不代表当前代码失败。
 
 2026-08-26：推送合并门禁记录提交 `6df43a50` 后，local/origin 已同步；Vercel 因 Hobby `build-rate-limit` 暂未生成 `6df43a50` Preview，当前 `check:preview-parity` 为 `NOT_SYNCHRONIZED`（Ready Preview 仍为已验证的 `b2613bdd`）。PR #141 新 head 的 RC、validate、candidate-head、Cloudflare 已通过，UI Regression 进行中；不影响代码判断，但 release 仍不可宣称完成。
 2026-08-26：合并 `main` 实时门禁复核：统一分支 `codex/unified-rc-visual-v1@b2613bdd` 与 origin 同步，Vercel READY Preview `aquaguide-60xddgoyg-chusday97s-projects.vercel.app` 精确 SHA parity PASS；PR #141 的 RC/UI/validate/candidate/Cloudflare/Vercel checks 全部成功，但仍为 Draft、`mergeable=CONFLICTING`/`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 为 742/224、相对 `origin/main` 为 214/224（左侧为目标分支独有提交/右侧为统一分支独有提交），与 integration 的只读 merge-tree 检出 62 个冲突文件；因此未创建 main 合并 PR，继续按能力语义收敛。

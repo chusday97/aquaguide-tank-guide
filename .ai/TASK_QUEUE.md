@@ -9,6 +9,7 @@
 - [x] 修复 P0-07 legacy storage event 边界：跨标签页写入 canonical/legacy 镜像键都会触发统一订阅刷新，无关 key 保持静默；专项回归已通过。
 - [x] 修复 RC Convergence 旧 run 竞态：按 PR/ref 取消过期 workflow，保留最新 head SHA 校验，避免旧证据在新提交后误失败。
 - [x] 补齐 RC Convergence 手动复验入口：支持对指定 canonical ref dispatch，避免 push 事件延迟导致当前 head 无可验证 run。
+- [x] 真实验证 RC Convergence 手动复验：run `32990488781` 在 PR 当前 head `33e8bbfe` 成功，旧 stale-head 失败已与当前结果区分。
 
 - [x] 实时复核 main 合并门禁：`b2613bdd` local/remote/Preview parity PASS；PR #141 checks 全部成功但仍 Draft/CONFLICTING，与 integration 只读 merge-tree 检出 62 个冲突文件，未创建 main 合并。
 

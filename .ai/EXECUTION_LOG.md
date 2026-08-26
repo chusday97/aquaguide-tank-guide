@@ -487,3 +487,8 @@
 - **Follow-up:** Added `workflow_dispatch` to allow a traceable manual run against the current canonical ref when push-event delivery is delayed.
 - **Verification:** `npm run check:project-truth`, `npm run test:result-ux-head-integrity`, and `git diff --check` pass.
 - **Boundary:** Workflow-only change; no product/API/database/Supabase/visual changes.
+
+## 2026-08-27 — Manual RC Convergence pass
+
+- **Verification:** Dispatched run `32990488781` on the canonical ref; PR #141 head `33e8bbfe25f68caf681054d4622a3ff5b93aaf80` completed with `success`. All listed contract, domain, storage, telemetry, visual and production-build steps passed.
+- **Interpretation:** Older RC failures were stale-head races; they remain historical evidence and do not contradict the current head result.

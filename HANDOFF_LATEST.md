@@ -9,6 +9,7 @@
 - 代码提交 `3330c02d` 曾完成 local/origin/Vercel READY Preview parity；随后文档证据提交已继续推送，local/origin 仍保持同步，Vercel 自动部署在最近一次检查仍停在 `3330c02d`，严格 parity 为 `NOT_SYNCHRONIZED`。未手动部署。
 - RC Convergence V1 已加入按 PR/ref 的 `cancel-in-progress` 并发门禁；快速连续推送时旧 run 会取消，最新 run 仍执行 exact SHA 校验。已通过 project truth、Result UX workflow contract 和 diff check。
 - RC Convergence V1 现在也支持 `workflow_dispatch`；若 push 事件没有及时生成当前 head run，可手动指定 `codex/unified-rc-visual-v1` 复验，结果仍受 PR/SHA 门禁约束。
+- 手动复验 run `32990488781` 已在 PR 当前 head `33e8bbfe` 成功；三层契约、业务/API、混养、storage、telemetry、视觉契约和 production build 全部通过。此前旧 SHA 的 stale-head 失败不再作为当前 head 结论。
 
 - Critic 复验后补齐逐对 telemetry 去重签名：组合、数量、逐对状态和规则代码变化会生成新事件；单纯 React 重渲染仍去重。
 - Critic 复验建议已关闭：签名覆盖 `passedRules` 及风险/缺失规则，且使用排序后的物种 ID，反向选择不再产生方向性重复。
