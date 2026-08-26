@@ -1,4 +1,6 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
+- 2026-08-26：最新 canonical head `ef878e25144c4cd12c461e0f3eadbd5182a1bada` 已完成远端四项门禁：`UI Regression V1` `32948782199`、`Surface System V1` `32948782231`、`Result UX Head Integrity V1` `32948782259`、`RC Convergence V1` `32948782285` 全部 success；PR #141 head、origin 分支与本地 SHA 一致，4317 `/_preview/interactive` 返回 HTTP 200。CI 环境缺口已关闭，main 未修改。
+- 2026-08-26：本轮 CI 修复正式收口：Surface 断言对齐当前 480–600px Detail Rail；Aquarium primary-tools 关闭/面板切换使用稳定状态验收；UI Regression 启动 Express API + Vite proxy 后 Identify 与全量浏览器矩阵通过（commits: `a7b85171`, `a90911fa`, `78160db3`, `0b52e947` 及文档提交）。Vercel check 仍为 `AUTH_REQUIRED`/构建额度失败，Supabase schema/RLS parity 与 release acceptance 继续 pending，发布保持 `NOT_READY`。
 - 2026-08-26：修复远端 Surface System V1 的陈旧几何断言：workflow 现在验证当前 Dialog Detail Rail 的 `w-[clamp(480px,42vw,600px)]`，不再要求已淘汰的 `max-w-[920px]`；未改变产品视觉几何。（commit: `a7b85171`）
 - 2026-08-26：修复 `test:aquarium-primary-tools` 在 CI 慢速环境的关闭竞态：设置面板按 Escape 后先等待共享 Dialog 隐藏，再点击添加生物；本地 4317 回归、lint、project truth 和 diff check 通过。（commit: `a7b85171`）
 - 2026-08-26：此前远端 UI Regression `32945314830` 的实际失败已确认是上述点击竞态；Surface `32945314731` 的实际失败是旧 `max-w-[920px]` 断言。修复已推送，新的 Actions 结果待观察。

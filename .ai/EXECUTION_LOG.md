@@ -3,8 +3,14 @@
 ## 2026-08-26 — UI regression API parity
 
 - **Action:** The remote Identify regression exposed that UI CI used a static Vite preview without the `/api/v1` fallback endpoint. Updated `UI Regression V1` to start the existing Express API on 8787 and run Vite with its API proxy on 4173; production build remains a separate gate.
-- **Verification:** In a local API+Vite proxy environment, `test:identify-flow-separation` and `test:aquarium-primary-tools` passed; no Supabase writes or product behavior changed. Commit `0b52e947` is ready to push.
+- **Verification:** In a local API+Vite proxy environment, `test:identify-flow-separation` and `test:aquarium-primary-tools` passed; no Supabase writes or product behavior changed. Commit `0b52e947` was pushed and the canonical remote UI run passed.
 - **Boundary:** CI environment only; the API starts with existing configuration and does not auto-migrate or write Supabase.
+
+## 2026-08-26 — Canonical CI regression hardening closed
+
+- **Action:** Observed the post-fix canonical workflows and recorded the final evidence for PR #141.
+- **Verification:** On `ef878e25144c4cd12c461e0f3eadbd5182a1bada`, `UI Regression V1` `32948782199`, `Surface System V1` `32948782231`, `Result UX Head Integrity V1` `32948782259`, and `RC Convergence V1` `32948782285` all completed successfully. Local/remote/PR SHA match; local 4317 interactive preview returns HTTP 200.
+- **Boundary:** Vercel remains `AUTH_REQUIRED`/Hobby build-rate-limited and Supabase schema/RLS parity plus release acceptance remain pending; `main` and cloud data were not changed.
 
 ## 2026-08-26 — Aquarium settings panel click synchronization
 

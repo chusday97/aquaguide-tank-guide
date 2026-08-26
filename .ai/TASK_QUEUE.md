@@ -35,7 +35,7 @@
 - [x] 根据远端日志修复 Aquarium 添加生物点击后的导航等待竞态；本地回归通过，提交 `a90911fa` 待推送。
 - [x] 根据远端日志将 Aquarium 两个设置面板切换点击设为 `noWaitAfter`；本地回归通过，提交 `78160db3` 待推送。
 - [x] 修复 UI Regression 静态 Preview 缺少 `/api/v1` fallback 的环境缺口：启动 Express API + Vite proxy，API+Vite 本地 Identify/Aquarium 回归通过，提交 `0b52e947` 待推送。
-- [ ] 观察 `0b52e947` 新触发的 Surface/UI/RC Actions；若全绿，再更新远端证据；若失败，按日志继续修复。
+- [x] 观察 `0b52e947` 后续 canonical Actions：UI `32948782199`、Surface `32948782231`、Result UX `32948782259`、RC `32948782285` 全部通过；最终 head 为 `ef878e25`，local/remote/PR 同步。
 - [ ] 完成授权部署环境的 Vercel exact SHA 与 Supabase schema/RLS parity 复核。
 
 ## Eight-phase truth consolidation

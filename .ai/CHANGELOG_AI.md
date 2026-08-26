@@ -2,6 +2,11 @@
 
 ## 2026-08-26
 
+### Canonical CI regression hardening closed
+
+- Confirmed the final canonical head `ef878e25144c4cd12c461e0f3eadbd5182a1bada` passes UI Regression `32948782199`, Surface System `32948782231`, Result UX Head Integrity `32948782259`, and RC Convergence `32948782285`.
+- Local, remote and PR #141 SHA are aligned; 4317 preview returns HTTP 200. Vercel remains blocked by `AUTH_REQUIRED`/Hobby build quota and Supabase schema/RLS parity plus release acceptance remain open.
+
 ### UI regression API parity
 
 - Updated UI Regression V1 to start the existing Express API and Vite API proxy so Identify fallback and other `/api/v1` browser flows run against the same local architecture as development.
