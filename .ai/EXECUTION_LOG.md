@@ -474,3 +474,8 @@
 
 - **Verification:** `npm run project:status` and `npm run check:branch-convergence` show local/remote `3330c02d` synchronized; `npm run check:preview-parity` reports Vercel READY Preview `aquaguide-8sds6m5er-chusday97s-projects.vercel.app` on the same SHA.
 - **PR boundary:** PR #141 remains Draft with `mergeable=CONFLICTING`/`mergeStateStatus=DIRTY`; the latest four workflow runs observed were still pending or stale-head, so this does not authorize a `main` merge.
+
+## 2026-08-27 — Documentation-head Preview lag
+
+- **Verification:** After docs evidence commit `59d4f0ae`, local and origin are synchronized, but `npm run check:preview-parity` still reports Vercel READY `3330c02d`; status is `NOT_SYNCHRONIZED` while Git-connected deployment catches up.
+- **Safety:** No manual deployment, Supabase write/migration or `main` merge was performed; the earlier `3330c02d` parity PASS is retained as historical evidence only.

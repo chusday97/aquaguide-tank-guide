@@ -12,6 +12,10 @@
 - After pushing `3330c02d`, local branch, origin branch and Vercel READY Preview `aquaguide-8sds6m5er-chusday97s-projects.vercel.app` matched exactly; `check:preview-parity` returned `PASS`.
 - PR #141 remains Draft and `CONFLICTING`; the latest Actions observation was still pending/stale-head and does not authorize a `main` merge.
 
+### Documentation-head Preview lag
+
+- Docs evidence commit `59d4f0ae` is synchronized between local and origin; Vercel READY remains at `3330c02d`, so strict Preview parity is temporarily `NOT_SYNCHRONIZED` until automatic deployment catches up.
+
 ## 2026-08-26
 
 ### Discovery storage boundary
