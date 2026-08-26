@@ -22,6 +22,7 @@
 - No authorized Supabase schema/RLS inspection surface was available; no database mutation was attempted. The existing 31/31 PostgREST evidence remains read-only table/column reachability only.
 - A read-only Vercel CLI listing later exposed deployment metadata: the newest Ready deployment on the canonical branch is `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` with `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`, so the deployment is verifiably behind the canonical SHA `43f75e739655e8061fb880ed3415b741a90275c1`. No redeploy was triggered in this pass.
 - A Git-connected Preview creation request for the current canonical SHA was rejected with Vercel `api-deployments-free-per-day` (Hobby daily limit exceeded). This is an external quota blocker; no deployment was created and the gate remains pending until the quota resets or the account plan/limit changes.
+- The repeatable read-only command `npm run check:preview-parity` now reports local SHA = remote SHA and Vercel deployment SHA `6b0e629d…`; its `NOT_SYNCHRONIZED` result keeps this gate explicitly pending.
 
 ## 2026-08-26 remote CI evidence
 
@@ -36,6 +37,7 @@ No Preview/Production deployment, CI success, historical PR, or local build alon
 
 ```bash
 npm run project:status
+npm run check:preview-parity
 npm run check:project-truth
 npm run lint
 npm run test:layout-mode

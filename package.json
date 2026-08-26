@@ -19,6 +19,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "project:status": "node scripts/project-status.mjs",
+    "check:preview-parity": "node scripts/check-preview-parity.mjs",
     "audit:branch-convergence": "node scripts/audit-branch-convergence.mjs",
     "check:branch-convergence": "node scripts/audit-branch-convergence.mjs --check",
     "check:project-truth": "node scripts/verify-project-truth.mjs",

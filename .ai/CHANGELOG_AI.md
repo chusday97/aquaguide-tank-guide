@@ -2,6 +2,12 @@
 
 ## 2026-08-26
 
+### Automated Preview SHA parity gate
+
+- Added `scripts/check-preview-parity.mjs` and `npm run check:preview-parity` to compare local HEAD, `origin/codex/unified-rc-visual-v1`, and the latest Vercel deployment for that branch using `githubCommitSha`.
+- The live read-only check confirms local and GitHub are equal at the current head, while Vercel remains on `6b0e629d…`; the command correctly exits with `NOT_SYNCHRONIZED` instead of treating a stale Preview as release-ready.
+- The command performs no deployment, Supabase, configuration, or data mutation.
+
 ### Compatibility evidence boundary migration
 
 - Selectively retained the reviewed-pair evidence boundary from historical main batches: pair evaluation uses `species_only` scope, and reviewed species without a reviewed pair rule remain `insufficient_data`.

@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- Added read-only `npm run check:preview-parity` to compare local, canonical remote, and Vercel branch Preview SHAs; the current stale deployment is reported as `NOT_SYNCHRONIZED` rather than accepted.
 - Vercel parity audit now records the latest canonical-branch Preview's exact `githubCommitSha` (`6b0e629d…`) and the confirmed lag behind local/GitHub `43f75e73…`; no redeploy or cloud mutation was performed.
 - After pushing the parity evidence commit, a second read-only Vercel listing still found no deployment matching the current canonical head; Preview remains on the older SHA and release stays `NOT_READY`.
 - Git-connected Preview creation for the current canonical SHA was attempted and rejected by Vercel's `api-deployments-free-per-day` Hobby quota; no deployment or Production mutation occurred.

@@ -1,4 +1,5 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
+- 2026-08-26：新增 `npm run check:preview-parity` 自动门禁，确认 local/remote 同步但 Vercel canonical Preview 仍停留在 `6b0e629d…`，命令以 `NOT_SYNCHRONIZED` 阻断误发布；未触发部署或 Supabase 变更。
 
 - 2026-08-26：执行 Vercel CLI 只读部署元数据复核。最新 Ready canonical-branch Preview `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` 明确绑定统一分支，但 `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`，落后于本地/GitHub `43f75e739655e8061fb880ed3415b741a90275c1`；确认 Preview 存在部署滞后，未触发重新部署，Supabase 仍未执行写操作或 migration。
 - 2026-08-26：已推送 parity 证据提交 `bf1e936d`；推送后再次读取 Vercel 部署列表，尚未出现匹配新 canonical head 的部署，Preview 仍停留在 `6b0e629d…`。当前继续保持 `NOT_READY`，未执行手动部署或 Supabase 写入。

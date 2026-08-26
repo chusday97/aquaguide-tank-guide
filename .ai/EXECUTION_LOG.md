@@ -212,3 +212,9 @@
 - **Conclusion:** Preview is verifiably behind the canonical branch; exact Preview SHA parity remains pending. No redeploy, migration, RPC mutation, configuration change or data write was executed.
 - **Follow-up:** Pushed the evidence commit and rechecked `vercel ls aquaguide --json`; no deployment for the new canonical head appeared, so the lag is still active and must be resolved through the Git-connected Vercel deployment path.
 - **Quota blocker:** The Git-connected Preview API request for the current head was rejected with `api-deployments-free-per-day` (Hobby daily limit exceeded). No deployment was created; retry is deferred until the quota resets.
+
+## 2026-08-26 — Automated Preview SHA parity gate
+
+- **Action:** Added `scripts/check-preview-parity.mjs` and `npm run check:preview-parity`.
+- **Verification:** The gate reports local SHA = remote SHA, but the latest canonical-branch Vercel deployment is `6b0e629d…`; status is `NOT_SYNCHRONIZED` and the command exits non-zero.
+- **Safety:** The check is read-only and does not trigger Vercel, Supabase, configuration, or data changes.

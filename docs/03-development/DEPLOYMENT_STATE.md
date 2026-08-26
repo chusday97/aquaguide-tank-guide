@@ -52,6 +52,11 @@
 - Vercel metadata exposed `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`; the canonical local/GitHub SHA is the current value reported by `npm run project:status`. This is an explicit deployment lag, not parity.
 - After pushing the parity evidence commit, a second read-only `vercel ls aquaguide --json` still showed no deployment matching the current canonical head; the branch Preview remains on the older SHA above.
 - A Git-connected Preview creation request targeting the current branch/SHA was rejected with `api-deployments-free-per-day` because the Hobby daily deployment limit was exceeded. No deployment or Production promotion was created; retry only after the quota window resets.
+
+## 2026-08-26 automated parity gate
+
+- Added the repeatable read-only command `npm run check:preview-parity`. It compares local HEAD, `origin/codex/unified-rc-visual-v1`, and the latest Vercel deployment metadata for that branch.
+- The current result is `NOT_SYNCHRONIZED`: local and remote match, while Vercel still reports `githubCommitSha=6b0e629d…`. This is an explicit failing gate, not a deployment mutation.
 - No redeploy, configuration change, database migration, RPC mutation or data write was executed.
 
 ## Deployment rules
