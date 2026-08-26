@@ -7,6 +7,11 @@
 - Attempted read-only parity against the recorded Vercel branch Preview; it returned `302 → Vercel SSO` without an exposed Git SHA.
 - No authorized Supabase schema/RLS inspection surface was available, so no Supabase request or mutation was executed. Exact Preview SHA, schema/RLS parity and human acceptance remain pending.
 
+### Remote CI evidence
+
+- GitHub confirmed PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a`; `RC Convergence V1` (`32915252842`) and `Result UX Head Integrity V1` (`32915252831`) passed.
+- Vercel and Cloudflare status checks passed, but Vercel did not expose a deployed Git SHA; exact Preview parity remains pending.
+
 ### Result UX workflow head integrity
 
 - Retained only the candidate-head verification semantics from the historical Result UX branch: pull-request head or canonical push SHA checkout, followed by an exact `git rev-parse HEAD` assertion.

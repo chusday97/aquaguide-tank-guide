@@ -35,6 +35,11 @@
 - A read-only request to the recorded branch Preview returned an HTTP `302` redirect to Vercel SSO. The response did not expose a deploy Git SHA, so exact Preview SHA parity remains **pending** and the protected URL cannot be used as browser evidence from this environment.
 - No authorized Supabase schema/RLS inspection surface was available in this environment. No Supabase request, migration, RPC mutation or data write was executed; the prior 31/31 PostgREST result remains the latest read-only evidence and does not prove migration/RLS parity.
 
+## 2026-08-26 remote CI follow-up
+
+- PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a` was confirmed through GitHub read-only metadata. `RC Convergence V1` run `32915252842` and `Result UX Head Integrity V1` run `32915252831` both completed successfully; the candidate-head checkout assertion therefore has remote CI evidence.
+- GitHub's Vercel and Cloudflare status contexts also completed successfully, but the Vercel status did not expose the deployed Git SHA. Deployment success is recorded separately from exact Preview SHA parity, which remains **pending**.
+
 ## Deployment rules
 
 - Never treat a Vercel/Cloudflare success as proof that its deployed SHA is the accepted review SHA.

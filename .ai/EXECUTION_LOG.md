@@ -7,6 +7,11 @@
 - **Decision:** Keep exact Preview SHA and Supabase schema/RLS parity as `pending`; do not infer parity from a redirect, environment names or the prior 31/31 PostgREST reachability result.
 - **Next:** Obtain authorized Preview access exposing the deployed SHA, an authorized read-only Supabase schema/RLS inspection, then request human visual acceptance on 4317.
 
+## 2026-08-26 — Remote CI evidence
+
+- **Evidence:** GitHub read-only metadata confirmed PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a`; `RC Convergence V1` run `32915252842` and `Result UX Head Integrity V1` run `32915252831` passed. Vercel and Cloudflare status checks also passed.
+- **Boundary:** Vercel did not expose the deployed Git SHA, so deployment success does not close exact Preview parity. Supabase schema/RLS and human visual acceptance remain pending.
+
 ## 2026-08-26 — Result UX workflow head integrity
 
 - **Action:** Ported only the candidate-head verification concept from historical Result UX commits: the new workflow is configured to check out `${{ github.event.pull_request.head.sha || github.sha }}` and compare `git rev-parse HEAD` with the same expected SHA for PRs targeting `main`/`integration/aquaguide-rc1` and pushes to the canonical branch.
