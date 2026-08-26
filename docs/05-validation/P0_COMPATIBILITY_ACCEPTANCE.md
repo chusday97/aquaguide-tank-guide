@@ -14,6 +14,8 @@
 | Water-change calendar does not become an emergency diagnosis | `test:p0-water-change` BC-WATER-001 / AQ-WATER-004 | Pass |
 | Existing compatibility load behavior remains intact | `test:compatibility` 17/17 | Pass |
 | Reviewed species without reviewed pair evidence fail closed; explicit reviewed pair rules retain authority | `test:compatibility-evidence-coverage`, `test:compatibility-coverage-scorecard` | Pass |
+| An empty selected aquarium does not generate current or recommended livestock; planning candidates require explicit user selection | `test:compatibility` empty-tank preview case; seeded 4317 browser check | Pass |
+| An aquarium without a confirmed water type is not treated as freshwater and remains information-incomplete | `test:compatibility` unknown-water case; species-fit regression | Pass |
 | Tank-level aggregate blocks remain visible to result UI when pair evaluation is species-only | `test:visual-results` aggregate blocker assertion | Pass |
 | Approved visual baseline geometry remains unchanged | 4320 build preview: layout, framing, interactive scenes and page matrix | Pass |
 

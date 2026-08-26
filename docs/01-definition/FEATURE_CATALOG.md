@@ -24,7 +24,7 @@
 | Encyclopedia and species detail | `CURRENT_VERIFIED` | Browse, search/filter, persistent detail Rail/Sheet, collection and compatibility entry points | `src/pages/Encyclopedia.tsx`, Visual Acceptance Matrix |
 | Care | `CURRENT_VERIFIED` | Interactive exploration plus browse fallback, article/task/reminder flows | `src/pages/CareEncyclopedia.tsx`, Visual Acceptance Matrix |
 | Collection | `CURRENT_VERIFIED` | Wishlist, care saves, memorials, achievements and deep links | `src/pages/Collection*.tsx`, Visual Acceptance Matrix |
-| Compatibility | `PARTIAL_WITH_FALLBACK` | Deterministic current baseline and safe insufficient-data outcomes | `src/lib/tankCompatibilityEngine.ts`, `CONTRACT.md` |
+| Compatibility | `PARTIAL_WITH_FALLBACK` | Deterministic current baseline, explicit planning selection, empty-tank safe state and safe insufficient-data outcomes | `src/lib/tankCompatibilityEngine.ts`, `src/services/compatibility/compatibility-preview.service.ts`, `CONTRACT.md` |
 | Identification and health triage | `PARTIAL_WITH_FALLBACK` | Candidate confirmation, manual species fallback, controlled questions and urgent-path handling | `src/pages/Identify.tsx`, `src/services/ai/` |
 | Text AI assistance | `PARTIAL_WITH_FALLBACK` | Structured assistant/daily-check paths with failure reporting | `apps/api/`, `server/index.mjs` |
 | Visual AI | `PARTIAL_WITH_FALLBACK` | Manual confirmation when a visual provider is unavailable | Product Truth invariant 3 |

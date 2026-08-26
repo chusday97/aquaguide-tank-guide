@@ -2,6 +2,13 @@
 
 ## 已修复
 
+### PUI-BC-062 — 空鱼缸混养候选和水体默认值错误
+
+- **现象：** 空鱼缸在混养页出现自动候选物种；缺失 `waterType` 被默认成淡水并影响适配结论。
+- **处理：** 空缸候选改为显式用户选择；未知水体进入 `insufficient_data`/详情 `unknown`，不再生成水体冲突。
+- **证据：** `c822bd0e`、`npm run test:compatibility`、物种适配、UI smoke、物种详情、lint、build、4317 空缸种子检查。
+- **状态：** `REGRESSION_VERIFIED`
+
 ### PUI-BC-024 — Daily Check 否定水质答案被模糊匹配为异常
 
 - **现象：** “没有异味”等分类否定答案包含“异味”子串，可能误触发水体异常摘要和换水动作。

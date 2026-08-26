@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- 修复空鱼缸在混养页自动出现候选物种的问题：选中的鱼缸没有真实活体时保持空状态，物种必须由用户主动搜索加入。
+- 修复未填写水体类型被默认判为淡水的问题：鱼缸适配与物种详情改为信息不足/待补充，不再产生错误水体冲突。
+
 ### Changed
 
 - `audit:branch-convergence` 现在输出 `origin/main` 与 `integration/aquaguide-rc1` 的只读 `merge-tree` 冲突清单，当前分别为 37 和 64 个冲突文件；不执行 merge/rebase，不把提交数量当成功能缺失。

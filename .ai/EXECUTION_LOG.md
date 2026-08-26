@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-27 — Empty-tank compatibility and water-type boundary
+
+- **Problem:** An aquarium with no real livestock still showed generated compatibility candidates, and missing `waterType` was implicitly evaluated as freshwater.
+- **Action:** Centralized compatibility preview candidate selection; empty selected tanks now return no generated species. Updated species-fit, tank compatibility and Encyclopedia detail assessment to preserve unknown water type and fail closed to information-needed status.
+- **Verification:** `npm run test:compatibility`, `npx tsx scripts/test-species-fit-engine.ts`, `npm run test:recommendation-authority`, `npm run test:ui-smoke`, `npm run test:species-detail-ui`, `npm run lint`, `npm run build`, and a seeded empty-tank 4317 browser check all pass. No API/database/Supabase write or visual geometry change.
+- **Commit:** `c822bd0e`.
+
 ## 2026-08-27 — Merge-tree readiness visibility
 
 - **Problem:** Commit-count divergence did not show whether a target branch could be merged cleanly.

@@ -2,6 +2,14 @@
 
 ## 2026-08-27
 
+### Empty-tank compatibility and water-type authority
+
+- Empty selected aquariums no longer fall back to generated compatibility candidates; planning species must be added explicitly by the user.
+- Unknown aquarium water type is now `insufficient_data` in tank compatibility and `unknown` in species-detail fit assessment instead of being treated as freshwater.
+- Added the compatibility preview service and regression coverage; no API, database, Supabase or visual-geometry change.
+
+## 2026-08-27
+
 ### Merge-tree readiness visibility
 
 - Extended `audit:branch-convergence` with read-only `merge-tree` summaries for `origin/main` and `origin/integration/aquaguide-rc1`.

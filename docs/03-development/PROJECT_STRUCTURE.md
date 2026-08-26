@@ -24,7 +24,7 @@ aquaguide_frontend/
 │   ├── data/              物种和养护静态数据
 │   ├── lib/               AI、Supabase 等基础能力
 │   ├── pages/             路由页面
-│   ├── services/          本地状态与领域规则
+│   ├── services/          本地状态与领域规则（含混养候选预览服务）
 │   ├── types/             领域类型
 │   ├── App.tsx            路由和应用壳
 │   └── index.css          全局设计令牌与样式

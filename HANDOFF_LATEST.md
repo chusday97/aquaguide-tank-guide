@@ -4,6 +4,8 @@
 
 ## 本轮新增
 
+- **空缸与水体事实修复（提交 `c822bd0e`）：** 混养候选已抽到 `src/services/compatibility/compatibility-preview.service.ts`；当选中鱼缸没有真实活体时，候选列表保持空状态，不再从空缸或其他鱼缸推导物种。未填写水体类型时，`speciesFitEngine`、`tankCompatibilityEngine` 和图鉴详情均保持未知/信息不足，不再默认淡水或产生水体冲突。`test:compatibility`、物种适配、推荐 authority、UI smoke、物种详情、lint、build 均通过；4317 已用空缸种子实测页面无物种图像、显示 `Water type pending`。未改 API、数据库、Supabase 或视觉几何。
+
 - **合并可见性修复：** `npm run audit:branch-convergence` 现在额外输出只读 `merge-tree` 结果；当前 canonical head 对 `origin/main` 有 37 个冲突、对 `integration/aquaguide-rc1` 有 64 个冲突。该输出只用于收敛决策，不会修改 Git index 或执行合并。
 
 - **Preview parity CLI 修复：** `scripts/check-preview-parity.mjs` 默认固定到已验证的 `vercel@59.6.2`（通过 `npm exec`，可用 `VERCEL_CLI_PACKAGE` 覆盖）。修复后能稳定读取 Vercel READY 部署；当前 canonical head 仍未生成对应部署，因此 parity 仍为 `NOT_SYNCHRONIZED`，不是 CLI `AUTH_REQUIRED`。精确 SHA 始终以 `npm run project:status` 和 parity 输出为准。

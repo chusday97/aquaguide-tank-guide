@@ -1,8 +1,17 @@
 # AquaGuide Badcase — Latest
 
-更新时间：2026-08-22 +08:00
+更新时间：2026-08-27 +08:00
 
 > UI / 产品 badcase 与 AI evaluation registry 分开管理。本文件只记录当前仍需关注或刚完成验证的产品问题。
+
+## PUI-BC-062 — 空鱼缸在混养页生成物种且缺失水体被当作淡水
+
+- **Severity**：P0 / High
+- **Feature**：`compatibility` / `tank_water_type`
+- **Status**：`regression_verified`
+- **现象**：选中的鱼缸没有真实活体时，混养页仍回退显示候选物种；未填写水体类型时，适配判断默认按淡水处理。
+- **处理**：混养候选预览集中到 `compatibility-preview.service`，空缸只显示空状态，规划物种必须由用户主动加入；水体类型只在明确为 `Freshwater`/`Saltwater` 时参与冲突判断，否则结果为信息不足，详情显示待补充。
+- **证据**：提交 `c822bd0e`；`npm run test:compatibility`、物种适配、推荐 authority、UI smoke、物种详情、lint、build；4317 空缸种子浏览器检查。
 
 ## DATA-BC-002 — Compatibility evidence coverage 过低
 
