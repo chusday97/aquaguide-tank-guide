@@ -116,6 +116,8 @@ jobs:
         run: npm run test:compatibility-evidence
       - name: Recommendation authority
         run: npm run test:recommendation-authority
+      - name: Discovery storage boundary
+        run: npm run test:discovery-storage-boundary
       - name: Share report contract
         run: npm run test:share-report-contract
       - name: Type check

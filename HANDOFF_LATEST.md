@@ -4,6 +4,8 @@
 
 ## 当前工作基线
 
+- **P0-07 存储边界修复（2026-08-26）：** Aquarium 与 Encyclopedia 的互动发现牌堆已统一通过 `src/services/storage/local-app-state.ts` 读写；旧 `aquapediaDiscoveryDeck` 键仍可读取并由 canonical writer 镜像，跨页面统一发出 `aquaguide:app-state-changed`。新增 `npm run test:discovery-storage-boundary` 并纳入 RC Convergence；图鉴筛选使用统计与未路由 AI 聊天仍保留为页面级 UI 状态，P0-07 继续为部分完成。
+
 - **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1@b2613bdd` 与 origin 同步；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 为 742/224、相对 `origin/main` 为 214/224；只读 merge-tree 与 integration 检出 62 个冲突文件。当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
 - **Preview parity（实时复核）：** 当前 canonical head 为 `fb90c07a`，local/remote/Vercel READY Preview 精确 SHA 一致，`npm run check:preview-parity` 返回 `PASS`。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
 

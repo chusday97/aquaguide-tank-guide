@@ -365,3 +365,4 @@
 - 混养判断统一为四种状态：`compatible / caution / not_recommended / insufficient_data`。
 - 手机端按真实手机设备判定，不再按 `<768px` 判定；桌面缩窄仍保持桌面工作台，平板默认使用桌面布局。
 2026-08-26：最终复核 `fb90c07a`：local/origin/Vercel READY Preview SHA parity PASS；PR #141 的 RC Convergence、validate、candidate-head、Vercel、Cloudflare 已通过，UI Regression 仍在运行。PR 仍 Draft/CONFLICTING，main 合并未开始。
+2026-08-26：修复 P0-07 的互动发现状态漂移：`Aquarium` 与 `Encyclopedia` 现在都通过 `local-app-state` 读写 discovery deck，保留 `aquapediaDiscoveryDeck` 旧键兼容并统一派发 app-state 事件；新增 `test:discovery-storage-boundary` 并纳入 RC Convergence。`test:discovery-storage-boundary`、lint、build、project truth、diff check 通过，未改变视觉、Supabase 或业务规则。

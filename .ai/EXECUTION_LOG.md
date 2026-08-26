@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Discovery storage boundary
+
+- **Problem:** Encyclopedia wrote the discovery deck only to the legacy localStorage key, while Aquarium also patched canonical app state; cross-page state could diverge.
+- **Action:** Added `loadDiscoveryDeckState`/`saveDiscoveryDeckState` to `local-app-state.ts`; updated both pages to use the shared boundary and kept legacy-key mirroring.
+- **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run build`, `npm run check:project-truth`, and `git diff --check` pass.
+- **Boundary:** No product rule, visual, API, Supabase or main change; filter usage and unrouted AI chat remain intentionally page-level UI state.
+
 ## 2026-08-26 — main merge readiness audit
 
 - **Verification:** `project:status` reports canonical branch/local SHA `b2613bdd850aff43f52d56f991df56ce365462c7`; `check:preview-parity` returns `PASS` with Vercel READY deployment `aquaguide-60xddgoyg-chusday97s-projects.vercel.app`.

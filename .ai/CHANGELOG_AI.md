@@ -2,6 +2,12 @@
 
 ## 2026-08-26
 
+### Discovery storage boundary
+
+- Aquarium and Encyclopedia now persist interactive discovery through `local-app-state`; legacy `aquapediaDiscoveryDeck` remains mirrored for compatibility. Added `test:discovery-storage-boundary` to RC Convergence. Filter usage and unrouted AI chat remain page-level UI state.
+
+## 2026-08-26
+
 ### main merge readiness audit
 
 - 只读核对统一分支 `b2613bdd`、PR #141、origin/main/integration 与 Vercel Preview；确认 local/remote/Preview SHA parity PASS，PR checks 全部成功，但 `mergeable=CONFLICTING`，未创建 main 合并。

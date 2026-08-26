@@ -38,7 +38,6 @@ import {
 import type { DiagnosisAnswerMap, DiagnosisOutput, DiagnosisProblemType, DiagnosisQuestion, DiagnosisRecord, TankDailyCheckContext } from '../modules/diagnosis/diagnosis.types';
 import {
   DISCOVERY_DAILY_LIMIT,
-  DISCOVERY_STORAGE_KEY,
   normalizeDiscoveryState,
   recommendationService,
 } from '../modules/recommendation/recommendation.service';
@@ -47,7 +46,9 @@ import { weatherService } from '../services/weather/weather.service';
 import type { LocalWeatherOutput } from '../services/weather/weather.schema';
 import {
   loadAppStateFromStorage,
+  loadDiscoveryDeckState,
   patchLocalAppState,
+  saveDiscoveryDeckState,
   saveAppStateToStorage,
   type LocalEventRecord,
 } from '../services/storage/local-app-state';
@@ -961,17 +962,12 @@ const needsHeaterForSpecies = (fish: Fish) => {
 };
 
 const loadDiscoveryState = () => {
-  try {
-    const state = normalizeDiscoveryState(JSON.parse(localStorage.getItem(DISCOVERY_STORAGE_KEY) || 'null'));
-    return { ...state, queueIds: [] };
-  } catch {
-    return normalizeDiscoveryState();
-  }
+  const state = normalizeDiscoveryState(loadDiscoveryDeckState());
+  return { ...state, queueIds: [] };
 };
 
 const saveDiscoveryState = (state: DiscoveryDeckState) => {
-  localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state));
-  patchLocalAppState({ discoveryState: state }, { debounce: true });
+  saveDiscoveryDeckState(state, { debounce: true });
 };
 
 const getDiscoveryPositioning = (fish: Fish, isEn = false) => {

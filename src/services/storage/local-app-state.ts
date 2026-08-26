@@ -6,6 +6,7 @@ import type { CareEventType } from '../../types/database';
 export const AQUARIUM_APP_STATE_KEY = 'aquarium_app_state_v1';
 export const AQUARIUM_APP_STATE_VERSION = 1;
 export const APP_STATE_CHANGED_EVENT = 'aquaguide:app-state-changed';
+const DISCOVERY_STORAGE_KEY = 'aquapediaDiscoveryDeck';
 
 export type LocalEventRecord = {
   id: string;
@@ -121,8 +122,21 @@ export const loadAppStateFromStorage = (): LocalAppState => {
     wishlist: readLegacyArray<string>('wishlistFishIds'),
     diagnosisRecords: readLegacyArray<unknown>('aquarium_diagnosis_records'),
     deceasedRecords: readLegacyArray<unknown>('deceasedRecords'),
-    discoveryState: safeParse<DiscoveryDeckState | undefined>(localStorage.getItem('aquapediaDiscoveryDeck'), undefined, 'aquapediaDiscoveryDeck'),
+    discoveryState: safeParse<DiscoveryDeckState | undefined>(localStorage.getItem(DISCOVERY_STORAGE_KEY), undefined, DISCOVERY_STORAGE_KEY),
   });
+};
+
+/** Read discovery state through the canonical app-state boundary, with legacy-key fallback. */
+export const loadDiscoveryDeckState = (): DiscoveryDeckState | undefined => {
+  const appState = loadAppStateFromStorage();
+  if (appState.discoveryState) return appState.discoveryState;
+  return safeParse<DiscoveryDeckState | undefined>(localStorage.getItem(DISCOVERY_STORAGE_KEY), undefined, DISCOVERY_STORAGE_KEY);
+};
+
+/** Persist discovery state through the same writer and change event as business state. */
+export const saveDiscoveryDeckState = (state: DiscoveryDeckState, options: { debounce?: boolean } = {}) => {
+  const current = loadAppStateFromStorage();
+  return saveAppStateToStorage({ ...current, discoveryState: state }, options);
 };
 
 export const saveAppStateToStorage = (appState: LocalAppState, options: { debounce?: boolean } = {}) => {
@@ -135,7 +149,7 @@ export const saveAppStateToStorage = (appState: LocalAppState, options: { deboun
       localStorage.setItem('aquarium_diagnosis_records', JSON.stringify(normalized.diagnosisRecords));
       localStorage.setItem('deceasedRecords', JSON.stringify(normalized.deceasedRecords));
       if (normalized.discoveryState) {
-        localStorage.setItem('aquapediaDiscoveryDeck', JSON.stringify(normalized.discoveryState));
+        localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(normalized.discoveryState));
       }
       emitAppStateChanged();
     } catch (error) {
@@ -163,7 +177,7 @@ export const saveAppStateToStorage = (appState: LocalAppState, options: { deboun
         localStorage.setItem('aquarium_diagnosis_records', JSON.stringify(pendingState.diagnosisRecords));
         localStorage.setItem('deceasedRecords', JSON.stringify(pendingState.deceasedRecords));
         if (pendingState.discoveryState) {
-          localStorage.setItem('aquapediaDiscoveryDeck', JSON.stringify(pendingState.discoveryState));
+          localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(pendingState.discoveryState));
         }
         emitAppStateChanged();
       } catch (error) {
@@ -204,7 +218,7 @@ export const clearLocalAppState = () => {
       'wishlistFishIds',
       'aquarium_diagnosis_records',
       'deceasedRecords',
-      'aquapediaDiscoveryDeck',
+      DISCOVERY_STORAGE_KEY,
     ].forEach(key => localStorage.removeItem(key));
   } catch (error) {
     console.warn('AquaGuide local app state clear failed', error);

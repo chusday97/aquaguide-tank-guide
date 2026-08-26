@@ -75,24 +75,20 @@ import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.
 import { SpeciesSceneAtlas } from '../components/interactive/SpeciesSceneAtlas';
 import {
   INTERACTIVE_DISCOVERY_BATCH_SIZE,
-  DISCOVERY_STORAGE_KEY,
   normalizeDiscoveryState,
   recommendationService,
 } from '../modules/recommendation/recommendation.service';
 import type { DiscoveryDeckState } from '../modules/recommendation/recommendation.schema';
+import { loadDiscoveryDeckState, saveDiscoveryDeckState } from '../services/storage/local-app-state';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 
 const loadDiscoveryState = (): DiscoveryDeckState => {
-  try {
-    return normalizeDiscoveryState(JSON.parse(localStorage.getItem(DISCOVERY_STORAGE_KEY) || 'null'));
-  } catch {
-    return normalizeDiscoveryState();
-  }
+  return normalizeDiscoveryState(loadDiscoveryDeckState());
 };
 
 const saveDiscoveryState = (state: DiscoveryDeckState) => {
-  localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state));
+  saveDiscoveryDeckState(state, { debounce: true });
 };
 
 

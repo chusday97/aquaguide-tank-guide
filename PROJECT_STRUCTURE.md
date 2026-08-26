@@ -22,6 +22,7 @@
 
 - `src/modules/recommendation/recommendation.service.ts`：推荐候选与智能推荐服务；候选严重级别由统一混养引擎裁决，局部负载/群游计算只提供风险和调整提示。
 - `scripts/test-recommendation-authority.ts`：推荐权威边界回归，覆盖单养候选保留、canonical 严重级别、近负载候选和理由来源。
+- `scripts/test-discovery-storage-boundary.ts`：验证图鉴与鱼缸互动发现共用 canonical app-state 写入、保留旧键读取兼容并发出统一变更事件。
 - `scripts/test-compatibility-evidence-coverage.ts` / `scripts/test-compatibility-coverage-scorecard.ts`：验证已审核物种与未审核配对的 fail-closed 边界、直接配对证据优先级和优先物种矩阵覆盖；不代表全库知识已完成。
 - `api/v1/[...path].ts`：Vercel V1 API catch-all，不启动独立 listener。
 - `scripts/test-production-cloud-runtime-contract.mjs` / `scripts/test-production-cloud-runtime-smoke.ts`：API namespace root/nested before SPA、环境边界、JSON health/404、AI fallback 和 canonical Express runtime 回归。
@@ -118,6 +119,7 @@
 - `src/services/aquarium/aquarium-navigation.service.ts`：本地/云端共用的会话级鱼缸列表与当前选择快照，供桌面侧栏订阅。
 - `src/services/aquarium/species-batches.service.ts`：游客模式的批次规范化、汇总、拆分、体态更新与确定性今日观察信号。
 - `src/services/care/care-activity.service.ts`：应用内养护计划、完成操作与护理清单的旧键兼容写入。
+- `src/services/storage/local-app-state.ts`：统一本地 app state 写入与 discovery deck 读写边界，兼容旧 localStorage 键并派发跨页面变更事件。
 - `src/services/care/care-timeline.service.ts`：现有鱼缸记录的确定性时间线聚合、新事件来源去重与本地持久化。
 - `src/services/care/care-category.service.ts`：养护分类稳定 ID 与中文基准字段匹配，保证中英文返回相同文章集合。
 - `src/services/compatibility/`：Mini 与完整混养的会话级选择传递。
