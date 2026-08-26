@@ -51,6 +51,7 @@
 - Using the existing authenticated Vercel CLI in read-only mode, the newest Ready deployment for the canonical branch was identified as `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` with branch alias `aquaguide-git-codex-unified-rc-visual-v1-chusday97s-projects.vercel.app`.
 - Vercel metadata exposed `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`; the canonical local/GitHub SHA is the current value reported by `npm run project:status`. This is an explicit deployment lag, not parity.
 - After pushing the parity evidence commit, a second read-only `vercel ls aquaguide --json` still showed no deployment matching the current canonical head; the branch Preview remains on the older SHA above.
+- A Git-connected Preview creation request targeting the current branch/SHA was rejected with `api-deployments-free-per-day` because the Hobby daily deployment limit was exceeded. No deployment or Production promotion was created; retry only after the quota window resets.
 - No redeploy, configuration change, database migration, RPC mutation or data write was executed.
 
 ## Deployment rules
