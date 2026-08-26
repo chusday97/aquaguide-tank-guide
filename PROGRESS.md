@@ -370,3 +370,4 @@
 2026-08-26：补强跨页刷新：Aquarium 与 Encyclopedia 订阅 `APP_STATE_CHANGED_EVENT` 与 storage 事件，收到统一写入后刷新 discovery/wishlist；相同 Set 保持引用以避免重复保存回流。（commit: `0efd32a2`）
 2026-08-26：修复清除事件与旧用户迁移兼容：Aquarium 不再把空 discovery 误判为保留旧队列；仅显式 `clearLocalAppState()` 删除 legacy 键，普通 app-state 保存保留旧键兼容，清空本地状态派发统一事件；专项回归覆盖 clear 后等待 750ms、订阅通知及 canonical 缺 discovery 的 legacy 迁移。Critic 六维复验 PASS。（commits: `901db4cf`, `d26b3270`）
 2026-08-26：继续修复混养可追溯性：兼容性评估现在在整体验证事件之外记录规范化的逐对状态（仅 `sp_####` ID、方向无关、拒绝自由文本/自配对），用于后续证据优先级分析；新增会话事件隐私回归。未改变混养结论、数据契约、Supabase 或视觉基线。
+2026-08-26：根据独立 Critic 复验继续收口：逐对 telemetry 去重签名现在包含 pair 状态、数量和规则代码，状态变化不会因 aggregate 等级不变而漏记；`test:session-events` 已纳入 RC Convergence。专项门禁通过，待远端新检查结果。

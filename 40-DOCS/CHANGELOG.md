@@ -4,6 +4,7 @@
 
 ### Changed
 
+- 根据独立审查补齐混养逐对 telemetry 的状态/数量/规则签名去重，并将会话隐私回归纳入 `RC Convergence V1`。
 - 混养评估新增隐私安全的逐对会话事件：记录规范化 `pairKey` 与结论状态，拒绝自由文本和自配对，支持后续证据优先级分析；不改变混养规则、数据/API、Supabase 或视觉基线。
 
 - 收口互动发现状态写入：Aquarium 与 Encyclopedia 共用 `local-app-state` canonical writer，保留旧键兼容并新增 storage boundary 回归，P0-07 其余页面级 UI 存储仍保留。

@@ -586,7 +586,20 @@ export function CompatibilityRiskCalculator({
   const recordedEvaluationKeyRef = useRef('');
   useEffect(() => {
     if (!selectedAquarium || selectedItems.length < 2 || !result.ruleResult || result.level === 'empty') return;
-    const key = `${selectedAquarium.id}:${selectedItems.map(item => item.species.id).sort().join('|')}:${result.level}`;
+    const pairSignature = (result.decision?.pairResults || [])
+      .map(pair => {
+        const ruleCodes = [
+          pair.primaryReason?.sourceRule.code,
+          ...pair.secondaryReasons.map(reason => reason.sourceRule.code),
+          ...pair.rawResult.blockingRules.map(rule => rule.code),
+          ...pair.rawResult.warningRules.map(rule => rule.code),
+          ...pair.rawResult.missingData.map(rule => rule.code),
+        ].filter(Boolean).sort().join(',');
+        return `${pair.pairId}:${pair.status}:${pair.quantityA}:${pair.quantityB}:${ruleCodes}`;
+      })
+      .sort()
+      .join('|');
+    const key = `${selectedAquarium.id}:${selectedItems.map(item => `${item.species.id}:${item.quantity}`).sort().join('|')}:${result.level}:${pairSignature}`;
     if (recordedEvaluationKeyRef.current === key) return;
     recordedEvaluationKeyRef.current = key;
     trackSessionEvent('compatibility_started', {

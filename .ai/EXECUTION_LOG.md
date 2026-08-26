@@ -451,3 +451,9 @@
 - **Action:** Added a privacy-safe `compatibility_pair_evaluated` session event for each canonical pair result; normalize direction and allow only `sp_####` catalog IDs, rejecting free text and self-pairs.
 - **Verification:** `npm run test:session-events`, `npm run test:compatibility`, `npm run test:compatibility-evidence`, `npm run test:compatibility-evidence-coverage`, `npm run test:compatibility-coverage-scorecard`, `npm run lint`, `npm run build`, and `git diff --check` pass.
 - **Boundary:** Session memory/PostHog only; no new database/API/Supabase field, no visual change, and no research result is propagated into runtime compatibility decisions.
+## 2026-08-27 — Critic follow-up for compatibility telemetry
+
+- **Critic findings:** Pair telemetry was privacy-safe and sourced from canonical pair results, but the aggregate-only dedupe key could miss a pair-level status change; the session test was not part of RC Convergence.
+- **Action:** Added a deterministic pair signature containing pair id, quantities, status and rule codes; registered `npm run test:session-events` in the canonical workflow.
+- **Verification:** `npm run test:session-events`, `npm run test:compatibility`, `npm run build`, `npm run lint`, `npm run check:project-truth`, and `git diff --check` pass.
+- **Boundary:** No compatibility rule, API, database, Supabase or visual change.

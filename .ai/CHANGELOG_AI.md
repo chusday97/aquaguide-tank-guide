@@ -310,3 +310,9 @@
 
 - 混养评估在整体验证之外记录逐对 `status` 与方向无关的 `pairKey`，供后续证据优先级分析；pair key 仅接受 catalog `sp_####` ID，拒绝自由文本、路径样式值和自配对。
 - `npm run test:session-events`、混养/证据覆盖回归、lint 与 production build 通过；未改混养规则、API、数据库、Supabase 或视觉基线。
+## 2026-08-27
+
+### Critic follow-up
+
+- 逐对 telemetry 的去重签名补充数量、pair status 和规则代码，避免 aggregate 等级不变时漏记逐对状态变化。
+- 将 `npm run test:session-events` 纳入 `RC Convergence V1`；本地专项、混养回归、lint、build 和 project truth 通过。

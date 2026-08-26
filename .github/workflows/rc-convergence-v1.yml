@@ -102,6 +102,8 @@ jobs:
         run: npm run test:api-boundary
       - name: Compatibility engine
         run: npm run test:compatibility
+      - name: Session telemetry privacy boundary
+        run: npm run test:session-events
       - name: Tank state engine
         run: npm run test:p0-tank-state
       - name: Daily Check rule and persistence contract
