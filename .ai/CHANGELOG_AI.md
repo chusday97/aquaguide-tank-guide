@@ -316,3 +316,8 @@
 
 - 逐对 telemetry 的去重签名补充数量、pair status 和规则代码，避免 aggregate 等级不变时漏记逐对状态变化。
 - 将 `npm run test:session-events` 纳入 `RC Convergence V1`；本地专项、混养回归、lint、build 和 project truth 通过。
+## 2026-08-27
+
+### Telemetry boundary follow-up
+
+- 逐对签名补齐全部 canonical rule code（含 passed rules），并以排序后的物种 ID 替代顺序相关的 pairId；反向选择不会重复计数。

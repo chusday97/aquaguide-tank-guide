@@ -588,14 +588,16 @@ export function CompatibilityRiskCalculator({
     if (!selectedAquarium || selectedItems.length < 2 || !result.ruleResult || result.level === 'empty') return;
     const pairSignature = (result.decision?.pairResults || [])
       .map(pair => {
+        const canonicalPairId = [pair.speciesA.id, pair.speciesB.id].sort().join('__');
         const ruleCodes = [
           pair.primaryReason?.sourceRule.code,
           ...pair.secondaryReasons.map(reason => reason.sourceRule.code),
+          ...pair.rawResult.passedRules.map(rule => rule.code),
           ...pair.rawResult.blockingRules.map(rule => rule.code),
           ...pair.rawResult.warningRules.map(rule => rule.code),
           ...pair.rawResult.missingData.map(rule => rule.code),
         ].filter(Boolean).sort().join(',');
-        return `${pair.pairId}:${pair.status}:${pair.quantityA}:${pair.quantityB}:${ruleCodes}`;
+        return `${canonicalPairId}:${pair.status}:${pair.quantityA}:${pair.quantityB}:${ruleCodes}`;
       })
       .sort()
       .join('|');

@@ -457,3 +457,8 @@
 - **Action:** Added a deterministic pair signature containing pair id, quantities, status and rule codes; registered `npm run test:session-events` in the canonical workflow.
 - **Verification:** `npm run test:session-events`, `npm run test:compatibility`, `npm run build`, `npm run lint`, `npm run check:project-truth`, and `git diff --check` pass.
 - **Boundary:** No compatibility rule, API, database, Supabase or visual change.
+## 2026-08-27 — Telemetry boundary follow-up
+
+- **Critic follow-up:** The initial signature omitted passed rule codes and used an input-order pair id.
+- **Action:** Include passed, blocking, warning and missing rule codes; derive the signature pair id from sorted species IDs.
+- **Verification:** `npm run lint`, `npm run test:session-events`, `npm run test:compatibility`, `npm run check:project-truth`, and `git diff --check` pass.
