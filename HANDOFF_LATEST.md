@@ -27,7 +27,7 @@
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
-- 当前统一代码与文档 head：`6b0e629d`
+- 当前统一代码与文档 head：`8507623f`
 - 本次提交同时包含兼容性聚合修复、证据状态门禁、回归脚本与交接文档；后续判断产品行为以该提交及其验证证据为准。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
