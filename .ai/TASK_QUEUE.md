@@ -6,6 +6,7 @@
 - [x] 修复 P0-07 互动发现牌堆的页面直写漂移与延迟写入竞态：Aquarium/Encyclopedia 共用 local-app-state canonical writer，待提交字段 patch 在 flush 时合并最新快照，保留旧键兼容并增加 `test:discovery-storage-boundary`；图鉴筛选使用统计和未路由 AI 聊天仍待后续服务化。
 - [x] 补强 P0-07 跨页刷新：Aquarium/Encyclopedia 订阅 canonical app-state/storage 事件，并对未变化 wishlist Set 保持引用，避免快速切页读取旧 discovery 或事件回流。
 - [x] 修复 P0-07 清除态与迁移兼容：空 discovery 不再保留 Aquarium 旧队列；仅显式 clearLocalAppState 移除 legacy 镜像，普通保存保留旧 key，统一事件与迁移回归已加入专项测试。
+- [x] 修复 P0-07 legacy storage event 边界：跨标签页写入 canonical/legacy 镜像键都会触发统一订阅刷新，无关 key 保持静默；专项回归已通过。
 
 - [x] 实时复核 main 合并门禁：`b2613bdd` local/remote/Preview parity PASS；PR #141 checks 全部成功但仍 Draft/CONFLICTING，与 integration 只读 merge-tree 检出 62 个冲突文件，未创建 main 合并。
 

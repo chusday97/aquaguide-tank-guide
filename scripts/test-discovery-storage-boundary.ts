@@ -89,14 +89,22 @@ assert.deepEqual(mergedExternal.wishlist, ['external-fish'], 'external updates t
 
 let clearEvents = 0;
 const unsubscribe = subscribeToAppState(() => { clearEvents += 1; });
+const legacyStorageEvent = new Event('storage');
+Object.defineProperty(legacyStorageEvent, 'key', { value: 'aquapediaDiscoveryDeck' });
+window.dispatchEvent(legacyStorageEvent);
+assert.equal(clearEvents, 1, 'legacy discovery storage changes must notify app-state subscribers');
+const unrelatedStorageEvent = new Event('storage');
+Object.defineProperty(unrelatedStorageEvent, 'key', { value: 'unrelated-key' });
+window.dispatchEvent(unrelatedStorageEvent);
+assert.equal(clearEvents, 1, 'unrelated storage changes must not notify app-state subscribers');
 clearLocalAppState();
 await new Promise(resolve => setTimeout(resolve, 750));
 unsubscribe();
 assert.equal(loadDiscoveryDeckState(), undefined, 'clearing local state must clear canonical and legacy discovery state');
-assert.equal(clearEvents, 1, 'clearing local state must notify app-state subscribers once');
+assert.equal(clearEvents, 2, 'clearing local state must notify app-state subscribers once');
 
 function saveAppStateFixture(patch: { wishlist: string[] }) {
   patchLocalAppState(patch);
 }
 
-console.log('discovery storage boundary: canonical, legacy, interleaving, and external-update cases passed');
+console.log('discovery storage boundary: canonical, legacy, interleaving, external-update, and storage-event cases passed');

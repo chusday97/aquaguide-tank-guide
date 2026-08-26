@@ -1,5 +1,12 @@
 # AI Changelog
 
+## 2026-08-27
+
+### Storage event migration boundary
+
+- `subscribeToAppState` now listens to the canonical app-state key and every mirrored legacy key (`aquapediaDiscoveryDeck`, wishlist, aquarium, diagnosis and deceased records), so older tabs cannot leave active pages stale during migration.
+- Added storage-event regression coverage; unrelated keys remain ignored. No product rule, API, database, Supabase or visual change.
+
 ## 2026-08-26
 
 ### Discovery storage boundary

@@ -7,6 +7,18 @@ export const AQUARIUM_APP_STATE_KEY = 'aquarium_app_state_v1';
 export const AQUARIUM_APP_STATE_VERSION = 1;
 export const APP_STATE_CHANGED_EVENT = 'aquaguide:app-state-changed';
 const DISCOVERY_STORAGE_KEY = 'aquapediaDiscoveryDeck';
+// During the migration window, older tabs may still write mirrored legacy keys.
+// Treat those writes as app-state changes so active pages refresh from the
+// canonical reader instead of waiting for a full reload.
+const APP_STATE_STORAGE_KEYS = new Set([
+  AQUARIUM_APP_STATE_KEY,
+  'aquariums',
+  'myAquarium',
+  'wishlistFishIds',
+  'aquarium_diagnosis_records',
+  'deceasedRecords',
+  DISCOVERY_STORAGE_KEY,
+]);
 
 export type LocalEventRecord = {
   id: string;
@@ -211,7 +223,7 @@ export const patchLocalAppState = (patch: Partial<LocalAppState>, options: { deb
 export const subscribeToAppState = (listener: () => void) => {
   if (typeof window === 'undefined') return () => undefined;
   const handleStorage = (event: StorageEvent) => {
-    if (event.key === AQUARIUM_APP_STATE_KEY) listener();
+    if (event.key && APP_STATE_STORAGE_KEYS.has(event.key)) listener();
   };
   window.addEventListener(APP_STATE_CHANGED_EVENT, listener);
   window.addEventListener('storage', handleStorage);

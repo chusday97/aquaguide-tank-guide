@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-26",
+  "updatedAt": "2026-08-27",
   "canonicalBranch": "codex/unified-rc-visual-v1",
   "canonicalBase": {
     "branch": "codex/interactive-parity-v3",

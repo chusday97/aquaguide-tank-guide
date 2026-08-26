@@ -462,3 +462,10 @@
 - **Critic follow-up:** The initial signature omitted passed rule codes and used an input-order pair id.
 - **Action:** Include passed, blocking, warning and missing rule codes; derive the signature pair id from sorted species IDs.
 - **Verification:** `npm run lint`, `npm run test:session-events`, `npm run test:compatibility`, `npm run check:project-truth`, and `git diff --check` pass.
+
+## 2026-08-27 — Legacy storage event boundary
+
+- **Problem:** During the migration window, older tabs can write mirrored legacy localStorage keys without emitting the canonical app-state event, leaving Aquarium/Encyclopedia stale until reload.
+- **Action:** `subscribeToAppState` now accepts the canonical key and all mirrored legacy keys; unrelated storage keys remain ignored. Added canonical/legacy/unrelated storage-event assertions to `test:discovery-storage-boundary`.
+- **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run build`, `npm run check:project-truth`, `git diff --check`, `npm run test:ui-smoke` and `npm run test:product-actions-runtime` pass on 4317.
+- **Boundary:** No product rule, API, database, Supabase or visual change; filter-usage and unrouted AI-chat storage remain page-level UI state.

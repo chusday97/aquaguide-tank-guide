@@ -1,8 +1,11 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-27 00:25 +08:00
+更新时间：2026-08-27 00:45 +08:00
 
 ## 本轮新增
+
+- 修复 P0-07 迁移期跨标签页刷新缺口：`subscribeToAppState` 同时监听 canonical app-state 与 Aquarium/图鉴仍在兼容期使用的 legacy 镜像键；无关 storage key 不触发页面回流。
+- `npm run test:discovery-storage-boundary` 新增 legacy/unrelated storage event 回归；专项测试、lint、build、project truth、4317 UI smoke 与 product-actions runtime 均通过。
 
 - Critic 复验后补齐逐对 telemetry 去重签名：组合、数量、逐对状态和规则代码变化会生成新事件；单纯 React 重渲染仍去重。
 - Critic 复验建议已关闭：签名覆盖 `passedRules` 及风险/缺失规则，且使用排序后的物种 ID，反向选择不再产生方向性重复。
