@@ -1073,7 +1073,8 @@ export default function Encyclopedia() {
     const minLiters = getMinimumTankLiters(fish);
     const currentTemperature = aquarium?.targetTemperature ? Number(aquarium.targetTemperature) : null;
     const isSaltwaterSpecies = fish.category.includes('海水') || getCareTaxonomyPath(fish).waterType.includes('海水');
-    const waterTypeMismatch = !!aquarium && ((aquarium.waterType === 'Saltwater') !== isSaltwaterSpecies);
+    const waterTypeKnown = aquarium?.waterType === 'Freshwater' || aquarium?.waterType === 'Saltwater';
+    const waterTypeMismatch = Boolean(waterTypeKnown && ((aquarium!.waterType === 'Saltwater') !== isSaltwaterSpecies));
     const needsHeater = getFishTemperatureTheme(fish.waterTemperature).needsHeater;
     const heaterMissing = needsHeater && aquarium?.equipment?.heater === false;
 
@@ -1138,12 +1139,20 @@ export default function Encyclopedia() {
         status: 'danger',
         advice: '当前鱼缸水体类型与该物种需求不一致，不建议直接加入。',
       });
+    } else if (aquarium && !waterTypeKnown) {
+      items.unshift({
+        label: '水体类型',
+        current: '未设置',
+        requirement: isSaltwaterSpecies ? '海水' : '淡水',
+        status: 'info',
+        advice: '先在鱼缸设置中确认淡水或海水，再判断该物种是否适配。',
+      });
     }
 
     const dangerCount = items.filter(item => item.status === 'danger').length;
     const warningCount = items.filter(item => item.status === 'warning').length;
     const infoCount = items.filter(item => item.status === 'info').length;
-    const status = !aquarium || infoCount >= 3 ? 'unknown' : dangerCount > 0 ? 'risk' : warningCount > 0 ? 'warning' : 'suitable';
+    const status = !aquarium || !waterTypeKnown || infoCount >= 3 ? 'unknown' : dangerCount > 0 ? 'risk' : warningCount > 0 ? 'warning' : 'suitable';
     const conclusion = status === 'suitable'
       ? '适合当前鱼缸，可以少量加入并观察 3-7 天。'
       : status === 'warning'

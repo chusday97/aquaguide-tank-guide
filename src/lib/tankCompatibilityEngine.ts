@@ -426,6 +426,9 @@ export const evaluateTankCompatibility = ({
   fit.confirmations.forEach(item => missingData.push(convertFitItem(item, 'low')));
 
   const tankVolume = getAquariumVolumeLiters(tank);
+  if (tank.waterType !== 'Freshwater' && tank.waterType !== 'Saltwater') {
+    missingData.push(asRule('missing_tank_water_type', '缺少水体类型', '当前鱼缸尚未确认淡水或海水类型，无法可靠判断物种适配。', 'medium'));
+  }
   if (!tankVolume) {
     missingData.push(asRule('missing_tank_volume', '缺少鱼缸容量', '当前鱼缸尺寸不完整，无法确认容量和负载。', 'medium'));
   }

@@ -3,6 +3,7 @@ import { evaluateTankCompatibility, getTankCompatibilityAddPolicy } from '../src
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { executeSpeciesAddition, reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';
+import { getCompatibilityPreviewSpecies } from '../src/services/compatibility/compatibility-preview.service';
 
 const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   id: 'peaceful-small-fish',
@@ -93,6 +94,29 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       return result.status === 'not_recommended'
         && result.blockingRules.some(rule => rule.code === 'water_type_mismatch');
     },
+  },
+  {
+    name: 'unknown tank water type is insufficient instead of freshwater',
+    run: () => {
+      const result = evaluateTankCompatibility({
+        tank: makeTank({ waterType: undefined }),
+        candidateSpecies: makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼' }),
+      });
+      return result.status === 'insufficient_data'
+        && result.blockingRules.every(rule => rule.code !== 'water_type_mismatch')
+        && result.missingData.some(rule => rule.code === 'missing_tank_water_type');
+    },
+  },
+  {
+    name: 'empty tank compatibility preview does not invent candidates',
+    run: () => getCompatibilityPreviewSpecies({
+      selectedAquarium: makeTank({ fishes: [] }),
+      currentLivestock: [],
+      activeSpeciesIds: [],
+      preferredSpeciesIds: ['peaceful-small-fish'],
+      candidateSpecies: [makeFish()],
+      fallbackSpecies: [makeFish()],
+    }).length === 0,
   },
   {
     name: 'missing tank dimensions and temperature is insufficient data',

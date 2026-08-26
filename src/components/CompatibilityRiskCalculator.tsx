@@ -98,13 +98,14 @@ import type { Aquarium, Fish } from '../types';
 import { getCareTaxonomyPath, getLifeType } from '../modules/species/species.service';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { getAquariumVolumeLiters, getCurrentLivestockForAquarium } from '../lib/speciesFitEngine';
-import { evaluateTankCompatibility, getTankCompatibilityAddPolicy, type TankCompatibilityResult, type TankCompatibilityStatus } from '../lib/tankCompatibilityEngine';
+import { getTankCompatibilityAddPolicy, type TankCompatibilityResult, type TankCompatibilityStatus } from '../lib/tankCompatibilityEngine';
 import { evaluateCompatibilityDecision, type CompatibilityItem } from '../modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision } from '../modules/knowledge/knowledge.types';
 import { VisualResultCard } from './visual-results/VisualResultCard';
 import { buildCompatibilityVisualResult } from './visual-results/visual-result.adapters';
 import { recordTankCompatibility } from '../services/compatibility/compatibility-records.service';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
+import { getCompatibilityPreviewSpecies } from '../services/compatibility/compatibility-preview.service';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
@@ -520,7 +521,11 @@ const getAquariumLabel = (aquarium?: Aquarium | null, isEn = false) => {
   if (!aquarium) return isEn ? 'No Tank Selected' : '未选择鱼缸';
   const volume = getAquariumVolumeLiters(aquarium);
   const name = getLocalizedAquariumName(aquarium.name, isEn);
-  const typeLabel = aquarium.waterType === 'Saltwater' ? (isEn ? 'Marine' : '海水') : (isEn ? 'Freshwater' : '淡水');
+  const typeLabel = aquarium.waterType === 'Saltwater'
+    ? (isEn ? 'Marine' : '海水')
+    : aquarium.waterType === 'Freshwater'
+      ? (isEn ? 'Freshwater' : '淡水')
+      : (isEn ? 'Water type pending' : '水体待补充');
   const capLabel = volume ? `${volume}L` : (isEn ? 'Pending Capacity' : '容量待补充');
   return `${name} · ${capLabel} · ${typeLabel}`;
 };
@@ -680,43 +685,15 @@ export function CompatibilityRiskCalculator({
     setAddedSpeciesIds(prev => prev.filter(id => activeSpeciesIds.includes(id)));
   }, [activeSpeciesIds]);
   const commonPreviewSpecies = useMemo(() => {
-    if (selectedAquarium) {
-      const ownedIds = new Set(currentLivestock.map(item => item.species?.id).filter(Boolean));
-      const evaluated = fishData
-        .filter(isCompatibilityLivestock)
-        .filter(fish => !activeSpeciesIds.includes(fish.id))
-        .filter(fish => !ownedIds.has(fish.id))
-        .map(fish => ({
-          fish,
-          evaluation: evaluateTankCompatibility({
-            tank: selectedAquarium,
-            existingSpecies: currentLivestock.map(item => ({
-              species: item.species,
-              record: { quantity: item.record.quantity },
-            })),
-            candidateSpecies: fish,
-            candidateQuantity: 1,
-          }),
-        }))
-        .filter(item => item.evaluation.status !== 'not_recommended')
-        .sort((a, b) => {
-          const rank = { compatible: 0, caution: 1, insufficient_data: 2, not_recommended: 3 } as Record<TankCompatibilityStatus, number>;
-          return rank[a.evaluation.status] - rank[b.evaluation.status] || a.fish.name.localeCompare(b.fish.name, 'zh-Hans-CN');
-        })
-        .map(item => item.fish)
-        .slice(0, 8);
-      if (evaluated.length > 0) return evaluated;
-    }
-    const preferredSpecies = Array.from(new Set(preferredSpeciesIds))
-      .map(id => fishData.find(fish => fish.id === id))
-      .filter((fish): fish is Fish => Boolean(fish))
-      .filter(isCompatibilityLivestock)
-      .filter(fish => !activeSpeciesIds.includes(fish.id));
-    const fallbackSpecies = getCommonPreviewSpecies()
-      .filter(isCompatibilityLivestock)
-      .filter(fish => !activeSpeciesIds.includes(fish.id))
-      .filter(fish => !preferredSpecies.some(item => item.id === fish.id));
-    return (preferredSpecies.length > 0 ? preferredSpecies : fallbackSpecies).slice(0, 8);
+    const fallbackSpecies = getCommonPreviewSpecies().filter(isCompatibilityLivestock);
+    return getCompatibilityPreviewSpecies({
+      selectedAquarium,
+      currentLivestock: currentLivestock.map(item => ({ species: item.species, record: { quantity: item.record.quantity } })),
+      activeSpeciesIds,
+      preferredSpeciesIds: preferredSpeciesIds.filter(id => fishData.some(fish => fish.id === id && isCompatibilityLivestock(fish))),
+      candidateSpecies: fishData.filter(isCompatibilityLivestock),
+      fallbackSpecies,
+    });
   }, [activeSpeciesIds, currentLivestock, preferredSpeciesIds, selectedAquarium]);
   const selectedCount = selectedSpecies.length;
   const statusLabel = selectedCount === 0
@@ -895,7 +872,7 @@ export function CompatibilityRiskCalculator({
               </div>
             ) : (
               <div className="mt-2 rounded-[13px] bg-white px-3 py-2 text-[11px] font-bold text-ink/45">
-                {isEn ? 'Current tank has no livestock. Beginner-friendly species will be recommended.' : '当前鱼缸暂无活体，推荐会使用新手友好候选。'}
+                {isEn ? 'Current tank has no livestock. Search and add planning candidates explicitly; no species will be generated from the tank.' : '当前鱼缸暂无活体，请通过搜索主动加入规划物种；系统不会从空缸生成缸内物种。'}
               </div>
             )}
             {missingLivestockCount > 0 && (
