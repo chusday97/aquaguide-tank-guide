@@ -13,6 +13,11 @@
 - **Preview:** `check:preview-parity` reported `NOT_SYNCHRONIZED`: Vercel retained READY deployment SHA `b2613bdd` and GitHub reported `Deployment rate limited — retry in 24 hours`.
 - **Boundary:** This is an external Vercel quota blocker, not a code or mergeability result; no manual deployment, Supabase write, or `main` mutation was performed.
 
+## 2026-08-26 — Preview quota recovered
+
+- **Verification:** Canonical head `fb90c07ad85bfe24c22fb06aaec63eaa888cf2f1` is synchronized locally and on origin; Vercel deployment completed `READY` with the same SHA and `check:preview-parity` returned `PASS`.
+- **GitHub:** PR #141 remains Draft/CONFLICTING; RC Convergence, validate, candidate-head, Vercel and Cloudflare passed, while UI Regression was still in progress at the final read.
+
 ## 2026-08-26 — Compatibility research backlog reconciliation
 
 - **Problem:** Historical `origin/main` commits defer no-pair-evidence research groups, which could be mistaken for runtime compatibility evidence if copied wholesale.

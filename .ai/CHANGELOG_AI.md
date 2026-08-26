@@ -6,6 +6,7 @@
 
 - 只读核对统一分支 `b2613bdd`、PR #141、origin/main/integration 与 Vercel Preview；确认 local/remote/Preview SHA parity PASS，PR checks 全部成功，但 `mergeable=CONFLICTING`，未创建 main 合并。
 - 推送 `6df43a50` 后 local/remote 仍同步；Vercel Hobby 返回 `build-rate-limit`，Preview 暂留 `b2613bdd`，严格 parity 暂为 `NOT_SYNCHRONIZED`。
+- 后续 `fb90c07a` 已生成 Vercel READY Preview，同 SHA parity 恢复 PASS；PR #141 仍 Draft/CONFLICTING，UI Regression 仍在运行。
 
 ## 2026-08-26
 

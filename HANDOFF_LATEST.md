@@ -5,7 +5,7 @@
 ## 当前工作基线
 
 - **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1@b2613bdd` 与 origin 同步；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 为 742/224、相对 `origin/main` 为 214/224；只读 merge-tree 与 integration 检出 62 个冲突文件。当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
-- **Preview parity（实时复核）：** 推送文档记录后的 canonical head 为 `6df43a50`，local/remote 一致；Vercel 因 Hobby `build-rate-limit` 拒绝新部署，READY Preview 暂仍为已验证的 `b2613bdd`，因此 `npm run check:preview-parity` 当前为 `NOT_SYNCHRONIZED`。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
+- **Preview parity（实时复核）：** 当前 canonical head 为 `fb90c07a`，local/remote/Vercel READY Preview 精确 SHA 一致，`npm run check:preview-parity` 返回 `PASS`。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
 
 - **兼容性研究延期复核（2026-08-26）：** `origin/main@2eaa20c2` / `e8d6c652` 仅记录 research-only 无配对证据后的延期，当前无已接受的研究队列契约，已标记 `HISTORICAL_OR_EXCLUDED`；不传播到运行时混养结论。
 - **成就模块语义复核（2026-08-26）：** `origin/main@5bf9800c` 的“建设中”降级与当前产品契约冲突，已标记 `HISTORICAL_OR_EXCLUDED`；Collection hub 回归现在确认成就入口可聚焦中央并渲染派生成就预览。提交 `d5dcbd7a` 的 RC/UI/validate/candidate/Vercel/Cloudflare 全部通过，Preview SHA parity PASS；未改变视觉基线或数据契约。
