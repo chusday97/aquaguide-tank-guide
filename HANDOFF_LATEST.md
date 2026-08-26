@@ -23,7 +23,7 @@
 - **Supabase 状态校正：** 用户于 2026-08-25 确认既有 Supabase 工作已部署。旧文档中“待真实 Supabase 验证”只表示当前统一分支尚未重新核对连接环境、schema revision 与 RLS 回归，绝不表示 Supabase 没有部署。
 - **Parity 核对结果（2026-08-25）：** 使用 Vercel 现有授权读取生产环境配置名，并以 anon key 对配置项目执行 GET-only PostgREST 探针；31/31 契约表、鱼缸/批次/换水、养护动作/循环、兼容证据和引用字段均返回 HTTP 200。Vercel 脱敏 PostgreSQL 连接串，anon REST 不公开 migration history/RLS policy metadata，因此不能把这次结果升级为 exact schema/RLS parity。
 - **Preview 核对结果（2026-08-25）：** 最新 Ready branch Preview `aquaguide-2kdgtap8s-chusday97s-projects.vercel.app` 绑定统一分支，创建时间与 `187d16ba` 提交时间相差 6 秒；Vercel 元数据接口未返回 Git SHA，只能记为 timing correlation，不能记为 exact SHA parity。
-- **人工验收状态（2026-08-25）：** 4317 已在当前 523×812 视口渲染完整互动预览、9 个物种图像和 592×728 WebGL canvas，浏览器无应用错误；Three.js 仅有弃用警告。用户仍需确认视觉是否通过，不能由自动检查代替。
+- **人工验收状态（2026-08-26）：** 用户已确认当前 4317 视觉方向作为工作基线；后续视觉仍可修改，但每次 UI owner 变更都必须重新做固定视口人工验收。此前 523×812 视口的 DOM、9 个物种图像和 WebGL canvas 浏览器检查无应用错误；Three.js 仅有弃用警告。
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
@@ -31,14 +31,14 @@
 - 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `9fcad4a2` 为最新产品代码基线。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
-- 当前下一步：完成 exact Preview SHA、Supabase schema/RLS parity 和人工视觉验收；在这些门禁完成前不创建 `main` 发布合并。
+- 当前下一步：完成 exact Preview SHA 与 Supabase schema/RLS parity；在这些门禁及单独 release acceptance 完成前不创建 `main` 发布合并。
 - 最新 parity 尝试（2026-08-26）：记录的 Vercel Preview 返回 `302 → Vercel SSO`，未暴露 Git SHA；当前环境没有授权 Supabase schema/RLS inspection surface。本轮未执行 Supabase 请求、migration、RPC 或写库，以上门禁仍为 pending。
-- 最新远端 CI 证据（2026-08-26）：PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a`；`RC Convergence V1` run `32915252842`、`Result UX Head Integrity V1` run `32915252831` 均通过。Vercel/Cloudflare 状态通过，但 exact Preview Git SHA、Supabase schema/RLS 和人工视觉验收仍 pending。
+- 最新远端 CI 证据（2026-08-26）：PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a`；`RC Convergence V1` run `32915252842`、`Result UX Head Integrity V1` run `32915252831` 均通过。Vercel/Cloudflare 状态通过，但 exact Preview Git SHA 与 Supabase schema/RLS 仍 pending；当前视觉基线人工验收已通过，后续 UI 变更需复验。
 - 最近完成：`Species Detail evidence authority`。详情关键理由、混养证据状态和来源提示消费统一 `TankCompatibilityResult`；`housingReason` 仅显示为档案参考并明确不覆盖计算结果。保持当前视觉基线，未迁移 RC 详情布局。新增 `src/modules/knowledge/compatibilityEvidencePresentation.ts` 与专项回归。
 - 最近完成：`Recommendation authority and severity`（`9fcad4a2`）。推荐候选保留与 direct/adjustable/blocked 严重级别消费统一 `TankCompatibilityResult`；“建议单养”、负载和群游局部启发式不再独立硬阻断，理由优先使用 canonical summary。保持当前视觉基线，未迁移 RC 推荐 UI；专项契约回归通过。
 - 最近完成：`Vercel/API runtime contract`（`039135ba`）。新增 V1 catch-all、精确 namespace root 与 nested API-before-SPA rewrites、standalone canonical Express runtime、ESM-safe imports、AI/health 兼容边界与本地 contract/smoke 回归；未迁移 RC 的 LifeStage、数据库字段或业务 API 语义变化，保持当前视觉基线。独立 Critic 六维复验 PASS；exact Preview SHA 仍是发布门禁。
 - 最近完成：`Result UX workflow head integrity`。仅保留候选 PR head/规范推送 SHA checkout 与 `git rev-parse HEAD` 精确校验，新增 `.github/workflows/result-ux-head-integrity-v1.yml` 和本地静态契约；未复制历史 Result UX 页面、旧 workflow 或 UI，未改 Supabase/API/视觉基线。远端 PR workflow run 仍待该文件进入 PR base/default 交付路径。
-- 下一功能审查单元：Preview/Supabase parity 与人工视觉验收；保持当前视觉基线，不自动改 Supabase schema/RLS 或 API 契约。
+- 下一功能审查单元：Preview/Supabase parity；保持当前视觉基线，不自动改 Supabase schema/RLS 或 API 契约。
 - **视觉决策更新：** 用户确认当前 4317 版本可用作工作基线，但仍有后续视觉问题；后续修改必须按模块和视口渐进推进，并保留正式组件、Rail/Sheet/Blocking 语义。
 - 最新 source audit：`ALIGNMENT_AUDIT_LATEST.md`。
 - UI 不可变原则：`UI_REGRESSION_CONTRACT.md`。
@@ -192,9 +192,9 @@
 
 当前 501 条物种只有 3 条 reviewed behavior profile、1 条 reviewed pair rule。抽样 12,000 个真实组合时 `behavior_evidence_unreviewed` 是主要 medium missing-data；抽样 30,000 个真实组合没有出现 `caution`。这不是 UI bug，而是证据覆盖不足。禁止降低 evidence gate 来制造“可尝试”结果；下一步应扩 reviewed evidence + citation + confidence。
 
-### P1 — Human visual acceptance / deployment parity 尚未完成
+### P1 — Deployment parity 尚未完成
 
-Identify、Aquarium Surface、Collection 子页、Settings guard、Search → Detail 与 28-case 全页面 matrix 均已 browser 验证。剩余是用户人工视觉验收、Vercel 同 SHA parity，以及后续新改动持续回归。
+Identify、Aquarium Surface、Collection 子页、Settings guard、Search → Detail 与 28-case 全页面 matrix 均已 browser 验证。当前视觉基线已获用户确认；剩余是 Vercel 同 SHA parity、Supabase schema/RLS parity，以及后续新改动持续回归。
 
 ### P2 — Remaining stale-test / dead-style debt
 
@@ -230,7 +230,7 @@ Identify、Aquarium Surface、Collection 子页、Settings guard、Search → De
 - Business hand-built dialog semantics：0；governance PASS
 - Compatibility evidence audit：501 total / 3 reviewed / 1 pair rule / **0.60% coverage_gap**
 
-注意：以上属于 local build/browser evidence，不等于用户已经完成视觉验收；human visual PASS 仍未授予。
+注意：以上属于 local build/browser evidence；用户已对当前 4317 工作基线完成视觉确认，但这不等于部署 parity 或 `main` release acceptance。
 
 ## Local → Vercel parity 规则
 
@@ -253,10 +253,10 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 每条必须有 citation / confidence / reviewStatus；
 - 持续运行 evidence coverage audit，覆盖率只能上升不能回退。
 
-### Step 2 — Human visual baseline + Vercel parity
+### Step 2 — Preview/Supabase parity
 
 - 继续使用 `http://127.0.0.1:4317/` 作为开发验收源；
-- 用户确认当前视觉后才建立 screenshot golden baseline；
+- 当前 4317 视觉方向已获用户确认；后续 UI owner 变更必须重新做固定视口人工验收；
 - Vercel deployed SHA 必须等于已验收 product SHA；
 - Local / Vercel 使用同一 seed 与 regression 做 parity。
 

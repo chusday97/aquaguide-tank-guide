@@ -2,6 +2,11 @@
 
 ## 2026-08-26
 
+### Human visual baseline confirmation
+
+- User confirmed the current 4317 visual direction as the working baseline; later visual changes remain allowed but must be incremental and re-reviewed.
+- Core contract/domain checks, production build and real Chromium route check passed on canonical SHA `91cc980c`; exact Preview SHA and Supabase schema/RLS parity remain release blockers.
+
 ### Preview/Supabase parity follow-up
 
 - Attempted read-only parity against the recorded Vercel branch Preview; it returned `302 → Vercel SSO` without an exposed Git SHA.

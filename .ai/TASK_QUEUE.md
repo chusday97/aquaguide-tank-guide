@@ -32,7 +32,7 @@
 - [ ] Phase 5: 模块事实盘点已建立；只读 PostgREST 已核对 31/31 契约表和最新字段，仍缺 exact migration revision、直接 RLS policy metadata 与 exact Preview Git SHA。
 - [x] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线；RC branch protection 等待 workflow 进入基分支后的管理员配置。
 - [x] Phase 7: 用户已接受 P0 兼容性契约；已选择性迁入本地生命周期、审核证据、当前鱼缸/换水纯规则与派生服务，保留现有 UI。
-- [ ] Phase 8: 发布就绪表已建立；P0 实现已通过，仍等待 exact Preview SHA、授权 Supabase schema/RLS parity 和用户单独 release acceptance。
+- [ ] Phase 8: 发布就绪表已建立；P0 实现和当前视觉基线人工验收已通过，仍等待 exact Preview SHA、授权 Supabase schema/RLS parity 和用户单独 release acceptance。
 
 ## Release Gate
 

@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Human visual baseline confirmation
+
+- **Decision:** User confirmed the current `http://127.0.0.1:4317/_preview/interactive` visual direction as the working baseline; this is not a final visual lock and future UI-owner changes require a new review.
+- **Verification:** `project:status` reports canonical branch `codex/unified-rc-visual-v1`, clean worktree and SHA `91cc980c`; `check:branch-convergence`, `check:project-truth`, three-tier contract, compatibility (17/17), recommendation authority, tank-state (11/11), tank-evidence, water-change (8/8), API typecheck, lint and production build passed. Real Chromium loaded the 4317 route with HTTP 200, title `aquaguide` and no page errors.
+- **Boundary:** No product UI, domain rule, API contract, database, Supabase environment or deployment was changed. Exact Preview SHA and Supabase schema/RLS parity remain pending.
+- **Next:** Continue with authorized read-only Preview SHA/Supabase parity; re-run visual acceptance after any later UI change.
+
 ## 2026-08-26 — Preview/Supabase parity follow-up
 
 - **Action:** Attempted only read-only cloud parity checks against the recorded Vercel branch Preview and available local deployment context.
