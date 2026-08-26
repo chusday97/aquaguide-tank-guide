@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Compatibility research backlog reconciliation
+
+- Audited `origin/main@2eaa20c2` and `e8d6c652`; these commits defer research-only no-pair-evidence groups and have no accepted runtime or research-planning contract in the canonical branch.
+- Marked the history as excluded from runtime compatibility decisions; no API, database, Supabase or visual-baseline change.
+
+## 2026-08-26
+
 ### Achievement module remote verification
 
 - Canonical commit `d5dcbd7a` passed PR #141 RC Convergence, UI Regression, validation, candidate-head, Vercel and Cloudflare checks.

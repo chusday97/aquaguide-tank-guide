@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Compatibility research backlog reconciliation
+
+- **Problem:** Historical `origin/main` commits defer no-pair-evidence research groups, which could be mistaken for runtime compatibility evidence if copied wholesale.
+- **Action:** Compared the source queue/outcome behavior with the canonical compatibility contract and recorded the commits as `HISTORICAL_OR_EXCLUDED`; no runtime propagation was added.
+- **Verification:** Source and current contract audit completed; existing compatibility evidence coverage and scorecard remain the runtime gates.
+- **Boundary:** Research-planning behavior remains unimplemented until a separate accepted contract exists; no API, database, Supabase, visual or `main` changes.
+
 ## 2026-08-26 — Achievement module remote verification
 
 - **Verification:** Commit `d5dcbd7aed81fac691a44a021316f9bffc0d3dc7` passed PR #141 RC Convergence, UI Regression, validation, candidate-head, Vercel and Cloudflare checks.

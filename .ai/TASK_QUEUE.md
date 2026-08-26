@@ -38,6 +38,7 @@
 - [x] 选择性迁移 `origin/main@2add55a5` 的 Daily Check 导航澄清：桌面鱼缸子菜单明确直达 `/aquarium?action=daily-check`，新增 task-entry contract。
 - [x] 选择性迁移 `origin/main@d464e24b` 的空养护计划推荐深链：浏览养护直达 `/care#care-recommendations`，并由 task-entry contract 锁定。
 - [x] 审计 `origin/main@5bf9800c` 成就建设中 CTA：按当前“8 枚勋章已完成”契约排除旧 UI 降级，并补充成就模块可达/预览回归。
+- [x] 审计 `origin/main@2eaa20c2` / `e8d6c652` 兼容性研究延期：标记为历史/待契约，不把 research-only 无证据结果传播到运行时混养结论。
 - [x] 修复 Surface workflow 陈旧 `max-w-[920px]` 断言与 Aquarium 设置关闭后的 CI 点击竞态；本地回归通过，提交 `a7b85171` 已推送。
 - [x] 根据远端日志修复 Aquarium 添加生物点击后的导航等待竞态；本地回归通过，提交 `a90911fa` 已推送。
 - [x] 根据远端日志将 Aquarium 两个设置面板切换点击设为 `noWaitAfter`；本地回归通过，提交 `78160db3` 已推送。

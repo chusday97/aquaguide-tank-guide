@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Verified
+- 审计 `origin/main@2eaa20c2` / `e8d6c652` 的兼容性研究延期：确认其属于未接入当前产品的 research-only backlog，标记为 `HISTORICAL_OR_EXCLUDED`，不传播到运行时混养结论。
 - `d5dcbd7a` 的成就入口回归已完成远端闭环：PR #141 RC/UI/validate/candidate-head、Vercel、Cloudflare 全部通过，Vercel Preview `aquaguide-4l55btoqc-chusday97s-projects.vercel.app` 与 local/remote SHA parity PASS。
 - 审计 `origin/main@5bf9800c` 后确认当前成就模块不应降级为“建设中”：现行产品契约要求 8 枚勋章可达，新增成就入口聚焦与派生预览回归；`npm run test:collection-hub-ui`、`npm run lint`、`npm run build` 通过。
 - `66cb109c` 的空养护计划推荐深链已完成远端闭环：PR #141 RC/UI/validate/candidate-head、Vercel、Cloudflare 全部通过，Vercel Preview `aquaguide-c3g36lf4w-chusday97s-projects.vercel.app` 与 local/remote SHA parity PASS。
