@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Achievement module remote verification
+
+- **Verification:** Commit `d5dcbd7aed81fac691a44a021316f9bffc0d3dc7` passed PR #141 RC Convergence, UI Regression, validation, candidate-head, Vercel and Cloudflare checks.
+- **Preview:** `npm run check:preview-parity` returned `PASS`; Vercel READY deployment `aquaguide-4l55btoqc-chusday97s-projects.vercel.app` exposes the same SHA.
+- **Boundary:** No database, Supabase, visual-baseline or `main` mutation; achievement downgrade remains excluded as historical.
+
 ## 2026-08-26 — Achievement module reconciliation
 
 - **Problem:** `origin/main@5bf9800c` contains a historical downgrade that marks the achievement module as building, while the canonical product contract defines eight achievements as complete and reachable.

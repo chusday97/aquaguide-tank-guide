@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Achievement module remote verification
+
+- Canonical commit `d5dcbd7a` passed PR #141 RC Convergence, UI Regression, validation, candidate-head, Vercel and Cloudflare checks.
+- Read-only Preview parity is `PASS`: local SHA = origin SHA = Vercel READY deployment SHA `aquaguide-4l55btoqc-chusday97s-projects.vercel.app`.
+
+## 2026-08-26
+
 ### Achievement module reconciliation
 
 - Audited `origin/main@5bf9800c`; the current product contract treats eight derived achievements as complete and reachable, so the historical “building” CTA downgrade was excluded.
