@@ -304,3 +304,9 @@
 - Added the canonical Feature Catalog with one status vocabulary for current, deployed-but-unreverified, partial, proposed RC and archived capability.
 - Added a Git delivery protocol, PR template and project-truth verification gate; branch protection remains intentionally pending until the check can run from its base branch.
 - Added the Unified Release Readiness gate, separating local visual acceptance, CI, exact deployed SHA, Supabase parity, P0 migration and release authorization.
+## 2026-08-26
+
+### Compatibility pair telemetry
+
+- 混养评估在整体验证之外记录逐对 `status` 与方向无关的 `pairKey`，供后续证据优先级分析；pair key 仅接受 catalog `sp_####` ID，拒绝自由文本、路径样式值和自配对。
+- `npm run test:session-events`、混养/证据覆盖回归、lint 与 production build 通过；未改混养规则、API、数据库、Supabase 或视觉基线。

@@ -596,6 +596,15 @@ export function CompatibilityRiskCalculator({
       source: 'rules',
       candidateCount: selectedItems.length,
     });
+    result.decision?.pairResults.forEach(pair => {
+      trackSessionEvent('compatibility_pair_evaluated', {
+        action: 'evaluate_pair',
+        status: pair.status,
+        entry: 'full_compatibility',
+        source: 'rules',
+        pairKey: `${pair.speciesA.id}__${pair.speciesB.id}`,
+      });
+    });
     recordTankCompatibility({ aquariumId: selectedAquarium.id, speciesIds: selectedItems.map(item => item.species.id), status: result.level });
     onEvaluationRecorded?.();
   }, [onEvaluationRecorded, result.level, result.ruleResult, selectedAquarium, selectedItems]);

@@ -4,6 +4,8 @@
 
 ### Changed
 
+- 混养评估新增隐私安全的逐对会话事件：记录规范化 `pairKey` 与结论状态，拒绝自由文本和自配对，支持后续证据优先级分析；不改变混养规则、数据/API、Supabase 或视觉基线。
+
 - 收口互动发现状态写入：Aquarium 与 Encyclopedia 共用 `local-app-state` canonical writer，保留旧键兼容并新增 storage boundary 回归，P0-07 其余页面级 UI 存储仍保留。
 - 修复互动发现状态的延迟写入竞态：待提交字段 patch 会在 flush 时合并最新快照，愿望清单/跨标签更新不再覆盖 discovery；清空本地状态会取消待写入任务，并补齐三类交错回归。
 - 补强 Aquarium 与 Encyclopedia 的跨页状态刷新：统一监听 app-state/storage 事件，并避免未变化 wishlist 触发重复保存。

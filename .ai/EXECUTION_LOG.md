@@ -445,3 +445,9 @@
 - **Action:** Added `scripts/check-preview-parity.mjs` and `npm run check:preview-parity`.
 - **Verification:** The gate reports local SHA = remote SHA, but the latest canonical-branch Vercel deployment is `6b0e629d…`; status is `NOT_SYNCHRONIZED` and the command exits non-zero.
 - **Safety:** The check is read-only and does not trigger Vercel, Supabase, configuration, or data changes.
+## 2026-08-26 — Compatibility pair telemetry
+
+- **Problem:** Compatibility evaluation only recorded the aggregate result, so later evidence prioritization could not identify which catalog pair produced a status.
+- **Action:** Added a privacy-safe `compatibility_pair_evaluated` session event for each canonical pair result; normalize direction and allow only `sp_####` catalog IDs, rejecting free text and self-pairs.
+- **Verification:** `npm run test:session-events`, `npm run test:compatibility`, `npm run test:compatibility-evidence`, `npm run test:compatibility-evidence-coverage`, `npm run test:compatibility-coverage-scorecard`, `npm run lint`, `npm run build`, and `git diff --check` pass.
+- **Boundary:** Session memory/PostHog only; no new database/API/Supabase field, no visual change, and no research result is propagated into runtime compatibility decisions.

@@ -1,6 +1,12 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-26 22:30 +08:00
+更新时间：2026-08-26 23:55 +08:00
+
+## 本轮新增
+
+- 混养评估补充 `compatibility_pair_evaluated` 会话级事件：每个逐对结论记录 `status` 与规范化 `pairKey`，仅接受 catalog `sp_####` ID，拒绝自由文本、路径样式值和自配对；不写入数据库、不影响运行时结论。
+- `npm run test:session-events` 已覆盖 allowlist、方向归一化、隐私拒绝和 reset；混养/证据覆盖回归与 production build 也通过。
+- 当前工作区有本轮三文件未提交改动，提交前不得以 `project:status` 的 dirty 状态作为发布通过。
 
 ## 当前工作基线
 
@@ -341,3 +347,14 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 当前已无已知 720px Detail Rail / Surface runtime P0；最高优先未完成项转为 **Compatibility reviewed evidence coverage + human visual/Vercel parity**。
 
 同时参考：`ALIGNMENT_AUDIT_LATEST.md`、`UI_REGRESSION_CONTRACT.md`、`BADCASE_LATEST.md`、`PROGRESS_LATEST.md`、`SURFACE_INVENTORY_LATEST.md`。
+# AquaGuide Handoff — Latest
+
+更新时间：2026-08-26 23:55 +08:00
+
+## 本轮新增
+
+- 混养评估补充 `compatibility_pair_evaluated` 会话级事件：每个逐对结论记录 `status` 与规范化 `pairKey`，仅接受 catalog `sp_####` ID，拒绝自由文本、路径样式值和自配对；不写入数据库、不影响运行时结论。
+- `npm run test:session-events` 已覆盖 allowlist、方向归一化、隐私拒绝和 reset；混养/证据覆盖回归与 production build 也通过。
+- 当前工作区有本轮三文件未提交改动，提交前不得以 `project:status` 的 dirty 状态作为发布通过。
+
+## 当前工作基线

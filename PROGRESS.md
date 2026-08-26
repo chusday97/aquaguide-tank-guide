@@ -369,3 +369,4 @@
 2026-08-26：修复 P0-07 延迟写入竞态：`local-app-state` 改用待提交字段 patch，flush 时合并最新持久化快照；发现牌堆不会再被愿望清单等即时/延迟更新覆盖，清空本地状态会取消待写入任务。专项回归新增交错写入、双延迟 patch 和外部标签页更新；`test:discovery-storage-boundary`、lint、build、project truth、diff check、UI smoke、product-actions runtime 均通过。（commit: `8095815f`）
 2026-08-26：补强跨页刷新：Aquarium 与 Encyclopedia 订阅 `APP_STATE_CHANGED_EVENT` 与 storage 事件，收到统一写入后刷新 discovery/wishlist；相同 Set 保持引用以避免重复保存回流。（commit: `0efd32a2`）
 2026-08-26：修复清除事件与旧用户迁移兼容：Aquarium 不再把空 discovery 误判为保留旧队列；仅显式 `clearLocalAppState()` 删除 legacy 键，普通 app-state 保存保留旧键兼容，清空本地状态派发统一事件；专项回归覆盖 clear 后等待 750ms、订阅通知及 canonical 缺 discovery 的 legacy 迁移。Critic 六维复验 PASS。（commits: `901db4cf`, `d26b3270`）
+2026-08-26：继续修复混养可追溯性：兼容性评估现在在整体验证事件之外记录规范化的逐对状态（仅 `sp_####` ID、方向无关、拒绝自由文本/自配对），用于后续证据优先级分析；新增会话事件隐私回归。未改变混养结论、数据契约、Supabase 或视觉基线。
