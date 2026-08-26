@@ -2,6 +2,12 @@
 
 ## 2026-08-26
 
+### main merge readiness audit
+
+- 只读核对统一分支 `b2613bdd`、PR #141、origin/main/integration 与 Vercel Preview；确认 local/remote/Preview SHA parity PASS，PR checks 全部成功，但 `mergeable=CONFLICTING`，未创建 main 合并。
+
+## 2026-08-26
+
 ### Compatibility research backlog reconciliation
 
 - Audited `origin/main@2eaa20c2` and `e8d6c652`; these commits defer research-only no-pair-evidence groups and have no accepted runtime or research-planning contract in the canonical branch.

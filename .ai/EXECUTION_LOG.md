@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — main merge readiness audit
+
+- **Verification:** `project:status` reports canonical branch/local SHA `b2613bdd850aff43f52d56f991df56ce365462c7`; `check:preview-parity` returns `PASS` with Vercel READY deployment `aquaguide-60xddgoyg-chusday97s-projects.vercel.app`.
+- **GitHub:** PR #141 remains Draft and `mergeable=CONFLICTING` / `mergeStateStatus=DIRTY`; all listed RC/UI/validate/candidate/Vercel/Cloudflare checks are successful.
+- **Topology:** unified branch is 742/224 against `origin/integration/aquaguide-rc1` and 214/224 against `origin/main`; read-only merge-tree reports 62 conflicts against integration. No main PR or merge/rebase was created.
+- **Boundary:** Supabase schema/RLS parity and release acceptance remain pending; no database, Supabase, production or `main` mutation.
+
 ## 2026-08-26 — Compatibility research backlog reconciliation
 
 - **Problem:** Historical `origin/main` commits defer no-pair-evidence research groups, which could be mistaken for runtime compatibility evidence if copied wholesale.

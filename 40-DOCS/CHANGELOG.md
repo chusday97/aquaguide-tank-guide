@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 记录 `b2613bdd` 的 main 合并门禁复核：PR #141 checks 全部通过且 Preview SHA parity PASS，但 PR 仍为 Draft/CONFLICTING；与 integration 只读合并检出 62 个冲突文件，暂不创建 main 合并。
+
 ### Verified
 - 审计 `origin/main@2eaa20c2` / `e8d6c652` 的兼容性研究延期：确认其属于未接入当前产品的 research-only backlog，标记为 `HISTORICAL_OR_EXCLUDED`，不传播到运行时混养结论。
 - `d5dcbd7a` 的成就入口回归已完成远端闭环：PR #141 RC/UI/validate/candidate-head、Vercel、Cloudflare 全部通过，Vercel Preview `aquaguide-4l55btoqc-chusday97s-projects.vercel.app` 与 local/remote SHA parity PASS。
