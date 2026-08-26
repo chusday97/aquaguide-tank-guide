@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Aquarium settings panel click synchronization
+
+- Made the Substrate and Plants settings-panel regression clicks navigation-independent, matching the current state-update interaction contract.
+- Local 4317 verification passed; committed as `78160db3`. No product or cloud state changed.
+
+## 2026-08-26
+
 ### Aquarium action regression navigation wait
 
 - Updated the Add Livestock browser regression to avoid waiting for a navigation that the current action does not guarantee; it now verifies the resulting Dialog directly.

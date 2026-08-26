@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Aquarium settings panel click synchronization
+
+- **Action:** After the Add Livestock click was made navigation-independent, the remote run exposed the same default navigation wait on the Substrate and Plants settings-panel toggles. Both toggles now use `noWaitAfter`; search-result and Dialog visibility assertions remain unchanged.
+- **Verification:** `PREVIEW_URL=http://127.0.0.1:4317 npm run test:aquarium-primary-tools` and `git diff --check` passed. Commit `78160db3` is ready to push.
+- **Boundary:** Test-only timing alignment; no product UI/runtime, data, API, Supabase, Vercel or visual baseline change.
+
 ## 2026-08-26 — Aquarium action regression navigation wait
 
 - **Action:** After the hidden-state wait fixed the Settings close race, the remote UI run still timed out while Playwright waited for navigation after the Add Livestock click. Changed only that regression click to `noWaitAfter`; the following “记录已有生物” Dialog visibility remains the assertion.

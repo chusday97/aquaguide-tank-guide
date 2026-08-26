@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- 修复 Aquarium 设置内底砂/水草面板切换在慢速 CI 中被错误当作导航等待的问题，统一使用 `noWaitAfter` 并保留搜索结果断言。提交 `78160db3`，未改变产品 UI 或云端状态。
 - 修复 Aquarium primary-tools 回归在添加生物点击后等待不存在导航的超时，改为 `noWaitAfter` 并验证“记录已有生物” Dialog；提交 `a90911fa`，未改变产品 UI 或云端状态。
 - 修复 `Surface System V1` 对已淘汰 `max-w-[920px]` 的静态断言，改为验证当前 480–600px Detail Rail；同时让 Aquarium primary-tools 回归等待设置 Dialog 关闭完成，避免慢速 CI 点击竞态。提交 `a7b85171`，未改变产品 UI、业务规则、数据或部署。
 - 将三层数据契约、业务/API 边界、混养、鱼缸状态/证据、换水、推荐和分享契约回归纳入 `RC Convergence V1`，使统一分支的底层逻辑与 UI 门禁在同一 CI 链路验证；未改变产品、数据库或 Supabase。
