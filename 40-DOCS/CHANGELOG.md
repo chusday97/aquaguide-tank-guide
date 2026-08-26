@@ -5,6 +5,7 @@
 ### Changed
 
 - RC Convergence V1 增加按 PR/分支取消旧运行的并发门禁，避免快速连续推送时旧 SHA 在新 head 到达后产生误失败；保留现有 exact SHA 校验。
+- RC Convergence V1 增加 `workflow_dispatch`，允许对指定 canonical head 进行可追溯的人工复验，避免 push 事件延迟时只能看到旧 run。
 - 统一本地状态订阅的迁移边界：canonical app state 与所有仍在兼容期的 legacy 镜像键现在都会触发跨标签页刷新；无关 `localStorage` 键不会触发页面回流。
 
 - 根据独立审查补齐混养逐对 telemetry 的状态/数量/规则签名去重，并将会话隐私回归纳入 `RC Convergence V1`。

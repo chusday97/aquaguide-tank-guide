@@ -484,5 +484,6 @@
 
 - **Problem:** An older push run can start PR governance after a newer commit has already advanced PR #141, so the intentional head-drift check fails on stale evidence.
 - **Action:** Added `concurrency` to `.github/workflows/rc-convergence-v1.yml`, grouped by PR number or ref with `cancel-in-progress: true`; exact SHA validation remains in place for the newest run.
+- **Follow-up:** Added `workflow_dispatch` to allow a traceable manual run against the current canonical ref when push-event delivery is delayed.
 - **Verification:** `npm run check:project-truth`, `npm run test:result-ux-head-integrity`, and `git diff --check` pass.
 - **Boundary:** Workflow-only change; no product/API/database/Supabase/visual changes.

@@ -5,6 +5,7 @@
 ### RC Convergence stale-run guard
 
 - Added workflow concurrency cancellation for the canonical RC Convergence branch/PR. A newer push now cancels an older queued run before its PR-head SHA check can report a stale-head failure; the exact SHA check remains unchanged.
+- Added `workflow_dispatch` so maintainers can explicitly re-run the gate against a specified canonical ref when push-event delivery is delayed.
 - No product, API, database, Supabase or visual change.
 
 ## 2026-08-27

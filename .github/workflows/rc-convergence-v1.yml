@@ -63,6 +63,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/rc-convergence-v1.yml'
+  workflow_dispatch:
 
 concurrency:
   group: rc-convergence-${{ github.event.pull_request.number || github.ref }}
