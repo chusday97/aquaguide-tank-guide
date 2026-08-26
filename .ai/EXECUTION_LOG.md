@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Exact Preview SHA parity restored
+
+- **Verification:** Current canonical head `f465cb76c0ccc2a50216ebe370145bfbc5572c0d` matches local, origin and PR #141; RC `32956089426`, Result UX `32956089336`, Surface `32956089357`, and UI `32956089431` all passed.
+- **Preview:** Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` exposes the same Git SHA; `npm run check:preview-parity` returns `PASS`.
+- **Boundary:** Supabase schema/RLS parity and separate release acceptance remain pending; no Supabase mutation or main merge.
+
 ## 2026-08-26 — Species detail CTA regression alignment
 
 - **Problem:** `npm run test:species-detail-ui` expected the retired English label `View tank species`, while the current canonical detail action renders `Livestock in Tank`; the stale assertion masked a regression test gap because the script was not in the UI workflow.

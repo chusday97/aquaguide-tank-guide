@@ -2,6 +2,11 @@
 
 ## 2026-08-26
 
+### Exact Preview SHA parity restored
+
+- Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` now matches canonical head `f465cb76…`.
+- All four GitHub Actions for the current head passed; Supabase schema/RLS parity and release acceptance remain open.
+
 ### Species detail CTA regression alignment
 
 - Updated the stale owned-atlas detail assertion from `View tank species` to the current canonical `Livestock in Tank` label.

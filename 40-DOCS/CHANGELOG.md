@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- 完成 `f465cb76` 的 Preview SHA parity 收口：Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` 与 local/remote/PR #141 同 SHA，四项 GitHub Actions 全部通过；Supabase schema/RLS 与 release acceptance 仍 pending。
 - 对齐物种详情已拥有状态的当前英文 CTA：回归脚本从已淘汰的 `View tank species` 改为 `Livestock in Tank`，并将 `npm run test:species-detail-ui` 纳入 `UI Regression V1`；4317 受控浏览器回归通过，未改变产品 UI 或数据契约。
 - 修复 `check:preview-parity` 在环境仅提供 `npx vercel` 时误报 `AUTH_REQUIRED` 的命令解析；无 `VERCEL_BIN` 时现在使用 `npx --yes vercel`。只读验证确认 local/remote/PR #141/Vercel Ready Preview 同为 `f2a5ec47…`，未触发部署或 Supabase 变更。
 - 后续 docs/guard-only 提交将 canonical head 推进到 `16be50ed…`；Vercel 仍停留在已验证的应用 head `f2a5ec47…`，因此严格当前 head parity 暂为 pending，未手动部署。

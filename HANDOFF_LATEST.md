@@ -7,7 +7,7 @@
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
 - **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
 - **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
-- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head 以 `npm run project:status` 为准（本轮提交 `2d8dce2c…` 的 GitHub Actions 已通过），但 Vercel 最新 Ready Preview 仍绑定 `9f1a543c…`，严格当前-head SHA parity 为 pending；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
+- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head 以 `npm run project:status` 为准（本轮 `f465cb76…` 的 GitHub Actions 已通过），Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` 已绑定同一 SHA，exact Preview parity 已通过；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
 - **P0 独立审查：** Critic 已复验通过；曾发现的水质映射、侵略性负荷回归、共享类型边界与自由文本误判均已有回归用例和修复。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
