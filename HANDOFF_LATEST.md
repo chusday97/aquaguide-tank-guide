@@ -11,6 +11,7 @@
 - RC Convergence V1 现在也支持 `workflow_dispatch`；若 push 事件没有及时生成当前 head run，可手动指定 `codex/unified-rc-visual-v1` 复验，结果仍受 PR/SHA 门禁约束。
 - 手动复验 run `32990488781` 已在 PR 当前 head `33e8bbfe` 成功；三层契约、业务/API、混养、storage、telemetry、视觉契约和 production build 全部通过。此前旧 SHA 的 stale-head 失败不再作为当前 head 结论。
 - 随后对更新后的当前 head `69fa4b7e` 再次 dispatch，run `32990928544` 成功；手动复验入口和完整 RC Convergence 门禁均可重复工作。
+- Vercel 已自动生成当前 canonical head 的 READY Preview；最近一次 `npm run check:preview-parity` 返回 `PASS`，本地 4317 返回 HTTP 200。每次后续推送仍需重新运行 parity，不沿用旧部署结果。
 
 - Critic 复验后补齐逐对 telemetry 去重签名：组合、数量、逐对状态和规则代码变化会生成新事件；单纯 React 重渲染仍去重。
 - Critic 复验建议已关闭：签名覆盖 `passedRules` 及风险/缺失规则，且使用排序后的物种 ID，反向选择不再产生方向性重复。
@@ -29,7 +30,7 @@
 - **独立审查结果（2026-08-26）：** Critic 对 `8095815f`、`901db4cf`、`d26b3270` 的交错写入、跨页刷新、清除态与 legacy migration 进行了同线程六维复验，全部通过；仅保留 direct full-snapshot debounce 语义文档化与真实浏览器等待 flush 作为非阻塞后续建议。
 
 - **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1` 已推送至本轮修复 head；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 与 `origin/main` 的拓扑差异仍需逐项语义收敛；当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
-- **Preview parity（实时复核）：** 当前 `npm run project:status` 显示 local/origin 同步；最近一次 `npm run check:preview-parity` 显示 Vercel READY Preview 仍为 `3330c02d`，状态 `NOT_SYNCHRONIZED`。下一次工作先重新运行该命令，不沿用旧结果。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
+- **Preview parity（实时复核）：** 最近一次 `npm run check:preview-parity` 已返回 `PASS`，local/origin/Vercel READY Preview 同步；下一次工作在任何推送后先重新运行该命令。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
 
 - **兼容性研究延期复核（2026-08-26）：** `origin/main@2eaa20c2` / `e8d6c652` 仅记录 research-only 无配对证据后的延期，当前无已接受的研究队列契约，已标记 `HISTORICAL_OR_EXCLUDED`；不传播到运行时混养结论。
 - **成就模块语义复核（2026-08-26）：** `origin/main@5bf9800c` 的“建设中”降级与当前产品契约冲突，已标记 `HISTORICAL_OR_EXCLUDED`；Collection hub 回归现在确认成就入口可聚焦中央并渲染派生成就预览。提交 `d5dcbd7a` 的 RC/UI/validate/candidate/Vercel/Cloudflare 全部通过，Preview SHA parity PASS；未改变视觉基线或数据契约。

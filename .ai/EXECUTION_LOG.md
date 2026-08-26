@@ -496,3 +496,8 @@
 ## 2026-08-27 — Repeatable current-head RC pass
 
 - **Verification:** Run `32990928544` via `workflow_dispatch` completed `success` on head `69fa4b7ef77c06eed3362704f8a998d3b9291d54`; all convergence-contract steps passed again.
+
+## 2026-08-27 — Preview parity recovery
+
+- **Verification:** Vercel READY deployment for `3b33c7733ca98beb10ddef743f85dc77e35a5b75` matched local/origin; `npm run check:preview-parity` returned `PASS`, and 4317 returned HTTP 200.
+- **Boundary:** PR #141 remains Draft/CONFLICTING; Supabase schema/RLS parity and release acceptance remain separate gates.

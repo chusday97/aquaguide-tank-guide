@@ -8,6 +8,7 @@
 - RC Convergence V1 增加 `workflow_dispatch`，允许对指定 canonical head 进行可追溯的人工复验，避免 push 事件延迟时只能看到旧 run。
 - 已通过 RC Convergence 手动复验 run `32990488781`：当前 PR head `33e8bbfe` 的底层契约、领域、storage、telemetry、视觉契约与 production build 全部通过。
 - RC Convergence 手动复验 run `32990928544` 在更新后的 head `69fa4b7e` 再次通过，确认当前门禁可重复验证。
+- Vercel 自动部署已追上 canonical head `3b33c773` 并进入 READY；`check:preview-parity` 与本地 4317 HTTP 200 均通过。
 - 统一本地状态订阅的迁移边界：canonical app state 与所有仍在兼容期的 legacy 镜像键现在都会触发跨标签页刷新；无关 `localStorage` 键不会触发页面回流。
 
 - 根据独立审查补齐混养逐对 telemetry 的状态/数量/规则签名去重，并将会话隐私回归纳入 `RC Convergence V1`。

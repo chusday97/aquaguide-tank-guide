@@ -33,6 +33,10 @@
 
 - Re-dispatched RC Convergence after the evidence update; run `32990928544` passed on PR head `69fa4b7e`, confirming the manual verification path is repeatable.
 
+### Preview parity recovery
+
+- Vercel automatically produced a READY deployment for the canonical head `3b33c773`; `npm run check:preview-parity` returned `PASS` and the local 4317 preview returned HTTP 200.
+
 ## 2026-08-26
 
 ### Discovery storage boundary
