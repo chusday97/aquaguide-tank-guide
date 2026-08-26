@@ -32,6 +32,7 @@
 - AI 建缸助手恢复为桌面沉浸式 Dock 的第七个操作卡片；移动端继续使用“更多鱼缸操作”入口。未新增第二套业务入口或规则。
 - 第二轮陈旧回归审计已完成：Care 分类改用正式 `/care?mode=browse` 路由；Daily Discovery、动作语义和手机优先级回归改为验证图鉴互动场景拥有六项发现队列，鱼缸首页不再渲染重复推荐；Species Detail 使用当前 `View tank species`/`查看缸内物种` 入口与 `detail-rail`/`bottom-sheet` 表面。
 - 已移除旧 3003 UI smoke 并注册 `npm run test:ui-smoke`：脚本固定使用 4317，验证正式路由、browse 搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐；该 smoke 已通过。
+- 已修复 CI 触发漂移：`Surface System V1` 与 `UI Regression V1` 现在均监听 `codex/unified-rc-visual-v1`，并在隔离 4173 production Preview 上执行 canonical UI smoke；旧 `codex/interactive-parity-v3` 不再作为 push 门禁来源。
 - README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。回归、文档与最终状态提交已全部推送；当前 SHA 不固化在 Handoff，始终以 `npm run project:status` 与 `git ls-remote` 输出为准，工作区 clean。
 - 推送后 `check:preview-parity` 仍返回 `AUTH_REQUIRED`（当前 Vercel CLI 会话未暴露部署信息）；不得将其解释为 Preview 已同步，Supabase schema/RLS parity 仍 pending。
 

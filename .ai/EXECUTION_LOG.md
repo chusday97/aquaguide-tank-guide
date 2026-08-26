@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Canonical CI trigger alignment
+
+- **Action:** Moved `Surface System V1` and `UI Regression V1` push triggers from retired `codex/interactive-parity-v3` to `codex/unified-rc-visual-v1`; added the canonical `npm run test:ui-smoke` step to the unified browser workflow using the isolated 4173 preview.
+- **Verification:** Workflow trigger scan shows only the canonical branch for push events; `npm run test:ui-smoke` passes locally with `AQUAGUIDE_URL=http://127.0.0.1:4317`.
+- **Boundary:** No product UI, domain rule, API contract, database, Supabase environment or visual geometry changed. Remote workflow execution will be observed after the push.
+
 ## 2026-08-26 — Preview URL and stale regression repair
 
 - **Action:** Added the canonical `scripts/preview-url.mjs` resolver (default `http://127.0.0.1:4317`) and migrated browser scripts away from mixed 3000/4173/localhost defaults. Repaired stale 600px, detail surface, compatibility route, Aquarium search/entry and dialog-name assertions. Restored the existing AI Tank Copilot as the desktop Dock seventh action and mobile more-actions entry.

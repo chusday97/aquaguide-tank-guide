@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- 将 `Surface System V1` 与 `UI Regression V1` 的 push 触发分支从已退役的 `codex/interactive-parity-v3` 收口到 `codex/unified-rc-visual-v1`，并把 `npm run test:ui-smoke` 纳入统一浏览器 CI；未改变产品 UI、业务规则、API、数据库或视觉几何。
 - 清理剩余 Care category、Daily Discovery、Species Detail 浏览器回归中的旧 detail surface/入口断言，并明确 3000 开发服务与 4317 production 验收 Preview 的区别。
 - 移除旧 3003 UI smoke 并注册 `npm run test:ui-smoke`；新 smoke 固定 4317，验证正式路由、browse 搜索、互动图鉴发现和鱼缸首页职责边界。
 - 修复浏览器回归使用陈旧 localhost 端口、600px 断点、旧 surface/路由和旧入口文案的问题；统一通过 `scripts/preview-url.mjs` 默认验证 4317 production Preview。

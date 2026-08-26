@@ -3,7 +3,7 @@ name: Surface System V1
 on:
   push:
     branches:
-      - codex/interactive-parity-v3
+      - codex/unified-rc-visual-v1
   workflow_dispatch:
 
 permissions:

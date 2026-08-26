@@ -2,6 +2,12 @@
 
 ## 2026-08-26
 
+### Canonical CI trigger alignment
+
+- Updated `Surface System V1` and `UI Regression V1` push triggers from the retired `codex/interactive-parity-v3` branch to `codex/unified-rc-visual-v1`.
+- Registered the canonical `npm run test:ui-smoke` in the unified browser workflow against its isolated 4173 production preview.
+- No product UI, domain rule, API contract, database, Supabase environment or visual geometry changed.
+
 ### Preview target and runtime regression alignment
 
 - Added `scripts/preview-url.mjs` as the single browser-regression target; scripts now default to the canonical 4317 production Preview and accept an explicit `AQUAGUIDE_URL`/`AQUAGUIDE_PREVIEW_URL`/`PREVIEW_URL` override.

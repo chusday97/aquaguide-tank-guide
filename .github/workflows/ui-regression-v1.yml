@@ -3,7 +3,7 @@ name: UI Regression V1
 on:
   push:
     branches:
-      - codex/interactive-parity-v3
+      - codex/unified-rc-visual-v1
   workflow_dispatch:
 
 permissions:
@@ -86,6 +86,11 @@ jobs:
         env:
           AQUAGUIDE_URL: http://127.0.0.1:4173
         run: npm run test:page-runtime-matrix
+
+      - name: Canonical UI smoke
+        env:
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: npm run test:ui-smoke
 
       - name: Admin content Blocking regression
         env:
