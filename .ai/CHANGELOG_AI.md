@@ -2,6 +2,12 @@
 
 ## 2026-08-26
 
+### Species detail CTA regression alignment
+
+- Updated the stale owned-atlas detail assertion from `View tank species` to the current canonical `Livestock in Tank` label.
+- Added `npm run test:species-detail-ui` to `UI Regression V1`; the 4317 browser regression passes.
+- No product, API, database, Supabase or visual-baseline change.
+
 ### Preview SHA parity gate repaired
 
 - Fixed the read-only parity script to fall back to `npx --yes vercel` when the system `vercel` binary is unavailable.

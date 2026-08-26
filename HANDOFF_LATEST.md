@@ -1,13 +1,13 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-26 16:45 +08:00
+更新时间：2026-08-26 17:36 +08:00
 
 ## 当前工作基线
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
 - **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
 - **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
-- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head `9f1a543c…` 的 Vercel Ready Preview 已完成 SHA parity；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
+- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head `3ac61d11…` 的 GitHub Actions 已通过，但 Vercel 最新 Ready Preview 仍绑定 `9f1a543c…`，严格当前-head SHA parity 为 pending；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
 - **P0 独立审查：** Critic 已复验通过；曾发现的水质映射、侵略性负荷回归、共享类型边界与自由文本误判均已有回归用例和修复。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
@@ -31,6 +31,7 @@
 - 已按当前 UI 契约修复 600px 断点、detail surface、混养路由、Aquarium 搜索/物种入口和 Dialog accessible-name 断言。
 - AI 建缸助手恢复为桌面沉浸式 Dock 的第七个操作卡片；移动端继续使用“更多鱼缸操作”入口。未新增第二套业务入口或规则。
 - 第二轮陈旧回归审计已完成：Care 分类改用正式 `/care?mode=browse` 路由；Daily Discovery、动作语义和手机优先级回归改为验证图鉴互动场景拥有六项发现队列，鱼缸首页不再渲染重复推荐；Species Detail 使用当前 `View tank species`/`查看缸内物种` 入口与 `detail-rail`/`bottom-sheet` 表面。
+- 物种详情回归已进一步对齐当前双语 CTA：已拥有图鉴详情使用 `Livestock in Tank`，`npm run test:species-detail-ui` 在 4317 受控浏览器环境通过，并已纳入 `UI Regression V1`；未修改产品 UI、业务规则或视觉基线。
 - 已移除旧 3003 UI smoke 并注册 `npm run test:ui-smoke`：脚本固定使用 4317，验证正式路由、browse 搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐；该 smoke 已通过。
 - 已修复 CI 触发漂移：`Surface System V1` 与 `UI Regression V1` 现在均监听 `codex/unified-rc-visual-v1`，并在隔离 4173 production Preview 上执行 canonical UI smoke；旧 `codex/interactive-parity-v3` 不再作为 push 门禁来源。
 - 该 CI 收口已推送为 `834af948`；`project:status` 与 `git ls-remote` 已确认 local/remote 同 SHA，4317 `/_preview/interactive` 返回 200。该时点 Vercel CLI 误报 `AUTH_REQUIRED`，后续已修复 CLI 解析并确认 exact Preview SHA；Supabase schema/RLS 与 release acceptance 仍未完成。

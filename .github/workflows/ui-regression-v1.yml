@@ -131,6 +131,11 @@ jobs:
           AQUAGUIDE_URL: http://127.0.0.1:4173
         run: npm run test:species-export-card
 
+      - name: Species detail experience regression
+        env:
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: npm run test:species-detail-ui
+
       - name: Identify flow and unsaved navigation guard
         env:
           PREVIEW_URL: http://127.0.0.1:4173

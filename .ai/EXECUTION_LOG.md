@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Species detail CTA regression alignment
+
+- **Problem:** `npm run test:species-detail-ui` expected the retired English label `View tank species`, while the current canonical detail action renders `Livestock in Tank`; the stale assertion masked a regression test gap because the script was not in the UI workflow.
+- **Action:** Updated the browser assertion to the current i18n contract and added `npm run test:species-detail-ui` to `UI Regression V1`.
+- **Verification:** `npm run test:species-detail-ui` passed against the 4317 production preview under controlled browser permissions; no product UI, domain rule, API, database, Supabase or visual baseline change.
+- **Boundary:** Vercel current-head SHA parity remains pending (`3ac61d11` has no matching deployment); Supabase schema/RLS parity and release acceptance remain open.
+
 ## 2026-08-26 — UI regression API parity
 
 - **Action:** The remote Identify regression exposed that UI CI used a static Vite preview without the `/api/v1` fallback endpoint. Updated `UI Regression V1` to start the existing Express API on 8787 and run Vite with its API proxy on 4173; production build remains a separate gate.

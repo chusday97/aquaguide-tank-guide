@@ -217,7 +217,7 @@ try {
 
   const ownedCollection = await newSeededPage({ state: createState({ withTank: true, owned: true }) });
   const ownedCollectionDialog = await openWishlistDetail(ownedCollection.page);
-  const tankAction = ownedCollectionDialog.getByRole('button', { name: 'View tank species', exact: true });
+  const tankAction = ownedCollectionDialog.getByRole('button', { name: 'Livestock in Tank', exact: true });
   assert.equal(await tankAction.count(), 1, 'owned atlas detail must have one view-in-tank action');
   await tankAction.click();
   await ownedCollection.page.waitForURL(/\/aquarium\?action=livestock$/);

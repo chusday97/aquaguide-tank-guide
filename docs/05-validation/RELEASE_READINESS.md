@@ -1,7 +1,7 @@
 # Unified Release Readiness
 
 **Status:** `NOT_READY`  
-**Updated:** 2026-08-26 16:45 +08:00
+**Updated:** 2026-08-26 17:36 +08:00
 **Scope:** final gate for a unified branch becoming eligible for a separately authorized RC/main release.
 
 | Gate | Current evidence | Status | What closes it |
@@ -10,7 +10,7 @@
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | User-confirmed 4317 direction; layout/framing/scene/Rail/page matrix passed locally | Pass | Rerun affected matrix rows after any UI-owner change. |
 | GitHub convergence CI | PR #141 head `f2a5ec47`; `RC Convergence V1` run `32949623270`, `Result UX Head Integrity V1` run `32949623304`, `Surface System V1` run `32949623328`, and `UI Regression V1` run `32949623297` passed | Pass | Rerun automatically for relevant future pushes. |
-| Exact Preview SHA parity | Read-only `npm run check:preview-parity` reports `PASS`; Vercel Ready Preview `aquaguide-jqfsw1rja-chusday97s-projects.vercel.app` exposes `githubCommitSha=9f1a543c1e1527282f4b8436ebff815270e34c1c`, equal to local/remote/PR #141 | Pass | Rerun after each canonical push. |
+| Exact Preview SHA parity | Read-only `npm run check:preview-parity` reports `NOT_SYNCHRONIZED`; latest Vercel Ready Preview `aquaguide-jqfsw1rja-chusday97s-projects.vercel.app` exposes `githubCommitSha=9f1a543c1e1527282f4b8436ebff815270e34c1c`, while current local/remote/PR #141 head is `3ac61d11362f787d4dc4eb4a09de5a4c5c16d13c` | Pending | Rerun after the deployment quota/propagation boundary clears; do not treat the older Ready Preview as current-head parity. |
 | Supabase schema/RLS parity | Read-only PostgREST probes: 31/31 contract tables and latest contract columns returned 200; migration revision/RLS policy metadata unavailable from authorized surfaces | Pending | Authorized read-only schema revision and direct RLS/API smoke check. |
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
 | Human visual acceptance | User confirmed the current 4317 visual as the working baseline on 2026-08-26; future visual changes require a new review | Pass (baseline only) | Re-run human review after any visual-owner change; this does not approve `main` release. |
@@ -38,7 +38,8 @@
 ## 2026-08-26 final current-head parity
 
 - Canonical head `9f1a543c1e1527282f4b8436ebff815270e34c1c` passed all four GitHub workflows and is deployed Ready at `aquaguide-jqfsw1rja-chusday97s-projects.vercel.app`.
-- `npm run check:preview-parity` reports `PASS` for local, origin, PR #141 and Vercel. No manual deploy or Supabase mutation was performed.
+- `npm run check:preview-parity` reports `NOT_SYNCHRONIZED`: local = origin = PR #141 at `3ac61d11…`, while the latest Vercel Ready Preview remains `9f1a543c…`. No manual deploy or Supabase mutation was performed.
+- GitHub Actions for current head `3ac61d11…` remain green; the Vercel PR status is failure because the Hobby build-rate limit blocks a matching deployment, not because a product test failed.
 - Supabase migration revision/direct RLS policy metadata and user release acceptance remain pending; release status stays `NOT_READY`.
 
 ## Release rule
