@@ -25,6 +25,9 @@ export const taskRoutes = {
     compatibility: '/encyclopedia?mode=compatibility',
     browse: '/encyclopedia?mode=browse',
   },
+  care: {
+    recommendations: '/care#care-recommendations',
+  },
 } as const;
 
 export type AquariumTaskAction =

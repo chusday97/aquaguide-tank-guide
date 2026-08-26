@@ -36,6 +36,7 @@
 - [x] 修复 UI Regression V1 的 Chromium 安装阻塞：仅安装 Playwright Chromium，避免 runner 重复执行系统依赖安装。
 - [x] 选择性迁移 `origin/main@37177a60` 的 Daily Check 否定答案规则修复，并将正/负回归纳入 RC Convergence；`test:daily-check`、lint、build 通过。
 - [x] 选择性迁移 `origin/main@2add55a5` 的 Daily Check 导航澄清：桌面鱼缸子菜单明确直达 `/aquarium?action=daily-check`，新增 task-entry contract。
+- [x] 选择性迁移 `origin/main@d464e24b` 的空养护计划推荐深链：浏览养护直达 `/care#care-recommendations`，并由 task-entry contract 锁定。
 - [x] 修复 Surface workflow 陈旧 `max-w-[920px]` 断言与 Aquarium 设置关闭后的 CI 点击竞态；本地回归通过，提交 `a7b85171` 已推送。
 - [x] 根据远端日志修复 Aquarium 添加生物点击后的导航等待竞态；本地回归通过，提交 `a90911fa` 已推送。
 - [x] 根据远端日志将 Aquarium 两个设置面板切换点击设为 `noWaitAfter`；本地回归通过，提交 `78160db3` 已推送。

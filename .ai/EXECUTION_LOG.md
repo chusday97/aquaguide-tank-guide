@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Empty care plan recommendation deep link
+
+- **Problem:** The empty-care-plan “浏览养护” CTA opened the Care home without locating the recommendation section.
+- **Action:** Added `taskRoutes.care.recommendations` for `/care#care-recommendations`, wired Aquarium to it, and extended the task-entry contract.
+- **Verification:** `npm run test:task-entry-contract`, `npm run test:task-routes`, `npm run lint`, `npm run build`, and `git diff --check` pass.
+- **Boundary:** Selective migration of `origin/main@d464e24b`; no data, API, Supabase, visual-baseline or `main` changes. Remote CI/Preview parity pending push.
+
 ## 2026-08-26 — Daily Check navigation remote verification
 
 - **Verification:** Commit `d4e615143be7145407a4a476c1f2b04854e78592` passed PR #141 RC Convergence (`32962622208`), UI Regression (`32962622300`), validate (`32962622235`) and candidate-head (`32962622268`); Vercel and Cloudflare passed.

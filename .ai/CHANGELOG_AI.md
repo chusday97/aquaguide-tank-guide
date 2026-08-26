@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Empty care plan recommendation deep link
+
+- Selectively migrated `origin/main@d464e24b`: empty care-plan CTA now uses the canonical `/care#care-recommendations` route.
+- Extended the task-entry contract to protect the route mapping; no data, API, Supabase or visual-baseline changes.
+
+## 2026-08-26
+
 ### Daily Check navigation remote verification
 
 - Canonical commit `d4e61514` passed RC Convergence, UI Regression, validation, Vercel and Cloudflare checks.

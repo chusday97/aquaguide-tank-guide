@@ -1,3 +1,5 @@
+2026-08-26：选择性修复 `origin/main@d464e24b` 的空养护计划推荐深链：鱼缸页“浏览养护”现在直达 `/care#care-recommendations`，并通过 task-entry contract、task-routes、lint、build；本轮待推送后观察远端门禁和 Vercel parity。
+
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
 - 2026-08-26：选择性修复 `origin/main@37177a60` 的 Daily Check 否定答案误判：水体异常枚举改为精确匹配，新增“没有异味/清澈”负向与“明显异味”正向回归，并纳入 `RC Convergence V1`；`npm run test:daily-check`、`npm run lint`、`npm run build` 通过。未改视觉、API、数据库、Supabase 或 `main`。
 - 2026-08-26：选择性修复 `origin/main@2add55a5` 的 Daily Check 导航歧义：桌面“我的鱼缸”新增每日检查子入口并直达 canonical task route；提交 `d4e61514` 的 RC Convergence、UI Regression、验证/候选 head、Vercel、Cloudflare 全部通过，Preview SHA parity PASS。未改 Supabase 或 `main`。

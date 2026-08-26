@@ -16,6 +16,7 @@
 | `ed0cf380` Care card reachability | `CareEncyclopedia` 已有唯一“分享卡片”入口，打开现有本地 `生成养护卡` 预览；`npm run test:care-card-action-ui` 在 4317 通过 | `ALREADY_PRESENT`；只保留回归证据，不复制旧入口 |
 | `37177a60` Daily Check negative answer matching | `diagnosis.rules.ts` 已使用分类水体答案精确匹配；`npm run test:daily-check` 覆盖“没有异味/清澈”负向与“明显异味”正向场景，并已纳入 RC Convergence | `SELECTIVE_MIGRATION`；只迁移规则边界和回归，不迁移旧 workflow/UI |
 | `2add55a5` Daily Check navigation ambiguity | `src/App.tsx` 的桌面 `/aquarium` 子菜单现在明确显示每日鱼缸检查并直达 `taskRoutes.aquarium.dailyCheck`；`npm run test:task-entry-contract` 锁定入口契约 | `SELECTIVE_MIGRATION`；只迁移明确任务入口和契约，不迁移旧页面/UI 样式 |
+| `d464e24b` Empty care plan recommendation deep link | `taskRoutes.care.recommendations` 统一指向 `/care#care-recommendations`；鱼缸页空计划按钮消费该路由，避免只进入 Care 首页 | `SELECTIVE_MIGRATION`；只迁移已存在的推荐区深链，不迁移旧组件布局 |
 | `daadc2a3` Settings sharing marked building | 统一分支的 Settings 已有“已分享报告”真实状态区和“打开导出与分享”导航；`npm run test:settings-share-action-ui` 验证进入 `/aquarium?action=exports`，分享契约/API/公共报告回归也通过 | `ALREADY_PRESENT / DEPLOYED_REVERIFY_PENDING`；不降级为建设中，等待云端 parity |
 | `8e0238dc` surface sizing / typography / collection rails | 当前视觉基线 `37a8d4d1`、`UI_REGRESSION_CONTRACT.md`、surface/layout 回归已定义另一套 owner | `HISTORICAL_OR_EXCLUDED`；禁止整体搬运 CSS/UI |
 | `2416e5b4` compatibility mixing-flow rebuild | 当前 `evaluateTankCompatibility`、证据边界和推荐 authority 已在 `.ai/RC_MIGRATION_LEDGER.md` 记录并有专项回归 | `HISTORICAL_OR_EXCLUDED`；不替换当前领域引擎或 UI |

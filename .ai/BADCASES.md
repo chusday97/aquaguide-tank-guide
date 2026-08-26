@@ -16,6 +16,13 @@
 - **证据：** `npm run test:task-entry-contract`、`npm run test:task-routes`、`npm run lint`；来源 `origin/main@2add55a5` 已按语义选择性迁移。
 - **状态：** `REGRESSION_VERIFIED`
 
+### PUI-BC-025 — 空养护计划按钮未定位到推荐区
+
+- **现象：** 鱼缸没有养护计划时，“浏览养护”只打开 Care 首页，用户仍需自行寻找推荐区。
+- **处理：** 增加 canonical `taskRoutes.care.recommendations` 深链，并让鱼缸页空计划按钮消费 `/care#care-recommendations`；新增 task-entry contract 断言。
+- **证据：** `npm run test:task-entry-contract`、`npm run test:task-routes`、`npm run lint`、`npm run build`；来源 `origin/main@d464e24b` 已按语义选择性迁移。
+- **状态：** `REGRESSION_VERIFIED`
+
 ### AQUA-UI-001 — 非 Portal Popup 导致页面错误
 
 - **现象：** 首轮非 Portal 写法曾触发 Base UI 页面错误，养护详情也未进入实际双屏父网格。
