@@ -39,6 +39,7 @@
 - `origin/main@daadc2a3` 的 Settings sharing 降级已复核：统一分支保留真实脱敏报告流程，并由 `test:settings-share-action-ui` 验证 Settings → 导出与分享；状态继续为 `DEPLOYED_REVERIFY_PENDING`，不降级为建设中。
 - `RC Convergence V1` 已补齐底层门禁：三层契约、业务/API、混养、鱼缸状态/证据、换水、证据展示、推荐和分享测试均在 canonical workflow 执行；视觉 UI 门禁仍由 `UI Regression V1` 负责。
 - 已修复远端 Surface System V1 的陈旧 `max-w-[920px]` 断言，改为验证当前 Detail Rail `w-[clamp(480px,42vw,600px)]`；同时修复 Aquarium primary-tools 回归在 Escape 关闭设置面板后的 CI 点击竞态（`a7b85171`）。本地 4317 回归、lint、project truth 和 diff check 通过，新的远端 Actions 结果待观察。
+- 新远端 Surface 已通过；UI Regression 继续暴露回归脚本在添加生物点击后等待导航的超时，已改为 `noWaitAfter` 并以目标 Dialog 可见性验收（`a90911fa`）。本地 4317 回归通过，需等待下一次远端 UI run。
 - README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。回归、文档与最终状态提交已全部推送；当前 SHA 不固化在 Handoff，始终以 `npm run project:status` 与 `git ls-remote` 输出为准，工作区 clean。
 - 推送后 `check:preview-parity` 仍返回 `AUTH_REQUIRED`（当前 Vercel CLI 会话未暴露部署信息）；不得将其解释为 Preview 已同步，Supabase schema/RLS parity 仍 pending。
 

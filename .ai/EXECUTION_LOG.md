@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Aquarium action regression navigation wait
+
+- **Action:** After the hidden-state wait fixed the Settings close race, the remote UI run still timed out while Playwright waited for navigation after the Add Livestock click. Changed only that regression click to `noWaitAfter`; the following “记录已有生物” Dialog visibility remains the assertion.
+- **Verification:** `PREVIEW_URL=http://127.0.0.1:4317 npm run test:aquarium-primary-tools` and `git diff --check` passed. Commit `a90911fa` is ready to push.
+- **Boundary:** This is a test synchronization fix; no product UI/runtime, API, database, Supabase, Vercel or visual baseline changed.
+
 ## 2026-08-26 — Surface guard and Aquarium regression stabilization
 
 - **Action:** Replaced the stale Surface workflow assertion for `max-w-[920px]` with the canonical Detail Rail width token `w-[clamp(480px,42vw,600px)]`; added a hidden-state wait after Escape in `test:aquarium-primary-tools` before opening the next Dialog.

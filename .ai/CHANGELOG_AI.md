@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Aquarium action regression navigation wait
+
+- Updated the Add Livestock browser regression to avoid waiting for a navigation that the current action does not guarantee; it now verifies the resulting Dialog directly.
+- Local 4317 verification passed and the test-only fix was committed as `a90911fa`; no product or cloud state changed.
+
+## 2026-08-26
+
 ### Surface and Aquarium CI regression repair
 
 - Updated the Surface System V1 static guard to the canonical 480–600px Detail Rail width instead of the retired 920px token.
