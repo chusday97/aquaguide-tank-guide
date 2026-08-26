@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `audit:branch-convergence` 现在输出 `origin/main` 与 `integration/aquaguide-rc1` 的只读 `merge-tree` 冲突清单，当前分别为 37 和 64 个冲突文件；不执行 merge/rebase，不把提交数量当成功能缺失。
+
 ### Fixed
 
 - 稳定 `check:preview-parity` 的 Vercel CLI 调用：默认固定已验证的 `vercel@59.6.2` 并保留 `VERCEL_CLI_PACKAGE` 覆盖，避免 unpinned `npx` 依赖解析失败导致误报 `AUTH_REQUIRED`。当前旧 READY 部署仍为 `3b33c773`，严格 current-head parity 继续如实返回 `NOT_SYNCHRONIZED`。

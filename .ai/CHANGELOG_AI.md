@@ -2,6 +2,13 @@
 
 ## 2026-08-27
 
+### Merge-tree readiness visibility
+
+- Extended `audit:branch-convergence` with read-only `merge-tree` summaries for `origin/main` and `origin/integration/aquaguide-rc1`.
+- Current canonical head reports 37 conflicts against `main` and 64 against integration; this is now visible without attempting a merge. No product, API, Supabase or visual change.
+
+## 2026-08-27
+
 ### Preview parity CLI stabilization
 
 - Pinned the default parity CLI to the verified `vercel@59.6.2` package through `npm exec`; `VERCEL_CLI_PACKAGE` remains available for controlled overrides.

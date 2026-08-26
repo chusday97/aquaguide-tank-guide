@@ -18,6 +18,27 @@ const count = (left, right) => {
   return { leftOnly, rightOnly };
 };
 
+const mergeTreeSummary = (target, source) => {
+  try {
+    execFileSync('git', ['merge-tree', '--write-tree', target, source], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    return { status: 'CLEAN_MERGE', conflictCount: 0, conflicts: [] };
+  } catch (error) {
+    const output = `${error.stdout ?? ''}\n${error.stderr ?? ''}`;
+    const conflicts = [...output.matchAll(/^\d{6}\s+\S+\s+[123]\t(.+)$/gm)]
+      .map((match) => match[1])
+      .filter((path, index, paths) => paths.indexOf(path) === index)
+      .sort();
+    return {
+      status: conflicts.length > 0 ? 'CONFLICTING' : 'MERGE_TREE_ERROR',
+      conflictCount: conflicts.length,
+      conflicts,
+    };
+  }
+};
+
 const canonical = `origin/${state.canonicalBranch}`;
 const localBranch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
 const effectiveBranch = process.env.GITHUB_REF_NAME || localBranch;
@@ -39,6 +60,11 @@ const remoteRefs = git([
 const comparisons = {};
 for (const ref of ['origin/main', 'origin/integration/aquaguide-rc1']) {
   comparisons[ref] = hasRef(ref) ? count(canonical, ref) : null;
+}
+
+const mergeReadiness = {};
+for (const ref of ['origin/main', 'origin/integration/aquaguide-rc1']) {
+  mergeReadiness[ref] = hasRef(ref) ? mergeTreeSummary(ref, canonical) : null;
 }
 
 const historicalBranches = remoteRefs
@@ -63,6 +89,7 @@ console.log(JSON.stringify({
   status: missingRefs.length > 0 ? 'MISSING_REMOTE_REF' : parity ? 'SYNCHRONIZED' : 'NOT_SYNCHRONIZED',
   missingRefs,
   comparisons,
+  mergeReadiness,
   historicalBranches,
 }, null, 2));
 

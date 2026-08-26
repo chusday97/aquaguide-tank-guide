@@ -41,6 +41,12 @@ For every historical PR, branch or `origin/main`-only commit group:
 
 No branch is a merge base merely because it is newer, has more commits, or has an attractive PR title.
 
+## Current merge-tree evidence (2026-08-27)
+
+`npm run audit:branch-convergence` now also reports a read-only merge-tree result for the two release candidates. The current canonical head has **37 conflicts against `origin/main`** and **64 conflicts against `origin/integration/aquaguide-rc1`**. This is a mergeability signal only; it does not authorize automatic conflict resolution or imply missing features.
+
+The command keeps the existing parity check behavior and never writes an index, merges, rebases, deletes or pushes. Resolve these paths only through the semantic migration ledger and dedicated regression evidence.
+
 ## Current decision
 
 - Do not merge `origin/main`, `integration/aquaguide-rc1`, PR #140 or any historical branch into the canonical branch wholesale.

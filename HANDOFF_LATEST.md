@@ -4,6 +4,8 @@
 
 ## 本轮新增
 
+- **合并可见性修复：** `npm run audit:branch-convergence` 现在额外输出只读 `merge-tree` 结果；当前 canonical head 对 `origin/main` 有 37 个冲突、对 `integration/aquaguide-rc1` 有 64 个冲突。该输出只用于收敛决策，不会修改 Git index 或执行合并。
+
 - **Preview parity CLI 修复：** `scripts/check-preview-parity.mjs` 默认固定到已验证的 `vercel@59.6.2`（通过 `npm exec`，可用 `VERCEL_CLI_PACKAGE` 覆盖）。修复后能稳定读取 Vercel READY 部署；当前 canonical head 仍未生成对应部署，因此 parity 仍为 `NOT_SYNCHRONIZED`，不是 CLI `AUTH_REQUIRED`。精确 SHA 始终以 `npm run project:status` 和 parity 输出为准。
 
 - **当前合并阻塞（实时只读复核）：** `origin/integration/aquaguide-rc1@895f2f39` 与 canonical head 的 `git merge-tree --write-tree` 检出 **64 个冲突文件**，覆盖 `CONTRACT.md`、API、domain-rules、页面、共享组件、服务与 `vercel.json`；这不是可安全“一键同步”的文档差异。PR #141 仍 `OPEN/Draft`、`mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`，因此继续禁止整体 merge/rebase 或合并 `main`。

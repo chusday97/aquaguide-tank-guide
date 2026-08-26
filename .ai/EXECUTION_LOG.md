@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-27 — Merge-tree readiness visibility
+
+- **Problem:** Commit-count divergence did not show whether a target branch could be merged cleanly.
+- **Action:** Added a read-only `mergeTreeSummary` to `scripts/audit-branch-convergence.mjs`; it returns conflict status and unique paths without mutating the index.
+- **Verification:** Current output reports 37 conflicts against `origin/main` and 64 against `origin/integration/aquaguide-rc1`; `npm run check:project-truth` and `git diff --check` pass. No merge/rebase or cloud mutation.
+
 ## 2026-08-27 — Preview parity CLI stabilization
 
 - **Problem:** Unpinned `npx vercel` intermittently failed to resolve `@vercel/container@3.0.0`, causing `check:preview-parity` to return `AUTH_REQUIRED` without querying deployments.
