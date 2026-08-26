@@ -2,6 +2,13 @@
 
 ## 已修复
 
+### PUI-BC-024 — Daily Check 否定水质答案被模糊匹配为异常
+
+- **现象：** “没有异味”等分类否定答案包含“异味”子串，可能误触发水体异常摘要和换水动作。
+- **处理：** 水体异常改用分类值精确匹配；同时保留“经常浮头”本身的高风险结论，并加入正/负回归。
+- **证据：** `npm run test:daily-check`、`npm run lint`、`npm run build`；来源 `origin/main@37177a60` 已按语义选择性迁移。
+- **状态：** `REGRESSION_VERIFIED`
+
 ### AQUA-UI-001 — 非 Portal Popup 导致页面错误
 
 - **现象：** 首轮非 Portal 写法曾触发 Base UI 页面错误，养护详情也未进入实际双屏父网格。

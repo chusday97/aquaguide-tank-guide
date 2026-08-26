@@ -82,6 +82,26 @@ deterministicCases.forEach(testCase => {
   assert.ok(result.avoidActions.length > 0, `${testCase.name} 应提供禁止动作`);
 });
 
+const negativeWaterAnswerRegression = buildPatrol({
+  breathing: '经常浮头',
+  waterLook: '清澈',
+  surfaceLook: '没有泡沫或油膜',
+  odor: '没有异味',
+  behavior: '正常游动和进食',
+  recentAction: '没有特别操作',
+});
+assert.equal(negativeWaterAnswerRegression.riskLevel, 'high', '经常浮头本身仍应保持高风险');
+assert.ok(negativeWaterAnswerRegression.matchedRules.includes('frequent-breathing-warning'), '正常水体答案下应命中呼吸异常规则');
+assert.ok(!negativeWaterAnswerRegression.matchedRules.includes('water-breathing-high-risk'), '否定水体枚举不得命中水体异常高风险规则');
+assert.ok(!negativeWaterAnswerRegression.matchedRules.includes('water-clarity-check'), '正常水体枚举不得命中水体异常规则');
+assert.doesNotMatch(negativeWaterAnswerRegression.summary, /水体异常/, '结果摘要不得把否定水体答案改写成水体异常');
+assert.ok(!negativeWaterAnswerRegression.actions.includes('少量换水 20%-30%'), '没有真实水体异常时不得加入 20%-30% 换水动作');
+
+const positiveWaterAnswerControl = buildPatrol({ breathing: '经常浮头', odor: '明显异味' });
+assert.ok(positiveWaterAnswerControl.matchedRules.includes('water-breathing-high-risk'), '明显异味正向对照仍应命中水体异常高风险规则');
+assert.match(positiveWaterAnswerControl.summary, /水体异常/, '明显异味正向对照应保留水体异常摘要');
+assert.ok(positiveWaterAnswerControl.actions.includes('少量换水 20%-30%'), '明显异味正向对照应保留原有紧急换水动作');
+
 const originalFetch = globalThis.fetch;
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
   status,

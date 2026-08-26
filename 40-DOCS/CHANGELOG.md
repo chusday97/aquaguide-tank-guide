@@ -3,11 +3,13 @@
 ## [Unreleased]
 
 ### Verified
+- 选择性迁移 `origin/main@37177a60` 的 Daily Check 否定答案修复：精确区分“没有异味/清澈”与“明显异味”，`npm run test:daily-check`、`npm run lint`、`npm run build` 通过；未改变视觉、API、数据库或 Supabase。
 - Re-verified canonical head `fd27daf2`: core UI, responsive route scan (7×17), page runtime matrix (28/28), remote four-gate CI, branch convergence and project truth all pass; 4317 preview returns HTTP 200. Vercel current-head parity remains blocked by Hobby `build-rate-limit`, so release stays `NOT_READY`.
 
 ### Changed
 - Expanded `RC Convergence V1` push/PR path filters to include canonical progress, handoff, AI logs, changelog and evidence files; this keeps docs-only synchronization on the same verification chain.
 - Changed UI Regression V1 Chromium setup to install the browser without `--with-deps` system package provisioning, reducing CI stalls on hosted runners.
+- Added the Daily Check contract test to `RC Convergence V1`, keeping negative categorical-answer coverage on the canonical bottom-layer gate.
 
 ### Fixed
 - 完成 `f465cb76` 的 Preview SHA parity 收口：Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` 与 local/remote/PR #141 同 SHA，四项 GitHub Actions 全部通过；Supabase schema/RLS 与 release acceptance 仍 pending。

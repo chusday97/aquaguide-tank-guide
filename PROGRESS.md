@@ -1,4 +1,6 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
+- 2026-08-26：选择性修复 `origin/main@37177a60` 的 Daily Check 否定答案误判：水体异常枚举改为精确匹配，新增“没有异味/清澈”负向与“明显异味”正向回归，并纳入 `RC Convergence V1`；`npm run test:daily-check`、`npm run lint`、`npm run build` 通过。未改视觉、API、数据库、Supabase 或 `main`。
+- 2026-08-26：UI Regression Chromium 修复已由远端 run `32959367104` 验证通过；此前“待新 run 验证”状态关闭。Vercel current-head 仍受 Hobby `build-rate-limit` 阻断，Preview parity 继续 `NOT_SYNCHRONIZED`。
 - 2026-08-26：修复 UI Regression V1 在 GitHub runner 的 Chromium 安装阻塞：从 `npx playwright install --with-deps chromium` 改为 `npx playwright install chromium`，避免重复执行系统包安装导致 CI 长时间停滞；未改变产品 UI、业务规则、API、Supabase 或视觉基线，待新 run 验证。
 - 2026-08-26：修复 RC Convergence V1 的 canonical 文档路径过滤：进度、交接、AI 执行记录、变更日志和 `.project-journal` 现在会触发同一底层门禁，避免文档同步后 PR 继续显示旧 SHA 的 RC 结果。仅改 CI 触发范围，未改产品、API、Supabase 或视觉基线。
 - 2026-08-26：继续复跑当前 canonical head `fd27daf2` 的本地与远端回归：`UI Regression V1` `32956751904`、核心体验、响应式路由（7×17）、全页面运行时矩阵（28/28）均通过，4317 `/_preview/interactive` 返回 HTTP 200；local/remote SHA 一致。Vercel 最新 Ready 仍为 `f465cb76`，当前 head 自动部署被 Hobby `build-rate-limit` 阻断，`check:preview-parity` 为 `NOT_SYNCHRONIZED`；Supabase schema/RLS parity、release acceptance 和 main 合并继续 pending。

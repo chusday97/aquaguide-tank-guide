@@ -1,16 +1,17 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-26 18:20 +08:00
+更新时间：2026-08-26 19:05 +08:00
 
 ## 当前工作基线
 
-- **CI 环境修复（2026-08-26）：** UI Regression V1 的 Chromium 安装已去除 `--with-deps` 系统包安装，仅保留 Playwright 浏览器下载；此前 run `32958817853` 在该步骤长时间停滞，需以新 run 结果确认修复。
+- **CI 环境修复（2026-08-26）：** UI Regression V1 的 Chromium 安装已去除 `--with-deps` 系统包安装，仅保留 Playwright 浏览器下载；新 run `32959367104` 已通过，浏览器回归已越过安装步骤并完成。
+- **Daily Check 规则修复（2026-08-26）：** `origin/main@37177a60` 的否定水质答案误判已选择性迁入统一分支；精确枚举匹配、正/负回归和 RC Convergence 门禁均已加入，未改变当前 4317 视觉基线。
 - **CI 触发修复（2026-08-26）：** `RC Convergence V1` 已将 `PROGRESS.md`、`HANDOFF_LATEST.md`、`.ai` 执行/变更记录、`40-DOCS/CHANGELOG.md` 与 `.project-journal/**` 纳入 push/PR 路径过滤；后续文档同步会产生同一 SHA 的底层门禁结果，不再沿用旧 head 的 RC 结果。
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
 - **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
 - **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
-- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head 以 `npm run project:status` 为准（当前为 `fd27daf2…`），其 GitHub Actions 已通过；Vercel 最新 Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` 仍绑定上一提交 `f465cb76…`，当前自动部署受 Hobby `build-rate-limit` 阻断，`check:preview-parity` 为 `NOT_SYNCHRONIZED`；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
+- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head 始终以 `npm run project:status` 为准；上一个已完成四项远端门禁的 head 为 `fd27daf2…`，本轮 Daily Check 规则修复推送后需等待新 head 的 Actions 结果。Vercel 最新 Ready Preview 仍落后于当前 head，自动部署受 Hobby `build-rate-limit` 阻断，`check:preview-parity` 为 `NOT_SYNCHRONIZED`；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
 - **P0 独立审查：** Critic 已复验通过；曾发现的水质映射、侵略性负荷回归、共享类型边界与自由文本误判均已有回归用例和修复。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。

@@ -2,6 +2,14 @@
 
 ## 2026-08-26
 
+### Daily Check negative-answer rule hardening
+
+- Selectively migrated `origin/main@37177a60` semantics: categorical water-abnormality answers now use exact matching, preventing “没有异味”等否定 values from triggering water-abnormality actions.
+- Added positive/negative regression coverage and registered `npm run test:daily-check` in `RC Convergence V1`.
+- `npm run test:daily-check`, `npm run lint`, and `npm run build` pass; no UI, API, database, Supabase or visual-baseline changes.
+
+## 2026-08-26
+
 ### UI CI Chromium install unblock
 
 - Removed the unnecessary `--with-deps` system package installation from UI Regression V1, reducing the GitHub runner stall surface while preserving Playwright browser installation.

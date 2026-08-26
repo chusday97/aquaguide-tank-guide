@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Daily Check negative-answer rule hardening
+
+- **Problem:** `origin/main@37177a60` identified substring matching that could treat categorical answers such as “没有异味” as positive water abnormalities.
+- **Action:** Added exact categorical matching in `diagnosis.rules.ts`, added positive/negative contract cases, and registered `npm run test:daily-check` in `RC Convergence V1`.
+- **Verification:** `npm run test:daily-check`, `npm run lint`, `npm run build`, and `git diff --check` passed.
+- **Boundary:** No visual, API, database, Supabase, deployment or `main` changes; this is a selective domain-rule migration.
+
 ## 2026-08-26 — UI CI Chromium install unblock
 
 - **Problem:** UI Regression run `32958817853` remained in `Install Chromium` for several minutes before any browser test started.

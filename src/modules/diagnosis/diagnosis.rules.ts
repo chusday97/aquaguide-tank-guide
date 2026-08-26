@@ -76,10 +76,13 @@ export const evaluateDiagnosisRules = (input: BuildDiagnosisInput): DiagnosisRul
   const addRule = (rule: DiagnosisRuleResult) => rules.push(rule);
 
   const has = (...keywords: string[]) => includesAny(answers, keywords);
+  const hasExact = (...options: string[]) => answers.some(value => options.includes(value));
+  const hasWaterAbnormality = () => hasExact('有异味', '明显异味', '水发白', '水发绿', '发白', '发绿', '轻微浑浊', '明显浑浊', '持续泡沫', '水面油膜');
+  const hasClearWaterAbnormality = () => hasExact('有异味', '明显异味', '水发白', '水发绿', '发白', '发绿', '明显浑浊', '持续泡沫', '水面油膜');
   const uncertainCount = answers.filter(value => value.includes('不确定')).length;
   const problemText = input.problemType;
 
-  if (has('鱼浮头喘气', '浮头喘气', '经常浮头', '呼吸明显急促', '急促呼吸', '浮头') && has('有异味', '明显异味', '水发白', '水发绿', '发白', '发绿', '明显浑浊', '持续泡沫', '水面油膜')) {
+  if (has('鱼浮头喘气', '浮头喘气', '经常浮头', '呼吸明显急促', '急促呼吸', '浮头') && hasClearWaterAbnormality()) {
     addRule({
       ruleId: 'water-breathing-high-risk',
       riskLevel: 'high',
@@ -93,7 +96,7 @@ export const evaluateDiagnosisRules = (input: BuildDiagnosisInput): DiagnosisRul
     });
   }
 
-  if (has('经常浮头', '呼吸明显急促', '急促呼吸') && !has('有异味', '明显浑浊', '水发白', '水发绿', '发白', '发绿')) {
+  if (has('经常浮头', '呼吸明显急促', '急促呼吸') && !hasClearWaterAbnormality()) {
     addRule({
       ruleId: 'frequent-breathing-warning',
       riskLevel: 'high',
@@ -107,7 +110,7 @@ export const evaluateDiagnosisRules = (input: BuildDiagnosisInput): DiagnosisRul
     });
   }
 
-  if (has('偶尔浮头') && !has('经常浮头', '呼吸明显急促', '有异味', '明显浑浊', '死亡多条', '连续死了多条')) {
+  if (has('偶尔浮头') && !hasExact('经常浮头', '呼吸明显急促', '有异味', '明显异味', '明显浑浊', '死亡多条', '连续死了多条')) {
     addRule({
       ruleId: 'occasional-breathing-watch',
       riskLevel: 'medium',
@@ -205,11 +208,11 @@ export const evaluateDiagnosisRules = (input: BuildDiagnosisInput): DiagnosisRul
     });
   }
 
-  if (problemText === '水质浑浊 / 异味' || has('轻微浑浊', '明显浑浊', '发白', '发绿', '有异味', '明显异味', '持续泡沫', '水面油膜')) {
+  if (problemText === '水质浑浊 / 异味' || hasWaterAbnormality()) {
     addRule({
       ruleId: 'water-clarity-check',
-      riskLevel: has('有异味', '明显异味', '明显浑浊', '持续泡沫') ? 'medium' : 'low',
-      summary: has('有异味', '明显异味', '明显浑浊', '持续泡沫') ? '水体已经有明显异常，需要先减负并检查过滤。' : '水体轻微异常，先排查残饵、过滤和近期操作。',
+      riskLevel: hasExact('有异味', '明显异味', '明显浑浊', '持续泡沫') ? 'medium' : 'low',
+      summary: hasExact('有异味', '明显异味', '明显浑浊', '持续泡沫') ? '水体已经有明显异常，需要先减负并检查过滤。' : '水体轻微异常，先排查残饵、过滤和近期操作。',
       actions: ['捞出可见残饵和腐败物', '检查过滤是否正常运行', '必要时少量换水 10%-20%'],
       avoidActions: ['不要一次性全缸大换水', '不要继续过量喂食', '不要同时清洗所有滤材'],
       possibleCauses: ['残饵污染', '过滤压力增加', '水体菌相波动'],
