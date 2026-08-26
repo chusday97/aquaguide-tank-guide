@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- 修复 `Surface System V1` 对已淘汰 `max-w-[920px]` 的静态断言，改为验证当前 480–600px Detail Rail；同时让 Aquarium primary-tools 回归等待设置 Dialog 关闭完成，避免慢速 CI 点击竞态。提交 `a7b85171`，未改变产品 UI、业务规则、数据或部署。
 - 将三层数据契约、业务/API 边界、混养、鱼缸状态/证据、换水、推荐和分享契约回归纳入 `RC Convergence V1`，使统一分支的底层逻辑与 UI 门禁在同一 CI 链路验证；未改变产品、数据库或 Supabase。
 - 对 `origin/main@ed0cf380` 的 Care card 可达性修复完成语义复核：统一分支已有 `分享卡片` → 本地养护卡流程，因此只新增 `test:care-card-action-ui` 回归并纳入统一 UI CI，避免重复迁移旧入口；未改变产品 UI、API、数据库或视觉几何。
 - 新增 `ORIGIN_MAIN_RECONCILIATION.md`，记录 origin/main 高影响能力首轮逐项判定，明确未完成的提交仍不得直接合并。

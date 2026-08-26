@@ -38,6 +38,7 @@
 - 首轮 `origin/main` 高影响能力判定已整理到 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`；这只是已验证分组，不代表 214 个独有提交全部完成，剩余提交仍不得直接合并。
 - `origin/main@daadc2a3` 的 Settings sharing 降级已复核：统一分支保留真实脱敏报告流程，并由 `test:settings-share-action-ui` 验证 Settings → 导出与分享；状态继续为 `DEPLOYED_REVERIFY_PENDING`，不降级为建设中。
 - `RC Convergence V1` 已补齐底层门禁：三层契约、业务/API、混养、鱼缸状态/证据、换水、证据展示、推荐和分享测试均在 canonical workflow 执行；视觉 UI 门禁仍由 `UI Regression V1` 负责。
+- 已修复远端 Surface System V1 的陈旧 `max-w-[920px]` 断言，改为验证当前 Detail Rail `w-[clamp(480px,42vw,600px)]`；同时修复 Aquarium primary-tools 回归在 Escape 关闭设置面板后的 CI 点击竞态（`a7b85171`）。本地 4317 回归、lint、project truth 和 diff check 通过，新的远端 Actions 结果待观察。
 - README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。回归、文档与最终状态提交已全部推送；当前 SHA 不固化在 Handoff，始终以 `npm run project:status` 与 `git ls-remote` 输出为准，工作区 clean。
 - 推送后 `check:preview-parity` 仍返回 `AUTH_REQUIRED`（当前 Vercel CLI 会话未暴露部署信息）；不得将其解释为 Preview 已同步，Supabase schema/RLS parity 仍 pending。
 
@@ -54,7 +55,7 @@
 - 推送 parity 证据提交 `bf1e936d` 后再次读取 Vercel 部署列表，尚未出现匹配当前 canonical head 的新部署；Preview 仍停留在 `6b0e629d8b6694a06b98182a38da01d34718c44f`。当前 head 以 `npm run project:status` 输出为准，不能用旧 Preview 作为发布 SHA。
 - 继续修复 Preview parity 时，通过已授权 Vercel API 使用 Git-connected `codex/unified-rc-visual-v1` + 当前 SHA 创建 Preview；请求被 Vercel 明确拒绝为 `api-deployments-free-per-day`（Hobby 每日超过 100 次，约 24 小时后恢复）。未创建部署、未触碰 Production、GitHub 或 Supabase；额度恢复后只需重试同一 Git SHA。
 - 已新增 `npm run check:preview-parity` 作为可重复的只读门禁：当前输出确认 local SHA 与 `origin/codex/unified-rc-visual-v1` 一致，但 Vercel canonical-branch Preview 仍为 `6b0e629d…`，命令明确返回 `NOT_SYNCHRONIZED`。该门禁不触发部署、不修改 Supabase 或配置。
-- 最新远端 CI 证据（2026-08-26）：PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a`；`RC Convergence V1` run `32915252842`、`Result UX Head Integrity V1` run `32915252831` 均通过。Vercel/Cloudflare 状态通过，但 exact Preview Git SHA 与 Supabase schema/RLS 仍 pending；当前视觉基线人工验收已通过，后续 UI 变更需复验。
+- 最新远端 CI 证据（2026-08-26）：旧 head `6e6e2b97` 的 `RC Convergence V1` `32945314825`、`Result UX Head Integrity V1` `32945314743` 通过；`Surface System V1` `32945314731` 因陈旧 `max-w-[920px]` 断言失败，`UI Regression V1` `32945314830` 因设置 Dialog 关闭竞态失败。修复提交 `a7b85171` 已推送，需以新 head 的 Actions 结果复核；Vercel exact Preview Git SHA 与 Supabase schema/RLS 仍 pending。
 - 最近完成：`Compatibility evidence boundary migration`（`6b0e629d`）。配对判断显式固定为 `species_only`，避免鱼缸级捕食/负载启发式污染逐对结论；聚合结果额外合并 `tank` scope，保留容量、设备、温度和负载硬约束，视觉适配器展示聚合主阻断；证据 getter 只暴露 `reviewed` 状态。已审核物种但没有已审核配对规则时统一返回 `insufficient_data`，显式已审核配对规则继续保留阻断/谨慎权威。新增覆盖回归、优先级 scorecard、高负载与视觉权威测试：501 条物种、7 个 reviewed profiles、4 个 reviewed pair rules、12 个优先方向，其中 2 个可记录结论、8 个资料不足、2 个不建议。未改 API、数据库、Supabase 或视觉几何。
 - 最近完成：`Species Detail` 回归脚本对齐当前产品契约（待本地提交）。测试 fixture 使用当前孔雀鱼 ID `sp_0436`，当前缸内谨慎路径验证“查看风险后确认添加 → 混养计算”，鱼缸入口改用 `data-tank-species-entry`；手机布局断言改为验证结论后动作顺序，避免把已淘汰的首屏按钮可见性和旧样式当作当前真相。
 - 最近完成：`Species Detail evidence authority`。详情关键理由、混养证据状态和来源提示消费统一 `TankCompatibilityResult`；`housingReason` 仅显示为档案参考并明确不覆盖计算结果。保持当前视觉基线，未迁移 RC 详情布局。新增 `src/modules/knowledge/compatibilityEvidencePresentation.ts` 与专项回归。

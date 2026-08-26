@@ -2,6 +2,14 @@
 
 ## 2026-08-26
 
+### Surface and Aquarium CI regression repair
+
+- Updated the Surface System V1 static guard to the canonical 480–600px Detail Rail width instead of the retired 920px token.
+- Made the Aquarium primary-tools browser regression wait for the Settings Dialog to finish closing after Escape, preventing a slow-CI click race.
+- Local 4317 regression, typecheck, project-truth and diff checks pass; pushed as `a7b85171`. No product UI, domain, API, database, Supabase or deployment mutation.
+
+## 2026-08-26
+
 ### Canonical domain and API CI coverage
 
 - Added existing three-tier contract, business/API boundary, compatibility, tank-state/evidence, water-change, evidence-presentation, recommendation and share-report tests to `RC Convergence V1`.

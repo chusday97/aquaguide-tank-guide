@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Surface guard and Aquarium regression stabilization
+
+- **Action:** Replaced the stale Surface workflow assertion for `max-w-[920px]` with the canonical Detail Rail width token `w-[clamp(480px,42vw,600px)]`; added a hidden-state wait after Escape in `test:aquarium-primary-tools` before opening the next Dialog.
+- **Verification:** The Surface static contract, `PREVIEW_URL=http://127.0.0.1:4317 npm run test:aquarium-primary-tools`, `npm run lint`, `npm run check:project-truth` and `git diff --check` passed. Commit `a7b85171` was pushed to the canonical branch.
+- **Evidence:** Remote failures were reproduced from run `32945314731` (stale width grep) and `32945314830` (30s click timeout after Settings Escape); no product/runtime code, Supabase, Vercel or visual geometry changed.
+- **Next:** Observe new Surface/UI/RC Actions runs for `a7b85171`; release remains blocked by exact Preview SHA, Supabase schema/RLS parity and release acceptance.
+
 ## 2026-08-26 — Canonical domain and API CI coverage
 
 - **Action:** Added the existing data-contract, API-boundary, compatibility, current-tank state/evidence, water-change, evidence-presentation, recommendation and share-report checks to `RC Convergence V1`.

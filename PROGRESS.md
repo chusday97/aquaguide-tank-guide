@@ -1,4 +1,7 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
+- 2026-08-26：修复远端 Surface System V1 的陈旧几何断言：workflow 现在验证当前 Dialog Detail Rail 的 `w-[clamp(480px,42vw,600px)]`，不再要求已淘汰的 `max-w-[920px]`；未改变产品视觉几何。（commit: `a7b85171`）
+- 2026-08-26：修复 `test:aquarium-primary-tools` 在 CI 慢速环境的关闭竞态：设置面板按 Escape 后先等待共享 Dialog 隐藏，再点击添加生物；本地 4317 回归、lint、project truth 和 diff check 通过。（commit: `a7b85171`）
+- 2026-08-26：此前远端 UI Regression `32945314830` 的实际失败已确认是上述点击竞态；Surface `32945314731` 的实际失败是旧 `max-w-[920px]` 断言。修复已推送，新的 Actions 结果待观察。
 - 2026-08-26：第二轮陈旧回归审计完成并提交 `cb6446bc`：Care 分类、Daily Discovery、动作语义、手机鱼缸优先级与 Species Detail 断言均已对齐当前正式路由、互动图鉴发现归属、`detail-rail`/`bottom-sheet` 和 `data-tank-species-entry`。4317 上每日发现、动作运行时、手机优先级、核心体验、28/28 页面矩阵、导航、互动场景、设置反馈与统一门禁全部通过；未改产品数据、API、Supabase 或视觉几何。
 - 2026-08-26：上述回归与文档提交已推送统一分支；`npm run project:status`、`git ls-remote` 确认 local/remote 同步，4317 `/_preview/interactive` 返回 HTTP 200。具体 SHA 以命令实时输出为准。Vercel parity 仍因当前授权面返回 `AUTH_REQUIRED`，Supabase schema/RLS 与 release acceptance 继续 pending。
 - 2026-08-26：清理最后一条 3003 端口旧 smoke，新增并注册 `npm run test:ui-smoke`；在 4317 上验证正式路由、browse 搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐通过。未改产品数据、API、Supabase 或视觉几何。
