@@ -1,7 +1,7 @@
 # Unified Release Readiness
 
 **Status:** `NOT_READY`  
-**Updated:** 2026-08-26 17:36 +08:00
+**Updated:** 2026-08-27 01:35 +08:00
 **Scope:** final gate for a unified branch becoming eligible for a separately authorized RC/main release.
 
 | Gate | Current evidence | Status | What closes it |
@@ -9,8 +9,8 @@
 | One delivery line | Local branch, remote and Draft PR #141 are tracked by `project:status` | Pass | Keep all future work on the canonical branch. |
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | User-confirmed 4317 direction; layout/framing/scene/Rail/page matrix passed locally | Pass | Rerun affected matrix rows after any UI-owner change. |
-| GitHub convergence CI | Current PR #141 head and the latest four workflow results are read from `gh pr view 141 --json headRefOid,statusCheckRollup`; latest verified head `a6afb7b9…` passed RC `32955446456`, Result UX `32955446656`, Surface `32955446543`, and UI `32955446500` | Pass | Rerun automatically for relevant future pushes. |
-| Exact Preview SHA parity | Read-only `npm run check:preview-parity` reports `PASS`; Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` exposes `githubCommitSha=f465cb76c0ccc2a50216ebe370145bfbc5572c0d`, equal to local/remote/PR #141 | Pass | Rerun after each canonical push. |
+| GitHub convergence CI | Latest verified push head `e021adac…` passed RC `32994590759`; later commits only update evidence/handoff records | Pass (latest verified head) | Rerun automatically for relevant future pushes. |
+| Exact Preview SHA parity | `npm run check:preview-parity` reads Vercel READY `3b33c773…`, while current canonical head is newer; GitHub Vercel status reports `Deployment rate limited — retry in 24 hours` | Pending / external quota | Rerun after quota recovery; do not treat old READY as current head. |
 | Supabase schema/RLS parity | Read-only PostgREST probes: 31/31 contract tables and latest contract columns returned 200; migration revision/RLS policy metadata unavailable from authorized surfaces | Pending | Authorized read-only schema revision and direct RLS/API smoke check. |
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
 | Human visual acceptance | User confirmed the current 4317 visual as the working baseline on 2026-08-26; future visual changes require a new review | Pass (baseline only) | Re-run human review after any visual-owner change; this does not approve `main` release. |
@@ -47,6 +47,12 @@
 - Current canonical head `f465cb76…` is synchronized locally and on origin; all four GitHub Actions passed.
 - Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` exposes the same `githubCommitSha`; `npm run check:preview-parity` is `PASS`.
 - Supabase schema/RLS parity and separate release acceptance remain pending; `main` remains untouched.
+
+## 2026-08-27 current parity status
+
+- Local and origin canonical SHA are synchronized at the current head reported by `npm run project:status`; local 4317 preview returns HTTP 200.
+- The fixed parity CLI can query Vercel successfully. The newest READY canonical-branch deployment remains `3b33c773…`, behind the current head.
+- GitHub commit status for the current head explicitly reports `Deployment rate limited — retry in 24 hours`; this is an external Vercel quota blocker, not an application build failure. No manual deployment, Supabase mutation or `main` merge was performed.
 
 ## Release rule
 

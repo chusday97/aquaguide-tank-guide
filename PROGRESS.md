@@ -389,3 +389,4 @@
 2026-08-27：修复 `check:preview-parity` 的 Vercel CLI 不稳定解析：默认改用已验证的 `npm exec --package=vercel@59.6.2`，并支持 `VERCEL_CLI_PACKAGE` 覆盖。修复后只读 parity 可读取 Vercel READY `3b33c773`（当前 head `d3b6b5aa` 仍未部署），不再因 CLI 依赖解析直接误报 `AUTH_REQUIRED`；未修改产品、Supabase 或 main。
 2026-08-27：状态账本清理：将当前 canonical head、最新 RC Convergence 证据与 Preview 状态统一到 `cef27775`；产品代码最近修复 head `7dc78079` 的 RC run `32993742780` 已通过，当前 Vercel READY 仍为 `3b33c773`，parity `NOT_SYNCHRONIZED`。未修改 main、Supabase 或视觉基线。
 2026-08-27：push RC Convergence run `32994590759` 在交接 head `e021adac` 上成功；契约、领域、API、storage、telemetry、视觉契约与 production build 全部通过。该 head 仅包含交接文档更新。
+2026-08-27：GitHub Vercel 状态明确返回 `Deployment rate limited — retry in 24 hours`；确认 Preview 未追上当前 head 是外部 Hobby 配额阻塞，不是应用构建失败。发布就绪表已更新，未手动部署、未修改 Supabase 或 main。

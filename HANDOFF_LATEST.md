@@ -10,6 +10,7 @@
 - **最新门禁：** push RC Convergence run `32994590759` 已在当前交接 head `e021adac` 上 `success`；完整 contract/domain/API/storage/telemetry/visual/build 步骤通过。Vercel 最新 READY 仍落后于 canonical head，严格 parity 以命令实时输出为准；本地 4317 预览可用（HTTP 200）。
 - **文档提交后复验：** 交接/证据同步提交 `6fc42dd9` 已推送；RC Convergence workflow_dispatch run `32992520843` 在该精确 head 上 `success`，完整契约、领域、storage、telemetry、视觉契约和 production build 步骤通过。该提交只更新记录，不改变产品代码。
 - **Preview 查询边界（已修复）：** 之前的查询曾因 Vercel CLI 依赖解析返回 `AUTH_REQUIRED`；当前脚本已固定 CLI 并能读取 READY 部署。当前 canonical head 仍未部署，需等待 Vercel 自动部署后重跑 parity。
+- **Vercel 外部阻塞（实时）：** 当前 head 的 GitHub Vercel 状态明确为 `Deployment rate limited — retry in 24 hours`；这是 Hobby 部署额度限制，不是应用构建失败。等待额度恢复前不手动部署、不修改生产环境。
 
 - 修复 P0-07 迁移期跨标签页刷新缺口：`subscribeToAppState` 同时监听 canonical app-state 与 Aquarium/图鉴仍在兼容期使用的 legacy 镜像键；无关 storage key 不触发页面回流。
 - `npm run test:discovery-storage-boundary` 新增 legacy/unrelated storage event 回归；专项测试、lint、build、project truth、4317 UI smoke 与 product-actions runtime 均通过。
