@@ -25,7 +25,7 @@
 - **Preview 核对结果（2026-08-25）：** 最新 Ready branch Preview `aquaguide-2kdgtap8s-chusday97s-projects.vercel.app` 绑定统一分支，创建时间与 `187d16ba` 提交时间相差 6 秒；Vercel 元数据接口未返回 Git SHA，只能记为 timing correlation，不能记为 exact SHA parity。
 - **人工验收状态（2026-08-26）：** 用户已确认当前 4317 视觉方向作为工作基线；后续视觉仍可修改，但每次 UI owner 变更都必须重新做固定视口人工验收。此前 523×812 视口的 DOM、9 个物种图像和 WebGL canvas 浏览器检查无应用错误；Three.js 仅有弃用警告。
 
-### 本轮修复（`cb6446bc`）
+### 本轮修复（canonical regression hardening）
 
 - 浏览器回归脚本统一通过 `scripts/preview-url.mjs` 解析目标，默认使用当前 4317 production Preview；不再静默落到 3000/4173 等旧端口。
 - 已按当前 UI 契约修复 600px 断点、detail surface、混养路由、Aquarium 搜索/物种入口和 Dialog accessible-name 断言。
