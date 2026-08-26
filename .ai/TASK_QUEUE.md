@@ -3,6 +3,7 @@
 ## P0 — Progress unification
 
 - [x] 修复 P0-07 互动发现牌堆的页面直写漂移与延迟写入竞态：Aquarium/Encyclopedia 共用 local-app-state canonical writer，待提交字段 patch 在 flush 时合并最新快照，保留旧键兼容并增加 `test:discovery-storage-boundary`；图鉴筛选使用统计和未路由 AI 聊天仍待后续服务化。
+- [x] 补强 P0-07 跨页刷新：Aquarium/Encyclopedia 订阅 canonical app-state/storage 事件，并对未变化 wishlist Set 保持引用，避免快速切页读取旧 discovery 或事件回流。
 
 - [x] 实时复核 main 合并门禁：`b2613bdd` local/remote/Preview parity PASS；PR #141 checks 全部成功但仍 Draft/CONFLICTING，与 integration 只读 merge-tree 检出 62 个冲突文件，未创建 main 合并。
 

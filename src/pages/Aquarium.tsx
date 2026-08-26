@@ -50,6 +50,7 @@ import {
   patchLocalAppState,
   saveDiscoveryDeckState,
   saveAppStateToStorage,
+  subscribeToAppState,
   type LocalEventRecord,
 } from '../services/storage/local-app-state';
 import {
@@ -1378,6 +1379,12 @@ export default function AquariumManager() {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => subscribeToAppState(() => {
+    const nextWishlist = loadWishlistFishIds();
+    setWishlistFishIds(current => current.size === nextWishlist.size && [...current].every(id => nextWishlist.has(id)) ? current : nextWishlist);
+    setDiscoveryState(loadDiscoveryState());
+  }), []);
 
   const toggleWishlist = (id: string) => {
     const next = new Set(wishlistFishIds);

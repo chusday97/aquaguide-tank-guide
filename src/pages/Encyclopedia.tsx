@@ -79,7 +79,7 @@ import {
   recommendationService,
 } from '../modules/recommendation/recommendation.service';
 import type { DiscoveryDeckState } from '../modules/recommendation/recommendation.schema';
-import { loadDiscoveryDeckState, saveDiscoveryDeckState } from '../services/storage/local-app-state';
+import { loadDiscoveryDeckState, saveDiscoveryDeckState, subscribeToAppState } from '../services/storage/local-app-state';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 
@@ -763,6 +763,12 @@ export default function Encyclopedia() {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => subscribeToAppState(() => {
+    const nextWishlist = loadWishlistIds();
+    setWishlistFishIds(current => current.size === nextWishlist.size && [...current].every(id => nextWishlist.has(id)) ? current : nextWishlist);
+    setDiscoveryState(loadDiscoveryState());
+  }), []);
 
   const toggleWishlist = (id: string) => {
     const next = new Set(wishlistFishIds);

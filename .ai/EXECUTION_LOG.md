@@ -14,6 +14,12 @@
 - **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run build`, `npm run check:project-truth`, `git diff --check`, `AQUAGUIDE_URL=http://127.0.0.1:4323 npm run test:ui-smoke`, and `AQUAGUIDE_URL=http://127.0.0.1:4323 npm run test:product-actions-runtime` pass. The earlier 4322 run failed because its temporary preview process had exited; it was rerun successfully on 4323.
 - **Boundary:** No product rule, visual, API, Supabase or main change; Critic re-verification is required before delivery.
 
+## 2026-08-26 — Discovery cross-page refresh
+
+- **Action:** Aquarium and Encyclopedia now subscribe to the canonical app-state event/storage boundary and refresh discovery/wishlist state after writes from another page or tab; unchanged wishlist sets retain their reference to avoid save loops.
+- **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run build`, `npm run check:project-truth`, and `git diff --check` pass.
+- **Boundary:** No product rule, visual, API, Supabase or main change; Critic must reverify the combined patch.
+
 ## 2026-08-26 — main merge readiness audit
 
 - **Verification:** `project:status` reports canonical branch/local SHA `b2613bdd850aff43f52d56f991df56ce365462c7`; `check:preview-parity` returns `PASS` with Vercel READY deployment `aquaguide-60xddgoyg-chusday97s-projects.vercel.app`.
