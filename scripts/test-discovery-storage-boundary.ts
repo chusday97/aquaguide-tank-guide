@@ -13,7 +13,13 @@ const fakeWindow = Object.assign(eventTarget, { localStorage, setTimeout, clearT
 Object.defineProperty(globalThis, 'window', { value: fakeWindow, configurable: true });
 Object.defineProperty(globalThis, 'localStorage', { value: localStorage, configurable: true });
 
-const { AQUARIUM_APP_STATE_KEY, loadDiscoveryDeckState, saveDiscoveryDeckState } = await import('../src/services/storage/local-app-state');
+const {
+  AQUARIUM_APP_STATE_KEY,
+  clearLocalAppState,
+  loadDiscoveryDeckState,
+  patchLocalAppState,
+  saveDiscoveryDeckState,
+} = await import('../src/services/storage/local-app-state');
 
 const legacyState = {
   dateKey: '2099-01-01',
@@ -48,4 +54,37 @@ assert.deepEqual(loadDiscoveryDeckState(), canonicalState, 'canonical app state 
 assert.deepEqual(JSON.parse(localStorage.getItem('aquapediaDiscoveryDeck') || '{}'), canonicalState, 'legacy key must mirror canonical state for compatibility');
 assert.equal(changeEvents, 1, 'canonical discovery save must emit one app-state change event');
 
-console.log('discovery storage boundary: canonical app-state and legacy compatibility passed');
+clearLocalAppState();
+saveAppStateFixture({ wishlist: ['existing-fish'] });
+saveDiscoveryDeckState(canonicalState, { debounce: true });
+patchLocalAppState({ wishlist: ['new-fish'] });
+await new Promise(resolve => setTimeout(resolve, 750));
+const mergedAfterImmediatePatch = JSON.parse(localStorage.getItem(AQUARIUM_APP_STATE_KEY) || '{}');
+assert.deepEqual(mergedAfterImmediatePatch.discoveryState, canonicalState, 'an immediate patch must not discard queued discovery state');
+assert.deepEqual(mergedAfterImmediatePatch.wishlist, ['new-fish'], 'an immediate patch must be persisted with queued discovery state');
+
+clearLocalAppState();
+saveAppStateFixture({ wishlist: ['existing-fish'] });
+saveDiscoveryDeckState(canonicalState, { debounce: true });
+patchLocalAppState({ wishlist: ['debounced-fish'] }, { debounce: true });
+await new Promise(resolve => setTimeout(resolve, 750));
+const mergedDebounced = JSON.parse(localStorage.getItem(AQUARIUM_APP_STATE_KEY) || '{}');
+assert.deepEqual(mergedDebounced.discoveryState, canonicalState, 'two debounced patches must be merged');
+assert.deepEqual(mergedDebounced.wishlist, ['debounced-fish'], 'latest debounced patch must be persisted');
+
+clearLocalAppState();
+saveAppStateFixture({ wishlist: ['existing-fish'] });
+saveDiscoveryDeckState(canonicalState, { debounce: true });
+const externalUpdate = JSON.parse(localStorage.getItem(AQUARIUM_APP_STATE_KEY) || '{}');
+externalUpdate.wishlist = ['external-fish'];
+localStorage.setItem(AQUARIUM_APP_STATE_KEY, JSON.stringify(externalUpdate));
+await new Promise(resolve => setTimeout(resolve, 750));
+const mergedExternal = JSON.parse(localStorage.getItem(AQUARIUM_APP_STATE_KEY) || '{}');
+assert.deepEqual(mergedExternal.discoveryState, canonicalState, 'queued discovery state must survive an external update');
+assert.deepEqual(mergedExternal.wishlist, ['external-fish'], 'external updates to unrelated fields must survive the flush');
+
+function saveAppStateFixture(patch: { wishlist: string[] }) {
+  patchLocalAppState(patch);
+}
+
+console.log('discovery storage boundary: canonical, legacy, interleaving, and external-update cases passed');

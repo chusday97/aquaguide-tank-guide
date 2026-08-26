@@ -1,13 +1,15 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-26 20:35 +08:00
+更新时间：2026-08-26 21:35 +08:00
 
 ## 当前工作基线
 
 - **P0-07 存储边界修复（2026-08-26）：** Aquarium 与 Encyclopedia 的互动发现牌堆已统一通过 `src/services/storage/local-app-state.ts` 读写；旧 `aquapediaDiscoveryDeck` 键仍可读取并由 canonical writer 镜像，跨页面统一发出 `aquaguide:app-state-changed`。新增 `npm run test:discovery-storage-boundary` 并纳入 RC Convergence；图鉴筛选使用统计与未路由 AI 聊天仍保留为页面级 UI 状态，P0-07 继续为部分完成。
 
-- **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1@b2613bdd` 与 origin 同步；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 为 742/224、相对 `origin/main` 为 214/224；只读 merge-tree 与 integration 检出 62 个冲突文件。当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
-- **Preview parity（实时复核）：** 当前 canonical head 为 `fb90c07a`，local/remote/Vercel READY Preview 精确 SHA 一致，`npm run check:preview-parity` 返回 `PASS`。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
+- **P0-07 交错写入修复（2026-08-26）：** 延迟写入现在记录字段 patch，并在 flush 时合并最新持久化快照；发现牌堆更新不会再被愿望清单等即时/延迟更新覆盖，清空本地状态也会取消待执行写入。专项回归覆盖同页交错、双延迟 patch 和外部标签页更新。
+
+- **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1` 已推送至本轮修复 head；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 与 `origin/main` 的拓扑差异仍需逐项语义收敛；当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
+- **Preview parity（实时复核）：** 本轮代码已完成本地验证并推送；需以 `npm run project:status` 与 `npm run check:preview-parity` 复核当前 Vercel READY SHA，不能沿用旧 Preview 记录。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
 
 - **兼容性研究延期复核（2026-08-26）：** `origin/main@2eaa20c2` / `e8d6c652` 仅记录 research-only 无配对证据后的延期，当前无已接受的研究队列契约，已标记 `HISTORICAL_OR_EXCLUDED`；不传播到运行时混养结论。
 - **成就模块语义复核（2026-08-26）：** `origin/main@5bf9800c` 的“建设中”降级与当前产品契约冲突，已标记 `HISTORICAL_OR_EXCLUDED`；Collection hub 回归现在确认成就入口可聚焦中央并渲染派生成就预览。提交 `d5dcbd7a` 的 RC/UI/validate/candidate/Vercel/Cloudflare 全部通过，Preview SHA parity PASS；未改变视觉基线或数据契约。

@@ -105,7 +105,7 @@ const normalizeState = (value: Partial<LocalAppState> | null | undefined): Local
 };
 
 let pendingTimer: number | null = null;
-let pendingState: LocalAppState | null = null;
+let pendingPatch: Partial<LocalAppState> | null = null;
 
 const emitAppStateChanged = () => {
   if (typeof window === 'undefined') return;
@@ -126,74 +126,86 @@ export const loadAppStateFromStorage = (): LocalAppState => {
   });
 };
 
+const getLatestAppState = (): LocalAppState => normalizeState({
+  ...loadAppStateFromStorage(),
+  ...(pendingPatch ?? {}),
+});
+
+const writeAppState = (state: LocalAppState) => {
+  try {
+    localStorage.setItem(AQUARIUM_APP_STATE_KEY, JSON.stringify(state));
+    localStorage.setItem('aquariums', JSON.stringify(state.aquariums));
+    localStorage.setItem('wishlistFishIds', JSON.stringify(state.wishlist));
+    localStorage.setItem('aquarium_diagnosis_records', JSON.stringify(state.diagnosisRecords));
+    localStorage.setItem('deceasedRecords', JSON.stringify(state.deceasedRecords));
+    if (state.discoveryState) {
+      localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state.discoveryState));
+    }
+    emitAppStateChanged();
+  } catch (error) {
+    console.warn('AquaGuide local app state save failed', error);
+    throw error instanceof Error ? error : new Error('本地数据没有保存成功。');
+  }
+};
+
+const scheduleAppStatePatch = (patch: Partial<LocalAppState>) => {
+  pendingPatch = {
+    ...(pendingPatch ?? {}),
+    ...patch,
+    version: AQUARIUM_APP_STATE_VERSION,
+    updatedAt: new Date().toISOString(),
+  };
+  if (pendingTimer !== null) window.clearTimeout(pendingTimer);
+  pendingTimer = window.setTimeout(() => {
+    const queuedPatch = pendingPatch;
+    pendingTimer = null;
+    pendingPatch = null;
+    if (!queuedPatch) return;
+
+    try {
+      // Merge against the latest persisted snapshot so unrelated cross-tab updates survive.
+      const latest = normalizeState({ ...loadAppStateFromStorage(), ...queuedPatch });
+      writeAppState({ ...latest, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      console.warn('AquaGuide local app state debounced save failed', error);
+      notifyDataRecovery(AQUARIUM_APP_STATE_KEY, error);
+    }
+  }, 700);
+};
+
 /** Read discovery state through the canonical app-state boundary, with legacy-key fallback. */
 export const loadDiscoveryDeckState = (): DiscoveryDeckState | undefined => {
-  const appState = loadAppStateFromStorage();
+  const appState = getLatestAppState();
   if (appState.discoveryState) return appState.discoveryState;
   return safeParse<DiscoveryDeckState | undefined>(localStorage.getItem(DISCOVERY_STORAGE_KEY), undefined, DISCOVERY_STORAGE_KEY);
 };
 
 /** Persist discovery state through the same writer and change event as business state. */
 export const saveDiscoveryDeckState = (state: DiscoveryDeckState, options: { debounce?: boolean } = {}) => {
-  const current = loadAppStateFromStorage();
-  return saveAppStateToStorage({ ...current, discoveryState: state }, options);
+  return patchLocalAppState({ discoveryState: state }, options);
 };
 
 export const saveAppStateToStorage = (appState: LocalAppState, options: { debounce?: boolean } = {}) => {
   const normalized = normalizeState({ ...appState, updatedAt: new Date().toISOString() });
-  const write = () => {
-    try {
-      localStorage.setItem(AQUARIUM_APP_STATE_KEY, JSON.stringify(normalized));
-      localStorage.setItem('aquariums', JSON.stringify(normalized.aquariums));
-      localStorage.setItem('wishlistFishIds', JSON.stringify(normalized.wishlist));
-      localStorage.setItem('aquarium_diagnosis_records', JSON.stringify(normalized.diagnosisRecords));
-      localStorage.setItem('deceasedRecords', JSON.stringify(normalized.deceasedRecords));
-      if (normalized.discoveryState) {
-        localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(normalized.discoveryState));
-      }
-      emitAppStateChanged();
-    } catch (error) {
-      console.warn('AquaGuide local app state save failed', error);
-      throw error instanceof Error ? error : new Error('本地数据没有保存成功。');
-    }
-  };
 
   if (!options.debounce) {
     if (pendingTimer !== null) window.clearTimeout(pendingTimer);
     pendingTimer = null;
-    pendingState = null;
-    write();
+    pendingPatch = null;
+    writeAppState(normalized);
     return normalized;
   }
 
-  pendingState = normalized;
-  if (pendingTimer !== null) window.clearTimeout(pendingTimer);
-  pendingTimer = window.setTimeout(() => {
-    if (pendingState) {
-      try {
-        localStorage.setItem(AQUARIUM_APP_STATE_KEY, JSON.stringify(pendingState));
-        localStorage.setItem('aquariums', JSON.stringify(pendingState.aquariums));
-        localStorage.setItem('wishlistFishIds', JSON.stringify(pendingState.wishlist));
-        localStorage.setItem('aquarium_diagnosis_records', JSON.stringify(pendingState.diagnosisRecords));
-        localStorage.setItem('deceasedRecords', JSON.stringify(pendingState.deceasedRecords));
-        if (pendingState.discoveryState) {
-          localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(pendingState.discoveryState));
-        }
-        emitAppStateChanged();
-      } catch (error) {
-        console.warn('AquaGuide local app state debounced save failed', error);
-        notifyDataRecovery(AQUARIUM_APP_STATE_KEY, error);
-      }
-    }
-    pendingTimer = null;
-    pendingState = null;
-  }, 700);
+  scheduleAppStatePatch(normalized);
   return normalized;
 };
 
 export const patchLocalAppState = (patch: Partial<LocalAppState>, options: { debounce?: boolean } = {}) => {
-  const current = loadAppStateFromStorage();
-  return saveAppStateToStorage({ ...current, ...patch, version: AQUARIUM_APP_STATE_VERSION }, options);
+  if (options.debounce) {
+    scheduleAppStatePatch(patch);
+    return getLatestAppState();
+  }
+  return saveAppStateToStorage({ ...getLatestAppState(), ...patch, version: AQUARIUM_APP_STATE_VERSION });
 };
 
 export const subscribeToAppState = (listener: () => void) => {
@@ -211,6 +223,9 @@ export const subscribeToAppState = (listener: () => void) => {
 
 export const clearLocalAppState = () => {
   try {
+    if (pendingTimer !== null) window.clearTimeout(pendingTimer);
+    pendingTimer = null;
+    pendingPatch = null;
     [
       AQUARIUM_APP_STATE_KEY,
       'aquariums',

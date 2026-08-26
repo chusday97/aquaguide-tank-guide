@@ -7,6 +7,13 @@
 - **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run build`, `npm run check:project-truth`, and `git diff --check` pass.
 - **Boundary:** No product rule, visual, API, Supabase or main change; filter usage and unrouted AI chat remain intentionally page-level UI state.
 
+## 2026-08-26 — Discovery storage interleaving repair
+
+- **Critic finding:** The first canonical writer still replaced a queued full snapshot when an immediate wishlist patch arrived, which could drop discovery state.
+- **Action:** Replaced pending full snapshots with field patches; flush merges against the latest persisted state, and clear-local-state cancels pending writes. Expanded the storage boundary regression with immediate/debounced interleaving and external-update cases.
+- **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run build`, `npm run check:project-truth`, `git diff --check`, `AQUAGUIDE_URL=http://127.0.0.1:4323 npm run test:ui-smoke`, and `AQUAGUIDE_URL=http://127.0.0.1:4323 npm run test:product-actions-runtime` pass. The earlier 4322 run failed because its temporary preview process had exited; it was rerun successfully on 4323.
+- **Boundary:** No product rule, visual, API, Supabase or main change; Critic re-verification is required before delivery.
+
 ## 2026-08-26 — main merge readiness audit
 
 - **Verification:** `project:status` reports canonical branch/local SHA `b2613bdd850aff43f52d56f991df56ce365462c7`; `check:preview-parity` returns `PASS` with Vercel READY deployment `aquaguide-60xddgoyg-chusday97s-projects.vercel.app`.

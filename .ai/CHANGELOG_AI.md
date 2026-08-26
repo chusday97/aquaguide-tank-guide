@@ -5,6 +5,7 @@
 ### Discovery storage boundary
 
 - Aquarium and Encyclopedia now persist interactive discovery through `local-app-state`; legacy `aquapediaDiscoveryDeck` remains mirrored for compatibility. Added `test:discovery-storage-boundary` to RC Convergence. Filter usage and unrouted AI chat remain page-level UI state.
+- Fixed the follow-up interleaving bug: debounced writes now queue field patches and merge against the latest persisted snapshot, so discovery state survives wishlist updates and cross-tab writes; clearing local state cancels queued writes.
 
 ## 2026-08-26
 
