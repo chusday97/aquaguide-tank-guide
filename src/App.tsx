@@ -210,6 +210,9 @@ const desktopSubMenus: Record<string, Array<{
   hash?: string;
   path?: string;
 }>> = {
+  '/aquarium': [
+    { id: 'daily-check', labelKey: 'aquarium.dailyCheck', descriptionKey: 'aquarium.dailyCheckDesc', icon: BookOpenCheck, path: taskRoutes.aquarium.dailyCheck },
+  ],
   '/encyclopedia': [
     { id: 'browse', labelKey: 'nav.browse', descriptionKey: 'nav.browseDescription', icon: BookOpen, path: taskRoutes.encyclopedia.browse },
     { id: 'compatibility', labelKey: 'nav.compatibility', descriptionKey: 'nav.compatibilityDescription', icon: Activity, path: taskRoutes.encyclopedia.compatibility },

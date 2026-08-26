@@ -72,6 +72,7 @@
 - `src/components/search/SearchAutocomplete.tsx`：共享可访问搜索联想、键盘选择和已选物种摘要。
 - `src/services/search/search-suggestions.service.ts`：确定性物种优先排序、养护匹配与受控相关词。
 - `src/services/navigation/task-routes.ts`：添加生物、巡检、换水、缸内物种、混养与设置的正式任务地址契约。
+- `scripts/test-task-entry-contract.mjs`：锁定桌面鱼缸子菜单与每日检查 canonical route 的对应关系。
 - `src/services/aquarium/aquarium-setup.service.ts`：鱼缸未知字段规范化、空白鱼缸草稿和 `empty / incomplete / usable / complete` 资料状态派生。
 - `src/services/aquarium/species-addition-policy.ts`：现实记录与未来规划在混养四态下的独立产品策略。
 - `src/services/aquarium/livestock-recording.service.ts`：现实生物先保存、后评估及批量部分失败保留的统一服务。

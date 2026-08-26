@@ -106,6 +106,8 @@ jobs:
         run: npm run test:p0-tank-state
       - name: Daily Check rule and persistence contract
         run: npm run test:daily-check
+      - name: Task entry contract
+        run: npm run test:task-entry-contract
       - name: Tank evidence adapter
         run: npm run test:p0-tank-evidence
       - name: Water change engine

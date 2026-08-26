@@ -2,6 +2,14 @@
 
 ## 2026-08-26
 
+### Daily Check navigation clarity
+
+- Selectively migrated `origin/main@2add55a5`: desktop Aquarium navigation now exposes a named Daily Aquarium Check submenu item and canonical task route.
+- Added a static task-entry contract to prevent future drift between navigation labels and task routes.
+- No API, database, Supabase or visual-baseline changes.
+
+## 2026-08-26
+
 ### Daily Check rule remote verification
 
 - Canonical commit `2b544836` passed PR #141 RC Convergence, UI Regression, Surface, Result UX, Vercel and Cloudflare checks.

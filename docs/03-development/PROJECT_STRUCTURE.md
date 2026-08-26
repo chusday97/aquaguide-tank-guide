@@ -18,7 +18,7 @@ aquaguide_frontend/
 │   ├── 03-development/    架构、结构、运行、QA 与日志入口
 │   └── 04-planning/       产品卡点和路线图
 ├── server/                可复用的旧 AI 路由与静态预览宿主
-├── scripts/               契约、规则、审计与核心路径脚本
+├── scripts/               契约、规则、审计与核心路径脚本（含 task-entry contract）
 ├── src/
 │   ├── components/        导航、详情表面、任务流程与 3D
 │   ├── data/              物种和养护静态数据

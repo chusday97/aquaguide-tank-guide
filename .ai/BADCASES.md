@@ -9,6 +9,13 @@
 - **证据：** `npm run test:daily-check`、`npm run lint`、`npm run build`；来源 `origin/main@37177a60` 已按语义选择性迁移。
 - **状态：** `REGRESSION_VERIFIED`
 
+### PUI-BC-023 — Daily Check 与 Care troubleshooting 入口含义不清
+
+- **现象：** 桌面“我的鱼缸”只有一级入口，用户无法从导航区分实际巡检任务与养护百科排查。
+- **处理：** 增加明确命名的每日鱼缸检查子入口，直达 canonical daily-check route；保留 Care 独立入口。
+- **证据：** `npm run test:task-entry-contract`、`npm run test:task-routes`、`npm run lint`；来源 `origin/main@2add55a5` 已按语义选择性迁移。
+- **状态：** `REGRESSION_VERIFIED`
+
 ### AQUA-UI-001 — 非 Portal Popup 导致页面错误
 
 - **现象：** 首轮非 Portal 写法曾触发 Base UI 页面错误，养护详情也未进入实际双屏父网格。

@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Daily Check navigation clarity
+
+- **Problem:** Desktop Aquarium navigation had no explicit Daily Check subtask, making it ambiguous with Care troubleshooting.
+- **Action:** Added the `/aquarium` desktop submenu item using `taskRoutes.aquarium.dailyCheck`; added `scripts/test-task-entry-contract.mjs` and the RC Convergence step.
+- **Verification:** `npm run test:task-entry-contract`, `npm run test:task-routes`, `npm run lint`, and `git diff --check` pass.
+- **Boundary:** No data contract, API, Supabase, visual geometry or `main` changes.
+
 ## 2026-08-26 — Daily Check rule remote verification
 
 - **Verification:** Commit `2b544836b3c92290d3aa9f723e45627f7c7953d1` is on the canonical remote branch. PR #141 RC Convergence (`32961005538`), UI Regression (`32961005592`), Result UX/validate (`32961005535`/`32961005567`), Vercel and Cloudflare all passed.
