@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Verified
+- 审计 `origin/main@5bf9800c` 后确认当前成就模块不应降级为“建设中”：现行产品契约要求 8 枚勋章可达，新增成就入口聚焦与派生预览回归；`npm run test:collection-hub-ui`、`npm run lint`、`npm run build` 通过。
 - `66cb109c` 的空养护计划推荐深链已完成远端闭环：PR #141 RC/UI/validate/candidate-head、Vercel、Cloudflare 全部通过，Vercel Preview `aquaguide-c3g36lf4w-chusday97s-projects.vercel.app` 与 local/remote SHA parity PASS。
 - 选择性迁移 `origin/main@d464e24b` 的空养护计划推荐深链：鱼缸页“浏览养护”现在直达 `/care#care-recommendations`，新增任务入口契约；未改变数据/API/Supabase 或视觉基线。
 - `d4e61514` 的 Daily Check 导航修复已完成远端闭环：RC Convergence、UI Regression、Vercel、Cloudflare 全部通过，Vercel READY Preview 与 local/remote SHA parity PASS。

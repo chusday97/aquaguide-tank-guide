@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Achievement module reconciliation
+
+- Audited `origin/main@5bf9800c`; the current product contract treats eight derived achievements as complete and reachable, so the historical “building” CTA downgrade was excluded.
+- Extended Collection hub browser regression to assert achievement focus and derived previews; no visual, API, database or Supabase change.
+
+## 2026-08-26
+
 ### Empty care plan recommendation deep link remote verification
 
 - Canonical commit `66cb109c` passed PR #141 RC Convergence, UI Regression, validation, candidate-head, Vercel and Cloudflare checks.

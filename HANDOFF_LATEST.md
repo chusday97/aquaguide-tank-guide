@@ -4,6 +4,7 @@
 
 ## 当前工作基线
 
+- **成就模块语义复核（2026-08-26）：** `origin/main@5bf9800c` 的“建设中”降级与当前产品契约冲突，已标记 `HISTORICAL_OR_EXCLUDED`；Collection hub 回归现在确认成就入口可聚焦中央并渲染派生成就预览。未改变视觉基线或数据契约。
 - **空养护计划深链修复（2026-08-26）：** 选择性迁移 `origin/main@d464e24b`；鱼缸页“浏览养护”现在直达 `/care#care-recommendations`，并由 task-entry contract 锁定。提交 `66cb109c` 的 RC Convergence、UI Regression、validate、候选 head、Vercel、Cloudflare 全部通过，Preview SHA parity PASS；本地 4317 HTTP 200。
 - **CI 环境修复（2026-08-26）：** UI Regression V1 的 Chromium 安装已去除 `--with-deps` 系统包安装，仅保留 Playwright 浏览器下载；新 run `32959367104` 已通过，浏览器回归已越过安装步骤并完成。
 - **Daily Check 规则修复（2026-08-26）：** `origin/main@37177a60` 的否定水质答案误判已选择性迁入统一分支；精确枚举匹配、正/负回归和 RC Convergence 门禁均已加入，未改变当前 4317 视觉基线。

@@ -70,6 +70,10 @@ async function assertDesktopCreatureNavigation(width) {
   assert.equal(await center.getAttribute('data-collection-focus'), 'care', 'Clicking a creature must focus that collection in the center');
   assert.ok(await page.locator('[data-preview-item="care"]').count() >= 1, 'Care center module must render saved guides');
 
+  await page.locator('[data-collection-node="achievements"]').click();
+  assert.equal(await center.getAttribute('data-collection-focus'), 'achievements', 'Achievements creature must focus the completed achievement module');
+  assert.ok(await page.locator('[data-preview-item="achievements"]').count() >= 1, 'Achievement center module must render derived milestone previews');
+
   await page.locator('[data-collection-node="wishlist"]').click();
   const firstWishlist = page.locator('[data-preview-item="wishlist"]').first();
   assert.equal(await firstWishlist.getAttribute('data-preview-id'), 'sp_0004', 'Newest saved species must remain first');

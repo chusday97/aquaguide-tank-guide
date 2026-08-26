@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Achievement module reconciliation
+
+- **Problem:** `origin/main@5bf9800c` contains a historical downgrade that marks the achievement module as building, while the canonical product contract defines eight achievements as complete and reachable.
+- **Action:** Excluded the stale UI migration and strengthened `verify-collection-hub-previews.mjs` to assert the achievement creature focuses the center and renders derived milestone previews.
+- **Verification:** `npm run test:collection-hub-ui`, `npm run lint`, `npm run build`, `npm run check:project-truth`, and `git diff --check` pass.
+- **Boundary:** No visual-baseline, API, database, Supabase or `main` changes; local browser check required escalated process permission, while the same regression is covered by remote UI CI.
+
 ## 2026-08-26 — Empty care plan recommendation deep link remote verification
 
 - **Verification:** Commit `66cb109c0879caea6acb1c3551cc2e065fd7ec92` passed PR #141 RC Convergence, UI Regression, validation, candidate-head, Vercel and Cloudflare checks.
