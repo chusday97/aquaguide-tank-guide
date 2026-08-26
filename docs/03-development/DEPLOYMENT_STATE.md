@@ -49,7 +49,8 @@
 ## 2026-08-26 Vercel CLI metadata check
 
 - Using the existing authenticated Vercel CLI in read-only mode, the newest Ready deployment for the canonical branch was identified as `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` with branch alias `aquaguide-git-codex-unified-rc-visual-v1-chusday97s-projects.vercel.app`.
-- Vercel metadata exposed `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`; the canonical local/GitHub SHA is `43f75e739655e8061fb880ed3415b741a90275c1`. This is an explicit deployment lag, not parity.
+- Vercel metadata exposed `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`; the canonical local/GitHub SHA is the current value reported by `npm run project:status`. This is an explicit deployment lag, not parity.
+- After pushing the parity evidence commit, a second read-only `vercel ls aquaguide --json` still showed no deployment matching the current canonical head; the branch Preview remains on the older SHA above.
 - No redeploy, configuration change, database migration, RPC mutation or data write was executed.
 
 ## Deployment rules

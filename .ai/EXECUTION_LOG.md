@@ -210,3 +210,4 @@
 - **Read:** canonical branch status, branch convergence audit, Vercel project metadata and latest deployment list.
 - **Verification:** local and GitHub canonical SHA are both `43f75e739655e8061fb880ed3415b741a90275c1`; `vercel ls aquaguide --json` identified the newest Ready deployment on `codex/unified-rc-visual-v1` as `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` with `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`.
 - **Conclusion:** Preview is verifiably behind the canonical branch; exact Preview SHA parity remains pending. No redeploy, migration, RPC mutation, configuration change or data write was executed.
+- **Follow-up:** Pushed the evidence commit and rechecked `vercel ls aquaguide --json`; no deployment for the new canonical head appeared, so the lag is still active and must be resolved through the Git-connected Vercel deployment path.

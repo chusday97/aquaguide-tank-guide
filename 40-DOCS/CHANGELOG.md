@@ -4,6 +4,7 @@
 
 ### Fixed
 - Vercel parity audit now records the latest canonical-branch Preview's exact `githubCommitSha` (`6b0e629d…`) and the confirmed lag behind local/GitHub `43f75e73…`; no redeploy or cloud mutation was performed.
+- After pushing the parity evidence commit, a second read-only Vercel listing still found no deployment matching the current canonical head; Preview remains on the older SHA and release stays `NOT_READY`.
 - Parity follow-up recorded: canonical local/remote SHA remains synchronized and local 4317 preview returns 200; anonymous GitHub API rate limiting prevented new PR/check-run evidence. No Supabase or deployment mutation.
 - 混养配对判断统一使用 `species_only` scope，避免把鱼缸级负载/捕食启发式误套到物种配对；聚合结果另行合并 `tank` scope，保留容量、设备、温度和负载硬约束，并让视觉结果展示聚合主阻断；已审核物种但未审核配对时明确返回 `insufficient_data`。证据 getter 显式过滤非 `reviewed` 状态，新增覆盖、高负载和视觉权威回归，未修改数据库、API 或当前视觉几何。
 - Parity follow-up recorded: the protected Vercel Preview returned `302 → Vercel SSO` without a deploy SHA; no authorized Supabase schema/RLS inspection was available and no database mutation was attempted. Release remains `NOT_READY`.
