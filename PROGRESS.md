@@ -1,5 +1,6 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
 
+- 2026-08-26：执行 Vercel CLI 只读部署元数据复核。最新 Ready canonical-branch Preview `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` 明确绑定统一分支，但 `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`，落后于本地/GitHub `43f75e739655e8061fb880ed3415b741a90275c1`；确认 Preview 存在部署滞后，未触发重新部署，Supabase 仍未执行写操作或 migration。
 - 2026-08-26：用户确认当前 4317 视觉方向可作为工作基线，后续视觉仍允许按模块渐进修改；已将人工视觉验收记录为“当前基线通过、后续变更需重新验收”。本轮核心契约/领域回归、生产构建和 4317 互动预览浏览器检查通过；exact Preview SHA 与 Supabase schema/RLS parity 仍是发布门禁。
 - 2026-08-26：选择性迁移混养证据边界：物种配对评估固定使用 `species_only` scope，防止鱼缸级启发式污染配对结论；已审核物种但未审核配对统一 fail closed 为 `insufficient_data`。新增覆盖矩阵与 scorecard 回归，当前 501 物种 / 7 reviewed profiles / 4 reviewed pair rules，未整批合并 `origin/main`。
 - 2026-08-26：最新 parity 复核：本地 `4317/_preview/interactive` 返回 HTTP 200；公开 GitHub API 因匿名 rate limit 未能新增 PR/check-run 证据。未把本地可用性当作 Vercel SHA parity，Supabase schema/RLS 仍保持 pending，未执行任何写入或 migration。

@@ -204,3 +204,9 @@
 - **User decision:** The current 4317 version is usable as the working visual baseline, while additional visual issues remain for later incremental work.
 - **Action:** Recorded D-AQUA-005 and clarified the Visual Baseline; no product code or UI geometry changed.
 - **Constraint:** Future visual work must be module-scoped, preserve formal component/surface semantics, and rerun only the affected viewport matrix before acceptance.
+
+## 2026-08-26 — Vercel deployment lag identified (read-only)
+
+- **Read:** canonical branch status, branch convergence audit, Vercel project metadata and latest deployment list.
+- **Verification:** local and GitHub canonical SHA are both `43f75e739655e8061fb880ed3415b741a90275c1`; `vercel ls aquaguide --json` identified the newest Ready deployment on `codex/unified-rc-visual-v1` as `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` with `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`.
+- **Conclusion:** Preview is verifiably behind the canonical branch; exact Preview SHA parity remains pending. No redeploy, migration, RPC mutation, configuration change or data write was executed.
