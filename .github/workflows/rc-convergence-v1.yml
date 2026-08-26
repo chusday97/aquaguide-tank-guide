@@ -82,6 +82,26 @@ jobs:
         run: npm run check:project-truth
       - name: Confirm PR and cross-layer governance
         run: npm run check:pr-governance
+      - name: Three-tier data contract
+        run: npm run test:three-tier-contract
+      - name: Business API contract
+        run: npm run test:business-api-contract
+      - name: API boundary and auth semantics
+        run: npm run test:api-boundary
+      - name: Compatibility engine
+        run: npm run test:compatibility
+      - name: Tank state engine
+        run: npm run test:p0-tank-state
+      - name: Tank evidence adapter
+        run: npm run test:p0-tank-evidence
+      - name: Water change engine
+        run: npm run test:p0-water-change
+      - name: Compatibility evidence presentation
+        run: npm run test:compatibility-evidence
+      - name: Recommendation authority
+        run: npm run test:recommendation-authority
+      - name: Share report contract
+        run: npm run test:share-report-contract
       - name: Type check
         run: npm run lint
       - name: Visual viewport contract

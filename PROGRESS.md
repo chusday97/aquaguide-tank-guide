@@ -7,6 +7,7 @@
 - 2026-08-26：完成 `origin/main@ed0cf380` Care card 能力首轮语义复核：统一分支已有 `分享卡片` → 本地养护卡预览和复制流程；新增 canonical Care card 浏览器回归并纳入统一 UI CI，不迁入重复入口。待推送后观察远端 workflow。
 - 2026-08-26：建立 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`，对 origin/main 高影响能力完成首轮“已存在/选择性迁移/契约复核/历史排除”判定；明确其余独有提交仍待逐项复核，不以提交数量判断功能缺失。
 - 2026-08-26：完成 `origin/main@daadc2a3` Settings sharing 首轮复核：统一分支已有真实分享报告列表和 `/aquarium?action=exports` 目标；新增 Settings 导航浏览器回归，不复制“建设中”降级，云端 parity 仍待授权。
+- 2026-08-26：补齐 canonical CI 底层门禁：`RC Convergence V1` 现在执行三层契约、业务/API、混养、鱼缸状态/证据、换水、证据展示、推荐和分享契约测试；本地回归通过，未改产品或 Supabase。
 - 2026-08-26：新增 `npm run check:preview-parity` 自动门禁（`1a355c6c`），确认 local/remote 同步但 Vercel canonical Preview 仍停留在 `6b0e629d…`，命令以 `NOT_SYNCHRONIZED` 阻断误发布；未触发部署或 Supabase 变更。
 
 - 2026-08-26：执行 Vercel CLI 只读部署元数据复核。最新 Ready canonical-branch Preview `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` 明确绑定统一分支，但 `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`，落后于本地/GitHub `43f75e739655e8061fb880ed3415b741a90275c1`；确认 Preview 存在部署滞后，未触发重新部署，Supabase 仍未执行写操作或 migration。

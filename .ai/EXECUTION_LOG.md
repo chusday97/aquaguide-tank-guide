@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Canonical domain and API CI coverage
+
+- **Action:** Added the existing data-contract, API-boundary, compatibility, current-tank state/evidence, water-change, evidence-presentation, recommendation and share-report checks to `RC Convergence V1`.
+- **Verification:** Each command passes locally (listener-based API checks run with authorized local process permissions); the workflow now gates the canonical branch on bottom-layer semantics before type/build checks.
+- **Boundary:** No product UI, domain implementation, database schema, RLS, Supabase environment or deployment behavior changed.
+
 ## 2026-08-26 — Canonical CI trigger alignment
 
 - **Action:** Moved `Surface System V1` and `UI Regression V1` push triggers from retired `codex/interactive-parity-v3` to `codex/unified-rc-visual-v1`; added the canonical `npm run test:ui-smoke` step to the unified browser workflow using the isolated 4173 preview.

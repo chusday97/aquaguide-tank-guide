@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- 将三层数据契约、业务/API 边界、混养、鱼缸状态/证据、换水、推荐和分享契约回归纳入 `RC Convergence V1`，使统一分支的底层逻辑与 UI 门禁在同一 CI 链路验证；未改变产品、数据库或 Supabase。
 - 对 `origin/main@ed0cf380` 的 Care card 可达性修复完成语义复核：统一分支已有 `分享卡片` → 本地养护卡流程，因此只新增 `test:care-card-action-ui` 回归并纳入统一 UI CI，避免重复迁移旧入口；未改变产品 UI、API、数据库或视觉几何。
 - 新增 `ORIGIN_MAIN_RECONCILIATION.md`，记录 origin/main 高影响能力首轮逐项判定，明确未完成的提交仍不得直接合并。
 - 复核 `origin/main@daadc2a3` 的分享设置降级：统一分支已有真实的脱敏报告列表与导出/分享中心，因此保留实现并新增 Settings 导航回归，不把功能退回“建设中”。

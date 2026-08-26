@@ -2,6 +2,11 @@
 
 ## 2026-08-26
 
+### Canonical domain and API CI coverage
+
+- Added existing three-tier contract, business/API boundary, compatibility, tank-state/evidence, water-change, evidence-presentation, recommendation and share-report tests to `RC Convergence V1`.
+- This closes the CI coverage gap between the canonical branch's bottom-layer implementation and its visual/browser gates; no product, schema, RLS or deployment behavior changed.
+
 ### Canonical CI trigger alignment
 
 - Updated `Surface System V1` and `UI Regression V1` push triggers from the retired `codex/interactive-parity-v3` branch to `codex/unified-rc-visual-v1`.

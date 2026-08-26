@@ -26,6 +26,7 @@
 - `api/v1/[...path].ts`：Vercel V1 API catch-all，不启动独立 listener。
 - `scripts/test-production-cloud-runtime-contract.mjs` / `scripts/test-production-cloud-runtime-smoke.ts`：API namespace root/nested before SPA、环境边界、JSON health/404、AI fallback 和 canonical Express runtime 回归。
 - `.github/workflows/result-ux-head-integrity-v1.yml` / `scripts/test-result-ux-workflow-head-integrity.mjs`：只验证 PR head 或规范推送 SHA 的精确 checkout；不承载历史 Result UX 页面或旧 UI workflow。
+- `.github/workflows/rc-convergence-v1.yml`：在 canonical 分支统一执行数据契约、API、领域规则、证据和分享回归，再进入类型与构建门禁。
 
 - `apps/api/`：Express TypeScript 业务 API 入口、统一错误、Supabase 客户端、鉴权和版本化路由。
 - `server/index.mjs` / `api/health.js` / `functions/api/health.js`：本地 Express、Vercel 与 Pages 兼容健康接口；公开文字/视觉 AI 能力状态，但不暴露 Secret。

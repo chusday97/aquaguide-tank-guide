@@ -37,6 +37,7 @@
 - `origin/main@ed0cf380` 的 Care card 可达性已完成首轮复核：统一分支已有 `分享卡片` → 本地 `生成养护卡` 流程；新增 `test:care-card-action-ui` 守住该行为并纳入统一 UI CI，没有复制旧入口或改变产品契约。
 - 首轮 `origin/main` 高影响能力判定已整理到 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`；这只是已验证分组，不代表 214 个独有提交全部完成，剩余提交仍不得直接合并。
 - `origin/main@daadc2a3` 的 Settings sharing 降级已复核：统一分支保留真实脱敏报告流程，并由 `test:settings-share-action-ui` 验证 Settings → 导出与分享；状态继续为 `DEPLOYED_REVERIFY_PENDING`，不降级为建设中。
+- `RC Convergence V1` 已补齐底层门禁：三层契约、业务/API、混养、鱼缸状态/证据、换水、证据展示、推荐和分享测试均在 canonical workflow 执行；视觉 UI 门禁仍由 `UI Regression V1` 负责。
 - README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。回归、文档与最终状态提交已全部推送；当前 SHA 不固化在 Handoff，始终以 `npm run project:status` 与 `git ls-remote` 输出为准，工作区 clean。
 - 推送后 `check:preview-parity` 仍返回 `AUTH_REQUIRED`（当前 Vercel CLI 会话未暴露部署信息）；不得将其解释为 Preview 已同步，Supabase schema/RLS parity 仍 pending。
 

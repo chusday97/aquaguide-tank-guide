@@ -30,6 +30,7 @@
 - [x] 对 `origin/main` Care card 能力完成首轮语义复核：统一分支已有本地“分享卡片”流程，补充 canonical Care card 浏览器门禁，不迁入重复 UI。
 - [x] 建立 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`，记录首轮高影响能力的“已存在 / 选择性迁移 / 契约复核 / 历史排除”判定；其余 origin/main 独有提交仍待逐项复核。
 - [x] 复核 `origin/main@daadc2a3` Settings sharing 状态：统一分支保留已实现的脱敏报告流程，不复制“建设中”降级，并用 Settings → 导出与分享浏览器回归守住真实入口。
+- [x] 将核心三层契约、API、混养、当前鱼缸、水质、证据、推荐和分享回归纳入 `RC Convergence V1` canonical CI。
 - [ ] 完成授权部署环境的 Vercel exact SHA 与 Supabase schema/RLS parity 复核。
 
 ## Eight-phase truth consolidation
