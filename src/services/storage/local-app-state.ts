@@ -235,6 +235,7 @@ export const clearLocalAppState = () => {
       'deceasedRecords',
       DISCOVERY_STORAGE_KEY,
     ].forEach(key => localStorage.removeItem(key));
+    emitAppStateChanged();
   } catch (error) {
     console.warn('AquaGuide local app state clear failed', error);
   }

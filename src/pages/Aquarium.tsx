@@ -1383,7 +1383,14 @@ export default function AquariumManager() {
   useEffect(() => subscribeToAppState(() => {
     const nextWishlist = loadWishlistFishIds();
     setWishlistFishIds(current => current.size === nextWishlist.size && [...current].every(id => nextWishlist.has(id)) ? current : nextWishlist);
-    setDiscoveryState(loadDiscoveryState());
+    setDiscoveryState(current => {
+      const next = normalizeDiscoveryState(loadDiscoveryDeckState());
+      // Aquarium's initial loader intentionally hides the retired homepage queue;
+      // cross-page refreshes must not apply that presentation-only filter.
+      return next.queueIds.length > 0 || current.queueIds.length === 0
+        ? next
+        : { ...next, queueIds: current.queueIds };
+    });
   }), []);
 
   const toggleWishlist = (id: string) => {
