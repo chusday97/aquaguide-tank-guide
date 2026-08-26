@@ -13,6 +13,7 @@
 - Reviewed `origin/main@ed0cf380`'s Care card reachability patch against the canonical Care article. The unified branch already exposes `分享卡片` → local `生成养护卡` with copy/save actions, so the old UI patch would duplicate the entry rather than restore missing behavior.
 - Added `scripts/verify-care-card-action.mjs`, `npm run test:care-card-action-ui`, and the corresponding unified UI workflow step to protect the existing behavior. No product UI, domain rule, API contract, database, Supabase environment or visual geometry changed.
 - Added `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md` to record first-pass capability decisions for high-impact `origin/main` groups without claiming all 214 unique commits are reconciled.
+- Reviewed `origin/main@daadc2a3`'s Settings sharing downgrade. The canonical branch has a real Settings → export/share route and deployed-reverification state, so the old “building” patch was not copied; added a browser guard for the destination.
 
 ### Preview target and runtime regression alignment
 

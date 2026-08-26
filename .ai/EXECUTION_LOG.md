@@ -13,6 +13,12 @@
 - **Verification:** Added a canonical Preview browser check for the entry, local card preview, copy action and absence of public-sharing CTAs; the check will run in `UI Regression V1`.
 - **Boundary:** No duplicate product entry, data field, API, Supabase or visual geometry was introduced. The origin/main patch remains a reviewed historical source, not a merge source.
 
+## 2026-08-26 — Origin/main Settings sharing reconciliation
+
+- **Action:** Compared `origin/main@daadc2a3`'s “sharing is building” change with the canonical Settings page. The unified branch has an implemented, auth-gated share-report list and a real `/aquarium?action=exports` destination.
+- **Verification:** Added `test:settings-share-action-ui` to assert the Settings section and destination in the canonical Preview; share-report contract, API boundary, public report UI and Settings feedback regressions also pass.
+- **Decision:** Keep `DEPLOYED_REVERIFY_PENDING` until cloud parity is authorized; do not downgrade the implemented path or copy the historical building-state patch.
+
 ## 2026-08-26 — Preview URL and stale regression repair
 
 - **Action:** Added the canonical `scripts/preview-url.mjs` resolver (default `http://127.0.0.1:4317`) and migrated browser scripts away from mixed 3000/4173/localhost defaults. Repaired stale 600px, detail surface, compatibility route, Aquarium search/entry and dialog-name assertions. Restored the existing AI Tank Copilot as the desktop Dock seventh action and mobile more-actions entry.

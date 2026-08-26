@@ -14,6 +14,7 @@
 - `src/components/ThreeAquarium.tsx`：`contain` / `stage-cover` 响应式相机取景。
 - `scripts/verify-split-workspace-detail.mjs`：阻止桌面详情退回 Portal 固定抽屉的结构门禁。
 - `scripts/verify-split-workspace-runtime.mjs`：在正式预览中打开物种/养护详情，断言其为页面内非固定双屏区域、无 Portal、无滚动锁并可关闭。
+- `scripts/verify-care-card-action.mjs` / `scripts/verify-settings-share-action.mjs`：验证本地养护卡可达性，以及 Settings 到导出/分享中心的真实导航。
 
 根目录 `vercel.json`：Vercel 生产部署的 API-before-SPA rewrite 和 SPA 路由回退配置；`api/v1/[...path].ts` 复用 canonical Express API app。
 
