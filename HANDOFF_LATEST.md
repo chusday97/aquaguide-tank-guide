@@ -6,7 +6,7 @@
 
 - 修复 P0-07 迁移期跨标签页刷新缺口：`subscribeToAppState` 同时监听 canonical app-state 与 Aquarium/图鉴仍在兼容期使用的 legacy 镜像键；无关 storage key 不触发页面回流。
 - `npm run test:discovery-storage-boundary` 新增 legacy/unrelated storage event 回归；专项测试、lint、build、project truth、4317 UI smoke 与 product-actions runtime 均通过。
-- 代码提交 `3330c02d` 曾完成 local/origin/Vercel READY Preview parity；随后文档证据提交 `59d4f0ae` 已推送并使 local/origin 同步，Vercel 自动部署仍停在 `3330c02d`，当前严格 parity 为 `NOT_SYNCHRONIZED`。未手动部署。
+- 代码提交 `3330c02d` 曾完成 local/origin/Vercel READY Preview parity；随后文档证据提交已继续推送，local/origin 仍保持同步，Vercel 自动部署在最近一次检查仍停在 `3330c02d`，严格 parity 为 `NOT_SYNCHRONIZED`。未手动部署。
 
 - Critic 复验后补齐逐对 telemetry 去重签名：组合、数量、逐对状态和规则代码变化会生成新事件；单纯 React 重渲染仍去重。
 - Critic 复验建议已关闭：签名覆盖 `passedRules` 及风险/缺失规则，且使用排序后的物种 ID，反向选择不再产生方向性重复。
@@ -25,7 +25,7 @@
 - **独立审查结果（2026-08-26）：** Critic 对 `8095815f`、`901db4cf`、`d26b3270` 的交错写入、跨页刷新、清除态与 legacy migration 进行了同线程六维复验，全部通过；仅保留 direct full-snapshot debounce 语义文档化与真实浏览器等待 flush 作为非阻塞后续建议。
 
 - **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1` 已推送至本轮修复 head；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 与 `origin/main` 的拓扑差异仍需逐项语义收敛；当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
-- **Preview parity（实时复核）：** 当前 `npm run project:status` 为 `59d4f0ae`，local/origin 同步；`npm run check:preview-parity` 显示 Vercel READY Preview 仍为 `3330c02d`，状态 `NOT_SYNCHRONIZED`。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
+- **Preview parity（实时复核）：** 当前 `npm run project:status` 显示 local/origin 同步；最近一次 `npm run check:preview-parity` 显示 Vercel READY Preview 仍为 `3330c02d`，状态 `NOT_SYNCHRONIZED`。下一次工作先重新运行该命令，不沿用旧结果。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
 
 - **兼容性研究延期复核（2026-08-26）：** `origin/main@2eaa20c2` / `e8d6c652` 仅记录 research-only 无配对证据后的延期，当前无已接受的研究队列契约，已标记 `HISTORICAL_OR_EXCLUDED`；不传播到运行时混养结论。
 - **成就模块语义复核（2026-08-26）：** `origin/main@5bf9800c` 的“建设中”降级与当前产品契约冲突，已标记 `HISTORICAL_OR_EXCLUDED`；Collection hub 回归现在确认成就入口可聚焦中央并渲染派生成就预览。提交 `d5dcbd7a` 的 RC/UI/validate/candidate/Vercel/Cloudflare 全部通过，Preview SHA parity PASS；未改变视觉基线或数据契约。
