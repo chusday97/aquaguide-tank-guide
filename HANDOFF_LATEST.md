@@ -27,14 +27,14 @@
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
-- 当前统一代码与文档 head：`4b09a225`
+- 当前统一代码与文档 head：`6b0e629d`
 - 本次提交同时包含兼容性聚合修复、证据状态门禁、回归脚本与交接文档；后续判断产品行为以该提交及其验证证据为准。
 - 不合并 `main`；当前分支与 `main`、RC1/#104/#105 等历史栈存在明显分叉，后续必须 semantic reconciliation，禁止覆盖式 merge/rebase 当作“同步最新”。
 - 当前状态：**alignment recovery / runtime regression hardening / 非 release-ready / 非最终视觉锁定**。
 - 当前下一步：完成 exact Preview SHA 与 Supabase schema/RLS parity；在这些门禁及单独 release acceptance 完成前不创建 `main` 发布合并。
 - 最新 parity 尝试（2026-08-26）：记录的 Vercel Preview 返回 `302 → Vercel SSO`，未暴露 Git SHA；当前环境没有授权 Supabase schema/RLS inspection surface。本轮未执行 Supabase 请求、migration、RPC 或写库，以上门禁仍为 pending。
 - 最新远端 CI 证据（2026-08-26）：PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a`；`RC Convergence V1` run `32915252842`、`Result UX Head Integrity V1` run `32915252831` 均通过。Vercel/Cloudflare 状态通过，但 exact Preview Git SHA 与 Supabase schema/RLS 仍 pending；当前视觉基线人工验收已通过，后续 UI 变更需复验。
-- 最近完成：`Compatibility evidence boundary migration`（`70f216cd`）。配对判断显式固定为 `species_only`，避免鱼缸级捕食/负载启发式污染逐对结论；聚合结果额外合并 `tank` scope，保留容量、设备、温度和负载硬约束，视觉适配器展示聚合主阻断；证据 getter 只暴露 `reviewed` 状态。已审核物种但没有已审核配对规则时统一返回 `insufficient_data`，显式已审核配对规则继续保留阻断/谨慎权威。新增覆盖回归、优先级 scorecard、高负载与视觉权威测试：501 条物种、7 个 reviewed profiles、4 个 reviewed pair rules、12 个优先方向，其中 2 个可记录结论、8 个资料不足、2 个不建议。未改 API、数据库、Supabase 或视觉几何。
+- 最近完成：`Compatibility evidence boundary migration`（`6b0e629d`）。配对判断显式固定为 `species_only`，避免鱼缸级捕食/负载启发式污染逐对结论；聚合结果额外合并 `tank` scope，保留容量、设备、温度和负载硬约束，视觉适配器展示聚合主阻断；证据 getter 只暴露 `reviewed` 状态。已审核物种但没有已审核配对规则时统一返回 `insufficient_data`，显式已审核配对规则继续保留阻断/谨慎权威。新增覆盖回归、优先级 scorecard、高负载与视觉权威测试：501 条物种、7 个 reviewed profiles、4 个 reviewed pair rules、12 个优先方向，其中 2 个可记录结论、8 个资料不足、2 个不建议。未改 API、数据库、Supabase 或视觉几何。
 - 最近完成：`Species Detail` 回归脚本对齐当前产品契约（待本地提交）。测试 fixture 使用当前孔雀鱼 ID `sp_0436`，当前缸内谨慎路径验证“查看风险后确认添加 → 混养计算”，鱼缸入口改用 `data-tank-species-entry`；手机布局断言改为验证结论后动作顺序，避免把已淘汰的首屏按钮可见性和旧样式当作当前真相。
 - 最近完成：`Species Detail evidence authority`。详情关键理由、混养证据状态和来源提示消费统一 `TankCompatibilityResult`；`housingReason` 仅显示为档案参考并明确不覆盖计算结果。保持当前视觉基线，未迁移 RC 详情布局。新增 `src/modules/knowledge/compatibilityEvidencePresentation.ts` 与专项回归。
 - 最近完成：`Recommendation authority and severity`（`9fcad4a2`）。推荐候选保留与 direct/adjustable/blocked 严重级别消费统一 `TankCompatibilityResult`；“建议单养”、负载和群游局部启发式不再独立硬阻断，理由优先使用 canonical summary。保持当前视觉基线，未迁移 RC 推荐 UI；专项契约回归通过。
