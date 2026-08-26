@@ -13,6 +13,12 @@
 
 ## 2026-08-26 — Latest parity check
 
+## 2026-08-26 — Browser contract convergence push
+
+- **Action:** Pushed the validated convergence commits `cb6446bc` and `ec7ead8c` to `codex/unified-rc-visual-v1`.
+- **Verification:** `npm run project:status` and `git ls-remote` both report `ec7ead8ca9d6dafa2bb648ffd64dee49c6b455cb`; worktree is clean; `/_preview/interactive` returns HTTP 200. `npm run check:preview-parity` confirms local/remote parity but remains `AUTH_REQUIRED` for Vercel deployment metadata.
+- **Boundary:** No `main` merge, Supabase request/migration/write, or deployment mutation was performed.
+
 - **Action:** Rechecked canonical local/remote SHA and the local 4317 preview; attempted a read-only public GitHub PR metadata query.
 - **Verification:** `npm run project:status`, `npm run check:branch-convergence` and `curl -I http://127.0.0.1:4317/_preview/interactive` passed. GitHub API returned anonymous rate-limit protection, so no new remote check-run evidence was claimed.
 - **Boundary:** No Supabase request, migration, RPC mutation, data write or Vercel deployment change.

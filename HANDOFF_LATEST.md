@@ -31,7 +31,7 @@
 - 已按当前 UI 契约修复 600px 断点、detail surface、混养路由、Aquarium 搜索/物种入口和 Dialog accessible-name 断言。
 - AI 建缸助手恢复为桌面沉浸式 Dock 的第七个操作卡片；移动端继续使用“更多鱼缸操作”入口。未新增第二套业务入口或规则。
 - 第二轮陈旧回归审计已完成：Care 分类改用正式 `/care?mode=browse` 路由；Daily Discovery、动作语义和手机优先级回归改为验证图鉴互动场景拥有六项发现队列，鱼缸首页不再渲染重复推荐；Species Detail 使用当前 `View tank species`/`查看缸内物种` 入口与 `detail-rail`/`bottom-sheet` 表面。
-- README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。提交 `cb6446bcb46d561a9424a38b8074cf0b07ee6b31` 已完成本地提交，推送前仍需复核远端。
+- README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。`cb6446bcb46d561a9424a38b8074cf0b07ee6b31` 与文档提交 `ec7ead8ca9d6dafa2bb648ffd64dee49c6b455cb` 已推送；`project:status` 与 `git ls-remote` 均确认 local/remote 为 `ec7ead8c`，工作区 clean。
 - 推送后 `check:preview-parity` 仍返回 `AUTH_REQUIRED`（当前 Vercel CLI 会话未暴露部署信息）；不得将其解释为 Preview 已同步，Supabase schema/RLS parity 仍 pending。
 
 - 当前分支：`codex/unified-rc-visual-v1`
