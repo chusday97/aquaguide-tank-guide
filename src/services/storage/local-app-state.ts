@@ -140,6 +140,8 @@ const writeAppState = (state: LocalAppState) => {
     localStorage.setItem('deceasedRecords', JSON.stringify(state.deceasedRecords));
     if (state.discoveryState) {
       localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state.discoveryState));
+    } else {
+      localStorage.removeItem(DISCOVERY_STORAGE_KEY);
     }
     emitAppStateChanged();
   } catch (error) {

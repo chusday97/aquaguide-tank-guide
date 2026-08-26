@@ -19,6 +19,7 @@ const {
   loadDiscoveryDeckState,
   patchLocalAppState,
   saveDiscoveryDeckState,
+  subscribeToAppState,
 } = await import('../src/services/storage/local-app-state');
 
 const legacyState = {
@@ -82,6 +83,14 @@ await new Promise(resolve => setTimeout(resolve, 750));
 const mergedExternal = JSON.parse(localStorage.getItem(AQUARIUM_APP_STATE_KEY) || '{}');
 assert.deepEqual(mergedExternal.discoveryState, canonicalState, 'queued discovery state must survive an external update');
 assert.deepEqual(mergedExternal.wishlist, ['external-fish'], 'external updates to unrelated fields must survive the flush');
+
+let clearEvents = 0;
+const unsubscribe = subscribeToAppState(() => { clearEvents += 1; });
+clearLocalAppState();
+await new Promise(resolve => setTimeout(resolve, 750));
+unsubscribe();
+assert.equal(loadDiscoveryDeckState(), undefined, 'clearing local state must clear canonical and legacy discovery state');
+assert.equal(clearEvents, 1, 'clearing local state must notify app-state subscribers once');
 
 function saveAppStateFixture(patch: { wishlist: string[] }) {
   patchLocalAppState(patch);
