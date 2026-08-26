@@ -1,6 +1,6 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-26 21:35 +08:00
+更新时间：2026-08-26 22:30 +08:00
 
 ## 当前工作基线
 
@@ -9,6 +9,7 @@
 - **P0-07 交错写入修复（2026-08-26）：** 延迟写入现在记录字段 patch，并在 flush 时合并最新持久化快照；发现牌堆更新不会再被愿望清单等即时/延迟更新覆盖，清空本地状态也会取消待执行写入。专项回归覆盖同页交错、双延迟 patch 和外部标签页更新。
 - **跨页刷新补强（2026-08-26）：** Aquarium 与 Encyclopedia 已订阅统一 `APP_STATE_CHANGED_EVENT`；收到 canonical 写入或跨标签 storage 事件时刷新 discovery/wishlist，且对未变化的 Set 保持引用，避免事件回流触发重复保存。
 - **清除状态修复（2026-08-26）：** Aquarium 刷新不再用旧队列兜底；当 canonical/legacy discovery 均不存在时会清空页面状态。只有显式 `clearLocalAppState()` 清理 legacy 键，普通 app-state 保存继续保留旧键兼容并等待 discovery 迁移。
+- **独立审查结果（2026-08-26）：** Critic 对 `8095815f`、`901db4cf`、`d26b3270` 的交错写入、跨页刷新、清除态与 legacy migration 进行了同线程六维复验，全部通过；仅保留 direct full-snapshot debounce 语义文档化与真实浏览器等待 flush 作为非阻塞后续建议。
 
 - **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1` 已推送至本轮修复 head；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 与 `origin/main` 的拓扑差异仍需逐项语义收敛；当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
 - **Preview parity（实时复核）：** 本轮代码已完成本地验证并推送；需以 `npm run project:status` 与 `npm run check:preview-parity` 复核当前 Vercel READY SHA，不能沿用旧 Preview 记录。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。

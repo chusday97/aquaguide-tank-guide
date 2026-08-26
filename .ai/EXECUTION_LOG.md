@@ -27,6 +27,11 @@
 - **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run check:project-truth`, and `git diff --check` pass; the test waits past the 700ms debounce and asserts clear notification plus canonical-without-discovery migration compatibility.
 - **Boundary:** No product rule, visual, API, Supabase or main change; Critic re-verification is required after commit.
 
+## 2026-08-26 — Discovery storage boundary review passed
+
+- **Critic:** Same-thread six-dimension review of the combined storage, page subscription, clear-state and legacy migration fixes passed. Immediate/debounced interleaving, external updates, clear notification, Aquarium queue refresh, and legacy migration are all covered by implementation and regression evidence.
+- **Non-blocking follow-up:** Document the full-replacement semantics of direct `saveAppStateToStorage(..., { debounce: true })`; optionally add a browser-level wait-after-flush assertion.
+
 ## 2026-08-26 — main merge readiness audit
 
 - **Verification:** `project:status` reports canonical branch/local SHA `b2613bdd850aff43f52d56f991df56ce365462c7`; `check:preview-parity` returns `PASS` with Vercel READY deployment `aquaguide-60xddgoyg-chusday97s-projects.vercel.app`.
