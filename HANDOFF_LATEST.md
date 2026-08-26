@@ -4,7 +4,7 @@
 
 ## 当前工作基线
 
-- **空养护计划深链修复（2026-08-26）：** 选择性迁移 `origin/main@d464e24b`；鱼缸页“浏览养护”现在直达 `/care#care-recommendations`，并由 task-entry contract 锁定。代码与文档已在本地完成，当前提交待远端 CI/Preview 复核。
+- **空养护计划深链修复（2026-08-26）：** 选择性迁移 `origin/main@d464e24b`；鱼缸页“浏览养护”现在直达 `/care#care-recommendations`，并由 task-entry contract 锁定。提交 `66cb109c` 的 RC Convergence、UI Regression、validate、候选 head、Vercel、Cloudflare 全部通过，Preview SHA parity PASS；本地 4317 HTTP 200。
 - **CI 环境修复（2026-08-26）：** UI Regression V1 的 Chromium 安装已去除 `--with-deps` 系统包安装，仅保留 Playwright 浏览器下载；新 run `32959367104` 已通过，浏览器回归已越过安装步骤并完成。
 - **Daily Check 规则修复（2026-08-26）：** `origin/main@37177a60` 的否定水质答案误判已选择性迁入统一分支；精确枚举匹配、正/负回归和 RC Convergence 门禁均已加入，未改变当前 4317 视觉基线。
 - **Daily Check 导航修复（2026-08-26）：** `origin/main@2add55a5` 的导航澄清已选择性迁入；桌面鱼缸子菜单明确显示每日鱼缸检查并直达 `/aquarium?action=daily-check`。提交 `d4e61514` 的远端 CI 与 Vercel Preview parity 已通过。

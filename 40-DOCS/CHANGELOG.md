@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Verified
+- `66cb109c` 的空养护计划推荐深链已完成远端闭环：PR #141 RC/UI/validate/candidate-head、Vercel、Cloudflare 全部通过，Vercel Preview `aquaguide-c3g36lf4w-chusday97s-projects.vercel.app` 与 local/remote SHA parity PASS。
 - 选择性迁移 `origin/main@d464e24b` 的空养护计划推荐深链：鱼缸页“浏览养护”现在直达 `/care#care-recommendations`，新增任务入口契约；未改变数据/API/Supabase 或视觉基线。
 - `d4e61514` 的 Daily Check 导航修复已完成远端闭环：RC Convergence、UI Regression、Vercel、Cloudflare 全部通过，Vercel READY Preview 与 local/remote SHA parity PASS。
 - 选择性迁移 `origin/main@2add55a5` 的 Daily Check 导航澄清：桌面“我的鱼缸”新增明确的每日检查子入口，`npm run test:task-entry-contract` 与 `npm run lint` 通过；未改变数据/API/Supabase 或视觉基线。

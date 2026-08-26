@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Empty care plan recommendation deep link remote verification
+
+- Canonical commit `66cb109c` passed PR #141 RC Convergence, UI Regression, validation, candidate-head, Vercel and Cloudflare checks.
+- Read-only Preview parity is `PASS`: local SHA = origin SHA = Vercel READY deployment SHA `aquaguide-c3g36lf4w-chusday97s-projects.vercel.app`.
+
+## 2026-08-26
+
 ### Empty care plan recommendation deep link
 
 - Selectively migrated `origin/main@d464e24b`: empty care-plan CTA now uses the canonical `/care#care-recommendations` route.
