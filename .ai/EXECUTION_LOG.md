@@ -4,6 +4,7 @@
 
 - **Action:** Moved `Surface System V1` and `UI Regression V1` push triggers from retired `codex/interactive-parity-v3` to `codex/unified-rc-visual-v1`; added the canonical `npm run test:ui-smoke` step to the unified browser workflow using the isolated 4173 preview.
 - **Verification:** Workflow trigger scan shows only the canonical branch for push events; `npm run test:ui-smoke` passes locally with `AQUAGUIDE_URL=http://127.0.0.1:4317`.
+- **Verification:** The change was pushed as `834af948`; `npm run project:status` and `git ls-remote` report the same canonical SHA, and `/_preview/interactive` returns HTTP 200. `check:preview-parity` remains `AUTH_REQUIRED` for Vercel metadata.
 - **Boundary:** No product UI, domain rule, API contract, database, Supabase environment or visual geometry changed. Remote workflow execution will be observed after the push.
 
 ## 2026-08-26 — Preview URL and stale regression repair
