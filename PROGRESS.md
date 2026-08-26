@@ -373,3 +373,4 @@
 2026-08-26：根据独立 Critic 复验继续收口：逐对 telemetry 去重签名现在包含 pair 状态、数量和规则代码，状态变化不会因 aggregate 等级不变而漏记；`test:session-events` 已纳入 RC Convergence。专项门禁通过，待远端新检查结果。
 2026-08-27：完成 Critic 修复并推送 `bf9f6bf3` / `0878a51f`：逐对 telemetry 变化签名与 RC Convergence session 门禁已落地；4317 UI smoke、动作运行时、状态同步通过。GitHub API 当前网络不可用，等待恢复后复核 PR #141 checks。
 2026-08-27：完成 telemetry 最后一处边界补强：pairSignature 现在纳入全部 canonical rule codes（含 passedRules），并使用排序后的物种 ID，反向选择不会重复产生新签名；本地 session/兼容性/lint/project truth 通过。
+2026-08-27：修正交接中的提交引用，当前 canonical head 为 `f175ea2c`，与远端统一分支一致；此前旧 SHA 仅保留为历史证据。
