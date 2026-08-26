@@ -14,7 +14,7 @@
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
 - **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；P0 业务迁移已完成，仍不得在 Supabase parity 与单独 release acceptance 前转为 Ready 或合并。
 - **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；运行 `32854080645` 已在 `cc99ec47` 通过 project truth、状态、PR topology、lint、布局、3D 取景和 production build；当前 head 仅包含文档证据更新。
-- **最近一次远端门禁：** 提交 `2d8dce2c` 的 `RC Convergence V1` `32954725592`、`Result UX Head Integrity V1` `32954725576`、`Surface System V1` `32954725687`、`UI Regression V1` `32954725673` 均已通过；UI Regression 已包含物种详情专项回归。
+- **最近一次远端门禁：** PR #141 的当前 head 与四项 workflow 结果必须以 GitHub live check rollup 为准；截至本轮，提交 `a6afb7b9` 的 RC、Result UX、Surface、UI Regression 均已通过，且 UI Regression 已包含物种详情专项回归。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 与 `docs/03-development/PR_CLEANUP_RECORD.md` 已记录安全收敛结果；当前开放列表只剩 #141，其他 55 个历史 PR 已关闭但分支保留。
 - **分支收敛审计：** `98977966` 新增 `npm run audit:branch-convergence` 和 `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`。最新远端快照显示统一分支相对 `origin/main` 为 149/214、相对 RC1 为 149/742；这些是 Git 拓扑差异，不是缺失功能结论。后续必须按 `.ai/RC_MIGRATION_LEDGER.md` 逐项审查，禁止整体 merge/rebase。
 - **Parity 门禁：** `54f3e005`、`b39dbbd7`、`6e71cb05` 已加入 local/remote SHA、缺失 ref 和 detached CI 分支检查；统一分支已推送，当前 `project:status` 与 `check:branch-convergence` 均通过。当前环境无法连接 GitHub API，Actions 真实运行仍待外部观察。
