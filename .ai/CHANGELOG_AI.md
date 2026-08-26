@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Daily Check navigation remote verification
+
+- Canonical commit `d4e61514` passed RC Convergence, UI Regression, validation, Vercel and Cloudflare checks.
+- Read-only Preview parity is `PASS` for local, origin and Vercel READY deployment.
+
+## 2026-08-26
+
 ### Daily Check navigation clarity
 
 - Selectively migrated `origin/main@2add55a5`: desktop Aquarium navigation now exposes a named Daily Aquarium Check submenu item and canonical task route.

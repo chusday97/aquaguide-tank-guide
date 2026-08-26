@@ -6,6 +6,7 @@
 
 - **CI 环境修复（2026-08-26）：** UI Regression V1 的 Chromium 安装已去除 `--with-deps` 系统包安装，仅保留 Playwright 浏览器下载；新 run `32959367104` 已通过，浏览器回归已越过安装步骤并完成。
 - **Daily Check 规则修复（2026-08-26）：** `origin/main@37177a60` 的否定水质答案误判已选择性迁入统一分支；精确枚举匹配、正/负回归和 RC Convergence 门禁均已加入，未改变当前 4317 视觉基线。
+- **Daily Check 导航修复（2026-08-26）：** `origin/main@2add55a5` 的导航澄清已选择性迁入；桌面鱼缸子菜单明确显示每日鱼缸检查并直达 `/aquarium?action=daily-check`。提交 `d4e61514` 的远端 CI 与 Vercel Preview parity 已通过。
 - **CI 触发修复（2026-08-26）：** `RC Convergence V1` 已将 `PROGRESS.md`、`HANDOFF_LATEST.md`、`.ai` 执行/变更记录、`40-DOCS/CHANGELOG.md` 与 `.project-journal/**` 纳入 push/PR 路径过滤；后续文档同步会产生同一 SHA 的底层门禁结果，不再沿用旧 head 的 RC 结果。
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
@@ -20,6 +21,7 @@
 - **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；运行 `32854080645` 已在 `cc99ec47` 通过 project truth、状态、PR topology、lint、布局、3D 取景和 production build；当前 head 仅包含文档证据更新。
 - **最近一次远端门禁：** PR #141 当前 head `fd27daf2…` 的 RC Convergence `32956751975`、Result UX Head Integrity `32956752189`、Surface System `32956751865`、UI Regression `32956751904` 均已通过，且 UI Regression 已包含物种详情专项回归。
 - **最新远端门禁：** PR #141 head `2b544836…` 的 RC Convergence `32961005538`、Result UX/validate `32961005535`/`32961005567`、UI Regression `32961005592` 均通过；Vercel 与 Cloudflare 状态也通过。
+- **最新远端门禁：** PR #141 head `d4e61514…` 的 RC Convergence `32962622208`、UI Regression `32962622300`、validate `32962622235`、verify-candidate-head `32962622268` 均通过；Vercel/Cloudflare 也通过，Preview SHA parity 为 PASS。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 与 `docs/03-development/PR_CLEANUP_RECORD.md` 已记录安全收敛结果；当前开放列表只剩 #141，其他 55 个历史 PR 已关闭但分支保留。
 - **分支收敛审计：** `98977966` 新增 `npm run audit:branch-convergence` 和 `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`。最新远端快照显示统一分支相对 `origin/main` 为 149/214、相对 RC1 为 149/742；这些是 Git 拓扑差异，不是缺失功能结论。后续必须按 `.ai/RC_MIGRATION_LEDGER.md` 逐项审查，禁止整体 merge/rebase。
 - **Parity 门禁：** `54f3e005`、`b39dbbd7`、`6e71cb05` 已加入 local/remote SHA、缺失 ref 和 detached CI 分支检查；统一分支已推送，当前 `project:status` 与 `check:branch-convergence` 均通过。当前环境无法连接 GitHub API，Actions 真实运行仍待外部观察。

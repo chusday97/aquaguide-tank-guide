@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project_id": "PRJ-aquaguide",
-  "updated_at": "2026-08-26T19:20:00+08:00",
+  "updated_at": "2026-08-26T19:45:00+08:00",
   "evidence_items": [
     {"id":"EVD-20260715-001","type":"commit","locator":"917b80a","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"今日行动、水族册独立地址与生命纪念回流"},
     {"id":"EVD-20260715-002","type":"test","locator":"npm run lint; npm run build; 1280/390 browser regression","date":"2026-07-15","version":"917b80a","accessible":true,"sensitive":false,"notes":"类型、构建和直达行为验证"},
@@ -100,6 +100,7 @@
     {"id":"EVD-20260826-075","type":"verification","locator":".github/workflows/rc-convergence-v1.yml path filters; npm run check:project-truth; git diff --check","date":"2026-08-26","version":"03b42bf6ac81f2f3b31f11265ac2ec522ad2b49f","accessible":true,"sensitive":false,"notes":"RC Convergence push 与 pull_request 现在覆盖 canonical progress、handoff、AI logs、changelog 和 .project-journal 文件；本地 workflow path presence、project truth 与 diff check 通过，远端同 SHA RC run 待推送后验证"},
     {"id":"EVD-20260826-076","type":"verification","locator":".github/workflows/ui-regression-v1.yml Install Chromium step; run 32958817853 job 98146388124; npm run check:project-truth; git diff --check","date":"2026-08-26","version":"857cff4fbed3514451cec1d488750000a2ff5c44","accessible":true,"sensitive":false,"notes":"旧 UI Regression run 在 npx playwright install --with-deps chromium 停滞；工作流已改为 npx playwright install chromium，静态检查通过，待新 run 验证是否越过安装步骤"},
     {"id":"EVD-20260826-077","type":"verification","locator":"src/modules/diagnosis/diagnosis.rules.ts; scripts/test-daily-check-contract.ts; .github/workflows/rc-convergence-v1.yml; npm run test:daily-check; npm run lint; npm run build; git diff --check","date":"2026-08-26","version":"2b544836b3c92290d3aa9f723e45627f7c7953d1","accessible":true,"sensitive":false,"notes":"Daily Check 水体分类答案改为精确匹配；“没有异味/清澈”负向与“明显异味”正向回归通过，并已加入 canonical RC Convergence 门禁"},
-    {"id":"EVD-20260826-078","type":"deployment","locator":"npm run check:preview-parity; gh pr checks 141; Vercel aquaguide-kh6huu1vq-chusday97s-projects.vercel.app; GitHub Actions 32961005535/32961005538/32961005567/32961005592","date":"2026-08-26","version":"2b544836b3c92290d3aa9f723e45627f7c7953d1","accessible":true,"sensitive":false,"notes":"PR #141 RC/UI/Surface/Result UX、Vercel、Cloudflare 全部通过；local、origin、PR 与 Vercel READY Preview 精确 SHA parity PASS；Supabase schema/RLS 与 release acceptance 仍 pending"}
+    {"id":"EVD-20260826-078","type":"deployment","locator":"npm run check:preview-parity; gh pr checks 141; Vercel aquaguide-kh6huu1vq-chusday97s-projects.vercel.app; GitHub Actions 32961005535/32961005538/32961005567/32961005592","date":"2026-08-26","version":"2b544836b3c92290d3aa9f723e45627f7c7953d1","accessible":true,"sensitive":false,"notes":"PR #141 RC/UI/Surface/Result UX、Vercel、Cloudflare 全部通过；local、origin、PR 与 Vercel READY Preview 精确 SHA parity PASS；Supabase schema/RLS 与 release acceptance 仍 pending"},
+    {"id":"EVD-20260826-079","type":"deployment","locator":"npm run check:preview-parity; gh pr checks 141; Vercel aquaguide-7rrbsg5mp-chusday97s-projects.vercel.app; GitHub Actions 32962622208/32962622235/32962622268/32962622300","date":"2026-08-26","version":"d4e615143be7145407a4a476c1f2b04854e78592","accessible":true,"sensitive":false,"notes":"桌面 Aquarium daily-check 导航修复的 PR #141 RC/UI/validate/candidate-head、Vercel、Cloudflare 全部通过；local、origin、PR 与 Vercel READY Preview 精确 SHA parity PASS"}
   ]
 }
