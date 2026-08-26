@@ -66,14 +66,14 @@ async function verifySettingsSearch() {
   await page.locator('[data-tank-primary-action="settings"]').click();
   await page.getByRole('dialog', { name: '鱼缸设置' }).waitFor({ state: 'visible' });
 
-  await page.locator('[data-settings-panel="substrate"]').click();
+  await page.locator('[data-settings-panel="substrate"]').click({ noWaitAfter: true });
   const substrateSearch = page.getByRole('searchbox', { name: '搜索底砂或造景' });
   await substrateSearch.fill('溪流砂');
   const substrateSection = substrateSearch.locator('xpath=ancestor::section[1]');
   assert.ok(await substrateSection.getByText('溪流砂', { exact: true }).count(), 'substrate search must find matching substrate');
   assert.equal(await substrateSection.getByText('水草泥', { exact: true }).count(), 0, 'substrate search must filter unrelated options');
 
-  await page.locator('[data-settings-panel="plants"]').click();
+  await page.locator('[data-settings-panel="plants"]').click({ noWaitAfter: true });
   const plantSearch = page.getByRole('searchbox', { name: '搜索水草物种' });
   await plantSearch.fill('小水榕');
   const plantSection = plantSearch.locator('xpath=ancestor::section[1]');
