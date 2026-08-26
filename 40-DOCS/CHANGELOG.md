@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 统一分支 `f9f6ba82` 的 RC/UI/Surface/Result UX/Cloudflare 门禁全部成功，Vercel READY Preview 与 local/origin/PR 精确 SHA parity 恢复为 PASS；PR #141 仍 Draft/CONFLICTING，Supabase parity 与 release acceptance 未完成。
+
 ### Fixed
 
 - 修复空鱼缸在混养页自动出现候选物种的问题：选中的鱼缸没有真实活体时保持空状态，物种必须由用户主动搜索加入。

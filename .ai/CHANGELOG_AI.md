@@ -2,6 +2,14 @@
 
 ## 2026-08-27
 
+### Canonical head Preview parity restored
+
+- Pushed the repaired canonical head `f9f6ba82` to the only delivery branch.
+- PR #141 RC Convergence, UI Regression, Surface, Result UX and Cloudflare checks passed; Vercel READY Preview `aquaguide-9lqyqp6bs-chusday97s-projects.vercel.app` now matches the same SHA and `check:preview-parity` returns `PASS`.
+- PR #141 remains Draft/CONFLICTING; Supabase schema/RLS parity and independent release acceptance still block `main`.
+
+## 2026-08-27
+
 ### Empty-tank compatibility and water-type authority
 
 - Empty selected aquariums no longer fall back to generated compatibility candidates; planning species must be added explicitly by the user.

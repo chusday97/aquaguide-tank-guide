@@ -1,5 +1,10 @@
 # AI Execution Log
 
+## 2026-08-27 — Canonical head Preview parity restored
+
+- **Verification:** Pushed `f9f6ba82`; PR #141 checks RC `32997393798`, UI `32997393786`, Surface `32997394573`, Result UX `32997393839` and Cloudflare all succeeded. Vercel READY Preview `aquaguide-9lqyqp6bs-chusday97s-projects.vercel.app` exposes the same SHA; `npm run check:preview-parity` is `PASS`; 4317 returns HTTP 200.
+- **Merge boundary:** PR #141 is still Draft/CONFLICTING/DIRTY. Supabase schema/RLS parity and independent release acceptance remain pending; no main merge or Supabase mutation.
+
 ## 2026-08-27 — Empty-tank compatibility and water-type boundary
 
 - **Problem:** An aquarium with no real livestock still showed generated compatibility candidates, and missing `waterType` was implicitly evaluated as freshwater.

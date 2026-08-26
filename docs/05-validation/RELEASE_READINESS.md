@@ -10,11 +10,17 @@
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | User-confirmed 4317 direction; layout/framing/scene/Rail/page matrix passed locally | Pass | Rerun affected matrix rows after any UI-owner change. |
 | GitHub convergence CI | Latest verified push head `e021adac…` passed RC `32994590759`; later commits only update evidence/handoff records | Pass (latest verified head) | Rerun automatically for relevant future pushes. |
-| Exact Preview SHA parity | `npm run check:preview-parity` reads Vercel READY `3b33c773…`, while current canonical head is newer; GitHub Vercel status reports `Deployment rate limited — retry in 24 hours` | Pending / external quota | Rerun after quota recovery; do not treat old READY as current head. |
+| Exact Preview SHA parity | `npm run check:preview-parity` reports local/origin/PR/Vercel READY all at `f9f6ba82…`; Vercel `aquaguide-9lqyqp6bs-chusday97s-projects.vercel.app` is READY | Pass | Rerun after every canonical push. |
 | Supabase schema/RLS parity | Read-only PostgREST probes: 31/31 contract tables and latest contract columns returned 200; migration revision/RLS policy metadata unavailable from authorized surfaces | Pending | Authorized read-only schema revision and direct RLS/API smoke check. |
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
 | Human visual acceptance | User confirmed the current 4317 visual as the working baseline on 2026-08-26; future visual changes require a new review | Pass (baseline only) | Re-run human review after any visual-owner change; this does not approve `main` release. |
 | RC/main merge | Not authorized | Blocked by release decision | Separate user release acceptance after all above gates pass. |
+
+## 2026-08-27 latest canonical parity
+
+- Canonical head `f9f6ba820b162b645ea748b2d33c929a8ca78690` is synchronized locally, on origin, in PR #141 and in Vercel READY Preview `aquaguide-9lqyqp6bs-chusday97s-projects.vercel.app`.
+- `npm run check:preview-parity` returned `PASS`; local 4317 returned HTTP 200.
+- PR #141 remains Draft/CONFLICTING/DIRTY. Supabase schema/RLS parity and separate release acceptance remain pending, so this does not authorize a `main` merge.
 
 ## 2026-08-26 parity follow-up
 

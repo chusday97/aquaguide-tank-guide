@@ -1,3 +1,5 @@
+2026-08-27：远端统一门禁与 Preview parity 已追上修复 head `f9f6ba82`：PR #141 的 RC Convergence `32997393798`、UI Regression `32997393786`、Surface `32997394573`、Result UX `32997393839`、Cloudflare 均成功；`npm run check:preview-parity` 返回 `PASS`，Vercel READY `aquaguide-9lqyqp6bs-chusday97s-projects.vercel.app` 绑定同一 SHA，4317 返回 HTTP 200。PR 仍 Draft/CONFLICTING；Supabase schema/RLS parity 与独立 release acceptance 仍是 main 合并门槛。
+
 2026-08-27：修复空缸混养与水体默认值问题（提交 `c822bd0e`）。混养候选现在区分“当前缸内事实”和“用户主动规划”：已存在但无活体的鱼缸不再自动生成候选物种；未填写水体类型不再默认淡水，鱼缸适配结果进入 `insufficient_data`，物种详情显示“水体待补充”。新增 `compatibility-preview.service` 与混养回归，`test:compatibility`、物种适配、推荐 authority、UI smoke、物种详情、lint、build、project truth、diff check 均通过；未修改 API、数据库、Supabase 或视觉几何。
 
 2026-08-27：修复 P0-07 迁移期跨标签页 storage 事件边界（代码提交 `c05b2f50`）。`subscribeToAppState` 现在监听 canonical app-state 及所有仍在兼容期的 legacy 镜像键；新增 legacy/unrelated storage event 回归。`npm run test:discovery-storage-boundary`、lint、production build、project truth、4317 UI smoke 与 product-actions runtime 通过；未改产品规则、API、数据库、Supabase 或视觉基线。

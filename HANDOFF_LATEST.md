@@ -1,8 +1,10 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-27 01:27 +08:00
+更新时间：2026-08-27 02:15 +08:00
 
 ## 本轮新增
+
+- **远端统一门禁与 Preview parity（`f9f6ba82`）：** PR #141 当前 head 的 RC Convergence `32997393798`、UI Regression `32997393786`、Surface `32997394573`、Result UX `32997393839`、Cloudflare 均成功；Vercel READY `aquaguide-9lqyqp6bs-chusday97s-projects.vercel.app` 与 local/origin 精确同 SHA，`npm run check:preview-parity` 为 `PASS`，4317 返回 HTTP 200。PR 仍 Draft/CONFLICTING；Supabase schema/RLS parity 与 release acceptance 仍未完成。
 
 - **空缸与水体事实修复（提交 `c822bd0e`）：** 混养候选已抽到 `src/services/compatibility/compatibility-preview.service.ts`；当选中鱼缸没有真实活体时，候选列表保持空状态，不再从空缸或其他鱼缸推导物种。未填写水体类型时，`speciesFitEngine`、`tankCompatibilityEngine` 和图鉴详情均保持未知/信息不足，不再默认淡水或产生水体冲突。`test:compatibility`、物种适配、推荐 authority、UI smoke、物种详情、lint、build 均通过；4317 已用空缸种子实测页面无物种图像、显示 `Water type pending`。未改 API、数据库、Supabase 或视觉几何。
 
@@ -42,7 +44,7 @@
 - **独立审查结果（2026-08-26）：** Critic 对 `8095815f`、`901db4cf`、`d26b3270` 的交错写入、跨页刷新、清除态与 legacy migration 进行了同线程六维复验，全部通过；仅保留 direct full-snapshot debounce 语义文档化与真实浏览器等待 flush 作为非阻塞后续建议。
 
 - **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1` 已推送至本轮修复 head；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。与 `origin/integration/aquaguide-rc1` 的只读 merge-tree 当前检出 64 个冲突文件；相对 `origin/main` 的拓扑差异仍需逐项语义收敛。当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
-- **Preview parity（实时复核）：** local/origin 已同步到当前 head，Vercel 最新 READY 仍为 `3b33c773`，因此当前严格 `npm run check:preview-parity` 为 `NOT_SYNCHRONIZED`；4317 本地预览 HTTP 200。下一次工作先重跑 parity，不沿用旧 PASS。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
+- **Preview parity（实时复核）：** local/origin、PR #141 与 Vercel READY Preview 已同步到 `f9f6ba82`，`npm run check:preview-parity` 返回 `PASS`；4317 本地预览 HTTP 200。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
 
 - **兼容性研究延期复核（2026-08-26）：** `origin/main@2eaa20c2` / `e8d6c652` 仅记录 research-only 无配对证据后的延期，当前无已接受的研究队列契约，已标记 `HISTORICAL_OR_EXCLUDED`；不传播到运行时混养结论。
 - **成就模块语义复核（2026-08-26）：** `origin/main@5bf9800c` 的“建设中”降级与当前产品契约冲突，已标记 `HISTORICAL_OR_EXCLUDED`；Collection hub 回归现在确认成就入口可聚焦中央并渲染派生成就预览。提交 `d5dcbd7a` 的 RC/UI/validate/candidate/Vercel/Cloudflare 全部通过，Preview SHA parity PASS；未改变视觉基线或数据契约。
