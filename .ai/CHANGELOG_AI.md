@@ -2,6 +2,14 @@
 
 ## 2026-08-26
 
+### Canonical regression re-verification
+
+- Re-ran the current canonical head `fd27daf2` locally: core experience, responsive route scan (7×17), and full page runtime matrix (28/28) passed.
+- Re-ran the remote PR #141 gates; RC, Result UX, Surface and UI Regression all passed at `fd27daf2`.
+- Vercel remains on Ready deployment `f465cb76` because the current push is blocked by Hobby `build-rate-limit`; strict Preview SHA parity remains `NOT_SYNCHRONIZED`.
+
+## 2026-08-26
+
 ### Exact Preview SHA parity restored
 
 - Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` now matches canonical head `f465cb76…`.

@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Canonical regression re-verification after fd27daf2
+
+- **Verification:** Current canonical head `fd27daf20d8222d052fc7011ce8cdec0eccebbcd` matches local, origin and PR #141. Remote RC Convergence `32956751975`, Result UX Head Integrity `32956752189`, Surface System `32956751865`, and UI Regression `32956751904` all passed.
+- **Local:** `npm run test:core-ui`, `npm run test:responsive-routes` (7×17), `npm run test:page-runtime-matrix` (28/28), `npm run check:branch-convergence`, and `npm run check:project-truth` passed; 4317 `/_preview/interactive` returned HTTP 200.
+- **Boundary:** Vercel latest Ready deployment remains `f465cb76…`; the current docs-only head is not deployed because the Vercel check reports Hobby `build-rate-limit`. `npm run check:preview-parity` is intentionally `NOT_SYNCHRONIZED`; no manual deployment, Supabase mutation, migration or main merge was performed.
+
 ## 2026-08-26 — Exact Preview SHA parity restored
 
 - **Verification:** Current canonical head `f465cb76c0ccc2a50216ebe370145bfbc5572c0d` matches local, origin and PR #141; RC `32956089426`, Result UX `32956089336`, Surface `32956089357`, and UI `32956089431` all passed.

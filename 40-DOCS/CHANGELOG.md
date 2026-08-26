@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Verified
+- Re-verified canonical head `fd27daf2`: core UI, responsive route scan (7×17), page runtime matrix (28/28), remote four-gate CI, branch convergence and project truth all pass; 4317 preview returns HTTP 200. Vercel current-head parity remains blocked by Hobby `build-rate-limit`, so release stays `NOT_READY`.
+
 ### Fixed
 - 完成 `f465cb76` 的 Preview SHA parity 收口：Vercel Ready Preview `aquaguide-ps1d4be93-chusday97s-projects.vercel.app` 与 local/remote/PR #141 同 SHA，四项 GitHub Actions 全部通过；Supabase schema/RLS 与 release acceptance 仍 pending。
 - 对齐物种详情已拥有状态的当前英文 CTA：回归脚本从已淘汰的 `View tank species` 改为 `Livestock in Tank`，并将 `npm run test:species-detail-ui` 纳入 `UI Regression V1`；4317 受控浏览器回归通过，未改变产品 UI 或数据契约。
