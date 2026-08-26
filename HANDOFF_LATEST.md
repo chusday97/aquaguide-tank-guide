@@ -1,6 +1,6 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-27 00:10 +08:00
+更新时间：2026-08-27 00:25 +08:00
 
 ## 本轮新增
 
@@ -8,7 +8,7 @@
 - `RC Convergence V1` 已执行 `npm run test:session-events`，将 pairKey 隐私/归一化回归纳入远端统一门禁。
 - 混养评估补充 `compatibility_pair_evaluated` 会话级事件：每个逐对结论记录 `status` 与规范化 `pairKey`，仅接受 catalog `sp_####` ID，拒绝自由文本、路径样式值和自配对；不写入数据库、不影响运行时结论。
 - `npm run test:session-events` 已覆盖 allowlist、方向归一化、隐私拒绝和 reset；混养/证据覆盖回归与 production build 也通过。
-- 当前工作区有本轮三文件未提交改动，提交前不得以 `project:status` 的 dirty 状态作为发布通过。
+- 本轮修复已提交并推送：代码提交 `bf9f6bf3`，证据文档提交 `0878a51f`；`project:status` 显示 `dirty=false`，local/remote SHA 为 `0878a51f`。
 
 ## 当前工作基线
 
