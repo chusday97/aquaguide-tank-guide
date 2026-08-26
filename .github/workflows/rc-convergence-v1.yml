@@ -64,6 +64,10 @@ on:
       - 'package-lock.json'
       - '.github/workflows/rc-convergence-v1.yml'
 
+concurrency:
+  group: rc-convergence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   pull-requests: read

@@ -7,6 +7,7 @@
 - 修复 P0-07 迁移期跨标签页刷新缺口：`subscribeToAppState` 同时监听 canonical app-state 与 Aquarium/图鉴仍在兼容期使用的 legacy 镜像键；无关 storage key 不触发页面回流。
 - `npm run test:discovery-storage-boundary` 新增 legacy/unrelated storage event 回归；专项测试、lint、build、project truth、4317 UI smoke 与 product-actions runtime 均通过。
 - 代码提交 `3330c02d` 曾完成 local/origin/Vercel READY Preview parity；随后文档证据提交已继续推送，local/origin 仍保持同步，Vercel 自动部署在最近一次检查仍停在 `3330c02d`，严格 parity 为 `NOT_SYNCHRONIZED`。未手动部署。
+- RC Convergence V1 已加入按 PR/ref 的 `cancel-in-progress` 并发门禁；快速连续推送时旧 run 会取消，最新 run 仍执行 exact SHA 校验。已通过 project truth、Result UX workflow contract 和 diff check。
 
 - Critic 复验后补齐逐对 telemetry 去重签名：组合、数量、逐对状态和规则代码变化会生成新事件；单纯 React 重渲染仍去重。
 - Critic 复验建议已关闭：签名覆盖 `passedRules` 及风险/缺失规则，且使用排序后的物种 ID，反向选择不再产生方向性重复。

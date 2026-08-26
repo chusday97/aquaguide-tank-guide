@@ -479,3 +479,10 @@
 
 - **Verification:** After docs evidence commit `59d4f0ae`, local and origin are synchronized, but `npm run check:preview-parity` still reports Vercel READY `3330c02d`; status is `NOT_SYNCHRONIZED` while Git-connected deployment catches up.
 - **Safety:** No manual deployment, Supabase write/migration or `main` merge was performed; the earlier `3330c02d` parity PASS is retained as historical evidence only.
+
+## 2026-08-27 — RC Convergence stale-run guard
+
+- **Problem:** An older push run can start PR governance after a newer commit has already advanced PR #141, so the intentional head-drift check fails on stale evidence.
+- **Action:** Added `concurrency` to `.github/workflows/rc-convergence-v1.yml`, grouped by PR number or ref with `cancel-in-progress: true`; exact SHA validation remains in place for the newest run.
+- **Verification:** `npm run check:project-truth`, `npm run test:result-ux-head-integrity`, and `git diff --check` pass.
+- **Boundary:** Workflow-only change; no product/API/database/Supabase/visual changes.
