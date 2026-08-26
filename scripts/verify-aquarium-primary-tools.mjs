@@ -84,6 +84,7 @@ async function verifySettingsSearch() {
   assert.equal(await plantSection.getByText('小水榕', { exact: true }).count(), 0, 'plant search must update results when the query changes');
 
   await page.keyboard.press('Escape');
+  await page.getByRole('dialog', { name: '鱼缸设置' }).waitFor({ state: 'hidden' });
   await page.locator('[data-tank-primary-action="add"]').click();
   await page.getByRole('dialog', { name: '记录已有生物' }).waitFor({ state: 'visible' });
   await page.close();
