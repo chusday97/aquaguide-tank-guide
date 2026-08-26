@@ -4,6 +4,11 @@
 
 ### Changed
 
+- 只读复核 PR #141 与 `integration/aquaguide-rc1` 的当前合并阻塞：`git merge-tree` 检出 64 个跨契约/API/领域/UI/服务冲突文件；最新 RC Convergence run `32991934463` 在 canonical head `0a9613a5` 通过。未整体 merge/rebase、未修改 main 或 Supabase。
+- 记录当前 Preview 状态：local/origin 已同步，Vercel READY 仍为 `3b33c773`，严格 parity 暂为 `NOT_SYNCHRONIZED`；4317 本地预览 HTTP 200。
+
+### Changed
+
 - RC Convergence V1 增加按 PR/分支取消旧运行的并发门禁，避免快速连续推送时旧 SHA 在新 head 到达后产生误失败；保留现有 exact SHA 校验。
 - RC Convergence V1 增加 `workflow_dispatch`，允许对指定 canonical head 进行可追溯的人工复验，避免 push 事件延迟时只能看到旧 run。
 - 已通过 RC Convergence 手动复验 run `32990488781`：当前 PR head `33e8bbfe` 的底层契约、领域、storage、telemetry、视觉契约与 production build 全部通过。

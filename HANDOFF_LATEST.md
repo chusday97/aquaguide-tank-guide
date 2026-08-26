@@ -1,8 +1,11 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-27 01:10 +08:00
+更新时间：2026-08-27 01:07 +08:00
 
 ## 本轮新增
+
+- **当前合并阻塞（实时只读复核）：** `origin/integration/aquaguide-rc1@895f2f39` 与 canonical head `0a9613a5` 的 `git merge-tree --write-tree` 检出 **64 个冲突文件**，覆盖 `CONTRACT.md`、API、domain-rules、页面、共享组件、服务与 `vercel.json`；这不是可安全“一键同步”的文档差异。PR #141 仍 `OPEN/Draft`、`mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`，因此继续禁止整体 merge/rebase 或合并 `main`。
+- **最新门禁：** push 触发的 RC Convergence run `32991934463` 已在 head `0a9613a5` 上 `success`；本地与 origin SHA 一致且工作区 clean。Vercel 当前 READY 部署仍为 `3b33c773`，所以严格 `npm run check:preview-parity` 暂为 `NOT_SYNCHRONIZED`；本地 4317 预览可用（HTTP 200）。
 
 - 修复 P0-07 迁移期跨标签页刷新缺口：`subscribeToAppState` 同时监听 canonical app-state 与 Aquarium/图鉴仍在兼容期使用的 legacy 镜像键；无关 storage key 不触发页面回流。
 - `npm run test:discovery-storage-boundary` 新增 legacy/unrelated storage event 回归；专项测试、lint、build、project truth、4317 UI smoke 与 product-actions runtime 均通过。
@@ -29,8 +32,8 @@
 - **清除状态修复（2026-08-26）：** Aquarium 刷新不再用旧队列兜底；当 canonical/legacy discovery 均不存在时会清空页面状态。只有显式 `clearLocalAppState()` 清理 legacy 键，普通 app-state 保存继续保留旧键兼容并等待 discovery 迁移。
 - **独立审查结果（2026-08-26）：** Critic 对 `8095815f`、`901db4cf`、`d26b3270` 的交错写入、跨页刷新、清除态与 legacy migration 进行了同线程六维复验，全部通过；仅保留 direct full-snapshot debounce 语义文档化与真实浏览器等待 flush 作为非阻塞后续建议。
 
-- **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1` 已推送至本轮修复 head；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。相对 `origin/integration/aquaguide-rc1` 与 `origin/main` 的拓扑差异仍需逐项语义收敛；当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
-- **Preview parity（实时复核）：** 最近一次 `npm run check:preview-parity` 已返回 `PASS`，local/origin/Vercel READY Preview 同步；下一次工作在任何推送后先重新运行该命令。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
+- **main 合并状态（实时复核）：** 统一分支 `codex/unified-rc-visual-v1` 已推送至本轮修复 head；PR #141 仍为 Draft，GitHub `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`。与 `origin/integration/aquaguide-rc1` 的只读 merge-tree 当前检出 64 个冲突文件；相对 `origin/main` 的拓扑差异仍需逐项语义收敛。当前没有指向 `main` 的发布 PR，不能直接合并或用整体 rebase 解决。
+- **Preview parity（实时复核）：** local/origin 已同步到当前 head，Vercel 最新 READY 仍为 `3b33c773`，因此当前严格 `npm run check:preview-parity` 为 `NOT_SYNCHRONIZED`；4317 本地预览 HTTP 200。下一次工作先重跑 parity，不沿用旧 PASS。Supabase schema/RLS parity 和用户 release acceptance 仍未完成。
 
 - **兼容性研究延期复核（2026-08-26）：** `origin/main@2eaa20c2` / `e8d6c652` 仅记录 research-only 无配对证据后的延期，当前无已接受的研究队列契约，已标记 `HISTORICAL_OR_EXCLUDED`；不传播到运行时混养结论。
 - **成就模块语义复核（2026-08-26）：** `origin/main@5bf9800c` 的“建设中”降级与当前产品契约冲突，已标记 `HISTORICAL_OR_EXCLUDED`；Collection hub 回归现在确认成就入口可聚焦中央并渲染派生成就预览。提交 `d5dcbd7a` 的 RC/UI/validate/candidate/Vercel/Cloudflare 全部通过，Preview SHA parity PASS；未改变视觉基线或数据契约。

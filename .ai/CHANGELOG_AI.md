@@ -2,6 +2,14 @@
 
 ## 2026-08-27
 
+### Current merge-blocker recheck
+
+- Read-only `git merge-tree --write-tree` against `origin/integration/aquaguide-rc1@895f2f39` finds 64 conflicts with canonical head `0a9613a5` across contracts, API, domain rules, pages, shared components and services.
+- Latest push RC Convergence run `32991934463` succeeds on `0a9613a5`; local/origin are synchronized and clean. Vercel READY remains `3b33c773`, so strict Preview parity is currently `NOT_SYNCHRONIZED`.
+- No merge/rebase, main change, Supabase write/migration or manual deployment.
+
+## 2026-08-27
+
 ### RC Convergence stale-run guard
 
 - Added workflow concurrency cancellation for the canonical RC Convergence branch/PR. A newer push now cancels an older queued run before its PR-head SHA check can report a stale-head failure; the exact SHA check remains unchanged.
