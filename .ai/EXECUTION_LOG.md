@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Latest parity check
+
+- **Action:** Rechecked canonical local/remote SHA and the local 4317 preview; attempted a read-only public GitHub PR metadata query.
+- **Verification:** `npm run project:status`, `npm run check:branch-convergence` and `curl -I http://127.0.0.1:4317/_preview/interactive` passed. GitHub API returned anonymous rate-limit protection, so no new remote check-run evidence was claimed.
+- **Boundary:** No Supabase request, migration, RPC mutation, data write or Vercel deployment change.
+- **Next:** Obtain authorized Vercel exact deployed SHA and Supabase schema/RLS inspection, then run release acceptance.
+
 ## 2026-08-26 — Compatibility evidence boundary migration
 
 - **Action:** Selectively ported the reviewed-pair evidence boundary from `origin/main` history into the canonical branch. Pair decisions now call the compatibility engine with `scope: 'species_only'`; when both species have reviewed profiles but no reviewed pair rule, the result is explicitly `insufficient_data` instead of inferred recordable compatibility. Aggregate decisions still merge separate `scope: 'tank'` evaluations, so volume, equipment, temperature and bioload blocks cannot be lost; visual adapters consume the aggregate primary blocker.

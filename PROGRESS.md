@@ -2,6 +2,7 @@
 
 - 2026-08-26：用户确认当前 4317 视觉方向可作为工作基线，后续视觉仍允许按模块渐进修改；已将人工视觉验收记录为“当前基线通过、后续变更需重新验收”。本轮核心契约/领域回归、生产构建和 4317 互动预览浏览器检查通过；exact Preview SHA 与 Supabase schema/RLS parity 仍是发布门禁。
 - 2026-08-26：选择性迁移混养证据边界：物种配对评估固定使用 `species_only` scope，防止鱼缸级启发式污染配对结论；已审核物种但未审核配对统一 fail closed 为 `insufficient_data`。新增覆盖矩阵与 scorecard 回归，当前 501 物种 / 7 reviewed profiles / 4 reviewed pair rules，未整批合并 `origin/main`。
+- 2026-08-26：最新 parity 复核：本地 `4317/_preview/interactive` 返回 HTTP 200；公开 GitHub API 因匿名 rate limit 未能新增 PR/check-run 证据。未把本地可用性当作 Vercel SHA parity，Supabase schema/RLS 仍保持 pending，未执行任何写入或 migration。
 - 2026-08-26：恢复本地生产预览服务。此前 4317 端口无监听进程，导致 `/_preview/interactive` 无法连接；使用现有 `dist` 产物启动 `vite preview` 后，`/` 与 `/_preview/interactive` 均返回 HTTP 200。当前服务会话保持运行，未修改产品代码或 Supabase。
 
 - 2026-08-25：完成分支收敛审计门禁（`98977966`）。新增 `npm run audit:branch-convergence` 与 `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`，记录统一分支与 `origin/main`（149/214）、RC1（149/742）及远端分支拓扑；该审计只提供 Git 图证据，不把分支差异当作缺失功能，也不执行 merge/rebase/push。下一步按 `.ai/RC_MIGRATION_LEDGER.md` 逐项完成来源能力审查。

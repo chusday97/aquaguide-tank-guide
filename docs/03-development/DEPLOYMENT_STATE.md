@@ -40,6 +40,12 @@
 - PR #141 head `ffdcabd8411a8339ce09196f7310b96b33a4ce8a` was confirmed through GitHub read-only metadata. `RC Convergence V1` run `32915252842` and `Result UX Head Integrity V1` run `32915252831` both completed successfully; the candidate-head checkout assertion therefore has remote CI evidence.
 - GitHub's Vercel and Cloudflare status contexts also completed successfully, but the Vercel status did not expose the deployed Git SHA. Deployment success is recorded separately from exact Preview SHA parity, which remains **pending**.
 
+## 2026-08-26 latest parity check
+
+- The public GitHub API was rate-limited for the anonymous request, so no new PR head or check-run evidence was recorded in this pass.
+- The local canonical Preview `http://127.0.0.1:4317/_preview/interactive` returned HTTP `200`; this confirms local availability only and does not prove a deployed Vercel SHA.
+- No Supabase request, migration, RPC mutation or data write was executed. Exact Preview SHA and schema/RLS parity remain **pending**.
+
 ## Deployment rules
 
 - Never treat a Vercel/Cloudflare success as proof that its deployed SHA is the accepted review SHA.
