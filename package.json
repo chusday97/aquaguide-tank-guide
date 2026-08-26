@@ -75,6 +75,7 @@
     "test:task-routes": "tsx scripts/test-task-routes.ts",
     "test:task-actions-ui": "node scripts/verify-task-action-closure.mjs",
     "test:product-actions-runtime": "node scripts/verify-action-kind-runtime.mjs",
+    "test:care-card-action-ui": "node scripts/verify-care-card-action.mjs",
     "test:responsive-images": "python3 scripts/test_responsive_images.py",
     "test:three-step-paths": "tsx scripts/test-three-step-paths.ts",
     "test:three-step-ui": "node scripts/verify-three-step-experience.mjs",

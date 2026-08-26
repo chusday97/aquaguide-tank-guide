@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Fixed
+- 对 `origin/main@ed0cf380` 的 Care card 可达性修复完成语义复核：统一分支已有 `分享卡片` → 本地养护卡流程，因此只新增 `test:care-card-action-ui` 回归并纳入统一 UI CI，避免重复迁移旧入口；未改变产品 UI、API、数据库或视觉几何。
+- 新增 `ORIGIN_MAIN_RECONCILIATION.md`，记录 origin/main 高影响能力首轮逐项判定，明确未完成的提交仍不得直接合并。
 - 将 `Surface System V1` 与 `UI Regression V1` 的 push 触发分支从已退役的 `codex/interactive-parity-v3` 收口到 `codex/unified-rc-visual-v1`，并把 `npm run test:ui-smoke` 纳入统一浏览器 CI；未改变产品 UI、业务规则、API、数据库或视觉几何。
 - 上述 CI 收口已推送 `834af948`；local/remote SHA 与本地 4317 Preview HTTP 200 已复核，Vercel exact Preview SHA 仍因 `AUTH_REQUIRED` 未完成。
 - 清理剩余 Care category、Daily Discovery、Species Detail 浏览器回归中的旧 detail surface/入口断言，并明确 3000 开发服务与 4317 production 验收 Preview 的区别。

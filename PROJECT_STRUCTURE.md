@@ -6,6 +6,7 @@
 - `scripts/check-preview-parity.mjs`：只读比较本地 HEAD、canonical 远端 HEAD 与 Vercel canonical-branch Preview 的 `githubCommitSha`；不触发部署。
 - `scripts/preview-url.mjs`：所有正式浏览器回归共用的 Preview 地址解析器；显式环境变量优先，默认用户确认的 4317。
 - `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`：分支差异快照、解释和逐项迁移规则。
+- `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`：对 `origin/main` 高影响能力的首轮逐项语义复核；不等同于完成全部提交迁移。
 
 ## 本轮交互结构
 

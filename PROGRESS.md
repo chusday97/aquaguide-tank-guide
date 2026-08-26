@@ -4,6 +4,8 @@
 - 2026-08-26：清理最后一条 3003 端口旧 smoke，新增并注册 `npm run test:ui-smoke`；在 4317 上验证正式路由、browse 搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐通过。未改产品数据、API、Supabase 或视觉几何。
 - 2026-08-26：修复 CI 统一性缺口：`Surface System V1` 与 `UI Regression V1` 的 push 触发从已退役的 `codex/interactive-parity-v3` 改为 `codex/unified-rc-visual-v1`，并将 `npm run test:ui-smoke` 纳入统一浏览器工作流；本地 smoke 通过，远端 workflow 结果待推送后观察。
 - 2026-08-26：上述 CI 收口已提交并推送 `834af948`；`npm run project:status` 与 `git ls-remote` 确认 local/remote 同 SHA，4317 `/_preview/interactive` 返回 HTTP 200。Vercel 只读 parity 仍为 `AUTH_REQUIRED`，Supabase schema/RLS 与 release acceptance 继续 pending。
+- 2026-08-26：完成 `origin/main@ed0cf380` Care card 能力首轮语义复核：统一分支已有 `分享卡片` → 本地养护卡预览和复制流程；新增 canonical Care card 浏览器回归并纳入统一 UI CI，不迁入重复入口。待推送后观察远端 workflow。
+- 2026-08-26：建立 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`，对 origin/main 高影响能力完成首轮“已存在/选择性迁移/契约复核/历史排除”判定；明确其余独有提交仍待逐项复核，不以提交数量判断功能缺失。
 - 2026-08-26：新增 `npm run check:preview-parity` 自动门禁（`1a355c6c`），确认 local/remote 同步但 Vercel canonical Preview 仍停留在 `6b0e629d…`，命令以 `NOT_SYNCHRONIZED` 阻断误发布；未触发部署或 Supabase 变更。
 
 - 2026-08-26：执行 Vercel CLI 只读部署元数据复核。最新 Ready canonical-branch Preview `aquaguide-uwfft41zv-chusday97s-projects.vercel.app` 明确绑定统一分支，但 `githubCommitSha=6b0e629d8b6694a06b98182a38da01d34718c44f`，落后于本地/GitHub `43f75e739655e8061fb880ed3415b741a90275c1`；确认 Preview 存在部署滞后，未触发重新部署，Supabase 仍未执行写操作或 migration。

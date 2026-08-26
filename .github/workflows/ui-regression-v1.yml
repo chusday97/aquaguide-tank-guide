@@ -92,6 +92,11 @@ jobs:
           AQUAGUIDE_URL: http://127.0.0.1:4173
         run: npm run test:ui-smoke
 
+      - name: Care card action regression
+        env:
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+        run: npm run test:care-card-action-ui
+
       - name: Admin content Blocking regression
         env:
           AQUAGUIDE_URL: http://127.0.0.1:4173

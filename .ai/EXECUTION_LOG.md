@@ -7,6 +7,12 @@
 - **Verification:** The change was pushed as `834af948`; `npm run project:status` and `git ls-remote` report the same canonical SHA, and `/_preview/interactive` returns HTTP 200. `check:preview-parity` remains `AUTH_REQUIRED` for Vercel metadata.
 - **Boundary:** No product UI, domain rule, API contract, database, Supabase environment or visual geometry changed. Remote workflow execution will be observed after the push.
 
+## 2026-08-26 — Origin/main Care card reconciliation
+
+- **Action:** Compared `origin/main@ed0cf380`'s Care card reachability patch with the canonical Care detail. The current branch already wires `分享卡片` to the existing local `生成养护卡` preview; only the regression evidence was missing.
+- **Verification:** Added a canonical Preview browser check for the entry, local card preview, copy action and absence of public-sharing CTAs; the check will run in `UI Regression V1`.
+- **Boundary:** No duplicate product entry, data field, API, Supabase or visual geometry was introduced. The origin/main patch remains a reviewed historical source, not a merge source.
+
 ## 2026-08-26 — Preview URL and stale regression repair
 
 - **Action:** Added the canonical `scripts/preview-url.mjs` resolver (default `http://127.0.0.1:4317`) and migrated browser scripts away from mixed 3000/4173/localhost defaults. Repaired stale 600px, detail surface, compatibility route, Aquarium search/entry and dialog-name assertions. Restored the existing AI Tank Copilot as the desktop Dock seventh action and mobile more-actions entry.

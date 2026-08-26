@@ -34,6 +34,8 @@
 - 已移除旧 3003 UI smoke 并注册 `npm run test:ui-smoke`：脚本固定使用 4317，验证正式路由、browse 搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐；该 smoke 已通过。
 - 已修复 CI 触发漂移：`Surface System V1` 与 `UI Regression V1` 现在均监听 `codex/unified-rc-visual-v1`，并在隔离 4173 production Preview 上执行 canonical UI smoke；旧 `codex/interactive-parity-v3` 不再作为 push 门禁来源。
 - 该 CI 收口已推送为 `834af948`；`project:status` 与 `git ls-remote` 已确认 local/remote 同 SHA，4317 `/_preview/interactive` 返回 200。远端 Actions 新 run 尚待 GitHub 观察，Vercel parity 仍为 `AUTH_REQUIRED`，Supabase schema/RLS 与 release acceptance 未完成。
+- `origin/main@ed0cf380` 的 Care card 可达性已完成首轮复核：统一分支已有 `分享卡片` → 本地 `生成养护卡` 流程；新增 `test:care-card-action-ui` 守住该行为并纳入统一 UI CI，没有复制旧入口或改变产品契约。
+- 首轮 `origin/main` 高影响能力判定已整理到 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`；这只是已验证分组，不代表 214 个独有提交全部完成，剩余提交仍不得直接合并。
 - README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。回归、文档与最终状态提交已全部推送；当前 SHA 不固化在 Handoff，始终以 `npm run project:status` 与 `git ls-remote` 输出为准，工作区 clean。
 - 推送后 `check:preview-parity` 仍返回 `AUTH_REQUIRED`（当前 Vercel CLI 会话未暴露部署信息）；不得将其解释为 Preview 已同步，Supabase schema/RLS parity 仍 pending。
 

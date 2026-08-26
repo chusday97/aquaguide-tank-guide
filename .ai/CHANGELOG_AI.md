@@ -8,6 +8,12 @@
 - Registered the canonical `npm run test:ui-smoke` in the unified browser workflow against its isolated 4173 production preview.
 - No product UI, domain rule, API contract, database, Supabase environment or visual geometry changed.
 
+### Origin/main Care card reconciliation
+
+- Reviewed `origin/main@ed0cf380`'s Care card reachability patch against the canonical Care article. The unified branch already exposes `分享卡片` → local `生成养护卡` with copy/save actions, so the old UI patch would duplicate the entry rather than restore missing behavior.
+- Added `scripts/verify-care-card-action.mjs`, `npm run test:care-card-action-ui`, and the corresponding unified UI workflow step to protect the existing behavior. No product UI, domain rule, API contract, database, Supabase environment or visual geometry changed.
+- Added `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md` to record first-pass capability decisions for high-impact `origin/main` groups without claiming all 214 unique commits are reconciled.
+
 ### Preview target and runtime regression alignment
 
 - Added `scripts/preview-url.mjs` as the single browser-regression target; scripts now default to the canonical 4317 production Preview and accept an explicit `AQUAGUIDE_URL`/`AQUAGUIDE_PREVIEW_URL`/`PREVIEW_URL` override.

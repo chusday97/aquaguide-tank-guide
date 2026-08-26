@@ -27,6 +27,8 @@
 - [x] 第二轮陈旧回归审计：修复 Care category、Daily Discovery、Species Detail、动作语义和手机优先级中残留的旧 detail surface/首页推荐/英文入口断言，并把 3000 开发地址与 4317 production 验收地址在 README/SETUP 中明确区分；受影响回归与全页面矩阵 28/28 已通过。
 - [x] 注册 canonical UI smoke：移除旧 3003 端口和过时默认图鉴搜索假设，新增 `npm run test:ui-smoke`，覆盖正式路由、搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐。
 - [x] 将 UI Regression / Surface System push CI 收口到 `codex/unified-rc-visual-v1`，并把 canonical UI smoke 纳入统一浏览器工作流。
+- [x] 对 `origin/main` Care card 能力完成首轮语义复核：统一分支已有本地“分享卡片”流程，补充 canonical Care card 浏览器门禁，不迁入重复 UI。
+- [x] 建立 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`，记录首轮高影响能力的“已存在 / 选择性迁移 / 契约复核 / 历史排除”判定；其余 origin/main 独有提交仍待逐项复核。
 - [ ] 完成授权部署环境的 Vercel exact SHA 与 Supabase schema/RLS parity 复核。
 
 ## Eight-phase truth consolidation
