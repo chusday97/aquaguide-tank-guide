@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — UI regression API parity
+
+- **Action:** The remote Identify regression exposed that UI CI used a static Vite preview without the `/api/v1` fallback endpoint. Updated `UI Regression V1` to start the existing Express API on 8787 and run Vite with its API proxy on 4173; production build remains a separate gate.
+- **Verification:** In a local API+Vite proxy environment, `test:identify-flow-separation` and `test:aquarium-primary-tools` passed; no Supabase writes or product behavior changed. Commit `0b52e947` is ready to push.
+- **Boundary:** CI environment only; the API starts with existing configuration and does not auto-migrate or write Supabase.
+
 ## 2026-08-26 — Aquarium settings panel click synchronization
 
 - **Action:** After the Add Livestock click was made navigation-independent, the remote run exposed the same default navigation wait on the Substrate and Plants settings-panel toggles. Both toggles now use `noWaitAfter`; search-result and Dialog visibility assertions remain unchanged.

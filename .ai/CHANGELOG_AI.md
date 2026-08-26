@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### UI regression API parity
+
+- Updated UI Regression V1 to start the existing Express API and Vite API proxy so Identify fallback and other `/api/v1` browser flows run against the same local architecture as development.
+- Production build remains a separate check; local API+Vite Identify and Aquarium regressions pass. Commit `0b52e947`.
+
+## 2026-08-26
+
 ### Aquarium settings panel click synchronization
 
 - Made the Substrate and Plants settings-panel regression clicks navigation-independent, matching the current state-update interaction contract.
