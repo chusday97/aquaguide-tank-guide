@@ -1,5 +1,7 @@
 > **长期历史账本：** 当前状态以 `docs/PROJECT_TRUTH.md`、`.ai/PROJECT_STATE.json` 和 `.ai/TASK_QUEUE.md` 为准。以下内容保留完成记录和验证证据，不单独定义当前产品或 UI。
 
+- 2026-08-26：恢复本地生产预览服务。此前 4317 端口无监听进程，导致 `/_preview/interactive` 无法连接；使用现有 `dist` 产物启动 `vite preview` 后，`/` 与 `/_preview/interactive` 均返回 HTTP 200。当前服务会话保持运行，未修改产品代码或 Supabase。
+
 - 2026-08-25：完成分支收敛审计门禁（`98977966`）。新增 `npm run audit:branch-convergence` 与 `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`，记录统一分支与 `origin/main`（149/214）、RC1（149/742）及远端分支拓扑；该审计只提供 Git 图证据，不把分支差异当作缺失功能，也不执行 merge/rebase/push。下一步按 `.ai/RC_MIGRATION_LEDGER.md` 逐项完成来源能力审查。
 - 2026-08-25：修复 parity 检查的本地/远端 SHA、缺失 ref 和 detached CI 分支边界（`54f3e005`、`b39dbbd7`、`6e71cb05`）；已推送统一分支，`npm run project:status` 与 `npm run check:branch-convergence` 均确认本地/远端为同一 SHA。GitHub Actions 真实运行结果因当前环境无法连接 GitHub API，仍待外部观察。
 

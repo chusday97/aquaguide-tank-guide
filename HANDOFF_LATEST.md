@@ -58,6 +58,7 @@
   - 虎皮鱼直达验证：`http://127.0.0.1:4317/encyclopedia?mode=browse&species=sp_0439`
 - 该 Preview 使用 production `npm run build` 产物，不是旧 Vercel Preview，也不占用现有 3000/4173 等地址。
 - 日常 UI review 优先以 4317 为开发验收源；Vercel 恢复后只作为部署 parity 验收源。
+- 2026-08-26 运行状态：本地预览服务已恢复，使用当前 `dist` 产物运行于 `127.0.0.1:4317`；`/` 与 `/_preview/interactive` 均已通过 HTTP 200 检查。若浏览器仍显示旧错误，请刷新该标签页。
 
 ## 当前不可变产品契约
 
