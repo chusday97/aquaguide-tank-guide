@@ -2,6 +2,13 @@
 
 ## 2026-08-26
 
+### Canonical documentation trigger coverage
+
+- Added canonical progress, handoff, AI log, changelog and evidence paths to `RC Convergence V1` push/PR filters so documentation synchronization receives same-SHA domain/API checks.
+- No product, API, database, Supabase or visual-baseline changes.
+
+## 2026-08-26
+
 ### Canonical regression re-verification
 
 - Re-ran the current canonical head `fd27daf2` locally: core experience, responsive route scan (7×17), and full page runtime matrix (28/28) passed.

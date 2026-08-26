@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project_id": "PRJ-aquaguide",
-  "updated_at": "2026-08-26T18:20:00+08:00",
+  "updated_at": "2026-08-26T18:30:00+08:00",
   "evidence_items": [
     {"id":"EVD-20260715-001","type":"commit","locator":"917b80a","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"今日行动、水族册独立地址与生命纪念回流"},
     {"id":"EVD-20260715-002","type":"test","locator":"npm run lint; npm run build; 1280/390 browser regression","date":"2026-07-15","version":"917b80a","accessible":true,"sensitive":false,"notes":"类型、构建和直达行为验证"},
@@ -96,6 +96,7 @@
     {"id":"CLM-20260802-021","text":"AquaGuide 的今日推荐以单一正式入口回到鱼缸首页，并复用每日十个队列、正式物种详情和收藏状态；六个管理操作无需折叠即可访问。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260802-052","EVD-20260802-053"],"contradicting_evidence_ids":[],"scope":"本地分支与Chromium响应式回归；不代表真实用户任务完成率或移动端真机验证","career_material_allowed":true,"reviewed_at":"2026-08-02T16:30:00+08:00"},
     {"id":"CLM-20260809-022","text":"AquaGuide 已在本地建立混养审核证据门禁、动作级养护来源、Repository业务写入、体态三步任务和幂等鱼缸时间线，并通过独立Critic修复复验及Evaluator最终裁决。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260809-058","EVD-20260809-059","EVD-20260809-060","EVD-20260809-061"],"contradicting_evidence_ids":[],"scope":"本地代码、契约和Chromium；不代表真实Supabase已迁移或228条养护动作已人工审核","career_material_allowed":true,"reviewed_at":"2026-08-09T18:40:00+08:00"},
     {"id":"CLM-20260809-023","text":"AquaGuide 已将现实缸内记录与未来养殖规划拆为独立Intent，新鱼缸保持未知事实，Local/API新增生物具备稳定重放且云端父记录、批次和幂等结果原子提交，并通过真实PostgreSQL失败注入、独立Critic和Evaluator验收。","evidence_level":"verified","supporting_evidence_ids":["EVD-20260809-063","EVD-20260809-064","EVD-20260809-065","EVD-20260809-066"],"contradicting_evidence_ids":[],"scope":"本地代码、PostgreSQL16、Chromium与GitHub main；不代表真实Supabase migration/RLS/RPC已部署","career_material_allowed":true,"reviewed_at":"2026-08-09T21:45:00+08:00"},
-    {"id":"EVD-20260826-074","type":"verification","locator":"npm run test:core-ui; npm run test:responsive-routes; npm run test:page-runtime-matrix; gh run view 32956751904; npm run check:branch-convergence; npm run check:project-truth; curl -I http://127.0.0.1:4317/_preview/interactive","date":"2026-08-26","version":"fd27daf20d8222d052fc7011ce8cdec0eccebbcd","accessible":true,"sensitive":false,"notes":"当前 canonical head 的核心体验、7×17 响应式路由、28/28 全页面矩阵、PR #141 四项 Actions、分支收敛、项目事实和 4317 HTTP 200 均通过；Vercel current-head deployment 因 Hobby build-rate-limit 未生成，Preview parity 为 NOT_SYNCHRONIZED"}
+    {"id":"EVD-20260826-074","type":"verification","locator":"npm run test:core-ui; npm run test:responsive-routes; npm run test:page-runtime-matrix; gh run view 32956751904; npm run check:branch-convergence; npm run check:project-truth; curl -I http://127.0.0.1:4317/_preview/interactive","date":"2026-08-26","version":"fd27daf20d8222d052fc7011ce8cdec0eccebbcd","accessible":true,"sensitive":false,"notes":"当前 canonical head 的核心体验、7×17 响应式路由、28/28 全页面矩阵、PR #141 四项 Actions、分支收敛、项目事实和 4317 HTTP 200 均通过；Vercel current-head deployment 因 Hobby build-rate-limit 未生成，Preview parity 为 NOT_SYNCHRONIZED"},
+    {"id":"EVD-20260826-075","type":"verification","locator":".github/workflows/rc-convergence-v1.yml path filters; npm run check:project-truth; git diff --check","date":"2026-08-26","version":"03b42bf6ac81f2f3b31f11265ac2ec522ad2b49f","accessible":true,"sensitive":false,"notes":"RC Convergence push 与 pull_request 现在覆盖 canonical progress、handoff、AI logs、changelog 和 .project-journal 文件；本地 workflow path presence、project truth 与 diff check 通过，远端同 SHA RC run 待推送后验证"}
   ]
 }

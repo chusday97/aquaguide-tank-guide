@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-26 — Canonical documentation trigger coverage
+
+- **Problem:** `RC Convergence V1` path filters omitted the canonical progress, handoff and evidence files, so a docs-only synchronization could leave the PR displaying an older SHA's RC result.
+- **Action:** Added `PROGRESS.md`, `HANDOFF_LATEST.md`, `.ai/EXECUTION_LOG.md`, `.ai/CHANGELOG_AI.md`, `40-DOCS/CHANGELOG.md`, and `.project-journal/**` to both push and pull-request trigger paths.
+- **Verification:** YAML path presence check, `npm run check:project-truth`, and `git diff --check` passed. Product UI, API, database, Supabase and visual baseline are unchanged.
+- **Boundary:** The workflow change must be pushed and observed on a new run; Vercel current-head deployment remains subject to the existing Hobby quota.
+
 ## 2026-08-26 — Canonical regression re-verification after fd27daf2
 
 - **Verification:** Current canonical head `fd27daf20d8222d052fc7011ce8cdec0eccebbcd` matches local, origin and PR #141. Remote RC Convergence `32956751975`, Result UX Head Integrity `32956752189`, Surface System `32956751865`, and UI Regression `32956751904` all passed.
