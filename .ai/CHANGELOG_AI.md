@@ -29,6 +29,10 @@
 - Dispatched RC Convergence run `32990488781` against the canonical ref; current PR head `33e8bbfe` passed all contract, domain, storage, telemetry, visual-contract and production-build checks.
 - Earlier stale-head failures are historical run evidence only; no product/API/database/Supabase/visual change was introduced by the dispatch.
 
+### Current-head RC recheck
+
+- Re-dispatched RC Convergence after the evidence update; run `32990928544` passed on PR head `69fa4b7e`, confirming the manual verification path is repeatable.
+
 ## 2026-08-26
 
 ### Discovery storage boundary

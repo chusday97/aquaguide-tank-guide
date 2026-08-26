@@ -492,3 +492,7 @@
 
 - **Verification:** Dispatched run `32990488781` on the canonical ref; PR #141 head `33e8bbfe25f68caf681054d4622a3ff5b93aaf80` completed with `success`. All listed contract, domain, storage, telemetry, visual and production-build steps passed.
 - **Interpretation:** Older RC failures were stale-head races; they remain historical evidence and do not contradict the current head result.
+
+## 2026-08-27 — Repeatable current-head RC pass
+
+- **Verification:** Run `32990928544` via `workflow_dispatch` completed `success` on head `69fa4b7ef77c06eed3362704f8a998d3b9291d54`; all convergence-contract steps passed again.
