@@ -7,6 +7,11 @@
 - `subscribeToAppState` now listens to the canonical app-state key and every mirrored legacy key (`aquapediaDiscoveryDeck`, wishlist, aquarium, diagnosis and deceased records), so older tabs cannot leave active pages stale during migration.
 - Added storage-event regression coverage; unrelated keys remain ignored. No product rule, API, database, Supabase or visual change.
 
+### Canonical parity recheck
+
+- After pushing `3330c02d`, local branch, origin branch and Vercel READY Preview `aquaguide-8sds6m5er-chusday97s-projects.vercel.app` matched exactly; `check:preview-parity` returned `PASS`.
+- PR #141 remains Draft and `CONFLICTING`; the latest Actions observation was still pending/stale-head and does not authorize a `main` merge.
+
 ## 2026-08-26
 
 ### Discovery storage boundary

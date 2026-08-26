@@ -469,3 +469,8 @@
 - **Action:** `subscribeToAppState` now accepts the canonical key and all mirrored legacy keys; unrelated storage keys remain ignored. Added canonical/legacy/unrelated storage-event assertions to `test:discovery-storage-boundary`.
 - **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run build`, `npm run check:project-truth`, `git diff --check`, `npm run test:ui-smoke` and `npm run test:product-actions-runtime` pass on 4317.
 - **Boundary:** No product rule, API, database, Supabase or visual change; filter-usage and unrouted AI-chat storage remain page-level UI state.
+
+## 2026-08-27 — Canonical parity recheck
+
+- **Verification:** `npm run project:status` and `npm run check:branch-convergence` show local/remote `3330c02d` synchronized; `npm run check:preview-parity` reports Vercel READY Preview `aquaguide-8sds6m5er-chusday97s-projects.vercel.app` on the same SHA.
+- **PR boundary:** PR #141 remains Draft with `mergeable=CONFLICTING`/`mergeStateStatus=DIRTY`; the latest four workflow runs observed were still pending or stale-head, so this does not authorize a `main` merge.
