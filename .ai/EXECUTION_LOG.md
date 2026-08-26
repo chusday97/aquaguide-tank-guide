@@ -23,8 +23,8 @@
 ## 2026-08-26 — Discovery clear-state repair
 
 - **Critic finding:** Preserving Aquarium's current queue when a refresh returned no discovery state made `clearLocalAppState()` leave stale UI visible after storage was empty.
-- **Action:** Aquarium now consumes the canonical/legacy discovery value directly; the writer removes the legacy mirror when discovery is absent, and clearing local state emits one app-state event.
-- **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run check:project-truth`, and `git diff --check` pass; the test waits past the 700ms debounce and asserts clear notification.
+- **Action:** Aquarium now consumes the canonical/legacy discovery value directly; only explicit clear removes the legacy mirror, while ordinary app-state saves preserve a legacy discovery during migration. Clearing local state emits one app-state event.
+- **Verification:** `npm run test:discovery-storage-boundary`, `npm run lint`, `npm run check:project-truth`, and `git diff --check` pass; the test waits past the 700ms debounce and asserts clear notification plus canonical-without-discovery migration compatibility.
 - **Boundary:** No product rule, visual, API, Supabase or main change; Critic re-verification is required after commit.
 
 ## 2026-08-26 — main merge readiness audit

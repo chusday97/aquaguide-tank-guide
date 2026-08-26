@@ -368,4 +368,4 @@
 2026-08-26：修复 P0-07 的互动发现状态漂移：`Aquarium` 与 `Encyclopedia` 现在都通过 `local-app-state` 读写 discovery deck，保留 `aquapediaDiscoveryDeck` 旧键兼容并统一派发 app-state 事件；新增 `test:discovery-storage-boundary` 并纳入 RC Convergence。`test:discovery-storage-boundary`、lint、build、project truth、diff check 通过，未改变视觉、Supabase 或业务规则。
 2026-08-26：修复 P0-07 延迟写入竞态：`local-app-state` 改用待提交字段 patch，flush 时合并最新持久化快照；发现牌堆不会再被愿望清单等即时/延迟更新覆盖，清空本地状态会取消待写入任务。专项回归新增交错写入、双延迟 patch 和外部标签页更新；`test:discovery-storage-boundary`、lint、build、project truth、diff check、UI smoke、product-actions runtime 均通过。浏览器回归曾因旧 4322 服务退出失败，已在 4323 预览重跑通过。（待提交）
 2026-08-26：补强跨页刷新：Aquarium 与 Encyclopedia 订阅 `APP_STATE_CHANGED_EVENT` 与 storage 事件，收到统一写入后刷新 discovery/wishlist；相同 Set 保持引用以避免重复保存回流。类型、构建、专项存储回归和 project truth 复验通过。（待提交）
-2026-08-26：修复清除事件回归：Aquarium 刷新直接消费 canonical/legacy discovery，不再把“空状态”误判为保留旧队列；writer 在无 discovery 时删除 legacy 键，清空本地状态派发一次统一事件。专项存储回归覆盖 clear 后等待 750ms 与订阅通知。（待提交）
+2026-08-26：修复清除事件回归：Aquarium 刷新直接消费 canonical/legacy discovery，不再把“空状态”误判为保留旧队列；仅显式 `clearLocalAppState()` 删除 legacy 键，普通 app-state 保存继续保留旧键兼容，清空本地状态派发一次统一事件。专项存储回归覆盖 clear 后等待 750ms、订阅通知及 canonical 缺 discovery 的 legacy 迁移。（待提交）

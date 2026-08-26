@@ -34,6 +34,9 @@ const legacyState = {
 };
 localStorage.setItem('aquapediaDiscoveryDeck', JSON.stringify(legacyState));
 assert.deepEqual(loadDiscoveryDeckState(), legacyState, 'legacy discovery key must remain readable');
+localStorage.setItem(AQUARIUM_APP_STATE_KEY, JSON.stringify({ version: 1, wishlist: [], updatedAt: new Date().toISOString() }));
+patchLocalAppState({ wishlist: ['legacy-compatible-fish'] });
+assert.deepEqual(loadDiscoveryDeckState(), legacyState, 'an unrelated save must preserve legacy discovery during migration');
 
 const canonicalState = {
   dateKey: '2099-01-01',
