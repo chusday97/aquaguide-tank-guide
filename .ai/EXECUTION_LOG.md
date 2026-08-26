@@ -6,6 +6,11 @@
 - **Action:** `scripts/check-preview-parity.mjs` now invokes `npm exec --yes --package=vercel@59.6.2 -- vercel ...`; `VERCEL_CLI_PACKAGE` permits a controlled version override.
 - **Verification:** `npm run check:preview-parity` reads Vercel READY deployment `3b33c773`; local/origin are synchronized at `d3b6b5aa`, so the honest result remains `NOT_SYNCHRONIZED` until a matching deployment exists. No manual deployment or cloud mutation.
 
+## 2026-08-27 — Latest handoff-head RC verification
+
+- **Verification:** Push RC Convergence run `32994590759` completed successfully on `e021adac`; all contract, domain, API, storage, telemetry, visual-contract and production-build steps passed. The head contains handoff-only updates after the parity CLI fix.
+- **Boundary:** Vercel remains at the older READY SHA and parity is not synchronized; no main, Supabase or deployment mutation.
+
 ## 2026-08-27 — Current merge-blocker recheck
 
 - **Verification:** `gh pr view 141` reports PR #141 `OPEN/Draft`, `mergeable=CONFLICTING`, `mergeStateStatus=DIRTY`; `git merge-tree --write-tree origin/integration/aquaguide-rc1 HEAD` reports 64 conflict paths. Push RC Convergence `32991934463` completed `success` on head `0a9613a5`.

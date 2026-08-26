@@ -7,7 +7,7 @@
 - **Preview parity CLI 修复：** `scripts/check-preview-parity.mjs` 默认固定到已验证的 `vercel@59.6.2`（通过 `npm exec`，可用 `VERCEL_CLI_PACKAGE` 覆盖）。修复后能稳定读取 Vercel READY 部署；当前 canonical head 仍未生成对应部署，因此 parity 仍为 `NOT_SYNCHRONIZED`，不是 CLI `AUTH_REQUIRED`。精确 SHA 始终以 `npm run project:status` 和 parity 输出为准。
 
 - **当前合并阻塞（实时只读复核）：** `origin/integration/aquaguide-rc1@895f2f39` 与 canonical head 的 `git merge-tree --write-tree` 检出 **64 个冲突文件**，覆盖 `CONTRACT.md`、API、domain-rules、页面、共享组件、服务与 `vercel.json`；这不是可安全“一键同步”的文档差异。PR #141 仍 `OPEN/Draft`、`mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`，因此继续禁止整体 merge/rebase 或合并 `main`。
-- **最新门禁：** RC Convergence workflow_dispatch run `32993742780` 已在代码 head `7dc78079` 上 `success`；之后仅增加证据文档，当前 local/origin 保持同步且工作区 clean。Vercel 最新 READY 仍落后于 canonical head，严格 parity 以命令实时输出为准；本地 4317 预览可用（HTTP 200）。
+- **最新门禁：** push RC Convergence run `32994590759` 已在当前交接 head `e021adac` 上 `success`；完整 contract/domain/API/storage/telemetry/visual/build 步骤通过。Vercel 最新 READY 仍落后于 canonical head，严格 parity 以命令实时输出为准；本地 4317 预览可用（HTTP 200）。
 - **文档提交后复验：** 交接/证据同步提交 `6fc42dd9` 已推送；RC Convergence workflow_dispatch run `32992520843` 在该精确 head 上 `success`，完整契约、领域、storage、telemetry、视觉契约和 production build 步骤通过。该提交只更新记录，不改变产品代码。
 - **Preview 查询边界（已修复）：** 之前的查询曾因 Vercel CLI 依赖解析返回 `AUTH_REQUIRED`；当前脚本已固定 CLI 并能读取 READY 部署。当前 canonical head 仍未部署，需等待 Vercel 自动部署后重跑 parity。
 
