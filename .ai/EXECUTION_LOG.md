@@ -12,6 +12,12 @@
 - **Verification:** On `ef878e25144c4cd12c461e0f3eadbd5182a1bada`, `UI Regression V1` `32948782199`, `Surface System V1` `32948782231`, `Result UX Head Integrity V1` `32948782259`, and `RC Convergence V1` `32948782285` all completed successfully. Local/remote/PR SHA match; local 4317 interactive preview returns HTTP 200.
 - **Boundary:** Vercel remains `AUTH_REQUIRED`/Hobby build-rate-limited and Supabase schema/RLS parity plus release acceptance remain pending; `main` and cloud data were not changed.
 
+## 2026-08-26 — Preview SHA parity gate repaired and passed
+
+- **Action:** Fixed `check:preview-parity` to use `npx --yes vercel` when no system `vercel` binary is installed; `VERCEL_BIN` remains available for explicit overrides.
+- **Verification:** Read-only parity now reports `PASS`: local, origin, PR #141 and Vercel Ready Preview `aquaguide-k48ki2sbb-chusday97s-projects.vercel.app` all point to `f2a5ec4719dcc388985c845217d66eb8d1f46f47`.
+- **Boundary:** No deployment was triggered by the script and no Supabase migration/write/RLS change occurred. Direct schema/RLS metadata and user release acceptance remain pending; release stays `NOT_READY`.
+
 ## 2026-08-26 — Aquarium settings panel click synchronization
 
 - **Action:** After the Add Livestock click was made navigation-independent, the remote run exposed the same default navigation wait on the Substrate and Plants settings-panel toggles. Both toggles now use `noWaitAfter`; search-result and Dialog visibility assertions remain unchanged.

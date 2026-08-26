@@ -21,7 +21,7 @@
 - [x] 完成 Compatibility evidence coverage boundary：配对判断显式使用 `species_only` scope，已审核物种但未审核配对时 fail closed；新增覆盖矩阵与 scorecard 回归，未整批合并 `origin/main`。
 - [x] 完成 Vercel/API runtime contract 本地迁移审查：新增 V1 catch-all、API-before-SPA rewrite、canonical Express runtime 和 ESM-safe imports；未修改 Supabase schema、RLS、LifeStage 或业务 API 字段。
 - [x] 完成 Result UX workflow head integrity 本地迁移审查：仅保留 PR head/推送 SHA checkout 与 `git rev-parse HEAD` 精确校验；未复制历史 Result UX 页面、旧 workflow 或 UI。
-- [ ] 获取可暴露部署 SHA 的 Vercel Preview 只读访问，并完成授权 Supabase schema/RLS 只读 parity；远端 CI 已通过，但本轮 exact SHA/schema/RLS 证据仍不足。
+- [ ] 完成授权 Supabase schema/RLS 只读 parity；Vercel exact Preview SHA 已通过只读门禁确认与 local/remote/PR 同步。
 - [x] 新增 `npm run check:preview-parity`，自动比较 local/remote/Vercel branch Preview SHA；当前结果明确报告 `NOT_SYNCHRONIZED`，不把旧 Preview 误报为通过。
 - [x] 统一浏览器回归的 Preview URL 入口为 `scripts/preview-url.mjs`（默认 4317），并修复核心/导航脚本中已淘汰的断点、入口和 surface 断言；桌面沉浸式 Dock 恢复可见 AI 建缸助手卡片，移动端保留“更多操作”入口。
 - [x] 第二轮陈旧回归审计：修复 Care category、Daily Discovery、Species Detail、动作语义和手机优先级中残留的旧 detail surface/首页推荐/英文入口断言，并把 3000 开发地址与 4317 production 验收地址在 README/SETUP 中明确区分；受影响回归与全页面矩阵 28/28 已通过。
@@ -32,10 +32,11 @@
 - [x] 复核 `origin/main@daadc2a3` Settings sharing 状态：统一分支保留已实现的脱敏报告流程，不复制“建设中”降级，并用 Settings → 导出与分享浏览器回归守住真实入口。
 - [x] 将核心三层契约、API、混养、当前鱼缸、水质、证据、推荐和分享回归纳入 `RC Convergence V1` canonical CI。
 - [x] 修复 Surface workflow 陈旧 `max-w-[920px]` 断言与 Aquarium 设置关闭后的 CI 点击竞态；本地回归通过，提交 `a7b85171` 已推送。
-- [x] 根据远端日志修复 Aquarium 添加生物点击后的导航等待竞态；本地回归通过，提交 `a90911fa` 待推送。
-- [x] 根据远端日志将 Aquarium 两个设置面板切换点击设为 `noWaitAfter`；本地回归通过，提交 `78160db3` 待推送。
-- [x] 修复 UI Regression 静态 Preview 缺少 `/api/v1` fallback 的环境缺口：启动 Express API + Vite proxy，API+Vite 本地 Identify/Aquarium 回归通过，提交 `0b52e947` 待推送。
+- [x] 根据远端日志修复 Aquarium 添加生物点击后的导航等待竞态；本地回归通过，提交 `a90911fa` 已推送。
+- [x] 根据远端日志将 Aquarium 两个设置面板切换点击设为 `noWaitAfter`；本地回归通过，提交 `78160db3` 已推送。
+- [x] 修复 UI Regression 静态 Preview 缺少 `/api/v1` fallback 的环境缺口：启动 Express API + Vite proxy，API+Vite 本地 Identify/Aquarium 回归通过，提交 `0b52e947` 已推送。
 - [x] 观察 `0b52e947` 后续 canonical Actions：UI `32948782199`、Surface `32948782231`、Result UX `32948782259`、RC `32948782285` 全部通过；最终 head 为 `ef878e25`，local/remote/PR 同步。
+- [x] 修复 `check:preview-parity` 在无系统 Vercel CLI 时的误报，并确认 `f2a5ec47` 的 local/remote/PR/Vercel SHA parity `PASS`。
 - [ ] 完成授权部署环境的 Vercel exact SHA 与 Supabase schema/RLS parity 复核。
 
 ## Eight-phase truth consolidation

@@ -8,7 +8,10 @@ const project = vercelRepo.projects?.[0];
 const git = (args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
 const localSha = git(['rev-parse', 'HEAD']);
 const remoteSha = git(['rev-parse', `origin/${state.canonicalBranch}`]);
-const vercelBin = process.env.VERCEL_BIN || 'vercel';
+const vercelBin = process.env.VERCEL_BIN || null;
+const vercelArgs = (args) => vercelBin
+  ? { file: vercelBin, args }
+  : { file: 'npx', args: ['--yes', 'vercel', ...args] };
 
 const result = {
   canonicalBranch: state.canonicalBranch,
@@ -27,7 +30,8 @@ const result = {
 
 let deployments;
 try {
-  const raw = execFileSync(vercelBin, ['ls', project?.name ?? 'aquaguide', '--json'], {
+  const command = vercelArgs(['ls', project?.name ?? 'aquaguide', '--json']);
+  const raw = execFileSync(command.file, command.args, {
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
   });

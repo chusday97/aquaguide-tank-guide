@@ -2,6 +2,11 @@
 
 ## 2026-08-26
 
+### Preview SHA parity gate repaired
+
+- Fixed the read-only parity script to fall back to `npx --yes vercel` when the system `vercel` binary is unavailable.
+- Verified `PASS` for local, origin, PR #141 and Vercel Ready Preview at `f2a5ec4719dcc388985c845217d66eb8d1f46f47`; Supabase schema/RLS metadata and release acceptance remain open.
+
 ### Canonical CI regression hardening closed
 
 - Confirmed the final canonical head `ef878e25144c4cd12c461e0f3eadbd5182a1bada` passes UI Regression `32948782199`, Surface System `32948782231`, Result UX Head Integrity `32948782259`, and RC Convergence `32948782285`.

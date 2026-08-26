@@ -7,7 +7,7 @@
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
 - **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
 - **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
-- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。只读 PostgREST 已确认 31/31 契约表和最新字段存在，但 exact migration revision、直接 RLS policy metadata、exact Preview Git SHA 与用户 release acceptance 仍未完成。
+- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。只读 PostgREST 已确认 31/31 契约表和最新字段存在，且当前 Vercel Ready Preview 已与 canonical SHA 对齐；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
 - **P0 独立审查：** Critic 已复验通过；曾发现的水质映射、侵略性负荷回归、共享类型边界与自由文本误判均已有回归用例和修复。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
@@ -33,7 +33,7 @@
 - 第二轮陈旧回归审计已完成：Care 分类改用正式 `/care?mode=browse` 路由；Daily Discovery、动作语义和手机优先级回归改为验证图鉴互动场景拥有六项发现队列，鱼缸首页不再渲染重复推荐；Species Detail 使用当前 `View tank species`/`查看缸内物种` 入口与 `detail-rail`/`bottom-sheet` 表面。
 - 已移除旧 3003 UI smoke 并注册 `npm run test:ui-smoke`：脚本固定使用 4317，验证正式路由、browse 搜索、互动图鉴六项发现、鱼缸唯一缸内物种入口和无重复推荐；该 smoke 已通过。
 - 已修复 CI 触发漂移：`Surface System V1` 与 `UI Regression V1` 现在均监听 `codex/unified-rc-visual-v1`，并在隔离 4173 production Preview 上执行 canonical UI smoke；旧 `codex/interactive-parity-v3` 不再作为 push 门禁来源。
-- 该 CI 收口已推送为 `834af948`；`project:status` 与 `git ls-remote` 已确认 local/remote 同 SHA，4317 `/_preview/interactive` 返回 200。远端 Actions 新 run 尚待 GitHub 观察，Vercel parity 仍为 `AUTH_REQUIRED`，Supabase schema/RLS 与 release acceptance 未完成。
+- 该 CI 收口已推送为 `834af948`；`project:status` 与 `git ls-remote` 已确认 local/remote 同 SHA，4317 `/_preview/interactive` 返回 200。该时点 Vercel CLI 误报 `AUTH_REQUIRED`，后续已修复 CLI 解析并确认 exact Preview SHA；Supabase schema/RLS 与 release acceptance 仍未完成。
 - `origin/main@ed0cf380` 的 Care card 可达性已完成首轮复核：统一分支已有 `分享卡片` → 本地 `生成养护卡` 流程；新增 `test:care-card-action-ui` 守住该行为并纳入统一 UI CI，没有复制旧入口或改变产品契约。
 - 首轮 `origin/main` 高影响能力判定已整理到 `docs/03-development/ORIGIN_MAIN_RECONCILIATION.md`；这只是已验证分组，不代表 214 个独有提交全部完成，剩余提交仍不得直接合并。
 - `origin/main@daadc2a3` 的 Settings sharing 降级已复核：统一分支保留真实脱敏报告流程，并由 `test:settings-share-action-ui` 验证 Settings → 导出与分享；状态继续为 `DEPLOYED_REVERIFY_PENDING`，不降级为建设中。
@@ -42,9 +42,9 @@
 - 新远端 Surface 已通过；UI Regression 继续暴露回归脚本在添加生物点击后等待导航的超时，已改为 `noWaitAfter` 并以目标 Dialog 可见性验收（`a90911fa`）。本地 4317 回归通过，需等待下一次远端 UI run。
 - 后续远端日志显示设置内“水草”面板切换也存在同类导航等待，两个设置面板切换已统一改为 `noWaitAfter`（`78160db3`）；本地 4317 回归通过，等待新 UI run。
 - Identify 失败进一步确认是 UI CI 环境缺少 API：workflow 现在在隔离前端前启动现有 Express API（8787），再用 Vite 开发代理提供 4173；production build 仍单独执行。API+Vite 本地回归通过，提交 `0b52e947` 已推送。
-- 最新远端 CI 证据（2026-08-26）：canonical head `ef878e25144c4cd12c461e0f3eadbd5182a1bada` 上 `UI Regression V1` `32948782199`、`Surface System V1` `32948782231`、`Result UX Head Integrity V1` `32948782259`、`RC Convergence V1` `32948782285` 全部 success；PR #141 head、本地和 origin 分支 SHA 一致，4317 `/_preview/interactive` HTTP 200。Vercel status 仍因 Hobby `api-deployments-free-per-day` 失败，`check:preview-parity` 返回 `AUTH_REQUIRED`；Supabase schema/RLS parity 与 release acceptance 未完成。
+- 最新远端 CI 证据（2026-08-26）：canonical head `f2a5ec4719dcc388985c845217d66eb8d1f46f47` 上 `UI Regression V1` `32949623297`、`Surface System V1` `32949623328`、`Result UX Head Integrity V1` `32949623304`、`RC Convergence V1` `32949623270` 全部 success；PR #141 head、本地和 origin 分支 SHA 一致，4317 `/_preview/interactive` HTTP 200。Vercel Ready Preview `aquaguide-k48ki2sbb-chusday97s-projects.vercel.app` 也绑定该 SHA，`check:preview-parity` 已 PASS；Supabase schema/RLS parity 与 release acceptance 未完成。
 - README/SETUP 已明确 3000 是开发服务、4317 是 production Preview 验收源。`npm run test:daily-discovery`、`test:product-actions-runtime`、`test:mobile-aquarium-priorities`、核心体验、全页面运行矩阵 28/28、导航、设置反馈、互动场景、lint、project truth、branch convergence 与 diff check 均通过。回归、文档与最终状态提交已全部推送；当前 SHA 不固化在 Handoff，始终以 `npm run project:status` 与 `git ls-remote` 输出为准，工作区 clean。
-- 推送后 `check:preview-parity` 仍返回 `AUTH_REQUIRED`（当前 Vercel CLI 会话未暴露部署信息）；不得将其解释为 Preview 已同步，Supabase schema/RLS parity 仍 pending。
+- 修复 `check:preview-parity` 的 Vercel CLI 解析：无系统 `vercel` 时自动使用 `npx --yes vercel`。当前只读输出为 `PASS`：local = origin = PR #141 = Vercel Ready Preview `aquaguide-k48ki2sbb-chusday97s-projects.vercel.app`，SHA `f2a5ec47…`；Supabase schema/RLS 直接元数据和 release acceptance 仍 pending。
 
 - 当前分支：`codex/unified-rc-visual-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
