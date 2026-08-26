@@ -2,6 +2,14 @@
 
 ## 2026-08-26
 
+### Daily Check rule remote verification
+
+- Canonical commit `2b544836` passed PR #141 RC Convergence, UI Regression, Surface, Result UX, Vercel and Cloudflare checks.
+- Read-only Preview parity is `PASS`: local SHA = origin SHA = Vercel READY deployment SHA.
+- Supabase schema/RLS parity and release acceptance remain pending; `main` was not modified.
+
+## 2026-08-26
+
 ### Daily Check negative-answer rule hardening
 
 - Selectively migrated `origin/main@37177a60` semantics: categorical water-abnormality answers now use exact matching, preventing “没有异味”等否定 values from triggering water-abnormality actions.

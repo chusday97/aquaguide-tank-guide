@@ -11,7 +11,7 @@
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
 - **项目总入口：** `docs/PROJECT_TRUTH.md`。产品、UI、部署、数据与历史材料必须按它的 canonical routing 读取。
 - **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
-- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head 始终以 `npm run project:status` 为准；上一个已完成四项远端门禁的 head 为 `fd27daf2…`，本轮 Daily Check 规则修复推送后需等待新 head 的 Actions 结果。Vercel 最新 Ready Preview 仍落后于当前 head，自动部署受 Hobby `build-rate-limit` 阻断，`check:preview-parity` 为 `NOT_SYNCHRONIZED`；exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
+- **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归。当前 canonical head 始终以 `npm run project:status` 为准；提交 `2b544836` 的 PR #141 RC Convergence、UI Regression、Surface、Result UX、Vercel、Cloudflare 全部通过。`npm run check:preview-parity` 已确认 Vercel READY Preview `aquaguide-kh6huu1vq-chusday97s-projects.vercel.app` 与 local/remote 同 SHA。exact migration revision、直接 RLS policy metadata 与用户 release acceptance 仍未完成。
 - **P0 独立审查：** Critic 已复验通过；曾发现的水质映射、侵略性负荷回归、共享类型边界与自由文本误判均已有回归用例和修复。
 - **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
@@ -19,6 +19,7 @@
 - **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；P0 业务迁移已完成，仍不得在 Supabase parity 与单独 release acceptance 前转为 Ready 或合并。
 - **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；运行 `32854080645` 已在 `cc99ec47` 通过 project truth、状态、PR topology、lint、布局、3D 取景和 production build；当前 head 仅包含文档证据更新。
 - **最近一次远端门禁：** PR #141 当前 head `fd27daf2…` 的 RC Convergence `32956751975`、Result UX Head Integrity `32956752189`、Surface System `32956751865`、UI Regression `32956751904` 均已通过，且 UI Regression 已包含物种详情专项回归。
+- **最新远端门禁：** PR #141 head `2b544836…` 的 RC Convergence `32961005538`、Result UX/validate `32961005535`/`32961005567`、UI Regression `32961005592` 均通过；Vercel 与 Cloudflare 状态也通过。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 与 `docs/03-development/PR_CLEANUP_RECORD.md` 已记录安全收敛结果；当前开放列表只剩 #141，其他 55 个历史 PR 已关闭但分支保留。
 - **分支收敛审计：** `98977966` 新增 `npm run audit:branch-convergence` 和 `docs/03-development/BRANCH_CONVERGENCE_AUDIT.md`。最新远端快照显示统一分支相对 `origin/main` 为 149/214、相对 RC1 为 149/742；这些是 Git 拓扑差异，不是缺失功能结论。后续必须按 `.ai/RC_MIGRATION_LEDGER.md` 逐项审查，禁止整体 merge/rebase。
 - **Parity 门禁：** `54f3e005`、`b39dbbd7`、`6e71cb05` 已加入 local/remote SHA、缺失 ref 和 detached CI 分支检查；统一分支已推送，当前 `project:status` 与 `check:branch-convergence` 均通过。当前环境无法连接 GitHub API，Actions 真实运行仍待外部观察。

@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-26 — Daily Check rule remote verification
+
+- **Verification:** Commit `2b544836b3c92290d3aa9f723e45627f7c7953d1` is on the canonical remote branch. PR #141 RC Convergence (`32961005538`), UI Regression (`32961005592`), Result UX/validate (`32961005535`/`32961005567`), Vercel and Cloudflare all passed.
+- **Preview:** `npm run check:preview-parity` returned `PASS`; Vercel READY deployment is `aquaguide-kh6huu1vq-chusday97s-projects.vercel.app` with the same SHA.
+- **Boundary:** Supabase schema/RLS parity and release acceptance remain pending; no `main`, Supabase or deployment mutation was performed.
+
 ## 2026-08-26 — Daily Check negative-answer rule hardening
 
 - **Problem:** `origin/main@37177a60` identified substring matching that could treat categorical answers such as “没有异味” as positive water abnormalities.

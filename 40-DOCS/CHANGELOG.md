@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Verified
+- `2b544836` 已完成远端收敛验证：PR #141 RC Convergence、UI Regression、Surface、Result UX、Vercel 和 Cloudflare 全部通过；Vercel READY Preview `aquaguide-kh6huu1vq-chusday97s-projects.vercel.app` 与 local/remote SHA parity PASS。
 - 选择性迁移 `origin/main@37177a60` 的 Daily Check 否定答案修复：精确区分“没有异味/清澈”与“明显异味”，`npm run test:daily-check`、`npm run lint`、`npm run build` 通过；未改变视觉、API、数据库或 Supabase。
 - Re-verified canonical head `fd27daf2`: core UI, responsive route scan (7×17), page runtime matrix (28/28), remote four-gate CI, branch convergence and project truth all pass; 4317 preview returns HTTP 200. Vercel current-head parity remains blocked by Hobby `build-rate-limit`, so release stays `NOT_READY`.
 
