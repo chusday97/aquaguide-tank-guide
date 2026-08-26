@@ -384,3 +384,4 @@
 2026-08-27：完成 telemetry 最后一处边界补强：pairSignature 现在纳入全部 canonical rule codes（含 passedRules），并使用排序后的物种 ID，反向选择不会重复产生新签名；本地 session/兼容性/lint/project truth 通过。
 2026-08-27：修正交接中的提交引用，当前 canonical head 为 `f175ea2c`，与远端统一分支一致；此前旧 SHA 仅保留为历史证据。
 2026-08-27：实时复核 PR #141 与业务参考线：`origin/integration/aquaguide-rc1@895f2f39` 对 canonical head `0a9613a5` 的 `git merge-tree --write-tree` 检出 64 个冲突文件（契约、API、领域规则、页面、共享组件和服务均有冲突），因此不能整体 merge/rebase；push RC Convergence run `32991934463` 在当前 head 成功，local/origin 同步且 clean。Vercel READY 仍为 `3b33c773`，`check:preview-parity` 暂为 `NOT_SYNCHRONIZED`，4317 本地预览 HTTP 200；main、Supabase 均未修改。
+2026-08-27：提交 `6fc42dd9` 的交接/证据同步已完成；随后对精确 head 执行 RC Convergence workflow_dispatch run `32992520843` 并成功，确认文档同步不会改变底层契约、领域、storage、telemetry、视觉契约或 production build 结果。
