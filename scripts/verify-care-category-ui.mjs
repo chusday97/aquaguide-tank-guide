@@ -31,7 +31,7 @@ const inspectNewStock = async (locale, buttonName) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await seed(page, locale);
-  await page.goto(`${baseUrl}/care`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}/care?mode=browse`, { waitUntil: 'networkidle' });
 
   const category = page.locator('[data-care-category="new_stock"]');
   await category.getByText(buttonName, { exact: true }).waitFor();
@@ -40,14 +40,14 @@ const inspectNewStock = async (locale, buttonName) => {
 
   const resultCount = Number(await page.locator('#care-results').getAttribute('data-care-result-count'));
   assert.ok(resultCount >= 2, `${locale} new-stock category should show at least two articles`);
-  assert.equal(await page.locator('[data-surface="detail-drawer"]').count(), 0, 'choosing a category must not open a single article');
+  assert.equal(await page.locator('[data-surface="detail-rail"]').count(), 0, 'choosing a category must not open a single article');
   assert.equal(await category.getAttribute('class').then(value => value?.includes('bg-emerald-50')), true, 'selected category should stay visibly selected');
 
   const firstArticle = page.locator('#care-results button[id^="care-article-"]').first();
   await firstArticle.click();
-  await page.locator('[data-surface="detail-drawer"]').waitFor();
+  await page.locator('[data-surface="detail-rail"]').waitFor();
   await page.keyboard.press('Escape');
-  await page.locator('[data-surface="detail-drawer"]').waitFor({ state: 'detached' });
+  await page.locator('[data-surface="detail-rail"]').waitFor({ state: 'detached' });
   assert.equal(Number(await page.locator('#care-results').getAttribute('data-care-result-count')), resultCount, 'closing an article must restore the category result set');
   assert.deepEqual(errors, [], `${locale} care page should not throw: ${errors.join('; ')}`);
   await page.close();

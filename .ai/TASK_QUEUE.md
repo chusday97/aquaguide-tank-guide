@@ -24,6 +24,7 @@
 - [ ] 获取可暴露部署 SHA 的 Vercel Preview 只读访问，并完成授权 Supabase schema/RLS 只读 parity；远端 CI 已通过，但本轮 exact SHA/schema/RLS 证据仍不足。
 - [x] 新增 `npm run check:preview-parity`，自动比较 local/remote/Vercel branch Preview SHA；当前结果明确报告 `NOT_SYNCHRONIZED`，不把旧 Preview 误报为通过。
 - [x] 统一浏览器回归的 Preview URL 入口为 `scripts/preview-url.mjs`（默认 4317），并修复核心/导航脚本中已淘汰的断点、入口和 surface 断言；桌面沉浸式 Dock 恢复可见 AI 建缸助手卡片，移动端保留“更多操作”入口。
+- [x] 第二轮陈旧回归审计：修复 Care category、Daily Discovery、Species Detail、动作语义和手机优先级中残留的旧 detail surface/首页推荐/英文入口断言，并把 3000 开发地址与 4317 production 验收地址在 README/SETUP 中明确区分；受影响回归与全页面矩阵 28/28 已通过。
 - [ ] 完成授权部署环境的 Vercel exact SHA 与 Supabase schema/RLS parity 复核。
 
 ## Eight-phase truth consolidation

@@ -26,7 +26,7 @@ npm run dev:web
 npm run dev:api
 ```
 
-默认 Web 预览地址为 `http://localhost:3000`。API 端口默认由服务配置决定，常用本地值为 `8787`。
+`npm run dev` 的开发 Web 服务默认地址为 `http://127.0.0.1:3000`；统一验收使用 production Preview `http://127.0.0.1:4317`（构建后启动 `vite preview --host 127.0.0.1 --port 4317`）。浏览器回归脚本默认指向 4317，也可用 `AQUAGUIDE_URL` 覆盖。API 端口默认由服务配置决定，常用本地值为 `8787`。
 
 ## 3. 环境变量
 

@@ -6,6 +6,11 @@
 - **Verification:** `npm run build`; `npm run test:core-ui`; `npm run test:page-runtime-matrix` (28/28); `npm run test:guided-navigation-ui`; `npm run test:settings-feedback`; `npm run test:interactive-scenes-ui`; `npm run lint`; `npx tsc --noEmit`; `npm run check:project-truth`; `npm run check:branch-convergence`; `git diff --check` all passed. 4317 serves the rebuilt production output and the Copilot dialog opens in Chromium.
 - **Boundary:** Current visual baseline remains unchanged; no SQL, API, Supabase, main merge, or Vercel deployment was performed. Vercel exact SHA and Supabase schema/RLS parity remain external release gates.
 
+## 2026-08-26 — Second stale-regression audit
+
+- **Action:** Audited remaining browser scripts and documentation for retired detail surfaces, labels, and port assumptions. Updated Care category, Daily Discovery, Species Detail and the 3000-vs-4317 setup wording. Rebased Daily Discovery and action/mobile priority checks on the current product truth: discovery belongs to the Encyclopedia interactive scene, while Aquarium remains a single immersive tank workspace.
+- **Verification:** `npm run test:daily-discovery`; `npm run test:product-actions-runtime`; `npm run test:mobile-aquarium-priorities`; `npm run test:core-ui`; `npm run test:page-runtime-matrix` (28/28); `npm run test:guided-navigation-ui`; `npm run test:interactive-scenes-ui`; `npm run test:settings-feedback`; `npm run lint`; `npm run check:project-truth`; `npm run check:branch-convergence`; `git diff --check` all passed on the canonical 4317 Preview. No product data, API, Supabase, or visual geometry changed.
+
 ## 2026-08-26 — Latest parity check
 
 - **Action:** Rechecked canonical local/remote SHA and the local 4317 preview; attempted a read-only public GitHub PR metadata query.

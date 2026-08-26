@@ -38,7 +38,7 @@ VITE_SUPABASE_ANON_KEY="你的 Supabase anon public key"
 npm run dev
 ```
 
-打开 `http://localhost:3000` 即可使用。后端健康检查地址是 `http://localhost:8787/api/health`。
+开发模式打开 `http://127.0.0.1:3000` 即可使用；固定 production 验收 Preview 为 `http://127.0.0.1:4317`。后端健康检查地址是 `http://127.0.0.1:8787/api/health`。
 
 ## 交付检查
 

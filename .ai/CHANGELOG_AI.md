@@ -9,6 +9,13 @@
 - Restored the existing AI Tank Copilot capability as the seventh desktop Aquarium Dock action and the existing mobile “更多鱼缸操作” action. No second page or new business rule was added.
 - Verified core experience, page runtime matrix (28/28), guided navigation, settings feedback, interactive scenes, typecheck, project truth, branch convergence, and production build.
 
+### Second stale-regression audit
+
+- Replaced remaining `detail-drawer` and retired `Livestock in Tank` browser assertions with the current `detail-rail` and `View tank species` contracts.
+- Clarified in README/SETUP that 3000 is the development server while 4317 is the production Preview used by regression scripts.
+- Rebased Daily Discovery, action-kind runtime, and mobile Aquarium priority regressions on the current ownership contract: the six-item discovery scene is owned by Encyclopedia; Aquarium must not render a duplicate queue. Detail close, species favorite, livestock entry, and browse-mode filter assertions now use current observable actions.
+- Re-ran the affected browser suite plus core/page/navigation/interactive/settings gates on 4317; all passed, including page runtime matrix 28/28.
+
 ## 2026-08-26
 
 ### Automated Preview SHA parity gate

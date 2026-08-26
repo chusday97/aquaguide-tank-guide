@@ -33,9 +33,9 @@ try {
   const page = await context.newPage();
   await seed(page);
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  await page.getByText('今日推荐', { exact: true }).waitFor();
 
   const aquariumToolbar = page.locator('.aquarium-toolbar');
+  await aquariumToolbar.getByRole('button', { name: '新建鱼缸' }).waitFor({ state: 'visible' });
   assert.ok(await aquariumToolbar.getByRole('button', { name: '新建鱼缸' }).isVisible());
   assert.ok(await aquariumToolbar.getByRole('button', { name: '更多鱼缸操作' }).isVisible());
   assert.equal(await aquariumToolbar.getByRole('button', { name: /水族册/ }).count(), 0, 'collection must not occupy the aquarium top bar');
@@ -53,10 +53,10 @@ try {
   await page.getByRole('button', { name: '更多鱼缸操作' }).click();
 
   const primaryActionTexts = await page.locator('.aquarium-actions .desktop-card-grid').first().locator(':scope > button').allTextContents();
-  assert.equal(primaryActionTexts.length, 7);
-  for (const keyword of ['鱼缸检查', '换水', '喂食', '记录已有生物', '规划想养的生物', 'AI 建缸助手', '养护记录']) assert.ok(primaryActionTexts.some(text => text.includes(keyword)), `visible actions must include ${keyword}`);
+  assert.equal(primaryActionTexts.length, 6);
+  for (const keyword of ['鱼缸检查', '换水', '喂食', '记录已有生物', '规划想养的生物', '养护记录']) assert.ok(primaryActionTexts.some(text => text.includes(keyword)), `visible actions must include ${keyword}`);
   assert.equal(await page.getByText('更多工具', { exact: true }).count(), 0, 'core actions must not be folded under more tools');
-  assert.ok(await page.getByText('今日推荐', { exact: true }).isVisible(), 'daily discovery must remain visible on aquarium home');
+  assert.equal(await page.locator('#aquarium-discovery').count(), 0, 'daily discovery must remain owned by the encyclopedia scene');
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
 
   const atlas = await context.newPage();
@@ -73,14 +73,13 @@ try {
     const desktop = await browser.newPage({ viewport: { width, height: 900 }, locale: 'en-US' });
     await seed(desktop, 'en');
     await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-    await desktop.getByText('Daily Discovery', { exact: true }).waitFor();
     assert.ok(await desktop.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `${width}px must not overflow`);
-    assert.ok(await desktop.getByText('Daily Discovery', { exact: true }).isVisible());
+    assert.equal(await desktop.locator('#aquarium-discovery').count(), 0, 'daily discovery must not return to aquarium home');
     assert.equal(await desktop.getByText('More tools', { exact: true }).count(), 0);
     await desktop.close();
   }
 
-  console.log('mobile aquarium priorities: compact header, seven visible actions, homepage discovery and atlas modes separated');
+  console.log('mobile aquarium priorities: compact header, six visible actions, encyclopedia discovery ownership and atlas modes separated');
 } finally {
   await browser.close();
 }

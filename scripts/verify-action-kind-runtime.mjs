@@ -53,28 +53,27 @@ try {
   }
 
   const page = await context.newPage();
-  await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-
-  await page.locator('#aquarium-discovery').getByRole('button', { name: '查看物种详情', exact: true }).click();
-  await page.waitForURL(/\/encyclopedia\?species=/);
+  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
+  await page.locator('[data-scene-node]').first().click();
+  await page.getByRole('button', { name: '查看物种档案', exact: true }).click();
+  await page.locator('[data-surface="detail-rail"], [data-surface="bottom-sheet"]').waitFor({ state: 'visible' });
   assert.equal(new URL(page.url()).pathname, '/encyclopedia', 'route 动作没有进入目标页面');
 
-  await page.getByRole('dialog').getByRole('button', { name: '知道了', exact: true }).click();
-  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
+  const speciesDetail = page.locator('[data-surface="detail-rail"], [data-surface="bottom-sheet"]');
+  await speciesDetail.getByRole('button', { name: '加入种草', exact: true }).click();
+  await speciesDetail.getByRole('button', { name: '已种草', exact: true }).waitFor();
+  await speciesDetail.getByRole('button', { name: '关闭', exact: true }).click();
+  await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'domcontentloaded' });
 
   const filterButton = page.getByRole('button', { name: /筛选/ }).first();
   await filterButton.click();
   assert.equal(await filterButton.getAttribute('aria-expanded'), 'true', 'view 动作没有改变展开状态');
 
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  const discovery = page.locator('#aquarium-discovery');
-  const favoriteButton = discovery.getByRole('button', { name: '收藏物种', exact: true });
-  await favoriteButton.click();
-  await discovery.getByRole('button', { name: '取消收藏物种', exact: true }).waitFor();
-  assert.equal((await discovery.locator('h3').innerText()).trim().length > 0, true, 'mutation 动作后推荐对象消失');
+  assert.equal(await page.locator('#aquarium-discovery').count(), 0, '鱼缸首页不得重新渲染已迁移到图鉴的推荐队列');
 
-  await page.getByRole('button', { name: '添加生物', exact: true }).first().click();
-  const dialog = page.getByRole('dialog').filter({ hasText: '添加生物' });
+  await page.locator('[data-tank-species-entry]').click();
+  const dialog = page.getByRole('dialog').filter({ hasText: '缸内物种' });
   await dialog.waitFor();
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
   await dialog.waitFor({ state: 'hidden' });
