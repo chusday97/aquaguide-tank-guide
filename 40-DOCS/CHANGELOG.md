@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- 将 `today_action_surface` 纳入 disclosure 契约白名单，允许今日行动按产品要求折叠，但仍保持核心任务内容在展开态直接可见。
 - 将 Aquarium 今日行动改为半透明可交互拉手：点击展开、Esc 收起，支持触控/鼠标拖拽在收起/半展开/完全展开三档吸附；任务内容与 Repository 写入保持不变，并新增 `test:today-action` 门禁。
 - 恢复正式 `/encyclopedia` 与 `/care` 的默认互动场景，并保留显式 `?mode=browse` 传统浏览入口；新增 `test:formal-scenes` 门禁覆盖场景点选与模式切换。
 - 修正图鉴手机端 320px 分页布局，更新核心/手机回归脚本以使用显式 browse 模式和当前 Rail/成就页文案，避免旧断言掩盖真实回归。

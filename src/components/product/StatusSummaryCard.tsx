@@ -176,6 +176,7 @@ export function StatusSummaryCard({
       <button
         type="button"
         data-today-action-handle
+        data-disclosure-purpose="today_action_surface"
         aria-expanded={panelLevel !== 'collapsed'}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
