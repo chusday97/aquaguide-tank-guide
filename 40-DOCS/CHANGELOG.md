@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- PR #142 最新候选 `ff2520c9` 的远端 validate 重跑通过；保留 Draft，等待 Preview SHA parity、Supabase 只读 parity 和用户人工视觉验收。
 - 更新 GP-003 返回用户每日检查回归：先展开今日行动拉手再进入检查任务，并提高 CI 等待窗口；本地完整路径通过。
 - GP-001 CI 浏览器门禁扩大等待窗口至 30 秒，修复 GitHub runner 上设置弹层异步加载导致的偶发不可编辑超时；本地完整建缸路径通过。
 - `project:status` 现在同时允许从 canonical recovery 分支和 PR #142 release candidate 运行，并按当前分支比较远端 SHA，避免切到候选后无法核对同步状态。

@@ -44,6 +44,7 @@
 - 候选已快进并推送至 `codex/main-core-foundation-v1@a8532072`；`project:status` 现可从 recovery 或 candidate 运行并报告远端同步。PR #142 仍 Draft，未合并 main。
 - PR #142 validate 的 GP-001 失败定位为 GitHub runner 异步设置弹层等待不足，已将测试默认等待从 10s 提升为 30s；本地 GP-001 通过，需推送后重跑远端门禁。
 - 远端 validate 进一步暴露 GP-003 直接寻找隐藏“开始今日检查”按钮；测试已改为先展开今日行动拉手并提高等待窗口，本地 GP-003 通过。
+- 最新候选 `ff2520c9` 已通过 GitHub validate/foundation、Vercel 与 Cloudflare checks，PR #142 状态为 CLEAN/Draft；Preview 部署已成功，但 Preview 实际 Git SHA 尚未由独立 parity 工具确认。
 - `today_action_surface` 已加入 disclosure 契约白名单，`npm run test:disclosures` 通过。
 - 底层回归已复验：Catalog、Domain policy、添加意图、现实记录/API 错误语义、Mini 混养、布局与 3D framing 门禁通过；Supabase 仍只读待授权 parity。
 - 下一步：运行统一底层/Catalog 门禁，之后再做 Preview SHA/Supabase 只读 parity；当前仍未推送候选或合并 main。

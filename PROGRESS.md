@@ -66,6 +66,7 @@
 - [x] `project:status` 支持 recovery/candidate 双入口；候选分支本地与远端 SHA 已一致（`a8532072`）。
 - [x] 修复 GP-001 CI runner 输入框等待窗口（30s），本地 `test:golden-path-gp001-ui` 通过；远端 validate 待推送后重跑。
 - [x] GP-003 已适配今日行动默认收起行为，`test:golden-path-gp003-ui` 本地通过；远端 validate 待本次推送后重跑。
+- [x] PR #142 最新 head `ff2520c9` 已与本地/远端候选一致；GitHub `validate`、两项 `foundation`、Vercel 和 Cloudflare checks 均通过，PR 仍 Draft 且尚未合并 main。
 - [x] `npm run test:disclosures` 通过，今日行动折叠用途已登记为 `today_action_surface`。
 
 ### 底层门禁复验
