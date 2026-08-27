@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4319';
 const today = new Date().toISOString().slice(0, 10);
 const state = {
   version: 1,

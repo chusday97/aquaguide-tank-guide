@@ -85,13 +85,13 @@ export const normalizeCatalogWaterType = (value: unknown): DomainSpeciesFact['wa
   return normalized === 'freshwater' || normalized === 'saltwater' ? normalized : 'unknown';
 };
 
-const readPublishedCatalogDecision = async ({
+export const readPublishedCatalogDecision = async ({
   client,
   aquariumId,
   speciesCatalogKey,
   catalogVersion,
 }: {
-  client: ReturnType<typeof userClientFor>;
+  client: Pick<ReturnType<typeof userClientFor>, 'from'>;
   aquariumId: string;
   speciesCatalogKey: string;
   catalogVersion: string;

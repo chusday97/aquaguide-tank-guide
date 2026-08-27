@@ -6,10 +6,10 @@
 
 | Gate | Current evidence | Status | What closes it |
 | --- | --- | --- | --- |
-| One delivery line | Local candidate, remote candidate and Draft PR #142 point to the same head according to `npm run project:status` and GitHub metadata | Pass | Keep future work on the candidate until release acceptance. |
+| One delivery line | Local candidate is `2648682d`; remote candidate and Draft PR #142 are still on `5b419e98`; `npm run project:status` fails until the candidate is pushed | Blocked / remote sync pending | Push the reviewed candidate once, then re-run `project:status` and record PR/Preview SHAs. |
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | Candidate contains recovery commits; formal pages, transparent scene assets and layout parity are not yet human-accepted against `37a8d4d1` | Failed / recovery in progress | Run fixed-viewport matrix and user visual acceptance on 4319 against the detached 4317 baseline. |
-| GitHub convergence CI | PR #142 foundation runs `33041753905`, `33041755993` and Product Golden Path `33041756115` all passed; current head is runtime-checked by `npm run project:status` | Pass | Keep the same head through Preview/Supabase parity and release acceptance. |
+| GitHub convergence CI | Historical runs `33041753905`, `33041755993` and `33041756115` passed on the old PR head; they do not cover local `2648682d` | Pending | Push the candidate and require fresh CI on the exact PR head. |
 | Exact Preview SHA parity | Branch Preview exists | Pending | Record the exact deployed SHA associated with the accepted review. |
 | Supabase schema/RLS parity | Read-only inspection found 26 production migrations, 35 RLS tables, 89 policies; production lacks `catalog_releases` and `species.water_type`, while candidate lacks 8 production migrations | Migration required / history conflict | Reconcile production migration history locally, then separately authorize Catalog migration and release checks. |
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
