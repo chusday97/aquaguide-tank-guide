@@ -72,8 +72,28 @@ import {
 import { taskRoutes } from '../services/navigation/task-routes';
 import { getAquariumNavigationSnapshot } from '../services/aquarium/aquarium-navigation.service';
 import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.service';
+import { SpeciesSceneAtlas } from '../components/interactive/SpeciesSceneAtlas';
+import {
+  INTERACTIVE_DISCOVERY_BATCH_SIZE,
+  DISCOVERY_STORAGE_KEY,
+  normalizeDiscoveryState,
+  recommendationService,
+} from '../modules/recommendation/recommendation.service';
+import type { DiscoveryDeckState } from '../modules/recommendation/recommendation.schema';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
+
+const loadDiscoveryState = (): DiscoveryDeckState => {
+  try {
+    return normalizeDiscoveryState(JSON.parse(localStorage.getItem(DISCOVERY_STORAGE_KEY) || 'null'));
+  } catch {
+    return normalizeDiscoveryState();
+  }
+};
+
+const saveDiscoveryState = (state: DiscoveryDeckState) => {
+  localStorage.setItem(DISCOVERY_STORAGE_KEY, JSON.stringify(state));
+};
 
 
 const getSpeciesNameLocalized = (species: any, isEn = false): string => {
@@ -590,7 +610,7 @@ export default function Encyclopedia() {
   const { captureContext, navigateToRoute, navigateToSection, navigateToView, restoreContext } = useWorkspaceNavigation();
   const location = useLocation();
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState<'browse' | 'compatibility'>('browse');
+  const [viewMode, setViewMode] = useState<'scene' | 'browse' | 'compatibility'>('scene');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSearchSpecies, setSelectedSearchSpecies] = useState<SearchSuggestion | null>(null);
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>(emptyActiveFilters);
@@ -643,7 +663,8 @@ export default function Encyclopedia() {
       setResultPage(0);
     }
     if (params.get('mode') === 'compatibility') setViewMode('compatibility');
-    if (params.get('mode') === 'browse') setViewMode('browse');
+    else if (params.get('mode') === 'browse') setViewMode('browse');
+    else setViewMode('scene');
   }, [location.search]);
 
   useEffect(() => {
@@ -655,6 +676,7 @@ export default function Encyclopedia() {
 
   const [ownedFishIds, setOwnedFishIds] = useState<Set<string>>(new Set());
   const [wishlistFishIds, setWishlistFishIds] = useState<Set<string>>(() => loadWishlistIds());
+  const [discoveryState, setDiscoveryState] = useState<DiscoveryDeckState>(() => loadDiscoveryState());
   const [isWishlistExpanded, setIsWishlistExpanded] = useState(false);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
   const [isMoreFilterOpen, setIsMoreFilterOpen] = useState(false);
@@ -791,6 +813,45 @@ export default function Encyclopedia() {
     []
   );
   const allFishes = encyclopediaCatalog.allItems;
+  const discoveryPool = useMemo(() => allFishes.filter(fish => {
+    const lifeType = getLifeType(fish);
+    return lifeType !== 'plant' && lifeType !== 'hardscape';
+  }), [allFishes]);
+  useEffect(() => {
+    setDiscoveryState(previous => {
+      const output = recommendationService.createInteractiveDiscoveryBatch({
+        speciesPool: discoveryPool,
+        wishlistIds: Array.from(wishlistFishIds),
+        state: previous,
+        batchSize: INTERACTIVE_DISCOVERY_BATCH_SIZE,
+      });
+      saveDiscoveryState(output.state);
+      return output.state;
+    });
+  }, [discoveryPool, wishlistFishIds]);
+  const discoverySpecies = useMemo(() => discoveryState.sceneBatchIds
+    .map(id => discoveryPool.find(fish => fish.id === id))
+    .filter((fish): fish is Fish => Boolean(fish)), [discoveryPool, discoveryState.sceneBatchIds]);
+  const refreshDiscoveries = () => {
+    const output = recommendationService.replaceInteractiveDiscoveryBatch({
+      speciesPool: discoveryPool,
+      wishlistIds: Array.from(wishlistFishIds),
+      state: discoveryState,
+      batchSize: INTERACTIVE_DISCOVERY_BATCH_SIZE,
+    });
+    saveDiscoveryState(output.state);
+    setDiscoveryState(output.state);
+  };
+  const restartDiscoveries = () => {
+    const output = recommendationService.restartInteractiveDiscoveryBatches({
+      speciesPool: discoveryPool,
+      wishlistIds: Array.from(wishlistFishIds),
+      state: discoveryState,
+      batchSize: INTERACTIVE_DISCOVERY_BATCH_SIZE,
+    });
+    saveDiscoveryState(output.state);
+    setDiscoveryState(output.state);
+  };
   const ownedQuantityBySpeciesId = useMemo(() => new Map(
     (currentAquarium?.fishes || []).map(item => [item.fishId, item.quantity]),
   ), [currentAquarium]);
@@ -1394,6 +1455,7 @@ export default function Encyclopedia() {
     setSelectedFish(fish);
   };
   const atlasModeItems = [
+    { id: 'scene' as const, label: isEn ? 'Explore scene' : '互动探索', description: isEn ? 'Start with a species you notice.' : '先点一条你感兴趣的生物。' },
     { id: 'browse' as const, label: t('encyclopedia.browseAtlas'), description: t('encyclopedia.browseAtlasDesc') },
     { id: 'compatibility' as const, label: t('encyclopedia.compatibilityCalc'), description: t('encyclopedia.compatibilityCalcDesc') },
   ];
@@ -1402,7 +1464,7 @@ export default function Encyclopedia() {
     <div className="encyclopedia-workspace page-frame-wide flex min-w-0 flex-col gap-6 overflow-x-hidden pt-[58px] md:pt-0 md:overflow-visible">
       {!isOverlayOpen && (
       <div className="atlas-mobile-toolbar fixed inset-x-0 top-0 z-[60] mx-auto grid w-full max-w-[430px] grid-cols-[minmax(0,1fr)_auto_auto] gap-1.5 bg-bg/95 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] shadow-sm backdrop-blur-md md:sticky md:inset-auto md:top-3 md:max-w-[560px] md:rounded-[30px] md:p-2 md:hidden">
-        <div className="grid min-w-0 grid-cols-2 gap-1 rounded-full bg-white/90 p-1 ring-1 ring-border/70">
+        <div className="grid min-w-0 grid-cols-3 gap-1 rounded-full bg-white/90 p-1 ring-1 ring-border/70">
         {atlasModeItems.map(item => (
           <button
             key={item.id}
@@ -1526,8 +1588,34 @@ export default function Encyclopedia() {
         </aside>
         <div className="min-w-0">
 
+      {viewMode === 'scene' ? (
+        <SpeciesSceneAtlas
+          species={discoverySpecies}
+          isEn={isEn}
+          getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
+          onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
+          onBrowseList={() => setViewMode('browse')}
+          onIdentify={() => navigateToRoute('/identify')}
+          onRefreshDiscoveries={refreshDiscoveries}
+          onRestartDiscoveries={restartDiscoveries}
+          discoveryBatch={{
+            size: discoverySpecies.length,
+            seenCount: discoveryState.sceneSeenIds.length + discoverySpecies.length,
+            complete: discoveryState.sceneComplete,
+            index: discoveryState.sceneBatchIndex,
+          }}
+        />
+      ) : viewMode === 'browse' ? (
       <div className="flex flex-col gap-5">
       <div id="atlas-toolbar" data-workspace-sticky="true" className="atlas-sticky-toolbar flex flex-wrap gap-4 md:items-center md:gap-3 md:rounded-[22px] md:border md:border-white/80 md:bg-white/82 md:p-3 md:shadow-sm">
+        <button
+          type="button"
+          data-scene-return
+          onClick={() => setViewMode('scene')}
+          className="hidden h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 text-[12px] font-black text-emerald-800 shadow-sm transition hover:bg-emerald-100 md:inline-flex"
+        >
+          <ChevronLeft className="h-4 w-4" />{isEn ? 'Explore scene' : '回到互动探索'}
+        </button>
         <button
           type="button"
           onClick={() => navigateToRoute('/identify')}
@@ -1984,12 +2072,12 @@ export default function Encyclopedia() {
 
       {resultItemCount > resultPageSize && (
         <div id="atlas-pagination-bottom" className="mt-5 flex w-full justify-center">
-          <div className="grid w-full max-w-[390px] grid-cols-[44px_44px_minmax(64px,1fr)_44px_44px] items-center gap-1.5 rounded-full border border-white/80 bg-white/88 px-2 py-2 shadow-sm backdrop-blur-sm md:hidden">
+          <div className="grid w-full max-w-[390px] grid-cols-[36px_36px_minmax(48px,1fr)_36px_36px] items-center gap-1 rounded-full border border-white/80 bg-white/88 px-1.5 py-1.5 shadow-sm backdrop-blur-sm sm:grid-cols-[44px_44px_minmax(64px,1fr)_44px_44px] sm:gap-1.5 sm:px-2 sm:py-2 md:hidden">
             <button
               type="button"
               onClick={() => goToResultPage(0)}
               disabled={currentResultPage === 0}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25 sm:h-11 sm:w-11"
               aria-label={t('encyclopedia.firstPage')}
               title={t('encyclopedia.firstPageLabel')}
             >
@@ -1999,7 +2087,7 @@ export default function Encyclopedia() {
               type="button"
               onClick={() => goToResultPage(currentResultPage - 1)}
               disabled={currentResultPage === 0}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25 sm:h-11 sm:w-11"
               aria-label={t('encyclopedia.prevPageLabel')}
               title={t('encyclopedia.prevPageLabel')}
             >
@@ -2012,7 +2100,7 @@ export default function Encyclopedia() {
               type="button"
               onClick={() => goToResultPage(currentResultPage + 1)}
               disabled={currentResultPage >= resultPageCount - 1}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25 sm:h-11 sm:w-11"
               aria-label={t('encyclopedia.nextPageLabel')}
               title={t('encyclopedia.nextPageLabel')}
             >
@@ -2022,7 +2110,7 @@ export default function Encyclopedia() {
               type="button"
               onClick={() => goToResultPage(resultPageCount - 1)}
               disabled={currentResultPage >= resultPageCount - 1}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-ink/70 disabled:bg-bg disabled:text-ink/25 sm:h-11 sm:w-11"
               aria-label={t('encyclopedia.lastPage')}
               title={t('encyclopedia.lastPageLabel')}
             >
@@ -2111,6 +2199,7 @@ export default function Encyclopedia() {
         </div>
       )}
       </div>
+      ) : null}
       {viewMode === 'compatibility' && (
         <div id="compatibility-calculator" className="scroll-mt-6">
         <CompatibilityRiskCalculator

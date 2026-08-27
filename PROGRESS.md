@@ -49,6 +49,13 @@
 
 ### 2026-08-27 Service/API 添加契约门禁
 
+## 2026-08-27 正式互动场景恢复
+
+- 已在 `codex/main-visual-recovery-v1` 恢复正式 `/encyclopedia` 默认 scene、`/care` 默认 scene，并保留 `?mode=browse` 传统浏览深链；场景数据继续走当前 Service/本地 Catalog 适配。
+- 新增 `npm run test:formal-scenes`，已通过 390px 图鉴场景点选、详情入口、browse 切换，以及养护场景位置选择、browse 切换。
+- 手机图鉴分页在 320px 下改为紧凑布局；`test:mobile-care-ui` 已通过。`test:core-ui` 运行无错误退出。
+- 当前仍未开始今日行动拖拽面板、Supabase 只读 parity、候选推送或 main 合并。
+
 - [x] `LivestockAddCommand` 与 `aquariumSpeciesCreateSchema` 增加 `intent`、`catalogVersion`、`compatibilityConfirmation`。
 - [x] API 对 `planned_addition` 增加同版本确认、阻断和资料不足错误语义；`record_existing` 继续允许保存事实。
 - [x] `npm run test:addition-intents`、`npm run test:livestock-addition-api-errors`、`lint`、`check:api` 通过。

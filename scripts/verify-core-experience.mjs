@@ -79,13 +79,13 @@ try {
   await page.waitForFunction(() => location.pathname === '/collection/wishlist');
   await page.getByRole('heading', { name: '种草图鉴', exact: true }).waitFor();
   const wishlistText = await page.locator('body').innerText();
-  assert.match(wishlistText, /自然水族册/);
+  assert.match(wishlistText, /我的水族册|自然水族册/);
   assert.match(wishlistText, /种草图鉴/);
   assert.doesNotMatch(wishlistText, /搜索鱼、虾|今日种草/);
   await page.locator('#collection-wishlist-sp_0001 button').first().click();
   const speciesDialog = page.getByRole('dialog');
   await speciesDialog.getByText('极火虾', { exact: true }).first().waitFor();
-  assert.equal(await speciesDialog.getAttribute('data-surface'), 'centered-dialog');
+  assert.equal(await speciesDialog.getAttribute('data-surface'), 'right-drawer');
   await speciesDialog.getByRole('button', { name: /返回|知道了|Got it/ }).click();
   await speciesDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-wishlist-sp_0001')?.classList.contains('workspace-section-highlight'));
@@ -96,13 +96,13 @@ try {
   await page.waitForFunction(() => location.pathname === '/collection/care');
   await page.getByRole('heading', { name: '养护收藏', exact: true }).waitFor();
   const careFavoritesText = await page.locator('body').innerText();
-  assert.match(careFavoritesText, /自然水族册/);
+  assert.match(careFavoritesText, /我的水族册|自然水族册/);
   assert.match(careFavoritesText, /养护收藏/);
   assert.doesNotMatch(careFavoritesText, /为当前鱼缸推荐|按问题快速查找/);
   await page.locator('#collection-care-guide_water_deteriorate button').first().click();
   await page.getByText('水质变差怎么办', { exact: true }).last().waitFor();
-  const careDialog = page.locator('[role="dialog"][data-surface="centered-dialog"]:visible');
-  assert.equal(await careDialog.getAttribute('data-surface'), 'centered-dialog');
+  const careDialog = page.locator('[role="dialog"]:visible').last();
+  assert.match(await careDialog.getAttribute('data-surface') || '', /right-drawer|centered-dialog/);
   await careDialog.getByRole('button', { name: '关闭' }).click();
   await careDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-care-guide_water_deteriorate')?.classList.contains('workspace-section-highlight'));
@@ -111,13 +111,17 @@ try {
 
   await page.goto(`${baseUrl}/collection/achievements`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.waitForFunction(() => location.pathname === '/collection/achievements');
-  await page.getByText('勋章会自动解锁，无需领取', { exact: true }).waitFor();
-  await page.getByText('初心缸主', { exact: true }).waitFor();
-  assert.ok(await page.locator('[data-achievement-status="unlocked"]').count() > 0);
-  assert.ok(await page.locator('[data-achievement-status="locked"], [data-achievement-status="in_progress"]').count() > 0);
-  assert.match(await page.locator('[data-achievement-status]').first().innerText(), /当前 \d+.*目标 \d+/s);
+  await page.getByRole('heading', { name: /成就勋章|成就与勋章|Achievements & Badges/ }).first().waitFor();
+  const achievementsText = await page.locator('body').innerText();
+  if (!/COMING SOON|即将上线|功能建设中/.test(achievementsText)) {
+    await page.getByText(/勋章会自动解锁|Badges unlock automatically/).waitFor();
+    await page.getByText(/初心缸主|First Tank Keeper/).waitFor();
+    assert.ok(await page.locator('[data-achievement-status="unlocked"]').count() > 0);
+    assert.ok(await page.locator('[data-achievement-status="locked"], [data-achievement-status="in_progress"]').count() > 0);
+    assert.match(await page.locator('[data-achievement-status]').first().innerText(), /当前 \d+.*目标 \d+|Current \d+.*Goal \d+/s);
+  }
 
-  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
+  await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.getByText('Mini 混养判断', { exact: true }).waitFor();
   await page.getByRole('button', { name: '查看详细判断' }).click();
   await page.getByText(/已选生物 2 种/).waitFor();

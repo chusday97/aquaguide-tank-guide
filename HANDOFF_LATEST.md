@@ -27,6 +27,13 @@
 
 ### Catalog 阶段新增
 
+## 2026-08-27 正式互动场景恢复进展
+
+- `Encyclopedia` 默认场景已恢复为 `SpeciesSceneAtlas`，`CareEncyclopedia` 默认场景已恢复为 `KnowledgeSceneExplorer`；`?mode=browse` 保留传统列表路径，模式切换由路由显式记录。
+- 新增 `scripts/verify-formal-interactive-scenes.mjs` / `npm run test:formal-scenes`，并修正手机/核心回归脚本使用显式 browse 模式；`test:formal-scenes`、`test:mobile-care-ui` 通过，`test:core-ui` 无错误退出。
+- 图鉴手机分页调整为 320px 可用的紧凑布局，未改变领域规则、Catalog 或 Supabase。
+- 下一步：先提交本步并继续实现半透明可拖拽“今日行动”；完成后再做统一门禁、推送候选和 parity。当前仍暂停 Supabase 写入、PR 更新和 main 合并。
+
 - 已增加 Catalog 公共契约、Supabase migration 提案、不可变快照加载器和 `/api/v1/catalog/releases/current` 只读入口。
 - `npm run lint`、`npm run check:api`、`npm run test:catalog-snapshot` 均通过。
 - 当前本地快照为 486 个物种、13 个证据来源；旧物种水体字段仍为 `unknown`，等待审核数据回填，禁止文本推断。

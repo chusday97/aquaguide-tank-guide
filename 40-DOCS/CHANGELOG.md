@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Main convergence
+- 恢复正式 `/encyclopedia` 与 `/care` 的默认互动场景，并保留显式 `?mode=browse` 传统浏览入口；新增 `test:formal-scenes` 门禁覆盖场景点选与模式切换。
+- 修正图鉴手机端 320px 分页布局，更新核心/手机回归脚本以使用显式 browse 模式和当前 Rail/成就页文案，避免旧断言掩盖真实回归。
 - 修复 main 收敛候选误删用户确认视觉入口的问题：恢复 `/_preview/interactive`、互动场景组件、canonical Aquarium/Detail 样式，并保持当前 Domain/Catalog/Service/API 不变；固定视口人工验收仍待完成。
 - 恢复候选分支的 `.ai/PROJECT_STATE.json`、canonical 文档路由、`project:status`、`check:project-truth` 和候选分支 CI；当前 delivery line 为 `codex/main-core-foundation-v1 → main`，Draft PR #142 已创建并由运行时状态门禁追踪，PR #141 仅保留为历史迁移证据。
 - 从最新 `origin/main` 建立 `codex/main-core-foundation-v1`，按能力台账选择性迁移已验证混养规则；PR #141 继续作为历史证据，不整体合并。

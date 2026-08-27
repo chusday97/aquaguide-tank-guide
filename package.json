@@ -69,6 +69,7 @@
     "test:three-step-ui": "node scripts/verify-three-step-experience.mjs",
     "test:core-ui": "node scripts/verify-core-experience.mjs",
     "test:mobile-care-ui": "node scripts/verify-mobile-care-experience.mjs",
+    "test:formal-scenes": "node scripts/verify-formal-interactive-scenes.mjs",
     "test:care-guide-types": "node scripts/verify-care-guide-types.mjs",
     "test:care-guidance": "tsx scripts/test-care-assessment-guidance.ts",
     "audit:care-evidence": "node --import tsx scripts/audit-care-evidence.ts",
