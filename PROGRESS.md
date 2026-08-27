@@ -31,6 +31,13 @@
 - [x] 新增 `npm run test:domain-compatibility`，并通过 `lint` 与 `check:api`；既有兼容测试待授权环境复跑。
 - 当前仍为基础权威层，旧 `src/lib/tankCompatibilityEngine.ts` 的 UI 适配尚未完全切换，状态保持 `PARTIAL_WITH_FALLBACK`。
 
+## 2026-08-27 UI 回退恢复
+
+- 已确认 main 收敛候选存在真实视觉回退：`/_preview/interactive`、`aquarium-stage-layout-v4.css`、`immersive-detail-layout-v5.css` 被移除，`src/index.css` 相比用户确认基线少约 919 行。
+- 已从 `codex/main-core-foundation-v1` 创建本地恢复分支 `codex/main-visual-recovery-v1`；恢复互动预览路由、场景组件、canonical 舞台/详情样式和互动样式，未回退 Domain/Catalog/Service/API/Supabase。
+- 本地 `npm run lint`、`npm run build` 通过；预览构建包含 `InteractivePreview` chunk。4319 被旧进程占用，候选实际启动于 4326；固定视口人工验收仍待完成。
+- 当前视觉门禁：`FAILED / recovery in progress`；PR #142 未更新、未推送、未合并。
+
 ### 2026-08-27 Service/API 添加契约门禁
 
 - [x] `LivestockAddCommand` 与 `aquariumSpeciesCreateSchema` 增加 `intent`、`catalogVersion`、`compatibilityConfirmation`。

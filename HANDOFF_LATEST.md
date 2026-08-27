@@ -2,6 +2,14 @@
 
 更新时间：2026-08-27 +08:00
 
+## 当前视觉恢复状态（2026-08-27）
+
+- 已确认 main 收敛候选发生真实 UI 回退，不是缓存：`/_preview/interactive` 路由及两套 canonical 布局样式曾被删除，4317 也被复用来服务候选构建。
+- 当前本地恢复分支：`codex/main-visual-recovery-v1`，从 `codex/main-core-foundation-v1` 创建；未推送，PR #142 尚未更新。
+- 已恢复互动预览路由、互动场景组件、Aquarium 舞台样式、详情 Rail/Sheet/Blocking 样式及互动样式；Domain/Catalog/Service/API/Supabase 未回退。
+- `npm run lint`、`npm run build` 已通过；4319 被历史进程占用，候选预览实际启动在 4326。浏览器固定视口人工验收仍未完成，因此视觉门禁保持 `FAILED / recovery in progress`。
+- 继续执行前必须先完成 390/600/1280px 视觉复验，再决定是否将恢复提交合入候选并推送 PR #142。
+
 ## 2026-08-27 Main 收敛分支
 
 - 当前工作分支：`codex/main-core-foundation-v1`，基于 `origin/main@ed0cf380`。

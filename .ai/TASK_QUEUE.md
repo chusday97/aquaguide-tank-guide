@@ -25,6 +25,8 @@
 
 ## Release Gate
 
+- [ ] Visual recovery: restore the user-confirmed 37a8d4d1 preview and rerun the fixed-viewport matrix before updating PR #142.
+- [ ] Keep 4317 as the frozen visual reference and use an independent candidate port; never infer version from the port alone.
 - [ ] 统一 RC 分支验收通过后，再单独评估是否合并 `main`。
 - [ ] 视觉 AI 未配置时继续保持 `manual_confirmation` 回退语义。
 - [ ] 关键节点前完成本地验证；未达到关键节点不推送远端。

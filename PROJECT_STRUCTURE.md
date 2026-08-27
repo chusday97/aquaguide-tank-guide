@@ -40,6 +40,7 @@
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
 - `src/components/visual-results/`：混养、物种适配、巡检与养护自查共用的视觉结果卡、展示模型和规则适配器。
+- `src/components/interactive/`：互动图鉴与场景养护预览组件；仅负责收集场景选择并调用正式详情/养护入口。
 - `src/components/layout/LayoutModeProvider.tsx`：真实设备布局判定。
 - `src/pages/Aquarium.tsx`：我的鱼缸。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
@@ -110,6 +111,8 @@
 - `src/components/common/AdaptiveTaskContent.tsx`：桌面与手机的沉浸式任务流程表面。
 - `src/components/common/SurfaceHeader.tsx`：统一详情/任务表面的标题、返回、关闭与 44px 图标操作。
 - `src/components/ThreeAquarium.tsx`：3D 鱼缸。
+- `src/pages/InteractivePreview.tsx`：用户确认的内部互动视觉预览入口，不写入业务数据。
+- `src/styles/aquarium-stage-layout-v4.css`、`src/styles/immersive-detail-layout-v5.css`：Aquarium 舞台与详情 Rail/Sheet/Blocking 的 canonical 几何样式。
 
 ## 文档与验证
 

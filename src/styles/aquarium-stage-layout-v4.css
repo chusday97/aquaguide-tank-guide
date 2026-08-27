@@ -1,0 +1,289 @@
+/*
+ * Aquarium Stage Layout V4
+ *
+ * The aquarium home is one visual stage, not a split content grid.
+ * ThreeAquarium owns camera framing. CSS controls only stage geometry and
+ * overlay placement; it must never apply a second zoom to the WebGL canvas.
+ */
+
+.aquarium-dashboard-stage,
+.aquarium-dashboard-tank,
+.aquarium-dashboard-tank > .aquarium-tank {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+/*
+ * 960px is the immersive-stage threshold. 1024px is a normal desktop/tablet
+ * landscape width and must not fall back to a stacked dashboard that makes the
+ * aquarium look like a narrow card beside/between content blocks.
+ */
+@media (min-width: 960px) {
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll:has(.desktop-canvas--aquarium) {
+    padding: 12px 14px 0 !important;
+  }
+
+  .aquarium-dashboard {
+    gap: 0 !important;
+  }
+
+  /* The scene already owns a readable title/status overlay. Do not duplicate a
+     numbered observe-zone header above the immersive aquarium. */
+  .aquarium-dashboard > .aquarium-zone-header {
+    display: none !important;
+  }
+
+  .aquarium-dashboard-stage {
+    display: block;
+    width: 100%;
+  }
+
+  .aquarium-dashboard-tank {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    min-height: clamp(640px, calc(100dvh - 92px), 840px);
+    overflow: hidden;
+    border-radius: 32px 32px 0 0;
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden;
+    border: 0;
+    border-radius: inherit;
+    box-shadow: none;
+  }
+
+  /* stage-cover in ThreeAquarium is the single framing owner. Keeping the
+     canvas at 1:1 CSS scale prevents the tank from jumping in size when a
+     viewport crosses 960/1280/1600 breakpoints and keeps R3F pointer geometry
+     aligned with what the user sees. */
+  .aquarium-dashboard-tank > .aquarium-tank canvas {
+    width: 100% !important;
+    height: 100% !important;
+    transform: none !important;
+    transform-origin: 50% 50%;
+  }
+
+  .aquarium-stage-intro {
+    top: 30px !important;
+    left: 30px !important;
+    max-width: min(48%, 620px) !important;
+    padding: 10px 14px 12px;
+  }
+
+  /* Today's action floats over the scene; it must never consume a grid column. */
+  .aquarium-dashboard-rail {
+    position: absolute;
+    z-index: 40;
+    top: 32px;
+    right: 32px;
+    width: clamp(300px, 26vw, 430px);
+    min-width: 0;
+    max-width: calc(100% - 64px);
+    pointer-events: auto;
+  }
+
+  .aquarium-dashboard-rail .aquarium-status > section {
+    min-height: 0;
+    border-radius: 28px;
+    padding: clamp(18px, 2vw, 28px);
+    box-shadow: 0 18px 44px rgba(22, 82, 63, 0.12);
+  }
+
+  /* Bottom actions are one floating dock inside the stage. Reserve a left lane
+     for the livestock pill instead of spanning the whole stage and forcing that
+     pill upward. */
+  .aquarium-dashboard-actions {
+    position: absolute;
+    z-index: 35;
+    right: 24px;
+    bottom: 24px;
+    left: clamp(190px, 17vw, 250px);
+    width: auto;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 28px;
+    background: rgba(252, 253, 250, 0.92);
+    box-shadow: 0 18px 46px rgba(15, 62, 51, 0.15);
+    backdrop-filter: blur(18px);
+  }
+
+  /* The dock itself is the section chrome; suppress the old numbered management
+     header and nested card/title so the bottom reads as one control strip. */
+  .aquarium-dashboard-actions > .aquarium-zone-header {
+    display: none !important;
+  }
+
+  .aquarium-dashboard-actions > .aquarium-actions {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .aquarium-dashboard-actions > .aquarium-actions > :first-child {
+    display: none !important;
+  }
+
+  .aquarium-dashboard-actions > .aquarium-actions > :nth-child(2) {
+    margin-top: 0 !important;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 8px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid > button {
+    width: 100%;
+    min-width: 0;
+    min-height: 72px;
+  }
+
+  .aquarium-dashboard-tank [data-tank-species-entry] {
+    bottom: 32px !important;
+    left: 28px !important;
+    z-index: 45;
+    max-width: 150px;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1599px) {
+  .aquarium-dashboard-rail {
+    width: clamp(330px, 26vw, 440px);
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1279px) {
+  .aquarium-dashboard-tank {
+    min-height: clamp(600px, calc(100dvh - 86px), 760px);
+  }
+
+  .aquarium-dashboard-rail {
+    top: 22px;
+    right: 22px;
+    width: clamp(280px, 30vw, 350px);
+    max-width: calc(100% - 44px);
+  }
+
+  .aquarium-stage-intro {
+    top: 22px !important;
+    left: 22px !important;
+    max-width: min(50%, 480px) !important;
+  }
+
+  .aquarium-dashboard-actions {
+    right: 18px;
+    bottom: 18px;
+    left: 178px;
+    padding: 10px 12px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid > button {
+    min-height: 66px;
+  }
+
+  .aquarium-dashboard-tank [data-tank-species-entry] {
+    bottom: 26px !important;
+    left: 22px !important;
+    max-width: 142px;
+  }
+}
+
+/* Mid-width tablet remains deliberately stacked, but the range is explicit and
+   stops before 960px so 1024px never regresses to the narrow dashboard layout. */
+@media (min-width: 768px) and (max-width: 959px) {
+  .aquarium-dashboard-stage {
+    display: block;
+  }
+
+  .aquarium-dashboard-tank {
+    display: grid;
+    width: 100%;
+    min-height: 0;
+    gap: 12px;
+    overflow: visible;
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank {
+    position: relative;
+    width: 100% !important;
+    height: min(58dvh, 560px) !important;
+    min-height: 420px !important;
+    overflow: hidden;
+    border-radius: 28px;
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank canvas {
+    width: 100% !important;
+    height: 100% !important;
+    transform: none !important;
+    transform-origin: 50% 50%;
+  }
+
+  .aquarium-dashboard-rail,
+  .aquarium-dashboard-actions {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .aquarium-dashboard-rail {
+    display: block;
+  }
+
+  .aquarium-dashboard-actions {
+    margin-top: 0;
+    padding: 12px;
+    border-radius: 24px;
+    background: rgba(252, 253, 250, 0.94);
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid > button {
+    min-height: 72px;
+  }
+}
+
+@media (max-width: 767px) {
+  .aquarium-dashboard-tank,
+  .aquarium-dashboard-tank > .aquarium-tank {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank canvas {
+    width: 100% !important;
+    height: 100% !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aquarium-dashboard-tank > .aquarium-tank canvas {
+    transition: none !important;
+  }
+}

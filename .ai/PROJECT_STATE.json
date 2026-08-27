@@ -3,6 +3,8 @@
   "updatedAt": "2026-08-27",
   "canonicalBranch": "codex/main-core-foundation-v1",
   "canonicalRole": "main release candidate; becomes canonical only after release acceptance",
+  "visualRecoveryBranch": "codex/main-visual-recovery-v1",
+  "visualGate": "failed_recovery_in_progress",
   "releaseBranch": "main",
   "canonicalBase": {
     "branch": "main",

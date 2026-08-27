@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- 修复 main 收敛候选误删用户确认视觉入口的问题：恢复 `/_preview/interactive`、互动场景组件、canonical Aquarium/Detail 样式，并保持当前 Domain/Catalog/Service/API 不变；固定视口人工验收仍待完成。
 - 恢复候选分支的 `.ai/PROJECT_STATE.json`、canonical 文档路由、`project:status`、`check:project-truth` 和候选分支 CI；当前 delivery line 为 `codex/main-core-foundation-v1 → main`，Draft PR #142 已创建并由运行时状态门禁追踪，PR #141 仅保留为历史迁移证据。
 - 从最新 `origin/main` 建立 `codex/main-core-foundation-v1`，按能力台账选择性迁移已验证混养规则；PR #141 继续作为历史证据，不整体合并。
 - 记录当前迁移状态与门禁于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。

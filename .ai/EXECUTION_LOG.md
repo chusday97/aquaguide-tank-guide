@@ -4,6 +4,14 @@
 
 ## 2026-08-27 — Main convergence candidate
 
+## 2026-08-27 — Visual recovery started
+
+- Confirmed a real visual regression: the main-based candidate had removed `/_preview/interactive`, the canonical stage/detail styles, and 919 lines of baseline index styles.
+- Created local recovery branch `codex/main-visual-recovery-v1` from the candidate without changing Domain, Catalog, Service, API or Supabase files.
+- Restored the interactive preview route, preview-only scene components, canonical stage/detail styles and interactive scene styles. Adapted only removed prop signatures to the current `ResilientImage` and `ThreeAquarium` APIs.
+- Verification: `npm run lint` and `npm run build` pass; the preview build contains the restored `InteractivePreview` chunk. Fixed-viewport browser review is still pending because the local browser policy blocked localhost inspection.
+- Remote: not pushed; PR #142 remains unchanged and not release-ready.
+
 - Created `codex/main-core-foundation-v1` from `origin/main@ed0cf380`.
 - Migrated only accepted P0 compatibility capabilities from `99865414` and `c822bd0e`; resolved the main Dialog prop mismatch with commit `5b0c8ea7`.
 - Verification: `npm run lint` PASS and `npm run test:compatibility` PASS (19 assertions).
