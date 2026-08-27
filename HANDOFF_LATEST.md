@@ -7,7 +7,7 @@
 - 当前工作分支：`codex/main-core-foundation-v1`，基于 `origin/main@ed0cf380`。
 - 已选择性迁移 `99865414` 与 `c822bd0e` 的 P0 混养能力；`npm run lint` 与 `npm run test:compatibility` 通过。
 - 迁移台账：`.ai/MAIN_CONVERGENCE_LEDGER.md`。不得把 PR #141 整体 merge/rebase 当作同步方案。
-- 尚未完成：Catalog manifest/snapshot、Supabase schema/RLS parity、当前视觉基线完整迁移、main release PR。
+- 尚未完成：Supabase schema/RLS parity、完整 Domain Service 切换、当前视觉基线完整迁移、main release PR。
 
 ### Catalog 阶段新增
 

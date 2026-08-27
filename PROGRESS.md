@@ -5,7 +5,7 @@
 
 - 已从 `origin/main@ed0cf380` 创建 `codex/main-core-foundation-v1`，不整体合并 PR #141。
 - 选择性迁移已验证 P0 混养能力（`99865414`、`c822bd0e`），解决 main 与统一分支 UI 接口冲突后，本地 `lint` 与 `test:compatibility` 通过；提交 `5b0c8ea7` 记录 Dialog 契约修复。
-- 能力台账已建立于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。Catalog manifest、Supabase parity、release PR 尚未完成。
+- 能力台账已建立于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。Catalog 契约/本地快照、Domain 基础层和添加命令门禁已完成；Supabase parity、完整 Domain Service 切换、release PR 尚未完成。
 
 ### 2026-08-27 Catalog 契约与只读发布入口
 
@@ -14,7 +14,7 @@
 - [x] 新增本地 Catalog Snapshot 构建/校验/云端失败回退服务 `src/services/catalog/catalog-snapshot.service.ts`。
 - [x] 新增只读 API `GET /api/v1/catalog/releases/current`。
 - [x] 新增 `npm run test:catalog-snapshot`：486 物种、13 证据来源、SHA-256 和本地/远端回退测试通过。
-- 对应提交：待本步骤提交
+- 对应提交：`2eee7c40`
 
 ### 2026-08-27 Domain compatibility authority foundation
 
@@ -29,7 +29,7 @@
 - [x] `LivestockAddCommand` 与 `aquariumSpeciesCreateSchema` 增加 `intent`、`catalogVersion`、`compatibilityConfirmation`。
 - [x] API 对 `planned_addition` 增加同版本确认、阻断和资料不足错误语义；`record_existing` 继续允许保存事实。
 - [x] `npm run test:addition-intents`、`npm run test:livestock-addition-api-errors`、`lint`、`check:api` 通过。
-- 尚未完成：云端写入前的服务端 Catalog 重新计算；当前 API 门禁验证客户端提供的同版本确认，需在 Catalog 发布行部署后接入完整 Domain Service。
+- 尚未完成：云端写入前的服务端 Catalog 重新计算；当前 API 门禁验证客户端提供的同版本确认，需在 Catalog 发布行部署后接入完整 Domain Service。（`15713d32`）
 
 ## 已完成
 - 状态：`核心鱼缸事实链路已完成并通过独立 Critic 与 Evaluator 六维验收`。`record_existing` 先保存事实再评估，任何四态结果均不能回滚现实记录；`planned_addition` 先评估且不写鱼缸，只有用户明确确认已实际入缸才进入记录流程。新鱼缸不再生成尺寸、水体、温度、设备或换水伪数据；创建和新增生物均通过 Repository 命令，旧 `add-species` 深链兼容映射到规划流程。云端新增使用原子 RPC 提交父物种、批次和幂等结果，404/409/503 语义保持清晰。（commits: `56c486b`, `7284008`, `f04f189`, `8d272aa`, `9accb48`, `f97e6ca`, `3af5c61`）
