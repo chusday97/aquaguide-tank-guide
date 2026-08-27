@@ -105,6 +105,7 @@ export interface Aquarium {
 }
 
 export type SpeciesAdditionIntent = 'record_existing' | 'planned_addition';
+export type CompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 
 export type AquariumSetupStatus = 'empty' | 'incomplete' | 'usable' | 'complete';
 

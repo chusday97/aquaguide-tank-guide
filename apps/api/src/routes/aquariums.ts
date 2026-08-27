@@ -171,6 +171,21 @@ aquariumsRouter.post('/aquariums/:id/species', asyncRoute(async (request, respon
   const aquariumId = parseId(request.params.id, '鱼缸标识');
   const parsed = aquariumSpeciesCreateSchema.safeParse(request.body);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '入缸物种信息无效。', parsed.error.flatten());
+  if (parsed.data.intent === 'planned_addition') {
+    const confirmation = parsed.data.compatibilityConfirmation;
+    if (!confirmation || !parsed.data.catalogVersion || confirmation.catalogVersion !== parsed.data.catalogVersion) {
+      throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '规划加入前需要同一 Catalog 版本的混养复核结果。');
+    }
+    if (confirmation.status === 'not_recommended') {
+      throw new ApiError(409, 'COMPATIBILITY_BLOCKED', '当前混养复核阻止规划加入该物种。');
+    }
+    if (confirmation.status === 'insufficient_data') {
+      throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前混养资料不足，请补充信息后重新判断。');
+    }
+    if (confirmation.status === 'caution' && !confirmation.confirmedAt) {
+      throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '谨慎混养需要明确确认后才能加入。');
+    }
+  }
   const client = userClientFor(request);
   const userId = authenticatedRequest(request).authUser.id;
   const operationKey = requireIdempotencyKey(request);

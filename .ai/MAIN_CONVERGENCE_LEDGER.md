@@ -19,6 +19,7 @@ Status: `IN_PROGRESS`
 | Empty-tank preview boundary | `c822bd0e` | `MIGRATED` | empty preview regression; unknown water remains fail-closed |
 | Species catalog release snapshot | unified plan | `MIGRATED` | `packages/contracts/src/catalog.ts`, `src/services/catalog/catalog-snapshot.service.ts`, `npm run test:catalog-snapshot` |
 | Domain compatibility authority foundation | unified plan | `PARTIAL_WITH_FALLBACK` | `packages/domain-rules/src/compatibility.ts`, `npm run test:domain-compatibility`; legacy UI engine remains adapter |
+| Livestock add intent/version contract | unified plan | `PARTIAL_WITH_FALLBACK` | `packages/contracts/src/business.ts`, Repository command, API errors and addition tests; server re-evaluation pending |
 | Cloud/local catalog parity | unified plan | `PENDING` | requires authorized Supabase read-only verification |
 | Main release PR | unified plan | `PENDING` | blocked until ledger and all release gates pass |
 

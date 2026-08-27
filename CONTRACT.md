@@ -207,6 +207,8 @@ interface CareActionEvidence {
 
 同一鱼缸内同一 `speciesCatalogKey` 只能保留一条有效记录，追加数量通过更新完成。
 
+新增生物命令必须携带 `intent`（`record_existing | planned_addition`）。规划加入还必须携带同一 `catalogVersion` 的 `compatibilityConfirmation`；`not_recommended` 返回 `COMPATIBILITY_BLOCKED`，`insufficient_data` 返回 `COMPATIBILITY_INFORMATION_REQUIRED`。现实中已存在的生物只记录事实，不因混养结论阻止保存。
+
 鱼缸创建时只保存名称、真实建缸日期和来源。尺寸、水体、目标温度、设备、底砂与换水日期在用户未提供时必须保持空值；UI 示例值不得进入持久化对象。`aquarium_species.last_water_change_at` 继续允许为空，入缸日期不得作为换水日期回填。
 
 鱼缸资料状态由前端领域服务派生，不新增数据库字段：
