@@ -8,6 +8,7 @@
 - 当前本地恢复分支：`codex/main-visual-recovery-v1`，从 `codex/main-core-foundation-v1` 创建；未推送，PR #142 尚未更新。
 - 已恢复互动预览路由、互动场景组件、Aquarium 舞台样式、详情 Rail/Sheet/Blocking 样式及互动样式；生产 Aquarium 的 tank/status/actions 已重新归一到 dashboard stage，3D 相机使用 `stage-cover`，并恢复场景标题与缸内物种入口（`5ab8ca79`）。Domain/Catalog/Service/API/Supabase 未回退。
 - `test:aquarium-stage-layout`、`test:three-stage-framing`、`npm run lint`、`npm run build`、`npm run check:project-truth` 已通过；4319 被历史进程占用，候选预览实际启动在 4326。浏览器固定视口人工验收仍未完成，因此视觉门禁保持 `FAILED / recovery in progress`。
+- Critic 复验后，互动 journey 已明确为 preview-only fixture，Archive 外层补充 `aria-label`（`62135580`）。Critic 认为恢复代码基本合理，但要求先完成固定视口视觉、Preview SHA 与 PR 同步，才可继续 main 门禁。
 - 继续执行前必须先完成 390/600/1280px 视觉复验，再决定是否将恢复提交合入候选并推送 PR #142。
 
 ## 2026-08-27 Main 收敛分支
