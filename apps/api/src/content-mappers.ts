@@ -71,7 +71,7 @@ export const mapSpeciesSummary = (row: DbRow, requestedLocale: SupportedLocale =
     sizeClass: row.size_class,
     waterType: row.water_type || 'unknown',
     completeness: row.completeness || 'unknown',
-    ...(evidence.length ? { evidence } : {}),
+    evidence,
     thumbnail: assets.find(asset => asset.variant === 'thumbnail'),
     updatedAt: row.updated_at,
     localization: localizationMeta(requestedLocale, Boolean(translation)),

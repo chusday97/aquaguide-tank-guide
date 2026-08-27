@@ -111,10 +111,10 @@ export interface SpeciesSummaryDto {
   phLevelText: string;
   temperament: 'Peaceful' | 'Aggressive' | 'Territorial';
   sizeClass: 'Small' | 'Medium' | 'Large';
-  waterType?: import('./catalog').CatalogWaterType;
+  waterType: import('./catalog').CatalogWaterType;
   catalogVersion?: string;
-  completeness?: import('./catalog').CatalogCompleteness;
-  evidence?: EvidenceSourceDto[];
+  completeness: import('./catalog').CatalogCompleteness;
+  evidence: EvidenceSourceDto[];
   thumbnail?: PublicAssetDto;
   updatedAt: string;
   localization: LocalizedContentMeta;
