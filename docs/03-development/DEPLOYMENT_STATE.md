@@ -1,7 +1,14 @@
 # AquaGuide Deployment State
 
 **Status:** Active
-**Updated:** 2026-08-27
+**Updated:** 2026-08-28
+
+## 2026-08-28 latest convergence evidence
+
+- Candidate `codex/main-core-foundation-v1` is synchronized locally and remotely at the SHA reported by `npm run project:status`. PR #142 remains open and Draft.
+- Read-only Supabase management checks confirmed 26 applied migrations, 35/35 public tables with RLS enabled, 89 policies, 56 foreign keys, 86 indexes and 33 non-internal triggers. The production Catalog objects are absent; see `docs/05-validation/SUPABASE_PARITY_REPORT.md`.
+- Both local preview ports respond with HTTP 200 when checked from the authorized host: 4317 is the detached `37a8d4d1` baseline and 4319 is the candidate. Fixed viewport screenshots are stored outside the repository under `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2`.
+- The read-only `npm run check:preview-parity` gate now compares local/remote/PR SHA and GitHub Preview deployment SHA. It correctly reports `UNVERIFIED` for the current head because Vercel returned `build-rate-limit`; no deployment or production promotion was created.
 
 ## Evidence categories
 
