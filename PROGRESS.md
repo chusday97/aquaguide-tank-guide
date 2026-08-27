@@ -61,6 +61,7 @@
 - [x] `StatusSummaryCard` 增加半透明拉手和三档面板状态：collapsed / half / expanded。
 - [x] 支持点击、Esc、鼠标/触控 Pointer 拖拽吸附；拖拽不触发舞台或任务误点。
 - [x] `npm run test:today-action` 通过；未新增数据库字段、API 或 Supabase 写入。
+- [x] 390px 几何门禁确认今日行动位于舞台底部拉起区域，1280px 继续使用右上浮层。
 - [x] `npm run test:disclosures` 通过，今日行动折叠用途已登记为 `today_action_surface`。
 
 ### 底层门禁复验

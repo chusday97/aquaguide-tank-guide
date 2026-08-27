@@ -269,6 +269,27 @@
 }
 
 @media (max-width: 767px) {
+  .aquarium-dashboard-tank {
+    position: relative;
+  }
+
+  /* On phones the daily action is a bottom pull-up, keeping the aquarium
+     scene and species entry visible while the handle is collapsed. */
+  .aquarium-dashboard-rail {
+    position: absolute;
+    z-index: 40;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    max-width: none;
+    pointer-events: auto;
+  }
+
+  .aquarium-dashboard-rail .aquarium-status > section {
+    border-radius: 22px;
+  }
+
   .aquarium-dashboard-tank,
   .aquarium-dashboard-tank > .aquarium-tank {
     width: 100%;

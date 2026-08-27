@@ -38,6 +38,22 @@ try {
   await page.mouse.up();
   assert.equal(await dock.getAttribute('data-panel-level'), 'half');
   await context.close();
+
+  const phoneContext = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'zh-CN' });
+  await phoneContext.addInitScript((seed) => {
+    localStorage.setItem('aquarium_app_state_v1', JSON.stringify(seed));
+    localStorage.setItem('aquariums', JSON.stringify(seed.aquariums));
+    localStorage.setItem('aquaguide_locale', 'zh-CN');
+  }, state);
+  const phonePage = await phoneContext.newPage();
+  await phonePage.goto(`${baseUrl}/aquarium`, { waitUntil: 'networkidle', timeout: 30_000 });
+  const phoneHandle = phonePage.locator('[data-today-action-handle]');
+  await phoneHandle.waitFor();
+  const phoneTank = await phonePage.locator('.aquarium-dashboard-tank > .aquarium-tank').boundingBox();
+  const phoneHandleBox = await phoneHandle.boundingBox();
+  assert.ok(phoneTank && phoneHandleBox);
+  assert.ok(phoneHandleBox.y > phoneTank.y + phoneTank.height / 2, 'phone handle stays in bottom pull-up zone');
+  await phoneContext.close();
   console.log('today action dock: click, Escape, and drag snap states passed');
 } finally {
   await browser.close();

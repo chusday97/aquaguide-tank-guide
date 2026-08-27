@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- 手机端今日行动 Rail 改为鱼缸舞台底部拉起层，补充 390px 几何回归，桌面右上浮层保持不遮挡主要舞台。
 - 统一底层回归重新通过：添加意图、现实记录服务、API 错误语义、Mini 混养、Catalog checksum、Domain policy 与项目真相门禁均通过；仅修正了过时的文案断言。
 - 将 `today_action_surface` 纳入 disclosure 契约白名单，允许今日行动按产品要求折叠，但仍保持核心任务内容在展开态直接可见。
 - 将 Aquarium 今日行动改为半透明可交互拉手：点击展开、Esc 收起，支持触控/鼠标拖拽在收起/半展开/完全展开三档吸附；任务内容与 Repository 写入保持不变，并新增 `test:today-action` 门禁。
