@@ -1,6 +1,6 @@
 # Supabase Migration Parity
 
-更新时间：2026-08-27
+更新时间：2026-08-28
 
 ## 当前结论
 
