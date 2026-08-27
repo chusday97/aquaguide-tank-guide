@@ -14,11 +14,13 @@
 - `packages/contracts/src/content-admin.ts`：内容编辑、状态切换和素材上传的服务端校验契约。
 - `packages/contracts/src/localization.ts`：中英文语言、偏好、回退元数据、审核与覆盖率契约。
 - `packages/contracts/src/species-diagnosis.ts`：视觉候选、匿名未命中、受控观察、动态追问与原因排序契约。
+- `packages/contracts/src/catalog.ts`：不可变 Catalog manifest、Snapshot、证据和配对规则契约。
 - `packages/domain-rules/`：跨前后端共享的确定性规则类型与安全不变量。
 - `packages/domain-rules/src/species-diagnosis.ts`：受控观察、本地症状解析、红旗优先与信息增益追问策略。
 - `src/services/onboarding/onboarding-paths.ts`：两条新手目标路线、真实进度计算与统一任务定义。
 - `scripts/test-onboarding-activation.ts`：验证目标顺序、真实适配门禁、历史用户保护、旧引导兼容和清单单一来源。
 - `src/services/compatibility/compatibility-records.service.ts`：保存并校验与真实鱼缸关联的完整混养判断记录。
+- `src/services/catalog/catalog-snapshot.service.ts`：本地/云端 Catalog 快照校验、SHA-256 parity 和安全回退。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。
 - `scripts/verify-taxonomy-ui.mjs`：珊瑚、歧义名称、两条五彩青蛙及中英文角色标签的真实浏览器分类回归。

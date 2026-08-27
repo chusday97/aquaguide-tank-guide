@@ -33,7 +33,7 @@ contentRouter.get('/species', asyncRoute(async (request, response) => {
 
   let builder = client
     .from('species')
-    .select('id,catalog_key,name,scientific_name,category,difficulty,water_temperature_text,ph_level_text,temperament,size_class,updated_at,species_assets(*),species_translations(*)')
+    .select('id,catalog_key,name,scientific_name,category,difficulty,water_type,water_temperature_text,ph_level_text,temperament,size_class,updated_at,species_assets(*),species_translations(*),species_reference_links(*,evidence_sources(*))')
     .eq('status', 'published')
     .is('deleted_at', null)
     .order('catalog_key')
@@ -59,7 +59,7 @@ contentRouter.get('/species/:catalogKey', asyncRoute(async (request, response) =
   const client = getPublicSupabase();
   const { data, error } = await client
     .from('species')
-    .select('*,species_translations(*),species_feeding_profiles(*,species_feeding_profile_translations(*)),species_assets(*),species_compatibility_profiles(*,species_compatibility_profile_sources(*,evidence_sources(*)))')
+    .select('*,species_translations(*),species_feeding_profiles(*,species_feeding_profile_translations(*)),species_assets(*),species_reference_links(*,evidence_sources(*)),species_compatibility_profiles(*,species_compatibility_profile_sources(*,evidence_sources(*)))')
     .eq('catalog_key', parsed.data)
     .eq('status', 'published')
     .is('deleted_at', null)

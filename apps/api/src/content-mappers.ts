@@ -50,9 +50,14 @@ const mapEvidenceSource = (row: DbRow) => ({
   reviewStatus: row.review_status,
 });
 
+const mapSpeciesEvidence = (row: DbRow) => (row.species_reference_links || [])
+  .filter((link: DbRow) => !link.deleted_at && link.review_status === 'reviewed' && link.evidence_sources)
+  .map((link: DbRow) => mapEvidenceSource(link.evidence_sources));
+
 export const mapSpeciesSummary = (row: DbRow, requestedLocale: SupportedLocale = 'zh-CN'): SpeciesSummaryDto => {
   const assets = currentAssets(row.species_assets);
   const translation = resolveTranslation(row.species_translations, requestedLocale);
+  const evidence = mapSpeciesEvidence(row);
   return {
     id: row.id,
     catalogKey: row.catalog_key,
@@ -64,6 +69,9 @@ export const mapSpeciesSummary = (row: DbRow, requestedLocale: SupportedLocale =
     phLevelText: translation?.ph_level_text || row.ph_level_text,
     temperament: row.temperament,
     sizeClass: row.size_class,
+    waterType: row.water_type || 'unknown',
+    completeness: row.completeness || 'unknown',
+    ...(evidence.length ? { evidence } : {}),
     thumbnail: assets.find(asset => asset.variant === 'thumbnail'),
     updatedAt: row.updated_at,
     localization: localizationMeta(requestedLocale, Boolean(translation)),

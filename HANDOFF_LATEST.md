@@ -9,6 +9,13 @@
 - 迁移台账：`.ai/MAIN_CONVERGENCE_LEDGER.md`。不得把 PR #141 整体 merge/rebase 当作同步方案。
 - 尚未完成：Catalog manifest/snapshot、Supabase schema/RLS parity、当前视觉基线完整迁移、main release PR。
 
+### Catalog 阶段新增
+
+- 已增加 Catalog 公共契约、Supabase migration 提案、不可变快照加载器和 `/api/v1/catalog/releases/current` 只读入口。
+- `npm run lint`、`npm run check:api`、`npm run test:catalog-snapshot` 均通过。
+- 当前本地快照为 486 个物种、13 个证据来源；旧物种水体字段仍为 `unknown`，等待审核数据回填，禁止文本推断。
+- Migration 尚未执行；API 在生产 schema 未部署前预期返回 `503/404`，这是当前已知边界，不是静默成功。
+
 ## 当前工作基线
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。

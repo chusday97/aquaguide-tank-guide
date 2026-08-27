@@ -1,6 +1,6 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.6.0
+> 版本：2.7.0
 > 状态：已确认，实施中
 > 生效日期：2026-08-09
 > SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090002_atomic_care_reminder_completion.sql`
@@ -102,6 +102,15 @@ interface SyncFields {
 ### 3.1 SpeciesRecord
 
 物种包含 UUID、`catalogKey`、中英文名、分类、难度、温度/pH 文本与可计算范围、换水周期、描述、食性、缸体要求、性情、体型、混养说明、检索词和发布状态。
+
+统一主数据补充以下契约：
+
+- `species.water_type` 只能是 `freshwater | saltwater | unknown`，不得从名称、描述或分类文字推断。
+- `species_reference_links` 将身份、环境和养护字段分别绑定到证据来源及审核状态；缺失或未审核字段保持 `null/unknown`。
+- `catalog_releases` 保存不可变 Catalog 版本、Schema 版本、SHA-256、对象数量、Storage 路径和发布时间。
+- 前端内置与云端相同版本的 Snapshot；云端下载只有在 Schema、校验和与引用完整性均通过后才能原子替换，失败继续使用本地版本。
+
+Catalog 的公共类型定义位于 `packages/contracts/src/catalog.ts`，数据库映射类型位于 `src/types/database.ts`。
 
 发布状态：
 
@@ -379,6 +388,7 @@ type ApiErrorCode =
 |---|---|---|---|---|
 | GET | `/species` | `locale cursor? limit? category? query?` | `Page<SpeciesSummary>` | 400/503 |
 | GET | `/species/:catalogKey` | `locale` | `SpeciesWithRelations` | 404/503 |
+| GET | `/catalog/releases/current` | 无 | `CatalogManifest` | 404/503 |
 | GET | `/care-articles` | `locale cursor? limit? category? urgency? query?` | `Page<CareArticleSummary>` | 400/503 |
 | GET | `/care-articles/:catalogKey` | `locale` | `CareArticleWithRelations` | 404/503 |
 

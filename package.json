@@ -14,6 +14,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
+    "test:catalog-snapshot": "node --import tsx scripts/test-catalog-snapshot.ts",
     "test:p0-tank-state": "tsx scripts/test-p0-tank-state-engine.ts",
     "test:p0-tank-evidence": "tsx scripts/test-p0-tank-evidence-adapter.ts",
     "test:p0-water-change": "tsx scripts/test-p0-water-change-engine.ts",

@@ -17,7 +17,7 @@ Status: `IN_PROGRESS`
 | Existing-vs-planned livestock intent | `99865414` | `MIGRATED` | local P0 state, addition-intent and repository tests |
 | Deterministic compatibility rules | `99865414` | `MIGRATED` | `npm run test:compatibility`, `npx tsx scripts/test-species-fit-engine.ts` |
 | Empty-tank preview boundary | `c822bd0e` | `MIGRATED` | empty preview regression; unknown water remains fail-closed |
-| Species catalog release snapshot | unified plan | `PENDING` | contract and immutable manifest not implemented yet |
+| Species catalog release snapshot | unified plan | `MIGRATED` | `packages/contracts/src/catalog.ts`, `src/services/catalog/catalog-snapshot.service.ts`, `npm run test:catalog-snapshot` |
 | Cloud/local catalog parity | unified plan | `PENDING` | requires authorized Supabase read-only verification |
 | Main release PR | unified plan | `PENDING` | blocked until ledger and all release gates pass |
 

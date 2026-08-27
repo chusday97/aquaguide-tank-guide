@@ -7,6 +7,15 @@
 - 选择性迁移已验证 P0 混养能力（`99865414`、`c822bd0e`），解决 main 与统一分支 UI 接口冲突后，本地 `lint` 与 `test:compatibility` 通过；提交 `5b0c8ea7` 记录 Dialog 契约修复。
 - 能力台账已建立于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。Catalog manifest、Supabase parity、release PR 尚未完成。
 
+### 2026-08-27 Catalog 契约与只读发布入口
+
+- [x] 新增 `packages/contracts/src/catalog.ts`，统一 Catalog Manifest、Snapshot、证据、物种和配对规则类型。
+- [x] 新增 `supabase/migrations/202608270001_catalog_releases_and_species_water_type.sql`（仅提案，未执行），补齐显式水体、物种证据链接和不可变发布记录及 RLS。
+- [x] 新增本地 Catalog Snapshot 构建/校验/云端失败回退服务 `src/services/catalog/catalog-snapshot.service.ts`。
+- [x] 新增只读 API `GET /api/v1/catalog/releases/current`。
+- [x] 新增 `npm run test:catalog-snapshot`：486 物种、13 证据来源、SHA-256 和本地/远端回退测试通过。
+- 对应提交：待本步骤提交
+
 ## 已完成
 - 状态：`核心鱼缸事实链路已完成并通过独立 Critic 与 Evaluator 六维验收`。`record_existing` 先保存事实再评估，任何四态结果均不能回滚现实记录；`planned_addition` 先评估且不写鱼缸，只有用户明确确认已实际入缸才进入记录流程。新鱼缸不再生成尺寸、水体、温度、设备或换水伪数据；创建和新增生物均通过 Repository 命令，旧 `add-species` 深链兼容映射到规划流程。云端新增使用原子 RPC 提交父物种、批次和幂等结果，404/409/503 语义保持清晰。（commits: `56c486b`, `7284008`, `f04f189`, `8d272aa`, `9accb48`, `f97e6ca`, `3af5c61`）
 - 状态：`已合并并推送 GitHub main`。`main` 从 `de61600` 安全快进到已验收 P0 `153695e`，远端无独立提交、无冲突、无历史改写；功能分支 `codex/activation-evaluation-v1` 继续保留作为阶段记录。（本次仅补交接记录）
