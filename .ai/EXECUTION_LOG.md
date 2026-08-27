@@ -2,6 +2,13 @@
 
 ## 2026-08-25 — Initialize `.ai/`
 
+## 2026-08-27 — Main convergence candidate
+
+- Created `codex/main-core-foundation-v1` from `origin/main@ed0cf380`.
+- Migrated only accepted P0 compatibility capabilities from `99865414` and `c822bd0e`; resolved the main Dialog prop mismatch with commit `5b0c8ea7`.
+- Verification: `npm run lint` PASS and `npm run test:compatibility` PASS (19 assertions).
+- Not done: catalog release snapshot, Supabase parity, visual baseline migration, release PR.
+
 - **Read:** 项目 `PROGRESS.md`、`HANDOFF.md`、`PROJECT_STRUCTURE.md`、`40-DOCS/CHANGELOG.md`。
 - **Action:** 创建 `CURRENT_GOAL.md`、`TASK_QUEUE.md`、`CHANGELOG_AI.md`、`EXECUTION_LOG.md`。
 - **Verification:** 文件结构和当前目标均来自现有项目文档；未新增未经确认的产品事实。

@@ -1,6 +1,12 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-27 Main 收敛执行
+
+- 已从 `origin/main@ed0cf380` 创建 `codex/main-core-foundation-v1`，不整体合并 PR #141。
+- 选择性迁移已验证 P0 混养能力（`99865414`、`c822bd0e`），解决 main 与统一分支 UI 接口冲突后，本地 `lint` 与 `test:compatibility` 通过；提交 `5b0c8ea7` 记录 Dialog 契约修复。
+- 能力台账已建立于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。Catalog manifest、Supabase parity、release PR 尚未完成。
+
 ## 已完成
 - 状态：`核心鱼缸事实链路已完成并通过独立 Critic 与 Evaluator 六维验收`。`record_existing` 先保存事实再评估，任何四态结果均不能回滚现实记录；`planned_addition` 先评估且不写鱼缸，只有用户明确确认已实际入缸才进入记录流程。新鱼缸不再生成尺寸、水体、温度、设备或换水伪数据；创建和新增生物均通过 Repository 命令，旧 `add-species` 深链兼容映射到规划流程。云端新增使用原子 RPC 提交父物种、批次和幂等结果，404/409/503 语义保持清晰。（commits: `56c486b`, `7284008`, `f04f189`, `8d272aa`, `9accb48`, `f97e6ca`, `3af5c61`）
 - 状态：`已合并并推送 GitHub main`。`main` 从 `de61600` 安全快进到已验收 P0 `153695e`，远端无独立提交、无冲突、无历史改写；功能分支 `codex/activation-evaluation-v1` 继续保留作为阶段记录。（本次仅补交接记录）

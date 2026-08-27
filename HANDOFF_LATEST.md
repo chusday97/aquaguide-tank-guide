@@ -2,6 +2,13 @@
 
 更新时间：2026-08-25 +08:00
 
+## 2026-08-27 Main 收敛分支
+
+- 当前工作分支：`codex/main-core-foundation-v1`，基于 `origin/main@ed0cf380`。
+- 已选择性迁移 `99865414` 与 `c822bd0e` 的 P0 混养能力；`npm run lint` 与 `npm run test:compatibility` 通过。
+- 迁移台账：`.ai/MAIN_CONVERGENCE_LEDGER.md`。不得把 PR #141 整体 merge/rebase 当作同步方案。
+- 尚未完成：Catalog manifest/snapshot、Supabase schema/RLS parity、当前视觉基线完整迁移、main release PR。
+
 ## 当前工作基线
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。

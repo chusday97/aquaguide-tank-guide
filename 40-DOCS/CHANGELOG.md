@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Main convergence
+- 从最新 `origin/main` 建立 `codex/main-core-foundation-v1`，按能力台账选择性迁移已验证混养规则；PR #141 继续作为历史证据，不整体合并。
+- 记录当前迁移状态与门禁于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。
+
 ### Changed
 - 定义“记录已有生物”和“规划想养生物”两类添加语义；现实事实不再受混养结论阻断。
 - 鱼缸资料状态改为根据真实字段派生，未记录的尺寸、温度、设备和换水信息保持未知。
