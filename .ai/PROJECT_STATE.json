@@ -19,7 +19,14 @@
     "sha": "895f2f3959dc42b653fbb4f33cc25044e5785da3",
     "role": "verified business capability source; migrate selectively"
   },
-  "activePullRequest": null,
+  "activePullRequest": {
+    "number": 142,
+    "base": "main",
+    "head": "codex/main-core-foundation-v1",
+    "sha": "741b3d8f2471b3a7ac615f8afd24f3ccd3a5ee08",
+    "state": "OPEN",
+    "isDraft": true
+  },
   "historicalPullRequest": 141,
   "supabaseDeployment": {
     "status": "user_confirmed_deployed",

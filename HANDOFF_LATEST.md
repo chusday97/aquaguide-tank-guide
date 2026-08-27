@@ -5,7 +5,7 @@
 ## 2026-08-27 Main 收敛分支
 
 - 当前工作分支：`codex/main-core-foundation-v1`，基于 `origin/main@ed0cf380`。
-- 当前分支尚未推送到远端，Draft PR `candidate → main` 尚未创建；完成本地门禁后再执行一次受控 push 和 PR 创建。
+- 候选已推送并创建 [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142)（`codex/main-core-foundation-v1 → main`），本地/远端/PR head 均为 `741b3d8f`。
 - 已选择性迁移 `99865414` 与 `c822bd0e` 的 P0 混养能力；`npm run lint` 与 `npm run test:compatibility` 通过。
 - 迁移台账：`.ai/MAIN_CONVERGENCE_LEDGER.md`。不得把 PR #141 整体 merge/rebase 当作同步方案。
 - 尚未完成：Supabase schema/RLS parity、完整 Domain Service 切换、当前视觉基线完整迁移、main release PR。
@@ -35,7 +35,7 @@
 - **产品参考分支（非当前工作分支）：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`；只按语义提供迁移证据。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
-- **历史 GitHub 收敛入口：** Draft PR #141，head 为 `codex/unified-rc-visual-v1`、base 为 `integration/aquaguide-rc1`；它不再承担 main 发布，新的候选 Draft PR 必须指向 `main`。
+- **历史 GitHub 收敛入口：** Draft PR #141，head 为 `codex/unified-rc-visual-v1`、base 为 `integration/aquaguide-rc1`；它不再承担 main 发布。当前唯一 release 入口为 Draft PR #142。
 - **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；最近两次可复核运行 `32849012409`、`32849349859` 均通过（project truth、状态、lint、布局、3D 取景和 production build）。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 已冻结 2026-08-25 的 56 个 open PR；除 #141 外均为历史输入而非收敛路径。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。

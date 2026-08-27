@@ -9,7 +9,7 @@
 | Concern | Current authority | Rule |
 | --- | --- | --- |
 | Daily work branch | `codex/main-core-foundation-v1` | Current release-candidate line, created from `origin/main@ed0cf380`. |
-| GitHub convergence | Draft PR to `main` (pending creation during phase 1) | The candidate PR becomes the only active release entry; #141 remains historical evidence. |
+| GitHub convergence | [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) | The candidate PR is the only active release entry; #141 remains historical evidence. |
 | Branch reconciliation | [Branch Convergence Audit](./03-development/BRANCH_CONVERGENCE_AUDIT.md) and [origin/main semantic reconciliation](./03-development/ORIGIN_MAIN_RECONCILIATION.md) | Commit counts alone; a graph difference is not a missing-feature verdict. |
 | Approved visual baseline | `37a8d4d1` and `http://127.0.0.1:4317/_preview/interactive` | No RC page/CSS may replace this visual baseline wholesale. |
 | Current state | `.ai/PROJECT_STATE.json` | Local branch, remote SHA, PR and preview must agree. |
@@ -58,4 +58,4 @@ git status --short
 gh pr view 141 --json headRefOid,state,isDraft
 ```
 
-Expected: the local branch, remote candidate branch and candidate Draft PR to `main` identify the same SHA; an empty `git status` means no unrecorded local state. Until the first push, `remoteSha` and the active PR are intentionally null.
+Expected: the local branch, remote candidate branch and Draft PR #142 identify the same SHA; an empty `git status` means no unrecorded local state.

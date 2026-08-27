@@ -8,7 +8,7 @@
 | Category | Meaning | Current fact |
 | --- | --- | --- |
 | Local preview | A local production build is running | User-approved interactive preview is `http://127.0.0.1:4317/_preview/interactive`. |
-| GitHub delivery | Current branch and PR can be traced | `codex/main-core-foundation-v1` is the local release candidate; its first remote push and Draft PR to `main` are pending. #141 is historical. |
+| GitHub delivery | Current branch and PR can be traced | `codex/main-core-foundation-v1` and Draft PR #142 target `main` at `741b3d8f`; #141 is historical. |
 | CI | Automated checks passed for a concrete SHA | GitHub Actions run `32854080645` passed state, PR topology, lint, layout, framing and build checks for `cc99ec47`; the final head contains documentation-only evidence updates. |
 | Supabase deployment | A cloud environment has been deployed | User-confirmed on 2026-08-25. Existing schema, RLS, API and repository work must not be described as undeployed. |
 | Environment parity | The current branch was verified against the connected cloud environment | Not yet re-verified. This is distinct from deployment. |
