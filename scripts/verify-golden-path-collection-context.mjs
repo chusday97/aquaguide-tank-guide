@@ -66,7 +66,8 @@ try {
 
   await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
   await desktop.getByText('我的水族册', { exact: true }).waitFor();
-  await desktop.getByRole('button', { name: '种草图鉴，4', exact: true }).click();
+  await desktop.locator('[data-collection-node="wishlist"]').hover();
+  await desktop.locator('[data-collection-hover="wishlist"]').getByRole('button', { name: '查看全部种草', exact: true }).click();
   await desktop.waitForURL(url => url.pathname === '/collection/wishlist');
 
   const desktopRail = desktop.locator('.collection-wishlist-grid');
@@ -103,7 +104,8 @@ try {
   await seedCollection(mobile);
 
   await mobile.goto(`${baseUrl}/collection`, { waitUntil: 'domcontentloaded' });
-  await mobile.getByRole('button', { name: '种草图鉴，4', exact: true }).click();
+  await mobile.locator('[data-collection-compact="wishlist"]').click();
+  await mobile.getByRole('button', { name: '打开完整模块', exact: true }).click();
   await mobile.waitForURL(url => url.pathname === '/collection/wishlist');
 
   const mobileRail = mobile.locator('.collection-wishlist-grid');
