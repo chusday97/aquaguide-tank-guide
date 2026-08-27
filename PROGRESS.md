@@ -61,6 +61,13 @@
 - [x] 视觉门禁更新为当前契约：`test:responsive-detail-surface`、`test:formal-scenes`、`test:today-action`、`test:collection-hub-ui`、`test:aquarium-stage-layout`、`test:three-stage-framing`、`lint`、`build` 均通过。
 - 当前候选仍未推送；4317 冻结基线与 4319 候选的 SHA parity、固定截图和正式人工验收待后续门禁完成。
 
+### 2026-08-27 阶段 4：Supabase 历史收敛与预览身份
+
+- [x] 本地恢复生产缺失的 8 个 migration，并将 memorial migration 对齐生产版本 `202607290004`；新增 parity 台账 `docs/05-validation/SUPABASE_MIGRATION_PARITY.md`。
+- [x] Vite 构建注入分支、完整 Git SHA、seed 和构建时间；`/_preview/interactive` 显示版本身份，避免同端口误判版本。
+- [x] `PREVIEW_URL=http://127.0.0.1:4319 npm run test:formal-scenes` 已验证预览元数据、透明场景素材和正式图鉴/养护 scene/browse 流程。
+- 当前仍不执行生产 migration、Catalog 上传或 `main` 合并；真实 Supabase schema/RLS/RPC parity 仍是独立只读门禁。
+
 ### 2026-08-27 Service/API 添加契约门禁
 
 ## 2026-08-27 正式互动场景恢复

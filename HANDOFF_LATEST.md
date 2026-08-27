@@ -10,6 +10,13 @@
 - 未完成：正式 Catalog/Service 唯一权威切换、生产 migration 授权、固定截图/Preview SHA parity、独立 Critic/Evaluator、PR #142 推送和 `main` 合并。
 - 禁止重踩：不要把 4319 候选当成 4317 基线；不要恢复旧 `right-drawer`/四卡片水族册断言；不要在 Supabase parity 前执行 migration 或 Catalog 上传。
 
+## 2026-08-27 阶段 4 交接
+
+- 本地候选已包含生产报告的 26 个 migration 版本；Catalog migration `202608270001` 仍为第 27 个未执行提案。
+- 候选预览构建现在在 `/_preview/interactive` 显示 branch/SHA/seed/build time；正式门禁会检查完整 40 位 SHA。
+- 已通过透明素材、正式 scene/browse、今日行动、creature-first 水族册、Aquarium 单一舞台和响应式 Surface 回归。
+- 下一步优先：服务端规划加入重算与 Catalog 版本绑定 → 干净 PostgreSQL 历史回放 → 固定视口截图矩阵 → Critic/Evaluator → 单次推送 Preview parity。生产 migration、Catalog 发布和 main 合并仍需独立授权。
+
 ## 2026-08-27 最终统一执行线（当前权威）
 
 - 唯一日常工作树与发布候选：`codex/main-core-foundation-v1@5b419e98`；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。
