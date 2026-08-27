@@ -7,7 +7,7 @@
 - 唯一修改工作线：`codex/main-core-foundation-v1`；`codex/main-visual-recovery-v1` 仅作历史证据。
 - 已恢复共享 `detail-rail`/`bottom-sheet` Surface、透明场景图片失败容器、正式 `/collection` creature-first 水族册和 Aquarium 单一沉浸舞台；未修改 Domain/Catalog/Supabase。
 - 已通过：`npm run lint`、`npm run build`、`npm run check:api`、`npm run check:project-truth`、`npm run test:responsive-detail-surface`、`PREVIEW_URL=http://127.0.0.1:4319 npm run test:formal-scenes`、`PREVIEW_URL=http://127.0.0.1:4319 npm run test:today-action`、`PREVIEW_URL=http://127.0.0.1:4319 npm run test:collection-hub-ui`、`npm run test:aquarium-stage-layout`、`npm run test:three-stage-framing`；两套固定视口截图已保存到 `/private/tmp/aquaguide-visual-matrix/`。
-- 未完成：正式 Catalog/Service 唯一权威切换、生产 migration 授权、Preview 实际 Git SHA parity、用户人工验收和 `main` 合并；PR #142 当前 CI 已全绿但仍为 Draft。
+- 未完成：正式 Catalog/Service 唯一权威切换、生产 migration 授权、用户人工验收和 `main` 合并；PR #142 当前 CI 已全绿、Vercel Preview 已与候选 exact SHA 对齐，但仍为 Draft。
 - 禁止重踩：不要把 4319 候选当成 4317 基线；不要恢复旧 `right-drawer`/四卡片水族册断言；不要在 Supabase parity 前执行 migration 或 Catalog 上传。
 
 ## 2026-08-27 阶段 4 交接
