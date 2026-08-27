@@ -6,6 +6,12 @@ const browser = await chromium.launch({ headless: true });
 
 try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, locale: 'zh-CN' });
+  await page.goto(`${baseUrl}/_preview/interactive`, { waitUntil: 'networkidle', timeout: 30_000 });
+  const previewMetadata = page.locator('[data-preview-metadata]');
+  await previewMetadata.waitFor();
+  assert.match(await previewMetadata.innerText(), /seed:\s*interactive-preview/);
+  assert.match(await previewMetadata.innerText(), /built:/);
+  assert.match(await previewMetadata.innerText(), /[0-9a-f]{40}/i, 'preview metadata must expose the full build SHA');
   await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle', timeout: 30_000 });
   await page.getByRole('region', { name: '互动物种鱼缸' }).waitFor();
   assert.equal(await page.locator('[data-scene-node]').count(), 6, 'encyclopedia scene renders six selectable creatures');

@@ -32,7 +32,10 @@ export default function InteractivePreview() {
     <main className="min-h-[100dvh] bg-[#dfe8e5] px-4 py-5 text-ink md:px-8 md:py-8">
       <header className="mx-auto mb-5 flex max-w-[1440px] items-center justify-between gap-4">
         <button type="button" onClick={() => navigate('/aquarium')} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-xs font-black text-emerald-800 shadow-sm"><ArrowLeft className="h-4 w-4" />返回正式鱼缸</button>
-        <span className="text-[11px] font-black tracking-[0.12em] text-ink/45">INTERNAL · FORMAL COMPONENT PREVIEW</span>
+        <div data-preview-metadata className="text-right text-[10px] font-black tracking-[0.08em] text-ink/45">
+          <span className="block">{__AQUAGUIDE_PREVIEW_METADATA__.branch} · {__AQUAGUIDE_PREVIEW_METADATA__.sha}</span>
+          <span className="mt-1 block tracking-normal">seed: {__AQUAGUIDE_PREVIEW_METADATA__.seed} · built: {__AQUAGUIDE_PREVIEW_METADATA__.builtAt}</span>
+        </div>
       </header>
       <div className="mx-auto grid max-w-[1440px] gap-5">
         <section aria-label="全幅 3D 鱼缸首页预览">
