@@ -22,7 +22,7 @@ aquaguide_frontend/
 ├── src/
 │   ├── components/        导航、详情表面、任务流程与 3D
 │   ├── data/              物种和养护静态数据
-│   ├── lib/               AI、Supabase 等基础能力
+│   ├── lib/               AI、Supabase 等基础能力（含 viewport layout contract）
 │   ├── pages/             路由页面
 │   ├── services/          本地状态与领域规则
 │   ├── types/             领域类型

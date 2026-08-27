@@ -13,4 +13,4 @@ Routes captured at 390×844, 600×900 and 1280×900:
 
 The PNG files are intentionally kept in the local evidence directory `/private/tmp/aquaguide-visual-matrix/` until the user completes visual release acceptance. They are not promoted as golden snapshots yet. The candidate build exposes its branch, full SHA, seed and build timestamp in `[data-preview-metadata]`; the formal scene gate verifies that identity before exercising the routes.
 
-Status: `RECOVERY_IN_PROGRESS`; screenshots must be regenerated after the Aquarium learn-zone fix, then human comparison and release acceptance are still required.
+Status: `RECOVERY_IN_PROGRESS`; current candidate screenshots include the Aquarium learn-zone and viewport-contract fixes. Human comparison and release acceptance are still required.

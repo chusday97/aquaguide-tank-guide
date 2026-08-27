@@ -46,6 +46,7 @@
 - `src/components/visual-results/`：混养、物种适配、巡检与养护自查共用的视觉结果卡、展示模型和规则适配器。
 - `src/components/interactive/`：互动图鉴与场景养护预览组件；仅负责收集场景选择并调用正式详情/养护入口。
 - `src/components/layout/LayoutModeProvider.tsx`：真实设备布局判定。
+- `lib/layout-mode.ts`：共享 768px viewport 布局断点与响应式订阅。
 - `src/pages/Aquarium.tsx`：我的鱼缸。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
 - `src/pages/Identify.tsx`：拍照识别候选、手动兜底、物种确认、动态追问与可视化风险结果。

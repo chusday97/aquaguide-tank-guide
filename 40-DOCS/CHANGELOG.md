@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- Restored the shared viewport-based layout contract; 390/600px now use the same phone surfaces regardless of user-agent, preventing the desktop rail/sidebar from reappearing in narrow previews.
 - Fixed Critic findings on the current candidate: restored Aquarium Archive/Discovery learn-zone targets, normalized legacy `Freshwater`/`Saltwater` values before Domain evaluation, expanded formal scene checks to 600/1280px, and removed trailing migration blank lines.
 - Updated the candidate truth to `codex/main-core-foundation-v1@94f37ba4`; separated 4317 (detached `37a8d4d1` baseline) from 4319 (candidate), captured the fixed-viewport comparison matrix, and made the formal scene gate reject branch/SHA drift.
 - Restored the approved creature-first Collection hub, single immersive Aquarium stage, shared desktop detail rail/mobile bottom sheet, and transparent scene-image loading/failure behavior on the main convergence candidate.

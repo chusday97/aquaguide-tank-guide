@@ -38,6 +38,11 @@
 - Expanded formal scene structural checks to 600px and 1280px, restored Collection wishlist/care route checks, and removed trailing blank lines from the eight restored production migrations.
 - Rebuilt the candidate and reran lint, API typecheck, build, API semantics and diff-check; remote candidate and PR remain stale until the reviewed local head is pushed.
 
+## 2026-08-27 — Viewport regression fix
+
+- Independent visual review caught a real narrow-screen regression: the candidate had replaced the shared viewport contract with UA detection, causing a 390px desktop sidebar and overlapping scene controls.
+- Restored `lib/layout-mode.ts` and `LayoutModeProvider` to the 768px viewport contract, updated the stale UA-oriented gate, and verified 390px now renders the phone toolbar/bottom navigation while 600/1280 retain their intended modes.
+
 - **Action:** 将唯一工作线校正为 `codex/main-core-foundation-v1@5b419e98`；4317 固定视觉基线，4319 作为候选预览；恢复分支降级为历史证据。
 - **Read-only evidence:** Supabase project `AquaGuide` 为 `ACTIVE_HEALTHY`；生产有 26 个 migration、35 张启用 RLS 的 public 表、89 条 policy。
 - **Finding:** 生产缺少候选 Catalog migration (`catalog_releases`、`species.water_type`)，候选缺少 8 个生产 migration，并存在 memorial migration 版本命名漂移；状态为 `MIGRATION_REQUIRED + MIGRATION_HISTORY_CONFLICT`。
