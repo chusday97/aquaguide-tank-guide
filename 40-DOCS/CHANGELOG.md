@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- Updated the candidate truth to `codex/main-core-foundation-v1@94f37ba4`; separated 4317 (detached `37a8d4d1` baseline) from 4319 (candidate), captured the fixed-viewport comparison matrix, and made the formal scene gate reject branch/SHA drift.
 - Restored the approved creature-first Collection hub, single immersive Aquarium stage, shared desktop detail rail/mobile bottom sheet, and transparent scene-image loading/failure behavior on the main convergence candidate.
 - Restored the eight production migration history files locally, aligned memorial migration versioning, and added branch/SHA/seed/build-time metadata to the interactive preview.
 - Added server-side Catalog/domain re-evaluation before planned livestock writes; stale or conflicting client confirmations now fail with explicit version/compatibility errors.

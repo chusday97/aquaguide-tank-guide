@@ -25,6 +25,12 @@ This matrix makes the visual baseline executable. It does not replace [`UI_REGRE
 - **Not yet a screenshot golden:** no screenshot baseline is promoted until a stored image set, viewport, locale and seed are all recorded.
 - **Deployment parity pending:** a deployed preview is accepted only when its SHA and rendered behavior match this baseline.
 
+## Current candidate evidence
+
+- Candidate review target: `http://127.0.0.1:4319` from `codex/main-core-foundation-v1@94f37ba4`.
+- Candidate formal scene, transparent-image, today-action, Collection, Aquarium layout and detail-surface gates pass locally.
+- The candidate is not promoted to a screenshot golden and remains `RECOVERY_IN_PROGRESS` until fixed-viewport human comparison with 4317 is accepted.
+
 ## Required change record
 
 A visual PR must state:

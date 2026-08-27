@@ -24,6 +24,13 @@
 - Updated responsive/formal/collection browser gates to assert the current visual contract. Lint, build, responsive surface, formal scenes, today action, collection hub, aquarium layout and framing checks pass on the local candidate.
 - Candidate changes are local only; Preview SHA parity, fixed screenshots, independent review, Supabase reconciliation and main merge remain pending.
 
+## 2026-08-27 — Preview identity and fixed-viewport evidence
+
+- Replaced the stale 4317 candidate listener with a detached `37a8d4d1` baseline worktree and started the candidate on the planned 4319 port.
+- Captured both sets at 390×844, 600×900 and 1280×900 for `/_preview/interactive`, Aquarium, Encyclopedia, Care and Collection under `zh-CN`; local artifacts are in `/private/tmp/aquaguide-visual-matrix/`.
+- Formal scene verification now checks the candidate branch and exact checked-out SHA exposed by preview metadata before route interaction tests.
+- Production migration, Catalog publication, remote push and main merge remain blocked by their separate authorization/acceptance gates.
+
 - **Action:** 将唯一工作线校正为 `codex/main-core-foundation-v1@5b419e98`；4317 固定视觉基线，4319 作为候选预览；恢复分支降级为历史证据。
 - **Read-only evidence:** Supabase project `AquaGuide` 为 `ACTIVE_HEALTHY`；生产有 26 个 migration、35 张启用 RLS 的 public 表、89 条 policy。
 - **Finding:** 生产缺少候选 Catalog migration (`catalog_releases`、`species.water_type`)，候选缺少 8 个生产 migration，并存在 memorial migration 版本命名漂移；状态为 `MIGRATION_REQUIRED + MIGRATION_HISTORY_CONFLICT`。

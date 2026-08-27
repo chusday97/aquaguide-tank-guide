@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.PREVIEW_URL || process.env.AQUAGUIDE_URL || 'http://127.0.0.1:4317';
+const expectedBranch = process.env.PREVIEW_BRANCH || 'codex/main-core-foundation-v1';
+const expectedSha = process.env.PREVIEW_SHA || execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 const browser = await chromium.launch({ headless: true });
 
 try {
@@ -9,9 +12,12 @@ try {
   await page.goto(`${baseUrl}/_preview/interactive`, { waitUntil: 'networkidle', timeout: 30_000 });
   const previewMetadata = page.locator('[data-preview-metadata]');
   await previewMetadata.waitFor();
-  assert.match(await previewMetadata.innerText(), /seed:\s*interactive-preview/);
-  assert.match(await previewMetadata.innerText(), /built:/);
-  assert.match(await previewMetadata.innerText(), /[0-9a-f]{40}/i, 'preview metadata must expose the full build SHA');
+  const metadataText = await previewMetadata.innerText();
+  assert.match(metadataText, new RegExp(expectedBranch.replaceAll('/', '\\/')), 'preview metadata must expose the expected branch');
+  assert.match(metadataText, new RegExp(expectedSha), 'preview metadata must match the checked-out build SHA');
+  assert.match(metadataText, /seed:\s*interactive-preview/);
+  assert.match(metadataText, /built:/);
+  assert.match(metadataText, /[0-9a-f]{40}/i, 'preview metadata must expose the full build SHA');
   await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle', timeout: 30_000 });
   await page.getByRole('region', { name: '互动物种鱼缸' }).waitFor();
   assert.equal(await page.locator('[data-scene-node]').count(), 6, 'encyclopedia scene renders six selectable creatures');

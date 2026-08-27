@@ -3,7 +3,7 @@
 
 ## 2026-08-27 最终统一执行线
 
-- 当前唯一候选工作树为 `codex/main-core-foundation-v1@5b419e98`；4317 固定为 `37a8d4d1` 视觉基线，4319 用于候选验收，视觉恢复分支仅保留为历史证据。
+- 当前唯一候选工作树为 `codex/main-core-foundation-v1@94f37ba4`；4317 固定为 `37a8d4d1` 视觉基线，4319 用于候选验收，视觉恢复分支仅保留为历史证据。
 - 生产 Supabase 已完成只读核对：26 个 migration、35 张 RLS 表、89 条 policy；候选缺 8 个生产 migration，生产缺 Catalog 表和 `species.water_type`，必须先做 migration history reconciliation。
 - 当前 release 继续为 `NOT_READY`；禁止把旧候选 CI、旧 Preview 或生产已部署事实当作当前视觉或 Catalog parity 证据。
 
@@ -42,7 +42,7 @@
 - 已确认 main 收敛候选存在真实视觉回退：`/_preview/interactive`、`aquarium-stage-layout-v4.css`、`immersive-detail-layout-v5.css` 被移除，`src/index.css` 相比用户确认基线少约 919 行。
 - 已从 `codex/main-core-foundation-v1` 创建本地恢复分支 `codex/main-visual-recovery-v1`；恢复互动预览路由、场景组件、canonical 舞台/详情样式和互动样式，未回退 Domain/Catalog/Service/API/Supabase。
 - 已恢复生产 Aquarium 的单一沉浸舞台：tank/status/actions 重新归一到 dashboard stage，3D 相机使用 `stage-cover`，并恢复场景标题与缸内物种入口（commit: `5ab8ca79`）。
-- `test:aquarium-stage-layout`、`test:three-stage-framing`、`npm run lint`、`npm run build`、`npm run check:project-truth` 通过；预览构建包含 `InteractivePreview` chunk。4319 被旧进程占用，候选实际启动于 4326；固定视口人工验收仍待完成。
+- `test:aquarium-stage-layout`、`test:three-stage-framing`、`npm run lint`、`npm run build`、`npm run check:project-truth` 通过；预览构建包含 `InteractivePreview` chunk。4317 已切换为 detached `37a8d4d1` 基线，4319 已切换为候选 `94f37ba4`；固定视口截图已生成，人工验收仍待完成。
 - 独立 Critic 复验后将互动 journey 明确标注为 preview-only，并为 Archive 外层补充可访问性标签（commit: `62135580`）；Critic 六维结论为“代码基本合理、视觉发布门禁未通过”，未推送、未更新 PR。
 - 当前视觉门禁：`FAILED / recovery in progress`；PR #142 未更新、未推送、未合并。
 
