@@ -12,7 +12,7 @@
 | GitHub convergence | [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) | The candidate PR is the only active release entry; #141 remains historical evidence. |
 | Branch reconciliation | [Branch Convergence Audit](./03-development/BRANCH_CONVERGENCE_AUDIT.md) and [origin/main semantic reconciliation](./03-development/ORIGIN_MAIN_RECONCILIATION.md) | Commit counts alone; a graph difference is not a missing-feature verdict. |
 | Approved visual baseline | `37a8d4d1` and `http://127.0.0.1:4317/_preview/interactive` | No RC page/CSS may replace this visual baseline wholesale. |
-| Current state | `.ai/PROJECT_STATE.json` | Local branch, remote SHA, PR and preview must agree. |
+| Current state | `.ai/PROJECT_STATE.json` | Local branch, remote SHA, PR and preview must agree; current candidate head is `9a70420b`. |
 | Historical PRs | `.ai/OPEN_PR_REGISTRY.md` | Historical inputs only; never direct merge sources. |
 | Git/PR delivery rules | [Git Delivery Protocol](./03-development/GIT_DELIVERY_PROTOCOL.md) | Informal branch selection or an old PR base |
 | Historical documents | [Historical Evidence Registry](./HISTORICAL_EVIDENCE.md) | Evidence only; never a current decision source. |

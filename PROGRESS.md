@@ -12,7 +12,7 @@
 - [x] 补回 `.ai/PROJECT_STATE.json`、项目真相路由、视觉/部署/分支/PR 证据文档，并把当前工作线改为 `codex/main-core-foundation-v1 → main`；#141 明确降级为历史迁移证据。
 - [x] 增加 `npm run project:status` 与 `npm run check:project-truth`，候选分支未推送前允许明确显示 `remoteSha:null`，不把本地状态伪装成远端同步。
 - [x] 增加候选分支专用 GitHub Actions 工作流，首个 push/PR 后才产生远端运行证据。
-- [x] 提交并推送候选分支，创建 [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) 指向 `main`；本地/远端/PR head 均为 `741b3d8f`。
+- [x] 提交并推送候选分支，创建 [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) 指向 `main`；本地/远端/PR head 均为 `9a70420b`。
 
 ### 2026-08-27 Catalog 契约与只读发布入口
 
