@@ -63,6 +63,11 @@
 - [x] `npm run test:today-action` 通过；未新增数据库字段、API 或 Supabase 写入。
 - [x] `npm run test:disclosures` 通过，今日行动折叠用途已登记为 `today_action_surface`。
 
+### 底层门禁复验
+
+- [x] `test:catalog-snapshot`、`test:domain-compatibility`、`test:addition-intents`、`test:livestock-recording`、`test:livestock-addition-api-errors`、`test:mini-compatibility` 通过。
+- [x] `test:layout-mode`、`test:three-stage-framing`、`check:project-truth` 通过；未执行任何生产 Supabase migration。
+
 - [x] `LivestockAddCommand` 与 `aquariumSpeciesCreateSchema` 增加 `intent`、`catalogVersion`、`compatibilityConfirmation`。
 - [x] API 对 `planned_addition` 增加同版本确认、阻断和资料不足错误语义；`record_existing` 继续允许保存事实。
 - [x] `npm run test:addition-intents`、`npm run test:livestock-addition-api-errors`、`lint`、`check:api` 通过。

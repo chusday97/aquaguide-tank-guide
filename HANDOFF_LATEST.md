@@ -39,6 +39,7 @@
 - `StatusSummaryCard` 已改为半透明拉手默认收起；点击可展开，Esc 可收起，Pointer 拖拽会吸附到 collapsed / half / expanded 三档。
 - 新增 `npm run test:today-action`，已在 1280px 真实浏览器验证点击、Esc 和拖拽到半展开；任务数据、完成状态和写入回调未改动。
 - `today_action_surface` 已加入 disclosure 契约白名单，`npm run test:disclosures` 通过。
+- 底层回归已复验：Catalog、Domain policy、添加意图、现实记录/API 错误语义、Mini 混养、布局与 3D framing 门禁通过；Supabase 仍只读待授权 parity。
 - 下一步：运行统一底层/Catalog 门禁，之后再做 Preview SHA/Supabase 只读 parity；当前仍未推送候选或合并 main。
 
 - 已增加 Catalog 公共契约、Supabase migration 提案、不可变快照加载器和 `/api/v1/catalog/releases/current` 只读入口。
