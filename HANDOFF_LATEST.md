@@ -2,6 +2,14 @@
 
 更新时间：2026-08-27 +08:00
 
+## 2026-08-27 当前执行状态（阶段 2 视觉恢复）
+
+- 唯一修改工作线：`codex/main-core-foundation-v1`；`codex/main-visual-recovery-v1` 仅作历史证据。
+- 已恢复共享 `detail-rail`/`bottom-sheet` Surface、透明场景图片失败容器、正式 `/collection` creature-first 水族册和 Aquarium 单一沉浸舞台；未修改 Domain/Catalog/Supabase。
+- 已通过：`npm run lint`、`npm run build`、`npm run test:responsive-detail-surface`、`PREVIEW_URL=http://127.0.0.1:4319 npm run test:formal-scenes`、`PREVIEW_URL=http://127.0.0.1:4319 npm run test:today-action`、`PREVIEW_URL=http://127.0.0.1:4319 npm run test:collection-hub-ui`、`npm run test:aquarium-stage-layout`、`npm run test:three-stage-framing`。
+- 未完成：正式 Catalog/Service 唯一权威切换、生产 migration 授权、固定截图/Preview SHA parity、独立 Critic/Evaluator、PR #142 推送和 `main` 合并。
+- 禁止重踩：不要把 4319 候选当成 4317 基线；不要恢复旧 `right-drawer`/四卡片水族册断言；不要在 Supabase parity 前执行 migration 或 Catalog 上传。
+
 ## 2026-08-27 最终统一执行线（当前权威）
 
 - 唯一日常工作树与发布候选：`codex/main-core-foundation-v1@5b419e98`；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。

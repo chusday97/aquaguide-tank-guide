@@ -296,17 +296,6 @@ function AquariumWorkspace({
           </div>
         </div>
       </section>
-      {(archive || discovery) && (
-        <div className="aquarium-followup-grid">
-          {archive && <section aria-label="Aquarium records" className="aquarium-workspace-zone aquarium-records-zone">{archive}</section>}
-          {discovery && (
-            <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-              <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-              <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
-            </section>
-          )}
-        </div>
-      )}
     </>
   );
 }

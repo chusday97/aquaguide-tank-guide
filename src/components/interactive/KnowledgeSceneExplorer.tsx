@@ -69,7 +69,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
         <span aria-hidden="true" className="interactive-care-filter" />
         {fishData.slice(0, creaturePositions.length).map((fish, index) => {
           const position = creaturePositions[index];
-          return <span key={fish.id} aria-hidden="true" className="interactive-tank-creature interactive-tank-decorative" style={{ left: position.left, top: position.top, width: position.width, '--scene-delay': position.delay } as CSSProperties}><ResilientImage src={getSpeciesVisualSources(fish).texture} alt="" className={`h-full w-full object-contain ${getSpeciesImageClass(fish)}`} /></span>;
+          return <span key={fish.id} aria-hidden="true" className="interactive-tank-creature interactive-tank-decorative" style={{ left: position.left, top: position.top, width: position.width, '--scene-delay': position.delay } as CSSProperties}><ResilientImage src={getSpeciesVisualSources(fish).texture} alt="" loadingSurface="transparent" className={`h-full w-full object-contain ${getSpeciesImageClass(fish)}`} /></span>;
         })}
         {!selectedObject && <p className="interactive-tank-prompt">{isEn ? 'Choose the place where you noticed it' : '选择你注意到异常的位置'}</p>}
         {sceneObjects.map((object) => {

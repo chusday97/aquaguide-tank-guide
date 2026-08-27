@@ -9,6 +9,8 @@ try {
   await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle', timeout: 30_000 });
   await page.getByRole('region', { name: '互动物种鱼缸' }).waitFor();
   assert.equal(await page.locator('[data-scene-node]').count(), 6, 'encyclopedia scene renders six selectable creatures');
+  assert.equal(await page.locator('[data-scene-node] .resilient-image-transparent').count(), 6, 'encyclopedia creatures use transparent scene image surfaces');
+  assert.equal(await page.locator('[data-scene-node] img[src$=".png"], [data-scene-node] img[src*=".png?"]').count(), 6, 'encyclopedia creatures resolve to PNG/RGBA scene assets');
   await page.locator('[data-scene-node]').first().click();
   await page.getByRole('button', { name: '查看物种档案' }).waitFor();
   await page.getByRole('button', { name: '传统浏览', exact: true }).click();
@@ -17,6 +19,7 @@ try {
 
   await page.goto(`${baseUrl}/care`, { waitUntil: 'networkidle', timeout: 30_000 });
   await page.getByRole('region', { name: '互动鱼缸养护指南' }).waitFor();
+  assert.ok(await page.locator('.interactive-care-scene .resilient-image-transparent').count() >= 1, 'care scene decorations use transparent image surfaces');
   await page.getByText('场景找问题', { exact: true }).waitFor();
   await page.getByRole('button', { name: '水面：泡沫、油膜、浮头' }).click();
   await page.getByText('再确认一个现象', { exact: true }).waitFor();

@@ -16,6 +16,14 @@
 
 ## 2026-08-27 — Final unified line and Supabase audit
 
+## 2026-08-27 — Stage 2 visual recovery on the canonical candidate
+
+- Restored the shared desktop `detail-rail` and mobile bounded `bottom-sheet` contract without reintroducing the legacy `right-drawer` assertions.
+- Added transparent loading/failure surfaces to `ResilientImage` and enabled them for formal Encyclopedia and Care scene assets; failures no longer paint opaque white placeholders over the immersive stage.
+- Restored the creature-first Collection hub from the approved visual baseline and removed Aquarium follow-up cards outside the single immersive stage. No Domain, Catalog or Supabase files were changed.
+- Updated responsive/formal/collection browser gates to assert the current visual contract. Lint, build, responsive surface, formal scenes, today action, collection hub, aquarium layout and framing checks pass on the local candidate.
+- Candidate changes are local only; Preview SHA parity, fixed screenshots, independent review, Supabase reconciliation and main merge remain pending.
+
 - **Action:** 将唯一工作线校正为 `codex/main-core-foundation-v1@5b419e98`；4317 固定视觉基线，4319 作为候选预览；恢复分支降级为历史证据。
 - **Read-only evidence:** Supabase project `AquaGuide` 为 `ACTIVE_HEALTHY`；生产有 26 个 migration、35 张启用 RLS 的 public 表、89 条 policy。
 - **Finding:** 生产缺少候选 Catalog migration (`catalog_releases`、`species.water_type`)，候选缺少 8 个生产 migration，并存在 memorial migration 版本命名漂移；状态为 `MIGRATION_REQUIRED + MIGRATION_HISTORY_CONFLICT`。

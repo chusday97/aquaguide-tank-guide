@@ -53,6 +53,14 @@
 - 已更新 `.ai/PROJECT_STATE.json`、`docs/PROJECT_TRUTH.md`、`FEATURE_CATALOG.md`、`HANDOFF_LATEST.md` 与 project-truth 校验，避免旧候选 CI 被误当作恢复版本证据。
 - 验证：`npm run project:status`、`npm run check:project-truth`、`git diff --check` 通过；恢复分支尚未推送。
 
+### 2026-08-27 阶段 2：正式视觉与水族册回退恢复
+
+- [x] 恢复共享详情 Surface 契约：桌面使用 persistent `detail-rail`，手机使用受限高度 `bottom-sheet`，不再使用旧 `right-drawer` 断言。
+- [x] `ResilientImage` 增加透明场景 loading/失败容器；互动图鉴与养护场景显式使用透明素材表面，失败时不渲染白色矩形。
+- [x] 恢复 `/collection` creature-first 水族册（桌面四个生物节点、中央聚焦内容、手机紧凑入口），移除旧四卡片首页回退；Aquarium 恢复单一沉浸舞台，不在舞台外重复渲染 follow-up 卡片。
+- [x] 视觉门禁更新为当前契约：`test:responsive-detail-surface`、`test:formal-scenes`、`test:today-action`、`test:collection-hub-ui`、`test:aquarium-stage-layout`、`test:three-stage-framing`、`lint`、`build` 均通过。
+- 当前候选仍未推送；4317 冻结基线与 4319 候选的 SHA parity、固定截图和正式人工验收待后续门禁完成。
+
 ### 2026-08-27 Service/API 添加契约门禁
 
 ## 2026-08-27 正式互动场景恢复

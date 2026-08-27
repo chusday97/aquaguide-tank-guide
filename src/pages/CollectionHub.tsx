@@ -38,91 +38,35 @@ const achievementIcons: Record<AchievementId, typeof Medal> = {
   life_reflection: Medal,
 };
 
-function CollectionModuleCard({
-  id,
-  title,
-  count,
-  icon,
-  tone,
-  remainingCount,
-  moreLabel,
-  building = false,
-  children,
-}: {
-  id: CollectionModule;
-  title: string;
-  count: string;
-  icon: ReactNode;
-  tone: string;
-  remainingCount: number;
-  moreLabel: string;
-  building?: boolean;
-  children: ReactNode;
-}) {
-  const navigate = useNavigate();
-  const openModule = () => {
-    navigate(moduleRoutes[id]);
-  };
-  return (
-    <section
-      data-collection-module={id}
-      data-feature-status={building ? 'building' : undefined}
-      className={`flex min-h-[326px] min-w-0 flex-col rounded-[24px] border p-4 text-left ${id === 'achievements' ? 'border-slate-200 bg-slate-50 text-slate-500 shadow-none' : 'border-white/90 bg-white shadow-sm'}`}
-    >
-      {building ? (
-        <div className="flex w-full items-center gap-3 rounded-[16px] text-left" aria-label={`${title}，${count}`}>
-          <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] ${tone}`}>{icon}</span>
-          <span className="min-w-0 flex-1 text-[17px] font-black text-ink">
-            {title}
-            <span className="ml-2 text-[13px] text-ink/45">· {count}</span>
-          </span>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={openModule}
-          className="group flex w-full items-center gap-3 rounded-[16px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-          aria-label={`${title}，${count}`}
-        >
-          <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[15px] ${tone}`}>{icon}</span>
-          <span className="min-w-0 flex-1 text-[17px] font-black text-ink">
-            {title}
-            <span className="ml-2 text-[13px] text-ink/45">· {count}</span>
-          </span>
-          <ChevronRight className="h-5 w-5 shrink-0 text-ink/25 transition-transform group-hover:translate-x-0.5" />
-        </button>
-      )}
-      <span className="mt-3 flex min-h-0 w-full flex-1 flex-col overflow-hidden rounded-[18px] border border-slate-100 bg-[#fbfcfb]">
-        {children}
-      </span>
-      {!building && remainingCount > 0 && (
-        <button
-          type="button"
-          onClick={openModule}
-          className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-1 rounded-full text-[12px] font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-        >
-          {moreLabel}<ChevronRight className="h-3.5 w-3.5" />
-        </button>
-      )}
-    </section>
-  );
-}
+const moduleOrder: CollectionModule[] = ['wishlist', 'care', 'memorial', 'achievements'];
+const marineVisualIndexes: Record<CollectionModule, number> = {
+  wishlist: 0,
+  care: 2,
+  memorial: 4,
+  achievements: 6,
+};
 
-function PreviewEmpty({
-  icon,
-  title,
-  description,
-}: {
-  icon: ReactNode;
-  title: string;
-  description: string;
-}) {
+const desktopNodePositions: Record<CollectionModule, string> = {
+  wishlist: 'left-[1%] top-[16%] xl:left-[4%]',
+  care: 'right-[1%] top-[15%] xl:right-[4%]',
+  memorial: 'left-[1%] bottom-[13%] xl:left-[4%]',
+  achievements: 'right-[1%] bottom-[12%] xl:right-[4%]',
+};
+
+type HoverItem = {
+  id: string;
+  label: string;
+  meta?: string;
+  all?: boolean;
+};
+
+function EmptyState({ icon, title, description }: { icon: ReactNode; title: string; description: string }) {
   return (
-    <span className="flex min-h-[210px] flex-1 flex-col items-center justify-center px-5 text-center">
-      <span className="flex h-12 w-12 items-center justify-center rounded-[16px] bg-white text-ink/25 shadow-sm">{icon}</span>
-      <span className="mt-3 text-[13px] font-black text-ink">{title}</span>
-      <span className="mt-1 max-w-[280px] text-[11px] font-bold leading-5 text-ink/42">{description}</span>
-    </span>
+    <div className="flex min-h-[250px] flex-col items-center justify-center rounded-[28px] border border-white/70 bg-white/60 px-6 text-center backdrop-blur-xl">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-ink/30 shadow-sm">{icon}</span>
+      <h3 className="mt-4 text-[18px] font-black text-ink">{title}</h3>
+      <p className="mt-2 max-w-[360px] text-[12px] font-semibold leading-6 text-ink/52">{description}</p>
+    </div>
   );
 }
 
@@ -131,6 +75,8 @@ export default function CollectionHub() {
   const navigate = useNavigate();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const [snapshot, setSnapshot] = useState(getCollectionSnapshot);
+  const [activeModule, setActiveModule] = useState<CollectionModule>('wishlist');
+  const [focusedItemId, setFocusedItemId] = useState<string | null>(null);
 
   useEffect(() => subscribeToCollection(() => setSnapshot(getCollectionSnapshot())), []);
 
@@ -138,29 +84,73 @@ export default function CollectionHub() {
     .reverse()
     .map(id => fishData.find(fish => fish.id === id))
     .filter((fish): fish is (typeof fishData)[number] => Boolean(fish))
-    .slice(0, 3), [snapshot.wishlistIds]);
+    .slice(0, 4), [snapshot.wishlistIds]);
 
   const careTopics = useMemo(() => Object.values(snapshot.careFavorites)
     .sort((a, b) => new Date(b.favoritedAt).getTime() - new Date(a.favoritedAt).getTime())
     .map(favorite => careTopicsData.find(topic => topic.id === favorite.id))
     .filter((topic): topic is (typeof careTopicsData)[number] => Boolean(topic))
-    .slice(0, 2), [snapshot.careFavorites]);
+    .slice(0, 4), [snapshot.careFavorites]);
 
-  const recentMemorials = snapshot.memorials.slice(0, 2);
-  const unlockedAchievement = [...snapshot.achievements].reverse().find(item => item.unlocked);
-  const nextAchievement = snapshot.achievements
-    .filter(item => !item.unlocked)
-    .sort((a, b) => (b.current / b.target) - (a.current / a.target))[0];
+  const recentMemorials = snapshot.memorials.slice(0, 4);
   const achievementPreviews = useMemo(() => {
-    const prioritized = [
-      ...(unlockedAchievement ? [unlockedAchievement] : []),
-      ...(nextAchievement ? [nextAchievement] : []),
-      ...snapshot.achievements,
-    ];
-    return prioritized
+    const unlocked = [...snapshot.achievements].reverse().filter(item => item.unlocked);
+    const locked = [...snapshot.achievements]
+      .filter(item => !item.unlocked)
+      .sort((a, b) => (b.current / b.target) - (a.current / a.target));
+    return [...unlocked, ...locked]
       .filter((item, index, items) => items.findIndex(candidate => candidate.id === item.id) === index)
-      .slice(0, 2);
-  }, [nextAchievement, snapshot.achievements, unlockedAchievement]);
+      .slice(0, 4);
+  }, [snapshot.achievements]);
+
+  const moduleMeta: Record<CollectionModule, {
+    title: string;
+    shortLabel: string;
+    description: string;
+    countLabel: string;
+    icon: ReactNode;
+    accentClass: string;
+  }> = {
+    wishlist: {
+      title: isEn ? 'Species Wishlist' : '种草图鉴',
+      shortLabel: isEn ? 'Wishlist' : '种草',
+      description: isEn ? 'Species you saved for a closer look before deciding what belongs in your tank.' : '把感兴趣的生物先放在这里，再决定是否适合你的鱼缸。',
+      countLabel: isEn ? `${snapshot.counts.wishlist} saved` : `${snapshot.counts.wishlist} 种`,
+      icon: <Heart className="h-4 w-4" />,
+      accentClass: 'text-rose-600',
+    },
+    care: {
+      title: isEn ? 'Saved Care' : '养护收藏',
+      shortLabel: isEn ? 'Care' : '养护',
+      description: isEn ? 'Keep the care guides you want to return to during real aquarium maintenance.' : '把真正会反复查看的养护指南收进来，维护时直接继续。',
+      countLabel: isEn ? `${snapshot.counts.care} guides` : `${snapshot.counts.care} 篇`,
+      icon: <BookOpenCheck className="h-4 w-4" />,
+      accentClass: 'text-sky-700',
+    },
+    memorial: {
+      title: isEn ? 'Life Memorials' : '生命纪念',
+      shortLabel: isEn ? 'Memorials' : '纪念',
+      description: isEn ? 'A quiet record of lives that were part of your aquarium and what you learned from them.' : '记录曾经生活在缸里的生命，以及留下来的观察与复盘。',
+      countLabel: isEn ? `${snapshot.counts.memorial} records` : `${snapshot.counts.memorial} 条`,
+      icon: <Skull className="h-4 w-4" />,
+      accentClass: 'text-stone-600',
+    },
+    achievements: {
+      title: isEn ? 'Aquarium Milestones' : '成长勋章',
+      shortLabel: isEn ? 'Badges' : '勋章',
+      description: isEn ? 'Milestones earned from real aquarium care, not decorative points.' : '根据真实养缸行为形成的里程碑，不做无意义的积分装饰。',
+      countLabel: isEn ? `${snapshot.counts.achievements} unlocked` : `${snapshot.counts.achievements} 枚已解锁`,
+      icon: <Medal className="h-4 w-4" />,
+      accentClass: 'text-amber-700',
+    },
+  };
+
+  const formatDate = (value: string) => {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return new Intl.DateTimeFormat(isEn ? 'en' : 'zh-CN', { month: 'short', day: 'numeric' }).format(date);
+  };
+
   const openItem = (module: CollectionModule, itemId: string) => {
     if (module === 'memorial') {
       navigate(`/collection/memorial/${encodeURIComponent(itemId)}`);
@@ -168,166 +158,287 @@ export default function CollectionHub() {
     }
     navigate(`${moduleRoutes[module]}?item=${encodeURIComponent(itemId)}`);
   };
-  const formatDate = (value: string) => {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value;
-    return new Intl.DateTimeFormat(isEn ? 'en' : 'zh-CN', { month: 'short', day: 'numeric' }).format(date);
+
+  const selectModule = (module: CollectionModule, itemId?: string) => {
+    setActiveModule(module);
+    setFocusedItemId(itemId || null);
   };
 
-  return (
-    <div className="collection-hub page-frame mx-auto flex w-full min-w-0 max-w-[1180px] flex-col gap-4 pb-24">
-      <header className="px-1 py-1">
-        <h1 className="text-[25px] font-black tracking-tight text-ink">{isEn ? 'My Collection' : '我的水族册'}</h1>
-        <p className="mt-1 text-[12px] font-bold text-ink/48">{isEn ? 'Wishlist · Care · Memorials' : '种草 · 养护 · 纪念'}</p>
-      </header>
+  const getHoverItems = (module: CollectionModule): HoverItem[] => {
+    if (module === 'wishlist') {
+      return [
+        ...wishlistFishes.slice(0, 3).map(fish => ({ id: fish.id, label: fish.name, meta: fish.category })),
+        { id: 'all', label: isEn ? 'View all saved species' : '查看全部种草', all: true },
+      ];
+    }
+    if (module === 'care') {
+      return [
+        ...careTopics.slice(0, 3).map(topic => ({ id: topic.id, label: topic.title, meta: topic.category })),
+        { id: 'all', label: isEn ? 'View all saved guides' : '查看全部养护收藏', all: true },
+      ];
+    }
+    if (module === 'memorial') {
+      return [
+        ...recentMemorials.slice(0, 3).map(record => {
+          const fish = fishData.find(item => item.id === record.fishId);
+          return { id: record.id, label: fish?.name || (isEn ? 'Aquarium resident' : '缸内生物'), meta: formatDate(record.date) };
+        }),
+        { id: 'all', label: isEn ? 'View all memorials' : '查看全部纪念', all: true },
+      ];
+    }
+    return [
+      ...achievementPreviews.slice(0, 3).map(item => ({
+        id: item.id,
+        label: item.title,
+        meta: item.unlocked ? (isEn ? 'Unlocked' : '已解锁') : `${item.current}/${item.target}`,
+      })),
+      { id: 'all', label: isEn ? 'View all milestones' : '查看全部勋章', all: true },
+    ];
+  };
 
-      <section className="grid min-w-0 gap-3 min-[900px]:grid-cols-2" aria-label={isEn ? 'Collection previews' : '水族册内容预览'}>
-        <CollectionModuleCard
-          id="wishlist"
-          title={isEn ? 'Species Wishlist' : '种草图鉴'}
-          count={String(snapshot.counts.wishlist)}
-          icon={<Heart className="h-5 w-5" />}
-          tone="bg-rose-50 text-rose-600"
-          remainingCount={Math.max(0, snapshot.counts.wishlist - 3)}
-          moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.wishlist - 3)} species` : `更多 ${Math.max(0, snapshot.counts.wishlist - 3)} 种`}
-        >
-          {wishlistFishes.length ? wishlistFishes.map(fish => (
+  const renderCentralContent = () => {
+    if (activeModule === 'wishlist') {
+      if (!wishlistFishes.length) {
+        return <EmptyState icon={<Heart className="h-6 w-6" />} title={isEn ? 'Nothing saved yet' : '还没有种草生物'} description={isEn ? 'Save species from the atlas and they will surface here.' : '从图鉴收藏感兴趣的生物后，它们会出现在中央。'} />;
+      }
+      return (
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+          {wishlistFishes.map(fish => (
             <button
               key={fish.id}
               type="button"
+              onClick={() => openItem('wishlist', fish.id)}
               data-preview-item="wishlist"
               data-preview-id={fish.id}
-              onClick={() => openItem('wishlist', fish.id)}
-              className="flex min-h-0 w-full flex-1 items-center gap-3 border-b border-slate-100 px-2.5 py-2 text-left transition-colors last:border-b-0 hover:bg-rose-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-rose-500"
+              className={`group flex min-w-0 items-center gap-3 rounded-[22px] border bg-white/78 p-3 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 ${focusedItemId === fish.id ? 'border-rose-300 ring-2 ring-rose-100' : 'border-white/80'}`}
             >
-              <span className="flex h-[62px] w-[104px] shrink-0 items-center justify-center overflow-hidden rounded-[13px] bg-white">
-                <ResilientImage
-                  src={getSpeciesVisualSources(fish).thumbnail}
-                  alt={fish.name}
-                  className={`h-full w-full object-contain p-[7%] ${getSpeciesImageClass(fish)}`}
-                  loading="lazy"
-                  decoding="async"
-                />
+              <span className="flex h-[88px] w-[116px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] bg-white/90">
+                <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt={fish.name} className={`h-full w-full object-contain p-[6%] ${getSpeciesImageClass(fish)}`} loading="lazy" decoding="async" />
               </span>
-              <span className="min-w-0">
-                <span className="block truncate text-[13px] font-black text-ink">{fish.name}</span>
-                <span className="mt-1 inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-black text-rose-600">{fish.category}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[15px] font-black text-ink">{fish.name}</span>
+                <span className="mt-1 block truncate text-[11px] font-semibold text-ink/48">{fish.scientificName}</span>
+                <span className="mt-3 inline-flex rounded-full bg-rose-50 px-2.5 py-1 text-[10px] font-black text-rose-600">{fish.category}</span>
               </span>
+              <ChevronRight className="h-4 w-4 shrink-0 text-ink/28 transition-transform group-hover:translate-x-1" />
             </button>
-          )) : (
-            <PreviewEmpty
-              icon={<Heart className="h-5 w-5" />}
-              title={isEn ? 'No saved species yet' : '还没有种草生物'}
-              description={isEn ? 'Save species from the encyclopedia to preview them here.' : '从图鉴收藏感兴趣的生物后，会在这里显示。'}
-            />
-          )}
-        </CollectionModuleCard>
+          ))}
+        </div>
+      );
+    }
 
-        <CollectionModuleCard
-          id="care"
-          title={isEn ? 'Saved Care' : '养护收藏'}
-          count={String(snapshot.counts.care)}
-          icon={<BookOpenCheck className="h-5 w-5" />}
-          tone="bg-sky-50 text-sky-700"
-          remainingCount={Math.max(0, snapshot.counts.care - 2)}
-          moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.care - 2)} guides` : `更多 ${Math.max(0, snapshot.counts.care - 2)} 篇`}
-        >
-          {careTopics.length ? careTopics.map(topic => (
+    if (activeModule === 'care') {
+      if (!careTopics.length) {
+        return <EmptyState icon={<BookOpenCheck className="h-6 w-6" />} title={isEn ? 'No saved guides yet' : '还没有养护收藏'} description={isEn ? 'Favorite useful care guides and they will stay ready here.' : '把常用的养护指南收藏起来，之后可以从这里继续。'} />;
+      }
+      return (
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+          {careTopics.map(topic => (
             <button
               key={topic.id}
               type="button"
+              onClick={() => openItem('care', topic.id)}
               data-preview-item="care"
               data-preview-id={topic.id}
-              onClick={() => openItem('care', topic.id)}
-              className="grid min-h-0 w-full flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 text-left transition-colors last:border-b-0 hover:bg-sky-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-600"
+              className={`group overflow-hidden rounded-[22px] border bg-white/78 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${focusedItemId === topic.id ? 'border-sky-300 ring-2 ring-sky-100' : 'border-white/80'}`}
             >
-              <span className="h-[82px] overflow-hidden rounded-[13px] bg-white">
-                <ResilientImage
-                  src={getCareVisualSources(topic.imageUrl).thumbnail}
-                  alt={topic.title}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
+              <span className="block h-[120px] overflow-hidden bg-white/70">
+                <ResilientImage src={getCareVisualSources(topic.imageUrl).thumbnail} alt={topic.title} className="h-full w-full object-cover" loading="lazy" decoding="async" />
               </span>
-              <span className="min-w-0">
-                <span className="line-clamp-2 text-[13px] font-black leading-5 text-ink">{topic.title}</span>
-                <span className="mt-1 line-clamp-2 text-[10px] font-bold leading-4 text-ink/45">{topic.summary}</span>
+              <span className="block p-3.5">
+                <span className="flex items-center justify-between gap-2">
+                  <span className="line-clamp-1 text-[14px] font-black text-ink">{topic.title}</span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-ink/28 transition-transform group-hover:translate-x-1" />
+                </span>
+                <span className="mt-1.5 line-clamp-2 text-[11px] font-semibold leading-5 text-ink/50">{topic.summary}</span>
+                <span className="mt-3 inline-flex rounded-full bg-sky-50 px-2.5 py-1 text-[10px] font-black text-sky-700">{topic.category}</span>
               </span>
             </button>
-          )) : (
-            <PreviewEmpty
-              icon={<BookOpenCheck className="h-5 w-5" />}
-              title={isEn ? 'No saved care guides' : '还没有养护收藏'}
-              description={isEn ? 'Save practical guides to reach them quickly when needed.' : '收藏常用处理步骤，遇到问题时可以快速找到。'}
-            />
-          )}
-        </CollectionModuleCard>
+          ))}
+        </div>
+      );
+    }
 
-        <CollectionModuleCard
-          id="memorial"
-          title={isEn ? 'Memorials' : '生命纪念'}
-          count={String(snapshot.counts.memorial)}
-          icon={<Skull className="h-5 w-5" />}
-          tone="bg-slate-100 text-slate-600"
-          remainingCount={Math.max(0, snapshot.counts.memorial - 2)}
-          moreLabel={isEn ? `More ${Math.max(0, snapshot.counts.memorial - 2)} records` : `更多 ${Math.max(0, snapshot.counts.memorial - 2)} 条`}
-        >
-          {recentMemorials.length ? recentMemorials.map(record => {
+    if (activeModule === 'memorial') {
+      if (!recentMemorials.length) {
+        return <EmptyState icon={<Skull className="h-6 w-6" />} title={isEn ? 'No memorial records' : '还没有生命纪念'} description={isEn ? 'Memorial entries appear only from real aquarium records.' : '只有真实记录过的生命纪念才会出现在这里。'} />;
+      }
+      return (
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+          {recentMemorials.map(record => {
             const fish = fishData.find(item => item.id === record.fishId);
             return (
               <button
                 key={record.id}
                 type="button"
+                onClick={() => openItem('memorial', record.id)}
                 data-preview-item="memorial"
                 data-preview-id={record.id}
-                onClick={() => openItem('memorial', record.id)}
-                className="grid min-h-0 w-full flex-1 grid-cols-[116px_minmax(0,1fr)] items-center gap-3 border-b border-slate-100 p-2.5 text-left transition-colors last:border-b-0 hover:bg-slate-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-600"
+                className={`group flex min-h-[132px] items-center gap-4 rounded-[22px] border bg-white/76 p-4 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 ${focusedItemId === record.id ? 'border-stone-400 ring-2 ring-stone-100' : 'border-white/80'}`}
               >
-                <span className="flex h-[82px] items-center justify-center overflow-hidden rounded-[13px] bg-slate-100 grayscale">
-                  {fish ? (
-                    <ResilientImage
-                      src={getSpeciesVisualSources(fish).thumbnail}
-                      alt=""
-                      className={`h-full w-full object-contain p-[8%] opacity-75 ${getSpeciesImageClass(fish)}`}
-                      loading="lazy"
-                    />
-                  ) : <Skull className="h-5 w-5 text-ink/25" />}
+                <span className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-stone-50">
+                  {fish ? <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt={fish.name} className={`h-full w-full object-contain p-[8%] grayscale-[20%] ${getSpeciesImageClass(fish)}`} loading="lazy" decoding="async" /> : <Skull className="h-6 w-6 text-stone-400" />}
                 </span>
-                <span className="min-w-0">
-                  <span className="block truncate text-[13px] font-black text-ink">{fish?.name || (isEn ? 'Species unavailable' : '物种信息不可用')}</span>
-                  <span className="mt-1 block text-[10px] font-bold text-ink/45">{formatDate(record.date)}</span>
-                  <span className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-[9px] font-black ${record.reason ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
-                    {record.reason ? (isEn ? 'Reason recorded' : '已记录原因') : (isEn ? 'Reason needed' : '原因待补充')}
-                  </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] font-black text-ink">{fish?.name || (isEn ? 'Aquarium resident' : '缸内生物')}</span>
+                  <span className="mt-1 block text-[11px] font-bold text-ink/46">{formatDate(record.date)}</span>
+                  <span className="mt-2 line-clamp-2 text-[11px] font-semibold leading-5 text-ink/52">{record.reason || record.observation || (isEn ? 'Open the memorial record.' : '打开纪念记录查看详情。')}</span>
                 </span>
+                <ChevronRight className="h-4 w-4 shrink-0 text-ink/28 transition-transform group-hover:translate-x-1" />
               </button>
             );
-          }) : (
-            <PreviewEmpty
-              icon={<Skull className="h-5 w-5" />}
-              title={isEn ? 'No memorial records' : '还没有生命纪念'}
-              description={isEn ? 'After recording a departure or death, the date and reason are kept here.' : '记录离缸或死亡后，这里会保留日期和原因。'}
-            />
-          )}
-        </CollectionModuleCard>
+          })}
+        </div>
+      );
+    }
 
-        <CollectionModuleCard
-          id="achievements"
-          title={isEn ? 'Achievements' : '成就勋章'}
-          count={isEn ? 'Coming soon' : '建设中'}
-          icon={<Medal className="h-5 w-5" />}
-          tone="bg-slate-100 text-slate-400"
-          remainingCount={0}
-          moreLabel=""
-          building
-        >
-          <PreviewEmpty
-            icon={<Medal className="h-5 w-5" />}
-            title={isEn ? 'Not available yet' : '暂未开放'}
-            description={isEn ? 'Track long-term care milestones.' : '记录你的养护里程碑。'}
-          />
-        </CollectionModuleCard>
+    return (
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+        {achievementPreviews.map(item => {
+          const AchievementIcon = achievementIcons[item.id] || Medal;
+          const progress = Math.max(0, Math.min(100, Math.round((item.current / Math.max(item.target, 1)) * 100)));
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => {
+                if (item.nextAction?.route) navigate(item.nextAction.route);
+                else navigate(moduleRoutes.achievements);
+              }}
+              data-preview-item="achievements"
+              data-preview-id={item.id}
+              className={`group rounded-[22px] border bg-white/78 p-4 text-left shadow-sm transition-all hover:-translate-y-1 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${focusedItemId === item.id ? 'border-amber-300 ring-2 ring-amber-100' : 'border-white/80'}`}
+            >
+              <span className="flex items-start gap-3">
+                <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${item.unlocked ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-ink/36'}`}><AchievementIcon className="h-5 w-5" /></span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center justify-between gap-2">
+                    <span className="truncate text-[14px] font-black text-ink">{item.title}</span>
+                    <span className="shrink-0 text-[10px] font-black text-ink/42">{item.unlocked ? (isEn ? 'Unlocked' : '已解锁') : `${item.current}/${item.target}`}</span>
+                  </span>
+                  <span className="mt-1 block line-clamp-2 text-[11px] font-semibold leading-5 text-ink/50">{item.description}</span>
+                </span>
+              </span>
+              <span className="mt-4 block h-1.5 overflow-hidden rounded-full bg-black/5"><span className="block h-full rounded-full bg-amber-500 transition-[width]" style={{ width: `${progress}%` }} /></span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const activeMeta = moduleMeta[activeModule];
+
+  return (
+    <div className="collection-hub page-frame-wide mx-auto flex w-full min-w-0 flex-col gap-4 pb-24">
+      <header className="px-1 py-1">
+        <div className="flex items-center gap-2 text-[11px] font-black tracking-[0.14em] text-emerald-700 uppercase"><BookHeart className="h-4 w-4" />{isEn ? 'Aqua Collection' : '自然水族册'}</div>
+        <h1 className="mt-2 text-[30px] font-bold text-ink md:text-[42px]">{isEn ? 'My Collection' : '我的水族册'}</h1>
+        <p className="mt-2 max-w-[680px] text-[13px] font-semibold leading-6 text-ink/56">{isEn ? 'Hover over a creature to preview its collection, then bring that collection into the center.' : '把鼠标移到海洋生物上查看细分内容，点击后把对应收藏拉到中央。'}</p>
+      </header>
+
+      <section className="relative min-h-[720px] overflow-hidden rounded-[36px] border border-emerald-100/80 bg-[linear-gradient(180deg,#dff6f0_0%,#bfe7dc_53%,#9fcdbf_72%,#7f9f84_100%)] shadow-[0_26px_70px_rgba(18,83,66,0.13)] md:min-h-[760px]" aria-label={isEn ? 'Interactive collection aquarium' : '互动水族册'}>
+        <span aria-hidden="true" className="absolute inset-x-0 top-[22%] h-px bg-white/70 shadow-[0_0_30px_white]" />
+        <span aria-hidden="true" className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-white/30 blur-3xl" />
+        <span aria-hidden="true" className="absolute -right-20 bottom-10 h-80 w-80 rounded-full bg-emerald-100/35 blur-3xl" />
+        <span aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-[24%] bg-[linear-gradient(180deg,rgba(115,102,75,0.62),rgba(86,72,49,0.78))]" />
+        <span aria-hidden="true" className="absolute bottom-[7%] left-[4%] h-[22%] w-4 origin-bottom -rotate-12 rounded-t-full bg-emerald-700/65" />
+        <span aria-hidden="true" className="absolute bottom-[6%] left-[9%] h-[16%] w-3 origin-bottom rotate-6 rounded-t-full bg-emerald-800/55" />
+        <span aria-hidden="true" className="absolute bottom-[5%] right-[6%] h-[26%] w-4 origin-bottom rotate-12 rounded-t-full bg-emerald-700/60" />
+
+        <div className="relative z-20 grid grid-cols-2 gap-3 p-4 lg:hidden">
+          {moduleOrder.map(module => {
+            const meta = moduleMeta[module];
+            const fish = fishData[marineVisualIndexes[module]] || fishData[0];
+            return (
+              <button
+                key={module}
+                type="button"
+                onClick={() => selectModule(module)}
+                aria-pressed={activeModule === module}
+                data-collection-compact={module}
+                className={`flex min-h-[116px] flex-col items-center justify-center rounded-[24px] border bg-white/68 p-3 backdrop-blur-xl transition-all ${activeModule === module ? 'border-emerald-400 ring-2 ring-emerald-100' : 'border-white/80'}`}
+              >
+                <span className="relative flex h-14 w-24 items-center justify-center">
+                  {fish && <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt="" className={`h-full w-full object-contain drop-shadow-[0_10px_10px_rgba(18,70,57,0.18)] ${getSpeciesImageClass(fish)}`} loading="lazy" decoding="async" />}
+                </span>
+                <span className="mt-2 flex items-center gap-1.5 text-[12px] font-black text-ink">{meta.icon}{meta.shortLabel}</span>
+                <span className="mt-1 text-[10px] font-bold text-ink/45">{meta.countLabel}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="hidden lg:block">
+          {moduleOrder.map(module => {
+            const meta = moduleMeta[module];
+            const fish = fishData[marineVisualIndexes[module]] || fishData[0];
+            const hoverItems = getHoverItems(module);
+            const hoverPanelAlign = module === 'wishlist' || module === 'memorial'
+              ? 'left-0 translate-x-0'
+              : 'right-0 left-auto translate-x-0';
+            return (
+              <div key={module} className={`group absolute z-30 ${desktopNodePositions[module]}`}>
+                <button
+                  type="button"
+                  onClick={() => selectModule(module)}
+                  aria-pressed={activeModule === module}
+                  data-collection-node={module}
+                  data-node-visual="creature"
+                  className="relative flex min-h-[120px] min-w-[140px] flex-col items-center justify-center bg-transparent px-1 py-2 transition-transform duration-300 hover:-translate-y-2 focus-visible:-translate-y-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-4 focus-visible:ring-offset-transparent xl:min-h-[132px] xl:min-w-[160px]"
+                >
+                  <span aria-hidden="true" className={`absolute left-1/2 top-[42%] h-[82px] w-[126px] xl:h-[92px] xl:w-[144px] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-xl transition-all duration-300 ${activeModule === module ? 'bg-white/58 opacity-100 scale-110' : 'bg-white/24 opacity-55 group-hover:opacity-90'}`} />
+                  <span className={`relative flex h-[82px] w-[128px] items-center justify-center xl:h-[94px] xl:w-[150px] transition-all duration-300 ${activeModule === module ? 'scale-110 -translate-y-1' : 'group-hover:scale-110'}`}>
+                    {fish && <ResilientImage src={getSpeciesVisualSources(fish).thumbnail} alt="" className={`h-full w-full object-contain drop-shadow-[0_18px_14px_rgba(13,68,54,0.28)] ${getSpeciesImageClass(fish)}`} loading="lazy" decoding="async" />}
+                  </span>
+                  <span className={`relative mt-1 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-black shadow-[0_8px_20px_rgba(13,68,54,0.10)] backdrop-blur-md transition-all ${activeModule === module ? 'border-white/90 bg-white/88 text-ink' : 'border-white/60 bg-white/58 text-ink/72 group-hover:bg-white/78 group-hover:text-ink'}`}>
+                    <span className={meta.accentClass}>{meta.icon}</span>
+                    <span>{meta.shortLabel}</span>
+                    <span className="text-[9px] font-bold text-ink/42">· {meta.countLabel}</span>
+                  </span>
+                </button>
+
+                <div data-collection-hover={module}
+                  className={`pointer-events-none absolute top-[calc(100%+10px)] z-50 w-[236px] translate-y-2 rounded-[22px] ${hoverPanelAlign} border border-white/80 bg-white/92 p-2 opacity-0 shadow-[0_20px_55px_rgba(12,70,55,0.18)] backdrop-blur-xl transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100`}>
+                  <div className="px-2 pb-1.5 pt-1 text-[10px] font-black tracking-[0.12em] text-ink/38 uppercase">{isEn ? 'Inside this collection' : '这里面的细分'}</div>
+                  {hoverItems.map(item => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => item.all ? navigate(moduleRoutes[module]) : selectModule(module, item.id)}
+                      className="flex w-full items-center justify-between gap-2 rounded-[14px] px-2.5 py-2 text-left transition-colors hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-[11px] font-black text-ink">{item.label}</span>
+                        {item.meta && <span className="mt-0.5 block truncate text-[9px] font-bold text-ink/42">{item.meta}</span>}
+                      </span>
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-ink/30" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="relative z-20 mx-4 mb-5 mt-3 lg:absolute lg:left-1/2 lg:top-1/2 lg:m-0 lg:w-[min(50%,720px)] lg:-translate-x-1/2 lg:-translate-y-1/2 xl:w-[min(56%,720px)]">
+          <section key={activeModule} className="overflow-hidden rounded-[32px] border border-white/80 bg-[#fdfcf8]/94 p-4 shadow-[0_26px_72px_rgba(13,67,54,0.18)] backdrop-blur-2xl md:p-6" aria-live="polite" data-collection-focus={activeModule}>
+            <div className="flex items-start justify-between gap-4 border-b border-ink/8 pb-4">
+              <div className="min-w-0">
+                <div className={`flex items-center gap-2 text-[11px] font-black ${activeMeta.accentClass}`}>{activeMeta.icon}{activeMeta.countLabel}</div>
+                <h2 className="mt-2 font-serif text-[27px] font-bold leading-tight text-ink md:text-[34px]">{activeMeta.title}</h2>
+                <p className="mt-2 max-w-[540px] text-[12px] font-semibold leading-6 text-ink/54">{activeMeta.description}</p>
+              </div>
+              <button type="button" onClick={() => navigate(moduleRoutes[activeModule])} className="hidden shrink-0 items-center gap-1 rounded-full border border-emerald-100 bg-white px-4 py-2.5 text-[11px] font-black text-emerald-800 shadow-sm transition-transform hover:-translate-y-0.5 sm:flex">{isEn ? 'Open full collection' : '打开完整模块'}<ChevronRight className="h-4 w-4" /></button>
+            </div>
+
+            <div className="mt-4 max-h-[430px] overflow-y-auto pr-1">{renderCentralContent()}</div>
+
+            <button type="button" onClick={() => navigate(moduleRoutes[activeModule])} className="mt-4 flex w-full items-center justify-center gap-1 rounded-full bg-[#0b634d] px-4 py-3 text-[12px] font-black text-white sm:hidden">{isEn ? 'Open full collection' : '打开完整模块'}<ChevronRight className="h-4 w-4" /></button>
+          </section>
+        </div>
+
+        <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 rounded-full border border-white/65 bg-white/50 px-3 py-2 text-[10px] font-bold text-emerald-950/55 backdrop-blur-md lg:flex"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'Hover to peek · click to focus' : '悬停预览 · 点击聚焦到中央'}</div>
       </section>
     </div>
   );
