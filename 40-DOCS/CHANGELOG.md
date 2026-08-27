@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- GP-001 CI 浏览器门禁扩大等待窗口至 30 秒，修复 GitHub runner 上设置弹层异步加载导致的偶发不可编辑超时；本地完整建缸路径通过。
 - `project:status` 现在同时允许从 canonical recovery 分支和 PR #142 release candidate 运行，并按当前分支比较远端 SHA，避免切到候选后无法核对同步状态。
 - 修复正式场景深链与交互可访问性：Care 的 `#care-*` 入口自动切换 browse，Encyclopedia scene/browse 切换同步 `mode`，今日行动支持 Enter/Space 键盘展开/收起。
 - 手机端今日行动 Rail 改为鱼缸舞台底部拉起层，补充 390px 几何回归，桌面右上浮层保持不遮挡主要舞台。
