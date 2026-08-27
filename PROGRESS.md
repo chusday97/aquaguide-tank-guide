@@ -7,6 +7,13 @@
 - 选择性迁移已验证 P0 混养能力（`99865414`、`c822bd0e`），解决 main 与统一分支 UI 接口冲突后，本地 `lint` 与 `test:compatibility` 通过；提交 `5b0c8ea7` 记录 Dialog 契约修复。
 - 能力台账已建立于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。Catalog 契约/本地快照、Domain 基础层和添加命令门禁已完成；Supabase parity、完整 Domain Service 切换、release PR 尚未完成。
 
+### 2026-08-27 阶段 1：统一进度入口恢复
+
+- [x] 补回 `.ai/PROJECT_STATE.json`、项目真相路由、视觉/部署/分支/PR 证据文档，并把当前工作线改为 `codex/main-core-foundation-v1 → main`；#141 明确降级为历史迁移证据。
+- [x] 增加 `npm run project:status` 与 `npm run check:project-truth`，候选分支未推送前允许明确显示 `remoteSha:null`，不把本地状态伪装成远端同步。
+- [x] 增加候选分支专用 GitHub Actions 工作流，首个 push/PR 后才产生远端运行证据。
+- [ ] 提交并推送候选分支，创建新的 Draft PR 指向 `main`，随后回填真实 PR 编号与 SHA。
+
 ### 2026-08-27 Catalog 契约与只读发布入口
 
 - [x] 新增 `packages/contracts/src/catalog.ts`，统一 Catalog Manifest、Snapshot、证据、物种和配对规则类型。

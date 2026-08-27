@@ -1,10 +1,11 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-25 +08:00
+更新时间：2026-08-27 +08:00
 
 ## 2026-08-27 Main 收敛分支
 
 - 当前工作分支：`codex/main-core-foundation-v1`，基于 `origin/main@ed0cf380`。
+- 当前分支尚未推送到远端，Draft PR `candidate → main` 尚未创建；完成本地门禁后再执行一次受控 push 和 PR 创建。
 - 已选择性迁移 `99865414` 与 `c822bd0e` 的 P0 混养能力；`npm run lint` 与 `npm run test:compatibility` 通过。
 - 迁移台账：`.ai/MAIN_CONVERGENCE_LEDGER.md`。不得把 PR #141 整体 merge/rebase 当作同步方案。
 - 尚未完成：Supabase schema/RLS parity、完整 Domain Service 切换、当前视觉基线完整迁移、main release PR。
@@ -31,16 +32,16 @@
 - **功能状态：** `docs/01-definition/FEATURE_CATALOG.md` 是唯一模块状态目录；不要从旧 PR 或 `PROGRESS.md` 推断功能是否当前可用。
 - **发布状态：** `docs/05-validation/RELEASE_READINESS.md` 当前为 `NOT_READY`；P0 契约已接受，local compatibility input/派生服务已通过回归，Supabase exact parity 和 release acceptance 仍未完成。
 - **P0 独立审查：** Critic 已复验通过；曾发现的水质映射、侵略性负荷回归、共享类型边界与自由文本误判均已有回归用例和修复。
-- **唯一统一分支：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
+- **产品参考分支（非当前工作分支）：** `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`；只按语义提供迁移证据。
 - **RC 定位：** `integration/aquaguide-rc1@895f2f39` 是已验证业务能力来源，不是视觉验收来源；只允许按语义选择性迁移。
 - **废弃入口：** `codex/rc1-visual-convergence-v1` / PR #140 是错误的 RC-first 局部视觉迁移，不得继续作为验收或合并基准。
-- **唯一 GitHub 收敛入口：** Draft PR #141，head 必须保持 `codex/unified-rc-visual-v1`；P0 业务迁移已完成，仍不得在 Supabase parity 与单独 release acceptance 前转为 Ready 或合并。
+- **历史 GitHub 收敛入口：** Draft PR #141，head 为 `codex/unified-rc-visual-v1`、base 为 `integration/aquaguide-rc1`；它不再承担 main 发布，新的候选 Draft PR 必须指向 `main`。
 - **GitHub 门禁：** `RC Convergence V1` 会在统一分支的相关推送后自动复验；最近两次可复核运行 `32849012409`、`32849349859` 均通过（project truth、状态、lint、布局、3D 取景和 production build）。
 - **PR 拓扑：** `.ai/OPEN_PR_REGISTRY.md` 已冻结 2026-08-25 的 56 个 open PR；除 #141 外均为历史输入而非收敛路径。
 - **唯一日常本地目录：** `/Users/chuchu/Documents/New project/aquaguide_frontend` 已切到该统一分支；旧 `codex/rc1-visual-integration` 仅保留作历史参考，禁止继续作为工作起点。
 - **Supabase 状态校正：** 用户于 2026-08-25 确认既有 Supabase 工作已部署。旧文档中“待真实 Supabase 验证”只表示当前统一分支尚未重新核对连接环境、schema revision 与 RLS 回归，绝不表示 Supabase 没有部署。
 
-- 当前分支：`codex/unified-rc-visual-v1`
+- 当前分支：`codex/main-core-foundation-v1`
 - 本地与 GitHub 的对齐提交必须每次以 `npm run project:status` 的 `sha` 为准；Handoff 不固化易过期 SHA。
 - 当前产品代码 head：`90c1ad6`
 - 本次 Handoff 文档更新后会产生新的 docs-only head；判断产品行为仍以 `90c1ad6` 为最新产品代码基线。

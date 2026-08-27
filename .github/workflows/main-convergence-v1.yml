@@ -1,0 +1,38 @@
+name: Main Convergence V1
+
+on:
+  push:
+    branches: [codex/main-core-foundation-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: main-convergence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run project:status
+      - run: npm run check:project-truth
+      - run: npm run test:catalog-snapshot
+      - run: npm run test:domain-compatibility
+      - run: npm run test:catalog-release-contract
+      - run: npm run test:compatibility
+      - run: npm run lint
+      - run: npm run check:api
+      - run: npm run build

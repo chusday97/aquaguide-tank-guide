@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- 恢复候选分支的 `.ai/PROJECT_STATE.json`、canonical 文档路由、`project:status`、`check:project-truth` 和候选分支 CI；当前 delivery line 改为 `codex/main-core-foundation-v1 → main`，PR #141 仅保留为历史迁移证据，首个远端 push 与 Draft PR 创建仍待执行。
 - 从最新 `origin/main` 建立 `codex/main-core-foundation-v1`，按能力台账选择性迁移已验证混养规则；PR #141 继续作为历史证据，不整体合并。
 - 记录当前迁移状态与门禁于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。
 - 增加 Catalog manifest/snapshot 契约、本地 SHA-256 校验与云端失败回退，以及当前发布版本只读 API；Supabase migration 仅作为提案保存，未执行。

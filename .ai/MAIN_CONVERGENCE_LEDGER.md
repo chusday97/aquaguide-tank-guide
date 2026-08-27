@@ -36,6 +36,6 @@ An item becomes `MIGRATED` only after its contract, implementation, regression e
 
 ## Foundation review checkpoint
 
-- Candidate head: `13ce05da` (local, 12 commits ahead of `origin/main`, no uncommitted changes).
+- Candidate head before phase-1 docs commit: `cc2b3f47`; the next local commit records the restored canonical truth files and project gates.
 - Critic: same-thread final recheck, six dimensions `PASS`; `git diff --check origin/main...HEAD` exits 0.
 - Remaining release gates: authorized Supabase read-only parity, real PostgreSQL trigger execution evidence, server-side Catalog re-evaluation before planned writes, Preview SHA parity and release acceptance.

@@ -10,6 +10,8 @@
     "dev:api": "tsx apps/api/src/index.ts",
     "check:api": "tsc --noEmit -p apps/api/tsconfig.json",
     "build": "vite build",
+    "project:status": "node scripts/project-status.mjs",
+    "check:project-truth": "node scripts/verify-project-truth.mjs",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
