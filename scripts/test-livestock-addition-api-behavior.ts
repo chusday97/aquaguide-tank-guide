@@ -11,9 +11,10 @@ const query = (result: Result) => {
   return chain;
 };
 
+type CatalogClient = Parameters<typeof readPublishedCatalogDecision>[0]['client'];
 const clientFor = (tables: Record<string, Result>) => ({
   from: (table: string) => query(tables[table] || { data: [], error: null }),
-});
+}) as unknown as CatalogClient;
 
 const release = { version_key: 'catalog-v1' };
 const aquarium = {
