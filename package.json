@@ -91,6 +91,7 @@
     "test:livestock-recording": "node --import tsx scripts/test-livestock-recording.ts",
     "test:atomic-livestock-addition": "node --import tsx scripts/test-atomic-livestock-addition.ts",
     "test:livestock-addition-api-errors": "node --import tsx scripts/test-livestock-addition-api-errors.ts",
+    "test:livestock-addition-api-behavior": "node --import tsx scripts/test-livestock-addition-api-behavior.ts",
     "test:livestock-removal-replay": "node --import tsx scripts/test-livestock-removal-replay.ts",
     "test:guided-navigation-ui": "node scripts/verify-guided-navigation.mjs",
     "test:aquarium-home-c": "node scripts/verify-aquarium-home-c.mjs",

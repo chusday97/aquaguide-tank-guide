@@ -35,20 +35,18 @@ try {
   await desktop.locator('[data-collection-node="care"]').click();
   assert.equal(await desktop.locator('[data-collection-focus]').getAttribute('data-collection-focus'), 'care', '点击生物节点应切换中央收藏内容');
   const careItem = desktop.locator('[data-preview-item="care"]').first();
-  if (await careItem.count()) {
-    await careItem.click();
-    await desktop.waitForURL(/\/collection\/care\?item=/);
-    await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle', timeout: 30_000 });
-    await desktop.getByRole('region', { name: '互动水族册' }).waitFor();
-  }
+  assert.equal(await careItem.count(), 1, 'care collection must render a preview item for deep-link coverage');
+  await careItem.click();
+  await desktop.waitForURL(/\/collection\/care\?item=/);
+  await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle', timeout: 30_000 });
+  await desktop.getByRole('region', { name: '互动水族册' }).waitFor();
   await desktop.locator('[data-collection-node="wishlist"]').click();
   const wishlistItem = desktop.locator('[data-preview-item="wishlist"]').first();
-  if (await wishlistItem.count()) {
-    await wishlistItem.click();
-    await desktop.waitForURL(/\/collection\/wishlist\?item=/);
-    await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle', timeout: 30_000 });
-    await desktop.getByRole('region', { name: '互动水族册' }).waitFor();
-  }
+  assert.equal(await wishlistItem.count(), 1, 'wishlist collection must render a preview item for deep-link coverage');
+  await wishlistItem.click();
+  await desktop.waitForURL(/\/collection\/wishlist\?item=/);
+  await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle', timeout: 30_000 });
+  await desktop.getByRole('region', { name: '互动水族册' }).waitFor();
   await assertNoHorizontalOverflow(desktop);
   assert.deepEqual(desktopErrors, [], `桌面不应出现页面错误：${desktopErrors.join('; ')}`);
   await desktop.close();

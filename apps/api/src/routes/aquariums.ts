@@ -33,7 +33,7 @@ import {
 import { ApiError, asyncRoute, sendData } from '../http';
 import { resolveLivestockMemorialReplay } from '../livestock-memorial-replay';
 import { throwLivestockAdditionRpcError } from '../livestock-addition-error';
-import { evaluateCompatibility, type DomainCompatibilityInput, type DomainSpeciesFact } from '../../../../packages/domain-rules/src';
+import { evaluateCompatibility, type CompatibilityDecisionStatus, type DomainCompatibilityInput, type DomainSpeciesFact } from '../../../../packages/domain-rules/src';
 
 type DbRow = Record<string, any>;
 
@@ -149,6 +149,28 @@ export const readPublishedCatalogDecision = async ({
     phMax: row.ph_max,
     reviewed: reviewedIds.has(row.id),
   });
+  let explicitPairStatus: CompatibilityDecisionStatus | undefined;
+  const statusRank: Record<CompatibilityDecisionStatus, number> = {
+    compatible: 0,
+    caution: 1,
+    insufficient_data: 2,
+    not_recommended: 3,
+  };
+  for (const existingKey of existingKeys) {
+    const existingRow = speciesByKey.get(existingKey);
+    const candidateRow = speciesByKey.get(speciesCatalogKey);
+    if (!existingRow || !candidateRow) continue;
+    const { data: pairRule, error: pairRuleError } = await client
+      .from('species_pair_compatibility_rules')
+      .select('verdict')
+      .or(`and(species_a_id.eq.${existingRow.id},species_b_id.eq.${candidateRow.id}),and(species_a_id.eq.${candidateRow.id},species_b_id.eq.${existingRow.id})`)
+      .eq('review_status', 'reviewed')
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (pairRuleError) throw new ApiError(503, 'COMPATIBILITY_INFORMATION_REQUIRED', '混养配对证据尚未完成 parity，暂不能规划加入。');
+    const verdict = pairRule?.verdict as CompatibilityDecisionStatus | undefined;
+    if (verdict && (!explicitPairStatus || statusRank[verdict] > statusRank[explicitPairStatus])) explicitPairStatus = verdict;
+  }
   const input: DomainCompatibilityInput = {
     intent: 'planned_addition',
     catalogVersion,
@@ -161,6 +183,7 @@ export const readPublishedCatalogDecision = async ({
     },
     existingSpecies: existingKeys.map(key => toFact(speciesByKey.get(key)!)),
     candidateSpecies: toFact(speciesByKey.get(speciesCatalogKey)!),
+    explicitPairStatus,
   };
   return evaluateCompatibility(input);
 };

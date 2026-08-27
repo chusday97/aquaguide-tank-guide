@@ -25,6 +25,12 @@ try {
   assert.equal(await page.locator('[data-scene-node] img[src$=".png"], [data-scene-node] img[src*=".png?"]').count(), 6, 'encyclopedia creatures resolve to PNG/RGBA scene assets');
   await page.locator('[data-scene-node]').first().click();
   await page.getByRole('button', { name: '查看物种档案' }).waitFor();
+  await page.getByRole('button', { name: '查看物种档案' }).click();
+  const phoneDetailSurface = page.locator('[role="dialog"][data-surface]:visible');
+  await phoneDetailSurface.waitFor();
+  assert.equal(await phoneDetailSurface.getAttribute('data-surface'), 'bottom-sheet', 'phone species detail must use a bottom sheet');
+  await page.keyboard.press('Escape');
+  await phoneDetailSurface.waitFor({ state: 'hidden' });
   await page.getByRole('button', { name: '传统浏览', exact: true }).click();
   await page.getByPlaceholder('搜索鱼、虾、螺、水草或用途').waitFor();
   assert.match(page.url(), /mode=browse/);
@@ -47,6 +53,13 @@ try {
     assert.equal(await widePage.locator('[data-scene-node]').count(), 6, `${width}px encyclopedia scene renders six selectable creatures`);
     assert.equal(await widePage.locator('[data-scene-node] .resilient-image-transparent').count(), 6, `${width}px encyclopedia scene keeps transparent surfaces`);
     assert.equal(await widePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, `${width}px encyclopedia has no horizontal overflow`);
+    await widePage.locator('[data-scene-node]').first().click();
+    await widePage.getByRole('button', { name: '查看物种档案' }).click();
+    const desktopDetailSurface = widePage.locator('[role="dialog"][data-surface]:visible');
+    await desktopDetailSurface.waitFor();
+    assert.equal(await desktopDetailSurface.getAttribute('data-surface'), width < 768 ? 'bottom-sheet' : 'detail-rail', `${width}px species detail must follow the viewport surface contract`);
+    await widePage.keyboard.press('Escape');
+    await desktopDetailSurface.waitFor({ state: 'hidden' });
     await widePage.goto(`${baseUrl}/care`, { waitUntil: 'networkidle', timeout: 30_000 });
     await widePage.getByRole('region', { name: '互动鱼缸养护指南' }).waitFor();
     assert.ok(await widePage.locator('.interactive-care-scene .resilient-image-transparent').count() >= 1, `${width}px care scene keeps transparent surfaces`);
