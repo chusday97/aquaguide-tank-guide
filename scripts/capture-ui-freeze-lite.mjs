@@ -1,11 +1,14 @@
 import { mkdir, writeFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 
 const outputRoot = process.env.UI_FREEZE_OUTPUT ?? '/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2';
+const candidateSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const candidateBranch = execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
 const targets = [
   { name: 'baseline', baseUrl: 'http://127.0.0.1:4317', branch: 'detached-visual-baseline', sha: '37a8d4d1' },
-  { name: 'candidate', baseUrl: 'http://127.0.0.1:4319', branch: 'codex/main-core-foundation-v1', sha: '02457dd2ded7042cc67c55acfce3c9c4f238aa42' }
+  { name: 'candidate', baseUrl: 'http://127.0.0.1:4319', branch: candidateBranch, sha: candidateSha }
 ];
 const viewports = [390, 600, 1280];
 const route = '/_preview/interactive';
