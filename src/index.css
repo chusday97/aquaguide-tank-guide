@@ -1204,6 +1204,13 @@ body::-webkit-scrollbar {
   }
 }
 
+/* The workspace follow-up owns its heading above the Archive/Discovery pair. */
+@container aquarium-home (min-width: 900px) {
+  .aquarium-workspace-zone .aquarium-followup-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (min-width: 768px) and (max-width: 1049px) {
   .aquarium-zone-grid {
     grid-template-columns: minmax(0, 1fr);
