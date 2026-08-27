@@ -2,5 +2,4 @@
 -- Application/API contracts already treat this as a first-class care event.
 
 alter type public.care_event_type
-  add value if not exists 'care_operation_completed';
-
+add value if not exists 'care_operation_completed';

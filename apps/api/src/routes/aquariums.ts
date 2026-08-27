@@ -79,9 +79,11 @@ const getOwnedSpeciesRecord = async (client: ReturnType<typeof userClientFor>, a
   return data as DbRow;
 };
 
-const normalizeCatalogWaterType = (value: unknown): DomainSpeciesFact['waterType'] => (
-  value === 'freshwater' || value === 'saltwater' ? value : 'unknown'
-);
+export const normalizeCatalogWaterType = (value: unknown): DomainSpeciesFact['waterType'] => {
+  if (typeof value !== 'string') return 'unknown';
+  const normalized = value.trim().toLowerCase();
+  return normalized === 'freshwater' || normalized === 'saltwater' ? normalized : 'unknown';
+};
 
 const readPublishedCatalogDecision = async ({
   client,

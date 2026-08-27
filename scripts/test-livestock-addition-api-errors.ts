@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ApiError } from '../apps/api/src/http';
 import { throwLivestockAdditionRpcError } from '../apps/api/src/livestock-addition-error';
+import { normalizeCatalogWaterType } from '../apps/api/src/routes/aquariums';
 
 const expectApiError = (message: string, status: number, code: string) => {
   assert.throws(
@@ -15,6 +16,10 @@ expectApiError('SPECIES_NOT_FOUND', 404, 'NOT_FOUND');
 expectApiError('DUPLICATE_OPERATION_KEY', 409, 'DUPLICATE_RESOURCE');
 expectApiError('DUPLICATE_BATCH_ID', 409, 'DUPLICATE_RESOURCE');
 expectApiError('unexpected database failure', 503, 'DEPENDENCY_UNAVAILABLE');
+
+assert.equal(normalizeCatalogWaterType('Freshwater'), 'freshwater');
+assert.equal(normalizeCatalogWaterType(' saltwater '), 'saltwater');
+assert.equal(normalizeCatalogWaterType('unknown'), 'unknown');
 
 const routeSource = readFileSync(new URL('../apps/api/src/routes/aquariums.ts', import.meta.url), 'utf8');
 assert.match(routeSource, /readPublishedCatalogDecision/);

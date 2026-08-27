@@ -25,7 +25,7 @@
 
 ## 2026-08-27 最终统一执行线（当前权威）
 
-- 唯一日常工作树与发布候选：`codex/main-core-foundation-v1@94f37ba4`；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。
+- 唯一日常工作树与发布候选：`codex/main-core-foundation-v1@755eed77`；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。
 - 4317 只运行冻结视觉基线 `37a8d4d1`，4319 运行当前候选；预览版本必须同时记录分支、完整 SHA、seed 和构建时间。
 - PR #142 是唯一发布 PR，仍为 Draft；PR #141 仅作历史证据，不能整体 merge/rebase。
 - 当前视觉门禁：`FAILED / recovery in progress`。正式图鉴、养护、水族册和 Aquarium 需通过固定视口视觉验收后才能 release-ready。
@@ -38,7 +38,7 @@
 - 已确认 main 收敛候选发生真实 UI 回退，不是缓存：`/_preview/interactive` 路由及两套 canonical 布局样式曾被删除，4317 也被复用来服务候选构建。
 - 当前本地恢复分支：`codex/main-visual-recovery-v1`，从 `codex/main-core-foundation-v1` 创建；未推送，PR #142 尚未更新。
 - 已恢复互动预览路由、互动场景组件、Aquarium 舞台样式、详情 Rail/Sheet/Blocking 样式及互动样式；生产 Aquarium 的 tank/status/actions 已重新归一到 dashboard stage，3D 相机使用 `stage-cover`，并恢复场景标题与缸内物种入口（`5ab8ca79`）。Domain/Catalog/Service/API/Supabase 未回退。
-- `test:aquarium-stage-layout`、`test:three-stage-framing`、`npm run lint`、`npm run build`、`npm run check:project-truth` 已通过；4317 已切换为 detached `37a8d4d1` 基线，4319 已切换为候选 `94f37ba4`。固定视口截图已生成，但人工验收仍未完成，因此视觉门禁保持 `FAILED / recovery in progress`。
+- `test:aquarium-stage-layout`、`test:three-stage-framing`、`npm run lint`、`npm run build`、`npm run check:project-truth` 已通过；4317 已切换为 detached `37a8d4d1` 基线，4319 已切换为候选 `755eed77`。Aquarium learn zone 已恢复 Archive/Discovery 深链；固定视口截图需重拍，人工验收仍未完成，因此视觉门禁保持 `FAILED / recovery in progress`。
 - Critic 复验后，互动 journey 已明确为 preview-only fixture，Archive 外层补充 `aria-label`（`62135580`）。Critic 认为恢复代码基本合理，但要求先完成固定视口视觉、Preview SHA 与 PR 同步，才可继续 main 门禁。
 - 继续执行前必须先完成 390/600/1280px 视觉复验，再决定是否将恢复提交合入候选并推送 PR #142。
 

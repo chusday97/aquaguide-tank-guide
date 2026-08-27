@@ -171,4 +171,3 @@ grant execute on function public.set_aquarium_water_change_day(uuid, date, boole
   to authenticated;
 
 commit;
-

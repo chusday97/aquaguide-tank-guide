@@ -151,4 +151,3 @@ revoke all on function public.relocate_verified_aquarium_livestock(uuid, uuid, u
 grant execute on function public.relocate_verified_aquarium_livestock(uuid, uuid, uuid, uuid, integer, uuid, uuid, text, text) to authenticated;
 
 commit;
-

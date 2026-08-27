@@ -269,4 +269,3 @@ create policy pair_compatibility_rule_sources_admin_delete
   using (public.is_admin());
 
 commit;
-

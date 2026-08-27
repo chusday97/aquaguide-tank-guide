@@ -34,6 +34,21 @@ try {
   assert.equal(await desktop.locator('[data-collection-module]').count(), 0, '不得回退到旧模块卡片布局');
   await desktop.locator('[data-collection-node="care"]').click();
   assert.equal(await desktop.locator('[data-collection-focus]').getAttribute('data-collection-focus'), 'care', '点击生物节点应切换中央收藏内容');
+  const careItem = desktop.locator('[data-preview-item="care"]').first();
+  if (await careItem.count()) {
+    await careItem.click();
+    await desktop.waitForURL(/\/collection\/care\?item=/);
+    await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle', timeout: 30_000 });
+    await desktop.getByRole('region', { name: '互动水族册' }).waitFor();
+  }
+  await desktop.locator('[data-collection-node="wishlist"]').click();
+  const wishlistItem = desktop.locator('[data-preview-item="wishlist"]').first();
+  if (await wishlistItem.count()) {
+    await wishlistItem.click();
+    await desktop.waitForURL(/\/collection\/wishlist\?item=/);
+    await desktop.goto(`${baseUrl}/collection`, { waitUntil: 'networkidle', timeout: 30_000 });
+    await desktop.getByRole('region', { name: '互动水族册' }).waitFor();
+  }
   await assertNoHorizontalOverflow(desktop);
   assert.deepEqual(desktopErrors, [], `桌面不应出现页面错误：${desktopErrors.join('; ')}`);
   await desktop.close();

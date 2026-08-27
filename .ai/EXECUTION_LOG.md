@@ -31,6 +31,13 @@
 - Formal scene verification now checks the candidate branch and exact checked-out SHA exposed by preview metadata before route interaction tests.
 - Production migration, Catalog publication, remote push and main merge remain blocked by their separate authorization/acceptance gates.
 
+## 2026-08-27 — Independent Critic fixes
+
+- Critic found that Aquarium `archive`/`discovery` props were accepted but not rendered, so the `aquarium-learn-zone`, Archive and Daily Discovery deep links were restored as one learn zone below the immersive stage.
+- Normalized both legacy database enum spellings (`Freshwater`/`Saltwater`) and Catalog spellings (`freshwater`/`saltwater`) before server-side Domain evaluation; added direct regression assertions.
+- Expanded formal scene structural checks to 600px and 1280px, restored Collection wishlist/care route checks, and removed trailing blank lines from the eight restored production migrations.
+- Rebuilt the candidate and reran lint, API typecheck, build, API semantics and diff-check; remote candidate and PR remain stale until the reviewed local head is pushed.
+
 - **Action:** 将唯一工作线校正为 `codex/main-core-foundation-v1@5b419e98`；4317 固定视觉基线，4319 作为候选预览；恢复分支降级为历史证据。
 - **Read-only evidence:** Supabase project `AquaGuide` 为 `ACTIVE_HEALTHY`；生产有 26 个 migration、35 张启用 RLS 的 public 表、89 条 policy。
 - **Finding:** 生产缺少候选 Catalog migration (`catalog_releases`、`species.water_type`)，候选缺少 8 个生产 migration，并存在 memorial migration 版本命名漂移；状态为 `MIGRATION_REQUIRED + MIGRATION_HISTORY_CONFLICT`。

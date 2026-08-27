@@ -23,7 +23,7 @@
   },
   "releaseCandidate": {
     "branch": "codex/main-core-foundation-v1",
-    "head": "94f37ba4235e606f504ea4591f3bd1cddaafe6b1",
+    "head": "755eed77279693bb9d3d2de0b0264672f96c91c4",
     "role": "Draft PR #142 release candidate; visual recovery commits are present but visual acceptance is still pending"
   },
   "activePullRequest": {

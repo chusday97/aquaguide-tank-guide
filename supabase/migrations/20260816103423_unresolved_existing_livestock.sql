@@ -170,4 +170,3 @@ grant execute on function public.add_unresolved_aquarium_livestock(
 ) to authenticated;
 
 commit;
-

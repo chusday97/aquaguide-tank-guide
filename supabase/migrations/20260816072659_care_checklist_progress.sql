@@ -68,4 +68,3 @@ create policy care_checklist_progress_owner_all
   );
 
 commit;
-

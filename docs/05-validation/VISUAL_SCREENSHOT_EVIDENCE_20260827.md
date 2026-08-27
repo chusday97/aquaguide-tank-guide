@@ -5,7 +5,7 @@ This evidence compares the user-approved baseline and the current release candid
 | Set | Source | Preview |
 | --- | --- | --- |
 | Baseline | detached worktree `37a8d4d1` | `http://127.0.0.1:4317` |
-| Candidate | `codex/main-core-foundation-v1@94f37ba4` | `http://127.0.0.1:4328` (4319 was occupied) |
+| Candidate | `codex/main-core-foundation-v1@755eed77` | `http://127.0.0.1:4319` |
 
 Routes captured at 390×844, 600×900 and 1280×900:
 
@@ -13,4 +13,4 @@ Routes captured at 390×844, 600×900 and 1280×900:
 
 The PNG files are intentionally kept in the local evidence directory `/private/tmp/aquaguide-visual-matrix/` until the user completes visual release acceptance. They are not promoted as golden snapshots yet. The candidate build exposes its branch, full SHA, seed and build timestamp in `[data-preview-metadata]`; the formal scene gate verifies that identity before exercising the routes.
 
-Status: `RECOVERY_IN_PROGRESS`; human comparison and release acceptance are still required.
+Status: `RECOVERY_IN_PROGRESS`; screenshots must be regenerated after the Aquarium learn-zone fix, then human comparison and release acceptance are still required.

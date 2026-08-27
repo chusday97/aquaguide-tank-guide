@@ -295,6 +295,13 @@ function AquariumWorkspace({
             </section>
           </div>
         </div>
+        <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-followup-grid scroll-mt-4" aria-labelledby="aquarium-learn-title">
+          <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
+          <div className="grid min-w-0 gap-3 md:grid-cols-2">
+            {archive}
+            {discovery}
+          </div>
+        </section>
       </section>
     </>
   );

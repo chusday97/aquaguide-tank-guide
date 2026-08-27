@@ -40,6 +40,20 @@ try {
   await page.goto(`${baseUrl}/care#care-results`, { waitUntil: 'networkidle', timeout: 30_000 });
   await page.getByPlaceholder('搜索养护问题，如白点、水浑、不吃食...').waitFor();
 
+  for (const width of [600, 1280]) {
+    const widePage = await browser.newPage({ viewport: { width, height: 900 }, locale: 'zh-CN' });
+    await widePage.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle', timeout: 30_000 });
+    await widePage.getByRole('region', { name: '互动物种鱼缸' }).waitFor();
+    assert.equal(await widePage.locator('[data-scene-node]').count(), 6, `${width}px encyclopedia scene renders six selectable creatures`);
+    assert.equal(await widePage.locator('[data-scene-node] .resilient-image-transparent').count(), 6, `${width}px encyclopedia scene keeps transparent surfaces`);
+    assert.equal(await widePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, `${width}px encyclopedia has no horizontal overflow`);
+    await widePage.goto(`${baseUrl}/care`, { waitUntil: 'networkidle', timeout: 30_000 });
+    await widePage.getByRole('region', { name: '互动鱼缸养护指南' }).waitFor();
+    assert.ok(await widePage.locator('.interactive-care-scene .resilient-image-transparent').count() >= 1, `${width}px care scene keeps transparent surfaces`);
+    assert.equal(await widePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, `${width}px care has no horizontal overflow`);
+    await widePage.close();
+  }
+
   console.log('formal interactive scenes: encyclopedia and care scene/browse flows passed');
 } finally {
   await browser.close();
