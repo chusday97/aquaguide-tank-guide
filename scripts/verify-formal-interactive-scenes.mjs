@@ -13,6 +13,7 @@ try {
   await page.getByRole('button', { name: '查看物种档案' }).waitFor();
   await page.getByRole('button', { name: '传统浏览', exact: true }).click();
   await page.getByPlaceholder('搜索鱼、虾、螺、水草或用途').waitFor();
+  assert.match(page.url(), /mode=browse/);
 
   await page.goto(`${baseUrl}/care`, { waitUntil: 'networkidle', timeout: 30_000 });
   await page.getByRole('region', { name: '互动鱼缸养护指南' }).waitFor();
@@ -20,6 +21,8 @@ try {
   await page.getByRole('button', { name: '水面：泡沫、油膜、浮头' }).click();
   await page.getByText('再确认一个现象', { exact: true }).waitFor();
   await page.getByRole('button', { name: '传统浏览', exact: true }).click();
+  await page.getByPlaceholder('搜索养护问题，如白点、水浑、不吃食...').waitFor();
+  await page.goto(`${baseUrl}/care#care-results`, { waitUntil: 'networkidle', timeout: 30_000 });
   await page.getByPlaceholder('搜索养护问题，如白点、水浑、不吃食...').waitFor();
 
   console.log('formal interactive scenes: encyclopedia and care scene/browse flows passed');

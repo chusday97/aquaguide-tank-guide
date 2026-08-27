@@ -168,6 +168,12 @@ export function StatusSummaryCard({
       setPanelLevel(delta > 72 ? 'collapsed' : delta > 24 ? 'half' : 'expanded');
       return;
     }
+  };
+  const handleClick = () => {
+    if (dragMoved.current) {
+      dragMoved.current = false;
+      return;
+    }
     setPanelLevel(level => level === 'collapsed' ? 'expanded' : 'collapsed');
   };
 
@@ -181,6 +187,7 @@ export function StatusSummaryCard({
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onClick={handleClick}
         className="flex min-h-11 w-full touch-none items-center justify-between gap-2 rounded-[16px] bg-white/45 px-3 text-left text-ink/70 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
       >
         <span className="min-w-0 truncate text-[12px] font-black">{t('aquarium.todayAction')} · {action.task.title}</span>

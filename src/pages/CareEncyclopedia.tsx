@@ -1652,6 +1652,7 @@ export default function CareEncyclopedia() {
 
   useEffect(() => {
     if (!location.hash) return;
+    if (new URLSearchParams(location.search).get('mode') !== 'browse') setCarePresentationMode('browse');
     if (location.hash === '#care-favorites') {
       setCareViewMode('favorites');
       setCareWorkspacePage('content');
@@ -1672,7 +1673,7 @@ export default function CareEncyclopedia() {
     if (location.hash === '#care-recommendations') {
       void navigateToSection('care-recommendations', { updateHash: false });
     }
-  }, [location.hash, navigateToSection]);
+  }, [location.hash, location.search, navigateToSection]);
 
   useEffect(() => {
     const node = recommendationCarouselRef.current;

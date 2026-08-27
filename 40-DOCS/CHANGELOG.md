@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- 修复正式场景深链与交互可访问性：Care 的 `#care-*` 入口自动切换 browse，Encyclopedia scene/browse 切换同步 `mode`，今日行动支持 Enter/Space 键盘展开/收起。
 - 手机端今日行动 Rail 改为鱼缸舞台底部拉起层，补充 390px 几何回归，桌面右上浮层保持不遮挡主要舞台。
 - 统一底层回归重新通过：添加意图、现实记录服务、API 错误语义、Mini 混养、Catalog checksum、Domain policy 与项目真相门禁均通过；仅修正了过时的文案断言。
 - 将 `today_action_surface` 纳入 disclosure 契约白名单，允许今日行动按产品要求折叠，但仍保持核心任务内容在展开态直接可见。

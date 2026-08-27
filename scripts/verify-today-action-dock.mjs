@@ -29,6 +29,11 @@ try {
   assert.equal(await handle.getAttribute('aria-expanded'), 'true');
   await page.keyboard.press('Escape');
   assert.equal(await dock.getAttribute('data-panel-level'), 'collapsed');
+  await handle.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await dock.getAttribute('data-panel-level'), 'expanded');
+  await page.keyboard.press(' ');
+  assert.equal(await dock.getAttribute('data-panel-level'), 'collapsed');
   await handle.click();
   const box = await handle.boundingBox();
   assert.ok(box);

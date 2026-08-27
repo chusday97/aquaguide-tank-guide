@@ -667,6 +667,14 @@ export default function Encyclopedia() {
     else setViewMode('scene');
   }, [location.search]);
 
+  const changeViewMode = (mode: 'scene' | 'browse' | 'compatibility') => {
+    setViewMode(mode);
+    const params = new URLSearchParams(location.search);
+    if (mode === 'scene') params.delete('mode');
+    else params.set('mode', mode);
+    navigateToRoute(params.toString() ? `/encyclopedia?${params.toString()}` : '/encyclopedia');
+  };
+
   useEffect(() => {
     const mode = new URLSearchParams(location.search).get('mode');
     if (mode !== 'compatibility' && mode !== 'browse') return;
@@ -1470,7 +1478,7 @@ export default function Encyclopedia() {
             key={item.id}
             id={item.id === 'compatibility' ? 'calculator-tab-target' : undefined}
             type="button"
-            onClick={() => setViewMode(item.id as typeof viewMode)}
+            onClick={() => changeViewMode(item.id as typeof viewMode)}
             className={`h-10 rounded-full text-[14px] font-black transition-colors ${
               viewMode === item.id ? 'bg-accent text-white shadow-sm' : 'text-ink/55 hover:text-ink'
             }`}
@@ -1594,7 +1602,7 @@ export default function Encyclopedia() {
           isEn={isEn}
           getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
           onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
-          onBrowseList={() => setViewMode('browse')}
+          onBrowseList={() => changeViewMode('browse')}
           onIdentify={() => navigateToRoute('/identify')}
           onRefreshDiscoveries={refreshDiscoveries}
           onRestartDiscoveries={restartDiscoveries}
@@ -1611,7 +1619,7 @@ export default function Encyclopedia() {
         <button
           type="button"
           data-scene-return
-          onClick={() => setViewMode('scene')}
+          onClick={() => changeViewMode('scene')}
           className="hidden h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 text-[12px] font-black text-emerald-800 shadow-sm transition hover:bg-emerald-100 md:inline-flex"
         >
           <ChevronLeft className="h-4 w-4" />{isEn ? 'Explore scene' : '回到互动探索'}
