@@ -30,6 +30,8 @@ jobs:
       - run: npm run project:status
       - run: npm run check:project-truth
       - run: npm run test:catalog-snapshot
+      - run: npm run catalog:build
+      - run: npm run catalog:validate
       - run: npm run test:domain-compatibility
       - run: npm run test:catalog-release-contract
       - run: npm run test:compatibility
