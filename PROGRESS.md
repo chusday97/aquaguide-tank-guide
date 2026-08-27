@@ -53,13 +53,13 @@
 
 - [x] 修复候选 CI 暴露的 Catalog tuple 类型检查；`catalog:validate` 在本地和 CI 编译路径均可通过。
 - [x] 为混养记录失败补齐显式 `recordError` 状态、稳定中英文错误文案和保存中禁用状态；核心流程 v1/v2、产品评测、Golden Path 合约和 build 本地通过。
-- [x] PR #142 新一轮远端 CI 已确认通过：foundation `33041422730` / `33041424713`，Product Golden Path `33041424701`。
+- [x] PR #142 最新候选 head `b929be59` 的远端 CI 已确认通过：foundation `33041753905` / `33041755993`，Product Golden Path `33041756115`。
 
 ### 2026-08-27 Golden Path 阻塞修复
 
 - [x] 非空鱼缸从物种详情的主 CTA 进入混养结算；结算自动保留真实缸内生物，空缸仍保持主动规划入口。
 - [x] 混养组合补充数量加号与可见数量，谨慎结果按钮统一为“确认风险后再记录”，Portal 确认按真实页面动作验收。
-- [x] `PREVIEW_URL=http://127.0.0.1:4317 npm run test:golden-path-gp002-ui` 通过，修复已提交为 `2b841e95` 并推送；PR #142 远端门禁已全绿。
+- [x] `PREVIEW_URL=http://127.0.0.1:4317 npm run test:golden-path-gp002-ui` 通过，功能修复提交为 `2b841e95`，当前候选文档同步 head 为 `b929be59`；PR #142 远端门禁已全绿。
 
 ### 2026-08-27 Critic 修复
 
