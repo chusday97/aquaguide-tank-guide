@@ -77,7 +77,7 @@ try {
   const { target: desktopTarget, scrollLeft: desktopScrollLeft } = await moveTargetIntoScrolledContext(desktop, desktopRail);
   await desktopTarget.getByRole('button').first().click();
 
-  const desktopDrawer = desktop.locator('[data-surface="right-drawer"]');
+  const desktopDrawer = desktop.locator('[data-surface="detail-rail"]:visible');
   await desktopDrawer.waitFor();
   await desktopDrawer.getByText(targetFishName, { exact: true }).first().waitFor();
   assert.equal(new URL(desktop.url()).pathname, '/collection/wishlist', 'Opening saved-species detail must keep the user inside the wishlist collection context.');

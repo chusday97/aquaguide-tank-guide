@@ -169,7 +169,7 @@ try {
   await narrowEnglish.getByRole('button', { name: 'Discard changes' }).click();
   await narrowEnglish.getByRole('heading', { name: /^Manage / }).waitFor({ state: 'hidden' });
   await narrowEnglish.keyboard.press('Escape');
-  await narrowEnglish.locator('[role="dialog"][data-surface="right-drawer"]:visible').waitFor({ state: 'hidden' });
+  await narrowEnglish.locator('[role="dialog"][data-surface="detail-rail"]:visible, [role="dialog"][data-surface="bottom-sheet"]:visible').first().waitFor({ state: 'hidden' });
   await narrowEnglish.getByRole('button', { name: 'Settings', exact: true }).click();
   await narrowEnglish.waitForURL('**/settings');
   await narrowEnglish.goto(`${baseUrl}/search?q=${encodeURIComponent('极火虾')}`, { waitUntil: 'domcontentloaded' });

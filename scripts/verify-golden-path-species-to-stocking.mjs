@@ -58,7 +58,7 @@ try {
   // Milestone 2: open the exact object, not the atlas home.
   await resultCard.click();
   await page.waitForURL(url => url.pathname === '/encyclopedia' && url.searchParams.get('species') === 'sp_0432');
-  const detail = page.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  const detail = page.locator('[role="dialog"][data-surface="detail-rail"]:visible, [role="dialog"][data-surface="bottom-sheet"]:visible').first();
   await detail.waitFor();
   await detail.getByText('宝莲灯', { exact: true }).first().waitFor();
 

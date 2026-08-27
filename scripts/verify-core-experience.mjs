@@ -85,7 +85,7 @@ try {
   await page.locator('#collection-wishlist-sp_0001 button').first().click();
   const speciesDialog = page.getByRole('dialog');
   await speciesDialog.getByText('极火虾', { exact: true }).first().waitFor();
-  assert.equal(await speciesDialog.getAttribute('data-surface'), 'right-drawer');
+  assert.match(await speciesDialog.getAttribute('data-surface') || '', /detail-rail|bottom-sheet/);
   await speciesDialog.getByRole('button', { name: /返回|知道了|Got it/ }).click();
   await speciesDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-wishlist-sp_0001')?.classList.contains('workspace-section-highlight'));
@@ -102,7 +102,7 @@ try {
   await page.locator('#collection-care-guide_water_deteriorate button').first().click();
   await page.getByText('水质变差怎么办', { exact: true }).last().waitFor();
   const careDialog = page.locator('[role="dialog"]:visible').last();
-  assert.match(await careDialog.getAttribute('data-surface') || '', /right-drawer|centered-dialog/);
+  assert.match(await careDialog.getAttribute('data-surface') || '', /detail-rail|bottom-sheet|centered-dialog/);
   await careDialog.getByRole('button', { name: '关闭' }).click();
   await careDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-care-guide_water_deteriorate')?.classList.contains('workspace-section-highlight'));

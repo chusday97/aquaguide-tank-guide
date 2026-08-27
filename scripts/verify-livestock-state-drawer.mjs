@@ -51,7 +51,7 @@ try {
   await seed(desktop);
   await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await desktop.getByText('缸内物种', { exact: true }).last().click();
-  const desktopDrawer = desktop.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  const desktopDrawer = desktop.locator('[role="dialog"][data-surface="detail-rail"]:visible');
   await desktopDrawer.waitFor();
   await desktopDrawer.getByRole('button', { name: '调整体态' }).click();
   await desktopDrawer.getByText('调整缸内物种体态', { exact: true }).waitFor();
