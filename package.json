@@ -12,6 +12,8 @@
     "build": "vite build",
     "project:status": "node scripts/project-status.mjs",
     "check:project-truth": "node scripts/verify-project-truth.mjs",
+    "check:ui-freeze": "node scripts/check-ui-freeze.mjs",
+    "capture:ui-freeze": "node scripts/capture-ui-freeze-lite.mjs",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",

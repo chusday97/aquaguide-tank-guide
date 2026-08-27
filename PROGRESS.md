@@ -396,3 +396,12 @@
 - 本地验证：build、lint、API 类型、project truth、Domain/Service/Catalog、正式图鉴/Care 场景、今日行动、水族册、移动端、物种详情、布局与 framing 测试通过。
 - 预览：4317 detached `37a8d4d1` 冻结基线；4319 当前候选，页面显示分支、完整 SHA、seed、build 时间。人工视觉验收仍未授予。
 - 下一步：完成最终候选部署的 exact Preview SHA 记录、Supabase 只读 parity 和用户人工验收；生产第 27 个 migration、Catalog 发布及合并 main 仍需分别授权。PR #142 当前 CI 已全绿。
+
+## 2026-08-28 UI 冻结与 Supabase 只读 parity
+
+- [x] 将当前候选 `02457dd2` 标记为 `FROZEN_PROVISIONAL`，新增 `.ai/UI_FREEZE.json` 与 `npm run check:ui-freeze`；后续底层提交触碰视觉 owner 会失败。
+- [x] 通过浏览器脚本保存 4317 `37a8d4d1` 基线与 4319 候选在 390/600/1280px 的互动预览截图；证据目录为 `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2`。
+- [x] Supabase 只读核对确认 26 个 migration、35 张 public 表且全部启用 RLS、89 条 policy、56 条外键、86 个索引和 33 个非内部触发器；已读取 13 个 public RPC 的签名与安全属性。
+- [x] 确认生产尚不存在 `catalog_releases`、`species_reference_links` 或 `species.water_type`，当前 parity 为 `MIGRATION_REQUIRED`；未执行任何 migration、Catalog 发布或业务写入。
+- [x] 新增 `docs/05-validation/SUPABASE_PARITY_REPORT.md` 并同步 Release Readiness、PROJECT_STATE、CHANGELOG。
+- [ ] 逐条比对 RLS/RPC/外键/索引语义，并在取得独立授权后决定是否执行第 27 个 Catalog migration；在此之前不得合并 main。

@@ -368,3 +368,12 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 4317 是 detached `37a8d4d1` 视觉基线，4319 是候选并显示完整 SHA；若服务进程退出，先重启再做 Preview 证据。
 - viewport、正式场景、透明素材、详情 Rail/Sheet、今日推荐深链和门禁默认端口已修复并通过本地回归；人工视觉验收、远端 CI/Preview SHA、Supabase parity 尚未完成。
 - 用户未授权前不得执行生产 migration、Catalog 发布或 main 合并。
+
+## 2026-08-28 当前收敛状态（UI 冻结 + Supabase 只读 parity）
+
+- 当前候选仍为 `codex/main-core-foundation-v1@02457dd2`，4317 运行 detached `37a8d4d1` 基线，4319 运行候选；本轮不修改布局、视觉组件、素材或交互结构。
+- `.ai/UI_FREEZE.json` 和 `npm run check:ui-freeze` 已建立；固定截图/manifest 位于 `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2`，覆盖 390/600/1280px 的 `/_preview/interactive`。
+- Supabase 只读证据已刷新：26 migrations、35/35 RLS 表、89 policies、56 外键、86 索引、33 非内部触发器；13 个 public RPC 已读取签名。详细报告见 `docs/05-validation/SUPABASE_PARITY_REPORT.md`。
+- 生产缺少 `catalog_releases`、`species_reference_links`、`species.water_type`，故 parity 为 `MIGRATION_REQUIRED`，不是 `EQUIVALENT`；未执行 SQL、Catalog 发布或业务写入。
+- 下一步只做逐条 schema/RLS/RPC 语义比对、干净 PostgreSQL 回放和统一回归。只有用户另行授权才执行第 27 个 migration、Catalog 发布或合并 main。
+- 验证：`npm run check:ui-freeze` 通过；4317/4319 HTTP 200；截图 manifest 记录两套 SHA。

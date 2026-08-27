@@ -6,9 +6,11 @@
 
 本地候选已恢复生产报告的 26 个 migration 版本；候选另有一个尚未执行的 Catalog 提案。生产 migration、Catalog 发布和业务数据均未被本文件或本轮代码修改。
 
+最新只读 parity 细项见 [SUPABASE_PARITY_REPORT.md](./SUPABASE_PARITY_REPORT.md)。
+
 | 环境 | 版本范围 | 状态 |
 | --- | --- | --- |
-| 生产 Supabase | `202607160001` → `20260816160129`（26 个） | 已部署，来源为只读 inspection |
+| 生产 Supabase | `202607160001` → `20260816160129`（26 个） | `EQUIVALENT`，由 `supabase.list_migrations` 复核 |
 | 候选本地 | 同上 26 个 + `202608270001_catalog_releases_and_species_water_type.sql` | 历史已对齐，Catalog 待授权 |
 
 ## 已对齐的生产历史补回

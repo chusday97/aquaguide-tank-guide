@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added the provisional UI freeze manifest and `npm run check:ui-freeze` guard so backend/domain work cannot silently change visual-owned files.
+- Added `npm run capture:ui-freeze` and fixed viewport evidence for the 4317 baseline and 4319 candidate at 390/600/1280px.
+- Added the read-only Supabase parity report with migration, RLS, policy, Catalog and RPC evidence.
+
+### Changed
+
+- Updated project truth and release readiness to mark the current UI as frozen provisional and Supabase parity as migration-required, without executing production changes.
+
 ### Main convergence
 - Updated convergence browser gates to default to the 4319 candidate preview, accept the current desktop `detail-rail` and localized “Why?” evidence disclosure, and verify mobile Sheet/desktop Rail detail behavior without silently falling back to port 3000.
 - Exported the server-side Catalog decision adapter for behavior-level testing and kept the planned-addition recheck on the shared Domain Rules engine; production Supabase behavior remains an external parity gate.

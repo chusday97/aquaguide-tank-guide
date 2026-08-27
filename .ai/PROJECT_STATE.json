@@ -4,7 +4,14 @@
   "canonicalBranch": "codex/main-core-foundation-v1",
   "canonicalRole": "single release-candidate worktree; all implementation changes land here until main release",
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
-  "visualGate": "failed_recovery_in_progress",
+  "visualGate": "frozen_provisional",
+  "visualFreeze": {
+    "baselineCommit": "02457dd2ded7042cc67c55acfce3c9c4f238aa42",
+    "evidenceDir": "/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2",
+    "viewports": [390, 600, 1280],
+    "routes": ["/_preview/interactive"],
+    "policy": "No visual-owned file changes until a separately reviewed post-main baseline refresh"
+  },
   "releaseBranch": "main",
   "canonicalBase": {
     "branch": "main",
@@ -36,8 +43,10 @@
   "historicalPullRequest": 141,
   "supabaseDeployment": {
     "status": "user_confirmed_deployed",
-    "parityStatus": "migration_required_history_conflict",
-    "confirmedAt": "2026-08-25"
+    "parityStatus": "migration_required",
+    "confirmedAt": "2026-08-25",
+    "lastReadOnlyCheck": "2026-08-28",
+    "evidence": "docs/05-validation/SUPABASE_PARITY_REPORT.md"
   },
   "localPreview": "http://127.0.0.1:4319/_preview/interactive",
   "visualBaselinePreview": "http://127.0.0.1:4317/_preview/interactive",
