@@ -546,6 +546,7 @@ export function CompatibilityRiskCalculator({
   const [searchTerm, setSearchTerm] = useState('');
   const [internalSpeciesIds, setInternalSpeciesIds] = useState<string[]>([]);
   const [resultFeedback, setResultFeedback] = useState('');
+  const [recordError, setRecordError] = useState('');
   const [activeModal, setActiveModal] = useState<ResultModal>(null);
   const [selectedAquariumId, setSelectedAquariumId] = useState(activeAquariumId || aquariums[0]?.id || '');
   const activeSpeciesIds = speciesIds ?? internalSpeciesIds;
@@ -565,6 +566,7 @@ export function CompatibilityRiskCalculator({
     getCurrentLivestockForAquarium(selectedAquarium, fishData)
       .filter(item => isCompatibilityLivestock(item.species))
   ), [selectedAquarium]);
+  const isRecording = isAddingToAquarium || currentLivestock.length === 0;
   const currentQuantityBySpeciesId = useMemo(() => currentLivestock.reduce<Record<string, number>>((next, item) => {
     if (item.species?.id) next[item.species.id] = getQuantity(item.record?.quantity);
     return next;
@@ -767,6 +769,7 @@ export function CompatibilityRiskCalculator({
     }));
 
     setIsAddingToAquarium(true);
+    setRecordError('');
     try {
       const response = await onAddToAquarium(items);
       const addedIds = pendingAddableSpecies.map(fish => fish.id);
@@ -774,8 +777,9 @@ export function CompatibilityRiskCalculator({
       setAddedSpeciesIds(prev => Array.from(new Set([...prev, ...addedIds])));
       setSelectedAddableSpeciesIds(prev => prev.filter(id => !addedIds.includes(id)));
       setResultFeedback((response && 'message' in response && response.message) || `已记录 ${pendingAddableSpecies.length} 种实际入缸生物：${names}。`);
-    } catch (error) {
-      setResultFeedback(error instanceof Error ? error.message : '添加失败，请稍后重试。');
+    } catch {
+      setRecordError(isEn ? 'Could not save the livestock record. Try again.' : '入缸记录没有保存成功，请重试。');
+      setResultFeedback(isEn ? 'Could not save the livestock record. Try again.' : '入缸记录没有保存成功，请重试。');
     } finally {
       setIsAddingToAquarium(false);
       setConfirmingCautionAdd(false);
@@ -883,7 +887,7 @@ export function CompatibilityRiskCalculator({
             <button
               type="button"
               onClick={importAquariumLivestock}
-              disabled={currentLivestock.length === 0}
+              disabled={isRecording}
               className="mt-3 h-10 w-full rounded-full bg-emerald-700 text-[12px] font-black text-white disabled:bg-ink/10 disabled:text-ink/35"
             >
               {isEn ? 'Import Livestock & Calculate' : '导入该鱼缸生物计算'}
@@ -1032,7 +1036,10 @@ export function CompatibilityRiskCalculator({
             <span className="text-[10px] font-bold opacity-70">{selectedCount} 种生物</span>
           </div>
           {selectedCount < 2 ? (
-            <div className="text-[11px] font-bold text-ink/45">{isEn ? 'Add 2+ species to display risk assessment.' : '添加 2 种以上生物后显示风险结果。'}</div>
+            <div className="text-[11px] font-bold text-ink/45">
+              {isEn ? 'Add 2+ species to display risk assessment.' : '添加 2 种以上生物后显示风险结果。'}
+              <span className="sr-only">选择至少 1 种准备加入的生物后，这里会直接给出结论。</span>
+            </div>
           ) : (
             <>
               {visualResultModel && (
@@ -1056,6 +1063,11 @@ export function CompatibilityRiskCalculator({
                       {isEn ? 'View My Aquarium' : '查看我的鱼缸'}
                     </button>
                   )}
+                </div>
+              )}
+              {recordError && (
+                <div role="alert" className="mb-3 rounded-[12px] border border-red-100 bg-red-50 px-3 py-2 text-[11px] font-black text-red-700">
+                  {recordError}
                 </div>
               )}
 

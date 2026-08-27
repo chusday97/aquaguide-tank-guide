@@ -31,7 +31,7 @@ for (const profile of snapshot.compatibilityProfiles) {
   if (profile.citationIds.some(id => !sourceIds.has(id))) throw new Error(`profile references unknown evidence source: ${profile.speciesId}`);
 }
 for (const rule of snapshot.pairRules) {
-  if (rule.speciesIds.some(id => !speciesIds.has(id))) throw new Error(`pair rule references unknown species: ${rule.speciesIds.join(',')}`);
+  if (rule.speciesIds.some(id => !speciesIds.has(String(id)))) throw new Error(`pair rule references unknown species: ${rule.speciesIds.join(',')}`);
   if (rule.citationIds.some(id => !sourceIds.has(id))) throw new Error(`pair rule references unknown evidence source: ${rule.speciesIds.join(',')}`);
 }
 const actual = checksum(snapshot);

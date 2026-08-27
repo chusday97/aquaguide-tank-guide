@@ -49,6 +49,12 @@
 - [x] 新增 `catalog:build`、`catalog:validate`、`catalog:publish` 三个独立命令；构建和校验均验证 486 个物种、13 个证据来源、引用完整性和 SHA-256。
 - [x] `catalog:publish` 默认只生成 `build/catalog-pending/releases/<version>/`，不上传 Storage、不执行 Supabase migration。
 
+### 2026-08-27 候选 CI 回归修复
+
+- [x] 修复候选 CI 暴露的 Catalog tuple 类型检查；`catalog:validate` 在本地和 CI 编译路径均可通过。
+- [x] 为混养记录失败补齐显式 `recordError` 状态、稳定中英文错误文案和保存中禁用状态；核心流程 v1/v2、产品评测、Golden Path 合约和 build 本地通过。
+- [ ] 等待 PR #142 新一轮远端 CI 运行确认，浏览器 Golden Path 仍由 GitHub runner 执行。
+
 ### 2026-08-27 Critic 修复
 
 - [x] 修复无 `tank` 的规划加入误放行：统一返回 `insufficient_data / complete_information`，并新增回归。
