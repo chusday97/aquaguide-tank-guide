@@ -40,5 +40,5 @@ An item becomes `MIGRATED` only after its contract, implementation, regression e
 
 - Candidate head: resolved at runtime by `project:status`; local, remote candidate branch and Draft PR #142 must be synchronized.
 - Critic: same-thread final recheck, six dimensions `PASS`; `git diff --check origin/main...HEAD` exits 0.
-- Candidate CI exposed four contract gaps (Catalog tuple typing, explicit compatibility-record failure state, non-empty-tank detail routing, and the portal/quantity/confirmation Golden Path contract); all are fixed locally and require the next remote run for confirmation.
+- Candidate CI exposed four contract gaps (Catalog tuple typing, explicit compatibility-record failure state, non-empty-tank detail routing, and the portal/quantity/confirmation Golden Path contract); all are fixed in `2b841e95`, and candidate runs `33041422730`, `33041424713`, `33041424701` now pass.
 - Remaining release gates: authorized Supabase read-only parity, real PostgreSQL trigger execution evidence, server-side Catalog re-evaluation before planned writes, Preview SHA parity and release acceptance.
