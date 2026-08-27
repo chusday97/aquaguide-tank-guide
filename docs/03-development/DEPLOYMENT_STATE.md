@@ -8,15 +8,15 @@
 | Category | Meaning | Current fact |
 | --- | --- | --- |
 | Local preview | A local production build is running | User-approved interactive preview is `http://127.0.0.1:4317/_preview/interactive`. |
-| GitHub delivery | Current branch and PR can be traced | `codex/main-core-foundation-v1` and Draft PR #142 target `main` at `741b3d8f`; #141 is historical. |
+| GitHub delivery | Current branch and PR can be traced | `codex/main-core-foundation-v1@5b419e98` and Draft PR #142 target `main`; #141 is historical. |
 | CI | Automated checks passed for a concrete SHA | GitHub Actions run `32854080645` passed state, PR topology, lint, layout, framing and build checks for `cc99ec47`; the final head contains documentation-only evidence updates. |
 | Supabase deployment | A cloud environment has been deployed | User-confirmed on 2026-08-25. Existing schema, RLS, API and repository work must not be described as undeployed. |
-| Environment parity | The current branch was verified against the connected cloud environment | Not yet re-verified. This is distinct from deployment. |
+| Environment parity | The current branch was verified against the connected cloud environment | Migration history conflict found; reconciliation required before Catalog release. |
 | Human visual acceptance | A person accepted the rendered UI | The 4317 local interactive baseline is user-confirmed; a matching deployed-SHA review remains pending. |
 
 ## 2026-08-25 non-secret deployment audit
 
-- The repository contains 18 tracked Supabase migration files, from `202607160001_core_schema.sql` through `202608090003_atomic_livestock_addition.sql`.
+- The candidate currently contains 19 tracked migration files. Production reports 26 applied migrations, including eight migrations not present in the candidate and a production-only versioned memorial migration.
 - `npm run test:three-tier-contract` passed: 31 tables, RLS, Storage, API and shared types are internally aligned.
 - Vercel Production contains configured Supabase/Postgres environment-variable names; values were not read or recorded.
 - A Ready Preview is aliased to `codex/unified-rc-visual-v1`.
@@ -78,4 +78,13 @@
 
 The repository contains historical records that use phrases such as “real Supabase verification pending.” They mean the exact current-environment parity check above has not been repeated from the unified branch. They do not mean that Supabase was never deployed.
 
-The remaining parity evidence requires an authorized read-only Supabase schema/RLS inspection against the deployed project. No migration rename, schema change, environment-variable change or redeployment is authorized by this audit.
+Read-only inspection is now available. It confirmed a production migration-history conflict and that the candidate Catalog migration is not deployed. No schema change, environment-variable change, Catalog upload or business-data write has been authorized by this audit.
+
+## 2026-08-27 direct read-only Supabase inspection
+
+- Supabase project status: `ACTIVE_HEALTHY`.
+- Production migration history contains 26 versions through `20260816160129_atomic_verified_livestock_relocation`.
+- Production has 35 public tables with RLS enabled and 89 public policies.
+- `public.catalog_releases` is absent and `public.species.water_type` is absent in production.
+- Candidate-only Catalog migration: `202608270001_catalog_releases_and_species_water_type.sql`.
+- Production-only migration history must be restored into the candidate before the Catalog migration is considered for execution. No write or migration was executed.

@@ -14,6 +14,13 @@
 
 ## 2026-08-27 — Unified plan execution started
 
+## 2026-08-27 — Final unified line and Supabase audit
+
+- **Action:** 将唯一工作线校正为 `codex/main-core-foundation-v1@5b419e98`；4317 固定视觉基线，4319 作为候选预览；恢复分支降级为历史证据。
+- **Read-only evidence:** Supabase project `AquaGuide` 为 `ACTIVE_HEALTHY`；生产有 26 个 migration、35 张启用 RLS 的 public 表、89 条 policy。
+- **Finding:** 生产缺少候选 Catalog migration (`catalog_releases`、`species.water_type`)，候选缺少 8 个生产 migration，并存在 memorial migration 版本命名漂移；状态为 `MIGRATION_REQUIRED + MIGRATION_HISTORY_CONFLICT`。
+- **Safety:** 未执行 migration、Catalog 上传、RPC mutation、业务数据写入或 `main` 合并。
+
 - Corrected canonical status to distinguish the active recovery worktree from the PR #142 release candidate.
 - Marked formal Encyclopedia and Care scene entry as `PARTIAL_WITH_FALLBACK`; preview-only scene components are not treated as restored product routes.
 - Updated project-truth verification to require both active worktree and release-candidate metadata.

@@ -8,11 +8,11 @@
 
 | Concern | Current authority | Rule |
 | --- | --- | --- |
-| Daily work branch | `codex/main-visual-recovery-v1` | Current visual recovery worktree; based on the main release candidate and not yet pushed. |
+| Daily work branch | `codex/main-core-foundation-v1` | Single release-candidate worktree; visual recovery commits are kept on this branch until release. |
 | GitHub convergence | [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) | The candidate PR is the only active release entry; #141 remains historical evidence. |
 | Branch reconciliation | [Branch Convergence Audit](./03-development/BRANCH_CONVERGENCE_AUDIT.md) and [origin/main semantic reconciliation](./03-development/ORIGIN_MAIN_RECONCILIATION.md) | Commit counts alone; a graph difference is not a missing-feature verdict. |
-| Approved visual baseline | `37a8d4d1` and `http://127.0.0.1:4317/_preview/interactive` | No RC page/CSS may replace this visual baseline wholesale. |
-| Current state | `.ai/PROJECT_STATE.json` plus `npm run project:status` | Recovery branch is the active worktree; candidate branch and PR #142 remain the release promotion target. |
+| Approved visual baseline | `37a8d4d1` and `http://127.0.0.1:4317/_preview/interactive` | 4317 is a detached reference; candidate review runs on 4319. No RC page/CSS may replace this baseline wholesale. |
+| Current state | `.ai/PROJECT_STATE.json` plus `npm run project:status` | Candidate branch is the active worktree; `codex/main-visual-recovery-v1` is historical evidence only. |
 | Historical PRs | `.ai/OPEN_PR_REGISTRY.md` | Historical inputs only; never direct merge sources. |
 | Git/PR delivery rules | [Git Delivery Protocol](./03-development/GIT_DELIVERY_PROTOCOL.md) | Informal branch selection or an old PR base |
 | Historical documents | [Historical Evidence Registry](./HISTORICAL_EVIDENCE.md) | Evidence only; never a current decision source. |

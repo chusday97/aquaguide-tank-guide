@@ -1,6 +1,12 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-27 最终统一执行线
+
+- 当前唯一候选工作树为 `codex/main-core-foundation-v1@5b419e98`；4317 固定为 `37a8d4d1` 视觉基线，4319 用于候选验收，视觉恢复分支仅保留为历史证据。
+- 生产 Supabase 已完成只读核对：26 个 migration、35 张 RLS 表、89 条 policy；候选缺 8 个生产 migration，生产缺 Catalog 表和 `species.water_type`，必须先做 migration history reconciliation。
+- 当前 release 继续为 `NOT_READY`；禁止把旧候选 CI、旧 Preview 或生产已部署事实当作当前视觉或 Catalog parity 证据。
+
 ## 2026-08-27 Main 收敛执行
 
 - 已从 `origin/main@ed0cf380` 创建 `codex/main-core-foundation-v1`，不整体合并 PR #141。

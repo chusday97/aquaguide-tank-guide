@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "updatedAt": "2026-08-27",
-  "canonicalBranch": "codex/main-visual-recovery-v1",
-  "canonicalRole": "current recovery worktree; candidate is promoted only after visual and release gates",
+  "canonicalBranch": "codex/main-core-foundation-v1",
+  "canonicalRole": "single release-candidate worktree; all implementation changes land here until main release",
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
   "visualGate": "failed_recovery_in_progress",
   "releaseBranch": "main",
@@ -23,8 +23,8 @@
   },
   "releaseCandidate": {
     "branch": "codex/main-core-foundation-v1",
-    "head": "b09be2a5884003915efbd2bed845be4e417a4377",
-    "role": "Draft PR #142 release candidate; not updated with visual recovery yet"
+    "head": "5b419e981370b70f868110de7f4c1ff52f5b411b",
+    "role": "Draft PR #142 release candidate; visual recovery commits are present but visual acceptance is still pending"
   },
   "activePullRequest": {
     "number": 142,
@@ -36,10 +36,11 @@
   "historicalPullRequest": 141,
   "supabaseDeployment": {
     "status": "user_confirmed_deployed",
-    "parityStatus": "pending_authorized_read_only_check",
+    "parityStatus": "migration_required_history_conflict",
     "confirmedAt": "2026-08-25"
   },
-  "localPreview": "http://127.0.0.1:4317/_preview/interactive",
+  "localPreview": "http://127.0.0.1:4319/_preview/interactive",
+  "visualBaselinePreview": "http://127.0.0.1:4317/_preview/interactive",
   "officialLocalWorktree": "/Users/chuchu/Documents/New project/aquaguide_frontend",
   "rules": [
     "Do not merge or rebase historical PR #141 as a whole.",

@@ -20,4 +20,4 @@
 
 ## 当前状态
 
-`IN_PROGRESS` — 当前工作树为 `codex/main-visual-recovery-v1`，目标是先恢复用户确认的正式互动视觉，再把经过门禁的恢复提交提升到 Draft PR #142 的 `codex/main-core-foundation-v1`。发布前仍需 Domain/Service 唯一权威、固定视口视觉、今日行动、exact Preview SHA、授权 schema/RLS parity 和 release acceptance；`main` 尚未合并。
+`IN_PROGRESS` — 当前唯一工作树为 `codex/main-core-foundation-v1`，目标是在保留已验证底层能力的前提下恢复 `37a8d4d1` 的正式视觉，并完成 Domain/Service、生产 Supabase migration history、Preview SHA 和 release acceptance 门禁后合并 `main`。4317 仅运行冻结视觉基线，4319 运行当前候选；`main` 尚未合并。

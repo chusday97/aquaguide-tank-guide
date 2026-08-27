@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- 校正最终统一执行线：`codex/main-core-foundation-v1@5b419e98` 为唯一候选，4317 固定为 `37a8d4d1` 基线，4319 用于候选验收；记录生产 Supabase 26 个 migration、35 张 RLS 表、89 条 policy 与 Catalog/history 双向漂移，未执行生产写入。
 - PR #142 最新候选 `ff2520c9` 的远端 validate 重跑通过；保留 Draft，等待 Preview SHA parity、Supabase 只读 parity 和用户人工视觉验收。
 - 更新 GP-003 返回用户每日检查回归：先展开今日行动拉手再进入检查任务，并提高 CI 等待窗口；本地完整路径通过。
 - GP-001 CI 浏览器门禁扩大等待窗口至 30 秒，修复 GitHub runner 上设置弹层异步加载导致的偶发不可编辑超时；本地完整建缸路径通过。

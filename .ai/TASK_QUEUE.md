@@ -18,16 +18,16 @@
 - [x] Phase 2: 将冲突/重复文档降级为历史入口或改为链接，不删除证据。
 - [x] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口；2026-08-25 自动门禁通过。
 - [x] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
-- [ ] Phase 5: 已完成非敏感环境、18 份 migration、31 表契约和分支 Preview 审计；仍需授权只读核对已部署 Supabase 的 schema/RLS 与 exact SHA parity。
+- [ ] Phase 5: 已完成只读 Supabase 核对；生产为 26 份 migration、35 张 RLS 表、89 条 policy，但候选缺 8 个生产 migration且缺 Catalog 表/水体字段；需先收敛 migration history，再做 Catalog migration 与 exact SHA parity。
 - [x] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线；RC branch protection 等待 workflow 进入基分支后的管理员配置。
 - [x] Phase 7: 用户已接受 P0 兼容性契约；已选择性迁入本地生命周期、审核证据、当前鱼缸/换水纯规则与派生服务，保留现有 UI。
 - [ ] Phase 8: 发布就绪表已建立；P0 实现已通过，仍等待 exact Preview SHA、授权 Supabase schema/RLS parity 和单独 release acceptance。
 
 ## Release Gate
 
-- [x] Visual recovery branch created and user-confirmed preview route restored; formal Encyclopedia/Care scene wiring remains incomplete.
+- [ ] Visual recovery is being completed on the single candidate branch; formal Encyclopedia/Care scene wiring, transparent assets and fixed-viewport parity remain to be accepted.
 - [ ] Visual recovery: reconnect formal Encyclopedia/Care scene owners and rerun the fixed-viewport matrix before updating PR #142.
-- [ ] Keep 4317 as the frozen visual reference and use an independent candidate port; never infer version from the port alone.
+- [x] Keep 4317 as the frozen visual reference and use 4319 for the candidate; every preview must show branch, full SHA, seed and build time.
 - [ ] 统一 RC 分支验收通过后，再单独评估是否合并 `main`。
 - [ ] 视觉 AI 未配置时继续保持 `manual_confirmation` 回退语义。
 - [ ] 关键节点前完成本地验证；未达到关键节点不推送远端。

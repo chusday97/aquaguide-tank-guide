@@ -2,6 +2,16 @@
 
 更新时间：2026-08-27 +08:00
 
+## 2026-08-27 最终统一执行线（当前权威）
+
+- 唯一日常工作树与发布候选：`codex/main-core-foundation-v1@5b419e98`；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。
+- 4317 只运行冻结视觉基线 `37a8d4d1`，4319 运行当前候选；预览版本必须同时记录分支、完整 SHA、seed 和构建时间。
+- PR #142 是唯一发布 PR，仍为 Draft；PR #141 仅作历史证据，不能整体 merge/rebase。
+- 当前视觉门禁：`FAILED / recovery in progress`。正式图鉴、养护、水族册和 Aquarium 需通过固定视口视觉验收后才能 release-ready。
+- Supabase 只读检查已确认：生产 26 个 migration、35 张启用 RLS 的表、89 条 policy；生产缺少 `catalog_releases` 和 `species.water_type`，候选缺少 8 个生产 migration，状态为 `MIGRATION_REQUIRED + MIGRATION_HISTORY_CONFLICT`。
+- 当前禁止：生产 migration、Catalog 上传、PR 推送、`main` 合并，直到本地迁移历史和视觉门禁完成；生产动作仍需独立授权。
+- 下一步顺序：恢复生产 migration 历史到候选 → 完成正式视觉/透明素材 → 完成 Domain/Service 服务端重算 → 本地完整回归与独立审查 → Preview/Supabase parity → 用户验收 → 合并 `main`。
+
 ## 当前视觉恢复状态（2026-08-27）
 
 - 已确认 main 收敛候选发生真实 UI 回退，不是缓存：`/_preview/interactive` 路由及两套 canonical 布局样式曾被删除，4317 也被复用来服务候选构建。
