@@ -5,7 +5,6 @@ export type BioloadScreeningItem = {
   size?: BioloadBodySize;
   quantity?: number;
 };
-
 const quantityOf = (value?: number) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 1;
@@ -31,4 +30,3 @@ export const assessBioloadScreening = (
     pressure: ratio >= 0.9 ? 'high' : ratio >= 0.7 ? 'elevated' : 'low',
   };
 };
-

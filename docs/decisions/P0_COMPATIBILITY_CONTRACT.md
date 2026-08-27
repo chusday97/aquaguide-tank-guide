@@ -1,7 +1,7 @@
 # P0 Compatibility and Current-Tank Contract
 
 **Status:** `ACCEPTED — user approved 2026-08-25`
-**Target:** `codex/unified-rc-visual-v1`  
+**Target:** `codex/unified-rc-visual-v1`
 **Business reference:** `integration/aquaguide-rc1@895f2f39`
 
 ## Goal

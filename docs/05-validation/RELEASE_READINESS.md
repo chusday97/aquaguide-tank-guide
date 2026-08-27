@@ -1,7 +1,7 @@
 # Unified Release Readiness
 
-**Status:** `NOT_READY`  
-**Updated:** 2026-08-25  
+**Status:** `NOT_READY`
+**Updated:** 2026-08-25
 **Scope:** final gate for a unified branch becoming eligible for a separately authorized RC/main release.
 
 | Gate | Current evidence | Status | What closes it |

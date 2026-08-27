@@ -10,7 +10,6 @@ export type EvaluateWaterChangeInput = {
   today: string;
   currentSignals?: TankObservationCode[];
 };
-
 export type WaterChangeDecision = {
   scheduleStatus: WaterChangeScheduleStatus;
   action: WaterChangeAction;
@@ -198,4 +197,3 @@ export const evaluateWaterChangeDecision = ({
     matchedRules: unique(matchedRules),
   };
 };
-

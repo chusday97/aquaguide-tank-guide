@@ -10,7 +10,6 @@ export type TankPriorRisk = {
   evidence?: string;
   observationTargets?: string[];
 };
-
 export type TankHardConstraint = {
   code: string;
   active: boolean;
@@ -241,4 +240,3 @@ export const evaluateTankState = ({
     observationTargets,
   };
 };
-

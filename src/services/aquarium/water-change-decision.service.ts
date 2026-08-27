@@ -34,4 +34,3 @@ export const deriveWaterChangeDecision = ({
     currentSignals: tankStateEvidence?.result.activeSignals || [],
   });
 };
-

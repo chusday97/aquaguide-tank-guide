@@ -1,6 +1,6 @@
 # P0 Compatibility Authority Acceptance
 
-**Status:** `VERIFIED_LOCAL`  
+**Status:** `VERIFIED_LOCAL`
 **Scope:** accepted local-only P0 unit; no database, API, Supabase, persisted-state or UI-geometry change.
 
 | Acceptance case | Evidence | Result |

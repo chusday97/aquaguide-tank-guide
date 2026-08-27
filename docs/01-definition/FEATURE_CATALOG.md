@@ -1,7 +1,7 @@
 # AquaGuide Feature Catalog
 
-**Status:** Active  
-**Updated:** 2026-08-25  
+**Status:** Active
+**Updated:** 2026-08-25
 **Rule:** this is the only module-status inventory. Product promises belong in [PRODUCT_TRUTH.md](./PRODUCT_TRUTH.md); historical implementation detail belongs in `PROGRESS.md` and `HANDOFF.md`.
 
 ## Status vocabulary
