@@ -12,6 +12,7 @@
 - 修复规划加入缺少鱼缸时的 fail-open、已发布 Catalog 可修改和 legacy content API 对未部署 Catalog migration 的依赖，并补充契约回归。
 - Main foundation candidate 已通过同线程 Critic 六维复验与格式门禁；Supabase parity、服务端重算与 release PR 仍保持未完成。
 - 兼容性 UI 引擎增加 Domain Rules 适配层，统一输出 Catalog/规则元数据与添加策略；保留旧证据丰富结果作为迁移期 fallback，规划写入前服务端重算仍待完成。
+- 增加 Catalog build/validate/publish 三个独立命令，校验数量、引用、重复 ID 和 SHA-256；publish 默认只生成待发布产物，不自动上传。
 
 ### Changed
 - 定义“记录已有生物”和“规划想养生物”两类添加语义；现实事实不再受混养结论阻断。

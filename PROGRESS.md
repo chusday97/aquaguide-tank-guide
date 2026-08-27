@@ -44,6 +44,11 @@
 - [x] 添加策略统一委托 `packages/domain-rules/src/compatibility.ts`，兼容性回归、Domain 回归、添加意图回归通过。
 - [ ] 仍需把本地/API Repository 的规划写入改为基于同一 Catalog Snapshot 的服务端重新计算；当前旧引擎结果仍是 UI 证据 fallback，状态保持 `PARTIAL_WITH_FALLBACK`。
 
+### 2026-08-27 阶段 3：Catalog 产物流水线
+
+- [x] 新增 `catalog:build`、`catalog:validate`、`catalog:publish` 三个独立命令；构建和校验均验证 486 个物种、13 个证据来源、引用完整性和 SHA-256。
+- [x] `catalog:publish` 默认只生成 `build/catalog-pending/releases/<version>/`，不上传 Storage、不执行 Supabase migration。
+
 ### 2026-08-27 Critic 修复
 
 - [x] 修复无 `tank` 的规划加入误放行：统一返回 `insufficient_data / complete_information`，并新增回归。

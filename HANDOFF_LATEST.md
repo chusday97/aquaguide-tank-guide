@@ -25,6 +25,7 @@
 - Critic 发现的无鱼缸规划误放行、已发布 Catalog 可变、legacy content 查询依赖新 migration 三项阻塞已修复；同一 Critic 已最终复验六维 PASS，格式门禁 `13ce05da` 通过。
 - 沙箱运行 `tsx` 时曾被临时 IPC 权限阻断，需在授权环境重跑既有 `npm run test:compatibility` 作为验证证据。
 - 旧兼容引擎已接入 Domain Rules 适配层：结果保留现有 UI 所需证据列表，但 metadata 的 Catalog 版本、Domain 规则版本、规则代码和域状态由纯函数引擎生成；尚未完成服务端写入前按同一 Catalog Snapshot 重算。
+- Catalog 已具备三个独立本地产物命令：`npm run catalog:build`、`npm run catalog:validate`、`npm run catalog:publish`；发布命令只生成待发布目录，不上传或修改 Supabase。
 
 ## 当前工作基线
 

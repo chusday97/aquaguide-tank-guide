@@ -19,6 +19,7 @@ Status: `IN_PROGRESS`
 | Deterministic compatibility rules | `99865414` | `MIGRATED` | `npm run test:compatibility`, `npx tsx scripts/test-species-fit-engine.ts` |
 | Empty-tank preview boundary | `c822bd0e` | `MIGRATED` | empty preview regression; unknown water remains fail-closed |
 | Species catalog release snapshot | unified plan | `MIGRATED` | `2eee7c40`, `packages/contracts/src/catalog.ts`, `src/services/catalog/catalog-snapshot.service.ts`, `npm run test:catalog-snapshot` |
+| Catalog build/validate/publish pipeline | unified plan | `MIGRATED` | `npm run catalog:build`, `npm run catalog:validate`, `npm run catalog:publish`; publish generates a pending artifact and never uploads automatically |
 | Domain compatibility authority foundation | unified plan | `PARTIAL_WITH_FALLBACK` | Domain status/policy/version metadata now flows through the legacy UI adapter; `npm run test:compatibility`, `npm run test:domain-compatibility`; rich legacy evidence remains presentation fallback |
 | Livestock add intent/version contract | unified plan | `PARTIAL_WITH_FALLBACK` | `packages/contracts/src/business.ts`, Repository command, API errors and addition tests; server re-evaluation pending |
 | Cloud/local catalog parity | unified plan | `PENDING` | requires authorized Supabase read-only verification |
