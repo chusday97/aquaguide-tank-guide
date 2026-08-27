@@ -74,6 +74,7 @@ export const evaluateCompatibility = ({
 
   if (!candidateSpecies) raise('insufficient_data', 'candidate_missing');
   if (candidateSpecies && existingSpecies.length === 0) raise('insufficient_data', 'empty_tank_no_existing_species');
+  if (candidateSpecies && intent === 'planned_addition' && !tank) raise('insufficient_data', 'tank_missing');
 
   if (candidateSpecies && existingSpecies.length > 0) {
     for (const existing of existingSpecies) {

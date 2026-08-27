@@ -35,4 +35,3 @@ catalogRouter.get('/catalog/releases/current', asyncRoute(async (request, respon
 
   return sendData(request, response, manifest);
 }));
-

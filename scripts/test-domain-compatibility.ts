@@ -20,6 +20,15 @@ const emptyFact = evaluateCompatibility({ intent: 'record_existing', existingSpe
 assert.equal(emptyFact.status, 'insufficient_data');
 assert.equal(emptyFact.addPolicy, 'allow');
 
+const noTankPlan = evaluateCompatibility({
+  intent: 'planned_addition',
+  existingSpecies: [{ ...base, id: 'b' }],
+  candidateSpecies: base,
+});
+assert.equal(noTankPlan.status, 'insufficient_data');
+assert.equal(noTankPlan.addPolicy, 'complete_information');
+assert.ok(noTankPlan.ruleCodes.includes('tank_missing'));
+
 const blocked = evaluateCompatibility({
   intent: 'planned_addition',
   existingSpecies: [{ ...base, id: 'b', waterType: 'saltwater' }],

@@ -40,6 +40,26 @@ create table if not exists public.catalog_releases (
   version integer not null default 1 check (version > 0)
 );
 
+create or replace function public.prevent_published_catalog_release_mutation()
+returns trigger
+language plpgsql
+as $$
+begin
+  if old.status = 'published' then
+    raise exception 'published catalog releases are immutable';
+  end if;
+  if tg_op = 'DELETE' then
+    return old;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists catalog_releases_immutable on public.catalog_releases;
+create trigger catalog_releases_immutable
+  before update or delete on public.catalog_releases
+  for each row execute function public.prevent_published_catalog_release_mutation();
+
 alter table public.species_reference_links enable row level security;
 alter table public.catalog_releases enable row level security;
 

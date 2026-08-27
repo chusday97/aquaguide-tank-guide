@@ -21,6 +21,7 @@
 - `packages/domain-rules/src/compatibility.ts` 已提供纯函数兼容判断基础层和统一添加策略；专项测试通过。
 - 旧 UI 引擎仍保留作兼容适配，尚未宣称已完成全量切换；下一步是 Service/Repository 使用同一 Catalog 版本重新判断。
 - `LivestockAddCommand`、API body 和错误语义已增加规划加入确认门禁；生产写入仍需 Catalog 发布后补上服务端重新计算，不能把客户端确认当作最终安全边界。
+- Critic 发现的无鱼缸规划误放行、已发布 Catalog 可变、legacy content 查询依赖新 migration 三项阻塞已修复；新增 Domain 和 release-contract 回归，等待同一 Critic 复验。
 - 沙箱运行 `tsx` 时曾被临时 IPC 权限阻断，需在授权环境重跑既有 `npm run test:compatibility` 作为验证证据。
 
 ## 当前工作基线
