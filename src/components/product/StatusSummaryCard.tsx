@@ -1,4 +1,5 @@
-import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, Trash2 } from 'lucide-react';
+import { AlertTriangle, CalendarDays, Check, CheckCircle2, ChevronDown, Clock3, GripHorizontal, Trash2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { TagPill, type TagPillTone } from './TagPill';
@@ -115,6 +116,17 @@ export function StatusSummaryCard({
   onBrowseCare,
 }: StatusSummaryCardProps) {
   const { t } = useTranslation();
+  const [panelLevel, setPanelLevel] = useState<'collapsed' | 'half' | 'expanded'>('collapsed');
+  const dragStartY = useRef<number | null>(null);
+  const dragMoved = useRef(false);
+  useEffect(() => {
+    if (panelLevel === 'collapsed') return undefined;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setPanelLevel('collapsed');
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [panelLevel]);
   const Icon = action.level === 'normal' ? CheckCircle2 : AlertTriangle;
   const hasPrimaryAction = Boolean(action.task.primaryLabel);
   const hasOverflowCarePlans = carePlan.activeCount > 1;
@@ -139,8 +151,47 @@ export function StatusSummaryCard({
     upcoming: t('aquarium.carePlanUpcoming'),
   } as const;
 
+  const handlePointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+    dragStartY.current = event.clientY;
+    dragMoved.current = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const handlePointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (dragStartY.current !== null && Math.abs(event.clientY - dragStartY.current) > 8) dragMoved.current = true;
+  };
+  const handlePointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (dragStartY.current === null) return;
+    const delta = event.clientY - dragStartY.current;
+    dragStartY.current = null;
+    if (dragMoved.current) {
+      event.preventDefault();
+      setPanelLevel(delta > 72 ? 'collapsed' : delta > 24 ? 'half' : 'expanded');
+      return;
+    }
+    setPanelLevel(level => level === 'collapsed' ? 'expanded' : 'collapsed');
+  };
+
   return (
-    <section className={`flex min-h-[220px] flex-col rounded-[20px] border p-4 shadow-sm ${levelStyles[action.level]}`} data-daily-action={action.task.actionType}>
+    <section className={`flex flex-col rounded-[20px] border p-2 shadow-sm transition-[max-height,background] ${panelLevel === 'collapsed' ? 'min-h-0 bg-white/35' : panelLevel === 'half' ? 'min-h-0 bg-white/55' : `min-h-[220px] p-4 ${levelStyles[action.level]}`}`} data-daily-action={action.task.actionType} data-panel-level={panelLevel}>
+      <button
+        type="button"
+        data-today-action-handle
+        aria-expanded={panelLevel !== 'collapsed'}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        className="flex min-h-11 w-full touch-none items-center justify-between gap-2 rounded-[16px] bg-white/45 px-3 text-left text-ink/70 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+      >
+        <span className="min-w-0 truncate text-[12px] font-black">{t('aquarium.todayAction')} · {action.task.title}</span>
+        <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-black text-ink/45"><GripHorizontal className="h-4 w-4" />{panelLevel === 'collapsed' ? t('aquarium.expandTodayAction', { defaultValue: '展开' }) : panelLevel === 'half' ? t('aquarium.halfExpandTodayAction', { defaultValue: '半展开' }) : t('aquarium.collapseTodayAction', { defaultValue: '收起' })}</span>
+      </button>
+      {panelLevel === 'half' && (
+        <div className="flex items-center gap-3 rounded-[15px] bg-white/65 p-3">
+          <div className="min-w-0 flex-1"><div className="text-[11px] font-black text-ink">{action.label}</div><div className="mt-1 truncate text-[12px] font-black text-ink">{action.task.title}</div></div>
+          {hasPrimaryAction && <Button type="button" onClick={onPrimaryAction} className="min-h-11 shrink-0 rounded-full bg-emerald-800 px-3 text-[11px] font-black text-white">{action.task.primaryLabel}</Button>}
+        </div>
+      )}
+      <div className={panelLevel === 'expanded' ? '' : 'hidden'}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-[13px] font-black text-ink">{t('aquarium.todayAction')}</div>
@@ -255,6 +306,7 @@ export function StatusSummaryCard({
           </div>
         )}
       </section>
+      </div>
     </section>
   );
 }

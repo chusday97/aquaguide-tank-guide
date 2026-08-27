@@ -34,6 +34,12 @@
 - 图鉴手机分页调整为 320px 可用的紧凑布局，未改变领域规则、Catalog 或 Supabase。
 - 下一步：先提交本步并继续实现半透明可拖拽“今日行动”；完成后再做统一门禁、推送候选和 parity。当前仍暂停 Supabase 写入、PR 更新和 main 合并。
 
+## 2026-08-27 今日行动交互
+
+- `StatusSummaryCard` 已改为半透明拉手默认收起；点击可展开，Esc 可收起，Pointer 拖拽会吸附到 collapsed / half / expanded 三档。
+- 新增 `npm run test:today-action`，已在 1280px 真实浏览器验证点击、Esc 和拖拽到半展开；任务数据、完成状态和写入回调未改动。
+- 下一步：运行统一底层/Catalog 门禁，之后再做 Preview SHA/Supabase 只读 parity；当前仍未推送候选或合并 main。
+
 - 已增加 Catalog 公共契约、Supabase migration 提案、不可变快照加载器和 `/api/v1/catalog/releases/current` 只读入口。
 - `npm run lint`、`npm run check:api`、`npm run test:catalog-snapshot` 均通过。
 - 当前本地快照为 486 个物种、13 个证据来源；旧物种水体字段仍为 `unknown`，等待审核数据回填，禁止文本推断。

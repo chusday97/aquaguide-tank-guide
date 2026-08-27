@@ -56,6 +56,12 @@
 - 手机图鉴分页在 320px 下改为紧凑布局；`test:mobile-care-ui` 已通过。`test:core-ui` 运行无错误退出。
 - 当前仍未开始今日行动拖拽面板、Supabase 只读 parity、候选推送或 main 合并。
 
+### 今日行动交互
+
+- [x] `StatusSummaryCard` 增加半透明拉手和三档面板状态：collapsed / half / expanded。
+- [x] 支持点击、Esc、鼠标/触控 Pointer 拖拽吸附；拖拽不触发舞台或任务误点。
+- [x] `npm run test:today-action` 通过；未新增数据库字段、API 或 Supabase 写入。
+
 - [x] `LivestockAddCommand` 与 `aquariumSpeciesCreateSchema` 增加 `intent`、`catalogVersion`、`compatibilityConfirmation`。
 - [x] API 对 `planned_addition` 增加同版本确认、阻断和资料不足错误语义；`record_existing` 继续允许保存事实。
 - [x] `npm run test:addition-intents`、`npm run test:livestock-addition-api-errors`、`lint`、`check:api` 通过。

@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Main convergence
+- 将 Aquarium 今日行动改为半透明可交互拉手：点击展开、Esc 收起，支持触控/鼠标拖拽在收起/半展开/完全展开三档吸附；任务内容与 Repository 写入保持不变，并新增 `test:today-action` 门禁。
 - 恢复正式 `/encyclopedia` 与 `/care` 的默认互动场景，并保留显式 `?mode=browse` 传统浏览入口；新增 `test:formal-scenes` 门禁覆盖场景点选与模式切换。
 - 修正图鉴手机端 320px 分页布局，更新核心/手机回归脚本以使用显式 browse 模式和当前 Rail/成就页文案，避免旧断言掩盖真实回归。
 - 修复 main 收敛候选误删用户确认视觉入口的问题：恢复 `/_preview/interactive`、互动场景组件、canonical Aquarium/Detail 样式，并保持当前 Domain/Catalog/Service/API 不变；固定视口人工验收仍待完成。
