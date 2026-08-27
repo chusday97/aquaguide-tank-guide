@@ -5,7 +5,7 @@
 ## 2026-08-27 Main 收敛分支
 
 - 当前工作分支：`codex/main-core-foundation-v1`，基于 `origin/main@ed0cf380`。
-- 候选已推送并创建 [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142)（`codex/main-core-foundation-v1 → main`），本地/远端/PR head 均为 `9a70420b`。
+- 候选已推送并创建 [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142)（`codex/main-core-foundation-v1 → main`）；本地/远端/PR head 由 `npm run project:status` 和 GitHub 元数据实时核验。
 - 已选择性迁移 `99865414` 与 `c822bd0e` 的 P0 混养能力；`npm run lint` 与 `npm run test:compatibility` 通过。
 - 迁移台账：`.ai/MAIN_CONVERGENCE_LEDGER.md`。不得把 PR #141 整体 merge/rebase 当作同步方案。
 - 尚未完成：Supabase schema/RLS parity、完整 Domain Service 切换、当前视觉基线完整迁移、main release PR。

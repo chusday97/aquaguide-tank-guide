@@ -6,7 +6,7 @@
 
 | Gate | Current evidence | Status | What closes it |
 | --- | --- | --- | --- |
-| One delivery line | Local candidate, remote candidate and Draft PR #142 all point to `9a70420b` | Pass | Keep future work on the candidate until release acceptance. |
+| One delivery line | Local candidate, remote candidate and Draft PR #142 point to the same head according to `npm run project:status` and GitHub metadata | Pass | Keep future work on the candidate until release acceptance. |
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | User-confirmed 4317 direction; layout/framing/scene/Rail/page matrix passed locally | Pass | Rerun affected matrix rows after any UI-owner change. |
 | GitHub convergence CI | Candidate workflow is defined; no candidate run exists until the first push | Pending | Rerun automatically for candidate pushes and the Draft PR. |
