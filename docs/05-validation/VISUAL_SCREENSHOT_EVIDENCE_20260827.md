@@ -5,7 +5,7 @@ This evidence compares the user-approved baseline and the current release candid
 | Set | Source | Preview |
 | --- | --- | --- |
 | Baseline | detached worktree `37a8d4d1` | `http://127.0.0.1:4317` |
-| Candidate | `codex/main-core-foundation-v1@b9203dd3` | `http://127.0.0.1:4319` |
+| Candidate | current `codex/main-core-foundation-v1` HEAD (full SHA in preview metadata) | `http://127.0.0.1:4319` |
 
 Routes captured at 390×844, 600×900 and 1280×900:
 

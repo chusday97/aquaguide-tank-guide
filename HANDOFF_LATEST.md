@@ -25,7 +25,7 @@
 
 ## 2026-08-27 最终统一执行线（当前权威）
 
-- 唯一日常工作树与发布候选：`codex/main-core-foundation-v1@b9203dd3`；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。
+- 唯一日常工作树与发布候选：`codex/main-core-foundation-v1`（SHA 以 `git rev-parse HEAD` 运行时读取）；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。
 - 4317 只运行冻结视觉基线 `37a8d4d1`，4319 运行当前候选；预览版本必须同时记录分支、完整 SHA、seed 和构建时间。
 - PR #142 是唯一发布 PR，仍为 Draft；PR #141 仅作历史证据，不能整体 merge/rebase。
 - 当前视觉门禁：`FAILED / recovery in progress`。正式图鉴、养护、水族册和 Aquarium 需通过固定视口视觉验收后才能 release-ready。
