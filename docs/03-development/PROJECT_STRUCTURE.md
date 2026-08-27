@@ -11,7 +11,7 @@ aquaguide_frontend/
 │   ├── contracts/        API DTO、错误和校验契约
 │   └── domain-rules/     跨端确定性规则边界
 ├── supabase/
-│   └── migrations/       表、索引、RLS、触发器与 Storage
+│   └── migrations/       26 个生产历史迁移 + 1 个待授权 Catalog 迁移
 ├── docs/
 │   ├── 01-definition/     产品定位、用户故事、竞品与现状
 │   ├── 02-design/         信息架构、交互、设计、数据与 AI

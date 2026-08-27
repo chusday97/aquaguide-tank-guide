@@ -35,9 +35,11 @@
 - `supabase/migrations/202607220002_atomic_livestock_batch_split.sql` 至 `202607220005_fix_livestock_batch_merge_signature.sql`：拆分、生命纪念扣减与合并的原子数据库函数，以及旧合并函数签名的显式升级。
 - `supabase/migrations/202607260001_feedback_submissions.sql`：低敏感意见反馈、管理员 RLS、状态索引与版本触发器。
 - `supabase/migrations/202607260002_atomic_livestock_removal.sql`：缸内物种数量移出的事务锁、整数校验与幂等重放。
-- `supabase/migrations/202607290001_memorial_reflection_fields.sql`：生命纪念“当时观察 / 可能原因 / 后续改进”字段与原子批次纪念写入函数。
+- `supabase/migrations/202607290004_memorial_reflection_fields.sql`：与生产版本对齐的生命纪念“当时观察 / 可能原因 / 后续改进”字段与原子批次纪念写入函数。
 - `supabase/migrations/202608010001_memorial_causes_feedback_email.sql`：生命纪念受控原因代码、反馈邮件投递状态与新版原子纪念写入函数。
 - `supabase/migrations/202608090001_evidence_timeline_recurrence.sql` 至 `202608090002_atomic_care_reminder_completion.sql`：可信证据、时间线来源、循环养护字段，以及完成当前计划和生成下一期的原子事务函数。
+- `supabase/migrations/20260815115240_atomic_water_change_record.sql` 至 `20260816160129_atomic_verified_livestock_relocation.sql`：生产已部署的换水原子写入、函数安全、RLS 优化、养护事件/清单和缸内物种迁移历史；本地候选已恢复，尚未执行任何生产动作。
+- `supabase/migrations/202608270001_catalog_releases_and_species_water_type.sql`：Catalog 发布、显式水体和证据引用提案；待独立生产授权。
 
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
@@ -66,7 +68,7 @@
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
 - `src/data/careEvidence.ts`：41 篇养护内容的确定性来源映射、审核状态与复查动作兜底。
-- `src/pages/CollectionHub.tsx`：水族册模块首页，四格按最近新增规则预览种草、养护收藏、生命纪念与成就；具体条目使用稳定深链，剩余内容通过“更多”进入模块。
+- `src/pages/CollectionHub.tsx`：creature-first 互动水族册首页，桌面生物节点聚焦中央模块，手机提供紧凑入口；具体条目使用稳定深链。
 - `src/pages/Collection.tsx`：四个独立水族册模块的排序列表、物种/养护详情深链、纪念旧地址兼容跳转、勋章定位与空状态。
 - `src/pages/MemorialDetail.tsx`：生命纪念独立档案页；结构化复盘补录/编辑、未保存保护、列表返回与再次加入统一复核。
 - `src/pages/AdminContent.tsx`：受管理员权限保护的独立内容后台页面，不进入普通用户导航。

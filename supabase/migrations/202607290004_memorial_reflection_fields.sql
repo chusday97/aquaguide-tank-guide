@@ -82,3 +82,4 @@ revoke all on function public.record_livestock_memorial(uuid, uuid, uuid, intege
 grant execute on function public.record_livestock_memorial(uuid, uuid, uuid, integer, date, text, text, text, uuid) to authenticated;
 
 commit;
+

@@ -16,7 +16,7 @@
 
 ## 2026-08-25 non-secret deployment audit
 
-- The candidate currently contains 19 tracked migration files. Production reports 26 applied migrations, including eight migrations not present in the candidate and a production-only versioned memorial migration.
+- The candidate now contains the 26 production migration versions plus the candidate-only `202608270001_catalog_releases_and_species_water_type.sql` (27 tracked files total). The memorial migration is aligned to production's `202607290004` version; no duplicate `202607290001` memorial version remains.
 - `npm run test:three-tier-contract` passed: 31 tables, RLS, Storage, API and shared types are internally aligned.
 - Vercel Production contains configured Supabase/Postgres environment-variable names; values were not read or recorded.
 - A Ready Preview is aliased to `codex/unified-rc-visual-v1`.
@@ -88,3 +88,10 @@ Read-only inspection is now available. It confirmed a production migration-histo
 - `public.catalog_releases` is absent and `public.species.water_type` is absent in production.
 - Candidate-only Catalog migration: `202608270001_catalog_releases_and_species_water_type.sql`.
 - Production-only migration history must be restored into the candidate before the Catalog migration is considered for execution. No write or migration was executed.
+
+## 2026-08-27 migration history reconciliation (local only)
+
+- Restored the eight production migration files missing from the candidate: atomic water change, function security hardening, water-change RPC qualification, RLS optimization, care operation completion event, care checklist progress, unresolved existing livestock and verified livestock relocation.
+- Renamed the duplicate memorial migration to the production-aligned `202607290004_memorial_reflection_fields.sql`; file contents are unchanged.
+- Local migration order now matches the 26 production versions through `20260816160129_atomic_verified_livestock_relocation`; the Catalog migration remains an unapplied proposal after that history.
+- This step only changes repository history files. It does not run `supabase db push`, alter production schema/RLS, upload Catalog data or write business data.
