@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite --port=3010 --host=0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview --port=4010 --host=0.0.0.0"
+    "preview": "vite preview --port=4010 --host=0.0.0.0",
+    "predev": "node scripts/generate-catalog.mjs",
+    "prebuild": "node scripts/generate-catalog.mjs",
+    "test:contract": "node scripts/generate-catalog.mjs && node scripts/verify-contract.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.1",

@@ -6,10 +6,23 @@ Isolated companion app for editing Species SEO content. It lives in the same mon
 
 - Branch-only prototype: `feature/admin-content-v0`.
 - Do not merge or deploy to production yet.
-- Uses only `VITE_SUPABASE_URL` and the browser-safe anon key.
-- Never expose `SUPABASE_SERVICE_ROLE_KEY` to this app.
+- Uses only `VITE_SUPABASE_URL` and the browser-safe publishable/anon key.
+- Never expose a Supabase service-role key to this app.
 - Admin authorization is enforced by the existing `user_roles` table and database RLS, not by hiding the URL.
 - The `species_seo` migration in this branch is code-only until explicitly applied to a non-production database.
+
+## Current data contract
+
+The public AquaGuide product currently reads 486 Species from `src/data/fishData.ts`. The connected AquaGuide Supabase project has the `species` table but currently contains no Species rows.
+
+For V0, the Admin therefore:
+
+1. Generates a lightweight Species index from the existing repository catalog before dev/build.
+2. Uses the stable Species id (`sp_0001`, etc.) as `catalog_key`.
+3. Stores only editorial SEO content in Supabase `species_seo`.
+4. Joins product truth and SEO content by `catalog_key` rather than duplicating the entire product catalog into Supabase.
+
+This keeps the SEO Admin useful without forcing a product-data migration first.
 
 ## Run locally
 
@@ -22,15 +35,24 @@ npm run dev -w @aquaguide/admin-content
 
 Open `http://localhost:3010`.
 
+## Verify
+
+```bash
+npm run test:contract -w @aquaguide/admin-content
+npm run build -w @aquaguide/admin-content
+```
+
+The contract test checks the catalog projection, admin-role guard, SEO storage key, RLS requirements, and that no service-role key is exposed in the browser app.
+
 ## V0 scope
 
 1. Supabase email/password sign-in.
 2. Verify the signed-in user has `user_roles.role = admin`.
-3. Read Species from the existing `species` table.
+3. Read the Species index generated from the same repository catalog used by AquaGuide.
 4. Search and select a Species.
 5. Edit SEO title, meta description, H1, intro, image alt, canonical path and focus keyword.
 6. Preview a search-result snippet.
-7. Save SEO content to the branch-defined `species_seo` table once its migration exists in the target environment.
+7. Save localized SEO content by `catalog_key + locale` once the branch migration exists in the target environment.
 8. Explicitly surface a schema-not-ready state rather than silently failing.
 
 Not included yet: image upload, history/rollback UI, bulk editing, Search Console, AI generation, production deployment, or changes to the public Species page.

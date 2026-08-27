@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './supabase.js';
+import { catalogSpecies } from './catalog.js';
 
 const emptySeo = {
   seoTitle: '',
@@ -126,7 +127,8 @@ function SeoEditor({ species, record, schemaReady, onSaved }) {
     setSaving(true);
     setMessage('');
     const payload = {
-      species_id: species.id,
+      catalog_key: species.catalog_key,
+      locale: 'zh-CN',
       seo_title: form.seoTitle.trim(),
       meta_description: form.metaDescription.trim(),
       h1: form.h1.trim(),
@@ -138,7 +140,7 @@ function SeoEditor({ species, record, schemaReady, onSaved }) {
     };
     const { data, error } = await supabase
       .from('species_seo')
-      .upsert(payload, { onConflict: 'species_id' })
+      .upsert(payload, { onConflict: 'catalog_key,locale' })
       .select('*')
       .single();
     setSaving(false);
@@ -308,20 +310,10 @@ export default function App() {
         return;
       }
 
-      const { data: speciesRows, error: speciesError } = await supabase
-        .from('species')
-        .select('id,catalog_key,name,scientific_name,category,status,updated_at,version')
-        .is('deleted_at', null)
-        .order('updated_at', { ascending: false })
-        .limit(300);
-
-      if (speciesError) {
-        setError(`Species 加载失败：${speciesError.message}`);
-        setLoading(false);
-        return;
-      }
-      setSpecies(speciesRows || []);
-      if (!selectedId && speciesRows?.length) setSelectedId(speciesRows[0].id);
+      // V0 reads the product catalog from the same source currently used by AquaGuide.
+      // This avoids duplicating 486 product records into Supabase just to edit SEO.
+      setSpecies(catalogSpecies);
+      if (!selectedId && catalogSpecies.length) setSelectedId(catalogSpecies[0].id);
 
       const { data: seoData, error: seoError } = await supabase
         .from('species_seo')
@@ -332,7 +324,7 @@ export default function App() {
         setSchemaReady(false);
       } else {
         setSchemaReady(true);
-        setSeoRows(Object.fromEntries((seoData || []).map((row) => [row.species_id, row])));
+        setSeoRows(Object.fromEntries((seoData || []).map((row) => [row.catalog_key, row])));
       }
       setLoading(false);
     };
@@ -409,7 +401,7 @@ export default function App() {
           </div>
           <input className="search-input" placeholder="搜索鱼名、学名或 key…" value={search} onChange={(event) => setSearch(event.target.value)} />
           <div className="species-list">
-            {loading ? <p className="list-message">正在读取 Supabase…</p> : null}
+            {loading ? <p className="list-message">正在验证管理员权限…</p> : null}
             {!loading && filteredSpecies.length === 0 ? <p className="list-message">没有匹配的 Species。</p> : null}
             {filteredSpecies.map((item) => (
               <button key={item.id} className={`species-row ${selectedId === item.id ? 'active' : ''}`} type="button" onClick={() => setSelectedId(item.id)}>
@@ -428,9 +420,9 @@ export default function App() {
         <main className="editor-area">
           <SeoEditor
             species={selectedSpecies}
-            record={selectedSpecies ? seoRows[selectedSpecies.id] : null}
+            record={selectedSpecies ? seoRows[selectedSpecies.catalog_key] : null}
             schemaReady={schemaReady}
-            onSaved={(row) => setSeoRows((current) => ({ ...current, [row.species_id]: row }))}
+            onSaved={(row) => setSeoRows((current) => ({ ...current, [row.catalog_key]: row }))}
           />
         </main>
       </div>
