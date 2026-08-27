@@ -2,7 +2,7 @@
 
 更新时间：2026-08-28
 
-本报告只记录通过 Supabase 管理接口执行的只读检查。没有执行 SQL migration、Catalog 上传或业务数据写入。
+报告前半部分只记录通过 Supabase 管理接口执行的生产只读检查；后附本地 Supabase 重放证据。整个过程中没有执行生产 SQL migration、Catalog 上传或生产业务数据写入。
 
 ## 结论
 
