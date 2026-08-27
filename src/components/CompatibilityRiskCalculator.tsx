@@ -442,7 +442,7 @@ function CompatibilityBottomSheet({
 
   return (
     <Dialog open={Boolean(activeModal)} onOpenChange={open => !open && onClose()}>
-      <DialogContent surface="task" data-surface="task-flow" showCloseButton={false} className="overflow-hidden border-border bg-bg p-0">
+      <DialogContent data-surface="task-flow" showCloseButton={false} className="overflow-hidden border-border bg-bg p-0">
         <div className="shrink-0 border-b border-white bg-white px-4 pb-3 pt-2">
           <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-ink/12" />
           <div className="flex items-center justify-between gap-3">
@@ -1245,7 +1245,7 @@ export function CompatibilityRiskCalculator({
       }}
     />
     <Dialog open={isClearConfirmOpen} onOpenChange={setIsClearConfirmOpen}>
-      <DialogContent surface="blocking" showCloseButton={false} className="w-[min(420px,calc(100vw-32px))] overflow-hidden rounded-[24px] border-border bg-white p-0">
+      <DialogContent showCloseButton={false} className="w-[min(420px,calc(100vw-32px))] overflow-hidden rounded-[24px] border-border bg-white p-0">
         <DialogHeader className="border-b border-border/70 px-6 py-5 text-left">
           <DialogTitle className="text-[18px] font-black text-ink">{isEn ? 'Clear current species selection?' : '清空当前混养组合？'}</DialogTitle>
           <DialogDescription className="mt-1 text-[12px] font-bold leading-relaxed text-ink/55">
