@@ -388,3 +388,11 @@
 - AI 只能解释规则结果，不能决定 `canAdd`、风险等级或推荐候选池。
 - 混养判断统一为四种状态：`compatible / caution / not_recommended / insufficient_data`。
 - 手机端按真实手机设备判定，不再按 `<768px` 判定；桌面缩窄仍保持桌面工作台，平板默认使用桌面布局。
+
+## 2026-08-27 最终统一执行进展
+
+- 候选分支 `codex/main-core-foundation-v1` 本地 HEAD：`8cfe383e`；远端候选/PR #142 仍为 `5b419e98`，尚未推送。
+- 已完成：真实 viewport 响应式契约、Aquarium learn/archive/discovery 恢复、正式详情 Rail/Sheet、透明素材容器、今日推荐深链，以及收敛浏览器测试默认指向 4319。
+- 本地验证：build、lint、API 类型、project truth、Domain/Service/Catalog、正式图鉴/Care 场景、今日行动、水族册、移动端、物种详情、布局与 framing 测试通过。
+- 预览：4317 detached `37a8d4d1` 冻结基线；4319 当前候选，页面显示分支、完整 SHA、seed、build 时间。人工视觉验收仍未授予。
+- 下一步：独立 Critic/Evaluator 复验 → 一次性推送候选并获取新 CI/Preview SHA → Supabase 只读 parity；生产第 27 个 migration、Catalog 发布及合并 main 仍需分别授权。

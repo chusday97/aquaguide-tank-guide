@@ -361,3 +361,10 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 当前已无已知 720px Detail Rail / Surface runtime P0；最高优先未完成项转为 **Compatibility reviewed evidence coverage + human visual/Vercel parity**。
 
 同时参考：`ALIGNMENT_AUDIT_LATEST.md`、`UI_REGRESSION_CONTRACT.md`、`BADCASE_LATEST.md`、`PROGRESS_LATEST.md`、`SURFACE_INVENTORY_LATEST.md`。
+
+## 2026-08-27 当前候选交接
+
+- 当前本地候选 HEAD 为 `8cfe383e`，远端候选/PR #142 仍为 `5b419e98`，所以 `project:status` 预期失败，不能声称已同步。
+- 4317 是 detached `37a8d4d1` 视觉基线，4319 是候选并显示完整 SHA；若服务进程退出，先重启再做 Preview 证据。
+- viewport、正式场景、透明素材、详情 Rail/Sheet、今日推荐深链和门禁默认端口已修复并通过本地回归；人工视觉验收、远端 CI/Preview SHA、Supabase parity 尚未完成。
+- 用户未授权前不得执行生产 migration、Catalog 发布或 main 合并。
