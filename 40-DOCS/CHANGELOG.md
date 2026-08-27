@@ -5,6 +5,7 @@
 ### Main convergence
 - Restored the approved creature-first Collection hub, single immersive Aquarium stage, shared desktop detail rail/mobile bottom sheet, and transparent scene-image loading/failure behavior on the main convergence candidate.
 - Restored the eight production migration history files locally, aligned memorial migration versioning, and added branch/SHA/seed/build-time metadata to the interactive preview.
+- Added server-side Catalog/domain re-evaluation before planned livestock writes; stale or conflicting client confirmations now fail with explicit version/compatibility errors.
 - 校正最终统一执行线：`codex/main-core-foundation-v1@5b419e98` 为唯一候选，4317 固定为 `37a8d4d1` 基线，4319 用于候选验收；记录生产 Supabase 26 个 migration、35 张 RLS 表、89 条 policy 与 Catalog/history 双向漂移，未执行生产写入。
 - PR #142 最新候选 `ff2520c9` 的远端 validate 重跑通过；保留 Draft，等待 Preview SHA parity、Supabase 只读 parity 和用户人工视觉验收。
 - 更新 GP-003 返回用户每日检查回归：先展开今日行动拉手再进入检查任务，并提高 CI 等待窗口；本地完整路径通过。

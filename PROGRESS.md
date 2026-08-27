@@ -68,6 +68,13 @@
 - [x] `PREVIEW_URL=http://127.0.0.1:4319 npm run test:formal-scenes` 已验证预览元数据、透明场景素材和正式图鉴/养护 scene/browse 流程。
 - 当前仍不执行生产 migration、Catalog 上传或 `main` 合并；真实 Supabase schema/RLS/RPC parity 仍是独立只读门禁。
 
+### 2026-08-27 阶段 3：规划加入服务端重算门禁
+
+- [x] API `POST /aquariums/:id/species` 在 `planned_addition` 写入前读取同一已发布 Catalog、鱼缸真实事实、当前缸内物种、物种水体/环境字段和审核证据引用，并通过 `packages/domain-rules` 重新计算。
+- [x] 服务端不再把客户端 `compatibilityConfirmation.status` 作为安全边界：状态不一致返回 `VERSION_CONFLICT`，阻断/资料不足继续返回结构化错误；`record_existing` 不经过规划阻断分支。
+- [x] `test:livestock-addition-api-errors` 增加服务端重算结构门禁；`check:api`、Domain/Intent 回归通过。
+- 由于生产尚未执行 Catalog migration，真实规划写入会安全返回 Catalog parity/资料不足错误；不得将此状态包装为生产功能已可用。
+
 ### 2026-08-27 Service/API 添加契约门禁
 
 ## 2026-08-27 正式互动场景恢复

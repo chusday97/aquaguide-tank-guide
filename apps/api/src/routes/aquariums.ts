@@ -33,6 +33,7 @@ import {
 import { ApiError, asyncRoute, sendData } from '../http';
 import { resolveLivestockMemorialReplay } from '../livestock-memorial-replay';
 import { throwLivestockAdditionRpcError } from '../livestock-addition-error';
+import { evaluateCompatibility, type DomainCompatibilityInput, type DomainSpeciesFact } from '../../../../packages/domain-rules/src';
 
 type DbRow = Record<string, any>;
 
@@ -76,6 +77,90 @@ const getOwnedSpeciesRecord = async (client: ReturnType<typeof userClientFor>, a
   if (error) throwDatabaseError(error, '暂时无法读取缸内物种。');
   if (!data) throw new ApiError(404, 'NOT_FOUND', '没有找到这条缸内物种记录。');
   return data as DbRow;
+};
+
+const normalizeCatalogWaterType = (value: unknown): DomainSpeciesFact['waterType'] => (
+  value === 'freshwater' || value === 'saltwater' ? value : 'unknown'
+);
+
+const readPublishedCatalogDecision = async ({
+  client,
+  aquariumId,
+  speciesCatalogKey,
+  catalogVersion,
+}: {
+  client: ReturnType<typeof userClientFor>;
+  aquariumId: string;
+  speciesCatalogKey: string;
+  catalogVersion: string;
+}) => {
+  const { data: release, error: releaseError } = await client
+    .from('catalog_releases')
+    .select('version_key')
+    .eq('status', 'published')
+    .is('deleted_at', null)
+    .not('published_at', 'is', null)
+    .order('published_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (releaseError) throw new ApiError(503, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前 Supabase 尚未提供可核验的 Catalog 版本，请先完成发布校验。');
+  if (!release) throw new ApiError(503, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前没有已发布的 Catalog 版本，暂不能规划加入。');
+  if (release.version_key !== catalogVersion) throw new ApiError(409, 'VERSION_CONFLICT', '混养复核使用的 Catalog 已过期，请刷新后重新判断。');
+
+  const { data: aquarium, error: aquariumError } = await client
+    .from('aquariums')
+    .select('water_type,length_cm,width_cm,height_cm,target_temperature_c,aquarium_species(species_catalog_key,quantity,deleted_at)')
+    .eq('id', aquariumId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (aquariumError || !aquarium) throw new ApiError(aquariumError ? 503 : 404, aquariumError ? 'COMPATIBILITY_INFORMATION_REQUIRED' : 'NOT_FOUND', aquariumError ? '鱼缸事实暂时无法用于混养复核。' : '没有找到这个鱼缸。');
+
+  const existingKeys = (aquarium.aquarium_species || [])
+    .filter((item: DbRow) => !item.deleted_at && typeof item.species_catalog_key === 'string')
+    .map((item: DbRow) => item.species_catalog_key as string);
+  const keys = Array.from(new Set([...existingKeys, speciesCatalogKey]));
+  const { data: speciesRows, error: speciesError } = await client
+    .from('species')
+    .select('id,catalog_key,water_type,water_temperature_min_c,water_temperature_max_c,ph_min,ph_max,status')
+    .in('catalog_key', keys)
+    .eq('status', 'published')
+    .is('deleted_at', null);
+  if (speciesError) throw new ApiError(503, 'COMPATIBILITY_INFORMATION_REQUIRED', '物种 Catalog 字段尚未完成 parity，暂不能规划加入。');
+  const speciesByKey = new Map((speciesRows || []).map((row: DbRow) => [row.catalog_key as string, row]));
+  if (keys.some(key => !speciesByKey.has(key))) throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前物种资料不完整，请刷新 Catalog 后重新判断。');
+
+  const speciesIds = Array.from(speciesByKey.values()).map((row: DbRow) => row.id as string);
+  const { data: reviewedLinks, error: linksError } = await client
+    .from('species_reference_links')
+    .select('species_id')
+    .in('species_id', speciesIds)
+    .eq('review_status', 'reviewed')
+    .is('deleted_at', null);
+  if (linksError) throw new ApiError(503, 'COMPATIBILITY_INFORMATION_REQUIRED', '物种证据引用尚未完成 parity，暂不能规划加入。');
+  const reviewedIds = new Set((reviewedLinks || []).map((row: DbRow) => row.species_id as string));
+  const toFact = (row: DbRow): DomainSpeciesFact => ({
+    id: row.catalog_key,
+    waterType: normalizeCatalogWaterType(row.water_type),
+    temperatureMinC: row.water_temperature_min_c,
+    temperatureMaxC: row.water_temperature_max_c,
+    phMin: row.ph_min,
+    phMax: row.ph_max,
+    reviewed: reviewedIds.has(row.id),
+  });
+  const input: DomainCompatibilityInput = {
+    intent: 'planned_addition',
+    catalogVersion,
+    tank: {
+      waterType: normalizeCatalogWaterType(aquarium.water_type),
+      volumeLiters: Number(aquarium.length_cm) > 0 && Number(aquarium.width_cm) > 0 && Number(aquarium.height_cm) > 0
+        ? Number(aquarium.length_cm) * Number(aquarium.width_cm) * Number(aquarium.height_cm) / 1000
+        : null,
+      targetTemperatureC: aquarium.target_temperature_c,
+    },
+    existingSpecies: existingKeys.map(key => toFact(speciesByKey.get(key)!)),
+    candidateSpecies: toFact(speciesByKey.get(speciesCatalogKey)!),
+  };
+  return evaluateCompatibility(input);
 };
 
 export const aquariumsRouter = Router();
@@ -171,22 +256,31 @@ aquariumsRouter.post('/aquariums/:id/species', asyncRoute(async (request, respon
   const aquariumId = parseId(request.params.id, '鱼缸标识');
   const parsed = aquariumSpeciesCreateSchema.safeParse(request.body);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '入缸物种信息无效。', parsed.error.flatten());
+  const client = userClientFor(request);
   if (parsed.data.intent === 'planned_addition') {
     const confirmation = parsed.data.compatibilityConfirmation;
     if (!confirmation || !parsed.data.catalogVersion || confirmation.catalogVersion !== parsed.data.catalogVersion) {
       throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '规划加入前需要同一 Catalog 版本的混养复核结果。');
     }
-    if (confirmation.status === 'not_recommended') {
+    const serverDecision = await readPublishedCatalogDecision({
+      client,
+      aquariumId,
+      speciesCatalogKey: parsed.data.speciesCatalogKey,
+      catalogVersion: parsed.data.catalogVersion,
+    });
+    if (serverDecision.status !== confirmation.status) {
+      throw new ApiError(409, 'VERSION_CONFLICT', '混养复核结果已变化，请刷新后重新判断。');
+    }
+    if (serverDecision.status === 'not_recommended') {
       throw new ApiError(409, 'COMPATIBILITY_BLOCKED', '当前混养复核阻止规划加入该物种。');
     }
-    if (confirmation.status === 'insufficient_data') {
+    if (serverDecision.status === 'insufficient_data') {
       throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前混养资料不足，请补充信息后重新判断。');
     }
-    if (confirmation.status === 'caution' && !confirmation.confirmedAt) {
+    if (serverDecision.status === 'caution' && !confirmation.confirmedAt) {
       throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '谨慎混养需要明确确认后才能加入。');
     }
   }
-  const client = userClientFor(request);
   const userId = authenticatedRequest(request).authUser.id;
   const operationKey = requireIdempotencyKey(request);
   const recordId = deterministicUuid(`${userId}:${aquariumId}:species:${operationKey}`);

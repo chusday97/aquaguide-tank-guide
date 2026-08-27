@@ -17,6 +17,12 @@
 - 已通过透明素材、正式 scene/browse、今日行动、creature-first 水族册、Aquarium 单一舞台和响应式 Surface 回归。
 - 下一步优先：服务端规划加入重算与 Catalog 版本绑定 → 干净 PostgreSQL 历史回放 → 固定视口截图矩阵 → Critic/Evaluator → 单次推送 Preview parity。生产 migration、Catalog 发布和 main 合并仍需独立授权。
 
+## 2026-08-27 阶段 3 交接
+
+- 规划加入现在在 API 写入前重新读取已发布 Catalog、鱼缸和缸内物种事实，经 Domain Rules 计算后才允许 RPC；客户端确认仅用于证明用户确认过 caution。
+- Catalog 表、水体字段或证据引用在生产缺失时，API 明确返回 `COMPATIBILITY_INFORMATION_REQUIRED`，不会静默放行；现实记录路径仍保持可保存事实。
+- 已通过 `test:livestock-addition-api-errors`、`test:domain-compatibility`、`test:addition-intents`、`check:api`、`lint`。尚未执行生产 migration 或真实登录写入回归。
+
 ## 2026-08-27 最终统一执行线（当前权威）
 
 - 唯一日常工作树与发布候选：`codex/main-core-foundation-v1@5b419e98`；`codex/main-visual-recovery-v1` 仅作历史恢复证据，不再作为第二条开发线。
