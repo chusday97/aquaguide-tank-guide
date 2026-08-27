@@ -43,6 +43,7 @@
 - 当前恢复分支最新本地 head 为 `86ec4ec4`；本地候选门禁已通过，下一步可将候选分支快进并推送 PR #142。推送前仍不合并 main，Supabase 只读 parity 待外部授权。
 - 候选已快进并推送至 `codex/main-core-foundation-v1@a8532072`；`project:status` 现可从 recovery 或 candidate 运行并报告远端同步。PR #142 仍 Draft，未合并 main。
 - PR #142 validate 的 GP-001 失败定位为 GitHub runner 异步设置弹层等待不足，已将测试默认等待从 10s 提升为 30s；本地 GP-001 通过，需推送后重跑远端门禁。
+- 远端 validate 进一步暴露 GP-003 直接寻找隐藏“开始今日检查”按钮；测试已改为先展开今日行动拉手并提高等待窗口，本地 GP-003 通过。
 - `today_action_surface` 已加入 disclosure 契约白名单，`npm run test:disclosures` 通过。
 - 底层回归已复验：Catalog、Domain policy、添加意图、现实记录/API 错误语义、Mini 混养、布局与 3D framing 门禁通过；Supabase 仍只读待授权 parity。
 - 下一步：运行统一底层/Catalog 门禁，之后再做 Preview SHA/Supabase 只读 parity；当前仍未推送候选或合并 main。
