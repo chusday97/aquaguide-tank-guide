@@ -27,7 +27,7 @@ This matrix makes the visual baseline executable. It does not replace [`UI_REGRE
 
 ## Current candidate evidence
 
-- Candidate review target: `http://127.0.0.1:4319` from `codex/main-core-foundation-v1@755eed77`.
+- Candidate review target: `http://127.0.0.1:4319` from `codex/main-core-foundation-v1@b9203dd3`.
 - Candidate formal scene, transparent-image, today-action, Collection, Aquarium layout and detail-surface gates pass locally.
 - The candidate is not promoted to a screenshot golden and remains `RECOVERY_IN_PROGRESS` until fixed-viewport human comparison with 4317 is accepted.
 
