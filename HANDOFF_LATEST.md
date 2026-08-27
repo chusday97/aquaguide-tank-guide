@@ -371,7 +371,7 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 
 ## 2026-08-28 当前收敛状态（UI 冻结 + Supabase 只读 parity）
 
-- 当前候选仍为 `codex/main-core-foundation-v1@02457dd2`，4317 运行 detached `37a8d4d1` 基线，4319 运行候选；本轮不修改布局、视觉组件、素材或交互结构。
+- 当前候选为 `codex/main-core-foundation-v1`（SHA 以 `npm run project:status` 运行时读取；UI 冻结基线为 `02457dd2`），4317 运行 detached `37a8d4d1` 基线，4319 运行候选；本轮不修改布局、视觉组件、素材或交互结构。
 - `.ai/UI_FREEZE.json` 和 `npm run check:ui-freeze` 已建立；固定截图/manifest 位于 `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2`，覆盖 390/600/1280px 的 `/_preview/interactive`。
 - Supabase 只读证据已刷新：26 migrations、35/35 RLS 表、89 policies、56 外键、86 索引、33 非内部触发器；13 个 public RPC 已读取签名。详细报告见 `docs/05-validation/SUPABASE_PARITY_REPORT.md`。
 - 生产缺少 `catalog_releases`、`species_reference_links`、`species.water_type`，故 parity 为 `MIGRATION_REQUIRED`，不是 `EQUIVALENT`；未执行 SQL、Catalog 发布或业务写入。
