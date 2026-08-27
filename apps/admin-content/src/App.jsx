@@ -104,8 +104,11 @@ function SeoEditor({ species, record, schemaReady, onSaved }) {
 
   useEffect(() => {
     setForm(fromSeoRow(record, species));
-    setMessage('');
   }, [record, species]);
+
+  useEffect(() => {
+    setMessage('');
+  }, [species?.id]);
 
   if (!species) {
     return (

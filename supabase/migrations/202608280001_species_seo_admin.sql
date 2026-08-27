@@ -30,6 +30,9 @@ create trigger species_seo_set_updated_at
 
 alter table public.species_seo enable row level security;
 
+-- The admin UI must be able to read its own role; RLS still limits rows.
+grant select on public.user_roles to authenticated;
+
 grant select on public.species_seo to anon, authenticated;
 grant insert, update, delete on public.species_seo to authenticated;
 

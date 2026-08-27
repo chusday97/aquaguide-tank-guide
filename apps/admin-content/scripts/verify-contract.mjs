@@ -32,6 +32,7 @@ assert.match(migrationSource, /catalog_key text not null/);
 assert.match(migrationSource, /locale text not null default 'zh-CN'/);
 assert.match(migrationSource, /unique \(catalog_key, locale\)/);
 assert.match(migrationSource, /enable row level security/);
+assert.match(migrationSource, /grant select on public\.user_roles to authenticated/);
 assert.match(migrationSource, /public\.is_admin\(\)/);
 assert.match(migrationSource, /species_seo_admin_insert/);
 assert.match(migrationSource, /species_seo_admin_update/);
