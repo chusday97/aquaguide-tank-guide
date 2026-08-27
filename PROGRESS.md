@@ -36,7 +36,7 @@
 - [x] 修复无 `tank` 的规划加入误放行：统一返回 `insufficient_data / complete_information`，并新增回归。
 - [x] 已发布 Catalog 记录增加数据库触发器不可变保护；legacy `/species` 查询不再依赖尚未部署的 Catalog migration 字段/关系。
 - [x] `npm run test:domain-compatibility`、`npm run test:catalog-release-contract`、`lint`、`check:api` 通过。
-- Critic 首轮阻塞已修复，等待同一线程复验；服务端基于已发布 Catalog 的重新计算仍是下一阶段工作。
+- Critic 首轮阻塞已修复并由同一线程最终复验通过（六维 PASS，`git diff --check origin/main...HEAD` PASS，`13ce05da`）；服务端基于已发布 Catalog 的重新计算仍是下一阶段工作。
 
 ## 已完成
 - 状态：`核心鱼缸事实链路已完成并通过独立 Critic 与 Evaluator 六维验收`。`record_existing` 先保存事实再评估，任何四态结果均不能回滚现实记录；`planned_addition` 先评估且不写鱼缸，只有用户明确确认已实际入缸才进入记录流程。新鱼缸不再生成尺寸、水体、温度、设备或换水伪数据；创建和新增生物均通过 Repository 命令，旧 `add-species` 深链兼容映射到规划流程。云端新增使用原子 RPC 提交父物种、批次和幂等结果，404/409/503 语义保持清晰。（commits: `56c486b`, `7284008`, `f04f189`, `8d272aa`, `9accb48`, `f97e6ca`, `3af5c61`）

@@ -9,6 +9,7 @@
 - 增加纯函数 Domain compatibility authority 基础层，统一空缸/未知资料降级和现实记录与规划添加策略；旧 UI 引擎暂保留兼容适配。
 - 新增现实记录/规划加入的 `intent`、Catalog 版本和混养确认字段；API 对规划加入增加阻断与资料不足错误语义，服务端重算待 Catalog 发布后接入。
 - 修复规划加入缺少鱼缸时的 fail-open、已发布 Catalog 可修改和 legacy content API 对未部署 Catalog migration 的依赖，并补充契约回归。
+- Main foundation candidate 已通过同线程 Critic 六维复验与格式门禁；Supabase parity、服务端重算与 release PR 仍保持未完成。
 
 ### Changed
 - 定义“记录已有生物”和“规划想养生物”两类添加语义；现实事实不再受混养结论阻断。

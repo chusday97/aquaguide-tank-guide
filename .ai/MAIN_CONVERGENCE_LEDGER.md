@@ -33,3 +33,9 @@ Status: `IN_PROGRESS`
 ## Verification rule
 
 An item becomes `MIGRATED` only after its contract, implementation, regression evidence and affected UI/API boundaries are all recorded. Commit ancestry alone is insufficient.
+
+## Foundation review checkpoint
+
+- Candidate head: `13ce05da` (local, 12 commits ahead of `origin/main`, no uncommitted changes).
+- Critic: same-thread final recheck, six dimensions `PASS`; `git diff --check origin/main...HEAD` exits 0.
+- Remaining release gates: authorized Supabase read-only parity, real PostgreSQL trigger execution evidence, server-side Catalog re-evaluation before planned writes, Preview SHA parity and release acceptance.
