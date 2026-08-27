@@ -24,6 +24,7 @@ export type DomainCompatibilityInput = {
   existingSpecies: DomainSpeciesFact[];
   candidateSpecies?: DomainSpeciesFact | null;
   explicitPairStatus?: CompatibilityDecisionStatus;
+  catalogVersion?: string;
 };
 
 export type CompatibilityDecision = {
@@ -62,6 +63,7 @@ export const evaluateCompatibility = ({
   existingSpecies,
   candidateSpecies,
   explicitPairStatus,
+  catalogVersion = 'unknown',
 }: DomainCompatibilityInput): CompatibilityDecision => {
   const ruleCodes: string[] = [];
   let status: CompatibilityDecisionStatus = 'compatible';
@@ -101,8 +103,7 @@ export const evaluateCompatibility = ({
     status,
     addPolicy: policyFor(intent, status),
     ruleCodes: [...new Set(ruleCodes)],
-    catalogVersion: 'unknown',
+    catalogVersion,
     ruleVersion: COMPATIBILITY_RULE_VERSION,
   };
 };
-

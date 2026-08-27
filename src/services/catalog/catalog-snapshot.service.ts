@@ -3,8 +3,8 @@ import { fishData } from '../../data/fishData';
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { Fish } from '../../types';
 
-const LOCAL_VERSION = 'local-fish-data-v1';
-const LOCAL_SNAPSHOT_URL = 'https://catalog.invalid/releases/local-fish-data-v1/catalog.snapshot.json';
+export const LOCAL_CATALOG_VERSION = 'local-fish-data-v1';
+const LOCAL_SNAPSHOT_URL = `https://catalog.invalid/releases/${LOCAL_CATALOG_VERSION}/catalog.snapshot.json`;
 
 export type CatalogLoadResult = {
   snapshot: CatalogSnapshot;
@@ -76,7 +76,7 @@ export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
   const evidenceSources = collectEvidenceSources(profiles, pairRules);
   const snapshotWithoutChecksum: CatalogSnapshot = {
     manifest: {
-      version: LOCAL_VERSION,
+      version: LOCAL_CATALOG_VERSION,
       schemaVersion: 1,
       checksumSha256: '',
       speciesCount: fishData.length,
@@ -144,4 +144,3 @@ export const loadCatalogSnapshot = async (options: { manifestUrl?: string; fetch
     return { snapshot: local, source: 'local', fallbackReason: reason };
   }
 };
-
