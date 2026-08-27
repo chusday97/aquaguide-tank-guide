@@ -40,7 +40,7 @@ try {
     const firstSpeciesName = (await discovery.locator('h3').innerText()).trim();
     await discovery.getByRole('button', { name: '查看物种详情', exact: true }).click();
     await page.waitForURL(/\/encyclopedia\?species=.*source=daily-discovery/);
-    const detailSurface = page.locator('[data-surface="centered-dialog"], [data-surface="bottom-sheet"]');
+    const detailSurface = page.locator('[data-surface="centered-dialog"], [data-surface="bottom-sheet"], [data-surface="detail-rail"]');
     await detailSurface.waitFor({ state: 'visible' });
     await detailSurface.getByRole('button', { name: '知道了', exact: true }).click();
     await page.waitForURL(url => url.pathname === '/aquarium');
