@@ -2,6 +2,22 @@
 
 ## 2026-08-25
 
+## 2026-08-28 — Local Supabase parity gate
+
+### Added
+
+- Added repository-local Supabase CLI configuration and a transaction-isolated Catalog/RLS pgTAP suite.
+- Added explicit read-only anonymous grants for proposed Catalog tables and revoked ordinary-role execution of the published-release mutation helper.
+
+### Changed
+
+- Moved legacy PostgreSQL fixtures out of the automatic `supabase test db --local` directory.
+- Verified a clean 26+1 migration replay, zero schema-lint errors, 18/18 Catalog/RLS assertions, exact normalized 26-migration parity against the production read-only baseline, and local anonymous read/write behavior.
+
+### Notes
+
+- This is local evidence only. Production Catalog migration, Catalog publication, business-data writes, GitHub push, PR #142 update, Vercel deployment and `main` merge were not performed.
+
 ## 2026-08-27 — Main convergence candidate
 
 - Added `.ai/MAIN_CONVERGENCE_LEDGER.md` and created `codex/main-core-foundation-v1` from the latest `origin/main`.

@@ -1,5 +1,13 @@
 # AI Execution Log
 
+## 2026-08-28 — Local Supabase replay and RLS verification
+
+- Started Docker Desktop and initialized the repository-local Supabase CLI configuration with production-compatible legacy grants for the existing 26-migration history.
+- Replayed the first 26 migrations from an empty local database. Normalized hashes for columns, constraints, functions, indexes, policies, table grants and triggers exactly matched the read-only production baseline.
+- Hardened the proposed Catalog migration with explicit Data API grants/revokes and moved legacy non-pgTAP SQL fixtures out of `supabase/tests/`.
+- Added an 18-assertion transaction-isolated Catalog/RLS pgTAP suite. Full 27-migration replay, schema lint, Catalog contract/snapshot validation, domain/API/repository tests and UI freeze checks pass locally.
+- Local anonymous REST read returned 200 for published Catalog data; anonymous write returned 401/`42501`. No production migration, Catalog publication, business-data write, GitHub push, PR update or main merge occurred.
+
 ## 2026-08-25 — Initialize `.ai/`
 
 ## 2026-08-27 — Main convergence candidate

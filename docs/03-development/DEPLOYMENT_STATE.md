@@ -21,6 +21,14 @@
 | Environment parity | The current branch was verified against the connected cloud environment | Migration history conflict found; reconciliation required before Catalog release. |
 | Human visual acceptance | A person accepted the rendered UI | The 4317 local interactive baseline is user-confirmed; a matching deployed-SHA review remains pending. |
 
+## 2026-08-28 local Supabase replay and permission gate
+
+- Docker Desktop and the local Supabase CLI stack are running. `supabase db reset --local --no-seed` replayed all 27 repository migrations from an empty local database.
+- After matching the local CLI exposure setting to the existing production grant baseline, the first 26 migration schemas have exact normalized hash parity with the read-only production snapshot: columns `480`, constraints `203`, functions `13`, indexes `86`, policies `89`, table grants `980`, triggers `33`.
+- The Catalog migration adds explicit grants: `anon` is read-only, `authenticated` can read and maintain drafts subject to RLS, and the published-release mutation helper is not executable by ordinary roles. Local pgTAP passed 18/18 assertions; schema lint returned zero errors.
+- Local PostgREST checks returned HTTP 200 for anonymous published Catalog reads and HTTP 401/`42501` for anonymous Catalog writes. These are local authorization results only; no production write or migration was attempted.
+- Production remains `MIGRATION_REQUIRED` for Catalog objects and `UNVERIFIED` for production write semantics. The Vercel exact-SHA check remains blocked by the deployment rate limit; this local database work does not change the UI or trigger a deployment.
+
 ## 2026-08-25 non-secret deployment audit
 
 - The candidate now contains the 26 production migration versions plus the candidate-only `202608270001_catalog_releases_and_species_water_type.sql` (27 tracked files total). The memorial migration is aligned to production's `202607290004` version; no duplicate `202607290001` memorial version remains.

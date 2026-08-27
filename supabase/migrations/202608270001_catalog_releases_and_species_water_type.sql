@@ -89,6 +89,22 @@ create policy catalog_releases_admin_update on public.catalog_releases for updat
 drop policy if exists catalog_releases_admin_delete on public.catalog_releases;
 create policy catalog_releases_admin_delete on public.catalog_releases for delete using (public.is_admin());
 
+-- Data API exposure is explicit: published content is publicly readable, while
+-- mutations remain subject to the administrator-only RLS policies above.
+grant select on table public.species_reference_links to anon, authenticated, service_role;
+grant insert, update, delete on table public.species_reference_links to authenticated, service_role;
+grant select on table public.catalog_releases to anon, authenticated, service_role;
+grant insert, update, delete on table public.catalog_releases to authenticated, service_role;
+revoke insert, update, delete, truncate, references, trigger on table public.species_reference_links from anon;
+revoke truncate, references, trigger on table public.species_reference_links from authenticated;
+revoke references, trigger on table public.species_reference_links from service_role;
+revoke insert, update, delete, truncate, references, trigger on table public.catalog_releases from anon;
+revoke truncate, references, trigger on table public.catalog_releases from authenticated;
+revoke references, trigger on table public.catalog_releases from service_role;
+
+-- Trigger helpers are not part of the public Data API surface.
+revoke all on function public.prevent_published_catalog_release_mutation() from public, anon, authenticated, service_role;
+
 drop trigger if exists species_reference_links_set_updated_at on public.species_reference_links;
 create trigger species_reference_links_set_updated_at
   before update on public.species_reference_links

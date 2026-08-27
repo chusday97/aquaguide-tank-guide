@@ -49,3 +49,45 @@
 - 不能把 `list_tables` 的空行数当成“没有数据”或“数据已同步”；当前数据数量属于权限/环境观察结果，需通过发布 Catalog API 或受控查询复核。
 - 任何字段、RLS、RPC 或 migration 顺序冲突都会停止 Preview/main 发布。
 - 本报告中的数量等价不代表策略语义已经等价；逐条策略和身份回归仍是 release gate。
+
+## 2026-08-28 本地 Supabase 26+1 重放证据
+
+本节记录候选分支在本机 Supabase CLI 栈中的可复现实验，不改变上面的生产只读结论，也不代表已执行生产 migration 或写入。
+
+### 前 26 个生产版本
+
+本地从零重放至 `20260816160129_atomic_verified_livestock_relocation` 后，规范化结构清单与生产只读基线逐项匹配：
+
+| 对象 | 数量 | SHA-256（本地 = 生产） |
+| --- | ---: | --- |
+| columns | 480 | `2a9109a0af89bd0c7ccf048071559d7f` |
+| constraints | 203 | `2f2129eff15bce6c57b63950f594160c` |
+| functions | 13 | `ea62f23288ff3869354e19110e895812` |
+| indexes | 86 | `42f4e1cbfb24275267e5b3103683d866` |
+| policies | 89 | `fe306d2ff4f4e66d7cccca6e9d17db44` |
+| table grants | 980 | `496e09488c420b883880edee52b80724` |
+| triggers | 33 | `757f63626496733cee00d13083e3b7eb` |
+
+因此，前 26 个版本的本地结构与已取得的生产规范化基线标记为 `EQUIVALENT`。这仍不替代生产身份写入、并发和回滚验证。
+
+### 第 27 个 Catalog 提案
+
+- 完整重放 26+1 migration 成功；`supabase db lint --local --schema public --level error --fail-on error` 返回 0 条错误。
+- `supabase test db --local` 通过 18/18 个 Catalog/RLS pgTAP 断言，覆盖匿名读取、匿名写入拒绝、管理员草稿写入和已发布记录不可变性。
+- 本地 PostgREST 匿名 `GET /rest/v1/catalog_releases` 返回已发布记录（HTTP 200）；匿名 `POST` 被权限拒绝（HTTP 401，PostgreSQL `42501`）。这是本地权限证据，不是生产写入验证。
+- Catalog 快照仍为本地 486 个物种、13 个证据来源，checksum 为 `45f4f10ec1199f16543c93d12cd68526cce97b13bd7633aa04d156b1ab4a835a`；本地/云端生产 Catalog checksum 仍为 `UNVERIFIED`，因为生产表尚不存在。
+- 生产 `catalog_releases`、`species_reference_links` 和 `species.water_type` 仍未部署；第 27 个 migration、Catalog 发布和 `main` 合并均未执行。
+
+### 本地门禁命令
+
+```text
+supabase db reset --local --no-seed
+supabase test db --local
+supabase db lint --local --schema public --level error --fail-on error
+npm run test:catalog-release-contract
+npm run test:catalog-snapshot
+npm run catalog:validate
+npm run check:ui-freeze
+```
+
+结果仅证明候选分支可在本地重放并通过权限回归；生产 parity 仍须在独立授权后重新读取确认。

@@ -1,5 +1,14 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 本地 Supabase 验证续跑
+
+- 当前目标：在 Vercel 等待期间完成候选分支的本地数据库重放与权限门禁，不改变 localhost UI、不写生产 Supabase、不推送 GitHub。
+- 已完成：Docker Desktop + Supabase CLI 本地栈；前 26 个生产 migration 从零重放；七类规范化结构 hash 与生产只读基线完全一致；第 27 个 Catalog migration 本地重放、schema lint 和 18/18 pgTAP 通过；匿名 Catalog REST 读取成功、匿名写入被 `401/42501` 拒绝。
+- 关键文件：`supabase/config.toml`、`supabase/tests/catalog_rls.test.sql`、`supabase/fixtures/`、`docs/05-validation/SUPABASE_PARITY_REPORT.md`。
+- 当前卡点：生产尚未执行第 27 个 migration，生产 Catalog checksum 与真实身份写入/回滚语义仍 `UNVERIFIED`；Vercel exact Preview SHA 仍受 `build-rate-limit` 阻塞；PR #142 和 `main` 均未改变。
+- 下一步：先由独立 Critic 只读审查本地 migration/config/test diff；修复并复验后，再单独申请生产第 27 个 migration 授权。Catalog 发布与合并 `main` 继续分别授权。
+- 禁止重踩：不要运行 `supabase db reset --linked`、`supabase db push`、生产 DDL/DML；不要把本地 pgTAP/REST 结果描述为生产写入已验证；不要修改视觉文件。
+
 ## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline
 
 - GP-002 已升级为 covered：真实 Chromium 连续执行“搜索宝莲灯 → 精确物种详情 → 主 CTA 进入混养 → 候选 ×6 → caution 风险确认 → 实际入缸 → 持久化数量验证”，不得用多个单点测试替代。

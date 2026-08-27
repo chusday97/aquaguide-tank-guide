@@ -40,6 +40,9 @@
 - `supabase/migrations/202608090001_evidence_timeline_recurrence.sql` 至 `202608090002_atomic_care_reminder_completion.sql`：可信证据、时间线来源、循环养护字段，以及完成当前计划和生成下一期的原子事务函数。
 - `supabase/migrations/20260815115240_atomic_water_change_record.sql` 至 `20260816160129_atomic_verified_livestock_relocation.sql`：生产已部署的换水原子写入、函数安全、RLS 优化、养护事件/清单和缸内物种迁移历史；本地候选已恢复，尚未执行任何生产动作。
 - `supabase/migrations/202608270001_catalog_releases_and_species_water_type.sql`：Catalog 发布、显式水体和证据引用提案；待独立生产授权。
+- `supabase/config.toml`：本地 Supabase CLI 配置；保持现有生产 26 个 migration 的默认 grants parity，新表由 migration 显式收紧权限。
+- `supabase/tests/catalog_rls.test.sql`：Catalog 表、发布不可变性、匿名读取和管理员草稿写入的 pgTAP 回归。
+- `supabase/fixtures/`：不随 `supabase test db` 自动执行的旧 PostgreSQL 原子生物写入 fixtures，由专项 npm 测试显式调用。
 
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
@@ -164,7 +167,7 @@
 - `scripts/test-business-api-contract.ts` / `scripts/test-repository-boundary.ts`：业务路由、校验、稳定 ID、安全规则与本地/云端访问边界回归。
 - `scripts/test-aquarium-creation-semantics.ts` / `scripts/test-addition-intents.ts` / `scripts/test-livestock-recording.ts`：空白鱼缸语义、两类 Intent 策略与现实记录顺序/幂等专项。
 - `supabase/migrations/202608090003_atomic_livestock_addition.sql`：原子创建/复用父物种、写入批次并登记幂等结果。
-- `scripts/test-atomic-livestock-addition.ts` / `supabase/tests/atomic_livestock_addition.sql`：代码契约及真实 PostgreSQL 父记录成功、批次失败回滚专项。
+- `scripts/test-atomic-livestock-addition.ts` / `supabase/fixtures/atomic_livestock_addition.sql`：代码契约及真实 PostgreSQL 父记录成功、批次失败回滚专项；fixture 不作为 pgTAP 自动测试执行。
 - `apps/api/src/livestock-addition-error.ts` / `scripts/test-livestock-addition-api-errors.ts`：原子 RPC 的 404、409 与 503 错误语义映射和回归。
 - `scripts/verify-aquarium-factual-flow.mjs`：真实浏览器验证创建无伪数据、规划不写入、明确现实确认后保存和旧深链兼容。
 - `scripts/test-livestock-memorial-replay.ts`：已提交纪念重放先于父记录所有权查询的行为回归。
