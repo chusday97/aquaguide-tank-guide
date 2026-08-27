@@ -6,9 +6,11 @@ const state = JSON.parse(readFileSync('.ai/PROJECT_STATE.json', 'utf8'));
 const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
 const sha = git(['rev-parse', 'HEAD']);
 const dirty = git(['status', '--porcelain']);
-const remoteBranch = `origin/${state.canonicalBranch}`;
+const allowedBranches = new Set([state.canonicalBranch, state.releaseCandidate?.branch].filter(Boolean));
+const remoteTrackedBranch = allowedBranches.has(branch) ? branch : state.canonicalBranch;
+const remoteBranch = `origin/${remoteTrackedBranch}`;
 let remoteSha = null;
-if (existsSync('.git/refs/remotes/origin/' + state.canonicalBranch)) {
+if (existsSync('.git/refs/remotes/origin/' + remoteTrackedBranch)) {
   remoteSha = git(['rev-parse', remoteBranch]);
 } else {
   // `--verify --quiet` avoids printing a fatal error while the candidate
@@ -20,8 +22,8 @@ if (existsSync('.git/refs/remotes/origin/' + state.canonicalBranch)) {
   }
 }
 
-if (branch !== state.canonicalBranch && process.env.CI !== 'true') {
-  throw new Error(`Run project:status from ${state.canonicalBranch}; current branch is ${branch}.`);
+if (!allowedBranches.has(branch) && process.env.CI !== 'true') {
+  throw new Error(`Run project:status from ${state.canonicalBranch} or ${state.releaseCandidate?.branch}; current branch is ${branch}.`);
 }
 if (remoteSha && remoteSha !== sha && process.env.CI !== 'true') {
   throw new Error(`Candidate branch is not synchronized with origin (${sha} != ${remoteSha}).`);

@@ -63,6 +63,7 @@
 - [x] `npm run test:today-action` 通过；未新增数据库字段、API 或 Supabase 写入。
 - [x] 390px 几何门禁确认今日行动位于舞台底部拉起区域，1280px 继续使用右上浮层。
 - [x] 修复 Care hash 深链、Encyclopedia mode URL 持久化，并补齐今日行动 Enter/Space 回归；Critic 阻塞项已处理。
+- [x] `project:status` 支持 recovery/candidate 双入口；候选分支本地与远端 SHA 已一致（`a8532072`）。
 - [x] `npm run test:disclosures` 通过，今日行动折叠用途已登记为 `today_action_surface`。
 
 ### 底层门禁复验
