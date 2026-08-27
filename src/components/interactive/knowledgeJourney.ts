@@ -1,3 +1,4 @@
+// Preview-only fixture: keep this journey isolated from production domain rules.
 export type KnowledgeObjectId = 'water_surface' | 'water_body' | 'livestock' | 'filter' | 'substrate' | 'plants_equipment';
 export type KnowledgeUrgency = 'routine' | 'watch' | 'urgent';
 export type KnowledgeObservation = {
