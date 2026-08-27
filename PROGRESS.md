@@ -35,7 +35,8 @@
 
 - 已确认 main 收敛候选存在真实视觉回退：`/_preview/interactive`、`aquarium-stage-layout-v4.css`、`immersive-detail-layout-v5.css` 被移除，`src/index.css` 相比用户确认基线少约 919 行。
 - 已从 `codex/main-core-foundation-v1` 创建本地恢复分支 `codex/main-visual-recovery-v1`；恢复互动预览路由、场景组件、canonical 舞台/详情样式和互动样式，未回退 Domain/Catalog/Service/API/Supabase。
-- 本地 `npm run lint`、`npm run build` 通过；预览构建包含 `InteractivePreview` chunk。4319 被旧进程占用，候选实际启动于 4326；固定视口人工验收仍待完成。
+- 已恢复生产 Aquarium 的单一沉浸舞台：tank/status/actions 重新归一到 dashboard stage，3D 相机使用 `stage-cover`，并恢复场景标题与缸内物种入口（commit: `5ab8ca79`）。
+- `test:aquarium-stage-layout`、`test:three-stage-framing`、`npm run lint`、`npm run build`、`npm run check:project-truth` 通过；预览构建包含 `InteractivePreview` chunk。4319 被旧进程占用，候选实际启动于 4326；固定视口人工验收仍待完成。
 - 当前视觉门禁：`FAILED / recovery in progress`；PR #142 未更新、未推送、未合并。
 
 ### 2026-08-27 Service/API 添加契约门禁
