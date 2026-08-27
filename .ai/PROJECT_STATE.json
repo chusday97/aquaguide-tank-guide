@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "updatedAt": "2026-08-27",
-  "canonicalBranch": "codex/main-core-foundation-v1",
-  "canonicalRole": "main release candidate; becomes canonical only after release acceptance",
+  "canonicalBranch": "codex/main-visual-recovery-v1",
+  "canonicalRole": "current recovery worktree; candidate is promoted only after visual and release gates",
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
   "visualGate": "failed_recovery_in_progress",
   "releaseBranch": "main",
@@ -20,6 +20,11 @@
     "branch": "integration/aquaguide-rc1",
     "sha": "895f2f3959dc42b653fbb4f33cc25044e5785da3",
     "role": "verified business capability source; migrate selectively"
+  },
+  "releaseCandidate": {
+    "branch": "codex/main-core-foundation-v1",
+    "head": "4e160962a8735e4b5b743acbb553c55ee6f93908",
+    "role": "Draft PR #142 release candidate; not updated with visual recovery yet"
   },
   "activePullRequest": {
     "number": 142,

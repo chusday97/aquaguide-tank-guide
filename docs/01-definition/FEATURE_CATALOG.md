@@ -21,8 +21,8 @@
 | App shell and responsive surfaces | `CURRENT_VERIFIED` | Viewport-driven desktop/phone shell, Rail/Sheet/Blocking surface behavior | `UI_REGRESSION_CONTRACT.md`, Visual Acceptance Matrix |
 | Aquarium workspace | `CURRENT_VERIFIED` | Immersive 3D stage, tank selection/settings, livestock entry, task surfaces and timeline entry | `src/pages/Aquarium.tsx`, Visual Baseline |
 | Real livestock vs planning | `CURRENT_VERIFIED` | Existing livestock is recorded as fact; planned additions remain planning until explicitly confirmed | `CONTRACT.md`, `src/services/aquarium/` |
-| Encyclopedia and species detail | `CURRENT_VERIFIED` | Browse, search/filter, persistent detail Rail/Sheet, collection and compatibility entry points | `src/pages/Encyclopedia.tsx`, Visual Acceptance Matrix |
-| Care | `CURRENT_VERIFIED` | Interactive exploration plus browse fallback, article/task/reminder flows | `src/pages/CareEncyclopedia.tsx`, Visual Acceptance Matrix |
+| Encyclopedia and species detail | `PARTIAL_WITH_FALLBACK` | Browse, search/filter and detail flows work; formal interactive scene entry is being restored from the approved visual baseline | `src/pages/Encyclopedia.tsx`, `src/components/interactive/SpeciesSceneAtlas.tsx`, Visual Acceptance Matrix |
+| Care | `PARTIAL_WITH_FALLBACK` | Browse, article/task/reminder flows work; formal interactive exploration entry is being restored from the approved visual baseline | `src/pages/CareEncyclopedia.tsx`, `src/components/interactive/KnowledgeSceneExplorer.tsx`, Visual Acceptance Matrix |
 | Collection | `CURRENT_VERIFIED` | Wishlist, care saves, memorials, achievements and deep links | `src/pages/Collection*.tsx`, Visual Acceptance Matrix |
 | Compatibility | `PARTIAL_WITH_FALLBACK` | Deterministic current baseline and safe insufficient-data outcomes | `src/lib/tankCompatibilityEngine.ts`, `CONTRACT.md` |
 | Identification and health triage | `PARTIAL_WITH_FALLBACK` | Candidate confirmation, manual species fallback, controlled questions and urgent-path handling | `src/pages/Identify.tsx`, `src/services/ai/` |

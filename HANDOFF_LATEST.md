@@ -11,6 +11,12 @@
 - Critic 复验后，互动 journey 已明确为 preview-only fixture，Archive 外层补充 `aria-label`（`62135580`）。Critic 认为恢复代码基本合理，但要求先完成固定视口视觉、Preview SHA 与 PR 同步，才可继续 main 门禁。
 - 继续执行前必须先完成 390/600/1280px 视觉复验，再决定是否将恢复提交合入候选并推送 PR #142。
 
+## 2026-08-27 统一计划执行校正
+
+- 当前实际工作树为 `codex/main-visual-recovery-v1`；PR #142 仍指向旧候选 `codex/main-core-foundation-v1`，不能把旧 CI 结果当作恢复版本证据。
+- `/_preview/interactive` 已渲染，但正式 `/encyclopedia` 当前没有 `SpeciesSceneAtlas` 场景入口，正式 `/care` 当前没有 `KnowledgeSceneExplorer` 场景入口；两个模块状态已降级为 `PARTIAL_WITH_FALLBACK`。
+- 本轮先同步状态和交接文档，下一步恢复正式路由的 scene/browse 双模式，再做今日行动；Supabase、Preview 推送和 main 合并保持暂停。
+
 ## 2026-08-27 Main 收敛分支
 
 - 当前工作分支：`codex/main-core-foundation-v1`，基于 `origin/main@ed0cf380`。

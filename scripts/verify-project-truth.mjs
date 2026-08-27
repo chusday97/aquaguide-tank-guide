@@ -18,7 +18,8 @@ for (const file of requiredFiles) {
   if (!existsSync(resolve(root, file))) throw new Error(`Missing canonical truth file: ${file}`);
 }
 const state = JSON.parse(readFileSync(resolve(root, '.ai/PROJECT_STATE.json'), 'utf8'));
-if (state.canonicalBranch !== 'codex/main-core-foundation-v1') throw new Error('PROJECT_STATE canonical branch is not the current release candidate.');
+if (!state.canonicalBranch || !state.releaseCandidate?.branch) throw new Error('PROJECT_STATE must name both the active worktree and release candidate.');
+if (state.releaseCandidate.branch !== 'codex/main-core-foundation-v1') throw new Error('PROJECT_STATE release candidate branch is not the expected main convergence branch.');
 if (state.releaseBranch !== 'main') throw new Error('PROJECT_STATE release branch must remain main.');
 const ledger = readFileSync(resolve(root, '.ai/MAIN_CONVERGENCE_LEDGER.md'), 'utf8');
 for (const status of ['MIGRATED', 'PARTIAL_WITH_FALLBACK', 'PENDING']) {

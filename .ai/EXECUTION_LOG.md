@@ -12,6 +12,12 @@
 - Verification: `npm run lint` and `npm run build` pass; the preview build contains the restored `InteractivePreview` chunk. Fixed-viewport browser review is still pending because the local browser policy blocked localhost inspection.
 - Remote: not pushed; PR #142 remains unchanged and not release-ready.
 
+## 2026-08-27 — Unified plan execution started
+
+- Corrected canonical status to distinguish the active recovery worktree from the PR #142 release candidate.
+- Marked formal Encyclopedia and Care scene entry as `PARTIAL_WITH_FALLBACK`; preview-only scene components are not treated as restored product routes.
+- Updated project-truth verification to require both active worktree and release-candidate metadata.
+
 - Created `codex/main-core-foundation-v1` from `origin/main@ed0cf380`.
 - Migrated only accepted P0 compatibility capabilities from `99865414` and `c822bd0e`; resolved the main Dialog prop mismatch with commit `5b0c8ea7`.
 - Verification: `npm run lint` PASS and `npm run test:compatibility` PASS (19 assertions).

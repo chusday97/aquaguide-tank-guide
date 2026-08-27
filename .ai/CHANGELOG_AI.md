@@ -7,6 +7,14 @@
 - Added `.ai/MAIN_CONVERGENCE_LEDGER.md` and created `codex/main-core-foundation-v1` from the latest `origin/main`.
 - Selectively migrated verified compatibility authority and empty-tank safety boundaries; no Supabase write or whole-PR merge was performed.
 
+## 2026-08-27 — Unified plan execution
+
+### Changed
+
+- Distinguished the visual recovery worktree from the Draft PR #142 release candidate in project truth.
+- Reclassified formal Encyclopedia/Care interactive scenes as partial until their production routes are reconnected.
+- Updated the project-truth gate to validate both branch roles.
+
 ### Added
 
 - 用户批准 P0 契约后，新增本地当前鱼缸/换水规则、审核阶段风险证据、派生服务和确定性回归；未改 UI、SQL、API 或 Supabase。

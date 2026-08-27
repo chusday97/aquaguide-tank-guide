@@ -40,6 +40,13 @@
 - 独立 Critic 复验后将互动 journey 明确标注为 preview-only，并为 Archive 外层补充可访问性标签（commit: `62135580`）；Critic 六维结论为“代码基本合理、视觉发布门禁未通过”，未推送、未更新 PR。
 - 当前视觉门禁：`FAILED / recovery in progress`；PR #142 未更新、未推送、未合并。
 
+### 2026-08-27 统一计划执行：状态真相校正
+
+- 已将当前工作树与 PR 发布候选分离记录：工作树为 `codex/main-visual-recovery-v1`，PR #142 仍为 `codex/main-core-foundation-v1`。
+- 已把正式 Encyclopedia/Care 互动入口降级为 `PARTIAL_WITH_FALLBACK`；预览页存在不再等同于正式页面恢复。
+- 已更新 `.ai/PROJECT_STATE.json`、`docs/PROJECT_TRUTH.md`、`FEATURE_CATALOG.md`、`HANDOFF_LATEST.md` 与 project-truth 校验，避免旧候选 CI 被误当作恢复版本证据。
+- 验证：`npm run project:status`、`npm run check:project-truth`、`git diff --check` 通过；恢复分支尚未推送。
+
 ### 2026-08-27 Service/API 添加契约门禁
 
 - [x] `LivestockAddCommand` 与 `aquariumSpeciesCreateSchema` 增加 `intent`、`catalogVersion`、`compatibilityConfirmation`。

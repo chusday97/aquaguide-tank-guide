@@ -20,4 +20,4 @@
 
 ## 当前状态
 
-`IN_PROGRESS` — 阶段 1–7 已完成：canonical routing、历史证据降级、4317 UI 验收矩阵、功能目录、非敏感部署审计、Git/PR 门禁，以及经用户接受的 P0 本地规则迁移均已落地。阶段 8 已建立发布门禁，仍等待 exact Preview SHA、授权 schema/RLS parity 和单独 release acceptance。统一分支为 `codex/unified-rc-visual-v1`。
+`IN_PROGRESS` — 当前工作树为 `codex/main-visual-recovery-v1`，目标是先恢复用户确认的正式互动视觉，再把经过门禁的恢复提交提升到 Draft PR #142 的 `codex/main-core-foundation-v1`。发布前仍需 Domain/Service 唯一权威、固定视口视觉、今日行动、exact Preview SHA、授权 schema/RLS parity 和 release acceptance；`main` 尚未合并。
