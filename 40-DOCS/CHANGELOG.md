@@ -6,6 +6,7 @@
 - 从最新 `origin/main` 建立 `codex/main-core-foundation-v1`，按能力台账选择性迁移已验证混养规则；PR #141 继续作为历史证据，不整体合并。
 - 记录当前迁移状态与门禁于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。
 - 增加 Catalog manifest/snapshot 契约、本地 SHA-256 校验与云端失败回退，以及当前发布版本只读 API；Supabase migration 仅作为提案保存，未执行。
+- 增加纯函数 Domain compatibility authority 基础层，统一空缸/未知资料降级和现实记录与规划添加策略；旧 UI 引擎暂保留兼容适配。
 
 ### Changed
 - 定义“记录已有生物”和“规划想养生物”两类添加语义；现实事实不再受混养结论阻断。

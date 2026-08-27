@@ -39,3 +39,4 @@ export * from './species-diagnosis';
 export * from './bioload';
 export * from './tank-state';
 export * from './water-change';
+export * from './compatibility';

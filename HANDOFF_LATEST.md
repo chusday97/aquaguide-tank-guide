@@ -16,6 +16,12 @@
 - 当前本地快照为 486 个物种、13 个证据来源；旧物种水体字段仍为 `unknown`，等待审核数据回填，禁止文本推断。
 - Migration 尚未执行；API 在生产 schema 未部署前预期返回 `503/404`，这是当前已知边界，不是静默成功。
 
+### Domain Rules 阶段新增
+
+- `packages/domain-rules/src/compatibility.ts` 已提供纯函数兼容判断基础层和统一添加策略；专项测试通过。
+- 旧 UI 引擎仍保留作兼容适配，尚未宣称已完成全量切换；下一步是 Service/Repository 使用同一 Catalog 版本重新判断。
+- 沙箱运行 `tsx` 时曾被临时 IPC 权限阻断，需在授权环境重跑既有 `npm run test:compatibility` 作为验证证据。
+
 ## 当前工作基线
 
 - **统一进度入口：** `.ai/PROJECT_STATE.json`。新接手者先读该文件，再读本 Handoff；不得从旧 RC、本地旧 worktree 或 PR #140 推断当前目标。
