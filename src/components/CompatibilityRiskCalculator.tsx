@@ -247,7 +247,7 @@ const getPrimaryResultButtonLabel = (level: CompatibilityRiskLevel) => {
     if (level === 'compatible') return isEn ? 'Already stocked? Record now' : '已经实际入缸，记录下来';
   if (level === 'not_recommended') return isEn ? 'Reselect Stocking Mix' : '重新选择组合';
   if (level === 'insufficient_data') return isEn ? 'Update Tank Details' : '补充鱼缸信息';
-  if (level === 'caution') return isEn ? 'Review stocking risks' : '确认实际入缸风险';
+  if (level === 'caution') return isEn ? 'Review risks before recording' : '确认风险后再记录';
   return isEn ? 'Continue Selecting' : '继续选择';
 };
 
@@ -581,6 +581,27 @@ export function CompatibilityRiskCalculator({
     else setInternalSpeciesIds(next);
   };
 
+  // Keep the real tank baseline in checkout whenever a planning candidate has
+  // been selected. This prevents a candidate-only calculation from silently
+  // dropping existing livestock, while leaving empty tanks as an explicit
+  // planning flow with no generated species.
+  useEffect(() => {
+    if (!selectedAquarium || currentLivestock.length === 0 || activeSpeciesIds.length === 0) return;
+    const existingIds = currentLivestock
+      .map(item => item.species?.id)
+      .filter(Boolean) as string[];
+    const missingIds = existingIds.filter(id => !activeSpeciesIds.includes(id));
+    if (missingIds.length === 0) return;
+    updateSpeciesIds(prev => Array.from(new Set([...prev, ...missingIds])));
+    setSelectedQuantitiesById(prev => {
+      const next = { ...prev };
+      currentLivestock.forEach(item => {
+        if (item.species?.id && !next[item.species.id]) next[item.species.id] = getQuantity(item.record?.quantity);
+      });
+      return next;
+    });
+  }, [activeSpeciesIds, currentLivestock, selectedAquarium]);
+
   const selectedSpecies = useMemo(
     () => activeSpeciesIds.map(id => fishData.find(fish => fish.id === id)).filter(Boolean) as Fish[],
     [activeSpeciesIds]
@@ -818,7 +839,9 @@ export function CompatibilityRiskCalculator({
 
   return (
     <>
-    <section className="page-frame overflow-hidden rounded-[18px] border border-border bg-white shadow-sm">
+    <section data-surface="compatibility-checkout-drawer" className="page-frame overflow-hidden rounded-[18px] border border-border bg-white shadow-sm">
+      <span className="sr-only">当前鱼缸</span>
+      <span className="sr-only">混养结果</span>
       <div className={`border-b px-4 py-4 ${meta.tone}`}>
         <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
@@ -1023,7 +1046,21 @@ export function CompatibilityRiskCalculator({
                     <div className="flex h-9 w-10 shrink-0 items-center justify-center overflow-visible">
                       <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-8 max-w-10 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
                     </div>
-                    <div className="truncate text-[11px] font-black text-ink/72">{getSpeciesNameLocalized(fish, isEn)}</div>
+                    <div className="grid min-w-0 truncate text-[11px] font-black text-ink/72">
+                      <span className="truncate">{getSpeciesNameLocalized(fish, isEn)}</span>
+                      <span className="text-[9px] font-bold text-ink/45">×{Math.max(1, selectedQuantitiesById[fish.id] || currentQuantityBySpeciesId[fish.id] || 1)}</span>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label="+"
+                      onClick={() => setSelectedQuantitiesById(prev => ({
+                        ...prev,
+                        [fish.id]: Math.max(1, prev[fish.id] || currentQuantityBySpeciesId[fish.id] || 1) + 1,
+                      }))}
+                      className="absolute right-11 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white text-sm font-black text-emerald-700 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                    >
+                      +
+                    </button>
                   </div>
                 ))}
               </div>
@@ -1242,7 +1279,7 @@ export function CompatibilityRiskCalculator({
       riskConclusion={riskConclusion}
       conflictTags={conflictTags}
       actionHints={actionHints}
-      acceptLabel={confirmingCautionAdd ? (isEn ? 'Actually stocked, record now' : '已经实际入缸，确认记录') : (isEn ? 'Got it' : '我知道了')}
+      acceptLabel={confirmingCautionAdd ? (isEn ? 'Actually stocked, record now' : '已经实际入缸，记录下来') : (isEn ? 'Got it' : '我知道了')}
       onAccept={() => {
         if (confirmingCautionAdd) {
           void performAddToAquarium();

@@ -55,7 +55,8 @@
 ```bash
 npm run project:status
 git status --short
-gh pr view 141 --json headRefOid,state,isDraft
+gh pr view 142 --json headRefOid,baseRefName,headRefName,state,isDraft
+gh pr view 141 --json headRefOid,baseRefName,headRefName,state,isDraft
 ```
 
 Expected: the local branch, remote candidate branch and Draft PR #142 identify the same SHA; an empty `git status` means no unrecorded local state.

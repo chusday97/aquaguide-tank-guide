@@ -55,6 +55,12 @@
 - [x] 为混养记录失败补齐显式 `recordError` 状态、稳定中英文错误文案和保存中禁用状态；核心流程 v1/v2、产品评测、Golden Path 合约和 build 本地通过。
 - [ ] 等待 PR #142 新一轮远端 CI 运行确认，浏览器 Golden Path 仍由 GitHub runner 执行。
 
+### 2026-08-27 Golden Path 阻塞修复
+
+- [x] 非空鱼缸从物种详情的主 CTA 进入混养结算；结算自动保留真实缸内生物，空缸仍保持主动规划入口。
+- [x] 混养组合补充数量加号与可见数量，谨慎结果按钮统一为“确认风险后再记录”，Portal 确认按真实页面动作验收。
+- [x] `PREVIEW_URL=http://127.0.0.1:4317 npm run test:golden-path-gp002-ui` 通过；待提交、推送并等待 PR #142 远端重跑。
+
 ### 2026-08-27 Critic 修复
 
 - [x] 修复无 `tank` 的规划加入误放行：统一返回 `insufficient_data / complete_information`，并新增回归。

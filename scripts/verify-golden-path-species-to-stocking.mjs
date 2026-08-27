@@ -93,12 +93,12 @@ try {
   assert.equal(/当前鱼缸已有 红绿灯，不建议再加入体型明显更小的 宝莲灯/.test(resultText), false, 'peaceful prey wording must not regress into a predation block');
 
   // Milestone 6: caution requires an explicit confirmation before the real write.
-  let recordButton = calculator.getByRole('button', { name: /已经实际入缸，记录下来|确认风险后再记录/ });
+  let recordButton = page.getByRole('button', { name: /已经实际入缸，记录下来|确认风险后再记录/ });
   await recordButton.waitFor();
   const firstLabel = await recordButton.textContent();
   await recordButton.click();
   if (firstLabel?.includes('确认风险后再记录')) {
-    recordButton = calculator.getByRole('button', { name: '已经实际入缸，记录下来' });
+    recordButton = page.getByRole('button', { name: '已经实际入缸，记录下来' });
     await recordButton.waitFor();
     await recordButton.click();
   }

@@ -622,7 +622,16 @@ export function SpeciesDetailDialog({
       onOpenTankSettings?.('size');
       return;
     }
+    const hasExistingLivestock = aquariumContext.fishes.some(item => Number(item.quantity) > 0);
     if ((displayFit.status === 'suitable') && onAddToTank && !owned && !displayFit.alreadyInTank) {
+      // A planned addition to a non-empty tank must pass through the same
+      // compatibility checkout as caution and conflict paths. Recording an
+      // already-empty tank remains a direct add flow.
+      if (hasExistingLivestock && onGoCalculator) {
+        if (!inCalculator) onAddToCalculator(fish);
+        onGoCalculator();
+        return;
+      }
       onAddToTank(fish);
       return;
     }

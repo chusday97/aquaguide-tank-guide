@@ -26,7 +26,7 @@
 - 沙箱运行 `tsx` 时曾被临时 IPC 权限阻断，需在授权环境重跑既有 `npm run test:compatibility` 作为验证证据。
 - 旧兼容引擎已接入 Domain Rules 适配层：结果保留现有 UI 所需证据列表，但 metadata 的 Catalog 版本、Domain 规则版本、规则代码和域状态由纯函数引擎生成；尚未完成服务端写入前按同一 Catalog Snapshot 重算。
 - Catalog 已具备三个独立本地产物命令：`npm run catalog:build`、`npm run catalog:validate`、`npm run catalog:publish`；发布命令只生成待发布目录，不上传或修改 Supabase。
-- PR #142 首轮 CI 发现 Catalog 校验脚本的 tuple 类型和混养记录失败 UI 契约缺口，已修复；本地完整产品评测/核心流程/build 通过，等待远端重跑确认。
+- PR #142 首轮 CI 发现 Catalog 校验脚本的 tuple 类型和混养记录失败 UI 契约缺口；随后本地 Golden Path 暴露非空缸详情 CTA、数量控件和 Portal 确认按钮断言缺口，均已修复。`npm run test:golden-path-gp002-ui` 已在 4317 通过，等待推送后远端重跑确认。
 
 ## 当前工作基线
 

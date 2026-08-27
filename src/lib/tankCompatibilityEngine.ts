@@ -647,11 +647,10 @@ const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
 });
 
 /**
- * Compatibility UI keeps its existing evidence-rich result shape, while this
- * adapter delegates the authoritative status/version/policy decision to the
- * pure Domain Rules engine. The legacy evaluator is intentionally retained as
- * a presentation/evidence fallback until the service layer consumes Catalog
- * snapshots directly.
+ * During migration, the adapter delegates Domain metadata and add-policy
+ * decisions to the pure Domain Rules engine. The legacy evaluator remains a
+ * presentation/evidence fallback; its status is not yet the service write
+ * authority until Repository/API re-evaluation consumes Catalog snapshots.
  */
 export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput): TankCompatibilityResult => {
   const legacy = evaluateLegacyTankCompatibility(input);
