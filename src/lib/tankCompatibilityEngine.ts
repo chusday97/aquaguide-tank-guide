@@ -3,6 +3,14 @@ import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
 import { getReviewedCompatibilityProfile, getReviewedPairRule, getReviewedStageRiskProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
+import {
+  COMPATIBILITY_RULE_VERSION,
+  evaluateCompatibility,
+  getCompatibilityAddPolicy,
+  type DomainCompatibilityInput,
+  type DomainSpeciesFact,
+  type DomainTankFact,
+} from '../../packages/domain-rules/src';
 import { estimateBioloadUnits } from '../../packages/domain-rules/src';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
@@ -31,6 +39,9 @@ export type TankCompatibilityResult = {
     speciesDataVersion: string;
     calculatedAt: string;
     scope: TankCompatibilityScope;
+    catalogVersion: string;
+    domainRuleCodes: string[];
+    domainStatus: TankCompatibilityStatus;
   };
 };
 
@@ -45,6 +56,7 @@ export type EvaluateTankCompatibilityInput = {
 
 const RULE_VERSION = 'tank-compatibility-v3-stage-risk';
 const SPECIES_DATA_VERSION = 'local-fish-data-v1+compatibility-evidence-v2-stage-risk';
+const CATALOG_VERSION = 'local-fish-data-v1';
 
 const asRule = (
   code: string,
@@ -174,7 +186,7 @@ const formatReviewedStageRiskEvidence = (rule: ReviewedStageRiskProfile) => (
   `${rule.reason} 这是生命阶段相关风险，不代表每一只成体都会发生吞食；在没有隔离措施时不应默认安全。`
 );
 
-export const evaluateTankCompatibility = ({
+const evaluateLegacyTankCompatibility = ({
   tank,
   existingSpecies = [],
   candidateSpecies,
@@ -187,6 +199,9 @@ export const evaluateTankCompatibility = ({
     speciesDataVersion: SPECIES_DATA_VERSION,
     calculatedAt: new Date().toISOString(),
     scope,
+    catalogVersion: 'unknown',
+    domainRuleCodes: [] as string[],
+    domainStatus: 'insufficient_data' as TankCompatibilityStatus,
   };
   const passedRules: TankCompatibilityRule[] = [];
   const warningRules: TankCompatibilityRule[] = [];
@@ -611,6 +626,57 @@ export const evaluateTankCompatibility = ({
   };
 };
 
+const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
+  const temperature = parseRange(fish.waterTemperature);
+  const ph = parseRange(fish.phLevel);
+  return {
+    id: fish.id,
+    waterType: isSaltwaterSpecies(fish) ? 'saltwater' : 'unknown',
+    temperatureMinC: temperature?.min ?? null,
+    temperatureMaxC: temperature?.max ?? null,
+    phMin: ph?.min ?? null,
+    phMax: ph?.max ?? null,
+    reviewed: Boolean(getReviewedCompatibilityProfile(fish.id)),
+  };
+};
+
+const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
+  waterType: tank.waterType === 'Freshwater' ? 'freshwater' : tank.waterType === 'Saltwater' ? 'saltwater' : 'unknown',
+  volumeLiters: getAquariumVolumeLiters(tank) || null,
+  targetTemperatureC: tank.targetTemperature ? Number(tank.targetTemperature) : null,
+});
+
+/**
+ * Compatibility UI keeps its existing evidence-rich result shape, while this
+ * adapter delegates the authoritative status/version/policy decision to the
+ * pure Domain Rules engine. The legacy evaluator is intentionally retained as
+ * a presentation/evidence fallback until the service layer consumes Catalog
+ * snapshots directly.
+ */
+export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput): TankCompatibilityResult => {
+  const legacy = evaluateLegacyTankCompatibility(input);
+  const normalized = normalizeExistingSpecies(input.existingSpecies);
+  const domainInput: DomainCompatibilityInput = {
+    intent: input.scope === 'species_only' ? 'record_existing' : 'planned_addition',
+    tank: input.tank ? toDomainTankFact(input.tank) : null,
+    existingSpecies: normalized.map(item => toDomainSpeciesFact(item.species)),
+    candidateSpecies: input.candidateSpecies ? toDomainSpeciesFact(input.candidateSpecies) : null,
+    explicitPairStatus: legacy.status,
+    catalogVersion: CATALOG_VERSION,
+  };
+  const domainDecision = evaluateCompatibility(domainInput);
+  return {
+    ...legacy,
+    metadata: {
+      ...legacy.metadata,
+      ruleVersion: domainDecision.ruleVersion,
+      catalogVersion: domainDecision.catalogVersion,
+      domainRuleCodes: domainDecision.ruleCodes,
+      domainStatus: domainDecision.status,
+    },
+  };
+};
+
 export const getTankCompatibilityStatusLabel = (status: TankCompatibilityStatus) => {
   switch (status) {
     case 'compatible':
@@ -669,8 +735,5 @@ export const evaluateSpeciesCombination = (species: Fish[]): TankCompatibilityRe
 export const getTankCompatibilityAddPolicy = (
   status: TankCompatibilityStatus,
 ): TankCompatibilityAddPolicy => {
-  if (status === 'compatible') return 'allow';
-  if (status === 'caution') return 'confirm';
-  if (status === 'insufficient_data') return 'complete_information';
-  return 'block';
+  return getCompatibilityAddPolicy('planned_addition', status);
 };

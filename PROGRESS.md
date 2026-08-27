@@ -38,6 +38,12 @@
 - [x] `npm run test:addition-intents`、`npm run test:livestock-addition-api-errors`、`lint`、`check:api` 通过。
 - 尚未完成：云端写入前的服务端 Catalog 重新计算；当前 API 门禁验证客户端提供的同版本确认，需在 Catalog 发布行部署后接入完整 Domain Service。（`15713d32`）
 
+### 2026-08-27 阶段 2：Domain 适配层
+
+- [x] 旧 `src/lib/tankCompatibilityEngine.ts` 现在通过 Domain Rules 生成统一 Catalog 版本、规则版本、规则代码和域状态元数据；现有证据丰富的结果形状与视觉保持兼容。
+- [x] 添加策略统一委托 `packages/domain-rules/src/compatibility.ts`，兼容性回归、Domain 回归、添加意图回归通过。
+- [ ] 仍需把本地/API Repository 的规划写入改为基于同一 Catalog Snapshot 的服务端重新计算；当前旧引擎结果仍是 UI 证据 fallback，状态保持 `PARTIAL_WITH_FALLBACK`。
+
 ### 2026-08-27 Critic 修复
 
 - [x] 修复无 `tank` 的规划加入误放行：统一返回 `insufficient_data / complete_information`，并新增回归。

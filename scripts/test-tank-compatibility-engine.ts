@@ -46,6 +46,19 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     ),
   },
   {
+    name: 'legacy result exposes the domain authority metadata',
+    run: () => {
+      const result = evaluateTankCompatibility({
+        tank: makeTank(),
+        candidateSpecies: makeFish(),
+      });
+      return result.metadata.catalogVersion === 'local-fish-data-v1'
+        && result.metadata.ruleVersion === 'compatibility-domain-v1'
+        && result.metadata.domainRuleCodes.length > 0
+        && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
+    },
+  },
+  {
     name: 'ordinary species does not require a stored pH value',
     run: () => {
       const result = evaluateTankCompatibility({

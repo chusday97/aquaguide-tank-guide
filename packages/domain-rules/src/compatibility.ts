@@ -44,7 +44,10 @@ const statusRank: Record<CompatibilityDecisionStatus, number> = {
   not_recommended: 3,
 };
 
-const policyFor = (intent: CompatibilityIntent, status: CompatibilityDecisionStatus): CompatibilityAddPolicy => {
+export const getCompatibilityAddPolicy = (
+  intent: CompatibilityIntent,
+  status: CompatibilityDecisionStatus,
+): CompatibilityAddPolicy => {
   if (intent === 'record_existing') return 'allow';
   if (status === 'compatible') return 'allow';
   if (status === 'caution') return 'confirm';
@@ -102,7 +105,7 @@ export const evaluateCompatibility = ({
 
   return {
     status,
-    addPolicy: policyFor(intent, status),
+    addPolicy: getCompatibilityAddPolicy(intent, status),
     ruleCodes: [...new Set(ruleCodes)],
     catalogVersion,
     ruleVersion: COMPATIBILITY_RULE_VERSION,
