@@ -12,7 +12,7 @@
 ### Changed
 
 - Moved legacy PostgreSQL fixtures out of the automatic `supabase test db --local` directory.
-- Verified a clean 26+1 migration replay, zero schema-lint errors, 18/18 Catalog/RLS assertions, exact normalized 26-migration parity against the production read-only baseline, and local anonymous read/write behavior.
+- Verified a clean 26+1 migration replay, zero schema-lint errors, 19/19 Catalog/RLS assertions, exact normalized 26-migration parity against the production read-only baseline, and local anonymous read/write behavior.
 
 ### Notes
 

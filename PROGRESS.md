@@ -9,9 +9,9 @@
 
 ## 2026-08-28 本地 Supabase 验证连续推进
 
-- [x] 启动 Docker Desktop 与本地 Supabase CLI 栈，生成 `supabase/config.toml`；设置保留现有生产 26 个 migration 的 grants parity，`.temp/` 和本地凭据保持忽略。
+- [x] 启动 Docker Desktop 与本地 Supabase CLI 栈，生成 `supabase/config.toml`；设置保留现有生产 26 个 migration 的 grants parity，`.temp/` 和本地凭据保持忽略（commit: `b9903924`）。
 - [x] 从零重放前 26 个生产 migration；columns、constraints、functions、indexes、policies、table grants、triggers 七类规范化 hash 与生产只读基线完全一致（见 `docs/05-validation/SUPABASE_PARITY_REPORT.md`）。
-- [x] 完整重放第 27 个 Catalog 提案；显式水体、证据表、发布不可变触发器和 RLS 通过 `supabase db lint --local` 与 18/18 pgTAP 回归。
+- [x] 完整重放第 27 个 Catalog 提案；显式水体、证据表、发布不可变触发器和 RLS 通过 `supabase db lint --local` 与 19/19 pgTAP 回归（commit: `b9903924`）。
 - [x] 本地 PostgREST 验证匿名用户可读取已发布 Catalog、不能写入 Catalog；Catalog 快照 486 物种 checksum `45f4f10e…a835a` 通过本地校验。
 - [ ] 生产仍未执行第 27 个 migration、Catalog 发布或业务数据写入；生产 Catalog checksum、生产身份写入/回滚语义继续标记 `UNVERIFIED`，需独立授权后验证。
 - [ ] Vercel exact Preview SHA 仍受 `build-rate-limit` 阻塞；本轮未触发部署、未更新 PR #142、未合并 `main`。

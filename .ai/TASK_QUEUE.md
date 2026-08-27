@@ -19,7 +19,7 @@
 - [x] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口；2026-08-25 自动门禁通过。
 - [x] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
 - [x] Phase 5a: 启动本地 Supabase 栈并从零重放生产 26 个 migration；七类规范化结构 hash 与生产只读基线完全一致。
-- [x] Phase 5b: 本地重放第 27 个 Catalog 提案；显式 grants/RLS、不可变发布触发器、schema lint 与 18/18 pgTAP 通过；匿名 REST 读写边界已验证。
+- [x] Phase 5b: 本地重放第 27 个 Catalog 提案；显式 grants/RLS、不可变发布触发器、schema lint 与 19/19 pgTAP 通过；匿名/普通用户 REST 写入边界已验证。
 - [ ] Phase 5c: 生产 Catalog migration、Catalog checksum parity、双身份/管理员生产语义仍需独立授权；不得把本地结果描述为生产写入已验证。
 - [x] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线；RC branch protection 等待 workflow 进入基分支后的管理员配置。
 - [x] Phase 7: 用户已接受 P0 兼容性契约；已选择性迁入本地生命周期、审核证据、当前鱼缸/换水纯规则与派生服务，保留现有 UI。

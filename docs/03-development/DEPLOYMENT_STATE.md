@@ -25,7 +25,7 @@
 
 - Docker Desktop and the local Supabase CLI stack are running. `supabase db reset --local --no-seed` replayed all 27 repository migrations from an empty local database.
 - After matching the local CLI exposure setting to the existing production grant baseline, the first 26 migration schemas have exact normalized hash parity with the read-only production snapshot: columns `480`, constraints `203`, functions `13`, indexes `86`, policies `89`, table grants `980`, triggers `33`.
-- The Catalog migration adds explicit grants: `anon` is read-only, `authenticated` can read and maintain drafts subject to RLS, and the published-release mutation helper is not executable by ordinary roles. Local pgTAP passed 18/18 assertions; schema lint returned zero errors.
+- The Catalog migration adds explicit grants: `anon` is read-only, `authenticated` can read and maintain drafts subject to RLS, and the published-release mutation helper is not executable by ordinary roles. Local pgTAP passed 19/19 assertions; schema lint returned zero errors.
 - Local PostgREST checks returned HTTP 200 for anonymous published Catalog reads and HTTP 401/`42501` for anonymous Catalog writes. These are local authorization results only; no production write or migration was attempted.
 - Production remains `MIGRATION_REQUIRED` for Catalog objects and `UNVERIFIED` for production write semantics. The Vercel exact-SHA check remains blocked by the deployment rate limit; this local database work does not change the UI or trigger a deployment.
 
