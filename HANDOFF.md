@@ -8,6 +8,13 @@
 - 当前本地领先远端候选 9 个提交；不要宣称 GitHub/PR/Preview 与当前 head 已同步。生产第 27 个 migration、Catalog 发布和 `main` 合并均未执行。
 - 下一步：等待 Vercel 配额恢复后一次性推送；重跑 `project:status`/Preview parity；随后分别申请生产 migration、Catalog 发布和 main 合并授权。
 
+## 2026-08-28 混养唯一结论闭环
+
+- 旧引擎入口已改为 Domain-authoritative adapter：保留 legacy Fish 输入和说明证据，但最终 `status`、风险等级、策略所依据的元数据来自 Domain Rules；commit `7fa70ac1`。
+- 现有 Aquarium、Encyclopedia、Species Detail 和 Compatibility Calculator 页面文件没有改动，`check:ui-freeze` 通过；无需为了切换逻辑重新设计视觉。
+- 回归通过：`test:compatibility`、`test:compatibility-service`、Catalog、添加/记录、build、UI freeze 和 project truth；正式 scene/browse 与今日行动此前已通过。
+- 当前本地候选领先远端 11 个提交；不要宣称 GitHub、PR #142 或 Preview 已同步。生产第27个 migration、Catalog 发布和 main 合并仍未执行。
+
 ## 2026-08-28 Domain 结论接管 Service
 
 - Compatibility Service 已把 Domain Rules 的状态与添加策略接到应用/服务层；legacy 引擎仍只提供证据详情，Service 不再把 legacy status 当最终结论。

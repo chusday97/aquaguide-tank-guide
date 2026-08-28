@@ -8,6 +8,13 @@
 - [x] `check:ui-freeze`、`check:project-truth` 和 `git diff --check` 通过；本轮尝试的页面 import 切换因视觉 Owner 冻结门禁被回退，未改变 UI。
 - [ ] 当前本地候选 `fe062e25` 比远端候选领先 9 个提交；尚未推送，Preview exact SHA 尚未对当前 head 验证。生产第 27 个 migration、Catalog 发布和 main 合并仍未授权。
 
+## 2026-08-28 混养唯一结论闭环
+
+- [x] 旧 `tankCompatibilityEngine` 现在保留原有 Fish 输入和证据结构，但返回前统一应用 Domain Rules 的 `status` 与风险等级；现有页面无需改视觉文件也不会拿到旧状态。（commit: `7fa70ac1`）
+- [x] Compatibility Service 会继续合并 Domain ruleCodes 对应的结构化证据；旧入口与 Service 的状态、策略、版本回归通过。
+- [x] `test:compatibility`、`test:compatibility-service`、Catalog、添加/记录、build、`check:ui-freeze` 和 `check:project-truth` 通过。
+- [ ] 当前本地候选比远端领先 11 个提交；远端/PR/当前 Preview 尚未同步，生产 migration、Catalog 发布和 main 合并仍未授权。
+
 ## 2026-08-27 最终统一执行线
 
 - 当前唯一候选工作树为 `codex/main-core-foundation-v1`（SHA 以 `git rev-parse HEAD` 运行时读取）；4317 固定为 `37a8d4d1` 视觉基线，4319 用于候选验收，视觉恢复分支仅保留为历史证据。
