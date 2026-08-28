@@ -120,7 +120,8 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         intent: 'planned_addition',
       });
       return result.status === 'not_recommended'
-        && result.blockingRules.some(rule => rule.code === 'candidate_tank_water_type_conflict');
+        && result.blockingRules.some(rule => rule.code === 'candidate_tank_water_type_conflict')
+        && /候选物种水体类型与当前鱼缸不一致/.test(result.summary);
     },
   },
   {

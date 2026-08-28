@@ -38,6 +38,9 @@ assert.equal(cohort.length * (cohort.length - 1) / 2, 435);
 const facts = cohort.map(toFact);
 const tank = { waterType: 'freshwater' as const, volumeLiters: 1000, lengthCm: 200, targetTemperatureC: 25 };
 let insufficientPairs = 0;
+let notRecommendedPairs = 0;
+let cautionPairs = 0;
+let compatiblePairs = 0;
 
 for (let left = 0; left < facts.length; left += 1) {
   for (let right = left + 1; right < facts.length; right += 1) {
@@ -70,9 +73,19 @@ for (let left = 0; left < facts.length; left += 1) {
     });
     assert.equal(forward.status, reverse.status, `${facts[left].id}/${facts[right].id} must be symmetric`);
     assert.deepEqual(forward, repeat, `${facts[left].id}/${facts[right].id} must be deterministic`);
-    if (forward.status === 'insufficient_data') insufficientPairs += 1;
+    if (forward.status === 'insufficient_data') {
+      insufficientPairs += 1;
+    } else if (forward.status === 'not_recommended') {
+      notRecommendedPairs += 1;
+    } else if (forward.status === 'caution') {
+      cautionPairs += 1;
+    } else {
+      assert.equal(forward.status, 'compatible', `${facts[left].id}/${facts[right].id} must return a known status`);
+      compatiblePairs += 1;
+    }
   }
 }
 
-assert.ok(insufficientPairs > 0, 'unreviewed cohort pairs must fail closed as insufficient_data');
-console.log(`compatibility launch matrix verified: 435 unordered pairs, ${insufficientPairs} safely insufficient, deterministic and symmetric`);
+assert.equal(insufficientPairs, 324, 'unreviewed cohort pairs must fail closed as insufficient_data');
+assert.equal(insufficientPairs + notRecommendedPairs + cautionPairs + compatiblePairs, 435, 'every unordered pair must have an explicit status');
+console.log(`compatibility launch matrix verified: 435 unordered pairs, ${insufficientPairs} safely insufficient, ${notRecommendedPairs} blocked, ${cautionPairs} caution, ${compatiblePairs} compatible, deterministic and symmetric`);

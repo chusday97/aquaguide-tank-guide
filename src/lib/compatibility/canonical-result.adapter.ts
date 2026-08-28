@@ -123,14 +123,28 @@ export const applyCanonicalCompatibilityDecision = (
   const reviewedPairBlocking = decision.status === 'not_recommended' && decision.ruleCodes.includes('reviewed_pair_rule')
     ? domainRules.filter(rule => rule.code === 'reviewed_pair_rule')
     : [];
+  const domainBlockingWithoutGenericPair = domainBlockingRules.filter(rule => rule.code !== 'reviewed_pair_rule');
+  const domainBlockingPriority: Record<string, number> = {
+    candidate_tank_water_type_conflict: 0,
+    water_type_conflict: 1,
+    temperature_range_conflict: 2,
+    tank_temperature_conflict: 3,
+    predation_risk: 4,
+    single_housing_required: 5,
+    observed_emergency: 6,
+    bioload_over_limit: 7,
+  };
+  const orderedDomainBlockingRules = [...domainBlockingWithoutGenericPair].sort(
+    (left, right) => (domainBlockingPriority[left.code] ?? 99) - (domainBlockingPriority[right.code] ?? 99),
+  );
   const blockingRules = decision.status === 'not_recommended'
-    ? uniqueRules([...result.blockingRules, ...domainBlockingRules, ...reviewedPairBlocking])
+    ? uniqueRules([...orderedDomainBlockingRules, ...result.blockingRules, ...reviewedPairBlocking])
     : [];
   const missingData = decision.status === 'insufficient_data'
-    ? uniqueRules([...result.missingData, ...domainMissingRules])
+    ? uniqueRules([...domainMissingRules, ...result.missingData])
     : [];
   const warningRules = decision.status === 'caution' || decision.status === 'insufficient_data' || decision.status === 'not_recommended'
-    ? uniqueRules([...result.warningRules, ...domainWarningRules])
+    ? uniqueRules([...domainWarningRules, ...result.warningRules])
     : [];
   const riskLevel: TankCompatibilityRiskLevel = decision.status === 'not_recommended'
     ? 'high'

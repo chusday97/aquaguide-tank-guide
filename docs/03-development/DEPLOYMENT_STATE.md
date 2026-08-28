@@ -5,10 +5,12 @@
 
 ## 2026-08-28 local convergence preparation (latest)
 
-- Local release rehearsal after the authority/documentation update is complete: `check:compatibility-authority`, Catalog build/validate, Domain/Service/API, core UI, formal scenes, today action, species detail, responsive matrix, Supabase reset/pgTAP/lint, project truth, UI freeze, lint, API typecheck, build and diff check all passed. The only test edits were stale assertions; visual-owned files are unchanged.
-- The latest candidate is the SHA reported by `npm run project:status`; it is pushed and synchronized with the remote candidate and PR #142. Exact Preview parity for this head is not claimed until a matching deployment is available. Production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
+> Runtime correction: this worktree is currently ahead of the remote candidate. The local HEAD is not yet pushed; older “synchronized” statements below are historical evidence only and must not be used as the current state.
 
-- `npm run project:status` currently confirms the local candidate, remote branch and PR #142 are synchronized. PR #142 remains Draft and `releaseReady=false`.
+- Local release rehearsal after the authority/documentation update is complete: `check:compatibility-authority`, Catalog build/validate, Domain/Service/API, core UI, formal scenes, today action, species detail, responsive matrix, Supabase reset/pgTAP/lint, project truth, UI freeze, lint, API typecheck, build and diff check all passed. The only test edits were stale assertions; visual-owned files are unchanged.
+- The latest candidate is the SHA reported by `git rev-parse HEAD`; it is a local checkpoint ahead of the remote candidate and PR #142. Exact Preview parity for this head is not claimed until a matching deployment is available. Production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
+
+- `npm run project:status` currently fails the synchronization gate because local HEAD is ahead of the remote candidate and PR #142. PR #142 remains Draft and `releaseReady=false` until one authorized push updates the remote.
 - Local Catalog verification now reflects the schema-normalized snapshot: 486 species, 13 evidence sources, checksum `2fdcbc9ddcf1348828bc8cea311c2162a7a2c7ef00184a7b9542dbcc79c57ae2`. The former `545ac...` value is historical and must not be used for current parity.
 - The compatibility authority gate passes: frozen callers may use the legacy facade, while Domain Rules owns final status, policy, rule codes and versions.
 - Local Supabase 26+1 replay, 19/19 pgTAP and schema lint are passing. Production remains at 26 migrations; the Catalog migration is prepared but not executed.
