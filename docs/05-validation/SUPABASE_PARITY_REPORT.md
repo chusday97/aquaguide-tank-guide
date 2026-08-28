@@ -15,9 +15,9 @@
 | 生产 migration 历史（26 个） | `EQUIVALENT` | `supabase.list_migrations` 返回 `202607160001` → `20260816160129`，版本顺序与候选已恢复的 26 个文件一致 |
 | public 表数量与 RLS 覆盖 | `EQUIVALENT`（数量层） | `pg_class` 只读查询：35 张表、35 张启用 RLS |
 | public policy 数量 | `EQUIVALENT`（数量层） | `pg_policies` 只读查询：89 条 policy |
-| 外键数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 56 条，候选 hash 对齐 |
-| 索引数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 86 个，候选 hash 对齐 |
-| 触发器数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 33 个对象，候选 hash 对齐 |
+| 外键数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 56 条，候选 hash 对齐；本地重放与规范化清单见 `supabase db reset --local --no-seed` 及本报告“本地门禁命令” |
+| 索引数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 86 个，候选 hash 对齐；本地重放与规范化清单见 `supabase db reset --local --no-seed` 及本报告“本地门禁命令” |
+| 触发器数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 33 个对象，候选 hash 对齐；本地重放与规范化清单见 `supabase db reset --local --no-seed` 及本报告“本地门禁命令” |
 | `catalog_releases` | `MIGRATION_REQUIRED` | 生产 `to_regclass('public.catalog_releases')` 返回 `null` |
 | `species_reference_links` | `MIGRATION_REQUIRED` | 生产 `to_regclass('public.species_reference_links')` 返回 `null` |
 | `species.water_type` | `MIGRATION_REQUIRED` | 生产 `information_schema.columns` 查询数量为 `0` |
