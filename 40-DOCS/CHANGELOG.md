@@ -24,6 +24,9 @@
 - Pushed the canonical candidate and recorded exact local/remote/PR/Preview SHA parity at `781c6af9`; PR #142 remains Draft pending remaining gates.
 - Isolated the unrelated Vercel `admin-content` project to its dedicated branch while keeping the repository connection; regular AquaGuide branches now skip that build.
 - Changed Domain adapter pair status input to use reviewed structured pair rules only; legacy aggregate status is no longer passed back into Domain.
+- Changed the Compatibility Service to normalize Domain Rules status/policy/version as the service-layer authority; legacy engine output is retained only for evidence-rich explanations while the UI freeze remains active.
+- Added explicit Domain checks for candidate/tank water-type conflict and reviewed predation, territorial and solitary-housing traits; unknown catalog facts fail closed as `insufficient_data`.
+- Added explicit `record_existing`/`planned_addition` intent propagation through the livestock assessment path and the `test:compatibility-service` authority regression.
 
 ### Main convergence
 - Updated convergence browser gates to default to the 4319 candidate preview, accept the current desktop `detail-rail` and localized “Why?” evidence disclosure, and verify mobile Sheet/desktop Rail detail behavior without silently falling back to port 3000.

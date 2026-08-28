@@ -37,6 +37,24 @@ const blocked = evaluateCompatibility({
 assert.equal(blocked.status, 'not_recommended');
 assert.equal(blocked.addPolicy, 'block');
 
+const candidateWaterConflict = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
+  existingSpecies: [{ ...base, id: 'b' }],
+  candidateSpecies: { ...base, waterType: 'saltwater' },
+});
+assert.equal(candidateWaterConflict.status, 'not_recommended');
+assert.ok(candidateWaterConflict.ruleCodes.includes('candidate_tank_water_type_conflict'));
+
+const unknownCandidateWater = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
+  existingSpecies: [{ ...base, id: 'b' }],
+  candidateSpecies: { ...base, waterType: 'unknown' },
+});
+assert.equal(unknownCandidateWater.status, 'insufficient_data');
+assert.ok(unknownCandidateWater.ruleCodes.includes('candidate_water_type_missing'));
+
 const missing = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'unknown' },

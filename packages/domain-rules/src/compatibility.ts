@@ -10,6 +10,8 @@ export type DomainSpeciesFact = {
   phMin?: number | null;
   phMax?: number | null;
   reviewed: boolean;
+  behaviorTraits?: string[];
+  size?: 'Small' | 'Medium' | 'Large' | string;
 };
 
 export type DomainTankFact = {
@@ -87,6 +89,15 @@ export const evaluateCompatibility = ({
         raise('not_recommended', 'water_type_conflict');
       }
       if (!existing.reviewed || !candidateSpecies.reviewed) raise('insufficient_data', 'species_evidence_unreviewed');
+      if (existing.behaviorTraits?.includes('predatory') && candidateSpecies.size === 'Small') {
+        raise('not_recommended', 'predation_risk');
+      }
+      if (existing.behaviorTraits?.includes('territorial') && candidateSpecies.behaviorTraits?.includes('territorial')) {
+        raise('not_recommended', 'territorial_conflict');
+      }
+      if (candidateSpecies.behaviorTraits?.includes('solitary_required')) {
+        raise('not_recommended', 'single_housing_required');
+      }
       if (rangesOverlap(existing.temperatureMinC, existing.temperatureMaxC, candidateSpecies.temperatureMinC, candidateSpecies.temperatureMaxC) === null) {
         raise('insufficient_data', 'temperature_range_missing');
       }
@@ -98,6 +109,10 @@ export const evaluateCompatibility = ({
 
   if (candidateSpecies && tank) {
     if (!tank.waterType || tank.waterType === 'unknown') raise('insufficient_data', 'tank_water_type_missing');
+    if (candidateSpecies.waterType === 'unknown') raise('insufficient_data', 'candidate_water_type_missing');
+    if (tank.waterType !== 'unknown' && candidateSpecies.waterType !== 'unknown' && tank.waterType !== candidateSpecies.waterType) {
+      raise('not_recommended', 'candidate_tank_water_type_conflict');
+    }
     if (tank.volumeLiters == null || tank.volumeLiters <= 0) raise('insufficient_data', 'tank_volume_missing');
     if (tank.targetTemperatureC == null) raise('insufficient_data', 'tank_temperature_missing');
   }

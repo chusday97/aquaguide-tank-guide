@@ -22,7 +22,7 @@
 - `src/services/compatibility/compatibility-records.service.ts`：保存并校验与真实鱼缸关联的完整混养判断记录。
 - `src/services/catalog/catalog-snapshot.service.ts`：本地/云端 Catalog 快照校验、SHA-256 parity 和安全回退。
 - `src/services/catalog/species-profile.adapter.ts`：将旧 Fish 转换为 canonical SpeciesProfile；缺失水体保持 unknown，不做文本推断。
-- `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；页面迁移完成前封装旧引擎实现。
+- `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。

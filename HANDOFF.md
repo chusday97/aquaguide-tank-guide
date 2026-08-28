@@ -1,5 +1,15 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 Domain 结论接管 Service
+
+- Compatibility Service 已把 Domain Rules 的状态与添加策略接到应用/服务层；legacy 引擎仍只提供证据详情，Service 不再把 legacy status 当最终结论。
+- Domain 新增显式候选水体校验及已审核捕食、领地、单养特征规则；未知水体/未审核资料安全返回 `insufficient_data`。
+- 新增 `npm run test:compatibility-service`，并通过 Domain、Catalog、添加意图、现实记录、API 类型、lint、build、UI freeze、project truth 回归。
+- `record_existing` 与 `planned_addition` 现在由记录/规划服务显式传入，现实记录仍可保存，规划加入仍按 `allow / confirm / complete_information / block` 处理。
+- 当前提交尚未推送：本地分支在 `77383588` 之后还有本步骤未提交改动；工作树需在 Critic 复验后再提交。
+- UI 冻结仍有效：正式页面的旧引擎 import 本轮没有改动，因此布局和素材没有变化；解除冻结后的页面入口切换仍是待办。
+- 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 `main` 合并未执行。
+
 ## 2026-08-28 候选推送与 Preview parity
 
 - 本地候选、远端 `codex/main-core-foundation-v1`、PR #142 Head 与 Vercel Preview 已同步为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。

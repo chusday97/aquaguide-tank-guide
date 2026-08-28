@@ -8,6 +8,7 @@ import {
   COMPATIBILITY_RULE_VERSION,
   evaluateCompatibility,
   getCompatibilityAddPolicy,
+  type CompatibilityIntent,
   type DomainCompatibilityInput,
   type DomainSpeciesFact,
   type DomainTankFact,
@@ -40,6 +41,7 @@ export type TankCompatibilityResult = {
     speciesDataVersion: string;
     calculatedAt: string;
     scope: TankCompatibilityScope;
+    intent: CompatibilityIntent;
     catalogVersion: string;
     domainRuleCodes: string[];
     domainStatus: TankCompatibilityStatus;
@@ -53,6 +55,7 @@ export type EvaluateTankCompatibilityInput = {
   candidateQuantity?: number;
   candidateLifeStage?: CompatibilityLifeStage;
   scope?: TankCompatibilityScope;
+  intent?: CompatibilityIntent;
 };
 
 const RULE_VERSION = 'tank-compatibility-v3-stage-risk';
@@ -200,6 +203,7 @@ const evaluateLegacyTankCompatibility = ({
     speciesDataVersion: SPECIES_DATA_VERSION,
     calculatedAt: new Date().toISOString(),
     scope,
+    intent: (scope === 'species_only' ? 'record_existing' : 'planned_addition') as CompatibilityIntent,
     catalogVersion: 'unknown',
     domainRuleCodes: [] as string[],
     domainStatus: 'insufficient_data' as TankCompatibilityStatus,
@@ -637,6 +641,8 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     phMin: profile.phMin,
     phMax: profile.phMax,
     reviewed: Boolean(getReviewedCompatibilityProfile(fish.id)),
+    behaviorTraits: getReviewedCompatibilityProfile(fish.id)?.behaviorTraits || [],
+    size: fish.size,
   };
 };
 
@@ -668,7 +674,7 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
   };
   const explicitPairStatus = pairStatuses.sort((left, right) => pairRank[right] - pairRank[left])[0];
   const domainInput: DomainCompatibilityInput = {
-    intent: input.scope === 'species_only' ? 'record_existing' : 'planned_addition',
+    intent: input.intent || (input.scope === 'species_only' ? 'record_existing' : 'planned_addition'),
     tank: input.tank ? toDomainTankFact(input.tank) : null,
     existingSpecies: normalized.map(item => toDomainSpeciesFact(item.species)),
     candidateSpecies: input.candidateSpecies ? toDomainSpeciesFact(input.candidateSpecies) : null,
@@ -680,6 +686,7 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
     ...legacy,
     metadata: {
       ...legacy.metadata,
+      intent: domainInput.intent,
       ruleVersion: domainDecision.ruleVersion,
       catalogVersion: domainDecision.catalogVersion,
       domainRuleCodes: domainDecision.ruleCodes,

@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../src/types';
-import { evaluateTankCompatibility, getTankCompatibilityAddPolicy } from '../src/services/compatibility/compatibility.service';
+import { evaluateTankCompatibility as evaluateLegacyTankCompatibility } from '../src/lib/tankCompatibilityEngine';
+import { getTankCompatibilityAddPolicy } from '../src/services/compatibility/compatibility.service';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { executeSpeciesAddition, reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';
@@ -48,7 +49,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'legacy result exposes the domain authority metadata',
     run: () => {
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank(),
         candidateSpecies: makeFish(),
       });
@@ -61,7 +62,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'ordinary species does not require a stored pH value',
     run: () => {
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ substrate: '无', plants: [], hardscape: [] }),
         candidateSpecies: makeFish(),
       });
@@ -72,7 +73,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'sensitive species gets an optional test reminder instead of insufficient data',
     run: () => {
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ substrate: '水草泥', hardscape: ['沉木'] }),
         candidateSpecies: makeFish({
           id: 'sensitive-shrimp',
@@ -100,7 +101,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'freshwater tank blocks saltwater species',
     run: () => {
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank(),
         candidateSpecies: makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼' }),
       });
@@ -111,7 +112,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'unknown tank water type is insufficient instead of freshwater',
     run: () => {
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ waterType: undefined }),
         candidateSpecies: makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼' }),
       });
@@ -134,7 +135,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'missing tank dimensions and temperature is insufficient data',
     run: () => {
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ dimensions: undefined, targetTemperature: undefined }),
         candidateSpecies: makeFish(),
       });
@@ -145,7 +146,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'adjustable heater issue returns caution',
     run: () => {
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' } }),
         candidateSpecies: makeFish({ waterTemperature: '24-28°C' }),
       });
@@ -164,7 +165,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         size: 'Large',
         tankSize: '至少 100 升',
       });
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ dimensions: { length: '100', width: '50', height: '50' } }),
         existingSpecies: [{ species: predator, record: { quantity: 1 } }],
         candidateSpecies: makeFish(),
@@ -210,7 +211,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         size: 'Large',
         description: '会争夺领地，但没有明确捕食资料。',
       });
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         scope: 'species_only',
         existingSpecies: [aggressive],
         candidateSpecies: makeFish(),
@@ -236,7 +237,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         size: 'Medium',
         description: '繁殖期会防御领地。',
       });
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         scope: 'species_only',
         existingSpecies: [tigerBarb],
         candidateSpecies: miniParrot,
@@ -256,7 +257,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     run: () => {
       const candidate = makeFish({ waterTemperature: '24-28°C' });
       const tank = makeTank({ equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' } });
-      const direct = evaluateTankCompatibility({
+      const direct = evaluateLegacyTankCompatibility({
         tank,
         candidateSpecies: candidate,
         candidateQuantity: 1,
@@ -271,15 +272,15 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         speciesCatalog: [candidate],
       });
       return direct.status === 'caution'
-        && calculator.status === direct.status
-        && addition?.status === direct.status;
+        && calculator.status === 'insufficient_data'
+        && addition?.status === 'insufficient_data';
     },
   },
   {
     name: 'same species quantity counts toward load without self conflict',
     run: () => {
       const species = makeFish();
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ dimensions: { length: '40', width: '25', height: '30' } }),
         existingSpecies: [{ species, record: { quantity: 10 } }],
         candidateSpecies: species,
@@ -294,7 +295,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     name: 'aggressive temperament keeps the legacy load threshold',
     run: () => {
       const aggressive = makeFish({ size: 'Large', temperament: 'Aggressive' });
-      const result = evaluateTankCompatibility({
+      const result = evaluateLegacyTankCompatibility({
         tank: makeTank({ dimensions: { length: '70', width: '40', height: '25' } }),
         existingSpecies: [{ species: aggressive, record: { quantity: 6 } }],
         candidateSpecies: makeFish({ id: 'candidate-small', size: 'Small' }),
@@ -307,9 +308,9 @@ const cases: Array<{ name: string; run: () => boolean }> = [
   {
     name: 'addition service blocks incompatible species before write',
     run: () => {
-      const freshwater = makeFish();
-      const saltwater = makeFish({ id: 'blocked-saltwater', category: '海水观赏鱼' });
-      const tank = makeTank();
+      const freshwater = makeFish({ waterType: 'freshwater' });
+      const saltwater = makeFish({ id: 'blocked-saltwater', category: '海水观赏鱼', waterType: 'saltwater' });
+      const tank = makeTank({ fishes: [{ id: 'existing', fishId: freshwater.id, quantity: 1, entryDate: '2026-01-01' }] });
       const result = executeSpeciesAddition({
         aquariums: [tank],
         aquarium: tank,
@@ -318,11 +319,12 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       });
       return !result.added
         && result.reason === 'blocked'
-        && result.aquariums[0].fishes.length === 0;
+        && result.aquariums[0].fishes.length === 1
+        && result.aquariums[0].fishes[0]?.fishId === freshwater.id;
     },
   },
   {
-    name: 'addition service requires caution confirmation',
+    name: 'addition service requires complete information when Catalog facts are unreviewed',
     run: () => {
       const fish = makeFish({ waterTemperature: '24-28°C' });
       const tank = makeTank({ equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' } });
@@ -344,16 +346,16 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         speciesCatalog: [fish],
         confirmedCaution: true,
       });
-      return review?.policy === 'confirm'
-        && pending.reason === 'confirmation_required'
-        && confirmed.added
-        && confirmed.aquariums[0].fishes[0]?.fishId === fish.id;
+      return review?.policy === 'complete_information'
+        && pending.reason === 'missing_information'
+        && !confirmed.added
+        && confirmed.aquariums[0].fishes.length === 0;
     },
   },
   {
     name: 'addition service merges quantity for existing species',
     run: () => {
-      const fish = makeFish();
+      const fish = makeFish({ id: 'sp_0431', waterType: 'freshwater' });
       const tank = makeTank({
         dimensions: { length: '120', width: '50', height: '50' },
         fishes: [{ id: 'existing', fishId: fish.id, quantity: 2, entryDate: '2026-01-01', lastWaterChangeDate: '2026-01-01' }],

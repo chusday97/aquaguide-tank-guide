@@ -62,6 +62,7 @@ export const recordExistingLivestock = async (input: {
       aquarium: baselineAquarium,
       items: savedItems,
       speciesCatalog: input.speciesCatalog,
+      intent: 'record_existing',
     });
     return {
       aquarium: savedAquarium,
