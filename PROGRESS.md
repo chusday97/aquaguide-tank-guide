@@ -5,7 +5,7 @@
 
 - [x] 4317 冻结基线与 4319 当前候选均 HTTP 200；4319 元数据已刷新到当前候选提交，4317 保持历史 SHA 不改写。
 - [x] 真实 Chromium factual flow、正式图鉴/养护 scene/browse、今日行动点击/Escape/拖拽吸附均通过；项目真相与 diff 检查通过。
-- [x] 4319 当前候选为 `13613f95be8845499e17e6e7576a68dcfd559a4c`；远端候选/PR #142 仍为 `396e71da4ce60e3b7de6a9b90072d7d55eb77aad`，本地领先 20 个提交，尚未推送。
+- [x] 4319 当前候选 SHA、远端候选/PR #142 SHA 和领先数量均由 `git rev-parse`/`git rev-list` 运行时读取；当前本地已提交但尚未推送。
 - [ ] `check:ui-freeze` 仍只报告已批准的混养结果区域文件变化；需要用户确认文案/操作后再 capture 新基线，不能把该失败描述为舞台回退。
 - [ ] 生产 migration、Catalog 发布、Preview exact SHA parity、人工 release acceptance 和 `main` 合并未执行。
 

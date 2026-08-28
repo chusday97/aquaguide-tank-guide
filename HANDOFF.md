@@ -4,7 +4,7 @@
 
 - 4317 冻结视觉基线和 4319 当前候选均已恢复并返回 HTTP 200；4319 元数据对应候选当前 SHA，4317 保持历史构建，不为元数据改写基线。
 - 真实浏览器已通过 Aquarium factual flow（规划只写种草清单、鱼缸不变、现实记录可保存）、正式图鉴/养护 scene/browse、今日行动点击/Escape/拖拽吸附。
-- 当前候选 HEAD 由 `git rev-parse HEAD` 读取为 `13613f95be8845499e17e6e7576a68dcfd559a4c`，远端候选和 PR #142 仍为 `396e71da`，本地领先 20 个提交；工作树干净，未推送。
+- 当前候选 HEAD、远端候选/PR #142 SHA 和领先数量均由 `git rev-parse`/`git rev-list` 运行时读取；工作树干净，候选已提交但未推送。
 - `check:ui-freeze` 明确报告的是本轮已批准的混养结果区域变化（7 个 visual-owned 文件），不是 Aquarium 舞台布局回退；需要用户确认后再重新 capture freeze。
 - 生产 Supabase、Catalog 发布和 `main` 合并均未执行；本轮没有 GitHub、生产数据库或 Catalog 写入。
 
