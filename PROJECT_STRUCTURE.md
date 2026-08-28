@@ -31,6 +31,7 @@
 - `scripts/verify-daily-discovery-deep-link.mjs`：鱼缸首页今日推荐的位置、每日进度、详情返回、切换收藏、响应式边界和图鉴去重回归。
 - `scripts/verify-formal-interactive-scenes.mjs`：正式图鉴与养护 scene/browse 模式、场景点选和详情入口的浏览器门禁。
 - `scripts/test-species-profile-adapter.ts`：SpeciesProfile 显式水体与旧 Fish 边界回归。
+- `scripts/test-recommendation-unknown-filter.ts`：验证未审核物种不会进入自动推荐或空缸方案。
 - `scripts/verify-today-action-dock.mjs`：今日行动半透明拉手的点击、Esc 关闭与拖拽吸附回归。
 - `scripts/check-compatibility-authority.mjs`：静态守卫旧混养引擎只能作为兼容 facade，最终状态必须来自 Domain Rules。
 - `scripts/audit-species-data-quality.ts`：486 条物种记录的身份、来源、模板污染、显式水体和重复项审计。

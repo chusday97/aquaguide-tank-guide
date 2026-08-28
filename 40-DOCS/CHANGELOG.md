@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed compatibility result presentation so internal `insufficient_data` stays a safety state while users see confirmed facts or an unavailable fallback; unreviewed candidates stay out of automatic recommendations, and Aquarium planning saves only to the existing wishlist.
+
 - Fixed Domain evidence precedence in the legacy compatibility facade and strengthened the 435-pair launch matrix to assert exact safe-status counts. Local candidate checkpoint `4d5cbb28` passes compatibility, authority, UI-freeze and project-truth gates; it is intentionally not pushed yet.
 
 - Added a frozen, de-duplicated 30-species compatibility review cohort, per-record catalog quality artifacts, draft-only `catalog:research`/`catalog:review` commands, a 435-pair deterministic/symmetric matrix gate, individual life-stage and breeding context, observed coexistence severity, and layered stocking guidance. Domain remains the sole decision authority; UI and production Supabase were not changed.
