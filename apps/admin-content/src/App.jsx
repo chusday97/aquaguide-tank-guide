@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './supabase.js';
 import { catalogSpecies } from './catalog.js';
 
+const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
+
 const emptySeo = {
   seoTitle: '',
   metaDescription: '',
@@ -97,7 +99,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, record, schemaReady, onSaved }) {
+function SeoEditor({ species, record, schemaReady, readOnly = false, onSaved }) {
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -123,6 +125,10 @@ function SeoEditor({ species, record, schemaReady, onSaved }) {
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
 
   const save = async () => {
+    if (readOnly) {
+      setMessage('当前为只读 UI Review，不会向任何 Supabase 发送写入请求。');
+      return;
+    }
     if (!schemaReady) {
       setMessage('当前 Supabase 尚未应用 species_seo migration。这个分支不会自动修改生产数据库。');
       return;
@@ -252,7 +258,7 @@ function SeoEditor({ species, record, schemaReady, onSaved }) {
             <option value="published">Published</option>
             <option value="archived">Archived</option>
           </select>
-          <button className="primary-button compact" type="button" onClick={save} disabled={saving}>{saving ? '保存中…' : '保存 SEO'}</button>
+          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly}>{readOnly ? '只读预览' : saving ? '保存中…' : '保存 SEO'}</button>
         </div>
       </div>
     </section>
@@ -272,6 +278,15 @@ export default function App() {
   const [schemaReady, setSchemaReady] = useState(true);
 
   useEffect(() => {
+    if (isReviewMode) {
+      setSession({ user: { id: 'review-only', email: 'review@aquaguide.local' } });
+      setRole('admin');
+      setSpecies(catalogSpecies);
+      setSelectedId(catalogSpecies[0]?.id || null);
+      setSchemaReady(false);
+      setAuthChecked(true);
+      return undefined;
+    }
     if (!supabase) {
       setAuthChecked(true);
       return undefined;
@@ -285,6 +300,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (isReviewMode) return undefined;
     if (!session) {
       setRole(null);
       setSpecies([]);
@@ -346,11 +362,12 @@ export default function App() {
   const selectedSpecies = species.find((item) => item.id === selectedId) || null;
 
   const signOut = async () => {
+    if (isReviewMode) return;
     await supabase.auth.signOut();
     setSession(null);
   };
 
-  if (!isSupabaseConfigured) {
+  if (!isReviewMode && !isSupabaseConfigured) {
     return (
       <main className="login-shell">
         <section className="login-card wide">
@@ -379,13 +396,17 @@ export default function App() {
         </div>
         <div className="topbar-actions">
           <span className={`connection-dot ${schemaReady ? 'ready' : 'warning'}`}></span>
-          <span>{schemaReady ? 'SEO schema ready' : 'SEO schema pending'}</span>
+          <span>{isReviewMode ? 'Read-only UI review' : schemaReady ? 'SEO schema ready' : 'SEO schema pending'}</span>
           <span className="admin-email">{session.user.email}</span>
           <button className="ghost-button" type="button" onClick={signOut}>退出</button>
         </div>
       </header>
 
-      {!schemaReady ? (
+      {isReviewMode ? (
+        <div className="schema-banner">
+          <strong>只读 UI Review：</strong> 当前远程预览不连接任何 Supabase 写入环境。可以搜索 486 条 Species、体验编辑器和 Google Preview，但保存被硬禁用。
+        </div>
+      ) : !schemaReady ? (
         <div className="schema-banner">
           <strong>安全隔离状态：</strong> 这个分支包含 `species_seo` migration，但当前数据库尚未应用，所以可以预览编辑器，不能写入 SEO。不会自动触碰 Production。
         </div>
@@ -425,6 +446,7 @@ export default function App() {
             species={selectedSpecies}
             record={selectedSpecies ? seoRows[selectedSpecies.catalog_key] : null}
             schemaReady={schemaReady}
+            readOnly={isReviewMode}
             onSaved={(row) => setSeoRows((current) => ({ ...current, [row.catalog_key]: row }))}
           />
         </main>

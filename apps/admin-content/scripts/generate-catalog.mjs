@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { access, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -6,6 +6,22 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../../..');
 const sourcePath = path.join(repoRoot, 'src/data/fishData.ts');
 const outputPath = path.join(here, '../src/catalog.generated.json');
+
+let sourceAvailable = true;
+try {
+  await access(sourcePath);
+} catch {
+  sourceAvailable = false;
+}
+
+if (!sourceAvailable) {
+  const existing = JSON.parse(await readFile(outputPath, 'utf8'));
+  if (!Array.isArray(existing) || existing.length === 0) {
+    throw new Error('Repository catalog source is unavailable and generated catalog is invalid.');
+  }
+  console.log(`Using committed Admin species catalog: ${existing.length} entries`);
+  process.exit(0);
+}
 
 const source = await readFile(sourcePath, 'utf8');
 const match = source.match(/export const fishData: Fish\[\] = ([\s\S]*);\s*$/);

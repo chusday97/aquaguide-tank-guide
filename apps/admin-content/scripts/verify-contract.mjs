@@ -7,11 +7,12 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, supabaseSource, migrationSource, envExample, catalogRaw] = await Promise.all([
+const [appSource, supabaseSource, migrationSource, envExample, reviewEnvExample, catalogRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/supabase.js'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280001_species_seo_admin.sql'), 'utf8'),
   readFile(path.join(appRoot, '.env.example'), 'utf8'),
+  readFile(path.join(appRoot, '.env.review.example'), 'utf8'),
   readFile(path.join(appRoot, 'src/catalog.generated.json'), 'utf8'),
 ]);
 
@@ -24,6 +25,10 @@ assert.match(appSource, /from\('user_roles'\)/, 'Admin must verify user_roles');
 assert.match(appSource, /from\('species_seo'\)/, 'Admin must read/write species_seo');
 assert.doesNotMatch(appSource, /from\('species'\)/, 'Admin V0 must not depend on the currently empty Supabase species table');
 assert.match(appSource, /onConflict: 'catalog_key,locale'/, 'SEO upsert must use catalog_key + locale');
+assert.match(appSource, /VITE_ADMIN_REVIEW_MODE/, 'Review mode must be explicit and build-time controlled');
+assert.match(appSource, /if \(readOnly\)/, 'Review mode save path must fail closed');
+assert.match(appSource, /disabled=\{saving \|\| readOnly\}/, 'Review mode save button must be disabled');
+assert.match(reviewEnvExample, /^VITE_ADMIN_REVIEW_MODE=true$/m, 'Review environment must only opt into read-only UI mode');
 
 assert.doesNotMatch(supabaseSource, /import\.meta\.env\.(?:VITE_)?SUPABASE_SERVICE_ROLE_KEY/, 'service role key must never be read by the browser app');
 assert.doesNotMatch(envExample, /^(?:VITE_)?SUPABASE_SERVICE_ROLE_KEY\s*=/m, 'service role key must never be configured in the browser app');
