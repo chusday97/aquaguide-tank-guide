@@ -31,6 +31,7 @@
 - `scripts/verify-formal-interactive-scenes.mjs`：正式图鉴与养护 scene/browse 模式、场景点选和详情入口的浏览器门禁。
 - `scripts/test-species-profile-adapter.ts`：SpeciesProfile 显式水体与旧 Fish 边界回归。
 - `scripts/verify-today-action-dock.mjs`：今日行动半透明拉手的点击、Esc 关闭与拖拽吸附回归。
+- `scripts/check-compatibility-authority.mjs`：静态守卫旧混养引擎只能作为兼容 facade，最终状态必须来自 Domain Rules。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。
@@ -131,6 +132,7 @@
 
 - `.project-journal/`：按工作区证据规则维护可追溯事件、证据索引、事实卡和证据缺口；职业材料仅使用 verified 结论。
 - `docs/05-validation/`：证据矩阵、产品假设、真人测试结果与 AI Evaluation 当前状态；严格区分自动测试、真实模型和真人证据。
+- `docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`：第 27 个 Catalog migration 的只读前置、权限模型、执行后验证和停止条件授权包。
 - `evaluation/`：47 个版本化 JSONL Case、Zod 契约、deterministic/mocked/live Runner、统一报告与 Badcase Registry。
 - `docs/README.md`：当前产品文档总入口与事实来源说明。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。

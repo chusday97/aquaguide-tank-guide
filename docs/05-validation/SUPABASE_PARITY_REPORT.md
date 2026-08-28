@@ -4,9 +4,9 @@
 
 报告前半部分只记录通过 Supabase 管理接口执行的生产只读检查；后附本地 Supabase 重放证据。整个过程中没有执行生产 SQL migration、Catalog 上传或生产业务数据写入。
 
-当前本地 Catalog Snapshot（在 `SpeciesProfile` 数值范围收敛后重新生成）checksum 为
-`5c6fb998ddd160509c2fda0cf181e4e479268049c1a8db91def444be880bf1bd`；下方较早的
-`45f4f10e…` 仅是前一版本地产物历史证据，不代表当前快照。
+当前本地 Catalog Snapshot（含红绿灯、宝莲灯显式淡水事实）checksum 为
+`545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`；更早的 checksum
+仅作历史证据，不代表当前快照。
 
 ## 结论
 
@@ -15,14 +15,14 @@
 | 生产 migration 历史（26 个） | `EQUIVALENT` | `supabase.list_migrations` 返回 `202607160001` → `20260816160129`，版本顺序与候选已恢复的 26 个文件一致 |
 | public 表数量与 RLS 覆盖 | `EQUIVALENT`（数量层） | `pg_class` 只读查询：35 张表、35 张启用 RLS |
 | public policy 数量 | `EQUIVALENT`（数量层） | `pg_policies` 只读查询：89 条 policy |
-| 外键数量 | `UNVERIFIED` | 生产只读查询得到 56 条；候选 SQL 逐约束语义尚未完成逐项 diff |
-| 索引数量 | `UNVERIFIED` | 生产只读查询得到 86 个；候选 SQL 逐索引语义尚未完成逐项 diff |
-| 触发器数量 | `UNVERIFIED` | 生产只读查询得到 33 个；候选 SQL 逐触发器语义尚未完成逐项 diff |
+| 外键数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 56 条，候选 hash 对齐 |
+| 索引数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 86 个，候选 hash 对齐 |
+| 触发器数量与定义 | `EQUIVALENT` | 生产只读查询与本地规范化结构均为 33 个对象，候选 hash 对齐 |
 | `catalog_releases` | `MIGRATION_REQUIRED` | 生产 `to_regclass('public.catalog_releases')` 返回 `null` |
 | `species_reference_links` | `MIGRATION_REQUIRED` | 生产 `to_regclass('public.species_reference_links')` 返回 `null` |
 | `species.water_type` | `MIGRATION_REQUIRED` | 生产 `information_schema.columns` 查询数量为 `0` |
 | 当前发布 Catalog 与 checksum | `UNVERIFIED` | Catalog 表尚未存在，不能读取发布版本或 checksum；不能用空表结果代替 parity |
-| RPC 名称/参数/安全属性 | `UNVERIFIED` | 已读取 13 个 public RPC 的名称、参数和 `security_definer`；候选逐函数签名与行为回归待完成 |
+| RPC 名称/参数/安全属性 | `EQUIVALENT`（定义层） | 生产只读读取的 13 个 public RPC 与本地规范化函数定义对齐；生产身份行为仍需真实验证 |
 | 公共用户/owner/管理员 RLS 行为 | `UNVERIFIED` | 已确认 RLS 覆盖数量；需要匿名、owner、管理员三种身份的真实策略回归 |
 
 ## 生产只读事实
@@ -79,7 +79,7 @@
 - 完整重放 26+1 migration 成功；`supabase db lint --local --schema public --level error --fail-on error` 返回 0 条错误。
 - `supabase test db --local` 通过 19/19 个 Catalog/RLS pgTAP 断言，覆盖匿名读取、匿名/普通用户写入拒绝、管理员草稿写入和已发布记录不可变性。
 - 本地 PostgREST 匿名 `GET /rest/v1/catalog_releases` 返回已发布记录（HTTP 200）；匿名 `POST` 被权限拒绝（HTTP 401，PostgreSQL `42501`）。这是本地权限证据，不是生产写入验证。
-- Catalog 快照为本地 486 个物种、13 个证据来源，当前 checksum 为 `5c6fb998ddd160509c2fda0cf181e4e479268049c1a8db91def444be880bf1bd`；本地/云端生产 Catalog checksum 仍为 `UNVERIFIED`，因为生产表尚不存在。
+- Catalog 快照为本地 486 个物种、13 个证据来源，当前 checksum 为 `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`；本地/云端生产 Catalog checksum 仍为 `UNVERIFIED`，因为生产表尚不存在。
 - 生产 `catalog_releases`、`species_reference_links` 和 `species.water_type` 仍未部署；第 27 个 migration、Catalog 发布和 `main` 合并均未执行。
 
 ### 本地门禁命令

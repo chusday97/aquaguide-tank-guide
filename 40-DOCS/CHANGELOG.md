@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Completed the local convergence rehearsal without waiting for Vercel: added the compatibility-authority static gate, refreshed Catalog/Supabase parity evidence and migration authorization docs, and aligned stale core browser assertions with the current viewport, compatibility, feature-preview and evidence-disclosure contracts. Domain, Service, Catalog, local 26+1 Supabase replay, pgTAP, schema lint, build, UI freeze and browser matrices pass; no UI Owner or production data changed.
+
+- Added the compatibility-authority static gate, updated local Catalog parity to the reviewed tetra checksum, and prepared the production Catalog migration authorization package. No UI or production data changed; exact Preview remains an external Vercel gate.
+
 - Fixed the reviewed water facts for tetra species `sp_0431` (red neon tetra) and `sp_0432` (cardinal tetra) with explicit `freshwater` values; all other unreviewed species remain `unknown` and fail closed. Added caution and missing-water regressions. The candidate/PR SHA is resolved at runtime by `npm run project:status`; the previous code head `cdd46581` has the recorded exact Preview parity, while the latest docs-only head awaits a new deployment because of Vercel rate limiting. CI status is read at runtime with `gh pr checks 142`; Catalog checksum: `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`.
 
 - Closed the local mixed-compatibility authority gap: the shared canonical adapter now applies Domain status/policy/version and maps every current Domain rule code into legacy evidence groups; the direct legacy entry and Compatibility Service share the same adapter. Local Critic re-review passed; GitHub/Preview parity remains pending until the candidate is pushed.

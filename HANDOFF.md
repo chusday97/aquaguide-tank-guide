@@ -1,5 +1,21 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 忽略 Vercel 后的本地收敛（最新）
+
+- 当前工作线仍为 `codex/main-core-foundation-v1`；本轮没有修改冻结 UI、生产 Supabase、Catalog 发布或 `main`。
+- 已完成混养唯一权威静态门禁、486 物种 Catalog 校验、26+1 本地 migration 重放、19/19 pgTAP、schema lint、Domain/Service/API 与浏览器回归。核心 UI 测试中的旧 600px/混养/AI 入口/证据折叠断言已按当前正式契约修正并通过。
+- 当前可复核事实：旧引擎只能作为 facade；生产前 26 个 migration 只读结构等价；第 27 个 migration 仍需生产授权；生产 Catalog checksum、真实身份写入和回滚仍 `UNVERIFIED`。
+- 未完成：独立 Critic 对最新 diff 的复验、一次性 GitHub 同步、Vercel 对新 head 的 Preview parity。PR #142 继续 Draft，不合并 `main`。
+- 下一步：先交 Critic 六维复验；若无阻塞，提交本地小步 commit，再一次性推送候选分支，读取 GitHub/PR 状态；随后等待外部门禁恢复并申请生产 migration 授权。
+
+## 2026-08-28 忽略 Vercel 的安全补救（最新）
+
+- 本轮只处理本地与文档收敛，不等待 Vercel、不修改当前 UI、不执行生产 Supabase SQL。
+- 新增 `check:compatibility-authority` 门禁：旧 `tankCompatibilityEngine` 是冻结页面的兼容 facade，Domain Rules 保留最终结论权威。
+- Feature Catalog/Convergence Ledger 已记录混养本地验证完成；Catalog parity 报告更新为当前 checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- 第 27 个 migration 授权包已生成：`docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`。生产仍只有前 26 个 migration，Catalog 未发布。
+- 下一步：跑完整本地回归、交独立 Critic 复验，再一次性同步 GitHub；Preview 仍按 Vercel 恢复情况单独验证。
+
 ## 2026-08-28 最新执行快照：水体事实修复已同步
 
 - 红绿灯 `sp_0431` 和宝莲灯 `sp_0432` 已加入有证据支持的显式 `freshwater`；其余未审核物种保持 `unknown`，未知水体仍安全返回 `insufficient_data`。

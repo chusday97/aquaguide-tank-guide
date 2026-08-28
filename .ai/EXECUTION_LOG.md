@@ -1,5 +1,13 @@
 # AI Execution Log
 
+## 2026-08-28 — Local convergence rehearsal after Vercel deferral
+
+- Added `check:compatibility-authority` and kept legacy compatibility imports explicitly allowlisted as a facade boundary; Domain Rules remains the final status/policy/version source.
+- Updated current Catalog checksum/parity facts and created the production Catalog migration authorization package. No production SQL, Catalog publication, business-data write or main merge was executed.
+- Re-ran local gates: Catalog build/validate, Domain/Service/API, compatibility evidence, core flow, core UI, formal scenes, today action, species detail, responsive routes/detail surface, Supabase 26+1 reset, pgTAP 19/19, schema lint, lint, API typecheck, build, project truth, UI freeze and diff check. All passed.
+- Corrected only stale browser assertions: 600px follows the 768px phone breakpoint; formal compatibility uses `/encyclopedia?mode=compatibility`; AI Tank Copilot emits the existing feature-preview event; evidence disclosure is checked through `aria-expanded`.
+- Remaining: independent Critic re-review, one consolidated GitHub push, and Preview parity for the new head. Vercel remains external and rate-limited.
+
 ## 2026-08-28 — Candidate head and admin-content isolation
 
 - Candidate `codex/main-core-foundation-v1`, remote branch and PR #142 are synchronized at `df3c4e11`; `main` remains unchanged and PR #142 remains Draft.

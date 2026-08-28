@@ -3,6 +3,17 @@
 **Status:** Active
 **Updated:** 2026-08-28
 
+## 2026-08-28 local convergence preparation (latest)
+
+- Local release rehearsal after the authority/documentation update is complete: `check:compatibility-authority`, Catalog build/validate, Domain/Service/API, core UI, formal scenes, today action, species detail, responsive matrix, Supabase reset/pgTAP/lint, project truth, UI freeze, lint, API typecheck, build and diff check all passed. The only test edits were stale assertions; visual-owned files are unchanged.
+- The latest local changes are not yet pushed. Preview parity for the new head is therefore not claimed; production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
+
+- Candidate branch, remote branch and PR #142 SHA are synchronized; exact SHA is read at runtime with `npm run project:status`. PR #142 remains Draft and `releaseReady=false`.
+- Local Catalog verification now reflects the reviewed tetra water facts: 486 species, 13 evidence sources, checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`.
+- The compatibility authority gate passes: frozen callers may use the legacy facade, while Domain Rules owns final status, policy, rule codes and versions.
+- Local Supabase 26+1 replay, 19/19 pgTAP and schema lint are passing. Production remains at 26 migrations; the Catalog migration is prepared but not executed.
+- Current exact-SHA Preview is `UNVERIFIED` because Vercel is rate-limited. No production migration, Catalog upload, business-data write or `main` merge was performed.
+
 ## 2026-08-28 latest convergence evidence
 
 - Candidate `codex/main-core-foundation-v1`, GitHub remote and PR #142 are synchronized at the latest pushed SHA (verify with `npm run project:status`). PR #142 remains open and Draft.

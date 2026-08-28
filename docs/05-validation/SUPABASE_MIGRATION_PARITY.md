@@ -7,6 +7,8 @@
 本地候选已恢复生产报告的 26 个 migration 版本；候选另有一个尚未执行的 Catalog 提案。生产 migration、Catalog 发布和业务数据均未被本文件或本轮代码修改。
 
 最新只读 parity 细项见 [SUPABASE_PARITY_REPORT.md](./SUPABASE_PARITY_REPORT.md)。
+第 27 个 migration 的执行前检查、影响范围、验证命令和停止条件见
+[SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md](./SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md)。
 
 | 环境 | 版本范围 | 状态 |
 | --- | --- | --- |

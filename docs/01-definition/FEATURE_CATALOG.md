@@ -1,7 +1,7 @@
 # AquaGuide Feature Catalog
 
 **Status:** Active
-**Updated:** 2026-08-27
+**Updated:** 2026-08-28
 **Rule:** this is the only module-status inventory. Product promises belong in [PRODUCT_TRUTH.md](./PRODUCT_TRUTH.md); historical implementation detail belongs in `PROGRESS.md` and `HANDOFF.md`.
 
 ## Status vocabulary
@@ -24,7 +24,7 @@
 | Encyclopedia and species detail | `PARTIAL_WITH_FALLBACK` | Browse, search/filter and detail flows work; formal interactive scene entry is being restored from the approved visual baseline | `src/pages/Encyclopedia.tsx`, `src/components/interactive/SpeciesSceneAtlas.tsx`, Visual Acceptance Matrix |
 | Care | `PARTIAL_WITH_FALLBACK` | Browse, article/task/reminder flows work; formal interactive exploration entry is being restored from the approved visual baseline | `src/pages/CareEncyclopedia.tsx`, `src/components/interactive/KnowledgeSceneExplorer.tsx`, Visual Acceptance Matrix |
 | Collection | `PARTIAL_WITH_FALLBACK` | Wishlist, care saves, memorials, achievements and deep links exist; creature-first visual parity is not yet accepted | `src/pages/Collection*.tsx`, Visual Acceptance Matrix |
-| Compatibility | `PARTIAL_WITH_FALLBACK` | Deterministic current baseline and safe insufficient-data outcomes | `src/lib/tankCompatibilityEngine.ts`, `CONTRACT.md` |
+| Compatibility | `CURRENT_VERIFIED` | Domain Rules owns status, policy, rule codes and versions; frozen callers use a guarded compatibility facade and unknown data remains fail-closed | `packages/domain-rules/`, `src/services/compatibility/compatibility.service.ts`, `scripts/check-compatibility-authority.mjs` |
 | Identification and health triage | `PARTIAL_WITH_FALLBACK` | Candidate confirmation, manual species fallback, controlled questions and urgent-path handling | `src/pages/Identify.tsx`, `src/services/ai/` |
 | Text AI assistance | `PARTIAL_WITH_FALLBACK` | Structured assistant/daily-check paths with failure reporting | `apps/api/`, `server/index.mjs` |
 | Visual AI | `PARTIAL_WITH_FALLBACK` | Manual confirmation when a visual provider is unavailable | Product Truth invariant 3 |
@@ -35,7 +35,7 @@
 
 | Capability | Status | Constraint |
 | --- | --- | --- |
-| Compatibility evidence, current tank state and water-change authority | `PARTIAL_WITH_FALLBACK` | User-approved local rules and derived services are verified; existing UI geometry is unchanged and no new current-state UI surface is wired in this unit. |
+| Compatibility evidence, current tank state and water-change authority | `MIGRATED` | User-approved local rules and derived services are verified; existing UI geometry is unchanged and the legacy facade is guarded as a compatibility boundary. |
 | Species Detail evidence authority | `RC_MIGRATION_PROPOSED` | Service/evidence adapters only; never copy RC detail layout. |
 | Recommendation authority/severity | `RC_MIGRATION_PROPOSED` | Only after P0 authority is present. |
 | API/Vercel runtime changes | `RC_MIGRATION_PROPOSED` | Separate deployment/API contract review required. |

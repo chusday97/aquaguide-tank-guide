@@ -1,6 +1,22 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-28 忽略 Vercel 后的本地收敛结果（最新）
+
+- [x] 完成混养权威静态门禁：旧 `tankCompatibilityEngine` 仅作为兼容 facade，Domain Rules 负责最终状态、策略、规则代码和版本；门禁扫描 226 个源文件通过。
+- [x] 完成 Catalog 与本地 Supabase 演练：486 个物种、13 个证据来源、checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`；26+1 migration 从零重放，pgTAP 19/19，schema lint 0 error。
+- [x] 完成业务与 UI 回归：Domain/Service/契约、核心体验、正式 scene、今日行动、物种详情、响应式路由、UI freeze、project truth、lint、API 类型和 production build 均通过；本轮只修正过期测试断言，未修改视觉 Owner 文件。
+- [x] 生成第 27 个 Catalog migration 授权包：`docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`；未执行生产 SQL、Catalog 发布或业务数据写入。
+- [ ] 独立 Critic 需对当前 diff 复验；随后将本地补救一次性推送候选分支并更新 PR #142。Vercel Preview 继续作为外部门禁，不重复重试。
+
+## 2026-08-28 忽略 Vercel 的安全补救（进行中）
+
+- [x] 增加 `check:compatibility-authority` 静态门禁，确认旧引擎只作为冻结 UI 的兼容 facade，Domain Rules 决定最终状态、策略、规则代码和版本。
+- [x] 将 Feature Catalog 与 Convergence Ledger 的混养状态更新为本地已验证；未修改页面、布局、素材或数据库字段。
+- [x] 更新 Supabase parity 当前 Catalog checksum，并整理前 26 个 migration 的定义层等价证据。
+- [x] 生成第 27 个 Catalog migration 授权包；未执行生产 SQL、未发布 Catalog、未写入业务数据。
+- [ ] 重新运行完整本地发布演练并完成 Critic 同线程复验；Vercel Preview 继续独立标记为 `UNVERIFIED`。
+
 ## 2026-08-28 水体事实修复与发布门禁（最新）
 
 - [x] 为红绿灯 `sp_0431` 与宝莲灯 `sp_0432` 写入有证据支持的显式 `waterType: freshwater`；其他未审核物种仍保持 `unknown`，没有从名称、分类或描述推断水体。

@@ -1,5 +1,14 @@
 # Task Queue
 
+## 2026-08-28 safe convergence preparation (latest)
+
+- [x] Reviewed tetra water facts and fail-closed regressions are in the canonical Catalog; checksum is recorded in the parity report.
+- [x] Added `check:compatibility-authority` to guard the legacy facade boundary without changing frozen UI files.
+- [x] Updated Feature Catalog and convergence ledger to record local compatibility authority as migrated/currently verified.
+- [x] Prepared `docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`; production execution remains unauthorized.
+- [x] Re-ran the complete local release rehearsal: compatibility authority, Catalog, Domain/Service, core UI, formal scenes, today action, species detail, responsive routes, Supabase 26+1, pgTAP 19/19, schema lint, lint, API typecheck, build, UI freeze and project truth passed.
+- [ ] Obtain same-thread Critic re-review of the latest diff, then push the consolidated local remediation once; Vercel/Preview remains an external gate and is not retried during rate limiting.
+
 ## P0 — Progress unification
 
 - [x] 建立 `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。

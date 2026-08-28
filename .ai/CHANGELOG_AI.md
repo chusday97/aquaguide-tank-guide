@@ -1,5 +1,20 @@
 # AI Changelog
 
+## 2026-08-28 — Vercel deferred, local convergence completed
+
+### Added
+
+- Added the compatibility-authority static gate and the production Catalog migration authorization package.
+
+### Changed
+
+- Updated Catalog/Supabase parity evidence and aligned stale core browser assertions with the current viewport, compatibility, feature-preview and evidence-disclosure contracts.
+- Completed the local release rehearsal: Domain/Service/API, Catalog, 26+1 Supabase replay, pgTAP 19/19, schema lint, browser matrices, build, project truth and UI freeze all pass.
+
+### Notes
+
+- No visual-owned files, production Supabase data, Catalog publication, GitHub remote state or `main` were changed. Critic re-review and one consolidated push remain next.
+
 ## 2026-08-25
 
 ## 2026-08-28 — Local Supabase parity gate
