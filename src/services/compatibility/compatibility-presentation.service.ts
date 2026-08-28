@@ -20,7 +20,6 @@ export type CompatibilityCoverage = {
   omittedDimensions: CompatibilityDimension[];
   canIssueOverallVerdict: boolean;
 };
-
 export type CompatibilityPresentation = {
   mode: CompatibilityPresentationMode;
   headline: string;
@@ -128,4 +127,3 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     coverage,
   };
 };
-
