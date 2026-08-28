@@ -6,9 +6,9 @@
 - [x] 为红绿灯 `sp_0431` 与宝莲灯 `sp_0432` 写入有证据支持的显式 `waterType: freshwater`；其他未审核物种仍保持 `unknown`，没有从名称、分类或描述推断水体。
 - [x] 增加“红绿灯↔宝莲灯完整资料返回 `caution`”和“任一方移除显式水体后返回 `insufficient_data`”回归；Catalog 校验现为 486 个物种，checksum：`545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
 - [x] 本地 Domain、Service、Repository/API、Catalog、Supabase 26+1、pgTAP、lint、API 类型、build、UI freeze、project truth 和 diff 检查通过；独立 Critic 六维复验通过。
-- [x] 本地、远端候选和 PR #142 当前均为 `98f20beaebd16b1e39368d6259adb892f963a9f9`，工作树干净。
+- [x] 本地、远端候选和 PR #142 当前 SHA 已同步且工作树干净；精确值由 `npm run project:status` 运行时读取，避免文档提交后过期。
 - [x] 上一个代码 head `cdd465817dc796bf77c9d3aef5e95c25366befff` 曾有 exact Preview parity；该证据保留为历史记录，不代表当前 docs head。
-- [ ] 当前 `98f20bea` 没有 exact Preview 部署，parity 为 `UNVERIFIED`；AquaGuide 与 admin-content Vercel checks 因部署额度限制失败；截至最近复核，Cloudflare pending、foundation 一项通过/一项 pending、`validate` pending。
+- [ ] 当前候选没有 exact Preview 部署，parity 为 `UNVERIFIED`；AquaGuide 与 admin-content Vercel checks 因部署额度限制失败；截至最近复核，Cloudflare pending、foundation 一项通过/一项 pending、`validate` pending。
 - [ ] PR #142 保持 Draft。生产第 27 个 migration、Catalog 发布、人工 release acceptance 和 `main` 合并均未执行。
 
 ## 2026-08-28 当前执行快照（最新）

@@ -4,8 +4,8 @@
 
 - 红绿灯 `sp_0431` 和宝莲灯 `sp_0432` 已加入有证据支持的显式 `freshwater`；其余未审核物种保持 `unknown`，未知水体仍安全返回 `insufficient_data`。
 - 完整资料下红绿灯↔宝莲灯返回 `caution`；移除任一方显式水体后返回 `insufficient_data`。Catalog 486 个物种 checksum 为 `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
-- 本地、远端 `codex/main-core-foundation-v1` 和 PR #142 当前均为 `98f20beaebd16b1e39368d6259adb892f963a9f9`，工作树干净。上一个代码 head `cdd465817dc796bf77c9d3aef5e95c25366befff` 的 Preview parity 仅作为历史证据保留。
-- 当前 `98f20bea` 没有 exact Preview 部署，`check-preview-parity` 为 `UNVERIFIED`；AquaGuide 与 `admin-content` Vercel checks 均因 24 小时部署限流失败；截至最近复核，Cloudflare pending、foundation 一项通过/一项 pending、`validate` pending。
+- 本地、远端 `codex/main-core-foundation-v1` 和 PR #142 当前 SHA 已同步，精确值以 `npm run project:status` 运行时读取，工作树干净。上一个代码 head `cdd465817dc796bf77c9d3aef5e95c25366befff` 的 Preview parity 仅作为历史证据保留。
+- 当前候选没有 exact Preview 部署，`check-preview-parity` 为 `UNVERIFIED`；AquaGuide 与 `admin-content` Vercel checks 均因 24 小时部署限流失败；截至最近复核，Cloudflare pending、foundation 一项通过/一项 pending、`validate` pending。
 - 当前没有改 UI、没有执行生产 Supabase migration/Catalog 发布、没有合并 `main`。PR #142 继续保持 Draft，等待生产授权和最终人工验收。
 
 ## 2026-08-28 最新执行快照
