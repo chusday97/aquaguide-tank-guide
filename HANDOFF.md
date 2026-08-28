@@ -14,7 +14,7 @@
 
 - 修复 `reviewSpeciesAdditions` 的 intent policy：现实记录不再返回规划加入的 `complete_information`，改为保存类策略；新增 Domain ruleCode 到结构化说明的映射，避免状态/理由不一致。
 - 补回 `npm run check:preview-parity` 脚本入口；本地执行因 GitHub DNS/网络限制失败，不能将 Preview parity 记为通过。
-- 修复尚未提交；当前需要先完成同一 Critic 的复验，再提交并决定是否推送。生产 migration、Catalog 发布和 main 合并仍不执行。
+- 修复已提交为 `ba23c69d`；当前需要完成同一 Critic 的复验，再决定在 Vercel 配额恢复后推送。生产 migration、Catalog 发布和 main 合并仍不执行。
 
 ## 2026-08-28 候选推送与 Preview parity
 
