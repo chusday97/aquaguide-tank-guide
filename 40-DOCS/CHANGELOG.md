@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed Domain evidence precedence in the legacy compatibility facade and strengthened the 435-pair launch matrix to assert exact safe-status counts. Local candidate checkpoint `4d5cbb28` passes compatibility, authority, UI-freeze and project-truth gates; it is intentionally not pushed yet.
+
 - Added a frozen, de-duplicated 30-species compatibility review cohort, per-record catalog quality artifacts, draft-only `catalog:research`/`catalog:review` commands, a 435-pair deterministic/symmetric matrix gate, individual life-stage and breeding context, observed coexistence severity, and layered stocking guidance. Domain remains the sole decision authority; UI and production Supabase were not changed.
 
 - Added species data-quality audit and deterministic 30-species research cohort; added evidence-gated `decisionReadiness` metadata and routed formal compatibility consumers through the Compatibility Service. Extended Domain checks for temperature, pH, tank temperature, minimum volume and tank length. No UI Owner files or production data changed.

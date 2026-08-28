@@ -3,10 +3,12 @@
 
 ## 2026-08-28 物种底层修复进展（本轮最新）
 
+> 当前工作树最新提交：`4d5cbb28`（由 `git rev-parse HEAD` 验证）。本地已提交但尚未推送；远端候选/PR #142 仍停在 `396e71da`。下方较早的“同步/已推送”条目均为历史证据。
+
 - [x] 首批审核队列已冻结为 30 个明确 Catalog ID，按基础物种去重；不再由排序或新增变种悄悄改变研究范围。泰国斗鱼暂以 `Betta splendens` 品系代表 `sp_0258` 纳入，基础种关系仍待内容审核。
 - [x] Domain 增加个体生命阶段/繁殖状态输入、现实共处等级（stable/observe/intervene/emergency）和分层 `StockingGuidance`；幼体只可降低即时捕食判断，不能覆盖成体风险。
 - [x] 领地冲突改为谨慎提示；繁殖护域、持续追逐、进食排除、伤口/呼吸异常/多只死亡均有结构化规则与证据码。物种未审核时规划结论安全降级，已确认硬冲突仍保留阻断。
-- [x] 新增 435 个无序组合矩阵回归：状态确定性、顺序对称性和未审核资料的安全降级通过（324 组返回 `insufficient_data`）。
+- [x] 新增 435 个无序组合矩阵回归：状态确定性、顺序对称性和未审核资料的安全降级通过（324 组返回 `insufficient_data`、110 组阻断、1 组兼容）。
 - [x] 新增 `catalog:audit` 逐记录质量报告、`catalog:research --batch` 和 `catalog:review` 草稿审核入口；首批草稿仍为 10/10 pending，未进入运行时事实。
 - [x] 本地门禁通过：Domain/Service/legacy facade、Catalog、lint、API 类型、production build、UI freeze、project truth、Supabase 26+1 重放、pgTAP 19/19、schema lint 0 error。
 - [ ] 首批 30 种仍未完成逐字段人工审核；生产第 27 个 migration、Catalog 发布、最新 Preview exact SHA、人工 release acceptance 和 `main` 合并仍未执行。
