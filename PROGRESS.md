@@ -15,6 +15,12 @@
 - [x] `test:compatibility`、`test:compatibility-service`、Catalog、添加/记录、build、`check:ui-freeze` 和 `check:project-truth` 通过。
 - [ ] 当前本地候选比远端领先 11 个提交；远端/PR/当前 Preview 尚未同步，生产 migration、Catalog 发布和 main 合并仍未授权。
 
+## 2026-08-28 Critic 阻塞修复
+
+- [x] 将 Domain ruleCodes 到 legacy blocking/warning/missing 证据的合并下沉到 `src/lib/compatibility/canonical-result.adapter.ts`；旧页面直连入口不再出现“状态阻断但无阻断理由”。
+- [x] 新增旧入口 Domain-only 水体冲突回归；`test:compatibility` 与 `test:compatibility-service` 均通过，UI 文件未变更。（commit: `33576cc6`）
+- [ ] 仍未推送当前候选；远端/PR/Preview、生产 migration、Catalog 发布和 main 合并继续保持外部门禁。
+
 ## 2026-08-27 最终统一执行线
 
 - 当前唯一候选工作树为 `codex/main-core-foundation-v1`（SHA 以 `git rev-parse HEAD` 运行时读取）；4317 固定为 `37a8d4d1` 视觉基线，4319 用于候选验收，视觉恢复分支仅保留为历史证据。

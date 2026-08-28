@@ -15,6 +15,11 @@
 - 回归通过：`test:compatibility`、`test:compatibility-service`、Catalog、添加/记录、build、UI freeze 和 project truth；正式 scene/browse 与今日行动此前已通过。
 - 当前本地候选领先远端 11 个提交；不要宣称 GitHub、PR #142 或 Preview 已同步。生产第27个 migration、Catalog 发布和 main 合并仍未执行。
 
+## 2026-08-28 Critic 阻塞修复
+
+- 独立 Critic 发现旧入口只同步 Domain 状态、未同步 Domain 证据；现已把证据合并下沉到 `src/lib/compatibility/canonical-result.adapter.ts`，直连旧页面也能显示对应阻断/资料不足理由。（commit: `33576cc6`）
+- 新增 direct-entry 水体冲突回归并通过；类型、混养、UI freeze 和 project truth 继续通过。当前代码修复尚未推送。
+
 ## 2026-08-28 Domain 结论接管 Service
 
 - Compatibility Service 已把 Domain Rules 的状态与添加策略接到应用/服务层；legacy 引擎仍只提供证据详情，Service 不再把 legacy status 当最终结论。
