@@ -1015,7 +1015,13 @@ export function SpeciesDetailDialog({
                       </button>
                       {expandedSection === 'compatibility' && (
                         <div className="grid gap-3 border-t border-border/70 p-3">
-                          {compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
+                          {compatibilityVisualModel?.presentationMode === 'unavailable' ? (
+                            <section className="rounded-[18px] border border-sky-100 bg-sky-50/70 p-3" data-visual-result-presentation="unavailable">
+                              <div className="text-[13px] font-black text-ink">暂未开放这组混养建议</div>
+                              <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">先查看物种养护，或打开混养计算器主动保存这组组合。</p>
+                              <button type="button" onClick={handleOpenCalculator} className="mt-3 min-h-11 rounded-full bg-accent px-4 text-[11px] font-black text-white">打开混养计算器</button>
+                            </section>
+                          ) : compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
                           {(fish.housingMode || fish.housingReason) && (
                             <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
                               <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.adviceHousingDefault')}</div>
