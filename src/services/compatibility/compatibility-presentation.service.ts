@@ -127,3 +127,36 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     coverage,
   };
 };
+
+export const getCompatibilityPresentationForStatus = ({
+  status,
+  hasConfirmedFacts,
+  confirmedFindings = [],
+  cautions = [],
+}: {
+  status: CompatibilityDecision['status'];
+  hasConfirmedFacts: boolean;
+  confirmedFindings?: string[];
+  cautions?: string[];
+}): CompatibilityPresentation => {
+  if (status === 'not_recommended') return {
+    mode: 'verdict', headline: '不建议一起饲养', confirmedFindings, cautions, coverageLabel: null,
+    primaryAction: 'none', coverage: { level: 'full', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: true },
+  };
+  if (status === 'caution') return {
+    mode: 'verdict', headline: '调整后可尝试', confirmedFindings, cautions, coverageLabel: null,
+    primaryAction: 'confirm_addition', coverage: { level: 'full', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: true },
+  };
+  if (status === 'compatible') return {
+    mode: 'verdict', headline: '当前条件适合', confirmedFindings, cautions, coverageLabel: null,
+    primaryAction: 'add_to_tank', coverage: { level: 'full', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: true },
+  };
+  return hasConfirmedFacts ? {
+    mode: 'confirmed_facts', headline: '当前可确认', confirmedFindings: Array.from(new Set(confirmedFindings)).slice(0, 5),
+    cautions: Array.from(new Set(cautions)).slice(0, 3), coverageLabel: '本次仅展示已核对的环境与行为条件', primaryAction: 'save_to_wishlist',
+    coverage: { level: 'partial', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: false },
+  } : {
+    mode: 'unavailable', headline: '暂未开放这组混养建议', confirmedFindings: [], cautions: [], coverageLabel: null,
+    primaryAction: 'save_to_wishlist', coverage: { level: 'none', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: false },
+  };
+};

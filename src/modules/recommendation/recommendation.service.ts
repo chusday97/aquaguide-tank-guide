@@ -323,7 +323,7 @@ const buildCandidate = (
 
   let status: CandidateStatus = 'blocked';
   if (compatibility.status === 'compatible' && risks.length === 0 && requiredAdjustments.length === 0) status = 'direct';
-  if (compatibility.status === 'caution' || compatibility.status === 'insufficient_data' || (compatibility.status === 'compatible' && (risks.length > 0 || requiredAdjustments.length > 0))) status = 'adjustable';
+  if (compatibility.status === 'caution' || (compatibility.status === 'compatible' && (risks.length > 0 || requiredAdjustments.length > 0))) status = 'adjustable';
   if (compatibility.status === 'not_recommended') status = 'blocked';
   if (profile.load.loadRate >= TANK_LOAD_THRESHOLDS.nearLimit) status = 'blocked';
   if (minGroup > recommendedQuantity && minGroup > 1) status = 'blocked';

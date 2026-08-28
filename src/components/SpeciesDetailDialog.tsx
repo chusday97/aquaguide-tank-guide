@@ -24,6 +24,7 @@ import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.se
 import { deriveSpeciesGroups, findGroupForSpecies, getVariantLabel } from '../lib/speciesGrouping';
 import { QuickDatePicker } from './forms/QuickDatePicker';
 import { MemorialCauseSelector } from './memorial/MemorialCauseSelector';
+import { getCompatibilityPresentationForStatus } from '../services/compatibility/compatibility-presentation.service';
 
 const ImagePreviewModal = lazy(() => import('./common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const Interactive3DFishWrapper = lazy(() => import('./Interactive3DFishWrapper'));
@@ -571,17 +572,15 @@ export function SpeciesDetailDialog({
     const hasConfirmedFacts = compatibilityPairs.some(pair => (
       pair.rawResult.passedRules.length > 0 || pair.rawResult.warningRules.length > 0 || pair.rawResult.blockingRules.length > 0
     ));
-    const presentationMode = status === 'insufficient_data'
-      ? (hasConfirmedFacts ? 'confirmed_facts' : 'unavailable')
-      : 'verdict';
+    const presentation = getCompatibilityPresentationForStatus({ status, hasConfirmedFacts });
     const conclusion = status === 'insufficient_data'
       ? (hasConfirmedFacts ? '当前可确认部分条件，先加入种草清单。' : '暂未开放这组混养建议，可先查看物种养护。')
       : primaryPair?.primaryReason?.evidence || primaryPair?.rawResult.summary || t('encyclopedia.conclusionNoPairs');
     return {
       status,
-      presentationMode,
-      statusLabel: status === 'insufficient_data' ? (isEn ? 'Confirmed factors' : '当前可确认') : undefined,
-      coverageLabel: hasConfirmedFacts && status === 'insufficient_data' ? '本次仅展示已核对的环境与行为条件' : null,
+      presentationMode: presentation.mode,
+      statusLabel: presentation.mode === 'confirmed_facts' ? (isEn ? 'Confirmed factors' : '当前可确认') : presentation.mode === 'unavailable' ? (isEn ? 'Not yet available' : '暂未开放') : undefined,
+      coverageLabel: presentation.coverageLabel,
       title: t('encyclopedia.compatibilityCalc'),
       conclusion,
       emphasis: getVisualEmphasis(conclusion),

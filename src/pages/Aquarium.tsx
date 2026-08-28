@@ -91,6 +91,7 @@ import {
 import { recordExistingLivestock, type RecordExistingResult } from '../services/aquarium/livestock-recording.service';
 import { createAquariumDraft, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { getCompatibilityPresentationForStatus } from '../services/compatibility/compatibility-presentation.service';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
@@ -2098,16 +2099,12 @@ export default function AquariumManager() {
       return;
     }
     if (addPolicy === 'complete_information') {
-      const missingCodes = addFishCompatibilityReview.keyRules.map(rule => rule.code);
-      const settingsPanel = missingCodes.some(code => /volume|size|tank/.test(code))
-        ? 'size'
-        : missingCodes.some(code => /filter|heater|equipment/.test(code))
-          ? 'equipment'
-          : 'parameters';
+      const next = new Set(wishlistFishIds);
+      addFishCompatibilityReview.items.forEach(item => next.add(item.fishId));
+      syncWishlistFishIds(next);
       setIsAddFishOpen(false);
       setAddFishCompatibilityReview(null);
-      openAquariumSettings(settingsPanel);
-      setTankActionMessage(Boolean(i18n.language?.startsWith('en')) ? 'Please fill in aquarium details before evaluating.' : '请先补充鱼缸信息，再评估是否可以加入。');
+      setTankActionMessage(Boolean(i18n.language?.startsWith('en')) ? 'Saved to your wishlist. Revisit this mix after more review.' : '已加入种草清单，资料完善后可以再回来判断。');
       return;
     }
     await recordSelectedFishItems(addFishCompatibilityReview.items);
@@ -4825,6 +4822,18 @@ export default function AquariumManager() {
       trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });
     }
   };
+  const addFishReviewPresentation = useMemo(() => {
+    if (!addFishCompatibilityReview) return null;
+    const confirmedFindings = addFishCompatibilityReview.evaluations.flatMap(evaluation => [
+      ...evaluation.result.passedRules,
+      ...evaluation.result.warningRules,
+    ]).map(rule => rule.evidence || rule.title);
+    return getCompatibilityPresentationForStatus({
+      status: addFishCompatibilityReview.status,
+      hasConfirmedFacts: confirmedFindings.length > 0,
+      confirmedFindings,
+    });
+  }, [addFishCompatibilityReview]);
   const isTimelineOpen = new URLSearchParams(routeLocation.search).get('action') === 'timeline';
   if (isTimelineOpen) {
     void careTimelineRevision;
@@ -6382,7 +6391,7 @@ export default function AquariumManager() {
                       <div className={`mt-1 font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[28px] leading-tight text-red-700' : 'text-lg text-ink'}`}>
                         {addFishCompatibilityReview.status === 'not_recommended'
                           ? (isEn ? 'Not recommended to add' : '不建议加入')
-                          : getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
+                          : addFishReviewPresentation?.headline || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
                       </div>
                       <p className={`mt-2 leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[14px] font-black text-red-800' : 'text-[12px] font-bold text-ink/62'}`}>
                         {addFishCompatibilityReview.status === 'not_recommended'
@@ -6404,14 +6413,14 @@ export default function AquariumManager() {
                       <div key={evaluation.fish.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[14px] bg-white/82 px-3 py-2 shadow-sm">
                         <span className="min-w-0">
                           <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
-                          <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{evaluation.result.summary}</span>
+                          <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{evaluation.result.status === 'insufficient_data' ? '当前可确认部分条件' : evaluation.result.summary}</span>
                         </span>
                         <span className="shrink-0 text-[10px] font-black text-ink/60">{getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
                       </div>
                     ))}
                   </div>
 
-                  {addFishCompatibilityReview.keyRules.length > 0 && (
+                  {addFishCompatibilityReview.keyRules.length > 0 && addFishCompatibilityReview.status !== 'insufficient_data' && (
                     <div className={`rounded-[16px] p-4 ${addFishCompatibilityReview.status === 'not_recommended' ? 'border-2 border-red-200 bg-white' : 'bg-white/72'}`}>
                       <div className={`font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[15px] text-red-700' : 'text-[11px] text-ink'}`}>{isEn ? 'Key Reasons' : '不建议混养的原因'}</div>
                       <div className="mt-2 grid gap-1.5">
@@ -6771,7 +6780,7 @@ export default function AquariumManager() {
                               ? getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'block'
                                 ? '返回调整组合'
                                 : getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'complete_information'
-                                  ? '先补充鱼缸信息'
+                                  ? '加入种草清单'
                                   : '已经实际入缸，记录下来'
                               : additionIntent === 'record_existing'
                                 ? '保存到鱼缸'

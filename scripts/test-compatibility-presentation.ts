@@ -77,4 +77,10 @@ for (const file of [
   assert.doesNotMatch(source, /资料不足|信息不足|fitInsufficient/, `${file} must not expose raw compatibility unknown copy`);
 }
 
+const aquariumSource = readFileSync(resolve(process.cwd(), 'src/pages/Aquarium.tsx'), 'utf8');
+assert.doesNotMatch(aquariumSource, /请先补充鱼缸信息，再评估是否可以加入/);
+assert.match(aquariumSource, /evaluation\.result\.status === 'insufficient_data' \? '当前可确认部分条件'/);
+assert.match(aquariumSource, /syncWishlistFishIds\(next\)/);
+assert.match(aquariumSource, /getCompatibilityPresentationForStatus/);
+
 console.log('compatibility presentation: verdict, partial facts, unavailable fallback passed');
