@@ -7,18 +7,20 @@ Build an isolated AquaGuide Content Admin for non-technical Species SEO manageme
 
 ## Current milestone
 
-Complete the inheritance model:
+Complete bilingual Species SEO authoring on top of the inheritance model:
+
+`中文 Source → AI English suggestion → human review → English Draft`
+
+while preserving:
 
 `Category → Base Species shared SEO → Variant Override → Effective SEO`
 
-Base Species owns shared templates/content. Variants inherit by default and only persist fields that genuinely differ. Batch operations create Variant Draft shells rather than copying shared text into every record.
-
 ## Success criteria
 
-- Base Species changes immediately propagate to every non-overridden Variant preview.
-- Clearing a Variant override restores inheritance automatically.
-- Product Truth remains read-only and outside the SEO write path.
-- Category-conflict groups fail closed and require source-data review.
-- Published SEO cannot be silently batch-overwritten before versioned drafts exist.
-- Remote Preview remains read-only; actual writes remain limited by Auth + admin role + RLS.
-- Every milestone is recorded in `.ai/` and indexed from root handoff/progress docs.
+- `zh-CN` and `en` are independent content rows; one language never overwrites the other.
+- English common/display name is editorial localization, not Product Truth.
+- AI translation is suggestion-only; it never auto-publishes or silently overwrites Published English.
+- Scientific names, catalog keys and `{{template_tokens}}` remain protected.
+- Empty Variant Overrides stay empty so Base inheritance is preserved across languages.
+- Category conflicts and duplicate candidates remain visible with concrete review evidence.
+- Remote Preview remains read-only; real writes still require Auth + admin role + RLS.

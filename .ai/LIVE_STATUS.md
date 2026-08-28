@@ -6,25 +6,31 @@ Branch: `feature/admin-content-v0`
 ## Current state
 - Public AquaGuide `main`: untouched by this Admin branch.
 - Production Supabase: untouched; Admin migrations remain branch-only proposals.
-- Admin app: `apps/admin-content`; remote Vercel Preview stays read-only.
-- 486 catalog rows are grouped into 276 Base Species; 83 groups support same-group batch workflows.
-- Base Species SEO inheritance + Variant Override is implemented locally and awaiting milestone commit/push.
+- Admin app: `apps/admin-content`; remote Review mode remains no-write.
+- Inheritance milestone is already pushed as `f27ed43`.
+- Current uncommitted milestone adds source-data review + bilingual SEO authoring.
 
-## Inheritance verification
-- Editing a Base title template updates both selected Variant Google Preview and multi-Variant batch preview immediately in Review mode, without database writes.
-- Base shared intro appears in Variant content context; Variant intro remains a separate difference/override field.
-- A Variant title override affects only that Variant; clearing it immediately restores Base inheritance.
-- Batch creation stores only Draft shells (`catalog_key + locale + status`) instead of duplicating Base SEO text.
-- Category-conflict groups remain blocked.
+## Bilingual content model
+- Chinese is the editorial source locale (`zh-CN`); English is a separate `en` row.
+- Variant rows are keyed by `catalog_key + locale`; Base rows by `group_key + locale`.
+- `localized_name` stores an English editorial common/display name and does not modify Product Truth.
+- English Base templates have locale-native defaults; Variant blank Overrides continue inheriting Base.
+- AI translation generates suggestions only; acceptance saves an English Draft and never auto-publishes.
+- Published English is protected from direct suggestion overwrite until versioned Draft/Publish exists.
 
-## Database verification
-- `202608280002_species_seo_group_inheritance.sql` applied successfully to the isolated local Supabase only.
-- `species_seo_groups` has RLS enabled.
-- Simulated admin JWT: Base SEO Draft insert succeeds and is visible.
-- Simulated non-admin JWT: Base SEO Draft select returns 0; insert is rejected by RLS.
-- RLS test data cleanup returned 0 remaining test rows.
+## Translation safety
+- `/api/translate` requires the signed-in Supabase JWT and re-checks `user_roles.role=admin` server-side.
+- Provider secrets use server-only `AI_API_KEY` / `DEEPSEEK_API_KEY`; browser code never reads them.
+- Scientific names/catalog keys are context-only and must not be translated.
+- Base `{{template_tokens}}` are validated after model output; token loss/rename fails closed.
 
-## Gate before push
-- Rerun contract test, production build, `git diff --check`.
-- Inspect staged files and confirm `.env.local` remains ignored.
-- Commit/push one concentrated inheritance milestone; do not merge main.
+## Verification
+- Contract test, Vite production build and diff check passed before final docs sync; final gate will rerun before commit.
+- Local isolated Supabase: same Species stores independent zh-CN and en Draft rows without collision.
+- Simulated non-admin Draft read remains 0; test rows were cleaned up.
+- Real Chrome Review verified `?locale=en`, `?locale=en&species=sp_0175`, and `?species=sp_0001`.
+- Review UI visibly exposes 5 category conflicts and 28 duplicate candidates with exact member evidence.
+
+## External gate
+- A live AI translation request still depends on configuring the provider secret in the isolated Admin deployment.
+- Public multilingual Species routing/canonical/hreflang is intentionally not connected yet.

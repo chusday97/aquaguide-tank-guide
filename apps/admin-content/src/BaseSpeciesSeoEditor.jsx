@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase.js';
-import { defaultGroupSeo, groupSeoFromRow } from './seoInheritance.js';
+import { groupSeoFromRow } from './seoInheritance.js';
+import { getLocaleLabel, isEnglishLocale } from './localization.js';
 
-export default function BaseSpeciesSeoEditor({ group, record, schemaReady, readOnly, onPreview, onSaved }) {
-  const [form, setForm] = useState(defaultGroupSeo);
+export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved }) {
+  const [form, setForm] = useState(() => groupSeoFromRow(record, locale));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    setForm(groupSeoFromRow(record));
+    setForm(groupSeoFromRow(record, locale));
     setMessage('');
-  }, [group?.group_key, record]);
+  }, [group?.group_key, record, locale]);
 
   if (!group || group.member_count < 2) return null;
+  const localeLabel = getLocaleLabel(locale);
   const toPreviewRow = (next) => ({
     group_key: group.group_key,
-    locale: 'zh-CN',
+    locale,
     seo_title_template: next.seoTitleTemplate,
     meta_description_template: next.metaDescriptionTemplate,
     h1_template: next.h1Template,
@@ -29,8 +31,12 @@ export default function BaseSpeciesSeoEditor({ group, record, schemaReady, readO
   });
 
   const save = async () => {
+    if (isEnglishLocale(locale) && form.status === 'published') {
+      setMessage('English 发布暂时锁定：先完成 URL / canonical / hreflang 契约。');
+      return;
+    }
     if (readOnly) {
-      setMessage('当前为只读 Review，只展示 Base Species 继承效果。');
+      setMessage(`当前为只读 Review，只展示 ${localeLabel} Base Species 继承效果。`);
       return;
     }
     if (!schemaReady) {
@@ -41,7 +47,7 @@ export default function BaseSpeciesSeoEditor({ group, record, schemaReady, readO
     setMessage('');
     const payload = {
       group_key: group.group_key,
-      locale: 'zh-CN',
+      locale,
       seo_title_template: form.seoTitleTemplate.trim(),
       meta_description_template: form.metaDescriptionTemplate.trim(),
       h1_template: form.h1Template.trim(),
@@ -58,7 +64,7 @@ export default function BaseSpeciesSeoEditor({ group, record, schemaReady, readO
       setMessage(`Base Species 保存失败：${error.message}`);
       return;
     }
-    setMessage('Base Species SEO 已保存；未 Override 的 Variant 会自动继承。');
+    setMessage(`${localeLabel} Base Species SEO 已保存；未 Override 的 Variant 会自动继承。`);
     onSaved(data);
   };
 
@@ -66,11 +72,11 @@ export default function BaseSpeciesSeoEditor({ group, record, schemaReady, readO
     <section className="base-seo-panel">
       <div className="base-seo-header">
         <div>
-          <p className="eyebrow">BASE SPECIES SEO</p>
+          <p className="eyebrow">BASE SPECIES SEO · {localeLabel}</p>
           <h2>{group.base_scientific_name}</h2>
-          <p>{group.member_count} 条同类 / 变种共享这一层；Variant 默认继承，只有差异字段才 Override。</p>
+          <p>{group.member_count} 条同类 / 变种共享这一层；每个语言版本独立 Draft / Publish。</p>
         </div>
-        <span className={`status-pill ${form.status}`}>BASE: {form.status}</span>
+        <span className={`status-pill ${form.status}`}>{localeLabel}: {form.status}</span>
       </div>
       {group.category_conflict ? (
         <div className="batch-warning">源 catalog 存在分类冲突；可以查看继承结构，但在复核前不要发布这个 Base Species。</div>
@@ -88,18 +94,18 @@ export default function BaseSpeciesSeoEditor({ group, record, schemaReady, readO
         <label>共享简介 / 基础内容
           <textarea rows="5" value={form.sharedIntro} onChange={(event) => update('sharedIntro', event.target.value)} placeholder="只写这个基础物种共同成立的内容；变种差异写到 Variant Override。" />
         </label>
-        <p className="template-help">可用变量：{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
+        <p className="template-help">变量必须原样保留：{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>
       <div className="base-seo-footer">
-        <div>{message || (readOnly ? '只读 Review：修改模板可预览，不会写数据库。' : '保存后，同组未 Override 的 Variant 自动使用最新 Base 内容。')}</div>
+        <div>{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 模板，不会写数据库。` : `保存后只更新 ${localeLabel}，不会覆盖其它语言。`)}</div>
         <div className="footer-actions">
           <select value={form.status} onChange={(event) => update('status', event.target.value)}>
             <option value="draft">Draft</option>
-            <option value="published">Published</option>
+            <option value="published" disabled={isEnglishLocale(locale)}>Published{isEnglishLocale(locale) ? '（待 URL / hreflang）' : ''}</option>
             <option value="archived">Archived</option>
           </select>
           <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving || group.category_conflict}>
-            {readOnly ? '只读 Base 预览' : saving ? '保存中…' : '保存 Base SEO'}
+            {readOnly ? `只读 ${localeLabel} 预览` : saving ? '保存中…' : `保存 ${localeLabel} Base SEO`}
           </button>
         </div>
       </div>

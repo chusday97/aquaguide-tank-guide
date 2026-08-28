@@ -68,7 +68,7 @@ The contract test checks the catalog projection, admin-role guard, SEO storage k
 7. Save localized SEO content by `catalog_key + locale` once the branch migration exists in the target environment.
 8. Explicitly surface a schema-not-ready state rather than silently failing.
 
-Not included yet: image upload, history/rollback UI, bulk editing, Search Console, AI generation, production deployment, or changes to the public Species page.
+Not included yet: image upload, history/rollback UI, Search Console, production publishing, or changes to the public Species page.
 
 ## Base Species / Variant grouping (2026-08-28)
 
@@ -99,3 +99,25 @@ SEO is no longer modeled as 486 independent copies. Multi-member groups use:
 - Batch selection creates Variant Draft shells only; it does not copy shared Base text into every Variant row.
 - Category-conflict groups remain blocked from publish/bulk write until the source catalog is reviewed.
 - The group migration has only been applied to the isolated local Supabase test environment; Production remains unchanged.
+
+## Chinese → English content workflow (current branch)
+
+The Admin now follows a locale-specific editorial model inspired by mature CMS/localization patterns without adding another CMS dependency:
+
+- `zh-CN` is the editorial source; `en` is stored as a separate locale row, never as an overwrite of Chinese.
+- Base Species and Variant inheritance both resolve independently per locale.
+- `localized_name` is an English editorial display/common name and never changes Product Truth in `fishData.ts`.
+- `/api/translate` creates an AI suggestion only. It requires the signed-in Supabase JWT and re-checks `user_roles.role = admin` server-side.
+- Scientific names, catalog keys and `{{template_tokens}}` are protected; token loss rejects the suggestion.
+- English translation saves as Draft only. English Published is intentionally locked until public URL, canonical and hreflang contracts are implemented and tested.
+- Existing Published English rows, if any are introduced later, are not overwritten by the translation workflow.
+
+For UI-only work, `npm run dev -w @aquaguide/admin-content` is sufficient. The serverless `/api/translate` route requires a Vercel runtime (`vercel dev` or a Vercel Preview) plus a server-only `AI_API_KEY` / `DEEPSEEK_API_KEY`. Never rename that secret to a `VITE_*` variable.
+
+## Data review queue
+
+The generated grouping layer now exposes the source-data problems found during deterministic catalog scanning:
+
+- 5 Base Species groups have category conflicts. The Admin shows the conflicting category members and keeps bulk/publish actions fail-closed.
+- 28 records are suspected exact duplicates. Duplicate sets and peer `catalog_key` values are displayed for review.
+- The first record in a duplicate set is only a review candidate; the Admin does not delete, merge, rewrite Product Truth, or silently choose a canonical record.

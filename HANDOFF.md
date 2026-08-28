@@ -505,3 +505,14 @@
 - 批量操作当前只允许创建继承 Draft shell，不允许静默覆盖 Published Variant。
 - Base SEO 新表为 `species_seo_groups`；只在本地隔离 Supabase 验证过，Production 未应用。
 - 本地 RLS 已验证 admin 可写、普通 authenticated 用户不可见 Draft 且不能写；详细证据见 `.ai/LIVE_STATUS.md` 与 `.ai/EXECUTION_LOG.md`。
+
+### 2026-08-28 Species SEO bilingual authoring handoff
+- Do not treat UI i18n as localized Species content. Admin content rows are now locale-specific: Variant=`catalog_key + locale`, Base=`group_key + locale`.
+- `zh-CN` is the editorial source; `en` has its own Draft/Publish state. English `localized_name` is editorial only and must never replace the catalog/Product Truth name.
+- English authoring workflow is `中文 Source → AI suggestion → human review → English Draft`; no automatic publish and no silent overwrite of Published English.
+- `/api/translate` uses server-only OpenAI-compatible/DeepSeek credentials and re-validates the caller's Supabase JWT + `user_roles=admin`.
+- Base template tokens must survive translation exactly. Empty Variant Overrides must remain empty so Base inheritance is preserved.
+- GitHub references used as architecture patterns: Payload CMS localization (locale-specific content) and Tolgee translation workflow (context-aware suggestion + review). Neither was added as a dependency.
+- Data Review Queue now shows exact category-conflict membership and exact duplicate peer IDs; it does not choose canonical records or rewrite `fishData.ts`.
+- `202608280003_species_seo_localized_name.sql` was tested only in isolated local Supabase. Production remains untouched.
+- Remaining gates: configure Admin AI provider secret and verify one live translation; implement version history; decide multilingual public URL/canonical/hreflang; then connect Published English to public Species pages.

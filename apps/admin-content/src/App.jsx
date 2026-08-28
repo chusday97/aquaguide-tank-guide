@@ -1,14 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './supabase.js';
 import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
 import BatchSeoEditor from './BatchSeoEditor.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
+import TranslationPanel from './TranslationPanel.jsx';
+import DataReviewPanel from './DataReviewPanel.jsx';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
+import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
+const initialParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+const initialContentLocale = initialParams.get('locale') === 'en' ? 'en' : 'zh-CN';
+const initialSpeciesId = initialParams.get('species') || null;
 
 const emptySeo = {
+  localizedName: '',
   seoTitle: '',
   metaDescription: '',
   h1: '',
@@ -19,14 +26,15 @@ const emptySeo = {
   status: 'draft',
 };
 
-const fromSeoRow = (row, species) => ({
+const fromSeoRow = (row, species, locale = 'zh-CN') => ({
+  localizedName: row?.localized_name || (isEnglishLocale(locale) ? '' : species?.name || ''),
   seoTitle: row?.seo_title || '',
   metaDescription: row?.meta_description || '',
   h1: row?.h1 || '',
   intro: row?.intro || '',
   imageAlt: row?.image_alt || '',
   canonicalPath: row?.canonical_path || `/species/${species?.catalog_key || ''}`,
-  focusKeyword: row?.focus_keyword || species?.name || '',
+  focusKeyword: row?.focus_keyword || (isEnglishLocale(locale) ? row?.localized_name || '' : species?.name || ''),
   status: row?.status || 'draft',
   version: row?.version,
 });
@@ -103,14 +111,14 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly = false, onSaved }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, readOnly = false, onSaved }) {
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    setForm(fromSeoRow(record, species));
-  }, [record, species]);
+    setForm(fromSeoRow(record, species, locale));
+  }, [record, species, locale]);
 
   useEffect(() => {
     setMessage('');
@@ -136,11 +144,18 @@ function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly 
       meta_description: form.metaDescription,
       h1: form.h1,
       intro: form.intro,
+      localized_name: form.localizedName,
+      locale,
     },
+    locale,
   });
   const effectiveSeo = resolvedSeo.effective;
 
   const save = async () => {
+    if (isEnglishLocale(locale) && form.status === 'published') {
+      setMessage('English 发布暂时锁定：先完成 URL / canonical / hreflang 契约，只能保存 Draft 或 Archived。');
+      return;
+    }
     if (readOnly) {
       setMessage('当前为只读 UI Review，不会向任何 Supabase 发送写入请求。');
       return;
@@ -153,7 +168,8 @@ function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly 
     setMessage('');
     const payload = {
       catalog_key: species.catalog_key,
-      locale: 'zh-CN',
+      locale,
+      localized_name: isEnglishLocale(locale) ? form.localizedName.trim() : '',
       seo_title: form.seoTitle.trim(),
       meta_description: form.metaDescription.trim(),
       h1: form.h1.trim(),
@@ -181,7 +197,7 @@ function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly 
     <section className="editor-panel">
       <div className="editor-header">
         <div>
-          <p className="eyebrow">SPECIES SEO</p>
+          <p className="eyebrow">SPECIES SEO · {getLocaleLabel(locale)}</p>
           <h2>{species.name}</h2>
           <p className="scientific-name">{species.scientific_name}</p>
         </div>
@@ -201,6 +217,13 @@ function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly 
                 <p>控制搜索结果和页面主标题，不修改产品数据。</p>
               </div>
             </div>
+            {isEnglishLocale(locale) ? (
+              <label>
+                English Common Name
+                <input value={form.localizedName} placeholder="例如 Cherry Shrimp" onChange={(event) => update('localizedName', event.target.value)} />
+                <small className="inherit-note">只影响 English 内容层；不会改 Product Truth 里的中文名称。</small>
+              </label>
+            ) : null}
             <label>
               SEO Title Override <span>{form.seoTitle ? `${form.seoTitle.length}/60` : '继承 Base'}</span>
               <input value={form.seoTitle} maxLength={120} placeholder={resolvedSeo.inherited.seoTitle} onChange={(event) => update('seoTitle', event.target.value)} />
@@ -260,7 +283,7 @@ function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly 
             </div>
             <div className="google-preview">
               <div className="preview-domain">aquaguide · {form.canonicalPath || `/species/${species.catalog_key}`}</div>
-              <div className="preview-title">{effectiveSeo.seoTitle || species.name}</div>
+              <div className="preview-title">{effectiveSeo.seoTitle || effectiveSeo.displayName || species.name}</div>
               <div className="preview-description">{effectiveSeo.metaDescription || '尚未填写 Meta Description。'}</div>
             </div>
             <div className="seo-checks">
@@ -281,10 +304,10 @@ function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly 
         <div className="footer-actions">
           <select value={form.status} onChange={(event) => update('status', event.target.value)} aria-label="SEO status">
             <option value="draft">Draft</option>
-            <option value="published">Published</option>
+            <option value="published" disabled={isEnglishLocale(locale)}>Published{isEnglishLocale(locale) ? '（待 URL / hreflang）' : ''}</option>
             <option value="archived">Archived</option>
           </select>
-          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly}>{readOnly ? '只读预览' : saving ? '保存中…' : '保存 SEO'}</button>
+          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly}>{readOnly ? '只读预览' : saving ? '保存中…' : `保存 ${getLocaleLabel(locale)} SEO`}</button>
         </div>
       </div>
     </section>
@@ -299,7 +322,8 @@ export default function App() {
   const [seoRows, setSeoRows] = useState({});
   const [groupSeoRows, setGroupSeoRows] = useState({});
   const [groupPreviewRows, setGroupPreviewRows] = useState({});
-  const [selectedId, setSelectedId] = useState(null);
+  const [contentLocale, setContentLocale] = useState(initialContentLocale);
+  const [selectedId, setSelectedId] = useState(initialSpeciesId);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [batchIds, setBatchIds] = useState([]);
@@ -313,7 +337,7 @@ export default function App() {
       setSession({ user: { id: 'review-only', email: 'review@aquaguide.local' } });
       setRole('admin');
       setSpecies(catalogSpecies);
-      setSelectedId(catalogSpecies[0]?.id || null);
+      setSelectedId((current) => catalogSpecies.some((item) => item.id === current) ? current : catalogSpecies[0]?.id || null);
       setSchemaReady(false);
       setGroupSchemaReady(false);
       setAuthChecked(true);
@@ -377,7 +401,7 @@ export default function App() {
         setSchemaReady(false);
       } else {
         setSchemaReady(true);
-        setSeoRows(Object.fromEntries((seoData || []).map((row) => [row.catalog_key, row])));
+        setSeoRows(Object.fromEntries((seoData || []).map((row) => [seoRowKey(row.catalog_key, row.locale), row])));
       }
 
       const { data: groupSeoData, error: groupSeoError } = await supabase
@@ -388,7 +412,7 @@ export default function App() {
         setGroupSchemaReady(false);
       } else {
         setGroupSchemaReady(true);
-        setGroupSeoRows(Object.fromEntries((groupSeoData || []).map((row) => [row.group_key, row])));
+        setGroupSeoRows(Object.fromEntries((groupSeoData || []).map((row) => [groupSeoRowKey(row.group_key, row.locale), row])));
       }
       setLoading(false);
     };
@@ -398,14 +422,24 @@ export default function App() {
 
   const selectedSpecies = species.find((item) => item.id === selectedId) || null;
   const selectedGroup = selectedSpecies ? speciesGroupByMemberId.get(selectedSpecies.id) : null;
-  const selectedGroupPersisted = selectedGroup ? groupSeoRows[selectedGroup.group_key] : null;
-  const selectedGroupRecord = selectedGroup
-    ? groupPreviewRows[selectedGroup.group_key] || selectedGroupPersisted
+  const selectedGroupKey = selectedGroup ? groupSeoRowKey(selectedGroup.group_key, contentLocale) : null;
+  const selectedGroupPersisted = selectedGroupKey ? groupSeoRows[selectedGroupKey] : null;
+  const selectedGroupRecord = selectedGroupKey
+    ? groupPreviewRows[selectedGroupKey] || selectedGroupPersisted
     : null;
+  const selectedVariantRecord = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, contentLocale)] : null;
+  const sourceVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'zh-CN')] : null;
+  const sourceGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, 'zh-CN')] : null;
+  const englishVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'en')] : null;
+  const englishGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, 'en')] : null;
+  const localeSeoRows = useMemo(() => Object.fromEntries(
+    Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
+  ), [seoRows, contentLocale]);
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
   const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
-  const batchGroupRecord = batchGroup
-    ? groupPreviewRows[batchGroup.group_key] || groupSeoRows[batchGroup.group_key]
+  const batchGroupKey = batchGroup ? groupSeoRowKey(batchGroup.group_key, contentLocale) : null;
+  const batchGroupRecord = batchGroupKey
+    ? groupPreviewRows[batchGroupKey] || groupSeoRows[batchGroupKey]
     : null;
 
   const toggleBatch = (id) => {
@@ -452,9 +486,22 @@ export default function App() {
             <span>Species Content</span>
           </div>
         </div>
+        <div className="locale-switcher" aria-label="Content language">
+          {CONTENT_LOCALES.map((item) => (
+            <button
+              key={item.code}
+              type="button"
+              className={contentLocale === item.code ? 'active' : ''}
+              onClick={() => setContentLocale(item.code)}
+            >
+              {item.label}
+            </button>
+          ))}
+          <small>语言独立 Draft / Publish</small>
+        </div>
         <div className="topbar-actions">
           <span className={`connection-dot ${schemaReady && groupSchemaReady ? 'ready' : 'warning'}`}></span>
-          <span>{isReviewMode ? 'Read-only UI review' : schemaReady && groupSchemaReady ? 'SEO inheritance schema ready' : 'SEO schema pending'}</span>
+          <span>{isReviewMode ? 'Read-only UI review' : schemaReady && groupSchemaReady ? `${getLocaleLabel(contentLocale)} SEO ready` : 'SEO schema pending'}</span>
           <span className="admin-email">{session.user.email}</span>
           <button className="ghost-button" type="button" onClick={signOut}>退出</button>
         </div>
@@ -486,17 +533,36 @@ export default function App() {
         />
 
         <main className="editor-area">
+          <DataReviewPanel group={selectedGroup} />
+          {contentLocale === 'en' ? (
+            <TranslationPanel
+              species={selectedSpecies}
+              group={selectedGroup}
+              sourceVariantRow={sourceVariantRow}
+              sourceGroupRow={sourceGroupRow}
+              targetVariantRow={englishVariantRow}
+              targetGroupRow={englishGroupRow}
+              readOnly={isReviewMode}
+              accessToken={session?.access_token || ''}
+              schemaReady={schemaReady}
+              groupSchemaReady={groupSchemaReady}
+              onVariantSaved={(row) => setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }))}
+              onGroupSaved={(row) => setGroupSeoRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
+            />
+          ) : null}
           <BaseSpeciesSeoEditor
             group={selectedGroup}
             record={selectedGroupPersisted}
+            locale={contentLocale}
             schemaReady={groupSchemaReady}
             readOnly={isReviewMode}
-            onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [row.group_key]: row }))}
+            onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
             onSaved={(row) => {
-              setGroupSeoRows((current) => ({ ...current, [row.group_key]: row }));
+              const key = groupSeoRowKey(row.group_key, row.locale);
+              setGroupSeoRows((current) => ({ ...current, [key]: row }));
               setGroupPreviewRows((current) => {
                 const next = { ...current };
-                delete next[row.group_key];
+                delete next[key];
                 return next;
               });
             }}
@@ -506,13 +572,14 @@ export default function App() {
               group={batchGroup}
               groupRecord={batchGroupRecord}
               members={batchMembers}
-              existingRows={seoRows}
+              existingRows={localeSeoRows}
+              locale={contentLocale}
               schemaReady={schemaReady}
               readOnly={isReviewMode}
               onClear={() => setBatchIds([])}
               onSaved={(rows) => setSeoRows((current) => ({
                 ...current,
-                ...Object.fromEntries(rows.map((row) => [row.catalog_key, row])),
+                ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])),
               }))}
             />
           ) : null}
@@ -520,10 +587,11 @@ export default function App() {
             species={selectedSpecies}
             group={selectedGroup}
             groupRecord={selectedGroupRecord}
-            record={selectedSpecies ? seoRows[selectedSpecies.catalog_key] : null}
+            record={selectedVariantRecord}
+            locale={contentLocale}
             schemaReady={schemaReady}
             readOnly={isReviewMode}
-            onSaved={(row) => setSeoRows((current) => ({ ...current, [row.catalog_key]: row }))}
+            onSaved={(row) => setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }))}
           />
         </main>
       </div>

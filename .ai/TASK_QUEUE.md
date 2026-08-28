@@ -2,24 +2,27 @@
 
 Updated: 2026-08-28
 
-## Now
-- [x] Generate Base Species / Variant grouping map from 486 catalog rows.
-- [x] Add grouped Species navigation and same-group batch selection.
-- [x] Push grouping milestone (`746bce0`).
-- [x] Add Base Species shared SEO/content layer.
-- [x] Add Variant Override with automatic fallback to Base inheritance.
-- [x] Change batch SEO from copied text to inheritance Draft shells.
-- [x] Verify Base inheritance, Variant override/clear, and local RLS behavior.
-- [ ] Commit and push inheritance milestone to `feature/admin-content-v0`.
+## Done this milestone
+- [x] Push Base Species inheritance milestone (`f27ed43`).
+- [x] Build source-data review filters for 5 category conflicts and 28 suspected exact duplicates.
+- [x] Add right-side review evidence; do not auto-delete or rewrite Product Truth.
+- [x] Add independent `zh-CN` / `en` Species SEO and Base SEO rows.
+- [x] Add locale-specific English common/display name without mutating catalog names.
+- [x] Add admin-authenticated server-side AI translation suggestion endpoint.
+- [x] Protect scientific names, catalog keys and Base template tokens.
+- [x] Save accepted translation only as English Draft; block direct overwrite of Published English.
+- [x] Verify bilingual coexistence and Draft RLS in isolated local Supabase.
+- [x] Verify English translation UI and review queue in real Chrome Review mode.
 
 ## Next
-- [ ] Build review queue for 5 category-conflict groups and 28 suspected exact duplicates.
+- [ ] Configure AI provider secret for the isolated Admin deployment and verify one real zh→en translation request.
 - [ ] Add Draft / Preview / Publish version history before modifying Published SEO.
 - [ ] Add per-Variant index strategy: Index / Canonical to Base / Noindex.
-- [ ] Add actual public Species-page preview using the production page content contract.
-- [ ] Validate final schema in staging/non-production Supabase.
+- [ ] Define public multilingual URL + canonical + hreflang contract before wiring English SEO to public pages.
+- [ ] Add terminology/glossary memory after the first reviewed English Species batch.
+- [ ] Validate the final Admin schema in staging/non-production Supabase.
 
 ## Later
-- [ ] Connect Published effective SEO to public Species pages.
+- [ ] Connect Published effective localized SEO to public Species pages.
 - [ ] Add internal-link/FAQ inheritance after content model stabilizes.
 - [ ] Search Console/ranking integrations only after publishing architecture is stable.

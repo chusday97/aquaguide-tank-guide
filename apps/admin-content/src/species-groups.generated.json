@@ -21,6 +21,7 @@
       "member_count": 4,
       "variant_count": 4,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -89,6 +90,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -131,6 +133,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -160,6 +163,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -202,6 +206,7 @@
       "member_count": 8,
       "variant_count": 8,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -322,6 +327,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -351,6 +357,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -393,6 +400,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -435,6 +443,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -464,6 +473,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -493,6 +503,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -522,6 +533,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -551,6 +563,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -580,6 +593,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -610,6 +624,7 @@
       "member_count": 7,
       "variant_count": 6,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -717,6 +732,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -746,6 +762,17 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:pelvicachromis-pulcher:dup:sp_0214",
+          "name": "白金西非凤凰",
+          "scientific_name": "Pelvicachromis pulcher var. Albino",
+          "member_ids": [
+            "sp_0214",
+            "sp_0338"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -760,7 +787,12 @@
           "base_scientific_name": "Pelvicachromis pulcher",
           "variant_label": "Albino",
           "relation_type": "variety",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:pelvicachromis-pulcher:dup:sp_0214",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0338"
+          ]
         },
         {
           "id": "sp_0338",
@@ -773,7 +805,12 @@
           "base_scientific_name": "Pelvicachromis pulcher",
           "variant_label": "Albino",
           "relation_type": "variety",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:pelvicachromis-pulcher:dup:sp_0214",
+          "duplicate_of_catalog_key": "sp_0214",
+          "duplicate_peer_keys": [
+            "sp_0214"
+          ]
         }
       ]
     },
@@ -788,6 +825,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -818,6 +856,7 @@
       "member_count": 10,
       "variant_count": 9,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -964,6 +1003,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -993,6 +1033,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1022,6 +1063,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1051,6 +1093,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -1093,6 +1136,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1122,6 +1166,7 @@
       "member_count": 13,
       "variant_count": 12,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -1307,6 +1352,7 @@
       "member_count": 6,
       "variant_count": 6,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -1401,6 +1447,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1430,6 +1477,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -1485,6 +1533,7 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -1527,6 +1576,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1556,6 +1606,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1585,6 +1636,7 @@
       "member_count": 4,
       "variant_count": 3,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -1653,6 +1705,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1682,6 +1735,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1711,6 +1765,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1740,6 +1795,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1769,6 +1825,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1798,6 +1855,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1827,6 +1885,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1856,6 +1915,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1885,6 +1945,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -1940,6 +2001,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1969,6 +2031,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -1998,6 +2061,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2027,6 +2091,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2056,6 +2121,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2085,6 +2151,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2114,6 +2181,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2143,6 +2211,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2172,6 +2241,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2201,6 +2271,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2230,6 +2301,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2259,6 +2331,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2288,6 +2361,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2317,6 +2391,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -2359,6 +2434,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2388,6 +2464,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2417,6 +2494,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2446,6 +2524,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2475,6 +2554,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -2517,6 +2597,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2546,6 +2627,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2575,6 +2657,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -2630,6 +2713,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2659,6 +2743,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2688,6 +2773,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2717,6 +2803,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2746,6 +2833,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2775,6 +2863,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2804,6 +2893,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2833,6 +2923,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2862,6 +2953,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2891,6 +2983,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2920,6 +3013,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2949,6 +3043,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -2979,6 +3074,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -3021,6 +3117,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -3063,6 +3160,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3093,6 +3191,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -3135,6 +3234,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3164,6 +3264,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3193,6 +3294,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3222,6 +3324,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3251,6 +3354,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3280,6 +3384,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3309,6 +3414,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3338,6 +3444,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3367,6 +3474,7 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -3409,6 +3517,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3438,6 +3547,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3467,6 +3577,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3496,6 +3607,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3525,6 +3637,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3554,6 +3667,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -3596,6 +3710,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3625,6 +3740,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3654,6 +3770,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3683,6 +3800,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3712,6 +3830,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -3767,6 +3886,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3796,6 +3916,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3825,6 +3946,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3854,6 +3976,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3883,6 +4006,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3912,6 +4036,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3941,6 +4066,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -3970,6 +4096,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -4025,6 +4152,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4054,6 +4182,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4083,6 +4212,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4112,6 +4242,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4141,6 +4272,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -4196,6 +4328,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4225,6 +4358,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -4280,6 +4414,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4309,6 +4444,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4338,6 +4474,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4367,6 +4504,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4396,6 +4534,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4425,6 +4564,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4454,6 +4594,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4483,6 +4624,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4512,6 +4654,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4541,6 +4684,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -4583,6 +4727,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4612,6 +4757,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4641,6 +4787,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4670,6 +4817,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4699,6 +4847,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4728,6 +4877,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4757,6 +4907,7 @@
       "member_count": 3,
       "variant_count": 3,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -4812,6 +4963,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4841,6 +4993,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4870,6 +5023,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4899,6 +5053,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4928,6 +5083,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:bolbitis-heudelotii:dup:sp_0082",
+          "name": "黑木蕨",
+          "scientific_name": "Bolbitis heudelotii",
+          "member_ids": [
+            "sp_0082",
+            "sp_0306"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -4942,7 +5108,12 @@
           "base_scientific_name": "Bolbitis heudelotii",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:bolbitis-heudelotii:dup:sp_0082",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0306"
+          ]
         },
         {
           "id": "sp_0306",
@@ -4955,7 +5126,12 @@
           "base_scientific_name": "Bolbitis heudelotii",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:bolbitis-heudelotii:dup:sp_0082",
+          "duplicate_of_catalog_key": "sp_0082",
+          "duplicate_peer_keys": [
+            "sp_0082"
+          ]
         }
       ]
     },
@@ -4970,6 +5146,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -4999,6 +5176,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5028,6 +5206,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5057,6 +5236,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:cryptocoryne-aponogetifolia:dup:sp_0102",
+          "name": "大蜻蜓椒草",
+          "scientific_name": "Cryptocoryne aponogetifolia",
+          "member_ids": [
+            "sp_0102",
+            "sp_0317"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5071,7 +5261,12 @@
           "base_scientific_name": "Cryptocoryne aponogetifolia",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:cryptocoryne-aponogetifolia:dup:sp_0102",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0317"
+          ]
         },
         {
           "id": "sp_0317",
@@ -5084,7 +5279,12 @@
           "base_scientific_name": "Cryptocoryne aponogetifolia",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:cryptocoryne-aponogetifolia:dup:sp_0102",
+          "duplicate_of_catalog_key": "sp_0102",
+          "duplicate_peer_keys": [
+            "sp_0102"
+          ]
         }
       ]
     },
@@ -5099,6 +5299,17 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:cryptocoryne-wendtii:dup:sp_0083",
+          "name": "绿温蒂椒草",
+          "scientific_name": "Cryptocoryne wendtii 'Green'",
+          "member_ids": [
+            "sp_0083",
+            "sp_0309"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5113,7 +5324,12 @@
           "base_scientific_name": "Cryptocoryne wendtii",
           "variant_label": "Green",
           "relation_type": "cultivar",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:cryptocoryne-wendtii:dup:sp_0083",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0309"
+          ]
         },
         {
           "id": "sp_0309",
@@ -5126,7 +5342,12 @@
           "base_scientific_name": "Cryptocoryne wendtii",
           "variant_label": "Green",
           "relation_type": "cultivar",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:cryptocoryne-wendtii:dup:sp_0083",
+          "duplicate_of_catalog_key": "sp_0083",
+          "duplicate_peer_keys": [
+            "sp_0083"
+          ]
         }
       ]
     },
@@ -5141,6 +5362,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:echinodorus-amazonicus:dup:sp_0094",
+          "name": "大叶皇冠",
+          "scientific_name": "Echinodorus amazonicus",
+          "member_ids": [
+            "sp_0094",
+            "sp_0310"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5155,7 +5387,12 @@
           "base_scientific_name": "Echinodorus amazonicus",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:echinodorus-amazonicus:dup:sp_0094",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0310"
+          ]
         },
         {
           "id": "sp_0310",
@@ -5168,7 +5405,12 @@
           "base_scientific_name": "Echinodorus amazonicus",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:echinodorus-amazonicus:dup:sp_0094",
+          "duplicate_of_catalog_key": "sp_0094",
+          "duplicate_peer_keys": [
+            "sp_0094"
+          ]
         }
       ]
     },
@@ -5183,6 +5425,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5212,6 +5455,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:egeria-densa:dup:sp_0087",
+          "name": "蜈蚣草",
+          "scientific_name": "Egeria densa",
+          "member_ids": [
+            "sp_0087",
+            "sp_0313"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5226,7 +5480,12 @@
           "base_scientific_name": "Egeria densa",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:egeria-densa:dup:sp_0087",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0313"
+          ]
         },
         {
           "id": "sp_0313",
@@ -5239,7 +5498,12 @@
           "base_scientific_name": "Egeria densa",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:egeria-densa:dup:sp_0087",
+          "duplicate_of_catalog_key": "sp_0087",
+          "duplicate_peer_keys": [
+            "sp_0087"
+          ]
         }
       ]
     },
@@ -5254,6 +5518,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5283,6 +5548,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5312,6 +5578,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5341,6 +5608,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5370,6 +5638,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5399,6 +5668,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:limnobium-laevigatum:dup:sp_0086",
+          "name": "圆心萍",
+          "scientific_name": "Limnobium laevigatum",
+          "member_ids": [
+            "sp_0086",
+            "sp_0311"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5413,7 +5693,12 @@
           "base_scientific_name": "Limnobium laevigatum",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:limnobium-laevigatum:dup:sp_0086",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0311"
+          ]
         },
         {
           "id": "sp_0311",
@@ -5426,7 +5711,12 @@
           "base_scientific_name": "Limnobium laevigatum",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:limnobium-laevigatum:dup:sp_0086",
+          "duplicate_of_catalog_key": "sp_0086",
+          "duplicate_peer_keys": [
+            "sp_0086"
+          ]
         }
       ]
     },
@@ -5441,6 +5731,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5470,6 +5761,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5499,6 +5791,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5528,6 +5821,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5557,6 +5851,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:utricularia-graminifolia:dup:sp_0073",
+          "name": "挖耳草",
+          "scientific_name": "Utricularia graminifolia",
+          "member_ids": [
+            "sp_0073",
+            "sp_0300"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5571,7 +5876,12 @@
           "base_scientific_name": "Utricularia graminifolia",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:utricularia-graminifolia:dup:sp_0073",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0300"
+          ]
         },
         {
           "id": "sp_0300",
@@ -5584,7 +5894,12 @@
           "base_scientific_name": "Utricularia graminifolia",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:utricularia-graminifolia:dup:sp_0073",
+          "duplicate_of_catalog_key": "sp_0073",
+          "duplicate_peer_keys": [
+            "sp_0073"
+          ]
         }
       ]
     },
@@ -5599,6 +5914,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5628,6 +5944,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5657,6 +5974,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5686,6 +6004,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5715,6 +6034,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5744,6 +6064,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5773,6 +6094,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5802,6 +6124,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -5831,6 +6154,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:anentome-helena:dup:sp_0430",
+          "name": "杀手螺",
+          "scientific_name": "Anentome helena",
+          "member_ids": [
+            "sp_0430",
+            "sp_0457"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5845,7 +6179,12 @@
           "base_scientific_name": "Anentome helena",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:anentome-helena:dup:sp_0430",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0457"
+          ]
         },
         {
           "id": "sp_0457",
@@ -5858,7 +6197,12 @@
           "base_scientific_name": "Anentome helena",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:anentome-helena:dup:sp_0430",
+          "duplicate_of_catalog_key": "sp_0430",
+          "duplicate_peer_keys": [
+            "sp_0430"
+          ]
         }
       ]
     },
@@ -5873,6 +6217,17 @@
       "member_count": 6,
       "variant_count": 6,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:caridina-cantonensis:dup:sp_0002",
+          "name": "水晶虾",
+          "scientific_name": "Caridina cantonensis var.",
+          "member_ids": [
+            "sp_0002",
+            "sp_0028"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5887,7 +6242,12 @@
           "base_scientific_name": "Caridina cantonensis",
           "variant_label": "水晶虾",
           "relation_type": "variety",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:caridina-cantonensis:dup:sp_0002",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0028"
+          ]
         },
         {
           "id": "sp_0028",
@@ -5900,7 +6260,12 @@
           "base_scientific_name": "Caridina cantonensis",
           "variant_label": "水晶虾",
           "relation_type": "variety",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:caridina-cantonensis:dup:sp_0002",
+          "duplicate_of_catalog_key": "sp_0002",
+          "duplicate_peer_keys": [
+            "sp_0002"
+          ]
         },
         {
           "id": "sp_0277",
@@ -5967,6 +6332,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:caridina-dennerli:dup:sp_0003",
+          "name": "苏拉威西虾",
+          "scientific_name": "Caridina dennerli",
+          "member_ids": [
+            "sp_0003",
+            "sp_0029"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -5981,7 +6357,12 @@
           "base_scientific_name": "Caridina dennerli",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:caridina-dennerli:dup:sp_0003",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0029"
+          ]
         },
         {
           "id": "sp_0029",
@@ -5994,7 +6375,12 @@
           "base_scientific_name": "Caridina dennerli",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:caridina-dennerli:dup:sp_0003",
+          "duplicate_of_catalog_key": "sp_0003",
+          "duplicate_peer_keys": [
+            "sp_0003"
+          ]
         }
       ]
     },
@@ -6009,6 +6395,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:caridina-multidentata:dup:sp_0427",
+          "name": "大和藻虾",
+          "scientific_name": "Caridina multidentata",
+          "member_ids": [
+            "sp_0427",
+            "sp_0454"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6023,7 +6420,12 @@
           "base_scientific_name": "Caridina multidentata",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:caridina-multidentata:dup:sp_0427",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0454"
+          ]
         },
         {
           "id": "sp_0454",
@@ -6036,7 +6438,12 @@
           "base_scientific_name": "Caridina multidentata",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:caridina-multidentata:dup:sp_0427",
+          "duplicate_of_catalog_key": "sp_0427",
+          "duplicate_peer_keys": [
+            "sp_0427"
+          ]
         }
       ]
     },
@@ -6051,6 +6458,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:clithon-corona:dup:sp_0005",
+          "name": "角螺",
+          "scientific_name": "Clithon corona",
+          "member_ids": [
+            "sp_0005",
+            "sp_0033"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6065,7 +6483,12 @@
           "base_scientific_name": "Clithon corona",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:clithon-corona:dup:sp_0005",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0033"
+          ]
         },
         {
           "id": "sp_0033",
@@ -6078,7 +6501,12 @@
           "base_scientific_name": "Clithon corona",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:clithon-corona:dup:sp_0005",
+          "duplicate_of_catalog_key": "sp_0005",
+          "duplicate_peer_keys": [
+            "sp_0005"
+          ]
         }
       ]
     },
@@ -6093,6 +6521,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:geosesarma-dennerle:dup:sp_0006",
+          "name": "恶魔蟹",
+          "scientific_name": "Geosesarma dennerle",
+          "member_ids": [
+            "sp_0006",
+            "sp_0035"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6107,7 +6546,12 @@
           "base_scientific_name": "Geosesarma dennerle",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:geosesarma-dennerle:dup:sp_0006",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0035"
+          ]
         },
         {
           "id": "sp_0035",
@@ -6120,7 +6564,12 @@
           "base_scientific_name": "Geosesarma dennerle",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:geosesarma-dennerle:dup:sp_0006",
+          "duplicate_of_catalog_key": "sp_0006",
+          "duplicate_peer_keys": [
+            "sp_0006"
+          ]
         }
       ]
     },
@@ -6135,6 +6584,17 @@
       "member_count": 16,
       "variant_count": 16,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:neocaridina-davidi:dup:sp_0001",
+          "name": "极火虾",
+          "scientific_name": "Neocaridina davidi var. Red",
+          "member_ids": [
+            "sp_0001",
+            "sp_0027"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6149,7 +6609,12 @@
           "base_scientific_name": "Neocaridina davidi",
           "variant_label": "Red",
           "relation_type": "variety",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:neocaridina-davidi:dup:sp_0001",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0027"
+          ]
         },
         {
           "id": "sp_0027",
@@ -6162,7 +6627,12 @@
           "base_scientific_name": "Neocaridina davidi",
           "variant_label": "Red",
           "relation_type": "variety",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:neocaridina-davidi:dup:sp_0001",
+          "duplicate_of_catalog_key": "sp_0001",
+          "duplicate_peer_keys": [
+            "sp_0001"
+          ]
         },
         {
           "id": "sp_0030",
@@ -6359,6 +6829,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:neritina-natalensis:dup:sp_0428",
+          "name": "斑马螺",
+          "scientific_name": "Neritina natalensis",
+          "member_ids": [
+            "sp_0428",
+            "sp_0455"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6373,7 +6854,12 @@
           "base_scientific_name": "Neritina natalensis",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:neritina-natalensis:dup:sp_0428",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0455"
+          ]
         },
         {
           "id": "sp_0455",
@@ -6386,7 +6872,12 @@
           "base_scientific_name": "Neritina natalensis",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:neritina-natalensis:dup:sp_0428",
+          "duplicate_of_catalog_key": "sp_0428",
+          "duplicate_peer_keys": [
+            "sp_0428"
+          ]
         }
       ]
     },
@@ -6401,6 +6892,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6430,6 +6922,17 @@
       "member_count": 5,
       "variant_count": 3,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:pomacea-bridgesii:dup:sp_0429",
+          "name": "神秘螺",
+          "scientific_name": "Pomacea bridgesii",
+          "member_ids": [
+            "sp_0429",
+            "sp_0456"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6483,7 +6986,12 @@
           "base_scientific_name": "Pomacea bridgesii",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:pomacea-bridgesii:dup:sp_0429",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0456"
+          ]
         },
         {
           "id": "sp_0456",
@@ -6496,7 +7004,12 @@
           "base_scientific_name": "Pomacea bridgesii",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:pomacea-bridgesii:dup:sp_0429",
+          "duplicate_of_catalog_key": "sp_0429",
+          "duplicate_peer_keys": [
+            "sp_0429"
+          ]
         }
       ]
     },
@@ -6511,6 +7024,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6540,6 +7054,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6569,6 +7084,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:vittina-turrita:dup:sp_0004",
+          "name": "洋葱螺",
+          "scientific_name": "Vittina turrita",
+          "member_ids": [
+            "sp_0004",
+            "sp_0032"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6583,7 +7109,12 @@
           "base_scientific_name": "Vittina turrita",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:vittina-turrita:dup:sp_0004",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0032"
+          ]
         },
         {
           "id": "sp_0032",
@@ -6596,7 +7127,12 @@
           "base_scientific_name": "Vittina turrita",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:vittina-turrita:dup:sp_0004",
+          "duplicate_of_catalog_key": "sp_0004",
+          "duplicate_peer_keys": [
+            "sp_0004"
+          ]
         }
       ]
     },
@@ -6611,6 +7147,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6666,6 +7203,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6695,6 +7233,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -6737,6 +7276,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6766,6 +7306,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6795,6 +7336,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6824,6 +7366,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6853,6 +7396,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6882,6 +7426,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6911,6 +7456,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6940,6 +7486,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6969,6 +7516,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -6998,6 +7546,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -7053,6 +7602,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7082,6 +7632,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7111,6 +7662,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7140,6 +7692,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7169,6 +7722,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7198,6 +7752,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7227,6 +7782,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7256,6 +7812,7 @@
       "member_count": 17,
       "variant_count": 17,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -7493,6 +8050,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -7535,6 +8093,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7564,6 +8123,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -7606,6 +8166,7 @@
       "member_count": 3,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -7661,6 +8222,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7690,6 +8252,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7719,6 +8282,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7748,6 +8312,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -7777,6 +8342,7 @@
       "member_count": 3,
       "variant_count": 3,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -7832,6 +8398,7 @@
       "member_count": 3,
       "variant_count": 3,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -7887,6 +8454,7 @@
       "member_count": 8,
       "variant_count": 7,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8007,6 +8575,7 @@
       "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8049,6 +8618,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
+          "name": "牛毛毡",
+          "scientific_name": "Eleocharis acicularis",
+          "member_ids": [
+            "sp_0072",
+            "sp_0299"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8063,7 +8643,12 @@
           "base_scientific_name": "Eleocharis acicularis",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0299"
+          ]
         },
         {
           "id": "sp_0299",
@@ -8076,7 +8661,12 @@
           "base_scientific_name": "Eleocharis acicularis",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:eleocharis-acicularis:dup:sp_0072",
+          "duplicate_of_catalog_key": "sp_0072",
+          "duplicate_peer_keys": [
+            "sp_0072"
+          ]
         }
       ]
     },
@@ -8091,6 +8681,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8120,6 +8711,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8149,6 +8741,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
+          "name": "凤尾藓",
+          "scientific_name": "Fissidens fontanus",
+          "member_ids": [
+            "sp_0101",
+            "sp_0308"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8163,7 +8766,12 @@
           "base_scientific_name": "Fissidens fontanus",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0308"
+          ]
         },
         {
           "id": "sp_0308",
@@ -8176,7 +8784,12 @@
           "base_scientific_name": "Fissidens fontanus",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:fissidens-fontanus:dup:sp_0101",
+          "duplicate_of_catalog_key": "sp_0101",
+          "duplicate_peer_keys": [
+            "sp_0101"
+          ]
         }
       ]
     },
@@ -8191,6 +8804,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8220,6 +8834,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8249,6 +8864,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8278,6 +8894,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8307,6 +8924,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8336,6 +8954,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
+          "name": "迷你矮珍珠",
+          "scientific_name": "Hemianthus callitrichoides",
+          "member_ids": [
+            "sp_0071",
+            "sp_0298"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8350,7 +8979,12 @@
           "base_scientific_name": "Hemianthus callitrichoides",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0298"
+          ]
         },
         {
           "id": "sp_0298",
@@ -8363,7 +8997,12 @@
           "base_scientific_name": "Hemianthus callitrichoides",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:hemianthus-callitrichoides:dup:sp_0071",
+          "duplicate_of_catalog_key": "sp_0071",
+          "duplicate_peer_keys": [
+            "sp_0071"
+          ]
         }
       ]
     },
@@ -8378,6 +9017,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8407,6 +9047,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8436,6 +9077,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8465,6 +9107,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8494,6 +9137,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8523,6 +9167,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8565,6 +9210,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8594,6 +9240,7 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8636,6 +9283,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8665,6 +9313,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8694,6 +9343,17 @@
       "member_count": 3,
       "variant_count": 1,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
+          "name": "铁皇冠",
+          "scientific_name": "Microsorum pteropus",
+          "member_ids": [
+            "sp_0081",
+            "sp_0305"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8708,7 +9368,12 @@
           "base_scientific_name": "Microsorum pteropus",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0305"
+          ]
         },
         {
           "id": "sp_0090",
@@ -8734,7 +9399,12 @@
           "base_scientific_name": "Microsorum pteropus",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:microsorum-pteropus:dup:sp_0081",
+          "duplicate_of_catalog_key": "sp_0081",
+          "duplicate_peer_keys": [
+            "sp_0081"
+          ]
         }
       ]
     },
@@ -8749,6 +9419,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
+          "name": "绿羽毛",
+          "scientific_name": "Myriophyllum aquaticum",
+          "member_ids": [
+            "sp_0097",
+            "sp_0316"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8763,7 +9444,12 @@
           "base_scientific_name": "Myriophyllum aquaticum",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0316"
+          ]
         },
         {
           "id": "sp_0316",
@@ -8776,7 +9462,12 @@
           "base_scientific_name": "Myriophyllum aquaticum",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:myriophyllum-aquaticum:dup:sp_0097",
+          "duplicate_of_catalog_key": "sp_0097",
+          "duplicate_peer_keys": [
+            "sp_0097"
+          ]
         }
       ]
     },
@@ -8791,6 +9482,7 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8833,6 +9525,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:opsariichthys-bidens:dup:sp_0038",
+          "name": "马口鱼",
+          "scientific_name": "Opsariichthys bidens",
+          "member_ids": [
+            "sp_0038",
+            "sp_0130"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -8847,7 +9550,12 @@
           "base_scientific_name": "Opsariichthys bidens",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:opsariichthys-bidens:dup:sp_0038",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0130"
+          ]
         },
         {
           "id": "sp_0130",
@@ -8860,7 +9568,12 @@
           "base_scientific_name": "Opsariichthys bidens",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:opsariichthys-bidens:dup:sp_0038",
+          "duplicate_of_catalog_key": "sp_0038",
+          "duplicate_peer_keys": [
+            "sp_0038"
+          ]
         }
       ]
     },
@@ -8875,6 +9588,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8904,6 +9618,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8933,6 +9648,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8962,6 +9678,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -8991,6 +9708,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9033,6 +9751,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9062,6 +9781,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9091,6 +9811,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9120,6 +9841,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9149,6 +9871,7 @@
       "member_count": 5,
       "variant_count": 5,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9230,6 +9953,7 @@
       "member_count": 8,
       "variant_count": 7,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9350,6 +10074,7 @@
       "member_count": 5,
       "variant_count": 4,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9431,6 +10156,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9460,6 +10186,7 @@
       "member_count": 2,
       "variant_count": 2,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9502,6 +10229,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9531,6 +10259,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9560,6 +10289,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9589,6 +10319,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9618,6 +10349,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9647,6 +10379,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9676,6 +10409,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9706,6 +10440,17 @@
       "member_count": 4,
       "variant_count": 4,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
+          "name": "红宫廷",
+          "scientific_name": "Rotala rotundifolia 'Red'",
+          "member_ids": [
+            "sp_0079",
+            "sp_0303"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9733,7 +10478,12 @@
           "base_scientific_name": "Rotala rotundifolia",
           "variant_label": "Red",
           "relation_type": "cultivar",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0303"
+          ]
         },
         {
           "id": "sp_0303",
@@ -9746,7 +10496,12 @@
           "base_scientific_name": "Rotala rotundifolia",
           "variant_label": "Red",
           "relation_type": "cultivar",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:rotala-rotundifolia:dup:sp_0079",
+          "duplicate_of_catalog_key": "sp_0079",
+          "duplicate_peer_keys": [
+            "sp_0079"
+          ]
         },
         {
           "id": "sp_0304",
@@ -9774,6 +10529,7 @@
       "member_count": 4,
       "variant_count": 3,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9842,6 +10598,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -9871,6 +10628,7 @@
       "member_count": 8,
       "variant_count": 6,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -9991,6 +10749,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:semaprochilodus-insignis:dup:sp_0061",
+          "name": "飞凤鱼",
+          "scientific_name": "Semaprochilodus insignis",
+          "member_ids": [
+            "sp_0061",
+            "sp_0137"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10005,7 +10774,12 @@
           "base_scientific_name": "Semaprochilodus insignis",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:semaprochilodus-insignis:dup:sp_0061",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0137"
+          ]
         },
         {
           "id": "sp_0137",
@@ -10018,7 +10792,12 @@
           "base_scientific_name": "Semaprochilodus insignis",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:semaprochilodus-insignis:dup:sp_0061",
+          "duplicate_of_catalog_key": "sp_0061",
+          "duplicate_peer_keys": [
+            "sp_0061"
+          ]
         }
       ]
     },
@@ -10033,6 +10812,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10062,6 +10842,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10091,6 +10872,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10120,6 +10902,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:sphaerichthys-osphromenoides:dup:sp_0060",
+          "name": "巧克力曼龙",
+          "scientific_name": "Sphaerichthys osphromenoides",
+          "member_ids": [
+            "sp_0060",
+            "sp_0136"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10134,7 +10927,12 @@
           "base_scientific_name": "Sphaerichthys osphromenoides",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:sphaerichthys-osphromenoides:dup:sp_0060",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0136"
+          ]
         },
         {
           "id": "sp_0136",
@@ -10147,7 +10945,12 @@
           "base_scientific_name": "Sphaerichthys osphromenoides",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:sphaerichthys-osphromenoides:dup:sp_0060",
+          "duplicate_of_catalog_key": "sp_0060",
+          "duplicate_peer_keys": [
+            "sp_0060"
+          ]
         }
       ]
     },
@@ -10162,6 +10965,17 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 1,
+      "duplicate_sets": [
+        {
+          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
+          "name": "南美叉柱花",
+          "scientific_name": "Staurogyne repens",
+          "member_ids": [
+            "sp_0091",
+            "sp_0314"
+          ]
+        }
+      ],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10176,7 +10990,12 @@
           "base_scientific_name": "Staurogyne repens",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
+          "duplicate_of_catalog_key": null,
+          "duplicate_peer_keys": [
+            "sp_0314"
+          ]
         },
         {
           "id": "sp_0314",
@@ -10189,7 +11008,12 @@
           "base_scientific_name": "Staurogyne repens",
           "variant_label": null,
           "relation_type": "exact_species",
-          "grouping_confidence": "high"
+          "grouping_confidence": "high",
+          "duplicate_set_key": "base:staurogyne-repens:dup:sp_0091",
+          "duplicate_of_catalog_key": "sp_0091",
+          "duplicate_peer_keys": [
+            "sp_0091"
+          ]
         }
       ]
     },
@@ -10204,6 +11028,7 @@
       "member_count": 1,
       "variant_count": 1,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10233,6 +11058,7 @@
       "member_count": 5,
       "variant_count": 4,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10314,6 +11140,7 @@
       "member_count": 4,
       "variant_count": 3,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10382,6 +11209,7 @@
       "member_count": 6,
       "variant_count": 6,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10476,6 +11304,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10505,6 +11334,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10534,6 +11364,7 @@
       "member_count": 2,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10576,6 +11407,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10605,6 +11437,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10634,6 +11467,7 @@
       "member_count": 4,
       "variant_count": 3,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": true,
       "seo_strategy": "shared_base_plus_variant_override",
       "members": [
@@ -10702,6 +11536,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [
@@ -10731,6 +11566,7 @@
       "member_count": 1,
       "variant_count": 0,
       "duplicate_count": 0,
+      "duplicate_sets": [],
       "batch_candidate": false,
       "seo_strategy": "single_species",
       "members": [

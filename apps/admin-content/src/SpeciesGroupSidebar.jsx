@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { speciesCategories, speciesGroupStats } from './speciesGroups.js';
 
 function matches(group, needle) {
@@ -27,12 +27,18 @@ export default function SpeciesGroupSidebar({
   onSelect,
   onToggleBatch,
 }) {
+  const [reviewMode, setReviewMode] = useState('all');
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
-    return groups.filter((group) => (
-      (!category || group.primary_category === category) && matches(group, needle)
-    ));
-  }, [groups, search, category]);
+    return groups.filter((group) => {
+      const categoryMatch = !category || group.primary_category === category;
+      const textMatch = matches(group, needle);
+      const reviewMatch = reviewMode === 'all'
+        || (reviewMode === 'conflict' && group.category_conflict)
+        || (reviewMode === 'duplicate' && group.duplicate_count > 0);
+      return categoryMatch && textMatch && reviewMatch;
+    });
+  }, [groups, search, category, reviewMode]);
 
   return (
     <aside className="species-sidebar">
@@ -45,6 +51,11 @@ export default function SpeciesGroupSidebar({
       </div>
       <div className="catalog-summary">
         {speciesGroupStats.catalog_count} 条记录 · {speciesGroupStats.batch_candidate_groups} 个可批量组
+      </div>
+      <div className="review-filters" aria-label="数据复核筛选">
+        <button type="button" className={reviewMode === 'all' ? 'active' : ''} onClick={() => setReviewMode('all')}>全部 {speciesGroupStats.base_group_count}</button>
+        <button type="button" className={reviewMode === 'conflict' ? 'active danger' : 'danger'} onClick={() => setReviewMode('conflict')}>分类冲突 {speciesGroupStats.category_conflict_groups}</button>
+        <button type="button" className={reviewMode === 'duplicate' ? 'active warning' : 'warning'} onClick={() => setReviewMode('duplicate')}>疑似重复 +{speciesGroupStats.exact_duplicate_records}</button>
       </div>
       <input
         className="search-input"
@@ -66,7 +77,8 @@ export default function SpeciesGroupSidebar({
                 <small>{group.member_count > 1 ? `${group.member_count} 条同类 / 变种` : group.members[0].name}</small>
               </span>
               <span className="group-badges">
-                {group.category_conflict ? <em>需复核</em> : null}
+                {group.category_conflict ? <em>分类冲突</em> : null}
+                {group.duplicate_count > 0 ? <em className="duplicate-badge">重复 +{group.duplicate_count}</em> : null}
                 {group.member_count > 1 ? <b>{group.member_count}</b> : null}
               </span>
             </button>
@@ -85,6 +97,7 @@ export default function SpeciesGroupSidebar({
                       <span>
                         <strong>{item.name}</strong>
                         <small>{item.variant_label || '基础型 / 未标变种'}</small>
+                        {item.duplicate_peer_keys?.length ? <em className="duplicate-member-note">疑似重复：{item.duplicate_peer_keys.join(' / ')}</em> : null}
                       </span>
                       <code>{item.catalog_key}</code>
                     </button>

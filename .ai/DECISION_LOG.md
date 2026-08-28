@@ -28,3 +28,13 @@
 - Effective SEO is resolved at read/preview time: `Variant Override ?? Base Template`.
 - This reduces future maintenance: changing shared wording once updates all non-overridden Variants.
 - Category-conflict groups remain publish-blocked even if the inheritance UI can render them.
+
+## 2026-08-28 — Bilingual SEO translation workflow
+- UI i18n and Species content localization are separate concerns; this Admin milestone manages localized content rows.
+- Chinese remains the source editorial locale; English is an independent Draft/Publish lifecycle, not an in-place replacement.
+- Borrow Payload CMS's locale-specific content model and Tolgee's suggestion/context/review workflow without adding either platform as a runtime dependency.
+- AI translation is suggestion-only and Draft-only. Human review is the publication gate.
+- Empty Variant Overrides remain empty after translation so inheritance is preserved instead of materializing Base content into every Variant.
+- Scientific names, catalog keys and `{{template_tokens}}` are protected; token mismatch fails closed.
+- English common/display names live in `species_seo.localized_name`; Product Truth names remain untouched.
+- Published English cannot be silently overwritten until versioned Draft/Preview/Publish is implemented.

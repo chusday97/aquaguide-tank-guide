@@ -92,9 +92,32 @@ const groups = [...grouped.entries()].map(([groupKey, groupMembers]) => {
   const exactDuplicateKeys = new Map();
   for (const member of groupMembers) {
     const key = `${clean(member.name).toLowerCase()}::${clean(member.scientific_name).toLowerCase()}`;
-    exactDuplicateKeys.set(key, (exactDuplicateKeys.get(key) || 0) + 1);
+    const list = exactDuplicateKeys.get(key) || [];
+    list.push(member);
+    exactDuplicateKeys.set(key, list);
   }
-  const duplicateCount = [...exactDuplicateKeys.values()].reduce((sum, count) => sum + Math.max(0, count - 1), 0);
+  const duplicateSets = [...exactDuplicateKeys.values()]
+    .filter((items) => items.length > 1)
+    .map((items) => ({
+      duplicate_set_key: `${groupKey}:dup:${items[0].catalog_key}`,
+      name: items[0].name,
+      scientific_name: items[0].scientific_name,
+      member_ids: items.map((item) => item.catalog_key),
+    }));
+  const duplicateCount = duplicateSets.reduce((sum, set) => sum + set.member_ids.length - 1, 0);
+  const duplicateSetByMember = new Map();
+  for (const set of duplicateSets) {
+    set.member_ids.forEach((id, index) => duplicateSetByMember.set(id, { set, index }));
+  }
+  const enrichedMembers = groupMembers.map((member) => {
+    const duplicate = duplicateSetByMember.get(member.catalog_key);
+    return duplicate ? {
+      ...member,
+      duplicate_set_key: duplicate.set.duplicate_set_key,
+      duplicate_of_catalog_key: duplicate.index === 0 ? null : duplicate.set.member_ids[0],
+      duplicate_peer_keys: duplicate.set.member_ids.filter((id) => id !== member.catalog_key),
+    } : member;
+  });
 
   return {
     group_key: groupKey,
@@ -105,9 +128,10 @@ const groups = [...grouped.entries()].map(([groupKey, groupMembers]) => {
     member_count: groupMembers.length,
     variant_count: groupMembers.filter((item) => item.variant_label).length,
     duplicate_count: duplicateCount,
+    duplicate_sets: duplicateSets,
     batch_candidate: groupMembers.length > 1,
     seo_strategy: groupMembers.length > 1 ? 'shared_base_plus_variant_override' : 'single_species',
-    members: groupMembers,
+    members: enrichedMembers,
   };
 });
 groups.sort((a, b) => {

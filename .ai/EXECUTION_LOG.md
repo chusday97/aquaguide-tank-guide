@@ -46,3 +46,13 @@
 - Batch workflow now creates Draft shells only and previews effective inherited SEO instead of copying template text.
 - Real Chrome Review verification: Base template edits propagate immediately to 极火虾 / 黄金米虾 previews; shared intro propagates; Variant Override remains isolated.
 - Isolated local Supabase verification: admin Draft insert succeeds; non-admin Draft read returns 0 and non-admin insert is rejected by RLS; test rows cleaned up.
+
+## 2026-08-28 bilingual SEO + review milestone
+- GitHub research: Payload localization informed locale-specific content/status; Tolgee informed context-aware machine/AI suggestions with review before acceptance.
+- Reused AquaGuide's existing OpenAI-compatible / DeepSeek server pattern instead of introducing a new translation SaaS/runtime dependency.
+- Added `zh-CN` / `en` content switching, composite locale keys and `localized_name` editorial field.
+- Added admin-authenticated `/api/translate`, English suggestion review panel and Draft-only acceptance flow.
+- Added token-preservation validation and no-auto-overwrite rule for Published English.
+- Completed source-data review queue with concrete category-conflict and duplicate-set evidence.
+- Applied `202608280003_species_seo_localized_name.sql` only to isolated local Supabase; bilingual rows coexist and non-admin Draft read remains denied.
+- Real Chrome Review verified English workspace, `Pterophyllum scalare` conflict evidence and `Neocaridina davidi` duplicate evidence.

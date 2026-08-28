@@ -265,3 +265,13 @@
 - 批量操作不再把同一段 SEO 文案复制到多个变种，只建立 Draft shell；未 Override 字段继续继承 Base。
 - 真实 Chrome 验证 Base 模板/共享简介会立即影响同组 Variant 预览，单个 Variant Override 清空后恢复继承。
 - 新 `species_seo_groups` migration 已仅在本地隔离 Supabase 执行；管理员写入通过，普通用户 Draft 读取为 0 且写入被 RLS 拒绝。Production Supabase 未执行。
+
+### 2026-08-28 Species SEO 中英文转化与数据复核
+- Admin 新增独立 `zh-CN / en` 内容层；同一 `catalog_key` / Base Group 可分别保存中文与英文 Draft/Published 状态，互不覆盖。
+- English 增加 editorial `localized_name`，只用于英文 SEO/展示，不修改 `fishData.ts` 中的 Product Truth 名称。
+- 新增中→英翻译工作台：中文 Source → AI English Suggestion → 人工修改/确认 → English Draft；机器结果不能直接发布。
+- 服务端翻译接口复用现有 DeepSeek/OpenAI-compatible 配置，并再次校验 Supabase JWT + admin role；AI key 不进入浏览器。
+- 科学名、catalog key 与 `{{template_tokens}}` 受保护；Base 模板变量丢失或改名会直接拒绝结果。
+- 5 个分类冲突与 28 条疑似重复已升级为可查看证据的 Data Review Queue，不自动删改源 catalog。
+- 本地隔离 Supabase 已验证中文/英文同 key 共存及普通用户 Draft 不可见；Production Supabase 未执行新 migration。
+- 真实 Chrome 已验证 English 双栏翻译界面、神仙鱼分类冲突证据与米虾重复证据；public Species 多语言 URL/canonical/hreflang 尚未接入。

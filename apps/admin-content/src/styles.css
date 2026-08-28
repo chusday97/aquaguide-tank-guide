@@ -254,3 +254,62 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 @media (max-width: 900px) {
   .base-seo-header, .base-seo-footer { align-items: stretch; flex-direction: column; }
 }
+
+.locale-switcher { display: flex; align-items: center; gap: 5px; margin-left: auto; }
+.locale-switcher button { border: 1px solid #d9e1db; border-radius: 999px; background: #fff; padding: 6px 10px; color: #536159; font-size: 11px; }
+.locale-switcher button.active { border-color: #7ea28a; background: #eaf3ed; color: #285b3e; font-weight: 700; }
+.locale-switcher small { margin-left: 4px; color: #8a948e; font-size: 9px; white-space: nowrap; }
+.review-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: -2px 0 12px; }
+.review-filters button { border: 1px solid #e1e6e2; border-radius: 8px; background: #fff; padding: 6px 5px; color: #6e7972; font-size: 9px; }
+.review-filters button:first-child { grid-column: 1 / -1; }
+.review-filters button.active { border-color: #8ba797; background: #edf5ef; color: #355b43; font-weight: 700; }
+.review-filters button.danger { color: #8a6121; }
+.review-filters button.warning { color: #866324; }
+.duplicate-badge { background: #f4ead3 !important; color: #7d5e21 !important; }
+.duplicate-member-note { font-size: 8px; font-style: normal; color: #9a6b27; }
+
+.translation-panel { max-width: 1180px; margin: 0 auto 20px; padding: 20px; border: 1px solid #d8e4da; border-radius: 17px; background: #fbfcfb; box-shadow: 0 8px 26px rgba(42, 59, 48, .04); }
+.translation-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 14px; }
+.translation-header h2 { margin: 0 0 4px; font-size: 20px; }
+.translation-header p:last-child { margin: 0; color: #708078; font-size: 11px; }
+.translation-scope-tabs { display: flex; gap: 6px; }
+.translation-scope-tabs button { border: 1px solid #dce5de; border-radius: 9px; background: #fff; padding: 7px 10px; color: #5d6b62; font-size: 10px; }
+.translation-scope-tabs button.active { border-color: #7fa08a; background: #eaf3ed; color: #285b3e; font-weight: 700; }
+.translation-rule-note { margin-bottom: 14px; padding: 10px 12px; border-radius: 10px; background: #eef4ef; color: #53665a; font-size: 10px; line-height: 1.6; }
+.translation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.translation-source, .translation-target { display: grid; gap: 10px; padding: 14px; border: 1px solid #e1e7e2; border-radius: 13px; background: #fff; }
+.translation-source h3, .translation-target h3 { margin: 0 0 2px; font-size: 13px; }
+.translation-source textarea { background: #f6f8f6; color: #657269; }
+.translation-warning { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: #fff2cc; color: #725a18; font-size: 10px; }
+.translation-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 14px; color: #758078; font-size: 10px; }
+
+@media (max-width: 1050px) {
+  .topbar { flex-wrap: wrap; }
+  .locale-switcher { order: 3; width: 100%; justify-content: center; }
+}
+@media (max-width: 900px) {
+  .translation-grid { grid-template-columns: 1fr; }
+  .translation-header, .translation-footer { align-items: stretch; flex-direction: column; }
+  .translation-scope-tabs { flex-wrap: wrap; }
+}
+
+.data-review-panel { max-width: 1180px; margin: 0 auto 20px; padding: 18px 20px; border: 1px solid #ead9b0; border-radius: 17px; background: #fffdf7; }
+.data-review-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.data-review-header h2 { margin: 0 0 4px; font-size: 19px; }
+.data-review-header p:last-child { margin: 0; color: #776e5c; font-size: 11px; }
+.review-count { border-radius: 999px; background: #f3e7c9; padding: 5px 9px; color: #76591b; font-size: 10px; font-weight: 700; }
+.review-issue-card { margin-top: 10px; padding: 12px; border: 1px solid #eee2c8; border-radius: 11px; background: #fff; color: #5d584d; font-size: 10px; }
+.review-issue-card p { margin: 7px 0; line-height: 1.55; }
+.review-issue-title { display: flex; justify-content: space-between; gap: 12px; }
+.review-issue-title strong { color: #77591b; font-size: 11px; }
+.review-issue-title span { color: #8a806e; }
+.review-evidence-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.review-evidence-grid > div { display: grid; gap: 3px; padding: 8px; border-radius: 8px; background: #f8f7f2; }
+.review-evidence-grid small { color: #756f63; }
+.duplicate-key-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.duplicate-key-list code { border-radius: 6px; background: #f3f2ed; padding: 5px 7px; color: #6b6456; font-size: 9px; }
+
+@media (max-width: 700px) {
+  .review-evidence-grid { grid-template-columns: 1fr; }
+  .data-review-header { flex-direction: column; }
+}

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { supabase } from './supabase.js';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 
-export default function BatchSeoEditor({ group, members, existingRows, groupRecord, readOnly, schemaReady, onSaved, onClear }) {
+export default function BatchSeoEditor({ group, members, existingRows, groupRecord, locale = 'zh-CN', readOnly, schemaReady, onSaved, onClear }) {
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -13,6 +13,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
       group,
       groupRow: groupRecord,
       variantRow: existingRows[member.catalog_key],
+      locale,
     });
     return {
       id: member.id,
@@ -20,7 +21,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
       title: resolved.effective.seoTitle,
       overridden: resolved.override.seoTitle,
     };
-  }), [group, groupRecord, members, existingRows]);
+  }), [group, groupRecord, members, existingRows, locale]);
 
   const blockedReason = group.category_conflict
     ? '这个基础组存在分类冲突，必须先复核源数据。'
@@ -36,7 +37,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
     setMessage('');
     const rows = members.map((member) => ({
       catalog_key: member.catalog_key,
-      locale: 'zh-CN',
+      locale,
       status: 'draft',
     }));
     const { data, error } = await supabase
@@ -55,7 +56,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
     <section className="batch-panel">
       <div className="batch-header">
         <div>
-          <p className="eyebrow">BULK VARIANT SEO</p>
+          <p className="eyebrow">BULK VARIANT SEO · {locale}</p>
           <h2>{group.base_scientific_name}</h2>
           <p>{members.length} 个同类 / 变种已选择。这里建立继承 Draft，不复制 Base 文案到每一条记录。</p>
         </div>
