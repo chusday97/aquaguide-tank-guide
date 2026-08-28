@@ -1,6 +1,15 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-28 水体事实修复与发布门禁（最新）
+
+- [x] 为红绿灯 `sp_0431` 与宝莲灯 `sp_0432` 写入有证据支持的显式 `waterType: freshwater`；其他未审核物种仍保持 `unknown`，没有从名称、分类或描述推断水体。
+- [x] 增加“红绿灯↔宝莲灯完整资料返回 `caution`”和“任一方移除显式水体后返回 `insufficient_data`”回归；Catalog 校验现为 486 个物种，checksum：`545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- [x] 本地 Domain、Service、Repository/API、Catalog、Supabase 26+1、pgTAP、lint、API 类型、build、UI freeze、project truth 和 diff 检查通过；独立 Critic 六维复验通过。
+- [x] 本地、远端候选、PR #142 和 Vercel Preview 均为 `cdd465817dc796bf77c9d3aef5e95c25366befff`；Preview parity 为 `PASS / EQUIVALENT`，地址：`https://aquaguide-g27skg5gg-chusday97s-projects.vercel.app`。
+- [x] PR #142 的 `validate`、AquaGuide Vercel、Cloudflare Pages、Foundation 和 Preview Comments 均通过。
+- [ ] `Vercel – admin-content` 仍因部署额度限制失败（与 AquaGuide 候选无关）；PR #142 保持 Draft。生产第 27 个 migration、Catalog 发布、人工 release acceptance 和 `main` 合并均未执行。
+
 ## 2026-08-28 当前执行快照（最新）
 
 - [x] 混养唯一结论已在 Domain → Service → legacy 兼容入口闭环；共享适配器同步状态、策略、版本及 blocking/warning/missing 证据，当前页面无需改 UI 即不会再拿到旧最终状态。（最新代码提交：`b9d56da2`）

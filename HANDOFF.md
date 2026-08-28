@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 最新执行快照：水体事实修复已同步
+
+- 红绿灯 `sp_0431` 和宝莲灯 `sp_0432` 已加入有证据支持的显式 `freshwater`；其余未审核物种保持 `unknown`，未知水体仍安全返回 `insufficient_data`。
+- 完整资料下红绿灯↔宝莲灯返回 `caution`；移除任一方显式水体后返回 `insufficient_data`。Catalog 486 个物种 checksum 为 `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- 本地、远端 `codex/main-core-foundation-v1`、PR #142 和 Preview 已同步为 `cdd465817dc796bf77c9d3aef5e95c25366befff`。`node scripts/check-preview-parity.mjs` 返回 `PASS / EQUIVALENT`；Preview：`https://aquaguide-g27skg5gg-chusday97s-projects.vercel.app`。
+- `validate`、AquaGuide Vercel、Cloudflare Pages、Foundation 和 Preview Comments 通过；`Vercel – admin-content` 仍为无关的 24 小时部署限流失败。
+- 当前没有改 UI、没有执行生产 Supabase migration/Catalog 发布、没有合并 `main`。PR #142 继续保持 Draft，等待生产授权和最终人工验收。
+
 ## 2026-08-28 最新执行快照
 
 - 混养结论已完成本地唯一权威闭环：Domain Rules 是最终状态/策略/版本来源，`src/lib/compatibility/canonical-result.adapter.ts` 负责把结构化 ruleCodes 映射为 legacy 页面仍需的证据分组；Service 与旧入口共用同一适配器。最新代码提交为 `b9d56da2`。
