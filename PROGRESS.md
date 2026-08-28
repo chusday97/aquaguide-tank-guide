@@ -1,6 +1,14 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-29 浏览器门禁修复（本轮最新）
+
+- [x] 修复 Aquarium 创建空缸后的 React Hook 顺序回归：展示层 `useMemo` 不再位于 `!activeAquarium` 条件返回之后；真实 Chromium 不再进入错误边界。
+- [x] 更新 `verify-aquarium-factual-flow.mjs` 使用真实“鱼类 → 黑裙鱼”选择路径，不再误点分类按钮。
+- [x] 增加 wishlist-only 浏览器证据：内部 `complete_information` 规划只写现有种草清单，鱼缸生物保持为空，且未调用新增生物 API；现实记录仍可独立保存。
+- [x] 本地验证：浏览器 factual flow、compatibility presentation、unknown recommendation filter、Compatibility Service、addition intents、lint、build、Catalog validate、435 组合矩阵、authority/project truth 通过。
+- [ ] `check:ui-freeze` 仍按预期因本轮已批准的混养结果区域变化而失败，需用户确认后重录基线；本地仍领先远端 16 个提交，未推送；生产 migration、Catalog 发布和 `main` 合并未执行。
+
 ## 2026-08-29 混养结果体验修复（本轮）
 
 - [x] 保留 Domain 内部 `insufficient_data` 安全状态，但新增统一 Compatibility Presentation：完整结论显示适合/调整后可尝试/不建议，部分事实显示“当前可确认”，无可靠事实显示“暂未开放这组混养建议”。

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed an Aquarium empty-state React Hook order regression that caused the page to enter the error boundary after creating the first tank. The factual-flow browser gate now follows the real species-selection path and proves incomplete planning is wishlist-only, does not call livestock APIs, and leaves the tank unchanged before a separate reality-record action.
+
 - Fixed compatibility result presentation so internal `insufficient_data` stays a safety state while users see confirmed facts or an unavailable fallback; unreviewed candidates stay out of automatic recommendations, and Aquarium planning saves only to the existing wishlist.
 
 - Fixed Domain evidence precedence in the legacy compatibility facade and strengthened the 435-pair launch matrix to assert exact safe-status counts. Local candidate checkpoint `4d5cbb28` passes compatibility, authority, UI-freeze and project-truth gates; it is intentionally not pushed yet.

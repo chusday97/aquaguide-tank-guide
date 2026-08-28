@@ -1696,6 +1696,34 @@ export default function AquariumManager() {
 
   const activeAquarium = aquariums.find(a => a.id === activeId);
 
+  const addFishReviewPresentation = useMemo(() => {
+    if (!addFishCompatibilityReview) return null;
+    const confirmedFindings = addFishCompatibilityReview.evaluations.flatMap(evaluation => [
+      ...evaluation.result.passedRules,
+      ...evaluation.result.warningRules,
+    ]).map(rule => rule.evidence || rule.title);
+    return getCompatibilityPresentationForStatus({
+      status: addFishCompatibilityReview.status,
+      hasConfirmedFacts: confirmedFindings.length > 0,
+      confirmedFindings,
+    });
+  }, [addFishCompatibilityReview]);
+
+  const addFishEvaluationPresentations = useMemo(() => {
+    if (!addFishCompatibilityReview) return new Map<string, ReturnType<typeof getCompatibilityPresentationForStatus>>();
+    return new Map(addFishCompatibilityReview.evaluations.map(evaluation => {
+      const hasConfirmedFacts = evaluation.result.passedRules.length > 0
+        || evaluation.result.warningRules.length > 0
+        || evaluation.result.blockingRules.length > 0;
+      return [evaluation.fish.id, getCompatibilityPresentationForStatus({
+        status: evaluation.result.status,
+        hasConfirmedFacts,
+        confirmedFindings: evaluation.result.passedRules.map(rule => rule.evidence || rule.title),
+        cautions: evaluation.result.warningRules.map(rule => rule.evidence || rule.title),
+      })] as const;
+    }));
+  }, [addFishCompatibilityReview]);
+
   useEffect(() => {
     const params = new URLSearchParams(routeLocation.search);
     const requestedTankId = params.get('tank');
@@ -4822,32 +4850,6 @@ export default function AquariumManager() {
       trackSessionEvent('remedy_article_opened', { action: 'open', status: structuredDiagnosis.riskLevel, entry: 'daily-check-result' });
     }
   };
-  const addFishReviewPresentation = useMemo(() => {
-    if (!addFishCompatibilityReview) return null;
-    const confirmedFindings = addFishCompatibilityReview.evaluations.flatMap(evaluation => [
-      ...evaluation.result.passedRules,
-      ...evaluation.result.warningRules,
-    ]).map(rule => rule.evidence || rule.title);
-    return getCompatibilityPresentationForStatus({
-      status: addFishCompatibilityReview.status,
-      hasConfirmedFacts: confirmedFindings.length > 0,
-      confirmedFindings,
-    });
-  }, [addFishCompatibilityReview]);
-  const addFishEvaluationPresentations = useMemo(() => {
-    if (!addFishCompatibilityReview) return new Map<string, ReturnType<typeof getCompatibilityPresentationForStatus>>();
-    return new Map(addFishCompatibilityReview.evaluations.map(evaluation => {
-      const hasConfirmedFacts = evaluation.result.passedRules.length > 0
-        || evaluation.result.warningRules.length > 0
-        || evaluation.result.blockingRules.length > 0;
-      return [evaluation.fish.id, getCompatibilityPresentationForStatus({
-        status: evaluation.result.status,
-        hasConfirmedFacts,
-        confirmedFindings: evaluation.result.passedRules.map(rule => rule.evidence || rule.title),
-        cautions: evaluation.result.warningRules.map(rule => rule.evidence || rule.title),
-      })] as const;
-    }));
-  }, [addFishCompatibilityReview]);
   const isTimelineOpen = new URLSearchParams(routeLocation.search).get('action') === 'timeline';
   if (isTimelineOpen) {
     void careTimelineRevision;

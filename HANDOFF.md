@@ -1,5 +1,12 @@
 # AquaGuide 交接文档
 
+## 2026-08-29 浏览器门禁修复（本轮最新）
+
+- 修复 Aquarium 空缸创建后的 React Hook 顺序错误。原因是混养展示 `useMemo` 位于 `!activeAquarium` 条件返回之后；现已移到所有条件返回之前，页面创建空缸后不再进入错误边界。
+- `scripts/verify-aquarium-factual-flow.mjs` 现在走真实的“鱼类 → 黑裙鱼 → 查看规划判断”交互，覆盖：规划不写鱼缸、资料不完整时只写种草清单、不调用新增生物 API、现实记录独立保存、旧 `add-species` 深链兼容。
+- 浏览器回归通过：`PREVIEW_URL=http://localhost:3001 node scripts/verify-aquarium-factual-flow.mjs`；静态/构建门禁也通过。当前 3001 是临时本地候选预览，结束后已关闭临时依赖链接。
+- `check:ui-freeze` 仍是批准范围内混养结果变化导致的预期失败，不代表 Aquarium 舞台回退。当前候选仍比远端领先 16 个提交，未推送；生产 Supabase、Catalog 和 `main` 均未改动。
+
 ## 2026-08-29 混养结果体验修复（本轮最新）
 
 - 当前分支：`codex/main-core-foundation-v1`；本轮只改混养结果展示、收藏操作和推荐过滤，不动 Aquarium 舞台、布局、素材、今日行动、Supabase 或生产数据。
