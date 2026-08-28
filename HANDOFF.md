@@ -8,6 +8,7 @@
 - 新增中央展示服务 `src/services/compatibility/compatibility-presentation.service.ts`，并接入 Compatibility Calculator、Visual Result Card、Species Detail、Encyclopedia、Aquarium 和 Recommendation。
 - 验证通过：`test:compatibility-presentation`、`test:recommendation-unknown-filter`、`test:visual-results`、混养 Domain/Service/435 组合矩阵、Catalog、lint、API 类型和 production build。
 - Critic 初审发现两个阻塞：未审核候选仍进入自动推荐、Aquarium 的 `complete_information` 仍进入设置并可能写鱼缸；已在 `ef1bba10` 修复并补回归，未审核候选现在只留在 blocked，规划资料不足只写种草清单。
+- 同一 Critic 已复验 `ef1bba10`：需求完整性、逻辑、边界、代码质量、测试设计和 diff 范围均无新的实现级阻塞；完整交付仍受 UI freeze 人工确认和远端/Preview/Supabase/main 门禁限制。
 - `check:ui-freeze` 当前为 `FROZEN_PROVISIONAL` 失败，原因仅是批准范围内的混养结果区域文件变化；不是舞台或布局回退。用户验收新文案后需要重新 capture freeze。
 - 本地 HEAD `ef1bba10` 已提交，工作树干净；远端候选和 PR #142 仍停留在 `396e71da`，本轮不推送、不执行生产 migration/Catalog 发布、不合并 `main`。
 

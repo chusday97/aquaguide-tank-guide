@@ -9,6 +9,7 @@
 - [x] 自动推荐排除内部 `insufficient_data` 结果，部分评估仅允许用户主动查看和收藏。
 - [x] Critic 指出的两个体验阻塞已修复：未审核候选不再进入自动推荐；Aquarium 规划资料不足只保存到种草清单，不进入设置或真实鱼缸（commit: `ef1bba10`）。
 - [x] 新增 `test:compatibility-presentation`，覆盖完整结论、部分事实、无结果卡、种草操作和兼容页面文案门禁；混养、Domain、Service、Catalog、构建和类型检查通过。
+- [x] 同一 Critic 已复验最新提交，确认本轮两个阻塞已消除；完整交付仍等待用户确认混养结果文案后更新 UI freeze，且尚未推送远端。
 - [ ] `check:ui-freeze` 按预期报告混养结果区域发生定向变化；需用户确认新结果文案后重新生成冻结基线。4317、4319、GitHub、生产 Supabase 和 `main` 均未改动。
 
 ## 2026-08-28 物种底层修复进展（本轮最新）
