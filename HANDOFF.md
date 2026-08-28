@@ -7,6 +7,8 @@
 - `npm run check:preview-parity`：`PASS / EQUIVALENT`；Preview 为 `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app`，实际部署 SHA 与候选一致。
 - 本次只推送候选代码和文档；未执行生产第 27 个 migration、Catalog 发布或 main 合并。当前唯一底层未完成项仍是 legacy UI status/evidence 尚未完全由 Domain 接管。
 
+> 追加事实：后续 docs-only 提交将候选推进到 `df3c4e119b14e323502b9c711ad607b66eeb5435`，本地/远端/PR 仍同步；Vercel 对该 head 受每日额度限制，Preview parity 暂为 `UNVERIFIED`。上一笔代码 head `55a37745` 的 exact Preview parity 保留为历史证据。
+
 ## 2026-08-28 admin-content 门禁隔离
 
 - 已更新 Vercel `admin-content` 项目配置：Root Directory 恢复自动检测（仓库根），仅 `feature/admin-content-v0` 执行 `npm run build --workspace @aquaguide/admin-content`；其他分支直接跳过。
