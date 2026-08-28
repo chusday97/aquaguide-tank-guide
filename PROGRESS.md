@@ -7,6 +7,7 @@
 - [x] 部分或未开放组合的主操作改为加入现有种草清单；不调用新增缸内生物 Repository/API，不新增数据库字段。
 - [x] `VisualResultCard` 支持展示模式、状态文案和判断范围；Species Detail、Encyclopedia、Aquarium 的混养文案不再直接显示“资料不足/信息不足”。
 - [x] 自动推荐排除内部 `insufficient_data` 结果，部分评估仅允许用户主动查看和收藏。
+- [x] Critic 指出的两个体验阻塞已修复：未审核候选不再进入自动推荐；Aquarium 规划资料不足只保存到种草清单，不进入设置或真实鱼缸（commit: `ef1bba10`）。
 - [x] 新增 `test:compatibility-presentation`，覆盖完整结论、部分事实、无结果卡、种草操作和兼容页面文案门禁；混养、Domain、Service、Catalog、构建和类型检查通过。
 - [ ] `check:ui-freeze` 按预期报告混养结果区域发生定向变化；需用户确认新结果文案后重新生成冻结基线。4317、4319、GitHub、生产 Supabase 和 `main` 均未改动。
 
