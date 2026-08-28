@@ -35,6 +35,19 @@ npm run dev -w @aquaguide/admin-content
 
 Open `http://localhost:3010`.
 
+## Read-only remote review
+
+The separate Vercel project `admin-content` is for review only at this stage:
+
+- Root Directory is locked to `apps/admin-content`.
+- `VITE_ADMIN_REVIEW_MODE=true` is scoped to Preview deployments of `feature/admin-content-v0`.
+- Review mode loads the committed 486-Species index but never performs Supabase auth/data writes.
+- The save action is disabled in review mode.
+- Vercel Authentication protects the Preview URL, and the page declares `noindex,nofollow,noarchive`.
+- The project-level Ignored Build Step skips Git deployments from branches other than `feature/admin-content-v0`.
+
+This remote review mode is separate from the locally verified Supabase Auth + RLS + draft-save flow. Do not treat review mode as an Admin authentication bypass.
+
 ## Verify
 
 ```bash
