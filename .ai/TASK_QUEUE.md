@@ -9,16 +9,17 @@ Updated: 2026-08-28
 - [x] Add data review queue for 5 category conflicts and 28 suspected duplicate records.
 - [x] Add zh-CN → English suggestion workflow with separate locale Drafts (`465024a`).
 - [x] Define deterministic route/canonical/hreflang contract and Index/Canonical/Noindex strategy (`43eec47`).
-- [x] Add live public Species-page effect preview and verify migration 004/RLS locally.
-- [x] Build fail-closed static Species HTML generator from explicit publication snapshots.
-- [x] Add runtime tests for title/meta/H1/robots/canonical/hreflang and Species sitemap output.
-- [x] Add Base + Variant revision history and rollback-to-Draft migration/UI.
-- [x] Verify migration 005, revision RLS and Base/Variant rollback against fresh isolated local Supabase.
+- [x] Add static Species generator + runtime SEO/sitemap tests + Base/Variant revision/rollback (`cd363b4`).
+- [x] Push `cd363b4` to `origin/feature/admin-content-v0`; `main` remains untouched.
+- [x] Add staging-only snapshot export and end-to-end publishing verifier with Production DB/site deny-lists.
+- [x] Remove generator fallback to Production canonical host; non-production generation now requires an explicit non-production `siteUrl`.
+- [x] Confirm AquaGuide Supabase currently has no existing development branch.
 
 ## Next
-- [ ] Sync this generator/history milestone to GitHub and verify the new `admin-content` Vercel Preview.
-- [ ] Validate migrations 001–005 plus snapshot export/generator against a dedicated staging Supabase environment.
-- [ ] Keep Published disabled until staging publication validation passes end-to-end.
+- [ ] Re-check `admin-content` Vercel Preview after Hobby daily deployment quota resets; current manual Preview attempt is blocked by the 100-deploy/day limit.
+- [ ] Provision or identify a dedicated AquaGuide staging Supabase only with explicit cost/environment approval.
+- [ ] Apply migrations 001–005 in staging and prepare at least one reviewed bilingual self-canonical Index pair.
+- [ ] Run `verify:staging-publish` against staging DB + staging public host; keep Published disabled until it passes.
 - [ ] Resolve duplicate/cross-category source-data review before enabling affected records for independent Index.
 
 ## Later

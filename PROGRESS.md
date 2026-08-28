@@ -295,3 +295,12 @@
 - `npm run test:contract -w @aquaguide/admin-content` 与 Admin production build 通过；仅保留既有 >500KB bundle warning。
 - 上一提交 `43eec47` 的独立 Vercel `admin-content` Preview 已确认 READY / HTTP 200 / noindex；本批次待集中 commit/push 后再核对新 SHA Preview。
 - Production Supabase 与 `main` 仍未修改。下一门禁仅为 dedicated staging Supabase 上的 migrations 001–005 + snapshot → generator → rendered-page 端到端验证；通过前 Published 保持锁定。
+
+### 2026-08-28 Species SEO staging release gate hardening
+- Generator/history milestone committed and pushed as `cd363b4`; `main` and Production Supabase unchanged.
+- New Vercel Preview could not be created because the Hobby account hit `api-deployments-free-per-day` (>100/day). Previous Admin Preview remains healthy; no Production deployment was attempted.
+- Supabase inventory confirms AquaGuide has no existing development branch; the separate IceGlide staging project is not reused.
+- Fixed a release-safety gap: static Species generation no longer defaults to the Production canonical host. `siteUrl` is mandatory and the known Production host is rejected for non-production generation.
+- Added staging-only Published snapshot export and end-to-end staging verifier with explicit staging/Production DB and public-site deny-lists.
+- Staging verifier requires at least one bilingual self-canonical Index pair and validates generated EN/ZH pages plus sitemap over a temporary HTTP server.
+- With no staging env configured, `verify:staging-publish` intentionally exits non-zero; Published remains disabled.

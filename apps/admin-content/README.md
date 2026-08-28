@@ -164,3 +164,36 @@ Migration `202608280005_species_seo_revision_history.sql` adds database-backed h
 - Fresh isolated local Supabase verified Variant and Base `v1 Draft → v2 Published fixture → v3 rollback Draft`, non-admin history visibility `0`, non-admin rollback rejection, and zero final test residue.
 
 The remaining release gate is a dedicated staging Supabase running migrations 001–005 plus snapshot → generator → rendered-page verification. Production Supabase and `main` remain untouched.
+
+## Staging release gate
+
+Published remains locked until a dedicated AquaGuide staging environment passes the full release chain. The branch now provides two staging-only commands:
+
+```bash
+npm run export:staging-snapshot -w @aquaguide/admin-content -- --out /tmp/species-staging.json
+npm run verify:staging-publish -w @aquaguide/admin-content
+```
+
+The verifier does not reuse local or Production defaults. Configure these values only for a dedicated AquaGuide staging environment:
+
+- `STAGING_SUPABASE_URL`
+- `STAGING_SUPABASE_PUBLISHABLE_KEY`
+- `STAGING_SUPABASE_PROJECT_REF`
+- `PRODUCTION_SUPABASE_PROJECT_REF` (deny-list only)
+- `STAGING_PUBLIC_SITE_URL`
+- `PRODUCTION_PUBLIC_SITE_URL` (deny-list only)
+- optional `STAGING_SOURCE_LABEL`
+
+`verify:staging-publish` performs:
+
+1. explicit staging-vs-Production Supabase identity validation;
+2. Published Base/Variant snapshot export through RLS using the publishable client key;
+3. static Species HTML + sitemap generation with an explicit non-production canonical host;
+4. temporary local HTTP serving of the generated output;
+5. HTTP fetch and assertions for one bilingual self-canonical Index pair plus sitemap membership.
+
+The command fails if staging has no eligible bilingual Index pair. It also fails if the staging DB/project ref or public host matches Production.
+
+As of 2026-08-28, the connected Supabase account has the AquaGuide project and an unrelated IceGlide staging project, but no AquaGuide development branch. Do not reuse the IceGlide environment. Creating an AquaGuide Supabase branch/project may incur cost and requires explicit approval before provisioning.
+
+The generator itself also requires `--site-url`; it no longer defaults to the Production canonical domain for preview/staging snapshots.

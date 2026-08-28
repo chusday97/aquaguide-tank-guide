@@ -82,6 +82,16 @@ try {
   assert.match(sitemap, /hreflang="x-default"/);
 
   await assert.rejects(
+    generatePublicSpecies({ snapshot, outDir: `${outDir}-missing-site` }),
+    /siteUrl is required/,
+  );
+
+  await assert.rejects(
+    generatePublicSpecies({ snapshot, outDir: `${outDir}-production-host`, siteUrl: 'https://aqua-tank-guide.vercel.app' }),
+    /Refusing production canonical host/,
+  );
+
+  await assert.rejects(
     generatePublicSpecies({ snapshot: { ...snapshot, environment: 'production' }, outDir: `${outDir}-production`, siteUrl }),
     /Refusing publication snapshot environment: production/,
   );
@@ -103,6 +113,8 @@ try {
   console.log(`Public Species generator verified: ${manifest.generated_pages} pages, ${manifest.indexable_pages} sitemap candidates, production input refused`);
 } finally {
   await rm(outDir, { recursive: true, force: true });
+  await rm(`${outDir}-missing-site`, { recursive: true, force: true });
+  await rm(`${outDir}-production-host`, { recursive: true, force: true });
   await rm(`${outDir}-production`, { recursive: true, force: true });
   await rm(`${outDir}-draft-base`, { recursive: true, force: true });
   await rm(`${outDir}-broken-canonical`, { recursive: true, force: true });

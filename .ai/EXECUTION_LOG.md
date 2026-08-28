@@ -79,3 +79,13 @@
 - Read-only Chrome Review on temporary port 3099 showed both History panels, public Species preview and both disabled Published options with zero page errors. Temporary Vite/Supabase test environments were stopped after validation.
 - `test:contract` and production Admin build pass; only the known >500KB bundle warning remains.
 - Production Supabase and `main` were not modified. Published remains locked pending staging end-to-end publication validation.
+
+## 2026-08-28 — Generator/history push and staging gate follow-up
+- Re-ran Admin contract/build/diff checks and committed generator + revision history as `cd363b4 feat(admin): add species publishing safety and revision history`.
+- Pushed `cd363b4` to `origin/feature/admin-content-v0`; `main` and Production Supabase remain untouched.
+- Vercel Git Integration did not create a new deployment immediately. Manual Preview deploy from the linked `admin-content` project was rejected by Hobby `api-deployments-free-per-day` (>100/day); no Production deploy was attempted.
+- Supabase project inventory confirmed there is no AquaGuide staging project or development branch. `ice-glide-staging-sg` is unrelated and was not used.
+- Auditing the next staging step found that the generator still defaulted to the Production canonical host when `siteUrl` was omitted; removed that fallback and added a Production-host denial test.
+- Added staging-only Published snapshot export using the Supabase publishable-key client plus explicit staging/Production project-ref guards.
+- Added end-to-end staging verifier: export → generator → local HTTP serving → EN/ZH rendered response + sitemap checks.
+- `verify:staging-publish` intentionally fails non-zero when staging DB/site configuration is absent; there is no local/Production fallback.

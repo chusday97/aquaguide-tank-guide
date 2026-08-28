@@ -538,3 +538,13 @@
 - Fresh isolated Supabase applied core + Admin migrations 001–005. Variant and Base each passed `v1 Draft → v2 Published fixture → v3 rollback Draft`; non-admin revision visibility was 0 and restore RPC failed with `Admin role required`; final test residue was 0.
 - Prior Vercel Admin Preview for `43eec47` was READY / HTTP 200 / noindex. The next pushed generator/history SHA must be checked again after deployment.
 - Do not merge to `main`, run these migrations in Production, or unlock Published yet. The next release gate is a dedicated staging Supabase with migrations 001–005 plus a real staging snapshot → generator → rendered-page verification.
+
+### 2026-08-28 Species SEO staging publishing handoff
+- `cd363b4` is pushed to `feature/admin-content-v0`; it contains the static generator, runtime SEO/sitemap checks, and database revision/rollback chain.
+- Do not interpret the missing new Vercel Preview as a code failure: manual Preview deployment hit the Hobby daily deployment cap (`api-deployments-free-per-day`). Retry Preview only after quota reset; do not use `--prod`.
+- AquaGuide currently has no Supabase development branch. Do not use `ice-glide-staging-sg` for AquaGuide validation.
+- Staging release commands now exist: `export:staging-snapshot` and `verify:staging-publish` in `apps/admin-content/package.json`.
+- Required staging identity is explicit: staging DB URL/key/ref plus Production DB ref deny-list; staging public URL plus Production public URL deny-list.
+- `generate-public-species.mjs` now requires explicit `siteUrl` and rejects the known Production canonical host. Never restore a Production default for preview/staging generation.
+- `verify:staging-publish` must see at least one bilingual self-canonical Index pair, then exports Published rows, generates static HTML, serves it locally and fetches EN/ZH pages + sitemap to verify canonical/hreflang/x-default/indexing behavior.
+- If no staging env exists, the correct state is a non-zero gate and disabled Published controls. Provisioning a Supabase branch/project may cost money and requires explicit approval before creation.

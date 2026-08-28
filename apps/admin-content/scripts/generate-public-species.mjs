@@ -6,7 +6,7 @@ import { buildSpeciesSeoRouteMeta } from '../src/seoRouteContract.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
-const DEFAULT_SITE_URL = 'https://aqua-tank-guide.vercel.app';
+const PRODUCTION_SITE_HOSTS = new Set(['aqua-tank-guide.vercel.app']);
 const SAFE_ENVIRONMENTS = new Set(['local', 'test', 'preview', 'staging']);
 
 function escapeHtml(value = '') {
@@ -20,6 +20,19 @@ function escapeHtml(value = '') {
 
 function escapeXml(value = '') {
   return escapeHtml(value);
+}
+
+function validateSiteUrl(siteUrl, environment) {
+  if (!siteUrl) throw new Error('siteUrl is required; non-production generation must use an explicit preview/staging host.');
+  let parsed;
+  try { parsed = new URL(siteUrl); } catch { throw new Error(`Invalid siteUrl: ${siteUrl}`); }
+  if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error(`Unsupported siteUrl protocol: ${parsed.protocol}`);
+  if (PRODUCTION_SITE_HOSTS.has(parsed.hostname)) {
+    throw new Error(`Refusing production canonical host for ${environment}: ${parsed.hostname}`);
+  }
+  parsed.pathname = parsed.pathname.replace(/\/$/, '');
+  parsed.search = ''; parsed.hash = '';
+  return parsed.toString().replace(/\/$/, '');
 }
 
 function absoluteUrl(siteUrl, pathname) {
@@ -135,9 +148,10 @@ function renderSitemap(siteUrl, pages) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${items}\n</urlset>\n`;
 }
 
-export async function generatePublicSpecies({ snapshot, outDir, siteUrl = DEFAULT_SITE_URL }) {
+export async function generatePublicSpecies({ snapshot, outDir, siteUrl }) {
   if (!snapshot || typeof snapshot !== 'object') throw new Error('Publication snapshot is required.');
   if (!SAFE_ENVIRONMENTS.has(snapshot.environment)) throw new Error(`Refusing publication snapshot environment: ${snapshot.environment || 'missing'}`);
+  const validatedSiteUrl = validateSiteUrl(siteUrl, snapshot.environment);
   if (!outDir) throw new Error('outDir is required; generator never writes into public/ implicitly.');
 
   const [catalog, groupData] = await Promise.all([
@@ -204,9 +218,9 @@ export async function generatePublicSpecies({ snapshot, outDir, siteUrl = DEFAUL
   for (const page of pagePlans) {
     const target = path.join(outDir, page.routeMeta.selfPath.replace(/^\//, ''));
     await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, renderPage({ siteUrl, ...page, locale: page.row.locale }), 'utf8');
+    await writeFile(target, renderPage({ siteUrl: validatedSiteUrl, ...page, locale: page.row.locale }), 'utf8');
   }
-  const sitemap = renderSitemap(siteUrl, pagePlans);
+  const sitemap = renderSitemap(validatedSiteUrl, pagePlans);
   await writeFile(path.join(outDir, 'sitemap-species.xml'), sitemap, 'utf8');
   const manifest = {
     environment: snapshot.environment,
@@ -230,8 +244,8 @@ async function cli() {
   };
   const snapshotPath = value('--snapshot');
   const outDir = value('--out-dir');
-  const siteUrl = value('--site-url') || DEFAULT_SITE_URL;
-  if (!snapshotPath || !outDir) throw new Error('Usage: node generate-public-species.mjs --snapshot <json> --out-dir <dir> [--site-url <url>]');
+  const siteUrl = value('--site-url');
+  if (!snapshotPath || !outDir || !siteUrl) throw new Error('Usage: node generate-public-species.mjs --snapshot <json> --out-dir <dir> --site-url <non-production-url>');
   const snapshot = JSON.parse(await readFile(path.resolve(snapshotPath), 'utf8'));
   const result = await generatePublicSpecies({ snapshot, outDir: path.resolve(outDir), siteUrl });
   console.log(JSON.stringify(result.manifest));

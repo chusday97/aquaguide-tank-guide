@@ -7,18 +7,21 @@ Build an isolated AquaGuide Species SEO Admin that can safely move reviewed bili
 
 ## Current milestone
 
-Close the publishing safety chain:
+Close the final non-production release gate:
 
-`Base/Variant Draft → revision history/rollback → index strategy → derived URL/canonical/hreflang → fail-closed static generator → sitemap/runtime SEO tests → staging publication validation`
+`reviewed Draft → revision history/rollback → Published staging rows → staging-only snapshot export → explicit staging canonical host → static generator → HTTP-rendered EN/ZH + sitemap verification`
 
 ## Success criteria
 
-- Public URL is deterministic and not manually typed.
-- English uses the existing default-language path pattern; Chinese uses `/zh/`.
-- Every new Species SEO row defaults to `noindex`.
-- Category conflicts and suspected duplicates cannot silently become independent index pages.
-- Static generation accepts only explicit non-production publication snapshots and never writes into public routes implicitly.
-- Runtime tests verify title, meta, H1, robots, canonical, hreflang and sitemap behavior.
-- Every Base/Variant save creates an admin-only revision; rollback always restores as Draft and cannot republish content.
-- Published remains disabled until the same migration + snapshot → generator → page verification path succeeds against a staging Supabase environment.
+- Staging database identity must be explicit and different from Production Supabase.
+- Staging public host must be explicit and different from the Production canonical host.
+- Generator cannot fall back to Production canonical URLs when `--site-url` is omitted.
+- At least one reviewed bilingual self-canonical Index pair must pass the staging verifier; empty staging cannot PASS.
+- Runtime verification covers title/meta/H1/robots/canonical/reciprocal hreflang/x-default and sitemap behavior.
+- Published remains disabled until a real AquaGuide staging Supabase exists and the end-to-end verifier passes.
 - Production Supabase and `main` remain untouched until explicit approval.
+
+## Current external blockers
+
+- No AquaGuide Supabase development branch currently exists; creating one may incur cost and requires explicit approval.
+- Vercel Hobby daily deployment quota currently blocks a new Preview for `cd363b4`; previous Preview remains healthy.

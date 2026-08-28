@@ -1,0 +1,67 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { createClient } from '@supabase/supabase-js';
+import { validateStagingSupabaseConfig } from './staging-publishing-config.mjs';
+
+const VARIANT_SELECT = [
+  'catalog_key','locale','localized_name','seo_title','meta_description','h1','intro','image_alt',
+  'canonical_path','focus_keyword','index_strategy','canonical_catalog_key','status','published_at',
+  'updated_at','deleted_at','version',
+].join(',');
+
+const GROUP_SELECT = [
+  'group_key','locale','seo_title_template','meta_description_template','h1_template','shared_intro',
+  'status','published_at','updated_at','deleted_at','version',
+].join(',');
+
+async function fetchPublishedRows({ client, table, select }) {
+  const { data, error } = await client
+    .from(table)
+    .select(select)
+    .eq('status', 'published')
+    .is('deleted_at', null)
+    .order('updated_at', { ascending: true });
+  if (error) throw new Error(`Staging ${table} export failed: ${error.message}`);
+  if (!Array.isArray(data)) throw new Error(`Staging ${table} export did not return an array.`);
+  return data;
+}
+
+export async function exportStagingSpeciesSnapshot(config) {
+  const { supabaseUrl, actualProjectRef } = validateStagingSupabaseConfig(config);
+  const client = createClient(supabaseUrl, config.publishableKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const [speciesSeo, speciesSeoGroups] = await Promise.all([
+    fetchPublishedRows({ client, table: 'species_seo', select: VARIANT_SELECT }),
+    fetchPublishedRows({ client, table: 'species_seo_groups', select: GROUP_SELECT }),
+  ]);
+  return {
+    environment: 'staging',
+    source_label: config.sourceLabel || `supabase:${actualProjectRef}`,
+    source_project_ref: actualProjectRef,
+    exported_at: new Date().toISOString(),
+    species_seo: speciesSeo,
+    species_seo_groups: speciesSeoGroups,
+  };
+}
+
+async function cli() {
+  const args = process.argv.slice(2);
+  const outIndex = args.indexOf('--out');
+  const outPath = outIndex >= 0 ? args[outIndex + 1] : null;
+  if (!outPath) throw new Error('Usage: node export-staging-species-snapshot.mjs --out <snapshot.json>');
+  const snapshot = await exportStagingSpeciesSnapshot({
+    supabaseUrl: process.env.STAGING_SUPABASE_URL,
+    publishableKey: process.env.STAGING_SUPABASE_PUBLISHABLE_KEY,
+    expectedProjectRef: process.env.STAGING_SUPABASE_PROJECT_REF,
+    productionProjectRef: process.env.PRODUCTION_SUPABASE_PROJECT_REF,
+    sourceLabel: process.env.STAGING_SOURCE_LABEL,
+  });
+  const resolved = path.resolve(outPath);
+  await mkdir(path.dirname(resolved), { recursive: true });
+  await writeFile(resolved, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
+  console.log(JSON.stringify({ out: resolved, project_ref: snapshot.source_project_ref, variants: snapshot.species_seo.length, groups: snapshot.species_seo_groups.length }));
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
+  cli().catch((error) => { console.error(error.message); process.exitCode = 1; });
+}

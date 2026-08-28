@@ -65,3 +65,11 @@
 - A rollback always restores as Draft, clears `published_at`, and records a new `rollback` revision pointing to its source revision. Rollback is never a republish mechanism.
 - The Admin requires a second click before executing restore, but database authorization and Draft coercion remain the real safety boundary.
 - Local verification is necessary but insufficient for release: Published remains fail-closed until the same chain passes against a dedicated staging Supabase.
+
+## 2026-08-28 — Staging identity is part of the publishing contract
+- A non-production snapshot flag alone is insufficient; the database project identity and public canonical host must also be explicitly non-production.
+- Staging export therefore requires an expected staging Supabase project ref plus a Production project-ref deny-list.
+- Staging page verification requires a staging public URL plus a Production public URL deny-list.
+- The static generator no longer has a Production site URL fallback. Omitting `siteUrl` is an error.
+- A release-gate PASS requires at least one bilingual self-canonical Index pair; zero Published rows or no bilingual pair is a hard failure.
+- Existing unrelated staging projects must not be reused across AquaGuide/IceGlide merely to avoid provisioning cost or setup time.
