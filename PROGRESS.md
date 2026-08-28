@@ -1,6 +1,14 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-29 本地收口复核（本轮最新）
+
+- [x] 4317 冻结基线与 4319 当前候选均 HTTP 200；4319 元数据已刷新到当前候选提交，4317 保持历史 SHA 不改写。
+- [x] 真实 Chromium factual flow、正式图鉴/养护 scene/browse、今日行动点击/Escape/拖拽吸附均通过；项目真相与 diff 检查通过。
+- [x] 4319 当前候选为 `13613f95be8845499e17e6e7576a68dcfd559a4c`；远端候选/PR #142 仍为 `396e71da4ce60e3b7de6a9b90072d7d55eb77aad`，本地领先 20 个提交，尚未推送。
+- [ ] `check:ui-freeze` 仍只报告已批准的混养结果区域文件变化；需要用户确认文案/操作后再 capture 新基线，不能把该失败描述为舞台回退。
+- [ ] 生产 migration、Catalog 发布、Preview exact SHA parity、人工 release acceptance 和 `main` 合并未执行。
+
 ## 2026-08-29 浏览器门禁修复（本轮最新）
 
 - [x] 修复 Aquarium 创建空缸后的 React Hook 顺序回归：展示层 `useMemo` 不再位于 `!activeAquarium` 条件返回之后；真实 Chromium 不再进入错误边界。
