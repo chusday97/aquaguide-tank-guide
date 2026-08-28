@@ -6,32 +6,29 @@ Branch: `feature/admin-content-v0`
 ## Current state
 - Public AquaGuide `main`: untouched.
 - Production Supabase: untouched; Admin migrations 001–006 remain branch-only proposals.
-- Latest pushed milestone before A+B work: `70e539f feat(admin): verify staging schema release gate`.
-- Previous Vercel Admin Preview for `43eec47` remains READY / HTTP 200 / noindex; new Preview is temporarily blocked by Vercel Hobby daily deployment quota.
-- 486 catalog rows → 276 Base Species groups; 28 suspected duplicates; 5 category-conflict groups.
+- A+B green baseline is recorded at `3c2acab docs(admin): record green A+B gate`; subsequent planning docs move the project into publish-readiness/product completion.
+- A+B is proven: local macOS and GitHub Actions run `33147127271` both pass the shared `test:supabase-gate`.
+- GitHub A uses Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0 and exact npm lockfile; CI has no Production credentials or deploy permissions.
+- Previous Vercel Admin Preview for `43eec47` is READY / HTTP 200 / noindex; newer Preview is waiting on Vercel Hobby daily deployment quota reset.
+- Catalog projection remains 486 rows → 276 Base Species; 28 suspected duplicates; 5 category-conflict groups.
 
-## A+B stability model
-- B = Mac local Supabase for fast development and UI/database debugging.
-- A = GitHub Actions ephemeral Supabase for clean-machine, reproducible validation.
-- Both run the same `npm run test:supabase-gate -w @aquaguide/admin-content` command.
-- CI is read-only with respect to the repository and has no Production Supabase or Vercel deployment credentials.
-- CI toolchain is pinned: Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0, exact npm lockfile.
-## Shared gate verification
-- Ephemeral DB loads only `202607160001_core_schema.sql` + Admin migrations 001–006.
-- Local gate creates real admin/user Auth identities, promotes only the test admin through local DB fixture setup, then exercises product writes through JWT + RLS.
-- Regular authenticated users see 0 Draft Species rows, cannot insert SEO, cannot read revision history, and cannot call rollback.
-- Base + Variant rollback both restore Draft state and clear `published_at`; rollback revisions preserve source revision IDs.
-- The same temporary DB publishes one reviewed `sp_0030` bilingual fixture, reads Published rows anonymously, and generates 2 indexable EN/ZH static pages with canonical/hreflang/sitemap checks.
-- Local macOS result: `gate=PASS`, schema version 6, 2 rollback revisions, 2 generated/indexable pages.
+## Verified publishing safety
+- Migrations 001–006, RLS, admin/non-admin behavior, Base/Variant revision history and rollback-to-Draft are covered by the shared ephemeral Supabase gate.
+- One bilingual `sp_0030` fixture can be read as Published from the temporary DB and materialized into two self-canonical indexable EN/ZH pages.
+- Runtime checks cover title, meta, H1, robots, canonical, hreflang/x-default and Species sitemap membership.
+- Production snapshot/DB/site identities fail closed; generator output must use an explicit non-production target.
+- Paid persistent staging is no longer a release prerequisite.
 
-## GitHub A-layer status
-- Workflow `2d85a4e` is already pushed and GitHub run `33146619043` verified checkout, Node 24.14.0, Supabase CLI 2.115.0 and Docker successfully.
-- That first clean run failed only at `npm ci` because root `package-lock.json` did not contain the Admin workspace metadata; database tests were not reached.
-- Lockfile is now corrected locally. Actual `date-fns` remains 4.1.0; only the root dependency spec metadata is aligned to `package.json` (`^4.0.0`).
-- Clean local `npm ci --no-audit --no-fund` plus the full shared Supabase gate/build now PASS.
+## Current product gap
+- Published controls are still globally disabled; the next step is not to remove that lock blindly.
+- The Admin needs a publish-readiness layer showing exact blockers per Base/Variant/locale and a controlled Preview Publish state.
+- The Data Review Queue currently displays source problems but does not yet persist human resolution decisions.
+- Category conflicts and suspected duplicates therefore remain unresolved and cannot safely become independent Index pages.
+- Live AI translation provider behavior has not yet been validated with a configured server-side secret.
 
-## Remaining gate
-- GitHub Actions run `33147127271` for `ef2f6ae` completed SUCCESS: every step passed, including clean `npm ci`, contract, ephemeral Supabase database gate, production build, generated catalog parity and diff hygiene.
-- A is now proven on a clean Ubuntu runner; B remains the fast local path using the same database gate command.
-- Published remains disabled until CI is green and public-deploy integration is explicitly reviewed.
-- A paid persistent Supabase staging branch is no longer required; it remains an optional later convenience.
+## Next milestone
+1. Publish-readiness checklist/state machine.
+2. Persisted human review decisions for category conflicts / duplicates.
+3. Controlled non-production Preview Publish using the existing generator and A+B gate.
+4. Real AI translation suggestion smoke test.
+5. Only after those steps: review Production migration/public deployment integration with explicit approval.

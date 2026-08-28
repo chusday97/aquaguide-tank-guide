@@ -497,7 +497,7 @@
 - 83 个 Base Species 含多个 catalog 成员，可作为批量 SEO 候选；批量模板按成员名称/Variant 生成独立草稿，不直接复制为 Published 内容。
 - 发现 28 条疑似完全重复 catalog 记录；不得先删原数据，先在 Admin 标记并后续人工确认 canonical/合并策略。
 - 发现 5 个跨分类冲突组（含部分神仙鱼、波子、海葵/珊瑚、红宫廷）；这些组必须人工复核，禁止一键批量发布。
-- 下一阶段核心：在 dedicated staging Supabase 验证 migrations 001–006、release-gate probe、publication snapshot、静态 generator 与最终 HTML；通过前不解锁 Published，也不修改 Product Truth。
+- 下一阶段核心：A+B 门禁已通过，转入 publish-readiness、可记录的数据复核和非 Production Preview Publish；仍不修改 Product Truth，也不直接连接 Production 发布。
 
 ### 2026-08-28 Base Species → Variant SEO inheritance
 - 不要恢复“每个 Variant 复制一份 Base SEO 文案”的模式。当前契约是 Base Species 保存共享模板/简介，Variant 只保存差异 Override。
@@ -515,7 +515,7 @@
 - GitHub references used as architecture patterns: Payload CMS localization (locale-specific content) and Tolgee translation workflow (context-aware suggestion + review). Neither was added as a dependency.
 - Data Review Queue now shows exact category-conflict membership and exact duplicate peer IDs; it does not choose canonical records or rewrite `fishData.ts`.
 - `202608280003_species_seo_localized_name.sql` was tested only in isolated local Supabase. Production remains untouched.
-- Remaining gates for publishing: dedicated staging Supabase validation and source-data review for affected duplicate/category-conflict records. Live AI translation provider validation is separate from static publishing safety and does not authorize Published content by itself.
+- Remaining gates for publishing: publish-readiness workflow, explicit source-data review decisions for affected duplicate/category-conflict records, and controlled non-production Preview Publish. A paid persistent staging branch is optional. Live AI translation provider validation is separate from static publishing safety and does not authorize Published content by itself.
 
 ### 2026-08-28 Species SEO public route / indexing handoff
 - Do not treat `/encyclopedia?species=...` as the new SEO canonical. The branch now proposes stable static paths based on Base Scientific Name slug + catalog key.
@@ -523,7 +523,7 @@
 - `species_seo.index_strategy` defaults to `noindex`; `canonical_to_sibling` is restricted by the Admin contract to the same Base Species group.
 - Base Species is an inheritance object, not automatically an indexable public page.
 - `PublicSpeciesPreview` is an Admin HTML preview of future page changes; it does not mean a public Species file already exists.
-- The real static Species generator and runtime title/meta/canonical/hreflang/robots/sitemap tests are now implemented and passing locally. Publishing is still intentionally locked until staging validates the full database → snapshot → generator → rendered-page chain.
+- The real static Species generator and runtime title/meta/canonical/hreflang/robots/sitemap tests are now implemented and passing locally. Publishing is still intentionally locked at the UI level until publish-readiness and controlled Preview Publish are implemented; the database → snapshot → generator → rendered-page chain itself is already proven by A+B.
 - Migration 004 was verified only in a fresh isolated local Supabase. Never infer that Production has these columns.
 
 
@@ -537,7 +537,7 @@
 - Admin now shows Base Species History and Variant History; restore is a two-click action. UI confirmation is secondary defense; DB authorization and Draft coercion are the actual safety boundary.
 - Fresh isolated Supabase applied core + Admin migrations 001–005. Variant and Base each passed `v1 Draft → v2 Published fixture → v3 rollback Draft`; non-admin revision visibility was 0 and restore RPC failed with `Admin role required`; final test residue was 0.
 - Prior Vercel Admin Preview for `43eec47` was READY / HTTP 200 / noindex. The next pushed generator/history SHA must be checked again after deployment.
-- Do not merge to `main`, run these migrations in Production, or unlock Published yet. The next release gate is a dedicated staging Supabase with migrations 001–006 plus release-gate probe and a real staging snapshot → generator → rendered-page verification.
+- Do not merge to `main`, run these migrations in Production, or map Published directly to Production. A+B already proves migrations 001–006 plus snapshot → generator → rendered-page behavior; the next work is publish-readiness, human data-review decisions and controlled Preview Publish.
 
 ### 2026-08-28 Species SEO staging publishing handoff
 - `cd363b4` is pushed to `feature/admin-content-v0`; it contains the static generator, runtime SEO/sitemap checks, and database revision/rollback chain.
@@ -571,3 +571,11 @@
 - `ef2f6ae` corrected the root npm lockfile so `@aquaguide/admin-content` is reproducible under clean `npm ci`; resolved `date-fns` remains 4.1.0.
 - GitHub Actions run `33147127271` completed SUCCESS with every Admin gate step green, including the ephemeral Supabase 001–006/RLS/rollback/static-page chain.
 - Treat `npm run test:supabase-gate -w @aquaguide/admin-content` as the shared A/B database gate. Persistent paid Supabase staging is optional; do not make it a prerequisite again unless an operational need appears.
+
+### 2026-08-28 Next handoff — publish readiness
+- Infrastructure is no longer the primary blocker: A+B is green locally and on GitHub Actions run `33147127271`.
+- Implement a visible publish-readiness state before enabling any Published control. Ready means eligible for controlled Preview Publish only; never equate it with Production deployment.
+- Persist human review decisions for category-conflict and duplicate candidates. Keep Product Truth immutable from this Admin and do not auto-rewrite `fishData.ts`.
+- Independent Index / Preview Publish must fail closed until required review decisions exist.
+- Reuse the existing static generator and shared `test:supabase-gate` for Preview Publish; do not invent a second publishing pipeline.
+- Paid persistent staging remains optional. Production Supabase migrations and `main` integration require explicit approval.

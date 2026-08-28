@@ -163,7 +163,7 @@ Migration `202608280005_species_seo_revision_history.sql` adds database-backed h
 - The Admin requires a second click to confirm restore, while database authorization remains the actual security boundary.
 - Fresh isolated local Supabase verified Variant and Base `v1 Draft → v2 Published fixture → v3 rollback Draft`, non-admin history visibility `0`, non-admin rollback rejection, and zero final test residue.
 
-The remaining release gate is a dedicated staging Supabase running migrations 001–006 plus snapshot → generator → rendered-page verification. Production Supabase and `main` remain untouched.
+The A+B database/public-page gate is now proven locally and on GitHub Actions. The remaining product gate is publish-readiness + human data-review decisions + controlled non-production Preview Publish. A persistent paid staging branch is optional. Production Supabase and `main` remain untouched.
 
 ## Staging release gate
 
@@ -222,3 +222,15 @@ npm run test:supabase-gate -w @aquaguide/admin-content
 The gate pins Node `24.14.0` and Supabase CLI `2.115.0`, loads only core schema + Admin migrations `001–006`, verifies Auth/RLS and rollback behavior, creates one bilingual Published fixture, then generates and checks EN/ZH static Species pages. The temporary database is destroyed after each run.
 
 GitHub CI has repository read-only permission and receives no Production Supabase/Vercel deployment credentials. It does not commit, deploy, migrate Production, or unlock Published automatically.
+
+## Next product milestone: publish readiness
+
+A+B infrastructure is now proven locally and on GitHub Actions. The next Admin milestone is product workflow, not more staging infrastructure:
+
+1. Show publish-readiness blockers per Base Species / Variant / locale.
+2. Persist explicit human review decisions for category conflicts and suspected duplicates without rewriting Product Truth.
+3. Allow only reviewed content to enter controlled non-production Preview Publish.
+4. Reuse the existing static generator and shared `test:supabase-gate`; do not create a second publication path.
+5. Validate live AI translation suggestions only after the server-side provider secret is configured; AI remains suggestion-only and Draft-only.
+
+`publish-ready` must never mean automatic Production deployment. Production Supabase migration and public deployment remain explicit approval steps.

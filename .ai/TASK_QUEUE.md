@@ -9,19 +9,22 @@ Updated: 2026-08-28
 - [x] Add zh-CN → English suggestion workflow and data review (`465024a`).
 - [x] Add route/canonical/hreflang/index contract and page preview (`43eec47`).
 - [x] Add static generator + runtime SEO tests + revision/rollback (`cd363b4`).
-- [x] Add staging publication guards and schema readiness probe (`d19fb13`, `70e539f`).
-- [x] Adopt A+B: local Supabase for development + pinned GitHub Actions ephemeral Supabase for release validation.
-- [x] Build one shared `test:supabase-gate` covering migrations 001–006, RLS, rollback and DB→EN/ZH static generation.
-- [x] Verify the shared gate locally on macOS with Node 24.14.0 / Supabase CLI 2.115.0.
+- [x] Add staging/Production deny-list guards and schema readiness probe (`d19fb13`, `70e539f`).
+- [x] Adopt A+B and prove the shared ephemeral Supabase gate locally and on GitHub Actions.
+- [x] GitHub Actions run `33147127271` PASS end-to-end on clean Ubuntu 24.04 (`ef2f6ae`).
+
+## Now — product completion
+- [ ] Add a publish-readiness checklist/state machine for Base + Variant + locale. Do not map “ready” directly to Production publish.
+- [ ] Make Data Review actionable: record explicit human decisions for 5 category-conflict groups and 28 suspected duplicate records; no automatic source edits.
+- [ ] Block independent Index/Preview Publish until required review decisions exist.
+- [ ] Add controlled Preview Publish to an explicit non-production output and reuse the existing static generator + A+B gate.
+- [ ] Re-check Vercel Admin Preview after the Hobby daily deployment quota resets.
 
 ## Next
-- [x] Push the pinned A+B workflow (`2d85a4e`); first clean GitHub run reached the fixed toolchain but exposed an Admin workspace lockfile mismatch.
-- [x] Push the corrected lockfile / `npm ci --no-audit --no-fund` fix (`ef2f6ae`) and verify GitHub Actions run `33147127271` PASS end-to-end.
-- [ ] Keep Published locked until the final public-deploy integration is reviewed; the A+B database/SEO gate itself is now green.
-- [ ] Re-check Vercel Preview after the Hobby daily deployment quota resets.
-- [ ] Resolve duplicate/cross-category source-data review before affected records can use independent Index.
+- [ ] Configure server-only Admin AI provider secret and validate 1–2 real Chinese → English suggestions; keep human approval and Draft-only writes.
+- [ ] Review public deployment integration only after Preview Publish is reproducible.
+- [ ] Decide whether/when to apply migrations 001–006 to Production AquaGuide Supabase; this requires explicit approval.
 
 ## Later
-- [ ] Add an optional paid Supabase development branch only if persistent remote staging becomes operationally useful.
-- [ ] Connect approved Published Species pages to the public AquaGuide deployment only after explicit approval.
-- [ ] Add Search Console integration only after route/index contracts are stable in production.
+- [ ] Add a paid persistent Supabase development branch only if long-lived remote staging becomes operationally useful.
+- [ ] Add Search Console integration only after public route/index contracts are stable in production.

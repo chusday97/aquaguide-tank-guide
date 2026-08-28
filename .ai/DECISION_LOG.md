@@ -86,3 +86,9 @@
 - The temporary database loads only core schema + Admin migrations 001–006 to avoid unrelated historical migration conflicts.
 - Test fixture preparation may use the ephemeral PostgreSQL superuser, but all product behavior assertions must run through normal Supabase JWT/RLS clients.
 - A paid persistent Supabase development branch is optional, not a prerequisite for current Admin validation.
+
+## 2026-08-28 — Ready is not Production Published
+- After A+B passed, the next state is `publish-ready` / Preview eligibility, not automatic Production publication.
+- Data-quality review decisions are first-class release inputs; category conflicts and duplicate candidates remain fail-closed until a human decision is recorded.
+- Preview Publish must reuse the same generator and A+B verification path as release safety; no parallel publishing implementation.
+- Persistent paid staging is optional convenience, not a release requirement.

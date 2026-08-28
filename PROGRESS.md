@@ -294,7 +294,7 @@
 - Admin UI 新增 Base / Variant History 面板和二次点击恢复；只读 Review 不连接真实 history。真实 Chrome 验证两个 History 面板、Public Species Preview 与两个 disabled Published option，无 page error。
 - `npm run test:contract -w @aquaguide/admin-content` 与 Admin production build 通过；仅保留既有 >500KB bundle warning。
 - 上一提交 `43eec47` 的独立 Vercel `admin-content` Preview 已确认 READY / HTTP 200 / noindex；本批次待集中 commit/push 后再核对新 SHA Preview。
-- Production Supabase 与 `main` 仍未修改。下一门禁仅为 dedicated staging Supabase 上的 migrations 001–006 + schema probe + snapshot → generator → rendered-page 端到端验证；通过前 Published 保持锁定。
+- Production Supabase 与 `main` 仍未修改。A+B 已完成 migrations 001–006 + schema probe + snapshot → generator → rendered-page 的端到端验证；下一阶段转为 publish-readiness、人工数据复核决策与非 Production Preview Publish。
 
 ### 2026-08-28 Species SEO staging release gate hardening
 - Generator/history milestone committed and pushed as `cd363b4`; `main` and Production Supabase unchanged.
@@ -319,10 +319,17 @@
 - 临时数据库只加载 core schema + Admin migrations 001–006，避免历史无关 migration 冲突影响 Admin 门禁。
 - 本地第一次执行发现临时 `migrations/` 目录缺失，第二次发现 service_role 无 `user_roles UPDATE`；均在 push 前修复，未通过临时扩权绕过。
 - 最终本地门禁已通过：schema v6、普通用户 Draft 可见 0、普通用户不可写/不可看 revision/不可 rollback、Base/Variant rollback 强制 Draft、数据库读取后生成 2 个中英 Index 页面并验证 canonical/hreflang/sitemap。
-- 下一步：push workflow 后以 GitHub Actions 第一次真实 Ubuntu clean-run PASS 作为 A 层正式证据；通过前 Published 保持锁定。
+- A 层已由 GitHub Actions run `33147127271` 真实 Ubuntu clean-run PASS 证明；下一步不再重复基础设施，转入 publish-readiness 与 Preview Publish。
 
 
 ### 2026-08-28 Admin A+B 首次完整 CI 通过
 - `ef2f6ae` 修复 root lockfile 对 Admin workspace 的缺失登记；实际 `date-fns` 解析版本仍为 4.1.0，没有依赖降级。
 - GitHub Actions `33147127271` 在 Ubuntu 24.04 干净 runner 全绿：Node 24.14.0 / Supabase CLI 2.115.0 / npm ci / contract / 临时 Supabase 001–006 + RLS/rollback/双语静态页 / build / generated catalog parity / diff hygiene 全部 PASS。
 - 至此 A+B 已成为正式稳定门禁：B 本地快速迭代，A 干净机重复验证；两层都不持有或修改 Production。
+
+### 2026-08-28 Admin 下一阶段：发布准备与数据复核闭环
+- A+B 基础设施已验证完成，后续不再把付费 Supabase Development Branch 当作必选阻塞。
+- P0 改为 publish-readiness：对 Base / Variant / locale 显示内容完整性、Base Published/ready、数据复核、Index/canonical、双语 counterpart、revision 等阻塞原因；“Ready”只代表可进入 Preview Publish，不代表 Production 上线。
+- Data Review Queue 要从只读告警升级为人工决策记录：分类冲突记录确认分类/备注；疑似重复记录确认 duplicate / distinct / canonical candidate。不得自动改 `fishData.ts`。
+- P1 为非 Production Preview Publish：显式临时输出 → static generator → canonical/hreflang/sitemap → A+B gate → 可查看 Preview。
+- Live AI 翻译只做 suggestion smoke test，仍要求人工确认并保存为 Draft。

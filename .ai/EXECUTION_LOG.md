@@ -120,3 +120,9 @@
 - GitHub Actions run `33147127271` completed SUCCESS on Ubuntu 24.04.
 - Every gate step passed: pinned Node 24.14.0, Supabase CLI 2.115.0, clean npm install, Admin contract, ephemeral Supabase gate, build, generated catalog parity and diff hygiene.
 - A+B is now an executed stability protocol, not a proposal. Paid persistent Supabase staging remains optional.
+
+## 2026-08-28 — Post A+B planning sync
+- Rebased project planning from infrastructure setup to product completion after GitHub Actions run `33147127271` passed end-to-end.
+- Updated CURRENT_GOAL / TASK_QUEUE / LIVE_STATUS and corrected stale HANDOFF / PROGRESS references that still treated paid dedicated staging as mandatory.
+- Next implementation order is publish-readiness → persisted data-review decisions → controlled Preview Publish → real translation suggestion smoke test.
+- No product code, Production Supabase, Vercel Production or `main` changed in this planning sync.

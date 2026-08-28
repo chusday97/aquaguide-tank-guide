@@ -3,21 +3,26 @@
 Updated: 2026-08-28
 Branch: `feature/admin-content-v0`
 
-Build a stable AquaGuide Species SEO Admin with a two-layer development model:
-
-`B: Mac local Supabase for fast development` + `A: pinned GitHub Actions ephemeral Supabase for reproducible release gating`.
+The A+B infrastructure gate is complete. The Admin now moves from infrastructure work to a safe editorial release workflow.
 
 ## Current milestone
 
-Make A and B execute the same database contract:
+Build a visible publish-readiness and data-review workflow without touching `main` or Production Supabase:
 
-`core + Admin migrations 001–006 → Auth/RLS → Base/Variant revision + rollback → bilingual Published fixture → DB read → static Species generator → EN/ZH canonical/hreflang/sitemap verification`
+`Draft → editorial checks → source-data review → publish-readiness → Preview Publish → A+B verification`
+
+## Priority order
+
+1. Add a publish-readiness state/checklist that explains exactly why a Base/Variant/locale is not publishable.
+2. Turn the 5 category conflicts and 28 suspected duplicate records into an actionable review workflow with explicit human decisions; never auto-edit `fishData.ts`.
+3. Add a non-production Preview Publish path that materializes approved bilingual pages into an explicit temporary output and runs the existing generator/canonical/hreflang/sitemap gate.
+4. Validate one or two real zh-CN → English AI suggestions after a server-side provider secret is configured; AI remains suggestion-only.
 
 ## Stability rules
 
-- GitHub CI is validation-only: no Production secrets, writes, deploys or automatic commits.
-- CI pins Ubuntu 24.04, Node 24.14.0 and Supabase CLI 2.115.0.
-- Local B uses the exact same `test:supabase-gate` command as GitHub A.
-- Only core schema + Admin migrations 001–006 are loaded into the ephemeral database; unrelated historical migrations are excluded.
+- B = Mac local Supabase for fast iteration; A = pinned GitHub Actions ephemeral Supabase for reproducible validation.
+- The shared `test:supabase-gate` remains mandatory for database/public-page changes.
+- GitHub CI remains validation-only: no Production credentials, writes, deploys or automatic commits.
+- Published must not become an automatic Production action. Any future unlock first means “eligible for controlled Preview Publish”, not “go live”.
 - Production Supabase and `main` remain untouched until explicit approval.
-- A paid remote Supabase development branch is optional later, not required for the current release gate.
+- Paid persistent Supabase staging is optional, not a prerequisite.
