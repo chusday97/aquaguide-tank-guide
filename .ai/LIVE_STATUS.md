@@ -5,30 +5,35 @@ Branch: `feature/admin-content-v0`
 
 ## Current state
 - Public AquaGuide `main`: untouched.
-- Production Supabase: untouched; Admin migrations 001–006 remain branch-only proposals.
-- A+B green baseline is recorded at `3c2acab docs(admin): record green A+B gate`; subsequent planning docs move the project into publish-readiness/product completion.
-- A+B is proven: local macOS and GitHub Actions run `33147127271` both pass the shared `test:supabase-gate`.
-- GitHub A uses Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0 and exact npm lockfile; CI has no Production credentials or deploy permissions.
-- Previous Vercel Admin Preview for `43eec47` is READY / HTTP 200 / noindex; newer Preview is waiting on Vercel Hobby daily deployment quota reset.
+- Production Supabase: untouched; Admin migrations 001–007 remain branch-only proposals.
+- A+B baseline is proven: local macOS and GitHub Actions run `33147127271` passed the shared gate through migration 006.
+- Current uncommitted milestone adds migration 007 Publish Readiness + persisted Data Review decisions; B/local has passed through schema v7.
+- Local read-only Admin preview is available at `http://localhost:3020/` and returns HTTP 200.
 - Catalog projection remains 486 rows → 276 Base Species; 28 suspected duplicates; 5 category-conflict groups.
 
-## Verified publishing safety
-- Migrations 001–006, RLS, admin/non-admin behavior, Base/Variant revision history and rollback-to-Draft are covered by the shared ephemeral Supabase gate.
-- One bilingual `sp_0030` fixture can be read as Published from the temporary DB and materialized into two self-canonical indexable EN/ZH pages.
-- Runtime checks cover title, meta, H1, robots, canonical, hreflang/x-default and Species sitemap membership.
-- Production snapshot/DB/site identities fail closed; generator output must use an explicit non-production target.
-- Paid persistent staging is no longer a release prerequisite.
+## Publish-readiness model implemented locally
+- Editorial review is independent from content status: `editing → ready_for_review → approved`.
+- Any editorial/index change after approval automatically resets the row to `editing`; clients cannot preserve stale approval.
+- Rollback restores `draft + editing`, clears publish metadata, and cannot republish or preserve approval.
+- `species_data_reviews` persists admin decisions for category conflicts and duplicate sets without modifying `fishData.ts` Product Truth.
+- A safe public resolution RPC exposes only issue key/type/group/decision/canonical target; notes/reviewer identity remain admin-only.
+- Generator now requires Approved Base + Approved Variant and re-checks review resolutions before independent Index.
+- All 276 Base Species now have a Base editor; single-member groups no longer fall outside the Base/publication contract.
 
-## Current product gap
-- Published controls are still globally disabled; the next step is not to remove that lock blindly.
-- The Admin needs a publish-readiness layer showing exact blockers per Base/Variant/locale and a controlled Preview Publish state.
-- The Data Review Queue currently displays source problems but does not yet persist human resolution decisions.
-- Category conflicts and suspected duplicates therefore remain unresolved and cannot safely become independent Index pages.
-- Live AI translation provider behavior has not yet been validated with a configured server-side secret.
+## B-layer evidence
+- Fresh ephemeral Supabase applied core + migrations 001–007 from scratch.
+- Schema probe reports version 7 and confirms editorial review + data-review capability.
+- Ordinary authenticated users: Draft visibility 0; cannot write SEO; cannot read revisions; cannot rollback; cannot read/write Data Review rows.
+- Public review-resolution RPC is readable without exposing notes/reviewer fields.
+- Approved content modified afterward is forced back to Editing.
+- Base/Variant rollback remains Draft-only and Editing-only.
+- DB → bilingual static Species fixture still generates 2 indexable EN/ZH pages with canonical/hreflang/sitemap checks.
+- Contract, staging guards, Supabase gate, production Admin build and `git diff --check` pass; only the existing >500KB Vite warning remains.
+- Real Chrome Review covered duplicate, category-conflict and single-member Base paths with `PAGE_ERRORS=0`.
 
-## Next milestone
-1. Publish-readiness checklist/state machine.
-2. Persisted human review decisions for category conflicts / duplicates.
-3. Controlled non-production Preview Publish using the existing generator and A+B gate.
-4. Real AI translation suggestion smoke test.
-5. Only after those steps: review Production migration/public deployment integration with explicit approval.
+## Remaining gate
+1. Commit/push this milestone and require the GitHub A-layer clean Ubuntu run to pass migrations 001–007.
+2. Build Controlled Preview Publish from Publish-ready content into a non-Production output only.
+3. Add queue-level review counts/filters for pending/resolved/source-fix-required.
+4. Validate 1–2 live translation suggestions after server-only provider configuration.
+5. Production migration/public deploy remains a separate explicit approval.

@@ -6,6 +6,7 @@ const zhDefaults = {
   h1Template: '{{name}}饲养指南',
   sharedIntro: '',
   status: 'draft',
+  reviewState: 'editing',
 };
 
 const enDefaults = {
@@ -14,6 +15,7 @@ const enDefaults = {
   h1Template: '{{name}} Care Guide',
   sharedIntro: '',
   status: 'draft',
+  reviewState: 'editing',
 };
 
 export const defaultGroupSeoForLocale = (locale = 'zh-CN') => (
@@ -29,6 +31,8 @@ export const groupSeoFromRow = (row, locale = 'zh-CN') => {
     h1Template: row?.h1_template || fallback.h1Template,
     sharedIntro: row?.shared_intro || '',
     status: row?.status || 'draft',
+    reviewState: row?.review_state || 'editing',
+    reviewedAt: row?.reviewed_at || null,
     version: row?.version,
   };
 };

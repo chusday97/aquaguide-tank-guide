@@ -42,12 +42,52 @@ const regular = await signIn(userEmail);
 
 const { data: readiness, error: readinessError } = await anonymous.rpc('species_seo_release_gate_status');
 if (readinessError) throw readinessError;
-assert.equal(readiness.schema_version, 6);
+assert.equal(readiness.schema_version, 7);
+assert.equal(readiness.editorial_review_ready, true);
+assert.equal(readiness.data_review_ready, true);
+assert.equal(readiness.data_review_resolution_rpc_ready, true);
 assert.equal(readiness.revision_history_ready, true);
 assert.equal(readiness.restore_rpc_ready, true);
 
 const { error: anonRevisionError } = await anonymous.from('content_revisions').select('id').limit(1);
 assert.ok(anonRevisionError, 'Anonymous clients must not read content revisions');
+const reviewIssueKey = `ci-review:${stamp}`;
+let reviewResult = await regular.from('species_data_reviews').select('*');
+if (reviewResult.error) throw reviewResult.error;
+assert.equal(reviewResult.data.length, 0, 'Regular users must not read data-review decisions');
+reviewResult = await regular.from('species_data_reviews').insert({
+  issue_key: reviewIssueKey, issue_type: 'category_conflict', group_key: `ci-review-group:${stamp}`, decision: 'accepted_as_is',
+});
+assert.ok(reviewResult.error, 'Regular users must not write data-review decisions');
+reviewResult = await admin.from('species_data_reviews').insert({
+  issue_key: reviewIssueKey, issue_type: 'category_conflict', group_key: `ci-review-group:${stamp}`, decision: 'accepted_as_is', notes: 'CI only',
+}).select('*').single();
+if (reviewResult.error) throw reviewResult.error;
+assert.equal(reviewResult.data.decision, 'accepted_as_is');
+const { data: publicResolutions, error: publicResolutionError } = await anonymous.rpc('species_seo_public_review_resolutions');
+if (publicResolutionError) throw publicResolutionError;
+assert.ok(publicResolutions.some((row) => row.issue_key === reviewIssueKey));
+assert.ok(!Object.hasOwn(publicResolutions.find((row) => row.issue_key === reviewIssueKey), 'notes'), 'Public review resolution must not expose notes');
+
+const reviewCatalogKey = `sp_review_${stamp}`;
+let reviewStateResult = await admin.from('species_seo').insert({
+  catalog_key: reviewCatalogKey, locale: 'en', localized_name: 'Review Fish', seo_title: 'Review Fish',
+  meta_description: 'Review meta', h1: 'Review H1', intro: 'Review intro', review_state: 'approved', status: 'draft',
+}).select('*').single();
+if (reviewStateResult.error) throw reviewStateResult.error;
+assert.equal(reviewStateResult.data.review_state, 'editing', 'New content must not enter Approved directly');
+reviewStateResult = await admin.from('species_seo').update({ review_state: 'ready_for_review' }).eq('catalog_key', reviewCatalogKey).eq('locale', 'en').select('*').single();
+if (reviewStateResult.error) throw reviewStateResult.error;
+assert.equal(reviewStateResult.data.review_state, 'ready_for_review');
+reviewStateResult = await admin.from('species_seo').update({ review_state: 'approved' }).eq('catalog_key', reviewCatalogKey).eq('locale', 'en').select('*').single();
+if (reviewStateResult.error) throw reviewStateResult.error;
+assert.equal(reviewStateResult.data.review_state, 'approved');
+assert.equal(reviewStateResult.data.reviewed_by, adminUser.id);
+assert.ok(reviewStateResult.data.reviewed_at);
+reviewStateResult = await admin.from('species_seo').update({ seo_title: 'Review Fish changed' }).eq('catalog_key', reviewCatalogKey).eq('locale', 'en').select('*').single();
+if (reviewStateResult.error) throw reviewStateResult.error;
+assert.equal(reviewStateResult.data.review_state, 'editing', 'Content changes must invalidate approval');
+
 const syntheticGroupKey = `ci:base:${stamp}`;
 const syntheticCatalogKey = `sp_ci_${stamp}`;
 let { error } = await admin.from('species_seo_groups').insert({
@@ -113,11 +153,13 @@ if (variantRollback.error) throw variantRollback.error;
 assert.equal(variantRollback.data.status, 'draft');
 assert.equal(variantRollback.data.published_at, null);
 assert.equal(variantRollback.data.seo_title, 'CI Fish v1');
+assert.equal(variantRollback.data.review_state, 'editing');
 const groupRollback = await admin.rpc('restore_species_seo_revision', { p_revision_id: groupV1.id });
 if (groupRollback.error) throw groupRollback.error;
 assert.equal(groupRollback.data.status, 'draft');
 assert.equal(groupRollback.data.published_at, null);
 assert.equal(groupRollback.data.seo_title_template, '{{name}} v1');
+assert.equal(groupRollback.data.review_state, 'editing');
 
 const { data: rollbackRevisions, error: rollbackRevisionError } = await admin
   .from('content_revisions').select('resource_type,resource_key,operation,source_revision_id')
@@ -162,6 +204,10 @@ const variantFixtures = [
 ];
 ({ error } = await admin.from('species_seo').insert(variantFixtures));
 if (error) throw error;
+({ error } = await admin.from('species_seo_groups').update({ review_state: 'approved' }).eq('group_key', realGroupKey));
+if (error) throw error;
+({ error } = await admin.from('species_seo').update({ review_state: 'approved' }).eq('catalog_key', realCatalogKey));
+if (error) throw error;
 
 const { data: publicVariants, error: publicVariantError } = await anonymous
   .from('species_seo').select('*').eq('catalog_key', realCatalogKey).order('locale');
@@ -178,6 +224,7 @@ try {
     source_label: 'ephemeral-supabase-ci',
     species_seo: publicVariants,
     species_seo_groups: publicGroups,
+    data_review_resolutions: publicResolutions,
   };
   const { manifest } = await generatePublicSpecies({
     snapshot,

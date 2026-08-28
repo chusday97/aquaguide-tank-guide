@@ -51,6 +51,7 @@ MIGRATIONS=(
   202608280004_species_seo_index_strategy.sql
   202608280005_species_seo_revision_history.sql
   202608280006_species_seo_release_gate_probe.sql
+  202608280007_species_seo_publish_readiness.sql
 )
 for migration in "${MIGRATIONS[@]}"; do
   source_file="$REPO_ROOT/supabase/migrations/$migration"

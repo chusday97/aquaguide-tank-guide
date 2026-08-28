@@ -316,7 +316,7 @@
 - Admin 后续采用 A+B：B 为 Mac 本地 Supabase 快速开发，A 为 GitHub Actions 临时 Supabase 干净机验证；不再把付费 Development Branch 作为当前必选前提。
 - A/B 共用同一个 `test:supabase-gate`，避免本地和 CI 维护两套数据库验证逻辑。
 - GitHub workflow 固定 Ubuntu 24.04、Node 24.14.0、Supabase CLI 2.115.0，并只给 `contents: read` 权限；无 Production Supabase/Vercel secret，无自动 commit/deploy。
-- 临时数据库只加载 core schema + Admin migrations 001–006，避免历史无关 migration 冲突影响 Admin 门禁。
+- 临时数据库只加载 core schema + 当前 Admin migrations 001–007，避免历史无关 migration 冲突影响 Admin 门禁；后续新增 Admin migration 必须显式加入 allow-list。
 - 本地第一次执行发现临时 `migrations/` 目录缺失，第二次发现 service_role 无 `user_roles UPDATE`；均在 push 前修复，未通过临时扩权绕过。
 - 最终本地门禁已通过：schema v6、普通用户 Draft 可见 0、普通用户不可写/不可看 revision/不可 rollback、Base/Variant rollback 强制 Draft、数据库读取后生成 2 个中英 Index 页面并验证 canonical/hreflang/sitemap。
 - A 层已由 GitHub Actions run `33147127271` 真实 Ubuntu clean-run PASS 证明；下一步不再重复基础设施，转入 publish-readiness 与 Preview Publish。
@@ -333,3 +333,16 @@
 - Data Review Queue 要从只读告警升级为人工决策记录：分类冲突记录确认分类/备注；疑似重复记录确认 duplicate / distinct / canonical candidate。不得自动改 `fishData.ts`。
 - P1 为非 Production Preview Publish：显式临时输出 → static generator → canonical/hreflang/sitemap → A+B gate → 可查看 Preview。
 - Live AI 翻译只做 suggestion smoke test，仍要求人工确认并保存为 Draft。
+
+
+### 2026-08-28 Admin Publish Readiness + Data Review 可执行闭环
+- 新增 branch-only migration 007：Base / Variant 增加 `editing → ready_for_review → approved` Editorial Review State；任何正文、SEO、Index/Canonical 修改都会由数据库自动把旧 Approved 退回 Editing。
+- Rollback 继续强制 Draft，并进一步强制 Editing，旧 revision 的审核结论不会跟随恢复后的内容。
+- 新增 `species_data_reviews`：5 个分类冲突与 28 条疑似重复可记录人工决定、备注和 duplicate canonical；该 Admin 仍不自动修改 `fishData.ts` Product Truth。
+- 对静态发布只暴露脱敏 review-resolution RPC；审核备注与审核人保持 admin-only。
+- 新增 Publish Readiness 面板，区分 Blocked / Ready for Review / Publish-ready；后者只代表可进入非 Production Preview Publish。
+- 修复结构缺口：276 个 Base Species 全部拥有 Base 编辑/审核层，单成员组不再因为缺少 Base Editor 永久无法满足 Generator。
+- Generator 现在要求 same-locale Base + Variant 均 Approved，并在生成时再次验证 Data Review / duplicate canonical / Index 规则。
+- B 层从空库顺序应用 core + migrations 001–007 并通过：schema v7、普通用户 Draft/Data Review/History 权限隔离、Approved 修改自动失效、rollback→Draft+Editing、DB→2 个中英 Index 页面。
+- 真实 Chrome 覆盖重复、分类冲突和单成员 Base，修复一个 `groupMember is not defined` 运行时错误后 `PAGE_ERRORS=0`。
+- 下一门禁：push 后要求 GitHub A 层 clean Ubuntu run 对 migration 007 全绿；通过后进入 Controlled Preview Publish。

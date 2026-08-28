@@ -93,7 +93,7 @@
 ## 2026-08-28 — Release-gate schema probe hardening
 - Found that content/page verification alone could not prove the staging database had revision/rollback schema applied when using only a publishable client key.
 - Added migration 006 `species_seo_release_gate_status()` as a data-free readiness probe. It reports only schema-version/feature booleans and grants execute to anon/authenticated; it does not expose revisions or SEO content.
-- Staging snapshot export now calls the probe before reading Published rows and refuses schema versions below 6 or any missing feature flag.
+- At the migration-006 milestone, staging snapshot export began refusing schema versions below 6 or any missing feature flag; migration 007 later raised the current minimum to schema version 7.
 - Fresh temporary Supabase applied core + migrations 001–006 from scratch. Publishable anon successfully received all readiness flags=true while direct `content_revisions` SELECT remained `permission denied`.
 - Generator staging mode now also requires an explicit Production public URL deny-list, so direct generator use cannot silently target another Production alias through the staging path.
 - Temporary Supabase stack was stopped and removed after verification; Production remained untouched.
@@ -126,3 +126,16 @@
 - Updated CURRENT_GOAL / TASK_QUEUE / LIVE_STATUS and corrected stale HANDOFF / PROGRESS references that still treated paid dedicated staging as mandatory.
 - Next implementation order is publish-readiness → persisted data-review decisions → controlled Preview Publish → real translation suggestion smoke test.
 - No product code, Production Supabase, Vercel Production or `main` changed in this planning sync.
+
+
+## 2026-08-28 — Publish readiness + actionable Data Review implementation
+- Added branch migration 007 with Base/Variant editorial review state, persisted `species_data_reviews`, admin-only RLS and a minimal public review-resolution RPC.
+- Added `PublishReadinessPanel` and deterministic readiness assessment covering Base/Variant existence, content completeness, editorial approval, bilingual counterpart, index/canonical rules and Data Review decisions.
+- Changed Data Review from evidence-only cards to persisted human decisions for category conflict / duplicate sets; Review mode remains write-disabled.
+- Extended Base editor to all 276 groups so single-member Species can satisfy the same Base publication contract.
+- Added DB trigger invalidation: any content/index change after Approved forces Editing and clears reviewer metadata.
+- Extended rollback RPC through migration 007 so restored rows return Draft + Editing.
+- Extended generator and staging snapshot to require Approved content and consume only safe review resolutions.
+- First DB run found a PostgreSQL trigger bug caused by cross-table OLD-field access; fixed by branching on `TG_TABLE_NAME`.
+- Real Chrome found a runtime `groupMember is not defined` missed by build; fixed and rerun across duplicate/conflict/singleton paths with zero page errors.
+- Fresh B-layer Supabase gate passed schema v7, Data Review RLS, approval invalidation, rollback and DB→EN/ZH generation.

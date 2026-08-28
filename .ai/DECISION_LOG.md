@@ -83,7 +83,7 @@
 - A and B must execute the same `test:supabase-gate` command; do not maintain separate local/CI database logic.
 - CI versions are pinned instead of `latest`: Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0, npm lockfile via `npm ci`.
 - CI has `contents: read` only and receives no Production Supabase or Vercel deployment credentials.
-- The temporary database loads only core schema + Admin migrations 001–006 to avoid unrelated historical migration conflicts.
+- The temporary database loads only core schema + current Admin migrations 001–007 to avoid unrelated historical migration conflicts; extend this explicit allow-list intentionally when a new Admin migration is added.
 - Test fixture preparation may use the ephemeral PostgreSQL superuser, but all product behavior assertions must run through normal Supabase JWT/RLS clients.
 - A paid persistent Supabase development branch is optional, not a prerequisite for current Admin validation.
 
@@ -92,3 +92,14 @@
 - Data-quality review decisions are first-class release inputs; category conflicts and duplicate candidates remain fail-closed until a human decision is recorded.
 - Preview Publish must reuse the same generator and A+B verification path as release safety; no parallel publishing implementation.
 - Persistent paid staging is optional convenience, not a release requirement.
+
+
+## 2026-08-28 — Publish readiness is database-backed, not a UI badge
+- Editorial review state is stored on both Base and Variant rows and is separate from `draft/published/archived`.
+- `approved` is invalidated by any editorial or indexing change at the PostgreSQL trigger layer; browser state is not trusted.
+- Rollback always restores `draft + editing`; historical approval is evidence of an older revision, not approval of restored content.
+- Data-quality decisions live in `species_data_reviews` and never rewrite Product Truth from this Admin.
+- Duplicate review may designate one canonical catalog key; only that reviewed canonical may independently Index while confirmed duplicates must canonicalize or remain noindex.
+- Public generation may read only the minimal review-resolution RPC, never admin notes or reviewer identity.
+- Base Species authoring applies to all 276 groups, including single-member groups, so generator requirements and editor capabilities stay consistent.
+- `publish-ready` means eligible for Controlled Preview Publish only; Production Published remains a distinct later approval.

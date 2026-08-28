@@ -5,16 +5,18 @@ import { fileURLToPath } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { extractTemplateTokens, validateProtectedTokens } from '../api/_translation-core.js';
 import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
+import { assessDataReview, assessPublishReadiness, categoryIssueKey, getIndexReviewBlockReason } from '../src/publishReadiness.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, readinessSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/DataReviewPanel.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/PublishReadinessPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublicSpeciesPreview.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/RevisionHistoryPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/TranslationPanel.jsx'), 'utf8'),
@@ -26,6 +28,7 @@ const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, hi
   readFile(path.join(repoRoot, 'supabase/migrations/202608280004_species_seo_index_strategy.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280005_species_seo_revision_history.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280006_species_seo_release_gate_probe.sql'), 'utf8'),
+  readFile(path.join(repoRoot, 'supabase/migrations/202608280007_species_seo_publish_readiness.sql'), 'utf8'),
   readFile(path.join(appRoot, '.env.example'), 'utf8'),
   readFile(path.join(appRoot, '.env.review.example'), 'utf8'),
   readFile(path.join(appRoot, 'src/catalog.generated.json'), 'utf8'),
@@ -57,7 +60,9 @@ assert.doesNotMatch(appSource, /from\('species'\)/, 'Admin must not depend on th
 assert.match(appSource, /SpeciesGroupSidebar/, 'Admin must render grouped Species navigation');
 assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
-assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review evidence');
+assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review workflow');
+assert.match(appSource, /PublishReadinessPanel/, 'Admin must expose explicit publish readiness');
+assert.match(readinessSource, /Publish-ready/, 'Readiness UI must distinguish Preview Publish readiness from Production publication');
 assert.match(appSource, /TranslationPanel/, 'Admin must expose bilingual translation workflow');
 assert.match(appSource, /PublicSpeciesPreview/, 'Admin must show the resulting public Species page preview');
 assert.match(publicPreviewSource, /hreflang=zh-CN/, 'Public preview must expose hreflang pair evidence');
@@ -77,16 +82,18 @@ assert.match(appSource, /VITE_ADMIN_REVIEW_MODE/, 'Review mode must be explicit 
 assert.match(appSource, /if \(readOnly\)/, 'Single save path must fail closed in review mode');
 assert.match(appSource, /disabled=\{saving \|\| readOnly/, 'Single save button must be disabled in review mode');
 
-assert.match(batchSource, /group\.category_conflict/, 'Category-conflict groups must block bulk writes');
+assert.match(batchSource, /assessDataReview/, 'Bulk writes must consume persisted data-review decisions');
 assert.match(batchSource, /publishedSelected\.length/, 'Published rows must block unsafe batch overwrite');
 assert.match(batchSource, /status: 'draft'/, 'Batch SEO must write drafts only');
 assert.match(batchSource, /resolveEffectiveSeo/, 'Batch preview must resolve Base inheritance rather than copy flat content');
 assert.doesNotMatch(batchSource, /seo_title:\s*applySeoTemplate/, 'Batch write must not duplicate Base title into every Variant');
 assert.match(batchSource, /onConflict: 'catalog_key,locale'/, 'Batch upsert must use stable catalog key + locale');
 assert.match(baseSource, /from\('species_seo_groups'\)/, 'Base editor must persist group SEO separately');
-assert.match(baseSource, /group\.category_conflict/, 'Base publish must respect source category conflicts');
+assert.match(baseSource, /Publish Readiness/, 'Base editor must defer publication blocking to explicit readiness instead of preventing Draft editing');
 assert.match(reviewSource, /duplicate_sets/, 'Review panel must expose duplicate evidence sets');
 assert.match(reviewSource, /category_conflict/, 'Review panel must expose category conflicts');
+assert.match(reviewSource, /species_data_reviews/, 'Review decisions must persist separately from Product Truth');
+assert.match(reviewSource, /duplicate_records/, 'Duplicate review must support an explicit canonical decision');
 assert.match(translationSource, /zh-CN/, 'Translation panel must have an explicit Chinese source locale');
 assert.match(translationSource, /locale: 'en'/, 'Translation panel must save an independent English locale');
 assert.match(translationSource, /status: 'draft'/, 'AI translation must save as Draft only');
@@ -132,6 +139,13 @@ assert.match(releaseGateMigrationSource, /schema_version', 6/);
 assert.match(releaseGateMigrationSource, /revision_history_ready/);
 assert.match(releaseGateMigrationSource, /restore_rpc_ready/);
 assert.match(releaseGateMigrationSource, /grant execute on function public\.species_seo_release_gate_status\(\) to anon, authenticated/);
+assert.match(publishReadinessMigrationSource, /schema_version', 7/);
+assert.match(publishReadinessMigrationSource, /create table if not exists public\.species_data_reviews/);
+assert.match(publishReadinessMigrationSource, /review_state text not null default 'editing'/);
+assert.match(publishReadinessMigrationSource, /ready_for_review/);
+assert.match(publishReadinessMigrationSource, /species_seo_public_review_resolutions/);
+assert.match(publishReadinessMigrationSource, /new\.review_state := 'editing'/, 'Content changes and rollback must invalidate approval');
+assert.match(publishReadinessMigrationSource, /species_data_reviews_admin_update/);
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
 assert.ok(neoGroup?.member_count > 2, 'Neocaridina group must remain a real inheritance fixture');
@@ -147,6 +161,32 @@ const sibling = neoGroup.members.find((member) => member.catalog_key !== yellowS
 const canonicalMeta = buildSpeciesSeoRouteMeta({ member: yellowShrimp, group: neoGroup, locale: 'zh-CN', indexStrategy: 'canonical_to_sibling', canonicalCatalogKey: sibling.catalog_key });
 assert.equal(canonicalMeta.canonicalPath, speciesPublicPath(sibling, neoGroup, 'zh-CN'), 'Canonical target must stay inside the same Base Species group');
 assert.equal(canonicalMeta.alternates['x-default'], speciesPublicPath(sibling, neoGroup, 'en'), 'x-default must follow the existing English-default SEO pattern');
+
+const duplicateSet = neoGroup.duplicate_sets?.find((set) => set.member_ids.includes('sp_0001')) || neoGroup.duplicate_sets?.[0];
+if (duplicateSet) {
+  const pendingReview = assessDataReview(neoGroup, {});
+  assert.equal(pendingReview.ready, false, 'Unresolved duplicate/category evidence must keep data review blocked');
+  const duplicateMember = neoGroup.members.find((member) => duplicateSet.member_ids.includes(member.catalog_key));
+  assert.match(getIndexReviewBlockReason({ species: duplicateMember, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows: {} }), /疑似重复/, 'Unresolved duplicate must block independent Index');
+  const reviewRows = {};
+  if (neoGroup.category_conflict) reviewRows[categoryIssueKey(neoGroup)] = { decision: 'accepted_as_is' };
+  for (const set of neoGroup.duplicate_sets || []) reviewRows[set.duplicate_set_key] = { decision: 'distinct_records' };
+  assert.equal(assessDataReview(neoGroup, reviewRows).ready, true, 'Explicit human decisions must resolve data-review blockers');
+  assert.equal(getIndexReviewBlockReason({ species: duplicateMember, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows }), '', 'Distinct-record decision must unblock independent Index');
+  const canonicalReviewRows = { ...reviewRows, [duplicateSet.duplicate_set_key]: { decision: 'duplicate_records', canonical_catalog_key: duplicateSet.member_ids[0] } };
+  const nonCanonical = neoGroup.members.find((member) => duplicateSet.member_ids.includes(member.catalog_key) && member.catalog_key !== duplicateSet.member_ids[0]);
+  if (nonCanonical) assert.match(getIndexReviewBlockReason({ species: nonCanonical, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows: canonicalReviewRows }), /不能独立 Index/, 'Confirmed duplicate non-canonical must stay blocked from independent Index');
+}
+
+const cleanGroup = groupData.groups.find((group) => !group.category_conflict && !group.duplicate_count);
+const cleanMember = cleanGroup.members[0];
+const readinessFixture = assessPublishReadiness({
+  species: cleanMember, group: cleanGroup, locale: 'en',
+  groupRow: { locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' },
+  variantRow: { locale: 'en', localized_name: 'Reviewed Species', image_alt: 'Reviewed Species', review_state: 'approved', index_strategy: 'noindex' },
+  counterpartGroupRow: { review_state: 'approved' }, counterpartVariantRow: { review_state: 'approved' }, reviewRows: {},
+});
+assert.equal(readinessFixture.state, 'publish_ready', 'Complete approved noindex content should be Preview Publish-ready');
 
 const inheritedSeo = resolveEffectiveSeo({ member: yellowShrimp, group: neoGroup, groupRow: null, variantRow: null });
 assert.match(inheritedSeo.effective.seoTitle, /黄金米虾/, 'Base template must resolve the Variant display name');

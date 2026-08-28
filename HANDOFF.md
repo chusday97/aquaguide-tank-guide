@@ -560,7 +560,7 @@
 - Current Admin validation model is A+B, not a paid staging branch requirement. B = Mac local Supabase; A = GitHub Actions ephemeral Supabase.
 - Keep `apps/admin-content/scripts/verify-admin-supabase-gate.sh` as the single orchestration entrypoint for both local and CI. Do not fork a second CI-only database setup.
 - CI pins Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0 and immutable action SHAs. Version bumps must be intentional, tested locally first, and recorded in `.ai/DECISION_LOG.md`.
-- The ephemeral database loads only `202607160001_core_schema.sql` plus Admin migrations `202608280001`–`202608280006`; do not switch CI to all repository migrations without resolving historical conflicts first.
+- The ephemeral database loads only `202607160001_core_schema.sql` plus Admin migrations `202608280001`–`202608280007`; do not switch CI to all repository migrations without resolving historical conflicts first.
 - Fixture preparation uses only the temporary PostgreSQL admin connection to mark the generated test user as admin. Product behavior assertions still go through publishable-key JWT sessions and real RLS.
 - Required gate proof: regular user cannot read Draft/write/read revisions/rollback; Base+Variant rollback returns Draft; Published bilingual `sp_0030` is anonymously readable and generates two indexable EN/ZH pages with canonical/hreflang/sitemap.
 - Workflow must remain validation-only: no Production credentials, DB push, Git commit, Vercel deployment or automatic Published unlock.
@@ -579,3 +579,16 @@
 - Independent Index / Preview Publish must fail closed until required review decisions exist.
 - Reuse the existing static generator and shared `test:supabase-gate` for Preview Publish; do not invent a second publishing pipeline.
 - Paid persistent staging remains optional. Production Supabase migrations and `main` integration require explicit approval.
+
+
+### 2026-08-28 Publish readiness / Data Review handoff
+- Migration 007 is the new branch-only readiness layer. Production Supabase has not applied it.
+- Base and Variant review state is separate from content `status`: `editing → ready_for_review → approved`. Do not collapse these into one Published field.
+- PostgreSQL invalidates approval on editorial/index changes; front-end clients must not be treated as the approval authority.
+- Rollback returns Draft + Editing. A restored old revision must be reviewed again.
+- `species_data_reviews` stores human source-data decisions without mutating catalog/Product Truth. Category conflicts may be accepted as intentional or marked source-fix-required; duplicate sets may be distinct or confirmed duplicate with a canonical catalog key.
+- Generator/public staging export only consumes the safe resolution RPC; never grant public access to review notes or reviewer identity.
+- All Base groups, including single-member groups, have the Base editor/review layer. Do not reintroduce `member_count < 2` hiding.
+- `PublishReadinessPanel` is the editor-facing explanation surface. `publish-ready` means only Controlled Preview Publish eligible.
+- B/local schema v7 gate is green; the next required evidence after push is a clean GitHub A-layer run through migration 007.
+- After A is green, build one non-Production Preview Publish command/output that reuses the existing generator rather than introducing a second publishing pipeline.

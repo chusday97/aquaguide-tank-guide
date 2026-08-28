@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react';
 import { supabase } from './supabase.js';
 import { resolveEffectiveSeo } from './seoInheritance.js';
+import { assessDataReview } from './publishReadiness.js';
 
-export default function BatchSeoEditor({ group, members, existingRows, groupRecord, locale = 'zh-CN', readOnly, schemaReady, onSaved, onClear }) {
+export default function BatchSeoEditor({ group, members, existingRows, groupRecord, locale = 'zh-CN', dataReviewRows = {}, readOnly, schemaReady, onSaved, onClear }) {
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
 
   const publishedSelected = members.filter((member) => existingRows[member.catalog_key]?.status === 'published');
+  const dataReview = assessDataReview(group, dataReviewRows);
   const previews = useMemo(() => members.slice(0, 6).map((member) => {
     const resolved = resolveEffectiveSeo({
       member,
@@ -23,8 +25,8 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
     };
   }), [group, groupRecord, members, existingRows, locale]);
 
-  const blockedReason = group.category_conflict
-    ? '这个基础组存在分类冲突，必须先复核源数据。'
+  const blockedReason = !dataReview.ready
+    ? `源数据复核尚未完成：${dataReview.blockers[0]}`
     : publishedSelected.length
       ? `已选中 ${publishedSelected.length} 条已发布记录；版本化草稿完成前禁止批量覆盖。`
       : !schemaReady

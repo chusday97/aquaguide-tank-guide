@@ -7,10 +7,12 @@ import TranslationPanel from './TranslationPanel.jsx';
 import DataReviewPanel from './DataReviewPanel.jsx';
 import PublicSpeciesPreview from './PublicSpeciesPreview.jsx';
 import RevisionHistoryPanel from './RevisionHistoryPanel.jsx';
+import PublishReadinessPanel from './PublishReadinessPanel.jsx';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
+import { REVIEW_STATES, assessPublishReadiness, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -29,6 +31,7 @@ const emptySeo = {
   canonicalCatalogKey: '',
   focusKeyword: '',
   status: 'draft',
+  reviewState: 'editing',
 };
 
 const fromSeoRow = (row, species, locale = 'zh-CN') => ({
@@ -42,6 +45,8 @@ const fromSeoRow = (row, species, locale = 'zh-CN') => ({
   canonicalCatalogKey: row?.canonical_catalog_key || '',
   focusKeyword: row?.focus_keyword || (isEnglishLocale(locale) ? row?.localized_name || '' : species?.name || ''),
   status: row?.status || 'draft',
+  reviewState: row?.review_state || 'editing',
+  reviewedAt: row?.reviewed_at || null,
   version: row?.version,
 });
 
@@ -117,7 +122,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, readOnly = false, onSaved }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved }) {
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -156,7 +161,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     locale,
   });
   const effectiveSeo = resolvedSeo.effective;
-  const groupMember = group?.members?.find((item) => item.catalog_key === species.catalog_key) || null;
   const routeMeta = buildSpeciesSeoRouteMeta({
     member: species,
     group,
@@ -164,13 +168,13 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     indexStrategy: form.indexStrategy,
     canonicalCatalogKey: form.canonicalCatalogKey,
   });
-  const indexBlockReason = group?.category_conflict && form.indexStrategy !== 'noindex'
-    ? '源数据存在分类冲突；复核完成前只能保持 Noindex。'
-    : groupMember?.duplicate_peer_keys?.length && form.indexStrategy === 'index'
-      ? '当前记录属于疑似重复集；复核 canonical 前不能独立 Index。'
-      : !routeMeta.publishReady
-        ? '选择 Canonical to sibling 后必须指定同一 Base Species 内的目标记录。'
-        : '';
+  const groupMember = group?.members?.find((item) => item.catalog_key === species.catalog_key) || null;
+  const reviewIndexBlockReason = getIndexReviewBlockReason({
+    species, group, indexStrategy: form.indexStrategy, canonicalCatalogKey: form.canonicalCatalogKey, reviewRows: dataReviewRows,
+  });
+  const indexBlockReason = reviewIndexBlockReason || (!routeMeta.publishReady
+    ? '选择 Canonical to sibling 后必须指定同一 Base Species 内的目标记录。'
+    : '');
 
   const save = async () => {
     if (indexBlockReason) {
@@ -178,7 +182,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       return;
     }
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      setMessage('Species 发布仍锁定：静态 HTML 生成器与版本回滚已通过本地验证，但 staging 端到端发布链尚未验证，只能保存 Draft 或 Archived。');
+      setMessage('Species 发布仍锁定：A+B 门禁已通过，但 Production public-deploy integration 尚未显式批准，只能保存 Draft 或 Archived。');
       return;
     }
     if (readOnly) {
@@ -205,6 +209,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       canonical_catalog_key: form.indexStrategy === 'canonical_to_sibling' ? form.canonicalCatalogKey : '',
       focus_keyword: form.focusKeyword.trim(),
       status: form.status,
+      review_state: form.reviewState,
     };
     const { data, error } = await supabase
       .from('species_seo')
@@ -231,6 +236,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         <div className="editor-statuses">
           <span className={`status-pill ${species.status}`}>Species: {species.status}</span>
           <span className={`status-pill ${form.status}`}>SEO: {form.status}</span>
+          <span className={`status-pill ${form.reviewState}`}>Review: {form.reviewState}</span>
           {group?.member_count > 1 ? <span className="status-pill inherited">{resolvedSeo.override.seoTitle ? 'TITLE: OVERRIDE' : 'TITLE: INHERITED'}</span> : null}
         </div>
       </div>
@@ -363,9 +369,12 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           {message ? <span className="save-message">{message}</span> : null}
         </div>
         <div className="footer-actions">
+          <select value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label="Editorial review state">
+            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+          </select>
           <select value={form.status} onChange={(event) => update('status', event.target.value)} aria-label="SEO status">
             <option value="draft">Draft</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（待版本回滚 / Staging）</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（Production integration locked）</option>
             <option value="archived">Archived</option>
           </select>
           <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? '只读预览' : saving ? '保存中…' : `保存 ${getLocaleLabel(locale)} SEO`}</button>
@@ -393,6 +402,8 @@ export default function App() {
   const [schemaReady, setSchemaReady] = useState(true);
   const [groupSchemaReady, setGroupSchemaReady] = useState(true);
   const [historySchemaReady, setHistorySchemaReady] = useState(true);
+  const [dataReviewSchemaReady, setDataReviewSchemaReady] = useState(true);
+  const [dataReviewRows, setDataReviewRows] = useState({});
   const [revisionRefreshKey, setRevisionRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -404,6 +415,7 @@ export default function App() {
       setSchemaReady(false);
       setGroupSchemaReady(false);
       setHistorySchemaReady(false);
+      setDataReviewSchemaReady(false);
       setAuthChecked(true);
       return undefined;
     }
@@ -427,6 +439,7 @@ export default function App() {
       setSeoRows({});
       setGroupSeoRows({});
       setGroupPreviewRows({});
+      setDataReviewRows({});
       return;
     }
 
@@ -458,7 +471,7 @@ export default function App() {
 
       const { data: seoData, error: seoError } = await supabase
         .from('species_seo')
-        .select('id,catalog_key,locale,localized_name,seo_title,meta_description,h1,intro,image_alt,canonical_path,focus_keyword,index_strategy,canonical_catalog_key,status,published_at,updated_at,deleted_at,version')
+        .select('id,catalog_key,locale,localized_name,seo_title,meta_description,h1,intro,image_alt,canonical_path,focus_keyword,index_strategy,canonical_catalog_key,status,published_at,review_state,reviewed_by,reviewed_at,updated_at,deleted_at,version')
         .is('deleted_at', null);
 
       if (seoError) {
@@ -484,6 +497,12 @@ export default function App() {
         .select('id')
         .limit(1);
       setHistorySchemaReady(!historyError);
+
+      const { data: reviewData, error: reviewError } = await supabase
+        .from('species_data_reviews')
+        .select('*');
+      setDataReviewSchemaReady(!reviewError);
+      setDataReviewRows(reviewError ? {} : dataReviewMap(reviewData || []));
       setLoading(false);
     };
 
@@ -502,6 +521,16 @@ export default function App() {
   const sourceGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, 'zh-CN')] : null;
   const englishVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'en')] : null;
   const englishGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, 'en')] : null;
+  const counterpartLocale = contentLocale === 'en' ? 'zh-CN' : 'en';
+  const counterpartVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, counterpartLocale)] : null;
+  const counterpartGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, counterpartLocale)] : null;
+  const calculatedReadiness = selectedSpecies && selectedGroup ? assessPublishReadiness({
+    species: selectedSpecies, group: selectedGroup, locale: contentLocale, variantRow: selectedVariantRecord,
+    groupRow: selectedGroupPersisted, counterpartVariantRow, counterpartGroupRow, reviewRows: dataReviewRows,
+  }) : null;
+  const publishReadiness = calculatedReadiness && (!schemaReady || !groupSchemaReady || !historySchemaReady || !dataReviewSchemaReady)
+    ? { state: 'blocked', blockers: ['Admin schema 001–007 尚未完整就绪；Publish Readiness fail closed。'] }
+    : calculatedReadiness;
   const localeSeoRows = useMemo(() => Object.fromEntries(
     Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
   ), [seoRows, contentLocale]);
@@ -570,7 +599,7 @@ export default function App() {
           <small>语言独立 Draft / Publish</small>
         </div>
         <div className="topbar-actions">
-          <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady ? 'ready' : 'warning'}`}></span>
+          <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
           <span>{isReviewMode ? 'Read-only UI review' : schemaReady && groupSchemaReady ? `${getLocaleLabel(contentLocale)} SEO · ${historySchemaReady ? 'history ready' : 'history pending'}` : 'SEO schema pending'}</span>
           <span className="admin-email">{session.user.email}</span>
           <button className="ghost-button" type="button" onClick={signOut}>退出</button>
@@ -588,6 +617,10 @@ export default function App() {
       ) : !historySchemaReady ? (
         <div className="schema-banner">
           <strong>版本安全门：</strong> Draft 编辑可用，但 revision history migration 尚未应用；在历史记录与回滚可验证前 Published 继续锁定。
+        </div>
+      ) : !dataReviewSchemaReady ? (
+        <div className="schema-banner">
+          <strong>审核安全门：</strong> migration 007 尚未完整应用；Editorial Review / Data Review 不可用，Publish Readiness 保持 Blocked。
         </div>
       ) : null}
 
@@ -607,7 +640,9 @@ export default function App() {
         />
 
         <main className="editor-area">
-          <DataReviewPanel group={selectedGroup} />
+          <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} />
+          <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
+            onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
           {contentLocale === 'en' ? (
             <TranslationPanel
               species={selectedSpecies}
@@ -690,6 +725,7 @@ export default function App() {
               existingRows={localeSeoRows}
               locale={contentLocale}
               schemaReady={schemaReady}
+              dataReviewRows={dataReviewRows}
               readOnly={isReviewMode}
               onClear={() => setBatchIds([])}
               onSaved={(rows) => {
@@ -708,6 +744,7 @@ export default function App() {
             record={selectedVariantRecord}
             locale={contentLocale}
             schemaReady={schemaReady}
+            dataReviewRows={dataReviewRows}
             readOnly={isReviewMode}
             onSaved={(row) => {
               setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));

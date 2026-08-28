@@ -9,14 +9,14 @@ const outDir = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-species-pages-'))
 
 const baseRows = [
   {
-    group_key: 'base:neocaridina-davidi', locale: 'en', status: 'published',
+    group_key: 'base:neocaridina-davidi', locale: 'en', status: 'published', review_state: 'approved',
     seo_title_template: '{{name}} Care Guide | AquaGuide',
     meta_description_template: 'Learn water, tank and compatibility essentials for {{name}} ({{base_species}}).',
     h1_template: '{{name}} Care Guide',
     shared_intro: 'A practical care overview grounded in AquaGuide catalog facts.',
   },
   {
-    group_key: 'base:neocaridina-davidi', locale: 'zh-CN', status: 'published',
+    group_key: 'base:neocaridina-davidi', locale: 'zh-CN', status: 'published', review_state: 'approved',
     seo_title_template: '{{name}}饲养指南 | AquaGuide',
     meta_description_template: '了解{{name}}（{{base_species}}）的水温、鱼缸环境与饲养重点。',
     h1_template: '{{name}}饲养指南',
@@ -25,10 +25,10 @@ const baseRows = [
 ];
 
 const rows = [
-  { catalog_key: 'sp_0030', locale: 'en', localized_name: 'Yellow Cherry Shrimp', status: 'published', index_strategy: 'index', canonical_catalog_key: '' },
-  { catalog_key: 'sp_0030', locale: 'zh-CN', localized_name: '', status: 'published', index_strategy: 'index', canonical_catalog_key: '' },
-  { catalog_key: 'sp_0031', locale: 'en', localized_name: 'Blue Velvet Shrimp', status: 'published', index_strategy: 'canonical_to_sibling', canonical_catalog_key: 'sp_0030' },
-  { catalog_key: 'sp_0164', locale: 'en', localized_name: 'Black Cherry Shrimp', status: 'published', index_strategy: 'noindex', canonical_catalog_key: '' },
+  { catalog_key: 'sp_0030', locale: 'en', localized_name: 'Yellow Cherry Shrimp', status: 'published', review_state: 'approved', index_strategy: 'index', canonical_catalog_key: '' },
+  { catalog_key: 'sp_0030', locale: 'zh-CN', localized_name: '', status: 'published', review_state: 'approved', index_strategy: 'index', canonical_catalog_key: '' },
+  { catalog_key: 'sp_0031', locale: 'en', localized_name: 'Blue Velvet Shrimp', status: 'published', review_state: 'approved', index_strategy: 'canonical_to_sibling', canonical_catalog_key: 'sp_0030' },
+  { catalog_key: 'sp_0164', locale: 'en', localized_name: 'Black Cherry Shrimp', status: 'published', review_state: 'approved', index_strategy: 'noindex', canonical_catalog_key: '' },
 ];
 
 const snapshot = {
@@ -109,6 +109,13 @@ try {
     /Refusing publication snapshot environment: production/,
   );
 
+  const unapprovedSnapshot = structuredClone(snapshot);
+  unapprovedSnapshot.species_seo.find((row) => row.catalog_key === 'sp_0030' && row.locale === 'en').review_state = 'ready_for_review';
+  await assert.rejects(
+    generatePublicSpecies({ snapshot: unapprovedSnapshot, outDir: `${outDir}-unapproved`, siteUrl }),
+    /Variant editorial review is not Approved/,
+  );
+
   const draftBaseSnapshot = structuredClone(snapshot);
   draftBaseSnapshot.species_seo_groups.find((row) => row.locale === 'en').status = 'draft';
   await assert.rejects(
@@ -131,6 +138,7 @@ try {
   await rm(`${outDir}-staging-missing-prod`, { recursive: true, force: true });
   await rm(`${outDir}-staging-ok`, { recursive: true, force: true });
   await rm(`${outDir}-production`, { recursive: true, force: true });
+  await rm(`${outDir}-unapproved`, { recursive: true, force: true });
   await rm(`${outDir}-draft-base`, { recursive: true, force: true });
   await rm(`${outDir}-broken-canonical`, { recursive: true, force: true });
 }

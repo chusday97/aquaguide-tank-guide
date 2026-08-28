@@ -50,6 +50,14 @@ function rowKey(key, locale) {
   return `${key}::${locale}`;
 }
 
+function reviewResolutionMap(snapshot) {
+  return new Map((snapshot?.data_review_resolutions || []).map((row) => [row.issue_key, row]));
+}
+
+function categoryReviewKey(group) {
+  return `category:${group?.group_key || ''}`;
+}
+
 function isPublished(row) {
   return row?.status === 'published' && !row?.deleted_at;
 }
@@ -77,12 +85,14 @@ function pageLabels(locale) {
   };
 }
 
-function validatePublishedRecord({ row, groupRow, member, group, effectiveSeo, rowMap }) {
+function validatePublishedRecord({ row, groupRow, member, group, effectiveSeo, rowMap, reviewMap }) {
   const errors = [];
   const locale = normalizeLocale(row.locale);
   if (!locale) errors.push(`unsupported locale ${row.locale}`);
   if (!member || !group) errors.push(`unknown catalog_key ${row.catalog_key}`);
   if (!isPublished(groupRow)) errors.push(`Base Species ${group?.group_key || 'unknown'} is not Published for ${row.locale}`);
+  if (row?.review_state !== 'approved') errors.push('Variant editorial review is not Approved');
+  if (groupRow?.review_state !== 'approved') errors.push('Base Species editorial review is not Approved');
   if (!effectiveSeo?.seoTitle?.trim()) errors.push('SEO title is empty');
   if (!effectiveSeo?.metaDescription?.trim()) errors.push('Meta description is empty');
   if (!effectiveSeo?.h1?.trim()) errors.push('H1 is empty');
@@ -91,8 +101,23 @@ function validatePublishedRecord({ row, groupRow, member, group, effectiveSeo, r
   if (locale === 'en' && !row.localized_name?.trim()) errors.push('English localized_name is required');
 
   const strategy = row.index_strategy || 'noindex';
-  if (strategy === 'index' && group?.category_conflict) errors.push('category-conflict group cannot be independently indexed');
-  if (strategy === 'index' && member?.duplicate_peer_keys?.length) errors.push('suspected duplicate cannot be independently indexed before review');
+  if (strategy !== 'noindex' && group?.category_conflict) {
+    const categoryReview = reviewMap.get(categoryReviewKey(group));
+    if (categoryReview?.decision !== 'accepted_as_is') errors.push('category-conflict group lacks an accepted data-review resolution');
+  }
+  const duplicateSet = (group?.duplicate_sets || []).find((set) => set.member_ids.includes(row.catalog_key));
+  const duplicateReview = duplicateSet ? reviewMap.get(duplicateSet.duplicate_set_key) : null;
+  if (duplicateSet && duplicateReview?.decision === 'distinct_records') {
+    // Human review explicitly confirmed these records are distinct.
+  } else if (duplicateSet && duplicateReview?.decision === 'duplicate_records') {
+    const canonicalKey = duplicateReview.canonical_catalog_key;
+    if (!duplicateSet.member_ids.includes(canonicalKey)) errors.push('duplicate review canonical target is not in the duplicate set');
+    if (row.catalog_key === canonicalKey && strategy !== 'index') errors.push('reviewed duplicate canonical record must be independently indexed');
+    if (row.catalog_key !== canonicalKey && strategy === 'index') errors.push('reviewed duplicate non-canonical record cannot be independently indexed');
+    if (row.catalog_key !== canonicalKey && strategy === 'canonical_to_sibling' && row.canonical_catalog_key !== canonicalKey) errors.push('canonical target does not match the reviewed duplicate resolution');
+  } else if (strategy === 'index' && duplicateSet) {
+    errors.push('suspected duplicate cannot be independently indexed before review');
+  }
   if (strategy === 'canonical_to_sibling') {
     const target = rowMap.get(rowKey(row.canonical_catalog_key, row.locale));
     if (!target || !isPublished(target)) errors.push('canonical sibling must be Published in the same locale');
@@ -173,6 +198,7 @@ export async function generatePublicSpecies({ snapshot, outDir, siteUrl, product
   const groupRows = Array.isArray(snapshot.species_seo_groups) ? snapshot.species_seo_groups : [];
   const rowMap = new Map(rows.map((row) => [rowKey(row.catalog_key, row.locale), row]));
   const groupRowMap = new Map(groupRows.map((row) => [rowKey(row.group_key, row.locale), row]));
+  const reviewMap = reviewResolutionMap(snapshot);
   const publishedRows = rows.filter(isPublished);
   const pagePlans = [];
   const errors = [];
@@ -186,7 +212,7 @@ export async function generatePublicSpecies({ snapshot, outDir, siteUrl, product
     }
     const groupRow = groupRowMap.get(rowKey(group.group_key, row.locale));
     const { effective } = resolveEffectiveSeo({ member, group, groupRow, variantRow: row, locale: row.locale });
-    const recordErrors = validatePublishedRecord({ row, groupRow, member: group.members.find((x) => x.catalog_key === row.catalog_key), group, effectiveSeo: effective, rowMap });
+    const recordErrors = validatePublishedRecord({ row, groupRow, member: group.members.find((x) => x.catalog_key === row.catalog_key), group, effectiveSeo: effective, rowMap, reviewMap });
     if (recordErrors.length) {
       errors.push(`${row.catalog_key}/${row.locale}: ${recordErrors.join('; ')}`);
       continue;

@@ -9,7 +9,7 @@ Isolated companion app for editing Species SEO content. It lives in the same mon
 - Uses only `VITE_SUPABASE_URL` and the browser-safe publishable/anon key.
 - Never expose a Supabase service-role key to this app.
 - Admin authorization is enforced by the existing `user_roles` table and database RLS, not by hiding the URL.
-- Admin migrations 001–006 are branch-only proposals. They have been exercised only in fresh isolated local Supabase environments; Production remains unchanged.
+- Admin migrations 001–007 are branch-only proposals. They have been exercised only in fresh isolated local Supabase environments; Production remains unchanged.
 
 ## Current data contract
 
@@ -167,7 +167,7 @@ The A+B database/public-page gate is now proven locally and on GitHub Actions. T
 
 ## Staging release gate
 
-Published remains locked until a dedicated AquaGuide staging environment passes the full release chain. The branch now provides two staging-only commands:
+Persistent staging is optional, not the primary gate. A+B now proves the database/public-page chain on ephemeral Supabase; the following staging-only commands remain available when a persistent remote environment is operationally useful:
 
 ```bash
 npm run export:staging-snapshot -w @aquaguide/admin-content -- --out /tmp/species-staging.json
@@ -200,9 +200,9 @@ The generator itself also requires `--site-url`; it no longer defaults to the Pr
 
 ### Staging schema readiness probe
 
-Migration `202608280006_species_seo_release_gate_probe.sql` adds `species_seo_release_gate_status()` for release validation. It returns only schema readiness booleans and `schema_version=6`; it does not expose revision rows or editorial content.
+Migration 006 introduced `species_seo_release_gate_status()`; migration 007 upgrades it to `schema_version=7` and adds readiness flags for Editorial Review, Data Review and the safe review-resolution RPC. The probe still exposes only capability booleans, not revision rows or editorial content.
 
-The staging exporter calls this probe before exporting Published rows. It blocks if the probe is missing, reports a schema version below 6, or any required capability is false. Fresh local verification confirmed that anon publishable access can call the probe while direct `content_revisions` reads remain denied.
+The staging exporter calls this probe before exporting Published rows. It blocks if the probe is missing, reports a schema version below 7, or any required capability is false. Fresh local verification confirmed that anon publishable access can call the probe while direct `content_revisions` reads remain denied.
 
 For staging generation, `PRODUCTION_PUBLIC_SITE_URL` is also mandatory. Direct staging generator calls must pass `productionSiteUrl` / `--production-site-url`; the staging verifier supplies it automatically from the environment deny-list.
 
@@ -219,18 +219,20 @@ Both environments execute the same command:
 npm run test:supabase-gate -w @aquaguide/admin-content
 ```
 
-The gate pins Node `24.14.0` and Supabase CLI `2.115.0`, loads only core schema + Admin migrations `001–006`, verifies Auth/RLS and rollback behavior, creates one bilingual Published fixture, then generates and checks EN/ZH static Species pages. The temporary database is destroyed after each run.
+The gate pins Node `24.14.0` and Supabase CLI `2.115.0`, loads only core schema + Admin migrations `001–007`, verifies Auth/RLS and rollback behavior, creates one bilingual Published fixture, then generates and checks EN/ZH static Species pages. The temporary database is destroyed after each run.
 
 GitHub CI has repository read-only permission and receives no Production Supabase/Vercel deployment credentials. It does not commit, deploy, migrate Production, or unlock Published automatically.
 
-## Next product milestone: publish readiness
+## Current product milestone: publish readiness implemented locally
 
-A+B infrastructure is now proven locally and on GitHub Actions. The next Admin milestone is product workflow, not more staging infrastructure:
+Migration 007 and the current Admin UI now implement the readiness layer:
 
-1. Show publish-readiness blockers per Base Species / Variant / locale.
-2. Persist explicit human review decisions for category conflicts and suspected duplicates without rewriting Product Truth.
-3. Allow only reviewed content to enter controlled non-production Preview Publish.
-4. Reuse the existing static generator and shared `test:supabase-gate`; do not create a second publication path.
-5. Validate live AI translation suggestions only after the server-side provider secret is configured; AI remains suggestion-only and Draft-only.
+- Base + Variant review states: `Editing / Ready for Review / Approved`;
+- approval is invalidated by later editorial/index changes at the database trigger layer;
+- rollback restores Draft + Editing;
+- Data Review decisions persist separately from Product Truth;
+- duplicate/category decisions feed Index eligibility and static generation;
+- all 276 Base Species, including single-member groups, have a Base authoring/review surface;
+- generator requires Approved Base + Variant and safe review resolutions.
 
-`publish-ready` must never mean automatic Production deployment. Production Supabase migration and public deployment remain explicit approval steps.
+The B/local gate is green through schema version 7. The immediate next gate is the GitHub A-layer clean run through migration 007, followed by Controlled non-Production Preview Publish. `publish-ready` still never means automatic Production deployment.

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from './supabase.js';
 import { groupSeoFromRow } from './seoInheritance.js';
 import { getLocaleLabel } from './localization.js';
+import { REVIEW_STATES } from './publishReadiness.js';
 
 const isPublicSpeciesPublishingEnabled = false;
 
@@ -15,7 +16,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     setMessage('');
   }, [group?.group_key, record, locale]);
 
-  if (!group || group.member_count < 2) return null;
+  if (!group) return null;
   const localeLabel = getLocaleLabel(locale);
   const toPreviewRow = (next) => ({
     group_key: group.group_key,
@@ -25,6 +26,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     h1_template: next.h1Template,
     shared_intro: next.sharedIntro,
     status: next.status,
+    review_state: next.reviewState,
   });
   const update = (key, value) => setForm((current) => {
     const next = { ...current, [key]: value };
@@ -34,7 +36,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
 
   const save = async () => {
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      setMessage('Species 发布仍锁定：静态 HTML 生成器与版本回滚已通过本地验证，但 staging 端到端发布链尚未验证。');
+      setMessage('Species 发布仍锁定：A+B 验证链已通过，但 Production public-deploy integration 尚未显式批准。');
       return;
     }
     if (readOnly) {
@@ -55,6 +57,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       h1_template: form.h1Template.trim(),
       shared_intro: form.sharedIntro.trim(),
       status: form.status,
+      review_state: form.reviewState,
     };
     const { data, error } = await supabase
       .from('species_seo_groups')
@@ -76,12 +79,12 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <div>
           <p className="eyebrow">BASE SPECIES SEO · {localeLabel}</p>
           <h2>{group.base_scientific_name}</h2>
-          <p>{group.member_count} 条同类 / 变种共享这一层；每个语言版本独立 Draft / Publish。</p>
+          <p>{group.member_count} 条记录使用这一 Base 层；多成员组共享继承，单成员组也保留统一审核与发布契约。</p>
         </div>
-        <span className={`status-pill ${form.status}`}>{localeLabel}: {form.status}</span>
+        <div className="editor-statuses"><span className={`status-pill ${form.status}`}>{localeLabel}: {form.status}</span><span className={`status-pill ${form.reviewState}`}>Review: {form.reviewState}</span></div>
       </div>
       {group.category_conflict ? (
-        <div className="batch-warning">源 catalog 存在分类冲突；可以查看继承结构，但在复核前不要发布这个 Base Species。</div>
+        <div className="batch-warning">源 catalog 存在分类冲突；Draft 可继续编辑，但 Publish Readiness 会保持阻止直到人工结论完成。</div>
       ) : null}
       <div className="base-seo-grid">
         <label>SEO Title 模板
@@ -101,12 +104,15 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       <div className="base-seo-footer">
         <div>{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 模板，不会写数据库。` : `保存后只更新 ${localeLabel}，不会覆盖其它语言。`)}</div>
         <div className="footer-actions">
+          <select value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label="Base editorial review state">
+            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+          </select>
           <select value={form.status} onChange={(event) => update('status', event.target.value)}>
             <option value="draft">Draft</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（待版本回滚 / Staging）</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（Production integration locked）</option>
             <option value="archived">Archived</option>
           </select>
-          <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving || group.category_conflict}>
+          <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving}>
             {readOnly ? `只读 ${localeLabel} 预览` : saving ? '保存中…' : `保存 ${localeLabel} Base SEO`}
           </button>
         </div>
