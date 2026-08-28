@@ -9,6 +9,8 @@
 - 当前阻塞：首批 30 种事实仍需人工逐字段审核；生产第 27 个 migration、Catalog checksum parity、Preview exact SHA、人工验收和 `main` 合并仍未完成。
 - 下一步：先跑完整本地门禁并交独立 Critic 复验，再按授权边界申请生产 migration；任何 UI freeze 差异立即停止。
 
+> 说明：本文件更早日期段中的 `545ac...` checksum、旧 SHA 和“未推送”描述均为历史证据；当前候选状态以本节和 `npm run project:status` 为准。
+
 ## 2026-08-28 忽略 Vercel 后的本地收敛（最新）
 
 - 当前工作线仍为 `codex/main-core-foundation-v1`；本轮没有修改冻结 UI、生产 Supabase、Catalog 发布或 `main`。
