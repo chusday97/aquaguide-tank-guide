@@ -15,6 +15,12 @@
 - [x] 旧引擎传入 Domain 的 `explicitPairStatus` 仅来自已审核结构化 pair rule；相关类型、Catalog、Domain、API、UI 冻结回归通过。
 - [ ] Domain 结果尚未完全接管 legacy UI evidence/status；下一步收敛 Service/Repository 的统一结果适配，保持当前 UI 不变。
 
+## 2026-08-28 Domain fact source 收敛第二步
+
+- [x] `speciesProfileFromFish` 统一解析显式温度/pH 文本为 Profile 数值范围；`toDomainSpeciesFact` 只读取 Profile，不再绕过适配器读取 legacy Fish 文本。
+- [x] 补充空文本、无效换水周期、nullable 字段和数值范围回归；Catalog checksum 重新生成并通过一致性校验。
+- [ ] legacy UI status/evidence 尚未完全由 Domain 接管，状态继续为 `PARTIAL_WITH_FALLBACK`；生产 migration、Catalog 发布和 main 合并仍未授权。（本地提交待生成）
+
 ## 2026-08-28 本地 Supabase 验证连续推进
 
 - [x] 启动 Docker Desktop 与本地 Supabase CLI 栈，生成 `supabase/config.toml`；设置保留现有生产 26 个 migration 的 grants parity，`.temp/` 和本地凭据保持忽略（commit: `b9903924`）。

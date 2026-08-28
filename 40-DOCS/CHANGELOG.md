@@ -18,6 +18,7 @@
 - Moved legacy PostgreSQL fixtures out of `supabase/tests/` so `supabase test db --local` executes only transaction-isolated pgTAP tests; local 26-migration normalized hashes now match the production read-only baseline across columns, constraints, functions, indexes, policies, grants and triggers.
 - Updated `check:preview-parity` to use Vercel deployment metadata as a read-only fallback when GitHub Deployments omits the provider record, preventing false `UNVERIFIED` results.
 - Added the canonical `SpeciesProfile` export and explicit-water-type Fish adapter; legacy text cannot infer freshwater or saltwater values.
+- Moved legacy temperature/pH parsing into the `SpeciesProfile` adapter and added nullable/invalid-range regression coverage; Domain facts no longer read Fish text directly.
 - Changed Domain adapter pair status input to use reviewed structured pair rules only; legacy aggregate status is no longer passed back into Domain.
 
 ### Main convergence

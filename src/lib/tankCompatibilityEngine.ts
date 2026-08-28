@@ -628,16 +628,14 @@ const evaluateLegacyTankCompatibility = ({
 };
 
 const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
-  const temperature = parseRange(fish.waterTemperature);
-  const ph = parseRange(fish.phLevel);
   const profile = speciesProfileFromFish(fish);
   return {
     id: profile.catalogKey,
     waterType: profile.waterType,
-    temperatureMinC: temperature?.min ?? null,
-    temperatureMaxC: temperature?.max ?? null,
-    phMin: ph?.min ?? null,
-    phMax: ph?.max ?? null,
+    temperatureMinC: profile.waterTemperatureMinC,
+    temperatureMaxC: profile.waterTemperatureMaxC,
+    phMin: profile.phMin,
+    phMax: profile.phMax,
     reviewed: Boolean(getReviewedCompatibilityProfile(fish.id)),
   };
 };

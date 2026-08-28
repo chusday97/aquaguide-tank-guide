@@ -1,5 +1,11 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 Domain fact source 收敛第二步
+
+- `speciesProfileFromFish` 现在负责将旧 Fish 的显式温度/pH 文本转换为 canonical `SpeciesProfile` 数值范围；Domain adapter 不再直接读取 Fish 文本字段。
+- 补充空文本、无效换水周期、nullable 文案和范围转换回归；`test:species-profile`、Catalog、Domain、lint、API、build、UI freeze 和 project truth 均通过。
+- 本步骤仍未宣称完整 Domain authority：legacy UI status/evidence 仍为迁移期 fallback；生产第 27 个 migration、Catalog 发布和 main 合并未执行。
+
 ## 2026-08-28 Domain authority 收敛进展
 
 - 已新增 canonical `SpeciesProfile` 类型和 `speciesProfileFromFish` 适配器；旧 Fish 的缺失水体保持 `unknown`，不从名称、分类或描述推断。
