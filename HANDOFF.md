@@ -16,7 +16,7 @@
 - 补回 `npm run check:preview-parity` 脚本入口；本地执行因 GitHub DNS/网络限制失败，不能将 Preview parity 记为通过。
 - 修复已提交为 `ba23c69d`；当前需要完成同一 Critic 的复验，再决定在 Vercel 配额恢复后推送。生产 migration、Catalog 发布和 main 合并仍不执行。
 - 追加规则说明归类和重复脚本键修复，提交为 `9495a95b`；Domain-only 水体冲突现在进入 blocking，未知/审核缺口进入 missing/warning，避免风险等级过度放大。
-- 最新本地 HEAD 为 `5e9421a1`，工作树干净；本地门禁通过。当前仍比远端候选领先 7 个提交，未推送；等待 Vercel 配额恢复后一次性同步并验证 PR/Preview SHA。
+- 本地 authority checkpoint 已提交且工作树干净；本地门禁通过。当前仍比远端候选领先本地提交，未推送；等待 Vercel 配额恢复后一次性同步并验证 PR/Preview SHA，具体 SHA 以状态命令动态读取。
 
 ## 2026-08-28 候选推送与 Preview parity
 

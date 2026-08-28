@@ -44,7 +44,7 @@
 - [x] 增加现实记录 review policy 回归；`test:compatibility-service`、混养、现实记录、lint、API、build、UI freeze 和 project truth 均通过。
 - [x] 补回 `check:preview-parity` npm 入口；当前实际运行因沙箱无法解析 GitHub，Preview 仍不能宣称已验证。
 - [x] 独立 Critic 已复验 `ba23c69d` 并确认原 intent policy 阻塞已消除；随后补充规则说明归类与 `check:preview-parity` 去重修复（commit: `9495a95b`）。本地代码门禁通过，待同线程对最新提交复验。
-- [x] 最新本地候选 HEAD 为 `5e9421a1`，工作树干净；`lint`、API 类型、build、Domain/Service/兼容性、现实记录、Catalog、UI freeze、project truth 和 diff check 通过。
+- [x] 本地候选已包含 Domain authority 与 Critic 修复提交；工作树干净，`lint`、API 类型、build、Domain/Service/兼容性、现实记录、Catalog、UI freeze、project truth 和 diff check 通过。具体 SHA 由 `git rev-parse HEAD` 和 `npm run project:status` 动态读取。
 - [ ] 本地领先远端候选 7 个提交；尚未推送，因此远端/PR/Preview parity 暂不能宣称通过。Vercel 配额恢复后一次性推送并重跑 PR/Preview 门禁。
 
 ## 2026-08-28 候选推送与 Preview parity
