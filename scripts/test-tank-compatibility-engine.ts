@@ -111,6 +111,19 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'direct legacy entry carries Domain blocking evidence',
+    run: () => {
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank(),
+        existingSpecies: [{ species: makeFish({ id: 'existing-freshwater' }), record: { quantity: 1 } }],
+        candidateSpecies: makeFish({ id: 'saltwater-candidate', waterType: 'saltwater' }),
+        intent: 'planned_addition',
+      });
+      return result.status === 'not_recommended'
+        && result.blockingRules.some(rule => rule.code === 'candidate_tank_water_type_conflict');
+    },
+  },
+  {
     name: 'unknown tank water type is insufficient instead of freshwater',
     run: () => {
       const result = evaluateLegacyTankCompatibility({

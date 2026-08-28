@@ -14,7 +14,7 @@ import {
   type DomainTankFact,
 } from '../../packages/domain-rules/src';
 import { estimateBioloadUnits } from '../../packages/domain-rules/src';
-import { applyCanonicalCompatibilityDecision } from '../services/compatibility/canonical-result.adapter';
+import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
