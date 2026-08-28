@@ -16,6 +16,17 @@ const minimumLiters = (value?: string | null) => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 };
 
+const baseSpeciesKey = (scientificName: string) => {
+  const match = scientificName.trim().match(/^([A-Z][A-Za-z-]+)\s+([a-z][A-Za-z-]+)/);
+  return match ? `${match[1]} ${match[2]}` : null;
+};
+
+const taxonStatus = (scientificName: string) => {
+  if (!scientificName.trim()) return 'ambiguous' as const;
+  if (/\b(?:sp\.|spp\.|var\.)\s*$/i.test(scientificName)) return 'partial' as const;
+  return 'verified' as const;
+};
+
 /** Convert legacy Fish records without inferring catalog facts from names or categories. */
 export const speciesProfileFromFish = (fish: Fish): SpeciesProfile => {
   const temperature = numericRange(fish.waterTemperature);
@@ -23,6 +34,9 @@ export const speciesProfileFromFish = (fish: Fish): SpeciesProfile => {
   return {
   id: fish.id,
   catalogKey: fish.id,
+  baseSpeciesKey: baseSpeciesKey(fish.scientificName),
+  variantKey: /\bvar\.|['()]/i.test(fish.scientificName) ? fish.scientificName.trim() : null,
+  taxonStatus: taxonStatus(fish.scientificName),
   name: fish.name,
   scientificName: fish.scientificName,
   category: fish.category,
@@ -39,11 +53,17 @@ export const speciesProfileFromFish = (fish: Fish): SpeciesProfile => {
   diet: nullableText(fish.diet),
   tankSizeText: nullableText(fish.tankSize),
   minTankLiters: minimumLiters(fish.tankSize),
+  minTankLengthCm: null,
+  adultLengthMinCm: null,
+  adultLengthMaxCm: null,
+  socialMode: 'unknown',
+  minimumGroupSize: null,
   temperament: fish.temperament ?? null,
   sizeClass: fish.size ?? null,
   housingMode: fish.housingMode ?? null,
   housingReason: nullableText(fish.housingReason),
   completeness: 'unknown',
   evidenceSourceIds: [],
+  factEvidence: [],
   };
 };

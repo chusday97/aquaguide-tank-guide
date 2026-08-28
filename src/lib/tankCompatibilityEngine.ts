@@ -12,6 +12,7 @@ import {
   type DomainCompatibilityInput,
   type DomainSpeciesFact,
   type DomainTankFact,
+  type CompatibilityDecisionReadiness,
 } from '../../packages/domain-rules/src';
 import { estimateBioloadUnits } from '../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
@@ -46,6 +47,7 @@ export type TankCompatibilityResult = {
     catalogVersion: string;
     domainRuleCodes: string[];
     domainStatus: TankCompatibilityStatus;
+    decisionReadiness: CompatibilityDecisionReadiness;
   };
 };
 
@@ -208,6 +210,7 @@ const evaluateLegacyTankCompatibility = ({
     catalogVersion: 'unknown',
     domainRuleCodes: [] as string[],
     domainStatus: 'insufficient_data' as TankCompatibilityStatus,
+    decisionReadiness: 'unknown' as CompatibilityDecisionReadiness,
   };
   const passedRules: TankCompatibilityRule[] = [];
   const warningRules: TankCompatibilityRule[] = [];
@@ -694,6 +697,7 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
       catalogVersion: domainDecision.catalogVersion,
       domainRuleCodes: domainDecision.ruleCodes,
       domainStatus: domainDecision.status,
+      decisionReadiness: domainDecision.decisionReadiness,
     },
   }, domainDecision);
 };

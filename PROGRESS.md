@@ -1,6 +1,16 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-28 物种底层修复进行中（最新）
+
+- [x] Domain compatibility 增加温度、pH、鱼缸温度、最低容量/缸长约束；最终结论继续由 Domain 返回，旧引擎仅作兼容 facade。
+- [x] canonical SpeciesProfile 补齐身份、分类状态、最低容量和社会行为占位字段；缺失事实保持 `null/unknown`，不从名称或描述推断。
+- [x] 旧引擎入口已固化为 Domain-authoritative facade，因此正式 Aquarium、Encyclopedia、Species Detail、Compatibility Calculator 即使保持原 import，也不会拿到旧最终结论；视觉文件未改动。
+- [x] 新增 486 条物种质量审计（重复名称/学名、模板污染、Google 搜索来源、显式水体缺失）和确定性的首批 30 种研究队列；队列成员不会自动获得上线资格。
+- [x] 统一结果新增 `decisionReadiness`：只有已有审核画像和引用的物种才标记 `reviewed`，未审核组合仍为 `unknown` 并按资料不足处理。
+- [ ] 仍未完成首批 30 种逐字段人工审核、生产第 27 个 migration、Catalog 发布、Preview exact SHA、人工 release acceptance 和 `main` 合并。
+- [ ] 当前本地 Catalog checksum 为 `2fdcbc9ddcf1348828bc8cea311c2162a7a2c7ef00184a7b9542dbcc79c57ae2`；旧文档中的 `545ac...` 仅作历史证据，不覆盖本次规范化快照结果。
+
 ## 2026-08-28 忽略 Vercel 后的本地收敛结果（最新）
 
 - [x] 完成混养权威静态门禁：旧 `tankCompatibilityEngine` 仅作为兼容 facade，Domain Rules 负责最终状态、策略、规则代码和版本；门禁扫描 226 个源文件通过。

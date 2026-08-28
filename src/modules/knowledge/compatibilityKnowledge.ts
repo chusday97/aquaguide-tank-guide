@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
+import type { CompatibilityDecisionReadiness } from '../../../packages/domain-rules/src';
 import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
 
@@ -35,6 +36,12 @@ const statusRank: Record<TankCompatibilityStatus, number> = {
   insufficient_data: 2,
   not_recommended: 3,
 };
+
+const readinessOf = (results: TankCompatibilityResult[]): CompatibilityDecisionReadiness => (
+  results.length > 0 && results.every(result => result.metadata.decisionReadiness === 'reviewed')
+    ? 'reviewed'
+    : 'unknown'
+);
 
 const riskPriority: CompatibilityRiskType[] = [
   'water_type',
@@ -120,6 +127,7 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
       catalogVersion: results[0]?.metadata.catalogVersion || 'unknown',
       domainRuleCodes: Array.from(new Set(results.flatMap(result => result.metadata.domainRuleCodes || []))),
       domainStatus: results[0]?.metadata.domainStatus || status,
+      decisionReadiness: readinessOf(results),
     },
   };
 };
@@ -251,6 +259,7 @@ const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompa
       catalogVersion: pairResults[0]?.rawResult.metadata.catalogVersion || 'unknown',
       domainRuleCodes: Array.from(new Set(pairResults.flatMap(result => result.rawResult.metadata.domainRuleCodes || []))),
       domainStatus: pairResults[0]?.rawResult.metadata.domainStatus || status,
+      decisionReadiness: readinessOf(pairResults.map(result => result.rawResult)),
     },
   };
 };

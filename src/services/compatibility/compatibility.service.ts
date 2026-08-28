@@ -9,7 +9,7 @@ import {
   type TankCompatibilityRule,
   type TankCompatibilityStatus,
 } from '../../lib/tankCompatibilityEngine';
-import type { CompatibilityIntent } from '../../../packages/domain-rules/src';
+import type { CompatibilityDecisionReadiness, CompatibilityIntent } from '../../../packages/domain-rules/src';
 import { getCompatibilityAddPolicy } from '../../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from '../../lib/compatibility/canonical-result.adapter';
 
@@ -41,6 +41,7 @@ export type CanonicalCompatibilityDecision = {
   ruleCodes: string[];
   catalogVersion: string;
   ruleVersion: string;
+  decisionReadiness: CompatibilityDecisionReadiness;
 };
 
 export const getCompatibilityDecision = (
@@ -52,6 +53,7 @@ export const getCompatibilityDecision = (
   ruleCodes: result.metadata.domainRuleCodes,
   catalogVersion: result.metadata.catalogVersion,
   ruleVersion: result.metadata.ruleVersion,
+  decisionReadiness: result.metadata.decisionReadiness,
 });
 
 const normalizeCanonicalResult = (result: TankCompatibilityResult): TankCompatibilityResult => {

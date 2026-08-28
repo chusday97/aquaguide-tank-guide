@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added species data-quality audit and deterministic 30-species research cohort; added evidence-gated `decisionReadiness` metadata and routed formal compatibility consumers through the Compatibility Service. Extended Domain checks for temperature, pH, tank temperature, minimum volume and tank length. No UI Owner files or production data changed.
+
 - Completed the local convergence rehearsal without waiting for Vercel: added the compatibility-authority static gate, refreshed Catalog/Supabase parity evidence and migration authorization docs, and aligned stale core browser assertions with the current viewport, compatibility, feature-preview and evidence-disclosure contracts. Domain, Service, Catalog, local 26+1 Supabase replay, pgTAP, schema lint, build, UI freeze and browser matrices pass; no UI Owner or production data changed.
 
 - Added the compatibility-authority static gate, updated local Catalog parity to the reviewed tetra checksum, and prepared the production Catalog migration authorization package. No UI or production data changed; exact Preview remains an external Vercel gate.

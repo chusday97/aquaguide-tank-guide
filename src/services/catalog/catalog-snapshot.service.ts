@@ -48,7 +48,7 @@ export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
     manifest: {
       version: LOCAL_CATALOG_VERSION,
       schemaVersion: 1,
-      checksumSha256: '',
+      checksumSha256: '0'.repeat(64),
       speciesCount: fishData.length,
       reviewedProfileCount: profiles.length,
       reviewedPairRuleCount: pairRules.length,
@@ -77,10 +77,14 @@ export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
       citationIds: rule!.citations.map(citation => citation.id),
     })),
   };
-  const checksumSha256 = await sha256(stablePayload(snapshotWithoutChecksum));
+  // Hash the schema-normalized representation so optional field ordering in
+  // adapters cannot produce a checksum that fails when the snapshot is parsed
+  // again by a remote consumer.
+  const normalized = catalogSnapshotSchema.parse(snapshotWithoutChecksum);
+  const checksumSha256 = await sha256(stablePayload(normalized));
   return catalogSnapshotSchema.parse({
-    ...snapshotWithoutChecksum,
-    manifest: { ...snapshotWithoutChecksum.manifest, checksumSha256 },
+    ...normalized,
+    manifest: { ...normalized.manifest, checksumSha256 },
   });
 };
 

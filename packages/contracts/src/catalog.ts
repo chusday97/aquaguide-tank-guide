@@ -23,6 +23,27 @@ export const catalogEvidenceSourceSchema = z.object({
   reviewStatus: z.enum(['draft', 'reviewed', 'rejected']),
 });
 
+export const speciesFactKeySchema = z.enum([
+  'identity',
+  'water',
+  'temperature',
+  'ph',
+  'adult_size',
+  'tank_size',
+  'social_behavior',
+  'territoriality',
+  'predation',
+  'breeding_behavior',
+  'feeding',
+]);
+
+export const speciesFactEvidenceSchema = z.object({
+  field: speciesFactKeySchema,
+  citationIds: z.array(z.string()),
+  reviewStatus: z.enum(['draft', 'reviewed', 'rejected']),
+  confidence: z.enum(['high', 'medium', 'low', 'unknown']),
+});
+
 export const catalogSpeciesSchema = z.object({
   id: z.string().trim().min(1),
   catalogKey: z.string().trim().min(1),
@@ -48,6 +69,15 @@ export const catalogSpeciesSchema = z.object({
   housingReason: z.string().nullable(),
   completeness: catalogCompletenessSchema,
   evidenceSourceIds: z.array(z.string()),
+  baseSpeciesKey: z.string().trim().min(1).nullable().optional(),
+  variantKey: z.string().trim().min(1).nullable().optional(),
+  taxonStatus: z.enum(['verified', 'partial', 'ambiguous']).optional(),
+  adultLengthMinCm: z.number().nonnegative().nullable().optional(),
+  adultLengthMaxCm: z.number().nonnegative().nullable().optional(),
+  minTankLengthCm: z.number().nonnegative().nullable().optional(),
+  socialMode: z.enum(['solitary', 'pair', 'group', 'colony', 'variable', 'unknown']).optional(),
+  minimumGroupSize: z.number().int().positive().nullable().optional(),
+  factEvidence: z.array(speciesFactEvidenceSchema).optional(),
 });
 
 /**
@@ -90,6 +120,8 @@ export type CatalogWaterType = z.infer<typeof catalogWaterTypeSchema>;
 export type CatalogCompleteness = z.infer<typeof catalogCompletenessSchema>;
 export type CatalogManifest = z.infer<typeof catalogManifestSchema>;
 export type CatalogEvidenceSource = z.infer<typeof catalogEvidenceSourceSchema>;
+export type SpeciesFactKey = z.infer<typeof speciesFactKeySchema>;
+export type SpeciesFactEvidence = z.infer<typeof speciesFactEvidenceSchema>;
 export type CatalogSpecies = z.infer<typeof catalogSpeciesSchema>;
 export type SpeciesProfile = z.infer<typeof speciesProfileSchema>;
 export type CatalogCompatibilityProfile = z.infer<typeof catalogCompatibilityProfileSchema>;

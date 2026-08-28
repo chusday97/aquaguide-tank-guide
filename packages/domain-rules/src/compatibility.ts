@@ -1,6 +1,7 @@
 export type CompatibilityDecisionStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type CompatibilityAddPolicy = 'allow' | 'confirm' | 'block' | 'complete_information';
 export type CompatibilityIntent = 'record_existing' | 'planned_addition';
+export type CompatibilityDecisionReadiness = 'reviewed' | 'partial' | 'unknown';
 
 export type DomainSpeciesFact = {
   id: string;
@@ -38,6 +39,7 @@ export type CompatibilityDecision = {
   ruleCodes: string[];
   catalogVersion: string;
   ruleVersion: string;
+  decisionReadiness: CompatibilityDecisionReadiness;
 };
 
 export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v1';
@@ -144,11 +146,17 @@ export const evaluateCompatibility = ({
   }
   if (explicitPairStatus) raise(explicitPairStatus, 'reviewed_pair_rule');
 
+  const allSpeciesReviewed = Boolean(candidateSpecies)
+    && existingSpecies.every(species => species.reviewed)
+    && Boolean(candidateSpecies?.reviewed);
+  const decisionReadiness: CompatibilityDecisionReadiness = allSpeciesReviewed ? 'reviewed' : 'unknown';
+
   return {
     status,
     addPolicy: getCompatibilityAddPolicy(intent, status),
     ruleCodes: [...new Set(ruleCodes)],
     catalogVersion,
     ruleVersion: COMPATIBILITY_RULE_VERSION,
+    decisionReadiness,
   };
 };

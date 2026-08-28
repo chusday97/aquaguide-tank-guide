@@ -45,6 +45,7 @@ const reviewedDecision = evaluateTankCompatibility({
 });
 assert.equal(reviewedDecision.status, 'caution');
 assert.equal(getCompatibilityDecision(reviewedDecision).addPolicy, 'confirm');
+assert.equal(getCompatibilityDecision(reviewedDecision).decisionReadiness, 'reviewed');
 assert.equal(reviewedDecision.metadata.domainStatus, reviewedDecision.status);
 assert.equal(reviewedDecision.metadata.ruleVersion, 'compatibility-domain-v1');
 assert.ok(reviewedDecision.warningRules.some(rule => rule.code === 'pair_rule_group_size_and_shared_water_window'));
@@ -67,6 +68,7 @@ const legacyCompatibleDomainInsufficient = evaluateTankCompatibility({
 assert.equal(legacyCompatibleDomainInsufficient.metadata.domainStatus, 'insufficient_data');
 assert.equal(legacyCompatibleDomainInsufficient.status, 'insufficient_data');
 assert.equal(getCompatibilityDecision(legacyCompatibleDomainInsufficient).addPolicy, 'complete_information');
+assert.equal(getCompatibilityDecision(legacyCompatibleDomainInsufficient).decisionReadiness, 'unknown');
 const legacyEntryDecision = evaluateLegacyEntry({
   tank,
   existingSpecies: [],

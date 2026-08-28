@@ -1,5 +1,14 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 物种底层修复（最新）
+
+- 当前工作线仍为 `codex/main-core-foundation-v1`；本轮保持冻结 UI，不执行生产 SQL、Catalog 发布、GitHub 推送或 `main` 合并。
+- 已完成 Domain 环境约束（温度/pH/缸温/容量/缸长）和 `decisionReadiness` 元数据；旧引擎入口已固化为 Domain-authoritative facade，正式页面保持原 import 以满足 UI freeze，但最终结论不再来自旧逻辑。
+- 新增 `scripts/audit-species-data-quality.ts` 和 `src/data/compatibility-launch-cohort.ts`：486 条记录审计、30 条确定性研究队列。研究队列只用于排期，不能把未审核物种当作安全可规划加入。
+- 本地验证：`lint`、API 类型、Domain/Service 混养回归、Catalog 快照和 30 条队列测试通过；`check:ui-freeze` 仍需在本步骤最终门禁中复跑。
+- 当前阻塞：首批 30 种事实仍需人工逐字段审核；生产第 27 个 migration、Catalog checksum parity、Preview exact SHA、人工验收和 `main` 合并仍未完成。
+- 下一步：先跑完整本地门禁并交独立 Critic 复验，再按授权边界申请生产 migration；任何 UI freeze 差异立即停止。
+
 ## 2026-08-28 忽略 Vercel 后的本地收敛（最新）
 
 - 当前工作线仍为 `codex/main-core-foundation-v1`；本轮没有修改冻结 UI、生产 Supabase、Catalog 发布或 `main`。
