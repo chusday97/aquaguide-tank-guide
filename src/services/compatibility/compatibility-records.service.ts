@@ -1,4 +1,4 @@
-import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import type { TankCompatibilityStatus } from './compatibility.service';
 import { loadAppStateFromStorage, patchLocalAppState } from '../storage/local-app-state';
 import { trackActivationIfFirstValidCompatibility, trackSessionEvent } from '../analytics/session-events.service';
 

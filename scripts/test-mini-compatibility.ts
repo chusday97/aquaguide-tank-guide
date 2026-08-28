@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
+import { evaluateSpeciesCombination } from '../src/services/compatibility/compatibility.service';
 import type { Fish } from '../src/types';
 
 const makeFish = (overrides: Partial<Fish> & Pick<Fish, 'id' | 'name'>): Fish => ({

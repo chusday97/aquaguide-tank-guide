@@ -1,5 +1,5 @@
 import type { Aquarium, Fish } from '../../types';
-import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
 

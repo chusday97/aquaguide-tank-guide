@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { Aquarium, Fish } from '../../types';
-import type { TankCompatibilityRule, TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import type { TankCompatibilityRule, TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 import { aquariumSchema } from '../aquarium/aquarium.schema';
 import { fishSchema } from '../species/species.schema';
 

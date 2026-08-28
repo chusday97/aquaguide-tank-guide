@@ -21,6 +21,12 @@
 - [x] 补充空文本、无效换水周期、nullable 字段和数值范围回归；Catalog checksum 重新生成并通过一致性校验。
 - [ ] legacy UI status/evidence 尚未完全由 Domain 接管，状态继续为 `PARTIAL_WITH_FALLBACK`；生产 migration、Catalog 发布和 main 合并仍未授权。（本地提交待生成）
 
+## 2026-08-28 Compatibility Service 入口收敛
+
+- [x] 新增 Compatibility Service 统一封装混养评估、组合评估和添加策略；服务、知识模块、推荐、Collection 和测试改用该入口，旧引擎仅保留在入口内部。
+- [x] 页面/组件因视觉冻结未改动，`check:ui-freeze` 通过；正式 UI 消费者切换仍是解除冻结后的下一步。
+- [ ] Domain 最终状态尚未完全替换 legacy status/evidence；状态继续为 `PARTIAL_WITH_FALLBACK`。（待提交）
+
 ## 2026-08-28 候选推送与 Preview parity
 
 - [x] 推送 `28fa0e8a`、`781c6af9` 至 `codex/main-core-foundation-v1`；本地、远端候选和 PR #142 Head 均为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。

@@ -20,6 +20,12 @@
 - 补充空文本、无效换水周期、nullable 文案和范围转换回归；`test:species-profile`、Catalog、Domain、lint、API、build、UI freeze 和 project truth 均通过。
 - 本步骤仍未宣称完整 Domain authority：legacy UI status/evidence 仍为迁移期 fallback；生产第 27 个 migration、Catalog 发布和 main 合并未执行。
 
+## 2026-08-28 Compatibility Service 入口收敛
+
+- 新增 `src/services/compatibility/compatibility.service.ts` 作为统一应用入口，服务、知识模块、推荐、Collection 和测试不再直接导入旧引擎；旧引擎仅在该入口内部调用。
+- 页面/组件文件因 UI freeze 约束保持不变，因此正式页面消费者尚未完成最后切换；不能把本步骤描述为 Domain status 已完全接管。
+- `check:ui-freeze`、lint、API 类型、Domain/兼容性回归和 project truth 已通过；当前工作树待提交。
+
 ## 2026-08-28 Domain authority 收敛进展
 
 - 已新增 canonical `SpeciesProfile` 类型和 `speciesProfileFromFish` 适配器；旧 Fish 的缺失水体保持 `unknown`，不从名称、分类或描述推断。

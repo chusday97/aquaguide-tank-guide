@@ -7,7 +7,7 @@ import {
   type TankCompatibilityResult,
   type TankCompatibilityRule,
   type TankCompatibilityStatus,
-} from '../../lib/tankCompatibilityEngine';
+} from '../compatibility/compatibility.service';
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
 
 export type SpeciesAdditionItem = {

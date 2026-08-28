@@ -1,5 +1,5 @@
 import type { Fish } from '../../types';
-import type { TankCompatibilityResult, TankCompatibilityRule, TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import type { TankCompatibilityResult, TankCompatibilityRule, TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 
 export type KnowledgeConfidence = 'verified' | 'derived' | 'unknown';
 

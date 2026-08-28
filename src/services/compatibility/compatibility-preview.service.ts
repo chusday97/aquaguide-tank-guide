@@ -1,5 +1,5 @@
 import type { Aquarium, Fish } from '../../types';
-import { evaluateTankCompatibility, type TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility, type TankCompatibilityStatus } from './compatibility.service';
 
 type CurrentLivestock = Array<{ species: Fish; record: { quantity?: number } }>;
 

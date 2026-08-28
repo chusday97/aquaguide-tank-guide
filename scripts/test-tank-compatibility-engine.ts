@@ -1,5 +1,5 @@
 import type { Aquarium, Fish } from '../src/types';
-import { evaluateTankCompatibility, getTankCompatibilityAddPolicy } from '../src/lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility, getTankCompatibilityAddPolicy } from '../src/services/compatibility/compatibility.service';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { executeSpeciesAddition, reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';

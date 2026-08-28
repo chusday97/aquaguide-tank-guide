@@ -21,7 +21,7 @@ import {
   UserPreference,
 } from './recommendation.schema';
 import { evaluateSpeciesForAquarium } from '../../lib/speciesFitEngine';
-import { evaluateTankCompatibility } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility } from '../../services/compatibility/compatibility.service';
 import { RECOMMENDATION_LIMITS, TANK_CAPACITY_MULTIPLIER, TANK_LOAD_THRESHOLDS } from './recommendation.config';
 
 export const DISCOVERY_DAILY_LIMIT = 10;
