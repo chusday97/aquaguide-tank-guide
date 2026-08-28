@@ -40,7 +40,9 @@ const statusRank: Record<TankCompatibilityStatus, number> = {
 const readinessOf = (results: TankCompatibilityResult[]): CompatibilityDecisionReadiness => (
   results.length > 0 && results.every(result => result.metadata.decisionReadiness === 'reviewed')
     ? 'reviewed'
-    : 'unknown'
+    : results.some(result => result.metadata.decisionReadiness === 'partial')
+      ? 'partial'
+      : 'unknown'
 );
 
 const riskPriority: CompatibilityRiskType[] = [

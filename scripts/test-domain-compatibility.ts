@@ -14,6 +14,7 @@ const base = {
 const emptyPlan = evaluateCompatibility({ intent: 'planned_addition', existingSpecies: [], candidateSpecies: base });
 assert.equal(emptyPlan.status, 'insufficient_data');
 assert.equal(emptyPlan.addPolicy, 'complete_information');
+assert.equal(emptyPlan.decisionReadiness, 'partial');
 assert.ok(emptyPlan.ruleCodes.includes('empty_tank_no_existing_species'));
 
 const emptyFact = evaluateCompatibility({ intent: 'record_existing', existingSpecies: [], candidateSpecies: base });
@@ -27,6 +28,7 @@ const noTankPlan = evaluateCompatibility({
 });
 assert.equal(noTankPlan.status, 'insufficient_data');
 assert.equal(noTankPlan.addPolicy, 'complete_information');
+assert.equal(noTankPlan.decisionReadiness, 'partial');
 assert.ok(noTankPlan.ruleCodes.includes('tank_missing'));
 
 const blocked = evaluateCompatibility({
@@ -93,6 +95,7 @@ const missing = evaluateCompatibility({
 });
 assert.equal(missing.status, 'insufficient_data');
 assert.equal(missing.addPolicy, 'complete_information');
+assert.equal(missing.decisionReadiness, 'unknown');
 assert.deepEqual(missing.ruleCodes.slice(-1), ['reviewed_pair_rule']);
 
 console.log('domain compatibility policy verified: fail-closed precedence and record-existing allowance');

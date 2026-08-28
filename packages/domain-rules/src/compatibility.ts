@@ -51,6 +51,8 @@ const statusRank: Record<CompatibilityDecisionStatus, number> = {
   not_recommended: 3,
 };
 
+const isInsufficientData = (value: CompatibilityDecisionStatus) => value === 'insufficient_data';
+
 export const getCompatibilityAddPolicy = (
   intent: CompatibilityIntent,
   status: CompatibilityDecisionStatus,
@@ -149,7 +151,12 @@ export const evaluateCompatibility = ({
   const allSpeciesReviewed = Boolean(candidateSpecies)
     && existingSpecies.every(species => species.reviewed)
     && Boolean(candidateSpecies?.reviewed);
-  const decisionReadiness: CompatibilityDecisionReadiness = allSpeciesReviewed ? 'reviewed' : 'unknown';
+  const finalStatus: CompatibilityDecisionStatus = status;
+  const decisionReadiness: CompatibilityDecisionReadiness = !allSpeciesReviewed
+    ? 'unknown'
+    : isInsufficientData(finalStatus)
+      ? 'partial'
+      : 'reviewed';
 
   return {
     status,

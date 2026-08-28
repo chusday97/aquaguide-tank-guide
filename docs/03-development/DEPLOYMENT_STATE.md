@@ -9,7 +9,7 @@
 - The latest local changes are committed at `beb36cb2` but are not yet pushed. The remote candidate and PR #142 still point to the previous head; Preview parity for this new head is therefore not claimed. Production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
 
 - The local candidate, remote branch and PR #142 are synchronized only after the planned one-time push; verify the exact SHA at runtime with `npm run project:status`. PR #142 remains Draft and `releaseReady=false`.
-- Local Catalog verification now reflects the reviewed tetra water facts: 486 species, 13 evidence sources, checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`.
+- Local Catalog verification now reflects the schema-normalized snapshot: 486 species, 13 evidence sources, checksum `2fdcbc9ddcf1348828bc8cea311c2162a7a2c7ef00184a7b9542dbcc79c57ae2`. The former `545ac...` value is historical and must not be used for current parity.
 - The compatibility authority gate passes: frozen callers may use the legacy facade, while Domain Rules owns final status, policy, rule codes and versions.
 - Local Supabase 26+1 replay, 19/19 pgTAP and schema lint are passing. Production remains at 26 migrations; the Catalog migration is prepared but not executed.
 - Current exact-SHA Preview is `UNVERIFIED` because Vercel is rate-limited. No production migration, Catalog upload, business-data write or `main` merge was performed.
