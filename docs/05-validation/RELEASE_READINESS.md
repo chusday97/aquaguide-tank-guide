@@ -6,7 +6,7 @@
 
 | Gate | Current evidence | Status | What closes it |
 | --- | --- | --- | --- |
-| One delivery line | `npm run project:status` reports the local candidate, remote candidate and PR #142 SHA at runtime; the working tree is currently synchronized | Pass / Supabase and acceptance pending | Keep the runtime-reported SHA unchanged through Preview and release acceptance. |
+| One delivery line | Local candidate is one checkpoint ahead of remote/PR (`6539611a` vs `396e71da`); the working tree is clean but not yet pushed | Pending / local checkpoint | Run `npm run project:status` after the single authorized push; only then require local = remote = PR. |
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
 | Local visual baseline | Current candidate UI is frozen provisionally at `02457dd2`; 4317 is detached `37a8d4d1`; fixed 390/600/1280 screenshots are stored in `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2` | Pass / provisional | Do not change visual-owned files before main; run `npm run check:ui-freeze` on every backend change. |
 | GitHub convergence CI | The synchronized candidate is being evaluated by the current GitHub checks; the unrelated admin-content project is isolated by its ignored build step | Pending / remote checks | Read `gh pr checks 142` for the current synchronized SHA; keep Draft until required checks finish. |

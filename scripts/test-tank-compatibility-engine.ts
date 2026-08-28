@@ -306,6 +306,30 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'mini parrot juvenile record is allowed without inventing a safe maximum',
+    run: () => {
+      const miniParrot = makeFish({
+        id: 'sp_0021',
+        name: '迷你鹦鹉鱼',
+        size: 'Medium',
+        tankSize: '至少 64 升',
+        temperament: 'Aggressive',
+      });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '30' } }),
+        candidateSpecies: miniParrot,
+        candidateQuantity: 4,
+        candidateContext: { lifeStage: 'juvenile', reproductiveState: 'normal', averageLengthCm: 2.5 },
+        intent: 'record_existing',
+      });
+      return result.status === 'compatible'
+        && result.metadata.domainStatus === 'compatible'
+        && result.metadata.decisionReadiness === 'reviewed'
+        && result.stockingGuidance?.kind === 'screening_only'
+        && result.stockingGuidance.recommendedMax === null;
+    },
+  },
+  {
     name: 'aggressive temperament keeps the legacy load threshold',
     run: () => {
       const aggressive = makeFish({ size: 'Large', temperament: 'Aggressive' });
