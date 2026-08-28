@@ -5,8 +5,9 @@
 - 当前工作线仍为 `codex/main-core-foundation-v1`；本轮没有修改冻结 UI、生产 Supabase、Catalog 发布或 `main`。
 - 已完成混养唯一权威静态门禁、486 物种 Catalog 校验、26+1 本地 migration 重放、19/19 pgTAP、schema lint、Domain/Service/API 与浏览器回归。核心 UI 测试中的旧 600px/混养/AI 入口/证据折叠断言已按当前正式契约修正并通过。
 - 当前可复核事实：旧引擎只能作为 facade；生产前 26 个 migration 只读结构等价；第 27 个 migration 仍需生产授权；生产 Catalog checksum、真实身份写入和回滚仍 `UNVERIFIED`。
-- 未完成：独立 Critic 对最新 diff 的复验、一次性 GitHub 同步、Vercel 对新 head 的 Preview parity。PR #142 继续 Draft，不合并 `main`。
-- 下一步：先交 Critic 六维复验；若无阻塞，提交本地小步 commit，再一次性推送候选分支，读取 GitHub/PR 状态；随后等待外部门禁恢复并申请生产 migration 授权。
+- 已完成：独立 Critic 对最新 diff 的复验和一次性 GitHub 同步；`npm run project:status` 显示本地、远端候选和 PR #142 SHA 同步。PR #142 继续 Draft，不合并 `main`。
+- 未完成：新 head 的 Preview exact SHA、生产第 27 个 migration、Catalog 发布、人工 release acceptance 和 `main` 合并。
+- 下一步：读取本次 GitHub CI/Preview 收敛结果；Preview 未验证前不发布，随后由用户单独决定生产 migration 授权。
 
 ## 2026-08-28 忽略 Vercel 的安全补救（最新）
 

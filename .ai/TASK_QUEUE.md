@@ -7,7 +7,8 @@
 - [x] Updated Feature Catalog and convergence ledger to record local compatibility authority as migrated/currently verified.
 - [x] Prepared `docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`; production execution remains unauthorized.
 - [x] Re-ran the complete local release rehearsal: compatibility authority, Catalog, Domain/Service, core UI, formal scenes, today action, species detail, responsive routes, Supabase 26+1, pgTAP 19/19, schema lint, lint, API typecheck, build, UI freeze and project truth passed.
-- [ ] Obtain same-thread Critic re-review of the latest diff, then push the consolidated local remediation once; Vercel/Preview remains an external gate and is not retried during rate limiting.
+- [x] Same-thread Critic re-review passed and the consolidated local remediation was pushed once; local/remote/PR SHA parity is synchronized.
+- [ ] Read the new Preview/CI result once; Vercel exact SHA remains an external gate and is not retried during rate limiting.
 
 ## P0 — Progress unification
 

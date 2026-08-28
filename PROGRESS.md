@@ -7,7 +7,8 @@
 - [x] 完成 Catalog 与本地 Supabase 演练：486 个物种、13 个证据来源、checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`；26+1 migration 从零重放，pgTAP 19/19，schema lint 0 error。
 - [x] 完成业务与 UI 回归：Domain/Service/契约、核心体验、正式 scene、今日行动、物种详情、响应式路由、UI freeze、project truth、lint、API 类型和 production build 均通过；本轮只修正过期测试断言，未修改视觉 Owner 文件。
 - [x] 生成第 27 个 Catalog migration 授权包：`docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`；未执行生产 SQL、Catalog 发布或业务数据写入。
-- [ ] 独立 Critic 需对当前 diff 复验；随后将本地补救一次性推送候选分支并更新 PR #142。Vercel Preview 继续作为外部门禁，不重复重试。
+- [x] 独立 Critic 六维复验通过；本地补救已一次性推送候选分支并更新 PR #142。`npm run project:status` 显示本地、远端、PR SHA 同步为当前 head。
+- [ ] 新 head 的 Preview exact SHA 尚未验证；Vercel/AquaGuide 正在部署，admin-content 仍受无关限流影响。继续不重复重试。
 
 > 本文件后续按日期保留历史证据；较早条目中的旧 SHA、checksum 和 `PARTIAL_WITH_FALLBACK` 状态均不覆盖本节最新事实。
 

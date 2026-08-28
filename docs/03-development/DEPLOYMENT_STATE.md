@@ -8,7 +8,7 @@
 - Local release rehearsal after the authority/documentation update is complete: `check:compatibility-authority`, Catalog build/validate, Domain/Service/API, core UI, formal scenes, today action, species detail, responsive matrix, Supabase reset/pgTAP/lint, project truth, UI freeze, lint, API typecheck, build and diff check all passed. The only test edits were stale assertions; visual-owned files are unchanged.
 - The latest local changes are not yet pushed. Preview parity for the new head is therefore not claimed; production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
 
-- The current local candidate contains new commits beyond the last pushed remote/PR head; these changes are not yet represented by GitHub or Preview. After the one planned push, exact local/remote/PR SHA relation must be read with `npm run project:status`. PR #142 remains Draft and `releaseReady=false`.
+- The local candidate, remote branch and PR #142 are synchronized at the current head; verify the exact SHA at runtime with `npm run project:status`. The new Preview deployment is still being observed and is not yet accepted as exact-SHA parity. PR #142 remains Draft and `releaseReady=false`.
 - Local Catalog verification now reflects the reviewed tetra water facts: 486 species, 13 evidence sources, checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`.
 - The compatibility authority gate passes: frozen callers may use the legacy facade, while Domain Rules owns final status, policy, rule codes and versions.
 - Local Supabase 26+1 replay, 19/19 pgTAP and schema lint are passing. Production remains at 26 migrations; the Catalog migration is prepared but not executed.

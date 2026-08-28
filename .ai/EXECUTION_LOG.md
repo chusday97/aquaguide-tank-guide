@@ -8,6 +8,11 @@
 - Corrected only stale browser assertions: 600px follows the 768px phone breakpoint; formal compatibility uses `/encyclopedia?mode=compatibility`; AI Tank Copilot emits the existing feature-preview event; evidence disclosure is checked through `aria-expanded`.
 - Remaining: independent Critic re-review, one consolidated GitHub push, and Preview parity for the new head. Vercel remains external and rate-limited.
 
+## 2026-08-28 — Candidate push completed
+
+- Independent Critic re-review passed; the consolidated candidate was pushed once. `npm run project:status` now confirms local, remote branch and PR #142 SHA parity.
+- GitHub foundation/validate checks are still settling and AquaGuide Vercel is deploying; `admin-content` remains an unrelated rate-limit failure. Preview exact SHA is not yet accepted.
+
 ## 2026-08-28 — Candidate head and admin-content isolation
 
 - Candidate `codex/main-core-foundation-v1`, remote branch and PR #142 are synchronized at `df3c4e11`; `main` remains unchanged and PR #142 remains Draft.

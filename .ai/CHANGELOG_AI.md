@@ -13,7 +13,7 @@
 
 ### Notes
 
-- No visual-owned files, production Supabase data, Catalog publication, GitHub remote state or `main` were changed. Critic re-review and one consolidated push remain next.
+- No visual-owned files, production Supabase data, Catalog publication or `main` were changed. Critic re-review passed and the consolidated candidate push completed; Preview exact SHA and the three production authorization points remain pending.
 
 ## 2026-08-25
 
