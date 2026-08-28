@@ -21,6 +21,12 @@
 - [x] 补充空文本、无效换水周期、nullable 字段和数值范围回归；Catalog checksum 重新生成并通过一致性校验。
 - [ ] legacy UI status/evidence 尚未完全由 Domain 接管，状态继续为 `PARTIAL_WITH_FALLBACK`；生产 migration、Catalog 发布和 main 合并仍未授权。（本地提交待生成）
 
+## 2026-08-28 候选推送与 Preview parity
+
+- [x] 推送 `28fa0e8a`、`781c6af9` 至 `codex/main-core-foundation-v1`；本地、远端候选和 PR #142 Head 均为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。
+- [x] 新 Preview `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app` 实际 SHA 与候选一致，`check:preview-parity` 返回 `PASS / EQUIVALENT`。
+- [ ] PR #142 仍为 Draft；admin-content 无关门禁、生产第27个 migration、Catalog 发布和 main 合并仍未完成/未授权。
+
 ## 2026-08-28 本地 Supabase 验证连续推进
 
 - [x] 启动 Docker Desktop 与本地 Supabase CLI 栈，生成 `supabase/config.toml`；设置保留现有生产 26 个 migration 的 grants parity，`.temp/` 和本地凭据保持忽略（commit: `b9903924`）。
