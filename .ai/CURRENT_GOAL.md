@@ -3,24 +3,21 @@
 Updated: 2026-08-28
 Branch: `feature/admin-content-v0`
 
-Build an isolated AquaGuide Content Admin for non-technical Species SEO management without modifying `main` or Production Supabase.
+Build an isolated AquaGuide Species SEO Admin that supports grouped variants, bilingual drafts, safe indexing decisions and a visible public-page preview without modifying `main` or Production Supabase.
 
 ## Current milestone
 
-Complete bilingual Species SEO authoring on top of the inheritance model:
+Define and verify the public Species SEO route contract while keeping publishing fail-closed:
 
-`中文 Source → AI English suggestion → human review → English Draft`
-
-while preserving:
-
-`Category → Base Species shared SEO → Variant Override → Effective SEO`
+`Base/Variant content → locale draft → index strategy → derived URL/canonical/hreflang → public-page preview`
 
 ## Success criteria
 
-- `zh-CN` and `en` are independent content rows; one language never overwrites the other.
-- English common/display name is editorial localization, not Product Truth.
-- AI translation is suggestion-only; it never auto-publishes or silently overwrites Published English.
-- Scientific names, catalog keys and `{{template_tokens}}` remain protected.
-- Empty Variant Overrides stay empty so Base inheritance is preserved across languages.
-- Category conflicts and duplicate candidates remain visible with concrete review evidence.
-- Remote Preview remains read-only; real writes still require Auth + admin role + RLS.
+- Public URL is deterministic and not manually typed.
+- English uses the existing default-language path pattern; Chinese uses `/zh/`.
+- Every new Species SEO row defaults to `noindex`.
+- Canonical-to-sibling can only target a member of the same Base Species group in the Admin contract.
+- Category conflicts and suspected duplicates cannot silently become independent index pages.
+- Admin shows how H1/intro/Product Truth will appear on the future public page.
+- No Species can be marked Published until the real static-page generator and runtime canonical/hreflang tests exist.
+- All database validation remains local/non-production and all milestones are traceable in `.ai/`.

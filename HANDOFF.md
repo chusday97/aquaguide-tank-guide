@@ -516,3 +516,12 @@
 - Data Review Queue now shows exact category-conflict membership and exact duplicate peer IDs; it does not choose canonical records or rewrite `fishData.ts`.
 - `202608280003_species_seo_localized_name.sql` was tested only in isolated local Supabase. Production remains untouched.
 - Remaining gates: configure Admin AI provider secret and verify one live translation; implement version history; decide multilingual public URL/canonical/hreflang; then connect Published English to public Species pages.
+
+### 2026-08-28 Species SEO public route / indexing handoff
+- Do not treat `/encyclopedia?species=...` as the new SEO canonical. The branch now proposes stable static paths based on Base Scientific Name slug + catalog key.
+- English is the default route; Chinese prepends `/zh/`, matching the existing static Problem SEO pages and their hreflang/x-default pattern.
+- `species_seo.index_strategy` defaults to `noindex`; `canonical_to_sibling` is restricted by the Admin contract to the same Base Species group.
+- Base Species is an inheritance object, not automatically an indexable public page.
+- `PublicSpeciesPreview` is an Admin HTML preview of future page changes; it does not mean a public Species file already exists.
+- Publishing is intentionally locked for both locales until a real static Species generator, sitemap and runtime title/meta/canonical/hreflang/robots tests are implemented.
+- Migration 004 was verified only in a fresh isolated local Supabase. Never infer that Production has these columns.

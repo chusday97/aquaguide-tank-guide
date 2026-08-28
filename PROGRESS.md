@@ -275,3 +275,11 @@
 - 5 个分类冲突与 28 条疑似重复已升级为可查看证据的 Data Review Queue，不自动删改源 catalog。
 - 本地隔离 Supabase 已验证中文/英文同 key 共存及普通用户 Draft 不可见；Production Supabase 未执行新 migration。
 - 真实 Chrome 已验证 English 双栏翻译界面、神仙鱼分类冲突证据与米虾重复证据；public Species 多语言 URL/canonical/hreflang 尚未接入。
+
+### 2026-08-28 Species SEO Route / Index / 页面效果预览
+- 隔离 Admin 已新增稳定 Species 路由提案：英文 `/species/<scientific-slug>/<catalog-key>.html`，中文对应 `/zh/species/...`；沿用现有 Problem SEO 页的 English-default + `/zh/` + hreflang/x-default 结构。
+- 所有 Species 默认 `noindex`，可人工选择独立 Index 或同 Base Species 内 canonical；分类冲突/疑似重复继续 fail closed。
+- Canonical 不再由运营手填，改为路由契约自动生成；Base Species 继续只承担共享内容继承，不自动产生公共 landing page。
+- Admin 已增加真实 HTML“公开 Species 页面效果预览”，组合 SEO H1/简介与现有 catalog 水温、pH、缸体、难度等只读 Product Truth。
+- 新 migration 004 仅在全新本地隔离 Supabase 验证；管理员写入成功，普通用户 Draft 读取为 0 且写入被 RLS 拒绝。Production 未执行。
+- 正式 Species HTML 生成器与 canonical/hreflang/sitemap 运行时门禁尚未完成，因此中英文 Published 均保持禁用。

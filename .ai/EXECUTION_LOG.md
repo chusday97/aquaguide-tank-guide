@@ -56,3 +56,13 @@
 - Completed source-data review queue with concrete category-conflict and duplicate-set evidence.
 - Applied `202608280003_species_seo_localized_name.sql` only to isolated local Supabase; bilingual rows coexist and non-admin Draft read remains denied.
 - Real Chrome Review verified English workspace, `Pterophyllum scalare` conflict evidence and `Neocaridina davidi` duplicate evidence.
+
+## 2026-08-28 — Species route, index strategy and page-effect preview
+- Audited existing `public/problems` + `public/zh/problems` SEO pages and reused their English-default + `/zh/` hreflang pattern.
+- Confirmed there are currently no independent public Species SEO HTML pages; existing `/encyclopedia?species=...` is an application deep link, not the new canonical contract.
+- Added `seoRouteContract.js`, `index_strategy`, `canonical_catalog_key` and derived canonical paths.
+- Extended the lightweight Admin catalog with read-only temperature/pH/tank-size/difficulty/description fields only for page preview.
+- Added `PublicSpeciesPreview` so editors see H1/intro and existing Product Truth in a future public-page layout instead of relying on a generated image.
+- Contract/build/diff checks passed; real Chrome verified URL/canonical/hreflang/noindex and disabled Published state.
+- Recreated a fresh isolated local Supabase at `/tmp/aquaguide-admin-seo-test`; core + Admin migrations 001–004 applied successfully.
+- RLS proof: admin saved canonical strategy; non-admin saw 0 Draft rows and INSERT was rejected; test rows cleaned up.

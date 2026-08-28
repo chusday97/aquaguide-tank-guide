@@ -128,7 +128,8 @@ export default function TranslationPanel({
         intro: suggestion.intro,
         image_alt: suggestion.imageAlt,
         focus_keyword: suggestion.focusKeyword,
-        canonical_path: targetVariantRow?.canonical_path || `/species/${species.catalog_key}`,
+        index_strategy: targetVariantRow?.index_strategy || 'noindex',
+        canonical_catalog_key: targetVariantRow?.canonical_catalog_key || '',
         status: 'draft',
       };
       const { data, error } = await supabase.from('species_seo').upsert(row, { onConflict: 'catalog_key,locale' }).select('*').single();

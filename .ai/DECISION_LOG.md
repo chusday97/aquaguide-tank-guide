@@ -38,3 +38,13 @@
 - Scientific names, catalog keys and `{{template_tokens}}` are protected; token mismatch fails closed.
 - English common/display names live in `species_seo.localized_name`; Product Truth names remain untouched.
 - Published English cannot be silently overwritten until versioned Draft/Preview/Publish is implemented.
+
+## 2026-08-28 — Public Species route / indexing contract
+- Reuse the existing AquaGuide multilingual SEO pattern: English default path, Chinese `/zh/`, reciprocal hreflang, English `x-default`.
+- Base Species is a content-inheritance layer, not automatically a public landing page.
+- Variant/public page identity uses stable Base Scientific Name slug + `catalog_key`; translated/common names do not control URLs.
+- New Species SEO is `noindex` by default. A catalog row existing does not imply Google should index it.
+- `canonical_to_sibling` is a manual SEO decision and the Admin only offers targets inside the same Base Species group.
+- Category-conflict groups and suspected duplicates fail closed for independent Index until reviewed.
+- Canonical URLs are derived from the route contract, not free-text editorial fields.
+- All Published options remain disabled until the actual Species HTML generator, canonical/hreflang output and runtime regression tests exist.

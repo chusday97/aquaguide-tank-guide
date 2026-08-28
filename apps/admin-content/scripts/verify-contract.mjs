@@ -4,22 +4,25 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { extractTemplateTokens, validateProtectedTokens } from '../api/_translation-core.js';
+import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/DataReviewPanel.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/PublicSpeciesPreview.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/TranslationPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'api/translate.js'), 'utf8'),
   readFile(path.join(appRoot, 'src/supabase.js'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280001_species_seo_admin.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280002_species_seo_group_inheritance.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280003_species_seo_localized_name.sql'), 'utf8'),
+  readFile(path.join(repoRoot, 'supabase/migrations/202608280004_species_seo_index_strategy.sql'), 'utf8'),
   readFile(path.join(appRoot, '.env.example'), 'utf8'),
   readFile(path.join(appRoot, '.env.review.example'), 'utf8'),
   readFile(path.join(appRoot, 'src/catalog.generated.json'), 'utf8'),
@@ -35,6 +38,7 @@ assert.equal(groupedMembers.length, catalog.length, 'Every catalog record must b
 assert.equal(new Set(groupedMembers.map((item) => item.catalog_key)).size, catalog.length, 'Grouped members must remain unique');
 assert.ok(groupData.groups.some((group) => group.member_count > 1), 'Group model must expose batch candidates');
 assert.ok(catalog.every((item) => item.id === item.catalog_key), 'Catalog key must remain the stable Species id');
+assert.ok(catalog.some((item) => item.water_temperature && item.ph_level && item.tank_size), 'Admin catalog must expose preview Product Truth without making it editable');
 assert.equal(groupData.stats.catalog_count, catalog.length, 'Group stats must match catalog size');
 assert.equal(groupData.stats.base_group_count, groupData.groups.length, 'Group count stats must remain accurate');
 assert.ok(groupData.stats.batch_candidate_groups > 0, 'Batch candidate groups must be tracked');
@@ -52,14 +56,19 @@ assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
 assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review evidence');
 assert.match(appSource, /TranslationPanel/, 'Admin must expose bilingual translation workflow');
-assert.match(appSource, /English 发布暂时锁定/, 'English publish must remain locked until URL/hreflang contract exists');
-assert.match(baseSource, /English 发布暂时锁定/, 'Base English publish must remain locked until URL/hreflang contract exists');
+assert.match(appSource, /PublicSpeciesPreview/, 'Admin must show the resulting public Species page preview');
+assert.match(publicPreviewSource, /hreflang=zh-CN/, 'Public preview must expose hreflang pair evidence');
+assert.match(appSource, /index_strategy: form\.indexStrategy/, 'Variant SEO must persist explicit index strategy');
+assert.match(appSource, /Species 发布暂时锁定/, 'Species publish must remain locked until public Species generator is verified');
+assert.match(appSource, /isPublicSpeciesPublishingEnabled = false/, 'Variant publish gate must fail closed while public generator is absent');
+assert.match(baseSource, /Species 发布暂时锁定/, 'Base Species publish must remain locked until public Species generator is verified');
+assert.match(baseSource, /isPublicSpeciesPublishingEnabled = false/, 'Base publish gate must fail closed while public generator is absent');
 assert.match(appSource, /CONTENT_LOCALES/, 'Admin must expose an explicit content-locale switcher');
 assert.match(appSource, /seoRowKey\(row\.catalog_key, row\.locale\)/, 'Localized Variant rows must not collide in client state');
 assert.match(appSource, /groupSeoRowKey\(row\.group_key, row\.locale\)/, 'Localized Base rows must not collide in client state');
 assert.match(appSource, /VITE_ADMIN_REVIEW_MODE/, 'Review mode must be explicit and build-time controlled');
 assert.match(appSource, /if \(readOnly\)/, 'Single save path must fail closed in review mode');
-assert.match(appSource, /disabled=\{saving \|\| readOnly\}/, 'Single save button must be disabled in review mode');
+assert.match(appSource, /disabled=\{saving \|\| readOnly/, 'Single save button must be disabled in review mode');
 
 assert.match(batchSource, /group\.category_conflict/, 'Category-conflict groups must block bulk writes');
 assert.match(batchSource, /publishedSelected\.length/, 'Published rows must block unsafe batch overwrite');
@@ -101,11 +110,25 @@ assert.match(groupMigrationSource, /species_seo_groups_admin_update/);
 assert.match(groupMigrationSource, /public\.is_admin\(\)/);
 
 assert.match(localeMigrationSource, /add column if not exists localized_name text not null default ''/);
+assert.match(routeMigrationSource, /index_strategy text not null default 'noindex'/);
+assert.match(routeMigrationSource, /canonical_catalog_key text not null default ''/);
+assert.match(routeMigrationSource, /canonical_to_sibling/);
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
 assert.ok(neoGroup?.member_count > 2, 'Neocaridina group must remain a real inheritance fixture');
 const yellowShrimp = neoGroup.members.find((member) => member.name === '黄金米虾');
 assert.ok(yellowShrimp, 'Inheritance fixture must include 黄金米虾');
+const routeEnglish = speciesPublicPath(yellowShrimp, neoGroup, 'en');
+const routeChinese = speciesPublicPath(yellowShrimp, neoGroup, 'zh-CN');
+assert.equal(routeEnglish, `/species/neocaridina-davidi/${yellowShrimp.catalog_key.replaceAll('_', '-')}.html`, 'English Species route must be deterministic and stable');
+assert.equal(routeChinese, `/zh${routeEnglish}`, 'Chinese Species route must reuse the existing /zh locale pattern');
+const noindexMeta = buildSpeciesSeoRouteMeta({ member: yellowShrimp, group: neoGroup, locale: 'en' });
+assert.equal(noindexMeta.robots, 'noindex,follow', 'Species SEO records must fail closed to noindex by default');
+const sibling = neoGroup.members.find((member) => member.catalog_key !== yellowShrimp.catalog_key);
+const canonicalMeta = buildSpeciesSeoRouteMeta({ member: yellowShrimp, group: neoGroup, locale: 'zh-CN', indexStrategy: 'canonical_to_sibling', canonicalCatalogKey: sibling.catalog_key });
+assert.equal(canonicalMeta.canonicalPath, speciesPublicPath(sibling, neoGroup, 'zh-CN'), 'Canonical target must stay inside the same Base Species group');
+assert.equal(canonicalMeta.alternates['x-default'], speciesPublicPath(sibling, neoGroup, 'en'), 'x-default must follow the existing English-default SEO pattern');
+
 const inheritedSeo = resolveEffectiveSeo({ member: yellowShrimp, group: neoGroup, groupRow: null, variantRow: null });
 assert.match(inheritedSeo.effective.seoTitle, /黄金米虾/, 'Base template must resolve the Variant display name');
 assert.equal(inheritedSeo.override.seoTitle, false, 'Missing Variant value must inherit Base title');

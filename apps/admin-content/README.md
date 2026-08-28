@@ -121,3 +121,17 @@ The generated grouping layer now exposes the source-data problems found during d
 - 5 Base Species groups have category conflicts. The Admin shows the conflicting category members and keeps bulk/publish actions fail-closed.
 - 28 records are suspected exact duplicates. Duplicate sets and peer `catalog_key` values are displayed for review.
 - The first record in a duplicate set is only a review candidate; the Admin does not delete, merge, rewrite Product Truth, or silently choose a canonical record.
+
+## Public Species route and indexing proposal (current branch)
+
+The Admin no longer treats `/species/<catalog_key>` as an existing canonical URL. AquaGuide currently has no standalone public Species SEO HTML pages. The branch defines a deterministic future contract instead:
+
+- English: `/species/<base-scientific-slug>/<catalog-key>.html`
+- Chinese: `/zh/species/<base-scientific-slug>/<catalog-key>.html`
+- `x-default`: English
+- New records: `noindex,follow` by default
+- Optional review strategies: independent Index, canonical to a sibling Variant, or Noindex
+
+Canonical paths are derived and cannot be freely typed. Category-conflict groups cannot become indexable, and suspected exact duplicates cannot be marked as independent Index before review. Base Species remains an inheritance layer rather than automatically becoming a public URL.
+
+`PublicSpeciesPreview` shows the future page composition using editorial H1/intro plus read-only Product Truth from the current catalog. This is a preview only: the static Species HTML generator and sitemap are not implemented yet, so both Chinese and English Published states remain disabled.

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabase.js';
 import { groupSeoFromRow } from './seoInheritance.js';
-import { getLocaleLabel, isEnglishLocale } from './localization.js';
+import { getLocaleLabel } from './localization.js';
+
+const isPublicSpeciesPublishingEnabled = false;
 
 export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved }) {
   const [form, setForm] = useState(() => groupSeoFromRow(record, locale));
@@ -31,8 +33,8 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
   });
 
   const save = async () => {
-    if (isEnglishLocale(locale) && form.status === 'published') {
-      setMessage('English 发布暂时锁定：先完成 URL / canonical / hreflang 契约。');
+    if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
+      setMessage('Species 发布暂时锁定：正式 HTML 生成器与 canonical/hreflang 运行时回归尚未接入。');
       return;
     }
     if (readOnly) {
@@ -101,7 +103,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <div className="footer-actions">
           <select value={form.status} onChange={(event) => update('status', event.target.value)}>
             <option value="draft">Draft</option>
-            <option value="published" disabled={isEnglishLocale(locale)}>Published{isEnglishLocale(locale) ? '（待 URL / hreflang）' : ''}</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（待公开页生成器）</option>
             <option value="archived">Archived</option>
           </select>
           <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving || group.category_conflict}>

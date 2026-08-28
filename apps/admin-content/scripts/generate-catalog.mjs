@@ -36,6 +36,11 @@ const catalog = fishData.map((item) => ({
   category: item.category,
   status: 'catalog',
   image: item.image,
+  difficulty: item.difficulty || '',
+  water_temperature: item.waterTemperature || '',
+  ph_level: item.phLevel || '',
+  tank_size: item.tankSize || '',
+  product_description: item.description || '',
 }));
 
 await writeFile(outputPath, `${JSON.stringify(catalog, null, 2)}\n`, 'utf8');

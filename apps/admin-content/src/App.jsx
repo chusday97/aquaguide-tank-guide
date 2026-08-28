@@ -5,11 +5,14 @@ import BatchSeoEditor from './BatchSeoEditor.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
 import TranslationPanel from './TranslationPanel.jsx';
 import DataReviewPanel from './DataReviewPanel.jsx';
+import PublicSpeciesPreview from './PublicSpeciesPreview.jsx';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
+import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
+const isPublicSpeciesPublishingEnabled = false;
 const initialParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 const initialContentLocale = initialParams.get('locale') === 'en' ? 'en' : 'zh-CN';
 const initialSpeciesId = initialParams.get('species') || null;
@@ -21,7 +24,8 @@ const emptySeo = {
   h1: '',
   intro: '',
   imageAlt: '',
-  canonicalPath: '',
+  indexStrategy: 'noindex',
+  canonicalCatalogKey: '',
   focusKeyword: '',
   status: 'draft',
 };
@@ -33,7 +37,8 @@ const fromSeoRow = (row, species, locale = 'zh-CN') => ({
   h1: row?.h1 || '',
   intro: row?.intro || '',
   imageAlt: row?.image_alt || '',
-  canonicalPath: row?.canonical_path || `/species/${species?.catalog_key || ''}`,
+  indexStrategy: row?.index_strategy || 'noindex',
+  canonicalCatalogKey: row?.canonical_catalog_key || '',
   focusKeyword: row?.focus_keyword || (isEnglishLocale(locale) ? row?.localized_name || '' : species?.name || ''),
   status: row?.status || 'draft',
   version: row?.version,
@@ -150,10 +155,29 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     locale,
   });
   const effectiveSeo = resolvedSeo.effective;
+  const groupMember = group?.members?.find((item) => item.catalog_key === species.catalog_key) || null;
+  const routeMeta = buildSpeciesSeoRouteMeta({
+    member: species,
+    group,
+    locale,
+    indexStrategy: form.indexStrategy,
+    canonicalCatalogKey: form.canonicalCatalogKey,
+  });
+  const indexBlockReason = group?.category_conflict && form.indexStrategy !== 'noindex'
+    ? '源数据存在分类冲突；复核完成前只能保持 Noindex。'
+    : groupMember?.duplicate_peer_keys?.length && form.indexStrategy === 'index'
+      ? '当前记录属于疑似重复集；复核 canonical 前不能独立 Index。'
+      : !routeMeta.publishReady
+        ? '选择 Canonical to sibling 后必须指定同一 Base Species 内的目标记录。'
+        : '';
 
   const save = async () => {
-    if (isEnglishLocale(locale) && form.status === 'published') {
-      setMessage('English 发布暂时锁定：先完成 URL / canonical / hreflang 契约，只能保存 Draft 或 Archived。');
+    if (indexBlockReason) {
+      setMessage(indexBlockReason);
+      return;
+    }
+    if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
+      setMessage('Species 发布暂时锁定：正式 HTML 生成器与 canonical/hreflang 运行时回归尚未接入，只能保存 Draft 或 Archived。');
       return;
     }
     if (readOnly) {
@@ -175,7 +199,9 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       h1: form.h1.trim(),
       intro: form.intro.trim(),
       image_alt: form.imageAlt.trim(),
-      canonical_path: form.canonicalPath.trim(),
+      canonical_path: routeMeta.canonicalPath,
+      index_strategy: form.indexStrategy,
+      canonical_catalog_key: form.indexStrategy === 'canonical_to_sibling' ? form.canonicalCatalogKey : '',
       focus_keyword: form.focusKeyword.trim(),
       status: form.status,
     };
@@ -266,10 +292,41 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               Hero Image Alt
               <input value={form.imageAlt} onChange={(event) => update('imageAlt', event.target.value)} />
             </label>
-            <label>
-              Canonical Path
-              <input value={form.canonicalPath} onChange={(event) => update('canonicalPath', event.target.value)} />
+          </div>
+
+          <div className="section-card">
+            <div className="section-heading">
+              <div>
+                <h3>Indexing & URL</h3>
+                <p>公开路径由稳定 catalog key + Base Scientific Name 推导，不再手填 Canonical。</p>
+              </div>
+            </div>
+            <label>Search Index Strategy
+              <select value={form.indexStrategy} onChange={(event) => update('indexStrategy', event.target.value)}>
+                {INDEX_STRATEGIES.map((item) => (
+                  <option
+                    key={item.value}
+                    value={item.value}
+                    disabled={(group?.category_conflict && item.value !== 'noindex') || (groupMember?.duplicate_peer_keys?.length && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
+                  >{item.label}</option>
+                ))}
+              </select>
             </label>
+            {form.indexStrategy === 'canonical_to_sibling' ? (
+              <label>Canonical target（同组）
+                <select value={form.canonicalCatalogKey} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
+                  <option value="">请选择同组主页面</option>
+                  {(group?.members || []).filter((item) => item.catalog_key !== species.catalog_key).map((item) => (
+                    <option key={item.catalog_key} value={item.catalog_key}>{item.name} · {item.catalog_key}</option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
+            <div className="route-inline-summary">
+              <span>Public URL</span><code>{routeMeta.selfPath}</code>
+              <span>Canonical</span><code>{routeMeta.canonicalPath}</code>
+            </div>
+            <small className="inherit-note">当前只建立 Route Contract 和页面预览；正式 Species HTML 生成器尚未接入，因此不会因为选择 Index 就自动上线。</small>
           </div>
         </div>
 
@@ -282,7 +339,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               </div>
             </div>
             <div className="google-preview">
-              <div className="preview-domain">aquaguide · {form.canonicalPath || `/species/${species.catalog_key}`}</div>
+              <div className="preview-domain">aquaguide · {routeMeta.selfPath}</div>
               <div className="preview-title">{effectiveSeo.seoTitle || effectiveSeo.displayName || species.name}</div>
               <div className="preview-description">{effectiveSeo.metaDescription || '尚未填写 Meta Description。'}</div>
             </div>
@@ -296,18 +353,21 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         </aside>
       </div>
 
+      <PublicSpeciesPreview species={species} locale={locale} effectiveSeo={effectiveSeo} routeMeta={routeMeta} />
+
       <div className="editor-footer">
         <div>
           {!schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
+          {indexBlockReason ? <span className="warning-text">{indexBlockReason}</span> : null}
           {message ? <span className="save-message">{message}</span> : null}
         </div>
         <div className="footer-actions">
           <select value={form.status} onChange={(event) => update('status', event.target.value)} aria-label="SEO status">
             <option value="draft">Draft</option>
-            <option value="published" disabled={isEnglishLocale(locale)}>Published{isEnglishLocale(locale) ? '（待 URL / hreflang）' : ''}</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（待公开页生成器）</option>
             <option value="archived">Archived</option>
           </select>
-          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly}>{readOnly ? '只读预览' : saving ? '保存中…' : `保存 ${getLocaleLabel(locale)} SEO`}</button>
+          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? '只读预览' : saving ? '保存中…' : `保存 ${getLocaleLabel(locale)} SEO`}</button>
         </div>
       </div>
     </section>
@@ -394,7 +454,7 @@ export default function App() {
 
       const { data: seoData, error: seoError } = await supabase
         .from('species_seo')
-        .select('*')
+        .select('id,catalog_key,locale,localized_name,seo_title,meta_description,h1,intro,image_alt,canonical_path,focus_keyword,index_strategy,canonical_catalog_key,status,published_at,updated_at,deleted_at,version')
         .is('deleted_at', null);
 
       if (seoError) {

@@ -2,27 +2,25 @@
 
 Updated: 2026-08-28
 
-## Done this milestone
-- [x] Push Base Species inheritance milestone (`f27ed43`).
-- [x] Build source-data review filters for 5 category conflicts and 28 suspected exact duplicates.
-- [x] Add right-side review evidence; do not auto-delete or rewrite Product Truth.
-- [x] Add independent `zh-CN` / `en` Species SEO and Base SEO rows.
-- [x] Add locale-specific English common/display name without mutating catalog names.
-- [x] Add admin-authenticated server-side AI translation suggestion endpoint.
-- [x] Protect scientific names, catalog keys and Base template tokens.
-- [x] Save accepted translation only as English Draft; block direct overwrite of Published English.
-- [x] Verify bilingual coexistence and Draft RLS in isolated local Supabase.
-- [x] Verify English translation UI and review queue in real Chrome Review mode.
+## Completed
+- [x] Create isolated `apps/admin-content` companion app with Auth + admin role + RLS.
+- [x] Project 486 catalog rows into 276 Base Species groups and Variant members.
+- [x] Add Base Species inheritance + Variant Override (`f27ed43`).
+- [x] Add data review queue for 5 category conflicts and 28 suspected duplicate records.
+- [x] Add zh-CN → English suggestion workflow with separate locale Drafts (`465024a`).
+- [x] Define deterministic Species public-route/canonical/hreflang contract.
+- [x] Add Index / Canonical-to-sibling / Noindex strategy, defaulting to Noindex.
+- [x] Add live HTML public Species-page effect preview inside Admin.
+- [x] Verify migration 004 and RLS in a fresh isolated local Supabase.
 
 ## Next
-- [ ] Configure AI provider secret for the isolated Admin deployment and verify one real zh→en translation request.
-- [ ] Add Draft / Preview / Publish version history before modifying Published SEO.
-- [ ] Add per-Variant index strategy: Index / Canonical to Base / Noindex.
-- [ ] Define public multilingual URL + canonical + hreflang contract before wiring English SEO to public pages.
-- [ ] Add terminology/glossary memory after the first reviewed English Species batch.
-- [ ] Validate the final Admin schema in staging/non-production Supabase.
+- [ ] Commit/push the route + index + public-page-preview milestone.
+- [ ] Build a non-production Species static-page generator from Published SEO records.
+- [ ] Add runtime tests for title/meta/canonical/hreflang/robots and sitemap output.
+- [ ] Add version history / rollback before allowing Published SEO updates.
+- [ ] Resolve duplicate/cross-category source-data review before enabling independent Index.
 
 ## Later
-- [ ] Connect Published effective localized SEO to public Species pages.
-- [ ] Add internal-link/FAQ inheritance after content model stabilizes.
-- [ ] Search Console/ranking integrations only after publishing architecture is stable.
+- [ ] Validate the final publishing pipeline in staging Supabase.
+- [ ] Connect approved Published Species pages to the public AquaGuide deployment.
+- [ ] Add Search Console integration only after route/index contracts are stable.

@@ -4,33 +4,29 @@ Updated: 2026-08-28
 Branch: `feature/admin-content-v0`
 
 ## Current state
-- Public AquaGuide `main`: untouched by this Admin branch.
-- Production Supabase: untouched; Admin migrations remain branch-only proposals.
-- Admin app: `apps/admin-content`; remote Review mode remains no-write.
-- Inheritance milestone is already pushed as `f27ed43`.
-- Current uncommitted milestone adds source-data review + bilingual SEO authoring.
+- Public AquaGuide `main`: untouched by this Admin milestone.
+- Production Supabase: untouched; migrations 001–004 remain branch-only proposals.
+- Latest pushed milestone before current work: `465024a` bilingual translation + data review.
+- Current uncommitted milestone: Species route/index contract + live public-page effect preview.
+- 486 catalog rows → 276 Base Species groups; 83 multi-member groups; 28 suspected duplicate records; 5 category-conflict groups.
 
-## Bilingual content model
-- Chinese is the editorial source locale (`zh-CN`); English is a separate `en` row.
-- Variant rows are keyed by `catalog_key + locale`; Base rows by `group_key + locale`.
-- `localized_name` stores an English editorial common/display name and does not modify Product Truth.
-- English Base templates have locale-native defaults; Variant blank Overrides continue inheriting Base.
-- AI translation generates suggestions only; acceptance saves an English Draft and never auto-publishes.
-- Published English is protected from direct suggestion overwrite until versioned Draft/Publish exists.
-
-## Translation safety
-- `/api/translate` requires the signed-in Supabase JWT and re-checks `user_roles.role=admin` server-side.
-- Provider secrets use server-only `AI_API_KEY` / `DEEPSEEK_API_KEY`; browser code never reads them.
-- Scientific names/catalog keys are context-only and must not be translated.
-- Base `{{template_tokens}}` are validated after model output; token loss/rename fails closed.
+## Public Species SEO contract
+- Existing AquaGuide static SEO pages already use English default paths and Chinese `/zh/` paths with reciprocal hreflang and English `x-default`; Species proposal follows the same pattern.
+- Proposed stable Species paths: `/species/<base-scientific-slug>/sp-0001.html` and `/zh/species/<base-scientific-slug>/sp-0001.html`.
+- URL identity uses Base Scientific Name + stable catalog key, not translated/common names.
+- `index_strategy` defaults to `noindex`; available review choices are `index`, `canonical_to_sibling`, `noindex`.
+- Canonical path is derived by contract, not editable free text.
+- Base Species remains an inheritance layer; it is not automatically a separate public landing page.
 
 ## Verification
-- Contract test, Vite production build and diff check passed before final docs sync; final gate will rerun before commit.
-- Local isolated Supabase: same Species stores independent zh-CN and en Draft rows without collision.
-- Simulated non-admin Draft read remains 0; test rows were cleaned up.
-- Real Chrome Review verified `?locale=en`, `?locale=en&species=sp_0175`, and `?species=sp_0001`.
-- Review UI visibly exposes 5 category conflicts and 28 duplicate candidates with exact member evidence.
+- Contract test and production Admin build pass; only the existing >500KB bundle warning remains.
+- Real Chrome Review shows Public URL, canonical, hreflang en/zh-CN/x-default, `noindex,follow`, Google Preview and public Species-page preview.
+- Preview reads existing water temperature, pH, tank size and difficulty from catalog as read-only Product Truth.
+- Fresh isolated Supabase on ports 56321/56322 applied core + Admin migrations 001–004 from scratch.
+- Simulated admin RLS write stored `canonical_to_sibling`; simulated non-admin Draft read returned 0 and write was rejected; cleanup left 0 test rows.
+- Published is disabled for both locales until an actual Species HTML generator + runtime SEO validation exists.
 
-## External gate
-- A live AI translation request still depends on configuring the provider secret in the isolated Admin deployment.
-- Public multilingual Species routing/canonical/hreflang is intentionally not connected yet.
+## Safety boundary
+- Remote Review remains read-only.
+- No service-role key is exposed to browser code.
+- No current operation has modified Production Supabase or merged this branch into `main`.
