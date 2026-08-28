@@ -9,6 +9,13 @@ const numericRange = (value?: string | null) => {
   return { min: Math.min(...values), max: Math.max(...values) };
 };
 
+const minimumLiters = (value?: string | null) => {
+  const match = value?.match(/(\d+(?:\.\d+)?)\s*(?:l|升|liters?)/i);
+  if (!match) return null;
+  const parsed = Number(match[1]);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+};
+
 /** Convert legacy Fish records without inferring catalog facts from names or categories. */
 export const speciesProfileFromFish = (fish: Fish): SpeciesProfile => {
   const temperature = numericRange(fish.waterTemperature);
@@ -31,7 +38,7 @@ export const speciesProfileFromFish = (fish: Fish): SpeciesProfile => {
   description: nullableText(fish.description),
   diet: nullableText(fish.diet),
   tankSizeText: nullableText(fish.tankSize),
-  minTankLiters: null,
+  minTankLiters: minimumLiters(fish.tankSize),
   temperament: fish.temperament ?? null,
   sizeClass: fish.size ?? null,
   housingMode: fish.housingMode ?? null,

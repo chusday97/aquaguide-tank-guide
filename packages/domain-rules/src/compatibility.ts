@@ -9,6 +9,8 @@ export type DomainSpeciesFact = {
   temperatureMaxC?: number | null;
   phMin?: number | null;
   phMax?: number | null;
+  minTankLiters?: number | null;
+  minTankLengthCm?: number | null;
   reviewed: boolean;
   behaviorTraits?: string[];
   size?: 'Small' | 'Medium' | 'Large' | string;
@@ -17,6 +19,7 @@ export type DomainSpeciesFact = {
 export type DomainTankFact = {
   waterType?: 'freshwater' | 'saltwater' | 'unknown' | null;
   volumeLiters?: number | null;
+  lengthCm?: number | null;
   targetTemperatureC?: number | null;
 };
 
@@ -62,6 +65,11 @@ const rangesOverlap = (leftMin?: number | null, leftMax?: number | null, rightMi
   return Math.max(leftMin, rightMin) <= Math.min(leftMax, rightMax);
 };
 
+const rangeContains = (value: number | null | undefined, min?: number | null, max?: number | null) => {
+  if (value == null || min == null || max == null) return null;
+  return value >= min && value <= max;
+};
+
 export const evaluateCompatibility = ({
   intent,
   tank,
@@ -98,11 +106,17 @@ export const evaluateCompatibility = ({
       if (candidateSpecies.behaviorTraits?.includes('solitary_required')) {
         raise('not_recommended', 'single_housing_required');
       }
-      if (rangesOverlap(existing.temperatureMinC, existing.temperatureMaxC, candidateSpecies.temperatureMinC, candidateSpecies.temperatureMaxC) === null) {
+      const temperatureOverlap = rangesOverlap(existing.temperatureMinC, existing.temperatureMaxC, candidateSpecies.temperatureMinC, candidateSpecies.temperatureMaxC);
+      if (temperatureOverlap === null) {
         raise('insufficient_data', 'temperature_range_missing');
+      } else if (!temperatureOverlap) {
+        raise('not_recommended', 'temperature_range_conflict');
       }
-      if (rangesOverlap(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax) === null) {
+      const phOverlap = rangesOverlap(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax);
+      if (phOverlap === null) {
         raise('insufficient_data', 'ph_range_missing');
+      } else if (!phOverlap) {
+        raise('caution', 'ph_range_conflict');
       }
     }
   }
@@ -115,6 +129,18 @@ export const evaluateCompatibility = ({
     }
     if (tank.volumeLiters == null || tank.volumeLiters <= 0) raise('insufficient_data', 'tank_volume_missing');
     if (tank.targetTemperatureC == null) raise('insufficient_data', 'tank_temperature_missing');
+    const candidateTankTemperatureFit = rangeContains(
+      tank.targetTemperatureC,
+      candidateSpecies.temperatureMinC,
+      candidateSpecies.temperatureMaxC,
+    );
+    if (candidateTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
+    if (candidateSpecies.minTankLiters != null && tank.volumeLiters != null && tank.volumeLiters < candidateSpecies.minTankLiters) {
+      raise('caution', 'tank_volume_below_species_minimum');
+    }
+    if (candidateSpecies.minTankLengthCm != null && tank.lengthCm != null && tank.lengthCm < candidateSpecies.minTankLengthCm) {
+      raise('caution', 'tank_length_below_species_minimum');
+    }
   }
   if (explicitPairStatus) raise(explicitPairStatus, 'reviewed_pair_rule');
 

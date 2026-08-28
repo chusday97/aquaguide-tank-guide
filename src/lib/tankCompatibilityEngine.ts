@@ -641,6 +641,8 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     temperatureMaxC: profile.waterTemperatureMaxC,
     phMin: profile.phMin,
     phMax: profile.phMax,
+    minTankLiters: profile.minTankLiters,
+    minTankLengthCm: null,
     reviewed: Boolean(getReviewedCompatibilityProfile(fish.id)),
     behaviorTraits: getReviewedCompatibilityProfile(fish.id)?.behaviorTraits || [],
     size: fish.size,
@@ -650,6 +652,7 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
 const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
   waterType: tank.waterType === 'Freshwater' ? 'freshwater' : tank.waterType === 'Saltwater' ? 'saltwater' : 'unknown',
   volumeLiters: getAquariumVolumeLiters(tank) || null,
+  lengthCm: tank.dimensions ? Number(tank.dimensions.length) || null : null,
   targetTemperatureC: tank.targetTemperature ? Number(tank.targetTemperature) : null,
 });
 

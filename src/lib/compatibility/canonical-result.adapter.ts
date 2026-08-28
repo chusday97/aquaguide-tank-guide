@@ -57,6 +57,21 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   ph_range_missing: {
     code: 'ph_range_missing', title: '缺少 pH 适宜区间', evidence: '组合中至少一个物种缺少可比较的 pH 区间。', severity: 'medium', basis: 'species_trait', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
+  temperature_range_conflict: {
+    code: 'temperature_range_conflict', title: '温度区间不重合', evidence: '组合中的物种没有共同的适宜温度区间，不能按同一温度规划加入。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  ph_range_conflict: {
+    code: 'ph_range_conflict', title: 'pH 区间差异较大', evidence: '组合中的物种没有明确的共同 pH 区间，需先确认实际水质和物种敏感度。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  tank_temperature_conflict: {
+    code: 'tank_temperature_conflict', title: '鱼缸温度不匹配', evidence: '当前鱼缸目标温度不在候选物种的已审核适宜范围内。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  tank_volume_below_species_minimum: {
+    code: 'tank_volume_below_species_minimum', title: '水体低于物种最低建议', evidence: '当前水体低于候选物种的已审核最低建议，需要先调整空间或更换候选。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  tank_length_below_species_minimum: {
+    code: 'tank_length_below_species_minimum', title: '缸长低于物种最低建议', evidence: '当前鱼缸长度低于候选物种的已审核最低建议，需要先确认活动空间。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
 };
 
 const hasRule = (rules: TankCompatibilityRule[], code: string) => rules.some(rule => rule.code === code);
@@ -68,8 +83,8 @@ export const applyCanonicalCompatibilityDecision = (
   const domainRules = decision.ruleCodes
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
-  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'predation_risk', 'territorial_conflict', 'single_housing_required']);
-  const warningCodes = new Set(['reviewed_pair_rule']);
+  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'territorial_conflict', 'single_housing_required']);
+  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
   const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code));

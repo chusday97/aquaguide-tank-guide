@@ -46,6 +46,35 @@ const candidateWaterConflict = evaluateCompatibility({
 assert.equal(candidateWaterConflict.status, 'not_recommended');
 assert.ok(candidateWaterConflict.ruleCodes.includes('candidate_tank_water_type_conflict'));
 
+const temperatureConflict = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
+  existingSpecies: [{ ...base, id: 'cold-water', temperatureMinC: 14, temperatureMaxC: 18 }],
+  candidateSpecies: { ...base, temperatureMinC: 25, temperatureMaxC: 29 },
+});
+assert.equal(temperatureConflict.status, 'not_recommended');
+assert.equal(temperatureConflict.addPolicy, 'block');
+assert.ok(temperatureConflict.ruleCodes.includes('temperature_range_conflict'));
+
+const tankTemperatureConflict = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 18 },
+  existingSpecies: [{ ...base, id: 'existing-reviewed' }],
+  candidateSpecies: { ...base, temperatureMinC: 24, temperatureMaxC: 28 },
+});
+assert.equal(tankTemperatureConflict.status, 'not_recommended');
+assert.ok(tankTemperatureConflict.ruleCodes.includes('tank_temperature_conflict'));
+
+const phConflict = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
+  existingSpecies: [{ ...base, id: 'alkaline', phMin: 8.2, phMax: 9 }],
+  candidateSpecies: { ...base, phMin: 6, phMax: 6.8 },
+});
+assert.equal(phConflict.status, 'caution');
+assert.equal(phConflict.addPolicy, 'confirm');
+assert.ok(phConflict.ruleCodes.includes('ph_range_conflict'));
+
 const unknownCandidateWater = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
