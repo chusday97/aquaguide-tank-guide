@@ -6,9 +6,11 @@
 ## 2026-08-28 latest convergence evidence
 
 - Candidate `codex/main-core-foundation-v1`, GitHub remote and PR #142 are synchronized at the latest pushed SHA (verify with `npm run project:status`). PR #142 remains open and Draft.
+- The latest pushed candidate is `7420919c` (full SHA is read at runtime); the previous exact Preview parity at `55a37745` is historical until the new deployment is rechecked.
 - Read-only Supabase management checks confirmed 26 applied migrations, 35/35 public tables with RLS enabled, 89 policies, 56 foreign keys, 86 indexes and 33 non-internal triggers. The production Catalog objects are absent; see `docs/05-validation/SUPABASE_PARITY_REPORT.md`.
 - Both local preview ports respond with HTTP 200 when checked from the authorized host: 4317 is the detached `37a8d4d1` baseline and 4319 is the candidate. Fixed viewport screenshots are stored outside the repository under `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2`.
-- The read-only `npm run check:preview-parity` gate passes for candidate `1a3d366bd8432eadf20442274ba06dfd90904a98`; Vercel Preview is `https://aquaguide-6xdkkkg9e-chusday97s-projects.vercel.app` with the same SHA.
+- The read-only `npm run check:preview-parity` gate passed for candidate `55a377457161fe710efd093a002549582bc1c742`; after docs-only head `7420919c`, rerun the gate once the new Vercel deployment metadata is available.
+- Vercel `admin-content` is now configured at repository root with a build command restricted to `feature/admin-content-v0`; its current GitHub status is rate-limited, not an AquaGuide build failure.
 
 ## Evidence categories
 

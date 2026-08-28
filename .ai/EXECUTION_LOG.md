@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-08-28 — Candidate head and admin-content isolation
+
+- Candidate `codex/main-core-foundation-v1`, remote branch and PR #142 are synchronized at `7420919c`; `main` remains unchanged and PR #142 remains Draft.
+- Exact Preview parity was verified at preceding code head `55a37745`; the latest docs-only head has an AquaGuide deployment and is pending one final metadata read after checks settle.
+- Vercel `admin-content` was configured to use repository-root auto detection and build only on `feature/admin-content-v0`; its new PR status is currently rate-limited for 24 hours, so release readiness remains blocked by an external gate.
+- No production Supabase migration, Catalog publication or main merge was executed.
+
 ## 2026-08-28 — Local Supabase replay and RLS verification
 
 - Started Docker Desktop and initialized the repository-local Supabase CLI configuration with production-compatible legacy grants for the existing 26-migration history.
