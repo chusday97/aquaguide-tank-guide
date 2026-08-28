@@ -20,3 +20,11 @@
 - No service-role key in browser code.
 - Remote Preview is read-only and noindex.
 - No merge to `main` and no Production Supabase migration without explicit later approval.
+
+## 2026-08-28 — Base inheritance, not bulk text duplication
+- Base Species owns shared SEO templates and shared editorial intro.
+- Variant rows store only explicit overrides/differences; blank override means inherit Base.
+- Batch selection creates Draft shells only; it must not materialize copied Base Title/Description/H1 into every Variant row.
+- Effective SEO is resolved at read/preview time: `Variant Override ?? Base Template`.
+- This reduces future maintenance: changing shared wording once updates all non-overridden Variants.
+- Category-conflict groups remain publish-blocked even if the inheritance UI can render them.

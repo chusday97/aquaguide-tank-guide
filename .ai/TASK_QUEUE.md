@@ -4,21 +4,22 @@ Updated: 2026-08-28
 
 ## Now
 - [x] Generate Base Species / Variant grouping map from 486 catalog rows.
-- [x] Add grouped Species navigation and category filter.
-- [x] Add same-group multi-select and batch SEO template preview.
-- [x] Block batch writes for category-conflict groups and Published rows.
-- [x] Finish grouped UI browser verification in read-only Review mode.
-- [ ] Commit and push this milestone to `feature/admin-content-v0`.
+- [x] Add grouped Species navigation and same-group batch selection.
+- [x] Push grouping milestone (`746bce0`).
+- [x] Add Base Species shared SEO/content layer.
+- [x] Add Variant Override with automatic fallback to Base inheritance.
+- [x] Change batch SEO from copied text to inheritance Draft shells.
+- [x] Verify Base inheritance, Variant override/clear, and local RLS behavior.
+- [ ] Commit and push inheritance milestone to `feature/admin-content-v0`.
 
 ## Next
-- [ ] Build a review queue for 5 category-conflict groups and 28 exact duplicate records.
-- [ ] Add Base Species shared SEO/content fields + Variant override model.
-- [ ] Add true Draft / Preview / Publish versioning before any batch edit of Published SEO.
-- [ ] Add SEO index strategy per Variant: Index / Canonical to Base / Noindex.
-- [ ] Add batch internal-link templates and FAQ inheritance after the content model is stable.
-- [ ] Validate the final schema in staging/non-production Supabase.
+- [ ] Build review queue for 5 category-conflict groups and 28 suspected exact duplicates.
+- [ ] Add Draft / Preview / Publish version history before modifying Published SEO.
+- [ ] Add per-Variant index strategy: Index / Canonical to Base / Noindex.
+- [ ] Add actual public Species-page preview using the production page content contract.
+- [ ] Validate final schema in staging/non-production Supabase.
 
 ## Later
-- [ ] Connect published SEO content to public Species pages.
-- [ ] Add public-page preview using the actual AquaGuide Species page components/data contract.
-- [ ] Search Console / ranking data only after publishing architecture is stable.
+- [ ] Connect Published effective SEO to public Species pages.
+- [ ] Add internal-link/FAQ inheritance after content model stabilizes.
+- [ ] Search Console/ranking integrations only after publishing architecture is stable.

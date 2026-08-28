@@ -32,3 +32,17 @@
 - Verified 1440×900 desktop grid has no document horizontal overflow.
 - Fixed batch checkbox selection to align the single-item editor with the last selected member.
 - Removed runtime timestamp from generated grouping JSON; repeated generation now produces an identical SHA-256 hash.
+
+## 2026-08-28 grouping milestone push
+- Functional milestone committed as `746bce0 feat(admin): group species variants for bulk SEO`.
+- Pushed successfully to `origin/feature/admin-content-v0`; `main` remains untouched.
+- Vercel `admin-content` detected commit `746bce0` on the intended branch; deployment is currently queued on Hobby capacity, not yet verified READY.
+- Deployment-side caveat: other repository branches without `apps/admin-content` can fail before Ignore Build runs because the configured Root Directory is absent. This is external deployment noise, not an Admin runtime failure.
+
+## 2026-08-28 Base Species inheritance milestone
+- Added `species_seo_groups` branch migration with admin-only write RLS and published/admin read policy.
+- Added Base Species shared SEO editor and read-time inheritance resolver.
+- Variant SEO fields are now explicit Overrides; clearing Title Override restores Base inheritance.
+- Batch workflow now creates Draft shells only and previews effective inherited SEO instead of copying template text.
+- Real Chrome Review verification: Base template edits propagate immediately to 极火虾 / 黄金米虾 previews; shared intro propagates; Variant Override remains isolated.
+- Isolated local Supabase verification: admin Draft insert succeeds; non-admin Draft read returns 0 and non-admin insert is rejected by RLS; test rows cleaned up.

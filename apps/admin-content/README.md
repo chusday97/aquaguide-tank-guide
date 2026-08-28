@@ -87,3 +87,15 @@ Current deterministic scan:
 - 5 Base Species groups contain category conflicts and are fail-closed for batch writes
 
 Grouping uses the existing scientific name plus explicit `var.`, cultivar quotes and `wild type` markers. It does not alter `fishData.ts` or infer new Product Truth.
+
+## Base Species inheritance (current branch)
+
+SEO is no longer modeled as 486 independent copies. Multi-member groups use:
+
+`Base Species SEO → Variant Override → Effective SEO`
+
+- `species_seo_groups` stores shared Title/Description/H1 templates and shared editorial intro.
+- `species_seo` stores Variant-specific overrides/differences; blank override means inherit Base.
+- Batch selection creates Variant Draft shells only; it does not copy shared Base text into every Variant row.
+- Category-conflict groups remain blocked from publish/bulk write until the source catalog is reviewed.
+- The group migration has only been applied to the isolated local Supabase test environment; Production remains unchanged.

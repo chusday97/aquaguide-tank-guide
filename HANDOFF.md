@@ -498,3 +498,10 @@
 - 发现 28 条疑似完全重复 catalog 记录；不得先删原数据，先在 Admin 标记并后续人工确认 canonical/合并策略。
 - 发现 5 个跨分类冲突组（含部分神仙鱼、波子、海葵/珊瑚、红宫廷）；这些组必须人工复核，禁止一键批量发布。
 - 下一阶段核心：建立 Base Species 公共 SEO 层 + Variant Override / Inheritance，并保留单条 SEO fallback；不修改 Product Truth。
+
+### 2026-08-28 Base Species → Variant SEO inheritance
+- 不要恢复“每个 Variant 复制一份 Base SEO 文案”的模式。当前契约是 Base Species 保存共享模板/简介，Variant 只保存差异 Override。
+- Effective SEO 在读取/预览时解析；空 Override 表示继承，清空 Override 必须可恢复 Base。
+- 批量操作当前只允许创建继承 Draft shell，不允许静默覆盖 Published Variant。
+- Base SEO 新表为 `species_seo_groups`；只在本地隔离 Supabase 验证过，Production 未应用。
+- 本地 RLS 已验证 admin 可写、普通 authenticated 用户不可见 Draft 且不能写；详细证据见 `.ai/LIVE_STATUS.md` 与 `.ai/EXECUTION_LOG.md`。

@@ -259,3 +259,9 @@
 - Species SEO Admin 已从 486 条平铺 catalog 升级为 `Category → Base Species → Variant` 分组模型。
 - 当前扫描结果：486 条 catalog → 276 个 Base Species；83 个组可批量；293 条记录位于多成员组；223 条识别出明确 Variant；28 条疑似重复；5 个组存在跨分类冲突并强制进入人工复核。
 - 批量 SEO 当前只作用于 Editorial SEO 草稿，不修改温度、pH、混养、难度等 Product Truth；分类冲突组禁止直接批量发布。
+
+### 2026-08-28 Species SEO 继承模型
+- Base Species 公共 SEO 层与 Variant Override 已在隔离 Admin 分支实现：`Variant Override ?? Base Species Template`。
+- 批量操作不再把同一段 SEO 文案复制到多个变种，只建立 Draft shell；未 Override 字段继续继承 Base。
+- 真实 Chrome 验证 Base 模板/共享简介会立即影响同组 Variant 预览，单个 Variant Override 清空后恢复继承。
+- 新 `species_seo_groups` migration 已仅在本地隔离 Supabase 执行；管理员写入通过，普通用户 Draft 读取为 0 且写入被 RLS 拒绝。Production Supabase 未执行。

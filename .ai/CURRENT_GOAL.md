@@ -7,17 +7,18 @@ Build an isolated AquaGuide Content Admin for non-technical Species SEO manageme
 
 ## Current milestone
 
-Replace the flat 486-record Species list with a safe hierarchy:
+Complete the inheritance model:
 
-`Category → Base Species → Variant / Strain → SEO`
+`Category → Base Species shared SEO → Variant Override → Effective SEO`
 
-The Admin must support batch SEO for members of the same Base Species while keeping aquarium Product Truth separate and read-only.
+Base Species owns shared templates/content. Variants inherit by default and only persist fields that genuinely differ. Batch operations create Variant Draft shells rather than copying shared text into every record.
 
 ## Success criteria
 
-- Group variants using stable, traceable catalog data rather than UI/DOM guessing.
-- Batch SEO changes only editorial SEO fields.
-- Category-conflict groups fail closed and require review.
+- Base Species changes immediately propagate to every non-overridden Variant preview.
+- Clearing a Variant override restores inheritance automatically.
+- Product Truth remains read-only and outside the SEO write path.
+- Category-conflict groups fail closed and require source-data review.
 - Published SEO cannot be silently batch-overwritten before versioned drafts exist.
-- Remote Preview remains read-only and cannot write Supabase.
-- Every meaningful change is recorded under `.ai/` and indexed from root handoff/progress docs.
+- Remote Preview remains read-only; actual writes remain limited by Auth + admin role + RLS.
+- Every milestone is recorded in `.ai/` and indexed from root handoff/progress docs.

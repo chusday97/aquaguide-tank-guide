@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './supabase.js';
 import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
 import BatchSeoEditor from './BatchSeoEditor.jsx';
+import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
+import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
@@ -18,9 +20,9 @@ const emptySeo = {
 };
 
 const fromSeoRow = (row, species) => ({
-  seoTitle: row?.seo_title || `${species?.name || ''} Care Guide | AquaGuide`,
+  seoTitle: row?.seo_title || '',
   metaDescription: row?.meta_description || '',
-  h1: row?.h1 || `${species?.name || ''} Care Guide`,
+  h1: row?.h1 || '',
   intro: row?.intro || '',
   imageAlt: row?.image_alt || '',
   canonicalPath: row?.canonical_path || `/species/${species?.catalog_key || ''}`,
@@ -101,7 +103,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, record, schemaReady, readOnly = false, onSaved }) {
+function SeoEditor({ species, group, groupRecord, record, schemaReady, readOnly = false, onSaved }) {
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -125,6 +127,18 @@ function SeoEditor({ species, record, schemaReady, readOnly = false, onSaved }) 
   }
 
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const resolvedSeo = resolveEffectiveSeo({
+    member: species,
+    group,
+    groupRow: groupRecord,
+    variantRow: {
+      seo_title: form.seoTitle,
+      meta_description: form.metaDescription,
+      h1: form.h1,
+      intro: form.intro,
+    },
+  });
+  const effectiveSeo = resolvedSeo.effective;
 
   const save = async () => {
     if (readOnly) {
@@ -174,6 +188,7 @@ function SeoEditor({ species, record, schemaReady, readOnly = false, onSaved }) 
         <div className="editor-statuses">
           <span className={`status-pill ${species.status}`}>Species: {species.status}</span>
           <span className={`status-pill ${form.status}`}>SEO: {form.status}</span>
+          {group?.member_count > 1 ? <span className="status-pill inherited">{resolvedSeo.override.seoTitle ? 'TITLE: OVERRIDE' : 'TITLE: INHERITED'}</span> : null}
         </div>
       </div>
 
@@ -187,16 +202,19 @@ function SeoEditor({ species, record, schemaReady, readOnly = false, onSaved }) 
               </div>
             </div>
             <label>
-              SEO Title <span>{form.seoTitle.length}/60</span>
-              <input value={form.seoTitle} maxLength={120} onChange={(event) => update('seoTitle', event.target.value)} />
+              SEO Title Override <span>{form.seoTitle ? `${form.seoTitle.length}/60` : '继承 Base'}</span>
+              <input value={form.seoTitle} maxLength={120} placeholder={resolvedSeo.inherited.seoTitle} onChange={(event) => update('seoTitle', event.target.value)} />
+              <small className="inherit-note">{form.seoTitle ? '当前 Variant 使用自定义 Title；清空即可恢复继承。' : `继承：${resolvedSeo.inherited.seoTitle}`}</small>
             </label>
             <label>
-              Meta Description <span>{form.metaDescription.length}/160</span>
-              <textarea rows="3" value={form.metaDescription} maxLength={320} onChange={(event) => update('metaDescription', event.target.value)} />
+              Meta Description Override <span>{form.metaDescription ? `${form.metaDescription.length}/160` : '继承 Base'}</span>
+              <textarea rows="3" value={form.metaDescription} maxLength={320} placeholder={resolvedSeo.inherited.metaDescription} onChange={(event) => update('metaDescription', event.target.value)} />
+              <small className="inherit-note">{form.metaDescription ? '当前 Variant 使用自定义 Description；清空即可恢复继承。' : '当前使用 Base Species 模板。'}</small>
             </label>
             <label>
-              页面 H1
-              <input value={form.h1} onChange={(event) => update('h1', event.target.value)} />
+              页面 H1 Override
+              <input value={form.h1} placeholder={resolvedSeo.inherited.h1} onChange={(event) => update('h1', event.target.value)} />
+              <small className="inherit-note">{form.h1 ? '当前 Variant 使用自定义 H1。' : `继承：${resolvedSeo.inherited.h1}`}</small>
             </label>
             <label>
               Focus Keyword
@@ -211,9 +229,15 @@ function SeoEditor({ species, record, schemaReady, readOnly = false, onSaved }) 
                 <p>V0 只管理最核心的编辑型内容。</p>
               </div>
             </div>
+            {group?.member_count > 1 ? (
+              <div className="inherit-content-preview">
+                <strong>Base Species 共享简介</strong>
+                <p>{effectiveSeo.sharedIntro || 'Base Species 尚未填写共享简介。'}</p>
+              </div>
+            ) : null}
             <label>
-              SEO Intro
-              <textarea rows="7" value={form.intro} onChange={(event) => update('intro', event.target.value)} />
+              Variant Intro / 差异补充
+              <textarea rows="6" value={form.intro} onChange={(event) => update('intro', event.target.value)} placeholder="只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。" />
             </label>
             <label>
               Hero Image Alt
@@ -236,13 +260,13 @@ function SeoEditor({ species, record, schemaReady, readOnly = false, onSaved }) 
             </div>
             <div className="google-preview">
               <div className="preview-domain">aquaguide · {form.canonicalPath || `/species/${species.catalog_key}`}</div>
-              <div className="preview-title">{form.seoTitle || species.name}</div>
-              <div className="preview-description">{form.metaDescription || '尚未填写 Meta Description。'}</div>
+              <div className="preview-title">{effectiveSeo.seoTitle || species.name}</div>
+              <div className="preview-description">{effectiveSeo.metaDescription || '尚未填写 Meta Description。'}</div>
             </div>
             <div className="seo-checks">
-              <div><span className={form.seoTitle.length > 0 && form.seoTitle.length <= 60 ? 'check good' : 'check'}>•</span> Title {form.seoTitle.length > 60 ? '过长' : form.seoTitle ? '已填写' : '缺失'}</div>
-              <div><span className={form.metaDescription.length > 0 && form.metaDescription.length <= 160 ? 'check good' : 'check'}>•</span> Description {form.metaDescription.length > 160 ? '过长' : form.metaDescription ? '已填写' : '缺失'}</div>
-              <div><span className={form.h1 ? 'check good' : 'check'}>•</span> H1 {form.h1 ? '已填写' : '缺失'}</div>
+              <div><span className={effectiveSeo.seoTitle.length > 0 && effectiveSeo.seoTitle.length <= 60 ? 'check good' : 'check'}>•</span> Title {effectiveSeo.seoTitle.length > 60 ? '过长' : resolvedSeo.override.seoTitle ? 'Variant Override' : 'Base 继承'}</div>
+              <div><span className={effectiveSeo.metaDescription.length > 0 && effectiveSeo.metaDescription.length <= 160 ? 'check good' : 'check'}>•</span> Description {effectiveSeo.metaDescription.length > 160 ? '过长' : resolvedSeo.override.metaDescription ? 'Variant Override' : 'Base 继承'}</div>
+              <div><span className={effectiveSeo.h1 ? 'check good' : 'check'}>•</span> H1 {resolvedSeo.override.h1 ? 'Variant Override' : 'Base 继承'}</div>
               <div><span className={form.imageAlt ? 'check good' : 'check'}>•</span> Image Alt {form.imageAlt ? '已填写' : '缺失'}</div>
             </div>
           </div>
@@ -273,6 +297,8 @@ export default function App() {
   const [role, setRole] = useState(null);
   const [species, setSpecies] = useState([]);
   const [seoRows, setSeoRows] = useState({});
+  const [groupSeoRows, setGroupSeoRows] = useState({});
+  const [groupPreviewRows, setGroupPreviewRows] = useState({});
   const [selectedId, setSelectedId] = useState(null);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
@@ -280,6 +306,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [schemaReady, setSchemaReady] = useState(true);
+  const [groupSchemaReady, setGroupSchemaReady] = useState(true);
 
   useEffect(() => {
     if (isReviewMode) {
@@ -288,6 +315,7 @@ export default function App() {
       setSpecies(catalogSpecies);
       setSelectedId(catalogSpecies[0]?.id || null);
       setSchemaReady(false);
+      setGroupSchemaReady(false);
       setAuthChecked(true);
       return undefined;
     }
@@ -309,6 +337,8 @@ export default function App() {
       setRole(null);
       setSpecies([]);
       setSeoRows({});
+      setGroupSeoRows({});
+      setGroupPreviewRows({});
       return;
     }
 
@@ -349,6 +379,17 @@ export default function App() {
         setSchemaReady(true);
         setSeoRows(Object.fromEntries((seoData || []).map((row) => [row.catalog_key, row])));
       }
+
+      const { data: groupSeoData, error: groupSeoError } = await supabase
+        .from('species_seo_groups')
+        .select('*')
+        .is('deleted_at', null);
+      if (groupSeoError) {
+        setGroupSchemaReady(false);
+      } else {
+        setGroupSchemaReady(true);
+        setGroupSeoRows(Object.fromEntries((groupSeoData || []).map((row) => [row.group_key, row])));
+      }
       setLoading(false);
     };
 
@@ -356,8 +397,16 @@ export default function App() {
   }, [session]);
 
   const selectedSpecies = species.find((item) => item.id === selectedId) || null;
+  const selectedGroup = selectedSpecies ? speciesGroupByMemberId.get(selectedSpecies.id) : null;
+  const selectedGroupPersisted = selectedGroup ? groupSeoRows[selectedGroup.group_key] : null;
+  const selectedGroupRecord = selectedGroup
+    ? groupPreviewRows[selectedGroup.group_key] || selectedGroupPersisted
+    : null;
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
   const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
+  const batchGroupRecord = batchGroup
+    ? groupPreviewRows[batchGroup.group_key] || groupSeoRows[batchGroup.group_key]
+    : null;
 
   const toggleBatch = (id) => {
     const nextGroup = speciesGroupByMemberId.get(id);
@@ -404,8 +453,8 @@ export default function App() {
           </div>
         </div>
         <div className="topbar-actions">
-          <span className={`connection-dot ${schemaReady ? 'ready' : 'warning'}`}></span>
-          <span>{isReviewMode ? 'Read-only UI review' : schemaReady ? 'SEO schema ready' : 'SEO schema pending'}</span>
+          <span className={`connection-dot ${schemaReady && groupSchemaReady ? 'ready' : 'warning'}`}></span>
+          <span>{isReviewMode ? 'Read-only UI review' : schemaReady && groupSchemaReady ? 'SEO inheritance schema ready' : 'SEO schema pending'}</span>
           <span className="admin-email">{session.user.email}</span>
           <button className="ghost-button" type="button" onClick={signOut}>退出</button>
         </div>
@@ -415,9 +464,9 @@ export default function App() {
         <div className="schema-banner">
           <strong>只读 UI Review：</strong> 当前远程预览不连接任何 Supabase 写入环境。可以搜索 486 条 Species、体验编辑器和 Google Preview，但保存被硬禁用。
         </div>
-      ) : !schemaReady ? (
+      ) : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
-          <strong>安全隔离状态：</strong> 这个分支包含 `species_seo` migration，但当前数据库尚未应用，所以可以预览编辑器，不能写入 SEO。不会自动触碰 Production。
+          <strong>安全隔离状态：</strong> Variant / Base Species SEO migration 尚未全部应用；可以预览继承结构，但缺失的层级不会写入。不会自动触碰 Production。
         </div>
       ) : null}
 
@@ -437,9 +486,25 @@ export default function App() {
         />
 
         <main className="editor-area">
+          <BaseSpeciesSeoEditor
+            group={selectedGroup}
+            record={selectedGroupPersisted}
+            schemaReady={groupSchemaReady}
+            readOnly={isReviewMode}
+            onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [row.group_key]: row }))}
+            onSaved={(row) => {
+              setGroupSeoRows((current) => ({ ...current, [row.group_key]: row }));
+              setGroupPreviewRows((current) => {
+                const next = { ...current };
+                delete next[row.group_key];
+                return next;
+              });
+            }}
+          />
           {batchGroup && batchMembers.length > 1 ? (
             <BatchSeoEditor
               group={batchGroup}
+              groupRecord={batchGroupRecord}
               members={batchMembers}
               existingRows={seoRows}
               schemaReady={schemaReady}
@@ -453,6 +518,8 @@ export default function App() {
           ) : null}
           <SeoEditor
             species={selectedSpecies}
+            group={selectedGroup}
+            groupRecord={selectedGroupRecord}
             record={selectedSpecies ? seoRows[selectedSpecies.catalog_key] : null}
             schemaReady={schemaReady}
             readOnly={isReviewMode}
