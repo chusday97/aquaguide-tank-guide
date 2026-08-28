@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Current candidate `16b3d8d5` is synchronized locally, remotely and with PR #142; Preview parity for this latest docs-only head is `UNVERIFIED` because Vercel build quota is exhausted. Previous exact Preview parity at `55a37745` remains historical evidence.
 - Recorded final GitHub/PR/Preview SHA parity for candidate `1b28bc85`; Product Golden Path validation passed. Production Catalog migration, Catalog publication and `main` merge remain pending independent authorization.
 
 ### Added
