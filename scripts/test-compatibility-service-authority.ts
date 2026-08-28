@@ -46,6 +46,16 @@ assert.equal(reviewedDecision.status, 'caution');
 assert.equal(getCompatibilityDecision(reviewedDecision).addPolicy, 'confirm');
 assert.equal(reviewedDecision.metadata.domainStatus, reviewedDecision.status);
 assert.equal(reviewedDecision.metadata.ruleVersion, 'compatibility-domain-v1');
+assert.ok(reviewedDecision.warningRules.some(rule => rule.code === 'pair_rule_group_size_and_shared_water_window'));
+
+const domainOnlyWaterConflict = evaluateTankCompatibility({
+  tank,
+  existingSpecies: [{ species: reviewedA, record: { quantity: 5 } }],
+  candidateSpecies: makeFish('saltwater-candidate', 'saltwater'),
+  intent: 'planned_addition',
+});
+assert.equal(domainOnlyWaterConflict.status, 'not_recommended');
+assert.ok(domainOnlyWaterConflict.blockingRules.some(rule => rule.code === 'candidate_tank_water_type_conflict'));
 
 const legacyCompatibleDomainInsufficient = evaluateTankCompatibility({
   tank,

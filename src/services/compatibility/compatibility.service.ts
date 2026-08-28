@@ -61,15 +61,14 @@ const normalizeCanonicalResult = (result: TankCompatibilityResult): TankCompatib
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
   const hasRule = (rules: TankCompatibilityRule[], code: string) => rules.some(rule => rule.code === code);
-  const blockingRules = decision.status === 'not_recommended'
-    ? [...result.blockingRules, ...domainRules.filter(rule => !hasRule(result.blockingRules, rule.code))]
-    : result.blockingRules;
-  const missingData = decision.status === 'insufficient_data'
-    ? [...result.missingData, ...domainRules.filter(rule => !hasRule(result.missingData, rule.code))]
-    : result.missingData;
-  const warningRules = decision.status === 'caution'
-    ? [...result.warningRules, ...domainRules.filter(rule => !hasRule(result.warningRules, rule.code))]
-    : result.warningRules;
+  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'predation_risk', 'territorial_conflict', 'single_housing_required']);
+  const warningCodes = new Set(['reviewed_pair_rule']);
+  const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
+  const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
+  const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code));
+  const blockingRules = [...result.blockingRules, ...domainBlockingRules.filter(rule => !hasRule(result.blockingRules, rule.code))];
+  const missingData = [...result.missingData, ...domainMissingRules.filter(rule => !hasRule(result.missingData, rule.code))];
+  const warningRules = [...result.warningRules, ...domainWarningRules.filter(rule => !hasRule(result.warningRules, rule.code))];
   const summary = decision.status === 'not_recommended'
     ? blockingRules[0]?.evidence || result.summary
     : decision.status === 'insufficient_data'
