@@ -7,7 +7,9 @@ assert.equal(local.manifest.reviewedProfileCount, local.compatibilityProfiles.fi
 assert.equal(local.manifest.reviewedPairRuleCount, local.pairRules.filter(item => item.reviewStatus === 'reviewed').length);
 assert.match(local.manifest.checksumSha256, /^[a-f0-9]{64}$/);
 assert.ok(local.species.length >= 400, 'bundled catalog must include the current species set');
-assert.ok(local.species.every(item => item.waterType === 'unknown'), 'legacy adapter must not infer water type from text');
+assert.equal(local.species.find(item => item.id === 'sp_0431')?.waterType, 'freshwater');
+assert.equal(local.species.find(item => item.id === 'sp_0432')?.waterType, 'freshwater');
+assert.ok(local.species.filter(item => !['sp_0431', 'sp_0432'].includes(item.id)).every(item => item.waterType === 'unknown'), 'legacy adapter must not infer water type from text');
 
 const fetchRemote = async (url: string | URL | Request) => new Response(
   String(url).includes('/current') ? JSON.stringify(local.manifest) : JSON.stringify(local),
