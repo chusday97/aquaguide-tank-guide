@@ -7,7 +7,7 @@
 - [x] 更新 `verify-aquarium-factual-flow.mjs` 使用真实“鱼类 → 黑裙鱼”选择路径，不再误点分类按钮。
 - [x] 增加 wishlist-only 浏览器证据：内部 `complete_information` 规划只写现有种草清单，鱼缸生物保持为空，且未调用新增生物 API；现实记录仍可独立保存。
 - [x] 本地验证：浏览器 factual flow、compatibility presentation、unknown recommendation filter、Compatibility Service、addition intents、lint、build、Catalog validate、435 组合矩阵、authority/project truth 通过。
-- [ ] `check:ui-freeze` 仍按预期因本轮已批准的混养结果区域变化而失败，需用户确认后重录基线；本地仍领先远端 16 个提交，未推送；生产 migration、Catalog 发布和 `main` 合并未执行。
+- [ ] `check:ui-freeze` 仍按预期因本轮已批准的混养结果区域变化而失败，需用户确认后重录基线；本地仍领先远端 18 个提交，未推送；生产 migration、Catalog 发布和 `main` 合并未执行。
 
 ## 2026-08-29 双预览复现（本轮最新）
 
