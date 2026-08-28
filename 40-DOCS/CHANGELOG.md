@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Recorded final GitHub/PR/Preview SHA parity for candidate `1a3d366b`; Product Golden Path validation passed. Production Catalog migration, Catalog publication and `main` merge remain pending independent authorization.
+
 ### Added
 
 - Added the provisional UI freeze manifest and `npm run check:ui-freeze` guard so backend/domain work cannot silently change visual-owned files.

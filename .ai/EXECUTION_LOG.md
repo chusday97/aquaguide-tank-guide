@@ -11,6 +11,7 @@
 - Production read-only recheck confirmed 26 migration versions, 35/35 RLS tables, 89 policies, 56 foreign keys and 86 indexes; 33 trigger objects appear as 35 information_schema event rows because one trigger covers multiple events. Catalog objects remain absent and no production write was attempted.
 - Pushed the consolidated candidate once after the recheck: local/remote/PR #142 SHA `ad858032`; `npm run check:preview-parity` passed with Vercel deployment `6133389265`. Product Golden Path validation is still in progress.
 - Fixed the parity gate false negative by adding a read-only Vercel CLI metadata fallback; the fix is committed as `75dafff3` and has been pushed. The previous `ad858032` Preview record is historical; the new candidate deployment SHA is pending one final read.
+- Final read-only parity: local, remote branch, PR #142 and Vercel Preview all match `1a3d366bd8432eadf20442274ba06dfd90904a98`; `npm run check:preview-parity` returned `EQUIVALENT`, and Product Golden Path validate completed successfully. Production migration/catalog publication/main merge remain separately unauthorized.
 
 ## 2026-08-25 — Initialize `.ai/`
 

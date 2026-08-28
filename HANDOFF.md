@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 GitHub 与 Preview parity 已闭合
+
+- 当前候选分支 `codex/main-core-foundation-v1`、远端分支、PR #142 Head 和 Vercel Preview 均为 `1a3d366bd8432eadf20442274ba06dfd90904a98`。
+- `npm run check:preview-parity` 已通过：Preview 为 `https://aquaguide-6xdkkkg9e-chusday97s-projects.vercel.app`，状态 `EQUIVALENT`。
+- PR #142 的 `foundation`、`validate`、Cloudflare Pages 和 aquaguide Vercel 检查通过；PR 仍为 Draft，另有无关的 `Vercel – admin-content` 失败状态，不作为 AquaGuide 候选部署证据。
+- 生产 Supabase 仍只读：前 26 个 migration 与结构基线等价；Catalog 三项仍 `MIGRATION_REQUIRED`。未执行第 27 个 migration、Catalog 发布、生产写入或 `main` 合并。
+- 下一步只有三个独立授权点：生产第 27 个 migration、Catalog 发布、PR #142 转 Ready/合并 `main`。
+
 ## 2026-08-28 本地 Supabase 验证续跑
 
 - 当前目标：在 Vercel 等待期间完成候选分支的本地数据库重放与权限门禁，不改变 localhost UI、不写生产 Supabase、不推送 GitHub。
@@ -9,8 +17,8 @@
 - 下一步：等待 Product Golden Path validate 收尾；随后由用户单独授权第 27 个生产 migration。Catalog 发布与合并 `main` 继续分别授权。
 - 独立 Critic 复验：六维均通过本地范围；确认 26+1 replay、RLS/GRANT、19/19 pgTAP 和 fixture 移动无阻塞。生产 parity、Catalog 发布和身份写入/回滚仍明确为外部门禁。
 - 2026-08-28 生产只读复核：26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；33 个触发器对象对应 35 个 information_schema 事件行（多事件展开）；Catalog 表/水体字段缺失，标记 `MIGRATION_REQUIRED`，未执行任何生产写入。
-- 2026-08-28 GitHub/Preview 同步：候选曾在 `ad858032` 部署 Vercel deployment `6133389265`，Cloudflare/Vercel 均通过；随后补推 parity 门禁修复，当前最新候选需重新记录 exact Preview SHA。
-- 2026-08-28 parity 门禁修复：Vercel CLI metadata fallback 已加入 `check:preview-parity`，解决 GitHub Deployments API 漏报 Vercel deployment 的误报；本地检查通过，提交 `75dafff3`。
+- 2026-08-28 GitHub/Preview 同步：历史 `ad858032` 部署 `6133389265` 仅作旧证据；当前候选已同步至 `1a3d366b`，并完成新的 exact Preview SHA 记录。
+- 2026-08-28 parity 门禁修复：Vercel CLI metadata fallback 已加入 `check:preview-parity`，解决 GitHub Deployments API 漏报 Vercel deployment 的误报；修复后候选 `1a3d366b` 的 parity 检查通过。
 - 禁止重踩：不要运行 `supabase db reset --linked`、`supabase db push`、生产 DDL/DML；不要把本地 pgTAP/REST 结果描述为生产写入已验证；不要修改视觉文件。
 
 ## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline
