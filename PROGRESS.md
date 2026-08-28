@@ -43,7 +43,7 @@
 - [x] Service 将 Domain ruleCodes 映射为结构化 blocking/warning/missing 证据，避免结论与说明文本漂移。
 - [x] 增加现实记录 review policy 回归；`test:compatibility-service`、混养、现实记录、lint、API、build、UI freeze 和 project truth 均通过。
 - [x] 补回 `check:preview-parity` npm 入口；当前实际运行因沙箱无法解析 GitHub，Preview 仍不能宣称已验证。
-- [ ] 独立 Critic 需对本修复再次复验后，才能将本地提交推送候选分支。
+- [x] 独立 Critic 已复验 `ba23c69d` 并确认原 intent policy 阻塞已消除；随后补充规则说明归类与 `check:preview-parity` 去重修复（commit: `9495a95b`）。本地代码门禁通过，待同线程对最新提交复验。
 
 ## 2026-08-28 候选推送与 Preview parity
 
