@@ -5,10 +5,11 @@
 - 当前目标：在 Vercel 等待期间完成候选分支的本地数据库重放与权限门禁，不改变 localhost UI、不写生产 Supabase、不推送 GitHub。
 - 已完成：Docker Desktop + Supabase CLI 本地栈；前 26 个生产 migration 从零重放；七类规范化结构 hash 与生产只读基线完全一致；第 27 个 Catalog migration 本地重放、schema lint 和 19/19 pgTAP 通过；匿名 Catalog REST 读取成功、匿名写入被 `401/42501` 拒绝（commit `b9903924`）。
 - 关键文件：`supabase/config.toml`、`supabase/tests/catalog_rls.test.sql`、`supabase/fixtures/`、`docs/05-validation/SUPABASE_PARITY_REPORT.md`。
-- 当前卡点：生产尚未执行第 27 个 migration，生产 Catalog checksum 与真实身份写入/回滚语义仍 `UNVERIFIED`；Vercel exact Preview SHA 仍受 `build-rate-limit` 阻塞；PR #142 和 `main` 均未改变。
-- 下一步：先由独立 Critic 只读审查本地 migration/config/test diff；修复并复验后，再单独申请生产第 27 个 migration 授权。Catalog 发布与合并 `main` 继续分别授权。
+- 当前卡点：生产尚未执行第 27 个 migration，生产 Catalog checksum 与真实身份写入/回滚语义仍 `UNVERIFIED`；PR #142 仍为 Draft，`main` 尚未改变。
+- 下一步：等待 Product Golden Path validate 收尾；随后由用户单独授权第 27 个生产 migration。Catalog 发布与合并 `main` 继续分别授权。
 - 独立 Critic 复验：六维均通过本地范围；确认 26+1 replay、RLS/GRANT、19/19 pgTAP 和 fixture 移动无阻塞。生产 parity、Catalog 发布和身份写入/回滚仍明确为外部门禁。
 - 2026-08-28 生产只读复核：26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；33 个触发器对象对应 35 个 information_schema 事件行（多事件展开）；Catalog 表/水体字段缺失，标记 `MIGRATION_REQUIRED`，未执行任何生产写入。
+- 2026-08-28 GitHub/Preview 同步：一次性推送后本地、远端候选和 PR #142 为 `ad858032`；Vercel deployment `6133389265` exact SHA parity 已通过，Cloudflare/Vercel 均通过；Product Golden Path validate 尚在运行。
 - 禁止重踩：不要运行 `supabase db reset --linked`、`supabase db push`、生产 DDL/DML；不要把本地 pgTAP/REST 结果描述为生产写入已验证；不要修改视觉文件。
 
 ## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline

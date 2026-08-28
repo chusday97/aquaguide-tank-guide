@@ -9,6 +9,7 @@
 - Local anonymous REST read returned 200 for published Catalog data; anonymous write returned 401/`42501`. No production migration, Catalog publication, business-data write, GitHub push, PR update or main merge occurred.
 - Local verification/configuration commit: `b9903924` (not pushed).
 - Production read-only recheck confirmed 26 migration versions, 35/35 RLS tables, 89 policies, 56 foreign keys and 86 indexes; 33 trigger objects appear as 35 information_schema event rows because one trigger covers multiple events. Catalog objects remain absent and no production write was attempted.
+- Pushed the consolidated candidate once after the recheck: local/remote/PR #142 SHA `ad858032`; `npm run check:preview-parity` passed with Vercel deployment `6133389265`. Product Golden Path validation is still in progress.
 
 ## 2026-08-25 — Initialize `.ai/`
 

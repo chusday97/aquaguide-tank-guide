@@ -14,8 +14,10 @@
 - [x] 完整重放第 27 个 Catalog 提案；显式水体、证据表、发布不可变触发器和 RLS 通过 `supabase db lint --local` 与 19/19 pgTAP 回归（commit: `b9903924`）。
 - [x] 本地 PostgREST 验证匿名用户可读取已发布 Catalog、不能写入 Catalog；Catalog 快照 486 物种 checksum `45f4f10e…a835a` 通过本地校验。
 - [ ] 生产仍未执行第 27 个 migration、Catalog 发布或业务数据写入；生产 Catalog checksum、生产身份写入/回滚语义继续标记 `UNVERIFIED`，需独立授权后验证。
-- [ ] Vercel exact Preview SHA 仍受 `build-rate-limit` 阻塞；本轮未触发部署、未更新 PR #142、未合并 `main`。
+- [x] 推送后 Vercel exact Preview SHA 已恢复并通过；此前的 `build-rate-limit` 仅作为历史阻塞，本轮未手动重复触发部署。
 - [x] 生产只读复核再次确认 26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；触发器为 33 个对象（35 个事件行），Catalog 三项仍为 `MIGRATION_REQUIRED`。
+- [x] 只读复核后一次性推送本地提交到 `codex/main-core-foundation-v1`；本地、远端和 PR #142 已统一为 `ad858032`，Vercel Preview `6133389265` 已部署同一 SHA，`npm run check:preview-parity` 通过。
+- [ ] PR #142 的 Product Golden Path validate 仍在运行；生产第 27 个 migration、Catalog 发布和 `main` 合并仍未授权。
 
 ## 2026-08-27 Main 收敛执行
 

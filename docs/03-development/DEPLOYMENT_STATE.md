@@ -5,10 +5,10 @@
 
 ## 2026-08-28 latest convergence evidence
 
-- Candidate `codex/main-core-foundation-v1` is synchronized locally and remotely at the SHA reported by `npm run project:status`. PR #142 remains open and Draft.
+- Candidate `codex/main-core-foundation-v1`, GitHub remote and PR #142 are synchronized at `ad858032469aa18db2f19ee138a2b3d6f44db95f`. PR #142 remains open and Draft.
 - Read-only Supabase management checks confirmed 26 applied migrations, 35/35 public tables with RLS enabled, 89 policies, 56 foreign keys, 86 indexes and 33 non-internal triggers. The production Catalog objects are absent; see `docs/05-validation/SUPABASE_PARITY_REPORT.md`.
 - Both local preview ports respond with HTTP 200 when checked from the authorized host: 4317 is the detached `37a8d4d1` baseline and 4319 is the candidate. Fixed viewport screenshots are stored outside the repository under `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2`.
-- The read-only `npm run check:preview-parity` gate now compares local/remote/PR SHA and GitHub Preview deployment SHA. It correctly reports `UNVERIFIED` for the current head because Vercel returned `build-rate-limit`; no deployment or production promotion was created.
+- The read-only `npm run check:preview-parity` gate reports `PASS`: Vercel deployment `6133389265` is `success` at the exact candidate SHA `ad858032469aa18db2f19ee138a2b3d6f44db95f`, target `https://aquaguide-ro6anuddl-chusday97s-projects.vercel.app`.
 
 ## Evidence categories
 
@@ -27,7 +27,8 @@
 - After matching the local CLI exposure setting to the existing production grant baseline, the first 26 migration schemas have exact normalized hash parity with the read-only production snapshot: columns `480`, constraints `203`, functions `13`, indexes `86`, policies `89`, table grants `980`, triggers `33`.
 - The Catalog migration adds explicit grants: `anon` is read-only, `authenticated` can read and maintain drafts subject to RLS, and the published-release mutation helper is not executable by ordinary roles. Local pgTAP passed 19/19 assertions; schema lint returned zero errors.
 - Local PostgREST checks returned HTTP 200 for anonymous published Catalog reads and HTTP 401/`42501` for anonymous Catalog writes. These are local authorization results only; no production write or migration was attempted.
-- Production remains `MIGRATION_REQUIRED` for Catalog objects and `UNVERIFIED` for production write semantics. The Vercel exact-SHA check remains blocked by the deployment rate limit; this local database work does not change the UI or trigger a deployment.
+- Production remains `MIGRATION_REQUIRED` for Catalog objects and `UNVERIFIED` for production write semantics. The Vercel exact-SHA check is now passing for the pushed candidate; this local database work did not change the UI or production database.
+- The candidate was pushed once after the read-only recheck; GitHub foundation checks, Vercel deployment and Cloudflare deployment are passing. Product Golden Path validation remains in progress for this SHA.
 
 ## 2026-08-25 non-secret deployment audit
 
