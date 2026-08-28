@@ -37,6 +37,14 @@
 - [ ] 正式页面仍保留旧引擎导入以满足当前冻结 UI；解除 UI freeze 后需将页面 import 也切换到 Compatibility Service，并补跑固定视口人工验收。（当前 Service authority commit: `9d0110f6`）
 - [ ] 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 main 合并仍未授权/未执行。
 
+## 2026-08-28 Critic 修复：现实记录 policy 与规则说明
+
+- [x] 修复 `reviewSpeciesAdditions({ intent: 'record_existing' })` 仍返回规划策略的问题；现在按 intent 返回 `save / save_with_warning / save_with_unknown / save_with_urgent_warning`，不会把现实记录误判为需要补资料。
+- [x] Service 将 Domain ruleCodes 映射为结构化 blocking/warning/missing 证据，避免结论与说明文本漂移。
+- [x] 增加现实记录 review policy 回归；`test:compatibility-service`、混养、现实记录、lint、API、build、UI freeze 和 project truth 均通过。
+- [x] 补回 `check:preview-parity` npm 入口；当前实际运行因沙箱无法解析 GitHub，Preview 仍不能宣称已验证。
+- [ ] 独立 Critic 需对本修复再次复验后，才能将本地提交推送候选分支。
+
 ## 2026-08-28 候选推送与 Preview parity
 
 - [x] 推送 `28fa0e8a`、`781c6af9` 至 `codex/main-core-foundation-v1`；本地、远端候选和 PR #142 Head 均为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。

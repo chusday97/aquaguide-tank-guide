@@ -10,6 +10,12 @@
 - UI 冻结仍有效：正式页面的旧引擎 import 本轮没有改动，因此布局和素材没有变化；解除冻结后的页面入口切换仍是待办。
 - 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 `main` 合并未执行。
 
+## 2026-08-28 Critic 修复与复验准备
+
+- 修复 `reviewSpeciesAdditions` 的 intent policy：现实记录不再返回规划加入的 `complete_information`，改为保存类策略；新增 Domain ruleCode 到结构化说明的映射，避免状态/理由不一致。
+- 补回 `npm run check:preview-parity` 脚本入口；本地执行因 GitHub DNS/网络限制失败，不能将 Preview parity 记为通过。
+- 修复尚未提交；当前需要先完成同一 Critic 的复验，再提交并决定是否推送。生产 migration、Catalog 发布和 main 合并仍不执行。
+
 ## 2026-08-28 候选推送与 Preview parity
 
 - 本地候选、远端 `codex/main-core-foundation-v1`、PR #142 Head 与 Vercel Preview 已同步为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。

@@ -3,6 +3,7 @@ import {
   evaluateTankCompatibility,
   getCompatibilityDecision,
 } from '../src/services/compatibility/compatibility.service';
+import { reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import type { Aquarium, Fish } from '../src/types';
 
 const makeFish = (id: string, waterType?: Fish['waterType']): Fish => ({
@@ -64,6 +65,14 @@ const recordExistingDecision = evaluateTankCompatibility({
 });
 assert.equal(recordExistingDecision.status, 'insufficient_data');
 assert.equal(getCompatibilityDecision(recordExistingDecision, 'record_existing').addPolicy, 'allow');
+const recordReview = reviewSpeciesAdditions({
+  aquarium: tank,
+  items: [{ fishId: 'unreviewed-candidate', quantity: 1 }],
+  speciesCatalog: [makeFish('unreviewed-candidate')],
+  intent: 'record_existing',
+});
+assert.equal(recordReview?.status, 'insufficient_data');
+assert.equal(recordReview?.policy, 'save_with_unknown');
 
 const plannedWithoutTank = evaluateTankCompatibility({
   existingSpecies: [{ species: reviewedA, record: { quantity: 1 } }],

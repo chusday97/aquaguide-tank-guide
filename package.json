@@ -14,6 +14,7 @@
     "check:project-truth": "node scripts/verify-project-truth.mjs",
     "check:ui-freeze": "node scripts/check-ui-freeze.mjs",
     "check:preview-parity": "node scripts/check-preview-parity.mjs",
+    "check:preview-parity": "node scripts/check-preview-parity.mjs",
     "capture:ui-freeze": "node scripts/capture-ui-freeze-lite.mjs",
     "preview": "vite preview",
     "clean": "rm -rf dist",

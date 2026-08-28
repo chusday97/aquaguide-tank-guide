@@ -1,9 +1,7 @@
-import type { Aquarium, Fish } from '../../types';
+import type { Aquarium, Fish, SpeciesAdditionPolicy } from '../../types';
 import { appendSpeciesBatch, createSpeciesBatch } from './species-batches.service';
 import {
   evaluateTankCompatibility,
-  getTankCompatibilityAddPolicy,
-  type TankCompatibilityAddPolicy,
   type TankCompatibilityResult,
   type TankCompatibilityRule,
   type TankCompatibilityStatus,
@@ -24,7 +22,7 @@ export type SpeciesAdditionEvaluation = {
 
 export type SpeciesAdditionReview = {
   status: TankCompatibilityStatus;
-  policy: TankCompatibilityAddPolicy;
+  policy: SpeciesAdditionPolicy;
   items: SpeciesAdditionItem[];
   evaluations: SpeciesAdditionEvaluation[];
   keyRules: TankCompatibilityRule[];
@@ -104,7 +102,7 @@ export const reviewSpeciesAdditions = ({
   if (!assessment) return null;
   return {
     ...assessment,
-    policy: getTankCompatibilityAddPolicy(assessment.status),
+    policy: getSpeciesAdditionPolicy({ intent, status: assessment.status }),
   };
 };
 
