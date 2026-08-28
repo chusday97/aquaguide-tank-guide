@@ -5,8 +5,8 @@
 - 修复 Aquarium 空缸创建后的 React Hook 顺序错误。原因是混养展示 `useMemo` 位于 `!activeAquarium` 条件返回之后；现已移到所有条件返回之前，页面创建空缸后不再进入错误边界。
 - `scripts/verify-aquarium-factual-flow.mjs` 现在走真实的“鱼类 → 黑裙鱼 → 查看规划判断”交互，覆盖：规划不写鱼缸、资料不完整时只写种草清单、不调用新增生物 API、现实记录独立保存、旧 `add-species` 深链兼容。
 - 浏览器回归通过：`PREVIEW_URL=http://localhost:3001 node scripts/verify-aquarium-factual-flow.mjs`；静态/构建门禁也通过。当前 3001 是临时本地候选预览，结束后已关闭临时依赖链接。
-- `check:ui-freeze` 仍是批准范围内混养结果变化导致的预期失败，不代表 Aquarium 舞台回退。当前候选仍比远端领先 18 个提交，未推送；生产 Supabase、Catalog 和 `main` 均未改动。
-- 双预览已恢复：4317 使用独立基线 worktree `37a8d4d1` 的 production build，4319 使用候选 `8df6acba`；两个 `/_preview/interactive` 均已用真实 Chromium 验证 HTTP 200 且无页面错误。4317 不能显示候选版新增的元数据条，因为那会修改冻结 SHA；4319 已显示 branch/SHA/seed/build time。
+- `check:ui-freeze` 仍是批准范围内混养结果变化导致的预期失败，不代表 Aquarium 舞台回退。当前候选领先远端的提交数以 `git rev-list` 运行时读取，未推送；生产 Supabase、Catalog 和 `main` 均未改动。
+- 双预览已恢复：4317 使用独立基线 worktree `37a8d4d1` 的 production build，4319 使用候选当前提交；两个 `/_preview/interactive` 均已用真实 Chromium 验证 HTTP 200 且无页面错误。4317 不能显示候选版新增的元数据条，因为那会修改冻结 SHA；4319 已显示 branch/SHA/seed/build time。
 
 ## 2026-08-29 混养结果体验修复（本轮最新）
 
@@ -19,7 +19,7 @@
 - 同一 Critic 已复验 `ef1bba10`：需求完整性、逻辑、边界、代码质量、测试设计和 diff 范围均无新的实现级阻塞；完整交付仍受 UI freeze 人工确认和远端/Preview/Supabase/main 门禁限制。
 - 追加修复 `9584dbef`：Aquarium 规划结果逐项区分“当前可确认”和“暂未开放”，没有确认事实的物种不再被错误标成当前可确认；展示测试、类型检查和 production build 已重新通过，同一 Critic 复验通过。
 - `check:ui-freeze` 当前为 `FROZEN_PROVISIONAL` 失败，原因仅是批准范围内的混养结果区域文件变化；不是舞台或布局回退。用户验收新文案后需要重新 capture freeze。
-- 本地 HEAD `ef1bba10` 已提交，工作树干净；远端候选和 PR #142 仍停留在 `396e71da`，本轮不推送、不执行生产 migration/Catalog 发布、不合并 `main`。
+- 本地 HEAD 以 `git rev-parse HEAD` 运行时读取，工作树干净；远端候选和 PR #142 仍停留在 `396e71da`，本轮不推送、不执行生产 migration/Catalog 发布、不合并 `main`。
 
 下一步：将 `ef1bba10` 交回同一 Critic 做六维复验；如无阻塞，等待用户确认混养结果显示，再重新 capture UI freeze，之后才讨论一次性推送 PR #142。
 
