@@ -4834,6 +4834,20 @@ export default function AquariumManager() {
       confirmedFindings,
     });
   }, [addFishCompatibilityReview]);
+  const addFishEvaluationPresentations = useMemo(() => {
+    if (!addFishCompatibilityReview) return new Map<string, ReturnType<typeof getCompatibilityPresentationForStatus>>();
+    return new Map(addFishCompatibilityReview.evaluations.map(evaluation => {
+      const hasConfirmedFacts = evaluation.result.passedRules.length > 0
+        || evaluation.result.warningRules.length > 0
+        || evaluation.result.blockingRules.length > 0;
+      return [evaluation.fish.id, getCompatibilityPresentationForStatus({
+        status: evaluation.result.status,
+        hasConfirmedFacts,
+        confirmedFindings: evaluation.result.passedRules.map(rule => rule.evidence || rule.title),
+        cautions: evaluation.result.warningRules.map(rule => rule.evidence || rule.title),
+      })] as const;
+    }));
+  }, [addFishCompatibilityReview]);
   const isTimelineOpen = new URLSearchParams(routeLocation.search).get('action') === 'timeline';
   if (isTimelineOpen) {
     void careTimelineRevision;
@@ -6411,11 +6425,18 @@ export default function AquariumManager() {
                   <div className="grid gap-2">
                     {addFishCompatibilityReview.evaluations.map(evaluation => (
                       <div key={evaluation.fish.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[14px] bg-white/82 px-3 py-2 shadow-sm">
-                        <span className="min-w-0">
-                          <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
-                          <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{evaluation.result.status === 'insufficient_data' ? '当前可确认部分条件' : evaluation.result.summary}</span>
-                        </span>
-                        <span className="shrink-0 text-[10px] font-black text-ink/60">{getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
+                        {(() => {
+                          const presentation = addFishEvaluationPresentations.get(evaluation.fish.id);
+                          return (
+                            <>
+                              <span className="min-w-0">
+                                <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
+                                <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.mode === 'confirmed_facts' ? '当前可确认部分条件' : presentation?.mode === 'unavailable' ? '暂未开放这组混养建议' : evaluation.result.summary}</span>
+                              </span>
+                              <span className="shrink-0 text-[10px] font-black text-ink/60">{presentation?.headline || getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
+                            </>
+                          );
+                        })()}
                       </div>
                     ))}
                   </div>
