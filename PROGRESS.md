@@ -8,7 +8,7 @@
 - [x] 本地 Domain、Service、Repository/API、Catalog、Supabase 26+1、pgTAP、lint、API 类型、build、UI freeze、project truth 和 diff 检查通过；独立 Critic 六维复验通过。
 - [x] 本地、远端候选和 PR #142 当前 SHA 已同步且工作树干净；精确值由 `npm run project:status` 运行时读取，避免文档提交后过期。
 - [x] 上一个代码 head `cdd465817dc796bf77c9d3aef5e95c25366befff` 曾有 exact Preview parity；该证据保留为历史记录，不代表当前 docs head。
-- [ ] 当前候选没有 exact Preview 部署，parity 为 `UNVERIFIED`；AquaGuide 与 admin-content Vercel checks 因部署额度限制失败；截至最近复核，Cloudflare pending、foundation 一项通过/一项 pending、`validate` pending。
+- [ ] 当前候选没有 exact Preview 部署，parity 为 `UNVERIFIED`；AquaGuide 与 admin-content Vercel checks 因部署额度限制失败。Cloudflare、Foundation、`validate` 的实时结果以 `gh pr checks 142` 读取；未全绿不得发布。
 - [ ] PR #142 保持 Draft。生产第 27 个 migration、Catalog 发布、人工 release acceptance 和 `main` 合并均未执行。
 
 ## 2026-08-28 当前执行快照（最新）
