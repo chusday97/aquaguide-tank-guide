@@ -497,7 +497,7 @@
 - 83 个 Base Species 含多个 catalog 成员，可作为批量 SEO 候选；批量模板按成员名称/Variant 生成独立草稿，不直接复制为 Published 内容。
 - 发现 28 条疑似完全重复 catalog 记录；不得先删原数据，先在 Admin 标记并后续人工确认 canonical/合并策略。
 - 发现 5 个跨分类冲突组（含部分神仙鱼、波子、海葵/珊瑚、红宫廷）；这些组必须人工复核，禁止一键批量发布。
-- 下一阶段核心：在 dedicated staging Supabase 验证 migrations 001–005、publication snapshot、静态 generator 与最终 HTML；通过前不解锁 Published，也不修改 Product Truth。
+- 下一阶段核心：在 dedicated staging Supabase 验证 migrations 001–006、release-gate probe、publication snapshot、静态 generator 与最终 HTML；通过前不解锁 Published，也不修改 Product Truth。
 
 ### 2026-08-28 Base Species → Variant SEO inheritance
 - 不要恢复“每个 Variant 复制一份 Base SEO 文案”的模式。当前契约是 Base Species 保存共享模板/简介，Variant 只保存差异 Override。
@@ -537,7 +537,7 @@
 - Admin now shows Base Species History and Variant History; restore is a two-click action. UI confirmation is secondary defense; DB authorization and Draft coercion are the actual safety boundary.
 - Fresh isolated Supabase applied core + Admin migrations 001–005. Variant and Base each passed `v1 Draft → v2 Published fixture → v3 rollback Draft`; non-admin revision visibility was 0 and restore RPC failed with `Admin role required`; final test residue was 0.
 - Prior Vercel Admin Preview for `43eec47` was READY / HTTP 200 / noindex. The next pushed generator/history SHA must be checked again after deployment.
-- Do not merge to `main`, run these migrations in Production, or unlock Published yet. The next release gate is a dedicated staging Supabase with migrations 001–005 plus a real staging snapshot → generator → rendered-page verification.
+- Do not merge to `main`, run these migrations in Production, or unlock Published yet. The next release gate is a dedicated staging Supabase with migrations 001–006 plus release-gate probe and a real staging snapshot → generator → rendered-page verification.
 
 ### 2026-08-28 Species SEO staging publishing handoff
 - `cd363b4` is pushed to `feature/admin-content-v0`; it contains the static generator, runtime SEO/sitemap checks, and database revision/rollback chain.
@@ -548,3 +548,10 @@
 - `generate-public-species.mjs` now requires explicit `siteUrl` and rejects the known Production canonical host. Never restore a Production default for preview/staging generation.
 - `verify:staging-publish` must see at least one bilingual self-canonical Index pair, then exports Published rows, generates static HTML, serves it locally and fetches EN/ZH pages + sitemap to verify canonical/hreflang/x-default/indexing behavior.
 - If no staging env exists, the correct state is a non-zero gate and disabled Published controls. Provisioning a Supabase branch/project may cost money and requires explicit approval before creation.
+
+### 2026-08-28 Species SEO release-gate probe handoff
+- Staging must now apply migration 006 in addition to 001–005. `species_seo_release_gate_status()` is the data-free proof that Species SEO, Base groups, localized name, index strategy, revision history and rollback RPC exist.
+- The staging exporter calls the probe before exporting Published rows; missing/old schema is a hard failure.
+- Do not replace this with service-role reads. Fresh local proof shows anon can call the probe while `content_revisions` remains unreadable to anon.
+- Staging generator calls must supply both staging `siteUrl` and Production public URL deny-list; omission or host equality is a hard failure.
+- Fresh isolated DB applied core + 001–006 and returned all probe flags true. Temporary stack was removed after verification.

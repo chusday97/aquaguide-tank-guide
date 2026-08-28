@@ -89,3 +89,11 @@
 - Added staging-only Published snapshot export using the Supabase publishable-key client plus explicit staging/Production project-ref guards.
 - Added end-to-end staging verifier: export → generator → local HTTP serving → EN/ZH rendered response + sitemap checks.
 - `verify:staging-publish` intentionally fails non-zero when staging DB/site configuration is absent; there is no local/Production fallback.
+
+## 2026-08-28 — Release-gate schema probe hardening
+- Found that content/page verification alone could not prove the staging database had revision/rollback schema applied when using only a publishable client key.
+- Added migration 006 `species_seo_release_gate_status()` as a data-free readiness probe. It reports only schema-version/feature booleans and grants execute to anon/authenticated; it does not expose revisions or SEO content.
+- Staging snapshot export now calls the probe before reading Published rows and refuses schema versions below 6 or any missing feature flag.
+- Fresh temporary Supabase applied core + migrations 001–006 from scratch. Publishable anon successfully received all readiness flags=true while direct `content_revisions` SELECT remained `permission denied`.
+- Generator staging mode now also requires an explicit Production public URL deny-list, so direct generator use cannot silently target another Production alias through the staging path.
+- Temporary Supabase stack was stopped and removed after verification; Production remained untouched.

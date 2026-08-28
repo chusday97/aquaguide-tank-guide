@@ -92,6 +92,19 @@ try {
   );
 
   await assert.rejects(
+    generatePublicSpecies({ snapshot: { ...snapshot, environment: 'staging' }, outDir: `${outDir}-staging-missing-prod`, siteUrl }),
+    /productionSiteUrl is required/,
+  );
+
+  const stagingResult = await generatePublicSpecies({
+    snapshot: { ...snapshot, environment: 'staging' },
+    outDir: `${outDir}-staging-ok`,
+    siteUrl,
+    productionSiteUrl: 'https://aqua-tank-guide.vercel.app',
+  });
+  assert.equal(stagingResult.manifest.generated_pages, 4);
+
+  await assert.rejects(
     generatePublicSpecies({ snapshot: { ...snapshot, environment: 'production' }, outDir: `${outDir}-production`, siteUrl }),
     /Refusing publication snapshot environment: production/,
   );
@@ -115,6 +128,8 @@ try {
   await rm(outDir, { recursive: true, force: true });
   await rm(`${outDir}-missing-site`, { recursive: true, force: true });
   await rm(`${outDir}-production-host`, { recursive: true, force: true });
+  await rm(`${outDir}-staging-missing-prod`, { recursive: true, force: true });
+  await rm(`${outDir}-staging-ok`, { recursive: true, force: true });
   await rm(`${outDir}-production`, { recursive: true, force: true });
   await rm(`${outDir}-draft-base`, { recursive: true, force: true });
   await rm(`${outDir}-broken-canonical`, { recursive: true, force: true });

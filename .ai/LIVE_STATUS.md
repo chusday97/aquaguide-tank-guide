@@ -5,7 +5,7 @@ Branch: `feature/admin-content-v0`
 
 ## Current state
 - Public AquaGuide `main`: untouched by this Admin milestone.
-- Production Supabase: untouched; migrations 001–005 remain branch-only proposals.
+- Production Supabase: untouched; migrations 001–006 remain branch-only proposals.
 - Latest pushed milestone: `cd363b4 feat(admin): add species publishing safety and revision history`.
 - Generator/history baseline is `cd363b4`; the current HEAD adds staging release-gate hardening on top of it. Check `git log -1` for the final milestone SHA.
 - Vercel Git Integration has not produced a `cd363b4` Preview yet; manual Preview deploy was refused by Hobby `api-deployments-free-per-day` (>100 deployments/day), not by build/runtime failure.
@@ -32,11 +32,17 @@ Branch: `feature/admin-content-v0`
 ## Verification
 - `test:contract` passes, including generator runtime tests and staging Production-deny guard tests.
 - Generator fixture still produces 4 pages / 2 sitemap candidates; missing site URL and Production canonical host are now rejected.
-- Fresh isolated Supabase proof for migrations 001–005 and Base/Variant rollback remains valid from `cd363b4`.
+- Fresh isolated Supabase proof for migrations 001–005 and Base/Variant rollback remains valid from `cd363b4`; migration 006 release-gate probe has now been verified separately.
 - Production Admin build passes; only the known >500KB bundle warning remains.
 
 ## Remaining release gate
 - Published stays disabled.
-- A dedicated AquaGuide staging Supabase must be provisioned or identified before migrations 001–005 and real snapshot export can be validated remotely.
+- A dedicated AquaGuide staging Supabase must be provisioned or identified before migrations 001–006 and real snapshot export can be validated remotely.
 - Creating a Supabase branch/project may incur cost and therefore requires explicit approval; no paid environment was created in this run.
 - Re-check the new Admin Vercel Preview after the Hobby daily deployment quota resets.
+
+## Schema readiness probe verification
+- Migration 006 adds `species_seo_release_gate_status()` so staging verification can prove the required schema exists without using service-role credentials.
+- The probe returns only schema-version/readiness booleans for Species SEO, Base groups, localized name, index strategy, revision history and rollback RPC.
+- Fresh isolated Supabase applied core + migrations 001–006 successfully; anon publishable access received `schema_version=6` with every readiness flag true.
+- The same anon identity still received `permission denied for table content_revisions`, confirming the probe does not weaken revision-history data access.

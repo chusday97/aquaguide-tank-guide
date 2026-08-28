@@ -294,7 +294,7 @@
 - Admin UI 新增 Base / Variant History 面板和二次点击恢复；只读 Review 不连接真实 history。真实 Chrome 验证两个 History 面板、Public Species Preview 与两个 disabled Published option，无 page error。
 - `npm run test:contract -w @aquaguide/admin-content` 与 Admin production build 通过；仅保留既有 >500KB bundle warning。
 - 上一提交 `43eec47` 的独立 Vercel `admin-content` Preview 已确认 READY / HTTP 200 / noindex；本批次待集中 commit/push 后再核对新 SHA Preview。
-- Production Supabase 与 `main` 仍未修改。下一门禁仅为 dedicated staging Supabase 上的 migrations 001–005 + snapshot → generator → rendered-page 端到端验证；通过前 Published 保持锁定。
+- Production Supabase 与 `main` 仍未修改。下一门禁仅为 dedicated staging Supabase 上的 migrations 001–006 + schema probe + snapshot → generator → rendered-page 端到端验证；通过前 Published 保持锁定。
 
 ### 2026-08-28 Species SEO staging release gate hardening
 - Generator/history milestone committed and pushed as `cd363b4`; `main` and Production Supabase unchanged.
@@ -304,3 +304,10 @@
 - Added staging-only Published snapshot export and end-to-end staging verifier with explicit staging/Production DB and public-site deny-lists.
 - Staging verifier requires at least one bilingual self-canonical Index pair and validates generated EN/ZH pages plus sitemap over a temporary HTTP server.
 - With no staging env configured, `verify:staging-publish` intentionally exits non-zero; Published remains disabled.
+
+### 2026-08-28 Species SEO release-gate schema probe
+- 新增 migration 006 `species_seo_release_gate_status()`，只暴露 schema readiness，不暴露 SEO 内容或 revision 数据。
+- staging exporter 在读取 Published 内容前先调用 probe；`schema_version < 6` 或任一能力缺失都会 fail closed。
+- 全新隔离 Supabase 从 core + migrations 001–006 顺序应用成功；anon publishable 身份读取 probe 全部为 true，同时直接读取 `content_revisions` 仍被 `permission denied`。
+- staging generator 进一步要求显式 Production public URL deny-list；直接 staging 调用也不能只靠固定域名保护。
+- 临时 Supabase 已关闭并删除，Production 未修改。

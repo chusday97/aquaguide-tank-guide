@@ -73,3 +73,7 @@
 - The static generator no longer has a Production site URL fallback. Omitting `siteUrl` is an error.
 - A release-gate PASS requires at least one bilingual self-canonical Index pair; zero Published rows or no bilingual pair is a hard failure.
 - Existing unrelated staging projects must not be reused across AquaGuide/IceGlide merely to avoid provisioning cost or setup time.
+
+## 2026-08-28 — Staging schema proof must not require privileged data access
+- Release verification may expose a data-free schema readiness RPC to anon/authenticated, but must not grant anon access to `content_revisions` or admin write paths.
+- The readiness probe is authoritative only when all expected flags are true and `schema_version >= 6`; otherwise staging publication fails closed.

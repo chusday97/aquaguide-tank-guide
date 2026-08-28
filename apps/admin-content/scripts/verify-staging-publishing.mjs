@@ -52,7 +52,7 @@ export async function verifyStagingPublishing(config) {
   const snapshot = await exportStagingSpeciesSnapshot(config);
   let server;
   try {
-    const { manifest, pages } = await generatePublicSpecies({ snapshot, outDir, siteUrl });
+    const { manifest, pages } = await generatePublicSpecies({ snapshot, outDir, siteUrl, productionSiteUrl: config.productionSiteUrl });
     if (manifest.generated_pages < 2) throw new Error('Staging must contain at least one bilingual Published Species pair.');
     const pair = findBilingualIndexPair(pages);
     if (!pair) throw new Error('Staging must include at least one bilingual self-canonical Index pair.');

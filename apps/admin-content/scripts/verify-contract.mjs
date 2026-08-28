@@ -10,7 +10,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
@@ -25,6 +25,7 @@ const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, hi
   readFile(path.join(repoRoot, 'supabase/migrations/202608280003_species_seo_localized_name.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280004_species_seo_index_strategy.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280005_species_seo_revision_history.sql'), 'utf8'),
+  readFile(path.join(repoRoot, 'supabase/migrations/202608280006_species_seo_release_gate_probe.sql'), 'utf8'),
   readFile(path.join(appRoot, '.env.example'), 'utf8'),
   readFile(path.join(appRoot, '.env.review.example'), 'utf8'),
   readFile(path.join(appRoot, 'src/catalog.generated.json'), 'utf8'),
@@ -126,6 +127,11 @@ assert.match(historyMigrationSource, /restore_species_seo_revision/);
 assert.match(historyMigrationSource, /security definer/);
 assert.match(historyMigrationSource, /status = 'draft'/, 'Rollback must never republish content automatically');
 assert.match(historyMigrationSource, /revision_operation', 'rollback'/, 'Rollback events must be identifiable in history');
+assert.match(releaseGateMigrationSource, /species_seo_release_gate_status/);
+assert.match(releaseGateMigrationSource, /schema_version', 6/);
+assert.match(releaseGateMigrationSource, /revision_history_ready/);
+assert.match(releaseGateMigrationSource, /restore_rpc_ready/);
+assert.match(releaseGateMigrationSource, /grant execute on function public\.species_seo_release_gate_status\(\) to anon, authenticated/);
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
 assert.ok(neoGroup?.member_count > 2, 'Neocaridina group must remain a real inheritance fixture');

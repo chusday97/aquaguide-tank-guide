@@ -22,12 +22,19 @@ function escapeXml(value = '') {
   return escapeHtml(value);
 }
 
-function validateSiteUrl(siteUrl, environment) {
+function validateSiteUrl(siteUrl, environment, productionSiteUrl) {
   if (!siteUrl) throw new Error('siteUrl is required; non-production generation must use an explicit preview/staging host.');
   let parsed;
   try { parsed = new URL(siteUrl); } catch { throw new Error(`Invalid siteUrl: ${siteUrl}`); }
   if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error(`Unsupported siteUrl protocol: ${parsed.protocol}`);
-  if (PRODUCTION_SITE_HOSTS.has(parsed.hostname)) {
+  if (environment === 'staging' && !productionSiteUrl) {
+    throw new Error('productionSiteUrl is required for staging canonical deny-list validation.');
+  }
+  let productionHost = '';
+  if (productionSiteUrl) {
+    try { productionHost = new URL(productionSiteUrl).hostname; } catch { throw new Error(`Invalid productionSiteUrl: ${productionSiteUrl}`); }
+  }
+  if (PRODUCTION_SITE_HOSTS.has(parsed.hostname) || (productionHost && parsed.hostname === productionHost)) {
     throw new Error(`Refusing production canonical host for ${environment}: ${parsed.hostname}`);
   }
   parsed.pathname = parsed.pathname.replace(/\/$/, '');
@@ -148,10 +155,10 @@ function renderSitemap(siteUrl, pages) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${items}\n</urlset>\n`;
 }
 
-export async function generatePublicSpecies({ snapshot, outDir, siteUrl }) {
+export async function generatePublicSpecies({ snapshot, outDir, siteUrl, productionSiteUrl }) {
   if (!snapshot || typeof snapshot !== 'object') throw new Error('Publication snapshot is required.');
   if (!SAFE_ENVIRONMENTS.has(snapshot.environment)) throw new Error(`Refusing publication snapshot environment: ${snapshot.environment || 'missing'}`);
-  const validatedSiteUrl = validateSiteUrl(siteUrl, snapshot.environment);
+  const validatedSiteUrl = validateSiteUrl(siteUrl, snapshot.environment, productionSiteUrl);
   if (!outDir) throw new Error('outDir is required; generator never writes into public/ implicitly.');
 
   const [catalog, groupData] = await Promise.all([
@@ -245,9 +252,10 @@ async function cli() {
   const snapshotPath = value('--snapshot');
   const outDir = value('--out-dir');
   const siteUrl = value('--site-url');
-  if (!snapshotPath || !outDir || !siteUrl) throw new Error('Usage: node generate-public-species.mjs --snapshot <json> --out-dir <dir> --site-url <non-production-url>');
+  const productionSiteUrl = value('--production-site-url');
+  if (!snapshotPath || !outDir || !siteUrl) throw new Error('Usage: node generate-public-species.mjs --snapshot <json> --out-dir <dir> --site-url <non-production-url> [--production-site-url <production-url>]');
   const snapshot = JSON.parse(await readFile(path.resolve(snapshotPath), 'utf8'));
-  const result = await generatePublicSpecies({ snapshot, outDir: path.resolve(outDir), siteUrl });
+  const result = await generatePublicSpecies({ snapshot, outDir: path.resolve(outDir), siteUrl, productionSiteUrl });
   console.log(JSON.stringify(result.manifest));
 }
 

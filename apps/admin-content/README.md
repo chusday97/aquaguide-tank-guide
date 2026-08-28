@@ -9,7 +9,7 @@ Isolated companion app for editing Species SEO content. It lives in the same mon
 - Uses only `VITE_SUPABASE_URL` and the browser-safe publishable/anon key.
 - Never expose a Supabase service-role key to this app.
 - Admin authorization is enforced by the existing `user_roles` table and database RLS, not by hiding the URL.
-- Admin migrations 001–005 are branch-only proposals. They have been exercised only in fresh isolated local Supabase environments; Production remains unchanged.
+- Admin migrations 001–006 are branch-only proposals. They have been exercised only in fresh isolated local Supabase environments; Production remains unchanged.
 
 ## Current data contract
 
@@ -163,7 +163,7 @@ Migration `202608280005_species_seo_revision_history.sql` adds database-backed h
 - The Admin requires a second click to confirm restore, while database authorization remains the actual security boundary.
 - Fresh isolated local Supabase verified Variant and Base `v1 Draft → v2 Published fixture → v3 rollback Draft`, non-admin history visibility `0`, non-admin rollback rejection, and zero final test residue.
 
-The remaining release gate is a dedicated staging Supabase running migrations 001–005 plus snapshot → generator → rendered-page verification. Production Supabase and `main` remain untouched.
+The remaining release gate is a dedicated staging Supabase running migrations 001–006 plus snapshot → generator → rendered-page verification. Production Supabase and `main` remain untouched.
 
 ## Staging release gate
 
@@ -197,3 +197,11 @@ The command fails if staging has no eligible bilingual Index pair. It also fails
 As of 2026-08-28, the connected Supabase account has the AquaGuide project and an unrelated IceGlide staging project, but no AquaGuide development branch. Do not reuse the IceGlide environment. Creating an AquaGuide Supabase branch/project may incur cost and requires explicit approval before provisioning.
 
 The generator itself also requires `--site-url`; it no longer defaults to the Production canonical domain for preview/staging snapshots.
+
+### Staging schema readiness probe
+
+Migration `202608280006_species_seo_release_gate_probe.sql` adds `species_seo_release_gate_status()` for release validation. It returns only schema readiness booleans and `schema_version=6`; it does not expose revision rows or editorial content.
+
+The staging exporter calls this probe before exporting Published rows. It blocks if the probe is missing, reports a schema version below 6, or any required capability is false. Fresh local verification confirmed that anon publishable access can call the probe while direct `content_revisions` reads remain denied.
+
+For staging generation, `PRODUCTION_PUBLIC_SITE_URL` is also mandatory. Direct staging generator calls must pass `productionSiteUrl` / `--production-site-url`; the staging verifier supplies it automatically from the environment deny-list.

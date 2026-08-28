@@ -18,7 +18,7 @@ Updated: 2026-08-28
 ## Next
 - [ ] Re-check `admin-content` Vercel Preview after Hobby daily deployment quota resets; current manual Preview attempt is blocked by the 100-deploy/day limit.
 - [ ] Provision or identify a dedicated AquaGuide staging Supabase only with explicit cost/environment approval.
-- [ ] Apply migrations 001–005 in staging and prepare at least one reviewed bilingual self-canonical Index pair.
+- [ ] Apply migrations 001–006 in staging and prepare at least one reviewed bilingual self-canonical Index pair.
 - [ ] Run `verify:staging-publish` against staging DB + staging public host; keep Published disabled until it passes.
 - [ ] Resolve duplicate/cross-category source-data review before enabling affected records for independent Index.
 

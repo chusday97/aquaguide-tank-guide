@@ -15,6 +15,16 @@ const GROUP_SELECT = [
   'status','published_at','updated_at','deleted_at','version',
 ].join(',');
 
+async function verifyReleaseGateSchema(client) {
+  const { data, error } = await client.rpc('species_seo_release_gate_status');
+  if (error) throw new Error(`Staging schema readiness probe failed: ${error.message}`);
+  const required = ['species_seo_ready', 'group_seo_ready', 'revision_history_ready', 'restore_rpc_ready', 'localized_name_ready', 'index_strategy_ready'];
+  if (!data || Number(data.schema_version) < 6 || required.some((key) => data[key] !== true)) {
+    throw new Error(`Staging Species SEO schema is not release-ready: ${JSON.stringify(data || null)}`);
+  }
+  return data;
+}
+
 async function fetchPublishedRows({ client, table, select }) {
   const { data, error } = await client
     .from(table)
@@ -30,6 +40,7 @@ async function fetchPublishedRows({ client, table, select }) {
 export async function exportStagingSpeciesSnapshot(config) {
   const { supabaseUrl, actualProjectRef } = validateStagingSupabaseConfig(config);
   const client = createClient(supabaseUrl, config.publishableKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const schemaProbe = await verifyReleaseGateSchema(client);
   const [speciesSeo, speciesSeoGroups] = await Promise.all([
     fetchPublishedRows({ client, table: 'species_seo', select: VARIANT_SELECT }),
     fetchPublishedRows({ client, table: 'species_seo_groups', select: GROUP_SELECT }),
@@ -38,6 +49,7 @@ export async function exportStagingSpeciesSnapshot(config) {
     environment: 'staging',
     source_label: config.sourceLabel || `supabase:${actualProjectRef}`,
     source_project_ref: actualProjectRef,
+    schema_probe: schemaProbe,
     exported_at: new Date().toISOString(),
     species_seo: speciesSeo,
     species_seo_groups: speciesSeoGroups,
