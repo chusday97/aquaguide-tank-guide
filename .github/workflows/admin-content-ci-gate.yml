@@ -1,0 +1,77 @@
+name: Admin Content CI Gate
+
+on:
+  push:
+    branches: ['feature/admin-content-v0']
+    paths:
+      - 'apps/admin-content/**'
+      - 'src/data/fishData.ts'
+      - 'supabase/migrations/202607160001_core_schema.sql'
+      - 'supabase/migrations/20260828000*.sql'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/admin-content-ci-gate.yml'
+  pull_request:
+    paths:
+      - 'apps/admin-content/**'
+      - 'src/data/fishData.ts'
+      - 'supabase/migrations/202607160001_core_schema.sql'
+      - 'supabase/migrations/20260828000*.sql'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/admin-content-ci-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: admin-content-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      ADMIN_EXPECTED_NODE_VERSION: v24.14.0
+      ADMIN_EXPECTED_SUPABASE_VERSION: 2.115.0
+      ADMIN_SUPABASE_PORT_BASE: 56420
+    steps:
+      - name: Checkout pinned revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Setup pinned Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24.14.0
+          cache: npm
+
+      - name: Setup pinned Supabase CLI
+        uses: supabase/setup-cli@ab058987d8d6c725971f6cf9d0b5c98467e30bd1 # v1.7.1
+        with:
+          version: 2.115.0
+      - name: Verify toolchain versions
+        run: |
+          test "$(node -v)" = "$ADMIN_EXPECTED_NODE_VERSION"
+          test "$(supabase --version)" = "$ADMIN_EXPECTED_SUPABASE_VERSION"
+          docker version
+
+      - name: Install exact dependencies
+        run: npm ci
+
+      - name: Admin contract and generator tests
+        run: npm run test:contract -w @aquaguide/admin-content
+
+      - name: Ephemeral Supabase database gate
+        run: npm run test:supabase-gate -w @aquaguide/admin-content
+
+      - name: Production build
+        run: npm run build -w @aquaguide/admin-content
+
+      - name: Generated catalog must be committed
+        run: |
+          git diff --exit-code -- apps/admin-content/src/catalog.generated.json
+          git diff --exit-code -- apps/admin-content/src/species-groups.generated.json
+
+      - name: Diff hygiene
+        run: git diff --check

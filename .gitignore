@@ -14,3 +14,5 @@ evaluation/reports/*.json
 evaluation/reports/*.md
 !evaluation/reports/.gitkeep
 .vercel
+
+supabase/.temp/

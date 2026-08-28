@@ -555,3 +555,13 @@
 - Do not replace this with service-role reads. Fresh local proof shows anon can call the probe while `content_revisions` remains unreadable to anon.
 - Staging generator calls must supply both staging `siteUrl` and Production public URL deny-list; omission or host equality is a hard failure.
 - Fresh isolated DB applied core + 001–006 and returned all probe flags true. Temporary stack was removed after verification.
+
+### 2026-08-28 Admin A+B CI / local handoff
+- Current Admin validation model is A+B, not a paid staging branch requirement. B = Mac local Supabase; A = GitHub Actions ephemeral Supabase.
+- Keep `apps/admin-content/scripts/verify-admin-supabase-gate.sh` as the single orchestration entrypoint for both local and CI. Do not fork a second CI-only database setup.
+- CI pins Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0 and immutable action SHAs. Version bumps must be intentional, tested locally first, and recorded in `.ai/DECISION_LOG.md`.
+- The ephemeral database loads only `202607160001_core_schema.sql` plus Admin migrations `202608280001`–`202608280006`; do not switch CI to all repository migrations without resolving historical conflicts first.
+- Fixture preparation uses only the temporary PostgreSQL admin connection to mark the generated test user as admin. Product behavior assertions still go through publishable-key JWT sessions and real RLS.
+- Required gate proof: regular user cannot read Draft/write/read revisions/rollback; Base+Variant rollback returns Draft; Published bilingual `sp_0030` is anonymously readable and generates two indexable EN/ZH pages with canonical/hreflang/sitemap.
+- Workflow must remain validation-only: no Production credentials, DB push, Git commit, Vercel deployment or automatic Published unlock.
+- After push, verify the first GitHub Actions clean Ubuntu run. Until that run is green, A is not considered proven even though the same gate passes locally.

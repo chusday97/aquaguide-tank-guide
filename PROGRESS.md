@@ -311,3 +311,12 @@
 - 全新隔离 Supabase 从 core + migrations 001–006 顺序应用成功；anon publishable 身份读取 probe 全部为 true，同时直接读取 `content_revisions` 仍被 `permission denied`。
 - staging generator 进一步要求显式 Production public URL deny-list；直接 staging 调用也不能只靠固定域名保护。
 - 临时 Supabase 已关闭并删除，Production 未修改。
+
+### 2026-08-28 Admin A+B 稳定验证模式
+- Admin 后续采用 A+B：B 为 Mac 本地 Supabase 快速开发，A 为 GitHub Actions 临时 Supabase 干净机验证；不再把付费 Development Branch 作为当前必选前提。
+- A/B 共用同一个 `test:supabase-gate`，避免本地和 CI 维护两套数据库验证逻辑。
+- GitHub workflow 固定 Ubuntu 24.04、Node 24.14.0、Supabase CLI 2.115.0，并只给 `contents: read` 权限；无 Production Supabase/Vercel secret，无自动 commit/deploy。
+- 临时数据库只加载 core schema + Admin migrations 001–006，避免历史无关 migration 冲突影响 Admin 门禁。
+- 本地第一次执行发现临时 `migrations/` 目录缺失，第二次发现 service_role 无 `user_roles UPDATE`；均在 push 前修复，未通过临时扩权绕过。
+- 最终本地门禁已通过：schema v6、普通用户 Draft 可见 0、普通用户不可写/不可看 revision/不可 rollback、Base/Variant rollback 强制 Draft、数据库读取后生成 2 个中英 Index 页面并验证 canonical/hreflang/sitemap。
+- 下一步：push workflow 后以 GitHub Actions 第一次真实 Ubuntu clean-run PASS 作为 A 层正式证据；通过前 Published 保持锁定。

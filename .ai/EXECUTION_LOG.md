@@ -97,3 +97,12 @@
 - Fresh temporary Supabase applied core + migrations 001–006 from scratch. Publishable anon successfully received all readiness flags=true while direct `content_revisions` SELECT remained `permission denied`.
 - Generator staging mode now also requires an explicit Production public URL deny-list, so direct generator use cannot silently target another Production alias through the staging path.
 - Temporary Supabase stack was stopped and removed after verification; Production remained untouched.
+
+## 2026-08-28 — A+B CI gate implementation
+- Added `.github/workflows/admin-content-ci-gate.yml` scoped to Admin/catalog/SEO migration paths and the isolated feature branch.
+- Pinned immutable action SHAs plus Node 24.14.0 and Supabase CLI 2.115.0; workflow uses Ubuntu 24.04 and repository read-only permissions.
+- Added shared `test:supabase-gate` used by both local macOS and GitHub Actions.
+- First local run exposed missing temporary `migrations/` creation; fixed before push.
+- Second local run exposed that service_role lacked `user_roles UPDATE`; test setup was corrected to use only ephemeral PostgreSQL admin fixture preparation instead of widening service-role privileges.
+- Final local shared gate PASS: migrations 001–006, readiness probe, admin/non-admin RLS, Base/Variant rollback, anonymous Published reads, DB→2 bilingual static pages, canonical/hreflang/sitemap.
+- No Production secret, Production database write, main merge, automatic Git commit or automatic deploy is part of this workflow.

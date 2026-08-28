@@ -205,3 +205,20 @@ Migration `202608280006_species_seo_release_gate_probe.sql` adds `species_seo_re
 The staging exporter calls this probe before exporting Published rows. It blocks if the probe is missing, reports a schema version below 6, or any required capability is false. Fresh local verification confirmed that anon publishable access can call the probe while direct `content_revisions` reads remain denied.
 
 For staging generation, `PRODUCTION_PUBLIC_SITE_URL` is also mandatory. Direct staging generator calls must pass `productionSiteUrl` / `--production-site-url`; the staging verifier supplies it automatically from the environment deny-list.
+
+## Stable A+B development gate (2026-08-28)
+
+AquaGuide Admin now uses two complementary environments instead of paying for a persistent Supabase development branch by default:
+
+- **B / local:** Mac + pinned Supabase CLI for fast development and debugging.
+- **A / CI:** GitHub Actions + an ephemeral Supabase database for reproducible clean-run validation.
+
+Both environments execute the same command:
+
+```bash
+npm run test:supabase-gate -w @aquaguide/admin-content
+```
+
+The gate pins Node `24.14.0` and Supabase CLI `2.115.0`, loads only core schema + Admin migrations `001–006`, verifies Auth/RLS and rollback behavior, creates one bilingual Published fixture, then generates and checks EN/ZH static Species pages. The temporary database is destroyed after each run.
+
+GitHub CI has repository read-only permission and receives no Production Supabase/Vercel deployment credentials. It does not commit, deploy, migrate Production, or unlock Published automatically.

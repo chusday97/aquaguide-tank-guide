@@ -15,7 +15,8 @@
     "test:public-pages": "node scripts/test-public-species-generator.mjs",
     "export:staging-snapshot": "node scripts/export-staging-species-snapshot.mjs",
     "verify:staging-publish": "node scripts/verify-staging-publishing.mjs",
-    "test:staging-publish-guards": "node --check scripts/export-staging-species-snapshot.mjs && node --check scripts/verify-staging-publishing.mjs && node scripts/test-staging-publishing-guards.mjs"
+    "test:staging-publish-guards": "node --check scripts/export-staging-species-snapshot.mjs && node --check scripts/verify-staging-publishing.mjs && node scripts/test-staging-publishing-guards.mjs",
+    "test:supabase-gate": "bash scripts/verify-admin-supabase-gate.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.1",

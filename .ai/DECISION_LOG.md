@@ -77,3 +77,12 @@
 ## 2026-08-28 — Staging schema proof must not require privileged data access
 - Release verification may expose a data-free schema readiness RPC to anon/authenticated, but must not grant anon access to `content_revisions` or admin write paths.
 - The readiness probe is authoritative only when all expected flags are true and `schema_version >= 6`; otherwise staging publication fails closed.
+
+## 2026-08-28 — A+B stable development model
+- Use B (Mac local Supabase) for fast iteration and A (GitHub Actions ephemeral Supabase) as the reproducible release gate.
+- A and B must execute the same `test:supabase-gate` command; do not maintain separate local/CI database logic.
+- CI versions are pinned instead of `latest`: Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0, npm lockfile via `npm ci`.
+- CI has `contents: read` only and receives no Production Supabase or Vercel deployment credentials.
+- The temporary database loads only core schema + Admin migrations 001–006 to avoid unrelated historical migration conflicts.
+- Test fixture preparation may use the ephemeral PostgreSQL superuser, but all product behavior assertions must run through normal Supabase JWT/RLS clients.
+- A paid persistent Supabase development branch is optional, not a prerequisite for current Admin validation.

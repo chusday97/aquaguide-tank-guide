@@ -6,22 +6,21 @@ Updated: 2026-08-28
 - [x] Create isolated `apps/admin-content` companion app with Auth + admin role + RLS.
 - [x] Project 486 catalog rows into 276 Base Species groups and Variant members.
 - [x] Add Base Species inheritance + Variant Override (`f27ed43`).
-- [x] Add data review queue for 5 category conflicts and 28 suspected duplicate records.
-- [x] Add zh-CN → English suggestion workflow with separate locale Drafts (`465024a`).
-- [x] Define deterministic route/canonical/hreflang contract and Index/Canonical/Noindex strategy (`43eec47`).
-- [x] Add static Species generator + runtime SEO/sitemap tests + Base/Variant revision/rollback (`cd363b4`).
-- [x] Push `cd363b4` to `origin/feature/admin-content-v0`; `main` remains untouched.
-- [x] Add staging-only snapshot export and end-to-end publishing verifier with Production DB/site deny-lists.
-- [x] Remove generator fallback to Production canonical host; non-production generation now requires an explicit non-production `siteUrl`.
-- [x] Confirm AquaGuide Supabase currently has no existing development branch.
+- [x] Add zh-CN → English suggestion workflow and data review (`465024a`).
+- [x] Add route/canonical/hreflang/index contract and page preview (`43eec47`).
+- [x] Add static generator + runtime SEO tests + revision/rollback (`cd363b4`).
+- [x] Add staging publication guards and schema readiness probe (`d19fb13`, `70e539f`).
+- [x] Adopt A+B: local Supabase for development + pinned GitHub Actions ephemeral Supabase for release validation.
+- [x] Build one shared `test:supabase-gate` covering migrations 001–006, RLS, rollback and DB→EN/ZH static generation.
+- [x] Verify the shared gate locally on macOS with Node 24.14.0 / Supabase CLI 2.115.0.
 
 ## Next
-- [ ] Re-check `admin-content` Vercel Preview after Hobby daily deployment quota resets; current manual Preview attempt is blocked by the 100-deploy/day limit.
-- [ ] Provision or identify a dedicated AquaGuide staging Supabase only with explicit cost/environment approval.
-- [ ] Apply migrations 001–006 in staging and prepare at least one reviewed bilingual self-canonical Index pair.
-- [ ] Run `verify:staging-publish` against staging DB + staging public host; keep Published disabled until it passes.
-- [ ] Resolve duplicate/cross-category source-data review before enabling affected records for independent Index.
+- [ ] Push the A+B CI workflow and confirm the first GitHub Actions run passes on a clean Ubuntu 24.04 runner.
+- [ ] Keep Published locked until the GitHub CI gate is proven green and the final public-deploy integration is reviewed.
+- [ ] Re-check Vercel Preview after the Hobby daily deployment quota resets.
+- [ ] Resolve duplicate/cross-category source-data review before affected records can use independent Index.
 
 ## Later
+- [ ] Add an optional paid Supabase development branch only if persistent remote staging becomes operationally useful.
 - [ ] Connect approved Published Species pages to the public AquaGuide deployment only after explicit approval.
 - [ ] Add Search Console integration only after route/index contracts are stable in production.
