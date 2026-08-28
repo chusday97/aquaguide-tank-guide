@@ -1,5 +1,12 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 最新执行快照
+
+- 混养结论已完成本地唯一权威闭环：Domain Rules 是最终状态/策略/版本来源，`src/lib/compatibility/canonical-result.adapter.ts` 负责把结构化 ruleCodes 映射为 legacy 页面仍需的证据分组；Service 与旧入口共用同一适配器。最新代码提交为 `b9d56da2`。
+- 本地门禁与独立 Critic 六维复验通过；正式场景、今日行动、UI freeze 和 project truth 均通过，未修改视觉文件。
+- 当前仍卡在发布同步：本地未推送，远端候选/PR #142 仍为 `878c95d5`，当前 head 的 Preview SHA 未验证；生产第 27 个 migration、Catalog 发布和 `main` 合并未执行。
+- 下一步：先提交本次文档并一次性推送候选，运行 `project:status` 与 `check:preview-parity`；如 Preview 限流，保留 Draft，不重复推送。
+
 ## 2026-08-28 当前执行边界
 
 - 本地 Compatibility Service 与 Domain Rules 权威收敛已通过专项回归；当前候选工作树为 `codex/main-core-foundation-v1`，SHA 由运行时状态命令读取。
@@ -19,6 +26,7 @@
 
 - 独立 Critic 发现旧入口只同步 Domain 状态、未同步 Domain 证据；现已把证据合并下沉到 `src/lib/compatibility/canonical-result.adapter.ts`，直连旧页面也能显示对应阻断/资料不足理由。（commit: `33576cc6`）
 - 新增 direct-entry 水体冲突回归并通过；类型、混养、UI freeze 和 project truth 继续通过。当前代码修复尚未推送。
+- 后续已删除 Service 内重复的 Domain evidence map，统一复用共享 adapter，并补齐未映射 ruleCodes；Critic 复验结论为本地六维 PASS。（commit: `b9d56da2`）
 
 ## 2026-08-28 Domain 结论接管 Service
 

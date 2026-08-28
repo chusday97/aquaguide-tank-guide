@@ -2,8 +2,10 @@
 
 ## [Unreleased]
 
+- Closed the local mixed-compatibility authority gap: the shared canonical adapter now applies Domain status/policy/version and maps every current Domain rule code into legacy evidence groups; the direct legacy entry and Compatibility Service share the same adapter. Local Critic re-review passed; GitHub/Preview parity remains pending until the candidate is pushed.
 - Made the legacy compatibility entrypoint apply the Domain Rules decision before returning, so frozen UI callers receive the canonical status while retaining evidence-rich legacy details; added direct-entry authority regression coverage.
 - Shared the Domain rule-to-evidence merge with the legacy compatibility adapter, so direct UI callers receive matching blocking, warning and missing-data evidence as well as the canonical status.
+- Removed the duplicate Service-side Domain evidence map and completed shared mappings for missing candidate/tank and unknown-water rules.
 - Current candidate `16b3d8d5` is synchronized locally, remotely and with PR #142; Preview parity for this latest docs-only head is `UNVERIFIED` because Vercel build quota is exhausted. Previous exact Preview parity at `55a37745` remains historical evidence.
 - Recorded final GitHub/PR/Preview SHA parity for candidate `1b28bc85`; Product Golden Path validation passed. Production Catalog migration, Catalog publication and `main` merge remain pending independent authorization.
 

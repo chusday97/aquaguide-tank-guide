@@ -1,6 +1,13 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-28 当前执行快照（最新）
+
+- [x] 混养唯一结论已在 Domain → Service → legacy 兼容入口闭环；共享适配器同步状态、策略、版本及 blocking/warning/missing 证据，当前页面无需改 UI 即不会再拿到旧最终状态。（最新代码提交：`b9d56da2`）
+- [x] 本地专项回归通过：混养、Service、正式图鉴/养护场景、今日行动、UI freeze、project truth、lint、API 类型、build、Catalog 和本地 Supabase 门禁均通过；独立 Critic 六维复验通过。
+- [ ] 本地 `b9d56da2` 尚未推送，远端候选/PR #142 仍是 `878c95d5`，Preview 对当前 head 未验证；生产第 27 个 migration、Catalog 发布和 main 合并均未执行。
+- [ ] 下一步是提交文档后一次性推送，核对 GitHub/PR/Preview SHA；这一步仍不触碰生产 Supabase 或 main。
+
 ## 2026-08-28 当前门禁复核
 
 - [x] Compatibility Service、Domain 规则与 intent policy 的本地权威回归通过；`record_existing` 可保存事实，`planned_addition` 执行四级策略，Domain-only 冲突/未知资料安全降级。
@@ -19,6 +26,7 @@
 
 - [x] 将 Domain ruleCodes 到 legacy blocking/warning/missing 证据的合并下沉到 `src/lib/compatibility/canonical-result.adapter.ts`；旧页面直连入口不再出现“状态阻断但无阻断理由”。
 - [x] 新增旧入口 Domain-only 水体冲突回归；`test:compatibility` 与 `test:compatibility-service` 均通过，UI 文件未变更。（commit: `33576cc6`）
+- [x] Service 已改为复用共享证据适配器，并补齐 candidate/tank missing 与 unknown water rule codes；Critic 同线程复验六维通过。（commit: `b9d56da2`）
 - [ ] 仍未推送当前候选；远端/PR/Preview、生产 migration、Catalog 发布和 main 合并继续保持外部门禁。
 
 ## 2026-08-27 最终统一执行线
