@@ -355,7 +355,7 @@ const getFitStatusLabel = (status: 'ok' | 'warning' | 'danger' | 'info') => {
     case 'danger':
       return '风险';
     default:
-      return '信息不足';
+      return '当前可确认';
   }
 };
 
@@ -1105,7 +1105,7 @@ export default function Encyclopedia() {
       {
         label: 'pH',
         current: '未记录',
-        requirement: phRange ? fish.phLevel : '资料不足',
+        requirement: phRange ? fish.phLevel : '待审核',
         status: 'info',
         advice: phRange ? '当前鱼缸暂无 pH 数据，建议测试后再判断。' : '该物种缺少明确 pH 范围，可先按稳定水质管理。',
       },
@@ -2347,7 +2347,7 @@ export default function Encyclopedia() {
                               : selectedGroupCompatibility?.status === 'not_recommended'
                                 ? t('encyclopedia.fitNotRecommended')
                                 : selectedGroupCompatibility?.status === 'insufficient_data'
-                                  ? t('encyclopedia.fitInsufficient')
+                                  ? '当前可确认'
                                   : selectedGroupFit?.status === 'suitable'
                                     ? t('encyclopedia.fitSuitable')
                                     : selectedGroupFit?.status === 'adjustable'

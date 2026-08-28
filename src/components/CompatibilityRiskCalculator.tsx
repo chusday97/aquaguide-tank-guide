@@ -106,6 +106,8 @@ import { buildCompatibilityVisualResult } from './visual-results/visual-result.a
 import { recordTankCompatibility } from '../services/compatibility/compatibility-records.service';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { getCompatibilityPreviewSpecies } from '../services/compatibility/compatibility-preview.service';
+import { addSpeciesFavorite } from '../services/favorites/favorites.service';
+import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
@@ -154,7 +156,7 @@ const getRiskMeta = (level: CompatibilityRiskLevel) => {
     case 'caution':
       return { label: Boolean(i18n.language?.startsWith('en')) ? 'Caution' : '谨慎尝试', tone: 'border-amber-200 bg-amber-50 text-amber-700', iconTone: 'bg-amber-500 text-white' };
     case 'insufficient_data':
-      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Info Needed' : '信息不足', tone: 'border-sky-200 bg-sky-50 text-sky-700', iconTone: 'bg-sky-500 text-white' };
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Confirmed Factors' : '当前可确认', tone: 'border-sky-200 bg-sky-50 text-sky-700', iconTone: 'bg-sky-500 text-white' };
     case 'compatible':
       return { label: Boolean(i18n.language?.startsWith('en')) ? 'Compatible' : '适合', tone: 'border-emerald-200 bg-emerald-50 text-emerald-700', iconTone: 'bg-emerald-500 text-white' };
     default:
@@ -219,7 +221,7 @@ const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reaso
   if (species.length < 2) return '';
   const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Not recommended under current conditions; remove risks first.' : '当前条件下不建议加入，先移除阻断风险。';
-  if (level === 'insufficient_data') return isEn ? 'Insufficient data; cannot provide a reliable evaluation.' : '信息不足，暂时无法可靠判断。';
+  if (level === 'insufficient_data') return isEn ? 'Some conditions are confirmed. Save this mix and revisit after more review.' : '当前可以确认部分条件，先加入种草清单，之后再回来判断。';
   if (level === 'caution') return isEn ? 'Can attempt, but environment adjustments and close observation needed.' : '可以尝试，但需要调整环境并观察。';
   return isEn ? 'Compatible for co-habitation; keep observing after stocking.' : '可以尝试混养，入缸后继续观察。';
 };
@@ -227,7 +229,7 @@ const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reaso
 const getResultNextAction = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Remove red-flagged species below and recalculate.' : '先移除下方红色对象，再重新计算组合。';
-  if (level === 'insufficient_data') return isEn ? 'Fill in missing details before deciding to add.' : '先补充缺失信息，再决定是否加入。';
+  if (level === 'insufficient_data') return isEn ? 'Save this mix to your wishlist and revisit when the review is complete.' : '先加入种草清单，资料完善后再回来判断。';
   if (level === 'caution') return isEn ? 'Review the warnings. Record only after the livestock is actually in the tank.' : '先确认风险；只有生物实际入缸后再记录。';
   if (level === 'compatible') return isEn ? 'The plan is compatible. Record it only after the livestock is actually in the tank.' : '规划判断通过；只有生物实际入缸后再记录。';
   return isEn ? 'Select at least 2 species first.' : '先选择至少 2 种生物。';
@@ -236,7 +238,7 @@ const getResultNextAction = (level: CompatibilityRiskLevel) => {
 const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'not_recommended') return isEn ? 'Handle Red Flags First' : '先处理阻断对象';
-  if (level === 'insufficient_data') return isEn ? 'Fill in Details First' : '先补充判断信息';
+  if (level === 'insufficient_data') return isEn ? 'Review Confirmed Factors' : '查看当前可确认条件';
   if (level === 'caution') return isEn ? 'Review Before Stocking' : '入缸前确认风险';
   if (level === 'compatible') return isEn ? 'Plan Confirmed' : '规划判断完成';
   return isEn ? 'Select Species First' : '先选择生物';
@@ -246,7 +248,7 @@ const getPrimaryResultButtonLabel = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'compatible') return isEn ? 'Already stocked? Record now' : '已经实际入缸，记录下来';
   if (level === 'not_recommended') return isEn ? 'Reselect Stocking Mix' : '重新选择组合';
-  if (level === 'insufficient_data') return isEn ? 'Update Tank Details' : '补充鱼缸信息';
+  if (level === 'insufficient_data') return isEn ? 'Save to Wishlist' : '加入种草清单';
   if (level === 'caution') return isEn ? 'Review risks before recording' : '确认风险后再记录';
   return isEn ? 'Continue Selecting' : '继续选择';
 };
@@ -372,6 +374,14 @@ const getSpeciesActionGroups = (
 ): SpeciesActionGroup => {
   const existing = species.filter(item => currentQuantityBySpeciesId[item.id]);
   const candidateSpecies = species.filter(item => !currentQuantityBySpeciesId[item.id]);
+
+  if (result.level === 'insufficient_data') {
+    return {
+      keep: [],
+      remove: [],
+      existing,
+    };
+  }
 
   if (result.level !== 'not_recommended') {
     return {
@@ -502,6 +512,7 @@ type CompatibilityRiskCalculatorProps = {
   onBrowseAtlas?: () => void;
   onAddToAquarium?: (items: { fishId: string; quantity: number }[]) => void | Promise<{ message?: string } | void>;
   onRequestTankInfo?: (missingRuleCodes: string[]) => void;
+  onSaveToWishlist?: (speciesIds: string[]) => void | Promise<void>;
   onViewAquarium?: () => void;
   preferredSpeciesIds?: string[];
   aquariums?: Aquarium[];
@@ -535,7 +546,7 @@ export function CompatibilityRiskCalculator({
   onSpeciesIdsChange,
   onBrowseAtlas,
   onAddToAquarium,
-  onRequestTankInfo,
+  onSaveToWishlist,
   onViewAquarium,
   preferredSpeciesIds = [],
   aquariums = [],
@@ -680,6 +691,10 @@ export function CompatibilityRiskCalculator({
       currentAction: getResultNextAction(result.level),
     };
   }, [result.decision, result.level, selectedSpecies]);
+  const compatibilityPresentation = useMemo(
+    () => result.decision ? getCompatibilityPresentation(result.decision) : null,
+    [result.decision],
+  );
   const speciesActionGroups = useMemo(
     () => getSpeciesActionGroups(result, selectedSpecies, currentQuantityBySpeciesId),
     [currentQuantityBySpeciesId, result, selectedSpecies]
@@ -723,7 +738,11 @@ export function CompatibilityRiskCalculator({
     ? (isEn ? 'Not Started' : '未开始')
     : selectedCount === 1
       ? (isEn ? 'Pending Addition' : '待添加')
-      : meta.label;
+      : compatibilityPresentation?.mode === 'confirmed_facts'
+        ? (isEn ? 'Confirmed factors' : '当前可确认')
+        : compatibilityPresentation?.mode === 'unavailable'
+          ? (isEn ? 'Not yet available' : '暂未开放')
+          : meta.label;
   const selectedTitle = selectedCount < 2
     ? (isEn ? `Selected ${selectedCount}/2` : `已选生物 ${selectedCount}/2`)
     : (isEn ? `Selected ${selectedCount} species` : `已选生物 ${selectedCount} 种`);
@@ -813,12 +832,17 @@ export function CompatibilityRiskCalculator({
       return;
     }
     if (resultAddPolicy === 'complete_information') {
-      const missingRuleCodes = result.ruleResult?.missingData.map(rule => rule.code) || [];
-      if (onRequestTankInfo) {
-        onRequestTankInfo(missingRuleCodes);
-        return;
-      }
-      setResultFeedback('当前信息不足，请先补充鱼缸参数后再添加。');
+      const save = async () => {
+        try {
+          if (onSaveToWishlist) await onSaveToWishlist(selectedSpecies.map(species => species.id));
+          else selectedSpecies.forEach(species => addSpeciesFavorite(species.id));
+          setResultFeedback(isEn ? 'Saved to your wishlist. Revisit this mix after more review.' : '已加入种草清单，资料完善后可以再回来判断。');
+          setRecordError('');
+        } catch {
+          setRecordError(isEn ? 'Could not save to wishlist. Try again.' : '种草清单保存失败，请重试。');
+        }
+      };
+      void save();
       return;
     }
     if (resultAddPolicy === 'confirm') {
@@ -1079,7 +1103,16 @@ export function CompatibilityRiskCalculator({
             </div>
           ) : (
             <>
-              {visualResultModel && (
+              {visualResultModel?.presentationMode === 'unavailable' ? (
+                <section className="mb-3 rounded-[18px] border border-sky-100 bg-sky-50/75 p-3" data-visual-result-presentation="unavailable">
+                  <div className="text-[15px] font-black text-ink">{visualResultModel.title}</div>
+                  <p className="mt-1 text-[12px] font-bold leading-relaxed text-ink/65">{visualResultModel.conclusion}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button type="button" onClick={handlePrimaryResultAction} className="min-h-11 rounded-full bg-accent px-4 text-[11px] font-black text-white">加入种草清单</button>
+                    {onBrowseAtlas && <button type="button" onClick={onBrowseAtlas} className="min-h-11 rounded-full border border-emerald-200 bg-white px-4 text-[11px] font-black text-emerald-800">查看物种养护</button>}
+                  </div>
+                </section>
+              ) : visualResultModel && (
                 <VisualResultCard
                   model={visualResultModel}
                   onPrimaryAction={handlePrimaryResultAction}

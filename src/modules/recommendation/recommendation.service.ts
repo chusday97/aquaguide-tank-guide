@@ -573,7 +573,7 @@ export const recommendationService = {
         candidateSpecies: candidate,
         candidateQuantity: 1,
       }),
-    })).filter(item => item.compatibility.status !== 'not_recommended');
+    })).filter(item => item.compatibility.status !== 'not_recommended' && item.compatibility.status !== 'insufficient_data');
 
     const strictCandidates = baseCandidates.filter(({ candidate, compatibility }) => {
       if (compatibility.status !== 'compatible') return false;

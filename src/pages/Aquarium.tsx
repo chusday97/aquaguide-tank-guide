@@ -6316,7 +6316,7 @@ export default function AquariumManager() {
                         addFishSuccess.result.assessment?.status === 'not_recommended'
                           ? '已记录现实情况；当前存在紧急混养风险，请优先查看风险处理。'
                           : addFishSuccess.result.assessment?.status === 'insufficient_data'
-                            ? '已记录现实情况；补充基础尺寸和水体类型后可以得到更完整判断。'
+                            ? '已记录现实情况；当前结论会随着环境和行为资料完善而更新。'
                             : addFishSuccess.result.assessment?.status === 'caution'
                               ? '已记录现实情况；请按提示重点观察，不需要重新添加。'
                               : '当前未发现阻断风险，继续观察实际状态。'
@@ -6388,7 +6388,7 @@ export default function AquariumManager() {
                         {addFishCompatibilityReview.status === 'not_recommended'
                           ? '当前规划命中阻断风险，不建议实际加入；这不会删除现实中已经存在的记录。'
                           : addFishCompatibilityReview.status === 'insufficient_data'
-                            ? '鱼缸关键信息不足，请先补全后再判断。'
+                            ? '这组规划暂未开放完整建议，可先查看物种养护或加入种草清单。'
                             : addFishCompatibilityReview.status === 'caution'
                               ? '存在需要注意的条件；确认理解后，只有实际入缸时才记录。'
                               : '当前规划允许继续；只有实际入缸后才记录到鱼缸。'}

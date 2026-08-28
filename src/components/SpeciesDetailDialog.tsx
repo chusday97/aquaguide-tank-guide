@@ -153,7 +153,7 @@ const getFitStatusLabel = (status: FitStatus, isEn = false) => {
   if (status === 'ok') return isEn ? 'Fit' : '匹配';
   if (status === 'warning') return isEn ? 'Adjust' : '需调整';
   if (status === 'danger') return isEn ? 'Risk' : '风险';
-  return isEn ? 'Limited Data' : '信息不足';
+  return isEn ? 'Confirmed factors' : '当前可确认';
 };
 
 const mapCompatibilityStatusToDetailStatus = (
@@ -259,8 +259,8 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
     {
       type: 'water_parameter',
       label: isEn ? "Water Parameters" : "水质参数",
-      current: phRange ? t('encyclopedia.phMatch') : t('encyclopedia.fitInsufficient'),
-      requirement: phRange ? fish.phLevel : t('encyclopedia.fitInsufficient'),
+      current: phRange ? t('encyclopedia.phMatch') : (isEn ? 'Not recorded' : '未记录'),
+      requirement: phRange ? fish.phLevel : (isEn ? 'Review pending' : '待审核'),
       status: 'info',
       advice: phRange ? t('encyclopedia.phMatch') : t('encyclopedia.phWarning', { range: fish.phLevel, current: 'pH' }),
     },
@@ -568,9 +568,20 @@ export function SpeciesDetailDialog({
         statusRank[pair.status] > statusRank[current] ? pair.status : current
       ), 'compatible');
     const primaryPair = [...compatibilityPairs].sort((a, b) => statusRank[b.status] - statusRank[a.status])[0];
-    const conclusion = primaryPair?.primaryReason?.evidence || primaryPair?.rawResult.summary || t('encyclopedia.conclusionNoPairs');
+    const hasConfirmedFacts = compatibilityPairs.some(pair => (
+      pair.rawResult.passedRules.length > 0 || pair.rawResult.warningRules.length > 0 || pair.rawResult.blockingRules.length > 0
+    ));
+    const presentationMode = status === 'insufficient_data'
+      ? (hasConfirmedFacts ? 'confirmed_facts' : 'unavailable')
+      : 'verdict';
+    const conclusion = status === 'insufficient_data'
+      ? (hasConfirmedFacts ? '当前可确认部分条件，先加入种草清单。' : '暂未开放这组混养建议，可先查看物种养护。')
+      : primaryPair?.primaryReason?.evidence || primaryPair?.rawResult.summary || t('encyclopedia.conclusionNoPairs');
     return {
       status,
+      presentationMode,
+      statusLabel: status === 'insufficient_data' ? (isEn ? 'Confirmed factors' : '当前可确认') : undefined,
+      coverageLabel: hasConfirmedFacts && status === 'insufficient_data' ? '本次仅展示已核对的环境与行为条件' : null,
       title: t('encyclopedia.compatibilityCalc'),
       conclusion,
       emphasis: getVisualEmphasis(conclusion),
@@ -592,11 +603,11 @@ export function SpeciesDetailDialog({
           role: 'related' as const,
           status: pair.status,
           shortReason: reason,
-          badgeLabel: pair.primaryReason?.title || (pair.status === 'compatible' ? t('encyclopedia.housingBehaviorMatch') : pair.status === 'caution' ? t('encyclopedia.fitCaution') : pair.status === 'not_recommended' ? t('encyclopedia.fitNotRecommended') : t('encyclopedia.fitInsufficient')),
+          badgeLabel: pair.primaryReason?.title || (pair.status === 'compatible' ? t('encyclopedia.housingBehaviorMatch') : pair.status === 'caution' ? t('encyclopedia.fitCaution') : pair.status === 'not_recommended' ? t('encyclopedia.fitNotRecommended') : (isEn ? 'Confirmed factors' : '当前可确认')),
           emphasis: getVisualEmphasis(reason),
         };
       })],
-      currentAction: primaryPair?.actions[0] || t('encyclopedia.actionNoPairs'),
+      currentAction: status === 'insufficient_data' ? '先加入种草清单，资料完善后再回来判断。' : primaryPair?.actions[0] || t('encyclopedia.actionNoPairs'),
       primaryAction: { label: t('encyclopedia.compatibilityCalc'), actionType: 'route' },
       detailSections: compatibilityPairs.map(pair => {
         const other = pair.speciesA.id === fish.id ? pair.speciesB : pair.speciesA;
@@ -769,7 +780,7 @@ export function SpeciesDetailDialog({
                             <h3 id="species-feeding-summary-title" className="text-[11px] font-black text-amber-900">{isEn ? 'Feeding at a glance' : '喂养速览'}</h3>
                             {carePresentation && (
                               <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black ${getCareSourceClass(carePresentation.sourceStatus)}`}>
-                                {carePresentation.sourceStatus === 'pending' ? t('encyclopedia.fitInsufficient') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
+                                {carePresentation.sourceStatus === 'pending' ? (isEn ? 'Review pending' : '待审核') : carePresentation.sourceStatus === 'verified' ? t('encyclopedia.fitStatusOkLabel') : t('encyclopedia.fitStatusMatchConfirm')}
                               </span>
                             )}
                           </div>

@@ -32,7 +32,7 @@ export const getTankCompatibilityAddPolicy = (status: TankCompatibilityStatus): 
 );
 
 export const getTankCompatibilityStatusLabel = (status: TankCompatibilityStatus): string => (
-  getLegacyTankCompatibilityStatusLabel(status)
+  status === 'insufficient_data' ? '当前可确认' : getLegacyTankCompatibilityStatusLabel(status)
 );
 
 export type CanonicalCompatibilityDecision = {

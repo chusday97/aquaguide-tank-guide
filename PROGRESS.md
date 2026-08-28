@@ -1,6 +1,15 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-29 混养结果体验修复（本轮）
+
+- [x] 保留 Domain 内部 `insufficient_data` 安全状态，但新增统一 Compatibility Presentation：完整结论显示适合/调整后可尝试/不建议，部分事实显示“当前可确认”，无可靠事实显示“暂未开放这组混养建议”。
+- [x] 部分或未开放组合的主操作改为加入现有种草清单；不调用新增缸内生物 Repository/API，不新增数据库字段。
+- [x] `VisualResultCard` 支持展示模式、状态文案和判断范围；Species Detail、Encyclopedia、Aquarium 的混养文案不再直接显示“资料不足/信息不足”。
+- [x] 自动推荐排除内部 `insufficient_data` 结果，部分评估仅允许用户主动查看和收藏。
+- [x] 新增 `test:compatibility-presentation`，覆盖完整结论、部分事实、无结果卡、种草操作和兼容页面文案门禁；混养、Domain、Service、Catalog、构建和类型检查通过。
+- [ ] `check:ui-freeze` 按预期报告混养结果区域发生定向变化；需用户确认新结果文案后重新生成冻结基线。4317、4319、GitHub、生产 Supabase 和 `main` 均未改动。
+
 ## 2026-08-28 物种底层修复进展（本轮最新）
 
 > 当前工作树最新提交以 `git rev-parse HEAD` 运行时读取。本地已提交但尚未推送；远端候选/PR #142 仍停在 `396e71da`。下方较早的“同步/已推送”条目均为历史证据。
