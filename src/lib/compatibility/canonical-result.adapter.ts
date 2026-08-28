@@ -6,6 +6,18 @@ import type {
 } from '../tankCompatibilityEngine';
 
 const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
+  candidate_missing: {
+    code: 'candidate_missing', title: '缺少候选生物', evidence: '请先选择要评估的生物。', severity: 'high', basis: 'rule_inference', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
+  },
+  empty_tank_no_existing_species: {
+    code: 'empty_tank_no_existing_species', title: '暂无已记录的缸内生物', evidence: '当前鱼缸还没有已记录的其他生物，暂时无法判断混养关系。', severity: 'medium', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  tank_missing: {
+    code: 'tank_missing', title: '缺少当前鱼缸', evidence: '请先选择一个鱼缸，再判断混养适配。', severity: 'high', basis: 'tank_condition', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
+  },
+  water_type_unknown: {
+    code: 'water_type_unknown', title: '水体类型未确认', evidence: '组合中至少一个物种尚未确认淡水或海水类型，暂时无法可靠判断。', severity: 'medium', basis: 'tank_condition', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
+  },
   water_type_conflict: {
     code: 'water_type_conflict', title: '物种水体不一致', evidence: '组合中的物种水体类型不一致，不能按同一水体规划加入。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
