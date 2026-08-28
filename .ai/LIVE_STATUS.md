@@ -7,7 +7,7 @@ Branch: `feature/admin-content-v0`
 - Public AquaGuide `main`: untouched.
 - Production Supabase: untouched; Admin migrations 001–007 remain branch-only proposals.
 - A+B baseline is proven: local macOS and GitHub Actions run `33147127271` passed the shared gate through migration 006.
-- Current uncommitted milestone adds migration 007 Publish Readiness + persisted Data Review decisions; B/local has passed through schema v7.
+- Migration 007 Publish Readiness/Data Review is pushed as `3669146`; GitHub Actions run `33149941551` passed every A-layer step, including the ephemeral schema-v7 database gate.
 - Local read-only Admin preview is available at `http://localhost:3020/` and returns HTTP 200.
 - Catalog projection remains 486 rows → 276 Base Species; 28 suspected duplicates; 5 category-conflict groups.
 
@@ -31,9 +31,17 @@ Branch: `feature/admin-content-v0`
 - Contract, staging guards, Supabase gate, production Admin build and `git diff --check` pass; only the existing >500KB Vite warning remains.
 - Real Chrome Review covered duplicate, category-conflict and single-member Base paths with `PAGE_ERRORS=0`.
 
+## Controlled Preview Publish
+- Approved Draft content can now be exported from Admin as a minimal Preview Snapshot; reviewer identity and Data Review notes are stripped.
+- `generate:preview-publish` reuses the static generator in explicit Preview mode and requires selected catalog keys.
+- Preview HTML always renders `noindex,nofollow` even when the intended future route is Index.
+- Preview output includes `robots.txt` with `Disallow: /`, a local index page and preview manifest; it does not emit `sitemap-species.xml`.
+- Root/app deployable `public/` and Admin `dist/` output paths are hard-rejected.
+- Local generated Preview is live at `http://localhost:4020/`; root/EN/ZH are HTTP 200 and Chromium reports no page errors.
+- Admin Review remains live at `http://localhost:3020/`.
+
 ## Remaining gate
-1. Commit/push this milestone and require the GitHub A-layer clean Ubuntu run to pass migrations 001–007.
-2. Build Controlled Preview Publish from Publish-ready content into a non-Production output only.
-3. Add queue-level review counts/filters for pending/resolved/source-fix-required.
-4. Validate 1–2 live translation suggestions after server-only provider configuration.
-5. Production migration/public deploy remains a separate explicit approval.
+1. Add queue-level Data Review and Publish Readiness overview counts/filters.
+2. Re-check remote Admin Preview after Vercel Hobby quota reset.
+3. Validate 1–2 live translation suggestions after server-only provider configuration.
+4. Production migration/public deploy remains a separate explicit approval.

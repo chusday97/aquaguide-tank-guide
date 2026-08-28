@@ -103,3 +103,13 @@
 - Public generation may read only the minimal review-resolution RPC, never admin notes or reviewer identity.
 - Base Species authoring applies to all 276 groups, including single-member groups, so generator requirements and editor capabilities stay consistent.
 - `publish-ready` means eligible for Controlled Preview Publish only; Production Published remains a distinct later approval.
+
+
+## 2026-08-28 — Controlled Preview Publish is intentionally non-indexable
+- Preview may consume Approved Draft content; release/staging continues to require Published content.
+- The same static generator is reused with an explicit Preview mode; do not create a second renderer.
+- Preview actual robots are always `noindex,nofollow` regardless of intended future Index strategy. Planned robots remain visible in preview metadata/banner for editorial review.
+- Preview writes `robots.txt` with `Disallow: /` and intentionally omits the release Species sitemap.
+- Preview output may not target root/app `public/` or Admin `dist/`; accidental deployable output is a hard error.
+- Preview requires explicit selected catalog keys so an approval state cannot silently generate every Species.
+- Admin Preview Snapshot export strips reviewer identity and review notes; only minimal review resolutions are carried into generation.

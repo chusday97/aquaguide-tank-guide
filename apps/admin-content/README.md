@@ -236,3 +236,30 @@ Migration 007 and the current Admin UI now implement the readiness layer:
 - generator requires Approved Base + Variant and safe review resolutions.
 
 The B/local gate is green through schema version 7. The immediate next gate is the GitHub A-layer clean run through migration 007, followed by Controlled non-Production Preview Publish. `publish-ready` still never means automatic Production deployment.
+
+
+## Controlled Preview Publish
+
+Publish-ready content can be exported from the Admin as a minimal JSON Preview Snapshot. The snapshot includes the selected Species, its available locale rows/Base rows and only minimal Data Review resolutions; reviewer identity and review notes are omitted.
+
+Generate a local static preview with:
+
+```bash
+npm run generate:preview-publish -w @aquaguide/admin-content -- \
+  --snapshot /path/to/sp_xxxx-preview-snapshot.json \
+  --site-url http://127.0.0.1:4020 \
+  --production-site-url https://aqua-tank-guide.vercel.app
+```
+
+The default output is ignored `.preview-output/`. Preview mode is intentionally safer than release mode:
+
+- requires `environment=preview` + `delivery_mode=controlled_preview`;
+- requires explicit selected catalog keys;
+- accepts Approved Draft, while release/staging remains Published-only;
+- forces every rendered page to `noindex,nofollow`;
+- writes `robots.txt` with `Disallow: /`;
+- does not emit the release `sitemap-species.xml`;
+- refuses repository/Admin `public/` and Admin `dist/` output;
+- refuses Production canonical hosts.
+
+`npm run test:preview-publish -w @aquaguide/admin-content` is part of `test:contract`. Local reference output was verified in Chromium at `http://localhost:4020/` with zero page errors.

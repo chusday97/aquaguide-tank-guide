@@ -10,13 +10,15 @@
     "generate:catalog": "node scripts/generate-catalog.mjs && node scripts/generate-species-groups.mjs",
     "predev": "npm run generate:catalog",
     "prebuild": "npm run generate:catalog",
-    "test:contract": "npm run generate:catalog && node scripts/verify-contract.mjs && node scripts/test-public-species-generator.mjs && npm run test:staging-publish-guards",
+    "test:contract": "npm run generate:catalog && node scripts/verify-contract.mjs && node scripts/test-public-species-generator.mjs && node scripts/test-controlled-preview-publish.mjs && npm run test:staging-publish-guards",
     "generate:public-species": "node scripts/generate-public-species.mjs",
     "test:public-pages": "node scripts/test-public-species-generator.mjs",
     "export:staging-snapshot": "node scripts/export-staging-species-snapshot.mjs",
     "verify:staging-publish": "node scripts/verify-staging-publishing.mjs",
     "test:staging-publish-guards": "node --check scripts/export-staging-species-snapshot.mjs && node --check scripts/verify-staging-publishing.mjs && node scripts/test-staging-publishing-guards.mjs",
-    "test:supabase-gate": "bash scripts/verify-admin-supabase-gate.sh"
+    "test:supabase-gate": "bash scripts/verify-admin-supabase-gate.sh",
+    "generate:preview-publish": "node scripts/build-controlled-preview.mjs",
+    "test:preview-publish": "node scripts/test-controlled-preview-publish.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.1",

@@ -94,3 +94,42 @@ export function getIndexReviewBlockReason({ species, group, indexStrategy, canon
   }
   return indexStrategy === 'index' ? '当前记录仍是疑似重复；人工复核前不能独立 Index。' : '';
 }
+
+
+const VARIANT_PREVIEW_FIELDS = [
+  'catalog_key','locale','localized_name','seo_title','meta_description','h1','intro','image_alt',
+  'canonical_path','focus_keyword','index_strategy','canonical_catalog_key','status','review_state','deleted_at','version',
+];
+const GROUP_PREVIEW_FIELDS = [
+  'group_key','locale','seo_title_template','meta_description_template','h1_template','shared_intro',
+  'status','review_state','deleted_at','version',
+];
+function pickPreviewFields(row, fields) {
+  if (!row) return null;
+  return Object.fromEntries(fields.map((field) => [field, row[field] ?? null]));
+}
+export function buildControlledPreviewSnapshot({ species, group, variantRows = [], groupRows = [], reviewRows = {} }) {
+  if (!species?.catalog_key || !group?.group_key) throw new Error('Species and Base group are required for Preview Snapshot.');
+  const resolutions = [];
+  const category = reviewRows[categoryIssueKey(group)];
+  if (category) resolutions.push(category);
+  for (const set of group.duplicate_sets || []) {
+    const row = reviewRows[set.duplicate_set_key];
+    if (row) resolutions.push(row);
+  }
+  return {
+    environment: 'preview',
+    delivery_mode: 'controlled_preview',
+    source_label: 'admin-ui-preview-export',
+    selected_catalog_keys: [species.catalog_key],
+    species_seo: variantRows.filter(Boolean).map((row) => pickPreviewFields(row, VARIANT_PREVIEW_FIELDS)),
+    species_seo_groups: groupRows.filter(Boolean).map((row) => pickPreviewFields(row, GROUP_PREVIEW_FIELDS)),
+    data_review_resolutions: resolutions.map((row) => ({
+      issue_key: row.issue_key,
+      issue_type: row.issue_type,
+      group_key: row.group_key,
+      decision: row.decision,
+      canonical_catalog_key: row.canonical_catalog_key || '',
+    })),
+  };
+}

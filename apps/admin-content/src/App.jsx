@@ -12,7 +12,7 @@ import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
-import { REVIEW_STATES, assessPublishReadiness, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
+import { REVIEW_STATES, assessPublishReadiness, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -541,6 +541,26 @@ export default function App() {
     ? groupPreviewRows[batchGroupKey] || groupSeoRows[batchGroupKey]
     : null;
 
+  const exportPreviewSnapshot = () => {
+    if (!selectedSpecies || !selectedGroup || publishReadiness?.state !== 'publish_ready' || isReviewMode) return;
+    const snapshot = buildControlledPreviewSnapshot({
+      species: selectedSpecies,
+      group: selectedGroup,
+      variantRows: [sourceVariantRow, englishVariantRow],
+      groupRows: [sourceGroupRow, englishGroupRow],
+      reviewRows: dataReviewRows,
+    });
+    const blob = new Blob([`${JSON.stringify(snapshot, null, 2)}\n`], { type: 'application/json' });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = `${selectedSpecies.catalog_key}-preview-snapshot.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(href);
+  };
+
   const toggleBatch = (id) => {
     const nextGroup = speciesGroupByMemberId.get(id);
     setSelectedId(id);
@@ -640,7 +660,7 @@ export default function App() {
         />
 
         <main className="editor-area">
-          <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} />
+          <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} />
           <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
             onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
           {contentLocale === 'en' ? (

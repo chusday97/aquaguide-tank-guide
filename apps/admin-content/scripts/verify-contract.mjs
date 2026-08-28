@@ -5,18 +5,19 @@ import { fileURLToPath } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { extractTemplateTokens, validateProtectedTokens } from '../api/_translation-core.js';
 import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
-import { assessDataReview, assessPublishReadiness, categoryIssueKey, getIndexReviewBlockReason } from '../src/publishReadiness.js';
+import { assessDataReview, assessPublishReadiness, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason } from '../src/publishReadiness.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, readinessSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, readinessSource, controlledPreviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/DataReviewPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublishReadinessPanel.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'scripts/build-controlled-preview.mjs'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublicSpeciesPreview.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/RevisionHistoryPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/TranslationPanel.jsx'), 'utf8'),
@@ -62,6 +63,11 @@ assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
 assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review workflow');
 assert.match(appSource, /PublishReadinessPanel/, 'Admin must expose explicit publish readiness');
+assert.match(readinessSource, /导出 Preview Snapshot/, 'Publish-ready UI must expose controlled Preview Snapshot export');
+assert.match(controlledPreviewSource, /noindex,nofollow/, 'Controlled Preview pages must force noindex,nofollow');
+assert.match(controlledPreviewSource, /Disallow: \//, 'Controlled Preview root must disallow crawlers');
+assert.match(controlledPreviewSource, /refuses deployable output directory/, 'Controlled Preview must reject deployable public/dist output');
+assert.doesNotMatch(controlledPreviewSource, /sitemap-species\.xml/, 'Controlled Preview wrapper must not emit the release sitemap');
 assert.match(readinessSource, /Publish-ready/, 'Readiness UI must distinguish Preview Publish readiness from Production publication');
 assert.match(appSource, /TranslationPanel/, 'Admin must expose bilingual translation workflow');
 assert.match(appSource, /PublicSpeciesPreview/, 'Admin must show the resulting public Species page preview');
@@ -187,6 +193,17 @@ const readinessFixture = assessPublishReadiness({
   counterpartGroupRow: { review_state: 'approved' }, counterpartVariantRow: { review_state: 'approved' }, reviewRows: {},
 });
 assert.equal(readinessFixture.state, 'publish_ready', 'Complete approved noindex content should be Preview Publish-ready');
+const previewSnapshot = buildControlledPreviewSnapshot({
+  species: cleanMember, group: cleanGroup,
+  variantRows: [{ catalog_key: cleanMember.catalog_key, locale: 'zh-CN', status: 'draft', review_state: 'approved', reviewed_by: 'should-not-export' }],
+  groupRows: [{ group_key: cleanGroup.group_key, locale: 'zh-CN', status: 'draft', review_state: 'approved', reviewed_by: 'should-not-export' }],
+  reviewRows: { [categoryIssueKey(cleanGroup)]: { issue_key: categoryIssueKey(cleanGroup), issue_type: 'category_conflict', group_key: cleanGroup.group_key, decision: 'accepted_as_is', notes: 'private', reviewed_by: 'private-user' } },
+});
+assert.equal(previewSnapshot.environment, 'preview');
+assert.equal(previewSnapshot.delivery_mode, 'controlled_preview');
+assert.deepEqual(previewSnapshot.selected_catalog_keys, [cleanMember.catalog_key]);
+assert.ok(!('reviewed_by' in previewSnapshot.species_seo[0]), 'Preview snapshot must strip reviewer identity');
+assert.ok(!('notes' in (previewSnapshot.data_review_resolutions[0] || {})), 'Preview snapshot must strip Data Review notes');
 
 const inheritedSeo = resolveEffectiveSeo({ member: yellowShrimp, group: neoGroup, groupRow: null, variantRow: null });
 assert.match(inheritedSeo.effective.seoTitle, /黄金米虾/, 'Base template must resolve the Variant display name');

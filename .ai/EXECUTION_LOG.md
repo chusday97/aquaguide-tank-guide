@@ -139,3 +139,15 @@
 - First DB run found a PostgreSQL trigger bug caused by cross-table OLD-field access; fixed by branching on `TG_TABLE_NAME`.
 - Real Chrome found a runtime `groupMember is not defined` missed by build; fixed and rerun across duplicate/conflict/singleton paths with zero page errors.
 - Fresh B-layer Supabase gate passed schema v7, Data Review RLS, approval invalidation, rollback and DB→EN/ZH generation.
+
+
+## 2026-08-28 — Controlled Preview Publish milestone
+- Verified `3669146` on GitHub Actions run `33149941551`: clean Ubuntu A-layer passed install, contract, migration 001–007 ephemeral Supabase gate, build, generated catalog parity and diff hygiene.
+- Extended the existing static generator with explicit `release` vs `preview` eligibility without changing release/staging Published semantics.
+- Added `build-controlled-preview.mjs`: requires `environment=preview`, `delivery_mode=controlled_preview`, explicit selected catalog keys and a non-Production host.
+- Preview output is defense-in-depth noindex: page meta `noindex,nofollow`, visible PREVIEW ONLY banner, root `robots.txt` Disallow-all, no release sitemap.
+- Added Preview output-dir deny-list for repository public, Admin public and Admin dist. First test exposed the missing Admin-public deny-list; fixed before completion.
+- Added `buildControlledPreviewSnapshot` + Admin export action; exported snapshot strips `reviewed_by` and Data Review `notes`.
+- Added permanent `test:preview-publish` to `test:contract`.
+- B-layer regression confirms release fixture still generates 2 real indexable pages + sitemap after Preview mode was added.
+- Generated a local Approved-Draft two-language preview and served it on `127.0.0.1:4020`; HTTP root/EN/ZH = 200. Chromium clicked the English page and verified H1, forced noindex, PREVIEW banner and `pageErrors=[]`.

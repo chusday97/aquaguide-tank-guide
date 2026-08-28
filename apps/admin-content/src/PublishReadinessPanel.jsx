@@ -4,7 +4,7 @@ const STATE_META = {
   publish_ready: { label: 'Publish-ready', tone: 'ready', description: '已满足 Preview Publish 的内容与数据门禁；不代表已上线 Production。' },
 };
 
-export default function PublishReadinessPanel({ readiness, locale }) {
+export default function PublishReadinessPanel({ readiness, locale, readOnly = false, onExportPreview }) {
   if (!readiness) return null;
   const meta = STATE_META[readiness.state] || STATE_META.blocked;
   return (
@@ -24,7 +24,12 @@ export default function PublishReadinessPanel({ readiness, locale }) {
       ) : readiness.reviewNeeded?.length ? (
         <p className="readiness-note">下一步审核：{readiness.reviewNeeded.join(' + ')}。Approved 后才进入 Publish-ready。</p>
       ) : (
-        <p className="readiness-note">可进入受控 Preview Publish；Production Published 仍由独立发布集成门禁控制。</p>
+        <div className="readiness-ready-actions">
+          <p className="readiness-note">可进入受控 Preview Publish；Production Published 仍由独立发布集成门禁控制。</p>
+          <button className="secondary-button" type="button" disabled={readOnly || !onExportPreview} onClick={onExportPreview}>
+            {readOnly ? '只读 Preview Snapshot' : '导出 Preview Snapshot'}
+          </button>
+        </div>
       )}
     </section>
   );

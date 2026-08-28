@@ -5,24 +5,24 @@ Updated: 2026-08-28
 ## Completed
 - [x] Isolated Admin app with Auth/admin role/RLS.
 - [x] 486 catalog rows → 276 Base Species groups; Variant inheritance and batch Drafts.
-- [x] Bilingual zh-CN/en authoring + AI suggestion-only translation.
-- [x] Route/canonical/hreflang/index contract + static Species generator + sitemap tests.
+- [x] Bilingual zh-CN/en authoring + suggestion-only translation architecture.
+- [x] Route/canonical/hreflang/index contract + static release generator + sitemap tests.
 - [x] Revision history + rollback-to-Draft.
 - [x] A+B stable validation gate with pinned GitHub Actions ephemeral Supabase.
-- [x] Add Editorial Review State: `editing → ready_for_review → approved`.
-- [x] Add persisted Data Review decisions for category conflicts and duplicate sets.
-- [x] Add explicit Publish Readiness panel and single-member Base editor support.
-- [x] Make content edits invalidate approval automatically; rollback resets to `editing`.
-- [x] Make Generator require Approved Base + Variant and consume safe review-resolution RPC output.
-- [x] Verify migrations 001–007, RLS, approval invalidation, rollback and DB→EN/ZH pages in B layer.
+- [x] Migration 007 Editorial Review State + persisted Data Review decisions + Publish Readiness.
+- [x] Verify migration 007 locally and on GitHub Actions run `33149941551` end-to-end.
+- [x] Add Controlled Preview Publish for Approved Draft content using the same static generator.
+- [x] Force preview HTML to `noindex,nofollow`, block deployable output dirs, add `robots.txt Disallow /`, and omit release sitemap.
+- [x] Add Admin `Publish-ready → Export Preview Snapshot` with reviewer/notes stripped.
+- [x] Run real local static Preview at `http://localhost:4020/`; Chromium confirms EN page, preview banner and zero page errors.
 
 ## Next
-- [ ] Commit/push this milestone and require GitHub A-layer run to PASS with migration 007.
-- [ ] Build controlled Preview Publish command/output using only Publish-ready reviewed content.
-- [ ] Add review-queue overview counts: pending / resolved / source-fix-required.
-- [ ] Add audit/history view for Data Review decision changes if operationally needed.
-- [ ] Re-check Vercel Admin Preview after deployment quota resets.
+- [ ] Add Data Review queue overview counts/filters: pending / resolved / source-fix-required.
+- [ ] Add Publish Readiness overview counts: blocked / ready-for-review / publish-ready across locale.
+- [ ] Re-check Vercel Admin Preview after Hobby deployment quota reset.
+- [ ] Validate 1–2 live translation suggestions after server-only provider key is configured.
+- [ ] Decide whether Data Review decision revision history is operationally necessary.
 
 ## Later
-- [ ] Real AI translation smoke test on 1–2 Species with server-only provider key.
-- [ ] Explicit Production public-deploy integration review before unlocking Published.
+- [ ] Explicit Production migration/public-deploy integration review before unlocking Published.
+- [ ] Search Console integration only after public Species routes are deliberately released.

@@ -346,3 +346,13 @@
 - B 层从空库顺序应用 core + migrations 001–007 并通过：schema v7、普通用户 Draft/Data Review/History 权限隔离、Approved 修改自动失效、rollback→Draft+Editing、DB→2 个中英 Index 页面。
 - 真实 Chrome 覆盖重复、分类冲突和单成员 Base，修复一个 `groupMember is not defined` 运行时错误后 `PAGE_ERRORS=0`。
 - 下一门禁：push 后要求 GitHub A 层 clean Ubuntu run 对 migration 007 全绿；通过后进入 Controlled Preview Publish。
+
+
+### 2026-08-28 Admin Controlled Preview Publish
+- migration 007 已由 GitHub Actions run `33149941551` 在干净 Ubuntu A 层全绿验证，Publish Readiness/Data Review 不再只是本地证据。
+- 新增受控 Preview 发布：Approved Draft 可进入 Preview，但正式 release/staging 仍只接受 Published。
+- Preview 复用同一个 Species static generator，不建立第二套页面渲染逻辑；实际 HTML 强制 `noindex,nofollow`，同时保留 intended robots 用于人工判断。
+- Preview 根目录生成 `robots.txt` 全站 Disallow，并故意不生成正式 `sitemap-species.xml`；根/应用 public 与 Admin dist 输出目录均硬拒绝。
+- Admin Publish-ready 状态可导出当前 Species 的最小 Preview Snapshot，审核人/备注不会进入导出。
+- 本地实际生成中英 2 页 Approved Draft Preview；`http://localhost:4020/`、英文页、中文页均 HTTP 200，Chromium 无 page error。
+- 正式 Production Published 仍锁定；下一步转向 Data Review / Publish Readiness 队列级总览与筛选。

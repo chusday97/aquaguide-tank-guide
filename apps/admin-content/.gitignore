@@ -2,3 +2,5 @@
 .env*
 !.env.example
 !.env.review.example
+
+.preview-output/

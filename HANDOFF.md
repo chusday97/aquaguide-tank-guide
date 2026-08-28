@@ -592,3 +592,14 @@
 - `PublishReadinessPanel` is the editor-facing explanation surface. `publish-ready` means only Controlled Preview Publish eligible.
 - B/local schema v7 gate is green; the next required evidence after push is a clean GitHub A-layer run through migration 007.
 - After A is green, build one non-Production Preview Publish command/output that reuses the existing generator rather than introducing a second publishing pipeline.
+
+
+### 2026-08-28 Controlled Preview Publish handoff
+- `3669146` migration-007 milestone passed GitHub Actions run `33149941551`; A+B is green through schema v7.
+- Controlled Preview is a distinct delivery mode, not a new content renderer. It reuses `generate-public-species.mjs` with Preview eligibility.
+- Preview can consume Approved Draft rows, but release/staging must remain Published-only. Do not weaken release eligibility when editing Preview behavior.
+- Preview actual robots must stay `noindex,nofollow`; root `robots.txt` must stay `Disallow: /`; no release `sitemap-species.xml` is emitted.
+- `build-controlled-preview.mjs` must continue refusing deployable `public/` and Admin `dist/` directories and Production canonical hosts.
+- Admin export carries only the selected Species and minimal review resolutions; reviewer IDs and notes are deliberately stripped.
+- Local reference URLs while the current processes remain alive: Admin Review `http://localhost:3020/`; generated static Preview `http://localhost:4020/`.
+- Next implementation should add queue-level counts/filters for Data Review and Publish Readiness before Production integration work.
