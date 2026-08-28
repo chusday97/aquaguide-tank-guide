@@ -6,6 +6,7 @@ import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
 import TranslationPanel from './TranslationPanel.jsx';
 import DataReviewPanel from './DataReviewPanel.jsx';
 import PublicSpeciesPreview from './PublicSpeciesPreview.jsx';
+import RevisionHistoryPanel from './RevisionHistoryPanel.jsx';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
@@ -177,7 +178,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       return;
     }
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      setMessage('Species 发布暂时锁定：正式 HTML 生成器与 canonical/hreflang 运行时回归尚未接入，只能保存 Draft 或 Archived。');
+      setMessage('Species 发布仍锁定：静态 HTML 生成器与版本回滚已通过本地验证，但 staging 端到端发布链尚未验证，只能保存 Draft 或 Archived。');
       return;
     }
     if (readOnly) {
@@ -326,7 +327,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               <span>Public URL</span><code>{routeMeta.selfPath}</code>
               <span>Canonical</span><code>{routeMeta.canonicalPath}</code>
             </div>
-            <small className="inherit-note">当前只建立 Route Contract 和页面预览；正式 Species HTML 生成器尚未接入，因此不会因为选择 Index 就自动上线。</small>
+            <small className="inherit-note">静态 Species HTML 生成器已通过本地回归，但尚未连接 staging/public 发布链；选择 Index 仍不会自动上线。</small>
           </div>
         </div>
 
@@ -364,7 +365,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         <div className="footer-actions">
           <select value={form.status} onChange={(event) => update('status', event.target.value)} aria-label="SEO status">
             <option value="draft">Draft</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（待公开页生成器）</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（待版本回滚 / Staging）</option>
             <option value="archived">Archived</option>
           </select>
           <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? '只读预览' : saving ? '保存中…' : `保存 ${getLocaleLabel(locale)} SEO`}</button>
@@ -391,6 +392,8 @@ export default function App() {
   const [error, setError] = useState('');
   const [schemaReady, setSchemaReady] = useState(true);
   const [groupSchemaReady, setGroupSchemaReady] = useState(true);
+  const [historySchemaReady, setHistorySchemaReady] = useState(true);
+  const [revisionRefreshKey, setRevisionRefreshKey] = useState(0);
 
   useEffect(() => {
     if (isReviewMode) {
@@ -400,6 +403,7 @@ export default function App() {
       setSelectedId((current) => catalogSpecies.some((item) => item.id === current) ? current : catalogSpecies[0]?.id || null);
       setSchemaReady(false);
       setGroupSchemaReady(false);
+      setHistorySchemaReady(false);
       setAuthChecked(true);
       return undefined;
     }
@@ -474,6 +478,12 @@ export default function App() {
         setGroupSchemaReady(true);
         setGroupSeoRows(Object.fromEntries((groupSeoData || []).map((row) => [groupSeoRowKey(row.group_key, row.locale), row])));
       }
+
+      const { error: historyError } = await supabase
+        .from('content_revisions')
+        .select('id')
+        .limit(1);
+      setHistorySchemaReady(!historyError);
       setLoading(false);
     };
 
@@ -560,8 +570,8 @@ export default function App() {
           <small>语言独立 Draft / Publish</small>
         </div>
         <div className="topbar-actions">
-          <span className={`connection-dot ${schemaReady && groupSchemaReady ? 'ready' : 'warning'}`}></span>
-          <span>{isReviewMode ? 'Read-only UI review' : schemaReady && groupSchemaReady ? `${getLocaleLabel(contentLocale)} SEO ready` : 'SEO schema pending'}</span>
+          <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady ? 'ready' : 'warning'}`}></span>
+          <span>{isReviewMode ? 'Read-only UI review' : schemaReady && groupSchemaReady ? `${getLocaleLabel(contentLocale)} SEO · ${historySchemaReady ? 'history ready' : 'history pending'}` : 'SEO schema pending'}</span>
           <span className="admin-email">{session.user.email}</span>
           <button className="ghost-button" type="button" onClick={signOut}>退出</button>
         </div>
@@ -574,6 +584,10 @@ export default function App() {
       ) : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
           <strong>安全隔离状态：</strong> Variant / Base Species SEO migration 尚未全部应用；可以预览继承结构，但缺失的层级不会写入。不会自动触碰 Production。
+        </div>
+      ) : !historySchemaReady ? (
+        <div className="schema-banner">
+          <strong>版本安全门：</strong> Draft 编辑可用，但 revision history migration 尚未应用；在历史记录与回滚可验证前 Published 继续锁定。
         </div>
       ) : null}
 
@@ -606,8 +620,14 @@ export default function App() {
               accessToken={session?.access_token || ''}
               schemaReady={schemaReady}
               groupSchemaReady={groupSchemaReady}
-              onVariantSaved={(row) => setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }))}
-              onGroupSaved={(row) => setGroupSeoRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
+              onVariantSaved={(row) => {
+                setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
+                setRevisionRefreshKey((current) => current + 1);
+              }}
+              onGroupSaved={(row) => {
+                setGroupSeoRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }));
+                setRevisionRefreshKey((current) => current + 1);
+              }}
             />
           ) : null}
           <BaseSpeciesSeoEditor
@@ -625,8 +645,43 @@ export default function App() {
                 delete next[key];
                 return next;
               });
+              setRevisionRefreshKey((current) => current + 1);
             }}
           />
+          <div className="revision-grid">
+            <RevisionHistoryPanel
+              resourceType="species_seo_group"
+              resourceKey={selectedGroup?.group_key || ''}
+              locale={contentLocale}
+              schemaReady={historySchemaReady}
+              readOnly={isReviewMode}
+              refreshKey={revisionRefreshKey}
+              onRestored={(row) => {
+                if (!row?.group_key) return;
+                const key = groupSeoRowKey(row.group_key, row.locale);
+                setGroupSeoRows((current) => ({ ...current, [key]: row }));
+                setGroupPreviewRows((current) => {
+                  const next = { ...current };
+                  delete next[key];
+                  return next;
+                });
+                setRevisionRefreshKey((current) => current + 1);
+              }}
+            />
+            <RevisionHistoryPanel
+              resourceType="species_seo"
+              resourceKey={selectedSpecies?.catalog_key || ''}
+              locale={contentLocale}
+              schemaReady={historySchemaReady}
+              readOnly={isReviewMode}
+              refreshKey={revisionRefreshKey}
+              onRestored={(row) => {
+                if (!row?.catalog_key) return;
+                setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
+                setRevisionRefreshKey((current) => current + 1);
+              }}
+            />
+          </div>
           {batchGroup && batchMembers.length > 1 ? (
             <BatchSeoEditor
               group={batchGroup}
@@ -637,10 +692,13 @@ export default function App() {
               schemaReady={schemaReady}
               readOnly={isReviewMode}
               onClear={() => setBatchIds([])}
-              onSaved={(rows) => setSeoRows((current) => ({
-                ...current,
-                ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])),
-              }))}
+              onSaved={(rows) => {
+                setSeoRows((current) => ({
+                  ...current,
+                  ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])),
+                }));
+                setRevisionRefreshKey((current) => current + 1);
+              }}
             />
           ) : null}
           <SeoEditor
@@ -651,7 +709,10 @@ export default function App() {
             locale={contentLocale}
             schemaReady={schemaReady}
             readOnly={isReviewMode}
-            onSaved={(row) => setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }))}
+            onSaved={(row) => {
+              setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
+              setRevisionRefreshKey((current) => current + 1);
+            }}
           />
         </main>
       </div>

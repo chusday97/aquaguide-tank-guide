@@ -47,4 +47,21 @@
 - `canonical_to_sibling` is a manual SEO decision and the Admin only offers targets inside the same Base Species group.
 - Category-conflict groups and suspected duplicates fail closed for independent Index until reviewed.
 - Canonical URLs are derived from the route contract, not free-text editorial fields.
-- All Published options remain disabled until the actual Species HTML generator, canonical/hreflang output and runtime regression tests exist.
+- Published remains disabled after generator verification until revision/rollback and staging publication are proven end-to-end; a local generator alone is not a release signal.
+
+
+## 2026-08-28 — Fail-closed Species static publishing generator
+- The generator consumes an explicit publication snapshot; it does not query Production Supabase and never writes into `public/` implicitly.
+- Accepted snapshot environments are `local`, `test`, `preview` and `staging`; `production` is rejected by code.
+- Generation requires a Published Variant and same-locale Published Base row plus non-empty editorial title/meta/H1/intro; English additionally requires `localized_name`.
+- Index/canonical safety is revalidated at build time, not trusted from the Admin UI. This protects against direct database writes or future UI regressions.
+- Only self-canonical `index,follow` pages enter the Species sitemap. Canonical-to-sibling and noindex pages are emitted only when explicitly present in the snapshot and are omitted from sitemap discovery.
+- Runtime regression is part of `test:contract`; it verifies HTML language, title, meta, H1, robots, canonical, hreflang/x-default and sitemap membership.
+
+## 2026-08-28 — Revision history and rollback safety
+- Every Base Species and Variant insert/update/delete is captured by database trigger in `content_revisions`; history is not a browser-only undo stack.
+- Revision rows are admin-readable only through RLS and are not directly writable by authenticated clients.
+- Rollback is a guarded SECURITY DEFINER RPC that re-checks `is_admin()`.
+- A rollback always restores as Draft, clears `published_at`, and records a new `rollback` revision pointing to its source revision. Rollback is never a republish mechanism.
+- The Admin requires a second click before executing restore, but database authorization and Draft coercion remain the real safety boundary.
+- Local verification is necessary but insufficient for release: Published remains fail-closed until the same chain passes against a dedicated staging Supabase.

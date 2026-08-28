@@ -66,3 +66,16 @@
 - Contract/build/diff checks passed; real Chrome verified URL/canonical/hreflang/noindex and disabled Published state.
 - Recreated a fresh isolated local Supabase at `/tmp/aquaguide-admin-seo-test`; core + Admin migrations 001–004 applied successfully.
 - RLS proof: admin saved canonical strategy; non-admin saw 0 Draft rows and INSERT was rejected; test rows cleaned up.
+
+## 2026-08-28 — Fail-closed Species generator + revision history milestone
+- Verified prior pushed route milestone `43eec47` on Vercel `admin-content`: deployment READY, HTTP 200, page and response remain noindex.
+- Added `generate-public-species.mjs`: explicit non-production snapshot → deterministic bilingual static HTML + `sitemap-species.xml` + manifest. Production snapshots are rejected and output directory is always explicit.
+- Added runtime generator regression and wired it into `test:contract`; fixture generates 4 pages with 2 self-canonical sitemap candidates and verifies title/meta/H1/robots/canonical/hreflang/x-default/sitemap behavior.
+- First runtime pass caught a real locale defect: English file path rendered Chinese `<html lang>` and labels because locale was not forwarded to `renderPage`; fixed before milestone completion.
+- Added migration 005 `content_revisions`, Base/Variant revision triggers and admin-only rollback RPC. Rollback always forces Draft, clears `published_at`, and records a `rollback` revision with source revision ID.
+- Added Base/Variant History UI with two-click restore confirmation; read-only Vercel Review never queries real revision history.
+- Fresh isolated local Supabase applied core + migrations 001–005. Variant proof: v1 Draft → v2 Published fixture → v3 rollback Draft. Base Species passed the same sequence.
+- Non-admin history query returned 0; non-admin rollback RPC raised `Admin role required`; cleanup ended with 0 SEO/group/revision test rows.
+- Read-only Chrome Review on temporary port 3099 showed both History panels, public Species preview and both disabled Published options with zero page errors. Temporary Vite/Supabase test environments were stopped after validation.
+- `test:contract` and production Admin build pass; only the known >500KB bundle warning remains.
+- Production Supabase and `main` were not modified. Published remains locked pending staging end-to-end publication validation.

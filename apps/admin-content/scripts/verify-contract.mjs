@@ -10,12 +10,13 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/DataReviewPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublicSpeciesPreview.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/RevisionHistoryPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/TranslationPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'api/translate.js'), 'utf8'),
   readFile(path.join(appRoot, 'src/supabase.js'), 'utf8'),
@@ -23,6 +24,7 @@ const [appSource, batchSource, baseSource, reviewSource, publicPreviewSource, tr
   readFile(path.join(repoRoot, 'supabase/migrations/202608280002_species_seo_group_inheritance.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280003_species_seo_localized_name.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280004_species_seo_index_strategy.sql'), 'utf8'),
+  readFile(path.join(repoRoot, 'supabase/migrations/202608280005_species_seo_revision_history.sql'), 'utf8'),
   readFile(path.join(appRoot, '.env.example'), 'utf8'),
   readFile(path.join(appRoot, '.env.review.example'), 'utf8'),
   readFile(path.join(appRoot, 'src/catalog.generated.json'), 'utf8'),
@@ -58,11 +60,15 @@ assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review
 assert.match(appSource, /TranslationPanel/, 'Admin must expose bilingual translation workflow');
 assert.match(appSource, /PublicSpeciesPreview/, 'Admin must show the resulting public Species page preview');
 assert.match(publicPreviewSource, /hreflang=zh-CN/, 'Public preview must expose hreflang pair evidence');
+assert.match(appSource, /RevisionHistoryPanel/, 'Admin must expose Base and Variant revision history');
+assert.match(historySource, /from\('content_revisions'\)/, 'History UI must read database-backed revisions');
+assert.match(historySource, /restore_species_seo_revision/, 'History UI must use the guarded rollback RPC');
+assert.match(historySource, /armedId/, 'Rollback must require an explicit second click rather than one-click destructive restore');
 assert.match(appSource, /index_strategy: form\.indexStrategy/, 'Variant SEO must persist explicit index strategy');
-assert.match(appSource, /Species 发布暂时锁定/, 'Species publish must remain locked until public Species generator is verified');
-assert.match(appSource, /isPublicSpeciesPublishingEnabled = false/, 'Variant publish gate must fail closed while public generator is absent');
-assert.match(baseSource, /Species 发布暂时锁定/, 'Base Species publish must remain locked until public Species generator is verified');
-assert.match(baseSource, /isPublicSpeciesPublishingEnabled = false/, 'Base publish gate must fail closed while public generator is absent');
+assert.match(appSource, /Species 发布仍锁定/, 'Species publish must remain locked until rollback and staging gates are verified');
+assert.match(appSource, /isPublicSpeciesPublishingEnabled = false/, 'Variant publish gate must remain fail-closed after generator verification');
+assert.match(baseSource, /Species 发布仍锁定/, 'Base Species publish must remain locked until rollback and staging gates are verified');
+assert.match(baseSource, /isPublicSpeciesPublishingEnabled = false/, 'Base publish gate must remain fail-closed after generator verification');
 assert.match(appSource, /CONTENT_LOCALES/, 'Admin must expose an explicit content-locale switcher');
 assert.match(appSource, /seoRowKey\(row\.catalog_key, row\.locale\)/, 'Localized Variant rows must not collide in client state');
 assert.match(appSource, /groupSeoRowKey\(row\.group_key, row\.locale\)/, 'Localized Base rows must not collide in client state');
@@ -113,6 +119,13 @@ assert.match(localeMigrationSource, /add column if not exists localized_name tex
 assert.match(routeMigrationSource, /index_strategy text not null default 'noindex'/);
 assert.match(routeMigrationSource, /canonical_catalog_key text not null default ''/);
 assert.match(routeMigrationSource, /canonical_to_sibling/);
+assert.match(historyMigrationSource, /create table if not exists public\.content_revisions/);
+assert.match(historyMigrationSource, /enable row level security/);
+assert.match(historyMigrationSource, /content_revisions_admin_select/);
+assert.match(historyMigrationSource, /restore_species_seo_revision/);
+assert.match(historyMigrationSource, /security definer/);
+assert.match(historyMigrationSource, /status = 'draft'/, 'Rollback must never republish content automatically');
+assert.match(historyMigrationSource, /revision_operation', 'rollback'/, 'Rollback events must be identifiable in history');
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
 assert.ok(neoGroup?.member_count > 2, 'Neocaridina group must remain a real inheritance fixture');

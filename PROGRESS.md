@@ -274,7 +274,7 @@
 - 科学名、catalog key 与 `{{template_tokens}}` 受保护；Base 模板变量丢失或改名会直接拒绝结果。
 - 5 个分类冲突与 28 条疑似重复已升级为可查看证据的 Data Review Queue，不自动删改源 catalog。
 - 本地隔离 Supabase 已验证中文/英文同 key 共存及普通用户 Draft 不可见；Production Supabase 未执行新 migration。
-- 真实 Chrome 已验证 English 双栏翻译界面、神仙鱼分类冲突证据与米虾重复证据；public Species 多语言 URL/canonical/hreflang 尚未接入。
+- 真实 Chrome 已验证 English 双栏翻译界面、神仙鱼分类冲突证据与米虾重复证据；后续已补齐 public Species 多语言 URL/canonical/hreflang contract 与静态生成器。
 
 ### 2026-08-28 Species SEO Route / Index / 页面效果预览
 - 隔离 Admin 已新增稳定 Species 路由提案：英文 `/species/<scientific-slug>/<catalog-key>.html`，中文对应 `/zh/species/...`；沿用现有 Problem SEO 页的 English-default + `/zh/` + hreflang/x-default 结构。
@@ -282,4 +282,16 @@
 - Canonical 不再由运营手填，改为路由契约自动生成；Base Species 继续只承担共享内容继承，不自动产生公共 landing page。
 - Admin 已增加真实 HTML“公开 Species 页面效果预览”，组合 SEO H1/简介与现有 catalog 水温、pH、缸体、难度等只读 Product Truth。
 - 新 migration 004 仅在全新本地隔离 Supabase 验证；管理员写入成功，普通用户 Draft 读取为 0 且写入被 RLS 拒绝。Production 未执行。
-- 正式 Species HTML 生成器与 canonical/hreflang/sitemap 运行时门禁尚未完成，因此中英文 Published 均保持禁用。
+- 正式 Species HTML 生成器与 canonical/hreflang/robots/sitemap 运行时门禁已在隔离分支完成；中英文 Published 仍保持禁用，版本历史/回滚现已在后续里程碑通过本地验证；当前剩余发布门禁是 staging 端到端验证。
+
+### 2026-08-28 Species SEO 静态生成器与版本回滚
+- 新增 fail-closed `generate-public-species.mjs`：只消费显式 `local/test/preview/staging` 发布快照，拒绝 `production` 输入，也不会隐式写入根 `public/`。
+- 生成结果包含双语静态 Species HTML、`sitemap-species.xml` 与 manifest；Title、Meta、H1、robots、canonical、hreflang/x-default 和 sitemap 进入运行时回归。
+- 首轮运行时测试实际发现并修复英文页面 locale 未透传的问题：英文路径曾错误渲染中文 `<html lang>` 与事实标签，修复后回归通过。
+- 生成层重复执行 Index 安全门，不信任 Admin UI：分类冲突/疑似重复不能直接 Index，canonical 目标必须同语言 Published 且独立 Index；sitemap 只纳入 self-canonical `index,follow`。
+- migration 005 新增数据库 `content_revisions`、Base/Variant 自动 revision trigger 与 `restore_species_seo_revision`；回滚强制恢复为 Draft、清空 `published_at` 并记录 source revision，不能借回滚重新发布。
+- 全新隔离 Supabase 已从 core + migrations 001–005 重建并验证：Variant 与 Base 均通过 `v1 Draft → v2 Published fixture → v3 rollback Draft`；普通用户历史可见 0、回滚 RPC 被 `Admin role required` 拒绝；最终 SEO/group/revision 测试残留均为 0。
+- Admin UI 新增 Base / Variant History 面板和二次点击恢复；只读 Review 不连接真实 history。真实 Chrome 验证两个 History 面板、Public Species Preview 与两个 disabled Published option，无 page error。
+- `npm run test:contract -w @aquaguide/admin-content` 与 Admin production build 通过；仅保留既有 >500KB bundle warning。
+- 上一提交 `43eec47` 的独立 Vercel `admin-content` Preview 已确认 READY / HTTP 200 / noindex；本批次待集中 commit/push 后再核对新 SHA Preview。
+- Production Supabase 与 `main` 仍未修改。下一门禁仅为 dedicated staging Supabase 上的 migrations 001–005 + snapshot → generator → rendered-page 端到端验证；通过前 Published 保持锁定。

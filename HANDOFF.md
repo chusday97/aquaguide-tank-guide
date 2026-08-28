@@ -497,7 +497,7 @@
 - 83 个 Base Species 含多个 catalog 成员，可作为批量 SEO 候选；批量模板按成员名称/Variant 生成独立草稿，不直接复制为 Published 内容。
 - 发现 28 条疑似完全重复 catalog 记录；不得先删原数据，先在 Admin 标记并后续人工确认 canonical/合并策略。
 - 发现 5 个跨分类冲突组（含部分神仙鱼、波子、海葵/珊瑚、红宫廷）；这些组必须人工复核，禁止一键批量发布。
-- 下一阶段核心：建立 Base Species 公共 SEO 层 + Variant Override / Inheritance，并保留单条 SEO fallback；不修改 Product Truth。
+- 下一阶段核心：在 dedicated staging Supabase 验证 migrations 001–005、publication snapshot、静态 generator 与最终 HTML；通过前不解锁 Published，也不修改 Product Truth。
 
 ### 2026-08-28 Base Species → Variant SEO inheritance
 - 不要恢复“每个 Variant 复制一份 Base SEO 文案”的模式。当前契约是 Base Species 保存共享模板/简介，Variant 只保存差异 Override。
@@ -515,7 +515,7 @@
 - GitHub references used as architecture patterns: Payload CMS localization (locale-specific content) and Tolgee translation workflow (context-aware suggestion + review). Neither was added as a dependency.
 - Data Review Queue now shows exact category-conflict membership and exact duplicate peer IDs; it does not choose canonical records or rewrite `fishData.ts`.
 - `202608280003_species_seo_localized_name.sql` was tested only in isolated local Supabase. Production remains untouched.
-- Remaining gates: configure Admin AI provider secret and verify one live translation; implement version history; decide multilingual public URL/canonical/hreflang; then connect Published English to public Species pages.
+- Remaining gates for publishing: dedicated staging Supabase validation and source-data review for affected duplicate/category-conflict records. Live AI translation provider validation is separate from static publishing safety and does not authorize Published content by itself.
 
 ### 2026-08-28 Species SEO public route / indexing handoff
 - Do not treat `/encyclopedia?species=...` as the new SEO canonical. The branch now proposes stable static paths based on Base Scientific Name slug + catalog key.
@@ -523,5 +523,18 @@
 - `species_seo.index_strategy` defaults to `noindex`; `canonical_to_sibling` is restricted by the Admin contract to the same Base Species group.
 - Base Species is an inheritance object, not automatically an indexable public page.
 - `PublicSpeciesPreview` is an Admin HTML preview of future page changes; it does not mean a public Species file already exists.
-- Publishing is intentionally locked for both locales until a real static Species generator, sitemap and runtime title/meta/canonical/hreflang/robots tests are implemented.
+- The real static Species generator and runtime title/meta/canonical/hreflang/robots/sitemap tests are now implemented and passing locally. Publishing is still intentionally locked until staging validates the full database → snapshot → generator → rendered-page chain.
 - Migration 004 was verified only in a fresh isolated local Supabase. Never infer that Production has these columns.
+
+
+### 2026-08-28 Species SEO generator + revision/rollback handoff
+- New generator: `apps/admin-content/scripts/generate-public-species.mjs`. It only accepts explicit `local/test/preview/staging` snapshots, rejects `production`, and requires an explicit output directory. Do not weaken either guard when wiring staging.
+- `test:contract` now includes `test-public-species-generator.mjs`; keep it in the merge gate. It verifies EN/ZH HTML language, Title, Meta, H1, robots, self/cross canonical behavior, hreflang/x-default and sitemap membership.
+- The first runtime test caught a real locale propagation defect (English path with Chinese `lang`/labels); it was fixed before this milestone. This is evidence that static source assertions are not enough.
+- Generator eligibility is stricter than the UI: Published Variant + same-locale Published Base + complete editorial fields; English requires `localized_name`; conflict/duplicate/canonical rules are recomputed at generation time.
+- New branch migration `202608280005_species_seo_revision_history.sql` stores immutable audit snapshots in `content_revisions` for both Base and Variant writes. Authenticated clients receive SELECT only, and RLS makes those rows admin-visible only.
+- Rollback uses `restore_species_seo_revision(uuid)`. It re-checks `is_admin()`, restores content as **Draft only**, clears `published_at`, and creates a new `rollback` revision linked by `source_revision_id`. Do not change rollback into a republish shortcut.
+- Admin now shows Base Species History and Variant History; restore is a two-click action. UI confirmation is secondary defense; DB authorization and Draft coercion are the actual safety boundary.
+- Fresh isolated Supabase applied core + Admin migrations 001–005. Variant and Base each passed `v1 Draft → v2 Published fixture → v3 rollback Draft`; non-admin revision visibility was 0 and restore RPC failed with `Admin role required`; final test residue was 0.
+- Prior Vercel Admin Preview for `43eec47` was READY / HTTP 200 / noindex. The next pushed generator/history SHA must be checked again after deployment.
+- Do not merge to `main`, run these migrations in Production, or unlock Published yet. The next release gate is a dedicated staging Supabase with migrations 001–005 plus a real staging snapshot → generator → rendered-page verification.

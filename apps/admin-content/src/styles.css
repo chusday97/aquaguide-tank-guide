@@ -378,3 +378,41 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .species-page-image-placeholder { min-height:120px; }
   .species-fact-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
+
+.revision-grid {
+  max-width: 1180px;
+  margin: 0 auto 20px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.revision-panel {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #dfe7e1;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 7px 22px rgba(42, 59, 48, .03);
+}
+.revision-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+.revision-header h3 { margin: 0; font-size: 15px; }
+.revision-count { padding: 4px 7px; border-radius: 999px; background: #edf2ee; color: #58675d; font-size: 10px; font-weight: 800; }
+.revision-list { display: grid; gap: 8px; }
+.revision-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px; border: 1px solid #e8ece9; border-radius: 10px; background: #fafcfa; }
+.revision-main { min-width: 0; display: grid; gap: 4px; }
+.revision-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; color: #849087; font-size: 9px; }
+.revision-meta strong { color: #405248; }
+.revision-operation { padding: 2px 5px; border-radius: 999px; background: #edf0ed; color: #657169; font-weight: 800; text-transform: uppercase; }
+.revision-operation.rollback { background: #fff0d3; color: #815e18; }
+.revision-summary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #435148; font-size: 10px; }
+.revision-empty, .revision-error { margin: 0; padding: 10px; border-radius: 9px; background: #f6f8f6; color: #7c8780; font-size: 10px; line-height: 1.55; }
+.revision-error { background: #fff0ed; color: #7a3c32; }
+.secondary-button.compact, .danger-button.compact { flex: none; min-height: 32px; padding: 0 9px; font-size: 9px; }
+.danger-button { border: 0; border-radius: 9px; background: #fff0ed; color: #81483f; font-weight: 750; }
+.danger-button:hover { background: #f9e1dc; }
+.danger-button:disabled { opacity: .55; cursor: default; }
+@media (max-width: 900px) {
+  .revision-grid { grid-template-columns: 1fr; }
+  .revision-item { align-items: stretch; flex-direction: column; }
+  .revision-item button { width: 100%; }
+}
