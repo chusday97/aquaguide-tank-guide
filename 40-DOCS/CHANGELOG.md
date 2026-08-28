@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-- Fixed the reviewed water facts for tetra species `sp_0431` (red neon tetra) and `sp_0432` (cardinal tetra) with explicit `freshwater` values; all other unreviewed species remain `unknown` and fail closed. Added caution and missing-water regressions, and synchronized candidate/PR/Preview SHA parity at `cdd46581` with Catalog checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`.
+- Fixed the reviewed water facts for tetra species `sp_0431` (red neon tetra) and `sp_0432` (cardinal tetra) with explicit `freshwater` values; all other unreviewed species remain `unknown` and fail closed. Added caution and missing-water regressions. The current candidate/PR head is `46984205`; the previous code head `cdd46581` has the recorded exact Preview parity, while the docs-only head awaits a new deployment because of Vercel rate limiting. Catalog checksum: `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`.
 
 - Closed the local mixed-compatibility authority gap: the shared canonical adapter now applies Domain status/policy/version and maps every current Domain rule code into legacy evidence groups; the direct legacy entry and Compatibility Service share the same adapter. Local Critic re-review passed; GitHub/Preview parity remains pending until the candidate is pushed.
 - Pushed candidate `7f0d208f` so local, remote branch, and PR #142 are synchronized; the exact Preview deployment is still unverified because Vercel reports a 24-hour build-rate limit.
