@@ -4,8 +4,8 @@
 
 - 混养结论已完成本地唯一权威闭环：Domain Rules 是最终状态/策略/版本来源，`src/lib/compatibility/canonical-result.adapter.ts` 负责把结构化 ruleCodes 映射为 legacy 页面仍需的证据分组；Service 与旧入口共用同一适配器。最新代码提交为 `b9d56da2`。
 - 本地门禁与独立 Critic 六维复验通过；正式场景、今日行动、UI freeze 和 project truth 均通过，未修改视觉文件。
-- 当前仍卡在发布同步：本地未推送，远端候选/PR #142 仍为 `878c95d5`，当前 head 的 Preview SHA 未验证；生产第 27 个 migration、Catalog 发布和 `main` 合并未执行。
-- 下一步：先提交本次文档并一次性推送候选，运行 `project:status` 与 `check:preview-parity`；如 Preview 限流，保留 Draft，不重复推送。
+- 当前 GitHub 同步已完成：本地、远端候选和 PR #142 均为 `7f0d208f`，工作树干净；当前 head 的 Preview SHA 仍未验证，GitHub 报告 Vercel AquaGuide/admin-content build-rate-limit（24 小时后重试）。生产第 27 个 migration、Catalog 发布和 `main` 合并未执行。
+- 下一步：不再重复推送；等待额度恢复后只读运行 `check:preview-parity`。在此之前可继续本地与生产只读证据整理，PR #142 保持 Draft。
 
 ## 2026-08-28 当前执行边界
 

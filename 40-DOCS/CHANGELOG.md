@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Closed the local mixed-compatibility authority gap: the shared canonical adapter now applies Domain status/policy/version and maps every current Domain rule code into legacy evidence groups; the direct legacy entry and Compatibility Service share the same adapter. Local Critic re-review passed; GitHub/Preview parity remains pending until the candidate is pushed.
+- Pushed candidate `7f0d208f` so local, remote branch, and PR #142 are synchronized; the exact Preview deployment is still unverified because Vercel reports a 24-hour build-rate limit.
 - Made the legacy compatibility entrypoint apply the Domain Rules decision before returning, so frozen UI callers receive the canonical status while retaining evidence-rich legacy details; added direct-entry authority regression coverage.
 - Shared the Domain rule-to-evidence merge with the legacy compatibility adapter, so direct UI callers receive matching blocking, warning and missing-data evidence as well as the canonical status.
 - Removed the duplicate Service-side Domain evidence map and completed shared mappings for missing candidate/tank and unknown-water rules.
