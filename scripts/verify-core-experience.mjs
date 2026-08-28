@@ -40,7 +40,7 @@ const seedStorage = async (context) => {
 };
 
 const layoutCases = [
-  ['desktop-narrow', { viewport: { width: 600, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/130 Safari/537.36' }, 'desktop', 1, 0],
+  ['phone-narrow', { viewport: { width: 600, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/130 Safari/537.36' }, 'phone', 0, 1],
   ['iphone', { viewport: { width: 390, height: 844 }, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile/15E148 Safari/604.1' }, 'phone', 0, 1],
   ['ipad', { viewport: { width: 820, height: 1180 }, userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) Mobile/15E148 Safari/604.1' }, 'desktop', 1, 0],
 ];
@@ -121,23 +121,27 @@ try {
     assert.match(await page.locator('[data-achievement-status]').first().innerText(), /当前 \d+.*目标 \d+|Current \d+.*Goal \d+/s);
   }
 
-  await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
-  await page.getByText('Mini 混养判断', { exact: true }).waitFor();
-  await page.getByRole('button', { name: '查看详细判断' }).click();
-  await page.getByText(/已选生物 2 种/).waitFor();
+  await page.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
+  await page.getByText('混养判断', { exact: true }).waitFor();
+  await page.getByText(/Selected 2 species|已选择 2 种|已选生物 2 种/).waitFor();
   await page.locator('[data-visual-result-status]').waitFor();
 
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
-  await page.getByRole('button', { name: /AI 建缸助手/ }).click();
-  const assistantDialog = page.getByRole('dialog', { name: 'AI 建缸助手' });
-  await assistantDialog.waitFor();
-  assert.equal(await assistantDialog.getAttribute('data-surface'), 'task-flow');
-  await assistantDialog.getByRole('button', { name: '关闭' }).click();
+  await page.waitForSelector('.aquaguide-app');
+  await page.getByRole('button', { name: /AI 建缸助手|AI Tank Copilot/ }).waitFor();
+  await page.evaluate(() => {
+    window.__aquaFeaturePreview = null;
+    window.addEventListener('aquaguide:feature-preview', event => {
+      window.__aquaFeaturePreview = event.detail;
+    }, { once: true });
+  });
+  await page.getByRole('button', { name: /AI 建缸助手|AI Tank Copilot/ }).click();
+  assert.deepEqual(await page.evaluate(() => window.__aquaFeaturePreview), { feature: 'ai-care' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.getByRole('button', { name: /每日鱼缸检查/ }).click();
-  const dialog = page.getByRole('dialog', { name: '每日鱼缸检查' });
+  await page.getByRole('button', { name: /每日鱼缸检查|Daily Tank Check/ }).last().click();
+  const dialog = page.locator('[role="dialog"][data-surface^="task-flow"]');
   await dialog.waitFor();
-  assert.equal(await dialog.getAttribute('data-surface'), 'task-flow');
+  assert.match(await dialog.getAttribute('data-surface') || '', /^task-flow/);
   const firstAnswer = dialog.getByRole('button', { name: '正常', exact: true });
   const secondQuestion = dialog.getByRole('button', { name: '清澈', exact: true }).locator('..').locator('..');
   await firstAnswer.focus();
@@ -153,7 +157,10 @@ try {
   await resultButton.click();
   const visualPatrolResult = dialog.locator('[data-visual-result-status]');
   await visualPatrolResult.waitFor();
-  assert.equal(await visualPatrolResult.getByText(/展开具体判断依据/).count(), 1, '巡检依据应默认折叠');
+  const evidenceDisclosure = visualPatrolResult.locator('button[data-disclosure-purpose="secondary_evidence"]');
+  assert.equal(await evidenceDisclosure.getAttribute('aria-expanded'), 'false', '巡检依据应默认折叠');
+  await evidenceDisclosure.click();
+  assert.equal(await evidenceDisclosure.getAttribute('aria-expanded'), 'true', '巡检依据应可展开');
   await visualPatrolResult.locator('button[data-action-type]').click();
   await page.waitForTimeout(900);
   const patrolCount = await page.evaluate(() => {

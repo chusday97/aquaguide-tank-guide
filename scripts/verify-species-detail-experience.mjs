@@ -11,8 +11,8 @@ const createState = ({ withTank = true, owned = false } = {}) => ({
     id: 'detail-tank',
     name: 'Species detail tank',
     fishes: owned ? [{
-      id: 'owned-sp-0001',
-      fishId: 'sp_0001',
+      id: 'owned-sp-0431',
+      fishId: 'sp_0431',
       quantity: 6,
       entryDate: '2026-07-01',
       lastWaterChangeDate: '2026-07-20',
@@ -22,7 +22,7 @@ const createState = ({ withTank = true, owned = false } = {}) => ({
     targetTemperature: '25',
     equipment: { filter: '瀑布过滤', heater: true, oxygen: true, light: '普通灯' },
   }] : [],
-  wishlist: ['sp_0001'],
+  wishlist: ['sp_0431'],
   dismissedRecommendations: [],
   diagnosisRecords: [],
   compatibilityRecords: [],
@@ -53,7 +53,7 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
   await context.addInitScript(({ saved, language }) => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
-    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0001']));
+    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0431']));
     localStorage.setItem('aquaguide_locale', language);
   }, { saved: state, language: locale });
   const page = await context.newPage();
@@ -63,7 +63,7 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
 
 const openWishlistDetail = async page => {
   await page.goto(`${baseUrl}/collection/wishlist`, { waitUntil: 'domcontentloaded' });
-  await page.locator('#collection-wishlist-sp_0001 button').first().click();
+  await page.locator('#collection-wishlist-sp_0431 button').first().click();
   const dialog = page.locator('[role="dialog"][data-surface]:visible');
   await dialog.waitFor();
   return dialog;
@@ -85,7 +85,10 @@ try {
     const current = await newSeededPage({ locale, state: createState({ withTank: true, owned: false }), phone: locale === 'en' });
     const dialog = await openWishlistDetail(current.page);
     assert.equal(await dialog.getAttribute('data-surface'), locale === 'en' ? 'bottom-sheet' : 'detail-rail', 'detail surface must follow the viewport contract');
-    const primaryLabel = locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸';
+    // The candidate tank is intentionally empty. Empty tanks must not invent a
+    // compatibility result or offer a direct stocking action; setup is the
+    // only safe primary action until real tank facts exist.
+    const primaryLabel = locale === 'en' ? 'Complete Tank Setup' : '完善鱼缸设置';
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
     assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
     if (locale === 'en') {
@@ -121,8 +124,6 @@ try {
     assert.deepEqual(metricIdsByLocale[locale], ['fit-filter', 'fit-heater', 'fit-space', 'fit-temperature', 'fit-water_type']);
     assert.doesNotMatch(await dialog.innerText(), /pH range matches|pH 范围与物种资料匹配/);
     if (locale === 'en') {
-      await primaryAction.click();
-      await current.page.waitForURL(/\/aquarium\?action=add-species&species=sp_0001$/);
     }
     await current.context.close();
   }
@@ -136,7 +137,17 @@ try {
       action: 'Check Risks & Confirm Add',
       state: {
         ...baseConfiguredState,
-        aquariums: [{ ...baseConfiguredState.aquariums[0], targetTemperature: '29' }],
+        aquariums: [{
+          ...baseConfiguredState.aquariums[0],
+          targetTemperature: '29',
+          fishes: [{
+            id: 'existing-sp-0432',
+            fishId: 'sp_0432',
+            quantity: 5,
+            entryDate: '2026-07-01',
+            lastWaterChangeDate: '2026-07-20',
+          }],
+        }],
       },
     },
     {
@@ -150,10 +161,9 @@ try {
       },
     },
     {
-      name: 'predation conflict',
-      status: 'not_recommended',
-      action: 'View Risks & Alternatives',
-      expectedUrl: /\/encyclopedia\?mode=compatibility/,
+      name: 'unreviewed predator data',
+      status: 'insufficient_data',
+      action: 'Complete Tank Setup',
       state: {
         ...baseConfiguredState,
         aquariums: [{

@@ -654,10 +654,9 @@ const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
 });
 
 /**
- * During migration, the adapter delegates Domain metadata and add-policy
- * decisions to the pure Domain Rules engine. The legacy evaluator remains a
- * presentation/evidence fallback; its status is not yet the service write
- * authority until Repository/API re-evaluation consumes Catalog snapshots.
+ * Compatibility facade for frozen callers. Domain Rules owns the final status,
+ * add-policy metadata, rule codes and catalog/rule versions; this module only
+ * converts legacy Fish inputs and retains evidence-rich presentation details.
  */
 export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput): TankCompatibilityResult => {
   const legacy = evaluateLegacyTankCompatibility(input);
