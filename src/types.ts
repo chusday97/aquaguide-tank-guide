@@ -1,8 +1,12 @@
+import type { CatalogWaterType } from '../packages/contracts/src';
+
 export interface Fish {
   id: string;
   name: string;
   scientificName: string;
   category: string;
+  /** Explicit catalog field; absent legacy records remain unknown. */
+  waterType?: CatalogWaterType;
   image: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   waterTemperature: string;

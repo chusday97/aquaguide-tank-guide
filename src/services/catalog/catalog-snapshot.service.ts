@@ -2,6 +2,7 @@ import { catalogSnapshotSchema, type CatalogSnapshot, type CatalogManifest } fro
 import { fishData } from '../../data/fishData';
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { Fish } from '../../types';
+import { speciesProfileFromFish } from './species-profile.adapter';
 
 export const LOCAL_CATALOG_VERSION = 'local-fish-data-v1';
 const LOCAL_SNAPSHOT_URL = `https://catalog.invalid/releases/${LOCAL_CATALOG_VERSION}/catalog.snapshot.json`;
@@ -11,37 +12,6 @@ export type CatalogLoadResult = {
   source: 'local' | 'remote';
   fallbackReason?: 'manifest_unavailable' | 'manifest_invalid' | 'snapshot_invalid' | 'checksum_mismatch' | 'version_mismatch';
 };
-
-const nonEmpty = (value: string | undefined) => value?.trim() || null;
-
-const toCatalogSpecies = (fish: Fish) => ({
-  id: fish.id,
-  catalogKey: fish.id,
-  name: fish.name,
-  scientificName: fish.scientificName,
-  category: fish.category,
-  // Fish has no reviewed, explicit water-type field yet. Unknown is intentional;
-  // this adapter must not infer water type from names or category text.
-  waterType: 'unknown' as const,
-  difficulty: fish.difficulty,
-  waterTemperatureText: nonEmpty(fish.waterTemperature),
-  waterTemperatureMinC: null,
-  waterTemperatureMaxC: null,
-  phLevelText: nonEmpty(fish.phLevel),
-  phMin: null,
-  phMax: null,
-  waterChangeCycleDays: Number.isFinite(fish.waterChangeCycle) && fish.waterChangeCycle > 0 ? fish.waterChangeCycle : null,
-  description: nonEmpty(fish.description),
-  diet: nonEmpty(fish.diet),
-  tankSizeText: nonEmpty(fish.tankSize),
-  minTankLiters: null,
-  temperament: fish.temperament ?? null,
-  sizeClass: fish.size ?? null,
-  housingMode: fish.housingMode ?? null,
-  housingReason: nonEmpty(fish.housingReason),
-  completeness: 'unknown' as const,
-  evidenceSourceIds: [],
-});
 
 const collectEvidenceSources = (profiles: ReturnType<typeof getReviewedCompatibilityProfile>[], pairRules: ReturnType<typeof getReviewedPairRule>[]) => {
   const byId = new Map<string, NonNullable<typeof profiles[number]>['citations'][number]>();
@@ -85,7 +55,7 @@ export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
       publishedAt: '1970-01-01T00:00:00.000Z',
       snapshotUrl: LOCAL_SNAPSHOT_URL,
     },
-    species: fishData.map(toCatalogSpecies),
+    species: fishData.map(speciesProfileFromFish),
     evidenceSources,
     compatibilityProfiles: profiles.map(profile => ({
       speciesId: profile!.speciesId,

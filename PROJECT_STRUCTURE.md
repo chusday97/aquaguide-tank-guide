@@ -21,12 +21,14 @@
 - `scripts/test-onboarding-activation.ts`：验证目标顺序、真实适配门禁、历史用户保护、旧引导兼容和清单单一来源。
 - `src/services/compatibility/compatibility-records.service.ts`：保存并校验与真实鱼缸关联的完整混养判断记录。
 - `src/services/catalog/catalog-snapshot.service.ts`：本地/云端 Catalog 快照校验、SHA-256 parity 和安全回退。
+- `src/services/catalog/species-profile.adapter.ts`：将旧 Fish 转换为 canonical SpeciesProfile；缺失水体保持 unknown，不做文本推断。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。
 - `scripts/verify-taxonomy-ui.mjs`：珊瑚、歧义名称、两条五彩青蛙及中英文角色标签的真实浏览器分类回归。
 - `scripts/verify-daily-discovery-deep-link.mjs`：鱼缸首页今日推荐的位置、每日进度、详情返回、切换收藏、响应式边界和图鉴去重回归。
 - `scripts/verify-formal-interactive-scenes.mjs`：正式图鉴与养护 scene/browse 模式、场景点选和详情入口的浏览器门禁。
+- `scripts/test-species-profile-adapter.ts`：SpeciesProfile 显式水体与旧 Fish 边界回归。
 - `scripts/verify-today-action-dock.mjs`：今日行动半透明拉手的点击、Esc 关闭与拖拽吸附回归。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。

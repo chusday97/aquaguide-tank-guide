@@ -1,5 +1,12 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 Domain authority 收敛进展
+
+- 已新增 canonical `SpeciesProfile` 类型和 `speciesProfileFromFish` 适配器；旧 Fish 的缺失水体保持 `unknown`，不从名称、分类或描述推断。
+- Catalog Snapshot 与 Domain 输入复用同一 Profile 边界；已审核结构化 pair rule 才能进入 Domain，legacy 总状态不再反向覆盖 Domain。
+- 本地验证：`test:species-profile`、`test:catalog-snapshot`、`test:domain-compatibility`、兼容性引擎回归、lint、API 类型、`check:ui-freeze` 和 `check:project-truth` 通过。
+- 当前仍未完成：所有 Service/Repository/UI 结果完全改由 Domain 决定；生产 Catalog migration、Catalog 发布和 `main` 合并继续未授权。
+
 ## 2026-08-28 GitHub 与 Preview parity 已闭合
 
 - 当前候选分支 `codex/main-core-foundation-v1`、远端分支、PR #142 Head 和 Vercel Preview 均为 `1a3d366bd8432eadf20442274ba06dfd90904a98`。

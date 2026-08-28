@@ -3,6 +3,7 @@ import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
 import { getReviewedCompatibilityProfile, getReviewedPairRule, getReviewedStageRiskProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
+import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
 import {
   COMPATIBILITY_RULE_VERSION,
   evaluateCompatibility,
@@ -629,9 +630,10 @@ const evaluateLegacyTankCompatibility = ({
 const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
   const temperature = parseRange(fish.waterTemperature);
   const ph = parseRange(fish.phLevel);
+  const profile = speciesProfileFromFish(fish);
   return {
-    id: fish.id,
-    waterType: isSaltwaterSpecies(fish) ? 'saltwater' : 'unknown',
+    id: profile.catalogKey,
+    waterType: profile.waterType,
     temperatureMinC: temperature?.min ?? null,
     temperatureMaxC: temperature?.max ?? null,
     phMin: ph?.min ?? null,
@@ -655,12 +657,24 @@ const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
 export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput): TankCompatibilityResult => {
   const legacy = evaluateLegacyTankCompatibility(input);
   const normalized = normalizeExistingSpecies(input.existingSpecies);
+  const pairStatuses = normalized
+    .map(item => item.species)
+    .filter(species => species.id !== input.candidateSpecies?.id)
+    .map(species => input.candidateSpecies ? getReviewedPairRule(species.id, input.candidateSpecies.id)?.verdict : undefined)
+    .filter((status): status is TankCompatibilityStatus => Boolean(status));
+  const pairRank: Record<TankCompatibilityStatus, number> = {
+    compatible: 0,
+    caution: 1,
+    insufficient_data: 2,
+    not_recommended: 3,
+  };
+  const explicitPairStatus = pairStatuses.sort((left, right) => pairRank[right] - pairRank[left])[0];
   const domainInput: DomainCompatibilityInput = {
     intent: input.scope === 'species_only' ? 'record_existing' : 'planned_addition',
     tank: input.tank ? toDomainTankFact(input.tank) : null,
     existingSpecies: normalized.map(item => toDomainSpeciesFact(item.species)),
     candidateSpecies: input.candidateSpecies ? toDomainSpeciesFact(input.candidateSpecies) : null,
-    explicitPairStatus: legacy.status,
+    explicitPairStatus,
     catalogVersion: CATALOG_VERSION,
   };
   const domainDecision = evaluateCompatibility(domainInput);

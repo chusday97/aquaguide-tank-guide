@@ -7,6 +7,14 @@
 - 生产 Supabase 已完成只读核对：26 个 migration、35 张 RLS 表、89 条 policy；候选缺 8 个生产 migration，生产缺 Catalog 表和 `species.water_type`，必须先做 migration history reconciliation。
 - 当前 release 继续为 `NOT_READY`；禁止把旧候选 CI、旧 Preview 或生产已部署事实当作当前视觉或 Catalog parity 证据。
 
+## 2026-08-28 Domain authority 收敛第一步
+
+- [x] 公共契约正式导出 `SpeciesProfile`，保留 `CatalogSpecies` 作为迁移兼容类型。
+- [x] 新增 `speciesProfileFromFish` 边界适配器；只有显式 `waterType` 才进入 Profile，名称/分类/描述不会推断水体。
+- [x] Catalog Snapshot 与 Domain 输入复用同一 Profile 边界，486 物种 checksum 保持不变。
+- [x] 旧引擎传入 Domain 的 `explicitPairStatus` 仅来自已审核结构化 pair rule；相关类型、Catalog、Domain、API、UI 冻结回归通过。
+- [ ] Domain 结果尚未完全接管 legacy UI evidence/status；下一步收敛 Service/Repository 的统一结果适配，保持当前 UI 不变。
+
 ## 2026-08-28 本地 Supabase 验证连续推进
 
 - [x] 启动 Docker Desktop 与本地 Supabase CLI 栈，生成 `supabase/config.toml`；设置保留现有生产 26 个 migration 的 grants parity，`.temp/` 和本地凭据保持忽略（commit: `b9903924`）。

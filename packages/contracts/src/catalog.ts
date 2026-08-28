@@ -50,6 +50,13 @@ export const catalogSpeciesSchema = z.object({
   evidenceSourceIds: z.array(z.string()),
 });
 
+/**
+ * Canonical domain model for species details.
+ * CatalogSpecies remains exported for migration compatibility; new domain and
+ * service code should use SpeciesProfile as the source-of-truth name.
+ */
+export const speciesProfileSchema = catalogSpeciesSchema;
+
 export const catalogCompatibilityProfileSchema = z.object({
   speciesId: z.string().trim().min(1),
   behaviorTraits: z.array(z.string()),
@@ -84,6 +91,7 @@ export type CatalogCompleteness = z.infer<typeof catalogCompletenessSchema>;
 export type CatalogManifest = z.infer<typeof catalogManifestSchema>;
 export type CatalogEvidenceSource = z.infer<typeof catalogEvidenceSourceSchema>;
 export type CatalogSpecies = z.infer<typeof catalogSpeciesSchema>;
+export type SpeciesProfile = z.infer<typeof speciesProfileSchema>;
 export type CatalogCompatibilityProfile = z.infer<typeof catalogCompatibilityProfileSchema>;
 export type CatalogPairRule = z.infer<typeof catalogPairRuleSchema>;
 export type CatalogSnapshot = z.infer<typeof catalogSnapshotSchema>;

@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-- Recorded final GitHub/PR/Preview SHA parity for candidate `1a3d366b`; Product Golden Path validation passed. Production Catalog migration, Catalog publication and `main` merge remain pending independent authorization.
+- Recorded final GitHub/PR/Preview SHA parity for candidate `1b28bc85`; Product Golden Path validation passed. Production Catalog migration, Catalog publication and `main` merge remain pending independent authorization.
 
 ### Added
 
@@ -17,6 +17,8 @@
 - Updated the Care category browser gate to use the 4319 candidate and the current desktop detail-rail surface instead of the retired 4173/centered-dialog contract.
 - Moved legacy PostgreSQL fixtures out of `supabase/tests/` so `supabase test db --local` executes only transaction-isolated pgTAP tests; local 26-migration normalized hashes now match the production read-only baseline across columns, constraints, functions, indexes, policies, grants and triggers.
 - Updated `check:preview-parity` to use Vercel deployment metadata as a read-only fallback when GitHub Deployments omits the provider record, preventing false `UNVERIFIED` results.
+- Added the canonical `SpeciesProfile` export and explicit-water-type Fish adapter; legacy text cannot infer freshwater or saltwater values.
+- Changed Domain adapter pair status input to use reviewed structured pair rules only; legacy aggregate status is no longer passed back into Domain.
 
 ### Main convergence
 - Updated convergence browser gates to default to the 4319 candidate preview, accept the current desktop `detail-rail` and localized “Why?” evidence disclosure, and verify mobile Sheet/desktop Rail detail behavior without silently falling back to port 3000.

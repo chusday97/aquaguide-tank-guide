@@ -20,6 +20,7 @@
     "lint": "tsc --noEmit",
     "test:compatibility": "tsx scripts/test-tank-compatibility-engine.ts",
     "test:catalog-snapshot": "node --import tsx scripts/test-catalog-snapshot.ts",
+    "test:species-profile": "node --import tsx scripts/test-species-profile-adapter.ts",
     "catalog:build": "node --import tsx scripts/build-catalog-snapshot.ts",
     "catalog:validate": "node --import tsx scripts/validate-catalog-snapshot.ts",
     "catalog:publish": "node --import tsx scripts/publish-catalog-snapshot.ts",
