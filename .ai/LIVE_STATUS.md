@@ -24,7 +24,13 @@ Branch: `feature/admin-content-v0`
 - The same temporary DB publishes one reviewed `sp_0030` bilingual fixture, reads Published rows anonymously, and generates 2 indexable EN/ZH static pages with canonical/hreflang/sitemap checks.
 - Local macOS result: `gate=PASS`, schema version 6, 2 rollback revisions, 2 generated/indexable pages.
 
+## GitHub A-layer status
+- Workflow `2d85a4e` is already pushed and GitHub run `33146619043` verified checkout, Node 24.14.0, Supabase CLI 2.115.0 and Docker successfully.
+- That first clean run failed only at `npm ci` because root `package-lock.json` did not contain the Admin workspace metadata; database tests were not reached.
+- Lockfile is now corrected locally. Actual `date-fns` remains 4.1.0; only the root dependency spec metadata is aligned to `package.json` (`^4.0.0`).
+- Clean local `npm ci --no-audit --no-fund` plus the full shared Supabase gate/build now PASS.
+
 ## Remaining gate
-- Push the workflow and require the first GitHub Actions clean-run PASS before treating A as proven.
+- Push the lockfile/workflow correction and require the next GitHub Actions clean-run PASS before treating A as proven.
 - Published remains disabled until CI is green and public-deploy integration is explicitly reviewed.
 - A paid persistent Supabase staging branch is no longer required; it remains an optional later convenience.

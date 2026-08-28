@@ -57,7 +57,7 @@ jobs:
           docker version
 
       - name: Install exact dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund
 
       - name: Admin contract and generator tests
         run: npm run test:contract -w @aquaguide/admin-content

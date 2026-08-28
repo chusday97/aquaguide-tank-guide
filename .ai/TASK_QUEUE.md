@@ -15,7 +15,8 @@ Updated: 2026-08-28
 - [x] Verify the shared gate locally on macOS with Node 24.14.0 / Supabase CLI 2.115.0.
 
 ## Next
-- [ ] Push the A+B CI workflow and confirm the first GitHub Actions run passes on a clean Ubuntu 24.04 runner.
+- [x] Push the pinned A+B workflow (`2d85a4e`); first clean GitHub run reached the fixed toolchain but exposed an Admin workspace lockfile mismatch.
+- [ ] Push the corrected lockfile / `npm ci --no-audit --no-fund` fix and require the next clean GitHub Actions run to PASS end-to-end.
 - [ ] Keep Published locked until the GitHub CI gate is proven green and the final public-deploy integration is reviewed.
 - [ ] Re-check Vercel Preview after the Hobby daily deployment quota resets.
 - [ ] Resolve duplicate/cross-category source-data review before affected records can use independent Index.
