@@ -69,3 +69,21 @@ The contract test checks the catalog projection, admin-role guard, SEO storage k
 8. Explicitly surface a schema-not-ready state rather than silently failing.
 
 Not included yet: image upload, history/rollback UI, bulk editing, Search Console, AI generation, production deployment, or changes to the public Species page.
+
+## Base Species / Variant grouping (2026-08-28)
+
+The flat 486-row catalog is now projected into a content-management hierarchy:
+
+`Category → Base Species → Variant / strain`
+
+Current deterministic scan:
+
+- 486 catalog rows
+- 276 Base Species groups
+- 83 groups contain 2+ records and can become batch SEO candidates
+- 293 records belong to those multi-member groups
+- 223 records expose an explicit variant marker
+- 28 exact duplicate records need review
+- 5 Base Species groups contain category conflicts and are fail-closed for batch writes
+
+Grouping uses the existing scientific name plus explicit `var.`, cultivar quotes and `wild type` markers. It does not alter `fishData.ts` or infer new Product Truth.

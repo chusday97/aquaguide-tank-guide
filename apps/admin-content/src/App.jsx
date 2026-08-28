@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './supabase.js';
-import { catalogSpecies } from './catalog.js';
+import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
+import BatchSeoEditor from './BatchSeoEditor.jsx';
+import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 
@@ -273,6 +275,8 @@ export default function App() {
   const [seoRows, setSeoRows] = useState({});
   const [selectedId, setSelectedId] = useState(null);
   const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('');
+  const [batchIds, setBatchIds] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [schemaReady, setSchemaReady] = useState(true);
@@ -351,15 +355,20 @@ export default function App() {
     loadAdminData();
   }, [session]);
 
-  const filteredSpecies = useMemo(() => {
-    const needle = search.trim().toLowerCase();
-    if (!needle) return species;
-    return species.filter((item) => [item.name, item.scientific_name, item.catalog_key, item.category]
-      .filter(Boolean)
-      .some((value) => String(value).toLowerCase().includes(needle)));
-  }, [search, species]);
-
   const selectedSpecies = species.find((item) => item.id === selectedId) || null;
+  const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
+  const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
+
+  const toggleBatch = (id) => {
+    const nextGroup = speciesGroupByMemberId.get(id);
+    setSelectedId(id);
+    setBatchIds((current) => {
+      if (current.includes(id)) return current.filter((item) => item !== id);
+      const currentGroup = current.length ? speciesGroupByMemberId.get(current[0]) : null;
+      if (currentGroup && nextGroup && currentGroup.group_key !== nextGroup.group_key) return [id];
+      return [...current, id];
+    });
+  };
 
   const signOut = async () => {
     if (isReviewMode) return;
@@ -415,33 +424,33 @@ export default function App() {
       {error ? <div className="page-error">{error}</div> : null}
 
       <div className="workspace">
-        <aside className="species-sidebar">
-          <div className="sidebar-heading">
-            <div>
-              <p className="eyebrow">CONTENT</p>
-              <h2>Species</h2>
-            </div>
-            <span className="count-badge">{species.length}</span>
-          </div>
-          <input className="search-input" placeholder="搜索鱼名、学名或 key…" value={search} onChange={(event) => setSearch(event.target.value)} />
-          <div className="species-list">
-            {loading ? <p className="list-message">正在验证管理员权限…</p> : null}
-            {!loading && filteredSpecies.length === 0 ? <p className="list-message">没有匹配的 Species。</p> : null}
-            {filteredSpecies.map((item) => (
-              <button key={item.id} className={`species-row ${selectedId === item.id ? 'active' : ''}`} type="button" onClick={() => setSelectedId(item.id)}>
-                <span className="species-avatar">{item.name?.slice(0, 1) || '?'}</span>
-                <span className="species-copy">
-                  <strong>{item.name}</strong>
-                  <small>{item.scientific_name}</small>
-                  <span>{item.catalog_key}</span>
-                </span>
-                <span className={`tiny-status ${item.status}`}></span>
-              </button>
-            ))}
-          </div>
-        </aside>
+        <SpeciesGroupSidebar
+          groups={speciesGroups}
+          selectedId={selectedId}
+          batchIds={batchIds}
+          search={search}
+          onSearch={setSearch}
+          category={category}
+          onCategory={setCategory}
+          onSelect={setSelectedId}
+          onToggleBatch={toggleBatch}
+        />
 
         <main className="editor-area">
+          {batchGroup && batchMembers.length > 1 ? (
+            <BatchSeoEditor
+              group={batchGroup}
+              members={batchMembers}
+              existingRows={seoRows}
+              schemaReady={schemaReady}
+              readOnly={isReviewMode}
+              onClear={() => setBatchIds([])}
+              onSaved={(rows) => setSeoRows((current) => ({
+                ...current,
+                ...Object.fromEntries(rows.map((row) => [row.catalog_key, row])),
+              }))}
+            />
+          ) : null}
           <SeoEditor
             species={selectedSpecies}
             record={selectedSpecies ? seoRows[selectedSpecies.catalog_key] : null}

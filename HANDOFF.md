@@ -489,3 +489,12 @@
 - 根因：旧 `foreignObjectRendering` 在离屏 1080px 克隆上生成全透明画布；常规 html2canvas 又会被 Tailwind `oklch` 阻断。
 - 修复：记录卡使用 Canvas API 固定 1080px 直接绘制，不读取响应式页面 CSS；实际 PNG 为 1080×1000，深色像素和通道对比度门禁通过。
 - 验证：导出模型、分享隐私契约、390/600/1280px 布局和真实下载像素检查。
+
+## 2026-08-28 Species SEO Admin 分组与批量模型交接
+- 当前工作位于隔离分支 `feature/admin-content-v0`；不得把本阶段误写成 main 已合并或 Production 已接入。
+- 新接手者先读 `.ai/LIVE_STATUS.md`，再读 `.ai/CURRENT_GOAL.md` / `TASK_QUEUE.md` / `DECISION_LOG.md` / `EXECUTION_LOG.md`。
+- 现有 486 条 Species 不是 486 个独立 SEO 实体；生成层按明确学名/变种标记聚合为 276 个 Base Species。
+- 83 个 Base Species 含多个 catalog 成员，可作为批量 SEO 候选；批量模板按成员名称/Variant 生成独立草稿，不直接复制为 Published 内容。
+- 发现 28 条疑似完全重复 catalog 记录；不得先删原数据，先在 Admin 标记并后续人工确认 canonical/合并策略。
+- 发现 5 个跨分类冲突组（含部分神仙鱼、波子、海葵/珊瑚、红宫廷）；这些组必须人工复核，禁止一键批量发布。
+- 下一阶段核心：建立 Base Species 公共 SEO 层 + Variant Override / Inheritance，并保留单条 SEO fallback；不修改 Product Truth。

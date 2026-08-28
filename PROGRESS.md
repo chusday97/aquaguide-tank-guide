@@ -252,3 +252,10 @@
 - AI 只能解释规则结果，不能决定 `canAdd`、风险等级或推荐候选池。
 - 混养判断统一为四种状态：`compatible / caution / not_recommended / insufficient_data`。
 - 手机端按真实手机设备判定，不再按 `<768px` 判定；桌面缩窄仍保持桌面工作台，平板默认使用桌面布局。
+
+## 2026-08-28 Admin Content / Species SEO 附属项目
+- 独立分支：`feature/admin-content-v0`；不合并 main，不写 Production Supabase。
+- 详细实时状态统一记录在 `.ai/LIVE_STATUS.md`，执行目标见 `.ai/CURRENT_GOAL.md`，决策见 `.ai/DECISION_LOG.md`，任务队列见 `.ai/TASK_QUEUE.md`。
+- Species SEO Admin 已从 486 条平铺 catalog 升级为 `Category → Base Species → Variant` 分组模型。
+- 当前扫描结果：486 条 catalog → 276 个 Base Species；83 个组可批量；293 条记录位于多成员组；223 条识别出明确 Variant；28 条疑似重复；5 个组存在跨分类冲突并强制进入人工复核。
+- 批量 SEO 当前只作用于 Editorial SEO 草稿，不修改温度、pH、混养、难度等 Product Truth；分类冲突组禁止直接批量发布。
