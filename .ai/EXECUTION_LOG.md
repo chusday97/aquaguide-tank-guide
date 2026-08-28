@@ -114,3 +114,9 @@
 - The failure was reproduced/fixed locally by updating lockfile with npm 11.9.0; no dependency upgrade was introduced.
 - Clean local `npm ci --no-audit --no-fund` then passed contract, ephemeral Supabase gate and Admin build.
 - Clean install also removed local node_modules drift: Vite returned from untracked 6.4.3 to lockfile-resolved 6.4.2 with all tests still green.
+
+## 2026-08-28 — A+B gate proven green
+- Commit `ef2f6ae ci(admin): fix clean workspace install gate` aligned root lockfile workspace metadata without downgrading resolved `date-fns` (still 4.1.0).
+- GitHub Actions run `33147127271` completed SUCCESS on Ubuntu 24.04.
+- Every gate step passed: pinned Node 24.14.0, Supabase CLI 2.115.0, clean npm install, Admin contract, ephemeral Supabase gate, build, generated catalog parity and diff hygiene.
+- A+B is now an executed stability protocol, not a proposal. Paid persistent Supabase staging remains optional.

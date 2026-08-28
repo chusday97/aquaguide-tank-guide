@@ -565,3 +565,9 @@
 - Required gate proof: regular user cannot read Draft/write/read revisions/rollback; Base+Variant rollback returns Draft; Published bilingual `sp_0030` is anonymously readable and generates two indexable EN/ZH pages with canonical/hreflang/sitemap.
 - Workflow must remain validation-only: no Production credentials, DB push, Git commit, Vercel deployment or automatic Published unlock.
 - After push, verify the first GitHub Actions clean Ubuntu run. Until that run is green, A is not considered proven even though the same gate passes locally.
+
+
+### 2026-08-28 A+B gate green handoff
+- `ef2f6ae` corrected the root npm lockfile so `@aquaguide/admin-content` is reproducible under clean `npm ci`; resolved `date-fns` remains 4.1.0.
+- GitHub Actions run `33147127271` completed SUCCESS with every Admin gate step green, including the ephemeral Supabase 001–006/RLS/rollback/static-page chain.
+- Treat `npm run test:supabase-gate -w @aquaguide/admin-content` as the shared A/B database gate. Persistent paid Supabase staging is optional; do not make it a prerequisite again unless an operational need appears.

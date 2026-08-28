@@ -320,3 +320,9 @@
 - 本地第一次执行发现临时 `migrations/` 目录缺失，第二次发现 service_role 无 `user_roles UPDATE`；均在 push 前修复，未通过临时扩权绕过。
 - 最终本地门禁已通过：schema v6、普通用户 Draft 可见 0、普通用户不可写/不可看 revision/不可 rollback、Base/Variant rollback 强制 Draft、数据库读取后生成 2 个中英 Index 页面并验证 canonical/hreflang/sitemap。
 - 下一步：push workflow 后以 GitHub Actions 第一次真实 Ubuntu clean-run PASS 作为 A 层正式证据；通过前 Published 保持锁定。
+
+
+### 2026-08-28 Admin A+B 首次完整 CI 通过
+- `ef2f6ae` 修复 root lockfile 对 Admin workspace 的缺失登记；实际 `date-fns` 解析版本仍为 4.1.0，没有依赖降级。
+- GitHub Actions `33147127271` 在 Ubuntu 24.04 干净 runner 全绿：Node 24.14.0 / Supabase CLI 2.115.0 / npm ci / contract / 临时 Supabase 001–006 + RLS/rollback/双语静态页 / build / generated catalog parity / diff hygiene 全部 PASS。
+- 至此 A+B 已成为正式稳定门禁：B 本地快速迭代，A 干净机重复验证；两层都不持有或修改 Production。

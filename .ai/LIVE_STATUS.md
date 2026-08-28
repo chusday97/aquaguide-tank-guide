@@ -31,6 +31,7 @@ Branch: `feature/admin-content-v0`
 - Clean local `npm ci --no-audit --no-fund` plus the full shared Supabase gate/build now PASS.
 
 ## Remaining gate
-- Push the lockfile/workflow correction and require the next GitHub Actions clean-run PASS before treating A as proven.
+- GitHub Actions run `33147127271` for `ef2f6ae` completed SUCCESS: every step passed, including clean `npm ci`, contract, ephemeral Supabase database gate, production build, generated catalog parity and diff hygiene.
+- A is now proven on a clean Ubuntu runner; B remains the fast local path using the same database gate command.
 - Published remains disabled until CI is green and public-deploy integration is explicitly reviewed.
 - A paid persistent Supabase staging branch is no longer required; it remains an optional later convenience.

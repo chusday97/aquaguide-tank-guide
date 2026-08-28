@@ -16,8 +16,8 @@ Updated: 2026-08-28
 
 ## Next
 - [x] Push the pinned A+B workflow (`2d85a4e`); first clean GitHub run reached the fixed toolchain but exposed an Admin workspace lockfile mismatch.
-- [ ] Push the corrected lockfile / `npm ci --no-audit --no-fund` fix and require the next clean GitHub Actions run to PASS end-to-end.
-- [ ] Keep Published locked until the GitHub CI gate is proven green and the final public-deploy integration is reviewed.
+- [x] Push the corrected lockfile / `npm ci --no-audit --no-fund` fix (`ef2f6ae`) and verify GitHub Actions run `33147127271` PASS end-to-end.
+- [ ] Keep Published locked until the final public-deploy integration is reviewed; the A+B database/SEO gate itself is now green.
 - [ ] Re-check Vercel Preview after the Hobby daily deployment quota resets.
 - [ ] Resolve duplicate/cross-category source-data review before affected records can use independent Index.
 
