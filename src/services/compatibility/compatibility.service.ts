@@ -56,7 +56,6 @@ export const getCompatibilityDecision = (
 
 const normalizeCanonicalResult = (result: TankCompatibilityResult): TankCompatibilityResult => {
   const decision = getCompatibilityDecision(result);
-  if (decision.status === result.status) return result;
   const domainRules = decision.ruleCodes
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));

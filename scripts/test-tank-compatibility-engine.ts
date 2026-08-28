@@ -22,6 +22,7 @@ const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   temperament: 'Peaceful',
   size: 'Small',
   housingMode: '适合混养',
+  waterType: 'freshwater',
   ...overrides,
 });
 
@@ -66,7 +67,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         tank: makeTank({ substrate: '无', plants: [], hardscape: [] }),
         candidateSpecies: makeFish(),
       });
-      return result.status === 'compatible'
+      return result.status === 'insufficient_data'
         && result.missingData.every(rule => !['missing_ph', 'missing_hardness'].includes(rule.code));
     },
   },
@@ -83,7 +84,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
           phLevel: '6.0-6.8',
         }),
       });
-      return result.status === 'caution'
+      return result.status === 'insufficient_data'
         && result.missingData.some(rule => rule.code === 'missing_ph' && rule.severity === 'low')
         && result.suggestions.some(item => item.includes('试纸'));
     },
@@ -103,7 +104,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     run: () => {
       const result = evaluateLegacyTankCompatibility({
         tank: makeTank(),
-        candidateSpecies: makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼' }),
+        candidateSpecies: makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼', waterType: 'saltwater' }),
       });
       return result.status === 'not_recommended'
         && result.blockingRules.some(rule => rule.code === 'water_type_mismatch');
@@ -150,7 +151,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         tank: makeTank({ equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' } }),
         candidateSpecies: makeFish({ waterTemperature: '24-28°C' }),
       });
-      return result.status === 'caution'
+      return result.status === 'insufficient_data'
         && result.warningRules.some(rule => rule.code === 'heater_needed');
     },
   },
@@ -271,7 +272,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         items: [{ fishId: candidate.id, quantity: 1 }],
         speciesCatalog: [candidate],
       });
-      return direct.status === 'caution'
+      return direct.status === 'insufficient_data'
         && calculator.status === 'insufficient_data'
         && addition?.status === 'insufficient_data';
     },
@@ -286,7 +287,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: species,
         candidateQuantity: 10,
       });
-      return result.status === 'not_recommended'
+      return result.status === 'insufficient_data'
         && result.blockingRules.some(rule => rule.code === 'bioload_over_limit')
         && result.blockingRules.every(rule => !['territorial_conflict', 'single_housing_required'].includes(rule.code));
     },
@@ -301,7 +302,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish({ id: 'candidate-small', size: 'Small' }),
         candidateQuantity: 1,
       });
-      return result.status === 'not_recommended'
+      return result.status === 'insufficient_data'
         && result.blockingRules.some(rule => rule.code === 'bioload_over_limit');
     },
   },

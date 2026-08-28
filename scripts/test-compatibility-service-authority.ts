@@ -3,6 +3,7 @@ import {
   evaluateTankCompatibility,
   getCompatibilityDecision,
 } from '../src/services/compatibility/compatibility.service';
+import { evaluateTankCompatibility as evaluateLegacyEntry } from '../src/lib/tankCompatibilityEngine';
 import { reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import type { Aquarium, Fish } from '../src/types';
 
@@ -66,6 +67,14 @@ const legacyCompatibleDomainInsufficient = evaluateTankCompatibility({
 assert.equal(legacyCompatibleDomainInsufficient.metadata.domainStatus, 'insufficient_data');
 assert.equal(legacyCompatibleDomainInsufficient.status, 'insufficient_data');
 assert.equal(getCompatibilityDecision(legacyCompatibleDomainInsufficient).addPolicy, 'complete_information');
+const legacyEntryDecision = evaluateLegacyEntry({
+  tank,
+  existingSpecies: [],
+  candidateSpecies: makeFish('unreviewed-candidate'),
+  intent: 'planned_addition',
+});
+assert.equal(legacyEntryDecision.status, 'insufficient_data');
+assert.equal(legacyEntryDecision.metadata.domainStatus, legacyEntryDecision.status);
 
 const recordExistingDecision = evaluateTankCompatibility({
   tank,
