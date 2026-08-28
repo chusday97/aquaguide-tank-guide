@@ -300,7 +300,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: species,
         candidateQuantity: 10,
       });
-      return result.status === 'insufficient_data'
+      return result.status === 'not_recommended'
         && result.blockingRules.some(rule => rule.code === 'bioload_over_limit')
         && result.blockingRules.every(rule => !['territorial_conflict', 'single_housing_required'].includes(rule.code));
     },
@@ -315,7 +315,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish({ id: 'candidate-small', size: 'Small' }),
         candidateQuantity: 1,
       });
-      return result.status === 'insufficient_data'
+      return result.status === 'not_recommended'
         && result.blockingRules.some(rule => rule.code === 'bioload_over_limit');
     },
   },

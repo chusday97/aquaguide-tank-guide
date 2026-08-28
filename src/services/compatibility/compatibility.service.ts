@@ -9,7 +9,7 @@ import {
   type TankCompatibilityRule,
   type TankCompatibilityStatus,
 } from '../../lib/tankCompatibilityEngine';
-import type { CompatibilityDecisionReadiness, CompatibilityIntent } from '../../../packages/domain-rules/src';
+import type { CompatibilityDecisionReadiness, CompatibilityIntent, StockingGuidance, ObservedCoexistenceStatus } from '../../../packages/domain-rules/src';
 import { getCompatibilityAddPolicy } from '../../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from '../../lib/compatibility/canonical-result.adapter';
 
@@ -42,6 +42,9 @@ export type CanonicalCompatibilityDecision = {
   catalogVersion: string;
   ruleVersion: string;
   decisionReadiness: CompatibilityDecisionReadiness;
+  stockingGuidance: StockingGuidance;
+  observedStatus: ObservedCoexistenceStatus;
+  evidenceIds: string[];
 };
 
 export const getCompatibilityDecision = (
@@ -54,6 +57,16 @@ export const getCompatibilityDecision = (
   catalogVersion: result.metadata.catalogVersion,
   ruleVersion: result.metadata.ruleVersion,
   decisionReadiness: result.metadata.decisionReadiness,
+  stockingGuidance: result.stockingGuidance || {
+    kind: 'unknown',
+    recommendedMin: null,
+    recommendedMax: null,
+    constraints: [],
+    confidence: 'unknown',
+    evidenceIds: [],
+  },
+  observedStatus: result.observedStatus || 'stable',
+  evidenceIds: result.evidenceIds || [],
 });
 
 const normalizeCanonicalResult = (result: TankCompatibilityResult): TankCompatibilityResult => {

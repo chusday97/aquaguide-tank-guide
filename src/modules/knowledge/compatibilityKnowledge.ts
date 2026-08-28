@@ -131,6 +131,9 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
       domainStatus: results[0]?.metadata.domainStatus || status,
       decisionReadiness: readinessOf(results),
     },
+    stockingGuidance: results.find(result => result.stockingGuidance)?.stockingGuidance,
+    observedStatus: results.find(result => result.observedStatus)?.observedStatus,
+    evidenceIds: Array.from(new Set(results.flatMap(result => result.evidenceIds || []))),
   };
 };
 
@@ -263,6 +266,9 @@ const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompa
       domainStatus: pairResults[0]?.rawResult.metadata.domainStatus || status,
       decisionReadiness: readinessOf(pairResults.map(result => result.rawResult)),
     },
+    stockingGuidance: pairResults.find(result => result.rawResult.stockingGuidance)?.rawResult.stockingGuidance,
+    observedStatus: pairResults.find(result => result.rawResult.observedStatus)?.rawResult.observedStatus,
+    evidenceIds: Array.from(new Set(pairResults.flatMap(result => result.rawResult.evidenceIds || []))),
   };
 };
 
@@ -308,5 +314,8 @@ export const evaluateCompatibilityDecision = ({
     suggestions: aggregateResult.suggestions,
     aggregateResult,
     metadata: aggregateResult.metadata,
+    stockingGuidance: aggregateResult.stockingGuidance,
+    observedStatus: aggregateResult.observedStatus,
+    evidenceIds: aggregateResult.evidenceIds,
   };
 };

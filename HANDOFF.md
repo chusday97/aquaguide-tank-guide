@@ -1,5 +1,15 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 当前执行快照（本轮最新）
+
+- 当前分支：`codex/main-core-foundation-v1`。UI 继续冻结；本轮未改布局、素材、今日行动或视觉 Owner 文件，未推送 GitHub、未写生产 Supabase、未合并 `main`。
+- 首批 30 个物种队列已改为固定、去重的 Catalog ID；新增逐记录 Catalog 审计报告和只生成草稿的 `catalog:research`/`catalog:review` 命令。审核状态不会因进入队列自动提升。
+- Domain 现在输出个体上下文、现实共处等级和分层数量指导；领地性仅谨慎提示，繁殖护域与现实伤害有独立等级，幼体风险不会覆盖成体风险。旧引擎仍是冻结页面使用的兼容 facade，最终状态由 Domain 决定。
+- 新增 435 组合矩阵门禁，验证无序组合确定性、顺序对称性和资料不足安全降级；本地 324/435 组合返回 `insufficient_data`，其余为明确硬冲突。
+- 本地门禁结果：Domain/Service/legacy facade、Catalog、lint、API 类型、production build、UI freeze、project truth、26+1 migration 重放、pgTAP 19/19、schema lint 0 error 均通过。
+- 当前阻塞：30 种字段级内容仍需水族内容专家整批审核；生产第 27 个 migration、Catalog 发布、最新 Preview exact SHA、人工 release acceptance 和 `main` 合并仍未完成。
+- 下一步：先让同一 Critic 基于本轮 diff 和测试证据复验；随后整理少量本地提交。除非另行授权，不执行生产 migration、Catalog 发布、GitHub 推送或 main 合并。
+
 ## 2026-08-28 物种底层修复（最新）
 
 - 当前工作线仍为 `codex/main-core-foundation-v1`；本轮保持冻结 UI，不执行生产 SQL、Catalog 发布、GitHub 推送或 `main` 合并。

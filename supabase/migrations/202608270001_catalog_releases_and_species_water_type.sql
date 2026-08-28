@@ -8,7 +8,7 @@ alter table public.species
 
 alter table public.species
   add constraint species_water_type_check
-  check (water_type in ('freshwater', 'saltwater', 'unknown'));
+  check (water_type in ('freshwater', 'saltwater', 'brackish', 'unknown'));
 
 create table if not exists public.species_reference_links (
   species_id uuid not null references public.species(id) on delete cascade,

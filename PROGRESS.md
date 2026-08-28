@@ -1,6 +1,18 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-28 物种底层修复进展（本轮最新）
+
+- [x] 首批审核队列已冻结为 30 个明确 Catalog ID，按基础物种去重；不再由排序或新增变种悄悄改变研究范围。泰国斗鱼暂以 `Betta splendens` 品系代表 `sp_0258` 纳入，基础种关系仍待内容审核。
+- [x] Domain 增加个体生命阶段/繁殖状态输入、现实共处等级（stable/observe/intervene/emergency）和分层 `StockingGuidance`；幼体只可降低即时捕食判断，不能覆盖成体风险。
+- [x] 领地冲突改为谨慎提示；繁殖护域、持续追逐、进食排除、伤口/呼吸异常/多只死亡均有结构化规则与证据码。物种未审核时规划结论安全降级，已确认硬冲突仍保留阻断。
+- [x] 新增 435 个无序组合矩阵回归：状态确定性、顺序对称性和未审核资料的安全降级通过（324 组返回 `insufficient_data`）。
+- [x] 新增 `catalog:audit` 逐记录质量报告、`catalog:research --batch` 和 `catalog:review` 草稿审核入口；首批草稿仍为 10/10 pending，未进入运行时事实。
+- [x] 本地门禁通过：Domain/Service/legacy facade、Catalog、lint、API 类型、production build、UI freeze、project truth、Supabase 26+1 重放、pgTAP 19/19、schema lint 0 error。
+- [ ] 首批 30 种仍未完成逐字段人工审核；生产第 27 个 migration、Catalog 发布、最新 Preview exact SHA、人工 release acceptance 和 `main` 合并仍未执行。
+
+> 当前本地 Catalog 测试 checksum 为 `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`；生产 checksum 仍为 `UNVERIFIED`。本轮未修改 UI Owner 文件、未写生产数据库、未推送 GitHub。
+
 ## 2026-08-28 物种底层修复进行中（最新；提交详情以 `git log` 和 `project:status` 运行时读取）
 
 - [x] Domain compatibility 增加温度、pH、鱼缸温度、最低容量/缸长约束；最终结论继续由 Domain 返回，旧引擎仅作兼容 facade。

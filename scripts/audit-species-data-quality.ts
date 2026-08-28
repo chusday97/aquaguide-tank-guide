@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { fishData } from '../src/data/fishData';
 
 type QualityStatus = 'VERIFIED' | 'PARTIAL' | 'TEMPLATE_DERIVED' | 'CONFLICT' | 'AMBIGUOUS' | 'MISSING';
@@ -35,6 +37,21 @@ const statusOf = (species: typeof fishData[number]): QualityStatus => {
   return 'VERIFIED';
 };
 
+const fieldStatusOf = (species: typeof fishData[number], field: 'identity' | 'water' | 'temperature' | 'ph' | 'evidence'): QualityStatus => {
+  if (field === 'identity') {
+    if (!species.scientificName.trim() || /^(?:unknown|待定|未定)$/i.test(species.scientificName.trim())) return 'MISSING';
+    if (/\b(?:sp\.|spp\.|var\.)\s*$/i.test(species.scientificName)) return 'AMBIGUOUS';
+    return 'VERIFIED';
+  }
+  if (field === 'water') return species.waterType ? 'VERIFIED' : 'MISSING';
+  if (field === 'temperature') return species.waterTemperature?.trim() ? 'PARTIAL' : 'MISSING';
+  if (field === 'ph') return species.phLevel?.trim() ? 'PARTIAL' : 'MISSING';
+  const source = species.feedingProfile;
+  if (!source?.sourceUrl) return 'MISSING';
+  if (source.sourceUrl.includes('google.com/search') || source.sourceName?.toLowerCase().includes('template')) return 'TEMPLATE_DERIVED';
+  return source.needsReview ? 'PARTIAL' : 'VERIFIED';
+};
+
 const statuses = Object.fromEntries((['VERIFIED', 'PARTIAL', 'TEMPLATE_DERIVED', 'CONFLICT', 'AMBIGUOUS', 'MISSING'] as QualityStatus[]).map(status => [
   status,
   fishData.filter(species => statusOf(species) === status).length,
@@ -47,6 +64,19 @@ const sourceDomains = Object.fromEntries([...new Set(fishData.map(species => sou
 
 assert.equal(fishData.length, 486, 'catalog audit expects all 486 catalog rows');
 assert.equal(new Set(fishData.map(species => species.id)).size, fishData.length, 'catalog IDs must be unique');
+
+const fieldAudit = fishData.map(species => ({
+  speciesId: species.id,
+  name: species.name,
+  scientificName: species.scientificName,
+  overallStatus: statusOf(species),
+  fields: Object.fromEntries((['identity', 'water', 'temperature', 'ph', 'evidence'] as const).map(field => [field, fieldStatusOf(species, field)])),
+  sourceDomain: sourceDomainOf(species.feedingProfile?.sourceUrl),
+}));
+
+const auditOutput = process.env.CATALOG_AUDIT_OUTPUT || 'build/catalog/audit/species-quality.json';
+await mkdir(dirname(auditOutput), { recursive: true });
+await writeFile(auditOutput, `${JSON.stringify({ generatedAt: new Date().toISOString(), total: fishData.length, records: fieldAudit }, null, 2)}\n`, 'utf8');
 
 console.log(JSON.stringify({
   total: fishData.length,
@@ -62,4 +92,5 @@ console.log(JSON.stringify({
   placeholderScientificNames: fishData.filter(species => /\b(?:sp\.|spp\.|var\.)\s*$/i.test(species.scientificName)).map(species => ({ id: species.id, name: species.name, scientificName: species.scientificName })),
   crossSpeciesHousingConflicts: fishData.filter(species => statusOf(species) === 'CONFLICT').map(species => ({ id: species.id, name: species.name })),
   researchKeys: new Set(fishData.map(species => binomialOf(species.scientificName)).filter(Boolean)).size,
+  reportPath: auditOutput,
 }, null, 2));

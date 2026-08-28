@@ -55,7 +55,13 @@ export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
       publishedAt: '1970-01-01T00:00:00.000Z',
       snapshotUrl: LOCAL_SNAPSHOT_URL,
     },
-    species: fishData.map(speciesProfileFromFish),
+    species: fishData.map(species => {
+      const profile = speciesProfileFromFish(species);
+      const reviewed = getReviewedCompatibilityProfile(species.id);
+      return reviewed?.requiredFacts
+        ? { ...profile, compatibilityRequiredFacts: reviewed.requiredFacts }
+        : profile;
+    }),
     evidenceSources,
     compatibilityProfiles: profiles.map(profile => ({
       speciesId: profile!.speciesId,
@@ -65,6 +71,8 @@ export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
       confidence: profile!.confidence,
       reviewStatus: profile!.reviewStatus,
       citationIds: profile!.citations.map(citation => citation.id),
+      ...(profile!.requiredFacts ? { requiredFacts: profile!.requiredFacts } : {}),
+      ...(profile!.stockingGuidance ? { stockingGuidance: profile!.stockingGuidance } : {}),
     })),
     pairRules: pairRules.map(rule => ({
       speciesIds: [...rule!.speciesIds].sort() as [string, string],

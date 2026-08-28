@@ -121,6 +121,9 @@ export interface SpeciesSummaryDto {
 }
 
 export interface SpeciesDetailDto extends SpeciesSummaryDto {
+  baseSpeciesKey?: string | null;
+  variantKey?: string | null;
+  taxonStatus?: 'verified' | 'partial' | 'ambiguous';
   waterTemperatureMinC?: number;
   waterTemperatureMaxC?: number;
   phMin?: number;
@@ -130,6 +133,12 @@ export interface SpeciesDetailDto extends SpeciesSummaryDto {
   diet: string;
   tankSizeText: string;
   minTankLiters?: number;
+  minTankLengthCm?: number | null;
+  adultLengthMinCm?: number | null;
+  adultLengthMaxCm?: number | null;
+  socialMode?: 'solitary' | 'pair' | 'group' | 'colony' | 'variable' | 'unknown';
+  minimumGroupSize?: number | null;
+  decisionReadiness?: 'reviewed' | 'partial' | 'unknown';
   housingMode?: '适合混养' | '谨慎混养' | '建议单养';
   housingReason?: string;
   feedingProfile?: Record<string, unknown>;
@@ -141,6 +150,8 @@ export interface SpeciesDetailDto extends SpeciesSummaryDto {
     confidence: EvidenceConfidence;
     reviewStatus: EvidenceReviewStatus;
     citations: EvidenceSourceDto[];
+    requiredFacts?: import('./catalog').CompatibilityRequiredFact[];
+    stockingGuidance?: import('./catalog').CatalogCompatibilityProfile['stockingGuidance'];
   };
 }
 

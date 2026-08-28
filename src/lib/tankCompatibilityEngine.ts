@@ -13,6 +13,9 @@ import {
   type DomainSpeciesFact,
   type DomainTankFact,
   type CompatibilityDecisionReadiness,
+  type CompatibilityIndividualContext,
+  type StockingGuidance,
+  type ObservedCoexistenceStatus,
 } from '../../packages/domain-rules/src';
 import { estimateBioloadUnits } from '../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
@@ -49,6 +52,9 @@ export type TankCompatibilityResult = {
     domainStatus: TankCompatibilityStatus;
     decisionReadiness: CompatibilityDecisionReadiness;
   };
+  stockingGuidance?: StockingGuidance;
+  observedStatus?: ObservedCoexistenceStatus;
+  evidenceIds?: string[];
 };
 
 export type EvaluateTankCompatibilityInput = {
@@ -57,6 +63,8 @@ export type EvaluateTankCompatibilityInput = {
   candidateSpecies?: Fish | null;
   candidateQuantity?: number;
   candidateLifeStage?: CompatibilityLifeStage;
+  candidateContext?: CompatibilityIndividualContext;
+  observedSignals?: DomainTankFact['observedSignals'];
   scope?: TankCompatibilityScope;
   intent?: CompatibilityIntent;
 };
@@ -637,6 +645,7 @@ const evaluateLegacyTankCompatibility = ({
 
 const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
   const profile = speciesProfileFromFish(fish);
+  const reviewed = getReviewedCompatibilityProfile(fish.id);
   return {
     id: profile.catalogKey,
     waterType: profile.waterType,
@@ -646,8 +655,16 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     phMax: profile.phMax,
     minTankLiters: profile.minTankLiters,
     minTankLengthCm: null,
-    reviewed: Boolean(getReviewedCompatibilityProfile(fish.id)),
-    behaviorTraits: getReviewedCompatibilityProfile(fish.id)?.behaviorTraits || [],
+    reviewed: Boolean(reviewed),
+    compatibilityRequiredFacts: reviewed?.requiredFacts,
+    minimumGroupSize: reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
+    stockingGuidance: reviewed?.stockingGuidance,
+    evidenceIds: reviewed?.citations.map(citation => citation.id) || [],
+    loadMultiplier: fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1,
+    adultLengthMinCm: profile.adultLengthMinCm,
+    adultLengthMaxCm: profile.adultLengthMaxCm,
+    socialMode: profile.socialMode,
+    behaviorTraits: reviewed?.behaviorTraits || [],
     size: fish.size,
   };
 };
@@ -681,9 +698,19 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
   const explicitPairStatus = pairStatuses.sort((left, right) => pairRank[right] - pairRank[left])[0];
   const domainInput: DomainCompatibilityInput = {
     intent: input.intent || (input.scope === 'species_only' ? 'record_existing' : 'planned_addition'),
-    tank: input.tank ? toDomainTankFact(input.tank) : null,
+    tank: input.tank ? { ...toDomainTankFact(input.tank), observedSignals: input.observedSignals } : null,
     existingSpecies: normalized.map(item => toDomainSpeciesFact(item.species)),
     candidateSpecies: input.candidateSpecies ? toDomainSpeciesFact(input.candidateSpecies) : null,
+    candidateQuantity: input.candidateQuantity,
+    existingQuantities: Object.fromEntries(normalized.map(item => [item.species.id, item.quantity])),
+    candidateContext: input.candidateContext || (input.candidateLifeStage ? {
+      lifeStage: input.candidateLifeStage,
+      reproductiveState: 'unknown',
+    } : undefined),
+    individualContexts: Object.fromEntries(normalized.flatMap(item => {
+      const batch = item.batches[0];
+      return batch ? [[item.species.id, { lifeStage: batch.lifeStage, reproductiveState: batch.reproductiveState }]] : [];
+    })),
     explicitPairStatus,
     catalogVersion: CATALOG_VERSION,
   };

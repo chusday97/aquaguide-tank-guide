@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added a frozen, de-duplicated 30-species compatibility review cohort, per-record catalog quality artifacts, draft-only `catalog:research`/`catalog:review` commands, a 435-pair deterministic/symmetric matrix gate, individual life-stage and breeding context, observed coexistence severity, and layered stocking guidance. Domain remains the sole decision authority; UI and production Supabase were not changed.
+
 - Added species data-quality audit and deterministic 30-species research cohort; added evidence-gated `decisionReadiness` metadata and routed formal compatibility consumers through the Compatibility Service. Extended Domain checks for temperature, pH, tank temperature, minimum volume and tank length. No UI Owner files or production data changed.
 
 - Completed the local convergence rehearsal without waiting for Vercel: added the compatibility-authority static gate, refreshed Catalog/Supabase parity evidence and migration authorization docs, and aligned stale core browser assertions with the current viewport, compatibility, feature-preview and evidence-disclosure contracts. Domain, Service, Catalog, local 26+1 Supabase replay, pgTAP, schema lint, build, UI freeze and browser matrices pass; no UI Owner or production data changed.

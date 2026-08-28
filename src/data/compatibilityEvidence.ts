@@ -1,4 +1,5 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
+import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
 import type { CompatibilityLifeStage } from '../types';
 
 export type ReviewedCompatibilityProfile = {
@@ -9,6 +10,8 @@ export type ReviewedCompatibilityProfile = {
   confidence: CompatibilityEvidenceDto['confidence'];
   reviewStatus: CompatibilityEvidenceDto['reviewStatus'];
   citations: EvidenceSourceDto[];
+  requiredFacts?: CompatibilityRequiredFact[];
+  stockingGuidance?: StockingGuidance;
 };
 
 export type ReviewedPairRule = CompatibilityEvidenceDto & {
@@ -173,6 +176,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [tigerBarbStudy],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'territoriality'],
   },
   sp_0021: {
     speciesId: 'sp_0021',
@@ -181,6 +185,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'high',
     reviewStatus: 'reviewed',
     citations: [convictCichlidTerritoryStudy],
+    requiredFacts: ['water', 'temperature', 'territoriality', 'breeding_behavior'],
   },
   sp_0049: {
     speciesId: 'sp_0049',
@@ -189,6 +194,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [smallSnakeheadAssessment],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'predation', 'territoriality'],
   },
   sp_0431: {
     speciesId: 'sp_0431',
@@ -198,6 +204,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [neonTetraFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'social_behavior'],
   },
   sp_0432: {
     speciesId: 'sp_0432',
@@ -207,6 +214,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [cardinalTetraFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'social_behavior'],
   },
   sp_0434: {
     speciesId: 'sp_0434',
@@ -216,6 +224,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [whiteCloudFishBase, whiteCloudShoalingStudy],
+    requiredFacts: ['water', 'temperature', 'social_behavior'],
   },
   sp_0436: {
     speciesId: 'sp_0436',
@@ -225,6 +234,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [guppyFishBase, guppyShoalingStudy],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'breeding_behavior'],
   },
 };
 

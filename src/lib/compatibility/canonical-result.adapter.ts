@@ -6,6 +6,15 @@ import type {
 } from '../tankCompatibilityEngine';
 
 const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
+  compatibility_clear: {
+    code: 'compatibility_clear', title: '未发现明确阻断', evidence: '已审核事实与当前环境没有发现明确的阻断规则。', severity: 'info', basis: 'rule_inference', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  bioload_over_limit: {
+    code: 'bioload_over_limit', title: '生物负荷过高', evidence: '加入后生物负荷筛查达到高风险，不能把此结果当作安全上限。', severity: 'high', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  bioload_near_limit: {
+    code: 'bioload_near_limit', title: '生物负荷偏高', evidence: '加入后生物负荷筛查偏高，建议减少数量或先改善过滤与空间。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   candidate_missing: {
     code: 'candidate_missing', title: '缺少候选生物', evidence: '请先选择要评估的生物。', severity: 'high', basis: 'rule_inference', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
@@ -27,8 +36,14 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   predation_risk: {
     code: 'predation_risk', title: '捕食或吞食风险', evidence: '已审核资料显示组合存在捕食或吞食风险。', severity: 'high', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  juvenile_predation_risk: {
+    code: 'juvenile_predation_risk', title: '幼体阶段仍有捕食风险', evidence: '当前体型可能暂时降低捕食风险，但成体体型和行为仍需纳入长期规划，不能据此确认长期兼容。', severity: 'medium', basis: 'species_trait', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   territorial_conflict: {
-    code: 'territorial_conflict', title: '领地冲突', evidence: '已审核资料显示组合存在领地防御冲突。', severity: 'high', basis: 'species_trait', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+    code: 'territorial_conflict', title: '领地管理需要观察', evidence: '已审核资料显示组合存在领地防御或空间重叠风险，应通过分区、遮挡和现实观察管理，不把领地性标签直接当作阻断。', severity: 'medium', basis: 'species_trait', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  breeding_territory_active: {
+    code: 'breeding_territory_active', title: '繁殖护域需要观察', evidence: '物种处于护卵、护幼或产卵状态时，领地和追逐行为可能暂时增强；应先观察并准备分隔方案。', severity: 'medium', basis: 'species_trait', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
   single_housing_required: {
     code: 'single_housing_required', title: '更适合单养', evidence: '已审核资料显示候选物种不适合作为普通混养对象。', severity: 'high', basis: 'species_trait', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
@@ -72,9 +87,23 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   tank_length_below_species_minimum: {
     code: 'tank_length_below_species_minimum', title: '缸长低于物种最低建议', evidence: '当前鱼缸长度低于候选物种的已审核最低建议，需要先确认活动空间。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  observed_intervention: {
+    code: 'observed_intervention', title: '现实观察需要干预', evidence: '已记录持续追逐或进食排除，建议先暂停新增并调整环境或分隔观察。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  observed_emergency: {
+    code: 'observed_emergency', title: '现实观察达到紧急等级', evidence: '已记录伤口、呼吸异常或多只死亡，建议立即隔离并优先处理现实风险。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
 };
 
-const hasRule = (rules: TankCompatibilityRule[], code: string) => rules.some(rule => rule.code === code);
+const uniqueRules = (rules: TankCompatibilityRule[]) => {
+  const seen = new Set<string>();
+  return rules.filter(rule => {
+    const key = `${rule.code}::${rule.evidence}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
 
 export const applyCanonicalCompatibilityDecision = (
   result: TankCompatibilityResult,
@@ -83,14 +112,26 @@ export const applyCanonicalCompatibilityDecision = (
   const domainRules = decision.ruleCodes
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
-  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'territorial_conflict', 'single_housing_required']);
-  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum']);
+  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'single_housing_required', 'observed_emergency', 'bioload_over_limit']);
+  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_near_limit']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
   const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code));
-  const blockingRules = [...result.blockingRules, ...domainBlockingRules.filter(rule => !hasRule(result.blockingRules, rule.code))];
-  const missingData = [...result.missingData, ...domainMissingRules.filter(rule => !hasRule(result.missingData, rule.code))];
-  const warningRules = [...result.warningRules, ...domainWarningRules.filter(rule => !hasRule(result.warningRules, rule.code))];
+  // Legacy rules are explanatory input only. Reclassify them by the Domain
+  // status so an old "block" cannot survive when the canonical result is a
+  // caution (for example, territorial labels without a reviewed pair rule).
+  const reviewedPairBlocking = decision.status === 'not_recommended' && decision.ruleCodes.includes('reviewed_pair_rule')
+    ? domainRules.filter(rule => rule.code === 'reviewed_pair_rule')
+    : [];
+  const blockingRules = decision.status === 'not_recommended'
+    ? uniqueRules([...result.blockingRules, ...domainBlockingRules, ...reviewedPairBlocking])
+    : [];
+  const missingData = decision.status === 'insufficient_data'
+    ? uniqueRules([...result.missingData, ...domainMissingRules])
+    : [];
+  const warningRules = decision.status === 'caution' || decision.status === 'insufficient_data' || decision.status === 'not_recommended'
+    ? uniqueRules([...result.warningRules, ...domainWarningRules])
+    : [];
   const riskLevel: TankCompatibilityRiskLevel = decision.status === 'not_recommended'
     ? 'high'
     : decision.status === 'insufficient_data'
@@ -113,5 +154,8 @@ export const applyCanonicalCompatibilityDecision = (
     blockingRules,
     warningRules,
     missingData,
+    stockingGuidance: decision.stockingGuidance,
+    observedStatus: decision.observedStatus,
+    evidenceIds: decision.evidenceIds,
   };
 };
