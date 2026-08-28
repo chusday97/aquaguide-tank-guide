@@ -16,8 +16,10 @@
 - [ ] 生产仍未执行第 27 个 migration、Catalog 发布或业务数据写入；生产 Catalog checksum、生产身份写入/回滚语义继续标记 `UNVERIFIED`，需独立授权后验证。
 - [x] 推送后 Vercel exact Preview SHA 已恢复并通过；此前的 `build-rate-limit` 仅作为历史阻塞，本轮未手动重复触发部署。
 - [x] 生产只读复核再次确认 26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；触发器为 33 个对象（35 个事件行），Catalog 三项仍为 `MIGRATION_REQUIRED`。
-- [x] 只读复核后一次性推送本地提交到 `codex/main-core-foundation-v1`；本地、远端和 PR #142 已统一为 `ad858032`，Vercel Preview `6133389265` 已部署同一 SHA，`npm run check:preview-parity` 通过。
+- [x] 只读复核后已推送候选提交；`ad858032` 的 Vercel Preview `6133389265` 曾通过 exact SHA parity，随后追加 parity 门禁修复提交。
 - [ ] PR #142 的 Product Golden Path validate 仍在运行；生产第 27 个 migration、Catalog 发布和 `main` 合并仍未授权。
+- [x] 修复 Preview parity 门禁在 GitHub Deployments API 漏报 Vercel 时的误报，改为安全读取 Vercel CLI metadata（commit: `75dafff3`）。
+- [ ] 最新候选 `75dafff3` 的 Vercel exact SHA 尚未出现在 CLI deployment metadata 中；GitHub checks 已通过但 Preview parity 仍为 `UNVERIFIED`，需等待该 SHA 的自动部署记录。
 
 ## 2026-08-27 Main 收敛执行
 

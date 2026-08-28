@@ -9,7 +9,8 @@
 - 下一步：等待 Product Golden Path validate 收尾；随后由用户单独授权第 27 个生产 migration。Catalog 发布与合并 `main` 继续分别授权。
 - 独立 Critic 复验：六维均通过本地范围；确认 26+1 replay、RLS/GRANT、19/19 pgTAP 和 fixture 移动无阻塞。生产 parity、Catalog 发布和身份写入/回滚仍明确为外部门禁。
 - 2026-08-28 生产只读复核：26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；33 个触发器对象对应 35 个 information_schema 事件行（多事件展开）；Catalog 表/水体字段缺失，标记 `MIGRATION_REQUIRED`，未执行任何生产写入。
-- 2026-08-28 GitHub/Preview 同步：一次性推送后本地、远端候选和 PR #142 为 `ad858032`；Vercel deployment `6133389265` exact SHA parity 已通过，Cloudflare/Vercel 均通过；Product Golden Path validate 尚在运行。
+- 2026-08-28 GitHub/Preview 同步：候选曾在 `ad858032` 部署 Vercel deployment `6133389265`，Cloudflare/Vercel 均通过；随后补推 parity 门禁修复，当前最新候选需重新记录 exact Preview SHA。
+- 2026-08-28 parity 门禁修复：Vercel CLI metadata fallback 已加入 `check:preview-parity`，解决 GitHub Deployments API 漏报 Vercel deployment 的误报；本地检查通过，提交 `75dafff3`。
 - 禁止重踩：不要运行 `supabase db reset --linked`、`supabase db push`、生产 DDL/DML；不要把本地 pgTAP/REST 结果描述为生产写入已验证；不要修改视觉文件。
 
 ## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline
