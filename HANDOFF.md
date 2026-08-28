@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-28 当前执行边界
+
+- 本地 Compatibility Service 与 Domain Rules 权威收敛已通过专项回归；当前候选工作树为 `codex/main-core-foundation-v1`，SHA 由运行时状态命令读取。
+- 4319 已重启到当前工作树，正式图鉴/养护 scene/browse 与今日行动回归通过；4317 冻结视觉基线未动。
+- 页面层 import 切换尝试被 `check:ui-freeze` 正确拦截并回退，因此正式页面仍有旧引擎适配层入口；这是解冻 UI 后的明确待办，不是已完成事项。
+- 当前本地领先远端候选 9 个提交；不要宣称 GitHub/PR/Preview 与当前 head 已同步。生产第 27 个 migration、Catalog 发布和 `main` 合并均未执行。
+- 下一步：等待 Vercel 配额恢复后一次性推送；重跑 `project:status`/Preview parity；随后分别申请生产 migration、Catalog 发布和 main 合并授权。
+
 ## 2026-08-28 Domain 结论接管 Service
 
 - Compatibility Service 已把 Domain Rules 的状态与添加策略接到应用/服务层；legacy 引擎仍只提供证据详情，Service 不再把 legacy status 当最终结论。

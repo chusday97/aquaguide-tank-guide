@@ -1,6 +1,13 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-28 当前门禁复核
+
+- [x] Compatibility Service、Domain 规则与 intent policy 的本地权威回归通过；`record_existing` 可保存事实，`planned_addition` 执行四级策略，Domain-only 冲突/未知资料安全降级。
+- [x] 4319 候选预览已重启并能加载当前工作树；正式图鉴/养护场景和今日行动浏览器回归通过。
+- [x] `check:ui-freeze`、`check:project-truth` 和 `git diff --check` 通过；本轮尝试的页面 import 切换因视觉 Owner 冻结门禁被回退，未改变 UI。
+- [ ] 当前本地候选 `fe062e25` 比远端候选领先 9 个提交；尚未推送，Preview exact SHA 尚未对当前 head 验证。生产第 27 个 migration、Catalog 发布和 main 合并仍未授权。
+
 ## 2026-08-27 最终统一执行线
 
 - 当前唯一候选工作树为 `codex/main-core-foundation-v1`（SHA 以 `git rev-parse HEAD` 运行时读取）；4317 固定为 `37a8d4d1` 视觉基线，4319 用于候选验收，视觉恢复分支仅保留为历史证据。
