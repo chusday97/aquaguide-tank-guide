@@ -42,4 +42,3 @@ export const isSpeciesDecisionReady = (speciesId: string) => {
   const profile = getReviewedCompatibilityProfile(speciesId);
   return Boolean(profile && profile.reviewStatus === 'reviewed' && profile.citations.length > 0);
 };
-

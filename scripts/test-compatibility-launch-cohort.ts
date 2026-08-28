@@ -21,4 +21,3 @@ for (const reviewedId of getCompatibilityEvidenceAudit().reviewedSpeciesIds) {
 assert.equal(isSpeciesDecisionReady('unreviewed-launch-candidate'), false, 'cohort membership cannot grant decision readiness');
 
 console.log(`compatibility launch cohort verified: ${first.length} deterministic research targets; readiness remains evidence-gated`);
-
