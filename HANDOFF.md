@@ -6,7 +6,7 @@
 - Domain 新增显式候选水体校验及已审核捕食、领地、单养特征规则；未知水体/未审核资料安全返回 `insufficient_data`。
 - 新增 `npm run test:compatibility-service`，并通过 Domain、Catalog、添加意图、现实记录、API 类型、lint、build、UI freeze、project truth 回归。
 - `record_existing` 与 `planned_addition` 现在由记录/规划服务显式传入，现实记录仍可保存，规划加入仍按 `allow / confirm / complete_information / block` 处理。
-- 当前提交尚未推送：本地分支在 `77383588` 之后还有本步骤未提交改动；工作树需在 Critic 复验后再提交。
+- 本步骤已本地提交为 `9d0110f6`，尚未推送；推送前仍需独立 Critic 复验，并考虑 Vercel 配额限制。
 - UI 冻结仍有效：正式页面的旧引擎 import 本轮没有改动，因此布局和素材没有变化；解除冻结后的页面入口切换仍是待办。
 - 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 `main` 合并未执行。
 

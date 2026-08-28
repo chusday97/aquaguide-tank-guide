@@ -19,13 +19,13 @@
 
 - [x] `speciesProfileFromFish` 统一解析显式温度/pH 文本为 Profile 数值范围；`toDomainSpeciesFact` 只读取 Profile，不再绕过适配器读取 legacy Fish 文本。
 - [x] 补充空文本、无效换水周期、nullable 字段和数值范围回归；Catalog checksum 重新生成并通过一致性校验。
-- [ ] legacy UI status/evidence 尚未完全由 Domain 接管，状态继续为 `PARTIAL_WITH_FALLBACK`；生产 migration、Catalog 发布和 main 合并仍未授权。（本地提交待生成）
+- [ ] legacy UI status/evidence 尚未完全由 Domain 接管，状态继续为 `PARTIAL_WITH_FALLBACK`；生产 migration、Catalog 发布和 main 合并仍未授权。（Service authority commit: `9d0110f6`）
 
 ## 2026-08-28 Compatibility Service 入口收敛
 
 - [x] 新增 Compatibility Service 统一封装混养评估、组合评估和添加策略；服务、知识模块、推荐、Collection 和测试改用该入口，旧引擎仅保留在入口内部。
 - [x] 页面/组件因视觉冻结未改动，`check:ui-freeze` 通过；正式 UI 消费者切换仍是解除冻结后的下一步。
-- [ ] Domain 最终状态尚未完全替换 legacy status/evidence；状态继续为 `PARTIAL_WITH_FALLBACK`。（待提交）
+- [ ] Domain 最终状态尚未完全替换 legacy status/evidence；状态继续为 `PARTIAL_WITH_FALLBACK`。（Service authority commit: `9d0110f6`）
 
 ## 2026-08-28 Domain 结论接管 Service
 
@@ -34,7 +34,7 @@
 - [x] 新增 `test:compatibility-service`，覆盖旧引擎与 Domain 冲突、规划加入四级策略、现实记录可保存、缺少鱼缸和版本元数据一致性。
 - [x] 现实记录链路显式传递 `record_existing`；规划加入显式传递 `planned_addition`，避免记录事实被规划阻断策略误用。
 - [x] Domain、Service、Catalog、API、UI freeze、project truth 与 build 门禁通过；无视觉文件变更。
-- [ ] 正式页面仍保留旧引擎导入以满足当前冻结 UI；解除 UI freeze 后需将页面 import 也切换到 Compatibility Service，并补跑固定视口人工验收。
+- [ ] 正式页面仍保留旧引擎导入以满足当前冻结 UI；解除 UI freeze 后需将页面 import 也切换到 Compatibility Service，并补跑固定视口人工验收。（当前 Service authority commit: `9d0110f6`）
 - [ ] 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 main 合并仍未授权/未执行。
 
 ## 2026-08-28 候选推送与 Preview parity
