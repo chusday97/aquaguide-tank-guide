@@ -15,6 +15,7 @@
 - [x] 本地 PostgREST 验证匿名用户可读取已发布 Catalog、不能写入 Catalog；Catalog 快照 486 物种 checksum `45f4f10e…a835a` 通过本地校验。
 - [ ] 生产仍未执行第 27 个 migration、Catalog 发布或业务数据写入；生产 Catalog checksum、生产身份写入/回滚语义继续标记 `UNVERIFIED`，需独立授权后验证。
 - [ ] Vercel exact Preview SHA 仍受 `build-rate-limit` 阻塞；本轮未触发部署、未更新 PR #142、未合并 `main`。
+- [x] 生产只读复核再次确认 26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；触发器为 33 个对象（35 个事件行），Catalog 三项仍为 `MIGRATION_REQUIRED`。
 
 ## 2026-08-27 Main 收敛执行
 

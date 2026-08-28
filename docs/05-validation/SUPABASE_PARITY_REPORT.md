@@ -91,3 +91,19 @@ npm run check:ui-freeze
 ```
 
 结果仅证明候选分支可在本地重放并通过权限回归；生产 parity 仍须在独立授权后重新读取确认。
+
+## 2026-08-28 生产只读复核
+
+本次复核通过 Supabase 管理接口完成，未执行 migration、Catalog 发布、RPC mutation 或业务数据写入。
+
+| 检查项 | 状态 | 只读结果 |
+| --- | --- | --- |
+| migration 历史 | `EQUIVALENT` | 生产 26 个版本，最后为 `20260816160129`，与候选前 26 个文件一致 |
+| public 表与 RLS | `EQUIVALENT` | 35 张 public 表，35/35 启用 RLS |
+| policy | `EQUIVALENT`（数量层） | 89 条 policy |
+| 外键/索引 | `EQUIVALENT`（数量层） | 56 条外键、86 个索引 |
+| 触发器 | `EQUIVALENT`（对象层） | 33 个触发器对象；`information_schema.triggers` 展开为 35 个事件行（多事件触发器导致），不构成差异 |
+| Catalog 表与水体字段 | `MIGRATION_REQUIRED` | `catalog_releases`、`species_reference_links`、`species.water_type` 均不存在 |
+| RPC 与身份语义 | `UNVERIFIED` | 已读取 RPC 签名/安全属性；匿名、普通用户、管理员真实写入语义仍未在生产执行 |
+
+结论：前 26 个历史结构没有发现新的只读冲突；第 27 个 Catalog migration 仍需单独授权，生产 Catalog checksum 和真实身份写入/回滚继续保持 `UNVERIFIED`。
