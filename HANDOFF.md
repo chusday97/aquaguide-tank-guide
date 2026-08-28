@@ -2,7 +2,7 @@
 
 ## 2026-08-28 当前执行快照（本轮最新）
 
-> 当前本地 HEAD 为 `4d5cbb28`，已提交但尚未推送；远端候选和 PR #142 仍为 `396e71da`。此前“已同步/已推送”描述均为历史记录，不能作为当前状态。
+> 当前本地 HEAD 以 `git rev-parse HEAD` 运行时读取，已提交但尚未推送；远端候选和 PR #142 仍为 `396e71da`。此前“已同步/已推送”描述均为历史记录，不能作为当前状态。
 
 - 当前分支：`codex/main-core-foundation-v1`。UI 继续冻结；本轮未改布局、素材、今日行动或视觉 Owner 文件，未推送 GitHub、未写生产 Supabase、未合并 `main`。
 - 首批 30 个物种队列已改为固定、去重的 Catalog ID；新增逐记录 Catalog 审计报告和只生成草稿的 `catalog:research`/`catalog:review` 命令。审核状态不会因进入队列自动提升。
