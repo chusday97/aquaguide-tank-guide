@@ -20,6 +20,7 @@
 - Added the canonical `SpeciesProfile` export and explicit-water-type Fish adapter; legacy text cannot infer freshwater or saltwater values.
 - Moved legacy temperature/pH parsing into the `SpeciesProfile` adapter and added nullable/invalid-range regression coverage; Domain facts no longer read Fish text directly.
 - Pushed the canonical candidate and recorded exact local/remote/PR/Preview SHA parity at `781c6af9`; PR #142 remains Draft pending remaining gates.
+- Isolated the unrelated Vercel `admin-content` project to its dedicated branch while keeping the repository connection; regular AquaGuide branches now skip that build.
 - Changed Domain adapter pair status input to use reviewed structured pair rules only; legacy aggregate status is no longer passed back into Domain.
 
 ### Main convergence

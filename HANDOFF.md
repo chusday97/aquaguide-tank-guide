@@ -7,6 +7,11 @@
 - `npm run check:preview-parity`：`PASS / EQUIVALENT`；Preview 为 `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app`，实际部署 SHA 与候选一致。
 - 本次只推送候选代码和文档；未执行生产第 27 个 migration、Catalog 发布或 main 合并。当前唯一底层未完成项仍是 legacy UI status/evidence 尚未完全由 Domain 接管。
 
+## 2026-08-28 admin-content 门禁隔离
+
+- 已更新 Vercel `admin-content` 项目配置：Root Directory 恢复自动检测（仓库根），仅 `feature/admin-content-v0` 执行 `npm run build --workspace @aquaguide/admin-content`；其他分支直接跳过。
+- 该配置不改变 AquaGuide 代码、当前 UI 或仓库分支；旧候选失败部署已按新配置重试并被安全取消（表示忽略构建），需下一次 GitHub push 生成新的 status 才能确认 PR 门禁恢复。
+
 ## 2026-08-28 Domain fact source 收敛第二步
 
 - `speciesProfileFromFish` 现在负责将旧 Fish 的显式温度/pH 文本转换为 canonical `SpeciesProfile` 数值范围；Domain adapter 不再直接读取 Fish 文本字段。

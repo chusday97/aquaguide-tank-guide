@@ -27,6 +27,11 @@
 - [x] 新 Preview `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app` 实际 SHA 与候选一致，`check:preview-parity` 返回 `PASS / EQUIVALENT`。
 - [ ] PR #142 仍为 Draft；admin-content 无关门禁、生产第27个 migration、Catalog 发布和 main 合并仍未完成/未授权。
 
+## 2026-08-28 admin-content 门禁隔离
+
+- [x] Vercel `admin-content` 已改为仓库根自动检测；仅 `feature/admin-content-v0` 构建后台 workspace，候选及其他普通分支跳过，不断开仓库关联。
+- [ ] 需要下一次候选文档提交触发 GitHub status，确认旧 `Vercel – admin-content` 失败不再复现；该项目配置不影响 AquaGuide Vercel。
+
 ## 2026-08-28 本地 Supabase 验证连续推进
 
 - [x] 启动 Docker Desktop 与本地 Supabase CLI 栈，生成 `supabase/config.toml`；设置保留现有生产 26 个 migration 的 grants parity，`.temp/` 和本地凭据保持忽略（commit: `b9903924`）。
