@@ -11,7 +11,7 @@
 - The latest candidate is the SHA reported by `git rev-parse HEAD`; it is a local checkpoint ahead of the remote candidate and PR #142. Exact Preview parity for this head is not claimed until a matching deployment is available. Production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
 
 - `npm run project:status` currently fails the synchronization gate because local HEAD is ahead of the remote candidate and PR #142. PR #142 remains Draft and `releaseReady=false` until one authorized push updates the remote.
-- Local Catalog verification now reflects the schema-normalized snapshot: 486 species, 13 evidence sources, checksum `2fdcbc9ddcf1348828bc8cea311c2162a7a2c7ef00184a7b9542dbcc79c57ae2`. The former `545ac...` value is historical and must not be used for current parity.
+- Local Catalog verification now reflects the schema-normalized snapshot: 486 species, 13 evidence sources, checksum `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`. The former `545ac...` and `2fdcbc...` values are historical and must not be used for current parity.
 - The compatibility authority gate passes: frozen callers may use the legacy facade, while Domain Rules owns final status, policy, rule codes and versions.
 - Local Supabase 26+1 replay, 19/19 pgTAP and schema lint are passing. Production remains at 26 migrations; the Catalog migration is prepared but not executed.
 - Current exact-SHA Preview is `UNVERIFIED` because Vercel is rate-limited. No production migration, Catalog upload, business-data write or `main` merge was performed.
