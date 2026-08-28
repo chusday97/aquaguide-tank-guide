@@ -6,6 +6,7 @@
 - `scripts/verify-aquarium-factual-flow.mjs` 现在走真实的“鱼类 → 黑裙鱼 → 查看规划判断”交互，覆盖：规划不写鱼缸、资料不完整时只写种草清单、不调用新增生物 API、现实记录独立保存、旧 `add-species` 深链兼容。
 - 浏览器回归通过：`PREVIEW_URL=http://localhost:3001 node scripts/verify-aquarium-factual-flow.mjs`；静态/构建门禁也通过。当前 3001 是临时本地候选预览，结束后已关闭临时依赖链接。
 - `check:ui-freeze` 仍是批准范围内混养结果变化导致的预期失败，不代表 Aquarium 舞台回退。当前候选仍比远端领先 16 个提交，未推送；生产 Supabase、Catalog 和 `main` 均未改动。
+- 双预览已恢复：4317 使用独立基线 worktree `37a8d4d1` 的 production build，4319 使用候选 `8df6acba`；两个 `/_preview/interactive` 均已用真实 Chromium 验证 HTTP 200 且无页面错误。4317 不能显示候选版新增的元数据条，因为那会修改冻结 SHA；4319 已显示 branch/SHA/seed/build time。
 
 ## 2026-08-29 混养结果体验修复（本轮最新）
 

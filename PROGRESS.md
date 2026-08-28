@@ -9,6 +9,12 @@
 - [x] 本地验证：浏览器 factual flow、compatibility presentation、unknown recommendation filter、Compatibility Service、addition intents、lint、build、Catalog validate、435 组合矩阵、authority/project truth 通过。
 - [ ] `check:ui-freeze` 仍按预期因本轮已批准的混养结果区域变化而失败，需用户确认后重录基线；本地仍领先远端 16 个提交，未推送；生产 migration、Catalog 发布和 `main` 合并未执行。
 
+## 2026-08-29 双预览复现（本轮最新）
+
+- [x] 4317 已从独立 worktree 的 `37a8d4d1` production build 启动，4319 从候选 worktree 的最新 `8df6acba` 启动；两者 `/_preview/interactive` 均 HTTP 200、Chromium 无页面错误。
+- [x] 发现并规避开发服务器共享依赖缓存造成的 R3F 假故障：4317 若与候选同时使用共享 Vite dev cache 会报 `R3F: Hooks can only be used within the Canvas component`，改用基线 production preview 后恢复稳定；未修改基线代码。
+- [ ] 4317 是冻结历史 SHA，原页面没有候选版的 `data-preview-metadata` 元数据；不能为显示元数据而改写冻结基线，否则会改变其 SHA。候选 4319 已显示分支、完整 SHA、seed 和构建时间。
+
 ## 2026-08-29 混养结果体验修复（本轮）
 
 - [x] 保留 Domain 内部 `insufficient_data` 安全状态，但新增统一 Compatibility Presentation：完整结论显示适合/调整后可尝试/不建议，部分事实显示“当前可确认”，无可靠事实显示“暂未开放这组混养建议”。
