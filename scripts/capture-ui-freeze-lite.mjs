@@ -10,15 +10,18 @@ const targets = [
   { name: 'baseline', baseUrl: 'http://127.0.0.1:4317', branch: 'detached-visual-baseline', sha: '37a8d4d1' },
   { name: 'candidate', baseUrl: 'http://127.0.0.1:4319', branch: candidateBranch, sha: candidateSha }
 ];
-const viewports = [390, 600, 1280];
+const viewports = [390, 600, 768, 1024, 1280, 1440, 1920];
+const modules = ['aquarium', 'encyclopedia', 'care', 'collection'];
 const route = '/_preview/interactive';
 await mkdir(outputRoot, { recursive: true });
 const records = [];
 for (const target of targets) {
-  for (const width of viewports) {
+  const targetModules = target.name === 'baseline' ? ['aquarium'] : modules;
+  for (const module of targetModules) {
+    for (const width of viewports) {
     const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
-    const url = `${target.baseUrl}${route}?module=aquarium`;
+    const url = `${target.baseUrl}${route}?module=${module}`;
     const pageErrors = [];
     const failedRequests = [];
     page.on('pageerror', error => pageErrors.push(error.message));
@@ -34,11 +37,12 @@ for (const target of targets) {
     if (pageErrors.length || failedRequests.length) {
       throw new Error(`${target.name} ${width}px not ready: ${[...pageErrors, ...failedRequests].join(' | ')}`);
     }
-    const filename = `${target.name}-${width}-preview_interactive.png`;
+    const filename = `${target.name}-${module}-${width}-preview_interactive.png`;
     await page.screenshot({ path: resolve(outputRoot, filename), fullPage: false, animations: 'disabled' });
     const bodyChars = (await page.locator('body').innerText().catch(() => '')).length;
-    records.push({ target: target.name, branch: target.branch, sha: target.sha, width, route: `${route}?module=aquarium`, status: response?.status() ?? null, bodyChars, screenshot: filename });
+    records.push({ target: target.name, branch: target.branch, sha: target.sha, module, width, route: `${route}?module=${module}`, status: response?.status() ?? null, bodyChars, screenshot: filename });
     await browser.close();
+    }
   }
 }
 await writeFile(resolve(outputRoot, 'manifest.json'), JSON.stringify({ schemaVersion: 1, capturedAt: new Date().toISOString(), route, viewports, targets, records }, null, 2) + '\n');
