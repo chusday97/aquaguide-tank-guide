@@ -1,23 +1,24 @@
 # Unified Release Readiness
 
 **Status:** `NOT_READY`
-**Updated:** 2026-08-28
-**Scope:** final gate for a unified branch becoming eligible for a separately authorized RC/main release.
+**Updated:** 2026-08-30
+**Scope:** separates code-source convergence into `main` from the separately authorized production release.
 
 | Gate | Current evidence | Status | What closes it |
 | --- | --- | --- | --- |
-| One delivery line | Local candidate is ahead of remote/PR; current SHA is read from `git rev-parse HEAD`, remote/PR remain `396e71da` until the authorized push. Working tree is being finalized locally. | Pending / local checkpoint | Commit the final local changes, then run `npm run project:status` after the single authorized push; only then require local = remote = PR. |
+| One code source | `main` is the intended canonical code source; PR #142 carries `codex/main-core-foundation-v1` into it. | Pending / source convergence | Push the current candidate once, pass CI, then merge PR #142 with a merge commit. |
 | One project/product/UI/deployment truth map | Project Truth, Product Truth, Feature Catalog, Visual Baseline, Deployment State and history registry exist | Pass | `npm run check:project-truth`. |
-| Local visual baseline | Current candidate UI is frozen provisionally at `02457dd2`; 4317 is detached `37a8d4d1`; fixed 390/600/1280 screenshots are stored in `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2` | Pass / provisional | Do not change visual-owned files before main; run `npm run check:ui-freeze` on every backend change. |
+| Local visual baseline | Current candidate UI remains provisional; 4317 is detached `37a8d4d1`; the latest 35-image matrix is stored outside the repository | Pass / provisional | Visual recovery and the new freeze baseline remain post-convergence release work. |
 | GitHub convergence CI | The synchronized candidate is being evaluated by the current GitHub checks; the unrelated admin-content project is isolated by its ignored build step | Pending / remote checks | Read `gh pr checks 142` for the current synchronized SHA; keep Draft until required checks finish. |
-| Exact Preview SHA parity | The current candidate SHA from `npm run project:status` has not yet been verified against a new exact Preview deployment; earlier Preview evidence is historical | Pending / external Vercel gate | When quota permits, verify `environment=Preview`, exact SHA and `state=success` for the runtime-reported candidate SHA. |
+| Exact Preview SHA parity | The current candidate SHA has no newly verified matching Preview deployment | Pending / production release gate | Verify exact SHA after visual/data work; it is not a reason to deploy production during source convergence. |
 | Supabase schema/RLS parity | Read-only check confirms 26 migrations, 35 RLS tables, 89 policies; production lacks `catalog_releases`, `species_reference_links` and `species.water_type` | Migration required | See [SUPABASE_PARITY_REPORT.md](./SUPABASE_PARITY_REPORT.md); separately authorize migration, then Catalog release. |
 | P0 business migration | User-approved local contract; compatibility, tank-state and water-change deterministic tests passed; temporary 4320 preview passed layout/framing/scene/page matrix | Pass | Keep later authority/UI work in a separately approved unit. |
-| RC/main merge | Not authorized | Blocked by release decision | Separate user release acceptance after all above gates pass. |
+| Source convergence merge | PR #142 is not yet synchronized with the local candidate | Pending / separate authorization | Confirm production freeze, pass CI, then merge PR #142 into `main`. |
+| Production release | `release/production` is anchored to `ed0cf380`; production remains unchanged | Blocked / release gates | Only fast-forward the deployment pointer after Preview, Catalog, Supabase and human acceptance pass. |
 
 ## Release rule
 
-No Preview/Production deployment, CI success, historical PR, or local build alone can change this file to `READY`. The release SHA must be the same one reviewed locally, validated in CI, checked against the deployed environment, and accepted by the user.
+Source convergence may make `main` current while this file remains `NOT_READY`. No Preview/Production deployment, CI success, historical PR, or local build alone can change this file to `READY`. The production SHA must be reviewed locally, validated in CI, checked against the deployed environment, and accepted by the user.
 
 ## Verification commands
 

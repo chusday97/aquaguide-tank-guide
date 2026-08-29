@@ -1,7 +1,15 @@
 # AquaGuide Deployment State
 
 **Status:** Active
-**Updated:** 2026-08-28
+**Updated:** 2026-08-30
+
+## 2026-08-30 source convergence and production freeze (current)
+
+- Vercel production deployment metadata was read in read-only mode. The current production alias points to `main@ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- A local deployment-only branch `release/production` now points to that exact SHA. It is a rollback anchor, not a development line.
+- The intended post-convergence relationship is: `main` = latest code source; `release/production` = last accepted production source. Production must remain unchanged while `NOT_READY` gates are open.
+- Vercel production-branch reconfiguration and Cloudflare branch/publish settings have **not** been changed in this pass. They require separate external authorization and read-back verification before PR #142 can merge safely.
+- No GitHub push, PR merge, Supabase migration, Catalog publication, production deployment or business-data write was performed.
 
 ## 2026-08-28 local convergence preparation (latest)
 

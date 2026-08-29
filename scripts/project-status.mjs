@@ -31,6 +31,9 @@ if (remoteSha && remoteSha !== sha && process.env.CI !== 'true') {
 
 console.log(JSON.stringify({
   canonicalBranch: state.canonicalBranch,
+  sourceConvergenceBranch: state.sourceConvergenceBranch ?? state.releaseCandidate?.branch,
+  productionBranch: state.productionBranch ?? state.releaseBranch,
+  productionAnchor: state.productionAnchor ?? null,
   releaseBranch: state.releaseBranch,
   localBranch: branch,
   sha,

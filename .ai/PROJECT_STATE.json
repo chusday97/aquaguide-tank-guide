@@ -1,8 +1,16 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-08-29",
-  "canonicalBranch": "codex/main-core-foundation-v1",
-  "canonicalRole": "single release-candidate worktree; all implementation changes land here until main release",
+  "updatedAt": "2026-08-30",
+  "canonicalBranch": "main",
+  "canonicalRole": "single code source after source convergence; production is pinned separately until release gates pass",
+  "sourceConvergenceBranch": "codex/main-core-foundation-v1",
+  "productionBranch": "release/production",
+  "productionAnchor": {
+    "sha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
+    "source": "Vercel production deployment metadata",
+    "verifiedAt": "2026-08-30",
+    "role": "rollback and production freeze anchor; no independent development"
+  },
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
   "visualGate": "strict_4317_recovery_in_progress",
   "visualFreeze": {
@@ -31,7 +39,7 @@
   "releaseCandidate": {
     "branch": "codex/main-core-foundation-v1",
     "head": "runtime",
-    "role": "Draft PR #142 release candidate; visual recovery commits are present but visual acceptance is still pending"
+    "role": "source-convergence candidate for PR #142; after merge, retain only as short-lived migration evidence"
   },
   "activePullRequest": {
     "number": 142,

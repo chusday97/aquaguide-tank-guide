@@ -1,6 +1,15 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-30 快速收敛推进（当前）
+
+- [x] 只读确认 Vercel 当前生产部署为 `main@ed0cf38025652db901ee81aa697ca55b1c1584b6`。
+- [x] 建立本地 `release/production` 分支并锚定该生产 SHA；该分支只作为部署/回退指针。
+- [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
+- [ ] Vercel Production Branch 和 Cloudflare 实际生产分支尚未修改或读回确认；这是合并 `main` 前的外部阻塞。
+- [ ] 候选领先远端约 40 个提交，尚未推送 PR #142；推送需单独授权并触发 CI/Preview。
+- [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。
+
 ## 2026-08-29 4317 严格视觉恢复：候选首轮严格对齐（最新）
 
 - [x] 候选预览保留批准的 `?module=aquarium|encyclopedia|care|collection` 单模块切换，未复制 4317 的旧业务逻辑。

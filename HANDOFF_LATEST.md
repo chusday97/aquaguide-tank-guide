@@ -1,6 +1,14 @@
 # AquaGuide Handoff — Latest
 
-更新时间：2026-08-27 +08:00
+更新时间：2026-08-30 +08:00
+
+## 2026-08-30 快速收敛路线（当前）
+
+- 代码事实目标已切换为 `main`；当前候选仍在 `codex/main-core-foundation-v1`，等待一次性同步到 PR #142。
+- 生产部署锚点已只读确认：Vercel 生产 SHA 为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`；本地 `release/production` 已指向同一 SHA，仅作为部署/回退指针。
+- 生产冻结尚未完成：Vercel Production Branch 与 Cloudflare 实际分支设置仍需外部修改/读回确认。完成前禁止合并 `main`。
+- 合并 `main` 后仍保持 `NOT_READY`：视觉新基线、30 种资料、Supabase 第27个 migration、Catalog 发布和最终 Preview 只作为生产门禁。
+- 本轮已更新状态模型和部署说明；尚未推送 GitHub、修改 Vercel/Cloudflare、执行 Supabase 或合并 `main`。
 
 ## 2026-08-29 4317 严格视觉恢复（当前工作）
 

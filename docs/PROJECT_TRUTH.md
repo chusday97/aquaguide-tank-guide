@@ -1,18 +1,20 @@
 # AquaGuide Project Truth
 
 **Status:** Active
-**Updated:** 2026-08-27
+**Updated:** 2026-08-30
 **Purpose:** the one reading map for the current product. This file routes facts; it does not duplicate their full definitions.
 
 ## Current delivery line
 
 | Concern | Current authority | Rule |
 | --- | --- | --- |
-| Daily work branch | `codex/main-core-foundation-v1` | Single release-candidate worktree; visual recovery commits are kept on this branch until release. |
-| GitHub convergence | [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) | The candidate PR is the only active release entry; #141 remains historical evidence. |
+| Daily work branch | `main` (after source convergence) | `main` is the single code source; short-lived branches must start from its latest SHA. |
+| Source-convergence candidate | `codex/main-core-foundation-v1` | PR #142 carries the current local candidate into `main`; it is not a separate product line. |
+| Production branch | `release/production` | Deployment-only pointer anchored to the current production SHA; no independent development or direct commits. |
+| GitHub convergence | [PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) | Merge is a source-convergence action; release status remains `NOT_READY` until production gates pass. |
 | Branch reconciliation | [Branch Convergence Audit](./03-development/BRANCH_CONVERGENCE_AUDIT.md) and [origin/main semantic reconciliation](./03-development/ORIGIN_MAIN_RECONCILIATION.md) | Commit counts alone; a graph difference is not a missing-feature verdict. |
 | Approved visual baseline | `37a8d4d1` and `http://127.0.0.1:4317/_preview/interactive` | 4317 is a detached reference; candidate review runs on 4319. No RC page/CSS may replace this baseline wholesale. |
-| Current state | `.ai/PROJECT_STATE.json` plus `npm run project:status` | Candidate branch is the active worktree; `codex/main-visual-recovery-v1` is historical evidence only. |
+| Current state | `.ai/PROJECT_STATE.json` plus `npm run project:status` | The command reports code source, convergence branch and production pointer separately. |
 | Historical PRs | `.ai/OPEN_PR_REGISTRY.md` | Historical inputs only; never direct merge sources. |
 | Git/PR delivery rules | [Git Delivery Protocol](./03-development/GIT_DELIVERY_PROTOCOL.md) | Informal branch selection or an old PR base |
 | Historical documents | [Historical Evidence Registry](./HISTORICAL_EVIDENCE.md) | Evidence only; never a current decision source. |
@@ -59,4 +61,4 @@ gh pr view 142 --json headRefOid,baseRefName,headRefName,state,isDraft
 gh pr view 141 --json headRefOid,baseRefName,headRefName,state,isDraft
 ```
 
-Expected: the local branch, remote candidate branch and Draft PR #142 identify the same SHA; an empty `git status` means no unrecorded local state.
+Expected before source convergence: the local candidate, remote candidate and PR #142 identify the same SHA. After convergence: local/remote `main` identify the merged SHA, while `release/production` remains pinned to the last accepted production SHA until release gates pass.
