@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed the local 4319 candidate preview lifecycle: the worktree dependency link now remains resolvable for Vite reload/HMR instead of being removed after startup, preventing the Tailwind plugin error overlay that appeared as garbled technical output. Verified UTF-8 content, candidate metadata, and a clean reload in the existing browser tab.
+
 - Fixed an Aquarium empty-state React Hook order regression that caused the page to enter the error boundary after creating the first tank. The factual-flow browser gate now follows the real species-selection path and proves incomplete planning is wishlist-only, does not call livestock APIs, and leaves the tank unchanged before a separate reality-record action.
 
 - Fixed compatibility result presentation so internal `insufficient_data` stays a safety state while users see confirmed facts or an unavailable fallback; unreviewed candidates stay out of automatic recommendations, and Aquarium planning saves only to the existing wishlist.
