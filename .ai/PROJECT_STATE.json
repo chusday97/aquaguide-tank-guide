@@ -5,6 +5,7 @@
   "canonicalRole": "single code source after source convergence; production is pinned separately until release gates pass",
   "sourceConvergenceBranch": "codex/main-core-foundation-v1",
   "productionBranch": "release/production",
+  "productionDeploymentFrozen": false,
   "productionAnchor": {
     "sha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
     "source": "Vercel production deployment metadata",

@@ -22,6 +22,23 @@ if (existsSync('.git/refs/remotes/origin/' + remoteTrackedBranch)) {
   }
 }
 
+const resolveSha = (ref) => {
+  try {
+    return git(['rev-parse', '--verify', '--quiet', ref]);
+  } catch {
+    return null;
+  }
+};
+
+const productionBranch = state.productionBranch ?? state.releaseBranch;
+const productionAnchorSha = state.productionAnchor?.sha ?? null;
+const productionPointerSha = productionBranch
+  ? resolveSha(productionBranch) ?? resolveSha(`origin/${productionBranch}`)
+  : null;
+const productionPointerSynchronized = Boolean(
+  productionPointerSha && productionAnchorSha && productionPointerSha === productionAnchorSha,
+);
+
 if (!allowedBranches.has(branch) && process.env.CI !== 'true') {
   throw new Error(`Run project:status from ${state.canonicalBranch} or ${state.releaseCandidate?.branch}; current branch is ${branch}.`);
 }
@@ -32,8 +49,11 @@ if (remoteSha && remoteSha !== sha && process.env.CI !== 'true') {
 console.log(JSON.stringify({
   canonicalBranch: state.canonicalBranch,
   sourceConvergenceBranch: state.sourceConvergenceBranch ?? state.releaseCandidate?.branch,
-  productionBranch: state.productionBranch ?? state.releaseBranch,
+  productionBranch,
   productionAnchor: state.productionAnchor ?? null,
+  productionPointerSha,
+  productionPointerSynchronized,
+  productionDeploymentFrozen: state.productionDeploymentFrozen ?? false,
   releaseBranch: state.releaseBranch,
   localBranch: branch,
   sha,

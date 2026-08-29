@@ -9,6 +9,7 @@
 - 生产冻结尚未完成：Vercel Production Branch 与 Cloudflare 实际分支设置仍需外部修改/读回确认。完成前禁止合并 `main`。
 - 合并 `main` 后仍保持 `NOT_READY`：视觉新基线、30 种资料、Supabase 第27个 migration、Catalog 发布和最终 Preview 只作为生产门禁。
 - 本轮已更新状态模型和部署说明，并已一次性推送候选到 PR #142；尚未修改 Vercel/Cloudflare、执行 Supabase 或合并 `main`。GitHub/CI 只读回读待网络恢复。
+- `npm run project:status` 现在会动态输出 `productionPointerSha`、`productionPointerSynchronized` 和 `productionDeploymentFrozen`；当前回退锚点已对齐，但生产平台分支设置仍是 `productionDeploymentFrozen=false`，不能据此宣称已冻结。
 
 ## 2026-08-29 4317 严格视觉恢复（当前工作）
 

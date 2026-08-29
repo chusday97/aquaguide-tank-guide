@@ -4,6 +4,8 @@
 
 - Prepared the fast source-convergence route: read-only recorded the Vercel production anchor at `ed0cf380`, created local deployment-only `release/production`, and separated `main` code truth from production release readiness. No provider settings, GitHub refs, Supabase schema, Catalog data or production deployment were changed.
 
+- Added runtime production-pointer evidence to `project:status`: it now resolves the deployment-only branch SHA, compares it with the recorded production anchor, and reports whether provider freeze has actually been verified. The local pointer is synchronized; Vercel/Cloudflare settings remain unfrozen until separately read back.
+
 - Restored the candidate's preview and formal immersive page geometry to the 4317 visual baseline: Aquarium uses the original 72dvh/720px stage, scene stages use 500/520px, core roots no longer add a second workspace inset, and the explicit Geist/PingFang fallback stack is preserved. Module-switch preview, Domain/Service logic, data, and public contracts are unchanged. Full matrix capture and human acceptance remain pending.
 
 - Rebuilt the candidate production preview after the geometry restoration; 4319 now serves commit `a46a4c9c8118b3c34e8eb0c2aa979ae9c6a9fb4d` and exposes the matching branch/SHA/seed metadata. No remote branch or PR was updated.
