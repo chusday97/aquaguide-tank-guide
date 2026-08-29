@@ -7,7 +7,7 @@
 - [x] Aquarium 预览舞台恢复 4317 的 `72dvh/720px` 高度；互动图鉴场景恢复 500px，互动养护场景恢复 520px，移除过渡版 clamp 放大。
 - [x] 移除 Aquarium、Encyclopedia、Care、CollectionHub 和 Collection 根节点额外的 workspace 内边距，正式图鉴内容起点从约 x=332 回到 4317 的 x=312。
 - [x] 增加独立字体 token，绕过 Tailwind 主题覆盖，候选运行时字体栈与 4317 一致：`Geist Variable → PingFang SC → Microsoft YaHei`。
-- [x] 本地 `npm run build`、`test:desktop-layout`、`test:aquarium-stage-layout`、`test:three-stage-framing` 通过；4319 production preview 已用提交 `a46a4c9c8118b3c34e8eb0c2aa979ae9c6a9fb4d` 构建重启，页面元数据显示同一完整 SHA。
+- [x] 本地 `npm run build`、`test:desktop-layout`、`test:aquarium-stage-layout`、`test:three-stage-framing` 通过；4319 production preview 已用提交 `652beaecc9a4a4511243b46c3e8b8e81a0dc47ce` 构建重启，页面元数据显示同一完整 SHA。
 - [ ] 4317 固定矩阵脚本在重复抓取至 1440px 时旧进程中断，完整新矩阵尚未生成；已有历史矩阵仅作参考，不宣称本轮视觉验收通过。
 - [ ] 用户人工确认、UI Freeze 新基线、一次性推送 PR #142、Preview SHA parity、生产 migration、Catalog 发布和 main 合并仍未执行。
 
