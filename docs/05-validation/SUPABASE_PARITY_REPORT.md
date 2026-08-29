@@ -5,7 +5,7 @@
 报告前半部分只记录通过 Supabase 管理接口执行的生产只读检查；后附本地 Supabase 重放证据。整个过程中没有执行生产 SQL migration、Catalog 上传或生产业务数据写入。
 
 当前本地 Catalog Snapshot（含红绿灯、宝莲灯显式淡水事实）checksum 为
-`545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`；更早的 checksum
+`6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`；`545ac...` 等更早的 checksum
 仅作历史证据，不代表当前快照。
 
 ## 结论
@@ -79,7 +79,7 @@
 - 完整重放 26+1 migration 成功；`supabase db lint --local --schema public --level error --fail-on error` 返回 0 条错误。
 - `supabase test db --local` 通过 19/19 个 Catalog/RLS pgTAP 断言，覆盖匿名读取、匿名/普通用户写入拒绝、管理员草稿写入和已发布记录不可变性。
 - 本地 PostgREST 匿名 `GET /rest/v1/catalog_releases` 返回已发布记录（HTTP 200）；匿名 `POST` 被权限拒绝（HTTP 401，PostgreSQL `42501`）。这是本地权限证据，不是生产写入验证。
-- Catalog 快照为本地 486 个物种、13 个证据来源，当前 checksum 为 `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`；本地/云端生产 Catalog checksum 仍为 `UNVERIFIED`，因为生产表尚不存在。
+- Catalog 快照为本地 486 个物种、13 个证据来源，当前 checksum 为 `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`；本地/云端生产 Catalog checksum 仍为 `UNVERIFIED`，因为生产表尚不存在。
 - 生产 `catalog_releases`、`species_reference_links` 和 `species.water_type` 仍未部署；第 27 个 migration、Catalog 发布和 `main` 合并均未执行。
 
 ### 本地门禁命令
