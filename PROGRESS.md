@@ -1,6 +1,14 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-29 4317 严格视觉恢复：运行时修复（最新）
+
+- [x] 修复互动预览 Aquarium 容器没有明确高度的问题；候选 4319 的 Canvas 现在按工作区高度布局，不再退化为顶部条带或异常空白。
+- [x] 恢复候选全局字体变量与 4317 的编辑型字体层级，避免 Georgia/Helvetica 替换确认过的 Noto Serif/Geist 组合。
+- [x] 截图门禁等待预览 ready marker、字体和 Canvas 尺寸，并记录页面错误与失败请求；不再用过早 Loading 截图代替视觉证据。
+- [x] 本地 production build preview（4320 临时验证端口）确认 WebGL context 正常、鱼缸舞台和生物真实可见；提交：`9f31c7af`。
+- [ ] 4319 需要以当前提交重新构建并运行 production preview；四模块与正式路由仍需按 390/600/768/1024/1280/1440/1920px 完成截图和人工验收。
+
 ## 2026-08-29 网页端布局统一（本轮）
 
 - [x] 建立 `workspace--immersive`、`workspace--content`、`workspace--standalone` 三类桌面布局契约，并让核心正式路由声明 `data-workspace-layout`。

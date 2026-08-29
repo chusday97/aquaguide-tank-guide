@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed the candidate preview runtime for strict visual comparison: Aquarium preview now has an explicit workspace height, the confirmed 4317 typography tokens are restored, and UI freeze capture waits for the preview marker, fonts, Canvas dimensions, and failed-request/page-error checks. Production preview verified WebGL rendering at commit `9f31c7af`; no domain, data, Supabase, or production state changed.
+
 - Added the desktop workspace layout contract for immersive, content, and standalone pages; separated Care scene layout from browse columns, made scene heights responsive to available workspace space, and converted the interactive preview into a URL-addressable single-module showroom. This is a layout-only change; domain, data, assets, and write behavior are unchanged. Browser visual acceptance and the new UI freeze baseline remain pending.
 
 - Fixed the local 4319 candidate preview lifecycle: the worktree dependency link now remains resolvable for Vite reload/HMR instead of being removed after startup, preventing the Tailwind plugin error overlay that appeared as garbled technical output. Verified UTF-8 content, candidate metadata, and a clean reload in the existing browser tab.

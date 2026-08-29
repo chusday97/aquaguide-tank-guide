@@ -385,3 +385,11 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 生产缺少 `catalog_releases`、`species_reference_links`、`species.water_type`，故 parity 为 `MIGRATION_REQUIRED`，不是 `EQUIVALENT`；未执行 SQL、Catalog 发布或业务写入。
 - 下一步只做逐条 schema/RLS/RPC 语义比对、干净 PostgreSQL 回放和统一回归。只有用户另行授权才执行第 27 个 migration、Catalog 发布或合并 main。
 - 验证：`npm run check:ui-freeze` 通过；4317/4319 HTTP 200；截图 manifest 记录两套 SHA。
+## 2026-08-29 4317 严格视觉恢复：最新交接
+
+- 当前候选分支：`codex/main-core-foundation-v1`，最新本地提交 `9f31c7af`；未推送 GitHub、未执行 Supabase、未合并 main。
+- 4317 继续是 detached `37a8d4d1` 视觉母版；候选 4319 应运行当前提交的 production preview，不能用 Vite 开发态的白色 Canvas 作为验收证据。
+- 已修复：Aquarium 预览工作区的明确高度、4317 字体变量/标题层级、截图 ready/font/Canvas 等待和 4xx/pageerror 失败门禁。
+- 已验证：候选 production build 在临时 4320 端口渲染 WebGL 鱼缸、透明生物和操作层；无页面错误。4319 需重启到新 build 后再给用户验收。
+- 当前卡点：四模块严格对照 4317 的截图、网页端断点矩阵和人工视觉验收尚未完成；`check:ui-freeze` 仍只能在视觉确认后更新基线。
+- 下一步：重建并把候选 production preview 绑定到 4319，运行 capture 门禁；按 Aquarium → Encyclopedia → Care → Collection 修复差异，完成后再提交新的 UI freeze 证据。
