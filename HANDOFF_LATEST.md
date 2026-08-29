@@ -2,6 +2,14 @@
 
 更新时间：2026-08-27 +08:00
 
+## 2026-08-29 网页端布局统一（当前）
+
+- 当前工作线：`codex/main-core-foundation-v1`；本轮只修改桌面布局壳层、正式页面根布局和互动预览，不修改 Domain、Catalog、Supabase、素材或业务写入。
+- 已建立三类布局契约：沉浸工作区、内容工具页、独立页面；Care Scene 不再进入 Browse 双栏网格，互动预览改为 URL 模块切换。
+- 已通过：`npm run test:desktop-layout`、`npm run lint`、`npm run build`、`npm run test:aquarium-stage-layout`、`npm run test:three-stage-framing`、`npm run check:project-truth`、`git diff --check`。
+- 当前阻塞：真实截图/人工布局验收尚未完成。`check:ui-freeze` 预期失败，因为本轮已批准解冻布局 Owner 文件；不得把它描述成业务回退。
+- 下一步：按 390/600/768/1024/1280/1440/1920px 验收正式路由与预览模块，修复实际越界/空白，再由用户确认并重录 UI freeze；在此之前不推送、不做生产 migration、不合并 `main`。
+
 ## 2026-08-27 当前执行状态（阶段 2 视觉恢复）
 
 - 唯一修改工作线：`codex/main-core-foundation-v1`；`codex/main-visual-recovery-v1` 仅作历史证据。

@@ -330,7 +330,7 @@ export default function CollectionHub() {
   const activeMeta = moduleMeta[activeModule];
 
   return (
-    <div className="collection-hub page-frame-wide mx-auto flex w-full min-w-0 flex-col gap-4 pb-24">
+    <div data-workspace-layout="immersive" className="collection-hub workspace--immersive page-frame-wide mx-auto flex w-full min-w-0 flex-col gap-4 pb-24">
       <header className="px-1 py-1">
         <div className="flex items-center gap-2 text-[11px] font-black tracking-[0.14em] text-emerald-700 uppercase"><BookHeart className="h-4 w-4" />{isEn ? 'Aqua Collection' : '自然水族册'}</div>
         <h1 className="mt-2 text-[30px] font-bold text-ink md:text-[42px]">{isEn ? 'My Collection' : '我的水族册'}</h1>
@@ -346,7 +346,7 @@ export default function CollectionHub() {
         <span aria-hidden="true" className="absolute bottom-[6%] left-[9%] h-[16%] w-3 origin-bottom rotate-6 rounded-t-full bg-emerald-800/55" />
         <span aria-hidden="true" className="absolute bottom-[5%] right-[6%] h-[26%] w-4 origin-bottom rotate-12 rounded-t-full bg-emerald-700/60" />
 
-        <div className="relative z-20 grid grid-cols-2 gap-3 p-4 lg:hidden">
+        <div className="collection-compact-nav relative z-20 grid grid-cols-2 gap-3 p-4 lg:hidden">
           {moduleOrder.map(module => {
             const meta = moduleMeta[module];
             const fish = fishData[marineVisualIndexes[module]] || fishData[0];
@@ -369,7 +369,7 @@ export default function CollectionHub() {
           })}
         </div>
 
-        <div className="hidden lg:block">
+        <div className="collection-desktop-nav hidden lg:block">
           {moduleOrder.map(module => {
             const meta = moduleMeta[module];
             const fish = fishData[marineVisualIndexes[module]] || fishData[0];

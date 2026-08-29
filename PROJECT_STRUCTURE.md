@@ -128,6 +128,7 @@
 - `src/components/common/SurfaceHeader.tsx`：统一详情/任务表面的标题、返回、关闭与 44px 图标操作。
 - `src/components/ThreeAquarium.tsx`：3D 鱼缸。
 - `src/pages/InteractivePreview.tsx`：用户确认的内部互动视觉预览入口，不写入业务数据。
+- `scripts/test-desktop-layout-contract.mjs`：桌面工作区类别、Care Scene 单列隔离和互动预览模块切换的静态布局门禁。
 - `src/styles/aquarium-stage-layout-v4.css`、`src/styles/immersive-detail-layout-v5.css`：Aquarium 舞台与详情 Rail/Sheet/Blocking 的 canonical 几何样式。
 
 ## 文档与验证

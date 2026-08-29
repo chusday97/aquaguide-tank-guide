@@ -825,7 +825,7 @@ function NotFoundPage() {
   const { i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   return (
-    <section className="mx-auto flex min-h-[70dvh] w-full max-w-[720px] items-center justify-center px-4 py-10 text-center">
+    <section className="workspace--standalone mx-auto flex min-h-[70dvh] w-full max-w-[720px] items-center justify-center px-4 py-10 text-center">
       <div className="w-full rounded-[28px] border border-white/80 bg-white p-7 shadow-sm">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-emerald-50 text-emerald-700">
           <SearchIcon className="h-6 w-6" />

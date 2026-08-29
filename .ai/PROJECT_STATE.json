@@ -1,16 +1,16 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-08-28",
+  "updatedAt": "2026-08-29",
   "canonicalBranch": "codex/main-core-foundation-v1",
   "canonicalRole": "single release-candidate worktree; all implementation changes land here until main release",
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
-  "visualGate": "frozen_provisional",
+  "visualGate": "desktop_adaptation_in_progress",
   "visualFreeze": {
     "baselineCommit": "02457dd2ded7042cc67c55acfce3c9c4f238aa42",
     "evidenceDir": "/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2",
     "viewports": [390, 600, 1280],
     "routes": ["/_preview/interactive"],
-    "policy": "No visual-owned file changes until a separately reviewed post-main baseline refresh"
+    "policy": "Desktop layout adaptation may change only the approved workspace shell, page roots, responsive geometry and interactive preview. Backend, domain, service, repository, migration, assets, content and task behavior remain frozen. A new visual baseline is required after human acceptance."
   },
   "releaseBranch": "main",
   "canonicalBase": {

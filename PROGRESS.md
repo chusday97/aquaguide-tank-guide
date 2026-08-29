@@ -1,6 +1,16 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-29 网页端布局统一（本轮）
+
+- [x] 建立 `workspace--immersive`、`workspace--content`、`workspace--standalone` 三类桌面布局契约，并让核心正式路由声明 `data-workspace-layout`。
+- [x] 修复 Care Scene 被 Browse 双栏网格挤到右侧的问题；Scene 使用单列连续舞台，Browse 才使用双栏。
+- [x] 互动场景高度按可用视口计算；水族册节点在工作区不足时切换紧凑入口，避免网页端重叠。
+- [x] `/_preview/interactive` 改为 `?module=aquarium|encyclopedia|care|collection` 单模块切换展厅，保留分支、完整 SHA、seed 和构建时间。
+- [x] 覆盖搜索、识别、设置、收藏子页、时间线、纪念详情、Welcome、Login、Shared Report、Admin 和 404 的统一布局类别。
+- [x] `npm run test:desktop-layout`、`npm run lint`、`npm run build`、Aquarium 舞台契约和 Three framing 契约通过；`check:project-truth` 与 `git diff --check` 通过。
+- [ ] 真实浏览器截图验收尚未完成；当前 `check:ui-freeze` 会报告本轮批准的布局 Owner 变化，需完成 390/600/768/1024/1280/1440/1920px 验收后重录新基线。
+
 ## 2026-08-29 4319 本地预览恢复（本轮最新）
 
 - [x] 复现用户所称“乱码”：实际是 Vite 错误遮罩，`@tailwindcss/vite` 在 reload/HMR 时无法解析候选 worktree 的依赖；页面响应本身为 UTF-8。

@@ -147,7 +147,8 @@
     "test:golden-path-gp003-ui": "node scripts/verify-golden-path-returning-user-daily-check.mjs",
     "test:golden-path-gp004-ui": "node scripts/verify-golden-path-abnormal-care.mjs",
     "test:aquarium-stage-layout": "node --import tsx scripts/test-aquarium-stage-layout-contract.ts",
-    "test:three-stage-framing": "node --import tsx scripts/test-three-stage-framing.ts"
+    "test:three-stage-framing": "node --import tsx scripts/test-three-stage-framing.ts",
+    "test:desktop-layout": "node scripts/test-desktop-layout-contract.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

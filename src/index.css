@@ -121,6 +121,42 @@ body,
   transform: none !important;
 }
 
+/* Shared desktop workspace contract. Page roots opt into one of these modes
+   so route-specific content cannot silently invent a second shell. */
+.workspace--immersive,
+.workspace--content,
+.workspace--standalone {
+  --workspace-inline-padding: clamp(12px, 1.6vw, 24px);
+  --workspace-gap: clamp(12px, 1.5vw, 20px);
+  width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.workspace--immersive {
+  max-width: 1440px;
+}
+
+.workspace--content {
+  max-width: 1180px;
+}
+
+.workspace--standalone {
+  max-width: none;
+}
+
+@media (min-width: 768px) {
+  .workspace--immersive,
+  .workspace--content,
+  .workspace--standalone {
+    padding-inline: var(--workspace-inline-padding);
+  }
+
+  .desktop-canvas {
+    container: desktop-canvas / inline-size;
+  }
+}
+
 .care-workspace-shell {
   container: care-workspace / inline-size;
 }
@@ -344,30 +380,66 @@ body,
   min-width: 0;
 }
 
+/* Scene mode is one continuous task surface. The browse-only two-column grid
+   must never capture its scene, toolbar, or dock. */
+.care-workspace-shell--scene .care-workspace-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--workspace-gap, 16px);
+}
+
+.care-workspace-shell--scene .interactive-care-scene {
+  width: 100%;
+}
+
+.care-workspace-shell--scene .interactive-care-stage {
+  min-height: clamp(560px, calc(100dvh - 190px), 780px);
+}
+
+@container desktop-canvas (max-width: 1099px) {
+  .collection-desktop-nav { display: none !important; }
+  .collection-compact-nav { display: grid !important; }
+}
+
+@container desktop-canvas (min-width: 1100px) {
+  .collection-compact-nav { display: none !important; }
+  .collection-desktop-nav { display: block !important; }
+}
+
+@media (min-width: 768px) {
+  .collection-hub > section[aria-label="互动水族册"] {
+    min-height: clamp(620px, calc(100dvh - 170px), 840px) !important;
+  }
+
+  .workspace--immersive .interactive-tank-shell {
+    min-height: 0;
+  }
+}
+
 @container care-workspace (min-width: 760px) {
-  .care-workspace-grid {
+  .care-workspace-shell:not(.care-workspace-shell--scene) .care-workspace-grid {
     display: grid;
     grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
     gap: 16px;
   }
 
-  .care-left-panel {
+  .care-workspace-shell:not(.care-workspace-shell--scene) .care-left-panel {
     grid-column: 1;
   }
 
-  #care-recommendations {
+  .care-workspace-shell:not(.care-workspace-shell--scene) #care-recommendations {
     grid-row: 1;
   }
 
-  #care-search {
+  .care-workspace-shell:not(.care-workspace-shell--scene) #care-search {
     grid-row: 2;
   }
 
-  #care-categories {
+  .care-workspace-shell:not(.care-workspace-shell--scene) #care-categories {
     grid-row: 3;
   }
 
-  .care-results-panel {
+  .care-workspace-shell:not(.care-workspace-shell--scene) .care-results-panel {
     grid-column: 2;
     grid-row: 1 / span 3;
   }
@@ -1645,7 +1717,7 @@ select {
 
 .interactive-tank-stage {
   position: relative;
-  min-height: 500px;
+  min-height: clamp(500px, calc(100dvh - 250px), 760px);
   overflow: hidden;
   background:
     radial-gradient(circle at 25% 11%, rgb(255 255 255 / 0.78), transparent 22%),
@@ -1900,7 +1972,7 @@ select {
   font-weight: 800;
 }
 
-.interactive-care-stage { min-height: 520px; }
+.interactive-care-stage { min-height: clamp(520px, calc(100dvh - 250px), 760px); }
 .interactive-care-stage::after {
   position: absolute;
   z-index: 3;
