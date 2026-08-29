@@ -7,7 +7,7 @@
 - [x] 建立本地 `release/production` 分支并锚定该生产 SHA；该分支只作为部署/回退指针。
 - [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
 - [ ] Vercel Production Branch 和 Cloudflare 实际生产分支尚未修改或读回确认；这是合并 `main` 前的外部阻塞。
-- [x] 候选已推送到 PR #142；当前本地与远端候选 SHA 由 `npm run project:status` 运行时核对，GitHub API/CI 详情因网络不可用暂未回读。
+- [x] 上一同步点曾推送到 PR #142；当前 HEAD 是否同步由 `npm run project:status` 运行时核对。当前本地在最新字体修复提交后领先远端 1 个提交，尚未推送。
 - [x] `npm run project:status` 同时输出 `productionPointerSha=ed0cf380...`、`productionPointerSynchronized=true`，并明确 `productionDeploymentFrozen=false`，避免把本地回退锚点误当成已冻结生产设置。
 - [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。
 
@@ -641,3 +641,10 @@
 - [x] 确认生产尚不存在 `catalog_releases`、`species_reference_links` 或 `species.water_type`，当前 parity 为 `MIGRATION_REQUIRED`；未执行任何 migration、Catalog 发布或业务写入。
 - [x] 新增 `docs/05-validation/SUPABASE_PARITY_REPORT.md` 并同步 Release Readiness、PROJECT_STATE、CHANGELOG。
 - [ ] 逐条比对 RLS/RPC/外键/索引语义，并在取得独立授权后决定是否执行第 27 个 Catalog migration；在此之前不得合并 main。
+
+## 2026-08-30 可见进展优先：候选运行时稳定化
+
+- [x] 候选预览移除外部 Google Noto Serif SC 请求，继续使用仓库既有/系统字体回退；未改 4317 母版、业务逻辑或数据契约。
+- [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-36a425a6`（提交前 SHA 证据）。
+- [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
+- [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。

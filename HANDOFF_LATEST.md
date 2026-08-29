@@ -413,3 +413,10 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 已验证：候选 production build 在 4319 渲染 WebGL 鱼缸、透明生物和操作层；无页面错误。最新四模块 35 张固定截图位于 `/private/tmp/aquaguide-visual-matrix/ui-parity-126f99b8`，manifest 全部 HTTP 200。
 - 当前卡点：四模块严格对照 4317 的截图、网页端断点矩阵和人工视觉验收尚未完成；`check:ui-freeze` 仍只能在视觉确认后更新基线。
 - 下一步：按 Aquarium → Encyclopedia → Care → Collection 完成与 4317 的截图和人工验收；通过后再提交新的 UI freeze 证据。
+
+## 2026-08-30 候选预览运行时证据
+
+- 候选 4319 已移除外部 Google 字体导入，避免网络请求失败造成字体 403；字体仍按本地/系统回退栈渲染。
+- 候选四模块截图矩阵已重新生成并绑定当前构建 checkpoint：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`，28 张、7 个视口、全部 HTTP 200，无 page error 或 failed request。
+- 4317 仍为 detached `37a8d4d1` 视觉母版；其外部字体请求在当前网络环境可能失败，因此基线截图工具不能把该网络失败伪装成候选通过。候选无此失败。
+- 当前候选 CSS 修复已形成提交，4319 已重建并重启，页面元数据与当前 SHA 一致；独立 Critic 已完成复验。本地尚未推送，故 `project:status` 暂显示 ahead 1。

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Removed the candidate preview's external Google Noto Serif SC import so visual checks do not depend on a network font request; the existing local/system fallback stack remains unchanged. Rebuilt 4319 and captured a candidate-only 28-image matrix for the current checkpoint across four modules and seven viewports with HTTP 200 and no runtime request failures. The frozen 4317 baseline remains unchanged and human visual acceptance is still pending.
+
 - Prepared the fast source-convergence route: read-only recorded the Vercel production anchor at `ed0cf380`, created local deployment-only `release/production`, and separated `main` code truth from production release readiness. No provider settings, GitHub refs, Supabase schema, Catalog data or production deployment were changed.
 
 - Added runtime production-pointer evidence to `project:status`: it now resolves the deployment-only branch SHA, compares it with the recorded production anchor, and reports whether provider freeze has actually been verified. The local pointer is synchronized; Vercel/Cloudflare settings remain unfrozen until separately read back.
