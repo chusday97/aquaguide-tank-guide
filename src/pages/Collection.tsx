@@ -274,7 +274,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
   };
 
   return (
-    <div className="collection-workspace workspace--content page-frame mx-auto flex w-full min-w-0 max-w-[1180px] flex-col gap-4 pb-24">
+    <div className="collection-workspace page-frame mx-auto flex w-full min-w-0 max-w-[1180px] flex-col gap-4 pb-24">
       <header className="overflow-hidden rounded-[28px] border border-white/80 bg-[linear-gradient(135deg,#ffffff_0%,#edf7f1_58%,#dfeee8_100%)] p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>

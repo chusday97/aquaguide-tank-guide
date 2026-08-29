@@ -1,6 +1,16 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-29 4317 严格视觉恢复：候选首轮严格对齐（最新）
+
+- [x] 候选预览保留批准的 `?module=aquarium|encyclopedia|care|collection` 单模块切换，未复制 4317 的旧业务逻辑。
+- [x] Aquarium 预览舞台恢复 4317 的 `72dvh/720px` 高度；互动图鉴场景恢复 500px，互动养护场景恢复 520px，移除过渡版 clamp 放大。
+- [x] 移除 Aquarium、Encyclopedia、Care、CollectionHub 和 Collection 根节点额外的 workspace 内边距，正式图鉴内容起点从约 x=332 回到 4317 的 x=312。
+- [x] 增加独立字体 token，绕过 Tailwind 主题覆盖，候选运行时字体栈与 4317 一致：`Geist Variable → PingFang SC → Microsoft YaHei`。
+- [x] 本地 `npm run build`、`test:desktop-layout`、`test:aquarium-stage-layout`、`test:three-stage-framing` 通过；4319 production preview 已用当前候选构建重启，元数据显示完整 SHA `f837cfa2`。
+- [ ] 4317 固定矩阵脚本在重复抓取至 1440px 时旧进程中断，完整新矩阵尚未生成；已有历史矩阵仅作参考，不宣称本轮视觉验收通过。
+- [ ] 用户人工确认、UI Freeze 新基线、一次性推送 PR #142、Preview SHA parity、生产 migration、Catalog 发布和 main 合并仍未执行。
+
 ## 2026-08-29 4317 严格视觉恢复：运行时修复（最新）
 
 - [x] 修复互动预览 Aquarium 容器没有明确高度的问题；候选 4319 的 Canvas 现在按工作区高度布局，不再退化为顶部条带或异常空白。

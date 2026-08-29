@@ -32,6 +32,13 @@
   --radius-sm: 2px;
 }
 
+/* Keep the visual baseline's explicit fallback stack. Tailwind's inline theme
+   later redefines --font-sans for utility classes, so the app shell uses this
+   dedicated token for stable cross-platform rendering. */
+:root {
+  --aquaguide-font-sans: 'Geist Variable', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
 html,
 body,
 #root {
@@ -49,7 +56,7 @@ body,
 /* Keep the confirmed 4317 editorial type hierarchy while the workspace shell
    adapts to desktop widths. */
 .aquaguide-app {
-  font-family: var(--font-sans);
+  font-family: var(--aquaguide-font-sans);
 }
 
 .aquaguide-app h1,
@@ -65,7 +72,7 @@ body,
 }
 
 .aquaguide-app :is(button, input, textarea, select) {
-  font-family: var(--font-sans);
+  font-family: var(--aquaguide-font-sans);
 }
 
 .aquaguide-app .latin,
@@ -425,7 +432,7 @@ body,
 }
 
 .care-workspace-shell--scene .interactive-care-stage {
-  min-height: clamp(560px, calc(100dvh - 190px), 780px);
+  min-height: 520px;
 }
 
 @container desktop-canvas (max-width: 1099px) {
@@ -914,7 +921,7 @@ body {
   max-width: 100vw;
   background-color: #dfe8e5;
   color: var(--color-ink);
-  font-family: var(--font-sans);
+  font-family: var(--aquaguide-font-sans);
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
   scrollbar-width: none;
@@ -1749,7 +1756,7 @@ select {
 
 .interactive-tank-stage {
   position: relative;
-  min-height: clamp(500px, calc(100dvh - 250px), 760px);
+  min-height: 500px;
   overflow: hidden;
   background:
     radial-gradient(circle at 25% 11%, rgb(255 255 255 / 0.78), transparent 22%),
@@ -2004,7 +2011,7 @@ select {
   font-weight: 800;
 }
 
-.interactive-care-stage { min-height: clamp(520px, calc(100dvh - 250px), 760px); }
+.interactive-care-stage { min-height: 520px; }
 .interactive-care-stage::after {
   position: absolute;
   z-index: 3;

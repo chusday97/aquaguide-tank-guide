@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Restored the candidate's preview and formal immersive page geometry to the 4317 visual baseline: Aquarium uses the original 72dvh/720px stage, scene stages use 500/520px, core roots no longer add a second workspace inset, and the explicit Geist/PingFang fallback stack is preserved. Module-switch preview, Domain/Service logic, data, and public contracts are unchanged. Full matrix capture and human acceptance remain pending.
+
 - Fixed the candidate preview runtime for strict visual comparison: Aquarium preview now has an explicit workspace height, the confirmed 4317 typography tokens are restored, and UI freeze capture waits for the preview marker, fonts, Canvas dimensions, and failed-request/page-error checks. Production preview verified WebGL rendering at commit `9f31c7af`; no domain, data, Supabase, or production state changed.
 
 - Added the desktop workspace layout contract for immersive, content, and standalone pages; separated Care scene layout from browse columns, made scene heights responsive to available workspace space, and converted the interactive preview into a URL-addressable single-module showroom. This is a layout-only change; domain, data, assets, and write behavior are unchanged. Browser visual acceptance and the new UI freeze baseline remain pending.

@@ -1903,7 +1903,7 @@ export default function CareEncyclopedia() {
   };
 
   return (
-    <div data-workspace-layout={carePresentationMode === 'scene' ? 'immersive' : 'content'} className={`page-frame-wide workspace--${carePresentationMode === 'scene' ? 'immersive' : 'content'} care-workspace-shell ${carePresentationMode === 'scene' ? 'care-workspace-shell--scene' : ''} min-w-0 overflow-x-hidden`}>
+    <div data-workspace-layout={carePresentationMode === 'scene' ? 'immersive' : 'content'} className={`page-frame-wide care-workspace-shell ${carePresentationMode === 'scene' ? 'care-workspace-shell--scene' : ''} min-w-0 overflow-x-hidden`}>
       <div className="care-workspace-grid flex min-w-0 flex-col gap-3 pb-4 md:pb-8">
       <section className="px-1 py-1 md:hidden">
         <div className="flex items-start justify-between gap-3">

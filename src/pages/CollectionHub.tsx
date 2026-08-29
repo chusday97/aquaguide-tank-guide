@@ -330,7 +330,7 @@ export default function CollectionHub() {
   const activeMeta = moduleMeta[activeModule];
 
   return (
-    <div data-workspace-layout="immersive" className="collection-hub workspace--immersive page-frame-wide mx-auto flex w-full min-w-0 flex-col gap-4 pb-24">
+    <div data-workspace-layout="immersive" className="collection-hub page-frame-wide mx-auto flex w-full min-w-0 flex-col gap-4 pb-24">
       <header className="px-1 py-1">
         <div className="flex items-center gap-2 text-[11px] font-black tracking-[0.14em] text-emerald-700 uppercase"><BookHeart className="h-4 w-4" />{isEn ? 'Aqua Collection' : '自然水族册'}</div>
         <h1 className="mt-2 text-[30px] font-bold text-ink md:text-[42px]">{isEn ? 'My Collection' : '我的水族册'}</h1>

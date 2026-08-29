@@ -2,6 +2,17 @@
 
 更新时间：2026-08-27 +08:00
 
+## 2026-08-29 4317 严格视觉恢复（当前工作）
+
+- 当前分支：`codex/main-core-foundation-v1`；本轮代码仍未推送。
+- 4317：detached `37a8d4d1` 视觉母版；4319：当前候选 production preview。
+- 已完成：预览 Aquarium 高度恢复为 4317 的 `72dvh/720px`；图鉴/养护场景恢复 500/520px；正式核心页面移除额外 workspace 内边距；字体栈恢复为母版显式 fallback。
+- 保留：候选现有 Domain、Service、Repository、Catalog、API 和模块切换预览；未复制旧页面业务逻辑，未修改数据库或公共接口。
+- 验证：build、桌面布局、Aquarium stage、Three framing 通过；4319 HTTP 200，当前页面显示分支、完整 SHA、seed 和构建时间。
+- 当前卡点：完整双预览矩阵需重新生成；`check:ui-freeze` 仍会报告候选已有视觉 Owner 变化，不能据此宣称通过；用户人工验收尚未完成。
+- 下一步：先完成稳定截图矩阵与正式路由检查，按差异清单逐模块修复；随后更新 UI Freeze，提交 Critic 复验，再一次性同步 PR #142。
+- 禁止重踩：不要直接替换候选为 4317，不要把旧远端 PR SHA 当作当前代码，不要在视觉门禁前执行生产 migration、Catalog 发布或 main 合并。
+
 ## 2026-08-29 网页端布局统一（当前）
 
 - 当前工作线：`codex/main-core-foundation-v1`；本轮只修改桌面布局壳层、正式页面根布局和互动预览，不修改 Domain、Catalog、Supabase、素材或业务写入。

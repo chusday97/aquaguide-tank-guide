@@ -42,7 +42,7 @@ export default function InteractivePreview() {
   const activeMeta = moduleMeta[module];
 
   return (
-    <main data-workspace-layout="standalone" className="workspace--standalone interactive-preview-shell min-h-[100dvh] bg-[#dfe8e5] px-4 py-5 text-ink md:px-8 md:py-8" data-preview-module={module} data-preview-ready="true">
+    <main data-workspace-layout="standalone" className="interactive-preview-shell min-h-[100dvh] bg-[#dfe8e5] px-4 py-5 text-ink md:px-8 md:py-8" data-preview-module={module} data-preview-ready="true">
       <header className="mx-auto mb-4 flex max-w-[1440px] items-center justify-between gap-4">
         <button type="button" onClick={() => navigate('/aquarium')} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-xs font-black text-emerald-800 shadow-sm"><ArrowLeft className="h-4 w-4" />返回正式鱼缸</button>
         <div data-preview-metadata className="text-right text-[10px] font-black tracking-[0.08em] text-ink/45">
@@ -57,7 +57,7 @@ export default function InteractivePreview() {
       </nav>
       <section className="mx-auto max-w-[1440px]" aria-label={`${activeMeta.label}预览`}>
         <div className="mb-3 flex items-center justify-between gap-3 px-1"><div><p className="text-[11px] font-black tracking-[0.1em] text-emerald-700">{activeMeta.eyebrow}</p><h1 className="font-serif text-3xl font-black">{activeMeta.title}</h1></div><button type="button" onClick={() => navigate(module === 'aquarium' ? '/aquarium' : module === 'encyclopedia' ? '/encyclopedia' : module === 'care' ? '/care' : '/collection')} className="inline-flex min-h-11 items-center gap-1 text-xs font-black text-emerald-800">打开正式页面<ExternalLink className="h-4 w-4" /></button></div>
-        {module === 'aquarium' && <div className="relative h-[min(72dvh,720px)] min-h-[520px] overflow-hidden rounded-[28px] border border-white/80 bg-[#eaf5f1] shadow-sm">
+        {module === 'aquarium' && <div className="relative h-[min(72dvh,720px)] overflow-hidden rounded-[28px] border border-white/80 bg-[#eaf5f1] shadow-sm">
             <ThreeAquarium aquarium={demoAquarium} framing="stage-cover" />
             <div className="pointer-events-none absolute left-6 top-6 max-w-[42ch] md:left-10 md:top-10"><p className="text-[11px] font-black tracking-[0.16em] text-emerald-950/60">MY AQUARIUM · PREVIEW</p><h2 className="mt-2 font-serif text-[clamp(28px,4vw,52px)] font-semibold leading-none text-emerald-950">今天先完成一次观察</h2><p className="mt-3 text-sm font-bold leading-relaxed text-emerald-950/65">鱼缸内部应填满舞台；操作只覆盖边缘，不遮挡主要生物。</p></div>
             <div className="absolute right-5 top-5 w-[min(390px,34%)] rounded-[24px] bg-white/94 p-5 shadow-lg"><p className="text-[11px] font-black text-amber-700">今日行动</p><h3 className="mt-3 font-serif text-2xl font-bold text-emerald-950">完成今天的鱼缸检查</h3><button type="button" onClick={() => navigate('/aquarium?action=daily-check')} className="mt-5 min-h-12 w-full rounded-full bg-emerald-800 px-4 text-sm font-black text-white">开始今日检查</button></div>
