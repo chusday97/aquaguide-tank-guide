@@ -7,7 +7,7 @@
 - [x] 建立本地 `release/production` 分支并锚定该生产 SHA；该分支只作为部署/回退指针。
 - [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
 - [ ] Vercel Production Branch 和 Cloudflare 实际生产分支尚未修改或读回确认；这是合并 `main` 前的外部阻塞。
-- [ ] 候选领先远端约 40 个提交，尚未推送 PR #142；推送需单独授权并触发 CI/Preview。
+- [x] 候选已一次性推送到 PR #142（推送回执：`396e71da → 3e9ed0e8`）；GitHub/CI 的只读回读因网络暂时不可用，待恢复后确认。
 - [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。
 
 ## 2026-08-29 4317 严格视觉恢复：候选首轮严格对齐（最新）

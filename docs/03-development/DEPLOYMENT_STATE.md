@@ -13,7 +13,7 @@
 
 ## 2026-08-28 local convergence preparation (latest)
 
-> Runtime correction: this worktree is currently ahead of the remote candidate. The local HEAD is not yet pushed; older “synchronized” statements below are historical evidence only and must not be used as the current state.
+> Runtime correction: the candidate was pushed once in the current pass. Older “synchronized” or “not yet pushed” statements below are historical evidence only; confirm the remote/PR SHA with `npm run project:status` after GitHub connectivity returns.
 
 - Local release rehearsal after the authority/documentation update is complete: `check:compatibility-authority`, Catalog build/validate, Domain/Service/API, core UI, formal scenes, today action, species detail, responsive matrix, Supabase reset/pgTAP/lint, project truth, UI freeze, lint, API typecheck, build and diff check all passed. The only test edits were stale assertions; visual-owned files are unchanged.
 - The latest candidate is the SHA reported by `git rev-parse HEAD`; it is a local checkpoint ahead of the remote candidate and PR #142. Exact Preview parity for this head is not claimed until a matching deployment is available. Production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
