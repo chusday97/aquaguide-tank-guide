@@ -4,7 +4,7 @@
 
 ## 2026-08-29 4317 严格视觉恢复（当前工作）
 
-- 当前分支：`codex/main-core-foundation-v1`；当前本地 HEAD：`652beaecc9a4a4511243b46c3e8b8e81a0dc47ce`，本轮代码仍未推送。
+- 当前分支：`codex/main-core-foundation-v1`；当前本地 HEAD 以 `git rev-parse HEAD` 读取，本轮代码仍未推送。
 - 4317：detached `37a8d4d1` 视觉母版；4319：当前候选 production preview。
 - 已完成：预览 Aquarium 高度恢复为 4317 的 `72dvh/720px`；图鉴/养护场景恢复 500/520px；正式核心页面移除额外 workspace 内边距；字体栈恢复为母版显式 fallback。
 - 保留：候选现有 Domain、Service、Repository、Catalog、API 和模块切换预览；未复制旧页面业务逻辑，未修改数据库或公共接口。
