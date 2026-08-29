@@ -36,6 +36,20 @@ Status: `IN_PROGRESS`
 
 An item becomes `MIGRATED` only after its contract, implementation, regression evidence and affected UI/API boundaries are all recorded. Commit ancestry alone is insufficient.
 
+## 4317 visual convergence ledger (2026-08-29)
+
+The detached `37a8d4d1` preview remains the visual mother. The candidate keeps its current data and service behavior; only the approved preview shell and layout-owner changes are allowed.
+
+| Module | Difference classification | Current status | Evidence / next check |
+| --- | --- | --- | --- |
+| Aquarium | `RESTORE_FROM_4317` + `EXPLICIT_EXCEPTION` (module switch and SHA metadata) | `IN_PROGRESS` | 4319 production preview now renders the stage and transparent creatures; compare camera framing and overlay bounds at 390/600/768/1024/1280/1440/1920px |
+| Encyclopedia | `RESTORE_FROM_4317` + `KEEP_CURRENT_LOGIC` | `IN_PROGRESS` | Scene module renders the 4317 atlas surface; verify detail Rail, focus return and transparent assets against the baseline |
+| Care | `RESTORE_FROM_4317` + `KEEP_CURRENT_LOGIC` | `IN_PROGRESS` | Scene module renders the 4317 hotspot composition; verify scene single-column and browse-only grid behavior |
+| Collection | `RESTORE_FROM_4317` + `APPROVED_DESKTOP_ADAPTATION` | `IN_PROGRESS` | Creature-first scene renders in candidate; verify node bounds and compact fallback at the full viewport matrix |
+| Runtime evidence | `EXPLICIT_EXCEPTION` | `PARTIAL` | 4317 stays detached; 4319 is served from the candidate production build so WebGL context and fonts are deterministic; final freeze waits for user acceptance |
+
+The preview capture gate now waits for a ready marker, fonts, Canvas dimensions and failed-request/page-error checks. A route returning HTTP 200 without these conditions is not visual evidence.
+
 ## Foundation review checkpoint
 
 - Candidate head: resolved at runtime by `project:status`; local, remote candidate branch and Draft PR #142 must be synchronized.

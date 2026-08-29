@@ -4,7 +4,7 @@
   "canonicalBranch": "codex/main-core-foundation-v1",
   "canonicalRole": "single release-candidate worktree; all implementation changes land here until main release",
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
-  "visualGate": "desktop_adaptation_in_progress",
+  "visualGate": "strict_4317_recovery_in_progress",
   "visualFreeze": {
     "baselineCommit": "02457dd2ded7042cc67c55acfce3c9c4f238aa42",
     "evidenceDir": "/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2",
