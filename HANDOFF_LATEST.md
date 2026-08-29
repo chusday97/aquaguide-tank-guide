@@ -13,7 +13,7 @@
 
 ## 2026-08-29 4317 严格视觉恢复（当前工作）
 
-- 当前分支：`codex/main-core-foundation-v1`；当前本地 HEAD 以 `git rev-parse HEAD` 读取，上一同步点已推送，最新候选提交尚未推送（本地 ahead 1），GitHub API/CI 详情待网络恢复。
+- 当前分支：`codex/main-core-foundation-v1`；当前本地 HEAD 以 `git rev-parse HEAD` 读取，上一同步点已推送，最新候选提交尚未推送；GitHub API/CI 详情待网络恢复。
 - 4317：detached `37a8d4d1` 视觉母版；4319：当前候选 production preview。
 - 已完成：预览 Aquarium 高度恢复为 4317 的 `72dvh/720px`；图鉴/养护场景恢复 500/520px；正式核心页面移除额外 workspace 内边距；字体栈恢复为母版显式 fallback。
 - 保留：候选现有 Domain、Service、Repository、Catalog、API 和模块切换预览；未复制旧页面业务逻辑，未修改数据库或公共接口。
@@ -419,4 +419,4 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 候选 4319 已移除外部 Google 字体导入，避免网络请求失败造成字体 403；字体仍按本地/系统回退栈渲染。
 - 候选四模块截图矩阵已重新生成并绑定当前构建 checkpoint：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`，28 张、7 个视口、全部 HTTP 200，无 page error 或 failed request。
 - 4317 仍为 detached `37a8d4d1` 视觉母版；其外部字体请求在当前网络环境可能失败，因此基线截图工具不能把该网络失败伪装成候选通过。候选无此失败。
-- 当前候选 CSS 修复已形成提交，4319 已重建并重启，页面元数据与当前 SHA 一致；独立 Critic 已完成复验。本地尚未推送，故 `project:status` 暂显示 ahead 1。
+- 当前候选 CSS 修复已形成提交，4319 已重建并重启，页面元数据与当前 SHA 一致；独立 Critic 已完成复验。本地尚未推送，故 `project:status` 按设计显示候选不同步。
