@@ -645,6 +645,6 @@
 ## 2026-08-30 可见进展优先：候选运行时稳定化
 
 - [x] 候选预览移除外部 Google Noto Serif SC 请求，继续使用仓库既有/系统字体回退；未改 4317 母版、业务逻辑或数据契约。
-- [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-36a425a6`（提交前 SHA 证据）。
+- [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`（当前提交为文档-only amend，UI bytes unchanged；manifest 已记录最终 checkpoint SHA）。
 - [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
 - [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。
