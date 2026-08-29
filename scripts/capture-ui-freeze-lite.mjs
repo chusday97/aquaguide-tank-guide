@@ -16,15 +16,28 @@ await mkdir(outputRoot, { recursive: true });
 const records = [];
 for (const target of targets) {
   for (const width of viewports) {
-    const browser = await chromium.launch({ headless: true, args: ['--disable-gpu'] });
+    const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
-    const url = `${target.baseUrl}${route}`;
+    const url = `${target.baseUrl}${route}?module=aquarium`;
+    const pageErrors = [];
+    const failedRequests = [];
+    page.on('pageerror', error => pageErrors.push(error.message));
+    page.on('requestfailed', request => failedRequests.push(`${request.url()} · ${request.failure()?.errorText ?? 'failed'}`));
     const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 8000 });
-    await page.waitForTimeout(600);
+    await page.locator(target.name === 'candidate' ? '[data-preview-ready="true"]' : 'canvas').first().waitFor({ state: 'attached', timeout: 8000 });
+    await page.evaluate(async () => { await document.fonts?.ready; });
+    await page.waitForFunction(() => {
+      const canvas = document.querySelector('canvas');
+      return !canvas || (canvas.clientWidth > 0 && canvas.clientHeight > 0);
+    }, null, { timeout: 8000 });
+    await page.waitForTimeout(1200);
+    if (pageErrors.length || failedRequests.length) {
+      throw new Error(`${target.name} ${width}px not ready: ${[...pageErrors, ...failedRequests].join(' | ')}`);
+    }
     const filename = `${target.name}-${width}-preview_interactive.png`;
     await page.screenshot({ path: resolve(outputRoot, filename), fullPage: false, animations: 'disabled' });
     const bodyChars = (await page.locator('body').innerText().catch(() => '')).length;
-    records.push({ target: target.name, branch: target.branch, sha: target.sha, width, route, status: response?.status() ?? null, bodyChars, screenshot: filename });
+    records.push({ target: target.name, branch: target.branch, sha: target.sha, width, route: `${route}?module=aquarium`, status: response?.status() ?? null, bodyChars, screenshot: filename });
     await browser.close();
   }
 }

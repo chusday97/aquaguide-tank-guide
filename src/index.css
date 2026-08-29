@@ -15,8 +15,8 @@
   --color-accent-light: #E8F0EE;
   --color-border: rgba(26, 26, 26, 0.1);
   
-  --font-serif: 'Georgia', 'Noto Serif SC', serif;
-  --font-sans: 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Noto Serif SC', 'Songti SC', Georgia, serif;
+  --font-sans: 'Geist Variable', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
   --color-background: var(--color-bg);
   --color-foreground: var(--color-ink);
@@ -44,6 +44,38 @@ body,
 .aquaguide-app button {
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+/* Keep the confirmed 4317 editorial type hierarchy while the workspace shell
+   adapts to desktop widths. */
+.aquaguide-app {
+  font-family: var(--font-sans);
+}
+
+.aquaguide-app h1,
+.aquaguide-app .font-serif {
+  font-family: var(--font-serif);
+  font-style: normal;
+}
+
+.aquaguide-app h1 {
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.aquaguide-app :is(button, input, textarea, select) {
+  font-family: var(--font-sans);
+}
+
+.aquaguide-app .latin,
+.aquaguide-app [data-scientific-name] {
+  font-family: Georgia, serif;
+  font-style: italic;
+}
+
+.aquaguide-app .italic {
+  font-style: italic;
 }
 
 .aquaguide-app [role="tablist"] {
