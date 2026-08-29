@@ -10,7 +10,7 @@
 - 保留：候选现有 Domain、Service、Repository、Catalog、API 和模块切换预览；未复制旧页面业务逻辑，未修改数据库或公共接口。
 - 验证：build、桌面布局、Aquarium stage、Three framing、project truth 和兼容权威门禁通过；4319 HTTP 200，页面显示分支、完整 SHA、seed 和构建时间，且元数据与本地 HEAD 一致。
 - 当前卡点：完整矩阵已生成，但 `check:ui-freeze` 仍会报告候选已有视觉 Owner 变化，不能据此宣称通过；用户人工验收尚未完成。
-- 下一步：用户先确认四模块截图与正式路由差异；确认后更新 UI Freeze，提交 Critic 复验，再一次性同步 PR #142。
+- 下一步：用户先确认四模块截图与正式路由差异；确认后更新 UI Freeze，提交 Critic 复验，再一次性同步 PR #142。最近一次测试修正仅触及回归断言，不改变 UI。
 - 禁止重踩：不要直接替换候选为 4317，不要把旧远端 PR SHA 当作当前代码，不要在视觉门禁前执行生产 migration、Catalog 发布或 main 合并。
 
 ## 2026-08-29 网页端布局统一（当前）

@@ -8,8 +8,9 @@
 - [x] 移除 Aquarium、Encyclopedia、Care、CollectionHub 和 Collection 根节点额外的 workspace 内边距，正式图鉴内容起点从约 x=332 回到 4317 的 x=312。
 - [x] 增加独立字体 token，绕过 Tailwind 主题覆盖，候选运行时字体栈与 4317 一致：`Geist Variable → PingFang SC → Microsoft YaHei`。
 - [x] 本地 `npm run build`、`test:desktop-layout`、`test:aquarium-stage-layout`、`test:three-stage-framing` 通过；4319 production preview 已用当前 `git rev-parse HEAD` 构建重启，页面元数据显示同一完整 SHA（运行时核对，不在文档硬编码）。
-- [x] 稳定化截图门禁后，当前候选已生成 4317 Aquarium 母版 + 4319 四模块、390/600/768/1024/1280/1440/1920px 共 35 张截图，manifest 全部 HTTP 200，证据目录为 `/private/tmp/aquaguide-visual-matrix/ui-parity-38f97a68-final`；候选 SHA 由 manifest 记录为当前提交。
+- [x] 稳定化截图门禁后，当前候选已生成 4317 Aquarium 母版 + 4319 四模块、390/600/768/1024/1280/1440/1920px 共 35 张截图，manifest 全部 HTTP 200，证据目录为 `/private/tmp/aquaguide-visual-matrix/ui-parity-6396d61e`；候选 SHA 由 manifest 记录为生成时视觉提交，后续仅有测试/文档提交。
 - [ ] 截图只证明结构和运行稳定，尚未替代用户人工视觉验收；仍需确认差异后重录 UI Freeze。
+- [x] 修正 mini compatibility 回归中沿用旧规则码的断言；当前未审核物种仍返回 `species_evidence_unreviewed`，已审核单物种不会因缺少第二种鱼自动降级，混养、添加意图和现实记录回归通过。
 - [ ] 用户人工确认、UI Freeze 新基线、一次性推送 PR #142、Preview SHA parity、生产 migration、Catalog 发布和 main 合并仍未执行。
 
 ## 2026-08-29 4317 严格视觉恢复：运行时修复（最新）

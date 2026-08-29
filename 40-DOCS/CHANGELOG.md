@@ -8,6 +8,8 @@
 
 - Stabilized the visual freeze capture gate by reusing one Chromium process with isolated pages, then captured the current 4317/4319 35-image matrix at seven viewports. The manifest records HTTP 200 for every capture; human acceptance and the new freeze baseline remain pending.
 
+- Aligned the mini compatibility regression with the current Domain evidence code: unreviewed species now assert `species_evidence_unreviewed`, while reviewed single-species selection remains eligible for environment screening. No UI or data contract changed.
+
 - Fixed the candidate preview runtime for strict visual comparison: Aquarium preview now has an explicit workspace height, the confirmed 4317 typography tokens are restored, and UI freeze capture waits for the preview marker, fonts, Canvas dimensions, and failed-request/page-error checks. Production preview verified WebGL rendering at commit `9f31c7af`; no domain, data, Supabase, or production state changed.
 
 - Added the desktop workspace layout contract for immersive, content, and standalone pages; separated Care scene layout from browse columns, made scene heights responsive to available workspace space, and converted the interactive preview into a URL-addressable single-module showroom. This is a layout-only change; domain, data, assets, and write behavior are unchanged. Browser visual acceptance and the new UI freeze baseline remain pending.
