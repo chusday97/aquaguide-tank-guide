@@ -6,6 +6,8 @@
 
 - Rebuilt the candidate production preview after the geometry restoration; 4319 now serves commit `a46a4c9c8118b3c34e8eb0c2aa979ae9c6a9fb4d` and exposes the matching branch/SHA/seed metadata. No remote branch or PR was updated.
 
+- Stabilized the visual freeze capture gate by reusing one Chromium process with isolated pages, then captured the current 4317/4319 35-image matrix at seven viewports. The manifest records HTTP 200 for every capture; human acceptance and the new freeze baseline remain pending.
+
 - Fixed the candidate preview runtime for strict visual comparison: Aquarium preview now has an explicit workspace height, the confirmed 4317 typography tokens are restored, and UI freeze capture waits for the preview marker, fonts, Canvas dimensions, and failed-request/page-error checks. Production preview verified WebGL rendering at commit `9f31c7af`; no domain, data, Supabase, or production state changed.
 
 - Added the desktop workspace layout contract for immersive, content, and standalone pages; separated Care scene layout from browse columns, made scene heights responsive to available workspace space, and converted the interactive preview into a URL-addressable single-module showroom. This is a layout-only change; domain, data, assets, and write behavior are unchanged. Browser visual acceptance and the new UI freeze baseline remain pending.

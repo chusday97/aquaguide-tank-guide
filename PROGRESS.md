@@ -8,7 +8,8 @@
 - [x] 移除 Aquarium、Encyclopedia、Care、CollectionHub 和 Collection 根节点额外的 workspace 内边距，正式图鉴内容起点从约 x=332 回到 4317 的 x=312。
 - [x] 增加独立字体 token，绕过 Tailwind 主题覆盖，候选运行时字体栈与 4317 一致：`Geist Variable → PingFang SC → Microsoft YaHei`。
 - [x] 本地 `npm run build`、`test:desktop-layout`、`test:aquarium-stage-layout`、`test:three-stage-framing` 通过；4319 production preview 已用当前 `git rev-parse HEAD` 构建重启，页面元数据显示同一完整 SHA（运行时核对，不在文档硬编码）。
-- [ ] 4317 固定矩阵脚本在重复抓取至 1440px 时旧进程中断，完整新矩阵尚未生成；已有历史矩阵仅作参考，不宣称本轮视觉验收通过。
+- [x] 稳定化截图门禁后，当前候选已生成 4317 Aquarium 母版 + 4319 四模块、390/600/768/1024/1280/1440/1920px 共 35 张截图，manifest 全部 HTTP 200，证据目录为 `/private/tmp/aquaguide-visual-matrix/ui-parity-38f97a68-final`；候选 SHA 由 manifest 记录为当前提交。
+- [ ] 截图只证明结构和运行稳定，尚未替代用户人工视觉验收；仍需确认差异后重录 UI Freeze。
 - [ ] 用户人工确认、UI Freeze 新基线、一次性推送 PR #142、Preview SHA parity、生产 migration、Catalog 发布和 main 合并仍未执行。
 
 ## 2026-08-29 4317 严格视觉恢复：运行时修复（最新）
