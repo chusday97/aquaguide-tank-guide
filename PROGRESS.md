@@ -7,7 +7,7 @@
 - [x] 建立本地 `release/production` 分支并锚定该生产 SHA；该分支只作为部署/回退指针。
 - [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
 - [ ] Vercel Production Branch 和 Cloudflare 实际生产分支尚未修改或读回确认；这是合并 `main` 前的外部阻塞。
-- [x] 候选已推送到 PR #142；当前本地与远端候选 SHA 由 `npm run project:status` 运行时核对为 `7a4c4fdc...`，GitHub API/CI 详情因网络不可用暂未回读。
+- [x] 候选已推送到 PR #142；当前本地与远端候选 SHA 由 `npm run project:status` 运行时核对，GitHub API/CI 详情因网络不可用暂未回读。
 - [x] `npm run project:status` 同时输出 `productionPointerSha=ed0cf380...`、`productionPointerSynchronized=true`，并明确 `productionDeploymentFrozen=false`，避免把本地回退锚点误当成已冻结生产设置。
 - [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。
 
