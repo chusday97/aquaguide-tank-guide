@@ -7,8 +7,9 @@
 - [x] 恢复候选全局字体变量与 4317 的编辑型字体层级，避免 Georgia/Helvetica 替换确认过的 Noto Serif/Geist 组合。
 - [x] 截图门禁等待预览 ready marker、字体和 Canvas 尺寸，并记录页面错误与失败请求；不再用过早 Loading 截图代替视觉证据。
 - [x] 本地 production build preview 已切换回 4319，并确认 WebGL context 正常、鱼缸舞台和透明生物真实可见；运行 SHA 为 `d71ab59d`。
-- [x] 截图门禁已用最新 SHA 生成 `/private/tmp/aquaguide-visual-matrix/ui-parity-d71ab59d`，4317/4319 三视口均 HTTP 200、无页面错误/失败请求。
-- [ ] 四模块与正式路由仍需按 390/600/768/1024/1280/1440/1920px 完成截图和人工验收。
+- [x] 截图门禁已用候选 SHA 生成 `/private/tmp/aquaguide-visual-matrix/ui-parity-d71ab59d`，4317/4319 三视口均 HTTP 200、无页面错误/失败请求。
+- [x] 截图脚本已扩展为 4317 Aquarium 母版 + 候选四模块的 390/600/768/1024/1280/1440/1920px 矩阵；最新 35 张证据位于 `/private/tmp/aquaguide-visual-matrix/ui-parity-126f99b8`，manifest 全部 HTTP 200。
+- [ ] 仍需用户对四模块与正式路由完成最终人工视觉验收；此前的截图只证明运行稳定和结构可比，不自动授予 UI freeze 通过。
 
 ## 2026-08-29 网页端布局统一（本轮）
 
