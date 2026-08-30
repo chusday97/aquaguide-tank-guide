@@ -5,12 +5,14 @@
 ## 2026-08-30 字段级审核门禁实现（当前）
 
 - [x] `9b3b9380` 增加 `CatalogFieldReview` 机器可读契约、10 个待审核字段、审核状态/置信度/引用/冲突记录及批准字段应用器。
+- [x] `62539910` 修复 Critic 指出的引用绕过：reviewed 字段必须引用同物种、已审核的来源；reviewed 值按字段形状校验；领地、捕食和繁殖审核事实保留到 `factEvidence`。
 - [x] `catalog:research` 三批草稿现在每个物种明确生成 10 条 Draft 字段记录；`catalog:review` 会拒绝缺字段、重复字段或无效引用，并统计 reviewed/pending 字段。
 - [x] `test:catalog-review`、`catalog:build`、`catalog:validate`、`lint`、`check:project-truth`、兼容首发队列/435 组合矩阵、Catalog snapshot、authority gate 均通过；当前 Catalog 仍为 486 条、checksum `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`。
 - [x] 研究草稿和批准应用路径已接入，但当前批准记录为空，因此运行时 Catalog 没有被未经审核资料改变。
 - [ ] 30 种逐字段证据仍为 `0/30` 完成；当前 `catalog:review` 明确输出 `reviewedCount=0`、`pendingCount=30`，不能进入正式 Catalog。
 - [ ] `check:ui-freeze` 仍因旧 provisional `02457dd2` 与历史候选视觉 Owner 差异失败；本数据步骤没有修改 UI，需后续视觉短分支重新建立基线。
 - [ ] 独立 Critic 对本次新提交的复验、用户整批内容确认、生产 migration、Catalog 发布、Preview 和正式上线均未完成。
+- [ ] Critic 修复后的同线程复验待完成；在此之前不能把本分支称为可发布数据闭环。
 
 ## 2026-08-30 当前执行边界
 
