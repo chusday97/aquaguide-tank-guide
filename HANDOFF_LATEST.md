@@ -11,7 +11,7 @@
 - 运行验证：`npm run test:readiness` 通过。沙箱中部分 `tsx` 测试遇到临时 IPC `EPERM`，看板已按环境证据降级为 `UNVERIFIED`，需在授权运行环境重跑作为最终门禁。
 - `e3316997` 已提交；独立 Critic 同线程复验通过。当前授权运行的最新报告绑定候选 `fb6db2a2`，为 18 PASS、1 BLOCKED（生产未冻结）、1 UNVERIFIED（生产 Supabase 未写入验证）、1 USER_ACCEPTANCE_REQUIRED（视觉基线）。
 - 候选当前提交、远端候选、PR #142、Vercel Preview 和 CI 的精确关系以运行时报告为准；Vercel Production Branch 已切换到 `release/production`，设置页与 API 均读回成功，正式部署仍保持旧生产 SHA `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
-- Cloudflare 仍未完成生产分支读回：现有用户标签页访问控制台返回 `ERR_CONNECTION_CLOSED`，且本机没有 `CLOUDFLARE_API_TOKEN`。在 Cloudflare 读回前，`productionDeploymentFrozen` 必须继续为 `false`，不能合并 `main`。
+- Cloudflare 仍未完成生产分支读回：用户截图显示其一侧已进入 Account home（可见 Worker `ice-glide`），但当前可自动读取的浏览器会话仍显示登录页，且本机没有 `CLOUDFLARE_API_TOKEN`。截图不能替代项目设置读回；在 Cloudflare 读回前，`productionDeploymentFrozen` 必须继续为 `false`，不能合并 `main`。
 - 下一步：完成 Cloudflare 只读读回；若确认未跟随 `main` 或已指向 `release/production`，再更新冻结状态并单独申请 `main` 合并授权。
 
 ## 2026-08-30 正式预览入口收敛（当前）

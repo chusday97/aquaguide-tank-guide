@@ -8,6 +8,8 @@
 
 - Rechecked the existing Cloudflare dashboard tab; it currently fails with `ERR_CONNECTION_CLOSED`. This remains a read-back blocker; no Cloudflare setting or production traffic was changed.
 
+- User-provided screenshot confirms an authenticated Cloudflare Account home with Worker `ice-glide`, but the browser session available for automation still shows the login page. Cloudflare project/branch read-back remains `UNVERIFIED`; no setting or production traffic was changed.
+
 - Updated current progress and handoff evidence to candidate SHA `fb6db2a2`; recorded remote/PR/Preview parity and the remaining production-freeze, Supabase-production, and user-acceptance gates.
 
 - Added a local-only readiness evidence center: `npm run readiness:collect` generates SHA-bound JSON/Markdown gate evidence, `npm run readiness:serve` serves a read-only dashboard at `127.0.0.1:4320`, and `npm run test:readiness` validates its schema and explicit blocked/unverified states. This keeps backend progress inspectable while the 4319 UI remains unaccepted; no product API, database, Supabase or production setting changed.

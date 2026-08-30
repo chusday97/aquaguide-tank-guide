@@ -39,6 +39,7 @@
 - [x] 已在 Vercel Production 环境将 Branch Tracking 从 `main` 改为 `release/production`，并通过设置页与 API 读回确认；正式部署仍为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
 - [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
 - [ ] Cloudflare 实际生产分支尚未读回确认；当前 Cloudflare 控制台标签页返回 `ERR_CONNECTION_CLOSED`，Wrangler 也没有 `CLOUDFLARE_API_TOKEN`，因此不能证明它不会跟随 `main`。
+- [ ] 用户提供的 Cloudflare 截图显示已登录 Account home，并可见 Worker `ice-glide`；但当前可自动读取的浏览器会话仍落在登录页，因此 AquaGuide 对应项目的生产分支绑定仍为 `UNVERIFIED`，不能仅凭截图修改或宣称冻结完成。
 - [x] 候选与 PR #142 的同步状态由 `npm run project:status` 与 `npm run check:preview-parity` 运行时核对；本轮验证提交完成后再进行一次性推送。
 - [x] `npm run project:status` 同时输出 `productionPointerSha=ed0cf380...`、`productionPointerSynchronized=true`，并明确 `productionDeploymentFrozen=false`，避免把本地回退锚点误当成已冻结生产设置。
 - [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。
