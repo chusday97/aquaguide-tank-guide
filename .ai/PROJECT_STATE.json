@@ -3,7 +3,7 @@
   "updatedAt": "2026-08-30",
   "canonicalBranch": "main",
   "canonicalRole": "single code source after source convergence; production is pinned separately until release gates pass",
-  "sourceConvergenceBranch": "codex/main-core-foundation-v1",
+  "sourceConvergenceBranch": "main",
   "productionBranch": "release/production",
   "productionDeploymentFrozen": true,
   "productionProviders": {
@@ -56,14 +56,17 @@
   "releaseCandidate": {
     "branch": "codex/main-core-foundation-v1",
     "head": "runtime",
-    "role": "source-convergence candidate for PR #142; after merge, retain only as short-lived migration evidence"
+    "head": "b87ae5d69d624f7e715eabd715959498377d56d5",
+    "role": "historical source-convergence branch; merged into main on 2026-08-30; retain temporarily for traceability"
   },
   "activePullRequest": {
     "number": 142,
     "base": "main",
     "head": "codex/main-core-foundation-v1",
-    "state": "OPEN",
-    "isDraft": true
+    "state": "MERGED",
+    "isDraft": false,
+    "mergeCommit": "2d0b4cfe5416e706edb6dcf195dc9597d0c94ae6",
+    "mergedAt": "2026-08-30T14:58:00Z"
   },
   "historicalPullRequest": 141,
   "supabaseDeployment": {

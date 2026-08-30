@@ -3,15 +3,15 @@
 **Date:** 2026-08-25
 **Historical PR retained:** [#141](https://github.com/chusday97/aquaguide-tank-guide/pull/141)
 **Current release candidate:** `codex/main-core-foundation-v1`
-**Policy:** keep Draft PR #142 as the only active release entry; retain #141 and its branch for traceability until the release PR is accepted; do not delete branches in this phase.
+**Policy:** PR #142 is the completed source-convergence entry; retain #141 and its branch for traceability until explicitly closed; do not delete branches in this phase.
 
 ## Result
 
-The current release entry is now Draft PR #142; #141 remains open only as historical migration evidence until the main release is accepted:
+The source-convergence entry is now merged PR #142; #141 remains open only as historical migration evidence until explicitly closed:
 
 | PR | Branch | Base | State |
 | --- | --- | --- | --- |
-| #142 | `codex/main-core-foundation-v1` | `main` | Draft / active release candidate |
+| #142 | `codex/main-core-foundation-v1` | `main` | Merged / source convergence complete |
 | #141 | `codex/unified-rc-visual-v1` | `integration/aquaguide-rc1` | Draft / historical migration evidence |
 
 The other 55 PRs from the 2026-08-25 inventory are closed. The closure comment points back to #141 and requires any future use to pass through `.ai/RC_MIGRATION_LEDGER.md`. No remote branch was deleted, and `main`, `integration/aquaguide-rc1` and the canonical branch were not changed.

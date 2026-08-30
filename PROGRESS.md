@@ -1,4 +1,11 @@
 ## 当前任务目标
+
+## 2026-08-30 代码统一完成
+
+- [x] PR #142 已合入 `main`，merge commit 为 `2d0b4cfe5416e706edb6dcf195dc9597d0c94ae6`。
+- [x] `main` 与 `origin/main` 同步；候选 `b87ae5d6` 已确认是 `main` 祖先。
+- [x] `release/production` 继续停在 `ed0cf380`，生产网站未变化。
+- [ ] 首批30种资料审核、UI人工验收、Supabase第27个 migration、Catalog发布和正式上线仍未完成。
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
 ## 2026-08-30 可验证进度中心（当前）

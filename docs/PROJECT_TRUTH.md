@@ -61,4 +61,4 @@ gh pr view 142 --json headRefOid,baseRefName,headRefName,state,isDraft
 gh pr view 141 --json headRefOid,baseRefName,headRefName,state,isDraft
 ```
 
-Expected before source convergence: the local candidate, remote candidate and PR #142 identify the same SHA. After convergence: local/remote `main` identify the merged SHA, while `release/production` remains pinned to the last accepted production SHA until release gates pass.
+Before source convergence, the candidate and PR #142 must identify the same SHA. After convergence, local/remote `main` identify the merge commit, while `release/production` remains pinned to the last accepted production SHA until release gates pass.

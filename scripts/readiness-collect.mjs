@@ -133,20 +133,24 @@ gates.push(gate({
   notes: remote.ok && !remote.output.startsWith(project.sha) ? '远端返回的 SHA 与本地不同。' : null,
 }));
 
-let pr = run('gh', ['pr', 'view', String(project.activePullRequest?.number ?? 142), '--json', 'headRefOid,isDraft,state,baseRefName,headRefName'], { timeout: 8_000 });
+let pr = run('gh', ['pr', 'view', String(project.activePullRequest?.number ?? 142), '--json', 'headRefOid,isDraft,state,baseRefName,headRefName,mergeCommit'], { timeout: 8_000 });
 if (pr.ok) {
   const prInfo = parseJson(pr.output);
   const expectedPr = project.activePullRequest ?? {};
-  const valid = prInfo?.headRefOid === project.sha
+  const headMatches = prInfo?.headRefOid === project.sha
     && prInfo.baseRefName === expectedPr.base
     && prInfo.headRefName === expectedPr.head;
+  const mergedMatches = prInfo?.state === 'MERGED'
+    && prInfo.mergeCommit?.oid === project.sha
+    && prInfo.baseRefName === expectedPr.base;
+  const valid = headMatches || mergedMatches;
   if (!valid) pr = { ...pr, ok: false, output: `PR metadata does not match current candidate: ${pr.output}` };
 }
 gates.push(gate({
   gateId: 'github-pr',
   title: 'PR 状态与候选一致',
-  command: `gh pr view ${project.activePullRequest?.number ?? 142} --json headRefOid,isDraft,state,baseRefName,headRefName`,
-  expected: `PR #${project.activePullRequest?.number ?? 142} 指向候选分支且 head SHA 等于当前 SHA。`,
+  command: `gh pr view ${project.activePullRequest?.number ?? 142} --json headRefOid,isDraft,state,baseRefName,headRefName,mergeCommit`,
+  expected: `PR #${project.activePullRequest?.number ?? 142} 未合并时 head 等于当前 SHA；合并后 merge commit 等于当前 SHA。`,
   source: 'github',
   result: pr,
 }));

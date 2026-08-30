@@ -1,5 +1,12 @@
 # AquaGuide Handoff — Latest
 
+## 2026-08-30 main 收敛完成（当前）
+
+- PR #142 已以普通 merge commit `2d0b4cfe5416e706edb6dcf195dc9597d0c94ae6` 合入 `main`；候选 `b87ae5d6` 已验证为 `main` 祖先。
+- 稳定工作树为 `/Users/chuchu/Documents/New project/aquaguide-main-stable`，本地 `main` 与 `origin/main` 同步且干净。
+- 生产继续冻结在 `release/production@ed0cf380`；未执行 Supabase 第27个 migration、Catalog 发布或正式生产部署。
+- 下一步从 `main` 创建短分支，先做首批30种资料闭环，再做 UI 视觉闭环；不再回到候选分支开发。
+
 更新时间：2026-08-30 +08:00
 
 ## 2026-08-30 可验证进度中心（当前）
