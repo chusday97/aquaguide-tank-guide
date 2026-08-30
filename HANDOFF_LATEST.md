@@ -2,18 +2,26 @@
 
 更新时间：2026-08-30 +08:00
 
+## 2026-08-30 当前验证快照
+
+- 当前候选分支：`codex/main-core-foundation-v1`；本轮验证前本地、远端候选、PR #142 与 Preview 已同步，新增验证提交待一次性推送，精确值由 `npm run project:status` 和 `npm run check:preview-parity` 运行时读取。
+- 本地门禁：Catalog 486 条校验、Domain/Service/Presentation、435 组合矩阵、26+1 Supabase 重放、pgTAP 19/19、Schema lint 0 error、lint、API 类型、build、核心体验、正式场景、今日行动和响应式路由均通过。
+- 本轮修复：Care 来源链接满足 44×44px 触控区域；核心浏览器断言兼容正式“混养风险计算”标题；未改数据库、Domain 规则或生产设置。
+- 当前两个真实阻塞：用户视觉验收后才能替换旧 UI Freeze；生产仍未冻结，Vercel 仍跟随 `main`，Cloudflare 绑定未确认。生产冻结前禁止合并 `main`。
+- 后续顺序：用户确认 4319 四模块 → 新 UI Freeze → 单独授权冻结 Vercel/Cloudflare → PR #142 合入 `main` → 从 `main` 完成30种审核和生产 migration/Catalog 授权 → 最终 release acceptance。
+
 ## 2026-08-30 快速收敛路线（当前）
 
-- 代码事实目标已切换为 `main`；当前候选 `codex/main-core-foundation-v1` 上一同步点已推送到 PR #142，最新字体修复尚未推送；精确 SHA 由 `npm run project:status` 运行时读取。
+- 代码事实目标已切换为 `main`；当前候选 `codex/main-core-foundation-v1` 的同步状态与精确 SHA 由 `npm run project:status` 运行时读取。
 - 生产部署锚点已只读确认：Vercel 生产 SHA 为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`；本地 `release/production` 已指向同一 SHA，仅作为部署/回退指针。
 - 生产冻结尚未完成：Vercel Production Branch 与 Cloudflare 实际分支设置仍需外部修改/读回确认。完成前禁止合并 `main`。
 - 合并 `main` 后仍保持 `NOT_READY`：视觉新基线、30 种资料、Supabase 第27个 migration、Catalog 发布和最终 Preview 只作为生产门禁。
-- 本轮已更新状态模型和部署说明；最新候选提交尚未推送，尚未修改 Vercel/Cloudflare、执行 Supabase 或合并 `main`。GitHub API/CI 详情仍待网络恢复。
+- 本轮已更新状态模型、浏览器验证和部署说明；生产设置、Supabase、Catalog 和 `main` 均未修改。候选推送与远端检查状态以运行时门禁为准。
 - `npm run project:status` 现在会动态输出 `productionPointerSha`、`productionPointerSynchronized` 和 `productionDeploymentFrozen`；当前回退锚点已对齐，但生产平台分支设置仍是 `productionDeploymentFrozen=false`，不能据此宣称已冻结。
 
 ## 2026-08-29 4317 严格视觉恢复（当前工作）
 
-- 当前分支：`codex/main-core-foundation-v1`；当前本地 HEAD 以 `git rev-parse HEAD` 读取，上一同步点已推送，最新候选提交尚未推送；GitHub API/CI 详情待网络恢复。
+- 当前分支：`codex/main-core-foundation-v1`；当前本地 HEAD、远端候选和 PR 状态以 `git rev-parse HEAD` 与项目门禁运行时读取。
 - 4317：detached `37a8d4d1` 视觉母版；4319：当前候选 production preview。
 - 已完成：预览 Aquarium 高度恢复为 4317 的 `72dvh/720px`；图鉴/养护场景恢复 500/520px；正式核心页面移除额外 workspace 内边距；字体栈恢复为母版显式 fallback。
 - 保留：候选现有 Domain、Service、Repository、Catalog、API 和模块切换预览；未复制旧页面业务逻辑，未修改数据库或公共接口。

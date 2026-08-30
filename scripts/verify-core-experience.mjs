@@ -39,6 +39,15 @@ const seedStorage = async (context) => {
   }, seededState);
 };
 
+const waitForFocus = async (locator, message) => {
+  await locator.waitFor({ state: 'visible' });
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    if (await locator.evaluate((element) => element === document.activeElement)) return;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(message);
+};
+
 const layoutCases = [
   ['phone-narrow', { viewport: { width: 600, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/130 Safari/537.36' }, 'phone', 0, 1],
   ['iphone', { viewport: { width: 390, height: 844 }, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile/15E148 Safari/604.1' }, 'phone', 0, 1],
@@ -122,7 +131,7 @@ try {
   }
 
   await page.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
-  await page.getByText('混养判断', { exact: true }).waitFor();
+  await page.getByRole('heading', { name: /混养(?:风险)?(?:判断|计算)/ }).waitFor();
   await page.getByText(/Selected 2 species|已选择 2 种|已选生物 2 种/).waitFor();
   await page.locator('[data-visual-result-status]').waitFor();
 
@@ -146,14 +155,13 @@ try {
   const secondQuestion = dialog.getByRole('button', { name: '清澈', exact: true }).locator('..').locator('..');
   await firstAnswer.focus();
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(260);
-  assert.equal(await secondQuestion.evaluate(element => element === document.activeElement), true, 'keyboard answer focuses the next question with reduced motion');
+  await waitForFocus(secondQuestion, '第二个巡检问题未获得焦点');
   for (const answer of ['清澈', '没有泡沫或油膜', '没有异味', '正常游动和进食', '没有特别操作']) {
     await dialog.getByRole('button', { name: answer, exact: true }).click();
     await page.waitForTimeout(260);
   }
   const resultButton = dialog.getByRole('button', { name: '生成检查结果', exact: true });
-  assert.equal(await resultButton.evaluate(element => element === document.activeElement), true, 'last answer focuses result without auto submit');
+  await waitForFocus(resultButton, '检查结果按钮未获得焦点');
   await resultButton.click();
   const visualPatrolResult = dialog.locator('[data-visual-result-status]');
   await visualPatrolResult.waitFor();

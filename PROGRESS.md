@@ -1,13 +1,23 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-30 浏览器与本地数据库门禁复验（当前）
+
+- [x] 本轮验证前本地候选、远端候选、PR #142 和 Preview 已由运行时检查确认同步；当前新增验证提交待一次性推送，PR 仍为 Draft、无冲突。
+- [x] 本地 Supabase 26+1 migration 从零重放成功；pgTAP 19/19、Schema lint 0 error；Catalog 486 条、13 个来源、checksum 由 `catalog:validate` 复核通过。
+- [x] Compatibility authority、Domain、Service、Presentation、435 组合矩阵、核心体验、正式 scene、今日行动、Collection 和响应式路由回归通过。
+- [x] 修复 Care 来源链接触控区域不足 44px，并将核心回归断言对齐当前“混养风险计算”标题；类型检查和 production build 通过。
+- [ ] `check:ui-freeze` 仍会对旧 provisional `02457dd2` 报告候选视觉 Owner 差异；这不是新回退，必须由用户完成一次视觉验收后重录基线。
+- [ ] 生产部署仍未冻结（`productionDeploymentFrozen=false`）；生产 Vercel 当前仍运行 `main@ed0cf380`，Cloudflare 生产绑定尚未读回确认。
+- [ ] 首批 30 种逐字段人工审核、第 27 个生产 migration、Catalog 发布、人工 release acceptance 和 PR #142 合并 `main` 尚未执行。
+
 ## 2026-08-30 快速收敛推进（当前）
 
 - [x] 只读确认 Vercel 当前生产部署为 `main@ed0cf38025652db901ee81aa697ca55b1c1584b6`。
 - [x] 建立本地 `release/production` 分支并锚定该生产 SHA；该分支只作为部署/回退指针。
 - [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
 - [ ] Vercel Production Branch 和 Cloudflare 实际生产分支尚未修改或读回确认；这是合并 `main` 前的外部阻塞。
-- [x] 上一同步点曾推送到 PR #142；当前 HEAD 是否同步由 `npm run project:status` 运行时核对。最新候选字体修复与文档提交尚未推送。
+- [x] 候选与 PR #142 的同步状态由 `npm run project:status` 与 `npm run check:preview-parity` 运行时核对；本轮验证提交完成后再进行一次性推送。
 - [x] `npm run project:status` 同时输出 `productionPointerSha=ed0cf380...`、`productionPointerSynchronized=true`，并明确 `productionDeploymentFrozen=false`，避免把本地回退锚点误当成已冻结生产设置。
 - [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。
 

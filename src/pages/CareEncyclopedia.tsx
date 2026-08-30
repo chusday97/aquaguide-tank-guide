@@ -2918,7 +2918,7 @@ function ActionEvidenceInline({ evidence, isEn }: { evidence?: CareActionEvidenc
           rel="noreferrer"
           title={`${reference.publisher} · ${reference.title}`}
           aria-label={isEn ? `Open source: ${reference.publisher}` : `打开来源：${reference.publisher}`}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           data-action-kind="external"
         >
           <ExternalLink className="h-3.5 w-3.5" />
@@ -3503,7 +3503,7 @@ export function CareArticleDetail({
                   rel="noreferrer"
                   title={`${reference.publisher} · ${reference.title}`}
                   aria-label={isEn ? `Open ${reference.publisher} source` : `打开 ${reference.publisher} 原文`}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/55 px-3 text-[11px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/55 px-3 text-[11px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   data-action-kind="external"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />

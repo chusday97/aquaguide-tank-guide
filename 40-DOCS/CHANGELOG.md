@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Raised Care evidence links to the 44px interaction target and aligned the core browser gate with the current “混养风险计算” heading. Local responsive/core browser checks, Catalog validation, local Supabase 26+1 replay, pgTAP, schema lint, typecheck and build pass; production settings, migration, Catalog publication and main merge remain gated.
+
 - Removed the candidate preview's external Google Noto Serif SC import so visual checks do not depend on a network font request; the existing local/system fallback stack remains unchanged. Rebuilt 4319 and captured a candidate-only 28-image matrix for the current checkpoint across four modules and seven viewports with HTTP 200 and no runtime request failures. The frozen 4317 baseline remains unchanged and human visual acceptance is still pending.
 
 - Prepared the fast source-convergence route: read-only recorded the Vercel production anchor at `ed0cf380`, created local deployment-only `release/production`, and separated `main` code truth from production release readiness. No provider settings, GitHub refs, Supabase schema, Catalog data or production deployment were changed.
