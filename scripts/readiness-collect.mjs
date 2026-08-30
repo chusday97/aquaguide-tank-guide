@@ -42,7 +42,7 @@ const statusFromResult = (result, kind = 'local') => {
   return 'FAIL';
 };
 
-const stateResult = run('node', ['scripts/project-status.mjs'], { timeout: 20_000 });
+const stateResult = run('node', ['scripts/project-status.mjs'], { timeout: 20_000, env: { CI: 'true' } });
 if (!stateResult.ok) throw new Error(`project:status failed before readiness collection:\n${stateResult.output}`);
 const project = parseJson(stateResult.output);
 if (!project?.sha) throw new Error('project:status did not return a current SHA.');
@@ -76,6 +76,12 @@ if (project.dirty) gates[0] = {
   status: 'BLOCKED',
   actual: `${gates[0].actual} 工作树存在未提交变更；当前报告只作开发中记录。`,
   notes: '提交并重新采集后，才能生成绑定当前 SHA 的 PASS 证据。',
+};
+if (project.remoteSha && project.remoteSha !== project.sha) gates[0] = {
+  ...gates[0],
+  status: 'FAIL',
+  actual: `${gates[0].actual} 远端记录为 ${project.remoteSha}，与本地 ${project.sha} 不一致。`,
+  notes: '必须推送并重新采集，不能把旧远端结果当作当前 SHA 证据。',
 };
 
 const localCommands = [
