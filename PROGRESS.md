@@ -12,6 +12,7 @@
 - [ ] 30 种逐字段证据仍为 `0/30` 完成；当前 `catalog:review` 明确输出 `reviewedCount=0`、`pendingCount=30`，不能进入正式 Catalog。
 - [ ] `check:ui-freeze` 仍因旧 provisional `02457dd2` 与历史候选视觉 Owner 差异失败；本数据步骤没有修改 UI，需后续视觉短分支重新建立基线。
 - [x] 独立 Critic 已按六维复验 `62539910`/`3fa3e7a0`：字段级审核门禁与草稿管道通过；明确仍为 `0/30 reviewed`，不能当作可发布 Catalog。
+- [x] `95438025` 补充全字段 reviewed 正例、重复字段/无效引用负例，并完成 Critic 同线程复验；当前分支工作树干净、尚未推送。
 - [ ] 用户整批内容确认、生产 migration、Catalog 发布、Preview 和正式上线均未完成。
 
 ## 2026-08-30 当前执行边界
