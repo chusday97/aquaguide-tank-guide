@@ -364,7 +364,7 @@
 - Base 父级与 Variant 子级现在对应不同编辑上下文；语言切换只保留在中心工作区。
 - 右侧 Page / Google / Mobile 由真实 AquaGuide state 驱动；中间未保存 H1 修改可以即时反映到右侧。
 - Data Review、发布检查、翻译、批量、History 和 Workflow Overview 均降级为二级展开工具，不再常驻挤压编辑区。
-- 修复分组投影遗漏 Product Truth 的问题：`species-groups.generated.json` 现在保留 image / 水温 / pH / 建议缸体 / 难度 / description，只读用于真实页面预览。
+- 首轮曾把 Product Truth 补进 `species-groups.generated.json` 以验证真实预览，随后因主包膨胀改为按需读取 catalog；当前 Group JSON 不再复制 image / 水温 / pH / 缸体 / 难度 / description。
 - Local contract/build/Chrome 与 schema-v7 Supabase gate 均保持通过；Production Supabase 和 `main` 未修改。
 
 ### 2026-08-31 Admin 三栏工作台 + 全局中英文界面
@@ -373,3 +373,11 @@
 - 新增全局界面语言 `appLocale`，支持中文 / English、刷新记忆和 `<html lang>` 同步；它与内容语言 `contentLocale` 独立。
 - 右侧 Product Truth 改为按需读取 catalog，避免向 Species Group JSON 重复复制图片、水温、pH、缸体等事实数据。
 - B 层 contract/build/Supabase gate 和真实 Chromium 回归均通过。
+
+### 2026-08-31 Admin 工作流状态色 + 下一阶段 Inspector
+- 顶部 `数据复核 / 待审核 / Preview-ready` 不再使用同一视觉：分别使用琥珀色、蓝色、绿色语义，并保留可点击筛选；真实浏览器 computed style 已验证。
+- `539baf4` 三栏工作台/全局中英文里程碑已通过 GitHub Actions run `33323234484`，A 层 contract、migration 001–007 ephemeral Supabase、build、catalog parity、diff hygiene 全绿。
+- 下一阶段 P0 改为 Editor ↔ Preview 双向 Inspector，而不是继续大面积修 CSS：中间 focus/edit → 右侧自动定位高亮；右侧点击元素 → 中间自动定位对应字段。
+- 首批映射：localized name、H1、Intro、Image Alt、SEO Title、Meta Description。SEO Title/Description 可自动切到 Google Preview。
+- 水温、pH、缸体、难度、科学名等 Product Truth 也允许被 Inspector 识别，但必须显示 `Product Truth · Read only`，Content Admin 不提供修改入口。
+- Inspector 使用稳定元素 registry，不做任意 DOM/WYSIWYG 编辑，避免破坏现有 Base/Variant inheritance、RLS、Readiness 和 generator 安全边界。

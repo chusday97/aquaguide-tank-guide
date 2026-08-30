@@ -1,13 +1,13 @@
 # Current Goal
 
-Updated: 2026-08-30
+Updated: 2026-08-31
 Branch: `feature/admin-content-v0`
 
 Converge AquaGuide Species SEO Admin from an engineering-oriented panel into a stable editorial workspace while preserving the proven database, review and publishing safety contracts.
 
 ## Current milestone
 
-`AI Studio visual source → extract layout/interaction only → reconnect real AquaGuide Admin logic → B local gate → A GitHub gate`
+`stable three-pane editorial workspace → semantic workflow states → bidirectional editor/preview Inspector`
 
 The persistent product model is now:
 - Left: choose Category → Base Species → Variant and workflow queue.
@@ -16,7 +16,8 @@ The persistent product model is now:
 
 ## Verified baseline
 - A+B remains the stability model: Mac local Supabase for fast iteration plus pinned GitHub Actions ephemeral Supabase for clean-machine gating.
-- Queue-level Workflow Overview is committed as `374db2f` and real Chrome verifies 33 pending review issues → 32 affected Base groups → clear restores 276 groups.
+- Three-pane workspace + global UI language is committed as `539baf4`; GitHub Actions run `33323234484` passed contract, migration 001–007 ephemeral Supabase gate, build, catalog parity and diff hygiene.
+- Queue-level Workflow Overview remains verified: 33 pending review issues → 32 affected Base groups → clear restores 276 groups.
 - Controlled Preview Publish remains Approved-Draft-only, forced noindex, and separate from Production Published.
 - `aqua-fronted-cms` is an external visual/reference source only. Its mock state, fake preview URLs, delete logic and client-side readiness decisions are not business authority.
 
@@ -38,3 +39,10 @@ The persistent product model is now:
 - The workspace uses the stable three-pane model: Species navigation → content editing → live frontend preview.
 - `appLocale` controls Admin interface language; `contentLocale` independently controls the editorial locale being edited and previewed.
 - Product Truth for the right preview is lazy-loaded from the existing catalog projection instead of duplicated into Species Group data.
+
+## 2026-08-31 — Next interaction milestone
+- Top workflow states use semantic colors: Data Review = amber, Awaiting Review = blue, Preview-ready = green.
+- P0 is a bidirectional Editor ↔ Preview Inspector. Editing/focusing a field must highlight and scroll to its frontend element; clicking an inspectable preview element must select it and locate the corresponding center editor field.
+- The first mapped fields are localized name, H1, intro, image alt, SEO title and meta description.
+- Product Truth elements such as temperature, pH, tank size, difficulty and scientific name may be inspectable but remain read-only in Content Admin.
+- Inspector mapping must be explicit/stable; do not turn the frontend preview into arbitrary DOM editing.

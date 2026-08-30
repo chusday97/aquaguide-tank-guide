@@ -130,3 +130,10 @@
 - The interface preference persists in localStorage; content locale remains explicit per editing session.
 - Do not introduce a heavy i18n dependency until the lightweight dictionary becomes materially difficult to maintain.
 - Product Truth preview data stays outside Species Group JSON and is loaded on demand from the existing catalog projection.
+
+## 2026-08-31 — Preview Inspector is mapped, not freeform
+- Treat the right pane as a real frontend preview with an optional inspection overlay, not as a WYSIWYG DOM editor.
+- Use a stable element registry to map center fields to preview elements and preview elements back to center fields.
+- Center focus/edit may switch Preview mode and scroll/highlight the mapped element. Preview click selects/highlights and locates the editor field, but does not immediately force text input focus.
+- Product Truth may be inspectable for explanation but remains read-only; Inspector must never create a hidden Product Truth edit path.
+- Workflow status colors are semantic and restrained: Data Review amber, Awaiting Review blue, Preview-ready green.

@@ -666,3 +666,30 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   justify-content: flex-end;
   margin: -8px 0 12px;
 }
+
+/* Workflow queue status colors: issue → amber, review → blue, preview-ready → green. */
+.topbar-workflow .workflow-status {
+  border: 1px solid transparent;
+  font-weight: 600;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.topbar-workflow .workflow-status b {
+  display: inline-flex;
+  min-width: 20px;
+  justify-content: center;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+.topbar-workflow .workflow-status-issue { color: #9a5b12; }
+.topbar-workflow .workflow-status-issue b { background: #fff4d8; color: #8a4f0b; }
+.topbar-workflow .workflow-status-issue:hover,
+.topbar-workflow .workflow-status-issue.active { background: #fff8e8; border-color: #f2cc86; color: #7a4307; }
+.topbar-workflow .workflow-status-review { color: #3567a6; }
+.topbar-workflow .workflow-status-review b { background: #eaf2ff; color: #2f5f9b; }
+.topbar-workflow .workflow-status-review:hover,
+.topbar-workflow .workflow-status-review.active { background: #f2f7ff; border-color: #b8cef0; color: #244f87; }
+.topbar-workflow .workflow-status-ready { color: #2e7450; }
+.topbar-workflow .workflow-status-ready b { background: #e7f6ed; color: #246441; }
+.topbar-workflow .workflow-status-ready:hover,
+.topbar-workflow .workflow-status-ready.active { background: #eff9f2; border-color: #acd7bb; color: #205b3b; }

@@ -171,3 +171,8 @@
 - Added `AppLanguageProvider` with persisted Chinese/English interface locale and independent `contentLocale`.
 - Local browser proof: English Admin UI with Chinese content remained intact after reload, Product Truth image/facts loaded, and `pageErrors=[]`.
 - Initial Product Truth duplication inflated the main bundle to ~921KB; replaced with dynamic catalog loading, returning the main bundle to ~748KB plus a lazy catalog chunk.
+
+## 2026-08-31 — Workflow state colors + Inspector planning sync
+- Added distinct semantic topbar workflow styling: Data Review amber, Awaiting Review blue, Preview-ready green; active filters use matching soft backgrounds/borders.
+- Production Admin build remains green; Chromium computed styles confirm the three states are visually distinct.
+- Synchronized project docs around the next P0 milestone: bidirectional center-editor ↔ right-preview element inspection/highlighting with explicit editable/read-only mappings.

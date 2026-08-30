@@ -283,3 +283,11 @@ The Admin has two independent language concepts:
 Switching the global interface language does not switch or rewrite content. This allows, for example, an English Admin interface while reviewing Chinese Species content. The right preview follows `contentLocale`, not `appLocale`.
 
 Product Truth used by the live preview is lazy-loaded from `catalog.generated.json` through `productTruthLoader.js`; it must not be duplicated into the Species grouping projection.
+
+## Workflow state colors and Preview Inspector roadmap
+
+Top workflow filters use restrained semantic colors: Data Review = amber, Awaiting Review = blue, Preview-ready = green. The color is a navigation/status aid only; database review/readiness state remains authoritative.
+
+The next interaction milestone is a bidirectional Editor ↔ Preview Inspector. It will use an explicit element registry rather than arbitrary DOM editing. Center-field focus/edit selects and highlights the matching frontend element; clicking an inspectable preview element locates/highlights the corresponding center field. SEO Title and Meta Description map to Google Preview; page fields map to Page Preview.
+
+Inspector selections also expose content authority: Custom, Inherited from Base, or Product Truth · Read only. Product Truth facts can be inspected for context but cannot be mutated from Content Admin.

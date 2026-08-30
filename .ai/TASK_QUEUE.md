@@ -14,12 +14,20 @@ Updated: 2026-08-30
 - [x] Audit `aqua-fronted-cms` and classify it as visual source only; reject mock readiness/delete/fake-preview logic.
 - [x] Integrate first three-pane editorial shell: Species navigation → editor → persistent live frontend preview.
 - [x] Add Base-parent / Variant-child navigation and live unsaved Variant preview updates.
-- [x] Restore read-only Product Truth fields into grouped member projection for actual frontend preview.
+- [x] Lazy-load read-only Product Truth for the live preview without duplicating those fields into Species Group JSON.
 
-## Next
-- [ ] Finish visual polish of inheritance fields: inherited vs custom should read naturally without repeated technical badges.
-- [ ] Convert Data Review, Translation and Revision History from large inline panels into lighter drawer/disclosure interactions while keeping the same callbacks and DB authority.
-- [ ] Run final B gate for the UI convergence milestone, commit/push, then require the A-layer GitHub Actions run to pass.
+## Next — P0 Bidirectional Preview Inspector
+- [ ] Add a stable editor-element registry for `localizedName`, `h1`, `intro`, `imageAlt`, `seoTitle`, `metaDescription`.
+- [ ] Center → right: focus/click/edit a center field, switch Preview mode when necessary, scroll the mapped frontend element into view and show an outline + element label.
+- [ ] Right → center: hover preview elements subtly; click to lock selection, scroll the matching editor field into view and highlight it without immediately forcing text input focus.
+- [ ] Show source state on selection: Custom / Inherited from Base / Product Truth · Read only.
+- [ ] Map Product Truth facts as inspectable read-only elements so users understand why they appear on the page but cannot be edited here.
+- [ ] Keep Page as default; SEO Title / Meta Description selection may automatically switch the right pane to Google Preview.
+- [ ] Add browser regression for both directions, inherited content and read-only Product Truth; keep `pageErrors=[]`.
+
+## Next — P1 Visual refinement
+- [ ] Reduce repeated inherited/custom badges and convert inheritance to calm `Inherited from Base → Override → Use Base value` interactions.
+- [ ] Refine Data Review, Translation and Revision History into lighter drawer/disclosure surfaces while keeping current DB authority and callbacks.
 - [ ] Re-check Vercel Admin Preview after Hobby deployment quota reset.
 - [ ] Validate 1–2 live translation suggestions after server-only provider key is configured.
 
@@ -35,4 +43,6 @@ Updated: 2026-08-30
 - [x] Add global Chinese/English Admin interface switch with refresh persistence.
 - [x] Keep interface locale independent from content locale.
 - [x] Lazy-load Product Truth preview data so Group JSON stays lightweight.
+- [x] Add semantic top workflow colors: Data Review amber / Awaiting Review blue / Preview-ready green.
+- [ ] Implement bidirectional Editor ↔ Preview Inspector before further broad CSS polishing.
 - [ ] Continue visual refinement: inheritance controls, spacing, preview fidelity, and secondary-tool density.

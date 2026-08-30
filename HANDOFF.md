@@ -611,7 +611,7 @@
 - Left hierarchy is Category → Base Species → Variant. Base parent opens shared authoring; Variant child opens override authoring.
 - Right live preview receives unsaved Variant edits from the real resolver. Base edits continue to use `groupPreviewRows`, so shared-template edits also update the selected page preview before save.
 - Secondary tools are disclosures; do not move them back into permanent large panels unless a workflow requires it.
-- `generate-species-groups.mjs` must preserve the read-only Product Truth fields used in preview (image, water temperature, pH, tank size, difficulty, description). Contract now guards this projection.
+- Do not put preview Product Truth fields into `species-groups.generated.json`. `productTruthLoader.js` lazy-loads the existing catalog projection, and contract guards this separation.
 - Local reference: Admin Review `http://localhost:3020/`. At 1600px current measured panes are 270 / 870 / 460 with zero browser page errors.
 - Before treating this UI milestone as stable: commit/push, then require the existing Admin GitHub Actions A-layer to pass. Do not touch Production or `main`.
 
@@ -622,3 +622,12 @@
 - `contentLocale` remains separate. A global English UI may edit and preview Chinese content without switching the content row.
 - `productTruthLoader.js` dynamically imports `catalog.generated.json`; do not re-add Product Truth fields to `species-groups.generated.json`.
 - Contract tests explicitly enforce the locale separation and lazy Product Truth boundary.
+
+### 2026-08-31 Next handoff — bidirectional Preview Inspector
+- Stable committed baseline is `539baf4`; GitHub Actions run `33323234484` is green end-to-end. Current local delta adds semantic workflow colors only.
+- Next P0 is not another layout rewrite. Preserve left = choose / center = edit / right = frontend result. Add an inspection layer over the existing `LiveFrontendPreview`.
+- Build one explicit element registry for `localizedName`, `h1`, `intro`, `imageAlt`, `seoTitle`, `metaDescription`; each mapping declares preview mode and editor target.
+- Center → Preview: focus/edit should select the mapped element, switch Page/Google if needed, scroll it into view and draw a restrained outline + label.
+- Preview → Center: hover gives a subtle outline; click locks selection and scrolls/highlights the corresponding center field without immediately focusing the input.
+- Selection must explain source: Custom / Inherited from Base / Product Truth · Read only. Product Truth elements are explanatory only and remain immutable here.
+- Add browser regression for both directions before committing; do not weaken current contract/A+B gates.

@@ -12,8 +12,9 @@ Branch: `feature/admin-content-v0`
 - Catalog remains 486 rows → 276 Base Species; 5 category-conflict groups + 28 duplicate sets = 33 Data Review issues.
 
 ## Latest committed baseline
-- `f6c6401` — Controlled Species Preview Publish.
-- `374db2f` — queue-level Workflow Overview filters; Chrome verifies 276 → 32 issue groups → 276 restore with zero page errors.
+- `539baf4` — three-pane live workspace + global Admin language + lazy Product Truth preview.
+- GitHub Actions run `33323234484` completed SUCCESS: contract, migration 001–007 ephemeral Supabase gate, production build, generated catalog parity and diff hygiene all green.
+- `374db2f` remains the verified queue-filter baseline: 276 → 32 issue groups → 276 restore with zero page errors.
 
 ## UI convergence currently verified locally
 - `aqua-fronted-cms` has been inspected as the AI Studio visual source. It is not connected as a backend/business dependency.
@@ -27,16 +28,15 @@ Branch: `feature/admin-content-v0`
 - Browser evidence at 1600×1000: left=270, center=870, right=460; H1 live update PASS; Base editor switch PASS; issue filter 33 issues → 32 groups; `pageErrors=[]`.
 - Local Supabase gate remains PASS after the UI refactor; schema_version=7, RLS/rollback/static generation unchanged.
 
-## Current uncommitted milestone
-- First visual integration pass is locally green but not yet pushed.
-- Before push: update contract/docs, rerun contract/build/diff/full B gate, inspect staged scope.
-- After push: GitHub A-layer clean Ubuntu run must pass before this UI milestone is treated as stable.
+## Current local delta
+- Top workflow navigation now uses semantic state colors: Data Review amber, Awaiting Review blue, Preview-ready green. Browser computed-style verification confirms all three states render distinctly.
+- This small UI delta is intentionally being synchronized with the Inspector roadmap rather than treated as a standalone product milestone.
 
 ## Remaining product work
-1. Further reduce inherited/custom field noise in the center editor.
-2. Refine Data Review / Translation / History interactions into lighter secondary surfaces.
-3. Re-check Vercel Preview when quota permits.
-4. Validate live English AI suggestion quality with a server-only provider key.
+1. P0: Bidirectional Editor ↔ Preview Inspector for the first six editable fields.
+2. P0: Selection source labels — Custom / Inherited from Base / Product Truth · Read only.
+3. P1: Reduce inherited/custom field noise and refine secondary tools into lighter surfaces.
+4. Re-check Vercel Preview when quota permits and validate live English AI suggestions when the server-only provider key is available.
 5. Production migration/public deploy remains a separate explicit approval.
 
 ## 2026-08-31 Admin UI / i18n status
