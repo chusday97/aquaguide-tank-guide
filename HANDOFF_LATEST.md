@@ -11,7 +11,7 @@
 - `3bb38297` 进一步锁定来源候选 ID 集合必须与第一批 cohort 完全一致；工作树仍干净、尚未推送。
 - 下一步：逐页核对专业来源实际支持哪些字段，填写字段值、citationIds、冲突说明和审核状态；无法确认的字段保持 `unknown`。用户只需最后看整批混养判断，不参与逐字段审核。
 
-- 分支：`codex/catalog-cohort-30-v1`，基于 `main@016dbca5`；当前 HEAD `2b7c34d9`（代码修复 `62539910`，后续测试/文档提交已包含），当前仅本地，未推送。
+- 历史节点 `2b7c34d9` 记录字段审核管道落地；当前 HEAD、提交数和工作树状态以本交接顶部的运行时说明及 Git 命令为准。
 - 本步新增 `src/data/catalogFieldReviews.ts`、`scripts/test-catalog-review-contract.ts`，并扩展 `catalog:research` / `catalog:review` / Catalog snapshot 生成链路。
 - 三批研究草稿每个物种包含 10 个字段（身份、水体、温度、pH、成体体型、缸体、社会行为、领地、捕食、繁殖），全部为 Draft、无引用；机器校验为 `0/30 reviewed`、`300` 个字段待审核。
 - 运行证据：`test:catalog-review`、`catalog:build`、`catalog:validate`、`lint`、`check:project-truth`、首发队列/435 组合矩阵、Catalog snapshot、compatibility authority 均通过；Catalog 保持 486 条，checksum `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`。
