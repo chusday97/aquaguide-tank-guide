@@ -11,8 +11,8 @@
 - [x] 研究草稿和批准应用路径已接入，但当前批准记录为空，因此运行时 Catalog 没有被未经审核资料改变。
 - [ ] 30 种逐字段证据仍为 `0/30` 完成；当前 `catalog:review` 明确输出 `reviewedCount=0`、`pendingCount=30`，不能进入正式 Catalog。
 - [ ] `check:ui-freeze` 仍因旧 provisional `02457dd2` 与历史候选视觉 Owner 差异失败；本数据步骤没有修改 UI，需后续视觉短分支重新建立基线。
-- [ ] 独立 Critic 对本次新提交的复验、用户整批内容确认、生产 migration、Catalog 发布、Preview 和正式上线均未完成。
-- [ ] Critic 修复后的同线程复验待完成；在此之前不能把本分支称为可发布数据闭环。
+- [x] 独立 Critic 已按六维复验 `62539910`/`3fa3e7a0`：字段级审核门禁与草稿管道通过；明确仍为 `0/30 reviewed`，不能当作可发布 Catalog。
+- [ ] 用户整批内容确认、生产 migration、Catalog 发布、Preview 和正式上线均未完成。
 
 ## 2026-08-30 当前执行边界
 

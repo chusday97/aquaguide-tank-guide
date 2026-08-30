@@ -68,7 +68,7 @@ export const getApprovedCatalogFieldReviews = (speciesId: string) => getCatalogF
 
 export const isCatalogSpeciesFieldReady = (speciesId: string) => {
   const reviews = getApprovedCatalogFieldReviews(speciesId);
-  return REVIEWABLE_CATALOG_FIELDS.every(field => reviews.some(item => item.field === field));
+  return REVIEWABLE_CATALOG_FIELDS.every(field => reviews.some(item => item.field === field && isCatalogFieldReviewValueValid(item)));
 };
 
 const finiteOrNull = (value: unknown) => typeof value === 'number' && Number.isFinite(value) ? value : null;

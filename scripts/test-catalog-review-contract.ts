@@ -56,6 +56,7 @@ assert.deepEqual(overlaid.factEvidence?.find(item => item.field === 'territorial
 
 const temporaryDirectory = await mkdtemp(join(tmpdir(), 'catalog-review-contract-'));
 const invalidCitationInput = join(temporaryDirectory, 'invalid-citation.json');
+const positiveInput = join(temporaryDirectory, 'positive.json');
 const invalidCitationPayload = {
   species: [{
     speciesId: cohort[0].id,
@@ -81,5 +82,44 @@ const invalidCitationPayload = {
 };
 await writeFile(invalidCitationInput, JSON.stringify(invalidCitationPayload));
 assert.throws(() => execFileSync(process.execPath, ['--import', 'tsx', 'scripts/catalog-review.ts', '--input', invalidCitationInput], { encoding: 'utf8' }));
+
+const reviewedValues: Record<string, unknown> = {
+  identity: { scientificName: 'Paracheirodon innesi' },
+  water: 'freshwater',
+  temperature: { min: 22, max: 28 },
+  ph: { min: 6, max: 7 },
+  adult_size: { min: 3, max: 4 },
+  tank_size: { liters: 40, lengthCm: 60 },
+  social_behavior: { mode: 'group', minimumGroupSize: 6 },
+  territoriality: { traits: [] },
+  predation: { targets: [] },
+  breeding_behavior: { traits: [] },
+};
+const positivePayload = {
+  species: [{
+    speciesId: cohort[0].id,
+    status: 'reviewed',
+    sources: invalidCitationPayload.species[0].sources,
+    fieldReviews: REVIEWABLE_CATALOG_FIELDS.map(field => ({
+      field,
+      proposedValue: reviewedValues[field],
+      status: 'reviewed',
+      confidence: 'high',
+      citationIds: ['reviewed-source'],
+      conflictNotes: [],
+      reviewedAt: '2026-08-30T00:00:00.000Z',
+    })),
+  }],
+};
+await writeFile(positiveInput, JSON.stringify(positivePayload));
+const positiveOutput = execFileSync(process.execPath, ['--import', 'tsx', 'scripts/catalog-review.ts', '--input', positiveInput], { encoding: 'utf8' });
+const positiveReport = JSON.parse(positiveOutput) as { reviewedCount: number; reviewedFieldCount: number };
+assert.equal(positiveReport.reviewedCount, 1);
+assert.equal(positiveReport.reviewedFieldCount, REVIEWABLE_CATALOG_FIELDS.length);
+const duplicatePayload = structuredClone(positivePayload);
+duplicatePayload.species[0].fieldReviews.push(duplicatePayload.species[0].fieldReviews[0]);
+const duplicateInput = join(temporaryDirectory, 'duplicate-field.json');
+await writeFile(duplicateInput, JSON.stringify(duplicatePayload));
+assert.throws(() => execFileSync(process.execPath, ['--import', 'tsx', 'scripts/catalog-review.ts', '--input', duplicateInput], { encoding: 'utf8' }));
 await rm(temporaryDirectory, { recursive: true, force: true });
 console.log(`catalog review contract: PASS (${cohort.length} species × ${REVIEWABLE_CATALOG_FIELDS.length} fields awaiting evidence)`);
