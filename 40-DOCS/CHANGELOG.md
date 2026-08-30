@@ -80,6 +80,8 @@
 
 - Added the source-controlled `CatalogFieldReview` contract and field-level review gate. Research batches now emit ten explicit draft fields per species; only cited, reviewed values may be applied to the local Catalog.
 
+- Added citation existence/review-status validation and preserved reviewed territoriality, predation, and breeding evidence in the canonical `factEvidence` snapshot overlay. Invalid citations and malformed reviewed values now block promotion.
+
 - Added the provisional UI freeze manifest and `npm run check:ui-freeze` guard so backend/domain work cannot silently change visual-owned files.
 - Added `npm run capture:ui-freeze` and fixed viewport evidence for the 4317 baseline and 4319 candidate at 390/600/1280px.
 - Added the read-only Supabase parity report with migration, RLS, policy, Catalog and RPC evidence.

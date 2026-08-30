@@ -1,11 +1,18 @@
 import assert from 'node:assert/strict';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launch-cohort';
 import {
+  applyApprovedCatalogFieldReviews,
   catalogFieldReviewSchema,
   getApprovedCatalogFieldReviews,
+  isCatalogFieldReviewValueValid,
   isCatalogSpeciesFieldReady,
   REVIEWABLE_CATALOG_FIELDS,
 } from '../src/data/catalogFieldReviews';
+import { speciesProfileFromFish } from '../src/services/catalog/species-profile.adapter';
 
 const cohort = selectCompatibilityLaunchCohort();
 assert.equal(cohort.length, 30);
@@ -24,4 +31,55 @@ const draft = catalogFieldReviewSchema.parse({
   reviewedAt: null,
 });
 assert.equal(draft.status, 'draft');
+
+const reviewedBehavior = catalogFieldReviewSchema.parse({
+  speciesId: cohort[0].id,
+  field: 'territoriality',
+  proposedValue: { traits: ['territorial'] },
+  status: 'reviewed',
+  confidence: 'high',
+  citationIds: ['reviewed-source'],
+  conflictNotes: [],
+  reviewedAt: '2026-08-30T00:00:00.000Z',
+});
+assert.equal(isCatalogFieldReviewValueValid(reviewedBehavior), true);
+const invalidBehavior = { ...reviewedBehavior, proposedValue: { traits: [''] } };
+assert.equal(isCatalogFieldReviewValueValid(invalidBehavior), false);
+const profile = speciesProfileFromFish(cohort[0]);
+const overlaid = applyApprovedCatalogFieldReviews(profile, [reviewedBehavior]);
+assert.deepEqual(overlaid.factEvidence?.find(item => item.field === 'territoriality'), {
+  field: 'territoriality',
+  citationIds: ['reviewed-source'],
+  reviewStatus: 'reviewed',
+  confidence: 'high',
+});
+
+const temporaryDirectory = await mkdtemp(join(tmpdir(), 'catalog-review-contract-'));
+const invalidCitationInput = join(temporaryDirectory, 'invalid-citation.json');
+const invalidCitationPayload = {
+  species: [{
+    speciesId: cohort[0].id,
+    status: 'reviewed',
+    sources: [{
+      id: 'reviewed-source',
+      title: 'Reviewed source',
+      publisher: 'Test publisher',
+      url: 'https://example.com/source',
+      sourceType: 'professional_association',
+      reviewStatus: 'reviewed',
+    }],
+    fieldReviews: REVIEWABLE_CATALOG_FIELDS.map(field => ({
+      field,
+      proposedValue: field === 'water' ? 'freshwater' : null,
+      status: field === 'water' ? 'reviewed' : 'draft',
+      confidence: field === 'water' ? 'high' : 'unknown',
+      citationIds: field === 'water' ? ['missing-source'] : [],
+      conflictNotes: [],
+      reviewedAt: field === 'water' ? '2026-08-30T00:00:00.000Z' : null,
+    })),
+  }],
+};
+await writeFile(invalidCitationInput, JSON.stringify(invalidCitationPayload));
+assert.throws(() => execFileSync(process.execPath, ['--import', 'tsx', 'scripts/catalog-review.ts', '--input', invalidCitationInput], { encoding: 'utf8' }));
+await rm(temporaryDirectory, { recursive: true, force: true });
 console.log(`catalog review contract: PASS (${cohort.length} species × ${REVIEWABLE_CATALOG_FIELDS.length} fields awaiting evidence)`);
