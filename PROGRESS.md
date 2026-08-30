@@ -7,6 +7,7 @@
 - [x] 新增 `catalogReviewSourceCandidates.ts`，为首批第一批10种物种登记 FishBase 专业来源候选；全部保持 `draft`，不会进入运行时 Catalog。
 - [x] `catalog:research --batch 10 --offset 0` 会把来源候选写入研究草稿；字段引用仍为空，必须由审核者逐字段选择并批准。
 - [x] `test:catalog-review` 覆盖来源候选数量、FishBase 发布者、Draft 状态和第二批未研究物种不误带来源。
+- [x] `3bb38297` 增加第一批来源候选 ID 与 cohort 成员集合断言，防止来源映射漂移。
 - [ ] 10种来源页面的字段级阅读、冲突分析和 `reviewed` 批准仍未完成；当前审核进度仍为 `0/30`、`0/300` 字段。
 
 ## 2026-08-30 字段级审核门禁实现（当前）

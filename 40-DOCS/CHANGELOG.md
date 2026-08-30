@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Added draft FishBase source candidates for the first 10 launch-cohort species. Candidates are attached to research drafts only; no field is promoted until a reviewer verifies the source, value, citation and conflicts.
+- Added a regression assertion that the first-batch source candidate IDs exactly match the first-batch cohort IDs.
 
 - Pushed candidate `codex/main-core-foundation-v1` to GitHub at `186751e7` after local readiness and project-truth checks passed. PR #142 remains Draft; API read-back is pending a successful GitHub DNS check.
 
