@@ -11,7 +11,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, liveFrontendPreviewSource, appLanguageSource, productTruthLoaderSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
@@ -20,6 +20,9 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
   readFile(path.join(appRoot, 'src/WorkflowOverview.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'scripts/build-controlled-preview.mjs'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublicSpeciesPreview.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/LiveFrontendPreview.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/AppLanguage.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/productTruthLoader.js'), 'utf8'),
   readFile(path.join(appRoot, 'src/RevisionHistoryPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/TranslationPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'api/translate.js'), 'utf8'),
@@ -80,7 +83,18 @@ assert.match(controlledPreviewSource, /refuses deployable output directory/, 'Co
 assert.doesNotMatch(controlledPreviewSource, /sitemap-species\.xml/, 'Controlled Preview wrapper must not emit the release sitemap');
 assert.match(readinessSource, /Publish-ready/, 'Readiness UI must distinguish Preview Publish readiness from Production publication');
 assert.match(appSource, /TranslationPanel/, 'Admin must expose bilingual translation workflow');
-assert.match(appSource, /PublicSpeciesPreview/, 'Admin must show the resulting public Species page preview');
+assert.match(appSource, /LiveFrontendPreview/, 'Admin must expose a persistent live frontend Species preview');
+assert.match(appSource, /app-language-switch/, 'Admin must expose one global interface-language switch');
+assert.match(appSource, /contentLocale/, 'Content locale must remain a separate editorial state');
+assert.match(appSource, /appLocale/, 'Interface locale must remain separate from content locale');
+assert.match(appLanguageSource, /aquaguide-admin-app-locale/, 'Interface locale must persist across refreshes');
+assert.match(appLanguageSource, /document\.documentElement\.lang/, 'Global interface locale must update document language');
+assert.match(productTruthLoaderSource, /import\('\.\/catalog\.generated\.json'\)/, 'Product Truth preview data must remain lazy-loaded');
+assert.ok(groupedMembers.every((item) => !('image' in item) && !('water_temperature' in item) && !('ph_level' in item)), 'Species group projection must not duplicate Product Truth preview fields');
+assert.match(appSource, /onLivePreviewChange/, 'Variant edits must stream unsaved changes into the live frontend preview');
+assert.match(liveFrontendPreviewSource, /\['page', 'google', 'mobile'\]/, 'Live preview must preserve Page, Google and Mobile modes');
+assert.match(liveFrontendPreviewSource, /preview\.previewOnly/, 'Live preview must render the localized noindex safety label');
+assert.match(appLanguageSource, /Noindex/, 'Global UI language dictionary must preserve the Preview noindex safety label');
 assert.match(publicPreviewSource, /hreflang=zh-CN/, 'Public preview must expose hreflang pair evidence');
 assert.match(appSource, /RevisionHistoryPanel/, 'Admin must expose Base and Variant revision history');
 assert.match(historySource, /from\('content_revisions'\)/, 'History UI must read database-backed revisions');

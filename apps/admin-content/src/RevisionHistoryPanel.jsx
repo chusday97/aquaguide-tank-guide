@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from './supabase.js';
 import { getLocaleLabel } from './localization.js';
+import { useAppLanguage } from './AppLanguage.jsx';
 
 const resourceLabels = {
   species_seo: 'Variant History',
@@ -35,6 +36,8 @@ export default function RevisionHistoryPanel({
   refreshKey = 0,
   onRestored,
 }) {
+  const { appLocale } = useAppLanguage();
+  const isUiEnglish = appLocale === 'en';
   const [revisions, setRevisions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -105,15 +108,15 @@ export default function RevisionHistoryPanel({
       </div>
 
       {readOnly ? (
-        <p className="revision-empty">远程 UI Review 不读取真实历史记录；连接 Local / Staging Supabase 后才显示版本与回滚。</p>
+        <p className="revision-empty">{isUiEnglish ? 'Remote UI Review does not read real revision history. Connect Local / Staging Supabase to inspect versions and restore.' : '远程 UI Review 不读取真实历史记录；连接 Local / Staging Supabase 后才显示版本与回滚。'}</p>
       ) : !schemaReady ? (
-        <p className="revision-empty">Revision migration 尚未应用。Draft 编辑不受影响，但发布继续锁定。</p>
+        <p className="revision-empty">{isUiEnglish ? 'Revision migration is not applied. Draft editing remains available, while publication stays locked.' : 'Revision migration 尚未应用。Draft 编辑不受影响，但发布继续锁定。'}</p>
       ) : loading ? (
-        <p className="revision-empty">正在读取历史版本…</p>
+        <p className="revision-empty">{isUiEnglish ? 'Loading revision history…' : '正在读取历史版本…'}</p>
       ) : error ? (
         <p className="revision-error">{error}</p>
       ) : revisions.length === 0 ? (
-        <p className="revision-empty">还没有历史快照。第一次保存后会自动创建 v1。</p>
+        <p className="revision-empty">{isUiEnglish ? 'No revision snapshots yet. The first save will create v1 automatically.' : '还没有历史快照。第一次保存后会自动创建 v1。'}</p>
       ) : (
         <div className="revision-list">
           {revisions.map((revision) => (
@@ -134,10 +137,10 @@ export default function RevisionHistoryPanel({
                 disabled={Boolean(restoringId)}
               >
                 {restoringId === revision.id
-                  ? '恢复中…'
+                  ? (isUiEnglish ? 'Restoring…' : '恢复中…')
                   : armedId === revision.id
-                    ? `再次点击恢复 v${revision.version} 为 Draft`
-                    : `恢复 v${revision.version}`}
+                    ? (isUiEnglish ? `Click again to restore v${revision.version} as Draft` : `再次点击恢复 v${revision.version} 为 Draft`)
+                    : (isUiEnglish ? `Restore v${revision.version}` : `恢复 v${revision.version}`)}
               </button>
             </div>
           ))}

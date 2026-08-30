@@ -135,7 +135,7 @@ The Admin no longer treats `/species/<catalog_key>` as an existing canonical URL
 
 Canonical paths are derived and cannot be freely typed. Category-conflict groups cannot become indexable, and suspected exact duplicates cannot be marked as independent Index before review. Base Species remains an inheritance layer rather than automatically becoming a public URL.
 
-`PublicSpeciesPreview` shows the future page composition using editorial H1/intro plus read-only Product Truth from the current catalog.
+`LiveFrontendPreview` is now the primary editor preview: the center editor streams unsaved Variant changes to a persistent right pane with Page / Google / Mobile modes. Product Truth remains read-only. `PublicSpeciesPreview` is retained only as an older route-contract evidence component, not the main workspace surface.
 
 ## Static Species generator (current branch)
 
@@ -263,3 +263,23 @@ The default output is ignored `.preview-output/`. Preview mode is intentionally 
 - refuses Production canonical hosts.
 
 `npm run test:preview-publish -w @aquaguide/admin-content` is part of `test:contract`. Local reference output was verified in Chromium at `http://localhost:4020/` with zero page errors.
+
+
+## Content Studio visual integration (2026-08-30)
+
+The Admin workspace follows one persistent interaction model: **left = choose content, center = edit, right = live frontend result**. The separate `aqua-fronted-cms` AI Studio repository is a visual reference only; its mock data model, fake preview URLs, delete behavior and client-side readiness logic must not be imported as authority.
+
+The left pane is Category → Base Species → Variant. Selecting a Base Species opens shared template/content authoring; selecting a Variant opens that page's overrides. Data Review, readiness details, translation, batch operations and revision history remain available through secondary disclosures rather than permanently occupying the main editor.
+
+The live preview loads read-only image/water/tank/difficulty/description fields from the existing catalog projection on demand. Species Group JSON remains focused on hierarchy and review metadata, so Product Truth is not duplicated into the main bundle.
+
+## Global interface language
+
+The Admin has two independent language concepts:
+
+- `appLocale`: Admin UI language (`zh-CN` / `en`), persisted in localStorage as `aquaguide-admin-app-locale`.
+- `contentLocale`: the Species editorial language currently being edited and rendered in the live frontend preview.
+
+Switching the global interface language does not switch or rewrite content. This allows, for example, an English Admin interface while reviewing Chinese Species content. The right preview follows `contentLocale`, not `appLocale`.
+
+Product Truth used by the live preview is lazy-loaded from `catalog.generated.json` through `productTruthLoader.js`; it must not be duplicated into the Species grouping projection.

@@ -3,10 +3,13 @@ import { supabase } from './supabase.js';
 import { groupSeoFromRow } from './seoInheritance.js';
 import { getLocaleLabel } from './localization.js';
 import { REVIEW_STATES } from './publishReadiness.js';
+import { useAppLanguage } from './AppLanguage.jsx';
 
 const isPublicSpeciesPublishingEnabled = false;
 
 export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved }) {
+  const { appLocale, t } = useAppLanguage();
+  const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(() => groupSeoFromRow(record, locale));
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -79,41 +82,41 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <div>
           <p className="eyebrow">BASE SPECIES SEO · {localeLabel}</p>
           <h2>{group.base_scientific_name}</h2>
-          <p>{group.member_count} 条记录使用这一 Base 层；多成员组共享继承，单成员组也保留统一审核与发布契约。</p>
+          <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 条记录使用这一 Base 层；多成员组共享继承，单成员组也保留统一审核与发布契约。`}</p>
         </div>
         <div className="editor-statuses"><span className={`status-pill ${form.status}`}>{localeLabel}: {form.status}</span><span className={`status-pill ${form.reviewState}`}>Review: {form.reviewState}</span></div>
       </div>
       {group.category_conflict ? (
-        <div className="batch-warning">源 catalog 存在分类冲突；Draft 可继续编辑，但 Publish Readiness 会保持阻止直到人工结论完成。</div>
+        <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源 catalog 存在分类冲突；Draft 可继续编辑，但 Publish Readiness 会保持阻止直到人工结论完成。'}</div>
       ) : null}
       <div className="base-seo-grid">
-        <label>SEO Title 模板
+        <label>{isUiEnglish ? 'SEO Title template' : 'SEO Title 模板'}
           <input value={form.seoTitleTemplate} onChange={(event) => update('seoTitleTemplate', event.target.value)} />
         </label>
-        <label>Meta Description 模板
+        <label>{isUiEnglish ? 'Meta Description template' : 'Meta Description 模板'}
           <textarea rows="3" value={form.metaDescriptionTemplate} onChange={(event) => update('metaDescriptionTemplate', event.target.value)} />
         </label>
-        <label>H1 模板
+        <label>{isUiEnglish ? 'H1 template' : 'H1 模板'}
           <input value={form.h1Template} onChange={(event) => update('h1Template', event.target.value)} />
         </label>
-        <label>共享简介 / 基础内容
-          <textarea rows="5" value={form.sharedIntro} onChange={(event) => update('sharedIntro', event.target.value)} placeholder="只写这个基础物种共同成立的内容；变种差异写到 Variant Override。" />
+        <label>{isUiEnglish ? 'Shared introduction / Base content' : '共享简介 / 基础内容'}
+          <textarea rows="5" value={form.sharedIntro} onChange={(event) => update('sharedIntro', event.target.value)} placeholder={isUiEnglish ? 'Write only content shared by this Base Species; keep Variant-specific differences in overrides.' : '只写这个基础物种共同成立的内容；变种差异写到 Variant Override。'} />
         </label>
-        <p className="template-help">变量必须原样保留：{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
+        <p className="template-help">{isUiEnglish ? 'Keep template tokens unchanged: ' : '变量必须原样保留：'}{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>
       <div className="base-seo-footer">
         <div>{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 模板，不会写数据库。` : `保存后只更新 ${localeLabel}，不会覆盖其它语言。`)}</div>
         <div className="footer-actions">
           <select value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label="Base editorial review state">
-            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? item.label : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label)}</option>)}
           </select>
           <select value={form.status} onChange={(event) => update('status', event.target.value)}>
             <option value="draft">Draft</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（Production integration locked）</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Published (Production integration locked)' : 'Published（Production 发布锁定）'}</option>
             <option value="archived">Archived</option>
           </select>
           <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving}>
-            {readOnly ? `只读 ${localeLabel} 预览` : saving ? '保存中…' : `保存 ${localeLabel} Base SEO`}
+            {readOnly ? `${t('common.readonly')} ${localeLabel}` : saving ? t('common.saving') : `${t('common.save')} ${localeLabel} Base SEO`}
           </button>
         </div>
       </div>

@@ -151,3 +151,23 @@
 - Added permanent `test:preview-publish` to `test:contract`.
 - B-layer regression confirms release fixture still generates 2 real indexable pages + sitemap after Preview mode was added.
 - Generated a local Approved-Draft two-language preview and served it on `127.0.0.1:4020`; HTTP root/EN/ZH = 200. Chromium clicked the English page and verified H1, forced noindex, PREVIEW banner and `pageErrors=[]`.
+
+## 2026-08-30 — AI Studio visual integration pass 1
+- Located the AI Studio source in separate private repo `chusday97/aqua-fronted-cms` and verified it contains React/Vite components rather than the earlier README-only state.
+- Audited the source and rejected mock business behavior: random preview token generation, fake preview domains, in-memory delete, client-side Data Review resolution and client-side readiness authority.
+- First closed the pre-existing Workflow Overview work as `374db2f feat(admin): add workflow overview filters`; real Chrome verifies 33 pending issues filter to 32 Base groups and clearing restores all 276.
+- Reworked the real Admin into a three-pane desktop workspace while preserving existing callbacks/state: 270px contextual Species navigation, flexible center editor, 460px live frontend preview.
+- Added Base-parent / Variant-child navigation and moved language switching into the editor context instead of duplicating it in the global header.
+- Moved Data Review, readiness details, translation, batch operations, revision history and queue overview behind progressive disclosure.
+- Added `LiveFrontendPreview`: Page / Google / Mobile modes; unsaved Variant H1/title/meta/intro resolve through the existing inheritance logic and update the right pane without saving.
+- Browser validation at 1600×1000 measured 270/870/460 panes, confirmed live H1 updates, Base editor switching, 33→32 issue filtering and zero page errors.
+- Browser validation also found grouped Species had lost image/Product Truth fields. Extended deterministic group projection with image, temperature, pH, tank size, difficulty and product description; preview image now loads and facts render from catalog.
+- Full local Supabase gate remains PASS after UI changes: schema v7, RLS/rollback and DB→2 bilingual indexable static pages unchanged.
+
+## 2026-08-31 — AI Studio visual integration + global language layer
+- Preserved `374db2f` workflow overview filters as a rollback baseline before UI integration.
+- Imported only layout/visual concepts from `chusday97/aqua-fronted-cms`; rejected its mock Preview URLs/tokens, client-side Data Review decisions, deletion flows and Readiness authority.
+- Reworked Admin into Species hierarchy / editor / live frontend preview; unsaved H1 changes update the right page immediately.
+- Added `AppLanguageProvider` with persisted Chinese/English interface locale and independent `contentLocale`.
+- Local browser proof: English Admin UI with Chinese content remained intact after reload, Product Truth image/facts loaded, and `pageErrors=[]`.
+- Initial Product Truth duplication inflated the main bundle to ~921KB; replaced with dynamic catalog loading, returning the main bundle to ~748KB plus a lazy catalog chunk.

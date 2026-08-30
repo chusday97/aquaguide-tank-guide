@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from './supabase.js';
 import { groupSeoFromRow } from './seoInheritance.js';
+import { useAppLanguage } from './AppLanguage.jsx';
 
 const baseFields = [
   ['seoTitleTemplate', 'SEO Title Template'],
@@ -23,6 +24,8 @@ export default function TranslationPanel({
   species, group, sourceVariantRow, sourceGroupRow, targetVariantRow, targetGroupRow,
   readOnly, accessToken, schemaReady, groupSchemaReady, onVariantSaved, onGroupSaved,
 }) {
+  const { appLocale } = useAppLanguage();
+  const isUiEnglish = appLocale === 'en';
   const [scope, setScope] = useState(group?.member_count > 1 ? 'base' : 'variant');
   const [suggestion, setSuggestion] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -144,23 +147,23 @@ export default function TranslationPanel({
       <div className="translation-header">
         <div>
           <p className="eyebrow">ZH → EN TRANSLATION</p>
-          <h2>中英文内容转化</h2>
-          <p>中文是 Source；AI 只生成 English 建议，人工确认后保存为独立 Draft。</p>
+          <h2>{isUiEnglish ? 'Chinese → English content translation' : '中英文内容转化'}</h2>
+          <p>{isUiEnglish ? 'Chinese is the source. AI creates English suggestions only; human review is required before saving an independent Draft.' : '中文是 Source；AI 只生成 English 建议，人工确认后保存为独立 Draft。'}</p>
         </div>
         <div className="translation-scope-tabs">
           {group.member_count > 1 ? (
-            <button type="button" className={scope === 'base' ? 'active' : ''} onClick={() => { setScope('base'); setSuggestion(null); }}>Base 公共内容</button>
+            <button type="button" className={scope === 'base' ? 'active' : ''} onClick={() => { setScope('base'); setSuggestion(null); }}>{isUiEnglish ? 'Base shared content' : 'Base 公共内容'}</button>
           ) : null}
-          <button type="button" className={scope === 'variant' ? 'active' : ''} onClick={() => { setScope('variant'); setSuggestion(null); }}>当前 Variant</button>
+          <button type="button" className={scope === 'variant' ? 'active' : ''} onClick={() => { setScope('variant'); setSuggestion(null); }}>{isUiEnglish ? 'Current Variant' : '当前 Variant'}</button>
         </div>
       </div>
       <div className="translation-rule-note">
-        <strong>保护规则：</strong> 科学名与 catalog key 不翻译；{'{{name}}'} 等模板变量必须原样保留；空 Override 保持为空，不把 Base 内容复制进 Variant。
+        <strong>{isUiEnglish ? 'Protection rules:' : '保护规则：'}</strong> 科学名与 catalog key 不翻译；{'{{name}}'} 等模板变量必须原样保留；空 Override 保持为空，不把 Base 内容复制进 Variant。
       </div>
       {targetPublished ? <div className="batch-warning">English 当前版本已经 Published。现阶段只允许生成建议，不允许直接覆盖已发布内容。</div> : null}
       <div className="translation-grid">
         <div className="translation-source">
-          <h3>中文 Source</h3>
+          <h3>{isUiEnglish ? 'Chinese source' : '中文 Source'}</h3>
           {fields.map(([key, label]) => (
             <label key={key}>
               {label}
@@ -176,7 +179,7 @@ export default function TranslationPanel({
               <textarea
                 rows={key.includes('Intro') || key === 'intro' ? 4 : 2}
                 value={suggestion?.[key] || ''}
-                placeholder="先生成翻译建议"
+                placeholder={isUiEnglish ? 'Generate a translation suggestion first' : '先生成翻译建议'}
                 onChange={(event) => updateSuggestion(key, event.target.value)}
                 disabled={!suggestion}
               />
@@ -189,10 +192,10 @@ export default function TranslationPanel({
         <span>{message || (readOnly ? '只读 Review：不请求 AI，也不会写 Supabase。' : '生成建议不会自动保存或发布。')}</span>
         <div className="footer-actions">
           <button className="secondary-button" type="button" onClick={generate} disabled={busy || readOnly || !accessToken}>
-            {busy ? '处理中…' : '从中文生成 English 建议'}
+            {busy ? (isUiEnglish ? 'Processing…' : '处理中…') : (isUiEnglish ? 'Generate English suggestion from Chinese' : '从中文生成 English 建议')}
           </button>
           <button className="primary-button" type="button" onClick={saveEnglishDraft} disabled={busy || readOnly || !suggestion || targetPublished}>
-            保存为 English Draft
+            {isUiEnglish ? 'Save as English Draft' : '保存为 English Draft'}
           </button>
         </div>
       </div>

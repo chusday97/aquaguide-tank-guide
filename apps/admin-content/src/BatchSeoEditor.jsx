@@ -2,8 +2,11 @@ import { useMemo, useState } from 'react';
 import { supabase } from './supabase.js';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { assessDataReview } from './publishReadiness.js';
+import { useAppLanguage } from './AppLanguage.jsx';
 
 export default function BatchSeoEditor({ group, members, existingRows, groupRecord, locale = 'zh-CN', dataReviewRows = {}, readOnly, schemaReady, onSaved, onClear }) {
+  const { appLocale } = useAppLanguage();
+  const isUiEnglish = appLocale === 'en';
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -60,18 +63,18 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
         <div>
           <p className="eyebrow">BULK VARIANT SEO · {locale}</p>
           <h2>{group.base_scientific_name}</h2>
-          <p>{members.length} 个同类 / 变种已选择。这里建立继承 Draft，不复制 Base 文案到每一条记录。</p>
+          <p>{isUiEnglish ? `${members.length} related records selected. This creates inherited Drafts without copying Base text into every Variant.` : `${members.length} 个同类 / 变种已选择。这里建立继承 Draft，不复制 Base 文案到每一条记录。`}</p>
         </div>
-        <button className="ghost-button" type="button" onClick={onClear}>清除选择</button>
+        <button className="ghost-button" type="button" onClick={onClear}>{isUiEnglish ? 'Clear selection' : '清除选择'}</button>
       </div>
       {blockedReason ? <div className="batch-warning">{blockedReason}</div> : null}
       <div className="batch-preview inheritance-preview">
-        <h3>继承结果预览</h3>
+        <h3>{isUiEnglish ? 'Inheritance preview' : '继承结果预览'}</h3>
         {previews.map((item) => (
           <div className="batch-preview-row" key={item.id}>
             <strong>{item.name}</strong>
             <span>{item.title}</span>
-            <small>{item.overridden ? 'Variant Override' : '继承 Base Template'}</small>
+            <small>{item.overridden ? 'Variant Override' : (isUiEnglish ? 'Inherited Base Template' : '继承 Base Template')}</small>
           </div>
         ))}
         {members.length > previews.length ? <small>另有 {members.length - previews.length} 条使用同一继承规则。</small> : null}
@@ -84,7 +87,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
           onClick={saveDrafts}
           disabled={readOnly || Boolean(blockedReason) || members.length < 2 || saving}
         >
-          {readOnly ? '只读继承预览' : saving ? '建立 Draft 中…' : `建立 ${members.length} 条继承 Draft`}
+          {readOnly ? (isUiEnglish ? 'Read-only inheritance preview' : '只读继承预览') : saving ? (isUiEnglish ? 'Creating Drafts…' : '建立 Draft 中…') : (isUiEnglish ? `Create ${members.length} inherited Drafts` : `建立 ${members.length} 条继承 Draft`)}
         </button>
       </div>
     </section>

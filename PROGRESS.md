@@ -356,3 +356,20 @@
 - Admin Publish-ready 状态可导出当前 Species 的最小 Preview Snapshot，审核人/备注不会进入导出。
 - 本地实际生成中英 2 页 Approved Draft Preview；`http://localhost:4020/`、英文页、中文页均 HTTP 200，Chromium 无 page error。
 - 正式 Production Published 仍锁定；下一步转向 Data Review / Publish Readiness 队列级总览与筛选。
+
+### 2026-08-30 Admin UI Studio 视觉接线（第一阶段）
+- Google AI Studio 输出已同步到独立仓库 `aqua-fronted-cms`；该仓库只作为视觉/交互参考，不成为 AquaGuide 数据或发布逻辑的新来源。
+- 先收口并提交 `374db2f`：Data Review / Publish Readiness 队列级筛选，真实 Chrome 证明 33 个待复核事项对应 32 个 Base Group，清除后恢复 276 组。
+- 真实 Admin 已改为三栏编辑工作台：左侧 Category→Base→Variant，中心专注编辑，右侧固定实时前端页面预览。1600px 验收宽度为 270 / 870 / 460。
+- Base 父级与 Variant 子级现在对应不同编辑上下文；语言切换只保留在中心工作区。
+- 右侧 Page / Google / Mobile 由真实 AquaGuide state 驱动；中间未保存 H1 修改可以即时反映到右侧。
+- Data Review、发布检查、翻译、批量、History 和 Workflow Overview 均降级为二级展开工具，不再常驻挤压编辑区。
+- 修复分组投影遗漏 Product Truth 的问题：`species-groups.generated.json` 现在保留 image / 水温 / pH / 建议缸体 / 难度 / description，只读用于真实页面预览。
+- Local contract/build/Chrome 与 schema-v7 Supabase gate 均保持通过；Production Supabase 和 `main` 未修改。
+
+### 2026-08-31 Admin 三栏工作台 + 全局中英文界面
+- `aqua-fronted-cms` 仅作为 UI 参考，真实 Base/Variant/Data Review/Readiness/Preview/History 逻辑继续来自 `feature/admin-content-v0`。
+- Admin 已重构成“左选对象 / 中间编辑 / 右侧实时前端效果”的三栏工作台；Variant 未保存修改也会即时反映到右侧。
+- 新增全局界面语言 `appLocale`，支持中文 / English、刷新记忆和 `<html lang>` 同步；它与内容语言 `contentLocale` 独立。
+- 右侧 Product Truth 改为按需读取 catalog，避免向 Species Group JSON 重复复制图片、水温、pH、缸体等事实数据。
+- B 层 contract/build/Supabase gate 和真实 Chromium 回归均通过。

@@ -5,7 +5,9 @@ import BatchSeoEditor from './BatchSeoEditor.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
 import TranslationPanel from './TranslationPanel.jsx';
 import DataReviewPanel from './DataReviewPanel.jsx';
-import PublicSpeciesPreview from './PublicSpeciesPreview.jsx';
+import LiveFrontendPreview from './LiveFrontendPreview.jsx';
+import { useAppLanguage } from './AppLanguage.jsx';
+import { loadProductTruth } from './productTruthLoader.js';
 import RevisionHistoryPanel from './RevisionHistoryPanel.jsx';
 import PublishReadinessPanel from './PublishReadinessPanel.jsx';
 import WorkflowOverview from './WorkflowOverview.jsx';
@@ -65,7 +67,18 @@ const formatDate = (value) => {
   }
 };
 
+function InterfaceLanguageSwitch() {
+  const { appLocale, setAppLocale, t } = useAppLanguage();
+  return (
+    <div className="app-language-switch" aria-label={t('top.interfaceLanguage')}>
+      <button type="button" className={appLocale === 'zh-CN' ? 'active' : ''} onClick={() => setAppLocale('zh-CN')}>中文</button>
+      <button type="button" className={appLocale === 'en' ? 'active' : ''} onClick={() => setAppLocale('en')}>EN</button>
+    </div>
+  );
+}
+
 function Login({ onSignedIn }) {
+  const { appLocale, t } = useAppLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -87,43 +100,48 @@ function Login({ onSignedIn }) {
   return (
     <main className="login-shell">
       <section className="login-card">
+        <div className="login-language-row"><InterfaceLanguageSwitch /></div>
         <div className="brand-mark">A</div>
         <p className="eyebrow">AQUAGUIDE · PRIVATE</p>
         <h1>Content Admin</h1>
-        <p className="muted">仅管理员可访问。当前版本用于 Species SEO 内容管理验证。</p>
+        <p className="muted">{appLocale === 'en' ? 'Admin access only. This workspace manages and reviews Species SEO content.' : '仅管理员可访问。当前版本用于 Species SEO 内容管理验证。'}</p>
         <form onSubmit={submit} className="login-form">
           <label>
-            管理员邮箱
+            {appLocale === 'en' ? 'Admin email' : '管理员邮箱'}
             <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="email" />
           </label>
           <label>
-            密码
+            {appLocale === 'en' ? 'Password' : '密码'}
             <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required autoComplete="current-password" />
           </label>
           {error ? <div className="error-box">{error}</div> : null}
-          <button className="primary-button" type="submit" disabled={busy}>{busy ? '正在验证…' : '登录后台'}</button>
+          <button className="primary-button" type="submit" disabled={busy}>{busy ? (appLocale === 'en' ? 'Signing in…' : '正在验证…') : (appLocale === 'en' ? 'Sign in' : '登录后台')}</button>
         </form>
-        <p className="security-note">访问控制由 Supabase Auth + user_roles + RLS 执行，不依赖隐藏页面地址。</p>
+        <p className="security-note">{appLocale === 'en' ? 'Access is enforced by Supabase Auth + user_roles + RLS, not by hiding the page URL.' : '访问控制由 Supabase Auth + user_roles + RLS 执行，不依赖隐藏页面地址。'}</p>
       </section>
     </main>
   );
 }
 
 function Forbidden({ email, onSignOut }) {
+  const { appLocale, t } = useAppLanguage();
   return (
     <main className="login-shell">
       <section className="login-card">
+        <div className="login-language-row"><InterfaceLanguageSwitch /></div>
         <div className="brand-mark danger">!</div>
         <p className="eyebrow">ACCESS DENIED</p>
-        <h1>没有管理员权限</h1>
-        <p className="muted">{email || '当前账号'} 已登录，但 `user_roles.role` 不是 admin。</p>
-        <button className="secondary-button" type="button" onClick={onSignOut}>退出账号</button>
+        <h1>{appLocale === 'en' ? 'Admin access required' : '没有管理员权限'}</h1>
+        <p className="muted">{appLocale === 'en' ? `${email || 'Current account'} is signed in, but user_roles.role is not admin.` : `${email || '当前账号'} 已登录，但 user_roles.role 不是 admin。`}</p>
+        <button className="secondary-button" type="button" onClick={onSignOut}>{appLocale === 'en' ? 'Sign out' : '退出账号'}</button>
       </section>
     </main>
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange }) {
+  const { appLocale, t } = useAppLanguage();
+  const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -136,18 +154,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     setMessage('');
   }, [species?.id]);
 
-  if (!species) {
-    return (
-      <section className="editor-empty">
-        <div className="empty-icon">↖</div>
-        <h2>选择一个 Species</h2>
-        <p>从左侧列表选择鱼种，开始编辑 SEO 内容。</p>
-      </section>
-    );
-  }
-
-  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
-  const resolvedSeo = resolveEffectiveSeo({
+  const hasSpecies = Boolean(species);
+  const resolvedSeo = hasSpecies ? resolveEffectiveSeo({
     member: species,
     group,
     groupRow: groupRecord,
@@ -160,23 +168,53 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       locale,
     },
     locale,
-  });
+  }) : { effective: null, inherited: {}, override: {} };
   const effectiveSeo = resolvedSeo.effective;
-  const routeMeta = buildSpeciesSeoRouteMeta({
+  const routeMeta = hasSpecies ? buildSpeciesSeoRouteMeta({
     member: species,
     group,
     locale,
     indexStrategy: form.indexStrategy,
     canonicalCatalogKey: form.canonicalCatalogKey,
-  });
-  const groupMember = group?.members?.find((item) => item.catalog_key === species.catalog_key) || null;
-  const reviewIndexBlockReason = getIndexReviewBlockReason({
+  }) : null;
+  const groupMember = group?.members?.find((item) => item.catalog_key === species?.catalog_key) || null;
+  const reviewIndexBlockReason = hasSpecies ? getIndexReviewBlockReason({
     species, group, indexStrategy: form.indexStrategy, canonicalCatalogKey: form.canonicalCatalogKey, reviewRows: dataReviewRows,
-  });
-  const indexBlockReason = reviewIndexBlockReason || (!routeMeta.publishReady
+  }) : '';
+  const indexBlockReason = reviewIndexBlockReason || (routeMeta && !routeMeta.publishReady
     ? '选择 Canonical to sibling 后必须指定同一 Base Species 内的目标记录。'
     : '');
 
+  useEffect(() => {
+    if (!hasSpecies || !effectiveSeo || !routeMeta) {
+      onLivePreviewChange?.(null);
+      return;
+    }
+    onLivePreviewChange?.({
+      species,
+      locale,
+      routeMeta,
+      effectiveSeo: { ...effectiveSeo, imageAlt: form.imageAlt },
+      override: resolvedSeo.override,
+    });
+  }, [
+    species?.catalog_key, locale, effectiveSeo?.seoTitle, effectiveSeo?.metaDescription, effectiveSeo?.h1,
+    effectiveSeo?.sharedIntro, effectiveSeo?.variantIntro, effectiveSeo?.displayName, routeMeta?.selfPath,
+    routeMeta?.canonicalPath, routeMeta?.robots, form.imageAlt, resolvedSeo?.override?.seoTitle,
+    resolvedSeo?.override?.metaDescription, resolvedSeo?.override?.h1, onLivePreviewChange,
+  ]);
+
+  if (!species) {
+    return (
+      <section className="editor-empty">
+        <div className="empty-icon">↖</div>
+        <h2>{isUiEnglish ? 'Select a Species' : '选择一个 Species'}</h2>
+        <p>{isUiEnglish ? 'Choose a Species from the left navigation to begin editing.' : '从左侧列表选择鱼种，开始编辑 SEO 内容。'}</p>
+      </section>
+    );
+  }
+
+  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const save = async () => {
     if (indexBlockReason) {
       setMessage(indexBlockReason);
@@ -235,10 +273,10 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <p className="scientific-name">{species.scientific_name}</p>
         </div>
         <div className="editor-statuses">
-          <span className={`status-pill ${species.status}`}>Species: {species.status}</span>
+          <span className={`status-pill ${species.status}`}>{isUiEnglish ? 'Species' : '物种'}: {species.status}</span>
           <span className={`status-pill ${form.status}`}>SEO: {form.status}</span>
-          <span className={`status-pill ${form.reviewState}`}>Review: {form.reviewState}</span>
-          {group?.member_count > 1 ? <span className="status-pill inherited">{resolvedSeo.override.seoTitle ? 'TITLE: OVERRIDE' : 'TITLE: INHERITED'}</span> : null}
+          <span className={`status-pill ${form.reviewState}`}>{isUiEnglish ? 'Review' : '审核'}: {form.reviewState}</span>
+          {group?.member_count > 1 ? <span className="status-pill inherited">{resolvedSeo.override.seoTitle ? (isUiEnglish ? 'TITLE: OVERRIDE' : '标题：自定义') : (isUiEnglish ? 'TITLE: INHERITED' : '标题：继承')}</span> : null}
         </div>
       </div>
 
@@ -247,34 +285,34 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <div className="section-card">
             <div className="section-heading">
               <div>
-                <h3>Search Appearance</h3>
-                <p>控制搜索结果和页面主标题，不修改产品数据。</p>
+                <h3>{t('editor.seo')}</h3>
+                <p>{isUiEnglish ? 'Edit search appearance and page headings without changing Product Truth.' : '控制搜索结果和页面主标题，不修改产品数据。'}</p>
               </div>
             </div>
             {isEnglishLocale(locale) ? (
               <label>
                 English Common Name
-                <input value={form.localizedName} placeholder="例如 Cherry Shrimp" onChange={(event) => update('localizedName', event.target.value)} />
-                <small className="inherit-note">只影响 English 内容层；不会改 Product Truth 里的中文名称。</small>
+                <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onChange={(event) => update('localizedName', event.target.value)} />
+                <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; Product Truth names remain unchanged.' : '只影响 English 内容层；不会改 Product Truth 里的中文名称。'}</small>
               </label>
             ) : null}
             <label>
-              SEO Title Override <span>{form.seoTitle ? `${form.seoTitle.length}/60` : '继承 Base'}</span>
+              {t('editor.metaTitle')} <span>{form.seoTitle ? `${form.seoTitle.length}/60` : (isUiEnglish ? 'Inherited' : '继承 Base')}</span>
               <input value={form.seoTitle} maxLength={120} placeholder={resolvedSeo.inherited.seoTitle} onChange={(event) => update('seoTitle', event.target.value)} />
-              <small className="inherit-note">{form.seoTitle ? '当前 Variant 使用自定义 Title；清空即可恢复继承。' : `继承：${resolvedSeo.inherited.seoTitle}`}</small>
+              <small className="inherit-note">{form.seoTitle ? (isUiEnglish ? 'This Variant uses a custom Title; clear it to inherit again.' : '当前 Variant 使用自定义 Title；清空即可恢复继承。') : `${isUiEnglish ? 'Inherited: ' : '继承：'}${resolvedSeo.inherited.seoTitle}`}</small>
             </label>
             <label>
-              Meta Description Override <span>{form.metaDescription ? `${form.metaDescription.length}/160` : '继承 Base'}</span>
+              {t('editor.metaDescription')} <span>{form.metaDescription ? `${form.metaDescription.length}/160` : (isUiEnglish ? 'Inherited' : '继承 Base')}</span>
               <textarea rows="3" value={form.metaDescription} maxLength={320} placeholder={resolvedSeo.inherited.metaDescription} onChange={(event) => update('metaDescription', event.target.value)} />
-              <small className="inherit-note">{form.metaDescription ? '当前 Variant 使用自定义 Description；清空即可恢复继承。' : '当前使用 Base Species 模板。'}</small>
+              <small className="inherit-note">{form.metaDescription ? (isUiEnglish ? 'This Variant uses a custom Description; clear it to inherit again.' : '当前 Variant 使用自定义 Description；清空即可恢复继承。') : (isUiEnglish ? 'Currently inherited from the Base Species template.' : '当前使用 Base Species 模板。')}</small>
             </label>
             <label>
-              页面 H1 Override
+              {t('editor.h1')}
               <input value={form.h1} placeholder={resolvedSeo.inherited.h1} onChange={(event) => update('h1', event.target.value)} />
-              <small className="inherit-note">{form.h1 ? '当前 Variant 使用自定义 H1。' : `继承：${resolvedSeo.inherited.h1}`}</small>
+              <small className="inherit-note">{form.h1 ? (isUiEnglish ? 'This Variant uses a custom H1.' : '当前 Variant 使用自定义 H1。') : `${isUiEnglish ? 'Inherited: ' : '继承：'}${resolvedSeo.inherited.h1}`}</small>
             </label>
             <label>
-              Focus Keyword
+              {t('editor.focusKeyword')}
               <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
             </label>
           </div>
@@ -282,22 +320,22 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <div className="section-card">
             <div className="section-heading">
               <div>
-                <h3>Page Content</h3>
-                <p>V0 只管理最核心的编辑型内容。</p>
+                <h3>{t('editor.pageContent')}</h3>
+                <p>{isUiEnglish ? 'Edit the core editorial content for this page.' : '编辑这个页面最核心的内容。'}</p>
               </div>
             </div>
             {group?.member_count > 1 ? (
               <div className="inherit-content-preview">
-                <strong>Base Species 共享简介</strong>
-                <p>{effectiveSeo.sharedIntro || 'Base Species 尚未填写共享简介。'}</p>
+                <strong>{t('editor.sharedIntro')}</strong>
+                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared Base Species introduction yet.' : 'Base Species 尚未填写共享简介。')}</p>
               </div>
             ) : null}
             <label>
-              Variant Intro / 差异补充
-              <textarea rows="6" value={form.intro} onChange={(event) => update('intro', event.target.value)} placeholder="只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。" />
+              {t('editor.variantIntro')}
+              <textarea rows="6" value={form.intro} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Describe only Variant-specific differences; keep shared care content in Base Species.' : '只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。'} />
             </label>
             <label>
-              Hero Image Alt
+              {t('editor.imageAlt')}
               <input value={form.imageAlt} onChange={(event) => update('imageAlt', event.target.value)} />
             </label>
           </div>
@@ -305,25 +343,25 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <div className="section-card">
             <div className="section-heading">
               <div>
-                <h3>Indexing & URL</h3>
-                <p>公开路径由稳定 catalog key + Base Scientific Name 推导，不再手填 Canonical。</p>
+                <h3>{t('editor.indexUrl')}</h3>
+                <p>{isUiEnglish ? 'Public paths are derived from stable catalog identity; Canonical is not free text.' : '公开路径由稳定 catalog key + Base Scientific Name 推导，不再手填 Canonical。'}</p>
               </div>
             </div>
-            <label>Search Index Strategy
+            <label>{t('editor.indexStrategy')}
               <select value={form.indexStrategy} onChange={(event) => update('indexStrategy', event.target.value)}>
                 {INDEX_STRATEGIES.map((item) => (
                   <option
                     key={item.value}
                     value={item.value}
                     disabled={(group?.category_conflict && item.value !== 'noindex') || (groupMember?.duplicate_peer_keys?.length && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
-                  >{item.label}</option>
+                  >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
                 ))}
               </select>
             </label>
             {form.indexStrategy === 'canonical_to_sibling' ? (
-              <label>Canonical target（同组）
+              <label>{t('editor.canonicalTarget')}
                 <select value={form.canonicalCatalogKey} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
-                  <option value="">请选择同组主页面</option>
+                  <option value="">{isUiEnglish ? 'Select the canonical page in this Base group' : '请选择同组主页面'}</option>
                   {(group?.members || []).filter((item) => item.catalog_key !== species.catalog_key).map((item) => (
                     <option key={item.catalog_key} value={item.catalog_key}>{item.name} · {item.catalog_key}</option>
                   ))}
@@ -331,37 +369,14 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               </label>
             ) : null}
             <div className="route-inline-summary">
-              <span>Public URL</span><code>{routeMeta.selfPath}</code>
-              <span>Canonical</span><code>{routeMeta.canonicalPath}</code>
+              <span>{t('editor.publicUrl')}</span><code>{routeMeta.selfPath}</code>
+              <span>{t('editor.canonical')}</span><code>{routeMeta.canonicalPath}</code>
             </div>
             <small className="inherit-note">静态 Species HTML 生成器已通过本地回归，但尚未连接 staging/public 发布链；选择 Index 仍不会自动上线。</small>
           </div>
         </div>
 
-        <aside className="preview-column">
-          <div className="section-card sticky-card">
-            <div className="section-heading">
-              <div>
-                <h3>Google Preview</h3>
-                <p>用于编辑判断，不代表 Google 一定采用。</p>
-              </div>
-            </div>
-            <div className="google-preview">
-              <div className="preview-domain">aquaguide · {routeMeta.selfPath}</div>
-              <div className="preview-title">{effectiveSeo.seoTitle || effectiveSeo.displayName || species.name}</div>
-              <div className="preview-description">{effectiveSeo.metaDescription || '尚未填写 Meta Description。'}</div>
-            </div>
-            <div className="seo-checks">
-              <div><span className={effectiveSeo.seoTitle.length > 0 && effectiveSeo.seoTitle.length <= 60 ? 'check good' : 'check'}>•</span> Title {effectiveSeo.seoTitle.length > 60 ? '过长' : resolvedSeo.override.seoTitle ? 'Variant Override' : 'Base 继承'}</div>
-              <div><span className={effectiveSeo.metaDescription.length > 0 && effectiveSeo.metaDescription.length <= 160 ? 'check good' : 'check'}>•</span> Description {effectiveSeo.metaDescription.length > 160 ? '过长' : resolvedSeo.override.metaDescription ? 'Variant Override' : 'Base 继承'}</div>
-              <div><span className={effectiveSeo.h1 ? 'check good' : 'check'}>•</span> H1 {resolvedSeo.override.h1 ? 'Variant Override' : 'Base 继承'}</div>
-              <div><span className={form.imageAlt ? 'check good' : 'check'}>•</span> Image Alt {form.imageAlt ? '已填写' : '缺失'}</div>
-            </div>
-          </div>
-        </aside>
       </div>
-
-      <PublicSpeciesPreview species={species} locale={locale} effectiveSeo={effectiveSeo} routeMeta={routeMeta} />
 
       <div className="editor-footer">
         <div>
@@ -371,14 +386,14 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         </div>
         <div className="footer-actions">
           <select value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label="Editorial review state">
-            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? item.label : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label)}</option>)}
           </select>
           <select value={form.status} onChange={(event) => update('status', event.target.value)} aria-label="SEO status">
             <option value="draft">Draft</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>Published（Production integration locked）</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Published (Production integration locked)' : 'Published（Production 发布锁定）'}</option>
             <option value="archived">Archived</option>
           </select>
-          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? '只读预览' : saving ? '保存中…' : `保存 ${getLocaleLabel(locale)} SEO`}</button>
+          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : `${t('common.save')} ${getLocaleLabel(locale)} SEO`}</button>
         </div>
       </div>
     </section>
@@ -386,6 +401,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 }
 
 export default function App() {
+  const { appLocale, t } = useAppLanguage();
   const [session, setSession] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [role, setRole] = useState(null);
@@ -407,6 +423,11 @@ export default function App() {
   const [dataReviewRows, setDataReviewRows] = useState({});
   const [revisionRefreshKey, setRevisionRefreshKey] = useState(0);
   const [workflowFilter, setWorkflowFilter] = useState(null);
+  const [editorScope, setEditorScope] = useState('variant');
+  const [livePreview, setLivePreview] = useState(null);
+  const [selectedProductTruth, setSelectedProductTruth] = useState(null);
+
+  useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
 
   useEffect(() => {
     if (isReviewMode) {
@@ -512,6 +533,18 @@ export default function App() {
   }, [session]);
 
   const selectedSpecies = species.find((item) => item.id === selectedId) || null;
+  useEffect(() => {
+    let cancelled = false;
+    setSelectedProductTruth(null);
+    if (!selectedSpecies?.catalog_key) return () => { cancelled = true; };
+    loadProductTruth(selectedSpecies.catalog_key)
+      .then((row) => { if (!cancelled) setSelectedProductTruth(row); })
+      .catch(() => { if (!cancelled) setSelectedProductTruth(null); });
+    return () => { cancelled = true; };
+  }, [selectedSpecies?.catalog_key]);
+  const previewSpecies = selectedSpecies && selectedProductTruth
+    ? { ...selectedSpecies, ...selectedProductTruth }
+    : selectedSpecies;
   const selectedGroup = selectedSpecies ? speciesGroupByMemberId.get(selectedSpecies.id) : null;
   const selectedGroupKey = selectedGroup ? groupSeoRowKey(selectedGroup.group_key, contentLocale) : null;
   const selectedGroupPersisted = selectedGroupKey ? groupSeoRows[selectedGroupKey] : null;
@@ -519,6 +552,22 @@ export default function App() {
     ? groupPreviewRows[selectedGroupKey] || selectedGroupPersisted
     : null;
   const selectedVariantRecord = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, contentLocale)] : null;
+  const savedLivePreview = useMemo(() => {
+    if (!selectedSpecies || !selectedGroup) return null;
+    const resolved = resolveEffectiveSeo({
+      member: selectedSpecies, group: selectedGroup, groupRow: selectedGroupRecord, variantRow: selectedVariantRecord, locale: contentLocale,
+    });
+    const routeMeta = buildSpeciesSeoRouteMeta({
+      member: selectedSpecies, group: selectedGroup, locale: contentLocale,
+      indexStrategy: selectedVariantRecord?.index_strategy || 'noindex',
+      canonicalCatalogKey: selectedVariantRecord?.canonical_catalog_key || '',
+    });
+    return {
+      species: previewSpecies, locale: contentLocale, routeMeta,
+      effectiveSeo: { ...resolved.effective, imageAlt: selectedVariantRecord?.image_alt || '' },
+      override: resolved.override,
+    };
+  }, [selectedSpecies, previewSpecies, selectedGroup, selectedGroupRecord, selectedVariantRecord, contentLocale]);
   const sourceVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'zh-CN')] : null;
   const sourceGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, 'zh-CN')] : null;
   const englishVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'en')] : null;
@@ -537,6 +586,9 @@ export default function App() {
     Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
   ), [seoRows, contentLocale]);
   const workflowOverview = useMemo(() => buildAdminWorkflowOverview({ species, groups: speciesGroups, seoRows, groupSeoRows, reviewRows: dataReviewRows }), [species, seoRows, groupSeoRows, dataReviewRows]);
+  const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
+    ? { ...livePreview, species: previewSpecies || livePreview.species }
+    : savedLivePreview;
   const workflowScope = useMemo(() => {
     if (!workflowFilter) return { groupKeys: null, memberIds: null };
     if (workflowFilter.type === 'data') {
@@ -553,12 +605,12 @@ export default function App() {
     if (!next) return;
     if (next.type === 'readiness') {
       const firstId = workflowOverview.locales[next.locale]?.memberIdsByState[next.status]?.[0];
-      if (firstId) setSelectedId(firstId);
+      if (firstId) { setSelectedId(firstId); setEditorScope('variant'); }
       return;
     }
     const firstGroupKey = workflowOverview.dataReview.groupKeysByStatus[next.status]?.[0];
     const firstGroup = speciesGroups.find((group) => group.group_key === firstGroupKey);
-    if (firstGroup?.members?.[0]?.id) setSelectedId(firstGroup.members[0].id);
+    if (firstGroup?.members?.[0]?.id) { setSelectedId(firstGroup.members[0].id); setEditorScope('variant'); }
   };
 
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
@@ -591,6 +643,7 @@ export default function App() {
   const toggleBatch = (id) => {
     const nextGroup = speciesGroupByMemberId.get(id);
     setSelectedId(id);
+    setEditorScope('variant');
     setBatchIds((current) => {
       if (current.includes(id)) return current.filter((item) => item !== id);
       const currentGroup = current.length ? speciesGroupByMemberId.get(current[0]) : null;
@@ -628,34 +681,27 @@ export default function App() {
         <div className="brand-row">
           <div className="brand-mark small">A</div>
           <div>
-            <strong>AquaGuide Admin</strong>
-            <span>Species Content</span>
+            <strong>{t('top.product')}</strong>
+            <span>{t('top.section')}</span>
           </div>
         </div>
-        <div className="locale-switcher" aria-label="Content language">
-          {CONTENT_LOCALES.map((item) => (
-            <button
-              key={item.code}
-              type="button"
-              className={contentLocale === item.code ? 'active' : ''}
-              onClick={() => setContentLocale(item.code)}
-            >
-              {item.label}
-            </button>
-          ))}
-          <small>语言独立 Draft / Publish</small>
-        </div>
+        <nav className="topbar-workflow" aria-label="Workflow queues">
+          <button type="button" className={workflowFilter?.key === 'data:pending' ? 'active' : ''} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: 'Data Review · 待处理' })}>{t('top.dataReview')} <b>{workflowOverview.dataReview.pending}</b></button>
+          <button type="button" className={workflowFilter?.key === `${contentLocale}:ready_for_review` ? 'active' : ''} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${getLocaleLabel(contentLocale)} · Ready for Review` })}>{t('top.awaiting')} <b>{workflowOverview.locales[contentLocale].ready_for_review}</b></button>
+          <button type="button" className={workflowFilter?.key === `${contentLocale}:publish_ready` ? 'active' : ''} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${getLocaleLabel(contentLocale)} · Publish-ready` })}>{t('top.previewReady')} <b>{workflowOverview.locales[contentLocale].publish_ready}</b></button>
+        </nav>
         <div className="topbar-actions">
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
-          <span>{isReviewMode ? 'Read-only UI review' : schemaReady && groupSchemaReady ? `${getLocaleLabel(contentLocale)} SEO · ${historySchemaReady ? 'history ready' : 'history pending'}` : 'SEO schema pending'}</span>
+          <span>{isReviewMode ? t('top.reviewMode') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
-          <button className="ghost-button" type="button" onClick={signOut}>退出</button>
+          <InterfaceLanguageSwitch />
+          <button className="ghost-button" type="button" onClick={signOut}>{t('top.signOut')}</button>
         </div>
       </header>
 
       {isReviewMode ? (
         <div className="schema-banner">
-          <strong>只读 UI Review：</strong> 当前远程预览不连接任何 Supabase 写入环境。可以搜索 486 条 Species、体验编辑器和 Google Preview，但保存被硬禁用。
+          <strong>只读 UI Review：</strong> 当前远程预览不连接任何 Supabase 写入环境。可以搜索 486 条 Species、体验编辑器和实时前端 Preview，但保存被硬禁用。
         </div>
       ) : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
@@ -673,137 +719,172 @@ export default function App() {
 
       {error ? <div className="page-error">{error}</div> : null}
 
-      <div className="workspace">
+      <div className="workspace studio-workspace">
         <SpeciesGroupSidebar
           groups={speciesGroups}
           selectedId={selectedId}
+          selectedScope={editorScope}
           batchIds={batchIds}
           search={search}
           onSearch={setSearch}
           category={category}
           onCategory={setCategory}
-          onSelect={setSelectedId}
+          onSelect={(id) => { setSelectedId(id); setEditorScope('variant'); }}
+          onSelectBase={(id) => { setSelectedId(id); setEditorScope('base'); }}
           onToggleBatch={toggleBatch}
           workflowFilter={workflowFilter}
           workflowGroupKeys={workflowScope.groupKeys}
           workflowMemberIds={workflowScope.memberIds}
           onClearWorkflowFilter={() => setWorkflowFilter(null)}
+          workflowOverview={workflowOverview}
+          locale={contentLocale}
+          onWorkflowFilter={applyWorkflowFilter}
         />
 
-        <main className="editor-area">
-          <WorkflowOverview overview={workflowOverview} activeFilter={workflowFilter} onFilter={applyWorkflowFilter} />
-          <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} />
-          <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
-            onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
-          {contentLocale === 'en' ? (
-            <TranslationPanel
-              species={selectedSpecies}
+        <main className="editor-area studio-editor-area">
+          <div className="editor-context-bar">
+            <div className="editor-scope-switch" aria-label="Editor scope">
+              <button type="button" className={editorScope === 'base' ? 'active' : ''} onClick={() => setEditorScope('base')}>{t('editor.base')}</button>
+              <button type="button" className={editorScope === 'variant' ? 'active' : ''} onClick={() => setEditorScope('variant')}>{t('editor.currentPage')}</button>
+            </div>
+            <div className="locale-switcher compact" aria-label="Content language">
+              {CONTENT_LOCALES.map((item) => (
+                <button key={item.code} type="button" className={contentLocale === item.code ? 'active' : ''} onClick={() => setContentLocale(item.code)}>{item.label}</button>
+              ))}
+            </div>
+          </div>
+
+          {editorScope === 'base' ? (
+            <BaseSpeciesSeoEditor
               group={selectedGroup}
-              sourceVariantRow={sourceVariantRow}
-              sourceGroupRow={sourceGroupRow}
-              targetVariantRow={englishVariantRow}
-              targetGroupRow={englishGroupRow}
-              readOnly={isReviewMode}
-              accessToken={session?.access_token || ''}
-              schemaReady={schemaReady}
-              groupSchemaReady={groupSchemaReady}
-              onVariantSaved={(row) => {
-                setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
-                setRevisionRefreshKey((current) => current + 1);
-              }}
-              onGroupSaved={(row) => {
-                setGroupSeoRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }));
-                setRevisionRefreshKey((current) => current + 1);
-              }}
-            />
-          ) : null}
-          <BaseSpeciesSeoEditor
-            group={selectedGroup}
-            record={selectedGroupPersisted}
-            locale={contentLocale}
-            schemaReady={groupSchemaReady}
-            readOnly={isReviewMode}
-            onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
-            onSaved={(row) => {
-              const key = groupSeoRowKey(row.group_key, row.locale);
-              setGroupSeoRows((current) => ({ ...current, [key]: row }));
-              setGroupPreviewRows((current) => {
-                const next = { ...current };
-                delete next[key];
-                return next;
-              });
-              setRevisionRefreshKey((current) => current + 1);
-            }}
-          />
-          <div className="revision-grid">
-            <RevisionHistoryPanel
-              resourceType="species_seo_group"
-              resourceKey={selectedGroup?.group_key || ''}
+              record={selectedGroupPersisted}
               locale={contentLocale}
-              schemaReady={historySchemaReady}
+              schemaReady={groupSchemaReady}
               readOnly={isReviewMode}
-              refreshKey={revisionRefreshKey}
-              onRestored={(row) => {
-                if (!row?.group_key) return;
+              onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
+              onSaved={(row) => {
                 const key = groupSeoRowKey(row.group_key, row.locale);
                 setGroupSeoRows((current) => ({ ...current, [key]: row }));
-                setGroupPreviewRows((current) => {
-                  const next = { ...current };
-                  delete next[key];
-                  return next;
-                });
+                setGroupPreviewRows((current) => { const next = { ...current }; delete next[key]; return next; });
                 setRevisionRefreshKey((current) => current + 1);
               }}
             />
-            <RevisionHistoryPanel
-              resourceType="species_seo"
-              resourceKey={selectedSpecies?.catalog_key || ''}
-              locale={contentLocale}
-              schemaReady={historySchemaReady}
-              readOnly={isReviewMode}
-              refreshKey={revisionRefreshKey}
-              onRestored={(row) => {
-                if (!row?.catalog_key) return;
-                setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
-                setRevisionRefreshKey((current) => current + 1);
-              }}
-            />
-          </div>
-          {batchGroup && batchMembers.length > 1 ? (
-            <BatchSeoEditor
-              group={batchGroup}
-              groupRecord={batchGroupRecord}
-              members={batchMembers}
-              existingRows={localeSeoRows}
+          ) : (
+            <SeoEditor
+              species={selectedSpecies}
+              group={selectedGroup}
+              groupRecord={selectedGroupRecord}
+              record={selectedVariantRecord}
               locale={contentLocale}
               schemaReady={schemaReady}
               dataReviewRows={dataReviewRows}
               readOnly={isReviewMode}
-              onClear={() => setBatchIds([])}
-              onSaved={(rows) => {
-                setSeoRows((current) => ({
-                  ...current,
-                  ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])),
-                }));
+              onLivePreviewChange={setLivePreview}
+              onSaved={(row) => {
+                setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
                 setRevisionRefreshKey((current) => current + 1);
               }}
             />
-          ) : null}
-          <SeoEditor
-            species={selectedSpecies}
-            group={selectedGroup}
-            groupRecord={selectedGroupRecord}
-            record={selectedVariantRecord}
-            locale={contentLocale}
-            schemaReady={schemaReady}
-            dataReviewRows={dataReviewRows}
-            readOnly={isReviewMode}
-            onSaved={(row) => {
-              setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
-              setRevisionRefreshKey((current) => current + 1);
-            }}
-          />
+          )}
+
+          <div className="editor-secondary-tools">
+            {(selectedGroup?.category_conflict || selectedGroup?.duplicate_count > 0) ? (
+              <details className="studio-tool-disclosure" open>
+                <summary>{t('editor.sourceReview')} <span>{appLocale === 'en' ? 'This Species has unresolved source-data evidence' : '当前 Species 存在待确认的数据证据'}</span></summary>
+                <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
+                  onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
+              </details>
+            ) : null}
+            <details className="studio-tool-disclosure">
+              <summary>{t('editor.publishCheck')} <span>{publishReadiness?.state || 'blocked'}</span></summary>
+              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} />
+            </details>
+            {contentLocale === 'en' ? (
+              <details className="studio-tool-disclosure">
+                <summary>{t('editor.translation')} <span>{appLocale === 'en' ? 'Chinese source → English Draft' : '中文 Source → English Draft'}</span></summary>
+                <TranslationPanel
+                  species={selectedSpecies}
+                  group={selectedGroup}
+                  sourceVariantRow={sourceVariantRow}
+                  sourceGroupRow={sourceGroupRow}
+                  targetVariantRow={englishVariantRow}
+                  targetGroupRow={englishGroupRow}
+                  readOnly={isReviewMode}
+                  accessToken={session?.access_token || ''}
+                  schemaReady={schemaReady}
+                  groupSchemaReady={groupSchemaReady}
+                  onVariantSaved={(row) => {
+                    setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
+                    setRevisionRefreshKey((current) => current + 1);
+                  }}
+                  onGroupSaved={(row) => {
+                    setGroupSeoRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }));
+                    setRevisionRefreshKey((current) => current + 1);
+                  }}
+                />
+              </details>
+            ) : null}
+            {batchGroup && batchMembers.length > 1 ? (
+              <details className="studio-tool-disclosure">
+                <summary>{t('editor.batchSeo')} <span>{batchMembers.length} {appLocale === 'en' ? 'records in this group' : '条同组记录'}</span></summary>
+                <BatchSeoEditor
+                  group={batchGroup}
+                  groupRecord={batchGroupRecord}
+                  members={batchMembers}
+                  existingRows={localeSeoRows}
+                  locale={contentLocale}
+                  schemaReady={schemaReady}
+                  dataReviewRows={dataReviewRows}
+                  readOnly={isReviewMode}
+                  onClear={() => setBatchIds([])}
+                  onSaved={(rows) => {
+                    setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
+                    setRevisionRefreshKey((current) => current + 1);
+                  }}
+                />
+              </details>
+            ) : null}
+            <details className="studio-tool-disclosure">
+              <summary>{t('editor.history')} <span>Base / Variant revision</span></summary>
+              <div className="revision-grid">
+                <RevisionHistoryPanel
+                  resourceType="species_seo_group"
+                  resourceKey={selectedGroup?.group_key || ''}
+                  locale={contentLocale}
+                  schemaReady={historySchemaReady}
+                  readOnly={isReviewMode}
+                  refreshKey={revisionRefreshKey}
+                  onRestored={(row) => {
+                    if (!row?.group_key) return;
+                    const key = groupSeoRowKey(row.group_key, row.locale);
+                    setGroupSeoRows((current) => ({ ...current, [key]: row }));
+                    setGroupPreviewRows((current) => { const next = { ...current }; delete next[key]; return next; });
+                    setRevisionRefreshKey((current) => current + 1);
+                  }}
+                />
+                <RevisionHistoryPanel
+                  resourceType="species_seo"
+                  resourceKey={selectedSpecies?.catalog_key || ''}
+                  locale={contentLocale}
+                  schemaReady={historySchemaReady}
+                  readOnly={isReviewMode}
+                  refreshKey={revisionRefreshKey}
+                  onRestored={(row) => {
+                    if (!row?.catalog_key) return;
+                    setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
+                    setRevisionRefreshKey((current) => current + 1);
+                  }}
+                />
+              </div>
+            </details>
+            <details className="studio-tool-disclosure workflow-disclosure">
+              <summary>{t('editor.workflow')} <span>Data Review / Editorial / Preview-ready</span></summary>
+              <WorkflowOverview overview={workflowOverview} activeFilter={workflowFilter} onFilter={applyWorkflowFilter} />
+            </details>
+          </div>
         </main>
+
+        <LiveFrontendPreview preview={activeLivePreview} readiness={publishReadiness} readOnly={isReviewMode} onGeneratePreview={exportPreviewSnapshot} />
       </div>
     </div>
   );

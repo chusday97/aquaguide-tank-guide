@@ -113,3 +113,20 @@
 - Preview output may not target root/app `public/` or Admin `dist/`; accidental deployable output is a hard error.
 - Preview requires explicit selected catalog keys so an approval state cannot silently generate every Species.
 - Admin Preview Snapshot export strips reviewer identity and review notes; only minimal review resolutions are carried into generation.
+
+## 2026-08-30 — AI Studio is visual source, AquaGuide Admin remains logic authority
+- `chusday97/aqua-fronted-cms` is accepted only as a UI/reference source for layout, spacing, navigation and preview presentation.
+- Do not merge its mock domain model, random preview tokens, fake `preview.aquaguide.co` URLs, client-side Data Review resolution, client-side Publish Readiness or delete handlers into the real Admin.
+- The authoritative logic remains `aquaguide-tank-guide/feature/admin-content-v0`: Supabase RLS, migrations, Base/Variant inheritance, revision/rollback, Data Review decisions, readiness assessment and static generator.
+- The persistent workspace rule is `left = choose content`, `center = edit`, `right = live frontend result`.
+- Base Species and Variant are distinct editor contexts. A Base parent click edits shared content; a Variant child click edits only that page's overrides.
+- Secondary systems (Data Review, readiness details, translation, history, batch queues) should use progressive disclosure and must not displace the primary editor/preview relationship.
+- Product Truth facts in the preview must come from the catalog projection and remain read-only; the UI may not invent missing water/tank/difficulty values.
+
+## 2026-08-31 — Interface language and content language are separate
+- `appLocale` is a presentation preference for Admin chrome, navigation, controls and system messages.
+- `contentLocale` is an editorial state for Species SEO content and the live public-page preview.
+- Changing interface language must never silently mutate or switch unsaved content.
+- The interface preference persists in localStorage; content locale remains explicit per editing session.
+- Do not introduce a heavy i18n dependency until the lightweight dictionary becomes materially difficult to maintain.
+- Product Truth preview data stays outside Species Group JSON and is loaded on demand from the existing catalog projection.

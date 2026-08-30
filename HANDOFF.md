@@ -603,3 +603,22 @@
 - Admin export carries only the selected Species and minimal review resolutions; reviewer IDs and notes are deliberately stripped.
 - Local reference URLs while the current processes remain alive: Admin Review `http://localhost:3020/`; generated static Preview `http://localhost:4020/`.
 - Next implementation should add queue-level counts/filters for Data Review and Publish Readiness before Production integration work.
+
+### 2026-08-30 Admin UI convergence handoff
+- Visual source: private repo `chusday97/aqua-fronted-cms`. Treat it as a design reference only; never copy its mock state/preview/delete/readiness logic as business authority.
+- Logic source remains this branch: `feature/admin-content-v0` with Supabase RLS, migrations 001–007, inheritance, Data Review, readiness, revisions and controlled generator.
+- Current desktop mental model is fixed: left navigation → center editor → right live frontend preview.
+- Left hierarchy is Category → Base Species → Variant. Base parent opens shared authoring; Variant child opens override authoring.
+- Right live preview receives unsaved Variant edits from the real resolver. Base edits continue to use `groupPreviewRows`, so shared-template edits also update the selected page preview before save.
+- Secondary tools are disclosures; do not move them back into permanent large panels unless a workflow requires it.
+- `generate-species-groups.mjs` must preserve the read-only Product Truth fields used in preview (image, water temperature, pH, tank size, difficulty, description). Contract now guards this projection.
+- Local reference: Admin Review `http://localhost:3020/`. At 1600px current measured panes are 270 / 870 / 460 with zero browser page errors.
+- Before treating this UI milestone as stable: commit/push, then require the existing Admin GitHub Actions A-layer to pass. Do not touch Production or `main`.
+
+### 2026-08-31 Admin UI / global language handoff
+- Treat `chusday97/aqua-fronted-cms` as a design source, never as business-logic authority. Do not copy its mock deletion, Preview token, Data Review or Readiness state logic.
+- Current interaction contract: left = choose Category/Base/Variant; center = edit Base or current Variant; right = live public frontend result.
+- `AppLanguageProvider` owns `appLocale` (`zh-CN` / `en`) and persists it under `aquaguide-admin-app-locale`.
+- `contentLocale` remains separate. A global English UI may edit and preview Chinese content without switching the content row.
+- `productTruthLoader.js` dynamically imports `catalog.generated.json`; do not re-add Product Truth fields to `species-groups.generated.json`.
+- Contract tests explicitly enforce the locale separation and lazy Product Truth boundary.
