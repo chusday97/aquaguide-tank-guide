@@ -9,9 +9,9 @@
 - 当前候选 SHA 和报告数量以 `npm run project:status`、`npm run readiness:collect` 运行时输出为准。工作树有未提交变更时，项目事实显示 `BLOCKED`、本地门禁显示 `UNVERIFIED`；提交后必须重新采集，才能显示绑定当前 SHA 的 PASS。GitHub/Preview 网络不可用时也必须保持 `UNVERIFIED`。
 - 4319 乱码/视觉差异仍是 UI 发布问题，不影响底层进度中心收集；不得把底层 PASS 解读为 UI 已验收。
 - 运行验证：`npm run test:readiness` 通过。沙箱中部分 `tsx` 测试遇到临时 IPC `EPERM`，看板已按环境证据降级为 `UNVERIFIED`，需在授权运行环境重跑作为最终门禁。
-- `e3316997` 已提交；独立 Critic 同线程复验通过。授权运行的最新报告为 14 PASS、4 FAIL（本地与远端/Preview SHA 尚未同步）、1 BLOCKED（生产未冻结）、1 UNVERIFIED（生产 Supabase 未写入验证）、1 USER_ACCEPTANCE_REQUIRED（视觉基线）。
-- 候选已按计划推送到 `3e1dca89`；远端候选、PR #142、Vercel 和 Cloudflare Preview 已读回同一 SHA。基础 CI 已通过，Product Golden Path 仍在运行；生产冻结、UI验收、Supabase生产和main合并未执行。
-- 下一步：先用看板确认底层门禁与证据，再冻结 Vercel/Cloudflare；UI 重做从最新 `main` 短分支进行，生产继续保持旧版本。
+- `e3316997` 已提交；独立 Critic 同线程复验通过。当前授权运行的最新报告绑定候选 `fb6db2a2`，为 18 PASS、1 BLOCKED（生产未冻结）、1 UNVERIFIED（生产 Supabase 未写入验证）、1 USER_ACCEPTANCE_REQUIRED（视觉基线）。
+- 候选已按计划推送到 `fb6db2a2`；远端候选、PR #142、Vercel Preview 已读回同一 SHA，Foundation、Product Golden Path、Cloudflare 和 AquaGuide Vercel 检查均通过。生产冻结、UI验收、Supabase生产和main合并未执行。
+- 下一步：用户验收 4319 当前候选后，单独授权冻结 Vercel/Cloudflare；生产继续保持旧版本，未获授权前不合并 `main`。
 
 ## 2026-08-30 正式预览入口收敛（当前）
 
@@ -24,7 +24,7 @@
 
 ## 2026-08-30 当前验证快照
 
-- 当前候选分支：`codex/main-core-foundation-v1`；本轮验证前本地、远端候选、PR #142 与 Preview 已同步，新增验证提交待一次性推送，精确值由 `npm run project:status` 和 `npm run check:preview-parity` 运行时读取。
+- 当前候选分支：`codex/main-core-foundation-v1`；本地、远端候选、PR #142 与 Vercel Preview 已同步到 `fb6db2a2`，精确值由 `npm run project:status` 和 `npm run readiness:collect` 运行时读取。
 - 本地门禁：Catalog 486 条校验、Domain/Service/Presentation、435 组合矩阵、26+1 Supabase 重放、pgTAP 19/19、Schema lint 0 error、lint、API 类型、build、核心体验、正式场景、今日行动和响应式路由均通过。
 - 本轮修复：Care 来源链接满足 44×44px 触控区域；核心浏览器断言兼容正式“混养风险计算”标题；未改数据库、Domain 规则或生产设置。
 - 当前两个真实阻塞：用户视觉验收后才能替换旧 UI Freeze；生产仍未冻结，Vercel 仍跟随 `main`，Cloudflare 绑定未确认。生产冻结前禁止合并 `main`。
