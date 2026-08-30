@@ -8,7 +8,7 @@
 - [x] 新增 `npm run test:readiness`：校验报告 schema、完整 SHA、状态集合、固定业务案例和未完成 UI/生产门禁不会被隐藏。
 - [x] 看板区分 Main 代码收敛与生产发布两个结论；网络不可用、字体/tsx 沙箱限制和旧 UI freeze 基线差异会显示为 `UNVERIFIED` 或 `USER_ACCEPTANCE_REQUIRED`，不伪装成通过。
 - [x] 进度中心实现于 `e3316997`，独立 Critic 已复验通过；当前授权运行报告绑定候选 `fb6db2a2`，为 18 项 PASS、1 项 BLOCKED（生产未冻结）、1 项 UNVERIFIED（生产 Supabase 未写入验证）和 1 项 USER_ACCEPTANCE_REQUIRED（视觉）。
-- [ ] 当前仍需：Vercel/Cloudflare 生产冻结、UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。
+- [ ] 当前仍需：Cloudflare 生产绑定读回、UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。
 
 验证证据：readiness report 始终写入 `.artifacts/readiness/<sha-prefix>/`，报告数量和状态以每次运行时输出为准。工作树有未提交变更时，项目事实为 `BLOCKED`，本地门禁为 `UNVERIFIED`；只有提交后重新采集，才允许生成绑定当前 SHA 的 PASS 证据。
 
@@ -19,7 +19,7 @@
 - [x] 正式入口已验证：Aquarium、Encyclopedia Scene、Care Scene、Collection 均可从预览进入，元数据显示候选完整 SHA、seed 和构建时间。
 - [x] `test:formal-scenes`、`test:core-ui`、`test:responsive-routes`、`check:project-truth` 和 `check:compatibility-authority` 通过。
 - [x] 进度中心提交已同步到候选分支；远端候选、PR #142、Vercel Preview 和 Cloudflare 检查已指向 `fb6db2a2`，Foundation、Product Golden Path、Cloudflare 和 AquaGuide Vercel 检查均通过。
-- [ ] 用户视觉验收、新 UI Freeze、生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
+- [ ] 用户视觉验收、新 UI Freeze、Cloudflare 生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
 
 ## 2026-08-30 浏览器与本地数据库门禁复验（当前）
 
@@ -28,7 +28,7 @@
 - [x] Compatibility authority、Domain、Service、Presentation、435 组合矩阵、核心体验、正式 scene、今日行动、Collection 和响应式路由回归通过。
 - [x] 修复 Care 来源链接触控区域不足 44px，并将核心回归断言对齐当前“混养风险计算”标题；类型检查和 production build 通过。
 - [ ] `check:ui-freeze` 仍会对旧 provisional `02457dd2` 报告候选视觉 Owner 差异；这不是新回退，必须由用户完成一次视觉验收后重录基线。
-- [ ] 生产部署仍未冻结（`productionDeploymentFrozen=false`）；生产 Vercel 当前仍运行 `main@ed0cf380`，Cloudflare 生产绑定尚未读回确认。
+- [ ] 生产部署仍未完全冻结（`productionDeploymentFrozen=false`）；Vercel 已改为跟随 `release/production` 且仍运行 `ed0cf380`，Cloudflare 生产绑定尚未读回确认。
 - [ ] 首批 30 种逐字段人工审核、第 27 个生产 migration、Catalog 发布、人工 release acceptance 和 PR #142 合并 `main` 尚未执行。
 
 ## 2026-08-30 快速收敛推进（当前）

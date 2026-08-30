@@ -28,7 +28,7 @@
 - 当前候选分支：`codex/main-core-foundation-v1`；本地、远端候选、PR #142 与 Vercel Preview 已同步到 `fb6db2a2`，精确值由 `npm run project:status` 和 `npm run readiness:collect` 运行时读取。
 - 本地门禁：Catalog 486 条校验、Domain/Service/Presentation、435 组合矩阵、26+1 Supabase 重放、pgTAP 19/19、Schema lint 0 error、lint、API 类型、build、核心体验、正式场景、今日行动和响应式路由均通过。
 - 本轮修复：Care 来源链接满足 44×44px 触控区域；核心浏览器断言兼容正式“混养风险计算”标题；未改数据库、Domain 规则或生产设置。
-- 当前两个真实阻塞：用户视觉验收后才能替换旧 UI Freeze；生产仍未冻结，Vercel 仍跟随 `main`，Cloudflare 绑定未确认。生产冻结前禁止合并 `main`。
+- 当前两个真实阻塞：用户视觉验收后才能替换旧 UI Freeze；生产仍未完全冻结，Vercel 已切到 `release/production`，Cloudflare 绑定未确认。生产冻结前禁止合并 `main`。
 - 后续顺序：用户确认 4319 四模块 → 新 UI Freeze → 单独授权冻结 Vercel/Cloudflare → PR #142 合入 `main` → 从 `main` 完成30种审核和生产 migration/Catalog 授权 → 最终 release acceptance。
 
 ## 2026-08-30 快速收敛路线（当前）
