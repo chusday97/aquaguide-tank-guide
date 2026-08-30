@@ -8,15 +8,17 @@ Keep the current production deployment unchanged while `main` becomes the latest
 
 - Vercel production Git SHA: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 - Local deployment pointer: `release/production`
-- Remote deployment pointer: `release/production` (created at the anchor SHA; provider binding still pending)
+- Remote deployment pointer: `release/production` (created at the anchor SHA)
+- Vercel Production Branch: `release/production` (saved and read back via project settings/API)
+- Cloudflare Production Branch: `UNVERIFIED` (dashboard requires login; no local API token)
 - Release readiness: `NOT_READY`
 
 ## Required external changes
 
 Before merging PR #142, an authorized operator must:
 
-1. Set the Vercel Production Branch to `release/production`.
-2. Read back the setting and confirm the production alias still serves the anchor SHA.
+1. ~~Set the Vercel Production Branch to `release/production`.~~ **DONE** — setting and API read-back both show `release/production`.
+2. ~~Read back the setting and confirm the production alias still serves the anchor SHA.~~ **DONE** — production deployment remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 3. Confirm Cloudflare is either not connected to automatic `main` production deploys or is pinned to the same deployment-only branch.
 4. Record the provider, branch, SHA and timestamp without recording credentials.
 

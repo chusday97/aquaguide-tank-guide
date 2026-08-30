@@ -36,8 +36,9 @@
 - [x] 只读确认 Vercel 当前生产部署为 `main@ed0cf38025652db901ee81aa697ca55b1c1584b6`。
 - [x] 建立本地 `release/production` 分支并锚定该生产 SHA；该分支只作为部署/回退指针。
 - [x] 已将 `release/production@ed0cf38025652db901ee81aa697ca55b1c1584b6` 建立到 GitHub 远端，未强推。
+- [x] 已在 Vercel Production 环境将 Branch Tracking 从 `main` 改为 `release/production`，并通过设置页与 API 读回确认；正式部署仍为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
 - [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
-- [ ] Vercel Production Branch 和 Cloudflare 实际生产分支尚未修改或读回确认；本地没有平台管理凭证，这是合并 `main` 前的外部阻塞。
+- [ ] Cloudflare 实际生产分支尚未读回确认；当前 Cloudflare 控制台需要重新登录，Wrangler 也没有 `CLOUDFLARE_API_TOKEN`，因此不能证明它不会跟随 `main`。
 - [x] 候选与 PR #142 的同步状态由 `npm run project:status` 与 `npm run check:preview-parity` 运行时核对；本轮验证提交完成后再进行一次性推送。
 - [x] `npm run project:status` 同时输出 `productionPointerSha=ed0cf380...`、`productionPointerSynchronized=true`，并明确 `productionDeploymentFrozen=false`，避免把本地回退锚点误当成已冻结生产设置。
 - [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。

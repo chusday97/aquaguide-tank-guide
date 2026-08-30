@@ -10,8 +10,9 @@
 - 4319 乱码/视觉差异仍是 UI 发布问题，不影响底层进度中心收集；不得把底层 PASS 解读为 UI 已验收。
 - 运行验证：`npm run test:readiness` 通过。沙箱中部分 `tsx` 测试遇到临时 IPC `EPERM`，看板已按环境证据降级为 `UNVERIFIED`，需在授权运行环境重跑作为最终门禁。
 - `e3316997` 已提交；独立 Critic 同线程复验通过。当前授权运行的最新报告绑定候选 `fb6db2a2`，为 18 PASS、1 BLOCKED（生产未冻结）、1 UNVERIFIED（生产 Supabase 未写入验证）、1 USER_ACCEPTANCE_REQUIRED（视觉基线）。
-- 候选已按计划推送到 `fb6db2a2`；远端候选、PR #142、Vercel Preview 已读回同一 SHA，Foundation、Product Golden Path、Cloudflare 和 AquaGuide Vercel 检查均通过。生产冻结、UI验收、Supabase生产和main合并未执行。
-- 下一步：用户验收 4319 当前候选后，单独授权冻结 Vercel/Cloudflare；生产继续保持旧版本，未获授权前不合并 `main`。
+- 候选当前提交、远端候选、PR #142、Vercel Preview 和 CI 的精确关系以运行时报告为准；Vercel Production Branch 已切换到 `release/production`，设置页与 API 均读回成功，正式部署仍保持旧生产 SHA `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
+- Cloudflare 仍未完成生产分支读回：控制台当前停在登录页，且本机没有 `CLOUDFLARE_API_TOKEN`。在 Cloudflare 读回前，`productionDeploymentFrozen` 必须继续为 `false`，不能合并 `main`。
+- 下一步：完成 Cloudflare 只读读回；若确认未跟随 `main` 或已指向 `release/production`，再更新冻结状态并单独申请 `main` 合并授权。
 
 ## 2026-08-30 正式预览入口收敛（当前）
 
@@ -33,9 +34,9 @@
 ## 2026-08-30 快速收敛路线（当前）
 
 - 代码事实目标已切换为 `main`；当前候选 `codex/main-core-foundation-v1` 的同步状态与精确 SHA 由 `npm run project:status` 运行时读取。
-- 生产部署锚点已只读确认：Vercel 生产 SHA 为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`；本地 `release/production` 已指向同一 SHA，仅作为部署/回退指针。
+- 生产部署锚点已只读确认：Vercel 生产 SHA 为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`；本地 `release/production` 已指向同一 SHA，仅作为部署/回退指针。Vercel Production Branch 已读回为 `release/production`。
 - 远端 `release/production` 已建立并指向 `ed0cf38025652db901ee81aa697ca55b1c1584b6`，未强推；生产冻结尚未完成：Vercel Production Branch 与 Cloudflare 实际分支设置仍需外部修改/读回确认。完成前禁止合并 `main`。
-- Vercel CLI 未提供生产分支设置接口；Cloudflare Wrangler 因缺少 `CLOUDFLARE_API_TOKEN` 无法读取。必须通过已登录平台控制台完成设置和读回，不能把“远端指针已建立”当成平台冻结。
+- Vercel CLI 的项目设置页已完成生产分支切换并读回；Cloudflare Wrangler 因缺少 `CLOUDFLARE_API_TOKEN`，且当前控制台需要登录，仍无法读回。不能把 Vercel 单方冻结当成两个平台都已冻结。
 - 合并 `main` 后仍保持 `NOT_READY`：视觉新基线、30 种资料、Supabase 第27个 migration、Catalog 发布和最终 Preview 只作为生产门禁。
 - 本轮已更新状态模型、浏览器验证和部署说明；生产设置、Supabase、Catalog 和 `main` 均未修改。候选推送与远端检查状态以运行时门禁为准。
 - `npm run project:status` 现在会动态输出 `productionPointerSha`、`productionPointerSynchronized` 和 `productionDeploymentFrozen`；当前回退锚点已对齐，但生产平台分支设置仍是 `productionDeploymentFrozen=false`，不能据此宣称已冻结。

@@ -4,6 +4,8 @@
 
 - Created the remote `release/production` pointer at the verified production anchor `ed0cf380`; provider branch binding remains pending because Vercel/Cloudflare settings require authenticated platform access, and production freeze is still unverified.
 
+- Updated Vercel Production Branch to `release/production` and read back the setting plus unchanged production SHA `ed0cf380`; Cloudflare remains unverified because its dashboard requires login and no local API token is available. Production freeze remains blocked until Cloudflare is read back.
+
 - Updated current progress and handoff evidence to candidate SHA `fb6db2a2`; recorded remote/PR/Preview parity and the remaining production-freeze, Supabase-production, and user-acceptance gates.
 
 - Added a local-only readiness evidence center: `npm run readiness:collect` generates SHA-bound JSON/Markdown gate evidence, `npm run readiness:serve` serves a read-only dashboard at `127.0.0.1:4320`, and `npm run test:readiness` validates its schema and explicit blocked/unverified states. This keeps backend progress inspectable while the 4319 UI remains unaccepted; no product API, database, Supabase or production setting changed.
