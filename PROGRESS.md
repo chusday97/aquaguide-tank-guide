@@ -401,3 +401,11 @@
 - Workflow Drawer 的 Pending 点击会关闭抽屉并真实作用到左侧筛选；English Translation Source/Target 正常渲染。
 - 清理 Species SEO UI 中错误遗留的 Archived，只保留 Draft / Published（Published 继续锁定）。
 - Contract/build/B 层 ephemeral Supabase schema v7 全部 PASS。
+
+### 2026-08-31 Admin Preview 与发布生成器对齐
+- 右侧 Page Preview 已改为真实静态 Species generator 的同一页面结构：Header → Breadcrumb → Hero（图/H1/学名/Intro）→ 4 个事实卡 → Product Truth 说明。
+- 新增 `speciesPagePresentation.js`，Preview 与 `generate-public-species.mjs` 共用发布文案标签和 English tank-size 本地化规则。
+- 删除此前 Preview 独有但 generator 不会发布的 `Overview & Care / Care essentials` 假正文，避免“后台看得到、上线没有”的误导。
+- Chromium 发现 1120/1080px 旧三栏会把 400px Preview 裁出视口；现改为 1180px 以下双栏，并提供显式 Preview 浮层，不丢核心预览能力。
+- 1120px 实测：编辑 H1 → Preview 浮层自动打开并高亮；点击 Preview H1 → 浮层关闭并回到中间字段。1200px+ 仍保持常驻右栏。
+- Contract / generator tests / build / schema-v7 B gate 全部 PASS。

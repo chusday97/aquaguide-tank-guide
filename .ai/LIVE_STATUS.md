@@ -66,3 +66,11 @@ Branch: `feature/admin-content-v0`
 - Editable Preview selection dismisses the drawer and highlights the editor field; Product Truth read-only selection does not invent an edit path.
 - Variant and Base status selectors expose only Draft + disabled Published; Archived is removed from Species SEO UI.
 - Contract/build and local Supabase schema-v7 gate remain PASS.
+
+## 2026-08-31 Generator / responsive Preview evidence
+- 1600px remains 270 / 870 / 460; 1200px remains 248 / 552 / 400 with no overflow.
+- 1179/1120/1080 switch to 240px navigation + wide editor with no off-screen clipping.
+- At 1120px the compact Preview trigger is visible; clicking editor H1 opens the Preview overlay with H1 selected, clicking that Preview H1 closes the overlay and highlights the editor field.
+- 1200px+ keeps the persistent Preview and hides the compact trigger.
+- Live Page no longer contains generator-absent care sections; Hero + facts + Product Truth note render and Inspector hover/selection remain green.
+- Contract/build/local schema-v7 Supabase gate PASS.

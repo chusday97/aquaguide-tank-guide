@@ -62,3 +62,9 @@ The persistent product model is now:
 - `EditorToolDrawer` overlays only CSS Grid column 2 (the editor); the live Preview remains fixed in column 3 and stays interactive.
 - Drawer dismissal is explicit: close button, Escape or editor-cell backdrop. Clicking an editable Preview element also closes the drawer and returns to the mapped editor field; read-only Product Truth inspection may keep the drawer open.
 - Species SEO lifecycle UI now exposes Draft / Published only; Published remains disabled. The legacy shared `content_status` enum is not modified for unrelated tables.
+
+## 2026-08-31 — Generator-aligned live Preview
+- Page Preview now mirrors the static Species generator structure: Header → Breadcrumb → Hero (image/H1/scientific name/intro) → four catalog facts → Product Truth note.
+- Publication-facing labels and English tank-size localization live in `speciesPagePresentation.js`, shared by `LiveFrontendPreview` and `generate-public-species.mjs`.
+- Admin-only fake sections (`Overview & Care` / `Care essentials`) were removed because the generator never emitted them.
+- Three-column layout now stops below 1180px before the Preview can be clipped. Narrow layouts keep Preview through an explicit overlay trigger; editor selection opens it and Preview selection returns to the editor.

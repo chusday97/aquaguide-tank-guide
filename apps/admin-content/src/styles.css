@@ -618,7 +618,7 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .editor-panel, .base-seo-panel { padding-left: 26px; padding-right: 26px; }
   .editor-secondary-tools { padding-left: 26px; padding-right: 26px; }
 }
-@media (max-width: 1050px) {
+@media (max-width: 1180px) {
   .workspace.studio-workspace { grid-template-columns: 240px minmax(0, 1fr); }
   .live-preview-pane { display: none; }
   .topbar-workflow { display: none; }
@@ -859,4 +859,40 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .workspace.studio-workspace > .studio-editor-area { grid-column: 1; grid-row: auto; }
   .editor-tool-drawer-layer { position: fixed; inset: 52px 0 0; z-index: 30; }
   .editor-tool-drawer { width: min(560px, 94vw); }
+}
+
+/* Live Page preview mirrors generate-public-species.mjs instead of inventing extra sections. */
+.live-species-page.publish-structure { background: #f5f8f5; }
+.live-species-page.publish-structure .live-site-header { height: 42px; padding: 0 16px; background: #fff; }
+.live-publish-main { padding: 15px 15px 24px; }
+.live-species-page.publish-structure .live-breadcrumb { padding: 0; margin: 4px 0 10px; background: transparent; font-size: 8px; }
+.live-publish-hero { display: grid; grid-template-columns: minmax(118px, 34%) minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px; border: 1px solid #dce5de; border-radius: 14px; background: #fff; }
+.live-publish-hero .preview-image-inspectable { min-width: 0; }
+.live-publish-hero .preview-image-inspectable img { width: 100%; aspect-ratio: 1; object-fit: contain; display: block; padding: 6px; border-radius: 10px; background: #eef4ef; }
+.live-image-empty { width: 100%; aspect-ratio: 1; border-radius: 10px; background: #eef4ef; }
+.live-publish-copy { min-width: 0; }
+.live-publish-copy h1 { margin: 0 0 4px; font-size: 22px; line-height: 1.02; letter-spacing: -.04em; overflow-wrap: anywhere; }
+.live-scientific { color: #65736b; font-family: Georgia, serif; font-size: 9px; font-style: italic; }
+.live-publish-intro { margin: 8px 0 0; color: #536159; font-size: 9px; line-height: 1.55; white-space: pre-line; }
+.live-facts.publish-facts { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 9px 0; background: transparent; border: 0; }
+.live-facts.publish-facts .live-fact { min-height: 54px; padding: 8px; border: 1px solid #dce5de; border-radius: 9px; background: #fff; }
+.live-facts.publish-facts .live-fact span { display: block; margin-bottom: 3px; color: #65736b; font-size: 7px; }
+.live-facts.publish-facts .live-fact strong { font-size: 8.5px; line-height: 1.25; }
+.live-truth-note { margin-top: 9px; padding: 10px 11px; border: 1px solid #dce5de; border-radius: 9px; background: #edf5ef; }
+.live-truth-note strong { display: block; font-size: 8.5px; }
+.live-truth-note p { margin: 3px 0 0; color: #65736b; font-size: 7.5px; line-height: 1.45; }
+.live-species-page.mobile .live-publish-hero { grid-template-columns: 1fr; }
+.live-species-page.mobile .live-publish-hero .preview-image-inspectable { max-width: 170px; margin: 0 auto; }
+.live-species-page.mobile .live-facts.publish-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* Narrow desktop fallback: Preview becomes an explicit overlay instead of being clipped or disappearing. */
+.compact-preview-toggle { display: none; border: 1px solid #d8e1da; border-radius: 7px; background: #fff; padding: 6px 9px; color: #315f49; font-size: 9px; font-weight: 760; }
+.compact-preview-close { display: none; width: 28px; height: 28px; place-items: center; border: 0; border-radius: 7px; background: #eef2ef; color: #536159; font-size: 18px; line-height: 1; }
+@media (max-width: 1180px) {
+  .compact-preview-toggle { display: inline-flex; align-items: center; }
+  .live-preview-pane.compact-open {
+    display: flex; position: fixed; top: 52px; right: 0; bottom: 0; width: min(460px, 94vw); z-index: 45;
+    box-shadow: -20px 0 52px rgba(28,45,35,.18);
+  }
+  .live-preview-pane.compact-open .compact-preview-close { display: grid; }
 }

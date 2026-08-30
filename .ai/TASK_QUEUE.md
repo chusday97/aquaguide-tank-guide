@@ -46,4 +46,5 @@ Updated: 2026-08-30
 - [x] Add semantic top workflow colors: Data Review amber / Awaiting Review blue / Preview-ready green.
 - [x] Implement bidirectional Editor ↔ Preview Inspector before further broad CSS polishing.
 - [x] Complete inheritance controls and secondary-tool drawer density pass.
-- [ ] Continue visual refinement: spacing, preview fidelity, and responsive behavior.
+- [x] Align Page Preview to the real static generator structure and preserve Preview access below 1180px with a compact overlay.
+- [ ] Continue visual refinement: spacing and typography polish without changing the stable three-pane interaction model.

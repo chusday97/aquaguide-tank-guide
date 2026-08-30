@@ -152,3 +152,9 @@
 - Reason: Data Review/History/Translation are contextual operations; expanding them inline distorted the main editing flow and hid the edit-to-preview relationship.
 - Drawer is intentionally `aria-modal=false`: right Preview remains inspectable. Editable Preview selection closes the drawer and returns to the field; Product Truth stays read-only.
 - Species SEO UI exposes only Draft/Published. Do not surface the legacy shared enum value `archived` in this Admin.
+
+## 2026-08-31 — Live Preview follows publication structure
+- Decision: the Page tab is a visual projection of `generate-public-species.mjs`, not an independent mock page.
+- Shared presentation labels/localization live in `speciesPagePresentation.js` and are imported by both generator and Admin Preview.
+- Do not add content sections to Page Preview unless the generator publishes them.
+- Below 1180px, preserve Preview through a compact overlay rather than forcing a clipped third column or removing Preview access entirely.

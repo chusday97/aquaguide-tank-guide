@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { buildSpeciesSeoRouteMeta } from '../src/seoRouteContract.js';
+import { getSpeciesPageLabels, localizeSpeciesTankSize } from '../src/speciesPagePresentation.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
@@ -74,25 +75,6 @@ function normalizeLocale(locale) {
   return locale === 'en' ? 'en' : locale === 'zh-CN' ? 'zh-CN' : null;
 }
 
-function localizeTankSize(value, locale) {
-  if (locale !== 'en') return value || '—';
-  const match = String(value || '').match(/至少\s*(\d+(?:\.\d+)?)\s*升/);
-  return match ? `At least ${match[1]} L` : '—';
-}
-
-function pageLabels(locale) {
-  if (locale === 'en') {
-    return {
-      breadcrumb: 'Species', temperature: 'Temperature', ph: 'pH', tank: 'Tank size', difficulty: 'Difficulty',
-      truth: 'Catalog facts', truthNote: 'These values come from AquaGuide Product Truth and are not rewritten by the SEO editor.',
-    };
-  }
-  return {
-    breadcrumb: '物种图鉴', temperature: '水温', ph: 'pH', tank: '建议缸体', difficulty: '饲养难度',
-    truth: 'Catalog 事实数据', truthNote: '这些数值来自 AquaGuide Product Truth，SEO 编辑不会改写它们。',
-  };
-}
-
 function validateEligibleRecord({ row, groupRow, member, group, effectiveSeo, rowMap, reviewMap, mode }) {
   const errors = [];
   const locale = normalizeLocale(row.locale);
@@ -135,7 +117,7 @@ function validateEligibleRecord({ row, groupRow, member, group, effectiveSeo, ro
 }
 
 function renderPage({ siteUrl, member, locale, effectiveSeo, routeMeta, availableAlternates, previewOnly = false }) {
-  const labels = pageLabels(locale);
+  const labels = getSpeciesPageLabels(locale);
   const displayName = effectiveSeo.displayName || member.name;
   const intro = [effectiveSeo.sharedIntro, effectiveSeo.variantIntro].filter(Boolean).join('\n\n').trim();
   const canonical = absoluteUrl(siteUrl, routeMeta.canonicalPath);
@@ -173,7 +155,7 @@ ${alternates}
 <header><div class="bar"><a href="/">AquaGuide</a></div></header>
 <main><div class="crumb">AquaGuide / ${escapeHtml(labels.breadcrumb)} / ${escapeHtml(displayName)}</div>
 <article class="hero">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(imageAlt)}">` : '<div></div>'}<div><h1>${escapeHtml(effectiveSeo.h1)}</h1><div class="scientific">${escapeHtml(member.scientific_name)}</div><p class="intro">${escapeHtml(intro)}</p></div></article>
-<section class="facts"><div class="fact"><span>${labels.temperature}</span><strong>${escapeHtml(member.water_temperature || '—')}</strong></div><div class="fact"><span>${labels.ph}</span><strong>${escapeHtml(member.ph_level || '—')}</strong></div><div class="fact"><span>${labels.tank}</span><strong>${escapeHtml(localizeTankSize(member.tank_size, locale))}</strong></div><div class="fact"><span>${labels.difficulty}</span><strong>${escapeHtml(member.difficulty || '—')}</strong></div></section>
+<section class="facts"><div class="fact"><span>${labels.temperature}</span><strong>${escapeHtml(member.water_temperature || '—')}</strong></div><div class="fact"><span>${labels.ph}</span><strong>${escapeHtml(member.ph_level || '—')}</strong></div><div class="fact"><span>${labels.tank}</span><strong>${escapeHtml(localizeSpeciesTankSize(member.tank_size, locale))}</strong></div><div class="fact"><span>${labels.difficulty}</span><strong>${escapeHtml(member.difficulty || '—')}</strong></div></section>
 <section class="truth"><strong>${escapeHtml(labels.truth)}</strong><p>${escapeHtml(labels.truthNote)}</p></section></main>
 </body></html>\n`;
 }

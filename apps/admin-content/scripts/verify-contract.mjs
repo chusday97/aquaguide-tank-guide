@@ -43,6 +43,9 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
   readFile(path.join(appRoot, 'src/species-groups.generated.json'), 'utf8'),
 ]);
 
+const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
+const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
+
 const catalog = JSON.parse(catalogRaw);
 const groupData = JSON.parse(groupsRaw);
 const groupedMembers = groupData.groups.flatMap((group) => group.members);
@@ -122,6 +125,15 @@ assert.match(liveFrontendPreviewSource, /Product Truth · 只读/, 'Preview insp
 assert.match(liveFrontendPreviewSource, /elementEditPath/, 'Preview inspector must explain where the selected element is edited');
 assert.match(liveFrontendPreviewSource, /editorScope/, 'Inspector edit paths must distinguish Base and current-page editing context');
 assert.match(liveFrontendPreviewSource, /\['page', 'google', 'mobile'\]/, 'Live preview must preserve Page, Google and Mobile modes');
+assert.match(liveFrontendPreviewSource, /speciesPagePresentation/, 'Live Page preview must reuse the shared publication presentation rules');
+assert.match(publicGeneratorSource, /speciesPagePresentation/, 'Public Species generator must reuse the same publication presentation rules as live Preview');
+assert.match(speciesPagePresentationSource, /Catalog facts/, 'Shared Species presentation must define publication-facing fact labels');
+assert.doesNotMatch(liveFrontendPreviewSource, /Care essentials|饲养要点|Overview & Care|物种概览与饲养/, 'Live Page preview must not invent sections absent from the static generator');
+assert.match(appSource, /compactPreviewOpen/, 'Narrow layouts must preserve access to Preview through an explicit compact state');
+assert.match(appSource, /compact-preview-toggle/, 'Narrow layouts must expose a Preview trigger instead of silently hiding Preview');
+assert.match(liveFrontendPreviewSource, /compact-open/, 'Live Preview must support the narrow overlay mode');
+assert.match(stylesSource, /@media \(max-width: 1180px\)/, 'Three-column layout must stop before the 400px Preview is clipped off-screen');
+assert.match(stylesSource, /live-preview-pane\.compact-open/, 'Narrow Preview must have a visible overlay fallback');
 assert.match(liveFrontendPreviewSource, /preview\.previewOnly/, 'Live preview must render the localized noindex safety label');
 assert.match(appLanguageSource, /Noindex/, 'Global UI language dictionary must preserve the Preview noindex safety label');
 assert.match(publicPreviewSource, /hreflang=zh-CN/, 'Public preview must expose hreflang pair evidence');

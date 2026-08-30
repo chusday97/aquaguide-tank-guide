@@ -651,3 +651,10 @@
 - Existing Data Review/RPC, Readiness, Translation, Revision and Workflow callbacks remain the authority; the drawer is presentation only.
 - Species SEO status UI is Draft/Published only, with Published still fail-closed. Do not reintroduce Archived in Variant/Base controls.
 - Browser regression and local B gate are green; Production Supabase and `main` remain untouched.
+
+### 2026-08-31 Generator-aligned Preview handoff
+- Treat `generate-public-species.mjs` as the structural authority for the Page Preview. Do not add Page-tab sections that the static generator does not emit.
+- `speciesPagePresentation.js` is the shared browser/Node presentation contract for publication labels and tank-size localization. Keep generator and live Preview using it.
+- Desktop ≥1180px keeps the persistent third-column Preview. Narrow desktop uses `compactPreviewOpen` and `.compact-preview-toggle`; do not regress to a clipped off-screen 400px column.
+- Editor-origin Inspector selection opens compact Preview on narrow layouts; editable Preview-origin selection closes it and returns to the editor target.
+- Current contract/build/B gate are green; Production Supabase and `main` remain untouched.

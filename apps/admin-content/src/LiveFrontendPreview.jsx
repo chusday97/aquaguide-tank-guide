@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getLocaleLabel } from './localization.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 import { getEditorElementLabel, getEditorElementMeta } from './editorElementRegistry.js';
+import { getSpeciesPageLabels, localizeSpeciesTankSize } from './speciesPagePresentation.js';
 
 const stateMeta = {
   blocked: { label: 'Blocked', tone: 'blocked' },
@@ -59,37 +60,37 @@ function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabl
 
 function SpeciesPage({ preview, mobile = false, inspector }) {
   const { species, effectiveSeo, locale } = preview;
+  const labels = getSpeciesPageLabels(locale);
+  const displayName = effectiveSeo.displayName || species.name;
   const imageSrc = species.image?.startsWith('/') ? `https://aqua-tank-guide.vercel.app${species.image}` : species.image;
-  const intro = [effectiveSeo.sharedIntro, effectiveSeo.variantIntro].filter(Boolean).join('\n\n')
-    || species.product_description
-    || (locale === 'en' ? 'Editorial introduction has not been written yet.' : '尚未填写编辑型简介。');
+  const imageAlt = effectiveSeo.imageAlt || `${displayName} (${species.scientific_name || ''})`;
+  const intro = [effectiveSeo.sharedIntro, effectiveSeo.variantIntro].filter(Boolean).join('\n\n').trim();
   const inspectProps = (elementKey, className = '') => ({ elementKey, className, ...inspector });
   return (
-    <article className={`live-species-page ${mobile ? 'mobile' : ''}`}>
-      <div className="live-site-header"><strong>AquaGuide</strong><span>{preview.locale === 'en' ? 'Species Guide' : '物种指南'}</span></div>
-      <div className="live-breadcrumb">Species · {species.category} · <Inspectable {...inspectProps('localizedName', 'preview-inline-name')}>{effectiveSeo.displayName || species.name}</Inspectable></div>
-      <div className="live-hero">
-        <Inspectable {...inspectProps('imageAlt', 'preview-image-inspectable')}>
-          <img src={imageSrc} alt={effectiveSeo.imageAlt || effectiveSeo.displayName || species.name} />
-        </Inspectable>
-        <div className="live-hero-copy">
-          <span className="live-kicker">{species.category}</span>
-          <Inspectable {...inspectProps('h1')}><h1>{effectiveSeo.h1 || effectiveSeo.displayName || species.name}</h1></Inspectable>
-          <Inspectable {...inspectProps('scientificName')}><em>{species.scientific_name}</em></Inspectable>
+    <article className={`live-species-page publish-structure ${mobile ? 'mobile' : ''}`}>
+      <header className="live-site-header"><strong>AquaGuide</strong></header>
+      <main className="live-publish-main">
+        <div className="live-breadcrumb">
+          AquaGuide / {labels.breadcrumb} / <Inspectable {...inspectProps('localizedName', 'preview-inline-name')}>{displayName}</Inspectable>
         </div>
-      </div>
-      <div className="live-facts">
-        <Inspectable {...inspectProps('temperature')}><span>{locale === 'en' ? 'Temperature' : '水温'}</span><strong>{species.water_temperature || '—'}</strong></Inspectable>
-        <Inspectable {...inspectProps('ph')}><span>pH</span><strong>{species.ph_level || '—'}</strong></Inspectable>
-        <Inspectable {...inspectProps('tankSize')}><span>{locale === 'en' ? 'Tank' : '建议缸体'}</span><strong>{species.tank_size || '—'}</strong></Inspectable>
-        <Inspectable {...inspectProps('difficulty')}><span>{locale === 'en' ? 'Care' : '难度'}</span><strong>{species.difficulty || '—'}</strong></Inspectable>
-      </div>
-      <div className="live-body">
-        <h2>{locale === 'en' ? 'Overview & Care' : '物种概览与饲养'}</h2>
-        <Inspectable {...inspectProps('intro')}><p>{intro}</p></Inspectable>
-        <h2>{locale === 'en' ? 'Care essentials' : '饲养要点'}</h2>
-        <p>{species.product_description || (locale === 'en' ? 'Care facts come from AquaGuide Product Truth.' : '饲养事实来自 AquaGuide Product Truth。')}</p>
-      </div>
+        <article className="live-publish-hero">
+          <Inspectable {...inspectProps('imageAlt', 'preview-image-inspectable')}>
+            {imageSrc ? <img src={imageSrc} alt={imageAlt} /> : <div className="live-image-empty" />}
+          </Inspectable>
+          <div className="live-publish-copy">
+            <Inspectable {...inspectProps('h1')}><h1>{effectiveSeo.h1 || ''}</h1></Inspectable>
+            <Inspectable {...inspectProps('scientificName')}><div className="live-scientific">{species.scientific_name}</div></Inspectable>
+            <Inspectable {...inspectProps('intro')}><p className="live-publish-intro">{intro}</p></Inspectable>
+          </div>
+        </article>
+        <section className="live-facts publish-facts">
+          <Inspectable {...inspectProps('temperature', 'live-fact')}><span>{labels.temperature}</span><strong>{species.water_temperature || '—'}</strong></Inspectable>
+          <Inspectable {...inspectProps('ph', 'live-fact')}><span>{labels.ph}</span><strong>{species.ph_level || '—'}</strong></Inspectable>
+          <Inspectable {...inspectProps('tankSize', 'live-fact')}><span>{labels.tank}</span><strong>{localizeSpeciesTankSize(species.tank_size, locale)}</strong></Inspectable>
+          <Inspectable {...inspectProps('difficulty', 'live-fact')}><span>{labels.difficulty}</span><strong>{species.difficulty || '—'}</strong></Inspectable>
+        </section>
+        <section className="live-truth-note"><strong>{labels.truth}</strong><p>{labels.truthNote}</p></section>
+      </main>
     </article>
   );
 }
@@ -105,7 +106,7 @@ function GooglePreview({ preview, inspector }) {
   );
 }
 
-export default function LiveFrontendPreview({ preview, readiness, onGeneratePreview, readOnly = false, selectedElement, onSelectElement, editorScope = 'variant' }) {
+export default function LiveFrontendPreview({ preview, readiness, onGeneratePreview, readOnly = false, selectedElement, onSelectElement, editorScope = 'variant', compactOpen = false, onCloseCompact }) {
   const { appLocale, t } = useAppLanguage();
   const [mode, setMode] = useState('page');
   const [hoveredElement, setHoveredElement] = useState(null);
@@ -130,7 +131,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
     return () => cancelAnimationFrame(frame);
   }, [selectedElement, mode]);
 
-  if (!preview?.species) return <aside className="live-preview-pane"><div className="live-preview-empty">{t('preview.empty')}</div></aside>;
+  if (!preview?.species) return <aside className={`live-preview-pane ${compactOpen ? 'compact-open' : ''}`}><div className="live-preview-empty">{t('preview.empty')}</div></aside>;
   const selectedLabel = selectedElement ? getEditorElementLabel(selectedElement, appLocale) : '';
   const selectedSource = selectedElement ? elementSource(selectedElement, preview, appLocale) : '';
   const selectedPath = selectedElement ? elementEditPath(selectedElement, preview, appLocale, editorScope) : '';
@@ -144,7 +145,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
   };
 
   return (
-    <aside className="live-preview-pane" ref={paneRef}>
+    <aside className={`live-preview-pane ${compactOpen ? 'compact-open' : ''}`} ref={paneRef}>
       <header className="live-preview-header">
         <div><strong>{t('preview.title')}</strong><small>{getLocaleLabel(preview.locale)}</small></div>
         <div className="preview-header-actions">
@@ -154,6 +155,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
           <button type="button" className={`inspect-toggle ${inspectEnabled ? 'active' : ''}`} onClick={() => setInspectEnabled((value) => !value)}>
             {appLocale === 'en' ? 'Inspect' : '检查元素'}
           </button>
+          <button type="button" className="compact-preview-close" onClick={onCloseCompact} aria-label={appLocale === 'en' ? 'Close preview' : '关闭预览'}>×</button>
         </div>
       </header>
       <div className="preview-readiness-row">

@@ -194,3 +194,10 @@
 - Verified Escape / close / backdrop dismissal, Workflow filter handoff, English Translation drawer, and Inspector-to-editor return.
 - Removed Archived from Variant/Base Species status controls; Draft is writable and Published remains locked.
 - Contract/build PASS; local ephemeral Supabase gate PASS at schema_version=7.
+
+## 2026-08-31 — Generator-aligned Preview + responsive fallback
+- Extracted shared Species page labels / tank-size localization into `speciesPagePresentation.js`; generator tests remain green.
+- Rebuilt Page Preview to match generator output and removed non-published mock sections.
+- Moved the three-column cutoff to 1180px after Chromium proved 1120/1080 clipped the old 400px Preview column.
+- Added compact Preview state/trigger for narrow layouts and source-aware Inspector handoff between editor and overlay Preview.
+- Chromium responsive/Inspector regression, contract, build and local Supabase gate all PASS.

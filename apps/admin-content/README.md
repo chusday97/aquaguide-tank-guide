@@ -307,3 +307,9 @@ Variant Meta Title, Meta Description and H1 use progressive inheritance controls
 Data Review, Publish Readiness, Translation, Batch SEO, Revision History and Workflow use `EditorToolDrawer`. The drawer overlays only the center editor grid cell; the live frontend Preview remains visible and interactive in the right column. Close with the explicit close control, Escape, or the editor-cell backdrop. Selecting an editable Preview Inspector element dismisses the drawer and returns to the mapped editor field.
 
 Species SEO authoring exposes only `draft` and `published` lifecycle choices; `published` remains disabled until Production integration is explicitly approved. Do not expose the shared legacy enum value `archived` in this Admin.
+
+## Generator-aligned Page Preview
+
+The Page tab mirrors the static Species publication structure rather than maintaining an independent mock layout. `speciesPagePresentation.js` is shared by `LiveFrontendPreview` and `generate-public-species.mjs` for publication-facing labels and tank-size localization. Do not add Page Preview sections that are absent from the generator.
+
+At widths below 1180px the persistent third column is replaced by an explicit compact Preview overlay so the editor is not squeezed and Preview access is not lost. Editor Inspector selection opens the compact Preview; selecting an editable element in the overlay returns to the mapped editor field.

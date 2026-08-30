@@ -483,11 +483,13 @@ export default function App() {
   const [selectedProductTruth, setSelectedProductTruth] = useState(null);
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
+  const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
   useEffect(() => {
     setSelectedInspectorElement(null);
     setActiveTool(null);
+    setCompactPreviewOpen(false);
   }, [selectedId, contentLocale]);
 
   useEffect(() => {
@@ -650,10 +652,12 @@ export default function App() {
   const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
     ? { ...livePreview, species: previewSpecies || livePreview.species }
     : savedLivePreview;
-  const handleInspectorSelect = (key) => {
+  const handleInspectorSelect = (key, source = 'editor') => {
     setSelectedInspectorElement(key);
     const elementMeta = getEditorElementMeta(key);
     const inspectorReadOnly = Boolean(elementMeta?.readOnly || (key === 'localizedName' && contentLocale !== 'en'));
+    if (source === 'editor') setCompactPreviewOpen(true);
+    if (source === 'preview' && !inspectorReadOnly) setCompactPreviewOpen(false);
     if (!inspectorReadOnly) setActiveTool(null);
     const variantOnly = key === 'imageAlt' || (key === 'localizedName' && contentLocale === 'en');
     const variantOverride = Boolean(activeLivePreview?.override?.[key]);
@@ -844,6 +848,7 @@ export default function App() {
               <button type="button" className={editorScope === 'base' ? 'active' : ''} onClick={() => setEditorScope('base')}>{t('editor.base')}</button>
               <button type="button" className={editorScope === 'variant' ? 'active' : ''} onClick={() => setEditorScope('variant')}>{t('editor.currentPage')}</button>
             </div>
+            <button type="button" className="compact-preview-toggle" onClick={() => setCompactPreviewOpen(true)}>{t('preview.title')}</button>
             <div className="locale-switcher compact" aria-label="Content language">
               {CONTENT_LOCALES.map((item) => (
                 <button key={item.code} type="button" className={contentLocale === item.code ? 'active' : ''} onClick={() => setContentLocale(item.code)}>{item.label}</button>
@@ -860,7 +865,7 @@ export default function App() {
               readOnly={isReviewMode}
               onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
               selectedInspectorElement={selectedInspectorElement}
-              onInspectorSelect={handleInspectorSelect}
+              onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
               onSaved={(row) => {
                 const key = groupSeoRowKey(row.group_key, row.locale);
                 setGroupSeoRows((current) => ({ ...current, [key]: row }));
@@ -880,7 +885,7 @@ export default function App() {
               readOnly={isReviewMode}
               onLivePreviewChange={setLivePreview}
               selectedInspectorElement={selectedInspectorElement}
-              onInspectorSelect={handleInspectorSelect}
+              onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
               onSaved={(row) => {
                 setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
                 setRevisionRefreshKey((current) => current + 1);
@@ -1002,8 +1007,10 @@ export default function App() {
           readOnly={isReviewMode}
           onGeneratePreview={exportPreviewSnapshot}
           selectedElement={selectedInspectorElement}
-          onSelectElement={handleInspectorSelect}
+          onSelectElement={(key) => handleInspectorSelect(key, 'preview')}
           editorScope={editorScope}
+          compactOpen={compactPreviewOpen}
+          onCloseCompact={() => setCompactPreviewOpen(false)}
         />
       </div>
     </div>
