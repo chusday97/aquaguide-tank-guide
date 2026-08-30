@@ -6,7 +6,9 @@
 
 - [x] Added SHA-bound local readiness collection, read-only dashboard server (port 4320) and evidence schema test.
 - [x] Added explicit six-track statuses and fixed business-case rows; UI acceptance and production freeze cannot be hidden by backend PASS results.
-- [ ] Re-run the collector in an unrestricted environment so tsx-based local gates are fresh evidence; re-read GitHub/Preview when network is available.
+- [x] Re-ran the collector in an unrestricted environment; local gates and Preview SHA evidence are bound to `3e1dca89`.
+- [x] Pushed the candidate once; remote branch, PR #142, Vercel and Cloudflare Preview now point to `3e1dca89`.
+- [ ] Re-read Product Golden Path once its remaining browser paths finish; keep UI acceptance and production freeze separate.
 
 - [x] Reviewed tetra water facts and fail-closed regressions are in the canonical Catalog; checksum is recorded in the parity report.
 - [x] Added `check:compatibility-authority` to guard the legacy facade boundary without changing frozen UI files.

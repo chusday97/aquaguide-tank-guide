@@ -10,6 +10,7 @@
 - 4319 乱码/视觉差异仍是 UI 发布问题，不影响底层进度中心收集；不得把底层 PASS 解读为 UI 已验收。
 - 运行验证：`npm run test:readiness` 通过。沙箱中部分 `tsx` 测试遇到临时 IPC `EPERM`，看板已按环境证据降级为 `UNVERIFIED`，需在授权运行环境重跑作为最终门禁。
 - `e3316997` 已提交；独立 Critic 同线程复验通过。授权运行的最新报告为 14 PASS、4 FAIL（本地与远端/Preview SHA 尚未同步）、1 BLOCKED（生产未冻结）、1 UNVERIFIED（生产 Supabase 未写入验证）、1 USER_ACCEPTANCE_REQUIRED（视觉基线）。
+- 候选已按计划推送到 `3e1dca89`；远端候选、PR #142、Vercel 和 Cloudflare Preview 已读回同一 SHA。基础 CI 已通过，Product Golden Path 仍在运行；生产冻结、UI验收、Supabase生产和main合并未执行。
 - 下一步：先用看板确认底层门禁与证据，再冻结 Vercel/Cloudflare；UI 重做从最新 `main` 短分支进行，生产继续保持旧版本。
 
 ## 2026-08-30 正式预览入口收敛（当前）

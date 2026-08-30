@@ -1,5 +1,11 @@
 # AI Execution Log
 
+## 2026-08-30 — Readiness candidate synchronized
+
+- Pushed the clean candidate `3e1dca89` once to `codex/main-core-foundation-v1`; remote branch and PR #142 now report the same head.
+- Vercel and Cloudflare Preview deployments for the candidate are ready; foundation checks passed and Product Golden Path remains pending on the final browser paths.
+- No production branch setting, Supabase production SQL, Catalog publication or `main` merge was changed.
+
 ## 2026-08-28 — Local convergence rehearsal after Vercel deferral
 
 - Added `check:compatibility-authority` and kept legacy compatibility imports explicitly allowlisted as a facade boundary; Domain Rules remains the final status/policy/version source.

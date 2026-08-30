@@ -12,6 +12,10 @@
 
 - The local report distinguishes Main code convergence from production release. Current UI acceptance and production deployment freeze remain explicit blockers; network and sandbox-only failures are reported as `UNVERIFIED` rather than reused as green evidence.
 
+### Changed
+
+- Synchronized the readiness candidate to GitHub/PR #142 and recorded the exact Preview SHA. Product Golden Path remains pending until its final browser paths complete.
+
 ### Added
 
 - Added the compatibility-authority static gate and the production Catalog migration authorization package.

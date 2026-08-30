@@ -18,7 +18,8 @@
 - [x] 预览自动使用隔离演示鱼缸、完成 onboarding，并强制本地 Repository；浏览器回归确认四个模块无 `/api` 请求、无页面错误。
 - [x] 正式入口已验证：Aquarium、Encyclopedia Scene、Care Scene、Collection 均可从预览进入，元数据显示候选完整 SHA、seed 和构建时间。
 - [x] `test:formal-scenes`、`test:core-ui`、`test:responsive-routes`、`check:project-truth` 和 `check:compatibility-authority` 通过。
-- [ ] 当前预览改动待一次性推送纪律同步 GitHub；用户视觉验收、新 UI Freeze、生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
+- [x] 进度中心提交已一次性同步到候选分支；远端候选、PR #142 和当前 Vercel/Cloudflare Preview 已指向 `3e1dca89`，基础 CI 通过，Product Golden Path 尚在完成最后路径。
+- [ ] 用户视觉验收、新 UI Freeze、生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
 
 ## 2026-08-30 浏览器与本地数据库门禁复验（当前）
 
