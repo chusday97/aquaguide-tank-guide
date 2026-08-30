@@ -1,5 +1,15 @@
 # AquaGuide Handoff — Latest
 
+## 2026-08-30 字段级审核管道已落地（当前）
+
+- 分支：`codex/catalog-cohort-30-v1`，基于 `main@016dbca5`；最新提交 `9b3b9380`，当前仅本地，未推送。
+- 本步新增 `src/data/catalogFieldReviews.ts`、`scripts/test-catalog-review-contract.ts`，并扩展 `catalog:research` / `catalog:review` / Catalog snapshot 生成链路。
+- 三批研究草稿每个物种包含 10 个字段（身份、水体、温度、pH、成体体型、缸体、社会行为、领地、捕食、繁殖），全部为 Draft、无引用；机器校验为 `0/30 reviewed`、`300` 个字段待审核。
+- 运行证据：`test:catalog-review`、`catalog:build`、`catalog:validate`、`lint`、`check:project-truth`、首发队列/435 组合矩阵、Catalog snapshot、compatibility authority 均通过；Catalog 保持 486 条，checksum `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`。
+- 安全边界：批准记录数组目前为空；只有 `status=reviewed` 且存在 citationIds 的字段才会覆盖 Profile。研究草稿不会进入运行时事实，也不会改写 `fishData.ts`、数据库或生产 Supabase。
+- 已知阻塞：`check:ui-freeze` 仍针对旧 provisional `02457dd2` 报告历史视觉 Owner 差异；这是既有视觉基线问题，不是本次数据提交造成。UI 需后续短分支处理，当前本地预览/生产均未改动。
+- 下一步：由内容审核人员补齐每个字段的可靠来源、冲突说明和审核状态；完成后由同一 Critic 复验，再由用户一次性确认整批资料。未完成前不要发布 Catalog、执行第27个 migration 或推送 GitHub。
+
 ## 2026-08-30 30种资料审计启动（当前）
 
 - 短分支：`codex/catalog-cohort-30-v1`，基于最新 `main@016dbca5`，当前仅本地存在。
