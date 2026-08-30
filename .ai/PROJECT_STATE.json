@@ -5,7 +5,23 @@
   "canonicalRole": "single code source after source convergence; production is pinned separately until release gates pass",
   "sourceConvergenceBranch": "codex/main-core-foundation-v1",
   "productionBranch": "release/production",
-  "productionDeploymentFrozen": false,
+  "productionDeploymentFrozen": true,
+  "productionProviders": {
+    "vercel": {
+      "status": "ACTIVE_FROZEN",
+      "productionBranch": "release/production",
+      "verifiedSha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
+      "checkedAt": "2026-08-30",
+      "evidence": "Vercel project settings/API read-back"
+    },
+    "cloudflare": {
+      "status": "INACTIVE_LEGACY",
+      "productionBranch": null,
+      "verifiedSha": null,
+      "checkedAt": "2026-08-30",
+      "evidence": "User decision: Cloudflare is not an AquaGuide production channel; retain historical resources without modifying them"
+    }
+  },
   "productionAnchor": {
     "sha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
     "source": "Vercel production deployment metadata",

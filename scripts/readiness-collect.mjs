@@ -163,6 +163,9 @@ gates.push(gate({
 }));
 
 const productionFrozen = project.productionDeploymentFrozen === true;
+const providerSummary = Object.entries(project.productionProviders ?? {})
+  .map(([name, provider]) => `${name}:${provider?.status ?? 'UNVERIFIED'}`)
+  .join(', ') || '未配置生产渠道';
 gates.push({
   gateId: 'production-freeze',
   title: '生产部署已与 main 解耦',
@@ -171,9 +174,9 @@ gates.push({
   checkedAt: evaluatedAt,
   source: 'production',
   command: '读取 project:status.productionDeploymentFrozen',
-  expected: 'Vercel 与 Cloudflare 不会因 main 更新自动发布。',
+  expected: '所有仍在使用的生产渠道不会因 main 更新自动发布；历史渠道不参与冻结计算。',
   actual: productionFrozen ? 'productionDeploymentFrozen=true' : 'productionDeploymentFrozen=false；平台设置尚未读回确认。',
-  notes: `生产回退指针：${project.productionPointerSha ?? 'UNVERIFIED'}`,
+  notes: `生产回退指针：${project.productionPointerSha ?? 'UNVERIFIED'}；渠道：${providerSummary}`,
 });
 
 gates.push({

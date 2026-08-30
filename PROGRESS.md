@@ -11,7 +11,7 @@
 - [x] 新增 `npm run test:readiness`：校验报告 schema、完整 SHA、状态集合、固定业务案例和未完成 UI/生产门禁不会被隐藏。
 - [x] 看板区分 Main 代码收敛与生产发布两个结论；网络不可用、字体/tsx 沙箱限制和旧 UI freeze 基线差异会显示为 `UNVERIFIED` 或 `USER_ACCEPTANCE_REQUIRED`，不伪装成通过。
 - [x] 进度中心实现于 `e3316997`，独立 Critic 已复验通过；当前授权运行报告绑定候选 `fb6db2a2`，为 18 项 PASS、1 项 BLOCKED（生产未冻结）、1 项 UNVERIFIED（生产 Supabase 未写入验证）和 1 项 USER_ACCEPTANCE_REQUIRED（视觉）。
-- [ ] 当前仍需：Cloudflare 生产绑定读回、UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。
+- [ ] 当前仍需：UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。Cloudflare 已按用户决定登记为历史渠道，不再阻塞生产冻结。
 
 验证证据：readiness report 始终写入 `.artifacts/readiness/<sha-prefix>/`，报告数量和状态以每次运行时输出为准。工作树有未提交变更时，项目事实为 `BLOCKED`，本地门禁为 `UNVERIFIED`；只有提交后重新采集，才允许生成绑定当前 SHA 的 PASS 证据。
 
@@ -41,8 +41,7 @@
 - [x] 已将 `release/production@ed0cf38025652db901ee81aa697ca55b1c1584b6` 建立到 GitHub 远端，未强推。
 - [x] 已在 Vercel Production 环境将 Branch Tracking 从 `main` 改为 `release/production`，并通过设置页与 API 读回确认；正式部署仍为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
 - [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
-- [ ] Cloudflare 实际生产分支尚未读回确认；当前 Cloudflare 控制台标签页返回 `ERR_CONNECTION_CLOSED`，Wrangler 也没有 `CLOUDFLARE_API_TOKEN`，因此不能证明它不会跟随 `main`。
-- [ ] 用户提供的 Cloudflare 截图显示已登录 Account home，并可见 Worker `ice-glide`；但当前可自动读取的浏览器会话仍落在登录页，因此 AquaGuide 对应项目的生产分支绑定仍为 `UNVERIFIED`，不能仅凭截图修改或宣称冻结完成。
+- [x] Cloudflare 已按用户明确决定退出 AquaGuide 正式生产渠道，登记为 `INACTIVE_LEGACY`；不删除、不修改历史 Worker/Pages 资源，也不参与生产冻结计算。
 - [x] 候选与 PR #142 的同步状态由 `npm run project:status` 与 `npm run check:preview-parity` 运行时核对；本轮验证提交完成后再进行一次性推送。
 - [x] `npm run project:status` 同时输出 `productionPointerSha=ed0cf380...`、`productionPointerSynchronized=true`，并明确 `productionDeploymentFrozen=false`，避免把本地回退锚点误当成已冻结生产设置。
 - [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。

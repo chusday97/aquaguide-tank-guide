@@ -17,5 +17,11 @@ for (const gate of report.gates) {
 if (!Array.isArray(report.businessCases) || report.businessCases.length < 5) throw new Error('Readiness report must include fixed business cases.');
 const uiGate = report.gates.find(gate => gate.gateId === 'ui-freeze');
 if (!uiGate || (report.worktreeClean && uiGate.status !== 'USER_ACCEPTANCE_REQUIRED') || (!report.worktreeClean && uiGate.status !== 'UNVERIFIED')) throw new Error('Current UI acceptance must remain explicit and cannot be trusted from a dirty worktree.');
-if (!report.gates.some(gate => gate.gateId === 'production-freeze' && gate.status === 'BLOCKED')) throw new Error('Production freeze must remain explicit until provider settings are read back.');
+const productionFreezeGate = report.gates.find(gate => gate.gateId === 'production-freeze');
+const productionFrozen = report.project?.productionDeploymentFrozen === true;
+if (!productionFreezeGate || (productionFrozen ? productionFreezeGate.status !== 'PASS' : productionFreezeGate.status !== 'BLOCKED')) {
+  throw new Error(productionFrozen
+    ? 'Production freeze is marked true but the readiness gate is not PASS.'
+    : 'Production freeze must remain explicit until active provider settings are read back.');
+}
 console.log(`readiness evidence contract passed: ${report.gates.length} gates, ${report.businessCases.length} cases, SHA ${report.evaluatedSha}`);

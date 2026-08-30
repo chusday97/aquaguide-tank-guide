@@ -38,6 +38,12 @@ const productionPointerSha = productionBranch
 const productionPointerSynchronized = Boolean(
   productionPointerSha && productionAnchorSha && productionPointerSha === productionAnchorSha,
 );
+const productionProviders = state.productionProviders ?? {};
+const activeProductionProviders = Object.values(productionProviders)
+  .filter((provider) => provider?.status !== 'INACTIVE_LEGACY');
+const productionDeploymentFrozen = activeProductionProviders.length > 0
+  ? activeProductionProviders.every((provider) => provider?.status === 'ACTIVE_FROZEN')
+  : state.productionDeploymentFrozen === true;
 
 if (!allowedBranches.has(branch) && process.env.CI !== 'true') {
   throw new Error(`Run project:status from ${state.canonicalBranch} or ${state.releaseCandidate?.branch}; current branch is ${branch}.`);
@@ -53,7 +59,8 @@ console.log(JSON.stringify({
   productionAnchor: state.productionAnchor ?? null,
   productionPointerSha,
   productionPointerSynchronized,
-  productionDeploymentFrozen: state.productionDeploymentFrozen ?? false,
+  productionDeploymentFrozen,
+  productionProviders,
   releaseBranch: state.releaseBranch,
   localBranch: branch,
   sha,

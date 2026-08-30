@@ -4,8 +4,8 @@
 
 ## 2026-08-30 可验证进度中心（当前）
 
-- 用户提供的 Cloudflare 截图显示已进入 Account home；这证明用户侧登录成功，但不能替代自动化会话对 AquaGuide 项目生产分支的设置读回。当前自动化标签页仍显示登录页，Cloudflare 绑定继续为 `UNVERIFIED`。
-- 文档证据提交 `a0bdb3aa` 后已重新采集 readiness，报告绑定完整 SHA `a0bdb3aa5351adf456dd057b19b24ed3ca0f241a`；`npm run test:readiness` 通过。运行环境的 GitHub DNS、tsx IPC 和 Supabase telemetry 写入限制仍会使相应门禁保持 `FAIL/BLOCKED/UNVERIFIED`，不可解释为产品回归。
+- 用户已明确选择 Vercel 作为 AquaGuide 唯一正式生产渠道；Cloudflare 的历史 Worker/Pages 资源登记为 `INACTIVE_LEGACY`，保留但不修改，也不再参与生产冻结计算。
+- 已更新生产提供方状态模型：Vercel 为 `ACTIVE_FROZEN`（分支 `release/production`，生产 SHA `ed0cf380...`），Cloudflare 为 `INACTIVE_LEGACY`。外部 GitHub/Preview/Supabase 门禁仍按当前网络和权限证据显示。
 
 - 新增只读证据采集：`npm run readiness:collect`；新增本地看板：`npm run readiness:serve`，默认地址为 [http://127.0.0.1:4320](http://127.0.0.1:4320)。
 - 看板将 Main 代码收敛和生产发布分开，并为每条门禁记录当前 SHA、命令、预期/实际结果、来源和时间；固定业务案例也单独列出。
@@ -14,8 +14,8 @@
 - 运行验证：`npm run test:readiness` 通过。沙箱中部分 `tsx` 测试遇到临时 IPC `EPERM`，看板已按环境证据降级为 `UNVERIFIED`，需在授权运行环境重跑作为最终门禁。
 - `e3316997` 已提交；独立 Critic 同线程复验通过。当前授权运行的最新报告绑定候选 `fb6db2a2`，为 18 PASS、1 BLOCKED（生产未冻结）、1 UNVERIFIED（生产 Supabase 未写入验证）、1 USER_ACCEPTANCE_REQUIRED（视觉基线）。
 - 候选当前提交、远端候选、PR #142、Vercel Preview 和 CI 的精确关系以运行时报告为准；Vercel Production Branch 已切换到 `release/production`，设置页与 API 均读回成功，正式部署仍保持旧生产 SHA `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
-- Cloudflare 仍未完成生产分支读回：用户截图显示其一侧已进入 Account home（可见 Worker `ice-glide`），但当前可自动读取的浏览器会话仍显示登录页，且本机没有 `CLOUDFLARE_API_TOKEN`。截图不能替代项目设置读回；在 Cloudflare 读回前，`productionDeploymentFrozen` 必须继续为 `false`，不能合并 `main`。
-- 下一步：完成 Cloudflare 只读读回；若确认未跟随 `main` 或已指向 `release/production`，再更新冻结状态并单独申请 `main` 合并授权。
+- Cloudflare 已根据用户决定登记为 `INACTIVE_LEGACY`：AquaGuide 正式生产只使用 Vercel，历史 Worker/Pages 资源保留且不修改，不再参与生产冻结计算。
+- 下一步：完成本地 readiness 复验后，单独申请一次候选推送授权；候选同步后再单独申请 PR #142 合并授权。
 
 ## 2026-08-30 正式预览入口收敛（当前）
 
@@ -23,7 +23,7 @@
 - 4319 的 `/_preview/interactive?module=aquarium|encyclopedia|care|collection` 已改为正式路由演示入口：初始化隔离 demo seed、跳过 onboarding、进入真实 App Shell，并强制 local Repository。
 - 浏览器已验证四个模块：正式 Aquarium 不再跳 `/welcome`；图鉴、养护和水族册均使用正式路由；没有 `/api` 请求或页面错误；元数据显示当前构建完整 SHA。
 - 本地门禁已通过：lint、API 类型、build、formal scenes、core UI、responsive routes、project truth、compatibility authority。
-- 当前未完成：本轮候选改动待本地审查后一次性同步；用户视觉验收、新 UI Freeze、生产部署冻结、Supabase 第27个 migration、Catalog 发布和 `main` 合并。
+- 当前未完成：本轮候选改动待本地审查后一次性同步；用户视觉验收、新 UI Freeze、Supabase 第27个 migration、Catalog 发布和 `main` 合并。Vercel生产冻结已完成，Cloudflare不再是AquaGuide生产门禁。
 - 唯一预览入口：[http://127.0.0.1:4319/_preview/interactive?module=aquarium](http://127.0.0.1:4319/_preview/interactive?module=aquarium)。4317 仅作视觉母版对照。
 
 ## 2026-08-30 当前验证快照
@@ -31,18 +31,18 @@
 - 当前候选分支：`codex/main-core-foundation-v1`；本地、远端候选、PR #142 与 Vercel Preview 已同步到 `fb6db2a2`，精确值由 `npm run project:status` 和 `npm run readiness:collect` 运行时读取。
 - 本地门禁：Catalog 486 条校验、Domain/Service/Presentation、435 组合矩阵、26+1 Supabase 重放、pgTAP 19/19、Schema lint 0 error、lint、API 类型、build、核心体验、正式场景、今日行动和响应式路由均通过。
 - 本轮修复：Care 来源链接满足 44×44px 触控区域；核心浏览器断言兼容正式“混养风险计算”标题；未改数据库、Domain 规则或生产设置。
-- 当前两个真实阻塞：用户视觉验收后才能替换旧 UI Freeze；生产仍未完全冻结，Vercel 已切到 `release/production`，Cloudflare 绑定未确认。生产冻结前禁止合并 `main`。
-- 后续顺序：用户确认 4319 四模块 → 新 UI Freeze → 单独授权冻结 Vercel/Cloudflare → PR #142 合入 `main` → 从 `main` 完成30种审核和生产 migration/Catalog 授权 → 最终 release acceptance。
+- 当前主要阻塞：用户视觉验收后才能替换旧 UI Freeze；候选仍未同步到远端，PR #142尚未合并。Supabase第27个 migration、Catalog发布和最终release acceptance仍未执行。
+- 后续顺序：重新采集readiness → 单独授权候选推送 → 单独授权PR #142合入 `main` → 从 `main` 完成30种审核和生产 migration/Catalog授权 → 最终release acceptance。
 
 ## 2026-08-30 快速收敛路线（当前）
 
 - 代码事实目标已切换为 `main`；当前候选 `codex/main-core-foundation-v1` 的同步状态与精确 SHA 由 `npm run project:status` 运行时读取。
 - 生产部署锚点已只读确认：Vercel 生产 SHA 为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`；本地 `release/production` 已指向同一 SHA，仅作为部署/回退指针。Vercel Production Branch 已读回为 `release/production`。
-- 远端 `release/production` 已建立并指向 `ed0cf38025652db901ee81aa697ca55b1c1584b6`，未强推；生产冻结尚未完成：Vercel Production Branch 与 Cloudflare 实际分支设置仍需外部修改/读回确认。完成前禁止合并 `main`。
-- Vercel CLI 的项目设置页已完成生产分支切换并读回；Cloudflare Wrangler 因缺少 `CLOUDFLARE_API_TOKEN`，且当前控制台需要登录，仍无法读回。不能把 Vercel 单方冻结当成两个平台都已冻结。
+- 远端 `release/production` 已建立并指向 `ed0cf38025652db901ee81aa697ca55b1c1584b6`，未强推；Vercel Production Branch已读回为 `release/production`，生产冻结按Vercel唯一活动渠道计算完成。
+- Cloudflare按用户决定退出AquaGuide正式生产，Worker/Pages资源仅保留历史证据；不再要求读取其分支设置，也不把截图中的 `ice-glide`当作AquaGuide发布目标。
 - 合并 `main` 后仍保持 `NOT_READY`：视觉新基线、30 种资料、Supabase 第27个 migration、Catalog 发布和最终 Preview 只作为生产门禁。
 - 本轮已更新状态模型、浏览器验证和部署说明；生产设置、Supabase、Catalog 和 `main` 均未修改。候选推送与远端检查状态以运行时门禁为准。
-- `npm run project:status` 现在会动态输出 `productionPointerSha`、`productionPointerSynchronized` 和 `productionDeploymentFrozen`；当前回退锚点已对齐，但生产平台分支设置仍是 `productionDeploymentFrozen=false`，不能据此宣称已冻结。
+- `npm run project:status` 现在会动态输出 `productionPointerSha`、`productionPointerSynchronized`、`productionDeploymentFrozen` 和 `productionProviders`；当前回退锚点已对齐，Vercel为活动冻结渠道，Cloudflare为历史渠道。
 
 ## 2026-08-29 4317 严格视觉恢复（当前工作）
 

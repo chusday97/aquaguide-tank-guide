@@ -10,6 +10,8 @@
 
 - User-provided screenshot confirms an authenticated Cloudflare Account home with Worker `ice-glide`, but the browser session available for automation still shows the login page. Cloudflare project/branch read-back remains `UNVERIFIED`; no setting or production traffic was changed.
 
+- By user decision, Cloudflare is now recorded as `INACTIVE_LEGACY` for AquaGuide. Vercel remains the only active production provider; historical Cloudflare resources are retained and untouched.
+
 - Re-collected readiness after the evidence-only update at `a0bdb3aa`; the report is SHA-bound and `test:readiness` passes. Network/DNS, sandbox IPC and telemetry-write limits keep external gates explicitly `FAIL/BLOCKED/UNVERIFIED` rather than reusing stale results.
 
 - Updated current progress and handoff evidence to candidate SHA `fb6db2a2`; recorded remote/PR/Preview parity and the remaining production-freeze, Supabase-production, and user-acceptance gates.
