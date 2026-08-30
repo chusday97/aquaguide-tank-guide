@@ -27,6 +27,13 @@ assert.equal(catalogReviewSourceCandidateIds.length, 10);
 assert.equal(getCatalogReviewSourceCandidates(cohort[0].id)[0].reviewStatus, 'draft');
 assert.equal(getCatalogReviewSourceCandidates(cohort[0].id)[0].publisher, 'FishBase');
 assert.deepEqual(getCatalogReviewSourceCandidates(cohort[10].id), []);
+assert.deepEqual(
+  [...catalogReviewSourceCandidateIds].sort(),
+  cohort.slice(0, 10)
+    .map(species => getCatalogReviewSourceCandidates(species.id)[0]?.id)
+    .filter((id): id is string => Boolean(id))
+    .sort(),
+);
 
 const draft = catalogFieldReviewSchema.parse({
   speciesId: cohort[0].id,
