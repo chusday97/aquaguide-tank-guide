@@ -2,6 +2,16 @@
 
 ## 2026-08-28 — Vercel deferred, local convergence completed
 
+## 2026-08-30 — Readiness evidence center
+
+### Added
+
+- Added `readiness:collect`, `readiness:serve` and `test:readiness` to expose SHA-bound gate evidence without depending on the unaccepted 4319 visual UI.
+
+### Notes
+
+- The local report distinguishes Main code convergence from production release. Current UI acceptance and production deployment freeze remain explicit blockers; network and sandbox-only failures are reported as `UNVERIFIED` rather than reused as green evidence.
+
 ### Added
 
 - Added the compatibility-authority static gate and the production Catalog migration authorization package.

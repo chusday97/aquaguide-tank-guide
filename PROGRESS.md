@@ -1,6 +1,16 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-30 可验证进度中心（当前）
+
+- [x] 新增 `npm run readiness:collect`：在当前 SHA 上运行项目事实、Domain/Service/Presentation、Catalog、API 类型、build、兼容权威和 UI freeze 门禁，并记录每项证据的命令、预期、实际结果、来源和时间。
+- [x] 新增 `npm run readiness:serve`：提供本地只读进度看板（默认 `http://127.0.0.1:4320`），独立于 Aquarium/4319 视觉页面。
+- [x] 新增 `npm run test:readiness`：校验报告 schema、完整 SHA、状态集合、固定业务案例和未完成 UI/生产门禁不会被隐藏。
+- [x] 看板区分 Main 代码收敛与生产发布两个结论；网络不可用、字体/tsx 沙箱限制和旧 UI freeze 基线差异会显示为 `UNVERIFIED` 或 `USER_ACCEPTANCE_REQUIRED`，不伪装成通过。
+- [ ] 当前仍需：Vercel/Cloudflare 生产冻结、UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。
+
+验证证据：readiness report 始终写入 `.artifacts/readiness/<sha-prefix>/`，报告数量和状态以每次运行时输出为准。工作树有未提交变更时，项目事实为 `BLOCKED`，本地门禁为 `UNVERIFIED`；只有提交后重新采集，才允许生成绑定当前 SHA 的 PASS 证据。
+
 ## 2026-08-30 正式本地预览收敛（当前）
 
 - [x] 4319 已按候选构建重启；`/_preview/interactive?module=...` 会进入真实正式 App Shell，而不是只渲染组件展厅。

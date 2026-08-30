@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added a local-only readiness evidence center: `npm run readiness:collect` generates SHA-bound JSON/Markdown gate evidence, `npm run readiness:serve` serves a read-only dashboard at `127.0.0.1:4320`, and `npm run test:readiness` validates its schema and explicit blocked/unverified states. This keeps backend progress inspectable while the 4319 UI remains unaccepted; no product API, database, Supabase or production setting changed.
+
 - Formalized the 4319 preview entry: it now seeds an isolated demo aquarium, bypasses onboarding only for preview sessions, forces the local repository, and routes into the real Aquarium/Encyclopedia/Care/Collection App Shell. Added route and no-cloud-request regression coverage without changing production APIs, data, or UI ownership.
 
 - Added a dedicated formal-preview-entry browser gate covering all four module routes, full build metadata, local-only API isolation, page errors and failed resource requests.

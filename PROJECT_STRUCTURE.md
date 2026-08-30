@@ -131,6 +131,8 @@
 - `src/components/ThreeAquarium.tsx`：3D 鱼缸。
 - `src/pages/InteractivePreview.tsx`：正式页面演示预览入口，初始化隔离演示状态后进入正式 App Shell，不连接生产写入。
 - `scripts/test-desktop-layout-contract.mjs`：桌面工作区类别、Care Scene 单列隔离和互动预览模块切换的静态布局门禁。
+- `scripts/readiness-collect.mjs` / `scripts/readiness-serve.mjs`：本地只读进度证据采集与 4320 看板；按当前 SHA 展示 Main 收敛、底层、Catalog、Supabase、UI 和生产门禁。
+- `scripts/test-readiness-evidence.mjs`：进度报告结构、状态集合、固定业务案例及显式阻塞状态的契约测试。
 - `src/styles/aquarium-stage-layout-v4.css`、`src/styles/immersive-detail-layout-v5.css`：Aquarium 舞台与详情 Rail/Sheet/Blocking 的 canonical 几何样式。
 
 ## 文档与验证

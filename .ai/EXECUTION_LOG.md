@@ -179,3 +179,9 @@
 - **Verification:** `lint`、兼容性 16/16、tank-state 11/11、water-change 8/8、three-tier contract、production build 通过；4320 临时 build preview 的 layout、framing、interactive scenes、page runtime matrix 通过。
 - **Remote:** 尚未推送本次产品代码；`main` 未修改，发布仍受 Supabase parity 和单独 release acceptance 阻断。
 - **Independent review:** Critic initially found incomplete structured diagnosis mapping, a legacy bioload threshold regression, a shared lifecycle/API boundary leak, and free-text false positives. The builder restored the legacy multiplier, isolated `CompatibilityLifeStage`, mapped current structured question fields, excluded free text, and added regressions; the same Critic recheck passed.
+# 2026-08-30 — Readiness evidence center
+
+- Added `scripts/readiness-collect.mjs`, `scripts/readiness-serve.mjs` and `scripts/test-readiness-evidence.mjs`.
+- Added npm commands `readiness:collect`, `readiness:serve` and `test:readiness`.
+- Verified report generation at candidate SHA `6d202f9c26581f1e19e70a50b557996fc36ae51e`; 11 local gates PASS, production freeze BLOCKED, 5 remote/environment gates UNVERIFIED, UI freeze USER_ACCEPTANCE_REQUIRED.
+- Sandbox `tsx` IPC `EPERM` and GitHub DNS failure are preserved as evidence limitations, not classified as business failures.

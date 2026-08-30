@@ -2,6 +2,12 @@
 
 ## 2026-08-28 safe convergence preparation (latest)
 
+## 2026-08-30 readiness evidence center
+
+- [x] Added SHA-bound local readiness collection, read-only dashboard server (port 4320) and evidence schema test.
+- [x] Added explicit six-track statuses and fixed business-case rows; UI acceptance and production freeze cannot be hidden by backend PASS results.
+- [ ] Re-run the collector in an unrestricted environment so tsx-based local gates are fresh evidence; re-read GitHub/Preview when network is available.
+
 - [x] Reviewed tetra water facts and fail-closed regressions are in the canonical Catalog; checksum is recorded in the parity report.
 - [x] Added `check:compatibility-authority` to guard the legacy facade boundary without changing frozen UI files.
 - [x] Updated Feature Catalog and convergence ledger to record local compatibility authority as migrated/currently verified.
