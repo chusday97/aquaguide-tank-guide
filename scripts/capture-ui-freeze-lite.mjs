@@ -29,7 +29,7 @@ try {
           page.on('pageerror', error => pageErrors.push(error.message));
           page.on('requestfailed', request => failedRequests.push(`${request.url()} · ${request.failure()?.errorText ?? 'failed'}`));
           const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 8000 });
-          await page.locator(target.name === 'candidate' ? '[data-preview-ready="true"]' : '.interactive-tank-stage').first().waitFor({ state: 'attached', timeout: 8000 });
+          await page.locator(target.name === 'candidate' ? '.aquaguide-app[data-layout-mode]' : '.interactive-tank-stage').first().waitFor({ state: 'attached', timeout: 8000 });
           await page.evaluate(async () => { await document.fonts?.ready; });
           await page.waitForFunction(() => {
             const canvas = document.querySelector('canvas');

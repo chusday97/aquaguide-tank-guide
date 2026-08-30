@@ -45,6 +45,7 @@ import {
 import { buildTankCopilotContext, getTankCopilotMissingInfo } from '../modules/copilot/tankBuildCopilot';
 import { weatherService } from '../services/weather/weather.service';
 import type { LocalWeatherOutput } from '../services/weather/weather.schema';
+import { isInteractivePreviewActive } from '../services/preview/preview-session.service';
 import {
   clearLocalAppState,
   importLocalAppState,
@@ -1345,6 +1346,11 @@ export default function AquariumManager() {
 
   useEffect(() => {
     let isMounted = true;
+    if (isInteractivePreviewActive()) {
+      setLocalWeather(null);
+      setWeatherStatus('unavailable');
+      return () => { isMounted = false; };
+    }
     setWeatherStatus('loading');
 
     weatherService.getLocalWeather({ timeoutMs: 8000 }).then((weather) => {

@@ -84,6 +84,7 @@
     "test:core-ui": "node scripts/verify-core-experience.mjs",
     "test:mobile-care-ui": "node scripts/verify-mobile-care-experience.mjs",
     "test:formal-scenes": "node scripts/verify-formal-interactive-scenes.mjs",
+    "test:formal-preview-entry": "node scripts/verify-formal-preview-entry.mjs",
     "test:today-action": "node scripts/verify-today-action-dock.mjs",
     "test:care-guide-types": "node scripts/verify-care-guide-types.mjs",
     "test:care-guidance": "tsx scripts/test-care-assessment-guidance.ts",

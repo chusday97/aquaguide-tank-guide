@@ -16,8 +16,9 @@ assert.match(preview, /useSearchParams/, 'preview module state must be URL-addre
 for (const module of ['aquarium', 'encyclopedia', 'care', 'collection']) {
   assert.match(preview, new RegExp(module), `preview must expose ${module} module`);
 }
-assert.equal((preview.match(/<SpeciesSceneAtlas/g) || []).length, 1, 'preview must render one module at a time');
-assert.equal((preview.match(/<KnowledgeSceneExplorer/g) || []).length, 1, 'preview must render one care module at a time');
+assert.match(preview, /activateInteractivePreview\(module\)/, 'preview must activate an isolated session before routing');
+assert.match(preview, /navigate\(getPreviewRoute\(module\)/, 'preview must route into the formal app shell');
+assert.doesNotMatch(preview, /ThreeAquarium|SpeciesSceneAtlas|KnowledgeSceneExplorer|CollectionHub/, 'preview must not directly compose showroom components');
 assert.match(care, /data-workspace-layout=/, 'care page must declare its workspace layout');
 assert.match(encyclopedia, /data-workspace-layout=/, 'encyclopedia page must declare its workspace layout');
 

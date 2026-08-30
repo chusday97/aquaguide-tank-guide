@@ -1,6 +1,14 @@
 ## 当前任务目标
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
+## 2026-08-30 正式本地预览收敛（当前）
+
+- [x] 4319 已按候选构建重启；`/_preview/interactive?module=...` 会进入真实正式 App Shell，而不是只渲染组件展厅。
+- [x] 预览自动使用隔离演示鱼缸、完成 onboarding，并强制本地 Repository；浏览器回归确认四个模块无 `/api` 请求、无页面错误。
+- [x] 正式入口已验证：Aquarium、Encyclopedia Scene、Care Scene、Collection 均可从预览进入，元数据显示候选完整 SHA、seed 和构建时间。
+- [x] `test:formal-scenes`、`test:core-ui`、`test:responsive-routes`、`check:project-truth` 和 `check:compatibility-authority` 通过。
+- [ ] 当前预览改动待本地审查后按一次性推送纪律同步 GitHub；用户视觉验收、新 UI Freeze、生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
+
 ## 2026-08-30 浏览器与本地数据库门禁复验（当前）
 
 - [x] 本轮验证前本地候选、远端候选、PR #142 和 Preview 已由运行时检查确认同步；当前新增验证提交待一次性推送，PR 仍为 Draft、无冲突。

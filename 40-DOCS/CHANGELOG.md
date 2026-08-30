@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Formalized the 4319 preview entry: it now seeds an isolated demo aquarium, bypasses onboarding only for preview sessions, forces the local repository, and routes into the real Aquarium/Encyclopedia/Care/Collection App Shell. Added route and no-cloud-request regression coverage without changing production APIs, data, or UI ownership.
+
+- Added a dedicated formal-preview-entry browser gate covering all four module routes, full build metadata, local-only API isolation, page errors and failed resource requests.
+
 - Raised Care evidence links to the 44px interaction target and aligned the core browser gate with the current “混养风险计算” heading. Local responsive/core browser checks, Catalog validation, local Supabase 26+1 replay, pgTAP, schema lint, typecheck and build pass; production settings, migration, Catalog publication and main merge remain gated.
 
 - Removed the candidate preview's external Google Noto Serif SC import so visual checks do not depend on a network font request; the existing local/system fallback stack remains unchanged. Rebuilt 4319 and captured a candidate-only 28-image matrix for the current checkpoint across four modules and seven viewports with HTTP 200 and no runtime request failures. The frozen 4317 baseline remains unchanged and human visual acceptance is still pending.

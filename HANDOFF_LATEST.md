@@ -2,6 +2,15 @@
 
 更新时间：2026-08-30 +08:00
 
+## 2026-08-30 正式预览入口收敛（当前）
+
+- 代码基线：`codex/main-core-foundation-v1`；当前候选 SHA 由 `git rev-parse HEAD` 读取。
+- 4319 的 `/_preview/interactive?module=aquarium|encyclopedia|care|collection` 已改为正式路由演示入口：初始化隔离 demo seed、跳过 onboarding、进入真实 App Shell，并强制 local Repository。
+- 浏览器已验证四个模块：正式 Aquarium 不再跳 `/welcome`；图鉴、养护和水族册均使用正式路由；没有 `/api` 请求或页面错误；元数据显示当前构建完整 SHA。
+- 本地门禁已通过：lint、API 类型、build、formal scenes、core UI、responsive routes、project truth、compatibility authority。
+- 当前未完成：本轮候选改动待本地审查后一次性同步；用户视觉验收、新 UI Freeze、生产部署冻结、Supabase 第27个 migration、Catalog 发布和 `main` 合并。
+- 唯一预览入口：[http://127.0.0.1:4319/_preview/interactive?module=aquarium](http://127.0.0.1:4319/_preview/interactive?module=aquarium)。4317 仅作视觉母版对照。
+
 ## 2026-08-30 当前验证快照
 
 - 当前候选分支：`codex/main-core-foundation-v1`；本轮验证前本地、远端候选、PR #142 与 Preview 已同步，新增验证提交待一次性推送，精确值由 `npm run project:status` 和 `npm run check:preview-parity` 运行时读取。

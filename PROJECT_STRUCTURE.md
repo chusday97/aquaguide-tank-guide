@@ -30,6 +30,7 @@
 - `scripts/verify-taxonomy-ui.mjs`：珊瑚、歧义名称、两条五彩青蛙及中英文角色标签的真实浏览器分类回归。
 - `scripts/verify-daily-discovery-deep-link.mjs`：鱼缸首页今日推荐的位置、每日进度、详情返回、切换收藏、响应式边界和图鉴去重回归。
 - `scripts/verify-formal-interactive-scenes.mjs`：正式图鉴与养护 scene/browse 模式、场景点选和详情入口的浏览器门禁。
+- `scripts/verify-formal-preview-entry.mjs`：验证 4319 预览四模块进入正式路由、使用本地隔离会话且没有 API 或资源失败。
 - `scripts/test-species-profile-adapter.ts`：SpeciesProfile 显式水体与旧 Fish 边界回归。
 - `scripts/test-recommendation-unknown-filter.ts`：验证未审核物种不会进入自动推荐或空缸方案。
 - `scripts/verify-today-action-dock.mjs`：今日行动半透明拉手的点击、Esc 关闭与拖拽吸附回归。
@@ -95,6 +96,7 @@
 - `src/services/api/`：携带 Supabase JWT、幂等键和结构化错误的版本化 API 客户端。
 - `src/services/admin/content-admin.service.ts`：内容后台唯一 API 访问层，封装 CRUD、发布状态与原始图片上传。
 - `src/services/repository/`：游客本地与登录云端两种 Repository 实现；页面后续只依赖统一接口。
+- `src/services/preview/preview-session.service.ts`：4319 正式页面预览会话、演示鱼缸 seed 和模块路由映射，强制本地数据边界。
 - `apps/api/src/livestock-memorial-replay.ts`：最后一组被删除后仍可读取已提交生命纪念的幂等重放门禁。
 - `apps/api/src/routes/feedback.ts`：游客/登录反馈提交、频率限制，以及管理员分页和状态更新接口。
 - `src/services/analytics/`：只驻留当前会话的隐私安全事件白名单。
@@ -127,7 +129,7 @@
 - `src/components/common/AdaptiveTaskContent.tsx`：桌面与手机的沉浸式任务流程表面。
 - `src/components/common/SurfaceHeader.tsx`：统一详情/任务表面的标题、返回、关闭与 44px 图标操作。
 - `src/components/ThreeAquarium.tsx`：3D 鱼缸。
-- `src/pages/InteractivePreview.tsx`：用户确认的内部互动视觉预览入口，不写入业务数据。
+- `src/pages/InteractivePreview.tsx`：正式页面演示预览入口，初始化隔离演示状态后进入正式 App Shell，不连接生产写入。
 - `scripts/test-desktop-layout-contract.mjs`：桌面工作区类别、Care Scene 单列隔离和互动预览模块切换的静态布局门禁。
 - `src/styles/aquarium-stage-layout-v4.css`、`src/styles/immersive-detail-layout-v5.css`：Aquarium 舞台与详情 Rail/Sheet/Blocking 的 canonical 几何样式。
 
