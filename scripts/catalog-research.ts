@@ -2,6 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launch-cohort';
 import { REVIEWABLE_CATALOG_FIELDS } from '../src/data/catalogFieldReviews';
+import { getCatalogReviewSourceCandidates } from '../src/data/catalogReviewSourceCandidates';
 
 const batchSizeArg = Number(process.argv[process.argv.indexOf('--batch') + 1]);
 const batchSize = Number.isInteger(batchSizeArg) && batchSizeArg > 0 ? batchSizeArg : 10;
@@ -25,8 +26,10 @@ const draft = cohort.slice(offset, offset + batchSize).map(species => ({
     conflictNotes: [],
     reviewedAt: null,
   })),
-  sources: [],
-  reviewNotes: ['Research draft only. Add field-level source URLs and reviewer decision before runtime use.'],
+  sources: getCatalogReviewSourceCandidates(species.id),
+  reviewNotes: [
+    'Research draft only. Candidate sources require field-level inspection and reviewer decision before runtime use.',
+  ],
 }));
 
 await mkdir(outputRoot, { recursive: true });

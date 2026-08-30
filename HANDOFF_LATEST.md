@@ -2,6 +2,14 @@
 
 ## 2026-08-30 字段级审核管道已落地（当前）
 
+## 2026-08-31 专业来源候选已登记（当前）
+
+- 分支：`codex/catalog-cohort-30-v1`，当前 HEAD 以 `git rev-parse HEAD` 为准；本地工作树干净，未推送。
+- 新增 `src/data/catalogReviewSourceCandidates.ts`，为第一批10种物种登记 FishBase 来源候选；来源全部是 `draft`，不是审核事实。
+- `catalog-research` 已接入候选来源，生成研究草稿时会保留来源标题、发布者和 URL；`fieldReviews[].citationIds` 仍为空，不能升级为运行时数据。
+- 验证：`npm run test:catalog-review`、第一批 `catalog:research`、`catalog:review` 均通过；第一批报告为 `reviewedCount=0`、`reviewedFieldCount=0`、`pendingCount=10`。
+- 下一步：逐页核对专业来源实际支持哪些字段，填写字段值、citationIds、冲突说明和审核状态；无法确认的字段保持 `unknown`。用户只需最后看整批混养判断，不参与逐字段审核。
+
 - 分支：`codex/catalog-cohort-30-v1`，基于 `main@016dbca5`；当前 HEAD `2b7c34d9`（代码修复 `62539910`，后续测试/文档提交已包含），当前仅本地，未推送。
 - 本步新增 `src/data/catalogFieldReviews.ts`、`scripts/test-catalog-review-contract.ts`，并扩展 `catalog:research` / `catalog:review` / Catalog snapshot 生成链路。
 - 三批研究草稿每个物种包含 10 个字段（身份、水体、温度、pH、成体体型、缸体、社会行为、领地、捕食、繁殖），全部为 Draft、无引用；机器校验为 `0/30 reviewed`、`300` 个字段待审核。

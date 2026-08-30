@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added draft FishBase source candidates for the first 10 launch-cohort species. Candidates are attached to research drafts only; no field is promoted until a reviewer verifies the source, value, citation and conflicts.
+
 - Pushed candidate `codex/main-core-foundation-v1` to GitHub at `186751e7` after local readiness and project-truth checks passed. PR #142 remains Draft; API read-back is pending a successful GitHub DNS check.
 
 - Read back the synchronized candidate and PR #142 at `c63cb2dd`: PR is `OPEN/Draft/CLEAN/MERGEABLE`, required source checks are successful, and main convergence readiness is PASS. UI acceptance, production migration, Catalog publication and main merge remain separately gated.

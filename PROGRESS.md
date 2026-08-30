@@ -2,6 +2,13 @@
 
 从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。
 
+## 2026-08-31 专业来源候选入口（当前）
+
+- [x] 新增 `catalogReviewSourceCandidates.ts`，为首批第一批10种物种登记 FishBase 专业来源候选；全部保持 `draft`，不会进入运行时 Catalog。
+- [x] `catalog:research --batch 10 --offset 0` 会把来源候选写入研究草稿；字段引用仍为空，必须由审核者逐字段选择并批准。
+- [x] `test:catalog-review` 覆盖来源候选数量、FishBase 发布者、Draft 状态和第二批未研究物种不误带来源。
+- [ ] 10种来源页面的字段级阅读、冲突分析和 `reviewed` 批准仍未完成；当前审核进度仍为 `0/30`、`0/300` 字段。
+
 ## 2026-08-30 字段级审核门禁实现（当前）
 
 - [x] `9b3b9380` 增加 `CatalogFieldReview` 机器可读契约、10 个待审核字段、审核状态/置信度/引用/冲突记录及批准字段应用器。
