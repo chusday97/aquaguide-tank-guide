@@ -12,6 +12,8 @@
 
 - By user decision, Cloudflare is now recorded as `INACTIVE_LEGACY` for AquaGuide. Vercel remains the only active production provider; historical Cloudflare resources are retained and untouched.
 
+- Implemented the Vercel-only provider state in `77ea8572`: readiness now treats Vercel as `ACTIVE_FROZEN`, Cloudflare as `INACTIVE_LEGACY`, and computes `productionDeploymentFrozen=true` from active providers only. The readiness evidence contract passes for the new SHA.
+
 - Re-collected readiness after the evidence-only update at `a0bdb3aa`; the report is SHA-bound and `test:readiness` passes. Network/DNS, sandbox IPC and telemetry-write limits keep external gates explicitly `FAIL/BLOCKED/UNVERIFIED` rather than reusing stale results.
 
 - Updated current progress and handoff evidence to candidate SHA `fb6db2a2`; recorded remote/PR/Preview parity and the remaining production-freeze, Supabase-production, and user-acceptance gates.

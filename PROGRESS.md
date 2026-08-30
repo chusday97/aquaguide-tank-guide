@@ -3,6 +3,8 @@
 
 ## 2026-08-30 可验证进度中心（当前）
 
+- [x] 在 `77ea8572` 完成 Vercel-only 生产渠道状态：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 运行时输出 `productionDeploymentFrozen=true`，不会把历史 Cloudflare 绑定误算为活动生产阻塞。
+- [x] `npm run test:readiness` 通过（21 gates、6 cases）；本轮报告绑定 `77ea8572acc1b14b6d3593b6f2aac23a29740cbe`。GitHub/Preview 网络失败、UI人工验收和Supabase生产写入仍明确保持未通过/未验证。
 - [x] 用户提供 Cloudflare Account home 截图，证明其一侧已登录；自动化浏览器仍读取到登录页，因此项目级生产分支读回继续标记 `UNVERIFIED`。
 - [x] 文档证据提交 `a0bdb3aa` 后重新采集 readiness；当前报告绑定该完整 SHA，`test:readiness` 通过。由于当前网络/DNS 和沙箱写入限制，GitHub/Preview/Supabase 相关门禁继续按 `FAIL`、`BLOCKED` 或 `UNVERIFIED` 展示，不沿用旧绿色结果。
 
