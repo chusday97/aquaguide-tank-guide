@@ -260,7 +260,7 @@
 
 - [x] 推送 `28fa0e8a`、`781c6af9` 至 `codex/main-core-foundation-v1`；本地、远端候选和 PR #142 Head 均为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。
 - [x] 新 Preview `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app` 实际 SHA 与候选一致，`check:preview-parity` 返回 `PASS / EQUIVALENT`。
-- [ ] PR #142 仍为 Draft；admin-content 无关门禁、生产第27个 migration、Catalog 发布和 main 合并仍未完成/未授权。
+- [历史] PR #142 仍为 Draft；admin-content 无关门禁、生产第27个 migration、Catalog 发布和 main 合并仍未完成/未授权。
 
 ## 2026-08-28 admin-content 门禁隔离
 
@@ -271,7 +271,7 @@
 
 - [x] 候选已推进至 `df3c4e119b14e323502b9c711ad607b66eeb5435`，`project:status` 显示本地、远端、PR #142 同步，工作树干净；Foundation、Product Golden Path validate、Cloudflare 和 AquaGuide Vercel checks 通过。
 - [ ] 最新 docs-only head 没有新的 Vercel exact Preview deployment，`check:preview-parity` 明确返回 `UNVERIFIED`（Vercel build-rate-limit）；上一笔代码 head `55a37745` 的 parity 证据保留。
-- [ ] PR #142 继续 Draft；生产第27个 migration、Catalog 发布、用户 release acceptance 和 main 合并未执行。
+- [历史] PR #142 继续 Draft；生产第27个 migration、Catalog 发布、用户 release acceptance 和 main 合并未执行。
 
 ## 2026-08-28 本地 Supabase 验证连续推进
 
@@ -374,7 +374,7 @@
 - [x] `project:status` 支持 recovery/candidate 双入口；候选分支本地与远端 SHA 已一致（`a8532072`）。
 - [x] 修复 GP-001 CI runner 输入框等待窗口（30s），本地 `test:golden-path-gp001-ui` 通过；远端 validate 待推送后重跑。
 - [x] GP-003 已适配今日行动默认收起行为，`test:golden-path-gp003-ui` 本地通过；远端 validate 待本次推送后重跑。
-- [x] PR #142 最新 head `ff2520c9` 已与本地/远端候选一致；GitHub `validate`、两项 `foundation`、Vercel 和 Cloudflare checks 均通过，PR 仍 Draft 且尚未合并 main。
+- [历史] PR #142 最新 head `ff2520c9` 已与本地/远端候选一致；GitHub `validate`、两项 `foundation`、Vercel 和 Cloudflare checks 均通过，PR 当时仍 Draft 且尚未合并 main。
 - [x] `npm run test:disclosures` 通过，今日行动折叠用途已登记为 `today_action_surface`。
 
 ### 底层门禁复验

@@ -21,7 +21,7 @@
 - Local release rehearsal after the authority/documentation update is complete: `check:compatibility-authority`, Catalog build/validate, Domain/Service/API, core UI, formal scenes, today action, species detail, responsive matrix, Supabase reset/pgTAP/lint, project truth, UI freeze, lint, API typecheck, build and diff check all passed. The only test edits were stale assertions; visual-owned files are unchanged.
 - The latest candidate is the SHA reported by `git rev-parse HEAD`; it is a local checkpoint ahead of the remote candidate and PR #142. Exact Preview parity for this head is not claimed until a matching deployment is available. Production migration, Catalog publication, business-data writes and `main` merge remain unauthorized.
 
-- `npm run project:status` currently fails the synchronization gate because local HEAD is ahead of the remote candidate and PR #142. PR #142 remains Draft and `releaseReady=false` until one authorized push updates the remote.
+- 历史记录（合并前）：`npm run project:status` 曾因本地 HEAD 超前候选远端而失败同步门禁；PR #142 当时为 Draft，等待授权推送。
 - Local Catalog verification now reflects the schema-normalized snapshot: 486 species, 13 evidence sources, checksum `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`. The former `545ac...` and `2fdcbc...` values are historical and must not be used for current parity.
 - The compatibility authority gate passes: frozen callers may use the legacy facade, while Domain Rules owns final status, policy, rule codes and versions.
 - Local Supabase 26+1 replay, 19/19 pgTAP and schema lint are passing. Production remains at 26 migrations; the Catalog migration is prepared but not executed.
@@ -54,7 +54,7 @@
 - The Catalog migration adds explicit grants: `anon` is read-only, `authenticated` can read and maintain drafts subject to RLS, and the published-release mutation helper is not executable by ordinary roles. Local pgTAP passed 19/19 assertions; schema lint returned zero errors.
 - Local PostgREST checks returned HTTP 200 for anonymous published Catalog reads and HTTP 401/`42501` for anonymous Catalog writes. These are local authorization results only; no production write or migration was attempted.
 - Production remains `MIGRATION_REQUIRED` for Catalog objects and `UNVERIFIED` for production write semantics. The Vercel exact-SHA check is now passing for the pushed candidate; this local database work did not change the UI or production database.
-- The candidate was pushed after the read-only recheck; GitHub foundation checks, Product Golden Path validation, Vercel deployment and Cloudflare deployment are passing for `1a3d366bd8432eadf20442274ba06dfd90904a98`. PR #142 remains Draft.
+- 历史记录（合并前）：候选推送后，GitHub foundation、Product Golden Path、Vercel 和 Cloudflare 检查通过；PR #142 当时仍为 Draft。
 
 ## 2026-08-25 non-secret deployment audit
 

@@ -151,7 +151,7 @@ gates.push(gate({
   gateId: 'github-pr',
   title: 'PR 状态与候选一致',
   command: `gh pr view ${project.activePullRequest?.number ?? 142} --json headRefOid,isDraft,state,baseRefName,headRefName,mergeCommit`,
-  expected: `PR #${project.activePullRequest?.number ?? 142} 未合并时 head 等于当前 SHA；合并后 merge commit 等于当前 SHA。`,
+  expected: `PR #${project.activePullRequest?.number ?? 142} 未合并时 head 等于当前 SHA；合并后 merge commit 已包含于当前 main。`,
   source: 'github',
   result: pr,
 }));
