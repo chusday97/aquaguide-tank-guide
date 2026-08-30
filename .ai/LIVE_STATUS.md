@@ -46,3 +46,10 @@ Branch: `feature/admin-content-v0`
 - Browser proof: UI English + content Chinese coexist; the right frontend preview remains Chinese when `contentLocale=zh-CN`.
 - Product Truth lazy-load proof: `sp_0030` renders a 591px source image plus 18–28°C / pH 6.5–8.0 / 30L+ facts after the group projection was de-duplicated.
 - B layer remains green through migration 007, RLS, rollback, bilingual generator and Controlled Preview gates.
+## 2026-08-31 Preview Inspector evidence
+- Center focus → right selection: H1 stays Page; SEO Title / Meta Description automatically switch the right pane to Google.
+- Right click → center selection: Intro/H1 scroll and highlight the mapped editor field without forcing input focus.
+- Base mode: inherited H1 maps to Base H1 template; Hero Image routes back to Current page because Image Alt is page-level.
+- Hover shows the element label; click locks the outline and displays source + edit path.
+- Product Truth temperature shows `Product Truth · 只读 / Product Truth → 只读` and leaves zero editor fields selected.
+- Chromium regression `pageErrors=[]`; contract guards the six core mappings, Base targets, preview targets and read-only Product Truth behavior.

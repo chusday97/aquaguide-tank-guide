@@ -7,7 +7,7 @@ import { useAppLanguage } from './AppLanguage.jsx';
 
 const isPublicSpeciesPublishingEnabled = false;
 
-export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved }) {
+export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved, selectedInspectorElement, onInspectorSelect }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(() => groupSeoFromRow(record, locale));
@@ -18,6 +18,20 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     setForm(groupSeoFromRow(record, locale));
     setMessage('');
   }, [group?.group_key, record, locale]);
+
+  useEffect(() => {
+    if (!selectedInspectorElement) return;
+    const frame = requestAnimationFrame(() => {
+      const target = document.querySelector(`[data-base-editor-field="${selectedInspectorElement}"]`);
+      target?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [selectedInspectorElement, group?.group_key, locale]);
+
+  const baseFieldProps = (key) => ({
+    'data-base-editor-field': key,
+    className: `inspector-editor-field ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
+  });
 
   if (!group) return null;
   const localeLabel = getLocaleLabel(locale);
@@ -90,17 +104,17 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源 catalog 存在分类冲突；Draft 可继续编辑，但 Publish Readiness 会保持阻止直到人工结论完成。'}</div>
       ) : null}
       <div className="base-seo-grid">
-        <label>{isUiEnglish ? 'SEO Title template' : 'SEO Title 模板'}
-          <input value={form.seoTitleTemplate} onChange={(event) => update('seoTitleTemplate', event.target.value)} />
+        <label {...baseFieldProps('seoTitle')}>{isUiEnglish ? 'SEO Title template' : 'SEO Title 模板'}
+          <input value={form.seoTitleTemplate} onFocus={() => onInspectorSelect?.('seoTitle')} onChange={(event) => update('seoTitleTemplate', event.target.value)} />
         </label>
-        <label>{isUiEnglish ? 'Meta Description template' : 'Meta Description 模板'}
-          <textarea rows="3" value={form.metaDescriptionTemplate} onChange={(event) => update('metaDescriptionTemplate', event.target.value)} />
+        <label {...baseFieldProps('metaDescription')}>{isUiEnglish ? 'Meta Description template' : 'Meta Description 模板'}
+          <textarea rows="3" value={form.metaDescriptionTemplate} onFocus={() => onInspectorSelect?.('metaDescription')} onChange={(event) => update('metaDescriptionTemplate', event.target.value)} />
         </label>
-        <label>{isUiEnglish ? 'H1 template' : 'H1 模板'}
-          <input value={form.h1Template} onChange={(event) => update('h1Template', event.target.value)} />
+        <label {...baseFieldProps('h1')}>{isUiEnglish ? 'H1 template' : 'H1 模板'}
+          <input value={form.h1Template} onFocus={() => onInspectorSelect?.('h1')} onChange={(event) => update('h1Template', event.target.value)} />
         </label>
-        <label>{isUiEnglish ? 'Shared introduction / Base content' : '共享简介 / 基础内容'}
-          <textarea rows="5" value={form.sharedIntro} onChange={(event) => update('sharedIntro', event.target.value)} placeholder={isUiEnglish ? 'Write only content shared by this Base Species; keep Variant-specific differences in overrides.' : '只写这个基础物种共同成立的内容；变种差异写到 Variant Override。'} />
+        <label {...baseFieldProps('intro')}>{isUiEnglish ? 'Shared introduction / Base content' : '共享简介 / 基础内容'}
+          <textarea rows="5" value={form.sharedIntro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('sharedIntro', event.target.value)} placeholder={isUiEnglish ? 'Write only content shared by this Base Species; keep Variant-specific differences in overrides.' : '只写这个基础物种共同成立的内容；变种差异写到 Variant Override。'} />
         </label>
         <p className="template-help">{isUiEnglish ? 'Keep template tokens unchanged: ' : '变量必须原样保留：'}{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>

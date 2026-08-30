@@ -46,3 +46,9 @@ The persistent product model is now:
 - The first mapped fields are localized name, H1, intro, image alt, SEO title and meta description.
 - Product Truth elements such as temperature, pH, tank size, difficulty and scientific name may be inspectable but remain read-only in Content Admin.
 - Inspector mapping must be explicit/stable; do not turn the frontend preview into arbitrary DOM editing.
+## 2026-08-31 — Bidirectional Preview Inspector
+- The next interaction model is now implemented for the first core set: center editor ↔ right live preview share one stable element selection.
+- Core editable mappings: localized name, H1, intro, image alt, SEO title and meta description.
+- Preview Product Truth facts remain inspectable but read-only; selecting temperature/pH/tank/difficulty never creates a fake edit path.
+- Selection explains element name, source (Custom / Inherited from Base / Product Truth) and edit path (Current page / Base Species / Product Truth).
+- Base-aware routing prevents misleading edits: inherited fields can stay in Base authoring, while Variant-only/custom fields route to Current page.

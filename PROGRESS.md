@@ -381,3 +381,10 @@
 - 首批映射：localized name、H1、Intro、Image Alt、SEO Title、Meta Description。SEO Title/Description 可自动切到 Google Preview。
 - 水温、pH、缸体、难度、科学名等 Product Truth 也允许被 Inspector 识别，但必须显示 `Product Truth · Read only`，Content Admin 不提供修改入口。
 - Inspector 使用稳定元素 registry，不做任意 DOM/WYSIWYG 编辑，避免破坏现有 Base/Variant inheritance、RLS、Readiness 和 generator 安全边界。
+### 2026-08-31 双向 Preview Inspector
+- 新增稳定 Element Registry，将中间编辑字段与右侧真实 Page / Google 元素建立一一映射。
+- 中间 focus H1/Intro/Image Alt 等字段时，右侧会自动滚动并高亮；SEO Title / Meta Description 会自动切 Google Preview。
+- 右侧 Hover 显示元素名，点击后锁定选框；中间对应字段自动滚动并高亮，但不会强制抢占输入光标。
+- 选中信息显示元素来源与修改路径：Custom / 继承自 Base / Product Truth 只读，以及 Current page / Base Species / Product Truth。
+- Base 编辑模式已纳入映射；如果元素实际属于 Variant-only 或已有 Variant Override，系统会切回“当前页面”避免误导。
+- 水温、pH、缸体、难度、学名保持 Product Truth 只读，仅用于解释“为什么页面有这个元素但这里不能改”。

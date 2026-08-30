@@ -291,3 +291,10 @@ Top workflow filters use restrained semantic colors: Data Review = amber, Awaiti
 The next interaction milestone is a bidirectional Editor ↔ Preview Inspector. It will use an explicit element registry rather than arbitrary DOM editing. Center-field focus/edit selects and highlights the matching frontend element; clicking an inspectable preview element locates/highlights the corresponding center field. SEO Title and Meta Description map to Google Preview; page fields map to Page Preview.
 
 Inspector selections also expose content authority: Custom, Inherited from Base, or Product Truth · Read only. Product Truth facts can be inspected for context but cannot be mutated from Content Admin.
+## Bidirectional Preview Inspector
+
+The center editor and right live preview share stable element keys through `editorElementRegistry.js`. The first mapped editorial elements are localized name, H1, intro, image alt, SEO title and meta description.
+
+Focusing a center field selects and scrolls the matching preview element. SEO title/meta description automatically use Google Preview. Clicking a preview element selects and scrolls the mapped center field without forcing input focus. The selection status explains the element source and edit path.
+
+Product Truth facts such as temperature, pH, tank size, difficulty and scientific name are inspectable but read-only. Base/Variant routing is source-aware so the UI does not highlight a field that cannot affect the selected page.

@@ -16,14 +16,14 @@ Updated: 2026-08-30
 - [x] Add Base-parent / Variant-child navigation and live unsaved Variant preview updates.
 - [x] Lazy-load read-only Product Truth for the live preview without duplicating those fields into Species Group JSON.
 
-## Next — P0 Bidirectional Preview Inspector
-- [ ] Add a stable editor-element registry for `localizedName`, `h1`, `intro`, `imageAlt`, `seoTitle`, `metaDescription`.
-- [ ] Center → right: focus/click/edit a center field, switch Preview mode when necessary, scroll the mapped frontend element into view and show an outline + element label.
-- [ ] Right → center: hover preview elements subtly; click to lock selection, scroll the matching editor field into view and highlight it without immediately forcing text input focus.
-- [ ] Show source state on selection: Custom / Inherited from Base / Product Truth · Read only.
-- [ ] Map Product Truth facts as inspectable read-only elements so users understand why they appear on the page but cannot be edited here.
-- [ ] Keep Page as default; SEO Title / Meta Description selection may automatically switch the right pane to Google Preview.
-- [ ] Add browser regression for both directions, inherited content and read-only Product Truth; keep `pageErrors=[]`.
+## Completed — P0 Bidirectional Preview Inspector
+- [x] Stable registry for `localizedName`, `h1`, `intro`, `imageAlt`, `seoTitle`, `metaDescription`.
+- [x] Center → right selection, mode switching, scrolling, outline and element label.
+- [x] Right → center hover/click selection and editor scrolling without forced text-input focus.
+- [x] Source state: Custom / Inherited from Base / Product Truth · Read only.
+- [x] Inspectable read-only Product Truth facts.
+- [x] Page default with automatic Google mode for SEO metadata.
+- [x] Base-aware routing and Chromium regression with `pageErrors=[]`.
 
 ## Next — P1 Visual refinement
 - [ ] Reduce repeated inherited/custom badges and convert inheritance to calm `Inherited from Base → Override → Use Base value` interactions.
@@ -44,5 +44,5 @@ Updated: 2026-08-30
 - [x] Keep interface locale independent from content locale.
 - [x] Lazy-load Product Truth preview data so Group JSON stays lightweight.
 - [x] Add semantic top workflow colors: Data Review amber / Awaiting Review blue / Preview-ready green.
-- [ ] Implement bidirectional Editor ↔ Preview Inspector before further broad CSS polishing.
+- [x] Implement bidirectional Editor ↔ Preview Inspector before further broad CSS polishing.
 - [ ] Continue visual refinement: inheritance controls, spacing, preview fidelity, and secondary-tool density.

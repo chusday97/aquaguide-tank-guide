@@ -139,7 +139,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(emptySeo);
@@ -153,6 +153,21 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   useEffect(() => {
     setMessage('');
   }, [species?.id]);
+
+  useEffect(() => {
+    if (!selectedInspectorElement) return;
+    if (selectedInspectorElement === 'localizedName' && !isEnglishLocale(locale)) return;
+    const frame = requestAnimationFrame(() => {
+      const target = document.querySelector(`[data-editor-field="${selectedInspectorElement}"]`);
+      target?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [selectedInspectorElement, species?.id, locale]);
+
+  const editorFieldProps = (key) => ({
+    'data-editor-field': key,
+    className: `inspector-editor-field ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
+  });
 
   const hasSpecies = Boolean(species);
   const resolvedSeo = hasSpecies ? resolveEffectiveSeo({
@@ -290,25 +305,25 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               </div>
             </div>
             {isEnglishLocale(locale) ? (
-              <label>
+              <label {...editorFieldProps('localizedName')}>
                 English Common Name
-                <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onChange={(event) => update('localizedName', event.target.value)} />
+                <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onFocus={() => onInspectorSelect?.('localizedName')} onChange={(event) => update('localizedName', event.target.value)} />
                 <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; Product Truth names remain unchanged.' : '只影响 English 内容层；不会改 Product Truth 里的中文名称。'}</small>
               </label>
             ) : null}
-            <label>
+            <label {...editorFieldProps('seoTitle')}>
               {t('editor.metaTitle')} <span>{form.seoTitle ? `${form.seoTitle.length}/60` : (isUiEnglish ? 'Inherited' : '继承 Base')}</span>
-              <input value={form.seoTitle} maxLength={120} placeholder={resolvedSeo.inherited.seoTitle} onChange={(event) => update('seoTitle', event.target.value)} />
+              <input value={form.seoTitle} maxLength={120} placeholder={resolvedSeo.inherited.seoTitle} onFocus={() => onInspectorSelect?.('seoTitle')} onChange={(event) => update('seoTitle', event.target.value)} />
               <small className="inherit-note">{form.seoTitle ? (isUiEnglish ? 'This Variant uses a custom Title; clear it to inherit again.' : '当前 Variant 使用自定义 Title；清空即可恢复继承。') : `${isUiEnglish ? 'Inherited: ' : '继承：'}${resolvedSeo.inherited.seoTitle}`}</small>
             </label>
-            <label>
+            <label {...editorFieldProps('metaDescription')}>
               {t('editor.metaDescription')} <span>{form.metaDescription ? `${form.metaDescription.length}/160` : (isUiEnglish ? 'Inherited' : '继承 Base')}</span>
-              <textarea rows="3" value={form.metaDescription} maxLength={320} placeholder={resolvedSeo.inherited.metaDescription} onChange={(event) => update('metaDescription', event.target.value)} />
+              <textarea rows="3" value={form.metaDescription} maxLength={320} placeholder={resolvedSeo.inherited.metaDescription} onFocus={() => onInspectorSelect?.('metaDescription')} onChange={(event) => update('metaDescription', event.target.value)} />
               <small className="inherit-note">{form.metaDescription ? (isUiEnglish ? 'This Variant uses a custom Description; clear it to inherit again.' : '当前 Variant 使用自定义 Description；清空即可恢复继承。') : (isUiEnglish ? 'Currently inherited from the Base Species template.' : '当前使用 Base Species 模板。')}</small>
             </label>
-            <label>
+            <label {...editorFieldProps('h1')}>
               {t('editor.h1')}
-              <input value={form.h1} placeholder={resolvedSeo.inherited.h1} onChange={(event) => update('h1', event.target.value)} />
+              <input value={form.h1} placeholder={resolvedSeo.inherited.h1} onFocus={() => onInspectorSelect?.('h1')} onChange={(event) => update('h1', event.target.value)} />
               <small className="inherit-note">{form.h1 ? (isUiEnglish ? 'This Variant uses a custom H1.' : '当前 Variant 使用自定义 H1。') : `${isUiEnglish ? 'Inherited: ' : '继承：'}${resolvedSeo.inherited.h1}`}</small>
             </label>
             <label>
@@ -330,13 +345,13 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared Base Species introduction yet.' : 'Base Species 尚未填写共享简介。')}</p>
               </div>
             ) : null}
-            <label>
+            <label {...editorFieldProps('intro')}>
               {t('editor.variantIntro')}
-              <textarea rows="6" value={form.intro} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Describe only Variant-specific differences; keep shared care content in Base Species.' : '只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。'} />
+              <textarea rows="6" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Describe only Variant-specific differences; keep shared care content in Base Species.' : '只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。'} />
             </label>
-            <label>
+            <label {...editorFieldProps('imageAlt')}>
               {t('editor.imageAlt')}
-              <input value={form.imageAlt} onChange={(event) => update('imageAlt', event.target.value)} />
+              <input value={form.imageAlt} onFocus={() => onInspectorSelect?.('imageAlt')} onChange={(event) => update('imageAlt', event.target.value)} />
             </label>
           </div>
 
@@ -426,8 +441,10 @@ export default function App() {
   const [editorScope, setEditorScope] = useState('variant');
   const [livePreview, setLivePreview] = useState(null);
   const [selectedProductTruth, setSelectedProductTruth] = useState(null);
+  const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
+  useEffect(() => { setSelectedInspectorElement(null); }, [selectedId, contentLocale]);
 
   useEffect(() => {
     if (isReviewMode) {
@@ -589,6 +606,12 @@ export default function App() {
   const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
     ? { ...livePreview, species: previewSpecies || livePreview.species }
     : savedLivePreview;
+  const handleInspectorSelect = (key) => {
+    setSelectedInspectorElement(key);
+    const variantOnly = key === 'imageAlt' || (key === 'localizedName' && contentLocale === 'en');
+    const variantOverride = Boolean(activeLivePreview?.override?.[key]);
+    if (editorScope === 'base' && (variantOnly || variantOverride)) setEditorScope('variant');
+  };
   const workflowScope = useMemo(() => {
     if (!workflowFilter) return { groupKeys: null, memberIds: null };
     if (workflowFilter.type === 'data') {
@@ -762,6 +785,8 @@ export default function App() {
               schemaReady={groupSchemaReady}
               readOnly={isReviewMode}
               onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
+              selectedInspectorElement={selectedInspectorElement}
+              onInspectorSelect={handleInspectorSelect}
               onSaved={(row) => {
                 const key = groupSeoRowKey(row.group_key, row.locale);
                 setGroupSeoRows((current) => ({ ...current, [key]: row }));
@@ -780,6 +805,8 @@ export default function App() {
               dataReviewRows={dataReviewRows}
               readOnly={isReviewMode}
               onLivePreviewChange={setLivePreview}
+              selectedInspectorElement={selectedInspectorElement}
+              onInspectorSelect={handleInspectorSelect}
               onSaved={(row) => {
                 setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
                 setRevisionRefreshKey((current) => current + 1);
@@ -884,7 +911,15 @@ export default function App() {
           </div>
         </main>
 
-        <LiveFrontendPreview preview={activeLivePreview} readiness={publishReadiness} readOnly={isReviewMode} onGeneratePreview={exportPreviewSnapshot} />
+        <LiveFrontendPreview
+          preview={activeLivePreview}
+          readiness={publishReadiness}
+          readOnly={isReviewMode}
+          onGeneratePreview={exportPreviewSnapshot}
+          selectedElement={selectedInspectorElement}
+          onSelectElement={handleInspectorSelect}
+          editorScope={editorScope}
+        />
       </div>
     </div>
   );

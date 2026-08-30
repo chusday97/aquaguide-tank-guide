@@ -6,6 +6,7 @@ import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { extractTemplateTokens, validateProtectedTokens } from '../api/_translation-core.js';
 import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
 import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason } from '../src/publishReadiness.js';
+import { EDITOR_ELEMENT_REGISTRY } from '../src/editorElementRegistry.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
@@ -92,6 +93,20 @@ assert.match(appLanguageSource, /document\.documentElement\.lang/, 'Global inter
 assert.match(productTruthLoaderSource, /import\('\.\/catalog\.generated\.json'\)/, 'Product Truth preview data must remain lazy-loaded');
 assert.ok(groupedMembers.every((item) => !('image' in item) && !('water_temperature' in item) && !('ph_level' in item)), 'Species group projection must not duplicate Product Truth preview fields');
 assert.match(appSource, /onLivePreviewChange/, 'Variant edits must stream unsaved changes into the live frontend preview');
+assert.deepEqual(
+  ['localizedName', 'h1', 'intro', 'imageAlt', 'seoTitle', 'metaDescription'].filter((key) => !EDITOR_ELEMENT_REGISTRY[key]),
+  [],
+  'Preview inspector must preserve the six core editable element mappings',
+);
+assert.equal(EDITOR_ELEMENT_REGISTRY.temperature.readOnly, true, 'Product Truth temperature must stay inspectable but read-only');
+assert.match(appSource, /selectedInspectorElement/, 'Admin must keep one shared inspector selection across editor and preview');
+assert.match(appSource, /data-editor-field/, 'Variant editor fields must expose stable inspector targets');
+assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
+assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');
+assert.match(liveFrontendPreviewSource, /scrollIntoView/, 'Preview selection must scroll mapped elements into view');
+assert.match(liveFrontendPreviewSource, /Product Truth · 只读/, 'Preview inspector must explain Product Truth read-only elements');
+assert.match(liveFrontendPreviewSource, /elementEditPath/, 'Preview inspector must explain where the selected element is edited');
+assert.match(liveFrontendPreviewSource, /editorScope/, 'Inspector edit paths must distinguish Base and current-page editing context');
 assert.match(liveFrontendPreviewSource, /\['page', 'google', 'mobile'\]/, 'Live preview must preserve Page, Google and Mobile modes');
 assert.match(liveFrontendPreviewSource, /preview\.previewOnly/, 'Live preview must render the localized noindex safety label');
 assert.match(appLanguageSource, /Noindex/, 'Global UI language dictionary must preserve the Preview noindex safety label');

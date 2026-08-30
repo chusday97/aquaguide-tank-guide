@@ -176,3 +176,9 @@
 - Added distinct semantic topbar workflow styling: Data Review amber, Awaiting Review blue, Preview-ready green; active filters use matching soft backgrounds/borders.
 - Production Admin build remains green; Chromium computed styles confirm the three states are visually distinct.
 - Synchronized project docs around the next P0 milestone: bidirectional center-editor ↔ right-preview element inspection/highlighting with explicit editable/read-only mappings.
+## 2026-08-31 — Bidirectional Preview Inspector implementation
+- Added six editable mappings plus scientific name / temperature / pH / tank size / difficulty read-only mappings.
+- Chromium proof: center H1 → Page selection; Meta Description → Google selection; right Intro → center highlight; Product Truth temperature → zero editor selections.
+- Base proof: inherited H1 stays Base and highlights the H1 template; Hero Image routes to Current page / Image Alt.
+- Hover element labels, selected outline, source state and edit path all render with `pageErrors=[]`.
+- Admin contract/build and local schema-v7 Supabase gate pass after the interaction change.

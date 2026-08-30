@@ -137,3 +137,8 @@
 - Center focus/edit may switch Preview mode and scroll/highlight the mapped element. Preview click selects/highlights and locates the editor field, but does not immediately force text input focus.
 - Product Truth may be inspectable for explanation but remains read-only; Inspector must never create a hidden Product Truth edit path.
 - Workflow status colors are semantic and restrained: Data Review amber, Awaiting Review blue, Preview-ready green.
+## 2026-08-31 — Preview Inspector uses a stable registry, not ad-hoc DOM editing
+- `editorElementRegistry.js` is the mapping authority for editor ↔ preview elements.
+- Preview click selects/navigation only; it never directly mutates content and never auto-focuses the editor input.
+- Product Truth elements are inspectable read-only and cannot acquire fake SEO controls.
+- Base/Variant routing is source-aware so the UI does not imply that a Base field changes an already-custom Variant override.

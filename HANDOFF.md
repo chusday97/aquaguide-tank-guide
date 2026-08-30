@@ -631,3 +631,10 @@
 - Preview → Center: hover gives a subtle outline; click locks selection and scrolls/highlights the corresponding center field without immediately focusing the input.
 - Selection must explain source: Custom / Inherited from Base / Product Truth · Read only. Product Truth elements are explanatory only and remain immutable here.
 - Add browser regression for both directions before committing; do not weaken current contract/A+B gates.
+### 2026-08-31 Bidirectional Preview Inspector handoff
+- `editorElementRegistry.js` is the stable mapping authority between center-editor fields and preview elements. Extend the registry instead of adding ad-hoc click logic.
+- One `selectedInspectorElement` is shared by Variant editor, Base editor and `LiveFrontendPreview`.
+- Center focus selects the mapped preview element; SEO metadata may switch Preview to Google automatically.
+- Preview click selects and scrolls the editor target. Do not auto-focus the input on preview click; selection/navigation and text editing remain separate actions.
+- Base routing must stay source-aware: Variant-only/custom fields route to Current page, inherited fields may stay in Base authoring.
+- Product Truth facts are inspectable read-only elements and must never gain fake SEO edit controls.
