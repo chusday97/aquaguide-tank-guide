@@ -3,8 +3,8 @@
 
 ## 2026-08-30 可验证进度中心（当前）
 
-- [x] 在 `5ed6ad67` 完成 Vercel-only 生产渠道状态：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 运行时输出 `productionDeploymentFrozen=true`，不会把历史 Cloudflare 绑定误算为活动生产阻塞。
-- [x] `npm run test:readiness` 通过（21 gates、6 cases）；本轮报告绑定 `5ed6ad67abc27e0d6b34a3025ef5d212a131b22a`。候选已推送到远端 `186751e7`；GitHub/Preview API 读回因 DNS 暂时未完成，UI人工验收和Supabase生产写入仍明确保持未通过/未验证。
+- [x] 在 `c63cb2dd` 完成 Vercel-only 生产渠道状态并同步候选：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 运行时输出 `productionDeploymentFrozen=true`，不会把历史 Cloudflare 绑定误算为活动生产阻塞。
+- [x] `npm run readiness:collect` 在授权环境完成（19 PASS、1 UNVERIFIED、1 USER_ACCEPTANCE_REQUIRED）；本轮报告绑定 `c63cb2dd138a379ec75a5bc867113ce86f9462a9`。PR #142 已读回为 `OPEN/Draft/CLEAN/MERGEABLE`；UI人工验收和Supabase生产写入仍明确保持未通过/未验证。
 - [x] 用户提供 Cloudflare Account home 截图，证明其一侧已登录；自动化浏览器仍读取到登录页，因此项目级生产分支读回继续标记 `UNVERIFIED`。
 - [x] 文档证据提交 `a0bdb3aa` 后重新采集 readiness；当前报告绑定该完整 SHA，`test:readiness` 通过。由于当前网络/DNS 和沙箱写入限制，GitHub/Preview/Supabase 相关门禁继续按 `FAIL`、`BLOCKED` 或 `UNVERIFIED` 展示，不沿用旧绿色结果。
 
@@ -13,7 +13,7 @@
 - [x] 新增 `npm run test:readiness`：校验报告 schema、完整 SHA、状态集合、固定业务案例和未完成 UI/生产门禁不会被隐藏。
 - [x] 看板区分 Main 代码收敛与生产发布两个结论；网络不可用、字体/tsx 沙箱限制和旧 UI freeze 基线差异会显示为 `UNVERIFIED` 或 `USER_ACCEPTANCE_REQUIRED`，不伪装成通过。
 - [x] 进度中心实现于 `e3316997`，独立 Critic 已复验通过；当前授权运行报告绑定候选 `fb6db2a2`，为 18 项 PASS、1 项 BLOCKED（生产未冻结）、1 项 UNVERIFIED（生产 Supabase 未写入验证）和 1 项 USER_ACCEPTANCE_REQUIRED（视觉）。
-- [ ] 当前仍需：UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。Cloudflare 已按用户决定登记为历史渠道，不再阻塞生产冻结。
+- [ ] 当前仍需：UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。Cloudflare 已按用户决定登记为历史渠道，不再阻塞生产冻结；PR #142 合并前仍需用户单独授权。
 
 验证证据：readiness report 始终写入 `.artifacts/readiness/<sha-prefix>/`，报告数量和状态以每次运行时输出为准。工作树有未提交变更时，项目事实为 `BLOCKED`，本地门禁为 `UNVERIFIED`；只有提交后重新采集，才允许生成绑定当前 SHA 的 PASS 证据。
 

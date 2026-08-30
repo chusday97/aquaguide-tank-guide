@@ -4,6 +4,8 @@
 
 - Pushed candidate `codex/main-core-foundation-v1` to GitHub at `186751e7` after local readiness and project-truth checks passed. PR #142 remains Draft; API read-back is pending a successful GitHub DNS check.
 
+- Read back the synchronized candidate and PR #142 at `c63cb2dd`: PR is `OPEN/Draft/CLEAN/MERGEABLE`, required source checks are successful, and main convergence readiness is PASS. UI acceptance, production migration, Catalog publication and main merge remain separately gated.
+
 - Revalidated the Vercel-only production freeze at candidate `5ed6ad67`: Vercel remains `ACTIVE_FROZEN` on `release/production`, Cloudflare is `INACTIVE_LEGACY`, and readiness evidence is SHA-bound. Candidate push, main merge, production migration, Catalog publication and UI acceptance remain separately gated.
 
 - Created the remote `release/production` pointer at the verified production anchor `ed0cf380`; provider branch binding remains pending because Vercel/Cloudflare settings require authenticated platform access, and production freeze is still unverified.

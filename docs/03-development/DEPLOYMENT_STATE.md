@@ -10,7 +10,7 @@
 - The intended post-convergence relationship is: `main` = latest code source; `release/production` = last accepted production source. Production must remain unchanged while `NOT_READY` gates are open.
 - Vercel Production Branch has been changed to `release/production` and read back through the project settings/API; the production deployment remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Cloudflare is recorded as **INACTIVE_LEGACY** for AquaGuide by user decision. The visible Worker `ice-glide` and historical Pages resources are retained without modification and do not participate in the production freeze gate.
-- No candidate push, PR merge, Supabase migration, Catalog publication, production deployment or business-data write was performed in this pass.
+- Candidate `codex/main-core-foundation-v1` was pushed to `c63cb2dd`; PR #142 remains Draft. No PR merge, Supabase migration, Catalog publication, production deployment or business-data write was performed in this pass.
 
 ## 2026-08-28 local convergence preparation (latest)
 

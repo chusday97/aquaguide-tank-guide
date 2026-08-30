@@ -4,8 +4,8 @@
 
 ## 2026-08-30 可验证进度中心（当前）
 
-- `5ed6ad67` 已完成 Vercel-only 生产渠道状态收敛：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 现在按活动渠道计算 `productionDeploymentFrozen=true`。
-- `npm run test:readiness` 已通过（21 gates、6 cases），报告绑定完整 SHA `5ed6ad67abc27e0d6b34a3025ef5d212a131b22a`。候选已于本轮推送到远端 `186751e7`；UI仍待人工验收，Supabase生产migration/Catalog/main合并仍未执行。
+- `c63cb2dd` 已完成 Vercel-only 生产渠道状态收敛和候选同步：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 现在按活动渠道计算 `productionDeploymentFrozen=true`。
+- `npm run readiness:collect` 已在授权环境完成（19 PASS、1 UNVERIFIED、1 USER_ACCEPTANCE_REQUIRED），报告绑定完整 SHA `c63cb2dd138a379ec75a5bc867113ce86f9462a9`。PR #142 已读回为 `OPEN/Draft/CLEAN/MERGEABLE`；UI仍待人工验收，Supabase生产migration/Catalog/main合并仍未执行。
 - 用户已明确选择 Vercel 作为 AquaGuide 唯一正式生产渠道；Cloudflare 的历史 Worker/Pages 资源登记为 `INACTIVE_LEGACY`，保留但不修改，也不再参与生产冻结计算。
 - 已更新生产提供方状态模型：Vercel 为 `ACTIVE_FROZEN`（分支 `release/production`，生产 SHA `ed0cf380...`），Cloudflare 为 `INACTIVE_LEGACY`。外部 GitHub/Preview/Supabase 门禁仍按当前网络和权限证据显示。
 
@@ -17,7 +17,7 @@
 - `e3316997` 已提交；独立 Critic 同线程复验通过。当前授权运行的最新报告绑定候选 `fb6db2a2`，为 18 PASS、1 BLOCKED（生产未冻结）、1 UNVERIFIED（生产 Supabase 未写入验证）、1 USER_ACCEPTANCE_REQUIRED（视觉基线）。
 - 候选当前提交、远端候选、PR #142、Vercel Preview 和 CI 的精确关系以运行时报告为准；Vercel Production Branch 已切换到 `release/production`，设置页与 API 均读回成功，正式部署仍保持旧生产 SHA `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
 - Cloudflare 已根据用户决定登记为 `INACTIVE_LEGACY`：AquaGuide 正式生产只使用 Vercel，历史 Worker/Pages 资源保留且不修改，不再参与生产冻结计算。
-- 下一步：完成本地 readiness 复验后，单独申请一次候选推送授权；候选同步后再单独申请 PR #142 合并授权。
+- 下一步：申请 PR #142 合并授权；合并前保持 UI、生产 Catalog 和 Supabase migration 门禁不变。
 
 ## 2026-08-30 正式预览入口收敛（当前）
 
