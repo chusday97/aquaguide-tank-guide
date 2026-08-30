@@ -1,5 +1,14 @@
 ## 当前任务目标
 
+从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。
+
+## 2026-08-30 当前执行边界
+
+- `main@016dbca5` 与 `origin/main` 同步且干净。
+- `release/production@ed0cf380` 保持冻结，Vercel 继续使用旧生产版本。
+- `codex/catalog-cohort-30-v1` 是唯一数据短分支，当前仅本地存在。
+- UI、生产 migration、Catalog 发布和正式上线均后置。
+
 ## 2026-08-30 首批30种资料审计
 
 - [x] 全量审计已运行：486条记录；唯一中文名458、唯一学名437；状态为 `0 VERIFIED / 58 PARTIAL / 348 TEMPLATE_DERIVED / 33 CONFLICT / 47 AMBIGUOUS`。

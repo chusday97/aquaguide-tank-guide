@@ -2,11 +2,17 @@
 
 ## 2026-08-30 30种资料审计启动（当前）
 
-- 短分支：`codex/catalog-cohort-30-v1`，基于 `main@f0bc8ad3`。
+- 短分支：`codex/catalog-cohort-30-v1`，基于最新 `main@016dbca5`，当前仅本地存在。
 - `npm run catalog:audit` 已运行：486条记录、458个唯一中文名、437个唯一学名；`VERIFIED=0`、`PARTIAL=58`、`TEMPLATE_DERIVED=348`、`CONFLICT=33`、`AMBIGUOUS=47`；484条缺显式水体，427条引用搜索页。
 - `npm run catalog:research -- --batch 10` 已生成3批研究草稿，共30种；`catalog:review` 返回 `reviewedCount=0`、`pendingCount=30`，未进入运行时 Catalog。
 - 当前结论：资料审核是内容证据阻塞，不是脚本阻塞；不能用现有模板或搜索页自动提升为 Approved。
-- 下一步：整理首批30种字段级审核包，记录来源、冲突和审核状态；用户只需在整批审核包完成后一次确认。
+- 下一步：先实现字段级审核记录和批次校验，再填充来源、冲突和审核状态；用户只需在整批审核包完成后一次确认。
+
+## 当前边界
+
+- `main` 是唯一代码事实来源；`release/production@ed0cf380` 是唯一生产回退指针。
+- 本阶段不修改 UI、Supabase 生产、Catalog 发布或 GitHub 远端。
+- 30 种资料只有在字段级来源审核完成后，才能进入正式 Catalog；现有 7 个运行时 reviewed profile 也要重新审核，不能直接当作 30 种完成。
 
 ## 2026-08-30 main 收敛完成（当前）
 
