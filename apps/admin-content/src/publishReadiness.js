@@ -1,4 +1,5 @@
 import { resolveEffectiveSeo } from './seoInheritance.js';
+import { groupSeoRowKey, seoRowKey } from './localization.js';
 
 export const REVIEW_STATES = [
   { value: 'editing', label: 'Editing' },
@@ -132,4 +133,64 @@ export function buildControlledPreviewSnapshot({ species, group, variantRows = [
       canonical_catalog_key: row.canonical_catalog_key || '',
     })),
   };
+}
+
+
+function issueStatus(issue, reviewRows) {
+  const review = reviewRows[issue.issue_key];
+  if (!review) return 'pending';
+  if (issue.issue_type === 'category_conflict') {
+    return review.decision === 'source_correction_required' ? 'source_fix_required'
+      : review.decision === 'accepted_as_is' ? 'resolved' : 'pending';
+  }
+  if (review.decision === 'distinct_records') return 'resolved';
+  if (review.decision === 'duplicate_records' && issue.member_ids.includes(review.canonical_catalog_key)) return 'resolved';
+  return 'pending';
+}
+
+export function buildAdminWorkflowOverview({ species = [], groups = [], seoRows = {}, groupSeoRows = {}, reviewRows = {} }) {
+  const dataIssues = groups.flatMap((group) => {
+    const issues = [];
+    if (group.category_conflict) issues.push({ issue_key: categoryIssueKey(group), issue_type: 'category_conflict', group_key: group.group_key, member_ids: group.members.map((m) => m.catalog_key) });
+    for (const set of group.duplicate_sets || []) issues.push({ issue_key: set.duplicate_set_key, issue_type: 'duplicate_set', group_key: group.group_key, member_ids: set.member_ids });
+    return issues;
+  });
+  const dataReview = {
+    total: dataIssues.length,
+    pending: 0,
+    resolved: 0,
+    source_fix_required: 0,
+    groupKeysByStatus: { pending: [], resolved: [], source_fix_required: [] },
+  };
+  const groupSets = { pending: new Set(), resolved: new Set(), source_fix_required: new Set() };
+  for (const issue of dataIssues) {
+    const status = issueStatus(issue, reviewRows);
+    dataReview[status] += 1;
+    groupSets[status].add(issue.group_key);
+  }
+  for (const key of Object.keys(groupSets)) dataReview.groupKeysByStatus[key] = [...groupSets[key]];
+
+  const groupByMember = new Map();
+  for (const group of groups) for (const member of group.members) groupByMember.set(member.catalog_key, group);
+  const locales = {};
+  for (const locale of ['zh-CN', 'en']) {
+    const counterpart = locale === 'en' ? 'zh-CN' : 'en';
+    const state = { total: species.length, blocked: 0, ready_for_review: 0, publish_ready: 0, memberIdsByState: { blocked: [], ready_for_review: [], publish_ready: [] } };
+    for (const item of species) {
+      const group = groupByMember.get(item.catalog_key);
+      if (!group) continue;
+      const result = assessPublishReadiness({
+        species: item, group, locale,
+        variantRow: seoRows[seoRowKey(item.catalog_key, locale)],
+        groupRow: groupSeoRows[groupSeoRowKey(group.group_key, locale)],
+        counterpartVariantRow: seoRows[seoRowKey(item.catalog_key, counterpart)],
+        counterpartGroupRow: groupSeoRows[groupSeoRowKey(group.group_key, counterpart)],
+        reviewRows,
+      });
+      state[result.state] += 1;
+      state.memberIdsByState[result.state].push(item.id);
+    }
+    locales[locale] = state;
+  }
+  return { dataReview, locales };
 }

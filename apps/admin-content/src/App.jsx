@@ -8,11 +8,12 @@ import DataReviewPanel from './DataReviewPanel.jsx';
 import PublicSpeciesPreview from './PublicSpeciesPreview.jsx';
 import RevisionHistoryPanel from './RevisionHistoryPanel.jsx';
 import PublishReadinessPanel from './PublishReadinessPanel.jsx';
+import WorkflowOverview from './WorkflowOverview.jsx';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
-import { REVIEW_STATES, assessPublishReadiness, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
+import { REVIEW_STATES, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -405,6 +406,7 @@ export default function App() {
   const [dataReviewSchemaReady, setDataReviewSchemaReady] = useState(true);
   const [dataReviewRows, setDataReviewRows] = useState({});
   const [revisionRefreshKey, setRevisionRefreshKey] = useState(0);
+  const [workflowFilter, setWorkflowFilter] = useState(null);
 
   useEffect(() => {
     if (isReviewMode) {
@@ -534,6 +536,31 @@ export default function App() {
   const localeSeoRows = useMemo(() => Object.fromEntries(
     Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
   ), [seoRows, contentLocale]);
+  const workflowOverview = useMemo(() => buildAdminWorkflowOverview({ species, groups: speciesGroups, seoRows, groupSeoRows, reviewRows: dataReviewRows }), [species, seoRows, groupSeoRows, dataReviewRows]);
+  const workflowScope = useMemo(() => {
+    if (!workflowFilter) return { groupKeys: null, memberIds: null };
+    if (workflowFilter.type === 'data') {
+      return { groupKeys: new Set(workflowOverview.dataReview.groupKeysByStatus[workflowFilter.status] || []), memberIds: null };
+    }
+    const memberIds = new Set(workflowOverview.locales[workflowFilter.locale]?.memberIdsByState[workflowFilter.status] || []);
+    const groupKeys = new Set();
+    for (const id of memberIds) { const group = speciesGroupByMemberId.get(id); if (group) groupKeys.add(group.group_key); }
+    return { groupKeys, memberIds };
+  }, [workflowFilter, workflowOverview]);
+
+  const applyWorkflowFilter = (next) => {
+    setWorkflowFilter(next);
+    if (!next) return;
+    if (next.type === 'readiness') {
+      const firstId = workflowOverview.locales[next.locale]?.memberIdsByState[next.status]?.[0];
+      if (firstId) setSelectedId(firstId);
+      return;
+    }
+    const firstGroupKey = workflowOverview.dataReview.groupKeysByStatus[next.status]?.[0];
+    const firstGroup = speciesGroups.find((group) => group.group_key === firstGroupKey);
+    if (firstGroup?.members?.[0]?.id) setSelectedId(firstGroup.members[0].id);
+  };
+
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
   const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
   const batchGroupKey = batchGroup ? groupSeoRowKey(batchGroup.group_key, contentLocale) : null;
@@ -657,9 +684,14 @@ export default function App() {
           onCategory={setCategory}
           onSelect={setSelectedId}
           onToggleBatch={toggleBatch}
+          workflowFilter={workflowFilter}
+          workflowGroupKeys={workflowScope.groupKeys}
+          workflowMemberIds={workflowScope.memberIds}
+          onClearWorkflowFilter={() => setWorkflowFilter(null)}
         />
 
         <main className="editor-area">
+          <WorkflowOverview overview={workflowOverview} activeFilter={workflowFilter} onFilter={applyWorkflowFilter} />
           <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} />
           <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
             onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />

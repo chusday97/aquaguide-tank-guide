@@ -5,18 +5,19 @@ import { fileURLToPath } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { extractTemplateTokens, validateProtectedTokens } from '../api/_translation-core.js';
 import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
-import { assessDataReview, assessPublishReadiness, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason } from '../src/publishReadiness.js';
+import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason } from '../src/publishReadiness.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, readinessSource, controlledPreviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/DataReviewPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublishReadinessPanel.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/WorkflowOverview.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'scripts/build-controlled-preview.mjs'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublicSpeciesPreview.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/RevisionHistoryPanel.jsx'), 'utf8'),
@@ -53,6 +54,11 @@ assert.ok(groupData.stats.explicit_variant_members > 0, 'Explicit variants must 
 assert.ok(groupData.stats.category_conflict_groups > 0, 'Category conflicts must remain visible for review');
 assert.ok(groupData.stats.exact_duplicate_records > 0, 'Duplicate candidates must remain visible for review');
 assert.ok(groupData.groups.some((group) => group.duplicate_sets?.length), 'Duplicate review sets must include peer keys');
+const emptyWorkflowOverview = buildAdminWorkflowOverview({ species: catalog, groups: groupData.groups, seoRows: {}, groupSeoRows: {}, reviewRows: {} });
+assert.equal(emptyWorkflowOverview.dataReview.total, 33, 'Workflow overview must preserve 5 category + 28 duplicate review issues');
+assert.equal(emptyWorkflowOverview.dataReview.pending, 33, 'Unreviewed source issues must begin Pending');
+assert.equal(emptyWorkflowOverview.locales['zh-CN'].blocked, catalog.length, 'Missing Chinese editorial rows must block all Species');
+assert.equal(emptyWorkflowOverview.locales.en.blocked, catalog.length, 'Missing English editorial rows must block all Species');
 
 assert.match(appSource, /from\('user_roles'\)/, 'Admin must verify user_roles');
 assert.match(appSource, /from\('species_seo'\)/, 'Admin must read species_seo');
@@ -63,6 +69,10 @@ assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
 assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review workflow');
 assert.match(appSource, /PublishReadinessPanel/, 'Admin must expose explicit publish readiness');
+assert.match(appSource, /WorkflowOverview/, 'Admin must expose queue-level workflow overview');
+assert.match(workflowOverviewSource, /Data Review/, 'Workflow overview must include Data Review counts');
+assert.match(workflowOverviewSource, /Publish-ready/, 'Workflow overview must expose publish-ready counts');
+assert.match(appSource, /workflowGroupKeys/, 'Workflow filters must constrain the Species sidebar');
 assert.match(readinessSource, /导出 Preview Snapshot/, 'Publish-ready UI must expose controlled Preview Snapshot export');
 assert.match(controlledPreviewSource, /noindex,nofollow/, 'Controlled Preview pages must force noindex,nofollow');
 assert.match(controlledPreviewSource, /Disallow: \//, 'Controlled Preview root must disallow crawlers');
@@ -193,6 +203,14 @@ const readinessFixture = assessPublishReadiness({
   counterpartGroupRow: { review_state: 'approved' }, counterpartVariantRow: { review_state: 'approved' }, reviewRows: {},
 });
 assert.equal(readinessFixture.state, 'publish_ready', 'Complete approved noindex content should be Preview Publish-ready');
+const oneReadyOverview = buildAdminWorkflowOverview({
+  species: [cleanMember], groups: [cleanGroup],
+  seoRows: { [`${cleanMember.catalog_key}::en`]: { catalog_key: cleanMember.catalog_key, locale: 'en', localized_name: 'Reviewed Species', image_alt: 'Reviewed Species', review_state: 'approved', index_strategy: 'noindex' } },
+  groupSeoRows: { [`${cleanGroup.group_key}::en`]: { group_key: cleanGroup.group_key, locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' } },
+  reviewRows: {},
+});
+assert.equal(oneReadyOverview.locales.en.publish_ready, 1, 'Workflow overview must count a complete Approved Species as Publish-ready');
+assert.deepEqual(oneReadyOverview.locales.en.memberIdsByState.publish_ready, [cleanMember.id]);
 const previewSnapshot = buildControlledPreviewSnapshot({
   species: cleanMember, group: cleanGroup,
   variantRows: [{ catalog_key: cleanMember.catalog_key, locale: 'zh-CN', status: 'draft', review_state: 'approved', reviewed_by: 'should-not-export' }],
