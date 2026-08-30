@@ -26,7 +26,7 @@ Updated: 2026-08-30
 - [x] Base-aware routing and Chromium regression with `pageErrors=[]`.
 
 ## Next — P1 Visual refinement
-- [ ] Reduce repeated inherited/custom badges and convert inheritance to calm `Inherited from Base → Override → Use Base value` interactions.
+- [x] Reduce repeated inherited/custom badges and convert Meta Title / Meta Description / H1 to `Inherited from Base → Override → Use Base value` interactions.
 - [ ] Refine Data Review, Translation and Revision History into lighter drawer/disclosure surfaces while keeping current DB authority and callbacks.
 - [ ] Re-check Vercel Admin Preview after Hobby deployment quota reset.
 - [ ] Validate 1–2 live translation suggestions after server-only provider key is configured.

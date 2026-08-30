@@ -757,3 +757,50 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 @media (max-width: 1320px) {
   .preview-inspector-path { width: 100%; margin-left: 0; padding-left: 0; }
 }
+
+/* Calm Base inheritance controls */
+.inheritance-field-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.inheritance-field-heading > span:first-child { font-weight: 700; color: #405047; }
+.inheritance-state {
+  color: #88938c;
+  font-size: 8.5px;
+  font-weight: 700;
+}
+.inheritance-state.custom { color: #356c4b; }
+.inherited-field-view {
+  padding: 10px 12px;
+  border-left: 2px solid #aac4b2;
+  background: #f8faf8;
+}
+.inherited-field-value {
+  color: #39483f;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.inherited-field-footer,
+.override-field-footer {
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #8a958d;
+  font-size: 8.5px;
+  font-weight: 500;
+}
+.inherited-field-footer button,
+.override-field-footer button {
+  border: 0;
+  background: transparent;
+  padding: 2px 0;
+  color: #3f7253;
+  font-size: 8.5px;
+  font-weight: 750;
+}
+.inherited-field-footer button:hover,
+.override-field-footer button:hover { color: #245c3d; text-decoration: underline; }

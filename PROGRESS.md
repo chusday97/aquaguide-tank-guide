@@ -388,3 +388,8 @@
 - 选中信息显示元素来源与修改路径：Custom / 继承自 Base / Product Truth 只读，以及 Current page / Base Species / Product Truth。
 - Base 编辑模式已纳入映射；如果元素实际属于 Variant-only 或已有 Variant Override，系统会切回“当前页面”避免误导。
 - 水温、pH、缸体、难度、学名保持 Product Truth 只读，仅用于解释“为什么页面有这个元素但这里不能改”。
+### 2026-08-31 继承编辑交互收敛
+- Meta Title / Meta Description / H1 不再用空输入框表达继承，而是直接显示当前 Base 生效值。
+- 用户点击“单独编辑 / Override”后才进入 Variant 输入；未输入时不会物化 Base 文案。
+- 自定义后提供“使用 Base 值 / Use Base value”，本质是清空 Variant Override，继续由继承 resolver 计算。
+- 与右侧 Inspector 联动保持不变：Inherited/Custom 状态和 Page/Google Preview 会实时同步。

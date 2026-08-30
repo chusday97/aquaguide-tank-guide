@@ -298,3 +298,6 @@ The center editor and right live preview share stable element keys through `edit
 Focusing a center field selects and scrolls the matching preview element. SEO title/meta description automatically use Google Preview. Clicking a preview element selects and scrolls the mapped center field without forcing input focus. The selection status explains the element source and edit path.
 
 Product Truth facts such as temperature, pH, tank size, difficulty and scientific name are inspectable but read-only. Base/Variant routing is source-aware so the UI does not highlight a field that cannot affect the selected page.
+## Inherited Variant fields
+
+Variant Meta Title, Meta Description and H1 use progressive inheritance controls. An inherited field shows the resolved Base value and an explicit Override action instead of a blank input. Choosing Override reveals the Variant input. `Use Base value` clears the Variant override and returns to normal resolver-based inheritance; Base content is never copied into the Variant row.

@@ -638,3 +638,8 @@
 - Preview click selects and scrolls the editor target. Do not auto-focus the input on preview click; selection/navigation and text editing remain separate actions.
 - Base routing must stay source-aware: Variant-only/custom fields route to Current page, inherited fields may stay in Base authoring.
 - Product Truth facts are inspectable read-only elements and must never gain fake SEO edit controls.
+### 2026-08-31 Inheritance-control handoff
+- Do not represent inherited Variant fields as blank editable inputs by default.
+- Meta Title / Meta Description / H1 use an explicit disclosure: resolved Base value → Override → custom input → Use Base value.
+- `Use Base value` must clear the Variant value; never materialize/copy the Base template into the Variant row.
+- Keep the wrapper non-label to avoid nested interactive-control click ambiguity; actual inputs carry explicit aria-labels.

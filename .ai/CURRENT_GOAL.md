@@ -52,3 +52,7 @@ The persistent product model is now:
 - Preview Product Truth facts remain inspectable but read-only; selecting temperature/pH/tank/difficulty never creates a fake edit path.
 - Selection explains element name, source (Custom / Inherited from Base / Product Truth) and edit path (Current page / Base Species / Product Truth).
 - Base-aware routing prevents misleading edits: inherited fields can stay in Base authoring, while Variant-only/custom fields route to Current page.
+## 2026-08-31 — Calm inheritance editing
+- Variant Meta Title / Meta Description / H1 no longer render as empty inputs when they inherit.
+- Inherited state shows the effective Base value and source; an explicit Override action reveals the input.
+- Custom state exposes `Use Base value`, which clears the Variant override and returns to resolver-based inheritance rather than copying Base text.

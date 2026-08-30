@@ -145,9 +145,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [overrideEditing, setOverrideEditing] = useState({});
 
   useEffect(() => {
     setForm(fromSeoRow(record, species, locale));
+    setOverrideEditing({});
   }, [record, species, locale]);
 
   useEffect(() => {
@@ -230,6 +232,49 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   }
 
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const startOverride = (key) => {
+    setOverrideEditing((current) => ({ ...current, [key]: true }));
+    onInspectorSelect?.(key);
+    requestAnimationFrame(() => document.querySelector(`[data-editor-override="${key}"]`)?.focus());
+  };
+  const useBaseValue = (key) => {
+    update(key, '');
+    setOverrideEditing((current) => ({ ...current, [key]: false }));
+    onInspectorSelect?.(key);
+  };
+  const renderInheritedOverrideField = ({ key, label, value, inheritedValue, maxLength, rows }) => {
+    const custom = Boolean(value);
+    const editing = custom || Boolean(overrideEditing[key]);
+    return (
+      <div {...editorFieldProps(key)} onClick={() => onInspectorSelect?.(key)}>
+        <div className="inheritance-field-heading">
+          <span>{label}</span>
+          <span className={`inheritance-state ${custom ? 'custom' : 'inherited'}`}>{custom ? (isUiEnglish ? 'Custom' : '自定义') : (isUiEnglish ? 'Inherited' : '继承')}</span>
+        </div>
+        {!editing ? (
+          <div className="inherited-field-view">
+            <div className="inherited-field-value">{inheritedValue || '—'}</div>
+            <div className="inherited-field-footer">
+              <span>{isUiEnglish ? `Inherited from ${group?.base_scientific_name || 'Base Species'}` : `继承自 ${group?.base_scientific_name || 'Base Species'}`}</span>
+              <button type="button" onClick={() => startOverride(key)}>{isUiEnglish ? 'Override' : '单独编辑'}</button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {rows ? (
+              <textarea aria-label={label} data-editor-override={key} rows={rows} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
+            ) : (
+              <input aria-label={label} data-editor-override={key} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
+            )}
+            <div className="override-field-footer">
+              <span>{custom ? (isUiEnglish ? 'Custom for this page' : '当前页面自定义') : (isUiEnglish ? 'Type to create an override' : '输入内容后建立 Override')}</span>
+              <button type="button" onClick={() => useBaseValue(key)}>{custom ? (isUiEnglish ? 'Use Base value' : '使用 Base 值') : (isUiEnglish ? 'Cancel' : '取消')}</button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  };
   const save = async () => {
     if (indexBlockReason) {
       setMessage(indexBlockReason);
@@ -311,21 +356,15 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; Product Truth names remain unchanged.' : '只影响 English 内容层；不会改 Product Truth 里的中文名称。'}</small>
               </label>
             ) : null}
-            <label {...editorFieldProps('seoTitle')}>
-              {t('editor.metaTitle')} <span>{form.seoTitle ? `${form.seoTitle.length}/60` : (isUiEnglish ? 'Inherited' : '继承 Base')}</span>
-              <input value={form.seoTitle} maxLength={120} placeholder={resolvedSeo.inherited.seoTitle} onFocus={() => onInspectorSelect?.('seoTitle')} onChange={(event) => update('seoTitle', event.target.value)} />
-              <small className="inherit-note">{form.seoTitle ? (isUiEnglish ? 'This Variant uses a custom Title; clear it to inherit again.' : '当前 Variant 使用自定义 Title；清空即可恢复继承。') : `${isUiEnglish ? 'Inherited: ' : '继承：'}${resolvedSeo.inherited.seoTitle}`}</small>
-            </label>
-            <label {...editorFieldProps('metaDescription')}>
-              {t('editor.metaDescription')} <span>{form.metaDescription ? `${form.metaDescription.length}/160` : (isUiEnglish ? 'Inherited' : '继承 Base')}</span>
-              <textarea rows="3" value={form.metaDescription} maxLength={320} placeholder={resolvedSeo.inherited.metaDescription} onFocus={() => onInspectorSelect?.('metaDescription')} onChange={(event) => update('metaDescription', event.target.value)} />
-              <small className="inherit-note">{form.metaDescription ? (isUiEnglish ? 'This Variant uses a custom Description; clear it to inherit again.' : '当前 Variant 使用自定义 Description；清空即可恢复继承。') : (isUiEnglish ? 'Currently inherited from the Base Species template.' : '当前使用 Base Species 模板。')}</small>
-            </label>
-            <label {...editorFieldProps('h1')}>
-              {t('editor.h1')}
-              <input value={form.h1} placeholder={resolvedSeo.inherited.h1} onFocus={() => onInspectorSelect?.('h1')} onChange={(event) => update('h1', event.target.value)} />
-              <small className="inherit-note">{form.h1 ? (isUiEnglish ? 'This Variant uses a custom H1.' : '当前 Variant 使用自定义 H1。') : `${isUiEnglish ? 'Inherited: ' : '继承：'}${resolvedSeo.inherited.h1}`}</small>
-            </label>
+            {renderInheritedOverrideField({
+              key: 'seoTitle', label: t('editor.metaTitle'), value: form.seoTitle, inheritedValue: resolvedSeo.inherited.seoTitle, maxLength: 120,
+            })}
+            {renderInheritedOverrideField({
+              key: 'metaDescription', label: t('editor.metaDescription'), value: form.metaDescription, inheritedValue: resolvedSeo.inherited.metaDescription, maxLength: 320, rows: 3,
+            })}
+            {renderInheritedOverrideField({
+              key: 'h1', label: t('editor.h1'), value: form.h1, inheritedValue: resolvedSeo.inherited.h1,
+            })}
             <label>
               {t('editor.focusKeyword')}
               <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />

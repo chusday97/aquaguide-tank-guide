@@ -182,3 +182,8 @@
 - Base proof: inherited H1 stays Base and highlights the H1 template; Hero Image routes to Current page / Image Alt.
 - Hover element labels, selected outline, source state and edit path all render with `pageErrors=[]`.
 - Admin contract/build and local schema-v7 Supabase gate pass after the interaction change.
+## 2026-08-31 — Variant inheritance UI refinement
+- Replaced always-visible blank inputs for Meta Title / Meta Description / H1 with inherited-value disclosures.
+- Added Override and Use Base value flows while preserving live Preview updates and resolver authority.
+- Browser proof: inherited H1 → Override focus → custom live H1 → Use Base value → inherited H1 restored; Google mode switches on SEO Title Override; `pageErrors=[]`.
+- Contract/build/schema-v7 Supabase gate all pass after the change.

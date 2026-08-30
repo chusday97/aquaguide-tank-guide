@@ -53,3 +53,9 @@ Branch: `feature/admin-content-v0`
 - Hover shows the element label; click locks the outline and displays source + edit path.
 - Product Truth temperature shows `Product Truth · 只读 / Product Truth → 只读` and leaves zero editor fields selected.
 - Chromium regression `pageErrors=[]`; contract guards the six core mappings, Base targets, preview targets and read-only Product Truth behavior.
+## 2026-08-31 Inheritance-control evidence
+- Inherited H1 displays the resolved Base value with no editable input until Override is chosen.
+- Override opens/focuses the input; unsaved text updates the right Preview immediately.
+- `Use Base value` removes the Variant value, returns the field to Inherited, and restores the effective Base H1 in Preview.
+- SEO Title Override automatically switches the selected Preview element to Google.
+- A browser regression caught and removed an ambiguous nested-button-inside-label interaction; inheritance containers are now non-label wrappers with explicit input aria-labels.

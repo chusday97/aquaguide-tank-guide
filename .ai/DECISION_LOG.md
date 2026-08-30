@@ -142,3 +142,7 @@
 - Preview click selects/navigation only; it never directly mutates content and never auto-focuses the editor input.
 - Product Truth elements are inspectable read-only and cannot acquire fake SEO controls.
 - Base/Variant routing is source-aware so the UI does not imply that a Base field changes an already-custom Variant override.
+## 2026-08-31 — Inheritance is a state, not an empty input
+- Default inherited fields display the effective Base value instead of an empty editable control.
+- Override is explicit and local to the Variant.
+- Returning to Base means clearing the override, never copying Base text into Variant storage.
