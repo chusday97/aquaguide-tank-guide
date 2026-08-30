@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Revalidated the Vercel-only production freeze at candidate `5ed6ad67`: Vercel remains `ACTIVE_FROZEN` on `release/production`, Cloudflare is `INACTIVE_LEGACY`, and readiness evidence is SHA-bound. Candidate push, main merge, production migration, Catalog publication and UI acceptance remain separately gated.
+
 - Created the remote `release/production` pointer at the verified production anchor `ed0cf380`; provider branch binding remains pending because Vercel/Cloudflare settings require authenticated platform access, and production freeze is still unverified.
 
 - Updated Vercel Production Branch to `release/production` and read back the setting plus unchanged production SHA `ed0cf380`; Cloudflare remains unverified because its dashboard requires login and no local API token is available. Production freeze remains blocked until Cloudflare is read back.

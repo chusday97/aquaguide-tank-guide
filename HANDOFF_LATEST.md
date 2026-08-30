@@ -4,8 +4,8 @@
 
 ## 2026-08-30 可验证进度中心（当前）
 
-- `77ea8572` 已完成 Vercel-only 生产渠道状态收敛：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 现在按活动渠道计算 `productionDeploymentFrozen=true`。
-- `npm run test:readiness` 已通过（21 gates、6 cases），报告绑定完整 SHA `77ea8572acc1b14b6d3593b6f2aac23a29740cbe`。候选尚未推送，UI仍待人工验收，Supabase生产migration/Catalog/main合并仍未执行。
+- `5ed6ad67` 已完成 Vercel-only 生产渠道状态收敛：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 现在按活动渠道计算 `productionDeploymentFrozen=true`。
+- `npm run test:readiness` 已通过（21 gates、6 cases），报告绑定完整 SHA `5ed6ad67abc27e0d6b34a3025ef5d212a131b22a`。候选尚未推送，UI仍待人工验收，Supabase生产migration/Catalog/main合并仍未执行。
 - 用户已明确选择 Vercel 作为 AquaGuide 唯一正式生产渠道；Cloudflare 的历史 Worker/Pages 资源登记为 `INACTIVE_LEGACY`，保留但不修改，也不再参与生产冻结计算。
 - 已更新生产提供方状态模型：Vercel 为 `ACTIVE_FROZEN`（分支 `release/production`，生产 SHA `ed0cf380...`），Cloudflare 为 `INACTIVE_LEGACY`。外部 GitHub/Preview/Supabase 门禁仍按当前网络和权限证据显示。
 
