@@ -3,6 +3,9 @@
 
 ## 2026-08-30 可验证进度中心（当前）
 
+- [x] 用户提供 Cloudflare Account home 截图，证明其一侧已登录；自动化浏览器仍读取到登录页，因此项目级生产分支读回继续标记 `UNVERIFIED`。
+- [x] 文档证据提交 `a0bdb3aa` 后重新采集 readiness；当前报告绑定该完整 SHA，`test:readiness` 通过。由于当前网络/DNS 和沙箱写入限制，GitHub/Preview/Supabase 相关门禁继续按 `FAIL`、`BLOCKED` 或 `UNVERIFIED` 展示，不沿用旧绿色结果。
+
 - [x] 新增 `npm run readiness:collect`：在当前 SHA 上运行项目事实、Domain/Service/Presentation、Catalog、API 类型、build、兼容权威和 UI freeze 门禁，并记录每项证据的命令、预期、实际结果、来源和时间。
 - [x] 新增 `npm run readiness:serve`：提供本地只读进度看板（默认 `http://127.0.0.1:4320`），独立于 Aquarium/4319 视觉页面。
 - [x] 新增 `npm run test:readiness`：校验报告 schema、完整 SHA、状态集合、固定业务案例和未完成 UI/生产门禁不会被隐藏。

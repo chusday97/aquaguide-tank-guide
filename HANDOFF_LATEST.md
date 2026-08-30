@@ -4,6 +4,9 @@
 
 ## 2026-08-30 可验证进度中心（当前）
 
+- 用户提供的 Cloudflare 截图显示已进入 Account home；这证明用户侧登录成功，但不能替代自动化会话对 AquaGuide 项目生产分支的设置读回。当前自动化标签页仍显示登录页，Cloudflare 绑定继续为 `UNVERIFIED`。
+- 文档证据提交 `a0bdb3aa` 后已重新采集 readiness，报告绑定完整 SHA `a0bdb3aa5351adf456dd057b19b24ed3ca0f241a`；`npm run test:readiness` 通过。运行环境的 GitHub DNS、tsx IPC 和 Supabase telemetry 写入限制仍会使相应门禁保持 `FAIL/BLOCKED/UNVERIFIED`，不可解释为产品回归。
+
 - 新增只读证据采集：`npm run readiness:collect`；新增本地看板：`npm run readiness:serve`，默认地址为 [http://127.0.0.1:4320](http://127.0.0.1:4320)。
 - 看板将 Main 代码收敛和生产发布分开，并为每条门禁记录当前 SHA、命令、预期/实际结果、来源和时间；固定业务案例也单独列出。
 - 当前候选 SHA 和报告数量以 `npm run project:status`、`npm run readiness:collect` 运行时输出为准。工作树有未提交变更时，项目事实显示 `BLOCKED`、本地门禁显示 `UNVERIFIED`；提交后必须重新采集，才能显示绑定当前 SHA 的 PASS。GitHub/Preview 网络不可用时也必须保持 `UNVERIFIED`。
