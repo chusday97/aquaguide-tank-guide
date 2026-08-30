@@ -141,8 +141,9 @@ if (pr.ok) {
     && prInfo.baseRefName === expectedPr.base
     && prInfo.headRefName === expectedPr.head;
   const mergedMatches = prInfo?.state === 'MERGED'
-    && prInfo.mergeCommit?.oid === project.sha
-    && prInfo.baseRefName === expectedPr.base;
+    && Boolean(prInfo.mergeCommit?.oid)
+    && prInfo.baseRefName === expectedPr.base
+    && run('git', ['merge-base', '--is-ancestor', prInfo.mergeCommit.oid, project.sha], { timeout: 8_000 }).ok;
   const valid = headMatches || mergedMatches;
   if (!valid) pr = { ...pr, ok: false, output: `PR metadata does not match current candidate: ${pr.output}` };
 }
