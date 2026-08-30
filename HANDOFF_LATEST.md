@@ -1,5 +1,13 @@
 # AquaGuide Handoff — Latest
 
+## 2026-08-30 30种资料审计启动（当前）
+
+- 短分支：`codex/catalog-cohort-30-v1`，基于 `main@f0bc8ad3`。
+- `npm run catalog:audit` 已运行：486条记录、458个唯一中文名、437个唯一学名；`VERIFIED=0`、`PARTIAL=58`、`TEMPLATE_DERIVED=348`、`CONFLICT=33`、`AMBIGUOUS=47`；484条缺显式水体，427条引用搜索页。
+- `npm run catalog:research -- --batch 10` 已生成3批研究草稿，共30种；`catalog:review` 返回 `reviewedCount=0`、`pendingCount=30`，未进入运行时 Catalog。
+- 当前结论：资料审核是内容证据阻塞，不是脚本阻塞；不能用现有模板或搜索页自动提升为 Approved。
+- 下一步：整理首批30种字段级审核包，记录来源、冲突和审核状态；用户只需在整批审核包完成后一次确认。
+
 ## 2026-08-30 main 收敛完成（当前）
 
 - PR #142 已以普通 merge commit `2d0b4cfe5416e706edb6dcf195dc9597d0c94ae6` 合入 `main`；候选 `b87ae5d6` 已验证为 `main` 祖先。

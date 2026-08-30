@@ -1,5 +1,12 @@
 ## 当前任务目标
 
+## 2026-08-30 首批30种资料审计
+
+- [x] 全量审计已运行：486条记录；唯一中文名458、唯一学名437；状态为 `0 VERIFIED / 58 PARTIAL / 348 TEMPLATE_DERIVED / 33 CONFLICT / 47 AMBIGUOUS`。
+- [x] 生成首批30种三批研究草稿；每批10种，均为 Draft。
+- [x] 审核门禁确认 `0/30 reviewed`，草稿不能进入运行时 Catalog。
+- [ ] 字段级来源、冲突分析和一次性整批确认尚未完成。
+
 ## 2026-08-30 代码统一完成
 
 - [x] PR #142 已合入 `main`，merge commit 为 `2d0b4cfe5416e706edb6dcf195dc9597d0c94ae6`。
