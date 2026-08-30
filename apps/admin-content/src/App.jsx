@@ -11,6 +11,8 @@ import { loadProductTruth } from './productTruthLoader.js';
 import RevisionHistoryPanel from './RevisionHistoryPanel.jsx';
 import PublishReadinessPanel from './PublishReadinessPanel.jsx';
 import WorkflowOverview from './WorkflowOverview.jsx';
+import EditorToolDrawer from './EditorToolDrawer.jsx';
+import { getEditorElementMeta } from './editorElementRegistry.js';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
@@ -281,7 +283,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       return;
     }
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      setMessage('Species 发布仍锁定：A+B 门禁已通过，但 Production public-deploy integration 尚未显式批准，只能保存 Draft 或 Archived。');
+      setMessage('Species 发布仍锁定：A+B 门禁已通过，但 Production public-deploy integration 尚未显式批准，只能保存 Draft。');
       return;
     }
     if (readOnly) {
@@ -445,7 +447,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <select value={form.status} onChange={(event) => update('status', event.target.value)} aria-label="SEO status">
             <option value="draft">Draft</option>
             <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Published (Production integration locked)' : 'Published（Production 发布锁定）'}</option>
-            <option value="archived">Archived</option>
           </select>
           <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : `${t('common.save')} ${getLocaleLabel(locale)} SEO`}</button>
         </div>
@@ -481,9 +482,13 @@ export default function App() {
   const [livePreview, setLivePreview] = useState(null);
   const [selectedProductTruth, setSelectedProductTruth] = useState(null);
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
+  const [activeTool, setActiveTool] = useState(null);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
-  useEffect(() => { setSelectedInspectorElement(null); }, [selectedId, contentLocale]);
+  useEffect(() => {
+    setSelectedInspectorElement(null);
+    setActiveTool(null);
+  }, [selectedId, contentLocale]);
 
   useEffect(() => {
     if (isReviewMode) {
@@ -647,6 +652,9 @@ export default function App() {
     : savedLivePreview;
   const handleInspectorSelect = (key) => {
     setSelectedInspectorElement(key);
+    const elementMeta = getEditorElementMeta(key);
+    const inspectorReadOnly = Boolean(elementMeta?.readOnly || (key === 'localizedName' && contentLocale !== 'en'));
+    if (!inspectorReadOnly) setActiveTool(null);
     const variantOnly = key === 'imageAlt' || (key === 'localizedName' && contentLocale === 'en');
     const variantOverride = Boolean(activeLivePreview?.override?.[key]);
     if (editorScope === 'base' && (variantOnly || variantOverride)) setEditorScope('variant');
@@ -713,6 +721,33 @@ export default function App() {
       return [...current, id];
     });
   };
+
+  const toolDrawerMeta = ({
+    dataReview: {
+      title: t('editor.sourceReview'),
+      subtitle: appLocale === 'en' ? 'Resolve source-data evidence without changing Product Truth.' : '处理源数据证据，不修改 Product Truth。',
+    },
+    readiness: {
+      title: t('editor.publishCheck'),
+      subtitle: appLocale === 'en' ? 'See exactly what blocks or enables Controlled Preview.' : '查看阻塞项与 Controlled Preview 条件。',
+    },
+    translation: {
+      title: t('editor.translation'),
+      subtitle: appLocale === 'en' ? 'Chinese source → AI suggestion → reviewed English Draft.' : '中文 Source → AI 建议 → 人工确认 English Draft。',
+    },
+    batch: {
+      title: t('editor.batchSeo'),
+      subtitle: appLocale === 'en' ? 'Create inherited Draft shells without copying Base content.' : '建立继承 Draft，不复制 Base 文案。',
+    },
+    history: {
+      title: t('editor.history'),
+      subtitle: appLocale === 'en' ? 'Database-backed Base and Variant revision history.' : '数据库记录的 Base / Variant 版本历史。',
+    },
+    workflow: {
+      title: t('editor.workflow'),
+      subtitle: appLocale === 'en' ? 'Navigate Data Review, editorial review and Preview-ready queues.' : '查看 Data Review、内容审核和 Preview-ready 队列。',
+    },
+  })[activeTool] || { title: '', subtitle: '' };
 
   const signOut = async () => {
     if (isReviewMode) return;
@@ -853,73 +888,90 @@ export default function App() {
             />
           )}
 
-          <div className="editor-secondary-tools">
+          <div className="editor-secondary-tools editor-tool-launchers">
             {(selectedGroup?.category_conflict || selectedGroup?.duplicate_count > 0) ? (
-              <details className="studio-tool-disclosure" open>
-                <summary>{t('editor.sourceReview')} <span>{appLocale === 'en' ? 'This Species has unresolved source-data evidence' : '当前 Species 存在待确认的数据证据'}</span></summary>
-                <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
-                  onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
-              </details>
+              <button type="button" className={`editor-tool-row issue ${activeTool === 'dataReview' ? 'active' : ''}`} onClick={() => setActiveTool('dataReview')}>
+                <span><strong>{t('editor.sourceReview')}</strong><small>{appLocale === 'en' ? 'Source evidence requires a human decision' : '存在需要人工判断的源数据证据'}</small></span>
+                <em>{Number(selectedGroup.category_conflict) + (selectedGroup.duplicate_sets?.length || 0)}</em>
+              </button>
             ) : null}
-            <details className="studio-tool-disclosure">
-              <summary>{t('editor.publishCheck')} <span>{publishReadiness?.state || 'blocked'}</span></summary>
-              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} />
-            </details>
+            <button type="button" className={`editor-tool-row readiness ${activeTool === 'readiness' ? 'active' : ''}`} onClick={() => setActiveTool('readiness')}>
+              <span><strong>{t('editor.publishCheck')}</strong><small>{appLocale === 'en' ? 'Controlled Preview eligibility' : 'Controlled Preview 资格检查'}</small></span>
+              <em className={publishReadiness?.state || 'blocked'}>{publishReadiness?.state || 'blocked'}</em>
+            </button>
             {contentLocale === 'en' ? (
-              <details className="studio-tool-disclosure">
-                <summary>{t('editor.translation')} <span>{appLocale === 'en' ? 'Chinese source → English Draft' : '中文 Source → English Draft'}</span></summary>
-                <TranslationPanel
-                  species={selectedSpecies}
-                  group={selectedGroup}
-                  sourceVariantRow={sourceVariantRow}
-                  sourceGroupRow={sourceGroupRow}
-                  targetVariantRow={englishVariantRow}
-                  targetGroupRow={englishGroupRow}
-                  readOnly={isReviewMode}
-                  accessToken={session?.access_token || ''}
-                  schemaReady={schemaReady}
-                  groupSchemaReady={groupSchemaReady}
-                  onVariantSaved={(row) => {
-                    setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
-                    setRevisionRefreshKey((current) => current + 1);
-                  }}
-                  onGroupSaved={(row) => {
-                    setGroupSeoRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }));
-                    setRevisionRefreshKey((current) => current + 1);
-                  }}
-                />
-              </details>
+              <button type="button" className={`editor-tool-row ${activeTool === 'translation' ? 'active' : ''}`} onClick={() => setActiveTool('translation')}>
+                <span><strong>{t('editor.translation')}</strong><small>{appLocale === 'en' ? 'Chinese source → English Draft' : '中文 Source → English Draft'}</small></span><b>›</b>
+              </button>
             ) : null}
             {batchGroup && batchMembers.length > 1 ? (
-              <details className="studio-tool-disclosure">
-                <summary>{t('editor.batchSeo')} <span>{batchMembers.length} {appLocale === 'en' ? 'records in this group' : '条同组记录'}</span></summary>
-                <BatchSeoEditor
-                  group={batchGroup}
-                  groupRecord={batchGroupRecord}
-                  members={batchMembers}
-                  existingRows={localeSeoRows}
-                  locale={contentLocale}
-                  schemaReady={schemaReady}
-                  dataReviewRows={dataReviewRows}
-                  readOnly={isReviewMode}
-                  onClear={() => setBatchIds([])}
-                  onSaved={(rows) => {
-                    setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
-                    setRevisionRefreshKey((current) => current + 1);
-                  }}
-                />
-              </details>
+              <button type="button" className={`editor-tool-row ${activeTool === 'batch' ? 'active' : ''}`} onClick={() => setActiveTool('batch')}>
+                <span><strong>{t('editor.batchSeo')}</strong><small>{batchMembers.length} {appLocale === 'en' ? 'selected records' : '条已选择记录'}</small></span><b>›</b>
+              </button>
             ) : null}
-            <details className="studio-tool-disclosure">
-              <summary>{t('editor.history')} <span>Base / Variant revision</span></summary>
-              <div className="revision-grid">
+            <button type="button" className={`editor-tool-row ${activeTool === 'history' ? 'active' : ''}`} onClick={() => setActiveTool('history')}>
+              <span><strong>{t('editor.history')}</strong><small>Base / Variant revision</small></span><b>›</b>
+            </button>
+            <button type="button" className={`editor-tool-row ${activeTool === 'workflow' ? 'active' : ''}`} onClick={() => setActiveTool('workflow')}>
+              <span><strong>{t('editor.workflow')}</strong><small>Data Review / Editorial / Preview-ready</small></span><b>›</b>
+            </button>
+          </div>
+
+
+        </main>
+
+        <EditorToolDrawer open={Boolean(activeTool)} title={toolDrawerMeta.title} subtitle={toolDrawerMeta.subtitle} onClose={() => setActiveTool(null)}>
+            {activeTool === 'dataReview' ? (
+              <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
+                onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
+            ) : null}
+            {activeTool === 'readiness' ? (
+              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} />
+            ) : null}
+            {activeTool === 'translation' && contentLocale === 'en' ? (
+              <TranslationPanel
+                species={selectedSpecies}
+                group={selectedGroup}
+                sourceVariantRow={sourceVariantRow}
+                sourceGroupRow={sourceGroupRow}
+                targetVariantRow={englishVariantRow}
+                targetGroupRow={englishGroupRow}
+                readOnly={isReviewMode}
+                accessToken={session?.access_token || ''}
+                schemaReady={schemaReady}
+                groupSchemaReady={groupSchemaReady}
+                onVariantSaved={(row) => {
+                  setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
+                  setRevisionRefreshKey((current) => current + 1);
+                }}
+                onGroupSaved={(row) => {
+                  setGroupSeoRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }));
+                  setRevisionRefreshKey((current) => current + 1);
+                }}
+              />
+            ) : null}
+            {activeTool === 'batch' && batchGroup && batchMembers.length > 1 ? (
+              <BatchSeoEditor
+                group={batchGroup}
+                groupRecord={batchGroupRecord}
+                members={batchMembers}
+                existingRows={localeSeoRows}
+                locale={contentLocale}
+                schemaReady={schemaReady}
+                dataReviewRows={dataReviewRows}
+                readOnly={isReviewMode}
+                onClear={() => { setBatchIds([]); setActiveTool(null); }}
+                onSaved={(rows) => {
+                  setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
+                  setRevisionRefreshKey((current) => current + 1);
+                }}
+              />
+            ) : null}
+            {activeTool === 'history' ? (
+              <div className="revision-grid drawer-revision-grid">
                 <RevisionHistoryPanel
-                  resourceType="species_seo_group"
-                  resourceKey={selectedGroup?.group_key || ''}
-                  locale={contentLocale}
-                  schemaReady={historySchemaReady}
-                  readOnly={isReviewMode}
-                  refreshKey={revisionRefreshKey}
+                  resourceType="species_seo_group" resourceKey={selectedGroup?.group_key || ''} locale={contentLocale}
+                  schemaReady={historySchemaReady} readOnly={isReviewMode} refreshKey={revisionRefreshKey}
                   onRestored={(row) => {
                     if (!row?.group_key) return;
                     const key = groupSeoRowKey(row.group_key, row.locale);
@@ -929,12 +981,8 @@ export default function App() {
                   }}
                 />
                 <RevisionHistoryPanel
-                  resourceType="species_seo"
-                  resourceKey={selectedSpecies?.catalog_key || ''}
-                  locale={contentLocale}
-                  schemaReady={historySchemaReady}
-                  readOnly={isReviewMode}
-                  refreshKey={revisionRefreshKey}
+                  resourceType="species_seo" resourceKey={selectedSpecies?.catalog_key || ''} locale={contentLocale}
+                  schemaReady={historySchemaReady} readOnly={isReviewMode} refreshKey={revisionRefreshKey}
                   onRestored={(row) => {
                     if (!row?.catalog_key) return;
                     setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
@@ -942,13 +990,11 @@ export default function App() {
                   }}
                 />
               </div>
-            </details>
-            <details className="studio-tool-disclosure workflow-disclosure">
-              <summary>{t('editor.workflow')} <span>Data Review / Editorial / Preview-ready</span></summary>
-              <WorkflowOverview overview={workflowOverview} activeFilter={workflowFilter} onFilter={applyWorkflowFilter} />
-            </details>
-          </div>
-        </main>
+            ) : null}
+            {activeTool === 'workflow' ? (
+              <WorkflowOverview overview={workflowOverview} activeFilter={workflowFilter} onFilter={(filter) => { applyWorkflowFilter(filter); setActiveTool(null); }} />
+            ) : null}
+        </EditorToolDrawer>
 
         <LiveFrontendPreview
           preview={activeLivePreview}

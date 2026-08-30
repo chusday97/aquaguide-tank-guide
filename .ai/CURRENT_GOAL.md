@@ -56,3 +56,9 @@ The persistent product model is now:
 - Variant Meta Title / Meta Description / H1 no longer render as empty inputs when they inherit.
 - Inherited state shows the effective Base value and source; an explicit Override action reveals the input.
 - Custom state exposes `Use Base value`, which clears the Variant override and returns to resolver-based inheritance rather than copying Base text.
+
+## 2026-08-31 — Secondary tool drawers
+- Data Review, Publish Readiness, Translation, Batch SEO, Revision History and Workflow no longer expand inline below the editor.
+- `EditorToolDrawer` overlays only CSS Grid column 2 (the editor); the live Preview remains fixed in column 3 and stays interactive.
+- Drawer dismissal is explicit: close button, Escape or editor-cell backdrop. Clicking an editable Preview element also closes the drawer and returns to the mapped editor field; read-only Product Truth inspection may keep the drawer open.
+- Species SEO lifecycle UI now exposes Draft / Published only; Published remains disabled. The legacy shared `content_status` enum is not modified for unrelated tables.

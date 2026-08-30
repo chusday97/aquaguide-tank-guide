@@ -12,7 +12,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, liveFrontendPreviewSource, appLanguageSource, productTruthLoaderSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, liveFrontendPreviewSource, editorToolDrawerSource, stylesSource, appLanguageSource, productTruthLoaderSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
@@ -22,6 +22,8 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
   readFile(path.join(appRoot, 'scripts/build-controlled-preview.mjs'), 'utf8'),
   readFile(path.join(appRoot, 'src/PublicSpeciesPreview.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/LiveFrontendPreview.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/EditorToolDrawer.jsx'), 'utf8'),
+  readFile(path.join(appRoot, 'src/styles.css'), 'utf8'),
   readFile(path.join(appRoot, 'src/AppLanguage.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/productTruthLoader.js'), 'utf8'),
   readFile(path.join(appRoot, 'src/RevisionHistoryPanel.jsx'), 'utf8'),
@@ -85,6 +87,15 @@ assert.doesNotMatch(controlledPreviewSource, /sitemap-species\.xml/, 'Controlled
 assert.match(readinessSource, /Publish-ready/, 'Readiness UI must distinguish Preview Publish readiness from Production publication');
 assert.match(appSource, /TranslationPanel/, 'Admin must expose bilingual translation workflow');
 assert.match(appSource, /LiveFrontendPreview/, 'Admin must expose a persistent live frontend Species preview');
+assert.match(appSource, /EditorToolDrawer/, 'Secondary editor tools must use the dedicated drawer surface');
+assert.doesNotMatch(appSource, /<details className="studio-tool-disclosure/, 'Secondary tools must not regress to large inline disclosures');
+assert.match(editorToolDrawerSource, /Escape/, 'Tool drawer must support keyboard dismissal');
+assert.match(editorToolDrawerSource, /editor-tool-drawer-backdrop/, 'Tool drawer must support explicit backdrop dismissal');
+assert.match(editorToolDrawerSource, /aria-modal="false"/, 'Tool drawer must keep the live Preview interactive rather than acting as a blocking modal');
+assert.match(stylesSource, /editor-tool-drawer-layer[\s\S]*grid-column:\s*2;\s*grid-row:\s*1/, 'Tool drawer must overlay only the editor grid cell');
+assert.match(stylesSource, /studio-workspace > \.live-preview-pane \{ grid-column:\s*3;/, 'Live Preview must remain in its own grid column while tools are open');
+assert.doesNotMatch(appSource, /<option value="archived">/, 'Species Variant lifecycle UI must expose Draft/Published only');
+assert.doesNotMatch(baseSource, /<option value="archived">/, 'Base Species lifecycle UI must expose Draft/Published only');
 assert.match(appSource, /app-language-switch/, 'Admin must expose one global interface-language switch');
 assert.match(appSource, /contentLocale/, 'Content locale must remain a separate editorial state');
 assert.match(appSource, /appLocale/, 'Interface locale must remain separate from content locale');

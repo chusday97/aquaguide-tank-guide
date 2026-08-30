@@ -144,7 +144,6 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .status-pill { padding: 6px 9px; border-radius: 999px; background: #edf0ed; color: #6b766f; font-size: 10px; font-weight: 800; text-transform: uppercase; }
 .status-pill.published { background: #e2f2e7; color: #33734a; }
 .status-pill.draft { background: #fff3d6; color: #83651f; }
-.status-pill.archived { background: #ececec; color: #777; }
 .editor-grid { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 18px; align-items: start; }
 .form-column { display: grid; gap: 18px; }
 .section-card { border: 1px solid #e0e6e0; border-radius: 16px; background: #fff; padding: 20px; box-shadow: 0 7px 24px rgba(42, 59, 48, .035); }
@@ -804,3 +803,60 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 }
 .inherited-field-footer button:hover,
 .override-field-footer button:hover { color: #245c3d; text-decoration: underline; }
+
+/* Secondary editor tools: overlay the editor grid cell, never the live Preview column. */
+.workspace.studio-workspace > .species-sidebar { grid-column: 1; grid-row: 1; }
+.workspace.studio-workspace > .studio-editor-area { grid-column: 2; grid-row: 1; }
+.workspace.studio-workspace > .live-preview-pane { grid-column: 3; grid-row: 1; }
+.editor-tool-launchers { gap: 0; border-top: 1px solid #e8ece8; }
+.editor-tool-row {
+  width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 9px 2px; border: 0; border-bottom: 1px solid #eef1ee; background: transparent; color: #334239; text-align: left;
+}
+.editor-tool-row:hover, .editor-tool-row.active { background: #f7f9f7; }
+.editor-tool-row > span { min-width: 0; display: grid; gap: 3px; }
+.editor-tool-row strong { font-size: 11px; font-weight: 760; }
+.editor-tool-row small { color: #8b958e; font-size: 9px; font-weight: 500; }
+.editor-tool-row > b { color: #9aa39d; font-size: 17px; font-weight: 400; }
+.editor-tool-row > em { flex: none; border-radius: 999px; padding: 3px 7px; background: #eef2ef; color: #657168; font-size: 9px; font-style: normal; font-weight: 800; }
+.editor-tool-row.issue > em { background: #fff2d8; color: #8b5b13; }
+.editor-tool-row.readiness > em.blocked { background: #fae9e4; color: #9b5040; }
+.editor-tool-row.readiness > em.ready_for_review { background: #edf3ff; color: #3f67a0; }
+.editor-tool-row.readiness > em.publish_ready { background: #e7f5ec; color: #2e6e4d; }
+
+.editor-tool-drawer-layer {
+  grid-column: 2; grid-row: 1; min-width: 0; min-height: 0; position: relative; z-index: 16; overflow: hidden; pointer-events: none;
+}
+.editor-tool-drawer-backdrop {
+  position: absolute; inset: 0; border: 0; background: rgba(245,247,245,.64); backdrop-filter: blur(1px); pointer-events: auto;
+}
+.editor-tool-drawer {
+  position: absolute; top: 0; right: 0; bottom: 0; width: min(560px, 88%); display: flex; flex-direction: column;
+  border-left: 1px solid #dfe5e0; background: #fff; box-shadow: -18px 0 48px rgba(36,52,43,.12); pointer-events: auto;
+}
+.editor-tool-drawer-header { flex: 0 0 auto; min-height: 76px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 20px 14px; border-bottom: 1px solid #e7ebe8; }
+.editor-tool-drawer-header h2 { margin: 0 0 4px; font-size: 17px; letter-spacing: -.02em; }
+.editor-tool-drawer-header p { margin: 0; color: #7d8881; font-size: 10px; line-height: 1.5; }
+.editor-tool-drawer-close { width: 30px; height: 30px; flex: none; border: 0; border-radius: 8px; background: #f2f4f2; color: #637067; font-size: 19px; line-height: 1; }
+.editor-tool-drawer-close:hover { background: #e9eeea; color: #2e4d3b; }
+.editor-tool-drawer-body { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 18px 30px; }
+.editor-tool-drawer-body > .data-review-panel,
+.editor-tool-drawer-body > .publish-readiness-panel,
+.editor-tool-drawer-body > .translation-panel,
+.editor-tool-drawer-body > .batch-panel,
+.editor-tool-drawer-body > .workflow-overview { max-width: none; margin: 0; box-shadow: none; }
+.drawer-revision-grid { max-width: none; margin: 0; grid-template-columns: 1fr; }
+
+@media (max-width: 1320px) {
+  .editor-tool-drawer { width: min(520px, 92%); }
+}
+@media (max-width: 1050px) {
+  .workspace.studio-workspace > .live-preview-pane { display: none; }
+  .editor-tool-drawer-layer { grid-column: 2; }
+}
+@media (max-width: 760px) {
+  .workspace.studio-workspace > .species-sidebar,
+  .workspace.studio-workspace > .studio-editor-area { grid-column: 1; grid-row: auto; }
+  .editor-tool-drawer-layer { position: fixed; inset: 52px 0 0; z-index: 30; }
+  .editor-tool-drawer { width: min(560px, 94vw); }
+}

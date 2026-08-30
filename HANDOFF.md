@@ -643,3 +643,11 @@
 - Meta Title / Meta Description / H1 use an explicit disclosure: resolved Base value → Override → custom input → Use Base value.
 - `Use Base value` must clear the Variant value; never materialize/copy the Base template into the Variant row.
 - Keep the wrapper non-label to avoid nested interactive-control click ambiguity; actual inputs carry explicit aria-labels.
+
+### 2026-08-31 Secondary tool drawer handoff
+- Secondary workflows use `EditorToolDrawer` in CSS Grid column 2. Do not re-expand Data Review/Readiness/Translation/History/Workflow inline below the editor.
+- Keep column 3 live Preview visible and interactive while a tool is open. `aria-modal=false` is intentional.
+- Close routes: explicit close button, Escape, or editor backdrop. Selecting an editable Preview Inspector element closes the drawer and returns to its mapped editor field.
+- Existing Data Review/RPC, Readiness, Translation, Revision and Workflow callbacks remain the authority; the drawer is presentation only.
+- Species SEO status UI is Draft/Published only, with Published still fail-closed. Do not reintroduce Archived in Variant/Base controls.
+- Browser regression and local B gate are green; Production Supabase and `main` remain untouched.

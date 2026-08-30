@@ -187,3 +187,10 @@
 - Added Override and Use Base value flows while preserving live Preview updates and resolver authority.
 - Browser proof: inherited H1 → Override focus → custom live H1 → Use Base value → inherited H1 restored; Google mode switches on SEO Title Override; `pageErrors=[]`.
 - Contract/build/schema-v7 Supabase gate all pass after the change.
+
+## 2026-08-31 — Tool drawer convergence
+- Added `EditorToolDrawer` and moved Data Review, Readiness, Translation, Batch SEO, History and Workflow out of inline disclosures.
+- Added grid-cell-only overlay CSS and semantic launcher rows; Chromium confirms 560px drawer stays inside the 870px editor while the 460px Preview remains visible.
+- Verified Escape / close / backdrop dismissal, Workflow filter handoff, English Translation drawer, and Inspector-to-editor return.
+- Removed Archived from Variant/Base Species status controls; Draft is writable and Published remains locked.
+- Contract/build PASS; local ephemeral Supabase gate PASS at schema_version=7.

@@ -27,7 +27,7 @@ Updated: 2026-08-30
 
 ## Next — P1 Visual refinement
 - [x] Reduce repeated inherited/custom badges and convert Meta Title / Meta Description / H1 to `Inherited from Base → Override → Use Base value` interactions.
-- [ ] Refine Data Review, Translation and Revision History into lighter drawer/disclosure surfaces while keeping current DB authority and callbacks.
+- [x] Move Data Review, Publish Readiness, Translation, Batch SEO, Revision History and Workflow into editor-cell tool drawers while keeping the live Preview visible and existing DB/RPC callbacks authoritative.
 - [ ] Re-check Vercel Admin Preview after Hobby deployment quota reset.
 - [ ] Validate 1–2 live translation suggestions after server-only provider key is configured.
 
@@ -45,4 +45,5 @@ Updated: 2026-08-30
 - [x] Lazy-load Product Truth preview data so Group JSON stays lightweight.
 - [x] Add semantic top workflow colors: Data Review amber / Awaiting Review blue / Preview-ready green.
 - [x] Implement bidirectional Editor ↔ Preview Inspector before further broad CSS polishing.
-- [ ] Continue visual refinement: inheritance controls, spacing, preview fidelity, and secondary-tool density.
+- [x] Complete inheritance controls and secondary-tool drawer density pass.
+- [ ] Continue visual refinement: spacing, preview fidelity, and responsive behavior.

@@ -33,11 +33,10 @@ Branch: `feature/admin-content-v0`
 - This small UI delta is intentionally being synchronized with the Inspector roadmap rather than treated as a standalone product milestone.
 
 ## Remaining product work
-1. P0: Bidirectional Editor ↔ Preview Inspector for the first six editable fields.
-2. P0: Selection source labels — Custom / Inherited from Base / Product Truth · Read only.
-3. P1: Reduce inherited/custom field noise and refine secondary tools into lighter surfaces.
-4. Re-check Vercel Preview when quota permits and validate live English AI suggestions when the server-only provider key is available.
-5. Production migration/public deploy remains a separate explicit approval.
+1. P1 next: refine spacing, preview fidelity and responsive behavior after the Inspector/inheritance/tool-drawer milestones.
+2. Re-check Vercel Preview when quota permits.
+3. Validate live English AI suggestions when the server-only provider key is available.
+4. Production migration/public deploy remains a separate explicit approval.
 
 ## 2026-08-31 Admin UI / i18n status
 - Local Review remains available at `http://localhost:3020/`.
@@ -59,3 +58,11 @@ Branch: `feature/admin-content-v0`
 - `Use Base value` removes the Variant value, returns the field to Inherited, and restores the effective Base H1 in Preview.
 - SEO Title Override automatically switches the selected Preview element to Google.
 - A browser regression caught and removed an ambiguous nested-button-inside-label interaction; inheritance containers are now non-label wrappers with explicit input aria-labels.
+
+## 2026-08-31 Tool drawer evidence
+- Chromium at 1600×1000 measures editor x=270..1140, drawer x=580..1140, Preview x=1140..1600: no overlap.
+- History closes via Escape, close button and backdrop; Data Review, Readiness, Workflow and Translation render inside the drawer with `pageErrors=[]`.
+- Workflow Pending action closes the drawer and applies the real left-sidebar workflow filter.
+- Editable Preview selection dismisses the drawer and highlights the editor field; Product Truth read-only selection does not invent an edit path.
+- Variant and Base status selectors expose only Draft + disabled Published; Archived is removed from Species SEO UI.
+- Contract/build and local Supabase schema-v7 gate remain PASS.

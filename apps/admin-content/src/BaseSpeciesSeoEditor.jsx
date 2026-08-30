@@ -127,7 +127,6 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           <select value={form.status} onChange={(event) => update('status', event.target.value)}>
             <option value="draft">Draft</option>
             <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Published (Production integration locked)' : 'Published（Production 发布锁定）'}</option>
-            <option value="archived">Archived</option>
           </select>
           <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving}>
             {readOnly ? `${t('common.readonly')} ${localeLabel}` : saving ? t('common.saving') : `${t('common.save')} ${localeLabel} Base SEO`}

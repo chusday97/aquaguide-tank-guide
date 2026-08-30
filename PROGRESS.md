@@ -393,3 +393,11 @@
 - 用户点击“单独编辑 / Override”后才进入 Variant 输入；未输入时不会物化 Base 文案。
 - 自定义后提供“使用 Base 值 / Use Base value”，本质是清空 Variant Override，继续由继承 resolver 计算。
 - 与右侧 Inspector 联动保持不变：Inherited/Custom 状态和 Page/Google Preview 会实时同步。
+
+### 2026-08-31 Admin 二级工具抽屉化
+- Data Review、Publish Readiness、Translation、Batch SEO、Revision History、Workflow 不再在编辑器底部大块展开，统一进入中间编辑列的 `EditorToolDrawer`。
+- 1600px Chromium 实测：Editor 270–1140，Drawer 580–1140，Preview 1140–1600；抽屉不侵占右侧 Preview。
+- 支持 ESC / × / 中间遮罩关闭；右侧点击可编辑 Inspector 元素会关闭抽屉并返回对应字段，Product Truth 只读元素不会伪造编辑路径。
+- Workflow Drawer 的 Pending 点击会关闭抽屉并真实作用到左侧筛选；English Translation Source/Target 正常渲染。
+- 清理 Species SEO UI 中错误遗留的 Archived，只保留 Draft / Published（Published 继续锁定）。
+- Contract/build/B 层 ephemeral Supabase schema v7 全部 PASS。

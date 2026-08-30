@@ -146,3 +146,9 @@
 - Default inherited fields display the effective Base value instead of an empty editable control.
 - Override is explicit and local to the Variant.
 - Returning to Base means clearing the override, never copying Base text into Variant storage.
+
+## 2026-08-31 — Secondary tools are non-modal editor drawers
+- Decision: secondary workflows overlay only the center editor grid cell, never the persistent live Preview.
+- Reason: Data Review/History/Translation are contextual operations; expanding them inline distorted the main editing flow and hid the edit-to-preview relationship.
+- Drawer is intentionally `aria-modal=false`: right Preview remains inspectable. Editable Preview selection closes the drawer and returns to the field; Product Truth stays read-only.
+- Species SEO UI exposes only Draft/Published. Do not surface the legacy shared enum value `archived` in this Admin.
