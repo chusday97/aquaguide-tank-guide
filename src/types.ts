@@ -1,8 +1,12 @@
+import type { CatalogWaterType } from '../packages/contracts/src';
+
 export interface Fish {
   id: string;
   name: string;
   scientificName: string;
   category: string;
+  /** Explicit catalog field; absent legacy records remain unknown. */
+  waterType?: CatalogWaterType;
   image: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   waterTemperature: string;
@@ -44,6 +48,12 @@ export interface AquariumFish {
 }
 
 export type LifeStage = 'unknown' | 'juvenile' | 'adult';
+
+/**
+ * Compatibility inputs may describe unpersisted stages. Stored livestock batches
+ * intentionally remain on the existing API/database LifeStage contract.
+ */
+export type CompatibilityLifeStage = LifeStage | 'fry' | 'subadult';
 
 export type ReproductiveState =
   | 'unknown'
@@ -99,6 +109,7 @@ export interface Aquarium {
 }
 
 export type SpeciesAdditionIntent = 'record_existing' | 'planned_addition';
+export type CompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 
 export type AquariumSetupStatus = 'empty' | 'incomplete' | 'usable' | 'complete';
 

@@ -1,4 +1,6 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
+import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
+import type { CompatibilityLifeStage } from '../types';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -8,12 +10,24 @@ export type ReviewedCompatibilityProfile = {
   confidence: CompatibilityEvidenceDto['confidence'];
   reviewStatus: CompatibilityEvidenceDto['reviewStatus'];
   citations: EvidenceSourceDto[];
+  requiredFacts?: CompatibilityRequiredFact[];
+  stockingGuidance?: StockingGuidance;
 };
 
 export type ReviewedPairRule = CompatibilityEvidenceDto & {
   speciesIds: [string, string];
   verdict: 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
   riskType: string;
+  reason: string;
+  mitigation: string[];
+};
+
+export type ReviewedStageRiskProfile = CompatibilityEvidenceDto & {
+  speciesId: string;
+  youngerStages: CompatibilityLifeStage[];
+  olderStages: CompatibilityLifeStage[];
+  verdict: 'caution' | 'not_recommended';
+  riskType: 'conspecific_fry_predation';
   reason: string;
   mitigation: string[];
 };
@@ -99,6 +113,24 @@ const guppyShoalingStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const guppyCannibalismRefugeStudy: EvidenceSourceDto = {
+  id: 'guppy-cannibalism-refuge-study',
+  title: 'Guppy populations differ in cannibalistic degree and adaptation to structural environments',
+  publisher: 'Oecologia',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/21516310/',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const guppyFryYieldStudy: EvidenceSourceDto = {
+  id: 'guppy-fry-yield-cannibalism-study',
+  title: 'The effects of illumination and daily number of collections on fry yields in guppy breeding tanks',
+  publisher: 'Aquacultural Engineering',
+  url: 'https://www.sciencedirect.com/science/article/abs/pii/S0144860913000848',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const oscarZebrafishLivePredatorStudy: EvidenceSourceDto = {
   id: 'oscar-zebrafish-live-predator-study',
   title: 'Live Predators, Robots, and Computer-Animated Images Elicit Differential Avoidance Responses in Zebrafish',
@@ -144,6 +176,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [tigerBarbStudy],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'territoriality'],
   },
   sp_0021: {
     speciesId: 'sp_0021',
@@ -152,6 +185,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'high',
     reviewStatus: 'reviewed',
     citations: [convictCichlidTerritoryStudy],
+    requiredFacts: ['water', 'temperature', 'territoriality', 'breeding_behavior'],
   },
   sp_0049: {
     speciesId: 'sp_0049',
@@ -160,6 +194,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [smallSnakeheadAssessment],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'predation', 'territoriality'],
   },
   sp_0431: {
     speciesId: 'sp_0431',
@@ -169,6 +204,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [neonTetraFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'social_behavior'],
   },
   sp_0432: {
     speciesId: 'sp_0432',
@@ -178,6 +214,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [cardinalTetraFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'social_behavior'],
   },
   sp_0434: {
     speciesId: 'sp_0434',
@@ -187,6 +224,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [whiteCloudFishBase, whiteCloudShoalingStudy],
+    requiredFacts: ['water', 'temperature', 'social_behavior'],
   },
   sp_0436: {
     speciesId: 'sp_0436',
@@ -196,6 +234,24 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [guppyFishBase, guppyShoalingStudy],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'breeding_behavior'],
+  },
+};
+
+const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
+  sp_0436: {
+    speciesId: 'sp_0436',
+    youngerStages: ['fry'],
+    olderStages: ['adult'],
+    verdict: 'not_recommended',
+    riskType: 'conspecific_fry_predation',
+    reason: '孔雀鱼成体捕食同种幼体在水族箱实验与繁育研究中均有记录，且捕食程度会受到幼体体型与躲避结构影响。当前不应把成鱼与新生鱼苗直接同缸视为已证明安全。',
+    mitigation: ['鱼苗优先使用育苗隔离区或独立育苗缸。', '不要把水草躲避物当作能够消除同类吞食风险的保证。'],
+    basis: 'species_trait',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0436'],
+    citations: [guppyCannibalismRefugeStudy, guppyFryYieldStudy],
   },
 };
 
@@ -252,11 +308,14 @@ const pairRules: ReviewedPairRule[] = [
 
 export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
 
+export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];
+
 export const getReviewedPairRule = (leftId: string, rightId: string) => pairRules.find(rule => (
   rule.speciesIds.includes(leftId) && rule.speciesIds.includes(rightId)
 ));
 
 export const getCompatibilityEvidenceAudit = () => ({
   reviewedSpeciesIds: Object.keys(profiles),
+  reviewedStageRiskSpeciesIds: Object.keys(stageRiskProfiles),
   reviewedPairRules: pairRules,
 });

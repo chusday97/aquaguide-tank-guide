@@ -1,5 +1,191 @@
 # AquaGuide 交接文档
 
+## 2026-08-29 4319 本地预览恢复（本轮最新）
+
+- 用户报告的“乱码”已复现为 Vite 技术错误遮罩，不是中文编码问题：候选 worktree 的临时 `node_modules` 链接在服务启动后被移除，reload/HMR 再次解析 `@tailwindcss/vite` 时失败。
+- 4319 已重启，并在服务生命周期内保留依赖链接；链接通过仓库本地 exclude 忽略，不进入提交。
+- 同一浏览器标签 reload 后验证：UTF-8、错误遮罩为 0、正式互动内容与候选完整 SHA/seed/build time 可见。Three.js 仅有弃用 warning，没有页面错误。
+- 禁止重踩：候选 worktree 预览存活期间不得移除依赖链接；交付 localhost 前必须在首次加载后再执行一次 reload/HMR 复验。
+
+## 2026-08-29 本地收口复核（本轮最新）
+
+- 4317 冻结视觉基线和 4319 当前候选均已恢复并返回 HTTP 200；4319 元数据对应候选当前 SHA，4317 保持历史构建，不为元数据改写基线。
+- 真实浏览器已通过 Aquarium factual flow（规划只写种草清单、鱼缸不变、现实记录可保存）、正式图鉴/养护 scene/browse、今日行动点击/Escape/拖拽吸附。
+- 当前候选 HEAD、远端候选/PR #142 SHA 和领先数量均由 `git rev-parse`/`git rev-list` 运行时读取；工作树干净，候选已提交但未推送。
+- `check:ui-freeze` 明确报告的是本轮已批准的混养结果区域变化（7 个 visual-owned 文件），不是 Aquarium 舞台布局回退；需要用户确认后再重新 capture freeze。
+- 生产 Supabase、Catalog 发布和 `main` 合并均未执行；本轮没有 GitHub、生产数据库或 Catalog 写入。
+
+## 2026-08-29 浏览器门禁修复（本轮最新）
+
+- 修复 Aquarium 空缸创建后的 React Hook 顺序错误。原因是混养展示 `useMemo` 位于 `!activeAquarium` 条件返回之后；现已移到所有条件返回之前，页面创建空缸后不再进入错误边界。
+- `scripts/verify-aquarium-factual-flow.mjs` 现在走真实的“鱼类 → 黑裙鱼 → 查看规划判断”交互，覆盖：规划不写鱼缸、资料不完整时只写种草清单、不调用新增生物 API、现实记录独立保存、旧 `add-species` 深链兼容。
+- 浏览器回归通过：`PREVIEW_URL=http://localhost:3001 node scripts/verify-aquarium-factual-flow.mjs`；静态/构建门禁也通过。当前 3001 是临时本地候选预览，结束后已关闭临时依赖链接。
+- `check:ui-freeze` 仍是批准范围内混养结果变化导致的预期失败，不代表 Aquarium 舞台回退。当前候选领先远端的提交数以 `git rev-list` 运行时读取，未推送；生产 Supabase、Catalog 和 `main` 均未改动。
+- 双预览已恢复：4317 使用独立基线 worktree `37a8d4d1` 的 production build，4319 使用候选当前提交；两个 `/_preview/interactive` 均已用真实 Chromium 验证 HTTP 200 且无页面错误。4317 不能显示候选版新增的元数据条，因为那会修改冻结 SHA；4319 已显示 branch/SHA/seed/build time。
+
+## 2026-08-29 混养结果体验修复（本轮最新）
+
+- 当前分支：`codex/main-core-foundation-v1`；本轮只改混养结果展示、收藏操作和推荐过滤，不动 Aquarium 舞台、布局、素材、今日行动、Supabase 或生产数据。
+- Domain 仍返回真实 `insufficient_data`，但用户界面改为“当前可确认”或“暂未开放这组混养建议”；有部分事实时列出已核对维度，没有可靠事实时只提供物种养护和种草清单操作。
+- `insufficient_data` 的规划组合不会调用新增缸内生物 API；种草清单复用现有本地收藏服务，保存 species ID，支持重复点击和跨页事件同步。
+- 新增中央展示服务 `src/services/compatibility/compatibility-presentation.service.ts`，并接入 Compatibility Calculator、Visual Result Card、Species Detail、Encyclopedia、Aquarium 和 Recommendation。
+- 验证通过：`test:compatibility-presentation`、`test:recommendation-unknown-filter`、`test:visual-results`、混养 Domain/Service/435 组合矩阵、Catalog、lint、API 类型和 production build。
+- Critic 初审发现两个阻塞：未审核候选仍进入自动推荐、Aquarium 的 `complete_information` 仍进入设置并可能写鱼缸；已在 `ef1bba10` 修复并补回归，未审核候选现在只留在 blocked，规划资料不足只写种草清单。
+- 同一 Critic 已复验 `ef1bba10`：需求完整性、逻辑、边界、代码质量、测试设计和 diff 范围均无新的实现级阻塞；完整交付仍受 UI freeze 人工确认和远端/Preview/Supabase/main 门禁限制。
+- 追加修复 `9584dbef`：Aquarium 规划结果逐项区分“当前可确认”和“暂未开放”，没有确认事实的物种不再被错误标成当前可确认；展示测试、类型检查和 production build 已重新通过，同一 Critic 复验通过。
+- `check:ui-freeze` 当前为 `FROZEN_PROVISIONAL` 失败，原因仅是批准范围内的混养结果区域文件变化；不是舞台或布局回退。用户验收新文案后需要重新 capture freeze。
+- 本地 HEAD 以 `git rev-parse HEAD` 运行时读取，工作树干净；远端候选和 PR #142 仍停留在 `396e71da`，本轮不推送、不执行生产 migration/Catalog 发布、不合并 `main`。
+
+下一步：将 `ef1bba10` 交回同一 Critic 做六维复验；如无阻塞，等待用户确认混养结果显示，再重新 capture UI freeze，之后才讨论一次性推送 PR #142。
+
+## 2026-08-28 当前执行快照（本轮最新）
+
+> 当前本地 HEAD 以 `git rev-parse HEAD` 运行时读取，已提交但尚未推送；远端候选和 PR #142 仍为 `396e71da`。此前“已同步/已推送”描述均为历史记录，不能作为当前状态。
+
+- 当前分支：`codex/main-core-foundation-v1`。UI 继续冻结；本轮未改布局、素材、今日行动或视觉 Owner 文件，未推送 GitHub、未写生产 Supabase、未合并 `main`。
+- 首批 30 个物种队列已改为固定、去重的 Catalog ID；新增逐记录 Catalog 审计报告和只生成草稿的 `catalog:research`/`catalog:review` 命令。审核状态不会因进入队列自动提升。
+- Domain 现在输出个体上下文、现实共处等级和分层数量指导；领地性仅谨慎提示，繁殖护域与现实伤害有独立等级，幼体风险不会覆盖成体风险。旧引擎仍是冻结页面使用的兼容 facade，最终状态由 Domain 决定。
+- 新增 435 组合矩阵门禁，验证无序组合确定性、顺序对称性和资料不足安全降级；本地 324/435 组合返回 `insufficient_data`，其余为明确硬冲突。
+- 本地门禁结果：Domain/Service/legacy facade、Catalog、lint、API 类型、production build、UI freeze、project truth、26+1 migration 重放、pgTAP 19/19、schema lint 0 error 均通过。
+- 当前阻塞：30 种字段级内容仍需水族内容专家整批审核；生产第 27 个 migration、Catalog 发布、最新 Preview exact SHA、人工 release acceptance 和 `main` 合并仍未完成。
+- 下一步：先让同一 Critic 基于本轮 diff 和测试证据复验；随后整理少量本地提交。除非另行授权，不执行生产 migration、Catalog 发布、GitHub 推送或 main 合并。
+
+## 2026-08-28 物种底层修复（最新）
+
+- 当前工作线仍为 `codex/main-core-foundation-v1`；本轮保持冻结 UI，不执行生产 SQL、Catalog 发布、GitHub 推送或 `main` 合并。
+- 已完成 Domain 环境约束（温度/pH/缸温/容量/缸长）和 `decisionReadiness` 元数据；旧引擎入口已固化为 Domain-authoritative facade，正式页面保持原 import 以满足 UI freeze，但最终结论不再来自旧逻辑。
+- 新增 `scripts/audit-species-data-quality.ts` 和 `src/data/compatibility-launch-cohort.ts`：486 条记录审计、30 条确定性研究队列。研究队列只用于排期，不能把未审核物种当作安全可规划加入。
+- 本地验证：`lint`、API 类型、Domain/Service 混养回归、Catalog 快照、30 条队列测试、`check:compatibility-authority`、`check:ui-freeze`、`check:project-truth` 和 production build 通过。
+- 当前阻塞：首批 30 种事实仍需人工逐字段审核；生产第 27 个 migration、Catalog checksum parity、Preview exact SHA、人工验收和 `main` 合并仍未完成。
+- 下一步：先跑完整本地门禁并交独立 Critic 复验，再按授权边界申请生产 migration；任何 UI freeze 差异立即停止。
+
+> 说明：本文件更早日期段中的 `545ac...` checksum、旧 SHA 和“未推送”描述均为历史证据；当前候选状态以本节和 `npm run project:status` 为准。
+
+## 2026-08-28 忽略 Vercel 后的本地收敛（最新）
+
+- 当前工作线仍为 `codex/main-core-foundation-v1`；本轮没有修改冻结 UI、生产 Supabase、Catalog 发布或 `main`。
+- 已完成混养唯一权威静态门禁、486 物种 Catalog 校验、26+1 本地 migration 重放、19/19 pgTAP、schema lint、Domain/Service/API 与浏览器回归。核心 UI 测试中的旧 600px/混养/AI 入口/证据折叠断言已按当前正式契约修正并通过。
+- 当前可复核事实：旧引擎只能作为 facade；生产前 26 个 migration 只读结构等价；第 27 个 migration 仍需生产授权；生产 Catalog checksum、真实身份写入和回滚仍 `UNVERIFIED`。
+- 已完成：独立 Critic 对最新 diff 的复验和一次性 GitHub 同步；`npm run project:status` 显示本地、远端候选和 PR #142 SHA 同步。PR #142 继续 Draft，不合并 `main`。
+- 未完成：新 head 的 Preview exact SHA、生产第 27 个 migration、Catalog 发布、人工 release acceptance 和 `main` 合并。
+- 下一步：读取本次 GitHub CI/Preview 收敛结果；Preview 未验证前不发布，随后由用户单独决定生产 migration 授权。
+
+## 2026-08-28 忽略 Vercel 的安全补救（最新）
+
+- 本轮只处理本地与文档收敛，不等待 Vercel、不修改当前 UI、不执行生产 Supabase SQL。
+- 新增 `check:compatibility-authority` 门禁：旧 `tankCompatibilityEngine` 是冻结页面的兼容 facade，Domain Rules 保留最终结论权威。
+- Feature Catalog/Convergence Ledger 已记录混养本地验证完成；Catalog parity 报告更新为当前 checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- 第 27 个 migration 授权包已生成：`docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`。生产仍只有前 26 个 migration，Catalog 未发布。
+- 下一步：跑完整本地回归、交独立 Critic 复验，再一次性同步 GitHub；Preview 仍按 Vercel 恢复情况单独验证。
+
+## 2026-08-28 最新执行快照：水体事实修复已同步
+
+- 红绿灯 `sp_0431` 和宝莲灯 `sp_0432` 已加入有证据支持的显式 `freshwater`；其余未审核物种保持 `unknown`，未知水体仍安全返回 `insufficient_data`。
+- 完整资料下红绿灯↔宝莲灯返回 `caution`；移除任一方显式水体后返回 `insufficient_data`。Catalog 486 个物种 checksum 为 `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- 本地、远端 `codex/main-core-foundation-v1` 和 PR #142 当前 SHA 已同步，精确值以 `npm run project:status` 运行时读取，工作树干净。上一个代码 head `cdd465817dc796bf77c9d3aef5e95c25366befff` 的 Preview parity 仅作为历史证据保留。
+- 当前候选没有 exact Preview 部署，`check-preview-parity` 为 `UNVERIFIED`；AquaGuide 与 `admin-content` Vercel checks 均因 24 小时部署限流失败。Cloudflare、Foundation、`validate` 的实时结果以 `gh pr checks 142` 读取；未全绿不得发布。
+- 当前没有改 UI、没有执行生产 Supabase migration/Catalog 发布、没有合并 `main`。PR #142 继续保持 Draft，等待生产授权和最终人工验收。
+
+## 2026-08-28 最新执行快照
+
+- 混养结论已完成本地唯一权威闭环：Domain Rules 是最终状态/策略/版本来源，`src/lib/compatibility/canonical-result.adapter.ts` 负责把结构化 ruleCodes 映射为 legacy 页面仍需的证据分组；Service 与旧入口共用同一适配器。最新代码提交为 `b9d56da2`。
+- 本地门禁与独立 Critic 六维复验通过；正式场景、今日行动、UI freeze 和 project truth 均通过，未修改视觉文件。
+- 当前 GitHub 同步已完成：本地、远端候选和 PR #142 均为 `7f0d208f`，工作树干净；当前 head 的 Preview SHA 仍未验证，GitHub 报告 Vercel AquaGuide/admin-content build-rate-limit（24 小时后重试）。生产第 27 个 migration、Catalog 发布和 `main` 合并未执行。
+- 下一步：不再重复推送；等待额度恢复后只读运行 `check:preview-parity`。在此之前可继续本地与生产只读证据整理，PR #142 保持 Draft。
+
+## 2026-08-28 当前执行边界
+
+- 本地 Compatibility Service 与 Domain Rules 权威收敛已通过专项回归；当前候选工作树为 `codex/main-core-foundation-v1`，SHA 由运行时状态命令读取。
+- 4319 已重启到当前工作树，正式图鉴/养护 scene/browse 与今日行动回归通过；4317 冻结视觉基线未动。
+- 页面层 import 切换尝试被 `check:ui-freeze` 正确拦截并回退，因此正式页面仍有旧引擎适配层入口；这是解冻 UI 后的明确待办，不是已完成事项。
+- 当前本地领先远端候选 9 个提交；不要宣称 GitHub/PR/Preview 与当前 head 已同步。生产第 27 个 migration、Catalog 发布和 `main` 合并均未执行。
+- 下一步：等待 Vercel 配额恢复后一次性推送；重跑 `project:status`/Preview parity；随后分别申请生产 migration、Catalog 发布和 main 合并授权。
+
+## 2026-08-28 混养唯一结论闭环
+
+- 旧引擎入口已改为 Domain-authoritative adapter：保留 legacy Fish 输入和说明证据，但最终 `status`、风险等级、策略所依据的元数据来自 Domain Rules；commit `7fa70ac1`。
+- 现有 Aquarium、Encyclopedia、Species Detail 和 Compatibility Calculator 页面文件没有改动，`check:ui-freeze` 通过；无需为了切换逻辑重新设计视觉。
+- 回归通过：`test:compatibility`、`test:compatibility-service`、Catalog、添加/记录、build、UI freeze 和 project truth；正式 scene/browse 与今日行动此前已通过。
+- 当前本地候选领先远端 11 个提交；不要宣称 GitHub、PR #142 或 Preview 已同步。生产第27个 migration、Catalog 发布和 main 合并仍未执行。
+
+## 2026-08-28 Critic 阻塞修复
+
+- 独立 Critic 发现旧入口只同步 Domain 状态、未同步 Domain 证据；现已把证据合并下沉到 `src/lib/compatibility/canonical-result.adapter.ts`，直连旧页面也能显示对应阻断/资料不足理由。（commit: `33576cc6`）
+- 新增 direct-entry 水体冲突回归并通过；类型、混养、UI freeze 和 project truth 继续通过。当前代码修复尚未推送。
+- 后续已删除 Service 内重复的 Domain evidence map，统一复用共享 adapter，并补齐未映射 ruleCodes；Critic 复验结论为本地六维 PASS。（commit: `b9d56da2`）
+
+## 2026-08-28 Domain 结论接管 Service
+
+- Compatibility Service 已把 Domain Rules 的状态与添加策略接到应用/服务层；legacy 引擎仍只提供证据详情，Service 不再把 legacy status 当最终结论。
+- Domain 新增显式候选水体校验及已审核捕食、领地、单养特征规则；未知水体/未审核资料安全返回 `insufficient_data`。
+- 新增 `npm run test:compatibility-service`，并通过 Domain、Catalog、添加意图、现实记录、API 类型、lint、build、UI freeze、project truth 回归。
+- `record_existing` 与 `planned_addition` 现在由记录/规划服务显式传入，现实记录仍可保存，规划加入仍按 `allow / confirm / complete_information / block` 处理。
+- 本步骤已本地提交为 `9d0110f6`，尚未推送；推送前仍需独立 Critic 复验，并考虑 Vercel 配额限制。
+- UI 冻结仍有效：正式页面的旧引擎 import 本轮没有改动，因此布局和素材没有变化；解除冻结后的页面入口切换仍是待办。
+- 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 `main` 合并未执行。
+
+## 2026-08-28 Critic 修复与复验准备
+
+- 修复 `reviewSpeciesAdditions` 的 intent policy：现实记录不再返回规划加入的 `complete_information`，改为保存类策略；新增 Domain ruleCode 到结构化说明的映射，避免状态/理由不一致。
+- 补回 `npm run check:preview-parity` 脚本入口；本地执行因 GitHub DNS/网络限制失败，不能将 Preview parity 记为通过。
+- 修复已提交为 `ba23c69d`；当前需要完成同一 Critic 的复验，再决定在 Vercel 配额恢复后推送。生产 migration、Catalog 发布和 main 合并仍不执行。
+- 追加规则说明归类和重复脚本键修复，提交为 `9495a95b`；Domain-only 水体冲突现在进入 blocking，未知/审核缺口进入 missing/warning，避免风险等级过度放大。
+- 本地 authority checkpoint 已提交且工作树干净；本地门禁通过。当前仍比远端候选领先本地提交，未推送；等待 Vercel 配额恢复后一次性同步并验证 PR/Preview SHA，具体 SHA 以状态命令动态读取。
+
+## 2026-08-28 候选推送与 Preview parity
+
+- 本地候选、远端 `codex/main-core-foundation-v1`、PR #142 Head 与 Vercel Preview 已同步为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。
+- `npm run project:status`：本地/远端同步，PR #142 为 Draft，`releaseReady=false`。
+- `npm run check:preview-parity`：`PASS / EQUIVALENT`；Preview 为 `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app`，实际部署 SHA 与候选一致。
+- 本次只推送候选代码和文档；未执行生产第 27 个 migration、Catalog 发布或 main 合并。当前唯一底层未完成项仍是 legacy UI status/evidence 尚未完全由 Domain 接管。
+
+> 追加事实：后续 docs-only 提交将候选推进到 `df3c4e119b14e323502b9c711ad607b66eeb5435`，本地/远端/PR 仍同步；Vercel 对该 head 受每日额度限制，Preview parity 暂为 `UNVERIFIED`。上一笔代码 head `55a37745` 的 exact Preview parity 保留为历史证据。
+
+## 2026-08-28 admin-content 门禁隔离
+
+- 已更新 Vercel `admin-content` 项目配置：Root Directory 恢复自动检测（仓库根），仅 `feature/admin-content-v0` 执行 `npm run build --workspace @aquaguide/admin-content`；其他分支直接跳过。
+- 该配置不改变 AquaGuide 代码、当前 UI 或仓库分支；旧候选失败部署已按新配置重试并被安全取消（表示忽略构建），需下一次 GitHub push 生成新的 status 才能确认 PR 门禁恢复。
+
+## 2026-08-28 Domain fact source 收敛第二步
+
+- `speciesProfileFromFish` 现在负责将旧 Fish 的显式温度/pH 文本转换为 canonical `SpeciesProfile` 数值范围；Domain adapter 不再直接读取 Fish 文本字段。
+- 补充空文本、无效换水周期、nullable 文案和范围转换回归；`test:species-profile`、Catalog、Domain、lint、API、build、UI freeze 和 project truth 均通过。
+- 本步骤仍未宣称完整 Domain authority：legacy UI status/evidence 仍为迁移期 fallback；生产第 27 个 migration、Catalog 发布和 main 合并未执行。
+
+## 2026-08-28 Compatibility Service 入口收敛
+
+- 新增 `src/services/compatibility/compatibility.service.ts` 作为统一应用入口，服务、知识模块、推荐、Collection 和测试不再直接导入旧引擎；旧引擎仅在该入口内部调用。
+- 页面/组件文件因 UI freeze 约束保持不变，因此正式页面消费者尚未完成最后切换；不能把本步骤描述为 Domain status 已完全接管。
+- `check:ui-freeze`、lint、API 类型、Domain/兼容性回归和 project truth 已通过；当前工作树待提交。
+
+## 2026-08-28 Domain authority 收敛进展
+
+- 已新增 canonical `SpeciesProfile` 类型和 `speciesProfileFromFish` 适配器；旧 Fish 的缺失水体保持 `unknown`，不从名称、分类或描述推断。
+- Catalog Snapshot 与 Domain 输入复用同一 Profile 边界；已审核结构化 pair rule 才能进入 Domain，legacy 总状态不再反向覆盖 Domain。
+- 本地验证：`test:species-profile`、`test:catalog-snapshot`、`test:domain-compatibility`、兼容性引擎回归、lint、API 类型、`check:ui-freeze` 和 `check:project-truth` 通过。
+- 当前仍未完成：所有 Service/Repository/UI 结果完全改由 Domain 决定；生产 Catalog migration、Catalog 发布和 `main` 合并继续未授权。
+
+## 2026-08-28 GitHub 与 Preview parity 已闭合
+
+- 当前候选分支 `codex/main-core-foundation-v1`、远端分支、PR #142 Head 和 Vercel Preview 均为 `1a3d366bd8432eadf20442274ba06dfd90904a98`。
+- `npm run check:preview-parity` 已通过：Preview 为 `https://aquaguide-6xdkkkg9e-chusday97s-projects.vercel.app`，状态 `EQUIVALENT`。
+- PR #142 的 `foundation`、`validate`、Cloudflare Pages 和 aquaguide Vercel 检查通过；PR 仍为 Draft，另有无关的 `Vercel – admin-content` 失败状态，不作为 AquaGuide 候选部署证据。
+- 生产 Supabase 仍只读：前 26 个 migration 与结构基线等价；Catalog 三项仍 `MIGRATION_REQUIRED`。未执行第 27 个 migration、Catalog 发布、生产写入或 `main` 合并。
+- 下一步只有三个独立授权点：生产第 27 个 migration、Catalog 发布、PR #142 转 Ready/合并 `main`。
+
+## 2026-08-28 本地 Supabase 验证续跑
+
+- 当前目标：在 Vercel 等待期间完成候选分支的本地数据库重放与权限门禁，不改变 localhost UI、不写生产 Supabase、不推送 GitHub。
+- 已完成：Docker Desktop + Supabase CLI 本地栈；前 26 个生产 migration 从零重放；七类规范化结构 hash 与生产只读基线完全一致；第 27 个 Catalog migration 本地重放、schema lint 和 19/19 pgTAP 通过；匿名 Catalog REST 读取成功、匿名写入被 `401/42501` 拒绝（commit `b9903924`）。
+- 关键文件：`supabase/config.toml`、`supabase/tests/catalog_rls.test.sql`、`supabase/fixtures/`、`docs/05-validation/SUPABASE_PARITY_REPORT.md`。
+- 当前卡点：生产尚未执行第 27 个 migration，生产 Catalog checksum 与真实身份写入/回滚语义仍 `UNVERIFIED`；PR #142 仍为 Draft，`main` 尚未改变。
+- 下一步：等待 Product Golden Path validate 收尾；随后由用户单独授权第 27 个生产 migration。Catalog 发布与合并 `main` 继续分别授权。
+- 独立 Critic 复验：六维均通过本地范围；确认 26+1 replay、RLS/GRANT、19/19 pgTAP 和 fixture 移动无阻塞。生产 parity、Catalog 发布和身份写入/回滚仍明确为外部门禁。
+- 2026-08-28 生产只读复核：26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；33 个触发器对象对应 35 个 information_schema 事件行（多事件展开）；Catalog 表/水体字段缺失，标记 `MIGRATION_REQUIRED`，未执行任何生产写入。
+- 2026-08-28 GitHub/Preview 同步：历史 `ad858032` 部署 `6133389265` 仅作旧证据；当前候选已同步至 `1a3d366b`，并完成新的 exact Preview SHA 记录。
+- 2026-08-28 parity 门禁修复：Vercel CLI metadata fallback 已加入 `check:preview-parity`，解决 GitHub Deployments API 漏报 Vercel deployment 的误报；修复后候选 `1a3d366b` 的 parity 检查通过。
+- 禁止重踩：不要运行 `supabase db reset --linked`、`supabase db push`、生产 DDL/DML；不要把本地 pgTAP/REST 结果描述为生产写入已验证；不要修改视觉文件。
+
 ## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline
 
 - GP-002 已升级为 covered：真实 Chromium 连续执行“搜索宝莲灯 → 精确物种详情 → 主 CTA 进入混养 → 候选 ×6 → caution 风险确认 → 实际入缸 → 持久化数量验证”，不得用多个单点测试替代。

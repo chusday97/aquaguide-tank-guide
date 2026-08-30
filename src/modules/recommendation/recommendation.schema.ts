@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { Aquarium, Fish } from '../../types';
-import type { TankCompatibilityRule, TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import type { TankCompatibilityRule, TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 import { aquariumSchema } from '../aquarium/aquarium.schema';
 import { fishSchema } from '../species/species.schema';
 
@@ -59,6 +59,10 @@ export const discoveryDeckStateSchema = z.object({
   queueIds: z.array(z.string()).default([]),
   consumedIds: z.array(z.string()).default([]),
   history: z.array(discoveryHistoryItemSchema).default([]),
+  sceneBatchIds: z.array(z.string()).default([]),
+  sceneSeenIds: z.array(z.string()).default([]),
+  sceneBatchIndex: z.number().int().min(0).default(0),
+  sceneComplete: z.boolean().default(false),
 });
 
 export const discoveryDeckInputSchema = z.object({
@@ -94,6 +98,21 @@ export const discoveryAdvanceOutputSchema = z.object({
   remainingToday: z.number().int().min(0),
 });
 
+export const discoveryBatchInputSchema = z.object({
+  speciesPool: z.array(fishSchema).default([]),
+  wishlistIds: z.array(z.string()).default([]),
+  state: discoveryDeckStateSchema.partial().optional(),
+  batchSize: z.number().int().positive().max(8).default(6),
+});
+
+export const discoveryBatchOutputSchema = z.object({
+  state: discoveryDeckStateSchema,
+  batchIds: z.array(z.string()),
+  seenIds: z.array(z.string()),
+  batchIndex: z.number().int().min(0),
+  complete: z.boolean(),
+});
+
 export type RecommendationInput = z.infer<typeof recommendationInputSchema>;
 export type RecommendationItem = {
   speciesId: string;
@@ -114,6 +133,10 @@ export type DiscoveryDeckState = {
   queueIds: string[];
   consumedIds: string[];
   history: { id: string; dateKey: string }[];
+  sceneBatchIds: string[];
+  sceneSeenIds: string[];
+  sceneBatchIndex: number;
+  sceneComplete: boolean;
 };
 export type DiscoveryDeckInput = {
   speciesPool: Fish[];
@@ -143,6 +166,13 @@ export type DiscoveryAdvanceOutput = {
   addedWishlistId: string | null;
   message: string;
   remainingToday: number;
+};
+export type DiscoveryBatchResult = {
+  state: DiscoveryDeckState;
+  batchIds: string[];
+  seenIds: string[];
+  batchIndex: number;
+  complete: boolean;
 };
 export type CompatibleRecommendationInput = {
   aquarium: Aquarium;

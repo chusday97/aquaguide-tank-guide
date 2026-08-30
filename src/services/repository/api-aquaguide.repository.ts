@@ -264,6 +264,9 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
         entryDate: input.entryDate.slice(0, 10),
         lifeStage: input.lifeStage,
         reproductiveState: input.reproductiveState,
+        intent: input.intent || 'record_existing',
+        catalogVersion: input.catalogVersion,
+        compatibilityConfirmation: input.compatibilityConfirmation,
       },
       idempotencyKey: input.operationId,
     });

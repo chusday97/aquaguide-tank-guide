@@ -16,7 +16,7 @@ export default function WelcomePage() {
   };
 
   return (
-    <main className="min-h-[100dvh] bg-[radial-gradient(circle_at_top_left,#d9f4e6_0,transparent_42%),linear-gradient(145deg,#f8fbf8,#e5efeb)] px-4 py-8 text-ink md:flex md:items-center md:py-12">
+    <main className="workspace--standalone min-h-[100dvh] bg-[radial-gradient(circle_at_top_left,#d9f4e6_0,transparent_42%),linear-gradient(145deg,#f8fbf8,#e5efeb)] px-4 py-8 text-ink md:flex md:items-center md:py-12">
       <div className="mx-auto w-full max-w-5xl">
         <div className="max-w-2xl">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-700">AquaGuide</p>

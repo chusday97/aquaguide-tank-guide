@@ -489,7 +489,7 @@ export default function Identify() {
   };
 
   return (
-    <main ref={pageRef} className="page-frame-wide min-w-0 pb-24 pt-4 md:pb-8" data-identify-stage={stage}>
+    <main ref={pageRef} className="workspace--content page-frame-wide min-w-0 pb-24 pt-4 md:pb-8" data-identify-stage={stage}>
       <header className="mb-5 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <button type="button" onClick={() => requestNavigation('/encyclopedia')} className="mb-2 inline-flex min-h-10 items-center gap-1 rounded-full px-2 text-xs font-black text-emerald-800 hover:bg-emerald-50">

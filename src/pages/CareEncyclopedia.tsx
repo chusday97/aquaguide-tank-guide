@@ -45,10 +45,12 @@ import { getSearchSuggestions } from '../services/search/search-suggestions.serv
 import { taskRoutes } from '../services/navigation/task-routes';
 import { getSpeciesDisplayImage } from '../lib/speciesVisual';
 import { matchesCareCategory, type CareCategoryId } from '../services/care/care-category.service';
+import { KnowledgeSceneExplorer } from '../components/interactive/KnowledgeSceneExplorer';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const bannerTopicIds = ['guide_water_deteriorate', 'guide_new_fish_acclimation', 'guide_safe_water_change'];
 type CareViewMode = 'all' | 'favorites';
+type CarePresentationMode = 'scene' | 'browse';
 type FlyingFavorite = { id: string; startX: number; startY: number; endX: number; endY: number };
 type CareGuideView = {
   title: string;
@@ -1601,6 +1603,9 @@ export default function CareEncyclopedia() {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [careViewMode, setCareViewMode] = useState<CareViewMode>('all');
+  const [carePresentationMode, setCarePresentationMode] = useState<CarePresentationMode>(() => (
+    new URLSearchParams(location.search).get('mode') === 'browse' ? 'browse' : 'scene'
+  ));
   const [favorites, setFavorites] = useState<CareFavoriteMap>(() => getCareFavorites());
   const [shareTopic, setShareTopic] = useState<CareTopic | null>(null);
   const [copyMessage, setCopyMessage] = useState('');
@@ -1634,7 +1639,20 @@ export default function CareEncyclopedia() {
   }), [isEn, searchTerm]);
 
   useEffect(() => {
+    setCarePresentationMode(new URLSearchParams(location.search).get('mode') === 'browse' ? 'browse' : 'scene');
+  }, [location.search]);
+
+  const changeCarePresentation = (mode: CarePresentationMode) => {
+    setCarePresentationMode(mode);
+    const params = new URLSearchParams(location.search);
+    if (mode === 'browse') params.set('mode', 'browse');
+    else params.delete('mode');
+    navigateToRoute(params.toString() ? `/care?${params.toString()}` : '/care');
+  };
+
+  useEffect(() => {
     if (!location.hash) return;
+    if (new URLSearchParams(location.search).get('mode') !== 'browse') setCarePresentationMode('browse');
     if (location.hash === '#care-favorites') {
       setCareViewMode('favorites');
       setCareWorkspacePage('content');
@@ -1655,7 +1673,7 @@ export default function CareEncyclopedia() {
     if (location.hash === '#care-recommendations') {
       void navigateToSection('care-recommendations', { updateHash: false });
     }
-  }, [location.hash, navigateToSection]);
+  }, [location.hash, location.search, navigateToSection]);
 
   useEffect(() => {
     const node = recommendationCarouselRef.current;
@@ -1885,7 +1903,7 @@ export default function CareEncyclopedia() {
   };
 
   return (
-    <div className="page-frame-wide care-workspace-shell min-w-0 overflow-x-hidden">
+    <div data-workspace-layout={carePresentationMode === 'scene' ? 'immersive' : 'content'} className={`page-frame-wide care-workspace-shell ${carePresentationMode === 'scene' ? 'care-workspace-shell--scene' : ''} min-w-0 overflow-x-hidden`}>
       <div className="care-workspace-grid flex min-w-0 flex-col gap-3 pb-4 md:pb-8">
       <section className="px-1 py-1 md:hidden">
         <div className="flex items-start justify-between gap-3">
@@ -1903,6 +1921,29 @@ export default function CareEncyclopedia() {
           </button>
         </div>
       </section>
+
+      <section className="flex items-center justify-between gap-2 px-1" aria-label={isEn ? 'Care presentation' : '养护呈现方式'}>
+        <div className="inline-flex rounded-full border border-emerald-900/10 bg-white/70 p-1 shadow-sm">
+          <button type="button" aria-pressed={carePresentationMode === 'scene'} onClick={() => changeCarePresentation('scene')} className={`min-h-9 rounded-full px-3 text-[11px] font-black ${carePresentationMode === 'scene' ? 'bg-emerald-800 text-white' : 'text-ink/58'}`}>{isEn ? 'Interactive check' : '互动排查'}</button>
+          <button type="button" aria-pressed={carePresentationMode === 'browse'} onClick={() => changeCarePresentation('browse')} className={`min-h-9 rounded-full px-3 text-[11px] font-black ${carePresentationMode === 'browse' ? 'bg-emerald-800 text-white' : 'text-ink/58'}`}>{isEn ? 'Browse guides' : '传统浏览'}</button>
+        </div>
+        <button type="button" onClick={() => navigateToRoute(taskRoutes.collection.care)} className="hidden min-h-11 rounded-full px-3 text-[11px] font-black text-emerald-800 hover:bg-white/70 md:inline-flex">{isEn ? 'Saved guides' : '养护收藏'}<ChevronRight className="ml-0.5 h-3.5 w-3.5" /></button>
+      </section>
+
+      {carePresentationMode === 'scene' && (
+        <KnowledgeSceneExplorer
+          isEn={isEn}
+          onOpenTopic={(topicId, sourceId) => openCareDetail(topicId, sourceId)}
+          onBrowseList={(query) => {
+            if (query) setSearchTerm(query);
+            changeCarePresentation('browse');
+            setCareWorkspacePage('content');
+            void navigateToSection('care-results', { updateHash: false });
+          }}
+        />
+      )}
+
+      <div className={carePresentationMode === 'browse' ? 'contents' : 'hidden'}>
 
       <section id="care-recommendations" className={`care-left-panel w-full min-w-0 max-w-full scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white p-3 shadow-sm ${(!searchTerm.trim() && careWorkspacePage === 'home') ? '' : 'hidden md:block'}`}>
             <div className="mb-3 flex items-start justify-between gap-3">
@@ -2093,6 +2134,8 @@ export default function CareEncyclopedia() {
           </div>
         )}
       </section>
+
+      </div>
 
       <Dialog open={!!selectedTopic} onOpenChange={(open) => !open && closeCareDetail()}>
         <AdaptiveDetailContent>
@@ -2875,7 +2918,7 @@ function ActionEvidenceInline({ evidence, isEn }: { evidence?: CareActionEvidenc
           rel="noreferrer"
           title={`${reference.publisher} · ${reference.title}`}
           aria-label={isEn ? `Open source: ${reference.publisher}` : `打开来源：${reference.publisher}`}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-emerald-100 bg-white text-emerald-700 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           data-action-kind="external"
         >
           <ExternalLink className="h-3.5 w-3.5" />
@@ -3460,7 +3503,7 @@ export function CareArticleDetail({
                   rel="noreferrer"
                   title={`${reference.publisher} · ${reference.title}`}
                   aria-label={isEn ? `Open ${reference.publisher} source` : `打开 ${reference.publisher} 原文`}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/55 px-3 text-[11px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/55 px-3 text-[11px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   data-action-kind="external"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />

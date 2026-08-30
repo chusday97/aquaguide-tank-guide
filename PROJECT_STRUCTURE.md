@@ -14,15 +14,29 @@
 - `packages/contracts/src/content-admin.ts`：内容编辑、状态切换和素材上传的服务端校验契约。
 - `packages/contracts/src/localization.ts`：中英文语言、偏好、回退元数据、审核与覆盖率契约。
 - `packages/contracts/src/species-diagnosis.ts`：视觉候选、匿名未命中、受控观察、动态追问与原因排序契约。
+- `packages/contracts/src/catalog.ts`：不可变 Catalog manifest、Snapshot、证据和配对规则契约。
 - `packages/domain-rules/`：跨前后端共享的确定性规则类型与安全不变量。
 - `packages/domain-rules/src/species-diagnosis.ts`：受控观察、本地症状解析、红旗优先与信息增益追问策略。
 - `src/services/onboarding/onboarding-paths.ts`：两条新手目标路线、真实进度计算与统一任务定义。
 - `scripts/test-onboarding-activation.ts`：验证目标顺序、真实适配门禁、历史用户保护、旧引导兼容和清单单一来源。
 - `src/services/compatibility/compatibility-records.service.ts`：保存并校验与真实鱼缸关联的完整混养判断记录。
+- `src/services/catalog/catalog-snapshot.service.ts`：本地/云端 Catalog 快照校验、SHA-256 parity 和安全回退。
+- `src/services/catalog/species-profile.adapter.ts`：将旧 Fish 转换为 canonical SpeciesProfile；缺失水体保持 unknown，不做文本推断。
+- `src/data/compatibility-launch-cohort.ts`：确定性首批 30 种研究队列；仅用于审核排期，不授予混养决策资格。
+- `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
+- `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。
 - `scripts/verify-taxonomy-ui.mjs`：珊瑚、歧义名称、两条五彩青蛙及中英文角色标签的真实浏览器分类回归。
 - `scripts/verify-daily-discovery-deep-link.mjs`：鱼缸首页今日推荐的位置、每日进度、详情返回、切换收藏、响应式边界和图鉴去重回归。
+- `scripts/verify-formal-interactive-scenes.mjs`：正式图鉴与养护 scene/browse 模式、场景点选和详情入口的浏览器门禁。
+- `scripts/verify-formal-preview-entry.mjs`：验证 4319 预览四模块进入正式路由、使用本地隔离会话且没有 API 或资源失败。
+- `scripts/test-species-profile-adapter.ts`：SpeciesProfile 显式水体与旧 Fish 边界回归。
+- `scripts/test-recommendation-unknown-filter.ts`：验证未审核物种不会进入自动推荐或空缸方案。
+- `scripts/verify-today-action-dock.mjs`：今日行动半透明拉手的点击、Esc 关闭与拖拽吸附回归。
+- `scripts/check-compatibility-authority.mjs`：静态守卫旧混养引擎只能作为兼容 facade，最终状态必须来自 Domain Rules。
+- `scripts/audit-species-data-quality.ts`：486 条物种记录的身份、来源、模板污染、显式水体和重复项审计。
+- `scripts/test-compatibility-launch-cohort.ts`：研究队列数量、去重、确定性和 evidence-gated readiness 回归。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。
@@ -30,14 +44,21 @@
 - `supabase/migrations/202607220002_atomic_livestock_batch_split.sql` 至 `202607220005_fix_livestock_batch_merge_signature.sql`：拆分、生命纪念扣减与合并的原子数据库函数，以及旧合并函数签名的显式升级。
 - `supabase/migrations/202607260001_feedback_submissions.sql`：低敏感意见反馈、管理员 RLS、状态索引与版本触发器。
 - `supabase/migrations/202607260002_atomic_livestock_removal.sql`：缸内物种数量移出的事务锁、整数校验与幂等重放。
-- `supabase/migrations/202607290001_memorial_reflection_fields.sql`：生命纪念“当时观察 / 可能原因 / 后续改进”字段与原子批次纪念写入函数。
+- `supabase/migrations/202607290004_memorial_reflection_fields.sql`：与生产版本对齐的生命纪念“当时观察 / 可能原因 / 后续改进”字段与原子批次纪念写入函数。
 - `supabase/migrations/202608010001_memorial_causes_feedback_email.sql`：生命纪念受控原因代码、反馈邮件投递状态与新版原子纪念写入函数。
 - `supabase/migrations/202608090001_evidence_timeline_recurrence.sql` 至 `202608090002_atomic_care_reminder_completion.sql`：可信证据、时间线来源、循环养护字段，以及完成当前计划和生成下一期的原子事务函数。
+- `supabase/migrations/20260815115240_atomic_water_change_record.sql` 至 `20260816160129_atomic_verified_livestock_relocation.sql`：生产已部署的换水原子写入、函数安全、RLS 优化、养护事件/清单和缸内物种迁移历史；本地候选已恢复，尚未执行任何生产动作。
+- `supabase/migrations/202608270001_catalog_releases_and_species_water_type.sql`：Catalog 发布、显式水体和证据引用提案；待独立生产授权。
+- `supabase/config.toml`：本地 Supabase CLI 配置；保持现有生产 26 个 migration 的默认 grants parity，新表由 migration 显式收紧权限。
+- `supabase/tests/catalog_rls.test.sql`：Catalog 表、发布不可变性、匿名读取和管理员草稿写入的 pgTAP 回归。
+- `supabase/fixtures/`：不随 `supabase test db` 自动执行的旧 PostgreSQL 原子生物写入 fixtures，由专项 npm 测试显式调用。
 
 - `src/App.tsx`：设备级应用壳、导航与路由。
 - `src/i18n/`：i18next 初始化、浏览器语言检测和本地偏好保存。
 - `src/components/visual-results/`：混养、物种适配、巡检与养护自查共用的视觉结果卡、展示模型和规则适配器。
+- `src/components/interactive/`：互动图鉴与场景养护预览组件；仅负责收集场景选择并调用正式详情/养护入口。
 - `src/components/layout/LayoutModeProvider.tsx`：真实设备布局判定。
+- `lib/layout-mode.ts`：共享 768px viewport 布局断点与响应式订阅。
 - `src/pages/Aquarium.tsx`：我的鱼缸。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
 - `src/pages/Identify.tsx`：拍照识别候选、手动兜底、物种确认、动态追问与可视化风险结果。
@@ -60,7 +81,7 @@
 - `src/services/aquarium/livestock-removal-attempt.service.ts`：一次移出确认草稿的稳定操作号，失败重试复用、重新发起才更换。
 - `src/pages/CareEncyclopedia.tsx`：养护百科与共享养护详情。
 - `src/data/careEvidence.ts`：41 篇养护内容的确定性来源映射、审核状态与复查动作兜底。
-- `src/pages/CollectionHub.tsx`：水族册模块首页，四格按最近新增规则预览种草、养护收藏、生命纪念与成就；具体条目使用稳定深链，剩余内容通过“更多”进入模块。
+- `src/pages/CollectionHub.tsx`：creature-first 互动水族册首页，桌面生物节点聚焦中央模块，手机提供紧凑入口；具体条目使用稳定深链。
 - `src/pages/Collection.tsx`：四个独立水族册模块的排序列表、物种/养护详情深链、纪念旧地址兼容跳转、勋章定位与空状态。
 - `src/pages/MemorialDetail.tsx`：生命纪念独立档案页；结构化复盘补录/编辑、未保存保护、列表返回与再次加入统一复核。
 - `src/pages/AdminContent.tsx`：受管理员权限保护的独立内容后台页面，不进入普通用户导航。
@@ -75,6 +96,7 @@
 - `src/services/api/`：携带 Supabase JWT、幂等键和结构化错误的版本化 API 客户端。
 - `src/services/admin/content-admin.service.ts`：内容后台唯一 API 访问层，封装 CRUD、发布状态与原始图片上传。
 - `src/services/repository/`：游客本地与登录云端两种 Repository 实现；页面后续只依赖统一接口。
+- `src/services/preview/preview-session.service.ts`：4319 正式页面预览会话、演示鱼缸 seed 和模块路由映射，强制本地数据边界。
 - `apps/api/src/livestock-memorial-replay.ts`：最后一组被删除后仍可读取已提交生命纪念的幂等重放门禁。
 - `apps/api/src/routes/feedback.ts`：游客/登录反馈提交、频率限制，以及管理员分页和状态更新接口。
 - `src/services/analytics/`：只驻留当前会话的隐私安全事件白名单。
@@ -107,11 +129,19 @@
 - `src/components/common/AdaptiveTaskContent.tsx`：桌面与手机的沉浸式任务流程表面。
 - `src/components/common/SurfaceHeader.tsx`：统一详情/任务表面的标题、返回、关闭与 44px 图标操作。
 - `src/components/ThreeAquarium.tsx`：3D 鱼缸。
+- `src/pages/InteractivePreview.tsx`：正式页面演示预览入口，初始化隔离演示状态后进入正式 App Shell，不连接生产写入。
+- `scripts/test-desktop-layout-contract.mjs`：桌面工作区类别、Care Scene 单列隔离和互动预览模块切换的静态布局门禁。
+- `scripts/readiness-collect.mjs` / `scripts/readiness-serve.mjs`：本地只读进度证据采集与 4320 看板；按当前 SHA 展示 Main 收敛、底层、Catalog、Supabase、UI 和生产门禁。
+- `scripts/test-readiness-evidence.mjs`：进度报告结构、状态集合、固定业务案例及显式阻塞状态的契约测试。
+- `src/styles/aquarium-stage-layout-v4.css`、`src/styles/immersive-detail-layout-v5.css`：Aquarium 舞台与详情 Rail/Sheet/Blocking 的 canonical 几何样式。
 
 ## 文档与验证
 
+- `.ai/MAIN_CONVERGENCE_LEDGER.md`：main 收敛分支的能力迁移状态、冲突决策和可复核证据。
+
 - `.project-journal/`：按工作区证据规则维护可追溯事件、证据索引、事实卡和证据缺口；职业材料仅使用 verified 结论。
 - `docs/05-validation/`：证据矩阵、产品假设、真人测试结果与 AI Evaluation 当前状态；严格区分自动测试、真实模型和真人证据。
+- `docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`：第 27 个 Catalog migration 的只读前置、权限模型、执行后验证和停止条件授权包。
 - `evaluation/`：47 个版本化 JSONL Case、Zod 契约、deterministic/mocked/live Runner、统一报告与 Badcase Registry。
 - `docs/README.md`：当前产品文档总入口与事实来源说明。
 - `docs/01-definition/`：PRD、用户故事、竞品分析与当前产品状态。
@@ -151,7 +181,7 @@
 - `scripts/test-business-api-contract.ts` / `scripts/test-repository-boundary.ts`：业务路由、校验、稳定 ID、安全规则与本地/云端访问边界回归。
 - `scripts/test-aquarium-creation-semantics.ts` / `scripts/test-addition-intents.ts` / `scripts/test-livestock-recording.ts`：空白鱼缸语义、两类 Intent 策略与现实记录顺序/幂等专项。
 - `supabase/migrations/202608090003_atomic_livestock_addition.sql`：原子创建/复用父物种、写入批次并登记幂等结果。
-- `scripts/test-atomic-livestock-addition.ts` / `supabase/tests/atomic_livestock_addition.sql`：代码契约及真实 PostgreSQL 父记录成功、批次失败回滚专项。
+- `scripts/test-atomic-livestock-addition.ts` / `supabase/fixtures/atomic_livestock_addition.sql`：代码契约及真实 PostgreSQL 父记录成功、批次失败回滚专项；fixture 不作为 pgTAP 自动测试执行。
 - `apps/api/src/livestock-addition-error.ts` / `scripts/test-livestock-addition-api-errors.ts`：原子 RPC 的 404、409 与 503 错误语义映射和回归。
 - `scripts/verify-aquarium-factual-flow.mjs`：真实浏览器验证创建无伪数据、规划不写入、明确现实确认后保存和旧深链兼容。
 - `scripts/test-livestock-memorial-replay.ts`：已提交纪念重放先于父记录所有权查询的行为回归。

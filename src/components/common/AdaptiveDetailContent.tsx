@@ -3,36 +3,36 @@ import { DialogContent } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useLayoutMode } from '../layout/LayoutModeProvider';
 
-type AdaptiveDetailContentProps = ComponentProps<typeof DialogContent>;
+type AdaptiveDetailContentProps = ComponentProps<typeof DialogContent> & {
+  /** Desktop browsing details stay open as a non-modal right rail. */
+  workspace?: boolean;
+  workspaceOpen?: boolean;
+};
 
-export function AdaptiveDetailContent({ className, style, ...props }: AdaptiveDetailContentProps) {
+export function AdaptiveDetailContent({ className, workspace = false, workspaceOpen = false, children, ...props }: AdaptiveDetailContentProps) {
   const { isPhoneLayout } = useLayoutMode();
-  const desktopWidth = 'min(var(--adaptive-surface-width, var(--surface-reading-width, 520px)), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px))';
-  const surfaceStyle = isPhoneLayout
-    ? style
-    : {
-        ...style,
-        position: 'fixed' as const,
-        inset: '0 0 0 auto',
-        width: desktopWidth,
-        maxWidth: desktopWidth,
-        height: '100dvh',
-        maxHeight: '100dvh',
-        transform: 'none',
-      };
+
+  if (workspace && !isPhoneLayout && !workspaceOpen) return null;
 
   return (
     <DialogContent
-      data-surface={isPhoneLayout ? 'bottom-sheet' : 'right-drawer'}
+      surface="detail"
+      data-surface={isPhoneLayout ? 'bottom-sheet' : 'detail-rail'}
+      data-detail-viewport={isPhoneLayout ? 'phone-sheet' : 'desktop-rail'}
+      data-detail-behavior={isPhoneLayout ? 'bottom-sheet' : 'persistent-browse-rail'}
+      withOverlay={isPhoneLayout}
       className={cn(
-        'flex flex-col overflow-hidden border-border bg-white p-0 shadow-[0_20px_60px_rgba(15,23,42,0.16)] duration-200',
+        'flex min-h-0 flex-col overflow-hidden border-border bg-[#FDFCF8] p-0 duration-200',
         isPhoneLayout
-          ? 'bottom-0 left-1/2 top-auto h-[92dvh] max-h-[92dvh] !w-full !max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px]'
-          : 'bottom-0 left-auto right-0 top-0 h-[100dvh] max-h-[100dvh] min-w-0 translate-x-0 translate-y-0 rounded-none rounded-l-[24px] data-open:zoom-in-100 data-closed:zoom-out-100 data-open:slide-in-from-right-full data-closed:slide-out-to-right-full',
+          ? 'bottom-0 left-1/2 top-auto h-[68dvh] min-h-[52dvh] max-h-[82dvh] !w-[min(100vw,430px)] !max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px] shadow-[0_-18px_56px_rgba(15,23,42,0.18)] data-open:zoom-in-100 data-open:slide-in-from-bottom data-closed:zoom-out-100 data-closed:slide-out-to-bottom'
+          : 'bottom-0 left-auto right-0 top-0 h-[100dvh] max-h-[100dvh] w-[clamp(480px,42vw,600px)] max-w-[calc(100vw-280px)] translate-x-0 translate-y-0 rounded-l-[28px] rounded-r-none border-y-0 border-r-0 shadow-[-22px_0_64px_rgba(15,23,42,0.16)] data-open:zoom-in-100 data-open:slide-in-from-right data-closed:zoom-out-100 data-closed:slide-out-to-right',
         className,
       )}
-      style={surfaceStyle}
       {...props}
-    />
+    >
+      {children}
+    </DialogContent>
   );
 }
+
+(AdaptiveDetailContent as typeof AdaptiveDetailContent & { dialogSurface?: 'detail' }).dialogSurface = 'detail';

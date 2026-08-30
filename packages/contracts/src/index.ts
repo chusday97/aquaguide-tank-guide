@@ -5,6 +5,7 @@ export * from './content-admin';
 export * from './localization';
 export * from './species-diagnosis';
 export * from './share-reports';
+export * from './catalog';
 
 import type { LocalizedContentMeta } from './localization';
 import { supportedLocaleSchema } from './localization';
@@ -21,6 +22,8 @@ export const apiErrorCodeSchema = z.enum([
   'RATE_LIMITED',
   'INTERNAL_ERROR',
   'DEPENDENCY_UNAVAILABLE',
+  'COMPATIBILITY_BLOCKED',
+  'COMPATIBILITY_INFORMATION_REQUIRED',
 ]);
 
 export type ApiErrorCode = z.infer<typeof apiErrorCodeSchema>;
@@ -108,12 +111,19 @@ export interface SpeciesSummaryDto {
   phLevelText: string;
   temperament: 'Peaceful' | 'Aggressive' | 'Territorial';
   sizeClass: 'Small' | 'Medium' | 'Large';
+  waterType: import('./catalog').CatalogWaterType;
+  catalogVersion?: string;
+  completeness: import('./catalog').CatalogCompleteness;
+  evidence: EvidenceSourceDto[];
   thumbnail?: PublicAssetDto;
   updatedAt: string;
   localization: LocalizedContentMeta;
 }
 
 export interface SpeciesDetailDto extends SpeciesSummaryDto {
+  baseSpeciesKey?: string | null;
+  variantKey?: string | null;
+  taxonStatus?: 'verified' | 'partial' | 'ambiguous';
   waterTemperatureMinC?: number;
   waterTemperatureMaxC?: number;
   phMin?: number;
@@ -123,6 +133,12 @@ export interface SpeciesDetailDto extends SpeciesSummaryDto {
   diet: string;
   tankSizeText: string;
   minTankLiters?: number;
+  minTankLengthCm?: number | null;
+  adultLengthMinCm?: number | null;
+  adultLengthMaxCm?: number | null;
+  socialMode?: 'solitary' | 'pair' | 'group' | 'colony' | 'variable' | 'unknown';
+  minimumGroupSize?: number | null;
+  decisionReadiness?: 'reviewed' | 'partial' | 'unknown';
   housingMode?: '适合混养' | '谨慎混养' | '建议单养';
   housingReason?: string;
   feedingProfile?: Record<string, unknown>;
@@ -134,6 +150,8 @@ export interface SpeciesDetailDto extends SpeciesSummaryDto {
     confidence: EvidenceConfidence;
     reviewStatus: EvidenceReviewStatus;
     citations: EvidenceSourceDto[];
+    requiredFacts?: import('./catalog').CompatibilityRequiredFact[];
+    stockingGuidance?: import('./catalog').CatalogCompatibilityProfile['stockingGuidance'];
   };
 }
 

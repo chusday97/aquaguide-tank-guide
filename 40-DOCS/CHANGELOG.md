@@ -2,6 +2,139 @@
 
 ## [Unreleased]
 
+- Pushed candidate `codex/main-core-foundation-v1` to GitHub at `186751e7` after local readiness and project-truth checks passed. PR #142 remains Draft; API read-back is pending a successful GitHub DNS check.
+
+- Read back the synchronized candidate and PR #142 at `c63cb2dd`: PR is `OPEN/Draft/CLEAN/MERGEABLE`, required source checks are successful, and main convergence readiness is PASS. UI acceptance, production migration, Catalog publication and main merge remain separately gated.
+
+- Revalidated the Vercel-only production freeze at candidate `5ed6ad67`: Vercel remains `ACTIVE_FROZEN` on `release/production`, Cloudflare is `INACTIVE_LEGACY`, and readiness evidence is SHA-bound. Candidate push, main merge, production migration, Catalog publication and UI acceptance remain separately gated.
+
+- Created the remote `release/production` pointer at the verified production anchor `ed0cf380`; provider branch binding remains pending because Vercel/Cloudflare settings require authenticated platform access, and production freeze is still unverified.
+
+- Updated Vercel Production Branch to `release/production` and read back the setting plus unchanged production SHA `ed0cf380`; Cloudflare remains unverified because its dashboard requires login and no local API token is available. Production freeze remains blocked until Cloudflare is read back.
+
+- Rechecked the existing Cloudflare dashboard tab; it currently fails with `ERR_CONNECTION_CLOSED`. This remains a read-back blocker; no Cloudflare setting or production traffic was changed.
+
+- User-provided screenshot confirms an authenticated Cloudflare Account home with Worker `ice-glide`, but the browser session available for automation still shows the login page. Cloudflare project/branch read-back remains `UNVERIFIED`; no setting or production traffic was changed.
+
+- By user decision, Cloudflare is now recorded as `INACTIVE_LEGACY` for AquaGuide. Vercel remains the only active production provider; historical Cloudflare resources are retained and untouched.
+
+- Implemented the Vercel-only provider state in `77ea8572`: readiness now treats Vercel as `ACTIVE_FROZEN`, Cloudflare as `INACTIVE_LEGACY`, and computes `productionDeploymentFrozen=true` from active providers only. The readiness evidence contract passes for the new SHA.
+
+- Re-collected readiness after the evidence-only update at `a0bdb3aa`; the report is SHA-bound and `test:readiness` passes. Network/DNS, sandbox IPC and telemetry-write limits keep external gates explicitly `FAIL/BLOCKED/UNVERIFIED` rather than reusing stale results.
+
+- Updated current progress and handoff evidence to candidate SHA `fb6db2a2`; recorded remote/PR/Preview parity and the remaining production-freeze, Supabase-production, and user-acceptance gates.
+
+- Added a local-only readiness evidence center: `npm run readiness:collect` generates SHA-bound JSON/Markdown gate evidence, `npm run readiness:serve` serves a read-only dashboard at `127.0.0.1:4320`, and `npm run test:readiness` validates its schema and explicit blocked/unverified states. This keeps backend progress inspectable while the 4319 UI remains unaccepted; no product API, database, Supabase or production setting changed.
+
+- Formalized the 4319 preview entry: it now seeds an isolated demo aquarium, bypasses onboarding only for preview sessions, forces the local repository, and routes into the real Aquarium/Encyclopedia/Care/Collection App Shell. Added route and no-cloud-request regression coverage without changing production APIs, data, or UI ownership.
+
+- Added a dedicated formal-preview-entry browser gate covering all four module routes, full build metadata, local-only API isolation, page errors and failed resource requests.
+
+- Raised Care evidence links to the 44px interaction target and aligned the core browser gate with the current “混养风险计算” heading. Local responsive/core browser checks, Catalog validation, local Supabase 26+1 replay, pgTAP, schema lint, typecheck and build pass; production settings, migration, Catalog publication and main merge remain gated.
+
+- Removed the candidate preview's external Google Noto Serif SC import so visual checks do not depend on a network font request; the existing local/system fallback stack remains unchanged. Rebuilt 4319 and captured a candidate-only 28-image matrix for the current checkpoint across four modules and seven viewports with HTTP 200 and no runtime request failures. The frozen 4317 baseline remains unchanged and human visual acceptance is still pending.
+
+- Prepared the fast source-convergence route: read-only recorded the Vercel production anchor at `ed0cf380`, created local deployment-only `release/production`, and separated `main` code truth from production release readiness. No provider settings, GitHub refs, Supabase schema, Catalog data or production deployment were changed.
+
+- Added runtime production-pointer evidence to `project:status`: it now resolves the deployment-only branch SHA, compares it with the recorded production anchor, and reports whether provider freeze has actually been verified. The local pointer is synchronized; Vercel/Cloudflare settings remain unfrozen until separately read back.
+
+- Restored the candidate's preview and formal immersive page geometry to the 4317 visual baseline: Aquarium uses the original 72dvh/720px stage, scene stages use 500/520px, core roots no longer add a second workspace inset, and the explicit Geist/PingFang fallback stack is preserved. Module-switch preview, Domain/Service logic, data, and public contracts are unchanged. Full matrix capture and human acceptance remain pending.
+
+- Rebuilt the candidate production preview after the geometry restoration; 4319 now serves commit `a46a4c9c8118b3c34e8eb0c2aa979ae9c6a9fb4d` and exposes the matching branch/SHA/seed metadata. No remote branch or PR was updated.
+
+- Stabilized the visual freeze capture gate by reusing one Chromium process with isolated pages, then captured the current 4317/4319 35-image matrix at seven viewports. The manifest records HTTP 200 for every capture; human acceptance and the new freeze baseline remain pending.
+
+- Aligned the mini compatibility regression with the current Domain evidence code: unreviewed species now assert `species_evidence_unreviewed`, while reviewed single-species selection remains eligible for environment screening. No UI or data contract changed.
+
+- Fixed the candidate preview runtime for strict visual comparison: Aquarium preview now has an explicit workspace height, the confirmed 4317 typography tokens are restored, and UI freeze capture waits for the preview marker, fonts, Canvas dimensions, and failed-request/page-error checks. Production preview verified WebGL rendering at commit `9f31c7af`; no domain, data, Supabase, or production state changed.
+
+- Added the desktop workspace layout contract for immersive, content, and standalone pages; separated Care scene layout from browse columns, made scene heights responsive to available workspace space, and converted the interactive preview into a URL-addressable single-module showroom. This is a layout-only change; domain, data, assets, and write behavior are unchanged. Browser visual acceptance and the new UI freeze baseline remain pending.
+
+- Fixed the local 4319 candidate preview lifecycle: the worktree dependency link now remains resolvable for Vite reload/HMR instead of being removed after startup, preventing the Tailwind plugin error overlay that appeared as garbled technical output. Verified UTF-8 content, candidate metadata, and a clean reload in the existing browser tab.
+
+- Fixed an Aquarium empty-state React Hook order regression that caused the page to enter the error boundary after creating the first tank. The factual-flow browser gate now follows the real species-selection path and proves incomplete planning is wishlist-only, does not call livestock APIs, and leaves the tank unchanged before a separate reality-record action.
+
+- Fixed compatibility result presentation so internal `insufficient_data` stays a safety state while users see confirmed facts or an unavailable fallback; unreviewed candidates stay out of automatic recommendations, and Aquarium planning saves only to the existing wishlist.
+
+- Fixed Domain evidence precedence in the legacy compatibility facade and strengthened the 435-pair launch matrix to assert exact safe-status counts. Local candidate checkpoint `4d5cbb28` passes compatibility, authority, UI-freeze and project-truth gates; it is intentionally not pushed yet.
+
+- Added a frozen, de-duplicated 30-species compatibility review cohort, per-record catalog quality artifacts, draft-only `catalog:research`/`catalog:review` commands, a 435-pair deterministic/symmetric matrix gate, individual life-stage and breeding context, observed coexistence severity, and layered stocking guidance. Domain remains the sole decision authority; UI and production Supabase were not changed.
+
+- Added species data-quality audit and deterministic 30-species research cohort; added evidence-gated `decisionReadiness` metadata and routed formal compatibility consumers through the Compatibility Service. Extended Domain checks for temperature, pH, tank temperature, minimum volume and tank length. No UI Owner files or production data changed.
+
+- Completed the local convergence rehearsal without waiting for Vercel: added the compatibility-authority static gate, refreshed Catalog/Supabase parity evidence and migration authorization docs, and aligned stale core browser assertions with the current viewport, compatibility, feature-preview and evidence-disclosure contracts. Domain, Service, Catalog, local 26+1 Supabase replay, pgTAP, schema lint, build, UI freeze and browser matrices pass; no UI Owner or production data changed.
+
+- Added the compatibility-authority static gate, updated local Catalog parity to the reviewed tetra checksum, and prepared the production Catalog migration authorization package. No UI or production data changed; exact Preview remains an external Vercel gate.
+
+- Fixed the reviewed water facts for tetra species `sp_0431` (red neon tetra) and `sp_0432` (cardinal tetra) with explicit `freshwater` values; all other unreviewed species remain `unknown` and fail closed. Added caution and missing-water regressions. The candidate/PR SHA is resolved at runtime by `npm run project:status`; the previous code head `cdd46581` has the recorded exact Preview parity, while the latest docs-only head awaits a new deployment because of Vercel rate limiting. CI status is read at runtime with `gh pr checks 142`; Catalog checksum: `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`.
+
+- Closed the local mixed-compatibility authority gap: the shared canonical adapter now applies Domain status/policy/version and maps every current Domain rule code into legacy evidence groups; the direct legacy entry and Compatibility Service share the same adapter. Local Critic re-review passed; GitHub/Preview parity remains pending until the candidate is pushed.
+- Pushed candidate `7f0d208f` so local, remote branch, and PR #142 are synchronized; the exact Preview deployment is still unverified because Vercel reports a 24-hour build-rate limit.
+- Made the legacy compatibility entrypoint apply the Domain Rules decision before returning, so frozen UI callers receive the canonical status while retaining evidence-rich legacy details; added direct-entry authority regression coverage.
+- Shared the Domain rule-to-evidence merge with the legacy compatibility adapter, so direct UI callers receive matching blocking, warning and missing-data evidence as well as the canonical status.
+- Removed the duplicate Service-side Domain evidence map and completed shared mappings for missing candidate/tank and unknown-water rules.
+- Current candidate `16b3d8d5` is synchronized locally, remotely and with PR #142; Preview parity for this latest docs-only head is `UNVERIFIED` because Vercel build quota is exhausted. Previous exact Preview parity at `55a37745` remains historical evidence.
+- Recorded final GitHub/PR/Preview SHA parity for candidate `1b28bc85`; Product Golden Path validation passed. Production Catalog migration, Catalog publication and `main` merge remain pending independent authorization.
+
+### Added
+
+- Added the provisional UI freeze manifest and `npm run check:ui-freeze` guard so backend/domain work cannot silently change visual-owned files.
+- Added `npm run capture:ui-freeze` and fixed viewport evidence for the 4317 baseline and 4319 candidate at 390/600/1280px.
+- Added the read-only Supabase parity report with migration, RLS, policy, Catalog and RPC evidence.
+- Added a reproducible local Supabase CLI configuration, 26+1 migration replay gate, Catalog RLS pgTAP suite, and explicit Data API grants/revokes for the proposed Catalog tables.
+
+### Changed
+
+- Updated project truth and release readiness to mark the current UI as frozen provisional and Supabase parity as migration-required, without executing production changes.
+- Updated the Care category browser gate to use the 4319 candidate and the current desktop detail-rail surface instead of the retired 4173/centered-dialog contract.
+- Moved legacy PostgreSQL fixtures out of `supabase/tests/` so `supabase test db --local` executes only transaction-isolated pgTAP tests; local 26-migration normalized hashes now match the production read-only baseline across columns, constraints, functions, indexes, policies, grants and triggers.
+- Updated `check:preview-parity` to use Vercel deployment metadata as a read-only fallback when GitHub Deployments omits the provider record, preventing false `UNVERIFIED` results.
+- Added the canonical `SpeciesProfile` export and explicit-water-type Fish adapter; legacy text cannot infer freshwater or saltwater values.
+- Moved legacy temperature/pH parsing into the `SpeciesProfile` adapter and added nullable/invalid-range regression coverage; Domain facts no longer read Fish text directly.
+- Added a single Compatibility Service entry point for application/service consumers while preserving the frozen UI; the legacy engine is now internal to that boundary.
+- Changed `reviewSpeciesAdditions` to honor `record_existing` versus `planned_addition` policies and mapped Domain-only rule codes into the returned evidence groups; added the missing `check:preview-parity` npm script without changing UI files.
+- Pushed the canonical candidate and recorded exact local/remote/PR/Preview SHA parity at `781c6af9`; PR #142 remains Draft pending remaining gates.
+- Isolated the unrelated Vercel `admin-content` project to its dedicated branch while keeping the repository connection; regular AquaGuide branches now skip that build.
+- Changed Domain adapter pair status input to use reviewed structured pair rules only; legacy aggregate status is no longer passed back into Domain.
+- Changed the Compatibility Service to normalize Domain Rules status/policy/version as the service-layer authority; legacy engine output is retained only for evidence-rich explanations while the UI freeze remains active.
+- Added explicit Domain checks for candidate/tank water-type conflict and reviewed predation, territorial and solitary-housing traits; unknown catalog facts fail closed as `insufficient_data`.
+- Added explicit `record_existing`/`planned_addition` intent propagation through the livestock assessment path and the `test:compatibility-service` authority regression.
+
+### Main convergence
+- Updated convergence browser gates to default to the 4319 candidate preview, accept the current desktop `detail-rail` and localized “Why?” evidence disclosure, and verify mobile Sheet/desktop Rail detail behavior without silently falling back to port 3000.
+- Exported the server-side Catalog decision adapter for behavior-level testing and kept the planned-addition recheck on the shared Domain Rules engine; production Supabase behavior remains an external parity gate.
+- Restored the shared viewport-based layout contract; 390/600px now use the same phone surfaces regardless of user-agent, preventing the desktop rail/sidebar from reappearing in narrow previews.
+- Fixed Critic findings on the current candidate: restored Aquarium Archive/Discovery learn-zone targets, normalized legacy `Freshwater`/`Saltwater` values before Domain evaluation, expanded formal scene checks to 600/1280px, and removed trailing migration blank lines.
+- Updated the candidate truth to `codex/main-core-foundation-v1@94f37ba4`; separated 4317 (detached `37a8d4d1` baseline) from 4319 (candidate), captured the fixed-viewport comparison matrix, and made the formal scene gate reject branch/SHA drift.
+- Restored the approved creature-first Collection hub, single immersive Aquarium stage, shared desktop detail rail/mobile bottom sheet, and transparent scene-image loading/failure behavior on the main convergence candidate.
+- Restored the eight production migration history files locally, aligned memorial migration versioning, and added branch/SHA/seed/build-time metadata to the interactive preview.
+- Added server-side Catalog/domain re-evaluation before planned livestock writes; stale or conflicting client confirmations now fail with explicit version/compatibility errors.
+- 校正最终统一执行线：`codex/main-core-foundation-v1@5b419e98` 为唯一候选，4317 固定为 `37a8d4d1` 基线，4319 用于候选验收；记录生产 Supabase 26 个 migration、35 张 RLS 表、89 条 policy 与 Catalog/history 双向漂移，未执行生产写入。
+- PR #142 最新候选 `ff2520c9` 的远端 validate 重跑通过；保留 Draft，等待 Preview SHA parity、Supabase 只读 parity 和用户人工视觉验收。
+- 更新 GP-003 返回用户每日检查回归：先展开今日行动拉手再进入检查任务，并提高 CI 等待窗口；本地完整路径通过。
+- GP-001 CI 浏览器门禁扩大等待窗口至 30 秒，修复 GitHub runner 上设置弹层异步加载导致的偶发不可编辑超时；本地完整建缸路径通过。
+- `project:status` 现在同时允许从 canonical recovery 分支和 PR #142 release candidate 运行，并按当前分支比较远端 SHA，避免切到候选后无法核对同步状态。
+- 修复正式场景深链与交互可访问性：Care 的 `#care-*` 入口自动切换 browse，Encyclopedia scene/browse 切换同步 `mode`，今日行动支持 Enter/Space 键盘展开/收起。
+- 手机端今日行动 Rail 改为鱼缸舞台底部拉起层，补充 390px 几何回归，桌面右上浮层保持不遮挡主要舞台。
+- 统一底层回归重新通过：添加意图、现实记录服务、API 错误语义、Mini 混养、Catalog checksum、Domain policy 与项目真相门禁均通过；仅修正了过时的文案断言。
+- 将 `today_action_surface` 纳入 disclosure 契约白名单，允许今日行动按产品要求折叠，但仍保持核心任务内容在展开态直接可见。
+- 将 Aquarium 今日行动改为半透明可交互拉手：点击展开、Esc 收起，支持触控/鼠标拖拽在收起/半展开/完全展开三档吸附；任务内容与 Repository 写入保持不变，并新增 `test:today-action` 门禁。
+- 恢复正式 `/encyclopedia` 与 `/care` 的默认互动场景，并保留显式 `?mode=browse` 传统浏览入口；新增 `test:formal-scenes` 门禁覆盖场景点选与模式切换。
+- 修正图鉴手机端 320px 分页布局，更新核心/手机回归脚本以使用显式 browse 模式和当前 Rail/成就页文案，避免旧断言掩盖真实回归。
+- 修复 main 收敛候选误删用户确认视觉入口的问题：恢复 `/_preview/interactive`、互动场景组件、canonical Aquarium/Detail 样式，并保持当前 Domain/Catalog/Service/API 不变；固定视口人工验收仍待完成。
+- 恢复候选分支的 `.ai/PROJECT_STATE.json`、canonical 文档路由、`project:status`、`check:project-truth` 和候选分支 CI；当前 delivery line 为 `codex/main-core-foundation-v1 → main`，Draft PR #142 已创建并由运行时状态门禁追踪，PR #141 仅保留为历史迁移证据。
+- 从最新 `origin/main` 建立 `codex/main-core-foundation-v1`，按能力台账选择性迁移已验证混养规则；PR #141 继续作为历史证据，不整体合并。
+- 记录当前迁移状态与门禁于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。
+- 增加 Catalog manifest/snapshot 契约、本地 SHA-256 校验与云端失败回退，以及当前发布版本只读 API；Supabase migration 仅作为提案保存，未执行。
+- 增加纯函数 Domain compatibility authority 基础层，统一空缸/未知资料降级和现实记录与规划添加策略；旧 UI 引擎暂保留兼容适配。
+- 新增现实记录/规划加入的 `intent`、Catalog 版本和混养确认字段；API 对规划加入增加阻断与资料不足错误语义，服务端重算待 Catalog 发布后接入。
+- 修复规划加入缺少鱼缸时的 fail-open、已发布 Catalog 可修改和 legacy content API 对未部署 Catalog migration 的依赖，并补充契约回归。
+- Main foundation candidate 已通过同线程 Critic 六维复验与格式门禁；Supabase parity、服务端重算与 release PR 仍保持未完成。
+- 兼容性 UI 引擎增加 Domain Rules 适配层，统一输出 Catalog/规则元数据与添加策略；保留旧证据丰富结果作为迁移期 fallback，规划写入前服务端重算仍待完成。
+- 增加 Catalog build/validate/publish 三个独立命令，校验数量、引用、重复 ID 和 SHA-256；publish 默认只生成待发布产物，不自动上传。
+- 修复候选 CI 暴露的 Catalog tuple 类型错误，并为混养记录失败补齐显式错误状态、稳定文案和保存中禁用状态。
+- 修复非空鱼缸从物种详情进入混养结算的 Golden Path，保留真实缸内生物，补充数量控件，并统一谨慎确认按钮文案。
+
 ### Changed
 - 定义“记录已有生物”和“规划想养生物”两类添加语义；现实事实不再受混养结论阻断。
 - 鱼缸资料状态改为根据真实字段派生，未记录的尺寸、温度、设备和换水信息保持未知。
@@ -49,6 +182,8 @@
 - 手机鱼缸页头保持鱼缸切换、新建和“更多”；首页核心养护操作通过响应式网格全部直显。
 
 ### Fixed
+
+- [2026-08-29] 混养结果体验：新增统一 Compatibility Presentation，将内部安全状态与用户文案分离；部分事实显示“当前可确认”，无可靠事实显示“暂未开放这组混养建议”，规划组合可保存到现有种草清单但不会写入鱼缸；自动推荐排除内部 `insufficient_data` 结果。
 - 修正养护提醒仍声称只保存到本地的旧文案，避免误导已登录的云端用户。
 - 修复图鉴原位筛选触发器缺少展开状态和目标面板关联，辅助技术与自动验收现在可以确认点击结果。
 - 修复今日推荐点击收藏后立即切换物种、已收藏状态只能跳水族册而无法取消的问题。

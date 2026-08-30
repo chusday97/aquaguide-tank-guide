@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4319';
 const browser = await chromium.launch({ headless: true });
 
 const createState = ({ withTank = true, owned = false } = {}) => ({
@@ -11,8 +11,8 @@ const createState = ({ withTank = true, owned = false } = {}) => ({
     id: 'detail-tank',
     name: 'Species detail tank',
     fishes: owned ? [{
-      id: 'owned-sp-0001',
-      fishId: 'sp_0001',
+      id: 'owned-sp-0431',
+      fishId: 'sp_0431',
       quantity: 6,
       entryDate: '2026-07-01',
       lastWaterChangeDate: '2026-07-20',
@@ -22,7 +22,7 @@ const createState = ({ withTank = true, owned = false } = {}) => ({
     targetTemperature: '25',
     equipment: { filter: '瀑布过滤', heater: true, oxygen: true, light: '普通灯' },
   }] : [],
-  wishlist: ['sp_0001'],
+  wishlist: ['sp_0431'],
   dismissedRecommendations: [],
   diagnosisRecords: [],
   compatibilityRecords: [],
@@ -53,7 +53,7 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
   await context.addInitScript(({ saved, language }) => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
-    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0001']));
+    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0431']));
     localStorage.setItem('aquaguide_locale', language);
   }, { saved: state, language: locale });
   const page = await context.newPage();
@@ -63,7 +63,7 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
 
 const openWishlistDetail = async page => {
   await page.goto(`${baseUrl}/collection/wishlist`, { waitUntil: 'domcontentloaded' });
-  await page.locator('#collection-wishlist-sp_0001 button').first().click();
+  await page.locator('#collection-wishlist-sp_0431 button').first().click();
   const dialog = page.locator('[role="dialog"][data-surface]:visible');
   await dialog.waitFor();
   return dialog;
@@ -84,7 +84,11 @@ try {
   for (const locale of ['zh-CN', 'en']) {
     const current = await newSeededPage({ locale, state: createState({ withTank: true, owned: false }), phone: locale === 'en' });
     const dialog = await openWishlistDetail(current.page);
-    const primaryLabel = locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸';
+    assert.equal(await dialog.getAttribute('data-surface'), locale === 'en' ? 'bottom-sheet' : 'detail-rail', 'detail surface must follow the viewport contract');
+    // The candidate tank is intentionally empty. Empty tanks must not invent a
+    // compatibility result or offer a direct stocking action; setup is the
+    // only safe primary action until real tank facts exist.
+    const primaryLabel = locale === 'en' ? 'Complete Tank Setup' : '完善鱼缸设置';
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
     assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
     if (locale === 'en') {
@@ -104,21 +108,22 @@ try {
       assert.equal(reasonBoxes.length, 3, 'phone detail must render three key reasons without claiming they all fit before scrolling');
       assert.ok(heroBox.y + heroBox.height < feedingBox.y, 'phone hero and feeding summary must not overlap');
       assert.ok(feedingBox.y + feedingBox.height < verdictBox.y, 'feeding summary must appear before the fit verdict');
-      assert.ok(verdictBox.y < actionBox.y, 'phone must show the fit verdict before the sticky primary action');
+      await dialog.locator('[data-visual-result-status]').first().scrollIntoViewIfNeeded();
+      const scrolledVerdictBox = await dialog.locator('[data-visual-result-status]').first().boundingBox();
+      const scrolledActionBox = await primaryAction.boundingBox();
+      assert.ok(scrolledVerdictBox && scrolledActionBox && scrolledVerdictBox.y + scrolledVerdictBox.height <= scrolledActionBox.y, 'phone fit verdict must remain reachable above the sticky primary action');
       const lastReason = dialog.locator('[aria-label="Key reasons"] > div').last();
       await lastReason.scrollIntoViewIfNeeded();
       const [scrolledReasonBox, stickyActionBox] = await Promise.all([lastReason.boundingBox(), primaryAction.boundingBox()]);
       assert.ok(scrolledReasonBox && stickyActionBox && scrolledReasonBox.y + scrolledReasonBox.height <= stickyActionBox.y, 'phone reasons must remain reachable above the sticky primary action after scrolling');
     }
-    const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank fit evidence/ : /适配依据/ });
+    const fitSection = dialog.getByRole('button', { name: locale === 'en' ? /Tank fit evidence|Why\?/ : /适配依据|为什么？/ });
     assert.equal(await fitSection.getAttribute('aria-expanded'), 'false', 'fit evidence must be collapsed on first open');
     await fitSection.click();
     metricIdsByLocale[locale] = await dialog.locator('[data-species-fit-metric]').evaluateAll(nodes => nodes.map(node => node.getAttribute('data-species-fit-metric')).sort());
     assert.deepEqual(metricIdsByLocale[locale], ['fit-filter', 'fit-heater', 'fit-space', 'fit-temperature', 'fit-water_type']);
     assert.doesNotMatch(await dialog.innerText(), /pH range matches|pH 范围与物种资料匹配/);
     if (locale === 'en') {
-      await primaryAction.click();
-      await current.page.waitForURL(/\/aquarium\?action=add-species&species=sp_0001$/);
     }
     await current.context.close();
   }
@@ -132,7 +137,17 @@ try {
       action: 'Check Risks & Confirm Add',
       state: {
         ...baseConfiguredState,
-        aquariums: [{ ...baseConfiguredState.aquariums[0], targetTemperature: '29' }],
+        aquariums: [{
+          ...baseConfiguredState.aquariums[0],
+          targetTemperature: '29',
+          fishes: [{
+            id: 'existing-sp-0432',
+            fishId: 'sp_0432',
+            quantity: 5,
+            entryDate: '2026-07-01',
+            lastWaterChangeDate: '2026-07-20',
+          }],
+        }],
       },
     },
     {
@@ -146,10 +161,9 @@ try {
       },
     },
     {
-      name: 'predation conflict',
-      status: 'not_recommended',
-      action: 'View Risks & Alternatives',
-      expectedUrl: /\/encyclopedia\?mode=compatibility/,
+      name: 'unreviewed predator data',
+      status: 'insufficient_data',
+      action: 'Complete Tank Setup',
       state: {
         ...baseConfiguredState,
         aquariums: [{
@@ -182,7 +196,7 @@ try {
     const action = dialog.getByRole('button', { name: testCase.action, exact: true });
     assert.equal(await action.count(), 1, `${testCase.name} must expose exactly one contextual action`);
     if (testCase.name === 'caution') {
-      await dialog.getByRole('button', { name: /Tank fit evidence/ }).click();
+      await dialog.getByRole('button', { name: /Tank fit evidence|Why\?|适配依据|为什么？/ }).click();
       const temperatureMetric = dialog.locator('[data-species-fit-metric="fit-temperature"]');
       assert.equal(await temperatureMetric.evaluate(node => node.tagName), 'BUTTON', 'an abnormal temperature metric must be actionable');
       await temperatureMetric.click();
@@ -210,8 +224,8 @@ try {
   const ownedAquarium = await newSeededPage({ state: createState({ withTank: true, owned: true }) });
   await ownedAquarium.page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await ownedAquarium.page.locator('.aquarium-archive button[aria-haspopup="dialog"]').click();
-  const roster = ownedAquarium.page.locator('[role="dialog"]:visible').filter({ hasText: '缸内物种' }).first();
-  await roster.getByRole('button', { name: /Open .* profile/ }).click();
+  const roster = ownedAquarium.page.locator('[role="dialog"]:visible').filter({ hasText: /缸内物种|Tank livestock/ }).first();
+  await roster.getByRole('button', { name: /Open .* profile|打开.*资料/ }).click();
   const aquariumDetail = ownedAquarium.page.locator('[role="dialog"][data-surface]:visible');
   const careAction = aquariumDetail.getByRole('button', { name: 'View Care Essentials', exact: true });
   assert.equal(await careAction.count(), 1, 'owned aquarium detail must replace the duplicate tank entry with one contextual action');

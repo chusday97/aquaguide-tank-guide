@@ -39,6 +39,7 @@ import {
 import { SearchAutocomplete } from './components/search/SearchAutocomplete';
 import type { SearchSuggestion } from './services/search/search-suggestions.service';
 import { taskRoutes } from './services/navigation/task-routes';
+import { activateInteractivePreview, isInteractivePreviewActive, isInteractivePreviewSession } from './services/preview/preview-session.service';
 
 const loadAquarium = () => import('./pages/Aquarium');
 const loadEncyclopedia = () => import('./pages/Encyclopedia');
@@ -46,6 +47,7 @@ const loadCare = () => import('./pages/CareEncyclopedia');
 const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
+const loadInteractivePreview = () => import('./pages/InteractivePreview');
 const loadLogin = () => import('./pages/Login');
 const loadAdminContent = () => import('./pages/AdminContent');
 const loadIdentify = () => import('./pages/Identify');
@@ -60,6 +62,7 @@ const CareEncyclopedia = lazyWithRecovery(loadCare, 'care');
 const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
+const InteractivePreview = lazyWithRecovery(loadInteractivePreview, 'interactive-preview');
 const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
@@ -634,6 +637,7 @@ function AppShell() {
   const { showToast } = useToast();
   const { isPhoneLayout } = useLayoutMode();
   const [preferencesReady, setPreferencesReady] = useState(false);
+  const isInteractivePreview = location.pathname === '/_preview/interactive';
   const isLogin = location.pathname === '/login';
   const isAdminContent = location.pathname === '/admin/content';
   const isWelcome = location.pathname === '/welcome';
@@ -661,6 +665,14 @@ function AppShell() {
     const handleSyncFailure = () => showToast(t('onboarding.syncFailed'), 'error');
     window.addEventListener(ONBOARDING_SYNC_FAILED_EVENT, handleSyncFailure);
     let active = true;
+    if (isInteractivePreview || isInteractivePreviewActive()) {
+      if (!isInteractivePreviewSession()) activateInteractivePreview('aquarium');
+      setPreferencesReady(true);
+      return () => {
+        active = false;
+        window.removeEventListener(ONBOARDING_SYNC_FAILED_EVENT, handleSyncFailure);
+      };
+    }
     void hydrateOnboardingFromProfile().finally(() => {
       if (active) setPreferencesReady(true);
     });
@@ -674,7 +686,7 @@ function AppShell() {
       unsubscribeAuth();
       window.removeEventListener(ONBOARDING_SYNC_FAILED_EVENT, handleSyncFailure);
     };
-  }, [showToast, t]);
+  }, [isInteractivePreview, showToast, t]);
 
   const effectiveSidebarCollapsed = isNarrowDesktop || isDesktopSidebarCollapsed;
   const desktopShellStyle = useMemo(() => ({
@@ -734,7 +746,7 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
+  if (!preferencesReady && !isInteractivePreview && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
 
   if (isSharedReport) {
     return (
@@ -747,6 +759,16 @@ function AppShell() {
     );
   }
 
+  if (isInteractivePreview) {
+    return (
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/_preview/interactive" element={<InteractivePreview />} />
+          <Route path="*" element={<Navigate to="/_preview/interactive" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
 
   if (isLogin) {
     return (
@@ -812,7 +834,7 @@ function NotFoundPage() {
   const { i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   return (
-    <section className="mx-auto flex min-h-[70dvh] w-full max-w-[720px] items-center justify-center px-4 py-10 text-center">
+    <section className="workspace--standalone mx-auto flex min-h-[70dvh] w-full max-w-[720px] items-center justify-center px-4 py-10 text-center">
       <div className="w-full rounded-[28px] border border-white/80 bg-white p-7 shadow-sm">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-emerald-50 text-emerald-700">
           <SearchIcon className="h-6 w-6" />
@@ -835,6 +857,7 @@ function NotFoundPage() {
 }
 
 function WorkspaceRoutes() {
+  const isPreviewSession = isInteractivePreviewActive();
   const page = (content: ReactNode, name: string) => <RouteErrorBoundary page={name}>{content}</RouteErrorBoundary>;
   return (
     <>
@@ -857,12 +880,22 @@ function WorkspaceRoutes() {
           <Route path="/collection/achievements" element={page(<Collection module="achievements" />, 'collection-achievements')} />
           <Route path="/wishlist" element={<Navigate to="/collection/wishlist" replace />} />
           <Route path="/care-favorites" element={<Navigate to="/collection/care" replace />} />
-          <Route path="/aquarium" element={shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
+          <Route path="/aquarium" element={!isPreviewSession && shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
           <Route path="/admin/content" element={page(<AdminContent />, 'admin-content')} />
           <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>
       </Suspense>
     </>
+  );
+}
+
+function PreviewMetadataBadge() {
+  if (!isInteractivePreviewSession()) return null;
+  return (
+    <div className="pointer-events-none fixed right-3 top-3 z-[70] max-w-[min(92vw,560px)] rounded-full border border-white/70 bg-white/80 px-3 py-1.5 text-right text-[9px] font-black tracking-[0.06em] text-ink/50 shadow-sm backdrop-blur-md" data-preview-metadata>
+      <span>{__AQUAGUIDE_PREVIEW_METADATA__.branch} · {__AQUAGUIDE_PREVIEW_METADATA__.sha}</span>
+      <span className="ml-2 tracking-normal">seed: {__AQUAGUIDE_PREVIEW_METADATA__.seed} · built: {__AQUAGUIDE_PREVIEW_METADATA__.builtAt}</span>
+    </div>
   );
 }
 
@@ -883,6 +916,7 @@ function DesktopAppShell({
       style={style}
       data-layout-mode="desktop"
     >
+      <PreviewMetadataBadge />
       <DesktopSidebar collapsed={collapsed} autoCollapsed={autoCollapsed} onToggleCollapsed={onToggleCollapsed} />
       <div className="desktop-too-narrow" role="status" aria-live="polite">
         <div className="rounded-[28px] bg-white p-6 text-center shadow-[0_24px_70px_rgba(15,23,42,0.16)]">
@@ -914,6 +948,7 @@ function MobileAppShell() {
       className="aquaguide-app phone-shell-active flex min-h-[100dvh] flex-col overflow-x-hidden bg-[#dfe8e5] text-ink"
       data-layout-mode="phone"
     >
+      <PreviewMetadataBadge />
       <div className="app-main-shell mx-auto flex min-h-0 w-full max-w-[430px] flex-1 flex-col overflow-hidden bg-bg shadow-2xl">
         <header className="flex shrink-0 items-center justify-end gap-1 border-b border-ink/5 bg-white/92 px-3 pb-2 pt-[calc(8px+env(safe-area-inset-top))] backdrop-blur-md">
           <button type="button" onClick={() => navigateToRoute('/search')} aria-label={t('searchPage.title')} className="flex h-11 w-11 items-center justify-center rounded-2xl text-ink/55 hover:bg-emerald-50 hover:text-emerald-700"><SearchIcon className="h-5 w-5" /></button>

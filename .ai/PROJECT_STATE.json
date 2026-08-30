@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 2,
+  "updatedAt": "2026-08-30",
+  "canonicalBranch": "main",
+  "canonicalRole": "single code source after source convergence; production is pinned separately until release gates pass",
+  "sourceConvergenceBranch": "codex/main-core-foundation-v1",
+  "productionBranch": "release/production",
+  "productionDeploymentFrozen": true,
+  "productionProviders": {
+    "vercel": {
+      "status": "ACTIVE_FROZEN",
+      "productionBranch": "release/production",
+      "verifiedSha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
+      "checkedAt": "2026-08-30",
+      "evidence": "Vercel project settings/API read-back"
+    },
+    "cloudflare": {
+      "status": "INACTIVE_LEGACY",
+      "productionBranch": null,
+      "verifiedSha": null,
+      "checkedAt": "2026-08-30",
+      "evidence": "User decision: Cloudflare is not an AquaGuide production channel; retain historical resources without modifying them"
+    }
+  },
+  "productionAnchor": {
+    "sha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
+    "source": "Vercel production deployment metadata",
+    "verifiedAt": "2026-08-30",
+    "role": "rollback and production freeze anchor; no independent development"
+  },
+  "visualRecoveryBranch": "codex/main-visual-recovery-v1",
+  "visualGate": "strict_4317_recovery_in_progress",
+  "visualFreeze": {
+    "baselineCommit": "02457dd2ded7042cc67c55acfce3c9c4f238aa42",
+    "evidenceDir": "/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2",
+    "viewports": [390, 600, 1280],
+    "routes": ["/_preview/interactive"],
+    "policy": "Desktop layout adaptation may change only the approved workspace shell, page roots, responsive geometry and interactive preview. Backend, domain, service, repository, migration, assets, content and task behavior remain frozen. A new visual baseline is required after human acceptance."
+  },
+  "releaseBranch": "main",
+  "canonicalBase": {
+    "branch": "main",
+    "sha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
+    "role": "GitHub default release base"
+  },
+  "productReference": {
+    "branch": "codex/unified-rc-visual-v1",
+    "sha": "8b36a15bde81bfff912ab2050065b3d28341bf21",
+    "role": "user-approved visual and current product reference; migrate selectively"
+  },
+  "businessReference": {
+    "branch": "integration/aquaguide-rc1",
+    "sha": "895f2f3959dc42b653fbb4f33cc25044e5785da3",
+    "role": "verified business capability source; migrate selectively"
+  },
+  "releaseCandidate": {
+    "branch": "codex/main-core-foundation-v1",
+    "head": "runtime",
+    "role": "source-convergence candidate for PR #142; after merge, retain only as short-lived migration evidence"
+  },
+  "activePullRequest": {
+    "number": 142,
+    "base": "main",
+    "head": "codex/main-core-foundation-v1",
+    "state": "OPEN",
+    "isDraft": true
+  },
+  "historicalPullRequest": 141,
+  "supabaseDeployment": {
+    "status": "user_confirmed_deployed",
+    "parityStatus": "migration_required",
+    "confirmedAt": "2026-08-25",
+    "lastReadOnlyCheck": "2026-08-28",
+    "evidence": "docs/05-validation/SUPABASE_PARITY_REPORT.md"
+  },
+  "localPreview": "http://127.0.0.1:4319/_preview/interactive",
+  "visualBaselinePreview": "http://127.0.0.1:4317/_preview/interactive",
+  "officialLocalWorktree": "/Users/chuchu/Documents/New project/aquaguide_frontend",
+  "rules": [
+    "Do not merge or rebase historical PR #141 as a whole.",
+    "Do not execute Supabase migration without separate authorization.",
+    "Do not call the candidate release-ready until Preview SHA, Supabase parity and user acceptance pass.",
+    "Unknown catalog facts remain unknown; never infer water type from text."
+  ]
+}

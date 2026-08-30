@@ -1,0 +1,128 @@
+import { catalogSnapshotSchema, type CatalogSnapshot, type CatalogManifest } from '../../../packages/contracts/src';
+import { fishData } from '../../data/fishData';
+import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
+import type { Fish } from '../../types';
+import { speciesProfileFromFish } from './species-profile.adapter';
+
+export const LOCAL_CATALOG_VERSION = 'local-fish-data-v1';
+const LOCAL_SNAPSHOT_URL = `https://catalog.invalid/releases/${LOCAL_CATALOG_VERSION}/catalog.snapshot.json`;
+
+export type CatalogLoadResult = {
+  snapshot: CatalogSnapshot;
+  source: 'local' | 'remote';
+  fallbackReason?: 'manifest_unavailable' | 'manifest_invalid' | 'snapshot_invalid' | 'checksum_mismatch' | 'version_mismatch';
+};
+
+const collectEvidenceSources = (profiles: ReturnType<typeof getReviewedCompatibilityProfile>[], pairRules: ReturnType<typeof getReviewedPairRule>[]) => {
+  const byId = new Map<string, NonNullable<typeof profiles[number]>['citations'][number]>();
+  for (const item of [...profiles, ...pairRules]) {
+    for (const citation of item?.citations ?? []) byId.set(citation.id, citation);
+  }
+  return [...byId.values()].map(source => ({
+    id: source.id,
+    title: source.title,
+    publisher: source.publisher,
+    url: source.url,
+    sourceType: source.sourceType,
+    reviewStatus: source.reviewStatus,
+  }));
+};
+
+const stablePayload = (snapshot: CatalogSnapshot) => ({
+  ...snapshot,
+  manifest: { ...snapshot.manifest, checksumSha256: '' },
+});
+
+const sha256 = async (value: unknown) => {
+  const bytes = new TextEncoder().encode(JSON.stringify(value));
+  const digest = await globalThis.crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+};
+
+export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
+  const audit = getCompatibilityEvidenceAudit();
+  const profiles = audit.reviewedSpeciesIds.map(id => getReviewedCompatibilityProfile(id)).filter(Boolean);
+  const pairRules = audit.reviewedPairRules.map(rule => getReviewedPairRule(rule.speciesIds[0], rule.speciesIds[1])).filter(Boolean);
+  const evidenceSources = collectEvidenceSources(profiles, pairRules);
+  const snapshotWithoutChecksum: CatalogSnapshot = {
+    manifest: {
+      version: LOCAL_CATALOG_VERSION,
+      schemaVersion: 1,
+      checksumSha256: '0'.repeat(64),
+      speciesCount: fishData.length,
+      reviewedProfileCount: profiles.length,
+      reviewedPairRuleCount: pairRules.length,
+      publishedAt: '1970-01-01T00:00:00.000Z',
+      snapshotUrl: LOCAL_SNAPSHOT_URL,
+    },
+    species: fishData.map(species => {
+      const profile = speciesProfileFromFish(species);
+      const reviewed = getReviewedCompatibilityProfile(species.id);
+      return reviewed?.requiredFacts
+        ? { ...profile, compatibilityRequiredFacts: reviewed.requiredFacts }
+        : profile;
+    }),
+    evidenceSources,
+    compatibilityProfiles: profiles.map(profile => ({
+      speciesId: profile!.speciesId,
+      behaviorTraits: profile!.behaviorTraits,
+      minimumGroupSize: profile!.minimumGroupSize ?? null,
+      predationTargets: profile!.predationTargets,
+      confidence: profile!.confidence,
+      reviewStatus: profile!.reviewStatus,
+      citationIds: profile!.citations.map(citation => citation.id),
+      ...(profile!.requiredFacts ? { requiredFacts: profile!.requiredFacts } : {}),
+      ...(profile!.stockingGuidance ? { stockingGuidance: profile!.stockingGuidance } : {}),
+    })),
+    pairRules: pairRules.map(rule => ({
+      speciesIds: [...rule!.speciesIds].sort() as [string, string],
+      verdict: rule!.verdict,
+      riskType: rule!.riskType,
+      reason: rule!.reason,
+      mitigation: rule!.mitigation,
+      confidence: rule!.confidence,
+      reviewStatus: rule!.reviewStatus,
+      citationIds: rule!.citations.map(citation => citation.id),
+    })),
+  };
+  // Hash the schema-normalized representation so optional field ordering in
+  // adapters cannot produce a checksum that fails when the snapshot is parsed
+  // again by a remote consumer.
+  const normalized = catalogSnapshotSchema.parse(snapshotWithoutChecksum);
+  const checksumSha256 = await sha256(stablePayload(normalized));
+  return catalogSnapshotSchema.parse({
+    ...normalized,
+    manifest: { ...normalized.manifest, checksumSha256 },
+  });
+};
+
+const verifySnapshot = async (snapshot: CatalogSnapshot, manifest?: CatalogManifest) => {
+  const parsed = catalogSnapshotSchema.parse(snapshot);
+  if (manifest && parsed.manifest.version !== manifest.version) throw new Error('version_mismatch');
+  if (parsed.manifest.speciesCount !== parsed.species.length) throw new Error('snapshot_invalid');
+  if (parsed.manifest.reviewedProfileCount !== parsed.compatibilityProfiles.filter(item => item.reviewStatus === 'reviewed').length) throw new Error('snapshot_invalid');
+  if (parsed.manifest.reviewedPairRuleCount !== parsed.pairRules.filter(item => item.reviewStatus === 'reviewed').length) throw new Error('snapshot_invalid');
+  const checksum = await sha256(stablePayload(parsed));
+  if (checksum.toLowerCase() !== parsed.manifest.checksumSha256.toLowerCase()) throw new Error('checksum_mismatch');
+  return parsed;
+};
+
+export const loadCatalogSnapshot = async (options: { manifestUrl?: string; fetchImpl?: typeof fetch } = {}): Promise<CatalogLoadResult> => {
+  const local = await buildLocalCatalogSnapshot();
+  const fetchImpl = options.fetchImpl ?? globalThis.fetch;
+  if (!fetchImpl) return { snapshot: local, source: 'local', fallbackReason: 'manifest_unavailable' };
+  try {
+    const manifestResponse = await fetchImpl(options.manifestUrl ?? '/api/v1/catalog/releases/current');
+    if (!manifestResponse.ok) return { snapshot: local, source: 'local', fallbackReason: 'manifest_unavailable' };
+    const manifest = catalogSnapshotSchema.shape.manifest.parse(await manifestResponse.json());
+    const snapshotResponse = await fetchImpl(manifest.snapshotUrl);
+    if (!snapshotResponse.ok) return { snapshot: local, source: 'local', fallbackReason: 'snapshot_invalid' };
+    const remote = await verifySnapshot(await snapshotResponse.json(), manifest);
+    return { snapshot: remote, source: 'remote' };
+  } catch (error) {
+    const reason = error instanceof Error && ['version_mismatch', 'checksum_mismatch', 'snapshot_invalid'].includes(error.message)
+      ? error.message as CatalogLoadResult['fallbackReason']
+      : 'manifest_invalid';
+    return { snapshot: local, source: 'local', fallbackReason: reason };
+  }
+};

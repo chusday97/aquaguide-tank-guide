@@ -7,6 +7,8 @@ export type SupportedLocale = 'zh-CN' | 'en';
 export type UserRole = 'user' | 'admin';
 export type AssetVariant = 'original' | 'thumbnail' | 'detail' | 'texture' | 'article_main' | 'article_step';
 export type WaterType = 'Freshwater' | 'Saltwater';
+export type CatalogWaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+export type CatalogCompleteness = 'verified' | 'partial' | 'unknown';
 export type ComponentType = 'substrate' | 'plant' | 'hardscape';
 export type CareEventType =
   | 'aquarium_created'
@@ -87,6 +89,29 @@ export interface SpeciesRecord extends SyncFields {
   housingReason?: string;
   isCustom: boolean;
   searchTerms: string[];
+  status: ContentStatus;
+  publishedAt?: IsoDateTime;
+  waterType: CatalogWaterType;
+  completeness: CatalogCompleteness;
+}
+
+export interface SpeciesReferenceLinkRecord {
+  speciesId: Uuid;
+  sourceId: Uuid;
+  fieldGroup: 'identity' | 'habitat' | 'care';
+  reviewStatus: EvidenceReviewStatus;
+}
+
+export interface CatalogReleaseRecord extends SyncFields {
+  id: Uuid;
+  versionKey: string;
+  schemaVersion: number;
+  checksumSha256: string;
+  storageBucket: string;
+  storagePath: string;
+  speciesCount: number;
+  reviewedProfileCount: number;
+  reviewedPairRuleCount: number;
   status: ContentStatus;
   publishedAt?: IsoDateTime;
 }
