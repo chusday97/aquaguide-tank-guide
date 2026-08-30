@@ -3,6 +3,7 @@ import { fishData } from '../../data/fishData';
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { Fish } from '../../types';
 import { speciesProfileFromFish } from './species-profile.adapter';
+import { applyApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
 
 export const LOCAL_CATALOG_VERSION = 'local-fish-data-v1';
 const LOCAL_SNAPSHOT_URL = `https://catalog.invalid/releases/${LOCAL_CATALOG_VERSION}/catalog.snapshot.json`;
@@ -56,7 +57,7 @@ export const buildLocalCatalogSnapshot = async (): Promise<CatalogSnapshot> => {
       snapshotUrl: LOCAL_SNAPSHOT_URL,
     },
     species: fishData.map(species => {
-      const profile = speciesProfileFromFish(species);
+      const profile = applyApprovedCatalogFieldReviews(speciesProfileFromFish(species));
       const reviewed = getReviewedCompatibilityProfile(species.id);
       return reviewed?.requiredFacts
         ? { ...profile, compatibilityRequiredFacts: reviewed.requiredFacts }

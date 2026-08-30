@@ -23,6 +23,7 @@
 - `src/services/catalog/catalog-snapshot.service.ts`：本地/云端 Catalog 快照校验、SHA-256 parity 和安全回退。
 - `src/services/catalog/species-profile.adapter.ts`：将旧 Fish 转换为 canonical SpeciesProfile；缺失水体保持 unknown，不做文本推断。
 - `src/data/compatibility-launch-cohort.ts`：确定性首批 30 种研究队列；仅用于审核排期，不授予混养决策资格。
+- `src/data/catalogFieldReviews.ts`：物种字段级审核记录、证据门禁和仅批准值的 Catalog 适配；草稿不会进入运行时。
 - `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
@@ -37,6 +38,7 @@
 - `scripts/check-compatibility-authority.mjs`：静态守卫旧混养引擎只能作为兼容 facade，最终状态必须来自 Domain Rules。
 - `scripts/audit-species-data-quality.ts`：486 条物种记录的身份、来源、模板污染、显式水体和重复项审计。
 - `scripts/test-compatibility-launch-cohort.ts`：研究队列数量、去重、确定性和 evidence-gated readiness 回归。
+- `scripts/catalog-research.ts` / `scripts/catalog-review.ts` / `scripts/test-catalog-review-contract.ts`：三批研究草稿、字段级审核校验和审核契约回归。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。

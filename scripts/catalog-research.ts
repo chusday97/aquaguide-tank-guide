@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launch-cohort';
+import { REVIEWABLE_CATALOG_FIELDS } from '../src/data/catalogFieldReviews';
 
 const batchSizeArg = Number(process.argv[process.argv.indexOf('--batch') + 1]);
 const batchSize = Number.isInteger(batchSizeArg) && batchSizeArg > 0 ? batchSizeArg : 10;
@@ -14,18 +15,16 @@ const draft = cohort.slice(offset, offset + batchSize).map(species => ({
   commonName: species.name,
   scientificName: species.scientificName,
   status: 'draft' as const,
-  fields: [
-    'identity',
-    'water',
-    'temperature',
-    'ph',
-    'adult_size',
-    'tank_size',
-    'social_behavior',
-    'territoriality',
-    'predation',
-    'breeding_behavior',
-  ],
+  fields: [...REVIEWABLE_CATALOG_FIELDS],
+  fieldReviews: REVIEWABLE_CATALOG_FIELDS.map(field => ({
+    field,
+    proposedValue: null,
+    status: 'draft' as const,
+    confidence: 'unknown' as const,
+    citationIds: [],
+    conflictNotes: [],
+    reviewedAt: null,
+  })),
   sources: [],
   reviewNotes: ['Research draft only. Add field-level source URLs and reviewer decision before runtime use.'],
 }));
