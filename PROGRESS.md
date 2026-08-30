@@ -7,6 +7,7 @@
 - [x] 新增 `npm run readiness:serve`：提供本地只读进度看板（默认 `http://127.0.0.1:4320`），独立于 Aquarium/4319 视觉页面。
 - [x] 新增 `npm run test:readiness`：校验报告 schema、完整 SHA、状态集合、固定业务案例和未完成 UI/生产门禁不会被隐藏。
 - [x] 看板区分 Main 代码收敛与生产发布两个结论；网络不可用、字体/tsx 沙箱限制和旧 UI freeze 基线差异会显示为 `UNVERIFIED` 或 `USER_ACCEPTANCE_REQUIRED`，不伪装成通过。
+- [x] 进度中心已提交为 `e3316997`；独立 Critic 已复验通过，最新授权运行报告为 14 项 PASS、4 项 FAIL（远端/Preview 尚未同步）、1 项 BLOCKED（生产未冻结）、1 项 UNVERIFIED（生产 Supabase 未写入验证）和 1 项 USER_ACCEPTANCE_REQUIRED（视觉）。
 - [ ] 当前仍需：Vercel/Cloudflare 生产冻结、UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。
 
 验证证据：readiness report 始终写入 `.artifacts/readiness/<sha-prefix>/`，报告数量和状态以每次运行时输出为准。工作树有未提交变更时，项目事实为 `BLOCKED`，本地门禁为 `UNVERIFIED`；只有提交后重新采集，才允许生成绑定当前 SHA 的 PASS 证据。
@@ -17,7 +18,7 @@
 - [x] 预览自动使用隔离演示鱼缸、完成 onboarding，并强制本地 Repository；浏览器回归确认四个模块无 `/api` 请求、无页面错误。
 - [x] 正式入口已验证：Aquarium、Encyclopedia Scene、Care Scene、Collection 均可从预览进入，元数据显示候选完整 SHA、seed 和构建时间。
 - [x] `test:formal-scenes`、`test:core-ui`、`test:responsive-routes`、`check:project-truth` 和 `check:compatibility-authority` 通过。
-- [ ] 当前预览改动待本地审查后按一次性推送纪律同步 GitHub；用户视觉验收、新 UI Freeze、生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
+- [ ] 当前预览改动待一次性推送纪律同步 GitHub；用户视觉验收、新 UI Freeze、生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
 
 ## 2026-08-30 浏览器与本地数据库门禁复验（当前）
 
