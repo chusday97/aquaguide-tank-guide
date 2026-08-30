@@ -8,6 +8,7 @@ Keep the current production deployment unchanged while `main` becomes the latest
 
 - Vercel production Git SHA: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 - Local deployment pointer: `release/production`
+- Remote deployment pointer: `release/production` (created at the anchor SHA; provider binding still pending)
 - Release readiness: `NOT_READY`
 
 ## Required external changes

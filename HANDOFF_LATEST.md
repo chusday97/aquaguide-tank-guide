@@ -34,7 +34,8 @@
 
 - 代码事实目标已切换为 `main`；当前候选 `codex/main-core-foundation-v1` 的同步状态与精确 SHA 由 `npm run project:status` 运行时读取。
 - 生产部署锚点已只读确认：Vercel 生产 SHA 为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`；本地 `release/production` 已指向同一 SHA，仅作为部署/回退指针。
-- 生产冻结尚未完成：Vercel Production Branch 与 Cloudflare 实际分支设置仍需外部修改/读回确认。完成前禁止合并 `main`。
+- 远端 `release/production` 已建立并指向 `ed0cf38025652db901ee81aa697ca55b1c1584b6`，未强推；生产冻结尚未完成：Vercel Production Branch 与 Cloudflare 实际分支设置仍需外部修改/读回确认。完成前禁止合并 `main`。
+- Vercel CLI 未提供生产分支设置接口；Cloudflare Wrangler 因缺少 `CLOUDFLARE_API_TOKEN` 无法读取。必须通过已登录平台控制台完成设置和读回，不能把“远端指针已建立”当成平台冻结。
 - 合并 `main` 后仍保持 `NOT_READY`：视觉新基线、30 种资料、Supabase 第27个 migration、Catalog 发布和最终 Preview 只作为生产门禁。
 - 本轮已更新状态模型、浏览器验证和部署说明；生产设置、Supabase、Catalog 和 `main` 均未修改。候选推送与远端检查状态以运行时门禁为准。
 - `npm run project:status` 现在会动态输出 `productionPointerSha`、`productionPointerSynchronized` 和 `productionDeploymentFrozen`；当前回退锚点已对齐，但生产平台分支设置仍是 `productionDeploymentFrozen=false`，不能据此宣称已冻结。
