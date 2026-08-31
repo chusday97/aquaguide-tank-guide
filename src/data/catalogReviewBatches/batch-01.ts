@@ -20,6 +20,15 @@ const species = [
   ['sp_0438', 'Xiphophorus hellerii', 'catalog-fishbase-xiphophorus-hellerii'],
 ] as const;
 
+/** GBIF taxonomy records were opened for identity only; they do not support aquarium husbandry fields. */
+const verifiedIdentitySources: Record<string, string> = {
+  'sp_0431': 'catalog-gbif-paracheirodon-innesi',
+  'sp_0432': 'catalog-gbif-paracheirodon-axelrodi',
+  'sp_0011': 'catalog-gbif-xiphophorus-maculatus',
+  'sp_0437': 'catalog-gbif-poecilia-sphenops',
+  'sp_0438': 'catalog-gbif-xiphophorus-hellerii',
+};
+
 const reviewedAt = '2026-08-31T00:00:00+08:00';
 
 export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
@@ -103,6 +112,46 @@ export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  {
+    id: 'catalog-gbif-paracheirodon-innesi',
+    title: 'Paracheirodon innesi GBIF Backbone Taxonomy record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/taxon/4CPDY',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
+  {
+    id: 'catalog-gbif-paracheirodon-axelrodi',
+    title: 'Paracheirodon axelrodi GBIF species record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/species/307573227',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
+  {
+    id: 'catalog-gbif-xiphophorus-maculatus',
+    title: 'Xiphophorus maculatus GBIF species record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/species/2350164',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
+  {
+    id: 'catalog-gbif-poecilia-sphenops',
+    title: 'Poecilia sphenops GBIF species record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/species/5203748',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
+  {
+    id: 'catalog-gbif-xiphophorus-hellerii',
+    title: 'Xiphophorus hellerii GBIF species record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/species/8246728',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
 ];
 
 const verifiedSourceIds = new Set([
@@ -111,6 +160,8 @@ const verifiedSourceIds = new Set([
   'catalog-fishbase-danio-rerio',
   'catalog-fishbase-puntigrus-tetrazona',
 ]);
+
+for (const sourceId of Object.values(verifiedIdentitySources)) verifiedSourceIds.add(sourceId);
 
 const unknownReason = (field: string, sourceVerified: boolean) => sourceVerified
   ? `FishBase page was opened, but it did not provide accepted field-specific aquarium evidence for ${field}; the runtime value remains unknown.`
@@ -147,8 +198,9 @@ const fields: CatalogFieldReview['field'][] = [
 export const catalogReviewBatch01FieldReviews: CatalogFieldReview[] = species.flatMap(
   ([speciesId, scientificName, citationId]) => fields.map(field => {
     const sourceVerified = verifiedSourceIds.has(citationId);
-    if (field === 'identity' && sourceVerified) {
-      return makeReview(speciesId, scientificName, citationId, field, {
+    const identityCitationId = verifiedIdentitySources[speciesId] ?? citationId;
+    if (field === 'identity' && verifiedSourceIds.has(identityCitationId)) {
+      return makeReview(speciesId, scientificName, identityCitationId, field, {
         scientificName,
         baseSpeciesKey: scientificName,
         variantKey: null,
@@ -163,7 +215,10 @@ export const catalogReviewBatch01FieldReviews: CatalogFieldReview[] = species.fl
 
 export const catalogReviewBatch01 = species.map(([speciesId]) => ({
   speciesId,
-  sources: catalogReviewBatch01Sources.filter(source => source.id === species.find(item => item[0] === speciesId)?.[2]),
+  sources: catalogReviewBatch01Sources.filter(source => {
+    const item = species.find(entry => entry[0] === speciesId);
+    return source.id === item?.[2] || source.id === verifiedIdentitySources[speciesId];
+  }),
   fieldReviews: catalogReviewBatch01FieldReviews.filter(review => review.speciesId === speciesId),
 }));
 
