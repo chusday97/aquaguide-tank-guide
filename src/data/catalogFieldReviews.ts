@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import type { SpeciesFactKey, SpeciesProfile, SpeciesFactEvidence } from '../../packages/contracts/src';
 import { catalogWaterTypeSchema } from '../../packages/contracts/src';
+import { catalogReviewBatch01FieldReviews } from './catalogReviewBatches/batch-01';
+import { catalogReviewBatch02 } from './catalogReviewBatches/batch-02';
+import { catalogReviewBatch03FieldReviews } from './catalogReviewBatches/batch-03';
 
 /** Source-controlled field review record. Drafts never enter runtime Catalog. */
 export const catalogFieldReviewSchema = z.object({
@@ -64,8 +67,12 @@ export const REVIEWABLE_CATALOG_FIELDS: readonly SpeciesFactKey[] = [
   'social_behavior', 'territoriality', 'predation', 'breeding_behavior',
 ];
 
-/** Deliberately empty until a reviewer supplies values and citations. */
-export const catalogFieldReviews: CatalogFieldReview[] = [];
+/** Aggregated source-controlled reviews; only reviewed+supported values overlay runtime profiles. */
+export const catalogFieldReviews: CatalogFieldReview[] = [
+  ...catalogReviewBatch01FieldReviews,
+  ...catalogReviewBatch02,
+  ...catalogReviewBatch03FieldReviews,
+];
 
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);
 

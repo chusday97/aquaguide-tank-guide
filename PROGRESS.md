@@ -5,7 +5,9 @@
 ### 2026-08-31 并行审核底座
 
 - [x] `bb666b31` 增加 `supported/unknown` 字段审核分辨率；`reviewed + unknown` 可完成审核但不会覆盖运行时 Profile。
-- [ ] 三批各10种的字段审核记录尚未生成；当前仍为 `0/30`。
+- [x] 三批并行审核已完成：30种/300字段，批次文件分别由子任务提交并已聚合；84条 `supported`、216条 `reviewed + unknown`。
+- [x] `test:catalog-review-batches` 校验批次成员、字段完整性、引用和审核分辨率；`catalog:build`/`catalog:validate` 通过（486种）。
+- [ ] 216个 unknown 字段仍需在网络可用时复核来源页面内容；当前不能把这批资料描述为全字段已确认。
 
 ## 2026-08-31 专业来源候选入口（当前）
 
