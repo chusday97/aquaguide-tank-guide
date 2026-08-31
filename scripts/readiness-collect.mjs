@@ -36,7 +36,7 @@ const statusFromResult = (result, kind = 'local') => {
   if (result.ok) return 'PASS';
   const text = result.output.toLowerCase();
   if (kind === 'user' && (text.includes('ui freeze failed') || text.includes('visual-owned files changed') || text.includes('baseline'))) return 'USER_ACCEPTANCE_REQUIRED';
-  if (text.includes('could not resolve host') || text.includes('network') || text.includes('internet') || text.includes('api.github.com') || text.includes('timed out') || text.includes('rate limit') || text.includes('eperm') || text.includes('operation not permitted') || text.includes('enoent') || text.includes('command not found')) {
+  if (text.includes('could not resolve host') || text.includes('network') || text.includes('internet') || text.includes('api.github.com') || text.includes('timed out') || text.includes('rate limit') || text.includes('eperm') || text.includes('operation not permitted') || text.includes('enoent') || text.includes('command not found') || text.includes('not been pushed yet') || text.includes('尚未进入远端') || text.includes('尚未创建数据 pr')) {
     return 'UNVERIFIED';
   }
   return 'FAIL';
@@ -118,18 +118,24 @@ gates.push(gate({
   notes: '当前 4319 视觉差异和乱码仍需用户确认；该状态不会阻止底层进度，但会阻止生产发布。',
 }));
 
-let remote = run('git', ['ls-remote', 'origin', `refs/heads/${project.sourceConvergenceBranch ?? 'codex/main-core-foundation-v1'}`], { timeout: 8_000 });
+const trackedRemoteBranch = project.branchRole === 'short_task_branch'
+  ? project.localBranch
+  : (project.sourceConvergenceBranch ?? 'codex/main-core-foundation-v1');
+let remote = run('git', ['ls-remote', 'origin', `refs/heads/${trackedRemoteBranch}`], { timeout: 8_000 });
 if (remote.ok) {
   const remoteSha = remote.output.split(/\s+/)[0];
-  if (remoteSha !== project.sha) remote = { ...remote, ok: false, output: `GitHub returned ${remoteSha || 'no SHA'}, expected ${project.sha}.` };
+  if (!remoteSha) remote = { ...remote, ok: false, output: `GitHub branch ${trackedRemoteBranch} has not been pushed yet.` };
+  else if (remoteSha !== project.sha) remote = { ...remote, ok: false, output: `GitHub returned ${remoteSha}, expected ${project.sha}.` };
 }
 gates.push(gate({
   gateId: 'github-sha',
   title: 'GitHub 候选 SHA 实时同步',
-  command: `git ls-remote origin refs/heads/${project.sourceConvergenceBranch ?? 'codex/main-core-foundation-v1'}`,
-  expected: `GitHub 候选分支 SHA 等于 ${project.sha}。`,
+  command: `git ls-remote origin refs/heads/${trackedRemoteBranch}`,
+  expected: `GitHub 分支 ${trackedRemoteBranch} 的 SHA 等于 ${project.sha}。`,
   source: 'github',
-  result: remote,
+  result: project.branchRole === 'short_task_branch' && !project.remoteSha
+    ? { ...remote, ok: false, output: `${remote.output} 本地短分支尚未进入远端，属于待推送证据。` }
+    : remote,
   notes: remote.ok && !remote.output.startsWith(project.sha) ? '远端返回的 SHA 与本地不同。' : null,
 }));
 
@@ -146,6 +152,9 @@ if (pr.ok) {
     && run('git', ['merge-base', '--is-ancestor', prInfo.mergeCommit.oid, project.sha], { timeout: 8_000 }).ok;
   const valid = headMatches || mergedMatches;
   if (!valid) pr = { ...pr, ok: false, output: `PR metadata does not match current candidate: ${pr.output}` };
+}
+if (project.branchRole === 'short_task_branch') {
+  pr = { ...pr, ok: false, output: `短分支 ${project.localBranch} 尚未创建数据 PR；已合并的源收敛 PR 不作为短分支发布证据。` };
 }
 gates.push(gate({
   gateId: 'github-pr',
