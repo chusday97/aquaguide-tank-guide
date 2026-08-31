@@ -677,3 +677,6 @@ Keep Base and Variant footer controls semantically identical. Review-state color
 
 ## 2026-08-31 three-pane selection contract
 Use the shared CSS selection tokens for every editable selection surface. Do not introduce component-local greens for sidebar/editor/Preview. Product Truth Inspector is intentionally graphite/read-only, never editable green. When a Variant is active, parent Base context may be lightly emphasized, but only the Variant row is the strong selection.
+
+## 2026-08-31 workflow-filter semantics
+Keep the same issue/review/Preview-ready color meaning in the top workflow status and left Species filters. Filter display labels must be derived from `appLocale`; do not reintroduce mixed-language labels such as `Data Review · 待处理`.

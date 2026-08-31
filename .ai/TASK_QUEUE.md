@@ -67,3 +67,8 @@ Updated: 2026-08-30
 - [x] Give Product Truth Inspector a distinct read-only visual state.
 - [x] Preserve parent Base hierarchy context while a Variant is selected.
 - [ ] Continue only evidence-based visual polish; avoid further density reductions that do not increase usable information.
+
+## 2026-08-31 workflow filter semantics
+- [x] Carry issue/review/Preview-ready semantic colors into the left Species workflow filters.
+- [x] Keep workflow filter labels fully localized in both zh-CN and English UI modes.
+- [x] Preserve real filter behavior: 33 pending Data Review issues map to 32 affected Base groups; clearing returns 276 groups.

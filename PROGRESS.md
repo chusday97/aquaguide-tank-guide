@@ -434,3 +434,8 @@
 - Product Truth facts use a separate graphite read-only Inspector state; editable fields remain green.
 - Selecting a Variant now keeps its parent Base relationship visible through the Base name and hierarchy guide without creating a second strong active row.
 - Browser regression and Admin contract pass; no Product Truth, inheritance, review or publishing behavior changed.
+
+## 2026-08-31 — Workflow filter visual semantics
+- Species quick filters now mirror the top workflow state colors: issue amber, review blue, Preview-ready green.
+- zh-CN and English UI modes no longer produce mixed-language workflow filter labels.
+- Existing filter counts and group mapping remain unchanged and browser-verified.

@@ -223,3 +223,8 @@
 - Added read-only Inspector class/state for Product Truth and fixed fact-card CSS specificity so the graphite background remains visible.
 - Added `containsActiveVariant` parent context in Species navigation.
 - Chromium evidence: editable H1 green, temperature graphite read-only, parent Base guide green, issue marks amber, pageErrors=[]. Contract + schema-v7 B gate PASS.
+
+## 2026-08-31 — Left workflow-filter semantics
+- Added semantic issue/review/Preview tones to Species quick filters and localized filter labels/punctuation.
+- Chromium verified no English-label overflow and correct zh/en banner text.
+- Filter behavior unchanged: 33 pending issues → 32 Base groups; clear → 276; pageErrors=[]. Contract + B gate PASS.

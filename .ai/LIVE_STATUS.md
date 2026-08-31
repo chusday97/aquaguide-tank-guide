@@ -102,3 +102,9 @@ Branch: `feature/admin-content-v0`
 - Read-only Product Truth selection uses graphite outline/background/tag and explicitly reports `Product Truth · 只读`.
 - Active Variant parent Base name + hierarchy guide remain visible in the shared selection family; issue marks remain amber.
 - Chromium 1600×900: editable H1, read-only temperature, Base/Variant hierarchy PASS; pageErrors=[].
+
+## 2026-08-31 workflow-filter regression
+- Left filters now use amber / blue / green semantics matching the top workflow states.
+- Browser: Chinese `问题 / 待审核 / 预览`; English `Issues / Awaiting Review / Preview`; workflow banner is fully localized.
+- Data Review filter regression: 33 issues → 32 Base groups → clear → 276 Base groups; pageErrors=[].
+- Parent `c6c65b7` A gate run 33366834732 SUCCESS.

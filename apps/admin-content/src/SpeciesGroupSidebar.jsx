@@ -69,12 +69,12 @@ export default function SpeciesGroupSidebar({
       <div className="catalog-summary">
         {speciesGroupStats.catalog_count} {t('sidebar.records')} · {speciesGroupStats.batch_candidate_groups} {t('sidebar.batchGroups')}
       </div>
-      {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}：{workflowFilter.label || workflowFilter.key}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
+      {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}{appLocale === 'en' ? ': ' : '：'}{workflowFilter.label || workflowFilter.key}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
       <div className="review-filters species-quick-filters" aria-label="Species workflow filters">
         <button type="button" className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{t('common.all')} <b>{speciesGroupStats.catalog_count}</b></button>
-        <button type="button" className={workflowFilter?.key === 'data:pending' ? 'active' : ''} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: 'Data Review · 待处理' })}>{t('common.issues')} <b>{workflowOverview?.dataReview?.pending ?? 0}</b></button>
-        <button type="button" className={workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: '待审核' })}>{t('common.review')} <b>{workflowOverview?.locales?.[locale]?.ready_for_review ?? 0}</b></button>
-        <button type="button" className={workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: 'Preview-ready' })}>Ready <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
+        <button type="button" className={`tone-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('common.issues')} <b>{workflowOverview?.dataReview?.pending ?? 0}</b></button>
+        <button type="button" className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{workflowOverview?.locales?.[locale]?.ready_for_review ?? 0}</b></button>
+        <button type="button" className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: 'Preview-ready' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
       </div>
       <input
         className="search-input"

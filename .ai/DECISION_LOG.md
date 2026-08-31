@@ -177,3 +177,7 @@
 - Decision: use one shared selection token family across left navigation, center editor Inspector and right live Preview.
 - Decision: Product Truth read-only elements must never use editable green; they use a separate graphite read-only tone.
 - Decision: selecting a Variant may emphasize its parent Base relationship, but must not give the Base the same strong active-row treatment.
+
+## 2026-08-31 — Workflow color semantics must travel with the state
+- Decision: Data Review issue = amber, editorial review = blue, Preview-ready = green in both top workflow status and left navigation filters.
+- Decision: workflow-filter labels follow `appLocale`; do not hardcode mixed Chinese/English labels.

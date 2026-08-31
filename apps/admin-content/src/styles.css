@@ -649,6 +649,15 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 
 .species-quick-filters b { font-size: 8px; color: #68756d; margin-left: 2px; }
 .species-quick-filters button.active b { color: #285b3e; }
+.species-quick-filters .tone-issue { color: #8a5a16; }
+.species-quick-filters .tone-issue b { color: #9a5b12; }
+.species-quick-filters .tone-issue.active { background: #fff8e8; color: #7a4307; box-shadow: inset 0 0 0 1px #f1d49d; }
+.species-quick-filters .tone-review { color: #4d6f9d; }
+.species-quick-filters .tone-review b { color: #3567a6; }
+.species-quick-filters .tone-review.active { background: #f2f7ff; color: #244f87; box-shadow: inset 0 0 0 1px #c7d8f1; }
+.species-quick-filters .tone-ready { color: #44785c; }
+.species-quick-filters .tone-ready b { color: #2e7450; }
+.species-quick-filters .tone-ready.active { background: #eff9f2; color: #205b3b; box-shadow: inset 0 0 0 1px #bcdcc7; }
 
 /* Global Admin interface language */
 .app-language-switch {

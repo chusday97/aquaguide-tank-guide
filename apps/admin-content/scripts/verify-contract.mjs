@@ -76,6 +76,10 @@ assert.match(appSource, /from\('species_seo_groups'\)/, 'Admin must read Base Sp
 assert.doesNotMatch(appSource, /from\('species'\)/, 'Admin must not depend on the empty Supabase species table');
 assert.match(appSource, /SpeciesGroupSidebar/, 'Admin must render grouped Species navigation');
 assert.match(sidebarSource, /containsActiveVariant/, 'Variant selection must preserve visible parent Base hierarchy context');
+assert.match(sidebarSource, /tone-issue/, 'Species workflow filters must visually distinguish Data Review issues');
+assert.match(sidebarSource, /tone-review/, 'Species workflow filters must visually distinguish editorial review');
+assert.match(sidebarSource, /tone-ready/, 'Species workflow filters must visually distinguish Preview-ready state');
+assert.match(sidebarSource, /Data Review · Pending/, 'English workflow filter labels must not regress to mixed-language text');
 assert.match(stylesSource, /species-group\.contains-active \.variant-list[\s\S]*var\(--selection-border\)/, 'Active Variant parent tree guide must use the shared selection token');
 assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
