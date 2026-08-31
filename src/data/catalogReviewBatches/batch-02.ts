@@ -91,3 +91,6 @@ export const catalogReviewBatch02Sources: CatalogEvidenceSource[] = [
 ];
 
 export const catalogReviewBatch02SpeciesIds = species.map(item => item.id);
+
+/** Populated only after a reviewer has read and verified source content. */
+export const catalogReviewBatch02VerifiedSourceIds: string[] = [];

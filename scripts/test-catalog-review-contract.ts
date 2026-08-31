@@ -21,8 +21,8 @@ import {
 const cohort = selectCompatibilityLaunchCohort();
 assert.equal(cohort.length, 30);
 assert.equal(REVIEWABLE_CATALOG_FIELDS.length, 10);
-assert.equal(getApprovedCatalogFieldReviews(cohort[0].id).length, REVIEWABLE_CATALOG_FIELDS.length);
-assert.equal(isCatalogSpeciesFieldReady(cohort[0].id), true);
+assert.equal(getApprovedCatalogFieldReviews(cohort[0].id).length, 0);
+assert.equal(isCatalogSpeciesFieldReady(cohort[0].id), false);
 assert.equal(catalogReviewSourceCandidateIds.length, 10);
 assert.equal(getCatalogReviewSourceCandidates(cohort[0].id)[0].reviewStatus, 'draft');
 assert.equal(getCatalogReviewSourceCandidates(cohort[0].id)[0].publisher, 'FishBase');

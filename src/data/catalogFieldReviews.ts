@@ -4,6 +4,9 @@ import { catalogWaterTypeSchema } from '../../packages/contracts/src';
 import { catalogReviewBatch01FieldReviews } from './catalogReviewBatches/batch-01';
 import { catalogReviewBatch02 } from './catalogReviewBatches/batch-02';
 import { catalogReviewBatch03FieldReviews } from './catalogReviewBatches/batch-03';
+import { catalogReviewBatch01VerifiedSourceIds } from './catalogReviewBatches/batch-01';
+import { catalogReviewBatch02VerifiedSourceIds } from './catalogReviewBatches/batch-02';
+import { catalogReviewBatch03VerifiedSourceIds } from './catalogReviewBatches/batch-03';
 
 /** Source-controlled field review record. Drafts never enter runtime Catalog. */
 export const catalogFieldReviewSchema = z.object({
@@ -74,10 +77,19 @@ export const catalogFieldReviews: CatalogFieldReview[] = [
   ...catalogReviewBatch03FieldReviews,
 ];
 
+/** Source content must be read and verified before any field can overlay runtime data. */
+export const catalogContentVerifiedSourceIds = new Set([
+  ...catalogReviewBatch01VerifiedSourceIds,
+  ...catalogReviewBatch02VerifiedSourceIds,
+  ...catalogReviewBatch03VerifiedSourceIds,
+]);
+
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);
 
 export const getApprovedCatalogFieldReviews = (speciesId: string) => getCatalogFieldReviews(speciesId)
-  .filter(item => item.status === 'reviewed' && item.citationIds.length > 0 && isCatalogFieldReviewValueValid(item));
+  .filter(item => item.status === 'reviewed' && item.citationIds.length > 0
+    && item.citationIds.every(citationId => catalogContentVerifiedSourceIds.has(citationId))
+    && isCatalogFieldReviewValueValid(item));
 
 export const isCatalogSpeciesFieldReady = (speciesId: string) => {
   const reviews = getApprovedCatalogFieldReviews(speciesId);

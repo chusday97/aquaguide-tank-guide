@@ -150,7 +150,9 @@ export const catalogReviewBatch03: CatalogReviewBatch03Entry[] = seeds.map(seed 
 export const catalogReviewBatch03FieldReviews = catalogReviewBatch03.flatMap(entry => entry.fieldReviews);
 export const catalogReviewBatch03Sources = catalogReviewBatch03.flatMap(entry => entry.sources);
 
+/** Populated only after a reviewer has read and verified source content. */
+export const catalogReviewBatch03VerifiedSourceIds: string[] = [];
+
 if (catalogReviewBatch03.length !== 10 || catalogReviewBatch03FieldReviews.length !== 100) {
   throw new Error('Batch 03 must contain exactly 10 species and 100 field reviews');
 }
-

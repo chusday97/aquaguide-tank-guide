@@ -9,6 +9,7 @@ import { LAUNCH_COHORT_IDS } from '../src/data/compatibility-launch-cohort';
 import { catalogReviewBatch01FieldReviews, catalogReviewBatch01Sources } from '../src/data/catalogReviewBatches/batch-01';
 import { catalogReviewBatch02, catalogReviewBatch02Sources } from '../src/data/catalogReviewBatches/batch-02';
 import { catalogReviewBatch03FieldReviews, catalogReviewBatch03Sources } from '../src/data/catalogReviewBatches/batch-03';
+import { catalogContentVerifiedSourceIds, getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 
 const reviews = [...catalogReviewBatch01FieldReviews, ...catalogReviewBatch02, ...catalogReviewBatch03FieldReviews];
 const sources = [...catalogReviewBatch01Sources, ...catalogReviewBatch02Sources, ...catalogReviewBatch03Sources];
@@ -36,4 +37,6 @@ for (const speciesId of LAUNCH_COHORT_IDS) {
 }
 const supported = reviews.filter(review => review.resolution === 'supported').length;
 const unknown = reviews.filter(review => review.resolution === 'unknown').length;
-console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown }, null, 2));
+assert.equal(catalogContentVerifiedSourceIds.size, 0, 'unverified source content must not enter runtime');
+assert.equal(getApprovedCatalogFieldReviews(LAUNCH_COHORT_IDS[0]).length, 0);
+console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: catalogContentVerifiedSourceIds.size, runtimeApprovedFields: 0 }, null, 2));

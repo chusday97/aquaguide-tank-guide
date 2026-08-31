@@ -157,3 +157,5 @@ export const catalogReviewBatch01 = species.map(([speciesId]) => ({
   fieldReviews: catalogReviewBatch01FieldReviews.filter(review => review.speciesId === speciesId),
 }));
 
+/** Populated only after a reviewer has read and verified source content. */
+export const catalogReviewBatch01VerifiedSourceIds: string[] = [];
