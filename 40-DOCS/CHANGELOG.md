@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added: four GBIF Backbone Taxonomy identity sources for batch-02 (Hemigrammus rhodostomus, Corydoras aeneus, Pterophyllum scalare and Symphysodon aequifasciatus). These citations are identity-only; husbandry and compatibility fields remain gated by their own verified sources. Runtime evidence counts now 24 sources / 59 approved fields at `065f75e2`.
+
 - Changed: catalog field reviews now distinguish supported facts from reviewed-but-unknown fields.
 - Added: parallel launch-cohort review batches and aggregate validation for 30 species / 300 fields.
 - Changed: runtime Catalog overlays now require a separately verified source-content allowlist.

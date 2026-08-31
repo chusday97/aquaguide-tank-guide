@@ -20,6 +20,14 @@ type BatchSpecies = {
   identityNote?: string;
 };
 
+/** GBIF taxonomy records are identity-only; they do not support husbandry values. */
+const verifiedIdentitySources: Record<string, string> = {
+  'sp_0433': 'batch-02-gbif-hemigrammus-rhodostomus',
+  'sp_0014': 'batch-02-gbif-corydoras-aeneus',
+  'sp_0446': 'batch-02-gbif-pterophyllum-scalare',
+  'sp_0447': 'batch-02-gbif-symphysodon-aequifasciatus',
+};
+
 const species: readonly BatchSpecies[] = [
   { id: 'sp_0012', scientificName: 'Puntius titteya', baseSpeciesKey: 'Puntius titteya', temp: [23, 27], ph: [6, 8], size: [null, 5], sources: ['batch-02-fishbase-puntius-titteya'] },
   { id: 'sp_0468', scientificName: 'Trigonostigma heteromorpha', baseSpeciesKey: 'Trigonostigma heteromorpha', temp: [22, 25], ph: [5, 7], size: [null, 5], sources: ['batch-02-fishbase-trigonostigma-heteromorpha'] },
@@ -46,9 +54,12 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
   const [phMin, phMax] = item.ph;
   const [sizeMin, sizeMax] = item.size;
   const citations = item.sources;
+  const identityCitations = verifiedIdentitySources[item.id]
+    ? [verifiedIdentitySources[item.id]!]
+    : citations;
   const identityNotes = item.identityNote ?? 'Taxonomic identity is supported by the cited taxonomic records; aquarium cultivar or common-name claims are not used as species evidence.';
   const reviews = [
-    supported(item.id, 'identity', { scientificName: item.scientificName, baseSpeciesKey: item.baseSpeciesKey, variantKey: item.variantKey ?? null }, citations, 'high'),
+    supported(item.id, 'identity', { scientificName: item.scientificName, baseSpeciesKey: item.baseSpeciesKey, variantKey: item.variantKey ?? null }, identityCitations, 'high'),
     supported(item.id, 'water', 'freshwater', citations, 'high'),
     supported(item.id, 'temperature', { min: tempMin, max: tempMax }, citations),
     supported(item.id, 'ph', { min: phMin, max: phMax }, citations),
@@ -108,6 +119,38 @@ export const catalogReviewBatch02Sources: CatalogEvidenceSource[] = [
   source('batch-02-worms-pterophyllum-scalare', 'Pterophyllum scalare taxon record', 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=101224'),
   source('batch-02-fishbase-symphysodon-aequifasciatus', 'Symphysodon aequifasciatus species summary', 'https://www.fishbase.se/summary/Symphysodon-aequifasciatus.html'),
   source('batch-02-worms-symphysodon-aequifasciatus', 'Symphysodon aequifasciatus taxon record', 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=101196'),
+  {
+    id: 'batch-02-gbif-hemigrammus-rhodostomus',
+    title: 'Hemigrammus rhodostomus GBIF species record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/species/100037480',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
+  {
+    id: 'batch-02-gbif-corydoras-aeneus',
+    title: 'Corydoras aeneus GBIF species record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/species/2342606',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
+  {
+    id: 'batch-02-gbif-pterophyllum-scalare',
+    title: 'Pterophyllum scalare GBIF Backbone Taxonomy record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/taxon/4Q2JF',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
+  {
+    id: 'batch-02-gbif-symphysodon-aequifasciatus',
+    title: 'Symphysodon aequifasciatus GBIF species record',
+    publisher: 'GBIF Backbone Taxonomy',
+    url: 'https://www.gbif.org/taxon/53QBZ',
+    sourceType: 'professional_association',
+    reviewStatus: 'reviewed',
+  },
 ];
 
 export const catalogReviewBatch02SpeciesIds = species.map(item => item.id);
@@ -119,4 +162,5 @@ export const catalogReviewBatch02VerifiedSourceIds: string[] = [
   'batch-02-fishbase-corydoras-panda',
   'batch-02-fishbase-otocinclus-vittatus',
   'batch-02-fishbase-trichopodus-leerii',
+  ...Object.values(verifiedIdentitySources),
 ];
