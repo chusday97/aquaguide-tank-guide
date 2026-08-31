@@ -39,6 +39,8 @@
     "catalog:audit": "node --import tsx scripts/audit-species-data-quality.ts",
     "catalog:research": "node --import tsx scripts/catalog-research.ts",
     "catalog:review": "node --import tsx scripts/catalog-review.ts",
+    "test:catalog-review": "node --import tsx scripts/test-catalog-review-contract.ts",
+    "test:catalog-review-batches": "node --import tsx scripts/test-catalog-review-batches.ts",
     "test:compatibility-launch-cohort": "node --import tsx scripts/test-compatibility-launch-cohort.ts",
     "test:compatibility-launch-matrix": "node --import tsx scripts/test-compatibility-launch-matrix.ts",
     "test:favorites": "tsx scripts/test-favorites-service.ts",

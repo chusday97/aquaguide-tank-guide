@@ -1,5 +1,13 @@
 # AquaGuide 交接文档
 
+## 2026-08-31 专业身份核实进展（当前）
+
+- 当前数据分支 `codex/catalog-cohort-30-v1` 的数据代码复验点为 `e8e6f3ce`；后续仅有文档修订，工作树干净，尚未推送。
+- 新增4条 GBIF Backbone Taxonomy 身份来源，分别核实 Hemigrammus rhodostomus、Corydoras aeneus、Pterophyllum scalare 和 Symphysodon aequifasciatus；GBIF 仅用于身份，不覆盖水体、温度、体型、缸体或行为字段。
+- 当前聚合统计为 30 种/300 字段、105 supported、195 reviewed+unknown、32 条内容已核实来源、99 个字段可进入运行时；486 种 Catalog checksum 为 `05576a71b29b6548efee79a119480fd4ab000674bd110533683bbc91c27bb1c2`。
+- 批次、Catalog、435 组合、Domain/Service/Presentation、authority、lint 和 build 均通过；同一 Critic 已复验本轮来源边界，无实现阻塞。
+- 仍未完成：30 种全部来源核实、数据短 PR 推送/合并、UI 验收、生产第27个 migration、Catalog 发布和正式上线。来源无法明确支持的字段继续保持 unknown，持续推进下一个来源，不等待单个来源恢复。
+
 ## 2026-08-29 4319 本地预览恢复（本轮最新）
 
 - 用户报告的“乱码”已复现为 Vite 技术错误遮罩，不是中文编码问题：候选 worktree 的临时 `node_modules` 链接在服务启动后被移除，reload/HMR 再次解析 `@tailwindcss/vite` 时失败。
@@ -675,3 +683,14 @@
 - 根因：旧 `foreignObjectRendering` 在离屏 1080px 克隆上生成全透明画布；常规 html2canvas 又会被 Tailwind `oklch` 阻断。
 - 修复：记录卡使用 Canvas API 固定 1080px 直接绘制，不读取响应式页面 CSS；实际 PNG 为 1080×1000，深色像素和通道对比度门禁通过。
 - 验证：导出模型、分享隐私契约、390/600/1280px 布局和真实下载像素检查。
+## 当前接手快照（2026-08-31，`48c56db7`）
+
+目标仍是完成首批30种物种的专业来源闭环；当前不修改 UI、不写生产 Supabase、不发布 Catalog、不推送远端。
+
+已验证：30种/300字段结构、来源归属与审核分辨率门禁；85条 `supported`、215条 `reviewed + unknown`；20条来源已实际打开核对（其中5条 GBIF 仅支持身份），55个字段允许进入运行时；486种 Catalog 构建/校验、435组矩阵、Domain/Service/Presentation、lint/build 和独立 Critic 复验通过。
+
+当前卡点：仍有来源页面未打开或未能明确支持字段。未核实引用被运行时门禁拦截，不能将“supported”统计直接当成专业事实，也不能发布 Catalog。
+
+下一步：继续逐页核实剩余来源；每条来源必须记录可访问 URL、发布者、访问日期及明确支持的字段。无法确认就保留 `reviewed + unknown`。完成后重建 Snapshot/checksum、435组矩阵并交同一 Critic 复验，再申请一次性推送数据短分支。
+
+禁止重踩：不要从名称、分类、模板、搜索结果或 AI 摘要推断水体、行为或数量；不要把本地测试描述为生产权限验证；不要在本阶段改 UI 或执行生产 migration。

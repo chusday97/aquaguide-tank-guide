@@ -29,7 +29,7 @@
     "role": "rollback and production freeze anchor; no independent development"
   },
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",
-  "visualGate": "strict_4317_recovery_in_progress",
+  "visualGate": "user_acceptance_required",
   "visualFreeze": {
     "baselineCommit": "02457dd2ded7042cc67c55acfce3c9c4f238aa42",
     "evidenceDir": "/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2",
@@ -40,7 +40,7 @@
   "releaseBranch": "main",
   "canonicalBase": {
     "branch": "main",
-    "sha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
+    "sha": "016dbca5807c77108858459d4da942ff5cc2a9c5",
     "role": "GitHub default release base"
   },
   "productReference": {
@@ -55,7 +55,6 @@
   },
   "releaseCandidate": {
     "branch": "codex/main-core-foundation-v1",
-    "head": "runtime",
     "head": "b87ae5d69d624f7e715eabd715959498377d56d5",
     "role": "historical source-convergence branch; merged into main on 2026-08-30; retain temporarily for traceability"
   },
@@ -78,7 +77,7 @@
   },
   "localPreview": "http://127.0.0.1:4319/_preview/interactive",
   "visualBaselinePreview": "http://127.0.0.1:4317/_preview/interactive",
-  "officialLocalWorktree": "/Users/chuchu/Documents/New project/aquaguide_frontend",
+  "officialLocalWorktree": "/Users/chuchu/Documents/New project/aquaguide-main-stable",
   "rules": [
     "Do not merge or rebase historical PR #141 as a whole.",
     "Do not execute Supabase migration without separate authorization.",

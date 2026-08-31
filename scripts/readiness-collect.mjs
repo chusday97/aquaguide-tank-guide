@@ -19,9 +19,11 @@ const run = (file, args, options = {}) => {
     }).trim();
     return { ok: true, output, durationMs: Date.now() - started };
   } catch (error) {
+    const captured = `${error.stdout ?? ''}${error.stderr ?? ''}`.trim();
+    const detail = error instanceof Error ? error.message : String(error);
     return {
       ok: false,
-      output: `${error.stdout ?? ''}${error.stderr ?? ''}`.trim() || error.message,
+      output: captured ? `${captured}\n${detail}` : detail,
       durationMs: Date.now() - started,
       code: error.status ?? null,
     };
@@ -36,7 +38,7 @@ const statusFromResult = (result, kind = 'local') => {
   if (result.ok) return 'PASS';
   const text = result.output.toLowerCase();
   if (kind === 'user' && (text.includes('ui freeze failed') || text.includes('visual-owned files changed') || text.includes('baseline'))) return 'USER_ACCEPTANCE_REQUIRED';
-  if (text.includes('could not resolve host') || text.includes('network') || text.includes('internet') || text.includes('api.github.com') || text.includes('timed out') || text.includes('rate limit') || text.includes('eperm') || text.includes('operation not permitted') || text.includes('enoent') || text.includes('command not found')) {
+  if (text.includes('could not resolve host') || text.includes('network') || text.includes('internet') || text.includes('api.github.com') || text.includes('timed out') || text.includes('etimedout') || text.includes('rate limit') || text.includes('eperm') || text.includes('operation not permitted') || text.includes('enoent') || text.includes('command not found') || text.includes('not been pushed yet') || text.includes('尚未进入远端') || text.includes('尚未创建数据 pr')) {
     return 'UNVERIFIED';
   }
   return 'FAIL';
@@ -118,40 +120,63 @@ gates.push(gate({
   notes: '当前 4319 视觉差异和乱码仍需用户确认；该状态不会阻止底层进度，但会阻止生产发布。',
 }));
 
-let remote = run('git', ['ls-remote', 'origin', `refs/heads/${project.sourceConvergenceBranch ?? 'codex/main-core-foundation-v1'}`], { timeout: 8_000 });
+const trackedRemoteBranch = project.branchRole === 'short_task_branch'
+  ? project.localBranch
+  : (project.sourceConvergenceBranch ?? 'codex/main-core-foundation-v1');
+let remote = run('git', ['ls-remote', 'origin', `refs/heads/${trackedRemoteBranch}`], { timeout: 8_000 });
 if (remote.ok) {
   const remoteSha = remote.output.split(/\s+/)[0];
-  if (remoteSha !== project.sha) remote = { ...remote, ok: false, output: `GitHub returned ${remoteSha || 'no SHA'}, expected ${project.sha}.` };
+  if (!remoteSha) remote = { ...remote, ok: false, output: `GitHub branch ${trackedRemoteBranch} has not been pushed yet.` };
+  else if (remoteSha !== project.sha) remote = { ...remote, ok: false, output: `GitHub returned ${remoteSha}, expected ${project.sha}.` };
 }
 gates.push(gate({
   gateId: 'github-sha',
   title: 'GitHub 候选 SHA 实时同步',
-  command: `git ls-remote origin refs/heads/${project.sourceConvergenceBranch ?? 'codex/main-core-foundation-v1'}`,
-  expected: `GitHub 候选分支 SHA 等于 ${project.sha}。`,
+  command: `git ls-remote origin refs/heads/${trackedRemoteBranch}`,
+  expected: `GitHub 分支 ${trackedRemoteBranch} 的 SHA 等于 ${project.sha}。`,
   source: 'github',
-  result: remote,
+  result: project.branchRole === 'short_task_branch' && !project.remoteSha
+    ? { ...remote, ok: false, output: `${remote.output} 本地短分支尚未进入远端，属于待推送证据。` }
+    : remote,
   notes: remote.ok && !remote.output.startsWith(project.sha) ? '远端返回的 SHA 与本地不同。' : null,
 }));
 
-let pr = run('gh', ['pr', 'view', String(project.activePullRequest?.number ?? 142), '--json', 'headRefOid,isDraft,state,baseRefName,headRefName,mergeCommit'], { timeout: 8_000 });
-if (pr.ok) {
-  const prInfo = parseJson(pr.output);
-  const expectedPr = project.activePullRequest ?? {};
-  const headMatches = prInfo?.headRefOid === project.sha
-    && prInfo.baseRefName === expectedPr.base
-    && prInfo.headRefName === expectedPr.head;
-  const mergedMatches = prInfo?.state === 'MERGED'
-    && Boolean(prInfo.mergeCommit?.oid)
-    && prInfo.baseRefName === expectedPr.base
-    && run('git', ['merge-base', '--is-ancestor', prInfo.mergeCommit.oid, project.sha], { timeout: 8_000 }).ok;
-  const valid = headMatches || mergedMatches;
-  if (!valid) pr = { ...pr, ok: false, output: `PR metadata does not match current candidate: ${pr.output}` };
+let pr;
+if (project.branchRole === 'short_task_branch') {
+  pr = run('gh', ['pr', 'list', '--head', project.localBranch, '--base', project.canonicalBranch ?? 'main', '--state', 'open', '--json', 'number,headRefOid,isDraft,state,baseRefName,headRefName'], { timeout: 8_000 });
+  if (pr.ok) {
+    const rows = parseJson(pr.output) ?? [];
+    const prInfo = rows[0];
+    if (!prInfo) pr = { ...pr, ok: false, output: `短分支 ${project.localBranch} 尚未创建数据 PR；已合并的源收敛 PR 不作为短分支发布证据。` };
+    else if (prInfo.headRefOid !== project.sha || prInfo.baseRefName !== (project.canonicalBranch ?? 'main') || prInfo.headRefName !== project.localBranch) {
+      pr = { ...pr, ok: false, output: `短分支 PR metadata does not match current candidate: ${JSON.stringify(prInfo)}` };
+    }
+  }
+} else {
+  pr = run('gh', ['pr', 'view', String(project.activePullRequest?.number ?? 142), '--json', 'headRefOid,isDraft,state,baseRefName,headRefName,mergeCommit'], { timeout: 8_000 });
+  if (pr.ok) {
+    const prInfo = parseJson(pr.output);
+    const expectedPr = project.activePullRequest ?? {};
+    const headMatches = prInfo?.headRefOid === project.sha
+      && prInfo.baseRefName === expectedPr.base
+      && prInfo.headRefName === expectedPr.head;
+    const mergedMatches = prInfo?.state === 'MERGED'
+      && Boolean(prInfo.mergeCommit?.oid)
+      && prInfo.baseRefName === expectedPr.base
+      && run('git', ['merge-base', '--is-ancestor', prInfo.mergeCommit.oid, project.sha], { timeout: 8_000 }).ok;
+    if (!headMatches && !mergedMatches) pr = { ...pr, ok: false, output: `PR metadata does not match current candidate: ${pr.output}` };
+  }
 }
+const prCommand = project.branchRole === 'short_task_branch'
+  ? `gh pr list --head ${project.localBranch} --base ${project.canonicalBranch ?? 'main'} --state open --json number,headRefOid,isDraft,state,baseRefName,headRefName`
+  : `gh pr view ${project.activePullRequest?.number ?? 142} --json headRefOid,isDraft,state,baseRefName,headRefName,mergeCommit`;
 gates.push(gate({
   gateId: 'github-pr',
   title: 'PR 状态与候选一致',
-  command: `gh pr view ${project.activePullRequest?.number ?? 142} --json headRefOid,isDraft,state,baseRefName,headRefName,mergeCommit`,
-  expected: `PR #${project.activePullRequest?.number ?? 142} 未合并时 head 等于当前 SHA；合并后 merge commit 已包含于当前 main。`,
+  command: prCommand,
+  expected: project.branchRole === 'short_task_branch'
+    ? `数据短分支 PR 的 head 等于当前 SHA，目标为 ${project.canonicalBranch ?? 'main'}。`
+    : `PR #${project.activePullRequest?.number ?? 142} 未合并时 head 等于当前 SHA；合并后 merge commit 已包含于当前 main。`,
   source: 'github',
   result: pr,
 }));

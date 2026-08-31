@@ -9,7 +9,7 @@
 | Concern | Current authority | Rule |
 | --- | --- | --- |
 | Daily work branch | `main` (after source convergence) | `main` is the single code source; short-lived branches must start from its latest SHA. |
-| Source-convergence candidate | `codex/main-core-foundation-v1` | PR #142 carries the current local candidate into `main`; it is not a separate product line. |
+| Source-convergence result | `main` | PR #142 was merged; `codex/main-core-foundation-v1` is historical evidence only. New work starts from the latest `main` in a short-lived `codex/*` branch. |
 | Production branch | `release/production` | Deployment-only pointer anchored to the current production SHA; no independent development or direct commits. |
 | GitHub convergence | [PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) | Merge is a source-convergence action; release status remains `NOT_READY` until production gates pass. |
 | Branch reconciliation | [Branch Convergence Audit](./03-development/BRANCH_CONVERGENCE_AUDIT.md) and [origin/main semantic reconciliation](./03-development/ORIGIN_MAIN_RECONCILIATION.md) | Commit counts alone; a graph difference is not a missing-feature verdict. |
@@ -61,4 +61,4 @@ gh pr view 142 --json headRefOid,baseRefName,headRefName,state,isDraft
 gh pr view 141 --json headRefOid,baseRefName,headRefName,state,isDraft
 ```
 
-Before source convergence, the candidate and PR #142 must identify the same SHA. After convergence, local/remote `main` identify the merge commit, while `release/production` remains pinned to the last accepted production SHA until release gates pass.
+After source convergence, local/remote `main` identify the current code source, while `release/production` remains pinned to the last accepted production SHA until release gates pass. A short-lived `codex/*` branch is valid only when it contains the latest `main` ancestor.

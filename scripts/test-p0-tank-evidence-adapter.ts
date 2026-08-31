@@ -145,8 +145,8 @@ const baseTank = (overrides: Partial<Aquarium> = {}): Aquarium => ({
 }
 
 {
-  const freshwater = { ...miniParrot, id: 'fresh-test', name: '淡水测试鱼', category: '淡水观赏鱼' };
-  const marine = { ...tigerBarb, id: 'marine-test', name: '海水测试鱼', category: '海水观赏鱼', description: '海水鱼' };
+  const freshwater = { ...miniParrot, id: 'fresh-test', name: '淡水测试鱼', category: '淡水观赏鱼', waterType: 'freshwater' as const };
+  const marine = { ...tigerBarb, id: 'marine-test', name: '海水测试鱼', category: '海水观赏鱼', description: '海水鱼', waterType: 'saltwater' as const };
   const tank = baseTank({
     fishes: [
       { id: 'fresh', fishId: freshwater.id, quantity: 1, entryDate: '2026-08-01T12:00:00.000Z' },

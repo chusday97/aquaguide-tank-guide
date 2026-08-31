@@ -1,5 +1,74 @@
 # AquaGuide Handoff — Latest
 
+## 2026-08-31 数据短分支本地门禁复验（当前）
+
+- 当前分支：`codex/catalog-cohort-30-v1`；当前 HEAD：`8bfef23cd667b7aec4ef3028d0ca61cf3771abd9`；工作树干净；分支包含 `origin/main@016dbca5`。
+- `project:status`、`check:project-truth`、Catalog 30/300 审核批次、486 条 Catalog、435 组合、Domain/Service/Presentation、authority、API 类型、lint、build、Supabase reset、pgTAP 19/19 和 schema lint 0 error 均通过。
+- readiness 证据：`.artifacts/readiness/8bfef23cd667/`；16 项 PASS，UI freeze 为 `USER_ACCEPTANCE_REQUIRED`，推送前短分支远端/PR 为 `UNVERIFIED`，生产 Supabase 为 `UNVERIFIED`。推送后远端分支已与本地 SHA 同步，数据 PR #143 正在等待 CI。
+- 数据分支 diff 未包含 UI、migration 或生产配置；当前 UI freeze 失败是旧 provisional 基线 `02457dd2` 与既有候选视觉差异，不是本轮数据修改造成。
+- 下一步：等待 PR #143 的远端 CI 完成；若通过，按预授权合并数据短 PR。随后从最新 `main` 创建 UI 短分支；不执行生产 migration、Catalog 发布或正式上线。
+
+## 2026-08-31 短分支治理门禁修复（当前）
+
+- 数据短分支：`codex/catalog-cohort-30-v1`，当前 HEAD 由 `git rev-parse HEAD` 读取；工作树因本步骤有计划内修改而暂时 dirty。
+- `scripts/project-status.mjs` 现在允许包含最新 `main` 的 `codex/*` 短分支，并输出 `branchRole`、`basedOnCanonicalSha` 和 `containsCanonical`；短分支若不包含 `main` 会直接失败。
+- `CONTRACT.md` 的 `CatalogWaterType` 已与代码及第27个 migration 对齐为 `freshwater | saltwater | brackish | unknown`。
+- `docs/PROJECT_TRUTH.md` 已将 PR #142 标记为已合并，`main` 为代码事实来源。
+- 已验证：`project:status`、`check:project-truth`、`test:catalog-review-batches`、`catalog:validate`、`test:compatibility-launch-matrix` 通过；当前生产指针仍为 `release/production@ed0cf380`。
+- 下一步：提交本次治理修复后，继续执行数据分支完整门禁；不修改 UI、生产 Supabase 或正式部署。
+
+## 2026-08-31 P0 回归夹具修复（当前）
+
+- `test:p0-tank-evidence` 的淡水/海水冲突夹具改为提供显式 `waterType`；不再依赖名称、分类或描述推断水体。
+- 已验证：该 P0 测试在授权本地环境 10/10 通过；`test:compatibility`、P0 tank state、P0 water change、API boundary、Catalog、Domain、Service、添加意图、写入恢复、lint、API 类型和 production build 已通过。
+- 当前仍需：完整数据门禁汇总、独立 Critic 复验、数据短 PR 同步；生产 migration、Catalog 发布和 UI 仍未执行。
+
+## 2026-08-31 并行首发审核结果
+
+- 三个子任务已完成各自10种批次并提交，主线程已聚合为30种/300条字段记录。
+- 当前统计：84条 `supported`，216条 `reviewed + unknown`；unknown 不覆盖运行时 Profile。
+- `test:catalog-review-batches`、`lint`、`catalog:build`、`catalog:validate` 已通过；来源页面仍需网络恢复后复核，未申请生产发布。
+
+Critic 初审提出的引用归属和 `baseSpeciesKey` 一致性问题已在 `55b50b42` 修复；复验待完成。当前统计仍是机器审核结构完成，不等于来源内容已逐页确认。
+
+`66b90d43` 已把运行时覆盖进一步收紧为“字段支持 + 引用来源内容已核实”；首轮核实后 `catalogContentVerifiedSourceIds` 当前包含15条来源，其余暂支持字段仍不会进入运行时。
+
+首轮核实已完成：15条来源实际打开并核对，聚合为80条 supported、220条 reviewed-unknown，其中50条支持字段当前可进入运行时。其余来源页面或字段仍待核实，不能发布Catalog。
+
+## 2026-08-30 字段级审核管道已落地（当前）
+
+## 2026-08-31 专业来源候选已登记（当前）
+
+- 分支：`codex/catalog-cohort-30-v1`，当前 HEAD 以 `git rev-parse HEAD` 为准；本地工作树干净，未推送。
+- 新增 `src/data/catalogReviewSourceCandidates.ts`，为第一批10种物种登记 FishBase 来源候选；来源全部是 `draft`，不是审核事实。
+- `catalog-research` 已接入候选来源，生成研究草稿时会保留来源标题、发布者和 URL；`fieldReviews[].citationIds` 仍为空，不能升级为运行时数据。
+- 验证：`npm run test:catalog-review`、第一批 `catalog:research`、`catalog:review` 均通过；第一批报告为 `reviewedCount=0`、`reviewedFieldCount=0`、`pendingCount=10`。
+- `3bb38297` 进一步锁定来源候选 ID 集合必须与第一批 cohort 完全一致；工作树仍干净、尚未推送。
+- 下一步：逐页核对专业来源实际支持哪些字段，填写字段值、citationIds、冲突说明和审核状态；无法确认的字段保持 `unknown`。用户只需最后看整批混养判断，不参与逐字段审核。
+
+- 历史节点 `2b7c34d9` 记录字段审核管道落地；当前 HEAD、提交数和工作树状态以本交接顶部的运行时说明及 Git 命令为准。
+- 本步新增 `src/data/catalogFieldReviews.ts`、`scripts/test-catalog-review-contract.ts`，并扩展 `catalog:research` / `catalog:review` / Catalog snapshot 生成链路。
+- 三批研究草稿每个物种包含 10 个字段（身份、水体、温度、pH、成体体型、缸体、社会行为、领地、捕食、繁殖），全部为 Draft、无引用；机器校验为 `0/30 reviewed`、`300` 个字段待审核。
+- 运行证据：`test:catalog-review`、`catalog:build`、`catalog:validate`、`lint`、`check:project-truth`、首发队列/435 组合矩阵、Catalog snapshot、compatibility authority 均通过；Catalog 保持 486 条，checksum `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`。
+- 安全边界：批准记录数组目前为空；只有 `status=reviewed` 且存在 citationIds 的字段才会覆盖 Profile。研究草稿不会进入运行时事实，也不会改写 `fishData.ts`、数据库或生产 Supabase。
+- Critic 首轮发现的两个阻塞已在 `62539910` 修复：审核脚本要求 citationId 指向同一物种的已审核 source，并拒绝无效 reviewed 值；领地、捕食和繁殖字段会保留到 Profile 的 `factEvidence`，避免审核通过后静默丢弃。新增测试覆盖无效引用、无效行为值、全字段 reviewed 正例、重复字段和行为字段 overlay；同一 Critic 已按六维复验通过。该阶段仍不是 30 种已审核结果，当前为 `0/30 reviewed`。
+- 已知阻塞：`check:ui-freeze` 仍针对旧 provisional `02457dd2` 报告历史视觉 Owner 差异；这是既有视觉基线问题，不是本次数据提交造成。UI 需后续短分支处理，当前本地预览/生产均未改动。
+- 下一步：由内容审核人员补齐每个字段的可靠来源、冲突说明和审核状态；完成后由同一 Critic 复验，再由用户一次性确认整批资料。未完成前不要发布 Catalog、执行第27个 migration 或推送 GitHub。
+
+## 2026-08-30 30种资料审计启动（当前）
+
+- 短分支：`codex/catalog-cohort-30-v1`，基于最新 `main@016dbca5`，当前仅本地存在。
+- `npm run catalog:audit` 已运行：486条记录、458个唯一中文名、437个唯一学名；`VERIFIED=0`、`PARTIAL=58`、`TEMPLATE_DERIVED=348`、`CONFLICT=33`、`AMBIGUOUS=47`；484条缺显式水体，427条引用搜索页。
+- `npm run catalog:research -- --batch 10` 已生成3批研究草稿，共30种；`catalog:review` 返回 `reviewedCount=0`、`pendingCount=30`，未进入运行时 Catalog。
+- 当前结论：资料审核是内容证据阻塞，不是脚本阻塞；不能用现有模板或搜索页自动提升为 Approved。
+- 下一步：先实现字段级审核记录和批次校验，再填充来源、冲突和审核状态；用户只需在整批审核包完成后一次确认。
+
+## 当前边界
+
+- `main` 是唯一代码事实来源；`release/production@ed0cf380` 是唯一生产回退指针。
+- 本阶段不修改 UI、Supabase 生产、Catalog 发布或 GitHub 远端。
+- 30 种资料只有在字段级来源审核完成后，才能进入正式 Catalog；现有 7 个运行时 reviewed profile 也要重新审核，不能直接当作 30 种完成。
+
 ## 2026-08-30 main 收敛完成（当前）
 
 - PR #142 已以普通 merge commit `2d0b4cfe5416e706edb6dcf195dc9597d0c94ae6` 合入 `main`；候选 `b87ae5d6` 已验证为 `main` 祖先。
@@ -462,3 +531,8 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 候选四模块截图矩阵已重新生成并绑定当前构建 checkpoint：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`，28 张、7 个视口、全部 HTTP 200，无 page error 或 failed request。
 - 4317 仍为 detached `37a8d4d1` 视觉母版；其外部字体请求在当前网络环境可能失败，因此基线截图工具不能把该网络失败伪装成候选通过。候选无此失败。
 - 当前候选 CSS 修复已形成提交，4319 已重建并重启，页面元数据与当前 SHA 一致；独立 Critic 已完成复验。本地尚未推送，故 `project:status` 按设计显示候选不同步。
+## 2026-08-31 并行审核底座
+
+- 当前分支已增加 `CatalogFieldResolution` 语义（`supported` 或 `unknown`），提交 `bb666b31`。
+- `reviewed + unknown` 要求来源与冲突说明，且不会写入运行时 Catalog；Draft/Rejected 仍不进入事实层。
+- 下一步由三个子任务分别写入 batch-01/02/03 审核文件；主线程随后聚合并运行 300 字段与435组合门禁。

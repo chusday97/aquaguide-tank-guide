@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+- Verified: data short-branch governance now tracks the branch's own remote ref during readiness collection; an unpublished short branch is reported as `UNVERIFIED` instead of incorrectly comparing against the merged source-convergence branch. Local Supabase reset, pgTAP 19/19, schema lint, Catalog, compatibility, typecheck and build were re-run at `4969b581`.
+- Fixed: readiness collection now preserves the underlying timeout/network error message, so Preview failures caused by DNS or service limits are classified as `UNVERIFIED` instead of an opaque implementation failure.
+
+- Fixed: project status now accepts `codex/*` short task branches only when they contain the latest `main` ancestor, and reports the branch role and ancestry evidence. Updated Project Truth to reflect merged PR #142 and aligned the documented Catalog water type contract with the code and pending migration (`brackish` included).
+- Fixed: updated the tank evidence regression fixture to use explicit water types, preserving the no-text-inference contract while restoring the freshwater/marine hard-constraint test.
+
+- Added: four GBIF Backbone Taxonomy identity sources for batch-02 (Hemigrammus rhodostomus, Corydoras aeneus, Pterophyllum scalare and Symphysodon aequifasciatus). These citations are identity-only; husbandry and compatibility fields remain gated by their own verified sources. Runtime evidence counts now 24 sources / 59 approved fields at `065f75e2`.
+- Changed: verified two direct FishBase pages for Paracheirodon innesi and Paracheirodon axelrodi; only explicit water, temperature, pH and adult-size facts are eligible. Runtime evidence is now 26 sources / 73 approved fields; behavior and stocking claims remain gated.
+
+- Changed: catalog field reviews now distinguish supported facts from reviewed-but-unknown fields.
+- Added: parallel launch-cohort review batches and aggregate validation for 30 species / 300 fields.
+- Changed: runtime Catalog overlays now require a separately verified source-content allowlist.
+- Changed: verified additional batch-02 FishBase facts (taxonomy aliases, environment, size and narrow husbandry fields) and batch-03 species facts; runtime evidence is now 30 verified sources / 94 approved fields. Conflicting taxonomies remain unknown.
+- Changed: verified explicit FishBase environment and adult-size facts for Astronotus ocellatus and the Amatitlania nigrofasciata base species; runtime evidence is now 32 verified sources / 100 approved fields. Cultivar identity and unsupported behavior remain unknown.
+- Fixed: narrowed the Amatitlania nigrofasciata evidence overlay to adult size only; the commercial mini-parrot cultivar no longer inherits an unreviewed freshwater claim. Runtime evidence is now 32 verified sources / 99 approved fields.
+
+- Added draft FishBase source candidates for the first 10 launch-cohort species. Candidates are attached to research drafts only; no field is promoted until a reviewer verifies the source, value, citation and conflicts.
+- Added a regression assertion that the first-batch source candidate IDs exactly match the first-batch cohort IDs.
+
 - Pushed candidate `codex/main-core-foundation-v1` to GitHub at `186751e7` after local readiness and project-truth checks passed. PR #142 remains Draft; API read-back is pending a successful GitHub DNS check.
 
 - Read back the synchronized candidate and PR #142 at `c63cb2dd`: PR is `OPEN/Draft/CLEAN/MERGEABLE`, required source checks are successful, and main convergence readiness is PASS. UI acceptance, production migration, Catalog publication and main merge remain separately gated.
@@ -77,6 +96,10 @@
 - Recorded final GitHub/PR/Preview SHA parity for candidate `1b28bc85`; Product Golden Path validation passed. Production Catalog migration, Catalog publication and `main` merge remain pending independent authorization.
 
 ### Added
+
+- Added the source-controlled `CatalogFieldReview` contract and field-level review gate. Research batches now emit ten explicit draft fields per species; only cited, reviewed values may be applied to the local Catalog.
+
+- Added citation existence/review-status validation and preserved reviewed territoriality, predation, and breeding evidence in the canonical `factEvidence` snapshot overlay. Invalid citations and malformed reviewed values now block promotion.
 
 - Added the provisional UI freeze manifest and `npm run check:ui-freeze` guard so backend/domain work cannot silently change visual-owned files.
 - Added `npm run capture:ui-freeze` and fixed viewport evidence for the 4317 baseline and 4319 candidate at 390/600/1280px.
