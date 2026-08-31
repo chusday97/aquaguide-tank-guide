@@ -9,6 +9,7 @@
 - Added: parallel launch-cohort review batches and aggregate validation for 30 species / 300 fields.
 - Changed: runtime Catalog overlays now require a separately verified source-content allowlist.
 - Changed: verified additional batch-02 FishBase facts (taxonomy aliases, environment, size and narrow husbandry fields) and batch-03 species facts; runtime evidence is now 30 verified sources / 94 approved fields. Conflicting taxonomies remain unknown.
+- Changed: verified explicit FishBase environment and adult-size facts for Astronotus ocellatus and the Amatitlania nigrofasciata base species; runtime evidence is now 32 verified sources / 100 approved fields. Cultivar identity and unsupported behavior remain unknown.
 
 - Added draft FishBase source candidates for the first 10 launch-cohort species. Candidates are attached to research drafts only; no field is promoted until a reviewer verifies the source, value, citation and conflicts.
 - Added a regression assertion that the first-batch source candidate IDs exactly match the first-batch cohort IDs.
