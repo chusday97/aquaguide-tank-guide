@@ -59,7 +59,7 @@ export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
     id: 'catalog-fishbase-danio-rerio',
     title: 'Danio rerio (Zebrafish) species summary',
     publisher: 'FishBase',
-    url: 'https://www.fishbase.org/summary/Brachydanio_rerio.html',
+    url: 'https://www.fishbase.se/summary/danio-rerio.html',
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
@@ -67,7 +67,7 @@ export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
     id: 'catalog-fishbase-puntigrus-tetrazona',
     title: 'Puntigrus tetrazona (Tiger barb) species summary',
     publisher: 'FishBase',
-    url: 'https://www.fishbase.org/summary/Puntigrus_tetrazona.html',
+    url: 'https://www.fishbase.se/summary/Puntius-tetrazona.html',
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
@@ -105,8 +105,16 @@ export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
   },
 ];
 
-const unknownReason = (field: string) =>
-  `FishBase identity/environment summary reviewed; no field-specific professional evidence was accepted for aquarium ${field}, so the runtime value remains unknown.`;
+const verifiedSourceIds = new Set([
+  'catalog-fishbase-tanichthys-albonubes',
+  'catalog-fishbase-poecilia-reticulata',
+  'catalog-fishbase-danio-rerio',
+  'catalog-fishbase-puntigrus-tetrazona',
+]);
+
+const unknownReason = (field: string, sourceVerified: boolean) => sourceVerified
+  ? `FishBase page was opened, but it did not provide accepted field-specific aquarium evidence for ${field}; the runtime value remains unknown.`
+  : `The registered FishBase page could not be opened and verified in this review pass; aquarium ${field} remains unknown.`;
 
 const makeReview = (
   speciesId: string,
@@ -115,6 +123,7 @@ const makeReview = (
   field: CatalogFieldReview['field'],
   proposedValue: unknown,
   resolution: CatalogFieldReview['resolution'],
+  sourceVerified = verifiedSourceIds.has(citationId),
 ): CatalogFieldReview => ({
   speciesId,
   field,
@@ -124,7 +133,7 @@ const makeReview = (
   confidence: resolution === 'supported' ? 'high' : 'unknown',
   citationIds: [citationId],
   conflictNotes: resolution === 'unknown'
-    ? [unknownReason(field)]
+    ? [unknownReason(field, sourceVerified)]
     : [],
   reviewedAt,
 });
@@ -137,14 +146,15 @@ const fields: CatalogFieldReview['field'][] = [
 /** Exactly 100 field reviews: ten species by ten fields. */
 export const catalogReviewBatch01FieldReviews: CatalogFieldReview[] = species.flatMap(
   ([speciesId, scientificName, citationId]) => fields.map(field => {
-    if (field === 'identity') {
+    const sourceVerified = verifiedSourceIds.has(citationId);
+    if (field === 'identity' && sourceVerified) {
       return makeReview(speciesId, scientificName, citationId, field, {
         scientificName,
         baseSpeciesKey: scientificName,
         variantKey: null,
       }, 'supported');
     }
-    if (field === 'water') {
+    if (field === 'water' && sourceVerified) {
       return makeReview(speciesId, scientificName, citationId, field, 'freshwater', 'supported');
     }
     return makeReview(speciesId, scientificName, citationId, field, null, 'unknown');
@@ -158,4 +168,4 @@ export const catalogReviewBatch01 = species.map(([speciesId]) => ({
 }));
 
 /** Populated only after a reviewer has read and verified source content. */
-export const catalogReviewBatch01VerifiedSourceIds: string[] = [];
+export const catalogReviewBatch01VerifiedSourceIds: string[] = [...verifiedSourceIds];
