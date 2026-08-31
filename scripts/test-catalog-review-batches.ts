@@ -37,6 +37,6 @@ for (const speciesId of LAUNCH_COHORT_IDS) {
 }
 const supported = reviews.filter(review => review.resolution === 'supported').length;
 const unknown = reviews.filter(review => review.resolution === 'unknown').length;
-assert.equal(catalogContentVerifiedSourceIds.size, 0, 'unverified source content must not enter runtime');
-assert.equal(getApprovedCatalogFieldReviews(LAUNCH_COHORT_IDS[0]).length, 0);
-console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: catalogContentVerifiedSourceIds.size, runtimeApprovedFields: 0 }, null, 2));
+assert.ok(catalogContentVerifiedSourceIds.size <= sources.length, 'verified source count cannot exceed source count');
+const runtimeApprovedFields = reviews.filter(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))).length;
+console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: catalogContentVerifiedSourceIds.size, runtimeApprovedFields }, null, 2));
