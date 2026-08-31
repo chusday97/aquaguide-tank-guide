@@ -1,5 +1,14 @@
 # AquaGuide Handoff — Latest
 
+## 2026-08-31 短分支治理门禁修复（当前）
+
+- 数据短分支：`codex/catalog-cohort-30-v1`，当前 HEAD 由 `git rev-parse HEAD` 读取；工作树因本步骤有计划内修改而暂时 dirty。
+- `scripts/project-status.mjs` 现在允许包含最新 `main` 的 `codex/*` 短分支，并输出 `branchRole`、`basedOnCanonicalSha` 和 `containsCanonical`；短分支若不包含 `main` 会直接失败。
+- `CONTRACT.md` 的 `CatalogWaterType` 已与代码及第27个 migration 对齐为 `freshwater | saltwater | brackish | unknown`。
+- `docs/PROJECT_TRUTH.md` 已将 PR #142 标记为已合并，`main` 为代码事实来源。
+- 已验证：`project:status`、`check:project-truth`、`test:catalog-review-batches`、`catalog:validate`、`test:compatibility-launch-matrix` 通过；当前生产指针仍为 `release/production@ed0cf380`。
+- 下一步：提交本次治理修复后，继续执行数据分支完整门禁；不修改 UI、生产 Supabase 或正式部署。
+
 ## 2026-08-31 并行首发审核结果
 
 - 三个子任务已完成各自10种批次并提交，主线程已聚合为30种/300条字段记录。

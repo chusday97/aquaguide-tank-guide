@@ -105,7 +105,7 @@ interface SyncFields {
 
 统一主数据补充以下契约：
 
-- `species.water_type` 只能是 `freshwater | saltwater | unknown`，不得从名称、描述或分类文字推断。
+- `species.water_type` 只能是 `freshwater | saltwater | brackish | unknown`，不得从名称、描述或分类文字推断。
 - `species_reference_links` 将身份、环境和养护字段分别绑定到证据来源及审核状态；缺失或未审核字段保持 `null/unknown`。
 - `catalog_releases` 保存不可变 Catalog 版本、Schema 版本、SHA-256、对象数量、Storage 路径和发布时间。
 - 前端内置与云端相同版本的 Snapshot；云端下载只有在 Schema、校验和与引用完整性均通过后才能原子替换，失败继续使用本地版本。

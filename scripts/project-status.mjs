@@ -6,8 +6,13 @@ const state = JSON.parse(readFileSync('.ai/PROJECT_STATE.json', 'utf8'));
 const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
 const sha = git(['rev-parse', 'HEAD']);
 const dirty = git(['status', '--porcelain']);
-const allowedBranches = new Set([state.canonicalBranch, state.releaseCandidate?.branch].filter(Boolean));
-const remoteTrackedBranch = allowedBranches.has(branch) ? branch : state.canonicalBranch;
+const canonicalBranch = state.canonicalBranch ?? 'main';
+const releaseCandidateBranch = state.releaseCandidate?.branch ?? null;
+const isShortBranch = branch.startsWith('codex/')
+  && branch !== releaseCandidateBranch
+  && branch !== state.productionBranch;
+const allowedBranches = new Set([canonicalBranch, releaseCandidateBranch, state.productionBranch].filter(Boolean));
+const remoteTrackedBranch = isShortBranch ? branch : allowedBranches.has(branch) ? branch : canonicalBranch;
 const remoteBranch = `origin/${remoteTrackedBranch}`;
 let remoteSha = null;
 if (existsSync('.git/refs/remotes/origin/' + remoteTrackedBranch)) {
@@ -30,6 +35,15 @@ const resolveSha = (ref) => {
   }
 };
 
+const isAncestor = (ancestor, descendant) => {
+  try {
+    execFileSync('git', ['merge-base', '--is-ancestor', ancestor, descendant]);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const productionBranch = state.productionBranch ?? state.releaseBranch;
 const productionAnchorSha = state.productionAnchor?.sha ?? null;
 const productionPointerSha = productionBranch
@@ -45,10 +59,14 @@ const productionDeploymentFrozen = activeProductionProviders.length > 0
   ? activeProductionProviders.every((provider) => provider?.status === 'ACTIVE_FROZEN')
   : state.productionDeploymentFrozen === true;
 
-if (!allowedBranches.has(branch) && process.env.CI !== 'true') {
-  throw new Error(`Run project:status from ${state.canonicalBranch} or ${state.releaseCandidate?.branch}; current branch is ${branch}.`);
+const canonicalSha = resolveSha(`origin/${canonicalBranch}`) ?? resolveSha(canonicalBranch);
+if (!allowedBranches.has(branch) && !isShortBranch && process.env.CI !== 'true') {
+  throw new Error(`Run project:status from ${canonicalBranch}, ${releaseCandidateBranch ?? 'the release candidate'}, or a codex/* short branch; current branch is ${branch}.`);
 }
-if (remoteSha && remoteSha !== sha && process.env.CI !== 'true') {
+if (isShortBranch && canonicalSha && !isAncestor(canonicalSha, sha)) {
+  throw new Error(`Short branch ${branch} does not contain ${canonicalBranch}@${canonicalSha}.`);
+}
+if (remoteSha && remoteSha !== sha && !isShortBranch && process.env.CI !== 'true') {
   throw new Error(`Candidate branch is not synchronized with origin (${sha} != ${remoteSha}).`);
 }
 
@@ -63,6 +81,15 @@ console.log(JSON.stringify({
   productionProviders,
   releaseBranch: state.releaseBranch,
   localBranch: branch,
+  branchRole: branch === canonicalBranch
+    ? 'canonical'
+    : branch === state.productionBranch
+      ? 'production_pointer'
+      : branch === releaseCandidateBranch
+        ? 'historical_candidate'
+        : isShortBranch ? 'short_task_branch' : 'unrecognized',
+  basedOnCanonicalSha: canonicalSha,
+  containsCanonical: canonicalSha ? isAncestor(canonicalSha, sha) : null,
   sha,
   remoteSha,
   remoteSynchronized: remoteSha ? remoteSha === sha : false,
