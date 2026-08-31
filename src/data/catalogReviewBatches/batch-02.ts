@@ -12,8 +12,8 @@ type BatchSpecies = {
   id: string;
   scientificName: string;
   baseSpeciesKey: string;
-  temp: readonly [number, number];
-  ph: readonly [number, number];
+  temp: readonly [number | null, number | null];
+  ph: readonly [number | null, number | null];
   size: readonly [number | null, number | null];
   sources: readonly string[];
   variantKey?: string;
@@ -31,13 +31,13 @@ const verifiedIdentitySources: Record<string, string> = {
 const species: readonly BatchSpecies[] = [
   { id: 'sp_0012', scientificName: 'Puntius titteya', baseSpeciesKey: 'Puntius titteya', temp: [23, 27], ph: [6, 8], size: [null, 5], sources: ['batch-02-fishbase-puntius-titteya'] },
   { id: 'sp_0468', scientificName: 'Trigonostigma heteromorpha', baseSpeciesKey: 'Trigonostigma heteromorpha', temp: [22, 25], ph: [5, 7], size: [null, 5], sources: ['batch-02-fishbase-trigonostigma-heteromorpha'] },
-  { id: 'sp_0433', scientificName: 'Hemigrammus rhodostomus', baseSpeciesKey: 'Hemigrammus rhodostomus', temp: [24, 28], ph: [5.5, 7], size: [4, 5], sources: ['batch-02-fishbase-hemigrammus-rhodostomus', 'batch-02-worms-hemigrammus-rhodostomus'] },
+  { id: 'sp_0433', scientificName: 'Petitella rhodostoma', baseSpeciesKey: 'Petitella rhodostoma', temp: [null, null], ph: [null, null], size: [null, 5], sources: ['batch-02-fishbase-hemigrammus-rhodostomus'], identityNote: 'FishBase presents the accepted taxon as Petitella rhodostoma; the former Hemigrammus name is not retained as the canonical identity.' },
   { id: 'sp_0443', scientificName: 'Hoplisoma panda', baseSpeciesKey: 'Hoplisoma panda', temp: [20, 25], ph: [6, 8], size: [null, 3.8], sources: ['batch-02-fishbase-corydoras-panda'], identityNote: 'FishBase currently presents this taxon as Hoplisoma panda; the catalog spelling “Corydoras pandas” is not retained.' },
-  { id: 'sp_0014', scientificName: 'Corydoras aeneus', baseSpeciesKey: 'Corydoras aeneus', temp: [22, 27], ph: [6, 8], size: [6, 7.5], sources: ['batch-02-fishbase-corydoras-aeneus', 'batch-02-worms-corydoras-aeneus'] },
+  { id: 'sp_0014', scientificName: 'Osteogaster aenea', baseSpeciesKey: 'Osteogaster aenea', temp: [25, 28], ph: [6, 8], size: [null, 7.5], sources: ['batch-02-fishbase-corydoras-aeneus'], identityNote: 'FishBase currently presents this taxon as Osteogaster aenea; the catalog identity is updated from Corydoras aeneus.' },
   { id: 'sp_0013', scientificName: 'Otocinclus vittatus', baseSpeciesKey: 'Otocinclus vittatus', temp: [20, 25], ph: [6, 7.5], size: [null, 3.3], sources: ['batch-02-fishbase-otocinclus-vittatus'] },
   { id: 'sp_0444', scientificName: 'Trichopodus leerii', baseSpeciesKey: 'Trichopodus leerii', temp: [24, 28], ph: [6, 8], size: [null, 12], sources: ['batch-02-fishbase-trichopodus-leerii'] },
-  { id: 'sp_0016', scientificName: 'Mikrogeophagus ramirezi', baseSpeciesKey: 'Mikrogeophagus ramirezi', temp: [26, 30], ph: [5, 7], size: [4, 5], sources: ['batch-02-fishbase-mikrogeophagus-ramirezi', 'batch-02-worms-mikrogeophagus-ramirezi'], variantKey: 'gold', identityNote: 'Gold is treated as a cultivated variant of Mikrogeophagus ramirezi, not a separate species; the variant claim is not used for taxonomic certainty.' },
-  { id: 'sp_0446', scientificName: 'Pterophyllum scalare', baseSpeciesKey: 'Pterophyllum scalare', temp: [24, 30], ph: [6, 7.5], size: [12, 15], sources: ['batch-02-fishbase-pterophyllum-scalare', 'batch-02-worms-pterophyllum-scalare'] },
+  { id: 'sp_0016', scientificName: 'Mikrogeophagus ramirezi', baseSpeciesKey: 'Mikrogeophagus ramirezi', temp: [27, 30], ph: [5, 6], size: [null, 4.2], sources: ['batch-02-fishbase-mikrogeophagus-ramirezi'], variantKey: 'gold', identityNote: 'FishBase supports the species identity; the gold cultivar is retained as a catalog variant and is not treated as a separate species.' },
+  { id: 'sp_0446', scientificName: 'Pterophyllum scalare', baseSpeciesKey: 'Pterophyllum scalare', temp: [24, 30], ph: [6, 8], size: [null, null], sources: ['batch-02-fishbase-pterophyllum-scalare'] },
   { id: 'sp_0447', scientificName: 'Symphysodon aequifasciatus', baseSpeciesKey: 'Symphysodon aequifasciatus', temp: [26, 30], ph: [4.5, 7], size: [13, 15], sources: ['batch-02-fishbase-symphysodon-aequifasciatus', 'batch-02-worms-symphysodon-aequifasciatus'] },
 ] as const;
 
@@ -61,8 +61,12 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
   const reviews = [
     supported(item.id, 'identity', { scientificName: item.scientificName, baseSpeciesKey: item.baseSpeciesKey, variantKey: item.variantKey ?? null }, identityCitations, 'high'),
     supported(item.id, 'water', 'freshwater', citations, 'high'),
-    supported(item.id, 'temperature', { min: tempMin, max: tempMax }, citations),
-    supported(item.id, 'ph', { min: phMin, max: phMax }, citations),
+    tempMin === null && tempMax === null
+      ? unknown(item.id, 'temperature', citations, 'The opened FishBase record does not provide a temperature range.')
+      : supported(item.id, 'temperature', { min: tempMin, max: tempMax }, citations),
+    phMin === null && phMax === null
+      ? unknown(item.id, 'ph', citations, 'The opened FishBase record does not provide a pH range.')
+      : supported(item.id, 'ph', { min: phMin, max: phMax }, citations),
     supported(item.id, 'adult_size', { min: sizeMin, max: sizeMax }, citations),
     unknown(item.id, 'tank_size', citations, 'The cited taxonomic records do not establish a defensible aquarium tank minimum; no stocking threshold is inferred.'),
     unknown(item.id, 'social_behavior', citations, 'The cited records do not establish a species-specific aquarium group minimum suitable for a formal stocking conclusion.'),
@@ -88,6 +92,22 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
     const breeding = reviews.find(review => review.field === 'breeding_behavior');
     if (tank) Object.assign(tank, supported(item.id, 'tank_size', { liters: null, lengthCm: 120 }, citations, 'high'));
     if (breeding) Object.assign(breeding, supported(item.id, 'breeding_behavior', { traits: ['Male guards the bubble nest.'] }, citations, 'high'));
+  }
+  if (item.id === 'sp_0016') {
+    const group = reviews.find(review => review.field === 'social_behavior');
+    const tank = reviews.find(review => review.field === 'tank_size');
+    const breeding = reviews.find(review => review.field === 'breeding_behavior');
+    if (group) Object.assign(group, supported(item.id, 'social_behavior', { mode: 'pair', minimumGroupSize: null }, citations, 'high'));
+    if (tank) Object.assign(tank, supported(item.id, 'tank_size', { liters: null, lengthCm: 60 }, citations, 'high'));
+    if (breeding) Object.assign(breeding, supported(item.id, 'breeding_behavior', { traits: ['Female cares for eggs and larvae.'] }, citations, 'high'));
+  }
+  if (item.id === 'sp_0446') {
+    const group = reviews.find(review => review.field === 'social_behavior');
+    const tank = reviews.find(review => review.field === 'tank_size');
+    const breeding = reviews.find(review => review.field === 'breeding_behavior');
+    if (group) Object.assign(group, supported(item.id, 'social_behavior', { mode: 'group', minimumGroupSize: 5 }, citations, 'high'));
+    if (tank) Object.assign(tank, supported(item.id, 'tank_size', { liters: null, lengthCm: 100 }, citations, 'high'));
+    if (breeding) Object.assign(breeding, supported(item.id, 'breeding_behavior', { traits: ['Both parents guard eggs attached to aquatic vegetation.'] }, citations, 'high'));
   }
   return reviews;
 };
@@ -162,5 +182,9 @@ export const catalogReviewBatch02VerifiedSourceIds: string[] = [
   'batch-02-fishbase-corydoras-panda',
   'batch-02-fishbase-otocinclus-vittatus',
   'batch-02-fishbase-trichopodus-leerii',
+  'batch-02-fishbase-hemigrammus-rhodostomus',
+  'batch-02-fishbase-corydoras-aeneus',
+  'batch-02-fishbase-mikrogeophagus-ramirezi',
+  'batch-02-fishbase-pterophyllum-scalare',
   ...Object.values(verifiedIdentitySources),
 ];
