@@ -2,7 +2,7 @@
 
 ## 2026-08-31 专业身份核实进展（当前）
 
-- 当前数据分支 `codex/catalog-cohort-30-v1` HEAD 为 `065f75e2`，工作树干净，尚未推送。
+- 当前数据分支 `codex/catalog-cohort-30-v1` HEAD 为 `124cd20b`，工作树干净，尚未推送。
 - 新增4条 GBIF Backbone Taxonomy 身份来源，分别核实 Hemigrammus rhodostomus、Corydoras aeneus、Pterophyllum scalare 和 Symphysodon aequifasciatus；GBIF 仅用于身份，不覆盖水体、温度、体型、缸体或行为字段。
 - 当前聚合统计为 30 种/300 字段、85 supported、215 reviewed+unknown、24 条内容已核实来源、59 个字段可进入运行时；486 种 Catalog checksum 为 `d99a4d3a6b1bb7a4324a2c1551af4a295cbee76aaf2cc083d975d919876c8c8b`。
 - 批次、Catalog、435 组合、Domain/Service/Presentation、authority、lint 和 build 均通过；同一 Critic 已复验本轮来源边界，无实现阻塞。
