@@ -44,7 +44,7 @@ const seeds: Seed[] = [
   {
     speciesId: 'sp_0021', commonName: '迷你鹦鹉鱼', scientificName: 'Amatitlania nigrofasciata var.',
     baseSpeciesKey: 'Amatitlania nigrofasciata', variantKey: null, sourceId: 'batch03-fishbase-amatitlania-nigrofasciata',
-    sourceTitle: 'Amatitlania nigrofasciata species summary', sourceUrl: 'https://www.fishbase.se/summary/Amatitlania-nigrofasciata.html', water: 'freshwater',
+    sourceTitle: 'Amatitlania nigrofasciata species summary', sourceUrl: 'https://www.fishbase.se/summary/Amatitlania-nigrofasciata.html',
     identityUnknown: '“迷你鹦鹉鱼”品系身份与 Amatitlania nigrofasciata 的商业命名关系未被该物种页确认，品系字段保持未知。',
   },
   {
