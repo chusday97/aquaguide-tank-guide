@@ -9,6 +9,12 @@
 - 已验证：`project:status`、`check:project-truth`、`test:catalog-review-batches`、`catalog:validate`、`test:compatibility-launch-matrix` 通过；当前生产指针仍为 `release/production@ed0cf380`。
 - 下一步：提交本次治理修复后，继续执行数据分支完整门禁；不修改 UI、生产 Supabase 或正式部署。
 
+## 2026-08-31 P0 回归夹具修复（当前）
+
+- `test:p0-tank-evidence` 的淡水/海水冲突夹具改为提供显式 `waterType`；不再依赖名称、分类或描述推断水体。
+- 已验证：该 P0 测试在授权本地环境 10/10 通过；`test:compatibility`、P0 tank state、P0 water change、API boundary、Catalog、Domain、Service、添加意图、写入恢复、lint、API 类型和 production build 已通过。
+- 当前仍需：完整数据门禁汇总、独立 Critic 复验、数据短 PR 同步；生产 migration、Catalog 发布和 UI 仍未执行。
+
 ## 2026-08-31 并行首发审核结果
 
 - 三个子任务已完成各自10种批次并提交，主线程已聚合为30种/300条字段记录。

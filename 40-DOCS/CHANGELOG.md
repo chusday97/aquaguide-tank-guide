@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Fixed: project status now accepts `codex/*` short task branches only when they contain the latest `main` ancestor, and reports the branch role and ancestry evidence. Updated Project Truth to reflect merged PR #142 and aligned the documented Catalog water type contract with the code and pending migration (`brackish` included).
+- Fixed: updated the tank evidence regression fixture to use explicit water types, preserving the no-text-inference contract while restoring the freshwater/marine hard-constraint test.
 
 - Added: four GBIF Backbone Taxonomy identity sources for batch-02 (Hemigrammus rhodostomus, Corydoras aeneus, Pterophyllum scalare and Symphysodon aequifasciatus). These citations are identity-only; husbandry and compatibility fields remain gated by their own verified sources. Runtime evidence counts now 24 sources / 59 approved fields at `065f75e2`.
 - Changed: verified two direct FishBase pages for Paracheirodon innesi and Paracheirodon axelrodi; only explicit water, temperature, pH and adult-size facts are eligible. Runtime evidence is now 26 sources / 73 approved fields; behavior and stocking claims remain gated.
