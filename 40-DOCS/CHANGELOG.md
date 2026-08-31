@@ -4,6 +4,7 @@
 
 - Changed: catalog field reviews now distinguish supported facts from reviewed-but-unknown fields.
 - Added: parallel launch-cohort review batches and aggregate validation for 30 species / 300 fields.
+- Changed: runtime Catalog overlays now require a separately verified source-content allowlist.
 
 - Added draft FishBase source candidates for the first 10 launch-cohort species. Candidates are attached to research drafts only; no field is promoted until a reviewer verifies the source, value, citation and conflicts.
 - Added a regression assertion that the first-batch source candidate IDs exactly match the first-batch cohort IDs.
