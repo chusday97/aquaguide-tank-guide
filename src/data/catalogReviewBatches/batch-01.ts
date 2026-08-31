@@ -36,7 +36,7 @@ export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
     id: 'catalog-fishbase-paracheirodon-innesi',
     title: 'Paracheirodon innesi (Neon tetra) species summary',
     publisher: 'FishBase',
-    url: 'https://www.fishbase.org/summary/Paracheirodon-innesi.html',
+    url: 'https://www.fishbase.se/summary/Paracheirodon-innesi.html',
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
@@ -44,7 +44,7 @@ export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
     id: 'catalog-fishbase-paracheirodon-axelrodi',
     title: 'Paracheirodon axelrodi (Cardinal tetra) species summary',
     publisher: 'FishBase',
-    url: 'https://www.fishbase.org/summary/Paracheirodon-axelrodi.html',
+    url: 'https://www.fishbase.se/summary/Paracheirodon-axelrodi.html',
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
@@ -155,6 +155,8 @@ export const catalogReviewBatch01Sources: CatalogEvidenceSource[] = [
 ];
 
 const verifiedSourceIds = new Set([
+  'catalog-fishbase-paracheirodon-innesi',
+  'catalog-fishbase-paracheirodon-axelrodi',
   'catalog-fishbase-tanichthys-albonubes',
   'catalog-fishbase-poecilia-reticulata',
   'catalog-fishbase-danio-rerio',

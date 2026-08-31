@@ -87,7 +87,7 @@ export const catalogContentVerifiedSourceIds = new Set([
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);
 
 export const getApprovedCatalogFieldReviews = (speciesId: string) => getCatalogFieldReviews(speciesId)
-  .filter(item => item.status === 'reviewed' && item.citationIds.length > 0
+  .filter(item => item.status === 'reviewed' && item.resolution === 'supported' && item.citationIds.length > 0
     && item.citationIds.every(citationId => catalogContentVerifiedSourceIds.has(citationId))
     && isCatalogFieldReviewValueValid(item));
 

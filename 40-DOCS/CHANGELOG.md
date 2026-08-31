@@ -3,10 +3,12 @@
 ## [Unreleased]
 
 - Added: four GBIF Backbone Taxonomy identity sources for batch-02 (Hemigrammus rhodostomus, Corydoras aeneus, Pterophyllum scalare and Symphysodon aequifasciatus). These citations are identity-only; husbandry and compatibility fields remain gated by their own verified sources. Runtime evidence counts now 24 sources / 59 approved fields at `065f75e2`.
+- Changed: verified two direct FishBase pages for Paracheirodon innesi and Paracheirodon axelrodi; only explicit water, temperature, pH and adult-size facts are eligible. Runtime evidence is now 26 sources / 73 approved fields; behavior and stocking claims remain gated.
 
 - Changed: catalog field reviews now distinguish supported facts from reviewed-but-unknown fields.
 - Added: parallel launch-cohort review batches and aggregate validation for 30 species / 300 fields.
 - Changed: runtime Catalog overlays now require a separately verified source-content allowlist.
+- Changed: verified additional batch-02 FishBase facts (taxonomy aliases, environment, size and narrow husbandry fields) and batch-03 species facts; runtime evidence is now 30 verified sources / 94 approved fields. Conflicting taxonomies remain unknown.
 
 - Added draft FishBase source candidates for the first 10 launch-cohort species. Candidates are attached to research drafts only; no field is promoted until a reviewer verifies the source, value, citation and conflicts.
 - Added a regression assertion that the first-batch source candidate IDs exactly match the first-batch cohort IDs.

@@ -24,7 +24,7 @@ assert.equal(cohort.length, 30);
 assert.equal(REVIEWABLE_CATALOG_FIELDS.length, 10);
 const cohortFirstApproved = getApprovedCatalogFieldReviews(cohort[0].id);
 assert.ok(cohortFirstApproved.length > 0);
-assert.ok(cohortFirstApproved.every(review => review.field === 'identity'));
+assert.ok(cohortFirstApproved.some(review => review.field === 'identity'));
 assert.ok(cohortFirstApproved.every(review => review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))));
 assert.equal(isCatalogSpeciesFieldReady(cohort[0].id), false);
 assert.equal(catalogReviewSourceCandidateIds.length, 10);
