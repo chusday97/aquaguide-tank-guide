@@ -2,11 +2,12 @@
 
 从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。
 
-### 2026-08-31 当前真实快照（`0db5f4d8`）
+### 2026-08-31 当前真实快照（`2c302452`）
 
 - [x] 30种/300条字段审核记录已聚合，格式、批次归属、重复字段、跨物种引用和来源归属门禁通过。
-- [x] 80条记录标记为 `supported`，220条为 `reviewed + unknown`；其中只有实际逐页核实的15条来源允许覆盖运行时，共50个字段进入运行时。
-- [x] 未逐页核实的支持候选不会进入运行时；`test:catalog-review-batches` 已硬断言 `contentVerifiedSources=15`、`runtimeApprovedFields=50`，防止把旧统计误报为完成。
+- [x] 85条记录标记为 `supported`，215条为 `reviewed + unknown`；其中20条来源已核实，55个字段允许进入运行时。
+- [x] 新增5条 GBIF 分类记录，仅用于身份字段；它们不支持水体、缸体、行为或数量字段，相关字段继续保持 `unknown`。
+- [x] 未逐页核实的支持候选不会进入运行时；`test:catalog-review-batches` 已硬断言 `contentVerifiedSources=20`、`runtimeApprovedFields=55`，防止把旧统计误报为完成。
 - [x] Catalog 486种构建/校验通过，当前 checksum 由 `catalog:validate` 运行时生成；435组组合矩阵、Domain/Service/Presentation、lint 和 build 通过。
 - [ ] 30种专业资料闭环尚未完成：仍有未打开或未能明确支持字段的来源；不能宣称30种已完成内容审核，也不能发布 Catalog。
 - [ ] 本分支仍只在本地，未推送 GitHub；UI、生产 Supabase 第27个 migration、Catalog 发布和 `main` 合并均未执行。

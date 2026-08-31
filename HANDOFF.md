@@ -675,11 +675,11 @@
 - 根因：旧 `foreignObjectRendering` 在离屏 1080px 克隆上生成全透明画布；常规 html2canvas 又会被 Tailwind `oklch` 阻断。
 - 修复：记录卡使用 Canvas API 固定 1080px 直接绘制，不读取响应式页面 CSS；实际 PNG 为 1080×1000，深色像素和通道对比度门禁通过。
 - 验证：导出模型、分享隐私契约、390/600/1280px 布局和真实下载像素检查。
-## 当前接手快照（2026-08-31，`0db5f4d8`）
+## 当前接手快照（2026-08-31，`2c302452`）
 
 目标仍是完成首批30种物种的专业来源闭环；当前不修改 UI、不写生产 Supabase、不发布 Catalog、不推送远端。
 
-已验证：30种/300字段结构、来源归属与审核分辨率门禁；80条 `supported`、220条 `reviewed + unknown`；15条来源已实际打开核对，50个字段允许进入运行时；486种 Catalog 构建/校验、435组矩阵、Domain/Service/Presentation、lint/build 和独立 Critic 复验通过。
+已验证：30种/300字段结构、来源归属与审核分辨率门禁；85条 `supported`、215条 `reviewed + unknown`；20条来源已实际打开核对（其中5条 GBIF 仅支持身份），55个字段允许进入运行时；486种 Catalog 构建/校验、435组矩阵、Domain/Service/Presentation、lint/build 和独立 Critic 复验通过。
 
 当前卡点：仍有来源页面未打开或未能明确支持字段。未核实引用被运行时门禁拦截，不能将“supported”统计直接当成专业事实，也不能发布 Catalog。
 
