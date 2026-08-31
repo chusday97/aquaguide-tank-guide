@@ -125,3 +125,9 @@ Branch: `feature/admin-content-v0`
 ## 2026-08-31 live workflow-label localization
 - Active workflow filter banners now derive labels from current `appLocale`; switching 中文/English updates an already-active filter immediately.
 - Browser regression: Data Review and Awaiting Review banners switch live between Chinese/English with zero page errors.
+
+## 2026-08-31 image Inspector semantics
+- Hero image Inspector now maps to `Image Alt`, not to image replacement.
+- Selected image status explicitly says `Alt custom/not set · Image source read-only`; Product Truth remains the image authority.
+- Inspector edit path now includes the exact mapped field after scope/section.
+- Browser regression in Chinese/English: image selection highlights the Image Alt editor target and reports zero page errors.

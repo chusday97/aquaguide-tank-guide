@@ -193,3 +193,6 @@
 
 ## 2026-08-31 — Workflow labels are derived UI, not state
 Do not persist translated display strings in workflow filter state. Filter state stores semantic keys/status; visible labels are derived from the current interface locale so the global language switch updates active filters immediately.
+
+## 2026-08-31 — Image asset and Image Alt are separate authorities
+The Content Admin may edit image alt text, but it does not own the Product Truth image asset. Preview Inspector must make that split explicit and must never imply that clicking the image enables image replacement.

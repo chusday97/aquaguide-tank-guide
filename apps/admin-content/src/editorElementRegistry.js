@@ -13,7 +13,8 @@ export const EDITOR_ELEMENT_REGISTRY = {
   },
   imageAlt: {
     previewMode: 'page', editorField: 'imageAlt',
-    label: { 'zh-CN': '主图', en: 'Hero image' },
+    label: { 'zh-CN': '主图 Alt 文本', en: 'Hero image alt text' },
+    assetReadOnly: true,
   },
   seoTitle: {
     previewMode: 'google', editorField: 'seoTitle',

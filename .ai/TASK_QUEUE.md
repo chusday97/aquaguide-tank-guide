@@ -89,3 +89,8 @@ Updated: 2026-08-30
 - [x] Remove mixed-language labels from topbar workflow actions.
 - [x] Derive active filter banner labels from live `appLocale` instead of cached click-time strings.
 - [x] Keep content-locale prefixes (`中文/Chinese/English`) aligned with interface language.
+
+## 2026-08-31 image Inspector boundary
+- [x] Rename ambiguous `Hero image / 主图` Inspector mapping to explicit Image Alt text.
+- [x] Mark image asset authority as Product Truth read-only while keeping alt text editable.
+- [x] Extend Inspector paths to the exact field level.

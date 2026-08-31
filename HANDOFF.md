@@ -689,3 +689,6 @@ Live Preview is not persistence. Keep Base/Variant dirty state visible until a s
 
 ## 2026-08-31 workflow-label contract
 Workflow filter state is semantic. Do not cache translated labels as the source of truth; derive banner text from `type/status/locale + appLocale` so active filters follow the global interface-language switch.
+
+## 2026-08-31 image authority contract
+The hero image asset remains Product Truth and read-only in Content Admin. Only Image Alt is editable. Keep the Inspector label/source/path explicit enough that image selection cannot be mistaken for an image-upload or image-replacement workflow.

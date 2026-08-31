@@ -246,3 +246,9 @@
 - Added live `workflowFilterLabel` derivation in Species sidebar.
 - Chromium verified active Data Review / Awaiting Review filters re-render across 中文 ↔ English with `pageErrors=[]`.
 - Contract and local schema-v7 Supabase gate PASS.
+
+## 2026-08-31 — Image Inspector regression
+- Changed registry label to `主图 Alt 文本 / Hero image alt text` and marked the asset read-only.
+- Added exact field names to Preview Inspector edit paths.
+- Chromium verified Image Alt selection, source/read-only explanation, Base-owned H1 path and English rendering with `pageErrors=[]`.
+- Contract and local schema-v7 Supabase gate PASS.

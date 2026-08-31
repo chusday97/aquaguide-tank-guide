@@ -131,6 +131,9 @@ assert.deepEqual(
   'Preview inspector must preserve the six core editable element mappings',
 );
 assert.equal(EDITOR_ELEMENT_REGISTRY.temperature.readOnly, true, 'Product Truth temperature must stay inspectable but read-only');
+assert.equal(EDITOR_ELEMENT_REGISTRY.imageAlt.assetReadOnly, true, 'Hero image source must stay Product Truth read-only even though alt text is editable');
+assert.match(liveFrontendPreviewSource, /Image source read-only|图片资源只读/, 'Image inspector must explain the split between read-only asset and editable alt text');
+assert.match(liveFrontendPreviewSource, /getEditorElementLabel\(key, appLocale\)/, 'Inspector edit paths must identify the exact mapped field, not only its section');
 assert.match(appSource, /selectedInspectorElement/, 'Admin must keep one shared inspector selection across editor and preview');
 assert.match(appSource, /data-editor-field/, 'Variant editor fields must expose stable inspector targets');
 assert.match(appSource, /renderInheritedOverrideField/, 'Variant editor must use explicit inherited/custom field presentation');

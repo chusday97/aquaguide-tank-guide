@@ -14,7 +14,15 @@ function elementSource(key, preview, appLocale) {
   const english = appLocale === 'en';
   const readOnly = getEditorElementMeta(key)?.readOnly || (key === 'localizedName' && preview?.locale !== 'en');
   if (readOnly) return english ? 'Product Truth · Read only' : 'Product Truth · 只读';
-  if (key === 'imageAlt') return preview?.effectiveSeo?.imageAlt ? (english ? 'Custom' : '自定义') : (english ? 'Not set' : '尚未填写');
+  if (key === 'imageAlt') {
+    const altState = preview?.effectiveSeo?.imageAlt
+      ? (english ? 'Alt custom' : 'Alt 已自定义')
+      : (english ? 'Alt not set' : 'Alt 尚未填写');
+    const assetReadOnly = Boolean(getEditorElementMeta(key)?.assetReadOnly);
+    return assetReadOnly
+      ? `${altState} · ${english ? 'Image source read-only' : '图片资源只读'}`
+      : altState;
+  }
   if (key === 'intro') return preview?.override?.intro
     ? (english ? 'Custom' : '自定义')
     : preview?.effectiveSeo?.sharedIntro
@@ -35,7 +43,7 @@ function elementEditPath(key, preview, appLocale, editorScope) {
   const custom = Boolean(preview?.override?.[key]);
   const baseContext = !variantOnly && !custom;
   const scope = baseContext ? 'Base Species' : (english ? 'Current page' : '当前页面');
-  return `${scope} → ${section}`;
+  return `${scope} → ${section} → ${getEditorElementLabel(key, appLocale)}`;
 }
 function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabled, onSelect, onHover, labelLocale = 'zh-CN', children, className = '', readOnlyElement = false }) {
   const selected = selectedElement === elementKey;
