@@ -74,3 +74,10 @@ The persistent product model is now:
 - Lifecycle + editorial review is represented once as `Draft · Editing/编辑中`, not repeated as multiple pills.
 - Base shared intro context is available on demand instead of occupying permanent vertical space in Variant authoring.
 - Preview Inspector routing is authority-aware only when selection starts from Preview: inherited content opens Base, Variant-owned content opens Current page, Product Truth remains read-only. Editor-origin selection only highlights Preview and does not unexpectedly switch scope.
+
+## 2026-08-31 — Primary editor density pass
+- Primary Variant authoring now defaults to only SEO title/description/H1 plus Intro and Image Alt.
+- Header status is one calm `Draft · review state` line instead of repeated catalog/SEO/inheritance pills.
+- Focus Keyword, index strategy, canonical target and public route evidence live under a default-collapsed Advanced SEO disclosure; blockers may force it open.
+- Variant Intro defaults to four rows and remains vertically resizable.
+- 1440×900 Chromium evidence: default editor panel height reduced from ~1333px to ~936px while Inspector remains bidirectional.

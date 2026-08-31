@@ -50,3 +50,9 @@ Updated: 2026-08-30
 - [x] Complete inheritance controls and secondary-tool drawer density pass.
 - [x] Align Page Preview to the real static generator structure and preserve Preview access below 1180px with a compact overlay.
 - [ ] Continue visual refinement: spacing and typography polish without changing the stable three-pane interaction model.
+
+## 2026-08-31 density pass
+- [x] Replace repeated Variant header status pills with one calm lifecycle/review line.
+- [x] Collapse Focus Keyword / indexing / canonical / route details into Advanced SEO.
+- [x] Reduce Variant Intro default height while preserving resize and Inspector mapping.
+- [x] Prioritize workflow status over admin identity text in narrower desktop topbar.

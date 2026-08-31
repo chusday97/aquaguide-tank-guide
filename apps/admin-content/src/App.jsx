@@ -390,7 +390,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             ) : null}
             <label {...editorFieldProps('intro')}>
               {t('editor.variantIntro')}
-              <textarea rows="6" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Describe only Variant-specific differences; keep shared care content in Base Species.' : '只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。'} />
+              <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Describe only Variant-specific differences; keep shared care content in Base Species.' : '只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。'} />
             </label>
             <label {...editorFieldProps('imageAlt')}>
               {t('editor.imageAlt')}

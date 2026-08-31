@@ -84,3 +84,10 @@ Branch: `feature/admin-content-v0`
 - Preview-origin Inspector routing now follows content authority: inherited H1/Intro/metadata → Base Species; image alt / localized English name / Variant overrides → Current page; Product Truth stays read-only.
 - Editor-origin Inspector selection never changes authoring scope just to highlight Preview. Browser regression: inherited H1 editor click stays Current page; Preview H1 click switches Base and highlights Base H1; Preview Hero Image switches back to Current page. `pageErrors=[]`.
 - Contract/build/local schema-v7 Supabase gate PASS.
+
+## 2026-08-31 primary-editor density evidence
+- Default Variant editor height at 1440×900: ~936px (previous audit ~1333px).
+- Visible primary path: Meta Title / Meta Description / H1 / Intro / Image Alt; Advanced SEO is collapsed unless a blocker requires attention.
+- Header status: `Draft · 编辑中/待审核/已审核`; repeated catalog/title-inheritance pills removed.
+- Intro focus still selects the mapped live Preview element; browser `pageErrors=[]`.
+- Responsive topbar prioritizes workflow state over admin identity details at common laptop widths.

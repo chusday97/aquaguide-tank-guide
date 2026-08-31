@@ -96,6 +96,9 @@ assert.match(editorToolDrawerSource, /Escape/, 'Tool drawer must support keyboar
 assert.match(editorToolDrawerSource, /editor-tool-drawer-backdrop/, 'Tool drawer must support explicit backdrop dismissal');
 assert.match(editorToolDrawerSource, /aria-modal="false"/, 'Tool drawer must keep the live Preview interactive rather than acting as a blocking modal');
 assert.match(stylesSource, /editor-tool-drawer-layer[\s\S]*grid-column:\s*2;\s*grid-row:\s*1/, 'Tool drawer must overlay only the editor grid cell');
+assert.match(stylesSource, /@media \(max-width: 1320px\)[\s\S]*\.topbar-actions \.admin-email \{ display: none; \}/, 'Responsive topbar must hide admin email before hiding workflow state');
+assert.match(stylesSource, /@media \(max-width: 1180px\) and \(min-width: 761px\)[\s\S]*\.topbar-workflow \{ display: flex; \}/, 'Workflow state must remain visible through common laptop widths');
+assert.match(stylesSource, /@media \(max-width: 760px\)[\s\S]*\.topbar-workflow \{ display: none; \}/, 'Workflow state may collapse only at the narrow single-column breakpoint');
 assert.match(stylesSource, /studio-workspace > \.live-preview-pane \{ grid-column:\s*3;/, 'Live Preview must remain in its own grid column while tools are open');
 assert.doesNotMatch(appSource, /<option value="archived">/, 'Species Variant lifecycle UI must expose Draft/Published only');
 assert.doesNotMatch(baseSource, /<option value="archived">/, 'Base Species lifecycle UI must expose Draft/Published only');
@@ -116,6 +119,10 @@ assert.equal(EDITOR_ELEMENT_REGISTRY.temperature.readOnly, true, 'Product Truth 
 assert.match(appSource, /selectedInspectorElement/, 'Admin must keep one shared inspector selection across editor and preview');
 assert.match(appSource, /data-editor-field/, 'Variant editor fields must expose stable inspector targets');
 assert.match(appSource, /renderInheritedOverrideField/, 'Variant editor must use explicit inherited/custom field presentation');
+assert.match(appSource, /editor-status-line/, 'Primary editor header must use one calm Draft/review status line');
+assert.doesNotMatch(appSource, /editor-statuses[\s\S]*status-pill/, 'Primary editor must not regress to repeated status pills');
+assert.match(appSource, /advanced-seo-disclosure/, 'Focus keyword and indexing controls must stay behind Advanced SEO disclosure');
+assert.match(appSource, /<textarea rows=\"4\" value=\{form\.intro\}/, 'Variant intro must default to a compact four-row editing surface');
 assert.match(appSource, /advanced-seo-disclosure/, 'Low-frequency keyword/index/canonical controls must stay behind Advanced SEO disclosure');
 assert.match(appSource, /open=\{Boolean\(indexBlockReason\)\}/, 'Advanced SEO must automatically surface active index/canonical blockers');
 assert.match(appSource, /inherited-content-disclosure/, 'Inherited Base intro must remain collapsed by default in Variant editing');

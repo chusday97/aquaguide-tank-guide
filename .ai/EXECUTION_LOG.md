@@ -208,3 +208,8 @@
 - Browser measured Variant panel ~1032px at 1440px with advanced controls collapsed; all advanced controls remain present after disclosure expansion.
 - Fixed Preview-origin authority routing and verified Current page → Base inherited H1 → Current page image-alt round trip with mapped editor highlights and zero page errors.
 - `npm run test:contract`, production build and local ephemeral Supabase schema-v7 gate all PASS.
+
+## 2026-08-31 — Primary editor density verification
+- Removed duplicate Variant header status badges in favor of one lifecycle/review summary.
+- Advanced SEO is now the single home for keyword/index/canonical/route controls.
+- Chromium 1440×900 measured ~936px default editor height; Intro Inspector mapping PASS; pageErrors=[]; B gate PASS.

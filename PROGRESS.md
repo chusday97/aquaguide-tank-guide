@@ -418,3 +418,9 @@
 - 1440px Chromium 实测常规 Variant 编辑区约 1032px，高于密度优化前约 1333px 的页面减少约 23%，Inspector 仍正常。
 - 修正右侧 Inspector 的“在哪里改”逻辑：从 Preview 点击继承 H1/Intro/metadata 自动进入 Base；Variant-only/自定义内容进入当前页面；Product Truth 只读。中间字段点击仅负责高亮 Preview，不会突然切换编辑上下文。
 - Contract / build / 本地 schema-v7 Supabase gate 全部 PASS。
+
+## 2026-08-31 — Primary editor density refinement
+- Variant authoring default height reduced from ~1333px to ~936px at 1440×900 without removing any persisted field.
+- Primary editor now emphasizes the five daily fields; low-frequency SEO routing controls are progressively disclosed.
+- Lifecycle/review state is summarized once in the header; actual review/status controls remain in the sticky save footer.
+- Intro remains Inspector-mapped after reducing its default textarea to four rows.

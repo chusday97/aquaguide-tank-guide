@@ -163,3 +163,8 @@
 - Decision: hide low-frequency Focus Keyword / indexing / canonical / URL controls behind Advanced SEO; automatically open only when an index/canonical blocker needs action.
 - Decision: replace repeated lifecycle/inheritance pills with one calm status line and field-level inheritance controls.
 - Decision: Preview Inspector click resolves editing ownership before routing. Inherited Base-owned fields route to Base Species; Variant-only/custom fields route to Current page; editor-field focus itself never changes scope.
+
+## 2026-08-31 — Keep low-frequency SEO progressive
+- Removed duplicate Variant header status badges in favor of one lifecycle/review summary.
+- Advanced SEO is now the single home for keyword/index/canonical/route controls.
+- Chromium 1440×900 measured ~936px default editor height; Intro Inspector mapping PASS; pageErrors=[]; B gate PASS.

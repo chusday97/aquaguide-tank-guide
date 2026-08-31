@@ -665,3 +665,9 @@
 - Variant/Base headers use a single `editor-status-line`; do not reintroduce catalog/title-inheritance status pill clusters.
 - Inherited Base intro is a collapsed disclosure in Variant authoring. The right Preview remains the canonical visual context.
 - When Inspector selection originates from Preview, route by ownership: Base-owned inherited fields → Base editor; Variant-only/custom → Current page; Product Truth → no editable target. Editor-origin selection must not switch scope.
+
+## 2026-08-31 primary editor UX contract
+- Keep daily Variant authoring calm: Title, Meta Description, H1, Intro, Image Alt first.
+- Do not restore catalog/status/inheritance badge clusters to the editor header.
+- Advanced SEO owns Focus Keyword, index strategy, canonical sibling and route evidence; it is collapsed by default unless a blocker must be shown.
+- Four-row Variant Intro is intentional; users can resize vertically and Inspector mapping must remain intact.
