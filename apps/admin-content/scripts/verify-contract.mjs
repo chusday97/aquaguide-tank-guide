@@ -116,6 +116,13 @@ assert.equal(EDITOR_ELEMENT_REGISTRY.temperature.readOnly, true, 'Product Truth 
 assert.match(appSource, /selectedInspectorElement/, 'Admin must keep one shared inspector selection across editor and preview');
 assert.match(appSource, /data-editor-field/, 'Variant editor fields must expose stable inspector targets');
 assert.match(appSource, /renderInheritedOverrideField/, 'Variant editor must use explicit inherited/custom field presentation');
+assert.match(appSource, /advanced-seo-disclosure/, 'Low-frequency keyword/index/canonical controls must stay behind Advanced SEO disclosure');
+assert.match(appSource, /open=\{Boolean\(indexBlockReason\)\}/, 'Advanced SEO must automatically surface active index/canonical blockers');
+assert.match(appSource, /inherited-content-disclosure/, 'Inherited Base intro must remain collapsed by default in Variant editing');
+assert.match(appSource, /editor-status-line/, 'Variant editor must use one calm lifecycle/review status line');
+assert.match(baseSource, /editor-status-line/, 'Base editor must use the same calm lifecycle/review status line');
+assert.match(appSource, /source === 'preview'[\s\S]*setEditorScope\(variantOnly \|\| variantOverride \? 'variant' : 'base'\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor');
+assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !custom/, 'Inspector edit path must identify inherited content as Base-owned regardless of current editor scope');
 assert.match(appSource, /Use Base value|使用 Base 值/, 'Variant overrides must expose a return-to-Base action');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');

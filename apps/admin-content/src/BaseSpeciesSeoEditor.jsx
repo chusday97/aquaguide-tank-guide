@@ -98,7 +98,12 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           <h2>{group.base_scientific_name}</h2>
           <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 条记录使用这一 Base 层；多成员组共享继承，单成员组也保留统一审核与发布契约。`}</p>
         </div>
-        <div className="editor-statuses"><span className={`status-pill ${form.status}`}>{localeLabel}: {form.status}</span><span className={`status-pill ${form.reviewState}`}>Review: {form.reviewState}</span></div>
+        <div className="editor-status-line" aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>
+          <span className={`editor-status-dot ${form.status}`}></span>
+          <strong>{form.status === 'published' ? 'Published' : 'Draft'}</strong>
+          <span>·</span>
+          <span>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[form.reviewState] || form.reviewState)}</span>
+        </div>
       </div>
       {group.category_conflict ? (
         <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源 catalog 存在分类冲突；Draft 可继续编辑，但 Publish Readiness 会保持阻止直到人工结论完成。'}</div>

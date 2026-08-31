@@ -158,3 +158,8 @@
 - Shared presentation labels/localization live in `speciesPagePresentation.js` and are imported by both generator and Admin Preview.
 - Do not add content sections to Page Preview unless the generator publishes them.
 - Below 1180px, preserve Preview through a compact overlay rather than forcing a clipped third column or removing Preview access entirely.
+
+## 2026-08-31 — Primary editor progressive disclosure
+- Decision: hide low-frequency Focus Keyword / indexing / canonical / URL controls behind Advanced SEO; automatically open only when an index/canonical blocker needs action.
+- Decision: replace repeated lifecycle/inheritance pills with one calm status line and field-level inheritance controls.
+- Decision: Preview Inspector click resolves editing ownership before routing. Inherited Base-owned fields route to Base Species; Variant-only/custom fields route to Current page; editor-field focus itself never changes scope.

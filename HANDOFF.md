@@ -658,3 +658,10 @@
 - Desktop ≥1180px keeps the persistent third-column Preview. Narrow desktop uses `compactPreviewOpen` and `.compact-preview-toggle`; do not regress to a clipped off-screen 400px column.
 - Editor-origin Inspector selection opens compact Preview on narrow layouts; editable Preview-origin selection closes it and returns to the editor target.
 - Current contract/build/B gate are green; Production Supabase and `main` remain untouched.
+
+## 2026-08-31 Handoff — calm editor + authoritative Inspector routing
+- Variant primary flow now exposes only high-frequency SEO/page-content fields. Advanced SEO contains focus keyword, index strategy, canonical target and derived paths.
+- Advanced SEO defaults closed but is forced open by `indexBlockReason`; do not hide an active safety blocker.
+- Variant/Base headers use a single `editor-status-line`; do not reintroduce catalog/title-inheritance status pill clusters.
+- Inherited Base intro is a collapsed disclosure in Variant authoring. The right Preview remains the canonical visual context.
+- When Inspector selection originates from Preview, route by ownership: Base-owned inherited fields → Base editor; Variant-only/custom → Current page; Product Truth → no editable target. Editor-origin selection must not switch scope.

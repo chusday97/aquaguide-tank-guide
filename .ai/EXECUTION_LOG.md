@@ -201,3 +201,10 @@
 - Moved the three-column cutoff to 1180px after Chromium proved 1120/1080 clipped the old 400px Preview column.
 - Added compact Preview state/trigger for narrow layouts and source-aware Inspector handoff between editor and overlay Preview.
 - Chromium responsive/Inspector regression, contract, build and local Supabase gate all PASS.
+
+## 2026-08-31 — Editor density and Inspector authority milestone
+- Confirmed GitHub A gate `33326654737` for `d79058f` SUCCESS.
+- Collapsed Advanced SEO and inherited Base intro; unified Variant/Base status lines.
+- Browser measured Variant panel ~1032px at 1440px with advanced controls collapsed; all advanced controls remain present after disclosure expansion.
+- Fixed Preview-origin authority routing and verified Current page → Base inherited H1 → Current page image-alt round trip with mapped editor highlights and zero page errors.
+- `npm run test:contract`, production build and local ephemeral Supabase schema-v7 gate all PASS.

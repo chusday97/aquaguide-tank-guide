@@ -28,6 +28,8 @@ Updated: 2026-08-30
 ## Next — P1 Visual refinement
 - [x] Reduce repeated inherited/custom badges and convert Meta Title / Meta Description / H1 to `Inherited from Base → Override → Use Base value` interactions.
 - [x] Move Data Review, Publish Readiness, Translation, Batch SEO, Revision History and Workflow into editor-cell tool drawers while keeping the live Preview visible and existing DB/RPC callbacks authoritative.
+- [x] Reduce primary Variant editor density: one calm lifecycle/review status line, Advanced SEO disclosure for keyword/index/canonical/URL, and collapsed inherited Base intro.
+- [x] Route Preview-origin Inspector selection to the authoritative editor: inherited → Base Species, Variant-only/custom → Current page, Product Truth → read-only.
 - [ ] Re-check Vercel Admin Preview after Hobby deployment quota reset.
 - [ ] Validate 1–2 live translation suggestions after server-only provider key is configured.
 

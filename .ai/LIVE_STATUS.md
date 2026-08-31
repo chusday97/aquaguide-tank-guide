@@ -74,3 +74,13 @@ Branch: `feature/admin-content-v0`
 - 1200px+ keeps the persistent Preview and hides the compact trigger.
 - Live Page no longer contains generator-absent care sections; Hero + facts + Product Truth note render and Inspector hover/selection remain green.
 - Contract/build/local schema-v7 Supabase gate PASS.
+
+## 2026-08-31 Calm editor density + authority routing
+- `d79058f` clean GitHub A gate `33326654737` completed SUCCESS before this refinement started.
+- Variant header no longer repeats catalog/status/title-inheritance pills; it now shows one `Draft · Editing/编辑中` line. Base uses the same pattern.
+- Focus Keyword, Index Strategy, Canonical target and derived URL live under default-collapsed Advanced SEO; an active index/canonical blocker forces that disclosure open.
+- Inherited Base shared intro is collapsed by default instead of expanding full Base copy inside every Variant page.
+- Chromium at 1440px measures the common Variant editor at ~1032px tall versus ~1333px before the density work (~23% reduction), with Advanced SEO collapsed.
+- Preview-origin Inspector routing now follows content authority: inherited H1/Intro/metadata → Base Species; image alt / localized English name / Variant overrides → Current page; Product Truth stays read-only.
+- Editor-origin Inspector selection never changes authoring scope just to highlight Preview. Browser regression: inherited H1 editor click stays Current page; Preview H1 click switches Base and highlights Base H1; Preview Hero Image switches back to Current page. `pageErrors=[]`.
+- Contract/build/local schema-v7 Supabase gate PASS.

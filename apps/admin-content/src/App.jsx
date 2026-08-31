@@ -334,11 +334,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <h2>{species.name}</h2>
           <p className="scientific-name">{species.scientific_name}</p>
         </div>
-        <div className="editor-statuses">
-          <span className={`status-pill ${species.status}`}>{isUiEnglish ? 'Species' : '物种'}: {species.status}</span>
-          <span className={`status-pill ${form.status}`}>SEO: {form.status}</span>
-          <span className={`status-pill ${form.reviewState}`}>{isUiEnglish ? 'Review' : '审核'}: {form.reviewState}</span>
-          {group?.member_count > 1 ? <span className="status-pill inherited">{resolvedSeo.override.seoTitle ? (isUiEnglish ? 'TITLE: OVERRIDE' : '标题：自定义') : (isUiEnglish ? 'TITLE: INHERITED' : '标题：继承')}</span> : null}
+        <div className="editor-status-line" aria-label={isUiEnglish ? 'Content status' : '内容状态'}>
+          <span className={`editor-status-dot ${form.status}`}></span>
+          <strong>{form.status === 'published' ? 'Published' : 'Draft'}</strong>
+          <span>·</span>
+          <span>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[form.reviewState] || form.reviewState)}</span>
         </div>
       </div>
 
@@ -367,10 +367,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             {renderInheritedOverrideField({
               key: 'h1', label: t('editor.h1'), value: form.h1, inheritedValue: resolvedSeo.inherited.h1,
             })}
-            <label>
-              {t('editor.focusKeyword')}
-              <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
-            </label>
           </div>
 
           <div className="section-card">
@@ -381,10 +377,16 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               </div>
             </div>
             {group?.member_count > 1 ? (
-              <div className="inherit-content-preview">
-                <strong>{t('editor.sharedIntro')}</strong>
+              <details className="inherited-content-disclosure">
+                <summary>
+                  <span>
+                    <strong>{t('editor.sharedIntro')}</strong>
+                    <small>{effectiveSeo.sharedIntro ? (isUiEnglish ? 'Inherited from Base Species' : '继承自 Base Species') : (isUiEnglish ? 'Base content is empty' : 'Base 内容为空')}</small>
+                  </span>
+                  <em>{isUiEnglish ? 'View' : '查看'}</em>
+                </summary>
                 <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared Base Species introduction yet.' : 'Base Species 尚未填写共享简介。')}</p>
-              </div>
+              </details>
             ) : null}
             <label {...editorFieldProps('intro')}>
               {t('editor.variantIntro')}
@@ -396,40 +398,48 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             </label>
           </div>
 
-          <div className="section-card">
-            <div className="section-heading">
-              <div>
-                <h3>{t('editor.indexUrl')}</h3>
-                <p>{isUiEnglish ? 'Public paths are derived from stable catalog identity; Canonical is not free text.' : '公开路径由稳定 catalog key + Base Scientific Name 推导，不再手填 Canonical。'}</p>
-              </div>
-            </div>
-            <label>{t('editor.indexStrategy')}
-              <select value={form.indexStrategy} onChange={(event) => update('indexStrategy', event.target.value)}>
-                {INDEX_STRATEGIES.map((item) => (
-                  <option
-                    key={item.value}
-                    value={item.value}
-                    disabled={(group?.category_conflict && item.value !== 'noindex') || (groupMember?.duplicate_peer_keys?.length && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
-                  >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
-                ))}
-              </select>
-            </label>
-            {form.indexStrategy === 'canonical_to_sibling' ? (
-              <label>{t('editor.canonicalTarget')}
-                <select value={form.canonicalCatalogKey} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
-                  <option value="">{isUiEnglish ? 'Select the canonical page in this Base group' : '请选择同组主页面'}</option>
-                  {(group?.members || []).filter((item) => item.catalog_key !== species.catalog_key).map((item) => (
-                    <option key={item.catalog_key} value={item.catalog_key}>{item.name} · {item.catalog_key}</option>
+          <details className="advanced-seo-disclosure" open={Boolean(indexBlockReason)}>
+            <summary>
+              <span>
+                <strong>{isUiEnglish ? 'Advanced SEO' : '高级 SEO'}</strong>
+                <small>{isUiEnglish ? 'Keyword, indexing, canonical and URL settings' : '关键词、收录策略、Canonical 与 URL'}</small>
+              </span>
+              <em>{form.indexStrategy === 'index' ? (isUiEnglish ? 'Index' : '独立收录') : form.indexStrategy === 'canonical_to_sibling' ? 'Canonical' : 'Noindex'}</em>
+            </summary>
+            <div className="advanced-seo-body">
+              <label>
+                {t('editor.focusKeyword')}
+                <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
+              </label>
+              <label>{t('editor.indexStrategy')}
+                <select value={form.indexStrategy} onChange={(event) => update('indexStrategy', event.target.value)}>
+                  {INDEX_STRATEGIES.map((item) => (
+                    <option
+                      key={item.value}
+                      value={item.value}
+                      disabled={(group?.category_conflict && item.value !== 'noindex') || (groupMember?.duplicate_peer_keys?.length && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
+                    >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
                   ))}
                 </select>
               </label>
-            ) : null}
-            <div className="route-inline-summary">
-              <span>{t('editor.publicUrl')}</span><code>{routeMeta.selfPath}</code>
-              <span>{t('editor.canonical')}</span><code>{routeMeta.canonicalPath}</code>
+              {form.indexStrategy === 'canonical_to_sibling' ? (
+                <label>{t('editor.canonicalTarget')}
+                  <select value={form.canonicalCatalogKey} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
+                    <option value="">{isUiEnglish ? 'Select the canonical page in this Base group' : '请选择同组主页面'}</option>
+                    {(group?.members || []).filter((item) => item.catalog_key !== species.catalog_key).map((item) => (
+                      <option key={item.catalog_key} value={item.catalog_key}>{item.name} · {item.catalog_key}</option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+              <div className="route-inline-summary">
+                <span>{t('editor.publicUrl')}</span><code>{routeMeta.selfPath}</code>
+                <span>{t('editor.canonical')}</span><code>{routeMeta.canonicalPath}</code>
+              </div>
+              {indexBlockReason ? <div className="advanced-seo-warning">{indexBlockReason}</div> : null}
+              <small className="inherit-note">{isUiEnglish ? 'The static Species generator is verified, but Production publishing remains locked.' : '静态 Species 生成器已验证；Production 发布仍然锁定。'}</small>
             </div>
-            <small className="inherit-note">静态 Species HTML 生成器已通过本地回归，但尚未连接 staging/public 发布链；选择 Index 仍不会自动上线。</small>
-          </div>
+          </details>
         </div>
 
       </div>
@@ -661,7 +671,9 @@ export default function App() {
     if (!inspectorReadOnly) setActiveTool(null);
     const variantOnly = key === 'imageAlt' || (key === 'localizedName' && contentLocale === 'en');
     const variantOverride = Boolean(activeLivePreview?.override?.[key]);
-    if (editorScope === 'base' && (variantOnly || variantOverride)) setEditorScope('variant');
+    if (source === 'preview' && !inspectorReadOnly) {
+      setEditorScope(variantOnly || variantOverride ? 'variant' : 'base');
+    }
   };
   const workflowScope = useMemo(() => {
     if (!workflowFilter) return { groupKeys: null, memberIds: null };

@@ -68,3 +68,9 @@ The persistent product model is now:
 - Publication-facing labels and English tank-size localization live in `speciesPagePresentation.js`, shared by `LiveFrontendPreview` and `generate-public-species.mjs`.
 - Admin-only fake sections (`Overview & Care` / `Care essentials`) were removed because the generator never emitted them.
 - Three-column layout now stops below 1180px before the Preview can be clipped. Narrow layouts keep Preview through an explicit overlay trigger; editor selection opens it and Preview selection returns to the editor.
+
+## 2026-08-31 — Calm primary editor
+- The primary Variant authoring path now keeps only high-frequency SEO/content fields visible; keyword/index/canonical/URL settings are Advanced SEO.
+- Lifecycle + editorial review is represented once as `Draft · Editing/编辑中`, not repeated as multiple pills.
+- Base shared intro context is available on demand instead of occupying permanent vertical space in Variant authoring.
+- Preview Inspector routing is authority-aware only when selection starts from Preview: inherited content opens Base, Variant-owned content opens Current page, Product Truth remains read-only. Editor-origin selection only highlights Preview and does not unexpectedly switch scope.

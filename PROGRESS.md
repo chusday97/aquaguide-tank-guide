@@ -409,3 +409,12 @@
 - Chromium 发现 1120/1080px 旧三栏会把 400px Preview 裁出视口；现改为 1180px 以下双栏，并提供显式 Preview 浮层，不丢核心预览能力。
 - 1120px 实测：编辑 H1 → Preview 浮层自动打开并高亮；点击 Preview H1 → 浮层关闭并回到中间字段。1200px+ 仍保持常驻右栏。
 - Contract / generator tests / build / schema-v7 B gate 全部 PASS。
+
+### 2026-08-31 主编辑器密度收敛 + Inspector 权威路由
+- `d79058f` 的 GitHub Actions run `33326654737` 已全绿。
+- Variant 顶部由 4 个重复状态 pill 收敛为单行 `Draft · 编辑中`，Base Species 同步统一。
+- Focus Keyword / Index Strategy / Canonical / URL 收入默认折叠的“高级 SEO”；若存在索引/Canonical 阻塞会自动展开，安全问题不会被隐藏。
+- Variant 中完整 Base 共享简介改为按需展开，避免 Base 文案增长后把每个 Variant 页面永久撑高。
+- 1440px Chromium 实测常规 Variant 编辑区约 1032px，高于密度优化前约 1333px 的页面减少约 23%，Inspector 仍正常。
+- 修正右侧 Inspector 的“在哪里改”逻辑：从 Preview 点击继承 H1/Intro/metadata 自动进入 Base；Variant-only/自定义内容进入当前页面；Product Truth 只读。中间字段点击仅负责高亮 Preview，不会突然切换编辑上下文。
+- Contract / build / 本地 schema-v7 Supabase gate 全部 PASS。

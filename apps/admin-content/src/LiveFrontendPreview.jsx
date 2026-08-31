@@ -33,7 +33,7 @@ function elementEditPath(key, preview, appLocale, editorScope) {
   const section = pageContent ? (english ? 'Page content' : '页面内容') : 'SEO';
   const variantOnly = key === 'imageAlt' || (key === 'localizedName' && preview?.locale === 'en');
   const custom = Boolean(preview?.override?.[key]);
-  const baseContext = editorScope === 'base' && !variantOnly && !custom;
+  const baseContext = !variantOnly && !custom;
   const scope = baseContext ? 'Base Species' : (english ? 'Current page' : '当前页面');
   return `${scope} → ${section}`;
 }

@@ -313,3 +313,9 @@ Species SEO authoring exposes only `draft` and `published` lifecycle choices; `p
 The Page tab mirrors the static Species publication structure rather than maintaining an independent mock layout. `speciesPagePresentation.js` is shared by `LiveFrontendPreview` and `generate-public-species.mjs` for publication-facing labels and tank-size localization. Do not add Page Preview sections that are absent from the generator.
 
 At widths below 1180px the persistent third column is replaced by an explicit compact Preview overlay so the editor is not squeezed and Preview access is not lost. Editor Inspector selection opens the compact Preview; selecting an editable element in the overlay returns to the mapped editor field.
+
+### Primary editor density and Inspector ownership
+- The common authoring path keeps Meta Title / Meta Description / H1 / Variant intro / Image Alt visible. Focus Keyword, index strategy, canonical target and derived URLs are in Advanced SEO.
+- Advanced SEO is collapsed by default and automatically opens when an active index/canonical blocker exists.
+- Base shared intro is collapsed in Variant editing; use Base authoring for shared copy.
+- Preview-origin Inspector selection follows content ownership: inherited → Base Species, Variant-only/custom → Current page, Product Truth → read-only. Editor-origin selection only highlights Preview.
