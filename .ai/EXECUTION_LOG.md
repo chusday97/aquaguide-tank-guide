@@ -252,3 +252,10 @@
 - Added exact field names to Preview Inspector edit paths.
 - Chromium verified Image Alt selection, source/read-only explanation, Base-owned H1 path and English rendering with `pageErrors=[]`.
 - Contract and local schema-v7 Supabase gate PASS.
+
+## 2026-08-31 — SEO handoff + loading audit
+- Confirmed `2a737de` GitHub A gate run `33370177087` SUCCESS.
+- Audited first-load Product Truth behavior under artificial network delay: prior behavior showed four `—` facts and no image before the lazy catalog chunk resolved.
+- Identified an additional stale-data risk during Species switching if the previously resolved Product Truth row is merged before the new `catalog_key` resolves.
+- Local fix is in progress with explicit loading state and key-scoped Product Truth ownership; production build passes, but browser delay regression/contract/B/A gates are still pending.
+- Reframed next project milestone from further CMS styling to a staging frontend SEO vertical slice.

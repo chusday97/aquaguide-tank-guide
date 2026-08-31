@@ -325,3 +325,20 @@ The Admin uses one shared selection token family across Species navigation, edit
 
 ### Unsaved edit safety
 The editor streams unsaved Base/Variant changes into Live Preview, but marks them as `Unsaved changes / 未保存修改` until a successful database save. Resource/scope/content-locale navigation requires discard confirmation while dirty, and browser refresh/close is protected with `beforeunload`. Re-selecting the current resource is intentionally a no-op so it cannot mask unsaved edits.
+
+## Frontend SEO publication pipeline
+
+This Admin is the editorial and review layer for static AquaGuide Species SEO pages. Product Truth remains in the AquaGuide catalog; the Admin owns localized editorial SEO such as title, meta description, H1, intro, image alt, localized common name and index strategy. Base Species supplies shared templates/content and Variants inherit unless an explicit override exists.
+
+The intended publication flow is:
+
+`Catalog Product Truth + reviewed Base/Variant SEO → Publish Readiness → explicit publication snapshot → generate-public-species.mjs → AquaGuide frontend static artifact`
+
+Controlled Preview is deliberately separate: it may render approved Draft content but is forced noindex/nofollow and must never be promoted as the Production publication source. Production Published remains locked.
+
+The first frontend integration should publish only a small reviewed staging set and verify the resulting HTML source: `<title>`, meta description, `<h1>`, canonical, robots, reciprocal hreflang, image alt and sitemap membership. Do not mass-publish all catalog rows merely because generation succeeds.
+
+Species SEO pages should eventually connect organic acquisition to AquaGuide product value. CTA/navigation contracts should preserve the current `catalog_key` when sending a visitor into compatibility, recommendation or related product journeys.
+
+### Product Truth loading correctness
+Product Truth is lazy-loaded to keep grouped navigation data lightweight. Loading must be represented explicitly; `—` means truly unavailable data, never “catalog chunk still loading”. Product Truth rows must be applied only when their `catalog_key` matches the current Species so stale facts/images cannot flash during navigation.

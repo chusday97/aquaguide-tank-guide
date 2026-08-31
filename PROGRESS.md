@@ -459,3 +459,10 @@
 - 右侧点击鱼图现在明确表示编辑的是 Image Alt，而不是替换图片。
 - 状态条显示“Alt 已自定义/尚未填写 · 图片资源只读”，并定位到“当前页面 → 页面内容 → 主图 Alt 文本”。
 - Product Truth 图片资源继续只读。
+
+## 2026-08-31 — SEO publication path synchronized
+The Admin is now best understood as an SEO publication system rather than a standalone CMS: Product Truth + editorial SEO → inheritance/review → Publish Readiness → immutable snapshot → static Species generator → frontend SEO pages.
+
+Latest stable pushed baseline is `2a737de`, with GitHub A gate `33370177087` successful. The next local correctness task is Product Truth loading: loading must never look like missing data and a newly selected Species must never flash facts from the previous Species. That fix is currently local/uncommitted.
+
+After it is gated, the next product milestone is a small staging publication slice, not another UI expansion: generate a few reviewed bilingual Species pages, connect them to the AquaGuide frontend artifact, inspect real HTML SEO tags/source and sitemap behavior, then decide whether Production publishing can be unlocked.

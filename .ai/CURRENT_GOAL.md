@@ -92,3 +92,10 @@ The persistent product model is now:
 - Dirty navigation is guarded across Species/Base scope/content locale/workflow/batch/sign-out; browser refresh/close uses `beforeunload`.
 - Re-selecting the current Variant or active workflow filter is a no-op and must never clear dirty state.
 - Save clears dirty state only after the local Supabase write succeeds; Production publishing remains locked.
+
+## 2026-08-31 — Frontend SEO publication vertical slice
+- Stable baseline: `2a737de` passed GitHub Admin Content CI Gate run `33370177087`; Product Truth, inheritance, review, generator and Preview contracts remain green.
+- Current local-only work: harden Product Truth lazy loading so loading state never renders fake `—` facts and stale facts from a previous Species cannot flash on a newly selected Species. This work is not yet committed.
+- After that correctness pass, stop expanding CMS surface area. Build the smallest staging publication slice: Approved/Publish-ready content → explicit Published snapshot → static Species generator → staging frontend artifact.
+- Validate the generated HTML itself: title, meta description, H1, canonical, robots, hreflang, image alt, static body copy and sitemap membership. Production publish remains locked until that vertical slice is reviewed.
+- SEO page purpose is acquisition into AquaGuide, not a detached blog: each Species page should eventually hand users into compatibility/recommendation/product flows with the selected `catalog_key`.

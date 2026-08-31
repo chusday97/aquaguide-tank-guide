@@ -131,3 +131,10 @@ Branch: `feature/admin-content-v0`
 - Selected image status explicitly says `Alt custom/not set · Image source read-only`; Product Truth remains the image authority.
 - Inspector edit path now includes the exact mapped field after scope/section.
 - Browser regression in Chinese/English: image selection highlights the Image Alt editor target and reports zero page errors.
+
+## 2026-08-31 publication-readiness status
+- Latest stable pushed Admin HEAD: `2a737de fix(admin): clarify image inspector authority`. GitHub A gate run `33370177087` SUCCESS.
+- Stable chain now includes grouped navigation, Base/Variant inheritance, bilingual editorial rows, Data Review, editorial review, Publish Readiness, Controlled Preview, generator-aligned Page Preview, bidirectional Inspector and unsaved-change protection.
+- Product Truth is still catalog authority; Content Admin edits editorial SEO only.
+- Local uncommitted work currently touches `App.jsx`, `LiveFrontendPreview.jsx`, and `styles.css` to distinguish Product Truth loading from missing data and prevent stale cross-Species fact flashes.
+- Production Supabase, Production Published and `main` remain untouched.

@@ -94,3 +94,12 @@ Updated: 2026-08-30
 - [x] Rename ambiguous `Hero image / 主图` Inspector mapping to explicit Image Alt text.
 - [x] Mark image asset authority as Product Truth read-only while keeping alt text editable.
 - [x] Extend Inspector paths to the exact field level.
+
+## 2026-08-31 frontend SEO publication path
+- [ ] Finish Product Truth loading correctness: explicit loading state, key-scoped data, no stale facts across Species switches.
+- [ ] Add regression coverage for delayed catalog loading and rapid Species switching; then contract/build/B gate/commit/A gate.
+- [ ] Define an explicit Published snapshot boundary separate from Controlled Preview Draft snapshots.
+- [ ] Generate a tiny staging set of real Species pages from approved bilingual fixtures; do not publish all 486 records.
+- [ ] Verify staging HTML source for title/meta/H1/canonical/robots/hreflang/alt and verify sitemap inclusion only for indexable pages.
+- [ ] Connect the staging Species artifact into the AquaGuide frontend build/deploy path without enabling Production Published.
+- [ ] Add a product CTA handoff contract so SEO landing pages can pass `catalog_key` into AquaGuide compatibility/recommendation flows.

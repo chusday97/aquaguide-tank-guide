@@ -196,3 +196,10 @@ Do not persist translated display strings in workflow filter state. Filter state
 
 ## 2026-08-31 — Image asset and Image Alt are separate authorities
 The Content Admin may edit image alt text, but it does not own the Product Truth image asset. Preview Inspector must make that split explicit and must never imply that clicking the image enables image replacement.
+
+## 2026-08-31 — SEO publication architecture
+- Species SEO pages are build-time/static publication artifacts, not runtime AI-generated React routes.
+- Product Truth remains sourced from the AquaGuide catalog; Editorial SEO controls title/meta/H1/intro/alt/localized name/index strategy only.
+- The publication boundary is explicit: editable Draft/Approved data → immutable publication snapshot → generator → staging/Production artifact. Controlled Preview is not that boundary and remains noindex.
+- Roll out staging with a small reviewed Species set first. Do not mass-publish 486 pages simply because the generator can create them.
+- Public Species pages must support product acquisition: future CTAs should preserve `catalog_key` into compatibility/recommendation journeys.

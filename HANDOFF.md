@@ -692,3 +692,10 @@ Workflow filter state is semantic. Do not cache translated labels as the source 
 
 ## 2026-08-31 image authority contract
 The hero image asset remains Product Truth and read-only in Content Admin. Only Image Alt is editable. Keep the Inspector label/source/path explicit enough that image selection cannot be mistaken for an image-upload or image-replacement workflow.
+
+## 2026-08-31 frontend SEO handoff
+The Admin's purpose is to create reviewed static Species SEO pages, not to become a general-purpose CMS. Keep Product Truth read-only and separate from Editorial SEO. The intended flow is `Product Truth + Base/Variant Editorial SEO → review/readiness → explicit publication snapshot → generate-public-species → AquaGuide frontend artifact`. Controlled Preview remains Draft/Approved, noindex and must never be treated as Production publication.
+
+Latest stable pushed baseline: `2a737de`; A gate `33370177087` SUCCESS. Local uncommitted Product Truth-loading work must be finished and gated before starting publication integration. Then build only a small staging Species set and verify source-level SEO (`title`, meta description, H1, canonical, robots, hreflang, alt, sitemap) before unlocking any Production path.
+
+Future SEO landing-page CTAs should carry the current `catalog_key` into AquaGuide compatibility/recommendation flows so organic traffic enters the product funnel instead of ending on an isolated content page.
