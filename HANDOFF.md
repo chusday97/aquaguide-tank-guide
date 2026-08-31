@@ -683,3 +683,6 @@ Keep the same issue/review/Preview-ready color meaning in the top workflow statu
 
 ## 2026-08-31 navigation count contract
 The Species tree navigates Base groups: `All` must use `base_group_count` (276), never `catalog_count` (486). Workflow filters may count issues/items/pages, but their unit must remain discoverable and active filters must show affected Base-group count.
+
+## 2026-08-31 unsaved-edit contract
+Live Preview is not persistence. Keep Base/Variant dirty state visible until a successful Supabase save. Any navigation that changes the active editor resource/scope/content locale must confirm before discarding dirty edits. Never clear dirty state for a no-op re-selection. Browser refresh/close protection must remain active while dirty.

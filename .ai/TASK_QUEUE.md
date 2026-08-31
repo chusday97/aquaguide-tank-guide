@@ -77,3 +77,10 @@ Updated: 2026-08-30
 - [x] Use 276 Base groups for the left `All` navigation count instead of 486 catalog rows.
 - [x] Keep 486 catalog records visible separately in the catalog summary.
 - [x] Explain mixed count units via localized hover help and show affected Base-group count in active workflow banners.
+
+## 2026-08-31 unsaved-change safety
+- [x] Show `未保存修改 / Unsaved changes` for Variant and Base editing.
+- [x] Guard Species, Base/current-page, content-language, workflow, batch and sign-out navigation.
+- [x] Protect dirty state from browser refresh/close with `beforeunload`.
+- [x] Keep no-op re-selection from clearing dirty state.
+- [x] Verify save/discard/cancel flows against an isolated ephemeral Supabase browser environment.

@@ -139,7 +139,7 @@ assert.match(appSource, /open=\{Boolean\(indexBlockReason\)\}/, 'Advanced SEO mu
 assert.match(appSource, /inherited-content-disclosure/, 'Inherited Base intro must remain collapsed by default in Variant editing');
 assert.match(appSource, /editor-status-line/, 'Variant editor must use one calm lifecycle/review status line');
 assert.match(baseSource, /editor-status-line/, 'Base editor must use the same calm lifecycle/review status line');
-assert.match(appSource, /source === 'preview'[\s\S]*setEditorScope\(variantOnly \|\| variantOverride \? 'variant' : 'base'\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor');
+assert.match(appSource, /source === 'preview'[\s\S]*const targetScope = variantOnly \|\| variantOverride \? 'variant' : 'base'[\s\S]*runEditorNavigation\(\(\) => setEditorScope\(targetScope\)\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor through the unsaved-change guard');
 assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !custom/, 'Inspector edit path must identify inherited content as Base-owned regardless of current editor scope');
 assert.match(appSource, /Use Base value|使用 Base 值/, 'Variant overrides must expose a return-to-Base action');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
@@ -147,6 +147,15 @@ assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expo
 assert.match(appSource, /footer-state-select review-/, 'Variant footer must visually distinguish review state');
 assert.match(baseSource, /footer-state-select review-/, 'Base footer must use the same review-state control language as Variant editing');
 assert.match(baseSource, /Base 内容状态|Base content status/, 'Base lifecycle control must remain explicitly labeled');
+assert.match(appSource, /unsaved-indicator/, 'Variant editing must expose an explicit unsaved-change indicator');
+assert.match(baseSource, /unsaved-indicator/, 'Base editing must expose the same unsaved-change indicator');
+assert.match(appSource, /beforeunload/, 'Admin must protect dirty editor state from browser refresh or close');
+assert.match(appSource, /confirmDiscardUnsaved/, 'Editor navigation must require explicit confirmation before discarding unsaved changes');
+assert.match(appSource, /runEditorNavigation/, 'Species, scope and locale navigation must share one unsaved-change guard');
+assert.match(appSource, /!isDirty/, 'Variant save action must be inactive when there are no changes to persist');
+assert.match(baseSource, /!isDirty/, 'Base save action must be inactive when there are no changes to persist');
+assert.match(appSource, /selectedId === id && editorScope === 'variant'/, 'Re-selecting the current Variant must remain a no-op and must not clear dirty state');
+assert.match(appSource, /workflowFilter\?\.key === next\.key/, 'Re-selecting the active workflow filter must not discard dirty editor state');
 assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');
 assert.match(liveFrontendPreviewSource, /scrollIntoView/, 'Preview selection must scroll mapped elements into view');
 assert.match(liveFrontendPreviewSource, /Product Truth · 只读/, 'Preview inspector must explain Product Truth read-only elements');

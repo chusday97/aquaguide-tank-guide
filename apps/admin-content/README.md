@@ -322,3 +322,6 @@ At widths below 1180px the persistent third column is replaced by an explicit co
 
 ### Visual selection contract
 The Admin uses one shared selection token family across Species navigation, editor Inspector and live Preview. Product Truth Inspector targets use a separate read-only graphite tone. Active Variant navigation keeps parent Base context visible without turning the Base row into a second active selection.
+
+### Unsaved edit safety
+The editor streams unsaved Base/Variant changes into Live Preview, but marks them as `Unsaved changes / 未保存修改` until a successful database save. Resource/scope/content-locale navigation requires discard confirmation while dirty, and browser refresh/close is protected with `beforeunload`. Re-selecting the current resource is intentionally a no-op so it cannot mask unsaved edits.

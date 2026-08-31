@@ -114,3 +114,10 @@ Branch: `feature/admin-content-v0`
 - `问题/Issues 33` continues to represent pending Data Review issues; active banner explicitly reports 32 affected Base groups.
 - Localized hover help explains Base-group / issue / review-item / Preview-page units without increasing button width.
 - Chromium zh/en regression PASS; pageErrors=[].
+
+## 2026-08-31 unsaved-change evidence
+- Isolated writable browser gate: Variant edit → dirty indicator → Save enabled; cancel navigation retains edits; confirmed navigation discards; successful local save clears dirty and disables Save.
+- Content-language switching follows the same discard confirmation contract.
+- Base browser gate: clean `beforeunload=false`; dirty `beforeunload=true`; cancel keeps Base edits; local save clears dirty; confirmed scope change discards and returns to Variant.
+- Re-clicking the already-selected Variant produces no confirmation and preserves dirty state.
+- Browser `pageErrors=[]`; contract/build/local schema-v7 Supabase gate PASS.

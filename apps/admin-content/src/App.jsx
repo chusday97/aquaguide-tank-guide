@@ -141,7 +141,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(emptySeo);
@@ -152,7 +152,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   useEffect(() => {
     setForm(fromSeoRow(record, species, locale));
     setOverrideEditing({});
-  }, [record, species, locale]);
+    onDirtyChange?.(false);
+  }, [record, species, locale, onDirtyChange]);
 
   useEffect(() => {
     setMessage('');
@@ -222,6 +223,10 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     routeMeta?.canonicalPath, routeMeta?.robots, form.imageAlt, resolvedSeo?.override?.seoTitle,
     resolvedSeo?.override?.metaDescription, resolvedSeo?.override?.h1, onLivePreviewChange,
   ]);
+
+  const baselineForm = fromSeoRow(record, species, locale);
+  const isDirty = !readOnly && JSON.stringify(form) !== JSON.stringify(baselineForm);
+  useEffect(() => { onDirtyChange?.(isDirty); }, [isDirty, onDirtyChange]);
 
   if (!species) {
     return (
@@ -446,6 +451,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 
       <div className="editor-footer">
         <div>
+          {!readOnly && isDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes' : '未保存修改'}</span> : null}
           {!schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
           {indexBlockReason ? <span className="warning-text">{indexBlockReason}</span> : null}
           {message ? <span className="save-message">{message}</span> : null}
@@ -458,7 +464,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             <option value="draft">{isUiEnglish ? 'Status · Draft' : '状态 · Draft'}</option>
             <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Status · Published (locked)' : '状态 · Published（锁定）'}</option>
           </select>
-          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : `${t('common.save')} ${getLocaleLabel(locale)} SEO`}</button>
+          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason) || !isDirty}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : `${t('common.save')} ${getLocaleLabel(locale)} SEO`}</button>
         </div>
       </div>
     </section>
@@ -494,6 +500,7 @@ export default function App() {
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
+  const [editorDirty, setEditorDirty] = useState(false);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
   useEffect(() => {
@@ -501,6 +508,16 @@ export default function App() {
     setActiveTool(null);
     setCompactPreviewOpen(false);
   }, [selectedId, contentLocale]);
+
+  useEffect(() => {
+    if (!editorDirty || isReviewMode) return undefined;
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [editorDirty]);
 
   useEffect(() => {
     if (isReviewMode) {
@@ -662,6 +679,17 @@ export default function App() {
   const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
     ? { ...livePreview, species: previewSpecies || livePreview.species }
     : savedLivePreview;
+  const confirmDiscardUnsaved = () => {
+    if (!editorDirty || isReviewMode) return true;
+    return window.confirm(appLocale === 'en'
+      ? 'You have unsaved changes. Discard them and continue?'
+      : '当前有未保存修改。确定放弃这些修改并继续吗？');
+  };
+  const runEditorNavigation = (action) => {
+    if (!confirmDiscardUnsaved()) return false;
+    action();
+    return true;
+  };
   const handleInspectorSelect = (key, source = 'editor') => {
     setSelectedInspectorElement(key);
     const elementMeta = getEditorElementMeta(key);
@@ -672,7 +700,8 @@ export default function App() {
     const variantOnly = key === 'imageAlt' || (key === 'localizedName' && contentLocale === 'en');
     const variantOverride = Boolean(activeLivePreview?.override?.[key]);
     if (source === 'preview' && !inspectorReadOnly) {
-      setEditorScope(variantOnly || variantOverride ? 'variant' : 'base');
+      const targetScope = variantOnly || variantOverride ? 'variant' : 'base';
+      if (targetScope !== editorScope) runEditorNavigation(() => setEditorScope(targetScope));
     }
   };
   const workflowScope = useMemo(() => {
@@ -687,8 +716,10 @@ export default function App() {
   }, [workflowFilter, workflowOverview]);
 
   const applyWorkflowFilter = (next) => {
+    if (!next) { setWorkflowFilter(null); return; }
+    if (workflowFilter?.key === next.key) return;
+    if (!confirmDiscardUnsaved()) return;
     setWorkflowFilter(next);
-    if (!next) return;
     if (next.type === 'readiness') {
       const firstId = workflowOverview.locales[next.locale]?.memberIdsByState[next.status]?.[0];
       if (firstId) { setSelectedId(firstId); setEditorScope('variant'); }
@@ -728,6 +759,7 @@ export default function App() {
 
   const toggleBatch = (id) => {
     const nextGroup = speciesGroupByMemberId.get(id);
+    if ((id !== selectedId || editorScope !== 'variant') && !confirmDiscardUnsaved()) return;
     setSelectedId(id);
     setEditorScope('variant');
     setBatchIds((current) => {
@@ -767,6 +799,8 @@ export default function App() {
 
   const signOut = async () => {
     if (isReviewMode) return;
+    if (!confirmDiscardUnsaved()) return;
+    setEditorDirty(false);
     await supabase.auth.signOut();
     setSession(null);
   };
@@ -842,8 +876,8 @@ export default function App() {
           onSearch={setSearch}
           category={category}
           onCategory={setCategory}
-          onSelect={(id) => { setSelectedId(id); setEditorScope('variant'); }}
-          onSelectBase={(id) => { setSelectedId(id); setEditorScope('base'); }}
+          onSelect={(id) => { if (selectedId === id && editorScope === 'variant') return; runEditorNavigation(() => { setSelectedId(id); setEditorScope('variant'); }); }}
+          onSelectBase={(id) => { if (selectedId === id && editorScope === 'base') return; runEditorNavigation(() => { setSelectedId(id); setEditorScope('base'); }); }}
           onToggleBatch={toggleBatch}
           workflowFilter={workflowFilter}
           workflowGroupKeys={workflowScope.groupKeys}
@@ -857,13 +891,13 @@ export default function App() {
         <main className="editor-area studio-editor-area">
           <div className="editor-context-bar">
             <div className="editor-scope-switch" aria-label="Editor scope">
-              <button type="button" className={editorScope === 'base' ? 'active' : ''} onClick={() => setEditorScope('base')}>{t('editor.base')}</button>
-              <button type="button" className={editorScope === 'variant' ? 'active' : ''} onClick={() => setEditorScope('variant')}>{t('editor.currentPage')}</button>
+              <button type="button" className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
+              <button type="button" className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
             </div>
             <button type="button" className="compact-preview-toggle" onClick={() => setCompactPreviewOpen(true)}>{t('preview.title')}</button>
             <div className="locale-switcher compact" aria-label="Content language">
               {CONTENT_LOCALES.map((item) => (
-                <button key={item.code} type="button" className={contentLocale === item.code ? 'active' : ''} onClick={() => setContentLocale(item.code)}>{item.label}</button>
+                <button key={item.code} type="button" className={contentLocale === item.code ? 'active' : ''} onClick={() => contentLocale === item.code || runEditorNavigation(() => setContentLocale(item.code))}>{item.label}</button>
               ))}
             </div>
           </div>
@@ -878,6 +912,7 @@ export default function App() {
               onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
               selectedInspectorElement={selectedInspectorElement}
               onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
+              onDirtyChange={setEditorDirty}
               onSaved={(row) => {
                 const key = groupSeoRowKey(row.group_key, row.locale);
                 setGroupSeoRows((current) => ({ ...current, [key]: row }));
@@ -898,6 +933,7 @@ export default function App() {
               onLivePreviewChange={setLivePreview}
               selectedInspectorElement={selectedInspectorElement}
               onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
+              onDirtyChange={setEditorDirty}
               onSaved={(row) => {
                 setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
                 setRevisionRefreshKey((current) => current + 1);

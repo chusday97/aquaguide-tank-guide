@@ -233,3 +233,10 @@
 - Changed Species `All` from 486 catalog records to 276 Base groups while preserving the separate 486-record catalog summary.
 - Active Data Review banner now reports 32 affected Base groups for 33 pending issues.
 - Added localized unit tooltips; browser zh/en regression PASS; pageErrors=[].
+
+## 2026-08-31 — Unsaved-change regression
+- Added dirty comparison for Base/Variant forms, sticky unsaved indicator, save enablement, guarded editor navigation and `beforeunload`.
+- Fixed conditional Hook ordering discovered during review before browser validation.
+- Fixed no-op navigation masking: current Variant re-selection no longer prompts or clears dirty state.
+- Ran two writable browser gates against local ephemeral Supabase: Variant/save/language/navigation and Base/save/scope/beforeunload all PASS with zero page errors.
+- `npm run test:contract`, production build and `npm run test:supabase-gate` PASS.

@@ -444,3 +444,9 @@
 - Fixed the misleading `All 486` sidebar count: the Species tree contains 276 Base groups, so navigation now uses 276.
 - 486 remains the catalog-record total in the summary.
 - Workflow filters keep their native counts and explain units through localized hover help plus affected Base-group counts in the active banner.
+
+## 2026-08-31 — Unsaved edit protection
+- 实时 Preview 与持久化状态正式分离：编辑会立即反映在右侧，但 footer 明确显示“未保存修改”，只有真实保存成功后才清除。
+- Species、Base/当前页面、内容语言、Workflow、批量选择、退出均接入放弃修改确认；刷新/关闭页面接入 `beforeunload`。
+- 修复重复点击当前 Species 时错误清除 dirty 的边界问题。
+- 使用本地临时 Supabase + 临时 admin 账号完成真实可写浏览器回归；测试环境结束后自动销毁。

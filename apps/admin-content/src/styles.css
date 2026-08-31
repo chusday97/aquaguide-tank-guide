@@ -1002,3 +1002,9 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 /* Keep read-only Product Truth inspector visibly distinct inside fact cards. */
 .live-facts > .preview-inspectable.is-readonly.is-hovered,
 .live-facts > .preview-inspectable.is-readonly.is-selected { background: var(--readonly-bg); }
+
+/* Unsaved edits are visually explicit because live Preview updates before persistence. */
+.unsaved-indicator {
+  display: inline-flex; align-items: center; gap: 6px; margin-right: 10px; color: #8a5a16; font-size: 9.5px; font-weight: 750; white-space: nowrap;
+}
+.unsaved-indicator::before { content: ''; width: 6px; height: 6px; border-radius: 999px; background: #d3972e; box-shadow: 0 0 0 3px #fff4db; }

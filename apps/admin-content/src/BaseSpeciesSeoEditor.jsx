@@ -7,7 +7,7 @@ import { useAppLanguage } from './AppLanguage.jsx';
 
 const isPublicSpeciesPublishingEnabled = false;
 
-export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved, selectedInspectorElement, onInspectorSelect }) {
+export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved, selectedInspectorElement, onInspectorSelect, onDirtyChange }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(() => groupSeoFromRow(record, locale));
@@ -17,7 +17,8 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
   useEffect(() => {
     setForm(groupSeoFromRow(record, locale));
     setMessage('');
-  }, [group?.group_key, record, locale]);
+    onDirtyChange?.(false);
+  }, [group?.group_key, record, locale, onDirtyChange]);
 
   useEffect(() => {
     if (!selectedInspectorElement) return;
@@ -33,6 +34,10 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     className: `inspector-editor-field ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
   });
 
+  const baselineForm = groupSeoFromRow(record, locale);
+  const isDirty = !readOnly && JSON.stringify(form) !== JSON.stringify(baselineForm);
+  useEffect(() => { onDirtyChange?.(isDirty); }, [isDirty, onDirtyChange]);
+
   if (!group) return null;
   const localeLabel = getLocaleLabel(locale);
   const toPreviewRow = (next) => ({
@@ -45,6 +50,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     status: next.status,
     review_state: next.reviewState,
   });
+
   const update = (key, value) => setForm((current) => {
     const next = { ...current, [key]: value };
     onPreview?.(toPreviewRow(next));
@@ -124,7 +130,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <p className="template-help">{isUiEnglish ? 'Keep template tokens unchanged: ' : '变量必须原样保留：'}{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>
       <div className="base-seo-footer">
-        <div>{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 模板，不会写数据库。` : `保存后只更新 ${localeLabel}，不会覆盖其它语言。`)}</div>
+        <div>{!readOnly && isDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes' : '未保存修改'}</span> : null}{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 模板，不会写数据库。` : `保存后只更新 ${localeLabel}，不会覆盖其它语言。`)}</div>
         <div className="footer-actions">
           <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Base review state' : 'Base 审核状态'}>
             {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? `Review · ${item.label}` : `审核 · ${{ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label}`}</option>)}
@@ -133,7 +139,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
             <option value="draft">{isUiEnglish ? 'Status · Draft' : '状态 · Draft'}</option>
             <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Status · Published (locked)' : '状态 · Published（锁定）'}</option>
           </select>
-          <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving}>
+          <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving || !isDirty}>
             {readOnly ? `${t('common.readonly')} ${localeLabel}` : saving ? t('common.saving') : `${t('common.save')} ${localeLabel} Base SEO`}
           </button>
         </div>

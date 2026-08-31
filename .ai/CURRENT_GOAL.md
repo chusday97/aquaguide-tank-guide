@@ -86,3 +86,9 @@ The persistent product model is now:
 - Navigation active state, editor Inspector selection and live Preview Inspector now share one selection token family.
 - Product Truth Inspector selection uses a distinct read-only graphite tone so read-only facts cannot look editable.
 - Active Variant navigation preserves lightweight parent Base context through the Base label + tree guide, while the Variant remains the only strong row selection.
+
+## 2026-08-31 — Unsaved-change safety
+- Variant and Base editors now expose explicit dirty state while live Preview continues to update before save.
+- Dirty navigation is guarded across Species/Base scope/content locale/workflow/batch/sign-out; browser refresh/close uses `beforeunload`.
+- Re-selecting the current Variant or active workflow filter is a no-op and must never clear dirty state.
+- Save clears dirty state only after the local Supabase write succeeds; Production publishing remains locked.
