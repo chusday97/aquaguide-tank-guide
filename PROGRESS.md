@@ -9,6 +9,8 @@
 - [x] `test:catalog-review-batches` 校验批次成员、字段完整性、引用和审核分辨率；`catalog:build`/`catalog:validate` 通过（486种）。
 - [ ] 216个 unknown 字段仍需在网络可用时复核来源页面内容；当前不能把这批资料描述为全字段已确认。
 
+补充：上述并行结果已完成代码聚合与批次门禁；仍未完成的是专业来源页面逐页核验和用户/发布授权，因此本分支不可推送生产或发布 Catalog。
+
 ## 2026-08-31 专业来源候选入口（当前）
 
 - [x] 新增 `catalogReviewSourceCandidates.ts`，为首批第一批10种物种登记 FishBase 专业来源候选；全部保持 `draft`，不会进入运行时 Catalog。

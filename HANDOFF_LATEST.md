@@ -6,6 +6,8 @@
 - 当前统计：84条 `supported`，216条 `reviewed + unknown`；unknown 不覆盖运行时 Profile。
 - `test:catalog-review-batches`、`lint`、`catalog:build`、`catalog:validate` 已通过；来源页面仍需网络恢复后复核，未申请生产发布。
 
+Critic 初审提出的引用归属和 `baseSpeciesKey` 一致性问题已在 `55b50b42` 修复；复验待完成。当前统计仍是机器审核结构完成，不等于来源内容已逐页确认。
+
 ## 2026-08-30 字段级审核管道已落地（当前）
 
 ## 2026-08-31 专业来源候选已登记（当前）
