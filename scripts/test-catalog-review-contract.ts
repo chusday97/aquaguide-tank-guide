@@ -149,4 +149,4 @@ const duplicateInput = join(temporaryDirectory, 'duplicate-field.json');
 await writeFile(duplicateInput, JSON.stringify(duplicatePayload));
 assert.throws(() => execFileSync(process.execPath, ['--import', 'tsx', 'scripts/catalog-review.ts', '--input', duplicateInput], { encoding: 'utf8' }));
 await rm(temporaryDirectory, { recursive: true, force: true });
-console.log(`catalog review contract: PASS (${cohort.length} species × ${REVIEWABLE_CATALOG_FIELDS.length} fields awaiting evidence)`);
+console.log(`catalog review contract: PASS (${cohort.length} species × ${REVIEWABLE_CATALOG_FIELDS.length} fields contract)`);
