@@ -424,3 +424,7 @@
 - Primary editor now emphasizes the five daily fields; low-frequency SEO routing controls are progressively disclosed.
 - Lifecycle/review state is summarized once in the header; actual review/status controls remain in the sticky save footer.
 - Intro remains Inspector-mapped after reducing its default textarea to four rows.
+
+## 2026-08-31 — Base / Variant state-control parity
+- Footer controls now state their meaning directly (`审核 · 编辑中`, `状态 · Draft`) instead of exposing contextless dropdown values.
+- Base and Variant share the same review/lifecycle color semantics and continue to use the same persisted fields and fail-closed publication lock.

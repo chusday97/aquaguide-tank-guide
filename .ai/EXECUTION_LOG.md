@@ -213,3 +213,7 @@
 - Removed duplicate Variant header status badges in favor of one lifecycle/review summary.
 - Advanced SEO is now the single home for keyword/index/canonical/route controls.
 - Chromium 1440×900 measured ~936px default editor height; Intro Inspector mapping PASS; pageErrors=[]; B gate PASS.
+
+## 2026-08-31 — Base/Variant status-control regression
+- Base and Variant footer selects now identify review vs content lifecycle explicitly and share the same semantic tones.
+- Browser regression: header summary PASS, Preview remains visible, pageErrors=[]; contract/build/B gate PASS.

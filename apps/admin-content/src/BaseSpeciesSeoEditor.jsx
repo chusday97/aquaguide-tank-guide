@@ -126,12 +126,12 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       <div className="base-seo-footer">
         <div>{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 模板，不会写数据库。` : `保存后只更新 ${localeLabel}，不会覆盖其它语言。`)}</div>
         <div className="footer-actions">
-          <select value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label="Base editorial review state">
-            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? item.label : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label)}</option>)}
+          <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Base review state' : 'Base 审核状态'}>
+            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? `Review · ${item.label}` : `审核 · ${{ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label}`}</option>)}
           </select>
-          <select value={form.status} onChange={(event) => update('status', event.target.value)}>
-            <option value="draft">Draft</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Published (Production integration locked)' : 'Published（Production 发布锁定）'}</option>
+          <select className={`footer-state-select content-${form.status}`} value={form.status} onChange={(event) => update('status', event.target.value)} aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>
+            <option value="draft">{isUiEnglish ? 'Status · Draft' : '状态 · Draft'}</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Status · Published (locked)' : '状态 · Published（锁定）'}</option>
           </select>
           <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving}>
             {readOnly ? `${t('common.readonly')} ${localeLabel}` : saving ? t('common.saving') : `${t('common.save')} ${localeLabel} Base SEO`}

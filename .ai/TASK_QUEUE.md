@@ -56,3 +56,8 @@ Updated: 2026-08-30
 - [x] Collapse Focus Keyword / indexing / canonical / route details into Advanced SEO.
 - [x] Reduce Variant Intro default height while preserving resize and Inspector mapping.
 - [x] Prioritize workflow status over admin identity text in narrower desktop topbar.
+
+## 2026-08-31 editor state controls
+- [x] Make Variant footer lifecycle/review controls self-describing instead of bare values.
+- [x] Apply the same state-control language and tones to Base Species editing.
+- [x] Keep Published locked and preserve the existing review-state machine.

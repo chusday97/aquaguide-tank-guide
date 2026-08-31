@@ -451,12 +451,12 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           {message ? <span className="save-message">{message}</span> : null}
         </div>
         <div className="footer-actions">
-          <select value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label="Editorial review state">
-            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? item.label : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label)}</option>)}
+          <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Review state' : '审核状态'}>
+            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? `Review · ${item.label}` : `审核 · ${{ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label}`}</option>)}
           </select>
-          <select value={form.status} onChange={(event) => update('status', event.target.value)} aria-label="SEO status">
-            <option value="draft">Draft</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Published (Production integration locked)' : 'Published（Production 发布锁定）'}</option>
+          <select className={`footer-state-select content-${form.status}`} value={form.status} onChange={(event) => update('status', event.target.value)} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>
+            <option value="draft">{isUiEnglish ? 'Status · Draft' : '状态 · Draft'}</option>
+            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Status · Published (locked)' : '状态 · Published（锁定）'}</option>
           </select>
           <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason)}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : `${t('common.save')} ${getLocaleLabel(locale)} SEO`}</button>
         </div>

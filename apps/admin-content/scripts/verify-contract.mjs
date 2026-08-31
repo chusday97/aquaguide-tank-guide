@@ -133,6 +133,9 @@ assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !cu
 assert.match(appSource, /Use Base value|使用 Base 值/, 'Variant overrides must expose a return-to-Base action');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
+assert.match(appSource, /footer-state-select review-/, 'Variant footer must visually distinguish review state');
+assert.match(baseSource, /footer-state-select review-/, 'Base footer must use the same review-state control language as Variant editing');
+assert.match(baseSource, /Base 内容状态|Base content status/, 'Base lifecycle control must remain explicitly labeled');
 assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');
 assert.match(liveFrontendPreviewSource, /scrollIntoView/, 'Preview selection must scroll mapped elements into view');
 assert.match(liveFrontendPreviewSource, /Product Truth · 只读/, 'Preview inspector must explain Product Truth read-only elements');

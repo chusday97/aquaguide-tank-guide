@@ -91,3 +91,8 @@ Branch: `feature/admin-content-v0`
 - Header status: `Draft · 编辑中/待审核/已审核`; repeated catalog/title-inheritance pills removed.
 - Intro focus still selects the mapped live Preview element; browser `pageErrors=[]`.
 - Responsive topbar prioritizes workflow state over admin identity details at common laptop widths.
+
+## 2026-08-31 editor status-control parity
+- Variant and Base editors now use the same explicit footer controls: `审核 · <state>` and `状态 · <lifecycle>`.
+- Review states use neutral/blue/green semantics; Draft uses amber and Published uses green while Production Published remains locked.
+- Browser regression confirms Base and Variant both retain `Draft · review-state` header summaries, live Preview visibility and zero page errors.

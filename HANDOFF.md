@@ -671,3 +671,6 @@
 - Do not restore catalog/status/inheritance badge clusters to the editor header.
 - Advanced SEO owns Focus Keyword, index strategy, canonical sibling and route evidence; it is collapsed by default unless a blocker must be shown.
 - Four-row Variant Intro is intentional; users can resize vertically and Inspector mapping must remain intact.
+
+## 2026-08-31 state-control UX
+Keep Base and Variant footer controls semantically identical. Review-state colors are workflow cues only; they do not change the underlying `editing / ready_for_review / approved` contract. Content lifecycle remains Draft/Published with Production Published disabled.

@@ -957,3 +957,12 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .footer-actions { gap: 7px; }
 .footer-actions select { width: 116px; height: 34px; padding-top: 5px; padding-bottom: 5px; font-size: 10px; }
 .footer-actions .primary-button.compact { min-height: 34px; padding-top: 7px; padding-bottom: 7px; }
+
+.footer-actions select:first-child { width: 128px; }
+.footer-actions select:nth-child(2) { width: 128px; }
+.footer-state-select { border-color:#dfe5e1; background:#f8faf8; color:#536159; }
+.footer-state-select.review-editing { background:#f6f7f6; color:#66736b; }
+.footer-state-select.review-ready_for_review { border-color:#cfdbef; background:#f1f5fc; color:#42648f; }
+.footer-state-select.review-approved { border-color:#cfe1d5; background:#eef7f1; color:#356c4a; }
+.footer-state-select.content-draft { border-color:#ead9ad; background:#fff9e9; color:#7c6425; }
+.footer-state-select.content-published { border-color:#cfe1d5; background:#eef7f1; color:#356c4a; }
