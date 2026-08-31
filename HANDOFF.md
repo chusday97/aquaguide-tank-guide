@@ -699,3 +699,10 @@ The Admin's purpose is to create reviewed static Species SEO pages, not to becom
 Latest stable pushed baseline: `2a737de`; A gate `33370177087` SUCCESS. Local uncommitted Product Truth-loading work must be finished and gated before starting publication integration. Then build only a small staging Species set and verify source-level SEO (`title`, meta description, H1, canonical, robots, hreflang, alt, sitemap) before unlocking any Production path.
 
 Future SEO landing-page CTAs should carry the current `catalog_key` into AquaGuide compatibility/recommendation flows so organic traffic enters the product funnel instead of ending on an isolated content page.
+
+## 2026-09-01 required handoff — AquaGuide Species SEO integration
+Before any AquaGuide frontend, SEO, Admin, publishing or deployment work, read `.ai/AQUA_SEO_ADMIN_INTEGRATION.md`.
+The key unresolved architecture gap is that the root AquaGuide build still does not include generated Species SEO HTML in its deployment artifact, and the repository currently contains both legacy `src/pages/AdminContent.tsx` and the new `apps/admin-content` Species SEO Admin.
+Completion means: Admin edit → review/publish → AquaGuide build → real staging Species URL → final static HTML contains the reviewed SEO content. Admin UI completion alone is not completion.
+Do not touch Production Supabase or enable Production Published actions while proving this path.
+

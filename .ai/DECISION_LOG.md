@@ -203,3 +203,9 @@ The Content Admin may edit image alt text, but it does not own the Product Truth
 - The publication boundary is explicit: editable Draft/Approved data → immutable publication snapshot → generator → staging/Production artifact. Controlled Preview is not that boundary and remains noindex.
 - Roll out staging with a small reviewed Species set first. Do not mass-publish 486 pages simply because the generator can create them.
 - Public Species pages must support product acquisition: future CTAs should preserve `catalog_key` into compatibility/recommendation journeys.
+
+## 2026-09-01 — Species SEO must be a real AquaGuide delivery capability
+Decision: treat `apps/admin-content` as the target Species Editorial SEO authority and integrate its approved content into the AquaGuide frontend build, rather than operating it as a standalone CMS artifact.
+Reason: the business goal is SEO acquisition for AquaGuide, so the system only creates value when reviewed content becomes crawlable final HTML and routes users back into existing AquaGuide product actions.
+Constraint: legacy `src/pages/AdminContent.tsx` may retain non-SEO content responsibilities only after the overlapping Species authority is explicitly resolved.
+

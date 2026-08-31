@@ -103,3 +103,13 @@ Updated: 2026-08-30
 - [ ] Verify staging HTML source for title/meta/H1/canonical/robots/hreflang/alt and verify sitemap inclusion only for indexable pages.
 - [ ] Connect the staging Species artifact into the AquaGuide frontend build/deploy path without enabling Production Published.
 - [ ] Add a product CTA handoff contract so SEO landing pages can pass `catalog_key` into AquaGuide compatibility/recommendation flows.
+
+## 2026-09-01 AquaGuide ↔ SEO Admin integration
+- [ ] Finish and commit Product Truth loading correctness without stale Species facts.
+- [ ] Establish one authoritative Species SEO Admin entry; do not keep two competing Species editors.
+- [ ] Integrate the Species generator into the AquaGuide root deployment artifact.
+- [ ] Build 3–5 representative bilingual Species pages in staging.
+- [ ] Verify final HTML: title, meta, H1, canonical, hreflang, robots and sitemap.
+- [ ] Add real AquaGuide compatibility / aquarium-planning CTA return paths with Species ID + `source=seo-species`.
+- [ ] Keep Production publishing locked until the staging vertical slice passes.
+

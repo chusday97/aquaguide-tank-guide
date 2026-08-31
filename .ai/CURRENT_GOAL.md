@@ -99,3 +99,10 @@ The persistent product model is now:
 - After that correctness pass, stop expanding CMS surface area. Build the smallest staging publication slice: Approved/Publish-ready content → explicit Published snapshot → static Species generator → staging frontend artifact.
 - Validate the generated HTML itself: title, meta description, H1, canonical, robots, hreflang, image alt, static body copy and sitemap membership. Production publish remains locked until that vertical slice is reviewed.
 - SEO page purpose is acquisition into AquaGuide, not a detached blog: each Species page should eventually hand users into compatibility/recommendation/product flows with the selected `catalog_key`.
+
+## 2026-09-01 — AquaGuide frontend SEO integration is now the primary goal
+- Required read: `.ai/AQUA_SEO_ADMIN_INTEGRATION.md`.
+- Success is no longer defined by Admin UI completion. Reviewed Species SEO must enter the real AquaGuide frontend build artifact and be verifiable from staging HTML source.
+- Resolve the duplicate-admin authority (`src/pages/AdminContent.tsx` vs `apps/admin-content`) before Production integration.
+- After Product Truth loading correctness is closed, prioritize one staging vertical slice over additional CMS feature expansion.
+
