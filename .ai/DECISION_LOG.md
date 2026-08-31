@@ -181,3 +181,7 @@
 ## 2026-08-31 — Workflow color semantics must travel with the state
 - Decision: Data Review issue = amber, editorial review = blue, Preview-ready = green in both top workflow status and left navigation filters.
 - Decision: workflow-filter labels follow `appLocale`; do not hardcode mixed Chinese/English labels.
+
+## 2026-08-31 — Navigation counts must state their unit
+- Decision: the left Species tree navigates Base groups, so `All` counts Base groups, not raw catalog rows.
+- Decision: workflow counts may use their native units (issues/items/pages), but hover help and active banners must make the unit explicit.

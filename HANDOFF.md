@@ -680,3 +680,6 @@ Use the shared CSS selection tokens for every editable selection surface. Do not
 
 ## 2026-08-31 workflow-filter semantics
 Keep the same issue/review/Preview-ready color meaning in the top workflow status and left Species filters. Filter display labels must be derived from `appLocale`; do not reintroduce mixed-language labels such as `Data Review · 待处理`.
+
+## 2026-08-31 navigation count contract
+The Species tree navigates Base groups: `All` must use `base_group_count` (276), never `catalog_count` (486). Workflow filters may count issues/items/pages, but their unit must remain discoverable and active filters must show affected Base-group count.

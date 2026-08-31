@@ -79,6 +79,10 @@ assert.match(sidebarSource, /containsActiveVariant/, 'Variant selection must pre
 assert.match(sidebarSource, /tone-issue/, 'Species workflow filters must visually distinguish Data Review issues');
 assert.match(sidebarSource, /tone-review/, 'Species workflow filters must visually distinguish editorial review');
 assert.match(sidebarSource, /tone-ready/, 'Species workflow filters must visually distinguish Preview-ready state');
+assert.match(sidebarSource, /common\.all[\s\S]*speciesGroupStats\.base_group_count/, 'Species navigation All count must use Base-group units, not catalog-row units');
+assert.match(sidebarSource, /filtered\.length[\s\S]*Base groups/, 'Active workflow filter banner must expose affected Base-group count');
+assert.match(sidebarSource, /Base Species groups/, 'Species navigation All count must expose its Base-group unit in hover help');
+assert.match(sidebarSource, /pending Data Review issues/, 'Data Review issue count must expose issue units in hover help');
 assert.match(sidebarSource, /Data Review · Pending/, 'English workflow filter labels must not regress to mixed-language text');
 assert.match(stylesSource, /species-group\.contains-active \.variant-list[\s\S]*var\(--selection-border\)/, 'Active Variant parent tree guide must use the shared selection token');
 assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');

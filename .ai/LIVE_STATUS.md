@@ -108,3 +108,9 @@ Branch: `feature/admin-content-v0`
 - Browser: Chinese `问题 / 待审核 / 预览`; English `Issues / Awaiting Review / Preview`; workflow banner is fully localized.
 - Data Review filter regression: 33 issues → 32 Base groups → clear → 276 Base groups; pageErrors=[].
 - Parent `c6c65b7` A gate run 33366834732 SUCCESS.
+
+## 2026-08-31 navigation count-unit regression
+- Left navigation now reads `全部/All 276`; catalog summary remains 486 records.
+- `问题/Issues 33` continues to represent pending Data Review issues; active banner explicitly reports 32 affected Base groups.
+- Localized hover help explains Base-group / issue / review-item / Preview-page units without increasing button width.
+- Chromium zh/en regression PASS; pageErrors=[].

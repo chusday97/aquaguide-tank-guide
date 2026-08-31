@@ -72,3 +72,8 @@ Updated: 2026-08-30
 - [x] Carry issue/review/Preview-ready semantic colors into the left Species workflow filters.
 - [x] Keep workflow filter labels fully localized in both zh-CN and English UI modes.
 - [x] Preserve real filter behavior: 33 pending Data Review issues map to 32 affected Base groups; clearing returns 276 groups.
+
+## 2026-08-31 navigation count units
+- [x] Use 276 Base groups for the left `All` navigation count instead of 486 catalog rows.
+- [x] Keep 486 catalog records visible separately in the catalog summary.
+- [x] Explain mixed count units via localized hover help and show affected Base-group count in active workflow banners.

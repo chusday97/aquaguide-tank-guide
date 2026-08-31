@@ -228,3 +228,8 @@
 - Added semantic issue/review/Preview tones to Species quick filters and localized filter labels/punctuation.
 - Chromium verified no English-label overflow and correct zh/en banner text.
 - Filter behavior unchanged: 33 pending issues → 32 Base groups; clear → 276; pageErrors=[]. Contract + B gate PASS.
+
+## 2026-08-31 — Navigation count-unit correction
+- Changed Species `All` from 486 catalog records to 276 Base groups while preserving the separate 486-record catalog summary.
+- Active Data Review banner now reports 32 affected Base groups for 33 pending issues.
+- Added localized unit tooltips; browser zh/en regression PASS; pageErrors=[].

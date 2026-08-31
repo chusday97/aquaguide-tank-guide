@@ -439,3 +439,8 @@
 - Species quick filters now mirror the top workflow state colors: issue amber, review blue, Preview-ready green.
 - zh-CN and English UI modes no longer produce mixed-language workflow filter labels.
 - Existing filter counts and group mapping remain unchanged and browser-verified.
+
+## 2026-08-31 — Navigation count-unit clarity
+- Fixed the misleading `All 486` sidebar count: the Species tree contains 276 Base groups, so navigation now uses 276.
+- 486 remains the catalog-record total in the summary.
+- Workflow filters keep their native counts and explain units through localized hover help plus affected Base-group counts in the active banner.
