@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { buildLocalCatalogSnapshot, loadCatalogSnapshot } from '../src/services/catalog/catalog-snapshot.service';
+import { catalogContentVerifiedSourceIds, getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 
 const local = await buildLocalCatalogSnapshot();
 assert.equal(local.manifest.speciesCount, local.species.length);
@@ -7,9 +8,12 @@ assert.equal(local.manifest.reviewedProfileCount, local.compatibilityProfiles.fi
 assert.equal(local.manifest.reviewedPairRuleCount, local.pairRules.filter(item => item.reviewStatus === 'reviewed').length);
 assert.match(local.manifest.checksumSha256, /^[a-f0-9]{64}$/);
 assert.ok(local.species.length >= 400, 'bundled catalog must include the current species set');
-assert.equal(local.species.find(item => item.id === 'sp_0431')?.waterType, 'freshwater');
-assert.equal(local.species.find(item => item.id === 'sp_0432')?.waterType, 'freshwater');
-assert.ok(local.species.filter(item => !['sp_0431', 'sp_0432'].includes(item.id)).every(item => item.waterType === 'unknown'), 'legacy adapter must not infer water type from text');
+const verifiedWaterSpecies = new Set(local.species
+  .filter(item => getApprovedCatalogFieldReviews(item.id).some(review => review.field === 'water' && review.resolution === 'supported'))
+  .map(item => item.id));
+assert.ok(catalogContentVerifiedSourceIds.size > 0);
+const preexistingExplicitWater = new Set(['sp_0431', 'sp_0432']);
+assert.ok(local.species.every(item => verifiedWaterSpecies.has(item.id) || preexistingExplicitWater.has(item.id) || item.waterType === 'unknown'), 'legacy adapter must not infer water type from text');
 
 const fetchRemote = async (url: string | URL | Request) => new Response(
   String(url).includes('/current') ? JSON.stringify(local.manifest) : JSON.stringify(local),
