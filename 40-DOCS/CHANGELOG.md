@@ -10,6 +10,7 @@
 - Changed: runtime Catalog overlays now require a separately verified source-content allowlist.
 - Changed: verified additional batch-02 FishBase facts (taxonomy aliases, environment, size and narrow husbandry fields) and batch-03 species facts; runtime evidence is now 30 verified sources / 94 approved fields. Conflicting taxonomies remain unknown.
 - Changed: verified explicit FishBase environment and adult-size facts for Astronotus ocellatus and the Amatitlania nigrofasciata base species; runtime evidence is now 32 verified sources / 100 approved fields. Cultivar identity and unsupported behavior remain unknown.
+- Fixed: narrowed the Amatitlania nigrofasciata evidence overlay to adult size only; the commercial mini-parrot cultivar no longer inherits an unreviewed freshwater claim. Runtime evidence is now 32 verified sources / 99 approved fields.
 
 - Added draft FishBase source candidates for the first 10 launch-cohort species. Candidates are attached to research drafts only; no field is promoted until a reviewer verifies the source, value, citation and conflicts.
 - Added a regression assertion that the first-batch source candidate IDs exactly match the first-batch cohort IDs.

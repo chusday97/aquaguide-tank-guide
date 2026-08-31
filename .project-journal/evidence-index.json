@@ -104,6 +104,7 @@
     {"id":"EVD-20260831-075","type":"source","locator":"src/data/catalogReviewBatches/batch-02.ts","date":"2026-08-31","version":"065f75e2","accessible":true,"sensitive":false,"notes":"新增4条GBIF Backbone Taxonomy身份来源；仅用于四个批次物种的identity字段，不覆盖水体、温度、体型、缸体或行为字段；来源内容由web检索结果核对。"},
     {"id":"EVD-20260831-076","type":"source","locator":"src/data/catalogReviewBatches/batch-01.ts","date":"2026-08-31","version":"1974c744","accessible":true,"sensitive":false,"notes":"FishBase页面已直接核对Paracheirodon innesi与Paracheirodon axelrodi的淡水、水温、pH和最大体长字段；行为、缸体与数量字段仍未升级。"},
     {"id":"EVD-20260831-077","type":"source","locator":"src/data/catalogReviewBatches/batch-03.ts","date":"2026-08-31","version":"1974c744","accessible":true,"sensitive":false,"notes":"基于已读取专业页面新增6条窄范围支持字段（雷龙、斗鱼、Neocaridina体长/繁殖）；未明确支持的字段保持unknown，斑马螺与水晶虾身份仍未确认。"},
-    {"id":"EVD-20260831-078","type":"source","locator":"src/data/catalogReviewBatches/batch-03.ts","date":"2026-08-31","version":"aca42ed3","accessible":true,"sensitive":false,"notes":"FishBase页面明确支持Astronotus ocellatus的淡水、水温和成体最大体长，以及Amatitlania nigrofasciata基础种的成体最大体长；商业品系身份与未明确行为字段保持未知。"}
+    {"id":"EVD-20260831-078","type":"source","locator":"src/data/catalogReviewBatches/batch-03.ts","date":"2026-08-31","version":"aca42ed3","accessible":true,"sensitive":false,"notes":"FishBase页面明确支持Astronotus ocellatus的淡水、水温和成体最大体长，以及Amatitlania nigrofasciata基础种的成体最大体长；商业品系身份与未明确行为字段保持未知。"},
+    {"id":"EVD-20260831-079","type":"test","locator":"scripts/test-catalog-review-batches.ts","date":"2026-08-31","version":"e8e6f3ce","accessible":true,"sensitive":false,"notes":"新增迷你鹦鹉鱼精确字段断言：来源白名单后仅adult_size进入运行时，freshwater不会因通用来源分支被意外升级；Catalog checksum更新为05576a71...。"}
   ]
 }
