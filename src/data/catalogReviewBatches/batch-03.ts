@@ -105,7 +105,41 @@ const unknownReason = (seed: Seed, field: string) => {
   return '没有把繁殖期、护幼和生命阶段行为同时确认的来源。';
 };
 
+/** Values copied only from statements visible on the verified source pages. */
+const verifiedFieldValues: Record<string, Partial<Record<typeof fields[number], unknown>>> = {
+  sp_0049: {
+    temperature: { min: 22, max: 28 },
+    adult_size: { min: null, max: 23.5 },
+  },
+  sp_0224: {
+    temperature: { min: 4, max: 22 },
+    adult_size: { min: null, max: 100 },
+  },
+  sp_0258: {
+    temperature: { min: 24, max: 30 },
+    ph: { min: 6, max: 8 },
+    adult_size: { min: null, max: 6.5 },
+    territoriality: { traits: ['雄鱼之间会争斗'] },
+    breeding_behavior: { traits: ['雄鱼筑造并守护泡巢'] },
+  },
+  sp_0459: {
+    adult_size: { min: null, max: 4 },
+    breeding_behavior: { traits: ['雌虾将卵携带在腹部附肢下直至孵化', '幼体以成体缩小版直接出卵'] },
+  },
+  sp_0001: {
+    adult_size: { min: null, max: 4 },
+  },
+};
+
 const makeReview = (seed: Seed, field: typeof fields[number]): CatalogFieldReview => {
+  const verifiedValue = verifiedFieldValues[seed.speciesId]?.[field];
+  if (verifiedValue !== undefined) {
+    return {
+      speciesId: seed.speciesId, field, proposedValue: verifiedValue, status: 'reviewed',
+      resolution: 'supported', confidence: 'medium', citationIds: [seed.sourceId],
+      conflictNotes: [], reviewedAt,
+    };
+  }
   const isIdentitySupported = field === 'identity' && !seed.identityUnknown;
   const isWaterSupported = field === 'water' && Boolean(seed.water);
   if (isIdentitySupported) {
