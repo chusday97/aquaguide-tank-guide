@@ -2,6 +2,11 @@
 
 从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。
 
+### 2026-08-31 并行审核底座
+
+- [x] `bb666b31` 增加 `supported/unknown` 字段审核分辨率；`reviewed + unknown` 可完成审核但不会覆盖运行时 Profile。
+- [ ] 三批各10种的字段审核记录尚未生成；当前仍为 `0/30`。
+
 ## 2026-08-31 专业来源候选入口（当前）
 
 - [x] 新增 `catalogReviewSourceCandidates.ts`，为首批第一批10种物种登记 FishBase 专业来源候选；全部保持 `draft`，不会进入运行时 Catalog。

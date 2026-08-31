@@ -496,3 +496,8 @@ Vercel build-rate-limit 不再阻塞日常 UI 修复；local 4317 是开发验�
 - 候选四模块截图矩阵已重新生成并绑定当前构建 checkpoint：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`，28 张、7 个视口、全部 HTTP 200，无 page error 或 failed request。
 - 4317 仍为 detached `37a8d4d1` 视觉母版；其外部字体请求在当前网络环境可能失败，因此基线截图工具不能把该网络失败伪装成候选通过。候选无此失败。
 - 当前候选 CSS 修复已形成提交，4319 已重建并重启，页面元数据与当前 SHA 一致；独立 Critic 已完成复验。本地尚未推送，故 `project:status` 按设计显示候选不同步。
+## 2026-08-31 并行审核底座
+
+- 当前分支已增加 `CatalogFieldResolution` 语义（`supported` 或 `unknown`），提交 `bb666b31`。
+- `reviewed + unknown` 要求来源与冲突说明，且不会写入运行时 Catalog；Draft/Rejected 仍不进入事实层。
+- 下一步由三个子任务分别写入 batch-01/02/03 审核文件；主线程随后聚合并运行 300 字段与435组合门禁。
