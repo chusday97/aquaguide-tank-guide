@@ -61,3 +61,9 @@ Updated: 2026-08-30
 - [x] Make Variant footer lifecycle/review controls self-describing instead of bare values.
 - [x] Apply the same state-control language and tones to Base Species editing.
 - [x] Keep Published locked and preserve the existing review-state machine.
+
+## 2026-08-31 three-pane hierarchy convergence
+- [x] Unify Base/Variant navigation, editor selection and Preview selection around shared selection tokens.
+- [x] Give Product Truth Inspector a distinct read-only visual state.
+- [x] Preserve parent Base hierarchy context while a Variant is selected.
+- [ ] Continue only evidence-based visual polish; avoid further density reductions that do not increase usable information.

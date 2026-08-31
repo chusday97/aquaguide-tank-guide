@@ -319,3 +319,6 @@ At widths below 1180px the persistent third column is replaced by an explicit co
 - Advanced SEO is collapsed by default and automatically opens when an active index/canonical blocker exists.
 - Base shared intro is collapsed in Variant editing; use Base authoring for shared copy.
 - Preview-origin Inspector selection follows content ownership: inherited → Base Species, Variant-only/custom → Current page, Product Truth → read-only. Editor-origin selection only highlights Preview.
+
+### Visual selection contract
+The Admin uses one shared selection token family across Species navigation, editor Inspector and live Preview. Product Truth Inspector targets use a separate read-only graphite tone. Active Variant navigation keeps parent Base context visible without turning the Base row into a second active selection.

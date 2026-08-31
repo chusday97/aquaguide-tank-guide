@@ -44,6 +44,7 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
 ]);
 
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
+const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 
 const catalog = JSON.parse(catalogRaw);
@@ -74,6 +75,8 @@ assert.match(appSource, /from\('species_seo'\)/, 'Admin must read species_seo');
 assert.match(appSource, /from\('species_seo_groups'\)/, 'Admin must read Base Species SEO groups');
 assert.doesNotMatch(appSource, /from\('species'\)/, 'Admin must not depend on the empty Supabase species table');
 assert.match(appSource, /SpeciesGroupSidebar/, 'Admin must render grouped Species navigation');
+assert.match(sidebarSource, /containsActiveVariant/, 'Variant selection must preserve visible parent Base hierarchy context');
+assert.match(stylesSource, /species-group\.contains-active \.variant-list[\s\S]*var\(--selection-border\)/, 'Active Variant parent tree guide must use the shared selection token');
 assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
 assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review workflow');
@@ -139,6 +142,12 @@ assert.match(baseSource, /Base 内容状态|Base content status/, 'Base lifecycl
 assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');
 assert.match(liveFrontendPreviewSource, /scrollIntoView/, 'Preview selection must scroll mapped elements into view');
 assert.match(liveFrontendPreviewSource, /Product Truth · 只读/, 'Preview inspector must explain Product Truth read-only elements');
+assert.match(liveFrontendPreviewSource, /is-readonly/, 'Preview inspector must visually distinguish read-only Product Truth elements from editable content');
+assert.match(stylesSource, /--selection-strong:/, 'Admin must keep one shared selection color token across navigation, editor and Preview');
+assert.match(stylesSource, /--readonly-strong:/, 'Admin must keep a distinct read-only inspector token');
+assert.match(stylesSource, /group-header\.active[\s\S]*var\(--selection-strong\)/, 'Base selection must use the shared selection token');
+assert.match(stylesSource, /variant-row\.active[\s\S]*var\(--selection-strong\)/, 'Variant selection must use the shared selection token');
+assert.match(stylesSource, /preview-inspectable\.is-readonly\.is-selected[\s\S]*var\(--readonly-strong\)/, 'Product Truth selection must use the read-only tone rather than editable green');
 assert.match(liveFrontendPreviewSource, /elementEditPath/, 'Preview inspector must explain where the selected element is edited');
 assert.match(liveFrontendPreviewSource, /editorScope/, 'Inspector edit paths must distinguish Base and current-page editing context');
 assert.match(liveFrontendPreviewSource, /\['page', 'google', 'mobile'\]/, 'Live preview must preserve Page, Google and Mobile modes');

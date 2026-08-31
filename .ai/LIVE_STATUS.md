@@ -96,3 +96,9 @@ Branch: `feature/admin-content-v0`
 - Variant and Base editors now use the same explicit footer controls: `审核 · <state>` and `状态 · <lifecycle>`.
 - Review states use neutral/blue/green semantics; Draft uses amber and Published uses green while Production Published remains locked.
 - Browser regression confirms Base and Variant both retain `Draft · review-state` header summaries, live Preview visibility and zero page errors.
+
+## 2026-08-31 three-pane visual regression evidence
+- Editable selection: left active Variant, center Inspector target and right Preview selection use the same green token family.
+- Read-only Product Truth selection uses graphite outline/background/tag and explicitly reports `Product Truth · 只读`.
+- Active Variant parent Base name + hierarchy guide remain visible in the shared selection family; issue marks remain amber.
+- Chromium 1600×900: editable H1, read-only temperature, Base/Variant hierarchy PASS; pageErrors=[].

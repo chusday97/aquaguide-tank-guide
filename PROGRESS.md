@@ -428,3 +428,9 @@
 ## 2026-08-31 — Base / Variant state-control parity
 - Footer controls now state their meaning directly (`审核 · 编辑中`, `状态 · Draft`) instead of exposing contextless dropdown values.
 - Base and Variant share the same review/lifecycle color semantics and continue to use the same persisted fields and fail-closed publication lock.
+
+## 2026-08-31 — Three-pane visual hierarchy convergence
+- Left navigation, center editor Inspector and right Preview now use one shared selection language instead of three different greens.
+- Product Truth facts use a separate graphite read-only Inspector state; editable fields remain green.
+- Selecting a Variant now keeps its parent Base relationship visible through the Base name and hierarchy guide without creating a second strong active row.
+- Browser regression and Admin contract pass; no Product Truth, inheritance, review or publishing behavior changed.

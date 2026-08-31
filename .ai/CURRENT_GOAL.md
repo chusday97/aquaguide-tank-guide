@@ -81,3 +81,8 @@ The persistent product model is now:
 - Focus Keyword, index strategy, canonical target and public route evidence live under a default-collapsed Advanced SEO disclosure; blockers may force it open.
 - Variant Intro defaults to four rows and remains vertically resizable.
 - 1440×900 Chromium evidence: default editor panel height reduced from ~1333px to ~936px while Inspector remains bidirectional.
+
+## 2026-08-31 — Three-pane visual hierarchy convergence
+- Navigation active state, editor Inspector selection and live Preview Inspector now share one selection token family.
+- Product Truth Inspector selection uses a distinct read-only graphite tone so read-only facts cannot look editable.
+- Active Variant navigation preserves lightweight parent Base context through the Base label + tree guide, while the Variant remains the only strong row selection.

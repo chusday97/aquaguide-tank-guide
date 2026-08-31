@@ -217,3 +217,9 @@
 ## 2026-08-31 — Base/Variant status-control regression
 - Base and Variant footer selects now identify review vs content lifecycle explicitly and share the same semantic tones.
 - Browser regression: header summary PASS, Preview remains visible, pageErrors=[]; contract/build/B gate PASS.
+
+## 2026-08-31 — Three-pane hierarchy convergence verification
+- Added shared selection/read-only CSS tokens and migrated active Base/Variant + Inspector styling onto them.
+- Added read-only Inspector class/state for Product Truth and fixed fact-card CSS specificity so the graphite background remains visible.
+- Added `containsActiveVariant` parent context in Species navigation.
+- Chromium evidence: editable H1 green, temperature graphite read-only, parent Base guide green, issue marks amber, pageErrors=[]. Contract + schema-v7 B gate PASS.

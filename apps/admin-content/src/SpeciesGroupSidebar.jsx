@@ -95,9 +95,10 @@ export default function SpeciesGroupSidebar({
               const visibleMembers = workflowMemberIds ? group.members.filter((item) => workflowMemberIds.has(item.id)) : group.members;
               const firstVisible = visibleMembers[0] || group.members[0];
               const baseActive = selectedScope === 'base' && group.members.some((item) => item.id === selectedId);
+              const containsActiveVariant = selectedScope === 'variant' && group.members.some((item) => item.id === selectedId);
               return (
-                <div className={`species-group ${group.category_conflict ? 'needs-review' : ''}`} key={group.group_key}>
-                  <button className={`group-header ${baseActive ? 'active' : ''}`} type="button" onClick={() => onSelectBase?.(firstVisible.id)}>
+                <div className={`species-group ${group.category_conflict ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
+                  <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={() => onSelectBase?.(firstVisible.id)}>
                     <span className="group-copy">
                       <strong>{group.base_scientific_name}</strong>
                       <small>{group.member_count > 1 ? `${group.member_count} ${t('sidebar.pages')}` : t('sidebar.baseSpecies')}</small>

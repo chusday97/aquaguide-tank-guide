@@ -674,3 +674,6 @@
 
 ## 2026-08-31 state-control UX
 Keep Base and Variant footer controls semantically identical. Review-state colors are workflow cues only; they do not change the underlying `editing / ready_for_review / approved` contract. Content lifecycle remains Draft/Published with Production Published disabled.
+
+## 2026-08-31 three-pane selection contract
+Use the shared CSS selection tokens for every editable selection surface. Do not introduce component-local greens for sidebar/editor/Preview. Product Truth Inspector is intentionally graphite/read-only, never editable green. When a Variant is active, parent Base context may be lightly emphasized, but only the Variant row is the strong selection.

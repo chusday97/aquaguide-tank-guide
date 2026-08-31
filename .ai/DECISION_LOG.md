@@ -172,3 +172,8 @@
 ## 2026-08-31 — Use explicit state-control language
 - Base and Variant footer selects now identify review vs content lifecycle explicitly and share the same semantic tones.
 - Browser regression: header summary PASS, Preview remains visible, pageErrors=[]; contract/build/B gate PASS.
+
+## 2026-08-31 — One selection language, separate read-only language
+- Decision: use one shared selection token family across left navigation, center editor Inspector and right live Preview.
+- Decision: Product Truth read-only elements must never use editable green; they use a separate graphite read-only tone.
+- Decision: selecting a Variant may emphasize its parent Base relationship, but must not give the Base the same strong active-row treatment.

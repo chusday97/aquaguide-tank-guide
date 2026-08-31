@@ -37,12 +37,12 @@ function elementEditPath(key, preview, appLocale, editorScope) {
   const scope = baseContext ? 'Base Species' : (english ? 'Current page' : '当前页面');
   return `${scope} → ${section}`;
 }
-function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabled, onSelect, onHover, labelLocale = 'zh-CN', children, className = '' }) {
+function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabled, onSelect, onHover, labelLocale = 'zh-CN', children, className = '', readOnlyElement = false }) {
   const selected = selectedElement === elementKey;
   const hovered = inspectEnabled && hoveredElement === elementKey;
   return (
     <div
-      className={`preview-inspectable ${selected ? 'is-selected' : ''} ${hovered ? 'is-hovered' : ''} ${className}`}
+      className={`preview-inspectable ${readOnlyElement ? 'is-readonly' : 'is-editable'} ${selected ? 'is-selected' : ''} ${hovered ? 'is-hovered' : ''} ${className}`}
       data-preview-element={elementKey}
       onMouseEnter={() => inspectEnabled && onHover(elementKey)}
       onMouseLeave={() => inspectEnabled && onHover(null)}
@@ -52,7 +52,7 @@ function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabl
         onSelect(elementKey);
       }}
     >
-      {selected || hovered ? <span className={`preview-element-tag ${hovered && !selected ? 'is-hover' : ''}`}>{getEditorElementLabel(elementKey, labelLocale)}</span> : null}
+      {selected || hovered ? <span className={`preview-element-tag ${readOnlyElement ? 'is-readonly' : ''} ${hovered && !selected ? 'is-hover' : ''}`}>{getEditorElementLabel(elementKey, labelLocale)}</span> : null}
       {children}
     </div>
   );
@@ -65,7 +65,12 @@ function SpeciesPage({ preview, mobile = false, inspector }) {
   const imageSrc = species.image?.startsWith('/') ? `https://aqua-tank-guide.vercel.app${species.image}` : species.image;
   const imageAlt = effectiveSeo.imageAlt || `${displayName} (${species.scientific_name || ''})`;
   const intro = [effectiveSeo.sharedIntro, effectiveSeo.variantIntro].filter(Boolean).join('\n\n').trim();
-  const inspectProps = (elementKey, className = '') => ({ elementKey, className, ...inspector });
+  const inspectProps = (elementKey, className = '') => ({
+    elementKey,
+    className,
+    readOnlyElement: Boolean(getEditorElementMeta(elementKey)?.readOnly || (elementKey === 'localizedName' && locale !== 'en')),
+    ...inspector,
+  });
   return (
     <article className={`live-species-page publish-structure ${mobile ? 'mobile' : ''}`}>
       <header className="live-site-header"><strong>AquaGuide</strong></header>
@@ -135,6 +140,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
   const selectedLabel = selectedElement ? getEditorElementLabel(selectedElement, appLocale) : '';
   const selectedSource = selectedElement ? elementSource(selectedElement, preview, appLocale) : '';
   const selectedPath = selectedElement ? elementEditPath(selectedElement, preview, appLocale, editorScope) : '';
+  const selectedReadOnly = Boolean(selectedElement && (getEditorElementMeta(selectedElement)?.readOnly || (selectedElement === 'localizedName' && preview?.locale !== 'en')));
   const inspector = {
     selectedElement,
     hoveredElement,
@@ -163,7 +169,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
         {readiness?.state === 'publish_ready' ? <button className="preview-generate-button" type="button" onClick={onGeneratePreview} disabled={readOnly}>{t('preview.generate')}</button> : <span className="preview-readiness-hint">{readiness?.state === 'blocked' ? t('preview.blockedHint') : t('preview.reviewHint')}</span>}
       </div>
       {selectedElement ? (
-        <div className="preview-inspector-status">
+        <div className={`preview-inspector-status ${selectedReadOnly ? 'is-readonly' : 'is-editable'}`}>
           <strong>{selectedLabel}</strong>
           <span>{selectedSource}</span>
           <span className="preview-inspector-path">{selectedPath}</span>
