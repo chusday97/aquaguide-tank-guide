@@ -84,3 +84,8 @@ Updated: 2026-08-30
 - [x] Protect dirty state from browser refresh/close with `beforeunload`.
 - [x] Keep no-op re-selection from clearing dirty state.
 - [x] Verify save/discard/cancel flows against an isolated ephemeral Supabase browser environment.
+
+## 2026-08-31 workflow localization consistency
+- [x] Remove mixed-language labels from topbar workflow actions.
+- [x] Derive active filter banner labels from live `appLocale` instead of cached click-time strings.
+- [x] Keep content-locale prefixes (`中文/Chinese/English`) aligned with interface language.

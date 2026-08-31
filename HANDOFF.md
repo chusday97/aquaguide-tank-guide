@@ -686,3 +686,6 @@ The Species tree navigates Base groups: `All` must use `base_group_count` (276),
 
 ## 2026-08-31 unsaved-edit contract
 Live Preview is not persistence. Keep Base/Variant dirty state visible until a successful Supabase save. Any navigation that changes the active editor resource/scope/content locale must confirm before discarding dirty edits. Never clear dirty state for a no-op re-selection. Browser refresh/close protection must remain active while dirty.
+
+## 2026-08-31 workflow-label contract
+Workflow filter state is semantic. Do not cache translated labels as the source of truth; derive banner text from `type/status/locale + appLocale` so active filters follow the global interface-language switch.

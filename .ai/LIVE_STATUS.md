@@ -121,3 +121,7 @@ Branch: `feature/admin-content-v0`
 - Base browser gate: clean `beforeunload=false`; dirty `beforeunload=true`; cancel keeps Base edits; local save clears dirty; confirmed scope change discards and returns to Variant.
 - Re-clicking the already-selected Variant produces no confirmation and preserves dirty state.
 - Browser `pageErrors=[]`; contract/build/local schema-v7 Supabase gate PASS.
+
+## 2026-08-31 live workflow-label localization
+- Active workflow filter banners now derive labels from current `appLocale`; switching 中文/English updates an already-active filter immediately.
+- Browser regression: Data Review and Awaiting Review banners switch live between Chinese/English with zero page errors.

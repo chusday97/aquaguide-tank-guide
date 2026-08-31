@@ -190,3 +190,6 @@
 - Decision: live Preview remains immediate, but every unsaved Base/Variant edit must be visibly marked until a database save succeeds.
 - Decision: destructive editor navigation requires explicit discard confirmation; UI-only language switching remains independent.
 - Decision: no-op navigation must never mutate parent dirty state. Child editor lifecycle, not navigation helpers, resets dirty state after a real editor-context change.
+
+## 2026-08-31 — Workflow labels are derived UI, not state
+Do not persist translated display strings in workflow filter state. Filter state stores semantic keys/status; visible labels are derived from the current interface locale so the global language switch updates active filters immediately.

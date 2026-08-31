@@ -84,6 +84,10 @@ assert.match(sidebarSource, /filtered\.length[\s\S]*Base groups/, 'Active workfl
 assert.match(sidebarSource, /Base Species groups/, 'Species navigation All count must expose its Base-group unit in hover help');
 assert.match(sidebarSource, /pending Data Review issues/, 'Data Review issue count must expose issue units in hover help');
 assert.match(sidebarSource, /Data Review · Pending/, 'English workflow filter labels must not regress to mixed-language text');
+assert.match(sidebarSource, /workflowFilterLabel/, 'Workflow filter banner labels must be derived at render time rather than cached at click time');
+assert.match(sidebarSource, /\[workflowFilter, appLocale\]/, 'Active workflow filter labels must react immediately to global interface-language changes');
+assert.match(sidebarSource, /appLocale === 'en' \? 'Preview-ready' : '可预览'/, 'Preview-ready filter labels must remain localized in both interface languages');
+assert.doesNotMatch(appSource, /label: 'Data Review · 待处理'/, 'Top workflow actions must not store mixed-language Data Review labels');
 assert.match(stylesSource, /species-group\.contains-active \.variant-list[\s\S]*var\(--selection-border\)/, 'Active Variant parent tree guide must use the shared selection token');
 assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');

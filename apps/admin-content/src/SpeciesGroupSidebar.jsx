@@ -57,6 +57,23 @@ export default function SpeciesGroupSidebar({
     return [...map.entries()];
   }, [filtered]);
 
+  const workflowFilterLabel = useMemo(() => {
+    if (!workflowFilter) return '';
+    const localePrefix = workflowFilter.locale
+      ? (workflowFilter.locale === 'en' ? 'English' : (appLocale === 'en' ? 'Chinese' : '中文'))
+      : '';
+    if (workflowFilter.type === 'data') return appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理';
+    if (workflowFilter.status === 'ready_for_review') {
+      const state = appLocale === 'en' ? 'Awaiting Review' : '待审核';
+      return localePrefix ? `${localePrefix} · ${state}` : state;
+    }
+    if (workflowFilter.status === 'publish_ready') {
+      const state = appLocale === 'en' ? 'Preview-ready' : '可预览';
+      return localePrefix ? `${localePrefix} · ${state}` : state;
+    }
+    return workflowFilter.label || workflowFilter.key;
+  }, [workflowFilter, appLocale]);
+
   return (
     <aside className="species-sidebar">
       <div className="sidebar-heading">
@@ -69,12 +86,12 @@ export default function SpeciesGroupSidebar({
       <div className="catalog-summary">
         {speciesGroupStats.catalog_count} {t('sidebar.records')} · {speciesGroupStats.batch_candidate_groups} {t('sidebar.batchGroups')}
       </div>
-      {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}{appLocale === 'en' ? ': ' : '：'}{workflowFilter.label || workflowFilter.key} · {filtered.length} {appLocale === 'en' ? 'Base groups' : '个 Base'}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
+      {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}{appLocale === 'en' ? ': ' : '：'}{workflowFilterLabel} · {filtered.length} {appLocale === 'en' ? 'Base groups' : '个 Base'}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
       <div className="review-filters species-quick-filters" aria-label="Species workflow filters">
         <button type="button" title={appLocale === 'en' ? `${speciesGroupStats.base_group_count} Base Species groups` : `${speciesGroupStats.base_group_count} 个 Base Species 分组`} className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{t('common.all')} <b>{speciesGroupStats.base_group_count}</b></button>
         <button type="button" title={appLocale === 'en' ? `${workflowOverview?.dataReview?.pending ?? 0} pending Data Review issues` : `${workflowOverview?.dataReview?.pending ?? 0} 个待处理数据问题`} className={`tone-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('common.issues')} <b>{workflowOverview?.dataReview?.pending ?? 0}</b></button>
         <button type="button" title={appLocale === 'en' ? 'Content items awaiting editorial review' : '等待人工审核的内容条目'} className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{workflowOverview?.locales?.[locale]?.ready_for_review ?? 0}</b></button>
-        <button type="button" title={appLocale === 'en' ? 'Pages eligible for Controlled Preview' : '可进入受控 Preview 的页面'} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: 'Preview-ready' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
+        <button type="button" title={appLocale === 'en' ? 'Pages eligible for Controlled Preview' : '可进入受控 Preview 的页面'} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: appLocale === 'en' ? 'Preview-ready' : '可预览' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
       </div>
       <input
         className="search-input"

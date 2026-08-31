@@ -240,3 +240,9 @@
 - Fixed no-op navigation masking: current Variant re-selection no longer prompts or clears dirty state.
 - Ran two writable browser gates against local ephemeral Supabase: Variant/save/language/navigation and Base/save/scope/beforeunload all PASS with zero page errors.
 - `npm run test:contract`, production build and `npm run test:supabase-gate` PASS.
+
+## 2026-08-31 — Workflow localization regression
+- Removed remaining mixed-language topbar filter labels.
+- Added live `workflowFilterLabel` derivation in Species sidebar.
+- Chromium verified active Data Review / Awaiting Review filters re-render across 中文 ↔ English with `pageErrors=[]`.
+- Contract and local schema-v7 Supabase gate PASS.

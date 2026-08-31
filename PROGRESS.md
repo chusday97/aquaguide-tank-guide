@@ -450,3 +450,7 @@
 - Species、Base/当前页面、内容语言、Workflow、批量选择、退出均接入放弃修改确认；刷新/关闭页面接入 `beforeunload`。
 - 修复重复点击当前 Species 时错误清除 dirty 的边界问题。
 - 使用本地临时 Supabase + 临时 admin 账号完成真实可写浏览器回归；测试环境结束后自动销毁。
+
+## 2026-08-31 — Workflow 筛选语言一致性
+- 顶部与左侧 Workflow 入口不再缓存中英混排 label。
+- 已激活的筛选在全局 UI 中文/English 切换时会立即重新本地化，包括内容语言前缀。
