@@ -39,6 +39,6 @@ const supported = reviews.filter(review => review.resolution === 'supported').le
 const unknown = reviews.filter(review => review.resolution === 'unknown').length;
 assert.ok(catalogContentVerifiedSourceIds.size <= sources.length, 'verified source count cannot exceed source count');
 const runtimeApprovedFields = reviews.filter(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))).length;
-assert.equal(catalogContentVerifiedSourceIds.size, 30);
-assert.equal(runtimeApprovedFields, 94);
+assert.equal(catalogContentVerifiedSourceIds.size, 32);
+assert.equal(runtimeApprovedFields, 100);
 console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: catalogContentVerifiedSourceIds.size, runtimeApprovedFields }, null, 2));

@@ -107,6 +107,13 @@ const unknownReason = (seed: Seed, field: string) => {
 
 /** Values copied only from statements visible on the verified source pages. */
 const verifiedFieldValues: Record<string, Partial<Record<typeof fields[number], unknown>>> = {
+  sp_0451: {
+    temperature: { min: 22, max: 25 },
+    adult_size: { min: null, max: 45.7 },
+  },
+  sp_0021: {
+    adult_size: { min: null, max: 10 },
+  },
   sp_0049: {
     temperature: { min: 22, max: 28 },
     adult_size: { min: null, max: 23.5 },
@@ -191,6 +198,8 @@ export const catalogReviewBatch03Sources = catalogReviewBatch03.flatMap(entry =>
 
 /** Populated only after a reviewer has read and verified source content. */
 export const catalogReviewBatch03VerifiedSourceIds: string[] = [
+  'batch03-fishbase-astronotus-ocellatus',
+  'batch03-fishbase-amatitlania-nigrofasciata',
   'batch03-fishbase-channa-asiatica',
   'batch03-fishbase-channa-argus',
   'batch03-fishbase-betta-splendens',
