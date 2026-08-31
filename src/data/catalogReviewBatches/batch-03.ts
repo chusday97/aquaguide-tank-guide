@@ -64,24 +64,24 @@ const seeds: Seed[] = [
   },
   {
     speciesId: 'sp_0459', commonName: '黑壳虾', scientificName: 'Neocaridina davidi wild type',
-    baseSpeciesKey: 'Neocaridina davidi', variantKey: 'wild type', sourceId: 'batch03-fishbase-neocaridina-davidi',
-    sourceTitle: 'Neocaridina davidi species summary', sourceUrl: 'https://www.fishbase.se/summary/Neocaridina-davidi.html', water: 'freshwater',
+    baseSpeciesKey: 'Neocaridina davidi', variantKey: 'wild type', sourceId: 'batch03-uf-ifas-neocaridina-davidi',
+    sourceTitle: 'Cherry Shrimp Neocaridina davidi (UF/IFAS)', sourceUrl: 'https://ask.ifas.ufl.edu/publication/IN1301', water: 'freshwater',
   },
   {
     speciesId: 'sp_0001', commonName: '极火虾', scientificName: 'Neocaridina davidi var. Red',
-    baseSpeciesKey: 'Neocaridina davidi', variantKey: 'Red', sourceId: 'batch03-fishbase-neocaridina-davidi-red',
-    sourceTitle: 'Neocaridina davidi species summary (red morph identity reference)', sourceUrl: 'https://www.fishbase.se/summary/Neocaridina-davidi.html', water: 'freshwater',
+    baseSpeciesKey: 'Neocaridina davidi', variantKey: 'Red', sourceId: 'batch03-usfws-neocaridina-davidi-red-morphs',
+    sourceTitle: 'Cherry Shrimp ecological risk screening summary (red morph names)', sourceUrl: 'https://www.fws.gov/sites/default/files/documents/2025-06/ecological-risk-screening-summary-cherry-shrimp-june-2025.pdf', water: 'freshwater',
   },
   {
     speciesId: 'sp_0002', commonName: '水晶虾', scientificName: 'Caridina cantonensis var.',
-    baseSpeciesKey: 'Caridina cantonensis', variantKey: null, sourceId: 'batch03-fishbase-caridina-cantonensis',
-    sourceTitle: 'Caridina cantonensis species summary', sourceUrl: 'https://www.fishbase.se/summary/Caridina-cantonensis.html',
+    baseSpeciesKey: 'Caridina cantonensis', variantKey: null, sourceId: 'batch03-itis-caridina-cantonensis',
+    sourceTitle: 'Caridina cantonensis taxonomic report (ITIS)', sourceUrl: 'https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1173917',
     identityUnknown: '“水晶虾”商业品系与 Caridina cantonensis 的现行分类对应关系需要专门品系来源确认。',
   },
   {
     speciesId: 'sp_0428', commonName: '斑马螺', scientificName: 'Neritina natalensis',
-    baseSpeciesKey: 'Neritina natalensis', sourceId: 'batch03-fishbase-neritina-natalensis',
-    sourceTitle: 'Neritina natalensis species summary', sourceUrl: 'https://www.fishbase.se/summary/Neritina-natalensis.html',
+    baseSpeciesKey: 'Neritina natalensis', sourceId: 'batch03-obis-neritina-natalensis',
+    sourceTitle: 'Neritina natalensis taxon record (OBIS/WoRMS)', sourceUrl: 'https://old.obis.org/taxon/818788',
     identityUnknown: 'Neritina 属观赏斑纹螺的商业名、物种名和幼体盐度需求存在混用，现有来源不足以确认本条完整水体画像。',
   },
   {
@@ -139,9 +139,14 @@ export const catalogReviewBatch03: CatalogReviewBatch03Entry[] = seeds.map(seed 
   sources: [{
     id: seed.sourceId,
     title: seed.sourceTitle,
-    publisher: 'FishBase',
+    publisher: seed.sourceId.includes('uf-ifas') ? 'University of Florida IFAS' :
+      seed.sourceId.includes('usfws') ? 'U.S. Fish and Wildlife Service' :
+        seed.sourceId.includes('itis') ? 'Integrated Taxonomic Information System' :
+          seed.sourceId.includes('obis') ? 'Ocean Biodiversity Information System' : 'FishBase',
     url: seed.sourceUrl,
-    sourceType: 'curated_husbandry',
+    sourceType: seed.sourceId.includes('uf-ifas') ? 'university' :
+      seed.sourceId.includes('usfws') || seed.sourceId.includes('itis') ? 'government' :
+        seed.sourceId.includes('obis') ? 'professional_association' : 'curated_husbandry',
     reviewStatus: 'reviewed',
   }],
   fieldReviews: fields.map(field => makeReview(seed, field)),
@@ -151,7 +156,14 @@ export const catalogReviewBatch03FieldReviews = catalogReviewBatch03.flatMap(ent
 export const catalogReviewBatch03Sources = catalogReviewBatch03.flatMap(entry => entry.sources);
 
 /** Populated only after a reviewer has read and verified source content. */
-export const catalogReviewBatch03VerifiedSourceIds: string[] = [];
+export const catalogReviewBatch03VerifiedSourceIds: string[] = [
+  'batch03-fishbase-channa-asiatica',
+  'batch03-fishbase-channa-argus',
+  'batch03-fishbase-betta-splendens',
+  'batch03-uf-ifas-neocaridina-davidi',
+  'batch03-usfws-neocaridina-davidi-red-morphs',
+  'batch03-obis-neritina-natalensis',
+];
 
 if (catalogReviewBatch03.length !== 10 || catalogReviewBatch03FieldReviews.length !== 100) {
   throw new Error('Batch 03 must contain exactly 10 species and 100 field reviews');
