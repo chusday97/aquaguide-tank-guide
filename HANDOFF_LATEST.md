@@ -2,11 +2,11 @@
 
 ## 2026-08-31 数据短分支本地门禁复验（当前）
 
-- 当前分支：`codex/catalog-cohort-30-v1`；当前 HEAD：`4969b5817184bd61f2feb7a9770a84f618587eaa`；工作树干净；分支包含 `origin/main@016dbca5`。
+- 当前分支：`codex/catalog-cohort-30-v1`；当前 HEAD：`8bfef23cd667b7aec4ef3028d0ca61cf3771abd9`；工作树干净；分支包含 `origin/main@016dbca5`。
 - `project:status`、`check:project-truth`、Catalog 30/300 审核批次、486 条 Catalog、435 组合、Domain/Service/Presentation、authority、API 类型、lint、build、Supabase reset、pgTAP 19/19 和 schema lint 0 error 均通过。
-- readiness 证据：`.artifacts/readiness/4969b5817184/`；16 项 PASS，UI freeze 为 `USER_ACCEPTANCE_REQUIRED`，短分支远端/PR 为 `UNVERIFIED`，生产 Supabase 为 `UNVERIFIED`。
+- readiness 证据：`.artifacts/readiness/8bfef23cd667/`；16 项 PASS，UI freeze 为 `USER_ACCEPTANCE_REQUIRED`，推送前短分支远端/PR 为 `UNVERIFIED`，生产 Supabase 为 `UNVERIFIED`。推送后远端分支已与本地 SHA 同步，数据 PR #143 正在等待 CI。
 - 数据分支 diff 未包含 UI、migration 或生产配置；当前 UI freeze 失败是旧 provisional 基线 `02457dd2` 与既有候选视觉差异，不是本轮数据修改造成。
-- 下一步：独立 Critic 只读复验通过后，一次性推送数据短分支并创建短 PR；不执行生产 migration、Catalog 发布或正式上线。
+- 下一步：等待 PR #143 的远端 CI 完成；若通过，按预授权合并数据短 PR。随后从最新 `main` 创建 UI 短分支；不执行生产 migration、Catalog 发布或正式上线。
 
 ## 2026-08-31 短分支治理门禁修复（当前）
 

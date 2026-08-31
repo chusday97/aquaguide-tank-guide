@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Verified: data short-branch governance now tracks the branch's own remote ref during readiness collection; an unpublished short branch is reported as `UNVERIFIED` instead of incorrectly comparing against the merged source-convergence branch. Local Supabase reset, pgTAP 19/19, schema lint, Catalog, compatibility, typecheck and build were re-run at `4969b581`.
+- Fixed: readiness collection now preserves the underlying timeout/network error message, so Preview failures caused by DNS or service limits are classified as `UNVERIFIED` instead of an opaque implementation failure.
 
 - Fixed: project status now accepts `codex/*` short task branches only when they contain the latest `main` ancestor, and reports the branch role and ancestry evidence. Updated Project Truth to reflect merged PR #142 and aligned the documented Catalog water type contract with the code and pending migration (`brackish` included).
 - Fixed: updated the tank evidence regression fixture to use explicit water types, preserving the no-text-inference contract while restoring the freshwater/marine hard-constraint test.

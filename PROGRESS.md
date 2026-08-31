@@ -2,13 +2,14 @@
 
 从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。
 
-### 2026-08-31 当前门禁复验（`4969b581`）
+### 2026-08-31 当前门禁复验（`8bfef23c`）
 
 - [x] 数据短分支治理修复已提交：`project:status`/`check:project-truth` 正确识别包含最新 `main` 的 `codex/*` 短分支；水体契约包含 `brackish`。
 - [x] 本地从零重放前26+第27个本地 Catalog migration；`supabase test db --local` 通过 19/19，`supabase db lint --local --schema public --level error --fail-on error` 为 0 error。
 - [x] 当前 SHA 上 readiness 本地门禁通过 16 项；`test:readiness` 通过，证据报告位于 `.artifacts/readiness/4969b5817184/`。
 - [x] 数据分支 diff 未包含 UI Owner、Supabase migration、生产配置或生产指针文件；UI freeze 仍是历史基线差异，留给 UI 短分支处理。
-- [ ] 数据短分支尚未推送、尚未创建数据 PR；远端/Preview 证据为 `UNVERIFIED`。生产 migration、Catalog 发布、UI 人工验收和正式上线仍未执行。
+- [x] 数据短分支已一次性推送到 `origin/codex/catalog-cohort-30-v1`，远端分支 SHA 与本地一致；数据 PR #143 已创建，等待远端 CI。Preview 与 PR #143 的实时 parity 尚未完成。
+- [ ] 生产 migration、Catalog 发布、UI 人工验收和正式上线仍未执行。
 
 ### 2026-08-31 当前短分支治理修复
 

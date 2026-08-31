@@ -19,9 +19,11 @@ const run = (file, args, options = {}) => {
     }).trim();
     return { ok: true, output, durationMs: Date.now() - started };
   } catch (error) {
+    const captured = `${error.stdout ?? ''}${error.stderr ?? ''}`.trim();
+    const detail = error instanceof Error ? error.message : String(error);
     return {
       ok: false,
-      output: `${error.stdout ?? ''}${error.stderr ?? ''}`.trim() || error.message,
+      output: captured ? `${captured}\n${detail}` : detail,
       durationMs: Date.now() - started,
       code: error.status ?? null,
     };
