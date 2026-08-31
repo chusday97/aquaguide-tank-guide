@@ -40,6 +40,7 @@ const draft = catalogFieldReviewSchema.parse({
   field: 'water',
   proposedValue: 'freshwater',
   status: 'draft',
+  resolution: null,
   confidence: 'unknown',
   citationIds: [],
   conflictNotes: [],
@@ -52,15 +53,24 @@ const reviewedBehavior = catalogFieldReviewSchema.parse({
   field: 'territoriality',
   proposedValue: { traits: ['territorial'] },
   status: 'reviewed',
+  resolution: 'supported',
   confidence: 'high',
   citationIds: ['reviewed-source'],
   conflictNotes: [],
   reviewedAt: '2026-08-30T00:00:00.000Z',
 });
 assert.equal(isCatalogFieldReviewValueValid(reviewedBehavior), true);
+const reviewedUnknown = catalogFieldReviewSchema.parse({
+  ...reviewedBehavior,
+  proposedValue: null,
+  resolution: 'unknown',
+  conflictNotes: ['Professional sources do not establish a reliable threshold.'],
+});
+assert.equal(isCatalogFieldReviewValueValid(reviewedUnknown), true);
 const invalidBehavior = { ...reviewedBehavior, proposedValue: { traits: [''] } };
 assert.equal(isCatalogFieldReviewValueValid(invalidBehavior), false);
 const profile = speciesProfileFromFish(cohort[0]);
+assert.equal(applyApprovedCatalogFieldReviews(profile, [reviewedUnknown]).factEvidence?.some(item => item.field === 'territoriality'), false);
 const overlaid = applyApprovedCatalogFieldReviews(profile, [reviewedBehavior]);
 assert.deepEqual(overlaid.factEvidence?.find(item => item.field === 'territoriality'), {
   field: 'territoriality',
@@ -88,6 +98,7 @@ const invalidCitationPayload = {
       field,
       proposedValue: field === 'water' ? 'freshwater' : null,
       status: field === 'water' ? 'reviewed' : 'draft',
+      resolution: field === 'water' ? 'supported' : null,
       confidence: field === 'water' ? 'high' : 'unknown',
       citationIds: field === 'water' ? ['missing-source'] : [],
       conflictNotes: [],
@@ -119,6 +130,7 @@ const positivePayload = {
       field,
       proposedValue: reviewedValues[field],
       status: 'reviewed',
+      resolution: 'supported',
       confidence: 'high',
       citationIds: ['reviewed-source'],
       conflictNotes: [],

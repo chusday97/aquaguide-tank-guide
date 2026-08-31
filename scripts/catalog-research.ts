@@ -21,6 +21,7 @@ const draft = cohort.slice(offset, offset + batchSize).map(species => ({
     field,
     proposedValue: null,
     status: 'draft' as const,
+    resolution: null,
     confidence: 'unknown' as const,
     citationIds: [],
     conflictNotes: [],

@@ -19,6 +19,8 @@ const invalidSourceSpeciesIds = species.flatMap(item => (item.sources || []).map
 const invalidFieldSpeciesIds: string[] = [];
 const invalidCitationSpeciesIds: string[] = [];
 const reviewedFieldKeys = new Set<string>();
+const supportedFieldKeys = new Set<string>();
+const unknownFieldKeys = new Set<string>();
 for (const item of species) {
   const validSources = (item.sources || []).map(source => {
     try { return catalogEvidenceSourceSchema.parse(source); } catch { return null; }
@@ -40,6 +42,8 @@ for (const item of species) {
       continue;
     }
     reviewedFieldKeys.add(`${item.speciesId}:${field.field}`);
+    if (field.resolution === 'supported') supportedFieldKeys.add(`${item.speciesId}:${field.field}`);
+    if (field.resolution === 'unknown') unknownFieldKeys.add(`${item.speciesId}:${field.field}`);
   }
 }
 const notReady = species.filter(item => (
@@ -54,6 +58,8 @@ console.log(JSON.stringify({
   reviewedCount: species.length - notReady.length,
   pendingCount: notReady.length,
   reviewedFieldCount: reviewedFieldKeys.size,
+  supportedFieldCount: supportedFieldKeys.size,
+  unknownFieldCount: unknownFieldKeys.size,
   expectedFieldCount: species.length * REVIEWABLE_CATALOG_FIELDS.length,
   invalidFieldSpeciesIds: [...new Set(invalidFieldSpeciesIds)],
   invalidCitationSpeciesIds: [...new Set(invalidCitationSpeciesIds)],

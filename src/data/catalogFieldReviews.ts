@@ -11,6 +11,7 @@ export const catalogFieldReviewSchema = z.object({
   ]),
   proposedValue: z.unknown(),
   status: z.enum(['draft', 'reviewed', 'rejected']),
+  resolution: z.enum(['supported', 'unknown']).nullable(),
   confidence: z.enum(['high', 'medium', 'low', 'unknown']),
   citationIds: z.array(z.string().trim().min(1)),
   conflictNotes: z.array(z.string()),
@@ -18,6 +19,7 @@ export const catalogFieldReviewSchema = z.object({
 });
 
 export type CatalogFieldReview = z.infer<typeof catalogFieldReviewSchema>;
+export type CatalogFieldResolution = NonNullable<CatalogFieldReview['resolution']>;
 
 const nullableRangeSchema = z.object({
   min: z.number().finite().nonnegative().nullable(),
@@ -49,6 +51,10 @@ const fieldValueSchemas: Partial<Record<SpeciesFactKey, z.ZodType>> = {
 
 export const isCatalogFieldReviewValueValid = (review: CatalogFieldReview) => {
   if (review.status !== 'reviewed') return true;
+  if (review.resolution === 'unknown') {
+    return review.proposedValue === null && review.citationIds.length > 0 && review.conflictNotes.some(note => note.trim().length > 0);
+  }
+  if (review.resolution !== 'supported') return false;
   const schema = fieldValueSchemas[review.field];
   return schema ? schema.safeParse(review.proposedValue).success : false;
 };
@@ -64,11 +70,11 @@ export const catalogFieldReviews: CatalogFieldReview[] = [];
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);
 
 export const getApprovedCatalogFieldReviews = (speciesId: string) => getCatalogFieldReviews(speciesId)
-  .filter(item => item.status === 'reviewed' && item.citationIds.length > 0);
+  .filter(item => item.status === 'reviewed' && item.citationIds.length > 0 && isCatalogFieldReviewValueValid(item));
 
 export const isCatalogSpeciesFieldReady = (speciesId: string) => {
   const reviews = getApprovedCatalogFieldReviews(speciesId);
-  return REVIEWABLE_CATALOG_FIELDS.every(field => reviews.some(item => item.field === field && isCatalogFieldReviewValueValid(item)));
+  return REVIEWABLE_CATALOG_FIELDS.every(field => reviews.some(item => item.field === field));
 };
 
 const finiteOrNull = (value: unknown) => typeof value === 'number' && Number.isFinite(value) ? value : null;
@@ -79,7 +85,7 @@ export const applyApprovedCatalogFieldReviews = (
   reviews: CatalogFieldReview[] = getApprovedCatalogFieldReviews(profile.id),
 ): SpeciesProfile => {
   let next = profile;
-  for (const review of reviews.filter(item => item.status === 'reviewed' && item.citationIds.length > 0)) {
+  for (const review of reviews.filter(item => item.status === 'reviewed' && item.resolution === 'supported' && item.citationIds.length > 0)) {
     if (!isCatalogFieldReviewValueValid(review)) continue;
     const value = review.proposedValue;
     if (review.field === 'identity' && typeof value === 'object' && value !== null) {
