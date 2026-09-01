@@ -106,3 +106,9 @@ The persistent product model is now:
 - Duplicate Admin authority is resolved at the UI/deployment boundary: `/admin/content` routes to an Admin Hub; legacy Product/Care editing moved to `/admin/product-content`; the three-pane Species SEO CMS is deployed under `/admin/seo/`.
 - Product Truth loading correctness is closed locally. Before the staging vertical slice, resolve the duplicate Species Admin authority so AquaGuide has one SEO editing source of truth.
 
+## 2026-09-01 — Hosted staging vertical slice
+- `feature/admin-content-v0` Vercel Preview is the controlled hosted staging surface for the current milestone.
+- Preview builds on this branch auto-consume only `apps/admin-content/fixtures/staging-publication-sample.json`; Production builds still require an explicit snapshot and otherwise skip Species generation.
+- The staging fixture contains 3 real catalog keys × zh-CN/en = 6 static pages covering index, canonical-to-sibling and noindex strategies.
+- Generated Species pages now include product-return CTAs into AquaGuide compatibility, browse/detail and aquarium planning using `species=<catalog_key>&source=seo-species`.
+- Next acceptance: fetch the newly deployed Vercel Species HTML and sitemap, verify metadata/CTA source, then browser-check at least one CTA handoff.

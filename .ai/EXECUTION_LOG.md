@@ -280,3 +280,9 @@
 - Added Admin CI coverage for the full root artifact path.
 - Local evidence: root build PASS with 6 generated HTML pages; artifact verifier PASS; Admin contract/generator/Controlled Preview/staging guard PASS; Admin authority browser verification PASS.
 - Safety: no snapshot = safe skip; generator still rejects Production snapshot/host paths.
+
+## 2026-09-01 — Hosted staging slice preparation
+- Confirmed Vercel deployment for `4ad6472` was READY and `/admin/seo/` served the embedded Admin app, but Species HTML was absent because automatic Git deployment had no snapshot build input.
+- Added branch-scoped Preview input resolution: only `feature/admin-content-v0` + `VERCEL_ENV=preview` receives the committed 3-Species staging fixture and Vercel preview host as canonical base.
+- Added deterministic product CTAs from generated Species pages to `/encyclopedia?mode=compatibility`, `/encyclopedia?mode=browse`, and `/aquarium?action=plan-species`, always carrying `species=<catalog_key>&source=seo-species`.
+- Local verification: Admin generator contracts PASS; simulated Vercel Preview root build emits 6 pages; root artifact verifier PASS; Production simulation safely skips without explicit snapshot; `git diff --check` PASS.

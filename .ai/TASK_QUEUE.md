@@ -113,3 +113,11 @@ Updated: 2026-08-30
 - [ ] Add real AquaGuide compatibility / aquarium-planning CTA return paths with Species ID + `source=seo-species`.
 - [ ] Keep Production publishing locked until the staging vertical slice passes.
 
+## 2026-09-01 hosted staging vertical slice
+- [x] Make the SEO staging branch auto-consume only the committed 3-Species Published fixture on Vercel Preview.
+- [x] Keep Production builds fail-closed: no explicit snapshot means no generated Species artifact.
+- [x] Add Species-page CTAs to compatibility, browse/detail and aquarium planning with catalog key + `source=seo-species`.
+- [x] Verify the CTA query contract against existing Encyclopedia/Aquarium route consumers.
+- [ ] Verify the next Vercel Preview deployment returns the 6 static HTML pages + sitemap rather than SPA fallback.
+- [ ] Fetch and assert hosted title/meta/H1/canonical/hreflang/robots/alt + CTA URLs.
+- [ ] Browser-check at least one hosted CTA into the correct AquaGuide Species context.

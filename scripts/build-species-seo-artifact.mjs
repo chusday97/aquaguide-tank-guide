@@ -6,6 +6,20 @@ import { generatePublicSpecies } from '../apps/admin-content/scripts/generate-pu
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
+const PREVIEW_FIXTURE = 'apps/admin-content/fixtures/staging-publication-sample.json';
+const SEO_STAGING_BRANCH = 'feature/admin-content-v0';
+
+function resolveBuildInputs({ snapshotPath, siteUrl, productionSiteUrl } = {}) {
+  const isSeoStagingPreview = process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_GIT_COMMIT_REF === SEO_STAGING_BRANCH;
+  const previewHost = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
+  const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  return {
+    snapshotPath: snapshotPath || (isSeoStagingPreview ? PREVIEW_FIXTURE : ''),
+    siteUrl: siteUrl || (isSeoStagingPreview && previewHost ? `https://${previewHost}` : ''),
+    productionSiteUrl: productionSiteUrl || (productionHost ? `https://${productionHost}` : 'https://aqua-tank-guide.vercel.app'),
+    source: snapshotPath ? 'explicit' : isSeoStagingPreview ? 'vercel-seo-staging-fixture' : 'none',
+  };
+}
 
 async function mergeGeneratedOutput(sourceDir, distDir) {
   await mkdir(distDir, { recursive: true });
@@ -26,6 +40,10 @@ export async function buildSpeciesSeoArtifact({
   productionSiteUrl,
   distDir = path.join(repoRoot, 'dist'),
 } = {}) {
+  const inputs = resolveBuildInputs({ snapshotPath, siteUrl, productionSiteUrl });
+  snapshotPath = inputs.snapshotPath;
+  siteUrl = inputs.siteUrl;
+  productionSiteUrl = inputs.productionSiteUrl;
   if (!snapshotPath) {
     console.log('Species SEO artifact: skipped (SPECIES_SEO_SNAPSHOT_PATH is not configured).');
     return { skipped: true, reason: 'snapshot-not-configured' };
@@ -51,6 +69,7 @@ export async function buildSpeciesSeoArtifact({
     const receipt = {
       integrated_at: new Date().toISOString(),
       source_snapshot: path.relative(repoRoot, resolvedSnapshot) || path.basename(resolvedSnapshot),
+      build_input_source: inputs.source,
       site_url: siteUrl,
       environment: snapshot.environment,
       generated_pages: result.manifest.generated_pages,

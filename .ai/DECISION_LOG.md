@@ -222,3 +222,7 @@ Deployment: root `npm run build` now emits the standalone SEO Admin into `dist/a
 ## 2026-09-01 — Species publication joins root build only through an explicit snapshot
 Decision: do not make the AquaGuide root build query Supabase directly and do not auto-publish all catalog rows. The deployment build may consume only an explicit reviewed publication snapshot. It generates into a temporary directory, then merges Species HTML/sitemap into root `dist/` after the SPA and SEO Admin builds.
 Reason: keeps Editorial review/Published snapshot as the authority boundary, prevents accidental Production publication, makes the deployment artifact deterministic, and preserves existing AquaGuide assets under `dist/zh` while adding SEO pages.
+
+## 2026-09-01 — Use branch-scoped Vercel Preview as staging, not Production
+Decision: until a dedicated AquaGuide staging Supabase project is provisioned, use `feature/admin-content-v0` Vercel Preview only as the hosted publication surface for the committed 3-Species Published fixture.
+Reason: this proves real hosting/build/routing/HTML delivery without incurring staging DB cost or enabling Production publishing. The fallback is branch- and environment-scoped, never active on Production builds.

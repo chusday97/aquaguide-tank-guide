@@ -472,3 +472,9 @@ After it is gated, the next product milestone is a small staging publication sli
 - Explicit staging fixture generated 6 bilingual HTML pages into root `dist/`; Title/Meta/H1/canonical/hreflang/robots/Image Alt/sitemap verification passed.
 - No snapshot means no Species publication; Production snapshot/host remain rejected.
 - Remaining launch gate: real hosted staging snapshot + final HTML-source verification + product CTA return path.
+
+## 2026-09-01 — Hosted SEO staging slice prepared
+- Branch-scoped Vercel Preview fixture injection implemented for 3 representative Species / 6 bilingual static pages.
+- Production build remains fail-closed without explicit Species snapshot.
+- Species pages now include real AquaGuide product CTAs carrying `catalog_key` and `source=seo-species`.
+- Local Preview simulation and generator/root artifact tests PASS; hosted Vercel verification is next.

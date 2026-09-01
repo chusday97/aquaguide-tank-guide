@@ -711,3 +711,8 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - Root AquaGuide `npm run build` now includes `build:species-pages`. When `SPECIES_SEO_SNAPSHOT_PATH` + `SPECIES_SEO_SITE_URL` are supplied, guarded generator output is merged into the same root `dist/`; with no snapshot, publication is skipped.
 - Local vertical artifact fixture: 3 Species × 2 locales = 6 static pages; index/canonical/noindex behavior and sitemap verified.
 - Do not unlock Production Published. Next: create/obtain a real AquaGuide staging publication snapshot, deploy the root artifact to a non-production URL, and verify returned HTML source end-to-end.
+
+## 2026-09-01 Hosted SEO staging slice
+- Vercel Preview on `feature/admin-content-v0` is now the controlled hosted SEO staging surface. Its root build auto-loads only the committed 3-Species bilingual Published fixture; Production still requires explicit snapshot input and otherwise skips Species generation.
+- Static Species pages now link back into real AquaGuide compatibility, browse/detail and aquarium-planning flows with the catalog key plus `source=seo-species`.
+- Local simulated Vercel Preview build + generator contracts + root artifact verification PASS. Next required evidence is the newly deployed Vercel HTML source and CTA handoff.

@@ -26,6 +26,8 @@ assert.match(enIndex, /<h1>Yellow Cherry Shrimp Care Guide<\/h1>/);
 assert.match(enIndex, /<meta name="robots" content="index,follow">/);
 assert.match(enIndex, /hreflang="zh-CN"/);
 assert.match(enIndex, /alt="Yellow Cherry Shrimp aquarium profile"/);
+assert.match(enIndex, /mode=compatibility&amp;species=sp_0030&amp;source=seo-species/);
+assert.match(enIndex, /action=plan-species&amp;species=sp_0030&amp;source=seo-species/);
 assert.match(zhIndex, /<html lang="zh-CN">/);
 assert.match(zhIndex, /hreflang="en"/);
 assert.match(enCanonical, /rel="canonical" href="[^"]+\/species\/neocaridina-davidi\/sp-0030\.html"/);

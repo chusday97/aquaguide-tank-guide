@@ -64,6 +64,8 @@ try {
   assert.match(english, /hreflang="x-default" href="https:\/\/preview\.aquaguide\.test\/species\/neocaridina-davidi\/sp-0030\.html"/);
   assert.match(english, /<h1>Yellow Cherry Shrimp Care Guide<\/h1>/);
   assert.match(english, /At least 30 L/);
+  assert.match(english, /href="\/encyclopedia\?mode=compatibility&amp;species=sp_0030&amp;source=seo-species"/);
+  assert.match(english, /href="\/aquarium\?action=plan-species&amp;species=sp_0030&amp;source=seo-species"/);
 
   assert.match(chinese, /<html lang="zh-CN">/);
   assert.match(chinese, /<title>黄金米虾饲养指南 \| AquaGuide<\/title>/);

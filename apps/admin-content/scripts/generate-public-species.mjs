@@ -128,6 +128,15 @@ function renderPage({ siteUrl, member, locale, effectiveSeo, routeMeta, availabl
     .join('\n');
   const imageAlt = member.image_alt || `${displayName} (${member.scientific_name})`;
   const image = member.image || '';
+  const speciesId = encodeURIComponent(member.catalog_key);
+  const actionLabels = locale === 'en'
+    ? { compatibility: 'Check compatibility', browse: 'View in AquaGuide', plan: 'Plan this species' }
+    : { compatibility: '检查混养兼容性', browse: '在 AquaGuide 中查看', plan: '加入鱼缸规划' };
+  const productActions = [
+    [`/encyclopedia?mode=compatibility&species=${speciesId}&source=seo-species`, actionLabels.compatibility],
+    [`/encyclopedia?mode=browse&species=${speciesId}&source=seo-species`, actionLabels.browse],
+    [`/aquarium?action=plan-species&species=${speciesId}&source=seo-species`, actionLabels.plan],
+  ];
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -148,7 +157,7 @@ function renderPage({ siteUrl, member, locale, effectiveSeo, routeMeta, availabl
 <link rel="canonical" href="${escapeHtml(canonical)}">
 ${alternates}
 <meta property="og:type" content="article"><meta property="og:title" content="${escapeHtml(effectiveSeo.seoTitle)}"><meta property="og:description" content="${escapeHtml(effectiveSeo.metaDescription)}"><meta property="og:url" content="${escapeHtml(selfUrl)}">
-<style>:root{--g:#315f49;--bg:#f5f8f5;--card:#fff;--ink:#17231d;--mut:#65736b;--line:#dce5de}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.65}a{color:var(--g)}header{border-bottom:1px solid var(--line);background:#fff}.bar,main{max-width:1040px;margin:auto;padding-left:24px;padding-right:24px}.bar{padding-top:16px;padding-bottom:16px;font-weight:800}.crumb{color:var(--mut);font-size:.88rem;margin:34px 0 14px}.hero{display:grid;grid-template-columns:minmax(220px,34%) 1fr;gap:34px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px}.hero img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:18px;background:#eef4ef}.hero h1{font-size:clamp(2rem,5vw,3.8rem);line-height:1.02;letter-spacing:-.045em;margin:8px 0}.scientific{color:var(--mut);font-style:italic}.intro{font-size:1.06rem;white-space:pre-line}.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.fact{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}.fact span{display:block;color:var(--mut);font-size:.82rem}.truth{margin:18px 0 50px;padding:18px;border:1px solid var(--line);border-radius:15px;background:#edf5ef}.truth p{margin:4px 0 0;color:var(--mut)}@media(max-width:760px){.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}}</style>
+<style>:root{--g:#315f49;--bg:#f5f8f5;--card:#fff;--ink:#17231d;--mut:#65736b;--line:#dce5de}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.65}a{color:var(--g)}header{border-bottom:1px solid var(--line);background:#fff}.bar,main{max-width:1040px;margin:auto;padding-left:24px;padding-right:24px}.bar{padding-top:16px;padding-bottom:16px;font-weight:800}.crumb{color:var(--mut);font-size:.88rem;margin:34px 0 14px}.hero{display:grid;grid-template-columns:minmax(220px,34%) 1fr;gap:34px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px}.hero img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:18px;background:#eef4ef}.hero h1{font-size:clamp(2rem,5vw,3.8rem);line-height:1.02;letter-spacing:-.045em;margin:8px 0}.scientific{color:var(--mut);font-style:italic}.intro{font-size:1.06rem;white-space:pre-line}.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.fact{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}.fact span{display:block;color:var(--mut);font-size:.82rem}.truth{margin:18px 0 18px;padding:18px;border:1px solid var(--line);border-radius:15px;background:#edf5ef}.truth p{margin:4px 0 0;color:var(--mut)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 50px}.actions a{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid var(--g);border-radius:999px;background:#fff;font-weight:800;text-decoration:none}.actions a:first-child{background:var(--g);color:#fff}@media(max-width:760px){.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}}</style>
 <script type="application/ld+json">${jsonLd}</script>
 </head>
 <body>${previewOnly ? `<div style="background:#7a4d00;color:#fff;padding:8px 20px;text-align:center;font:700 13px/1.4 system-ui">PREVIEW ONLY · noindex · intended robots: ${escapeHtml(routeMeta.robots)}</div>` : ''}
@@ -156,7 +165,8 @@ ${alternates}
 <main><div class="crumb">AquaGuide / ${escapeHtml(labels.breadcrumb)} / ${escapeHtml(displayName)}</div>
 <article class="hero">${image ? `<img src="${escapeHtml(image)}" alt="${escapeHtml(imageAlt)}">` : '<div></div>'}<div><h1>${escapeHtml(effectiveSeo.h1)}</h1><div class="scientific">${escapeHtml(member.scientific_name)}</div><p class="intro">${escapeHtml(intro)}</p></div></article>
 <section class="facts"><div class="fact"><span>${labels.temperature}</span><strong>${escapeHtml(member.water_temperature || '—')}</strong></div><div class="fact"><span>${labels.ph}</span><strong>${escapeHtml(member.ph_level || '—')}</strong></div><div class="fact"><span>${labels.tank}</span><strong>${escapeHtml(localizeSpeciesTankSize(member.tank_size, locale))}</strong></div><div class="fact"><span>${labels.difficulty}</span><strong>${escapeHtml(member.difficulty || '—')}</strong></div></section>
-<section class="truth"><strong>${escapeHtml(labels.truth)}</strong><p>${escapeHtml(labels.truthNote)}</p></section></main>
+<section class="truth"><strong>${escapeHtml(labels.truth)}</strong><p>${escapeHtml(labels.truthNote)}</p></section>
+<section class="actions" aria-label="AquaGuide actions">${productActions.map(([href, label]) => `<a href="${escapeHtml(href)}">${escapeHtml(label)}</a>`).join('')}</section></main>
 </body></html>\n`;
 }
 

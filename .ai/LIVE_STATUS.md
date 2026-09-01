@@ -154,3 +154,9 @@ Branch: `feature/admin-content-v0`
 - Artifact verifier PASS: Title, Meta Description, H1, canonical, hreflang, robots, Image Alt and sitemap inclusion/exclusion.
 - Admin contract, Controlled Preview guard, staging Production deny-list and Admin Hub/Product-Care browser regression remain PASS.
 - Production Published, Production Supabase and `main` remain untouched. Next gate is a real hosted staging snapshot/URL vertical slice, not more CMS UI.
+
+## 2026-09-01 Hosted Species staging integration
+- Local Vercel-preview simulation PASS: root build auto-selected the staging fixture only for `VERCEL_ENV=preview` + `feature/admin-content-v0` and emitted 6 Species HTML pages.
+- Production simulation PASS: `VERCEL_ENV=production` with no explicit snapshot skipped Species generation.
+- Generator contract PASS after adding compatibility/browse/aquarium CTAs carrying the real catalog key and `source=seo-species`.
+- Awaiting hosted verification on the Vercel deployment produced by the next push.
