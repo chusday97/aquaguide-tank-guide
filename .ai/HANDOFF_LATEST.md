@@ -231,15 +231,17 @@ Latest functional commit:
 - `c2c4789 feat(admin): add bulk import and activity center`
 
 GitHub Actions:
-- Admin Content CI Gate #43
-- run id `33532055685`
-- result: SUCCESS
+- Admin Content CI Gate #44
+- run id `33535655305`
+- head `39f90585ae2cecef0932b439d7b68a70664c4be2`
+- result: SUCCESS; all validate steps green
 
 Vercel Preview:
-- deployment `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw`
-- host `aquaguide-n24zsvrtk-chusday97s-projects.vercel.app`
+- deployment `dpl_GmHUtFr3xD9N4A7T7XZdQL6eP7rA`
+- host `aquaguide-j1gpyblfg-chusday97s-projects.vercel.app`
 - state: READY
 - stable branch alias: `aquaguide-git-feature-admin-content-v0-chusday97s-projects.vercel.app`
+- protected hosted `/admin/seo/` artifact was fetched after deployment and contains `批量导入`, `操作记录`, `import_action`, and `admin_activity_log`
 
 Temporary `_vercel_share` links expire and must not be stored as canonical handoff URLs.
 
@@ -269,8 +271,8 @@ Primary:
 Known build warning: large Vite chunks. This is not currently a Species SEO functional failure.
 
 ## 18. Current next actions — in priority order
-1. After the current code/docs batch is pushed, verify the hosted branch Preview contains the new top-right `批量导入` / `操作记录` entries and that GitHub/Vercel gates stay green. Do not perform a fake content write just to populate Activity history.
-2. Continue Data Review UX/processing if desired. The current example is 白金西非凤凰 (`sp_0214 / sp_0338`) and can now be handled directly from `处理重复`; once its final outstanding issue is resolved the Data Review drawer auto-closes and the operation is surfaced top-right.
+1. Continue Data Review processing. The current example is 白金西非凤凰 (`sp_0214 / sp_0338`) and can now be handled directly from `处理重复`; once its final outstanding issue is resolved the Data Review drawer auto-closes and the operation is surfaced top-right.
+2. Use the new bulk-import flow for the next real batch only when there is real content to import; do not create fake writes merely to populate Activity history.
 3. For the original `sp_0001` vertical slice: clean the English test copy, save English, submit and approve English. Do not ask user to re-submit Chinese; Chinese is already Approved.
 4. Then explicitly Staging Publish only the intended reviewed Species set.
 5. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`.
@@ -319,7 +321,7 @@ Functional commit: `c2c4789`.
 - if another category/duplicate issue still exists, the drawer stays open
 - the completed action still appears in the top-right notice and Activity history
 
-### Verification completed locally
+### Verification completed locally + remotely
 - `npm run test:contract -w @aquaguide/admin-content` PASS, including new bulk/activity contracts
 - Admin production build PASS
 - full root `npm run build` PASS
@@ -327,6 +329,9 @@ Functional commit: `c2c4789`.
 - `npm run test:admin-content-ui` PASS
 - real browser walk-through in `VITE_ADMIN_REVIEW_MODE=true` verified top-right Bulk import, CSV drawer controls, Activity drawer and read-only privacy message
 - `git diff --check` PASS
+- GitHub Admin Content CI Gate #44 PASS
+- Vercel Preview `dpl_GmHUtFr3xD9N4A7T7XZdQL6eP7rA` READY
+- hosted `/admin/seo/` deployment artifact contains the new bulk-import/activity-center code
 - only known Vite chunk-size warnings remain
 
 ## 21. Startup instruction for the next conversation
