@@ -696,7 +696,7 @@ The hero image asset remains Product Truth and read-only in Content Admin. Only 
 ## 2026-08-31 frontend SEO handoff
 The Admin's purpose is to create reviewed static Species SEO pages, not to become a general-purpose CMS. Keep Product Truth read-only and separate from Editorial SEO. The intended flow is `Product Truth + Base/Variant Editorial SEO → review/readiness → explicit publication snapshot → generate-public-species → AquaGuide frontend artifact`. Controlled Preview remains Draft/Approved, noindex and must never be treated as Production publication.
 
-Product Truth loading correctness is now locally complete and gated: explicit Loading/Unavailable states, key-scoped facts, no stale cross-Species flash, retryable lazy JSON asset fetch, contract/build/schema-v7 B gate PASS. Next: resolve the duplicate Species Admin authority (`src/pages/AdminContent.tsx` vs `apps/admin-content`) before wiring the generator into the AquaGuide frontend build. Then build only a small staging Species set and verify source-level SEO (`title`, meta description, H1, canonical, robots, hreflang, alt, sitemap) before unlocking any Production path.
+Product Truth loading correctness is complete and A-gated. Admin authority is now separated: `/admin/content` = Admin Hub, `/admin/product-content` = Product/Care content, `/admin/seo/` = the only Species SEO Admin, and the root AquaGuide build emits the SEO Admin into `dist/admin/seo/`. Next: wire the Species publication generator into the same root `dist`, then build only a small staging Species set and verify source-level SEO (`title`, meta description, H1, canonical, robots, hreflang, alt, sitemap) before unlocking any Production path.
 
 Future SEO landing-page CTAs should carry the current `catalog_key` into AquaGuide compatibility/recommendation flows so organic traffic enters the product funnel instead of ending on an isolated content page.
 
@@ -706,3 +706,8 @@ The key unresolved architecture gap is that the root AquaGuide build still does 
 Completion means: Admin edit → review/publish → AquaGuide build → real staging Species URL → final static HTML contains the reviewed SEO content. Admin UI completion alone is not completion.
 Do not touch Production Supabase or enable Production Published actions while proving this path.
 
+## 2026-09-01 — SEO Admin root artifact integration
+- The authoritative SEO CMS remains `apps/admin-content`; standalone `aqua-fronted-cms` is visual reference only.
+- Root AquaGuide `npm run build` now includes `build:species-pages`. When `SPECIES_SEO_SNAPSHOT_PATH` + `SPECIES_SEO_SITE_URL` are supplied, guarded generator output is merged into the same root `dist/`; with no snapshot, publication is skipped.
+- Local vertical artifact fixture: 3 Species × 2 locales = 6 static pages; index/canonical/noindex behavior and sitemap verified.
+- Do not unlock Production Published. Next: create/obtain a real AquaGuide staging publication snapshot, deploy the root artifact to a non-production URL, and verify returned HTML source end-to-end.

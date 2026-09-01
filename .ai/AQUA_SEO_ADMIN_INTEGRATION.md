@@ -7,7 +7,7 @@ This file is a required cross-session handoff for any AquaGuide frontend, Admin,
 
 ## Current architecture finding
 - AquaGuide frontend and `apps/admin-content` live in the same monorepo.
-- The root AquaGuide build currently runs Vite only; Species SEO generator output is not yet merged into the deployed root `dist/`.
+- The root AquaGuide build now runs web → SEO Admin → guarded Species static-page integration. Species output is merged into root `dist/` only when an explicit non-production publication snapshot is supplied; an ordinary build publishes no Species pages.
 - The root SPA already exposes `/admin/content`, but that route currently loads legacy `src/pages/AdminContent.tsx`.
 - The new three-pane Species SEO CMS lives in `apps/admin-content`.
 - Two competing Species admin authorities must not survive the integration.
@@ -40,7 +40,7 @@ They must link back into existing AquaGuide product routes with the selected Spe
 Do not invent a parallel conversion flow if an existing AquaGuide route already owns the action.
 ## Delivery sequence
 1. Product Truth Preview loading correctness is complete: loading/failure/missing are distinct, facts are key-scoped, and transient fetch failure is retryable.
-2. Unify `/admin/content` and `apps/admin-content` so there is one clear Species SEO authority.
+2. Admin authority is unified: `/admin/content` is the Hub, `/admin/product-content` is Product/Care authority, and `/admin/seo/` is the only Species SEO authority.
 3. Integrate Species generation into the real AquaGuide build artifact.
 4. Publish only 3–5 representative Species to staging first.
 5. Verify final HTML source, reciprocal hreflang, canonical, robots and sitemap from real staging URLs.

@@ -106,8 +106,8 @@ Updated: 2026-08-30
 
 ## 2026-09-01 AquaGuide ↔ SEO Admin integration
 - [x] Finish and gate Product Truth loading correctness without stale Species facts.
-- [ ] Establish one authoritative Species SEO Admin entry; do not keep two competing Species editors.
-- [ ] Integrate the Species generator into the AquaGuide root deployment artifact.
+- [x] Establish one authoritative Species SEO Admin entry; `/admin/content` is now an Admin Hub, `/admin/product-content` owns Product/Care content, and `/admin/seo/` owns Species SEO.
+- [x] Integrate the Species generator into the AquaGuide root deployment artifact with an explicit snapshot-only build step; no snapshot = safe skip.
 - [ ] Build 3–5 representative bilingual Species pages in staging.
 - [ ] Verify final HTML: title, meta, H1, canonical, hreflang, robots and sitemap.
 - [ ] Add real AquaGuide compatibility / aquarium-planning CTA return paths with Species ID + `source=seo-species`.

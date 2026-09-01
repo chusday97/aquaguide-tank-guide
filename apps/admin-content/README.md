@@ -150,7 +150,7 @@ Canonical paths are derived and cannot be freely typed. Category-conflict groups
 
 `test:contract` runs the public-page generator regression. It verifies HTML language, title, meta description, H1, robots, canonical, hreflang/x-default and sitemap membership. A runtime test caught and fixed an English locale propagation bug before this milestone was considered valid.
 
-The generator is not yet connected to a Production content export or public deploy. Both Chinese and English Published controls therefore remain disabled.
+The generator is now connected to the AquaGuide root build through a guarded snapshot-only artifact step. A build without `SPECIES_SEO_SNAPSHOT_PATH` publishes no Species pages; a configured non-production build merges generated Species HTML + sitemap into root `dist/`. Production content export and Production Published controls remain disabled.
 
 ## Revision history / rollback (current branch)
 
@@ -342,3 +342,8 @@ Species SEO pages should eventually connect organic acquisition to AquaGuide pro
 
 ### Product Truth loading correctness
 Product Truth is lazy-loaded to keep grouped navigation data lightweight. The catalog is emitted as a separate JSON build asset and fetched on demand so transient network failures can be retried without reloading the Admin. Loading is explicit (`Loading… / 加载中…`); transport failure is explicit (`Unavailable / 数据不可用`); `—` is reserved for a genuinely empty field after Product Truth is available. Product Truth rows are applied only when their `catalog_key` matches the active Species, preventing stale facts/images during navigation.
+
+### AquaGuide Admin authority and deployment
+The three-pane app is the only Species Editorial SEO authority. In the root AquaGuide application, `/admin/content` is an Admin Hub and legacy Product Truth/Care editing is isolated at `/admin/product-content`.
+
+The root `npm run build` also builds this app with base `/admin/seo/` into `dist/admin/seo/`, so the SEO Admin ships in the same AquaGuide deployment artifact without injecting its CSS/runtime into the main SPA. This authority split must remain intact: Product Truth fields belong to Product/Care content, while Title/Meta/H1/Intro/Image Alt/index/canonical/editorial review belong here.

@@ -95,14 +95,14 @@ The persistent product model is now:
 
 ## 2026-08-31 — Frontend SEO publication vertical slice
 - Stable baseline: `2a737de` passed GitHub Admin Content CI Gate run `33370177087`; Product Truth, inheritance, review, generator and Preview contracts remain green.
-- Current local-only work: harden Product Truth lazy loading so loading state never renders fake `—` facts and stale facts from a previous Species cannot flash on a newly selected Species. This work is not yet committed.
-- After that correctness pass, stop expanding CMS surface area. Build the smallest staging publication slice: Approved/Publish-ready content → explicit Published snapshot → static Species generator → staging frontend artifact.
+- Product Truth lazy-loading correctness is closed. Root AquaGuide build integration is now implemented locally: an explicit non-production Published Snapshot can generate Species pages into the same `dist/` artifact after the web + SEO Admin builds; no snapshot safely skips publication.
+- Stop expanding CMS surface area. The next milestone is the smallest real staging publication slice: Approved/Publish-ready content → explicit Published snapshot → root AquaGuide build → hosted staging Species URLs.
 - Validate the generated HTML itself: title, meta description, H1, canonical, robots, hreflang, image alt, static body copy and sitemap membership. Production publish remains locked until that vertical slice is reviewed.
 - SEO page purpose is acquisition into AquaGuide, not a detached blog: each Species page should eventually hand users into compatibility/recommendation/product flows with the selected `catalog_key`.
 
 ## 2026-09-01 — AquaGuide frontend SEO integration is now the primary goal
 - Required read: `.ai/AQUA_SEO_ADMIN_INTEGRATION.md`.
 - Success is no longer defined by Admin UI completion. Reviewed Species SEO must enter the real AquaGuide frontend build artifact and be verifiable from staging HTML source.
-- Resolve the duplicate-admin authority (`src/pages/AdminContent.tsx` vs `apps/admin-content`) before Production integration.
+- Duplicate Admin authority is resolved at the UI/deployment boundary: `/admin/content` routes to an Admin Hub; legacy Product/Care editing moved to `/admin/product-content`; the three-pane Species SEO CMS is deployed under `/admin/seo/`.
 - Product Truth loading correctness is closed locally. Before the staging vertical slice, resolve the duplicate Species Admin authority so AquaGuide has one SEO editing source of truth.
 

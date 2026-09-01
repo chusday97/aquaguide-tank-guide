@@ -266,3 +266,17 @@
 - Pending-request race: switching Species before the delayed asset returned stayed Loading until the final selected `catalog_key` resolved.
 - Failure/recovery regression: first JSON fetch forced to fail → Unavailable; next Species selection emitted a second fetch and recovered to the correct 40L Product Truth.
 - `npm run test:contract -w @aquaguide/admin-content`, production build, `git diff --check`, and schema-v7 ephemeral Supabase B gate PASS.
+
+## 2026-09-01 — Admin authority unification
+- Added root `AdminHub`: Species SEO and Product/Care are explicit separate authorities.
+- Moved legacy Product/Care UI route from `/admin/content` to `/admin/product-content`; preserved CRUD, publish/archive, image assets and safe 403 messaging.
+- New Species SEO Admin is named explicitly and built under `/admin/seo/`.
+- Root `npm run build` now runs AquaGuide web build + SEO Admin sub-build into one `dist`.
+- Validation: TypeScript PASS; root Admin UI regression PASS at 1280/390; Product/Care API contract PASS; SEO Admin contract PASS; root build PASS; static `/admin/seo/` + JS/CSS assets return 200.
+
+## 2026-09-01 — Root deployment artifact integration
+- Added `scripts/build-species-seo-artifact.mjs` and wired root `npm run build` to merge generated Species pages only from an explicit snapshot.
+- Added a 3-Species bilingual staging fixture and `scripts/verify-root-species-seo-artifact.mjs`.
+- Added Admin CI coverage for the full root artifact path.
+- Local evidence: root build PASS with 6 generated HTML pages; artifact verifier PASS; Admin contract/generator/Controlled Preview/staging guard PASS; Admin authority browser verification PASS.
+- Safety: no snapshot = safe skip; generator still rejects Production snapshot/host paths.

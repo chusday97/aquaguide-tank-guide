@@ -3,13 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "node scripts/dev-with-api.mjs",
     "dev:web": "vite --port=3000 --host=0.0.0.0",
     "dev:api": "tsx apps/api/src/index.ts",
     "check:api": "tsc --noEmit -p apps/api/tsconfig.json",
-    "build": "vite build",
+    "build": "npm run build:web && npm run build:seo-admin && npm run build:species-pages",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
@@ -117,7 +120,11 @@
     "test:golden-path-gp001-ui": "node scripts/verify-golden-path-first-tank-setup.mjs",
     "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs",
     "test:golden-path-gp003-ui": "node scripts/verify-golden-path-returning-user-daily-check.mjs",
-    "test:golden-path-gp004-ui": "node scripts/verify-golden-path-abnormal-care.mjs"
+    "test:golden-path-gp004-ui": "node scripts/verify-golden-path-abnormal-care.mjs",
+    "build:web": "vite build",
+    "build:seo-admin": "npm run build -w @aquaguide/admin-content -- --base=/admin/seo/ --outDir=../../dist/admin/seo",
+    "build:species-pages": "node scripts/build-species-seo-artifact.mjs",
+    "verify:species-pages-artifact": "node scripts/verify-root-species-seo-artifact.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

@@ -105,7 +105,7 @@ function Login({ onSignedIn }) {
         <div className="login-language-row"><InterfaceLanguageSwitch /></div>
         <div className="brand-mark">A</div>
         <p className="eyebrow">AQUAGUIDE · PRIVATE</p>
-        <h1>Content Admin</h1>
+        <h1>Species SEO Admin</h1>
         <p className="muted">{appLocale === 'en' ? 'Admin access only. This workspace manages and reviews Species SEO content.' : '仅管理员可访问。当前版本用于 Species SEO 内容管理验证。'}</p>
         <form onSubmit={submit} className="login-form">
           <label>

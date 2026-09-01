@@ -31,6 +31,10 @@
   ],
   "rewrites": [
     {
+      "source": "/admin/seo",
+      "destination": "/admin/seo/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

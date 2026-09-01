@@ -138,3 +138,19 @@ Branch: `feature/admin-content-v0`
 - Product Truth is still catalog authority; Content Admin edits editorial SEO only.
 - Product Truth loading correctness is locally gated: explicit Loading/Unavailable states, `catalog_key` ownership, no stale cross-Species facts, and retryable lazy JSON fetch. Chromium delayed/race/failure recovery regressions are clean; contract/build/schema-v7 B gate PASS.
 - Production Supabase, Production Published and `main` remain untouched.
+
+## 2026-09-01 Admin authority integration evidence
+- `/admin/content` renders an Admin Hub with separate Species SEO and Product/Care destinations.
+- `/admin/product-content` retains the legacy business content editor and explicitly labels Species fields as Product data, not SEO.
+- Root build emits `dist/index.html` and `dist/admin/seo/index.html`; SEO Admin assets use `/admin/seo/assets/...`.
+- Static artifact check: `/admin/seo/`, its JS and CSS all return HTTP 200.
+- TypeScript, Admin UI regression, Product/Care API contract, SEO Admin contract and root build PASS.
+
+## 2026-09-01 Root Species SEO artifact integration
+- Root `npm run build` now runs `build:web → build:seo-admin → build:species-pages`.
+- `build:species-pages` is fail-closed around publication input: no `SPECIES_SEO_SNAPSHOT_PATH` means an explicit safe skip; a configured snapshot must use the generator's non-production host guards.
+- Representative staging fixture covers 3 catalog records in both locales (6 HTML pages): self-canonical Index, canonical-to-sibling and noindex.
+- Full root build merged `/species/**`, `/zh/species/**`, `sitemap-species.xml`, generator manifest and an integration receipt into the same AquaGuide `dist/`.
+- Artifact verifier PASS: Title, Meta Description, H1, canonical, hreflang, robots, Image Alt and sitemap inclusion/exclusion.
+- Admin contract, Controlled Preview guard, staging Production deny-list and Admin Hub/Product-Care browser regression remain PASS.
+- Production Published, Production Supabase and `main` remain untouched. Next gate is a real hosted staging snapshot/URL vertical slice, not more CMS UI.

@@ -1,0 +1,89 @@
+{
+  "environment": "staging",
+  "source_label": "root-build-integration-fixture",
+  "species_seo_groups": [
+    {
+      "group_key": "base:neocaridina-davidi",
+      "locale": "en",
+      "status": "published",
+      "review_state": "approved",
+      "seo_title_template": "{{name}} Care Guide | AquaGuide",
+      "meta_description_template": "Learn water, tank and compatibility essentials for {{name}} ({{base_species}}).",
+      "h1_template": "{{name}} Care Guide",
+      "shared_intro": "A practical care overview grounded in AquaGuide catalog facts."
+    },
+    {
+      "group_key": "base:neocaridina-davidi",
+      "locale": "zh-CN",
+      "status": "published",
+      "review_state": "approved",
+      "seo_title_template": "{{name}}饲养指南 | AquaGuide",
+      "meta_description_template": "了解{{name}}（{{base_species}}）的水温、鱼缸环境与饲养重点。",
+      "h1_template": "{{name}}饲养指南",
+      "shared_intro": "基于 AquaGuide 现有物种事实数据整理的饲养概览。"
+    }
+  ],
+  "species_seo": [
+    {
+      "catalog_key": "sp_0030",
+      "locale": "en",
+      "localized_name": "Yellow Cherry Shrimp",
+      "image_alt": "Yellow Cherry Shrimp aquarium profile",
+      "status": "published",
+      "review_state": "approved",
+      "index_strategy": "index",
+      "canonical_catalog_key": ""
+    },
+    {
+      "catalog_key": "sp_0030",
+      "locale": "zh-CN",
+      "localized_name": "",
+      "image_alt": "黄金米虾水族图鉴",
+      "status": "published",
+      "review_state": "approved",
+      "index_strategy": "index",
+      "canonical_catalog_key": ""
+    },
+    {
+      "catalog_key": "sp_0031",
+      "locale": "en",
+      "localized_name": "Blue Velvet Shrimp",
+      "image_alt": "Blue Velvet Shrimp aquarium profile",
+      "status": "published",
+      "review_state": "approved",
+      "index_strategy": "canonical_to_sibling",
+      "canonical_catalog_key": "sp_0030"
+    },
+    {
+      "catalog_key": "sp_0031",
+      "locale": "zh-CN",
+      "localized_name": "",
+      "image_alt": "蓝丝绒米虾水族图鉴",
+      "status": "published",
+      "review_state": "approved",
+      "index_strategy": "canonical_to_sibling",
+      "canonical_catalog_key": "sp_0030"
+    },
+    {
+      "catalog_key": "sp_0164",
+      "locale": "en",
+      "localized_name": "Black Cherry Shrimp",
+      "image_alt": "Black Cherry Shrimp aquarium profile",
+      "status": "published",
+      "review_state": "approved",
+      "index_strategy": "noindex",
+      "canonical_catalog_key": ""
+    },
+    {
+      "catalog_key": "sp_0164",
+      "locale": "zh-CN",
+      "localized_name": "",
+      "image_alt": "黑米虾水族图鉴",
+      "status": "published",
+      "review_state": "approved",
+      "index_strategy": "noindex",
+      "canonical_catalog_key": ""
+    }
+  ],
+  "data_review_resolutions": []
+}

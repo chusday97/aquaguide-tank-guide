@@ -463,6 +463,12 @@
 ## 2026-08-31 — SEO publication path synchronized
 The Admin is now best understood as an SEO publication system rather than a standalone CMS: Product Truth + editorial SEO → inheritance/review → Publish Readiness → immutable snapshot → static Species generator → frontend SEO pages.
 
-Product Truth loading correctness is complete locally: loading renders as Loading/加载中 rather than fake missing values; transport failures render as Unavailable/数据不可用; Product Truth is applied only when `catalog_key` matches the active Species; transient JSON fetch failure can retry on the next Species selection. Delayed-load, rapid-switch and failure-recovery Chromium regressions pass, as do contract/build/schema-v7 B gate. The next architecture task is resolving the duplicate Species Admin authority before frontend publication integration.
+Product Truth loading correctness is complete and A-gated. Admin authority is also separated: `/admin/content` is now an Admin Hub, `/admin/product-content` keeps Product Truth/Care editing, and the three-pane Species SEO CMS is the only SEO authority under `/admin/seo/`. Root `npm run build` now emits both the AquaGuide SPA and the SEO Admin subapp into the same `dist`; static `/admin/seo/` and its assets return 200. Next: integrate generated Species SEO pages into that same root deployment artifact.
 
 After it is gated, the next product milestone is a small staging publication slice, not another UI expansion: generate a few reviewed bilingual Species pages, connect them to the AquaGuide frontend artifact, inspect real HTML SEO tags/source and sitemap behavior, then decide whether Production publishing can be unlocked.
+
+## 2026-09-01 — Species SEO now enters the AquaGuide root artifact
+- Root build sequence: web SPA → `/admin/seo/` → guarded static Species publication merge.
+- Explicit staging fixture generated 6 bilingual HTML pages into root `dist/`; Title/Meta/H1/canonical/hreflang/robots/Image Alt/sitemap verification passed.
+- No snapshot means no Species publication; Production snapshot/host remain rejected.
+- Remaining launch gate: real hosted staging snapshot + final HTML-source verification + product CTA return path.

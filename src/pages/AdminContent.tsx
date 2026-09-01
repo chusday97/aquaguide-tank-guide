@@ -6,6 +6,7 @@ import {
   speciesAdminInputSchema,
 } from '../../packages/contracts/src/index';
 import { useToast } from '../components/common/ToastProvider';
+import { AquaGuideApiError } from '../services/api/api-client';
 import {
   contentAdminService,
   type AdminCareArticleRecord,
@@ -31,7 +32,7 @@ const emptyCare = (): CareArticleAdminInput => ({
 
 const lines = (value: string) => value.split('\n').map(item => item.trim()).filter(Boolean);
 const lineText = (value: string[] | undefined) => (value || []).join('\n');
-const errorMessage = (_error: unknown) => '操作没有完成，请稍后重试。';
+const errorMessage = (error: unknown) => error instanceof AquaGuideApiError ? error.message : '操作没有完成，请稍后重试。';
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return <label className="grid gap-1.5 text-[12px] font-black text-ink/65"><span>{label}{required ? ' *' : ''}</span>{children}</label>;
@@ -39,6 +40,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
 
 const inputClass = 'min-h-11 w-full rounded-[14px] border border-border bg-white px-3 text-sm font-bold text-ink outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 disabled:bg-ink/5';
 const textareaClass = `${inputClass} min-h-[96px] resize-y py-3 leading-6`;
+const seoAdminUrl = import.meta.env.VITE_SEO_ADMIN_URL || (import.meta.env.DEV ? 'http://127.0.0.1:3010/' : '/admin/seo/');
 
 export default function AdminContent() {
   const navigate = useNavigate();
@@ -195,18 +197,21 @@ export default function AdminContent() {
       <div className="mx-auto max-w-[1440px]">
         <header className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white px-4 py-3 shadow-sm">
           <div className="flex items-center gap-3">
-            <button type="button" aria-label="返回我的鱼缸" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/aquarium'); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
-            <div><h1 className="text-xl font-black">内容后台</h1><p className="text-xs font-bold text-ink/45">编辑物种与养护资料，发布后才对用户可见。</p></div>
+            <button type="button" aria-label="返回后台首页" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/admin/content'); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
+            <div><h1 className="text-xl font-black">Product / Care Content</h1><p className="text-xs font-bold text-ink/45">管理 Product Truth 与养护内容；Species SEO 使用独立 SEO 后台。</p></div>
           </div>
-          <div className="flex rounded-full bg-bg p-1">
-            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('species'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种</button>
-            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('care'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) window.location.assign(seoAdminUrl); }} className="h-10 rounded-full border border-emerald-200 bg-emerald-50 px-4 text-sm font-black text-emerald-800">SEO 内容后台</button>
+            <div className="flex rounded-full bg-bg p-1">
+              <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('species'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种产品数据</button>
+              <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('care'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
+            </div>
           </div>
         </header>
 
         <main className="grid min-h-[calc(100dvh-130px)] gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
           <section className="rounded-[24px] border border-white/80 bg-white p-3 shadow-sm" aria-label="内容列表">
-            <button type="button" onClick={startNew} className="mb-3 flex h-11 w-full items-center justify-center gap-2 rounded-[16px] bg-accent text-sm font-black text-white hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-emerald-300"><Plus className="h-4 w-4" />新建{type === 'species' ? '物种' : '文章'}</button>
+            <button type="button" onClick={startNew} className="mb-3 flex h-11 w-full items-center justify-center gap-2 rounded-[16px] bg-accent text-sm font-black text-white hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-emerald-300"><Plus className="h-4 w-4" />新建{type === 'species' ? '物种数据' : '文章'}</button>
             {isLoading ? <div className="grid gap-2">{[1, 2, 3, 4].map(item => <div key={item} className="h-[72px] animate-pulse rounded-[16px] bg-ink/5" />)}</div>
               : loadError ? <div className="rounded-[18px] bg-red-50 p-4 text-sm font-bold text-red-700"><p>{loadError}</p><button type="button" onClick={() => void loadItems()} className="mt-3 h-10 rounded-full bg-red-700 px-4 text-white">重新加载</button></div>
               : items.length === 0 ? <div className="rounded-[18px] bg-bg p-5 text-center"><FileImage className="mx-auto h-8 w-8 text-ink/25" /><p className="mt-2 text-sm font-black">还没有内容</p><p className="mt-1 text-xs font-bold text-ink/45">先创建第一条草稿。</p></div>
@@ -215,7 +220,7 @@ export default function AdminContent() {
 
           <form onSubmit={save} className="rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5">
             <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
-              <div><div className="text-xs font-black text-emerald-700">{selected ? statusLabel : '新草稿'}</div><h2 className="mt-1 text-lg font-black">{selected ? ('name' in selected ? selected.name : selected.title) : `新建${type === 'species' ? '物种' : '养护文章'}`}</h2></div>
+              <div><div className="text-xs font-black text-emerald-700">{selected ? statusLabel : '新草稿'}</div><h2 className="mt-1 text-lg font-black">{selected ? ('name' in selected ? selected.name : selected.title) : `新建${type === 'species' ? '物种数据' : '养护文章'}`}</h2></div>
               <div className="flex flex-wrap gap-2">
                 {selected && <><button type="button" disabled={isSaving || isDirty} onClick={() => setPendingStatus(selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{selected.status === 'published' ? '下线' : '发布'}</button><label className={`flex h-10 cursor-pointer items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'pointer-events-none opacity-50' : ''}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label></>}
                 <button type="submit" disabled={isSaving || isUploading} className="flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-55">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{isSaving ? '保存中…' : selected ? '保存修改' : '创建草稿'}</button>

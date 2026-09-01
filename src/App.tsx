@@ -47,6 +47,7 @@ const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadLogin = () => import('./pages/Login');
+const loadAdminHub = () => import('./pages/AdminHub');
 const loadAdminContent = () => import('./pages/AdminContent');
 const loadIdentify = () => import('./pages/Identify');
 const loadSearch = () => import('./pages/Search');
@@ -61,7 +62,8 @@ const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const Login = lazyWithRecovery(loadLogin, 'login');
-const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
+const AdminHub = lazyWithRecovery(loadAdminHub, 'admin-hub');
+const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-product-content');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
 const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
@@ -635,7 +637,7 @@ function AppShell() {
   const { isPhoneLayout } = useLayoutMode();
   const [preferencesReady, setPreferencesReady] = useState(false);
   const isLogin = location.pathname === '/login';
-  const isAdminContent = location.pathname === '/admin/content';
+  const isAdminArea = location.pathname.startsWith('/admin/');
   const isWelcome = location.pathname === '/welcome';
   const isSharedReport = location.pathname.startsWith('/report/');
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(() => {
@@ -734,7 +736,7 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
+  if (!preferencesReady && !isLogin && !isAdminArea && !isSharedReport) return <PageLoading />;
 
   if (isSharedReport) {
     return (
@@ -759,11 +761,12 @@ function AppShell() {
     );
   }
 
-  if (isAdminContent) {
+  if (isAdminArea) {
     return (
       <Suspense fallback={<PageLoading />}>
         <Routes>
-          <Route path="/admin/content" element={<RouteErrorBoundary page="admin-content"><AdminContent /></RouteErrorBoundary>} />
+          <Route path="/admin/content" element={<RouteErrorBoundary page="admin-hub"><AdminHub /></RouteErrorBoundary>} />
+          <Route path="/admin/product-content" element={<RouteErrorBoundary page="admin-product-content"><AdminContent /></RouteErrorBoundary>} />
           <Route path="*" element={<Navigate to="/admin/content" replace />} />
         </Routes>
       </Suspense>
@@ -858,7 +861,8 @@ function WorkspaceRoutes() {
           <Route path="/wishlist" element={<Navigate to="/collection/wishlist" replace />} />
           <Route path="/care-favorites" element={<Navigate to="/collection/care" replace />} />
           <Route path="/aquarium" element={shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
-          <Route path="/admin/content" element={page(<AdminContent />, 'admin-content')} />
+          <Route path="/admin/content" element={page(<AdminHub />, 'admin-hub')} />
+          <Route path="/admin/product-content" element={page(<AdminContent />, 'admin-product-content')} />
           <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>
       </Suspense>

@@ -213,3 +213,12 @@ Constraint: legacy `src/pages/AdminContent.tsx` may retain non-SEO content respo
 Decision: load the generated Product Truth catalog as a separate `?url` JSON asset and fetch it lazily instead of relying on a dynamic JSON import.
 Reason: browsers cache a failed module import, so clearing the application Promise does not provide a real retry path. Fetch preserves lazy loading while allowing transient failure recovery.
 Contract: loading → explicit Loading state; transport/asset failure → explicit Unavailable state; only a successfully loaded row may use `—` for genuinely empty fields; a row is never applied unless its `catalog_key` matches the active Species.
+
+## 2026-09-01 — Admin authority is split by content ownership, not by duplicate Species editors
+Decision: `/admin/content` is the AquaGuide Admin Hub. `/admin/seo/` is the only Species Editorial SEO authority. Legacy `src/pages/AdminContent.tsx` remains available only as `/admin/product-content` for Product Truth / public product content and Care content.
+Reason: `public.species` is a real Product Content API source and cannot be deleted, but its water/pH/tank/difficulty/image fields must not compete with SEO Title/Meta/H1/Intro/Alt ownership.
+Deployment: root `npm run build` now emits the standalone SEO Admin into `dist/admin/seo/`; the apps remain style/runtime isolated while sharing one AquaGuide deployment artifact.
+
+## 2026-09-01 — Species publication joins root build only through an explicit snapshot
+Decision: do not make the AquaGuide root build query Supabase directly and do not auto-publish all catalog rows. The deployment build may consume only an explicit reviewed publication snapshot. It generates into a temporary directory, then merges Species HTML/sitemap into root `dist/` after the SPA and SEO Admin builds.
+Reason: keeps Editorial review/Published snapshot as the authority boundary, prevents accidental Production publication, makes the deployment artifact deterministic, and preserves existing AquaGuide assets under `dist/zh` while adding SEO pages.
