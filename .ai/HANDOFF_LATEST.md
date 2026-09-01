@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 01:04 +08:00
+Updated: 2026-09-02 01:42 +08:00
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -228,7 +228,7 @@ A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
 Latest functional commit:
-- `c2c4789 feat(admin): add bulk import and activity center`
+- `af8ad80 fix(admin): close duplicate review workflow`
 
 GitHub Actions:
 - Admin Content CI Gate #44
@@ -246,6 +246,7 @@ Vercel Preview:
 Temporary `_vercel_share` links expire and must not be stored as canonical handoff URLs.
 
 ## 16. Important recent commits
+- `af8ad80` — atomic duplicate review + evidence-guided UI + resolved-state cleanup
 - `c2c4789` — batch CSV import + persistent Admin activity center + duplicate-review auto-close
 - `fae815f` — duplicate warning becomes direct review action
 - `6a99dbb` — repair review-state persistence + simplify template UX
@@ -271,9 +272,9 @@ Primary:
 Known build warning: large Vite chunks. This is not currently a Species SEO functional failure.
 
 ## 18. Current next actions — in priority order
-1. Continue Data Review processing. The current example is 白金西非凤凰 (`sp_0214 / sp_0338`) and can now be handled directly from `处理重复`; once its final outstanding issue is resolved the Data Review drawer auto-closes and the operation is surfaced top-right.
-2. Use the new bulk-import flow for the next real batch only when there is real content to import; do not create fake writes merely to populate Activity history.
-3. For the original `sp_0001` vertical slice: clean the English test copy, save English, submit and approve English. Do not ask user to re-submit Chinese; Chinese is already Approved.
+1. In the **real authenticated Admin**, finish the 白金西非凤凰 review (`sp_0214 / sp_0338`) using the improved `处理重复` flow. Current evidence strongly favors `确认是重复记录` + keep `sp_0214`: name/scientific name/image/temperature/pH/tank/difficulty are the same; `sp_0338` is source-marked duplicate of `sp_0214`; only Product Truth description wording differs. Do not bypass the Admin session to write the private repo.
+2. For the original `sp_0001` vertical slice: clean the English acceptance/test copy, save English, submit and approve English. Do not ask user to re-submit Chinese; Chinese is already Approved.
+3. Use the new bulk-import flow for the next real batch only when there is real content to import; do not create fake writes merely to populate Activity history.
 4. Then explicitly Staging Publish only the intended reviewed Species set.
 5. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`.
 6. Clean all acceptance wording before considering Production.
@@ -334,7 +335,30 @@ Functional commit: `c2c4789`.
 - hosted `/admin/seo/` deployment artifact contains the new bulk-import/activity-center code
 - only known Vite chunk-size warnings remain
 
-## 21. Startup instruction for the next conversation
+## 21. Duplicate review closure — completed 2026-09-02
+Functional commit: `af8ad80`.
+
+### What changed
+- duplicate resolution is now one Repo RPC: review decision + canonical/index synchronization are committed atomically in the private content store
+- one user action now creates exactly one Activity record and one top-right notification instead of several internal SEO-save notices
+- changing a prior duplicate decision to `distinct_records` clears stale sibling-canonical policy and returns affected rows to fail-closed `noindex + editing`
+- sidebar `!`, `处理重复`, and editor Data Review launcher now depend on **open review state**, not permanent source duplicate metadata
+- after resolution, duplicate badges disappear; folded copy changes from `疑似重复已折叠` to `重复记录已合并`
+- the duplicate drawer now shows system comparison evidence, source lineage, recommended primary record, and explicit post-save outcome before confirmation
+- 白金西非凤凰 evidence was checked: identity + main care fields and image match; descriptions are two wording variants; `sp_0338` is marked duplicate of `sp_0214`
+- no private review decision was written from local tooling because authenticated Admin write credentials are not present locally; the application safety boundary was not bypassed
+
+### Verification
+- `npm run test:contract -w @aquaguide/admin-content` PASS
+- Repo backend atomic duplicate fixture PASS, including duplicate→distinct rollback safety and one-activity invariant
+- full root `npm run build` PASS
+- `npm run verify:seo-species-handoff` PASS
+- `npm run test:admin-content-ui` PASS
+- browser walk-through verified 白金西非凤凰 comparison/recommendation UI and unresolved sidebar copy
+- `git diff --check` PASS
+- only pre-existing Vite chunk-size warnings remain
+
+## 22. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.
