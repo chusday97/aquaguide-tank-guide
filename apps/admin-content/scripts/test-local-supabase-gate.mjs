@@ -254,6 +254,58 @@ try {
   assert.match(chinese, /<html lang="zh-CN">/);
   assert.match(chinese, /黄金米虾饲养指南/);
   assert.match(sitemap, /sp-0030\.html/);
+
+
+  // Simulate the real hosted-staging editorial path without unlocking Production Published.
+  ({ error } = await admin.from('species_seo_groups').update({ status: 'draft', published_at: null }).eq('group_key', realGroupKey));
+  if (error) throw error;
+  ({ error } = await admin.from('species_seo').update({ status: 'draft', published_at: null }).eq('catalog_key', realCatalogKey));
+  if (error) throw error;
+  let stagingEdit = await admin.from('species_seo').update({ h1: 'Yellow Cherry Shrimp Staging H1' })
+    .eq('catalog_key', realCatalogKey).eq('locale', 'en').select('*').single();
+  if (stagingEdit.error) throw stagingEdit.error;
+  assert.equal(stagingEdit.data.review_state, 'editing', 'Editing H1 must invalidate prior approval before staging release.');
+  stagingEdit = await admin.from('species_seo').update({ review_state: 'approved' })
+    .eq('catalog_key', realCatalogKey).eq('locale', 'en').select('*').single();
+  if (stagingEdit.error) throw stagingEdit.error;
+  assert.equal(stagingEdit.data.review_state, 'approved');
+  assert.ok(stagingEdit.data.reviewed_at);
+
+  const { data: hiddenDraftRows, error: hiddenDraftError } = await anonymous.from('species_seo')
+    .select('catalog_key').eq('catalog_key', realCatalogKey);
+  if (hiddenDraftError) throw hiddenDraftError;
+  assert.equal(hiddenDraftRows.length, 0, 'Approved Draft staging rows must remain invisible to anonymous public reads.');
+
+  const [{ data: stagingVariants, error: stagingVariantError }, { data: stagingGroups, error: stagingGroupError }] = await Promise.all([
+    service.from('species_seo').select('*').eq('catalog_key', realCatalogKey).eq('status', 'draft').eq('review_state', 'approved').order('locale'),
+    service.from('species_seo_groups').select('*').eq('group_key', realGroupKey).eq('status', 'draft').eq('review_state', 'approved').order('locale'),
+  ]);
+  if (stagingVariantError) throw stagingVariantError;
+  if (stagingGroupError) throw stagingGroupError;
+  assert.equal(stagingVariants.length, 2);
+  assert.equal(stagingGroups.length, 2);
+  const stagingOutDir = `${outDir}-approved-draft`;
+  const stagingSnapshot = {
+    environment: 'staging',
+    source_label: 'ephemeral-approved-draft-staging',
+    selected_catalog_keys: [realCatalogKey],
+    species_seo: stagingVariants,
+    species_seo_groups: stagingGroups,
+    data_review_resolutions: serverResolutions,
+  };
+  const stagingBuild = await generatePublicSpecies({
+    snapshot: stagingSnapshot,
+    outDir: stagingOutDir,
+    siteUrl: 'https://ci-staging.aquaguide.test',
+    productionSiteUrl: 'https://aqua-tank-guide.vercel.app',
+    mode: 'staging_release',
+  });
+  assert.equal(stagingBuild.manifest.generated_pages, 2);
+  assert.equal(stagingBuild.manifest.staging_approved_input_rows, 2);
+  const stagingEnglish = await readFile(path.join(stagingOutDir, 'species/neocaridina-davidi/sp-0030.html'), 'utf8');
+  assert.match(stagingEnglish, /<h1>Yellow Cherry Shrimp Staging H1<\/h1>/);
+  assert.doesNotMatch(stagingEnglish, /PREVIEW ONLY/);
+  await rm(stagingOutDir, { recursive: true, force: true });
 } finally {
   await rm(outDir, { recursive: true, force: true });
 }
@@ -264,4 +316,5 @@ console.log(JSON.stringify({
   rollback_revisions: rollbackRevisions.length,
   generated_pages: 2,
   indexable_pages: 2,
+  approved_draft_staging_pages: 2,
 }));

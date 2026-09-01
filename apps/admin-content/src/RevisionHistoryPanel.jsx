@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { supabase } from './supabase.js';
+import { adminContentClient } from './adminBackend.js';
 import { getLocaleLabel } from './localization.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 
@@ -49,13 +49,13 @@ export default function RevisionHistoryPanel({
     let cancelled = false;
     setArmedId('');
     setError('');
-    if (!resourceKey || readOnly || !schemaReady || !supabase) {
+    if (!resourceKey || readOnly || !schemaReady || !adminContentClient) {
       setRevisions([]);
       return () => { cancelled = true; };
     }
 
     setLoading(true);
-    supabase
+    adminContentClient
       .from('content_revisions')
       .select('id,resource_type,resource_key,locale,version,operation,snapshot,source_revision_id,created_at')
       .eq('resource_type', resourceType)
@@ -87,7 +87,7 @@ export default function RevisionHistoryPanel({
     }
     setRestoringId(revision.id);
     setError('');
-    const { data, error: restoreError } = await supabase.rpc('restore_species_seo_revision', { p_revision_id: revision.id });
+    const { data, error: restoreError } = await adminContentClient.rpc('restore_species_seo_revision', { p_revision_id: revision.id });
     setRestoringId('');
     setArmedId('');
     if (restoreError) {
@@ -108,7 +108,7 @@ export default function RevisionHistoryPanel({
       </div>
 
       {readOnly ? (
-        <p className="revision-empty">{isUiEnglish ? 'Remote UI Review does not read real revision history. Connect Local / Staging Supabase to inspect versions and restore.' : '远程 UI Review 不读取真实历史记录；连接 Local / Staging Supabase 后才显示版本与回滚。'}</p>
+        <p className="revision-empty">{isUiEnglish ? 'Remote UI Review does not read real revision history. Use an authenticated Admin backend to inspect versions and restore.' : '远程 UI Review 不读取真实历史记录；连接可写 Admin 内容后端后才显示版本与回滚。'}</p>
       ) : !schemaReady ? (
         <p className="revision-empty">{isUiEnglish ? 'Revision migration is not applied. Draft editing remains available, while publication stays locked.' : 'Revision migration 尚未应用。Draft 编辑不受影响，但发布继续锁定。'}</p>
       ) : loading ? (

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { supabase } from './supabase.js';
+import { adminContentClient } from './adminBackend.js';
 import { groupSeoFromRow } from './seoInheritance.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 
@@ -22,7 +22,7 @@ const variantFields = [
 
 export default function TranslationPanel({
   species, group, sourceVariantRow, sourceGroupRow, targetVariantRow, targetGroupRow,
-  readOnly, accessToken, schemaReady, groupSchemaReady, onVariantSaved, onGroupSaved,
+  readOnly, schemaReady, groupSchemaReady, onVariantSaved, onGroupSaved,
 }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
@@ -59,7 +59,7 @@ export default function TranslationPanel({
     : targetVariantRow?.status === 'published';
 
   const generate = async () => {
-    if (readOnly || !accessToken) {
+    if (readOnly) {
       setMessage('只读 Review 不调用翻译服务；正式管理员登录后才会请求 AI。');
       return;
     }
@@ -69,7 +69,7 @@ export default function TranslationPanel({
     try {
       const response = await fetch('/api/translate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           scope,
           source,
@@ -117,7 +117,7 @@ export default function TranslationPanel({
         shared_intro: suggestion.sharedIntro,
         status: 'draft',
       };
-      const { data, error } = await supabase.from('species_seo_groups').upsert(row, { onConflict: 'group_key,locale' }).select('*').single();
+      const { data, error } = await adminContentClient.from('species_seo_groups').upsert(row, { onConflict: 'group_key,locale' }).select('*').single();
       if (error) setMessage(`English Base Draft 保存失败：${error.message}`);
       else { setMessage('English Base Draft 已保存，不影响中文版本。'); onGroupSaved?.(data); }
     } else {
@@ -135,7 +135,7 @@ export default function TranslationPanel({
         canonical_catalog_key: targetVariantRow?.canonical_catalog_key || '',
         status: 'draft',
       };
-      const { data, error } = await supabase.from('species_seo').upsert(row, { onConflict: 'catalog_key,locale' }).select('*').single();
+      const { data, error } = await adminContentClient.from('species_seo').upsert(row, { onConflict: 'catalog_key,locale' }).select('*').single();
       if (error) setMessage(`English Variant Draft 保存失败：${error.message}`);
       else { setMessage('English Variant Draft 已保存，不影响中文版本。'); onVariantSaved?.(data); }
     }
@@ -189,9 +189,9 @@ export default function TranslationPanel({
       </div>
       {warnings.map((item) => <div className="translation-warning" key={item}>{item}</div>)}
       <div className="translation-footer">
-        <span>{message || (readOnly ? '只读 Review：不请求 AI，也不会写 Supabase。' : '生成建议不会自动保存或发布。')}</span>
+        <span>{message || (readOnly ? '只读 Review：不请求 AI，也不会写内容存储。' : '生成建议不会自动保存或发布。')}</span>
         <div className="footer-actions">
-          <button className="secondary-button" type="button" onClick={generate} disabled={busy || readOnly || !accessToken}>
+          <button className="secondary-button" type="button" onClick={generate} disabled={busy || readOnly}>
             {busy ? (isUiEnglish ? 'Processing…' : '处理中…') : (isUiEnglish ? 'Generate English suggestion from Chinese' : '从中文生成 English 建议')}
           </button>
           <button className="primary-button" type="button" onClick={saveEnglishDraft} disabled={busy || readOnly || !suggestion || targetPublished}>

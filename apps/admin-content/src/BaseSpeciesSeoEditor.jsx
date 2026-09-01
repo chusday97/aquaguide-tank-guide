@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from './supabase.js';
+import { adminContentClient } from './adminBackend.js';
 import { groupSeoFromRow } from './seoInheritance.js';
 import { getLocaleLabel } from './localization.js';
 import { REVIEW_STATES } from './publishReadiness.js';
@@ -82,7 +82,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       status: form.status,
       review_state: form.reviewState,
     };
-    const { data, error } = await supabase
+    const { data, error } = await adminContentClient
       .from('species_seo_groups')
       .upsert(payload, { onConflict: 'group_key,locale' })
       .select('*')

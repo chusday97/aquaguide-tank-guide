@@ -5,7 +5,7 @@ const STATE_META = {
   publish_ready: { label: 'Publish-ready', tone: 'ready', description: '已满足 Preview Publish 的内容与数据门禁；不代表已上线 Production。' },
 };
 
-export default function PublishReadinessPanel({ readiness, locale, readOnly = false, onExportPreview }) {
+export default function PublishReadinessPanel({ readiness, locale, readOnly = false, onExportPreview, onPublishStaging, stagingPublishing = false, stagingMessage = '', repoMode = false }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   if (!readiness) return null;
@@ -31,9 +31,17 @@ export default function PublishReadinessPanel({ readiness, locale, readOnly = fa
       ) : (
         <div className="readiness-ready-actions">
           <p className="readiness-note">{isUiEnglish ? 'Eligible for Controlled Preview. Production publication remains separately locked.' : '可进入受控 Preview Publish；Production Published 仍由独立发布集成门禁控制。'}</p>
-          <button className="secondary-button" type="button" disabled={readOnly || !onExportPreview} onClick={onExportPreview}>
-            {readOnly ? (isUiEnglish ? 'Read-only Preview Snapshot' : '只读 Preview Snapshot') : (isUiEnglish ? 'Export Preview Snapshot' : '导出 Preview Snapshot')}
-          </button>
+          <div className="footer-actions">
+            <button className="secondary-button" type="button" disabled={readOnly || !onExportPreview} onClick={onExportPreview}>
+              {readOnly ? (isUiEnglish ? 'Read-only Preview Snapshot' : '只读 Preview Snapshot') : (isUiEnglish ? 'Export Preview Snapshot' : '导出 Preview Snapshot')}
+            </button>
+            {repoMode ? (
+              <button className="primary-button compact" type="button" disabled={readOnly || !onPublishStaging || stagingPublishing} onClick={onPublishStaging}>
+                {stagingPublishing ? (isUiEnglish ? 'Publishing…' : '发布中…') : (isUiEnglish ? 'Publish selected to Staging' : '发布当前 Species 到 Staging')}
+              </button>
+            ) : null}
+          </div>
+          {stagingMessage ? <p className="readiness-note">{stagingMessage}</p> : null}
         </div>
       )}
     </section>

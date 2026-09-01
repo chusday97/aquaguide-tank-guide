@@ -141,10 +141,10 @@ Updated: 2026-08-30
 - [x] Upgrade release readiness probe to schema v8 with `server_export_ready`.
 - [x] Add one-command `build:staging-from-db` path: hosted staging Supabase → Published Snapshot → AquaGuide root `dist/`.
 - [x] Verify migration 001–008 on a fresh ephemeral Supabase instance.
-- [ ] Provision a dedicated AquaGuide hosted staging branch/project only after explicit cost approval.
-- [ ] Apply migrations 001–008 and configure server-only staging secrets in the Preview deployment.
-- [ ] Replace the committed fixture in Vercel Preview with the hosted Approved Draft database export + explicit `STAGING_CATALOG_KEYS`.
-- [ ] Final vertical-slice acceptance: edit H1 in Admin → Save → Ready for Review → Approved Draft → staging rebuild → hosted HTML source changes; Production Published stays locked.
+- [x] Superseded: do not provision a dedicated AquaGuide Supabase staging branch/project for Species SEO; Repo-backed content is now the runtime/staging authority.
+- [x] Superseded: hosted Supabase migration/secrets are no longer required for Species SEO Preview deployment.
+- [x] Replace database-export direction with GitHub Repo Draft Store + explicit staging snapshot publication.
+- [ ] Final hosted Repo vertical-slice acceptance: login → edit H1 → Save to `seo-admin-drafts` (no deploy) → Ready for Review → Approved Draft → explicit Staging Publish → one Preview rebuild → hosted HTML source changes; Production Published stays locked.
 
 ## 2026-09-01 staging lifecycle separation
 - [x] Add `staging_release` generator mode: release-style HTML/sitemap on a non-production host from Approved Draft rows only.
@@ -153,3 +153,20 @@ Updated: 2026-08-30
 - [x] Strip reviewer identity from the server-side staging snapshot.
 - [x] Add generator/guard contract tests for Approved Draft staging release and missing/oversized allowlists.
 - [ ] On hosted acceptance, verify deployment-level `X-Robots-Tag: noindex` in addition to intended page-level SEO metadata.
+
+## 2026-09-01 Repo-backed Species SEO authority
+- [x] Add server-side Admin session with HttpOnly/SameSite cookie; no Supabase Auth dependency.
+- [x] Add GitHub Contents API store for `content/species-seo/admin-store.json` on `seo-admin-drafts`.
+- [x] Force all Repo content writes to Draft and invalidate approval after editorial/index changes.
+- [x] Persist revision snapshots and Draft-only rollback in the Repo JSON store.
+- [x] Add Repo API adapter so the existing three-pane UI/Data Review/History workflow does not need a product rewrite.
+- [x] Move `/api/translate` authorization to the same server-side Admin session.
+- [x] Disable Vercel deployments for `seo-admin-drafts`; ordinary Save must not deploy.
+- [x] Add explicit Repo Staging Publish action that writes a sanitized allowlisted snapshot to the staging code branch.
+- [x] Make root Preview build prefer `content/species-seo/staging-snapshot.json` and execute `staging_release`.
+- [x] Add Repo backend + API gates proving H1 edit → approval reset → re-approval → staging HTML generation without Supabase.
+- [x] Remove Supabase SDK from the SEO Admin browser runtime; latest Admin build transforms 52 modules instead of the prior 93.
+- [ ] Configure the server-only Repo Admin environment in Vercel Preview.
+- [ ] Hosted acceptance: verify Draft Save creates/updates `seo-admin-drafts` with zero Vercel deploys.
+- [ ] Hosted acceptance: explicit Staging Publish causes exactly one Preview rebuild and returned Species HTML contains the edited H1.
+- [ ] Verify Preview response retains deployment-level `X-Robots-Tag: noindex`.

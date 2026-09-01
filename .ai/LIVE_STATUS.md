@@ -1,6 +1,6 @@
 # Live Status
 
-Updated: 2026-08-30
+Updated: 2026-09-01
 Branch: `feature/admin-content-v0`
 
 ## Current state
@@ -184,3 +184,13 @@ Branch: `feature/admin-content-v0`
 - `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
 - Production-style `release` remains Published-only and ignores Approved Drafts.
 - Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.
+
+## 2026-09-01 — Repo-backed runtime is now primary
+- Species SEO Admin no longer imports Supabase SDK in browser runtime; Vite Admin build dropped from 93 transformed modules to 52.
+- Browser persistence client is `adminContentClient` → `/api/admin-content/query` → server-side GitHub Contents API.
+- Admin login uses `aquaguide_admin_session` HttpOnly/SameSite cookie; translation uses the same session.
+- Draft store: `content/species-seo/admin-store.json` on `seo-admin-drafts`; that branch is Vercel deployment-disabled.
+- Explicit staging publication writes `content/species-seo/staging-snapshot.json` to the non-production staging code branch and is the only content-edit action intended to trigger Preview build.
+- Local gates PASS: Repo backend (`supabase_started=false`, 2 generated bilingual pages, revision history), Repo API auth, Admin contract, root build, 6-page artifact verifier and SEO compatibility handoff.
+- Legacy `test:supabase-gate`/migrations remain available for compatibility only and are removed from the primary GitHub Admin CI workflow.
+- Remaining hosted blocker is configuration, not database infrastructure: Vercel Preview needs server-only Admin session/GitHub Contents credentials. Production `main`, Production Published and Production Supabase remain untouched.

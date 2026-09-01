@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { isSupabaseConfigured, supabase } from './supabase.js';
+import { adminContentClient, isAdminBackendConfigured, isRepoBackend, publishRepoStaging } from './adminBackend.js';
 import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
 import BatchSeoEditor from './BatchSeoEditor.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
@@ -90,7 +90,7 @@ function Login({ onSignedIn }) {
     event.preventDefault();
     setBusy(true);
     setError('');
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error: signInError } = await adminContentClient.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (signInError) {
       setError(signInError.message || '登录失败，请检查账号。');
@@ -119,7 +119,7 @@ function Login({ onSignedIn }) {
           {error ? <div className="error-box">{error}</div> : null}
           <button className="primary-button" type="submit" disabled={busy}>{busy ? (appLocale === 'en' ? 'Signing in…' : '正在验证…') : (appLocale === 'en' ? 'Sign in' : '登录后台')}</button>
         </form>
-        <p className="security-note">{appLocale === 'en' ? 'Access is enforced by Supabase Auth + user_roles + RLS, not by hiding the page URL.' : '访问控制由 Supabase Auth + user_roles + RLS 执行，不依赖隐藏页面地址。'}</p>
+        <p className="security-note">{appLocale === 'en' ? 'Access uses a server-side session; content changes are written through the GitHub-backed Admin API. Secrets never enter the browser.' : '访问由服务端 Session 控制；内容通过 GitHub-backed Admin API 写入，密码和 GitHub Token 不进入浏览器。'}</p>
       </section>
     </main>
   );
@@ -292,11 +292,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       return;
     }
     if (readOnly) {
-      setMessage('当前为只读 UI Review，不会向任何 Supabase 发送写入请求。');
+      setMessage('当前为只读 UI Review，不会向内容存储发送任何写入请求。');
       return;
     }
     if (!schemaReady) {
-      setMessage('当前 Supabase 尚未应用 species_seo migration。这个分支不会自动修改生产数据库。');
+      setMessage('Repo Content Store 尚未就绪；保存被安全阻止。');
       return;
     }
     setSaving(true);
@@ -317,7 +317,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       status: form.status,
       review_state: form.reviewState,
     };
-    const { data, error } = await supabase
+    const { data, error } = await adminContentClient
       .from('species_seo')
       .upsert(payload, { onConflict: 'catalog_key,locale' })
       .select('*')
@@ -501,6 +501,8 @@ export default function App() {
   const [activeTool, setActiveTool] = useState(null);
   const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
   const [editorDirty, setEditorDirty] = useState(false);
+  const [stagingPublishing, setStagingPublishing] = useState(false);
+  const [stagingPublishMessage, setStagingPublishMessage] = useState('');
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
   useEffect(() => {
@@ -532,15 +534,15 @@ export default function App() {
       setAuthChecked(true);
       return undefined;
     }
-    if (!supabase) {
+    if (!adminContentClient) {
       setAuthChecked(true);
       return undefined;
     }
-    supabase.auth.getSession().then(({ data }) => {
+    adminContentClient.auth.getSession().then(({ data }) => {
       setSession(data.session || null);
       setAuthChecked(true);
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
+    const { data: listener } = adminContentClient.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
     return () => listener.subscription.unsubscribe();
   }, []);
 
@@ -559,7 +561,7 @@ export default function App() {
     const loadAdminData = async () => {
       setLoading(true);
       setError('');
-      const { data: roleRow, error: roleError } = await supabase
+      const { data: roleRow, error: roleError } = await adminContentClient
         .from('user_roles')
         .select('role')
         .eq('user_id', session.user.id)
@@ -578,11 +580,11 @@ export default function App() {
       }
 
       // V0 reads the product catalog from the same source currently used by AquaGuide.
-      // This avoids duplicating 486 product records into Supabase just to edit SEO.
+      // Product Truth stays repository-owned; the SEO content store only keeps editorial fields.
       setSpecies(catalogSpecies);
       if (!selectedId && catalogSpecies.length) setSelectedId(catalogSpecies[0].id);
 
-      const { data: seoData, error: seoError } = await supabase
+      const { data: seoData, error: seoError } = await adminContentClient
         .from('species_seo')
         .select('id,catalog_key,locale,localized_name,seo_title,meta_description,h1,intro,image_alt,canonical_path,focus_keyword,index_strategy,canonical_catalog_key,status,published_at,review_state,reviewed_by,reviewed_at,updated_at,deleted_at,version')
         .is('deleted_at', null);
@@ -594,7 +596,7 @@ export default function App() {
         setSeoRows(Object.fromEntries((seoData || []).map((row) => [seoRowKey(row.catalog_key, row.locale), row])));
       }
 
-      const { data: groupSeoData, error: groupSeoError } = await supabase
+      const { data: groupSeoData, error: groupSeoError } = await adminContentClient
         .from('species_seo_groups')
         .select('*')
         .is('deleted_at', null);
@@ -605,13 +607,13 @@ export default function App() {
         setGroupSeoRows(Object.fromEntries((groupSeoData || []).map((row) => [groupSeoRowKey(row.group_key, row.locale), row])));
       }
 
-      const { error: historyError } = await supabase
+      const { error: historyError } = await adminContentClient
         .from('content_revisions')
         .select('id')
         .limit(1);
       setHistorySchemaReady(!historyError);
 
-      const { data: reviewData, error: reviewError } = await supabase
+      const { data: reviewData, error: reviewError } = await adminContentClient
         .from('species_data_reviews')
         .select('*');
       setDataReviewSchemaReady(!reviewError);
@@ -682,7 +684,7 @@ export default function App() {
     groupRow: selectedGroupPersisted, counterpartVariantRow, counterpartGroupRow, reviewRows: dataReviewRows,
   }) : null;
   const publishReadiness = calculatedReadiness && (!schemaReady || !groupSchemaReady || !historySchemaReady || !dataReviewSchemaReady)
-    ? { state: 'blocked', blockers: ['Admin schema 001–007 尚未完整就绪；Publish Readiness fail closed。'] }
+    ? { state: 'blocked', blockers: [isRepoBackend ? 'Repo Content Store 尚未完整就绪；Publish Readiness fail closed。' : 'Admin schema 001–008 尚未完整就绪；Publish Readiness fail closed。'] }
     : calculatedReadiness;
   const localeSeoRows = useMemo(() => Object.fromEntries(
     Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
@@ -769,6 +771,28 @@ export default function App() {
     URL.revokeObjectURL(href);
   };
 
+  const publishSelectedToStaging = async () => {
+    if (!isRepoBackend || !selectedSpecies || !selectedGroup || publishReadiness?.state !== 'publish_ready' || isReviewMode) return;
+    setStagingPublishing(true);
+    setStagingPublishMessage('');
+    const canonicalTarget = selectedVariantRecord?.index_strategy === 'canonical_to_sibling'
+      ? selectedVariantRecord.canonical_catalog_key
+      : '';
+    const catalogKeys = [...new Set([selectedSpecies.catalog_key, canonicalTarget].filter(Boolean))];
+    const { data, error: publishError } = await publishRepoStaging({
+      catalogKeys,
+      groupKeys: [selectedGroup.group_key],
+    });
+    setStagingPublishing(false);
+    if (publishError) {
+      setStagingPublishMessage(appLocale === 'en' ? `Staging publish blocked: ${publishError.message}` : `Staging 发布被阻止：${publishError.message}`);
+      return;
+    }
+    setStagingPublishMessage(appLocale === 'en'
+      ? `Staging snapshot committed to ${data.branch}. Vercel Preview will rebuild once for this explicit publish.`
+      : `Staging Snapshot 已提交到 ${data.branch}；只有这次明确发布会触发一次 Vercel Preview 构建。`);
+  };
+
   const toggleBatch = (id) => {
     const nextGroup = speciesGroupByMemberId.get(id);
     if ((id !== selectedId || editorScope !== 'variant') && !confirmDiscardUnsaved()) return;
@@ -801,7 +825,7 @@ export default function App() {
     },
     history: {
       title: t('editor.history'),
-      subtitle: appLocale === 'en' ? 'Database-backed Base and Variant revision history.' : '数据库记录的 Base / Variant 版本历史。',
+      subtitle: appLocale === 'en' ? 'Versioned Base and Variant revision history.' : '带版本记录的 Base / Variant 历史。',
     },
     workflow: {
       title: t('editor.workflow'),
@@ -813,18 +837,18 @@ export default function App() {
     if (isReviewMode) return;
     if (!confirmDiscardUnsaved()) return;
     setEditorDirty(false);
-    await supabase.auth.signOut();
+    await adminContentClient.auth.signOut();
     setSession(null);
   };
 
-  if (!isReviewMode && !isSupabaseConfigured) {
+  if (!isReviewMode && !isAdminBackendConfigured) {
     return (
       <main className="login-shell">
         <section className="login-card wide">
           <div className="brand-mark">A</div>
           <p className="eyebrow">SETUP REQUIRED</p>
           <h1>Admin V0 已创建</h1>
-          <p className="muted">复制 `.env.example` 为本地环境变量并配置 `VITE_SUPABASE_URL` 与 `VITE_SUPABASE_ANON_KEY` 后即可登录。不要把 service role key 放进前端。</p>
+          <p className="muted">当前选择的 Admin 数据后端尚未配置。Repo 模式只需要服务端 Admin Session + GitHub Contents 写入凭证；任何 secret 都不能使用 VITE_ 前缀。</p>
         </section>
       </main>
     );
@@ -860,11 +884,11 @@ export default function App() {
 
       {isReviewMode ? (
         <div className="schema-banner">
-          <strong>只读 UI Review：</strong> 当前远程预览不连接任何 Supabase 写入环境。可以搜索 486 条 Species、体验编辑器和实时前端 Preview，但保存被硬禁用。
+          <strong>只读 UI Review：</strong> 当前远程预览不连接任何可写内容源。可以搜索 486 条 Species、体验编辑器和实时前端 Preview，但保存被硬禁用。
         </div>
       ) : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
-          <strong>安全隔离状态：</strong> Variant / Base Species SEO migration 尚未全部应用；可以预览继承结构，但缺失的层级不会写入。不会自动触碰 Production。
+          <strong>安全隔离状态：</strong> {isRepoBackend ? 'Repo Content Store 当前不可写；可以继续预览继承结构，但保存被阻止。' : 'Variant / Base Species SEO migration 尚未全部应用；可以预览继承结构，但缺失的层级不会写入。'} 不会自动触碰 Production。
         </div>
       ) : !historySchemaReady ? (
         <div className="schema-banner">
@@ -991,7 +1015,7 @@ export default function App() {
                 onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
             ) : null}
             {activeTool === 'readiness' ? (
-              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} />
+              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} onPublishStaging={publishSelectedToStaging} stagingPublishing={stagingPublishing} stagingMessage={stagingPublishMessage} repoMode={isRepoBackend} />
             ) : null}
             {activeTool === 'translation' && contentLocale === 'en' ? (
               <TranslationPanel
@@ -1002,7 +1026,6 @@ export default function App() {
                 targetVariantRow={englishVariantRow}
                 targetGroupRow={englishGroupRow}
                 readOnly={isReviewMode}
-                accessToken={session?.access_token || ''}
                 schemaReady={schemaReady}
                 groupSchemaReady={groupSchemaReady}
                 onVariantSaved={(row) => {

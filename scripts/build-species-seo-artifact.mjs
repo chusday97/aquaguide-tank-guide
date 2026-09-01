@@ -1,4 +1,5 @@
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -7,17 +8,20 @@ import { generatePublicSpecies } from '../apps/admin-content/scripts/generate-pu
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
 const PREVIEW_FIXTURE = 'apps/admin-content/fixtures/staging-publication-sample.json';
+const REPO_STAGING_SNAPSHOT = 'content/species-seo/staging-snapshot.json';
 const SEO_STAGING_BRANCH = 'feature/admin-content-v0';
 
 function resolveBuildInputs({ snapshotPath, siteUrl, productionSiteUrl } = {}) {
   const isSeoStagingPreview = process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_GIT_COMMIT_REF === SEO_STAGING_BRANCH;
   const previewHost = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
   const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const repoSnapshotAvailable = isSeoStagingPreview && existsSync(path.join(repoRoot, REPO_STAGING_SNAPSHOT));
+  const automaticSnapshot = repoSnapshotAvailable ? REPO_STAGING_SNAPSHOT : isSeoStagingPreview ? PREVIEW_FIXTURE : '';
   return {
-    snapshotPath: snapshotPath || (isSeoStagingPreview ? PREVIEW_FIXTURE : ''),
+    snapshotPath: snapshotPath || automaticSnapshot,
     siteUrl: siteUrl || (isSeoStagingPreview && previewHost ? `https://${previewHost}` : ''),
     productionSiteUrl: productionSiteUrl || (productionHost ? `https://${productionHost}` : 'https://aqua-tank-guide.vercel.app'),
-    source: snapshotPath ? 'explicit' : isSeoStagingPreview ? 'vercel-seo-staging-fixture' : 'none',
+    source: snapshotPath ? 'explicit' : repoSnapshotAvailable ? 'vercel-seo-staging-repo-snapshot' : isSeoStagingPreview ? 'vercel-seo-staging-fixture' : 'none',
   };
 }
 
@@ -39,7 +43,7 @@ export async function buildSpeciesSeoArtifact({
   siteUrl,
   productionSiteUrl,
   distDir = path.join(repoRoot, 'dist'),
-  mode = 'release',
+  mode = 'auto',
 } = {}) {
   const inputs = resolveBuildInputs({ snapshotPath, siteUrl, productionSiteUrl });
   snapshotPath = inputs.snapshotPath;
@@ -59,12 +63,15 @@ export async function buildSpeciesSeoArtifact({
 
   const tempDir = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-root-species-'));
   try {
+    const effectiveMode = mode === 'auto'
+      ? snapshot.delivery_mode === 'staging_release' ? 'staging_release' : 'release'
+      : mode;
     const result = await generatePublicSpecies({
       snapshot,
       outDir: tempDir,
       siteUrl,
       productionSiteUrl,
-      mode,
+      mode: effectiveMode,
     });
     await mergeGeneratedOutput(tempDir, distDir);
     const receipt = {
@@ -73,7 +80,7 @@ export async function buildSpeciesSeoArtifact({
       build_input_source: inputs.source,
       site_url: siteUrl,
       environment: snapshot.environment,
-      delivery_mode: mode,
+      delivery_mode: effectiveMode,
       generated_pages: result.manifest.generated_pages,
       indexable_pages: result.manifest.indexable_pages,
       output: path.relative(repoRoot, distDir) || 'dist',

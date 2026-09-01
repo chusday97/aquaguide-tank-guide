@@ -1,13 +1,13 @@
 # Current Goal
 
-Updated: 2026-08-31
+Updated: 2026-09-01
 Branch: `feature/admin-content-v0`
 
-Converge AquaGuide Species SEO Admin from an engineering-oriented panel into a stable editorial workspace while preserving the proven database, review and publishing safety contracts.
+Operate AquaGuide Species SEO Admin as a low-maintenance GitHub Repo-backed editorial publishing system. Preserve the existing review/readiness/static-generation contracts while removing Supabase as a runtime or staging dependency for Species SEO.
 
 ## Current milestone
 
-`stable three-pane editorial workspace → semantic workflow states → bidirectional editor/preview Inspector`
+`GitHub Repo Draft Store → review/readiness → explicit Staging Snapshot → AquaGuide static Species HTML`
 
 The persistent product model is now:
 - Left: choose Category → Base Species → Variant and workflow queue.
@@ -15,7 +15,7 @@ The persistent product model is now:
 - Right: live AquaGuide frontend preview; center edits update it immediately.
 
 ## Verified baseline
-- A+B remains the stability model: Mac local Supabase for fast iteration plus pinned GitHub Actions ephemeral Supabase for clean-machine gating.
+- Current runtime authority is GitHub Repo-backed content, not Supabase. The main CI gate validates Repo content/API behavior without starting Supabase. Legacy Supabase migrations/tests remain compatibility evidence only.
 - Three-pane workspace + global UI language is committed as `539baf4`; GitHub Actions run `33323234484` passed contract, migration 001–007 ephemeral Supabase gate, build, catalog parity and diff hygiene.
 - Queue-level Workflow Overview remains verified: 33 pending review issues → 32 affected Base groups → clear restores 276 groups.
 - Controlled Preview Publish remains Approved-Draft-only, forced noindex, and separate from Production Published.
@@ -31,7 +31,8 @@ The persistent product model is now:
 ## Safety boundary
 - Production Supabase and public `main` remain untouched.
 - Production Published remains locked.
-- AI Studio code is never merged wholesale; UI components must reconnect to existing RLS, revision, Data Review, Publish Readiness and generator logic.
+- SEO Admin secrets stay server-side; browser code never receives GitHub tokens, Admin passwords or session secrets.
+- AI Studio code is never merged wholesale; UI components must preserve revision, Data Review, Publish Readiness and generator logic.
 - Product Truth remains read-only from the Content Admin.
 
 ## 2026-08-31 — UI integration + global interface language
@@ -131,3 +132,13 @@ The persistent product model is now:
 - `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
 - Production-style `release` remains Published-only and ignores Approved Drafts.
 - Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.
+
+## 2026-09-01 — Authoritative no-Supabase runtime
+- Species SEO runtime authority is now `GitHub Repo-backed content`, not Supabase.
+- Normal Save writes versioned editorial JSON to dedicated branch `seo-admin-drafts`; `vercel.json` disables deployments for that branch, so editing does not trigger a deployment.
+- Admin authentication is a server-side HttpOnly/SameSite session. `ADMIN_GITHUB_TOKEN`, Admin password/hash and session secret are server-only and never enter the Vite bundle.
+- Repo writes force `Draft`; any content/indexing edit invalidates approval back to `Editing`; rollback creates a new Draft/Editing revision.
+- Explicit `Publish current Species to Staging` creates a sanitized `content/species-seo/staging-snapshot.json` on the non-production staging code branch. Only this explicit action triggers one Vercel Preview rebuild.
+- Root Preview build prefers that Repo staging snapshot when present, then generates static EN/ZH Species HTML + sitemap with `staging_release`. Production-style `release` remains Published-only and ignores Repo Drafts.
+- Local Repo backend/API gates pass with `supabase_started=false`; root build and SEO→compatibility handoff also pass.
+- Legacy Supabase migrations/exporter/tests are retained only as compatibility/history. Do not provision AquaGuide Supabase staging for Species SEO unless this architecture is explicitly reversed.

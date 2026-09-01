@@ -12,7 +12,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, liveFrontendPreviewSource, editorToolDrawerSource, stylesSource, appLanguageSource, productTruthLoaderSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, serverExportMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, liveFrontendPreviewSource, editorToolDrawerSource, stylesSource, appLanguageSource, productTruthLoaderSource, historySource, translationSource, translationApiSource, adminBackendSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
@@ -29,24 +29,25 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
   readFile(path.join(appRoot, 'src/RevisionHistoryPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/TranslationPanel.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'api/translate.js'), 'utf8'),
-  readFile(path.join(appRoot, 'src/supabase.js'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/202608280001_species_seo_admin.sql'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/202608280002_species_seo_group_inheritance.sql'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/202608280003_species_seo_localized_name.sql'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/202608280004_species_seo_index_strategy.sql'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/202608280005_species_seo_revision_history.sql'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/202608280006_species_seo_release_gate_probe.sql'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/202608280007_species_seo_publish_readiness.sql'), 'utf8'),
-  readFile(path.join(repoRoot, 'supabase/migrations/20260901064408_species_seo_server_export_boundary.sql'), 'utf8'),
+  readFile(path.join(appRoot, 'src/adminBackend.js'), 'utf8'),
   readFile(path.join(appRoot, '.env.example'), 'utf8'),
   readFile(path.join(appRoot, '.env.review.example'), 'utf8'),
   readFile(path.join(appRoot, 'src/catalog.generated.json'), 'utf8'),
   readFile(path.join(appRoot, 'src/species-groups.generated.json'), 'utf8'),
 ]);
 
+
+const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSource, repoSessionApiSource, repoQueryApiSource, repoPublishApiSource] = await Promise.all([
+  readFile(path.join(appRoot, 'src/repoBackendClient.js'), 'utf8'),
+  readFile(path.join(repoRoot, 'server/admin-repo/auth.mjs'), 'utf8'),
+  readFile(path.join(repoRoot, 'server/admin-repo/store.mjs'), 'utf8'),
+  readFile(path.join(repoRoot, 'server/admin-repo/github.mjs'), 'utf8'),
+  readFile(path.join(repoRoot, 'api/admin-content/session.js'), 'utf8'),
+  readFile(path.join(repoRoot, 'api/admin-content/query.js'), 'utf8'),
+  readFile(path.join(repoRoot, 'api/admin-content/publish-staging.js'), 'utf8'),
+]);
+
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
-const stagingExporterSource = await readFile(path.join(appRoot, 'scripts/export-staging-species-snapshot.mjs'), 'utf8');
-const stagingConfigSource = await readFile(path.join(appRoot, 'scripts/staging-publishing-config.mjs'), 'utf8');
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 
@@ -189,10 +190,6 @@ assert.match(liveFrontendPreviewSource, /speciesPagePresentation/, 'Live Page pr
 assert.match(publicGeneratorSource, /speciesPagePresentation/, 'Public Species generator must reuse the same publication presentation rules as live Preview');
 assert.match(publicGeneratorSource, /staging_release/, 'Generator must preserve a staging-only Approved Draft release mode');
 assert.match(publicGeneratorSource, /status === 'draft' && row\.review_state === 'approved'/, 'Staging release must consume Approved Drafts, not Production Published state');
-assert.match(stagingExporterSource, /STAGING_CATALOG_KEYS/, 'Hosted staging export must require an explicit Species allowlist');
-assert.match(stagingExporterSource, /\.eq\('status', 'draft'\)/, 'Hosted staging export must consume Draft lifecycle rows');
-assert.match(stagingExporterSource, /\.eq\('review_state', 'approved'\)/, 'Hosted staging export must require editorial approval');
-assert.match(stagingConfigSource, /at most 20 Species/, 'Hosted staging allowlist must have a hard batch ceiling');
 assert.match(speciesPagePresentationSource, /Catalog facts/, 'Shared Species presentation must define publication-facing fact labels');
 assert.doesNotMatch(liveFrontendPreviewSource, /Care essentials|饲养要点|Overview & Care|物种概览与饲养/, 'Live Page preview must not invent sections absent from the static generator');
 assert.match(appSource, /compactPreviewOpen/, 'Narrow layouts must preserve access to Preview through an explicit compact state');
@@ -239,56 +236,27 @@ assert.match(translationApiSource, /requireAdmin/, 'Translation API must re-chec
 assert.match(translationApiSource, /process\.env\.AI_API_KEY|process\.env\.DEEPSEEK_API_KEY/, 'Translation provider key must remain server-side');
 assert.doesNotMatch(translationSource, /DEEPSEEK_API_KEY|AI_API_KEY/, 'Browser translation UI must not read provider secrets');
 assert.match(reviewEnvExample, /^VITE_ADMIN_REVIEW_MODE=true$/m, 'Review environment must opt into read-only mode');
-assert.doesNotMatch(supabaseSource, /import\.meta\.env\.(?:VITE_)?SUPABASE_SERVICE_ROLE_KEY/, 'Service role must never be read by browser app');
-assert.doesNotMatch(envExample, /^(?:VITE_)?SUPABASE_SERVICE_ROLE_KEY\s*=/m, 'Service role must never be configured in browser app');
+assert.match(adminBackendSource, /repoBackendClient/, 'Repo-backed Admin client must be the default runtime authority');
+assert.doesNotMatch(adminBackendSource, /@supabase\/supabase-js/, 'SEO Admin browser runtime must not import Supabase SDK');
+assert.match(repoBackendClientSource, /credentials:\s*'include'/, 'Repo Admin browser requests must use the HttpOnly server session');
+assert.doesNotMatch(repoBackendClientSource, /ADMIN_GITHUB_TOKEN|ADMIN_REPO_PASSWORD|ADMIN_REPO_SESSION_SECRET/, 'Browser Repo client must never read server secrets');
+assert.match(repoAuthSource, /HttpOnly/, 'Repo Admin session cookie must be HttpOnly');
+assert.match(repoAuthSource, /SameSite=Lax/, 'Repo Admin session cookie must use SameSite protection');
+assert.match(repoAuthSource, /requireSameOriginMutation/, 'Repo Admin must enforce an explicit same-origin mutation guard in addition to SameSite cookies');
+assert.match(repoGithubSource, /ADMIN_GITHUB_TOKEN/, 'GitHub write credential must remain server-side');
+assert.match(repoGithubSource, /seo-admin-drafts/, 'Repo content writes must use a dedicated draft branch by default');
+assert.match(repoStoreSource, /merged\.status = 'draft'/, 'Repo content writes must fail closed to Draft');
+assert.match(repoStoreSource, /review_state = 'editing'/, 'Content edits must invalidate approval in Repo mode');
+assert.match(repoSessionApiSource, /setSessionCookie/, 'Repo login endpoint must issue the server-side session cookie');
+assert.match(repoQueryApiSource, /requireRepoAdmin/, 'Repo content query endpoint must require Admin session');
+assert.match(repoPublishApiSource, /requireRepoAdmin/, 'Staging publish endpoint must require Admin session');
+assert.match(translationApiSource, /getRequestSession/, 'Translation API must use the same Repo Admin session');
+assert.doesNotMatch(translationApiSource, /@supabase\/supabase-js|SUPABASE_ANON_KEY|SUPABASE_URL/, 'Translation API must not depend on Supabase auth in Repo mode');
+assert.doesNotMatch(envExample, /VITE_SUPABASE_|SUPABASE_SERVICE_ROLE_KEY/, 'Default Repo Admin browser env must not require Supabase credentials');
 
-assert.match(migrationSource, /catalog_key text not null/);
-assert.match(migrationSource, /locale text not null default 'zh-CN'/);
-assert.match(migrationSource, /unique \(catalog_key, locale\)/);
-assert.match(migrationSource, /enable row level security/);
-assert.match(migrationSource, /grant select on public\.user_roles to authenticated/);
-assert.match(migrationSource, /public\.is_admin\(\)/);
-assert.match(migrationSource, /species_seo_admin_insert/);
-assert.match(migrationSource, /species_seo_admin_update/);
-assert.match(migrationSource, /species_seo_admin_delete/);
-
-assert.match(groupMigrationSource, /create table if not exists public\.species_seo_groups/);
-assert.match(groupMigrationSource, /group_key text not null/);
-assert.match(groupMigrationSource, /unique \(group_key, locale\)/);
-assert.match(groupMigrationSource, /enable row level security/);
-assert.match(groupMigrationSource, /species_seo_groups_admin_insert/);
-assert.match(groupMigrationSource, /species_seo_groups_admin_update/);
-assert.match(groupMigrationSource, /public\.is_admin\(\)/);
-
-assert.match(localeMigrationSource, /add column if not exists localized_name text not null default ''/);
-assert.match(routeMigrationSource, /index_strategy text not null default 'noindex'/);
-assert.match(routeMigrationSource, /canonical_catalog_key text not null default ''/);
-assert.match(routeMigrationSource, /canonical_to_sibling/);
-assert.match(historyMigrationSource, /create table if not exists public\.content_revisions/);
-assert.match(historyMigrationSource, /enable row level security/);
-assert.match(historyMigrationSource, /content_revisions_admin_select/);
-assert.match(historyMigrationSource, /restore_species_seo_revision/);
-assert.match(historyMigrationSource, /security definer/);
-assert.match(historyMigrationSource, /status = 'draft'/, 'Rollback must never republish content automatically');
-assert.match(historyMigrationSource, /revision_operation', 'rollback'/, 'Rollback events must be identifiable in history');
-assert.match(releaseGateMigrationSource, /species_seo_release_gate_status/);
-assert.match(releaseGateMigrationSource, /schema_version', 6/);
-assert.match(releaseGateMigrationSource, /revision_history_ready/);
-assert.match(releaseGateMigrationSource, /restore_rpc_ready/);
-assert.match(releaseGateMigrationSource, /grant execute on function public\.species_seo_release_gate_status\(\) to anon, authenticated/);
-assert.match(publishReadinessMigrationSource, /schema_version', 7/);
-assert.match(publishReadinessMigrationSource, /create table if not exists public\.species_data_reviews/);
-assert.match(publishReadinessMigrationSource, /review_state text not null default 'editing'/);
-assert.match(publishReadinessMigrationSource, /ready_for_review/);
-assert.match(publishReadinessMigrationSource, /species_seo_public_review_resolutions/);
-assert.match(publishReadinessMigrationSource, /new\.review_state := 'editing'/, 'Content changes and rollback must invalidate approval');
-assert.match(publishReadinessMigrationSource, /species_data_reviews_admin_update/);
-assert.match(serverExportMigrationSource, /schema_version', 8/);
-assert.match(serverExportMigrationSource, /server_export_ready/);
-assert.match(serverExportMigrationSource, /grant select on table public\.species_seo to service_role/);
-assert.match(serverExportMigrationSource, /grant select on table public\.species_data_reviews to service_role/);
-assert.match(serverExportMigrationSource, /revoke execute on function public\.species_seo_public_review_resolutions\(\) from anon, authenticated/);
-assert.match(serverExportMigrationSource, /status = 'published' and review_state = 'approved'/, 'Public publication must require both Published and Approved');
+assert.match(repoStoreSource, /selectedCatalogKeys\.length > 20/, 'Repo staging publish must retain a hard 20-Species ceiling');
+assert.match(repoStoreSource, /status === 'draft'.*review_state === 'approved'/s, 'Repo staging snapshot must consume Approved Draft rows only');
+assert.match(repoStoreSource, /selected_catalog_keys/, 'Repo staging snapshot must carry an explicit Species allowlist');
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
 assert.ok(neoGroup?.member_count > 2, 'Neocaridina group must remain a real inheritance fixture');
@@ -372,5 +340,5 @@ assert.equal(validateProtectedTokens('base', { seoTitleTemplate: '{{name}} Guide
 
 console.log(
   `Admin Content contract verified: ${catalog.length} catalog entries, ` +
-  `${groupData.groups.length} base groups, ${groupData.stats.batch_candidate_groups} batch groups, auth/RLS protected`,
+  `${groupData.groups.length} base groups, ${groupData.stats.batch_candidate_groups} batch groups, Repo auth/content boundaries protected`,
 );

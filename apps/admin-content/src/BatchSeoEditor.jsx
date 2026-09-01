@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { supabase } from './supabase.js';
+import { adminContentClient } from './adminBackend.js';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { assessDataReview } from './publishReadiness.js';
 import { useAppLanguage } from './AppLanguage.jsx';
@@ -45,7 +45,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
       locale,
       status: 'draft',
     }));
-    const { data, error } = await supabase
+    const { data, error } = await adminContentClient
       .from('species_seo')
       .upsert(rows, { onConflict: 'catalog_key,locale' })
       .select('*');

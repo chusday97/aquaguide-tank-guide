@@ -502,3 +502,17 @@ After it is gated, the next product milestone is a small staging publication sli
 - `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
 - Production-style `release` remains Published-only and ignores Approved Drafts.
 - Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.
+
+## 2026-09-01 — Species SEO 改为 GitHub Repo-backed 内容源
+
+- 当前 Species SEO Admin 的运行时权威已经从 Supabase 切换为 GitHub Repo-backed content。此前关于“创建 AquaGuide Supabase staging”的待办已被本决策替代，不再执行。
+- 编辑链路：`/admin/seo/` → HttpOnly Admin Session → `/api/admin-content/query` → `seo-admin-drafts` 分支的 `content/species-seo/admin-store.json`。
+- 普通 Save 只写 Draft 分支；`vercel.json` 对 `seo-admin-drafts` 设置 `deploymentEnabled=false`，因此边改边保存不会反复触发 Vercel。
+- 内容/Index/Canonical 改动会把 `Approved` 自动退回 `Editing`；Repo API 强制 `status=Draft`，不能通过后台把 Production Published 解锁。
+- 显式“发布当前 Species 到 Staging”才生成脱敏、最多 20 Species 的 `content/species-seo/staging-snapshot.json` 并提交到非生产 staging code branch，从而触发一次 Preview build。
+- Root Preview build优先读取这个 Repo Snapshot，并以 `staging_release` 生成真实 EN/ZH 静态 HTML + sitemap；Production-style `release` 继续只接受 Published。
+- AI 翻译服务也复用同一 Admin Session，不再依赖 Supabase JWT/user_roles。浏览器 bundle 不再 import Supabase SDK。
+- 新增自动门禁已证明：完全不启动 Supabase 时，H1 修改会使审核失效 → 重新 Approved → Staging Snapshot → 静态 H1 改变；Production-style release 对这些 Draft 生成 0 页。
+- Primary GitHub Admin CI 已移除 Supabase CLI/Docker/ephemeral DB 步骤；legacy Supabase migration/test 仅保留兼容证据。
+- 下一步只做 hosted Repo vertical slice：配置 Vercel server-only Admin/GitHub credentials → 登录 → Save 确认 Draft branch 不部署 → Approved → Staging Publish → 单次 Preview rebuild → 检查 HTML H1 与 `X-Robots-Tag: noindex`。
+- `main`、Production Published、Production Supabase 均保持不动。

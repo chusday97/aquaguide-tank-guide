@@ -1,11 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import { getRequestSession, requireSameOriginMutation } from '../../../server/admin-repo/auth.mjs';
 import { cleanTranslationObject, parseJsonObject, validateProtectedTokens, hasCjkText } from './_translation-core.js';
 
 const aiBaseUrl = (process.env.AI_BASE_URL || process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, '');
 const aiModel = process.env.AI_MODEL || process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
 const apiKey = process.env.AI_API_KEY || process.env.DEEPSEEK_API_KEY || '';
-const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
 
 export const config = { maxDuration: 30 };
 
@@ -21,24 +19,9 @@ const fetchWithTimeout = async (url, options, timeoutMs = 20_000) => {
 };
 
 async function requireAdmin(req) {
-  const authHeader = String(req.headers.authorization || '');
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
-  if (!token || !supabaseUrl || !supabaseAnonKey) return { ok: false, status: 401 };
-
-  const client = createClient(supabaseUrl, supabaseAnonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-  });
-  const { data: userData, error: userError } = await client.auth.getUser(token);
-  if (userError || !userData?.user) return { ok: false, status: 401 };
-  const { data: roleRow, error: roleError } = await client
-    .from('user_roles')
-    .select('role')
-    .eq('user_id', userData.user.id)
-    .is('deleted_at', null)
-    .maybeSingle();
-  if (roleError || roleRow?.role !== 'admin') return { ok: false, status: 403 };
-  return { ok: true, user: userData.user };
+  const session = getRequestSession(req);
+  if (!session?.user) return { ok: false, status: 401 };
+  return { ok: true, user: session.user };
 }
 
 function buildPrompt(scope, source, context) {
@@ -65,6 +48,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
 
+  if (!requireSameOriginMutation(req, res)) return;
   const auth = await requireAdmin(req);
   if (!auth.ok) return res.status(auth.status).json({ ok: false, error: auth.status === 403 ? 'Admin access required' : 'Authentication required' });
   if (!isConfiguredKey(apiKey)) return res.status(503).json({ ok: false, error: 'AI translation provider is not configured', failureReason: 'not_configured' });

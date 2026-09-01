@@ -1,6 +1,6 @@
 import { useAppLanguage } from './AppLanguage.jsx';
 import { useEffect, useState } from 'react';
-import { supabase } from './supabase.js';
+import { adminContentClient } from './adminBackend.js';
 import { categoryIssueKey } from './publishReadiness.js';
 
 function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved }) {
@@ -29,7 +29,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
       issue_key: issueKey, issue_type: issueType, group_key: group.group_key, decision,
       canonical_catalog_key: decision === 'duplicate_records' ? canonicalKey : '', notes: notes.trim(),
     };
-    const { data, error } = await supabase.from('species_data_reviews')
+    const { data, error } = await adminContentClient.from('species_data_reviews')
       .upsert(payload, { onConflict: 'issue_key' }).select('*').single();
     setSaving(false);
     if (error) return setMessage(error.message || '保存失败。');

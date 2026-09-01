@@ -226,3 +226,14 @@ Reason: keeps Editorial review/Published snapshot as the authority boundary, pre
 ## 2026-09-01 — Use branch-scoped Vercel Preview as staging, not Production
 Decision: until a dedicated AquaGuide staging Supabase project is provisioned, use `feature/admin-content-v0` Vercel Preview only as the hosted publication surface for the committed 3-Species Published fixture.
 Reason: this proves real hosting/build/routing/HTML delivery without incurring staging DB cost or enabling Production publishing. The fallback is branch- and environment-scoped, never active on Production builds.
+
+## 2026-09-01 — Species SEO Admin uses GitHub as its runtime content store
+- This decision supersedes the earlier Species-SEO-specific requirement for Supabase Auth/RLS, ephemeral Supabase as the primary CI gate, and a possible hosted AquaGuide Supabase staging branch. Those records remain historical evidence, not current instructions.
+- Product Truth already lives in the repository and Species SEO publishes build-time static files; adding a runtime database for this editorial layer creates cost and operational complexity without a user-facing requirement that needs relational/runtime querying.
+- Editorial state lives in versioned JSON on a dedicated `seo-admin-drafts` Git branch. Git commits provide durable change history in addition to the compact application revision list.
+- Normal Save and deployment are intentionally decoupled. `seo-admin-drafts` is deployment-disabled; only an explicit staging publication writes the sanitized snapshot to the staging code branch.
+- Authentication is server-side session based. GitHub write token, Admin password/hash and session signing secret are server-only. Do not expose them through `VITE_*`.
+- Repo writes are always Draft; content changes invalidate approval. Production-style generator eligibility remains Published-only, so Repo Drafts cannot accidentally become Production pages.
+- Staging publication is an explicit allowlisted Approved-Draft snapshot, not a branch merge and not a Production status mutation.
+- Primary CI proves Repo store/API behavior, static generator behavior, root artifact integration and browser handoff without installing Supabase CLI or Docker.
+- Keep legacy Supabase scripts/migrations only while they provide useful compatibility evidence for the broader AquaGuide application. Do not reintroduce Supabase as a Species SEO runtime dependency without a concrete requirement that Git-backed content cannot satisfy.

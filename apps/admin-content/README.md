@@ -1,75 +1,113 @@
-# AquaGuide Content Admin V0
+# AquaGuide Species SEO Admin
 
-Isolated companion app for editing Species SEO content. It lives in the same monorepo but is not mounted into the public AquaGuide web app.
+Species editorial SEO workspace for AquaGuide. The current runtime is **GitHub Repo-backed** and does **not require Supabase** for Admin login, Draft persistence, revision history, staging publication, or the primary CI gate.
+
+## Current authority — read this first
+
+```text
+AquaGuide Product Truth (repository catalog)
+        +
+Species SEO Admin
+        ↓
+HttpOnly server-side Admin session
+        ↓
+GitHub draft branch: seo-admin-drafts
+content/species-seo/admin-store.json
+        ↓
+Editing → Ready for Review → Approved Draft
+        ↓ explicit action only
+content/species-seo/staging-snapshot.json
+on feature/admin-content-v0
+        ↓
+Vercel Preview build
+        ↓
+static /species + /zh/species HTML + sitemap
+        ↓
+AquaGuide product CTA
+```
+
+The dedicated `seo-admin-drafts` branch is deployment-disabled in `vercel.json`. **Normal Save does not deploy.** Only an explicit Staging Publish writes a reviewed snapshot to the staging code branch and is intended to trigger one Preview rebuild.
 
 ## Safety boundary
 
-- Branch-only prototype: `feature/admin-content-v0`.
-- Do not merge or deploy to production yet.
-- Uses only `VITE_SUPABASE_URL` and the browser-safe publishable/anon key.
-- Never expose a Supabase service-role key to this app.
-- Admin authorization is enforced by the existing `user_roles` table and database RLS, not by hiding the URL.
-- Admin migrations 001–007 are branch-only proposals. They have been exercised only in fresh isolated local Supabase environments; Production remains unchanged.
+- Work remains isolated on `feature/admin-content-v0`; do not merge to `main` or unlock Production Published without explicit later approval.
+- Repo-backed Admin writes are coerced to `Draft`; a content/index/canonical edit invalidates `Approved` back to `Editing`.
+- Production-style static generation remains `Published`-only and therefore ignores Repo Admin Drafts.
+- Admin password/hash, session-signing secret and GitHub write token are **server-only**. Never expose them through `VITE_*`.
+- Login uses an HttpOnly, SameSite server session; `/api/translate` reuses the same session.
+- Product Truth (temperature, pH, tank size, difficulty, image asset, taxonomy) remains repository-owned/read-only from Species SEO Admin.
+- Staging snapshots strip reviewer identity and private Data Review notes.
+- Preview acceptance must retain deployment-level `X-Robots-Tag: noindex` even when page source contains intended future robots/canonical values for SEO inspection.
 
-## Current data contract
+## Content storage
 
-The public AquaGuide product currently reads 486 Species from `src/data/fishData.ts`. The connected AquaGuide Supabase project has the `species` table but currently contains no Species rows.
+The 486 Species Product Truth catalog remains `src/data/fishData.ts`. Editorial SEO is stored separately in versioned JSON:
 
-For V0, the Admin therefore:
+- Draft authority: `content/species-seo/admin-store.json` on `seo-admin-drafts`.
+- Staging publication snapshot: `content/species-seo/staging-snapshot.json` on the non-production staging code branch.
+- `catalog_key` remains the stable join key.
+- `species_seo` stores localized Variant/page overrides.
+- `species_seo_groups` stores Base Species shared templates/content.
+- `species_data_reviews` stores human duplicate/category-review decisions without rewriting Product Truth.
+- `content_revisions` keeps compact application revisions; Git commit history provides an additional durable audit trail.
 
-1. Generates a lightweight Species index from the existing repository catalog before dev/build.
-2. Uses the stable Species id (`sp_0001`, etc.) as `catalog_key`.
-3. Stores only editorial SEO content in Supabase `species_seo`.
-4. Joins product truth and SEO content by `catalog_key` rather than duplicating the entire product catalog into Supabase.
+## Server configuration
 
-This keeps the SEO Admin useful without forcing a product-data migration first.
+Use `apps/admin-content/repo-admin.server.env.example` as the placeholder-only reference. Required hosted values are server-only:
 
-## Run locally
+- `ADMIN_REPO_EMAIL`
+- `ADMIN_REPO_PASSWORD_HASH` (preferred) or `ADMIN_REPO_PASSWORD`
+- `ADMIN_REPO_SESSION_SECRET`
+- `ADMIN_GITHUB_TOKEN` — fine-grained Contents write access only to this repository
+- `ADMIN_GITHUB_REPO`
+- `ADMIN_GITHUB_DRAFT_BRANCH=seo-admin-drafts`
+- `ADMIN_GITHUB_STAGING_BRANCH=feature/admin-content-v0`
 
-From the repository root:
+Do not reuse ChatGPT/GitHub connector credentials as application secrets.
+
+## Local development
+
+The Vite-only dev command renders the UI, but root `/api/*` serverless routes require a Vercel-compatible local runtime for real login/save behavior. For pure UI work:
 
 ```bash
 npm install
 npm run dev -w @aquaguide/admin-content
 ```
 
-Open `http://localhost:3010`.
+For the real Repo-backed API path, use the repository's Vercel development runtime or test through a protected Vercel Preview after server secrets are configured.
 
-## Read-only remote review
+## Verification
 
-The separate Vercel project `admin-content` is for review only at this stage:
-
-- Root Directory is locked to `apps/admin-content`.
-- `VITE_ADMIN_REVIEW_MODE=true` is scoped to Preview deployments of `feature/admin-content-v0`.
-- Review mode loads the committed 486-Species index but never performs Supabase auth/data writes.
-- The save action is disabled in review mode.
-- Vercel Authentication protects the Preview URL, and the page declares `noindex,nofollow,noarchive`.
-- The project-level Ignored Build Step skips Git deployments from branches other than `feature/admin-content-v0`.
-
-This remote review mode is separate from the locally verified Supabase Auth + RLS + draft-save flow. Do not treat review mode as an Admin authentication bypass.
-
-## Verify
+Primary no-Supabase gates:
 
 ```bash
 npm run test:contract -w @aquaguide/admin-content
+npm run test:repo-backend -w @aquaguide/admin-content
+npm run test:repo-api -w @aquaguide/admin-content
 npm run build -w @aquaguide/admin-content
 ```
 
-The contract test checks the catalog projection, admin-role guard, SEO storage key, RLS requirements, and that no service-role key is exposed in the browser app.
+`test:repo-backend` proves H1 edit → approval invalidation → re-approval → Approved Draft staging snapshot → generated bilingual static HTML, while Production-style release generates zero pages from those Drafts. It explicitly reports `supabase_started=false`.
 
-## V0 scope
+The primary GitHub `Admin Content CI Gate` no longer installs Supabase CLI/Docker or starts an ephemeral database. It validates Repo authority, static generation, root AquaGuide artifact integration, browser handoff, catalog parity and diff hygiene.
 
-1. Supabase email/password sign-in.
-2. Verify the signed-in user has `user_roles.role = admin`.
-3. Read the Species index generated from the same repository catalog used by AquaGuide.
-4. Search and select a Species.
-5. Edit SEO title, meta description, H1, intro, image alt, focus keyword and explicit Index/Canonical/Noindex strategy.
-6. Preview Google appearance plus the future public Species-page composition.
-7. Save localized SEO content by `catalog_key + locale` once the branch migration exists in the target environment.
-8. Review Base/Variant revision history and restore an earlier revision as Draft.
-9. Explicitly surface schema/history-not-ready states rather than silently failing.
+## Current V0 scope
 
-Not included yet: image upload, Search Console, Production publishing, or wiring generated Species files into the public AquaGuide deployment.
+1. Server-session Admin login.
+2. Repository-derived 486-Species navigation grouped into Base Species / Variant.
+3. Bilingual `zh-CN` / `en` editorial authoring and Base inheritance.
+4. SEO title, meta description, H1, intro, image alt, focus keyword and explicit Index/Canonical/Noindex strategy.
+5. Data Review, Editorial Review, Publish Readiness and revision rollback.
+6. Bidirectional Editor ↔ live frontend Preview Inspector.
+7. Suggestion-only Chinese → English AI translation protected by the same Admin session.
+8. Explicit Staging Publish of a small reviewed Species set; normal Save does not deploy.
+9. Static EN/ZH Species pages integrated into the AquaGuide root `dist/` with real product CTA handoff.
+
+Production Published, Search Console release integration and mass publication remain out of scope.
+
+## Legacy Supabase compatibility — not the current Species SEO runtime
+
+The repository retains the earlier Species SEO Supabase migrations/exporter and `test:supabase-gate` as historical/compatibility evidence. Sections below that describe Supabase-specific milestones document how the earlier implementation was validated; they do **not** mean that a hosted AquaGuide Supabase staging project should now be provisioned. The 2026-09-01 Repo-backed decision supersedes that runtime/staging direction for Species SEO.
 
 ## Base Species / Variant grouping (2026-08-28)
 
