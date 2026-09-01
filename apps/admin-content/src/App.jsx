@@ -289,7 +289,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       </div>
     );
   };
-  const save = async () => {
+  const save = async (reviewStateOverride = null) => {
     if (indexBlockReason) {
       setMessage(indexBlockReason);
       return;
@@ -322,7 +322,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       canonical_catalog_key: form.indexStrategy === 'canonical_to_sibling' ? form.canonicalCatalogKey : '',
       focus_keyword: form.focusKeyword.trim(),
       status: form.status,
-      review_state: form.reviewState,
+      review_state: reviewStateOverride || form.reviewState,
     };
     const { data, error } = await adminContentClient
       .from('species_seo')
@@ -334,7 +334,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       setMessage(error.message || '保存失败。');
       return;
     }
-    setMessage('已保存到 Species SEO 草稿。');
+    if (reviewStateOverride) setForm((current) => ({ ...current, reviewState: reviewStateOverride }));
+    setMessage(reviewStateOverride === 'ready_for_review' ? '已提交审核。' : reviewStateOverride === 'approved' ? '已批准进入预览。' : '已保存到 Species SEO 草稿。');
     onSaved(data);
   };
 
@@ -351,6 +352,26 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <strong>{form.status === 'published' ? 'Published' : 'Draft'}</strong>
           <span>·</span>
           <span>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[form.reviewState] || form.reviewState)}</span>
+        </div>
+      </div>
+
+      <div className={`workflow-stepper review-${form.reviewState}`} aria-label={isUiEnglish ? 'Editorial workflow' : '内容审核流程'}>
+        <div className="workflow-stepper-track">
+          <span className={form.reviewState === 'editing' ? 'current' : 'done'}><b>1</b>{isUiEnglish ? 'Editing' : '编辑中'}</span>
+          <i>→</i>
+          <span className={form.reviewState === 'ready_for_review' ? 'current' : form.reviewState === 'approved' ? 'done' : ''}><b>2</b>{isUiEnglish ? 'Awaiting review' : '待审核'}</span>
+          <i>→</i>
+          <span className={form.reviewState === 'approved' ? 'current' : ''}><b>3</b>{isUiEnglish ? 'Preview approved' : '已批准预览'}</span>
+        </div>
+        <div className="workflow-stepper-action">
+          {form.reviewState === 'editing' ? (
+            <button type="button" className="primary-button compact" disabled={saving || readOnly || contentDirty || Boolean(indexBlockReason)} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
+          ) : form.reviewState === 'ready_for_review' ? (
+            <button type="button" className="primary-button compact" disabled={saving || readOnly || contentDirty || Boolean(indexBlockReason)} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve for Preview' : '批准预览')}</button>
+          ) : (
+            <span className="workflow-approved-note">✓ {isUiEnglish ? 'Ready for Staging Preview' : '可进入 Staging 预览'}</span>
+          )}
+          {contentDirty ? <small>{isUiEnglish ? 'Save content changes before changing workflow state.' : '请先保存内容修改，再进入审核流程。'}</small> : null}
         </div>
       </div>
 
