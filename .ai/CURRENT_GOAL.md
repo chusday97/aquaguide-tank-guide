@@ -1,6 +1,9 @@
 # Current Goal
 
-Updated: 2026-09-01
+> **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
+
+
+Updated: 2026-09-02
 Branch: `feature/admin-content-v0`
 
 Operate AquaGuide Species SEO Admin as a low-maintenance dual-repository GitHub-backed editorial publishing system. Preserve the existing review/readiness/static-generation contracts while removing Supabase as a runtime or staging dependency for Species SEO.
@@ -150,3 +153,12 @@ The persistent product model is now:
 - The public AquaGuide repo no longer contains `admin-store.json` and its former public `seo-admin-drafts` branch has been removed.
 - The private content repo has `main` and `seo-admin-drafts` seeded with an empty content store. It is not linked to AquaGuide Vercel, so normal Save cannot trigger AquaGuide CI/deployment.
 - Primary automated gate `test:dual-repo-routing` proves Draft PUT → private content repo and Staging PUT → public AquaGuide repo.
+
+
+## 2026-09-02 — Latest continuation pointer
+- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
+- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
+- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
+- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
+- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
+- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.

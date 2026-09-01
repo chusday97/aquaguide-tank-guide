@@ -1,5 +1,8 @@
 # AquaGuide ↔ Species SEO Admin Integration Contract
 
+> **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
+
+
 ## Purpose
 The Species SEO Admin is only complete when reviewed SEO content is delivered into the real AquaGuide frontend build and can be verified from the final HTML source.
 
@@ -20,7 +23,9 @@ This file is a required cross-session handoff for any AquaGuide frontend, Admin,
 ## Required publication chain
 AquaGuide Product Truth + approved Editorial SEO must converge through one deterministic build path:
 
-`Admin → Save → Review → Published Snapshot → AquaGuide build → Species generator → root dist → staging/production`
+`Admin → Save Draft (private repo) → Data/Editorial Review → explicit Approved-Draft Staging Snapshot (public staging branch) → AquaGuide build → Species generator → root dist → Staging`
+
+Production remains a separate later boundary: Production-style release accepts Published only.
 
 The root deployment artifact must contain the generated SEO pages, not a separate orphaned Admin output directory.
 

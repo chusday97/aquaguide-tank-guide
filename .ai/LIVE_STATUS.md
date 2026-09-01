@@ -1,6 +1,9 @@
 # Live Status
 
-Updated: 2026-09-01
+> **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
+
+
+Updated: 2026-09-02
 Branch: `feature/admin-content-v0`
 
 ## Current state
@@ -251,3 +254,12 @@ Branch: `feature/admin-content-v0`
 - Existing 极火虾 review was repaired in the private content repo: `sp_0001` is the SEO main page, `index_strategy=index`, and the user's repeated Submit intent was recovered to `ready_for_review` for zh-CN. No Production publish occurred.
 - Repeated inheritance wording was removed from the primary UI. Chinese `公共内容` copy count in Admin source/rendered DOM is now 0. The normal page uses one centralized `内容来源` manager plus a secondary `管理基础模板` entry.
 - Status and actions remain separate: status is read-only; workflow actions are buttons only. Contract now guards metadata-only review transitions and automatic duplicate SEO policy alignment.
+
+
+## 2026-09-02 — Latest continuation pointer
+- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
+- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
+- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
+- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
+- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
+- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.

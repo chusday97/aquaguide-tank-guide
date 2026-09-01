@@ -1,5 +1,8 @@
 # AquaGuide 交接文档
 
+> **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
+
+
 ## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline
 
 - GP-002 已升级为 covered：真实 Chromium 连续执行“搜索宝莲灯 → 精确物种详情 → 主 CTA 进入混养 → 候选 ×6 → caution 风险确认 → 实际入缸 → 持久化数量验证”，不得用多个单点测试替代。
@@ -797,3 +800,12 @@ After the first real human login, the Admin was functionally correct but too imp
 5. **Editing invalidates approval immediately in UI.** Content edits show `未保存修改 · 保存后需重新审核`; workflow state cannot misleadingly remain Approved while content is dirty. `Draft` is presented as `草稿 · 不会直接上线`.
 
 Implementation commit: `8d1905c refactor(admin): productize species SEO workflow`. Local rendered-DOM acceptance and all Admin/root regression gates passed. GitHub Admin Content CI #36 (`33495672879`) is SUCCESS. Vercel deployment `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` is READY and Hosted Health remains fully green. Human hosted login is confirmed. The remaining acceptance item is a real Save click from the hosted UI followed by verification that the write lands only in private `aquaguide-seo-content/seo-admin-drafts` and causes zero AquaGuide deployment.
+
+
+## 2026-09-02 — Latest continuation pointer
+- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
+- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
+- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
+- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
+- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
+- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.

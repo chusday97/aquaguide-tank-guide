@@ -245,3 +245,12 @@ Reason: this proves real hosting/build/routing/HTML delivery without incurring s
 - `ADMIN_GITHUB_CONTENT_REPO` is mandatory and has no public-repo fallback. `ADMIN_GITHUB_STAGING_REPO` is separately identified.
 - One fine-grained token may cover exactly these two selected repositories with Contents Read/Write; broad `repo`/`workflow` OAuth credentials are explicitly rejected as the hosted application credential.
 - GitHub Contents reads can fall back to the Git Blob endpoint, avoiding the normal Contents inline-content size boundary as the JSON store grows.
+
+
+## 2026-09-02 — Latest continuation pointer
+- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
+- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
+- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
+- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
+- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
+- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.

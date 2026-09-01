@@ -1,4 +1,7 @@
 ## 当前任务目标
+
+> **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
+
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
 
 ## 已完成
@@ -553,3 +556,12 @@ After it is gated, the next product milestone is a small staging publication sli
 - Rendered-DOM check for `极火`: one visible normal 极火虾 row, one duplicate folded; group reports 15 candidate pages + 1 folded duplicate.
 - Commit `8d1905c`; CI #36 SUCCESS; Vercel `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` READY; Hosted Health all green.
 - Next acceptance is one real hosted Save click, then verify private Draft write / zero public deployment.
+
+
+## 2026-09-02 — Latest continuation pointer
+- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
+- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
+- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
+- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
+- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
+- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
