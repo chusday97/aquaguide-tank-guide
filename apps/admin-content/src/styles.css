@@ -1092,3 +1092,18 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .workflow-stepper-action .primary-button.compact { min-width: 94px; justify-content: center; }
 .workflow-stepper-action .staging-action { min-width: 126px; }
 .editor-footer .footer-actions:has(.draft-safety-chip:only-child) { justify-content: flex-end; }
+
+/* --- Explicit status vs action hierarchy --- */
+.editor-status-cluster { display:flex; align-items:flex-start; gap:10px; align-self:flex-start; margin-top:2px; }
+.editor-status-item { display:grid; gap:4px; min-width:92px; padding:7px 9px; border:1px solid #e1e7e2; border-radius:10px; background:#fbfcfb; }
+.editor-status-item > small { color:#8b958f; font-size:8.5px; font-weight:750; letter-spacing:.04em; }
+.editor-status-value { display:flex; align-items:center; gap:6px; color:#38483f; font-size:10.5px; }
+.editor-status-value strong { font-size:10.5px; }
+.review-status-pill { width:max-content; padding:3px 6px; border-radius:999px; background:#eef2ef; color:#59685f; font-size:9.5px; font-weight:800; }
+.review-status-pill.review-ready_for_review { background:#fff3d9; color:#8a651a; }
+.review-status-pill.review-approved { background:#e8f3eb; color:#2f6a4e; }
+.workflow-status-block, .workflow-action-block { display:grid; gap:5px; }
+.workflow-action-block { justify-items:end; }
+.workflow-section-label { color:#8a958e; font-size:8.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.workflow-action-block .workflow-section-label { color:#52645a; }
+@media (max-width: 900px) { .editor-status-cluster { width:100%; } .editor-status-item { flex:1; } .workflow-action-block { justify-items:start; } }

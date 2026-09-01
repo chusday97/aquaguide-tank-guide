@@ -106,22 +106,31 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           <h2>{group.base_scientific_name}</h2>
           <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 个品种页面共用这一层公共内容；当前品种可以单独覆盖，不需要重复填写共同信息。`}</p>
         </div>
-        <div className="editor-status-line" aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>
-          <span className={`editor-status-dot ${form.status}`}></span>
-          <strong>{form.status === 'published' ? 'Published' : 'Draft'}</strong>
-          <span>·</span>
-          <span>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[form.reviewState] || form.reviewState)}</span>
+        <div className="editor-status-cluster" aria-label={isUiEnglish ? 'Base current states' : '基础种当前状态'}>
+          <div className="editor-status-item">
+            <small>{isUiEnglish ? 'Publish status' : '发布状态'}</small>
+            <span className="editor-status-value"><span className={`editor-status-dot ${form.status}`}></span><strong>{form.status === 'published' ? (isUiEnglish ? 'Published' : '已发布') : (isUiEnglish ? 'Draft' : '草稿')}</strong></span>
+          </div>
+          <div className="editor-status-item">
+            <small>{isUiEnglish ? 'Review status' : '审核状态'}</small>
+            <strong className={`review-status-pill review-${form.reviewState}`}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Preview approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已批准预览' }[form.reviewState] || form.reviewState)}</strong>
+          </div>
         </div>
       </div>
       <div className={`workflow-stepper review-${form.reviewState}`} aria-label={isUiEnglish ? 'Base editorial workflow' : '基础种内容审核流程'}>
-        <div className="workflow-stepper-track">
+        <div className="workflow-status-block">
+          <small className="workflow-section-label">{isUiEnglish ? 'Review progress' : '审核进度'}</small>
+          <div className="workflow-stepper-track">
           <span className={form.reviewState === 'editing' ? 'current' : 'done'}><b>1</b>{isUiEnglish ? 'Editing' : '编辑中'}</span>
           <i>→</i>
           <span className={form.reviewState === 'ready_for_review' ? 'current' : form.reviewState === 'approved' ? 'done' : ''}><b>2</b>{isUiEnglish ? 'Awaiting review' : '待审核'}</span>
           <i>→</i>
           <span className={form.reviewState === 'approved' ? 'current' : ''}><b>3</b>{isUiEnglish ? 'Preview approved' : '已批准预览'}</span>
+          </div>
         </div>
-        <div className="workflow-stepper-action">
+        <div className="workflow-action-block">
+          <small className="workflow-section-label">{isUiEnglish ? 'Available actions' : '可执行操作'}</small>
+          <div className="workflow-stepper-action">
           {contentDirty ? (
             <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save shared content' : '保存公共内容')}</button>
           ) : form.reviewState === 'editing' ? (
@@ -132,11 +141,9 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
               <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
             </>
           ) : (
-            <>
-              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <span className="workflow-approved-note">✓ {isUiEnglish ? 'Shared content approved' : '公共内容已批准'}</span>
-            </>
+            <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
           )}
+          </div>
         </div>
       </div>
       {group.category_conflict ? (

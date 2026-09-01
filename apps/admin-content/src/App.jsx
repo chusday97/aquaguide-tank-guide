@@ -347,23 +347,32 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <h2>{species.name}</h2>
           <p className="scientific-name">{species.scientific_name}</p>
         </div>
-        <div className="editor-status-line" aria-label={isUiEnglish ? 'Content status' : '内容状态'}>
-          <span className={`editor-status-dot ${form.status}`}></span>
-          <strong>{form.status === 'published' ? 'Published' : 'Draft'}</strong>
-          <span>·</span>
-          <span>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[form.reviewState] || form.reviewState)}</span>
+        <div className="editor-status-cluster" aria-label={isUiEnglish ? 'Current states' : '当前状态'}>
+          <div className="editor-status-item">
+            <small>{isUiEnglish ? 'Publish status' : '发布状态'}</small>
+            <span className="editor-status-value"><span className={`editor-status-dot ${form.status}`}></span><strong>{form.status === 'published' ? (isUiEnglish ? 'Published' : '已发布') : (isUiEnglish ? 'Draft' : '草稿')}</strong></span>
+          </div>
+          <div className="editor-status-item">
+            <small>{isUiEnglish ? 'Review status' : '审核状态'}</small>
+            <strong className={`review-status-pill review-${form.reviewState}`}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Preview approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已批准预览' }[form.reviewState] || form.reviewState)}</strong>
+          </div>
         </div>
       </div>
 
       <div className={`workflow-stepper review-${form.reviewState}`} aria-label={isUiEnglish ? 'Editorial workflow' : '内容审核流程'}>
-        <div className="workflow-stepper-track">
+        <div className="workflow-status-block">
+          <small className="workflow-section-label">{isUiEnglish ? 'Review progress' : '审核进度'}</small>
+          <div className="workflow-stepper-track">
           <span className={form.reviewState === 'editing' ? 'current' : 'done'}><b>1</b>{isUiEnglish ? 'Editing' : '编辑中'}</span>
           <i>→</i>
           <span className={form.reviewState === 'ready_for_review' ? 'current' : form.reviewState === 'approved' ? 'done' : ''}><b>2</b>{isUiEnglish ? 'Awaiting review' : '待审核'}</span>
           <i>→</i>
           <span className={form.reviewState === 'approved' ? 'current' : ''}><b>3</b>{isUiEnglish ? 'Preview approved' : '已批准预览'}</span>
+          </div>
         </div>
-        <div className="workflow-stepper-action">
+        <div className="workflow-action-block">
+          <small className="workflow-section-label">{isUiEnglish ? 'Available actions' : '可执行操作'}</small>
+          <div className="workflow-stepper-action">
           {contentDirty ? (
             <button type="button" className="primary-button compact" disabled={saving || readOnly || Boolean(indexBlockReason)} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
           ) : form.reviewState === 'editing' ? (
@@ -385,6 +394,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             </>
           )}
           {contentDirty ? <small>{isUiEnglish ? 'Saving content resets approval to Editing.' : '保存内容后会自动退回“编辑中”，避免旧审核结果继续生效。'}</small> : null}
+          </div>
         </div>
       </div>
 
