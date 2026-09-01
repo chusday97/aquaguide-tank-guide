@@ -170,3 +170,11 @@ Branch: `feature/admin-content-v0`
 - Hosted EN/ZH index pages, canonical-to-sibling page, noindex page and `sitemap-species.xml` all passed source-level assertions.
 - Hosted compatibility deep link passed runtime browser verification: `sp_0030` appears as `Neocaridina davidi var. Yellow · planned ×1`, compatibility UI is active and `pageErrors=[]`.
 - GitHub CI #26 failed only because the clean Ubuntu runner had npm Playwright installed but no Chromium executable. The workflow now explicitly installs pinned-project Playwright Chromium before the browser handoff gate.
+
+## 2026-09-01 — Hosted DB readiness
+- Latest local database gate: PASS on migrations 001–008 / schema v8.
+- Hosted export credentials: server-only secret/service_role required; publishable/anon refused.
+- Public Species SEO policy: Published + Approved only.
+- Data Review release inputs: server-only.
+- One-command root artifact path ready: `npm run build:staging-from-db`.
+- Infrastructure blocker: no dedicated AquaGuide hosted staging Supabase branch/project currently exists; Production remains untouched.

@@ -296,3 +296,11 @@
 - Latest hosted Species artifact passed: EN/ZH title, robots, H1, reciprocal hreflang, canonical sibling behavior, noindex behavior, sitemap inclusion/exclusion and SEO-to-product CTA source parameters.
 - Latest hosted runtime handoff passed: compatibility deep link retained `species=sp_0030&source=seo-species`, preselected that Species as planned and produced zero page errors.
 - CI #26 diagnosis: root build and static artifact checks passed; only `verify:seo-species-handoff` failed because GitHub Actions had no downloaded Chromium binary. Added `npx playwright install --with-deps chromium` after `npm ci` so the same browser regression runs on a clean runner.
+
+## 2026-09-01 — Server-only hosted publication boundary
+- Audited the hosted staging exporter against current Supabase API-key/Data-API defaults.
+- Added migration 008: Published public visibility now also requires Approved; explicit `service_role` SELECT grants cover SEO/Base/Data Review release inputs.
+- Data Review resolution RPC is no longer callable by anon/authenticated; staging exporter reads a sanitized projection with a server-only secret/service-role client.
+- Release readiness probe advanced to schema v8 with `server_export_ready`.
+- Added `build:staging-from-db` to export from a future dedicated hosted staging Supabase and merge Species pages directly into AquaGuide `dist/`.
+- Fresh ephemeral Supabase 001–008 PASS: schema_version=8, draft/unapproved visibility blocked, rollback preserved, bilingual generation PASS.

@@ -42,7 +42,8 @@ const regular = await signIn(userEmail);
 
 const { data: readiness, error: readinessError } = await anonymous.rpc('species_seo_release_gate_status');
 if (readinessError) throw readinessError;
-assert.equal(readiness.schema_version, 7);
+assert.equal(readiness.schema_version, 8);
+assert.equal(readiness.server_export_ready, true);
 assert.equal(readiness.editorial_review_ready, true);
 assert.equal(readiness.data_review_ready, true);
 assert.equal(readiness.data_review_resolution_rpc_ready, true);
@@ -64,10 +65,15 @@ reviewResult = await admin.from('species_data_reviews').insert({
 }).select('*').single();
 if (reviewResult.error) throw reviewResult.error;
 assert.equal(reviewResult.data.decision, 'accepted_as_is');
-const { data: publicResolutions, error: publicResolutionError } = await anonymous.rpc('species_seo_public_review_resolutions');
-if (publicResolutionError) throw publicResolutionError;
-assert.ok(publicResolutions.some((row) => row.issue_key === reviewIssueKey));
-assert.ok(!Object.hasOwn(publicResolutions.find((row) => row.issue_key === reviewIssueKey), 'notes'), 'Public review resolution must not expose notes');
+const { error: publicResolutionError } = await anonymous.rpc('species_seo_public_review_resolutions');
+assert.ok(publicResolutionError, 'Anonymous clients must not call the release-only Data Review resolution RPC');
+const { data: serverResolutions, error: serverResolutionError } = await service
+  .from('species_data_reviews')
+  .select('issue_key,issue_type,group_key,decision,canonical_catalog_key')
+  .order('issue_key');
+if (serverResolutionError) throw serverResolutionError;
+assert.ok(serverResolutions.some((row) => row.issue_key === reviewIssueKey));
+assert.ok(!Object.hasOwn(serverResolutions.find((row) => row.issue_key === reviewIssueKey), 'notes'), 'Server export projection must strip Data Review notes');
 
 const reviewCatalogKey = `sp_review_${stamp}`;
 let reviewStateResult = await admin.from('species_seo').insert({
@@ -125,6 +131,9 @@ if (error) throw error;
   seo_title_template: '{{name}} v2', status: 'published', published_at: new Date().toISOString(),
 }).eq('group_key', syntheticGroupKey).eq('locale', 'en'));
 if (error) throw error;
+result = await regular.from('species_seo').select('catalog_key').eq('catalog_key', syntheticCatalogKey);
+if (result.error) throw result.error;
+assert.equal(result.data.length, 0, 'Published-but-unapproved Species SEO must remain hidden after an edit invalidates approval');
 
 const { data: variantRevisions, error: variantRevisionError } = await admin
   .from('content_revisions').select('*')
@@ -224,7 +233,7 @@ try {
     source_label: 'ephemeral-supabase-ci',
     species_seo: publicVariants,
     species_seo_groups: publicGroups,
-    data_review_resolutions: publicResolutions,
+    data_review_resolutions: serverResolutions,
   };
   const { manifest } = await generatePublicSpecies({
     snapshot,

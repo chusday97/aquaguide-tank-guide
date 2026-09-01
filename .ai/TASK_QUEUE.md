@@ -108,9 +108,9 @@ Updated: 2026-08-30
 - [x] Finish and gate Product Truth loading correctness without stale Species facts.
 - [x] Establish one authoritative Species SEO Admin entry; `/admin/content` is now an Admin Hub, `/admin/product-content` owns Product/Care content, and `/admin/seo/` owns Species SEO.
 - [x] Integrate the Species generator into the AquaGuide root deployment artifact with an explicit snapshot-only build step; no snapshot = safe skip.
-- [ ] Build 3–5 representative bilingual Species pages in staging.
-- [ ] Verify final HTML: title, meta, H1, canonical, hreflang, robots and sitemap.
-- [ ] Add real AquaGuide compatibility / aquarium-planning CTA return paths with Species ID + `source=seo-species`.
+- [x] Build 3–5 representative bilingual Species pages in staging.
+- [x] Verify final HTML: title, meta, H1, canonical, hreflang, robots and sitemap.
+- [x] Add real AquaGuide compatibility / aquarium-planning CTA return paths with Species ID + `source=seo-species`.
 - [ ] Keep Production publishing locked until the staging vertical slice passes.
 
 ## 2026-09-01 hosted staging vertical slice
@@ -118,18 +118,30 @@ Updated: 2026-08-30
 - [x] Keep Production builds fail-closed: no explicit snapshot means no generated Species artifact.
 - [x] Add Species-page CTAs to compatibility, browse/detail and aquarium planning with catalog key + `source=seo-species`.
 - [x] Verify the CTA query contract against existing Encyclopedia/Aquarium route consumers.
-- [ ] Verify the next Vercel Preview deployment returns the 6 static HTML pages + sitemap rather than SPA fallback.
-- [ ] Fetch and assert hosted title/meta/H1/canonical/hreflang/robots/alt + CTA URLs.
-- [ ] Browser-check at least one hosted CTA into the correct AquaGuide Species context.
+- [x] Verify the next Vercel Preview deployment returns the 6 static HTML pages + sitemap rather than SPA fallback.
+- [x] Fetch and assert hosted title/meta/H1/canonical/hreflang/robots/alt + CTA URLs.
+- [x] Browser-check at least one hosted CTA into the correct AquaGuide Species context.
 
 ## 2026-09-01 CTA handoff correction
 - [x] Correct compatibility deep-link semantics so SEO Species IDs enter the compatibility calculator as planned candidates.
 - [x] Add browser regression `verify:seo-species-handoff` and wire it into the Admin CI integration step.
-- [ ] Verify the corrected handoff on the next hosted Vercel Preview.
+- [x] Verify the corrected handoff on the next hosted Vercel Preview.
 
 ## 2026-09-01 hosted vertical slice acceptance
 - [x] Hosted Vercel Preview returns real static Species HTML and sitemap.
 - [x] Hosted EN/ZH index, canonical and noindex strategies match expected metadata and sitemap rules.
 - [x] Hosted SEO compatibility CTA preselects `sp_0030` as a planned species with zero page errors.
 - [x] Diagnose CI-only Playwright failure as missing clean-runner Chromium and add explicit browser installation.
-- [ ] Confirm the replacement GitHub Actions run is fully green, including root artifact integration and diff hygiene.
+- [x] Confirm the replacement GitHub Actions run is fully green, including root artifact integration and diff hygiene.
+
+## 2026-09-01 hosted Supabase publication boundary
+- [x] Add migration 008: public Species SEO visibility requires `published + approved`; unapproved edits fail closed.
+- [x] Move staging publication export to server-only Supabase secret/service-role credentials; publishable/anon credentials are refused.
+- [x] Remove anon/authenticated access to Data Review release-resolution RPC and add explicit service_role Data API grants.
+- [x] Upgrade release readiness probe to schema v8 with `server_export_ready`.
+- [x] Add one-command `build:staging-from-db` path: hosted staging Supabase → Published Snapshot → AquaGuide root `dist/`.
+- [x] Verify migration 001–008 on a fresh ephemeral Supabase instance.
+- [ ] Provision a dedicated AquaGuide hosted staging branch/project only after explicit cost approval.
+- [ ] Apply migrations 001–008 and configure server-only staging secrets in the Preview deployment.
+- [ ] Replace the committed fixture in Vercel Preview with the hosted staging database export.
+- [ ] Final vertical-slice acceptance: edit H1 in Admin → approve/publish → rebuild → hosted HTML source changes.

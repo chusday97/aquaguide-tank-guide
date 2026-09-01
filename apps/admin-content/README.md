@@ -172,12 +172,16 @@ Persistent staging is optional, not the primary gate. A+B now proves the databas
 ```bash
 npm run export:staging-snapshot -w @aquaguide/admin-content -- --out /tmp/species-staging.json
 npm run verify:staging-publish -w @aquaguide/admin-content
+# Or build the AquaGuide root artifact directly from hosted staging DB:
+npm run build:staging-from-db
 ```
 
 The verifier does not reuse local or Production defaults. Configure these values only for a dedicated AquaGuide staging environment:
 
+Template: `apps/admin-content/staging-publish.env.example` (contains placeholders only; never commit a real secret).
+
 - `STAGING_SUPABASE_URL`
-- `STAGING_SUPABASE_PUBLISHABLE_KEY`
+- `STAGING_SUPABASE_SECRET_KEY` (server-only; prefer `sb_secret_...`)
 - `STAGING_SUPABASE_PROJECT_REF`
 - `PRODUCTION_SUPABASE_PROJECT_REF` (deny-list only)
 - `STAGING_PUBLIC_SITE_URL`
@@ -187,7 +191,7 @@ The verifier does not reuse local or Production defaults. Configure these values
 `verify:staging-publish` performs:
 
 1. explicit staging-vs-Production Supabase identity validation;
-2. Published Base/Variant snapshot export through RLS using the publishable client key;
+2. Published + Approved Base/Variant snapshot export through a server-only Supabase secret/service-role key;
 3. static Species HTML + sitemap generation with an explicit non-production canonical host;
 4. temporary local HTTP serving of the generated output;
 5. HTTP fetch and assertions for one bilingual self-canonical Index pair plus sitemap membership.
@@ -200,9 +204,9 @@ The generator itself also requires `--site-url`; it no longer defaults to the Pr
 
 ### Staging schema readiness probe
 
-Migration 006 introduced `species_seo_release_gate_status()`; migration 007 upgrades it to `schema_version=7` and adds readiness flags for Editorial Review, Data Review and the safe review-resolution RPC. The probe still exposes only capability booleans, not revision rows or editorial content.
+Migration 006 introduced `species_seo_release_gate_status()`; migration 007 added Editorial Review/Data Review readiness. Migration 008 upgrades the probe to `schema_version=8`, verifies explicit `service_role` Data API grants for the release exporter, and confirms the Data Review resolution RPC is no longer executable by anon/authenticated. The probe still exposes only capability booleans, not revision rows or editorial content.
 
-The staging exporter calls this probe before exporting Published rows. It blocks if the probe is missing, reports a schema version below 7, or any required capability is false. Fresh local verification confirmed that anon publishable access can call the probe while direct `content_revisions` reads remain denied.
+The staging exporter calls this probe before exporting rows. It blocks unless schema v8 is present and only exports rows with `status=published`, `review_state=approved`, non-null `published_at` and non-null `reviewed_at`. The exporter uses a server-only secret/service-role key; publishable/anon keys are refused. Browser clients may still call the data-free readiness probe, but Data Review release inputs are server-only.
 
 For staging generation, `PRODUCTION_PUBLIC_SITE_URL` is also mandatory. Direct staging generator calls must pass `productionSiteUrl` / `--production-site-url`; the staging verifier supplies it automatically from the environment deny-list.
 
@@ -219,7 +223,7 @@ Both environments execute the same command:
 npm run test:supabase-gate -w @aquaguide/admin-content
 ```
 
-The gate pins Node `24.14.0` and Supabase CLI `2.115.0`, loads only core schema + Admin migrations `001–007`, verifies Auth/RLS and rollback behavior, creates one bilingual Published fixture, then generates and checks EN/ZH static Species pages. The temporary database is destroyed after each run.
+The gate pins Node `24.14.0` and Supabase CLI `2.115.0`, loads only core schema + Admin migrations `001–008`, verifies Auth/RLS and rollback behavior, creates one bilingual Published fixture, then generates and checks EN/ZH static Species pages. The temporary database is destroyed after each run.
 
 GitHub CI has repository read-only permission and receives no Production Supabase/Vercel deployment credentials. It does not commit, deploy, migrate Production, or unlock Published automatically.
 

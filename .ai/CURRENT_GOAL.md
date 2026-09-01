@@ -117,3 +117,11 @@ The persistent product model is now:
 - Compatibility CTA semantics are now explicit: `mode=compatibility&species=<id>` preselects that Species as a planned compatibility candidate instead of merely opening the Atlas detail dialog.
 - `scripts/verify-seo-species-handoff.mjs` starts an isolated Vite browser session and asserts `sp_0030` appears in the calculator with planned state and zero page errors.
 - Hosted verification remains required after the next Vercel Preview deploy.
+
+## 2026-09-01 — Hosted Supabase publication boundary v8
+- Hosted publication export is now server-only: `STAGING_SUPABASE_SECRET_KEY` / legacy `service_role` is required; publishable/anon keys are refused.
+- Migration 008 changes public Species SEO visibility to require both `status=published` and `review_state=approved` and removes anon/authenticated access to Data Review release resolutions.
+- Release probe is now schema v8 and includes `server_export_ready`, covering explicit `service_role` Data API grants and RPC access boundaries.
+- `npm run build:staging-from-db` is the direct future path from hosted staging Supabase → approved Published snapshot → AquaGuide root `dist/`.
+- Fresh ephemeral Supabase 001–008 gate passes. The remaining blocker is infrastructure, not code: no dedicated AquaGuide hosted staging branch/project exists yet.
+- Do not reuse the unrelated IceGlide staging project and do not provision a paid AquaGuide branch/project without explicit cost approval.

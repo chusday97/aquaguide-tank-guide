@@ -82,7 +82,7 @@ export async function verifyStagingPublishing(config) {
 async function cli() {
   const result = await verifyStagingPublishing({
     supabaseUrl: process.env.STAGING_SUPABASE_URL,
-    publishableKey: process.env.STAGING_SUPABASE_PUBLISHABLE_KEY,
+    secretKey: process.env.STAGING_SUPABASE_SECRET_KEY,
     expectedProjectRef: process.env.STAGING_SUPABASE_PROJECT_REF,
     productionProjectRef: process.env.PRODUCTION_SUPABASE_PROJECT_REF,
     sourceLabel: process.env.STAGING_SOURCE_LABEL,

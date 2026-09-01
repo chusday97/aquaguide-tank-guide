@@ -12,7 +12,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
 const repoRoot = path.resolve(appRoot, '../..');
 
-const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, liveFrontendPreviewSource, editorToolDrawerSource, stylesSource, appLanguageSource, productTruthLoaderSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
+const [appSource, batchSource, baseSource, reviewSource, readinessSource, workflowOverviewSource, controlledPreviewSource, publicPreviewSource, liveFrontendPreviewSource, editorToolDrawerSource, stylesSource, appLanguageSource, productTruthLoaderSource, historySource, translationSource, translationApiSource, supabaseSource, migrationSource, groupMigrationSource, localeMigrationSource, routeMigrationSource, historyMigrationSource, releaseGateMigrationSource, publishReadinessMigrationSource, serverExportMigrationSource, envExample, reviewEnvExample, catalogRaw, groupsRaw] = await Promise.all([
   readFile(path.join(appRoot, 'src/App.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BatchSeoEditor.jsx'), 'utf8'),
   readFile(path.join(appRoot, 'src/BaseSpeciesSeoEditor.jsx'), 'utf8'),
@@ -37,6 +37,7 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
   readFile(path.join(repoRoot, 'supabase/migrations/202608280005_species_seo_revision_history.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280006_species_seo_release_gate_probe.sql'), 'utf8'),
   readFile(path.join(repoRoot, 'supabase/migrations/202608280007_species_seo_publish_readiness.sql'), 'utf8'),
+  readFile(path.join(repoRoot, 'supabase/migrations/20260901064408_species_seo_server_export_boundary.sql'), 'utf8'),
   readFile(path.join(appRoot, '.env.example'), 'utf8'),
   readFile(path.join(appRoot, '.env.review.example'), 'utf8'),
   readFile(path.join(appRoot, 'src/catalog.generated.json'), 'utf8'),
@@ -274,6 +275,12 @@ assert.match(publishReadinessMigrationSource, /ready_for_review/);
 assert.match(publishReadinessMigrationSource, /species_seo_public_review_resolutions/);
 assert.match(publishReadinessMigrationSource, /new\.review_state := 'editing'/, 'Content changes and rollback must invalidate approval');
 assert.match(publishReadinessMigrationSource, /species_data_reviews_admin_update/);
+assert.match(serverExportMigrationSource, /schema_version', 8/);
+assert.match(serverExportMigrationSource, /server_export_ready/);
+assert.match(serverExportMigrationSource, /grant select on table public\.species_seo to service_role/);
+assert.match(serverExportMigrationSource, /grant select on table public\.species_data_reviews to service_role/);
+assert.match(serverExportMigrationSource, /revoke execute on function public\.species_seo_public_review_resolutions\(\) from anon, authenticated/);
+assert.match(serverExportMigrationSource, /status = 'published' and review_state = 'approved'/, 'Public publication must require both Published and Approved');
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
 assert.ok(neoGroup?.member_count > 2, 'Neocaridina group must remain a real inheritance fixture');

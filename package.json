@@ -124,6 +124,8 @@
     "build:web": "vite build",
     "build:seo-admin": "npm run build -w @aquaguide/admin-content -- --base=/admin/seo/ --outDir=../../dist/admin/seo",
     "build:species-pages": "node scripts/build-species-seo-artifact.mjs",
+    "build:species-pages:staging-db": "node scripts/build-species-seo-from-staging.mjs",
+    "build:staging-from-db": "npm run build:web && npm run build:seo-admin && npm run build:species-pages:staging-db",
     "verify:species-pages-artifact": "node scripts/verify-root-species-seo-artifact.mjs",
     "verify:seo-species-handoff": "node scripts/verify-seo-species-handoff.mjs"
   },

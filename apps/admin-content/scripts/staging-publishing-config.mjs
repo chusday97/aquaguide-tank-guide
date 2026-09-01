@@ -9,8 +9,24 @@ export function extractSupabaseProjectRef(value) {
   return match[1];
 }
 
-export function validateStagingSupabaseConfig({ supabaseUrl, publishableKey, expectedProjectRef, productionProjectRef }) {
-  if (!publishableKey) throw new Error('STAGING_SUPABASE_PUBLISHABLE_KEY is required.');
+function decodeJwtRole(value) {
+  if (!value || !value.includes('.')) return '';
+  try {
+    const payload = value.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const normalized = payload.padEnd(Math.ceil(payload.length / 4) * 4, '=');
+    return JSON.parse(Buffer.from(normalized, 'base64').toString('utf8')).role || '';
+  } catch { return ''; }
+}
+
+export function validateServerSupabaseKey(value) {
+  if (!value) throw new Error('STAGING_SUPABASE_SECRET_KEY is required for server-side publication export.');
+  if (value.startsWith('sb_secret_')) return value;
+  if (decodeJwtRole(value) === 'service_role') return value;
+  throw new Error('Staging publication export requires a Supabase secret key or legacy service_role key; publishable/anon keys are refused.');
+}
+
+export function validateStagingSupabaseConfig({ supabaseUrl, secretKey, expectedProjectRef, productionProjectRef }) {
+  validateServerSupabaseKey(secretKey);
   if (!expectedProjectRef) throw new Error('STAGING_SUPABASE_PROJECT_REF is required.');
   if (!productionProjectRef) throw new Error('PRODUCTION_SUPABASE_PROJECT_REF is required for the production deny-list.');
   const actualProjectRef = extractSupabaseProjectRef(supabaseUrl);

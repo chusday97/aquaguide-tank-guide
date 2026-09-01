@@ -487,3 +487,12 @@ After it is gated, the next product milestone is a small staging publication sli
 - Vercel Preview static HTML validation passed for bilingual index pages, canonical sibling, noindex page and sitemap.
 - Runtime product handoff passed: SEO Species `sp_0030` enters AquaGuide compatibility as a planned candidate with zero page errors.
 - GitHub clean-runner browser dependency is now explicit (`playwright install --with-deps chromium`) after CI #26 exposed the missing executable.
+
+## 2026-09-01 — Hosted publication hardening
+- Added schema v8 server-export boundary for real hosted staging readiness.
+- Public Species SEO now requires `published + approved`; editing invalidates public visibility until re-approved.
+- Staging exporter moved from publishable key + public Data Review RPC to server-only secret/service-role access with sanitized review projection.
+- Added explicit service_role Data API grants for Supabase's 2026 opt-in exposure defaults.
+- Added `build:staging-from-db` to generate the AquaGuide root Species artifact directly from a hosted staging DB.
+- Local contract and fresh ephemeral Supabase migrations 001–008 are green.
+- No Production migration or Production publish was performed.

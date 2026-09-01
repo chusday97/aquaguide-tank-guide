@@ -18,8 +18,8 @@ const GROUP_SELECT = [
 async function verifyReleaseGateSchema(client) {
   const { data, error } = await client.rpc('species_seo_release_gate_status');
   if (error) throw new Error(`Staging schema readiness probe failed: ${error.message}`);
-  const required = ['species_seo_ready', 'group_seo_ready', 'revision_history_ready', 'data_review_ready', 'data_review_resolution_rpc_ready', 'restore_rpc_ready', 'localized_name_ready', 'index_strategy_ready', 'editorial_review_ready'];
-  if (!data || Number(data.schema_version) < 7 || required.some((key) => data[key] !== true)) {
+  const required = ['species_seo_ready', 'group_seo_ready', 'revision_history_ready', 'data_review_ready', 'data_review_resolution_rpc_ready', 'restore_rpc_ready', 'localized_name_ready', 'index_strategy_ready', 'editorial_review_ready', 'server_export_ready'];
+  if (!data || Number(data.schema_version) < 8 || required.some((key) => data[key] !== true)) {
     throw new Error(`Staging Species SEO schema is not release-ready: ${JSON.stringify(data || null)}`);
   }
   return data;
@@ -30,6 +30,9 @@ async function fetchPublishedRows({ client, table, select }) {
     .from(table)
     .select(select)
     .eq('status', 'published')
+    .eq('review_state', 'approved')
+    .not('published_at', 'is', null)
+    .not('reviewed_at', 'is', null)
     .is('deleted_at', null)
     .order('updated_at', { ascending: true });
   if (error) throw new Error(`Staging ${table} export failed: ${error.message}`);
@@ -39,12 +42,14 @@ async function fetchPublishedRows({ client, table, select }) {
 
 export async function exportStagingSpeciesSnapshot(config) {
   const { supabaseUrl, actualProjectRef } = validateStagingSupabaseConfig(config);
-  const client = createClient(supabaseUrl, config.publishableKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const client = createClient(supabaseUrl, config.secretKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const schemaProbe = await verifyReleaseGateSchema(client);
   const [speciesSeo, speciesSeoGroups, resolutionsResult] = await Promise.all([
     fetchPublishedRows({ client, table: 'species_seo', select: VARIANT_SELECT }),
     fetchPublishedRows({ client, table: 'species_seo_groups', select: GROUP_SELECT }),
-    client.rpc('species_seo_public_review_resolutions'),
+    client.from('species_data_reviews')
+      .select('issue_key,issue_type,group_key,decision,canonical_catalog_key')
+      .order('issue_key', { ascending: true }),
   ]);
   if (resolutionsResult.error) throw new Error(`Staging review-resolution export failed: ${resolutionsResult.error.message}`);
   const dataReviewResolutions = Array.isArray(resolutionsResult.data) ? resolutionsResult.data : [];
@@ -67,7 +72,7 @@ async function cli() {
   if (!outPath) throw new Error('Usage: node export-staging-species-snapshot.mjs --out <snapshot.json>');
   const snapshot = await exportStagingSpeciesSnapshot({
     supabaseUrl: process.env.STAGING_SUPABASE_URL,
-    publishableKey: process.env.STAGING_SUPABASE_PUBLISHABLE_KEY,
+    secretKey: process.env.STAGING_SUPABASE_SECRET_KEY,
     expectedProjectRef: process.env.STAGING_SUPABASE_PROJECT_REF,
     productionProjectRef: process.env.PRODUCTION_SUPABASE_PROJECT_REF,
     sourceLabel: process.env.STAGING_SOURCE_LABEL,

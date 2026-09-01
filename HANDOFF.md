@@ -725,3 +725,11 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - The branch Vercel Preview now proves the real deployment artifact: Species HTML is statically returned with correct EN/ZH SEO metadata, canonical/noindex strategies and sitemap membership.
 - SEO compatibility CTA runtime is also proven: `species=sp_0030&source=seo-species` opens compatibility mode with that catalog Species already selected as a planned candidate; browser `pageErrors=[]`.
 - CI #26 was not a product regression: root build/artifact checks passed and the browser-only gate failed because the clean GitHub runner lacked Chromium. The workflow now installs Playwright Chromium explicitly before that gate.
+
+## 2026-09-01 — Hosted Supabase staging handoff
+- The staging publication exporter is now a server-side release component, not a browser client. Use `STAGING_SUPABASE_SECRET_KEY` (preferred `sb_secret_...`) or legacy `service_role`; never use a VITE-prefixed secret.
+- Migration `20260901064408_species_seo_server_export_boundary.sql` is required after Admin migrations 001–007. It enforces Published + Approved public visibility, explicit service-role read grants, and server-only Data Review release resolution access.
+- `species_seo_release_gate_status()` is schema v8 and must report `server_export_ready=true` before export.
+- Root build command for a future hosted staging DB: `npm run build:staging-from-db`.
+- The connected Supabase account currently has AquaGuide Production and an unrelated IceGlide staging project, but no AquaGuide staging branch. Do not point staging variables at either Production or IceGlide.
+- Next real acceptance after infrastructure provisioning: edit one bilingual Species H1 in Admin → Save → Ready for Review → Approved/Published → `build:staging-from-db` → verify hosted HTML source changed.
