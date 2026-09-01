@@ -280,6 +280,48 @@ function restoreRevision(store, revisionId) {
   return clone(next);
 }
 
+function resolveDuplicateReview(store, args = {}) {
+  const issueKey = String(args.p_issue_key || '').trim();
+  const groupKey = String(args.p_group_key || '').trim();
+  const decision = String(args.p_decision || '').trim();
+  const memberIds = [...new Set((args.p_member_ids || []).map(String).filter(Boolean))];
+  const canonicalKey = decision === 'duplicate_records' ? String(args.p_canonical_catalog_key || '').trim() : '';
+  const notes = String(args.p_notes || '').trim();
+  if (!issueKey || !groupKey) throw new Error('Duplicate review issue/group key is required.');
+  if (!['duplicate_records', 'distinct_records'].includes(decision)) throw new Error('Duplicate review decision is invalid.');
+  if (memberIds.length < 2) throw new Error('Duplicate review requires at least two source records.');
+  if (decision === 'duplicate_records' && !memberIds.includes(canonicalKey)) throw new Error('Canonical Species must belong to the reviewed duplicate set.');
+
+  const review = applyUpsert(store, 'species_data_reviews', {
+    issue_key: issueKey,
+    issue_type: 'duplicate_set',
+    group_key: groupKey,
+    decision,
+    canonical_catalog_key: canonicalKey,
+    notes,
+  })[0];
+
+  const seoRows = [];
+  if (decision === 'duplicate_records') {
+    for (const memberId of memberIds) {
+      const values = memberId === canonicalKey
+        ? { index_strategy: 'index', canonical_catalog_key: '' }
+        : { index_strategy: 'canonical_to_sibling', canonical_catalog_key: canonicalKey };
+      seoRows.push(...applyUpdate(store, { table: 'species_seo', values, filters: [{ type: 'eq', column: 'catalog_key', value: memberId }] }));
+    }
+  } else {
+    for (const memberId of memberIds) {
+      seoRows.push(...applyUpdate(store, {
+        table: 'species_seo',
+        values: { index_strategy: 'noindex', canonical_catalog_key: '' },
+        filters: [{ type: 'eq', column: 'catalog_key', value: memberId }],
+      }));
+    }
+  }
+
+  return { review: clone(review), seo_rows: clone(seoRows) };
+}
+
 function finalizeSingle(data, mode) {
   if (!mode) return { data, error: null };
   if (mode === 'maybeSingle') {
@@ -300,15 +342,37 @@ export async function executeRepoOperation(operation) {
       return finalizeSingle(applySelect(current, operation), operation.singleMode);
     }
     if (operation.action === 'rpc') {
-      if (operation.rpc !== 'restore_species_seo_revision') throw new Error(`Unsupported repo RPC: ${operation.rpc}`);
-      let restored = null;
-      await updateDraftJson((raw) => {
-        const store = normalizeStore(raw);
-        restored = restoreRevision(store, operation.args?.p_revision_id);
-        appendActivity(store, { ...operation, activity: operation.activity || { kind: 'revision_restored', title: '历史版本已恢复', detail: restored?.catalog_key || restored?.group_key || '' } }, restored ? [restored] : []);
-        return store;
-      }, 'content(seo): restore revision as draft');
-      return { data: restored, error: null };
+      if (operation.rpc === 'restore_species_seo_revision') {
+        let restored = null;
+        await updateDraftJson((raw) => {
+          const store = normalizeStore(raw);
+          restored = restoreRevision(store, operation.args?.p_revision_id);
+          appendActivity(store, { ...operation, activity: operation.activity || { kind: 'revision_restored', title: '历史版本已恢复', detail: restored?.catalog_key || restored?.group_key || '' } }, restored ? [restored] : []);
+          return store;
+        }, 'content(seo): restore revision as draft');
+        return { data: restored, error: null };
+      }
+      if (operation.rpc === 'resolve_species_duplicate_review') {
+        let resolved = null;
+        await updateDraftJson((raw) => {
+          const store = normalizeStore(raw);
+          resolved = resolveDuplicateReview(store, operation.args || {});
+          const decision = resolved?.review?.decision;
+          appendActivity(store, {
+            ...operation,
+            table: 'species_data_reviews',
+            activity: operation.activity || {
+              kind: 'duplicate_review',
+              title: decision === 'duplicate_records' ? '重复记录已确认并处理' : '已确认两条记录不是重复',
+              detail: resolved?.review?.group_key || '',
+              metadata: { decision, canonical_catalog_key: resolved?.review?.canonical_catalog_key || '' },
+            },
+          }, resolved?.review ? [resolved.review] : []);
+          return store;
+        }, 'content(seo): resolve duplicate review');
+        return { data: resolved, error: null };
+      }
+      throw new Error(`Unsupported repo RPC: ${operation.rpc}`);
     }
     let result = [];
     await updateDraftJson((raw) => {

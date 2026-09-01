@@ -66,6 +66,34 @@ result = await executeRepoOperation({
 assert.equal(result.data.review_state, 'approved');
 assert.ok(result.data.reviewed_at);
 
+const duplicateA = 'sp_test_duplicate_a';
+const duplicateB = 'sp_test_duplicate_b';
+result = await executeRepoOperation({ action: 'upsert', table: 'species_seo', values: [
+  { catalog_key: duplicateA, locale: 'en', localized_name: 'Duplicate A', image_alt: 'Duplicate A', index_strategy: 'noindex', canonical_catalog_key: '', status: 'draft', review_state: 'approved' },
+  { catalog_key: duplicateB, locale: 'en', localized_name: 'Duplicate B', image_alt: 'Duplicate B', index_strategy: 'noindex', canonical_catalog_key: '', status: 'draft', review_state: 'approved' },
+] });
+assert.equal(result.error, null);
+const activityBeforeDuplicate = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data.length;
+result = await executeRepoOperation({ action: 'rpc', rpc: 'resolve_species_duplicate_review', args: {
+  p_issue_key: 'duplicate:test-pair', p_group_key: 'base:test-pair', p_decision: 'duplicate_records',
+  p_canonical_catalog_key: duplicateA, p_member_ids: [duplicateA, duplicateB], p_notes: 'contract fixture',
+} });
+assert.equal(result.error, null);
+assert.equal(result.data.review.decision, 'duplicate_records');
+assert.equal(result.data.seo_rows.find((row) => row.catalog_key === duplicateA).index_strategy, 'index');
+assert.equal(result.data.seo_rows.find((row) => row.catalog_key === duplicateB).index_strategy, 'canonical_to_sibling');
+assert.equal(result.data.seo_rows.find((row) => row.catalog_key === duplicateB).canonical_catalog_key, duplicateA);
+const activityAfterDuplicate = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data;
+assert.equal(activityAfterDuplicate.length, activityBeforeDuplicate + 1, 'One duplicate-review action must create exactly one activity record.');
+assert.equal(activityAfterDuplicate.at(-1).kind, 'duplicate_review');
+
+result = await executeRepoOperation({ action: 'rpc', rpc: 'resolve_species_duplicate_review', args: {
+  p_issue_key: 'duplicate:test-pair', p_group_key: 'base:test-pair', p_decision: 'distinct_records',
+  p_canonical_catalog_key: '', p_member_ids: [duplicateA, duplicateB], p_notes: 'changed decision',
+} });
+assert.equal(result.error, null);
+assert.ok(result.data.seo_rows.every((row) => row.index_strategy === 'noindex' && !row.canonical_catalog_key), 'Changing to distinct records must clear stale canonical policy fail-closed.');
+
 const published = await publishRepoStagingSelection({ catalogKeys: [catalogKey], groupKeys: [groupKey] });
 assert.equal(published.snapshot.delivery_mode, 'staging_release');
 assert.deepEqual(published.snapshot.selected_catalog_keys, [catalogKey]);

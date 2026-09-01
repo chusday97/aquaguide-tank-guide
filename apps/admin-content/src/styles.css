@@ -307,6 +307,7 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .data-review-header h2 { margin: 0 0 4px; font-size: 19px; }
 .data-review-header p:last-child { margin: 0; color: #776e5c; font-size: 11px; }
 .review-count { border-radius: 999px; background: #f3e7c9; padding: 5px 9px; color: #76591b; font-size: 10px; font-weight: 700; }
+.review-count.resolved { background:#e6f3ea; color:#2f6a4e; }
 .review-issue-card { margin-top: 10px; padding: 12px; border: 1px solid #eee2c8; border-radius: 11px; background: #fff; color: #5d584d; font-size: 10px; }
 .review-issue-card p { margin: 7px 0; line-height: 1.55; }
 .review-issue-title { display: flex; justify-content: space-between; gap: 12px; }
@@ -1126,6 +1127,12 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .compact-source-view { position: relative; }
 .compact-source-view .inline-source-action { position: absolute; right: 10px; bottom: 7px; }
 
+.duplicate-evidence-summary { display:grid; gap:8px; margin:12px 0; padding:12px 13px; border:1px solid #dce8df; border-radius:12px; background:#f6faf7; }
+.duplicate-evidence-summary > div { display:grid; grid-template-columns:105px minmax(0,1fr); gap:10px; align-items:start; }
+.duplicate-evidence-summary strong { color:#395347; font-size:10px; }
+.duplicate-evidence-summary span { color:#66766d; font-size:10px; line-height:1.5; }
+.duplicate-evidence-summary p { margin:2px 0 0; padding-top:8px; border-top:1px dashed #d9e4dc; color:#587064; font-size:10px; line-height:1.55; }
+.review-outcome-note { margin:10px 0 12px; padding:9px 11px; border-radius:9px; background:#eef5f0; color:#4f6659; font-size:10px; line-height:1.55; }
 .review-decision-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:12px 0; }
 .review-choice { text-align:left; border:1px solid var(--line, #dfe8e1); border-radius:14px; background:#fff; padding:14px; display:flex; flex-direction:column; gap:4px; cursor:pointer; }
 .review-choice strong { font-size:14px; color:#20362b; }

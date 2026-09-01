@@ -117,9 +117,19 @@ export const repoBackendClient = {
     },
   },
   from(table) { return new RepoQueryBuilder(table); },
-  rpc(name, args = {}) {
+  rpc(name, args = {}, activity = {}) {
+    const operation = { action: 'rpc', rpc: name, args, activity };
     return apiRequest('/api/admin-content/query', {
-      method: 'POST', body: JSON.stringify({ action: 'rpc', rpc: name, args }),
+      method: 'POST', body: JSON.stringify(operation),
+    }).then((result) => {
+      const fallback = name === 'restore_species_seo_revision'
+        ? { kind: 'revision_restored', title: '历史版本已恢复', detail: '' }
+        : name === 'resolve_species_duplicate_review'
+          ? { kind: 'duplicate_review', title: args.p_decision === 'duplicate_records' ? '重复记录已处理' : '已确认不是重复', detail: args.p_group_key || '' }
+          : { kind: 'admin_action', title: '后台操作已完成', detail: name };
+      const description = activity?.title || activity?.detail ? { ...fallback, ...activity } : fallback;
+      dispatchOperationEvent({ ...description, status: result?.error ? 'error' : 'success', error: result?.error?.message || '', at: new Date().toISOString() });
+      return result;
     });
   },
 };

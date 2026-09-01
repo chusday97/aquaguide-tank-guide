@@ -1,7 +1,7 @@
 import { useAppLanguage } from './AppLanguage.jsx';
 import { useEffect, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
-import { categoryIssueKey } from './publishReadiness.js';
+import { categoryIssueKey, summarizeDataReviewIssues } from './publishReadiness.js';
 
 function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned }) {
   const { appLocale, t } = useAppLanguage();
@@ -19,66 +19,81 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
     setMessage('');
   }, [issueKey, row]);
 
+  const duplicateMembers = issueType === 'duplicate_set'
+    ? (set?.member_ids || []).map((id) => group.members?.find((item) => item.catalog_key === id)).filter(Boolean)
+    : [];
+  const sourcePrimary = duplicateMembers.find((member) => !member.duplicate_of_catalog_key && duplicateMembers.some((peer) => peer.duplicate_of_catalog_key === member.catalog_key)) || null;
+  const recommendedCanonicalKey = sourcePrimary?.catalog_key || set?.member_ids?.[0] || '';
+  const matchingFields = issueType === 'duplicate_set'
+    ? [
+      ['name', isUiEnglish ? 'name' : '名称'],
+      ['scientific_name', isUiEnglish ? 'scientific name' : '学名'],
+      ['variant_label', isUiEnglish ? 'variant' : '变体'],
+      ['category', isUiEnglish ? 'category' : '分类'],
+    ].filter(([field]) => { const values = duplicateMembers.map((member) => String(member?.[field] || '')); return values.some(Boolean) && new Set(values).size <= 1; }).map(([, label]) => label)
+    : [];
+
   const save = async () => {
-    if (readOnly) return setMessage('只读 Review 不写数据库。');
-    if (!schemaReady) return setMessage('Data Review schema 尚未应用。');
-    if (!decision) return setMessage('请先选择人工结论。');
-    if (decision === 'duplicate_records' && !canonicalKey) return setMessage('确认重复时必须选择保留的 SEO 主页面。');
+    if (readOnly) return setMessage(isUiEnglish ? 'Read-only Review does not write data.' : '只读 Review 不写数据。');
+    if (!schemaReady) return setMessage(isUiEnglish ? 'Data Review schema is not ready.' : 'Data Review schema 尚未应用。');
+    if (!decision) return setMessage(isUiEnglish ? 'Choose a review conclusion first.' : '请先选择人工结论。');
+    if (decision === 'duplicate_records' && !canonicalKey) return setMessage(isUiEnglish ? 'Choose the SEO page to keep.' : '确认重复时必须选择保留的 SEO 主页面。');
     setSaving(true); setMessage('');
+
+    if (issueType === 'duplicate_set') {
+      const activity = {
+        kind: 'duplicate_review',
+        title: decision === 'duplicate_records' ? '重复记录已确认并处理' : '已确认两条记录不是重复',
+        detail: `${group.base_scientific_name} · ${set?.name || issueKey}`,
+        metadata: { issue_key: issueKey, decision, canonical_catalog_key: decision === 'duplicate_records' ? canonicalKey : '' },
+      };
+      const { data: resolution, error } = await adminContentClient.rpc('resolve_species_duplicate_review', {
+        p_issue_key: issueKey,
+        p_group_key: group.group_key,
+        p_decision: decision,
+        p_canonical_catalog_key: decision === 'duplicate_records' ? canonicalKey : '',
+        p_member_ids: set?.member_ids || [],
+        p_notes: notes.trim(),
+      }, activity);
+      setSaving(false);
+      if (error) return setMessage(error.message || (isUiEnglish ? 'Save failed.' : '保存失败。'));
+      const savedReview = resolution?.review;
+      const alignedRows = resolution?.seo_rows || [];
+      setMessage(decision === 'duplicate_records'
+        ? (isUiEnglish ? 'Resolved in one operation. Canonical/index policy was synchronized automatically.' : '已一次性处理完成，并自动同步 SEO 主页面与 Canonical 策略。')
+        : (isUiEnglish ? 'Conclusion saved. Product Truth was not modified.' : '人工结论已记录；Product Truth 未被修改。'));
+      if (savedReview) onSaved?.(savedReview);
+      if (alignedRows.length) onSeoPolicyAligned?.(alignedRows);
+      if (savedReview) onResolved?.(savedReview);
+      return;
+    }
+
     const payload = {
       issue_key: issueKey, issue_type: issueType, group_key: group.group_key, decision,
-      canonical_catalog_key: decision === 'duplicate_records' ? canonicalKey : '', notes: notes.trim(),
+      canonical_catalog_key: '', notes: notes.trim(),
     };
     const { data, error } = await adminContentClient.from('species_data_reviews')
       .upsert(payload, { onConflict: 'issue_key' })
       .activity({
-        kind: issueType === 'duplicate_set' ? 'duplicate_review' : 'data_review',
-        title: issueType === 'duplicate_set' ? (decision === 'duplicate_records' ? '重复记录已确认并处理' : '已确认两条记录不是重复') : '源数据复核已记录',
-        detail: `${group.base_scientific_name} · ${issueKey}`,
-        metadata: { issue_key: issueKey, decision, canonical_catalog_key: decision === 'duplicate_records' ? canonicalKey : '' },
+        kind: 'data_review', title: '源数据复核已记录', detail: `${group.base_scientific_name} · ${issueKey}`,
+        metadata: { issue_key: issueKey, decision },
       })
       .select('*').single();
-    if (error) {
-      setSaving(false);
-      return setMessage(error.message || '保存失败。');
-    }
-    const alignedRows = [];
-    if (issueType === 'duplicate_set' && decision === 'duplicate_records') {
-      const { data: canonicalRows, error: canonicalError } = await adminContentClient
-        .from('species_seo')
-        .update({ index_strategy: 'index', canonical_catalog_key: '' })
-        .eq('catalog_key', canonicalKey)
-        .select('*');
-      if (canonicalError) {
-        setSaving(false);
-        setMessage(`复核已记录，但 SEO 主页面策略同步失败：${canonicalError.message}`);
-        onSaved?.(data);
-        return;
-      }
-      alignedRows.push(...(canonicalRows || []));
-      for (const duplicateKey of (set?.member_ids || []).filter((id) => id !== canonicalKey)) {
-        const { data: duplicateRows, error: duplicateError } = await adminContentClient
-          .from('species_seo')
-          .update({ index_strategy: 'canonical_to_sibling', canonical_catalog_key: canonicalKey })
-          .eq('catalog_key', duplicateKey)
-          .select('*');
-        if (duplicateError) {
-          setSaving(false);
-          setMessage(`复核已记录，但重复页面策略同步失败：${duplicateError.message}`);
-          onSaved?.(data);
-          return;
-        }
-        alignedRows.push(...(duplicateRows || []));
-      }
-    }
     setSaving(false);
-    setMessage(decision === 'duplicate_records' ? '复核已记录，并已自动同步 SEO 主页面策略。' : '人工结论已记录；Product Truth 未被修改。');
+    if (error) return setMessage(error.message || (isUiEnglish ? 'Save failed.' : '保存失败。'));
+    setMessage(isUiEnglish ? 'Conclusion saved. Product Truth was not modified.' : '人工结论已记录；Product Truth 未被修改。');
     onSaved?.(data);
-    if (alignedRows.length) onSeoPolicyAligned?.(alignedRows);
     onResolved?.(data);
   };
   return (
     <div className="review-decision-box">
+      {issueType === 'duplicate_set' ? (
+        <div className="duplicate-evidence-summary">
+          <div><strong>{isUiEnglish ? 'System comparison' : '系统比对'}</strong><span>{matchingFields.length ? (isUiEnglish ? `${matchingFields.join(', ')} match` : `${matchingFields.join('、')}一致`) : (isUiEnglish ? 'Review source fields manually' : '需要人工核对源字段')}</span></div>
+          {sourcePrimary ? <div><strong>{isUiEnglish ? 'Source lineage' : '源记录关系'}</strong><span>{isUiEnglish ? `${sourcePrimary.catalog_key} is marked as the primary source record; duplicate rows point to it.` : `${sourcePrimary.catalog_key} 是当前源数据主记录；其他重复行已指向它。`}</span></div> : null}
+          <p>{isUiEnglish ? 'Recommendation: if there is no external evidence that these are different variants, confirm the duplicate and keep the primary source record. Product Truth rows are not deleted.' : '建议：如果没有额外业务证据证明它们是不同品种，确认重复并保留源数据主记录。这里只合并 SEO 页面，不删除 Product Truth。'}</p>
+        </div>
+      ) : null}
       <div className="review-decision-options" aria-label={isUiEnglish ? 'Review decision' : '人工结论'}>
         {issueType === 'category_conflict' ? <>
           <button type="button" className={`review-choice ${decision === 'accepted_as_is' ? 'active' : ''}`} onClick={() => setDecision('accepted_as_is')}>
@@ -88,11 +103,11 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
             <strong>{isUiEnglish ? 'Source data needs correction' : '源数据需要修正'}</strong><small>{isUiEnglish ? 'Keep SEO blocked until corrected' : '修正前继续阻止 SEO 发布'}</small>
           </button>
         </> : <>
-          <button type="button" className={`review-choice ${decision === 'duplicate_records' ? 'active' : ''}`} onClick={() => { setDecision('duplicate_records'); if (!canonicalKey && set?.member_ids?.[0]) setCanonicalKey(set.member_ids[0]); }}>
-            <strong>{isUiEnglish ? 'Same species / duplicate record' : '是同一个品种'}</strong><small>{isUiEnglish ? 'Keep one SEO page' : '只保留 1 个 SEO 页面'}</small>
+          <button type="button" className={`review-choice ${decision === 'duplicate_records' ? 'active' : ''}`} onClick={() => { setDecision('duplicate_records'); if (!canonicalKey && recommendedCanonicalKey) setCanonicalKey(recommendedCanonicalKey); }}>
+            <strong>{isUiEnglish ? 'Confirm duplicate' : '确认是重复记录'}</strong><small>{isUiEnglish ? 'Keep one SEO page and canonicalize the rest' : '保留 1 个 SEO 页面，其余自动 Canonical'}</small>
           </button>
           <button type="button" className={`review-choice ${decision === 'distinct_records' ? 'active' : ''}`} onClick={() => { setDecision('distinct_records'); setCanonicalKey(''); }}>
-            <strong>{isUiEnglish ? 'Different records' : '不是重复'}</strong><small>{isUiEnglish ? 'Keep both SEO pages' : '两个页面分别保留'}</small>
+            <strong>{isUiEnglish ? 'Keep as distinct records' : '确认不是重复'}</strong><small>{isUiEnglish ? 'Keep both SEO pages independent' : '两个 SEO 页面分别保留'}</small>
           </button>
         </>}
       </div>
@@ -102,11 +117,19 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
           <div className="canonical-choice-list">
             {(set?.member_ids || []).map((id) => {
               const member = group.members?.find((item) => item.catalog_key === id);
-              return <label className={`canonical-choice ${canonicalKey === id ? 'active' : ''}`} key={id}><input type="radio" name={`canonical-${issueKey}`} value={id} checked={canonicalKey === id} onChange={() => setCanonicalKey(id)} /><span><b>{member?.name || set?.name || id}</b><small>{id}</small></span></label>;
+              const relation = sourcePrimary?.catalog_key === id
+                ? (isUiEnglish ? 'recommended primary' : '推荐保留 · 源数据主记录')
+                : member?.duplicate_of_catalog_key
+                  ? (isUiEnglish ? `duplicate of ${member.duplicate_of_catalog_key}` : `源数据重复于 ${member.duplicate_of_catalog_key}`)
+                  : '';
+              return <label className={`canonical-choice ${canonicalKey === id ? 'active' : ''}`} key={id}><input type="radio" name={`canonical-${issueKey}`} value={id} checked={canonicalKey === id} onChange={() => setCanonicalKey(id)} /><span><b>{member?.name || set?.name || id}</b><small>{id}{relation ? ` · ${relation}` : ''}</small></span></label>;
             })}
           </div>
         </div>
       ) : null}
+      {decision ? <div className="review-outcome-note">{decision === 'duplicate_records'
+        ? (isUiEnglish ? 'After saving: one SEO page remains independent; duplicate rows point to it with Canonical. This is one atomic operation.' : '保存后：只保留一个独立 SEO 页面，其他重复记录自动指向它的 Canonical；整套处理作为一次操作完成。')
+        : (isUiEnglish ? 'After saving: both records remain eligible to become separate SEO pages. Existing Product Truth is unchanged.' : '保存后：两条记录继续作为独立 SEO 页面候选；Product Truth 不做修改。')}</div> : null}
       <label>{isUiEnglish ? 'Review notes' : '审核备注'}
         <textarea rows="2" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder={isUiEnglish ? 'Record the evidence for this decision; Product Truth is not rewritten.' : '记录判断依据；不改写 Product Truth。'} />
       </label>
@@ -125,6 +148,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
   const categoryMembers = group.category_conflict
     ? group.categories.map((category) => ({ category, members: group.members.filter((member) => member.category === category) }))
     : [];
+  const issueSummary = summarizeDataReviewIssues(group, reviewRows);
   return (
     <section className="data-review-panel">
       <div className="data-review-header">
@@ -133,7 +157,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
           <h2>{isUiEnglish ? 'Source data review' : '源数据复核'}</h2>
           <p>{isUiEnglish ? `${group.base_scientific_name} requires a human decision. Review affects SEO eligibility only and never rewrites Product Truth.` : `${group.base_scientific_name} 的问题需要人工结论；结论只影响 SEO 发布资格，不改 Product Truth。`}</p>
         </div>
-        <span className="review-count">{Number(group.category_conflict) + (group.duplicate_sets?.length || 0)} {isUiEnglish ? 'issues' : '项'}</span>
+        <span className={`review-count ${issueSummary.open === 0 ? 'resolved' : ''}`}>{issueSummary.open > 0 ? `${issueSummary.open} ${isUiEnglish ? 'open' : '项待处理'}` : (isUiEnglish ? 'Resolved' : '已处理')}</span>
       </div>
       {group.category_conflict ? (
         <div className="review-issue-card">

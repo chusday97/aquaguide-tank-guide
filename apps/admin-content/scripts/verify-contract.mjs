@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { extractTemplateTokens, validateProtectedTokens } from '../api/_translation-core.js';
 import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
-import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason } from '../src/publishReadiness.js';
+import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason, summarizeDataReviewIssues } from '../src/publishReadiness.js';
 import { EDITOR_ELEMENT_REGISTRY } from '../src/editorElementRegistry.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -90,6 +90,9 @@ assert.match(sidebarSource, /tone-ready/, 'Species workflow filters must visuall
 assert.match(sidebarSource, /Base groups[\s\S]*speciesGroupStats\.base_group_count|基础种[\s\S]*speciesGroupStats\.base_group_count/, 'Species navigation must label the Base-group count explicitly');
 assert.match(sidebarSource, /seoPageCandidateCount[\s\S]*current SEO page candidates/, 'Sidebar header must expose current SEO page candidates separately from source-record count');
 assert.match(sidebarSource, /duplicate_of_catalog_key/, 'Sidebar must collapse source-marked duplicate records instead of presenting them as equal SEO pages');
+assert.match(sidebarSource, /summarizeDataReviewIssues/, 'Sidebar issue badges must reflect unresolved review state rather than permanent source evidence.');
+assert.match(sidebarSource, /duplicateIssueOpen/, 'Resolved duplicate evidence must stop rendering an actionable duplicate badge.');
+assert.match(sidebarSource, /重复记录已合并/, 'Resolved duplicate groups must use completion copy instead of staying visually suspicious.');
 assert.match(sidebarSource, /filtered\.length[\s\S]*Base groups/, 'Active workflow filter banner must expose affected Base-group count');
 assert.match(sidebarSource, /Base Species groups/, 'Species navigation All count must expose its Base-group unit in hover help');
 assert.match(sidebarSource, /pending Data Review issues/, 'Data Review issue count must expose issue units in hover help');
@@ -199,7 +202,9 @@ assert.match(baseSource, /save\('ready_for_review'\)/, 'Base workflow must expos
 assert.match(baseSource, /save\('approved'\)/, 'Base workflow must expose an explicit approve-preview action');
 assert.match(appSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('catalog_key'/, 'Variant review transitions must update review metadata only, not re-upsert content fields');
 assert.match(baseSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('group_key'/, 'Base review transitions must update review metadata only, not re-upsert template fields');
-assert.match(reviewSource, /index_strategy: 'index'[\s\S]*canonical_to_sibling/, 'Duplicate review must align canonical and duplicate SEO index policy automatically');
+assert.match(reviewSource, /系统比对/, 'Duplicate review must expose comparison evidence before asking for a human conclusion.');
+assert.match(reviewSource, /resolve_species_duplicate_review/, 'Duplicate review UI must use one atomic Repo operation.');
+assert.match(repoStoreSource, /resolveDuplicateReview/, 'Repo store must resolve review decision and SEO policy in one private-store write.');
 assert.match(appSource, /审核进度|Review progress/, 'Variant workflow must label the non-interactive status area as review progress');
 assert.match(appSource, /可执行操作|Available actions/, 'Variant workflow must label buttons as available actions');
 assert.match(baseSource, /审核进度|Review progress/, 'Base workflow must label the non-interactive status area as review progress');
@@ -334,6 +339,7 @@ if (duplicateSet) {
   assert.equal(assessDataReview(neoGroup, reviewRows).ready, true, 'Explicit human decisions must resolve data-review blockers');
   assert.equal(getIndexReviewBlockReason({ species: duplicateMember, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows }), '', 'Distinct-record decision must unblock independent Index');
   const canonicalReviewRows = { ...reviewRows, [duplicateSet.duplicate_set_key]: { decision: 'duplicate_records', canonical_catalog_key: duplicateSet.member_ids[0] } };
+  assert.equal(summarizeDataReviewIssues(neoGroup, canonicalReviewRows).open, neoGroup.category_conflict ? 1 : 0, 'Resolved duplicate evidence must leave only genuinely unresolved issues open.');
   const nonCanonical = neoGroup.members.find((member) => duplicateSet.member_ids.includes(member.catalog_key) && member.catalog_key !== duplicateSet.member_ids[0]);
   if (nonCanonical) assert.match(getIndexReviewBlockReason({ species: nonCanonical, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows: canonicalReviewRows }), /不能独立 Index/, 'Confirmed duplicate non-canonical must stay blocked from independent Index');
   const unrelatedMember = neoGroup.members.find((member) => !(neoGroup.duplicate_sets || []).some((set) => set.member_ids.includes(member.catalog_key)));

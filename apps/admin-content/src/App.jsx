@@ -19,7 +19,7 @@ import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
-import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
+import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason, summarizeDataReviewIssues } from './publishReadiness.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -752,6 +752,7 @@ export default function App() {
     ? { ...selectedSpecies, ...selectedProductTruth }
     : selectedSpecies;
   const selectedGroup = selectedSpecies ? speciesGroupByMemberId.get(selectedSpecies.id) : null;
+  const selectedDataReviewSummary = selectedGroup ? summarizeDataReviewIssues(selectedGroup, dataReviewRows) : { total: 0, open: 0 };
   const selectedGroupKey = selectedGroup ? groupSeoRowKey(selectedGroup.group_key, contentLocale) : null;
   const selectedGroupPersisted = selectedGroupKey ? groupSeoRows[selectedGroupKey] : null;
   const selectedGroupRecord = selectedGroupKey
@@ -1158,10 +1159,10 @@ export default function App() {
           )}
 
           <div className="editor-secondary-tools editor-tool-launchers">
-            {(selectedGroup?.category_conflict || selectedGroup?.duplicate_count > 0) ? (
+            {selectedDataReviewSummary.open > 0 ? (
               <button type="button" className={`editor-tool-row issue ${activeTool === 'dataReview' ? 'active' : ''}`} onClick={() => setActiveTool('dataReview')}>
-                <span><strong>{t('editor.sourceReview')}</strong><small>{appLocale === 'en' ? 'Source evidence requires a human decision' : '存在需要人工判断的源数据证据'}</small></span>
-                <em>{Number(selectedGroup.category_conflict) + (selectedGroup.duplicate_sets?.length || 0)}</em>
+                <span><strong>{t('editor.sourceReview')}</strong><small>{appLocale === 'en' ? 'Source evidence still requires a human decision' : '仍有需要人工判断的源数据证据'}</small></span>
+                <em>{selectedDataReviewSummary.open}</em>
               </button>
             ) : null}
             <button type="button" className={`editor-tool-row readiness ${activeTool === 'readiness' ? 'active' : ''}`} onClick={() => setActiveTool('readiness')}>

@@ -13,6 +13,32 @@ export function dataReviewMap(rows = []) {
   return Object.fromEntries((rows || []).map((row) => [row.issue_key, row]));
 }
 
+export function getDataReviewIssueState(issue, reviewRows = {}) {
+  const review = reviewRows[issue?.issue_key];
+  if (!review) return 'pending';
+  if (issue?.issue_type === 'category_conflict') {
+    if (review.decision === 'accepted_as_is') return 'resolved';
+    if (review.decision === 'source_correction_required') return 'source_fix_required';
+    return 'pending';
+  }
+  if (review.decision === 'distinct_records') return 'resolved';
+  if (review.decision === 'duplicate_records' && issue?.member_ids?.includes(review.canonical_catalog_key)) return 'resolved';
+  return 'pending';
+}
+
+export function summarizeDataReviewIssues(group, reviewRows = {}) {
+  const issues = [];
+  if (group?.category_conflict) issues.push({ issue_key: categoryIssueKey(group), issue_type: 'category_conflict', member_ids: group.members?.map((member) => member.catalog_key) || [] });
+  for (const set of group?.duplicate_sets || []) issues.push({ issue_key: set.duplicate_set_key, issue_type: 'duplicate_set', member_ids: set.member_ids || [] });
+  const summary = { total: issues.length, pending: 0, resolved: 0, source_fix_required: 0, open: 0, issues };
+  for (const issue of issues) {
+    const state = getDataReviewIssueState(issue, reviewRows);
+    summary[state] += 1;
+    if (state !== 'resolved') summary.open += 1;
+  }
+  return summary;
+}
+
 export function assessDataReview(group, reviewRows = {}, { catalogKey = null } = {}) {
   const blockers = [];
   const categoryReview = group?.category_conflict ? reviewRows[categoryIssueKey(group)] : null;
@@ -139,15 +165,7 @@ export function buildControlledPreviewSnapshot({ species, group, variantRows = [
 
 
 function issueStatus(issue, reviewRows) {
-  const review = reviewRows[issue.issue_key];
-  if (!review) return 'pending';
-  if (issue.issue_type === 'category_conflict') {
-    return review.decision === 'source_correction_required' ? 'source_fix_required'
-      : review.decision === 'accepted_as_is' ? 'resolved' : 'pending';
-  }
-  if (review.decision === 'distinct_records') return 'resolved';
-  if (review.decision === 'duplicate_records' && issue.member_ids.includes(review.canonical_catalog_key)) return 'resolved';
-  return 'pending';
+  return getDataReviewIssueState(issue, reviewRows);
 }
 
 export function buildAdminWorkflowOverview({ species = [], groups = [], seoRows = {}, groupSeoRows = {}, reviewRows = {} }) {

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { speciesCategories, speciesGroupStats } from './speciesGroups.js';
 import { useAppLanguage } from './AppLanguage.jsx';
+import { getDataReviewIssueState, summarizeDataReviewIssues } from './publishReadiness.js';
 
 function matches(group, needle) {
   if (!needle) return true;
@@ -126,25 +127,36 @@ export default function SpeciesGroupSidebar({
           <section className="species-category-section" key={categoryName}>
             <div className="species-category-label">{categoryName}</div>
             {categoryGroups.map((group) => {
+              const issueSummary = summarizeDataReviewIssues(group, reviewRows);
               const primaryMembers = group.members.filter((item) => isVisibleSeoMember(group, item, reviewRows));
               const hiddenDuplicateCount = group.members.length - primaryMembers.length;
+              const resolvedDuplicateHiddenCount = group.members.filter((member) => {
+                const set = (group.duplicate_sets || []).find((item) => item.member_ids.includes(member.catalog_key));
+                const review = set ? reviewRows[set.duplicate_set_key] : null;
+                return review?.decision === 'duplicate_records' && review.canonical_catalog_key && member.catalog_key !== review.canonical_catalog_key;
+              }).length;
               const visibleMembers = workflowMemberIds ? primaryMembers.filter((item) => workflowMemberIds.has(item.id)) : primaryMembers;
               const firstVisible = visibleMembers[0] || primaryMembers[0] || group.members[0];
               const baseActive = selectedScope === 'base' && group.members.some((item) => item.id === selectedId);
               const containsActiveVariant = selectedScope === 'variant' && group.members.some((item) => item.id === selectedId);
               return (
-                <div className={`species-group ${group.category_conflict ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
+                <div className={`species-group ${issueSummary.open > 0 ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
                   <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={(event) => { if (event.target.closest('.issue-dot')) { onOpenDataReview?.(group.group_key, firstVisible.id); return; } onSelectBase?.(firstVisible.id); }}>
                     <span className="group-copy">
                       <strong>{group.base_scientific_name}</strong>
-                      <small>{primaryMembers.length > 1 ? `${primaryMembers.length} ${t('sidebar.pages')}${hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`) : ''}` : t('sidebar.baseSpecies')}</small>
+                      <small>{primaryMembers.length > 1
+                        ? `${primaryMembers.length} ${t('sidebar.pages')}${hiddenDuplicateCount ? (resolvedDuplicateHiddenCount === hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate merged` : ` · ${hiddenDuplicateCount} 条重复记录已合并`) : (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate candidate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`)) : ''}`
+                        : `${t('sidebar.baseSpecies')}${hiddenDuplicateCount ? (resolvedDuplicateHiddenCount === hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate merged` : ` · ${hiddenDuplicateCount} 条重复记录已合并`) : (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate candidate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`)) : ''}`}</small>
                     </span>
                     <span className="group-badges">
-                      {group.category_conflict || group.duplicate_count > 0 ? <em className="issue-dot" title={t('sidebar.dataIssue')}>!</em> : null}
+                      {issueSummary.open > 0 ? <em className="issue-dot" title={appLocale === 'en' ? `${issueSummary.open} open data-review issue${issueSummary.open === 1 ? '' : 's'}` : `${issueSummary.open} 个待处理数据问题`}>{issueSummary.open}</em> : null}
                     </span>
                   </button>
                   <div className="variant-list">
-                    {visibleMembers.map((item) => (
+                    {visibleMembers.map((item) => {
+                      const duplicateSet = (group.duplicate_sets || []).find((set) => set.member_ids.includes(item.catalog_key));
+                      const duplicateIssueOpen = duplicateSet ? getDataReviewIssueState({ issue_key: duplicateSet.duplicate_set_key, issue_type: 'duplicate_set', member_ids: duplicateSet.member_ids }, reviewRows) !== 'resolved' : false;
+                      return (
                       <div className={`variant-row ${selectedScope === 'variant' && selectedId === item.id ? 'active' : ''}`} key={item.id}>
                         <input type="checkbox" checked={batchIds.includes(item.id)} onChange={() => onToggleBatch(item.id)} aria-label={`批量选择 ${item.name}`} />
                         <button type="button" onClick={(event) => { if (event.target.closest('.variant-issue-mark')) { onOpenDataReview?.(group.group_key, item.id); return; } onSelect(item.id); }}>
@@ -152,10 +164,10 @@ export default function SpeciesGroupSidebar({
                             <strong>{item.name}</strong>
                             <small>{item.variant_label || (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>
                           </span>
-                          {item.duplicate_peer_keys?.length ? <em className="variant-issue-mark actionable" title={appLocale === 'en' ? 'Open duplicate review' : '打开重复记录处理'}>{appLocale === 'en' ? 'Review duplicate' : '处理重复'}</em> : null}
+                          {duplicateIssueOpen ? <em className="variant-issue-mark actionable" title={appLocale === 'en' ? 'Open duplicate review' : '打开重复记录处理'}>{appLocale === 'en' ? 'Review duplicate' : '处理重复'}</em> : null}
                         </button>
                       </div>
-                    ))}
+                    );})}
                   </div>
                 </div>
               );
