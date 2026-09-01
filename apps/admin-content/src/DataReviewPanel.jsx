@@ -71,35 +71,40 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
   };
   return (
     <div className="review-decision-box">
-      <label>{isUiEnglish ? 'Review decision' : '人工结论'}
-        <select value={decision} onChange={(event) => setDecision(event.target.value)}>
-          <option value="">{isUiEnglish ? 'Pending review' : '待复核'}</option>
-          {issueType === 'category_conflict' ? <>
-            <option value="accepted_as_is">{isUiEnglish ? 'Category difference is intentional; continue SEO' : '分类差异为预期，可继续 SEO'}</option>
-            <option value="source_correction_required">{isUiEnglish ? 'Source data requires correction; keep blocked' : '源数据需要修正，继续阻止'}</option>
-          </> : <>
-            <option value="distinct_records">{isUiEnglish ? 'Confirmed distinct records' : '确认是不同记录'}</option>
-            <option value="duplicate_records">{isUiEnglish ? 'Confirmed duplicates; keep one SEO page' : '确认重复，只保留一个 SEO 主页面'}</option>
-          </>}
-        </select>
-      </label>
+      <div className="review-decision-options" aria-label={isUiEnglish ? 'Review decision' : '人工结论'}>
+        {issueType === 'category_conflict' ? <>
+          <button type="button" className={`review-choice ${decision === 'accepted_as_is' ? 'active' : ''}`} onClick={() => setDecision('accepted_as_is')}>
+            <strong>{isUiEnglish ? 'Keep current categories' : '分类没有问题'}</strong><small>{isUiEnglish ? 'Continue SEO with current source categories' : '保持源数据分类，继续 SEO'}</small>
+          </button>
+          <button type="button" className={`review-choice ${decision === 'source_correction_required' ? 'active' : ''}`} onClick={() => setDecision('source_correction_required')}>
+            <strong>{isUiEnglish ? 'Source data needs correction' : '源数据需要修正'}</strong><small>{isUiEnglish ? 'Keep SEO blocked until corrected' : '修正前继续阻止 SEO 发布'}</small>
+          </button>
+        </> : <>
+          <button type="button" className={`review-choice ${decision === 'duplicate_records' ? 'active' : ''}`} onClick={() => { setDecision('duplicate_records'); if (!canonicalKey && set?.member_ids?.[0]) setCanonicalKey(set.member_ids[0]); }}>
+            <strong>{isUiEnglish ? 'Same species / duplicate record' : '是同一个品种'}</strong><small>{isUiEnglish ? 'Keep one SEO page' : '只保留 1 个 SEO 页面'}</small>
+          </button>
+          <button type="button" className={`review-choice ${decision === 'distinct_records' ? 'active' : ''}`} onClick={() => { setDecision('distinct_records'); setCanonicalKey(''); }}>
+            <strong>{isUiEnglish ? 'Different records' : '不是重复'}</strong><small>{isUiEnglish ? 'Keep both SEO pages' : '两个页面分别保留'}</small>
+          </button>
+        </>}
+      </div>
       {decision === 'duplicate_records' ? (
-        <label>{isUiEnglish ? 'SEO page to keep' : '保留为 SEO 主页面'}
-          <select value={canonicalKey} onChange={(event) => setCanonicalKey(event.target.value)}>
-            <option value="">{isUiEnglish ? 'Select' : '请选择'}</option>
+        <div className="canonical-choice-block">
+          <strong>{isUiEnglish ? 'Which page should remain?' : '保留哪个 SEO 页面？'}</strong>
+          <div className="canonical-choice-list">
             {(set?.member_ids || []).map((id) => {
               const member = group.members?.find((item) => item.catalog_key === id);
-              return <option value={id} key={id}>{member?.name || set?.name || id} · {id}</option>;
+              return <label className={`canonical-choice ${canonicalKey === id ? 'active' : ''}`} key={id}><input type="radio" name={`canonical-${issueKey}`} value={id} checked={canonicalKey === id} onChange={() => setCanonicalKey(id)} /><span><b>{member?.name || set?.name || id}</b><small>{id}</small></span></label>;
             })}
-          </select>
-        </label>
+          </div>
+        </div>
       ) : null}
       <label>{isUiEnglish ? 'Review notes' : '审核备注'}
         <textarea rows="2" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder={isUiEnglish ? 'Record the evidence for this decision; Product Truth is not rewritten.' : '记录判断依据；不改写 Product Truth。'} />
       </label>
       <div className="review-decision-footer">
         <span>{row?.reviewed_at ? `已记录 · ${new Date(row.reviewed_at).toLocaleString()}` : '尚未记录人工结论'}{message ? ` · ${message}` : ''}</span>
-        <button type="button" className="secondary-button compact" onClick={save} disabled={saving || readOnly}>{saving ? t('common.saving') : (isUiEnglish ? 'Save review decision' : '保存复核结论')}</button>
+        <button type="button" className="secondary-button compact" onClick={save} disabled={saving || readOnly}>{saving ? t('common.saving') : (isUiEnglish ? 'Confirm & save' : '确认并保存')}</button>
       </div>
     </div>
   );

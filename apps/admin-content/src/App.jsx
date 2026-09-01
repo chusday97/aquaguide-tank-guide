@@ -1040,6 +1040,13 @@ export default function App() {
           locale={contentLocale}
           onWorkflowFilter={applyWorkflowFilter}
           reviewRows={dataReviewRows}
+          onOpenDataReview={(_groupKey, memberId) => {
+            runEditorNavigation(() => {
+              if (memberId) setSelectedId(memberId);
+              setEditorScope('variant');
+              requestAnimationFrame(() => setActiveTool('dataReview'));
+            });
+          }}
         />
 
         <main className="editor-area studio-editor-area">

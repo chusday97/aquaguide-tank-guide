@@ -48,6 +48,7 @@ export default function SpeciesGroupSidebar({
   locale = 'zh-CN',
   onWorkflowFilter,
   reviewRows = {},
+  onOpenDataReview,
 }) {
   const { appLocale, t } = useAppLanguage();
   const filtered = useMemo(() => {
@@ -133,7 +134,7 @@ export default function SpeciesGroupSidebar({
               const containsActiveVariant = selectedScope === 'variant' && group.members.some((item) => item.id === selectedId);
               return (
                 <div className={`species-group ${group.category_conflict ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
-                  <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={() => onSelectBase?.(firstVisible.id)}>
+                  <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={(event) => { if (event.target.closest('.issue-dot')) { onOpenDataReview?.(group.group_key, firstVisible.id); return; } onSelectBase?.(firstVisible.id); }}>
                     <span className="group-copy">
                       <strong>{group.base_scientific_name}</strong>
                       <small>{primaryMembers.length > 1 ? `${primaryMembers.length} ${t('sidebar.pages')}${hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`) : ''}` : t('sidebar.baseSpecies')}</small>
@@ -146,12 +147,12 @@ export default function SpeciesGroupSidebar({
                     {visibleMembers.map((item) => (
                       <div className={`variant-row ${selectedScope === 'variant' && selectedId === item.id ? 'active' : ''}`} key={item.id}>
                         <input type="checkbox" checked={batchIds.includes(item.id)} onChange={() => onToggleBatch(item.id)} aria-label={`批量选择 ${item.name}`} />
-                        <button type="button" onClick={() => onSelect(item.id)}>
+                        <button type="button" onClick={(event) => { if (event.target.closest('.variant-issue-mark')) { onOpenDataReview?.(group.group_key, item.id); return; } onSelect(item.id); }}>
                           <span>
                             <strong>{item.name}</strong>
                             <small>{item.variant_label || (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>
                           </span>
-                          {item.duplicate_peer_keys?.length ? <em className="variant-issue-mark" title={appLocale === 'en' ? 'Possible duplicate record; review before indexing' : '存在疑似重复记录，确认前不会独立收录'}>{appLocale === 'en' ? 'Dup' : '重复'}</em> : null}
+                          {item.duplicate_peer_keys?.length ? <em className="variant-issue-mark actionable" title={appLocale === 'en' ? 'Open duplicate review' : '打开重复记录处理'}>{appLocale === 'en' ? 'Review duplicate' : '处理重复'}</em> : null}
                         </button>
                       </div>
                     ))}
