@@ -1,5 +1,5 @@
 import { requireRepoAdmin, requireSameOriginMutation } from '../../server/admin-repo/auth.mjs';
-import { publishRepoStagingSelection } from '../../server/admin-repo/store.mjs';
+import { appendRepoActivity, publishRepoStagingSelection } from '../../server/admin-repo/store.mjs';
 
 export const config = { maxDuration: 20 };
 
@@ -19,6 +19,16 @@ export default async function handler(req, res) {
   try {
     const payload = body(req);
     const result = await publishRepoStagingSelection({ catalogKeys: payload.catalogKeys, groupKeys: payload.groupKeys });
+    try {
+      await appendRepoActivity({
+        kind: 'staging_publish',
+        title: 'Staging 发布已完成',
+        detail: `${result.snapshot.selected_catalog_keys.length} 个 Species`,
+        metadata: { selected_catalog_keys: result.snapshot.selected_catalog_keys, branch: result.write.branch },
+      });
+    } catch {
+      // Publishing already succeeded. Activity logging must never turn a successful release into a retryable failure.
+    }
     return res.status(200).json({
       data: {
         commit_sha: result.write.commitSha,

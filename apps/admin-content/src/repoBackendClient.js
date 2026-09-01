@@ -1,3 +1,34 @@
+
+function dispatchOperationEvent(detail) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('aquaguide-admin-operation', { detail }));
+}
+
+function describeOperation(operation, result) {
+  const explicit = operation.activity || {};
+  const values = Array.isArray(operation.values) ? operation.values : [operation.values || {}];
+  const first = result?.data && Array.isArray(result.data) ? result.data[0] : result?.data;
+  if (explicit.title || explicit.detail) return { title: explicit.title || '后台操作已完成', detail: explicit.detail || '', kind: explicit.kind || 'admin_action' };
+  if (operation.table === 'species_data_reviews') {
+    const decision = values[0]?.decision;
+    return {
+      title: decision === 'duplicate_records' ? '重复记录已处理' : decision === 'distinct_records' ? '已确认不是重复' : '数据复核已保存',
+      detail: first?.group_key || values[0]?.group_key || '',
+      kind: 'data_review',
+    };
+  }
+  if (operation.table === 'species_seo' || operation.table === 'species_seo_groups') {
+    const label = operation.table === 'species_seo_groups' ? '基础模板' : 'SEO 页面';
+    const state = operation.action === 'update' ? values[0]?.review_state : null;
+    return {
+      title: state === 'approved' ? `${label}已批准预览` : state === 'ready_for_review' ? `${label}已提交审核` : state === 'editing' ? `${label}已退回编辑` : `${label}已保存`,
+      detail: first?.catalog_key || first?.group_key || values[0]?.catalog_key || values[0]?.group_key || '',
+      kind: state ? 'review_state' : 'content_saved',
+    };
+  }
+  return { title: '后台操作已完成', detail: operation.table || '', kind: 'admin_action' };
+}
+
 async function apiRequest(path, options = {}) {
   try {
     const response = await fetch(path, {
@@ -29,6 +60,7 @@ class RepoQueryBuilder {
   in(column, values) { this.operation.filters.push({ type: 'in', column, values }); return this; }
   order(column, options = {}) { this.operation.order = { column, ascending: options.ascending !== false }; return this; }
   limit(value) { this.operation.limit = Number(value); return this; }
+  activity(meta = {}) { this.operation.activity = meta; return this; }
   single() { this.operation.singleMode = 'single'; return this; }
   maybeSingle() { this.operation.singleMode = 'maybeSingle'; return this; }
 
@@ -37,6 +69,12 @@ class RepoQueryBuilder {
       this.executed = apiRequest('/api/admin-content/query', {
         method: 'POST',
         body: JSON.stringify(this.operation),
+      }).then((result) => {
+        if (this.operation.action !== 'select') {
+          const description = describeOperation(this.operation, result);
+          dispatchOperationEvent({ ...description, status: result?.error ? 'error' : 'success', error: result?.error?.message || '', at: new Date().toISOString() });
+        }
+        return result;
       });
     }
     return this.executed;
@@ -87,9 +125,18 @@ export const repoBackendClient = {
 };
 
 export async function publishRepoStaging({ catalogKeys, groupKeys }) {
-  return apiRequest('/api/admin-content/publish-staging', {
+  const result = await apiRequest('/api/admin-content/publish-staging', {
     method: 'POST', body: JSON.stringify({ catalogKeys, groupKeys }),
   });
+  dispatchOperationEvent({
+    kind: 'staging_publish',
+    title: result?.error ? 'Staging 发布失败' : 'Staging 发布已完成',
+    detail: result?.error?.message || `${result?.data?.selected_catalog_keys?.length || 0} 个 Species`,
+    status: result?.error ? 'error' : 'success',
+    error: result?.error?.message || '',
+    at: new Date().toISOString(),
+  });
+  return result;
 }
 
 export async function getRepoBackendHealth() {

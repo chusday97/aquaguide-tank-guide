@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { adminContentClient, getRepoBackendHealth, isAdminBackendConfigured, isRepoBackend, publishRepoStaging } from './adminBackend.js';
 import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
 import BatchSeoEditor from './BatchSeoEditor.jsx';
+import BulkImportPanel from './BulkImportPanel.jsx';
+import ActivityCenter from './ActivityCenter.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
 import TranslationPanel from './TranslationPanel.jsx';
 import DataReviewPanel from './DataReviewPanel.jsx';
@@ -17,7 +19,7 @@ import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
-import { assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
+import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -570,6 +572,10 @@ export default function App() {
   const [editorDirty, setEditorDirty] = useState(false);
   const [stagingPublishing, setStagingPublishing] = useState(false);
   const [stagingPublishMessage, setStagingPublishMessage] = useState('');
+  const [activityOpen, setActivityOpen] = useState(false);
+  const [activityRefreshKey, setActivityRefreshKey] = useState(0);
+  const [activityUnread, setActivityUnread] = useState(0);
+  const [operationNotices, setOperationNotices] = useState([]);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
   useEffect(() => {
@@ -577,6 +583,19 @@ export default function App() {
     setActiveTool(null);
     setCompactPreviewOpen(false);
   }, [selectedId, contentLocale]);
+
+  useEffect(() => {
+    const onOperation = (event) => {
+      const detail = event.detail || {};
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      setOperationNotices((current) => [...current.slice(-2), { id, ...detail }]);
+      setActivityRefreshKey((current) => current + 1);
+      if (detail.status === 'success' && !activityOpen) setActivityUnread((current) => current + 1);
+      window.setTimeout(() => setOperationNotices((current) => current.filter((item) => item.id !== id)), 5200);
+    };
+    window.addEventListener('aquaguide-admin-operation', onOperation);
+    return () => window.removeEventListener('aquaguide-admin-operation', onOperation);
+  }, [activityOpen]);
 
   useEffect(() => {
     if (!editorDirty || isReviewMode) return undefined;
@@ -694,6 +713,18 @@ export default function App() {
 
     loadAdminData();
   }, [session]);
+
+  useEffect(() => {
+    if (!session || role !== 'admin' || isReviewMode) return undefined;
+    let cancelled = false;
+    const lastSeen = typeof window !== 'undefined' ? window.localStorage.getItem('aquaguide-admin-activity-seen-at') : null;
+    adminContentClient.from('admin_activity_log').select('id,created_at').order('created_at', { ascending: false }).limit(100).then(({ data, error: activityError }) => {
+      if (cancelled || activityError) return;
+      const unread = lastSeen ? (data || []).filter((row) => new Date(row.created_at) > new Date(lastSeen)).length : 0;
+      setActivityUnread(unread);
+    });
+    return () => { cancelled = true; };
+  }, [session, role]);
 
   const selectedSpecies = species.find((item) => item.id === selectedId) || null;
   useEffect(() => {
@@ -894,6 +925,10 @@ export default function App() {
       title: t('editor.batchSeo'),
       subtitle: appLocale === 'en' ? 'Create inherited Draft shells without copying Base content.' : '建立继承 Draft，不复制 Base 文案。',
     },
+    bulkImport: {
+      title: appLocale === 'en' ? 'Bulk import' : '批量导入',
+      subtitle: appLocale === 'en' ? 'Download the AquaGuide CSV template, fill it, validate it, then import Draft changes.' : '下载 AquaGuide CSV 模板，回填、校验后批量导入 Draft。',
+    },
     history: {
       title: t('editor.history'),
       subtitle: appLocale === 'en' ? 'Versioned Base and Variant revision history.' : '带版本记录的 Base / Variant 历史。',
@@ -994,6 +1029,16 @@ export default function App() {
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
           <span>{isReviewMode ? t('top.reviewMode') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
+          <button type="button" className={`topbar-bulk-trigger ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
+            {appLocale === 'en' ? 'Bulk import' : '批量导入'}
+          </button>
+          <button type="button" className={`activity-trigger ${activityOpen ? 'active' : ''}`} onClick={() => {
+            setActivityOpen(true);
+            setActivityUnread(0);
+            window.localStorage.setItem('aquaguide-admin-activity-seen-at', new Date().toISOString());
+          }} aria-label={appLocale === 'en' ? 'Open activity center' : '打开操作中心'}>
+            <span>{appLocale === 'en' ? 'Activity' : '操作记录'}</span>{activityUnread > 0 ? <b>{Math.min(activityUnread, 99)}</b> : null}
+          </button>
           <InterfaceLanguageSwitch />
           <button className="ghost-button" type="button" onClick={signOut}>{t('top.signOut')}</button>
         </div>
@@ -1133,6 +1178,9 @@ export default function App() {
                 <span><strong>{t('editor.batchSeo')}</strong><small>{batchMembers.length} {appLocale === 'en' ? 'selected records' : '条已选择记录'}</small></span><b>›</b>
               </button>
             ) : null}
+            <button type="button" className={`editor-tool-row ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
+              <span><strong>{appLocale === 'en' ? 'Bulk import' : '批量导入'}</strong><small>{appLocale === 'en' ? 'Download template → fill → upload' : '下载模板 → 回填 → 上传校验'}</small></span><b>›</b>
+            </button>
             <button type="button" className={`editor-tool-row ${activeTool === 'history' ? 'active' : ''}`} onClick={() => setActiveTool('history')}>
               <span><strong>{t('editor.history')}</strong><small>Base / Variant revision</small></span><b>›</b>
             </button>
@@ -1148,6 +1196,12 @@ export default function App() {
             {activeTool === 'dataReview' ? (
               <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
                 onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))}
+                onResolved={(row) => {
+                  const nextRows = { ...dataReviewRows, [row.issue_key]: row };
+                  if (selectedGroup && assessDataReview(selectedGroup, nextRows).ready) {
+                    setActiveTool(null);
+                  }
+                }}
                 onSeoPolicyAligned={(rows) => {
                   setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
                   setRevisionRefreshKey((current) => current + 1);
@@ -1194,6 +1248,19 @@ export default function App() {
                 }}
               />
             ) : null}
+            {activeTool === 'bulkImport' ? (
+              <BulkImportPanel
+                species={species}
+                seoRows={seoRows}
+                locale={contentLocale}
+                schemaReady={schemaReady}
+                readOnly={isReviewMode}
+                onImported={(rows) => {
+                  setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
+                  setRevisionRefreshKey((current) => current + 1);
+                }}
+              />
+            ) : null}
             {activeTool === 'history' ? (
               <div className="revision-grid drawer-revision-grid">
                 <RevisionHistoryPanel
@@ -1235,6 +1302,24 @@ export default function App() {
           onCloseCompact={() => setCompactPreviewOpen(false)}
         />
       </div>
+      <div className="operation-notice-stack" aria-live="polite">
+        {operationNotices.map((notice) => (
+          <div className={`operation-notice ${notice.status || 'success'}`} key={notice.id}>
+            <span>{notice.status === 'error' ? '!' : '✓'}</span>
+            <div><strong>{notice.title || (notice.status === 'error' ? '操作失败' : '操作已完成')}</strong><small>{notice.error || notice.detail || ''}</small></div>
+          </div>
+        ))}
+      </div>
+      <ActivityCenter
+        open={activityOpen}
+        refreshKey={activityRefreshKey}
+        onClose={() => setActivityOpen(false)}
+        readOnly={isReviewMode}
+        onLoaded={() => {
+          setActivityUnread(0);
+          window.localStorage.setItem('aquaguide-admin-activity-seen-at', new Date().toISOString());
+        }}
+      />
     </div>
   );
 }

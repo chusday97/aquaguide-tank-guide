@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { categoryIssueKey } from './publishReadiness.js';
 
-function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved, onSeoPolicyAligned }) {
+function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [decision, setDecision] = useState(row?.decision || '');
@@ -30,7 +30,14 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
       canonical_catalog_key: decision === 'duplicate_records' ? canonicalKey : '', notes: notes.trim(),
     };
     const { data, error } = await adminContentClient.from('species_data_reviews')
-      .upsert(payload, { onConflict: 'issue_key' }).select('*').single();
+      .upsert(payload, { onConflict: 'issue_key' })
+      .activity({
+        kind: issueType === 'duplicate_set' ? 'duplicate_review' : 'data_review',
+        title: issueType === 'duplicate_set' ? (decision === 'duplicate_records' ? '重复记录已确认并处理' : '已确认两条记录不是重复') : '源数据复核已记录',
+        detail: `${group.base_scientific_name} · ${issueKey}`,
+        metadata: { issue_key: issueKey, decision, canonical_catalog_key: decision === 'duplicate_records' ? canonicalKey : '' },
+      })
+      .select('*').single();
     if (error) {
       setSaving(false);
       return setMessage(error.message || '保存失败。');
@@ -68,6 +75,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
     setMessage(decision === 'duplicate_records' ? '复核已记录，并已自动同步 SEO 主页面策略。' : '人工结论已记录；Product Truth 未被修改。');
     onSaved?.(data);
     if (alignedRows.length) onSeoPolicyAligned?.(alignedRows);
+    onResolved?.(data);
   };
   return (
     <div className="review-decision-box">
@@ -110,7 +118,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
   );
 }
 
-export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = false, readOnly = false, onSaved, onSeoPolicyAligned }) {
+export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = false, readOnly = false, onSaved, onResolved, onSeoPolicyAligned }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   if (!group || (!group.category_conflict && !group.duplicate_count)) return null;
@@ -135,7 +143,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
             {categoryMembers.map((item) => <div key={item.category}><b>{item.category}</b>{item.members.map((member) => <small key={member.catalog_key}>{member.name} · {member.catalog_key}</small>)}</div>)}
           </div>
           <ReviewDecision issueKey={categoryIssueKey(group)} issueType="category_conflict" group={group}
-            row={reviewRows[categoryIssueKey(group)]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onSeoPolicyAligned={onSeoPolicyAligned} />
+            row={reviewRows[categoryIssueKey(group)]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} />
         </div>
       ) : null}
       {group.duplicate_sets?.map((set) => (
@@ -144,7 +152,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
           <p><b>{set.name}</b> · <i>{set.scientific_name}</i></p>
           <div className="duplicate-key-list">{set.member_ids.map((id) => { const member = group.members?.find((item) => item.catalog_key === id); return <code key={id}>{member?.name || set.name} · {id}</code>; })}</div>
           <ReviewDecision issueKey={set.duplicate_set_key} issueType="duplicate_set" group={group} set={set}
-            row={reviewRows[set.duplicate_set_key]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onSeoPolicyAligned={onSeoPolicyAligned} />
+            row={reviewRows[set.duplicate_set_key]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} />
         </div>
       ))}
     </section>

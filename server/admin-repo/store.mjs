@@ -2,15 +2,16 @@ import crypto from 'node:crypto';
 import { readDraftJsonWithFallback, updateDraftJson, writeStagingSnapshot } from './github.mjs';
 
 export const EMPTY_ADMIN_STORE = {
-  schema_version: 1,
+  schema_version: 2,
   updated_at: null,
   species_seo: [],
   species_seo_groups: [],
   species_data_reviews: [],
   content_revisions: [],
+  admin_activity_log: [],
 };
 
-const TABLES = new Set(['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions', 'user_roles']);
+const TABLES = new Set(['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions', 'admin_activity_log', 'user_roles']);
 const RESOURCE_CONFIG = {
   species_seo: {
     keys: ['catalog_key', 'locale'],
@@ -25,15 +26,17 @@ const RESOURCE_CONFIG = {
     contentFields: ['seo_title_template', 'meta_description_template', 'h1_template', 'shared_intro'],
   },
   species_data_reviews: { keys: ['issue_key'] },
+  admin_activity_log: { keys: ['id'] },
 };
 
 function now() { return new Date().toISOString(); }
 function clone(value) { return value == null ? value : structuredClone(value); }
 function normalizeStore(store) {
   const next = { ...EMPTY_ADMIN_STORE, ...(store || {}) };
-  for (const key of ['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions']) {
+  for (const key of ['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions', 'admin_activity_log']) {
     if (!Array.isArray(next[key])) next[key] = [];
   }
+  next.schema_version = Math.max(2, Number(next.schema_version) || 0);
   return next;
 }
 
@@ -57,6 +60,83 @@ function revisionFor(row, cfg, operation, sourceRevisionId = null) {
     source_revision_id: sourceRevisionId,
     created_at: now(),
   };
+}
+
+
+function activityDescriptor(operation, rows = []) {
+  const first = rows[0] || {};
+  const values = Array.isArray(operation.values) ? operation.values : [operation.values || {}];
+  const firstValue = values[0] || {};
+  const explicit = operation.activity || {};
+  if (explicit.kind || explicit.title || explicit.detail) {
+    return {
+      kind: explicit.kind || 'admin_action',
+      title: explicit.title || '后台操作已完成',
+      detail: explicit.detail || '',
+      metadata: explicit.metadata || {},
+    };
+  }
+  if (operation.table === 'species_data_reviews') {
+    const decision = firstValue.decision || first.decision || '';
+    return {
+      kind: decision === 'duplicate_records' || decision === 'distinct_records' ? 'duplicate_review' : 'data_review',
+      title: decision === 'duplicate_records' ? '重复记录已处理' : decision === 'distinct_records' ? '已确认不是重复' : '数据复核已记录',
+      detail: first.group_key || firstValue.group_key || '',
+      metadata: { decision, canonical_catalog_key: first.canonical_catalog_key || firstValue.canonical_catalog_key || '' },
+    };
+  }
+  if (operation.table === 'species_seo' || operation.table === 'species_seo_groups') {
+    const reviewStateOnly = operation.action === 'update' && Object.keys(firstValue).every((key) => key === 'review_state');
+    const resourceLabel = operation.table === 'species_seo_groups' ? '基础模板' : 'SEO 页面';
+    if (reviewStateOnly) {
+      const state = firstValue.review_state;
+      return {
+        kind: state === 'approved' ? 'review_approved' : state === 'ready_for_review' ? 'review_submitted' : 'review_returned',
+        title: state === 'approved' ? `${resourceLabel}已批准预览` : state === 'ready_for_review' ? `${resourceLabel}已提交审核` : `${resourceLabel}已退回编辑`,
+        detail: first.catalog_key || first.group_key || '',
+        metadata: { review_state: state },
+      };
+    }
+    if (values.length > 1 && values.every((item) => Object.keys(item).every((key) => ['catalog_key', 'locale', 'status'].includes(key)))) {
+      return { kind: 'batch_drafts_created', title: `已批量建立 ${values.length} 条 Draft`, detail: first.locale || firstValue.locale || '', metadata: {} };
+    }
+    return {
+      kind: 'content_saved',
+      title: `${resourceLabel}已保存`,
+      detail: first.catalog_key || first.group_key || '',
+      metadata: { locale: first.locale || firstValue.locale || '' },
+    };
+  }
+  return { kind: 'admin_action', title: '后台操作已完成', detail: operation.table || '', metadata: {} };
+}
+
+function appendActivity(store, operation, rows = []) {
+  const descriptor = activityDescriptor(operation, rows);
+  const first = rows[0] || {};
+  store.admin_activity_log.push({
+    id: crypto.randomUUID(),
+    status: 'success',
+    kind: descriptor.kind,
+    title: descriptor.title,
+    detail: descriptor.detail,
+    resource_type: operation.table || operation.rpc || 'admin',
+    resource_key: first.catalog_key || first.group_key || first.issue_key || '',
+    locale: first.locale || '',
+    affected_count: rows.length || (Array.isArray(operation.values) ? operation.values.length : 1),
+    metadata: descriptor.metadata,
+    actor: 'repo-admin',
+    created_at: now(),
+  });
+  store.admin_activity_log = store.admin_activity_log.slice(-1000);
+}
+
+export async function appendRepoActivity(activity) {
+  await updateDraftJson((raw) => {
+    const store = normalizeStore(raw);
+    appendActivity(store, { table: 'staging_publish', activity }, []);
+    store.updated_at = now();
+    return store;
+  }, 'content(seo): record admin activity');
 }
 
 function applyEditorialMetadata(previous, payload, cfg) {
@@ -167,6 +247,13 @@ function applyUpdate(store, operation) {
 }
 
 function applyInsert(store, operation) {
+  if (operation.table === 'admin_activity_log') {
+    const rows = (Array.isArray(operation.values) ? operation.values : [operation.values]).map((row) => ({ id: row.id || crypto.randomUUID(), created_at: row.created_at || now(), ...row }));
+    store.admin_activity_log.push(...rows);
+    store.admin_activity_log = store.admin_activity_log.slice(-1000);
+    store.updated_at = now();
+    return clone(rows);
+  }
   return applyUpsert(store, operation.table, operation.values);
 }
 
@@ -218,6 +305,7 @@ export async function executeRepoOperation(operation) {
       await updateDraftJson((raw) => {
         const store = normalizeStore(raw);
         restored = restoreRevision(store, operation.args?.p_revision_id);
+        appendActivity(store, { ...operation, activity: operation.activity || { kind: 'revision_restored', title: '历史版本已恢复', detail: restored?.catalog_key || restored?.group_key || '' } }, restored ? [restored] : []);
         return store;
       }, 'content(seo): restore revision as draft');
       return { data: restored, error: null };
@@ -229,6 +317,7 @@ export async function executeRepoOperation(operation) {
       else if (operation.action === 'insert') result = applyInsert(store, operation);
       else if (operation.action === 'update') result = applyUpdate(store, operation);
       else throw new Error(`Unsupported repo action: ${operation.action}`);
+      if (operation.table !== 'admin_activity_log') appendActivity(store, operation, result);
       return store;
     }, operation.commitMessage || `content(seo): ${operation.action} ${operation.table}`);
     return finalizeSingle(result, operation.singleMode);

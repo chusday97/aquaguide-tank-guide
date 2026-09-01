@@ -15,7 +15,7 @@ process.env.ADMIN_REPO_PASSWORD = 'Repo-Test-Only-42!';
 process.env.ADMIN_REPO_SESSION_SECRET = 'repo-test-session-secret-0123456789abcdef';
 
 await writeFile(storePath, `${JSON.stringify({
-  schema_version: 1, updated_at: null, species_seo: [], species_seo_groups: [], species_data_reviews: [], content_revisions: [],
+  schema_version: 1, updated_at: null, species_seo: [], species_seo_groups: [], species_data_reviews: [], content_revisions: [], admin_activity_log: [],
 }, null, 2)}\n`, 'utf8');
 
 const { authenticateCredentials, createSessionToken, readSessionToken } = await import('../../../server/admin-repo/auth.mjs');
@@ -96,7 +96,10 @@ const productionStyle = await generatePublicSpecies({
 assert.equal(productionStyle.manifest.generated_pages, 0, 'Approved Draft must remain invisible to Production-style release mode.');
 
 const persisted = JSON.parse(await readFile(storePath, 'utf8'));
+assert.equal(persisted.schema_version, 2, 'Repo store must migrate activity logging to schema v2 on the next write.');
 assert.ok(persisted.content_revisions.length >= 6, 'Repo store must retain revision snapshots.');
+assert.ok(persisted.admin_activity_log.length >= 5, 'Repo store must retain admin operation history without a second logging write.');
+assert.ok(persisted.admin_activity_log.some((row) => row.kind === 'review_approved'), 'Review actions must be represented in the operation log.');
 assert.ok(persisted.species_seo.every((row) => row.status === 'draft'));
 console.log(JSON.stringify({ gate: 'PASS', backend: 'github-repo', supabase_started: false, staging_pages: generated.manifest.generated_pages, revisions: persisted.content_revisions.length }));
 await rm(root, { recursive: true, force: true });

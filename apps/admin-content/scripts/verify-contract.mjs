@@ -51,6 +51,8 @@ const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSourc
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
+const bulkImportSource = await readFile(path.join(appRoot, 'src/BulkImportPanel.jsx'), 'utf8');
+const activityCenterSource = await readFile(path.join(appRoot, 'src/ActivityCenter.jsx'), 'utf8');
 
 const catalog = JSON.parse(catalogRaw);
 const groupData = JSON.parse(groupsRaw);
@@ -98,6 +100,23 @@ assert.match(sidebarSource, /appLocale === 'en' \? 'Preview-ready' : '可预览'
 assert.doesNotMatch(appSource, /label: 'Data Review · 待处理'/, 'Top workflow actions must not store mixed-language Data Review labels');
 assert.match(stylesSource, /species-group\.contains-active \.variant-list[\s\S]*var\(--selection-border\)/, 'Active Variant parent tree guide must use the shared selection token');
 assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
+assert.match(appSource, /BulkImportPanel/, 'Admin must expose template-backed bulk import');
+assert.match(appSource, /ActivityCenter/, 'Admin must expose a persistent operation-history surface');
+assert.match(bulkImportSource, /import_action/, 'Bulk template must require an explicit per-row import marker');
+assert.match(bulkImportSource, /VALID_ACTIONS/, 'Bulk import must ignore unmarked template rows');
+assert.match(bulkImportSource, /source_name[\s\S]*scientific_name/, 'Bulk template must expose Product Truth identity as reference columns');
+assert.match(bulkImportSource, /status:\s*'draft'[\s\S]*review_state:\s*'editing'/, 'Bulk import must fail closed to Draft + Editing');
+assert.match(bulkImportSource, /buildSpeciesSeoRouteMeta/, 'Bulk import must rebuild route/canonical metadata using the shared route contract');
+assert.match(bulkImportSource, /canonical_to_sibling/, 'Bulk import must validate canonical-to-sibling policy');
+assert.match(bulkImportSource, /kind:\s*'bulk_import'/, 'Bulk imports must record a named admin activity');
+assert.doesNotMatch(bulkImportSource, /from\('species'\)|from\('fishData'/, 'Bulk import must never write Product Truth storage');
+assert.match(activityCenterSource, /from\('admin_activity_log'\)/, 'Activity Center must load persisted admin operations');
+assert.match(repoBackendClientSource, /aquaguide-admin-operation/, 'All browser-side mutations must feed the shared operation notification channel');
+assert.match(repoStoreSource, /admin_activity_log/, 'Repo content authority must persist admin operations with Draft history');
+assert.match(repoStoreSource, /appendActivity/, 'Repo mutations must append activity in the same private-store transaction');
+assert.match(appSource, /assessDataReview\(selectedGroup, nextRows\)\.ready[\s\S]*setActiveTool\(null\)/, 'Resolved Data Review drawers must auto-close only when the current group has no remaining issue');
+assert.match(appSource, /operation-notice-stack/, 'Completed operations must surface a top-right status notice');
+assert.match(appSource, /activityUnread/, 'The top-right activity entry must expose unread operation count');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
 assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review workflow');
 assert.match(appSource, /PublishReadinessPanel/, 'Admin must expose explicit publish readiness');
