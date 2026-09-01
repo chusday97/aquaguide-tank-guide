@@ -91,3 +91,7 @@ export async function publishRepoStaging({ catalogKeys, groupKeys }) {
     method: 'POST', body: JSON.stringify({ catalogKeys, groupKeys }),
   });
 }
+
+export async function getRepoBackendHealth() {
+  return apiRequest('/api/admin-content/health', { method: 'GET' });
+}

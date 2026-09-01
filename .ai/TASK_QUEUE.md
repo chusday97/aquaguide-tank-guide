@@ -170,3 +170,12 @@ Updated: 2026-08-30
 - [ ] Hosted acceptance: verify Draft Save creates/updates `seo-admin-drafts` with zero Vercel deploys.
 - [ ] Hosted acceptance: explicit Staging Publish causes exactly one Preview rebuild and returned Species HTML contains the edited H1.
 - [ ] Verify Preview response retains deployment-level `X-Robots-Tag: noindex`.
+
+## 2026-09-01 Hosted Repo acceptance follow-up
+- [x] Create and seed `seo-admin-drafts`.
+- [x] Prove a real Draft content commit triggers neither GitHub Actions nor Vercel deployment.
+- [x] Configure branch-scoped Preview Repo paths + server-session auth/hash secrets.
+- [x] Add hosted Repo capability probes and login-before-editor fail-closed UI.
+- [ ] Add a fine-grained GitHub token scoped only to `chusday97/aquaguide-tank-guide` with Contents read/write. Do not reuse the broad local `gh` OAuth token.
+- [ ] Redeploy once after that token is configured; require Health: auth/token/repo/read-write/draft all ready.
+- [ ] Complete hosted H1 Save → Approved → Staging Publish → one rebuild → HTML source change acceptance.

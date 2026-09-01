@@ -14,6 +14,7 @@ await writeFile(storePath, JSON.stringify({ schema_version: 1, updated_at: null,
 
 const sessionHandler = (await import('../../../api/admin-content/session.js')).default;
 const queryHandler = (await import('../../../api/admin-content/query.js')).default;
+const healthHandler = (await import('../../../api/admin-content/health.js')).default;
 const translateHandler = (await import('../api/translate.js')).default;
 
 function response() {
@@ -27,6 +28,15 @@ function response() {
 }
 
 let res = response();
+await healthHandler({ method: 'GET', headers: {} }, res);
+assert.equal(res.state.statusCode, 200);
+assert.equal(res.state.body.backend, 'github-repo');
+assert.equal(res.state.body.auth_configured, true);
+assert.equal(res.state.body.github_token_configured, false);
+assert.equal(res.state.body.repo_access_error, 'token_missing');
+assert.equal(res.state.body.contents_write_capable, false);
+
+res = response();
 await queryHandler({ method: 'POST', headers: {}, body: { action: 'select', table: 'species_seo', filters: [] } }, res);
 assert.equal(res.state.statusCode, 401, 'Repo query must reject unauthenticated requests.');
 
@@ -71,5 +81,5 @@ await sessionHandler({ method: 'DELETE', headers: { cookie } }, res);
 assert.equal(res.state.statusCode, 200);
 assert.match(res.state.headers['set-cookie'], /Max-Age=0/);
 
-console.log(JSON.stringify({ gate: 'PASS', api: 'repo-admin', cookie_auth: true, unauthenticated_blocked: true, cross_origin_blocked: true, published_blocked: true }));
+console.log(JSON.stringify({ gate: 'PASS', api: 'repo-admin', cookie_auth: true, unauthenticated_blocked: true, cross_origin_blocked: true, health_fails_closed: true, published_blocked: true }));
 await rm(root, { recursive: true, force: true });

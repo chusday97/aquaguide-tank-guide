@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { adminContentClient, isAdminBackendConfigured, isRepoBackend, publishRepoStaging } from './adminBackend.js';
+import { adminContentClient, getRepoBackendHealth, isAdminBackendConfigured, isRepoBackend, publishRepoStaging } from './adminBackend.js';
 import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
 import BatchSeoEditor from './BatchSeoEditor.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
@@ -134,7 +134,7 @@ function Forbidden({ email, onSignOut }) {
         <div className="brand-mark danger">!</div>
         <p className="eyebrow">ACCESS DENIED</p>
         <h1>{appLocale === 'en' ? 'Admin access required' : '没有管理员权限'}</h1>
-        <p className="muted">{appLocale === 'en' ? `${email || 'Current account'} is signed in, but user_roles.role is not admin.` : `${email || '当前账号'} 已登录，但 user_roles.role 不是 admin。`}</p>
+        <p className="muted">{appLocale === 'en' ? `${email || 'Current account'} is signed in, but this Repo Admin session is not authorized.` : `${email || '当前账号'} 已登录，但当前 Repo Admin Session 没有管理员权限。`}</p>
         <button className="secondary-button" type="button" onClick={onSignOut}>{appLocale === 'en' ? 'Sign out' : '退出账号'}</button>
       </section>
     </main>
@@ -475,6 +475,7 @@ export default function App() {
   const { appLocale, t } = useAppLanguage();
   const [session, setSession] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const [backendHealth, setBackendHealth] = useState(null);
   const [role, setRole] = useState(null);
   const [species, setSpecies] = useState([]);
   const [seoRows, setSeoRows] = useState({});
@@ -538,8 +539,12 @@ export default function App() {
       setAuthChecked(true);
       return undefined;
     }
-    adminContentClient.auth.getSession().then(({ data }) => {
+    Promise.all([
+      adminContentClient.auth.getSession(),
+      getRepoBackendHealth(),
+    ]).then(([{ data }, health]) => {
       setSession(data.session || null);
+      setBackendHealth(health?.ok ? health : { ok: false, repo_access_error: health?.error?.message || 'health_unavailable' });
       setAuthChecked(true);
     });
     const { data: listener } = adminContentClient.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
@@ -833,6 +838,15 @@ export default function App() {
     },
   })[activeTool] || { title: '', subtitle: '' };
 
+
+  const repoBackendBlocked = !isReviewMode && backendHealth?.ok && (
+    !backendHealth.auth_configured ||
+    !backendHealth.github_token_configured ||
+    !backendHealth.repo_readable ||
+    !backendHealth.contents_write_capable ||
+    !backendHealth.draft_branch_ready
+  );
+
   const signOut = async () => {
     if (isReviewMode) return;
     if (!confirmDiscardUnsaved()) return;
@@ -855,6 +869,35 @@ export default function App() {
   }
 
   if (!authChecked) return <main className="center-message">正在检查登录状态…</main>;
+  if (repoBackendBlocked) {
+    const healthItems = [
+      ['Server session', backendHealth.auth_configured],
+      ['GitHub token', backendHealth.github_token_configured],
+      ['Repository read', backendHealth.repo_readable],
+      ['Contents write', backendHealth.contents_write_capable],
+      ['Draft branch', backendHealth.draft_branch_ready],
+    ];
+    return (
+      <main className="login-shell">
+        <section className="login-card wide">
+          <div className="login-language-row"><InterfaceLanguageSwitch /></div>
+          <div className="brand-mark danger">!</div>
+          <p className="eyebrow">REPO BACKEND SETUP</p>
+          <h1>{appLocale === 'en' ? 'Admin storage is not ready yet' : '后台内容存储还未就绪'}</h1>
+          <p className="muted">{appLocale === 'en' ? 'Login is intentionally blocked until the GitHub-backed content authority passes every server-side check.' : '在 GitHub-backed 内容源通过全部服务端检查前，后台会主动阻止登录，避免把配置问题误判成编辑器故障。'}</p>
+          <div className="backend-health-list">
+            {healthItems.map(([label, ready]) => (
+              <div className={`backend-health-item ${ready ? 'ready' : 'blocked'}`} key={label}>
+                <span>{ready ? '✓' : '!'}</span><strong>{label}</strong><em>{ready ? 'Ready' : 'Blocked'}</em>
+              </div>
+            ))}
+          </div>
+          <p className="security-note">{appLocale === 'en' ? `Status: ${backendHealth.repo_access_error || 'configuration incomplete'}. Secrets remain server-only.` : `当前状态：${backendHealth.repo_access_error || '配置未完成'}。所有 Secret 仍只保存在服务端。`}</p>
+        </section>
+      </main>
+    );
+  }
+  if (backendHealth && !backendHealth.ok) return <main className="center-message">Repo Admin health check failed closed.</main>;
   if (!session) return <Login onSignedIn={setSession} />;
   if (role && role !== 'admin') return <Forbidden email={session.user.email} onSignOut={signOut} />;
 

@@ -194,3 +194,12 @@ Branch: `feature/admin-content-v0`
 - Local gates PASS: Repo backend (`supabase_started=false`, 2 generated bilingual pages, revision history), Repo API auth, Admin contract, root build, 6-page artifact verifier and SEO compatibility handoff.
 - Legacy `test:supabase-gate`/migrations remain available for compatibility only and are removed from the primary GitHub Admin CI workflow.
 - Remaining hosted blocker is configuration, not database infrastructure: Vercel Preview needs server-only Admin session/GitHub Contents credentials. Production `main`, Production Published and Production Supabase remain untouched.
+
+## 2026-09-01 — Hosted Repo backend diagnostics
+- `seo-admin-drafts` remote branch is created and seeded with `content/species-seo/admin-store.json`.
+- A real content-only Draft commit on `seo-admin-drafts` produced **0 GitHub Actions runs** and **0 Vercel deployments**, proving normal Save is isolated from CI/deploy cost.
+- GitHub Actions run `33484383681` for `5f89864` completed SUCCESS on the new no-Supabase primary gate.
+- Vercel Preview `dpl_8hTSbaeKjowQvSFXYkp91g6QJsiX` is READY and serves `/api/admin-content/health` with `X-Robots-Tag: noindex`.
+- Branch-scoped Preview config now includes Repo paths plus server-session auth secrets; the generated Admin password was placed on the local macOS clipboard and only its scrypt hash is stored in Vercel.
+- The remaining external secret is a repository-scoped GitHub token with Contents read/write. The existing local `gh` OAuth token has broad `repo/workflow` scopes and is intentionally not reused.
+- Health now probes token validity, repository readability, Contents-write capability, Draft branch readiness and content-store readability. Admin login fails closed before the editor when these checks are not ready.

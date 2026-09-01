@@ -753,3 +753,10 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - Primary GitHub Admin CI 已移除 Supabase CLI/Docker/ephemeral DB 步骤；legacy Supabase migration/test 仅保留兼容证据。
 - 下一步只做 hosted Repo vertical slice：配置 Vercel server-only Admin/GitHub credentials → 登录 → Save 确认 Draft branch 不部署 → Approved → Staging Publish → 单次 Preview rebuild → 检查 HTML H1 与 `X-Robots-Tag: noindex`。
 - `main`、Production Published、Production Supabase 均保持不动。
+
+## 2026-09-01 — Repo Admin hosted configuration checkpoint
+- Normal Save cost isolation is now proven, not assumed: a real `seo-admin-drafts` content commit caused 0 Actions runs and 0 Vercel deployments.
+- Preview branch already has the non-secret Repo config plus server-session auth/hash secrets. Do not regenerate these unless rotating access intentionally.
+- The only missing hosted credential is `ADMIN_GITHUB_TOKEN`; it must be a fine-grained token limited to this repository with Contents read/write. The local `gh` OAuth token is intentionally rejected for app use because it has broad `repo + workflow` scopes.
+- `/api/admin-content/health` now reports `repo_readable`, `contents_write_capable`, `draft_branch_ready`, `content_store_readable` and a sanitized `repo_access_error`.
+- The Admin checks that health before login and shows a five-item backend readiness list instead of letting configuration errors surface as editor/schema failures.

@@ -60,6 +60,39 @@ async function getRefSha(branch) {
   return body?.object?.sha || '';
 }
 
+
+export async function probeRepoAccess() {
+  const cfg = config();
+  const base = {
+    token_configured: Boolean(cfg.token),
+    repo_readable: false,
+    contents_write_capable: false,
+    draft_branch_ready: false,
+    content_store_readable: false,
+    error_code: cfg.token ? '' : 'token_missing',
+  };
+  if (!cfg.token) return base;
+  try {
+    const repoInfo = await githubFetch(repoUrl(cfg.repo, ''));
+    base.repo_readable = true;
+    base.contents_write_capable = Boolean(repoInfo?.permissions?.push || repoInfo?.permissions?.admin || repoInfo?.permissions?.maintain);
+    try {
+      await getRefSha(cfg.draftBranch);
+      base.draft_branch_ready = true;
+    } catch (error) {
+      if (error.status !== 404) throw error;
+    }
+    if (base.draft_branch_ready) {
+      const store = await readRepoJson({ branch: cfg.draftBranch, filePath: cfg.contentPath, allowMissing: true });
+      base.content_store_readable = Boolean(store);
+    }
+    base.error_code = base.contents_write_capable ? '' : 'contents_write_missing';
+    return base;
+  } catch (error) {
+    return { ...base, error_code: error.status === 401 ? 'token_invalid' : error.status === 403 ? 'token_forbidden' : 'repo_unavailable' };
+  }
+}
+
 export async function ensureDraftBranch() {
   const { repo, draftBranch, sourceBranch, localFile } = config();
   if (localFile) return draftBranch;

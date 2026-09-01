@@ -37,7 +37,7 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
 ]);
 
 
-const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSource, repoSessionApiSource, repoQueryApiSource, repoPublishApiSource] = await Promise.all([
+const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSource, repoSessionApiSource, repoQueryApiSource, repoPublishApiSource, repoHealthApiSource] = await Promise.all([
   readFile(path.join(appRoot, 'src/repoBackendClient.js'), 'utf8'),
   readFile(path.join(repoRoot, 'server/admin-repo/auth.mjs'), 'utf8'),
   readFile(path.join(repoRoot, 'server/admin-repo/store.mjs'), 'utf8'),
@@ -45,6 +45,7 @@ const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSourc
   readFile(path.join(repoRoot, 'api/admin-content/session.js'), 'utf8'),
   readFile(path.join(repoRoot, 'api/admin-content/query.js'), 'utf8'),
   readFile(path.join(repoRoot, 'api/admin-content/publish-staging.js'), 'utf8'),
+  readFile(path.join(repoRoot, 'api/admin-content/health.js'), 'utf8'),
 ]);
 
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
@@ -250,6 +251,11 @@ assert.match(repoStoreSource, /review_state = 'editing'/, 'Content edits must in
 assert.match(repoSessionApiSource, /setSessionCookie/, 'Repo login endpoint must issue the server-side session cookie');
 assert.match(repoQueryApiSource, /requireRepoAdmin/, 'Repo content query endpoint must require Admin session');
 assert.match(repoPublishApiSource, /requireRepoAdmin/, 'Staging publish endpoint must require Admin session');
+assert.match(repoGithubSource, /probeRepoAccess/, 'Repo backend must expose a sanitized capability probe');
+assert.match(repoGithubSource, /contents_write_capable/, 'Repo capability probe must verify Contents write authority');
+assert.match(repoHealthApiSource, /repo_access_error/, 'Hosted health must expose a sanitized Repo readiness error code');
+assert.match(appSource, /getRepoBackendHealth/, 'Admin must load Repo health before allowing normal login');
+assert.match(appSource, /repoBackendBlocked/, 'Admin must fail closed before the editor when Repo authority is incomplete');
 assert.match(translationApiSource, /getRequestSession/, 'Translation API must use the same Repo Admin session');
 assert.doesNotMatch(translationApiSource, /@supabase\/supabase-js|SUPABASE_ANON_KEY|SUPABASE_URL/, 'Translation API must not depend on Supabase auth in Repo mode');
 assert.doesNotMatch(envExample, /VITE_SUPABASE_|SUPABASE_SERVICE_ROLE_KEY/, 'Default Repo Admin browser env must not require Supabase credentials');
