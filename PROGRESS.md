@@ -534,3 +534,11 @@ After it is gated, the next product milestone is a small staging publication sli
 - Preview responses retain `X-Robots-Tag: noindex`.
 - The remaining hosted external gate is one least-privilege fine-grained GitHub token covering exactly the private content repo + public AquaGuide repo with Contents Read/Write only. The broad local `gh` OAuth token is intentionally not reused.
 - Added `scripts/vercel-ignore-build.mjs`: docs-only `.ai/**`, `HANDOFF.md`, `PROGRESS.md`, and README changes skip Vercel; any code/config/data or `staging-snapshot.json` change continues deployment.
+
+## 2026-09-01 — 双仓 Hosted 链路已真实跑通
+- Fine-grained GitHub token 已配置到 Vercel Preview；Health 中私有内容仓库、公有 Staging 仓库、读写权限、Draft branch/store、Staging branch 全部为 ready。
+- 私有 `aquaguide-seo-content` 已真实写入 `sp_0001` 双语 Approved Draft；这次 Draft 提交没有触发 AquaGuide Vercel 部署。
+- 明确发布 Staging 后，公共 `118fa21` 只触发 1 次 Preview。
+- Hosted English H1 与中文 H1 均精确命中本次 staging 内容；页面为 `noindex,follow`，三个 Aqua 产品 CTA 均保留。
+- GitHub CI #34 SUCCESS；Production 未触碰。
+- 剩余一项仅为人工浏览器验收：用本机剪贴板中的后台密码登录 `/admin/seo/` 并做一次普通 Save，验证 UI/API 的登录会话路径。安全层禁止工具读取密码，不应绕过。

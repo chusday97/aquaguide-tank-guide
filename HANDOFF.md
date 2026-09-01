@@ -778,3 +778,11 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - Preview responses retain `X-Robots-Tag: noindex`.
 - The remaining hosted external gate is one least-privilege fine-grained GitHub token covering exactly the private content repo + public AquaGuide repo with Contents Read/Write only. The broad local `gh` OAuth token is intentionally not reused.
 - Added `scripts/vercel-ignore-build.mjs`: docs-only `.ai/**`, `HANDOFF.md`, `PROGRESS.md`, and README changes skip Vercel; any code/config/data or `staging-snapshot.json` change continues deployment.
+
+## 2026-09-01 — Hosted dual-repo vertical slice accepted (storage/publish path)
+- Vercel Preview now has the least-privilege fine-grained GitHub token; hosted `/api/admin-content/health` is fully green for both private Content Repo and public Staging Repo.
+- Real private Draft evidence: `aquaguide-seo-content/seo-admin-drafts` commit `d417e11` contains bilingual Approved Draft content for `sp_0001`; no AquaGuide deployment followed that Draft commit.
+- Explicit staging publication: public AquaGuide commit `118fa21` created `content/species-seo/staging-snapshot.json` and caused exactly one Preview build.
+- Hosted EN/ZH static pages render the exact staged H1 values and `noindex,follow`; compatibility/browse/plan CTAs remain intact.
+- CI #34 SUCCESS. Production `main` and Production Published remain untouched.
+- Only remaining acceptance: open hosted `/admin/seo/`, paste the rotated Admin password from the Mac clipboard, sign in, and perform one normal Save through the UI/API. Do not weaken auth or expose the password to automate this step.

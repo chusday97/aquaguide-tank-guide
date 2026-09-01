@@ -166,18 +166,18 @@ Updated: 2026-08-30
 - [x] Make root Preview build prefer `content/species-seo/staging-snapshot.json` and execute `staging_release`.
 - [x] Add Repo backend + API gates proving H1 edit → approval reset → re-approval → staging HTML generation without Supabase.
 - [x] Remove Supabase SDK from the SEO Admin browser runtime; latest Admin build transforms 52 modules instead of the prior 93.
-- [ ] Configure the server-only Repo Admin environment in Vercel Preview.
+- [x] Configure the server-only Repo Admin environment in Vercel Preview.
 - [ ] Hosted acceptance: verify Draft Save creates/updates `seo-admin-drafts` with zero Vercel deploys.
-- [ ] Hosted acceptance: explicit Staging Publish causes exactly one Preview rebuild and returned Species HTML contains the edited H1.
-- [ ] Verify Preview response retains deployment-level `X-Robots-Tag: noindex`.
+- [x] Hosted acceptance: explicit Staging Publish causes exactly one Preview rebuild and returned Species HTML contains the edited H1.
+- [x] Verify Preview response retains deployment-level `X-Robots-Tag: noindex`.
 
 ## 2026-09-01 Hosted Repo acceptance follow-up
 - [x] Create and seed `seo-admin-drafts`.
 - [x] Prove a real Draft content commit triggers neither GitHub Actions nor Vercel deployment.
 - [x] Configure branch-scoped Preview Repo paths + server-session auth/hash secrets.
 - [x] Add hosted Repo capability probes and login-before-editor fail-closed UI.
-- [ ] Add a fine-grained GitHub token scoped only to `chusday97/aquaguide-tank-guide` with Contents read/write. Do not reuse the broad local `gh` OAuth token.
-- [ ] Redeploy once after that token is configured; require Health: auth/token/repo/read-write/draft all ready.
+- [x] Add a fine-grained GitHub token scoped only to `chusday97/aquaguide-seo-content` + `chusday97/aquaguide-tank-guide` with Contents read/write. The broad local `gh` OAuth token was not reused.
+- [x] Redeploy after token configuration; hosted Health is fully green for auth/token/private Content Repo/public Staging Repo/read-write/branches/store.
 - [ ] Complete hosted H1 Save → Approved → Staging Publish → one rebuild → HTML source change acceptance.
 
 ## 2026-09-01 Dual-repo privacy hardening
@@ -189,8 +189,8 @@ Updated: 2026-08-30
 - [x] Split Health into private Content Repo and public Staging Repo readiness.
 - [x] Add dual-repo routing gate for Draft PUT vs Staging PUT.
 - [x] Configure branch-scoped Vercel Preview repo names/paths and private source branch.
-- [ ] Add least-privilege `ADMIN_GITHUB_TOKEN` to Preview: selected repositories = `aquaguide-seo-content` + `aquaguide-tank-guide`; Contents Read/Write only.
-- [ ] Redeploy and confirm Health: all Content/Staging repository checks green.
+- [x] Add least-privilege `ADMIN_GITHUB_TOKEN` to Preview: selected repositories = `aquaguide-seo-content` + `aquaguide-tank-guide`; Contents Read/Write only.
+- [x] Redeploy and confirm Health: all Content/Staging repository checks green.
 - [ ] Hosted vertical slice: edit H1 → private Draft commit (0 Aqua CI/deploy) → Approve → explicit Staging Publish → one Aqua Preview rebuild → returned HTML contains exact H1.
 
 ## 2026-09-01 Hosted dual-repo gate status
@@ -200,6 +200,16 @@ Updated: 2026-08-30
 - [x] Hosted Admin Session/password/session secret configured.
 - [x] Preview remains deployment-level noindex.
 - [x] Add docs-only Vercel ignore guard without suppressing code or staging-snapshot deploys.
-- [ ] Supply least-privilege `ADMIN_GITHUB_TOKEN` (two selected repositories; Contents Read/Write only).
-- [ ] Recheck hosted Health until all repo/write/branch/store flags are green.
+- [x] Supply least-privilege `ADMIN_GITHUB_TOKEN` (two selected repositories; Contents Read/Write only).
+- [x] Recheck hosted Health until all repo/write/branch/store flags are green.
 - [ ] Execute real hosted H1 edit → private Draft commit → approval → staging snapshot → one Preview rebuild → returned HTML exact-H1 acceptance.
+
+## 2026-09-01 hosted dual-repo vertical-slice evidence
+- [x] Private Draft Store received real bilingual Approved Draft content for `sp_0001` on `aquaguide-seo-content/seo-admin-drafts`.
+- [x] That private Draft commit produced 0 AquaGuide Vercel deployments.
+- [x] Explicit public staging snapshot commit `118fa21` produced exactly 1 AquaGuide Preview deployment.
+- [x] Hosted EN H1 = `Red Cherry Shrimp Care Guide | Dual-Repo Staging`.
+- [x] Hosted ZH H1 = `极火虾饲养指南｜双仓 Staging 验收`.
+- [x] Both hosted static pages return page-level `noindex,follow` and retain compatibility / browse / planning CTAs for `sp_0001`.
+- [x] GitHub Admin Content CI #34 completed SUCCESS for the staging snapshot commit.
+- [ ] One final browser-only acceptance remains: sign into `/admin/seo/` with the rotated Admin password and perform one Save through the hosted Admin UI/API. Automated secret reading is intentionally blocked, so this must be a human paste/click rather than a tool bypass.

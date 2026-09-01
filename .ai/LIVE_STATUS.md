@@ -220,3 +220,15 @@ Branch: `feature/admin-content-v0`
 - Preview responses retain `X-Robots-Tag: noindex`.
 - The remaining hosted external gate is one least-privilege fine-grained GitHub token covering exactly the private content repo + public AquaGuide repo with Contents Read/Write only. The broad local `gh` OAuth token is intentionally not reused.
 - Added `scripts/vercel-ignore-build.mjs`: docs-only `.ai/**`, `HANDOFF.md`, `PROGRESS.md`, and README changes skip Vercel; any code/config/data or `staging-snapshot.json` change continues deployment.
+
+## 2026-09-01 — Hosted token + dual-repo vertical slice PASS
+- Least-privilege `ADMIN_GITHUB_TOKEN` is configured as a Vercel Preview Sensitive variable for `feature/admin-content-v0`.
+- Latest hosted Health is fully green: Admin auth, token, private Content Repo read/write, Draft branch/store, public Staging Repo read/write, and Staging branch all true; `repo_access_error` is empty.
+- Private `aquaguide-seo-content/seo-admin-drafts` received a real bilingual Approved Draft for `sp_0001`; that private commit caused 0 AquaGuide Vercel deployments.
+- Explicit staging snapshot commit `118fa21` in public AquaGuide caused exactly 1 Preview deployment and did not target Production.
+- Hosted static EN H1: `Red Cherry Shrimp Care Guide | Dual-Repo Staging`.
+- Hosted static ZH H1: `极火虾饲养指南｜双仓 Staging 验收`.
+- Both pages are `noindex,follow` and retain compatibility, browse, and aquarium-planning CTAs carrying `species=sp_0001&source=seo-species`.
+- GitHub Admin Content CI #34 completed SUCCESS across contract, docs-only guard, root artifact integration, catalog parity and diff hygiene.
+- Admin password was rotated again; only its scrypt hash is in Vercel, and the plaintext password was copied to the local macOS clipboard.
+- Remaining acceptance is intentionally narrow: one human login + Save through the hosted Admin UI/API. Tool-level secret reading is blocked by the platform safety layer and must not be bypassed.
