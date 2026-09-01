@@ -81,7 +81,7 @@ function InterfaceLanguageSwitch() {
 
 function Login({ onSignedIn }) {
   const { appLocale, t } = useAppLanguage();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('admin@aquaguide.local');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -110,7 +110,7 @@ function Login({ onSignedIn }) {
         <form onSubmit={submit} className="login-form">
           <label>
             {appLocale === 'en' ? 'Admin email' : '管理员邮箱'}
-            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="email" />
+            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="username" />
           </label>
           <label>
             {appLocale === 'en' ? 'Password' : '密码'}
@@ -119,7 +119,7 @@ function Login({ onSignedIn }) {
           {error ? <div className="error-box">{error}</div> : null}
           <button className="primary-button" type="submit" disabled={busy}>{busy ? (appLocale === 'en' ? 'Signing in…' : '正在验证…') : (appLocale === 'en' ? 'Sign in' : '登录后台')}</button>
         </form>
-        <p className="security-note">{appLocale === 'en' ? 'Access uses a server-side session; content changes are written through the GitHub-backed Admin API. Secrets never enter the browser.' : '访问由服务端 Session 控制；内容通过 GitHub-backed Admin API 写入，密码和 GitHub Token 不进入浏览器。'}</p>
+        <p className="security-note">{appLocale === 'en' ? 'Admin account is prefilled. Paste your current Admin password; access uses a server-side session and secrets never enter the browser.' : '管理员账号已自动填好，只需粘贴当前后台密码；访问由服务端 Session 控制，GitHub Token 不进入浏览器。'}</p>
       </section>
     </main>
   );
