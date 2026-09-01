@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { groupSeoFromRow } from './seoInheritance.js';
 import { getLocaleLabel } from './localization.js';
-import { REVIEW_STATES } from './publishReadiness.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 
 const isPublicSpeciesPublishingEnabled = false;
@@ -59,7 +58,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     return next;
   });
 
-  const save = async () => {
+  const save = async (reviewStateOverride = null) => {
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
       setMessage('Species 发布仍锁定：A+B 验证链已通过，但 Production public-deploy integration 尚未显式批准。');
       return;
@@ -82,7 +81,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       h1_template: form.h1Template.trim(),
       shared_intro: form.sharedIntro.trim(),
       status: form.status,
-      review_state: form.reviewState,
+      review_state: reviewStateOverride || form.reviewState,
     };
     const { data, error } = await adminContentClient
       .from('species_seo_groups')
@@ -94,7 +93,8 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       setMessage(`Base Species 保存失败：${error.message}`);
       return;
     }
-    setMessage(`${localeLabel} Base Species SEO 已保存；未 Override 的 Variant 会自动继承。`);
+    if (reviewStateOverride) setForm((current) => ({ ...current, reviewState: reviewStateOverride }));
+    setMessage(reviewStateOverride === 'ready_for_review' ? (isUiEnglish ? 'Submitted for review.' : '已提交审核。') : reviewStateOverride === 'approved' ? (isUiEnglish ? 'Approved for Preview.' : '已批准进入预览。') : reviewStateOverride === 'editing' ? (isUiEnglish ? 'Returned to editing.' : '已退回编辑。') : `${localeLabel} Base Species SEO 已保存；未单独设置的品种页面会自动沿用。`);
     onSaved(data);
   };
 
@@ -111,6 +111,32 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           <strong>{form.status === 'published' ? 'Published' : 'Draft'}</strong>
           <span>·</span>
           <span>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[form.reviewState] || form.reviewState)}</span>
+        </div>
+      </div>
+      <div className={`workflow-stepper review-${form.reviewState}`} aria-label={isUiEnglish ? 'Base editorial workflow' : '基础种内容审核流程'}>
+        <div className="workflow-stepper-track">
+          <span className={form.reviewState === 'editing' ? 'current' : 'done'}><b>1</b>{isUiEnglish ? 'Editing' : '编辑中'}</span>
+          <i>→</i>
+          <span className={form.reviewState === 'ready_for_review' ? 'current' : form.reviewState === 'approved' ? 'done' : ''}><b>2</b>{isUiEnglish ? 'Awaiting review' : '待审核'}</span>
+          <i>→</i>
+          <span className={form.reviewState === 'approved' ? 'current' : ''}><b>3</b>{isUiEnglish ? 'Preview approved' : '已批准预览'}</span>
+        </div>
+        <div className="workflow-stepper-action">
+          {contentDirty ? (
+            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save shared content' : '保存公共内容')}</button>
+          ) : form.reviewState === 'editing' ? (
+            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
+          ) : form.reviewState === 'ready_for_review' ? (
+            <>
+              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
+            </>
+          ) : (
+            <>
+              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <span className="workflow-approved-note">✓ {isUiEnglish ? 'Shared content approved' : '公共内容已批准'}</span>
+            </>
+          )}
         </div>
       </div>
       {group.category_conflict ? (
@@ -132,18 +158,10 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <p className="template-help">{isUiEnglish ? 'Keep template tokens unchanged: ' : '变量必须原样保留：'}{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>
       <div className="base-seo-footer">
-        <div>{!readOnly && isDirty ? <span className="unsaved-indicator">{contentDirty ? (isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核') : (isUiEnglish ? 'Workflow state not saved' : '流程状态未保存')}</span> : null}{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 公共内容，不会写入。` : `保存后只更新 ${localeLabel} 的公共内容，不会覆盖其它语言。`)}</div>
+        <div>{!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 公共内容，不会写入。` : `保存后只更新 ${localeLabel} 的公共内容，不会覆盖其它语言。`)}</div>
         <div className="footer-actions">
           <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
-          <label className="review-flow-control">
-            <span>{isUiEnglish ? 'Workflow' : '内容流程'}</span>
-            <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} disabled={contentDirty} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Base review state' : 'Base 审核状态'}>
-              {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Submit for review', approved: 'Approved for Preview' }[item.value] || item.label) : ({ editing: '编辑中', ready_for_review: '提交审核', approved: '已批准预览' }[item.value] || item.label)}</option>)}
-            </select>
-          </label>
-          <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving || !isDirty}>
-            {readOnly ? `${t('common.readonly')} ${localeLabel}` : saving ? t('common.saving') : (contentDirty ? (isUiEnglish ? 'Save shared content' : '保存公共内容') : (isUiEnglish ? 'Save workflow state' : '保存流程状态'))}
-          </button>
+          {contentDirty ? <button className="primary-button" type="button" onClick={() => save()} disabled={readOnly || saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save shared content' : '保存公共内容')}</button> : null}
         </div>
       </div>
     </section>

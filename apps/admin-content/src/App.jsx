@@ -17,7 +17,7 @@ import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
-import { REVIEW_STATES, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
+import { assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason } from './publishReadiness.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -143,7 +143,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange, publishReadinessState = 'blocked', stagingPublishing = false, stagingMessage = '', onPublishStaging, onOpenReadiness }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(emptySeo);
@@ -364,14 +364,27 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <span className={form.reviewState === 'approved' ? 'current' : ''}><b>3</b>{isUiEnglish ? 'Preview approved' : '已批准预览'}</span>
         </div>
         <div className="workflow-stepper-action">
-          {form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly || contentDirty || Boolean(indexBlockReason)} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
+          {contentDirty ? (
+            <button type="button" className="primary-button compact" disabled={saving || readOnly || Boolean(indexBlockReason)} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
+          ) : form.reviewState === 'editing' ? (
+            <button type="button" className="primary-button compact" disabled={saving || readOnly || Boolean(indexBlockReason)} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
           ) : form.reviewState === 'ready_for_review' ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly || contentDirty || Boolean(indexBlockReason)} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve for Preview' : '批准预览')}</button>
+            <>
+              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="primary-button compact" disabled={saving || readOnly || Boolean(indexBlockReason)} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
+            </>
+          ) : publishReadinessState === 'publish_ready' ? (
+            <>
+              <button type="button" className="ghost-button compact" disabled={saving || readOnly || stagingPublishing} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="primary-button compact staging-action" disabled={readOnly || stagingPublishing} onClick={onPublishStaging}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? 'Publish to Staging' : '发布到 Staging')}</button>
+            </>
           ) : (
-            <span className="workflow-approved-note">✓ {isUiEnglish ? 'Ready for Staging Preview' : '可进入 Staging 预览'}</span>
+            <>
+              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="secondary-button compact" onClick={onOpenReadiness}>{isUiEnglish ? 'View blockers' : '查看发布阻塞项'}</button>
+            </>
           )}
-          {contentDirty ? <small>{isUiEnglish ? 'Save content changes before changing workflow state.' : '请先保存内容修改，再进入审核流程。'}</small> : null}
+          {contentDirty ? <small>{isUiEnglish ? 'Saving content resets approval to Editing.' : '保存内容后会自动退回“编辑中”，避免旧审核结果继续生效。'}</small> : null}
         </div>
       </div>
 
@@ -479,20 +492,15 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 
       <div className="editor-footer">
         <div>
-          {!readOnly && isDirty ? <span className="unsaved-indicator">{contentDirty ? (isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核') : (isUiEnglish ? 'Workflow state not saved' : '流程状态未保存')}</span> : null}
+          {!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}
           {!schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
           {indexBlockReason ? <span className="warning-text">{indexBlockReason}</span> : null}
           {message ? <span className="save-message">{message}</span> : null}
+          {stagingMessage ? <span className="save-message">{stagingMessage}</span> : null}
         </div>
         <div className="footer-actions">
           <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
-          <label className="review-flow-control">
-            <span>{isUiEnglish ? 'Workflow' : '内容流程'}</span>
-            <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} disabled={contentDirty} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Review state' : '审核状态'}>
-              {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Submit for review', approved: 'Approved for Preview' }[item.value] || item.label) : ({ editing: '编辑中', ready_for_review: '提交审核', approved: '已批准预览' }[item.value] || item.label)}</option>)}
-            </select>
-          </label>
-          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason) || !isDirty}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : (contentDirty ? (isUiEnglish ? 'Save changes' : '保存修改') : (isUiEnglish ? 'Save workflow state' : '保存流程状态'))}</button>
+          {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving || readOnly || Boolean(indexBlockReason)}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
         </div>
       </div>
     </section>
@@ -1029,6 +1037,11 @@ export default function App() {
               selectedInspectorElement={selectedInspectorElement}
               onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
               onDirtyChange={setEditorDirty}
+              publishReadinessState={publishReadiness?.state || 'blocked'}
+              stagingPublishing={stagingPublishing}
+              stagingMessage={stagingPublishMessage}
+              onPublishStaging={publishSelectedToStaging}
+              onOpenReadiness={() => setActiveTool('readiness')}
               onSaved={(row) => {
                 const key = groupSeoRowKey(row.group_key, row.locale);
                 setGroupSeoRows((current) => ({ ...current, [key]: row }));
@@ -1050,6 +1063,11 @@ export default function App() {
               selectedInspectorElement={selectedInspectorElement}
               onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
               onDirtyChange={setEditorDirty}
+              publishReadinessState={publishReadiness?.state || 'blocked'}
+              stagingPublishing={stagingPublishing}
+              stagingMessage={stagingPublishMessage}
+              onPublishStaging={publishSelectedToStaging}
+              onOpenReadiness={() => setActiveTool('readiness')}
               onSaved={(row) => {
                 setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
                 setRevisionRefreshKey((current) => current + 1);
