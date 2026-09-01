@@ -152,7 +152,7 @@ export default function TranslationPanel({
         </div>
         <div className="translation-scope-tabs">
           {group.member_count > 1 ? (
-            <button type="button" className={scope === 'base' ? 'active' : ''} onClick={() => { setScope('base'); setSuggestion(null); }}>{isUiEnglish ? 'Base shared content' : 'Base 公共内容'}</button>
+            <button type="button" className={scope === 'base' ? 'active' : ''} onClick={() => { setScope('base'); setSuggestion(null); }}>{isUiEnglish ? 'Base shared content' : 'Base 基础模板'}</button>
           ) : null}
           <button type="button" className={scope === 'variant' ? 'active' : ''} onClick={() => { setScope('variant'); setSuggestion(null); }}>{isUiEnglish ? 'Current Variant' : '当前 Variant'}</button>
         </div>

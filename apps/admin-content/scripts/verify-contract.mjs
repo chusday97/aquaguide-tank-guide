@@ -167,7 +167,8 @@ assert.match(appSource, /editor-status-item[\s\S]*Publish status|发布状态/, 
 assert.match(baseSource, /editor-status-cluster/, 'Base editor must separate publish status from review status');
 assert.match(appSource, /source === 'preview'[\s\S]*const targetScope = variantOnly \|\| variantOverride \? 'variant' : 'base'[\s\S]*runEditorNavigation\(\(\) => setEditorScope\(targetScope\)\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor through the unsaved-change guard');
 assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !custom/, 'Inspector edit path must identify inherited content as Base-owned regardless of current editor scope');
-assert.match(appSource, /Restore shared content|恢复公共内容/, 'Variant page-specific content must expose a plain-language return-to-shared-content action');
+assert.match(appSource, /content-source-manager/, 'Variant source inheritance must be centralized instead of repeated under every field');
+assert.match(appSource, /Use template|改用模板/, 'Variant source manager must expose a plain-language return-to-template action');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
 assert.doesNotMatch(appSource, /footer-state-select review-/, 'Variant workflow must not regress to a field-like review-state select');
@@ -177,6 +178,9 @@ assert.match(appSource, /save\('approved'\)/, 'Variant workflow must expose an e
 assert.match(appSource, /onPublishStaging/, 'Approved Variant workflow must expose an explicit Staging publish action');
 assert.match(baseSource, /save\('ready_for_review'\)/, 'Base workflow must expose an explicit submit-for-review action');
 assert.match(baseSource, /save\('approved'\)/, 'Base workflow must expose an explicit approve-preview action');
+assert.match(appSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('catalog_key'/, 'Variant review transitions must update review metadata only, not re-upsert content fields');
+assert.match(baseSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('group_key'/, 'Base review transitions must update review metadata only, not re-upsert template fields');
+assert.match(reviewSource, /index_strategy: 'index'[\s\S]*canonical_to_sibling/, 'Duplicate review must align canonical and duplicate SEO index policy automatically');
 assert.match(appSource, /审核进度|Review progress/, 'Variant workflow must label the non-interactive status area as review progress');
 assert.match(appSource, /可执行操作|Available actions/, 'Variant workflow must label buttons as available actions');
 assert.match(baseSource, /审核进度|Review progress/, 'Base workflow must label the non-interactive status area as review progress');
@@ -188,7 +192,7 @@ assert.match(appSource, /beforeunload/, 'Admin must protect dirty editor state f
 assert.match(appSource, /confirmDiscardUnsaved/, 'Editor navigation must require explicit confirmation before discarding unsaved changes');
 assert.match(appSource, /runEditorNavigation/, 'Species, scope and locale navigation must share one unsaved-change guard');
 assert.match(appSource, /contentDirty \? <button[\s\S]*保存修改/, 'Variant save action must appear only for actual content changes');
-assert.match(baseSource, /contentDirty \? <button[\s\S]*保存公共内容/, 'Base save action must appear only for actual shared-content changes');
+assert.match(baseSource, /contentDirty \? <button[\s\S]*保存基础模板/, 'Base save action must appear only for actual template changes');
 assert.match(appSource, /selectedId === id && editorScope === 'variant'/, 'Re-selecting the current Variant must remain a no-op and must not clear dirty state');
 assert.match(appSource, /workflowFilter\?\.key === next\.key/, 'Re-selecting the active workflow filter must not discard dirty editor state');
 assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');

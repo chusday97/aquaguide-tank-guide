@@ -244,3 +244,10 @@ Branch: `feature/admin-content-v0`
 - Admin contract, controlled-preview generator, Repo backend/API, dual-repo routing, Admin build, root AquaGuide build, SEO handoff and diff hygiene all PASS.
 - GitHub Admin Content CI #36 (`33495672879`) SUCCESS for `8d1905c`. Vercel Preview `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` READY. Hosted Health remains fully green with empty `repo_access_error`.
 - Hosted Admin bundle contains the new product language and duplicate-review flow. Remaining end-user acceptance: click Save once in the hosted Admin after editing, then verify that exact UI write lands in the private Draft repo with zero AquaGuide deployment.
+
+## 2026-09-01 — Workflow + template cleanup
+- Root cause fixed: review actions now update only `review_state`; they no longer re-upsert SEO content or get blocked by release/index readiness.
+- Duplicate Data Review now automatically aligns SEO policy: selected main page -> `index`; duplicate SEO rows -> `canonical_to_sibling` pointing to the selected main page.
+- Existing 极火虾 review was repaired in the private content repo: `sp_0001` is the SEO main page, `index_strategy=index`, and the user's repeated Submit intent was recovered to `ready_for_review` for zh-CN. No Production publish occurred.
+- Repeated inheritance wording was removed from the primary UI. Chinese `公共内容` copy count in Admin source/rendered DOM is now 0. The normal page uses one centralized `内容来源` manager plus a secondary `管理基础模板` entry.
+- Status and actions remain separate: status is read-only; workflow actions are buttons only. Contract now guards metadata-only review transitions and automatic duplicate SEO policy alignment.

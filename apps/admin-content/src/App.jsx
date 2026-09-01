@@ -256,46 +256,34 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     setOverrideEditing((current) => ({ ...current, [key]: false }));
     onInspectorSelect?.(key);
   };
+  const sourceFields = [
+    { key: 'seoTitle', label: t('editor.metaTitle'), custom: Boolean(form.seoTitle) },
+    { key: 'metaDescription', label: t('editor.metaDescription'), custom: Boolean(form.metaDescription) },
+    { key: 'h1', label: t('editor.h1'), custom: Boolean(form.h1) },
+  ];
+  const customSourceCount = sourceFields.filter((item) => item.custom).length;
   const renderInheritedOverrideField = ({ key, label, value, inheritedValue, maxLength, rows }) => {
     const custom = Boolean(value);
     const editing = custom || Boolean(overrideEditing[key]);
     return (
       <div {...editorFieldProps(key)} onClick={() => onInspectorSelect?.(key)}>
-        <div className="inheritance-field-heading">
-          <span>{label}</span>
-          <span className={`inheritance-state ${custom ? 'custom' : 'inherited'}`}>{custom ? (isUiEnglish ? 'Page-specific' : '当前页面单独设置') : (isUiEnglish ? 'Uses shared content' : '沿用公共内容')}</span>
-        </div>
+        <div className="inheritance-field-heading"><span>{label}</span></div>
         {!editing ? (
-          <div className="inherited-field-view">
+          <div className="inherited-field-view compact-source-view">
             <div className="inherited-field-value">{inheritedValue || '—'}</div>
-            <div className="inherited-field-footer">
-              <span>{isUiEnglish ? `This page uses shared content from ${group?.base_scientific_name || 'Base Species'}` : `当前页面未单独填写，将使用 ${group?.base_scientific_name || '基础种'} 的公共内容`}</span>
-              <button type="button" onClick={() => startOverride(key)}>{isUiEnglish ? 'Edit this page only' : '为当前页单独编辑'}</button>
-            </div>
+            <button type="button" className="inline-source-action" onClick={() => startOverride(key)}>{isUiEnglish ? 'Edit for this page' : '单独编辑'}</button>
           </div>
+        ) : rows ? (
+          <textarea aria-label={label} data-editor-override={key} rows={rows} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
         ) : (
-          <>
-            {rows ? (
-              <textarea aria-label={label} data-editor-override={key} rows={rows} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
-            ) : (
-              <input aria-label={label} data-editor-override={key} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
-            )}
-            <div className="override-field-footer">
-              <span>{custom ? (isUiEnglish ? 'This page replaces the shared value' : '当前页面已使用单独内容，不再沿用公共值') : (isUiEnglish ? 'Enter a page-specific value' : '输入后只修改当前页面')}</span>
-              <button type="button" onClick={() => useBaseValue(key)}>{custom ? (isUiEnglish ? 'Restore shared content' : '恢复公共内容') : (isUiEnglish ? 'Cancel' : '取消')}</button>
-            </div>
-          </>
+          <input aria-label={label} data-editor-override={key} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
         )}
       </div>
     );
   };
   const save = async (reviewStateOverride = null) => {
-    if (indexBlockReason) {
-      setMessage(indexBlockReason);
-      return;
-    }
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      setMessage('Species 发布仍锁定：A+B 门禁已通过，但 Production public-deploy integration 尚未显式批准，只能保存 Draft。');
+      setMessage('Species 发布仍锁定：Production 发布未开放，只能保存 Draft。');
       return;
     }
     if (readOnly) {
@@ -308,6 +296,24 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     }
     setSaving(true);
     setMessage('');
+    if (reviewStateOverride) {
+      const { data, error } = await adminContentClient
+        .from('species_seo')
+        .update({ review_state: reviewStateOverride })
+        .eq('catalog_key', species.catalog_key)
+        .eq('locale', locale)
+        .select('*')
+        .single();
+      setSaving(false);
+      if (error) {
+        setMessage(error.message || '审核状态更新失败。');
+        return;
+      }
+      setForm((current) => ({ ...current, reviewState: data.review_state }));
+      setMessage(reviewStateOverride === 'ready_for_review' ? '已提交审核。' : reviewStateOverride === 'approved' ? '已批准进入预览。' : '已退回编辑。');
+      onSaved(data);
+      return;
+    }
     const payload = {
       catalog_key: species.catalog_key,
       locale,
@@ -322,7 +328,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       canonical_catalog_key: form.indexStrategy === 'canonical_to_sibling' ? form.canonicalCatalogKey : '',
       focus_keyword: form.focusKeyword.trim(),
       status: form.status,
-      review_state: reviewStateOverride || form.reviewState,
+      review_state: form.reviewState,
     };
     const { data, error } = await adminContentClient
       .from('species_seo')
@@ -334,8 +340,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       setMessage(error.message || '保存失败。');
       return;
     }
-    if (reviewStateOverride) setForm((current) => ({ ...current, reviewState: reviewStateOverride }));
-    setMessage(reviewStateOverride === 'ready_for_review' ? '已提交审核。' : reviewStateOverride === 'approved' ? '已批准进入预览。' : '已保存到 Species SEO 草稿。');
+    setForm(fromSeoRow(data, species, locale));
+    setMessage('修改已保存为草稿；如内容发生变化，审核状态会自动回到编辑中。');
     onSaved(data);
   };
 
@@ -374,13 +380,13 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <small className="workflow-section-label">{isUiEnglish ? 'Available actions' : '可执行操作'}</small>
           <div className="workflow-stepper-action">
           {contentDirty ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly || Boolean(indexBlockReason)} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
+            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
           ) : form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly || Boolean(indexBlockReason)} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
+            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
           ) : form.reviewState === 'ready_for_review' ? (
             <>
               <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact" disabled={saving || readOnly || Boolean(indexBlockReason)} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
+              <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
             </>
           ) : publishReadinessState === 'publish_ready' ? (
             <>
@@ -414,6 +420,21 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; Product Truth names remain unchanged.' : '只影响 English 内容层；不会改 Product Truth 里的中文名称。'}</small>
               </label>
             ) : null}
+            <details className="content-source-manager">
+              <summary>
+                <span><strong>{isUiEnglish ? 'Content source' : '内容来源'}</strong><small>{isUiEnglish ? `${customSourceCount} page-specific · ${sourceFields.length - customSourceCount} from template` : `${customSourceCount} 项本页专用 · ${sourceFields.length - customSourceCount} 项使用模板`}</small></span>
+                <em>{isUiEnglish ? 'Manage' : '管理'}</em>
+              </summary>
+              <div className="content-source-list">
+                {sourceFields.map((item) => (
+                  <div className="content-source-row" key={item.key}>
+                    <span>{item.label}</span>
+                    <strong>{item.custom ? (isUiEnglish ? 'This page' : '本页专用') : (isUiEnglish ? 'Base template' : '基础模板')}</strong>
+                    <button type="button" onClick={() => item.custom ? useBaseValue(item.key) : startOverride(item.key)}>{item.custom ? (isUiEnglish ? 'Use template' : '改用模板') : (isUiEnglish ? 'Edit this page' : '单独编辑')}</button>
+                  </div>
+                ))}
+              </div>
+            </details>
             {renderInheritedOverrideField({
               key: 'seoTitle', label: t('editor.metaTitle'), value: form.seoTitle, inheritedValue: resolvedSeo.inherited.seoTitle, maxLength: 120,
             })}
@@ -437,11 +458,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <summary>
                   <span>
                     <strong>{t('editor.sharedIntro')}</strong>
-                    <small>{effectiveSeo.sharedIntro ? (isUiEnglish ? 'Shared across this Base Species group' : '同一基础种下的品种页面共同使用') : (isUiEnglish ? 'Shared content is empty' : '公共内容尚未填写')}</small>
+                    <small>{effectiveSeo.sharedIntro ? (isUiEnglish ? 'Shared across this Base Species group' : '来自基础种模板') : (isUiEnglish ? 'Shared content is empty' : '基础种简介尚未填写')}</small>
                   </span>
-                  <em>{isUiEnglish ? 'View shared content' : '查看公共内容'}</em>
+                  <em>{isUiEnglish ? 'View shared content' : '查看基础种简介'}</em>
                 </summary>
-                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础种公共简介尚未填写。')}</p>
+                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础种简介尚未填写。')}</p>
               </details>
             ) : null}
             <label {...editorFieldProps('intro')}>
@@ -504,13 +525,12 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         <div>
           {!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}
           {!schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
-          {indexBlockReason ? <span className="warning-text">{indexBlockReason}</span> : null}
           {message ? <span className="save-message">{message}</span> : null}
           {stagingMessage ? <span className="save-message">{stagingMessage}</span> : null}
         </div>
         <div className="footer-actions">
           <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
-          {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving || readOnly || Boolean(indexBlockReason)}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
+          {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving || readOnly}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
         </div>
       </div>
     </section>
@@ -1120,7 +1140,11 @@ export default function App() {
         <EditorToolDrawer open={Boolean(activeTool)} title={toolDrawerMeta.title} subtitle={toolDrawerMeta.subtitle} onClose={() => setActiveTool(null)}>
             {activeTool === 'dataReview' ? (
               <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
-                onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))} />
+                onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))}
+                onSeoPolicyAligned={(rows) => {
+                  setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
+                  setRevisionRefreshKey((current) => current + 1);
+                }} />
             ) : null}
             {activeTool === 'readiness' ? (
               <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} onPublishStaging={publishSelectedToStaging} stagingPublishing={stagingPublishing} stagingMessage={stagingPublishMessage} repoMode={isRepoBackend} />

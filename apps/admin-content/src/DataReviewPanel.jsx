@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { categoryIssueKey } from './publishReadiness.js';
 
-function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved }) {
+function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved, onSeoPolicyAligned }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [decision, setDecision] = useState(row?.decision || '');
@@ -31,10 +31,43 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
     };
     const { data, error } = await adminContentClient.from('species_data_reviews')
       .upsert(payload, { onConflict: 'issue_key' }).select('*').single();
+    if (error) {
+      setSaving(false);
+      return setMessage(error.message || '保存失败。');
+    }
+    const alignedRows = [];
+    if (issueType === 'duplicate_set' && decision === 'duplicate_records') {
+      const { data: canonicalRows, error: canonicalError } = await adminContentClient
+        .from('species_seo')
+        .update({ index_strategy: 'index', canonical_catalog_key: '' })
+        .eq('catalog_key', canonicalKey)
+        .select('*');
+      if (canonicalError) {
+        setSaving(false);
+        setMessage(`复核已记录，但 SEO 主页面策略同步失败：${canonicalError.message}`);
+        onSaved?.(data);
+        return;
+      }
+      alignedRows.push(...(canonicalRows || []));
+      for (const duplicateKey of (set?.member_ids || []).filter((id) => id !== canonicalKey)) {
+        const { data: duplicateRows, error: duplicateError } = await adminContentClient
+          .from('species_seo')
+          .update({ index_strategy: 'canonical_to_sibling', canonical_catalog_key: canonicalKey })
+          .eq('catalog_key', duplicateKey)
+          .select('*');
+        if (duplicateError) {
+          setSaving(false);
+          setMessage(`复核已记录，但重复页面策略同步失败：${duplicateError.message}`);
+          onSaved?.(data);
+          return;
+        }
+        alignedRows.push(...(duplicateRows || []));
+      }
+    }
     setSaving(false);
-    if (error) return setMessage(error.message || '保存失败。');
-    setMessage('人工结论已记录；Product Truth 未被修改。');
+    setMessage(decision === 'duplicate_records' ? '复核已记录，并已自动同步 SEO 主页面策略。' : '人工结论已记录；Product Truth 未被修改。');
     onSaved?.(data);
+    if (alignedRows.length) onSeoPolicyAligned?.(alignedRows);
   };
   return (
     <div className="review-decision-box">
@@ -72,7 +105,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
   );
 }
 
-export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = false, readOnly = false, onSaved }) {
+export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = false, readOnly = false, onSaved, onSeoPolicyAligned }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   if (!group || (!group.category_conflict && !group.duplicate_count)) return null;
@@ -97,7 +130,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
             {categoryMembers.map((item) => <div key={item.category}><b>{item.category}</b>{item.members.map((member) => <small key={member.catalog_key}>{member.name} · {member.catalog_key}</small>)}</div>)}
           </div>
           <ReviewDecision issueKey={categoryIssueKey(group)} issueType="category_conflict" group={group}
-            row={reviewRows[categoryIssueKey(group)]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} />
+            row={reviewRows[categoryIssueKey(group)]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onSeoPolicyAligned={onSeoPolicyAligned} />
         </div>
       ) : null}
       {group.duplicate_sets?.map((set) => (
@@ -106,7 +139,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
           <p><b>{set.name}</b> · <i>{set.scientific_name}</i></p>
           <div className="duplicate-key-list">{set.member_ids.map((id) => { const member = group.members?.find((item) => item.catalog_key === id); return <code key={id}>{member?.name || set.name} · {id}</code>; })}</div>
           <ReviewDecision issueKey={set.duplicate_set_key} issueType="duplicate_set" group={group} set={set}
-            row={reviewRows[set.duplicate_set_key]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} />
+            row={reviewRows[set.duplicate_set_key]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onSeoPolicyAligned={onSeoPolicyAligned} />
         </div>
       ))}
     </section>

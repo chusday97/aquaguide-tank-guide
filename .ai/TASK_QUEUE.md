@@ -227,3 +227,7 @@ Updated: 2026-08-30
 - [x] GitHub CI #36 SUCCESS and Vercel `8d1905c` Preview READY with fully green hosted Health.
 - [ ] Human click-path acceptance: from the hosted editor, save one edited Draft and confirm private `aquaguide-seo-content` commit + zero AquaGuide deployment.
 - [ ] Next UX pass: simplify Data Review from evidence-oriented cards into a short decision workflow and reduce Publish Readiness drawer density.
+
+## 2026-09-01 current next
+- Do not ask the user to submit 极火虾 again; zh-CN is already `ready_for_review` after compensating for the prior broken submit interaction.
+- Next human action, only if continuing acceptance: `批准预览` for zh-CN. Before Staging publish, verify bilingual Species + Base approvals and replace old acceptance/test copy intentionally.

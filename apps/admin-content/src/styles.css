@@ -1107,3 +1107,21 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .workflow-section-label { color:#8a958e; font-size:8.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
 .workflow-action-block .workflow-section-label { color:#52645a; }
 @media (max-width: 900px) { .editor-status-cluster { width:100%; } .editor-status-item { flex:1; } .workflow-action-block { justify-items:start; } }
+
+/* Centralized page/template source management */
+.content-source-manager { margin: 2px 0 4px; border: 1px solid #e0e7e2; border-radius: 12px; background: #f8faf8; overflow: hidden; }
+.content-source-manager > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 12px; }
+.content-source-manager > summary::-webkit-details-marker { display: none; }
+.content-source-manager > summary span { display: grid; gap: 2px; }
+.content-source-manager > summary strong { color: #35483d; font-size: 10.5px; }
+.content-source-manager > summary small { color: #87928b; font-size: 9.5px; font-weight: 500; }
+.content-source-manager > summary em { color: #35674d; font-size: 9px; font-style: normal; font-weight: 750; }
+.content-source-manager[open] > summary { border-bottom: 1px solid #e5ebe6; }
+.content-source-list { display: grid; padding: 4px 12px 9px; }
+.content-source-row { display: grid; grid-template-columns: minmax(110px,1fr) auto auto; align-items: center; gap: 10px; min-height: 34px; border-bottom: 1px solid #edf1ee; font-size: 9.5px; }
+.content-source-row:last-child { border-bottom: 0; }
+.content-source-row > span { color: #536158; font-weight: 650; }
+.content-source-row > strong { color: #6d7971; font-size: 9px; font-weight: 700; }
+.content-source-row > button, .inline-source-action { border: 0; background: transparent; color: #2f694d; font-size: 9px; font-weight: 800; cursor: pointer; padding: 3px 0; }
+.compact-source-view { position: relative; }
+.compact-source-view .inline-source-action { position: absolute; right: 10px; bottom: 7px; }
