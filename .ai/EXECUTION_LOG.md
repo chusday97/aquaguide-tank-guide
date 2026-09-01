@@ -286,3 +286,8 @@
 - Added branch-scoped Preview input resolution: only `feature/admin-content-v0` + `VERCEL_ENV=preview` receives the committed 3-Species staging fixture and Vercel preview host as canonical base.
 - Added deterministic product CTAs from generated Species pages to `/encyclopedia?mode=compatibility`, `/encyclopedia?mode=browse`, and `/aquarium?action=plan-species`, always carrying `species=<catalog_key>&source=seo-species`.
 - Local verification: Admin generator contracts PASS; simulated Vercel Preview root build emits 6 pages; root artifact verifier PASS; Production simulation safely skips without explicit snapshot; `git diff --check` PASS.
+
+## 2026-09-01 — Compatibility CTA runtime fix
+- Browser-tested the hosted compatibility deep link and rejected a false PASS: mode/source/species parameters were present, but the target Species was not in the calculator selection.
+- Updated Encyclopedia query handling so compatibility deep links append the requested Species to `calculatorSpeciesIds` and do not open the detail overlay. Browse-mode deep links retain detail behavior.
+- Added isolated Vite + Playwright regression proving `sp_0030` is a planned compatibility candidate with zero page errors.

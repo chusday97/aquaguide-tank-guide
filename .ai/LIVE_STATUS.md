@@ -160,3 +160,7 @@ Branch: `feature/admin-content-v0`
 - Production simulation PASS: `VERCEL_ENV=production` with no explicit snapshot skipped Species generation.
 - Generator contract PASS after adding compatibility/browse/aquarium CTAs carrying the real catalog key and `source=seo-species`.
 - Awaiting hosted verification on the Vercel deployment produced by the next push.
+
+## 2026-09-01 CTA runtime correction
+- Initial hosted CTA check exposed that compatibility deep links preserved query params but did not preselect the Species in the calculator.
+- Local correction PASS: `sp_0030` now renders as `Neocaridina davidi var. Yellow · planned ×1`; pageErrors=[]; regression is automated.

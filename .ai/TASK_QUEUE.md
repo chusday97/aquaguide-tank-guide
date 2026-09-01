@@ -121,3 +121,8 @@ Updated: 2026-08-30
 - [ ] Verify the next Vercel Preview deployment returns the 6 static HTML pages + sitemap rather than SPA fallback.
 - [ ] Fetch and assert hosted title/meta/H1/canonical/hreflang/robots/alt + CTA URLs.
 - [ ] Browser-check at least one hosted CTA into the correct AquaGuide Species context.
+
+## 2026-09-01 CTA handoff correction
+- [x] Correct compatibility deep-link semantics so SEO Species IDs enter the compatibility calculator as planned candidates.
+- [x] Add browser regression `verify:seo-species-handoff` and wire it into the Admin CI integration step.
+- [ ] Verify the corrected handoff on the next hosted Vercel Preview.

@@ -625,15 +625,23 @@ export default function Encyclopedia() {
   };
 
   useEffect(() => {
-    const speciesId = new URLSearchParams(location.search).get('species');
+    const params = new URLSearchParams(location.search);
+    const speciesId = params.get('species');
     if (!speciesId) {
       closingDetailRef.current = false;
       return;
     }
     if (closingDetailRef.current) return;
-    if (selectedFish?.id === speciesId) return;
     const fish = fishData.find(item => item.id === speciesId);
-    if (fish) openSpeciesDetail(fish);
+    if (!fish) return;
+
+    if (params.get('mode') === 'compatibility') {
+      setSelectedFish(null);
+      setCalculatorSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
+      return;
+    }
+
+    if (selectedFish?.id !== speciesId) openSpeciesDetail(fish);
   }, [location.search, selectedFish?.id]);
 
   useEffect(() => {

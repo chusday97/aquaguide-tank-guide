@@ -124,7 +124,8 @@
     "build:web": "vite build",
     "build:seo-admin": "npm run build -w @aquaguide/admin-content -- --base=/admin/seo/ --outDir=../../dist/admin/seo",
     "build:species-pages": "node scripts/build-species-seo-artifact.mjs",
-    "verify:species-pages-artifact": "node scripts/verify-root-species-seo-artifact.mjs"
+    "verify:species-pages-artifact": "node scripts/verify-root-species-seo-artifact.mjs",
+    "verify:seo-species-handoff": "node scripts/verify-seo-species-handoff.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

@@ -478,3 +478,7 @@ After it is gated, the next product milestone is a small staging publication sli
 - Production build remains fail-closed without explicit Species snapshot.
 - Species pages now include real AquaGuide product CTAs carrying `catalog_key` and `source=seo-species`.
 - Local Preview simulation and generator/root artifact tests PASS; hosted Vercel verification is next.
+
+## 2026-09-01 — SEO CTA runtime correction
+- Fixed compatibility SEO deep link from detail-only behavior to real calculator preselection.
+- Added automated Playwright regression; local PASS with `sp_0030` planned and no page errors.

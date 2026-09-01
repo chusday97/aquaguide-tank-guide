@@ -11,6 +11,7 @@ on:
       - 'package.json'
       - 'scripts/build-species-seo-artifact.mjs'
       - 'scripts/verify-root-species-seo-artifact.mjs'
+      - 'scripts/verify-seo-species-handoff.mjs'
       - 'package-lock.json'
       - '.github/workflows/admin-content-ci-gate.yml'
   pull_request:
@@ -22,6 +23,7 @@ on:
       - 'package.json'
       - 'scripts/build-species-seo-artifact.mjs'
       - 'scripts/verify-root-species-seo-artifact.mjs'
+      - 'scripts/verify-seo-species-handoff.mjs'
       - 'package-lock.json'
       - '.github/workflows/admin-content-ci-gate.yml'
   workflow_dispatch:
@@ -80,6 +82,7 @@ jobs:
         run: |
           npm run build
           npm run verify:species-pages-artifact
+          npm run verify:seo-species-handoff
 
       - name: Generated catalog must be committed
         run: |

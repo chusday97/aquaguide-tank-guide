@@ -716,3 +716,7 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - Vercel Preview on `feature/admin-content-v0` is now the controlled hosted SEO staging surface. Its root build auto-loads only the committed 3-Species bilingual Published fixture; Production still requires explicit snapshot input and otherwise skips Species generation.
 - Static Species pages now link back into real AquaGuide compatibility, browse/detail and aquarium-planning flows with the catalog key plus `source=seo-species`.
 - Local simulated Vercel Preview build + generator contracts + root artifact verification PASS. Next required evidence is the newly deployed Vercel HTML source and CTA handoff.
+
+## 2026-09-01 SEO compatibility handoff correction
+- Do not treat query preservation as CTA success. For `mode=compatibility`, the SEO `species` query must preselect that catalog ID in the compatibility calculator.
+- Local browser regression now proves `sp_0030` enters as a planned candidate; this regression is wired into CI. Hosted Vercel re-verification is still required.

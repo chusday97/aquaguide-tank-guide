@@ -112,3 +112,8 @@ The persistent product model is now:
 - The staging fixture contains 3 real catalog keys × zh-CN/en = 6 static pages covering index, canonical-to-sibling and noindex strategies.
 - Generated Species pages now include product-return CTAs into AquaGuide compatibility, browse/detail and aquarium planning using `species=<catalog_key>&source=seo-species`.
 - Next acceptance: fetch the newly deployed Vercel Species HTML and sitemap, verify metadata/CTA source, then browser-check at least one CTA handoff.
+
+## 2026-09-01 — SEO CTA runtime handoff
+- Compatibility CTA semantics are now explicit: `mode=compatibility&species=<id>` preselects that Species as a planned compatibility candidate instead of merely opening the Atlas detail dialog.
+- `scripts/verify-seo-species-handoff.mjs` starts an isolated Vite browser session and asserts `sp_0030` appears in the calculator with planned state and zero page errors.
+- Hosted verification remains required after the next Vercel Preview deploy.
