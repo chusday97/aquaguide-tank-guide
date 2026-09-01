@@ -139,6 +139,26 @@ export async function appendRepoActivity(activity) {
   }, 'content(seo): record admin activity');
 }
 
+function applyResolvedDuplicateSeoPolicy(store, row) {
+  if (!row?.catalog_key) return row;
+  const review = (store.species_data_reviews || []).find((item) =>
+    item.issue_type === 'duplicate_set' &&
+    item.decision === 'duplicate_records' &&
+    Array.isArray(item.member_ids) &&
+    item.member_ids.includes(row.catalog_key) &&
+    item.member_ids.includes(item.canonical_catalog_key)
+  );
+  if (!review) return row;
+  if (review.canonical_catalog_key === row.catalog_key) {
+    row.index_strategy = 'index';
+    row.canonical_catalog_key = '';
+  } else {
+    row.index_strategy = 'canonical_to_sibling';
+    row.canonical_catalog_key = review.canonical_catalog_key;
+  }
+  return row;
+}
+
 function applyEditorialMetadata(previous, payload, cfg) {
   const timestamp = now();
   const inserting = !previous;
@@ -189,9 +209,10 @@ function applyUpsert(store, table, values) {
   for (const payload of rows) {
     const index = store[table].findIndex((row) => sameKey(row, payload, cfg.keys));
     const previous = index >= 0 ? store[table][index] : null;
-    const next = table === 'species_data_reviews'
+    let next = table === 'species_data_reviews'
       ? applyDataReviewMetadata(previous, payload)
       : applyEditorialMetadata(previous, payload, cfg);
+    if (table === 'species_seo') next = applyResolvedDuplicateSeoPolicy(store, next);
     if (index >= 0) store[table][index] = next; else store[table].push(next);
     if (cfg.resourceType) {
       store.content_revisions.push(revisionFor(next, cfg, previous ? 'update' : 'insert'));
@@ -234,9 +255,10 @@ function applyUpdate(store, operation) {
   const output = [];
   store[operation.table] = store[operation.table].map((row) => {
     if (!matches(row, operation.filters)) return row;
-    const next = operation.table === 'species_data_reviews'
+    let next = operation.table === 'species_data_reviews'
       ? applyDataReviewMetadata(row, operation.values || {})
       : applyEditorialMetadata(row, operation.values || {}, cfg);
+    if (operation.table === 'species_seo') next = applyResolvedDuplicateSeoPolicy(store, next);
     if (cfg.resourceType) store.content_revisions.push(revisionFor(next, cfg, 'update'));
     output.push(clone(next));
     return next;
@@ -298,6 +320,7 @@ function resolveDuplicateReview(store, args = {}) {
     group_key: groupKey,
     decision,
     canonical_catalog_key: canonicalKey,
+    member_ids: memberIds,
     notes,
   })[0];
 

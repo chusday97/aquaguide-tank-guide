@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { extractTemplateTokens, validateProtectedTokens } from '../api/_translation-core.js';
 import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
-import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason, summarizeDataReviewIssues } from '../src/publishReadiness.js';
+import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason, getResolvedDuplicateSeoPolicy, summarizeDataReviewIssues } from '../src/publishReadiness.js';
 import { EDITOR_ELEMENT_REGISTRY } from '../src/editorElementRegistry.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -50,8 +50,8 @@ const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSourc
 
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
-const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 const bulkImportSource = await readFile(path.join(appRoot, 'src/BulkImportPanel.jsx'), 'utf8');
+const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 const activityCenterSource = await readFile(path.join(appRoot, 'src/ActivityCenter.jsx'), 'utf8');
 
 const catalog = JSON.parse(catalogRaw);
@@ -262,6 +262,11 @@ assert.match(appSource, /if \(readOnly\)/, 'Single save path must fail closed in
 assert.match(appSource, /disabled=\{saving \|\| readOnly/, 'Single save button must be disabled in review mode');
 
 assert.match(batchSource, /assessDataReview/, 'Bulk writes must consume persisted data-review decisions');
+assert.match(batchSource, /getResolvedDuplicateSeoPolicy/, 'Batch Draft creation must inherit resolved duplicate canonical policy.');
+assert.match(bulkImportSource, /getResolvedDuplicateSeoPolicy/, 'CSV bulk import must preserve resolved duplicate canonical policy.');
+assert.match(bulkImportSource, /已完成人工重复复核/, 'CSV validation must reject attempts to contradict a resolved duplicate decision.');
+assert.match(appSource, /Locked by the resolved duplicate-review decision|已由人工重复复核结论锁定/, 'Single-page Advanced SEO must lock resolved duplicate canonical policy.');
+assert.match(appSource, /保存被阻止：.*indexBlockReason|Save blocked:.*indexBlockReason/s, 'Single-page content save must refuse invalid index/canonical state.');
 assert.match(batchSource, /publishedSelected\.length/, 'Published rows must block unsafe batch overwrite');
 assert.match(batchSource, /status: 'draft'/, 'Batch SEO must write drafts only');
 assert.match(batchSource, /resolveEffectiveSeo/, 'Batch preview must resolve Base inheritance rather than copy flat content');
@@ -340,6 +345,15 @@ if (duplicateSet) {
   assert.equal(getIndexReviewBlockReason({ species: duplicateMember, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows }), '', 'Distinct-record decision must unblock independent Index');
   const canonicalReviewRows = { ...reviewRows, [duplicateSet.duplicate_set_key]: { decision: 'duplicate_records', canonical_catalog_key: duplicateSet.member_ids[0] } };
   assert.equal(summarizeDataReviewIssues(neoGroup, canonicalReviewRows).open, neoGroup.category_conflict ? 1 : 0, 'Resolved duplicate evidence must leave only genuinely unresolved issues open.');
+  const canonicalMember = neoGroup.members.find((member) => member.catalog_key === duplicateSet.member_ids[0]);
+  const duplicatePolicy = getResolvedDuplicateSeoPolicy({ species: canonicalMember, group: neoGroup, reviewRows: canonicalReviewRows });
+  assert.equal(duplicatePolicy?.indexStrategy, 'index', 'Resolved duplicate canonical must have an authoritative Index policy.');
+  const duplicateSibling = neoGroup.members.find((member) => duplicateSet.member_ids.includes(member.catalog_key) && member.catalog_key !== duplicateSet.member_ids[0]);
+  if (duplicateSibling) {
+    const siblingPolicy = getResolvedDuplicateSeoPolicy({ species: duplicateSibling, group: neoGroup, reviewRows: canonicalReviewRows });
+    assert.equal(siblingPolicy?.indexStrategy, 'canonical_to_sibling');
+    assert.equal(siblingPolicy?.canonicalCatalogKey, duplicateSet.member_ids[0]);
+  }
   const nonCanonical = neoGroup.members.find((member) => duplicateSet.member_ids.includes(member.catalog_key) && member.catalog_key !== duplicateSet.member_ids[0]);
   if (nonCanonical) assert.match(getIndexReviewBlockReason({ species: nonCanonical, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows: canonicalReviewRows }), /不能独立 Index/, 'Confirmed duplicate non-canonical must stay blocked from independent Index');
   const unrelatedMember = neoGroup.members.find((member) => !(neoGroup.duplicate_sets || []).some((set) => set.member_ids.includes(member.catalog_key)));

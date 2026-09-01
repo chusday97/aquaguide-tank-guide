@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 01:48 +08:00
+Updated: 2026-09-02 02:02 +08:00
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -228,7 +228,8 @@ A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
 Latest functional commit:
-- `af8ad80 fix(admin): close duplicate review workflow`
+- current branch HEAD after this batch: `fix(admin): enforce resolved duplicate policy everywhere`
+- previous functional checkpoint: `af8ad80 fix(admin): close duplicate review workflow`
 
 GitHub Actions:
 - Admin Content CI Gate #45
@@ -272,7 +273,7 @@ Primary:
 Known build warning: large Vite chunks. This is not currently a Species SEO functional failure.
 
 ## 18. Current next actions — in priority order
-1. In the **real authenticated Admin**, finish the 白金西非凤凰 review (`sp_0214 / sp_0338`) using the improved `处理重复` flow. Current evidence strongly favors `确认是重复记录` + keep `sp_0214`: name/scientific name/image/temperature/pH/tank/difficulty are the same; `sp_0338` is source-marked duplicate of `sp_0214`; only Product Truth description wording differs. Do not bypass the Admin session to write the private repo.
+1. In the **real authenticated Admin**, finish the 白金西非凤凰 review (`sp_0214 / sp_0338`) using the improved `处理重复` flow. Current evidence strongly favors `确认是重复记录` + keep `sp_0214`: name/scientific name/image/temperature/pH/tank/difficulty are the same; `sp_0338` is source-marked duplicate of `sp_0214`; only Product Truth description wording differs. Do not bypass the Admin session to write the private repo. Once saved, this review decision becomes authoritative across single-page Advanced SEO, batch Draft creation, CSV import and Repo writes.
 2. For the original `sp_0001` vertical slice: clean the English acceptance/test copy, save English, submit and approve English. Do not ask user to re-submit Chinese; Chinese is already Approved.
 3. Use the new bulk-import flow for the next real batch only when there is real content to import; do not create fake writes merely to populate Activity history.
 4. Then explicitly Staging Publish only the intended reviewed Species set.
@@ -360,7 +361,35 @@ Functional commit: `af8ad80`.
 - `git diff --check` PASS
 - only pre-existing Vite chunk-size warnings remain
 
-## 22. Startup instruction for the next conversation
+## 22. Resolved duplicate policy authority — completed locally 2026-09-02
+This batch closes write-path bypasses discovered after the duplicate workflow redesign.
+
+### Authority rule
+Once a duplicate set is explicitly resolved as `duplicate_records`, the human Data Review decision owns the SEO indexing policy:
+- canonical record → `index` + empty sibling canonical key
+- folded duplicate record → `canonical_to_sibling` → reviewed canonical record
+- changing the human decision to `distinct_records` clears stale canonical policy and returns rows to fail-closed `noindex + editing`
+
+### All write paths now obey the same rule
+- single-page Advanced SEO auto-loads the reviewed policy and locks the index/canonical controls; changing the decision requires reopening Data Review
+- invalid single-page index/canonical state blocks content Save instead of merely showing a warning
+- Batch SEO Draft creation carries the reviewed policy when it creates rows
+- CSV template download pre-fills the reviewed canonical/index policy even when a Variant SEO row does not yet exist
+- CSV validation rejects a row that contradicts a resolved duplicate decision
+- Repo backend stores duplicate `member_ids` on new resolutions and re-applies the reviewed policy on generic `species_seo` upsert/update, so direct Admin API writes cannot bypass the decision
+
+### Verification
+- contract test deliberately attempted to upsert a folded duplicate as independent `index`; Repo returned the reviewed `canonical_to_sibling` policy
+- contract test deliberately attempted to downgrade the reviewed canonical to `noindex`; Repo retained authoritative `index`
+- duplicate→distinct rollback safety still PASS
+- `npm run test:contract -w @aquaguide/admin-content` PASS (`revisions: 18`)
+- full root `npm run build` PASS
+- `npm run verify:seo-species-handoff` PASS
+- `npm run test:admin-content-ui` PASS
+- `git diff --check` PASS
+- new Vercel Preview remains externally blocked by the account deployment-rate limit; do not retrigger repeatedly
+
+## 23. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.

@@ -19,7 +19,7 @@ import { resolveEffectiveSeo } from './seoInheritance.js';
 import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './speciesGroups.js';
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
-import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason, summarizeDataReviewIssues } from './publishReadiness.js';
+import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason, getResolvedDuplicateSeoPolicy, summarizeDataReviewIssues } from './publishReadiness.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -152,12 +152,21 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [overrideEditing, setOverrideEditing] = useState({});
+  const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species, group, reviewRows: dataReviewRows });
+  const duplicateSetForSpecies = (group?.duplicate_sets || []).find((set) => set.member_ids.includes(species?.catalog_key));
+  const duplicateReviewForSpecies = duplicateSetForSpecies ? dataReviewRows[duplicateSetForSpecies.duplicate_set_key] : null;
+  const duplicateReviewOpen = Boolean(duplicateSetForSpecies && !['distinct_records', 'duplicate_records'].includes(duplicateReviewForSpecies?.decision));
 
   useEffect(() => {
-    setForm(fromSeoRow(record, species, locale));
+    const next = fromSeoRow(record, species, locale);
+    if (resolvedDuplicatePolicy) {
+      next.indexStrategy = resolvedDuplicatePolicy.indexStrategy;
+      next.canonicalCatalogKey = resolvedDuplicatePolicy.canonicalCatalogKey;
+    }
+    setForm(next);
     setOverrideEditing({});
     onDirtyChange?.(false);
-  }, [record, species, locale, onDirtyChange]);
+  }, [record, species, locale, resolvedDuplicatePolicy?.indexStrategy, resolvedDuplicatePolicy?.canonicalCatalogKey, onDirtyChange]);
 
   useEffect(() => {
     setMessage('');
@@ -314,6 +323,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       setForm((current) => ({ ...current, reviewState: data.review_state }));
       setMessage(reviewStateOverride === 'ready_for_review' ? '已提交审核。' : reviewStateOverride === 'approved' ? '已批准进入预览。' : '已退回编辑。');
       onSaved(data);
+      return;
+    }
+    if (indexBlockReason) {
+      setSaving(false);
+      setMessage(isUiEnglish ? `Save blocked: ${indexBlockReason}` : `保存被阻止：${indexBlockReason}`);
       return;
     }
     const payload = {
@@ -491,19 +505,20 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
               </label>
               <label>{t('editor.indexStrategy')}
-                <select value={form.indexStrategy} onChange={(event) => update('indexStrategy', event.target.value)}>
+                <select value={form.indexStrategy} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('indexStrategy', event.target.value)}>
                   {INDEX_STRATEGIES.map((item) => (
                     <option
                       key={item.value}
                       value={item.value}
-                      disabled={(group?.category_conflict && item.value !== 'noindex') || (groupMember?.duplicate_peer_keys?.length && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
+                      disabled={(group?.category_conflict && item.value !== 'noindex') || (duplicateReviewOpen && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
                     >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
                   ))}
                 </select>
+                {resolvedDuplicatePolicy ? <small className="inherit-note">{isUiEnglish ? 'Locked by the resolved duplicate-review decision.' : '已由人工重复复核结论锁定；如需改变，请回到“数据问题”重新复核。'}</small> : null}
               </label>
               {form.indexStrategy === 'canonical_to_sibling' ? (
                 <label>{t('editor.canonicalTarget')}
-                  <select value={form.canonicalCatalogKey} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
+                  <select value={form.canonicalCatalogKey} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
                     <option value="">{isUiEnglish ? 'Select the canonical page in this Base group' : '请选择同组主页面'}</option>
                     {(group?.members || []).filter((item) => item.catalog_key !== species.catalog_key).map((item) => (
                       <option key={item.catalog_key} value={item.catalog_key}>{item.name} · {item.catalog_key}</option>
@@ -1253,6 +1268,7 @@ export default function App() {
               <BulkImportPanel
                 species={species}
                 seoRows={seoRows}
+                reviewRows={dataReviewRows}
                 locale={contentLocale}
                 schemaReady={schemaReady}
                 readOnly={isReviewMode}

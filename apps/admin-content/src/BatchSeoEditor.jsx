@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { resolveEffectiveSeo } from './seoInheritance.js';
-import { assessDataReview } from './publishReadiness.js';
+import { assessDataReview, getResolvedDuplicateSeoPolicy } from './publishReadiness.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 
 export default function BatchSeoEditor({ group, members, existingRows, groupRecord, locale = 'zh-CN', dataReviewRows = {}, readOnly, schemaReady, onSaved, onClear }) {
@@ -40,11 +40,18 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
     if (readOnly || blockedReason || members.length < 2) return;
     setSaving(true);
     setMessage('');
-    const rows = members.map((member) => ({
-      catalog_key: member.catalog_key,
-      locale,
-      status: 'draft',
-    }));
+    const rows = members.map((member) => {
+      const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species: member, group, reviewRows: dataReviewRows });
+      return {
+        catalog_key: member.catalog_key,
+        locale,
+        status: 'draft',
+        ...(resolvedDuplicatePolicy ? {
+          index_strategy: resolvedDuplicatePolicy.indexStrategy,
+          canonical_catalog_key: resolvedDuplicatePolicy.canonicalCatalogKey,
+        } : {}),
+      };
+    });
     const { data, error } = await adminContentClient
       .from('species_seo')
       .upsert(rows, { onConflict: 'catalog_key,locale' })

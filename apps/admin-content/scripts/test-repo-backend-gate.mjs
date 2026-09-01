@@ -87,6 +87,21 @@ const activityAfterDuplicate = (await executeRepoOperation({ action: 'select', t
 assert.equal(activityAfterDuplicate.length, activityBeforeDuplicate + 1, 'One duplicate-review action must create exactly one activity record.');
 assert.equal(activityAfterDuplicate.at(-1).kind, 'duplicate_review');
 
+result = await executeRepoOperation({
+  action: 'upsert', table: 'species_seo', values: {
+    catalog_key: duplicateB, locale: 'en', localized_name: 'Attempted bypass', image_alt: 'Attempted bypass',
+    index_strategy: 'index', canonical_catalog_key: '', status: 'draft', review_state: 'editing',
+  }, singleMode: 'single',
+});
+assert.equal(result.error, null);
+assert.equal(result.data.index_strategy, 'canonical_to_sibling', 'Generic Repo writes must not bypass a resolved duplicate policy.');
+assert.equal(result.data.canonical_catalog_key, duplicateA);
+result = await executeRepoOperation({
+  action: 'update', table: 'species_seo', values: { index_strategy: 'noindex', canonical_catalog_key: '' },
+  filters: [{ type: 'eq', column: 'catalog_key', value: duplicateA }], singleMode: 'single',
+});
+assert.equal(result.data.index_strategy, 'index', 'Canonical source policy must remain authoritative on generic updates.');
+
 result = await executeRepoOperation({ action: 'rpc', rpc: 'resolve_species_duplicate_review', args: {
   p_issue_key: 'duplicate:test-pair', p_group_key: 'base:test-pair', p_decision: 'distinct_records',
   p_canonical_catalog_key: '', p_member_ids: [duplicateA, duplicateB], p_notes: 'changed decision',

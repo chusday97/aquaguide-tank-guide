@@ -59,6 +59,25 @@ export function assessDataReview(group, reviewRows = {}, { catalogKey = null } =
   }
   return { ready: blockers.length === 0, blockers, categoryReview };
 }
+export function getResolvedDuplicateSeoPolicy({ species, group, reviewRows = {} }) {
+  const catalogKey = species?.catalog_key;
+  if (!catalogKey || !group) return null;
+  const duplicateSet = (group.duplicate_sets || []).find((set) => set.member_ids.includes(catalogKey));
+  if (!duplicateSet) return null;
+  const review = reviewRows[duplicateSet.duplicate_set_key];
+  if (review?.decision !== 'duplicate_records' || !duplicateSet.member_ids.includes(review.canonical_catalog_key)) return null;
+  if (review.canonical_catalog_key === catalogKey) {
+    return { indexStrategy: 'index', canonicalCatalogKey: '', duplicateSet, review, isCanonical: true };
+  }
+  return {
+    indexStrategy: 'canonical_to_sibling',
+    canonicalCatalogKey: review.canonical_catalog_key,
+    duplicateSet,
+    review,
+    isCanonical: false,
+  };
+}
+
 export function assessPublishReadiness({ species, group, locale, variantRow, groupRow, counterpartVariantRow, counterpartGroupRow, reviewRows = {} }) {
   const blockers = [];
   if (!species || !group) return { state: 'blocked', blockers: ['未选择 Species。'] };

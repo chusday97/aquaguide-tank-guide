@@ -3,6 +3,7 @@ import { adminContentClient } from './adminBackend.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 import { speciesGroupByMemberId } from './speciesGroups.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
+import { getResolvedDuplicateSeoPolicy } from './publishReadiness.js';
 
 const FIELDS = [
   'import_action', 'catalog_key', 'source_name', 'scientific_name', 'locale', 'localized_name',
@@ -44,7 +45,7 @@ function parseCsv(text) {
   }));
 }
 
-export default function BulkImportPanel({ species = [], seoRows = {}, locale = 'zh-CN', schemaReady, readOnly, onImported }) {
+export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows = {}, locale = 'zh-CN', schemaReady, readOnly, onImported }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const inputRef = useRef(null);
@@ -61,11 +62,14 @@ export default function BulkImportPanel({ species = [], seoRows = {}, locale = '
     const lines = [FIELDS.join(',')];
     for (const member of species) {
       const current = seoRows[`${member.catalog_key}::${locale}`] || {};
+      const group = speciesGroupByMemberId.get(member.id);
+      const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species: member, group, reviewRows });
       const values = {
         import_action: '', catalog_key: member.catalog_key, source_name: member.name, scientific_name: member.scientific_name,
         locale, localized_name: current.localized_name || '', seo_title: current.seo_title || '', meta_description: current.meta_description || '',
         h1: current.h1 || '', intro: current.intro || '', image_alt: current.image_alt || '', focus_keyword: current.focus_keyword || '',
-        index_strategy: current.index_strategy || 'noindex', canonical_catalog_key: current.canonical_catalog_key || '',
+        index_strategy: resolvedDuplicatePolicy?.indexStrategy || current.index_strategy || 'noindex',
+        canonical_catalog_key: resolvedDuplicatePolicy?.canonicalCatalogKey ?? current.canonical_catalog_key ?? '',
       };
       lines.push(FIELDS.map((field) => csvEscape(values[field])).join(','));
     }
@@ -94,6 +98,14 @@ export default function BulkImportPanel({ species = [], seoRows = {}, locale = '
       if (!VALID_STRATEGIES.has(strategy)) { nextErrors.push(`第 ${row.__row} 行：index_strategy 无效。`); continue; }
       const canonicalKey = String(row.canonical_catalog_key || '').trim();
       const group = speciesGroupByMemberId.get(member.id);
+      const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species: member, group, reviewRows });
+      if (resolvedDuplicatePolicy && (strategy !== resolvedDuplicatePolicy.indexStrategy || canonicalKey !== resolvedDuplicatePolicy.canonicalCatalogKey)) {
+        const expected = resolvedDuplicatePolicy.isCanonical
+          ? 'index（独立主页面）'
+          : `canonical_to_sibling → ${resolvedDuplicatePolicy.canonicalCatalogKey}`;
+        nextErrors.push(`第 ${row.__row} 行：${key} 已完成人工重复复核，SEO 策略必须保持 ${expected}。`);
+        continue;
+      }
       if (strategy === 'canonical_to_sibling') {
         const validTarget = canonicalKey && canonicalKey !== key && group?.members?.some((item) => item.catalog_key === canonicalKey);
         if (!validTarget) { nextErrors.push(`第 ${row.__row} 行：Canonical 目标必须是同一 Base Species 下的其他页面。`); continue; }
