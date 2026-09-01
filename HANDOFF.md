@@ -720,3 +720,8 @@ Do not touch Production Supabase or enable Production Published actions while pr
 ## 2026-09-01 SEO compatibility handoff correction
 - Do not treat query preservation as CTA success. For `mode=compatibility`, the SEO `species` query must preselect that catalog ID in the compatibility calculator.
 - Local browser regression now proves `sp_0030` enters as a planned candidate; this regression is wired into CI. Hosted Vercel re-verification is still required.
+
+## 2026-09-01 Hosted Species vertical slice evidence
+- The branch Vercel Preview now proves the real deployment artifact: Species HTML is statically returned with correct EN/ZH SEO metadata, canonical/noindex strategies and sitemap membership.
+- SEO compatibility CTA runtime is also proven: `species=sp_0030&source=seo-species` opens compatibility mode with that catalog Species already selected as a planned candidate; browser `pageErrors=[]`.
+- CI #26 was not a product regression: root build/artifact checks passed and the browser-only gate failed because the clean GitHub runner lacked Chromium. The workflow now installs Playwright Chromium explicitly before that gate.

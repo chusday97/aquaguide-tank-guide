@@ -482,3 +482,8 @@ After it is gated, the next product milestone is a small staging publication sli
 ## 2026-09-01 — SEO CTA runtime correction
 - Fixed compatibility SEO deep link from detail-only behavior to real calculator preselection.
 - Added automated Playwright regression; local PASS with `sp_0030` planned and no page errors.
+
+## 2026-09-01 — Hosted Species vertical slice PASS
+- Vercel Preview static HTML validation passed for bilingual index pages, canonical sibling, noindex page and sitemap.
+- Runtime product handoff passed: SEO Species `sp_0030` enters AquaGuide compatibility as a planned candidate with zero page errors.
+- GitHub clean-runner browser dependency is now explicit (`playwright install --with-deps chromium`) after CI #26 exposed the missing executable.

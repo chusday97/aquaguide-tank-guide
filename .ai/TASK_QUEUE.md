@@ -126,3 +126,10 @@ Updated: 2026-08-30
 - [x] Correct compatibility deep-link semantics so SEO Species IDs enter the compatibility calculator as planned candidates.
 - [x] Add browser regression `verify:seo-species-handoff` and wire it into the Admin CI integration step.
 - [ ] Verify the corrected handoff on the next hosted Vercel Preview.
+
+## 2026-09-01 hosted vertical slice acceptance
+- [x] Hosted Vercel Preview returns real static Species HTML and sitemap.
+- [x] Hosted EN/ZH index, canonical and noindex strategies match expected metadata and sitemap rules.
+- [x] Hosted SEO compatibility CTA preselects `sp_0030` as a planned species with zero page errors.
+- [x] Diagnose CI-only Playwright failure as missing clean-runner Chromium and add explicit browser installation.
+- [ ] Confirm the replacement GitHub Actions run is fully green, including root artifact integration and diff hygiene.

@@ -164,3 +164,9 @@ Branch: `feature/admin-content-v0`
 ## 2026-09-01 CTA runtime correction
 - Initial hosted CTA check exposed that compatibility deep links preserved query params but did not preselect the Species in the calculator.
 - Local correction PASS: `sp_0030` now renders as `Neocaridina davidi var. Yellow · planned ×1`; pageErrors=[]; regression is automated.
+
+## 2026-09-01 Hosted vertical slice evidence
+- Vercel Preview `0222f4e` serves the generated Species files as real static HTML, not SPA fallback.
+- Hosted EN/ZH index pages, canonical-to-sibling page, noindex page and `sitemap-species.xml` all passed source-level assertions.
+- Hosted compatibility deep link passed runtime browser verification: `sp_0030` appears as `Neocaridina davidi var. Yellow · planned ×1`, compatibility UI is active and `pageErrors=[]`.
+- GitHub CI #26 failed only because the clean Ubuntu runner had npm Playwright installed but no Chromium executable. The workflow now explicitly installs pinned-project Playwright Chromium before the browser handoff gate.

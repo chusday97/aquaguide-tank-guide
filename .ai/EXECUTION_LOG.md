@@ -291,3 +291,8 @@
 - Browser-tested the hosted compatibility deep link and rejected a false PASS: mode/source/species parameters were present, but the target Species was not in the calculator selection.
 - Updated Encyclopedia query handling so compatibility deep links append the requested Species to `calculatorSpeciesIds` and do not open the detail overlay. Browse-mode deep links retain detail behavior.
 - Added isolated Vite + Playwright regression proving `sp_0030` is a planned compatibility candidate with zero page errors.
+
+## 2026-09-01 — Hosted vertical slice PASS / clean-runner repair
+- Latest hosted Species artifact passed: EN/ZH title, robots, H1, reciprocal hreflang, canonical sibling behavior, noindex behavior, sitemap inclusion/exclusion and SEO-to-product CTA source parameters.
+- Latest hosted runtime handoff passed: compatibility deep link retained `species=sp_0030&source=seo-species`, preselected that Species as planned and produced zero page errors.
+- CI #26 diagnosis: root build and static artifact checks passed; only `verify:seo-species-handoff` failed because GitHub Actions had no downloaded Chromium binary. Added `npx playwright install --with-deps chromium` after `npm ci` so the same browser regression runs on a clean runner.
