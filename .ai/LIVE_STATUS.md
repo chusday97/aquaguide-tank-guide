@@ -232,3 +232,15 @@ Branch: `feature/admin-content-v0`
 - GitHub Admin Content CI #34 completed SUCCESS across contract, docs-only guard, root artifact integration, catalog parity and diff hygiene.
 - Admin password was rotated again; only its scrypt hash is in Vercel, and the plaintext password was copied to the local macOS clipboard.
 - Remaining acceptance is intentionally narrow: one human login + Save through the hosted Admin UI/API. Tool-level secret reading is blocked by the platform safety layer and must not be bypassed.
+
+## 2026-09-01 — Species SEO Admin productization pass
+- Human hosted login is now confirmed. Login uses `admin@aquaguide.local`; commit `711019f` prefills the internal Admin account so users only paste the password.
+- Commit `8d1905c refactor(admin): productize species SEO workflow` replaces model/storage jargon in the Chinese primary flow: `Base Species / Variant / Override / 使用 Base 值` becomes `基础种公共内容 / 当前品种页面 / 沿用公共内容 / 为当前页单独编辑 / 恢复公共内容`.
+- Source catalog truth remains 486 records across 276 Base groups. There are 28 extra exact-duplicate source records and 33 total Data Review issues (28 duplicate sets + 5 category conflicts).
+- Normal SEO navigation now shows 458 current SEO page candidates while unresolved secondary duplicate source rows are folded. Review is authoritative: `distinct_records` restores both pages; `duplicate_records` keeps only the selected SEO main page. Product Truth is never silently deleted.
+- Duplicate readiness is page-scoped: an unresolved duplicate pair blocks only members of that pair, not unrelated variants in the same Base group. Workflow queue counts use the same duplicate-aware page-candidate rule.
+- Editing SEO content immediately resets the local review state to Editing and disables misleading approval changes until the edit is saved. Footer now says `草稿 · 不会直接上线` and uses a labeled `内容流程` instead of exposing two database-like lifecycle selects.
+- Local rendered-DOM acceptance: search `极火` shows one normal 极火虾 row; Neocaridina displays `15 个品种页面 · 1 条疑似重复已折叠`; sidebar shows `458` candidates and `486 条源记录 · 28 条疑似重复 · 276 个基础种`.
+- Admin contract, controlled-preview generator, Repo backend/API, dual-repo routing, Admin build, root AquaGuide build, SEO handoff and diff hygiene all PASS.
+- GitHub Admin Content CI #36 (`33495672879`) SUCCESS for `8d1905c`. Vercel Preview `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` READY. Hosted Health remains fully green with empty `repo_access_error`.
+- Hosted Admin bundle contains the new product language and duplicate-review flow. Remaining end-user acceptance: click Save once in the hosted Admin after editing, then verify that exact UI write lands in the private Draft repo with zero AquaGuide deployment.

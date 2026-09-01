@@ -542,3 +542,14 @@ After it is gated, the next product milestone is a small staging publication sli
 - Hosted English H1 与中文 H1 均精确命中本次 staging 内容；页面为 `noindex,follow`，三个 Aqua 产品 CTA 均保留。
 - GitHub CI #34 SUCCESS；Production 未触碰。
 - 剩余一项仅为人工浏览器验收：用本机剪贴板中的后台密码登录 `/admin/seo/` 并做一次普通 Save，验证 UI/API 的登录会话路径。安全层禁止工具读取密码，不应绕过。
+
+## 2026-09-01 — Productize Species SEO Admin after real-use feedback
+- Human hosted login confirmed; login page now prefills the internal Admin account.
+- Reframed the catalog into 486 source records → 458 current SEO page candidates → 276 Base groups, with 28 unresolved extra duplicate records folded from normal navigation.
+- Duplicate handling is reversible and review-driven; Product Truth is never silently rewritten.
+- Fixed a release-readiness bug where one duplicate pair could block unrelated variants in the same Base group.
+- Replaced Chinese inheritance internals with editorial language (`沿用公共内容`, `为当前页单独编辑`, `恢复公共内容`).
+- Simplified lifecycle UI: dirty content immediately resets approval; Draft is explicitly labeled as not live; review becomes a single `内容流程`.
+- Rendered-DOM check for `极火`: one visible normal 极火虾 row, one duplicate folded; group reports 15 candidate pages + 1 folded duplicate.
+- Commit `8d1905c`; CI #36 SUCCESS; Vercel `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` READY; Hosted Health all green.
+- Next acceptance is one real hosted Save click, then verify private Draft write / zero public deployment.

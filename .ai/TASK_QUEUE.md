@@ -213,3 +213,17 @@ Updated: 2026-08-30
 - [x] Both hosted static pages return page-level `noindex,follow` and retain compatibility / browse / planning CTAs for `sp_0001`.
 - [x] GitHub Admin Content CI #34 completed SUCCESS for the staging snapshot commit.
 - [ ] One final browser-only acceptance remains: sign into `/admin/seo/` with the rotated Admin password and perform one Save through the hosted Admin UI/API. Automated secret reading is intentionally blocked, so this must be a human paste/click rather than a tool bypass.
+
+## 2026-09-01 Admin productization after first human use
+- [x] Fix hosted login UX: prefill `admin@aquaguide.local` and stop requiring the user to remember the internal account.
+- [x] Separate source-record count from current SEO-page candidates: 486 source rows / 458 current page candidates / 28 folded duplicate rows / 276 Base groups.
+- [x] Fold unresolved duplicate secondary records from normal SEO navigation without deleting Product Truth.
+- [x] Make duplicate visibility review-aware: confirmed distinct restores both; confirmed duplicate retains the selected SEO main page.
+- [x] Scope duplicate publish blockers to the affected duplicate set instead of blocking every page in the Base group.
+- [x] Make workflow queue counts use the same duplicate-aware page candidates.
+- [x] Replace Chinese `Base / Variant / Override / 使用 Base 值` terminology with shared-content/page-specific language.
+- [x] Make unsaved content edits visibly reset review to Editing; replace database-like status controls with `草稿 · 不会直接上线` + `内容流程`.
+- [x] Verify rendered DOM locally and complete full Admin/root build regression.
+- [x] GitHub CI #36 SUCCESS and Vercel `8d1905c` Preview READY with fully green hosted Health.
+- [ ] Human click-path acceptance: from the hosted editor, save one edited Draft and confirm private `aquaguide-seo-content` commit + zero AquaGuide deployment.
+- [ ] Next UX pass: simplify Data Review from evidence-oriented cards into a short decision workflow and reduce Publish Readiness drawer density.

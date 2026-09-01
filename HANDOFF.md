@@ -786,3 +786,14 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - Hosted EN/ZH static pages render the exact staged H1 values and `noindex,follow`; compatibility/browse/plan CTAs remain intact.
 - CI #34 SUCCESS. Production `main` and Production Published remain untouched.
 - Only remaining acceptance: open hosted `/admin/seo/`, paste the rotated Admin password from the Mac clipboard, sign in, and perform one normal Save through the UI/API. Do not weaken auth or expose the password to automate this step.
+
+## 2026-09-01 — First-use UX correction / duplicate policy
+After the first real human login, the Admin was functionally correct but too implementation-shaped. The user specifically surfaced duplicate Species rows and the phrase `使用 Base 值`. The product rule is now:
+
+1. **Source rows are not SEO pages.** AquaGuide Product Truth currently has 486 source records. The generated grouping identifies 28 extra exact-duplicate records, so the unresolved default SEO candidate set is 458 pages across 276 Base groups.
+2. **Do not delete source duplicates.** Unresolved secondary duplicates are folded from the normal SEO navigation. A Data Review decision controls visibility: `distinct_records` restores each source row as a separate page; `duplicate_records` keeps only the chosen SEO main page.
+3. **Duplicate blocking is local.** An unresolved duplicate pair must not block unrelated variants under the same Base Species. Category conflicts remain group-level.
+4. **Inheritance is an implementation detail, not primary UI language.** Chinese main flow uses `基础种公共内容`, `当前品种页面`, `沿用公共内容`, `为当前页单独编辑`, `恢复公共内容`.
+5. **Editing invalidates approval immediately in UI.** Content edits show `未保存修改 · 保存后需重新审核`; workflow state cannot misleadingly remain Approved while content is dirty. `Draft` is presented as `草稿 · 不会直接上线`.
+
+Implementation commit: `8d1905c refactor(admin): productize species SEO workflow`. Local rendered-DOM acceptance and all Admin/root regression gates passed. GitHub Admin Content CI #36 (`33495672879`) is SUCCESS. Vercel deployment `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` is READY and Hosted Health remains fully green. Human hosted login is confirmed. The remaining acceptance item is a real Save click from the hosted UI followed by verification that the write lands only in private `aquaguide-seo-content/seo-admin-drafts` and causes zero AquaGuide deployment.
