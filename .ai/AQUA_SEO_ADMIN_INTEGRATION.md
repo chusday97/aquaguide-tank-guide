@@ -39,7 +39,7 @@ They must link back into existing AquaGuide product routes with the selected Spe
 
 Do not invent a parallel conversion flow if an existing AquaGuide route already owns the action.
 ## Delivery sequence
-1. Finish Product Truth Preview loading correctness; loading must never look like missing data and stale Species facts must never leak across selection changes.
+1. Product Truth Preview loading correctness is complete: loading/failure/missing are distinct, facts are key-scoped, and transient fetch failure is retryable.
 2. Unify `/admin/content` and `apps/admin-content` so there is one clear Species SEO authority.
 3. Integrate Species generation into the real AquaGuide build artifact.
 4. Publish only 3–5 representative Species to staging first.

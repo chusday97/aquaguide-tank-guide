@@ -496,7 +496,7 @@ export default function App() {
   const [workflowFilter, setWorkflowFilter] = useState(null);
   const [editorScope, setEditorScope] = useState('variant');
   const [livePreview, setLivePreview] = useState(null);
-  const [selectedProductTruth, setSelectedProductTruth] = useState(null);
+  const [productTruthState, setProductTruthState] = useState({ catalogKey: null, row: null, loading: false, error: false });
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
@@ -625,13 +625,25 @@ export default function App() {
   const selectedSpecies = species.find((item) => item.id === selectedId) || null;
   useEffect(() => {
     let cancelled = false;
-    setSelectedProductTruth(null);
-    if (!selectedSpecies?.catalog_key) return () => { cancelled = true; };
-    loadProductTruth(selectedSpecies.catalog_key)
-      .then((row) => { if (!cancelled) setSelectedProductTruth(row); })
-      .catch(() => { if (!cancelled) setSelectedProductTruth(null); });
+    const catalogKey = selectedSpecies?.catalog_key || null;
+    if (!catalogKey) {
+      setProductTruthState({ catalogKey: null, row: null, loading: false, error: false });
+      return () => { cancelled = true; };
+    }
+    setProductTruthState({ catalogKey, row: null, loading: true, error: false });
+    loadProductTruth(catalogKey)
+      .then((row) => {
+        if (!cancelled) setProductTruthState({ catalogKey, row: row || null, loading: false, error: !row });
+      })
+      .catch(() => {
+        if (!cancelled) setProductTruthState({ catalogKey, row: null, loading: false, error: true });
+      });
     return () => { cancelled = true; };
   }, [selectedSpecies?.catalog_key]);
+  const productTruthMatchesSelection = Boolean(selectedSpecies?.catalog_key && productTruthState.catalogKey === selectedSpecies.catalog_key);
+  const productTruthLoading = Boolean(selectedSpecies && (!productTruthMatchesSelection || productTruthState.loading));
+  const productTruthError = Boolean(selectedSpecies && productTruthMatchesSelection && !productTruthState.loading && productTruthState.error);
+  const selectedProductTruth = productTruthMatchesSelection && !productTruthState.error ? productTruthState.row : null;
   const previewSpecies = selectedSpecies && selectedProductTruth
     ? { ...selectedSpecies, ...selectedProductTruth }
     : selectedSpecies;
@@ -653,11 +665,11 @@ export default function App() {
       canonicalCatalogKey: selectedVariantRecord?.canonical_catalog_key || '',
     });
     return {
-      species: previewSpecies, locale: contentLocale, routeMeta,
+      species: previewSpecies, locale: contentLocale, routeMeta, productTruthLoading, productTruthError,
       effectiveSeo: { ...resolved.effective, imageAlt: selectedVariantRecord?.image_alt || '' },
       override: resolved.override,
     };
-  }, [selectedSpecies, previewSpecies, selectedGroup, selectedGroupRecord, selectedVariantRecord, contentLocale]);
+  }, [selectedSpecies, previewSpecies, selectedGroup, selectedGroupRecord, selectedVariantRecord, contentLocale, productTruthLoading, productTruthError]);
   const sourceVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'zh-CN')] : null;
   const sourceGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, 'zh-CN')] : null;
   const englishVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'en')] : null;
@@ -677,7 +689,7 @@ export default function App() {
   ), [seoRows, contentLocale]);
   const workflowOverview = useMemo(() => buildAdminWorkflowOverview({ species, groups: speciesGroups, seoRows, groupSeoRows, reviewRows: dataReviewRows }), [species, seoRows, groupSeoRows, dataReviewRows]);
   const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
-    ? { ...livePreview, species: previewSpecies || livePreview.species }
+    ? { ...livePreview, species: previewSpecies || livePreview.species, productTruthLoading, productTruthError }
     : savedLivePreview;
   const confirmDiscardUnsaved = () => {
     if (!editorDirty || isReviewMode) return true;

@@ -696,7 +696,7 @@ The hero image asset remains Product Truth and read-only in Content Admin. Only 
 ## 2026-08-31 frontend SEO handoff
 The Admin's purpose is to create reviewed static Species SEO pages, not to become a general-purpose CMS. Keep Product Truth read-only and separate from Editorial SEO. The intended flow is `Product Truth + Base/Variant Editorial SEO → review/readiness → explicit publication snapshot → generate-public-species → AquaGuide frontend artifact`. Controlled Preview remains Draft/Approved, noindex and must never be treated as Production publication.
 
-Latest stable pushed baseline: `2a737de`; A gate `33370177087` SUCCESS. Local uncommitted Product Truth-loading work must be finished and gated before starting publication integration. Then build only a small staging Species set and verify source-level SEO (`title`, meta description, H1, canonical, robots, hreflang, alt, sitemap) before unlocking any Production path.
+Product Truth loading correctness is now locally complete and gated: explicit Loading/Unavailable states, key-scoped facts, no stale cross-Species flash, retryable lazy JSON asset fetch, contract/build/schema-v7 B gate PASS. Next: resolve the duplicate Species Admin authority (`src/pages/AdminContent.tsx` vs `apps/admin-content`) before wiring the generator into the AquaGuide frontend build. Then build only a small staging Species set and verify source-level SEO (`title`, meta description, H1, canonical, robots, hreflang, alt, sitemap) before unlocking any Production path.
 
 Future SEO landing-page CTAs should carry the current `catalog_key` into AquaGuide compatibility/recommendation flows so organic traffic enters the product funnel instead of ending on an isolated content page.
 

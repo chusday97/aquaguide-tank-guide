@@ -104,5 +104,5 @@ The persistent product model is now:
 - Required read: `.ai/AQUA_SEO_ADMIN_INTEGRATION.md`.
 - Success is no longer defined by Admin UI completion. Reviewed Species SEO must enter the real AquaGuide frontend build artifact and be verifiable from staging HTML source.
 - Resolve the duplicate-admin authority (`src/pages/AdminContent.tsx` vs `apps/admin-content`) before Production integration.
-- After Product Truth loading correctness is closed, prioritize one staging vertical slice over additional CMS feature expansion.
+- Product Truth loading correctness is closed locally. Before the staging vertical slice, resolve the duplicate Species Admin authority so AquaGuide has one SEO editing source of truth.
 

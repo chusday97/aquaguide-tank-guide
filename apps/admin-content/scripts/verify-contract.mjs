@@ -122,7 +122,14 @@ assert.match(appSource, /contentLocale/, 'Content locale must remain a separate 
 assert.match(appSource, /appLocale/, 'Interface locale must remain separate from content locale');
 assert.match(appLanguageSource, /aquaguide-admin-app-locale/, 'Interface locale must persist across refreshes');
 assert.match(appLanguageSource, /document\.documentElement\.lang/, 'Global interface locale must update document language');
-assert.match(productTruthLoaderSource, /import\('\.\/catalog\.generated\.json'\)/, 'Product Truth preview data must remain lazy-loaded');
+assert.match(productTruthLoaderSource, /catalog\.generated\.json\?url/, 'Product Truth preview data must remain an external build asset');
+assert.match(productTruthLoaderSource, /fetch\(catalogUrl\)/, 'Product Truth preview data must remain lazy-loaded through fetch');
+assert.match(productTruthLoaderSource, /catalogPromise = undefined/, 'Transient Product Truth fetch failures must be retryable without reloading the Admin');
+assert.match(appSource, /productTruthState[\s\S]*catalogKey/, 'Product Truth state must stay keyed to the selected catalog record');
+assert.match(appSource, /productTruthMatchesSelection/, 'Preview must refuse Product Truth rows that do not match the active catalog key');
+assert.match(appSource, /productTruthLoading[\s\S]*productTruthError/, 'Product Truth loading and transport failure must remain distinct states');
+assert.match(liveFrontendPreviewSource, /Loading…|加载中…/, 'Live Preview must render explicit Product Truth loading state instead of fake missing values');
+assert.match(liveFrontendPreviewSource, /Unavailable|数据不可用/, 'Live Preview must distinguish Product Truth transport failure from genuine missing fields');
 assert.ok(groupedMembers.every((item) => !('image' in item) && !('water_temperature' in item) && !('ph_level' in item)), 'Species group projection must not duplicate Product Truth preview fields');
 assert.match(appSource, /onLivePreviewChange/, 'Variant edits must stream unsaved changes into the live frontend preview');
 assert.deepEqual(

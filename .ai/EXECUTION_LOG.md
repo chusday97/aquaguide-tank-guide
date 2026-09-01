@@ -259,3 +259,10 @@
 - Identified an additional stale-data risk during Species switching if the previously resolved Product Truth row is merged before the new `catalog_key` resolves.
 - Local fix is in progress with explicit loading state and key-scoped Product Truth ownership; production build passes, but browser delay regression/contract/B/A gates are still pending.
 - Reframed next project milestone from further CMS styling to a staging frontend SEO vertical slice.
+
+## 2026-09-01 — Product Truth loading correctness closed locally
+- Cold-load regression with 1.4s delayed Product Truth asset: four facts and hero image show explicit loading; no fake `—` / empty image.
+- Cross-Species regression: switching 64L → 40L Variant produced no frame where the new H1 was paired with the previous 64L facts.
+- Pending-request race: switching Species before the delayed asset returned stayed Loading until the final selected `catalog_key` resolved.
+- Failure/recovery regression: first JSON fetch forced to fail → Unavailable; next Species selection emitted a second fetch and recovered to the correct 40L Product Truth.
+- `npm run test:contract -w @aquaguide/admin-content`, production build, `git diff --check`, and schema-v7 ephemeral Supabase B gate PASS.

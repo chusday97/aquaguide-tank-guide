@@ -902,6 +902,9 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .live-publish-hero .preview-image-inspectable { min-width: 0; }
 .live-publish-hero .preview-image-inspectable img { width: 100%; aspect-ratio: 1; object-fit: contain; display: block; padding: 6px; border-radius: 10px; background: #eef4ef; }
 .live-image-empty { width: 100%; aspect-ratio: 1; border-radius: 10px; background: #eef4ef; }
+.live-image-loading { width: 100%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 10px; background: #eef2ef; color: #87938b; font-size: 8px; font-weight: 700; }
+.live-image-loading.is-error { background: #f3f3f1; color: #707873; }
+.truth-loading-text { color: #8f9993; font-weight: 650 !important; }
 .live-publish-copy { min-width: 0; }
 .live-publish-copy h1 { margin: 0 0 4px; font-size: 22px; line-height: 1.02; letter-spacing: -.04em; overflow-wrap: anywhere; }
 .live-scientific { color: #65736b; font-family: Georgia, serif; font-size: 9px; font-style: italic; }

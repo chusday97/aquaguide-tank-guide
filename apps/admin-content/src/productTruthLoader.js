@@ -1,11 +1,19 @@
+import catalogUrl from './catalog.generated.json?url';
+
 let catalogPromise;
 
 const loadCatalog = async () => {
   if (!catalogPromise) {
-    catalogPromise = import('./catalog.generated.json').then((module) => {
-      const rows = module.default || [];
-      return new Map(rows.map((row) => [row.catalog_key, row]));
-    });
+    catalogPromise = fetch(catalogUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Product Truth catalog request failed: ${response.status}`);
+        return response.json();
+      })
+      .then((rows) => new Map((Array.isArray(rows) ? rows : []).map((row) => [row.catalog_key, row])))
+      .catch((error) => {
+        catalogPromise = undefined;
+        throw error;
+      });
   }
   return catalogPromise;
 };

@@ -136,5 +136,5 @@ Branch: `feature/admin-content-v0`
 - Latest stable pushed Admin HEAD: `2a737de fix(admin): clarify image inspector authority`. GitHub A gate run `33370177087` SUCCESS.
 - Stable chain now includes grouped navigation, Base/Variant inheritance, bilingual editorial rows, Data Review, editorial review, Publish Readiness, Controlled Preview, generator-aligned Page Preview, bidirectional Inspector and unsaved-change protection.
 - Product Truth is still catalog authority; Content Admin edits editorial SEO only.
-- Local uncommitted work currently touches `App.jsx`, `LiveFrontendPreview.jsx`, and `styles.css` to distinguish Product Truth loading from missing data and prevent stale cross-Species fact flashes.
+- Product Truth loading correctness is locally gated: explicit Loading/Unavailable states, `catalog_key` ownership, no stale cross-Species facts, and retryable lazy JSON fetch. Chromium delayed/race/failure recovery regressions are clean; contract/build/schema-v7 B gate PASS.
 - Production Supabase, Production Published and `main` remain untouched.

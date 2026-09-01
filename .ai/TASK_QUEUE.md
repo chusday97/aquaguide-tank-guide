@@ -96,8 +96,8 @@ Updated: 2026-08-30
 - [x] Extend Inspector paths to the exact field level.
 
 ## 2026-08-31 frontend SEO publication path
-- [ ] Finish Product Truth loading correctness: explicit loading state, key-scoped data, no stale facts across Species switches.
-- [ ] Add regression coverage for delayed catalog loading and rapid Species switching; then contract/build/B gate/commit/A gate.
+- [x] Finish Product Truth loading correctness: explicit loading state, key-scoped data, no stale facts across Species switches.
+- [x] Add regression coverage for delayed catalog loading, rapid Species switching, transient fetch failure and retry; contract/build/B gate pass locally.
 - [ ] Define an explicit Published snapshot boundary separate from Controlled Preview Draft snapshots.
 - [ ] Generate a tiny staging set of real Species pages from approved bilingual fixtures; do not publish all 486 records.
 - [ ] Verify staging HTML source for title/meta/H1/canonical/robots/hreflang/alt and verify sitemap inclusion only for indexable pages.
@@ -105,7 +105,7 @@ Updated: 2026-08-30
 - [ ] Add a product CTA handoff contract so SEO landing pages can pass `catalog_key` into AquaGuide compatibility/recommendation flows.
 
 ## 2026-09-01 AquaGuide ↔ SEO Admin integration
-- [ ] Finish and commit Product Truth loading correctness without stale Species facts.
+- [x] Finish and gate Product Truth loading correctness without stale Species facts.
 - [ ] Establish one authoritative Species SEO Admin entry; do not keep two competing Species editors.
 - [ ] Integrate the Species generator into the AquaGuide root deployment artifact.
 - [ ] Build 3–5 representative bilingual Species pages in staging.

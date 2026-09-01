@@ -67,11 +67,14 @@ function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabl
 }
 
 function SpeciesPage({ preview, mobile = false, inspector }) {
-  const { species, effectiveSeo, locale } = preview;
+  const { species, effectiveSeo, locale, productTruthLoading = false, productTruthError = false } = preview;
   const labels = getSpeciesPageLabels(locale);
   const displayName = effectiveSeo.displayName || species.name;
   const imageSrc = species.image?.startsWith('/') ? `https://aqua-tank-guide.vercel.app${species.image}` : species.image;
   const imageAlt = effectiveSeo.imageAlt || `${displayName} (${species.scientific_name || ''})`;
+  const loadingLabel = locale === 'en' ? 'Loading…' : '加载中…';
+  const unavailableLabel = locale === 'en' ? 'Unavailable' : '数据不可用';
+  const truthValue = (value) => productTruthLoading ? loadingLabel : productTruthError ? unavailableLabel : (value || '—');
   const intro = [effectiveSeo.sharedIntro, effectiveSeo.variantIntro].filter(Boolean).join('\n\n').trim();
   const inspectProps = (elementKey, className = '') => ({
     elementKey,
@@ -88,7 +91,11 @@ function SpeciesPage({ preview, mobile = false, inspector }) {
         </div>
         <article className="live-publish-hero">
           <Inspectable {...inspectProps('imageAlt', 'preview-image-inspectable')}>
-            {imageSrc ? <img src={imageSrc} alt={imageAlt} /> : <div className="live-image-empty" />}
+            {productTruthLoading
+              ? <div className="live-image-loading" aria-label={loadingLabel}><span>{loadingLabel}</span></div>
+              : productTruthError
+                ? <div className="live-image-loading is-error" aria-label={unavailableLabel}><span>{unavailableLabel}</span></div>
+                : imageSrc ? <img src={imageSrc} alt={imageAlt} /> : <div className="live-image-empty" />}
           </Inspectable>
           <div className="live-publish-copy">
             <Inspectable {...inspectProps('h1')}><h1>{effectiveSeo.h1 || ''}</h1></Inspectable>
@@ -97,10 +104,10 @@ function SpeciesPage({ preview, mobile = false, inspector }) {
           </div>
         </article>
         <section className="live-facts publish-facts">
-          <Inspectable {...inspectProps('temperature', 'live-fact')}><span>{labels.temperature}</span><strong>{species.water_temperature || '—'}</strong></Inspectable>
-          <Inspectable {...inspectProps('ph', 'live-fact')}><span>{labels.ph}</span><strong>{species.ph_level || '—'}</strong></Inspectable>
-          <Inspectable {...inspectProps('tankSize', 'live-fact')}><span>{labels.tank}</span><strong>{localizeSpeciesTankSize(species.tank_size, locale)}</strong></Inspectable>
-          <Inspectable {...inspectProps('difficulty', 'live-fact')}><span>{labels.difficulty}</span><strong>{species.difficulty || '—'}</strong></Inspectable>
+          <Inspectable {...inspectProps('temperature', 'live-fact')}><span>{labels.temperature}</span><strong className={productTruthLoading ? 'truth-loading-text' : ''}>{truthValue(species.water_temperature)}</strong></Inspectable>
+          <Inspectable {...inspectProps('ph', 'live-fact')}><span>{labels.ph}</span><strong className={productTruthLoading ? 'truth-loading-text' : ''}>{truthValue(species.ph_level)}</strong></Inspectable>
+          <Inspectable {...inspectProps('tankSize', 'live-fact')}><span>{labels.tank}</span><strong className={productTruthLoading ? 'truth-loading-text' : ''}>{productTruthLoading ? loadingLabel : productTruthError ? unavailableLabel : localizeSpeciesTankSize(species.tank_size, locale)}</strong></Inspectable>
+          <Inspectable {...inspectProps('difficulty', 'live-fact')}><span>{labels.difficulty}</span><strong className={productTruthLoading ? 'truth-loading-text' : ''}>{truthValue(species.difficulty)}</strong></Inspectable>
         </section>
         <section className="live-truth-note"><strong>{labels.truth}</strong><p>{labels.truthNote}</p></section>
       </main>

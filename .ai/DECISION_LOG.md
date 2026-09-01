@@ -209,3 +209,7 @@ Decision: treat `apps/admin-content` as the target Species Editorial SEO authori
 Reason: the business goal is SEO acquisition for AquaGuide, so the system only creates value when reviewed content becomes crawlable final HTML and routes users back into existing AquaGuide product actions.
 Constraint: legacy `src/pages/AdminContent.tsx` may retain non-SEO content responsibilities only after the overlapping Species authority is explicitly resolved.
 
+## 2026-09-01 — Product Truth transport must distinguish loading, failure and missing fields
+Decision: load the generated Product Truth catalog as a separate `?url` JSON asset and fetch it lazily instead of relying on a dynamic JSON import.
+Reason: browsers cache a failed module import, so clearing the application Promise does not provide a real retry path. Fetch preserves lazy loading while allowing transient failure recovery.
+Contract: loading → explicit Loading state; transport/asset failure → explicit Unavailable state; only a successfully loaded row may use `—` for genuinely empty fields; a row is never applied unless its `catalog_key` matches the active Species.

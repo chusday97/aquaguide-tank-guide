@@ -463,6 +463,6 @@
 ## 2026-08-31 — SEO publication path synchronized
 The Admin is now best understood as an SEO publication system rather than a standalone CMS: Product Truth + editorial SEO → inheritance/review → Publish Readiness → immutable snapshot → static Species generator → frontend SEO pages.
 
-Latest stable pushed baseline is `2a737de`, with GitHub A gate `33370177087` successful. The next local correctness task is Product Truth loading: loading must never look like missing data and a newly selected Species must never flash facts from the previous Species. That fix is currently local/uncommitted.
+Product Truth loading correctness is complete locally: loading renders as Loading/加载中 rather than fake missing values; transport failures render as Unavailable/数据不可用; Product Truth is applied only when `catalog_key` matches the active Species; transient JSON fetch failure can retry on the next Species selection. Delayed-load, rapid-switch and failure-recovery Chromium regressions pass, as do contract/build/schema-v7 B gate. The next architecture task is resolving the duplicate Species Admin authority before frontend publication integration.
 
 After it is gated, the next product milestone is a small staging publication slice, not another UI expansion: generate a few reviewed bilingual Species pages, connect them to the AquaGuide frontend artifact, inspect real HTML SEO tags/source and sitemap behavior, then decide whether Production publishing can be unlocked.
