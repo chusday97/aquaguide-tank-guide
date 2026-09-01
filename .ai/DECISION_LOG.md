@@ -237,3 +237,11 @@ Reason: this proves real hosting/build/routing/HTML delivery without incurring s
 - Staging publication is an explicit allowlisted Approved-Draft snapshot, not a branch merge and not a Production status mutation.
 - Primary CI proves Repo store/API behavior, static generator behavior, root artifact integration and browser handoff without installing Supabase CLI or Docker.
 - Keep legacy Supabase scripts/migrations only while they provide useful compatibility evidence for the broader AquaGuide application. Do not reintroduce Supabase as a Species SEO runtime dependency without a concrete requirement that Git-backed content cannot satisfy.
+
+## 2026-09-01 — Private Draft repository + public Staging repository
+- Supersedes the initial same-repository `seo-admin-drafts` design. `aquaguide-tank-guide` is public, therefore unpublished copy, revision snapshots and review notes must not live on any branch in that repository.
+- Created private `chusday97/aquaguide-seo-content` as the editorial authority. `main` provides the seed; `seo-admin-drafts` receives ongoing Admin saves.
+- The AquaGuide public repository receives only the sanitized staging snapshot after explicit human publication. This preserves build-time integration without exposing editorial state.
+- `ADMIN_GITHUB_CONTENT_REPO` is mandatory and has no public-repo fallback. `ADMIN_GITHUB_STAGING_REPO` is separately identified.
+- One fine-grained token may cover exactly these two selected repositories with Contents Read/Write; broad `repo`/`workflow` OAuth credentials are explicitly rejected as the hosted application credential.
+- GitHub Contents reads can fall back to the Git Blob endpoint, avoiding the normal Contents inline-content size boundary as the JSON store grows.

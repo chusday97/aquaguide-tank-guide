@@ -11,7 +11,8 @@ Species SEO Admin
         ↓
 HttpOnly server-side Admin session
         ↓
-GitHub draft branch: seo-admin-drafts
+PRIVATE repo: aquaguide-seo-content
+branch: seo-admin-drafts
 content/species-seo/admin-store.json
         ↓
 Editing → Ready for Review → Approved Draft
@@ -26,7 +27,7 @@ static /species + /zh/species HTML + sitemap
 AquaGuide product CTA
 ```
 
-The dedicated `seo-admin-drafts` branch is deployment-disabled in `vercel.json`. **Normal Save does not deploy.** Only an explicit Staging Publish writes a reviewed snapshot to the staging code branch and is intended to trigger one Preview rebuild.
+The private `aquaguide-seo-content` repository is not linked to the AquaGuide Vercel project. **Normal Save therefore does not deploy or run the AquaGuide CI gate.** Only an explicit Staging Publish writes a reviewed, sanitized snapshot into the public AquaGuide staging branch and triggers one Preview rebuild.
 
 ## Safety boundary
 
@@ -43,8 +44,8 @@ The dedicated `seo-admin-drafts` branch is deployment-disabled in `vercel.json`.
 
 The 486 Species Product Truth catalog remains `src/data/fishData.ts`. Editorial SEO is stored separately in versioned JSON:
 
-- Draft authority: `content/species-seo/admin-store.json` on `seo-admin-drafts`.
-- Staging publication snapshot: `content/species-seo/staging-snapshot.json` on the non-production staging code branch.
+- Draft authority: private repository `aquaguide-seo-content`, branch `seo-admin-drafts`, path `content/species-seo/admin-store.json`.
+- Staging publication snapshot: public `aquaguide-tank-guide`, non-production branch `feature/admin-content-v0`, path `content/species-seo/staging-snapshot.json`.
 - `catalog_key` remains the stable join key.
 - `species_seo` stores localized Variant/page overrides.
 - `species_seo_groups` stores Base Species shared templates/content.
@@ -59,11 +60,12 @@ Use `apps/admin-content/repo-admin.server.env.example` as the placeholder-only r
 - `ADMIN_REPO_PASSWORD_HASH` (preferred) or `ADMIN_REPO_PASSWORD`
 - `ADMIN_REPO_SESSION_SECRET`
 - `ADMIN_GITHUB_TOKEN` — fine-grained Contents write access only to this repository
-- `ADMIN_GITHUB_REPO`
+- `ADMIN_GITHUB_CONTENT_REPO=owner/aquaguide-seo-content`
+- `ADMIN_GITHUB_STAGING_REPO=owner/aquaguide-tank-guide`
 - `ADMIN_GITHUB_DRAFT_BRANCH=seo-admin-drafts`
 - `ADMIN_GITHUB_STAGING_BRANCH=feature/admin-content-v0`
 
-Do not reuse ChatGPT/GitHub connector credentials as application secrets.
+Use one fine-grained GitHub token limited to exactly the private content repo and the public AquaGuide repo with **Contents: Read and write** only. No Actions/Workflow permission is required. Do not reuse the broad local `gh` OAuth token or ChatGPT connector credentials as application secrets.
 
 ## Local development
 

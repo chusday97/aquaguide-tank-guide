@@ -760,3 +760,12 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - The only missing hosted credential is `ADMIN_GITHUB_TOKEN`; it must be a fine-grained token limited to this repository with Contents read/write. The local `gh` OAuth token is intentionally rejected for app use because it has broad `repo + workflow` scopes.
 - `/api/admin-content/health` now reports `repo_readable`, `contents_write_capable`, `draft_branch_ready`, `content_store_readable` and a sanitized `repo_access_error`.
 - The Admin checks that health before login and shows a five-item backend readiness list instead of letting configuration errors surface as editor/schema failures.
+
+## 2026-09-01 — 双仓 Repo-backed 最新权威
+- 不再把后台 Draft 放在公开 `aquaguide-tank-guide` 的任何分支。此前的公共 `seo-admin-drafts` 已删除，公共 `admin-store.json` 也已移除。
+- 私有内容仓库：`chusday97/aquaguide-seo-content`（PRIVATE）→ `seo-admin-drafts` → Draft / Review / Revision / Data Review。
+- 公共 AquaGuide 仓库：只在明确 Staging Publish 后接收脱敏 `content/species-seo/staging-snapshot.json`，再触发一次 Vercel Preview。
+- `ADMIN_GITHUB_CONTENT_REPO` 缺失时必须 fail closed，禁止回退到公开 AquaGuide 仓库。
+- 新增 `test:dual-repo-routing`，已验证 Draft PUT 只去私有仓库、Staging PUT 只去公共 AquaGuide。
+- Vercel Preview 的 Admin Session、密码 Hash、Session Secret、双仓 Repo/Branch/Path 均已配置；当前唯一 Hosted 配置缺口是最小权限 `ADMIN_GITHUB_TOKEN`。
+- 最小权限要求：仅选中 `aquaguide-seo-content` 与 `aquaguide-tank-guide` 两个仓库，只给 Contents Read/Write；不要使用本机 `gh` 的 `repo + workflow` 广权限 OAuth token。

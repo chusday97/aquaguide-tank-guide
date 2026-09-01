@@ -842,9 +842,13 @@ export default function App() {
   const repoBackendBlocked = !isReviewMode && backendHealth?.ok && (
     !backendHealth.auth_configured ||
     !backendHealth.github_token_configured ||
-    !backendHealth.repo_readable ||
-    !backendHealth.contents_write_capable ||
-    !backendHealth.draft_branch_ready
+    !backendHealth.content_repo_readable ||
+    !backendHealth.content_contents_write_capable ||
+    !backendHealth.draft_branch_ready ||
+    !backendHealth.content_store_readable ||
+    !backendHealth.staging_repo_readable ||
+    !backendHealth.staging_contents_write_capable ||
+    !backendHealth.staging_branch_ready
   );
 
   const signOut = async () => {
@@ -873,9 +877,13 @@ export default function App() {
     const healthItems = [
       ['Server session', backendHealth.auth_configured],
       ['GitHub token', backendHealth.github_token_configured],
-      ['Repository read', backendHealth.repo_readable],
-      ['Contents write', backendHealth.contents_write_capable],
+      ['Private content repo', backendHealth.content_repo_readable],
+      ['Private content write', backendHealth.content_contents_write_capable],
       ['Draft branch', backendHealth.draft_branch_ready],
+      ['Draft store', backendHealth.content_store_readable],
+      ['AquaGuide staging repo', backendHealth.staging_repo_readable],
+      ['Staging snapshot write', backendHealth.staging_contents_write_capable],
+      ['Staging branch', backendHealth.staging_branch_ready],
     ];
     return (
       <main className="login-shell">
@@ -892,7 +900,7 @@ export default function App() {
               </div>
             ))}
           </div>
-          <p className="security-note">{appLocale === 'en' ? `Status: ${backendHealth.repo_access_error || 'configuration incomplete'}. Secrets remain server-only.` : `当前状态：${backendHealth.repo_access_error || '配置未完成'}。所有 Secret 仍只保存在服务端。`}</p>
+          <p className="security-note">{appLocale === 'en' ? `Status: ${backendHealth.repo_access_error || 'configuration incomplete'}. Drafts stay private; only sanitized staging snapshots cross into AquaGuide.` : `当前状态：${backendHealth.repo_access_error || '配置未完成'}。Draft 保持私有，只有脱敏后的 Staging Snapshot 会进入 AquaGuide。`}</p>
         </section>
       </main>
     );

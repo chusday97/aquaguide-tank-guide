@@ -179,3 +179,16 @@ Updated: 2026-08-30
 - [ ] Add a fine-grained GitHub token scoped only to `chusday97/aquaguide-tank-guide` with Contents read/write. Do not reuse the broad local `gh` OAuth token.
 - [ ] Redeploy once after that token is configured; require Health: auth/token/repo/read-write/draft all ready.
 - [ ] Complete hosted H1 Save → Approved → Staging Publish → one rebuild → HTML source change acceptance.
+
+## 2026-09-01 Dual-repo privacy hardening
+- [x] Create private `chusday97/aquaguide-seo-content`.
+- [x] Seed private `main` and `seo-admin-drafts` with the empty Admin store.
+- [x] Remove the public AquaGuide `seo-admin-drafts` branch before real editorial content exists.
+- [x] Remove public `content/species-seo/admin-store.json`.
+- [x] Make `ADMIN_GITHUB_CONTENT_REPO` mandatory; no fallback to the public app repo.
+- [x] Split Health into private Content Repo and public Staging Repo readiness.
+- [x] Add dual-repo routing gate for Draft PUT vs Staging PUT.
+- [x] Configure branch-scoped Vercel Preview repo names/paths and private source branch.
+- [ ] Add least-privilege `ADMIN_GITHUB_TOKEN` to Preview: selected repositories = `aquaguide-seo-content` + `aquaguide-tank-guide`; Contents Read/Write only.
+- [ ] Redeploy and confirm Health: all Content/Staging repository checks green.
+- [ ] Hosted vertical slice: edit H1 → private Draft commit (0 Aqua CI/deploy) → Approve → explicit Staging Publish → one Aqua Preview rebuild → returned HTML contains exact H1.

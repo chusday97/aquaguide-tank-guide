@@ -203,3 +203,11 @@ Branch: `feature/admin-content-v0`
 - Branch-scoped Preview config now includes Repo paths plus server-session auth secrets; the generated Admin password was placed on the local macOS clipboard and only its scrypt hash is stored in Vercel.
 - The remaining external secret is a repository-scoped GitHub token with Contents read/write. The existing local `gh` OAuth token has broad `repo/workflow` scopes and is intentionally not reused.
 - Health now probes token validity, repository readability, Contents-write capability, Draft branch readiness and content-store readability. Admin login fails closed before the editor when these checks are not ready.
+
+## 2026-09-01 — Dual-repo privacy correction
+- Private repo `chusday97/aquaguide-seo-content` created and seeded; `main` + `seo-admin-drafts` exist.
+- Public `aquaguide-tank-guide/seo-admin-drafts` removed before any real editorial content was stored there; the only test data was an empty store.
+- Public root `content/species-seo/admin-store.json` removed. AquaGuide may contain only sanitized staging/release snapshots, never Draft authority.
+- Vercel Preview config now declares `ADMIN_GITHUB_CONTENT_REPO=chusday97/aquaguide-seo-content`, `ADMIN_GITHUB_STAGING_REPO=chusday97/aquaguide-tank-guide`, and private source branch `main`.
+- Hosted Admin session/password/session secret are configured; `ADMIN_GITHUB_TOKEN` remains intentionally absent until a least-privilege fine-grained token is supplied.
+- `test:dual-repo-routing` PASS: exactly two simulated PUTs route to the intended repositories.

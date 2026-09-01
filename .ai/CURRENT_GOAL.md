@@ -3,7 +3,7 @@
 Updated: 2026-09-01
 Branch: `feature/admin-content-v0`
 
-Operate AquaGuide Species SEO Admin as a low-maintenance GitHub Repo-backed editorial publishing system. Preserve the existing review/readiness/static-generation contracts while removing Supabase as a runtime or staging dependency for Species SEO.
+Operate AquaGuide Species SEO Admin as a low-maintenance dual-repository GitHub-backed editorial publishing system. Preserve the existing review/readiness/static-generation contracts while removing Supabase as a runtime or staging dependency for Species SEO.
 
 ## Current milestone
 
@@ -142,3 +142,11 @@ The persistent product model is now:
 - Root Preview build prefers that Repo staging snapshot when present, then generates static EN/ZH Species HTML + sitemap with `staging_release`. Production-style `release` remains Published-only and ignores Repo Drafts.
 - Local Repo backend/API gates pass with `supabase_started=false`; root build and SEO→compatibility handoff also pass.
 - Legacy Supabase migrations/exporter/tests are retained only as compatibility/history. Do not provision AquaGuide Supabase staging for Species SEO unless this architecture is explicitly reversed.
+
+## 2026-09-01 — Authoritative dual-repository boundary
+- **Private editorial authority:** `chusday97/aquaguide-seo-content` (PRIVATE), branch `seo-admin-drafts`, path `content/species-seo/admin-store.json`. Drafts, review state, revision snapshots and Data Review notes live only here.
+- **Public staging delivery:** `chusday97/aquaguide-tank-guide`, branch `feature/admin-content-v0`, receives only the explicit sanitized `content/species-seo/staging-snapshot.json`.
+- The earlier single-repository idea is superseded. Missing `ADMIN_GITHUB_CONTENT_REPO` now fails closed; Draft writes must never fall back to the public AquaGuide repository.
+- The public AquaGuide repo no longer contains `admin-store.json` and its former public `seo-admin-drafts` branch has been removed.
+- The private content repo has `main` and `seo-admin-drafts` seeded with an empty content store. It is not linked to AquaGuide Vercel, so normal Save cannot trigger AquaGuide CI/deployment.
+- Primary automated gate `test:dual-repo-routing` proves Draft PUT → private content repo and Staging PUT → public AquaGuide repo.

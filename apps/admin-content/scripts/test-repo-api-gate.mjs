@@ -10,6 +10,11 @@ process.env.ADMIN_REPO_LOCAL_STAGING_FILE = path.join(root, 'staging.json');
 process.env.ADMIN_REPO_EMAIL = 'api-admin@aquaguide.test';
 process.env.ADMIN_REPO_PASSWORD = 'Api-Test-Only-42!';
 process.env.ADMIN_REPO_SESSION_SECRET = 'api-test-session-secret-0123456789abcdef';
+process.env.ADMIN_GITHUB_CONTENT_REPO = 'chusday97/aquaguide-seo-content';
+process.env.ADMIN_GITHUB_STAGING_REPO = 'chusday97/aquaguide-tank-guide';
+process.env.ADMIN_GITHUB_DRAFT_BRANCH = 'seo-admin-drafts';
+process.env.ADMIN_GITHUB_SOURCE_BRANCH = 'main';
+process.env.ADMIN_GITHUB_STAGING_BRANCH = 'feature/admin-content-v0';
 await writeFile(storePath, JSON.stringify({ schema_version: 1, updated_at: null, species_seo: [], species_seo_groups: [], species_data_reviews: [], content_revisions: [] }), 'utf8');
 
 const sessionHandler = (await import('../../../api/admin-content/session.js')).default;
@@ -35,6 +40,10 @@ assert.equal(res.state.body.auth_configured, true);
 assert.equal(res.state.body.github_token_configured, false);
 assert.equal(res.state.body.repo_access_error, 'token_missing');
 assert.equal(res.state.body.contents_write_capable, false);
+assert.equal(res.state.body.content_repo, 'chusday97/aquaguide-seo-content');
+assert.equal(res.state.body.staging_repo, 'chusday97/aquaguide-tank-guide');
+assert.equal(res.state.body.content_repo_readable, false);
+assert.equal(res.state.body.staging_repo_readable, false);
 
 res = response();
 await queryHandler({ method: 'POST', headers: {}, body: { action: 'select', table: 'species_seo', filters: [] } }, res);

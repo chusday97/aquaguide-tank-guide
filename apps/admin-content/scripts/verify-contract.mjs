@@ -245,6 +245,10 @@ assert.match(repoAuthSource, /HttpOnly/, 'Repo Admin session cookie must be Http
 assert.match(repoAuthSource, /SameSite=Lax/, 'Repo Admin session cookie must use SameSite protection');
 assert.match(repoAuthSource, /requireSameOriginMutation/, 'Repo Admin must enforce an explicit same-origin mutation guard in addition to SameSite cookies');
 assert.match(repoGithubSource, /ADMIN_GITHUB_TOKEN/, 'GitHub write credential must remain server-side');
+assert.match(repoGithubSource, /ADMIN_GITHUB_CONTENT_REPO/, 'Private editorial content repository must be explicit');
+assert.match(repoGithubSource, /ADMIN_GITHUB_STAGING_REPO/, 'Public staging repository must be a separate explicit authority');
+assert.match(repoGithubSource, /Drafts must never fall back to the public application repository/, 'Missing private content repo must fail closed instead of writing Drafts to AquaGuide');
+assert.doesNotMatch(repoGithubSource, /ADMIN_GITHUB_CONTENT_REPO \|\| process\.env\.ADMIN_GITHUB_REPO \|\| appRepo/, 'Private Draft authority must not fall back to the public AquaGuide repo');
 assert.match(repoGithubSource, /seo-admin-drafts/, 'Repo content writes must use a dedicated draft branch by default');
 assert.match(repoStoreSource, /merged\.status = 'draft'/, 'Repo content writes must fail closed to Draft');
 assert.match(repoStoreSource, /review_state = 'editing'/, 'Content edits must invalidate approval in Repo mode');
