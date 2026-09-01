@@ -102,8 +102,12 @@ assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species 
 assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review workflow');
 assert.match(appSource, /PublishReadinessPanel/, 'Admin must expose explicit publish readiness');
 assert.match(appSource, /WorkflowOverview/, 'Admin must expose queue-level workflow overview');
-assert.match(workflowOverviewSource, /Data Review/, 'Workflow overview must include Data Review counts');
-assert.match(workflowOverviewSource, /Publish-ready/, 'Workflow overview must expose publish-ready counts');
+assert.match(workflowOverviewSource, /workflow-queue-row/, 'Workflow overview must render drawer-safe task rows instead of narrow KPI cards');
+assert.match(workflowOverviewSource, /pageCount = overview\.locales/, 'Workflow overview page count must come from current workflow candidates rather than a hard-coded catalog total');
+assert.match(workflowOverviewSource, /现在需要处理什么/, 'Chinese workflow overview must use task-oriented localized copy');
+assert.match(workflowOverviewSource, /可预览/, 'Workflow overview must localize Preview-ready state in Chinese');
+assert.doesNotMatch(workflowOverviewSource, /Readiness 按 486 条 Species/, 'Workflow overview must not hard-code the legacy 486-species readiness count');
+assert.match(stylesSource, /workflow-queue-row[\s\S]*grid-template-columns:\s*minmax\(0,1fr\) auto/, 'Workflow drawer rows must reserve stable space for copy and counts without label squeezing');
 assert.match(appSource, /workflowGroupKeys/, 'Workflow filters must constrain the Species sidebar');
 assert.match(readinessSource, /导出 Preview Snapshot/, 'Publish-ready UI must expose controlled Preview Snapshot export');
 assert.match(controlledPreviewSource, /noindex,nofollow/, 'Controlled Preview pages must force noindex,nofollow');

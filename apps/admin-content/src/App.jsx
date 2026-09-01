@@ -841,7 +841,7 @@ export default function App() {
     },
     workflow: {
       title: t('editor.workflow'),
-      subtitle: appLocale === 'en' ? 'Navigate Data Review, editorial review and Preview-ready queues.' : '查看 Data Review、内容审核和 Preview-ready 队列。',
+      subtitle: appLocale === 'en' ? 'Navigate Data Review, editorial review and Preview-ready queues.' : '查看数据复核、内容审核和可预览页面。',
     },
   })[activeTool] || { title: '', subtitle: '' };
 
