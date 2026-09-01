@@ -17,6 +17,17 @@ function matches(group, needle) {
   return values.filter(Boolean).some((value) => String(value).toLowerCase().includes(needle));
 }
 
+
+function isVisibleSeoMember(group, member, reviewRows = {}) {
+  if (!member?.duplicate_set_key) return true;
+  const review = reviewRows[member.duplicate_set_key];
+  if (review?.decision === 'distinct_records') return true;
+  if (review?.decision === 'duplicate_records' && review.canonical_catalog_key) {
+    return member.catalog_key === review.canonical_catalog_key;
+  }
+  return !member.duplicate_of_catalog_key;
+}
+
 export default function SpeciesGroupSidebar({
   groups,
   selectedId,
@@ -36,6 +47,7 @@ export default function SpeciesGroupSidebar({
   workflowOverview,
   locale = 'zh-CN',
   onWorkflowFilter,
+  reviewRows = {},
 }) {
   const { appLocale, t } = useAppLanguage();
   const filtered = useMemo(() => {
@@ -56,6 +68,10 @@ export default function SpeciesGroupSidebar({
     });
     return [...map.entries()];
   }, [filtered]);
+
+  const seoPageCandidateCount = useMemo(() => groups.reduce((sum, group) => (
+    sum + group.members.filter((member) => isVisibleSeoMember(group, member, reviewRows)).length
+  ), 0), [groups, reviewRows]);
 
   const workflowFilterLabel = useMemo(() => {
     if (!workflowFilter) return '';
@@ -81,14 +97,14 @@ export default function SpeciesGroupSidebar({
           <p className="eyebrow">{t('sidebar.content')}</p>
           <h2>{t('sidebar.species')}</h2>
         </div>
-        <span className="count-badge">{speciesGroupStats.base_group_count}</span>
+        <span className="count-badge" title={appLocale === 'en' ? `${seoPageCandidateCount} current SEO page candidates` : `${seoPageCandidateCount} 个当前 SEO 页面候选`}>{seoPageCandidateCount}</span>
       </div>
       <div className="catalog-summary">
-        {speciesGroupStats.catalog_count} {t('sidebar.records')} · {speciesGroupStats.batch_candidate_groups} {t('sidebar.batchGroups')}
+        {speciesGroupStats.catalog_count} {appLocale === 'en' ? 'source records' : '条源记录'} · {speciesGroupStats.exact_duplicate_records} {appLocale === 'en' ? 'duplicate candidates' : '条疑似重复'} · {speciesGroupStats.base_group_count} {appLocale === 'en' ? 'Base groups' : '个基础种'}
       </div>
       {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}{appLocale === 'en' ? ': ' : '：'}{workflowFilterLabel} · {filtered.length} {appLocale === 'en' ? 'Base groups' : '个 Base'}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
       <div className="review-filters species-quick-filters" aria-label="Species workflow filters">
-        <button type="button" title={appLocale === 'en' ? `${speciesGroupStats.base_group_count} Base Species groups` : `${speciesGroupStats.base_group_count} 个 Base Species 分组`} className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{t('common.all')} <b>{speciesGroupStats.base_group_count}</b></button>
+        <button type="button" title={appLocale === 'en' ? `${speciesGroupStats.base_group_count} Base Species groups` : `${speciesGroupStats.base_group_count} 个 Base Species 分组`} className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{appLocale === 'en' ? 'Base groups' : '基础种'} <b>{speciesGroupStats.base_group_count}</b></button>
         <button type="button" title={appLocale === 'en' ? `${workflowOverview?.dataReview?.pending ?? 0} pending Data Review issues` : `${workflowOverview?.dataReview?.pending ?? 0} 个待处理数据问题`} className={`tone-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('common.issues')} <b>{workflowOverview?.dataReview?.pending ?? 0}</b></button>
         <button type="button" title={appLocale === 'en' ? 'Content items awaiting editorial review' : '等待人工审核的内容条目'} className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{workflowOverview?.locales?.[locale]?.ready_for_review ?? 0}</b></button>
         <button type="button" title={appLocale === 'en' ? 'Pages eligible for Controlled Preview' : '可进入受控 Preview 的页面'} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: appLocale === 'en' ? 'Preview-ready' : '可预览' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
@@ -109,8 +125,10 @@ export default function SpeciesGroupSidebar({
           <section className="species-category-section" key={categoryName}>
             <div className="species-category-label">{categoryName}</div>
             {categoryGroups.map((group) => {
-              const visibleMembers = workflowMemberIds ? group.members.filter((item) => workflowMemberIds.has(item.id)) : group.members;
-              const firstVisible = visibleMembers[0] || group.members[0];
+              const primaryMembers = group.members.filter((item) => isVisibleSeoMember(group, item, reviewRows));
+              const hiddenDuplicateCount = group.members.length - primaryMembers.length;
+              const visibleMembers = workflowMemberIds ? primaryMembers.filter((item) => workflowMemberIds.has(item.id)) : primaryMembers;
+              const firstVisible = visibleMembers[0] || primaryMembers[0] || group.members[0];
               const baseActive = selectedScope === 'base' && group.members.some((item) => item.id === selectedId);
               const containsActiveVariant = selectedScope === 'variant' && group.members.some((item) => item.id === selectedId);
               return (
@@ -118,7 +136,7 @@ export default function SpeciesGroupSidebar({
                   <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={() => onSelectBase?.(firstVisible.id)}>
                     <span className="group-copy">
                       <strong>{group.base_scientific_name}</strong>
-                      <small>{group.member_count > 1 ? `${group.member_count} ${t('sidebar.pages')}` : t('sidebar.baseSpecies')}</small>
+                      <small>{primaryMembers.length > 1 ? `${primaryMembers.length} ${t('sidebar.pages')}${hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`) : ''}` : t('sidebar.baseSpecies')}</small>
                     </span>
                     <span className="group-badges">
                       {group.category_conflict || group.duplicate_count > 0 ? <em className="issue-dot" title={t('sidebar.dataIssue')}>!</em> : null}
@@ -133,7 +151,7 @@ export default function SpeciesGroupSidebar({
                             <strong>{item.name}</strong>
                             <small>{item.variant_label || (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>
                           </span>
-                          {item.duplicate_peer_keys?.length ? <em className="variant-issue-mark">!</em> : null}
+                          {item.duplicate_peer_keys?.length ? <em className="variant-issue-mark" title={appLocale === 'en' ? 'Possible duplicate record; review before indexing' : '存在疑似重复记录，确认前不会独立收录'}>{appLocale === 'en' ? 'Dup' : '重复'}</em> : null}
                         </button>
                       </div>
                     ))}

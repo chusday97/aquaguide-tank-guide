@@ -6,6 +6,7 @@ import { REVIEW_STATES } from './publishReadiness.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 
 const isPublicSpeciesPublishingEnabled = false;
+const BASE_EDITORIAL_KEYS = ['seoTitleTemplate', 'metaDescriptionTemplate', 'h1Template', 'sharedIntro'];
 
 export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved, selectedInspectorElement, onInspectorSelect, onDirtyChange }) {
   const { appLocale, t } = useAppLanguage();
@@ -35,6 +36,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
   });
 
   const baselineForm = groupSeoFromRow(record, locale);
+  const contentDirty = !readOnly && BASE_EDITORIAL_KEYS.some((key) => String(form[key] ?? '') !== String(baselineForm[key] ?? ''));
   const isDirty = !readOnly && JSON.stringify(form) !== JSON.stringify(baselineForm);
   useEffect(() => { onDirtyChange?.(isDirty); }, [isDirty, onDirtyChange]);
 
@@ -52,7 +54,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
   });
 
   const update = (key, value) => setForm((current) => {
-    const next = { ...current, [key]: value };
+    const next = { ...current, [key]: value, ...(BASE_EDITORIAL_KEYS.includes(key) ? { reviewState: 'editing' } : {}) };
     onPreview?.(toPreviewRow(next));
     return next;
   });
@@ -102,7 +104,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <div>
           <p className="eyebrow">BASE SPECIES SEO · {localeLabel}</p>
           <h2>{group.base_scientific_name}</h2>
-          <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 条记录使用这一 Base 层；多成员组共享继承，单成员组也保留统一审核与发布契约。`}</p>
+          <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 个品种页面共用这一层公共内容；当前品种可以单独覆盖，不需要重复填写共同信息。`}</p>
         </div>
         <div className="editor-status-line" aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>
           <span className={`editor-status-dot ${form.status}`}></span>
@@ -112,35 +114,35 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         </div>
       </div>
       {group.category_conflict ? (
-        <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源 catalog 存在分类冲突；Draft 可继续编辑，但 Publish Readiness 会保持阻止直到人工结论完成。'}</div>
+        <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源数据存在分类冲突；草稿可以继续编辑，但完成数据复核前不能进入预览发布。'}</div>
       ) : null}
       <div className="base-seo-grid">
-        <label {...baseFieldProps('seoTitle')}>{isUiEnglish ? 'SEO Title template' : 'SEO Title 模板'}
+        <label {...baseFieldProps('seoTitle')}>{isUiEnglish ? 'SEO Title template' : '公共 Meta 标题模板'}
           <input value={form.seoTitleTemplate} onFocus={() => onInspectorSelect?.('seoTitle')} onChange={(event) => update('seoTitleTemplate', event.target.value)} />
         </label>
-        <label {...baseFieldProps('metaDescription')}>{isUiEnglish ? 'Meta Description template' : 'Meta Description 模板'}
+        <label {...baseFieldProps('metaDescription')}>{isUiEnglish ? 'Meta Description template' : '公共 Meta 描述模板'}
           <textarea rows="3" value={form.metaDescriptionTemplate} onFocus={() => onInspectorSelect?.('metaDescription')} onChange={(event) => update('metaDescriptionTemplate', event.target.value)} />
         </label>
-        <label {...baseFieldProps('h1')}>{isUiEnglish ? 'H1 template' : 'H1 模板'}
+        <label {...baseFieldProps('h1')}>{isUiEnglish ? 'H1 template' : '公共 H1 模板'}
           <input value={form.h1Template} onFocus={() => onInspectorSelect?.('h1')} onChange={(event) => update('h1Template', event.target.value)} />
         </label>
-        <label {...baseFieldProps('intro')}>{isUiEnglish ? 'Shared introduction / Base content' : '共享简介 / 基础内容'}
-          <textarea rows="5" value={form.sharedIntro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('sharedIntro', event.target.value)} placeholder={isUiEnglish ? 'Write only content shared by this Base Species; keep Variant-specific differences in overrides.' : '只写这个基础物种共同成立的内容；变种差异写到 Variant Override。'} />
+        <label {...baseFieldProps('intro')}>{isUiEnglish ? 'Shared introduction / Base content' : '基础种公共简介'}
+          <textarea rows="5" value={form.sharedIntro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('sharedIntro', event.target.value)} placeholder={isUiEnglish ? 'Write only content shared by this Base Species; keep Variant-specific differences in overrides.' : '只写同一基础种下所有品种都成立的共同内容；某个品种的差异请到“当前品种页面”补充。'} />
         </label>
         <p className="template-help">{isUiEnglish ? 'Keep template tokens unchanged: ' : '变量必须原样保留：'}{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>
       <div className="base-seo-footer">
-        <div>{!readOnly && isDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes' : '未保存修改'}</span> : null}{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 模板，不会写数据库。` : `保存后只更新 ${localeLabel}，不会覆盖其它语言。`)}</div>
+        <div>{!readOnly && isDirty ? <span className="unsaved-indicator">{contentDirty ? (isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核') : (isUiEnglish ? 'Workflow state not saved' : '流程状态未保存')}</span> : null}{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 公共内容，不会写入。` : `保存后只更新 ${localeLabel} 的公共内容，不会覆盖其它语言。`)}</div>
         <div className="footer-actions">
-          <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Base review state' : 'Base 审核状态'}>
-            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? `Review · ${item.label}` : `审核 · ${{ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label}`}</option>)}
-          </select>
-          <select className={`footer-state-select content-${form.status}`} value={form.status} onChange={(event) => update('status', event.target.value)} aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>
-            <option value="draft">{isUiEnglish ? 'Status · Draft' : '状态 · Draft'}</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Status · Published (locked)' : '状态 · Published（锁定）'}</option>
-          </select>
+          <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
+          <label className="review-flow-control">
+            <span>{isUiEnglish ? 'Workflow' : '内容流程'}</span>
+            <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} disabled={contentDirty} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Base review state' : 'Base 审核状态'}>
+              {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Submit for review', approved: 'Approved for Preview' }[item.value] || item.label) : ({ editing: '编辑中', ready_for_review: '提交审核', approved: '已批准预览' }[item.value] || item.label)}</option>)}
+            </select>
+          </label>
           <button className="primary-button" type="button" onClick={save} disabled={readOnly || saving || !isDirty}>
-            {readOnly ? `${t('common.readonly')} ${localeLabel}` : saving ? t('common.saving') : `${t('common.save')} ${localeLabel} Base SEO`}
+            {readOnly ? `${t('common.readonly')} ${localeLabel}` : saving ? t('common.saving') : (contentDirty ? (isUiEnglish ? 'Save shared content' : '保存公共内容') : (isUiEnglish ? 'Save workflow state' : '保存流程状态'))}
           </button>
         </div>
       </div>

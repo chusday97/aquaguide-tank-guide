@@ -520,7 +520,8 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .variant-row.active strong { color: var(--selection-strong); font-weight: 760; }
 .variant-row.active small { color: #6f8275; }
 .group-badges { min-width: 18px; justify-content: flex-end; }
-.issue-dot, .variant-issue-mark { width: 16px; height: 16px; display: grid; place-items: center; border-radius: 999px; background: var(--issue-bg); color: var(--issue-strong); font-size: 9px; font-style: normal; font-weight: 800; }
+.issue-dot { width: 16px; height: 16px; display: grid; place-items: center; border-radius: 999px; background: var(--issue-bg); color: var(--issue-strong); font-size: 9px; font-style: normal; font-weight: 800; }
+.variant-issue-mark { min-width: 30px; height: 18px; display: grid; place-items: center; padding: 0 6px; border-radius: 999px; background: var(--issue-bg); color: var(--issue-strong); font-size: 8px; font-style: normal; font-weight: 800; white-space: nowrap; }
 .variant-list { display: grid; border: 0; margin-left: 10px; padding-left: 8px; border-left: 1px solid #e7ebe7; }
 .variant-row { grid-template-columns: 18px minmax(0, 1fr); border: 0; border-radius: 7px; }
 .variant-row + .variant-row { margin-top: 1px; }
@@ -989,12 +990,15 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   min-height: 58px;
   box-shadow: 0 -10px 18px rgba(255,255,255,.92);
 }
-.footer-actions { gap: 7px; }
-.footer-actions select { width: 116px; height: 34px; padding-top: 5px; padding-bottom: 5px; font-size: 10px; }
+.footer-actions { gap: 8px; align-items: center; }
+.footer-actions select { height: 34px; padding-top: 5px; padding-bottom: 5px; font-size: 10px; }
 .footer-actions .primary-button.compact { min-height: 34px; padding-top: 7px; padding-bottom: 7px; }
-
-.footer-actions select:first-child { width: 128px; }
-.footer-actions select:nth-child(2) { width: 128px; }
+.draft-safety-chip { height: 34px; display: inline-flex; align-items: center; padding: 0 10px; border: 1px solid #ead9ad; border-radius: 8px; background: #fff9e9; color: #7c6425; font-size: 9px; font-weight: 750; white-space: nowrap; }
+.draft-safety-chip.content-published { border-color:#cfe1d5; background:#eef7f1; color:#356c4a; }
+.review-flow-control { display: flex !important; align-items: center; gap: 6px; margin: 0 !important; color: #7a867f !important; font-size: 9px !important; font-weight: 650 !important; }
+.review-flow-control > span { white-space: nowrap; }
+.review-flow-control .footer-state-select { width: 126px; }
+.review-flow-control .footer-state-select:disabled { opacity: .58; cursor: not-allowed; }
 .footer-state-select { border-color:#dfe5e1; background:#f8faf8; color:#536159; }
 .footer-state-select.review-editing { background:#f6f7f6; color:#66736b; }
 .footer-state-select.review-ready_for_review { border-color:#cfdbef; background:#f1f5fc; color:#42648f; }

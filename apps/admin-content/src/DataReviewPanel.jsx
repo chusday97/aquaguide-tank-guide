@@ -23,7 +23,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
     if (readOnly) return setMessage('只读 Review 不写数据库。');
     if (!schemaReady) return setMessage('Data Review schema 尚未应用。');
     if (!decision) return setMessage('请先选择人工结论。');
-    if (decision === 'duplicate_records' && !canonicalKey) return setMessage('确认重复时必须选择 canonical 记录。');
+    if (decision === 'duplicate_records' && !canonicalKey) return setMessage('确认重复时必须选择保留的 SEO 主页面。');
     setSaving(true); setMessage('');
     const payload = {
       issue_key: issueKey, issue_type: issueType, group_key: group.group_key, decision,
@@ -46,15 +46,18 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
             <option value="source_correction_required">{isUiEnglish ? 'Source data requires correction; keep blocked' : '源数据需要修正，继续阻止'}</option>
           </> : <>
             <option value="distinct_records">{isUiEnglish ? 'Confirmed distinct records' : '确认是不同记录'}</option>
-            <option value="duplicate_records">{isUiEnglish ? 'Confirmed duplicates; choose canonical' : '确认重复，指定 canonical'}</option>
+            <option value="duplicate_records">{isUiEnglish ? 'Confirmed duplicates; keep one SEO page' : '确认重复，只保留一个 SEO 主页面'}</option>
           </>}
         </select>
       </label>
       {decision === 'duplicate_records' ? (
-        <label>Canonical record
+        <label>{isUiEnglish ? 'SEO page to keep' : '保留为 SEO 主页面'}
           <select value={canonicalKey} onChange={(event) => setCanonicalKey(event.target.value)}>
             <option value="">{isUiEnglish ? 'Select' : '请选择'}</option>
-            {(set?.member_ids || []).map((id) => <option value={id} key={id}>{id}</option>)}
+            {(set?.member_ids || []).map((id) => {
+              const member = group.members?.find((item) => item.catalog_key === id);
+              return <option value={id} key={id}>{member?.name || set?.name || id} · {id}</option>;
+            })}
           </select>
         </label>
       ) : null}
@@ -99,9 +102,9 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
       ) : null}
       {group.duplicate_sets?.map((set) => (
         <div className="review-issue-card" key={set.duplicate_set_key}>
-          <div className="review-issue-title"><strong>{isUiEnglish ? 'Possible exact duplicate' : '疑似完全重复'}</strong><span>{set.member_ids.length} {isUiEnglish ? 'records' : '条记录'}</span></div>
+          <div className="review-issue-title"><strong>{isUiEnglish ? 'Possible duplicate pages' : '疑似重复页面'}</strong><span>{set.member_ids.length} {isUiEnglish ? 'source records' : '条源记录'}</span></div>
           <p><b>{set.name}</b> · <i>{set.scientific_name}</i></p>
-          <div className="duplicate-key-list">{set.member_ids.map((id) => <code key={id}>{id}</code>)}</div>
+          <div className="duplicate-key-list">{set.member_ids.map((id) => { const member = group.members?.find((item) => item.catalog_key === id); return <code key={id}>{member?.name || set.name} · {id}</code>; })}</div>
           <ReviewDecision issueKey={set.duplicate_set_key} issueType="duplicate_set" group={group} set={set}
             row={reviewRows[set.duplicate_set_key]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} />
         </div>

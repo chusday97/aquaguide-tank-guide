@@ -72,8 +72,9 @@ assert.ok(groupData.groups.some((group) => group.duplicate_sets?.length), 'Dupli
 const emptyWorkflowOverview = buildAdminWorkflowOverview({ species: catalog, groups: groupData.groups, seoRows: {}, groupSeoRows: {}, reviewRows: {} });
 assert.equal(emptyWorkflowOverview.dataReview.total, 33, 'Workflow overview must preserve 5 category + 28 duplicate review issues');
 assert.equal(emptyWorkflowOverview.dataReview.pending, 33, 'Unreviewed source issues must begin Pending');
-assert.equal(emptyWorkflowOverview.locales['zh-CN'].blocked, catalog.length, 'Missing Chinese editorial rows must block all Species');
-assert.equal(emptyWorkflowOverview.locales.en.blocked, catalog.length, 'Missing English editorial rows must block all Species');
+const initialSeoPageCandidates = catalog.length - groupData.stats.exact_duplicate_records;
+assert.equal(emptyWorkflowOverview.locales['zh-CN'].blocked, initialSeoPageCandidates, 'Missing Chinese editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');
+assert.equal(emptyWorkflowOverview.locales.en.blocked, initialSeoPageCandidates, 'Missing English editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');
 
 assert.match(appSource, /from\('user_roles'\)/, 'Admin must verify user_roles');
 assert.match(appSource, /from\('species_seo'\)/, 'Admin must read species_seo');
@@ -84,7 +85,9 @@ assert.match(sidebarSource, /containsActiveVariant/, 'Variant selection must pre
 assert.match(sidebarSource, /tone-issue/, 'Species workflow filters must visually distinguish Data Review issues');
 assert.match(sidebarSource, /tone-review/, 'Species workflow filters must visually distinguish editorial review');
 assert.match(sidebarSource, /tone-ready/, 'Species workflow filters must visually distinguish Preview-ready state');
-assert.match(sidebarSource, /common\.all[\s\S]*speciesGroupStats\.base_group_count/, 'Species navigation All count must use Base-group units, not catalog-row units');
+assert.match(sidebarSource, /Base groups[\s\S]*speciesGroupStats\.base_group_count|基础种[\s\S]*speciesGroupStats\.base_group_count/, 'Species navigation must label the Base-group count explicitly');
+assert.match(sidebarSource, /seoPageCandidateCount[\s\S]*current SEO page candidates/, 'Sidebar header must expose current SEO page candidates separately from source-record count');
+assert.match(sidebarSource, /duplicate_of_catalog_key/, 'Sidebar must collapse source-marked duplicate records instead of presenting them as equal SEO pages');
 assert.match(sidebarSource, /filtered\.length[\s\S]*Base groups/, 'Active workflow filter banner must expose affected Base-group count');
 assert.match(sidebarSource, /Base Species groups/, 'Species navigation All count must expose its Base-group unit in hover help');
 assert.match(sidebarSource, /pending Data Review issues/, 'Data Review issue count must expose issue units in hover help');
@@ -160,7 +163,7 @@ assert.match(appSource, /editor-status-line/, 'Variant editor must use one calm 
 assert.match(baseSource, /editor-status-line/, 'Base editor must use the same calm lifecycle/review status line');
 assert.match(appSource, /source === 'preview'[\s\S]*const targetScope = variantOnly \|\| variantOverride \? 'variant' : 'base'[\s\S]*runEditorNavigation\(\(\) => setEditorScope\(targetScope\)\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor through the unsaved-change guard');
 assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !custom/, 'Inspector edit path must identify inherited content as Base-owned regardless of current editor scope');
-assert.match(appSource, /Use Base value|使用 Base 值/, 'Variant overrides must expose a return-to-Base action');
+assert.match(appSource, /Restore shared content|恢复公共内容/, 'Variant page-specific content must expose a plain-language return-to-shared-content action');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
 assert.match(appSource, /footer-state-select review-/, 'Variant footer must visually distinguish review state');
@@ -224,7 +227,7 @@ assert.match(batchSource, /resolveEffectiveSeo/, 'Batch preview must resolve Bas
 assert.doesNotMatch(batchSource, /seo_title:\s*applySeoTemplate/, 'Batch write must not duplicate Base title into every Variant');
 assert.match(batchSource, /onConflict: 'catalog_key,locale'/, 'Batch upsert must use stable catalog key + locale');
 assert.match(baseSource, /from\('species_seo_groups'\)/, 'Base editor must persist group SEO separately');
-assert.match(baseSource, /Publish Readiness/, 'Base editor must defer publication blocking to explicit readiness instead of preventing Draft editing');
+assert.match(baseSource, /Preview readiness|预览发布/, 'Base editor must defer publication blocking to explicit readiness instead of preventing Draft editing');
 assert.match(reviewSource, /duplicate_sets/, 'Review panel must expose duplicate evidence sets');
 assert.match(reviewSource, /category_conflict/, 'Review panel must expose category conflicts');
 assert.match(reviewSource, /species_data_reviews/, 'Review decisions must persist separately from Product Truth');
@@ -297,6 +300,16 @@ if (duplicateSet) {
   const canonicalReviewRows = { ...reviewRows, [duplicateSet.duplicate_set_key]: { decision: 'duplicate_records', canonical_catalog_key: duplicateSet.member_ids[0] } };
   const nonCanonical = neoGroup.members.find((member) => duplicateSet.member_ids.includes(member.catalog_key) && member.catalog_key !== duplicateSet.member_ids[0]);
   if (nonCanonical) assert.match(getIndexReviewBlockReason({ species: nonCanonical, group: neoGroup, indexStrategy: 'index', canonicalCatalogKey: '', reviewRows: canonicalReviewRows }), /不能独立 Index/, 'Confirmed duplicate non-canonical must stay blocked from independent Index');
+  const unrelatedMember = neoGroup.members.find((member) => !(neoGroup.duplicate_sets || []).some((set) => set.member_ids.includes(member.catalog_key)));
+  if (unrelatedMember && !neoGroup.category_conflict) {
+    const unrelatedReadiness = assessPublishReadiness({
+      species: unrelatedMember, group: neoGroup, locale: 'en',
+      groupRow: { locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' },
+      variantRow: { locale: 'en', localized_name: 'Unrelated Variant', image_alt: 'Unrelated Variant', review_state: 'approved', index_strategy: 'noindex' },
+      counterpartGroupRow: { review_state: 'approved' }, counterpartVariantRow: { review_state: 'approved' }, reviewRows: {},
+    });
+    assert.equal(unrelatedReadiness.state, 'publish_ready', 'An unresolved duplicate pair must not block unrelated pages in the same Base group');
+  }
 }
 
 const cleanGroup = groupData.groups.find((group) => !group.category_conflict && !group.duplicate_count);

@@ -39,6 +39,8 @@ const emptySeo = {
   reviewState: 'editing',
 };
 
+const EDITORIAL_FORM_KEYS = ['localizedName', 'seoTitle', 'metaDescription', 'h1', 'intro', 'imageAlt', 'indexStrategy', 'canonicalCatalogKey', 'focusKeyword'];
+
 const fromSeoRow = (row, species, locale = 'zh-CN') => ({
   localizedName: row?.localized_name || (isEnglishLocale(locale) ? '' : species?.name || ''),
   seoTitle: row?.seo_title || '',
@@ -225,6 +227,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   ]);
 
   const baselineForm = fromSeoRow(record, species, locale);
+  const contentDirty = !readOnly && EDITORIAL_FORM_KEYS.some((key) => String(form[key] ?? '') !== String(baselineForm[key] ?? ''));
   const isDirty = !readOnly && JSON.stringify(form) !== JSON.stringify(baselineForm);
   useEffect(() => { onDirtyChange?.(isDirty); }, [isDirty, onDirtyChange]);
 
@@ -238,7 +241,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     );
   }
 
-  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const update = (key, value) => setForm((current) => ({
+    ...current,
+    [key]: value,
+    ...(EDITORIAL_FORM_KEYS.includes(key) ? { reviewState: 'editing' } : {}),
+  }));
   const startOverride = (key) => {
     setOverrideEditing((current) => ({ ...current, [key]: true }));
     onInspectorSelect?.(key);
@@ -256,14 +263,14 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       <div {...editorFieldProps(key)} onClick={() => onInspectorSelect?.(key)}>
         <div className="inheritance-field-heading">
           <span>{label}</span>
-          <span className={`inheritance-state ${custom ? 'custom' : 'inherited'}`}>{custom ? (isUiEnglish ? 'Custom' : '自定义') : (isUiEnglish ? 'Inherited' : '继承')}</span>
+          <span className={`inheritance-state ${custom ? 'custom' : 'inherited'}`}>{custom ? (isUiEnglish ? 'Page-specific' : '当前页面单独设置') : (isUiEnglish ? 'Uses shared content' : '沿用公共内容')}</span>
         </div>
         {!editing ? (
           <div className="inherited-field-view">
             <div className="inherited-field-value">{inheritedValue || '—'}</div>
             <div className="inherited-field-footer">
-              <span>{isUiEnglish ? `Inherited from ${group?.base_scientific_name || 'Base Species'}` : `继承自 ${group?.base_scientific_name || 'Base Species'}`}</span>
-              <button type="button" onClick={() => startOverride(key)}>{isUiEnglish ? 'Override' : '单独编辑'}</button>
+              <span>{isUiEnglish ? `This page uses shared content from ${group?.base_scientific_name || 'Base Species'}` : `当前页面未单独填写，将使用 ${group?.base_scientific_name || '基础种'} 的公共内容`}</span>
+              <button type="button" onClick={() => startOverride(key)}>{isUiEnglish ? 'Edit this page only' : '为当前页单独编辑'}</button>
             </div>
           </div>
         ) : (
@@ -274,8 +281,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               <input aria-label={label} data-editor-override={key} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
             )}
             <div className="override-field-footer">
-              <span>{custom ? (isUiEnglish ? 'Custom for this page' : '当前页面自定义') : (isUiEnglish ? 'Type to create an override' : '输入内容后建立 Override')}</span>
-              <button type="button" onClick={() => useBaseValue(key)}>{custom ? (isUiEnglish ? 'Use Base value' : '使用 Base 值') : (isUiEnglish ? 'Cancel' : '取消')}</button>
+              <span>{custom ? (isUiEnglish ? 'This page replaces the shared value' : '当前页面已使用单独内容，不再沿用公共值') : (isUiEnglish ? 'Enter a page-specific value' : '输入后只修改当前页面')}</span>
+              <button type="button" onClick={() => useBaseValue(key)}>{custom ? (isUiEnglish ? 'Restore shared content' : '恢复公共内容') : (isUiEnglish ? 'Cancel' : '取消')}</button>
             </div>
           </>
         )}
@@ -386,16 +393,16 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <summary>
                   <span>
                     <strong>{t('editor.sharedIntro')}</strong>
-                    <small>{effectiveSeo.sharedIntro ? (isUiEnglish ? 'Inherited from Base Species' : '继承自 Base Species') : (isUiEnglish ? 'Base content is empty' : 'Base 内容为空')}</small>
+                    <small>{effectiveSeo.sharedIntro ? (isUiEnglish ? 'Shared across this Base Species group' : '同一基础种下的品种页面共同使用') : (isUiEnglish ? 'Shared content is empty' : '公共内容尚未填写')}</small>
                   </span>
-                  <em>{isUiEnglish ? 'View' : '查看'}</em>
+                  <em>{isUiEnglish ? 'View shared content' : '查看公共内容'}</em>
                 </summary>
-                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared Base Species introduction yet.' : 'Base Species 尚未填写共享简介。')}</p>
+                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础种公共简介尚未填写。')}</p>
               </details>
             ) : null}
             <label {...editorFieldProps('intro')}>
               {t('editor.variantIntro')}
-              <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Describe only Variant-specific differences; keep shared care content in Base Species.' : '只写这个变种独有的颜色、选育、表现或注意事项；共同饲养信息留在 Base Species。'} />
+              <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Add only what is different on this page; do not repeat shared care content.' : '只补充这个品种与基础种不同的信息；共同饲养内容不要重复写。'} />
             </label>
             <label {...editorFieldProps('imageAlt')}>
               {t('editor.imageAlt')}
@@ -451,20 +458,20 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 
       <div className="editor-footer">
         <div>
-          {!readOnly && isDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes' : '未保存修改'}</span> : null}
+          {!readOnly && isDirty ? <span className="unsaved-indicator">{contentDirty ? (isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核') : (isUiEnglish ? 'Workflow state not saved' : '流程状态未保存')}</span> : null}
           {!schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
           {indexBlockReason ? <span className="warning-text">{indexBlockReason}</span> : null}
           {message ? <span className="save-message">{message}</span> : null}
         </div>
         <div className="footer-actions">
-          <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Review state' : '审核状态'}>
-            {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? `Review · ${item.label}` : `审核 · ${{ editing: '编辑中', ready_for_review: '待审核', approved: '已审核' }[item.value] || item.label}`}</option>)}
-          </select>
-          <select className={`footer-state-select content-${form.status}`} value={form.status} onChange={(event) => update('status', event.target.value)} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>
-            <option value="draft">{isUiEnglish ? 'Status · Draft' : '状态 · Draft'}</option>
-            <option value="published" disabled={!isPublicSpeciesPublishingEnabled}>{isUiEnglish ? 'Status · Published (locked)' : '状态 · Published（锁定）'}</option>
-          </select>
-          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason) || !isDirty}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : `${t('common.save')} ${getLocaleLabel(locale)} SEO`}</button>
+          <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
+          <label className="review-flow-control">
+            <span>{isUiEnglish ? 'Workflow' : '内容流程'}</span>
+            <select className={`footer-state-select review-${form.reviewState}`} value={form.reviewState} disabled={contentDirty} onChange={(event) => update('reviewState', event.target.value)} aria-label={isUiEnglish ? 'Review state' : '审核状态'}>
+              {REVIEW_STATES.map((item) => <option key={item.value} value={item.value}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Submit for review', approved: 'Approved for Preview' }[item.value] || item.label) : ({ editing: '编辑中', ready_for_review: '提交审核', approved: '已批准预览' }[item.value] || item.label)}</option>)}
+            </select>
+          </label>
+          <button className="primary-button compact" type="button" onClick={save} disabled={saving || readOnly || Boolean(indexBlockReason) || !isDirty}>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : saving ? t('common.saving') : (contentDirty ? (isUiEnglish ? 'Save changes' : '保存修改') : (isUiEnglish ? 'Save workflow state' : '保存流程状态'))}</button>
         </div>
       </div>
     </section>
@@ -973,6 +980,7 @@ export default function App() {
           workflowOverview={workflowOverview}
           locale={contentLocale}
           onWorkflowFilter={applyWorkflowFilter}
+          reviewRows={dataReviewRows}
         />
 
         <main className="editor-area studio-editor-area">

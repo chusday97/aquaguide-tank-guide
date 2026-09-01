@@ -13,7 +13,7 @@ export function dataReviewMap(rows = []) {
   return Object.fromEntries((rows || []).map((row) => [row.issue_key, row]));
 }
 
-export function assessDataReview(group, reviewRows = {}) {
+export function assessDataReview(group, reviewRows = {}, { catalogKey = null } = {}) {
   const blockers = [];
   const categoryReview = group?.category_conflict ? reviewRows[categoryIssueKey(group)] : null;
   if (group?.category_conflict && categoryReview?.decision !== 'accepted_as_is') {
@@ -22,11 +22,13 @@ export function assessDataReview(group, reviewRows = {}) {
       : '分类冲突尚未完成人工结论。');
   }
 
-  for (const set of group?.duplicate_sets || []) {
+  const duplicateSets = (group?.duplicate_sets || []).filter((set) => !catalogKey || set.member_ids.includes(catalogKey));
+  for (const set of duplicateSets) {
     const review = reviewRows[set.duplicate_set_key];
-    if (!review) blockers.push(`重复集 ${set.member_ids.join(' / ')} 尚未人工确认。`);
+    const label = set.name || set.scientific_name || '当前页面';
+    if (!review) blockers.push(`疑似重复页面：${label}（${set.member_ids.join(' / ')}）还没有确认应保留哪条记录。`);
     else if (review.decision === 'duplicate_records' && !set.member_ids.includes(review.canonical_catalog_key)) {
-      blockers.push(`重复集 ${set.member_ids.join(' / ')} 的 canonical 目标无效。`);
+      blockers.push(`疑似重复页面：${label} 的主页面选择无效，请重新确认。`);
     }
   }
   return { ready: blockers.length === 0, blockers, categoryReview };
@@ -45,20 +47,20 @@ export function assessPublishReadiness({ species, group, locale, variantRow, gro
   if (locale === 'en' && !variantRow?.localized_name?.trim()) blockers.push('English Common Name 为空。');
   if (!variantRow?.image_alt?.trim()) blockers.push('Hero Image Alt 尚未填写。');
 
-  const dataReview = assessDataReview(group, reviewRows);
+  const dataReview = assessDataReview(group, reviewRows, { catalogKey: species.catalog_key });
   blockers.push(...dataReview.blockers);
   const member = group.members?.find((item) => item.catalog_key === species.catalog_key);
   const duplicateSet = (group.duplicate_sets || []).find((set) => set.member_ids.includes(species.catalog_key));
   const duplicateReview = duplicateSet ? reviewRows[duplicateSet.duplicate_set_key] : null;
   if (duplicateReview?.decision === 'duplicate_records') {
     const isCanonical = duplicateReview.canonical_catalog_key === species.catalog_key;
-    if (isCanonical && variantRow?.index_strategy !== 'index') blockers.push('该记录被选为重复集 canonical，应使用独立 Index。');
-    if (!isCanonical && variantRow?.index_strategy === 'index') blockers.push('该记录已判定为重复项，不能独立 Index。');
+    if (isCanonical && variantRow?.index_strategy !== 'index') blockers.push('当前记录已被确认为 SEO 主页面，应使用独立收录。');
+    if (!isCanonical && variantRow?.index_strategy === 'index') blockers.push('当前记录已确认是重复项，不能作为独立 SEO 页面收录。');
     if (!isCanonical && variantRow?.index_strategy === 'canonical_to_sibling' && variantRow?.canonical_catalog_key !== duplicateReview.canonical_catalog_key) {
-      blockers.push('Canonical target 与重复复核结论不一致。');
+      blockers.push('当前 Canonical 目标与已确认的 SEO 主页面不一致。');
     }
   } else if (member?.duplicate_peer_keys?.length && duplicateReview?.decision !== 'distinct_records') {
-    blockers.push('疑似重复记录尚未得到可解除阻止的复核结论。');
+    blockers.push('当前页面与另一条记录疑似重复，需要先确认它们是否为同一页面。');
   }
 
   if (variantRow?.index_strategy === 'index') {
@@ -172,11 +174,21 @@ export function buildAdminWorkflowOverview({ species = [], groups = [], seoRows 
 
   const groupByMember = new Map();
   for (const group of groups) for (const member of group.members) groupByMember.set(member.catalog_key, group);
+  const workflowSpecies = species.filter((item) => {
+    const group = groupByMember.get(item.catalog_key);
+    const groupMember = group?.members?.find((member) => member.catalog_key === item.catalog_key);
+    const duplicateSet = (group?.duplicate_sets || []).find((set) => set.member_ids.includes(item.catalog_key));
+    if (!duplicateSet) return true;
+    const review = reviewRows[duplicateSet.duplicate_set_key];
+    if (review?.decision === 'distinct_records') return true;
+    if (review?.decision === 'duplicate_records' && review.canonical_catalog_key) return item.catalog_key === review.canonical_catalog_key;
+    return !groupMember?.duplicate_of_catalog_key;
+  });
   const locales = {};
   for (const locale of ['zh-CN', 'en']) {
     const counterpart = locale === 'en' ? 'zh-CN' : 'en';
-    const state = { total: species.length, blocked: 0, ready_for_review: 0, publish_ready: 0, memberIdsByState: { blocked: [], ready_for_review: [], publish_ready: [] } };
-    for (const item of species) {
+    const state = { total: workflowSpecies.length, blocked: 0, ready_for_review: 0, publish_ready: 0, memberIdsByState: { blocked: [], ready_for_review: [], publish_ready: [] } };
+    for (const item of workflowSpecies) {
       const group = groupByMember.get(item.catalog_key);
       if (!group) continue;
       const result = assessPublishReadiness({
