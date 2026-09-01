@@ -211,3 +211,12 @@ Branch: `feature/admin-content-v0`
 - Vercel Preview config now declares `ADMIN_GITHUB_CONTENT_REPO=chusday97/aquaguide-seo-content`, `ADMIN_GITHUB_STAGING_REPO=chusday97/aquaguide-tank-guide`, and private source branch `main`.
 - Hosted Admin session/password/session secret are configured; `ADMIN_GITHUB_TOKEN` remains intentionally absent until a least-privilege fine-grained token is supplied.
 - `test:dual-repo-routing` PASS: exactly two simulated PUTs route to the intended repositories.
+
+## 2026-09-01 — Hosted dual-repo evidence
+- `eb478ab fix(admin): isolate SEO drafts in private repo` is pushed to `feature/admin-content-v0`.
+- GitHub Admin Content CI #32 completed SUCCESS on a clean runner, including dual-repo routing, root Species artifact integration, catalog parity and diff hygiene.
+- Vercel Preview deployment `dpl_gvQV8AY3cGPC2Vk2J5uFuFfFa6Mx` reached READY for `eb478ab`.
+- Hosted `/api/admin-content/health` returns `auth_configured=true`, `content_repo=chusday97/aquaguide-seo-content`, `staging_repo=chusday97/aquaguide-tank-guide`, correct branches/paths, and `repo_access_error=token_missing`. This proves every hosted dependency except the GitHub write token is wired.
+- Preview responses retain `X-Robots-Tag: noindex`.
+- The remaining hosted external gate is one least-privilege fine-grained GitHub token covering exactly the private content repo + public AquaGuide repo with Contents Read/Write only. The broad local `gh` OAuth token is intentionally not reused.
+- Added `scripts/vercel-ignore-build.mjs`: docs-only `.ai/**`, `HANDOFF.md`, `PROGRESS.md`, and README changes skip Vercel; any code/config/data or `staging-snapshot.json` change continues deployment.

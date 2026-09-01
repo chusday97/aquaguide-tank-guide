@@ -525,3 +525,12 @@ After it is gated, the next product milestone is a small staging publication sli
 - 新增 `test:dual-repo-routing`，已验证 Draft PUT 只去私有仓库、Staging PUT 只去公共 AquaGuide。
 - Vercel Preview 的 Admin Session、密码 Hash、Session Secret、双仓 Repo/Branch/Path 均已配置；当前唯一 Hosted 配置缺口是最小权限 `ADMIN_GITHUB_TOKEN`。
 - 最小权限要求：仅选中 `aquaguide-seo-content` 与 `aquaguide-tank-guide` 两个仓库，只给 Contents Read/Write；不要使用本机 `gh` 的 `repo + workflow` 广权限 OAuth token。
+
+## 2026-09-01 — Hosted dual-repo evidence
+- `eb478ab fix(admin): isolate SEO drafts in private repo` is pushed to `feature/admin-content-v0`.
+- GitHub Admin Content CI #32 completed SUCCESS on a clean runner, including dual-repo routing, root Species artifact integration, catalog parity and diff hygiene.
+- Vercel Preview deployment `dpl_gvQV8AY3cGPC2Vk2J5uFuFfFa6Mx` reached READY for `eb478ab`.
+- Hosted `/api/admin-content/health` returns `auth_configured=true`, `content_repo=chusday97/aquaguide-seo-content`, `staging_repo=chusday97/aquaguide-tank-guide`, correct branches/paths, and `repo_access_error=token_missing`. This proves every hosted dependency except the GitHub write token is wired.
+- Preview responses retain `X-Robots-Tag: noindex`.
+- The remaining hosted external gate is one least-privilege fine-grained GitHub token covering exactly the private content repo + public AquaGuide repo with Contents Read/Write only. The broad local `gh` OAuth token is intentionally not reused.
+- Added `scripts/vercel-ignore-build.mjs`: docs-only `.ai/**`, `HANDOFF.md`, `PROGRESS.md`, and README changes skip Vercel; any code/config/data or `staging-snapshot.json` change continues deployment.

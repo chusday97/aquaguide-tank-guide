@@ -70,6 +70,22 @@ jobs:
       - name: Admin contract and generator tests
         run: npm run test:contract -w @aquaguide/admin-content
 
+      - name: Vercel docs-only deployment guard
+        shell: bash
+        run: |
+          set +e
+          VERCEL_CHANGED_FILES=$'.ai/LIVE_STATUS.md\nHANDOFF.md\napps/admin-content/README.md' node scripts/vercel-ignore-build.mjs
+          docs_exit=$?
+          VERCEL_CHANGED_FILES=$'.ai/LIVE_STATUS.md\nsrc/App.tsx' node scripts/vercel-ignore-build.mjs
+          code_exit=$?
+          VERCEL_CHANGED_FILES='content/species-seo/staging-snapshot.json' node scripts/vercel-ignore-build.mjs
+          snapshot_exit=$?
+          set -e
+          test "$docs_exit" -eq 0
+          test "$code_exit" -eq 1
+          test "$snapshot_exit" -eq 1
+
+
       - name: Production build
         run: npm run build -w @aquaguide/admin-content
 

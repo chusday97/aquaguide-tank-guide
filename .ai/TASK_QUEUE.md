@@ -192,3 +192,14 @@ Updated: 2026-08-30
 - [ ] Add least-privilege `ADMIN_GITHUB_TOKEN` to Preview: selected repositories = `aquaguide-seo-content` + `aquaguide-tank-guide`; Contents Read/Write only.
 - [ ] Redeploy and confirm Health: all Content/Staging repository checks green.
 - [ ] Hosted vertical slice: edit H1 → private Draft commit (0 Aqua CI/deploy) → Approve → explicit Staging Publish → one Aqua Preview rebuild → returned HTML contains exact H1.
+
+## 2026-09-01 Hosted dual-repo gate status
+- [x] GitHub CI #32 SUCCESS for `eb478ab`.
+- [x] Vercel Preview for `eb478ab` READY.
+- [x] Hosted Health identifies private Content Repo and public Staging Repo correctly.
+- [x] Hosted Admin Session/password/session secret configured.
+- [x] Preview remains deployment-level noindex.
+- [x] Add docs-only Vercel ignore guard without suppressing code or staging-snapshot deploys.
+- [ ] Supply least-privilege `ADMIN_GITHUB_TOKEN` (two selected repositories; Contents Read/Write only).
+- [ ] Recheck hosted Health until all repo/write/branch/store flags are green.
+- [ ] Execute real hosted H1 edit → private Draft commit → approval → staging snapshot → one Preview rebuild → returned HTML exact-H1 acceptance.
