@@ -11,6 +11,7 @@ const config = {
   expectedProjectRef: process.env.STAGING_SUPABASE_PROJECT_REF,
   productionProjectRef: process.env.PRODUCTION_SUPABASE_PROJECT_REF,
   sourceLabel: process.env.STAGING_SOURCE_LABEL,
+  selectedCatalogKeys: process.env.STAGING_CATALOG_KEYS,
 };
 
 const siteUrl = validateStagingSiteUrl(
@@ -28,6 +29,7 @@ try {
     snapshotPath,
     siteUrl,
     productionSiteUrl,
+    mode: 'staging_release',
   });
   console.log(JSON.stringify({
     source: snapshot.source_label,

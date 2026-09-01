@@ -39,6 +39,7 @@ export async function buildSpeciesSeoArtifact({
   siteUrl,
   productionSiteUrl,
   distDir = path.join(repoRoot, 'dist'),
+  mode = 'release',
 } = {}) {
   const inputs = resolveBuildInputs({ snapshotPath, siteUrl, productionSiteUrl });
   snapshotPath = inputs.snapshotPath;
@@ -63,7 +64,7 @@ export async function buildSpeciesSeoArtifact({
       outDir: tempDir,
       siteUrl,
       productionSiteUrl,
-      mode: 'release',
+      mode,
     });
     await mergeGeneratedOutput(tempDir, distDir);
     const receipt = {
@@ -72,6 +73,7 @@ export async function buildSpeciesSeoArtifact({
       build_input_source: inputs.source,
       site_url: siteUrl,
       environment: snapshot.environment,
+      delivery_mode: mode,
       generated_pages: result.manifest.generated_pages,
       indexable_pages: result.manifest.indexable_pages,
       output: path.relative(repoRoot, distDir) || 'dist',

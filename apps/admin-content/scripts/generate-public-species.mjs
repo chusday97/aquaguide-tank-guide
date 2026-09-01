@@ -67,8 +67,14 @@ function isPreviewEligible(row) {
   return Boolean(row && !row.deleted_at && row.status !== 'archived' && row.review_state === 'approved');
 }
 
+function isStagingReleaseEligible(row) {
+  return Boolean(row && !row.deleted_at && row.status === 'draft' && row.review_state === 'approved' && row.reviewed_at);
+}
+
 function isEligibleRow(row, mode) {
-  return mode === 'preview' ? isPreviewEligible(row) : isPublished(row);
+  if (mode === 'preview') return isPreviewEligible(row);
+  if (mode === 'staging_release') return isStagingReleaseEligible(row);
+  return isPublished(row);
 }
 
 function normalizeLocale(locale) {
@@ -80,7 +86,10 @@ function validateEligibleRecord({ row, groupRow, member, group, effectiveSeo, ro
   const locale = normalizeLocale(row.locale);
   if (!locale) errors.push(`unsupported locale ${row.locale}`);
   if (!member || !group) errors.push(`unknown catalog_key ${row.catalog_key}`);
-  if (!isEligibleRow(groupRow, mode)) errors.push(`Base Species ${group?.group_key || 'unknown'} is not ${mode === 'preview' ? 'Approved/preview-eligible' : 'Published'} for ${row.locale}`);
+  if (!isEligibleRow(groupRow, mode)) {
+    const expected = mode === 'preview' ? 'Approved/preview-eligible' : mode === 'staging_release' ? 'Approved Draft/staging-eligible' : 'Published';
+    errors.push(`Base Species ${group?.group_key || 'unknown'} is not ${expected} for ${row.locale}`);
+  }
   if (row?.review_state !== 'approved') errors.push('Variant editorial review is not Approved');
   if (groupRow?.review_state !== 'approved') errors.push('Base Species editorial review is not Approved');
   if (!effectiveSeo?.seoTitle?.trim()) errors.push('SEO title is empty');
@@ -110,7 +119,10 @@ function validateEligibleRecord({ row, groupRow, member, group, effectiveSeo, ro
   }
   if (strategy === 'canonical_to_sibling') {
     const target = rowMap.get(rowKey(row.canonical_catalog_key, row.locale));
-    if (!target || !isEligibleRow(target, mode)) errors.push(`canonical sibling must be ${mode === 'preview' ? 'Approved/preview-eligible' : 'Published'} in the same locale`);
+    if (!target || !isEligibleRow(target, mode)) {
+      const expected = mode === 'preview' ? 'Approved/preview-eligible' : mode === 'staging_release' ? 'Approved Draft/staging-eligible' : 'Published';
+      errors.push(`canonical sibling must be ${expected} in the same locale`);
+    }
     if (target?.index_strategy !== 'index') errors.push('canonical sibling must be an independently indexed target');
   }
   return errors;
@@ -183,8 +195,9 @@ function renderSitemap(siteUrl, pages) {
 
 export async function generatePublicSpecies({ snapshot, outDir, siteUrl, productionSiteUrl, mode = 'release', selectedCatalogKeys = [] }) {
   if (!snapshot || typeof snapshot !== 'object') throw new Error('Publication snapshot is required.');
-  if (!['release', 'preview'].includes(mode)) throw new Error(`Unsupported generation mode: ${mode}`);
+  if (!['release', 'preview', 'staging_release'].includes(mode)) throw new Error(`Unsupported generation mode: ${mode}`);
   if (mode === 'preview' && snapshot.environment !== 'preview') throw new Error('Controlled Preview Publish requires snapshot.environment=preview.');
+  if (mode === 'staging_release' && snapshot.environment !== 'staging') throw new Error('Staging release requires snapshot.environment=staging.');
   if (!SAFE_ENVIRONMENTS.has(snapshot.environment)) throw new Error(`Refusing publication snapshot environment: ${snapshot.environment || 'missing'}`);
   const validatedSiteUrl = validateSiteUrl(siteUrl, snapshot.environment, productionSiteUrl);
   if (!outDir) throw new Error('outDir is required; generator never writes into public/ implicitly.');
@@ -203,8 +216,11 @@ export async function generatePublicSpecies({ snapshot, outDir, siteUrl, product
   const groupRowMap = new Map(groupRows.map((row) => [rowKey(row.group_key, row.locale), row]));
   const reviewMap = reviewResolutionMap(snapshot);
   const selectedSet = new Set(selectedCatalogKeys.length ? selectedCatalogKeys : (snapshot.selected_catalog_keys || []));
-  if (mode === 'preview' && selectedSet.size === 0) throw new Error('Controlled Preview Publish requires at least one explicit selected catalog key.');
-  const eligibleRows = rows.filter((row) => isEligibleRow(row, mode) && (mode !== 'preview' || selectedSet.has(row.catalog_key)));
+  if ((mode === 'preview' || mode === 'staging_release') && selectedSet.size === 0) {
+    throw new Error(`${mode === 'preview' ? 'Controlled Preview Publish' : 'Staging release'} requires at least one explicit selected catalog key.`);
+  }
+  const restrictToSelection = mode === 'preview' || mode === 'staging_release';
+  const eligibleRows = rows.filter((row) => isEligibleRow(row, mode) && (!restrictToSelection || selectedSet.has(row.catalog_key)));
   const pagePlans = [];
   const errors = [];
 
@@ -258,7 +274,7 @@ export async function generatePublicSpecies({ snapshot, outDir, siteUrl, product
     await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, renderPage({ siteUrl: validatedSiteUrl, ...page, locale: page.row.locale, previewOnly: mode === 'preview' }), 'utf8');
   }
-  if (mode === 'release') {
+  if (mode !== 'preview') {
     const sitemap = renderSitemap(validatedSiteUrl, pagePlans);
     await writeFile(path.join(outDir, 'sitemap-species.xml'), sitemap, 'utf8');
   }
@@ -271,6 +287,7 @@ export async function generatePublicSpecies({ snapshot, outDir, siteUrl, product
     source_label: snapshot.source_label || 'unspecified',
     eligible_input_rows: eligibleRows.length,
     published_input_rows: mode === 'release' ? eligibleRows.length : 0,
+    staging_approved_input_rows: mode === 'staging_release' ? eligibleRows.length : 0,
     generated_pages: pagePlans.length,
     planned_indexable_pages: plannedIndexablePages,
     indexable_pages: mode === 'preview' ? 0 : plannedIndexablePages,

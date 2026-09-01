@@ -143,5 +143,13 @@ Updated: 2026-08-30
 - [x] Verify migration 001–008 on a fresh ephemeral Supabase instance.
 - [ ] Provision a dedicated AquaGuide hosted staging branch/project only after explicit cost approval.
 - [ ] Apply migrations 001–008 and configure server-only staging secrets in the Preview deployment.
-- [ ] Replace the committed fixture in Vercel Preview with the hosted staging database export.
-- [ ] Final vertical-slice acceptance: edit H1 in Admin → approve/publish → rebuild → hosted HTML source changes.
+- [ ] Replace the committed fixture in Vercel Preview with the hosted Approved Draft database export + explicit `STAGING_CATALOG_KEYS`.
+- [ ] Final vertical-slice acceptance: edit H1 in Admin → Save → Ready for Review → Approved Draft → staging rebuild → hosted HTML source changes; Production Published stays locked.
+
+## 2026-09-01 staging lifecycle separation
+- [x] Add `staging_release` generator mode: release-style HTML/sitemap on a non-production host from Approved Draft rows only.
+- [x] Require an explicit `STAGING_CATALOG_KEYS` allowlist for hosted staging export; dedupe keys and cap each release at 20 Species.
+- [x] Keep Production-style `release` Published-only; Approved Draft rows are ignored by normal release mode.
+- [x] Strip reviewer identity from the server-side staging snapshot.
+- [x] Add generator/guard contract tests for Approved Draft staging release and missing/oversized allowlists.
+- [ ] On hosted acceptance, verify deployment-level `X-Robots-Tag: noindex` in addition to intended page-level SEO metadata.

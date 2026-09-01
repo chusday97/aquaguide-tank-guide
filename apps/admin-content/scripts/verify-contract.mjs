@@ -45,6 +45,8 @@ const [appSource, batchSource, baseSource, reviewSource, readinessSource, workfl
 ]);
 
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
+const stagingExporterSource = await readFile(path.join(appRoot, 'scripts/export-staging-species-snapshot.mjs'), 'utf8');
+const stagingConfigSource = await readFile(path.join(appRoot, 'scripts/staging-publishing-config.mjs'), 'utf8');
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 
@@ -185,6 +187,12 @@ assert.match(liveFrontendPreviewSource, /editorScope/, 'Inspector edit paths mus
 assert.match(liveFrontendPreviewSource, /\['page', 'google', 'mobile'\]/, 'Live preview must preserve Page, Google and Mobile modes');
 assert.match(liveFrontendPreviewSource, /speciesPagePresentation/, 'Live Page preview must reuse the shared publication presentation rules');
 assert.match(publicGeneratorSource, /speciesPagePresentation/, 'Public Species generator must reuse the same publication presentation rules as live Preview');
+assert.match(publicGeneratorSource, /staging_release/, 'Generator must preserve a staging-only Approved Draft release mode');
+assert.match(publicGeneratorSource, /status === 'draft' && row\.review_state === 'approved'/, 'Staging release must consume Approved Drafts, not Production Published state');
+assert.match(stagingExporterSource, /STAGING_CATALOG_KEYS/, 'Hosted staging export must require an explicit Species allowlist');
+assert.match(stagingExporterSource, /\.eq\('status', 'draft'\)/, 'Hosted staging export must consume Draft lifecycle rows');
+assert.match(stagingExporterSource, /\.eq\('review_state', 'approved'\)/, 'Hosted staging export must require editorial approval');
+assert.match(stagingConfigSource, /at most 20 Species/, 'Hosted staging allowlist must have a hard batch ceiling');
 assert.match(speciesPagePresentationSource, /Catalog facts/, 'Shared Species presentation must define publication-facing fact labels');
 assert.doesNotMatch(liveFrontendPreviewSource, /Care essentials|饲养要点|Overview & Care|物种概览与饲养/, 'Live Page preview must not invent sections absent from the static generator');
 assert.match(appSource, /compactPreviewOpen/, 'Narrow layouts must preserve access to Preview through an explicit compact state');

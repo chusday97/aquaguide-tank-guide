@@ -106,6 +106,55 @@ try {
   });
   assert.equal(stagingResult.manifest.generated_pages, 4);
 
+  const reviewedAt = '2026-09-01T00:00:00.000Z';
+  const approvedDraftSnapshot = structuredClone(snapshot);
+  approvedDraftSnapshot.environment = 'staging';
+  approvedDraftSnapshot.selected_catalog_keys = ['sp_0030'];
+  for (const row of approvedDraftSnapshot.species_seo) {
+    row.status = 'draft';
+    row.review_state = 'approved';
+    row.reviewed_at = reviewedAt;
+    row.published_at = null;
+  }
+  for (const row of approvedDraftSnapshot.species_seo_groups) {
+    row.status = 'draft';
+    row.review_state = 'approved';
+    row.reviewed_at = reviewedAt;
+    row.published_at = null;
+  }
+  const stagingDraftResult = await generatePublicSpecies({
+    snapshot: approvedDraftSnapshot,
+    outDir: `${outDir}-approved-draft-staging`,
+    siteUrl,
+    productionSiteUrl: 'https://aqua-tank-guide.vercel.app',
+    mode: 'staging_release',
+  });
+  assert.equal(stagingDraftResult.manifest.generated_pages, 2);
+  assert.equal(stagingDraftResult.manifest.indexable_pages, 2);
+  assert.equal(stagingDraftResult.manifest.published_input_rows, 0);
+  assert.equal(stagingDraftResult.manifest.staging_approved_input_rows, 2);
+  const stagingDraftHtml = await readFile(path.join(`${outDir}-approved-draft-staging`, 'species/neocaridina-davidi/sp-0030.html'), 'utf8');
+  const stagingDraftSitemap = await readFile(path.join(`${outDir}-approved-draft-staging`, 'sitemap-species.xml'), 'utf8');
+  assert.match(stagingDraftHtml, /<meta name="robots" content="index,follow">/);
+  assert.doesNotMatch(stagingDraftHtml, /PREVIEW ONLY/);
+  assert.match(stagingDraftSitemap, /sp-0030\.html/);
+
+  await assert.rejects(
+    generatePublicSpecies({
+      snapshot: { ...approvedDraftSnapshot, selected_catalog_keys: [] },
+      outDir: `${outDir}-staging-no-selection`, siteUrl,
+      productionSiteUrl: 'https://aqua-tank-guide.vercel.app', mode: 'staging_release',
+    }),
+    /Staging release requires at least one explicit selected catalog key/,
+  );
+
+  const releaseFromDraft = await generatePublicSpecies({
+    snapshot: approvedDraftSnapshot,
+    outDir: `${outDir}-draft-release-refused`, siteUrl,
+    productionSiteUrl: 'https://aqua-tank-guide.vercel.app', mode: 'release',
+  });
+  assert.equal(releaseFromDraft.manifest.generated_pages, 0, 'Production-style release must ignore Approved Draft rows.');
+
   await assert.rejects(
     generatePublicSpecies({ snapshot: { ...snapshot, environment: 'production' }, outDir: `${outDir}-production`, siteUrl }),
     /Refusing publication snapshot environment: production/,
@@ -139,6 +188,9 @@ try {
   await rm(`${outDir}-production-host`, { recursive: true, force: true });
   await rm(`${outDir}-staging-missing-prod`, { recursive: true, force: true });
   await rm(`${outDir}-staging-ok`, { recursive: true, force: true });
+  await rm(`${outDir}-approved-draft-staging`, { recursive: true, force: true });
+  await rm(`${outDir}-staging-no-selection`, { recursive: true, force: true });
+  await rm(`${outDir}-draft-release-refused`, { recursive: true, force: true });
   await rm(`${outDir}-production`, { recursive: true, force: true });
   await rm(`${outDir}-unapproved`, { recursive: true, force: true });
   await rm(`${outDir}-draft-base`, { recursive: true, force: true });

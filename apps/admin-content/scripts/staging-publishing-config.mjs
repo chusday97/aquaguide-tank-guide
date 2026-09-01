@@ -25,6 +25,17 @@ export function validateServerSupabaseKey(value) {
   throw new Error('Staging publication export requires a Supabase secret key or legacy service_role key; publishable/anon keys are refused.');
 }
 
+
+export function parseStagingCatalogKeys(value) {
+  const raw = Array.isArray(value) ? value : String(value || '').split(',');
+  const keys = [...new Set(raw.map((item) => String(item).trim()).filter(Boolean))];
+  if (keys.length === 0) throw new Error('STAGING_CATALOG_KEYS is required; staging release must use an explicit Species allowlist.');
+  if (keys.length > 20) throw new Error('STAGING_CATALOG_KEYS may contain at most 20 Species per staging release.');
+  const invalid = keys.filter((key) => !/^sp_[a-z0-9_-]+$/i.test(key));
+  if (invalid.length) throw new Error(`Invalid staging catalog key(s): ${invalid.join(', ')}`);
+  return keys;
+}
+
 export function validateStagingSupabaseConfig({ supabaseUrl, secretKey, expectedProjectRef, productionProjectRef }) {
   validateServerSupabaseKey(secretKey);
   if (!expectedProjectRef) throw new Error('STAGING_SUPABASE_PROJECT_REF is required.');

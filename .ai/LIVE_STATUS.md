@@ -178,3 +178,9 @@ Branch: `feature/admin-content-v0`
 - Data Review release inputs: server-only.
 - One-command root artifact path ready: `npm run build:staging-from-db`.
 - Infrastructure blocker: no dedicated AquaGuide hosted staging Supabase branch/project currently exists; Production remains untouched.
+
+## 2026-09-01 — Approved Draft staging release
+- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
+- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
+- Production-style `release` remains Published-only and ignores Approved Drafts.
+- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.

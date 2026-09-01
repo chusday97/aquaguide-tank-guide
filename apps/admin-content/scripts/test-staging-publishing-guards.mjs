@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { extractSupabaseProjectRef, validateServerSupabaseKey, validateStagingSiteUrl, validateStagingSupabaseConfig } from './staging-publishing-config.mjs';
+import { extractSupabaseProjectRef, parseStagingCatalogKeys, validateServerSupabaseKey, validateStagingSiteUrl, validateStagingSupabaseConfig } from './staging-publishing-config.mjs';
 
 const serviceRoleJwt = `x.${Buffer.from(JSON.stringify({ role: 'service_role' })).toString('base64url')}.x`;
 const anonJwt = `x.${Buffer.from(JSON.stringify({ role: 'anon' })).toString('base64url')}.x`;
@@ -10,6 +10,10 @@ assert.equal(validateServerSupabaseKey('sb_secret_test'), 'sb_secret_test');
 assert.equal(validateServerSupabaseKey(serviceRoleJwt), serviceRoleJwt);
 assert.throws(() => validateServerSupabaseKey('sb_publishable_test'), /secret key or legacy service_role/);
 assert.throws(() => validateServerSupabaseKey(anonJwt), /secret key or legacy service_role/);
+assert.deepEqual(parseStagingCatalogKeys('sp_0030, sp_0031,sp_0030'), ['sp_0030', 'sp_0031']);
+assert.throws(() => parseStagingCatalogKeys(''), /explicit Species allowlist/);
+assert.throws(() => parseStagingCatalogKeys('angelfish'), /Invalid staging catalog key/);
+assert.throws(() => parseStagingCatalogKeys(Array.from({ length: 21 }, (_, index) => `sp_${String(index).padStart(4, '0')}`)), /at most 20/);
 
 const valid = validateStagingSupabaseConfig({
   supabaseUrl: 'https://stagingref.supabase.co',

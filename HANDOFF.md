@@ -733,3 +733,9 @@ Do not touch Production Supabase or enable Production Published actions while pr
 - Root build command for a future hosted staging DB: `npm run build:staging-from-db`.
 - The connected Supabase account currently has AquaGuide Production and an unrelated IceGlide staging project, but no AquaGuide staging branch. Do not point staging variables at either Production or IceGlide.
 - Next real acceptance after infrastructure provisioning: edit one bilingual Species H1 in Admin → Save → Ready for Review → Approved/Published → `build:staging-from-db` → verify hosted HTML source changed.
+
+## 2026-09-01 — Approved Draft staging release
+- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
+- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
+- Production-style `release` remains Published-only and ignores Approved Drafts.
+- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.

@@ -52,8 +52,8 @@ export async function verifyStagingPublishing(config) {
   const snapshot = await exportStagingSpeciesSnapshot(config);
   let server;
   try {
-    const { manifest, pages } = await generatePublicSpecies({ snapshot, outDir, siteUrl, productionSiteUrl: config.productionSiteUrl });
-    if (manifest.generated_pages < 2) throw new Error('Staging must contain at least one bilingual Published Species pair.');
+    const { manifest, pages } = await generatePublicSpecies({ snapshot, outDir, siteUrl, productionSiteUrl: config.productionSiteUrl, mode: 'staging_release' });
+    if (manifest.generated_pages < 2) throw new Error('Staging must contain at least one bilingual Approved Draft Species pair.');
     const pair = findBilingualIndexPair(pages);
     if (!pair) throw new Error('Staging must include at least one bilingual self-canonical Index pair.');
     server = await startStaticServer(outDir);
@@ -86,6 +86,7 @@ async function cli() {
     expectedProjectRef: process.env.STAGING_SUPABASE_PROJECT_REF,
     productionProjectRef: process.env.PRODUCTION_SUPABASE_PROJECT_REF,
     sourceLabel: process.env.STAGING_SOURCE_LABEL,
+    selectedCatalogKeys: process.env.STAGING_CATALOG_KEYS,
     siteUrl: process.env.STAGING_PUBLIC_SITE_URL,
     productionSiteUrl: process.env.PRODUCTION_PUBLIC_SITE_URL,
   });

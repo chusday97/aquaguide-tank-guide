@@ -187,16 +187,17 @@ Template: `apps/admin-content/staging-publish.env.example` (contains placeholder
 - `STAGING_PUBLIC_SITE_URL`
 - `PRODUCTION_PUBLIC_SITE_URL` (deny-list only)
 - optional `STAGING_SOURCE_LABEL`
+- `STAGING_CATALOG_KEYS` — required comma-separated allowlist, max 20 Species
 
 `verify:staging-publish` performs:
 
 1. explicit staging-vs-Production Supabase identity validation;
-2. Published + Approved Base/Variant snapshot export through a server-only Supabase secret/service-role key;
+2. Explicitly allowlisted Approved Draft Base/Variant snapshot export through a server-only Supabase secret/service-role key;
 3. static Species HTML + sitemap generation with an explicit non-production canonical host;
 4. temporary local HTTP serving of the generated output;
 5. HTTP fetch and assertions for one bilingual self-canonical Index pair plus sitemap membership.
 
-The command fails if staging has no eligible bilingual Index pair. It also fails if the staging DB/project ref or public host matches Production.
+The command fails if the explicit allowlist has no eligible bilingual Approved Draft Index pair. It also fails if the staging DB/project ref or public host matches Production. Hosted acceptance must additionally verify the deployment response carries a crawler-level `X-Robots-Tag: noindex` (the current protected Vercel Preview does); source HTML intentionally preserves intended per-route robots/canonical values for SEO review.
 
 As of 2026-08-28, the connected Supabase account has the AquaGuide project and an unrelated IceGlide staging project, but no AquaGuide development branch. Do not reuse the IceGlide environment. Creating an AquaGuide Supabase branch/project may incur cost and requires explicit approval before provisioning.
 
@@ -206,7 +207,7 @@ The generator itself also requires `--site-url`; it no longer defaults to the Pr
 
 Migration 006 introduced `species_seo_release_gate_status()`; migration 007 added Editorial Review/Data Review readiness. Migration 008 upgrades the probe to `schema_version=8`, verifies explicit `service_role` Data API grants for the release exporter, and confirms the Data Review resolution RPC is no longer executable by anon/authenticated. The probe still exposes only capability booleans, not revision rows or editorial content.
 
-The staging exporter calls this probe before exporting rows. It blocks unless schema v8 is present and only exports rows with `status=published`, `review_state=approved`, non-null `published_at` and non-null `reviewed_at`. The exporter uses a server-only secret/service-role key; publishable/anon keys are refused. Browser clients may still call the data-free readiness probe, but Data Review release inputs are server-only.
+The staging exporter calls this probe before exporting rows. It blocks unless schema v8 is present and only exports explicitly allowlisted rows with `status=draft`, `review_state=approved` and non-null `reviewed_at`. This is intentionally separate from Production Published. The exporter uses a server-only secret/service-role key; publishable/anon keys are refused. Browser clients may still call the data-free readiness probe, but Data Review release inputs are server-only.
 
 For staging generation, `PRODUCTION_PUBLIC_SITE_URL` is also mandatory. Direct staging generator calls must pass `productionSiteUrl` / `--production-site-url`; the staging verifier supplies it automatically from the environment deny-list.
 
@@ -259,7 +260,7 @@ The default output is ignored `.preview-output/`. Preview mode is intentionally 
 
 - requires `environment=preview` + `delivery_mode=controlled_preview`;
 - requires explicit selected catalog keys;
-- accepts Approved Draft, while release/staging remains Published-only;
+- accepts Approved Draft in controlled Preview; Production-style `release` remains Published-only; hosted `staging_release` accepts only explicitly allowlisted Approved Drafts;
 - forces every rendered page to `noindex,nofollow`;
 - writes `robots.txt` with `Disallow: /`;
 - does not emit the release `sitemap-species.xml`;

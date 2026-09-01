@@ -125,3 +125,9 @@ The persistent product model is now:
 - `npm run build:staging-from-db` is the direct future path from hosted staging Supabase → approved Published snapshot → AquaGuide root `dist/`.
 - Fresh ephemeral Supabase 001–008 gate passes. The remaining blocker is infrastructure, not code: no dedicated AquaGuide hosted staging branch/project exists yet.
 - Do not reuse the unrelated IceGlide staging project and do not provision a paid AquaGuide branch/project without explicit cost approval.
+
+## 2026-09-01 — Approved Draft staging release
+- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
+- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
+- Production-style `release` remains Published-only and ignores Approved Drafts.
+- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.

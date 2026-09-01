@@ -1,18 +1,21 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
-import { validateStagingSupabaseConfig } from './staging-publishing-config.mjs';
+import { parseStagingCatalogKeys, validateStagingSupabaseConfig } from './staging-publishing-config.mjs';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const appRoot = path.resolve(here, '..');
 
 const VARIANT_SELECT = [
   'catalog_key','locale','localized_name','seo_title','meta_description','h1','intro','image_alt',
   'canonical_path','focus_keyword','index_strategy','canonical_catalog_key','status','published_at',
-  'review_state','reviewed_by','reviewed_at','updated_at','deleted_at','version',
+  'review_state','reviewed_at','updated_at','deleted_at','version',
 ].join(',');
 
 const GROUP_SELECT = [
   'group_key','locale','seo_title_template','meta_description_template','h1_template','shared_intro',
-  'status','published_at','review_state','reviewed_by','reviewed_at','updated_at','deleted_at','version',
+  'status','published_at','review_state','reviewed_at','updated_at','deleted_at','version',
 ].join(',');
 
 async function verifyReleaseGateSchema(client) {
@@ -25,28 +28,41 @@ async function verifyReleaseGateSchema(client) {
   return data;
 }
 
-async function fetchPublishedRows({ client, table, select }) {
+async function fetchApprovedDraftRows({ client, table, select, keyColumn, keys }) {
   const { data, error } = await client
     .from(table)
     .select(select)
-    .eq('status', 'published')
+    .eq('status', 'draft')
     .eq('review_state', 'approved')
-    .not('published_at', 'is', null)
     .not('reviewed_at', 'is', null)
     .is('deleted_at', null)
+    .in(keyColumn, keys)
     .order('updated_at', { ascending: true });
   if (error) throw new Error(`Staging ${table} export failed: ${error.message}`);
   if (!Array.isArray(data)) throw new Error(`Staging ${table} export did not return an array.`);
   return data;
 }
 
+async function resolveSelectedGroupKeys(selectedCatalogKeys) {
+  const groupData = JSON.parse(await readFile(path.join(appRoot, 'src/species-groups.generated.json'), 'utf8'));
+  const groupByCatalog = new Map();
+  for (const group of groupData.groups || []) {
+    for (const member of group.members || []) groupByCatalog.set(member.catalog_key, group.group_key);
+  }
+  const unknown = selectedCatalogKeys.filter((key) => !groupByCatalog.has(key));
+  if (unknown.length) throw new Error(`STAGING_CATALOG_KEYS contains unknown catalog key(s): ${unknown.join(', ')}`);
+  return [...new Set(selectedCatalogKeys.map((key) => groupByCatalog.get(key)))];
+}
+
 export async function exportStagingSpeciesSnapshot(config) {
   const { supabaseUrl, actualProjectRef } = validateStagingSupabaseConfig(config);
+  const selectedCatalogKeys = parseStagingCatalogKeys(config.selectedCatalogKeys);
+  const selectedGroupKeys = await resolveSelectedGroupKeys(selectedCatalogKeys);
   const client = createClient(supabaseUrl, config.secretKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const schemaProbe = await verifyReleaseGateSchema(client);
   const [speciesSeo, speciesSeoGroups, resolutionsResult] = await Promise.all([
-    fetchPublishedRows({ client, table: 'species_seo', select: VARIANT_SELECT }),
-    fetchPublishedRows({ client, table: 'species_seo_groups', select: GROUP_SELECT }),
+    fetchApprovedDraftRows({ client, table: 'species_seo', select: VARIANT_SELECT, keyColumn: 'catalog_key', keys: selectedCatalogKeys }),
+    fetchApprovedDraftRows({ client, table: 'species_seo_groups', select: GROUP_SELECT, keyColumn: 'group_key', keys: selectedGroupKeys }),
     client.from('species_data_reviews')
       .select('issue_key,issue_type,group_key,decision,canonical_catalog_key')
       .order('issue_key', { ascending: true }),
@@ -59,6 +75,7 @@ export async function exportStagingSpeciesSnapshot(config) {
     source_project_ref: actualProjectRef,
     schema_probe: schemaProbe,
     exported_at: new Date().toISOString(),
+    selected_catalog_keys: selectedCatalogKeys,
     species_seo: speciesSeo,
     species_seo_groups: speciesSeoGroups,
     data_review_resolutions: dataReviewResolutions,
@@ -76,6 +93,7 @@ async function cli() {
     expectedProjectRef: process.env.STAGING_SUPABASE_PROJECT_REF,
     productionProjectRef: process.env.PRODUCTION_SUPABASE_PROJECT_REF,
     sourceLabel: process.env.STAGING_SOURCE_LABEL,
+    selectedCatalogKeys: process.env.STAGING_CATALOG_KEYS,
   });
   const resolved = path.resolve(outPath);
   await mkdir(path.dirname(resolved), { recursive: true });

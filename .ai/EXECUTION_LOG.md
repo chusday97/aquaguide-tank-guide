@@ -304,3 +304,9 @@
 - Release readiness probe advanced to schema v8 with `server_export_ready`.
 - Added `build:staging-from-db` to export from a future dedicated hosted staging Supabase and merge Species pages directly into AquaGuide `dist/`.
 - Fresh ephemeral Supabase 001–008 PASS: schema_version=8, draft/unapproved visibility blocked, rollback preserved, bilingual generation PASS.
+
+## 2026-09-01 — Approved Draft staging release
+- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
+- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
+- Production-style `release` remains Published-only and ignores Approved Drafts.
+- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.

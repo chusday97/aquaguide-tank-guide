@@ -496,3 +496,9 @@ After it is gated, the next product milestone is a small staging publication sli
 - Added `build:staging-from-db` to generate the AquaGuide root Species artifact directly from a hosted staging DB.
 - Local contract and fresh ephemeral Supabase migrations 001–008 are green.
 - No Production migration or Production publish was performed.
+
+## 2026-09-01 — Approved Draft staging release
+- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
+- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
+- Production-style `release` remains Published-only and ignores Approved Drafts.
+- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.
