@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 00:35 +08:00
+Updated: 2026-09-02 01:04 +08:00
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -16,7 +16,7 @@ Product Truth stays read-only here. The Admin edits only SEO/editorial content.
 **Public app/code repo**
 - `chusday97/aquaguide-tank-guide`
 - working branch: `feature/admin-content-v0`
-- current app HEAD: `fae815f78545` — `fix(admin): make duplicate review directly actionable`
+- latest functional commit: `c2c4789` — `feat(admin): add bulk import and activity center`
 - `main` is not the target of this work and Production is still locked.
 
 **Private editorial content repo**
@@ -227,8 +227,8 @@ The public staging snapshot still contains earlier acceptance-test content from 
 A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
-Latest code commit:
-- `fae815f fix(admin): make duplicate review directly actionable`
+Latest functional commit:
+- `c2c4789 feat(admin): add bulk import and activity center`
 
 GitHub Actions:
 - Admin Content CI Gate #43
@@ -244,6 +244,7 @@ Vercel Preview:
 Temporary `_vercel_share` links expire and must not be stored as canonical handoff URLs.
 
 ## 16. Important recent commits
+- `c2c4789` — batch CSV import + persistent Admin activity center + duplicate-review auto-close
 - `fae815f` — duplicate warning becomes direct review action
 - `6a99dbb` — repair review-state persistence + simplify template UX
 - `7aebaaf` — separate workflow states from actions
@@ -268,12 +269,13 @@ Primary:
 Known build warning: large Vite chunks. This is not currently a Species SEO functional failure.
 
 ## 18. Current next actions — in priority order
-1. Continue Data Review UX/processing if desired. The current example is 白金西非凤凰 (`sp_0214 / sp_0338`) and can now be handled directly from `处理重复`.
-2. For the original `sp_0001` vertical slice: clean the English test copy, save English, submit and approve English. Do not ask user to re-submit Chinese; Chinese is already Approved.
-3. Then explicitly Staging Publish only the intended reviewed Species set.
-4. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`.
-5. Clean all acceptance wording before considering Production.
-6. Keep Production locked until the user explicitly decides to move the publication boundary forward.
+1. After the current code/docs batch is pushed, verify the hosted branch Preview contains the new top-right `批量导入` / `操作记录` entries and that GitHub/Vercel gates stay green. Do not perform a fake content write just to populate Activity history.
+2. Continue Data Review UX/processing if desired. The current example is 白金西非凤凰 (`sp_0214 / sp_0338`) and can now be handled directly from `处理重复`; once its final outstanding issue is resolved the Data Review drawer auto-closes and the operation is surfaced top-right.
+3. For the original `sp_0001` vertical slice: clean the English test copy, save English, submit and approve English. Do not ask user to re-submit Chinese; Chinese is already Approved.
+4. Then explicitly Staging Publish only the intended reviewed Species set.
+5. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`.
+6. Clean all acceptance wording before considering Production.
+7. Keep Production locked until the user explicitly decides to move the publication boundary forward.
 
 ## 19. What NOT to do
 - Do not provision Supabase for Species SEO.
@@ -287,7 +289,47 @@ Known build warning: large Vite chunks. This is not currently a Species SEO func
 - Do not restore review-state dropdowns or engineering-language inheritance controls.
 - Do not make every tiny docs/UI change a separate deployment when batching is possible.
 
-## 20. Startup instruction for the next conversation
+## 20. Bulk import + operation closure — completed 2026-09-02
+Functional commit: `c2c4789`.
+
+### Bulk import UX
+- a top-right `批量导入 / Bulk import` entry is always available in the real Admin
+- the secondary tools list also keeps the same entry
+- download format is CSV, explicitly described as editable in Excel / Numbers
+- template is generated for the current content locale and contains all 486 catalog rows plus current SEO values
+- Product Truth identity columns (`catalog_key`, source name, scientific name) are reference/identity only; bulk import never writes Product Truth
+- every template row defaults to no action
+- only rows explicitly marked `import_action=update` / `更新` / `yes` / `1` are written
+- import validates catalog key, locale, index strategy, and same-Base canonical target
+- imported editorial rows always write as Draft + Editing; changed content cannot retain prior approval
+- blank supported overrides intentionally return to Base inheritance
+
+### Operation center / notifications
+- every successful normal Repo mutation appends `admin_activity_log` in the **same private-store write**, not a second content commit
+- repo store schema upgrades lazily from v1 to v2 on the next write; old stores remain readable
+- Staging publish activity is best-effort after the release succeeds; a logging failure must never turn a successful release into a retryable failure
+- browser mutations emit one shared `aquaguide-admin-operation` event for top-right success/error notices
+- top-right `操作记录 / Activity` shows unread count and opens a persistent activity drawer
+- persisted records cover save, submit/approve/return, duplicate/data review, batch Draft creation, bulk import, rollback and Staging publish
+- read-only UI Review does not query private operation history
+
+### Data Review auto-close
+- after a review decision is saved, the UI recomputes `assessDataReview` for that Base group
+- if no issue remains for that group, the Data Review drawer closes automatically
+- if another category/duplicate issue still exists, the drawer stays open
+- the completed action still appears in the top-right notice and Activity history
+
+### Verification completed locally
+- `npm run test:contract -w @aquaguide/admin-content` PASS, including new bulk/activity contracts
+- Admin production build PASS
+- full root `npm run build` PASS
+- `npm run verify:seo-species-handoff` PASS
+- `npm run test:admin-content-ui` PASS
+- real browser walk-through in `VITE_ADMIN_REVIEW_MODE=true` verified top-right Bulk import, CSV drawer controls, Activity drawer and read-only privacy message
+- `git diff --check` PASS
+- only known Vite chunk-size warnings remain
+
+## 21. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.
