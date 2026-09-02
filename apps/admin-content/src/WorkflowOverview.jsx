@@ -12,6 +12,15 @@ const readinessStates = [
   ['publish_ready', { zh: '可预览', en: 'Preview-ready' }, { zh: '已满足预览发布条件', en: 'Eligible for Staging Preview publication' }],
 ];
 
+const blockedNextActions = [
+  ['hygiene', { zh: '清理测试 / 验收文案', en: 'Clean test / acceptance copy' }, { zh: '先移除临时验收字样，再继续审核', en: 'Remove temporary acceptance wording before review' }],
+  ['data_review', { zh: '先处理数据问题', en: 'Resolve data review' }, { zh: '重复记录或分类问题需要先人工判断', en: 'Duplicate or category evidence needs a human decision' }],
+  ['content', { zh: '补齐当前语言内容', en: 'Complete this language' }, { zh: '补齐 Base、页面内容、名称或图片 Alt', en: 'Complete Base/page copy, names or image alt' }],
+  ['bilingual', { zh: '补齐另一语言', en: 'Complete the other language' }, { zh: '独立收录页面需要另一语言完成并审核', en: 'Indexed pages need the counterpart locale completed and approved' }],
+  ['seo_policy', { zh: '修正收录 / Canonical', en: 'Fix indexing / canonical' }, { zh: '让 Index 与人工重复复核结论保持一致', en: 'Align Index/Canonical with reviewed duplicate policy' }],
+  ['other', { zh: '检查其他阻塞项', en: 'Review other blockers' }, { zh: '打开发布资格查看剩余异常', en: 'Open publish readiness for remaining blockers' }],
+];
+
 function QueueRow({ active, count, label, description, tone, onClick }) {
   return (
     <button type="button" className={`workflow-queue-row ${tone} ${active ? 'active' : ''}`} onClick={onClick}>
@@ -39,24 +48,37 @@ export default function WorkflowOverview({ overview, activeFilter, onFilter }) {
         <span>{overview.locales?.[locale]?.total ?? 0} {isEnglish ? 'pages' : '个页面'}</span>
       </div>
       <div className="workflow-queue-list">
-        <QueueRow
-          active={activeFilter?.key === `${locale}:hygiene`}
-          count={overview.contentHygiene?.byLocale?.[locale]?.count ?? 0}
-          label={isEnglish ? 'Copy cleanup' : '需清理文案'}
-          description={isEnglish ? 'Test/acceptance wording detected; clean it before review' : '检测到测试/验收字样；清理后再进入审核'}
-          tone="hygiene"
-          onClick={() => toggle({ key: `${locale}:hygiene`, type: 'hygiene', locale, label: `${title} · ${isEnglish ? 'Copy cleanup' : '需清理文案'}` })}
-        />
         {readinessStates.map(([status, label, description]) => (
-          <QueueRow
-            key={status}
-            active={activeFilter?.key === `${locale}:${status}`}
-            count={overview.locales?.[locale]?.[status] ?? 0}
-            label={label[lang]}
-            description={description[lang]}
-            tone={status}
-            onClick={() => toggle({ key: `${locale}:${status}`, type: 'readiness', locale, status, label: `${title} · ${label[lang]}` })}
-          />
+          <div className={`workflow-state-cluster ${status}`} key={status}>
+            <QueueRow
+              active={activeFilter?.key === `${locale}:${status}`}
+              count={overview.locales?.[locale]?.[status] ?? 0}
+              label={label[lang]}
+              description={description[lang]}
+              tone={status}
+              onClick={() => toggle({ key: `${locale}:${status}`, type: 'readiness', locale, status, label: `${title} · ${label[lang]}` })}
+            />
+            {status === 'blocked' && (overview.locales?.[locale]?.blocked ?? 0) > 0 ? (
+              <div className="workflow-blocked-breakdown">
+                <small>{isEnglish ? 'Next action · each blocked page appears once' : '下一步动作 · 每个未就绪页面只计一次'}</small>
+                {blockedNextActions.map(([reason, actionLabel, actionDescription]) => {
+                  const item = overview.locales?.[locale]?.blockedNextActions?.[reason];
+                  if (!item?.count) return null;
+                  return (
+                    <QueueRow
+                      key={reason}
+                      active={activeFilter?.key === `${locale}:blocked:${reason}`}
+                      count={item.count}
+                      label={actionLabel[lang]}
+                      description={actionDescription[lang]}
+                      tone={`blocked-reason ${reason}`}
+                      onClick={() => toggle({ key: `${locale}:blocked:${reason}`, type: 'blocked_reason', locale, reason, label: `${title} · ${actionLabel[lang]}` })}
+                    />
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
         ))}
       </div>
     </section>

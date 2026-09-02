@@ -863,8 +863,8 @@ export default function App() {
     if (workflowFilter.type === 'data') {
       return { groupKeys: new Set(workflowOverview.dataReview.groupKeysByStatus[workflowFilter.status] || []), memberIds: null };
     }
-    const sourceIds = workflowFilter.type === 'hygiene'
-      ? workflowOverview.contentHygiene?.byLocale?.[workflowFilter.locale]?.memberIds || []
+    const sourceIds = workflowFilter.type === 'blocked_reason'
+      ? workflowOverview.locales[workflowFilter.locale]?.blockedNextActions?.[workflowFilter.reason]?.memberIds || []
       : workflowOverview.locales[workflowFilter.locale]?.memberIdsByState[workflowFilter.status] || [];
     const memberIds = new Set(sourceIds);
     const groupKeys = new Set();
@@ -877,9 +877,9 @@ export default function App() {
     if (workflowFilter?.key === next.key) return;
     if (!confirmDiscardUnsaved()) return;
     setWorkflowFilter(next);
-    if (next.type === 'readiness' || next.type === 'hygiene') {
-      const firstId = next.type === 'hygiene'
-        ? workflowOverview.contentHygiene?.byLocale?.[next.locale]?.memberIds?.[0]
+    if (next.type === 'readiness' || next.type === 'blocked_reason') {
+      const firstId = next.type === 'blocked_reason'
+        ? workflowOverview.locales[next.locale]?.blockedNextActions?.[next.reason]?.memberIds?.[0]
         : workflowOverview.locales[next.locale]?.memberIdsByState[next.status]?.[0];
       if (next.locale) setContentLocale(next.locale);
       if (firstId) { setSelectedId(firstId); setEditorScope('variant'); }

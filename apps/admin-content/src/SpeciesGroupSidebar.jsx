@@ -81,8 +81,16 @@ export default function SpeciesGroupSidebar({
       ? (workflowFilter.locale === 'en' ? 'English' : (appLocale === 'en' ? 'Chinese' : '中文'))
       : '';
     if (workflowFilter.type === 'data') return appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理';
-    if (workflowFilter.type === 'hygiene') {
-      const state = appLocale === 'en' ? 'Copy cleanup' : '需清理文案';
+    if (workflowFilter.type === 'blocked_reason') {
+      const labels = {
+        hygiene: appLocale === 'en' ? 'Clean copy' : '清理测试文案',
+        data_review: appLocale === 'en' ? 'Resolve data review' : '先处理数据问题',
+        content: appLocale === 'en' ? 'Complete content' : '补齐当前语言内容',
+        bilingual: appLocale === 'en' ? 'Complete other language' : '补齐另一语言',
+        seo_policy: appLocale === 'en' ? 'Fix indexing / canonical' : '修正收录 / Canonical',
+        other: appLocale === 'en' ? 'Other blockers' : '其他阻塞项',
+      };
+      const state = labels[workflowFilter.reason] || workflowFilter.label || workflowFilter.key;
       return localePrefix ? `${localePrefix} · ${state}` : state;
     }
     if (workflowFilter.status === 'ready_for_review') {
@@ -118,8 +126,8 @@ export default function SpeciesGroupSidebar({
       {(workflowOverview?.contentHygiene?.byLocale?.[locale]?.count ?? 0) > 0 ? (
         <button
           type="button"
-          className={`hygiene-quick-alert ${workflowFilter?.key === `${locale}:hygiene` ? 'active' : ''}`}
-          onClick={() => onWorkflowFilter?.({ key: `${locale}:hygiene`, type: 'hygiene', locale, label: appLocale === 'en' ? 'Copy cleanup' : '需清理文案' })}
+          className={`hygiene-quick-alert ${workflowFilter?.key === `${locale}:blocked:hygiene` ? 'active' : ''}`}
+          onClick={() => onWorkflowFilter?.({ key: `${locale}:blocked:hygiene`, type: 'blocked_reason', locale, reason: 'hygiene', label: appLocale === 'en' ? 'Clean copy' : '清理测试文案' })}
         >
           <span><strong>{appLocale === 'en' ? 'Copy cleanup needed' : '需清理测试 / 验收文案'}</strong><small>{appLocale === 'en' ? 'Review and Preview are blocked for these pages' : '这些页面清理前不能进入审核或 Preview'}</small></span>
           <b>{workflowOverview.contentHygiene.byLocale[locale].count}</b>

@@ -78,6 +78,12 @@ assert.equal(emptyWorkflowOverview.dataReview.pending, 33, 'Unreviewed source is
 const initialSeoPageCandidates = catalog.length - groupData.stats.exact_duplicate_records;
 assert.equal(emptyWorkflowOverview.locales['zh-CN'].blocked, initialSeoPageCandidates, 'Missing Chinese editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');
 assert.equal(emptyWorkflowOverview.locales.en.blocked, initialSeoPageCandidates, 'Missing English editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');
+for (const locale of ['zh-CN', 'en']) {
+  const blockedActionTotal = Object.values(emptyWorkflowOverview.locales[locale].blockedNextActions).reduce((sum, item) => sum + item.count, 0);
+  assert.equal(blockedActionTotal, emptyWorkflowOverview.locales[locale].blocked, 'Blocked next-action queues must be mutually exclusive and sum exactly to the blocked total');
+  assert.ok(emptyWorkflowOverview.locales[locale].blockedNextActions.data_review.count > 0, 'Unresolved source evidence must become a concrete Data Review next action');
+  assert.ok(emptyWorkflowOverview.locales[locale].blockedNextActions.content.count > 0, 'Missing editorial rows must become a concrete content-completion next action');
+}
 assert.equal(emptyWorkflowOverview.contentHygiene.total, 0, 'Empty editorial state must not invent content-hygiene tasks');
 assert.equal(emptyWorkflowOverview.contentHygiene.byLocale['zh-CN'].count, 0);
 assert.equal(emptyWorkflowOverview.contentHygiene.byLocale.en.count, 0);
@@ -132,12 +138,19 @@ assert.match(workflowOverviewSource, /workflow-queue-row/, 'Workflow overview mu
 assert.match(workflowOverviewSource, /pageCount = overview\.locales/, 'Workflow overview page count must come from current workflow candidates rather than a hard-coded catalog total');
 assert.match(workflowOverviewSource, /现在需要处理什么/, 'Chinese workflow overview must use task-oriented localized copy');
 assert.match(workflowOverviewSource, /可预览/, 'Workflow overview must localize Preview-ready state in Chinese');
-assert.match(workflowOverviewSource, /需清理文案/, 'Workflow overview must expose content hygiene as an actionable queue without creating a review state');
+assert.match(workflowOverviewSource, /下一步动作/, 'Blocked pages must expose a next-action breakdown instead of one opaque total');
+assert.match(workflowOverviewSource, /清理测试 \/ 验收文案/, 'Workflow overview must surface content hygiene as a concrete blocked-page next action');
+assert.match(workflowOverviewSource, /先处理数据问题/, 'Workflow overview must expose Data Review as a blocked-page next action');
+assert.match(workflowOverviewSource, /补齐当前语言内容/, 'Workflow overview must expose missing editorial content as a blocked-page next action');
+assert.match(workflowOverviewSource, /补齐另一语言/, 'Workflow overview must expose bilingual dependency as a blocked-page next action');
+assert.match(workflowOverviewSource, /修正收录 \/ Canonical/, 'Workflow overview must expose SEO-policy repair as a blocked-page next action');
 assert.match(sidebarSource, /hygiene-quick-alert/, 'Sidebar must expose a distinct full-width alert for content cleanup tasks when needed');
 assert.match(sidebarSource, /contentHygiene/, 'Sidebar hygiene count must come from the shared workflow overview');
-assert.match(appSource, /workflowFilter\.type === 'hygiene'/, 'Workflow scope must support page-level content hygiene filters');
-assert.match(appSource, /next\.type === 'readiness' \|\| next\.type === 'hygiene'/, 'Editorial and hygiene queue navigation must share locale-aware page navigation');
+assert.match(appSource, /workflowFilter\.type === 'blocked_reason'/, 'Workflow scope must support page-level blocked-reason filters');
+assert.match(appSource, /blockedNextActions/, 'Blocked-reason navigation must use the shared mutually-exclusive next-action queues');
+assert.match(appSource, /next\.type === 'readiness' \|\| next\.type === 'blocked_reason'/, 'Readiness and next-action navigation must share locale-aware page navigation');
 assert.match(appSource, /setContentLocale\(next\.locale\)/, 'Cross-language queue navigation must switch the editor to the selected content locale');
+assert.match(stylesSource, /workflow-blocked-breakdown/, 'Blocked next actions must render as a visually nested breakdown rather than equal top-level states');
 assert.doesNotMatch(workflowOverviewSource, /Readiness 按 486 条 Species/, 'Workflow overview must not hard-code the legacy 486-species readiness count');
 assert.match(stylesSource, /workflow-queue-row[\s\S]*grid-template-columns:\s*minmax\(0,1fr\) auto/, 'Workflow drawer rows must reserve stable space for copy and counts without label squeezing');
 assert.match(appSource, /workflowGroupKeys/, 'Workflow filters must constrain the Species sidebar');
@@ -406,6 +419,7 @@ const dirtyReadiness = assessPublishReadiness({
 });
 assert.equal(dirtyReadiness.state, 'blocked', 'Acceptance/test copy must block Preview readiness even when already Approved.');
 assert.ok(dirtyReadiness.blockers.some((item) => /测试|验收|test\/acceptance/i.test(item)), 'Readiness must explain the content-hygiene blocker.');
+assert.ok(dirtyReadiness.blockerCodes.includes('hygiene'), 'Structured readiness diagnostics must classify dirty copy without parsing display text');
 const dirtyCounterpartReadiness = assessPublishReadiness({
   species: cleanMember, group: cleanGroup, locale: 'en',
   groupRow: { locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' },
@@ -415,6 +429,7 @@ const dirtyCounterpartReadiness = assessPublishReadiness({
 });
 assert.equal(dirtyCounterpartReadiness.state, 'blocked', 'An indexable page must also be blocked when its approved counterpart still contains acceptance copy.');
 assert.ok(dirtyCounterpartReadiness.blockers.some((item) => /另一语言页面/.test(item)), 'Counterpart hygiene must be visible as a publish blocker.');
+assert.ok(dirtyCounterpartReadiness.blockerCodes.includes('bilingual'), 'Counterpart-locale failures must be classified as a bilingual next action');
 const oneReadyOverview = buildAdminWorkflowOverview({
   species: [cleanMember], groups: [cleanGroup],
   seoRows: { [`${cleanMember.catalog_key}::en`]: { catalog_key: cleanMember.catalog_key, locale: 'en', localized_name: 'Reviewed Species', image_alt: 'Reviewed Species', review_state: 'approved', index_strategy: 'noindex' } },
@@ -438,6 +453,8 @@ const dirtyWorkflowOverview = buildAdminWorkflowOverview({
 assert.equal(dirtyWorkflowOverview.contentHygiene.total, 1, 'One dirty locale page must create exactly one cleanup task');
 assert.equal(dirtyWorkflowOverview.contentHygiene.byLocale['zh-CN'].count, 1);
 assert.deepEqual(dirtyWorkflowOverview.contentHygiene.byLocale['zh-CN'].memberIds, [cleanMember.id]);
+assert.equal(dirtyWorkflowOverview.locales['zh-CN'].blockedNextActions.hygiene.count, 1, 'Dirty current-locale copy must be the primary next action for that blocked page');
+assert.deepEqual(dirtyWorkflowOverview.locales['zh-CN'].blockedNextActions.hygiene.memberIds, [cleanMember.id]);
 assert.equal(dirtyWorkflowOverview.contentHygiene.byLocale.en.count, 0, 'A clean counterpart locale must not be misclassified as dirty');
 const previewSnapshot = buildControlledPreviewSnapshot({
   species: cleanMember, group: cleanGroup,
