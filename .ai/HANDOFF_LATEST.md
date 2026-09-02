@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 13:37 +08:00
+Updated: 2026-09-02 13:48 +08:00
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -227,26 +227,30 @@ The public staging snapshot still contains earlier acceptance-test content from 
 A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
-Latest functional commit:
-- current branch HEAD after this batch: `fix(admin): enforce resolved duplicate policy everywhere`
-- previous functional checkpoint: `af8ad80 fix(admin): close duplicate review workflow`
+Latest functional commits:
+- `8b70a64 fix(seo): decouple code preview from staging snapshot`
+- `c82378f fix(admin): block acceptance copy from review and staging`
+- previous duplicate authority checkpoint: `4da7849 fix(admin): enforce resolved duplicate policy everywhere`
 
 GitHub Actions:
-- Admin Content CI Gate #45
-- run id `33539503349`
-- head `58064126a7fea0d0c4a666e3a58c041067920098`
-- result: SUCCESS; contract, production build, SEO artifact integration, generated catalog and diff hygiene all green
+- Admin Content CI Gate #47 (`33595530355`) SUCCESS on `c82378f`
+- Admin Content CI Gate #48 (`33595971134`) SUCCESS on `8b70a64`
+- #48 includes the new `test:species-seo-build-routing` gate plus contract, production build, explicit root Species artifact integration, generated-catalog consistency and diff hygiene
 
 Vercel Preview:
-- latest previously verified READY deployment remains `dpl_GmHUtFr3xD9N4A7T7XZdQL6eP7rA` (`39f9058`)
+- AquaGuide deployment `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` — READY on `8b70a64`
+- AquaGuide host `aquaguide-4d1k7wqep-chusday97s-projects.vercel.app`
 - stable branch alias: `aquaguide-git-feature-admin-content-v0-chusday97s-projects.vercel.app`
-- current head `5806412` did **not** receive a new Preview: both `Vercel – aquaguide` and `Vercel – admin-content` reported `Deployment rate limited — retry in 24 hours.`
-- this is an external Vercel account/build-rate blocker, not a code/build failure; do not repeatedly retrigger deployments while the rate limit is active
-- local build + GitHub CI #45 are the current authority for `af8ad80` until Vercel can build again
+- Admin-only deployment `dpl_8FuNP96AYyUTDhtaqEEXt2gXv8Y4` — READY on `8b70a64`
+- hosted AquaGuide `/admin/seo/` returns 200 and deployment-level `X-Robots-Tag: noindex`; its Admin bundle is `index-MrAgFMxf.js`, matching the locally verified hygiene-gate build
+- Vercel build log explicitly reports `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
+- the immediately prior AquaGuide deployment `dpl_CE1YCbyBG8tQc8C7DR1YB76aVmga` failed on `c82378f` because a normal code Preview still auto-consumed the historical dirty staging snapshot; `8b70a64` fixes that coupling rather than weakening the hygiene gate
 
 Temporary `_vercel_share` links expire and must not be stored as canonical handoff URLs.
 
 ## 16. Important recent commits
+- `8b70a64` — normal code Preview no longer consumes staging content; only explicit staging-publish snapshot commits generate Species pages
+- `c82378f` — content hygiene gate blocks acceptance/test wording from review, Staging and static generation
 - `af8ad80` — atomic duplicate review + evidence-guided UI + resolved-state cleanup
 - `c2c4789` — batch CSV import + persistent Admin activity center + duplicate-review auto-close
 - `fae815f` — duplicate warning becomes direct review action
@@ -392,7 +396,7 @@ Once a duplicate set is explicitly resolved as `duplicate_records`, the human Da
 - new Vercel Preview remains externally blocked by the account deployment-rate limit; do not retrigger repeatedly
 
 
-## 23. Content hygiene release gate — completed locally 2026-09-02
+## 23. Content hygiene release gate — completed 2026-09-02
 This closes the acceptance-copy leak that left `sp_0001` test wording inside Approved/Staging content.
 
 ### New authority rule
@@ -419,8 +423,35 @@ This closes the acceptance-copy leak that left `sp_0001` test wording inside App
 - `npm run verify:seo-species-handoff` PASS
 - `npm run test:admin-content-ui` PASS
 - `git diff --check` PASS
+- GitHub Admin Content CI Gate #47 PASS on `c82378f`
+- Admin-only Vercel Preview for `c82378f` was READY; the AquaGuide root Preview exposed the remaining build/content coupling described below
 
-## 24. Startup instruction for the next conversation
+## 24. Code Preview vs explicit Staging publication boundary — completed 2026-09-02
+Functional commit: `8b70a64`.
+
+### Problem found by the remote gate
+- after the hygiene gate landed, the normal AquaGuide code Preview automatically consumed the historical committed staging snapshot
+- because that old snapshot correctly fails hygiene on both `sp_0001` H1s, the entire code Preview failed even though the Admin code itself was valid
+- this meant code deployment and content publication were still incorrectly coupled
+
+### Fixed boundary
+- ordinary `fix/feat` Git/Vercel Preview commits now build AquaGuide + `/admin/seo/` without consuming any Species staging snapshot
+- the repo snapshot is auto-consumed only when all conditions are true: Preview environment, `feature/admin-content-v0`, commit subject starts `content(seo): publish staging`, and the commit changes only `content/species-seo/staging-snapshot.json`
+- mixed code+snapshot commits and main/default-branch builds cannot impersonate an explicit Staging publish
+- explicit `SPECIES_SEO_SNAPSHOT_PATH` remains supported for CI/local artifact verification
+- a real explicit Staging publish still fails closed if the snapshot contains dirty acceptance/test content
+
+### Verification
+- `npm run test:species-seo-build-routing` PASS
+- simulated normal Vercel code Preview PASS and logs `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
+- simulated `content(seo): publish staging sp_0001` with the historical dirty snapshot FAILS CLOSED on zh `验收` + en `Dual-Repo`
+- explicit clean CI fixture still generates 3 bilingual Species / 6 HTML pages and passes root artifact + SEO handoff verification
+- GitHub Admin Content CI Gate #48 PASS on `8b70a64`
+- AquaGuide Vercel Preview `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` READY
+- Admin-only Vercel Preview `dpl_8FuNP96AYyUTDhtaqEEXt2gXv8Y4` READY
+- hosted `/admin/seo/` returns 200 with `X-Robots-Tag: noindex`
+
+## 25. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.

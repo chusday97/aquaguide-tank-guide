@@ -326,3 +326,10 @@
 - Repo review updates and Staging snapshot creation enforce the same rule server-side; static Species generation independently rejects dirty snapshots.
 - Historical staging snapshot verification now fails closed on `sp_0001/zh-CN` (`验收`) and `sp_0001/en` (`Dual-Repo`) instead of regenerating those acceptance H1s.
 - Contract, Repo backend/API, dual-repo routing, full root build, SEO handoff and Admin UI gates PASS locally.
+
+## 2026-09-02 — Code Preview / Staging publication decoupling
+- Remote AquaGuide Preview on the hygiene-gate commit failed for the correct content reason: normal code deployment was still auto-consuming the historical dirty staging snapshot.
+- Reworked root Species artifact routing so normal code Preview skips staging content; only the server-generated `content(seo): publish staging ...` snapshot-only commit can auto-generate Species pages.
+- Added `test:species-seo-build-routing` and wired it into CI; explicit CI fixture generation remains supported.
+- Simulated code Preview PASS; simulated explicit publish with the dirty historical snapshot FAILS CLOSED on zh `验收` and en `Dual-Repo`.
+- GitHub CI #48 PASS; AquaGuide Vercel `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` READY; admin-content `dpl_8FuNP96AYyUTDhtaqEEXt2gXv8Y4` READY.
