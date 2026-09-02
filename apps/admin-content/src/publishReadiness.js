@@ -240,6 +240,13 @@ export function buildAdminWorkflowOverview({ species = [], groups = [], seoRows 
     if (review?.decision === 'duplicate_records' && review.canonical_catalog_key) return item.catalog_key === review.canonical_catalog_key;
     return !groupMember?.duplicate_of_catalog_key;
   });
+  const contentHygiene = {
+    total: 0,
+    byLocale: {
+      'zh-CN': { count: 0, memberIds: [] },
+      en: { count: 0, memberIds: [] },
+    },
+  };
   const locales = {};
   for (const locale of ['zh-CN', 'en']) {
     const counterpart = locale === 'en' ? 'zh-CN' : 'en';
@@ -257,8 +264,13 @@ export function buildAdminWorkflowOverview({ species = [], groups = [], seoRows 
       });
       state[result.state] += 1;
       state.memberIdsByState[result.state].push(item.id);
+      if (result.hygiene && !result.hygiene.clean) {
+        contentHygiene.total += 1;
+        contentHygiene.byLocale[locale].count += 1;
+        contentHygiene.byLocale[locale].memberIds.push(item.id);
+      }
     }
     locales[locale] = state;
   }
-  return { dataReview, locales };
+  return { dataReview, locales, contentHygiene };
 }

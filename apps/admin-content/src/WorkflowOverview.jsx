@@ -30,6 +30,7 @@ export default function WorkflowOverview({ overview, activeFilter, onFilter }) {
   const toggle = (next) => onFilter(activeFilter?.key === next.key ? null : next);
   const pageCount = overview.locales?.['zh-CN']?.total ?? 0;
   const issueCount = overview.dataReview?.total ?? 0;
+  const hygieneCount = overview.contentHygiene?.total ?? 0;
 
   const renderReadiness = (locale, title) => (
     <section className="workflow-queue-section" key={locale}>
@@ -38,6 +39,14 @@ export default function WorkflowOverview({ overview, activeFilter, onFilter }) {
         <span>{overview.locales?.[locale]?.total ?? 0} {isEnglish ? 'pages' : '个页面'}</span>
       </div>
       <div className="workflow-queue-list">
+        <QueueRow
+          active={activeFilter?.key === `${locale}:hygiene`}
+          count={overview.contentHygiene?.byLocale?.[locale]?.count ?? 0}
+          label={isEnglish ? 'Copy cleanup' : '需清理文案'}
+          description={isEnglish ? 'Test/acceptance wording detected; clean it before review' : '检测到测试/验收字样；清理后再进入审核'}
+          tone="hygiene"
+          onClick={() => toggle({ key: `${locale}:hygiene`, type: 'hygiene', locale, label: `${title} · ${isEnglish ? 'Copy cleanup' : '需清理文案'}` })}
+        />
         {readinessStates.map(([status, label, description]) => (
           <QueueRow
             key={status}
@@ -57,7 +66,7 @@ export default function WorkflowOverview({ overview, activeFilter, onFilter }) {
     <section className="workflow-overview workflow-queue-overview">
       <div className="workflow-queue-summary">
         <strong>{isEnglish ? 'What needs attention now' : '现在需要处理什么'}</strong>
-        <p>{isEnglish ? `${pageCount} current SEO page candidates · ${issueCount} data-review issues` : `${pageCount} 个当前 SEO 页面候选 · ${issueCount} 个数据问题`}</p>
+        <p>{isEnglish ? `${pageCount} current SEO page candidates · ${issueCount} data-review issues · ${hygieneCount} locale pages need copy cleanup` : `${pageCount} 个当前 SEO 页面候选 · ${issueCount} 个数据问题 · ${hygieneCount} 个语言页面需清理文案`}</p>
       </div>
 
       <section className="workflow-queue-section workflow-data-section">

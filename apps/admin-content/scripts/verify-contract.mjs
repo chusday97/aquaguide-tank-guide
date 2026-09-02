@@ -78,6 +78,9 @@ assert.equal(emptyWorkflowOverview.dataReview.pending, 33, 'Unreviewed source is
 const initialSeoPageCandidates = catalog.length - groupData.stats.exact_duplicate_records;
 assert.equal(emptyWorkflowOverview.locales['zh-CN'].blocked, initialSeoPageCandidates, 'Missing Chinese editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');
 assert.equal(emptyWorkflowOverview.locales.en.blocked, initialSeoPageCandidates, 'Missing English editorial rows must block every current SEO page candidate, excluding folded duplicate source rows');
+assert.equal(emptyWorkflowOverview.contentHygiene.total, 0, 'Empty editorial state must not invent content-hygiene tasks');
+assert.equal(emptyWorkflowOverview.contentHygiene.byLocale['zh-CN'].count, 0);
+assert.equal(emptyWorkflowOverview.contentHygiene.byLocale.en.count, 0);
 
 assert.match(appSource, /from\('user_roles'\)/, 'Admin must verify user_roles');
 assert.match(appSource, /from\('species_seo'\)/, 'Admin must read species_seo');
@@ -129,6 +132,12 @@ assert.match(workflowOverviewSource, /workflow-queue-row/, 'Workflow overview mu
 assert.match(workflowOverviewSource, /pageCount = overview\.locales/, 'Workflow overview page count must come from current workflow candidates rather than a hard-coded catalog total');
 assert.match(workflowOverviewSource, /现在需要处理什么/, 'Chinese workflow overview must use task-oriented localized copy');
 assert.match(workflowOverviewSource, /可预览/, 'Workflow overview must localize Preview-ready state in Chinese');
+assert.match(workflowOverviewSource, /需清理文案/, 'Workflow overview must expose content hygiene as an actionable queue without creating a review state');
+assert.match(sidebarSource, /hygiene-quick-alert/, 'Sidebar must expose a distinct full-width alert for content cleanup tasks when needed');
+assert.match(sidebarSource, /contentHygiene/, 'Sidebar hygiene count must come from the shared workflow overview');
+assert.match(appSource, /workflowFilter\.type === 'hygiene'/, 'Workflow scope must support page-level content hygiene filters');
+assert.match(appSource, /next\.type === 'readiness' \|\| next\.type === 'hygiene'/, 'Editorial and hygiene queue navigation must share locale-aware page navigation');
+assert.match(appSource, /setContentLocale\(next\.locale\)/, 'Cross-language queue navigation must switch the editor to the selected content locale');
 assert.doesNotMatch(workflowOverviewSource, /Readiness 按 486 条 Species/, 'Workflow overview must not hard-code the legacy 486-species readiness count');
 assert.match(stylesSource, /workflow-queue-row[\s\S]*grid-template-columns:\s*minmax\(0,1fr\) auto/, 'Workflow drawer rows must reserve stable space for copy and counts without label squeezing');
 assert.match(appSource, /workflowGroupKeys/, 'Workflow filters must constrain the Species sidebar');
@@ -321,6 +330,8 @@ assert.match(repoStoreSource, /Content hygiene blocked review/, 'Repo review upd
 assert.match(repoStoreSource, /Staging blocked by test\/acceptance wording/, 'Repo Staging snapshot must reject legacy approved acceptance/test copy');
 assert.match(publicGeneratorSource, /content hygiene:/, 'Static Species generator must independently reject acceptance/test copy from snapshots.');
 assert.match(appSource, /content-hygiene-warning/, 'Variant editor must surface content-hygiene blockers next to the workflow');
+assert.match(appSource, /去基础模板修复/, 'Inherited hygiene blockers must offer a direct path to the Base editor');
+assert.match(appSource, /onEditBase/, 'Variant hygiene actions must navigate through the shared Base-editor scope instead of duplicating Base controls');
 assert.match(baseSource, /content-hygiene-warning/, 'Base editor must surface content-hygiene blockers next to the workflow');
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
@@ -412,6 +423,22 @@ const oneReadyOverview = buildAdminWorkflowOverview({
 });
 assert.equal(oneReadyOverview.locales.en.publish_ready, 1, 'Workflow overview must count a complete Approved Species as Publish-ready');
 assert.deepEqual(oneReadyOverview.locales.en.memberIdsByState.publish_ready, [cleanMember.id]);
+const dirtyWorkflowOverview = buildAdminWorkflowOverview({
+  species: [cleanMember], groups: [cleanGroup],
+  seoRows: {
+    [`${cleanMember.catalog_key}::zh-CN`]: { catalog_key: cleanMember.catalog_key, locale: 'zh-CN', h1: '后台真实保存验收', image_alt: '正常图片说明', review_state: 'editing', index_strategy: 'noindex' },
+    [`${cleanMember.catalog_key}::en`]: { catalog_key: cleanMember.catalog_key, locale: 'en', localized_name: 'Reviewed Species', image_alt: 'Reviewed Species', review_state: 'editing', index_strategy: 'noindex' },
+  },
+  groupSeoRows: {
+    [`${cleanGroup.group_key}::zh-CN`]: { group_key: cleanGroup.group_key, locale: 'zh-CN', review_state: 'approved', seo_title_template: '{{name}}饲养指南', meta_description_template: '{{name}}饲养信息。', h1_template: '{{name}}饲养指南', shared_intro: '正常基础简介。' },
+    [`${cleanGroup.group_key}::en`]: { group_key: cleanGroup.group_key, locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Normal shared care intro.' },
+  },
+  reviewRows: {},
+});
+assert.equal(dirtyWorkflowOverview.contentHygiene.total, 1, 'One dirty locale page must create exactly one cleanup task');
+assert.equal(dirtyWorkflowOverview.contentHygiene.byLocale['zh-CN'].count, 1);
+assert.deepEqual(dirtyWorkflowOverview.contentHygiene.byLocale['zh-CN'].memberIds, [cleanMember.id]);
+assert.equal(dirtyWorkflowOverview.contentHygiene.byLocale.en.count, 0, 'A clean counterpart locale must not be misclassified as dirty');
 const previewSnapshot = buildControlledPreviewSnapshot({
   species: cleanMember, group: cleanGroup,
   variantRows: [{ catalog_key: cleanMember.catalog_key, locale: 'zh-CN', status: 'draft', review_state: 'approved', reviewed_by: 'should-not-export' }],

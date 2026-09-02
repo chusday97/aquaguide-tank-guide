@@ -81,6 +81,10 @@ export default function SpeciesGroupSidebar({
       ? (workflowFilter.locale === 'en' ? 'English' : (appLocale === 'en' ? 'Chinese' : '中文'))
       : '';
     if (workflowFilter.type === 'data') return appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理';
+    if (workflowFilter.type === 'hygiene') {
+      const state = appLocale === 'en' ? 'Copy cleanup' : '需清理文案';
+      return localePrefix ? `${localePrefix} · ${state}` : state;
+    }
     if (workflowFilter.status === 'ready_for_review') {
       const state = appLocale === 'en' ? 'Awaiting Review' : '待审核';
       return localePrefix ? `${localePrefix} · ${state}` : state;
@@ -111,6 +115,16 @@ export default function SpeciesGroupSidebar({
         <button type="button" title={appLocale === 'en' ? 'Content items awaiting editorial review' : '等待人工审核的内容条目'} className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{workflowOverview?.locales?.[locale]?.ready_for_review ?? 0}</b></button>
         <button type="button" title={appLocale === 'en' ? 'Pages eligible for Controlled Preview' : '可进入受控 Preview 的页面'} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: appLocale === 'en' ? 'Preview-ready' : '可预览' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
       </div>
+      {(workflowOverview?.contentHygiene?.byLocale?.[locale]?.count ?? 0) > 0 ? (
+        <button
+          type="button"
+          className={`hygiene-quick-alert ${workflowFilter?.key === `${locale}:hygiene` ? 'active' : ''}`}
+          onClick={() => onWorkflowFilter?.({ key: `${locale}:hygiene`, type: 'hygiene', locale, label: appLocale === 'en' ? 'Copy cleanup' : '需清理文案' })}
+        >
+          <span><strong>{appLocale === 'en' ? 'Copy cleanup needed' : '需清理测试 / 验收文案'}</strong><small>{appLocale === 'en' ? 'Review and Preview are blocked for these pages' : '这些页面清理前不能进入审核或 Preview'}</small></span>
+          <b>{workflowOverview.contentHygiene.byLocale[locale].count}</b>
+        </button>
+      ) : null}
       <input
         className="search-input"
         placeholder={t('sidebar.search')}

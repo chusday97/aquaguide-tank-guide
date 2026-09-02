@@ -146,7 +146,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange, publishReadinessState = 'blocked', stagingPublishing = false, stagingMessage = '', onPublishStaging, onOpenReadiness }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange, publishReadinessState = 'blocked', stagingPublishing = false, stagingMessage = '', onPublishStaging, onOpenReadiness, onEditBase }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(emptySeo);
@@ -435,7 +435,10 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       {!currentHygiene.clean ? (
         <div className="content-hygiene-warning" role="alert">
           <div><strong>{isUiEnglish ? 'Test / acceptance copy detected' : '检测到测试 / 验收文案'}</strong><span>{isUiEnglish ? 'Draft editing is allowed, but review and Preview are blocked until these markers are removed.' : '可以继续保存 Draft，但清理这些字样前不能提交审核或进入 Preview。'}</span></div>
-          <ul>{currentHygiene.issues.map((issue) => <li key={`${issue.field}-${issue.marker}`}><b>{issue.label}</b><span>{issue.match}</span>{['seoTitle', 'metaDescription', 'h1'].includes(issue.field) && form[issue.field] ? <button type="button" onClick={() => useBaseValue(issue.field)}>{isUiEnglish ? 'Use clean Base template' : '恢复基础模板'}</button> : issue.field === 'variantIntro' && form.intro ? <button type="button" onClick={() => update('intro', '')}>{isUiEnglish ? 'Clear page supplement' : '清空本页补充'}</button> : null}</li>)}</ul>
+          <ul>{currentHygiene.issues.map((issue) => {
+            const inheritedBaseIssue = issue.field === 'sharedIntro' || (['seoTitle', 'metaDescription', 'h1'].includes(issue.field) && !form[issue.field]);
+            return <li key={`${issue.field}-${issue.marker}`}><b>{issue.label}</b><span>{issue.match}</span>{['seoTitle', 'metaDescription', 'h1'].includes(issue.field) && form[issue.field] ? <button type="button" onClick={() => useBaseValue(issue.field)}>{isUiEnglish ? 'Use clean Base template' : '恢复基础模板'}</button> : issue.field === 'variantIntro' && form.intro ? <button type="button" onClick={() => update('intro', '')}>{isUiEnglish ? 'Clear page supplement' : '清空本页补充'}</button> : inheritedBaseIssue ? <button type="button" onClick={onEditBase}>{isUiEnglish ? 'Edit Base template' : '去基础模板修复'}</button> : null}</li>;
+          })}</ul>
         </div>
       ) : null}
 
@@ -860,7 +863,10 @@ export default function App() {
     if (workflowFilter.type === 'data') {
       return { groupKeys: new Set(workflowOverview.dataReview.groupKeysByStatus[workflowFilter.status] || []), memberIds: null };
     }
-    const memberIds = new Set(workflowOverview.locales[workflowFilter.locale]?.memberIdsByState[workflowFilter.status] || []);
+    const sourceIds = workflowFilter.type === 'hygiene'
+      ? workflowOverview.contentHygiene?.byLocale?.[workflowFilter.locale]?.memberIds || []
+      : workflowOverview.locales[workflowFilter.locale]?.memberIdsByState[workflowFilter.status] || [];
+    const memberIds = new Set(sourceIds);
     const groupKeys = new Set();
     for (const id of memberIds) { const group = speciesGroupByMemberId.get(id); if (group) groupKeys.add(group.group_key); }
     return { groupKeys, memberIds };
@@ -871,8 +877,11 @@ export default function App() {
     if (workflowFilter?.key === next.key) return;
     if (!confirmDiscardUnsaved()) return;
     setWorkflowFilter(next);
-    if (next.type === 'readiness') {
-      const firstId = workflowOverview.locales[next.locale]?.memberIdsByState[next.status]?.[0];
+    if (next.type === 'readiness' || next.type === 'hygiene') {
+      const firstId = next.type === 'hygiene'
+        ? workflowOverview.contentHygiene?.byLocale?.[next.locale]?.memberIds?.[0]
+        : workflowOverview.locales[next.locale]?.memberIdsByState[next.status]?.[0];
+      if (next.locale) setContentLocale(next.locale);
       if (firstId) { setSelectedId(firstId); setEditorScope('variant'); }
       return;
     }
@@ -1159,6 +1168,7 @@ export default function App() {
               stagingMessage={stagingPublishMessage}
               onPublishStaging={publishSelectedToStaging}
               onOpenReadiness={() => setActiveTool('readiness')}
+              onEditBase={() => runEditorNavigation(() => setEditorScope('base'))}
               onSaved={(row) => {
                 const key = groupSeoRowKey(row.group_key, row.locale);
                 setGroupSeoRows((current) => ({ ...current, [key]: row }));
