@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 14:26 +0800
+Updated: 2026-09-02 17:14 +0800
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -228,10 +228,11 @@ A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
 Latest functional commits:
+- `9db09f6 feat(admin): add bulk editorial review`
+- `53bb329 feat(admin): add bulk duplicate review and template import`
+- `f7ff63d fix(admin): distinguish actions from status tags`
+- `0f7a32e fix(admin): centralize action feedback in toasts`
 - `15ea1be feat(admin): split blocked pages by next action`
-- `16d3f7e feat(admin): add global copy cleanup queue`
-- `8b70a64 fix(seo): decouple code preview from staging snapshot`
-- `c82378f fix(admin): block acceptance copy from review and staging`
 - previous duplicate authority checkpoint: `4da7849 fix(admin): enforce resolved duplicate policy everywhere`
 
 GitHub Actions:
@@ -284,15 +285,16 @@ Primary:
 Known build warning: large Vite chunks. This is not currently a Species SEO functional failure.
 
 ## 18. Current next actions — in priority order
-1. In the **real authenticated Admin**, finish the 白金西非凤凰 review (`sp_0214 / sp_0338`) using the improved `处理重复` flow. Current evidence strongly favors `确认是重复记录` + keep `sp_0214`. Do not bypass the Admin session to write the private repo.
-2. Clean `sp_0001` before any new Staging release. The new hygiene gate makes this explicit:
-   - English private row: H1 contains `Red Cherry Shrimp Care Guide | Dual-Repo Staging`; use the editor's `恢复基础模板` action, Save, then submit/approve English.
-   - Chinese private row: H1 contains `后台真实保存验收`; restore the clean Base H1 and Save. Because the content genuinely changes, this new edit must return to Editing and be reviewed again; this is not a repeat of the earlier acceptance test.
+1. The real private Draft store already contains completed duplicate decisions for **极火虾** (`sp_0001`), **白金西非凤凰** (`sp_0214`) and **黑木蕨** (`sp_0082`), each keeping the source-primary record. Do not ask the user to repeat those reviews.
+2. The generated source catalog contains 28 duplicate sets total. Audit on 2026-09-02 found all 28/28 have an explicit source-primary → duplicate pointer and match on name, scientific name, category, image, difficulty, temperature, pH and tank size; their only Product Truth difference is `product_description` wording. With 3 private decisions already recorded, the current fetched private store leaves **25 unresolved duplicate sets**. Resolve them only through the authenticated Admin bulk-review action; do not write human decisions directly through GitHub file mutation.
+3. Clean `sp_0001` before any new Staging release:
+   - English private H1 still contains `Red Cherry Shrimp Care Guide | Dual-Repo Staging`; restore the clean Base template, Save, then review again.
+   - Chinese private H1 still contains `后台真实保存验收`; restore clean H1 and re-review.
    - both locales must be clean for an independently indexed bilingual page to become Preview-ready.
-3. Use the task drawer's blocked next-action breakdown to choose real work: `清理测试/验收文案` → `先处理数据问题` → `补齐当前语言内容` → `补齐另一语言` → `修正收录/Canonical`. In the empty review fixture the 458 blocked pages split cleanly into 51 Data Review-first + 407 content-first. Use bulk import only for the next real content batch; do not create fake writes merely to populate Activity history.
-4. Then explicitly Staging Publish only the intended reviewed Species set. The historical committed staging snapshot is intentionally left untouched; it is evidence from the old acceptance run and now fails the generator hygiene gate.
-5. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`. Do not repeatedly retrigger while the Vercel deployment-rate limit is active.
-6. Keep Production locked until the user explicitly decides to move the publication boundary forward.
+4. Start the first real 10–20 Species content batch with **SEO 模板导入**, then use the new **批量内容审核** flow instead of clicking every row individually: batch submit → batch approve Preview. The bulk review RPC stays atomic and preserves content-hygiene/state-transition gates.
+5. Use the blocked next-action queue for remaining work: `清理测试/验收文案` → `先处理数据问题` → `补齐当前语言内容` → `补齐另一语言` → `修正收录/Canonical`.
+6. Then explicitly Staging Publish only the intended reviewed Species set and verify one generated EN/ZH staging release: H1/title/meta/canonical/hreflang/robots/CTA + deployment-level `X-Robots-Tag: noindex`.
+7. Keep Production locked until the user explicitly decides to move the publication boundary forward.
 
 ## 19. What NOT to do
 - Do not provision Supabase for Species SEO.
@@ -582,3 +584,13 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - Template workflow is now presented as a product action: download AquaGuide CSV template → edit in Excel / Numbers → mark only intended rows → upload completed template → validate → import Draft changes. Product Truth identity columns remain read-only references.
 - Browser review-mode evidence: one top-bar Bulk Review button, one top-bar Template Import button; Bulk Review shows 28 rows, Select All selects 28, final action reads `确认处理 28 组`; Template Import exposes one `下载 CSV 模板` and one `上传回填后的模板`; browser errors = 0.
 - Local gates PASS: Admin contract including atomic bulk RPC, Admin build, Species SEO build routing, full root build, SEO handoff browser regression, Admin authority UI, and diff hygiene.
+
+
+## 30. CSV import change preview + no-op protection — completed 2026-09-02
+- `SEO 模板导入` now shows an explicit field-level diff after CSV validation and before any write.
+- Each marked row lists the fields that will change; fields being cleared are visually separated from normal edits.
+- The summary distinguishes marked rows, rows with actual changes, and the number of fields that will be cleared.
+- Marked rows that are identical to the current Draft are skipped and do not create a new Draft version or reset review state.
+- The final action count is based on actual changed rows rather than raw `import_action=update` markers.
+- Browser regression verified the preview renders with zero page errors; local Admin contract/build, root build, build-routing, SEO handoff and Admin UI gates pass.
+- Production remains locked; this change only improves private Draft import safety.

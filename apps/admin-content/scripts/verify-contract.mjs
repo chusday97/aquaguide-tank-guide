@@ -133,6 +133,9 @@ assert.match(bulkImportSource, /kind:\s*'bulk_import'/, 'Bulk imports must recor
 assert.doesNotMatch(bulkImportSource, /from\('species'\)|from\('fishData'/, 'Bulk import must never write Product Truth storage');
 assert.doesNotMatch(bulkImportSource, /bulk-import-errors|bulk-import-ready/, 'Bulk import action feedback must not render as persistent inline status boxes');
 assert.match(bulkImportSource, /emitAdminNotice/, 'Bulk import validation and client-side blockers must surface as top-right notices');
+assert.match(bulkImportSource, /导入变更预览|Import change preview/, 'Bulk import must preview actual field changes before writing');
+assert.match(bulkImportSource, /changedPayloads/, 'Bulk import must skip marked rows that have no actual changes');
+assert.match(bulkImportSource, /clearedFields/, 'Bulk import must surface override fields that will be cleared');
 assert.match(appSource, /SEO 模板导入/, 'Template import must be exposed as an explicit user-facing action rather than hidden as a generic bulk tool');
 assert.match(appSource, /批量审核重复记录/, 'Admin must expose a dedicated bulk duplicate-review entry');
 assert.match(bulkDuplicateSource, /resolve_species_duplicate_reviews_bulk/, 'Bulk duplicate review must use one atomic backend operation');

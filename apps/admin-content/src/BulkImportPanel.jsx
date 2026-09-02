@@ -11,6 +11,8 @@ const FIELDS = [
   'seo_title', 'meta_description', 'h1', 'intro', 'image_alt', 'focus_keyword', 'index_strategy', 'canonical_catalog_key',
 ];
 const EDITABLE = ['localized_name', 'seo_title', 'meta_description', 'h1', 'intro', 'image_alt', 'focus_keyword', 'index_strategy', 'canonical_catalog_key'];
+const FIELD_LABELS = { localized_name: 'English name', seo_title: 'SEO Title', meta_description: 'Meta Description', h1: 'H1', intro: 'Intro', image_alt: 'Image Alt', focus_keyword: 'Focus Keyword', index_strategy: 'Index strategy', canonical_catalog_key: 'Canonical target' };
+const normalizeComparable = (value) => String(value ?? '').trim();
 const VALID_ACTIONS = new Set(['update', '更新', 'yes', '1']);
 const VALID_STRATEGIES = new Set(INDEX_STRATEGIES.map((item) => item.value));
 
@@ -58,6 +60,29 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
   const speciesByKey = useMemo(() => new Map(species.map((item) => [item.catalog_key, item])), [species]);
   const markedRows = useMemo(() => parsedRows.filter((row) => VALID_ACTIONS.has(String(row.import_action || '').trim().toLowerCase())), [parsedRows]);
 
+  const importPreview = useMemo(() => {
+    if (!parsedRows.length) return { rows: [], changedPayloads: [], changedRows: 0, clearedFields: 0 };
+    const { nextErrors, payloads } = validate(parsedRows);
+    if (nextErrors.length) return { rows: [], changedPayloads: [], changedRows: 0, clearedFields: 0 };
+    const rows = payloads.map((payload) => {
+      const current = seoRows[`${payload.catalog_key}::${payload.locale}`] || {};
+      const changes = EDITABLE.flatMap((field) => {
+        const before = normalizeComparable(current[field]);
+        const after = normalizeComparable(payload[field]);
+        if (before === after) return [];
+        return [{ field, before, after, kind: before && !after ? 'clear' : 'change' }];
+      });
+      return { payload, member: speciesByKey.get(payload.catalog_key), changes };
+    });
+    const changed = rows.filter((item) => item.changes.length);
+    return {
+      rows,
+      changedPayloads: changed.map((item) => item.payload),
+      changedRows: changed.length,
+      clearedFields: changed.reduce((sum, item) => sum + item.changes.filter((change) => change.kind === 'clear').length, 0),
+    };
+  }, [parsedRows, seoRows, speciesByKey, reviewRows, locale]);
+
   const downloadTemplate = () => {
     const lines = [FIELDS.join(',')];
     for (const member of species) {
@@ -85,7 +110,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     emitAdminNotice({ status: 'success', title: isUiEnglish ? 'Template downloaded' : '模板已下载', detail: `${species.length} ${isUiEnglish ? 'catalog rows' : '条目录记录'} · ${locale}` });
   };
 
-  const validate = (rows) => {
+  function validate(rows) {
     const nextErrors = [];
     const payloads = [];
     for (const row of rows) {
@@ -124,7 +149,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       });
     }
     return { nextErrors, payloads };
-  };
+  }
 
   const onFile = async (event) => {
     const file = event.target.files?.[0];
@@ -154,10 +179,12 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'CSV was not imported.' : '不会执行批量导入。' }); return; }
     if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Import blocked' : '导入被阻止', detail: isUiEnglish ? 'Variant SEO content store is not ready.' : 'Variant SEO 内容存储尚未就绪。' }); return; }
     if (!parsedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose a CSV first' : '请先选择 CSV', detail: isUiEnglish ? 'Upload a completed AquaGuide template before importing.' : '请先上传回填后的 AquaGuide 模板。' }); return; }
-    const { nextErrors, payloads } = validate(parsedRows);
+    const { nextErrors } = validate(parsedRows);
     setErrors(nextErrors);
     if (nextErrors.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Import blocked by CSV validation' : 'CSV 校验未通过', detail: `${nextErrors[0]}${nextErrors.length > 1 ? ` · ${isUiEnglish ? `${nextErrors.length - 1} more issues` : `另有 ${nextErrors.length - 1} 项`}` : ''}`, duration: 7200 }); return; }
-    if (!payloads.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'No rows marked for import' : '没有标记待导入行', detail: isUiEnglish ? 'Set import_action = update on the rows you want to change.' : '请在需要导入的行填写 import_action = update（或“更新”）。' }); return; }
+    if (!markedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'No rows marked for import' : '没有标记待导入行', detail: isUiEnglish ? 'Set import_action = update on the rows you want to change.' : '请在需要导入的行填写 import_action = update（或“更新”）。' }); return; }
+    const payloads = importPreview.changedPayloads;
+    if (!payloads.length) { emitAdminNotice({ status: 'info', title: isUiEnglish ? 'No actual changes' : '没有实际变更', detail: isUiEnglish ? 'Marked rows match the current Draft, so nothing was written.' : '已标记的行与当前 Draft 完全一致，本次不会产生新版本。' }); return; }
     setSaving(true);
     const { data, error } = await adminContentClient
       .from('species_seo')
@@ -185,7 +212,26 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
         <button type="button" className="bulk-upload-button" onClick={() => inputRef.current?.click()}>{fileName || (isUiEnglish ? 'Upload completed template' : '上传回填后的模板')}</button>
         <span>{parsedRows.length ? (isUiEnglish ? `${parsedRows.length} rows read · ${markedRows.length} marked for import` : `已读取 ${parsedRows.length} 行 · ${markedRows.length} 行待导入`) : (isUiEnglish ? 'No file selected' : '尚未选择文件')}</span>
       </div>
-      <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。'}</span><button type="button" className="primary-button" disabled={saving} onClick={importRows}>{saving ? (isUiEnglish ? 'Importing…' : '正在导入…') : (isUiEnglish ? `Import ${markedRows.length} rows` : `导入 ${markedRows.length} 行`)}</button></div>
+      {markedRows.length && !errors.length ? (
+        <div className="bulk-import-preview">
+          <div className="bulk-import-preview-head">
+            <div><strong>{isUiEnglish ? 'Import change preview' : '导入变更预览'}</strong><small>{isUiEnglish ? `${markedRows.length} marked · ${importPreview.changedRows} will change · ${importPreview.clearedFields} fields cleared` : `标记 ${markedRows.length} 行 · 实际修改 ${importPreview.changedRows} 行 · 清空 ${importPreview.clearedFields} 个字段`}</small></div>
+            {markedRows.length !== importPreview.changedRows ? <span>{isUiEnglish ? `${markedRows.length - importPreview.changedRows} no-op rows skipped` : `跳过 ${markedRows.length - importPreview.changedRows} 行无变化内容`}</span> : null}
+          </div>
+          <div className="bulk-import-preview-list">
+            {importPreview.rows.slice(0, 20).map((item) => (
+              <div className={`bulk-import-preview-row ${item.changes.length ? '' : 'no-change'}`} key={item.payload.catalog_key}>
+                <div><strong>{item.member?.name || item.payload.catalog_key}</strong><small>{item.payload.catalog_key}</small></div>
+                <div className="bulk-import-change-tags">
+                  {item.changes.length ? item.changes.map((change) => <span className={change.kind === 'clear' ? 'clear' : ''} key={change.field}>{FIELD_LABELS[change.field] || change.field}{change.kind === 'clear' ? (isUiEnglish ? ' · clear' : ' · 清空') : ''}</span>) : <span className="no-change-tag">{isUiEnglish ? 'No change' : '无变化'}</span>}
+                </div>
+              </div>
+            ))}
+            {importPreview.rows.length > 20 ? <small className="bulk-import-preview-more">{isUiEnglish ? `+ ${importPreview.rows.length - 20} more marked rows` : `另有 ${importPreview.rows.length - 20} 行已标记内容`}</small> : null}
+          </div>
+        </div>
+      ) : null}
+      <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。'}</span><button type="button" className="primary-button" disabled={saving} onClick={importRows}>{saving ? (isUiEnglish ? 'Importing…' : '正在导入…') : (isUiEnglish ? `Import ${importPreview.changedRows} changed rows` : `导入 ${importPreview.changedRows} 行实际变更`)}</button></div>
     </section>
   );
 }

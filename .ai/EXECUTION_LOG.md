@@ -369,3 +369,11 @@
 - Promoted CSV workflow to explicit `SEO 模板导入`: download template, fill in Excel/Numbers, upload/validate, import Draft changes.
 - Browser fixture: 28 duplicate sets selected and ready for one batch confirmation; Template Import download/upload actions are both visible; no page errors.
 - Local contract/build/routing/handoff/Admin UI gates PASS; normal code build still skips explicit Staging content publication.
+
+## 2026-09-02 — CSV import diff preview and no-op protection
+- Added a pre-write field-level preview to SEO template import.
+- Marked CSV rows now show the exact fields that will change; cleared Override fields are called out separately.
+- Rows with no actual Draft changes are skipped instead of being upserted and unnecessarily reset to Editing.
+- Final import CTA uses the actual changed-row count.
+- Browser regression: preview rendered successfully with no page errors.
+- Full Admin contract/build/routing/handoff/UI gates PASS; normal code build still skips Staging Species publication.
