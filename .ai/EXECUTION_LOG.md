@@ -355,3 +355,4 @@
 - Changed semantic action blockers from unexplained disabled buttons to clickable actions that immediately explain the exact reason; only in-flight/busy states remain disabled. Persistent content diagnostics and safety banners remain inline because they describe page/system state, not a click result.
 - Browser Review-mode validation: bulk-import and submit-review blockers toast correctly; manual close + timed dismissal pass; old inline transient selector count=0; browser errors=0.
 - Contract, Admin build, build-routing, full root build, SEO handoff, Admin UI and diff gates PASS. Normal root build still skips Species staging content.
+- Remote: functional commit `0f7a32e`; GitHub Admin Content CI #51 (`33606431007`) PASS; AquaGuide Vercel `dpl_8nhb9HoVFBiuafNMrJZtxN5UEsvs` READY; Admin-only `dpl_EQrgN5itFAmSr6T1Eq5bmiy2RMzY` READY. Hosted `/admin/seo/` returns 200 + deployment `X-Robots-Tag: noindex`.
