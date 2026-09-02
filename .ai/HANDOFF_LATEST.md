@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 14:15 +0800
+Updated: 2026-09-02 14:26 +0800
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -228,6 +228,7 @@ A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
 Latest functional commits:
+- `15ea1be feat(admin): split blocked pages by next action`
 - `16d3f7e feat(admin): add global copy cleanup queue`
 - `8b70a64 fix(seo): decouple code preview from staging snapshot`
 - `c82378f fix(admin): block acceptance copy from review and staging`
@@ -237,21 +238,23 @@ GitHub Actions:
 - Admin Content CI Gate #47 (`33595530355`) SUCCESS on `c82378f`
 - Admin Content CI Gate #48 (`33595971134`) SUCCESS on `8b70a64`
 - Admin Content CI Gate #49 (`33597791743`) SUCCESS on `16d3f7e`
-- #49 covers the global copy-cleanup queue semantics plus the existing deployment-routing, contract, production build, explicit root Species artifact integration, generated-catalog consistency and diff-hygiene gates
+- Admin Content CI Gate #50 (`33598539620`) SUCCESS on `15ea1be`
+- #50 covers mutually-exclusive blocked next-action diagnostics plus the existing deployment-routing, contract, production build, explicit root Species artifact integration, generated-catalog consistency and diff-hygiene gates
 
 Vercel Preview:
-- latest AquaGuide deployment `dpl_7wysx8FDcz1CX4oWqNtmmdiLvVzq` — READY on `16d3f7e`
-- latest AquaGuide host `aquaguide-8fb3cp5ny-chusday97s-projects.vercel.app`
+- latest AquaGuide deployment `dpl_8ZMK57zfuGkTa4sqmh2rrE7cJ8xD` — READY on `15ea1be`
+- latest AquaGuide host `aquaguide-mbi9x40pv-chusday97s-projects.vercel.app`
 - previous deployment `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` remains the deployment-boundary checkpoint on `8b70a64`
 - stable branch alias: `aquaguide-git-feature-admin-content-v0-chusday97s-projects.vercel.app`
-- latest Admin-only deployment `dpl_F6jSc7U9pece3NaprHUdGbsU8Gyp` — READY on `16d3f7e`
-- hosted AquaGuide `/admin/seo/` returns 200 and deployment-level `X-Robots-Tag: noindex`; its Admin bundle is `index-Kbs1p-SQ.js`, matching the locally verified global copy-cleanup build
+- latest Admin-only deployment `dpl_8oPnHbvVE5Sd1op6DLhFDWwpKka7` — READY on `15ea1be`
+- hosted AquaGuide `/admin/seo/` returns 200 and deployment-level `X-Robots-Tag: noindex`; its Admin bundle is `index-BDHxLUJz.js`, matching the locally verified blocked-next-action build
 - Vercel build log explicitly reports `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
 - the immediately prior AquaGuide deployment `dpl_CE1YCbyBG8tQc8C7DR1YB76aVmga` failed on `c82378f` because a normal code Preview still auto-consumed the historical dirty staging snapshot; `8b70a64` fixes that coupling rather than weakening the hygiene gate
 
 Temporary `_vercel_share` links expire and must not be stored as canonical handoff URLs.
 
 ## 16. Important recent commits
+- `15ea1be` — split every blocked page into one actionable next-step queue instead of one opaque Not-ready total
 - `16d3f7e` — global per-locale copy-cleanup queue + sidebar alert + Base-template repair navigation
 - `8b70a64` — normal code Preview no longer consumes staging content; only explicit staging-publish snapshot commits generate Species pages
 - `c82378f` — content hygiene gate blocks acceptance/test wording from review, Staging and static generation
@@ -286,7 +289,7 @@ Known build warning: large Vite chunks. This is not currently a Species SEO func
    - English private row: H1 contains `Red Cherry Shrimp Care Guide | Dual-Repo Staging`; use the editor's `恢复基础模板` action, Save, then submit/approve English.
    - Chinese private row: H1 contains `后台真实保存验收`; restore the clean Base H1 and Save. Because the content genuinely changes, this new edit must return to Editing and be reviewed again; this is not a repeat of the earlier acceptance test.
    - both locales must be clean for an independently indexed bilingual page to become Preview-ready.
-3. Use the bulk-import flow for the next real content batch only; do not create fake writes merely to populate Activity history.
+3. Use the task drawer's blocked next-action breakdown to choose real work: `清理测试/验收文案` → `先处理数据问题` → `补齐当前语言内容` → `补齐另一语言` → `修正收录/Canonical`. In the empty review fixture the 458 blocked pages split cleanly into 51 Data Review-first + 407 content-first. Use bulk import only for the next real content batch; do not create fake writes merely to populate Activity history.
 4. Then explicitly Staging Publish only the intended reviewed Species set. The historical committed staging snapshot is intentionally left untouched; it is evidence from the old acceptance run and now fails the generator hygiene gate.
 5. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`. Do not repeatedly retrigger while the Vercel deployment-rate limit is active.
 6. Keep Production locked until the user explicitly decides to move the publication boundary forward.
@@ -479,7 +482,40 @@ Functional commit: `16d3f7e`.
 - AquaGuide Preview `dpl_7wysx8FDcz1CX4oWqNtmmdiLvVzq` READY; Admin-only Preview `dpl_F6jSc7U9pece3NaprHUdGbsU8Gyp` READY
 - hosted `/admin/seo/` returns 200 + `X-Robots-Tag: noindex`
 
-## 26. Startup instruction for the next conversation
+## 26. Blocked-page next-action breakdown — completed 2026-09-02
+Functional commit: `15ea1be`.
+
+### Why this was needed
+- the previous `未就绪 458` queue was technically correct but operationally useless: it mixed missing content, Data Review, bilingual dependency and SEO-policy issues into one number
+- adding more top-level workflow states would recreate the earlier status/action confusion, so this batch keeps the same three readiness states and adds a nested diagnostic layer only for `blocked` pages
+
+### New diagnostic model
+- `assessPublishReadiness` now emits stable structured `blockerCodes` in addition to human-readable blocker copy; queue logic no longer parses Chinese error strings
+- every blocked locale page is assigned exactly one primary next action, in priority order: hygiene → Data Review → current-locale content → bilingual counterpart → Index/Canonical policy → fallback other
+- each locale stores counts + exact Species IDs under `blockedNextActions`; categories are mutually exclusive and sum exactly to the locale's `blocked` total
+- clicking a next-action row filters the sidebar to only the affected Species, switches content locale when needed and selects the first actionable page
+- the sidebar's conditional hygiene alert uses the same primary hygiene queue, so counts/filtering stay consistent rather than becoming a parallel system
+
+### Review-mode evidence
+- Chinese `未就绪 458` → `先处理数据问题 51` + `补齐当前语言内容 407`
+- English produced the same empty-fixture split; no duplicate counting
+- selecting `先处理数据问题 51` filtered the left navigation to 32 affected Base groups and selected a matching Species
+- selecting English `补齐当前语言内容 407` switched the editor to `SPECIES SEO · English` and filtered to 248 affected Base groups
+- browser console/errors: none
+
+### Verification
+- semantic contract asserts every blocked next-action total equals the blocked total exactly
+- structured diagnostics classify current dirty copy as `hygiene` and dirty counterpart dependency as `bilingual`
+- `npm run test:contract -w @aquaguide/admin-content` PASS
+- `npm run test:species-seo-build-routing` PASS
+- Admin build + full root build PASS; normal root build still skips staging Species content
+- `npm run verify:seo-species-handoff` PASS
+- `npm run test:admin-content-ui` PASS
+- GitHub Admin Content CI Gate #50 PASS (`33598539620`)
+- AquaGuide Preview `dpl_8ZMK57zfuGkTa4sqmh2rrE7cJ8xD` READY; Admin-only Preview `dpl_8oPnHbvVE5Sd1op6DLhFDWwpKka7` READY
+- hosted AquaGuide Admin 200 + `X-Robots-Tag: noindex`; bundle `index-BDHxLUJz.js`
+
+## 27. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.

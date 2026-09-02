@@ -340,3 +340,10 @@
 - Inherited dirty Base content now routes to the Base editor; page Overrides keep one-click Base restore.
 - Local contract/build/UI/deployment-routing gates PASS; GitHub CI #49 PASS.
 - AquaGuide Preview dpl_7wysx8FDcz1CX4oWqNtmmdiLvVzq READY; Admin Preview dpl_F6jSc7U9pece3NaprHUdGbsU8Gyp READY; hosted Admin remains noindex.
+
+## 2026-09-02 — Blocked next-action diagnostics
+- Replaced the opaque 458-page Not-ready queue with a nested, mutually-exclusive next-action breakdown while retaining the existing readiness states.
+- Structured blocker codes now classify hygiene, Data Review, current-locale content, bilingual dependency and Index/Canonical policy without parsing display text.
+- Review fixture: 458 blocked = 51 Data Review-first + 407 content-first; Data Review filter maps to 32 Base groups, English content filter to 248 Base groups and switches locale correctly.
+- Local full gates PASS; GitHub CI #50 PASS.
+- AquaGuide dpl_8ZMK57zfuGkTa4sqmh2rrE7cJ8xD READY; Admin dpl_8oPnHbvVE5Sd1op6DLhFDWwpKka7 READY; hosted Admin remains noindex.
