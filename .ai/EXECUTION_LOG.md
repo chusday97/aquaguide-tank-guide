@@ -347,3 +347,11 @@
 - Review fixture: 458 blocked = 51 Data Review-first + 407 content-first; Data Review filter maps to 32 Base groups, English content filter to 248 Base groups and switches locale correctly.
 - Local full gates PASS; GitHub CI #50 PASS.
 - AquaGuide dpl_8ZMK57zfuGkTa4sqmh2rrE7cJ8xD READY; Admin dpl_8oPnHbvVE5Sd1op6DLhFDWwpKka7 READY; hosted Admin remains noindex.
+
+## 2026-09-02 — Unified top-right action feedback
+- Added a global `AdminNoticeViewport` mounted above App so login and Admin actions share one top-right transient feedback surface.
+- Repo mutations still use `aquaguide-admin-operation`; client-side precondition failures use `aquaguide-admin-notice`. Success/info/warning/error auto-dismiss and can be manually closed.
+- Removed transient inline save/error/status messages from Variant/Base editors, Data Review, Translation, Batch Drafts, CSV import, Revision History, Activity Center and Staging feedback.
+- Changed semantic action blockers from unexplained disabled buttons to clickable actions that immediately explain the exact reason; only in-flight/busy states remain disabled. Persistent content diagnostics and safety banners remain inline because they describe page/system state, not a click result.
+- Browser Review-mode validation: bulk-import and submit-review blockers toast correctly; manual close + timed dismissal pass; old inline transient selector count=0; browser errors=0.
+- Contract, Admin build, build-routing, full root build, SEO handoff, Admin UI and diff gates PASS. Normal root build still skips Species staging content.

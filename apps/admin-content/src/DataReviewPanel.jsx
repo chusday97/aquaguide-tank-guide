@@ -2,6 +2,7 @@ import { useAppLanguage } from './AppLanguage.jsx';
 import { useEffect, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { categoryIssueKey, summarizeDataReviewIssues } from './publishReadiness.js';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned }) {
   const { appLocale, t } = useAppLanguage();
@@ -9,14 +10,12 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
   const [decision, setDecision] = useState(row?.decision || '');
   const [canonicalKey, setCanonicalKey] = useState(row?.canonical_catalog_key || '');
   const [notes, setNotes] = useState(row?.notes || '');
-  const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setDecision(row?.decision || '');
     setCanonicalKey(row?.canonical_catalog_key || '');
     setNotes(row?.notes || '');
-    setMessage('');
   }, [issueKey, row]);
 
   const duplicateMembers = issueType === 'duplicate_set'
@@ -34,11 +33,11 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
     : [];
 
   const save = async () => {
-    if (readOnly) return setMessage(isUiEnglish ? 'Read-only Review does not write data.' : '只读 Review 不写数据。');
-    if (!schemaReady) return setMessage(isUiEnglish ? 'Data Review schema is not ready.' : 'Data Review schema 尚未应用。');
-    if (!decision) return setMessage(isUiEnglish ? 'Choose a review conclusion first.' : '请先选择人工结论。');
-    if (decision === 'duplicate_records' && !canonicalKey) return setMessage(isUiEnglish ? 'Choose the SEO page to keep.' : '确认重复时必须选择保留的 SEO 主页面。');
-    setSaving(true); setMessage('');
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'No data was written.' : '不会写入数据。' }); return; }
+    if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Data Review schema is not ready.' : 'Data Review schema 尚未应用。' }); return; }
+    if (!decision) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose a conclusion' : '请先选择人工结论', detail: isUiEnglish ? 'Select whether the records are duplicates before saving.' : '先选择复核结论，再点击“确认并保存”。' }); return; }
+    if (decision === 'duplicate_records' && !canonicalKey) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose the page to keep' : '请选择保留的 SEO 主页面', detail: isUiEnglish ? 'A canonical page is required when confirming duplicates.' : '确认重复记录时必须指定保留哪一个 SEO 页面。' }); return; }
+    setSaving(true);
 
     if (issueType === 'duplicate_set') {
       const activity = {
@@ -56,12 +55,9 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
         p_notes: notes.trim(),
       }, activity);
       setSaving(false);
-      if (error) return setMessage(error.message || (isUiEnglish ? 'Save failed.' : '保存失败。'));
+      if (error) return;
       const savedReview = resolution?.review;
       const alignedRows = resolution?.seo_rows || [];
-      setMessage(decision === 'duplicate_records'
-        ? (isUiEnglish ? 'Resolved in one operation. Canonical/index policy was synchronized automatically.' : '已一次性处理完成，并自动同步 SEO 主页面与 Canonical 策略。')
-        : (isUiEnglish ? 'Conclusion saved. Product Truth was not modified.' : '人工结论已记录；Product Truth 未被修改。'));
       if (savedReview) onSaved?.(savedReview);
       if (alignedRows.length) onSeoPolicyAligned?.(alignedRows);
       if (savedReview) onResolved?.(savedReview);
@@ -80,8 +76,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
       })
       .select('*').single();
     setSaving(false);
-    if (error) return setMessage(error.message || (isUiEnglish ? 'Save failed.' : '保存失败。'));
-    setMessage(isUiEnglish ? 'Conclusion saved. Product Truth was not modified.' : '人工结论已记录；Product Truth 未被修改。');
+    if (error) return;
     onSaved?.(data);
     onResolved?.(data);
   };
@@ -134,8 +129,8 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
         <textarea rows="2" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder={isUiEnglish ? 'Record the evidence for this decision; Product Truth is not rewritten.' : '记录判断依据；不改写 Product Truth。'} />
       </label>
       <div className="review-decision-footer">
-        <span>{row?.reviewed_at ? `已记录 · ${new Date(row.reviewed_at).toLocaleString()}` : '尚未记录人工结论'}{message ? ` · ${message}` : ''}</span>
-        <button type="button" className="secondary-button compact" onClick={save} disabled={saving || readOnly}>{saving ? t('common.saving') : (isUiEnglish ? 'Confirm & save' : '确认并保存')}</button>
+        <span>{row?.reviewed_at ? `${isUiEnglish ? 'Recorded' : '已记录'} · ${new Date(row.reviewed_at).toLocaleString()}` : (isUiEnglish ? 'No human conclusion recorded yet' : '尚未记录人工结论')}</span>
+        <button type="button" className="secondary-button compact" onClick={save} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Confirm & save' : '确认并保存')}</button>
       </div>
     </div>
   );

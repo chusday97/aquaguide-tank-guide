@@ -21,6 +21,7 @@ import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLo
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
 import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason, getResolvedDuplicateSeoPolicy, summarizeDataReviewIssues } from './publishReadiness.js';
 import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -89,16 +90,14 @@ function Login({ onSignedIn }) {
   const [email, setEmail] = useState('admin@aquaguide.local');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
 
   const submit = async (event) => {
     event.preventDefault();
     setBusy(true);
-    setError('');
     const { data, error: signInError } = await adminContentClient.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (signInError) {
-      setError(signInError.message || '登录失败，请检查账号。');
+      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Sign-in failed' : '登录失败', detail: signInError.message || (appLocale === 'en' ? 'Check the admin account and password.' : '请检查管理员账号和密码。') });
       return;
     }
     onSignedIn(data.session);
@@ -121,7 +120,6 @@ function Login({ onSignedIn }) {
             {appLocale === 'en' ? 'Password' : '密码'}
             <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required autoComplete="current-password" />
           </label>
-          {error ? <div className="error-box">{error}</div> : null}
           <button className="primary-button" type="submit" disabled={busy}>{busy ? (appLocale === 'en' ? 'Signing in…' : '正在验证…') : (appLocale === 'en' ? 'Sign in' : '登录后台')}</button>
         </form>
         <p className="security-note">{appLocale === 'en' ? 'Admin account is prefilled. Paste your current Admin password; access uses a server-side session and secrets never enter the browser.' : '管理员账号已自动填好，只需粘贴当前后台密码；访问由服务端 Session 控制，GitHub Token 不进入浏览器。'}</p>
@@ -146,12 +144,11 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange, publishReadinessState = 'blocked', stagingPublishing = false, stagingMessage = '', onPublishStaging, onOpenReadiness, onEditBase }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange, publishReadinessState = 'blocked', stagingPublishing = false, onPublishStaging, onOpenReadiness, onEditBase }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
   const [overrideEditing, setOverrideEditing] = useState({});
   const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species, group, reviewRows: dataReviewRows });
   const duplicateSetForSpecies = (group?.duplicate_sets || []).find((set) => set.member_ids.includes(species?.catalog_key));
@@ -168,10 +165,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     setOverrideEditing({});
     onDirtyChange?.(false);
   }, [record, species, locale, resolvedDuplicatePolicy?.indexStrategy, resolvedDuplicatePolicy?.canonicalCatalogKey, onDirtyChange]);
-
-  useEffect(() => {
-    setMessage('');
-  }, [species?.id]);
 
   useEffect(() => {
     if (!selectedInspectorElement) return;
@@ -301,22 +294,21 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   };
   const save = async (reviewStateOverride = null) => {
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      setMessage('Species 发布仍锁定：Production 发布未开放，只能保存 Draft。');
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Production publishing is locked' : 'Production 发布未开放', detail: isUiEnglish ? 'This action can only save a Draft.' : '当前只能保存 Draft，不能直接发布到 Production。' });
       return;
     }
     if (readOnly) {
-      setMessage('当前为只读 UI Review，不会向内容存储发送任何写入请求。');
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'No write request was sent.' : '此次操作不会写入内容存储。' });
       return;
     }
     if (!schemaReady) {
-      setMessage('Repo Content Store 尚未就绪；保存被安全阻止。');
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Repo Content Store is not ready.' : 'Repo Content Store 尚未就绪。' });
       return;
     }
     setSaving(true);
-    setMessage('');
     if (reviewStateOverride && reviewStateOverride !== 'editing' && !currentHygiene.clean) {
       setSaving(false);
-      setMessage(isUiEnglish ? `Review blocked: ${hygieneBlockReason}` : `审核被阻止：${hygieneBlockReason}`);
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Review blocked' : '审核被阻止', detail: hygieneBlockReason });
       return;
     }
     if (reviewStateOverride) {
@@ -329,17 +321,17 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         .single();
       setSaving(false);
       if (error) {
-        setMessage(error.message || '审核状态更新失败。');
+        /* Repo backend emits the operation error toast. */
         return;
       }
       setForm((current) => ({ ...current, reviewState: data.review_state }));
-      setMessage(reviewStateOverride === 'ready_for_review' ? '已提交审核。' : reviewStateOverride === 'approved' ? '已批准进入预览。' : '已退回编辑。');
+      /* Repo backend emits the operation success toast. */
       onSaved(data);
       return;
     }
     if (indexBlockReason) {
       setSaving(false);
-      setMessage(isUiEnglish ? `Save blocked: ${indexBlockReason}` : `保存被阻止：${indexBlockReason}`);
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: indexBlockReason });
       return;
     }
     const payload = {
@@ -365,11 +357,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       .single();
     setSaving(false);
     if (error) {
-      setMessage(error.message || '保存失败。');
+      /* Repo backend emits the operation error toast. */
       return;
     }
     setForm(fromSeoRow(data, species, locale));
-    setMessage('修改已保存为草稿；如内容发生变化，审核状态会自动回到编辑中。');
+    /* Repo backend emits the operation success toast. */
     onSaved(data);
   };
 
@@ -408,22 +400,22 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <small className="workflow-section-label">{isUiEnglish ? 'Available actions' : '可执行操作'}</small>
           <div className="workflow-stepper-action">
           {contentDirty ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
+            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
           ) : form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly || !currentHygiene.clean} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
+            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
           ) : form.reviewState === 'ready_for_review' ? (
             <>
-              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact" disabled={saving || readOnly || !currentHygiene.clean} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
+              <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
             </>
           ) : publishReadinessState === 'publish_ready' ? (
             <>
-              <button type="button" className="ghost-button compact" disabled={saving || readOnly || stagingPublishing} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact staging-action" disabled={readOnly || stagingPublishing} onClick={onPublishStaging}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? 'Publish to Staging' : '发布到 Staging')}</button>
+              <button type="button" className="ghost-button compact" disabled={saving || stagingPublishing} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="primary-button compact staging-action" disabled={stagingPublishing} onClick={onPublishStaging}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? 'Publish to Staging' : '发布到 Staging')}</button>
             </>
           ) : (
             <>
-              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
               <button type="button" className="secondary-button compact" onClick={onOpenReadiness}>{isUiEnglish ? 'View blockers' : '查看发布阻塞项'}</button>
             </>
           )}
@@ -564,12 +556,10 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         <div>
           {!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}
           {!schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
-          {message ? <span className="save-message">{message}</span> : null}
-          {stagingMessage ? <span className="save-message">{stagingMessage}</span> : null}
         </div>
         <div className="footer-actions">
           <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
-          {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving || readOnly}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
+          {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
         </div>
       </div>
     </section>
@@ -592,7 +582,6 @@ export default function App() {
   const [category, setCategory] = useState('');
   const [batchIds, setBatchIds] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [schemaReady, setSchemaReady] = useState(true);
   const [groupSchemaReady, setGroupSchemaReady] = useState(true);
   const [historySchemaReady, setHistorySchemaReady] = useState(true);
@@ -608,11 +597,9 @@ export default function App() {
   const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
   const [editorDirty, setEditorDirty] = useState(false);
   const [stagingPublishing, setStagingPublishing] = useState(false);
-  const [stagingPublishMessage, setStagingPublishMessage] = useState('');
   const [activityOpen, setActivityOpen] = useState(false);
   const [activityRefreshKey, setActivityRefreshKey] = useState(0);
   const [activityUnread, setActivityUnread] = useState(0);
-  const [operationNotices, setOperationNotices] = useState([]);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
   useEffect(() => {
@@ -624,11 +611,8 @@ export default function App() {
   useEffect(() => {
     const onOperation = (event) => {
       const detail = event.detail || {};
-      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-      setOperationNotices((current) => [...current.slice(-2), { id, ...detail }]);
       setActivityRefreshKey((current) => current + 1);
       if (detail.status === 'success' && !activityOpen) setActivityUnread((current) => current + 1);
-      window.setTimeout(() => setOperationNotices((current) => current.filter((item) => item.id !== id)), 5200);
     };
     window.addEventListener('aquaguide-admin-operation', onOperation);
     return () => window.removeEventListener('aquaguide-admin-operation', onOperation);
@@ -687,7 +671,6 @@ export default function App() {
 
     const loadAdminData = async () => {
       setLoading(true);
-      setError('');
       const { data: roleRow, error: roleError } = await adminContentClient
         .from('user_roles')
         .select('role')
@@ -696,7 +679,7 @@ export default function App() {
         .maybeSingle();
 
       if (roleError) {
-        setError(`管理员身份验证失败：${roleError.message}`);
+        emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Admin verification failed' : '管理员身份验证失败', detail: roleError.message });
         setLoading(false);
         return;
       }
@@ -898,7 +881,18 @@ export default function App() {
     : null;
 
   const exportPreviewSnapshot = () => {
-    if (!selectedSpecies || !selectedGroup || publishReadiness?.state !== 'publish_ready' || isReviewMode) return;
+    if (isReviewMode) {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only Review' : '当前是只读 Review', detail: appLocale === 'en' ? 'A real Preview Snapshot is only exported from the authenticated Admin.' : '真实 Preview Snapshot 只能从已登录的 Admin 导出。' });
+      return;
+    }
+    if (!selectedSpecies || !selectedGroup) {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Select a Species first' : '请先选择 Species', detail: appLocale === 'en' ? 'A selected Species is required.' : '导出前需要先选择一个 Species 页面。' });
+      return;
+    }
+    if (publishReadiness?.state !== 'publish_ready') {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Preview export blocked' : 'Preview 导出被阻止', detail: publishReadiness?.blockers?.[0] || (appLocale === 'en' ? 'This page is not Preview-ready yet.' : '当前页面还没有达到可预览条件。'), duration: 7200 });
+      return;
+    }
     const snapshot = buildControlledPreviewSnapshot({
       species: selectedSpecies,
       group: selectedGroup,
@@ -918,25 +912,35 @@ export default function App() {
   };
 
   const publishSelectedToStaging = async () => {
-    if (!isRepoBackend || !selectedSpecies || !selectedGroup || publishReadiness?.state !== 'publish_ready' || isReviewMode) return;
+    if (isReviewMode) {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only Review' : '当前是只读 Review', detail: appLocale === 'en' ? 'Staging publish is not available in Review mode.' : 'Review 模式不会执行 Staging 发布。' });
+      return;
+    }
+    if (!isRepoBackend) {
+      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Staging publish unavailable' : '无法发布到 Staging', detail: appLocale === 'en' ? 'The Repo-backed Admin backend is required.' : '当前不是可写的 Repo Admin 后端。' });
+      return;
+    }
+    if (!selectedSpecies || !selectedGroup) {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Select a Species first' : '请先选择 Species', detail: appLocale === 'en' ? 'A selected Species is required before publishing.' : '发布前需要先选择一个 Species 页面。' });
+      return;
+    }
+    if (publishReadiness?.state !== 'publish_ready') {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Staging publish blocked' : 'Staging 发布被阻止', detail: publishReadiness?.blockers?.[0] || (appLocale === 'en' ? 'This page is not Preview-ready yet.' : '当前页面还没有达到可预览条件。'), duration: 7200 });
+      return;
+    }
     setStagingPublishing(true);
-    setStagingPublishMessage('');
     const canonicalTarget = selectedVariantRecord?.index_strategy === 'canonical_to_sibling'
       ? selectedVariantRecord.canonical_catalog_key
       : '';
     const catalogKeys = [...new Set([selectedSpecies.catalog_key, canonicalTarget].filter(Boolean))];
-    const { data, error: publishError } = await publishRepoStaging({
+    const { error: publishError } = await publishRepoStaging({
       catalogKeys,
       groupKeys: [selectedGroup.group_key],
     });
     setStagingPublishing(false);
     if (publishError) {
-      setStagingPublishMessage(appLocale === 'en' ? `Staging publish blocked: ${publishError.message}` : `Staging 发布被阻止：${publishError.message}`);
       return;
     }
-    setStagingPublishMessage(appLocale === 'en'
-      ? `Staging snapshot committed to ${data.branch}. Vercel Preview will rebuild once for this explicit publish.`
-      : `Staging Snapshot 已提交到 ${data.branch}；只有这次明确发布会触发一次 Vercel Preview 构建。`);
   };
 
   const toggleBatch = (id) => {
@@ -1106,8 +1110,6 @@ export default function App() {
         </div>
       ) : null}
 
-      {error ? <div className="page-error">{error}</div> : null}
-
       <div className="workspace studio-workspace">
         <SpeciesGroupSidebar
           groups={speciesGroups}
@@ -1165,7 +1167,6 @@ export default function App() {
               onDirtyChange={setEditorDirty}
               publishReadinessState={publishReadiness?.state || 'blocked'}
               stagingPublishing={stagingPublishing}
-              stagingMessage={stagingPublishMessage}
               onPublishStaging={publishSelectedToStaging}
               onOpenReadiness={() => setActiveTool('readiness')}
               onEditBase={() => runEditorNavigation(() => setEditorScope('base'))}
@@ -1192,7 +1193,6 @@ export default function App() {
               onDirtyChange={setEditorDirty}
               publishReadinessState={publishReadiness?.state || 'blocked'}
               stagingPublishing={stagingPublishing}
-              stagingMessage={stagingPublishMessage}
               onPublishStaging={publishSelectedToStaging}
               onOpenReadiness={() => setActiveTool('readiness')}
               onSaved={(row) => {
@@ -1253,7 +1253,7 @@ export default function App() {
                 }} />
             ) : null}
             {activeTool === 'readiness' ? (
-              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} onPublishStaging={publishSelectedToStaging} stagingPublishing={stagingPublishing} stagingMessage={stagingPublishMessage} repoMode={isRepoBackend} />
+              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} onPublishStaging={publishSelectedToStaging} stagingPublishing={stagingPublishing} repoMode={isRepoBackend} />
             ) : null}
             {activeTool === 'translation' && contentLocale === 'en' ? (
               <TranslationPanel
@@ -1347,14 +1347,6 @@ export default function App() {
           compactOpen={compactPreviewOpen}
           onCloseCompact={() => setCompactPreviewOpen(false)}
         />
-      </div>
-      <div className="operation-notice-stack" aria-live="polite">
-        {operationNotices.map((notice) => (
-          <div className={`operation-notice ${notice.status || 'success'}`} key={notice.id}>
-            <span>{notice.status === 'error' ? '!' : '✓'}</span>
-            <div><strong>{notice.title || (notice.status === 'error' ? '操作失败' : '操作已完成')}</strong><small>{notice.error || notice.detail || ''}</small></div>
-          </div>
-        ))}
       </div>
       <ActivityCenter
         open={activityOpen}

@@ -515,7 +515,45 @@ Functional commit: `15ea1be`.
 - AquaGuide Preview `dpl_8ZMK57zfuGkTa4sqmh2rrE7cJ8xD` READY; Admin-only Preview `dpl_8oPnHbvVE5Sd1op6DLhFDWwpKka7` READY
 - hosted AquaGuide Admin 200 + `X-Robots-Tag: noindex`; bundle `index-BDHxLUJz.js`
 
-## 27. Startup instruction for the next conversation
+## 27. Unified top-right action feedback — completed 2026-09-02
+
+### UX contract
+- transient operation feedback no longer lives in editor footers, drawer footers or inline error boxes
+- success / info / warning / error all render through one global top-right notice viewport, including the login screen
+- success notices auto-dismiss after about 4 seconds; warnings/errors remain longer and every notice has a manual close button
+- Repo-backed mutations continue to emit the existing `aquaguide-admin-operation` event, so save/review/import/rollback/Staging outcomes are not double-notified
+- client-side blockers emit `aquaguide-admin-notice` with the exact reason before any request is sent
+- semantic blockers should not be hidden behind disabled action buttons; action buttons remain clickable unless an operation is actually busy, then explain read-only/schema/hygiene/canonical/selection/Preview-readiness failures in the top-right notice
+- persistent content diagnostics remain inline only when they describe the page itself rather than the result of a click (for example content-hygiene evidence, publish blocker lists, unsaved state, and permanent backend safety banners)
+
+### Covered actions
+- Login authorization failure
+- Variant and Base save / submit / approve / return preconditions
+- Data Review missing decision / canonical target / read-only / schema checks
+- translation generation and English Draft preconditions
+- batch Draft selection and blocking reasons
+- CSV template download, parse/validation, no-file/no-marked-row/import outcomes
+- revision-history load failure and two-click restore confirmation
+- Preview Snapshot export and Staging Publish preconditions
+- Activity Center load failure
+
+### Browser evidence
+- Review-mode Bulk Import with no writable authority: top-right warning `当前是只读 Review / 不会执行批量导入。`
+- Review-mode Submit for Review: top-right warning `当前是只读 Review / 此次操作不会写入内容存储。`
+- old transient inline selector count (`save-message/page-error/error-box/bulk-import-errors/bulk-import-ready/revision-error/translation-warning`) = 0
+- manual close removes the notice immediately; warning auto-dismiss verified after its timeout
+- browser console/page errors = 0
+
+### Verification
+- `npm run test:contract -w @aquaguide/admin-content` PASS
+- Admin production build PASS
+- `npm run test:species-seo-build-routing` PASS
+- full root build PASS and still logs `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
+- `npm run verify:seo-species-handoff` PASS
+- `npm run test:admin-content-ui` PASS
+- `git diff --check` PASS
+
+## 28. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { useAppLanguage } from './AppLanguage.jsx';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 const KIND_LABELS = {
   content_saved: ['内容已保存', 'Content saved'],
@@ -31,7 +32,6 @@ export default function ActivityCenter({ open, onClose, refreshKey = 0, onLoaded
   const isUiEnglish = appLocale === 'en';
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!open) return undefined;
@@ -39,11 +39,9 @@ export default function ActivityCenter({ open, onClose, refreshKey = 0, onLoaded
     if (readOnly) {
       setRows([]);
       setLoading(false);
-      setError('');
       return () => { cancelled = true; };
     }
     setLoading(true);
-    setError('');
     adminContentClient
       .from('admin_activity_log')
       .select('*')
@@ -54,7 +52,7 @@ export default function ActivityCenter({ open, onClose, refreshKey = 0, onLoaded
         setLoading(false);
         if (queryError) {
           setRows([]);
-          setError(queryError.message || '操作记录读取失败。');
+          emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Activity failed to load' : '操作记录读取失败', detail: queryError.message || (isUiEnglish ? 'Please retry.' : '请稍后重试。') });
           return;
         }
         setRows(data || []);
@@ -91,8 +89,7 @@ export default function ActivityCenter({ open, onClose, refreshKey = 0, onLoaded
         <div className="activity-center-body">
           {readOnly ? <p className="activity-empty">{isUiEnglish ? 'Read-only UI Review does not load private operation history.' : '只读 UI Review 不读取私有操作记录；登录真实 Admin 后，这里会显示保存、审核、重复处理、批量导入和 Staging 发布记录。'}</p> : null}
           {!readOnly && loading ? <p className="activity-empty">{isUiEnglish ? 'Loading activity…' : '正在读取操作记录…'}</p> : null}
-          {!readOnly && error ? <p className="activity-error">{error}</p> : null}
-          {!readOnly && !loading && !error && rows.length === 0 ? <p className="activity-empty">{isUiEnglish ? 'No operations recorded yet.' : '还没有操作记录。完成一次保存、审核或数据处理后会显示在这里。'}</p> : null}
+          {!readOnly && !loading && rows.length === 0 ? <p className="activity-empty">{isUiEnglish ? 'No operations recorded yet.' : '还没有操作记录。完成一次保存、审核或数据处理后会显示在这里。'}</p> : null}
           {rows.map((row) => {
             const labels = KIND_LABELS[row.kind] || [row.title || '后台操作', row.title || 'Admin action'];
             return (

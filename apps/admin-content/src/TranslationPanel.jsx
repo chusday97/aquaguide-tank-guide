@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { groupSeoFromRow } from './seoInheritance.js';
 import { useAppLanguage } from './AppLanguage.jsx';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 const baseFields = [
   ['seoTitleTemplate', 'SEO Title Template'],
@@ -29,13 +30,9 @@ export default function TranslationPanel({
   const [scope, setScope] = useState(group?.member_count > 1 ? 'base' : 'variant');
   const [suggestion, setSuggestion] = useState(null);
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState('');
-  const [warnings, setWarnings] = useState([]);
 
   useEffect(() => {
     setSuggestion(null);
-    setMessage('');
-    setWarnings([]);
     setScope(group?.member_count > 1 ? 'base' : 'variant');
   }, [species?.id, group?.group_key]);
 
@@ -60,12 +57,10 @@ export default function TranslationPanel({
 
   const generate = async () => {
     if (readOnly) {
-      setMessage('只读 Review 不调用翻译服务；正式管理员登录后才会请求 AI。');
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'Translation was not requested.' : '不会调用翻译服务；正式管理员登录后才会请求 AI。' });
       return;
     }
     setBusy(true);
-    setMessage('');
-    setWarnings([]);
     try {
       const response = await fetch('/api/translate', {
         method: 'POST',
@@ -84,10 +79,16 @@ export default function TranslationPanel({
       const payload = await response.json();
       if (!response.ok || !payload?.ok) throw new Error(payload?.error || 'Translation failed');
       setSuggestion(payload.data);
-      setWarnings(payload.warnings || []);
-      setMessage(`已生成 English 建议 · ${payload.model || 'AI provider'}。请检查后再保存。`);
+      const warnings = payload.warnings || [];
+      emitAdminNotice({
+        status: warnings.length ? 'warning' : 'success',
+        title: isUiEnglish ? 'English suggestion generated' : 'English 建议已生成',
+        detail: warnings.length
+          ? `${warnings[0]}${warnings.length > 1 ? ` · ${warnings.length - 1} more checks` : ''}`
+          : `${payload.model || 'AI provider'} · ${isUiEnglish ? 'Review before saving.' : '请检查后再保存。'}`,
+      });
     } catch (error) {
-      setMessage(error.message || '翻译失败。');
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Translation failed' : '翻译失败', detail: error.message || (isUiEnglish ? 'The translation service did not complete.' : '翻译服务未完成。') });
     } finally {
       setBusy(false);
     }
@@ -96,17 +97,18 @@ export default function TranslationPanel({
   const updateSuggestion = (key, value) => setSuggestion((current) => ({ ...current, [key]: value }));
 
   const saveEnglishDraft = async () => {
-    if (!suggestion || readOnly || targetPublished) return;
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'English Draft was not saved.' : '不会保存 English Draft。' }); return; }
+    if (targetPublished) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Published content is locked' : '已发布内容当前不可覆盖', detail: isUiEnglish ? 'Generate a suggestion if needed, but create a versioned editing flow before overwriting Published content.' : '可以继续生成建议，但当前不能直接覆盖已发布 English 内容。' }); return; }
+    if (!suggestion) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Generate a suggestion first' : '请先生成 English 建议', detail: isUiEnglish ? 'There is no English content to save yet.' : '当前还没有可保存的 English 建议。' }); return; }
     if (scope === 'base' && !groupSchemaReady) {
-      setMessage('Base Species SEO schema 尚未应用，不能保存 English Draft。');
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: 'Base Species SEO schema 尚未应用，不能保存 English Draft。' });
       return;
     }
     if (scope === 'variant' && !schemaReady) {
-      setMessage('Variant SEO schema 尚未应用，不能保存 English Draft。');
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: 'Variant SEO schema 尚未应用，不能保存 English Draft。' });
       return;
     }
     setBusy(true);
-    setMessage('');
     if (scope === 'base') {
       const row = {
         group_key: group.group_key,
@@ -118,8 +120,7 @@ export default function TranslationPanel({
         status: 'draft',
       };
       const { data, error } = await adminContentClient.from('species_seo_groups').upsert(row, { onConflict: 'group_key,locale' }).select('*').single();
-      if (error) setMessage(`English Base Draft 保存失败：${error.message}`);
-      else { setMessage('English Base Draft 已保存，不影响中文版本。'); onGroupSaved?.(data); }
+      if (!error) onGroupSaved?.(data);
     } else {
       const row = {
         catalog_key: species.catalog_key,
@@ -136,8 +137,7 @@ export default function TranslationPanel({
         status: 'draft',
       };
       const { data, error } = await adminContentClient.from('species_seo').upsert(row, { onConflict: 'catalog_key,locale' }).select('*').single();
-      if (error) setMessage(`English Variant Draft 保存失败：${error.message}`);
-      else { setMessage('English Variant Draft 已保存，不影响中文版本。'); onVariantSaved?.(data); }
+      if (!error) onVariantSaved?.(data);
     }
     setBusy(false);
   };
@@ -187,14 +187,13 @@ export default function TranslationPanel({
           ))}
         </div>
       </div>
-      {warnings.map((item) => <div className="translation-warning" key={item}>{item}</div>)}
       <div className="translation-footer">
-        <span>{message || (readOnly ? '只读 Review：不请求 AI，也不会写内容存储。' : '生成建议不会自动保存或发布。')}</span>
+        <span>{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : (isUiEnglish ? 'Suggestions are not saved or published automatically.' : '生成建议不会自动保存或发布。')}</span>
         <div className="footer-actions">
-          <button className="secondary-button" type="button" onClick={generate} disabled={busy || readOnly}>
+          <button className="secondary-button" type="button" onClick={generate} disabled={busy}>
             {busy ? (isUiEnglish ? 'Processing…' : '处理中…') : (isUiEnglish ? 'Generate English suggestion from Chinese' : '从中文生成 English 建议')}
           </button>
-          <button className="primary-button" type="button" onClick={saveEnglishDraft} disabled={busy || readOnly || !suggestion || targetPublished}>
+          <button className="primary-button" type="button" onClick={saveEnglishDraft} disabled={busy}>
             {isUiEnglish ? 'Save as English Draft' : '保存为 English Draft'}
           </button>
         </div>

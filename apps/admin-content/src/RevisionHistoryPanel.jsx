@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { getLocaleLabel } from './localization.js';
 import { useAppLanguage } from './AppLanguage.jsx';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 const resourceLabels = {
   species_seo: 'Variant History',
@@ -40,7 +41,6 @@ export default function RevisionHistoryPanel({
   const isUiEnglish = appLocale === 'en';
   const [revisions, setRevisions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [armedId, setArmedId] = useState('');
   const [restoringId, setRestoringId] = useState('');
   const label = resourceLabels[resourceType] || 'History';
@@ -48,7 +48,6 @@ export default function RevisionHistoryPanel({
   useEffect(() => {
     let cancelled = false;
     setArmedId('');
-    setError('');
     if (!resourceKey || readOnly || !schemaReady || !adminContentClient) {
       setRevisions([]);
       return () => { cancelled = true; };
@@ -67,7 +66,7 @@ export default function RevisionHistoryPanel({
         if (cancelled) return;
         setLoading(false);
         if (queryError) {
-          setError(`历史版本读取失败：${queryError.message}`);
+          emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Revision history failed to load' : '历史版本读取失败', detail: queryError.message });
           setRevisions([]);
           return;
         }
@@ -83,17 +82,14 @@ export default function RevisionHistoryPanel({
     if (readOnly || !schemaReady) return;
     if (armedId !== revision.id) {
       setArmedId(revision.id);
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? `Restore v${revision.version}?` : `确认恢复 v${revision.version}？`, detail: isUiEnglish ? 'Click the same restore button again to restore this snapshot as a Draft.' : '再次点击同一个“恢复”按钮，会把这个版本恢复为 Draft。', duration: 6500 });
       return;
     }
     setRestoringId(revision.id);
-    setError('');
     const { data, error: restoreError } = await adminContentClient.rpc('restore_species_seo_revision', { p_revision_id: revision.id });
     setRestoringId('');
     setArmedId('');
-    if (restoreError) {
-      setError(`回滚失败：${restoreError.message}`);
-      return;
-    }
+    if (restoreError) return;
     onRestored?.(data, resourceType);
   };
 
@@ -113,8 +109,6 @@ export default function RevisionHistoryPanel({
         <p className="revision-empty">{isUiEnglish ? 'Revision migration is not applied. Draft editing remains available, while publication stays locked.' : 'Revision migration 尚未应用。Draft 编辑不受影响，但发布继续锁定。'}</p>
       ) : loading ? (
         <p className="revision-empty">{isUiEnglish ? 'Loading revision history…' : '正在读取历史版本…'}</p>
-      ) : error ? (
-        <p className="revision-error">{error}</p>
       ) : revisions.length === 0 ? (
         <p className="revision-empty">{isUiEnglish ? 'No revision snapshots yet. The first save will create v1 automatically.' : '还没有历史快照。第一次保存后会自动创建 v1。'}</p>
       ) : (

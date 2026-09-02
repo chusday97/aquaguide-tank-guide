@@ -3,11 +3,11 @@ import { adminContentClient } from './adminBackend.js';
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { assessDataReview, getResolvedDuplicateSeoPolicy } from './publishReadiness.js';
 import { useAppLanguage } from './AppLanguage.jsx';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 export default function BatchSeoEditor({ group, members, existingRows, groupRecord, locale = 'zh-CN', dataReviewRows = {}, readOnly, schemaReady, onSaved, onClear }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
-  const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
 
   const publishedSelected = members.filter((member) => existingRows[member.catalog_key]?.status === 'published');
@@ -37,9 +37,10 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
         : '';
 
   const saveDrafts = async () => {
-    if (readOnly || blockedReason || members.length < 2) return;
+    if (members.length < 2) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select more records' : '请选择至少 2 条记录', detail: isUiEnglish ? 'Batch Draft creation needs at least two records from the same Base group.' : '批量建立 Draft 至少需要同一 Base 下的 2 条记录。' }); return; }
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'Batch Drafts were not created.' : '不会建立任何 Draft。' }); return; }
+    if (blockedReason) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Batch action blocked' : '批量操作被阻止', detail: blockedReason }); return; }
     setSaving(true);
-    setMessage('');
     const rows = members.map((member) => {
       const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species: member, group, reviewRows: dataReviewRows });
       return {
@@ -56,11 +57,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
       .from('species_seo')
       .upsert(rows, { onConflict: 'catalog_key,locale' })
       .select('*');
-    if (error) setMessage(`批量建立继承 Draft 失败：${error.message}`);
-    else {
-      setMessage(`已建立 ${data.length} 条 Variant Draft；未 Override 字段继续继承 Base SEO。`);
-      onSaved(data);
-    }
+    if (!error) onSaved(data);
     setSaving(false);
   };
 
@@ -87,12 +84,12 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
         {members.length > previews.length ? <small>另有 {members.length - previews.length} 条使用同一继承规则。</small> : null}
       </div>
       <div className="batch-footer">
-        <span>{message || (readOnly ? '远程 Review 只展示继承结果，不写数据库。' : '批量操作只创建 Draft 状态，不覆盖现有 Variant Override。')}</span>
+        <span>{readOnly ? (isUiEnglish ? 'Read-only inheritance preview' : '只读继承预览') : (isUiEnglish ? 'Creates Drafts only; existing Variant overrides are preserved.' : '批量操作只创建 Draft，不覆盖现有 Variant Override。')}</span>
         <button
           className="primary-button"
           type="button"
           onClick={saveDrafts}
-          disabled={readOnly || Boolean(blockedReason) || members.length < 2 || saving}
+          disabled={saving}
         >
           {readOnly ? (isUiEnglish ? 'Read-only inheritance preview' : '只读继承预览') : saving ? (isUiEnglish ? 'Creating Drafts…' : '建立 Draft 中…') : (isUiEnglish ? `Create ${members.length} inherited Drafts` : `建立 ${members.length} 条继承 Draft`)}
         </button>

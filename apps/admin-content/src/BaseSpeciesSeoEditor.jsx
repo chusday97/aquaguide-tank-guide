@@ -4,6 +4,7 @@ import { groupSeoFromRow } from './seoInheritance.js';
 import { getLocaleLabel } from './localization.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 const isPublicSpeciesPublishingEnabled = false;
 const BASE_EDITORIAL_KEYS = ['seoTitleTemplate', 'metaDescriptionTemplate', 'h1Template', 'sharedIntro'];
@@ -13,11 +14,9 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(() => groupSeoFromRow(record, locale));
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
 
   useEffect(() => {
     setForm(groupSeoFromRow(record, locale));
-    setMessage('');
     onDirtyChange?.(false);
   }, [group?.group_key, record, locale, onDirtyChange]);
 
@@ -66,22 +65,21 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
 
   const save = async (reviewStateOverride = null) => {
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      setMessage('Species 发布仍锁定：Production 发布未开放。');
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Production publishing is locked' : 'Production 发布未开放', detail: isUiEnglish ? 'The Base template can only remain a Draft.' : '基础模板当前只能保持 Draft。' });
       return;
     }
     if (readOnly) {
-      setMessage(`当前为只读 Review，只展示 ${localeLabel} 基础模板效果。`);
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? `Only the ${localeLabel} Base preview is available.` : `这里只展示 ${localeLabel} 基础模板效果，不会写入。` });
       return;
     }
     if (!schemaReady) {
-      setMessage('基础模板 SEO store 尚未就绪。');
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Base SEO content store is not ready.' : '基础模板 SEO store 尚未就绪。' });
       return;
     }
     setSaving(true);
-    setMessage('');
     if (reviewStateOverride && reviewStateOverride !== 'editing' && !baseHygiene.clean) {
       setSaving(false);
-      setMessage(isUiEnglish ? `Review blocked: ${baseHygieneBlockReason}` : `审核被阻止：${baseHygieneBlockReason}`);
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Review blocked' : '审核被阻止', detail: baseHygieneBlockReason });
       return;
     }
     if (reviewStateOverride) {
@@ -94,11 +92,11 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         .single();
       setSaving(false);
       if (error) {
-        setMessage(`审核状态更新失败：${error.message}`);
+        /* Repo backend emits the operation error toast. */
         return;
       }
       setForm((current) => ({ ...current, reviewState: data.review_state }));
-      setMessage(reviewStateOverride === 'ready_for_review' ? (isUiEnglish ? 'Submitted for review.' : '已提交审核。') : reviewStateOverride === 'approved' ? (isUiEnglish ? 'Approved for Preview.' : '已批准进入预览。') : (isUiEnglish ? 'Returned to editing.' : '已退回编辑。'));
+      /* Repo backend emits the operation success toast. */
       onSaved(data);
       return;
     }
@@ -119,11 +117,11 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       .single();
     setSaving(false);
     if (error) {
-      setMessage(`基础模板保存失败：${error.message}`);
+      /* Repo backend emits the operation error toast. */
       return;
     }
     setForm(groupSeoFromRow(data, locale));
-    setMessage(`${localeLabel} 基础模板已保存；未单独设置的品种页面会自动使用模板。`);
+    /* Repo backend emits the operation success toast. */
     onSaved(data);
   };
 
@@ -161,16 +159,16 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           <small className="workflow-section-label">{isUiEnglish ? 'Available actions' : '可执行操作'}</small>
           <div className="workflow-stepper-action">
           {contentDirty ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button>
+            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button>
           ) : form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly || !baseHygiene.clean} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
+            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
           ) : form.reviewState === 'ready_for_review' ? (
             <>
-              <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact" disabled={saving || readOnly || !baseHygiene.clean} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
+              <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+              <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
             </>
           ) : (
-            <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+            <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
           )}
           </div>
         </div>
@@ -200,10 +198,10 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <p className="template-help">{isUiEnglish ? 'Keep template tokens unchanged: ' : '变量必须原样保留：'}{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>
       <div className="base-seo-footer">
-        <div>{!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}{message || (readOnly ? `只读 Review：可预览 ${localeLabel} 基础模板，不会写入。` : `保存后只更新 ${localeLabel} 的基础模板，不会覆盖其它语言。`)}</div>
+        <div>{!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : <span className="footer-context-note">{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : (isUiEnglish ? `${localeLabel} only` : `仅更新 ${localeLabel}`)}</span>}</div>
         <div className="footer-actions">
           <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
-          {contentDirty ? <button className="primary-button" type="button" onClick={() => save()} disabled={readOnly || saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button> : null}
+          {contentDirty ? <button className="primary-button" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button> : null}
         </div>
       </div>
     </section>

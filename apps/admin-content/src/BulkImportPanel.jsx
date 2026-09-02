@@ -4,6 +4,7 @@ import { useAppLanguage } from './AppLanguage.jsx';
 import { speciesGroupByMemberId } from './speciesGroups.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
 import { getResolvedDuplicateSeoPolicy } from './publishReadiness.js';
+import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 const FIELDS = [
   'import_action', 'catalog_key', 'source_name', 'scientific_name', 'locale', 'localized_name',
@@ -52,7 +53,6 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
   const [fileName, setFileName] = useState('');
   const [parsedRows, setParsedRows] = useState([]);
   const [errors, setErrors] = useState([]);
-  const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
 
   const speciesByKey = useMemo(() => new Map(species.map((item) => [item.catalog_key, item])), [species]);
@@ -82,6 +82,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     link.click();
     link.remove();
     URL.revokeObjectURL(href);
+    emitAdminNotice({ status: 'success', title: isUiEnglish ? 'Template downloaded' : '模板已下载', detail: `${species.length} ${isUiEnglish ? 'catalog rows' : '条目录记录'} · ${locale}` });
   };
 
   const validate = (rows) => {
@@ -129,7 +130,6 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     const file = event.target.files?.[0];
     if (!file) return;
     setFileName(file.name);
-    setMessage('');
     try {
       const rows = parseCsv(await file.text());
       const missing = FIELDS.filter((field) => !Object.hasOwn(rows[0] || {}, field));
@@ -137,28 +137,35 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       const result = validate(rows);
       setParsedRows(rows);
       setErrors(result.nextErrors);
+      if (result.nextErrors.length) {
+        emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'CSV needs fixes before import' : 'CSV 需要修正后才能导入', detail: `${result.nextErrors[0]}${result.nextErrors.length > 1 ? ` · ${isUiEnglish ? `${result.nextErrors.length - 1} more issues` : `另有 ${result.nextErrors.length - 1} 项`}` : ''}`, duration: 7200 });
+      } else {
+        emitAdminNotice({ status: 'success', title: isUiEnglish ? 'CSV validation passed' : 'CSV 校验通过', detail: `${rows.length} ${isUiEnglish ? 'rows read' : '行已读取'} · ${rows.filter((row) => VALID_ACTIONS.has(String(row.import_action || '').trim().toLowerCase())).length} ${isUiEnglish ? 'marked for import' : '行待导入'}` });
+      }
     } catch (error) {
       setParsedRows([]);
-      setErrors([error.message || 'CSV 解析失败。']);
+      const reason = error.message || (isUiEnglish ? 'CSV parsing failed.' : 'CSV 解析失败。');
+      setErrors([reason]);
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'CSV could not be read' : 'CSV 读取失败', detail: reason });
     }
   };
 
   const importRows = async () => {
-    if (readOnly || !schemaReady || !parsedRows.length) return;
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'CSV was not imported.' : '不会执行批量导入。' }); return; }
+    if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Import blocked' : '导入被阻止', detail: isUiEnglish ? 'Variant SEO content store is not ready.' : 'Variant SEO 内容存储尚未就绪。' }); return; }
+    if (!parsedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose a CSV first' : '请先选择 CSV', detail: isUiEnglish ? 'Upload a completed AquaGuide template before importing.' : '请先上传回填后的 AquaGuide 模板。' }); return; }
     const { nextErrors, payloads } = validate(parsedRows);
     setErrors(nextErrors);
-    if (nextErrors.length) return;
-    if (!payloads.length) { setMessage(isUiEnglish ? 'Mark rows with import_action = update first.' : '请先在需要导入的行填写 import_action = update（或“更新”）。'); return; }
+    if (nextErrors.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Import blocked by CSV validation' : 'CSV 校验未通过', detail: `${nextErrors[0]}${nextErrors.length > 1 ? ` · ${isUiEnglish ? `${nextErrors.length - 1} more issues` : `另有 ${nextErrors.length - 1} 项`}` : ''}`, duration: 7200 }); return; }
+    if (!payloads.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'No rows marked for import' : '没有标记待导入行', detail: isUiEnglish ? 'Set import_action = update on the rows you want to change.' : '请在需要导入的行填写 import_action = update（或“更新”）。' }); return; }
     setSaving(true);
-    setMessage('');
     const { data, error } = await adminContentClient
       .from('species_seo')
       .upsert(payloads, { onConflict: 'catalog_key,locale' })
       .activity({ kind: 'bulk_import', title: `批量导入 ${payloads.length} 条 SEO 内容`, detail: `${locale} · CSV 模板导入`, metadata: { locale, count: payloads.length } })
       .select('*');
     setSaving(false);
-    if (error) { setMessage(`${isUiEnglish ? 'Import failed' : '导入失败'}：${error.message}`); return; }
-    setMessage(isUiEnglish ? `${data.length} Draft rows imported. Review state was reset to Editing where content changed.` : `已导入 ${data.length} 条 Draft；内容发生变化的页面已自动回到“编辑中”。`);
+    if (error) return;
     onImported?.(data || []);
   };
 
@@ -178,9 +185,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
         <button type="button" className="bulk-upload-button" onClick={() => inputRef.current?.click()}>{fileName || (isUiEnglish ? 'Choose completed CSV' : '选择回填后的 CSV')}</button>
         <span>{parsedRows.length ? (isUiEnglish ? `${parsedRows.length} rows read · ${markedRows.length} marked for import` : `已读取 ${parsedRows.length} 行 · ${markedRows.length} 行待导入`) : (isUiEnglish ? 'No file selected' : '尚未选择文件')}</span>
       </div>
-      {errors.length ? <div className="bulk-import-errors"><strong>{isUiEnglish ? 'Fix these rows before importing' : '导入前需要修正'}</strong>{errors.slice(0, 8).map((item) => <p key={item}>{item}</p>)}{errors.length > 8 ? <small>{isUiEnglish ? `${errors.length - 8} more errors` : `另有 ${errors.length - 8} 项错误`}</small> : null}</div> : null}
-      {markedRows.length && !errors.length ? <div className="bulk-import-ready"><strong>{isUiEnglish ? 'Ready to import' : '可以导入'}</strong><span>{isUiEnglish ? `${markedRows.length} rows will be written as Drafts.` : `${markedRows.length} 行会写入 Draft；未标记行不会被改动。`}</span></div> : null}
-      <div className="bulk-import-footer"><span>{message || (isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。')}</span><button type="button" className="primary-button" disabled={readOnly || !schemaReady || saving || !markedRows.length || errors.length > 0} onClick={importRows}>{saving ? (isUiEnglish ? 'Importing…' : '正在导入…') : (isUiEnglish ? `Import ${markedRows.length} rows` : `导入 ${markedRows.length} 行`)}</button></div>
+      <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。'}</span><button type="button" className="primary-button" disabled={saving} onClick={importRows}>{saving ? (isUiEnglish ? 'Importing…' : '正在导入…') : (isUiEnglish ? `Import ${markedRows.length} rows` : `导入 ${markedRows.length} 行`)}</button></div>
     </section>
   );
 }

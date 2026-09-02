@@ -181,7 +181,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
       </header>
       <div className="preview-readiness-row">
         <span className={`preview-readiness ${meta.tone}`}>{meta.label}{readiness?.blockers?.length ? ` · ${readiness.blockers.length} ${appLocale === 'en' ? 'items' : '项'}` : ''}</span>
-        {readiness?.state === 'publish_ready' ? <button className="preview-generate-button" type="button" onClick={onGeneratePreview} disabled={readOnly}>{t('preview.generate')}</button> : <span className="preview-readiness-hint">{readiness?.state === 'blocked' ? t('preview.blockedHint') : t('preview.reviewHint')}</span>}
+        {readiness?.state === 'publish_ready' ? <button className="preview-generate-button" type="button" onClick={onGeneratePreview}>{t('preview.generate')}</button> : <span className="preview-readiness-hint">{readiness?.state === 'blocked' ? t('preview.blockedHint') : t('preview.reviewHint')}</span>}
       </div>
       {selectedElement ? (
         <div className={`preview-inspector-status ${selectedReadOnly ? 'is-readonly' : 'is-editable'}`}>
