@@ -377,3 +377,16 @@
 - Final import CTA uses the actual changed-row count.
 - Browser regression: preview rendered successfully with no page errors.
 - Full Admin contract/build/routing/handoff/UI gates PASS; normal code build still skips Staging Species publication.
+
+## 2026-09-02 17:26 +0800 — Overall cross-session sync checkpoint
+- Canonical continuation file remains `.ai/HANDOFF_LATEST.md`; it was normalized so the top-level latest commit/deployment evidence no longer points to older #50-era state.
+- Current branch: `feature/admin-content-v0`; latest functional checkpoint before this docs sync: `2423202 fix(admin): preview bulk import changes`.
+- Current bulk workflow is end-to-end at the Admin layer: atomic duplicate review → explicit SEO CSV template download/upload → field-level import diff/no-op protection → atomic bulk editorial submit/approve/return → explicit Staging Publish.
+- UI contracts now treated as stable: action buttons vs status tags are visually/semantically separate; transient action outcomes/errors use top-right Toasts; persistent inline messages are reserved for page/system diagnostics.
+- Data authority remains dual-repo and fail-closed: Product Truth read-only; private editorial Draft/review authority in `chusday97/aquaguide-seo-content`; public repo contains code plus explicit Staging snapshot only; Species SEO runtime uses no Supabase.
+- Duplicate source audit: 28 duplicate sets total; 3 real human decisions already exist (极火虾 keep `sp_0001`, 白金西非凤凰 keep `sp_0214`, 黑木蕨 keep `sp_0082`); 25 remain for authenticated bulk review.
+- `sp_0001` still requires removal of Chinese/English acceptance-test H1 copy before a new Staging release; hygiene gates continue to block dirty review/Staging/static generation.
+- Next operational proof: resolve remaining Data Review → produce first real 10–20 Species SEO batch → bulk review → one explicit Staging publish → verify generated EN/ZH title/meta/H1/canonical/hreflang/robots/CTA/noindex.
+- GitHub Admin Content CI Gate #55 (`33613630539`) completed SUCCESS for `2423202`; every validation step succeeded.
+- GitHub commit statuses for `2423202` report both `Vercel – admin-content` and `Vercel – aquaguide` SUCCESS. Production remains locked; no `main` merge implied.
+- New-session instruction is now consolidated at the end of `.ai/HANDOFF_LATEST.md` under section 32; future sessions should read that file first, then git status/HEAD and the latest execution-log tail, and continue the first incomplete operational item unless the user supplies a newer concrete bug.

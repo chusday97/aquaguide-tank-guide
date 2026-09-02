@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 17:14 +0800
+Updated: 2026-09-02 17:26 +0800
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -16,7 +16,9 @@ Product Truth stays read-only here. The Admin edits only SEO/editorial content.
 **Public app/code repo**
 - `chusday97/aquaguide-tank-guide`
 - working branch: `feature/admin-content-v0`
-- latest functional commit: `16d3f7e` — `feat(admin): add global copy cleanup queue`
+- latest functional commit: `2423202` — `fix(admin): preview bulk import changes`
+- latest batch-review checkpoint: `9db09f6` — `feat(admin): add bulk editorial review`
+- latest bulk-data/template checkpoint: `53bb329` — `feat(admin): add bulk duplicate review and template import`
 - `main` is not the target of this work and Production is still locked.
 
 **Private editorial content repo**
@@ -68,9 +70,12 @@ Generated source catalog:
 - unresolved SEO navigation folds duplicate secondary rows
 - current SEO page candidates: 458 before further human duplicate decisions
 
-After the completed 极火虾 duplicate review, UI currently reports:
-- Data Review pending: **32**
-- affected Base groups in pending filter: **31**
+Current duplicate-review authority in the real private Draft store:
+- 28 duplicate sets exist in the generated source catalog
+- 3 sets already have real human decisions: 极火虾 (`sp_0001` kept), 白金西非凤凰 (`sp_0214` kept), 黑木蕨 (`sp_0082` kept)
+- 25 duplicate sets remain unresolved
+- all 28 source duplicate sets have an explicit source-primary → duplicate pointer and match on name, scientific name, category, image, difficulty, temperature, pH and tank size; only Product Truth description wording differs
+- category-conflict Data Review issues remain a separate queue; live pending totals must be derived from the private store rather than hard-coded here
 
 Source rows are not automatically SEO pages.
 
@@ -228,33 +233,34 @@ A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
 Latest functional commits:
+- `2423202 fix(admin): preview bulk import changes`
 - `9db09f6 feat(admin): add bulk editorial review`
 - `53bb329 feat(admin): add bulk duplicate review and template import`
 - `f7ff63d fix(admin): distinguish actions from status tags`
 - `0f7a32e fix(admin): centralize action feedback in toasts`
-- `15ea1be feat(admin): split blocked pages by next action`
-- previous duplicate authority checkpoint: `4da7849 fix(admin): enforce resolved duplicate policy everywhere`
+- previous workflow/readiness checkpoint: `15ea1be feat(admin): split blocked pages by next action`
+- duplicate authority checkpoint: `4da7849 fix(admin): enforce resolved duplicate policy everywhere`
 
 GitHub Actions:
-- Admin Content CI Gate #47 (`33595530355`) SUCCESS on `c82378f`
-- Admin Content CI Gate #48 (`33595971134`) SUCCESS on `8b70a64`
-- Admin Content CI Gate #49 (`33597791743`) SUCCESS on `16d3f7e`
-- Admin Content CI Gate #50 (`33598539620`) SUCCESS on `15ea1be`
-- #50 covers mutually-exclusive blocked next-action diagnostics plus the existing deployment-routing, contract, production build, explicit root Species artifact integration, generated-catalog consistency and diff-hygiene gates
+- Admin Content CI Gate #53 SUCCESS on `53bb329`
+- Admin Content CI Gate #54 SUCCESS on `9db09f6`
+- Admin Content CI Gate #55 (`33613630539`) SUCCESS on `2423202`
+- #55 completed all validation steps successfully: Admin contract/generator, docs-only deployment guard, Production build, root Species SEO artifact integration, generated-catalog consistency and diff hygiene
 
-Vercel Preview:
-- latest AquaGuide deployment `dpl_8ZMK57zfuGkTa4sqmh2rrE7cJ8xD` — READY on `15ea1be`
-- latest AquaGuide host `aquaguide-mbi9x40pv-chusday97s-projects.vercel.app`
-- previous deployment `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` remains the deployment-boundary checkpoint on `8b70a64`
-- stable branch alias: `aquaguide-git-feature-admin-content-v0-chusday97s-projects.vercel.app`
-- latest Admin-only deployment `dpl_8oPnHbvVE5Sd1op6DLhFDWwpKka7` — READY on `15ea1be`
-- hosted AquaGuide `/admin/seo/` returns 200 and deployment-level `X-Robots-Tag: noindex`; its Admin bundle is `index-BDHxLUJz.js`, matching the locally verified blocked-next-action build
-- Vercel build log explicitly reports `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
-- the immediately prior AquaGuide deployment `dpl_CE1YCbyBG8tQc8C7DR1YB76aVmga` failed on `c82378f` because a normal code Preview still auto-consumed the historical dirty staging snapshot; `8b70a64` fixes that coupling rather than weakening the hygiene gate
+Vercel / hosted Preview:
+- GitHub commit status on `2423202` reports both `Vercel – admin-content` and `Vercel – aquaguide` as SUCCESS
+- normal code Preview remains decoupled from Staging Species publication; local/root build continues to log `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
+- latest directly verified hosted `/admin/seo/` checkpoint remains HTTP 200 + deployment-level `X-Robots-Tag: noindex`
+- Production remains locked and no `main` merge is implied
 
 Temporary `_vercel_share` links expire and must not be stored as canonical handoff URLs.
 
 ## 16. Important recent commits
+- `2423202` — CSV import field-level diff preview + skip no-op rows + actual changed-row CTA
+- `9db09f6` — atomic bulk editorial review: batch submit / approve Preview / return to editing
+- `53bb329` — atomic bulk duplicate review + explicit SEO template download/upload workflow
+- `f7ff63d` — strict visual/DOM separation between status tags and action buttons
+- `0f7a32e` — unified top-right Toast feedback for transient action outcomes/blockers
 - `15ea1be` — split every blocked page into one actionable next-step queue instead of one opaque Not-ready total
 - `16d3f7e` — global per-locale copy-cleanup queue + sidebar alert + Base-template repair navigation
 - `8b70a64` — normal code Preview no longer consumes staging content; only explicit staging-publish snapshot commits generate Species pages
@@ -559,15 +565,6 @@ Functional commit: `15ea1be`.
 - AquaGuide Preview `dpl_8nhb9HoVFBiuafNMrJZtxN5UEsvs` READY; hosted `/admin/seo/` returns 200 with HTML `noindex,nofollow,noarchive` and `X-Robots-Tag: noindex`; bundle `index-DX8GOLVq.js`
 - Admin-only Preview `dpl_EQrgN5itFAmSr6T1Eq5bmiy2RMzY` READY and remains Vercel-auth protected + `X-Robots-Tag: noindex`
 
-## 28. Startup instruction for the next conversation
-When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
-1. Read `.ai/HANDOFF_LATEST.md` first.
-2. Check `git branch --show-current`, `git status --short`, and current HEAD.
-3. Do not re-plan completed architecture.
-4. Use the private content repo for current editorial state and the public repo only for code/staging snapshot state.
-5. Continue the first incomplete item in section 18 unless the user gives a newer concrete UI issue.
-6. Execute changes/tests/commit/push in batches; do not stop after merely explaining.
-
 ## 28. Button vs status UI semantics — completed 2026-09-02
 - Sidebar duplicate/data-review actions are now real standalone buttons, never clickable badge/tag elements.
 - `处理重复 / Review duplicate` is a rectangular bordered action with hover/pressed affordance and chevron; it no longer lives inside the Species navigation button.
@@ -586,7 +583,16 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - Local gates PASS: Admin contract including atomic bulk RPC, Admin build, Species SEO build routing, full root build, SEO handoff browser regression, Admin authority UI, and diff hygiene.
 
 
-## 30. CSV import change preview + no-op protection — completed 2026-09-02
+
+## 30. Bulk editorial review — completed 2026-09-02
+- Added top-level `批量内容审核 / Bulk content review` for the editorial workflow.
+- Supports three atomic actions: batch submit for review, batch approve Preview, and batch return to editing.
+- The panel only exposes pages eligible for the chosen transition; blocked rows show their reason instead of silently weakening Data Review/content-hygiene gates.
+- Required Base templates can move in the same atomic review action, avoiding page-by-page review work while preserving inheritance authority.
+- Backend RPC `transition_editorial_reviews_bulk` applies the batch as one private-store transaction; invalid state transitions fail closed rather than partially advancing rows.
+- Functional commit: `9db09f6`. GitHub Admin Content CI Gate #54 SUCCESS.
+
+## 31. CSV import change preview + no-op protection — completed 2026-09-02
 - `SEO 模板导入` now shows an explicit field-level diff after CSV validation and before any write.
 - Each marked row lists the fields that will change; fields being cleared are visually separated from normal edits.
 - The summary distinguishes marked rows, rows with actual changes, and the number of fields that will be cleared.
@@ -594,3 +600,30 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - The final action count is based on actual changed rows rather than raw `import_action=update` markers.
 - Browser regression verified the preview renders with zero page errors; local Admin contract/build, root build, build-routing, SEO handoff and Admin UI gates pass.
 - Production remains locked; this change only improves private Draft import safety.
+
+## 32. Current operational phase + cross-session startup — authoritative
+### Current phase
+The core Admin product architecture is now largely closed. The next proof is operational, not another generic CMS feature:
+
+`remaining Data Review → first real 10–20 Species SEO batch → bulk editorial review → one explicit Staging Publish → generated EN/ZH SEO-page verification`
+
+Do not continue adding backend UI by default. Add/fix product behavior only when a real content-production run exposes a blocker.
+
+### First incomplete work, in order
+1. Use the **authenticated real Admin** to resolve the remaining 25 duplicate sets through `批量审核`; never bypass the Admin to write human decisions directly into the private repo.
+2. Clean dirty acceptance/test copy on `sp_0001` Chinese + English and re-review the changed rows.
+3. Choose the first real 10–20 Species content batch, download the SEO CSV template, fill only intended rows, upload it, inspect field-level diff/clear warnings, then import actual changes.
+4. Use `批量内容审核`: batch submit → batch approve Preview.
+5. Explicitly Staging Publish only the reviewed intended set once; verify final EN/ZH title, meta, H1, canonical, hreflang, robots, CTA and deployment-level noindex.
+6. Keep Production locked until the user explicitly authorizes the publication boundary to move forward.
+
+### Startup instruction for every new conversation
+When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
+1. Read `.ai/HANDOFF_LATEST.md` **before planning or modifying anything**.
+2. Check `git branch --show-current`, `git status --short`, and current HEAD. Expected branch: `feature/admin-content-v0`; latest functional checkpoint at this sync: `2423202`.
+3. Read the newest tail of `.ai/EXECUTION_LOG.md`.
+4. Do not re-plan or rebuild completed architecture: dual-repo authority, no-Supabase runtime, status/action separation, Toast feedback, duplicate policy, template import, bulk duplicate review, bulk editorial review, content-hygiene gates, code-Preview/Staging separation are already implemented.
+5. Use the private content repo only through authenticated Admin flows for human editorial decisions. Public repo is code + explicit staging snapshot authority only.
+6. Continue the first incomplete item above unless the user gives a newer concrete bug/UI requirement.
+7. Execute meaningful batches with tests → commit → push → CI/Preview verification → update this handoff and `EXECUTION_LOG`; do not stop after explanation or one tiny change.
+8. Never expose/read secrets, never bypass authentication, never write Production data, and never merge to `main` unless the user explicitly requests it.
