@@ -7,6 +7,7 @@ import { extractTemplateTokens, validateProtectedTokens } from '../api/_translat
 import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteContract.js';
 import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason, getResolvedDuplicateSeoPolicy, summarizeDataReviewIssues } from '../src/publishReadiness.js';
 import { EDITOR_ELEMENT_REGISTRY } from '../src/editorElementRegistry.js';
+import { inspectEditorialContent } from '../src/contentHygiene.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
@@ -316,6 +317,11 @@ assert.doesNotMatch(envExample, /VITE_SUPABASE_|SUPABASE_SERVICE_ROLE_KEY/, 'Def
 assert.match(repoStoreSource, /selectedCatalogKeys\.length > 20/, 'Repo staging publish must retain a hard 20-Species ceiling');
 assert.match(repoStoreSource, /status === 'draft'.*review_state === 'approved'/s, 'Repo staging snapshot must consume Approved Draft rows only');
 assert.match(repoStoreSource, /selected_catalog_keys/, 'Repo staging snapshot must carry an explicit Species allowlist');
+assert.match(repoStoreSource, /Content hygiene blocked review/, 'Repo review updates must reject acceptance/test copy server-side');
+assert.match(repoStoreSource, /Staging blocked by test\/acceptance wording/, 'Repo Staging snapshot must reject legacy approved acceptance/test copy');
+assert.match(publicGeneratorSource, /content hygiene:/, 'Static Species generator must independently reject acceptance/test copy from snapshots.');
+assert.match(appSource, /content-hygiene-warning/, 'Variant editor must surface content-hygiene blockers next to the workflow');
+assert.match(baseSource, /content-hygiene-warning/, 'Base editor must surface content-hygiene blockers next to the workflow');
 
 const neoGroup = groupData.groups.find((group) => group.base_scientific_name === 'Neocaridina davidi');
 assert.ok(neoGroup?.member_count > 2, 'Neocaridina group must remain a real inheritance fixture');
@@ -377,6 +383,27 @@ const readinessFixture = assessPublishReadiness({
   counterpartGroupRow: { review_state: 'approved' }, counterpartVariantRow: { review_state: 'approved' }, reviewRows: {},
 });
 assert.equal(readinessFixture.state, 'publish_ready', 'Complete approved noindex content should be Preview Publish-ready');
+const dirtyAcceptance = inspectEditorialContent({ h1: 'Red Cherry Shrimp Care Guide | Dual-Repo Staging' });
+assert.equal(dirtyAcceptance.clean, false, 'Acceptance/test copy must be detected before review.');
+assert.equal(inspectEditorialContent({ h1: 'Red Cherry Shrimp Care Guide' }).clean, true, 'Normal editorial copy must remain clean.');
+assert.equal(inspectEditorialContent({ h1: '极火虾饲养指南｜双仓 Staging 验收' }).clean, false, 'Standalone Chinese acceptance wording must also be blocked.');
+const dirtyReadiness = assessPublishReadiness({
+  species: cleanMember, group: cleanGroup, locale: 'en',
+  groupRow: { locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' },
+  variantRow: { locale: 'en', localized_name: 'Reviewed Species', image_alt: 'Reviewed Species', h1: 'Reviewed Species Care Guide | Dual-Repo Staging', review_state: 'approved', index_strategy: 'noindex' },
+  counterpartGroupRow: { review_state: 'approved' }, counterpartVariantRow: { review_state: 'approved' }, reviewRows: {},
+});
+assert.equal(dirtyReadiness.state, 'blocked', 'Acceptance/test copy must block Preview readiness even when already Approved.');
+assert.ok(dirtyReadiness.blockers.some((item) => /测试|验收|test\/acceptance/i.test(item)), 'Readiness must explain the content-hygiene blocker.');
+const dirtyCounterpartReadiness = assessPublishReadiness({
+  species: cleanMember, group: cleanGroup, locale: 'en',
+  groupRow: { locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' },
+  variantRow: { locale: 'en', localized_name: 'Reviewed Species', image_alt: 'Reviewed Species', review_state: 'approved', index_strategy: 'index' },
+  counterpartGroupRow: { locale: 'zh-CN', review_state: 'approved', seo_title_template: '{{name}}饲养指南', meta_description_template: '{{name}}饲养说明', h1_template: '{{name}}饲养指南', shared_intro: '基础介绍' },
+  counterpartVariantRow: { locale: 'zh-CN', image_alt: '测试鱼', h1: '测试鱼饲养指南｜后台真实保存验收', review_state: 'approved', index_strategy: 'index' }, reviewRows: {},
+});
+assert.equal(dirtyCounterpartReadiness.state, 'blocked', 'An indexable page must also be blocked when its approved counterpart still contains acceptance copy.');
+assert.ok(dirtyCounterpartReadiness.blockers.some((item) => /另一语言页面/.test(item)), 'Counterpart hygiene must be visible as a publish blocker.');
 const oneReadyOverview = buildAdminWorkflowOverview({
   species: [cleanMember], groups: [cleanGroup],
   seoRows: { [`${cleanMember.catalog_key}::en`]: { catalog_key: cleanMember.catalog_key, locale: 'en', localized_name: 'Reviewed Species', image_alt: 'Reviewed Species', review_state: 'approved', index_strategy: 'noindex' } },

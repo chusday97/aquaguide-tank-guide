@@ -1226,3 +1226,13 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .bulk-import-steps { grid-template-columns: 1fr; }
   .bulk-upload-zone { align-items: stretch; flex-direction: column; }
 }
+
+.content-hygiene-warning { margin: 14px 0; border: 1px solid #e7c76d; background: #fff9e8; border-radius: 14px; padding: 14px 16px; color: #6f5317; }
+.content-hygiene-warning > div { display:flex; flex-direction:column; gap:4px; }
+.content-hygiene-warning > div strong { color:#5f4510; font-size:14px; }
+.content-hygiene-warning > div span { font-size:12px; line-height:1.5; }
+.content-hygiene-warning ul { margin:10px 0 0; padding:0; display:grid; gap:7px; list-style:none; }
+.content-hygiene-warning li { display:flex; align-items:center; gap:8px; flex-wrap:wrap; border-top:1px solid rgba(136,101,25,.14); padding-top:7px; font-size:12px; }
+.content-hygiene-warning li b { color:#4e3a10; }
+.content-hygiene-warning li span { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; background:#fff3c8; border-radius:6px; padding:2px 6px; }
+.content-hygiene-warning li button { margin-left:auto; border:0; background:transparent; color:#5b724b; font-weight:700; cursor:pointer; text-decoration:underline; }

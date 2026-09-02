@@ -66,6 +66,40 @@ result = await executeRepoOperation({
 assert.equal(result.data.review_state, 'approved');
 assert.ok(result.data.reviewed_at);
 
+result = await executeRepoOperation({
+  action: 'update', table: 'species_seo', values: { h1: 'Red Cherry Shrimp Care Guide | Dual-Repo Staging' },
+  filters: [{ type: 'eq', column: 'catalog_key', value: catalogKey }, { type: 'eq', column: 'locale', value: 'en' }], singleMode: 'single',
+});
+assert.equal(result.error, null);
+assert.equal(result.data.review_state, 'editing');
+result = await executeRepoOperation({
+  action: 'update', table: 'species_seo', values: { review_state: 'approved' },
+  filters: [{ type: 'eq', column: 'catalog_key', value: catalogKey }, { type: 'eq', column: 'locale', value: 'en' }], singleMode: 'single',
+});
+assert.match(result.error?.message || '', /Content hygiene blocked review/, 'Repo API must reject approving acceptance/test copy.');
+const legacyDirtyStore = JSON.parse(await readFile(storePath, 'utf8'));
+const legacyDirtyRow = legacyDirtyStore.species_seo.find((row) => row.catalog_key === catalogKey && row.locale === 'en');
+legacyDirtyRow.review_state = 'approved';
+legacyDirtyRow.reviewed_at = new Date().toISOString();
+legacyDirtyRow.reviewed_by = 'legacy-fixture';
+await writeFile(storePath, `${JSON.stringify(legacyDirtyStore, null, 2)}\n`, 'utf8');
+await assert.rejects(
+  publishRepoStagingSelection({ catalogKeys: [catalogKey], groupKeys: [groupKey] }),
+  /Staging blocked by test\/acceptance wording/,
+  'Staging must reject legacy Approved rows containing acceptance/test copy.',
+);
+result = await executeRepoOperation({
+  action: 'update', table: 'species_seo', values: { h1: 'Repo-backed H1 Changed' },
+  filters: [{ type: 'eq', column: 'catalog_key', value: catalogKey }, { type: 'eq', column: 'locale', value: 'en' }], singleMode: 'single',
+});
+assert.equal(result.error, null);
+result = await executeRepoOperation({
+  action: 'update', table: 'species_seo', values: { review_state: 'approved' },
+  filters: [{ type: 'eq', column: 'catalog_key', value: catalogKey }, { type: 'eq', column: 'locale', value: 'en' }], singleMode: 'single',
+});
+assert.equal(result.error, null);
+assert.equal(result.data.review_state, 'approved');
+
 const duplicateA = 'sp_test_duplicate_a';
 const duplicateB = 'sp_test_duplicate_b';
 result = await executeRepoOperation({ action: 'upsert', table: 'species_seo', values: [

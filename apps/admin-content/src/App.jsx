@@ -20,6 +20,7 @@ import { catalogSpecies, speciesGroups, speciesGroupByMemberId } from './species
 import { CONTENT_LOCALES, seoRowKey, groupSeoRowKey, getLocaleLabel, isEnglishLocale } from './localization.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
 import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, dataReviewMap, getIndexReviewBlockReason, getResolvedDuplicateSeoPolicy, summarizeDataReviewIssues } from './publishReadiness.js';
+import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
 
 const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
 const isPublicSpeciesPublishingEnabled = false;
@@ -217,6 +218,12 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const indexBlockReason = reviewIndexBlockReason || (routeMeta && !routeMeta.publishReady
     ? '选择 Canonical to sibling 后必须指定同一 Base Species 内的目标记录。'
     : '');
+  const currentHygiene = hasSpecies ? inspectEditorialContent({
+    seoTitle: effectiveSeo?.seoTitle, metaDescription: effectiveSeo?.metaDescription, h1: effectiveSeo?.h1,
+    sharedIntro: effectiveSeo?.sharedIntro, variantIntro: form.intro, localizedName: isEnglishLocale(locale) ? form.localizedName : '',
+    imageAlt: form.imageAlt, focusKeyword: form.focusKeyword,
+  }) : { clean: true, issues: [] };
+  const hygieneBlockReason = currentHygiene.clean ? '' : hygieneBlockerText(currentHygiene.issues[0], locale);
 
   useEffect(() => {
     if (!hasSpecies || !effectiveSeo || !routeMeta) {
@@ -307,6 +314,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     }
     setSaving(true);
     setMessage('');
+    if (reviewStateOverride && reviewStateOverride !== 'editing' && !currentHygiene.clean) {
+      setSaving(false);
+      setMessage(isUiEnglish ? `Review blocked: ${hygieneBlockReason}` : `审核被阻止：${hygieneBlockReason}`);
+      return;
+    }
     if (reviewStateOverride) {
       const { data, error } = await adminContentClient
         .from('species_seo')
@@ -398,11 +410,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           {contentDirty ? (
             <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
           ) : form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
+            <button type="button" className="primary-button compact" disabled={saving || readOnly || !currentHygiene.clean} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
           ) : form.reviewState === 'ready_for_review' ? (
             <>
               <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
+              <button type="button" className="primary-button compact" disabled={saving || readOnly || !currentHygiene.clean} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
             </>
           ) : publishReadinessState === 'publish_ready' ? (
             <>
@@ -419,6 +431,13 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           </div>
         </div>
       </div>
+
+      {!currentHygiene.clean ? (
+        <div className="content-hygiene-warning" role="alert">
+          <div><strong>{isUiEnglish ? 'Test / acceptance copy detected' : '检测到测试 / 验收文案'}</strong><span>{isUiEnglish ? 'Draft editing is allowed, but review and Preview are blocked until these markers are removed.' : '可以继续保存 Draft，但清理这些字样前不能提交审核或进入 Preview。'}</span></div>
+          <ul>{currentHygiene.issues.map((issue) => <li key={`${issue.field}-${issue.marker}`}><b>{issue.label}</b><span>{issue.match}</span>{['seoTitle', 'metaDescription', 'h1'].includes(issue.field) && form[issue.field] ? <button type="button" onClick={() => useBaseValue(issue.field)}>{isUiEnglish ? 'Use clean Base template' : '恢复基础模板'}</button> : issue.field === 'variantIntro' && form.intro ? <button type="button" onClick={() => update('intro', '')}>{isUiEnglish ? 'Clear page supplement' : '清空本页补充'}</button> : null}</li>)}</ul>
+        </div>
+      ) : null}
 
       <div className="editor-grid">
         <div className="form-column">

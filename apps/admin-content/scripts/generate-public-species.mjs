@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { buildSpeciesSeoRouteMeta } from '../src/seoRouteContract.js';
 import { getSpeciesPageLabels, localizeSpeciesTankSize } from '../src/speciesPagePresentation.js';
+import { inspectEditorialContent } from '../src/contentHygiene.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
@@ -98,6 +99,12 @@ function validateEligibleRecord({ row, groupRow, member, group, effectiveSeo, ro
   const intro = [effectiveSeo?.sharedIntro, effectiveSeo?.variantIntro].filter(Boolean).join('\n\n').trim();
   if (!intro) errors.push('Editorial intro is empty');
   if (locale === 'en' && !row.localized_name?.trim()) errors.push('English localized_name is required');
+  const hygiene = inspectEditorialContent({
+    seoTitle: effectiveSeo?.seoTitle, metaDescription: effectiveSeo?.metaDescription, h1: effectiveSeo?.h1,
+    sharedIntro: effectiveSeo?.sharedIntro, variantIntro: effectiveSeo?.variantIntro, localizedName: row.localized_name,
+    imageAlt: row.image_alt, focusKeyword: row.focus_keyword,
+  });
+  for (const issue of hygiene.issues) errors.push(`content hygiene: ${issue.label} contains test/acceptance marker ${issue.match}`);
 
   const strategy = row.index_strategy || 'noindex';
   if (strategy !== 'noindex' && group?.category_conflict) {

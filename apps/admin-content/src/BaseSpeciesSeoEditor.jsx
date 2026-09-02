@@ -3,6 +3,7 @@ import { adminContentClient } from './adminBackend.js';
 import { groupSeoFromRow } from './seoInheritance.js';
 import { getLocaleLabel } from './localization.js';
 import { useAppLanguage } from './AppLanguage.jsx';
+import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
 
 const isPublicSpeciesPublishingEnabled = false;
 const BASE_EDITORIAL_KEYS = ['seoTitleTemplate', 'metaDescriptionTemplate', 'h1Template', 'sharedIntro'];
@@ -38,6 +39,11 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
   const contentDirty = !readOnly && BASE_EDITORIAL_KEYS.some((key) => String(form[key] ?? '') !== String(baselineForm[key] ?? ''));
   const isDirty = !readOnly && JSON.stringify(form) !== JSON.stringify(baselineForm);
   useEffect(() => { onDirtyChange?.(isDirty); }, [isDirty, onDirtyChange]);
+  const baseHygiene = inspectEditorialContent({
+    seoTitleTemplate: form.seoTitleTemplate, metaDescriptionTemplate: form.metaDescriptionTemplate,
+    h1Template: form.h1Template, sharedIntroTemplate: form.sharedIntro,
+  });
+  const baseHygieneBlockReason = baseHygiene.clean ? '' : hygieneBlockerText(baseHygiene.issues[0], locale);
 
   if (!group) return null;
   const localeLabel = getLocaleLabel(locale);
@@ -73,6 +79,11 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     }
     setSaving(true);
     setMessage('');
+    if (reviewStateOverride && reviewStateOverride !== 'editing' && !baseHygiene.clean) {
+      setSaving(false);
+      setMessage(isUiEnglish ? `Review blocked: ${baseHygieneBlockReason}` : `审核被阻止：${baseHygieneBlockReason}`);
+      return;
+    }
     if (reviewStateOverride) {
       const { data, error } = await adminContentClient
         .from('species_seo_groups')
@@ -152,11 +163,11 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           {contentDirty ? (
             <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button>
           ) : form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
+            <button type="button" className="primary-button compact" disabled={saving || readOnly || !baseHygiene.clean} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
           ) : form.reviewState === 'ready_for_review' ? (
             <>
               <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact" disabled={saving || readOnly} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
+              <button type="button" className="primary-button compact" disabled={saving || readOnly || !baseHygiene.clean} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
             </>
           ) : (
             <button type="button" className="ghost-button compact" disabled={saving || readOnly} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
@@ -164,6 +175,12 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           </div>
         </div>
       </div>
+      {!baseHygiene.clean ? (
+        <div className="content-hygiene-warning" role="alert">
+          <div><strong>{isUiEnglish ? 'Test / acceptance copy detected in Base' : '基础模板包含测试 / 验收文案'}</strong><span>{isUiEnglish ? 'Clean the flagged fields before submitting or approving this Base template.' : '清理标记字段后才能提交或批准这套基础模板。'}</span></div>
+          <ul>{baseHygiene.issues.map((issue) => <li key={`${issue.field}-${issue.marker}`}><b>{issue.label}</b><span>{issue.match}</span></li>)}</ul>
+        </div>
+      ) : null}
       {group.category_conflict ? (
         <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源数据存在分类冲突；草稿可以继续编辑，但完成数据复核前不能进入预览发布。'}</div>
       ) : null}

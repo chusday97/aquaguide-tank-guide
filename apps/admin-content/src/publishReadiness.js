@@ -1,5 +1,6 @@
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { groupSeoRowKey, seoRowKey } from './localization.js';
+import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
 
 export const REVIEW_STATES = [
   { value: 'editing', label: 'Editing' },
@@ -92,6 +93,13 @@ export function assessPublishReadiness({ species, group, locale, variantRow, gro
   if (locale === 'en' && !variantRow?.localized_name?.trim()) blockers.push('English Common Name 为空。');
   if (!variantRow?.image_alt?.trim()) blockers.push('Hero Image Alt 尚未填写。');
 
+  const hygiene = inspectEditorialContent({
+    seoTitle: effective.seoTitle, metaDescription: effective.metaDescription, h1: effective.h1,
+    sharedIntro: effective.sharedIntro, variantIntro: effective.variantIntro, localizedName: variantRow?.localized_name,
+    imageAlt: variantRow?.image_alt, focusKeyword: variantRow?.focus_keyword,
+  });
+  blockers.push(...hygiene.issues.map((issue) => hygieneBlockerText(issue, locale)));
+
   const dataReview = assessDataReview(group, reviewRows, { catalogKey: species.catalog_key });
   blockers.push(...dataReview.blockers);
   const member = group.members?.find((item) => item.catalog_key === species.catalog_key);
@@ -110,17 +118,28 @@ export function assessPublishReadiness({ species, group, locale, variantRow, gro
 
   if (variantRow?.index_strategy === 'index') {
     if (!counterpartVariantRow || !counterpartGroupRow) blockers.push('独立 Index 需要另一语言已有对应内容。');
-    else if (counterpartVariantRow.review_state !== 'approved' || counterpartGroupRow.review_state !== 'approved') blockers.push('独立 Index 的另一语言内容尚未 Approved。');
+    else {
+      if (counterpartVariantRow.review_state !== 'approved' || counterpartGroupRow.review_state !== 'approved') blockers.push('独立 Index 的另一语言内容尚未 Approved。');
+      const counterpartLocale = locale === 'en' ? 'zh-CN' : 'en';
+      const counterpartEffective = resolveEffectiveSeo({ member: species, group, groupRow: counterpartGroupRow, variantRow: counterpartVariantRow, locale: counterpartLocale }).effective;
+      const counterpartHygiene = inspectEditorialContent({
+        seoTitle: counterpartEffective.seoTitle, metaDescription: counterpartEffective.metaDescription, h1: counterpartEffective.h1,
+        sharedIntro: counterpartEffective.sharedIntro, variantIntro: counterpartEffective.variantIntro, localizedName: counterpartVariantRow.localized_name,
+        imageAlt: counterpartVariantRow.image_alt, focusKeyword: counterpartVariantRow.focus_keyword,
+      });
+      if (!counterpartHygiene.clean) blockers.push(`另一语言页面仍有测试/验收文案：${counterpartHygiene.issues.map((issue) => issue.label).join('、')}。`);
+    }
   }
 
-  if (blockers.length) return { state: 'blocked', blockers, effective, dataReview };
+  if (blockers.length) return { state: 'blocked', blockers, effective, dataReview, hygiene };
   const editorialApproved = variantRow?.review_state === 'approved' && groupRow?.review_state === 'approved';
-  if (editorialApproved) return { state: 'publish_ready', blockers: [], effective, dataReview };
+  if (editorialApproved) return { state: 'publish_ready', blockers: [], effective, dataReview, hygiene };
   return {
     state: 'ready_for_review',
     blockers: [],
     effective,
     dataReview,
+    hygiene,
     reviewNeeded: [groupRow?.review_state !== 'approved' ? 'Base Species' : null, variantRow?.review_state !== 'approved' ? 'Variant' : null].filter(Boolean),
   };
 }

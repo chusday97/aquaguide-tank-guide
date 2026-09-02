@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { readDraftJsonWithFallback, updateDraftJson, writeStagingSnapshot } from './github.mjs';
+import { inspectEditorialContent } from '../../apps/admin-content/src/contentHygiene.js';
 
 export const EMPTY_ADMIN_STORE = {
   schema_version: 2,
@@ -46,6 +47,31 @@ function sameKey(row, payload, keys) {
 
 function contentChanged(previous, payload, fields) {
   return fields.some((field) => Object.hasOwn(payload, field) && String(previous?.[field] ?? '') !== String(payload?.[field] ?? ''));
+}
+
+function repoRowHygiene(table, row = {}) {
+  if (table === 'species_seo') {
+    return inspectEditorialContent({
+      localizedName: row.localized_name, seoTitle: row.seo_title, metaDescription: row.meta_description, h1: row.h1,
+      variantIntro: row.intro, imageAlt: row.image_alt, focusKeyword: row.focus_keyword,
+    });
+  }
+  if (table === 'species_seo_groups') {
+    return inspectEditorialContent({
+      seoTitleTemplate: row.seo_title_template, metaDescriptionTemplate: row.meta_description_template,
+      h1Template: row.h1_template, sharedIntroTemplate: row.shared_intro,
+    });
+  }
+  return { clean: true, issues: [] };
+}
+
+function assertReviewContentHygiene(table, row, requestedState) {
+  if (!['ready_for_review', 'approved'].includes(requestedState) || !['species_seo', 'species_seo_groups'].includes(table)) return;
+  const hygiene = repoRowHygiene(table, row);
+  if (!hygiene.clean) {
+    const fields = hygiene.issues.map((issue) => `${issue.label} (${issue.match})`).join(', ');
+    throw new Error(`Content hygiene blocked review: remove test/acceptance wording from ${fields}.`);
+  }
 }
 
 function revisionFor(row, cfg, operation, sourceRevisionId = null) {
@@ -255,6 +281,8 @@ function applyUpdate(store, operation) {
   const output = [];
   store[operation.table] = store[operation.table].map((row) => {
     if (!matches(row, operation.filters)) return row;
+    const requestedReviewState = operation.values?.review_state;
+    if (requestedReviewState) assertReviewContentHygiene(operation.table, { ...row, ...(operation.values || {}) }, requestedReviewState);
     let next = operation.table === 'species_data_reviews'
       ? applyDataReviewMetadata(row, operation.values || {})
       : applyEditorialMetadata(row, operation.values || {}, cfg);
@@ -438,6 +466,14 @@ export async function buildRepoStagingSnapshot({ catalogKeys, groupKeys }) {
     throw new Error('Each selected Species must have Approved Draft rows for both zh-CN and en before staging publish.');
   }
   if (speciesSeoGroups.length < selectedGroupKeys.length * 2) throw new Error('Each selected Base Species must have Approved Draft rows for both zh-CN and en before staging publish.');
+  const dirtyRows = [
+    ...speciesSeo.map((row) => ({ type: 'Species', key: `${row.catalog_key}/${row.locale}`, hygiene: repoRowHygiene('species_seo', row) })),
+    ...speciesSeoGroups.map((row) => ({ type: 'Base', key: `${row.group_key}/${row.locale}`, hygiene: repoRowHygiene('species_seo_groups', row) })),
+  ].filter((entry) => !entry.hygiene.clean);
+  if (dirtyRows.length) {
+    const first = dirtyRows[0];
+    throw new Error(`Staging blocked by test/acceptance wording in ${first.type} ${first.key}: ${first.hygiene.issues.map((issue) => issue.label).join(', ')}.`);
+  }
   return snapshot;
 }
 

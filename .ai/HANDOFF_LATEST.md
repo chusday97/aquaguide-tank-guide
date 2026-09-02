@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 02:02 +08:00
+Updated: 2026-09-02 13:37 +08:00
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -273,13 +273,15 @@ Primary:
 Known build warning: large Vite chunks. This is not currently a Species SEO functional failure.
 
 ## 18. Current next actions — in priority order
-1. In the **real authenticated Admin**, finish the 白金西非凤凰 review (`sp_0214 / sp_0338`) using the improved `处理重复` flow. Current evidence strongly favors `确认是重复记录` + keep `sp_0214`: name/scientific name/image/temperature/pH/tank/difficulty are the same; `sp_0338` is source-marked duplicate of `sp_0214`; only Product Truth description wording differs. Do not bypass the Admin session to write the private repo. Once saved, this review decision becomes authoritative across single-page Advanced SEO, batch Draft creation, CSV import and Repo writes.
-2. For the original `sp_0001` vertical slice: clean the English acceptance/test copy, save English, submit and approve English. Do not ask user to re-submit Chinese; Chinese is already Approved.
-3. Use the new bulk-import flow for the next real batch only when there is real content to import; do not create fake writes merely to populate Activity history.
-4. Then explicitly Staging Publish only the intended reviewed Species set.
-5. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`.
-6. Clean all acceptance wording before considering Production.
-7. Keep Production locked until the user explicitly decides to move the publication boundary forward.
+1. In the **real authenticated Admin**, finish the 白金西非凤凰 review (`sp_0214 / sp_0338`) using the improved `处理重复` flow. Current evidence strongly favors `确认是重复记录` + keep `sp_0214`. Do not bypass the Admin session to write the private repo.
+2. Clean `sp_0001` before any new Staging release. The new hygiene gate makes this explicit:
+   - English private row: H1 contains `Red Cherry Shrimp Care Guide | Dual-Repo Staging`; use the editor's `恢复基础模板` action, Save, then submit/approve English.
+   - Chinese private row: H1 contains `后台真实保存验收`; restore the clean Base H1 and Save. Because the content genuinely changes, this new edit must return to Editing and be reviewed again; this is not a repeat of the earlier acceptance test.
+   - both locales must be clean for an independently indexed bilingual page to become Preview-ready.
+3. Use the bulk-import flow for the next real content batch only; do not create fake writes merely to populate Activity history.
+4. Then explicitly Staging Publish only the intended reviewed Species set. The historical committed staging snapshot is intentionally left untouched; it is evidence from the old acceptance run and now fails the generator hygiene gate.
+5. Verify exactly one public staging commit/Preview rebuild, final static EN/ZH HTML, H1/title/meta/canonical/hreflang/robots/CTA, and deployment-level `X-Robots-Tag: noindex`. Do not repeatedly retrigger while the Vercel deployment-rate limit is active.
+6. Keep Production locked until the user explicitly decides to move the publication boundary forward.
 
 ## 19. What NOT to do
 - Do not provision Supabase for Species SEO.
@@ -389,7 +391,36 @@ Once a duplicate set is explicitly resolved as `duplicate_records`, the human Da
 - `git diff --check` PASS
 - new Vercel Preview remains externally blocked by the account deployment-rate limit; do not retrigger repeatedly
 
-## 23. Startup instruction for the next conversation
+
+## 23. Content hygiene release gate — completed locally 2026-09-02
+This closes the acceptance-copy leak that left `sp_0001` test wording inside Approved/Staging content.
+
+### New authority rule
+- Drafts may contain temporary working copy, but `ready_for_review`, `approved`, Staging snapshot creation and static Species generation must reject known test/acceptance markers.
+- the gate covers effective SEO title/meta/H1, Base/Variant intro, localized name, image alt and focus keyword; Base templates are checked independently.
+- indexable bilingual readiness also checks the approved counterpart locale, so one clean language cannot hide a dirty counterpart.
+
+### UX
+- editor shows `检测到测试 / 验收文案` next to the review workflow and identifies the exact field/marker.
+- inherited SEO fields with a dirty page Override expose `恢复基础模板`; browser verification on `sp_0001` English changed H1 to `Dual-Repo Staging`, showed the warning, then restored the clean Base H1 in one click.
+- Base editor has the same review blocker.
+
+### Defense in depth
+- Repo review-state updates reject dirty rows server-side, so API calls cannot approve acceptance copy.
+- Repo Staging snapshot creation rejects legacy dirty Approved rows.
+- static Species generator independently scans effective content, so old/manually supplied snapshots cannot regenerate acceptance copy.
+- the current historical `content/species-seo/staging-snapshot.json` was tested directly and is correctly rejected for `sp_0001/zh-CN` (`验收`) and `sp_0001/en` (`Dual-Repo`). Do not manually rewrite this historical snapshot; create a new one only through explicit Staging Publish after private Draft cleanup.
+
+### Verification
+- `npm run test:contract -w @aquaguide/admin-content` PASS, including server approval rejection and legacy-dirty-staging rejection (`revisions: 21`)
+- direct static-generator run against the committed historical staging snapshot FAILS CLOSED with the two expected H1 hygiene errors
+- browser review-mode walk-through verified warning + one-click Base restore for `sp_0001` English
+- full root `npm run build` PASS
+- `npm run verify:seo-species-handoff` PASS
+- `npm run test:admin-content-ui` PASS
+- `git diff --check` PASS
+
+## 24. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.

@@ -319,3 +319,10 @@
 - Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
 - Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
 - Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
+
+## 2026-09-02 — Content hygiene release gate
+- Added shared acceptance/test-copy detection for Species and Base editorial fields.
+- Variant/Base review actions now block dirty content; `sp_0001` browser check exposes the exact H1 marker and supports one-click restore to the clean Base template.
+- Repo review updates and Staging snapshot creation enforce the same rule server-side; static Species generation independently rejects dirty snapshots.
+- Historical staging snapshot verification now fails closed on `sp_0001/zh-CN` (`验收`) and `sp_0001/en` (`Dual-Repo`) instead of regenerating those acceptance H1s.
+- Contract, Repo backend/API, dual-repo routing, full root build, SEO handoff and Admin UI gates PASS locally.
