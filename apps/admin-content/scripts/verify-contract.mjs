@@ -52,6 +52,7 @@ const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSourc
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
 const bulkImportSource = await readFile(path.join(appRoot, 'src/BulkImportPanel.jsx'), 'utf8');
+const bulkDuplicateSource = await readFile(path.join(appRoot, 'src/BulkDuplicateReviewPanel.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 const activityCenterSource = await readFile(path.join(appRoot, 'src/ActivityCenter.jsx'), 'utf8');
 const adminNoticeSource = await readFile(path.join(appRoot, 'src/AdminNoticeViewport.jsx'), 'utf8');
@@ -131,6 +132,13 @@ assert.match(bulkImportSource, /kind:\s*'bulk_import'/, 'Bulk imports must recor
 assert.doesNotMatch(bulkImportSource, /from\('species'\)|from\('fishData'/, 'Bulk import must never write Product Truth storage');
 assert.doesNotMatch(bulkImportSource, /bulk-import-errors|bulk-import-ready/, 'Bulk import action feedback must not render as persistent inline status boxes');
 assert.match(bulkImportSource, /emitAdminNotice/, 'Bulk import validation and client-side blockers must surface as top-right notices');
+assert.match(appSource, /SEO 模板导入/, 'Template import must be exposed as an explicit user-facing action rather than hidden as a generic bulk tool');
+assert.match(appSource, /批量审核重复记录/, 'Admin must expose a dedicated bulk duplicate-review entry');
+assert.match(bulkDuplicateSource, /resolve_species_duplicate_reviews_bulk/, 'Bulk duplicate review must use one atomic backend operation');
+assert.match(bulkDuplicateSource, /全选待审核/, 'Bulk duplicate review must support selecting the pending duplicate queue');
+assert.match(bulkDuplicateSource, /确认处理/, 'Bulk duplicate review must require one explicit final confirmation action');
+assert.match(bulkDuplicateSource, /recommendedCanonicalKey/, 'Bulk duplicate review must expose a deterministic keep-page recommendation per duplicate set');
+assert.doesNotMatch(bulkDuplicateSource, /<em[^>]*>.*处理重复/s, 'Bulk duplicate actions must never be rendered as status-tag elements');
 assert.match(reviewSource, /emitAdminNotice/, 'Data Review precondition failures must surface as top-right notices');
 assert.match(translationSource, /emitAdminNotice/, 'Translation outcomes and blockers must surface as top-right notices');
 assert.match(historySource, /emitAdminNotice/, 'Revision load and confirmation feedback must surface as top-right notices');

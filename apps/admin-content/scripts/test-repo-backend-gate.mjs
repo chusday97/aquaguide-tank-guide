@@ -121,6 +121,34 @@ const activityAfterDuplicate = (await executeRepoOperation({ action: 'select', t
 assert.equal(activityAfterDuplicate.length, activityBeforeDuplicate + 1, 'One duplicate-review action must create exactly one activity record.');
 assert.equal(activityAfterDuplicate.at(-1).kind, 'duplicate_review');
 
+const bulkPairs = [
+  ['sp_test_bulk_a', 'sp_test_bulk_b', 'duplicate:test-bulk-1', 'base:test-bulk-1'],
+  ['sp_test_bulk_c', 'sp_test_bulk_d', 'duplicate:test-bulk-2', 'base:test-bulk-2'],
+];
+result = await executeRepoOperation({ action: 'upsert', table: 'species_seo', values: bulkPairs.flatMap(([a, b]) => [
+  { catalog_key: a, locale: 'en', localized_name: a, image_alt: a, index_strategy: 'noindex', canonical_catalog_key: '', status: 'draft', review_state: 'editing' },
+  { catalog_key: b, locale: 'en', localized_name: b, image_alt: b, index_strategy: 'noindex', canonical_catalog_key: '', status: 'draft', review_state: 'editing' },
+]) });
+assert.equal(result.error, null);
+const activityBeforeBulkReview = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data.length;
+result = await executeRepoOperation({ action: 'rpc', rpc: 'resolve_species_duplicate_reviews_bulk', args: { p_reviews: bulkPairs.map(([a, b, issue, group]) => ({
+  p_issue_key: issue, p_group_key: group, p_decision: 'duplicate_records', p_canonical_catalog_key: a, p_member_ids: [a, b], p_notes: 'bulk contract fixture',
+})) } });
+assert.equal(result.error, null);
+assert.equal(result.data.reviews.length, 2, 'Bulk duplicate review must resolve every selected issue.');
+assert.equal(result.data.seo_rows.filter((row) => row.index_strategy === 'canonical_to_sibling').length, 2, 'Bulk duplicate review must align duplicate sibling canonical policies.');
+const activityAfterBulkReview = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data;
+assert.equal(activityAfterBulkReview.length, activityBeforeBulkReview + 1, 'One bulk duplicate-review action must create exactly one activity record.');
+assert.equal(activityAfterBulkReview.at(-1).kind, 'duplicate_review_bulk');
+const reviewCountBeforeInvalidBulk = (await executeRepoOperation({ action: 'select', table: 'species_data_reviews', filters: [] })).data.length;
+result = await executeRepoOperation({ action: 'rpc', rpc: 'resolve_species_duplicate_reviews_bulk', args: { p_reviews: [
+  { p_issue_key: 'duplicate:atomic-valid', p_group_key: 'base:atomic-valid', p_decision: 'distinct_records', p_canonical_catalog_key: '', p_member_ids: ['atomic_a', 'atomic_b'], p_notes: '' },
+  { p_issue_key: 'duplicate:atomic-invalid', p_group_key: 'base:atomic-invalid', p_decision: 'duplicate_records', p_canonical_catalog_key: 'missing', p_member_ids: ['atomic_c', 'atomic_d'], p_notes: '' },
+] } });
+assert.match(result.error?.message || '', /Canonical Species must belong/, 'Invalid issue must fail the whole bulk duplicate-review operation.');
+const reviewCountAfterInvalidBulk = (await executeRepoOperation({ action: 'select', table: 'species_data_reviews', filters: [] })).data.length;
+assert.equal(reviewCountAfterInvalidBulk, reviewCountBeforeInvalidBulk, 'Failed bulk duplicate review must be atomic and persist no partial decisions.');
+
 result = await executeRepoOperation({
   action: 'upsert', table: 'species_seo', values: {
     catalog_key: duplicateB, locale: 'en', localized_name: 'Attempted bypass', image_alt: 'Attempted bypass',

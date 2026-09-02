@@ -373,6 +373,20 @@ function resolveDuplicateReview(store, args = {}) {
   return { review: clone(review), seo_rows: clone(seoRows) };
 }
 
+
+function resolveDuplicateReviewsBulk(store, args = {}) {
+  const reviews = Array.isArray(args.p_reviews) ? args.p_reviews : [];
+  if (!reviews.length) throw new Error('Bulk duplicate review requires at least one selected issue.');
+  if (reviews.length > 50) throw new Error('Bulk duplicate review is limited to 50 issues per operation.');
+  const issueKeys = reviews.map((item) => String(item?.p_issue_key || '').trim());
+  if (new Set(issueKeys).size !== issueKeys.length) throw new Error('Bulk duplicate review contains duplicate issue keys.');
+  const resolved = reviews.map((item) => resolveDuplicateReview(store, item));
+  return {
+    reviews: resolved.map((item) => item.review),
+    seo_rows: resolved.flatMap((item) => item.seo_rows || []),
+  };
+}
+
 function finalizeSingle(data, mode) {
   if (!mode) return { data, error: null };
   if (mode === 'maybeSingle') {
@@ -402,6 +416,26 @@ export async function executeRepoOperation(operation) {
           return store;
         }, 'content(seo): restore revision as draft');
         return { data: restored, error: null };
+      }
+      if (operation.rpc === 'resolve_species_duplicate_reviews_bulk') {
+        let resolved = null;
+        await updateDraftJson((raw) => {
+          const store = normalizeStore(raw);
+          resolved = resolveDuplicateReviewsBulk(store, operation.args || {});
+          const decisions = [...new Set((resolved?.reviews || []).map((item) => item.decision))];
+          appendActivity(store, {
+            ...operation,
+            table: 'species_data_reviews',
+            activity: operation.activity || {
+              kind: 'duplicate_review_bulk',
+              title: `批量审核 ${resolved?.reviews?.length || 0} 组重复记录`,
+              detail: decisions.length === 1 && decisions[0] === 'duplicate_records' ? '已同步 Index / Canonical 策略' : '批量人工结论已记录',
+              metadata: { count: resolved?.reviews?.length || 0, decisions },
+            },
+          }, resolved?.reviews || []);
+          return store;
+        }, 'content(seo): resolve duplicate reviews bulk');
+        return { data: resolved, error: null };
       }
       if (operation.rpc === 'resolve_species_duplicate_review') {
         let resolved = null;

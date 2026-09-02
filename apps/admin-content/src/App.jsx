@@ -3,6 +3,7 @@ import { adminContentClient, getRepoBackendHealth, isAdminBackendConfigured, isR
 import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
 import BatchSeoEditor from './BatchSeoEditor.jsx';
 import BulkImportPanel from './BulkImportPanel.jsx';
+import BulkDuplicateReviewPanel from './BulkDuplicateReviewPanel.jsx';
 import ActivityCenter from './ActivityCenter.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
 import TranslationPanel from './TranslationPanel.jsx';
@@ -813,6 +814,7 @@ export default function App() {
     Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
   ), [seoRows, contentLocale]);
   const workflowOverview = useMemo(() => buildAdminWorkflowOverview({ species, groups: speciesGroups, seoRows, groupSeoRows, reviewRows: dataReviewRows }), [species, seoRows, groupSeoRows, dataReviewRows]);
+  const pendingDuplicateReviewCount = useMemo(() => speciesGroups.reduce((sum, group) => sum + (group.duplicate_sets || []).filter((set) => !['duplicate_records', 'distinct_records'].includes(dataReviewRows?.[set.duplicate_set_key]?.decision)).length, 0), [dataReviewRows]);
   const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
     ? { ...livePreview, species: previewSpecies || livePreview.species, productTruthLoading, productTruthError }
     : savedLivePreview;
@@ -973,9 +975,13 @@ export default function App() {
       title: t('editor.batchSeo'),
       subtitle: appLocale === 'en' ? 'Create inherited Draft shells without copying Base content.' : '建立继承 Draft，不复制 Base 文案。',
     },
+    bulkReview: {
+      title: appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录',
+      subtitle: appLocale === 'en' ? 'Select multiple duplicate candidates and save one human decision batch atomically.' : '选择多组重复候选，一次确认并原子保存人工结论。',
+    },
     bulkImport: {
-      title: appLocale === 'en' ? 'Bulk import' : '批量导入',
-      subtitle: appLocale === 'en' ? 'Download the AquaGuide CSV template, fill it, validate it, then import Draft changes.' : '下载 AquaGuide CSV 模板，回填、校验后批量导入 Draft。',
+      title: appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入',
+      subtitle: appLocale === 'en' ? 'Download the AquaGuide template, fill it in Excel / Numbers, validate it, then import Draft changes.' : '下载 AquaGuide 模板，用 Excel / Numbers 回填，上传校验后批量导入 Draft。',
     },
     history: {
       title: t('editor.history'),
@@ -1077,8 +1083,11 @@ export default function App() {
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
           <span>{isReviewMode ? t('top.reviewMode') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
-          <button type="button" className={`topbar-bulk-trigger ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
-            {appLocale === 'en' ? 'Bulk import' : '批量导入'}
+          <button type="button" className={`topbar-bulk-trigger ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
+            <span>{appLocale === 'en' ? 'Bulk review' : '批量审核'}</span>{pendingDuplicateReviewCount > 0 ? <b>{pendingDuplicateReviewCount}</b> : null}
+          </button>
+          <button type="button" className={`topbar-template-trigger ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
+            {appLocale === 'en' ? 'Template import' : '模板导入'}
           </button>
           <button type="button" className={`activity-trigger ${activityOpen ? 'active' : ''}`} onClick={() => {
             setActivityOpen(true);
@@ -1223,8 +1232,11 @@ export default function App() {
                 <span><strong>{t('editor.batchSeo')}</strong><small>{batchMembers.length} {appLocale === 'en' ? 'selected records' : '条已选择记录'}</small></span><b>›</b>
               </button>
             ) : null}
+            <button type="button" className={`editor-tool-row ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
+              <span><strong>{appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录'}</strong><small>{appLocale === 'en' ? `${pendingDuplicateReviewCount} duplicate groups waiting` : `${pendingDuplicateReviewCount} 组重复候选待处理`}</small></span><em>{pendingDuplicateReviewCount}</em>
+            </button>
             <button type="button" className={`editor-tool-row ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
-              <span><strong>{appLocale === 'en' ? 'Bulk import' : '批量导入'}</strong><small>{appLocale === 'en' ? 'Download template → fill → upload' : '下载模板 → 回填 → 上传校验'}</small></span><b>›</b>
+              <span><strong>{appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入'}</strong><small>{appLocale === 'en' ? 'Download template → fill in Excel / Numbers → upload' : '下载模板 → Excel / Numbers 回填 → 上传校验'}</small></span><b>›</b>
             </button>
             <button type="button" className={`editor-tool-row ${activeTool === 'history' ? 'active' : ''}`} onClick={() => setActiveTool('history')}>
               <span><strong>{t('editor.history')}</strong><small>Base / Variant revision</small></span><b>›</b>
@@ -1238,6 +1250,21 @@ export default function App() {
         </main>
 
         <EditorToolDrawer open={Boolean(activeTool)} title={toolDrawerMeta.title} subtitle={toolDrawerMeta.subtitle} onClose={() => setActiveTool(null)}>
+            {activeTool === 'bulkReview' ? (
+              <BulkDuplicateReviewPanel
+                groups={speciesGroups}
+                reviewRows={dataReviewRows}
+                schemaReady={dataReviewSchemaReady}
+                readOnly={isReviewMode}
+                onCompleted={(result) => {
+                  const reviews = result?.reviews || [];
+                  const rows = result?.seo_rows || [];
+                  if (reviews.length) setDataReviewRows((current) => ({ ...current, ...Object.fromEntries(reviews.map((row) => [row.issue_key, row])) }));
+                  if (rows.length) setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
+                  if (rows.length) setRevisionRefreshKey((current) => current + 1);
+                }}
+              />
+            ) : null}
             {activeTool === 'dataReview' ? (
               <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
                 onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))}

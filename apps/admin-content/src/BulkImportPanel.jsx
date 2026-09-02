@@ -172,8 +172,8 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
   return (
     <section className="bulk-import-panel">
       <div className="bulk-import-head">
-        <div><p className="eyebrow">CSV BULK IMPORT · {locale}</p><h2>{isUiEnglish ? 'Bulk import SEO content' : '批量导入 SEO 内容'}</h2><p>{isUiEnglish ? 'Download the AquaGuide CSV table (editable in Excel or Numbers), edit only the rows you need, mark them as update, then upload the same file.' : '下载 AquaGuide 表格模板（CSV，可用 Excel / Numbers 编辑），只修改需要处理的行，并在 import_action 填“update / 更新”，再上传同一文件。'}</p></div>
-        <button type="button" className="secondary-button" onClick={downloadTemplate}>{isUiEnglish ? 'Download template' : '下载模板'}</button>
+        <div><p className="eyebrow">SEO TEMPLATE IMPORT · {locale}</p><h2>{isUiEnglish ? 'SEO template import' : 'SEO 模板导入'}</h2><p>{isUiEnglish ? 'Download the AquaGuide CSV table (editable in Excel or Numbers), edit only the rows you need, mark them as update, then upload the same file.' : '下载 AquaGuide 表格模板（CSV，可用 Excel / Numbers 编辑），只修改需要处理的行，并在 import_action 填“update / 更新”，再上传同一文件。'}</p></div>
+        <button type="button" className="secondary-button" onClick={downloadTemplate}>{isUiEnglish ? 'Download CSV template' : '下载 CSV 模板'}</button>
       </div>
       <div className="bulk-import-steps">
         <div><b>1</b><span>{isUiEnglish ? 'Download' : '下载模板'}</span><small>{isUiEnglish ? `${species.length} catalog rows, ${locale}` : `包含 ${species.length} 条目录记录 · ${locale}`}</small></div>
@@ -182,7 +182,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       </div>
       <div className="bulk-upload-zone">
         <input ref={inputRef} type="file" accept=".csv,text/csv" onChange={onFile} hidden />
-        <button type="button" className="bulk-upload-button" onClick={() => inputRef.current?.click()}>{fileName || (isUiEnglish ? 'Choose completed CSV' : '选择回填后的 CSV')}</button>
+        <button type="button" className="bulk-upload-button" onClick={() => inputRef.current?.click()}>{fileName || (isUiEnglish ? 'Upload completed template' : '上传回填后的模板')}</button>
         <span>{parsedRows.length ? (isUiEnglish ? `${parsedRows.length} rows read · ${markedRows.length} marked for import` : `已读取 ${parsedRows.length} 行 · ${markedRows.length} 行待导入`) : (isUiEnglish ? 'No file selected' : '尚未选择文件')}</span>
       </div>
       <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。'}</span><button type="button" className="primary-button" disabled={saving} onClick={importRows}>{saving ? (isUiEnglish ? 'Importing…' : '正在导入…') : (isUiEnglish ? `Import ${markedRows.length} rows` : `导入 ${markedRows.length} 行`)}</button></div>

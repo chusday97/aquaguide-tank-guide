@@ -572,3 +572,13 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - group-level `处理数据 / Review` is also an explicit button; unresolved counts are contained inside the action rather than disguised as a clickable status badge.
 - static counts/status remain non-interactive pill-style badges with no pointer/box-shadow; action controls use non-pill radius, visible border and interaction states.
 - contract guards prevent duplicate review from regressing to an actionable `<em>`/tag and require the visible action-button border.
+
+## 29. Bulk duplicate review + explicit SEO template import — completed 2026-09-02
+- Added top-level `批量审核 / Bulk review` with the current pending duplicate-group count; in the current review fixture it exposes 28 pending duplicate sets.
+- Added `BulkDuplicateReviewPanel`: select individual duplicate groups or `全选待审核`, choose one human conclusion, and for duplicate decisions verify the keep-page/canonical target per group before one final confirmation.
+- Added atomic Repo RPC `resolve_species_duplicate_reviews_bulk`: up to 50 duplicate issues are resolved in one private-store transaction and one activity record. If any selected issue is invalid, the whole batch fails with no partial human decisions written.
+- Batch duplicate confirmation reuses the same authoritative single-review policy: canonical page becomes `index`; folded siblings become `canonical_to_sibling`; `distinct_records` clears stale canonical policy fail-closed to `noindex`.
+- Promoted the former generic `批量导入` entry to explicit `SEO 模板导入 / SEO template import` in both the top bar and secondary tools.
+- Template workflow is now presented as a product action: download AquaGuide CSV template → edit in Excel / Numbers → mark only intended rows → upload completed template → validate → import Draft changes. Product Truth identity columns remain read-only references.
+- Browser review-mode evidence: one top-bar Bulk Review button, one top-bar Template Import button; Bulk Review shows 28 rows, Select All selects 28, final action reads `确认处理 28 组`; Template Import exposes one `下载 CSV 模板` and one `上传回填后的模板`; browser errors = 0.
+- Local gates PASS: Admin contract including atomic bulk RPC, Admin build, Species SEO build routing, full root build, SEO handoff browser regression, Admin authority UI, and diff hygiene.

@@ -362,3 +362,10 @@
 - Replaced clickable issue-count badge behavior with an explicit `处理数据` button.
 - Restored static count badges to pill-only/non-clickable semantics; action buttons now have visible border, rectangular radius, hover/press affordance and chevron/count treatment.
 - Added regression guards that forbid actionable duplicate-review tags and require explicit button styling.
+
+## 2026-09-02 — Bulk duplicate review + template import
+- Added a dedicated bulk duplicate-review workflow with select-all, explicit human conclusion, per-group keep-page verification, and one final confirmation.
+- Added atomic `resolve_species_duplicate_reviews_bulk`; multiple duplicate reviews now create one private-store commit/activity and fail without partial writes if any item is invalid.
+- Promoted CSV workflow to explicit `SEO 模板导入`: download template, fill in Excel/Numbers, upload/validate, import Draft changes.
+- Browser fixture: 28 duplicate sets selected and ready for one batch confirmation; Template Import download/upload actions are both visible; no page errors.
+- Local contract/build/routing/handoff/Admin UI gates PASS; normal code build still skips explicit Staging content publication.
