@@ -192,6 +192,8 @@ Canonical paths are derived and cannot be freely typed. Category-conflict groups
 
 The generator is now connected to the AquaGuide root build through a guarded snapshot-only artifact step. A build without `SPECIES_SEO_SNAPSHOT_PATH` publishes no Species pages; a configured non-production build merges generated Species HTML + sitemap into root `dist/`. Production content export and Production Published controls remain disabled.
 
+Normal Git/Vercel code deploys do **not** automatically consume `content/species-seo/staging-snapshot.json`. The root build only auto-consumes that repository snapshot when the current Preview commit is the server-generated `content(seo): publish staging ...` commit and that commit changes only the staging snapshot file. This keeps code Preview deploys independent from stale/dirty staging content while preserving fail-closed explicit publication.
+
 ## Revision history / rollback (current branch)
 
 Migration `202608280005_species_seo_revision_history.sql` adds database-backed history for Base Species and Variant SEO.

@@ -95,6 +95,7 @@ jobs:
           SPECIES_SEO_SITE_URL: https://staging.aquaguide.test
           PRODUCTION_PUBLIC_SITE_URL: https://aqua-tank-guide.vercel.app
         run: |
+          npm run test:species-seo-build-routing
           npm run build
           npm run verify:species-pages-artifact
           npm run verify:seo-species-handoff

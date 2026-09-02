@@ -1,5 +1,6 @@
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -7,21 +8,49 @@ import { generatePublicSpecies } from '../apps/admin-content/scripts/generate-pu
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
-const PREVIEW_FIXTURE = 'apps/admin-content/fixtures/staging-publication-sample.json';
 const REPO_STAGING_SNAPSHOT = 'content/species-seo/staging-snapshot.json';
 const SEO_STAGING_BRANCH = 'feature/admin-content-v0';
 
-function resolveBuildInputs({ snapshotPath, siteUrl, productionSiteUrl } = {}) {
+function currentCommitSubject() {
+  if (process.env.VERCEL_GIT_COMMIT_MESSAGE) return process.env.VERCEL_GIT_COMMIT_MESSAGE.split(/\r?\n/)[0].trim();
+  try {
+    return execFileSync('git', ['show', '-s', '--format=%s', 'HEAD'], { cwd: repoRoot, encoding: 'utf8' }).trim();
+  } catch {
+    return '';
+  }
+}
+
+function currentChangedFiles() {
+  if (process.env.VERCEL_CHANGED_FILES) {
+    return process.env.VERCEL_CHANGED_FILES.split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+  }
+  try {
+    return execFileSync('git', ['show', '--pretty=', '--name-only', 'HEAD'], { cwd: repoRoot, encoding: 'utf8' })
+      .split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+export function resolveBuildInputs({ snapshotPath, siteUrl, productionSiteUrl } = {}) {
   const isSeoStagingPreview = process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_GIT_COMMIT_REF === SEO_STAGING_BRANCH;
   const previewHost = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
   const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  const repoSnapshotAvailable = isSeoStagingPreview && existsSync(path.join(repoRoot, REPO_STAGING_SNAPSHOT));
-  const automaticSnapshot = repoSnapshotAvailable ? REPO_STAGING_SNAPSHOT : isSeoStagingPreview ? PREVIEW_FIXTURE : '';
+  const commitSubject = currentCommitSubject();
+  const changedFiles = currentChangedFiles();
+  const isExplicitStagingPublishCommit = isSeoStagingPreview
+    && /^content\(seo\): publish staging\b/.test(commitSubject)
+    && changedFiles.length === 1
+    && changedFiles[0] === REPO_STAGING_SNAPSHOT;
+  const repoSnapshotAvailable = isExplicitStagingPublishCommit && existsSync(path.join(repoRoot, REPO_STAGING_SNAPSHOT));
+  const automaticSnapshot = repoSnapshotAvailable ? REPO_STAGING_SNAPSHOT : '';
   return {
     snapshotPath: snapshotPath || automaticSnapshot,
-    siteUrl: siteUrl || (isSeoStagingPreview && previewHost ? `https://${previewHost}` : ''),
+    siteUrl: siteUrl || (repoSnapshotAvailable && previewHost ? `https://${previewHost}` : ''),
     productionSiteUrl: productionSiteUrl || (productionHost ? `https://${productionHost}` : 'https://aqua-tank-guide.vercel.app'),
-    source: snapshotPath ? 'explicit' : repoSnapshotAvailable ? 'vercel-seo-staging-repo-snapshot' : isSeoStagingPreview ? 'vercel-seo-staging-fixture' : 'none',
+    source: snapshotPath ? 'explicit' : repoSnapshotAvailable ? 'vercel-explicit-staging-publish' : 'none',
+    commitSubject,
+    changedFiles,
   };
 }
 
@@ -50,7 +79,7 @@ export async function buildSpeciesSeoArtifact({
   siteUrl = inputs.siteUrl;
   productionSiteUrl = inputs.productionSiteUrl;
   if (!snapshotPath) {
-    console.log('Species SEO artifact: skipped (SPECIES_SEO_SNAPSHOT_PATH is not configured).');
+    console.log('Species SEO artifact: skipped (normal code build; no explicit Staging publish input).');
     return { skipped: true, reason: 'snapshot-not-configured' };
   }
   if (!siteUrl) throw new Error('SPECIES_SEO_SITE_URL is required when SPECIES_SEO_SNAPSHOT_PATH is configured.');
