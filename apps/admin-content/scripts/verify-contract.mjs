@@ -53,6 +53,7 @@ const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generat
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
 const bulkImportSource = await readFile(path.join(appRoot, 'src/BulkImportPanel.jsx'), 'utf8');
 const bulkDuplicateSource = await readFile(path.join(appRoot, 'src/BulkDuplicateReviewPanel.jsx'), 'utf8');
+const bulkEditorialSource = await readFile(path.join(appRoot, 'src/BulkEditorialReviewPanel.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 const activityCenterSource = await readFile(path.join(appRoot, 'src/ActivityCenter.jsx'), 'utf8');
 const adminNoticeSource = await readFile(path.join(appRoot, 'src/AdminNoticeViewport.jsx'), 'utf8');
@@ -139,6 +140,16 @@ assert.match(bulkDuplicateSource, /全选待审核/, 'Bulk duplicate review must
 assert.match(bulkDuplicateSource, /确认处理/, 'Bulk duplicate review must require one explicit final confirmation action');
 assert.match(bulkDuplicateSource, /recommendedCanonicalKey/, 'Bulk duplicate review must expose a deterministic keep-page recommendation per duplicate set');
 assert.doesNotMatch(bulkDuplicateSource, /<em[^>]*>.*处理重复/s, 'Bulk duplicate actions must never be rendered as status-tag elements');
+assert.match(appSource, /批量内容审核/, 'Admin must expose a dedicated bulk editorial-review entry after template import.');
+assert.match(bulkEditorialSource, /transition_editorial_reviews_bulk/, 'Bulk editorial review must use one atomic backend operation.');
+assert.match(bulkEditorialSource, /批量提交审核/, 'Bulk editorial review must support submitting multiple pages for review.');
+assert.match(bulkEditorialSource, /批量批准 Preview/, 'Bulk editorial review must support approving multiple pages for Preview.');
+assert.match(bulkEditorialSource, /批量退回编辑/, 'Bulk editorial review must support returning multiple pages to Editing.');
+assert.match(bulkEditorialSource, /workflowOverview/, 'Bulk editorial candidates must derive from the shared publish-readiness queue.');
+assert.doesNotMatch(bulkEditorialSource, /<select[^>]*review|review[^>]*<select/s, 'Bulk editorial review must not regress workflow actions into a state dropdown.');
+assert.match(repoStoreSource, /transitionEditorialReviewsBulk/, 'Repo authority must implement atomic bulk editorial transitions.');
+assert.match(repoStoreSource, /Approve Preview requires Awaiting Review state/, 'Bulk approval must enforce strict editorial state transitions server-side.');
+assert.match(stylesSource, /topbar-content-review-trigger[\s\S]*border:\s*1px solid/, 'Bulk content review must remain visibly styled as an action button.');
 assert.match(reviewSource, /emitAdminNotice/, 'Data Review precondition failures must surface as top-right notices');
 assert.match(translationSource, /emitAdminNotice/, 'Translation outcomes and blockers must surface as top-right notices');
 assert.match(historySource, /emitAdminNotice/, 'Revision load and confirmation feedback must surface as top-right notices');

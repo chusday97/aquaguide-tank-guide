@@ -387,6 +387,38 @@ function resolveDuplicateReviewsBulk(store, args = {}) {
   };
 }
 
+function transitionEditorialReviewsBulk(store, args = {}) {
+  const targetState = String(args.p_target_state || '').trim();
+  const items = Array.isArray(args.p_items) ? args.p_items : [];
+  if (!['editing', 'ready_for_review', 'approved'].includes(targetState)) throw new Error('Bulk editorial review target state is invalid.');
+  if (!items.length) throw new Error('Bulk editorial review requires at least one content item.');
+  if (items.length > 100) throw new Error('Bulk editorial review is limited to 100 resources per operation.');
+  const keys = items.map((item) => `${item?.resource_type || ''}:${item?.resource_key || ''}:${item?.locale || ''}`);
+  if (new Set(keys).size !== keys.length) throw new Error('Bulk editorial review contains duplicate resources.');
+  const result = { species_seo: [], species_seo_groups: [] };
+  for (const item of items) {
+    const table = item?.resource_type;
+    const locale = String(item?.locale || '').trim();
+    const resourceKey = String(item?.resource_key || '').trim();
+    if (!['species_seo', 'species_seo_groups'].includes(table) || !locale || !resourceKey) throw new Error('Bulk editorial review resource is invalid.');
+    const keyColumn = table === 'species_seo' ? 'catalog_key' : 'group_key';
+    const current = store[table].find((row) => String(row?.[keyColumn] || '') === resourceKey && String(row?.locale || '') === locale && !row?.deleted_at);
+    if (!current) throw new Error(`Bulk editorial review resource not found: ${table}:${resourceKey}:${locale}`);
+    const currentState = current.review_state || 'editing';
+    if (targetState === 'ready_for_review' && currentState !== 'editing') throw new Error(`Submit for review requires Editing state: ${resourceKey}`);
+    if (targetState === 'approved' && currentState !== 'ready_for_review') throw new Error(`Approve Preview requires Awaiting Review state: ${resourceKey}`);
+    if (targetState === 'editing' && !['ready_for_review', 'approved'].includes(currentState)) throw new Error(`Return to editing requires a reviewed state: ${resourceKey}`);
+    const updated = applyUpdate(store, {
+      table,
+      values: { review_state: targetState },
+      filters: [{ type: 'eq', column: keyColumn, value: resourceKey }, { type: 'eq', column: 'locale', value: locale }],
+    });
+    if (updated.length !== 1) throw new Error(`Bulk editorial review expected one resource: ${resourceKey}`);
+    result[table].push(updated[0]);
+  }
+  return result;
+}
+
 function finalizeSingle(data, mode) {
   if (!mode) return { data, error: null };
   if (mode === 'maybeSingle') {
@@ -416,6 +448,27 @@ export async function executeRepoOperation(operation) {
           return store;
         }, 'content(seo): restore revision as draft');
         return { data: restored, error: null };
+      }
+      if (operation.rpc === 'transition_editorial_reviews_bulk') {
+        let transitioned = null;
+        await updateDraftJson((raw) => {
+          const store = normalizeStore(raw);
+          transitioned = transitionEditorialReviewsBulk(store, operation.args || {});
+          const allRows = [...(transitioned?.species_seo || []), ...(transitioned?.species_seo_groups || [])];
+          const state = String(operation.args?.p_target_state || '');
+          appendActivity(store, {
+            ...operation,
+            table: 'editorial_review',
+            activity: operation.activity || {
+              kind: 'editorial_review_bulk',
+              title: state === 'approved' ? `批量批准 ${transitioned?.species_seo?.length || 0} 个页面` : state === 'ready_for_review' ? `批量提交 ${transitioned?.species_seo?.length || 0} 个页面审核` : `批量退回 ${transitioned?.species_seo?.length || 0} 个页面编辑`,
+              detail: `同时处理 ${transitioned?.species_seo_groups?.length || 0} 个基础模板`,
+              metadata: { review_state: state, page_count: transitioned?.species_seo?.length || 0, base_count: transitioned?.species_seo_groups?.length || 0 },
+            },
+          }, allRows);
+          return store;
+        }, 'content(seo): transition editorial reviews bulk');
+        return { data: transitioned, error: null };
       }
       if (operation.rpc === 'resolve_species_duplicate_reviews_bulk') {
         let resolved = null;

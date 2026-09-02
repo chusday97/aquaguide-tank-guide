@@ -12,6 +12,7 @@ const KIND_LABELS = {
   data_review: ['数据复核', 'Data review'],
   batch_drafts_created: ['批量建立 Draft', 'Batch Draft creation'],
   bulk_import: ['批量导入', 'Bulk import'],
+  editorial_review_bulk: ['批量内容审核', 'Bulk content review'],
   revision_restored: ['恢复历史版本', 'Revision restored'],
   staging_publish: ['发布到 Staging', 'Staging publish'],
 };

@@ -128,7 +128,9 @@ export const repoBackendClient = {
           ? { kind: 'duplicate_review', title: args.p_decision === 'duplicate_records' ? '重复记录已处理' : '已确认不是重复', detail: args.p_group_key || '' }
           : name === 'resolve_species_duplicate_reviews_bulk'
             ? { kind: 'duplicate_review_bulk', title: `批量审核 ${args.p_reviews?.length || 0} 组重复记录`, detail: '' }
-            : { kind: 'admin_action', title: '后台操作已完成', detail: name };
+            : name === 'transition_editorial_reviews_bulk'
+              ? { kind: 'editorial_review_bulk', title: `批量内容审核 ${args.p_items?.length || 0} 项`, detail: args.p_target_state || '' }
+              : { kind: 'admin_action', title: '后台操作已完成', detail: name };
       const description = activity?.title || activity?.detail ? { ...fallback, ...activity } : fallback;
       dispatchOperationEvent({ ...description, status: result?.error ? 'error' : 'success', error: result?.error?.message || '', at: new Date().toISOString() });
       return result;

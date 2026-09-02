@@ -4,6 +4,7 @@ import SpeciesGroupSidebar from './SpeciesGroupSidebar.jsx';
 import BatchSeoEditor from './BatchSeoEditor.jsx';
 import BulkImportPanel from './BulkImportPanel.jsx';
 import BulkDuplicateReviewPanel from './BulkDuplicateReviewPanel.jsx';
+import BulkEditorialReviewPanel from './BulkEditorialReviewPanel.jsx';
 import ActivityCenter from './ActivityCenter.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
 import TranslationPanel from './TranslationPanel.jsx';
@@ -979,6 +980,10 @@ export default function App() {
       title: appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录',
       subtitle: appLocale === 'en' ? 'Select multiple duplicate candidates and save one human decision batch atomically.' : '选择多组重复候选，一次确认并原子保存人工结论。',
     },
+    bulkEditorial: {
+      title: appLocale === 'en' ? 'Bulk content review' : '批量内容审核',
+      subtitle: appLocale === 'en' ? 'Submit, approve, or return multiple completed pages without weakening review gates.' : '批量提交、批准或退回已完成页面，不绕过现有审核门禁。',
+    },
     bulkImport: {
       title: appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入',
       subtitle: appLocale === 'en' ? 'Download the AquaGuide template, fill it in Excel / Numbers, validate it, then import Draft changes.' : '下载 AquaGuide 模板，用 Excel / Numbers 回填，上传校验后批量导入 Draft。',
@@ -1085,6 +1090,9 @@ export default function App() {
           <span className="admin-email">{session.user.email}</span>
           <button type="button" className={`topbar-bulk-trigger ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
             <span>{appLocale === 'en' ? 'Bulk review' : '批量审核'}</span>{pendingDuplicateReviewCount > 0 ? <b>{pendingDuplicateReviewCount}</b> : null}
+          </button>
+          <button type="button" className={`topbar-content-review-trigger ${activeTool === 'bulkEditorial' ? 'active' : ''}`} onClick={() => setActiveTool('bulkEditorial')}>
+            <span>{appLocale === 'en' ? 'Content review' : '内容批审'}</span>{workflowOverview.locales[contentLocale].ready_for_review > 0 ? <b>{workflowOverview.locales[contentLocale].ready_for_review}</b> : null}
           </button>
           <button type="button" className={`topbar-template-trigger ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
             {appLocale === 'en' ? 'Template import' : '模板导入'}
@@ -1235,6 +1243,9 @@ export default function App() {
             <button type="button" className={`editor-tool-row ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
               <span><strong>{appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录'}</strong><small>{appLocale === 'en' ? `${pendingDuplicateReviewCount} duplicate groups waiting` : `${pendingDuplicateReviewCount} 组重复候选待处理`}</small></span><em>{pendingDuplicateReviewCount}</em>
             </button>
+            <button type="button" className={`editor-tool-row ${activeTool === 'bulkEditorial' ? 'active' : ''}`} onClick={() => setActiveTool('bulkEditorial')}>
+              <span><strong>{appLocale === 'en' ? 'Bulk content review' : '批量内容审核'}</strong><small>{appLocale === 'en' ? 'Submit / approve / return multiple completed pages' : '批量提交 / 批准 / 退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale].ready_for_review}</em>
+            </button>
             <button type="button" className={`editor-tool-row ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
               <span><strong>{appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入'}</strong><small>{appLocale === 'en' ? 'Download template → fill in Excel / Numbers → upload' : '下载模板 → Excel / Numbers 回填 → 上传校验'}</small></span><b>›</b>
             </button>
@@ -1262,6 +1273,25 @@ export default function App() {
                   if (reviews.length) setDataReviewRows((current) => ({ ...current, ...Object.fromEntries(reviews.map((row) => [row.issue_key, row])) }));
                   if (rows.length) setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
                   if (rows.length) setRevisionRefreshKey((current) => current + 1);
+                }}
+              />
+            ) : null}
+            {activeTool === 'bulkEditorial' ? (
+              <BulkEditorialReviewPanel
+                species={species}
+                groups={speciesGroups}
+                seoRows={seoRows}
+                groupSeoRows={groupSeoRows}
+                workflowOverview={workflowOverview}
+                locale={contentLocale}
+                schemaReady={schemaReady && groupSchemaReady && dataReviewSchemaReady}
+                readOnly={isReviewMode}
+                onCompleted={(result) => {
+                  const variantRows = result?.species_seo || [];
+                  const baseRows = result?.species_seo_groups || [];
+                  if (variantRows.length) setSeoRows((current) => ({ ...current, ...Object.fromEntries(variantRows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
+                  if (baseRows.length) setGroupSeoRows((current) => ({ ...current, ...Object.fromEntries(baseRows.map((row) => [groupSeoRowKey(row.group_key, row.locale), row])) }));
+                  if (variantRows.length || baseRows.length) setRevisionRefreshKey((current) => current + 1);
                 }}
               />
             ) : null}

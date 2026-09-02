@@ -149,6 +149,55 @@ assert.match(result.error?.message || '', /Canonical Species must belong/, 'Inva
 const reviewCountAfterInvalidBulk = (await executeRepoOperation({ action: 'select', table: 'species_data_reviews', filters: [] })).data.length;
 assert.equal(reviewCountAfterInvalidBulk, reviewCountBeforeInvalidBulk, 'Failed bulk duplicate review must be atomic and persist no partial decisions.');
 
+const editorialGroup = 'base:test-editorial-bulk';
+const editorialPages = ['sp_test_editorial_a', 'sp_test_editorial_b'];
+result = await executeRepoOperation({ action: 'upsert', table: 'species_seo_groups', values: {
+  group_key: editorialGroup, locale: 'zh-CN', seo_title_template: '{{name}}饲养指南', meta_description_template: '{{name}}水族饲养指南',
+  h1_template: '{{name}}饲养指南', shared_intro: '干净的批量审核基础模板。', status: 'draft', review_state: 'editing',
+} });
+assert.equal(result.error, null);
+result = await executeRepoOperation({ action: 'upsert', table: 'species_seo', values: editorialPages.map((catalog_key) => ({
+  catalog_key, locale: 'zh-CN', localized_name: '', seo_title: `${catalog_key} SEO`, meta_description: `${catalog_key} 描述`, h1: `${catalog_key} 饲养指南`,
+  intro: `${catalog_key} 页面简介`, image_alt: `${catalog_key} 图片`, index_strategy: 'noindex', canonical_catalog_key: '', status: 'draft', review_state: 'editing',
+})) });
+assert.equal(result.error, null);
+const editorialItems = [
+  ...editorialPages.map((resource_key) => ({ resource_type: 'species_seo', resource_key, locale: 'zh-CN' })),
+  { resource_type: 'species_seo_groups', resource_key: editorialGroup, locale: 'zh-CN' },
+];
+const activityBeforeEditorial = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data.length;
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: { p_target_state: 'ready_for_review', p_items: editorialItems } });
+assert.equal(result.error, null);
+assert.equal(result.data.species_seo.length, 2);
+assert.ok(result.data.species_seo.every((row) => row.review_state === 'ready_for_review'));
+assert.equal(result.data.species_seo_groups[0].review_state, 'ready_for_review');
+const activityAfterEditorialSubmit = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data;
+assert.equal(activityAfterEditorialSubmit.length, activityBeforeEditorial + 1, 'Bulk editorial submit must create exactly one activity record.');
+assert.equal(activityAfterEditorialSubmit.at(-1).kind, 'editorial_review_bulk');
+
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: { p_target_state: 'approved', p_items: editorialItems } });
+assert.equal(result.error, null);
+assert.ok(result.data.species_seo.every((row) => row.review_state === 'approved'));
+assert.equal(result.data.species_seo_groups[0].review_state, 'approved');
+const editorialApprovedBeforeAtomicFailure = (await executeRepoOperation({ action: 'select', table: 'species_seo', filters: [{ type: 'eq', column: 'catalog_key', value: editorialPages[0] }] })).data[0];
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: { p_target_state: 'editing', p_items: [
+  { resource_type: 'species_seo', resource_key: editorialPages[0], locale: 'zh-CN' },
+  { resource_type: 'species_seo', resource_key: 'sp_missing_editorial', locale: 'zh-CN' },
+] } });
+assert.match(result.error?.message || '', /resource not found/, 'Invalid bulk editorial item must fail the entire operation.');
+const editorialAfterAtomicFailure = (await executeRepoOperation({ action: 'select', table: 'species_seo', filters: [{ type: 'eq', column: 'catalog_key', value: editorialPages[0] }] })).data[0];
+assert.equal(editorialAfterAtomicFailure.review_state, editorialApprovedBeforeAtomicFailure.review_state, 'Failed bulk editorial review must persist no partial review-state changes.');
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: { p_target_state: 'editing', p_items: editorialItems } });
+assert.equal(result.error, null);
+result = await executeRepoOperation({ action: 'update', table: 'species_seo', values: { h1: 'Temporary acceptance test copy' }, filters: [
+  { type: 'eq', column: 'catalog_key', value: editorialPages[1] }, { type: 'eq', column: 'locale', value: 'zh-CN' },
+], singleMode: 'single' });
+assert.equal(result.error, null);
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: { p_target_state: 'ready_for_review', p_items: editorialItems } });
+assert.match(result.error?.message || '', /Content hygiene blocked review/, 'Bulk editorial submit must preserve the content-hygiene gate.');
+const cleanEditorialAfterDirtyFailure = (await executeRepoOperation({ action: 'select', table: 'species_seo', filters: [{ type: 'eq', column: 'catalog_key', value: editorialPages[0] }] })).data[0];
+assert.equal(cleanEditorialAfterDirtyFailure.review_state, 'editing', 'A dirty row must fail the whole bulk submit without advancing clean siblings.');
+
 result = await executeRepoOperation({
   action: 'upsert', table: 'species_seo', values: {
     catalog_key: duplicateB, locale: 'en', localized_name: 'Attempted bypass', image_alt: 'Attempted bypass',
