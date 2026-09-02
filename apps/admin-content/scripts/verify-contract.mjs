@@ -104,6 +104,10 @@ assert.match(sidebarSource, /seoPageCandidateCount[\s\S]*current SEO page candid
 assert.match(sidebarSource, /duplicate_of_catalog_key/, 'Sidebar must collapse source-marked duplicate records instead of presenting them as equal SEO pages');
 assert.match(sidebarSource, /summarizeDataReviewIssues/, 'Sidebar issue badges must reflect unresolved review state rather than permanent source evidence.');
 assert.match(sidebarSource, /duplicateIssueOpen/, 'Resolved duplicate evidence must stop rendering an actionable duplicate badge.');
+assert.match(sidebarSource, /className="variant-review-action"/, 'Duplicate review must render as an explicit action button.');
+assert.doesNotMatch(sidebarSource, /<em[^>]*variant-issue-mark[^>]*actionable/, 'Clickable duplicate review must never be rendered as a status-tag element.');
+assert.match(stylesSource, /variant-row > \.variant-review-action[\s\S]*border:\s*1px solid/, 'Duplicate review action must keep a visible button border even inside Variant rows.');
+assert.match(stylesSource, /count-badge[\s\S]*border-radius:\s*999px/, 'Static count badges must remain visually tag-like rather than action-like.');
 assert.match(sidebarSource, /重复记录已合并/, 'Resolved duplicate groups must use completion copy instead of staying visually suspicious.');
 assert.match(sidebarSource, /filtered\.length[\s\S]*Base groups/, 'Active workflow filter banner must expose affected Base-group count');
 assert.match(sidebarSource, /Base Species groups/, 'Species navigation All count must expose its Base-group unit in hover help');

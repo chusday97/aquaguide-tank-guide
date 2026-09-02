@@ -356,3 +356,9 @@
 - Browser Review-mode validation: bulk-import and submit-review blockers toast correctly; manual close + timed dismissal pass; old inline transient selector count=0; browser errors=0.
 - Contract, Admin build, build-routing, full root build, SEO handoff, Admin UI and diff gates PASS. Normal root build still skips Species staging content.
 - Remote: functional commit `0f7a32e`; GitHub Admin Content CI #51 (`33606431007`) PASS; AquaGuide Vercel `dpl_8nhb9HoVFBiuafNMrJZtxN5UEsvs` READY; Admin-only `dpl_EQrgN5itFAmSr6T1Eq5bmiy2RMzY` READY. Hosted `/admin/seo/` returns 200 + deployment `X-Robots-Tag: noindex`.
+
+## 2026-09-02 — Strict status vs action visual semantics
+- Replaced sidebar `处理重复` actionable tag with a standalone button and separated it from Species row navigation.
+- Replaced clickable issue-count badge behavior with an explicit `处理数据` button.
+- Restored static count badges to pill-only/non-clickable semantics; action buttons now have visible border, rectangular radius, hover/press affordance and chevron/count treatment.
+- Added regression guards that forbid actionable duplicate-review tags and require explicit button styling.

@@ -565,3 +565,10 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 4. Use the private content repo for current editorial state and the public repo only for code/staging snapshot state.
 5. Continue the first incomplete item in section 18 unless the user gives a newer concrete UI issue.
 6. Execute changes/tests/commit/push in batches; do not stop after merely explaining.
+
+## 28. Button vs status UI semantics — completed 2026-09-02
+- Sidebar duplicate/data-review actions are now real standalone buttons, never clickable badge/tag elements.
+- `处理重复 / Review duplicate` is a rectangular bordered action with hover/pressed affordance and chevron; it no longer lives inside the Species navigation button.
+- group-level `处理数据 / Review` is also an explicit button; unresolved counts are contained inside the action rather than disguised as a clickable status badge.
+- static counts/status remain non-interactive pill-style badges with no pointer/box-shadow; action controls use non-pill radius, visible border and interaction states.
+- contract guards prevent duplicate review from regressing to an actionable `<em>`/tag and require the visible action-button border.

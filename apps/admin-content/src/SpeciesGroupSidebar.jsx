@@ -163,17 +163,21 @@ export default function SpeciesGroupSidebar({
               const containsActiveVariant = selectedScope === 'variant' && group.members.some((item) => item.id === selectedId);
               return (
                 <div className={`species-group ${issueSummary.open > 0 ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
-                  <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={(event) => { if (event.target.closest('.issue-dot')) { onOpenDataReview?.(group.group_key, firstVisible.id); return; } onSelectBase?.(firstVisible.id); }}>
-                    <span className="group-copy">
-                      <strong>{group.base_scientific_name}</strong>
-                      <small>{primaryMembers.length > 1
-                        ? `${primaryMembers.length} ${t('sidebar.pages')}${hiddenDuplicateCount ? (resolvedDuplicateHiddenCount === hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate merged` : ` · ${hiddenDuplicateCount} 条重复记录已合并`) : (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate candidate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`)) : ''}`
-                        : `${t('sidebar.baseSpecies')}${hiddenDuplicateCount ? (resolvedDuplicateHiddenCount === hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate merged` : ` · ${hiddenDuplicateCount} 条重复记录已合并`) : (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate candidate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`)) : ''}`}</small>
-                    </span>
-                    <span className="group-badges">
-                      {issueSummary.open > 0 ? <em className="issue-dot" title={appLocale === 'en' ? `${issueSummary.open} open data-review issue${issueSummary.open === 1 ? '' : 's'}` : `${issueSummary.open} 个待处理数据问题`}>{issueSummary.open}</em> : null}
-                    </span>
-                  </button>
+                  <div className="group-header-row">
+                    <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={() => onSelectBase?.(firstVisible.id)}>
+                      <span className="group-copy">
+                        <strong>{group.base_scientific_name}</strong>
+                        <small>{primaryMembers.length > 1
+                          ? `${primaryMembers.length} ${t('sidebar.pages')}${hiddenDuplicateCount ? (resolvedDuplicateHiddenCount === hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate merged` : ` · ${hiddenDuplicateCount} 条重复记录已合并`) : (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate candidate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`)) : ''}`
+                          : `${t('sidebar.baseSpecies')}${hiddenDuplicateCount ? (resolvedDuplicateHiddenCount === hiddenDuplicateCount ? (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate merged` : ` · ${hiddenDuplicateCount} 条重复记录已合并`) : (appLocale === 'en' ? ` · ${hiddenDuplicateCount} duplicate candidate hidden` : ` · ${hiddenDuplicateCount} 条疑似重复已折叠`)) : ''}`}</small>
+                      </span>
+                    </button>
+                    {issueSummary.open > 0 ? (
+                      <button type="button" className="group-review-action" onClick={() => onOpenDataReview?.(group.group_key, firstVisible.id)} title={appLocale === 'en' ? 'Open data review' : '处理数据问题'}>
+                        <span>{appLocale === 'en' ? 'Review' : '处理数据'}</span><b>{issueSummary.open}</b>
+                      </button>
+                    ) : null}
+                  </div>
                   <div className="variant-list">
                     {visibleMembers.map((item) => {
                       const duplicateSet = (group.duplicate_sets || []).find((set) => set.member_ids.includes(item.catalog_key));
@@ -181,13 +185,17 @@ export default function SpeciesGroupSidebar({
                       return (
                       <div className={`variant-row ${selectedScope === 'variant' && selectedId === item.id ? 'active' : ''}`} key={item.id}>
                         <input type="checkbox" checked={batchIds.includes(item.id)} onChange={() => onToggleBatch(item.id)} aria-label={`批量选择 ${item.name}`} />
-                        <button type="button" onClick={(event) => { if (event.target.closest('.variant-issue-mark')) { onOpenDataReview?.(group.group_key, item.id); return; } onSelect(item.id); }}>
+                        <button className="variant-main-button" type="button" onClick={() => onSelect(item.id)}>
                           <span>
                             <strong>{item.name}</strong>
                             <small>{item.variant_label || (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>
                           </span>
-                          {duplicateIssueOpen ? <em className="variant-issue-mark actionable" title={appLocale === 'en' ? 'Open duplicate review' : '打开重复记录处理'}>{appLocale === 'en' ? 'Review duplicate' : '处理重复'}</em> : null}
                         </button>
+                        {duplicateIssueOpen ? (
+                          <button type="button" className="variant-review-action" onClick={() => onOpenDataReview?.(group.group_key, item.id)} title={appLocale === 'en' ? 'Open duplicate review' : '打开重复记录处理'}>
+                            <span>{appLocale === 'en' ? 'Review duplicate' : '处理重复'}</span><b aria-hidden="true">›</b>
+                          </button>
+                        ) : null}
                       </div>
                     );})}
                   </div>
