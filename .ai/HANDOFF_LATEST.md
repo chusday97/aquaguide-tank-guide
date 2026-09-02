@@ -1,6 +1,6 @@
 # AquaGuide Species SEO Admin — HANDOFF LATEST
 
-Updated: 2026-09-02 13:48 +08:00
+Updated: 2026-09-02 14:15 +0800
 Canonical continuation entry: **read this file first**.
 Branch: `feature/admin-content-v0`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
@@ -16,7 +16,7 @@ Product Truth stays read-only here. The Admin edits only SEO/editorial content.
 **Public app/code repo**
 - `chusday97/aquaguide-tank-guide`
 - working branch: `feature/admin-content-v0`
-- latest functional commit: `c2c4789` — `feat(admin): add bulk import and activity center`
+- latest functional commit: `16d3f7e` — `feat(admin): add global copy cleanup queue`
 - `main` is not the target of this work and Production is still locked.
 
 **Private editorial content repo**
@@ -228,6 +228,7 @@ A normal Save/Approve intentionally does not update that snapshot.
 
 ## 15. Latest code/deployment evidence
 Latest functional commits:
+- `16d3f7e feat(admin): add global copy cleanup queue`
 - `8b70a64 fix(seo): decouple code preview from staging snapshot`
 - `c82378f fix(admin): block acceptance copy from review and staging`
 - previous duplicate authority checkpoint: `4da7849 fix(admin): enforce resolved duplicate policy everywhere`
@@ -235,20 +236,23 @@ Latest functional commits:
 GitHub Actions:
 - Admin Content CI Gate #47 (`33595530355`) SUCCESS on `c82378f`
 - Admin Content CI Gate #48 (`33595971134`) SUCCESS on `8b70a64`
-- #48 includes the new `test:species-seo-build-routing` gate plus contract, production build, explicit root Species artifact integration, generated-catalog consistency and diff hygiene
+- Admin Content CI Gate #49 (`33597791743`) SUCCESS on `16d3f7e`
+- #49 covers the global copy-cleanup queue semantics plus the existing deployment-routing, contract, production build, explicit root Species artifact integration, generated-catalog consistency and diff-hygiene gates
 
 Vercel Preview:
-- AquaGuide deployment `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` — READY on `8b70a64`
-- AquaGuide host `aquaguide-4d1k7wqep-chusday97s-projects.vercel.app`
+- latest AquaGuide deployment `dpl_7wysx8FDcz1CX4oWqNtmmdiLvVzq` — READY on `16d3f7e`
+- latest AquaGuide host `aquaguide-8fb3cp5ny-chusday97s-projects.vercel.app`
+- previous deployment `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` remains the deployment-boundary checkpoint on `8b70a64`
 - stable branch alias: `aquaguide-git-feature-admin-content-v0-chusday97s-projects.vercel.app`
-- Admin-only deployment `dpl_8FuNP96AYyUTDhtaqEEXt2gXv8Y4` — READY on `8b70a64`
-- hosted AquaGuide `/admin/seo/` returns 200 and deployment-level `X-Robots-Tag: noindex`; its Admin bundle is `index-MrAgFMxf.js`, matching the locally verified hygiene-gate build
+- latest Admin-only deployment `dpl_F6jSc7U9pece3NaprHUdGbsU8Gyp` — READY on `16d3f7e`
+- hosted AquaGuide `/admin/seo/` returns 200 and deployment-level `X-Robots-Tag: noindex`; its Admin bundle is `index-Kbs1p-SQ.js`, matching the locally verified global copy-cleanup build
 - Vercel build log explicitly reports `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
 - the immediately prior AquaGuide deployment `dpl_CE1YCbyBG8tQc8C7DR1YB76aVmga` failed on `c82378f` because a normal code Preview still auto-consumed the historical dirty staging snapshot; `8b70a64` fixes that coupling rather than weakening the hygiene gate
 
 Temporary `_vercel_share` links expire and must not be stored as canonical handoff URLs.
 
 ## 16. Important recent commits
+- `16d3f7e` — global per-locale copy-cleanup queue + sidebar alert + Base-template repair navigation
 - `8b70a64` — normal code Preview no longer consumes staging content; only explicit staging-publish snapshot commits generate Species pages
 - `c82378f` — content hygiene gate blocks acceptance/test wording from review, Staging and static generation
 - `af8ad80` — atomic duplicate review + evidence-guided UI + resolved-state cleanup
@@ -451,7 +455,31 @@ Functional commit: `8b70a64`.
 - Admin-only Vercel Preview `dpl_8FuNP96AYyUTDhtaqEEXt2gXv8Y4` READY
 - hosted `/admin/seo/` returns 200 with `X-Robots-Tag: noindex`
 
-## 25. Startup instruction for the next conversation
+## 25. Global copy-cleanup queue — completed 2026-09-02
+Functional commit: `16d3f7e`.
+
+### What changed
+- content hygiene is now a first-class **diagnostic queue**, not a fourth editorial review state
+- workflow overview counts dirty effective pages per locale and stores exact Species member IDs for filtering
+- Chinese and English task sections each show `需清理文案 / Copy cleanup` with an explanation that review/Preview remains blocked until cleanup
+- clicking a hygiene task switches the editor to the corresponding content locale and selects the first affected Species
+- sidebar shows a full-width cleanup alert only when the current locale actually has dirty pages, avoiding a fifth cramped quick-filter button
+- a current-page dirty Override still offers `恢复基础模板`; inherited Base H1/title/meta or shared intro now offers `去基础模板修复` so the user lands on the real source rather than copying Base content into Variant
+
+### Verification
+- semantic contract: one dirty zh-CN page creates exactly one zh cleanup task and zero English false positives
+- empty editorial state creates zero hygiene tasks
+- review-mode browser verified the new queue rows coexist with the existing 33 Data Review issues / 458 blocked SEO candidates and no console errors
+- `npm run test:contract -w @aquaguide/admin-content` PASS
+- `npm run test:species-seo-build-routing` PASS
+- Admin build + root build PASS; root code build still logs `Species SEO artifact: skipped (normal code build; no explicit Staging publish input).`
+- `npm run verify:seo-species-handoff` PASS
+- `npm run test:admin-content-ui` PASS
+- GitHub Admin Content CI Gate #49 PASS (`33597791743`)
+- AquaGuide Preview `dpl_7wysx8FDcz1CX4oWqNtmmdiLvVzq` READY; Admin-only Preview `dpl_F6jSc7U9pece3NaprHUdGbsU8Gyp` READY
+- hosted `/admin/seo/` returns 200 + `X-Robots-Tag: noindex`
+
+## 26. Startup instruction for the next conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` first.
 2. Check `git branch --show-current`, `git status --short`, and current HEAD.

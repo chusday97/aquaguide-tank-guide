@@ -333,3 +333,10 @@
 - Added `test:species-seo-build-routing` and wired it into CI; explicit CI fixture generation remains supported.
 - Simulated code Preview PASS; simulated explicit publish with the dirty historical snapshot FAILS CLOSED on zh `验收` and en `Dual-Repo`.
 - GitHub CI #48 PASS; AquaGuide Vercel `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` READY; admin-content `dpl_8FuNP96AYyUTDhtaqEEXt2gXv8Y4` READY.
+
+## 2026-09-02 — Global copy-cleanup queue
+- Added per-locale content-hygiene task queues without creating a new review state.
+- Added a conditional full-width sidebar cleanup alert, locale-aware filtering, and direct navigation to the affected Species.
+- Inherited dirty Base content now routes to the Base editor; page Overrides keep one-click Base restore.
+- Local contract/build/UI/deployment-routing gates PASS; GitHub CI #49 PASS.
+- AquaGuide Preview dpl_7wysx8FDcz1CX4oWqNtmmdiLvVzq READY; Admin Preview dpl_F6jSc7U9pece3NaprHUdGbsU8Gyp READY; hosted Admin remains noindex.
