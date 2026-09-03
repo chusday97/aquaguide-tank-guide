@@ -252,3 +252,14 @@ Updated: 2026-09-02
 - [ ] Batch submit + approve the intended bilingual pages/Base templates.
 - [ ] Explicitly Staging Publish only the reviewed allowlist and verify generated EN/ZH metadata/CTA/noindex.
 - [ ] Keep Production locked unless explicitly authorized.
+
+## 2026-09-03 first real Species batch
+- [x] Make bulk SEO import atomic and create missing Base templates without overwriting existing Base content.
+- [x] Prepare a 14-Species bilingual noindex batch with no unresolved duplicate/category-conflict blocker.
+- [x] Run isolated end-to-end Draft → review → Staging snapshot → 28 static page generation dry-run.
+- [x] Remove publication-facing/internal `Product Truth` jargon exposed by the dry-run.
+- [ ] Authenticated Admin: upload batch-01 zh-CN CSV, inspect diff, import Draft.
+- [ ] Authenticated Admin: upload batch-01 English CSV, inspect diff, import Draft.
+- [ ] Batch submit + approve the intended 14 Species and required Base templates.
+- [ ] Explicitly Staging Publish the 14-Species allowlist once and verify hosted EN/ZH output + deployment noindex.
+- [ ] Keep Production locked until explicit authorization.

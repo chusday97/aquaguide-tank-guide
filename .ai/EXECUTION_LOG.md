@@ -403,3 +403,11 @@
 - `npm run test:admin-content-ui` PASS: hub routing, Product/Care edit/save, forbidden state and 390/1280px layout.
 - `git diff --check` PASS.
 - Next: prepare low-risk bilingual Draft content batch; no human duplicate decisions or Production publication will be automated.
+
+## 2026-09-03 — Batch-01 operational dry-run
+- `408c7ae` added atomic CSV import with create-if-missing Base templates.
+- Prepared 14 low-risk Species in `~/aquaguide-seo-batches/batch-01/` as bilingual noindex Draft CSVs.
+- Full isolated Repo/session workflow generated 28 bilingual static Species HTML pages with all review gates preserved.
+- Dry-run exposed user-facing `Product Truth` implementation jargon in the generator; fixed it across publication/preview/admin guidance in `348d6a0`.
+- Admin contract, root build, SEO handoff and Admin UI regression all PASS after the copy cleanup.
+- No real private content repo write, no Staging publish and no Production write performed in this dry-run.

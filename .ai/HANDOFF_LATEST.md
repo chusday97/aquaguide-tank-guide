@@ -637,3 +637,22 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - Regression coverage proves: 2 page rows + 2 Base candidates create 2 pages + only 1 missing Base; the pre-existing Base remains untouched; duplicate input fails atomically with zero partial Base creation.
 - Verification PASS: Admin contract suite, Repo backend/API gates, dual-repo routing, Admin build, full root build, SEO Species handoff, Admin authority UI/browser regression and `git diff --check`.
 - Production remains locked. The next step is operational: prepare the first low-risk 10–20 Species bilingual Draft batch, avoiding unresolved duplicate/category-conflict groups, then run CSV diff → import → bulk editorial review → explicit Staging only.
+
+## 33. First real 14-Species batch dry-run + public-copy cleanup — completed 2026-09-03
+- Functional commit: `348d6a0 fix(admin-content): remove internal data jargon from preview`.
+- The first real content batch is prepared locally at `~/aquaguide-seo-batches/batch-01/`; it is intentionally not committed to the public AquaGuide code repository.
+- Batch scope: 14 Species / 14 Base groups, each with `duplicate_count=0`, `category_conflict=false`, no unresolved duplicate set, bilingual Draft content, and fail-closed `noindex`.
+- Removed user-facing `Product Truth` / `Catalog` implementation jargon from publication-facing Species pages, Live Preview, Data Review, duplicate review and bulk import guidance. Publication copy now uses plain-language `基础饲养参数 / Care reference` and `源数据 / Source data`.
+- `PublicSpeciesPreview` now reuses the same shared Species presentation labels/tank-size localization as the static generator, reducing preview-vs-output drift.
+- Isolated full-chain dry-run PASS: 28 page Drafts + 28 Base Drafts → 56 review resources → batch submit → batch approve → 14-Species Staging snapshot → 28 EN/ZH static HTML pages.
+- Generated-page checks PASS: no acceptance/test copy, no internal `Product Truth` leakage, all 28 pages remain `noindex,follow`; no private Draft repo write and no Production write occurred.
+- Local gates PASS: Admin contract, Repo backend/API, dual-repo routing, Admin build, full root build, SEO handoff, Admin UI regression and diff hygiene.
+- Durable dry-run evidence: `~/aquaguide-seo-batches/batch-01/dry-run-report.json`.
+
+### Next operational action
+1. Keep Production locked.
+2. In the authenticated real Admin, upload the prepared zh-CN and English CSVs and inspect the field-level diff before writing.
+3. Import the 14-Species batch as Draft only; confirm 14 missing Base templates per locale are created only when absent.
+4. Use batch editorial review to submit and approve the intended 14 Species + required Base rows.
+5. Perform one explicit Staging Publish for the 14-Species allowlist and verify hosted EN/ZH HTML + deployment-level `X-Robots-Tag: noindex`.
+6. Do not bypass authenticated Admin for human review/data decisions; do not merge to `main` or unlock Production without explicit user instruction.
