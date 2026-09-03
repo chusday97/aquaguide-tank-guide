@@ -126,6 +126,11 @@ assert.match(appSource, /BulkImportPanel/, 'Admin must expose template-backed bu
 assert.match(appSource, /ActivityCenter/, 'Admin must expose a persistent operation-history surface');
 assert.match(bulkImportSource, /import_action/, 'Bulk template must require an explicit per-row import marker');
 assert.match(bulkImportSource, /VALID_ACTIONS/, 'Bulk import must ignore unmarked template rows');
+assert.match(bulkImportSource, /TEMPLATE_GUIDE/, 'Downloaded import template must explain what every field means.');
+assert.match(bulkImportSource, /TEMPLATE_FORMATS/, 'Downloaded import template must explain accepted field formats.');
+assert.match(bulkImportSource, /length:\s*20/, 'Downloaded import template must provide a blank working area instead of preloading the full catalog.');
+assert.match(bulkImportSource, /示例 1[\s\S]*示例 2[\s\S]*示例 3/, 'Downloaded import template must contain three non-importing examples below the blank area.');
+assert.doesNotMatch(bulkImportSource, /for \(const member of species\) \{[\s\S]*link\.download = `aquaguide-species-seo/, 'Template download must not preload every catalog record.');
 assert.match(bulkImportSource, /source_name[\s\S]*scientific_name/, 'Bulk template must expose Product Truth identity as reference columns');
 assert.match(bulkImportSource, /inspectSourceIdentity/, 'Bulk import must reject rows whose source scientific identity is incomplete before Draft write.');
 assert.match(bulkImportSource, /status:\s*'draft'[\s\S]*review_state:\s*'editing'/, 'Bulk import must fail closed to Draft + Editing');
@@ -321,9 +326,10 @@ assert.match(baseSource, /isPublicSpeciesPublishingEnabled = false/, 'Base publi
 assert.match(appSource, /CONTENT_LOCALES/, 'Admin must expose an explicit content-locale switcher');
 assert.match(appSource, /seoRowKey\(row\.catalog_key, row\.locale\)/, 'Localized Variant rows must not collide in client state');
 assert.match(appSource, /groupSeoRowKey\(row\.group_key, row\.locale\)/, 'Localized Base rows must not collide in client state');
-assert.match(appSource, /VITE_ADMIN_REVIEW_MODE/, 'Review mode must be explicit and build-time controlled');
+assert.match(appSource, /VITE_ADMIN_READ_ONLY_DEMO/, 'Read-only demo mode must be explicit and build-time controlled.');
+assert.doesNotMatch(appSource, /VITE_ADMIN_REVIEW_MODE/, 'Normal Vercel Preview must not be conflated with the old read-only review flag.');
 assert.match(appSource, /if \(readOnly\)/, 'Single save path must fail closed in review mode');
-assert.match(appSource, /Read-only Review[\s\S]*emitAdminNotice/, 'Read-only save attempts must explain the block through the global notice layer');
+assert.match(appSource, /Read-only demo[\s\S]*emitAdminNotice/, 'Read-only demo save attempts must explain the block through the global notice layer');
 
 assert.match(batchSource, /assessDataReview/, 'Bulk writes must consume persisted data-review decisions');
 assert.match(batchSource, /getResolvedDuplicateSeoPolicy/, 'Batch Draft creation must inherit resolved duplicate canonical policy.');
@@ -353,7 +359,7 @@ assert.match(translationSource, /targetPublished/, 'Published English rows must 
 assert.match(translationApiSource, /requireAdmin/, 'Translation API must re-check admin authorization server-side');
 assert.match(translationApiSource, /process\.env\.AI_API_KEY|process\.env\.DEEPSEEK_API_KEY/, 'Translation provider key must remain server-side');
 assert.doesNotMatch(translationSource, /DEEPSEEK_API_KEY|AI_API_KEY/, 'Browser translation UI must not read provider secrets');
-assert.match(reviewEnvExample, /^VITE_ADMIN_REVIEW_MODE=true$/m, 'Review environment must opt into read-only mode');
+assert.match(reviewEnvExample, /^VITE_ADMIN_READ_ONLY_DEMO=true$/m, 'Read-only demo environment must opt in explicitly');
 assert.match(adminBackendSource, /repoBackendClient/, 'Repo-backed Admin client must be the default runtime authority');
 assert.doesNotMatch(adminBackendSource, /@supabase\/supabase-js/, 'SEO Admin browser runtime must not import Supabase SDK');
 assert.match(repoBackendClientSource, /credentials:\s*'include'/, 'Repo Admin browser requests must use the HttpOnly server session');

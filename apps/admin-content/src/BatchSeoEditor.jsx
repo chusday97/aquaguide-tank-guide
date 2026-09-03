@@ -38,7 +38,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
 
   const saveDrafts = async () => {
     if (members.length < 2) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select more records' : '请选择至少 2 条记录', detail: isUiEnglish ? 'Batch Draft creation needs at least two records from the same Base group.' : '批量建立 Draft 至少需要同一 Base 下的 2 条记录。' }); return; }
-    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'Batch Drafts were not created.' : '不会建立任何 Draft。' }); return; }
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Batch Drafts were not created.' : '不会建立任何 Draft。' }); return; }
     if (blockedReason) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Batch action blocked' : '批量操作被阻止', detail: blockedReason }); return; }
     setSaving(true);
     const rows = members.map((member) => {

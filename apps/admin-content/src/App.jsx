@@ -25,7 +25,7 @@ import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, b
 import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
-const isReviewMode = import.meta.env.VITE_ADMIN_REVIEW_MODE === 'true';
+const isReadOnlyDemoMode = import.meta.env.VITE_ADMIN_READ_ONLY_DEMO === 'true';
 const isPublicSpeciesPublishingEnabled = false;
 const initialParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 const initialContentLocale = initialParams.get('locale') === 'en' ? 'en' : 'zh-CN';
@@ -300,7 +300,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       return;
     }
     if (readOnly) {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'No write request was sent.' : '此次操作不会写入内容存储。' });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'No write request was sent.' : '此次操作不会写入内容存储。' });
       return;
     }
     if (!schemaReady) {
@@ -621,7 +621,7 @@ export default function App() {
   }, [activityOpen]);
 
   useEffect(() => {
-    if (!editorDirty || isReviewMode) return undefined;
+    if (!editorDirty || isReadOnlyDemoMode) return undefined;
     const handleBeforeUnload = (event) => {
       event.preventDefault();
       event.returnValue = '';
@@ -631,7 +631,7 @@ export default function App() {
   }, [editorDirty]);
 
   useEffect(() => {
-    if (isReviewMode) {
+    if (isReadOnlyDemoMode) {
       setSession({ user: { id: 'review-only', email: 'review@aquaguide.local' } });
       setRole('admin');
       setSpecies(catalogSpecies);
@@ -660,7 +660,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (isReviewMode) return undefined;
+    if (isReadOnlyDemoMode) return undefined;
     if (!session) {
       setRole(null);
       setSpecies([]);
@@ -737,7 +737,7 @@ export default function App() {
   }, [session]);
 
   useEffect(() => {
-    if (!session || role !== 'admin' || isReviewMode) return undefined;
+    if (!session || role !== 'admin' || isReadOnlyDemoMode) return undefined;
     let cancelled = false;
     const lastSeen = typeof window !== 'undefined' ? window.localStorage.getItem('aquaguide-admin-activity-seen-at') : null;
     adminContentClient.from('admin_activity_log').select('id,created_at').order('created_at', { ascending: false }).limit(100).then(({ data, error: activityError }) => {
@@ -820,7 +820,7 @@ export default function App() {
     ? { ...livePreview, species: previewSpecies || livePreview.species, productTruthLoading, productTruthError }
     : savedLivePreview;
   const confirmDiscardUnsaved = () => {
-    if (!editorDirty || isReviewMode) return true;
+    if (!editorDirty || isReadOnlyDemoMode) return true;
     return window.confirm(appLocale === 'en'
       ? 'You have unsaved changes. Discard them and continue?'
       : '当前有未保存修改。确定放弃这些修改并继续吗？');
@@ -884,8 +884,8 @@ export default function App() {
     : null;
 
   const exportPreviewSnapshot = () => {
-    if (isReviewMode) {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only Review' : '当前是只读 Review', detail: appLocale === 'en' ? 'A real Preview Snapshot is only exported from the authenticated Admin.' : '真实 Preview Snapshot 只能从已登录的 Admin 导出。' });
+    if (isReadOnlyDemoMode) {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'A real Preview Snapshot is only exported from the authenticated Admin.' : '真实 Preview Snapshot 只能从已登录的 Admin 导出。' });
       return;
     }
     if (!selectedSpecies || !selectedGroup) {
@@ -915,8 +915,8 @@ export default function App() {
   };
 
   const publishSelectedToStaging = async () => {
-    if (isReviewMode) {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only Review' : '当前是只读 Review', detail: appLocale === 'en' ? 'Staging publish is not available in Review mode.' : 'Review 模式不会执行 Staging 发布。' });
+    if (isReadOnlyDemoMode) {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'Staging publish is not available in demo mode.' : '演示模式不会执行 Staging 发布。' });
       return;
     }
     if (!isRepoBackend) {
@@ -999,7 +999,7 @@ export default function App() {
   })[activeTool] || { title: '', subtitle: '' };
 
 
-  const repoBackendBlocked = !isReviewMode && backendHealth?.ok && (
+  const repoBackendBlocked = !isReadOnlyDemoMode && backendHealth?.ok && (
     !backendHealth.auth_configured ||
     !backendHealth.github_token_configured ||
     !backendHealth.content_repo_readable ||
@@ -1012,14 +1012,14 @@ export default function App() {
   );
 
   const signOut = async () => {
-    if (isReviewMode) return;
+    if (isReadOnlyDemoMode) return;
     if (!confirmDiscardUnsaved()) return;
     setEditorDirty(false);
     await adminContentClient.auth.signOut();
     setSession(null);
   };
 
-  if (!isReviewMode && !isAdminBackendConfigured) {
+  if (!isReadOnlyDemoMode && !isAdminBackendConfigured) {
     return (
       <main className="login-shell">
         <section className="login-card wide">
@@ -1086,7 +1086,7 @@ export default function App() {
         </nav>
         <div className="topbar-actions">
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
-          <span>{isReviewMode ? t('top.reviewMode') : t('top.admin')}</span>
+          <span>{isReadOnlyDemoMode ? t('top.reviewMode') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
           <button type="button" className={`topbar-bulk-trigger ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
             <span>{appLocale === 'en' ? 'Bulk review' : '批量审核'}</span>{pendingDuplicateReviewCount > 0 ? <b>{pendingDuplicateReviewCount}</b> : null}
@@ -1109,9 +1109,9 @@ export default function App() {
         </div>
       </header>
 
-      {isReviewMode ? (
+      {isReadOnlyDemoMode ? (
         <div className="schema-banner">
-          <strong>只读 UI Review：</strong> 当前远程预览不连接任何可写内容源。可以搜索 486 条 Species、体验编辑器和实时前端 Preview，但保存被硬禁用。
+          <strong>只读 UI 演示：</strong> 这是专门的只读演示环境，不连接任何可写内容源。可以搜索 486 条 Species、体验编辑器和实时前端 Preview，但保存被硬禁用。
         </div>
       ) : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
@@ -1177,7 +1177,7 @@ export default function App() {
               record={selectedGroupPersisted}
               locale={contentLocale}
               schemaReady={groupSchemaReady}
-              readOnly={isReviewMode}
+              readOnly={isReadOnlyDemoMode}
               onPreview={(row) => setGroupPreviewRows((current) => ({ ...current, [groupSeoRowKey(row.group_key, row.locale)]: row }))}
               selectedInspectorElement={selectedInspectorElement}
               onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
@@ -1203,7 +1203,7 @@ export default function App() {
               locale={contentLocale}
               schemaReady={schemaReady}
               dataReviewRows={dataReviewRows}
-              readOnly={isReviewMode}
+              readOnly={isReadOnlyDemoMode}
               onLivePreviewChange={setLivePreview}
               selectedInspectorElement={selectedInspectorElement}
               onInspectorSelect={(key) => handleInspectorSelect(key, 'editor')}
@@ -1266,7 +1266,7 @@ export default function App() {
                 groups={speciesGroups}
                 reviewRows={dataReviewRows}
                 schemaReady={dataReviewSchemaReady}
-                readOnly={isReviewMode}
+                readOnly={isReadOnlyDemoMode}
                 onCompleted={(result) => {
                   const reviews = result?.reviews || [];
                   const rows = result?.seo_rows || [];
@@ -1285,7 +1285,7 @@ export default function App() {
                 workflowOverview={workflowOverview}
                 locale={contentLocale}
                 schemaReady={schemaReady && groupSchemaReady && dataReviewSchemaReady}
-                readOnly={isReviewMode}
+                readOnly={isReadOnlyDemoMode}
                 onCompleted={(result) => {
                   const variantRows = result?.species_seo || [];
                   const baseRows = result?.species_seo_groups || [];
@@ -1296,7 +1296,7 @@ export default function App() {
               />
             ) : null}
             {activeTool === 'dataReview' ? (
-              <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReviewMode}
+              <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReadOnlyDemoMode}
                 onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))}
                 onResolved={(row) => {
                   const nextRows = { ...dataReviewRows, [row.issue_key]: row };
@@ -1310,7 +1310,7 @@ export default function App() {
                 }} />
             ) : null}
             {activeTool === 'readiness' ? (
-              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReviewMode} onExportPreview={exportPreviewSnapshot} onPublishStaging={publishSelectedToStaging} stagingPublishing={stagingPublishing} repoMode={isRepoBackend} />
+              <PublishReadinessPanel readiness={publishReadiness} locale={getLocaleLabel(contentLocale)} readOnly={isReadOnlyDemoMode} onExportPreview={exportPreviewSnapshot} onPublishStaging={publishSelectedToStaging} stagingPublishing={stagingPublishing} repoMode={isRepoBackend} />
             ) : null}
             {activeTool === 'translation' && contentLocale === 'en' ? (
               <TranslationPanel
@@ -1320,7 +1320,7 @@ export default function App() {
                 sourceGroupRow={sourceGroupRow}
                 targetVariantRow={englishVariantRow}
                 targetGroupRow={englishGroupRow}
-                readOnly={isReviewMode}
+                readOnly={isReadOnlyDemoMode}
                 schemaReady={schemaReady}
                 groupSchemaReady={groupSchemaReady}
                 onVariantSaved={(row) => {
@@ -1342,7 +1342,7 @@ export default function App() {
                 locale={contentLocale}
                 schemaReady={schemaReady}
                 dataReviewRows={dataReviewRows}
-                readOnly={isReviewMode}
+                readOnly={isReadOnlyDemoMode}
                 onClear={() => { setBatchIds([]); setActiveTool(null); }}
                 onSaved={(rows) => {
                   setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
@@ -1357,7 +1357,7 @@ export default function App() {
                 reviewRows={dataReviewRows}
                 locale={contentLocale}
                 schemaReady={schemaReady}
-                readOnly={isReviewMode}
+                readOnly={isReadOnlyDemoMode}
                 onImported={(result) => {
                   const rows = result?.species_seo || [];
                   const baseRows = result?.species_seo_groups || [];
@@ -1371,7 +1371,7 @@ export default function App() {
               <div className="revision-grid drawer-revision-grid">
                 <RevisionHistoryPanel
                   resourceType="species_seo_group" resourceKey={selectedGroup?.group_key || ''} locale={contentLocale}
-                  schemaReady={historySchemaReady} readOnly={isReviewMode} refreshKey={revisionRefreshKey}
+                  schemaReady={historySchemaReady} readOnly={isReadOnlyDemoMode} refreshKey={revisionRefreshKey}
                   onRestored={(row) => {
                     if (!row?.group_key) return;
                     const key = groupSeoRowKey(row.group_key, row.locale);
@@ -1382,7 +1382,7 @@ export default function App() {
                 />
                 <RevisionHistoryPanel
                   resourceType="species_seo" resourceKey={selectedSpecies?.catalog_key || ''} locale={contentLocale}
-                  schemaReady={historySchemaReady} readOnly={isReviewMode} refreshKey={revisionRefreshKey}
+                  schemaReady={historySchemaReady} readOnly={isReadOnlyDemoMode} refreshKey={revisionRefreshKey}
                   onRestored={(row) => {
                     if (!row?.catalog_key) return;
                     setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
@@ -1399,7 +1399,7 @@ export default function App() {
         <LiveFrontendPreview
           preview={activeLivePreview}
           readiness={publishReadiness}
-          readOnly={isReviewMode}
+          readOnly={isReadOnlyDemoMode}
           onGeneratePreview={exportPreviewSnapshot}
           selectedElement={selectedInspectorElement}
           onSelectElement={(key) => handleInspectorSelect(key, 'preview')}
@@ -1412,7 +1412,7 @@ export default function App() {
         open={activityOpen}
         refreshKey={activityRefreshKey}
         onClose={() => setActivityOpen(false)}
-        readOnly={isReviewMode}
+        readOnly={isReadOnlyDemoMode}
         onLoaded={() => {
           setActivityUnread(0);
           window.localStorage.setItem('aquaguide-admin-activity-seen-at', new Date().toISOString());

@@ -33,7 +33,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
     : [];
 
   const save = async () => {
-    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'No data was written.' : '不会写入数据。' }); return; }
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'No data was written.' : '不会写入数据。' }); return; }
     if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Data Review schema is not ready.' : 'Data Review schema 尚未应用。' }); return; }
     if (!decision) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose a conclusion' : '请先选择人工结论', detail: isUiEnglish ? 'Select whether the records are duplicates before saving.' : '先选择复核结论，再点击“确认并保存”。' }); return; }
     if (decision === 'duplicate_records' && !canonicalKey) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose the page to keep' : '请选择保留的 SEO 主页面', detail: isUiEnglish ? 'A canonical page is required when confirming duplicates.' : '确认重复记录时必须指定保留哪一个 SEO 页面。' }); return; }

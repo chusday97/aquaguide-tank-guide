@@ -88,7 +88,7 @@ export default function ActivityCenter({ open, onClose, refreshKey = 0, onLoaded
           <button type="button" className="activity-center-close" onClick={onClose}>×</button>
         </header>
         <div className="activity-center-body">
-          {readOnly ? <p className="activity-empty">{isUiEnglish ? 'Read-only UI Review does not load private operation history.' : '只读 UI Review 不读取私有操作记录；登录真实 Admin 后，这里会显示保存、审核、重复处理、批量导入和 Staging 发布记录。'}</p> : null}
+          {readOnly ? <p className="activity-empty">{isUiEnglish ? 'Read-only UI demo does not load private operation history.' : '只读 UI 演示不读取私有操作记录；登录真实 Admin 后，这里会显示保存、审核、重复处理、批量导入和 Staging 发布记录。'}</p> : null}
           {!readOnly && loading ? <p className="activity-empty">{isUiEnglish ? 'Loading activity…' : '正在读取操作记录…'}</p> : null}
           {!readOnly && !loading && rows.length === 0 ? <p className="activity-empty">{isUiEnglish ? 'No operations recorded yet.' : '还没有操作记录。完成一次保存、审核或数据处理后会显示在这里。'}</p> : null}
           {rows.map((row) => {

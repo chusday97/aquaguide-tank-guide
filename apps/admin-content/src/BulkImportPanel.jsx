@@ -18,6 +18,42 @@ const normalizeComparable = (value) => String(value ?? '').trim();
 const VALID_ACTIONS = new Set(['update', '更新', 'yes', '1']);
 const VALID_STRATEGIES = new Set(INDEX_STRATEGIES.map((item) => item.value));
 
+const TEMPLATE_GUIDE = {
+  import_action: '填写说明：只有真正要导入的内容行填写 update / 更新；说明、空白、示例行保持其他文字或留空，不会导入',
+  catalog_key: '必填：已有 Species ID，例如 sp_0436；必须与 AquaGuide 目录一致',
+  source_name: '参考字段：中文名称，可留空；上传时不会写回源数据',
+  scientific_name: '参考字段：完整学名，可留空；源记录学名不完整时系统会阻止导入',
+  locale: '必填：zh-CN 或 en；必须与当前下载模板的语言一致',
+  localized_name: '仅 English 必填：英文常用名；zh-CN 请留空',
+  seo_title: '建议填写：搜索结果标题；避免测试/验收字样，建议清晰包含物种名与用途',
+  meta_description: '建议填写：搜索摘要；自然描述饲养重点，不写内部流程或测试信息',
+  h1: '必填：页面主标题；每页一个清晰 H1',
+  intro: '必填：页面简介正文；可写饲养特点、环境与注意事项',
+  image_alt: '必填：图片替代文本；描述物种，不堆关键词',
+  focus_keyword: '建议填写：一个主要搜索词，例如 孔雀鱼 饲养 / guppy care',
+  index_strategy: '必填：noindex / index / canonical_to_sibling；首批或未审核内容建议 noindex',
+  canonical_catalog_key: '仅 canonical_to_sibling 必填：同一 Base Species 下的主页面 catalog_key；其他策略留空',
+};
+
+const TEMPLATE_FORMATS = {
+  import_action: '格式：update 或 更新', catalog_key: '格式：sp_0000', source_name: '文本', scientific_name: '完整属名 + 种名；不要以 var. / subsp. / ssp. 结尾',
+  locale: 'zh-CN | en', localized_name: 'English 文本', seo_title: '纯文本', meta_description: '纯文本', h1: '纯文本', intro: '纯文本', image_alt: '纯文本',
+  focus_keyword: '1 个主关键词/短语', index_strategy: 'noindex | index | canonical_to_sibling', canonical_catalog_key: '空白或 sp_0000',
+};
+
+function blankTemplateRow(locale) {
+  return Object.fromEntries(FIELDS.map((field) => [field, field === 'locale' ? locale : field === 'index_strategy' ? 'noindex' : '']));
+}
+
+function templateExampleRows(locale) {
+  const isEnglish = locale === 'en';
+  return [
+    { import_action: '示例 1 · 普通页面（不会导入）', catalog_key: 'sp_0436', source_name: '孔雀鱼', scientific_name: 'Poecilia reticulata', locale, localized_name: isEnglish ? 'Guppy' : '', seo_title: isEnglish ? 'Guppy Care Guide | AquaGuide' : '孔雀鱼饲养指南 | AquaGuide', meta_description: isEnglish ? 'Guppy care guide covering water, tank setup and everyday care.' : '了解孔雀鱼的水温、鱼缸环境与日常饲养重点。', h1: isEnglish ? 'Guppy Care Guide' : '孔雀鱼饲养指南', intro: isEnglish ? 'A practical introduction to guppy care, setup and everyday needs.' : '孔雀鱼是常见入门观赏鱼，适合在稳定水质与合适空间中饲养。', image_alt: isEnglish ? 'Guppy aquarium profile' : '孔雀鱼水族图鉴', focus_keyword: isEnglish ? 'guppy care' : '孔雀鱼 饲养', index_strategy: 'noindex', canonical_catalog_key: '' },
+    { import_action: '示例 2 · 独立收录页（不会导入）', catalog_key: 'sp_0431', source_name: '红绿灯', scientific_name: 'Paracheirodon innesi', locale, localized_name: isEnglish ? 'Neon Tetra' : '', seo_title: isEnglish ? 'Neon Tetra Care Guide | AquaGuide' : '红绿灯饲养指南 | AquaGuide', meta_description: isEnglish ? 'Neon Tetra care guide with water parameters, group size and tank setup.' : '红绿灯饲养指南：水温、水质、群游与鱼缸环境建议。', h1: isEnglish ? 'Neon Tetra Care Guide' : '红绿灯饲养指南', intro: isEnglish ? 'Use index only after both languages and review requirements are complete.' : '只有双语内容与审核条件都满足后，才使用 index 独立收录。', image_alt: isEnglish ? 'Neon Tetra aquarium profile' : '红绿灯水族图鉴', focus_keyword: isEnglish ? 'neon tetra care' : '红绿灯 饲养', index_strategy: 'index', canonical_catalog_key: '' },
+    { import_action: '示例 3 · 重复页指向主页面（不会导入）', catalog_key: 'sp_0031', source_name: '蓝丝绒米虾', scientific_name: 'Neocaridina davidi var. Blue', locale, localized_name: isEnglish ? 'Blue Velvet Shrimp' : '', seo_title: isEnglish ? 'Blue Velvet Shrimp Care Guide | AquaGuide' : '蓝丝绒米虾饲养指南 | AquaGuide', meta_description: isEnglish ? 'Example of a reviewed duplicate page that points to its canonical sibling.' : '示例：经人工确认的重复页面，通过 Canonical 指向同组主页面。', h1: isEnglish ? 'Blue Velvet Shrimp Care Guide' : '蓝丝绒米虾饲养指南', intro: isEnglish ? 'Use canonical_to_sibling only after duplicate review has confirmed the canonical page.' : '只有重复复核已确认主页面后，才使用 canonical_to_sibling。', image_alt: isEnglish ? 'Blue Velvet Shrimp aquarium profile' : '蓝丝绒米虾水族图鉴', focus_keyword: isEnglish ? 'blue velvet shrimp care' : '蓝丝绒米虾 饲养', index_strategy: 'canonical_to_sibling', canonical_catalog_key: 'sp_0030' },
+  ];
+}
+
 function csvEscape(value) {
   const text = String(value ?? '');
   return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
@@ -86,20 +122,13 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
   }, [parsedRows, seoRows, speciesByKey, reviewRows, locale]);
 
   const downloadTemplate = () => {
-    const lines = [FIELDS.join(',')];
-    for (const member of species) {
-      const current = seoRows[`${member.catalog_key}::${locale}`] || {};
-      const group = speciesGroupByMemberId.get(member.id);
-      const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species: member, group, reviewRows });
-      const values = {
-        import_action: '', catalog_key: member.catalog_key, source_name: member.name, scientific_name: member.scientific_name,
-        locale, localized_name: current.localized_name || '', seo_title: current.seo_title || '', meta_description: current.meta_description || '',
-        h1: current.h1 || '', intro: current.intro || '', image_alt: current.image_alt || '', focus_keyword: current.focus_keyword || '',
-        index_strategy: resolvedDuplicatePolicy?.indexStrategy || current.index_strategy || 'noindex',
-        canonical_catalog_key: resolvedDuplicatePolicy?.canonicalCatalogKey ?? current.canonical_catalog_key ?? '',
-      };
-      lines.push(FIELDS.map((field) => csvEscape(values[field])).join(','));
-    }
+    const rows = [
+      TEMPLATE_GUIDE,
+      TEMPLATE_FORMATS,
+      ...Array.from({ length: 20 }, () => blankTemplateRow(locale)),
+      ...templateExampleRows(locale),
+    ];
+    const lines = [FIELDS.join(','), ...rows.map((row) => FIELDS.map((field) => csvEscape(row[field])).join(','))];
     const blob = new Blob([`\uFEFF${lines.join('\r\n')}\r\n`], { type: 'text/csv;charset=utf-8' });
     const href = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -109,7 +138,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     link.click();
     link.remove();
     URL.revokeObjectURL(href);
-    emitAdminNotice({ status: 'success', title: isUiEnglish ? 'Template downloaded' : '模板已下载', detail: `${species.length} ${isUiEnglish ? 'catalog rows' : '条目录记录'} · ${locale}` });
+    emitAdminNotice({ status: 'success', title: isUiEnglish ? 'Blank template downloaded' : '空白模板已下载', detail: isUiEnglish ? `Field guide + 20 blank rows + 3 examples · ${locale}` : `字段说明 + 20 行空白填写区 + 3 个典型案例 · ${locale}` });
   };
 
   function validate(rows) {
@@ -172,7 +201,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       if (result.nextErrors.length) {
         emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'CSV needs fixes before import' : 'CSV 需要修正后才能导入', detail: `${result.nextErrors[0]}${result.nextErrors.length > 1 ? ` · ${isUiEnglish ? `${result.nextErrors.length - 1} more issues` : `另有 ${result.nextErrors.length - 1} 项`}` : ''}`, duration: 7200 });
       } else {
-        emitAdminNotice({ status: 'success', title: isUiEnglish ? 'CSV validation passed' : 'CSV 校验通过', detail: `${rows.length} ${isUiEnglish ? 'rows read' : '行已读取'} · ${rows.filter((row) => VALID_ACTIONS.has(String(row.import_action || '').trim().toLowerCase())).length} ${isUiEnglish ? 'marked for import' : '行待导入'}` });
+        emitAdminNotice({ status: 'success', title: isUiEnglish ? 'CSV validation passed' : 'CSV 校验通过', detail: `${rows.filter((row) => VALID_ACTIONS.has(String(row.import_action || '').trim().toLowerCase())).length} ${isUiEnglish ? 'data rows marked for import' : '行内容已标记待导入'} · ${locale}` });
       }
     } catch (error) {
       setParsedRows([]);
@@ -183,7 +212,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
   };
 
   const importRows = async () => {
-    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'CSV was not imported.' : '不会执行批量导入。' }); return; }
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'CSV was not imported.' : '不会执行批量导入。' }); return; }
     if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Import blocked' : '导入被阻止', detail: isUiEnglish ? 'Variant SEO content store is not ready.' : 'Variant SEO 内容存储尚未就绪。' }); return; }
     if (!parsedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose a CSV first' : '请先选择 CSV', detail: isUiEnglish ? 'Upload a completed AquaGuide template before importing.' : '请先上传回填后的 AquaGuide 模板。' }); return; }
     const { nextErrors } = validate(parsedRows);
@@ -227,18 +256,18 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
   return (
     <section className="bulk-import-panel">
       <div className="bulk-import-head">
-        <div><p className="eyebrow">SEO TEMPLATE IMPORT · {locale}</p><h2>{isUiEnglish ? 'SEO template import' : 'SEO 模板导入'}</h2><p>{isUiEnglish ? 'Download the AquaGuide CSV table (editable in Excel or Numbers), edit only the rows you need, mark them as update, then upload the same file.' : '下载 AquaGuide 表格模板（CSV，可用 Excel / Numbers 编辑），只修改需要处理的行，并在 import_action 填“update / 更新”，再上传同一文件。'}</p></div>
+        <div><p className="eyebrow">SEO TEMPLATE IMPORT · {locale}</p><h2>{isUiEnglish ? 'SEO template import' : 'SEO 模板导入'}</h2><p>{isUiEnglish ? 'Download a blank, uploadable CSV with field guidance and three examples. Fill only the blank rows you need, set import_action=update, then upload the same file.' : '下载可直接上传的空白 CSV：上方写明每个字段怎么填和格式要求，下方提供 3 个典型案例。只填写需要的空白行，并在 import_action 填 update / 更新。'}</p></div>
         <button type="button" className="secondary-button" onClick={downloadTemplate}>{isUiEnglish ? 'Download CSV template' : '下载 CSV 模板'}</button>
       </div>
       <div className="bulk-import-steps">
-        <div><b>1</b><span>{isUiEnglish ? 'Download' : '下载模板'}</span><small>{isUiEnglish ? `${species.length} catalog rows, ${locale}` : `包含 ${species.length} 条目录记录 · ${locale}`}</small></div>
+        <div><b>1</b><span>{isUiEnglish ? 'Download' : '下载模板'}</span><small>{isUiEnglish ? `Field guide + blank rows · ${locale}` : `字段说明 + 空白填写区 · ${locale}`}</small></div>
         <div><b>2</b><span>{isUiEnglish ? 'Fill + mark' : '回填并标记'}</span><small>{isUiEnglish ? 'Set import_action=update only for rows to change' : '只给要更新的行填写 import_action=update'}</small></div>
         <div><b>3</b><span>{isUiEnglish ? 'Upload + validate' : '上传并校验'}</span><small>{isUiEnglish ? 'AquaGuide source-data columns are reference-only' : 'source_name / scientific_name 仅作源数据参考，不会被改写'}</small></div>
       </div>
       <div className="bulk-upload-zone">
         <input ref={inputRef} type="file" accept=".csv,text/csv" onChange={onFile} hidden />
         <button type="button" className="bulk-upload-button" onClick={() => inputRef.current?.click()}>{fileName || (isUiEnglish ? 'Upload completed template' : '上传回填后的模板')}</button>
-        <span>{parsedRows.length ? (isUiEnglish ? `${parsedRows.length} rows read · ${markedRows.length} marked for import` : `已读取 ${parsedRows.length} 行 · ${markedRows.length} 行待导入`) : (isUiEnglish ? 'No file selected' : '尚未选择文件')}</span>
+        <span>{parsedRows.length ? (isUiEnglish ? `Template loaded · ${markedRows.length} data rows marked for import` : `模板已读取 · ${markedRows.length} 行内容待导入`) : (isUiEnglish ? 'No file selected' : '尚未选择文件')}</span>
       </div>
       {markedRows.length && !errors.length ? (
         <div className="bulk-import-preview">

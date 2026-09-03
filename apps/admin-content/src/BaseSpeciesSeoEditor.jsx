@@ -69,7 +69,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       return;
     }
     if (readOnly) {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? `Only the ${localeLabel} Base preview is available.` : `这里只展示 ${localeLabel} 基础模板效果，不会写入。` });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? `Only the ${localeLabel} Base preview is available.` : `这里只展示 ${localeLabel} 基础模板效果，不会写入。` });
       return;
     }
     if (!schemaReady) {

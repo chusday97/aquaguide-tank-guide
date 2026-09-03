@@ -81,7 +81,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   });
   const submit = async () => {
     if (readOnly) {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'Bulk editorial review was not written.' : '不会写入批量内容审核结果。' });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Bulk editorial review was not written.' : '不会写入批量内容审核结果。' });
       return;
     }
     if (!schemaReady) {

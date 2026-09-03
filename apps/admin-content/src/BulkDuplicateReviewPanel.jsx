@@ -47,7 +47,7 @@ export default function BulkDuplicateReviewPanel({ groups = [], reviewRows = {},
   });
 
   const submit = async () => {
-    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'Bulk duplicate decisions were not written.' : '不会写入批量重复审核结论。' }); return; }
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Bulk duplicate decisions were not written.' : '不会写入批量重复审核结论。' }); return; }
     if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Bulk review blocked' : '批量审核被阻止', detail: isUiEnglish ? 'Data Review storage is not ready.' : 'Data Review 存储尚未就绪。' }); return; }
     if (!selectedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select duplicate groups first' : '请先选择重复候选', detail: isUiEnglish ? 'Choose at least one duplicate group to review.' : '至少勾选 1 组重复候选后再批量处理。' }); return; }
     const invalid = decision === 'duplicate_records' ? selectedRows.find((item) => !canonicalByIssue[item.issueKey] || !item.set.member_ids.includes(canonicalByIssue[item.issueKey])) : null;

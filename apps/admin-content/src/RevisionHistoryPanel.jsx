@@ -104,7 +104,7 @@ export default function RevisionHistoryPanel({
       </div>
 
       {readOnly ? (
-        <p className="revision-empty">{isUiEnglish ? 'Remote UI Review does not read real revision history. Use an authenticated Admin backend to inspect versions and restore.' : '远程 UI Review 不读取真实历史记录；连接可写 Admin 内容后端后才显示版本与回滚。'}</p>
+        <p className="revision-empty">{isUiEnglish ? 'Remote UI demo does not read real revision history. Use an authenticated Admin backend to inspect versions and restore.' : '远程 UI 演示不读取真实历史记录；连接可写 Admin 内容后端后才显示版本与回滚。'}</p>
       ) : !schemaReady ? (
         <p className="revision-empty">{isUiEnglish ? 'Revision migration is not applied. Draft editing remains available, while publication stays locked.' : 'Revision migration 尚未应用。Draft 编辑不受影响，但发布继续锁定。'}</p>
       ) : loading ? (

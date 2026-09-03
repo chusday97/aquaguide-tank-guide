@@ -57,7 +57,7 @@ export default function TranslationPanel({
 
   const generate = async () => {
     if (readOnly) {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'Translation was not requested.' : '不会调用翻译服务；正式管理员登录后才会请求 AI。' });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Translation was not requested.' : '不会调用翻译服务；正式管理员登录后才会请求 AI。' });
       return;
     }
     setBusy(true);
@@ -97,7 +97,7 @@ export default function TranslationPanel({
   const updateSuggestion = (key, value) => setSuggestion((current) => ({ ...current, [key]: value }));
 
   const saveEnglishDraft = async () => {
-    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only Review' : '当前是只读 Review', detail: isUiEnglish ? 'English Draft was not saved.' : '不会保存 English Draft。' }); return; }
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'English Draft was not saved.' : '不会保存 English Draft。' }); return; }
     if (targetPublished) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Published content is locked' : '已发布内容当前不可覆盖', detail: isUiEnglish ? 'Generate a suggestion if needed, but create a versioned editing flow before overwriting Published content.' : '可以继续生成建议，但当前不能直接覆盖已发布 English 内容。' }); return; }
     if (!suggestion) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Generate a suggestion first' : '请先生成 English 建议', detail: isUiEnglish ? 'There is no English content to save yet.' : '当前还没有可保存的 English 建议。' }); return; }
     if (scope === 'base' && !groupSchemaReady) {
