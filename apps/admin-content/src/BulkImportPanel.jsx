@@ -121,6 +121,16 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     };
   }, [parsedRows, seoRows, speciesByKey, reviewRows, locale]);
 
+  const preflight = useMemo(() => {
+    const loaded = parsedRows.length > 0;
+    const marked = markedRows.length;
+    const issueCount = errors.length;
+    const changed = importPreview.changedRows;
+    const skipped = Math.max(marked - changed, 0);
+    const ready = loaded && marked > 0 && issueCount === 0 && changed > 0 && schemaReady && !readOnly;
+    return { loaded, marked, issueCount, changed, skipped, cleared: importPreview.clearedFields, ready };
+  }, [parsedRows.length, markedRows.length, errors.length, importPreview.changedRows, importPreview.clearedFields, schemaReady, readOnly]);
+
   const downloadTemplate = () => {
     const rows = [
       TEMPLATE_GUIDE,
@@ -262,13 +272,45 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       <div className="bulk-import-steps">
         <div><b>1</b><span>{isUiEnglish ? 'Download' : '下载模板'}</span><small>{isUiEnglish ? `Field guide + blank rows · ${locale}` : `字段说明 + 空白填写区 · ${locale}`}</small></div>
         <div><b>2</b><span>{isUiEnglish ? 'Fill + mark' : '回填并标记'}</span><small>{isUiEnglish ? 'Set import_action=update only for rows to change' : '只给要更新的行填写 import_action=update'}</small></div>
-        <div><b>3</b><span>{isUiEnglish ? 'Upload + validate' : '上传并校验'}</span><small>{isUiEnglish ? 'AquaGuide source-data columns are reference-only' : 'source_name / scientific_name 仅作源数据参考，不会被改写'}</small></div>
+        <div><b>3</b><span>{isUiEnglish ? 'Preflight + diff' : '预检查并看 Diff'}</span><small>{isUiEnglish ? 'Fix row issues and confirm the actual field changes' : '先处理行级问题，再确认实际字段变更'}</small></div>
+        <div><b>4</b><span>{isUiEnglish ? 'Create Draft' : '创建 Draft'}</span><small>{isUiEnglish ? 'Writes only after every preflight gate passes' : '全部预检查通过后才会真正写入'}</small></div>
       </div>
       <div className="bulk-upload-zone">
         <input ref={inputRef} type="file" accept=".csv,text/csv" onChange={onFile} hidden />
         <button type="button" className="bulk-upload-button" onClick={() => inputRef.current?.click()}>{fileName || (isUiEnglish ? 'Upload completed template' : '上传回填后的模板')}</button>
         <span>{parsedRows.length ? (isUiEnglish ? `Template loaded · ${markedRows.length} data rows marked for import` : `模板已读取 · ${markedRows.length} 行内容待导入`) : (isUiEnglish ? 'No file selected' : '尚未选择文件')}</span>
       </div>
+      {parsedRows.length ? (
+        <section className={`bulk-import-preflight ${errors.length ? 'blocked' : preflight.ready ? 'ready' : 'waiting'}`} aria-label={isUiEnglish ? 'Import preflight report' : '导入预检查结果'}>
+          <div className="bulk-import-preflight-head">
+            <div><strong>{isUiEnglish ? 'Preflight report' : '预检查结果'}</strong><small>{fileName || (isUiEnglish ? 'Uploaded CSV' : '已上传 CSV')}</small></div>
+            <span>{errors.length ? (isUiEnglish ? `${errors.length} issues` : `${errors.length} 个问题`) : preflight.ready ? (isUiEnglish ? 'Ready to create Draft' : '可以创建 Draft') : (isUiEnglish ? 'Needs attention' : '需要处理')}</span>
+          </div>
+          <div className="bulk-import-preflight-stats">
+            <div><span>{isUiEnglish ? 'Marked rows' : '标记导入'}</span><strong>{preflight.marked}</strong></div>
+            <div><span>{isUiEnglish ? 'Will change' : '实际变更'}</span><strong>{preflight.changed}</strong></div>
+            <div><span>{isUiEnglish ? 'No-op skipped' : '无变化跳过'}</span><strong>{preflight.skipped}</strong></div>
+            <div><span>{isUiEnglish ? 'Fields cleared' : '清空字段'}</span><strong>{preflight.cleared}</strong></div>
+          </div>
+          {errors.length ? (
+            <div className="bulk-import-issue-list">
+              <strong>{isUiEnglish ? 'Fix these rows before importing' : '请先修正以下问题'}</strong>
+              <ol>{errors.slice(0, 12).map((error, index) => <li key={`${index}-${error}`}>{error}</li>)}</ol>
+              {errors.length > 12 ? <small>{isUiEnglish ? `+ ${errors.length - 12} more issues` : `另有 ${errors.length - 12} 个问题`}</small> : null}
+            </div>
+          ) : !markedRows.length ? (
+            <p className="bulk-import-preflight-note">{isUiEnglish ? 'No data rows are marked. Set import_action=update only on rows you intend to change.' : '当前没有标记待导入的数据行。只在真正要修改的行填写 import_action=update / 更新。'}</p>
+          ) : !importPreview.changedRows ? (
+            <p className="bulk-import-preflight-note">{isUiEnglish ? 'All marked rows match the current Draft. No new revision will be created.' : '所有已标记行都与当前 Draft 一致，本次不会创建新版本。'}</p>
+          ) : readOnly ? (
+            <p className="bulk-import-preflight-note">{isUiEnglish ? 'This is a read-only demo. Preview the diff here, but Draft creation is disabled.' : '当前是只读演示，可以检查 Diff，但不会创建 Draft。'}</p>
+          ) : !schemaReady ? (
+            <p className="bulk-import-preflight-note">{isUiEnglish ? 'The content store is not ready, so Draft creation remains blocked.' : '内容存储尚未就绪，因此暂时不能创建 Draft。'}</p>
+          ) : (
+            <p className="bulk-import-preflight-note success">{isUiEnglish ? 'Validation passed. Review the field-level diff below, then create Drafts.' : '校验已通过。请继续检查下方字段级 Diff，确认后再创建 Draft。'}</p>
+          )}
+        </section>
+      ) : null}
       {markedRows.length && !errors.length ? (
         <div className="bulk-import-preview">
           <div className="bulk-import-preview-head">
@@ -288,7 +330,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
           </div>
         </div>
       ) : null}
-      <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。'}</span><button type="button" className="primary-button" disabled={saving} onClick={importRows}>{saving ? (isUiEnglish ? 'Importing…' : '正在导入…') : (isUiEnglish ? `Import ${importPreview.changedRows} changed rows` : `导入 ${importPreview.changedRows} 行实际变更`)}</button></div>
+      <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。'}</span><button type="button" className="primary-button" disabled={saving || !preflight.ready} onClick={importRows}>{saving ? (isUiEnglish ? 'Creating Drafts…' : '正在创建 Draft…') : (isUiEnglish ? `Create Drafts · ${importPreview.changedRows} rows` : `创建 Draft · ${importPreview.changedRows} 行`)}</button></div>
     </section>
   );
 }
