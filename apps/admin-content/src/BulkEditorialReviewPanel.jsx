@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { adminContentClient } from './adminBackend.js';
+import { adminContentClient, publishRepoStaging } from './adminBackend.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 import { seoRowKey, groupSeoRowKey, getLocaleLabel } from './localization.js';
@@ -63,6 +63,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   const [action, setAction] = useState('submit');
   const [selected, setSelected] = useState(() => new Set());
   const [saving, setSaving] = useState(false);
+  const [stagingPublishing, setStagingPublishing] = useState(false);
   const [recentImportScope, setRecentImportScope] = useState(() => loadRecentImportScope(locale));
   const [scopeMode, setScopeMode] = useState('recent');
 
@@ -71,8 +72,10 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
     for (const group of groups || []) for (const member of group.members || []) map.set(member.id, group);
     return map;
   }, [groups]);
+  const memberByCatalogKey = useMemo(() => new Map(species.map((member) => [member.catalog_key, member])), [species]);
   const allCandidateIds = useMemo(() => candidateIdSet(workflowOverview, locale), [workflowOverview, locale]);
   const reviewReadyIds = useMemo(() => new Set(workflowOverview?.locales?.[locale]?.memberIdsByState?.ready_for_review || []), [workflowOverview, locale]);
+  const publishReadyIds = useMemo(() => new Set(workflowOverview?.locales?.[locale]?.memberIdsByState?.publish_ready || []), [workflowOverview, locale]);
   const recentImportKeys = useMemo(() => new Set(recentImportScope.catalogKeys || []), [recentImportScope]);
 
   const buildCandidates = useCallback((mode) => species.flatMap((member) => {
@@ -110,6 +113,43 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   const eligible = candidates.filter((item) => !item.blockedReason);
   const selectedRows = eligible.filter((item) => selected.has(item.member.id));
   const allEligibleForAction = candidateSets[action].filter((item) => !item.blockedReason).length;
+
+  const stagingSelection = useMemo(() => {
+    const batchKeys = [...recentImportKeys];
+    const catalogKeys = new Set(batchKeys);
+    for (const key of batchKeys) {
+      for (const rowLocale of ['zh-CN', 'en']) {
+        const row = seoRows[seoRowKey(key, rowLocale)];
+        if (row?.index_strategy === 'canonical_to_sibling' && row.canonical_catalog_key) catalogKeys.add(row.canonical_catalog_key);
+      }
+    }
+    const groupKeys = new Set();
+    let allMembersFound = true;
+    let publishReadyCount = 0;
+    for (const key of catalogKeys) {
+      const member = memberByCatalogKey.get(key);
+      if (!member) { allMembersFound = false; continue; }
+      const group = groupByMemberId.get(member.id);
+      if (!group?.group_key) allMembersFound = false;
+      else groupKeys.add(group.group_key);
+      if (publishReadyIds.has(member.id)) publishReadyCount += 1;
+    }
+    const selectionKeys = [...catalogKeys];
+    const ready = batchKeys.length > 0
+      && batchKeys.length <= 20
+      && selectionKeys.length <= 20
+      && allMembersFound
+      && publishReadyCount === selectionKeys.length;
+    return {
+      batchCount: batchKeys.length,
+      dependencyCount: Math.max(selectionKeys.length - batchKeys.length, 0),
+      catalogKeys: selectionKeys,
+      groupKeys: [...groupKeys],
+      publishReadyCount,
+      ready,
+      overLimit: selectionKeys.length > 20,
+    };
+  }, [recentImportKeys, seoRows, memberByCatalogKey, groupByMemberId, publishReadyIds]);
 
   useEffect(() => {
     let cancelled = false;
@@ -194,6 +234,31 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
     if (error) return;
     setSelected(new Set());
     onCompleted?.(data);
+  };
+
+  const publishRecentBatch = async () => {
+    if (readOnly) {
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Staging publish is disabled in demo mode.' : '只读演示不会执行 Staging 发布。' });
+      return;
+    }
+    if (!schemaReady || !stagingSelection.ready) {
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Batch Staging publish blocked' : '本批 Staging 发布被阻止', detail: stagingSelection.overLimit
+        ? (isUiEnglish ? 'A Staging release is limited to 20 Species including canonical dependencies.' : '一次 Staging 最多 20 个 Species，包含 Canonical 依赖。')
+        : (isUiEnglish ? 'Every Species in this import scope, including canonical dependencies, must be bilingual Preview-ready first.' : '本次导入范围内的全部 Species（含 Canonical 依赖）都必须先达到双语 Preview-ready。') });
+      return;
+    }
+    setStagingPublishing(true);
+    const { data, error } = await publishRepoStaging({
+      catalogKeys: stagingSelection.catalogKeys,
+      groupKeys: stagingSelection.groupKeys,
+    });
+    setStagingPublishing(false);
+    if (error) return;
+    emitAdminNotice({
+      status: 'success',
+      title: isUiEnglish ? 'Import batch published to Staging' : '本次导入批次已发布到 Staging',
+      detail: `${data?.selected_catalog_keys?.length || stagingSelection.catalogKeys.length} Species · ${data?.commit_sha?.slice(0, 7) || 'Staging snapshot'}`,
+    });
   };
 
   const selectedBaseCount = useMemo(() => {
@@ -284,6 +349,24 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
           );
         })}
       </div>
+
+      {scopeMode === 'recent' && recentImportKeys.size ? (
+        <div className={`bulk-import-preflight ${stagingSelection.ready ? 'ready' : 'waiting'}`} aria-label={isUiEnglish ? 'Import batch Staging readiness' : '本批 Staging 就绪状态'}>
+          <div className="bulk-import-preflight-head">
+            <div><strong>{isUiEnglish ? 'Publish this import batch to Staging' : '发布本次导入批次到 Staging'}</strong><small>{isUiEnglish ? 'One explicit release after bilingual approval; Production stays locked.' : '双语审核全部通过后一次发布；Production 继续锁定。'}</small></div>
+            <span>{stagingSelection.publishReadyCount}/{stagingSelection.catalogKeys.length} Preview-ready</span>
+          </div>
+          <p className={`bulk-import-preflight-note ${stagingSelection.ready ? 'success' : ''}`}>{stagingSelection.overLimit
+            ? (isUiEnglish ? 'This release exceeds the 20-Species Staging cap once canonical dependencies are included.' : '加入 Canonical 依赖后超过单次 Staging 20 个 Species 的上限。')
+            : stagingSelection.ready
+              ? (isUiEnglish ? `${stagingSelection.batchCount} imported pages are bilingual Preview-ready${stagingSelection.dependencyCount ? `; ${stagingSelection.dependencyCount} canonical dependencies are included` : ''}.` : `${stagingSelection.batchCount} 个本批页面均已达到双语 Preview-ready${stagingSelection.dependencyCount ? `，并包含 ${stagingSelection.dependencyCount} 个 Canonical 依赖` : ''}。`)
+              : (isUiEnglish ? 'Staging stays disabled until every page in this import scope and every canonical dependency is bilingual Preview-ready.' : '本批全部页面及 Canonical 依赖达到双语 Preview-ready 前，Staging 发布保持禁用。')}</p>
+          <div className="bulk-duplicate-footer">
+            <span>{isUiEnglish ? 'This writes one sanitized Staging snapshot and triggers one Preview deployment; it does not publish Production.' : '该动作只写入一份脱敏 Staging Snapshot 并触发一次 Preview 部署，不会发布 Production。'}</span>
+            <button type="button" className="primary-button" disabled={stagingPublishing || !stagingSelection.ready} onClick={publishRecentBatch}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? `Publish ${stagingSelection.catalogKeys.length} to Staging` : `一次发布 ${stagingSelection.catalogKeys.length} 个到 Staging`)}</button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="bulk-duplicate-footer">
         <span>{selectedBaseCount ? (isUiEnglish ? `${selectedBaseCount} required Base templates will move in the same atomic review action.` : `会在同一次原子操作中同步处理 ${selectedBaseCount} 个必要的基础模板。`) : (isUiEnglish ? 'Only the selected page review states will change.' : '只修改所选页面的审核状态。')}</span>
