@@ -263,3 +263,15 @@ Updated: 2026-09-02
 - [ ] Batch submit + approve the intended 14 Species and required Base templates.
 - [ ] Explicitly Staging Publish the 14-Species allowlist once and verify hosted EN/ZH output + deployment noindex.
 - [ ] Keep Production locked until explicit authorization.
+
+## 2026-09-03 source identity / batch-01 correction
+- [x] Block incomplete source scientific identity before CSV Draft import.
+- [x] Surface incomplete source identity as its own workflow next action.
+- [x] Fail static Species generation on incomplete source identity.
+- [x] Remove `sp_0069` from batch-01 and replace with clean `sp_0011`.
+- [x] Re-run 14-Species bilingual full-chain dry-run after replacement.
+- [ ] Authenticated Admin: import corrected zh-CN batch-01 after field-level diff review.
+- [ ] Authenticated Admin: import corrected English batch-01 after field-level diff review.
+- [ ] Batch submit + approve 14 Species + required Base rows.
+- [ ] Explicit one-time Staging Publish for the 14-Species allowlist; verify hosted EN/ZH/noindex.
+- [ ] Keep Production locked until explicit authorization.

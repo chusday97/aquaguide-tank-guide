@@ -620,7 +620,7 @@ Do not continue adding backend UI by default. Add/fix product behavior only when
 ### Startup instruction for every new conversation
 When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修复`:
 1. Read `.ai/HANDOFF_LATEST.md` **before planning or modifying anything**.
-2. Check `git branch --show-current`, `git status --short`, and current HEAD. Expected branch: `feature/admin-content-v0`; latest functional checkpoint at this sync: `2423202`.
+2. Check `git branch --show-current`, `git status --short`, and current HEAD. Expected branch: `feature/admin-content-v0`; latest functional checkpoint at this sync: `43d0cfa`.
 3. Read the newest tail of `.ai/EXECUTION_LOG.md`.
 4. Do not re-plan or rebuild completed architecture: dual-repo authority, no-Supabase runtime, status/action separation, Toast feedback, duplicate policy, template import, bulk duplicate review, bulk editorial review, content-hygiene gates, code-Preview/Staging separation are already implemented.
 5. Use the private content repo only through authenticated Admin flows for human editorial decisions. Public repo is code + explicit staging snapshot authority only.
@@ -656,3 +656,22 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 4. Use batch editorial review to submit and approve the intended 14 Species + required Base rows.
 5. Perform one explicit Staging Publish for the 14-Species allowlist and verify hosted EN/ZH HTML + deployment-level `X-Robots-Tag: noindex`.
 6. Do not bypass authenticated Admin for human review/data decisions; do not merge to `main` or unlock Production without explicit user instruction.
+## 34. Source-identity gate + batch-01 correction — completed 2026-09-03
+- Functional commit: `43d0cfa fix(admin-content): block incomplete source identities`.
+- Real batch QA found `sp_0069 红白锦鲤` carried incomplete source scientific name `Cyprinus carpio var.` despite having no duplicate/category-conflict flags.
+- Added shared source-identity validation: missing/one-token scientific names or trailing incomplete taxonomic rank markers (`var.`, `subsp.`, `ssp.`) block Preview readiness.
+- CSV validation now rejects marked rows with incomplete source identity before any Draft write.
+- Workflow overview routes these pages to a dedicated `修正源身份数据 / Fix source identity` next action.
+- Static Species generation independently fails closed on the same identity problem, so malformed source identity cannot leak through a bypassed Admin flow.
+- Current catalog has 35 records ending in incomplete `var.`-style identity markers; they now remain blocked until source data is corrected.
+- Batch-01 removed `sp_0069` and replaced it with `sp_0011 月光鱼 / Platy`; all 14 batch identities now pass the source-identity gate.
+- Re-ran the isolated full chain: 28 page Drafts + 28 Base Drafts → 56 review resources → approval → 14-Species Staging snapshot → 28 EN/ZH HTML pages, all PASS and all noindex.
+- Durable batch evidence updated at `~/aquaguide-seo-batches/batch-01/dry-run-report.json`.
+- Production remains locked; no private real Draft write or Staging publish occurred.
+
+### Next operational action
+1. Authenticated Admin: upload corrected batch-01 zh-CN CSV, inspect field-level diff, import Draft.
+2. Authenticated Admin: upload corrected batch-01 English CSV, inspect diff, import Draft.
+3. Batch submit + approve the intended 14 Species and required Base templates.
+4. Explicitly Staging Publish the 14-Species allowlist once; verify hosted EN/ZH metadata, CTA and deployment noindex.
+5. Keep Production locked and do not merge `main` without explicit authorization.

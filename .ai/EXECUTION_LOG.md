@@ -411,3 +411,12 @@
 - Dry-run exposed user-facing `Product Truth` implementation jargon in the generator; fixed it across publication/preview/admin guidance in `348d6a0`.
 - Admin contract, root build, SEO handoff and Admin UI regression all PASS after the copy cleanup.
 - No real private content repo write, no Staging publish and no Production write performed in this dry-run.
+
+## 2026-09-03 — Source identity gate / batch-01 correction
+- Detected malformed source identity `sp_0069 / Cyprinus carpio var.` during real batch QA.
+- Added pre-import, readiness and static-generator fail-closed source identity checks.
+- 35 catalog rows ending in incomplete `var.`-style rank markers are now explicit source-data blockers.
+- Replaced batch-01 `sp_0069` with `sp_0011 月光鱼 / Platy`.
+- Full isolated 14×2 Draft → review → Staging-generation dry-run PASS; 28 HTML remain noindex; no private/Production writes.
+- `npm run test:contract -w @aquaguide/admin-content` PASS; Admin build + full root build + diff hygiene PASS.
+- Functional commit pushed: `43d0cfa`.
