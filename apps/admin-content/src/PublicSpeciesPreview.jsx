@@ -1,13 +1,9 @@
 import { getLocaleLabel } from './localization.js';
-
-const factLabels = {
-  'zh-CN': { temperature: '水温', ph: 'pH', tank: '建议缸体', difficulty: '饲养难度', truth: '现有 Product Truth' },
-  en: { temperature: 'Temperature', ph: 'pH', tank: 'Tank size', difficulty: 'Difficulty', truth: 'Existing Product Truth' },
-};
+import { getSpeciesPageLabels, localizeSpeciesTankSize } from './speciesPagePresentation.js';
 
 export default function PublicSpeciesPreview({ species, locale, effectiveSeo, routeMeta }) {
   if (!species || !routeMeta) return null;
-  const labels = locale === 'en' ? factLabels.en : factLabels['zh-CN'];
+  const labels = getSpeciesPageLabels(locale);
   const intro = [effectiveSeo.sharedIntro, effectiveSeo.variantIntro].filter(Boolean).join('\n\n')
     || species.product_description
     || (locale === 'en' ? 'Editorial introduction has not been written yet.' : '尚未填写编辑型简介。');
@@ -47,12 +43,12 @@ export default function PublicSpeciesPreview({ species, locale, effectiveSeo, ro
         <div className="species-fact-grid">
           <div><span>{labels.temperature}</span><strong>{species.water_temperature || '—'}</strong></div>
           <div><span>{labels.ph}</span><strong>{species.ph_level || '—'}</strong></div>
-          <div><span>{labels.tank}</span><strong>{species.tank_size || '—'}</strong></div>
+          <div><span>{labels.tank}</span><strong>{localizeSpeciesTankSize(species.tank_size, locale)}</strong></div>
           <div><span>{labels.difficulty}</span><strong>{species.difficulty || '—'}</strong></div>
         </div>
         <div className="truth-note">
           <strong>{labels.truth}</strong>
-          <span>{locale === 'en' ? 'These facts are read from the existing catalog; SEO editing does not rewrite them.' : '这些事实读取现有 catalog；SEO 编辑不会改写它们。'}</span>
+          <span>{labels.truthNote}</span>
         </div>
       </article>
     </section>

@@ -13,7 +13,7 @@ const stateMeta = {
 function elementSource(key, preview, appLocale) {
   const english = appLocale === 'en';
   const readOnly = getEditorElementMeta(key)?.readOnly || (key === 'localizedName' && preview?.locale !== 'en');
-  if (readOnly) return english ? 'Product Truth · Read only' : 'Product Truth · 只读';
+  if (readOnly) return english ? 'Source data · Read only' : '源数据 · 只读';
   if (key === 'imageAlt') {
     const altState = preview?.effectiveSeo?.imageAlt
       ? (english ? 'Alt custom' : 'Alt 已自定义')
@@ -36,7 +36,7 @@ function elementEditPath(key, preview, appLocale, editorScope) {
   const english = appLocale === 'en';
   const meta = getEditorElementMeta(key);
   const dynamicReadOnly = meta?.readOnly || (key === 'localizedName' && preview?.locale !== 'en');
-  if (dynamicReadOnly) return english ? 'Product Truth → Read only' : 'Product Truth → 只读';
+  if (dynamicReadOnly) return english ? 'Source data → Read only' : '源数据 → 只读';
   const pageContent = key === 'intro' || key === 'imageAlt';
   const section = pageContent ? (english ? 'Page content' : '页面内容') : 'SEO';
   const variantOnly = key === 'imageAlt' || (key === 'localizedName' && preview?.locale === 'en');

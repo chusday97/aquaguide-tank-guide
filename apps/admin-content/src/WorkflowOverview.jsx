@@ -3,7 +3,7 @@ import { useAppLanguage } from './AppLanguage.jsx';
 const reviewStates = [
   ['pending', { zh: '待处理', en: 'Pending' }, { zh: '需要先判断重复记录或分类冲突', en: 'Duplicate or category evidence needs a decision' }],
   ['resolved', { zh: '已解决', en: 'Resolved' }, { zh: '已记录人工结论，可继续 SEO 流程', en: 'Human decision recorded; SEO workflow can continue' }],
-  ['source_fix_required', { zh: '需修源数据', en: 'Source fix needed' }, { zh: '需要先修正 AquaGuide 源数据', en: 'Product Truth source data requires correction' }],
+  ['source_fix_required', { zh: '需修源数据', en: 'Source fix needed' }, { zh: '需要先修正 AquaGuide 源数据', en: 'AquaGuide source data requires correction' }],
 ];
 
 const readinessStates = [

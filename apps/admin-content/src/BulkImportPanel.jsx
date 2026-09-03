@@ -227,7 +227,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       <div className="bulk-import-steps">
         <div><b>1</b><span>{isUiEnglish ? 'Download' : '下载模板'}</span><small>{isUiEnglish ? `${species.length} catalog rows, ${locale}` : `包含 ${species.length} 条目录记录 · ${locale}`}</small></div>
         <div><b>2</b><span>{isUiEnglish ? 'Fill + mark' : '回填并标记'}</span><small>{isUiEnglish ? 'Set import_action=update only for rows to change' : '只给要更新的行填写 import_action=update'}</small></div>
-        <div><b>3</b><span>{isUiEnglish ? 'Upload + validate' : '上传并校验'}</span><small>{isUiEnglish ? 'Product Truth columns are reference-only' : 'source_name / scientific_name 只读参考，不会写回 Product Truth'}</small></div>
+        <div><b>3</b><span>{isUiEnglish ? 'Upload + validate' : '上传并校验'}</span><small>{isUiEnglish ? 'AquaGuide source-data columns are reference-only' : 'source_name / scientific_name 仅作源数据参考，不会被改写'}</small></div>
       </div>
       <div className="bulk-upload-zone">
         <input ref={inputRef} type="file" accept=".csv,text/csv" onChange={onFile} hidden />

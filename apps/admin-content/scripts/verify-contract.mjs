@@ -283,7 +283,7 @@ assert.match(appSource, /selectedId === id && editorScope === 'variant'/, 'Re-se
 assert.match(appSource, /workflowFilter\?\.key === next\.key/, 'Re-selecting the active workflow filter must not discard dirty editor state');
 assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');
 assert.match(liveFrontendPreviewSource, /scrollIntoView/, 'Preview selection must scroll mapped elements into view');
-assert.match(liveFrontendPreviewSource, /Product Truth · 只读/, 'Preview inspector must explain Product Truth read-only elements');
+assert.match(liveFrontendPreviewSource, /源数据 · 只读/, 'Preview inspector must explain source-data read-only elements');
 assert.match(liveFrontendPreviewSource, /is-readonly/, 'Preview inspector must visually distinguish read-only Product Truth elements from editable content');
 assert.match(stylesSource, /--selection-strong:/, 'Admin must keep one shared selection color token across navigation, editor and Preview');
 assert.match(stylesSource, /--readonly-strong:/, 'Admin must keep a distinct read-only inspector token');
@@ -297,7 +297,7 @@ assert.match(liveFrontendPreviewSource, /speciesPagePresentation/, 'Live Page pr
 assert.match(publicGeneratorSource, /speciesPagePresentation/, 'Public Species generator must reuse the same publication presentation rules as live Preview');
 assert.match(publicGeneratorSource, /staging_release/, 'Generator must preserve a staging-only Approved Draft release mode');
 assert.match(publicGeneratorSource, /status === 'draft' && row\.review_state === 'approved'/, 'Staging release must consume Approved Drafts, not Production Published state');
-assert.match(speciesPagePresentationSource, /Catalog facts/, 'Shared Species presentation must define publication-facing fact labels');
+assert.match(speciesPagePresentationSource, /Care reference/, 'Shared Species presentation must define publication-facing fact labels');
 assert.doesNotMatch(liveFrontendPreviewSource, /Care essentials|饲养要点|Overview & Care|物种概览与饲养/, 'Live Page preview must not invent sections absent from the static generator');
 assert.match(appSource, /compactPreviewOpen/, 'Narrow layouts must preserve access to Preview through an explicit compact state');
 assert.match(appSource, /compact-preview-toggle/, 'Narrow layouts must expose a Preview trigger instead of silently hiding Preview');

@@ -6,7 +6,7 @@ const loadCatalog = async () => {
   if (!catalogPromise) {
     catalogPromise = fetch(catalogUrl)
       .then((response) => {
-        if (!response.ok) throw new Error(`Product Truth catalog request failed: ${response.status}`);
+        if (!response.ok) throw new Error(`AquaGuide source catalog request failed: ${response.status}`);
         return response.json();
       })
       .then((rows) => new Map((Array.isArray(rows) ? rows : []).map((row) => [row.catalog_key, row])))

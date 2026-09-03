@@ -113,7 +113,7 @@ export default function BulkDuplicateReviewPanel({ groups = [], reviewRows = {},
         })}
       </div>
 
-      <div className="bulk-duplicate-footer"><span>{isUiEnglish ? 'Product Truth records are never deleted or rewritten by this action.' : '该操作只处理 SEO 资格和 Canonical，不删除、改写 Product Truth。'}</span><button type="button" className="primary-button" disabled={saving} onClick={submit}>{saving ? (isUiEnglish ? 'Saving…' : '正在保存…') : (isUiEnglish ? `Confirm ${selectedRows.length} groups` : `确认处理 ${selectedRows.length} 组`)}</button></div>
+      <div className="bulk-duplicate-footer"><span>{isUiEnglish ? 'Source records are never deleted or rewritten by this action.' : '该操作只处理 SEO 资格和 Canonical，不删除、改写源数据。'}</span><button type="button" className="primary-button" disabled={saving} onClick={submit}>{saving ? (isUiEnglish ? 'Saving…' : '正在保存…') : (isUiEnglish ? `Confirm ${selectedRows.length} groups` : `确认处理 ${selectedRows.length} 组`)}</button></div>
     </section>
   );
 }

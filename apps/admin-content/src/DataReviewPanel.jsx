@@ -86,7 +86,7 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
         <div className="duplicate-evidence-summary">
           <div><strong>{isUiEnglish ? 'System comparison' : '系统比对'}</strong><span>{matchingFields.length ? (isUiEnglish ? `${matchingFields.join(', ')} match` : `${matchingFields.join('、')}一致`) : (isUiEnglish ? 'Review source fields manually' : '需要人工核对源字段')}</span></div>
           {sourcePrimary ? <div><strong>{isUiEnglish ? 'Source lineage' : '源记录关系'}</strong><span>{isUiEnglish ? `${sourcePrimary.catalog_key} is marked as the primary source record; duplicate rows point to it.` : `${sourcePrimary.catalog_key} 是当前源数据主记录；其他重复行已指向它。`}</span></div> : null}
-          <p>{isUiEnglish ? 'Recommendation: if there is no external evidence that these are different variants, confirm the duplicate and keep the primary source record. Product Truth rows are not deleted.' : '建议：如果没有额外业务证据证明它们是不同品种，确认重复并保留源数据主记录。这里只合并 SEO 页面，不删除 Product Truth。'}</p>
+          <p>{isUiEnglish ? 'Recommendation: if there is no external evidence that these are different variants, confirm the duplicate and keep the primary source record. Source records are not deleted.' : '建议：如果没有额外业务证据证明它们是不同品种，确认重复并保留源数据主记录。这里只合并 SEO 页面，不删除源数据。'}</p>
         </div>
       ) : null}
       <div className="review-decision-options" aria-label={isUiEnglish ? 'Review decision' : '人工结论'}>
@@ -124,9 +124,9 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
       ) : null}
       {decision ? <div className="review-outcome-note">{decision === 'duplicate_records'
         ? (isUiEnglish ? 'After saving: one SEO page remains independent; duplicate rows point to it with Canonical. This is one atomic operation.' : '保存后：只保留一个独立 SEO 页面，其他重复记录自动指向它的 Canonical；整套处理作为一次操作完成。')
-        : (isUiEnglish ? 'After saving: both records remain eligible to become separate SEO pages. Existing Product Truth is unchanged.' : '保存后：两条记录继续作为独立 SEO 页面候选；Product Truth 不做修改。')}</div> : null}
+        : (isUiEnglish ? 'After saving: both records remain eligible to become separate SEO pages. Existing source data is unchanged.' : '保存后：两条记录继续作为独立 SEO 页面候选；源数据不做修改。')}</div> : null}
       <label>{isUiEnglish ? 'Review notes' : '审核备注'}
-        <textarea rows="2" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder={isUiEnglish ? 'Record the evidence for this decision; Product Truth is not rewritten.' : '记录判断依据；不改写 Product Truth。'} />
+        <textarea rows="2" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder={isUiEnglish ? 'Record the evidence for this decision; source data is not rewritten.' : '记录判断依据；不改写源数据。'} />
       </label>
       <div className="review-decision-footer">
         <span>{row?.reviewed_at ? `${isUiEnglish ? 'Recorded' : '已记录'} · ${new Date(row.reviewed_at).toLocaleString()}` : (isUiEnglish ? 'No human conclusion recorded yet' : '尚未记录人工结论')}</span>
@@ -150,7 +150,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
         <div>
           <p className="eyebrow">DATA REVIEW WORKFLOW</p>
           <h2>{isUiEnglish ? 'Source data review' : '源数据复核'}</h2>
-          <p>{isUiEnglish ? `${group.base_scientific_name} requires a human decision. Review affects SEO eligibility only and never rewrites Product Truth.` : `${group.base_scientific_name} 的问题需要人工结论；结论只影响 SEO 发布资格，不改 Product Truth。`}</p>
+          <p>{isUiEnglish ? `${group.base_scientific_name} requires a human decision. Review affects SEO eligibility only and never rewrites source data.` : `${group.base_scientific_name} 的问题需要人工结论；结论只影响 SEO 发布资格，不改源数据。`}</p>
         </div>
         <span className={`review-count ${issueSummary.open === 0 ? 'resolved' : ''}`}>{issueSummary.open > 0 ? `${issueSummary.open} ${isUiEnglish ? 'open' : '项待处理'}` : (isUiEnglish ? 'Resolved' : '已处理')}</span>
       </div>

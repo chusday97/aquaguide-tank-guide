@@ -442,14 +442,14 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             <div className="section-heading">
               <div>
                 <h3>{t('editor.seo')}</h3>
-                <p>{isUiEnglish ? 'Edit search appearance and page headings without changing Product Truth.' : '控制搜索结果和页面主标题，不修改产品数据。'}</p>
+                <p>{isUiEnglish ? 'Edit search appearance and page headings without changing source data.' : '控制搜索结果和页面主标题，不修改产品数据。'}</p>
               </div>
             </div>
             {isEnglishLocale(locale) ? (
               <label {...editorFieldProps('localizedName')}>
                 English Common Name
                 <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onFocus={() => onInspectorSelect?.('localizedName')} onChange={(event) => update('localizedName', event.target.value)} />
-                <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; Product Truth names remain unchanged.' : '只影响 English 内容层；不会改 Product Truth 里的中文名称。'}</small>
+                <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; source names remain unchanged.' : '只影响 English 内容层；不会改源数据里的中文名称。'}</small>
               </label>
             ) : null}
             <details className="content-source-manager">
@@ -962,7 +962,7 @@ export default function App() {
   const toolDrawerMeta = ({
     dataReview: {
       title: t('editor.sourceReview'),
-      subtitle: appLocale === 'en' ? 'Resolve source-data evidence without changing Product Truth.' : '处理源数据证据，不修改 Product Truth。',
+      subtitle: appLocale === 'en' ? 'Resolve source-data evidence without changing source data.' : '处理源数据证据，不修改源记录。',
     },
     readiness: {
       title: t('editor.publishCheck'),

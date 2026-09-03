@@ -12,8 +12,8 @@ export function getSpeciesPageLabels(locale = 'zh-CN') {
       ph: 'pH',
       tank: 'Tank size',
       difficulty: 'Difficulty',
-      truth: 'Catalog facts',
-      truthNote: 'These values come from AquaGuide Product Truth and are not rewritten by the SEO editor.',
+      truth: 'Care reference',
+      truthNote: 'These reference values come from AquaGuide species records and stay consistent across the site.',
     };
   }
   return {
@@ -22,7 +22,7 @@ export function getSpeciesPageLabels(locale = 'zh-CN') {
     ph: 'pH',
     tank: '建议缸体',
     difficulty: '饲养难度',
-    truth: 'Catalog 事实数据',
-    truthNote: '这些数值来自 AquaGuide Product Truth，SEO 编辑不会改写它们。',
+    truth: '基础饲养参数',
+    truthNote: '这些参考参数来自 AquaGuide 物种资料，并在站内保持一致。',
   };
 }
