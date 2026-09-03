@@ -29,8 +29,8 @@ export default function PublicSpeciesPreview({ species, locale, effectiveSeo, ro
       <article className="species-page-mock">
         <div className="species-page-breadcrumb">AquaGuide / Species / {effectiveSeo.displayName || species.name}</div>
         <div className="species-page-hero">
-          <div className="species-page-image-placeholder">
-            <span>Species image</span>
+          <div className={`species-page-image-placeholder ${species.image ? 'has-image' : ''}`}>
+            {species.image ? <img src={species.image} alt={effectiveSeo.displayName || species.name || ''} /> : <span>Species image</span>}
             <small>{species.catalog_key}</small>
           </div>
           <div className="species-page-copy">

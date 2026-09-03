@@ -149,6 +149,15 @@ assert.match(bulkDuplicateSource, /resolve_species_duplicate_reviews_bulk/, 'Bul
 assert.match(bulkDuplicateSource, /全选待审核/, 'Bulk duplicate review must support selecting the pending duplicate queue');
 assert.match(bulkDuplicateSource, /确认处理/, 'Bulk duplicate review must require one explicit final confirmation action');
 assert.match(bulkDuplicateSource, /recommendedCanonicalKey/, 'Bulk duplicate review must expose a deterministic keep-page recommendation per duplicate set');
+assert.match(bulkDuplicateSource, /SEO last edited|SEO 最近编辑/, 'Duplicate review must expose editorial update time rather than forcing decisions from catalog IDs.');
+assert.match(bulkDuplicateSource, /completeness/, 'Duplicate review must calculate per-locale SEO completeness evidence.');
+assert.match(bulkDuplicateSource, /Preview page|查看 Preview/, 'Duplicate review must offer an in-context page Preview for every candidate.');
+assert.match(bulkDuplicateSource, /source_primary[\s\S]*approved[\s\S]*completeness[\s\S]*recent_edit/, 'Duplicate recommendation must explain source, approval, completeness and recency evidence in priority order.');
+assert.match(bulkDuplicateSource, /暂不处理/, 'Duplicate review must let operators defer an ambiguous candidate without persisting a decision.');
+assert.match(bulkDuplicateSource, /water_temperature[\s\S]*ph_level[\s\S]*tank_size/, 'Duplicate review must compare core source-data facts.');
+assert.match(bulkDuplicateSource, /member\.image/, 'Duplicate review must show candidate images when available.');
+assert.match(bulkDuplicateSource, /loadProductTruthCatalog[\s\S]*catalogByKey/, 'Duplicate review must lazy-load full source facts without bloating the main Admin catalog projection.');
+
 assert.doesNotMatch(bulkDuplicateSource, /<em[^>]*>.*处理重复/s, 'Bulk duplicate actions must never be rendered as status-tag elements');
 assert.match(appSource, /批量内容审核/, 'Admin must expose a dedicated bulk editorial-review entry after template import.');
 assert.match(bulkEditorialSource, /transition_editorial_reviews_bulk/, 'Bulk editorial review must use one atomic backend operation.');

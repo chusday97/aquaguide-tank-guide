@@ -1265,6 +1265,9 @@ export default function App() {
               <BulkDuplicateReviewPanel
                 groups={speciesGroups}
                 reviewRows={dataReviewRows}
+                seoRows={seoRows}
+                groupSeoRows={groupSeoRows}
+                locale={contentLocale}
                 schemaReady={dataReviewSchemaReady}
                 readOnly={isReadOnlyDemoMode}
                 onCompleted={(result) => {

@@ -23,3 +23,7 @@ export async function loadProductTruth(catalogKey) {
   const catalog = await loadCatalog();
   return catalog.get(catalogKey) || null;
 }
+
+export async function loadProductTruthCatalog() {
+  return loadCatalog();
+}
