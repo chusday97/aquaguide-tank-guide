@@ -720,3 +720,28 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - Recommendation priority remains source-primary relationship → approved SEO → completeness → recent edit as weak evidence; SEO edit time is never presented as source-data update time.
 - Browser proof PASS on `白金西非凤凰`: single entry = 2 candidate cards + 2 images + Preview + defer; bulk entry = 28 shared comparisons / 56 candidate cards + Preview.
 - Admin contract/Repo/API/dual-repo gates, Admin build, root build, SEO handoff, Admin UI regression and diff hygiene PASS. Production/main remain untouched.
+
+## 38. CSV import preflight gate + documentation convergence — completed 2026-09-04
+- Functional commit: `8c9ceeb fix(admin-content): add import preflight gate`.
+- Real bulk-import UX gap closed: validation errors are no longer only surfaced through the first Toast message. The import drawer now shows a persistent preflight report with marked-row count, actual-change count, no-op skips, cleared-field count and row-level issues.
+- Import workflow is now explicitly staged as `Download → Fill/mark → Preflight + field Diff → Create Draft` so validation/review is visually separated from the write action.
+- `Create Draft` is fail-closed until: a CSV is loaded, at least one row is marked, row validation has zero issues, at least one actual change exists, the Repo content store is ready and the environment is writable.
+- Browser proof PASS: an intentionally invalid row showed its row-level `index_strategy` error and kept Draft creation disabled; a valid row displayed its field Diff; read-only demo still prevented Draft creation.
+- Contract, Repo backend/API, dual-repo routing, root build, SEO handoff, Admin UI and diff hygiene all PASS.
+- `CURRENT_GOAL.md` and `LIVE_STATUS.md` were rewritten to remove stale Supabase-as-current guidance. Supabase Species SEO remains historical/compatibility only; Repo-backed dual-repo authority is the only current runtime model.
+
+### Live branch convergence warning
+- Authoritative remote heads at this sync: `main=64fa58a16a723b74621ac1db513adb1efb47e282`, feature before docs sync `8c9ceeb0d58ed2abb8b170d072ee12b0dd1c38fa`.
+- Common base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Live main has 269 unique commits; the feature branch has 95 unique commits.
+- Since the common base, main changed 205 files and the feature branch changed 108; 11 files overlap.
+- A read-only `git merge-tree` audit reports 7 changed-in-both files and 13 conflict hunks. Core overlap includes `package.json`, `src/App.tsx`, `src/pages/AdminContent.tsx` and `src/pages/Encyclopedia.tsx`.
+- Do not merge/rebase as part of ordinary SEO Admin fixes. Finish real Admin batch acceptance first, then schedule a dedicated reconciliation pass.
+
+### Next operational action
+1. Use authenticated AquaGuide Preview `/admin/seo/`.
+2. Upload corrected batch-01 zh-CN CSV → review preflight + field Diff → Create Draft.
+3. Repeat for English.
+4. Batch submit + approve the intended 14 Species and required Base templates.
+5. One explicit Staging Publish; verify 28 hosted EN/ZH pages and deployment-level noindex.
+6. Keep Production locked; do not merge `main` during this operational acceptance.

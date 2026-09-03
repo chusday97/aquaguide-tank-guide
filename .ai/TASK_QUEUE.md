@@ -311,3 +311,17 @@ Updated: 2026-09-02
 - [ ] Authenticated Admin: use the shared view to review remaining unresolved duplicate groups as needed.
 - [ ] Resume corrected batch-01 zh-CN + EN Draft import after field-level diff inspection.
 - [ ] Batch editorial submit/approve and one explicit Staging Publish; Production stays locked.
+
+## 2026-09-04 import preflight + branch convergence
+- [x] Add persistent CSV preflight report after upload.
+- [x] Show row-level validation problems in the page instead of only the first Toast error.
+- [x] Separate `Preflight + Diff` from the final `Create Draft` write action.
+- [x] Disable Draft creation until every preflight gate passes.
+- [x] Browser-verify invalid CSV blocker, valid field Diff and read-only non-write behavior.
+- [x] Rewrite stale `CURRENT_GOAL` / `LIVE_STATUS` to current Repo-backed authority.
+- [x] Add `BRANCH_STATUS.md` with authoritative live main divergence and merge-tree risk.
+- [ ] Authenticated AquaGuide Preview: corrected batch-01 zh-CN preflight + Diff + Draft import.
+- [ ] Authenticated AquaGuide Preview: corrected batch-01 EN preflight + Diff + Draft import.
+- [ ] Batch submit + approve 14 Species + required Base rows.
+- [ ] One explicit Staging Publish + hosted 28-page bilingual verification.
+- [ ] Dedicated feature/main reconciliation after Admin operational acceptance; do not merge/rebase during ordinary fixes.

@@ -447,3 +447,15 @@
 - Browser PASS: single path 2 cards/2 images/Preview/defer; bulk path 28 shared comparisons/56 cards/Preview.
 - Contract + Repo/API + dual-repo gates PASS; Admin build ~640 KB JS; root build, SEO handoff, Admin UI and diff hygiene PASS.
 - Pushed functional commit `e0b40b7`; no Production write and no main merge.
+
+## 2026-09-04 — import preflight + documentation convergence
+- Started from clean `feature/admin-content-v0 @ c4c2601`; read canonical handoff/current goal/task queue/live status before modification.
+- Found Bulk Import surfaced only the first validation issue by Toast and left the write action visually present without a persistent preflight report.
+- Added upload → preflight → field Diff → Create Draft workflow and fail-closed Draft button gating.
+- Browser test: invalid `index_strategy` on row 2 rendered inline issue + disabled Draft; valid CSV rendered actual Diff; read-only demo stayed non-writing.
+- Contract, generator, Repo backend/API, dual-repo routing, root build, SEO handoff, Admin UI and diff hygiene PASS.
+- Functional commit pushed: `8c9ceeb fix(admin-content): add import preflight gate`.
+- Re-read authoritative remote heads rather than stale `origin/main`: live main `64fa58a`, feature `8c9ceeb`, common base `ed0cf38`.
+- Divergence audit: main 269 unique commits / feature 95; 205 vs 108 changed files; 11 overlap; merge-tree shows 7 changed-in-both files and 13 conflict hunks.
+- Rewrote `CURRENT_GOAL.md` and `LIVE_STATUS.md`; created `BRANCH_STATUS.md`; Supabase is no longer presented as current Species SEO runtime/staging authority.
+- No private real Draft write, Staging publish, Production write, merge or rebase performed.
