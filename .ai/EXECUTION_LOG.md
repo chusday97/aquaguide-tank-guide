@@ -440,3 +440,10 @@
 - `npm run test:contract -w @aquaguide/admin-content`, Repo/API/dual-repo gates, Admin build, root build, SEO handoff, Admin UI regression and `git diff --check` PASS.
 - Functional commit pushed: `22d9322 feat(admin-content): add duplicate decision evidence`.
 - No real human duplicate decision, private Draft mutation, Staging publication, Production write or `main` merge was performed.
+## 2026-09-04 — duplicate review entry-point convergence
+- Audited `DataReviewPanel` after bulk evidence UI shipped; found single `处理重复` still used legacy system-comparison + catalog-key radio selection.
+- Extracted shared `DuplicateCandidateComparison` and `duplicateReviewEvidence`; both single and bulk review now render the same evidence and recommendation logic.
+- Added explicit single-review defer with no persistence and removed obsolete legacy duplicate-review styles.
+- Browser PASS: single path 2 cards/2 images/Preview/defer; bulk path 28 shared comparisons/56 cards/Preview.
+- Contract + Repo/API + dual-repo gates PASS; Admin build ~640 KB JS; root build, SEO handoff, Admin UI and diff hygiene PASS.
+- Pushed functional commit `e0b40b7`; no Production write and no main merge.

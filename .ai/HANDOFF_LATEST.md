@@ -711,3 +711,12 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 3. Batch submit + approve the intended 14 Species and required Base templates.
 4. Perform one explicit Staging Publish for the 14-Species allowlist and verify hosted EN/ZH metadata, CTA and deployment-level noindex.
 5. Keep Production locked and do not merge `main` without explicit user authorization.
+## 37. Duplicate review single/bulk convergence — completed 2026-09-04
+- Functional commit: `e0b40b7 refactor(admin-content): unify duplicate review evidence`.
+- The single Species `处理重复` drawer and top-level `批量审核` no longer maintain separate decision UIs.
+- Added one shared `DuplicateCandidateComparison` + `duplicateReviewEvidence` contract for image, identity, source facts, bilingual SEO completeness, review state, SEO last-edited time, recommendation reasons, keep-page choice and in-context EN/ZH Preview.
+- Single-group review now has explicit `暂不处理`; it only closes the drawer and writes no decision.
+- Removed the legacy `系统比对`, catalog-key radio selection and obsolete canonical-choice styles so future changes cannot silently diverge the two entry points.
+- Recommendation priority remains source-primary relationship → approved SEO → completeness → recent edit as weak evidence; SEO edit time is never presented as source-data update time.
+- Browser proof PASS on `白金西非凤凰`: single entry = 2 candidate cards + 2 images + Preview + defer; bulk entry = 28 shared comparisons / 56 candidate cards + Preview.
+- Admin contract/Repo/API/dual-repo gates, Admin build, root build, SEO handoff, Admin UI regression and diff hygiene PASS. Production/main remain untouched.

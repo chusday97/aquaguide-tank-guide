@@ -302,3 +302,12 @@ Updated: 2026-09-02
 - [ ] Batch submit + approve 14 Species + required Base rows.
 - [ ] One explicit Staging Publish for the allowlist; verify hosted EN/ZH/noindex.
 - [ ] Keep Production locked until explicit authorization.
+## 2026-09-04 duplicate-review convergence
+- [x] Make single `处理重复` and top-level bulk review use the same evidence component.
+- [x] Show identical image / identity / source facts / bilingual SEO completeness / review state / SEO last-edited / Preview evidence in both entry points.
+- [x] Add explicit single-review `暂不处理` with zero write.
+- [x] Remove legacy ID-radio and old comparison UI/styles.
+- [x] Browser-verify both entry paths on the same duplicate set.
+- [ ] Authenticated Admin: use the shared view to review remaining unresolved duplicate groups as needed.
+- [ ] Resume corrected batch-01 zh-CN + EN Draft import after field-level diff inspection.
+- [ ] Batch editorial submit/approve and one explicit Staging Publish; Production stays locked.

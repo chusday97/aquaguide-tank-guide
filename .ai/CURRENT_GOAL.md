@@ -169,3 +169,7 @@ The persistent product model is now:
 - This feedback-driven UX blocker is closed in `22d9322`.
 - Primary project goal remains unchanged: complete the first real 14-Species authenticated Draft import → bulk editorial approval → one explicit Staging Publish → hosted bilingual SEO-page verification.
 - Production remains locked; `main` remains untouched until explicit authorization.
+## 2026-09-04 continuation
+Duplicate-review UI is converged and should no longer be expanded unless real authenticated use exposes a blocker.
+Next operational goal: use the canonical AquaGuide Preview `/admin/seo/` for remaining duplicate decisions as needed, then resume corrected batch-01 bilingual Draft import → bulk editorial review → one explicit Staging Publish.
+Keep Production locked and do not merge `main` without explicit user authorization.
