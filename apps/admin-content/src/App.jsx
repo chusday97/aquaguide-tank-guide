@@ -1299,7 +1299,15 @@ export default function App() {
               />
             ) : null}
             {activeTool === 'dataReview' ? (
-              <DataReviewPanel group={selectedGroup} reviewRows={dataReviewRows} schemaReady={dataReviewSchemaReady} readOnly={isReadOnlyDemoMode}
+              <DataReviewPanel
+                group={selectedGroup}
+                reviewRows={dataReviewRows}
+                seoRows={seoRows}
+                groupSeoRows={groupSeoRows}
+                locale={contentLocale}
+                schemaReady={dataReviewSchemaReady}
+                readOnly={isReadOnlyDemoMode}
+                onDefer={() => setActiveTool(null)}
                 onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))}
                 onResolved={(row) => {
                   const nextRows = { ...dataReviewRows, [row.issue_key]: row };

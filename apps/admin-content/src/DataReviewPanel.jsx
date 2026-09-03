@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react';
 import { adminContentClient } from './adminBackend.js';
 import { categoryIssueKey, summarizeDataReviewIssues } from './publishReadiness.js';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
+import DuplicateCandidateComparison from './DuplicateCandidateComparison.jsx';
+import { buildDuplicateRecommendation, mergeDuplicateMembers } from './duplicateReviewEvidence.js';
+import { loadProductTruthCatalog } from './productTruthLoader.js';
 
-function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned }) {
+function ReviewDecision({ issueKey, issueType, group, set, row, catalogByKey, seoRows, groupSeoRows, locale, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned, onDefer }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [decision, setDecision] = useState(row?.decision || '');
@@ -18,19 +21,9 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
     setNotes(row?.notes || '');
   }, [issueKey, row]);
 
-  const duplicateMembers = issueType === 'duplicate_set'
-    ? (set?.member_ids || []).map((id) => group.members?.find((item) => item.catalog_key === id)).filter(Boolean)
-    : [];
-  const sourcePrimary = duplicateMembers.find((member) => !member.duplicate_of_catalog_key && duplicateMembers.some((peer) => peer.duplicate_of_catalog_key === member.catalog_key)) || null;
-  const recommendedCanonicalKey = sourcePrimary?.catalog_key || set?.member_ids?.[0] || '';
-  const matchingFields = issueType === 'duplicate_set'
-    ? [
-      ['name', isUiEnglish ? 'name' : '名称'],
-      ['scientific_name', isUiEnglish ? 'scientific name' : '学名'],
-      ['variant_label', isUiEnglish ? 'variant' : '变体'],
-      ['category', isUiEnglish ? 'category' : '分类'],
-    ].filter(([field]) => { const values = duplicateMembers.map((member) => String(member?.[field] || '')); return values.some(Boolean) && new Set(values).size <= 1; }).map(([, label]) => label)
-    : [];
+  const duplicateMembers = issueType === 'duplicate_set' ? mergeDuplicateMembers(group, set, catalogByKey) : [];
+  const recommendation = issueType === 'duplicate_set' ? buildDuplicateRecommendation(duplicateMembers, seoRows) : { key: '' };
+  const recommendedCanonicalKey = recommendation.key || set?.member_ids?.[0] || '';
 
   const save = async () => {
     if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'No data was written.' : '不会写入数据。' }); return; }
@@ -83,11 +76,17 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
   return (
     <div className="review-decision-box">
       {issueType === 'duplicate_set' ? (
-        <div className="duplicate-evidence-summary">
-          <div><strong>{isUiEnglish ? 'System comparison' : '系统比对'}</strong><span>{matchingFields.length ? (isUiEnglish ? `${matchingFields.join(', ')} match` : `${matchingFields.join('、')}一致`) : (isUiEnglish ? 'Review source fields manually' : '需要人工核对源字段')}</span></div>
-          {sourcePrimary ? <div><strong>{isUiEnglish ? 'Source lineage' : '源记录关系'}</strong><span>{isUiEnglish ? `${sourcePrimary.catalog_key} is marked as the primary source record; duplicate rows point to it.` : `${sourcePrimary.catalog_key} 是当前源数据主记录；其他重复行已指向它。`}</span></div> : null}
-          <p>{isUiEnglish ? 'Recommendation: if there is no external evidence that these are different variants, confirm the duplicate and keep the primary source record. Source records are not deleted.' : '建议：如果没有额外业务证据证明它们是不同品种，确认重复并保留源数据主记录。这里只合并 SEO 页面，不删除源数据。'}</p>
-        </div>
+        <DuplicateCandidateComparison
+          group={group}
+          members={duplicateMembers}
+          seoRows={seoRows}
+          groupSeoRows={groupSeoRows}
+          locale={locale}
+          canonicalKey={canonicalKey}
+          onCanonicalChange={setCanonicalKey}
+          allowKeepSelection={decision === 'duplicate_records'}
+          isUiEnglish={isUiEnglish}
+        />
       ) : null}
       <div className="review-decision-options" aria-label={isUiEnglish ? 'Review decision' : '人工结论'}>
         {issueType === 'category_conflict' ? <>
@@ -106,22 +105,6 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
           </button>
         </>}
       </div>
-      {decision === 'duplicate_records' ? (
-        <div className="canonical-choice-block">
-          <strong>{isUiEnglish ? 'Which page should remain?' : '保留哪个 SEO 页面？'}</strong>
-          <div className="canonical-choice-list">
-            {(set?.member_ids || []).map((id) => {
-              const member = group.members?.find((item) => item.catalog_key === id);
-              const relation = sourcePrimary?.catalog_key === id
-                ? (isUiEnglish ? 'recommended primary' : '推荐保留 · 源数据主记录')
-                : member?.duplicate_of_catalog_key
-                  ? (isUiEnglish ? `duplicate of ${member.duplicate_of_catalog_key}` : `源数据重复于 ${member.duplicate_of_catalog_key}`)
-                  : '';
-              return <label className={`canonical-choice ${canonicalKey === id ? 'active' : ''}`} key={id}><input type="radio" name={`canonical-${issueKey}`} value={id} checked={canonicalKey === id} onChange={() => setCanonicalKey(id)} /><span><b>{member?.name || set?.name || id}</b><small>{id}{relation ? ` · ${relation}` : ''}</small></span></label>;
-            })}
-          </div>
-        </div>
-      ) : null}
       {decision ? <div className="review-outcome-note">{decision === 'duplicate_records'
         ? (isUiEnglish ? 'After saving: one SEO page remains independent; duplicate rows point to it with Canonical. This is one atomic operation.' : '保存后：只保留一个独立 SEO 页面，其他重复记录自动指向它的 Canonical；整套处理作为一次操作完成。')
         : (isUiEnglish ? 'After saving: both records remain eligible to become separate SEO pages. Existing source data is unchanged.' : '保存后：两条记录继续作为独立 SEO 页面候选；源数据不做修改。')}</div> : null}
@@ -130,15 +113,21 @@ function ReviewDecision({ issueKey, issueType, group, set, row, schemaReady, rea
       </label>
       <div className="review-decision-footer">
         <span>{row?.reviewed_at ? `${isUiEnglish ? 'Recorded' : '已记录'} · ${new Date(row.reviewed_at).toLocaleString()}` : (isUiEnglish ? 'No human conclusion recorded yet' : '尚未记录人工结论')}</span>
-        <button type="button" className="secondary-button compact" onClick={save} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Confirm & save' : '确认并保存')}</button>
+        <div className="review-decision-footer-actions">{issueType === 'duplicate_set' ? <button type="button" className="ghost-button compact" onClick={() => onDefer?.()}>{isUiEnglish ? 'Later' : '暂不处理'}</button> : null}<button type="button" className="secondary-button compact" onClick={save} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Confirm & save' : '确认并保存')}</button></div>
       </div>
     </div>
   );
 }
 
-export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = false, readOnly = false, onSaved, onResolved, onSeoPolicyAligned }) {
+export default function DataReviewPanel({ group, reviewRows = {}, seoRows = {}, groupSeoRows = {}, locale = 'zh-CN', schemaReady = false, readOnly = false, onSaved, onResolved, onSeoPolicyAligned, onDefer }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
+  const [catalogByKey, setCatalogByKey] = useState(() => new Map());
+  useEffect(() => {
+    let cancelled = false;
+    loadProductTruthCatalog().then((catalog) => { if (!cancelled) setCatalogByKey(catalog); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
   if (!group || (!group.category_conflict && !group.duplicate_count)) return null;
   const categoryMembers = group.category_conflict
     ? group.categories.map((category) => ({ category, members: group.members.filter((member) => member.category === category) }))
@@ -162,16 +151,15 @@ export default function DataReviewPanel({ group, reviewRows = {}, schemaReady = 
             {categoryMembers.map((item) => <div key={item.category}><b>{item.category}</b>{item.members.map((member) => <small key={member.catalog_key}>{member.name} · {member.catalog_key}</small>)}</div>)}
           </div>
           <ReviewDecision issueKey={categoryIssueKey(group)} issueType="category_conflict" group={group}
-            row={reviewRows[categoryIssueKey(group)]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} />
+            row={reviewRows[categoryIssueKey(group)]} catalogByKey={catalogByKey} seoRows={seoRows} groupSeoRows={groupSeoRows} locale={locale} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} onDefer={onDefer} />
         </div>
       ) : null}
       {group.duplicate_sets?.map((set) => (
         <div className="review-issue-card" key={set.duplicate_set_key}>
           <div className="review-issue-title"><strong>{isUiEnglish ? 'Possible duplicate pages' : '疑似重复页面'}</strong><span>{set.member_ids.length} {isUiEnglish ? 'source records' : '条源记录'}</span></div>
           <p><b>{set.name}</b> · <i>{set.scientific_name}</i></p>
-          <div className="duplicate-key-list">{set.member_ids.map((id) => { const member = group.members?.find((item) => item.catalog_key === id); return <code key={id}>{member?.name || set.name} · {id}</code>; })}</div>
           <ReviewDecision issueKey={set.duplicate_set_key} issueType="duplicate_set" group={group} set={set}
-            row={reviewRows[set.duplicate_set_key]} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} />
+            row={reviewRows[set.duplicate_set_key]} catalogByKey={catalogByKey} seoRows={seoRows} groupSeoRows={groupSeoRows} locale={locale} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} onDefer={onDefer} />
         </div>
       ))}
     </section>

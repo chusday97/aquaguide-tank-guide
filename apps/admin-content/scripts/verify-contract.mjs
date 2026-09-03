@@ -54,6 +54,8 @@ const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generat
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
 const bulkImportSource = await readFile(path.join(appRoot, 'src/BulkImportPanel.jsx'), 'utf8');
 const bulkDuplicateSource = await readFile(path.join(appRoot, 'src/BulkDuplicateReviewPanel.jsx'), 'utf8');
+const duplicateComparisonSource = await readFile(path.join(appRoot, 'src/DuplicateCandidateComparison.jsx'), 'utf8');
+const duplicateEvidenceSource = await readFile(path.join(appRoot, 'src/duplicateReviewEvidence.js'), 'utf8');
 const bulkEditorialSource = await readFile(path.join(appRoot, 'src/BulkEditorialReviewPanel.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
 const activityCenterSource = await readFile(path.join(appRoot, 'src/ActivityCenter.jsx'), 'utf8');
@@ -149,14 +151,18 @@ assert.match(bulkDuplicateSource, /resolve_species_duplicate_reviews_bulk/, 'Bul
 assert.match(bulkDuplicateSource, /全选待审核/, 'Bulk duplicate review must support selecting the pending duplicate queue');
 assert.match(bulkDuplicateSource, /确认处理/, 'Bulk duplicate review must require one explicit final confirmation action');
 assert.match(bulkDuplicateSource, /recommendedCanonicalKey/, 'Bulk duplicate review must expose a deterministic keep-page recommendation per duplicate set');
-assert.match(bulkDuplicateSource, /SEO last edited|SEO 最近编辑/, 'Duplicate review must expose editorial update time rather than forcing decisions from catalog IDs.');
-assert.match(bulkDuplicateSource, /completeness/, 'Duplicate review must calculate per-locale SEO completeness evidence.');
-assert.match(bulkDuplicateSource, /Preview page|查看 Preview/, 'Duplicate review must offer an in-context page Preview for every candidate.');
-assert.match(bulkDuplicateSource, /source_primary[\s\S]*approved[\s\S]*completeness[\s\S]*recent_edit/, 'Duplicate recommendation must explain source, approval, completeness and recency evidence in priority order.');
-assert.match(bulkDuplicateSource, /暂不处理/, 'Duplicate review must let operators defer an ambiguous candidate without persisting a decision.');
-assert.match(bulkDuplicateSource, /water_temperature[\s\S]*ph_level[\s\S]*tank_size/, 'Duplicate review must compare core source-data facts.');
-assert.match(bulkDuplicateSource, /member\.image/, 'Duplicate review must show candidate images when available.');
-assert.match(bulkDuplicateSource, /loadProductTruthCatalog[\s\S]*catalogByKey/, 'Duplicate review must lazy-load full source facts without bloating the main Admin catalog projection.');
+assert.match(duplicateComparisonSource, /SEO last edited|SEO 最近编辑/, 'Shared duplicate evidence must expose editorial update time rather than forcing decisions from catalog IDs.');
+assert.match(duplicateEvidenceSource, /duplicateCompleteness/, 'Shared duplicate evidence must calculate per-locale SEO completeness.');
+assert.match(duplicateComparisonSource, /Preview page|查看 Preview/, 'Shared duplicate evidence must offer an in-context page Preview for every candidate.');
+assert.match(duplicateEvidenceSource, /source_primary[\s\S]*approved[\s\S]*completeness[\s\S]*recent_edit/, 'Duplicate recommendation must explain source, approval, completeness and recency evidence in priority order.');
+assert.match(bulkDuplicateSource, /暂不处理/, 'Bulk duplicate review must let operators defer an ambiguous candidate without persisting a decision.');
+assert.match(reviewSource, /暂不处理/, 'Single-group duplicate review must also allow deferring without a write.');
+assert.match(duplicateComparisonSource, /water_temperature[\s\S]*ph_level[\s\S]*tank_size/, 'Shared duplicate evidence must compare core source-data facts.');
+assert.match(duplicateComparisonSource, /member\.image/, 'Shared duplicate evidence must show candidate images when available.');
+assert.match(bulkDuplicateSource, /loadProductTruthCatalog[\s\S]*catalogByKey/, 'Bulk duplicate review must lazy-load full source facts without bloating the main Admin catalog projection.');
+assert.match(reviewSource, /loadProductTruthCatalog[\s\S]*catalogByKey/, 'Single-group duplicate review must lazy-load the same source facts.');
+assert.match(bulkDuplicateSource, /DuplicateCandidateComparison/, 'Bulk duplicate review must use the shared comparison component.');
+assert.match(reviewSource, /DuplicateCandidateComparison/, 'Single-group Data Review must use the same duplicate comparison component as bulk review.');
 
 assert.doesNotMatch(bulkDuplicateSource, /<em[^>]*>.*处理重复/s, 'Bulk duplicate actions must never be rendered as status-tag elements');
 assert.match(appSource, /批量内容审核/, 'Admin must expose a dedicated bulk editorial-review entry after template import.');
@@ -280,7 +286,7 @@ assert.match(baseSource, /save\('ready_for_review'\)/, 'Base workflow must expos
 assert.match(baseSource, /save\('approved'\)/, 'Base workflow must expose an explicit approve-preview action');
 assert.match(appSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('catalog_key'/, 'Variant review transitions must update review metadata only, not re-upsert content fields');
 assert.match(baseSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('group_key'/, 'Base review transitions must update review metadata only, not re-upsert template fields');
-assert.match(reviewSource, /系统比对/, 'Duplicate review must expose comparison evidence before asking for a human conclusion.');
+assert.match(reviewSource, /DuplicateCandidateComparison/, 'Single-group duplicate review must expose the shared comparison evidence before asking for a human conclusion.');
 assert.match(reviewSource, /resolve_species_duplicate_review/, 'Duplicate review UI must use one atomic Repo operation.');
 assert.match(repoStoreSource, /resolveDuplicateReview/, 'Repo store must resolve review decision and SEO policy in one private-store write.');
 assert.match(appSource, /审核进度|Review progress/, 'Variant workflow must label the non-interactive status area as review progress');
