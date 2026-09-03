@@ -691,3 +691,23 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - Do **not** use the standalone Vercel project `admin-content` for real import acceptance. Its current hosted Preview intentionally/operationally lacks the Repo backend configuration and shows `content_repo_not_configured`.
 - The canonical writable hosted acceptance surface is the AquaGuide project deployment at `/admin/seo/`, on branch `feature/admin-content-v0`.
 - Future sessions must not give the standalone `admin-content-*.vercel.app` URL as the real import URL. Use the AquaGuide branch Preview `/admin/seo/` and require normal Admin login there.
+
+## 36. Duplicate review decision evidence — completed 2026-09-04
+- Functional commit: `22d9322 feat(admin-content): add duplicate decision evidence`.
+- User feedback exposed a real decision-quality problem: pending duplicate review mostly asked operators to choose between `catalog_key` IDs, which is insufficient for human content-governance decisions.
+- Bulk duplicate review now renders side-by-side candidate evidence cards with real Species image, Chinese name, scientific name, category, temperature, pH, tank size and source-description summary; `catalog_key` is retained only as a secondary identity.
+- Each candidate now exposes zh-CN and EN SEO completeness, editorial review state and a clearly labeled **SEO last edited** timestamp. Do not present this timestamp as source-data freshness; the current source Catalog does not have a reliable per-record `updated_at` field.
+- Candidate Preview is available in-context and can switch zh-CN / EN. `PublicSpeciesPreview` now renders the real Species image when available instead of a generic placeholder.
+- Recommendation priority is fail-safe and explainable: source-primary relationship first → approved SEO content → completeness → recent SEO editing only as a weak signal. Recommendation reasons are shown to the operator; recent edit alone must never determine the canonical page.
+- `暂不处理 / Later` writes no decision and leaves the duplicate set in the pending queue.
+- Full Catalog media/source facts are lazy-loaded through `productTruthLoader`; this avoided a temporary Admin bundle regression (~894 KB) and restored the main Admin JS to ~642 KB while keeping evidence available when duplicate review opens.
+- Browser proof PASS: 28 pending duplicate groups rendered; first real group showed two candidate cards + two images, recommendation evidence, real-image Preview, locale switching and defer-without-write behavior; drawer/card had no horizontal overflow.
+- Contract suite, Repo backend/API, dual-repo routing, Admin build, full root build, SEO handoff, Admin authority UI and diff hygiene all PASS.
+- Production remains locked; no human duplicate decision was auto-written, no private content write was bypassed, and `main` was not merged.
+
+### Next operational action
+1. Keep this duplicate-decision view as the stable baseline; do not revert to ID-only canonical selection.
+2. Continue authenticated AquaGuide Preview `/admin/seo/` batch-01 import: zh-CN diff → Draft import, then EN diff → Draft import.
+3. Batch submit + approve the intended 14 Species and required Base templates.
+4. Perform one explicit Staging Publish for the 14-Species allowlist and verify hosted EN/ZH metadata, CTA and deployment-level noindex.
+5. Keep Production locked and do not merge `main` without explicit user authorization.

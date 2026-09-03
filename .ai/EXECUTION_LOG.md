@@ -429,3 +429,14 @@
 - Renamed read-only UI copy to `只读演示 / Read-only demo` to eliminate Preview/read-only ambiguity.
 - Functional commit `71cecdc`; full local regression PASS; Production/main untouched.
 - Hosted check found standalone `admin-content` Preview is blocked at Repo setup (`content_repo_not_configured`); canonical writable acceptance remains AquaGuide Preview `/admin/seo/`. Documented this to prevent future URL confusion.
+
+## 2026-09-04 — Duplicate review evidence convergence
+- Replaced `catalog_key`-centric duplicate decisions with evidence-based side-by-side candidate cards.
+- Added source identity/facts, real image, bilingual SEO completeness, editorial state and explicit SEO last-edited evidence.
+- Added explainable canonical recommendation priority: source-primary → approved SEO → completeness → recent edit as weak evidence only.
+- Added in-context real-image Preview with zh-CN / EN switching; `暂不处理` leaves the issue pending and performs no write.
+- Found and corrected an intermediate performance regression: synchronous full Catalog import increased Admin JS to ~894 KB. Reused the existing catalog URL loader and lazy-loaded full source evidence only when needed; main Admin JS returned to ~642 KB.
+- Browser acceptance PASS on read-only demo: 28 pending groups, two candidate cards/images in the first real set, Preview locale switch, defer-without-write and zero horizontal overflow.
+- `npm run test:contract -w @aquaguide/admin-content`, Repo/API/dual-repo gates, Admin build, root build, SEO handoff, Admin UI regression and `git diff --check` PASS.
+- Functional commit pushed: `22d9322 feat(admin-content): add duplicate decision evidence`.
+- No real human duplicate decision, private Draft mutation, Staging publication, Production write or `main` merge was performed.

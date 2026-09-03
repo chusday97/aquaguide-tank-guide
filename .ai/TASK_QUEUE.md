@@ -287,3 +287,18 @@ Updated: 2026-09-02
 - [ ] Batch submit + approve the intended 14 Species/Base resources.
 - [ ] One explicit Staging Publish + hosted EN/ZH verification.
 - [x] Clarify canonical hosted path: use AquaGuide Preview `/admin/seo/`; standalone `admin-content` Preview is not the real writable import surface.
+
+## 2026-09-04 duplicate review decision evidence
+- [x] Replace ID-only duplicate selection with candidate comparison cards.
+- [x] Show real image, Chinese/scientific identity, category and core care facts for each candidate.
+- [x] Show zh-CN / EN SEO completeness, review state and clearly labeled SEO last-edited time.
+- [x] Add in-context candidate Preview with zh-CN / EN switching and real Species image.
+- [x] Add explainable recommendation reasons; source-primary and approved content outrank recency.
+- [x] Add `暂不处理` that writes nothing and keeps the candidate pending.
+- [x] Lazy-load full Catalog evidence so duplicate review does not bloat the Admin main bundle.
+- [x] Browser-verify the 28 pending groups, two-candidate comparison, Preview and no horizontal overflow.
+- [ ] Authenticated AquaGuide Preview `/admin/seo/`: import corrected batch-01 zh-CN after field-level diff.
+- [ ] Import corrected batch-01 English after field-level diff.
+- [ ] Batch submit + approve 14 Species + required Base rows.
+- [ ] One explicit Staging Publish for the allowlist; verify hosted EN/ZH/noindex.
+- [ ] Keep Production locked until explicit authorization.

@@ -162,3 +162,10 @@ The persistent product model is now:
 - Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
 - Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
 - Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
+
+## 2026-09-04 — Duplicate review evidence closed
+- Duplicate review is no longer an ID-selection task. The stable baseline is evidence-based comparison with source facts, real images, bilingual SEO status/completeness, explicit SEO edit time, Preview and explainable recommendation reasons.
+- Do not use source-edit recency as a hidden proxy: the Catalog still lacks a reliable per-record source `updated_at`; only SEO editorial update time is currently shown.
+- This feedback-driven UX blocker is closed in `22d9322`.
+- Primary project goal remains unchanged: complete the first real 14-Species authenticated Draft import → bulk editorial approval → one explicit Staging Publish → hosted bilingual SEO-page verification.
+- Production remains locked; `main` remains untouched until explicit authorization.
