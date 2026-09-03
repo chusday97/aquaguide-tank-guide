@@ -21,6 +21,23 @@ function inspectBaseRow(row) {
   });
 }
 
+function inspectVariantRow(row) {
+  if (!row) return { clean: false, issues: [{ label: 'Species SEO', match: 'missing' }] };
+  return inspectEditorialContent({
+    localizedName: row.localized_name,
+    seoTitle: row.seo_title,
+    metaDescription: row.meta_description,
+    h1: row.h1,
+    variantIntro: row.intro,
+    imageAlt: row.image_alt,
+    focusKeyword: row.focus_keyword,
+  });
+}
+
+function isApprovedDraft(row) {
+  return Boolean(row && row.status === 'draft' && row.review_state === 'approved' && row.reviewed_at);
+}
+
 function candidateIdSet(overview, locale) {
   const source = overview?.locales?.[locale]?.memberIdsByState || {};
   return new Set([...(source.blocked || []), ...(source.ready_for_review || []), ...(source.publish_ready || [])]);
@@ -75,7 +92,6 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   const memberByCatalogKey = useMemo(() => new Map(species.map((member) => [member.catalog_key, member])), [species]);
   const allCandidateIds = useMemo(() => candidateIdSet(workflowOverview, locale), [workflowOverview, locale]);
   const reviewReadyIds = useMemo(() => new Set(workflowOverview?.locales?.[locale]?.memberIdsByState?.ready_for_review || []), [workflowOverview, locale]);
-  const publishReadyIds = useMemo(() => new Set(workflowOverview?.locales?.[locale]?.memberIdsByState?.publish_ready || []), [workflowOverview, locale]);
   const recentImportKeys = useMemo(() => new Set(recentImportScope.catalogKeys || []), [recentImportScope]);
 
   const buildCandidates = useCallback((mode) => species.flatMap((member) => {
@@ -123,33 +139,37 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
         if (row?.index_strategy === 'canonical_to_sibling' && row.canonical_catalog_key) catalogKeys.add(row.canonical_catalog_key);
       }
     }
+    const selectionKeys = [...catalogKeys];
     const groupKeys = new Set();
     let allMembersFound = true;
-    let publishReadyCount = 0;
-    for (const key of catalogKeys) {
+    let readySpeciesCount = 0;
+    for (const key of selectionKeys) {
       const member = memberByCatalogKey.get(key);
       if (!member) { allMembersFound = false; continue; }
       const group = groupByMemberId.get(member.id);
-      if (!group?.group_key) allMembersFound = false;
-      else groupKeys.add(group.group_key);
-      if (publishReadyIds.has(member.id)) publishReadyCount += 1;
+      if (!group?.group_key) { allMembersFound = false; continue; }
+      groupKeys.add(group.group_key);
+      const variantRows = ['zh-CN', 'en'].map((rowLocale) => seoRows[seoRowKey(key, rowLocale)]);
+      const baseRows = ['zh-CN', 'en'].map((rowLocale) => groupSeoRows[groupSeoRowKey(group.group_key, rowLocale)]);
+      const variantsReady = variantRows.every((row) => isApprovedDraft(row) && inspectVariantRow(row).clean);
+      const basesReady = baseRows.every((row) => isApprovedDraft(row) && inspectBaseRow(row).clean);
+      if (variantsReady && basesReady) readySpeciesCount += 1;
     }
-    const selectionKeys = [...catalogKeys];
     const ready = batchKeys.length > 0
       && batchKeys.length <= 20
       && selectionKeys.length <= 20
       && allMembersFound
-      && publishReadyCount === selectionKeys.length;
+      && readySpeciesCount === selectionKeys.length;
     return {
       batchCount: batchKeys.length,
       dependencyCount: Math.max(selectionKeys.length - batchKeys.length, 0),
       catalogKeys: selectionKeys,
       groupKeys: [...groupKeys],
-      publishReadyCount,
+      readySpeciesCount,
       ready,
       overLimit: selectionKeys.length > 20,
     };
-  }, [recentImportKeys, seoRows, memberByCatalogKey, groupByMemberId, publishReadyIds]);
+  }, [recentImportKeys, seoRows, groupSeoRows, memberByCatalogKey, groupByMemberId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -244,7 +264,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
     if (!schemaReady || !stagingSelection.ready) {
       emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Batch Staging publish blocked' : '本批 Staging 发布被阻止', detail: stagingSelection.overLimit
         ? (isUiEnglish ? 'A Staging release is limited to 20 Species including canonical dependencies.' : '一次 Staging 最多 20 个 Species，包含 Canonical 依赖。')
-        : (isUiEnglish ? 'Every Species in this import scope, including canonical dependencies, must be bilingual Preview-ready first.' : '本次导入范围内的全部 Species（含 Canonical 依赖）都必须先达到双语 Preview-ready。') });
+        : (isUiEnglish ? 'Both language rows and both Base templates must be Approved Drafts with review timestamps and clean content before Staging.' : 'Staging 前，中英文页面与中英文 Base 都必须是已审核的 Approved Draft，并且没有测试/验收文案。') });
       return;
     }
     setStagingPublishing(true);
@@ -354,13 +374,13 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
         <div className={`bulk-import-preflight ${stagingSelection.ready ? 'ready' : 'waiting'}`} aria-label={isUiEnglish ? 'Import batch Staging readiness' : '本批 Staging 就绪状态'}>
           <div className="bulk-import-preflight-head">
             <div><strong>{isUiEnglish ? 'Publish this import batch to Staging' : '发布本次导入批次到 Staging'}</strong><small>{isUiEnglish ? 'One explicit release after bilingual approval; Production stays locked.' : '双语审核全部通过后一次发布；Production 继续锁定。'}</small></div>
-            <span>{stagingSelection.publishReadyCount}/{stagingSelection.catalogKeys.length} Preview-ready</span>
+            <span>{stagingSelection.readySpeciesCount}/{stagingSelection.catalogKeys.length} {isUiEnglish ? 'bilingual approved' : '双语已批准'}</span>
           </div>
           <p className={`bulk-import-preflight-note ${stagingSelection.ready ? 'success' : ''}`}>{stagingSelection.overLimit
             ? (isUiEnglish ? 'This release exceeds the 20-Species Staging cap once canonical dependencies are included.' : '加入 Canonical 依赖后超过单次 Staging 20 个 Species 的上限。')
             : stagingSelection.ready
-              ? (isUiEnglish ? `${stagingSelection.batchCount} imported pages are bilingual Preview-ready${stagingSelection.dependencyCount ? `; ${stagingSelection.dependencyCount} canonical dependencies are included` : ''}.` : `${stagingSelection.batchCount} 个本批页面均已达到双语 Preview-ready${stagingSelection.dependencyCount ? `，并包含 ${stagingSelection.dependencyCount} 个 Canonical 依赖` : ''}。`)
-              : (isUiEnglish ? 'Staging stays disabled until every page in this import scope and every canonical dependency is bilingual Preview-ready.' : '本批全部页面及 Canonical 依赖达到双语 Preview-ready 前，Staging 发布保持禁用。')}</p>
+              ? (isUiEnglish ? `${stagingSelection.batchCount} imported pages have Approved Drafts in both languages${stagingSelection.dependencyCount ? `; ${stagingSelection.dependencyCount} canonical dependencies are included` : ''}.` : `${stagingSelection.batchCount} 个本批页面的中英文 Draft 均已批准${stagingSelection.dependencyCount ? `，并包含 ${stagingSelection.dependencyCount} 个 Canonical 依赖` : ''}。`)
+              : (isUiEnglish ? 'Staging stays disabled until both language rows and both Base templates are Approved, reviewed and clean for every selected Species.' : '每个 Species 的中英文页面与中英文 Base 都达到 Approved、已审核且文案干净之前，Staging 发布保持禁用。')}</p>
           <div className="bulk-duplicate-footer">
             <span>{isUiEnglish ? 'This writes one sanitized Staging snapshot and triggers one Preview deployment; it does not publish Production.' : '该动作只写入一份脱敏 Staging Snapshot 并触发一次 Preview 部署，不会发布 Production。'}</span>
             <button type="button" className="primary-button" disabled={stagingPublishing || !stagingSelection.ready} onClick={publishRecentBatch}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? `Publish ${stagingSelection.catalogKeys.length} to Staging` : `一次发布 ${stagingSelection.catalogKeys.length} 个到 Staging`)}</button>
