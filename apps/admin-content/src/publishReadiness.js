@@ -1,6 +1,7 @@
 import { resolveEffectiveSeo } from './seoInheritance.js';
 import { groupSeoRowKey, seoRowKey } from './localization.js';
 import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
+import { inspectSourceIdentity, sourceIdentityBlockerText } from './sourceIdentity.js';
 
 export const REVIEW_STATES = [
   { value: 'editing', label: 'Editing' },
@@ -87,6 +88,8 @@ export function assessPublishReadiness({ species, group, locale, variantRow, gro
     blockerCodes.push(code);
   };
   if (!species || !group) return { state: 'blocked', blockers: ['未选择 Species。'], blockerCodes: ['content'] };
+  const sourceIdentity = inspectSourceIdentity(species);
+  for (const issue of sourceIdentity.issues) addBlocker('source_data', sourceIdentityBlockerText(issue, locale));
   if (!groupRow) addBlocker('content', `${locale} Base Species 尚未保存。`);
   if (!variantRow) addBlocker('content', `${locale} Variant SEO 尚未保存。`);
 
@@ -136,9 +139,9 @@ export function assessPublishReadiness({ species, group, locale, variantRow, gro
     }
   }
 
-  if (blockers.length) return { state: 'blocked', blockers, blockerCodes: [...new Set(blockerCodes)], effective, dataReview, hygiene };
+  if (blockers.length) return { state: 'blocked', blockers, blockerCodes: [...new Set(blockerCodes)], effective, dataReview, hygiene, sourceIdentity };
   const editorialApproved = variantRow?.review_state === 'approved' && groupRow?.review_state === 'approved';
-  if (editorialApproved) return { state: 'publish_ready', blockers: [], blockerCodes: [], effective, dataReview, hygiene };
+  if (editorialApproved) return { state: 'publish_ready', blockers: [], blockerCodes: [], effective, dataReview, hygiene, sourceIdentity };
   return {
     state: 'ready_for_review',
     blockers: [],
@@ -146,6 +149,7 @@ export function assessPublishReadiness({ species, group, locale, variantRow, gro
     effective,
     dataReview,
     hygiene,
+    sourceIdentity,
     reviewNeeded: [groupRow?.review_state !== 'approved' ? 'Base Species' : null, variantRow?.review_state !== 'approved' ? 'Variant' : null].filter(Boolean),
   };
 }
@@ -212,7 +216,7 @@ function issueStatus(issue, reviewRows) {
   return getDataReviewIssueState(issue, reviewRows);
 }
 
-const BLOCKED_NEXT_ACTION_PRIORITY = ['hygiene', 'data_review', 'content', 'bilingual', 'seo_policy'];
+const BLOCKED_NEXT_ACTION_PRIORITY = ['hygiene', 'source_data', 'data_review', 'content', 'bilingual', 'seo_policy'];
 function primaryBlockedNextAction(blockerCodes = []) {
   return BLOCKED_NEXT_ACTION_PRIORITY.find((code) => blockerCodes.includes(code)) || 'other';
 }
@@ -269,6 +273,7 @@ export function buildAdminWorkflowOverview({ species = [], groups = [], seoRows 
       memberIdsByState: { blocked: [], ready_for_review: [], publish_ready: [] },
       blockedNextActions: {
         data_review: { count: 0, memberIds: [] },
+        source_data: { count: 0, memberIds: [] },
         hygiene: { count: 0, memberIds: [] },
         content: { count: 0, memberIds: [] },
         bilingual: { count: 0, memberIds: [] },

@@ -14,6 +14,7 @@ const readinessStates = [
 
 const blockedNextActions = [
   ['hygiene', { zh: '清理测试 / 验收文案', en: 'Clean test / acceptance copy' }, { zh: '先移除临时验收字样，再继续审核', en: 'Remove temporary acceptance wording before review' }],
+  ['source_data', { zh: '修正源身份数据', en: 'Fix source identity' }, { zh: '学名等源身份字段不完整，需先修正源记录', en: 'Scientific identity data is incomplete and must be fixed at the source' }],
   ['data_review', { zh: '先处理数据问题', en: 'Resolve data review' }, { zh: '重复记录或分类问题需要先人工判断', en: 'Duplicate or category evidence needs a human decision' }],
   ['content', { zh: '补齐当前语言内容', en: 'Complete this language' }, { zh: '补齐 Base、页面内容、名称或图片 Alt', en: 'Complete Base/page copy, names or image alt' }],
   ['bilingual', { zh: '补齐另一语言', en: 'Complete the other language' }, { zh: '独立收录页面需要另一语言完成并审核', en: 'Indexed pages need the counterpart locale completed and approved' }],

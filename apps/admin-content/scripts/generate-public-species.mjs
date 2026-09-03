@@ -5,6 +5,7 @@ import { resolveEffectiveSeo } from '../src/seoInheritance.js';
 import { buildSpeciesSeoRouteMeta } from '../src/seoRouteContract.js';
 import { getSpeciesPageLabels, localizeSpeciesTankSize } from '../src/speciesPagePresentation.js';
 import { inspectEditorialContent } from '../src/contentHygiene.js';
+import { inspectSourceIdentity } from '../src/sourceIdentity.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
@@ -87,6 +88,8 @@ function validateEligibleRecord({ row, groupRow, member, group, effectiveSeo, ro
   const locale = normalizeLocale(row.locale);
   if (!locale) errors.push(`unsupported locale ${row.locale}`);
   if (!member || !group) errors.push(`unknown catalog_key ${row.catalog_key}`);
+  const sourceIdentity = inspectSourceIdentity(member);
+  for (const issue of sourceIdentity.issues) errors.push(`source identity ${issue.field} is ${issue.code}: ${issue.value || 'missing'}`);
   if (!isEligibleRow(groupRow, mode)) {
     const expected = mode === 'preview' ? 'Approved/preview-eligible' : mode === 'staging_release' ? 'Approved Draft/staging-eligible' : 'Published';
     errors.push(`Base Species ${group?.group_key || 'unknown'} is not ${expected} for ${row.locale}`);

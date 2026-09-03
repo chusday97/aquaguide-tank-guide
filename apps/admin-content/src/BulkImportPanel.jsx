@@ -6,6 +6,7 @@ import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.j
 import { getResolvedDuplicateSeoPolicy } from './publishReadiness.js';
 import { defaultGroupSeoForLocale } from './seoInheritance.js';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
+import { inspectSourceIdentity } from './sourceIdentity.js';
 
 const FIELDS = [
   'import_action', 'catalog_key', 'source_name', 'scientific_name', 'locale', 'localized_name',
@@ -119,6 +120,11 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       const key = String(row.catalog_key || '').trim();
       const member = speciesByKey.get(key);
       if (!member) { nextErrors.push(`第 ${row.__row} 行：catalog_key ${key || '为空'} 不存在。`); continue; }
+      const sourceIdentity = inspectSourceIdentity(member);
+      if (!sourceIdentity.clean) {
+        nextErrors.push(`第 ${row.__row} 行：${key} 的源数据学名不完整（${member.scientific_name || '为空'}），请先修正 AquaGuide 源记录。`);
+        continue;
+      }
       const rowLocale = String(row.locale || locale).trim();
       if (rowLocale !== locale) { nextErrors.push(`第 ${row.__row} 行：locale 必须是当前模板语言 ${locale}。`); continue; }
       const strategy = String(row.index_strategy || 'noindex').trim();

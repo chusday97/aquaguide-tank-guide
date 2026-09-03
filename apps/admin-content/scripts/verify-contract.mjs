@@ -8,6 +8,7 @@ import { buildSpeciesSeoRouteMeta, speciesPublicPath } from '../src/seoRouteCont
 import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, buildControlledPreviewSnapshot, categoryIssueKey, getIndexReviewBlockReason, getResolvedDuplicateSeoPolicy, summarizeDataReviewIssues } from '../src/publishReadiness.js';
 import { EDITOR_ELEMENT_REGISTRY } from '../src/editorElementRegistry.js';
 import { inspectEditorialContent } from '../src/contentHygiene.js';
+import { inspectSourceIdentity } from '../src/sourceIdentity.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(here, '..');
@@ -126,6 +127,7 @@ assert.match(appSource, /ActivityCenter/, 'Admin must expose a persistent operat
 assert.match(bulkImportSource, /import_action/, 'Bulk template must require an explicit per-row import marker');
 assert.match(bulkImportSource, /VALID_ACTIONS/, 'Bulk import must ignore unmarked template rows');
 assert.match(bulkImportSource, /source_name[\s\S]*scientific_name/, 'Bulk template must expose Product Truth identity as reference columns');
+assert.match(bulkImportSource, /inspectSourceIdentity/, 'Bulk import must reject rows whose source scientific identity is incomplete before Draft write.');
 assert.match(bulkImportSource, /status:\s*'draft'[\s\S]*review_state:\s*'editing'/, 'Bulk import must fail closed to Draft + Editing');
 assert.match(bulkImportSource, /buildSpeciesSeoRouteMeta/, 'Bulk import must rebuild route/canonical metadata using the shared route contract');
 assert.match(bulkImportSource, /canonical_to_sibling/, 'Bulk import must validate canonical-to-sibling policy');
@@ -441,8 +443,8 @@ if (duplicateSet) {
   }
 }
 
-const cleanGroup = groupData.groups.find((group) => !group.category_conflict && !group.duplicate_count);
-const cleanMember = cleanGroup.members[0];
+const cleanGroup = groupData.groups.find((group) => !group.category_conflict && !group.duplicate_count && group.members.some((member) => inspectSourceIdentity(member).clean));
+const cleanMember = cleanGroup.members.find((member) => inspectSourceIdentity(member).clean);
 const readinessFixture = assessPublishReadiness({
   species: cleanMember, group: cleanGroup, locale: 'en',
   groupRow: { locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' },
@@ -454,6 +456,22 @@ const dirtyAcceptance = inspectEditorialContent({ h1: 'Red Cherry Shrimp Care Gu
 assert.equal(dirtyAcceptance.clean, false, 'Acceptance/test copy must be detected before review.');
 assert.equal(inspectEditorialContent({ h1: 'Red Cherry Shrimp Care Guide' }).clean, true, 'Normal editorial copy must remain clean.');
 assert.equal(inspectEditorialContent({ h1: '极火虾饲养指南｜双仓 Staging 验收' }).clean, false, 'Standalone Chinese acceptance wording must also be blocked.');
+const malformedSourceSpecies = catalog.find((item) => item.catalog_key === 'sp_0069');
+const malformedSourceGroup = groupData.groups.find((group) => group.members.some((member) => member.catalog_key === 'sp_0069'));
+assert.equal(inspectSourceIdentity(malformedSourceSpecies).clean, false, 'Incomplete scientific identity must be detected from real catalog data.');
+assert.ok(inspectSourceIdentity(malformedSourceSpecies).issues.some((issue) => issue.code === 'incomplete_suffix'), 'Trailing var. without an epithet must be treated as incomplete source identity.');
+const validCultivarSpecies = catalog.find((item) => item.catalog_key === 'sp_0063');
+assert.equal(inspectSourceIdentity(validCultivarSpecies).clean, true, 'A completed cultivar identity such as var. Ranchu must remain valid.');
+const malformedSourceReadiness = assessPublishReadiness({
+  species: malformedSourceSpecies, group: malformedSourceGroup, locale: 'zh-CN',
+  groupRow: { locale: 'zh-CN', review_state: 'approved', seo_title_template: '{{name}}饲养指南', meta_description_template: '{{name}}饲养指南。', h1_template: '{{name}}饲养指南', shared_intro: '基础饲养简介。' },
+  variantRow: { locale: 'zh-CN', image_alt: '红白锦鲤', review_state: 'approved', index_strategy: 'noindex' },
+  counterpartGroupRow: null, counterpartVariantRow: null, reviewRows: {},
+});
+assert.equal(malformedSourceReadiness.state, 'blocked', 'Incomplete source identity must block Preview readiness even for noindex pages.');
+assert.ok(malformedSourceReadiness.blockerCodes.includes('source_data'), 'Incomplete scientific identity must surface as a source-data next action.');
+const malformedOverview = buildAdminWorkflowOverview({ species: [malformedSourceSpecies], groups: [malformedSourceGroup], seoRows: {}, groupSeoRows: {}, reviewRows: {} });
+assert.equal(malformedOverview.locales['zh-CN'].blockedNextActions.source_data.count, 1, 'Workflow queue must route malformed scientific identity to the source-data repair action.');
 const dirtyReadiness = assessPublishReadiness({
   species: cleanMember, group: cleanGroup, locale: 'en',
   groupRow: { locale: 'en', review_state: 'approved', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} care guide.', h1_template: '{{name}} Care Guide', shared_intro: 'Shared care intro.' },

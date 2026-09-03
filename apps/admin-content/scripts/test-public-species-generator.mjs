@@ -181,6 +181,23 @@ try {
     /canonical sibling must be an independently indexed target/,
   );
 
+  const malformedIdentitySnapshot = {
+    environment: 'test', source_label: 'malformed-source-identity-fixture',
+    species_seo_groups: [{
+      group_key: 'base:cyprinus-carpio', locale: 'zh-CN', status: 'published', review_state: 'approved',
+      seo_title_template: '{{name}}饲养指南 | AquaGuide', meta_description_template: '了解{{name}}的基础饲养要求。',
+      h1_template: '{{name}}饲养指南', shared_intro: '基础饲养简介。',
+    }],
+    species_seo: [{
+      catalog_key: 'sp_0069', locale: 'zh-CN', status: 'published', review_state: 'approved',
+      index_strategy: 'noindex', canonical_catalog_key: '', image_alt: '红白锦鲤',
+    }],
+  };
+  await assert.rejects(
+    generatePublicSpecies({ snapshot: malformedIdentitySnapshot, outDir: `${outDir}-malformed-identity`, siteUrl }),
+    /source identity scientific_name is incomplete_suffix: Cyprinus carpio var\./,
+  );
+
   console.log(`Public Species generator verified: ${manifest.generated_pages} pages, ${manifest.indexable_pages} sitemap candidates, production input refused`);
 } finally {
   await rm(outDir, { recursive: true, force: true });
@@ -195,4 +212,5 @@ try {
   await rm(`${outDir}-unapproved`, { recursive: true, force: true });
   await rm(`${outDir}-draft-base`, { recursive: true, force: true });
   await rm(`${outDir}-broken-canonical`, { recursive: true, force: true });
+  await rm(`${outDir}-malformed-identity`, { recursive: true, force: true });
 }

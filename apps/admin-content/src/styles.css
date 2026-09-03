@@ -1096,6 +1096,7 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .workflow-blocked-breakdown .workflow-queue-copy strong { font-size:10px; }
 .workflow-blocked-breakdown .workflow-queue-count { font-size:14px; }
 .workflow-queue-row.blocked-reason.hygiene .workflow-queue-count { color:#9a4f65; }
+.workflow-queue-row.blocked-reason.source_data .workflow-queue-count { color:#a24e38; }
 .workflow-queue-row.blocked-reason.data_review .workflow-queue-count { color:#9a5b12; }
 .workflow-queue-row.blocked-reason.content .workflow-queue-count { color:#875d3a; }
 .workflow-queue-row.blocked-reason.bilingual .workflow-queue-count { color:#4d6f9b; }
