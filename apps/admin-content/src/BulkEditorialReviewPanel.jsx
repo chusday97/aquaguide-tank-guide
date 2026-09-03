@@ -27,16 +27,23 @@ function candidateIdSet(overview, locale) {
 }
 
 function loadRecentImportScope(locale) {
-  if (typeof window === 'undefined') return { locale, catalogKeys: [], importedAt: null };
+  if (typeof window === 'undefined') return { locale, catalogKeys: [], importedAt: null, source: 'none' };
   try {
     const raw = window.localStorage.getItem(`aquaguide-admin-last-import-${locale}`);
-    if (!raw) return { locale, catalogKeys: [], importedAt: null };
+    if (!raw) return { locale, catalogKeys: [], importedAt: null, source: 'none' };
     const parsed = JSON.parse(raw);
     const catalogKeys = [...new Set((parsed?.catalogKeys || []).filter(Boolean))];
-    return { locale, catalogKeys, importedAt: parsed?.importedAt || null };
+    return { locale, catalogKeys, importedAt: parsed?.importedAt || null, source: catalogKeys.length ? 'local' : 'none' };
   } catch {
-    return { locale, catalogKeys: [], importedAt: null };
+    return { locale, catalogKeys: [], importedAt: null, source: 'none' };
   }
+}
+
+function scopeFromActivity(row, locale) {
+  const metadata = row?.metadata || {};
+  const catalogKeys = [...new Set((metadata.catalog_keys || []).filter(Boolean))];
+  if (row?.kind !== 'bulk_import' || metadata.locale !== locale || !catalogKeys.length) return null;
+  return { locale, catalogKeys, importedAt: row.created_at || null, source: 'activity' };
 }
 
 function formatScopeTime(value, isUiEnglish) {
@@ -105,10 +112,35 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   const allEligibleForAction = candidateSets[action].filter((item) => !item.blockedReason).length;
 
   useEffect(() => {
-    setRecentImportScope(loadRecentImportScope(locale));
+    let cancelled = false;
+    const localScope = loadRecentImportScope(locale);
+    setRecentImportScope(localScope);
     setScopeMode('recent');
     setSelected(new Set());
-  }, [locale]);
+    if (localScope.catalogKeys.length || readOnly) return () => { cancelled = true; };
+    adminContentClient
+      .from('admin_activity_log')
+      .select('*')
+      .eq('kind', 'bulk_import')
+      .order('created_at', { ascending: false })
+      .limit(40)
+      .then(({ data, error }) => {
+        if (cancelled || error) return;
+        const recovered = (data || []).map((row) => scopeFromActivity(row, locale)).find(Boolean);
+        if (!recovered) return;
+        setRecentImportScope(recovered);
+        try {
+          window.localStorage.setItem(`aquaguide-admin-last-import-${locale}`, JSON.stringify({
+            locale,
+            catalogKeys: recovered.catalogKeys,
+            importedAt: recovered.importedAt,
+          }));
+        } catch {
+          // Activity remains the durable fallback when browser storage is unavailable.
+        }
+      });
+    return () => { cancelled = true; };
+  }, [locale, readOnly]);
   useEffect(() => { setSelected(new Set()); }, [action, scopeMode]);
   useEffect(() => {
     setSelected((current) => new Set([...current].filter((id) => eligible.some((item) => item.member.id === id))));
