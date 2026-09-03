@@ -25,12 +25,39 @@ function candidateIdSet(overview, locale) {
   const source = overview?.locales?.[locale]?.memberIdsByState || {};
   return new Set([...(source.blocked || []), ...(source.ready_for_review || []), ...(source.publish_ready || [])]);
 }
+
+function loadRecentImportScope(locale) {
+  if (typeof window === 'undefined') return { locale, catalogKeys: [], importedAt: null };
+  try {
+    const raw = window.localStorage.getItem(`aquaguide-admin-last-import-${locale}`);
+    if (!raw) return { locale, catalogKeys: [], importedAt: null };
+    const parsed = JSON.parse(raw);
+    const catalogKeys = [...new Set((parsed?.catalogKeys || []).filter(Boolean))];
+    return { locale, catalogKeys, importedAt: parsed?.importedAt || null };
+  } catch {
+    return { locale, catalogKeys: [], importedAt: null };
+  }
+}
+
+function formatScopeTime(value, isUiEnglish) {
+  if (!value) return '';
+  try {
+    return new Intl.DateTimeFormat(isUiEnglish ? 'en-US' : 'zh-CN', {
+      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+    }).format(new Date(value));
+  } catch {
+    return '';
+  }
+}
+
 export default function BulkEditorialReviewPanel({ species = [], groups = [], seoRows = {}, groupSeoRows = {}, workflowOverview, locale = 'zh-CN', schemaReady = false, readOnly = false, onCompleted }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [action, setAction] = useState('submit');
   const [selected, setSelected] = useState(() => new Set());
   const [saving, setSaving] = useState(false);
+  const [recentImportScope, setRecentImportScope] = useState(() => loadRecentImportScope(locale));
+  const [scopeMode, setScopeMode] = useState('recent');
 
   const groupByMemberId = useMemo(() => {
     const map = new Map();
@@ -39,6 +66,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   }, [groups]);
   const allCandidateIds = useMemo(() => candidateIdSet(workflowOverview, locale), [workflowOverview, locale]);
   const reviewReadyIds = useMemo(() => new Set(workflowOverview?.locales?.[locale]?.memberIdsByState?.ready_for_review || []), [workflowOverview, locale]);
+  const recentImportKeys = useMemo(() => new Set(recentImportScope.catalogKeys || []), [recentImportScope]);
 
   const buildCandidates = useCallback((mode) => species.flatMap((member) => {
     if (!allCandidateIds.has(member.id)) return [];
@@ -65,11 +93,23 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
     approve: buildCandidates('approve'),
     return: buildCandidates('return'),
   }), [buildCandidates]);
-  const candidates = candidateSets[action];
+  const scopedCandidateSets = useMemo(() => Object.fromEntries(
+    Object.entries(candidateSets).map(([key, rows]) => [
+      key,
+      scopeMode === 'all' ? rows : recentImportKeys.size ? rows.filter((item) => recentImportKeys.has(item.member.catalog_key)) : [],
+    ]),
+  ), [candidateSets, scopeMode, recentImportKeys]);
+  const candidates = scopedCandidateSets[action];
   const eligible = candidates.filter((item) => !item.blockedReason);
   const selectedRows = eligible.filter((item) => selected.has(item.member.id));
+  const allEligibleForAction = candidateSets[action].filter((item) => !item.blockedReason).length;
 
-  useEffect(() => { setSelected(new Set()); }, [action, locale]);
+  useEffect(() => {
+    setRecentImportScope(loadRecentImportScope(locale));
+    setScopeMode('recent');
+    setSelected(new Set());
+  }, [locale]);
+  useEffect(() => { setSelected(new Set()); }, [action, scopeMode]);
   useEffect(() => {
     setSelected((current) => new Set([...current].filter((id) => eligible.some((item) => item.member.id === id))));
   }, [eligible.length]);
@@ -89,7 +129,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
       return;
     }
     if (!selectedRows.length) {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select pages first' : '请先选择页面', detail: isUiEnglish ? 'Choose at least one eligible page.' : '至少勾选 1 个可执行页面。' });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select pages first' : '请先选择页面', detail: isUiEnglish ? 'Choose at least one eligible page in the current review scope.' : '请在当前审核范围内至少勾选 1 个可执行页面。' });
       return;
     }
     const target = ACTIONS[action].target;
@@ -113,7 +153,10 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
       detail: items.length > selectedRows.length
         ? `${isUiEnglish ? 'Includes' : '同时处理'} ${items.length - selectedRows.length} ${isUiEnglish ? 'Base templates' : '个基础模板'}`
         : `${getLocaleLabel(locale)} · ${items.length} ${isUiEnglish ? 'resources' : '项内容'}`,
-      metadata: { action, locale, page_count: selectedRows.length, resource_count: items.length },
+      metadata: {
+        action, locale, page_count: selectedRows.length, resource_count: items.length,
+        review_scope: scopeMode, catalog_keys: selectedRows.map((item) => item.member.catalog_key),
+      },
     });
     setSaving(false);
     if (error) return;
@@ -131,6 +174,13 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   }, [selectedRows, action]);
 
   const actionLabel = isUiEnglish ? ACTIONS[action].en : ACTIONS[action].zh;
+  const scopeTime = formatScopeTime(recentImportScope.importedAt, isUiEnglish);
+  const scopeSummary = scopeMode === 'recent'
+    ? (recentImportKeys.size
+      ? (isUiEnglish ? `${recentImportKeys.size} pages from the latest ${getLocaleLabel(locale)} import${scopeTime ? ` · ${scopeTime}` : ''}` : `最近一次 ${getLocaleLabel(locale)} 导入 · ${recentImportKeys.size} 个页面${scopeTime ? ` · ${scopeTime}` : ''}`)
+      : (isUiEnglish ? 'No recent import batch detected. Full-library review stays hidden until you opt in.' : '没有检测到最近导入批次。为避免误审，默认不展示全库内容。'))
+    : (isUiEnglish ? `All eligible content is visible · ${allEligibleForAction} pages for this action` : `已显示全部可执行内容 · 当前动作 ${allEligibleForAction} 个页面`);
+
   return (
     <section className="bulk-editorial-panel">
       <div className="bulk-duplicate-head">
@@ -139,28 +189,48 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
           <h2>{isUiEnglish ? 'Bulk content review' : '批量内容审核'}</h2>
           <p>{isUiEnglish ? 'Move multiple completed pages through editorial review without weakening Data Review, copy hygiene, or Preview gates.' : '一次处理多条已完成页面，但不会绕过数据复核、测试文案或 Preview 门禁。'}</p>
         </div>
-        <span className="bulk-duplicate-count">{workflowOverview?.locales?.[locale]?.ready_for_review || 0} {isUiEnglish ? 'awaiting review' : '个待审核'}</span>
+        <span className="bulk-duplicate-count">{eligible.length} {isUiEnglish ? 'eligible in scope' : '个当前范围可执行'}</span>
+      </div>
+
+      <div className="bulk-import-preflight waiting" aria-label={isUiEnglish ? 'Review scope' : '审核范围'}>
+        <div className="bulk-import-preflight-head">
+          <div><strong>{isUiEnglish ? 'Review scope' : '审核范围'}</strong><small>{scopeSummary}</small></div>
+          <span>{scopeMode === 'recent' ? (isUiEnglish ? 'Latest import' : '最近导入') : (isUiEnglish ? 'All eligible' : '全部可执行')}</span>
+        </div>
+        <div className="bulk-review-decision" role="radiogroup" aria-label={isUiEnglish ? 'Choose review scope' : '选择审核范围'}>
+          <button type="button" className={scopeMode === 'recent' ? 'active' : ''} onClick={() => setScopeMode('recent')}>
+            <strong>{isUiEnglish ? 'Latest import batch' : '最近导入批次'}</strong>
+            <small>{recentImportKeys.size} {isUiEnglish ? 'recorded pages' : '个已记录页面'}</small>
+          </button>
+          <button type="button" className={scopeMode === 'all' ? 'active' : ''} onClick={() => setScopeMode('all')}>
+            <strong>{isUiEnglish ? 'All eligible content' : '全部可执行内容'}</strong>
+            <small>{isUiEnglish ? 'Explicit opt-in for historical Drafts too' : '主动切换后才会包含历史 Draft'}</small>
+          </button>
+        </div>
+        {scopeMode === 'all' ? <p className="bulk-import-preflight-note">{isUiEnglish ? 'Caution: this scope can include older Drafts outside the latest import. “Select eligible” will select only the pages currently shown here.' : '注意：这个范围可能包含最近导入之外的旧 Draft。“全选可执行”只会选择当前范围内显示的页面。'}</p> : null}
       </div>
 
       <div className="bulk-review-decision bulk-editorial-actions" role="tablist" aria-label={isUiEnglish ? 'Bulk editorial action' : '批量内容审核动作'}>
         {Object.entries(ACTIONS).map(([key, meta]) => (
           <button type="button" role="tab" aria-selected={action === key} key={key} className={action === key ? 'active' : ''} onClick={() => setAction(key)}>
             <strong>{isUiEnglish ? meta.en : meta.zh}</strong>
-            <small>{candidateSets[key].filter((item) => !item.blockedReason).length} {isUiEnglish ? 'eligible pages' : '个可执行页面'}</small>
+            <small>{scopedCandidateSets[key].filter((item) => !item.blockedReason).length} {isUiEnglish ? 'eligible pages in scope' : '个当前范围可执行'}</small>
           </button>
         ))}
       </div>
 
       <div className="bulk-review-toolbar">
         <div className="bulk-select-actions">
-          <button type="button" className="secondary-button compact" onClick={() => setSelected(new Set(eligible.slice(0, 50).map((item) => item.member.id)))}>{isUiEnglish ? 'Select eligible' : '全选可执行'}</button>
+          <button type="button" className="secondary-button compact" disabled={!eligible.length} onClick={() => setSelected(new Set(eligible.slice(0, 50).map((item) => item.member.id)))}>{scopeMode === 'recent' ? (isUiEnglish ? 'Select eligible in batch' : '全选本批可执行') : (isUiEnglish ? 'Select eligible in scope' : '全选当前范围')}</button>
           <button type="button" className="ghost-button compact" onClick={() => setSelected(new Set())}>{isUiEnglish ? 'Clear' : '清空选择'}</button>
         </div>
         <strong>{selectedRows.length} {isUiEnglish ? 'pages selected' : '个页面已选择'}</strong>
       </div>
       <div className="bulk-duplicate-list bulk-editorial-list">
         {candidates.length === 0 ? (
-          <p className="bulk-duplicate-empty">{isUiEnglish ? 'No pages are eligible for this bulk action.' : '当前没有可执行此批量动作的页面。'}</p>
+          <p className="bulk-duplicate-empty">{scopeMode === 'recent' && !recentImportKeys.size
+            ? (isUiEnglish ? 'No recent import scope is available. Import a template first, or explicitly switch to “All eligible content”.' : '当前没有最近导入批次。请先导入模板，或主动切换到“全部可执行内容”。')
+            : (isUiEnglish ? 'No pages are eligible for this bulk action in the current scope.' : '当前审核范围内没有可执行此批量动作的页面。')}</p>
         ) : candidates.map((item) => {
           const checked = selected.has(item.member.id);
           const disabled = Boolean(item.blockedReason);
@@ -185,7 +255,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
 
       <div className="bulk-duplicate-footer">
         <span>{selectedBaseCount ? (isUiEnglish ? `${selectedBaseCount} required Base templates will move in the same atomic review action.` : `会在同一次原子操作中同步处理 ${selectedBaseCount} 个必要的基础模板。`) : (isUiEnglish ? 'Only the selected page review states will change.' : '只修改所选页面的审核状态。')}</span>
-        <button type="button" className="primary-button" disabled={saving} onClick={submit}>{saving ? (isUiEnglish ? 'Saving…' : '正在保存…') : `${actionLabel} ${selectedRows.length}`}</button>
+        <button type="button" className="primary-button" disabled={saving || !selectedRows.length} onClick={submit}>{saving ? (isUiEnglish ? 'Saving…' : '正在保存…') : `${actionLabel} ${selectedRows.length}`}</button>
       </div>
     </section>
   );
