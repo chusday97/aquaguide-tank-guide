@@ -419,6 +419,32 @@ function transitionEditorialReviewsBulk(store, args = {}) {
   return result;
 }
 
+function importSpeciesSeoBulk(store, args = {}) {
+  const speciesRows = Array.isArray(args.p_species_rows) ? args.p_species_rows : [];
+  const groupDefaults = Array.isArray(args.p_group_defaults) ? args.p_group_defaults : [];
+  if (!speciesRows.length) throw new Error('Bulk SEO import requires at least one changed Species row.');
+  if (speciesRows.length > 100) throw new Error('Bulk SEO import is limited to 100 Species rows per operation.');
+  if (groupDefaults.length > 100) throw new Error('Bulk SEO import is limited to 100 Base templates per operation.');
+
+  const speciesKeys = speciesRows.map((row) => `${String(row?.catalog_key || '').trim()}:${String(row?.locale || '').trim()}`);
+  if (speciesKeys.some((key) => key === ':')) throw new Error('Bulk SEO import Species rows require catalog_key and locale.');
+  if (new Set(speciesKeys).size !== speciesKeys.length) throw new Error('Bulk SEO import contains duplicate Species rows.');
+
+  const groupKeys = groupDefaults.map((row) => `${String(row?.group_key || '').trim()}:${String(row?.locale || '').trim()}`);
+  if (groupKeys.some((key) => key === ':')) throw new Error('Bulk SEO import Base defaults require group_key and locale.');
+  if (new Set(groupKeys).size !== groupKeys.length) throw new Error('Bulk SEO import contains duplicate Base defaults.');
+
+  const createdGroups = [];
+  for (const payload of groupDefaults) {
+    const exists = store.species_seo_groups.some((row) => sameKey(row, payload, RESOURCE_CONFIG.species_seo_groups.keys) && !row?.deleted_at);
+    if (exists) continue;
+    createdGroups.push(...applyUpsert(store, 'species_seo_groups', payload));
+  }
+
+  const importedSpecies = applyUpsert(store, 'species_seo', speciesRows);
+  return { species_seo: importedSpecies, species_seo_groups: createdGroups };
+}
+
 function finalizeSingle(data, mode) {
   if (!mode) return { data, error: null };
   if (mode === 'maybeSingle') {
@@ -448,6 +474,26 @@ export async function executeRepoOperation(operation) {
           return store;
         }, 'content(seo): restore revision as draft');
         return { data: restored, error: null };
+      }
+      if (operation.rpc === 'import_species_seo_bulk') {
+        let imported = null;
+        await updateDraftJson((raw) => {
+          const store = normalizeStore(raw);
+          imported = importSpeciesSeoBulk(store, operation.args || {});
+          const allRows = [...(imported?.species_seo || []), ...(imported?.species_seo_groups || [])];
+          appendActivity(store, {
+            ...operation,
+            table: 'bulk_import',
+            activity: operation.activity || {
+              kind: 'bulk_import',
+              title: `批量导入 ${imported?.species_seo?.length || 0} 条 SEO 内容`,
+              detail: `自动建立 ${imported?.species_seo_groups?.length || 0} 个缺失基础模板`,
+              metadata: { page_count: imported?.species_seo?.length || 0, base_created_count: imported?.species_seo_groups?.length || 0 },
+            },
+          }, allRows);
+          return store;
+        }, 'content(seo): bulk import species seo drafts');
+        return { data: imported, error: null };
       }
       if (operation.rpc === 'transition_editorial_reviews_bulk') {
         let transitioned = null;

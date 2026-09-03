@@ -627,3 +627,13 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 6. Continue the first incomplete item above unless the user gives a newer concrete bug/UI requirement.
 7. Execute meaningful batches with tests → commit → push → CI/Preview verification → update this handoff and `EXECUTION_LOG`; do not stop after explanation or one tiny change.
 8. Never expose/read secrets, never bypass authentication, never write Production data, and never merge to `main` unless the user explicitly requests it.
+
+## 33. Atomic SEO template import + missing Base bootstrap — completed 2026-09-03
+- Real first-batch rehearsal exposed an operational blocker: CSV import created only page Drafts while Publish Readiness requires a matching Base template row for every locale; cross-group imports would otherwise force manual Base creation one group at a time.
+- Added atomic Repo RPC `import_species_seo_bulk`: one private-store transaction imports changed `species_seo` Draft rows and creates only missing `species_seo_groups` defaults for the same locale.
+- Existing Base templates are authoritative and are never overwritten by import defaults. Invalid/duplicate batch input fails before persistence, so no half-imported Base/page state remains.
+- The CSV UI now resolves each changed Species to its Base group, supplies locale-safe default templates, and refreshes both page and Base client state from one RPC result.
+- Revision generation, Draft-only status, approval invalidation, resolved duplicate SEO policy and Activity Center logging remain inside the existing Repo authority. One import produces one Activity entry.
+- Regression coverage proves: 2 page rows + 2 Base candidates create 2 pages + only 1 missing Base; the pre-existing Base remains untouched; duplicate input fails atomically with zero partial Base creation.
+- Verification PASS: Admin contract suite, Repo backend/API gates, dual-repo routing, Admin build, full root build, SEO Species handoff, Admin authority UI/browser regression and `git diff --check`.
+- Production remains locked. The next step is operational: prepare the first low-risk 10–20 Species bilingual Draft batch, avoiding unresolved duplicate/category-conflict groups, then run CSV diff → import → bulk editorial review → explicit Staging only.

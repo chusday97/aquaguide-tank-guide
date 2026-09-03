@@ -130,7 +130,9 @@ export const repoBackendClient = {
             ? { kind: 'duplicate_review_bulk', title: `批量审核 ${args.p_reviews?.length || 0} 组重复记录`, detail: '' }
             : name === 'transition_editorial_reviews_bulk'
               ? { kind: 'editorial_review_bulk', title: `批量内容审核 ${args.p_items?.length || 0} 项`, detail: args.p_target_state || '' }
-              : { kind: 'admin_action', title: '后台操作已完成', detail: name };
+              : name === 'import_species_seo_bulk'
+                ? { kind: 'bulk_import', title: `批量导入 ${args.p_species_rows?.length || 0} 条 SEO 内容`, detail: '缺失基础模板会在同一次写入中建立' }
+                : { kind: 'admin_action', title: '后台操作已完成', detail: name };
       const description = activity?.title || activity?.detail ? { ...fallback, ...activity } : fallback;
       dispatchOperationEvent({ ...description, status: result?.error ? 'error' : 'success', error: result?.error?.message || '', at: new Date().toISOString() });
       return result;

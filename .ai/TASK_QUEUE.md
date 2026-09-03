@@ -243,3 +243,12 @@ Updated: 2026-09-02
 - Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
 - Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
 - Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
+
+## 2026-09-03 first real batch operational blockers
+- [x] Make SEO template import atomically create missing locale Base templates without overwriting existing Base content.
+- [x] Prove failed bulk import leaves no partial Base/page writes and records one Activity on success.
+- [ ] Prepare first low-risk 10–20 Species bilingual SEO Draft batch from Product Truth; exclude unresolved duplicate/category-conflict groups.
+- [ ] Run CSV diff/no-op validation and import through authenticated Admin only.
+- [ ] Batch submit + approve the intended bilingual pages/Base templates.
+- [ ] Explicitly Staging Publish only the reviewed allowlist and verify generated EN/ZH metadata/CTA/noindex.
+- [ ] Keep Production locked unless explicitly authorized.

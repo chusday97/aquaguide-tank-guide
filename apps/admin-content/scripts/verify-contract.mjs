@@ -326,6 +326,10 @@ assert.match(appSource, /Read-only Review[\s\S]*emitAdminNotice/, 'Read-only sav
 assert.match(batchSource, /assessDataReview/, 'Bulk writes must consume persisted data-review decisions');
 assert.match(batchSource, /getResolvedDuplicateSeoPolicy/, 'Batch Draft creation must inherit resolved duplicate canonical policy.');
 assert.match(bulkImportSource, /getResolvedDuplicateSeoPolicy/, 'CSV bulk import must preserve resolved duplicate canonical policy.');
+assert.match(bulkImportSource, /import_species_seo_bulk/, 'CSV bulk import must use one atomic Repo RPC instead of separate Base/page writes.');
+assert.match(bulkImportSource, /defaultGroupSeoForLocale/, 'CSV bulk import must provide safe Base defaults for missing templates.');
+assert.match(repoStoreSource, /function importSpeciesSeoBulk/, 'Repo backend must own atomic Species + missing-Base import behavior.');
+assert.match(repoStoreSource, /exists[\s\S]*continue;[\s\S]*applyUpsert\(store, 'species_seo_groups'/, 'Bulk import must create missing Base templates without overwriting existing ones.');
 assert.match(bulkImportSource, /已完成人工重复复核/, 'CSV validation must reject attempts to contradict a resolved duplicate decision.');
 assert.match(appSource, /Locked by the resolved duplicate-review decision|已由人工重复复核结论锁定/, 'Single-page Advanced SEO must lock resolved duplicate canonical policy.');
 assert.match(appSource, /Save blocked[\s\S]*保存被阻止[\s\S]*detail:\s*indexBlockReason/, 'Single-page content save must refuse invalid index/canonical state and explain the reason through the notice layer.');

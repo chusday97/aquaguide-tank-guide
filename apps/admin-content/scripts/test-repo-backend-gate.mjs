@@ -100,6 +100,48 @@ result = await executeRepoOperation({
 assert.equal(result.error, null);
 assert.equal(result.data.review_state, 'approved');
 
+const importExistingGroup = 'base:test-import-existing';
+const importNewGroup = 'base:test-import-new';
+result = await executeRepoOperation({ action: 'upsert', table: 'species_seo_groups', values: {
+  group_key: importExistingGroup, locale: 'zh-CN', seo_title_template: '人工已有模板 {{name}}',
+  meta_description_template: '已有描述 {{name}}', h1_template: '已有 H1 {{name}}', shared_intro: '已有基础简介。',
+  status: 'draft', review_state: 'editing',
+} });
+assert.equal(result.error, null);
+const activityBeforeImport = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data.length;
+result = await executeRepoOperation({ action: 'rpc', rpc: 'import_species_seo_bulk', args: {
+  p_species_rows: [
+    { catalog_key: 'sp_test_import_existing', locale: 'zh-CN', seo_title: 'Existing group page', meta_description: '页面描述', h1: '页面 H1', intro: '页面简介', image_alt: '页面图片', index_strategy: 'noindex', canonical_catalog_key: '', status: 'draft', review_state: 'editing' },
+    { catalog_key: 'sp_test_import_new', locale: 'zh-CN', seo_title: 'New group page', meta_description: '另一页面描述', h1: '另一页面 H1', intro: '另一页面简介', image_alt: '另一页面图片', index_strategy: 'noindex', canonical_catalog_key: '', status: 'draft', review_state: 'editing' },
+  ],
+  p_group_defaults: [
+    { group_key: importExistingGroup, locale: 'zh-CN', seo_title_template: '不得覆盖 {{name}}', meta_description_template: '不得覆盖描述', h1_template: '不得覆盖 H1', shared_intro: '', status: 'draft', review_state: 'editing' },
+    { group_key: importNewGroup, locale: 'zh-CN', seo_title_template: '{{name}}饲养指南', meta_description_template: '{{name}}水族饲养指南', h1_template: '{{name}}饲养指南', shared_intro: '', status: 'draft', review_state: 'editing' },
+  ],
+} });
+assert.equal(result.error, null);
+assert.equal(result.data.species_seo.length, 2, 'Bulk SEO import must write every changed Species row atomically.');
+assert.equal(result.data.species_seo_groups.length, 1, 'Bulk SEO import must create only missing Base templates.');
+assert.equal(result.data.species_seo_groups[0].group_key, importNewGroup);
+const existingImportGroup = (await executeRepoOperation({ action: 'select', table: 'species_seo_groups', filters: [
+  { type: 'eq', column: 'group_key', value: importExistingGroup }, { type: 'eq', column: 'locale', value: 'zh-CN' },
+], singleMode: 'single' })).data;
+assert.equal(existingImportGroup.seo_title_template, '人工已有模板 {{name}}', 'Bulk import must never overwrite an existing Base template with defaults.');
+const activityAfterImport = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data;
+assert.equal(activityAfterImport.length, activityBeforeImport + 1, 'Bulk SEO import must create exactly one Activity record.');
+assert.equal(activityAfterImport.at(-1).kind, 'bulk_import');
+const groupsBeforeInvalidImport = (await executeRepoOperation({ action: 'select', table: 'species_seo_groups', filters: [] })).data.length;
+result = await executeRepoOperation({ action: 'rpc', rpc: 'import_species_seo_bulk', args: {
+  p_species_rows: [
+    { catalog_key: 'sp_test_import_atomic', locale: 'en', h1: 'Atomic one', intro: 'One', image_alt: 'One', index_strategy: 'noindex' },
+    { catalog_key: 'sp_test_import_atomic', locale: 'en', h1: 'Atomic duplicate', intro: 'Two', image_alt: 'Two', index_strategy: 'noindex' },
+  ],
+  p_group_defaults: [{ group_key: 'base:test-import-atomic', locale: 'en', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} guide', h1_template: '{{name}} Care Guide', shared_intro: '' }],
+} });
+assert.match(result.error?.message || '', /duplicate Species rows/, 'Invalid bulk SEO import must fail closed before any partial write.');
+const groupsAfterInvalidImport = (await executeRepoOperation({ action: 'select', table: 'species_seo_groups', filters: [] })).data.length;
+assert.equal(groupsAfterInvalidImport, groupsBeforeInvalidImport, 'Failed bulk SEO import must not create a Base template.');
+
 const duplicateA = 'sp_test_duplicate_a';
 const duplicateB = 'sp_test_duplicate_b';
 result = await executeRepoOperation({ action: 'upsert', table: 'species_seo', values: [

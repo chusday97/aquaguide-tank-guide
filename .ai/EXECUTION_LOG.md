@@ -390,3 +390,16 @@
 - GitHub Admin Content CI Gate #55 (`33613630539`) completed SUCCESS for `2423202`; every validation step succeeded.
 - GitHub commit statuses for `2423202` report both `Vercel – admin-content` and `Vercel – aquaguide` SUCCESS. Production remains locked; no `main` merge implied.
 - New-session instruction is now consolidated at the end of `.ai/HANDOFF_LATEST.md` under section 32; future sessions should read that file first, then git status/HEAD and the latest execution-log tail, and continue the first incomplete operational item unless the user supplies a newer concrete bug.
+
+## 2026-09-03 — Atomic first-batch import foundation
+- Audited the canonical `apps/admin-content` flow while preparing the first 10–20 Species production batch; rejected the standalone `aqua-fronted-cms` as a duplicate runtime and marked it visual-reference-only.
+- Found that CSV import wrote page Drafts but did not ensure required Base rows, which made cross-group bulk production depend on manual one-by-one Base creation.
+- Added `import_species_seo_bulk` as one Repo transaction: create only missing Base defaults + import changed page Drafts + revisions + one Activity. Existing Base templates are never overwritten.
+- Added atomicity/authority regression tests and semantic contract guards.
+- `npm run test:contract -w @aquaguide/admin-content` PASS, including Repo backend/API and dual-repo gates.
+- `npm run build -w @aquaguide/admin-content` PASS.
+- Root `npm run build` PASS; normal code build continues to skip Species staging content without explicit Staging publish input.
+- `npm run verify:seo-species-handoff` PASS.
+- `npm run test:admin-content-ui` PASS: hub routing, Product/Care edit/save, forbidden state and 390/1280px layout.
+- `git diff --check` PASS.
+- Next: prepare low-risk bilingual Draft content batch; no human duplicate decisions or Production publication will be automated.

@@ -4,6 +4,7 @@ import { useAppLanguage } from './AppLanguage.jsx';
 import { speciesGroupByMemberId } from './speciesGroups.js';
 import { buildSpeciesSeoRouteMeta, INDEX_STRATEGIES } from './seoRouteContract.js';
 import { getResolvedDuplicateSeoPolicy } from './publishReadiness.js';
+import { defaultGroupSeoForLocale } from './seoInheritance.js';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
 const FIELDS = [
@@ -185,15 +186,36 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     if (!markedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'No rows marked for import' : '没有标记待导入行', detail: isUiEnglish ? 'Set import_action = update on the rows you want to change.' : '请在需要导入的行填写 import_action = update（或“更新”）。' }); return; }
     const payloads = importPreview.changedPayloads;
     if (!payloads.length) { emitAdminNotice({ status: 'info', title: isUiEnglish ? 'No actual changes' : '没有实际变更', detail: isUiEnglish ? 'Marked rows match the current Draft, so nothing was written.' : '已标记的行与当前 Draft 完全一致，本次不会产生新版本。' }); return; }
+    const baseDefaults = defaultGroupSeoForLocale(locale);
+    const groupDefaultsByKey = new Map();
+    for (const payload of payloads) {
+      const member = speciesByKey.get(payload.catalog_key);
+      const group = member ? speciesGroupByMemberId.get(member.id) : null;
+      if (!group?.group_key || groupDefaultsByKey.has(group.group_key)) continue;
+      groupDefaultsByKey.set(group.group_key, {
+        group_key: group.group_key,
+        locale,
+        seo_title_template: baseDefaults.seoTitleTemplate,
+        meta_description_template: baseDefaults.metaDescriptionTemplate,
+        h1_template: baseDefaults.h1Template,
+        shared_intro: baseDefaults.sharedIntro,
+        status: 'draft',
+        review_state: 'editing',
+      });
+    }
     setSaving(true);
-    const { data, error } = await adminContentClient
-      .from('species_seo')
-      .upsert(payloads, { onConflict: 'catalog_key,locale' })
-      .activity({ kind: 'bulk_import', title: `批量导入 ${payloads.length} 条 SEO 内容`, detail: `${locale} · CSV 模板导入`, metadata: { locale, count: payloads.length } })
-      .select('*');
+    const { data, error } = await adminContentClient.rpc('import_species_seo_bulk', {
+      p_species_rows: payloads,
+      p_group_defaults: [...groupDefaultsByKey.values()],
+    }, {
+      kind: 'bulk_import',
+      title: `批量导入 ${payloads.length} 条 SEO 内容`,
+      detail: `${locale} · CSV 模板导入`,
+      metadata: { locale, count: payloads.length, base_candidates: groupDefaultsByKey.size },
+    });
     setSaving(false);
     if (error) return;
-    onImported?.(data || []);
+    onImported?.(data || { species_seo: [], species_seo_groups: [] });
   };
 
   return (

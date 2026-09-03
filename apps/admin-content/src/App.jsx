@@ -1358,9 +1358,12 @@ export default function App() {
                 locale={contentLocale}
                 schemaReady={schemaReady}
                 readOnly={isReviewMode}
-                onImported={(rows) => {
-                  setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
-                  setRevisionRefreshKey((current) => current + 1);
+                onImported={(result) => {
+                  const rows = result?.species_seo || [];
+                  const baseRows = result?.species_seo_groups || [];
+                  if (rows.length) setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
+                  if (baseRows.length) setGroupSeoRows((current) => ({ ...current, ...Object.fromEntries(baseRows.map((row) => [groupSeoRowKey(row.group_key, row.locale), row])) }));
+                  if (rows.length || baseRows.length) setRevisionRefreshKey((current) => current + 1);
                 }}
               />
             ) : null}
