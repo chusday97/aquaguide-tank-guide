@@ -687,3 +687,7 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 - Functional commit: `71cecdc fix(admin-content): make import template operational`.
 - Verification PASS: Admin contract, Repo backend/API, dual-repo routing, Admin build, full root build, SEO handoff, Admin authority UI, browser template download/upload round-trip, and diff hygiene.
 - Production remains locked; no main merge. Next operational step remains authenticated Preview import of the real 14-Species bilingual batch.
+### Canonical hosted Admin entrance clarification
+- Do **not** use the standalone Vercel project `admin-content` for real import acceptance. Its current hosted Preview intentionally/operationally lacks the Repo backend configuration and shows `content_repo_not_configured`.
+- The canonical writable hosted acceptance surface is the AquaGuide project deployment at `/admin/seo/`, on branch `feature/admin-content-v0`.
+- Future sessions must not give the standalone `admin-content-*.vercel.app` URL as the real import URL. Use the AquaGuide branch Preview `/admin/seo/` and require normal Admin login there.

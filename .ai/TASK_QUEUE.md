@@ -286,3 +286,4 @@ Updated: 2026-09-02
 - [ ] Authenticated Preview: import batch-01 English CSV and inspect field-level diff.
 - [ ] Batch submit + approve the intended 14 Species/Base resources.
 - [ ] One explicit Staging Publish + hosted EN/ZH verification.
+- [x] Clarify canonical hosted path: use AquaGuide Preview `/admin/seo/`; standalone `admin-content` Preview is not the real writable import surface.

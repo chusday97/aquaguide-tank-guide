@@ -428,3 +428,4 @@
 - Replaced legacy read-only flag `VITE_ADMIN_REVIEW_MODE` with explicit `VITE_ADMIN_READ_ONLY_DEMO`; normal Vercel Preview is intended to remain authenticated + writable.
 - Renamed read-only UI copy to `只读演示 / Read-only demo` to eliminate Preview/read-only ambiguity.
 - Functional commit `71cecdc`; full local regression PASS; Production/main untouched.
+- Hosted check found standalone `admin-content` Preview is blocked at Repo setup (`content_repo_not_configured`); canonical writable acceptance remains AquaGuide Preview `/admin/seo/`. Documented this to prevent future URL confusion.
