@@ -420,3 +420,11 @@
 - Full isolated 14×2 Draft → review → Staging-generation dry-run PASS; 28 HTML remain noindex; no private/Production writes.
 - `npm run test:contract -w @aquaguide/admin-content` PASS; Admin build + full root build + diff hygiene PASS.
 - Functional commit pushed: `43d0cfa`.
+
+## 2026-09-03 — Blank operational template + Preview writeability
+- Reworked SEO template download from 486-row catalog export to a blank operating template with field guidance, format rules, 20 blank rows and 3 examples.
+- Only explicit `import_action=update/更新` rows participate in validation/import; guide/example rows are safe and ignored.
+- Playwright round-trip PASS: download → inspect 26-line CSV → upload unchanged → 0 marked rows, no validation failure.
+- Replaced legacy read-only flag `VITE_ADMIN_REVIEW_MODE` with explicit `VITE_ADMIN_READ_ONLY_DEMO`; normal Vercel Preview is intended to remain authenticated + writable.
+- Renamed read-only UI copy to `只读演示 / Read-only demo` to eliminate Preview/read-only ambiguity.
+- Functional commit `71cecdc`; full local regression PASS; Production/main untouched.

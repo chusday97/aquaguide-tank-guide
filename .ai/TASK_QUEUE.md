@@ -275,3 +275,14 @@ Updated: 2026-09-02
 - [ ] Batch submit + approve 14 Species + required Base rows.
 - [ ] Explicit one-time Staging Publish for the 14-Species allowlist; verify hosted EN/ZH/noindex.
 - [ ] Keep Production locked until explicit authorization.
+
+## 2026-09-03 operational template clarification
+- [x] Replace full-catalog CSV dump with a blank uploadable template.
+- [x] Put per-field meaning and accepted format inside the downloaded template.
+- [x] Provide 20 blank working rows and 3 typical examples below them.
+- [x] Ensure guide/example rows are never imported and untouched template uploads safely with 0 marked rows.
+- [x] Separate normal writable Vercel Preview from explicit read-only demo mode.
+- [ ] Authenticated Preview: import the real batch-01 zh-CN CSV and inspect field-level diff.
+- [ ] Authenticated Preview: import batch-01 English CSV and inspect field-level diff.
+- [ ] Batch submit + approve the intended 14 Species/Base resources.
+- [ ] One explicit Staging Publish + hosted EN/ZH verification.

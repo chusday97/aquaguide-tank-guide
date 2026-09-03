@@ -675,3 +675,15 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 3. Batch submit + approve the intended 14 Species and required Base templates.
 4. Explicitly Staging Publish the 14-Species allowlist once; verify hosted EN/ZH metadata, CTA and deployment noindex.
 5. Keep Production locked and do not merge `main` without explicit authorization.
+
+## 35. Operational blank import template + writable Preview separation — completed 2026-09-03
+- User clarified the intended template is not a catalog dump. It is now a true blank operating template: header → field guidance row → accepted-format row → 20 blank working rows → 3 non-importing examples below.
+- The three examples cover: ordinary noindex page, independently indexable page, and reviewed duplicate pointing to a canonical sibling. Example/guide rows cannot be imported because only `import_action=update / 更新` marks a real data row.
+- Download no longer preloads all 486 catalog rows. `source_name` / `scientific_name` are reference-only; `catalog_key` remains the stable existing Species identity required for import.
+- Uploading the untouched blank template is valid and produces `0` marked rows rather than validation errors or accidental writes.
+- Browser proof PASS: downloaded CSV has 26 lines total (1 header + 2 guide + 20 blank + 3 examples), then the same file uploaded unchanged reports `模板已读取 · 0 行内容待导入`.
+- Normal Vercel Preview is no longer conflated with the old read-only UI review build. The old `VITE_ADMIN_REVIEW_MODE` flag is ignored; explicit read-only demos now require `VITE_ADMIN_READ_ONLY_DEMO=true`.
+- All user-facing `Read-only Review / 只读 Review` copy is renamed to `Read-only demo / 只读演示` so Preview remains understood as the authenticated writable acceptance environment.
+- Functional commit: `71cecdc fix(admin-content): make import template operational`.
+- Verification PASS: Admin contract, Repo backend/API, dual-repo routing, Admin build, full root build, SEO handoff, Admin authority UI, browser template download/upload round-trip, and diff hygiene.
+- Production remains locked; no main merge. Next operational step remains authenticated Preview import of the real 14-Species bilingual batch.
