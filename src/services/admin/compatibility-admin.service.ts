@@ -3,8 +3,16 @@ import type {
   CompatibilityPairRuleRevisionInput,
   CompatibilityProfileRevisionInput,
   CompatibilityProfileRevisionStatus,
+  CompatibilityRevisionReviewMutation,
 } from '../../../packages/contracts/src';
 import { apiRequest, createIdempotencyKey } from '../api/api-client';
+
+export type CompatibilityRevisionImpactReport = {
+  kind: 'profile' | 'pair_rule';
+  baselineVersion: number;
+  changedFields: string[];
+  changes: Array<{ field: string; before: unknown; after: unknown }>;
+};
 
 export type AdminCompatibilityProfileRevision = {
   id: string;
@@ -17,6 +25,9 @@ export type AdminCompatibilityProfileRevision = {
   confidence: CompatibilityProfileRevisionInput['confidence'];
   status: CompatibilityProfileRevisionStatus;
   citationSnapshots: CompatibilityCitationSnapshot[];
+  impactReport?: CompatibilityRevisionImpactReport;
+  impactCheckedAt?: string;
+  reviewNote?: string | null;
   version: number;
   species: { catalogKey: string; name: string; scientificName: string };
 };
@@ -40,6 +51,9 @@ export type AdminCompatibilityPairRuleRevision = {
   confidence: CompatibilityPairRuleRevisionInput['confidence'];
   status: CompatibilityProfileRevisionStatus;
   citationSnapshots: CompatibilityCitationSnapshot[];
+  impactReport?: CompatibilityRevisionImpactReport;
+  impactCheckedAt?: string;
+  reviewNote?: string | null;
   version: number;
   speciesA: { catalogKey: string; name: string; scientificName: string };
   speciesB: { catalogKey: string; name: string; scientificName: string };
@@ -63,6 +77,10 @@ export const compatibilityAdminService = {
     method: 'POST', body: { version }, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-submit'),
   }),
 
+  reviewPairRuleRevision: (id: string, input: CompatibilityRevisionReviewMutation) => apiRequest<AdminCompatibilityPairRuleRevision>(`/admin/compatibility/pair-rule-revisions/${id}/review`, {
+    method: 'POST', body: input, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-review'),
+  }),
+
   createProfileRevision: (input: CompatibilityProfileDraftInput) => apiRequest<AdminCompatibilityProfileRevision>('/admin/compatibility/profile-revisions', {
     method: 'POST',
     body: input,
@@ -79,5 +97,9 @@ export const compatibilityAdminService = {
     method: 'POST',
     body: { version },
     idempotencyKey: createIdempotencyKey('compatibility-profile-revision-submit'),
+  }),
+
+  reviewProfileRevision: (id: string, input: CompatibilityRevisionReviewMutation) => apiRequest<AdminCompatibilityProfileRevision>(`/admin/compatibility/profile-revisions/${id}/review`, {
+    method: 'POST', body: input, idempotencyKey: createIdempotencyKey('compatibility-profile-revision-review'),
   }),
 };

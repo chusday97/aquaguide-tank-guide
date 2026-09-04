@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
-import { compatibilityPairRuleRevisionInputSchema, compatibilityProfileRevisionInputSchema } from '../packages/contracts/src';
+import { compatibilityPairRuleRevisionInputSchema, compatibilityProfileRevisionInputSchema, compatibilityRevisionReviewMutationSchema } from '../packages/contracts/src';
 
 const audit = getCompatibilityEvidenceAudit();
 const speciesIds = new Set(fishData.map(item => item.id));
@@ -63,6 +63,15 @@ assert.equal(compatibilityPairRuleRevisionInputSchema.safeParse({
   mitigation: [], basis: 'rule_inference', confidence: 'low', citations: [{ sourceKey: 'x', title: 'x', publisher: 'x', url: 'https://example.com', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' }],
 }).success, false, 'Pair Rule revision must reject same-species pairs');
 
+assert.equal(compatibilityRevisionReviewMutationSchema.safeParse({ version: 2, decision: 'approve' }).success, true);
+assert.equal(compatibilityRevisionReviewMutationSchema.safeParse({ version: 2, decision: 'reject' }).success, false, 'reject must require a human review note');
+assert.equal(compatibilityRevisionReviewMutationSchema.safeParse({ version: 2, decision: 'reject', note: '证据不足，需要补充来源。' }).success, true);
+
+const reviewMigration = readFileSync('supabase/migrations/202609040004_compatibility_revision_review_gate.sql', 'utf8');
+assert.match(reviewMigration, /impact_report jsonb/);
+assert.match(reviewMigration, /impact_checked_at timestamptz/);
+assert.match(reviewMigration, /review_note text/);
+
 const pairMigration = readFileSync('supabase/migrations/202609040003_compatibility_pair_rule_revisions.sql', 'utf8');
 assert.match(pairMigration, /create table public\.species_pair_compatibility_rule_revisions/);
 assert.match(pairMigration, /one_active_revision_idx/);
@@ -79,5 +88,11 @@ assert.doesNotMatch(routeSource, /profile-revisions\/:id\/publish/, 'Profile rev
 assert.match(routeSource, /species_pair_compatibility_rule_revisions[\s\S]*pending_review/);
 assert.doesNotMatch(routeSource, /from\('species_pair_compatibility_rules'\)[\s\S]{0,160}\.update\(/, 'Pair Draft API must never mutate reviewed Pair Rule authority');
 assert.doesNotMatch(routeSource, /pair-rule-revisions\/:id\/publish/, 'Pair reviewed publish is intentionally unavailable in this round');
+assert.match(routeSource, /profile-revisions\/:id\/review/);
+assert.match(routeSource, /pair-rule-revisions\/:id\/review/);
+assert.match(routeSource, /buildImpactReport\('profile'/);
+assert.match(routeSource, /buildImpactReport\('pair_rule'/);
+assert.match(routeSource, /缺少有效 impact report/);
+
 
 console.log(`compatibility admin contract: ${audit.reviewedProfiles.length} reviewed profiles / ${audit.reviewedPairRules.length} reviewed pair rules, all evidence-linked`);

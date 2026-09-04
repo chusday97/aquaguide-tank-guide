@@ -72,6 +72,8 @@ export default function CompatibilityAdmin() {
   const [draftForm, setDraftForm] = useState<DraftForm | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profileReviewNote, setProfileReviewNote] = useState('');
+  const [isProfileReviewing, setIsProfileReviewing] = useState(false);
   const [pairRevisions, setPairRevisions] = useState<AdminCompatibilityPairRuleRevision[]>([]);
   const [pairRevisionCapability, setPairRevisionCapability] = useState<RevisionCapability>('loading');
   const [writablePairKeys, setWritablePairKeys] = useState<string[]>([]);
@@ -80,6 +82,8 @@ export default function CompatibilityAdmin() {
   const [pairDraftForm, setPairDraftForm] = useState<PairDraftForm | null>(null);
   const [isPairSaving, setIsPairSaving] = useState(false);
   const [isPairSubmitting, setIsPairSubmitting] = useState(false);
+  const [pairReviewNote, setPairReviewNote] = useState('');
+  const [isPairReviewing, setIsPairReviewing] = useState(false);
   const audit = useMemo(() => getCompatibilityEvidenceAudit(), []);
   const speciesById = useMemo(() => new Map(fishData.map(item => [item.id, item])), []);
 
@@ -145,6 +149,7 @@ export default function CompatibilityAdmin() {
   const selectRevision = (revision: AdminCompatibilityProfileRevision) => {
     setSelectedRevisionId(revision.id);
     setDraftForm(draftFormFromRevision(revision));
+    setProfileReviewNote(revision.reviewNote || '');
     setRevisionError('');
   };
 
@@ -222,9 +227,24 @@ export default function CompatibilityAdmin() {
   };
 
 
+  const reviewProfileRevision = async (decision: 'approve' | 'reject') => {
+    if (!selectedRevision || selectedRevision.status !== 'pending_review') return;
+    if (decision === 'reject' && !profileReviewNote.trim()) { setRevisionError('驳回时必须填写审核说明。'); return; }
+    setIsProfileReviewing(true); setRevisionError('');
+    try {
+      const reviewed = await compatibilityAdminService.reviewProfileRevision(selectedRevision.id, { version: selectedRevision.version, decision, note: profileReviewNote.trim() || undefined });
+      setRevisions(items => items.map(item => item.id === reviewed.id ? reviewed : item));
+      selectRevision(reviewed);
+      showToast(decision === 'approve' ? 'Profile revision 已批准；尚未发布' : 'Profile revision 已驳回', 'success');
+    } catch (error) {
+      const message = errorText(error); setRevisionError(message); showToast(message, 'error');
+    } finally { setIsProfileReviewing(false); }
+  };
+
   const selectPairRevision = (revision: AdminCompatibilityPairRuleRevision) => {
     setSelectedPairRevisionId(revision.id);
     setPairDraftForm(pairDraftFormFromRevision(revision));
+    setPairReviewNote(revision.reviewNote || '');
     setPairRevisionError('');
   };
 
@@ -278,6 +298,20 @@ export default function CompatibilityAdmin() {
     } finally { setIsPairSubmitting(false); }
   };
 
+  const reviewPairRevision = async (decision: 'approve' | 'reject') => {
+    if (!selectedPairRevision || selectedPairRevision.status !== 'pending_review') return;
+    if (decision === 'reject' && !pairReviewNote.trim()) { setPairRevisionError('驳回时必须填写审核说明。'); return; }
+    setIsPairReviewing(true); setPairRevisionError('');
+    try {
+      const reviewed = await compatibilityAdminService.reviewPairRuleRevision(selectedPairRevision.id, { version: selectedPairRevision.version, decision, note: pairReviewNote.trim() || undefined });
+      setPairRevisions(items => items.map(item => item.id === reviewed.id ? reviewed : item));
+      selectPairRevision(reviewed);
+      showToast(decision === 'approve' ? 'Pair Rule revision 已批准；尚未发布' : 'Pair Rule revision 已驳回', 'success');
+    } catch (error) {
+      const message = errorText(error); setPairRevisionError(message); showToast(message, 'error');
+    } finally { setIsPairReviewing(false); }
+  };
+
   return (
     <div className="min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
       <div className="mx-auto max-w-[1440px]">
@@ -317,6 +351,8 @@ export default function CompatibilityAdmin() {
             <label className="grid gap-1.5 text-xs font-black text-ink/60"><span>Confidence</span><select disabled={selectedRevision.status !== 'draft'} value={draftForm.confidence} onChange={event => setDraftForm(value => value ? { ...value, confidence: event.target.value as DraftForm['confidence'] } : value)} className="h-11 rounded-[14px] border border-border bg-bg px-3 text-sm font-bold disabled:opacity-60"><option value="high">高</option><option value="medium">中</option><option value="low">低</option><option value="unknown">未知</option></select></label>
           </div>
           <div className="mt-4 rounded-[14px] bg-bg px-3 py-3 text-xs font-bold leading-5 text-ink/55">继承 reviewed evidence：{selectedRevision.citationSnapshots.map(source => source.publisher).join(' · ')}。本轮不能在 Profile Draft 内新增未审核来源。</div>
+          {selectedRevision.impactReport?.changedFields?.length ? <div data-testid="profile-impact-report" className="mt-3 rounded-[14px] border border-amber-200 bg-amber-50 px-3 py-3 text-xs font-bold leading-5 text-amber-950">服务器 Impact Check：baseline v{selectedRevision.impactReport.baselineVersion} → 变更 {selectedRevision.impactReport.changedFields.join('、')}。批准只改变 revision 审核状态，不会发布到 Compatibility runtime。</div> : null}
+          {selectedRevision.status === 'pending_review' && <div className="mt-3 grid gap-2"><label className="grid gap-1 text-xs font-black text-ink/60"><span>审核说明（驳回必填）</span><textarea value={profileReviewNote} onChange={event => setProfileReviewNote(event.target.value)} className="min-h-[80px] rounded-[14px] border border-border bg-bg px-3 py-2 text-sm font-bold" /></label><div className="flex flex-wrap justify-end gap-2"><button type="button" disabled={isProfileReviewing} onClick={() => void reviewProfileRevision('reject')} className="h-10 rounded-full border border-red-200 px-4 text-sm font-black text-red-700 disabled:opacity-50">驳回 revision</button><button type="button" disabled={isProfileReviewing} onClick={() => void reviewProfileRevision('approve')} className="h-10 rounded-full bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50">批准 revision（不发布）</button></div></div>}
           <div className="mt-4 flex flex-wrap justify-end gap-2">
             {selectedRevision.status === 'draft' && <button type="button" disabled={isSaving || isSubmitting} onClick={() => void saveDraft()} className="flex h-10 items-center gap-2 rounded-full border border-indigo-200 px-4 text-sm font-black text-indigo-800 disabled:opacity-50">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}保存 Draft</button>}
             {selectedRevision.status === 'draft' && <button type="button" disabled={isSaving || isSubmitting} onClick={() => void submitDraft()} className="flex h-10 items-center gap-2 rounded-full bg-indigo-700 px-4 text-sm font-black text-white disabled:opacity-50">{isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}提交审核</button>}
@@ -337,6 +373,8 @@ export default function CompatibilityAdmin() {
             <label className="grid gap-1.5 text-xs font-black text-ink/60 md:col-span-2"><span>Mitigation（每行一项）</span><textarea disabled={selectedPairRevision.status !== 'draft'} value={pairDraftForm.mitigation} onChange={event => setPairDraftForm(value => value ? { ...value, mitigation: event.target.value } : value)} className="min-h-[100px] rounded-[14px] border border-border bg-bg px-3 py-2 text-sm font-bold disabled:opacity-60" /></label>
           </div>
           <div className="mt-4 rounded-[14px] bg-bg px-3 py-3 text-xs font-bold leading-5 text-ink/55">继承 reviewed evidence：{selectedPairRevision.citationSnapshots.map(source => source.publisher).join(' · ')}。本轮不能在 Pair Rule Draft 内新增未审核来源。</div>
+          {selectedPairRevision.impactReport?.changedFields?.length ? <div data-testid="pair-impact-report" className="mt-3 rounded-[14px] border border-amber-200 bg-amber-50 px-3 py-3 text-xs font-bold leading-5 text-amber-950">服务器 Impact Check：baseline v{selectedPairRevision.impactReport.baselineVersion} → 变更 {selectedPairRevision.impactReport.changedFields.join('、')}。批准只改变 revision 审核状态，不会发布到 Compatibility runtime。</div> : null}
+          {selectedPairRevision.status === 'pending_review' && <div className="mt-3 grid gap-2"><label className="grid gap-1 text-xs font-black text-ink/60"><span>Pair 审核说明（驳回必填）</span><textarea value={pairReviewNote} onChange={event => setPairReviewNote(event.target.value)} className="min-h-[80px] rounded-[14px] border border-border bg-bg px-3 py-2 text-sm font-bold" /></label><div className="flex flex-wrap justify-end gap-2"><button type="button" disabled={isPairReviewing} onClick={() => void reviewPairRevision('reject')} className="h-10 rounded-full border border-red-200 px-4 text-sm font-black text-red-700 disabled:opacity-50">驳回 Pair revision</button><button type="button" disabled={isPairReviewing} onClick={() => void reviewPairRevision('approve')} className="h-10 rounded-full bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50">批准 Pair revision（不发布）</button></div></div>}
           <div className="mt-4 flex flex-wrap justify-end gap-2">
             {selectedPairRevision.status === 'draft' && <button type="button" disabled={isPairSaving || isPairSubmitting} onClick={() => void savePairDraft()} className="flex h-10 items-center gap-2 rounded-full border border-violet-200 px-4 text-sm font-black text-violet-800 disabled:opacity-50">{isPairSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}保存 Pair Draft</button>}
             {selectedPairRevision.status === 'draft' && <button type="button" disabled={isPairSaving || isPairSubmitting} onClick={() => void submitPairDraft()} className="flex h-10 items-center gap-2 rounded-full bg-violet-700 px-4 text-sm font-black text-white disabled:opacity-50">{isPairSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}提交 Pair 审核</button>}

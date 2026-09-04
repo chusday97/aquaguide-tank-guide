@@ -6,6 +6,7 @@ import {
   compatibilityProfileRevisionInputSchema,
   compatibilityProfileRevisionStatusMutationSchema,
   compatibilityProfileRevisionUpdateSchema,
+  compatibilityRevisionReviewMutationSchema,
   uuidSchema,
 } from '../../../../packages/contracts/src/index';
 import type { AuthenticatedRequest } from '../auth';
@@ -22,6 +23,21 @@ import { getAdminSupabase } from '../supabase';
 const activeRevisionStatuses = ['draft', 'pending_review', 'approved'];
 const reviewedCitationsOnly = (citations: Array<{ reviewStatus: string }>) => (
   citations.length > 0 && citations.every(source => source.reviewStatus === 'reviewed')
+);
+
+const sameValue = (left: unknown, right: unknown) => JSON.stringify(left ?? null) === JSON.stringify(right ?? null);
+const buildImpactReport = (
+  kind: 'profile' | 'pair_rule',
+  baselineVersion: number,
+  draft: Record<string, any>,
+  baseline: Record<string, any>,
+  fields: string[],
+) => {
+  const changes = fields.flatMap(field => sameValue(draft[field], baseline[field]) ? [] : [{ field, before: baseline[field] ?? null, after: draft[field] ?? null }]);
+  return { kind, baselineVersion, changedFields: changes.map(change => change.field), changes };
+};
+const hasImpactChanges = (report: unknown) => Boolean(
+  report && typeof report === 'object' && Array.isArray((report as { changedFields?: unknown[] }).changedFields) && (report as { changedFields: unknown[] }).changedFields.length > 0,
 );
 
 const parseRevisionId = (value: string) => {
@@ -186,9 +202,20 @@ adminCompatibilityRouter.post('/profile-revisions/:id/submit', asyncRoute(async 
   }
 
   const client = getAdminSupabase();
+  const { data: baseline, error: baselineError } = await client
+    .from('species_compatibility_profiles')
+    .select('version,behavior_traits,minimum_group_size,predation_targets,confidence')
+    .eq('species_id', current.species_id)
+    .eq('review_status', 'reviewed')
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (baselineError) throwDatabaseError(baselineError, '暂时无法读取 reviewed Compatibility Profile impact baseline。');
+  if (!baseline) throw new ApiError(409, 'MIGRATION_REJECTED', 'Reviewed Compatibility Profile baseline 已不存在，不能提交审核。');
+  const impactReport = buildImpactReport('profile', baseline.version, current, baseline, ['behavior_traits', 'minimum_group_size', 'predation_targets', 'confidence']);
+  if (!hasImpactChanges(impactReport)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility Profile Draft 与 reviewed baseline 没有变化。');
   const { data, error } = await client
     .from('species_compatibility_profile_revisions')
-    .update({ status: 'pending_review' })
+    .update({ status: 'pending_review', impact_report: impactReport, impact_checked_at: new Date().toISOString() })
     .eq('id', id)
     .eq('version', parsed.data.version)
     .eq('status', 'draft')
@@ -196,6 +223,26 @@ adminCompatibilityRouter.post('/profile-revisions/:id/submit', asyncRoute(async 
     .maybeSingle();
   if (error) throwDatabaseError(error, 'Compatibility revision 没有成功提交审核。');
   if (!data) throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility Draft 已发生变化，请刷新后重试。');
+  return sendData(request, response, camelize(data));
+}));
+
+adminCompatibilityRouter.post('/profile-revisions/:id/review', asyncRoute(async (request, response) => {
+  const id = parseRevisionId(request.params.id);
+  const parsed = compatibilityRevisionReviewMutationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility Profile 审核操作无效。', parsed.error.flatten());
+  const current = await loadRevision(id);
+  if (current.status !== 'pending_review') throw new ApiError(409, 'VERSION_CONFLICT', '只有待审核的 Compatibility Profile revision 可以审核。', { status: current.status });
+  if (current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', '这条 Compatibility Profile revision 已发生变化。', { currentVersion: current.version });
+  if (!hasImpactChanges(current.impact_report)) throw new ApiError(409, 'MIGRATION_REJECTED', '缺少有效 impact report，不能完成审核。');
+  const actor = (request as AuthenticatedRequest).authUser.id;
+  const client = getAdminSupabase();
+  const { data, error } = await client.from('species_compatibility_profile_revisions').update({
+    status: parsed.data.decision === 'approve' ? 'approved' : 'rejected', reviewed_by: actor,
+    reviewed_at: new Date().toISOString(), review_note: parsed.data.note?.trim() || null,
+  }).eq('id', id).eq('version', parsed.data.version).eq('status', 'pending_review')
+    .select('*,species!inner(catalog_key,name,scientific_name)').maybeSingle();
+  if (error) throwDatabaseError(error, 'Compatibility Profile revision 审核没有完成。');
+  if (!data) throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility Profile revision 已发生变化，请刷新后重试。');
   return sendData(request, response, camelize(data));
 }));
 
@@ -366,9 +413,21 @@ adminCompatibilityRouter.post('/pair-rule-revisions/:id/submit', asyncRoute(asyn
   }
 
   const client = getAdminSupabase();
+  const { data: baseline, error: baselineError } = await client.from('species_pair_compatibility_rules')
+    .select('version,verdict,risk_type,reason,mitigation,basis,confidence')
+    .eq('species_a_id', current.speciesAId).eq('species_b_id', current.speciesBId)
+    .eq('review_status', 'reviewed').is('deleted_at', null).maybeSingle();
+  if (baselineError) throwDatabaseError(baselineError, '暂时无法读取 reviewed Pair Rule impact baseline。');
+  if (!baseline) throw new ApiError(409, 'MIGRATION_REJECTED', 'Reviewed Pair Rule baseline 已不存在，不能提交审核。');
+  const draftForImpact = {
+    verdict: current.verdict, risk_type: current.riskType, reason: current.reason, mitigation: current.mitigation,
+    basis: current.basis, confidence: current.confidence,
+  };
+  const impactReport = buildImpactReport('pair_rule', baseline.version, draftForImpact, baseline, ['verdict', 'risk_type', 'reason', 'mitigation', 'basis', 'confidence']);
+  if (!hasImpactChanges(impactReport)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Pair Rule Draft 与 reviewed baseline 没有变化。');
   const { data, error } = await client
     .from('species_pair_compatibility_rule_revisions')
-    .update({ status: 'pending_review' })
+    .update({ status: 'pending_review', impact_report: impactReport, impact_checked_at: new Date().toISOString() })
     .eq('id', id)
     .eq('version', parsed.data.version)
     .eq('status', 'draft')
@@ -376,5 +435,24 @@ adminCompatibilityRouter.post('/pair-rule-revisions/:id/submit', asyncRoute(asyn
     .maybeSingle();
   if (error) throwDatabaseError(error, 'Compatibility Pair Rule revision 没有成功提交审核。');
   if (!data) throw new ApiError(409, 'VERSION_CONFLICT', 'Pair Rule Draft 已发生变化，请刷新后重试。');
+  return sendData(request, response, await loadPairRevision(id));
+}));
+
+adminCompatibilityRouter.post('/pair-rule-revisions/:id/review', asyncRoute(async (request, response) => {
+  const id = parseRevisionId(request.params.id);
+  const parsed = compatibilityRevisionReviewMutationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility Pair Rule 审核操作无效。', parsed.error.flatten());
+  const current = await loadPairRevision(id);
+  if (current.status !== 'pending_review') throw new ApiError(409, 'VERSION_CONFLICT', '只有待审核的 Pair Rule revision 可以审核。', { status: current.status });
+  if (current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', '这条 Pair Rule revision 已发生变化。', { currentVersion: current.version });
+  if (!hasImpactChanges(current.impactReport)) throw new ApiError(409, 'MIGRATION_REJECTED', '缺少有效 impact report，不能完成审核。');
+  const actor = (request as AuthenticatedRequest).authUser.id;
+  const client = getAdminSupabase();
+  const { data, error } = await client.from('species_pair_compatibility_rule_revisions').update({
+    status: parsed.data.decision === 'approve' ? 'approved' : 'rejected', reviewed_by: actor,
+    reviewed_at: new Date().toISOString(), review_note: parsed.data.note?.trim() || null,
+  }).eq('id', id).eq('version', parsed.data.version).eq('status', 'pending_review').select('id').maybeSingle();
+  if (error) throwDatabaseError(error, 'Compatibility Pair Rule revision 审核没有完成。');
+  if (!data) throw new ApiError(409, 'VERSION_CONFLICT', 'Pair Rule revision 已发生变化，请刷新后重试。');
   return sendData(request, response, await loadPairRevision(id));
 }));

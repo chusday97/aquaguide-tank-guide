@@ -67,6 +67,18 @@ export const compatibilityPairRuleRevisionUpdateSchema = compatibilityPairRuleRe
 
 export const compatibilityPairRuleRevisionStatusMutationSchema = z.object({ version: versionSchema });
 
+export const compatibilityRevisionReviewMutationSchema = z.object({
+  version: versionSchema,
+  decision: z.enum(['approve', 'reject']),
+  note: z.string().trim().max(2000).optional(),
+}).superRefine((value, ctx) => {
+  if (value.decision === 'reject' && !value.note?.trim()) {
+    ctx.addIssue({ code: 'custom', path: ['note'], message: '驳回时必须填写审核说明。' });
+  }
+});
+
+export type CompatibilityRevisionReviewMutation = z.infer<typeof compatibilityRevisionReviewMutationSchema>;
+
 export type CompatibilityPairRuleRevisionInput = z.infer<typeof compatibilityPairRuleRevisionInputSchema>;
 export type CompatibilityVerdict = z.infer<typeof compatibilityVerdictSchema>;
 export type CompatibilityRuleBasisValue = z.infer<typeof compatibilityRuleBasisSchema>;

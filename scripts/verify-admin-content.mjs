@@ -104,8 +104,14 @@ try {
       const body = request.postDataJSON();
       if (method === 'POST' && url.pathname.endsWith('/submit')) {
         const current = compatibilityRevisions[0];
-        compatibilityRevisions = [{ ...current, status: 'pending_review', version: current.version + 1 }];
+        compatibilityRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'profile', baselineVersion: 1, changedFields: ['behavior_traits', 'minimum_group_size'], changes: [] }, impactCheckedAt: new Date().toISOString() }];
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-submit' }) });
+        return;
+      }
+      if (method === 'POST' && url.pathname.endsWith('/review')) {
+        const current = compatibilityRevisions[0];
+        compatibilityRevisions = [{ ...current, status: body.decision === 'approve' ? 'approved' : 'rejected', version: current.version + 1, reviewNote: body.note || null }];
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-review' }) });
         return;
       }
       if (method === 'POST') {
@@ -136,8 +142,14 @@ try {
       const body = request.postDataJSON();
       if (method === 'POST' && url.pathname.endsWith('/submit')) {
         const current = pairRuleRevisions[0];
-        pairRuleRevisions = [{ ...current, status: 'pending_review', version: current.version + 1 }];
+        pairRuleRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'pair_rule', baselineVersion: 1, changedFields: ['verdict', 'risk_type', 'reason', 'mitigation'], changes: [] }, impactCheckedAt: new Date().toISOString() }];
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: pairRuleRevisions[0], requestId: 'test-pair-submit' }) });
+        return;
+      }
+      if (method === 'POST' && url.pathname.endsWith('/review')) {
+        const current = pairRuleRevisions[0];
+        pairRuleRevisions = [{ ...current, status: body.decision === 'approve' ? 'approved' : 'rejected', version: current.version + 1, reviewNote: body.note || null }];
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: pairRuleRevisions[0], requestId: 'test-pair-review' }) });
         return;
       }
       if (method === 'POST') {
@@ -235,6 +247,11 @@ try {
     await page.getByText('Compatibility revision 已提交审核', { exact: true }).waitFor();
     await draftEditor.getByText('待审核', { exact: true }).waitFor();
     assert.equal(await draftEditor.getByLabel(/Behavior traits/).isDisabled(), true);
+    await draftEditor.getByTestId('profile-impact-report').waitFor();
+    assert.match(await draftEditor.getByTestId('profile-impact-report').innerText(), /behavior_traits[\s\S]*minimum_group_size/);
+    await draftEditor.getByRole('button', { name: '批准 revision（不发布）' }).click();
+    await page.getByText('Profile revision 已批准；尚未发布', { exact: true }).waitFor();
+    await draftEditor.getByText('已批准', { exact: true }).waitFor();
 
     await page.getByRole('button', { name: '创建 Pair Draft' }).first().click();
     const pairDraftEditor = page.getByTestId('compatibility-pair-draft-editor');
@@ -252,6 +269,11 @@ try {
     await page.getByText('Pair Rule revision 已提交审核', { exact: true }).waitFor();
     await pairDraftEditor.getByText('待审核', { exact: true }).waitFor();
     assert.equal(await pairDraftEditor.getByLabel('Risk Type').isDisabled(), true);
+    await pairDraftEditor.getByTestId('pair-impact-report').waitFor();
+    assert.match(await pairDraftEditor.getByTestId('pair-impact-report').innerText(), /verdict[\s\S]*risk_type/);
+    await pairDraftEditor.getByRole('button', { name: '批准 Pair revision（不发布）' }).click();
+    await page.getByText('Pair Rule revision 已批准；尚未发布', { exact: true }).waitFor();
+    await pairDraftEditor.getByText('已批准', { exact: true }).waitFor();
 
     const compatibilityOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(compatibilityOverflow, false, `${viewport.width}px Compatibility Admin should not overflow horizontally`);
