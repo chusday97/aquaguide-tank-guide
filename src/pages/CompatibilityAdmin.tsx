@@ -3,10 +3,11 @@ import { ArrowLeft, BookOpenCheck, Loader2, Save, Send, ShieldCheck } from 'luci
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../components/common/ToastProvider';
 import { fishData } from '../data/fishData';
-import { getCompatibilityEvidenceAudit, type ReviewedCompatibilityProfile } from '../data/compatibilityEvidence';
+import { getCompatibilityEvidenceAudit, type ReviewedCompatibilityProfile, type ReviewedPairRule } from '../data/compatibilityEvidence';
 import { AquaGuideApiError } from '../services/api/api-client';
 import {
   compatibilityAdminService,
+  type AdminCompatibilityPairRuleRevision,
   type AdminCompatibilityProfileRevision,
 } from '../services/admin/compatibility-admin.service';
 
@@ -24,6 +25,7 @@ const verdictClass = {
 
 type RevisionCapability = 'loading' | 'ready' | 'unavailable';
 type DraftForm = { behaviorTraits: string; minimumGroupSize: string; predationTargets: string; confidence: 'high' | 'medium' | 'low' | 'unknown' };
+type PairDraftForm = { verdict: 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data'; riskType: string; reason: string; mitigation: string; basis: 'species_trait' | 'pair_rule' | 'tank_condition' | 'rule_inference'; confidence: 'high' | 'medium' | 'low' | 'unknown' };
 
 const draftFormFromRevision = (revision: AdminCompatibilityProfileRevision): DraftForm => ({
   behaviorTraits: revision.behaviorTraits.join('\n'),
@@ -31,6 +33,16 @@ const draftFormFromRevision = (revision: AdminCompatibilityProfileRevision): Dra
   predationTargets: revision.predationTargets.join('\n'),
   confidence: revision.confidence,
 });
+
+const pairDraftFormFromRevision = (revision: AdminCompatibilityPairRuleRevision): PairDraftForm => ({
+  verdict: revision.verdict,
+  riskType: revision.riskType,
+  reason: revision.reason,
+  mitigation: revision.mitigation.join('\n'),
+  basis: revision.basis,
+  confidence: revision.confidence,
+});
+const compatibilityPairKey = (left: string, right: string) => [left, right].sort().join('__');
 
 const lines = (value: string) => value.split('\n').map(item => item.trim()).filter(Boolean);
 const errorText = (error: unknown) => error instanceof AquaGuideApiError ? error.message : 'Compatibility Draft 操作没有完成。';
@@ -42,6 +54,10 @@ const citationSnapshotsFromProfile = (profile: ReviewedCompatibilityProfile) => 
   url: source.url,
   sourceType: source.sourceType,
   reviewStatus: source.reviewStatus,
+}));
+
+const citationSnapshotsFromPairRule = (rule: ReviewedPairRule) => rule.citations.map(source => ({
+  sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus,
 }));
 
 export default function CompatibilityAdmin() {
@@ -56,6 +72,14 @@ export default function CompatibilityAdmin() {
   const [draftForm, setDraftForm] = useState<DraftForm | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pairRevisions, setPairRevisions] = useState<AdminCompatibilityPairRuleRevision[]>([]);
+  const [pairRevisionCapability, setPairRevisionCapability] = useState<RevisionCapability>('loading');
+  const [writablePairKeys, setWritablePairKeys] = useState<string[]>([]);
+  const [pairRevisionError, setPairRevisionError] = useState('');
+  const [selectedPairRevisionId, setSelectedPairRevisionId] = useState<string | null>(null);
+  const [pairDraftForm, setPairDraftForm] = useState<PairDraftForm | null>(null);
+  const [isPairSaving, setIsPairSaving] = useState(false);
+  const [isPairSubmitting, setIsPairSubmitting] = useState(false);
   const audit = useMemo(() => getCompatibilityEvidenceAudit(), []);
   const speciesById = useMemo(() => new Map(fishData.map(item => [item.id, item])), []);
 
@@ -77,11 +101,34 @@ export default function CompatibilityAdmin() {
     return () => { active = false; };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    compatibilityAdminService.listPairRuleRevisions()
+      .then(workspace => {
+        if (!active) return;
+        setPairRevisions(workspace.revisions);
+        setWritablePairKeys(workspace.writablePairKeys);
+        setPairRevisionCapability('ready');
+        setPairRevisionError('');
+      })
+      .catch(error => {
+        if (!active) return;
+        setPairRevisionCapability('unavailable');
+        setPairRevisionError(errorText(error));
+      });
+    return () => { active = false; };
+  }, []);
+
   const writableCatalogKeySet = useMemo(() => new Set(writableCatalogKeys), [writableCatalogKeys]);
   const activeRevisionByCatalogKey = useMemo(() => new Map(
     revisions.filter(item => ['draft', 'pending_review', 'approved'].includes(item.status)).map(item => [item.species.catalogKey, item]),
   ), [revisions]);
   const selectedRevision = revisions.find(item => item.id === selectedRevisionId) || null;
+  const writablePairKeySet = useMemo(() => new Set(writablePairKeys), [writablePairKeys]);
+  const activePairRevisionByKey = useMemo(() => new Map(
+    pairRevisions.filter(item => ['draft', 'pending_review', 'approved'].includes(item.status)).map(item => [compatibilityPairKey(item.speciesA.catalogKey, item.speciesB.catalogKey), item]),
+  ), [pairRevisions]);
+  const selectedPairRevision = pairRevisions.find(item => item.id === selectedPairRevisionId) || null;
 
   const normalizedQuery = query.trim().toLowerCase();
   const profiles = audit.reviewedProfiles.filter(profile => {
@@ -174,6 +221,63 @@ export default function CompatibilityAdmin() {
     }
   };
 
+
+  const selectPairRevision = (revision: AdminCompatibilityPairRuleRevision) => {
+    setSelectedPairRevisionId(revision.id);
+    setPairDraftForm(pairDraftFormFromRevision(revision));
+    setPairRevisionError('');
+  };
+
+  const beginPairDraft = async (rule: ReviewedPairRule) => {
+    const key = compatibilityPairKey(rule.speciesIds[0], rule.speciesIds[1]);
+    if (pairRevisionCapability !== 'ready' || !writablePairKeySet.has(key)) return;
+    setIsPairSaving(true);
+    setPairRevisionError('');
+    try {
+      const created = await compatibilityAdminService.createPairRuleRevision({
+        catalogKeyA: rule.speciesIds[0], catalogKeyB: rule.speciesIds[1], verdict: rule.verdict,
+        riskType: rule.riskType, reason: rule.reason, mitigation: rule.mitigation,
+        basis: rule.basis, confidence: rule.confidence, citations: citationSnapshotsFromPairRule(rule),
+      });
+      setPairRevisions(items => [created, ...items.filter(item => item.id !== created.id)]);
+      selectPairRevision(created);
+      showToast('Pair Rule Draft 已创建', 'success');
+    } catch (error) {
+      const message = errorText(error); setPairRevisionError(message); showToast(message, 'error');
+    } finally { setIsPairSaving(false); }
+  };
+
+  const savePairDraft = async () => {
+    if (!selectedPairRevision || !pairDraftForm || selectedPairRevision.status !== 'draft') return;
+    if (!pairDraftForm.riskType.trim() || !pairDraftForm.reason.trim()) {
+      setPairRevisionError('Risk Type 与判断依据不能为空。'); return;
+    }
+    setIsPairSaving(true); setPairRevisionError('');
+    try {
+      const updated = await compatibilityAdminService.updatePairRuleRevision(selectedPairRevision.id, selectedPairRevision.version, {
+        verdict: pairDraftForm.verdict, riskType: pairDraftForm.riskType.trim(), reason: pairDraftForm.reason.trim(),
+        mitigation: lines(pairDraftForm.mitigation), basis: pairDraftForm.basis, confidence: pairDraftForm.confidence,
+      });
+      setPairRevisions(items => items.map(item => item.id === updated.id ? updated : item));
+      selectPairRevision(updated); showToast('Pair Rule Draft 已保存', 'success');
+    } catch (error) {
+      const message = errorText(error); setPairRevisionError(message); showToast(message, 'error');
+    } finally { setIsPairSaving(false); }
+  };
+
+  const submitPairDraft = async () => {
+    if (!selectedPairRevision || selectedPairRevision.status !== 'draft') return;
+    if (!window.confirm('提交审核后将锁定 Pair Rule Draft；当前 reviewed Pair Rule 仍不会改变。确认继续吗？')) return;
+    setIsPairSubmitting(true); setPairRevisionError('');
+    try {
+      const submitted = await compatibilityAdminService.submitPairRuleRevision(selectedPairRevision.id, selectedPairRevision.version);
+      setPairRevisions(items => items.map(item => item.id === submitted.id ? submitted : item));
+      selectPairRevision(submitted); showToast('Pair Rule revision 已提交审核', 'success');
+    } catch (error) {
+      const message = errorText(error); setPairRevisionError(message); showToast(message, 'error');
+    } finally { setIsPairSubmitting(false); }
+  };
+
   return (
     <div className="min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
       <div className="mx-auto max-w-[1440px]">
@@ -182,21 +286,23 @@ export default function CompatibilityAdmin() {
             <button type="button" aria-label="返回管理后台" onClick={() => navigate('/admin/content')} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border hover:bg-bg"><ArrowLeft className="h-5 w-5" /></button>
             <div className="min-w-0"><div className="text-xs font-black uppercase tracking-[0.14em] text-indigo-700">Compatibility Authority</div><h1 className="truncate text-xl font-black">Compatibility Admin</h1></div>
           </div>
-          <span className={`rounded-full border px-3 py-1.5 text-xs font-black ${revisionCapability === 'ready' ? 'border-indigo-200 bg-indigo-50 text-indigo-800' : 'border-amber-200 bg-amber-50 text-amber-800'}`}>
-            {revisionCapability === 'loading' ? '检查 Draft storage…' : revisionCapability === 'ready' ? 'Profile Draft 已启用' : '只读审核基线'}
+          <span className={`rounded-full border px-3 py-1.5 text-xs font-black ${revisionCapability === 'ready' && pairRevisionCapability === 'ready' ? 'border-indigo-200 bg-indigo-50 text-indigo-800' : 'border-amber-200 bg-amber-50 text-amber-800'}`}>
+            {revisionCapability === 'loading' || pairRevisionCapability === 'loading' ? '检查 Draft storage…' : revisionCapability === 'ready' && pairRevisionCapability === 'ready' ? 'Profile / Pair Draft 已启用' : revisionCapability === 'ready' || pairRevisionCapability === 'ready' ? '部分 Draft 已启用' : '只读审核基线'}
           </span>
         </header>
 
         <section className="mt-4 rounded-[22px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold leading-6 text-amber-950">
-          reviewed Compatibility baseline 始终保持独立。Behavior Profile 编辑只写 revision Draft；提交审核也不会修改当前 runtime。Pair Rule 编辑与 reviewed publish 仍保持锁定。
+          reviewed Compatibility baseline 始终保持独立。Behavior Profile 与 Pair Rule 编辑都只写 revision Draft；提交审核也不会修改当前 runtime。reviewed publish 仍保持锁定。
         </section>
         {revisionCapability === 'unavailable' && <div role="status" className="mt-3 rounded-[16px] border border-slate-200 bg-white px-4 py-3 text-xs font-bold leading-5 text-ink/55">Draft storage 尚未启用：{revisionError || 'Compatibility revision API / migration 不可用。'} 当前 reviewed baseline 仍可正常审计。</div>}
         {revisionCapability === 'ready' && revisionError && <div role="alert" className="mt-3 rounded-[16px] border border-red-200 bg-red-50 px-4 py-3 text-xs font-bold text-red-700">{revisionError}</div>}
+        {pairRevisionCapability === 'unavailable' && <div role="status" className="mt-3 rounded-[16px] border border-slate-200 bg-white px-4 py-3 text-xs font-bold leading-5 text-ink/55">Pair Rule Draft storage 尚未启用：{pairRevisionError || 'Pair Rule revision API / migration 不可用。'} reviewed Pair Rules 仍可正常审计。</div>}
+        {pairRevisionCapability === 'ready' && pairRevisionError && <div role="alert" className="mt-3 rounded-[16px] border border-red-200 bg-red-50 px-4 py-3 text-xs font-bold text-red-700">{pairRevisionError}</div>}
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-[20px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-xs font-black text-ink/45">Reviewed Profiles</div><div className="mt-1 text-2xl font-black">{audit.reviewedProfiles.length}</div></div>
-          <div className="rounded-[20px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-xs font-black text-ink/45">Reviewed Pair Rules</div><div className="mt-1 text-2xl font-black">{audit.reviewedPairRules.length}</div></div>
-          <div className="rounded-[20px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-xs font-black text-ink/45">Active Profile Revisions</div><div className="mt-1 text-2xl font-black">{revisionCapability === 'ready' ? activeRevisionByCatalogKey.size : '—'}</div><div className="mt-1 text-[10px] font-bold text-ink/40">DB baseline {revisionCapability === 'ready' ? `${writableCatalogKeys.length}/${audit.reviewedProfiles.length}` : '—'}</div></div>
+          <div className="rounded-[20px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-xs font-black text-ink/45">Reviewed Profiles</div><div className="mt-1 text-2xl font-black">{audit.reviewedProfiles.length}</div><div className="mt-1 text-[10px] font-bold text-ink/40">DB baseline {revisionCapability === 'ready' ? `${writableCatalogKeys.length}/${audit.reviewedProfiles.length}` : '—'}</div></div>
+          <div className="rounded-[20px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-xs font-black text-ink/45">Reviewed Pair Rules</div><div className="mt-1 text-2xl font-black">{audit.reviewedPairRules.length}</div><div className="mt-1 text-[10px] font-bold text-ink/40">DB baseline {pairRevisionCapability === 'ready' ? `${writablePairKeys.length}/${audit.reviewedPairRules.length}` : '—'}</div></div>
+          <div className="rounded-[20px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-xs font-black text-ink/45">Active Revisions</div><div className="mt-1 text-sm font-black leading-6">Profiles {revisionCapability === 'ready' ? activeRevisionByCatalogKey.size : '—'}<br/>Pair Rules {pairRevisionCapability === 'ready' ? activePairRevisionByKey.size : '—'}</div></div>
         </section>
 
         {selectedRevision && draftForm && <section data-testid="compatibility-draft-editor" className="mt-4 rounded-[24px] border border-indigo-200 bg-white p-4 shadow-sm md:p-5">
@@ -216,6 +322,27 @@ export default function CompatibilityAdmin() {
             {selectedRevision.status === 'draft' && <button type="button" disabled={isSaving || isSubmitting} onClick={() => void submitDraft()} className="flex h-10 items-center gap-2 rounded-full bg-indigo-700 px-4 text-sm font-black text-white disabled:opacity-50">{isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}提交审核</button>}
           </div>
         </section>}
+
+        {selectedPairRevision && pairDraftForm && <section data-testid="compatibility-pair-draft-editor" className="mt-4 rounded-[24px] border border-violet-200 bg-white p-4 shadow-sm md:p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div><div className="text-xs font-black uppercase tracking-[0.12em] text-violet-700">Pair Rule Revision #{selectedPairRevision.revisionNumber}</div><h2 className="mt-1 text-lg font-black">{selectedPairRevision.speciesA.name} × {selectedPairRevision.speciesB.name}</h2><p className="mt-1 text-xs font-bold text-ink/45">baseline v{selectedPairRevision.baseRuleVersion || '—'} · Evidence inherited from reviewed rule</p></div>
+            <span className="rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-black text-violet-800">{revisionStatusLabel[selectedPairRevision.status]}</span>
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <label className="grid gap-1.5 text-xs font-black text-ink/60"><span>Verdict</span><select disabled={selectedPairRevision.status !== 'draft'} value={pairDraftForm.verdict} onChange={event => setPairDraftForm(value => value ? { ...value, verdict: event.target.value as PairDraftForm['verdict'] } : value)} className="h-11 rounded-[14px] border border-border bg-bg px-3 text-sm font-bold disabled:opacity-60"><option value="compatible">可混养</option><option value="caution">谨慎混养</option><option value="not_recommended">不建议</option><option value="insufficient_data">信息不足</option></select></label>
+            <label className="grid gap-1.5 text-xs font-black text-ink/60"><span>Risk Type</span><input disabled={selectedPairRevision.status !== 'draft'} value={pairDraftForm.riskType} onChange={event => setPairDraftForm(value => value ? { ...value, riskType: event.target.value } : value)} className="h-11 rounded-[14px] border border-border bg-bg px-3 text-sm font-bold disabled:opacity-60" /></label>
+            <label className="grid gap-1.5 text-xs font-black text-ink/60"><span>Basis</span><select disabled={selectedPairRevision.status !== 'draft'} value={pairDraftForm.basis} onChange={event => setPairDraftForm(value => value ? { ...value, basis: event.target.value as PairDraftForm['basis'] } : value)} className="h-11 rounded-[14px] border border-border bg-bg px-3 text-sm font-bold disabled:opacity-60"><option value="pair_rule">直接配对证据</option><option value="rule_inference">规则推断</option><option value="species_trait">物种特征</option><option value="tank_condition">鱼缸条件</option></select></label>
+            <label className="grid gap-1.5 text-xs font-black text-ink/60"><span>Confidence</span><select disabled={selectedPairRevision.status !== 'draft'} value={pairDraftForm.confidence} onChange={event => setPairDraftForm(value => value ? { ...value, confidence: event.target.value as PairDraftForm['confidence'] } : value)} className="h-11 rounded-[14px] border border-border bg-bg px-3 text-sm font-bold disabled:opacity-60"><option value="high">高</option><option value="medium">中</option><option value="low">低</option><option value="unknown">未知</option></select></label>
+            <label className="grid gap-1.5 text-xs font-black text-ink/60 md:col-span-2"><span>判断依据</span><textarea disabled={selectedPairRevision.status !== 'draft'} value={pairDraftForm.reason} onChange={event => setPairDraftForm(value => value ? { ...value, reason: event.target.value } : value)} className="min-h-[120px] rounded-[14px] border border-border bg-bg px-3 py-2 text-sm font-bold leading-6 disabled:opacity-60" /></label>
+            <label className="grid gap-1.5 text-xs font-black text-ink/60 md:col-span-2"><span>Mitigation（每行一项）</span><textarea disabled={selectedPairRevision.status !== 'draft'} value={pairDraftForm.mitigation} onChange={event => setPairDraftForm(value => value ? { ...value, mitigation: event.target.value } : value)} className="min-h-[100px] rounded-[14px] border border-border bg-bg px-3 py-2 text-sm font-bold disabled:opacity-60" /></label>
+          </div>
+          <div className="mt-4 rounded-[14px] bg-bg px-3 py-3 text-xs font-bold leading-5 text-ink/55">继承 reviewed evidence：{selectedPairRevision.citationSnapshots.map(source => source.publisher).join(' · ')}。本轮不能在 Pair Rule Draft 内新增未审核来源。</div>
+          <div className="mt-4 flex flex-wrap justify-end gap-2">
+            {selectedPairRevision.status === 'draft' && <button type="button" disabled={isPairSaving || isPairSubmitting} onClick={() => void savePairDraft()} className="flex h-10 items-center gap-2 rounded-full border border-violet-200 px-4 text-sm font-black text-violet-800 disabled:opacity-50">{isPairSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}保存 Pair Draft</button>}
+            {selectedPairRevision.status === 'draft' && <button type="button" disabled={isPairSaving || isPairSubmitting} onClick={() => void submitPairDraft()} className="flex h-10 items-center gap-2 rounded-full bg-violet-700 px-4 text-sm font-black text-white disabled:opacity-50">{isPairSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}提交 Pair 审核</button>}
+          </div>
+        </section>}
+
 
         <div className="mt-4 rounded-[20px] border border-white/80 bg-white p-3 shadow-sm">
           <label className="block text-xs font-black text-ink/50" htmlFor="compatibility-admin-search">搜索物种、学名、行为或风险类型</label>
@@ -245,17 +372,26 @@ export default function CompatibilityAdmin() {
           </section>
 
           <section className="min-w-0 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm" aria-labelledby="compatibility-pair-title">
-            <div className="flex items-center gap-2"><BookOpenCheck className="h-5 w-5 text-indigo-700"/><h2 id="compatibility-pair-title" className="text-lg font-black">Reviewed Pair Rules</h2></div>
-            <p className="mt-1 text-xs font-bold text-ink/45">Pair Rule revision 尚未开放；当前只审计已审核结论与证据边界。</p>
+            <div className="flex items-center gap-2"><BookOpenCheck className="h-5 w-5 text-violet-700"/><h2 id="compatibility-pair-title" className="text-lg font-black">Reviewed Pair Rules</h2></div>
+            <p className="mt-1 text-xs font-bold text-ink/45">reviewed baseline + 安全 Pair Rule revision Draft；Draft 不替换 runtime。</p>
             <div className="mt-4 grid gap-3">{pairRules.map(rule => {
               const left = speciesById.get(rule.speciesIds[0]);
               const right = speciesById.get(rule.speciesIds[1]);
-              return <article key={rule.speciesIds.join('__')} className="min-w-0 rounded-[18px] border border-border bg-bg/50 p-3">
+              const key = compatibilityPairKey(rule.speciesIds[0], rule.speciesIds[1]);
+              const activeRevision = activePairRevisionByKey.get(key);
+              return <article key={key} className="min-w-0 rounded-[18px] border border-border bg-bg/50 p-3">
                 <div className="flex min-w-0 flex-wrap items-start justify-between gap-2"><div className="min-w-0 text-sm font-black">{left?.name || rule.speciesIds[0]} <span className="text-ink/30">×</span> {right?.name || rule.speciesIds[1]}</div><span className={`rounded-full border px-2 py-1 text-[10px] font-black ${verdictClass[rule.verdict]}`}>{verdictLabel[rule.verdict]}</span></div>
-                <div className="mt-2 text-[11px] font-black text-indigo-700">{rule.riskType}</div>
+                <div className="mt-2 text-[11px] font-black text-violet-700">{rule.riskType}</div>
                 <p className="mt-2 break-words text-xs font-bold leading-5 text-ink/65">{rule.reason}</p>
                 <div className="mt-3 rounded-[12px] bg-white px-3 py-2 text-[11px] font-bold leading-5 text-ink/55"><span className="font-black text-ink/70">缓解：</span>{rule.mitigation.join('；')}</div>
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[10px] font-bold text-ink/45"><span>basis: {rule.basis} · confidence: {rule.confidence}</span><span>{rule.citations.length} 项 reviewed evidence</span></div>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
+                  <span className="text-[10px] font-black text-ink/40">reviewed baseline</span>
+                  {pairRevisionCapability === 'ready' && activeRevision && <button type="button" onClick={() => selectPairRevision(activeRevision)} className="h-9 rounded-full border border-violet-200 bg-white px-3 text-xs font-black text-violet-800">打开 Pair {revisionStatusLabel[activeRevision.status]}</button>}
+                  {pairRevisionCapability === 'ready' && !activeRevision && writablePairKeySet.has(key) && <button type="button" disabled={isPairSaving} onClick={() => void beginPairDraft(rule)} className="h-9 rounded-full bg-violet-700 px-3 text-xs font-black text-white disabled:opacity-50">创建 Pair Draft</button>}
+                  {pairRevisionCapability === 'ready' && !activeRevision && !writablePairKeySet.has(key) && <span className="text-[10px] font-bold text-amber-700">等待 DB Pair baseline 对齐</span>}
+                  {pairRevisionCapability !== 'ready' && <span className="text-[10px] font-bold text-amber-700">写入锁定</span>}
+                </div>
               </article>;
             })}{pairRules.length === 0 && <div className="rounded-[16px] bg-bg p-5 text-center text-sm font-bold text-ink/45">没有匹配的 Pair Rule。</div>}</div>
           </section>

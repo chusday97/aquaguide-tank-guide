@@ -41,3 +41,32 @@ export const compatibilityProfileRevisionStatusMutationSchema = z.object({
 export type CompatibilityProfileRevisionInput = z.infer<typeof compatibilityProfileRevisionInputSchema>;
 export type CompatibilityCitationSnapshot = z.infer<typeof compatibilityCitationSnapshotSchema>;
 export type CompatibilityProfileRevisionStatus = z.infer<typeof compatibilityProfileRevisionStatusSchema>;
+
+export const compatibilityVerdictSchema = z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']);
+export const compatibilityRuleBasisSchema = z.enum(['species_trait', 'pair_rule', 'tank_condition', 'rule_inference']);
+
+const compatibilityPairRuleRevisionBaseSchema = z.object({
+  catalogKeyA: z.string().trim().min(1).max(160).regex(/^[\w.-]+$/),
+  catalogKeyB: z.string().trim().min(1).max(160).regex(/^[\w.-]+$/),
+  verdict: compatibilityVerdictSchema,
+  riskType: z.string().trim().min(1).max(160),
+  reason: z.string().trim().min(1).max(6000),
+  mitigation: z.array(z.string().trim().min(1).max(1200)).max(30).default([]),
+  basis: compatibilityRuleBasisSchema,
+  confidence: compatibilityConfidenceSchema,
+  citations: z.array(compatibilityCitationSnapshotSchema).min(1).max(30),
+});
+
+export const compatibilityPairRuleRevisionInputSchema = compatibilityPairRuleRevisionBaseSchema
+  .refine(value => value.catalogKeyA !== value.catalogKeyB, { message: 'Pair Rule 必须包含两个不同物种。' });
+
+export const compatibilityPairRuleRevisionUpdateSchema = compatibilityPairRuleRevisionBaseSchema
+  .omit({ catalogKeyA: true, catalogKeyB: true })
+  .partial()
+  .extend({ version: versionSchema });
+
+export const compatibilityPairRuleRevisionStatusMutationSchema = z.object({ version: versionSchema });
+
+export type CompatibilityPairRuleRevisionInput = z.infer<typeof compatibilityPairRuleRevisionInputSchema>;
+export type CompatibilityVerdict = z.infer<typeof compatibilityVerdictSchema>;
+export type CompatibilityRuleBasisValue = z.infer<typeof compatibilityRuleBasisSchema>;

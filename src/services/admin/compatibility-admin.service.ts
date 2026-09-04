@@ -1,5 +1,6 @@
 import type {
   CompatibilityCitationSnapshot,
+  CompatibilityPairRuleRevisionInput,
   CompatibilityProfileRevisionInput,
   CompatibilityProfileRevisionStatus,
 } from '../../../packages/contracts/src';
@@ -23,8 +24,44 @@ export type AdminCompatibilityProfileRevision = {
 export type CompatibilityProfileDraftInput = CompatibilityProfileRevisionInput;
 export type AdminCompatibilityProfileRevisionWorkspace = { revisions: AdminCompatibilityProfileRevision[]; writableCatalogKeys: string[] };
 
+
+
+export type AdminCompatibilityPairRuleRevision = {
+  id: string;
+  speciesAId: string;
+  speciesBId: string;
+  revisionNumber: number;
+  baseRuleVersion?: number;
+  verdict: CompatibilityPairRuleRevisionInput['verdict'];
+  riskType: string;
+  reason: string;
+  mitigation: string[];
+  basis: CompatibilityPairRuleRevisionInput['basis'];
+  confidence: CompatibilityPairRuleRevisionInput['confidence'];
+  status: CompatibilityProfileRevisionStatus;
+  citationSnapshots: CompatibilityCitationSnapshot[];
+  version: number;
+  speciesA: { catalogKey: string; name: string; scientificName: string };
+  speciesB: { catalogKey: string; name: string; scientificName: string };
+};
+
+export type AdminCompatibilityPairRuleRevisionWorkspace = { revisions: AdminCompatibilityPairRuleRevision[]; writablePairKeys: string[] };
+
 export const compatibilityAdminService = {
   listProfileRevisions: () => apiRequest<AdminCompatibilityProfileRevisionWorkspace>('/admin/compatibility/profile-revisions'),
+  listPairRuleRevisions: () => apiRequest<AdminCompatibilityPairRuleRevisionWorkspace>('/admin/compatibility/pair-rule-revisions'),
+
+  createPairRuleRevision: (input: CompatibilityPairRuleRevisionInput) => apiRequest<AdminCompatibilityPairRuleRevision>('/admin/compatibility/pair-rule-revisions', {
+    method: 'POST', body: input, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-create'),
+  }),
+
+  updatePairRuleRevision: (id: string, version: number, input: Partial<CompatibilityPairRuleRevisionInput>) => apiRequest<AdminCompatibilityPairRuleRevision>(`/admin/compatibility/pair-rule-revisions/${id}`, {
+    method: 'PATCH', body: { ...input, version }, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-update'),
+  }),
+
+  submitPairRuleRevision: (id: string, version: number) => apiRequest<AdminCompatibilityPairRuleRevision>(`/admin/compatibility/pair-rule-revisions/${id}/submit`, {
+    method: 'POST', body: { version }, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-submit'),
+  }),
 
   createProfileRevision: (input: CompatibilityProfileDraftInput) => apiRequest<AdminCompatibilityProfileRevision>('/admin/compatibility/profile-revisions', {
     method: 'POST',

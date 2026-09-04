@@ -52,7 +52,7 @@ export default function AdminHub() {
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-700"><ShieldCheck className="h-6 w-6" /></div>
             <div className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-indigo-600">Compatibility Authority</div>
             <h2 className="mt-1 text-xl font-black">Compatibility 规则</h2>
-            <p className="mt-2 text-sm font-semibold leading-6 text-ink/55">核对 Species behavior profiles、Pair Rules、Evidence 与置信度。当前写入保持锁定，先提供 reviewed 基线审计。</p>
+            <p className="mt-2 text-sm font-semibold leading-6 text-ink/55">核对 Species behavior profiles、Pair Rules、Evidence 与置信度；已对齐 DB baseline 时可安全创建 Draft revision，reviewed publish 仍保持锁定。</p>
             <div className="mt-5 text-sm font-black text-indigo-700">打开 Compatibility 后台 →</div>
           </button>
         </main>

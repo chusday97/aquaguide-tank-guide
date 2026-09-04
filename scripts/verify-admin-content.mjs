@@ -58,8 +58,8 @@ const baseRecord = {
 
 const fishDataForTest = catalogKey => ({
   catalogKey,
-  name: catalogKey === 'sp_0439' ? '虎皮鱼' : catalogKey,
-  scientificName: catalogKey === 'sp_0439' ? 'Puntigrus tetrazona' : catalogKey,
+  name: catalogKey === 'sp_0439' ? '虎皮鱼' : catalogKey === 'sp_0021' ? '迷你鹦鹉鱼' : catalogKey,
+  scientificName: catalogKey === 'sp_0439' ? 'Puntigrus tetrazona' : catalogKey === 'sp_0021' ? 'Amatitlania nigrofasciata' : catalogKey,
 });
 
 const baseCareRecord = {
@@ -92,6 +92,7 @@ try {
     let currentRecord = { ...baseRecord };
     let currentCare = { ...baseCareRecord };
     let compatibilityRevisions = [];
+    let pairRuleRevisions = [];
     await page.route('**/api/v1/admin/compatibility/profile-revisions**', async route => {
       const request = route.request();
       const url = new URL(request.url());
@@ -123,6 +124,41 @@ try {
         return;
       }
       await route.fulfill({ status: 405, contentType: 'application/json', body: JSON.stringify({ error: { code: 'VALIDATION_ERROR', message: 'unsupported test route' } }) });
+    });
+    await page.route('**/api/v1/admin/compatibility/pair-rule-revisions**', async route => {
+      const request = route.request();
+      const url = new URL(request.url());
+      const method = request.method();
+      if (method === 'GET') {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { revisions: pairRuleRevisions, writablePairKeys: ['sp_0021__sp_0439'] }, requestId: 'test-pair-list' }) });
+        return;
+      }
+      const body = request.postDataJSON();
+      if (method === 'POST' && url.pathname.endsWith('/submit')) {
+        const current = pairRuleRevisions[0];
+        pairRuleRevisions = [{ ...current, status: 'pending_review', version: current.version + 1 }];
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: pairRuleRevisions[0], requestId: 'test-pair-submit' }) });
+        return;
+      }
+      if (method === 'POST') {
+        const created = {
+          id: 'ee1732a3-27d0-4820-986c-2e932990f575', speciesAId: 'aa1732a3-27d0-4820-986c-2e932990f576', speciesBId: 'bb1732a3-27d0-4820-986c-2e932990f577',
+          revisionNumber: 1, baseRuleVersion: 1, verdict: body.verdict, riskType: body.riskType, reason: body.reason, mitigation: body.mitigation,
+          basis: body.basis, confidence: body.confidence, status: 'draft', citationSnapshots: body.citations, version: 1,
+          speciesA: fishDataForTest(body.catalogKeyA), speciesB: fishDataForTest(body.catalogKeyB),
+        };
+        pairRuleRevisions = [created];
+        await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: created, requestId: 'test-pair-create' }) });
+        return;
+      }
+      if (method === 'PATCH') {
+        const current = pairRuleRevisions[0];
+        const updated = { ...current, ...body, version: current.version + 1 };
+        pairRuleRevisions = [updated];
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: updated, requestId: 'test-pair-update' }) });
+        return;
+      }
+      await route.fulfill({ status: 405, contentType: 'application/json', body: JSON.stringify({ error: { code: 'VALIDATION_ERROR', message: 'unsupported pair test route' } }) });
     });
     await page.route('**/api/v1/admin/species', async route => {
       if (route.request().method() === 'POST') {
@@ -173,6 +209,7 @@ try {
     }));
 
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.getByRole('heading', { name: '管理后台' }).waitFor();
     assert.equal(await page.getByRole('heading', { name: '管理后台' }).isVisible(), true);
     assert.equal(await page.getByRole('link', { name: /Species SEO/ }).isVisible(), true);
     assert.equal(await page.getByRole('button', { name: /Product Truth 与养护内容/ }).isVisible(), true);
@@ -183,7 +220,7 @@ try {
     await page.getByRole('heading', { name: 'Species Behavior Profiles' }).waitFor();
     await page.getByRole('heading', { name: 'Reviewed Pair Rules' }).waitFor();
     assert.match(await page.locator('body').innerText(), /Reviewed Profiles[\s\S]*7[\s\S]*Reviewed Pair Rules[\s\S]*4/);
-    await page.getByText('Profile Draft 已启用', { exact: true }).waitFor();
+    await page.getByText('Profile / Pair Draft 已启用', { exact: true }).waitFor();
     await page.getByRole('button', { name: '创建 Profile Draft' }).first().click();
     const draftEditor = page.getByTestId('compatibility-draft-editor');
     await draftEditor.waitFor();
@@ -198,6 +235,24 @@ try {
     await page.getByText('Compatibility revision 已提交审核', { exact: true }).waitFor();
     await draftEditor.getByText('待审核', { exact: true }).waitFor();
     assert.equal(await draftEditor.getByLabel(/Behavior traits/).isDisabled(), true);
+
+    await page.getByRole('button', { name: '创建 Pair Draft' }).first().click();
+    const pairDraftEditor = page.getByTestId('compatibility-pair-draft-editor');
+    await pairDraftEditor.waitFor();
+    assert.match(await pairDraftEditor.innerText(), /pair rule revision #1[\s\S]*reviewed evidence/i);
+    await pairDraftEditor.getByLabel('Verdict').selectOption('caution');
+    await pairDraftEditor.getByLabel('Risk Type').fill('behavior_conflict_review');
+    await pairDraftEditor.getByLabel('判断依据').fill('测试 revised pair reasoning，仍需人工审核。');
+    await pairDraftEditor.getByLabel(/Mitigation/).fill('分缸优先\n持续观察');
+    await pairDraftEditor.getByRole('button', { name: '保存 Pair Draft' }).click();
+    await page.getByText('Pair Rule Draft 已保存', { exact: true }).waitFor();
+    assert.equal(await pairDraftEditor.getByLabel('Risk Type').inputValue(), 'behavior_conflict_review');
+    page.once('dialog', dialog => dialog.accept());
+    await pairDraftEditor.getByRole('button', { name: '提交 Pair 审核' }).click();
+    await page.getByText('Pair Rule revision 已提交审核', { exact: true }).waitFor();
+    await pairDraftEditor.getByText('待审核', { exact: true }).waitFor();
+    assert.equal(await pairDraftEditor.getByLabel('Risk Type').isDisabled(), true);
+
     const compatibilityOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(compatibilityOverflow, false, `${viewport.width}px Compatibility Admin should not overflow horizontally`);
     await page.getByRole('button', { name: '返回管理后台' }).click();
