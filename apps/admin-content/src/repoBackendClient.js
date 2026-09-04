@@ -140,14 +140,14 @@ export const repoBackendClient = {
   },
 };
 
-export async function publishRepoStaging({ catalogKeys, groupKeys }) {
+export async function publishRepoStaging({ catalogKeys, groupKeys, batchId = '' }) {
   const result = await apiRequest('/api/admin-content/publish-staging', {
-    method: 'POST', body: JSON.stringify({ catalogKeys, groupKeys }),
+    method: 'POST', body: JSON.stringify({ catalogKeys, groupKeys, batchId }),
   });
   dispatchOperationEvent({
     kind: 'staging_publish',
     title: result?.error ? 'Staging 发布失败' : 'Staging 发布已完成',
-    detail: result?.error?.message || `${result?.data?.selected_catalog_keys?.length || 0} 个 Species`,
+    detail: result?.error?.message || `${batchId ? `${batchId} · ` : ''}${result?.data?.selected_catalog_keys?.length || 0} 个 Species`,
     status: result?.error ? 'error' : 'success',
     error: result?.error?.message || '',
     at: new Date().toISOString(),

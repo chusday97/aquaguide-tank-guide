@@ -602,6 +602,7 @@ export default function App() {
   const [activityOpen, setActivityOpen] = useState(false);
   const [activityRefreshKey, setActivityRefreshKey] = useState(0);
   const [activityUnread, setActivityUnread] = useState(0);
+  const [importBatches, setImportBatches] = useState([]);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
   useEffect(() => {
@@ -668,6 +669,7 @@ export default function App() {
       setGroupSeoRows({});
       setGroupPreviewRows({});
       setDataReviewRows({});
+      setImportBatches([]);
       return;
     }
 
@@ -730,6 +732,13 @@ export default function App() {
         .select('*');
       setDataReviewSchemaReady(!reviewError);
       setDataReviewRows(reviewError ? {} : dataReviewMap(reviewData || []));
+
+      const { data: importBatchData, error: importBatchError } = await adminContentClient
+        .from('import_batches')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+      setImportBatches(importBatchError ? [] : (importBatchData || []));
       setLoading(false);
     };
 
@@ -815,6 +824,16 @@ export default function App() {
     Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
   ), [seoRows, contentLocale]);
   const workflowOverview = useMemo(() => buildAdminWorkflowOverview({ species, groups: speciesGroups, seoRows, groupSeoRows, reviewRows: dataReviewRows }), [species, seoRows, groupSeoRows, dataReviewRows]);
+  const currentImportBatch = useMemo(() => {
+    const localized = [...importBatches]
+      .filter((row) => row?.locale === contentLocale)
+      .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+    return localized[0] || null;
+  }, [importBatches, contentLocale]);
+  const upsertImportBatch = (batch) => {
+    if (!batch?.batch_id) return;
+    setImportBatches((current) => [batch, ...current.filter((row) => row.batch_id !== batch.batch_id)]);
+  };
   const pendingDuplicateReviewCount = useMemo(() => speciesGroups.reduce((sum, group) => sum + (group.duplicate_sets || []).filter((set) => !['duplicate_records', 'distinct_records'].includes(dataReviewRows?.[set.duplicate_set_key]?.decision)).length, 0), [dataReviewRows]);
   const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
     ? { ...livePreview, species: previewSpecies || livePreview.species, productTruthLoading, productTruthError }
@@ -944,6 +963,32 @@ export default function App() {
     if (publishError) {
       return;
     }
+  };
+
+  const publishImportBatchToStaging = async (batch = currentImportBatch) => {
+    if (isReadOnlyDemoMode) {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'Import batches cannot publish from demo mode.' : '只读演示不会发布导入批次。' });
+      return;
+    }
+    if (!isRepoBackend || !batch?.batch_id) {
+      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Batch publish unavailable' : '批次发布不可用', detail: appLocale === 'en' ? 'A persisted import batch and Repo-backed Admin are required.' : '需要已持久化的导入批次和 Repo Admin 后端。' });
+      return;
+    }
+    if (batch.status !== 'approved') {
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Batch is not approved' : '当前批次尚未全部批准', detail: appLocale === 'en' ? 'Submit and approve the full batch before Staging publish.' : '请先完成当前批次的提交审核和批准，再发布到 Staging。', duration: 7200 });
+      return;
+    }
+    const catalogKeys = [...new Set(batch.catalog_keys || [])];
+    const groupKeys = [...new Set(batch.group_keys || [])];
+    if (!catalogKeys.length || !groupKeys.length) {
+      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Batch scope is incomplete' : '批次范围不完整', detail: appLocale === 'en' ? 'This batch is missing its persisted Species/Base allowlist.' : '该批次缺少持久化的 Species / Base allowlist。' });
+      return;
+    }
+    setStagingPublishing(true);
+    const { data, error: publishError } = await publishRepoStaging({ catalogKeys, groupKeys, batchId: batch.batch_id });
+    setStagingPublishing(false);
+    if (publishError) return;
+    if (data?.import_batch) upsertImportBatch(data.import_batch);
   };
 
   const toggleBatch = (id) => {
@@ -1287,13 +1332,17 @@ export default function App() {
                 groupSeoRows={groupSeoRows}
                 workflowOverview={workflowOverview}
                 locale={contentLocale}
+                importBatch={currentImportBatch}
                 schemaReady={schemaReady && groupSchemaReady && dataReviewSchemaReady}
                 readOnly={isReadOnlyDemoMode}
+                stagingPublishing={stagingPublishing}
+                onPublishBatch={publishImportBatchToStaging}
                 onCompleted={(result) => {
                   const variantRows = result?.species_seo || [];
                   const baseRows = result?.species_seo_groups || [];
                   if (variantRows.length) setSeoRows((current) => ({ ...current, ...Object.fromEntries(variantRows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
                   if (baseRows.length) setGroupSeoRows((current) => ({ ...current, ...Object.fromEntries(baseRows.map((row) => [groupSeoRowKey(row.group_key, row.locale), row])) }));
+                  if (result?.import_batch) upsertImportBatch(result.import_batch);
                   if (variantRows.length || baseRows.length) setRevisionRefreshKey((current) => current + 1);
                 }}
               />
@@ -1374,6 +1423,7 @@ export default function App() {
                   const baseRows = result?.species_seo_groups || [];
                   if (rows.length) setSeoRows((current) => ({ ...current, ...Object.fromEntries(rows.map((row) => [seoRowKey(row.catalog_key, row.locale), row])) }));
                   if (baseRows.length) setGroupSeoRows((current) => ({ ...current, ...Object.fromEntries(baseRows.map((row) => [groupSeoRowKey(row.group_key, row.locale), row])) }));
+                  if (result?.import_batch) upsertImportBatch(result.import_batch);
                   if (rows.length || baseRows.length) setRevisionRefreshKey((current) => current + 1);
                 }}
               />

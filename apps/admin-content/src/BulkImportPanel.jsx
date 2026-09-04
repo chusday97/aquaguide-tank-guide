@@ -233,10 +233,13 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     if (!payloads.length) { emitAdminNotice({ status: 'info', title: isUiEnglish ? 'No actual changes' : '没有实际变更', detail: isUiEnglish ? 'Marked rows match the current Draft, so nothing was written.' : '已标记的行与当前 Draft 完全一致，本次不会产生新版本。' }); return; }
     const baseDefaults = defaultGroupSeoForLocale(locale);
     const groupDefaultsByKey = new Map();
+    const batchGroupKeys = new Set();
     for (const payload of payloads) {
       const member = speciesByKey.get(payload.catalog_key);
       const group = member ? speciesGroupByMemberId.get(member.id) : null;
-      if (!group?.group_key || groupDefaultsByKey.has(group.group_key)) continue;
+      if (!group?.group_key) continue;
+      batchGroupKeys.add(group.group_key);
+      if (groupDefaultsByKey.has(group.group_key)) continue;
       groupDefaultsByKey.set(group.group_key, {
         group_key: group.group_key,
         locale,
@@ -252,15 +255,27 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     const { data, error } = await adminContentClient.rpc('import_species_seo_bulk', {
       p_species_rows: payloads,
       p_group_defaults: [...groupDefaultsByKey.values()],
+      p_group_keys: [...batchGroupKeys],
+      p_batch_filename: fileName || `aquaguide-species-seo-${locale}.csv`,
+      p_batch_source: 'seo_csv_import',
     }, {
       kind: 'bulk_import',
       title: `批量导入 ${payloads.length} 条 SEO 内容`,
-      detail: `${locale} · CSV 模板导入`,
-      metadata: { locale, count: payloads.length, base_candidates: groupDefaultsByKey.size },
+      detail: `${locale} · ${fileName || 'CSV 模板导入'}`,
+      metadata: { locale, count: payloads.length, base_candidates: groupDefaultsByKey.size, filename: fileName || '', source: 'seo_csv_import' },
     });
     setSaving(false);
     if (error) return;
-    onImported?.(data || { species_seo: [], species_seo_groups: [] });
+    const batch = data?.import_batch;
+    if (batch?.batch_id) {
+      emitAdminNotice({
+        status: 'success',
+        title: isUiEnglish ? 'Draft batch created' : 'Draft 批次已创建',
+        detail: `${batch.batch_id} · ${batch.page_count || payloads.length} ${isUiEnglish ? 'pages' : '个页面'} · ${batch.locale}`,
+        duration: 6500,
+      });
+    }
+    onImported?.(data || { species_seo: [], species_seo_groups: [], import_batch: null });
   };
 
   return (

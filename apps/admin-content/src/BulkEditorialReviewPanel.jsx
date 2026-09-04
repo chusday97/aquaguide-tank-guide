@@ -25,12 +25,13 @@ function candidateIdSet(overview, locale) {
   const source = overview?.locales?.[locale]?.memberIdsByState || {};
   return new Set([...(source.blocked || []), ...(source.ready_for_review || []), ...(source.publish_ready || [])]);
 }
-export default function BulkEditorialReviewPanel({ species = [], groups = [], seoRows = {}, groupSeoRows = {}, workflowOverview, locale = 'zh-CN', schemaReady = false, readOnly = false, onCompleted }) {
+export default function BulkEditorialReviewPanel({ species = [], groups = [], seoRows = {}, groupSeoRows = {}, workflowOverview, locale = 'zh-CN', importBatch = null, schemaReady = false, readOnly = false, stagingPublishing = false, onPublishBatch, onCompleted }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [action, setAction] = useState('submit');
   const [selected, setSelected] = useState(() => new Set());
   const [saving, setSaving] = useState(false);
+  const [scope, setScope] = useState(importBatch ? 'batch' : 'all');
 
   const groupByMemberId = useMemo(() => {
     const map = new Map();
@@ -60,16 +61,31 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
     return [{ member, group, variantRow, groupRow, blockedReason }];
   }), [species, allCandidateIds, groupByMemberId, seoRows, groupSeoRows, locale, reviewReadyIds, isUiEnglish]);
 
-  const candidateSets = useMemo(() => ({
+  const allCandidateSets = useMemo(() => ({
     submit: buildCandidates('submit'),
     approve: buildCandidates('approve'),
     return: buildCandidates('return'),
   }), [buildCandidates]);
+  const batchCatalogKeys = useMemo(() => new Set(importBatch?.catalog_keys || []), [importBatch?.batch_id, importBatch?.catalog_keys]);
+  const filterByScope = useCallback((rows) => {
+    if (!importBatch || scope === 'all') return rows;
+    if (scope === 'batch') return rows.filter((item) => batchCatalogKeys.has(item.member.catalog_key));
+    return rows.filter((item) => !batchCatalogKeys.has(item.member.catalog_key));
+  }, [importBatch, scope, batchCatalogKeys]);
+  const candidateSets = useMemo(() => ({
+    submit: filterByScope(allCandidateSets.submit),
+    approve: filterByScope(allCandidateSets.approve),
+    return: filterByScope(allCandidateSets.return),
+  }), [allCandidateSets, filterByScope]);
   const candidates = candidateSets[action];
   const eligible = candidates.filter((item) => !item.blockedReason);
   const selectedRows = eligible.filter((item) => selected.has(item.member.id));
+  const otherEligibleCount = importBatch
+    ? allCandidateSets[action].filter((item) => !batchCatalogKeys.has(item.member.catalog_key) && !item.blockedReason).length
+    : 0;
 
-  useEffect(() => { setSelected(new Set()); }, [action, locale]);
+  useEffect(() => { setScope(importBatch ? 'batch' : 'all'); }, [importBatch?.batch_id, locale]);
+  useEffect(() => { setSelected(new Set()); }, [action, locale, scope, importBatch?.batch_id]);
   useEffect(() => {
     setSelected((current) => new Set([...current].filter((id) => eligible.some((item) => item.member.id === id))));
   }, [eligible.length]);
@@ -104,16 +120,23 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
       }
     }
     setSaving(true);
+    const scopedBatch = importBatch && scope === 'batch' ? importBatch : null;
     const { data, error } = await adminContentClient.rpc('transition_editorial_reviews_bulk', {
       p_target_state: target,
       p_items: items,
+      p_batch_id: scopedBatch?.batch_id || '',
     }, {
       kind: 'editorial_review_bulk',
       title: `${isUiEnglish ? ACTIONS[action].en : ACTIONS[action].zh} ${selectedRows.length} ${isUiEnglish ? 'pages' : '个页面'}`,
-      detail: items.length > selectedRows.length
-        ? `${isUiEnglish ? 'Includes' : '同时处理'} ${items.length - selectedRows.length} ${isUiEnglish ? 'Base templates' : '个基础模板'}`
-        : `${getLocaleLabel(locale)} · ${items.length} ${isUiEnglish ? 'resources' : '项内容'}`,
-      metadata: { action, locale, page_count: selectedRows.length, resource_count: items.length },
+      detail: scopedBatch
+        ? `${scopedBatch.batch_id} · ${scopedBatch.filename || getLocaleLabel(locale)}`
+        : items.length > selectedRows.length
+          ? `${isUiEnglish ? 'Includes' : '同时处理'} ${items.length - selectedRows.length} ${isUiEnglish ? 'Base templates' : '个基础模板'}`
+          : `${getLocaleLabel(locale)} · ${items.length} ${isUiEnglish ? 'resources' : '项内容'}`,
+      metadata: {
+        action, locale, page_count: selectedRows.length, resource_count: items.length,
+        batch_id: scopedBatch?.batch_id || '', filename: scopedBatch?.filename || '', source: scopedBatch?.source || '',
+      },
     });
     setSaving(false);
     if (error) return;
@@ -131,6 +154,15 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
   }, [selectedRows, action]);
 
   const actionLabel = isUiEnglish ? ACTIONS[action].en : ACTIONS[action].zh;
+  const batchStatusLabel = importBatch ? ({
+    imported: isUiEnglish ? 'Imported' : '已导入',
+    review_in_progress: isUiEnglish ? 'Review in progress' : '提交审核中',
+    pending_review: isUiEnglish ? 'Awaiting approval' : '待批准',
+    approval_in_progress: isUiEnglish ? 'Approval in progress' : '批准处理中',
+    approved: isUiEnglish ? 'Approved' : '已批准',
+    returned: isUiEnglish ? 'Returned to editing' : '已退回编辑',
+    staging_published: isUiEnglish ? 'Published to Staging' : '已发布到 Staging',
+  }[importBatch.status] || importBatch.status) : '';
   return (
     <section className="bulk-editorial-panel">
       <div className="bulk-duplicate-head">
@@ -141,6 +173,29 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
         </div>
         <span className="bulk-duplicate-count">{workflowOverview?.locales?.[locale]?.ready_for_review || 0} {isUiEnglish ? 'awaiting review' : '个待审核'}</span>
       </div>
+
+      {importBatch ? (
+        <div className="bulk-review-scope">
+          <div className="bulk-review-scope-summary">
+            <span>{isUiEnglish ? 'Current import batch' : '当前导入批次'}</span>
+            <strong>{importBatch.batch_id}</strong>
+            <small>{importBatch.filename || 'CSV'} · {importBatch.locale} · {importBatch.catalog_keys?.length || 0} Species · {batchStatusLabel}</small>
+          </div>
+          <div className="bulk-review-scope-actions" role="tablist" aria-label={isUiEnglish ? 'Review scope' : '审核范围'}>
+            <button type="button" role="tab" aria-selected={scope === 'batch'} className={scope === 'batch' ? 'active' : ''} onClick={() => setScope('batch')}>
+              {isUiEnglish ? 'Current batch' : '当前批次'} · {importBatch.catalog_keys?.length || 0}
+            </button>
+            <button type="button" role="tab" aria-selected={scope === 'other'} className={scope === 'other' ? 'active' : ''} onClick={() => setScope('other')}>
+              {isUiEnglish ? 'Other pending' : '其他待处理'} · {otherEligibleCount}
+            </button>
+          </div>
+          {importBatch.status === 'approved' ? (
+            <button type="button" className="primary-button compact batch-staging-button" disabled={stagingPublishing || !onPublishBatch} onClick={() => onPublishBatch?.(importBatch)}>
+              {stagingPublishing ? (isUiEnglish ? 'Publishing batch…' : '正在发布批次…') : (isUiEnglish ? `Publish batch to Staging · ${importBatch.catalog_keys?.length || 0}` : `发布此批次到 Staging · ${importBatch.catalog_keys?.length || 0}`)}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="bulk-review-decision bulk-editorial-actions" role="tablist" aria-label={isUiEnglish ? 'Bulk editorial action' : '批量内容审核动作'}>
         {Object.entries(ACTIONS).map(([key, meta]) => (
@@ -153,7 +208,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
 
       <div className="bulk-review-toolbar">
         <div className="bulk-select-actions">
-          <button type="button" className="secondary-button compact" onClick={() => setSelected(new Set(eligible.slice(0, 50).map((item) => item.member.id)))}>{isUiEnglish ? 'Select eligible' : '全选可执行'}</button>
+          <button type="button" className="secondary-button compact" onClick={() => setSelected(new Set(eligible.slice(0, 50).map((item) => item.member.id)))}>{importBatch && scope === 'batch' ? (isUiEnglish ? 'Select current batch' : '全选当前批次') : (isUiEnglish ? 'Select filtered results' : '全选当前筛选结果')}</button>
           <button type="button" className="ghost-button compact" onClick={() => setSelected(new Set())}>{isUiEnglish ? 'Clear' : '清空选择'}</button>
         </div>
         <strong>{selectedRows.length} {isUiEnglish ? 'pages selected' : '个页面已选择'}</strong>
@@ -185,7 +240,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
 
       <div className="bulk-duplicate-footer">
         <span>{selectedBaseCount ? (isUiEnglish ? `${selectedBaseCount} required Base templates will move in the same atomic review action.` : `会在同一次原子操作中同步处理 ${selectedBaseCount} 个必要的基础模板。`) : (isUiEnglish ? 'Only the selected page review states will change.' : '只修改所选页面的审核状态。')}</span>
-        <button type="button" className="primary-button" disabled={saving} onClick={submit}>{saving ? (isUiEnglish ? 'Saving…' : '正在保存…') : `${actionLabel} ${selectedRows.length}`}</button>
+        <button type="button" className="primary-button" disabled={saving || !selectedRows.length} onClick={submit}>{saving ? (isUiEnglish ? 'Saving…' : '正在保存…') : `${actionLabel} ${selectedRows.length}`}</button>
       </div>
     </section>
   );

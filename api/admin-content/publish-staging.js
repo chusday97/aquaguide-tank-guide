@@ -18,13 +18,17 @@ export default async function handler(req, res) {
   if (!requireRepoAdmin(req, res)) return;
   try {
     const payload = body(req);
-    const result = await publishRepoStagingSelection({ catalogKeys: payload.catalogKeys, groupKeys: payload.groupKeys });
+    const result = await publishRepoStagingSelection({ catalogKeys: payload.catalogKeys, groupKeys: payload.groupKeys, batchId: String(payload.batchId || '').trim() });
     try {
       await appendRepoActivity({
         kind: 'staging_publish',
         title: 'Staging 发布已完成',
-        detail: `${result.snapshot.selected_catalog_keys.length} 个 Species`,
-        metadata: { selected_catalog_keys: result.snapshot.selected_catalog_keys, branch: result.write.branch },
+        detail: `${result.snapshot.import_batch_id ? `${result.snapshot.import_batch_id} · ` : ''}${result.snapshot.selected_catalog_keys.length} 个 Species`,
+        metadata: {
+          batch_id: result.snapshot.import_batch_id || '', selected_catalog_keys: result.snapshot.selected_catalog_keys, branch: result.write.branch,
+          filename: result.import_batch?.filename || '', source: result.import_batch?.source || '', locale: result.import_batch?.locale || '',
+          page_count: result.import_batch?.page_count || result.snapshot.selected_catalog_keys.length,
+        },
       });
     } catch {
       // Publishing already succeeded. Activity logging must never turn a successful release into a retryable failure.
@@ -35,6 +39,7 @@ export default async function handler(req, res) {
         branch: result.write.branch,
         path: result.write.path,
         selected_catalog_keys: result.snapshot.selected_catalog_keys,
+        import_batch: result.import_batch || null,
       },
       error: null,
     });

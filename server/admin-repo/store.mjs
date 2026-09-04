@@ -3,16 +3,17 @@ import { readDraftJsonWithFallback, updateDraftJson, writeStagingSnapshot } from
 import { inspectEditorialContent } from '../../apps/admin-content/src/contentHygiene.js';
 
 export const EMPTY_ADMIN_STORE = {
-  schema_version: 2,
+  schema_version: 3,
   updated_at: null,
   species_seo: [],
   species_seo_groups: [],
   species_data_reviews: [],
   content_revisions: [],
   admin_activity_log: [],
+  import_batches: [],
 };
 
-const TABLES = new Set(['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions', 'admin_activity_log', 'user_roles']);
+const TABLES = new Set(['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions', 'admin_activity_log', 'import_batches', 'user_roles']);
 const RESOURCE_CONFIG = {
   species_seo: {
     keys: ['catalog_key', 'locale'],
@@ -34,10 +35,10 @@ function now() { return new Date().toISOString(); }
 function clone(value) { return value == null ? value : structuredClone(value); }
 function normalizeStore(store) {
   const next = { ...EMPTY_ADMIN_STORE, ...(store || {}) };
-  for (const key of ['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions', 'admin_activity_log']) {
+  for (const key of ['species_seo', 'species_seo_groups', 'species_data_reviews', 'content_revisions', 'admin_activity_log', 'import_batches']) {
     if (!Array.isArray(next[key])) next[key] = [];
   }
-  next.schema_version = Math.max(2, Number(next.schema_version) || 0);
+  next.schema_version = Math.max(3, Number(next.schema_version) || 0);
   return next;
 }
 
@@ -390,6 +391,9 @@ function resolveDuplicateReviewsBulk(store, args = {}) {
 function transitionEditorialReviewsBulk(store, args = {}) {
   const targetState = String(args.p_target_state || '').trim();
   const items = Array.isArray(args.p_items) ? args.p_items : [];
+  const batchId = String(args.p_batch_id || '').trim();
+  const importBatch = batchId ? store.import_batches.find((row) => row.batch_id === batchId) : null;
+  if (batchId && !importBatch) throw new Error(`Import batch not found: ${batchId}`);
   if (!['editing', 'ready_for_review', 'approved'].includes(targetState)) throw new Error('Bulk editorial review target state is invalid.');
   if (!items.length) throw new Error('Bulk editorial review requires at least one content item.');
   if (items.length > 100) throw new Error('Bulk editorial review is limited to 100 resources per operation.');
@@ -401,6 +405,11 @@ function transitionEditorialReviewsBulk(store, args = {}) {
     const locale = String(item?.locale || '').trim();
     const resourceKey = String(item?.resource_key || '').trim();
     if (!['species_seo', 'species_seo_groups'].includes(table) || !locale || !resourceKey) throw new Error('Bulk editorial review resource is invalid.');
+    if (importBatch) {
+      if (locale !== importBatch.locale) throw new Error(`Bulk editorial review locale is outside import batch ${batchId}.`);
+      if (table === 'species_seo' && !importBatch.catalog_keys.includes(resourceKey)) throw new Error(`Species ${resourceKey} is outside import batch ${batchId}.`);
+      if (table === 'species_seo_groups' && !importBatch.group_keys.includes(resourceKey)) throw new Error(`Base group ${resourceKey} is outside import batch ${batchId}.`);
+    }
     const keyColumn = table === 'species_seo' ? 'catalog_key' : 'group_key';
     const current = store[table].find((row) => String(row?.[keyColumn] || '') === resourceKey && String(row?.locale || '') === locale && !row?.deleted_at);
     if (!current) throw new Error(`Bulk editorial review resource not found: ${table}:${resourceKey}:${locale}`);
@@ -416,19 +425,31 @@ function transitionEditorialReviewsBulk(store, args = {}) {
     if (updated.length !== 1) throw new Error(`Bulk editorial review expected one resource: ${resourceKey}`);
     result[table].push(updated[0]);
   }
+  if (importBatch) {
+    const batchPages = store.species_seo.filter((row) => importBatch.catalog_keys.includes(row.catalog_key) && row.locale === importBatch.locale && !row.deleted_at);
+    if (targetState === 'ready_for_review') importBatch.status = batchPages.every((row) => ['ready_for_review', 'approved'].includes(row.review_state)) ? 'pending_review' : 'review_in_progress';
+    if (targetState === 'approved') importBatch.status = batchPages.every((row) => row.review_state === 'approved') ? 'approved' : 'approval_in_progress';
+    if (targetState === 'editing') importBatch.status = 'returned';
+    importBatch.updated_at = now();
+    result.import_batch = clone(importBatch);
+  }
   return result;
 }
 
 function importSpeciesSeoBulk(store, args = {}) {
   const speciesRows = Array.isArray(args.p_species_rows) ? args.p_species_rows : [];
   const groupDefaults = Array.isArray(args.p_group_defaults) ? args.p_group_defaults : [];
+  const batchGroupKeys = [...new Set((args.p_group_keys || []).map((value) => String(value || '').trim()).filter(Boolean))];
   if (!speciesRows.length) throw new Error('Bulk SEO import requires at least one changed Species row.');
   if (speciesRows.length > 100) throw new Error('Bulk SEO import is limited to 100 Species rows per operation.');
   if (groupDefaults.length > 100) throw new Error('Bulk SEO import is limited to 100 Base templates per operation.');
+  if (!batchGroupKeys.length) throw new Error('Bulk SEO import requires the complete Base-group scope for the import batch.');
 
   const speciesKeys = speciesRows.map((row) => `${String(row?.catalog_key || '').trim()}:${String(row?.locale || '').trim()}`);
   if (speciesKeys.some((key) => key === ':')) throw new Error('Bulk SEO import Species rows require catalog_key and locale.');
   if (new Set(speciesKeys).size !== speciesKeys.length) throw new Error('Bulk SEO import contains duplicate Species rows.');
+  const locales = [...new Set(speciesRows.map((row) => String(row?.locale || '').trim()).filter(Boolean))];
+  if (locales.length !== 1) throw new Error('One import batch must contain exactly one locale.');
 
   const groupKeys = groupDefaults.map((row) => `${String(row?.group_key || '').trim()}:${String(row?.locale || '').trim()}`);
   if (groupKeys.some((key) => key === ':')) throw new Error('Bulk SEO import Base defaults require group_key and locale.');
@@ -442,7 +463,25 @@ function importSpeciesSeoBulk(store, args = {}) {
   }
 
   const importedSpecies = applyUpsert(store, 'species_seo', speciesRows);
-  return { species_seo: importedSpecies, species_seo_groups: createdGroups };
+  const timestamp = now();
+  const compactStamp = timestamp.replace(/[-:TZ.]/g, '').slice(0, 14);
+  const importBatch = {
+    batch_id: `batch-${compactStamp}-${crypto.randomBytes(2).toString('hex')}`,
+    source: String(args.p_batch_source || 'seo_csv_import').trim() || 'seo_csv_import',
+    filename: String(args.p_batch_filename || 'seo-import.csv').trim().slice(0, 240),
+    locale: locales[0],
+    catalog_keys: [...new Set(speciesRows.map((row) => String(row.catalog_key).trim()))],
+    group_keys: batchGroupKeys,
+    page_count: importedSpecies.length,
+    base_created_count: createdGroups.length,
+    status: 'imported',
+    created_at: timestamp,
+    updated_at: timestamp,
+  };
+  store.import_batches.push(importBatch);
+  store.import_batches = store.import_batches.slice(-500);
+  store.updated_at = timestamp;
+  return { species_seo: importedSpecies, species_seo_groups: createdGroups, import_batch: clone(importBatch) };
 }
 
 function finalizeSingle(data, mode) {
@@ -481,14 +520,21 @@ export async function executeRepoOperation(operation) {
           const store = normalizeStore(raw);
           imported = importSpeciesSeoBulk(store, operation.args || {});
           const allRows = [...(imported?.species_seo || []), ...(imported?.species_seo_groups || [])];
+          const batch = imported?.import_batch || {};
+          const requestedActivity = operation.activity || {};
           appendActivity(store, {
             ...operation,
             table: 'bulk_import',
-            activity: operation.activity || {
-              kind: 'bulk_import',
-              title: `批量导入 ${imported?.species_seo?.length || 0} 条 SEO 内容`,
-              detail: `自动建立 ${imported?.species_seo_groups?.length || 0} 个缺失基础模板`,
-              metadata: { page_count: imported?.species_seo?.length || 0, base_created_count: imported?.species_seo_groups?.length || 0 },
+            activity: {
+              kind: requestedActivity.kind || 'bulk_import',
+              title: requestedActivity.title || `批量导入 ${imported?.species_seo?.length || 0} 条 SEO 内容`,
+              detail: requestedActivity.detail || `${batch.batch_id || 'batch'} · 自动建立 ${imported?.species_seo_groups?.length || 0} 个缺失基础模板`,
+              metadata: {
+                ...(requestedActivity.metadata || {}),
+                batch_id: batch.batch_id || '', source: batch.source || '', filename: batch.filename || '', locale: batch.locale || '',
+                page_count: batch.page_count || imported?.species_seo?.length || 0, base_created_count: batch.base_created_count || imported?.species_seo_groups?.length || 0,
+                catalog_keys: batch.catalog_keys || [],
+              },
             },
           }, allRows);
           return store;
@@ -502,14 +548,19 @@ export async function executeRepoOperation(operation) {
           transitioned = transitionEditorialReviewsBulk(store, operation.args || {});
           const allRows = [...(transitioned?.species_seo || []), ...(transitioned?.species_seo_groups || [])];
           const state = String(operation.args?.p_target_state || '');
+          const batch = transitioned?.import_batch || null;
+          const requestedActivity = operation.activity || {};
           appendActivity(store, {
             ...operation,
             table: 'editorial_review',
-            activity: operation.activity || {
-              kind: 'editorial_review_bulk',
-              title: state === 'approved' ? `批量批准 ${transitioned?.species_seo?.length || 0} 个页面` : state === 'ready_for_review' ? `批量提交 ${transitioned?.species_seo?.length || 0} 个页面审核` : `批量退回 ${transitioned?.species_seo?.length || 0} 个页面编辑`,
-              detail: `同时处理 ${transitioned?.species_seo_groups?.length || 0} 个基础模板`,
-              metadata: { review_state: state, page_count: transitioned?.species_seo?.length || 0, base_count: transitioned?.species_seo_groups?.length || 0 },
+            activity: {
+              kind: requestedActivity.kind || 'editorial_review_bulk',
+              title: requestedActivity.title || (state === 'approved' ? `批量批准 ${transitioned?.species_seo?.length || 0} 个页面` : state === 'ready_for_review' ? `批量提交 ${transitioned?.species_seo?.length || 0} 个页面审核` : `批量退回 ${transitioned?.species_seo?.length || 0} 个页面编辑`),
+              detail: requestedActivity.detail || `${batch?.batch_id || '未绑定批次'} · 同时处理 ${transitioned?.species_seo_groups?.length || 0} 个基础模板`,
+              metadata: {
+                ...(requestedActivity.metadata || {}), review_state: state, page_count: transitioned?.species_seo?.length || 0,
+                base_count: transitioned?.species_seo_groups?.length || 0, batch_id: batch?.batch_id || '', source: batch?.source || '', filename: batch?.filename || '', locale: batch?.locale || '',
+              },
             },
           }, allRows);
           return store;
@@ -574,13 +625,22 @@ export async function executeRepoOperation(operation) {
   }
 }
 
-export async function buildRepoStagingSnapshot({ catalogKeys, groupKeys }) {
+export async function buildRepoStagingSnapshot({ catalogKeys, groupKeys, batchId = '' }) {
   const selectedCatalogKeys = [...new Set((catalogKeys || []).map(String).filter(Boolean))];
   const selectedGroupKeys = [...new Set((groupKeys || []).map(String).filter(Boolean))];
   if (!selectedCatalogKeys.length) throw new Error('Select at least one Species for staging publish.');
   if (selectedCatalogKeys.length > 20) throw new Error('Staging publish is limited to 20 Species per release.');
   if (!selectedGroupKeys.length) throw new Error('Selected Base Species group keys are required.');
   const store = normalizeStore((await readDraftJsonWithFallback(EMPTY_ADMIN_STORE)).data);
+  const importBatch = batchId ? store.import_batches.find((row) => row.batch_id === batchId) : null;
+  if (batchId && !importBatch) throw new Error(`Import batch not found: ${batchId}`);
+  if (importBatch) {
+    const expectedCatalogKeys = [...new Set(importBatch.catalog_keys || [])].sort();
+    const expectedGroupKeys = [...new Set(importBatch.group_keys || [])].sort();
+    if (JSON.stringify([...selectedCatalogKeys].sort()) !== JSON.stringify(expectedCatalogKeys)) throw new Error('Staging allowlist must exactly match the selected import batch.');
+    if (JSON.stringify([...selectedGroupKeys].sort()) !== JSON.stringify(expectedGroupKeys)) throw new Error('Staging Base-group allowlist must exactly match the selected import batch.');
+    if (!['approved', 'staging_published'].includes(importBatch.status)) throw new Error(`Import batch ${batchId} must be fully approved before Staging publish.`);
+  }
   const speciesSeo = store.species_seo.filter((row) => selectedCatalogKeys.includes(row.catalog_key) && row.status === 'draft' && row.review_state === 'approved' && row.reviewed_at && !row.deleted_at);
   const speciesSeoGroups = store.species_seo_groups.filter((row) => selectedGroupKeys.includes(row.group_key) && row.status === 'draft' && row.review_state === 'approved' && row.reviewed_at && !row.deleted_at);
   const snapshot = {
@@ -589,6 +649,7 @@ export async function buildRepoStagingSnapshot({ catalogKeys, groupKeys }) {
     source_label: 'github-repo-admin',
     exported_at: now(),
     selected_catalog_keys: selectedCatalogKeys,
+    import_batch_id: importBatch?.batch_id || '',
     species_seo: speciesSeo.map(({ reviewed_by, ...row }) => row),
     species_seo_groups: speciesSeoGroups.map(({ reviewed_by, ...row }) => row),
     data_review_resolutions: store.species_data_reviews
@@ -613,5 +674,24 @@ export async function buildRepoStagingSnapshot({ catalogKeys, groupKeys }) {
 export async function publishRepoStagingSelection(selection) {
   const snapshot = await buildRepoStagingSnapshot(selection);
   const write = await writeStagingSnapshot(snapshot);
-  return { snapshot, write };
+  let importBatch = null;
+  if (selection?.batchId) {
+    try {
+      await updateDraftJson((raw) => {
+        const store = normalizeStore(raw);
+        const batch = store.import_batches.find((row) => row.batch_id === selection.batchId);
+        if (batch) {
+          batch.status = 'staging_published';
+          batch.staging_commit_sha = write.commitSha;
+          batch.staging_branch = write.branch;
+          batch.updated_at = now();
+          importBatch = clone(batch);
+        }
+        return store;
+      }, `content(seo): mark import batch ${selection.batchId} staging published`);
+    } catch {
+      // Staging already succeeded; never turn a successful release into a retryable publish failure.
+    }
+  }
+  return { snapshot, write, import_batch: importBatch };
 }

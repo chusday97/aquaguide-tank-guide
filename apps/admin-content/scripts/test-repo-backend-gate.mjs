@@ -15,7 +15,7 @@ process.env.ADMIN_REPO_PASSWORD = 'Repo-Test-Only-42!';
 process.env.ADMIN_REPO_SESSION_SECRET = 'repo-test-session-secret-0123456789abcdef';
 
 await writeFile(storePath, `${JSON.stringify({
-  schema_version: 1, updated_at: null, species_seo: [], species_seo_groups: [], species_data_reviews: [], content_revisions: [], admin_activity_log: [],
+  schema_version: 1, updated_at: null, species_seo: [], species_seo_groups: [], species_data_reviews: [], content_revisions: [], admin_activity_log: [], import_batches: [],
 }, null, 2)}\n`, 'utf8');
 
 const { authenticateCredentials, createSessionToken, readSessionToken } = await import('../../../server/admin-repo/auth.mjs');
@@ -118,11 +118,21 @@ result = await executeRepoOperation({ action: 'rpc', rpc: 'import_species_seo_bu
     { group_key: importExistingGroup, locale: 'zh-CN', seo_title_template: '不得覆盖 {{name}}', meta_description_template: '不得覆盖描述', h1_template: '不得覆盖 H1', shared_intro: '', status: 'draft', review_state: 'editing' },
     { group_key: importNewGroup, locale: 'zh-CN', seo_title_template: '{{name}}饲养指南', meta_description_template: '{{name}}水族饲养指南', h1_template: '{{name}}饲养指南', shared_intro: '', status: 'draft', review_state: 'editing' },
   ],
+  p_group_keys: [importExistingGroup, importNewGroup],
+  p_batch_filename: 'batch-contract-zh.csv',
+  p_batch_source: 'seo_csv_import',
 } });
 assert.equal(result.error, null);
 assert.equal(result.data.species_seo.length, 2, 'Bulk SEO import must write every changed Species row atomically.');
 assert.equal(result.data.species_seo_groups.length, 1, 'Bulk SEO import must create only missing Base templates.');
 assert.equal(result.data.species_seo_groups[0].group_key, importNewGroup);
+const importBatch = result.data.import_batch;
+assert.ok(importBatch?.batch_id?.startsWith('batch-'), 'Bulk SEO import must persist a durable batch id.');
+assert.equal(importBatch.filename, 'batch-contract-zh.csv');
+assert.equal(importBatch.locale, 'zh-CN');
+assert.deepEqual(new Set(importBatch.catalog_keys), new Set(['sp_test_import_existing', 'sp_test_import_new']));
+assert.deepEqual(new Set(importBatch.group_keys), new Set([importExistingGroup, importNewGroup]));
+assert.equal(importBatch.status, 'imported');
 const existingImportGroup = (await executeRepoOperation({ action: 'select', table: 'species_seo_groups', filters: [
   { type: 'eq', column: 'group_key', value: importExistingGroup }, { type: 'eq', column: 'locale', value: 'zh-CN' },
 ], singleMode: 'single' })).data;
@@ -130,6 +140,34 @@ assert.equal(existingImportGroup.seo_title_template, '人工已有模板 {{name}
 const activityAfterImport = (await executeRepoOperation({ action: 'select', table: 'admin_activity_log', filters: [] })).data;
 assert.equal(activityAfterImport.length, activityBeforeImport + 1, 'Bulk SEO import must create exactly one Activity record.');
 assert.equal(activityAfterImport.at(-1).kind, 'bulk_import');
+assert.equal(activityAfterImport.at(-1).metadata.batch_id, importBatch.batch_id, 'Bulk import Activity must retain its batch id.');
+assert.equal(activityAfterImport.at(-1).metadata.filename, 'batch-contract-zh.csv');
+
+const importBatchItems = [
+  { resource_type: 'species_seo', resource_key: 'sp_test_import_existing', locale: 'zh-CN' },
+  { resource_type: 'species_seo', resource_key: 'sp_test_import_new', locale: 'zh-CN' },
+  { resource_type: 'species_seo_groups', resource_key: importExistingGroup, locale: 'zh-CN' },
+  { resource_type: 'species_seo_groups', resource_key: importNewGroup, locale: 'zh-CN' },
+];
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: {
+  p_target_state: 'ready_for_review', p_items: importBatchItems, p_batch_id: importBatch.batch_id,
+} });
+assert.equal(result.error, null);
+assert.equal(result.data.import_batch.status, 'pending_review', 'Whole-batch submit must advance persisted batch status.');
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: {
+  p_target_state: 'approved', p_items: importBatchItems, p_batch_id: importBatch.batch_id,
+} });
+assert.equal(result.error, null);
+assert.equal(result.data.import_batch.status, 'approved', 'Whole-batch approval must advance persisted batch status.');
+result = await executeRepoOperation({ action: 'rpc', rpc: 'transition_editorial_reviews_bulk', args: {
+  p_target_state: 'editing', p_items: [{ resource_type: 'species_seo', resource_key: catalogKey, locale: 'zh-CN' }], p_batch_id: importBatch.batch_id,
+} });
+assert.match(result.error?.message || '', /outside import batch/, 'Batch-bound review must reject historical content outside the imported allowlist.');
+await assert.rejects(
+  publishRepoStagingSelection({ catalogKeys: ['sp_test_import_existing'], groupKeys: [importExistingGroup], batchId: importBatch.batch_id }),
+  /allowlist must exactly match/,
+  'Batch-bound Staging publish must reject a partial or widened allowlist.',
+);
 const groupsBeforeInvalidImport = (await executeRepoOperation({ action: 'select', table: 'species_seo_groups', filters: [] })).data.length;
 result = await executeRepoOperation({ action: 'rpc', rpc: 'import_species_seo_bulk', args: {
   p_species_rows: [
@@ -137,6 +175,7 @@ result = await executeRepoOperation({ action: 'rpc', rpc: 'import_species_seo_bu
     { catalog_key: 'sp_test_import_atomic', locale: 'en', h1: 'Atomic duplicate', intro: 'Two', image_alt: 'Two', index_strategy: 'noindex' },
   ],
   p_group_defaults: [{ group_key: 'base:test-import-atomic', locale: 'en', seo_title_template: '{{name}} Care Guide', meta_description_template: '{{name}} guide', h1_template: '{{name}} Care Guide', shared_intro: '' }],
+  p_group_keys: ['base:test-import-atomic'],
 } });
 assert.match(result.error?.message || '', /duplicate Species rows/, 'Invalid bulk SEO import must fail closed before any partial write.');
 const groupsAfterInvalidImport = (await executeRepoOperation({ action: 'select', table: 'species_seo_groups', filters: [] })).data.length;
@@ -292,7 +331,7 @@ const productionStyle = await generatePublicSpecies({
 assert.equal(productionStyle.manifest.generated_pages, 0, 'Approved Draft must remain invisible to Production-style release mode.');
 
 const persisted = JSON.parse(await readFile(storePath, 'utf8'));
-assert.equal(persisted.schema_version, 2, 'Repo store must migrate activity logging to schema v2 on the next write.');
+assert.equal(persisted.schema_version, 3, 'Repo store must migrate import-batch authority to schema v3 on the next write.');
 assert.ok(persisted.content_revisions.length >= 6, 'Repo store must retain revision snapshots.');
 assert.ok(persisted.admin_activity_log.length >= 5, 'Repo store must retain admin operation history without a second logging write.');
 assert.ok(persisted.admin_activity_log.some((row) => row.kind === 'review_approved'), 'Review actions must be represented in the operation log.');

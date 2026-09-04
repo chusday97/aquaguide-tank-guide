@@ -99,7 +99,11 @@ export default function ActivityCenter({ open, onClose, refreshKey = 0, onLoaded
                 <div>
                   <div className="activity-item-title"><strong>{isUiEnglish ? labels[1] : labels[0]}</strong><time>{formatTime(row.created_at, appLocale)}</time></div>
                   <p>{row.detail || row.resource_key || (isUiEnglish ? 'Completed successfully.' : '操作已完成。')}</p>
-                  <small>{row.affected_count > 1 ? (isUiEnglish ? `${row.affected_count} records` : `${row.affected_count} 条记录`) : row.locale || ''}</small>
+                  <small>
+                    {row.metadata?.batch_id ? `${row.metadata.batch_id}${row.metadata.filename ? ` · ${row.metadata.filename}` : ''}` : ''}
+                    {row.metadata?.batch_id && (row.affected_count > 1 || row.locale) ? ' · ' : ''}
+                    {row.affected_count > 1 ? (isUiEnglish ? `${row.affected_count} records` : `${row.affected_count} 条记录`) : row.locale || ''}
+                  </small>
                 </div>
               </article>
             );
