@@ -84,3 +84,12 @@ Therefore editing an already-published row can change fields while it is still p
 
 ## Acceptance condition
 P0 Product/Care authority convergence is complete only when direct runtime static reads are removed or routed through the published-content provider, Draft isolation is proven, and Admin Publish is browser-verified end to end.
+
+## 2026-09-04 implemented runtime cutover
+- `runtimeContentCatalog.ts` bootstraps Product/Care from `/api/v1/content-bootstrap` before App import; failed/unconfigured API explicitly resets to static fallback.
+- Locale changes rehydrate the published catalog for `zh-CN` / `en`; published rows are protected from legacy static localization overwrite.
+- Encyclopedia Product Data and Care Encyclopedia use the runtime catalog.
+- Aquarium and Identify diagnosis now receive Care Knowledge from the runtime catalog; diagnosis rules remain pure consumers of the passed `careTopics` input.
+- Dedicated Business API Vercel routing avoids packaging the legacy static server into `/api/v1/*`.
+- Remaining direct static imports in Collection/Search/Home/Compatibility-related surfaces are not evidence that the two completed P0 routing items are unfinished; they require separate impact classification before decision-critical Product migration.
+- End-to-end Admin Save/Publish → Preview proof is still required before declaring the whole Product/Care authority P0 complete.

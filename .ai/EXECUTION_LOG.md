@@ -490,3 +490,14 @@
 - Regression protection added to `test:admin-content-contract`; API typecheck, contract, full root build, Admin UI regression, SEO handoff and `git diff --check` PASS.
 - Functional commit: `d6d2b37e feat(content): isolate product care publication`.
 - Migration is committed only; Production was not touched. No main merge/rebase. Next P0 is frontend runtime migration off direct static authority.
+
+
+## 2026-09-04 — Product/Care runtime authority convergence
+- Continued from publication snapshot checkpoint without touching main or Production.
+- Added `/content-bootstrap`, `runtimeContentCatalog`, locale-aware hydration and explicit static fallback.
+- Routed Encyclopedia Product Data plus Care Encyclopedia, Aquarium diagnosis and Identify diagnosis to the published runtime authority.
+- Added dedicated `/api/v1/*` Business API Vercel function routing and local Preview proxy; avoided legacy-app packaging bloat (~257 MB → ~24 MB function bundle in local Vercel build).
+- Added regression guards preventing target consumers from reverting to direct static authority.
+- Validation PASS: root build, TypeScript/API checks, Admin content contract, Product/Care runtime browser injection, Care/Identify search checks, species diagnosis, care guidance/category consistency, Admin UI and SEO handoff. Existing unrelated Identify tests contain older wording assumptions and were not used to alter product behavior.
+- Functional commit: `eff3bba3 feat(content): route published product care runtime`.
+- Next P0: real Admin Product edit and Care edit through Save/Publish into Preview, with Save-invisibility and compatibility/user-state spillover checks.

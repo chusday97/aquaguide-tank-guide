@@ -29,8 +29,8 @@ Species SEO remains Repo-backed and fail-closed:
 
 ## Next milestones
 1. [DONE locally] Define one published Product/Care read contract, inventory direct static consumers, and isolate Draft from the last Published snapshot.
-2. [NEXT] Converge Species and Care frontend runtime reads onto that authority with static seed/fallback behavior only when the published API is unavailable.
-3. Prove one Product edit and one Care edit from Admin through frontend Preview without unintended compatibility/user-state mutation.
+2. [DONE locally] Converge Encyclopedia Product and Care Encyclopedia/Aquarium/Identify diagnosis reads onto the published runtime authority with explicit static fallback.
+3. [NEXT] Prove one Product edit and one Care edit from Admin through frontend Preview without unintended compatibility/user-state mutation.
 4. Complete the existing 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview.
 5. Add change-impact classification/Preview before decision-critical Product Data changes can be released broadly.
 6. Build Compatibility Admin only after Product Data authority is stable.
@@ -39,4 +39,4 @@ Species SEO remains Repo-backed and fail-closed:
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
 
 ## 2026-09-04 implementation state
-Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation. Public API routes now prefer the immutable published snapshot, while pre-migration published rows remain a compatibility fallback. The database migration is committed but not applied to Production. Runtime pages still consume static Product/Care arrays, so frontend convergence and browser acceptance remain P0.
+Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation. Public API routes now prefer the immutable published snapshot, while pre-migration published rows remain a compatibility fallback. The database migration is committed but not applied to Production. Runtime bootstrap now prefers the published Product/Care API; Encyclopedia Product plus Care Encyclopedia/Aquarium/Identify diagnosis consume that runtime catalog. Browser injection acceptance passed for zh-CN Product/Care and English Care. Production migration remains unapplied; the next P0 is a real Admin edit/save/publish → Preview proof.

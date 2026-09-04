@@ -36,15 +36,16 @@ SEO is downstream acquisition content. Editing SEO must not mutate Product Data,
 - Editing an already-published Species/Care record now preserves its last public snapshot and moves the editable row back to Draft; Save no longer intentionally advances public content.
 - Public `/species` and `/care-articles` routes now prefer publication snapshots and retain a migration-order fallback to legacy published rows.
 - Local API typecheck, publication contract test, root build, Admin UI regression and SEO handoff all pass. Migration has not been applied to Production.
-- Frontend runtime consumers still import static arrays; this is the next unfinished P0 and must be converged before claiming end-to-end authority.
+- Primary Encyclopedia/Care/diagnosis runtime consumers are converged; real Admin edit → Preview acceptance is now the first unfinished P0.
 
-## Critical verified P0 gap
-Frontend Product/Care consumers are not yet fully converged onto Admin-published content:
-- `Encyclopedia.tsx` still imports `src/data/fishData.ts`.
-- `CareEncyclopedia.tsx` still imports generated `src/data/careTopicsData.ts`.
-- Product/Care Admin writes through `/admin/species` and `/admin/care-articles` APIs.
+## Product/Care P0 status after runtime convergence
+The primary target consumers are now routed through the published runtime catalog:
+- Encyclopedia Product Data → published Product API/runtime catalog.
+- Care Encyclopedia → published Care API/runtime catalog.
+- Aquarium and Identify diagnosis Care Knowledge → the same published Care runtime catalog.
+- Static Product/Care datasets remain explicit seed/offline fallback, not the successful live authority.
 
-Therefore do not claim Product/Care `Publish` immediately updates all user-facing pages until one-source-of-truth convergence is implemented and acceptance-tested.
+Do not yet claim full Admin-to-user publication acceptance. The next unresolved proof is one real Product edit and one real Care edit through Admin Save/Publish into Preview, including proof that Save alone stays invisible and that compatibility/user aquarium state is not mutated.
 ## Species SEO subsystem — stable baseline
 - Private Draft/review/revision/import-batch authority: `chusday97/aquaguide-seo-content / seo-admin-drafts`.
 - Public AquaGuide repo receives only code + explicit sanitized Staging snapshot.
@@ -66,10 +67,9 @@ Run the corrected 14-Species batch-01 through the authenticated AquaGuide Previe
 This proves the SEO subsystem operationally; it does **not** solve the Product/Care source-of-truth gap.
 ## Next implementation order
 P0-A — Product/Care authority convergence:
-- define the published-content read contract;
-- move Encyclopedia/Care consumers off direct static authority onto the published source;
-- keep static datasets only as explicit seed/fallback where necessary;
-- browser-test that an Admin-published Product/Care change reaches the intended frontend consumer and nowhere else.
+- [done locally] published-content read contract + Draft isolation;
+- [done locally] Encyclopedia Product + Care Encyclopedia/Aquarium/Identify diagnosis runtime cutover with explicit fallback;
+- [next] browser-test a real Admin Product and Care Save/Publish cycle against Preview and prove no compatibility/user-state spillover.
 
 P0-B — Finish batch-01 SEO operational acceptance in parallel only when authenticated human review is available.
 
@@ -81,8 +81,8 @@ P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extr
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `7fb19b28c7105fdfcd9f1f443ea42b82341e64da`.
-- Last measured divergence: main-only 269 / feature-only 106 commits against the live remote refs before this docs sync.
+- Feature remote before this docs sync: `b982e2a69e5c3a4ca575f45aa93bea81e362fe35`.
+- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 111 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
