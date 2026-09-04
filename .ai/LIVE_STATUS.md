@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`
+Operational HEAD before this sync: `dfed5a948982719505cc5d557be2b98ef4e9baea`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
@@ -82,3 +82,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Publish confirmation carries the simulation summary.
 - PASS: Product/Care browser flows at 1280/390, impact + Compatibility contracts, Product/Care Save→Publish Preview tests, Admin contract/build, lint and root build.
 - Next: Compatibility Admin.
+
+## 2026-09-04 Compatibility Admin Behavior Profile Draft checkpoint
+- `/admin/compatibility` now shows reviewed Profile / Pair Rule authority and can safely create/edit/submit Behavior Profile revisions when DB baseline alignment is available.
+- Static reviewed runtime remains unchanged; Pair Rule editing and reviewed publish remain locked.
+- New revision migration is committed only; no live DB/Production mutation.
+- PASS: compatibility admin contract, API TS check, 390/1280 browser workflow, root lint/build, diff hygiene.

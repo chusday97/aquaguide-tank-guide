@@ -28,7 +28,7 @@ Species SEO remains Repo-backed and fail-closed:
 3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
 4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
 5. [DONE] Change Impact Preview: field classification, affected-consumer summary, decision-critical Before/After and Compatibility-result regression checks.
-6. [NEXT] Build Compatibility Admin: reviewed Species behavior profiles, Pair Rules, Evidence, Confidence, Review Status and Rule Version.
+6. [IN PROGRESS] Compatibility Admin: Species behavior Profile operator surface + isolated Draft revision workflow are DONE locally; [NEXT] Pair Rule revision management with Evidence / Confidence / Review Status, then reviewed publish/versioning.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -62,3 +62,13 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Compatibility regression is explicitly simulation-only: Product publish does not mutate Compatibility evidence/rules.
 - Browser regression passes at 1280/390 including save → reload persistence and publish-confirmation summary. Product/Care Save→Publish boundaries, Admin contract/build and root build remain green.
 - Next milestone: Compatibility Admin.
+
+## 2026-09-04 Compatibility Admin — Behavior Profile Draft checkpoint
+- Functional commit `dfed5a94 feat(admin): add compatibility profile draft workflow`.
+- `/admin/compatibility` audits the exact 7 reviewed static Profiles / 4 reviewed Pair Rules currently used by the Compatibility engine.
+- Species Behavior Profile edits now use isolated `species_compatibility_profile_revisions`; create/update/submit-review never mutate `species_compatibility_profiles`.
+- Drafts inherit reviewed citation snapshots only; reviewed publish is intentionally unavailable until source reconciliation and human review are implemented.
+- API reports which catalog keys already have reviewed DB baselines; profiles without DB alignment remain read-only instead of failing after click.
+- Migration `202609040002_compatibility_profile_revisions.sql` is committed but NOT applied to Production or any live database in this round.
+- 390/1280 browser contract proves create Draft → edit → save → submit review → edit lock. API check, root lint/build, compatibility contracts and diff hygiene pass.
+- Next: Pair Rule revision Draft workflow; keep reviewed runtime and Production locked.

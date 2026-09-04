@@ -4,8 +4,8 @@ Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`
-Latest operational checkpoint: `9dc30c48 feat(admin): complete change impact preview`
+Current functional HEAD before this docs sync: `dfed5a948982719505cc5d557be2b98ef4e9baea`
+Latest operational checkpoint: `dfed5a94 feat(admin): add compatibility profile draft workflow`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -128,3 +128,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Publish confirmation includes the Compatibility simulation summary and reiterates that Compatibility authority is not auto-written.
 - PASS: impact contracts, Compatibility regression contract, Product/Care Admin browser flows at 1280/390, Product/Care Save→Publish Preview boundaries, Admin contract/build, root lint/build.
 - Next: Compatibility Admin operator surface for behavior profiles / Pair Rules / Evidence / Confidence / Review Status / Rule Version.
+
+## 2026-09-04 Compatibility Admin Behavior Profile Draft checkpoint
+- Functional commit `dfed5a948982719505cc5d557be2b98ef4e9baea`.
+- New `/admin/compatibility` operator surface audits current reviewed engine inputs: 7 Species Profiles / 4 Pair Rules.
+- Behavior Profile Drafts are isolated revisions with one active revision per species, optimistic versioning, Admin-only RLS, reviewed citation snapshots, and Draft → pending_review transition.
+- No reviewed profile/pair rule is mutated and there is no Compatibility publish endpoint in this round.
+- API exposes DB-baseline writable catalog keys; static reviewed profiles without DB alignment remain read-only.
+- Migration is repository-only and unapplied to Production/live databases.
+- Next unfinished item: Pair Rule revision management with Evidence / Confidence / Review Status.

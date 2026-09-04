@@ -546,3 +546,11 @@
 - Validation PASS: impact contract, compatibility regression contract, Admin UI 1280/390, Product/Care publish-preview tests, Admin contract/build, root lint/build.
 - Functional commit: `9dc30c48 feat(admin): complete change impact preview`. Production/main untouched.
 - Next unfinished milestone: P1 Compatibility Admin.
+
+22:xx
+- Continued P1 Compatibility Admin from reviewed-baseline audit into safe Behavior Profile revision workflow.
+- Added isolated revision schema/RLS/version trigger, Admin API create/update/submit-review, DB baseline capability gating, Profile Draft editor, and 390/1280 browser acceptance.
+- Reviewed runtime inputs remain 7 Profiles / 4 Pair Rules; no Compatibility publish route and no reviewed authority mutation.
+- Validation PASS: compatibility admin contract, Compatibility impact regression, Admin browser, Business API check, root lint/build, diff hygiene.
+- Functional commit pushed: `dfed5a948982719505cc5d557be2b98ef4e9baea`. Migration not applied to any live database; Production/main untouched.
+Next: Pair Rule revision Draft workflow with evidence/confidence/review status.

@@ -35,7 +35,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Add regression checks for compatibility-result changes caused by Product Data edits.
 
 ## P1 — Compatibility Admin
-- [ ] Operator UI for Species behavior profiles.
+- [x] Operator UI for Species behavior profiles with reviewed-baseline audit plus isolated Draft revision create/edit/submit-review.
 - [ ] Pair Rule management with Evidence, Confidence and Review Status.
 - [ ] Version Compatibility rules.
 - [ ] Require regression/impact test before rule publish.
