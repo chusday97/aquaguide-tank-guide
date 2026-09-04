@@ -84,3 +84,6 @@ P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extr
 
 ## Execution style for next session
 Start with live state reads, not memory. Continue the first incomplete P0 unless the user supplies a newer concrete bug. Do not reimplement stable SEO features. Update this handoff plus `CURRENT_GOAL`, `TASK_QUEUE`, `LIVE_STATUS`, `BRANCH_STATUS` and `EXECUTION_LOG` after material changes.
+
+## Cross-session recovery anchor
+For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contains the exact canonical read order, current first P0, safety rules and a copy-paste startup prompt. This file remains the detailed handoff; `CROSS_SESSION_START.md` is the stable entry point.
