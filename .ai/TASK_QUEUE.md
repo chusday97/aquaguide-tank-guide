@@ -1,6 +1,6 @@
 # Task Queue
 
-Updated: 2026-09-04
+Updated: 2026-09-05
 Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
 Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 

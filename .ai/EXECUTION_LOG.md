@@ -570,3 +570,11 @@ Next: explicit human Review/Approve + rule versioning and regression gate before
 - Functional commit `25e3ec0d445a6b8342593313c2783b98dc9b6b86`; online light CI `33893177526` PASS / Heavy skipped.
 - Architecture audit confirmed the next blocker: runtime still consumes code/data reviewed evidence while Admin revisions are DB-backed. No publish endpoint was added.
 Next: converge reviewed Compatibility runtime/publish authority before versioned publish + engine regression gate.
+
+## 2026-09-05 — Compatibility reviewed runtime authority
+- Commit: `1e8a482a91655cc5929fdb635b51232c7c3d0541`.
+- Added public reviewed Compatibility bootstrap, atomic runtime registry, exact-baseline fail-closed activation, and rule/evidence authority fingerprinting.
+- Preserved existing Compatibility algorithms and static fallback behavior; regression suites/build passed.
+- CI light gate now executes runtime authority contract.
+- No live migration/publish/Production/main changes.
+- Next: resolve revision citation source keys to canonical Evidence rows, then implement versioned reviewed publish.

@@ -1,6 +1,6 @@
 # Current Goal
 
-Updated: 2026-09-04
+Updated: 2026-09-05
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
 Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
@@ -90,3 +90,11 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Browser 1280/390 proves submit → Impact Check → approve → Approved while editing remains locked.
 - Migration `202609040004_compatibility_revision_review_gate.sql` is code-only/unapplied.
 - Remaining blocker before publish: user-facing Compatibility still reads code/data reviewed evidence, so DB publish would create split authority.
+
+## 2026-09-05 Compatibility reviewed runtime authority checkpoint
+- Functional commit `1e8a482a feat(compatibility): converge reviewed runtime authority`.
+- Public `/compatibility-bootstrap` exposes reviewed DB Profiles / Pair Rules only when species and evidence remain publishable/reviewed.
+- Runtime switches to DB only when it exactly covers the current 7 Profile / 4 Pair reviewed baseline; partial/mismatched/unavailable DB data fails closed to the static reviewed baseline as one atomic authority.
+- `tankCompatibilityEngine` now reads the runtime registry without changing decision algorithms.
+- `metadata.ruleVersion` records a stable authority fingerprint covering Profile/Pair versions plus Evidence IDs/versions/membership.
+- Next blocker before publish: citation snapshots still use source keys and must resolve to canonical `evidence_sources` rows. No Compatibility publish endpoint exists yet.

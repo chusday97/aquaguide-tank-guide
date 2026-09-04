@@ -1,11 +1,11 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
-Updated: 2026-09-04
+Updated: 2026-09-05
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `25e3ec0d445a6b8342593313c2783b98dc9b6b86`
-Latest operational checkpoint: `25e3ec0d feat(admin): add compatibility human review gate`
+Current functional HEAD before this docs sync: `1e8a482a91655cc5929fdb635b51232c7c3d0541`
+Latest operational checkpoint: `1e8a482a feat(compatibility): converge reviewed runtime authority`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -154,3 +154,13 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Canonical architecture was corrected: Product/Care published runtime is converged, while Compatibility still has a split-path risk because the user-facing engine reads code/data evidence and Admin revisions are DB-backed.
 - Do not create a Compatibility publish endpoint until runtime/published authority is converged.
 - Next: design/read-contract + controlled fallback for reviewed Compatibility runtime, then versioned publish with engine regression gate.
+
+## 2026-09-05 Compatibility reviewed runtime authority checkpoint
+- Functional commit `1e8a482a91655cc5929fdb635b51232c7c3d0541`.
+- Profile + Pair Draft workflows and server-generated impact/human review gate are already in place; approval still does not publish.
+- New public reviewed bootstrap + runtime registry allows the existing engine to consume DB reviewed authority only when DB coverage exactly matches all current 7 Profiles / 4 Pair Rules. Any partial, duplicate, evidence-incomplete or unavailable payload atomically falls back to static reviewed evidence.
+- Compatibility decision algorithms remain unchanged; legacy static behavior tests pass.
+- Runtime `ruleVersion` is no longer a misleading constant when DB authority is active: it fingerprints rule versions and evidence membership/versions.
+- Lightweight CI includes `test:runtime-compatibility-authority`; Heavy remains gated.
+- No migration was applied to a live database, no Compatibility publish endpoint was enabled, and Production/main were untouched.
+- First unfinished item: canonical Evidence reconciliation (`citation_snapshots.sourceKey` → `evidence_sources`) followed by versioned reviewed publish with the existing impact/human-review gate.

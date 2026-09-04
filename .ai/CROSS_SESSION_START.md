@@ -1,6 +1,6 @@
 # AquaGuide Cross-Session Start
 
-Updated: 2026-09-04
+Updated: 2026-09-05
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Working branch: `feature/admin-content-v0`
@@ -21,7 +21,7 @@ A new conversation should read this file first, then read the canonical set belo
 Treat the Admin as **Aqua Operations Studio**, not one SEO CMS. Keep Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and user-specific context as separate authorities.
 
 ## Current first incomplete milestone
-All defined P0 work and P1 Change Impact Preview are closed locally/Preview-accepted. P1 Compatibility Admin Profile/Pair Draft plus human Review/Approve and structural Impact Check are complete locally. The first unfinished item is **Compatibility reviewed runtime/publish authority convergence**, followed by versioned publish + engine regression gate.
+All defined P0 work and P1 Change Impact Preview are closed. Compatibility Profile/Pair Draft, server impact/human review, and reviewed runtime-read convergence are complete. The first unfinished item is **Evidence source reconciliation + versioned Compatibility reviewed publish**; do not add a publish path that bypasses canonical `evidence_sources` or creates a second runtime authority.
 
 Continue from `TASK_QUEUE.md`; do not reopen completed Product/Care or SEO P0 work unless a new regression is proven.
 

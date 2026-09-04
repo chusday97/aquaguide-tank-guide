@@ -1,8 +1,8 @@
 # Live Status
 
-Updated: 2026-09-04
+Updated: 2026-09-05
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `25e3ec0d445a6b8342593313c2783b98dc9b6b86`
+Operational HEAD before this sync: `1e8a482a91655cc5929fdb635b51232c7c3d0541`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
@@ -100,3 +100,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Approved remains non-runtime; no Compatibility publish endpoint exists.
 - Online light CI for `25e3ec0d` PASS; Heavy skipped.
 - Compatibility runtime still reads reviewed code/data evidence, so publish authority convergence remains required before versioned publish.
+
+## 2026-09-05 Compatibility runtime authority convergence
+- Functional commit `1e8a482a91655cc5929fdb635b51232c7c3d0541`.
+- Existing Compatibility engine now reads an atomic runtime reviewed registry.
+- Complete reviewed DB baseline (exact 7 Profile / 4 Pair coverage with reviewed evidence) may activate; partial/mismatched/unavailable DB always falls back wholesale to static reviewed evidence.
+- Runtime authority fingerprint is exposed through decision `metadata.ruleVersion` and includes Profile/Pair + Evidence versions.
+- PASS: runtime authority contract, legacy Compatibility engine suite, Admin impact/admin contracts, 390/1280 Admin UI, API TS, root lint/build, diff hygiene.
+- No live DB migration/publish, main merge/rebase or Production mutation.
