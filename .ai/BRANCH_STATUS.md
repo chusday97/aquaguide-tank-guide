@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `7fb19b28c7105fdfcd9f1f443ea42b82341e64da`
+Remote feature before this round push: `9f4119c97cdc533f3f1ec1d00d561201e9442516`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
@@ -23,3 +23,8 @@ Rule:
 4. Never force-push or blindly merge/rebase main during ordinary Admin work.
 
 Production/main remain outside normal Aqua Operations Studio iteration unless explicitly authorized.
+
+## 2026-09-04 current local checkpoint
+- Local functional HEAD before docs sync: `d6d2b37e feat(content): isolate product care publication`.
+- Live main re-read before the functional commit: `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- No merge/rebase of main and no Production mutation occurred.

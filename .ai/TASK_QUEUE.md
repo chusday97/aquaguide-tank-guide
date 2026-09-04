@@ -8,7 +8,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Inventory every frontend consumer of `fishData.ts` / `careTopicsData.ts` and classify runtime vs build-time use. See `PUBLISHED_CONTENT_AUTHORITY.md`.
 - [x] Define one published Product/Care read contract for Species and Care content. See `PUBLISHED_CONTENT_AUTHORITY.md`.
 - [x] Decide explicit role of static datasets: seed/audit fixture/offline fallback only — never a competing live authority.
-- [ ] Isolate Draft/save from the last Published Product/Care version before runtime cutover; current in-place PATCH can otherwise bypass Publish.
+- [x] Implement Draft/save isolation from the last Published Product/Care version using immutable publication snapshots; migration/runtime browser acceptance remains pending before frontend cutover.
 - [ ] Route Encyclopedia Product Data to the published authority.
 - [ ] Route Care Encyclopedia/diagnosis Care Knowledge to the published authority.
 - [ ] Prove one Admin Product edit reaches the intended frontend Preview.

@@ -3,7 +3,7 @@
 Updated: 2026-09-04
 Canonical branch: `feature/admin-content-v0`
 Docs HEAD before this sync: `7fb19b28c7105fdfcd9f1f443ea42b82341e64da`
-Latest converged functional baseline: `f4805669 merge: converge import batch scope safeguards`
+Latest converged functional baseline: `d6d2b37e feat(content): isolate product care publication`
 
 ## Product state
 - AquaGuide product includes Species, Aquarium/Care, Compatibility and SEO acquisition flows.
@@ -35,3 +35,11 @@ P1: add impact Preview and then Compatibility Admin.
 
 ## Canonical read set
 Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL → TASK_QUEUE → LIVE_STATUS → BRANCH_STATUS` before new work.
+
+## Product/Care publication isolation — implemented locally
+- `content_publications` stores immutable safe public snapshots for Species/Care.
+- Save on an already-published record preserves the old snapshot and returns the editable source row to Draft.
+- Publish/Archive use service-role-only transactional RPCs; public routes prefer the snapshot.
+- Missing snapshot-table migration is tolerated only by public reads so deployment order does not break legacy content; Admin edit remains fail-closed until the migration exists.
+- Validation PASS: API typecheck, Admin content contract, root build, Admin UI, SEO handoff, diff hygiene.
+- Production migration/state was not touched.

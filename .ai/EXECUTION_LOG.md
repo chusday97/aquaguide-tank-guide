@@ -480,3 +480,13 @@
 - Added permanent decision: SEO is downstream acquisition content; Product Data/Care/Compatibility remain separate authorities; personalized results come from shared approved knowledge/rules + user aquarium context.
 - Authoritative remote refs before docs commit: main `64fa58a`, feature `7fb19b28`; divergence 269 main-only / 106 feature-only; merge base `ed0cf38`. Narrow/stale `origin/main` must not be trusted without explicit live-ref verification.
 - No application code, private Draft content, Staging snapshot, Production state or main branch was modified by this documentation pass.
+
+## 2026-09-04 — Product/Care publication isolation checkpoint
+- Recovered exclusively from `CROSS_SESSION_START.md` and the canonical `.ai` read order, then verified clean `feature/admin-content-v0`, local/remote `9f4119c9`, and live main `64fa58a` before changes.
+- Inventoried all direct runtime/build-time `fishData.ts` and `careTopicsData.ts` consumers; recorded the authoritative classification in `.ai/PUBLISHED_CONTENT_AUTHORITY.md`.
+- Found a P0 release-boundary defect: Admin PATCH mutated already-published rows in place, so Save could change fields while public routes still considered the row published.
+- Added immutable Product/Care publication snapshots and service-role-only transactional publish/archive RPCs. First edit of published content preserves the last public snapshot and moves the editable source back to Draft.
+- Public Species/Care APIs now prefer publication snapshots while retaining legacy published-row fallback for safe migration/deployment ordering.
+- Regression protection added to `test:admin-content-contract`; API typecheck, contract, full root build, Admin UI regression, SEO handoff and `git diff --check` PASS.
+- Functional commit: `d6d2b37e feat(content): isolate product care publication`.
+- Migration is committed only; Production was not touched. No main merge/rebase. Next P0 is frontend runtime migration off direct static authority.

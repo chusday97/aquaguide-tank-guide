@@ -4,8 +4,8 @@ Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current docs HEAD before this sync: `7fb19b28c7105fdfcd9f1f443ea42b82341e64da`
-Latest converged functional baseline: `f4805669 merge: converge import batch scope safeguards`
+Current functional HEAD before this docs sync: `d6d2b37e`
+Latest converged functional baseline: `d6d2b37e feat(content): isolate product care publication`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -28,6 +28,15 @@ AquaGuide is not only a Species-information product and this Admin is not only a
 - User Context: aquarium/livestock/reminders/history. This is user data, not CMS content.
 
 SEO is downstream acquisition content. Editing SEO must not mutate Product Data, compatibility decisions, care logic or stored user state.
+
+## Latest P0-A implementation checkpoint
+- Full direct runtime consumer inventory is now canonical in `.ai/PUBLISHED_CONTENT_AUTHORITY.md`.
+- Product/Care public read contract is defined: public API is the published authority; static datasets are seed/audit/offline fallback only.
+- Added immutable `content_publications` snapshots plus service-role-only publish/archive RPCs in migration `202609040001_product_care_publication_snapshots.sql`.
+- Editing an already-published Species/Care record now preserves its last public snapshot and moves the editable row back to Draft; Save no longer intentionally advances public content.
+- Public `/species` and `/care-articles` routes now prefer publication snapshots and retain a migration-order fallback to legacy published rows.
+- Local API typecheck, publication contract test, root build, Admin UI regression and SEO handoff all pass. Migration has not been applied to Production.
+- Frontend runtime consumers still import static arrays; this is the next unfinished P0 and must be converged before claiming end-to-end authority.
 
 ## Critical verified P0 gap
 Frontend Product/Care consumers are not yet fully converged onto Admin-published content:
