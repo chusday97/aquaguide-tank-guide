@@ -44,7 +44,12 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Preserve explicit human review; no opaque AI auto-publish.
 
 ## P2 — Operations maturity
-- [ ] Unified Publish Center for Diff → Impact → Preview → Review → Staging → Production.
+- [ ] Unified Publish Center / release history & audit.
+  - [x] Architecture inventory: Product/Care + Compatibility remain Business API/Supabase authorities; SEO remains independent Repo Admin / `admin-store.json` authority.
+  - [ ] Define one read-only `ReleaseEvent` contract across Product/Care publications, Compatibility revisions/publishes and SEO revisions/activity/import/staging history.
+  - [ ] Add read-only aggregation services/API without copying or moving any subsystem write authority.
+  - [ ] Add `/admin/publish-center` timeline/readiness UI with source/auth availability clearly shown.
+  - [ ] Only after the read model is accepted, design cross-domain Diff → Impact → Preview → Review → Staging → Production orchestration.
 - [ ] Stronger roles/permissions and release audit history.
 - [ ] Care SEO as a downstream projection of approved Care Knowledge.
 - [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.

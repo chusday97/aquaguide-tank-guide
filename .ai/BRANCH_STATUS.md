@@ -87,3 +87,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Online Admin Content CI run `33909317349` validate PASS; Heavy browser/SEO gate skipped.
 - Compatibility reconciliation/versioned-publish migrations are repository-only and unapplied to live DB/Production.
 - No merge/rebase main and no Production mutation.
+## 2026-09-05 Compatibility P1 close / P2 start checkpoint
+- Compatibility versioned publish functional commit: `57c4ef00571c00191248948af8218f978417c949`.
+- P1-close docs commit before this sync: `a1242eb04a981f8815f2f1760bb4be833ddd6dc0`.
+- Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- Measured divergence at `57c4ef00`: main-only 269 / feature-only 129; dedicated reconciliation is still required before any future main merge.
+- Online Admin Content CI run `33909317349`: light `validate` success; Heavy browser / SEO handoff gate skipped by policy.
+- No Production mutation and no live Compatibility migration application occurred.

@@ -68,3 +68,10 @@ P2: add AI only as an assistant for extraction, conflict detection, impact expla
 
 ## 9. Non-negotiable rule
 Reliable Product/Care/Compatibility knowledge is upstream. SEO is downstream. Never use SEO copy as authority for product decisions, and never let AI invent decision-critical facts without evidence + human review.
+## 10. Publish Center authority rule
+Publish Center is an operational read/orchestration layer, not a fourth source of truth.
+- Product/Care + Compatibility keep Business API/Supabase write authority.
+- Species SEO keeps Repo Admin / private repo write authority and its separate authentication boundary.
+- V1 Publish Center normalizes read history into `ReleaseEvent` records and surfaces unavailable/unauthenticated sources explicitly.
+- Do not copy SEO revisions into Supabase, or Compatibility/Product releases into the SEO repo, merely to create one timeline.
+- Cross-domain write orchestration may be added only after the read model is accepted and must delegate writes back to each canonical authority.

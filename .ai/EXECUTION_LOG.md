@@ -589,3 +589,10 @@ Next: converge reviewed Compatibility runtime/publish authority before versioned
 - Online light CI run `33909317349` PASS including `Compatibility server regression gate`; Heavy skipped.
 - Migrations `202609050001` / `202609050002` remain unapplied to live DB/Production; main untouched.
 Next: P2 Unified Publish Center / release history & audit, beginning with a read-only aggregation contract.
+## 2026-09-05 — P2 Publish Center architecture inventory / docs sync
+- Verified branch `feature/admin-content-v0`, local/remote HEAD `a1242eb04a981f8815f2f1760bb4be833ddd6dc0`, clean worktree, live main `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- Confirmed P1 Compatibility Admin functional checkpoint `57c4ef00`; online light CI run `33909317349` PASS, Heavy skipped.
+- Inventoried release-history authorities: Product/Care + Compatibility use Business API/Supabase; SEO uses separate Repo Admin cookie and `admin-store.json` (`content_revisions`, `activity`, `import_batches`, Staging snapshot).
+- Decision: Publish Center v1 is read-only multi-authority aggregation. It must not create a new write authority or migrate SEO operational history into Supabase.
+- Next: implement normalized `ReleaseEvent` read contract + source readers/availability state + `/admin/publish-center` timeline.
+- Docs-only round; no business code, main, Production, deployment or live migration changes.

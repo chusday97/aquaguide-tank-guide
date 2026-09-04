@@ -108,3 +108,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Versioned publish is an atomic DB RPC gated by structural Impact + regression + canonical Evidence + human approval + unchanged baseline/evidence/authority sequence. Admin and user runtime share the same reviewed authority loader and refresh after publish.
 - Online light CI run `33909317349` PASS including `Compatibility server regression gate`; Heavy browser/SEO gate skipped. Production/main/live DB remained untouched.
 - First unfinished milestone is P2 Unified Publish Center / release history & audit.
+## 2026-09-05 P2 Publish Center architecture inventory
+- P1 Compatibility Admin is closed in code at functional checkpoint `57c4ef00`; docs checkpoint `a1242eb0` made P2 the canonical next milestone.
+- First P2 implementation is deliberately read-only. Product/Care + Compatibility remain Business API/Supabase authorities, while Species SEO remains independently authenticated Repo Admin state (`content_revisions`, `activity`, `import_batches`, Staging snapshot).
+- Do **not** migrate SEO history into Supabase or create a fourth publication database merely to make the UI look unified.
+- Next code task: define a normalized `ReleaseEvent` read model, aggregate the three existing release sources with per-source auth/availability status, then render `/admin/publish-center`.
+- No Production/main/live-database mutation is part of this first Publish Center round.

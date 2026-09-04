@@ -172,3 +172,13 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Submit Review computes a real before/after engine regression over the Product runtime cohort; reports include authority sequence, engine version, Product catalog fingerprint and semantic digest. Approve/Publish recompute freshness.
 - Product/Compatibility/Evidence authority mutations invalidate the global sequence, so concurrent/stale reviews cannot publish. Atomic RPC then updates reviewed baseline + Evidence links + revision history in one transaction.
 - First unfinished milestone: P2 Unified Publish Center / release history & audit. Start with a read-only aggregation of existing release sources; do not create a new competing publication authority.
+## 2026-09-05 P2 Unified Publish Center — architecture inventory
+- P1 Compatibility Admin is closed in code. Functional checkpoint `57c4ef00571c00191248948af8218f978417c949`; online Admin Content CI run `33909317349` passed all light checks including the server Compatibility regression gate, while Heavy was skipped.
+- Docs checkpoint before this sync: `a1242eb04a981f8815f2f1760bb4be833ddd6dc0`.
+- P2 inventory found two operational auth/storage domains that must remain separate:
+  1. Product/Care publications + Compatibility reviewed revisions/publish: Business API / Supabase.
+  2. Species SEO revisions/import/activity/Staging: independent Repo Admin cookie + `admin-store.json` / staging snapshot.
+- Publish Center v1 must be a **read-only multi-authority aggregation**, not a new write authority and not an SEO-to-Supabase migration.
+- Planned normalized read model: `ReleaseEvent` carrying domain, action/status, resource/batch, version/revision, actor/time, impact summary, source authority and source availability/auth state.
+- First unfinished code task: implement ReleaseEvent contracts + per-authority readers/aggregator, then `/admin/publish-center` timeline. Existing Product/Care, Compatibility and SEO publish mechanisms must stay unchanged.
+- Safety unchanged: no Production unlock, no live migration application, no ordinary merge/rebase of main.
