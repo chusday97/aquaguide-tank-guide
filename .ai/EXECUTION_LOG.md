@@ -562,3 +562,11 @@ Next: Pair Rule revision Draft workflow with evidence/confidence/review status.
 - PASS: pair/profile compatibility admin contract, 1280/390 browser workflow, API TS, root lint/build, Compatibility impact, diff hygiene.
 - Functional commit pushed: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`. Migration not applied to live DB/Production; reviewed runtime unchanged.
 Next: explicit human Review/Approve + rule versioning and regression gate before any reviewed Compatibility publish.
+
+23:5x
+- Added server-computed structural impact at Compatibility revision submit and explicit human Approve/Reject for Profile + Pair Rule revisions.
+- No-change revisions cannot enter review; Reject requires a review note; Approved remains non-runtime.
+- Browser 1280/390, compatibility admin contract, API TS, root lint/build and Compatibility impact all PASS.
+- Functional commit `25e3ec0d445a6b8342593313c2783b98dc9b6b86`; online light CI `33893177526` PASS / Heavy skipped.
+- Architecture audit confirmed the next blocker: runtime still consumes code/data reviewed evidence while Admin revisions are DB-backed. No publish endpoint was added.
+Next: converge reviewed Compatibility runtime/publish authority before versioned publish + engine regression gate.

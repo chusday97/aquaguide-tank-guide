@@ -4,8 +4,8 @@ Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`
-Latest operational checkpoint: `4c9ec12e feat(admin): add compatibility pair rule draft workflow`
+Current functional HEAD before this docs sync: `25e3ec0d445a6b8342593313c2783b98dc9b6b86`
+Latest operational checkpoint: `25e3ec0d feat(admin): add compatibility human review gate`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -81,7 +81,7 @@ P0-B — [DONE] Authenticated bilingual batch-01 import/review/Staging/28-page h
 
 P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Published Diff, affected-consumer summary, Encyclopedia Before/After and Compatibility-result regression simulation.
 
-P1 — [IN PROGRESS] Compatibility Admin: Profile + Pair Rule Draft workflows are implemented; next is human Review/Approve, rule versioning and regression gating before reviewed publish.
+P1 — [IN PROGRESS] Compatibility Admin: Profile/Pair Draft + human Review/Approve + structural Impact Check are implemented; next is Compatibility runtime/publish authority convergence, then versioned publish + engine regression gate.
 
 P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extraction/conflict detection/Draft generation from approved facts.
 
@@ -146,3 +146,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - 1280/390 browser flow passes create/edit/save/submit/lock; root lint/build, API check, Compatibility impact and compatibility-admin contract pass.
 - Migrations 0002/0003 remain code-only; no live DB or Production mutation.
 - Next unfinished item: versioned human Review/Approve + regression gate before reviewed Compatibility publish.
+
+## 2026-09-04 Compatibility human review / authority checkpoint
+- Functional commit `25e3ec0d445a6b8342593313c2783b98dc9b6b86`; online lightweight CI run `33893177526` passed and Heavy was skipped.
+- Server computes Draft-vs-reviewed structural impact at submit time; revisions without actual changes cannot enter review.
+- Explicit authenticated Approve/Reject is required; Reject requires a review note. Approval remains revision-only and cannot change reviewed runtime.
+- Canonical architecture was corrected: Product/Care published runtime is converged, while Compatibility still has a split-path risk because the user-facing engine reads code/data evidence and Admin revisions are DB-backed.
+- Do not create a Compatibility publish endpoint until runtime/published authority is converged.
+- Next: design/read-contract + controlled fallback for reviewed Compatibility runtime, then versioned publish with engine regression gate.

@@ -24,20 +24,19 @@ Personalization is computed from shared knowledge/rules plus each user's aquariu
 
 SEO is an acquisition projection, not the source of product behavior. Editing an SEO H1 or Meta must never silently change pH, compatibility decisions, aquarium tasks or another user's stored aquarium state.
 
-## 4. Current verified source-of-truth gap — P0
-The repository currently has two content paths that are not fully converged:
-- `src/pages/Encyclopedia.tsx` imports `src/data/fishData.ts` directly.
-- `src/pages/CareEncyclopedia.tsx` imports generated `src/data/careTopicsData.ts` directly.
-- `/admin/product-content` writes Product/Care records through `/admin/species` and `/admin/care-articles` APIs.
+## 4. Current verified source-of-truth status
+Product/Care P0 is converged and controlled-Preview accepted: public Product/Care APIs are the published runtime authority for the connected Encyclopedia/Care/Aquarium/Identify consumers, while static datasets remain explicit seed/offline fallback.
 
-Therefore Product/Care Admin `published` state is **not yet proven to be the single frontend authority**. Do not tell operators that every Product/Care publish immediately updates the live consumer experience until this read path is converged and acceptance-tested.
+The remaining authority gap is Compatibility. `tankCompatibilityEngine` still consumes reviewed code/data evidence such as `compatibilityEvidence`, while the new Compatibility Admin revision workflow is DB-backed. Do **not** add a reviewed publish action until the published Compatibility authority and runtime read path are converged; otherwise Admin and user-facing decisions would diverge.
+
 ## 5. Compatibility boundary
-The current compatibility product is real and rule-based. `tankCompatibilityEngine` consumes Species facts plus reviewed compatibility evidence and user tank context. Reviewed evidence currently lives in code/data such as `compatibilityEvidence`.
+The current compatibility product is real and rule-based. `tankCompatibilityEngine` consumes Species facts plus reviewed compatibility evidence and user tank context. Reviewed runtime evidence currently lives in code/data such as `compatibilityEvidence`.
 
-This means compatibility is **not SEO content** and is not yet a mature CMS-managed domain. The target operator model is:
+The operator model is now partially implemented:
 `Species Behavior Profile + Pair Rule + Evidence + Confidence + Review Status + Rule Version`.
+Profile and Pair Rule Draft revisions plus server-computed structural Impact Check and explicit human Approve/Reject exist in code. These migrations remain unapplied to live databases, and approved revisions are intentionally **not published** to runtime yet.
 
-Rule changes must be stricter than copy edits: Draft → regression/impact test → human review → versioned publish.
+Rule changes remain stricter than copy edits: Draft → regression/impact test → human review → versioned publish. The next architecture step is to converge reviewed publish/runtime authority before introducing that final publish transition.
 
 ## 6. Mature publishing model
 A mature change should pass through:

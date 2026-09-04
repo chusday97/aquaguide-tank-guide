@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`
+Operational HEAD before this sync: `25e3ec0d445a6b8342593313c2783b98dc9b6b86`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
@@ -26,7 +26,7 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview: completed and regression-accepted. Compatibility Profile + Pair Rule Draft workflows are implemented; human Review/Approve + rule versioning/regression gate are next.
+P1 Change Impact Preview: complete. Compatibility Profile/Pair Draft plus human Review/Approve and structural Impact Check are implemented; reviewed runtime/publish authority convergence is now the first unfinished Compatibility item.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
@@ -94,3 +94,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Pair Rule Drafts expose evidence/confidence/review-state fields but cannot mutate reviewed runtime authority or publish.
 - PASS: pair/profile compatibility-admin contract, API TS, 1280/390 browser flow, Compatibility impact, root lint/build, diff hygiene.
 - Pair migration remains unapplied to live DB/Production.
+
+## 2026-09-04 Compatibility human review checkpoint
+- Profile/Pair revisions require API-generated structural impact before pending review and explicit human Approve/Reject before becoming Approved.
+- Approved remains non-runtime; no Compatibility publish endpoint exists.
+- Online light CI for `25e3ec0d` PASS; Heavy skipped.
+- Compatibility runtime still reads reviewed code/data evidence, so publish authority convergence remains required before versioned publish.

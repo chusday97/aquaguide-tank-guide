@@ -28,7 +28,7 @@ Species SEO remains Repo-backed and fail-closed:
 3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
 4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
 5. [DONE] Change Impact Preview: field classification, affected-consumer summary, decision-critical Before/After and Compatibility-result regression checks.
-6. [IN PROGRESS] Compatibility Admin: Species behavior Profile and Pair Rule operator/Draft revision workflows are DONE locally; [NEXT] reviewed rule versioning + explicit human Review/Approve and regression gate before publish.
+6. [IN PROGRESS] Compatibility Admin: Profile + Pair Draft workflows and explicit human Review/Approve with server structural Impact Check are DONE locally; [NEXT] converge reviewed Compatibility publish authority with runtime, then add versioned publish + engine regression gate.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -81,3 +81,12 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Browser acceptance passes at 1280/390 for create → edit → save → submit-review → edit lock. A Zod refine/omit runtime crash found during acceptance was corrected at the contract layer.
 - Migration `202609040003_compatibility_pair_rule_revisions.sql` is repository-only and unapplied to live databases/Production.
 - Next: reviewed rule versioning + human approval + regression/impact gate before any Compatibility publish path is introduced.
+
+## 2026-09-04 Compatibility human review / impact checkpoint
+- Functional commit `25e3ec0d feat(admin): add compatibility human review gate`.
+- Submitting a Profile/Pair Draft now makes the API compare it with the current reviewed DB baseline and persist an impact report; no-change drafts cannot enter review.
+- `pending_review` revisions can only move to Approved/Rejected through an explicit authenticated human action; Reject requires a note.
+- Approval changes revision status only and never updates reviewed runtime rows.
+- Browser 1280/390 proves submit → Impact Check → approve → Approved while editing remains locked.
+- Migration `202609040004_compatibility_revision_review_gate.sql` is code-only/unapplied.
+- Remaining blocker before publish: user-facing Compatibility still reads code/data reviewed evidence, so DB publish would create split authority.
