@@ -4,8 +4,8 @@ Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `d6d2b37e`
-Latest converged functional baseline: `d6d2b37e feat(content): isolate product care publication`
+Current functional HEAD before this docs sync: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`
+Latest operational checkpoint: `7aaeb44e content(seo): publish staging batch-01`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -56,24 +56,30 @@ Controlled Preview acceptance now proves Save stays private, Publish advances th
 - Staging requires bilingual page/Base approvals, hygiene gates, exact batch allowlist and required Canonical dependencies.
 - Production remains locked.
 
-## Current operating proof still pending
-Run the corrected 14-Species batch-01 through the authenticated AquaGuide Preview:
-1. zh-CN CSV → Preflight/Diff → Draft batch.
-2. English CSV → Preflight/Diff → Draft batch.
-3. Batch-scoped review/approval for intended Species + Base rows.
-4. One explicit Staging Publish only when bilingual readiness is green.
-5. Verify 28 hosted EN/ZH pages for title/meta/H1, facts, canonical/hreflang, robots, CTA and internal-copy hygiene.
+## Species SEO operational proof — completed 2026-09-04
+- Authenticated zh-CN import batch: `batch-20260904132705-deca`; 14 Species / 14 Base groups; final status Approved.
+- Authenticated English import batch: `batch-20260904132732-9d0d`; same 14 Species / 14 Base groups; final status Staging Published.
+- Explicit Staging publication commit: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd` on `feature/admin-content-v0`; sanitized snapshot path `content/species-seo/staging-snapshot.json`.
+- Hosted Vercel deployment: `dpl_B86KiBaD75LhGdcHMa6v8zTN6pJM` / `aquaguide-bds0xiu0q-chusday97s-projects.vercel.app`.
+- Hosted acceptance: 28/28 EN/ZH pages passed title/meta/H1, Product facts, canonical/hreflang, robots, CTA and internal-copy hygiene checks.
+- Existing historical `sp_0001` acceptance/test Drafts were outside both batch scopes and were not published.
+- Production remained locked throughout.
 
-This proves the SEO subsystem operationally; it does **not** solve the Product/Care source-of-truth gap.
+## CI operating policy — 2026-09-04
+- Normal pushes/PRs run lightweight checks only: Admin contract/build, product fast contracts, lint/typecheck, root build, generated-data/diff hygiene.
+- Heavy Golden / Visual / evaluation-history / browser suites run only on `workflow_dispatch`, merge queue (`merge_group`), or PRs labeled `run-heavy-ci` / `merge-ready`.
+- Existing workflow/check identities are preserved where possible so branch rules do not silently break.
+- Heavy tests were not deleted; local entrypoint validation passed before commit.
+
 ## Next implementation order
 P0-A — Product/Care authority convergence:
 - [done locally] published-content read contract + Draft isolation;
 - [done locally] Encyclopedia Product + Care Encyclopedia/Aquarium/Identify diagnosis runtime cutover with explicit fallback;
 - [done locally] stateful browser Preview proves Admin Product/Care Save→Publish behavior plus user-state/Compatibility isolation.
 
-P0-B — [NEXT] Finish batch-01 SEO operational acceptance when authenticated human review is available.
+P0-B — [DONE] Authenticated bilingual batch-01 import/review/Staging/28-page hosted acceptance.
 
-P1 — Change Impact Preview: classify display-only vs decision-critical edits and show affected Encyclopedia / Aquarium / Compatibility / SEO consumers before release.
+P1 — [NEXT] Change Impact Preview: classify display-only vs decision-critical edits and show affected Encyclopedia / Aquarium / Compatibility / SEO consumers before release.
 
 P1 — Compatibility Admin: reviewed Species behavior profiles, Pair Rules, Evidence, Confidence and Rule Version with regression testing before publish.
 
@@ -81,8 +87,8 @@ P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extr
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `b982e2a69e5c3a4ca575f45aa93bea81e362fe35`.
-- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 113 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remote before this docs sync: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`.
+- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 115 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten

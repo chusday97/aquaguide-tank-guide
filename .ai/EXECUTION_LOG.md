@@ -514,3 +514,16 @@
 - Validation PASS: full root build, Admin contract/UI, SEO handoff, strict published runtime browser test, runtime isolation, Product publish-preview, Care publish-preview, diff hygiene.
 - Functional commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
 - No Production migration/deploy, main merge/rebase, or real user data mutation occurred. Next unfinished P0 is authenticated bilingual SEO batch-01 operational acceptance.
+
+## 2026-09-04 21:40 +0800 — authenticated SEO batch-01 acceptance + CI tiering
+- User authenticated Aqua SEO Admin locally; no password/cookie/token was copied into chat or committed.
+- Executed corrected batch-01 through official Repo Admin API with fail-closed scope checks.
+- zh-CN batch `batch-20260904132705-deca`: 14/14 Species changed, 14 Base groups, submitted and approved; final batch status `approved`.
+- en batch `batch-20260904132732-9d0d`: same 14 Species/Base scope, submitted and approved; one explicit Staging Publish completed.
+- Staging snapshot commit: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd` → `feature/admin-content-v0`; Production remained locked.
+- Vercel deployment `dpl_B86KiBaD75LhGdcHMa6v8zTN6pJM` became READY for the staging commit.
+- Hosted verification PASS 28/28: exact title/meta/H1, Product Truth temperature/pH/tank/difficulty, canonical + EN/zh-CN/x-default hreflang, `noindex,follow`, three AquaGuide CTAs, no acceptance/test/placeholder hygiene markers.
+- English tank-size verification uses the canonical `localizeSpeciesTankSize` presentation rule (`至少 N 升` → `At least N L`), avoiding a false source-string mismatch.
+- CI policy changed without deleting coverage: ordinary runs use lightweight Admin contracts/build + product fast contracts + lint/root build; heavy Golden/Visual/evaluation-history/browser suites run only for manual dispatch, merge queue, or PR labels `run-heavy-ci` / `merge-ready`.
+- Preserved existing `Admin Content CI Gate` and `Product Golden Path` workflow identities and `validate` job key to reduce branch-rule breakage risk.
+- Local validation PASS: YAML parse, `git diff --check`, full light command set, Golden contract, Visual result contract, evaluation report 47/47, Admin UI regression.

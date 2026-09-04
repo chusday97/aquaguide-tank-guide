@@ -8,7 +8,7 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-The immediate technical priority is to establish one authoritative Product/Care publication path so Admin changes can be trusted to reach the correct frontend consumers.
+The immediate technical priority is now **P1 Change Impact Preview**: make decision-critical edits show their affected frontend/runtime consumers before release. Product/Care authority convergence and the first authenticated SEO operating cycle are already closed.
 
 ## Why this is now P0
 Verified current code still has direct static frontend authorities:
@@ -31,8 +31,8 @@ Species SEO remains Repo-backed and fail-closed:
 1. [DONE locally] Define one published Product/Care read contract, inventory direct static consumers, and isolate Draft from the last Published snapshot.
 2. [DONE locally] Converge Encyclopedia Product and Care Encyclopedia/Aquarium/Identify diagnosis reads onto the published runtime authority with explicit static fallback.
 3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
-4. [NEXT] Complete the existing 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview.
-5. Add change-impact classification/Preview before decision-critical Product Data changes can be released broadly.
+4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
+5. [NEXT] Add change-impact classification/Preview before decision-critical Product Data changes can be released broadly.
 6. Build Compatibility Admin only after Product Data authority is stable.
 
 ## Safety
@@ -47,3 +47,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - `aquarium_app_state_v1` remains byte-identical across Admin Save/Publish and before/after user Preview loads.
 - Published Product hydration mutates only `runtimeFishData`; static `fishData` used by Compatibility remains unchanged.
 - This closes the defined Product/Care P0 target locally. Production migration/deployment remains intentionally untouched.
+
+## 2026-09-04 SEO operational acceptance + CI cost control
+- Authenticated batch-01 completed for zh-CN and en: 14 Species × 2 locales, with durable batch scope and 14 Base groups per locale.
+- One explicit Staging snapshot publish created commit `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`; Production remained locked.
+- Hosted deployment `dpl_B86KiBaD75LhGdcHMa6v8zTN6pJM` passed 28/28 page checks for metadata, H1, Product facts, canonical/hreflang, robots, CTA and content hygiene.
+- CI is now split into light default checks and gated heavy Golden/Visual/evaluation/browser checks.

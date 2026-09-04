@@ -19,6 +19,7 @@ on:
       - 'package-lock.json'
       - '.github/workflows/admin-content-ci-gate.yml'
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
     paths:
       - 'apps/admin-content/**'
       - 'src/data/fishData.ts'
@@ -34,10 +35,12 @@ on:
       - 'scripts/verify-seo-species-handoff.mjs'
       - 'package-lock.json'
       - '.github/workflows/admin-content-ci-gate.yml'
+  merge_group:
   workflow_dispatch:
 
 permissions:
   contents: read
+
 concurrency:
   group: admin-content-ci-${{ github.ref }}
   cancel-in-progress: true
@@ -45,30 +48,31 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 15
     env:
       ADMIN_EXPECTED_NODE_VERSION: v24.14.0
     steps:
       - name: Checkout pinned revision
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-
       - name: Setup pinned Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24.14.0
           cache: npm
-
       - name: Verify toolchain version
         run: test "$(node -v)" = "$ADMIN_EXPECTED_NODE_VERSION"
-
       - name: Install exact dependencies
         run: npm ci --no-audit --no-fund
-
-      - name: Install Playwright Chromium for SEO handoff gate
-        run: npx playwright install --with-deps chromium
-
-      - name: Admin contract and generator tests
+      - name: Admin contract tests
         run: npm run test:contract -w @aquaguide/admin-content
+      - name: Admin production build
+        run: npm run build -w @aquaguide/admin-content
+      - name: Generated catalog must be committed
+        run: |
+          git diff --exit-code -- apps/admin-content/src/catalog.generated.json
+          git diff --exit-code -- apps/admin-content/src/species-groups.generated.json
+      - name: Diff hygiene
+        run: git diff --check
 
       - name: Vercel docs-only deployment guard
         shell: bash
@@ -85,10 +89,31 @@ jobs:
           test "$code_exit" -eq 1
           test "$snapshot_exit" -eq 1
 
-
-      - name: Production build
-        run: npm run build -w @aquaguide/admin-content
-
+  heavy:
+    name: Heavy browser / SEO handoff gate
+    needs: validate
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'merge_group' ||
+      (github.event_name == 'pull_request' &&
+        (contains(github.event.pull_request.labels.*.name, 'run-heavy-ci') ||
+         contains(github.event.pull_request.labels.*.name, 'merge-ready')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout pinned revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Setup pinned Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24.14.0
+          cache: npm
+      - name: Install exact dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Admin browser regression
+        run: npm run test:admin-content-ui
       - name: Root AquaGuide Species SEO artifact integration
         env:
           SPECIES_SEO_SNAPSHOT_PATH: apps/admin-content/fixtures/staging-publication-sample.json
@@ -99,11 +124,3 @@ jobs:
           npm run build
           npm run verify:species-pages-artifact
           npm run verify:seo-species-handoff
-
-      - name: Generated catalog must be committed
-        run: |
-          git diff --exit-code -- apps/admin-content/src/catalog.generated.json
-          git diff --exit-code -- apps/admin-content/src/species-groups.generated.json
-
-      - name: Diff hygiene
-        run: git diff --check

@@ -17,12 +17,17 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Correct Admin publish copy to describe only connected Product/Care consumers and preserve Compatibility authority boundaries.
 
 ## P0 — Existing SEO operational acceptance
-- [ ] Authenticated import corrected batch-01 zh-CN → preflight/Diff → Draft batch.
-- [ ] Authenticated import corrected batch-01 en → preflight/Diff → Draft batch.
-- [ ] Batch-scoped submit/approve intended Species + Base rows.
-- [ ] One explicit bilingual Staging Publish when readiness is fully green.
-- [ ] Verify 28 hosted EN/ZH pages: metadata, H1, facts, canonical/hreflang, robots, CTA, hygiene.
-- [ ] Keep Production locked.
+- [x] Authenticated import corrected batch-01 zh-CN → preflight/Diff → Draft batch.
+- [x] Authenticated import corrected batch-01 en → preflight/Diff → Draft batch.
+- [x] Batch-scoped submit/approve intended Species + Base rows.
+- [x] One explicit bilingual Staging Publish when readiness is fully green.
+- [x] Verify 28 hosted EN/ZH pages: metadata, H1, facts, canonical/hreflang, robots, CTA, hygiene.
+- [x] Keep Production locked.
+## CI operating policy — completed
+- [x] Every normal push/PR runs lightweight checks only: contracts, lint/typecheck, builds and diff/generated-data hygiene.
+- [x] Golden / Visual / evaluation-history / browser-heavy suites run only on manual dispatch, merge queue, or PR labels `run-heavy-ci` / `merge-ready`.
+- [x] Preserve existing required-check workflow/job identities for compatibility with branch rules.
+
 ## P1 — Change Impact Preview
 - [ ] Classify fields as display-only, decision-critical Product Data, Care workflow, Compatibility rule or SEO-only.
 - [ ] Show affected consumers before release: Encyclopedia, Aquarium, Compatibility, Care and SEO.

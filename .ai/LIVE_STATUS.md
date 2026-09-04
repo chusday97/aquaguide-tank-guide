@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 Canonical branch: `feature/admin-content-v0`
-Docs HEAD before this sync: `7fb19b28c7105fdfcd9f1f443ea42b82341e64da`
+Operational HEAD before this sync: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
@@ -21,17 +21,16 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 ## SEO subsystem state
 - Repo-backed private Draft/review/revision/import-batch authority is stable.
 - CSV preflight/Diff, duplicate evidence review, batch-bound review and bilingual Staging gates are implemented.
-- Corrected 14-Species bilingual batch-01 has passed isolated dry-run but not the full authenticated hosted operating cycle.
+- Corrected 14-Species bilingual batch-01 completed the full authenticated hosted operating cycle: zh-CN + en import, batch-scoped review/approval, one Staging Publish, and 28/28 hosted page acceptance.
 - Production remains locked.
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
-P0-B: authenticated bilingual SEO batch-01 import/review/Staging acceptance is now the first unfinished P0.
-P0-B: finish hosted batch-01 SEO acceptance when authenticated human review is available.
-P1: add impact Preview and then Compatibility Admin.
+P0-B: completed; Production remained locked.
+P1: Change Impact Preview is now the first unfinished product milestone, followed by Compatibility Admin.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `b982e2a69e5c3a4ca575f45aa93bea81e362fe35`.
+- Feature remote before this docs sync: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -60,3 +59,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - `aquarium_app_state_v1` unchanged across the tested flows; Compatibility still consumes isolated static rule inputs.
 - Full root build, Admin contract/UI, SEO handoff, runtime browser, isolation and both publish-preview tests PASS.
 - Production migration/deployment and main remain untouched.
+
+## 2026-09-04 SEO batch-01 + CI checkpoint
+- zh-CN batch `batch-20260904132705-deca` and en batch `batch-20260904132732-9d0d` were authenticated, imported, reviewed and approved with exact 14-Species / 14-Base scope per locale.
+- Staging publish commit `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd` produced Vercel deployment `dpl_B86KiBaD75LhGdcHMa6v8zTN6pJM`.
+- Hosted acceptance PASS: 28/28 bilingual pages; metadata, H1, source facts, canonical/hreflang, robots, CTA and hygiene all verified.
+- CI split implemented locally: light checks on ordinary runs; Golden/Visual/evaluation/browser heavy gates only on `workflow_dispatch`, `merge_group`, `run-heavy-ci` or `merge-ready` PRs.
+- Local light CI command set PASS; heavy entrypoint smoke set PASS. Production untouched.
