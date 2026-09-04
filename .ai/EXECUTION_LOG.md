@@ -459,3 +459,14 @@
 - Divergence audit: main 269 unique commits / feature 95; 205 vs 108 changed files; 11 overlap; merge-tree shows 7 changed-in-both files and 13 conflict hunks.
 - Rewrote `CURRENT_GOAL.md` and `LIVE_STATUS.md`; created `BRANCH_STATUS.md`; Supabase is no longer presented as current Species SEO runtime/staging authority.
 - No private real Draft write, Staging publish, Production write, merge or rebase performed.
+
+## 2026-09-04 — durable import-batch convergence
+- Identified governance risk: bulk editorial review could select historical eligible Drafts outside the just-imported CSV scope.
+- Added Repo store schema v3 `import_batches` and server-generated durable batch identity/scope.
+- Added server-side batch membership validation for bulk review and exact batch+Canonical-dependency allowlist validation for Staging.
+- Preserved concurrent remote implementation's latest-import default scope, Activity/localStorage recovery, bilingual Approved/clean readiness and Canonical dependency calculation.
+- Concurrent push rejection was handled by fetch + no-force merge; only BulkEditorialReviewPanel conflicted and was manually reconciled.
+- Final converged functional head: `f4805669`.
+- Validation PASS: `test:contract`, Repo backend/API/dual-repo, root build, SEO handoff, Admin authority UI, `git diff --check`.
+- WebCodex invocation returned platform FORBIDDEN; no WebCodex execution result should be attributed to this change.
+- Production/main untouched. Next real proof is authenticated batch-01 zh-CN + en import/review/Staging on AquaGuide Preview.

@@ -745,3 +745,27 @@ When the user says `继续 Aqua SEO / 继续 SEO 后台 / 同步进度继续修�
 4. Batch submit + approve the intended 14 Species and required Base templates.
 5. One explicit Staging Publish; verify 28 hosted EN/ZH pages and deployment-level noindex.
 6. Keep Production locked; do not merge `main` during this operational acceptance.
+
+## 39. Durable import-batch authority + concurrent branch convergence — completed 2026-09-04
+- Final converged head: `f4805669 merge: converge import batch scope safeguards`.
+- During implementation, the same remote feature branch advanced with seven parallel commits covering recent-import review scope, Activity recovery, bilingual Staging readiness and Canonical dependency handling. Push was rejected non-fast-forward; no force push was used.
+- Reconciled the two implementations deliberately: preserved the richer remote UX/readiness logic, then added durable server-side batch authority and fail-closed mutation/release validation.
+- Repo store schema is now v3 with `import_batches` as persistent editorial authority.
+- Every successful CSV write creates a server-generated batch id plus filename, locale, Species allowlist, Base-group allowlist, source, counts, timestamps and batch workflow status.
+- zh-CN and en CSV imports remain separate locale-specific batch records; Staging readiness still requires both locales for every selected Species/Base before release.
+- Bulk editorial review defaults to the latest import scope. Full historical eligible content is explicit opt-in only.
+- `p_batch_id` makes the Repo RPC reject batch-external Species/Base resources, so a frontend selection bug cannot silently review historical Drafts.
+- Staging selection preserves the bilingual Approved/reviewed/hygiene gate and automatically includes required Canonical dependencies subject to the 20-Species cap.
+- Batch-bound Staging requests carry `batchId`; the server requires the exact persisted batch allowlist plus required Canonical dependencies and marks the private batch `staging_published` after a successful public snapshot write (best-effort post-write state update only).
+- Activity Center surfaces batch id/filename provenance for import/review/release actions.
+- localStorage and `bulk_import` Activity recovery remain compatibility fallback for pre-v3/legacy browser state; persisted Repo batch data wins when available.
+- Validation PASS after convergence: Admin contract/generator/Controlled Preview, Repo backend/API/dual-repo, root build, SEO compatibility handoff, Admin UI regression and diff hygiene.
+- WebCodex was explicitly invoked but the platform returned `FORBIDDEN: This conversation does not support developer MCPs`; the actual repository work was completed through the authorized local project tool instead. Do not claim WebCodex executed this change.
+- Production and `main` remain untouched.
+
+### Next operational action
+1. Authenticated AquaGuide Preview `/admin/seo/`: corrected batch-01 zh-CN → preflight/Diff → Create Draft.
+2. Corrected batch-01 en → preflight/Diff → Create Draft.
+3. Batch submit + approve each locale-specific batch scope for the intended 14 Species/Base resources.
+4. When the Staging card shows the full bilingual set ready, perform one explicit batch Staging Publish.
+5. Verify all 28 hosted EN/ZH pages and deployment-level noindex; keep Production locked.

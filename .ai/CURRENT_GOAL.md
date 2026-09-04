@@ -3,50 +3,47 @@
 Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
-Latest functional checkpoint: `adbc694 fix(admin-content): mirror staging bilingual gate`
+Latest converged functional head: `f4805669 merge: converge import batch scope safeguards`
 
 ## Runtime authority
-- Species SEO Draft/review/revision authority: private `chusday97/aquaguide-seo-content`, branch `seo-admin-drafts`.
+- Species SEO Draft/review/revision/import-batch authority: private `chusday97/aquaguide-seo-content`, branch `seo-admin-drafts`.
 - Public AquaGuide repo receives code plus an explicit sanitized Staging snapshot only.
-- Product/catalog source data stays read-only in AquaGuide.
+- Product/catalog source data remains read-only in AquaGuide.
 - Supabase Species SEO paths are historical/compatibility only; do not restore them as runtime or staging authority.
-- Canonical hosted Admin acceptance surface is AquaGuide Preview `/admin/seo/`; standalone `admin-content` Preview is not the real writable surface.
+- Canonical hosted Admin acceptance surface is AquaGuide Preview `/admin/seo/`.
 
 ## Current milestone
 Complete the first real 14-Species bilingual operating cycle:
-`CSV preflight + field diff → Draft import → import-scoped batch review → one batch Staging Publish → hosted EN/ZH verification`.
+`CSV preflight + field Diff → locale-specific Draft batch import → batch-scoped editorial review → one batch Staging Publish → hosted EN/ZH verification`.
 
 ## Stable completed baseline
-- Blank operational CSV template with field guidance, accepted formats, 20 blank rows and 3 non-importing examples.
-- Atomic page Draft + missing Base-template import with no partial writes.
+- Blank operational CSV template with field guide, format rules, 20 blank rows and 3 non-importing examples.
+- Atomic page Draft + create-if-missing Base-template import.
 - Source-identity fail-closed gate for incomplete scientific names.
-- Duplicate review uses one evidence view for single and bulk entry points.
-- Import has a persistent preflight report and fail-closed Create Draft action.
-- Bulk editorial review defaults to the most recent import batch, not the full historical Draft pool.
-- Recent import scope is cached locally and recoverable from private `bulk_import` Activity metadata after refresh/browser changes.
-- `全部可执行内容` is an explicit opt-in scope; it is never the default after import.
-- The recent import batch can be published to Staging in one explicit action rather than one Species at a time.
-- Batch Staging mirrors backend release rules: max 20 Species including Canonical dependencies; zh-CN/en page Drafts and zh-CN/en Base Drafts must all be Approved, reviewed and hygiene-clean.
+- Evidence-based duplicate review shared by single and bulk entry points.
+- Persistent CSV preflight report and fail-closed Create Draft action.
+- Durable Repo `import_batches` authority with server-generated batch id, filename, locale, Species keys, Base-group keys, source and workflow status.
+- Bulk review defaults to latest import scope; all historical eligible content is explicit opt-in only.
+- Batch-bound review mutations are revalidated by the Repo backend; UI scope alone is never authority.
+- Browser localStorage / Activity recovery is fallback for legacy sessions only; persisted Repo batch wins when present.
+- Staging batch UI verifies zh-CN + en page Drafts and zh-CN + en Base Drafts are Approved/reviewed/hygiene-clean.
+- Required Canonical dependencies are added to the Staging selection, and the server validates the exact batch + dependency allowlist.
 
 ## P0 next actions
-1. Authenticated AquaGuide Preview: upload corrected batch-01 zh-CN CSV, review preflight + field Diff, then create Drafts.
-2. Repeat for the English CSV.
-3. In `批量内容审核`, keep scope on `最近导入批次`; batch submit and approve the intended 14 Species + required Base rows.
-4. When the batch Staging card reports every selected Species bilingual-approved, perform one explicit Staging Publish.
-5. Verify 28 hosted bilingual pages: title/meta/H1, localized name, source facts, canonical/hreflang, robots, CTA, internal-copy hygiene and deployment-level noindex.
+1. Authenticated AquaGuide Preview: import corrected batch-01 zh-CN after preflight + field Diff.
+2. Import corrected batch-01 English the same way. Each locale import gets its own durable batch record.
+3. In `批量内容审核`, keep the safe latest-import scope and submit/approve the intended 14 pages + required Base rows for each locale.
+4. Publish one approved batch to Staging only when the bilingual readiness card is fully green.
+5. Verify the 28 hosted EN/ZH pages: title/meta/H1, localized name, source facts, canonical/hreflang, robots, CTA, internal-copy hygiene and deployment-level noindex.
 
 ## Branch convergence risk
-- Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282` at the latest dedicated convergence audit.
-- Common base at that audit: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
-- The audit found 269 main-only commits, 95 feature-only commits, 11 overlapping changed files, 7 changed-in-both files and 13 simulated conflict hunks.
-- Do not blindly merge/rebase. Use a dedicated reconciliation pass after current Admin operational acceptance.
-
-## Verification
-- GitHub Admin Content CI run `33786995600` for `adbc694` completed SUCCESS: contract/generator, Repo gates, production build, root AquaGuide Species SEO integration, catalog parity and diff hygiene.
-- Local interactive browser validation for this latest scope/Staging change was not run in this round because the authorized Remote Desktop device disconnected; do not claim a human hosted Admin write occurred.
+- Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- Feature: `f480566988c5a07e3e7306085856fead8158bec3`.
+- Current divergence: main-only 269 / feature-only 105 commits.
+- Do not blindly merge/rebase. Dedicated feature/main reconciliation remains after Admin operational acceptance.
 
 ## Safety boundary
 - Production remains locked.
-- Do not merge `main` without explicit authorization and a dedicated convergence audit.
-- Do not bypass Admin authentication for human editorial/review decisions.
-- Do not write private Draft content directly to the public AquaGuide repo.
+- Do not merge `main` without explicit authorization and dedicated reconciliation.
+- Do not bypass authenticated Admin for human editorial/review decisions.
+- Do not write private Draft content directly into the public AquaGuide repo.

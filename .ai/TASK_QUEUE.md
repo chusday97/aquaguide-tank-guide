@@ -325,3 +325,18 @@ Updated: 2026-09-02
 - [ ] Batch submit + approve 14 Species + required Base rows.
 - [ ] One explicit Staging Publish + hosted 28-page bilingual verification.
 - [ ] Dedicated feature/main reconciliation after Admin operational acceptance; do not merge/rebase during ordinary fixes.
+
+## 2026-09-04 durable import batch authority
+- [x] Persist each successful CSV import as a server-generated Repo `import_batch`.
+- [x] Persist filename, locale, Species keys, Base-group keys, source, counts and workflow status.
+- [x] Make persisted Repo batch scope outrank localStorage/Activity recovery.
+- [x] Keep historical/full-library bulk review behind explicit opt-in.
+- [x] Bind batch review RPC to `p_batch_id` and reject out-of-scope Species/Base resources server-side.
+- [x] Preserve bilingual Approved/reviewed/hygiene Staging readiness and automatic Canonical dependencies.
+- [x] Bind Staging publish to persisted batch id and validate exact batch + dependency allowlist server-side.
+- [x] Surface batch provenance in Activity Center.
+- [x] Reconcile concurrent same-branch implementation without force push; final converged head `f4805669`.
+- [ ] Authenticated Preview: import corrected batch-01 zh-CN and confirm durable batch appears.
+- [ ] Authenticated Preview: import corrected batch-01 en and confirm durable batch appears.
+- [ ] Submit + approve intended 14 Species/Base rows within each locale batch scope.
+- [ ] One explicit Staging Publish after full bilingual readiness; verify 28 hosted pages/noindex.
