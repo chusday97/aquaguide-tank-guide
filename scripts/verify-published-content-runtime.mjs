@@ -101,7 +101,7 @@ try {
     await careInput.fill('P0 已发布新鱼入缸');
     const careResults = page.locator('#care-results');
     await careResults.waitFor({ state: 'visible' });
-    assert.match(await careResults.innerText(), /P0 已发布新鱼入缸/, 'Care Guide must render the Published Care title');
+    await careResults.getByText('P0 已发布新鱼入缸', { exact: true }).first().waitFor();
     assert.deepEqual(seenRequests, ['zh-CN'], 'Care runtime must use the same Published Content bootstrap');
     assert.deepEqual(errors, [], `Published Care runtime should not raise page errors: ${errors.join(' | ')}`);
     await page.close();
@@ -117,7 +117,7 @@ try {
     await careInput.fill('P0 Published New Fish Acclimation');
     const careResults = page.locator('#care-results');
     await careResults.waitFor({ state: 'visible' });
-    assert.match(await careResults.innerText(), /P0 Published New Fish Acclimation/, 'English Care must render the published locale payload');
+    await careResults.getByText('P0 Published New Fish Acclimation', { exact: true }).first().waitFor();
     assert.deepEqual(seenRequests, ['en'], 'English bootstrap must request en rather than reusing zh-CN data');
     assert.deepEqual(errors, [], `English Published Content runtime should not raise page errors: ${errors.join(' | ')}`);
     await page.close();

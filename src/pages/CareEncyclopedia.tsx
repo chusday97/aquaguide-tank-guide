@@ -7,7 +7,7 @@ import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { CareTopic } from '../data/careTopicsData';
-import { runtimeFishData as fishData, runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
+import { isRuntimeCarePublished, runtimeFishData as fishData, runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import {
   getCareActionEvidence,
   getCareActionEvidenceForText,
@@ -744,6 +744,7 @@ const displayTitleMap: Record<string, string> = {
 };
 
 const getDisplayTitle = (topic: CareTopic) => {
+  if (isRuntimeCarePublished(topic.id)) return topic.title.trim();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   if (isEn) {
     if (displayTitleMapEn[topic.id]) return displayTitleMapEn[topic.id];
