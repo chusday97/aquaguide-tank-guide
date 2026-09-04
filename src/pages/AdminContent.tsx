@@ -7,7 +7,9 @@ import {
   type CareArticleDetailDto,
   type SpeciesDetailDto,
 } from '../../packages/contracts/src/index';
+import CompatibilityRegressionPreview from '../components/admin/CompatibilityRegressionPreview';
 import ContentImpactPreview from '../components/admin/ContentImpactPreview';
+import ProductBeforeAfterPreview from '../components/admin/ProductBeforeAfterPreview';
 import { useToast } from '../components/common/ToastProvider';
 import { AquaGuideApiError } from '../services/api/api-client';
 import {
@@ -18,6 +20,7 @@ import {
   type SpeciesAdminInput,
 } from '../services/admin/content-admin.service';
 import { buildContentImpact, type ContentImpactResult } from '../services/admin/content-impact.service';
+import { runCompatibilityRegression } from '../services/admin/compatibility-impact.service';
 
 type ContentType = 'species' | 'care';
 type StatusAction = 'published' | 'archived';
@@ -115,6 +118,11 @@ export default function AdminContent() {
   }, [careForm, publishedBaseline, selected, speciesForm, type]);
   const visibleImpact = isDirty ? liveImpact : (lastSavedImpact ?? liveImpact);
   const savedImpactLabel = publishedBaseline ? '当前草稿相对已发布版本' : '最近一次保存的字段变更';
+  const publishedSpeciesBaseline = publishedBaseline && 'scientificName' in publishedBaseline ? publishedBaseline : null;
+  const compatibilityRegression = useMemo(() => {
+    if (type !== 'species' || isDirty || !publishedSpeciesBaseline || !visibleImpact?.reviewConsumers.includes('compatibility')) return null;
+    return runCompatibilityRegression(publishedSpeciesBaseline, speciesForm);
+  }, [isDirty, publishedSpeciesBaseline, speciesForm, type, visibleImpact]);
 
   const loadPublishedBaseline = async (item: AdminSpeciesRecord | AdminCareArticleRecord) => {
     const requestId = ++baselineRequestRef.current;
@@ -300,6 +308,8 @@ export default function AdminContent() {
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
             {selected && <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />}
+            {selected && type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}
+            {selected && compatibilityRegression && <CompatibilityRegressionPreview result={compatibilityRegression} />}
             {type === 'species' ? (
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="目录 ID" required><input ref={firstFieldRef} className={inputClass} value={speciesForm.catalogKey} disabled={Boolean(selected)} onChange={e => { setSpeciesForm(v => ({ ...v, catalogKey: e.target.value })); setIsDirty(true); }} /></Field>
@@ -338,7 +348,7 @@ export default function AdminContent() {
         </main>
       </div>
 
-      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[520px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? '发布后，直接接入当前 Product/Care authority 的页面会读取新版本；标记为“需单独复核”的 Compatibility、SEO 等独立 authority 不会被自动改写。' : '下线后普通用户将无法继续打开这项内容。'}</p>{pendingStatus === 'published' && <ContentImpactPreview impact={visibleImpact} saved savedLabel={savedImpactLabel} compact />}<div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button></div></div></div>}
+      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[520px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? '发布后，直接接入当前 Product/Care authority 的页面会读取新版本；标记为“需单独复核”的 Compatibility、SEO 等独立 authority 不会被自动改写。' : '下线后普通用户将无法继续打开这项内容。'}</p>{pendingStatus === 'published' && <ContentImpactPreview impact={visibleImpact} saved savedLabel={savedImpactLabel} compact />}{pendingStatus === 'published' && compatibilityRegression && <div className={`mb-4 rounded-[14px] border px-3 py-2.5 text-xs font-bold leading-5 ${compatibilityRegression.changedPairs ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-emerald-200 bg-emerald-50 text-emerald-900'}`}><span className="font-black">Compatibility 模拟：</span>{compatibilityRegression.changedPairs ? `发现 ${compatibilityRegression.changedPairs} 个组合结果/规则发生变化，其中 ${compatibilityRegression.statusChangedPairs} 个状态变化；发布 Product 不会自动更新 Compatibility 规则。` : `已对比 ${compatibilityRegression.cohortSize} 个组合，未发现物种级 Compatibility 结果变化。`}</div>}<div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button></div></div></div>}
     </div>
   );
 }

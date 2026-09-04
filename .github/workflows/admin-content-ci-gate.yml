@@ -10,6 +10,7 @@ on:
       - 'src/components/admin/**'
       - 'src/services/admin/**'
       - 'scripts/test-admin-content-impact.ts'
+      - 'scripts/test-admin-compatibility-impact.ts'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
       - 'api/translate.js'
@@ -31,6 +32,7 @@ on:
       - 'src/components/admin/**'
       - 'src/services/admin/**'
       - 'scripts/test-admin-content-impact.ts'
+      - 'scripts/test-admin-compatibility-impact.ts'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
       - 'api/translate.js'
@@ -75,6 +77,8 @@ jobs:
         run: npm run test:contract -w @aquaguide/admin-content
       - name: Admin impact classification
         run: npm run test:admin-content-impact
+      - name: Admin compatibility regression contract
+        run: npm run test:admin-compatibility-impact
       - name: Admin production build
         run: npm run build -w @aquaguide/admin-content
       - name: Generated catalog must be committed
