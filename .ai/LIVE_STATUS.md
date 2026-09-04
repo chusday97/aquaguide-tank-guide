@@ -16,7 +16,7 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 - Care Encyclopedia plus Aquarium/Identify diagnosis now read the published Care runtime catalog.
 - `/api/v1/*` is routed through a dedicated Business API Vercel function; local Preview proxies the same API boundary.
 - Static datasets are retained as explicit fallback when the published API is unavailable.
-- Remaining P0 gap: prove real Admin Product/Care Save→Publish behavior in Preview and verify no compatibility or user-state mutation.
+- Controlled Product/Care Save→Publish→Preview acceptance now passes; user aquarium state and Compatibility static authority remain isolated.
 
 ## SEO subsystem state
 - Repo-backed private Draft/review/revision/import-batch authority is stable.
@@ -24,7 +24,8 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 - Corrected 14-Species bilingual batch-01 has passed isolated dry-run but not the full authenticated hosted operating cycle.
 - Production remains locked.
 ## Current next work
-P0-A: real Admin Product/Care Save/Publish → Preview acceptance and spillover verification.
+P0-A: Product/Care target convergence is locally accepted.
+P0-B: authenticated bilingual SEO batch-01 import/review/Staging acceptance is now the first unfinished P0.
 P0-B: finish hosted batch-01 SEO acceptance when authenticated human review is available.
 P1: add impact Preview and then Compatibility Admin.
 
@@ -51,3 +52,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Care search + Identify manual-search browser checks PASS; diagnosis deterministic tests PASS.
 - Local `vercel build` recognized `/api/v1/:path*` → dedicated `api/v1/router.func`; Business API bundle reduced from ~257 MB legacy-app packaging to ~24 MB.
 - No Vercel deployment, Production migration, main merge or rebase occurred.
+
+## 2026-09-04 Product/Care acceptance checkpoint
+- Functional commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
+- Product and Care stateful browser Preview tests PASS: Save remains private; Publish advances the intended runtime consumer.
+- Published Care titles now bypass legacy hardcoded title maps; runtime search suggestions preserve published Product/Care labels.
+- `aquarium_app_state_v1` unchanged across the tested flows; Compatibility still consumes isolated static rule inputs.
+- Full root build, Admin contract/UI, SEO handoff, runtime browser, isolation and both publish-preview tests PASS.
+- Production migration/deployment and main remain untouched.

@@ -501,3 +501,16 @@
 - Validation PASS: root build, TypeScript/API checks, Admin content contract, Product/Care runtime browser injection, Care/Identify search checks, species diagnosis, care guidance/category consistency, Admin UI and SEO handoff. Existing unrelated Identify tests contain older wording assumptions and were not used to alter product behavior.
 - Functional commit: `eff3bba3 feat(content): route published product care runtime`.
 - Next P0: real Admin Product edit and Care edit through Save/Publish into Preview, with Save-invisibility and compatibility/user-state spillover checks.
+
+
+## 2026-09-04 — Product/Care Save→Publish Preview acceptance
+- Built stateful browser contracts for one Product and one Care record using the real Admin UI plus controlled API fixtures.
+- Verified Save changes Admin source to Draft while the user-facing Preview keeps the previous published value; verified Publish advances the intended Encyclopedia/Care consumer on fresh load.
+- Tightened Care runtime acceptance from search-summary matching to exact rendered card-title matching; this exposed a real legacy `displayTitleMap` override that masked published Care titles. Fixed the override so published Care wins and legacy maps only format fallback content.
+- Protected published Product/Care search labels from legacy translation maps.
+- Added runtime isolation test: published Product can change name/temperature/pH/difficulty/temperament in `runtimeFishData` without mutating static `fishData` used by Compatibility; static Care seed also remains unchanged.
+- Added browser assertions that `aquarium_app_state_v1` is byte-identical before/after Admin Save/Publish and user Preview loads.
+- Updated Admin publish confirmation copy so it no longer claims universal immediate visibility and explicitly preserves Compatibility as an independent authority.
+- Validation PASS: full root build, Admin contract/UI, SEO handoff, strict published runtime browser test, runtime isolation, Product publish-preview, Care publish-preview, diff hygiene.
+- Functional commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
+- No Production migration/deploy, main merge/rebase, or real user data mutation occurred. Next unfinished P0 is authenticated bilingual SEO batch-01 operational acceptance.

@@ -30,8 +30,8 @@ Species SEO remains Repo-backed and fail-closed:
 ## Next milestones
 1. [DONE locally] Define one published Product/Care read contract, inventory direct static consumers, and isolate Draft from the last Published snapshot.
 2. [DONE locally] Converge Encyclopedia Product and Care Encyclopedia/Aquarium/Identify diagnosis reads onto the published runtime authority with explicit static fallback.
-3. [NEXT] Prove one Product edit and one Care edit from Admin through frontend Preview without unintended compatibility/user-state mutation.
-4. Complete the existing 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview.
+3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
+4. [NEXT] Complete the existing 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview.
 5. Add change-impact classification/Preview before decision-critical Product Data changes can be released broadly.
 6. Build Compatibility Admin only after Product Data authority is stable.
 
@@ -40,3 +40,10 @@ No Production unlock. No blind main merge/rebase. No SEO field may become author
 
 ## 2026-09-04 implementation state
 Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation. Public API routes now prefer the immutable published snapshot, while pre-migration published rows remain a compatibility fallback. The database migration is committed but not applied to Production. Runtime bootstrap now prefers the published Product/Care API; Encyclopedia Product plus Care Encyclopedia/Aquarium/Identify diagnosis consume that runtime catalog. Browser injection acceptance passed for zh-CN Product/Care and English Care. Production migration remains unapplied; the next P0 is a real Admin edit/save/publish → Preview proof.
+
+## 2026-09-04 Product/Care P0 acceptance
+- Controlled browser Preview proves Product and Care Save remain invisible until Publish, then advance the intended runtime consumer.
+- Care hardcoded display-title overrides were corrected so published Care titles are not masked by legacy presentation maps.
+- `aquarium_app_state_v1` remains byte-identical across Admin Save/Publish and before/after user Preview loads.
+- Published Product hydration mutates only `runtimeFishData`; static `fishData` used by Compatibility remains unchanged.
+- This closes the defined Product/Care P0 target locally. Production migration/deployment remains intentionally untouched.

@@ -92,4 +92,12 @@ P0 Product/Care authority convergence is complete only when direct runtime stati
 - Aquarium and Identify diagnosis now receive Care Knowledge from the runtime catalog; diagnosis rules remain pure consumers of the passed `careTopics` input.
 - Dedicated Business API Vercel routing avoids packaging the legacy static server into `/api/v1/*`.
 - Remaining direct static imports in Collection/Search/Home/Compatibility-related surfaces are not evidence that the two completed P0 routing items are unfinished; they require separate impact classification before decision-critical Product migration.
-- End-to-end Admin Save/Publish → Preview proof is still required before declaring the whole Product/Care authority P0 complete.
+- Controlled end-to-end Admin Save/Publish → Preview proof now passes for the defined Product/Care target consumers. Production/staging deployment acceptance remains separate and was not performed.
+
+## 2026-09-04 controlled acceptance result
+- Product Admin Save moves the editable record to Draft while the public runtime retains the previous published value; Publish advances Encyclopedia on a fresh Preview load.
+- Care Admin follows the same boundary and advances Care Guide only after Publish.
+- Stricter card-title assertions exposed and fixed a legacy hardcoded Care-title override that had produced a false-positive earlier test.
+- Published Product/Care labels are protected from legacy search/localization projection.
+- Browser tests keep `aquarium_app_state_v1` byte-identical; Node isolation test proves published Product hydration does not mutate static Compatibility inputs.
+- The defined Product/Care P0 target is locally accepted; remaining direct static consumers require explicit impact classification before any decision-critical migration.

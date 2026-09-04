@@ -9,7 +9,7 @@ Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 111
+- feature-only commits: 113
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -33,4 +33,11 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Local functional HEAD before docs sync: `eff3bba3 feat(content): route published product care runtime`.
 - Remote feature before this round push: `b982e2a69e5c3a4ca575f45aa93bea81e362fe35`.
 - Live main re-read: `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- No merge/rebase of main and no Production mutation occurred.
+
+## 2026-09-04 Product/Care acceptance checkpoint
+- Local functional HEAD before docs sync: `ee2fcc8a9c0da173d45e4d83f57ce70f6d381088`.
+- Remote feature before this docs push: `3d9ea6d54c6000f258a9a37e91310547e0a15b99`.
+- Live main re-read: `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- Divergence vs live main/local HEAD: main-only 269 / feature-only 113; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - No merge/rebase of main and no Production mutation occurred.

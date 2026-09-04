@@ -11,10 +11,10 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Implement Draft/save isolation from the last Published Product/Care version using immutable publication snapshots; Production migration remains intentionally unapplied.
 - [x] Route Encyclopedia Product Data to the published authority, with static seed only as explicit API fallback.
 - [x] Route Care Encyclopedia plus Aquarium/Identify diagnosis Care Knowledge to the published authority, with static seed only as explicit API fallback.
-- [ ] Prove one Admin Product edit reaches the intended frontend Preview.
-- [ ] Prove one Admin Care edit reaches the intended frontend Preview.
-- [ ] Verify those edits do not mutate user aquarium state or bypass compatibility rule authority.
-- [ ] Correct any Admin copy that claims immediate live visibility before the consumer path is truly published.
+- [x] Prove one Admin Product edit reaches the intended frontend Preview: Save remains private; Publish advances Encyclopedia runtime.
+- [x] Prove one Admin Care edit reaches the intended frontend Preview: Save remains private; Publish advances Care runtime.
+- [x] Verify Product/Care publish does not mutate `aquarium_app_state_v1` and Product runtime hydration does not mutate Compatibility/static authority inputs.
+- [x] Correct Admin publish copy to describe only connected Product/Care consumers and preserve Compatibility authority boundaries.
 
 ## P0 — Existing SEO operational acceptance
 - [ ] Authenticated import corrected batch-01 zh-CN → preflight/Diff → Draft batch.

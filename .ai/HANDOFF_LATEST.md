@@ -36,7 +36,7 @@ SEO is downstream acquisition content. Editing SEO must not mutate Product Data,
 - Editing an already-published Species/Care record now preserves its last public snapshot and moves the editable row back to Draft; Save no longer intentionally advances public content.
 - Public `/species` and `/care-articles` routes now prefer publication snapshots and retain a migration-order fallback to legacy published rows.
 - Local API typecheck, publication contract test, root build, Admin UI regression and SEO handoff all pass. Migration has not been applied to Production.
-- Primary Encyclopedia/Care/diagnosis runtime consumers are converged; real Admin edit → Preview acceptance is now the first unfinished P0.
+- Primary Encyclopedia/Care/diagnosis runtime consumers are converged and controlled Admin Save→Publish→Preview acceptance now passes for Product and Care.
 
 ## Product/Care P0 status after runtime convergence
 The primary target consumers are now routed through the published runtime catalog:
@@ -45,7 +45,7 @@ The primary target consumers are now routed through the published runtime catalo
 - Aquarium and Identify diagnosis Care Knowledge → the same published Care runtime catalog.
 - Static Product/Care datasets remain explicit seed/offline fallback, not the successful live authority.
 
-Do not yet claim full Admin-to-user publication acceptance. The next unresolved proof is one real Product edit and one real Care edit through Admin Save/Publish into Preview, including proof that Save alone stays invisible and that compatibility/user aquarium state is not mutated.
+Controlled Preview acceptance now proves Save stays private, Publish advances the intended Product/Care consumer, user aquarium state remains unchanged, and Compatibility static authority is not mutated. This is local/controlled acceptance only; Production migration/deployment was not performed.
 ## Species SEO subsystem — stable baseline
 - Private Draft/review/revision/import-batch authority: `chusday97/aquaguide-seo-content / seo-admin-drafts`.
 - Public AquaGuide repo receives only code + explicit sanitized Staging snapshot.
@@ -69,9 +69,9 @@ This proves the SEO subsystem operationally; it does **not** solve the Product/C
 P0-A — Product/Care authority convergence:
 - [done locally] published-content read contract + Draft isolation;
 - [done locally] Encyclopedia Product + Care Encyclopedia/Aquarium/Identify diagnosis runtime cutover with explicit fallback;
-- [next] browser-test a real Admin Product and Care Save/Publish cycle against Preview and prove no compatibility/user-state spillover.
+- [done locally] stateful browser Preview proves Admin Product/Care Save→Publish behavior plus user-state/Compatibility isolation.
 
-P0-B — Finish batch-01 SEO operational acceptance in parallel only when authenticated human review is available.
+P0-B — [NEXT] Finish batch-01 SEO operational acceptance when authenticated human review is available.
 
 P1 — Change Impact Preview: classify display-only vs decision-critical edits and show affected Encyclopedia / Aquarium / Compatibility / SEO consumers before release.
 
@@ -82,7 +82,7 @@ P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extr
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
 - Feature remote before this docs sync: `b982e2a69e5c3a4ca575f45aa93bea81e362fe35`.
-- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 111 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 113 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -96,3 +96,12 @@ Start with live state reads, not memory. Continue the first incomplete P0 unless
 
 ## Cross-session recovery anchor
 For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contains the exact canonical read order, current first P0, safety rules and a copy-paste startup prompt. This file remains the detailed handoff; `CROSS_SESSION_START.md` is the stable entry point.
+
+## 2026-09-04 Product/Care controlled Preview acceptance
+- Product: Admin edit/save returns Draft; pre-Publish Encyclopedia Preview still shows old public name; after Publish a fresh Preview shows the new public name.
+- Care: same Save/private → Publish/public sequence verified against Care Guide.
+- Fixed a real hidden P0 bug uncovered by stricter acceptance: hardcoded common-guide display titles could mask an Admin-published Care title. Published Care now wins; legacy title maps apply only to fallback content.
+- Search suggestion presentation now preserves published Product/Care names/categories instead of reapplying legacy English translation maps.
+- User aquarium local state and Compatibility static inputs remain unchanged.
+- Functional acceptance commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
+- Next unfinished P0 is the authenticated bilingual SEO batch-01 operating cycle; do not touch Production.
