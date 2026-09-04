@@ -38,10 +38,10 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Operator UI for Species behavior profiles with reviewed-baseline audit plus isolated Draft revision create/edit/submit-review.
 - [x] Pair Rule management with reviewed Evidence snapshots, Confidence and Review Status using isolated Draft revision create/edit/submit-review.
 - [x] Add server-computed Draft-vs-reviewed structural Impact Check plus explicit human Approve/Reject; approval does not publish.
-- [ ] Converge reviewed Compatibility publish authority with the runtime read path before exposing any publish action.
-- [ ] Version Compatibility rules through the final reviewed publish transition.
-- [ ] Require regression/impact test before rule publish; structural impact is already required before approval, engine regression still belongs in the publish gate.
-- [ ] Preserve human review; do not allow opaque AI auto-publish.
+- [x] Converge reviewed Compatibility publish authority with the runtime read path; exact 7/4 DB authority activates atomically with static reviewed fallback.
+- [x] Version Compatibility rules through the final reviewed publish transition using transactional Profile/Pair RPCs.
+- [x] Require structural impact + real server engine regression + canonical Evidence resolution before human approval/publish, with freshness invalidation.
+- [x] Preserve explicit human review; no opaque AI auto-publish.
 
 ## P2 — Operations maturity
 - [ ] Unified Publish Center for Diff → Impact → Preview → Review → Staging → Production.

@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Feature: `feature/admin-content-v0`
-Remote feature before this round push: `1e8a482a91655cc5929fdb635b51232c7c3d0541`
+Remote feature before this docs sync: `57c4ef00571c00191248948af8218f978417c949`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 127
+- feature-only commits: 129
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -80,3 +80,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Local/remote feature functional HEAD: `1e8a482a91655cc5929fdb635b51232c7c3d0541` before docs sync.
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`; divergence main-only 269 / feature-only 127; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - No merge/rebase main, live DB migration, Compatibility publish or Production mutation.
+
+## 2026-09-05 Compatibility versioned publish checkpoint
+- Functional feature HEAD pushed: `57c4ef00571c00191248948af8218f978417c949` before docs sync.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; measured divergence main-only 269 / feature-only 129; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Online Admin Content CI run `33909317349` validate PASS; Heavy browser/SEO gate skipped.
+- Compatibility reconciliation/versioned-publish migrations are repository-only and unapplied to live DB/Production.
+- No merge/rebase main and no Production mutation.

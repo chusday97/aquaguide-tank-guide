@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `1e8a482a91655cc5929fdb635b51232c7c3d0541`
+Operational HEAD before this sync: `57c4ef00571c00191248948af8218f978417c949`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
 - AquaGuide product includes Species, Aquarium/Care, Compatibility and SEO acquisition flows.
 - `/admin/product-content` currently exposes Product Data + Care editing/publish actions.
 - `/admin/seo/` remains the Species SEO editorial/publishing subsystem.
-- Compatibility runtime exists and uses reviewed evidence/rules, but no mature operator rule-management UI exists yet.
+- Compatibility Admin now has reviewed Profile/Pair revision, real regression, human review and versioned publish paths in code; live DB migrations remain intentionally unapplied.
 
 ## Product/Care runtime state
 - Encyclopedia Product Data now reads the published runtime catalog.
@@ -26,7 +26,7 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview: complete. Compatibility Profile/Pair Draft plus human Review/Approve and structural Impact Check are implemented; reviewed runtime/publish authority convergence is now the first unfinished Compatibility item.
+P1 Change Impact Preview: complete. P1 Compatibility Admin is complete in code, including exact reviewed runtime authority, server regression, canonical Evidence, human review and versioned publish. First unfinished milestone: P2 Unified Publish Center / release history & audit.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
@@ -99,7 +99,7 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Profile/Pair revisions require API-generated structural impact before pending review and explicit human Approve/Reject before becoming Approved.
 - Approved remains non-runtime; no Compatibility publish endpoint exists.
 - Online light CI for `25e3ec0d` PASS; Heavy skipped.
-- Compatibility runtime still reads reviewed code/data evidence, so publish authority convergence remains required before versioned publish.
+- Historical note only: this split-authority blocker was closed by the later runtime and versioned-publish checkpoints.
 
 ## 2026-09-05 Compatibility runtime authority convergence
 - Functional commit `1e8a482a91655cc5929fdb635b51232c7c3d0541`.
@@ -108,3 +108,12 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Runtime authority fingerprint is exposed through decision `metadata.ruleVersion` and includes Profile/Pair + Evidence versions.
 - PASS: runtime authority contract, legacy Compatibility engine suite, Admin impact/admin contracts, 390/1280 Admin UI, API TS, root lint/build, diff hygiene.
 - No live DB migration/publish, main merge/rebase or Production mutation.
+
+## 2026-09-05 Compatibility versioned publish completion
+- Functional commit `57c4ef00571c00191248948af8218f978417c949`; online light CI run `33909317349` PASS and Heavy skipped.
+- Runtime and Admin reviewed views use one exact DB authority loader with wholesale static reviewed fallback when 7 Profile / 4 Pair coverage is incomplete.
+- Evidence source keys reconcile to canonical reviewed Evidence with strict drift rejection; real engine before/after regression is persisted and freshness-checked at Approve and Publish.
+- Profile regression covers the Product runtime cohort (current 486 catalog rows; 1455 directional scenarios for a full Profile change); Pair regression covers three explicit-pair scenarios. Local benchmark for the full Profile cohort was ~42 ms.
+- Atomic versioned publish RPC requires Approved revision, structural Impact, fresh regression, canonical Evidence, unchanged baseline/evidence versions and authority sequence; any Product/Compatibility/Evidence authority change invalidates stale regression.
+- Migrations `202609050001_compatibility_reviewed_baseline_reconciliation.sql` and `202609050002_compatibility_versioned_publish.sql` are committed but NOT applied to a live database/Production.
+- Next: P2 read-only Unified Publish Center / release timeline first; do not rewrite Product/Care, SEO or Compatibility publication mechanisms.

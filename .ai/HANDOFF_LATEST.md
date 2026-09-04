@@ -81,14 +81,14 @@ P0-B — [DONE] Authenticated bilingual batch-01 import/review/Staging/28-page h
 
 P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Published Diff, affected-consumer summary, Encyclopedia Before/After and Compatibility-result regression simulation.
 
-P1 — [IN PROGRESS] Compatibility Admin: Profile/Pair Draft + human Review/Approve + structural Impact Check are implemented; next is Compatibility runtime/publish authority convergence, then versioned publish + engine regression gate.
+P1 — [DONE in code] Compatibility Admin: Profile/Pair Draft, structural Impact, real server engine Regression, canonical Evidence resolution, explicit human Review/Approve, exact reviewed runtime authority and atomic versioned publish are implemented. Live migrations remain unapplied.
 
 P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extraction/conflict detection/Draft generation from approved facts.
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`.
-- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 119 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remote before this docs sync: `57c4ef00571c00191248948af8218f978417c949`.
+- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 129 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -98,7 +98,7 @@ P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extr
 - Source identity gate blocks incomplete scientific names such as trailing `var.` / `subsp.` / `ssp.` markers.
 
 ## Execution style for next session
-Start with live state reads, not memory. Continue the first incomplete P0 unless the user supplies a newer concrete bug. Do not reimplement stable SEO features. Update this handoff plus `CURRENT_GOAL`, `TASK_QUEUE`, `LIVE_STATUS`, `BRANCH_STATUS` and `EXECUTION_LOG` after material changes.
+Start with live state reads, not memory. Continue the first incomplete TASK_QUEUE milestone unless the user supplies a newer concrete bug. Do not reimplement stable SEO features. Update this handoff plus `CURRENT_GOAL`, `TASK_QUEUE`, `LIVE_STATUS`, `BRANCH_STATUS` and `EXECUTION_LOG` after material changes.
 
 ## Cross-session recovery anchor
 For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contains the exact canonical read order, current first P0, safety rules and a copy-paste startup prompt. This file remains the detailed handoff; `CROSS_SESSION_START.md` is the stable entry point.
@@ -110,7 +110,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Search suggestion presentation now preserves published Product/Care names/categories instead of reapplying legacy English translation maps.
 - User aquarium local state and Compatibility static inputs remain unchanged.
 - Functional acceptance commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
-- Product/Care, SEO P0 and P1 Change Impact Preview are closed. The first unfinished milestone is P1 Compatibility Admin; do not touch Production.
+- Product/Care, SEO P0, P1 Change Impact Preview and P1 Compatibility Admin are closed in code. The first unfinished milestone is P2 Unified Publish Center / release history & audit; do not touch Production.
 
 ## 2026-09-04 Change Impact Preview first round
 - Functional commit: `e58c7082 feat(admin): add change impact preview`.
@@ -119,7 +119,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Existing public `/species/:catalogKey` and `/care-articles/:catalogKey` detail reads provide the published baseline, so Draft-vs-Published Diff survives refresh.
 - Product browser acceptance proves name Diff survives save + reload; Care acceptance proves workflow changes expose Care Guide / Aquarium / Identify as direct consumers. 1280px and 390px layouts pass.
 - Admin CI path filters now include Product/Care Admin page/services/impact test; ordinary pushes still run the lightweight job only.
-- Change Impact Preview is complete; next work is Compatibility Admin.
+- Historical note: Change Impact Preview was followed by and is now joined by completed P1 Compatibility Admin.
 
 ## 2026-09-04 Change Impact Preview completion
 - Functional commit: `9dc30c48 feat(admin): complete change impact preview`.
@@ -127,7 +127,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Product Drafts with Compatibility-sensitive fields run the existing `evaluateSpeciesCombination` engine against the static living-species cohort after save; both status changes and rule-only changes are counted and surfaced.
 - Publish confirmation includes the Compatibility simulation summary and reiterates that Compatibility authority is not auto-written.
 - PASS: impact contracts, Compatibility regression contract, Product/Care Admin browser flows at 1280/390, Product/Care Save→Publish Preview boundaries, Admin contract/build, root lint/build.
-- Next: Compatibility Admin operator surface for behavior profiles / Pair Rules / Evidence / Confidence / Review Status / Rule Version.
+- Historical note: the Compatibility operator surface and versioned reviewed publish chain are now implemented in code.
 
 ## 2026-09-04 Compatibility Admin Behavior Profile Draft checkpoint
 - Functional commit `dfed5a948982719505cc5d557be2b98ef4e9baea`.
@@ -163,4 +163,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Runtime `ruleVersion` is no longer a misleading constant when DB authority is active: it fingerprints rule versions and evidence membership/versions.
 - Lightweight CI includes `test:runtime-compatibility-authority`; Heavy remains gated.
 - No migration was applied to a live database, no Compatibility publish endpoint was enabled, and Production/main were untouched.
-- First unfinished item: canonical Evidence reconciliation (`citation_snapshots.sourceKey` → `evidence_sources`) followed by versioned reviewed publish with the existing impact/human-review gate.
+- This blocker was closed by `57c4ef00`; canonical Evidence, real engine regression and versioned reviewed publish are now implemented in code. Live migrations remain unapplied.
+
+## 2026-09-05 Compatibility versioned reviewed publish completion
+- Functional commit `57c4ef00571c00191248948af8218f978417c949`; online CI `33909317349` validate PASS including the server regression gate; Heavy skipped.
+- Canonical Evidence reconciliation covers 13 Evidence / 7 Profiles / 4 Pair Rules and fails closed on pre-existing reviewed drift. Reconciliation/versioned-publish migrations remain code-only and unapplied live.
+- The same reviewed authority loader drives public `/compatibility-bootstrap`, Admin reviewed baseline and server regression. DB activates only at exact 7/4 coverage; otherwise the engine atomically uses the static reviewed fallback.
+- Submit Review computes a real before/after engine regression over the Product runtime cohort; reports include authority sequence, engine version, Product catalog fingerprint and semantic digest. Approve/Publish recompute freshness.
+- Product/Compatibility/Evidence authority mutations invalidate the global sequence, so concurrent/stale reviews cannot publish. Atomic RPC then updates reviewed baseline + Evidence links + revision history in one transaction.
+- First unfinished milestone: P2 Unified Publish Center / release history & audit. Start with a read-only aggregation of existing release sources; do not create a new competing publication authority.

@@ -578,3 +578,14 @@ Next: converge reviewed Compatibility runtime/publish authority before versioned
 - CI light gate now executes runtime authority contract.
 - No live migration/publish/Production/main changes.
 - Next: resolve revision citation source keys to canonical Evidence rows, then implement versioned reviewed publish.
+
+
+## 2026-09-05 — Compatibility versioned reviewed publish completion
+- Functional commit `57c4ef00571c00191248948af8218f978417c949`.
+- Added canonical reviewed Evidence reconciliation (13 Evidence / 7 Profiles / 4 Pair Rules), exact reviewed authority loader, real server-side Compatibility regression, freshness digests/authority sequence, human approval gates and transactional Profile/Pair versioned publish RPCs.
+- Profile regression mirrors Product runtime Published-over-static fallback; current 486 catalog yields 1455 directional scenarios for a full Profile change, benchmarked ~42 ms locally. Pair Rule regression evaluates three explicit-pair scenarios.
+- Product/Compatibility/referenced-Evidence authority changes stale old reports; Approve and Publish recompute freshness before RPC execution.
+- Validation PASS: Admin contract, 16 Compatibility engine cases, runtime authority, structural impact, compatibility-admin contract, server regression gate, 1280/390 Admin browser publish flow, API TS, root lint/build, diff hygiene.
+- Online light CI run `33909317349` PASS including `Compatibility server regression gate`; Heavy skipped.
+- Migrations `202609050001` / `202609050002` remain unapplied to live DB/Production; main untouched.
+Next: P2 Unified Publish Center / release history & audit, beginning with a read-only aggregation contract.

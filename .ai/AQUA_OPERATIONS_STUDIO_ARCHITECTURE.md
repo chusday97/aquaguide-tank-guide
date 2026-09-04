@@ -27,16 +27,16 @@ SEO is an acquisition projection, not the source of product behavior. Editing an
 ## 4. Current verified source-of-truth status
 Product/Care P0 is converged and controlled-Preview accepted: public Product/Care APIs are the published runtime authority for the connected Encyclopedia/Care/Aquarium/Identify consumers, while static datasets remain explicit seed/offline fallback.
 
-The remaining authority gap is Compatibility. `tankCompatibilityEngine` still consumes reviewed code/data evidence such as `compatibilityEvidence`, while the new Compatibility Admin revision workflow is DB-backed. Do **not** add a reviewed publish action until the published Compatibility authority and runtime read path are converged; otherwise Admin and user-facing decisions would diverge.
+Compatibility is now converged in code as a reviewed authority with explicit fallback. `tankCompatibilityEngine`, Admin reviewed views and server regression consume the same reviewed authority model. DB authority activates only with exact current 7 Profile / 4 Pair coverage and reviewed Evidence; otherwise the runtime falls back wholesale to the static reviewed baseline. Versioned publish exists behind canonical Evidence, structural Impact, real engine Regression, explicit human approval and freshness/version gates. The migrations remain unapplied to live/Production, so live rollout is still intentionally locked.
 
 ## 5. Compatibility boundary
-The current compatibility product is real and rule-based. `tankCompatibilityEngine` consumes Species facts plus reviewed compatibility evidence and user tank context. Reviewed runtime evidence currently lives in code/data such as `compatibilityEvidence`.
+The compatibility product is real and rule-based. `tankCompatibilityEngine` consumes Approved Product facts plus reviewed Compatibility evidence/rules and user tank context.
 
-The operator model is now partially implemented:
+The operator model is implemented in code for the current reviewed baseline:
 `Species Behavior Profile + Pair Rule + Evidence + Confidence + Review Status + Rule Version`.
-Profile and Pair Rule Draft revisions plus server-computed structural Impact Check and explicit human Approve/Reject exist in code. These migrations remain unapplied to live databases, and approved revisions are intentionally **not published** to runtime yet.
+Rules follow `Draft → structural Impact → real engine Regression → canonical Evidence → human Review/Approve → versioned publish`. Arbitrary new rules without a reviewed DB baseline remain disallowed.
 
-Rule changes remain stricter than copy edits: Draft → regression/impact test → human review → versioned publish. The next architecture step is to converge reviewed publish/runtime authority before introducing that final publish transition.
+The next architecture gap is cross-domain release observability: Product/Care snapshots, SEO Repo/Staging releases and Compatibility revisions are mature but separate. P2 should unify **read-only release history/audit first**, then permissions/orchestration, without creating a competing publication authority.
 
 ## 6. Mature publishing model
 A mature change should pass through:

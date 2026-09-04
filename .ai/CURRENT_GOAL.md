@@ -8,7 +8,7 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-The immediate priority is now **P1 Compatibility Admin**. Change Impact Preview is complete: field classification, affected-consumer summaries, persisted Draft-vs-Published Diff, Encyclopedia Before/After, and species-only Compatibility regression are implemented and accepted.
+P1 Compatibility Admin is now complete in code. The immediate priority is **P2 Unified Publish Center / release history & audit**: aggregate Product/Care, SEO and Compatibility release states into one operator-facing read model before adding any new cross-domain write orchestration.
 
 ## Why this is now P1
 The defined Product/Care authority target is already converged and browser-accepted. The remaining operational risk is release comprehension: a content operator must see which user-facing surfaces change directly, which independent authorities require review, and what the user will see before a decision-critical release is approved.
@@ -28,7 +28,8 @@ Species SEO remains Repo-backed and fail-closed:
 3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
 4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
 5. [DONE] Change Impact Preview: field classification, affected-consumer summary, decision-critical Before/After and Compatibility-result regression checks.
-6. [IN PROGRESS] Compatibility Admin: Profile + Pair Draft workflows and explicit human Review/Approve with server structural Impact Check are DONE locally; [NEXT] converge reviewed Compatibility publish authority with runtime, then add versioned publish + engine regression gate.
+6. [DONE in code] Compatibility Admin: Profile + Pair Draft, structural Impact, server engine Regression, canonical Evidence resolution, human Approve/Reject, exact reviewed runtime authority and transactional versioned publish are implemented. Migrations remain unapplied to live/Production.
+7. [NEXT] P2 Unified Publish Center: define one read-only release/audit contract and aggregate existing Product/Care, SEO and Compatibility release history without changing their write authorities.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -97,4 +98,13 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Runtime switches to DB only when it exactly covers the current 7 Profile / 4 Pair reviewed baseline; partial/mismatched/unavailable DB data fails closed to the static reviewed baseline as one atomic authority.
 - `tankCompatibilityEngine` now reads the runtime registry without changing decision algorithms.
 - `metadata.ruleVersion` records a stable authority fingerprint covering Profile/Pair versions plus Evidence IDs/versions/membership.
-- Next blocker before publish: citation snapshots still use source keys and must resolve to canonical `evidence_sources` rows. No Compatibility publish endpoint exists yet.
+- This runtime checkpoint was followed by `57c4ef00`, which closes canonical Evidence reconciliation, real server regression and versioned publish in code. Live/Production migrations remain unapplied.
+
+## 2026-09-05 Compatibility versioned reviewed publish completion
+- Functional commit `57c4ef00571c00191248948af8218f978417c949 feat(compatibility): gate versioned reviewed publish`.
+- Canonical reconciliation covers 13 reviewed Evidence sources, 7 Profiles and 4 Pair Rules with fail-closed drift detection; migrations `202609050001/0002` remain repository-only and unapplied live.
+- Submit Review resolves canonical Evidence and runs the real Compatibility engine before/after against the Product runtime cohort; Profile changes evaluate the full cohort (486 catalog rows → 1455 pair-direction scenarios in the current runtime), while Pair Rules evaluate the explicit pair in three scenarios.
+- Regression reports carry authority sequence, engine version, Product catalog fingerprint and semantic digest. Approve and Publish recompute freshness; Product/Compatibility/Evidence changes invalidate stale reports.
+- Versioned publish is an atomic DB RPC gated by structural Impact + regression + canonical Evidence + human approval + unchanged baseline/evidence/authority sequence. Admin and user runtime share the same reviewed authority loader and refresh after publish.
+- Online light CI run `33909317349` PASS including `Compatibility server regression gate`; Heavy browser/SEO gate skipped. Production/main/live DB remained untouched.
+- First unfinished milestone is P2 Unified Publish Center / release history & audit.
