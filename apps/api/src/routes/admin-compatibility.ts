@@ -16,7 +16,14 @@ import {
   finishIdempotentWrite,
   snakeize,
   throwDatabaseError,
+  userClientFor,
 } from '../data-utils';
+import {
+  buildPairRuleRevisionRegression,
+  buildProfileRevisionRegression,
+  isCompatibilityRegressionReportFresh,
+  loadStableCompatibilityRegressionContext,
+} from '../compatibility-authority';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 
@@ -24,6 +31,51 @@ const activeRevisionStatuses = ['draft', 'pending_review', 'approved'];
 const reviewedCitationsOnly = (citations: Array<{ reviewStatus: string }>) => (
   citations.length > 0 && citations.every(source => source.reviewStatus === 'reviewed')
 );
+
+
+type CompatibilityCitationSnapshot = {
+  sourceKey: string;
+  title: string;
+  publisher: string;
+  url: string;
+  sourceType: string;
+  reviewStatus: string;
+};
+const resolveReviewedEvidenceSnapshots = async (citations: CompatibilityCitationSnapshot[]) => {
+  if (!reviewedCitationsOnly(citations)) throw new ApiError(409, 'MIGRATION_REJECTED', '提交审核前必须保留至少一项 reviewed evidence。');
+  const sourceKeys = citations.map(source => source.sourceKey);
+  if (new Set(sourceKeys).size !== sourceKeys.length) throw new ApiError(409, 'MIGRATION_REJECTED', 'Evidence sourceKey 不能重复。');
+  const client = getAdminSupabase();
+  const { data, error } = await client.from('evidence_sources')
+    .select('id,source_key,title,publisher,url,source_type,review_status,version')
+    .in('source_key', sourceKeys).eq('review_status', 'reviewed').is('deleted_at', null);
+  if (error) throwDatabaseError(error, 'Reviewed Evidence 暂时无法解析。');
+  const byKey = new Map((data || []).map(source => [source.source_key, source]));
+  if (byKey.size !== sourceKeys.length) throw new ApiError(409, 'MIGRATION_REJECTED', '存在尚未映射到 canonical evidence_sources 的 sourceKey。');
+  return citations.map(snapshot => {
+    const source = byKey.get(snapshot.sourceKey);
+    if (!source || source.title !== snapshot.title || source.publisher !== snapshot.publisher || source.url !== snapshot.url || source.source_type !== snapshot.sourceType) {
+      throw new ApiError(409, 'MIGRATION_REJECTED', `Evidence ${snapshot.sourceKey} 已变化，请刷新 reviewed evidence 后重新提交。`);
+    }
+    return { sourceKey: snapshot.sourceKey, sourceId: source.id, version: source.version };
+  });
+};
+const hasCanonicalEvidenceResolution = (revision: Record<string, any>) => {
+  const citations = revision.citation_snapshots || revision.citationSnapshots || [];
+  const resolution = revision.evidence_resolution || revision.evidenceResolution || [];
+  if (!Array.isArray(citations) || !Array.isArray(resolution) || citations.length === 0 || citations.length !== resolution.length) return false;
+  const citationKeys = [...citations.map((item: any) => item.sourceKey)].sort();
+  const resolvedKeys = [...resolution.map((item: any) => item.sourceKey)].sort();
+  return citationKeys.every((key, index) => key === resolvedKeys[index]) && resolution.every((item: any) => item.sourceId && Number(item.version) > 0);
+};
+const throwCompatibilityPublishError = (error: { code?: string; message?: string } | null, fallback: string): never => {
+  const message = String(error?.message || '');
+  if (message.includes('FORBIDDEN')) throw new ApiError(403, 'FORBIDDEN', '没有 Compatibility 发布权限。');
+  if (message.includes('NOT_FOUND')) throw new ApiError(404, 'NOT_FOUND', '没有找到要发布的 Compatibility revision。');
+  if (message.includes('VERSION_CONFLICT')) throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility baseline、revision 或 Evidence 已发生变化，请重新审核后再发布。');
+  if (message.includes('PUBLISH_GATE_REJECTED')) throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility revision 尚未满足发布门槛。');
+  return throwDatabaseError(error, fallback);
+};
 
 const sameValue = (left: unknown, right: unknown) => JSON.stringify(left ?? null) === JSON.stringify(right ?? null);
 const buildImpactReport = (
@@ -38,6 +90,11 @@ const buildImpactReport = (
 };
 const hasImpactChanges = (report: unknown) => Boolean(
   report && typeof report === 'object' && Array.isArray((report as { changedFields?: unknown[] }).changedFields) && (report as { changedFields: unknown[] }).changedFields.length > 0,
+);
+const hasRegressionReport = (report: unknown) => Boolean(
+  report && typeof report === 'object'
+  && Number((report as { evaluatedScenarios?: unknown }).evaluatedScenarios) > 0
+  && Number((report as { authoritySequence?: unknown }).authoritySequence) > 0,
 );
 
 const parseRevisionId = (value: string) => {
@@ -56,6 +113,27 @@ const loadRevision = async (id: string) => {
   if (error) throwDatabaseError(error, 'Compatibility revision 暂时无法读取。');
   if (!data) throw new ApiError(404, 'NOT_FOUND', '没有找到 Compatibility revision。');
   return data;
+};
+
+const assertProfileRegressionFresh = async (revision: Record<string, any>) => {
+  const context = await loadStableCompatibilityRegressionContext(getAdminSupabase());
+  const citations = Array.isArray(revision.citation_snapshots) ? revision.citation_snapshots : [];
+  const fresh = buildProfileRevisionRegression({
+    authority: context.authority,
+    fish: context.fish,
+    authoritySequence: context.authoritySequence,
+    catalogKey: revision.species.catalog_key,
+    baselineVersion: revision.base_profile_version,
+    behaviorTraits: revision.behavior_traits || [],
+    minimumGroupSize: revision.minimum_group_size,
+    predationTargets: revision.predation_targets || [],
+    confidence: revision.confidence,
+    sourceKeys: citations.map((source: CompatibilityCitationSnapshot) => source.sourceKey),
+  });
+  if (!isCompatibilityRegressionReportFresh(revision.regression_report, fresh)) {
+    throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility regression 已过期，请重新提交审核。');
+  }
+  return fresh;
 };
 
 export const adminCompatibilityRouter = Router();
@@ -201,6 +279,7 @@ adminCompatibilityRouter.post('/profile-revisions/:id/submit', asyncRoute(async 
     throw new ApiError(409, 'MIGRATION_REJECTED', '提交审核前必须保留至少一项 reviewed evidence。');
   }
 
+  const evidenceResolution = await resolveReviewedEvidenceSnapshots(citations as CompatibilityCitationSnapshot[]);
   const client = getAdminSupabase();
   const { data: baseline, error: baselineError } = await client
     .from('species_compatibility_profiles')
@@ -213,9 +292,22 @@ adminCompatibilityRouter.post('/profile-revisions/:id/submit', asyncRoute(async 
   if (!baseline) throw new ApiError(409, 'MIGRATION_REJECTED', 'Reviewed Compatibility Profile baseline 已不存在，不能提交审核。');
   const impactReport = buildImpactReport('profile', baseline.version, current, baseline, ['behavior_traits', 'minimum_group_size', 'predation_targets', 'confidence']);
   if (!hasImpactChanges(impactReport)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility Profile Draft 与 reviewed baseline 没有变化。');
+  const regressionContext = await loadStableCompatibilityRegressionContext(client);
+  const regressionReport = buildProfileRevisionRegression({
+    authority: regressionContext.authority,
+    fish: regressionContext.fish,
+    authoritySequence: regressionContext.authoritySequence,
+    catalogKey: current.species.catalog_key,
+    baselineVersion: baseline.version,
+    behaviorTraits: current.behavior_traits || [],
+    minimumGroupSize: current.minimum_group_size,
+    predationTargets: current.predation_targets || [],
+    confidence: current.confidence,
+    sourceKeys: citations.map((source: CompatibilityCitationSnapshot) => source.sourceKey),
+  });
   const { data, error } = await client
     .from('species_compatibility_profile_revisions')
-    .update({ status: 'pending_review', impact_report: impactReport, impact_checked_at: new Date().toISOString() })
+    .update({ status: 'pending_review', impact_report: impactReport, impact_checked_at: new Date().toISOString(), evidence_resolution: evidenceResolution, regression_report: regressionReport })
     .eq('id', id)
     .eq('version', parsed.data.version)
     .eq('status', 'draft')
@@ -234,6 +326,9 @@ adminCompatibilityRouter.post('/profile-revisions/:id/review', asyncRoute(async 
   if (current.status !== 'pending_review') throw new ApiError(409, 'VERSION_CONFLICT', '只有待审核的 Compatibility Profile revision 可以审核。', { status: current.status });
   if (current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', '这条 Compatibility Profile revision 已发生变化。', { currentVersion: current.version });
   if (!hasImpactChanges(current.impact_report)) throw new ApiError(409, 'MIGRATION_REJECTED', '缺少有效 impact report，不能完成审核。');
+  if (parsed.data.decision === 'approve' && !hasRegressionReport(current.regression_report)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility regression 尚未完成，不能批准。');
+  if (parsed.data.decision === 'approve' && !hasCanonicalEvidenceResolution(current)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Canonical Evidence 尚未解析完成，不能批准。');
+  if (parsed.data.decision === 'approve') await assertProfileRegressionFresh(current);
   const actor = (request as AuthenticatedRequest).authUser.id;
   const client = getAdminSupabase();
   const { data, error } = await client.from('species_compatibility_profile_revisions').update({
@@ -244,6 +339,22 @@ adminCompatibilityRouter.post('/profile-revisions/:id/review', asyncRoute(async 
   if (error) throwDatabaseError(error, 'Compatibility Profile revision 审核没有完成。');
   if (!data) throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility Profile revision 已发生变化，请刷新后重试。');
   return sendData(request, response, camelize(data));
+}));
+
+adminCompatibilityRouter.post('/profile-revisions/:id/publish', asyncRoute(async (request, response) => {
+  const id = parseRevisionId(request.params.id);
+  const parsed = compatibilityProfileRevisionStatusMutationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility Profile 发布版本无效。');
+  const idempotency = await beginIdempotentWrite(request);
+  if (idempotency.replay?.resourceId) return sendData(request, response, camelize(await loadRevision(idempotency.replay.resourceId)), idempotency.replay.responseStatus);
+  const current = await loadRevision(id);
+  if (current.status !== 'approved' || current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility Profile revision 状态已变化，请刷新。');
+  await assertProfileRegressionFresh(current);
+  const client = userClientFor(request);
+  const { error } = await client.rpc('publish_compatibility_profile_revision', { p_revision_id: id, p_expected_revision_version: parsed.data.version });
+  if (error) throwCompatibilityPublishError(error, 'Compatibility Profile versioned publish 没有完成。');
+  await finishIdempotentWrite(request, idempotency, 'compatibility_profile_revision', id, 200);
+  return sendData(request, response, camelize(await loadRevision(id)));
 }));
 
 const pairKey = (left: string, right: string) => [left, right].sort().join('__');
@@ -264,6 +375,29 @@ const loadPairRevision = async (id: string) => {
   const { data: species, error: speciesError } = await client.from('species').select('id,catalog_key,name,scientific_name').in('id', [data.species_a_id, data.species_b_id]);
   if (speciesError) throwDatabaseError(speciesError, '暂时无法读取 Pair Rule 物种身份。');
   return mapPairRevision(data, new Map((species || []).map(item => [item.id, item])));
+};
+
+const assertPairRegressionFresh = async (revision: Record<string, any>) => {
+  const context = await loadStableCompatibilityRegressionContext(getAdminSupabase());
+  const citations = Array.isArray(revision.citationSnapshots) ? revision.citationSnapshots : [];
+  const fresh = buildPairRuleRevisionRegression({
+    authority: context.authority,
+    fish: context.fish,
+    authoritySequence: context.authoritySequence,
+    catalogKeys: [revision.speciesA.catalogKey, revision.speciesB.catalogKey],
+    baselineVersion: revision.baseRuleVersion,
+    verdict: revision.verdict,
+    riskType: revision.riskType,
+    reason: revision.reason,
+    mitigation: revision.mitigation || [],
+    basis: revision.basis,
+    confidence: revision.confidence,
+    sourceKeys: citations.map((source: CompatibilityCitationSnapshot) => source.sourceKey),
+  });
+  if (!isCompatibilityRegressionReportFresh(revision.regressionReport, fresh)) {
+    throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility Pair regression 已过期，请重新提交审核。');
+  }
+  return fresh;
 };
 
 adminCompatibilityRouter.get('/pair-rule-revisions', asyncRoute(async (request, response) => {
@@ -412,6 +546,7 @@ adminCompatibilityRouter.post('/pair-rule-revisions/:id/submit', asyncRoute(asyn
     throw new ApiError(409, 'MIGRATION_REJECTED', '提交审核前必须保留至少一项 reviewed evidence。');
   }
 
+  const evidenceResolution = await resolveReviewedEvidenceSnapshots(citations as CompatibilityCitationSnapshot[]);
   const client = getAdminSupabase();
   const { data: baseline, error: baselineError } = await client.from('species_pair_compatibility_rules')
     .select('version,verdict,risk_type,reason,mitigation,basis,confidence')
@@ -425,9 +560,24 @@ adminCompatibilityRouter.post('/pair-rule-revisions/:id/submit', asyncRoute(asyn
   };
   const impactReport = buildImpactReport('pair_rule', baseline.version, draftForImpact, baseline, ['verdict', 'risk_type', 'reason', 'mitigation', 'basis', 'confidence']);
   if (!hasImpactChanges(impactReport)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Pair Rule Draft 与 reviewed baseline 没有变化。');
+  const regressionContext = await loadStableCompatibilityRegressionContext(client);
+  const regressionReport = buildPairRuleRevisionRegression({
+    authority: regressionContext.authority,
+    fish: regressionContext.fish,
+    authoritySequence: regressionContext.authoritySequence,
+    catalogKeys: [current.speciesA.catalogKey, current.speciesB.catalogKey],
+    baselineVersion: baseline.version,
+    verdict: current.verdict,
+    riskType: current.riskType,
+    reason: current.reason,
+    mitigation: current.mitigation || [],
+    basis: current.basis,
+    confidence: current.confidence,
+    sourceKeys: citations.map((source: CompatibilityCitationSnapshot) => source.sourceKey),
+  });
   const { data, error } = await client
     .from('species_pair_compatibility_rule_revisions')
-    .update({ status: 'pending_review', impact_report: impactReport, impact_checked_at: new Date().toISOString() })
+    .update({ status: 'pending_review', impact_report: impactReport, impact_checked_at: new Date().toISOString(), evidence_resolution: evidenceResolution, regression_report: regressionReport })
     .eq('id', id)
     .eq('version', parsed.data.version)
     .eq('status', 'draft')
@@ -446,6 +596,9 @@ adminCompatibilityRouter.post('/pair-rule-revisions/:id/review', asyncRoute(asyn
   if (current.status !== 'pending_review') throw new ApiError(409, 'VERSION_CONFLICT', '只有待审核的 Pair Rule revision 可以审核。', { status: current.status });
   if (current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', '这条 Pair Rule revision 已发生变化。', { currentVersion: current.version });
   if (!hasImpactChanges(current.impactReport)) throw new ApiError(409, 'MIGRATION_REJECTED', '缺少有效 impact report，不能完成审核。');
+  if (parsed.data.decision === 'approve' && !hasRegressionReport(current.regressionReport)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility regression 尚未完成，不能批准。');
+  if (parsed.data.decision === 'approve' && !hasCanonicalEvidenceResolution(current)) throw new ApiError(409, 'MIGRATION_REJECTED', 'Canonical Evidence 尚未解析完成，不能批准。');
+  if (parsed.data.decision === 'approve') await assertPairRegressionFresh(current);
   const actor = (request as AuthenticatedRequest).authUser.id;
   const client = getAdminSupabase();
   const { data, error } = await client.from('species_pair_compatibility_rule_revisions').update({
@@ -454,5 +607,21 @@ adminCompatibilityRouter.post('/pair-rule-revisions/:id/review', asyncRoute(asyn
   }).eq('id', id).eq('version', parsed.data.version).eq('status', 'pending_review').select('id').maybeSingle();
   if (error) throwDatabaseError(error, 'Compatibility Pair Rule revision 审核没有完成。');
   if (!data) throw new ApiError(409, 'VERSION_CONFLICT', 'Pair Rule revision 已发生变化，请刷新后重试。');
+  return sendData(request, response, await loadPairRevision(id));
+}));
+
+adminCompatibilityRouter.post('/pair-rule-revisions/:id/publish', asyncRoute(async (request, response) => {
+  const id = parseRevisionId(request.params.id);
+  const parsed = compatibilityPairRuleRevisionStatusMutationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility Pair Rule 发布版本无效。');
+  const idempotency = await beginIdempotentWrite(request);
+  if (idempotency.replay?.resourceId) return sendData(request, response, await loadPairRevision(idempotency.replay.resourceId), idempotency.replay.responseStatus);
+  const current = await loadPairRevision(id);
+  if (current.status !== 'approved' || current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', 'Compatibility Pair Rule revision 状态已变化，请刷新。');
+  await assertPairRegressionFresh(current);
+  const client = userClientFor(request);
+  const { error } = await client.rpc('publish_compatibility_pair_rule_revision', { p_revision_id: id, p_expected_revision_version: parsed.data.version });
+  if (error) throwCompatibilityPublishError(error, 'Compatibility Pair Rule versioned publish 没有完成。');
+  await finishIdempotentWrite(request, idempotency, 'compatibility_pair_rule_revision', id, 200);
   return sendData(request, response, await loadPairRevision(id));
 }));

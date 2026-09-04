@@ -136,7 +136,8 @@
     "build:species-pages:staging-db": "node scripts/build-species-seo-from-staging.mjs",
     "build:staging-from-db": "npm run build:web && npm run build:seo-admin && npm run build:species-pages:staging-db",
     "verify:species-pages-artifact": "node scripts/verify-root-species-seo-artifact.mjs",
-    "verify:seo-species-handoff": "node scripts/verify-seo-species-handoff.mjs"
+    "verify:seo-species-handoff": "node scripts/verify-seo-species-handoff.mjs",
+    "test:compatibility-regression-gate": "tsx scripts/test-compatibility-regression-gate.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

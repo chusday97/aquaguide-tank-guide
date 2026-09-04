@@ -14,6 +14,27 @@ export type CompatibilityRevisionImpactReport = {
   changes: Array<{ field: string; before: unknown; after: unknown }>;
 };
 
+export type CompatibilityRegressionDecision = {
+  status: 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
+  riskLevel: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  blocking: string[];
+  warning: string[];
+  missing: string[];
+};
+export type CompatibilityRegressionReport = {
+  kind: 'profile' | 'pair_rule';
+  targetKey: string;
+  baselineVersion: number;
+  authoritySequence: number;
+  engineVersion: string;
+  catalogFingerprint: string;
+  regressionDigest: string;
+  evaluatedScenarios: number;
+  changedScenarios: number;
+  changes: Array<{ scenario: string; species: [string, string]; before: CompatibilityRegressionDecision; after: CompatibilityRegressionDecision }>;
+  generatedAt: string;
+};
+
 export type AdminCompatibilityProfileRevision = {
   id: string;
   speciesId: string;
@@ -25,7 +46,9 @@ export type AdminCompatibilityProfileRevision = {
   confidence: CompatibilityProfileRevisionInput['confidence'];
   status: CompatibilityProfileRevisionStatus;
   citationSnapshots: CompatibilityCitationSnapshot[];
+  evidenceResolution?: Array<{ sourceKey: string; sourceId: string; version: number }>;
   impactReport?: CompatibilityRevisionImpactReport;
+  regressionReport?: CompatibilityRegressionReport;
   impactCheckedAt?: string;
   reviewNote?: string | null;
   version: number;
@@ -51,7 +74,9 @@ export type AdminCompatibilityPairRuleRevision = {
   confidence: CompatibilityPairRuleRevisionInput['confidence'];
   status: CompatibilityProfileRevisionStatus;
   citationSnapshots: CompatibilityCitationSnapshot[];
+  evidenceResolution?: Array<{ sourceKey: string; sourceId: string; version: number }>;
   impactReport?: CompatibilityRevisionImpactReport;
+  regressionReport?: CompatibilityRegressionReport;
   impactCheckedAt?: string;
   reviewNote?: string | null;
   version: number;
@@ -81,6 +106,10 @@ export const compatibilityAdminService = {
     method: 'POST', body: input, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-review'),
   }),
 
+  publishPairRuleRevision: (id: string, version: number) => apiRequest<AdminCompatibilityPairRuleRevision>(`/admin/compatibility/pair-rule-revisions/${id}/publish`, {
+    method: 'POST', body: { version }, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-publish'),
+  }),
+
   createProfileRevision: (input: CompatibilityProfileDraftInput) => apiRequest<AdminCompatibilityProfileRevision>('/admin/compatibility/profile-revisions', {
     method: 'POST',
     body: input,
@@ -101,5 +130,9 @@ export const compatibilityAdminService = {
 
   reviewProfileRevision: (id: string, input: CompatibilityRevisionReviewMutation) => apiRequest<AdminCompatibilityProfileRevision>(`/admin/compatibility/profile-revisions/${id}/review`, {
     method: 'POST', body: input, idempotencyKey: createIdempotencyKey('compatibility-profile-revision-review'),
+  }),
+
+  publishProfileRevision: (id: string, version: number) => apiRequest<AdminCompatibilityProfileRevision>(`/admin/compatibility/profile-revisions/${id}/publish`, {
+    method: 'POST', body: { version }, idempotencyKey: createIdempotencyKey('compatibility-profile-revision-publish'),
   }),
 };

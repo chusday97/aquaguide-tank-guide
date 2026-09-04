@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { chromium } from 'playwright';
 import { createServer } from 'vite';
+import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence.ts';
 
 const repoRoot = resolve(import.meta.dirname, '..');
 const rootPackage = JSON.parse(await readFile(resolve(repoRoot, 'package.json'), 'utf8'));
@@ -71,6 +72,33 @@ const baseCareRecord = {
   careArticleAssets: [],
 };
 
+const compatibilityAudit = getCompatibilityEvidenceAudit();
+const reviewedCatalogKeys = compatibilityAudit.reviewedProfiles.map(profile => profile.speciesId);
+const reviewedPairKeys = compatibilityAudit.reviewedPairRules.map(rule => [...rule.speciesIds].sort().join('__'));
+const sourceIdFor = sourceKey => {
+  let hash = 0;
+  for (const char of sourceKey) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return `00000000-0000-4000-8000-${hash.toString(16).padStart(12, '0').slice(-12)}`;
+};
+const toRuntimeCitation = source => ({
+  id: source.id, title: source.title, publisher: source.publisher, url: source.url,
+  sourceType: source.sourceType, reviewStatus: 'reviewed', version: 1,
+});
+const createCompatibilityBootstrap = () => ({
+  authority: 'reviewed-db',
+  counts: { profiles: compatibilityAudit.reviewedProfiles.length, pairRules: compatibilityAudit.reviewedPairRules.length },
+  profiles: compatibilityAudit.reviewedProfiles.map(profile => ({
+    catalogKey: profile.speciesId, behaviorTraits: [...profile.behaviorTraits], minimumGroupSize: profile.minimumGroupSize,
+    predationTargets: [...profile.predationTargets], confidence: profile.confidence, reviewStatus: 'reviewed',
+    citations: profile.citations.map(toRuntimeCitation), version: 1,
+  })),
+  pairRules: compatibilityAudit.reviewedPairRules.map(rule => ({
+    catalogKeys: [...rule.speciesIds].sort(), verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason,
+    mitigation: [...rule.mitigation], basis: rule.basis, confidence: rule.confidence, reviewStatus: 'reviewed',
+    citations: rule.citations.map(toRuntimeCitation), version: 1,
+  })),
+});
+
 const vite = await createServer({
   root: repoRoot,
   server: { host: '127.0.0.1', port: 0 },
@@ -93,18 +121,23 @@ try {
     let currentCare = { ...baseCareRecord };
     let compatibilityRevisions = [];
     let pairRuleRevisions = [];
+    let compatibilityBootstrap = createCompatibilityBootstrap();
+    let authoritySequence = 1;
+    await page.route('**/api/v1/compatibility-bootstrap**', async route => {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityBootstrap, requestId: 'test-compat-bootstrap' }) });
+    });
     await page.route('**/api/v1/admin/compatibility/profile-revisions**', async route => {
       const request = route.request();
       const url = new URL(request.url());
       const method = request.method();
       if (method === 'GET') {
-        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { revisions: compatibilityRevisions, writableCatalogKeys: ['sp_0439'] }, requestId: 'test-compat-list' }) });
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { revisions: compatibilityRevisions, writableCatalogKeys: reviewedCatalogKeys }, requestId: 'test-compat-list' }) });
         return;
       }
       const body = request.postDataJSON();
       if (method === 'POST' && url.pathname.endsWith('/submit')) {
         const current = compatibilityRevisions[0];
-        compatibilityRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'profile', baselineVersion: 1, changedFields: ['behavior_traits', 'minimum_group_size'], changes: [] }, impactCheckedAt: new Date().toISOString() }];
+        compatibilityRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'profile', baselineVersion: 1, changedFields: ['behavior_traits', 'minimum_group_size'], changes: [] }, impactCheckedAt: new Date().toISOString(), evidenceResolution: current.citationSnapshots.map(source => ({ sourceKey: source.sourceKey, sourceId: sourceIdFor(source.sourceKey), version: 1 })), regressionReport: { kind: 'profile', targetKey: current.species.catalogKey, baselineVersion: 1, authoritySequence, evaluatedScenarios: 18, changedScenarios: 1, generatedAt: new Date().toISOString(), changes: [{ scenario: 'species_only', species: [current.species.catalogKey, 'sp_0021'], before: { status: 'caution', riskLevel: 'medium', blocking: [], warning: ['before'], missing: [] }, after: { status: 'not_recommended', riskLevel: 'high', blocking: ['after'], warning: [], missing: [] } }] } }];
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-submit' }) });
         return;
       }
@@ -112,6 +145,20 @@ try {
         const current = compatibilityRevisions[0];
         compatibilityRevisions = [{ ...current, status: body.decision === 'approve' ? 'approved' : 'rejected', version: current.version + 1, reviewNote: body.note || null }];
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-review' }) });
+        return;
+      }
+      if (method === 'POST' && url.pathname.endsWith('/publish')) {
+        const current = compatibilityRevisions[0];
+        compatibilityRevisions = [{ ...current, status: 'published', version: current.version + 1 }];
+        authoritySequence += 1;
+        compatibilityBootstrap = {
+          ...compatibilityBootstrap,
+          profiles: compatibilityBootstrap.profiles.map(profile => profile.catalogKey === current.species.catalogKey ? {
+            ...profile, behaviorTraits: [...current.behaviorTraits], minimumGroupSize: current.minimumGroupSize,
+            predationTargets: [...current.predationTargets], confidence: current.confidence, version: profile.version + 1,
+          } : profile),
+        };
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-publish' }) });
         return;
       }
       if (method === 'POST') {
@@ -136,13 +183,13 @@ try {
       const url = new URL(request.url());
       const method = request.method();
       if (method === 'GET') {
-        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { revisions: pairRuleRevisions, writablePairKeys: ['sp_0021__sp_0439'] }, requestId: 'test-pair-list' }) });
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { revisions: pairRuleRevisions, writablePairKeys: reviewedPairKeys }, requestId: 'test-pair-list' }) });
         return;
       }
       const body = request.postDataJSON();
       if (method === 'POST' && url.pathname.endsWith('/submit')) {
         const current = pairRuleRevisions[0];
-        pairRuleRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'pair_rule', baselineVersion: 1, changedFields: ['verdict', 'risk_type', 'reason', 'mitigation'], changes: [] }, impactCheckedAt: new Date().toISOString() }];
+        pairRuleRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'pair_rule', baselineVersion: 1, changedFields: ['verdict', 'risk_type', 'reason', 'mitigation'], changes: [] }, impactCheckedAt: new Date().toISOString(), evidenceResolution: current.citationSnapshots.map(source => ({ sourceKey: source.sourceKey, sourceId: sourceIdFor(source.sourceKey), version: 1 })), regressionReport: { kind: 'pair_rule', targetKey: [current.speciesA.catalogKey, current.speciesB.catalogKey].sort().join('__'), baselineVersion: 1, authoritySequence, evaluatedScenarios: 3, changedScenarios: 2, generatedAt: new Date().toISOString(), changes: [{ scenario: 'species_only', species: [current.speciesA.catalogKey, current.speciesB.catalogKey], before: { status: 'not_recommended', riskLevel: 'high', blocking: ['before'], warning: [], missing: [] }, after: { status: 'caution', riskLevel: 'medium', blocking: [], warning: ['after'], missing: [] } }] } }];
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: pairRuleRevisions[0], requestId: 'test-pair-submit' }) });
         return;
       }
@@ -150,6 +197,20 @@ try {
         const current = pairRuleRevisions[0];
         pairRuleRevisions = [{ ...current, status: body.decision === 'approve' ? 'approved' : 'rejected', version: current.version + 1, reviewNote: body.note || null }];
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: pairRuleRevisions[0], requestId: 'test-pair-review' }) });
+        return;
+      }
+      if (method === 'POST' && url.pathname.endsWith('/publish')) {
+        const current = pairRuleRevisions[0];
+        pairRuleRevisions = [{ ...current, status: 'published', version: current.version + 1 }];
+        const currentKey = [current.speciesA.catalogKey, current.speciesB.catalogKey].sort().join('__');
+        compatibilityBootstrap = {
+          ...compatibilityBootstrap,
+          pairRules: compatibilityBootstrap.pairRules.map(rule => rule.catalogKeys.join('__') === currentKey ? {
+            ...rule, verdict: current.verdict, riskType: current.riskType, reason: current.reason,
+            mitigation: [...current.mitigation], basis: current.basis, confidence: current.confidence, version: rule.version + 1,
+          } : rule),
+        };
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: pairRuleRevisions[0], requestId: 'test-pair-publish' }) });
         return;
       }
       if (method === 'POST') {
@@ -249,9 +310,17 @@ try {
     assert.equal(await draftEditor.getByLabel(/Behavior traits/).isDisabled(), true);
     await draftEditor.getByTestId('profile-impact-report').waitFor();
     assert.match(await draftEditor.getByTestId('profile-impact-report').innerText(), /behavior_traits[\s\S]*minimum_group_size/);
+    await draftEditor.getByTestId('profile-regression-report').waitFor();
+    assert.match(await draftEditor.getByTestId('profile-regression-report').innerText(), /18 个场景[\s\S]*结果变化 1 个[\s\S]*caution → not_recommended/);
     await draftEditor.getByRole('button', { name: '批准 revision（不发布）' }).click();
     await page.getByText('Profile revision 已批准；尚未发布', { exact: true }).waitFor();
     await draftEditor.getByText('已批准', { exact: true }).waitFor();
+    assert.match(await draftEditor.innerText(), /Canonical Evidence：1\/1/);
+    page.once('dialog', dialog => dialog.accept());
+    await draftEditor.getByRole('button', { name: '发布 reviewed version' }).click();
+    await page.getByText('Profile reviewed version 已发布', { exact: true }).waitFor();
+    await draftEditor.getByText('已发布', { exact: true }).waitFor();
+    await page.getByText('foraging', { exact: true }).waitFor();
 
     await page.getByRole('button', { name: '创建 Pair Draft' }).first().click();
     const pairDraftEditor = page.getByTestId('compatibility-pair-draft-editor');
@@ -270,10 +339,18 @@ try {
     await pairDraftEditor.getByText('待审核', { exact: true }).waitFor();
     assert.equal(await pairDraftEditor.getByLabel('Risk Type').isDisabled(), true);
     await pairDraftEditor.getByTestId('pair-impact-report').waitFor();
+    await pairDraftEditor.getByTestId('pair-regression-report').waitFor();
+    assert.match(await pairDraftEditor.getByTestId('pair-regression-report').innerText(), /authority seq 2[\s\S]*3 个场景[\s\S]*结果变化 2 个[\s\S]*not_recommended → caution/);
     assert.match(await pairDraftEditor.getByTestId('pair-impact-report').innerText(), /verdict[\s\S]*risk_type/);
     await pairDraftEditor.getByRole('button', { name: '批准 Pair revision（不发布）' }).click();
     await page.getByText('Pair Rule revision 已批准；尚未发布', { exact: true }).waitFor();
     await pairDraftEditor.getByText('已批准', { exact: true }).waitFor();
+    assert.match(await pairDraftEditor.innerText(), /Canonical Evidence：2\/2/);
+    page.once('dialog', dialog => dialog.accept());
+    await pairDraftEditor.getByRole('button', { name: '发布 Pair reviewed version' }).click();
+    await page.getByText('Pair Rule reviewed version 已发布', { exact: true }).waitFor();
+    await pairDraftEditor.getByText('已发布', { exact: true }).waitFor();
+    await page.getByText('behavior_conflict_review', { exact: true }).waitFor();
 
     const compatibilityOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(compatibilityOverflow, false, `${viewport.width}px Compatibility Admin should not overflow horizontally`);

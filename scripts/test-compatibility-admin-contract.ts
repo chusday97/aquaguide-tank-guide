@@ -80,19 +80,63 @@ assert.match(pairMigration, /citation_snapshots jsonb/);
 assert.match(pairMigration, /enable row level security/);
 assert.match(pairMigration, /set_updated_at_and_version/);
 
+
+const reconciliationMigration = readFileSync('supabase/migrations/202609050001_compatibility_reviewed_baseline_reconciliation.sql', 'utf8');
+assert.match(reconciliationMigration, /add column if not exists source_key text/);
+assert.match(reconciliationMigration, /evidence_resolution jsonb/);
+const reviewedSourceKeys = new Set([
+  ...audit.reviewedProfiles.flatMap(profile => profile.citations.map(source => source.id)),
+  ...audit.reviewedPairRules.flatMap(rule => rule.citations.map(source => source.id)),
+]);
+for (const sourceKey of reviewedSourceKeys) assert.equal(reconciliationMigration.includes(sourceKey), true, `reconciliation migration must include source key: ${sourceKey}`);
+for (const profile of audit.reviewedProfiles) assert.match(reconciliationMigration, new RegExp(profile.speciesId));
+for (const rule of audit.reviewedPairRules) for (const speciesId of rule.speciesIds) assert.equal(reconciliationMigration.includes(speciesId), true, `reconciliation migration must include pair species: ${speciesId}`);
+
 const routeSource = readFileSync('apps/api/src/routes/admin-compatibility.ts', 'utf8');
 assert.match(routeSource, /species_compatibility_profiles[\s\S]*review_status[\s\S]*reviewed/);
 assert.match(routeSource, /species_compatibility_profile_revisions[\s\S]*pending_review/);
 assert.doesNotMatch(routeSource, /from\('species_compatibility_profiles'\)[\s\S]{0,120}\.update\(/, 'Draft API must never mutate reviewed profile authority');
-assert.doesNotMatch(routeSource, /profile-revisions\/:id\/publish/, 'Profile reviewed publish is intentionally unavailable in this round');
+assert.match(routeSource, /profile-revisions\/:id\/publish/);
 assert.match(routeSource, /species_pair_compatibility_rule_revisions[\s\S]*pending_review/);
 assert.doesNotMatch(routeSource, /from\('species_pair_compatibility_rules'\)[\s\S]{0,160}\.update\(/, 'Pair Draft API must never mutate reviewed Pair Rule authority');
-assert.doesNotMatch(routeSource, /pair-rule-revisions\/:id\/publish/, 'Pair reviewed publish is intentionally unavailable in this round');
+assert.match(routeSource, /pair-rule-revisions\/:id\/publish/);
 assert.match(routeSource, /profile-revisions\/:id\/review/);
 assert.match(routeSource, /pair-rule-revisions\/:id\/review/);
 assert.match(routeSource, /buildImpactReport\('profile'/);
 assert.match(routeSource, /buildImpactReport\('pair_rule'/);
 assert.match(routeSource, /缺少有效 impact report/);
+assert.match(routeSource, /resolveReviewedEvidenceSnapshots/);
+assert.match(routeSource, /source_key/);
+assert.match(routeSource, /evidence_resolution/);
+assert.match(routeSource, /Canonical Evidence 尚未解析完成/);
+assert.match(routeSource, /buildProfileRevisionRegression/);
+assert.match(routeSource, /buildPairRuleRevisionRegression/);
+assert.match(routeSource, /regression_report/);
+assert.match(routeSource, /Compatibility regression 尚未完成/);
+
+const publishMigration = readFileSync('supabase/migrations/202609050002_compatibility_versioned_publish.sql', 'utf8');
+assert.match(publishMigration, /publish_compatibility_profile_revision/);
+assert.match(publishMigration, /publish_compatibility_pair_rule_revision/);
+assert.match(publishMigration, /revision_not_approved/);
+assert.match(publishMigration, /impact_missing/);
+assert.match(publishMigration, /regression_report jsonb/);
+assert.match(publishMigration, /compatibility_authority_state/);
+assert.match(publishMigration, /regression_missing/);
+assert.match(publishMigration, /regression_authority/);
+assert.match(publishMigration, /regression_baseline/);
+assert.match(publishMigration, /version=version\+1/);
+assert.match(publishMigration, /compatibility_species_publication_bump_authority/);
+assert.match(publishMigration, /compatibility_evidence_bump_authority/);
+assert.match(publishMigration, /compatibility_profiles_bump_authority/);
+assert.match(publishMigration, /compatibility_pair_rules_bump_authority/);
+assert.match(publishMigration, /enable row level security/);
+assert.match(publishMigration, /evidence_resolution_missing/);
+assert.match(publishMigration, /VERSION_CONFLICT: baseline/);
+assert.match(publishMigration, /VERSION_CONFLICT: evidence/);
+assert.match(publishMigration, /for update/);
+assert.match(publishMigration, /status='published'/);
+assert.match(routeSource, /rpc\('publish_compatibility_profile_revision'/);
+assert.match(routeSource, /rpc\('publish_compatibility_pair_rule_revision'/);
 
 
 console.log(`compatibility admin contract: ${audit.reviewedProfiles.length} reviewed profiles / ${audit.reviewedPairRules.length} reviewed pair rules, all evidence-linked`);
