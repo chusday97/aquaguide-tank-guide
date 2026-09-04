@@ -90,6 +90,56 @@ const loadPublicationByCatalogKey = async (type: 'species' | 'care', catalogKey:
 
 export const contentRouter = Router();
 
+contentRouter.get('/content-bootstrap', asyncRoute(async (request, response) => {
+  const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');
+  if (!localeParsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '语言参数无效。');
+  const locale = localeParsed.data;
+  const client = getPublicSupabase();
+
+  const [speciesPublications, carePublications, legacySpeciesResult, legacyCareResult] = await Promise.all([
+    loadPublications('species'),
+    loadPublications('care'),
+    client
+      .from('species')
+      .select('*,species_translations(*),species_feeding_profiles(*,species_feeding_profile_translations(*)),species_assets(*)')
+      .eq('status', 'published')
+      .is('deleted_at', null)
+      .order('catalog_key'),
+    client
+      .from('care_articles')
+      .select('*,care_article_translations(*),care_article_steps(*,care_article_step_translations(*)),care_article_assets(*),care_article_reference_links(*,evidence_sources(*))')
+      .eq('status', 'published')
+      .is('deleted_at', null)
+      .order('catalog_key'),
+  ]);
+
+  if (legacySpeciesResult.error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '物种内容暂时无法加载。');
+  if (legacyCareResult.error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '养护内容暂时无法加载。');
+
+  const speciesPublicationKeys = new Set(speciesPublications.map(row => row.catalog_key));
+  const carePublicationKeys = new Set(carePublications.map(row => row.catalog_key));
+  const species = [
+    ...speciesPublications.map(row => getLocalizedPublication<any>(row.snapshot, locale)).filter(Boolean),
+    ...(legacySpeciesResult.data || [])
+      .filter(row => !speciesPublicationKeys.has(row.catalog_key))
+      .map(row => mapSpeciesDetail(row, locale)),
+  ].sort((left, right) => left.catalogKey.localeCompare(right.catalogKey));
+  const careArticles = [
+    ...carePublications.map(row => getLocalizedPublication<any>(row.snapshot, locale)).filter(Boolean),
+    ...(legacyCareResult.data || [])
+      .filter(row => !carePublicationKeys.has(row.catalog_key))
+      .map(row => mapCareArticleDetail(row, locale)),
+  ].sort((left, right) => left.catalogKey.localeCompare(right.catalogKey));
+
+  response.setHeader('Cache-Control', 'public, max-age=0, s-maxage=60, stale-while-revalidate=300');
+  return sendData(request, response, {
+    species,
+    careArticles,
+    authority: speciesPublications.length + carePublications.length > 0 ? 'publication-snapshot' : 'legacy-published',
+    publicationCounts: { species: speciesPublications.length, care: carePublications.length },
+  });
+}));
+
 contentRouter.get('/species', asyncRoute(async (request, response) => {
   const parsed = speciesListQuerySchema.safeParse(request.query);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '物种筛选条件无效。', parsed.error.flatten());

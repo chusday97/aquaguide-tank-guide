@@ -315,9 +315,8 @@ function DesktopSidebar({
     setSidebarSuggestionsError('');
     void Promise.all([
       import('./services/search/search-suggestions.service'),
-      import('./data/fishData'),
-      import('./data/careTopicsData'),
-    ]).then(([searchModule, speciesModule, careModule]) => {
+      import('./data/runtimeContentCatalog'),
+    ]).then(([searchModule, contentModule]) => {
       if (cancelled) return;
       const currentAquarium = aquariumNavigation.aquariums.find(item => item.id === aquariumNavigation.currentAquariumId)
         || aquariumNavigation.aquariums[0]
@@ -327,8 +326,8 @@ function DesktopSidebar({
         query: searchDraft,
         locale: Boolean(i18n.language?.startsWith('en')) ? 'en' : 'zh-CN',
         scope: 'global',
-        species: speciesModule.fishData,
-        careTopics: careModule.careTopicsData,
+        species: contentModule.runtimeFishData,
+        careTopics: contentModule.runtimeCareTopicsData,
         ownedQuantityBySpeciesId,
       });
       setSidebarSuggestions(result.suggestions);

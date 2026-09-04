@@ -14,6 +14,13 @@ const adminRoute = readFileSync(resolve(root, 'apps/api/src/routes/admin.ts'), '
 const contentRoute = readFileSync(resolve(root, 'apps/api/src/routes/content.ts'), 'utf8');
 const publicationBoundary = readFileSync(resolve(root, 'apps/api/src/content-publications.ts'), 'utf8');
 const contentMapper = readFileSync(resolve(root, 'apps/api/src/content-mappers.ts'), 'utf8');
+const vercelConfig = readFileSync(resolve(root, 'vercel.json'), 'utf8');
+const vercelV1Router = readFileSync(resolve(root, 'api/v1/router.ts'), 'utf8');
+const runtimeCatalog = readFileSync(resolve(root, 'src/data/runtimeContentCatalog.ts'), 'utf8');
+const aquariumPage = readFileSync(resolve(root, 'src/pages/Aquarium.tsx'), 'utf8');
+const identifyPage = readFileSync(resolve(root, 'src/pages/Identify.tsx'), 'utf8');
+const encyclopediaPage = readFileSync(resolve(root, 'src/pages/Encyclopedia.tsx'), 'utf8');
+const careEncyclopediaPage = readFileSync(resolve(root, 'src/pages/CareEncyclopedia.tsx'), 'utf8');
 
 assert.equal(speciesAdminInputSchema.safeParse({}).success, false);
 assert.equal(careArticleAdminInputSchema.safeParse({}).success, false);
@@ -49,5 +56,16 @@ assert.match(publicationBoundary, /buildPublicationSnapshot/);
 assert.match(contentRoute, /from\('content_publications'\)/);
 assert.match(contentRoute, /publicationKeys/);
 assert.match(contentRoute, /isPublicationStoreNotMigrated/);
+assert.match(contentRoute, /contentRouter\.get\('\/content-bootstrap'/);
+assert.match(vercelConfig, /\"source\": \"\/api\/v1\/:path\*\"/);
+assert.match(vercelConfig, /\"destination\": \"\/api\/v1\/router\"/);
+assert.match(vercelV1Router, /createBusinessApiApp/);
+assert.match(runtimeCatalog, /hydratePublishedContentCatalog/);
+assert.match(runtimeCatalog, /runtimeFishData/);
+assert.match(runtimeCatalog, /runtimeCareTopicsData/);
+assert.match(encyclopediaPage, /runtimeFishData as fishData/);
+assert.match(careEncyclopediaPage, /runtimeCareTopicsData as careTopicsData/);
+assert.match(aquariumPage, /runtimeCareTopicsData as careTopicsData/);
+assert.match(identifyPage, /runtimeCareTopicsData as careTopicsData/);
 
-console.log('admin content contract verified: protected CRUD, publication snapshots, draft isolation, migration fallback and private-original isolation');
+console.log('admin content contract verified: protected CRUD, publication snapshots, draft isolation, runtime API routing and private-original isolation');

@@ -47,7 +47,7 @@ const matchesBaseFilters = (fish: Fish, filters: EncyclopediaSearchOutput['activ
 };
 
 export const encyclopediaService = {
-  search: (input: unknown): EncyclopediaSearchOutput => {
+  search: (input: unknown, speciesCatalog?: Fish[]): EncyclopediaSearchOutput => {
     const parsed = encyclopediaSearchInputSchema.safeParse(input);
     if (!parsed.success) {
       loggerService.warn({
@@ -69,7 +69,7 @@ export const encyclopediaService = {
       temperament: parsed.data.temperament,
       housingMode: parsed.data.housingMode,
     };
-    const allItems = getDisplayableSpecies();
+    const allItems = getDisplayableSpecies(speciesCatalog);
     const categorySourceItems = allItems.filter((fish) => matchesBaseFilters(fish, activeFilters));
     const categories = getSecondaryCategories(categorySourceItems, parsed.data.lifeType);
     const items = categorySourceItems

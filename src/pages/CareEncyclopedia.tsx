@@ -6,7 +6,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { careTopicsData, type CareTopic } from '../data/careTopicsData';
+import type { CareTopic } from '../data/careTopicsData';
+import { runtimeFishData as fishData, runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import {
   getCareActionEvidence,
   getCareActionEvidenceForText,
@@ -14,7 +15,6 @@ import {
   getCareReferences,
   type CareActionEvidence,
 } from '../data/careEvidence';
-import { fishData } from '../data/fishData';
 import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import type { Aquarium, AquariumFish, Fish as FishType } from '../types';
 import type { WorkspaceNavigationContext } from '../types/navigation';

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { Fish, Aquarium } from '../types';
-import { fishData } from '../data/fishData';
+import { runtimeFishData as fishData, runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import { encyclopediaService } from '../modules/encyclopedia/encyclopedia.service';
 import {
   getCareTaxonomyPath,
@@ -63,7 +63,6 @@ import { recordSpeciesMemorial } from '../services/collection/memorial.service';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { englishTranslations } from '../i18n/localizeData';
 import { autoTranslations } from '../i18n/localizeDataAuto';
-import { careTopicsData } from '../data/careTopicsData';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
 import {
   getSearchSuggestions,
@@ -795,7 +794,7 @@ export default function Encyclopedia() {
   };
 
   const encyclopediaCatalog = useMemo(
-    () => encyclopediaService.search({ limit: 500 }),
+    () => encyclopediaService.search({ limit: 500 }, fishData),
     []
   );
   const allFishes = encyclopediaCatalog.allItems;

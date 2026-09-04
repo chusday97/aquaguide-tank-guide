@@ -23,5 +23,13 @@ export default defineConfig(({mode}) => {
         },
       },
     },
+    preview: {
+      proxy: {
+        '/api': {
+          target: `http://localhost:${env.API_PORT || '8787'}`,
+          changeOrigin: true,
+        },
+      },
+    },
   };
 });

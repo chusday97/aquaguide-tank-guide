@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { applyLocalization } from './localizeData';
+import { hydratePublishedContentCatalog } from '../data/runtimeContentCatalog';
 
 export const supportedLocales = ['zh-CN', 'en'] as const;
 export type SupportedLocale = (typeof supportedLocales)[number];
@@ -1831,11 +1832,12 @@ void i18n.use(initReactI18next).init({
 applyLocalization(initialLocale);
 
 export const setLocale = async (locale: SupportedLocale) => {
+  await hydratePublishedContentCatalog(locale);
+  applyLocalization(locale);
   await i18n.changeLanguage(locale);
   if (typeof document !== 'undefined') {
     document.documentElement.lang = locale;
   }
-  applyLocalization(locale);
   try {
     window.localStorage.setItem(STORAGE_KEY, locale);
   } catch {
