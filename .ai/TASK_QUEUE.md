@@ -5,9 +5,10 @@ Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
 Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 
 ## P0 — Product/Care authority convergence
-- [ ] Inventory every frontend consumer of `fishData.ts` / `careTopicsData.ts` and classify runtime vs build-time use.
-- [ ] Define one published Product/Care read contract for Species and Care content.
-- [ ] Decide explicit role of static datasets: seed, generated artifact or offline fallback — never a competing live authority.
+- [x] Inventory every frontend consumer of `fishData.ts` / `careTopicsData.ts` and classify runtime vs build-time use. See `PUBLISHED_CONTENT_AUTHORITY.md`.
+- [x] Define one published Product/Care read contract for Species and Care content. See `PUBLISHED_CONTENT_AUTHORITY.md`.
+- [x] Decide explicit role of static datasets: seed/audit fixture/offline fallback only — never a competing live authority.
+- [ ] Isolate Draft/save from the last Published Product/Care version before runtime cutover; current in-place PATCH can otherwise bypass Publish.
 - [ ] Route Encyclopedia Product Data to the published authority.
 - [ ] Route Care Encyclopedia/diagnosis Care Knowledge to the published authority.
 - [ ] Prove one Admin Product edit reaches the intended frontend Preview.

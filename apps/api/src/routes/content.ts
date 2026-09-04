@@ -6,6 +6,7 @@ import {
   supportedLocaleSchema,
 } from '../../../../packages/contracts/src/index';
 import { mapCareArticleDetail, mapCareArticleSummary, mapSpeciesDetail, mapSpeciesSummary } from '../content-mappers';
+import { getLocalizedPublication, type PublicationSnapshotPayload } from '../content-publications';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getPublicSupabase } from '../supabase';
 
@@ -22,6 +23,71 @@ const decodeCursor = (cursor?: string) => {
 
 const encodeCursor = (offset: number) => Buffer.from(String(offset), 'utf8').toString('base64url');
 
+type PublicationRow = { catalog_key: string; snapshot: PublicationSnapshotPayload };
+
+const toSpeciesSummary = (detail: any) => ({
+  id: detail.id,
+  catalogKey: detail.catalogKey,
+  name: detail.name,
+  scientificName: detail.scientificName,
+  category: detail.category,
+  difficulty: detail.difficulty,
+  waterTemperatureText: detail.waterTemperatureText,
+  phLevelText: detail.phLevelText,
+  temperament: detail.temperament,
+  sizeClass: detail.sizeClass,
+  thumbnail: detail.thumbnail,
+  updatedAt: detail.updatedAt,
+  localization: detail.localization,
+});
+
+const toCareSummary = (detail: any) => ({
+  id: detail.id,
+  catalogKey: detail.catalogKey,
+  title: detail.title,
+  category: detail.category,
+  urgency: detail.urgency,
+  summary: detail.summary,
+  keywords: detail.keywords,
+  image: detail.image,
+  updatedAt: detail.updatedAt,
+  localization: detail.localization,
+});
+
+const normalizedIncludes = (value: unknown, query: string) => (
+  String(value || '').toLocaleLowerCase().includes(query.toLocaleLowerCase())
+);
+
+const isPublicationStoreNotMigrated = (error: any) => (
+  ['42P01', 'PGRST205'].includes(String(error?.code || ''))
+  || /content_publications/i.test(String(error?.message || '')) && /not found|does not exist|schema cache/i.test(String(error?.message || ''))
+);
+
+const loadPublications = async (type: 'species' | 'care') => {
+  const client = getPublicSupabase();
+  const { data, error } = await client
+    .from('content_publications')
+    .select('catalog_key,snapshot')
+    .eq('resource_type', type)
+    .order('catalog_key');
+  if (error && isPublicationStoreNotMigrated(error)) return [];
+  if (error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '已发布内容快照暂时无法加载。');
+  return (data || []) as PublicationRow[];
+};
+
+const loadPublicationByCatalogKey = async (type: 'species' | 'care', catalogKey: string) => {
+  const client = getPublicSupabase();
+  const { data, error } = await client
+    .from('content_publications')
+    .select('snapshot')
+    .eq('resource_type', type)
+    .eq('catalog_key', catalogKey)
+    .maybeSingle();
+  if (error && isPublicationStoreNotMigrated(error)) return null;
+  if (error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '已发布内容快照暂时无法加载。');
+  return data?.snapshot as PublicationSnapshotPayload | undefined;
+};
+
 export const contentRouter = Router();
 
 contentRouter.get('/species', asyncRoute(async (request, response) => {
@@ -31,22 +97,34 @@ contentRouter.get('/species', asyncRoute(async (request, response) => {
   const offset = decodeCursor(cursor);
   const client = getPublicSupabase();
 
-  let builder = client
-    .from('species')
-    .select('id,catalog_key,name,scientific_name,category,difficulty,water_temperature_text,ph_level_text,temperament,size_class,updated_at,species_assets(*),species_translations(*)')
-    .eq('status', 'published')
-    .is('deleted_at', null)
-    .order('catalog_key')
-    .range(offset, offset + limit);
-  if (category) builder = builder.eq('category', category);
-  if (query) builder = builder.ilike('name', `%${query}%`);
+  const [{ data: legacyData, error: legacyError }, publications] = await Promise.all([
+    client
+      .from('species')
+      .select('id,catalog_key,name,scientific_name,category,difficulty,water_temperature_text,ph_level_text,temperament,size_class,updated_at,species_assets(*),species_translations(*)')
+      .eq('status', 'published')
+      .is('deleted_at', null)
+      .order('catalog_key'),
+    loadPublications('species'),
+  ]);
+  if (legacyError) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '物种内容暂时无法加载。');
 
-  const { data, error } = await builder;
-  if (error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '物种内容暂时无法加载。');
-  const rows = data || [];
-  const hasMore = rows.length > limit;
+  const publicationKeys = new Set(publications.map(row => row.catalog_key));
+  const publicationItems = publications
+    .map(row => getLocalizedPublication<any>(row.snapshot, locale))
+    .filter(Boolean)
+    .map(toSpeciesSummary);
+  const legacyItems = (legacyData || [])
+    .filter(row => !publicationKeys.has(row.catalog_key))
+    .map(row => mapSpeciesSummary(row, locale));
+
+  const filtered = [...publicationItems, ...legacyItems]
+    .filter(item => !category || item.category === category)
+    .filter(item => !query || normalizedIncludes(`${item.name} ${item.scientificName} ${item.catalogKey}`, query))
+    .sort((left, right) => left.catalogKey.localeCompare(right.catalogKey));
+  const page = filtered.slice(offset, offset + limit + 1);
+  const hasMore = page.length > limit;
   return sendData(request, response, {
-    items: rows.slice(0, limit).map(row => mapSpeciesSummary(row, locale)),
+    items: page.slice(0, limit),
     ...(hasMore ? { nextCursor: encodeCursor(offset + limit) } : {}),
   });
 }));
@@ -57,6 +135,13 @@ contentRouter.get('/species/:catalogKey', asyncRoute(async (request, response) =
   const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');
   if (!localeParsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '语言参数无效。');
   const client = getPublicSupabase();
+
+  const publication = await loadPublicationByCatalogKey('species', parsed.data);
+  if (publication) {
+    const detail = getLocalizedPublication<any>(publication, localeParsed.data);
+    if (detail) return sendData(request, response, detail);
+  }
+
   const { data, error } = await client
     .from('species')
     .select('*,species_translations(*),species_feeding_profiles(*,species_feeding_profile_translations(*)),species_assets(*),species_compatibility_profiles(*,species_compatibility_profile_sources(*,evidence_sources(*)))')
@@ -76,23 +161,35 @@ contentRouter.get('/care-articles', asyncRoute(async (request, response) => {
   const offset = decodeCursor(cursor);
   const client = getPublicSupabase();
 
-  let builder = client
-    .from('care_articles')
-    .select('id,catalog_key,title,category,urgency,summary,keywords,updated_at,care_article_assets(*),care_article_translations(*)')
-    .eq('status', 'published')
-    .is('deleted_at', null)
-    .order('catalog_key')
-    .range(offset, offset + limit);
-  if (category) builder = builder.eq('category', category);
-  if (urgency) builder = builder.eq('urgency', urgency);
-  if (query) builder = builder.ilike('title', `%${query}%`);
+  const [{ data: legacyData, error: legacyError }, publications] = await Promise.all([
+    client
+      .from('care_articles')
+      .select('id,catalog_key,title,category,urgency,summary,keywords,updated_at,care_article_assets(*),care_article_translations(*)')
+      .eq('status', 'published')
+      .is('deleted_at', null)
+      .order('catalog_key'),
+    loadPublications('care'),
+  ]);
+  if (legacyError) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '养护内容暂时无法加载。');
 
-  const { data, error } = await builder;
-  if (error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '养护内容暂时无法加载。');
-  const rows = data || [];
-  const hasMore = rows.length > limit;
+  const publicationKeys = new Set(publications.map(row => row.catalog_key));
+  const publicationItems = publications
+    .map(row => getLocalizedPublication<any>(row.snapshot, locale))
+    .filter(Boolean)
+    .map(toCareSummary);
+  const legacyItems = (legacyData || [])
+    .filter(row => !publicationKeys.has(row.catalog_key))
+    .map(row => mapCareArticleSummary(row, locale));
+
+  const filtered = [...publicationItems, ...legacyItems]
+    .filter(item => !category || item.category === category)
+    .filter(item => !urgency || item.urgency === urgency)
+    .filter(item => !query || normalizedIncludes(`${item.title} ${item.summary} ${item.catalogKey}`, query))
+    .sort((left, right) => left.catalogKey.localeCompare(right.catalogKey));
+  const page = filtered.slice(offset, offset + limit + 1);
+  const hasMore = page.length > limit;
   return sendData(request, response, {
-    items: rows.slice(0, limit).map(row => mapCareArticleSummary(row, locale)),
+    items: page.slice(0, limit),
     ...(hasMore ? { nextCursor: encodeCursor(offset + limit) } : {}),
   });
 }));
@@ -103,6 +200,13 @@ contentRouter.get('/care-articles/:catalogKey', asyncRoute(async (request, respo
   const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');
   if (!localeParsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '语言参数无效。');
   const client = getPublicSupabase();
+
+  const publication = await loadPublicationByCatalogKey('care', parsed.data);
+  if (publication) {
+    const detail = getLocalizedPublication<any>(publication, localeParsed.data);
+    if (detail) return sendData(request, response, detail);
+  }
+
   const { data, error } = await client
     .from('care_articles')
     .select('*,care_article_translations(*),care_article_steps(*,care_article_step_translations(*)),care_article_assets(*),care_article_reference_links(*,evidence_sources(*))')

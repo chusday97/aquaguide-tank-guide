@@ -9,7 +9,10 @@ import {
 
 const root = resolve(import.meta.dirname, '..');
 const migration = readFileSync(resolve(root, 'supabase/migrations/202607160001_core_schema.sql'), 'utf8');
+const publicationMigration = readFileSync(resolve(root, 'supabase/migrations/202609040001_product_care_publication_snapshots.sql'), 'utf8');
 const adminRoute = readFileSync(resolve(root, 'apps/api/src/routes/admin.ts'), 'utf8');
+const contentRoute = readFileSync(resolve(root, 'apps/api/src/routes/content.ts'), 'utf8');
+const publicationBoundary = readFileSync(resolve(root, 'apps/api/src/content-publications.ts'), 'utf8');
 const contentMapper = readFileSync(resolve(root, 'apps/api/src/content-mappers.ts'), 'utf8');
 
 assert.equal(speciesAdminInputSchema.safeParse({}).success, false);
@@ -32,4 +35,19 @@ assert.match(migration, /storage_bucket = 'catalog-public'.*species/s);
 assert.match(migration, /storage_bucket = 'catalog-public'.*care_articles/s);
 assert.match(contentMapper, /row\.storage_bucket === 'catalog-public'/);
 
-console.log('admin content contract verified: protected CRUD, image derivatives, idempotency, rollback and private-original isolation');
+assert.match(publicationMigration, /create table if not exists public\.content_publications/);
+assert.match(publicationMigration, /publish_content_snapshot/);
+assert.match(publicationMigration, /archive_content_snapshot/);
+assert.match(publicationMigration, /grant execute on function public\.publish_content_snapshot[^;]+to service_role/s);
+assert.doesNotMatch(publicationMigration, /grant execute on function public\.publish_content_snapshot[^;]+to (?:anon|authenticated)/s);
+assert.match(adminRoute, /ensurePublishedSnapshotBeforeDraft\('species'/);
+assert.match(adminRoute, /ensurePublishedSnapshotBeforeDraft\('care'/);
+assert.match(adminRoute, /status: 'draft'/);
+assert.match(adminRoute, /rpc\('publish_content_snapshot'/);
+assert.match(adminRoute, /rpc\('archive_content_snapshot'/);
+assert.match(publicationBoundary, /buildPublicationSnapshot/);
+assert.match(contentRoute, /from\('content_publications'\)/);
+assert.match(contentRoute, /publicationKeys/);
+assert.match(contentRoute, /isPublicationStoreNotMigrated/);
+
+console.log('admin content contract verified: protected CRUD, publication snapshots, draft isolation, migration fallback and private-original isolation');

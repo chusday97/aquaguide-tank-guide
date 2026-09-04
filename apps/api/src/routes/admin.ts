@@ -21,6 +21,7 @@ import {
   throwDatabaseError,
   throwMissingOrVersionConflict,
 } from '../data-utils';
+import { buildCurrentPublication, ensurePublishedSnapshotBeforeDraft } from '../content-publications';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 import { adminFeedbackRouter } from './feedback';
@@ -75,8 +76,10 @@ adminRouter.patch('/species/:id', asyncRoute(async (request, response) => {
   const parsed = speciesAdminUpdateSchema.safeParse(request.body);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '物种更新内容无效。', parsed.error.flatten());
   const { version, ...updates } = parsed.data;
+  const source = await ensurePublishedSnapshotBeforeDraft('species', id);
   const client = getAdminSupabase();
-  const { data, error } = await client.from('species').update(snakeize(updates)).eq('id', id).eq('version', version).select('*').maybeSingle();
+  const draftUpdates = { ...snakeize(updates), ...(source.status === 'published' ? { status: 'draft' } : {}) };
+  const { data, error } = await client.from('species').update(draftUpdates).eq('id', id).eq('version', version).select('*').maybeSingle();
   if (error) throwDatabaseError(error, '物种内容没有更新成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'species', id);
   return sendData(request, response, camelize(data));
@@ -127,8 +130,10 @@ adminRouter.patch('/care-articles/:id', asyncRoute(async (request, response) => 
   const parsed = careArticleAdminUpdateSchema.safeParse(request.body);
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '养护内容更新无效。', parsed.error.flatten());
   const { version, steps, ...updates } = parsed.data;
+  const source = await ensurePublishedSnapshotBeforeDraft('care', id);
   const client = getAdminSupabase();
-  const { data, error } = await client.from('care_articles').update(snakeize(updates)).eq('id', id).eq('version', version).select('*').maybeSingle();
+  const draftUpdates = { ...snakeize(updates), ...(source.status === 'published' ? { status: 'draft' } : {}) };
+  const { data, error } = await client.from('care_articles').update(draftUpdates).eq('id', id).eq('version', version).select('*').maybeSingle();
   if (error) throwDatabaseError(error, '养护文章没有更新成功。');
   if (!data) await throwMissingOrVersionConflict(client, 'care_articles', id);
   if (steps) {
@@ -194,14 +199,38 @@ const registerStatusRoute = (action: 'publish' | 'archive') => {
     if (!['species', 'care'].includes(request.params.type)) throw new ApiError(400, 'VALIDATION_ERROR', '内容类型无效。');
     const parsed = contentStatusMutationSchema.safeParse(request.body);
     if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '内容版本无效。');
-    const table = request.params.type === 'species' ? 'species' : 'care_articles';
+    const resourceType = request.params.type as 'species' | 'care';
+    const table = resourceType === 'species' ? 'species' : 'care_articles';
     const client = getAdminSupabase();
-    const { data, error } = await client.from(table).update({
-      status: action === 'publish' ? 'published' : 'archived',
-      published_at: action === 'publish' ? new Date().toISOString() : null,
-    }).eq('id', id).eq('version', parsed.data.version).select('*').maybeSingle();
-    if (error) throwDatabaseError(error, '内容状态没有更新成功。');
-    if (!data) await throwMissingOrVersionConflict(client, table, id);
+
+    if (action === 'publish') {
+      const { source, snapshot } = await buildCurrentPublication(resourceType, id);
+      if (source.version !== parsed.data.version) {
+        throw new ApiError(409, 'VERSION_CONFLICT', '内容已被更新，请刷新后再发布。');
+      }
+      const { error: publishError } = await client.rpc('publish_content_snapshot', {
+        p_resource_type: resourceType,
+        p_resource_id: id,
+        p_expected_version: parsed.data.version,
+        p_snapshot: snapshot,
+      });
+      if (publishError) throwDatabaseError(publishError, '内容发布没有完成。');
+    } else {
+      const { data: current, error: currentError } = await client.from(table).select('id,version').eq('id', id).maybeSingle();
+      if (currentError) throwDatabaseError(currentError, '暂时无法核对内容状态。');
+      if (!current) throw new ApiError(404, 'NOT_FOUND', '没有找到需要归档的内容。');
+      if (current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', '内容已被更新，请刷新后再归档。');
+      const { error: archiveError } = await client.rpc('archive_content_snapshot', {
+        p_resource_type: resourceType,
+        p_resource_id: id,
+        p_expected_version: parsed.data.version,
+      });
+      if (archiveError) throwDatabaseError(archiveError, '内容归档没有完成。');
+    }
+
+    const { data, error } = await client.from(table).select('*').eq('id', id).maybeSingle();
+    if (error) throwDatabaseError(error, '内容状态已变更，但暂时无法读取最新版本。');
+    if (!data) throw new ApiError(404, 'NOT_FOUND', '没有找到这条内容。');
     return sendData(request, response, camelize(data));
   }));
 };
@@ -222,9 +251,10 @@ adminRouter.post(
     const idempotency = await beginIdempotentWrite(request);
     const client = getAdminSupabase();
     const contentTable = parsed.data.contentType === 'species' ? 'species' : 'care_articles';
-    const { data: content, error: contentError } = await client.from(contentTable).select('id,catalog_key').eq('id', parsed.data.contentId).maybeSingle();
+    const { data: content, error: contentError } = await client.from(contentTable).select('id,catalog_key,status,version').eq('id', parsed.data.contentId).maybeSingle();
     if (contentError) throwDatabaseError(contentError, '暂时无法核对内容。');
     if (!content) throw new ApiError(404, 'NOT_FOUND', '没有找到需要绑定图片的内容。');
+    await ensurePublishedSnapshotBeforeDraft(parsed.data.contentType, content.id);
 
     const assetTable = parsed.data.contentType === 'species' ? 'species_assets' : 'care_article_assets';
     const foreignKey = parsed.data.contentType === 'species' ? 'species_id' : 'article_id';
@@ -318,6 +348,10 @@ adminRouter.post(
       const { data, error } = await client.from(assetTable).insert(rows).select('*');
       if (error || !data) throwDatabaseError(error, '图片已上传，但素材记录没有保存成功。');
       insertedIds = data.map(row => row.id);
+      if (content.status === 'published') {
+        const { error: draftError } = await client.from(contentTable).update({ status: 'draft' }).eq('id', content.id).eq('status', 'published');
+        if (draftError) throwDatabaseError(draftError, '图片已保存，但内容没有正确切回 Draft。');
+      }
       await finishIdempotentWrite(request, idempotency, 'content_asset', data[0].id, 201);
       return sendData(request, response, camelize(data), 201);
     } catch (error) {
