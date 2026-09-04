@@ -4,8 +4,8 @@ Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `dfed5a948982719505cc5d557be2b98ef4e9baea`
-Latest operational checkpoint: `dfed5a94 feat(admin): add compatibility profile draft workflow`
+Current functional HEAD before this docs sync: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`
+Latest operational checkpoint: `4c9ec12e feat(admin): add compatibility pair rule draft workflow`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -81,7 +81,7 @@ P0-B — [DONE] Authenticated bilingual batch-01 import/review/Staging/28-page h
 
 P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Published Diff, affected-consumer summary, Encyclopedia Before/After and Compatibility-result regression simulation.
 
-P1 — [NEXT] Compatibility Admin: reviewed Species behavior profiles, Pair Rules, Evidence, Confidence and Rule Version with regression testing before publish.
+P1 — [IN PROGRESS] Compatibility Admin: Profile + Pair Rule Draft workflows are implemented; next is human Review/Approve, rule versioning and regression gating before reviewed publish.
 
 P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extraction/conflict detection/Draft generation from approved facts.
 
@@ -137,3 +137,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - API exposes DB-baseline writable catalog keys; static reviewed profiles without DB alignment remain read-only.
 - Migration is repository-only and unapplied to Production/live databases.
 - Next unfinished item: Pair Rule revision management with Evidence / Confidence / Review Status.
+
+## 2026-09-04 Compatibility Admin Pair Rule Draft checkpoint
+- Functional commit `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`.
+- Pair Rule revisions mirror Profile safety: DB-baseline capability gating, one active revision per canonical pair, optimistic versioning, reviewed citation snapshots and Draft → pending_review.
+- Pair editor covers verdict / risk type / reason / mitigation / basis / confidence; reviewed Pair Rule rows remain immutable from Draft APIs.
+- Contract rejects same-species pairs and contains no Pair publish endpoint.
+- 1280/390 browser flow passes create/edit/save/submit/lock; root lint/build, API check, Compatibility impact and compatibility-admin contract pass.
+- Migrations 0002/0003 remain code-only; no live DB or Production mutation.
+- Next unfinished item: versioned human Review/Approve + regression gate before reviewed Compatibility publish.

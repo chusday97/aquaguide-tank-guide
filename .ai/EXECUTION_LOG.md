@@ -554,3 +554,11 @@
 - Validation PASS: compatibility admin contract, Compatibility impact regression, Admin browser, Business API check, root lint/build, diff hygiene.
 - Functional commit pushed: `dfed5a948982719505cc5d557be2b98ef4e9baea`. Migration not applied to any live database; Production/main untouched.
 Next: Pair Rule revision Draft workflow with evidence/confidence/review status.
+
+23:xx
+- Completed P1 Compatibility Admin Pair Rule Draft workflow on top of the reviewed 4-rule baseline.
+- Added pair revision schema/API/editor with DB-baseline gating, canonical pair ordering, reviewed citation snapshots, versioning, Draft save and submit-review lock.
+- Acceptance exposed and fixed a real Zod runtime crash caused by calling `.omit()` on a refined schema.
+- PASS: pair/profile compatibility admin contract, 1280/390 browser workflow, API TS, root lint/build, Compatibility impact, diff hygiene.
+- Functional commit pushed: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`. Migration not applied to live DB/Production; reviewed runtime unchanged.
+Next: explicit human Review/Approve + rule versioning and regression gate before any reviewed Compatibility publish.

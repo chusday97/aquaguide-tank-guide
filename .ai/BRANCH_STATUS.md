@@ -2,14 +2,14 @@
 
 Updated: 2026-09-04
 Feature: `feature/admin-content-v0`
-Remote feature before this round push: `9dc30c48fb02f565637e09f807e0a56d882c1252`
+Remote feature before this round push: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 119
+- feature-only commits: 123
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -62,4 +62,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Functional feature HEAD pushed: `dfed5a948982719505cc5d557be2b98ef4e9baea`.
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`; divergence main-only 269 / feature-only 121; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Migration `202609040002_compatibility_profile_revisions.sql` is code-only and unapplied.
+- No merge/rebase main and no Production mutation.
+
+## 2026-09-04 Compatibility Pair Rule Draft checkpoint
+- Functional feature HEAD pushed: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`.
+- Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`; divergence main-only 269 / feature-only 123; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Migration `202609040003_compatibility_pair_rule_revisions.sql` is code-only and unapplied.
 - No merge/rebase main and no Production mutation.

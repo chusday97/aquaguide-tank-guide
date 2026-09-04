@@ -28,7 +28,7 @@ Species SEO remains Repo-backed and fail-closed:
 3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
 4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
 5. [DONE] Change Impact Preview: field classification, affected-consumer summary, decision-critical Before/After and Compatibility-result regression checks.
-6. [IN PROGRESS] Compatibility Admin: Species behavior Profile operator surface + isolated Draft revision workflow are DONE locally; [NEXT] Pair Rule revision management with Evidence / Confidence / Review Status, then reviewed publish/versioning.
+6. [IN PROGRESS] Compatibility Admin: Species behavior Profile and Pair Rule operator/Draft revision workflows are DONE locally; [NEXT] reviewed rule versioning + explicit human Review/Approve and regression gate before publish.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -72,3 +72,12 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Migration `202609040002_compatibility_profile_revisions.sql` is committed but NOT applied to Production or any live database in this round.
 - 390/1280 browser contract proves create Draft → edit → save → submit review → edit lock. API check, root lint/build, compatibility contracts and diff hygiene pass.
 - Next: Pair Rule revision Draft workflow; keep reviewed runtime and Production locked.
+
+## 2026-09-04 Compatibility Admin — Pair Rule Draft checkpoint
+- Functional commit `4c9ec12e feat(admin): add compatibility pair rule draft workflow`.
+- Reviewed Pair Rules now support isolated revision Draft create/edit/submit-review when the exact DB pair baseline is aligned.
+- Draft fields cover verdict, risk type, reason, mitigation, basis, confidence and reviewed citation snapshots; same-species pairs are rejected.
+- One active Pair Rule revision per canonical pair is enforced; reviewed runtime rows are never updated by Draft routes and no Compatibility publish endpoint exists yet.
+- Browser acceptance passes at 1280/390 for create → edit → save → submit-review → edit lock. A Zod refine/omit runtime crash found during acceptance was corrected at the contract layer.
+- Migration `202609040003_compatibility_pair_rule_revisions.sql` is repository-only and unapplied to live databases/Production.
+- Next: reviewed rule versioning + human approval + regression/impact gate before any Compatibility publish path is introduced.

@@ -36,7 +36,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 
 ## P1 — Compatibility Admin
 - [x] Operator UI for Species behavior profiles with reviewed-baseline audit plus isolated Draft revision create/edit/submit-review.
-- [ ] Pair Rule management with Evidence, Confidence and Review Status.
+- [x] Pair Rule management with reviewed Evidence snapshots, Confidence and Review Status using isolated Draft revision create/edit/submit-review.
 - [ ] Version Compatibility rules.
 - [ ] Require regression/impact test before rule publish.
 - [ ] Preserve human review; do not allow opaque AI auto-publish.

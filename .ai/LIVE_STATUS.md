@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `dfed5a948982719505cc5d557be2b98ef4e9baea`
+Operational HEAD before this sync: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
@@ -26,7 +26,7 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview: completed and regression-accepted. P1 Compatibility Admin is now the first unfinished milestone.
+P1 Change Impact Preview: completed and regression-accepted. Compatibility Profile + Pair Rule Draft workflows are implemented; human Review/Approve + rule versioning/regression gate are next.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
@@ -88,3 +88,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Static reviewed runtime remains unchanged; Pair Rule editing and reviewed publish remain locked.
 - New revision migration is committed only; no live DB/Production mutation.
 - PASS: compatibility admin contract, API TS check, 390/1280 browser workflow, root lint/build, diff hygiene.
+
+## 2026-09-04 Compatibility Admin Pair Rule Draft checkpoint
+- `/admin/compatibility` now safely supports Profile and Pair Rule revision Drafts where reviewed DB baselines are aligned.
+- Pair Rule Drafts expose evidence/confidence/review-state fields but cannot mutate reviewed runtime authority or publish.
+- PASS: pair/profile compatibility-admin contract, API TS, 1280/390 browser flow, Compatibility impact, root lint/build, diff hygiene.
+- Pair migration remains unapplied to live DB/Production.
