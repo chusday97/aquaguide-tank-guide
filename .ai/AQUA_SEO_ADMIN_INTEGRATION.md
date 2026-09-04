@@ -1,5 +1,7 @@
 # AquaGuide ↔ Species SEO Admin Integration Contract
 
+> Scope note (2026-09-04): this is a **child contract for the SEO acquisition subsystem**, not the architecture for all AquaGuide content/product operations. Read `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md` first for Product Data / Care / Compatibility / SEO ownership.
+
 > **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
 
 
@@ -64,4 +66,4 @@ The same page must also have correct Title, Meta Description, canonical, robots,
 - Do not treat Admin UI completion as SEO integration completion.
 
 ## Required startup instruction
-Any future AquaGuide session working on frontend, SEO, Admin, publishing or deployment must read this file and `HANDOFF.md` before planning or modifying the integration.
+Any future AquaGuide session working on frontend, SEO, Admin, publishing or deployment must read `.ai/HANDOFF_LATEST.md` and `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md` first. Read this file next when the task touches the Species SEO acquisition/publication subsystem.

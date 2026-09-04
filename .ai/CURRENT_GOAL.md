@@ -3,47 +3,37 @@
 Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
-Latest converged functional head: `f4805669 merge: converge import batch scope safeguards`
+Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 
-## Runtime authority
-- Species SEO Draft/review/revision/import-batch authority: private `chusday97/aquaguide-seo-content`, branch `seo-admin-drafts`.
-- Public AquaGuide repo receives code plus an explicit sanitized Staging snapshot only.
-- Product/catalog source data remains read-only in AquaGuide.
-- Supabase Species SEO paths are historical/compatibility only; do not restore them as runtime or staging authority.
-- Canonical hosted Admin acceptance surface is AquaGuide Preview `/admin/seo/`.
+## Current objective
+Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-## Current milestone
-Complete the first real 14-Species bilingual operating cycle:
-`CSV preflight + field Diff → locale-specific Draft batch import → batch-scoped editorial review → one batch Staging Publish → hosted EN/ZH verification`.
+The immediate technical priority is to establish one authoritative Product/Care publication path so Admin changes can be trusted to reach the correct frontend consumers.
 
-## Stable completed baseline
-- Blank operational CSV template with field guide, format rules, 20 blank rows and 3 non-importing examples.
-- Atomic page Draft + create-if-missing Base-template import.
-- Source-identity fail-closed gate for incomplete scientific names.
-- Evidence-based duplicate review shared by single and bulk entry points.
-- Persistent CSV preflight report and fail-closed Create Draft action.
-- Durable Repo `import_batches` authority with server-generated batch id, filename, locale, Species keys, Base-group keys, source and workflow status.
-- Bulk review defaults to latest import scope; all historical eligible content is explicit opt-in only.
-- Batch-bound review mutations are revalidated by the Repo backend; UI scope alone is never authority.
-- Browser localStorage / Activity recovery is fallback for legacy sessions only; persisted Repo batch wins when present.
-- Staging batch UI verifies zh-CN + en page Drafts and zh-CN + en Base Drafts are Approved/reviewed/hygiene-clean.
-- Required Canonical dependencies are added to the Staging selection, and the server validates the exact batch + dependency allowlist.
+## Why this is now P0
+Verified current code still has direct static frontend authorities:
+- Encyclopedia → `src/data/fishData.ts`
+- Care Encyclopedia → `src/data/careTopicsData.ts`
+while Product/Care Admin writes through `/admin/species` and `/admin/care-articles`.
 
-## P0 next actions
-1. Authenticated AquaGuide Preview: import corrected batch-01 zh-CN after preflight + field Diff.
-2. Import corrected batch-01 English the same way. Each locale import gets its own durable batch record.
-3. In `批量内容审核`, keep the safe latest-import scope and submit/approve the intended 14 pages + required Base rows for each locale.
-4. Publish one approved batch to Staging only when the bilingual readiness card is fully green.
-5. Verify the 28 hosted EN/ZH pages: title/meta/H1, localized name, source facts, canonical/hreflang, robots, CTA, internal-copy hygiene and deployment-level noindex.
+Until those paths converge, `/admin/product-content` cannot be called a mature live CMS authority even though its edit/publish API exists.
+## Stable subsystem that must not regress
+Species SEO remains Repo-backed and fail-closed:
+- private Draft/review/import-batch authority;
+- CSV preflight + Diff;
+- evidence-based duplicate review;
+- batch-scoped editorial review;
+- bilingual Staging readiness;
+- exact Staging allowlist + Canonical dependency validation;
+- Production locked.
 
-## Branch convergence risk
-- Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature: `f480566988c5a07e3e7306085856fead8158bec3`.
-- Current divergence: main-only 269 / feature-only 105 commits.
-- Do not blindly merge/rebase. Dedicated feature/main reconciliation remains after Admin operational acceptance.
+## Next milestones
+1. Define one published Product/Care read contract and identify all direct static consumers.
+2. Converge Species and Care frontend reads onto that authority with safe seed/fallback behavior only where explicitly required.
+3. Prove one Product edit and one Care edit from Admin through frontend Preview without unintended compatibility/user-state mutation.
+4. Complete the existing 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview.
+5. Add change-impact classification/Preview before decision-critical Product Data changes can be released broadly.
+6. Build Compatibility Admin only after Product Data authority is stable.
 
-## Safety boundary
-- Production remains locked.
-- Do not merge `main` without explicit authorization and dedicated reconciliation.
-- Do not bypass authenticated Admin for human editorial/review decisions.
-- Do not write private Draft content directly into the public AquaGuide repo.
+## Safety
+No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.

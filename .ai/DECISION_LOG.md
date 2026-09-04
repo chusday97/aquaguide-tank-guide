@@ -254,3 +254,11 @@ Reason: this proves real hosting/build/routing/HTML delivery without incurring s
 - Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
 - Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
 - Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
+
+## 2026-09-04 — Aqua Admin is an Operations Studio, not one SEO CMS
+- Decision: AquaGuide Admin must separate Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and user context. These domains may share evidence and publishing infrastructure but must not share authority implicitly.
+- Decision: SEO is a downstream acquisition projection. SEO fields must never become authority for pH, temperature, tank size, behavior, compatibility decisions, care actions or user aquarium state.
+- Decision: user-specific compatibility/care results are computed from approved shared knowledge/rules plus each user's aquarium context; public SEO/content is not personalized per user by default.
+- Verified gap: `Encyclopedia.tsx` still reads static `fishData.ts`, `CareEncyclopedia.tsx` still reads generated `careTopicsData.ts`, while `/admin/product-content` writes API-backed Product/Care records. Product/Care publish therefore is not yet the single verified frontend authority.
+- P0 consequence: converge Product/Care source-of-truth before claiming the Admin is a mature live CMS for those domains.
+- Target product name/mental model: **Aqua Operations Studio**. Compatibility rule administration and Impact Preview are later stages after Product/Care authority convergence.

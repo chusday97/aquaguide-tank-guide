@@ -470,3 +470,13 @@
 - Validation PASS: `test:contract`, Repo backend/API/dual-repo, root build, SEO handoff, Admin authority UI, `git diff --check`.
 - WebCodex invocation returned platform FORBIDDEN; no WebCodex execution result should be attributed to this change.
 - Production/main untouched. Next real proof is authenticated batch-01 zh-CN + en import/review/Staging on AquaGuide Preview.
+
+## 2026-09-04 — Aqua Operations Studio documentation convergence
+- Re-read real local branch/worktree and authoritative remote heads before documentation edits.
+- Confirmed Product/Care/Compatibility/SEO ownership from current code: Product/Care Admin exists, Compatibility runtime exists, SEO Admin is mature as a separate acquisition subsystem.
+- Verified P0 architecture gap: `Encyclopedia.tsx` still imports static `fishData.ts`; `CareEncyclopedia.tsx` still imports generated `careTopicsData.ts`; `/admin/product-content` writes API-backed Product/Care records. Admin Product/Care publish is not yet the single frontend source of truth.
+- Added `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md` as the canonical broader architecture/ownership contract.
+- Rewrote `HANDOFF_LATEST`, `CURRENT_GOAL`, `LIVE_STATUS`, `TASK_QUEUE`, `BRANCH_STATUS` around the current Operations Studio roadmap rather than the older SEO-only mental model.
+- Added permanent decision: SEO is downstream acquisition content; Product Data/Care/Compatibility remain separate authorities; personalized results come from shared approved knowledge/rules + user aquarium context.
+- Authoritative remote refs before docs commit: main `64fa58a`, feature `7fb19b28`; divergence 269 main-only / 106 feature-only; merge base `ed0cf38`. Narrow/stale `origin/main` must not be trusted without explicit live-ref verification.
+- No application code, private Draft content, Staging snapshot, Production state or main branch was modified by this documentation pass.
