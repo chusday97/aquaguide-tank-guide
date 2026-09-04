@@ -1447,20 +1447,3 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .bulk-import-steps, .bulk-import-preflight-stats { grid-template-columns:1fr; }
   .bulk-import-preflight-head { align-items:flex-start; flex-direction:column; }
 }
-
-/* Import batch scope: keep bulk review and Staging release bounded to one persisted CSV batch. */
-.bulk-review-scope { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:10px; align-items:center; padding:11px 12px; border:1px solid #dce6df; border-radius:11px; background:#f8fbf9; }
-.bulk-review-scope-summary { display:grid; gap:2px; min-width:0; }
-.bulk-review-scope-summary > span { color:#79877e; font-size:8px; font-weight:750; text-transform:uppercase; letter-spacing:.04em; }
-.bulk-review-scope-summary > strong { overflow:hidden; color:#31463a; font-size:10.5px; text-overflow:ellipsis; white-space:nowrap; }
-.bulk-review-scope-summary > small { overflow:hidden; color:#7e8a83; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
-.bulk-review-scope-actions { display:flex; gap:5px; padding:3px; border-radius:8px; background:#edf2ee; }
-.bulk-review-scope-actions button { border:0; border-radius:6px; padding:6px 8px; background:transparent; color:#718078; font-size:8px; font-weight:750; cursor:pointer; }
-.bulk-review-scope-actions button.active { background:#fff; color:#315d45; box-shadow:0 1px 3px rgba(39,66,51,.1); }
-.batch-staging-button { white-space:nowrap; }
-@media (max-width: 760px) {
-  .bulk-review-scope { grid-template-columns:1fr; align-items:stretch; }
-  .bulk-review-scope-actions { width:100%; }
-  .bulk-review-scope-actions button { flex:1; }
-  .batch-staging-button { width:100%; }
-}

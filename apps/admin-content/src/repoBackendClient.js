@@ -4,6 +4,25 @@ function dispatchOperationEvent(detail) {
   window.dispatchEvent(new CustomEvent('aquaguide-admin-operation', { detail }));
 }
 
+function rememberRecentImportScope(name, args, result) {
+  if (name !== 'import_species_seo_bulk' || result?.error || typeof window === 'undefined') return;
+  const rows = Array.isArray(result?.data?.species_seo) && result.data.species_seo.length
+    ? result.data.species_seo
+    : (args?.p_species_rows || []);
+  const locale = rows.find((row) => row?.locale)?.locale || '';
+  const catalogKeys = [...new Set(rows.map((row) => row?.catalog_key).filter(Boolean))];
+  if (!locale || !catalogKeys.length) return;
+  try {
+    window.localStorage.setItem(`aquaguide-admin-last-import-${locale}`, JSON.stringify({
+      locale,
+      catalogKeys,
+      importedAt: new Date().toISOString(),
+    }));
+  } catch {
+    // Review scoping is a UX safety layer; storage failure must not invalidate a successful Repo write.
+  }
+}
+
 function describeOperation(operation, result) {
   const explicit = operation.activity || {};
   const values = Array.isArray(operation.values) ? operation.values : [operation.values || {}];
@@ -122,6 +141,7 @@ export const repoBackendClient = {
     return apiRequest('/api/admin-content/query', {
       method: 'POST', body: JSON.stringify(operation),
     }).then((result) => {
+      rememberRecentImportScope(name, args, result);
       const fallback = name === 'restore_species_seo_revision'
         ? { kind: 'revision_restored', title: '历史版本已恢复', detail: '' }
         : name === 'resolve_species_duplicate_review'

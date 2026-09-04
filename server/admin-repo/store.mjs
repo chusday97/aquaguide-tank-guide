@@ -635,9 +635,12 @@ export async function buildRepoStagingSnapshot({ catalogKeys, groupKeys, batchId
   const importBatch = batchId ? store.import_batches.find((row) => row.batch_id === batchId) : null;
   if (batchId && !importBatch) throw new Error(`Import batch not found: ${batchId}`);
   if (importBatch) {
-    const expectedCatalogKeys = [...new Set(importBatch.catalog_keys || [])].sort();
+    const canonicalDependencies = store.species_seo
+      .filter((row) => (importBatch.catalog_keys || []).includes(row.catalog_key) && row.index_strategy === 'canonical_to_sibling' && row.canonical_catalog_key)
+      .map((row) => row.canonical_catalog_key);
+    const expectedCatalogKeys = [...new Set([...(importBatch.catalog_keys || []), ...canonicalDependencies])].sort();
     const expectedGroupKeys = [...new Set(importBatch.group_keys || [])].sort();
-    if (JSON.stringify([...selectedCatalogKeys].sort()) !== JSON.stringify(expectedCatalogKeys)) throw new Error('Staging allowlist must exactly match the selected import batch.');
+    if (JSON.stringify([...selectedCatalogKeys].sort()) !== JSON.stringify(expectedCatalogKeys)) throw new Error('Staging allowlist must exactly match the selected import batch plus required canonical dependencies.');
     if (JSON.stringify([...selectedGroupKeys].sort()) !== JSON.stringify(expectedGroupKeys)) throw new Error('Staging Base-group allowlist must exactly match the selected import batch.');
     if (!['approved', 'staging_published'].includes(importBatch.status)) throw new Error(`Import batch ${batchId} must be fully approved before Staging publish.`);
   }

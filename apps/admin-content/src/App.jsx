@@ -965,32 +965,6 @@ export default function App() {
     }
   };
 
-  const publishImportBatchToStaging = async (batch = currentImportBatch) => {
-    if (isReadOnlyDemoMode) {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'Import batches cannot publish from demo mode.' : '只读演示不会发布导入批次。' });
-      return;
-    }
-    if (!isRepoBackend || !batch?.batch_id) {
-      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Batch publish unavailable' : '批次发布不可用', detail: appLocale === 'en' ? 'A persisted import batch and Repo-backed Admin are required.' : '需要已持久化的导入批次和 Repo Admin 后端。' });
-      return;
-    }
-    if (batch.status !== 'approved') {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Batch is not approved' : '当前批次尚未全部批准', detail: appLocale === 'en' ? 'Submit and approve the full batch before Staging publish.' : '请先完成当前批次的提交审核和批准，再发布到 Staging。', duration: 7200 });
-      return;
-    }
-    const catalogKeys = [...new Set(batch.catalog_keys || [])];
-    const groupKeys = [...new Set(batch.group_keys || [])];
-    if (!catalogKeys.length || !groupKeys.length) {
-      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Batch scope is incomplete' : '批次范围不完整', detail: appLocale === 'en' ? 'This batch is missing its persisted Species/Base allowlist.' : '该批次缺少持久化的 Species / Base allowlist。' });
-      return;
-    }
-    setStagingPublishing(true);
-    const { data, error: publishError } = await publishRepoStaging({ catalogKeys, groupKeys, batchId: batch.batch_id });
-    setStagingPublishing(false);
-    if (publishError) return;
-    if (data?.import_batch) upsertImportBatch(data.import_batch);
-  };
-
   const toggleBatch = (id) => {
     const nextGroup = speciesGroupByMemberId.get(id);
     if ((id !== selectedId || editorScope !== 'variant') && !confirmDiscardUnsaved()) return;
@@ -1335,8 +1309,6 @@ export default function App() {
                 importBatch={currentImportBatch}
                 schemaReady={schemaReady && groupSchemaReady && dataReviewSchemaReady}
                 readOnly={isReadOnlyDemoMode}
-                stagingPublishing={stagingPublishing}
-                onPublishBatch={publishImportBatchToStaging}
                 onCompleted={(result) => {
                   const variantRows = result?.species_seo || [];
                   const baseRows = result?.species_seo_groups || [];
