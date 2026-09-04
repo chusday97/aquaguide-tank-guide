@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`
+Operational HEAD before this sync: `e58c70829b389b6a9a7b23fd9519afd96c802702`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
@@ -26,11 +26,11 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1: Change Impact Preview is now the first unfinished product milestone, followed by Compatibility Admin.
+P1: Change Impact Preview first round is implemented. Next: decision-critical before/after user-facing Preview, then Compatibility-result regression simulation; Compatibility Admin follows.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`.
+- Feature remote before this docs sync: `e58c70829b389b6a9a7b23fd9519afd96c802702`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -66,3 +66,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Hosted acceptance PASS: 28/28 bilingual pages; metadata, H1, source facts, canonical/hreflang, robots, CTA and hygiene all verified.
 - CI split implemented locally: light checks on ordinary runs; Golden/Visual/evaluation/browser heavy gates only on `workflow_dispatch`, `merge_group`, `run-heavy-ci` or `merge-ready` PRs.
 - Local light CI command set PASS; heavy entrypoint smoke set PASS. Production untouched.
+
+## 2026-09-04 Change Impact Preview checkpoint
+- Functional commit `e58c70829b389b6a9a7b23fd9519afd96c802702`.
+- Product/Care fields now expose before→after Diff, impact class, direct consumers and review-only independent authorities in `/admin/product-content`.
+- Published baseline is loaded through existing public Product/Care detail APIs, so saved Draft impact survives reload.
+- Compatibility and SEO are explicitly review-only where appropriate; Product/Care publish still cannot silently mutate either authority.
+- PASS: impact unit contract, Product/Care browser impact flows at 1280/390, Admin contract/build, root lint/build, diff hygiene.
+- Admin CI now covers Product/Care Admin source paths and the lightweight impact test.

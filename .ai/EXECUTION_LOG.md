@@ -527,3 +527,13 @@
 - CI policy changed without deleting coverage: ordinary runs use lightweight Admin contracts/build + product fast contracts + lint/root build; heavy Golden/Visual/evaluation-history/browser suites run only for manual dispatch, merge queue, or PR labels `run-heavy-ci` / `merge-ready`.
 - Preserved existing `Admin Content CI Gate` and `Product Golden Path` workflow identities and `validate` job key to reduce branch-rule breakage risk.
 - Local validation PASS: YAML parse, `git diff --check`, full light command set, Golden contract, Visual result contract, evaluation report 47/47, Admin UI regression.
+
+## 2026-09-04 — Change Impact Preview first round
+- Added field-level Product/Care impact classification and `发布后直接更新` vs `需单独复核` consumer mapping.
+- Product decision-critical fields flag Aquarium / Compatibility / SEO review where applicable without implying those independent authorities are auto-mutated; Care workflow changes directly flag Care Guide / Aquarium / Identify.
+- Reused public Product/Care detail reads as published baseline, so Draft-vs-Published Diff survives refresh.
+- Added Impact UI to editor and publish confirmation; Product save→reload and Care workflow browser scenarios pass at desktop/mobile widths.
+- Added lightweight `test:admin-content-impact` and fixed Admin CI path coverage for `AdminContent.tsx`, admin components/services and impact test.
+- Validation PASS: diff hygiene, impact logic, Admin UI, Admin contract, Admin build, root lint and root build.
+- Functional commit pushed: `e58c70829b389b6a9a7b23fd9519afd96c802702`. Production/main untouched.
+- Next: full user-facing before/after Preview for decision-critical changes, then Compatibility-result regression simulation.

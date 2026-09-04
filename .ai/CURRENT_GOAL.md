@@ -8,15 +8,10 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-The immediate technical priority is now **P1 Change Impact Preview**: make decision-critical edits show their affected frontend/runtime consumers before release. Product/Care authority convergence and the first authenticated SEO operating cycle are already closed.
+The immediate priority remains **P1 Change Impact Preview**. Field classification and affected-consumer summaries are now implemented; the next slice is a user-facing before/after Preview for decision-critical edits, followed by Compatibility-result regression simulation before release.
 
-## Why this is now P0
-Verified current code still has direct static frontend authorities:
-- Encyclopedia → `src/data/fishData.ts`
-- Care Encyclopedia → `src/data/careTopicsData.ts`
-while Product/Care Admin writes through `/admin/species` and `/admin/care-articles`.
-
-Until those paths converge, `/admin/product-content` cannot be called a mature live CMS authority even though its edit/publish API exists.
+## Why this is now P1
+The defined Product/Care authority target is already converged and browser-accepted. The remaining operational risk is release comprehension: a content operator must see which user-facing surfaces change directly, which independent authorities require review, and what the user will see before a decision-critical release is approved.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -32,7 +27,7 @@ Species SEO remains Repo-backed and fail-closed:
 2. [DONE locally] Converge Encyclopedia Product and Care Encyclopedia/Aquarium/Identify diagnosis reads onto the published runtime authority with explicit static fallback.
 3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
 4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
-5. [NEXT] Add change-impact classification/Preview before decision-critical Product Data changes can be released broadly.
+5. [IN PROGRESS] Change Impact Preview: field classification + affected-consumer summary are DONE; [NEXT] add user-facing before/after Preview for decision-critical edits, then Compatibility-result regression checks.
 6. Build Compatibility Admin only after Product Data authority is stable.
 
 ## Safety
@@ -53,3 +48,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - One explicit Staging snapshot publish created commit `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`; Production remained locked.
 - Hosted deployment `dpl_B86KiBaD75LhGdcHMa6v8zTN6pJM` passed 28/28 page checks for metadata, H1, Product facts, canonical/hreflang, robots, CTA and content hygiene.
 - CI is now split into light default checks and gated heavy Golden/Visual/evaluation/browser checks.
+
+## 2026-09-04 Change Impact Preview first round
+- `e58c7082` adds field-level impact classification for Product/Care edits.
+- The editor distinguishes direct runtime consumers from independent/downstream consumers that require separate review.
+- Draft impact uses the current published public detail as baseline and survives page refresh; no new authority/database path was introduced.
+- Next: render user-facing before/after Preview for decision-critical Product changes; then compute Compatibility outcome regressions before publish.

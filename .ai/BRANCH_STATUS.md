@@ -2,14 +2,14 @@
 
 Updated: 2026-09-04
 Feature: `feature/admin-content-v0`
-Remote feature before this round push: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`
+Remote feature before this round push: `e58c70829b389b6a9a7b23fd9519afd96c802702`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 115
+- feature-only commits: 117
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -31,7 +31,7 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 
 ## 2026-09-04 runtime convergence checkpoint
 - Local functional HEAD before docs sync: `eff3bba3 feat(content): route published product care runtime`.
-- Remote feature before this round push: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd`.
+- Remote feature before this round push: `e58c70829b389b6a9a7b23fd9519afd96c802702`.
 - Live main re-read: `64fa58a16a723b74621ac1db513adb1efb47e282`.
 - No merge/rebase of main and no Production mutation occurred.
 
@@ -47,3 +47,8 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Live main remained `64fa58a16a723b74621ac1db513adb1efb47e282`; divergence measured main-only 269 / feature-only 115; merge base unchanged at `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - `7aaeb44e` is the explicit Staging snapshot publication for batch-01, not a merge from main.
 - CI workflow changes remain on the feature branch only; no Production/main mutation.
+
+## 2026-09-04 Change Impact Preview checkpoint
+- Local and remote feature: `e58c70829b389b6a9a7b23fd9519afd96c802702` before docs sync.
+- Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`; divergence main-only 269 / feature-only 117; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- No merge/rebase of main and no Production mutation.
