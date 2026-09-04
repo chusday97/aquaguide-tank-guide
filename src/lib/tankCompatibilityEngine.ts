@@ -1,7 +1,12 @@
 import type { Aquarium, Fish } from '../types';
 import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
-import { getReviewedCompatibilityProfile, getReviewedPairRule, type ReviewedPairRule } from '../data/compatibilityEvidence';
+import type { ReviewedPairRule } from '../data/compatibilityEvidence';
+import {
+  getRuntimeReviewedCompatibilityProfile as getReviewedCompatibilityProfile,
+  getRuntimeReviewedPairRule as getReviewedPairRule,
+  getRuntimeCompatibilityStatus,
+} from '../data/runtimeCompatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
@@ -41,7 +46,6 @@ export type EvaluateTankCompatibilityInput = {
   scope?: TankCompatibilityScope;
 };
 
-const RULE_VERSION = 'tank-compatibility-v2-reviewed-evidence';
 const SPECIES_DATA_VERSION = 'local-fish-data-v1+compatibility-evidence-v1';
 
 const asRule = (
@@ -179,7 +183,7 @@ export const evaluateTankCompatibility = ({
   scope = 'tank',
 }: EvaluateTankCompatibilityInput): TankCompatibilityResult => {
   const metadata = {
-    ruleVersion: RULE_VERSION,
+    ruleVersion: getRuntimeCompatibilityStatus().authorityVersion,
     speciesDataVersion: SPECIES_DATA_VERSION,
     calculatedAt: new Date().toISOString(),
     scope,

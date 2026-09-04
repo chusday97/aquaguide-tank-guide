@@ -4,6 +4,8 @@ import {
   catalogKeySchema,
   speciesListQuerySchema,
   supportedLocaleSchema,
+  type ReviewedCompatibilityPairRuleDto,
+  type ReviewedCompatibilityProfileDto,
 } from '../../../../packages/contracts/src/index';
 import { mapCareArticleDetail, mapCareArticleSummary, mapSpeciesDetail, mapSpeciesSummary } from '../content-mappers';
 import { getLocalizedPublication, type PublicationSnapshotPayload } from '../content-publications';
@@ -89,6 +91,72 @@ const loadPublicationByCatalogKey = async (type: 'species' | 'care', catalogKey:
 };
 
 export const contentRouter = Router();
+
+const mapReviewedEvidenceSource = (row: any) => ({
+  id: row.id,
+  title: row.title,
+  publisher: row.publisher,
+  url: row.url,
+  sourceType: row.source_type,
+  reviewStatus: 'reviewed' as const,
+  version: row.version,
+});
+const reviewedSourcesFromLinks = (links: any[] = []) => links
+  .map(link => link?.evidence_sources)
+  .filter(source => source?.review_status === 'reviewed')
+  .map(mapReviewedEvidenceSource);
+const compatibilityPairKey = (left: string, right: string) => [left, right].sort().join('__');
+
+contentRouter.get('/compatibility-bootstrap', asyncRoute(async (request, response) => {
+  const client = getPublicSupabase();
+  const [profileResult, pairResult] = await Promise.all([
+    client.from('species_compatibility_profiles')
+      .select('species_id,behavior_traits,minimum_group_size,predation_targets,confidence,review_status,version,species_compatibility_profile_sources(evidence_sources(id,title,publisher,url,source_type,review_status,version))')
+      .eq('review_status', 'reviewed').is('deleted_at', null),
+    client.from('species_pair_compatibility_rules')
+      .select('species_a_id,species_b_id,verdict,risk_type,reason,mitigation,basis,confidence,review_status,version,species_pair_compatibility_rule_sources(evidence_sources(id,title,publisher,url,source_type,review_status,version))')
+      .eq('review_status', 'reviewed').is('deleted_at', null),
+  ]);
+  if (profileResult.error || pairResult.error) {
+    throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Reviewed Compatibility authority 尚未准备完成。');
+  }
+  const speciesIds = Array.from(new Set([
+    ...(profileResult.data || []).map(row => row.species_id),
+    ...(pairResult.data || []).flatMap(row => [row.species_a_id, row.species_b_id]),
+  ]));
+  const speciesResult = speciesIds.length
+    ? await client.from('species').select('id,catalog_key').in('id', speciesIds).eq('status', 'published').is('deleted_at', null)
+    : { data: [], error: null };
+  if (speciesResult.error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Compatibility 物种身份暂时无法加载。');
+  const keyBySpeciesId = new Map((speciesResult.data || []).map(row => [row.id, row.catalog_key]));
+
+  const profiles: ReviewedCompatibilityProfileDto[] = (profileResult.data || []).flatMap(row => {
+    const catalogKey = keyBySpeciesId.get(row.species_id);
+    const citations = reviewedSourcesFromLinks(row.species_compatibility_profile_sources as any[]);
+    if (!catalogKey || citations.length === 0) return [];
+    return [{
+      catalogKey, behaviorTraits: row.behavior_traits || [], minimumGroupSize: row.minimum_group_size ?? undefined,
+      predationTargets: row.predation_targets || [], confidence: row.confidence, reviewStatus: 'reviewed', citations, version: row.version,
+    }];
+  });
+  const pairRules: ReviewedCompatibilityPairRuleDto[] = (pairResult.data || []).flatMap(row => {
+    const left = keyBySpeciesId.get(row.species_a_id);
+    const right = keyBySpeciesId.get(row.species_b_id);
+    const citations = reviewedSourcesFromLinks(row.species_pair_compatibility_rule_sources as any[]);
+    if (!left || !right || citations.length === 0) return [];
+    const catalogKeys = [left, right].sort() as [string, string];
+    return [{ catalogKeys, verdict: row.verdict, riskType: row.risk_type, reason: row.reason, mitigation: row.mitigation || [],
+      basis: row.basis, confidence: row.confidence, reviewStatus: 'reviewed' as const, citations, version: row.version }];
+  }).sort((left, right) => compatibilityPairKey(...left.catalogKeys).localeCompare(compatibilityPairKey(...right.catalogKeys)));
+
+  response.setHeader('Cache-Control', 'public, max-age=0, s-maxage=60, stale-while-revalidate=300');
+  return sendData(request, response, {
+    profiles,
+    pairRules,
+    authority: 'reviewed-db' as const,
+    counts: { profiles: profiles.length, pairRules: pairRules.length },
+  });
+}));
 
 contentRouter.get('/content-bootstrap', asyncRoute(async (request, response) => {
   const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');

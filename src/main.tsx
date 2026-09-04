@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import posthog from 'posthog-js';
 import { hydratePublishedContentCatalog } from './data/runtimeContentCatalog';
+import { hydrateReviewedCompatibilityEvidence } from './data/runtimeCompatibilityEvidence';
 import './services/navigation/history-navigation-guard.service';
 import './index.css';
 import { initializeSessionAnalytics } from './services/analytics/session-events.service';
@@ -34,7 +35,7 @@ if (posthogKey) {
 initializeSessionAnalytics();
 
 const startApplication = async () => {
-  await hydratePublishedContentCatalog();
+  await Promise.all([hydratePublishedContentCatalog(), hydrateReviewedCompatibilityEvidence()]);
   const { default: App } = await import('./App.tsx');
   createRoot(document.getElementById('root')!).render(
     <StrictMode>

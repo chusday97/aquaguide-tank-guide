@@ -13,11 +13,15 @@ on:
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
       - 'src/data/compatibilityEvidence.ts'
+      - 'src/data/runtimeCompatibilityEvidence.ts'
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'src/main.tsx'
       - 'src/components/admin/**'
       - 'src/services/admin/**'
       - 'scripts/test-admin-content-impact.ts'
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
+      - 'scripts/test-runtime-compatibility-authority.ts'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
       - 'api/translate.js'
@@ -42,11 +46,15 @@ on:
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
       - 'src/data/compatibilityEvidence.ts'
+      - 'src/data/runtimeCompatibilityEvidence.ts'
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'src/main.tsx'
       - 'src/components/admin/**'
       - 'src/services/admin/**'
       - 'scripts/test-admin-content-impact.ts'
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
+      - 'scripts/test-runtime-compatibility-authority.ts'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
       - 'api/translate.js'
@@ -95,6 +103,8 @@ jobs:
         run: npm run test:admin-compatibility-impact
       - name: Compatibility admin reviewed-baseline contract
         run: npm run test:compatibility-admin-contract
+      - name: Runtime compatibility authority contract
+        run: npm run test:runtime-compatibility-authority
       - name: Business API TypeScript check
         run: npm run check -w @aquaguide/api
       - name: Admin production build
