@@ -8,7 +8,7 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-The immediate priority remains **P1 Change Impact Preview**. Field classification and affected-consumer summaries are now implemented; the next slice is a user-facing before/after Preview for decision-critical edits, followed by Compatibility-result regression simulation before release.
+The immediate priority is now **P1 Compatibility Admin**. Change Impact Preview is complete: field classification, affected-consumer summaries, persisted Draft-vs-Published Diff, Encyclopedia Before/After, and species-only Compatibility regression are implemented and accepted.
 
 ## Why this is now P1
 The defined Product/Care authority target is already converged and browser-accepted. The remaining operational risk is release comprehension: a content operator must see which user-facing surfaces change directly, which independent authorities require review, and what the user will see before a decision-critical release is approved.
@@ -27,8 +27,8 @@ Species SEO remains Repo-backed and fail-closed:
 2. [DONE locally] Converge Encyclopedia Product and Care Encyclopedia/Aquarium/Identify diagnosis reads onto the published runtime authority with explicit static fallback.
 3. [DONE locally] Prove Product and Care Save→Publish→Preview boundaries with user-state and Compatibility isolation.
 4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
-5. [IN PROGRESS] Change Impact Preview: field classification + affected-consumer summary are DONE; [NEXT] add user-facing before/after Preview for decision-critical edits, then Compatibility-result regression checks.
-6. Build Compatibility Admin only after Product Data authority is stable.
+5. [DONE] Change Impact Preview: field classification, affected-consumer summary, decision-critical Before/After and Compatibility-result regression checks.
+6. [NEXT] Build Compatibility Admin: reviewed Species behavior profiles, Pair Rules, Evidence, Confidence, Review Status and Rule Version.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -53,4 +53,12 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - `e58c7082` adds field-level impact classification for Product/Care edits.
 - The editor distinguishes direct runtime consumers from independent/downstream consumers that require separate review.
 - Draft impact uses the current published public detail as baseline and survives page refresh; no new authority/database path was introduced.
-- Next: render user-facing before/after Preview for decision-critical Product changes; then compute Compatibility outcome regressions before publish.
+- This first-round note is historical; the following completion checkpoint closes Before/After and Compatibility regression. Next milestone is Compatibility Admin.
+
+## 2026-09-04 Change Impact Preview completion
+- Functional commit `9dc30c48 feat(admin): complete change impact preview`.
+- Decision-critical Product edits now show Encyclopedia current-published vs ready-to-publish Before/After, including temperature, pH, tank size, water-change cycle, temperament, size, housing and feeding fields.
+- Saved Product Drafts automatically run the existing species-only Compatibility engine against the current static living-species cohort; status changes and rule-only changes are both surfaced.
+- Compatibility regression is explicitly simulation-only: Product publish does not mutate Compatibility evidence/rules.
+- Browser regression passes at 1280/390 including save → reload persistence and publish-confirmation summary. Product/Care Save→Publish boundaries, Admin contract/build and root build remain green.
+- Next milestone: Compatibility Admin.

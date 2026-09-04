@@ -537,3 +537,12 @@
 - Validation PASS: diff hygiene, impact logic, Admin UI, Admin contract, Admin build, root lint and root build.
 - Functional commit pushed: `e58c70829b389b6a9a7b23fd9519afd96c802702`. Production/main untouched.
 - Next: full user-facing before/after Preview for decision-critical changes, then Compatibility-result regression simulation.
+
+## 2026-09-04 22:38 +0800 — P1 Change Impact Preview completed
+- Completed decision-critical Encyclopedia Before/After against the published Product baseline, including all editable critical fields and changed raw numeric bounds when present.
+- Added species-only Compatibility regression using the existing `evaluateSpeciesCombination` engine; static living-species cohort is read-only and Compatibility evidence/rules are never mutated.
+- Regression detects both status/risk changes and rule-only changes (for example a new pH-gap rule while overall status remains insufficient-data).
+- Publish confirmation now includes Compatibility simulation counts while preserving the independent-authority boundary.
+- Validation PASS: impact contract, compatibility regression contract, Admin UI 1280/390, Product/Care publish-preview tests, Admin contract/build, root lint/build.
+- Functional commit: `9dc30c48 feat(admin): complete change impact preview`. Production/main untouched.
+- Next unfinished milestone: P1 Compatibility Admin.

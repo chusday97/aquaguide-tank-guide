@@ -31,8 +31,8 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 ## P1 — Change Impact Preview
 - [x] Classify fields as display-only, decision-critical Product Data, Care workflow, Compatibility rule or SEO-only.
 - [x] Show affected consumers before release: Encyclopedia, Aquarium, Compatibility, Care and SEO; distinguish direct update vs independent-authority review.
-- [ ] Add before/after Preview for decision-critical edits.
-- [ ] Add regression checks for compatibility-result changes caused by Product Data edits.
+- [x] Add before/after Preview for decision-critical edits.
+- [x] Add regression checks for compatibility-result changes caused by Product Data edits.
 
 ## P1 — Compatibility Admin
 - [ ] Operator UI for Species behavior profiles.

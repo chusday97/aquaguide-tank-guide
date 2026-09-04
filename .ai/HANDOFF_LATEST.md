@@ -4,8 +4,8 @@ Updated: 2026-09-04
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `e58c70829b389b6a9a7b23fd9519afd96c802702`
-Latest operational checkpoint: `e58c7082 feat(admin): add change impact preview`
+Current functional HEAD before this docs sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`
+Latest operational checkpoint: `9dc30c48 feat(admin): complete change impact preview`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -79,16 +79,16 @@ P0-A — Product/Care authority convergence:
 
 P0-B — [DONE] Authenticated bilingual batch-01 import/review/Staging/28-page hosted acceptance.
 
-P1 — Change Impact Preview: [DONE first round] field classification + affected-consumer summary; [NEXT] user-facing before/after Preview for decision-critical edits, then Compatibility-result regression simulation.
+P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Published Diff, affected-consumer summary, Encyclopedia Before/After and Compatibility-result regression simulation.
 
-P1 — Compatibility Admin: reviewed Species behavior profiles, Pair Rules, Evidence, Confidence and Rule Version with regression testing before publish.
+P1 — [NEXT] Compatibility Admin: reviewed Species behavior profiles, Pair Rules, Evidence, Confidence and Rule Version with regression testing before publish.
 
 P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extraction/conflict detection/Draft generation from approved facts.
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `e58c70829b389b6a9a7b23fd9519afd96c802702`.
-- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 117 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remote before this docs sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`.
+- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 119 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -110,7 +110,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Search suggestion presentation now preserves published Product/Care names/categories instead of reapplying legacy English translation maps.
 - User aquarium local state and Compatibility static inputs remain unchanged.
 - Functional acceptance commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
-- Product/Care and SEO P0 are closed. The first unfinished milestone is P1 decision-critical before/after Preview; do not touch Production.
+- Product/Care, SEO P0 and P1 Change Impact Preview are closed. The first unfinished milestone is P1 Compatibility Admin; do not touch Production.
 
 ## 2026-09-04 Change Impact Preview first round
 - Functional commit: `e58c7082 feat(admin): add change impact preview`.
@@ -119,4 +119,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Existing public `/species/:catalogKey` and `/care-articles/:catalogKey` detail reads provide the published baseline, so Draft-vs-Published Diff survives refresh.
 - Product browser acceptance proves name Diff survives save + reload; Care acceptance proves workflow changes expose Care Guide / Aquarium / Identify as direct consumers. 1280px and 390px layouts pass.
 - Admin CI path filters now include Product/Care Admin page/services/impact test; ordinary pushes still run the lightweight job only.
-- Remaining P1 work: full user-facing before/after Preview for decision-critical changes, then Compatibility-result regression checks before release.
+- Change Impact Preview is complete; next work is Compatibility Admin.
+
+## 2026-09-04 Change Impact Preview completion
+- Functional commit: `9dc30c48 feat(admin): complete change impact preview`.
+- Product decision-critical edits show current Published vs ready-to-publish Encyclopedia data, with changed fields highlighted.
+- Product Drafts with Compatibility-sensitive fields run the existing `evaluateSpeciesCombination` engine against the static living-species cohort after save; both status changes and rule-only changes are counted and surfaced.
+- Publish confirmation includes the Compatibility simulation summary and reiterates that Compatibility authority is not auto-written.
+- PASS: impact contracts, Compatibility regression contract, Product/Care Admin browser flows at 1280/390, Product/Care Save→Publish Preview boundaries, Admin contract/build, root lint/build.
+- Next: Compatibility Admin operator surface for behavior profiles / Pair Rules / Evidence / Confidence / Review Status / Rule Version.

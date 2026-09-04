@@ -21,7 +21,7 @@ A new conversation should read this file first, then read the canonical set belo
 Treat the Admin as **Aqua Operations Studio**, not one SEO CMS. Keep Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and user-specific context as separate authorities.
 
 ## Current first incomplete milestone
-All defined P0 work is closed locally/Preview-accepted. P1 Change Impact Preview is now partially complete: field classification and affected-consumer summaries are implemented and persist against the published baseline. The first unfinished item is **user-facing before/after Preview for decision-critical Product edits**, followed by Compatibility-result regression checks.
+All defined P0 work and P1 Change Impact Preview are closed locally/Preview-accepted. The first unfinished milestone is **P1 Compatibility Admin**: operator management for Species behavior profiles, Pair Rules, Evidence, Confidence, Review Status and Rule Version.
 
 Continue from `TASK_QUEUE.md`; do not reopen completed Product/Care or SEO P0 work unless a new regression is proven.
 
@@ -35,7 +35,7 @@ Species SEO already has CSV template/preflight/Diff, durable import batch, dupli
 - Do not bypass authenticated human review or publish Production without explicit authorization.
 
 ## Exact prompt for a new conversation
-`继续 Aqua 项目。不要根据聊天记忆猜测。先读取 /Users/chuchu/aquaguide-admin-content-v0/.ai/CROSS_SESSION_START.md，再按其中顺序读取 HANDOFF_LATEST / AQUA_OPERATIONS_STUDIO_ARCHITECTURE / CURRENT_GOAL / TASK_QUEUE / LIVE_STATUS / BRANCH_STATUS / EXECUTION_LOG 最新记录。真实核对当前 branch、git status、HEAD 和 live remote refs，然后继续 TASK_QUEUE 中第一个未完成项（当前为 P1 decision-critical before/after Preview）。不要重新实现已完成的 Product/Care P0 或 SEO Admin；不要 merge main；不要动 Production；每完成一轮同步 .ai 文档。`
+`继续 Aqua 项目。不要根据聊天记忆猜测。先读取 /Users/chuchu/aquaguide-admin-content-v0/.ai/CROSS_SESSION_START.md，再按其中顺序读取 HANDOFF_LATEST / AQUA_OPERATIONS_STUDIO_ARCHITECTURE / CURRENT_GOAL / TASK_QUEUE / LIVE_STATUS / BRANCH_STATUS / EXECUTION_LOG 最新记录。真实核对当前 branch、git status、HEAD 和 live remote refs，然后继续 TASK_QUEUE 中第一个未完成项（当前为 P1 Compatibility Admin）。不要重新实现已完成的 Product/Care P0 或 SEO Admin；不要 merge main；不要动 Production；每完成一轮同步 .ai 文档。`
 
 ## Update rule after every material round
 After meaningful code/product changes, update at minimum: `HANDOFF_LATEST.md`, `CURRENT_GOAL.md`, `TASK_QUEUE.md`, `LIVE_STATUS.md`, `BRANCH_STATUS.md` when branch facts changed, and append `EXECUTION_LOG.md`. Keep this file short and only change it when the recovery protocol itself changes.

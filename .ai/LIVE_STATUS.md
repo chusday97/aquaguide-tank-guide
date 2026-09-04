@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `e58c70829b389b6a9a7b23fd9519afd96c802702`
+Operational HEAD before this sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`
 Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
 
 ## Product state
@@ -26,11 +26,11 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1: Change Impact Preview first round is implemented. Next: decision-critical before/after user-facing Preview, then Compatibility-result regression simulation; Compatibility Admin follows.
+P1 Change Impact Preview: completed and regression-accepted. P1 Compatibility Admin is now the first unfinished milestone.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `e58c70829b389b6a9a7b23fd9519afd96c802702`.
+- Feature remote before this docs sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -74,3 +74,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Compatibility and SEO are explicitly review-only where appropriate; Product/Care publish still cannot silently mutate either authority.
 - PASS: impact unit contract, Product/Care browser impact flows at 1280/390, Admin contract/build, root lint/build, diff hygiene.
 - Admin CI now covers Product/Care Admin source paths and the lightweight impact test.
+
+## 2026-09-04 Change Impact Preview completion checkpoint
+- Functional commit `9dc30c48fb02f565637e09f807e0a56d882c1252`.
+- Encyclopedia Before/After is rendered for decision-critical Product changes and persists against the current published baseline after reload.
+- Compatibility-sensitive saved Product changes run species-only engine regression across the static living-species cohort; status and rule-code changes are surfaced without mutating Compatibility authority.
+- Publish confirmation carries the simulation summary.
+- PASS: Product/Care browser flows at 1280/390, impact + Compatibility contracts, Product/Care Save→Publish Preview tests, Admin contract/build, lint and root build.
+- Next: Compatibility Admin.
