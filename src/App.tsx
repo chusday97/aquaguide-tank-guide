@@ -49,6 +49,7 @@ const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadLogin = () => import('./pages/Login');
 const loadAdminHub = () => import('./pages/AdminHub');
 const loadAdminContent = () => import('./pages/AdminContent');
+const loadCompatibilityAdmin = () => import('./pages/CompatibilityAdmin');
 const loadIdentify = () => import('./pages/Identify');
 const loadSearch = () => import('./pages/Search');
 const loadSettings = () => import('./pages/Settings');
@@ -64,6 +65,7 @@ const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminHub = lazyWithRecovery(loadAdminHub, 'admin-hub');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-product-content');
+const CompatibilityAdmin = lazyWithRecovery(loadCompatibilityAdmin, 'admin-compatibility');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
 const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
@@ -766,6 +768,7 @@ function AppShell() {
         <Routes>
           <Route path="/admin/content" element={<RouteErrorBoundary page="admin-hub"><AdminHub /></RouteErrorBoundary>} />
           <Route path="/admin/product-content" element={<RouteErrorBoundary page="admin-product-content"><AdminContent /></RouteErrorBoundary>} />
+            <Route path="/admin/compatibility" element={<RouteErrorBoundary page="admin-compatibility"><CompatibilityAdmin /></RouteErrorBoundary>} />
           <Route path="*" element={<Navigate to="/admin/content" replace />} />
         </Routes>
       </Suspense>
@@ -862,6 +865,7 @@ function WorkspaceRoutes() {
           <Route path="/aquarium" element={shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
           <Route path="/admin/content" element={page(<AdminHub />, 'admin-hub')} />
           <Route path="/admin/product-content" element={page(<AdminContent />, 'admin-product-content')} />
+          <Route path="/admin/compatibility" element={page(<CompatibilityAdmin />, 'admin-compatibility')} />
           <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>
       </Suspense>

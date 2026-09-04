@@ -56,6 +56,12 @@ const baseRecord = {
   speciesAssets: [],
 };
 
+const fishDataForTest = catalogKey => ({
+  catalogKey,
+  name: catalogKey === 'sp_0439' ? '虎皮鱼' : catalogKey,
+  scientificName: catalogKey === 'sp_0439' ? 'Puntigrus tetrazona' : catalogKey,
+});
+
 const baseCareRecord = {
   id: 'be1732a3-27d0-4820-986c-2e932990f571',
   catalogKey: 'care_demo', title: '换水后观察', category: '水质', urgency: '日常', summary: '先观察鱼只状态。',
@@ -85,6 +91,39 @@ try {
     let savedName = '';
     let currentRecord = { ...baseRecord };
     let currentCare = { ...baseCareRecord };
+    let compatibilityRevisions = [];
+    await page.route('**/api/v1/admin/compatibility/profile-revisions**', async route => {
+      const request = route.request();
+      const url = new URL(request.url());
+      const method = request.method();
+      if (method === 'GET') {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { revisions: compatibilityRevisions, writableCatalogKeys: ['sp_0439'] }, requestId: 'test-compat-list' }) });
+        return;
+      }
+      const body = request.postDataJSON();
+      if (method === 'POST' && url.pathname.endsWith('/submit')) {
+        const current = compatibilityRevisions[0];
+        compatibilityRevisions = [{ ...current, status: 'pending_review', version: current.version + 1 }];
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-submit' }) });
+        return;
+      }
+      if (method === 'POST') {
+        const fish = fishDataForTest(body.catalogKey);
+        const created = { id: 'de1732a3-27d0-4820-986c-2e932990f573', speciesId: 'fe1732a3-27d0-4820-986c-2e932990f574', revisionNumber: 1, baseProfileVersion: 1, behaviorTraits: body.behaviorTraits, minimumGroupSize: body.minimumGroupSize, predationTargets: body.predationTargets, confidence: body.confidence, status: 'draft', citationSnapshots: body.citations, version: 1, species: fish };
+        compatibilityRevisions = [created];
+        await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: created, requestId: 'test-compat-create' }) });
+        return;
+      }
+      if (method === 'PATCH') {
+        const current = compatibilityRevisions[0];
+        const updated = { ...current, ...body, version: current.version + 1 };
+        delete updated.catalogKey;
+        compatibilityRevisions = [updated];
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: updated, requestId: 'test-compat-update' }) });
+        return;
+      }
+      await route.fulfill({ status: 405, contentType: 'application/json', body: JSON.stringify({ error: { code: 'VALIDATION_ERROR', message: 'unsupported test route' } }) });
+    });
     await page.route('**/api/v1/admin/species', async route => {
       if (route.request().method() === 'POST') {
         const body = route.request().postDataJSON();
@@ -137,6 +176,32 @@ try {
     assert.equal(await page.getByRole('heading', { name: '管理后台' }).isVisible(), true);
     assert.equal(await page.getByRole('link', { name: /Species SEO/ }).isVisible(), true);
     assert.equal(await page.getByRole('button', { name: /Product Truth 与养护内容/ }).isVisible(), true);
+    assert.equal(await page.getByRole('button', { name: /Compatibility 规则/ }).isVisible(), true);
+    await page.getByRole('button', { name: /Compatibility 规则/ }).click();
+    await page.waitForURL('**/admin/compatibility');
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+    await page.getByRole('heading', { name: 'Species Behavior Profiles' }).waitFor();
+    await page.getByRole('heading', { name: 'Reviewed Pair Rules' }).waitFor();
+    assert.match(await page.locator('body').innerText(), /Reviewed Profiles[\s\S]*7[\s\S]*Reviewed Pair Rules[\s\S]*4/);
+    await page.getByText('Profile Draft 已启用', { exact: true }).waitFor();
+    await page.getByRole('button', { name: '创建 Profile Draft' }).first().click();
+    const draftEditor = page.getByTestId('compatibility-draft-editor');
+    await draftEditor.waitFor();
+    assert.match(await draftEditor.innerText(), /behavior profile revision #1[\s\S]*虎皮鱼[\s\S]*reviewed evidence/i);
+    await draftEditor.getByLabel(/Behavior traits/).fill('shoaling\nfin_nipping\nforaging');
+    await draftEditor.getByLabel('最低群体数量').fill('8');
+    await draftEditor.getByRole('button', { name: '保存 Draft' }).click();
+    await page.getByText('Compatibility Draft 已保存', { exact: true }).waitFor();
+    assert.match(await draftEditor.getByLabel(/Behavior traits/).inputValue(), /foraging/);
+    page.once('dialog', dialog => dialog.accept());
+    await draftEditor.getByRole('button', { name: '提交审核' }).click();
+    await page.getByText('Compatibility revision 已提交审核', { exact: true }).waitFor();
+    await draftEditor.getByText('待审核', { exact: true }).waitFor();
+    assert.equal(await draftEditor.getByLabel(/Behavior traits/).isDisabled(), true);
+    const compatibilityOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+    assert.equal(compatibilityOverflow, false, `${viewport.width}px Compatibility Admin should not overflow horizontally`);
+    await page.getByRole('button', { name: '返回管理后台' }).click();
+    await page.waitForURL('**/admin/content');
     await page.getByRole('button', { name: /Product Truth 与养护内容/ }).click();
     await page.waitForURL('**/admin/product-content');
     await page.getByRole('heading', { name: 'Product / Care Content' }).waitFor();

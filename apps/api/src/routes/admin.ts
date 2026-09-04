@@ -25,6 +25,7 @@ import { buildCurrentPublication, ensurePublishedSnapshotBeforeDraft } from '../
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 import { adminFeedbackRouter } from './feedback';
+import { adminCompatibilityRouter } from './admin-compatibility';
 
 const supportedMimeTypes = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const originalExtension: Record<string, string> = {
@@ -46,6 +47,7 @@ adminRouter.use((request, _response, next) => {
   next();
 });
 adminRouter.use(adminFeedbackRouter);
+adminRouter.use('/compatibility', adminCompatibilityRouter);
 
 adminRouter.get('/species', asyncRoute(async (request, response) => {
   const client = getAdminSupabase();
