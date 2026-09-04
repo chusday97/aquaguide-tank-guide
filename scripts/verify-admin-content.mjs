@@ -56,6 +56,15 @@ const baseRecord = {
   speciesAssets: [],
 };
 
+const baseCareRecord = {
+  id: 'be1732a3-27d0-4820-986c-2e932990f571',
+  catalogKey: 'care_demo', title: '换水后观察', category: '水质', urgency: '日常', summary: '先观察鱼只状态。',
+  symptoms: ['应激'], avoidActions: ['不要立即加药'], observeItems: ['呼吸'], diagnoseWhen: ['持续异常'],
+  nextStep: '必要时进一步诊断', keywords: ['换水'], status: 'draft', version: 1,
+  careArticleSteps: [{ id: 'ce1732a3-27d0-4820-986c-2e932990f572', position: 0, instruction: '先观察', durationLabel: '10 分钟' }],
+  careArticleAssets: [],
+};
+
 const vite = await createServer({
   root: repoRoot,
   server: { host: '127.0.0.1', port: 0 },
@@ -74,19 +83,55 @@ try {
       session: fakeSession,
     });
     let savedName = '';
+    let currentRecord = { ...baseRecord };
+    let currentCare = { ...baseCareRecord };
     await page.route('**/api/v1/admin/species', async route => {
       if (route.request().method() === 'POST') {
         const body = route.request().postDataJSON();
-        await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: { ...baseRecord, ...body }, requestId: 'test-create' }) });
+        currentRecord = { ...baseRecord, ...body };
+        await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: currentRecord, requestId: 'test-create' }) });
         return;
       }
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: [baseRecord], requestId: 'test-list' }) });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: [currentRecord], requestId: 'test-list' }) });
     });
     await page.route('**/api/v1/admin/species/*', async route => {
       const body = route.request().postDataJSON();
       savedName = body.name;
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { ...baseRecord, ...body, version: 2 }, requestId: 'test-update' }) });
+      currentRecord = { ...currentRecord, ...body, status: 'draft', version: currentRecord.version + 1 };
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: currentRecord, requestId: 'test-update' }) });
     });
+    await page.route('**/api/v1/species/sp_demo*', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { ...baseRecord, assets: [], updatedAt: new Date().toISOString(), localization: {} }, requestId: 'test-public-species' }),
+    }));
+
+    await page.route('**/api/v1/admin/care-articles', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: [currentCare], requestId: 'test-care-list' }),
+    }));
+    await page.route('**/api/v1/admin/care-articles/*', async route => {
+      const body = route.request().postDataJSON();
+      const { steps = [], ...fields } = body;
+      currentCare = {
+        ...currentCare, ...fields, status: 'draft', version: currentCare.version + 1,
+        careArticleSteps: steps.map((step, index) => ({ id: `care-step-${index}`, position: index, instruction: step.instruction, durationLabel: step.durationLabel })),
+      };
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: currentCare, requestId: 'test-care-update' }) });
+    });
+    await page.route('**/api/v1/care-articles/care_demo*', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: {
+        id: baseCareRecord.id, catalogKey: baseCareRecord.catalogKey, title: baseCareRecord.title, category: baseCareRecord.category,
+        urgency: baseCareRecord.urgency, summary: baseCareRecord.summary, keywords: baseCareRecord.keywords,
+        symptoms: baseCareRecord.symptoms, avoidActions: baseCareRecord.avoidActions, observeItems: baseCareRecord.observeItems,
+        diagnoseWhen: baseCareRecord.diagnoseWhen, nextStep: baseCareRecord.nextStep,
+        steps: baseCareRecord.careArticleSteps.map(step => ({ ...step, actionKind: 'immediate' })), references: [], assets: [],
+        updatedAt: new Date().toISOString(), localization: {},
+      }, requestId: 'test-public-care' }),
+    }));
 
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
     assert.equal(await page.getByRole('heading', { name: '管理后台' }).isVisible(), true);
@@ -99,9 +144,37 @@ try {
     await page.getByText('测试灯鱼', { exact: true }).waitFor();
     await page.getByText('测试灯鱼', { exact: true }).click();
     await page.getByLabel(/中文名/).fill('测试灯鱼已更新');
+    const impactPreview = page.getByTestId('content-impact-preview');
+    await impactPreview.getByText('展示内容', { exact: true }).first().waitFor();
+    assert.match(await impactPreview.innerText(), /发布后直接更新[\s\S]*Encyclopedia/);
+    assert.match(await impactPreview.innerText(), /需单独复核[\s\S]*Search \/ Collection[\s\S]*SEO/);
     await page.getByRole('button', { name: '保存修改' }).click();
     await page.getByText('内容已保存', { exact: true }).waitFor();
     assert.equal(savedName, '测试灯鱼已更新');
+    assert.match(await impactPreview.innerText(), /当前草稿相对已发布版本/);
+    await page.getByRole('button', { name: '发布', exact: true }).click();
+    const publishDialog = page.getByRole('dialog');
+    await publishDialog.getByRole('heading', { name: '确认发布' }).waitFor();
+    assert.match(await publishDialog.innerText(), /Encyclopedia/);
+    assert.match(await publishDialog.innerText(), /Search \/ Collection/);
+    await publishDialog.getByRole('button', { name: '取消' }).click();
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.getByRole('heading', { name: 'Product / Care Content' }).waitFor();
+    await page.getByRole('button', { name: /测试灯鱼已更新/ }).click();
+    const persistedImpact = page.getByTestId('content-impact-preview');
+    await persistedImpact.getByText('展示内容', { exact: true }).first().waitFor();
+    assert.match(await persistedImpact.innerText(), /当前草稿相对已发布版本/);
+    assert.match(await persistedImpact.innerText(), /测试灯鱼[\s\S]*测试灯鱼已更新/);
+    await page.getByRole('button', { name: '养护文章' }).click();
+    await page.getByRole('button', { name: /换水后观察/ }).waitFor();
+    await page.getByRole('button', { name: /换水后观察/ }).click();
+    await page.getByLabel('优先级').selectOption('高优先级');
+    const careImpact = page.getByTestId('content-impact-preview');
+    await careImpact.getByText('Care 流程', { exact: true }).first().waitFor();
+    assert.match(await careImpact.innerText(), /发布后直接更新[\s\S]*Care Guide[\s\S]*Aquarium[\s\S]*Identify/);
+    await page.getByRole('button', { name: '保存修改' }).click();
+    await page.getByText('内容已保存', { exact: true }).waitFor();
+    assert.match(await careImpact.innerText(), /当前草稿相对已发布版本/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(overflow, false, `${viewport.width}px should not overflow horizontally`);
     await page.close();

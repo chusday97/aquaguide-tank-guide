@@ -2,6 +2,8 @@ import type { z } from 'zod';
 import {
   careArticleAdminInputSchema,
   speciesAdminInputSchema,
+  type CareArticleDetailDto,
+  type SpeciesDetailDto,
 } from '../../../packages/contracts/src/index';
 import {
   apiRequest,
@@ -12,6 +14,15 @@ import {
 
 export type SpeciesAdminInput = z.infer<typeof speciesAdminInputSchema>;
 export type CareArticleAdminInput = z.infer<typeof careArticleAdminInputSchema>;
+
+const publicContentOrNull = async <T>(path: string): Promise<T | null> => {
+  try {
+    return await apiRequest<T>(path, { authenticated: false });
+  } catch (error) {
+    if (error instanceof AquaGuideApiError && error.code === 'NOT_FOUND') return null;
+    throw error;
+  }
+};
 
 export type AdminAssetRecord = {
   id: string;
@@ -58,6 +69,8 @@ const parseUploadResponse = async <T>(response: Response): Promise<T> => {
 export const contentAdminService = {
   listSpecies: () => apiRequest<AdminSpeciesRecord[]>('/admin/species'),
   listCareArticles: () => apiRequest<AdminCareArticleRecord[]>('/admin/care-articles'),
+  getPublishedSpecies: (catalogKey: string) => publicContentOrNull<SpeciesDetailDto>(`/species/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
+  getPublishedCareArticle: (catalogKey: string) => publicContentOrNull<CareArticleDetailDto>(`/care-articles/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
 
   createSpecies: (input: SpeciesAdminInput) => apiRequest<AdminSpeciesRecord>('/admin/species', {
     method: 'POST',

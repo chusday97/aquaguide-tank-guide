@@ -4,7 +4,10 @@ import { ArrowLeft, FileImage, Loader2, Plus, Save, Send, XCircle } from 'lucide
 import {
   careArticleAdminInputSchema,
   speciesAdminInputSchema,
+  type CareArticleDetailDto,
+  type SpeciesDetailDto,
 } from '../../packages/contracts/src/index';
+import ContentImpactPreview from '../components/admin/ContentImpactPreview';
 import { useToast } from '../components/common/ToastProvider';
 import { AquaGuideApiError } from '../services/api/api-client';
 import {
@@ -14,6 +17,7 @@ import {
   type CareArticleAdminInput,
   type SpeciesAdminInput,
 } from '../services/admin/content-admin.service';
+import { buildContentImpact, type ContentImpactResult } from '../services/admin/content-impact.service';
 
 type ContentType = 'species' | 'care';
 type StatusAction = 'published' | 'archived';
@@ -28,6 +32,38 @@ const emptySpecies = (): SpeciesAdminInput => ({
 const emptyCare = (): CareArticleAdminInput => ({
   catalogKey: '', title: '', category: '', urgency: '日常', summary: '', symptoms: [],
   steps: [], avoidActions: [], observeItems: [], diagnoseWhen: [], nextStep: '', keywords: [],
+});
+
+const speciesInputFromRecord = (record: AdminSpeciesRecord): SpeciesAdminInput => {
+  const { id: _id, status: _status, version: _version, speciesAssets: _assets, ...input } = record;
+  return speciesAdminInputSchema.parse(input);
+};
+
+const careInputFromRecord = (record: AdminCareArticleRecord): CareArticleAdminInput => {
+  const { id: _id, status: _status, version: _version, careArticleSteps, careArticleAssets: _assets, ...base } = record;
+  return careArticleAdminInputSchema.parse({
+    ...base,
+    steps: (careArticleSteps || []).sort((a, b) => a.position - b.position).map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel })),
+  });
+};
+
+const speciesInputFromPublished = (record: SpeciesDetailDto, fallback: SpeciesAdminInput): SpeciesAdminInput => speciesAdminInputSchema.parse({
+  ...fallback,
+  catalogKey: record.catalogKey, name: record.name, scientificName: record.scientificName, category: record.category,
+  difficulty: record.difficulty, waterTemperatureText: record.waterTemperatureText,
+  waterTemperatureMinC: record.waterTemperatureMinC, waterTemperatureMaxC: record.waterTemperatureMaxC,
+  phLevelText: record.phLevelText, phMin: record.phMin, phMax: record.phMax,
+  waterChangeCycleDays: record.waterChangeCycleDays, description: record.description, diet: record.diet,
+  tankSizeText: record.tankSizeText, minTankLiters: record.minTankLiters, temperament: record.temperament,
+  sizeClass: record.sizeClass, housingMode: record.housingMode, housingReason: record.housingReason,
+});
+
+const careInputFromPublished = (record: CareArticleDetailDto, fallback: CareArticleAdminInput): CareArticleAdminInput => careArticleAdminInputSchema.parse({
+  ...fallback,
+  catalogKey: record.catalogKey, title: record.title, category: record.category, urgency: record.urgency,
+  summary: record.summary, symptoms: record.symptoms, avoidActions: record.avoidActions,
+  observeItems: record.observeItems, diagnoseWhen: record.diagnoseWhen, nextStep: record.nextStep, keywords: record.keywords,
+  steps: record.steps.map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel, actionTitle: step.actionTitle, actionKind: step.actionKind })),
 });
 
 const lines = (value: string) => value.split('\n').map(item => item.trim()).filter(Boolean);
@@ -58,11 +94,45 @@ export default function AdminContent() {
   const [formError, setFormError] = useState('');
   const [isDirty, setIsDirty] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<StatusAction | null>(null);
+  const [lastSavedImpact, setLastSavedImpact] = useState<ContentImpactResult | null>(null);
+  const [publishedBaseline, setPublishedBaseline] = useState<SpeciesAdminInput | CareArticleAdminInput | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  const baselineRequestRef = useRef(0);
 
   const items = type === 'species' ? speciesItems : careItems;
   const selected = items.find(item => item.id === selectedId);
+  const liveImpact = useMemo(() => {
+    if (!selected) return null;
+    if (type === 'species') {
+      const fallback = speciesInputFromRecord(selected as AdminSpeciesRecord);
+      const baseline = publishedBaseline && 'scientificName' in publishedBaseline ? publishedBaseline : fallback;
+      return buildContentImpact('species', baseline, speciesForm);
+    }
+    const fallback = careInputFromRecord(selected as AdminCareArticleRecord);
+    const baseline = publishedBaseline && 'title' in publishedBaseline ? publishedBaseline : fallback;
+    return buildContentImpact('care', baseline, careForm);
+  }, [careForm, publishedBaseline, selected, speciesForm, type]);
+  const visibleImpact = isDirty ? liveImpact : (lastSavedImpact ?? liveImpact);
+  const savedImpactLabel = publishedBaseline ? '当前草稿相对已发布版本' : '最近一次保存的字段变更';
+
+  const loadPublishedBaseline = async (item: AdminSpeciesRecord | AdminCareArticleRecord) => {
+    const requestId = ++baselineRequestRef.current;
+    setPublishedBaseline(null);
+    try {
+      if (type === 'species') {
+        const fallback = speciesInputFromRecord(item as AdminSpeciesRecord);
+        const published = await contentAdminService.getPublishedSpecies(fallback.catalogKey);
+        if (requestId === baselineRequestRef.current) setPublishedBaseline(published ? speciesInputFromPublished(published, fallback) : null);
+      } else {
+        const fallback = careInputFromRecord(item as AdminCareArticleRecord);
+        const published = await contentAdminService.getPublishedCareArticle(fallback.catalogKey);
+        if (requestId === baselineRequestRef.current) setPublishedBaseline(published ? careInputFromPublished(published, fallback) : null);
+      }
+    } catch {
+      if (requestId === baselineRequestRef.current) setPublishedBaseline(null);
+    }
+  };
 
   const loadItems = async (nextType: ContentType = type, keepSelection = true) => {
     setIsLoading(true);
@@ -78,7 +148,7 @@ export default function AdminContent() {
     }
   };
 
-  useEffect(() => { void loadItems(type, false); }, [type]);
+  useEffect(() => { baselineRequestRef.current += 1; setPublishedBaseline(null); setLastSavedImpact(null); void loadItems(type, false); }, [type]);
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (!isDirty) return;
@@ -94,28 +164,24 @@ export default function AdminContent() {
     setSelectedId(item.id);
     setFormError('');
     setIsDirty(false);
-    if (type === 'species') {
-      const record = item as AdminSpeciesRecord;
-      const { id: _id, status: _status, version: _version, speciesAssets: _assets, ...input } = record;
-      setSpeciesForm(speciesAdminInputSchema.parse(input));
-    } else {
-      const record = item as AdminCareArticleRecord;
-      const { id: _id, status: _status, version: _version, careArticleSteps, careArticleAssets: _assets, ...base } = record;
-      setCareForm(careArticleAdminInputSchema.parse({
-        ...base,
-        steps: (careArticleSteps || []).sort((a, b) => a.position - b.position).map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel })),
-      }));
-    }
+    setLastSavedImpact(null);
+    setPublishedBaseline(null);
+    if (type === 'species') setSpeciesForm(speciesInputFromRecord(item as AdminSpeciesRecord));
+    else setCareForm(careInputFromRecord(item as AdminCareArticleRecord));
+    void loadPublishedBaseline(item);
     requestAnimationFrame(() => firstFieldRef.current?.focus());
   };
 
   const startNew = () => {
     if (isDirty && !window.confirm('当前修改尚未保存，确定新建内容吗？')) return;
+    baselineRequestRef.current += 1;
     setSelectedId(null);
+    setPublishedBaseline(null);
     setSpeciesForm(emptySpecies());
     setCareForm(emptyCare());
     setFormError('');
     setIsDirty(false);
+    setLastSavedImpact(null);
     requestAnimationFrame(() => firstFieldRef.current?.focus());
   };
 
@@ -130,6 +196,7 @@ export default function AdminContent() {
       firstFieldRef.current?.focus();
       return;
     }
+    const impactToSave = selected && liveImpact?.changes.length ? liveImpact : null;
     setIsSaving(true);
     try {
       if (type === 'species') {
@@ -146,6 +213,7 @@ export default function AdminContent() {
         setSelectedId(saved.id);
       }
       setIsDirty(false);
+      setLastSavedImpact(impactToSave);
       showToast(selected ? '内容已保存' : '草稿已创建', 'success');
       await loadItems(type, true);
     } catch (error) {
@@ -162,7 +230,10 @@ export default function AdminContent() {
     try {
       await contentAdminService.setStatus(type, selected.id, selected.version, pendingStatus);
       showToast(pendingStatus === 'published' ? '内容已发布' : '内容已下线', 'success');
+      const completedStatus = pendingStatus;
       setPendingStatus(null);
+      setLastSavedImpact(null);
+      setPublishedBaseline(completedStatus === 'published' ? (type === 'species' ? speciesForm : careForm) : null);
       await loadItems(type, true);
     } catch (error) {
       showToast(errorMessage(error), 'error');
@@ -228,6 +299,7 @@ export default function AdminContent() {
             </div>
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
+            {selected && <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />}
             {type === 'species' ? (
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="目录 ID" required><input ref={firstFieldRef} className={inputClass} value={speciesForm.catalogKey} disabled={Boolean(selected)} onChange={e => { setSpeciesForm(v => ({ ...v, catalogKey: e.target.value })); setIsDirty(true); }} /></Field>
@@ -266,7 +338,7 @@ export default function AdminContent() {
         </main>
       </div>
 
-      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[420px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? '发布后，已接入 Product/Care 发布源的页面会在刷新后读取新版本；Compatibility 等独立规则功能不会被这次发布直接改写。' : '下线后普通用户将无法继续打开这项内容。'}</p><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button></div></div></div>}
+      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[520px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? '发布后，直接接入当前 Product/Care authority 的页面会读取新版本；标记为“需单独复核”的 Compatibility、SEO 等独立 authority 不会被自动改写。' : '下线后普通用户将无法继续打开这项内容。'}</p>{pendingStatus === 'published' && <ContentImpactPreview impact={visibleImpact} saved savedLabel={savedImpactLabel} compact />}<div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button></div></div></div>}
     </div>
   );
 }
