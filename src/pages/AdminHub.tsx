@@ -1,4 +1,4 @@
-import { ArrowLeft, Database, Search, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Clock3, Database, Search, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const seoAdminUrl = import.meta.env.VITE_SEO_ADMIN_URL
@@ -52,8 +52,16 @@ export default function AdminHub() {
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-700"><ShieldCheck className="h-6 w-6" /></div>
             <div className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-indigo-600">Compatibility Authority</div>
             <h2 className="mt-1 text-xl font-black">Compatibility 规则</h2>
-            <p className="mt-2 text-sm font-semibold leading-6 text-ink/55">核对 Species behavior profiles、Pair Rules、Evidence 与置信度；已对齐 DB baseline 时可安全创建 Draft revision，reviewed publish 仍保持锁定。</p>
+            <p className="mt-2 text-sm font-semibold leading-6 text-ink/55">管理 Species behavior profiles、Pair Rules、Evidence、人工审核与 versioned reviewed publish；发布前强制运行真实 Compatibility regression。</p>
             <div className="mt-5 text-sm font-black text-indigo-700">打开 Compatibility 后台 →</div>
+          </button>
+
+          <button type="button" onClick={() => navigate('/admin/publish-center')} className="group rounded-[26px] border border-amber-100 bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-700"><Clock3 className="h-6 w-6" /></div>
+            <div className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-amber-700">Release Audit</div>
+            <h2 className="mt-1 text-xl font-black">Unified Publish Center</h2>
+            <p className="mt-2 text-sm font-semibold leading-6 text-ink/55">只读汇总 Product/Care、Compatibility 与 SEO 的发布、审核和 revision 状态；不会改写任何现有 authority。</p>
+            <div className="mt-5 text-sm font-black text-amber-700">查看发布中心 →</div>
           </button>
         </main>
 

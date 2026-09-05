@@ -12,6 +12,7 @@ on:
       - 'src/pages/AdminContent.tsx'
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
+      - 'src/pages/PublishCenter.tsx'
       - 'src/data/compatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityRegistry.ts'
@@ -23,6 +24,8 @@ on:
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
+      - 'scripts/test-publish-center-contract.ts'
+      - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
@@ -47,6 +50,7 @@ on:
       - 'src/pages/AdminContent.tsx'
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
+      - 'src/pages/PublishCenter.tsx'
       - 'src/data/compatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityRegistry.ts'
@@ -58,6 +62,8 @@ on:
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
+      - 'scripts/test-publish-center-contract.ts'
+      - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
@@ -109,6 +115,8 @@ jobs:
         run: npm run test:compatibility-admin-contract
       - name: Compatibility server regression gate
         run: npm run test:compatibility-regression-gate
+      - name: Publish Center read-only contract
+        run: npm run test:publish-center-contract
       - name: Runtime compatibility authority contract
         run: npm run test:runtime-compatibility-authority
       - name: Business API TypeScript check
@@ -162,6 +170,8 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Admin browser regression
         run: npm run test:admin-content-ui
+      - name: Publish Center browser regression
+        run: npm run test:publish-center-ui
       - name: Root AquaGuide Species SEO artifact integration
         env:
           SPECIES_SEO_SNAPSHOT_PATH: apps/admin-content/fixtures/staging-publication-sample.json

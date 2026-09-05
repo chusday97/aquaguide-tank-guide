@@ -50,6 +50,7 @@ const loadLogin = () => import('./pages/Login');
 const loadAdminHub = () => import('./pages/AdminHub');
 const loadAdminContent = () => import('./pages/AdminContent');
 const loadCompatibilityAdmin = () => import('./pages/CompatibilityAdmin');
+const loadPublishCenter = () => import('./pages/PublishCenter');
 const loadIdentify = () => import('./pages/Identify');
 const loadSearch = () => import('./pages/Search');
 const loadSettings = () => import('./pages/Settings');
@@ -66,6 +67,7 @@ const Login = lazyWithRecovery(loadLogin, 'login');
 const AdminHub = lazyWithRecovery(loadAdminHub, 'admin-hub');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-product-content');
 const CompatibilityAdmin = lazyWithRecovery(loadCompatibilityAdmin, 'admin-compatibility');
+const PublishCenter = lazyWithRecovery(loadPublishCenter, 'admin-publish-center');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
 const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
@@ -768,7 +770,8 @@ function AppShell() {
         <Routes>
           <Route path="/admin/content" element={<RouteErrorBoundary page="admin-hub"><AdminHub /></RouteErrorBoundary>} />
           <Route path="/admin/product-content" element={<RouteErrorBoundary page="admin-product-content"><AdminContent /></RouteErrorBoundary>} />
-            <Route path="/admin/compatibility" element={<RouteErrorBoundary page="admin-compatibility"><CompatibilityAdmin /></RouteErrorBoundary>} />
+          <Route path="/admin/compatibility" element={<RouteErrorBoundary page="admin-compatibility"><CompatibilityAdmin /></RouteErrorBoundary>} />
+          <Route path="/admin/publish-center" element={<RouteErrorBoundary page="admin-publish-center"><PublishCenter /></RouteErrorBoundary>} />
           <Route path="*" element={<Navigate to="/admin/content" replace />} />
         </Routes>
       </Suspense>
@@ -866,6 +869,7 @@ function WorkspaceRoutes() {
           <Route path="/admin/content" element={page(<AdminHub />, 'admin-hub')} />
           <Route path="/admin/product-content" element={page(<AdminContent />, 'admin-product-content')} />
           <Route path="/admin/compatibility" element={page(<CompatibilityAdmin />, 'admin-compatibility')} />
+          <Route path="/admin/publish-center" element={page(<PublishCenter />, 'admin-publish-center')} />
           <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>
       </Suspense>
