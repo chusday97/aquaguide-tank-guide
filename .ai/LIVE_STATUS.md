@@ -217,14 +217,14 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Stateful UI selection is now explicit rather than subtle: workflow stages distinguish system attention from operator selection.
 - Species/Base selection, workflow filters, editor scope and locale controls expose persistent selected styling and `aria-pressed` state.
 - Screenshot-driven correction supersedes the previous strong-row selection treatment: normal Species selection is now shown only in the existing 16×16 square radio; no extra ✓ badge is inserted into the text grid. Batch mode switches the same slot to checkbox semantics. 1440/390 checks confirm left-aligned text, 16×16 controls and zero overflow.
-- Current-page vs Base-template editing now has explicit `页 / 模` context cards with different accents and impact copy. Read-only Demo no longer reports `Schema 未应用`; it says only `只读演示 · 不会写入`.
+- Current-page vs Base-template editing uses plain-language context (`当前物种页面` / `基础模板`) and impact copy; the ambiguous `页 / 模` glyph badge has been removed. Read-only Demo says only `只读演示 · 不会写入`.
 - This remains Species SEO Admin-only work on `feature/admin-content-v0`; PR #144 reconciliation stays parked.
 
 ## 2026-09-05 — SEO Admin focus/layout state
 - Current feature adds Workspace Focus for editor/Preview and a neutral professional CMS palette. Editor/Preview interaction collapses fixed workflow chrome; left Species navigation alone leaves the full workflow visible.
 - Desktop workspace gains 196px vertical space in Focus; 390px gains 312px and focused editor controls are 46px high. Production/main/index/live DB remain untouched.
 ## 2026-09-06 — strict CMS visual system
-- Species SEO Admin now has one visual authority: Graphite neutrals + White/paper + Blue `#3157D5`; no additional semantic hue is allowed.
+- Species SEO Admin now has one visual authority: Graphite neutrals + White/paper + Green `#2F6F4E`; no additional semantic hue is allowed. Preview is hidden by default and opens from the always-visible `效果预览` control as an in-workspace overlay drawer.
 - Computed-style scan PASS at 1440×900 and 390×844 for initial UI and all six advanced tools (`发布资格 / 批量审核 / 批量内容审核 / SEO 模板导入 / 版本历史 / 任务队列`): extra saturated hue count `0`, horizontal overflow `0`.
 - Type hierarchy PASS: desktop 24/18/15/13/12/10px and mobile 22/17/14/12/11/10px; Focus editor bar remains 48px desktop / 46px mobile.
 - Admin contract + Repo backend/API routing + controlled Preview + root build remain PASS locally. Main/Production/index/live DB untouched; Care SEO stays `hold_noindex`.

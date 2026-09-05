@@ -1253,7 +1253,7 @@ export default function App() {
           }}
         />
 
-        <main className={`editor-area studio-editor-area scope-${editorScope}`} onPointerEnter={() => setWorkspaceFocusMode(true)} onFocusCapture={() => setWorkspaceFocusMode(true)} onWheelCapture={() => setWorkspaceFocusMode(true)} onTouchStart={() => setWorkspaceFocusMode(true)}>
+        <main className={`editor-area studio-editor-area scope-${editorScope}`} onPointerDown={(event) => { if (!event.target.closest('.editor-context-bar')) setWorkspaceFocusMode(true); }} onFocusCapture={(event) => { if (!event.target.closest('.editor-context-bar')) setWorkspaceFocusMode(true); }} onWheelCapture={() => setWorkspaceFocusMode(true)} onTouchStart={() => setWorkspaceFocusMode(true)}>
           <div className="editor-context-bar">
             <div className="editor-context-title">
               <small>{appLocale === 'en' ? 'CURRENT WORKSPACE' : '当前工作区'}</small>
@@ -1263,7 +1263,7 @@ export default function App() {
               <button type="button" aria-pressed={editorScope === 'base'} className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
               <button type="button" aria-pressed={editorScope === 'variant'} className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
             </div>
-            <button type="button" className="compact-preview-toggle" onClick={() => setCompactPreviewOpen(true)}>{t('preview.title')}</button>
+            <button type="button" className="compact-preview-toggle" aria-expanded={compactPreviewOpen} onClick={() => setCompactPreviewOpen((value) => !value)}>{appLocale === 'en' ? 'Preview' : '效果预览'}</button>
             <div className="locale-switcher compact" aria-label="Content language">
               {CONTENT_LOCALES.map((item) => (
                 <button key={item.code} type="button" aria-pressed={contentLocale === item.code} className={contentLocale === item.code ? 'active' : ''} onClick={() => contentLocale === item.code || runEditorNavigation(() => setContentLocale(item.code))}>{item.label}</button>
@@ -1272,11 +1272,8 @@ export default function App() {
           </div>
 
           <section className={`editor-scope-context ${editorScope}`} aria-label={appLocale === 'en' ? 'Editing context' : '编辑范围'}>
-            <div className="editor-scope-context-badge">
-              <span aria-hidden="true">{editorScope === 'base' ? (appLocale === 'en' ? 'T' : '模') : (appLocale === 'en' ? 'P' : '页')}</span>
-              <small>{editorScope === 'base' ? (appLocale === 'en' ? 'BASE TEMPLATE' : '基础模板') : (appLocale === 'en' ? 'CURRENT SPECIES PAGE' : '当前物种页面')}</small>
-            </div>
             <div className="editor-scope-context-copy">
+              <small className="editor-scope-context-label">{editorScope === 'base' ? (appLocale === 'en' ? 'BASE TEMPLATE' : '基础模板') : (appLocale === 'en' ? 'CURRENT SPECIES PAGE' : '当前物种页面')}</small>
               <strong>{editorScope === 'base' ? selectedGroup?.base_scientific_name : selectedSpecies?.name}</strong>
               <span>{editorScope === 'base'
                 ? (appLocale === 'en' ? `Shared template inherited by ${selectedGroup?.member_count || 0} pages. Changes here can affect the whole Base group.` : `这是一套共享模板，当前有 ${selectedGroup?.member_count || 0} 个页面继承；修改这里会影响同组页面。`)

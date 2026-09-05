@@ -296,15 +296,15 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Workflow stage state is now split into `attention` (system says work exists) vs `selected` (operator clicked it), so clicking Content Editing no longer leaves Data Review looking selected just because issues exist.
 - Stateful controls use `aria-pressed`; selected scope/locale/filter controls receive persistent selected styling.
 - Screenshot correction supersedes the first row treatment: normal Species selection uses only the existing 16×16 square radio; no second ✓ badge is inserted beside the text. The row keeps only a light supporting highlight. Batch mode switches that slot to checkbox semantics.
-- `当前物种页面` vs `基础模板` now has explicit `页 / 模` context styling and impact copy. Browser checks at 1440/390 verify 16×16 controls, left-aligned text and zero overflow. Production/main/index/live DB remain untouched.
+- `当前物种页面` vs `基础模板` now uses explicit plain-language context and impact copy; the ambiguous `页 / 模` badge is removed. Browser checks at 1440/390 verify 16×16 controls, left-aligned text and zero overflow. Production/main/index/live DB remain untouched.
 
 ## 2026-09-05 — SEO Admin workspace focus + palette checkpoint
 - Added automatic Workspace Focus when the operator enters the editor or live Preview; Species navigation does not trigger it. Full workflow remains recoverable via `展开流程`.
 - Measured at 1440×900 and 1366×768: fixed chrome drops from ~308px to ~112px and workspace gains 196px. At 390×844 workspace grows from 400px to 712px; focused editor sticky controls shrink from ~140px to 46px.
-- Replaced the green-heavy CMS chrome with white/cool-gray/graphite surfaces and a single blue interaction accent. Status colors remain semantic only.
+- Historical checkpoint: green-heavy chrome was first neutralized with blue; superseded by the current single Green interaction accent.
 - Admin contract and root production build pass; zero horizontal overflow in measured desktop/mobile focus states.
 ## 2026-09-06 — Species SEO Admin strict three-color + typography checkpoint
-- User rejected the prior palette as still too colorful and the typography as too flat. The final CMS rule is now **Graphite / White / one Blue `#3157D5` accent only**.
+- Current CMS rule is **Graphite / White / one Green `#2F6F4E` accent only**. Primary buttons and selected interaction states use that same Green; Preview is explicit-on-demand in an overlay drawer, and the scope badge is plain language rather than `页 / 模`.
 - Warning/review/ready/error/success states are hue-neutral; status is conveyed by copy, icon/border style and weight. Color transitions were disabled so intermediate click-animation hues cannot create temporary fourth colors.
 - Hidden tools were included, not just the first screen: all six advanced tools were opened and runtime-scanned at 1440×900 and 390×844. Every state reports `0` extra saturated hues and `0` horizontal overflow.
 - Typography hierarchy: desktop page 24, section 18, action 15, field/Species label 13, body 12, meta 10px; mobile 22/17/14/12/11/10px. Focus mode remains compact to maximize editing/Preview space.

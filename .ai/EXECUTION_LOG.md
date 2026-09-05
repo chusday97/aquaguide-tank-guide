@@ -734,3 +734,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Opened all six advanced tools and repeated 1440×900 + 390×844 runtime scans. Final result: extra saturated hues `0` in every state; horizontal overflow `0`.
 - Established typography scale and measured it in browser; removed superseded 2026-09-05 palette block while preserving Workspace Focus layout.
 - `npm run test:contract -w @aquaguide/admin-content` PASS; full `npm run build` PASS; `git diff --check` PASS.
+
+## 2026-09-06 — SEO Admin preview/scope/accent correction
+- Removed the opaque single-character `页 / 模` scope badge; scope is now explained with plain-language `当前物种页面` / `基础模板`.
+- Preview is hidden by default and opened explicitly from the sticky `效果预览` control as an in-workspace overlay drawer; desktop/mobile page overflow remains zero.
+- Replaced the single Blue interaction accent with one Green `#2F6F4E` accent, preserving the three-color Graphite / White / Green rule across primary buttons, selected states and Preview modes.
+- Browser acceptance at 1440×900 and 390×844: Preview closed→open→close works, all Page/Google/Mobile Preview modes show zero extra saturated hue, and Admin contract/root build pass.

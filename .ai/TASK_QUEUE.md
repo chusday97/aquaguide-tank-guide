@@ -91,9 +91,11 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Verify all 4 stages are simultaneously visible at 390px in a 2×2 layout; 1440/390 browser checks have zero page overflow.
 - [x] Visually separate `当前物种页面` from `基础模板`: explicit scope context card, different accent/background, and clear copy explaining page-only vs shared-template impact.
 - [x] In read-only Demo, suppress false `Schema 未应用` error language; show only `只读演示 · 不会写入`.
-- [x] Enforce a strict three-color CMS system: Graphite / White / one Blue accent; all semantic states and all six advanced tools are hue-neutral outside the Blue interaction accent.
+- [x] Enforce a strict three-color CMS system: Graphite / White / one Green accent; all semantic states and all six advanced tools are hue-neutral outside the Green interaction accent.
 - [x] Establish an explicit typography hierarchy (page → section → action → field label → body → meta) and verify desktop/mobile computed sizes.
 - [x] Runtime-scan 1440/390 initial + all advanced-tool states: zero extra saturated hues and zero horizontal overflow.
+- [x] Remove the ambiguous `页 / 模` glyph badge; keep scope identity in plain language (`当前物种页面` / `基础模板`).
+- [x] Make Preview explicit-on-demand: visible `效果预览` control in the editor bar, Preview hidden by default, overlay drawer on open, zero page overflow.
 - [ ] User visual/operator acceptance of the new hierarchy on the hosted read-only SEO Admin demo; collect screenshots/feedback.
 - [ ] Restore a writable `admin-content` Preview only through a safe server-side credential binding/transfer. Do not expose or manually shuttle `ADMIN_REPO_*` / `ADMIN_GITHUB_*` secrets; current independent project lacks those write credentials.
 
@@ -117,5 +119,5 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Bilingual Staging readiness + Canonical dependencies + noindex Preview safety.
 
 - [x] Add Workspace Focus mode: entering the editor or Preview collapses fixed chrome to a compact workflow/status strip; explicit `展开流程` restores the full workflow.
-- [x] Replace the green-heavy Admin palette with a neutral CMS system (white/cool gray/graphite + one blue accent); reserve warning/review/success colors for semantic status only.
+- [x] Initial neutralization checkpoint used a blue accent; superseded by the current Graphite / White / one Green accent system.
 - [x] Verify fixed-chrome reduction: 1440/1366 workspace gains 196px vertical space; 390 workspace gains 312px and mobile editor sticky bar drops from ~140px to 46px, with zero horizontal overflow.
