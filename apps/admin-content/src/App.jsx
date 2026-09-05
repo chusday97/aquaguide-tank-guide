@@ -1193,16 +1193,16 @@ export default function App() {
           <span className="workflow-locale-chip">{contentLocale === 'en' ? 'English' : '中文'}</span>
         </div>
         <div className="workflow-stage-grid">
-          <button type="button" className={`workflow-stage-card ${workflowOverview.dataReview.pending > 0 ? 'active issue' : 'done'}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
+          <button type="button" aria-pressed={workflowFilter?.key === 'data:pending'} className={`workflow-stage-card ${workflowOverview.dataReview.pending > 0 ? 'attention issue' : 'done'} ${workflowFilter?.key === 'data:pending' ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
             <b>1</b><span><strong>{appLocale === 'en' ? 'Data review' : '数据复核'}</strong><small>{appLocale === 'en' ? 'Resolve duplicate / source issues' : '判断重复与源数据问题'}</small></span><em>{workflowOverview.dataReview.pending}</em>
           </button>
-          <button type="button" className={`workflow-stage-card ${workflowOverview.dataReview.pending === 0 && (workflowOverview.locales[contentLocale]?.blocked || 0) > 0 ? 'active' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:blocked`, type: 'readiness', locale: contentLocale, status: 'blocked', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Editing' : '内容编辑'}` })}>
+          <button type="button" aria-pressed={workflowFilter?.key === `${contentLocale}:blocked`} className={`workflow-stage-card ${workflowOverview.dataReview.pending === 0 && (workflowOverview.locales[contentLocale]?.blocked || 0) > 0 ? 'attention' : ''} ${workflowFilter?.key === `${contentLocale}:blocked` ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:blocked`, type: 'readiness', locale: contentLocale, status: 'blocked', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Editing' : '内容编辑'}` })}>
             <b>2</b><span><strong>{appLocale === 'en' ? 'Edit content' : '内容编辑'}</strong><small>{appLocale === 'en' ? 'Complete SEO copy and page fields' : '补齐 SEO 文案与页面字段'}</small></span><em>{workflowOverview.locales[contentLocale]?.blocked || 0}</em>
           </button>
-          <button type="button" className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.ready_for_review || 0) > 0 ? 'active review' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>
+          <button type="button" aria-pressed={workflowFilter?.key === `${contentLocale}:ready_for_review`} className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.ready_for_review || 0) > 0 ? 'attention review' : ''} ${workflowFilter?.key === `${contentLocale}:ready_for_review` ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>
             <b>3</b><span><strong>{appLocale === 'en' ? 'Human review' : '人工审核'}</strong><small>{appLocale === 'en' ? 'Approve or return completed pages' : '批准或退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale]?.ready_for_review || 0}</em>
           </button>
-          <button type="button" className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.publish_ready || 0) > 0 ? 'active ready' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>
+          <button type="button" aria-pressed={workflowFilter?.key === `${contentLocale}:publish_ready`} className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.publish_ready || 0) > 0 ? 'attention ready' : ''} ${workflowFilter?.key === `${contentLocale}:publish_ready` ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>
             <b>4</b><span><strong>Staging</strong><small>{appLocale === 'en' ? 'Publish a controlled Preview' : '发布受控 Preview'}</small></span><em>{workflowOverview.locales[contentLocale]?.publish_ready || 0}</em>
           </button>
         </div>
@@ -1253,13 +1253,13 @@ export default function App() {
               <strong>{appLocale === 'en' ? 'Content editor' : '内容编辑'}</strong>
             </div>
             <div className="editor-scope-switch" aria-label="Editor scope">
-              <button type="button" className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
-              <button type="button" className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
+              <button type="button" aria-pressed={editorScope === 'base'} className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
+              <button type="button" aria-pressed={editorScope === 'variant'} className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
             </div>
             <button type="button" className="compact-preview-toggle" onClick={() => setCompactPreviewOpen(true)}>{t('preview.title')}</button>
             <div className="locale-switcher compact" aria-label="Content language">
               {CONTENT_LOCALES.map((item) => (
-                <button key={item.code} type="button" className={contentLocale === item.code ? 'active' : ''} onClick={() => contentLocale === item.code || runEditorNavigation(() => setContentLocale(item.code))}>{item.label}</button>
+                <button key={item.code} type="button" aria-pressed={contentLocale === item.code} className={contentLocale === item.code ? 'active' : ''} onClick={() => contentLocale === item.code || runEditorNavigation(() => setContentLocale(item.code))}>{item.label}</button>
               ))}
             </div>
           </div>

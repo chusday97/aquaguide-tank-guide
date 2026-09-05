@@ -707,3 +707,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Historical `test:admin-content-ui` currently fails in an unrelated Care SEO async assertion (`Published v1` expected before the loading state clears); no Care SEO code was changed in this round.
 - Hosted exact-SHA Cloudflare `94ddb622` PASS for `1e1414ec` at 1440/390: all four stages visible, 390px 2×2 stage grid, page action + detail hierarchy present, advanced tools collapsed, zero overflow.
 - Next: user visual/operator acceptance on the stable feature SEO Admin demo. Production/index/main/live DB remain locked.
+## 2026-09-05 — Species SEO Admin selected-state feedback
+- Re-read `feature/admin-content-v0` at `ccb4ade8`; live main remained `64fa58a1`.
+- Fixed the interaction-model bug where workflow `active` reflected pending counts rather than the operator's clicked stage by splitting `attention` vs `selected`.
+- Added persistent `aria-pressed` state and strong selected styling for workflow stages, quick filters, Base/current-page scope, content locale and selected Species/Base rows.
+- Selected Species/Base rows now expose a ✓ marker; browser interaction switched from 迷你鹦鹉鱼 to 蓝宝鹦鹉鱼 and verified the marker/pressed state moved correctly.
+- PASS: Admin build, Admin contract, full root build, diff hygiene, 1440/390 interaction checks, zero horizontal overflow.
+- Main/Production/Care SEO `hold_noindex`/live migrations untouched; PR #144 remains parked.

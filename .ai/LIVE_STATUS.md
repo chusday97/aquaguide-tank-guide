@@ -213,3 +213,8 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Exact-SHA URL: `https://8e1a3de3.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - 1440/390 hosted browser checks PASS; Demo is hard read-only and exposes no enabled Save actions.
 - Vercel `admin-content` is READY for the same code, but writable Repo Admin credentials are not configured in that independent project; do not describe it as writable yet.
+## 2026-09-05 — SEO Admin interaction feedback checkpoint
+- Stateful UI selection is now explicit rather than subtle: workflow stages distinguish system attention from operator selection.
+- Species/Base selection, workflow filters, editor scope and locale controls expose persistent selected styling and `aria-pressed` state.
+- Selected Species rows carry a visible ✓ marker and stronger row treatment; 1440/390 browser checks confirm the marker moves with the selected Species and page overflow remains zero.
+- This remains Species SEO Admin-only work on `feature/admin-content-v0`; PR #144 reconciliation stays parked.

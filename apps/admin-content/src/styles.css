@@ -1563,3 +1563,137 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .page-action-panel .workflow-stepper-action .secondary-button.compact { width:100%; }
   .advanced-tools-disclosure { margin-left:12px; margin-right:12px; }
 }
+
+/* Strong interaction feedback: selected state must be visually unmistakable. */
+button, .variant-row, .group-header, .editor-tool-row {
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, box-shadow 140ms ease, transform 80ms ease;
+}
+button:focus-visible {
+  outline: 3px solid rgba(44, 94, 65, .22);
+  outline-offset: 2px;
+}
+
+/* Workflow: attention = system recommendation; selected = what the operator clicked. */
+.workflow-stage-card.attention { border-color:#bdcabf; background:#f7f9f7; }
+.workflow-stage-card.attention > b { background:#e4ebe6; color:#334a3c; }
+.workflow-stage-card.attention.issue { border-color:#dfc58e; background:#fffaf1; }
+.workflow-stage-card.attention.issue > b, .workflow-stage-card.attention.issue > em { background:#f0dfbd; color:#7a4d0d; }
+.workflow-stage-card.attention.review { border-color:#c5d7ee; background:#f7faff; }
+.workflow-stage-card.attention.review > b, .workflow-stage-card.attention.review > em { background:#e1ecfa; color:#315e98; }
+.workflow-stage-card.attention.ready { border-color:#bfdac8; background:#f5faf7; }
+.workflow-stage-card.attention.ready > b, .workflow-stage-card.attention.ready > em { background:#dceee2; color:#286545; }
+.workflow-stage-card.selected {
+  position:relative;
+  border:2px solid #244f38;
+  padding:8px 9px;
+  background:#eaf3ed;
+  box-shadow:0 0 0 3px rgba(36,79,56,.12), 0 5px 14px rgba(36,79,56,.10);
+}
+.workflow-stage-card.selected > b { background:#183a28; color:#fff; }
+.workflow-stage-card.selected > span strong { color:#173826; font-weight:850; }
+.workflow-stage-card.selected > em { background:#244f38; color:#fff; }
+.workflow-stage-card.selected::after {
+  content:'已选';
+  position:absolute;
+  top:-8px;
+  right:8px;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#183a28;
+  color:#fff;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+
+/* Stateful segmented controls: use dark fill + check instead of subtle white-on-grey. */
+.editor-scope-switch button.active,
+.locale-switcher.compact button.active,
+.app-language-switch button.active,
+.preview-mode-tabs button.active,
+.translation-scope-tabs button.active {
+  background:#244f38;
+  color:#fff;
+  font-weight:820;
+  box-shadow:0 2px 7px rgba(36,79,56,.18);
+}
+.editor-scope-switch button.active::before,
+.locale-switcher.compact button.active::before {
+  content:'✓';
+  margin-right:4px;
+  font-size:9px;
+}
+
+/* Sidebar queue filters: selected filter is a real selected tab. */
+.species-quick-filters button.active {
+  background:#294f3a;
+  color:#fff;
+  box-shadow:0 2px 7px rgba(41,79,58,.18), inset 0 0 0 1px #294f3a;
+  font-weight:820;
+}
+.species-quick-filters button.active b { color:#fff; }
+.species-quick-filters .tone-issue.active { background:#85540f; color:#fff; box-shadow:0 2px 7px rgba(133,84,15,.18), inset 0 0 0 1px #85540f; }
+.species-quick-filters .tone-review.active { background:#315f9b; color:#fff; box-shadow:0 2px 7px rgba(49,95,155,.18), inset 0 0 0 1px #315f9b; }
+.species-quick-filters .tone-ready.active { background:#2d704d; color:#fff; box-shadow:0 2px 7px rgba(45,112,77,.18), inset 0 0 0 1px #2d704d; }
+.species-quick-filters .tone-issue.active b,
+.species-quick-filters .tone-review.active b,
+.species-quick-filters .tone-ready.active b { color:#fff; }
+
+/* Species selection: strong row background + persistent check mark. */
+.group-header { position:relative; }
+.group-header.active {
+  padding-right:38px;
+  background:#dcece1;
+  color:#173826;
+  box-shadow:inset 4px 0 0 #244f38, inset 0 0 0 1px #9fbea9;
+}
+.group-header.active::after {
+  content:'✓';
+  position:absolute;
+  right:9px;
+  top:50%;
+  width:20px;
+  height:20px;
+  display:grid;
+  place-items:center;
+  transform:translateY(-50%);
+  border-radius:999px;
+  background:#244f38;
+  color:#fff;
+  font-size:10px;
+  font-weight:900;
+}
+.variant-row.active {
+  background:#dcece1;
+  box-shadow:inset 4px 0 0 #244f38, inset 0 0 0 1px #a9c4b1;
+}
+.variant-row.active strong { color:#173826; font-weight:850; }
+.variant-row.active small { color:#526b5c; }
+.variant-main-button { gap:6px; }
+.variant-selection-mark {
+  width:18px;
+  height:18px;
+  flex:0 0 18px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  color:transparent;
+  font-size:9px;
+  font-weight:900;
+}
+.variant-row.active .variant-selection-mark { background:#244f38; color:#fff; }
+.species-group.contains-active .variant-list { border-left:2px solid #8fb29b; }
+
+/* Secondary tool selection should also persist clearly while its panel is open. */
+.editor-tool-row.active {
+  border-color:#8eb09a;
+  background:#eaf3ed;
+  color:#173826;
+  box-shadow:inset 4px 0 0 #244f38, 0 2px 7px rgba(36,79,56,.08);
+}
+.editor-tool-row.active strong { color:#173826; }
+.editor-tool-row.active > b { color:#244f38; }
+
+@media (max-width:560px) {
+  .workflow-stage-card.selected::after { content:'✓'; top:5px; right:5px; width:17px; height:17px; padding:0; display:grid; place-items:center; }
+}

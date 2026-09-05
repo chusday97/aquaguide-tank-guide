@@ -289,3 +289,9 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Hosted 1440/390 acceptance PASS: `当前下一步` visible, zero horizontal overflow, CTA routes to pending data review, no enabled Save actions; banner explicitly states read-only UI demo.
 - Independent Vercel `admin-content` deployment `dpl_96i313PnUMMZr5GUdRNbkjnbVpeN` is READY, but its project env contains only review-mode config and does not contain the 12 `ADMIN_REPO_*` / `ADMIN_GITHUB_*` write credentials present on the original AquaGuide feature Preview.
 - Automated cross-project secret transfer was blocked by the safety layer; no secret was exposed or copied. Keep UI acceptance read-only until a secure server-side binding/transfer path is available.
+## 2026-09-05 — SEO Admin selected-state feedback
+- User reported that clicking tabs/buttons and selecting a Species produced almost no persistent visual feedback.
+- Workflow stage state is now split into `attention` (system says work exists) vs `selected` (operator clicked it), so clicking Content Editing no longer leaves Data Review looking selected just because issues exist.
+- Stateful controls use `aria-pressed`; selected scope/locale/filter controls receive a dark fill, stronger border/shadow, and check feedback where appropriate.
+- Selected Base/Species rows now show an explicit ✓ plus stronger background/left marker; changing Species moves the marker to the newly selected row.
+- Browser checks at 1440/390 verified real computed-style changes, selected Species switching, Base selection, scope selection and zero horizontal overflow. Production/main/index/live DB remain untouched.

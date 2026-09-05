@@ -118,10 +118,10 @@ export default function SpeciesGroupSidebar({
       </div>
       {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}{appLocale === 'en' ? ': ' : '：'}{workflowFilterLabel} · {filtered.length} {appLocale === 'en' ? 'Base groups' : '个 Base'}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
       <div className="review-filters species-quick-filters" aria-label="Species workflow filters">
-        <button type="button" title={appLocale === 'en' ? `${speciesGroupStats.base_group_count} Base Species groups` : `${speciesGroupStats.base_group_count} 个 Base Species 分组`} className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{appLocale === 'en' ? 'Base groups' : '基础种'} <b>{speciesGroupStats.base_group_count}</b></button>
-        <button type="button" title={appLocale === 'en' ? `${workflowOverview?.dataReview?.pending ?? 0} pending Data Review issues` : `${workflowOverview?.dataReview?.pending ?? 0} 个待处理数据问题`} className={`tone-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('common.issues')} <b>{workflowOverview?.dataReview?.pending ?? 0}</b></button>
-        <button type="button" title={appLocale === 'en' ? 'Content items awaiting editorial review' : '等待人工审核的内容条目'} className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{workflowOverview?.locales?.[locale]?.ready_for_review ?? 0}</b></button>
-        <button type="button" title={appLocale === 'en' ? 'Pages eligible for Controlled Preview' : '可进入受控 Preview 的页面'} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: appLocale === 'en' ? 'Preview-ready' : '可预览' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
+        <button type="button" aria-pressed={!workflowFilter} title={appLocale === 'en' ? `${speciesGroupStats.base_group_count} Base Species groups` : `${speciesGroupStats.base_group_count} 个 Base Species 分组`} className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{appLocale === 'en' ? 'Base groups' : '基础种'} <b>{speciesGroupStats.base_group_count}</b></button>
+        <button type="button" aria-pressed={workflowFilter?.key === 'data:pending'} title={appLocale === 'en' ? `${workflowOverview?.dataReview?.pending ?? 0} pending Data Review issues` : `${workflowOverview?.dataReview?.pending ?? 0} 个待处理数据问题`} className={`tone-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('common.issues')} <b>{workflowOverview?.dataReview?.pending ?? 0}</b></button>
+        <button type="button" aria-pressed={workflowFilter?.key === `${locale}:ready_for_review`} title={appLocale === 'en' ? 'Content items awaiting editorial review' : '等待人工审核的内容条目'} className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{workflowOverview?.locales?.[locale]?.ready_for_review ?? 0}</b></button>
+        <button type="button" aria-pressed={workflowFilter?.key === `${locale}:publish_ready`} title={appLocale === 'en' ? 'Pages eligible for Controlled Preview' : '可进入受控 Preview 的页面'} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: appLocale === 'en' ? 'Preview-ready' : '可预览' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{workflowOverview?.locales?.[locale]?.publish_ready ?? 0}</b></button>
       </div>
       {(workflowOverview?.contentHygiene?.byLocale?.[locale]?.count ?? 0) > 0 ? (
         <button
@@ -164,7 +164,7 @@ export default function SpeciesGroupSidebar({
               return (
                 <div className={`species-group ${issueSummary.open > 0 ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
                   <div className="group-header-row">
-                    <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" onClick={() => onSelectBase?.(firstVisible.id)}>
+                    <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" aria-pressed={baseActive} onClick={() => onSelectBase?.(firstVisible.id)}>
                       <span className="group-copy">
                         <strong>{group.base_scientific_name}</strong>
                         <small>{primaryMembers.length > 1
@@ -185,7 +185,8 @@ export default function SpeciesGroupSidebar({
                       return (
                       <div className={`variant-row ${selectedScope === 'variant' && selectedId === item.id ? 'active' : ''}`} key={item.id}>
                         <input type="checkbox" checked={batchIds.includes(item.id)} onChange={() => onToggleBatch(item.id)} aria-label={`批量选择 ${item.name}`} />
-                        <button className="variant-main-button" type="button" onClick={() => onSelect(item.id)}>
+                        <button className="variant-main-button" type="button" aria-pressed={selectedScope === 'variant' && selectedId === item.id} onClick={() => onSelect(item.id)}>
+                          <span className="variant-selection-mark" aria-hidden="true">{selectedScope === 'variant' && selectedId === item.id ? '✓' : ''}</span>
                           <span>
                             <strong>{item.name}</strong>
                             <small>{item.variant_label || (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>

@@ -85,6 +85,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Verify 1440px / 390px layout, zero horizontal overflow, CTA queue routing and read-only no-write behavior.
 - [x] Add safe `?demo=1` read-only entry only for localhost / `*.pages.dev`; save/review/publish remain disabled.
 - [x] Verify exact-SHA + stable-branch Cloudflare `/admin/seo/?demo=1`; use the stable feature URL as the canonical UI acceptance entry.
+- [x] Make stateful interaction feedback unmistakable: separate workflow `attention` from operator `selected`, add `aria-pressed`, strong selected fills/borders, and explicit ✓ markers for selected Species/Base rows and editor scope/locale controls.
 - [x] Rebuild information hierarchy around a visible 4-stage workflow: Data Review → Content Edit → Human Review → Staging.
 - [x] Separate current-page key actions from detailed editing; collapse batch/history/translation/diagnostic tools under `更多工具`.
 - [x] Verify all 4 stages are simultaneously visible at 390px in a 2×2 layout; 1440/390 browser checks have zero page overflow.
