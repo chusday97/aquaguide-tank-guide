@@ -44,18 +44,19 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Preserve explicit human review; no opaque AI auto-publish.
 
 ## P2 — Operations maturity
-- [ ] Unified Publish Center / release history & audit.
+- [x] Unified Publish Center / release history & audit V1.
   - [x] Architecture inventory: Product/Care + Compatibility remain Business API/Supabase authorities; SEO remains independent Repo Admin / `admin-store.json` authority.
   - [x] Define one read-only `ReleaseEvent` contract across Product/Care publications, Compatibility revisions/publishes and SEO revisions/activity/import/staging history.
   - [x] Add read-only aggregation services/API without copying or moving any subsystem write authority.
   - [x] Add `/admin/publish-center` timeline/readiness UI with source/auth availability clearly shown.
   - [x] Add read-only release detail/readiness drill-down and explicitly surface Product/Care current-only history coverage.
   - [x] Add per-authority capability matrix for Diff → Impact → Preview → Review → Staging → Production, distinguishing available / partial / locked / not applicable.
-  - [ ] Next: design cross-domain orchestration as a coordination layer only; do not move Product/Care, Compatibility or SEO write authority into Publish Center.
-- [ ] Stronger roles/permissions and release audit history.
+  - [x] Add read-only cross-authority coordination context by explicit catalog/pair/batch keys, with authority jump links; do not infer dependency or auto-publish.
+  - [x] Close Publish Center V1 as a coordination/read model only; any future cross-domain write orchestration requires a separate product decision.
+- [x] Stronger roles/permissions boundary visibility and release audit history V1.
   - [x] Expose current Business `admin` vs SEO `repo-admin` permission boundary without merging auth systems.
   - [x] Add append-only Product/Care publication audit history in code with actor/version/publish/archive events; migration remains unapplied and route falls back to current-only.
-  - [ ] Defer editor/reviewer/publisher role split until a real multi-operator requirement exists; do not expand RLS surface speculatively.
+  - [x] Decision: defer editor/reviewer/publisher role split until a real multi-operator requirement exists; do not expand RLS surface speculatively.
 - [ ] Care SEO as a downstream projection of approved Care Knowledge.
 - [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
 

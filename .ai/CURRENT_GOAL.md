@@ -8,7 +8,7 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin is complete. P2 Unified Publish Center now has multi-authority release history, detail/readiness, capability and permission matrices, plus code-level append-only Product/Care audit history with safe current-only fallback. The immediate priority is **read-only cross-domain coordination design**; do not add centralized write orchestration or speculative role splitting.
+P1 Compatibility Admin and P2 Unified Publish Center V1 are complete in code. Publish Center remains a read/coordination layer with explicit-key cross-authority context, permission/capability boundaries and release audit coverage. The immediate priority is **Care SEO as a downstream projection of approved Care Knowledge**, without making SEO a Care authority or unlocking Production.
 
 ## Why this is now P1
 The defined Product/Care authority target is already converged and browser-accepted. The remaining operational risk is release comprehension: a content operator must see which user-facing surfaces change directly, which independent authorities require review, and what the user will see before a decision-critical release is approved.
@@ -29,7 +29,8 @@ Species SEO remains Repo-backed and fail-closed:
 4. [DONE] Complete the 14-Species bilingual SEO batch-01 operating cycle on authenticated Preview; 28/28 hosted EN/ZH pages passed acceptance.
 5. [DONE] Change Impact Preview: field classification, affected-consumer summary, decision-critical Before/After and Compatibility-result regression checks.
 6. [DONE in code] Compatibility Admin: Profile + Pair Draft, structural Impact, server engine Regression, canonical Evidence resolution, human Approve/Reject, exact reviewed runtime authority and transactional versioned publish are implemented. Migrations remain unapplied to live/Production.
-7. [NEXT] P2 Unified Publish Center: define one read-only release/audit contract and aggregate existing Product/Care, SEO and Compatibility release history without changing their write authorities.
+7. [DONE] P2 Unified Publish Center V1: read-only release/audit aggregation, detail/readiness, capability/permission boundaries, Product/Care audit history fallback and explicit-key cross-authority context.
+8. [NEXT] P2 Care SEO projection: derive SEO Draft inputs from approved Care Knowledge without duplicating or overriding Care authority.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.

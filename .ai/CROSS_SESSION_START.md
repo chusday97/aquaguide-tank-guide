@@ -21,7 +21,7 @@ A new conversation should read this file first, then read the canonical set belo
 Treat the Admin as **Aqua Operations Studio**, not one SEO CMS. Keep Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and user-specific context as separate authorities.
 
 ## Current first incomplete milestone
-All defined P0 work and P1 are closed. P2 Publish Center has multi-authority ReleaseEvent aggregation, detail/readiness, capability + permission boundaries, and code-level Product/Care append-only audit history with migration-safe current-only fallback. The first unfinished item is **read-only cross-domain coordination design**. Do not centralize writes, split roles without a multi-operator requirement, apply live migrations, or unlock Production.
+All defined P0 work, P1, and P2 Publish Center V1 are closed in code. Publish Center now has multi-authority ReleaseEvent aggregation, detail/readiness, capability + permission boundaries, code-level Product/Care append-only audit history with migration-safe current-only fallback, and explicit-key cross-authority context with authority jump links. The first unfinished item is **Care SEO as a downstream projection of approved Care Knowledge**. Do not centralize writes, infer cross-authority dependency, split roles without a multi-operator requirement, apply live migrations, or unlock Production.
 
 Continue from `TASK_QUEUE.md`; do not reopen completed Product/Care or SEO P0 work unless a new regression is proven.
 

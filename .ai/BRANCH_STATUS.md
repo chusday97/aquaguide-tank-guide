@@ -108,3 +108,7 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Product/Care audit checkpoint: `2a1c0594017839be2a2665878763bac6871a12bf`.
 - Migration `202609050003_content_publication_audit_history.sql` is repository-only/unapplied.
 - No merge/rebase main, live migration, or Production mutation.
+
+## 2026-09-05 Publish Center V1 closeout
+- feature/admin-content-v0 checkpoint: `5a549377732afcc982168c5408a4e360b78c7437`; online lightweight CI PASS (`33951946893`).
+- No main merge/rebase, Production deployment, or live migration.

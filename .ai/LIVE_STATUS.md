@@ -144,3 +144,12 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Product/Care full release audit history exists in code as append-only baseline/publish/archive events with actor/version; migration remains unapplied.
 - Unmigrated environments keep existing publish behavior and Publish Center current-only history via legacy RPC/read fallback.
 - First unfinished P2 item: read-only cross-domain coordination design.
+
+## 2026-09-05 P2 Publish Center — cross-authority coordination closeout
+- `5a549377` adds read-only cross-authority context by explicit catalog key / Pair key / SEO batch catalogKeys only.
+- Related records are contextual evidence, not dependency inference and not a signal that synchronized publish is required.
+- Event detail links back to the original Product/Care, Compatibility or SEO authority; Publish Center still performs no writes.
+- Online lightweight CI run `33951946893` passed for `5a549377`.
+- Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
+- Business role split is deliberately deferred until a real multi-operator requirement exists.
+- First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.

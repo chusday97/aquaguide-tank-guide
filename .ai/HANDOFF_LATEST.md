@@ -209,3 +209,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - PASS: Publish Center contract/UI 390/1280, Admin content contract, Product/Care Save→Publish→Preview, API TS, root lint/build.
 - Migration is NOT applied to live DB/Production. Role split is deliberately deferred until multi-operator need is proven.
 - Next: read-only cross-domain coordination design; no centralized write orchestration.
+
+## 2026-09-05 P2 Publish Center — cross-authority coordination closeout
+- `5a549377` adds read-only cross-authority context by explicit catalog key / Pair key / SEO batch catalogKeys only.
+- Related records are contextual evidence, not dependency inference and not a signal that synchronized publish is required.
+- Event detail links back to the original Product/Care, Compatibility or SEO authority; Publish Center still performs no writes.
+- Online lightweight CI run `33951946893` passed for `5a549377`.
+- Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
+- Business role split is deliberately deferred until a real multi-operator requirement exists.
+- First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.

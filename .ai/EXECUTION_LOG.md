@@ -618,3 +618,12 @@ Next: cross-domain orchestration design + roles/audit without moving write autho
 - Product/Care publish-preview regressions, Admin contract, API TS, lint/build pass.
 - Commits: `ec5e9a2b`, `2a1c0594`. Migration not applied live.
 Next: read-only cross-domain coordination design; no centralized writes.
+
+## 2026-09-05 P2 Publish Center — cross-authority coordination closeout
+- `5a549377` adds read-only cross-authority context by explicit catalog key / Pair key / SEO batch catalogKeys only.
+- Related records are contextual evidence, not dependency inference and not a signal that synchronized publish is required.
+- Event detail links back to the original Product/Care, Compatibility or SEO authority; Publish Center still performs no writes.
+- Online lightweight CI run `33951946893` passed for `5a549377`.
+- Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
+- Business role split is deliberately deferred until a real multi-operator requirement exists.
+- First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.
