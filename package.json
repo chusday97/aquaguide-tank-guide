@@ -12,7 +12,7 @@
     "dev:web": "vite --port=3000 --host=0.0.0.0",
     "dev:api": "tsx apps/api/src/index.ts",
     "check:api": "tsc --noEmit -p apps/api/tsconfig.json",
-    "build": "npm run build:web && npm run build:seo-admin && npm run build:species-pages",
+    "build": "npm run build:web && npm run build:seo-admin && npm run build:species-pages && npm run build:care-pages",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
@@ -141,7 +141,9 @@
     "test:care-seo-projection": "tsx scripts/test-care-seo-projection.ts",
     "test:care-seo-route": "node scripts/verify-care-seo-route.mjs",
     "test:publish-center-contract": "tsx scripts/test-publish-center-contract.ts",
-    "test:publish-center-ui": "node scripts/verify-publish-center.mjs"
+    "test:publish-center-ui": "node scripts/verify-publish-center.mjs",
+    "build:care-pages": "tsx scripts/build-care-seo-artifact.ts",
+    "test:care-seo-artifact": "tsx scripts/test-care-seo-artifact.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

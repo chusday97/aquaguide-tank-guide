@@ -85,7 +85,7 @@ const preloadRoute = (path: string) => {
         ? loadSearch
       : path === '/settings'
         ? loadSettings
-      : path === '/care' || path.startsWith('/care/')
+      : path === '/care' || path.startsWith('/care/') || path.startsWith('/zh/care/')
         ? loadCare
         : path === '/collection'
           ? loadCollectionHub
@@ -244,7 +244,7 @@ function BottomNavigation() {
             const isActive = item.path === '/collection'
               ? location.pathname.startsWith('/collection')
               : item.path === '/care'
-                ? location.pathname === '/care' || location.pathname.startsWith('/care/')
+                ? location.pathname === '/care' || location.pathname.startsWith('/care/') || location.pathname.startsWith('/zh/care/')
                 : location.pathname === item.path;
             const Icon = item.icon;
             return (
@@ -859,7 +859,8 @@ function WorkspaceRoutes() {
           <Route path="/settings" element={page(<SettingsPage />, 'settings')} />
           <Route path="/welcome" element={page(<WelcomePage />, 'welcome')} />
           <Route path="/care" element={page(<CareEncyclopedia />, 'care')} />
-          <Route path="/care/:topicId" element={page(<CareEncyclopedia />, 'care-topic')} />
+          <Route path="/care/:topicId" element={page(<CareEncyclopedia />, 'care-topic-en')} />
+          <Route path="/zh/care/:topicId" element={page(<CareEncyclopedia />, 'care-topic-zh')} />
           <Route path="/collection" element={page(<CollectionEntry />, 'collection')} />
           <Route path="/collection/wishlist" element={page(<Collection module="wishlist" />, 'collection-wishlist')} />
           <Route path="/collection/care" element={page(<Collection module="care" />, 'collection-care')} />

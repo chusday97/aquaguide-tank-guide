@@ -19,7 +19,8 @@ import type { PreviewImage } from '../components/common/ImagePreviewModal';
 import type { Aquarium, AquariumFish, Fish as FishType } from '../types';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { getLifeType } from '../modules/species/species.service';
-import i18n from '../i18n';
+import i18n, { setRouteLocale } from '../i18n';
+import { buildCareSeoAlternates, careSeoCatalogKeyFromPathParam, careSeoPublicPath, type SupportedLocale as SeoSupportedLocale } from '../../packages/contracts/src/index';
 import { loadAppStateFromStorage } from '../services/storage/local-app-state';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { ResilientImage } from '../components/common/ResilientImage';
@@ -1523,8 +1524,8 @@ export default function CareEncyclopedia() {
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const navigate = useNavigate();
-  const { topicId: routeTopicId } = useParams<{ topicId?: string }>();
-  const isCanonicalTopicRoute = Boolean(routeTopicId);
+  const { topicId: routeTopicParam } = useParams<{ topicId?: string }>();
+  const isCanonicalTopicRoute = Boolean(routeTopicParam);
 
   const categoryChips: Array<{ id: CareCategoryId; label: string }> = [
     { id: 'all', label: t('care.categories.all') },
@@ -1590,6 +1591,10 @@ export default function CareEncyclopedia() {
     }
   };
   const location = useLocation();
+  const routeTopicId = routeTopicParam ? careSeoCatalogKeyFromPathParam(routeTopicParam) : undefined;
+  const canonicalLocale: SeoSupportedLocale | null = isCanonicalTopicRoute
+    ? location.pathname.startsWith('/zh/care/') ? 'zh-CN' : 'en'
+    : null;
   const { captureContext, navigateToRoute, navigateToSection, restoreContext } = useWorkspaceNavigation();
   const { showToast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
@@ -1704,14 +1709,28 @@ export default function CareEncyclopedia() {
     }, 0);
   };
 
+  const activeRuntimeLocale: SeoSupportedLocale = i18n.language?.startsWith('zh') ? 'zh-CN' : 'en';
+
+  useEffect(() => {
+    if (!canonicalLocale || activeRuntimeLocale === canonicalLocale) return;
+    let cancelled = false;
+    void setRouteLocale(canonicalLocale).then(() => {
+      if (cancelled || !routeTopicId) return;
+      const refreshedTopic = careTopicsData.find(item => item.id === routeTopicId);
+      if (refreshedTopic) setSelectedTopic(refreshedTopic);
+    });
+    return () => { cancelled = true; };
+  }, [activeRuntimeLocale, canonicalLocale, routeTopicId]);
+
   useEffect(() => {
     const topicId = routeTopicId || new URLSearchParams(location.search).get('topic');
     if (!topicId || selectedTopic?.id === topicId) return;
+    if (canonicalLocale && activeRuntimeLocale !== canonicalLocale) return;
     openCareDetail(topicId, undefined, false);
-  }, [location.search, routeTopicId, selectedTopic?.id]);
+  }, [activeRuntimeLocale, canonicalLocale, location.search, routeTopicId, selectedTopic?.id]);
 
   useEffect(() => {
-    if (!isCanonicalTopicRoute || !selectedTopic) return;
+    if (!isCanonicalTopicRoute || !canonicalLocale || !selectedTopic) return;
     const previousTitle = document.title;
     const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     const previousDescription = meta?.content;
@@ -1723,17 +1742,28 @@ export default function CareEncyclopedia() {
     const robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
     const previousRobots = robots?.content;
     const robotsMeta = robots || document.head.appendChild(Object.assign(document.createElement('meta'), { name: 'robots' }));
+    const alternates = buildCareSeoAlternates(selectedTopic.id);
+    const alternateLinks = Object.entries(alternates).map(([hreflang, href]) => {
+      const link = document.createElement('link');
+      link.rel = 'alternate';
+      link.hreflang = hreflang;
+      link.href = `${window.location.origin}${href}`;
+      link.dataset.careSeoAlternate = 'true';
+      document.head.appendChild(link);
+      return link;
+    });
     document.title = `${getDisplayTitle(selectedTopic)} | AquaGuide`;
     descriptionMeta.content = description;
-    canonicalLink.href = `${window.location.origin}/care/${encodeURIComponent(selectedTopic.id)}`;
+    canonicalLink.href = `${window.location.origin}${careSeoPublicPath(selectedTopic.id, canonicalLocale)}`;
     robotsMeta.content = 'noindex,follow';
     return () => {
       document.title = previousTitle;
       if (meta) meta.content = previousDescription || ''; else descriptionMeta.remove();
       if (canonical) canonical.href = previousCanonical || ''; else canonicalLink.remove();
       if (robots) robots.content = previousRobots || ''; else robotsMeta.remove();
+      alternateLinks.forEach(link => link.remove());
     };
-  }, [isCanonicalTopicRoute, selectedTopic]);
+  }, [canonicalLocale, isCanonicalTopicRoute, selectedTopic]);
 
   const closeCareDetail = () => {
     setSelectedTopic(null);
@@ -1926,7 +1956,7 @@ export default function CareEncyclopedia() {
               <button type="button" aria-label={isEn ? 'Back to Care' : '返回养护百科'} onClick={closeCareDetail} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink/65">
                 <ArrowLeft className="h-4 w-4" />
               </button>
-              <div className="min-w-0"><div className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">Care guide</div><div className="truncate text-xs font-bold text-ink/45">/care/{selectedTopic.id}</div></div>
+              <div className="min-w-0"><div className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">Care guide</div><div className="truncate text-xs font-bold text-ink/45">{careSeoPublicPath(selectedTopic.id, canonicalLocale || 'en')}</div></div>
             </div>
             <CareArticleDetail
               key={`canonical-${selectedTopic.id}`}
@@ -1939,7 +1969,7 @@ export default function CareEncyclopedia() {
               onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
               onOpenCareCard={() => setShareTopic(selectedTopic)}
               onPreview={() => openPreview(selectedTopic)}
-              onSelectRelated={(topic) => navigate(`/care/${encodeURIComponent(topic.id)}`)}
+              onSelectRelated={(topic) => navigate(careSeoPublicPath(topic.id, canonicalLocale || 'en'))}
               onOpenCollection={() => navigateToRoute(taskRoutes.collection.care)}
               onRestoreActions={setCheckedActions}
               activeAquarium={activeAquarium}

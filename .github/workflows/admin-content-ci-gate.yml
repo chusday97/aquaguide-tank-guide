@@ -27,6 +27,8 @@ on:
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
       - 'scripts/test-care-seo-projection.ts'
+      - 'scripts/test-care-seo-artifact.ts'
+      - 'scripts/build-care-seo-artifact.ts'
       - 'scripts/verify-care-seo-route.mjs'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
@@ -69,6 +71,8 @@ on:
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
       - 'scripts/test-care-seo-projection.ts'
+      - 'scripts/test-care-seo-artifact.ts'
+      - 'scripts/build-care-seo-artifact.ts'
       - 'scripts/verify-care-seo-route.mjs'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
@@ -125,6 +129,8 @@ jobs:
         run: npm run test:compatibility-regression-gate
       - name: Care SEO downstream projection contract
         run: npm run test:care-seo-projection
+      - name: Care SEO static artifact contract
+        run: npm run test:care-seo-artifact
       - name: Publish Center read-only contract
         run: npm run test:publish-center-contract
       - name: Runtime compatibility authority contract

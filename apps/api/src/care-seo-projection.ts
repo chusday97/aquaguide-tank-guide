@@ -1,4 +1,10 @@
-import type { CareArticleDetailDto, CareSeoProjectionDto, SupportedLocale } from '../../../packages/contracts/src/index';
+import {
+  buildCareSeoAlternates,
+  careSeoPublicPath,
+  type CareArticleDetailDto,
+  type CareSeoProjectionDto,
+  type SupportedLocale,
+} from '../../../packages/contracts/src/index';
 
 const compact = (value: string) => value.replace(/\s+/g, ' ').trim();
 const truncate = (value: string, limit: number) => {
@@ -16,7 +22,8 @@ export const buildCareSeoProjection = (
   const immediateActions = detail.steps
     .filter(step => step.actionKind === 'immediate')
     .map(step => step.actionTitle || step.instruction);
-  const candidateUrl = `/care/${encodeURIComponent(detail.catalogKey)}`;
+  const candidateUrl = careSeoPublicPath(detail.catalogKey, locale);
+  const alternates = buildCareSeoAlternates(detail.catalogKey);
   return {
     sourceCareId: detail.id,
     sourceCareCatalogKey: detail.catalogKey,
@@ -28,11 +35,12 @@ export const buildCareSeoProjection = (
       pathname: candidateUrl,
       topicParam: detail.catalogKey,
       candidateUrl,
+      alternates,
       readiness: 'blocked',
       blockers: [
         'Canonical Care topic route 已建立，但当前默认 noindex，尚未开放 SEO publication。',
         'Care topic 仍由 SPA client render；static SEO artifact / hosted handoff 尚未建立。',
-        'Locale-specific hreflang URL contract 尚未建立。',
+        'Care SEO editorial snapshot / static artifact 尚未建立；当前继续 noindex。',
       ],
     },
     sourceFacts: {

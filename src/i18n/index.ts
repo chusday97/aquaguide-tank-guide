@@ -1831,19 +1831,23 @@ void i18n.use(initReactI18next).init({
 // Run initial localization of global datasets
 applyLocalization(initialLocale);
 
-export const setLocale = async (locale: SupportedLocale) => {
+const applyLocale = async (locale: SupportedLocale, persist: boolean) => {
   await hydratePublishedContentCatalog(locale);
   applyLocalization(locale);
   await i18n.changeLanguage(locale);
   if (typeof document !== 'undefined') {
     document.documentElement.lang = locale;
   }
+  if (!persist) return;
   try {
     window.localStorage.setItem(STORAGE_KEY, locale);
   } catch {
     // Language still changes for the current session when storage is unavailable.
   }
 };
+
+export const setLocale = async (locale: SupportedLocale) => applyLocale(locale, true);
+export const setRouteLocale = async (locale: SupportedLocale) => applyLocale(locale, false);
 
 if (typeof document !== 'undefined') {
   document.documentElement.lang = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';

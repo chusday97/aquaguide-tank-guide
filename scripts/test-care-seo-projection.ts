@@ -34,7 +34,8 @@ const projection = buildCareSeoProjection(
 assert.equal(projection.sourceCareCatalogKey, 'care_demo');
 assert.equal(projection.sourceCareVersion, 7);
 assert.equal(projection.sourceAuthority, 'publication-snapshot');
-assert.equal(projection.route.candidateUrl, '/care/care_demo');
+assert.equal(projection.route.candidateUrl, '/zh/care/care_demo.html');
+assert.deepEqual(projection.route.alternates, { en: '/care/care_demo.html', 'zh-CN': '/zh/care/care_demo.html', 'x-default': '/care/care_demo.html' });
 assert.equal(projection.route.readiness, 'blocked');
 assert.equal(projection.publishReady, false);
 assert.ok(projection.route.blockers.some(item => item.includes('noindex')));
