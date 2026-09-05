@@ -2,8 +2,8 @@
 
 Updated: 2026-09-05
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `57c4ef00571c00191248948af8218f978417c949`
-Latest converged functional baseline: `eff3bba3 feat(content): route published product care runtime`
+Operational HEAD before this sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`
+Latest converged functional baseline: `8104a1b2 feat(content): add care seo static handoff`
 
 ## Product state
 - AquaGuide product includes Species, Aquarium/Care, Compatibility and SEO acquisition flows.
@@ -26,11 +26,11 @@ Latest converged functional baseline: `eff3bba3 feat(content): route published p
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview: complete. P1 Compatibility Admin is complete in code, including exact reviewed runtime authority, server regression, canonical Evidence, human review and versioned publish. First unfinished milestone: P2 Unified Publish Center / release history & audit.
+P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO Published projection + bilingual canonical/hreflang + static Staging artifact foundation are complete in code. First unfinished milestone: Care SEO Editorial Draft/Review + explicit Staging snapshot/handoff and hosted acceptance.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `9dc30c48fb02f565637e09f807e0a56d882c1252`.
+- Feature remote before this docs sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -118,7 +118,7 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Migrations `202609050001_compatibility_reviewed_baseline_reconciliation.sql` and `202609050002_compatibility_versioned_publish.sql` are committed but NOT applied to a live database/Production.
 - Next: P2 read-only Unified Publish Center / release timeline first; do not rewrite Product/Care, SEO or Compatibility publication mechanisms.
 ## 2026-09-05 P2 Publish Center inventory
-- Current first unfinished milestone: read-only Unified Publish Center / release history & audit.
+- Historical note: read-only Unified Publish Center was the next milestone at this checkpoint and is now complete; use `## Current next work` above for continuation.
 - Product/Care + Compatibility release history can be read from Business API/Supabase authority.
 - SEO release history remains Repo Admin authority (`content_revisions`, `activity`, `import_batches`, Staging snapshot) behind its own authenticated API.
 - The first Publish Center must aggregate these sources without changing where writes occur. Per-source unavailable/unauthenticated state should be visible instead of silently dropping history.
@@ -138,7 +138,7 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Event detail, source-readiness cards and filter-safe selection are implemented.
 - Capability matrix now shows each authority's Diff / Impact / Preview / Review / Staging / Production state with explicit locked/not-applicable distinctions.
 - Production remains locked; Product/Care current history is still current-only by design.
-- First unfinished P2 item: cross-domain orchestration design + stronger roles/audit.
+- Historical note: cross-domain coordination + permission/audit visibility were next here and are now complete in Publish Center V1.
 ## 2026-09-05 Publish Center permission + Product/Care audit
 - Current Business `admin` and SEO `repo-admin` permissions are visible as separate authorities; Production locks are explicit.
 - Product/Care full release audit history exists in code as append-only baseline/publish/archive events with actor/version; migration remains unapplied.
@@ -153,3 +153,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
 - Business role split is deliberately deferred until a real multi-operator requirement exists.
 - First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.
+
+## 2026-09-05 Care SEO projection/static handoff closeout
+- Functional HEAD `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`; online light CI `33955509807` PASS, Heavy skipped.
+- Published Care is the only source for downstream SEO projection. Draft Care remains private.
+- SEO route contract: EN `/care/<key>.html`, zh-CN `/zh/care/<key>.html`, x-default EN; client fallback noindex.
+- Static Care SEO staging artifact generation is explicit-input-only and fail-closed; normal builds skip it.
+- Production/index remains locked. Next is editorial Draft/Review + explicit Staging snapshot/hosted acceptance.

@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `57c4ef00571c00191248948af8218f978417c949`
+Remote feature before this docs sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 129
+- feature-only commits: 144
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -112,3 +112,9 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 ## 2026-09-05 Publish Center V1 closeout
 - feature/admin-content-v0 checkpoint: `5a549377732afcc982168c5408a4e360b78c7437`; online lightweight CI PASS (`33951946893`).
 - No main merge/rebase, Production deployment, or live migration.
+
+## 2026-09-05 Care SEO static handoff closeout
+- Functional feature HEAD: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`.
+- Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`; measured divergence main-only 269 / feature-only 144; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Online Admin Content CI `33955509807`: `validate` success, Heavy browser / SEO handoff gate skipped by policy.
+- No merge/rebase main, live DB migration, index/Production unlock or Production mutation.

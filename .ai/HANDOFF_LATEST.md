@@ -4,8 +4,8 @@ Updated: 2026-09-05
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `1e8a482a91655cc5929fdb635b51232c7c3d0541`
-Latest operational checkpoint: `1e8a482a feat(compatibility): converge reviewed runtime authority`
+Current functional HEAD before this docs sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`
+Latest operational checkpoint: `8104a1b2 feat(content): add care seo static handoff`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -23,7 +23,7 @@ AquaGuide is not only a Species-information product and this Admin is not only a
 ## Authority boundaries
 - Product Data: scientific identity, temperature, pH, tank size, temperament, feeding, housing facts, images. Current operator surface: `/admin/product-content` → Species.
 - Care Knowledge: symptoms, actions, avoid/observe/escalate/next-step playbooks. Current operator surface: `/admin/product-content` → Care.
-- Compatibility Rules: behavior profiles, pair rules, evidence, confidence, rule versions. Product runtime exists; mature operator UI does not yet exist.
+- Compatibility Rules: behavior profiles, pair rules, evidence, confidence, rule versions. `/admin/compatibility` implements isolated revisions, real regression, human review and versioned reviewed publish in code; live migrations remain unapplied.
 - SEO Editorial: SEO Title, Meta, H1, Intro, Image Alt, localized display copy, canonical/index policy. Authority: `/admin/seo/`.
 - User Context: aquarium/livestock/reminders/history. This is user data, not CMS content.
 
@@ -83,12 +83,12 @@ P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Pu
 
 P1 — [DONE in code] Compatibility Admin: Profile/Pair Draft, structural Impact, real server engine Regression, canonical Evidence resolution, explicit human Review/Approve, exact reviewed runtime authority and atomic versioned publish are implemented. Live migrations remain unapplied.
 
-P2 — unified Publish Center, stronger permissions/audit, then AI-assisted extraction/conflict detection/Draft generation from approved facts.
+P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE in code] Care SEO Published projection + bilingual canonical/hreflang + static Staging artifact foundation. [NEXT] Care SEO Editorial Draft/Review + explicit Staging snapshot and hosted acceptance. AI assistance comes only after these deterministic controls.
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `57c4ef00571c00191248948af8218f978417c949`.
-- Current measured divergence against live main and local functional HEAD: main-only 269 / feature-only 129 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remote before this docs sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`.
+- Current measured divergence against live main and functional HEAD: main-only 269 / feature-only 144 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -110,7 +110,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Search suggestion presentation now preserves published Product/Care names/categories instead of reapplying legacy English translation maps.
 - User aquarium local state and Compatibility static inputs remain unchanged.
 - Functional acceptance commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
-- Product/Care, SEO P0, P1 Change Impact Preview and P1 Compatibility Admin are closed in code. The first unfinished milestone is P2 Unified Publish Center / release history & audit; do not touch Production.
+- Historical note: at this checkpoint Product/Care, SEO P0, P1 Change Impact Preview and P1 Compatibility Admin were closed and Publish Center was next. Publish Center V1 is now complete; use the current summary above for continuation.
 
 ## 2026-09-04 Change Impact Preview first round
 - Functional commit: `e58c7082 feat(admin): add change impact preview`.
@@ -171,7 +171,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - The same reviewed authority loader drives public `/compatibility-bootstrap`, Admin reviewed baseline and server regression. DB activates only at exact 7/4 coverage; otherwise the engine atomically uses the static reviewed fallback.
 - Submit Review computes a real before/after engine regression over the Product runtime cohort; reports include authority sequence, engine version, Product catalog fingerprint and semantic digest. Approve/Publish recompute freshness.
 - Product/Compatibility/Evidence authority mutations invalidate the global sequence, so concurrent/stale reviews cannot publish. Atomic RPC then updates reviewed baseline + Evidence links + revision history in one transaction.
-- First unfinished milestone: P2 Unified Publish Center / release history & audit. Start with a read-only aggregation of existing release sources; do not create a new competing publication authority.
+- Historical note: Publish Center was the first unfinished milestone at this checkpoint; it is now complete. Continue from the current summary / TASK_QUEUE.
 ## 2026-09-05 P2 Unified Publish Center — architecture inventory
 - P1 Compatibility Admin is closed in code. Functional checkpoint `57c4ef00571c00191248948af8218f978417c949`; online Admin Content CI run `33909317349` passed all light checks including the server Compatibility regression gate, while Heavy was skipped.
 - Docs checkpoint before this sync: `a1242eb04a981f8815f2f1760bb4be833ddd6dc0`.
@@ -199,7 +199,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - New capability matrix distinguishes `available / partial / locked / not_applicable` for Diff → Impact → Preview → Review → Staging → Production.
 - Product/Care has no separate Staging layer; Compatibility live publish remains locked because live migrations are unapplied; SEO Staging is available while Production remains locked.
 - PASS: Publish Center contract, 390/1280 browser flow, API TS, root lint/build, diff hygiene.
-- Next: cross-domain orchestration design + stronger roles/audit; Publish Center must remain a coordination layer, not a fourth authority.
+- Historical note: cross-domain coordination + permission/audit visibility were next here and are now complete in Publish Center V1.
 ## 2026-09-05 P2 Publish Center — permission + Product/Care audit checkpoint
 - `ec5e9a2b feat(admin): expose release permission boundaries` shows current Business `admin` and independent SEO `repo-admin` identities/actions without merging auth systems.
 - `2a1c0594 feat(admin): add product care release audit history` adds repository-only migration `202609050003_content_publication_audit_history.sql`.
@@ -218,3 +218,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
 - Business role split is deliberately deferred until a real multi-operator requirement exists.
 - First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.
+
+## 2026-09-05 Care SEO downstream projection / static handoff closeout
+- Functional chain: `108a4400` projection → `d6d267c3` canonical Care topic route → `8104a1b2` bilingual hreflang/static Staging handoff.
+- SEO projection is derived only from the last Published Care snapshot/version. Draft Care changes cannot leak into SEO input; protected symptoms/steps/avoid/observe/diagnose/next-step/evidence remain Care authority.
+- Deterministic SEO routes reuse the Species locale convention: EN `/care/<catalogKey>.html`, zh-CN `/zh/care/<catalogKey>.html`, `x-default`→EN. Route locale overrides display only and does not overwrite the user's saved language preference.
+- SPA canonical fallback stays `noindex,follow`. Static Staging generation is fail-closed and refuses unpaired locales, source-version drift, unapproved editorial, Production snapshots or a Production staging host.
+- PASS: Care projection/artifact contracts, Product/Care authority contract, Published runtime, API/root TS, production root build, canonical route 390/1280, Care guide/assessment/favorite regressions, Care first-screen. Online Admin Content CI `33955509807` validate PASS; Heavy skipped.
+- No Care SEO Production/index unlock, main merge/rebase, live migration or Production mutation occurred.
+- First unfinished item: Care SEO Editorial Draft/Review persistence + explicit sanitized Staging snapshot/handoff + hosted bilingual acceptance.

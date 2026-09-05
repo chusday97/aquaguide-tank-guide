@@ -8,10 +8,10 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin and P2 Unified Publish Center V1 are complete in code. Publish Center remains a read/coordination layer with explicit-key cross-authority context, permission/capability boundaries and release audit coverage. The immediate priority is **Care SEO as a downstream projection of approved Care Knowledge**, without making SEO a Care authority or unlocking Production.
+P1 Compatibility Admin and P2 Unified Publish Center V1 are complete in code. Care SEO downstream projection, deterministic bilingual canonical routes and a fail-closed static Staging artifact foundation are now also complete in code. The immediate priority is **Care SEO Editorial Draft/Review + explicit Staging acceptance**, while keeping Care Knowledge upstream, Index opt-in gated and Production locked.
 
-## Why this is now P1
-The defined Product/Care authority target is already converged and browser-accepted. The remaining operational risk is release comprehension: a content operator must see which user-facing surfaces change directly, which independent authorities require review, and what the user will see before a decision-critical release is approved.
+## Why this is current
+The upstream Product/Care/Compatibility authorities and Publish Center observability are already converged in code. Care SEO now has a deterministic downstream source/route/artifact foundation; the remaining operational gap is editorial persistence and authenticated Staging acceptance before any indexability can be enabled.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -30,7 +30,8 @@ Species SEO remains Repo-backed and fail-closed:
 5. [DONE] Change Impact Preview: field classification, affected-consumer summary, decision-critical Before/After and Compatibility-result regression checks.
 6. [DONE in code] Compatibility Admin: Profile + Pair Draft, structural Impact, server engine Regression, canonical Evidence resolution, human Approve/Reject, exact reviewed runtime authority and transactional versioned publish are implemented. Migrations remain unapplied to live/Production.
 7. [DONE] P2 Unified Publish Center V1: read-only release/audit aggregation, detail/readiness, capability/permission boundaries, Product/Care audit history fallback and explicit-key cross-authority context.
-8. [NEXT] P2 Care SEO projection: derive SEO Draft inputs from approved Care Knowledge without duplicating or overriding Care authority.
+8. [DONE in code] P2 Care SEO projection foundation: Published-Care-bound projection, protected Care facts, deterministic EN/ZH canonical + hreflang routes, and fail-closed static Staging artifact builder.
+9. [NEXT] Care SEO Editorial Draft/Review + explicit Staging snapshot/handoff and hosted acceptance. Do not unlock Production; indexability remains an explicit reviewed release decision.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -125,3 +126,11 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - PASS: read-only contract, API TS, root lint/build, 390/1280 Publish Center browser flow, existing Admin Hub/Product/Care browser regression, Repo Admin contract.
 - CI policy preserved: read-only contract runs in lightweight CI; Publish Center Playwright runs only in Heavy Gate.
 - Next: read-only release detail/readiness drill-down before any cross-domain write orchestration. Production/main/live DB untouched.
+
+## 2026-09-05 Care SEO projection + static handoff closeout
+- `108a4400` binds Care SEO projection to the last Published Care snapshot/version; Care Draft facts never become SEO source.
+- `d6d267c3` adds standalone Care topic canonical pages while preserving legacy `/care?topic=...` Dialog behavior.
+- `8104a1b2` completes deterministic bilingual SEO routes (`/care/<key>.html`, `/zh/care/<key>.html`, x-default→EN), route-owned locale, canonical/hreflang/noindex SPA fallback, and fail-closed static Staging artifact generation.
+- Static artifact requires bilingual pairing, equal Published Care source version, approved editorial and non-Production staging destination; ordinary builds without an explicit snapshot skip generation.
+- Online light CI `33955509807` PASS; Heavy skipped by policy. Production/main/live DB untouched.
+- Next: persist Care SEO Editorial Draft/Review, produce explicit sanitized Staging snapshot, and run hosted bilingual acceptance before any index unlock.

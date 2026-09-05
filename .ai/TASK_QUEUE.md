@@ -57,7 +57,16 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Expose current Business `admin` vs SEO `repo-admin` permission boundary without merging auth systems.
   - [x] Add append-only Product/Care publication audit history in code with actor/version/publish/archive events; migration remains unapplied and route falls back to current-only.
   - [x] Decision: defer editor/reviewer/publisher role split until a real multi-operator requirement exists; do not expand RLS surface speculatively.
-- [ ] Care SEO as a downstream projection of approved Care Knowledge.
+- [x] Care SEO downstream projection foundation from approved Care Knowledge.
+  - [x] Projection reads only the last Published Care snapshot/version; Draft Care never becomes SEO source.
+  - [x] SEO-editable projection fields are isolated from protected Care facts/evidence.
+  - [x] Deterministic bilingual routes: EN `/care/<catalogKey>.html`, zh-CN `/zh/care/<catalogKey>.html`, `x-default` → EN; SPA fallback stays `noindex,follow`.
+  - [x] Fail-closed static Staging artifact builder requires bilingual pairing, equal Care source version, approved editorial and non-Production destination; no explicit snapshot means normal builds skip generation.
+- [ ] Care SEO Editorial Draft/Review + Staging acceptance.
+  - [ ] Persist downstream SEO Draft/review state without duplicating Care Knowledge authority.
+  - [ ] Produce an explicit sanitized Staging snapshot/handoff from approved Care SEO rows.
+  - [ ] Hosted bilingual acceptance for title/meta/H1/canonical/hreflang/robots/source-version drift before any index unlock.
+  - [ ] Keep Production locked unless separately authorized.
 - [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
 
 ## Stable completed baseline — do not reimplement

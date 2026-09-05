@@ -627,3 +627,14 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
 - Business role split is deliberately deferred until a real multi-operator requirement exists.
 - First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.
+
+## 2026-09-05 16:31 +0800 — Care SEO projection/static handoff closeout
+- Closed Care SEO downstream foundation across three functional checkpoints: `108a4400` Published projection, `d6d267c3` standalone canonical route, `8104a1b2` deterministic bilingual hreflang/static Staging handoff.
+- Published Care snapshot/version is the only SEO source; Draft Care remains private and protected Care facts/evidence are not editable in SEO projection.
+- Canonical routes now follow Species SEO locale convention: EN `/care/<key>.html`, zh-CN `/zh/care/<key>.html`, x-default→EN. Route locale does not overwrite saved user language preference.
+- SPA canonical fallback remains `noindex,follow`; old `/care?topic=...` Dialog links remain compatible.
+- Added explicit-input-only static Care SEO builder. It rejects missing bilingual pairing, source-version drift, unapproved editorial, Production snapshot, or Production host leakage; normal root builds skip it.
+- Final local verification PASS: full lightweight Admin CI command set, Care projection/artifact contracts, Product/Care runtime, API/root TS, root production build, 390/1280 canonical route, Care guide/assessment/favorites and first-screen regressions.
+- Pushed functional commit `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`. Online Admin Content CI run `33955509807`: validate success; Heavy skipped.
+- Live main `64fa58a1`; divergence main-only 269 / feature-only 144; merge base unchanged. No main merge/rebase, live migration, index unlock or Production mutation.
+- Next unfinished item: Care SEO Editorial Draft/Review persistence → explicit sanitized Staging snapshot/handoff → hosted bilingual acceptance.
