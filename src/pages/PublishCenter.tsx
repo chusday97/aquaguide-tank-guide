@@ -88,7 +88,7 @@ export default function PublishCenter() {
           <ReadinessStat label="可读取 authority" value={`${readiness.ready}/3`} detail={readiness.ready === 3 ? '三个发布域都可读取' : '缺失源不会阻塞其它 authority'} />
           <ReadinessStat label="需要独立登录" value={String(readiness.authRequired)} detail="目前仅 SEO 使用独立 Repo Admin cookie" />
           <ReadinessStat label="暂不可用" value={String(readiness.unavailable)} detail="不可用源保持 fail-isolated，不影响其它时间线" />
-          <ReadinessStat label="历史覆盖缺口" value={String(readiness.currentOnly)} detail="Product/Care 当前只有 current Published snapshot" />
+          <ReadinessStat label="历史覆盖缺口" value={String(readiness.currentOnly)} detail={readiness.currentOnly ? "Product/Care 当前只有 current Published snapshot" : "Product/Care append-only publication history 可读取"} />
         </section>
 
         <ReleaseCapabilityMatrix capabilities={feed.capabilities} sources={sourceByAuthority} />

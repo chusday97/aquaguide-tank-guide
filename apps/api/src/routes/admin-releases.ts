@@ -5,6 +5,19 @@ import { getAdminSupabase } from '../supabase';
 import { throwDatabaseError } from '../data-utils';
 
 const eventTime = (row: Record<string, any>) => row.published_at || row.reviewed_at || row.updated_at || row.created_at || new Date(0).toISOString();
+
+const publicationAuditUnavailable = (error: { code?: string; message?: string } | null) => (
+  ['42P01', 'PGRST205'].includes(String(error?.code || ''))
+  || /content_publication_events/i.test(String(error?.message || ''))
+    && /not found|does not exist|schema cache/i.test(String(error?.message || ''))
+);
+const publicationEventTitle = (resourceType: string, eventType: string) => {
+  const domain = resourceType === 'care' ? 'Care' : 'Product';
+  if (eventType === 'archived') return `${domain} 已归档`;
+  if (eventType === 'baseline') return `${domain} 历史基线`;
+  return `${domain} 发布版本`;
+};
+
 const compatibilityTitle = (status: string, kind: 'Profile' | 'Pair Rule') => {
   if (status === 'published') return `${kind} reviewed version 已发布`;
   if (status === 'approved') return `${kind} revision 已批准`;
@@ -51,7 +64,10 @@ export const adminReleasesRouter = Router();
 adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
   const limit = Math.max(20, Math.min(200, Number(request.query.limit) || 100));
   const client = getAdminSupabase();
-  const [publicationResult, profileResult, pairResult] = await Promise.all([
+  const [publicationAuditResult, publicationResult, profileResult, pairResult] = await Promise.all([
+    client.from('content_publication_events')
+      .select('id,resource_type,resource_id,catalog_key,event_type,source_version,actor_id,occurred_at,metadata')
+      .order('occurred_at', { ascending: false }).limit(limit),
     client.from('content_publications')
       .select('id,resource_type,resource_id,catalog_key,source_version,published_at,updated_at')
       .order('published_at', { ascending: false }).limit(limit),
@@ -62,7 +78,13 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
       .select('id,species_a_id,species_b_id,revision_number,base_rule_version,status,version,created_at,updated_at,reviewed_at,published_at,reviewed_by')
       .order('updated_at', { ascending: false }).limit(limit),
   ]);
-  if (publicationResult.error) throwDatabaseError(publicationResult.error, 'Product/Care 发布记录暂时无法加载。');
+  if (publicationResult.error) throwDatabaseError(publicationResult.error, 'Product/Care 当前发布状态暂时无法加载。');
+  const publicationAuditReady = !publicationAuditResult.error;
+  const publicationAuditFallbackReason = publicationAuditResult.error
+    ? publicationAuditUnavailable(publicationAuditResult.error)
+      ? 'audit_migration_unapplied'
+      : 'audit_history_unavailable'
+    : undefined;
   if (profileResult.error) throwDatabaseError(profileResult.error, 'Compatibility Profile revision 暂时无法加载。');
   if (pairResult.error) throwDatabaseError(pairResult.error, 'Compatibility Pair Rule revision 暂时无法加载。');
 
@@ -76,17 +98,32 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
   if (speciesResult.error) throwDatabaseError(speciesResult.error, 'Compatibility 物种身份暂时无法解析。');
   const speciesById = new Map((speciesResult.data || []).map(row => [row.id, row]));
 
-  const publicationEvents: ReleaseEventDto[] = (publicationResult.data || []).map(row => ({
-    id: `product-care:${row.id}`,
-    authority: 'product_care',
-    domain: row.resource_type === 'care' ? 'care' : 'product',
-    eventType: 'published_snapshot', status: 'published',
-    title: row.resource_type === 'care' ? 'Care 发布版本' : 'Product 发布版本',
-    detail: `${row.catalog_key} · source v${row.source_version}`,
-    resourceKey: row.catalog_key, version: row.source_version,
-    occurredAt: row.published_at, sourceRef: `content_publications:${row.id}`,
-    metadata: { resourceId: row.resource_id, historyCoverage: 'current_only' },
-  }));
+  const publicationEvents: ReleaseEventDto[] = publicationAuditReady
+    ? (publicationAuditResult.data || []).map(row => ({
+        id: `product-care-audit:${row.id}`,
+        authority: 'product_care' as const,
+        domain: row.resource_type === 'care' ? 'care' as const : 'product' as const,
+        eventType: `publication_${row.event_type}`,
+        status: row.event_type,
+        title: publicationEventTitle(row.resource_type, row.event_type),
+        detail: `${row.catalog_key} · source v${row.source_version}`,
+        resourceKey: row.catalog_key, version: row.source_version,
+        actor: row.actor_id || undefined,
+        occurredAt: row.occurred_at,
+        sourceRef: `content_publication_events:${row.id}`,
+        metadata: { resourceId: row.resource_id, historyCoverage: 'revision_history', ...(row.metadata || {}) },
+      }))
+    : (publicationResult.data || []).map(row => ({
+        id: `product-care:${row.id}`,
+        authority: 'product_care' as const,
+        domain: row.resource_type === 'care' ? 'care' as const : 'product' as const,
+        eventType: 'published_snapshot', status: 'published',
+        title: row.resource_type === 'care' ? 'Care 发布版本' : 'Product 发布版本',
+        detail: `${row.catalog_key} · source v${row.source_version}`,
+        resourceKey: row.catalog_key, version: row.source_version,
+        occurredAt: row.published_at, sourceRef: `content_publications:${row.id}`,
+        metadata: { resourceId: row.resource_id, historyCoverage: 'current_only', fallbackReason: publicationAuditFallbackReason },
+      }));
   const profileEvents: ReleaseEventDto[] = (profileResult.data || []).map(row => {
     const species = speciesById.get(row.species_id);
     return {
@@ -124,9 +161,11 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
     events,
     sources: [
       {
-        authority: 'product_care', availability: 'ready', coverage: 'current_only',
+        authority: 'product_care', availability: 'ready', coverage: publicationAuditReady ? 'revision_history' : 'current_only',
         label: 'Product / Care publication',
-        detail: 'content_publications 只保留每个资源当前 Published snapshot；这里不伪装成完整历史。',
+        detail: publicationAuditReady
+          ? 'Append-only publication audit history：baseline / publish / archive，包含版本、时间与可用 actor。'
+          : `content_publications 当前版本回退；完整 audit history ${publicationAuditFallbackReason === 'audit_migration_unapplied' ? 'migration 尚未应用' : '暂不可读取'}。`,
       },
       {
         authority: 'compatibility', availability: 'ready', coverage: 'revision_history',

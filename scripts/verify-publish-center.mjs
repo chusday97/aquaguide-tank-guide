@@ -60,7 +60,18 @@ try {
     const page = await browser.newPage({ viewportSize: viewport });
     await page.addInitScript(({ key, session }) => localStorage.setItem(key, JSON.stringify(session)), { key: authStorageKey, session: fakeSession });
     let seoLoggedIn = false;
-    await page.route('**/api/v1/admin/releases**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: businessFeed, requestId: 'release-feed' }) }));
+    let productAuditHistoryReady = false;
+    await page.route('**/api/v1/admin/releases**', route => {
+      const data = productAuditHistoryReady ? {
+        ...businessFeed,
+        events: [
+          { id: 'pc-archive-1', authority: 'product_care', domain: 'product', eventType: 'publication_archived', status: 'archived', title: 'Product 已归档', detail: 'sp_0436 · source v5', resourceKey: 'sp_0436', version: 5, actor: '8b3f71bd-a1be-4a18-b7f8-5478cf55dc61', occurredAt: '2026-09-05T06:30:00.000Z', sourceRef: 'content_publication_events:audit-1' },
+          ...businessFeed.events,
+        ],
+        sources: businessFeed.sources.map(source => source.authority === 'product_care' ? { ...source, coverage: 'revision_history', detail: 'append-only history' } : source),
+      } : businessFeed;
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data, requestId: 'release-feed' }) });
+    });
     await page.route('**/api/admin-content/session', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ configured: true, session: seoLoggedIn ? { user: { email: 'admin@aquaguide.local' } } : null }) }));
     await page.route('**/api/admin-content/query', async route => {
       const operation = route.request().postDataJSON();
@@ -117,6 +128,14 @@ try {
     assert.match(refreshedTimeline, /SEO Staging batch 已发布/);
     await timeline.getByRole('button', { name: /SEO revision 已记录/ }).click();
     assert.match(await detail.innerText(), /SEO revision 已记录[\s\S]*Activity \/ Revision 历史[\s\S]*content_revisions:rev-1[\s\S]*zh-CN/);
+
+    productAuditHistoryReady = true;
+    await page.getByRole('button', { name: '刷新' }).click();
+    await timeline.getByRole('button', { name: /Product \/ Care archived Product 已归档/ }).waitFor();
+    assert.match(await sources.innerText(), /Product \/ Care[\s\S]*可读取[\s\S]*Revision 历史/);
+    assert.match(await readiness.innerText(), /历史覆盖缺口[\s\S]*0[\s\S]*append-only publication history 可读取/i);
+    await timeline.getByRole('button', { name: /Product \/ Care archived Product 已归档/ }).click();
+    assert.match(await detail.innerText(), /Product 已归档[\s\S]*sp_0436[\s\S]*content_publication_events:audit-1/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(overflow, false, `${viewport.width}px Publish Center should not overflow horizontally`);
     await page.close();

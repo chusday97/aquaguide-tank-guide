@@ -10,7 +10,7 @@ import {
   speciesAdminUpdateSchema,
   uuidSchema,
 } from '../../../../packages/contracts/src/index';
-import { requireAdmin, requireAuth } from '../auth';
+import { requireAdmin, requireAuth, type AuthenticatedRequest } from '../auth';
 import {
   beginIdempotentWrite,
   camelize,
@@ -27,6 +27,12 @@ import { getAdminSupabase } from '../supabase';
 import { adminFeedbackRouter } from './feedback';
 import { adminCompatibilityRouter } from './admin-compatibility';
 import { adminReleasesRouter } from './admin-releases';
+
+const auditedPublicationRpcUnavailable = (error: { code?: string; message?: string } | null) => (
+  ['42883', 'PGRST202'].includes(String(error?.code || ''))
+  || /publish_content_snapshot_audited|archive_content_snapshot_audited/i.test(String(error?.message || ''))
+    && /not found|does not exist|schema cache|function/i.test(String(error?.message || ''))
+);
 
 const supportedMimeTypes = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const originalExtension: Record<string, string> = {
@@ -212,24 +218,49 @@ const registerStatusRoute = (action: 'publish' | 'archive') => {
       if (source.version !== parsed.data.version) {
         throw new ApiError(409, 'VERSION_CONFLICT', '内容已被更新，请刷新后再发布。');
       }
-      const { error: publishError } = await client.rpc('publish_content_snapshot', {
+      const actorId = (request as AuthenticatedRequest).authUser.id;
+      const { error: auditedPublishError } = await client.rpc('publish_content_snapshot_audited', {
         p_resource_type: resourceType,
         p_resource_id: id,
         p_expected_version: parsed.data.version,
         p_snapshot: snapshot,
+        p_actor_id: actorId,
       });
-      if (publishError) throwDatabaseError(publishError, '内容发布没有完成。');
+      if (auditedPublishError && !auditedPublicationRpcUnavailable(auditedPublishError)) {
+        throwDatabaseError(auditedPublishError, '内容发布没有完成。');
+      }
+      if (auditedPublishError) {
+        const { error: publishError } = await client.rpc('publish_content_snapshot', {
+          p_resource_type: resourceType,
+          p_resource_id: id,
+          p_expected_version: parsed.data.version,
+          p_snapshot: snapshot,
+        });
+        if (publishError) throwDatabaseError(publishError, '内容发布没有完成。');
+      }
     } else {
       const { data: current, error: currentError } = await client.from(table).select('id,version').eq('id', id).maybeSingle();
       if (currentError) throwDatabaseError(currentError, '暂时无法核对内容状态。');
       if (!current) throw new ApiError(404, 'NOT_FOUND', '没有找到需要归档的内容。');
       if (current.version !== parsed.data.version) throw new ApiError(409, 'VERSION_CONFLICT', '内容已被更新，请刷新后再归档。');
-      const { error: archiveError } = await client.rpc('archive_content_snapshot', {
+      const actorId = (request as AuthenticatedRequest).authUser.id;
+      const { error: auditedArchiveError } = await client.rpc('archive_content_snapshot_audited', {
         p_resource_type: resourceType,
         p_resource_id: id,
         p_expected_version: parsed.data.version,
+        p_actor_id: actorId,
       });
-      if (archiveError) throwDatabaseError(archiveError, '内容归档没有完成。');
+      if (auditedArchiveError && !auditedPublicationRpcUnavailable(auditedArchiveError)) {
+        throwDatabaseError(auditedArchiveError, '内容归档没有完成。');
+      }
+      if (auditedArchiveError) {
+        const { error: archiveError } = await client.rpc('archive_content_snapshot', {
+          p_resource_type: resourceType,
+          p_resource_id: id,
+          p_expected_version: parsed.data.version,
+        });
+        if (archiveError) throwDatabaseError(archiveError, '内容归档没有完成。');
+      }
     }
 
     const { data, error } = await client.from(table).select('*').eq('id', id).maybeSingle();
