@@ -940,11 +940,12 @@ export default function App() {
     return {
       tone: 'edit',
       title: appLocale === 'en' ? 'Continue the selected SEO page' : '继续完善当前 SEO 页面',
-      detail: appLocale === 'en' ? 'Edit the middle column. The right side is the live Preview; advanced tools stay below the editor.' : '只需要编辑中间区域；右侧就是实时 Preview。批量、历史等高级工具都放在编辑器下方。',
-      cta: appLocale === 'en' ? 'Show workflow' : '查看完整流程',
-      run: () => setActiveTool('workflow'),
+      detail: appLocale === 'en' ? 'Edit the page below. Open Preview only when you need to compare the rendered result.' : '继续编辑下方页面；需要对照效果时再打开“效果预览”。',
+      cta: appLocale === 'en' ? 'Continue editing' : '继续编辑',
+      run: () => document.querySelector('.studio-editor-area')?.scrollTo({ top: 0, behavior: 'smooth' }),
     };
   })();
+  const currentWorkflowStage = ({ issue: 1, edit: 2, review: 3, ready: 4 })[primaryWorkflowAction.tone] || 2;
 
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
   const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
@@ -1183,36 +1184,29 @@ export default function App() {
         </div>
       ) : null}
 
-      <section className="workflow-command-center" aria-label={appLocale === 'en' ? 'SEO publishing workflow' : 'SEO 发布流程'}>
-        <div className="workflow-command-heading">
-          <div>
-            <small>{appLocale === 'en' ? 'SEO OPERATIONS' : 'SEO 工作台'}</small>
-            <h1>{appLocale === 'en' ? 'Publishing workflow' : '发布流程'}</h1>
-            <p>{appLocale === 'en' ? 'Follow the four stages from left to right. The highlighted stage is what needs attention now.' : '只按从左到右的 4 个阶段处理；高亮项就是现在需要关注的步骤。'}</p>
-          </div>
-          <span className="workflow-locale-chip">{contentLocale === 'en' ? 'English' : '中文'}</span>
+      <section className="workflow-command-center" aria-label={appLocale === 'en' ? 'SEO publishing workflow' : 'SEO 发布流程'} data-current-stage={currentWorkflowStage}>
+        <div className="workflow-progress-summary" aria-label={appLocale === 'en' ? `Current stage ${currentWorkflowStage} of 4` : `当前第 ${currentWorkflowStage} 阶段，共 4 阶段`}>
+          <span>{appLocale === 'en' ? 'PUBLISH FLOW' : '发布流程'}</span>
+          <strong>{currentWorkflowStage}<small>/4</small></strong>
         </div>
-        <div className="workflow-stage-grid">
-          <button type="button" aria-pressed={workflowFilter?.key === 'data:pending'} className={`workflow-stage-card ${workflowOverview.dataReview.pending > 0 ? 'attention issue' : 'done'} ${workflowFilter?.key === 'data:pending' ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
-            <b>1</b><span><strong>{appLocale === 'en' ? 'Data review' : '数据复核'}</strong><small>{appLocale === 'en' ? 'Resolve duplicate / source issues' : '判断重复与源数据问题'}</small></span><em>{workflowOverview.dataReview.pending}</em>
+        <nav className="workflow-stage-grid" aria-label={appLocale === 'en' ? 'Publishing stages' : '发布阶段'}>
+          <button type="button" aria-current={currentWorkflowStage === 1 ? 'step' : undefined} aria-pressed={workflowFilter?.key === 'data:pending'} className={`workflow-stage-card ${currentWorkflowStage > 1 ? 'is-complete' : currentWorkflowStage === 1 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === 'data:pending' ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
+            <b>{currentWorkflowStage > 1 ? '✓' : '1'}</b><span><strong>{appLocale === 'en' ? 'Data review' : '数据复核'}</strong></span><em>{workflowOverview.dataReview.pending}</em>
           </button>
-          <button type="button" aria-pressed={workflowFilter?.key === `${contentLocale}:blocked`} className={`workflow-stage-card ${workflowOverview.dataReview.pending === 0 && (workflowOverview.locales[contentLocale]?.blocked || 0) > 0 ? 'attention' : ''} ${workflowFilter?.key === `${contentLocale}:blocked` ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:blocked`, type: 'readiness', locale: contentLocale, status: 'blocked', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Editing' : '内容编辑'}` })}>
-            <b>2</b><span><strong>{appLocale === 'en' ? 'Edit content' : '内容编辑'}</strong><small>{appLocale === 'en' ? 'Complete SEO copy and page fields' : '补齐 SEO 文案与页面字段'}</small></span><em>{workflowOverview.locales[contentLocale]?.blocked || 0}</em>
+          <button type="button" aria-current={currentWorkflowStage === 2 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:blocked`} className={`workflow-stage-card ${currentWorkflowStage > 2 ? 'is-complete' : currentWorkflowStage === 2 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:blocked` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:blocked`, type: 'readiness', locale: contentLocale, status: 'blocked', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Editing' : '内容编辑'}` })}>
+            <b>{currentWorkflowStage > 2 ? '✓' : '2'}</b><span><strong>{appLocale === 'en' ? 'Edit content' : '内容编辑'}</strong></span><em>{workflowOverview.locales[contentLocale]?.blocked || 0}</em>
           </button>
-          <button type="button" aria-pressed={workflowFilter?.key === `${contentLocale}:ready_for_review`} className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.ready_for_review || 0) > 0 ? 'attention review' : ''} ${workflowFilter?.key === `${contentLocale}:ready_for_review` ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>
-            <b>3</b><span><strong>{appLocale === 'en' ? 'Human review' : '人工审核'}</strong><small>{appLocale === 'en' ? 'Approve or return completed pages' : '批准或退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale]?.ready_for_review || 0}</em>
+          <button type="button" aria-current={currentWorkflowStage === 3 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:ready_for_review`} className={`workflow-stage-card ${currentWorkflowStage > 3 ? 'is-complete' : currentWorkflowStage === 3 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:ready_for_review` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>
+            <b>{currentWorkflowStage > 3 ? '✓' : '3'}</b><span><strong>{appLocale === 'en' ? 'Human review' : '人工审核'}</strong></span><em>{workflowOverview.locales[contentLocale]?.ready_for_review || 0}</em>
           </button>
-          <button type="button" aria-pressed={workflowFilter?.key === `${contentLocale}:publish_ready`} className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.publish_ready || 0) > 0 ? 'attention ready' : ''} ${workflowFilter?.key === `${contentLocale}:publish_ready` ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>
-            <b>4</b><span><strong>Staging</strong><small>{appLocale === 'en' ? 'Publish a controlled Preview' : '发布受控 Preview'}</small></span><em>{workflowOverview.locales[contentLocale]?.publish_ready || 0}</em>
+          <button type="button" aria-current={currentWorkflowStage === 4 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:publish_ready`} className={`workflow-stage-card ${currentWorkflowStage === 4 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:publish_ready` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>
+            <b>4</b><span><strong>Staging</strong></span><em>{workflowOverview.locales[contentLocale]?.publish_ready || 0}</em>
           </button>
-        </div>
-        <div className={`primary-workflow-guide ${primaryWorkflowAction.tone}`} aria-label={appLocale === 'en' ? 'Current next action' : '当前下一步'}>
-          <div className="primary-workflow-guide-copy">
-            <small>{appLocale === 'en' ? 'DO THIS NOW' : '现在只做这件事'}</small>
-            <strong>{primaryWorkflowAction.title}</strong>
-            <span>{primaryWorkflowAction.detail}</span>
-          </div>
-          <button type="button" className="primary-workflow-guide-button" onClick={primaryWorkflowAction.run}>{primaryWorkflowAction.cta}</button>
+        </nav>
+        <div className="workflow-current-action" aria-label={appLocale === 'en' ? 'Current workflow action' : '当前流程操作'}>
+          <span>{appLocale === 'en' ? `CURRENT · ${currentWorkflowStage}/4` : `当前 · ${currentWorkflowStage}/4`}</span>
+          <strong>{primaryWorkflowAction.title}</strong>
+          <button type="button" onClick={primaryWorkflowAction.run}>{primaryWorkflowAction.cta}</button>
         </div>
       </section>
 

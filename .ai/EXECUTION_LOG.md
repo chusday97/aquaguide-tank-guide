@@ -744,3 +744,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - User rejected expandable workflow chrome. Removed `workspaceFocusMode`, `展开流程 / 专注编辑`, and editor/Preview-triggered density changes.
 - Workflow is fixed at 46px desktop / 64px mobile; stage type is 9px / 8px while editor page titles are 24px / 22px and section titles 18px / 17px.
 - 1440/390 browser checks: workflow height unchanged before/after editor scroll; zero horizontal overflow. Admin contract and root build PASS.
+
+## 2026-09-06 — Publishing Progress Navigation separation
+- User rejected the compact workflow as still reading like ordinary text/boxes and blending into the editor.
+- Rebuilt the top strip as dedicated Progress Navigation: current stage / 4, four clickable stage buttons, completed/current/upcoming semantics and a current-action CTA.
+- System progress uses `aria-current=step`; clicking another queue only changes `aria-pressed` / outlined filter-selection state, so browsing a queue cannot fake workflow progress.
+- Runtime browser checks at 1440×900 and 390×844: current stage is solid Green, workflow surface is neutral with a 2px Graphite divider, editor canvas is White, four stages remain visible and horizontal overflow is 0.

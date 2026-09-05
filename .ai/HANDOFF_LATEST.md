@@ -299,7 +299,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - `当前物种页面` vs `基础模板` now uses explicit plain-language context and impact copy; the ambiguous `页 / 模` badge is removed. Browser checks at 1440/390 verify 16×16 controls, left-aligned text and zero overflow. Production/main/index/live DB remain untouched.
 
 ## 2026-09-05 — SEO Admin workspace focus + palette checkpoint
-- Removed automatic Workspace Focus switching. The publishing workflow is now permanently compact, fixed-height top chrome with no `展开流程 / 专注编辑` control.
+- Removed automatic Workspace Focus switching. Publishing is now a permanent compact Progress Navigation bar: current stage / 4, four stage buttons, completion/current/upcoming semantics and one current-action CTA. It has a distinct neutral navigation surface and strong divider from the white editor canvas; system progress and operator filter selection are separate.
 - Measured at 1440×900 and 1366×768: fixed chrome drops from ~308px to ~112px and workspace gains 196px. At 390×844 workspace grows from 400px to 712px; focused editor sticky controls shrink from ~140px to 46px.
 - Historical checkpoint: green-heavy chrome was first neutralized with blue; superseded by the current single Green interaction accent.
 - Admin contract and root production build pass; zero horizontal overflow in measured desktop/mobile focus states.

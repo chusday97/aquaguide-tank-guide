@@ -2511,3 +2511,137 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
   .admin-shell.workflow-compact .workflow-locale-chip { display:none !important; }
   .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size:8px !important; }
 }
+
+/* 2026-09-06 progress navigation: visually distinct from the editor canvas. */
+.admin-shell.workflow-compact .workflow-command-center {
+  min-height:58px;
+  display:grid;
+  grid-template-columns:92px minmax(420px,1fr) minmax(220px,auto);
+  align-items:center;
+  gap:14px;
+  padding:7px 14px;
+  border-top:1px solid var(--cms-border);
+  border-bottom:2px solid var(--cms-ink);
+  background:var(--cms-panel) !important;
+  box-shadow:0 5px 14px rgba(32,36,44,.07);
+  position:relative;
+  z-index:12;
+}
+.workflow-progress-summary {
+  min-height:40px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-rows:auto auto;
+  align-items:center;
+  column-gap:7px;
+  padding:6px 9px;
+  border:1px solid var(--cms-border-strong);
+  border-radius:9px;
+  background:var(--cms-ink);
+  color:var(--cms-paper);
+}
+.workflow-progress-summary > span { grid-column:1 / -1; font-size:7px; font-weight:760; letter-spacing:.09em; opacity:.72; }
+.workflow-progress-summary > strong { grid-column:1 / -1; font-size:16px; line-height:1; font-weight:800; }
+.workflow-progress-summary > strong small { margin-left:2px; font-size:9px; font-weight:650; opacity:.68; }
+.admin-shell.workflow-compact .workflow-stage-grid {
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin:0;
+}
+.admin-shell.workflow-compact .workflow-stage-grid::before {
+  content:'';
+  position:absolute;
+  left:6%; right:6%; top:50%;
+  height:2px;
+  transform:translateY(-50%);
+  background:var(--cms-border-strong);
+  z-index:0;
+}
+.admin-shell.workflow-compact .workflow-stage-card {
+  position:relative;
+  z-index:1;
+  min-height:38px;
+  display:grid;
+  grid-template-columns:22px minmax(0,1fr) auto;
+  align-items:center;
+  gap:6px;
+  padding:5px 8px;
+  border:1px solid var(--cms-border-strong) !important;
+  border-radius:9px;
+  background:var(--cms-paper) !important;
+  color:var(--cms-ink) !important;
+  box-shadow:0 1px 2px rgba(32,36,44,.05) !important;
+  cursor:pointer;
+}
+.admin-shell.workflow-compact .workflow-stage-card > b {
+  width:22px; height:22px; display:grid; place-items:center;
+  border-radius:7px; background:var(--cms-panel) !important; color:var(--cms-muted) !important;
+  font-size:8px !important; font-weight:780 !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card > span strong {
+  display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-size:9px !important; font-weight:690 !important; color:var(--cms-ink) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card > em {
+  min-width:20px; height:20px; display:grid; place-items:center;
+  border-radius:6px; background:var(--cms-panel) !important; color:var(--cms-muted) !important;
+  font-size:7px; font-style:normal; font-weight:720;
+}
+.admin-shell.workflow-compact .workflow-stage-card.is-complete { border-style:dashed !important; }
+.admin-shell.workflow-compact .workflow-stage-card.is-complete > b { background:var(--cms-ink) !important; color:var(--cms-paper) !important; }
+.admin-shell.workflow-compact .workflow-stage-card.is-current {
+  border:2px solid var(--cms-accent) !important;
+  background:var(--cms-accent) !important;
+  color:var(--cms-paper) !important;
+  box-shadow:0 3px 10px rgba(47,111,78,.16) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.is-current > b,
+.admin-shell.workflow-compact .workflow-stage-card.is-current > em {
+  background:rgba(255,255,255,.18) !important; color:var(--cms-paper) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.is-current > span strong { color:var(--cms-paper) !important; font-weight:780 !important; }
+.admin-shell.workflow-compact .workflow-stage-card.filter-selected:not(.is-current) {
+  border-color:var(--cms-accent) !important;
+  box-shadow:inset 0 -3px 0 var(--cms-accent) !important;
+}
+.workflow-current-action {
+  min-width:0;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding-left:12px;
+  border-left:1px solid var(--cms-border-strong);
+}
+.workflow-current-action > span { font-size:7px; font-weight:800; letter-spacing:.08em; color:var(--cms-muted); }
+.workflow-current-action > strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; font-weight:680; color:var(--cms-ink); }
+.workflow-current-action > button {
+  min-height:30px; padding:0 10px; border:1px solid var(--cms-accent); border-radius:7px;
+  background:var(--cms-accent); color:var(--cms-paper); font-size:8px; font-weight:740; white-space:nowrap;
+}
+/* Editor starts as a separate white working canvas below the progress navigation. */
+.workspace.studio-workspace { border-top:0; background:var(--cms-paper) !important; }
+.studio-editor-area { background:var(--cms-paper) !important; }
+@media (max-width:1180px) {
+  .admin-shell.workflow-compact .workflow-command-center { grid-template-columns:80px minmax(0,1fr); gap:9px; }
+  .workflow-current-action { grid-column:1 / -1; padding:5px 0 0; border-left:0; border-top:1px solid var(--cms-border); }
+}
+@media (max-width:760px) {
+  .admin-shell.workflow-compact .workflow-command-center {
+    min-height:78px;
+    grid-template-columns:1fr;
+    gap:5px;
+    padding:6px 8px;
+  }
+  .workflow-progress-summary { display:none; }
+  .admin-shell.workflow-compact .workflow-stage-grid { gap:4px; }
+  .admin-shell.workflow-compact .workflow-stage-card { min-height:32px; grid-template-columns:18px minmax(0,1fr); gap:4px; padding:3px 4px; }
+  .admin-shell.workflow-compact .workflow-stage-card > b { width:18px; height:18px; font-size:7px !important; }
+  .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size:8px !important; }
+  .admin-shell.workflow-compact .workflow-stage-card > em { display:none; }
+  .workflow-current-action { min-height:28px; grid-template-columns:auto minmax(0,1fr) auto; padding-top:4px; }
+  .workflow-current-action > strong { font-size:8px; }
+  .workflow-current-action > button { min-height:25px; padding:0 7px; font-size:7px; }
+}

@@ -183,4 +183,4 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Working branch remains `feature/admin-content-v0`; live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`.
 - Current checkpoint is Species SEO Admin-only: strict Graphite / White / Green runtime system + typography hierarchy + on-demand Preview drawer + scope-label simplification; no main reconciliation changes.
 - Local computed-style acceptance covers desktop/mobile initial and six advanced tools with zero extra saturated hues / zero horizontal overflow. Admin contract and root build PASS.
-- Current SEO Admin checkpoint removes workflow expand/focus dual-mode behavior; branch remains `feature/admin-content-v0`, main untouched.
+- Current SEO Admin checkpoint upgrades the permanent strip into dedicated publishing Progress Navigation (current / 4 + four stage buttons + current-action CTA) and keeps system progress distinct from operator filter selection; branch remains `feature/admin-content-v0`, main untouched.
