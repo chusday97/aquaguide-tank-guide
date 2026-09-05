@@ -895,6 +895,47 @@ export default function App() {
     if (firstGroup?.members?.[0]?.id) { setSelectedId(firstGroup.members[0].id); setEditorScope('variant'); }
   };
 
+  const primaryWorkflowAction = (() => {
+    const localeOverview = workflowOverview.locales?.[contentLocale] || {};
+    if ((workflowOverview.dataReview?.pending || 0) > 0) {
+      const count = workflowOverview.dataReview.pending;
+      return {
+        tone: 'issue',
+        title: appLocale === 'en' ? `Resolve ${count} source-data issue${count === 1 ? '' : 's'} first` : `先处理 ${count} 个数据问题`,
+        detail: appLocale === 'en' ? 'Duplicate/category decisions block editorial approval. Finish these before editing more pages.' : '重复记录或分类问题会阻塞后续审核。先完成这里，再继续改 SEO 内容。',
+        cta: appLocale === 'en' ? 'Start data review' : '开始处理',
+        run: () => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' }),
+      };
+    }
+    if ((localeOverview.ready_for_review || 0) > 0) {
+      const count = localeOverview.ready_for_review;
+      return {
+        tone: 'review',
+        title: appLocale === 'en' ? `${count} page${count === 1 ? '' : 's'} waiting for review` : `${count} 个页面等你审核`,
+        detail: appLocale === 'en' ? 'Content is complete. Review the page and either approve Preview or return it to editing.' : '内容已经补齐。现在只需要人工检查并“批准预览”或退回编辑。',
+        cta: appLocale === 'en' ? 'Review next page' : '审核下一页',
+        run: () => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` }),
+      };
+    }
+    if ((localeOverview.publish_ready || 0) > 0) {
+      const count = localeOverview.publish_ready;
+      return {
+        tone: 'ready',
+        title: appLocale === 'en' ? `${count} page${count === 1 ? '' : 's'} ready for Staging Preview` : `${count} 个页面可以进入 Staging`,
+        detail: appLocale === 'en' ? 'These pages passed data, editorial and bilingual checks. Production is still locked.' : '这些页面已通过数据、内容和双语检查；Production 仍然锁定。',
+        cta: appLocale === 'en' ? 'View Preview-ready pages' : '查看可预览页面',
+        run: () => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` }),
+      };
+    }
+    return {
+      tone: 'edit',
+      title: appLocale === 'en' ? 'Continue the selected SEO page' : '继续完善当前 SEO 页面',
+      detail: appLocale === 'en' ? 'Edit the middle column. The right side is the live Preview; advanced tools stay below the editor.' : '只需要编辑中间区域；右侧就是实时 Preview。批量、历史等高级工具都放在编辑器下方。',
+      cta: appLocale === 'en' ? 'Show workflow' : '查看完整流程',
+      run: () => setActiveTool('workflow'),
+    };
+  })();
+
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
   const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
   const batchGroupKey = batchGroup ? groupSeoRowKey(batchGroup.group_key, contentLocale) : null;
@@ -1107,15 +1148,6 @@ export default function App() {
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
           <span>{isReadOnlyDemoMode ? t('top.reviewMode') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
-          <button type="button" className={`topbar-bulk-trigger ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
-            <span>{appLocale === 'en' ? 'Bulk review' : '批量审核'}</span>{pendingDuplicateReviewCount > 0 ? <b>{pendingDuplicateReviewCount}</b> : null}
-          </button>
-          <button type="button" className={`topbar-content-review-trigger ${activeTool === 'bulkEditorial' ? 'active' : ''}`} onClick={() => setActiveTool('bulkEditorial')}>
-            <span>{appLocale === 'en' ? 'Content review' : '内容批审'}</span>{workflowOverview.locales[contentLocale].ready_for_review > 0 ? <b>{workflowOverview.locales[contentLocale].ready_for_review}</b> : null}
-          </button>
-          <button type="button" className={`topbar-template-trigger ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
-            {appLocale === 'en' ? 'Template import' : '模板导入'}
-          </button>
           <button type="button" className={`activity-trigger ${activityOpen ? 'active' : ''}`} onClick={() => {
             setActivityOpen(true);
             setActivityUnread(0);
@@ -1145,6 +1177,15 @@ export default function App() {
           <strong>审核安全门：</strong> migration 007 尚未完整应用；Editorial Review / Data Review 不可用，Publish Readiness 保持 Blocked。
         </div>
       ) : null}
+
+      <section className={`primary-workflow-guide ${primaryWorkflowAction.tone}`} aria-label={appLocale === 'en' ? 'Current next action' : '当前下一步'}>
+        <div className="primary-workflow-guide-copy">
+          <small>{appLocale === 'en' ? 'NEXT ACTION' : '当前下一步'}</small>
+          <strong>{primaryWorkflowAction.title}</strong>
+          <span>{primaryWorkflowAction.detail}</span>
+        </div>
+        <button type="button" className="primary-workflow-guide-button" onClick={primaryWorkflowAction.run}>{primaryWorkflowAction.cta}</button>
+      </section>
 
       <div className="workspace studio-workspace">
         <SpeciesGroupSidebar
