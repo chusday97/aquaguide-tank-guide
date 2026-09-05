@@ -690,3 +690,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: Admin contract, full root build, 1440/390 no-overflow browser checks, CTA queue routing, read-only no-write check. Online light CI `33970208210` SUCCESS.
 - Added safe localhost/`*.pages.dev` `?demo=1` read-only entry for hosted UI acceptance while Vercel free build quota is rate-limited.
 - Next: push this checkpoint once, verify exact-SHA Cloudflare `/admin/seo/?demo=1`, then hand that SEO-specific URL to the user. Production/index/main/live DB remain untouched.
+
+## 2026-09-05 — SEO Admin hosted acceptance entry verified
+- `ca6dda1c` deployed to Cloudflare Pages and the independent `admin-content` Vercel project; Admin CI `33970948642` PASS.
+- Verified `/admin/seo/?demo=1` on Cloudflare at 1440/390: correct Species SEO Admin title, one current-next-action CTA, zero overflow, queue routing, and zero enabled Save actions.
+- Canonical UI acceptance URL is the stable feature Pages URL; this is intentionally read-only.
+- Found original AquaGuide feature Preview has 12 Admin Repo/GitHub write env keys while independent `admin-content` has only review-mode config. Automated secret transfer was safety-blocked; no values were exposed/copied.
+- Next user-facing step: user reviews the hosted SEO Admin UI and sends screenshots/feedback. Writable Preview credential restoration remains a separate secure configuration task.

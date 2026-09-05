@@ -206,3 +206,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Safe `?demo=1` mode is localhost/Cloudflare-Pages-only and hard read-only.
 - Vercel currently reports free-plan build-rate limit for new deployments; existing Production/index state is unchanged and no paid upgrade is authorized.
 - Next: verify the new exact-SHA Cloudflare `/admin/seo/?demo=1` entry and use it as the user acceptance URL.
+
+## 2026-09-05 — hosted SEO Admin demo verified
+- Current feature HEAD `ca6dda1c`; CI `33970948642` SUCCESS.
+- Stable SEO-only acceptance URL: `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
+- Exact-SHA URL: `https://8e1a3de3.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
+- 1440/390 hosted browser checks PASS; Demo is hard read-only and exposes no enabled Save actions.
+- Vercel `admin-content` is READY for the same code, but writable Repo Admin credentials are not configured in that independent project; do not describe it as writable yet.

@@ -168,3 +168,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - `5899d643` binds the new hosted acceptance evidence and the existing human `hold_noindex` decision to snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`.
 - GitHub light CI: AI commit `33962566946` PASS; reacceptance-test fix `33962759009` PASS; final snapshot `33962809578` PASS; evidence/decision `33962944072` PASS. Heavy remained skipped by policy.
 - All defined functional queue items are now closed. Next: isolated feature ↔ live-main reconciliation audit; no merge/Production/index action is authorized.
+
+## 2026-09-05 Species SEO Admin usability acceptance status
+- Simplified operator flow is hosted and ready for user review at `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
+- This hosted acceptance path is intentionally read-only; it is for UI/workflow validation, not content mutation.
+- Independent `admin-content` writable Preview configuration is incomplete because its Repo Admin/GitHub write credentials are not bound there. Restore them only through a secure secret-binding path; do not expose or manually shuttle values.
+- Current product decision required from the user is UI/operator acceptance feedback, not main reconciliation or Production release.

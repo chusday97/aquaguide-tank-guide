@@ -273,3 +273,10 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Added a safe query Demo entry restricted to localhost / `*.pages.dev`; it is read-only and cannot Save/Review/Publish.
 - GitHub light CI for `843b9e31`: `33970208210` SUCCESS; Vercel new builds are temporarily account-rate-limited, so no paid upgrade was used.
 - The separate PR #144 reconciliation work is parked. Current next action is hosted `/admin/seo/?demo=1` acceptance on the new Cloudflare exact SHA.
+
+## 2026-09-05 — hosted SEO Admin usability acceptance entry
+- Final usability/docs checkpoint: `ca6dda1c79748b6fea2f349d133f4b6c5ea4ec2b`; Admin Content CI `33970948642` SUCCESS, Heavy skipped by policy.
+- Cloudflare exact-SHA Preview `https://8e1a3de3.aquaguide-frontend.pages.dev/admin/seo/?demo=1` and stable branch entry `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1` both return the Species SEO Admin, not the fish-tank frontend.
+- Hosted 1440/390 acceptance PASS: `当前下一步` visible, zero horizontal overflow, CTA routes to pending data review, no enabled Save actions; banner explicitly states read-only UI demo.
+- Independent Vercel `admin-content` deployment `dpl_96i313PnUMMZr5GUdRNbkjnbVpeN` is READY, but its project env contains only review-mode config and does not contain the 12 `ADMIN_REPO_*` / `ADMIN_GITHUB_*` write credentials present on the original AquaGuide feature Preview.
+- Automated cross-project secret transfer was blocked by the safety layer; no secret was exposed or copied. Keep UI acceptance read-only until a secure server-side binding/transfer path is available.

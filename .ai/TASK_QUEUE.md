@@ -84,7 +84,9 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Add one queue-driven `当前下一步` primary action: data review → editorial review → Preview-ready → editing fallback.
 - [x] Verify 1440px / 390px layout, zero horizontal overflow, CTA queue routing and read-only no-write behavior.
 - [x] Add safe `?demo=1` read-only entry only for localhost / `*.pages.dev`; save/review/publish remain disabled.
-- [ ] Verify the new exact-SHA Cloudflare `/admin/seo/?demo=1` hosted URL after this checkpoint is pushed, then give the user that URL as the canonical UI acceptance entry.
+- [x] Verify exact-SHA + stable-branch Cloudflare `/admin/seo/?demo=1`; use the stable feature URL as the canonical UI acceptance entry.
+- [ ] User visual/operator acceptance of the simplified SEO Admin flow; collect screenshots/feedback from the hosted read-only demo.
+- [ ] Restore a writable `admin-content` Preview only through a safe server-side credential binding/transfer. Do not expose or manually shuttle `ADMIN_REPO_*` / `ADMIN_GITHUB_*` secrets; current independent project lacks those write credentials.
 
 ## Parked — dedicated branch reconciliation (not current user scope)
 The isolated reconciliation candidate exists on Draft PR #144. Do not continue/merge it while the user is asking to work on SEO Admin.
