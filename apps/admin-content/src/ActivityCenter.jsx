@@ -10,11 +10,11 @@ const KIND_LABELS = {
   review_returned: ['已退回编辑', 'Returned to editing'],
   duplicate_review: ['重复数据复核', 'Duplicate review'],
   data_review: ['数据复核', 'Data review'],
-  batch_drafts_created: ['批量建立 Draft', 'Batch Draft creation'],
+  batch_drafts_created: ['批量建立草稿', 'Batch Draft creation'],
   bulk_import: ['批量导入', 'Bulk import'],
   editorial_review_bulk: ['批量内容审核', 'Bulk content review'],
   revision_restored: ['恢复历史版本', 'Revision restored'],
-  staging_publish: ['发布到 Staging', 'Staging publish'],
+  staging_publish: ['发布到预发布环境', 'Staging publish'],
 };
 
 function formatTime(value, locale) {
@@ -88,7 +88,7 @@ export default function ActivityCenter({ open, onClose, refreshKey = 0, onLoaded
           <button type="button" className="activity-center-close" onClick={onClose}>×</button>
         </header>
         <div className="activity-center-body">
-          {readOnly ? <p className="activity-empty">{isUiEnglish ? 'Read-only UI demo does not load private operation history.' : '只读 UI 演示不读取私有操作记录；登录真实 Admin 后，这里会显示保存、审核、重复处理、批量导入和 Staging 发布记录。'}</p> : null}
+          {readOnly ? <p className="activity-empty">{isUiEnglish ? 'Read-only UI demo does not load private operation history.' : '只读界面演示不读取私有操作记录；登录真实后台后，这里会显示保存、审核、重复处理、批量导入和预发布记录。'}</p> : null}
           {!readOnly && loading ? <p className="activity-empty">{isUiEnglish ? 'Loading activity…' : '正在读取操作记录…'}</p> : null}
           {!readOnly && !loading && rows.length === 0 ? <p className="activity-empty">{isUiEnglish ? 'No operations recorded yet.' : '还没有操作记录。完成一次保存、审核或数据处理后会显示在这里。'}</p> : null}
           {rows.map((row) => {

@@ -76,7 +76,7 @@ export default function BulkDuplicateReviewPanel({
 
   const submit = async () => {
     if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Bulk duplicate decisions were not written.' : '不会写入批量重复审核结论。' }); return; }
-    if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Bulk review blocked' : '批量审核被阻止', detail: isUiEnglish ? 'Data Review storage is not ready.' : 'Data Review 存储尚未就绪。' }); return; }
+    if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Bulk review blocked' : '批量审核被阻止', detail: isUiEnglish ? 'Data Review storage is not ready.' : '数据复核存储尚未就绪。' }); return; }
     if (!selectedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select duplicate groups first' : '请先选择重复候选', detail: isUiEnglish ? 'Choose at least one duplicate group to review.' : '至少勾选 1 组重复候选后再批量处理。' }); return; }
     const invalid = decision === 'duplicate_records' ? selectedRows.find((item) => !canonicalByIssue[item.issueKey] || !item.set.member_ids.includes(canonicalByIssue[item.issueKey])) : null;
     if (invalid) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose a page to keep' : '请选择保留页面', detail: `${invalid.groupName} · ${invalid.set.name}` }); return; }
@@ -105,7 +105,7 @@ export default function BulkDuplicateReviewPanel({
   return (
     <section className="bulk-duplicate-panel">
       <div className="bulk-duplicate-head">
-        <div><p className="eyebrow">BULK DATA REVIEW</p><h2>{isUiEnglish ? 'Bulk duplicate review' : '批量审核重复记录'}</h2><p>{isUiEnglish ? 'Compare identity, source facts, editorial status and Preview before choosing the SEO page to keep. IDs are secondary evidence, not the decision itself.' : '先对比身份、源数据、SEO 编辑状态和真实 Preview，再决定保留哪个页面。编号只作为辅助身份，不再作为主要判断依据。'}</p></div>
+        <div><p className="eyebrow">{isUiEnglish ? 'BULK DATA REVIEW' : '批量数据复核'}</p><h2>{isUiEnglish ? 'Bulk duplicate review' : '批量审核重复记录'}</h2><p>{isUiEnglish ? 'Compare identity, source facts, editorial status and Preview before choosing the SEO page to keep. IDs are secondary evidence, not the decision itself.' : '先对比身份、源数据、SEO 编辑状态和真实预览，再决定保留哪个页面。编号只作为辅助身份，不再作为主要判断依据。'}</p></div>
         <span className="bulk-duplicate-count">{pending.length} {isUiEnglish ? 'pending' : '组待审核'}</span>
       </div>
 

@@ -398,7 +398,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         ) : publishReadinessState === 'publish_ready' ? (
           <>
             <button type="button" className="ghost-button compact" disabled={saving || stagingPublishing} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-            <button type="button" className="primary-button compact staging-action" disabled={stagingPublishing} onClick={onPublishStaging}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? 'Publish to Staging' : '发布到 Staging')}</button>
+            <button type="button" className="primary-button compact staging-action" disabled={stagingPublishing} onClick={onPublishStaging}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? 'Publish to Staging' : '发布到预发布环境')}</button>
           </>
         ) : (
           <>
@@ -958,7 +958,7 @@ export default function App() {
       return {
         tone: 'ready',
         title: appLocale === 'en' ? `${count} page${count === 1 ? '' : 's'} ready for Staging Preview` : `${count} 个页面可以进入预发布`,
-        detail: appLocale === 'en' ? 'These pages passed data, editorial and bilingual checks. Production is still locked.' : '这些页面已通过数据、内容和双语检查；Production 仍然锁定。',
+        detail: appLocale === 'en' ? 'These pages passed data, editorial and bilingual checks. Production is still locked.' : '这些页面已通过数据、内容和双语检查；正式发布仍然锁定。',
         cta: appLocale === 'en' ? 'View Preview-ready pages' : '查看可预览页面',
         run: () => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` }),
       };
@@ -1083,7 +1083,7 @@ export default function App() {
     },
     bulkImport: {
       title: appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入',
-      subtitle: appLocale === 'en' ? 'Download the AquaGuide template, fill it in Excel / Numbers, validate it, then import Draft changes.' : '下载 AquaGuide 模板，用 Excel / Numbers 回填，上传校验后批量导入 Draft。',
+      subtitle: appLocale === 'en' ? 'Download the AquaGuide template, fill it in Excel / Numbers, validate it, then import Draft changes.' : '下载 AquaGuide 模板，用 Excel / Numbers 回填，上传校验后批量导入草稿。',
     },
     history: {
       title: t('editor.history'),
@@ -1157,7 +1157,7 @@ export default function App() {
               </div>
             ))}
           </div>
-          <p className="security-note">{appLocale === 'en' ? `Status: ${backendHealth.repo_access_error || 'configuration incomplete'}. Drafts stay private; only sanitized staging snapshots cross into AquaGuide.` : `当前状态：${backendHealth.repo_access_error || '配置未完成'}。Draft 保持私有，只有脱敏后的 Staging Snapshot 会进入 AquaGuide。`}</p>
+          <p className="security-note">{appLocale === 'en' ? `Status: ${backendHealth.repo_access_error || 'configuration incomplete'}. Drafts stay private; only sanitized staging snapshots cross into AquaGuide.` : `当前状态：${backendHealth.repo_access_error || '配置未完成'}。草稿保持私有，只有脱敏后的预发布快照会进入 AquaGuide。`}</p>
         </section>
       </main>
     );
@@ -1198,11 +1198,11 @@ export default function App() {
         </div>
       ) : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
-          <strong>安全隔离状态：</strong> {isRepoBackend ? '仓库内容存储当前不可写；可以继续预览继承结构，但保存被阻止。' : '当前页 / 基础模板 SEO 数据结构尚未全部应用；可以预览继承结构，但缺失的层级不会写入。'} 不会自动触碰 Production。
+          <strong>安全隔离状态：</strong> {isRepoBackend ? '仓库内容存储当前不可写；可以继续预览继承结构，但保存被阻止。' : '当前页 / 基础模板 SEO 数据结构尚未全部应用；可以预览继承结构，但缺失的层级不会写入。'} 不会自动触碰正式环境。
         </div>
       ) : !historySchemaReady ? (
         <div className="schema-banner">
-          <strong>版本安全门：</strong> Draft 编辑可用，但 revision history migration 尚未应用；在历史记录与回滚可验证前 Published 继续锁定。
+          <strong>版本安全门：</strong> 草稿编辑可用，但版本历史数据结构尚未应用；在历史记录与回滚可验证前正式发布继续锁定。
         </div>
       ) : !dataReviewSchemaReady ? (
         <div className="schema-banner">

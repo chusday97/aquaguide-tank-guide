@@ -4,15 +4,10 @@ import { getLocaleLabel } from './localization.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
-const resourceLabels = {
-  species_seo: 'Variant History',
-  species_seo_group: 'Base Species History',
-};
-
-const formatTime = (value) => {
+const formatTime = (value, locale = 'zh-CN') => {
   if (!value) return '—';
   try {
-    return new Intl.DateTimeFormat('zh-CN', {
+    return new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'zh-CN', {
       month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',
     }).format(new Date(value));
   } catch {
@@ -20,12 +15,12 @@ const formatTime = (value) => {
   }
 };
 
-function revisionSummary(revision, resourceType) {
+function revisionSummary(revision, resourceType, isUiEnglish) {
   const snapshot = revision.snapshot || {};
   if (resourceType === 'species_seo_group') {
-    return snapshot.h1_template || snapshot.seo_title_template || 'Base Species snapshot';
+    return snapshot.h1_template || snapshot.seo_title_template || (isUiEnglish ? 'Base template snapshot' : '基础模板快照');
   }
-  return snapshot.h1 || snapshot.seo_title || snapshot.localized_name || 'Variant snapshot';
+  return snapshot.h1 || snapshot.seo_title || snapshot.localized_name || (isUiEnglish ? 'Current-page snapshot' : '当前页面快照');
 }
 
 export default function RevisionHistoryPanel({
@@ -43,7 +38,7 @@ export default function RevisionHistoryPanel({
   const [loading, setLoading] = useState(false);
   const [armedId, setArmedId] = useState('');
   const [restoringId, setRestoringId] = useState('');
-  const label = resourceLabels[resourceType] || 'History';
+  const label = resourceType === 'species_seo_group' ? (isUiEnglish ? 'Base template history' : '基础模板历史') : resourceType === 'species_seo' ? (isUiEnglish ? 'Current-page history' : '当前页面历史') : (isUiEnglish ? 'History' : '历史记录');
 
   useEffect(() => {
     let cancelled = false;
@@ -82,7 +77,7 @@ export default function RevisionHistoryPanel({
     if (readOnly || !schemaReady) return;
     if (armedId !== revision.id) {
       setArmedId(revision.id);
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? `Restore v${revision.version}?` : `确认恢复 v${revision.version}？`, detail: isUiEnglish ? 'Click the same restore button again to restore this snapshot as a Draft.' : '再次点击同一个“恢复”按钮，会把这个版本恢复为 Draft。', duration: 6500 });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? `Restore v${revision.version}?` : `确认恢复 v${revision.version}？`, detail: isUiEnglish ? 'Click the same restore button again to restore this snapshot as a Draft.' : '再次点击同一个“恢复”按钮，会把这个版本恢复为草稿。', duration: 6500 });
       return;
     }
     setRestoringId(revision.id);
@@ -97,7 +92,7 @@ export default function RevisionHistoryPanel({
     <section className="revision-panel">
       <div className="revision-header">
         <div>
-          <p className="eyebrow">VERSION HISTORY · {getLocaleLabel(locale)}</p>
+          <p className="eyebrow">{isUiEnglish ? 'VERSION HISTORY' : '版本历史'} · {isUiEnglish ? getLocaleLabel(locale) : (locale === 'en' ? '英文' : '中文')}</p>
           <h3>{label}</h3>
         </div>
         <span className="revision-count">{latestVersion ? `v${latestVersion}` : '—'}</span>
@@ -106,7 +101,7 @@ export default function RevisionHistoryPanel({
       {readOnly ? (
         <p className="revision-empty">{isUiEnglish ? 'Remote UI demo does not read real revision history. Use an authenticated Admin backend to inspect versions and restore.' : '远程 UI 演示不读取真实历史记录；连接可写 Admin 内容后端后才显示版本与回滚。'}</p>
       ) : !schemaReady ? (
-        <p className="revision-empty">{isUiEnglish ? 'Revision migration is not applied. Draft editing remains available, while publication stays locked.' : 'Revision migration 尚未应用。Draft 编辑不受影响，但发布继续锁定。'}</p>
+        <p className="revision-empty">{isUiEnglish ? 'Revision migration is not applied. Draft editing remains available, while publication stays locked.' : '版本历史存储尚未就绪。草稿编辑不受影响，但发布继续锁定。'}</p>
       ) : loading ? (
         <p className="revision-empty">{isUiEnglish ? 'Loading revision history…' : '正在读取历史版本…'}</p>
       ) : revisions.length === 0 ? (
@@ -119,10 +114,10 @@ export default function RevisionHistoryPanel({
                 <div className="revision-meta">
                   <strong>v{revision.version}</strong>
                   <span className={`revision-operation ${revision.operation}`}>{revision.operation}</span>
-                  <span>{formatTime(revision.created_at)}</span>
+                  <span>{formatTime(revision.created_at, appLocale)}</span>
                   <span>{revision.snapshot?.status || 'draft'}</span>
                 </div>
-                <div className="revision-summary">{revisionSummary(revision, resourceType)}</div>
+                <div className="revision-summary">{revisionSummary(revision, resourceType, isUiEnglish)}</div>
               </div>
               <button
                 type="button"
@@ -133,7 +128,7 @@ export default function RevisionHistoryPanel({
                 {restoringId === revision.id
                   ? (isUiEnglish ? 'Restoring…' : '恢复中…')
                   : armedId === revision.id
-                    ? (isUiEnglish ? `Click again to restore v${revision.version} as Draft` : `再次点击恢复 v${revision.version} 为 Draft`)
+                    ? (isUiEnglish ? `Click again to restore v${revision.version} as Draft` : `再次点击恢复 v${revision.version} 为草稿`)
                     : (isUiEnglish ? `Restore v${revision.version}` : `恢复 v${revision.version}`)}
               </button>
             </div>

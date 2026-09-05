@@ -33,12 +33,12 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
     : publishedSelected.length
       ? `已选中 ${publishedSelected.length} 条已发布记录；版本化草稿完成前禁止批量覆盖。`
       : !schemaReady
-        ? 'Variant SEO schema 尚未应用，当前只能预览继承结果。'
+        ? '当前页 SEO 数据结构尚未应用，当前只能预览继承结果。'
         : '';
 
   const saveDrafts = async () => {
-    if (members.length < 2) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select more records' : '请选择至少 2 条记录', detail: isUiEnglish ? 'Batch Draft creation needs at least two records from the same Base group.' : '批量建立 Draft 至少需要同一 Base 下的 2 条记录。' }); return; }
-    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Batch Drafts were not created.' : '不会建立任何 Draft。' }); return; }
+    if (members.length < 2) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Select more records' : '请选择至少 2 条记录', detail: isUiEnglish ? 'Batch Draft creation needs at least two records from the same Base group.' : '批量建立草稿至少需要同一基础模板下的 2 条记录。' }); return; }
+    if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Batch Drafts were not created.' : '不会建立任何草稿。' }); return; }
     if (blockedReason) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Batch action blocked' : '批量操作被阻止', detail: blockedReason }); return; }
     setSaving(true);
     const rows = members.map((member) => {
@@ -67,7 +67,7 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
         <div>
           <p className="eyebrow">BULK VARIANT SEO · {locale}</p>
           <h2>{group.base_scientific_name}</h2>
-          <p>{isUiEnglish ? `${members.length} related records selected. This creates inherited Drafts without copying Base text into every Variant.` : `${members.length} 个同类 / 变种已选择。这里建立继承 Draft，不复制 Base 文案到每一条记录。`}</p>
+          <p>{isUiEnglish ? `${members.length} related records selected. This creates inherited Drafts without copying Base text into every Variant.` : `${members.length} 个同类 / 变种已选择。这里建立继承草稿，不复制基础模板文案到每一条记录。`}</p>
         </div>
         <button className="ghost-button" type="button" onClick={onClear}>{isUiEnglish ? 'Clear selection' : '清除选择'}</button>
       </div>
@@ -78,20 +78,20 @@ export default function BatchSeoEditor({ group, members, existingRows, groupReco
           <div className="batch-preview-row" key={item.id}>
             <strong>{item.name}</strong>
             <span>{item.title}</span>
-            <small>{item.overridden ? 'Variant Override' : (isUiEnglish ? 'Inherited Base Template' : '继承 Base Template')}</small>
+            <small>{item.overridden ? 'Variant Override' : (isUiEnglish ? 'Inherited Base Template' : '继承基础模板')}</small>
           </div>
         ))}
         {members.length > previews.length ? <small>另有 {members.length - previews.length} 条使用同一继承规则。</small> : null}
       </div>
       <div className="batch-footer">
-        <span>{readOnly ? (isUiEnglish ? 'Read-only inheritance preview' : '只读继承预览') : (isUiEnglish ? 'Creates Drafts only; existing Variant overrides are preserved.' : '批量操作只创建 Draft，不覆盖现有 Variant Override。')}</span>
+        <span>{readOnly ? (isUiEnglish ? 'Read-only inheritance preview' : '只读继承预览') : (isUiEnglish ? 'Creates Drafts only; existing Variant overrides are preserved.' : '批量操作只创建草稿，不覆盖现有页面自定义内容。')}</span>
         <button
           className="primary-button"
           type="button"
           onClick={saveDrafts}
           disabled={saving}
         >
-          {readOnly ? (isUiEnglish ? 'Read-only inheritance preview' : '只读继承预览') : saving ? (isUiEnglish ? 'Creating Drafts…' : '建立 Draft 中…') : (isUiEnglish ? `Create ${members.length} inherited Drafts` : `建立 ${members.length} 条继承 Draft`)}
+          {readOnly ? (isUiEnglish ? 'Read-only inheritance preview' : '只读继承预览') : saving ? (isUiEnglish ? 'Creating Drafts…' : '正在建立草稿…') : (isUiEnglish ? `Create ${members.length} inherited Drafts` : `建立 ${members.length} 条继承草稿`)}
         </button>
       </div>
     </section>

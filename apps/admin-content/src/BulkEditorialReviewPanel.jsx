@@ -7,7 +7,7 @@ import { inspectEditorialContent } from './contentHygiene.js';
 
 const ACTIONS = {
   submit: { target: 'ready_for_review', zh: '批量提交审核', en: 'Submit for review' },
-  approve: { target: 'approved', zh: '批量批准 Preview', en: 'Approve Preview' },
+  approve: { target: 'approved', zh: '批量批准预览', en: 'Approve Preview' },
   return: { target: 'editing', zh: '批量退回编辑', en: 'Return to editing' },
 };
 
@@ -280,13 +280,13 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
 
   const publishRecentBatch = async () => {
     if (readOnly) {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Staging publish is disabled in demo mode.' : '只读演示不会执行 Staging 发布。' });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'Staging publish is disabled in demo mode.' : '只读演示不会执行预发布。' });
       return;
     }
     if (!schemaReady || !stagingSelection.ready) {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Batch Staging publish blocked' : '本批 Staging 发布被阻止', detail: stagingSelection.overLimit
-        ? (isUiEnglish ? 'A Staging release is limited to 20 Species including canonical dependencies.' : '一次 Staging 最多 20 个 Species，包含 Canonical 依赖。')
-        : (isUiEnglish ? 'Both language rows and both Base templates must be Approved Drafts with review timestamps and clean content before Staging.' : 'Staging 前，中英文页面与中英文 Base 都必须是已审核的 Approved Draft，并且没有测试/验收文案。') });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Batch Staging publish blocked' : '本批预发布被阻止', detail: stagingSelection.overLimit
+        ? (isUiEnglish ? 'A Staging release is limited to 20 Species including canonical dependencies.' : '一次预发布最多 20 个物种，包含 Canonical 依赖。')
+        : (isUiEnglish ? 'Both language rows and both Base templates must be Approved Drafts with review timestamps and clean content before Staging.' : '预发布前，中英文页面与中英文基础模板都必须是已批准草稿，并且没有测试/验收文案。') });
       return;
     }
     setStagingPublishing(true);
@@ -300,7 +300,7 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
     if (data?.import_batch) onCompleted?.({ import_batch: data.import_batch });
     emitAdminNotice({
       status: 'success',
-      title: isUiEnglish ? 'Import batch published to Staging' : '本次导入批次已发布到 Staging',
+      title: isUiEnglish ? 'Import batch published to Staging' : '本次导入批次已发布到预发布环境',
       detail: `${data?.selected_catalog_keys?.length || stagingSelection.catalogKeys.length} Species · ${data?.commit_sha?.slice(0, 7) || 'Staging snapshot'}`,
     });
   };
@@ -328,9 +328,9 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
     <section className="bulk-editorial-panel">
       <div className="bulk-duplicate-head">
         <div>
-          <p className="eyebrow">BULK EDITORIAL REVIEW · {getLocaleLabel(locale)}</p>
+          <p className="eyebrow">{isUiEnglish ? 'BULK EDITORIAL REVIEW' : '批量内容审核'} · {isUiEnglish ? getLocaleLabel(locale) : (locale === 'en' ? '英文' : '中文')}</p>
           <h2>{isUiEnglish ? 'Bulk content review' : '批量内容审核'}</h2>
-          <p>{isUiEnglish ? 'Move multiple completed pages through editorial review without weakening Data Review, copy hygiene, or Preview gates.' : '一次处理多条已完成页面，但不会绕过数据复核、测试文案或 Preview 门禁。'}</p>
+          <p>{isUiEnglish ? 'Move multiple completed pages through editorial review without weakening Data Review, copy hygiene, or Preview gates.' : '一次处理多条已完成页面，但不会绕过数据复核、测试文案或预览门禁。'}</p>
         </div>
         <span className="bulk-duplicate-count">{eligible.length} {isUiEnglish ? 'eligible in scope' : '个当前范围可执行'}</span>
       </div>
@@ -347,10 +347,10 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
           </button>
           <button type="button" className={scopeMode === 'all' ? 'active' : ''} onClick={() => setScopeMode('all')}>
             <strong>{isUiEnglish ? 'All eligible content' : '全部可执行内容'}</strong>
-            <small>{isUiEnglish ? 'Explicit opt-in for historical Drafts too' : '主动切换后才会包含历史 Draft'}</small>
+            <small>{isUiEnglish ? 'Explicit opt-in for historical Drafts too' : '主动切换后才会包含历史草稿'}</small>
           </button>
         </div>
-        {scopeMode === 'all' ? <p className="bulk-import-preflight-note">{isUiEnglish ? 'Caution: this scope can include older Drafts outside the latest import. “Select eligible” will select only the pages currently shown here.' : '注意：这个范围可能包含最近导入之外的旧 Draft。“全选可执行”只会选择当前范围内显示的页面。'}</p> : null}
+        {scopeMode === 'all' ? <p className="bulk-import-preflight-note">{isUiEnglish ? 'Caution: this scope can include older Drafts outside the latest import. “Select eligible” will select only the pages currently shown here.' : '注意：这个范围可能包含最近导入之外的旧草稿。“全选可执行”只会选择当前范围内显示的页面。'}</p> : null}
       </div>
 
       <div className="bulk-review-decision bulk-editorial-actions" role="tablist" aria-label={isUiEnglish ? 'Bulk editorial action' : '批量内容审核动作'}>
@@ -397,21 +397,21 @@ export default function BulkEditorialReviewPanel({ species = [], groups = [], se
       </div>
 
       {scopeMode === 'recent' && recentImportKeys.size ? (
-        <div className={`bulk-import-preflight ${stagingSelection.ready ? 'ready' : 'waiting'}`} aria-label={isUiEnglish ? 'Import batch Staging readiness' : '本批 Staging 就绪状态'}>
+        <div className={`bulk-import-preflight ${stagingSelection.ready ? 'ready' : 'waiting'}`} aria-label={isUiEnglish ? 'Import batch Staging readiness' : '本批预发布就绪状态'}>
           <div className="bulk-import-preflight-head">
-            <div><strong>{isUiEnglish ? 'Publish this import batch to Staging' : '发布本次导入批次到 Staging'}</strong><small>{isUiEnglish ? 'One explicit release after bilingual approval; Production stays locked.' : '双语审核全部通过后一次发布；Production 继续锁定。'}</small></div>
+            <div><strong>{isUiEnglish ? 'Publish this import batch to Staging' : '发布本次导入批次到预发布环境'}</strong><small>{isUiEnglish ? 'One explicit release after bilingual approval; Production stays locked.' : '双语审核全部通过后一次发布；正式环境继续锁定。'}</small></div>
             <span>{stagingSelection.readySpeciesCount}/{stagingSelection.catalogKeys.length} {isUiEnglish ? 'bilingual approved' : '双语已批准'}</span>
           </div>
           <p className={`bulk-import-preflight-note ${stagingSelection.ready ? 'success' : ''}`}>{stagingSelection.overLimit
-            ? (isUiEnglish ? 'This release exceeds the 20-Species Staging cap once canonical dependencies are included.' : '加入 Canonical 依赖后超过单次 Staging 20 个 Species 的上限。')
+            ? (isUiEnglish ? 'This release exceeds the 20-Species Staging cap once canonical dependencies are included.' : '加入 Canonical 依赖后超过单次预发布 20 个物种的上限。')
             : stagingSelection.ready
-              ? (isUiEnglish ? `${stagingSelection.batchCount} imported pages have Approved Drafts in both languages${stagingSelection.dependencyCount ? `; ${stagingSelection.dependencyCount} canonical dependencies are included` : ''}.` : `${stagingSelection.batchCount} 个本批页面的中英文 Draft 均已批准${stagingSelection.dependencyCount ? `，并包含 ${stagingSelection.dependencyCount} 个 Canonical 依赖` : ''}。`)
+              ? (isUiEnglish ? `${stagingSelection.batchCount} imported pages have Approved Drafts in both languages${stagingSelection.dependencyCount ? `; ${stagingSelection.dependencyCount} canonical dependencies are included` : ''}.` : `${stagingSelection.batchCount} 个本批页面的中英文草稿均已批准${stagingSelection.dependencyCount ? `，并包含 ${stagingSelection.dependencyCount} 个 Canonical 依赖` : ''}。`)
               : recentImportScope.batchId && !['approved', 'staging_published'].includes(recentImportScope.status)
                 ? (isUiEnglish ? 'This persisted import batch has not completed its batch approval workflow yet.' : '这个持久化导入批次尚未完成整批批准流程。')
-                : (isUiEnglish ? 'Staging stays disabled until both language rows and both Base templates are Approved, reviewed and clean for every selected Species.' : '每个 Species 的中英文页面与中英文 Base 都达到 Approved、已审核且文案干净之前，Staging 发布保持禁用。')}</p>
+                : (isUiEnglish ? 'Staging stays disabled until both language rows and both Base templates are Approved, reviewed and clean for every selected Species.' : '每个物种的中英文页面与中英文基础模板都达到已批准、已审核且文案干净之前，预发布保持禁用。')}</p>
           <div className="bulk-duplicate-footer">
-            <span>{isUiEnglish ? 'This writes one sanitized Staging snapshot and triggers one Preview deployment; it does not publish Production.' : '该动作只写入一份脱敏 Staging Snapshot 并触发一次 Preview 部署，不会发布 Production。'}</span>
-            <button type="button" className="primary-button" disabled={stagingPublishing || !stagingSelection.ready} onClick={publishRecentBatch}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? `Publish ${stagingSelection.catalogKeys.length} to Staging` : `一次发布 ${stagingSelection.catalogKeys.length} 个到 Staging`)}</button>
+            <span>{isUiEnglish ? 'This writes one sanitized Staging snapshot and triggers one Preview deployment; it does not publish Production.' : '该动作只写入一份脱敏预发布快照并触发一次预览部署，不会发布正式环境。'}</span>
+            <button type="button" className="primary-button" disabled={stagingPublishing || !stagingSelection.ready} onClick={publishRecentBatch}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? `Publish ${stagingSelection.catalogKeys.length} to Staging` : `一次发布 ${stagingSelection.catalogKeys.length} 个到预发布环境`)}</button>
           </div>
         </div>
       ) : null}

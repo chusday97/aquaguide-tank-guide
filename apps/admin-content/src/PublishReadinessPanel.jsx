@@ -27,7 +27,7 @@ export default function PublishReadinessPanel({ readiness, locale, readOnly = fa
           {readiness.blockers.map((item) => <div key={item}>• {item}</div>)}
         </div>
       ) : readiness.reviewNeeded?.length ? (
-        <p className="readiness-note">{isUiEnglish ? `Next review: ${readiness.reviewNeeded.join(' + ')}. Approval is required before Preview-ready.` : `下一步审核：${readiness.reviewNeeded.join(' + ')}。Approved 后才进入 Publish-ready。`}</p>
+        <p className="readiness-note">{isUiEnglish ? `Next review: ${readiness.reviewNeeded.join(' + ')}. Approval is required before Preview-ready.` : `下一步审核：${readiness.reviewNeeded.join(' + ')}。批准后才进入可发布状态。`}</p>
       ) : (
         <div className="readiness-ready-actions">
           <p className="readiness-note">{isUiEnglish ? 'Eligible for Controlled Preview. Production publication remains separately locked.' : '可进入受控预览；正式发布仍由独立发布门禁控制。'}</p>

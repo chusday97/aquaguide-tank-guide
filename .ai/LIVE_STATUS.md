@@ -240,3 +240,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Local 390 acceptance: editor remains 390px; Preview opens as 374px fixed overlay; overflow 0.
 - Unified locale acceptance: English workspace + content selector => `lang=en`, core chrome Han count 0; Chinese => `lang=zh-CN`, no ordinary English state-label leakage in scanned chrome.
 - Admin contract and full root build PASS. Production/main/live DB untouched.
+
+## 2026-09-06 — full Admin locale cleanup
+- Advanced-tool runtime localization acceptance now covers Publish Readiness, translation, duplicate review, bulk editorial review, template import, revision history and work queues.
+- Chinese-mode UI scan reports zero ordinary English state-label leakage (`Draft / Preview / Species / Base / Staging / Ready / Published / Production / Source / Review / Editing`) across the scanned tool controls/headings.
+- English-mode UI labels/headings contain no Chinese copy; Chinese common names that remain inside duplicate evidence are authoritative source-data values, not interface labels and are intentionally preserved.
+- Full Admin contract + root build PASS after updating old contract expectations that previously required mixed Chinese/English labels.

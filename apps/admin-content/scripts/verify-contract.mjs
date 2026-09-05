@@ -147,7 +147,7 @@ assert.match(bulkImportSource, /导入变更预览|Import change preview/, 'Bulk
 assert.match(bulkImportSource, /预检查结果|Preflight report/, 'Bulk import must show a persistent preflight report after upload.');
 assert.match(bulkImportSource, /errors\.slice\(0, 12\)/, 'Bulk import preflight must expose row-level validation issues instead of only the first Toast error.');
 assert.match(bulkImportSource, /disabled=\{saving \|\| !preflight\.ready\}/, 'Bulk import Draft creation must remain disabled until every preflight gate passes.');
-assert.match(bulkImportSource, /创建 Draft|Create Draft/, 'Bulk import must distinguish validation/diff from the irreversible Draft creation action.');
+assert.match(bulkImportSource, /创建草稿|Create Draft/, 'Bulk import must distinguish validation/diff from the irreversible Draft creation action.');
 assert.match(bulkImportSource, /changedPayloads/, 'Bulk import must skip marked rows that have no actual changes');
 assert.match(bulkImportSource, /clearedFields/, 'Bulk import must surface override fields that will be cleared');
 assert.match(appSource, /SEO 模板导入/, 'Template import must be exposed as an explicit user-facing action rather than hidden as a generic bulk tool');
@@ -173,7 +173,7 @@ assert.doesNotMatch(bulkDuplicateSource, /<em[^>]*>.*处理重复/s, 'Bulk dupli
 assert.match(appSource, /批量内容审核/, 'Admin must expose a dedicated bulk editorial-review entry after template import.');
 assert.match(bulkEditorialSource, /transition_editorial_reviews_bulk/, 'Bulk editorial review must use one atomic backend operation.');
 assert.match(bulkEditorialSource, /批量提交审核/, 'Bulk editorial review must support submitting multiple pages for review.');
-assert.match(bulkEditorialSource, /批量批准 Preview/, 'Bulk editorial review must support approving multiple pages for Preview.');
+assert.match(bulkEditorialSource, /批量批准预览/, 'Bulk editorial review must support approving multiple pages for Preview.');
 assert.match(bulkEditorialSource, /批量退回编辑/, 'Bulk editorial review must support returning multiple pages to Editing.');
 assert.match(bulkEditorialSource, /workflowOverview/, 'Bulk editorial candidates must derive from the shared publish-readiness queue.');
 assert.doesNotMatch(bulkEditorialSource, /<select[^>]*review|review[^>]*<select/s, 'Bulk editorial review must not regress workflow actions into a state dropdown.');

@@ -101,11 +101,11 @@ export default function TranslationPanel({
     if (targetPublished) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Published content is locked' : '已发布内容当前不可覆盖', detail: isUiEnglish ? 'Generate a suggestion if needed, but create a versioned editing flow before overwriting Published content.' : '可以继续生成建议，但当前不能直接覆盖已发布 English 内容。' }); return; }
     if (!suggestion) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Generate a suggestion first' : '请先生成英文建议', detail: isUiEnglish ? 'There is no English content to save yet.' : '当前还没有可保存的英文建议。' }); return; }
     if (scope === 'base' && !groupSchemaReady) {
-      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: 'Base Species SEO schema 尚未应用，不能保存 English Draft。' });
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Base Species SEO storage is not ready, so the English Draft cannot be saved.' : '基础模板 SEO 存储尚未就绪，不能保存英文草稿。' });
       return;
     }
     if (scope === 'variant' && !schemaReady) {
-      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: 'Variant SEO schema 尚未应用，不能保存 English Draft。' });
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Current-page SEO storage is not ready, so the English Draft cannot be saved.' : '当前页 SEO 存储尚未就绪，不能保存英文草稿。' });
       return;
     }
     setBusy(true);
@@ -158,9 +158,9 @@ export default function TranslationPanel({
         </div>
       </div>
       <div className="translation-rule-note">
-        <strong>{isUiEnglish ? 'Protection rules:' : '保护规则：'}</strong> 科学名与 catalog key 不翻译；{'{{name}}'} 等模板变量必须原样保留；空 Override 保持为空，不把 Base 内容复制进 Variant。
+        <strong>{isUiEnglish ? 'Protection rules:' : '保护规则：'}</strong>{isUiEnglish ? <> Scientific names and catalog keys are not translated; template tokens such as {'{{name}}'} must remain unchanged; empty overrides stay empty and Base content is not copied into the current page.</> : <> 科学名与 catalog key 不翻译；{'{{name}}'} 等模板变量必须原样保留；空自定义内容保持为空，不把基础模板内容复制进当前页面。</>}
       </div>
-      {targetPublished ? <div className="batch-warning">English 当前版本已经 Published。现阶段只允许生成建议，不允许直接覆盖已发布内容。</div> : null}
+      {targetPublished ? <div className="batch-warning">{isUiEnglish ? 'The current English version is already published. Suggestions can still be generated, but published content cannot be overwritten directly.' : '当前英文版本已经发布。现阶段只允许生成建议，不允许直接覆盖已发布内容。'}</div> : null}
       <div className="translation-grid">
         <div className="translation-source">
           <h3>{isUiEnglish ? 'Chinese source' : '中文来源'}</h3>

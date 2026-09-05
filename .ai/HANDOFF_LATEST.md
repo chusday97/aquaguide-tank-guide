@@ -323,3 +323,4 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Top interface switch and editor content-language switch now share `switchWorkspaceLocale`, synchronizing `appLocale` and `contentLocale`. The historical two-language drift is closed by contract.
 - Contract now protects the split grid, resize handle, non-closing inspector behavior and unified locale action.
 - This round is Aqua SEO Admin only. The user's separate “subscribe current segment -> subscribe competition icon” request belongs to IceGlide and was not written into Aqua.
+- Follow-up locale cleanup completed across advanced tools. Product-state language is localized end-to-end; canonical technical tokens such as SEO, H1, URL, Canonical and `catalog_key` may remain unchanged. Do not translate source-data identities merely to make the UI look monolingual.

@@ -20,11 +20,11 @@ const VALID_STRATEGIES = new Set(INDEX_STRATEGIES.map((item) => item.value));
 
 const TEMPLATE_GUIDE = {
   import_action: '填写说明：只有真正要导入的内容行填写 update / 更新；说明、空白、示例行保持其他文字或留空，不会导入',
-  catalog_key: '必填：已有 Species ID，例如 sp_0436；必须与 AquaGuide 目录一致',
+  catalog_key: '必填：已有物种 ID，例如 sp_0436；必须与 AquaGuide 目录一致',
   source_name: '参考字段：中文名称，可留空；上传时不会写回源数据',
   scientific_name: '参考字段：完整学名，可留空；源记录学名不完整时系统会阻止导入',
   locale: '必填：zh-CN 或 en；必须与当前下载模板的语言一致',
-  localized_name: '仅 English 必填：英文常用名；zh-CN 请留空',
+  localized_name: '仅英文必填：英文常用名；中文请留空',
   seo_title: '建议填写：搜索结果标题；避免测试/验收字样，建议清晰包含物种名与用途',
   meta_description: '建议填写：搜索摘要；自然描述饲养重点，不写内部流程或测试信息',
   h1: '必填：页面主标题；每页一个清晰 H1',
@@ -32,12 +32,12 @@ const TEMPLATE_GUIDE = {
   image_alt: '必填：图片替代文本；描述物种，不堆关键词',
   focus_keyword: '建议填写：一个主要搜索词，例如 孔雀鱼 饲养 / guppy care',
   index_strategy: '必填：noindex / index / canonical_to_sibling；首批或未审核内容建议 noindex',
-  canonical_catalog_key: '仅 canonical_to_sibling 必填：同一 Base Species 下的主页面 catalog_key；其他策略留空',
+  canonical_catalog_key: '仅 canonical_to_sibling 必填：同一基础物种下的主页面 catalog_key；其他策略留空',
 };
 
 const TEMPLATE_FORMATS = {
   import_action: '格式：update 或 更新', catalog_key: '格式：sp_0000', source_name: '文本', scientific_name: '完整属名 + 种名；不要以 var. / subsp. / ssp. 结尾',
-  locale: 'zh-CN | en', localized_name: 'English 文本', seo_title: '纯文本', meta_description: '纯文本', h1: '纯文本', intro: '纯文本', image_alt: '纯文本',
+  locale: 'zh-CN | en', localized_name: '英文文本', seo_title: '纯文本', meta_description: '纯文本', h1: '纯文本', intro: '纯文本', image_alt: '纯文本',
   focus_keyword: '1 个主关键词/短语', index_strategy: 'noindex | index | canonical_to_sibling', canonical_catalog_key: '空白或 sp_0000',
 };
 
@@ -180,7 +180,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
       }
       if (strategy === 'canonical_to_sibling') {
         const validTarget = canonicalKey && canonicalKey !== key && group?.members?.some((item) => item.catalog_key === canonicalKey);
-        if (!validTarget) { nextErrors.push(`第 ${row.__row} 行：Canonical 目标必须是同一 Base Species 下的其他页面。`); continue; }
+        if (!validTarget) { nextErrors.push(`第 ${row.__row} 行：Canonical 目标必须是同一基础物种下的其他页面。`); continue; }
       }
       const routeMeta = buildSpeciesSeoRouteMeta({ member, group, locale: rowLocale, indexStrategy: strategy, canonicalCatalogKey: canonicalKey });
       payloads.push({
@@ -223,14 +223,14 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
 
   const importRows = async () => {
     if (readOnly) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Read-only demo' : '当前是只读演示', detail: isUiEnglish ? 'CSV was not imported.' : '不会执行批量导入。' }); return; }
-    if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Import blocked' : '导入被阻止', detail: isUiEnglish ? 'Variant SEO content store is not ready.' : 'Variant SEO 内容存储尚未就绪。' }); return; }
+    if (!schemaReady) { emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Import blocked' : '导入被阻止', detail: isUiEnglish ? 'Variant SEO content store is not ready.' : '当前页 SEO 内容存储尚未就绪。' }); return; }
     if (!parsedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Choose a CSV first' : '请先选择 CSV', detail: isUiEnglish ? 'Upload a completed AquaGuide template before importing.' : '请先上传回填后的 AquaGuide 模板。' }); return; }
     const { nextErrors } = validate(parsedRows);
     setErrors(nextErrors);
     if (nextErrors.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Import blocked by CSV validation' : 'CSV 校验未通过', detail: `${nextErrors[0]}${nextErrors.length > 1 ? ` · ${isUiEnglish ? `${nextErrors.length - 1} more issues` : `另有 ${nextErrors.length - 1} 项`}` : ''}`, duration: 7200 }); return; }
     if (!markedRows.length) { emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'No rows marked for import' : '没有标记待导入行', detail: isUiEnglish ? 'Set import_action = update on the rows you want to change.' : '请在需要导入的行填写 import_action = update（或“更新”）。' }); return; }
     const payloads = importPreview.changedPayloads;
-    if (!payloads.length) { emitAdminNotice({ status: 'info', title: isUiEnglish ? 'No actual changes' : '没有实际变更', detail: isUiEnglish ? 'Marked rows match the current Draft, so nothing was written.' : '已标记的行与当前 Draft 完全一致，本次不会产生新版本。' }); return; }
+    if (!payloads.length) { emitAdminNotice({ status: 'info', title: isUiEnglish ? 'No actual changes' : '没有实际变更', detail: isUiEnglish ? 'Marked rows match the current Draft, so nothing was written.' : '已标记的行与当前草稿完全一致，本次不会产生新版本。' }); return; }
     const baseDefaults = defaultGroupSeoForLocale(locale);
     const groupDefaultsByKey = new Map();
     const batchGroupKeys = new Set();
@@ -270,7 +270,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
     if (batch?.batch_id) {
       emitAdminNotice({
         status: 'success',
-        title: isUiEnglish ? 'Draft batch created' : 'Draft 批次已创建',
+        title: isUiEnglish ? 'Draft batch created' : '草稿批次已创建',
         detail: `${batch.batch_id} · ${batch.page_count || payloads.length} ${isUiEnglish ? 'pages' : '个页面'} · ${batch.locale}`,
         duration: 6500,
       });
@@ -288,7 +288,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
         <div><b>1</b><span>{isUiEnglish ? 'Download' : '下载模板'}</span><small>{isUiEnglish ? `Field guide + blank rows · ${locale}` : `字段说明 + 空白填写区 · ${locale}`}</small></div>
         <div><b>2</b><span>{isUiEnglish ? 'Fill + mark' : '回填并标记'}</span><small>{isUiEnglish ? 'Set import_action=update only for rows to change' : '只给要更新的行填写 import_action=update'}</small></div>
         <div><b>3</b><span>{isUiEnglish ? 'Preflight + diff' : '预检查并看 Diff'}</span><small>{isUiEnglish ? 'Fix row issues and confirm the actual field changes' : '先处理行级问题，再确认实际字段变更'}</small></div>
-        <div><b>4</b><span>{isUiEnglish ? 'Create Draft' : '创建 Draft'}</span><small>{isUiEnglish ? 'Writes only after every preflight gate passes' : '全部预检查通过后才会真正写入'}</small></div>
+        <div><b>4</b><span>{isUiEnglish ? 'Create Draft' : '创建草稿'}</span><small>{isUiEnglish ? 'Writes only after every preflight gate passes' : '全部预检查通过后才会真正写入'}</small></div>
       </div>
       <div className="bulk-upload-zone">
         <input ref={inputRef} type="file" accept=".csv,text/csv" onChange={onFile} hidden />
@@ -299,7 +299,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
         <section className={`bulk-import-preflight ${errors.length ? 'blocked' : preflight.ready ? 'ready' : 'waiting'}`} aria-label={isUiEnglish ? 'Import preflight report' : '导入预检查结果'}>
           <div className="bulk-import-preflight-head">
             <div><strong>{isUiEnglish ? 'Preflight report' : '预检查结果'}</strong><small>{fileName || (isUiEnglish ? 'Uploaded CSV' : '已上传 CSV')}</small></div>
-            <span>{errors.length ? (isUiEnglish ? `${errors.length} issues` : `${errors.length} 个问题`) : preflight.ready ? (isUiEnglish ? 'Ready to create Draft' : '可以创建 Draft') : (isUiEnglish ? 'Needs attention' : '需要处理')}</span>
+            <span>{errors.length ? (isUiEnglish ? `${errors.length} issues` : `${errors.length} 个问题`) : preflight.ready ? (isUiEnglish ? 'Ready to create Draft' : '可以创建草稿') : (isUiEnglish ? 'Needs attention' : '需要处理')}</span>
           </div>
           <div className="bulk-import-preflight-stats">
             <div><span>{isUiEnglish ? 'Marked rows' : '标记导入'}</span><strong>{preflight.marked}</strong></div>
@@ -316,13 +316,13 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
           ) : !markedRows.length ? (
             <p className="bulk-import-preflight-note">{isUiEnglish ? 'No data rows are marked. Set import_action=update only on rows you intend to change.' : '当前没有标记待导入的数据行。只在真正要修改的行填写 import_action=update / 更新。'}</p>
           ) : !importPreview.changedRows ? (
-            <p className="bulk-import-preflight-note">{isUiEnglish ? 'All marked rows match the current Draft. No new revision will be created.' : '所有已标记行都与当前 Draft 一致，本次不会创建新版本。'}</p>
+            <p className="bulk-import-preflight-note">{isUiEnglish ? 'All marked rows match the current Draft. No new revision will be created.' : '所有已标记行都与当前草稿一致，本次不会创建新版本。'}</p>
           ) : readOnly ? (
-            <p className="bulk-import-preflight-note">{isUiEnglish ? 'This is a read-only demo. Preview the diff here, but Draft creation is disabled.' : '当前是只读演示，可以检查 Diff，但不会创建 Draft。'}</p>
+            <p className="bulk-import-preflight-note">{isUiEnglish ? 'This is a read-only demo. Preview the diff here, but Draft creation is disabled.' : '当前是只读演示，可以检查 Diff，但不会创建草稿。'}</p>
           ) : !schemaReady ? (
-            <p className="bulk-import-preflight-note">{isUiEnglish ? 'The content store is not ready, so Draft creation remains blocked.' : '内容存储尚未就绪，因此暂时不能创建 Draft。'}</p>
+            <p className="bulk-import-preflight-note">{isUiEnglish ? 'The content store is not ready, so Draft creation remains blocked.' : '内容存储尚未就绪，因此暂时不能创建草稿。'}</p>
           ) : (
-            <p className="bulk-import-preflight-note success">{isUiEnglish ? 'Validation passed. Review the field-level diff below, then create Drafts.' : '校验已通过。请继续检查下方字段级 Diff，确认后再创建 Draft。'}</p>
+            <p className="bulk-import-preflight-note success">{isUiEnglish ? 'Validation passed. Review the field-level diff below, then create Drafts.' : '校验已通过。请继续检查下方字段级 Diff，确认后再创建草稿。'}</p>
           )}
         </section>
       ) : null}
@@ -345,7 +345,7 @@ export default function BulkImportPanel({ species = [], seoRows = {}, reviewRows
           </div>
         </div>
       ) : null}
-      <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面 Override；支持继承的字段会重新使用 Base 模板。'}</span><button type="button" className="primary-button" disabled={saving || !preflight.ready} onClick={importRows}>{saving ? (isUiEnglish ? 'Creating Drafts…' : '正在创建 Draft…') : (isUiEnglish ? `Create Drafts · ${importPreview.changedRows} rows` : `创建 Draft · ${importPreview.changedRows} 行`)}</button></div>
+      <div className="bulk-import-footer"><span>{isUiEnglish ? 'Blank editable cells clear the page override and fall back to the Base template where applicable.' : '可编辑字段留空会清除该页面自定义内容；支持继承的字段会重新使用基础模板。'}</span><button type="button" className="primary-button" disabled={saving || !preflight.ready} onClick={importRows}>{saving ? (isUiEnglish ? 'Creating Drafts…' : '正在创建草稿…') : (isUiEnglish ? `Create Drafts · ${importPreview.changedRows} rows` : `创建草稿 · ${importPreview.changedRows} 行`)}</button></div>
     </section>
   );
 }
