@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "environment": "staging",
-  "snapshotSha256": "6b09e52667bbd987e33bab13b039f12cb9fddf921be2ca1c8d0e512d7de409c8",
-  "snapshotGitSha": "7ba66f9d9d0610d3be3e5ec121f3e157004849d2",
-  "acceptedAt": "2026-09-05T10:40:39.867Z",
+  "snapshotSha256": "cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879",
+  "snapshotGitSha": "fd960667b951cafca83332a4f78a60b413e36d9e",
+  "acceptedAt": "2026-09-05T11:17:03.412Z",
   "deployment": {
     "provider": "vercel",
-    "deploymentId": "dpl_3knobTC9R84wkVfaVsCZrPnnrXrp",
-    "deploymentUrl": "https://aquaguide-553wcz4t4-chusday97s-projects.vercel.app",
+    "deploymentId": "dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D",
+    "deploymentUrl": "https://aquaguide-glsbmcxhe-chusday97s-projects.vercel.app",
     "canonicalBaseUrl": "https://aquaguide-git-feature-admin-content-v0-chusday97s-projects.vercel.app"
   },
   "verification": {
