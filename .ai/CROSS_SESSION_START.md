@@ -23,7 +23,7 @@ Treat the Admin as **Aqua Operations Studio**, not one SEO CMS. Keep Product Dat
 ## Current first incomplete milestone
 A newer user-reported issue overrides the older branch-reconciliation queue: **Species SEO Admin operator usability / acceptance** is the active task on `feature/admin-content-v0`.
 
-The first usability checkpoint is implemented and hosted: the Admin now presents one `当前下一步` action driven by the real workflow queue and removes duplicate topbar bulk-review/import controls. The safe read-only acceptance entry is `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1` (localhost / `*.pages.dev` only). It cannot save, review, publish or write Production. The next task is user UI/operator acceptance feedback; writable Preview credentials remain a separate secure configuration task.
+The current usability checkpoint is implemented through functional commit `1e1414ec`: the Admin now exposes a visible 4-stage publishing workflow (`数据复核 → 内容编辑 → 人工审核 → Staging`), one `现在只做这件事` action, a separate current-page key-action panel, an explicit `详细编辑` section, and collapsed `更多工具`. The safe read-only acceptance entry remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1` (localhost / `*.pages.dev` only). It cannot write Production. The next task is user UI/operator acceptance feedback; writable Preview credentials remain a separate secure configuration task.
 
 The separate feature↔main reconciliation candidate remains parked on Draft PR #144. Do not continue or merge that branch unless the user explicitly returns to branch convergence. Current work must stay inside the SEO Admin / Species SEO surface.
 

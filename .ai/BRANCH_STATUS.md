@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`
+Remote feature before this docs sync: `1e1414ec768580843e4f9faf2599719fbe5805c7`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 161
+- feature-only commits: 166
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -166,3 +166,9 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Feature remote/local functional HEAD: `ca6dda1c79748b6fea2f349d133f4b6c5ea4ec2b` before this docs-only sync.
 - Online Admin Content CI `33970948642` SUCCESS; Cloudflare exact-SHA/stable branch SEO Admin Demo verified.
 - Reconciliation PR #144 remains parked and separate. Main/Production/index/live DB untouched.
+
+## 2026-09-05 Species SEO Admin hierarchy checkpoint
+- Functional feature HEAD: `1e1414ec768580843e4f9faf2599719fbe5805c7`.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; measured divergence main-only 269 / feature-only 166.
+- Active work is SEO Admin usability/acceptance only. Draft reconciliation PR #144 remains parked and is not authorized for merge.
+- No Production/index/live-DB mutation occurred.

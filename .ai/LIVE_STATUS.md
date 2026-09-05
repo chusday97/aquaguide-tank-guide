@@ -2,7 +2,7 @@
 
 Updated: 2026-09-05
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`
+Operational functional HEAD before this docs sync: `1e1414ec768580843e4f9faf2599719fbe5805c7`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
@@ -27,11 +27,11 @@ Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO projection/editorial/handoff/hosted acceptance/release-readiness are complete, with explicit human decision `hold_noindex`. AI advisory source extraction/conflict/impact/SEO Draft suggestion is also complete and remains human-gated/no-auto-write. The next safe activity is dedicated feature ↔ live-main reconciliation audit; Production/index remain locked.
+P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 and Care SEO/AI milestones remain complete with explicit `hold_noindex`. The active user scope is Species SEO Admin usability/acceptance: `1e1414ec` adds the 4-stage workflow hierarchy, current-action command center, separate page action panel, detailed-editing section and collapsed advanced tools. Branch reconciliation PR #144 is parked. Production/index remain locked.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`.
+- Feature remote before this docs sync: `1e1414ec768580843e4f9faf2599719fbe5805c7`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 

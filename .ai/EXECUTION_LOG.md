@@ -697,3 +697,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Canonical UI acceptance URL is the stable feature Pages URL; this is intentionally read-only.
 - Found original AquaGuide feature Preview has 12 Admin Repo/GitHub write env keys while independent `admin-content` has only review-mode config. Automated secret transfer was safety-blocked; no values were exposed/copied.
 - Next user-facing step: user reviews the hosted SEO Admin UI and sends screenshots/feedback. Writable Preview credential restoration remains a separate secure configuration task.
+
+## 2026-09-05 — Species SEO Admin information hierarchy V2
+- User reported that key information/buttons/sections lacked hierarchy and critical steps were buried in editing.
+- `1e1414ec` replaces competing first-screen controls with a visible four-stage workflow: Data Review → Content Edit → Human Review → Staging.
+- Added one `现在只做这件事` command, separate current-page `关键操作`, explicit `详细编辑`, and collapsed `更多工具` for batch/history/translation/diagnostics.
+- Mobile changed from hidden horizontal stage scrolling to a fully visible 2×2 stage grid.
+- PASS: Admin contract, Repo auth/write-boundary guards, root production build, 1440/390 hierarchy browser checks, zero horizontal page overflow.
+- Historical `test:admin-content-ui` currently fails in an unrelated Care SEO async assertion (`Published v1` expected before the loading state clears); no Care SEO code was changed in this round.
+- Hosted exact-SHA Cloudflare `94ddb622` PASS for `1e1414ec` at 1440/390: all four stages visible, 390px 2×2 stage grid, page action + detail hierarchy present, advanced tools collapsed, zero overflow.
+- Next: user visual/operator acceptance on the stable feature SEO Admin demo. Production/index/main/live DB remain locked.

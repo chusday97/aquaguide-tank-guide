@@ -4,7 +4,7 @@ Updated: 2026-09-05
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current operational HEAD before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`
+Current functional HEAD before this docs sync: `1e1414ec768580843e4f9faf2599719fbe5805c7`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
@@ -47,6 +47,15 @@ The primary target consumers are now routed through the published runtime catalo
 - Static Product/Care datasets remain explicit seed/offline fallback, not the successful live authority.
 
 Controlled Preview acceptance now proves Save stays private, Publish advances the intended Product/Care consumer, user aquarium state remains unchanged, and Compatibility static authority is not mutated. This is local/controlled acceptance only; Production migration/deployment was not performed.
+## Current Species SEO Admin usability checkpoint
+- Active user scope is `/admin/seo/`, not the fish-tank frontend and not reconciliation PR #144.
+- Functional checkpoint `1e1414ec` rebuilds hierarchy as: 4-stage workflow → one current action → current-page key action → detailed editing → collapsed `更多工具`.
+- The global workflow shows Data Review / Content Edit / Human Review / Staging with live counts and click-through filters.
+- Submit/Approve/Staging actions now live in a visually separate page action panel; form fields are explicitly labeled `详细编辑`.
+- 390px shows all four stages simultaneously in a 2×2 grid; 1440/390 browser checks report zero page overflow. Exact-SHA Cloudflare deployment `94ddb622` was browser-verified.
+- Canonical read-only acceptance URL remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
+- Writable independent `admin-content` Preview credential binding is still a separate security task; do not manually shuttle secrets.
+
 ## Species SEO subsystem — stable baseline
 - Private Draft/review/revision/import-batch authority: `chusday97/aquaguide-seo-content / seo-admin-drafts`.
 - Public AquaGuide repo receives only code + explicit sanitized Staging snapshot.
