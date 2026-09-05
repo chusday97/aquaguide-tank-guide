@@ -265,6 +265,23 @@ try {
       const url = new URL(request.url());
       const body = request.method() === 'GET' ? null : request.postDataJSON();
       const locale = body?.locale || url.searchParams.get('locale') || 'zh-CN';
+      if (request.method() === 'POST' && url.pathname.endsWith('/ai-assist')) {
+        assert.equal(body.sourceCareVersion, 1);
+        await route.fulfill({
+          status: 200, contentType: 'application/json', body: JSON.stringify({
+            data: {
+              sourceBinding: { sourceCareId: baseCareRecord.id, sourceCareCatalogKey: baseCareRecord.catalogKey, sourceCareVersion: 1, sourceAuthority: 'publication-snapshot', locale },
+              sourceExtraction: { primaryTopic: locale === 'en' ? 'Post-water-change observation' : '换水后安全观察', searchIntent: locale === 'en' ? 'Find safe next steps after a water change' : '了解换水后的安全观察与下一步', keyTerms: locale === 'en' ? ['water change', 'fish observation'] : ['换水', '鱼只观察'], safetyBoundaries: [locale === 'en' ? 'Do not invent medication or diagnosis advice.' : '不能补写 Published Care 中不存在的用药或诊断结论。'] },
+              conflicts: [{ severity: 'warning', type: 'source_gap', field: 'evidence', explanation: locale === 'en' ? 'No reference evidence in current Published Care.' : '当前 Published Care 没有 reference evidence，AI 不能补写证据。' }],
+              impactExplanation: { summary: locale === 'en' ? 'Search framing only; Care truth remains unchanged.' : '只调整搜索表达，不改变 Care truth。', changedEditorialFields: ['seoTitle', 'metaDescription', 'h1', 'focusKeyword'] },
+              draft: { seoTitle: locale === 'en' ? 'After a Water Change: Safe Fish Observation' : '换水后怎么观察鱼？安全步骤与下一步 | AquaGuide', metaDescription: locale === 'en' ? 'Use the published care steps to observe fish safely after a water change.' : '根据已发布养护步骤，了解换水后应观察什么、暂时避免什么，以及何时进一步处理。', h1: locale === 'en' ? 'Safe Fish Observation After a Water Change' : '换水后的安全观察步骤', focusKeyword: locale === 'en' ? 'fish after water change' : '换水后鱼只观察', indexStrategy: 'noindex' },
+              reviewWarnings: [locale === 'en' ? 'Human review required before saving.' : '保存 Draft 前仍需人工检查。'],
+              provider: { model: 'mock-care-seo-ai', generatedAt: new Date().toISOString() },
+            }, requestId: 'test-care-seo-ai',
+          }),
+        });
+        return;
+      }
       const localizedTitle = locale === 'en' ? 'After water change observation' : baseCareRecord.title;
       const localizedSummary = locale === 'en' ? 'Observe fish condition before taking further action.' : baseCareRecord.summary;
       const localizedKeyword = locale === 'en' ? 'water change' : baseCareRecord.keywords[0];
@@ -501,11 +518,21 @@ try {
     await page.getByRole('button', { name: /换水后观察/ }).click();
     const careSeoProjection = page.getByTestId('care-seo-projection');
     await careSeoProjection.waitFor();
+    await page.waitForLoadState('networkidle');
+    await careSeoProjection.getByLabel('SEO Title').waitFor();
     const initialCareSeoText = await careSeoProjection.innerText();
     assert.match(initialCareSeoText, /Published v1/i);
     assert.match(initialCareSeoText, /未建 Draft/i);
     assert.match(initialCareSeoText, /noindex locked/i);
     assert.equal(await careSeoProjection.getByLabel('SEO Title').inputValue(), '换水后观察 | AquaGuide');
+    await careSeoProjection.getByRole('button', { name: 'AI 分析并建议草稿' }).click();
+    const aiAssist = careSeoProjection.getByTestId('care-seo-ai-assist');
+    await aiAssist.getByText('Source extraction', { exact: true }).waitFor();
+    assert.match(await aiAssist.innerText(), /换水后安全观察[\s\S]*不能补写 Published Care[\s\S]*noindex/);
+    assert.equal(careSeoEditorialByLocale.size, 0, 'AI generation must not persist an Editorial Draft');
+    await aiAssist.getByRole('button', { name: '应用到本地表单（不保存）' }).click();
+    assert.equal(await careSeoProjection.getByLabel('SEO Title').inputValue(), '换水后怎么观察鱼？安全步骤与下一步 | AquaGuide');
+    assert.equal(careSeoEditorialByLocale.size, 0, 'Applying AI suggestion must remain local-only until Save Draft');
     await careSeoProjection.getByLabel('SEO Title').fill('换水后异常处理 | AquaGuide');
     await careSeoProjection.getByRole('button', { name: '创建 SEO Draft' }).click();
     await page.getByText('Care SEO Draft 已创建', { exact: true }).waitFor();

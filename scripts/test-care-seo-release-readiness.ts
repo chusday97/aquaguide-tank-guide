@@ -77,4 +77,11 @@ const forgedRaw = `${JSON.stringify(forgedSnapshot, null, 2)}\n`;
 result = evaluateCareSeoReleaseReadiness({ snapshotRaw: forgedRaw, acceptance: null, decision: null });
 assert.equal(result.readyForProductionIndex, false);
 assert.ok(result.blockers.includes('staging_record_not_noindex'));
+const persistedAcceptance = careSeoHostedAcceptanceEvidenceSchema.parse(JSON.parse(await readFile('content/care-seo/staging-acceptance.json', 'utf8')));
+const persistedDecision = careSeoReleaseDecisionSchema.parse(JSON.parse(await readFile('content/care-seo/release-decision.json', 'utf8')));
+result = evaluateCareSeoReleaseReadiness({ snapshotRaw, acceptance: persistedAcceptance, decision: persistedDecision });
+assert.equal(result.readyForProductionIndex, false);
+assert.equal(result.decision, 'hold_noindex');
+assert.deepEqual(result.blockers, ['release_decision_hold']);
+
 console.log('Care SEO release readiness: acceptance evidence + explicit human decision + noindex staging lock PASS');

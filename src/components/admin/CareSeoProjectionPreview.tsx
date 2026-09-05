@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Loader2, Save, Send, ShieldAlert } from 'lucide-react';
-import type { CareSeoEditorialWorkspaceDto, SupportedLocale } from '../../../packages/contracts/src';
+import { CheckCircle2, Loader2, Save, Send, ShieldAlert, Sparkles } from 'lucide-react';
+import type { CareSeoAiAssistDto, CareSeoEditorialWorkspaceDto, SupportedLocale } from '../../../packages/contracts/src';
 import { useToast } from '../common/ToastProvider';
 import { AquaGuideApiError } from '../../services/api/api-client';
 import { contentAdminService } from '../../services/admin/content-admin.service';
@@ -28,6 +28,8 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey }: P
   const [form, setForm] = useState<EditorialForm>(emptyForm);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiAssist, setAiAssist] = useState<CareSeoAiAssistDto | null>(null);
   const [error, setError] = useState('');
 
   const hydrateForm = (next: CareSeoEditorialWorkspaceDto) => {
@@ -43,6 +45,7 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey }: P
   const load = async (nextLocale: SupportedLocale = locale) => {
     setLoading(true);
     setError('');
+    setAiAssist(null);
     try {
       const next = await contentAdminService.getCareSeoEditorialWorkspace(careId, nextLocale);
       setWorkspace(next);
@@ -90,6 +93,31 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey }: P
     } finally { setBusy(false); }
   };
 
+  const runAiAssist = async () => {
+    setAiBusy(true); setError(''); setAiAssist(null);
+    try {
+      const next = await contentAdminService.getCareSeoAiAssist(careId, {
+        locale,
+        sourceCareVersion: projection.sourceCareVersion,
+      });
+      setAiAssist(next);
+      showToast('AI 已完成 Published Care 分析；尚未写入 Draft', 'success');
+    } catch (cause) {
+      const message = errorMessage(cause); setError(message); showToast(message, 'error');
+    } finally { setAiBusy(false); }
+  };
+
+  const applyAiDraftLocally = () => {
+    if (!aiAssist || !canEdit || !workspace.persistenceAvailable) return;
+    setForm({
+      seoTitle: aiAssist.draft.seoTitle,
+      metaDescription: aiAssist.draft.metaDescription,
+      h1: aiAssist.draft.h1,
+      focusKeyword: aiAssist.draft.focusKeyword,
+    });
+    showToast('AI 建议已填入本地表单；仍需手动保存 Draft', 'success');
+  };
+
   const transition = async (action: 'submit' | 'approve') => {
     if (!editorial || sourceDrift) return;
     setBusy(true); setError('');
@@ -132,6 +160,26 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey }: P
         <EditorialField label="Meta Description" value={form.metaDescription} disabled={!canEdit || !workspace.persistenceAvailable || busy} maxLength={200} onChange={value => setForm(current => ({ ...current, metaDescription: value }))} />
         <EditorialField label="H1" value={form.h1} disabled={!canEdit || !workspace.persistenceAvailable || busy} maxLength={240} onChange={value => setForm(current => ({ ...current, h1: value }))} />
         <EditorialField label="Focus Keyword" value={form.focusKeyword} disabled={!canEdit || !workspace.persistenceAvailable || busy} maxLength={160} onChange={value => setForm(current => ({ ...current, focusKeyword: value }))} />
+      </div>
+
+      <div data-testid="care-seo-ai-assist" className="mt-4 rounded-[16px] border border-indigo-200 bg-white p-3 md:p-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] text-indigo-700"><Sparkles className="h-4 w-4" />AI Assist · suggestion only</div>
+            <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">只读取当前 Published Care v{projection.sourceCareVersion}。AI 可以提取搜索意图、指出冲突并建议 SEO 文案，但不能修改 Care facts、审批或发布。</p>
+          </div>
+          <button type="button" disabled={aiBusy || busy} onClick={() => void runAiAssist()} className="flex h-9 items-center gap-2 rounded-full bg-indigo-700 px-3 text-xs font-black text-white disabled:opacity-50">{aiBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}{aiBusy ? 'AI 分析中…' : aiAssist ? '重新生成 AI 建议' : 'AI 分析并建议草稿'}</button>
+        </div>
+        {aiAssist && <div className="mt-3 grid gap-3">
+          <div className="grid gap-2 md:grid-cols-2">
+            <div className="rounded-[12px] bg-indigo-50 p-3 text-xs leading-5"><div className="font-black text-indigo-900">Source extraction</div><p className="mt-1 font-bold text-ink/65">{aiAssist.sourceExtraction.primaryTopic}</p><p className="mt-1 text-ink/52">搜索意图：{aiAssist.sourceExtraction.searchIntent}</p><p className="mt-1 text-ink/45">关键词：{aiAssist.sourceExtraction.keyTerms.join(' · ') || '—'}</p></div>
+            <div className="rounded-[12px] bg-slate-50 p-3 text-xs leading-5"><div className="font-black text-ink/70">Impact explanation</div><p className="mt-1 font-semibold text-ink/55">{aiAssist.impactExplanation.summary}</p><p className="mt-1 text-ink/45">建议变更：{aiAssist.impactExplanation.changedEditorialFields.join(' / ') || '无'}</p></div>
+          </div>
+          {aiAssist.sourceExtraction.safetyBoundaries.length > 0 && <div className="rounded-[12px] border border-emerald-200 bg-emerald-50 p-3 text-xs leading-5 text-emerald-950"><div className="font-black">不能越过的 Care 边界</div><ul className="mt-1 list-disc pl-5">{aiAssist.sourceExtraction.safetyBoundaries.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></div>}
+          {aiAssist.conflicts.length > 0 && <div data-testid="care-seo-ai-conflicts" className="rounded-[12px] border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-950"><div className="font-black">冲突 / 缺口 · 需要人工确认</div><ul className="mt-1 grid gap-1">{aiAssist.conflicts.map((item, index) => <li key={`${item.type}-${item.field}-${index}`}><span className="font-black">[{item.severity}] {item.field}</span> · {item.explanation}</li>)}</ul></div>}
+          {aiAssist.reviewWarnings.length > 0 && <div className="rounded-[12px] bg-slate-50 p-3 text-xs leading-5 text-ink/60"><div className="font-black">Review warnings</div><ul className="mt-1 list-disc pl-5">{aiAssist.reviewWarnings.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></div>}
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 text-[11px] font-bold text-ink/40"><span>绑定 Published v{aiAssist.sourceBinding.sourceCareVersion} · {aiAssist.provider.model} · noindex</span>{canEdit && workspace.persistenceAvailable && <button type="button" onClick={applyAiDraftLocally} className="h-9 rounded-full border border-indigo-300 bg-indigo-50 px-3 text-xs font-black text-indigo-800">应用到本地表单（不保存）</button>}</div>
+        </div>}
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">

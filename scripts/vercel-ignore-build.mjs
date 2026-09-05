@@ -6,6 +6,7 @@ const NON_RUNTIME_ONLY = [
   /^PROGRESS\.md$/,
   /(^|\/)README\.md$/,
   /^content\/care-seo\/staging-acceptance\.json$/,
+  /^content\/care-seo\/release-decision\.json$/,
 ];
 
 function changedFiles() {

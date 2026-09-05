@@ -3,6 +3,8 @@ import {
   careArticleAdminInputSchema,
   speciesAdminInputSchema,
   type CareArticleDetailDto,
+  type CareSeoAiAssistDto,
+  type CareSeoAiAssistRequest,
   type CareSeoEditorialDraftMutation,
   type CareSeoEditorialTransitionMutation,
   type CareSeoEditorialWorkspaceDto,
@@ -88,6 +90,11 @@ export const contentAdminService = {
   getCareSeoProjection: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoProjectionDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-projection?locale=${encodeURIComponent(locale)}`),
 
   getCareSeoEditorialWorkspace: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial?locale=${encodeURIComponent(locale)}`),
+  getCareSeoAiAssist: (id: string, input: CareSeoAiAssistRequest) => apiRequest<CareSeoAiAssistDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/ai-assist`, {
+    method: 'POST',
+    body: input,
+    idempotencyKey: createIdempotencyKey('admin-care-seo-ai-assist'),
+  }),
   saveCareSeoEditorialDraft: (id: string, input: CareSeoEditorialDraftMutation) => apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/draft`, {
     method: 'POST',
     body: input,

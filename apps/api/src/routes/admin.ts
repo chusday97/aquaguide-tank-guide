@@ -7,6 +7,7 @@ import {
   careArticleAdminUpdateSchema,
   careSeoEditorialDraftMutationSchema,
   careSeoEditorialTransitionMutationSchema,
+  careSeoAiAssistRequestSchema,
   supportedLocaleSchema,
   contentStatusMutationSchema,
   speciesAdminInputSchema,
@@ -33,6 +34,7 @@ import {
   submitCareSeoEditorialReview,
 } from '../care-seo-editorial';
 import { createCareSeoStagingHandoff } from '../care-seo-handoff';
+import { createCareSeoAiAssist } from '../care-seo-ai';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 import { adminFeedbackRouter } from './feedback';
@@ -131,6 +133,13 @@ adminRouter.get('/care-articles/:id/seo-editorial', asyncRoute(async (request, r
   const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');
   if (!localeParsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '语言参数无效。');
   return sendData(request, response, await getCareSeoEditorialWorkspace(id, localeParsed.data));
+}));
+
+adminRouter.post('/care-articles/:id/seo-editorial/ai-assist', asyncRoute(async (request, response) => {
+  const id = parseId(request.params.id);
+  const parsed = careSeoAiAssistRequestSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Care SEO AI 请求无效。', parsed.error.flatten());
+  return sendData(request, response, await createCareSeoAiAssist(id, parsed.data));
 }));
 
 adminRouter.post('/care-articles/:id/seo-editorial/draft', asyncRoute(async (request, response) => {

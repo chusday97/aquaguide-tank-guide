@@ -125,6 +125,58 @@ export interface CareSeoEditorialWorkspaceDto {
   persistenceAvailable: boolean;
 }
 
+export const careSeoAiAssistRequestSchema = z.object({
+  locale: supportedLocaleSchema,
+  sourceCareVersion: z.number().int().positive(),
+});
+
+export const careSeoAiConflictSchema = z.object({
+  severity: z.enum(['info', 'warning', 'blocking']),
+  type: z.enum(['source_gap', 'unsupported_claim', 'editorial_conflict', 'source_drift']),
+  field: z.string().trim().min(1).max(80),
+  explanation: z.string().trim().min(1).max(500),
+});
+
+export const careSeoAiDraftSchema = careSeoEditorialFieldsSchema.extend({
+  indexStrategy: z.literal('noindex'),
+});
+
+export const careSeoAiProviderOutputSchema = z.object({
+  sourceExtraction: z.object({
+    primaryTopic: z.string().trim().min(1).max(240),
+    searchIntent: z.string().trim().min(1).max(240),
+    keyTerms: z.array(z.string().trim().min(1).max(120)).max(12),
+    safetyBoundaries: z.array(z.string().trim().min(1).max(320)).max(10),
+  }),
+  conflicts: z.array(careSeoAiConflictSchema).max(12),
+  impactExplanation: z.object({
+    summary: z.string().trim().min(1).max(800),
+    changedEditorialFields: z.array(z.enum(['seoTitle', 'metaDescription', 'h1', 'focusKeyword'])).max(4),
+  }),
+  draft: careSeoAiDraftSchema,
+  reviewWarnings: z.array(z.string().trim().min(1).max(400)).max(10),
+});
+
+export const careSeoAiAssistDtoSchema = careSeoAiProviderOutputSchema.extend({
+  sourceBinding: z.object({
+    sourceCareId: z.string().trim().min(1),
+    sourceCareCatalogKey: z.string().trim().min(1),
+    sourceCareVersion: z.number().int().positive(),
+    sourceAuthority: z.literal('publication-snapshot'),
+    locale: supportedLocaleSchema,
+  }),
+  provider: z.object({
+    model: z.string().trim().min(1),
+    generatedAt: z.string().datetime({ offset: true }),
+  }),
+});
+
+export type CareSeoAiAssistRequest = z.infer<typeof careSeoAiAssistRequestSchema>;
+export type CareSeoAiConflict = z.infer<typeof careSeoAiConflictSchema>;
+export type CareSeoAiDraft = z.infer<typeof careSeoAiDraftSchema>;
+export type CareSeoAiProviderOutput = z.infer<typeof careSeoAiProviderOutputSchema>;
+export type CareSeoAiAssistDto = z.infer<typeof careSeoAiAssistDtoSchema>;
+
 const careSeoProjectionSnapshotSchema = z.object({
   sourceCareId: z.string().trim().min(1),
   sourceCareCatalogKey: z.string().trim().min(1),
