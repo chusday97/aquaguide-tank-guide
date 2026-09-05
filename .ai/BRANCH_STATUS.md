@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`
+Remote feature before this docs sync: `6079b6d44e7e3224822dcf06ae2253427679c632`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 145
+- feature-only commits: 148
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -126,3 +126,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; current pre-sync divergence is main-only 269 / feature-only 145, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Feature is not merge-ready: dedicated reconciliation against live main remains mandatory. No main merge/rebase, Production deploy, index unlock or live DB migration occurred.
 - Next milestone: Care SEO Editorial Draft/Review persistence → sanitized explicit Staging snapshot/handoff → hosted bilingual acceptance → only then consider index unlock. Production stays locked.
+
+## 2026-09-05 Care SEO Editorial + handoff checkpoint
+- Functional feature HEAD pushed: `6079b6d44e7e3224822dcf06ae2253427679c632`.
+- Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- Measured divergence: main-only 269 / feature-only 148; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Online light CI `33958334178` PASS; Heavy skipped by policy.
+- Feature remains not merge-ready; dedicated reconciliation is still required. No Production/main/live-DB mutation occurred.

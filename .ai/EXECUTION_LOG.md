@@ -644,3 +644,15 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Measured divergence before this docs-only sync: main-only 269 / feature-only 145; local HEAD matched remote feature and worktree was clean.
 - Confirmed functional Care SEO checkpoint `8104a1b2` online CI `33955509807` PASS; Heavy gate skipped by policy.
 - Canonical next task remains Care SEO Editorial Draft/Review + sanitized Staging snapshot/handoff + hosted bilingual acceptance; Production/index/live DB remain locked.
+
+## 2026-09-05 — Care SEO Editorial + sanitized Staging handoff
+- Continued from Care SEO static foundation without changing main/Production or applying live migrations.
+- `a2caf575043bc4e36472f57412f469ad168fc652` added downstream Care SEO Editorial revision persistence, Draft → ready_for_review → human Approved transitions, Published Care source binding and source-drift invalidation.
+- `6079b6d44e7e3224822dcf06ae2253427679c632` added explicit approved-only sanitized Staging handoff, immutable `publication-snapshot` requirement, exact Editorial/projection identity matching, bilingual same-version binding, `noindex` retention and Production source/destination denial.
+- Sanitization contract now object-tests protected-field non-leakage: Care title/symptoms/diagnose/evidence and Editorial revision/audit metadata are absent from the handoff.
+- Automatic Care SEO generation occurs only for a snapshot-only `content(care-seo): publish staging ...` commit on the feature Preview branch; normal root build skips Care SEO artifact generation.
+- Local full validation PASS: Care projection/editorial/handoff/build-routing/artifact tests, API TS, root lint, root production build, diff hygiene. Local HTTP hosted acceptance verifier PASS 2/2 bilingual pages for HTTP/title/meta/H1/canonical/hreflang/robots/source-version/hygiene with noindex retained.
+- GitHub Admin Content CI run `33958334178` completed SUCCESS for `validate`; Heavy browser/SEO handoff job skipped by policy.
+- Live refs at checkpoint: feature `6079b6d4`, main `64fa58a1`, merge base `ed0cf38`, divergence main-only 269 / feature-only 148.
+- Supabase inventory rechecked: AquaGuide `ydiygvhuqpogmqlcvgob` ACTIVE_HEALTHY with zero development branches; separate `ice-glide-staging-sg` is unrelated. Therefore real hosted Care SEO acceptance cannot honestly use a non-Production AquaGuide source yet.
+- No Production source was substituted, no branch/project was created, no cost was incurred, no index unlock occurred, and no main merge/rebase was performed. Next step requires an existing non-Production AquaGuide source or explicit approval for a cost-bearing Supabase branch/project.

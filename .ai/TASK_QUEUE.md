@@ -63,10 +63,11 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Deterministic bilingual routes: EN `/care/<catalogKey>.html`, zh-CN `/zh/care/<catalogKey>.html`, `x-default` → EN; SPA fallback stays `noindex,follow`.
   - [x] Fail-closed static Staging artifact builder requires bilingual pairing, equal Care source version, approved editorial and non-Production destination; no explicit snapshot means normal builds skip generation.
 - [ ] Care SEO Editorial Draft/Review + Staging acceptance.
-  - [ ] Persist downstream SEO Draft/review state without duplicating Care Knowledge authority.
-  - [ ] Produce an explicit sanitized Staging snapshot/handoff from approved Care SEO rows.
+  - [x] Persist downstream SEO Draft/review state without duplicating Care Knowledge authority.
+  - [x] Produce an explicit sanitized Staging snapshot/handoff from approved Care SEO rows.
   - [ ] Hosted bilingual acceptance for title/meta/H1/canonical/hreflang/robots/source-version drift before any index unlock.
-  - [ ] Keep Production locked unless separately authorized.
+    - Blocked on a real non-Production AquaGuide source: current AquaGuide Supabase has zero development branches; do not use Production or unrelated IceGlide staging. Creating branch/project requires explicit cost approval.
+  - [x] Keep Production locked unless separately authorized.
 - [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
 
 ## Stable completed baseline — do not reimplement

@@ -8,10 +8,10 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin and P2 Unified Publish Center V1 are complete in code. Care SEO downstream projection, deterministic bilingual canonical routes and a fail-closed static Staging artifact foundation are now also complete in code. The immediate priority is **Care SEO Editorial Draft/Review + explicit Staging acceptance**, while keeping Care Knowledge upstream, Index opt-in gated and Production locked.
+P1 Compatibility Admin and P2 Unified Publish Center V1 are complete in code. Care SEO downstream projection, deterministic bilingual canonical routes, Editorial Draft/Review persistence and a sanitized explicit Staging handoff are now complete in code. The immediate priority is **real hosted bilingual Care SEO acceptance against a non-Production AquaGuide source**, while keeping Care Knowledge upstream, Index opt-in gated and Production locked.
 
 ## Why this is current
-The upstream Product/Care/Compatibility authorities and Publish Center observability are already converged in code. Care SEO now has a deterministic downstream source/route/artifact foundation; the remaining operational gap is editorial persistence and authenticated Staging acceptance before any indexability can be enabled.
+The upstream Product/Care/Compatibility authorities and Publish Center observability are already converged in code. Care SEO now has deterministic downstream source/route/artifact generation plus human Editorial Draft→Review→Approved persistence and an approved-only sanitized Staging export. The remaining operational gap is a real hosted Staging acceptance run against a genuinely non-Production AquaGuide data source before any indexability can be enabled.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -31,7 +31,9 @@ Species SEO remains Repo-backed and fail-closed:
 6. [DONE in code] Compatibility Admin: Profile + Pair Draft, structural Impact, server engine Regression, canonical Evidence resolution, human Approve/Reject, exact reviewed runtime authority and transactional versioned publish are implemented. Migrations remain unapplied to live/Production.
 7. [DONE] P2 Unified Publish Center V1: read-only release/audit aggregation, detail/readiness, capability/permission boundaries, Product/Care audit history fallback and explicit-key cross-authority context.
 8. [DONE in code] P2 Care SEO projection foundation: Published-Care-bound projection, protected Care facts, deterministic EN/ZH canonical + hreflang routes, and fail-closed static Staging artifact builder.
-9. [NEXT] Care SEO Editorial Draft/Review + explicit Staging snapshot/handoff and hosted acceptance. Do not unlock Production; indexability remains an explicit reviewed release decision.
+9. [DONE in code] Care SEO Editorial Draft/Review persistence + approved-only sanitized explicit Staging snapshot/handoff.
+10. [NEXT] Run hosted bilingual acceptance against a real non-Production AquaGuide source/deployment. Current blocker: the AquaGuide Supabase project has no development branches, and no separate AquaGuide staging project exists; do not substitute Production.
+11. [LOCKED] Index unlock / Production release remains a separate explicit reviewed decision after hosted acceptance.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -134,3 +136,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Static artifact requires bilingual pairing, equal Published Care source version, approved editorial and non-Production staging destination; ordinary builds without an explicit snapshot skip generation.
 - Online light CI `33955509807` PASS; Heavy skipped by policy. Production/main/live DB untouched.
 - Next: persist Care SEO Editorial Draft/Review, produce explicit sanitized Staging snapshot, and run hosted bilingual acceptance before any index unlock.
+
+## 2026-09-05 Care SEO Editorial / Staging handoff checkpoint
+- `a2caf575` persists isolated Care SEO Editorial revisions with explicit Draft → Review → human Approved transitions and source-drift invalidation.
+- `6079b6d4` adds approved-only sanitized Staging export, immutable publication-snapshot enforcement, bilingual same-version binding, noindex retention, explicit snapshot-only build routing and hosted verifier.
+- Local HTTP end-to-end hosted verifier PASS: 2/2 bilingual pages. Online lightweight CI `33958334178` PASS; Heavy skipped.
+- Remaining blocker is environmental, not code: AquaGuide currently has no non-Production Supabase branch/project. Real hosted acceptance must not read Production. Creating a branch/project requires a separate cost approval.
