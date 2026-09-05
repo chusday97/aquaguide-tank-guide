@@ -3,6 +3,7 @@ import {
   careArticleAdminInputSchema,
   speciesAdminInputSchema,
   type CareArticleDetailDto,
+  type CareSeoProjectionDto,
   type SpeciesDetailDto,
 } from '../../../packages/contracts/src/index';
 import {
@@ -18,6 +19,16 @@ export type CareArticleAdminInput = z.infer<typeof careArticleAdminInputSchema>;
 const publicContentOrNull = async <T>(path: string): Promise<T | null> => {
   try {
     return await apiRequest<T>(path, { authenticated: false });
+  } catch (error) {
+    if (error instanceof AquaGuideApiError && error.code === 'NOT_FOUND') return null;
+    throw error;
+  }
+};
+
+
+const adminContentOrNull = async <T>(path: string): Promise<T | null> => {
+  try {
+    return await apiRequest<T>(path);
   } catch (error) {
     if (error instanceof AquaGuideApiError && error.code === 'NOT_FOUND') return null;
     throw error;
@@ -71,6 +82,7 @@ export const contentAdminService = {
   listCareArticles: () => apiRequest<AdminCareArticleRecord[]>('/admin/care-articles'),
   getPublishedSpecies: (catalogKey: string) => publicContentOrNull<SpeciesDetailDto>(`/species/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
   getPublishedCareArticle: (catalogKey: string) => publicContentOrNull<CareArticleDetailDto>(`/care-articles/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
+  getCareSeoProjection: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoProjectionDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-projection?locale=${encodeURIComponent(locale)}`),
 
   createSpecies: (input: SpeciesAdminInput) => apiRequest<AdminSpeciesRecord>('/admin/species', {
     method: 'POST',

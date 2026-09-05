@@ -24,6 +24,7 @@ on:
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
+      - 'scripts/test-care-seo-projection.ts'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
@@ -62,6 +63,7 @@ on:
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
+      - 'scripts/test-care-seo-projection.ts'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
@@ -115,6 +117,8 @@ jobs:
         run: npm run test:compatibility-admin-contract
       - name: Compatibility server regression gate
         run: npm run test:compatibility-regression-gate
+      - name: Care SEO downstream projection contract
+        run: npm run test:care-seo-projection
       - name: Publish Center read-only contract
         run: npm run test:publish-center-contract
       - name: Runtime compatibility authority contract

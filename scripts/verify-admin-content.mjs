@@ -259,8 +259,20 @@ try {
       contentType: 'application/json',
       body: JSON.stringify({ data: [currentCare], requestId: 'test-care-list' }),
     }));
+    await page.route('**/api/v1/admin/care-articles/*/seo-projection**', async route => {
+      const projection = {
+        sourceCareId: baseCareRecord.id, sourceCareCatalogKey: baseCareRecord.catalogKey, sourceCareVersion: 1,
+        sourcePublishedAt: '2026-09-05T01:00:00.000Z', sourceAuthority: 'publication-snapshot', locale: 'zh-CN',
+        route: { pathname: '/care', topicParam: baseCareRecord.catalogKey, candidateUrl: '/care?topic=care_demo', readiness: 'blocked', blockers: ['Care topic 目前通过 /care?topic=... 打开，不是独立可抓取文章路由。', 'Topic detail 当前渲染在 Dialog 内，没有 topic 级 document title / meta description。', 'Topic 级 canonical / hreflang contract 尚未建立。'] },
+        sourceFacts: { title: baseCareRecord.title, category: baseCareRecord.category, urgency: baseCareRecord.urgency, summary: baseCareRecord.summary, symptoms: baseCareRecord.symptoms, immediateActions: ['先观察'], avoidActions: baseCareRecord.avoidActions, observeItems: baseCareRecord.observeItems, diagnoseWhen: baseCareRecord.diagnoseWhen, nextStep: baseCareRecord.nextStep, evidenceCount: 0 },
+        suggestedEditorial: { seoTitle: `${baseCareRecord.title} | AquaGuide`, metaDescription: baseCareRecord.summary, h1: baseCareRecord.title, focusKeyword: baseCareRecord.keywords[0] },
+        editableFields: ['seoTitle', 'metaDescription', 'h1', 'focusKeyword'], protectedSourceFields: ['title', 'summary', 'symptoms', 'steps', 'avoidActions', 'observeItems', 'diagnoseWhen', 'nextStep', 'references'], publishReady: false,
+      };
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: projection, requestId: 'test-care-seo-projection' }) });
+    });
     await page.route('**/api/v1/admin/care-articles/*', async route => {
-      const body = route.request().postDataJSON();
+      const request = route.request();
+      const body = request.postDataJSON();
       const { steps = [], ...fields } = body;
       currentCare = {
         ...currentCare, ...fields, status: 'draft', version: currentCare.version + 1,
@@ -402,6 +414,13 @@ try {
     await page.getByRole('button', { name: '养护文章' }).click();
     await page.getByRole('button', { name: /换水后观察/ }).waitFor();
     await page.getByRole('button', { name: /换水后观察/ }).click();
+    const careSeoProjection = page.getByTestId('care-seo-projection');
+    await careSeoProjection.waitFor();
+    const initialCareSeoText = await careSeoProjection.innerText();
+    assert.match(initialCareSeoText, /Published v1/i);
+    assert.match(initialCareSeoText, /Route 未就绪/i);
+    assert.match(initialCareSeoText, /换水后观察 \| AquaGuide/);
+    await page.getByLabel('标题').fill('换水后观察草稿修改');
     await page.getByLabel('优先级').selectOption('高优先级');
     const careImpact = page.getByTestId('content-impact-preview');
     await careImpact.getByText('Care 流程', { exact: true }).first().waitFor();
@@ -409,6 +428,9 @@ try {
     await page.getByRole('button', { name: '保存修改' }).click();
     await page.getByText('内容已保存', { exact: true }).waitFor();
     assert.match(await careImpact.innerText(), /当前草稿相对已发布版本/);
+    const persistedCareSeoProjection = await careSeoProjection.innerText();
+    assert.match(persistedCareSeoProjection, /Published v1[\s\S]*换水后观察 \| AquaGuide/);
+    assert.doesNotMatch(persistedCareSeoProjection, /换水后观察草稿修改/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(overflow, false, `${viewport.width}px should not overflow horizontally`);
     await page.close();

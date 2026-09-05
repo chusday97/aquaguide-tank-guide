@@ -5,9 +5,11 @@ import {
   careArticleAdminInputSchema,
   speciesAdminInputSchema,
   type CareArticleDetailDto,
+  type CareSeoProjectionDto,
   type SpeciesDetailDto,
 } from '../../packages/contracts/src/index';
 import CompatibilityRegressionPreview from '../components/admin/CompatibilityRegressionPreview';
+import CareSeoProjectionPreview from '../components/admin/CareSeoProjectionPreview';
 import ContentImpactPreview from '../components/admin/ContentImpactPreview';
 import ProductBeforeAfterPreview from '../components/admin/ProductBeforeAfterPreview';
 import { useToast } from '../components/common/ToastProvider';
@@ -99,9 +101,12 @@ export default function AdminContent() {
   const [pendingStatus, setPendingStatus] = useState<StatusAction | null>(null);
   const [lastSavedImpact, setLastSavedImpact] = useState<ContentImpactResult | null>(null);
   const [publishedBaseline, setPublishedBaseline] = useState<SpeciesAdminInput | CareArticleAdminInput | null>(null);
+  const [careSeoProjection, setCareSeoProjection] = useState<CareSeoProjectionDto | null>(null);
+  const [careSeoProjectionLoading, setCareSeoProjectionLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const baselineRequestRef = useRef(0);
+  const careSeoProjectionRequestRef = useRef(0);
 
   const items = type === 'species' ? speciesItems : careItems;
   const selected = items.find(item => item.id === selectedId);
@@ -142,6 +147,20 @@ export default function AdminContent() {
     }
   };
 
+  const loadCareSeoProjection = async (item: AdminCareArticleRecord) => {
+    const requestId = ++careSeoProjectionRequestRef.current;
+    setCareSeoProjectionLoading(true);
+    setCareSeoProjection(null);
+    try {
+      const projection = await contentAdminService.getCareSeoProjection(item.id);
+      if (requestId === careSeoProjectionRequestRef.current) setCareSeoProjection(projection);
+    } catch {
+      if (requestId === careSeoProjectionRequestRef.current) setCareSeoProjection(null);
+    } finally {
+      if (requestId === careSeoProjectionRequestRef.current) setCareSeoProjectionLoading(false);
+    }
+  };
+
   const loadItems = async (nextType: ContentType = type, keepSelection = true) => {
     setIsLoading(true);
     setLoadError('');
@@ -156,7 +175,7 @@ export default function AdminContent() {
     }
   };
 
-  useEffect(() => { baselineRequestRef.current += 1; setPublishedBaseline(null); setLastSavedImpact(null); void loadItems(type, false); }, [type]);
+  useEffect(() => { baselineRequestRef.current += 1; careSeoProjectionRequestRef.current += 1; setPublishedBaseline(null); setCareSeoProjection(null); setCareSeoProjectionLoading(false); setLastSavedImpact(null); void loadItems(type, false); }, [type]);
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (!isDirty) return;
@@ -174,8 +193,14 @@ export default function AdminContent() {
     setIsDirty(false);
     setLastSavedImpact(null);
     setPublishedBaseline(null);
-    if (type === 'species') setSpeciesForm(speciesInputFromRecord(item as AdminSpeciesRecord));
-    else setCareForm(careInputFromRecord(item as AdminCareArticleRecord));
+    if (type === 'species') {
+      setSpeciesForm(speciesInputFromRecord(item as AdminSpeciesRecord));
+      setCareSeoProjection(null);
+    } else {
+      const careItem = item as AdminCareArticleRecord;
+      setCareForm(careInputFromRecord(careItem));
+      void loadCareSeoProjection(careItem);
+    }
     void loadPublishedBaseline(item);
     requestAnimationFrame(() => firstFieldRef.current?.focus());
   };
@@ -185,6 +210,9 @@ export default function AdminContent() {
     baselineRequestRef.current += 1;
     setSelectedId(null);
     setPublishedBaseline(null);
+    careSeoProjectionRequestRef.current += 1;
+    setCareSeoProjection(null);
+    setCareSeoProjectionLoading(false);
     setSpeciesForm(emptySpecies());
     setCareForm(emptyCare());
     setFormError('');
@@ -243,6 +271,7 @@ export default function AdminContent() {
       setLastSavedImpact(null);
       setPublishedBaseline(completedStatus === 'published' ? (type === 'species' ? speciesForm : careForm) : null);
       await loadItems(type, true);
+      if (type === 'care') await loadCareSeoProjection(selected as AdminCareArticleRecord);
     } catch (error) {
       showToast(errorMessage(error), 'error');
     } finally {
@@ -308,6 +337,7 @@ export default function AdminContent() {
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
             {selected && <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />}
+            {selected && type === 'care' && <CareSeoProjectionPreview projection={careSeoProjection} loading={careSeoProjectionLoading} />}
             {selected && type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}
             {selected && compatibilityRegression && <CompatibilityRegressionPreview result={compatibilityRegression} />}
             {type === 'species' ? (
