@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Clock3, Database, Loader2, RefreshCw, Search, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import type { ReleaseAuthority, ReleaseEventDto, ReleaseFeedDto, ReleaseSourceStatusDto } from '../../packages/contracts/src';
+import type { ReleaseAuthority, ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleaseSourceStatusDto, ReleaseStage } from '../../packages/contracts/src';
 import { publishCenterService } from '../services/admin/publish-center.service';
 
 const authorityLabel: Record<ReleaseAuthority, string> = {
@@ -9,6 +9,9 @@ const authorityLabel: Record<ReleaseAuthority, string> = {
 };
 const authorityIcon = { product_care: Database, compatibility: ShieldCheck, seo: Search } as const;
 const availabilityLabel = { ready: '可读取', auth_required: '需要登录', unavailable: '暂不可用' } as const;
+const stageLabel: Record<ReleaseStage, string> = { diff: 'Diff', impact: 'Impact', preview: 'Preview', review: 'Review', staging: 'Staging', production: 'Production' };
+const capabilityStateLabel = { available: '可用', partial: '部分', locked: '锁定', not_applicable: '不适用' } as const;
+const capabilityStateClass = { available: 'border-emerald-200 bg-emerald-50 text-emerald-800', partial: 'border-amber-200 bg-amber-50 text-amber-900', locked: 'border-red-200 bg-red-50 text-red-800', not_applicable: 'border-slate-200 bg-slate-50 text-slate-500' } as const;
 const coverageLabel = { current_only: '当前版本', revision_history: 'Revision 历史', activity_history: 'Activity / Revision 历史' } as const;
 
 const sourceClass = (source: ReleaseSourceStatusDto) => source.availability === 'ready'
@@ -23,7 +26,7 @@ const formatTime = (value: string) => {
 };
 export default function PublishCenter() {
   const navigate = useNavigate();
-  const [feed, setFeed] = useState<ReleaseFeedDto>({ events: [], sources: [] });
+  const [feed, setFeed] = useState<ReleaseFeedDto>({ events: [], sources: [], capabilities: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState<'all' | ReleaseAuthority>('all');
@@ -88,6 +91,8 @@ export default function PublishCenter() {
           <ReadinessStat label="历史覆盖缺口" value={String(readiness.currentOnly)} detail="Product/Care 当前只有 current Published snapshot" />
         </section>
 
+        <ReleaseCapabilityMatrix capabilities={feed.capabilities} sources={sourceByAuthority} />
+
         <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {([['all', '全部'], ['product_care', 'Product / Care'], ['compatibility', 'Compatibility'], ['seo', 'SEO']] as const).map(([value, label]) => <button key={value} type="button" onClick={() => { setFilter(value); setSelectedEventId(null); }} className={`shrink-0 rounded-full px-4 py-2 text-xs font-black ${filter === value ? 'bg-ink text-white' : 'border border-slate-200 bg-white text-ink/60'}`}>{label}</button>)}
         </div>
@@ -106,6 +111,16 @@ export default function PublishCenter() {
       </div>
     </div>
   );
+}
+
+
+function ReleaseCapabilityMatrix({ capabilities, sources }: { capabilities: ReleaseCapabilityDto[]; sources: Map<ReleaseAuthority, ReleaseSourceStatusDto> }) {
+  const byAuthority = (authority: ReleaseAuthority) => capabilities.filter(item => item.authority === authority);
+  return <section data-testid="publish-center-capability-matrix" className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Release capability</div><h2 className="mt-1 text-lg font-black">Diff → Impact → Preview → Review → Staging → Production</h2><p className="mt-1 text-xs font-semibold leading-5 text-ink/50">这是当前代码/authority 能力矩阵，不等于 Production 已解锁。来源未登录或不可用时，历史读取状态单独显示在上方。</p></div><div className="mt-4 grid gap-3">{(['product_care','compatibility','seo'] as ReleaseAuthority[]).map(authority => <article key={authority} className="rounded-[18px] border border-slate-100 bg-slate-50/60 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-sm font-black">{authorityLabel[authority]}</strong><span className="text-[11px] font-bold text-ink/40">{sources.get(authority) ? availabilityLabel[sources.get(authority)!.availability] : '未知'}</span></div><div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">{byAuthority(authority).map(item => <CapabilityCell key={`${authority}-${item.stage}`} item={item} />)}</div></article>)}</div></section>;
+}
+
+function CapabilityCell({ item }: { item: ReleaseCapabilityDto }) {
+  return <div className={`rounded-[14px] border px-3 py-2.5 ${capabilityStateClass[item.state]}`} title={item.detail}><div className="text-[10px] font-black uppercase tracking-[0.08em] opacity-70">{stageLabel[item.stage]}</div><div className="mt-1 text-xs font-black">{capabilityStateLabel[item.state]}</div><p className="mt-1 text-[10px] font-semibold leading-4 opacity-75">{item.detail}</p></div>;
 }
 
 function ReadinessStat({ label, value, detail }: { label: string; value: string; detail: string }) {

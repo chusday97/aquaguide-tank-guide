@@ -1,4 +1,4 @@
-import type { ReleaseEventDto, ReleaseFeedDto, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
+import type { ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
 import { apiRequest } from '../api/api-client';
 
 type RepoResult<T> = { data: T | null; error?: { message?: string } | null };
@@ -72,6 +72,16 @@ const seoBatchEvent = (row: SeoImportBatchRow): ReleaseEventDto => ({
   },
 });
 
+
+const seoCapabilities: ReleaseCapabilityDto[] = [
+  { authority: 'seo', stage: 'diff', state: 'available', label: 'Diff', detail: 'CSV preflight and page/base field Diff are available.' },
+  { authority: 'seo', stage: 'impact', state: 'partial', label: 'Impact', detail: 'Readiness and source/data blockers are available; cross-domain impact remains separate.' },
+  { authority: 'seo', stage: 'preview', state: 'available', label: 'Preview', detail: 'Controlled page/Google/mobile preview and hosted Staging verification are available.' },
+  { authority: 'seo', stage: 'review', state: 'available', label: 'Review', detail: 'Explicit editorial submit/approve gates exist for page and Base content.' },
+  { authority: 'seo', stage: 'staging', state: 'available', label: 'Staging', detail: 'Batch-scoped controlled Staging publish is implemented.' },
+  { authority: 'seo', stage: 'production', state: 'locked', label: 'Production', detail: 'Production SEO publish remains separately locked.' },
+];
+
 const seoSource = (availability: ReleaseSourceStatusDto['availability'], detail: string): ReleaseSourceStatusDto => ({
   authority: 'seo', availability, coverage: 'activity_history', label: 'Species SEO Repo Admin', detail,
 });
@@ -79,7 +89,7 @@ const seoSource = (availability: ReleaseSourceStatusDto['availability'], detail:
 const loadSeoReleaseFeed = async (limit = 100): Promise<ReleaseFeedDto> => {
   const session = await repoRequest<{ configured?: boolean; session?: { user?: { email?: string } } | null }>('/api/admin-content/session', { method: 'GET' });
   if (!session.response.ok || !session.payload?.session) {
-    return { events: [], sources: [seoSource('auth_required', 'SEO Repo Admin 使用独立 cookie；登录 /admin/seo 后可在这里读取 revision/activity。')] };
+    return { events: [], sources: [seoSource('auth_required', 'SEO Repo Admin 使用独立 cookie；登录 /admin/seo 后可在这里读取 revision/activity。')], capabilities: seoCapabilities };
   }
   try {
     const [activity, revisions, batches] = await Promise.all([
@@ -89,9 +99,9 @@ const loadSeoReleaseFeed = async (limit = 100): Promise<ReleaseFeedDto> => {
     ]);
     const events = [...activity.map(seoActivityEvent), ...revisions.map(seoRevisionEvent), ...batches.map(seoBatchEvent)]
       .sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt)).slice(0, limit);
-    return { events, sources: [seoSource('ready', 'Repo revision/activity/import/Staging 历史只读聚合；写 authority 仍留在 SEO Admin。')] };
+    return { events, sources: [seoSource('ready', 'Repo revision/activity/import/Staging 历史只读聚合；写 authority 仍留在 SEO Admin。')], capabilities: seoCapabilities };
   } catch (error) {
-    return { events: [], sources: [seoSource('unavailable', error instanceof Error ? error.message : 'SEO Repo release history 暂时不可读取。')] };
+    return { events: [], sources: [seoSource('unavailable', error instanceof Error ? error.message : 'SEO Repo release history 暂时不可读取。')], capabilities: seoCapabilities };
   }
 };
 export const publishCenterService = {
@@ -108,13 +118,15 @@ export const publishCenterService = {
             { authority: 'product_care', availability: 'unavailable', coverage: 'current_only', label: 'Product / Care publication', detail: 'Business Admin release feed 暂时不可读取。' },
             { authority: 'compatibility', availability: 'unavailable', coverage: 'revision_history', label: 'Compatibility revisions', detail: 'Business Admin release feed 暂时不可读取。' },
           ],
+          capabilities: [],
         };
-    const seoFeed = seo.status === 'fulfilled' ? seo.value : { events: [], sources: [seoSource('unavailable', 'SEO Repo release feed 暂时不可读取。')] };
+    const seoFeed = seo.status === 'fulfilled' ? seo.value : { events: [], sources: [seoSource('unavailable', 'SEO Repo release feed 暂时不可读取。')], capabilities: seoCapabilities };
     return {
       events: [...businessFeed.events, ...seoFeed.events]
         .sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt))
         .slice(0, limit),
       sources: [...businessFeed.sources, ...seoFeed.sources],
+      capabilities: [...(businessFeed.capabilities || []), ...(seoFeed.capabilities || [])],
     };
   },
 };

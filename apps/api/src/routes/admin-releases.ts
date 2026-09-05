@@ -14,6 +14,22 @@ const compatibilityTitle = (status: string, kind: 'Profile' | 'Pair Rule') => {
   return `${kind} Draft revision`;
 };
 
+
+const businessCapabilities = [
+  { authority: 'product_care', stage: 'diff', state: 'available', label: 'Diff', detail: 'Draft vs Published field Diff is available.' },
+  { authority: 'product_care', stage: 'impact', state: 'available', label: 'Impact', detail: 'Change Impact Preview classifies direct vs review-only consumers.' },
+  { authority: 'product_care', stage: 'preview', state: 'available', label: 'Preview', detail: 'Decision-critical Product fields expose Published vs ready-to-publish preview.' },
+  { authority: 'product_care', stage: 'review', state: 'partial', label: 'Review', detail: 'Admin publish confirmation exists; there is no separate reviewer role gate yet.' },
+  { authority: 'product_care', stage: 'staging', state: 'not_applicable', label: 'Staging', detail: 'Product/Care currently has no separate Staging publication authority.' },
+  { authority: 'product_care', stage: 'production', state: 'locked', label: 'Production', detail: 'Production remains explicitly locked in this project phase.' },
+  { authority: 'compatibility', stage: 'diff', state: 'available', label: 'Diff', detail: 'Revision vs reviewed baseline structural Diff is available.' },
+  { authority: 'compatibility', stage: 'impact', state: 'available', label: 'Impact', detail: 'Server structural impact and full engine regression reports are required.' },
+  { authority: 'compatibility', stage: 'preview', state: 'available', label: 'Preview', detail: 'Before/after engine outcomes are visible in the Compatibility Admin review flow.' },
+  { authority: 'compatibility', stage: 'review', state: 'available', label: 'Review', detail: 'Explicit human Approve/Reject is required before reviewed publish.' },
+  { authority: 'compatibility', stage: 'staging', state: 'not_applicable', label: 'Staging', detail: 'Compatibility reviewed authority currently has no separate Staging layer.' },
+  { authority: 'compatibility', stage: 'production', state: 'locked', label: 'Production', detail: 'Versioned publish code exists, but live Compatibility migrations remain unapplied.' },
+] as const;
+
 export const adminReleasesRouter = Router();
 
 adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
@@ -102,6 +118,7 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
         detail: 'Profile / Pair Rule revision 状态、审核与 versioned publish 历史。',
       },
     ],
+    capabilities: businessCapabilities.map(item => ({ ...item })),
   };
   return sendData(request, response, feed);
 }));

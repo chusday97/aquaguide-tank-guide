@@ -20,6 +20,20 @@ const businessFeed = {
     { authority: 'product_care', availability: 'ready', coverage: 'current_only', label: 'Product / Care publication', detail: 'current only' },
     { authority: 'compatibility', availability: 'ready', coverage: 'revision_history', label: 'Compatibility revisions', detail: 'revision history' },
   ],
+  capabilities: [
+    { authority: 'product_care', stage: 'diff', state: 'available', label: 'Diff', detail: 'field diff' },
+    { authority: 'product_care', stage: 'impact', state: 'available', label: 'Impact', detail: 'impact preview' },
+    { authority: 'product_care', stage: 'preview', state: 'available', label: 'Preview', detail: 'before after' },
+    { authority: 'product_care', stage: 'review', state: 'partial', label: 'Review', detail: 'publish confirmation only' },
+    { authority: 'product_care', stage: 'staging', state: 'not_applicable', label: 'Staging', detail: 'no separate staging' },
+    { authority: 'product_care', stage: 'production', state: 'locked', label: 'Production', detail: 'production locked' },
+    { authority: 'compatibility', stage: 'diff', state: 'available', label: 'Diff', detail: 'revision diff' },
+    { authority: 'compatibility', stage: 'impact', state: 'available', label: 'Impact', detail: 'server regression' },
+    { authority: 'compatibility', stage: 'preview', state: 'available', label: 'Preview', detail: 'engine before after' },
+    { authority: 'compatibility', stage: 'review', state: 'available', label: 'Review', detail: 'human review' },
+    { authority: 'compatibility', stage: 'staging', state: 'not_applicable', label: 'Staging', detail: 'no separate staging' },
+    { authority: 'compatibility', stage: 'production', state: 'locked', label: 'Production', detail: 'live migration unapplied' },
+  ],
 };
 const vite = await createServer({ root: process.cwd(), server: { host: '127.0.0.1', port: 0 }, logLevel: 'silent' });
 await vite.listen();
@@ -55,6 +69,11 @@ try {
     assert.match(await sources.innerText(), /SEO[\s\S]*需要登录/);
     const readiness = page.getByTestId('publish-center-readiness');
     assert.match(await readiness.innerText(), /可读取 authority[\s\S]*2\/3[\s\S]*需要独立登录[\s\S]*1[\s\S]*历史覆盖缺口[\s\S]*1/i);
+    const capability = page.getByTestId('publish-center-capability-matrix');
+    const capabilityText = await capability.innerText();
+    assert.match(capabilityText, /Product \/ Care[\s\S]*Diff[\s\S]*可用[\s\S]*Review[\s\S]*部分[\s\S]*Production[\s\S]*锁定/i);
+    assert.match(capabilityText, /Compatibility[\s\S]*Impact[\s\S]*可用[\s\S]*Staging[\s\S]*不适用/i);
+    assert.match(capabilityText, /SEO[\s\S]*Diff[\s\S]*可用[\s\S]*Staging[\s\S]*可用[\s\S]*Production[\s\S]*锁定/i);
     const detail = page.getByTestId('publish-center-event-detail');
     const productDetail = await detail.innerText();
     assert.match(productDetail, /Product 发布版本/);
