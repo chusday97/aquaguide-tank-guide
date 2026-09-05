@@ -11,7 +11,7 @@ export default function PublishReadinessPanel({ readiness, locale, readOnly = fa
   if (!readiness) return null;
   const meta = isUiEnglish
     ? ({ blocked: { label: 'Blocked', tone: 'blocked', description: 'Required blockers still need attention.' }, ready_for_review: { label: 'Ready for Review', tone: 'review', description: 'Structure and content are complete and ready for human review.' }, publish_ready: { label: 'Preview-ready', tone: 'ready', description: 'Content and data gates are satisfied for Controlled Preview; this is not Production.' } }[readiness.state] || { label: 'Blocked', tone: 'blocked', description: 'Required blockers still need attention.' })
-    : ({ blocked: { label: '已阻止', tone: 'blocked', description: '仍有必须处理的阻塞项。' }, ready_for_review: { label: '待审核', tone: 'review', description: '结构与内容完整，可以进入人工审核。' }, publish_ready: { label: '可生成 Preview', tone: 'ready', description: '已满足 Preview 的内容与数据门禁；不代表已上线 Production。' } }[readiness.state] || { label: '已阻止', tone: 'blocked', description: '仍有必须处理的阻塞项。' });
+    : ({ blocked: { label: '已阻止', tone: 'blocked', description: '仍有必须处理的阻塞项。' }, ready_for_review: { label: '待审核', tone: 'review', description: '结构与内容完整，可以进入人工审核。' }, publish_ready: { label: '可生成预览', tone: 'ready', description: '已满足预览的内容与数据门禁；不代表已正式上线。' } }[readiness.state] || { label: '已阻止', tone: 'blocked', description: '仍有必须处理的阻塞项。' });
   return (
     <section className={`publish-readiness-panel ${meta.tone}`}>
       <div className="publish-readiness-head">
@@ -30,14 +30,14 @@ export default function PublishReadinessPanel({ readiness, locale, readOnly = fa
         <p className="readiness-note">{isUiEnglish ? `Next review: ${readiness.reviewNeeded.join(' + ')}. Approval is required before Preview-ready.` : `下一步审核：${readiness.reviewNeeded.join(' + ')}。Approved 后才进入 Publish-ready。`}</p>
       ) : (
         <div className="readiness-ready-actions">
-          <p className="readiness-note">{isUiEnglish ? 'Eligible for Controlled Preview. Production publication remains separately locked.' : '可进入受控 Preview Publish；Production Published 仍由独立发布集成门禁控制。'}</p>
+          <p className="readiness-note">{isUiEnglish ? 'Eligible for Controlled Preview. Production publication remains separately locked.' : '可进入受控预览；正式发布仍由独立发布门禁控制。'}</p>
           <div className="footer-actions">
             <button className="secondary-button" type="button" disabled={!onExportPreview} onClick={onExportPreview}>
-              {readOnly ? (isUiEnglish ? 'Read-only Preview Snapshot' : '只读 Preview Snapshot') : (isUiEnglish ? 'Export Preview Snapshot' : '导出 Preview Snapshot')}
+              {readOnly ? (isUiEnglish ? 'Read-only Preview Snapshot' : '只读预览快照') : (isUiEnglish ? 'Export Preview Snapshot' : '导出预览快照')}
             </button>
             {repoMode ? (
               <button className="primary-button compact" type="button" disabled={!onPublishStaging || stagingPublishing} onClick={onPublishStaging}>
-                {stagingPublishing ? (isUiEnglish ? 'Publishing…' : '发布中…') : (isUiEnglish ? 'Publish selected to Staging' : '发布当前 Species 到 Staging')}
+                {stagingPublishing ? (isUiEnglish ? 'Publishing…' : '发布中…') : (isUiEnglish ? 'Publish selected to Staging' : '发布当前物种到预发布环境')}
               </button>
             ) : null}
           </div>

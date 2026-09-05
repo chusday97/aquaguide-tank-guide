@@ -83,12 +83,16 @@ const formatDate = (value) => {
   }
 };
 
-function InterfaceLanguageSwitch() {
+function InterfaceLanguageSwitch({ onLocaleChange }) {
   const { appLocale, setAppLocale, t } = useAppLanguage();
+  const switchLocale = (locale) => {
+    if (onLocaleChange) return onLocaleChange(locale);
+    setAppLocale(locale);
+  };
   return (
     <div className="app-language-switch" aria-label={t('top.interfaceLanguage')}>
-      <button type="button" className={appLocale === 'zh-CN' ? 'active' : ''} onClick={() => setAppLocale('zh-CN')}>中文</button>
-      <button type="button" className={appLocale === 'en' ? 'active' : ''} onClick={() => setAppLocale('en')}>EN</button>
+      <button type="button" className={appLocale === 'zh-CN' ? 'active' : ''} onClick={() => switchLocale('zh-CN')}>{appLocale === 'en' ? 'Chinese' : '中文'}</button>
+      <button type="button" className={appLocale === 'en' ? 'active' : ''} onClick={() => switchLocale('en')}>{appLocale === 'en' ? 'English' : '英文'}</button>
     </div>
   );
 }
@@ -254,7 +258,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     return (
       <section className="editor-empty">
         <div className="empty-icon">↖</div>
-        <h2>{isUiEnglish ? 'Select a Species' : '选择一个 Species'}</h2>
+        <h2>{isUiEnglish ? 'Select a Species' : '选择一个物种'}</h2>
         <p>{isUiEnglish ? 'Choose a Species from the left navigation to begin editing.' : '从左侧列表选择鱼种，开始编辑 SEO 内容。'}</p>
       </section>
     );
@@ -302,7 +306,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   };
   const save = async (reviewStateOverride = null) => {
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Production publishing is locked' : 'Production 发布未开放', detail: isUiEnglish ? 'This action can only save a Draft.' : '当前只能保存 Draft，不能直接发布到 Production。' });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Production publishing is locked' : '正式发布未开放', detail: isUiEnglish ? 'This action can only save a Draft.' : '当前只能保存草稿，不能直接发布到正式环境。' });
       return;
     }
     if (readOnly) {
@@ -310,7 +314,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       return;
     }
     if (!schemaReady) {
-      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Repo Content Store is not ready.' : 'Repo Content Store 尚未就绪。' });
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Repo Content Store is not ready.' : '仓库内容存储尚未就绪。' });
       return;
     }
     setSaving(true);
@@ -415,7 +419,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 
       {!currentHygiene.clean ? (
         <div className="content-hygiene-warning" role="alert">
-          <div><strong>{isUiEnglish ? 'Test / acceptance copy detected' : '检测到测试 / 验收文案'}</strong><span>{isUiEnglish ? 'Draft editing is allowed, but review and Preview are blocked until these markers are removed.' : '可以继续保存 Draft，但清理这些字样前不能提交审核或进入 Preview。'}</span></div>
+          <div><strong>{isUiEnglish ? 'Test / acceptance copy detected' : '检测到测试 / 验收文案'}</strong><span>{isUiEnglish ? 'Draft editing is allowed, but review and Preview are blocked until these markers are removed.' : '可以继续保存草稿，但清理这些字样前不能提交审核或进入预览。'}</span></div>
           <ul>{currentHygiene.issues.map((issue) => {
             const inheritedBaseIssue = issue.field === 'sharedIntro' || (['seoTitle', 'metaDescription', 'h1'].includes(issue.field) && !form[issue.field]);
             return <li key={`${issue.field}-${issue.marker}`}><b>{issue.label}</b><span>{issue.match}</span>{['seoTitle', 'metaDescription', 'h1'].includes(issue.field) && form[issue.field] ? <button type="button" onClick={() => useBaseValue(issue.field)}>{isUiEnglish ? 'Use clean Base template' : '恢复基础模板'}</button> : issue.field === 'variantIntro' && form.intro ? <button type="button" onClick={() => update('intro', '')}>{isUiEnglish ? 'Clear page supplement' : '清空本页补充'}</button> : inheritedBaseIssue ? <button type="button" onClick={onEditBase}>{isUiEnglish ? 'Edit Base template' : '去基础模板修复'}</button> : null}</li>;
@@ -441,7 +445,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               <label {...editorFieldProps('localizedName')}>
                 English Common Name
                 <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onFocus={() => onInspectorSelect?.('localizedName')} onChange={(event) => update('localizedName', event.target.value)} />
-                <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; source names remain unchanged.' : '只影响 English 内容层；不会改源数据里的中文名称。'}</small>
+                <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; source names remain unchanged.' : '只影响英文内容层；不会改源数据里的中文名称。'}</small>
               </label>
             ) : null}
             <details className="content-source-manager">
@@ -539,7 +543,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <span>{t('editor.canonical')}</span><code>{routeMeta.canonicalPath}</code>
               </div>
               {indexBlockReason ? <div className="advanced-seo-warning">{indexBlockReason}</div> : null}
-              <small className="inherit-note">{isUiEnglish ? 'The static Species generator is verified, but Production publishing remains locked.' : '静态 Species 生成器已验证；Production 发布仍然锁定。'}</small>
+              <small className="inherit-note">{isUiEnglish ? 'The static Species generator is verified, but Production publishing remains locked.' : '静态物种页面生成器已验证；正式发布仍然锁定。'}</small>
             </div>
           </details>
         </div>
@@ -552,7 +556,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           {readOnly ? <span className="footer-context-note">{isUiEnglish ? 'Read-only demo · no writes' : '只读演示 · 不会写入'}</span> : !schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
         </div>
         <div className="footer-actions">
-          {!readOnly ? <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span> : null}
+          {!readOnly ? <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : '已发布 · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span> : null}
           {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
         </div>
       </div>
@@ -562,7 +566,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 }
 
 export default function App() {
-  const { appLocale, t } = useAppLanguage();
+  const { appLocale, setAppLocale, t } = useAppLanguage();
   const [session, setSession] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [backendHealth, setBackendHealth] = useState(null);
@@ -571,7 +575,7 @@ export default function App() {
   const [seoRows, setSeoRows] = useState({});
   const [groupSeoRows, setGroupSeoRows] = useState({});
   const [groupPreviewRows, setGroupPreviewRows] = useState({});
-  const [contentLocale, setContentLocale] = useState(initialContentLocale);
+  const [contentLocale, setContentLocale] = useState(() => initialParams.has('locale') ? initialContentLocale : appLocale);
   const [selectedId, setSelectedId] = useState(initialSpeciesId);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
@@ -590,12 +594,34 @@ export default function App() {
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
+  const [previewWidth, setPreviewWidth] = useState(420);
+  const [previewResizing, setPreviewResizing] = useState(false);
   const [editorDirty, setEditorDirty] = useState(false);
   const [stagingPublishing, setStagingPublishing] = useState(false);
   const [activityOpen, setActivityOpen] = useState(false);
   const [activityRefreshKey, setActivityRefreshKey] = useState(0);
   const [activityUnread, setActivityUnread] = useState(0);
   const [importBatches, setImportBatches] = useState([]);
+
+
+  useEffect(() => {
+    if (!previewResizing) return undefined;
+    const handleMove = (event) => {
+      const sidebarWidth = window.innerWidth >= 1320 ? 270 : window.innerWidth >= 900 ? 220 : 0;
+      const maxWidth = Math.max(340, Math.min(560, window.innerWidth - sidebarWidth - 420));
+      const nextWidth = Math.max(340, Math.min(maxWidth, window.innerWidth - event.clientX));
+      setPreviewWidth(nextWidth);
+    };
+    const handleEnd = () => setPreviewResizing(false);
+    document.body.classList.add('is-resizing-preview');
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleEnd, { once: true });
+    return () => {
+      document.body.classList.remove('is-resizing-preview');
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleEnd);
+    };
+  }, [previewResizing]);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
   useEffect(() => {
@@ -849,12 +875,22 @@ export default function App() {
     action();
     return true;
   };
+  const switchWorkspaceLocale = (locale) => {
+    const next = locale === 'en' ? 'en' : 'zh-CN';
+    if (next === contentLocale) {
+      setAppLocale(next);
+      return true;
+    }
+    return runEditorNavigation(() => {
+      setContentLocale(next);
+      setAppLocale(next);
+    });
+  };
   const handleInspectorSelect = (key, source = 'editor') => {
     setSelectedInspectorElement(key);
     const elementMeta = getEditorElementMeta(key);
     const inspectorReadOnly = Boolean(elementMeta?.readOnly || (key === 'localizedName' && contentLocale !== 'en'));
     if (source === 'editor') setCompactPreviewOpen(true);
-    if (source === 'preview' && !inspectorReadOnly) setCompactPreviewOpen(false);
     if (!inspectorReadOnly) setActiveTool(null);
     const variantOnly = key === 'imageAlt' || (key === 'localizedName' && contentLocale === 'en');
     const variantOverride = Boolean(activeLivePreview?.override?.[key]);
@@ -921,7 +957,7 @@ export default function App() {
       const count = localeOverview.publish_ready;
       return {
         tone: 'ready',
-        title: appLocale === 'en' ? `${count} page${count === 1 ? '' : 's'} ready for Staging Preview` : `${count} 个页面可以进入 Staging`,
+        title: appLocale === 'en' ? `${count} page${count === 1 ? '' : 's'} ready for Staging Preview` : `${count} 个页面可以进入预发布`,
         detail: appLocale === 'en' ? 'These pages passed data, editorial and bilingual checks. Production is still locked.' : '这些页面已通过数据、内容和双语检查；Production 仍然锁定。',
         cta: appLocale === 'en' ? 'View Preview-ready pages' : '查看可预览页面',
         run: () => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` }),
@@ -946,15 +982,15 @@ export default function App() {
 
   const exportPreviewSnapshot = () => {
     if (isReadOnlyDemoMode) {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'A real Preview Snapshot is only exported from the authenticated Admin.' : '真实 Preview Snapshot 只能从已登录的 Admin 导出。' });
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'A real Preview Snapshot is only exported from the authenticated Admin.' : '真实预览快照只能从已登录后台导出。' });
       return;
     }
     if (!selectedSpecies || !selectedGroup) {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Select a Species first' : '请先选择 Species', detail: appLocale === 'en' ? 'A selected Species is required.' : '导出前需要先选择一个 Species 页面。' });
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Select a Species first' : '请先选择物种', detail: appLocale === 'en' ? 'A selected Species is required.' : '导出前需要先选择一个物种页面。' });
       return;
     }
     if (publishReadiness?.state !== 'publish_ready') {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Preview export blocked' : 'Preview 导出被阻止', detail: publishReadiness?.blockers?.[0] || (appLocale === 'en' ? 'This page is not Preview-ready yet.' : '当前页面还没有达到可预览条件。'), duration: 7200 });
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Preview export blocked' : '预览导出被阻止', detail: publishReadiness?.blockers?.[0] || (appLocale === 'en' ? 'This page is not Preview-ready yet.' : '当前页面还没有达到可预览条件。'), duration: 7200 });
       return;
     }
     const snapshot = buildControlledPreviewSnapshot({
@@ -977,19 +1013,19 @@ export default function App() {
 
   const publishSelectedToStaging = async () => {
     if (isReadOnlyDemoMode) {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'Staging publish is not available in demo mode.' : '演示模式不会执行 Staging 发布。' });
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Read-only demo' : '当前是只读演示', detail: appLocale === 'en' ? 'Staging publish is not available in demo mode.' : '演示模式不会执行预发布。' });
       return;
     }
     if (!isRepoBackend) {
-      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Staging publish unavailable' : '无法发布到 Staging', detail: appLocale === 'en' ? 'The Repo-backed Admin backend is required.' : '当前不是可写的 Repo Admin 后端。' });
+      emitAdminNotice({ status: 'error', title: appLocale === 'en' ? 'Staging publish unavailable' : '无法发布到预发布环境', detail: appLocale === 'en' ? 'The Repo-backed Admin backend is required.' : '当前不是可写的仓库后台。' });
       return;
     }
     if (!selectedSpecies || !selectedGroup) {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Select a Species first' : '请先选择 Species', detail: appLocale === 'en' ? 'A selected Species is required before publishing.' : '发布前需要先选择一个 Species 页面。' });
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Select a Species first' : '请先选择物种', detail: appLocale === 'en' ? 'A selected Species is required before publishing.' : '发布前需要先选择一个物种页面。' });
       return;
     }
     if (publishReadiness?.state !== 'publish_ready') {
-      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Staging publish blocked' : 'Staging 发布被阻止', detail: publishReadiness?.blockers?.[0] || (appLocale === 'en' ? 'This page is not Preview-ready yet.' : '当前页面还没有达到可预览条件。'), duration: 7200 });
+      emitAdminNotice({ status: 'warning', title: appLocale === 'en' ? 'Staging publish blocked' : '预发布被阻止', detail: publishReadiness?.blockers?.[0] || (appLocale === 'en' ? 'This page is not Preview-ready yet.' : '当前页面还没有达到可预览条件。'), duration: 7200 });
       return;
     }
     setStagingPublishing(true);
@@ -1027,15 +1063,15 @@ export default function App() {
     },
     readiness: {
       title: t('editor.publishCheck'),
-      subtitle: appLocale === 'en' ? 'See exactly what blocks or enables Controlled Preview.' : '查看阻塞项与 Controlled Preview 条件。',
+      subtitle: appLocale === 'en' ? 'See exactly what blocks or enables Controlled Preview.' : '查看阻塞项与受控预览条件。',
     },
     translation: {
       title: t('editor.translation'),
-      subtitle: appLocale === 'en' ? 'Chinese source → AI suggestion → reviewed English Draft.' : '中文 Source → AI 建议 → 人工确认 English Draft。',
+      subtitle: appLocale === 'en' ? 'Chinese source → AI suggestion → reviewed English Draft.' : '中文来源 → AI 建议 → 人工确认英文草稿。',
     },
     batch: {
       title: t('editor.batchSeo'),
-      subtitle: appLocale === 'en' ? 'Create inherited Draft shells without copying Base content.' : '建立继承 Draft，不复制 Base 文案。',
+      subtitle: appLocale === 'en' ? 'Create inherited Draft shells without copying Base content.' : '建立继承草稿，不复制基础模板文案。',
     },
     bulkReview: {
       title: appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录',
@@ -1051,7 +1087,7 @@ export default function App() {
     },
     history: {
       title: t('editor.history'),
-      subtitle: appLocale === 'en' ? 'Versioned Base and Variant revision history.' : '带版本记录的 Base / Variant 历史。',
+      subtitle: appLocale === 'en' ? 'Versioned Base and Variant revision history.' : '带版本记录的基础模板 / 当前页面历史。',
     },
     workflow: {
       title: t('editor.workflow'),
@@ -1151,18 +1187,18 @@ export default function App() {
           }} aria-label={appLocale === 'en' ? 'Open activity center' : '打开操作中心'}>
             <span>{appLocale === 'en' ? 'Activity' : '操作记录'}</span>{activityUnread > 0 ? <b>{Math.min(activityUnread, 99)}</b> : null}
           </button>
-          <InterfaceLanguageSwitch />
+          <InterfaceLanguageSwitch onLocaleChange={switchWorkspaceLocale} />
           <button className="ghost-button" type="button" onClick={signOut}>{t('top.signOut')}</button>
         </div>
       </header>
 
       {isReadOnlyDemoMode ? (
         <div className="schema-banner demo-banner">
-          <strong>只读 UI 演示：</strong> 这是专门的只读演示环境，不连接任何可写内容源。可以搜索 486 条 Species、体验编辑器和实时前端 Preview，但保存被硬禁用。
+          <strong>{appLocale === 'en' ? 'Read-only UI demo:' : '只读界面演示：'}</strong> {appLocale === 'en' ? 'This demo is disconnected from writable content sources. You can search 486 species pages, use the editor and compare the live preview, but all writes are disabled.' : '此演示环境不连接任何可写内容源。可以搜索 486 个物种页面、体验编辑器并对照实时预览，但所有写入操作均被禁用。'}
         </div>
       ) : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
-          <strong>安全隔离状态：</strong> {isRepoBackend ? 'Repo Content Store 当前不可写；可以继续预览继承结构，但保存被阻止。' : 'Variant / Base Species SEO migration 尚未全部应用；可以预览继承结构，但缺失的层级不会写入。'} 不会自动触碰 Production。
+          <strong>安全隔离状态：</strong> {isRepoBackend ? '仓库内容存储当前不可写；可以继续预览继承结构，但保存被阻止。' : '当前页 / 基础模板 SEO 数据结构尚未全部应用；可以预览继承结构，但缺失的层级不会写入。'} 不会自动触碰 Production。
         </div>
       ) : !historySchemaReady ? (
         <div className="schema-banner">
@@ -1190,7 +1226,7 @@ export default function App() {
             <b>{currentWorkflowStage > 3 ? '✓' : '3'}</b><span><strong>{appLocale === 'en' ? 'Human review' : '人工审核'}</strong></span><em>{workflowOverview.locales[contentLocale]?.ready_for_review || 0}</em>
           </button>
           <button type="button" aria-current={currentWorkflowStage === 4 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:publish_ready`} className={`workflow-stage-card ${currentWorkflowStage === 4 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:publish_ready` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>
-            <b>4</b><span><strong>Staging</strong></span><em>{workflowOverview.locales[contentLocale]?.publish_ready || 0}</em>
+            <b>4</b><span><strong>{appLocale === 'en' ? 'Staging' : '预发布'}</strong></span><em>{workflowOverview.locales[contentLocale]?.publish_ready || 0}</em>
           </button>
         </nav>
         <div className="workflow-current-action" aria-label={appLocale === 'en' ? 'Current workflow action' : '当前流程操作'}>
@@ -1200,7 +1236,7 @@ export default function App() {
         </div>
       </section>
 
-      <div className="workspace studio-workspace">
+      <div className={`workspace studio-workspace ${compactPreviewOpen ? 'preview-split-open' : ''}`} style={{ '--preview-width': `${previewWidth}px` }}>
         <SpeciesGroupSidebar
           groups={speciesGroups}
           selectedId={selectedId}
@@ -1245,7 +1281,7 @@ export default function App() {
             <button type="button" className="compact-preview-toggle" aria-expanded={compactPreviewOpen} onClick={() => setCompactPreviewOpen((value) => !value)}>{appLocale === 'en' ? 'Preview' : '效果预览'}</button>
             <div className="locale-switcher compact" aria-label="Content language">
               {CONTENT_LOCALES.map((item) => (
-                <button key={item.code} type="button" aria-pressed={contentLocale === item.code} className={contentLocale === item.code ? 'active' : ''} onClick={() => contentLocale === item.code || runEditorNavigation(() => setContentLocale(item.code))}>{item.label}</button>
+                <button key={item.code} type="button" aria-pressed={contentLocale === item.code} className={contentLocale === item.code ? 'active' : ''} onClick={() => switchWorkspaceLocale(item.code)}>{appLocale === 'en' ? (item.code === 'en' ? 'English' : 'Chinese') : (item.code === 'en' ? '英文' : '中文')}</button>
               ))}
             </div>
           </div>
@@ -1322,12 +1358,12 @@ export default function App() {
               </button>
             ) : null}
             <button type="button" className={`editor-tool-row readiness ${activeTool === 'readiness' ? 'active' : ''}`} onClick={() => setActiveTool('readiness')}>
-              <span><strong>{t('editor.publishCheck')}</strong><small>{appLocale === 'en' ? 'Controlled Preview eligibility' : 'Controlled Preview 资格检查'}</small></span>
+              <span><strong>{t('editor.publishCheck')}</strong><small>{appLocale === 'en' ? 'Controlled Preview eligibility' : '受控预览资格检查'}</small></span>
               <em className={publishReadiness?.state || 'blocked'}>{publishReadiness?.state || 'blocked'}</em>
             </button>
             {contentLocale === 'en' ? (
               <button type="button" className={`editor-tool-row ${activeTool === 'translation' ? 'active' : ''}`} onClick={() => setActiveTool('translation')}>
-                <span><strong>{t('editor.translation')}</strong><small>{appLocale === 'en' ? 'Chinese source → English Draft' : '中文 Source → English Draft'}</small></span><b>›</b>
+                <span><strong>{t('editor.translation')}</strong><small>{appLocale === 'en' ? 'Chinese source → English Draft' : '中文来源 → 英文草稿'}</small></span><b>›</b>
               </button>
             ) : null}
             {batchGroup && batchMembers.length > 1 ? (
@@ -1348,7 +1384,7 @@ export default function App() {
               <span><strong>{t('editor.history')}</strong><small>Base / Variant revision</small></span><b>›</b>
             </button>
             <button type="button" className={`editor-tool-row ${activeTool === 'workflow' ? 'active' : ''}`} onClick={() => setActiveTool('workflow')}>
-              <span><strong>{t('editor.workflow')}</strong><small>Data Review / Editorial / Preview-ready</small></span><b>›</b>
+              <span><strong>{t('editor.workflow')}</strong><small>{appLocale === 'en' ? 'Data Review / Editorial / Preview-ready' : '数据复核 / 内容审核 / 可预览'}</small></span><b>›</b>
             </button>
             </div>
           </details>
@@ -1506,6 +1542,18 @@ export default function App() {
             ) : null}
         </EditorToolDrawer>
 
+        <div
+          className="preview-resize-handle"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label={appLocale === 'en' ? 'Resize editor and preview' : '调整编辑与预览宽度'}
+          tabIndex={compactPreviewOpen ? 0 : -1}
+          onPointerDown={(event) => { event.preventDefault(); setPreviewResizing(true); }}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowLeft') setPreviewWidth((value) => Math.min(560, value + 20));
+            if (event.key === 'ArrowRight') setPreviewWidth((value) => Math.max(340, value - 20));
+          }}
+        ><span /></div>
         <LiveFrontendPreview
           preview={activeLivePreview}
           readiness={publishReadiness}

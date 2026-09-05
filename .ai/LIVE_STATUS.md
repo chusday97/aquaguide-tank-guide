@@ -234,3 +234,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Desktop browser acceptance: review bar width 1170px vs editor 760px; after 673px editor scroll the review bar remains sticky while content scrolls away.
 - Mobile: standalone review bar remains separate; sticky editor toolbar continuously exposes `审核 1/3 · 编辑中`, avoiding nested-sticky overlap. 1440/390 horizontal overflow remains 0.
 - Admin contract and root build PASS; Production/main/index/live DB remain untouched.
+
+## 2026-09-06 — split Preview / locale consistency
+- Local 1440 acceptance: editor 1170px closed -> 742px + 420px Preview open; drag verified 654px editor + 508px Preview; Preview remains open after selecting H1 in inspector; overflow 0.
+- Local 390 acceptance: editor remains 390px; Preview opens as 374px fixed overlay; overflow 0.
+- Unified locale acceptance: English workspace + content selector => `lang=en`, core chrome Han count 0; Chinese => `lang=zh-CN`, no ordinary English state-label leakage in scanned chrome.
+- Admin contract and full root build PASS. Production/main/live DB untouched.

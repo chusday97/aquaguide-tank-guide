@@ -480,7 +480,7 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .topbar-actions { font-size: 11px; gap: 8px; }
 .topbar-actions .ghost-button { padding: 6px 8px; }
 .schema-banner { flex: 0 0 auto; padding: 6px 16px; font-size: 10px; line-height: 1.45; background: #fff9e8; }
-.workspace.studio-workspace { flex: 1; min-height: 0; display: grid; grid-template-columns: 270px minmax(560px, 1fr) 460px; background: #fff; }
+.workspace.studio-workspace { flex: 1; min-height: 0; display: grid; grid-template-columns: 270px minmax(0, 1fr); background: #fff; }
 
 .species-sidebar { min-height: 0; padding: 0; display: flex; flex-direction: column; overflow: hidden; background: #fafbf9; border-right: 1px solid #e4e8e4; }
 .sidebar-heading { padding: 16px 16px 8px; }
@@ -594,7 +594,7 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .workflow-overview-grid { gap: 7px; }
 .workflow-overview-group { padding: 8px; border-radius: 8px; }
 
-.live-preview-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: #f3f5f3; border-left: 1px solid #e1e6e2; }
+.live-preview-pane { min-width: 0; min-height: 0; flex-direction: column; overflow: hidden; background: #f3f5f3; border-left: 1px solid #e1e6e2; }
 .live-preview-header { min-height: 52px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 1px solid #e2e7e3; background: #fff; }
 .live-preview-header > div:first-child { display: grid; gap: 1px; }
 .live-preview-header strong { font-size: 12px; }
@@ -645,14 +645,13 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .live-preview-footer { flex: 0 0 auto; padding: 7px 14px; border-top: 1px solid #e1e6e2; background: #fff; color: #929b95; font-size: 8px; text-align: center; }
 
 @media (max-width: 1320px) {
-  .workspace.studio-workspace { grid-template-columns: 248px minmax(520px, 1fr) 400px; }
+  .workspace.studio-workspace { grid-template-columns: 248px minmax(0, 1fr); }
   .editor-context-bar { padding: 0 22px; }
   .editor-panel, .base-seo-panel { padding-left: 26px; padding-right: 26px; }
   .editor-secondary-tools { padding-left: 26px; padding-right: 26px; }
 }
 @media (max-width: 1180px) {
-  .workspace.studio-workspace { grid-template-columns: 240px minmax(0, 1fr); }
-  .live-preview-pane { display: none; }
+  .workspace.studio-workspace { grid-template-columns: 220px minmax(0, 1fr); }
   .topbar-workflow { display: none; }
 }
 @media (max-width: 760px) {
@@ -860,7 +859,8 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 /* Secondary editor tools: overlay the editor grid cell, never the live Preview column. */
 .workspace.studio-workspace > .species-sidebar { grid-column: 1; grid-row: 1; }
 .workspace.studio-workspace > .studio-editor-area { grid-column: 2; grid-row: 1; }
-.workspace.studio-workspace > .live-preview-pane { grid-column: 3; grid-row: 1; }
+.workspace.studio-workspace > .preview-resize-handle { display:none; grid-column:3; grid-row:1; }
+.workspace.studio-workspace > .live-preview-pane { display:none; grid-column:4; grid-row:1; }
 .editor-tool-launchers { gap: 0; border-top: 1px solid #e8ece8; }
 .editor-tool-row {
   width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
@@ -904,7 +904,6 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .editor-tool-drawer { width: min(520px, 92%); }
 }
 @media (max-width: 1050px) {
-  .workspace.studio-workspace > .live-preview-pane { display: none; }
   .editor-tool-drawer-layer { grid-column: 2; }
 }
 @media (max-width: 760px) {
@@ -941,16 +940,27 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
 .live-species-page.mobile .live-publish-hero .preview-image-inspectable { max-width: 170px; margin: 0 auto; }
 .live-species-page.mobile .live-facts.publish-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-/* Narrow desktop fallback: Preview becomes an explicit overlay instead of being clipped or disappearing. */
-.compact-preview-toggle { display: none; border: 1px solid #d8e1da; border-radius: 7px; background: #fff; padding: 6px 9px; color: #315f49; font-size: 9px; font-weight: 760; }
-.compact-preview-close { display: none; width: 28px; height: 28px; place-items: center; border: 0; border-radius: 7px; background: #eef2ef; color: #536159; font-size: 18px; line-height: 1; }
-@media (max-width: 1180px) {
-  .compact-preview-toggle { display: inline-flex; align-items: center; }
-  .live-preview-pane.compact-open {
-    display: flex; position: fixed; top: 52px; right: 0; bottom: 0; width: min(460px, 94vw); z-index: 45;
-    box-shadow: -20px 0 52px rgba(28,45,35,.18);
-  }
-  .live-preview-pane.compact-open .compact-preview-close { display: grid; }
+/* Preview is explicit-on-demand. Desktop opens as a resizable split pane; narrow screens use an overlay. */
+.compact-preview-toggle { display:inline-flex; align-items:center; border:1px solid var(--cms-border); border-radius:7px; background:var(--cms-paper); padding:6px 9px; color:var(--cms-ink); font-size:9px; font-weight:760; }
+.compact-preview-toggle[aria-expanded='true'] { border-color:var(--cms-accent); color:var(--cms-accent); box-shadow:inset 0 -2px 0 var(--cms-accent); }
+.compact-preview-close { display:none; width:28px; height:28px; place-items:center; border:0; border-radius:7px; background:var(--cms-panel); color:var(--cms-ink); font-size:18px; line-height:1; }
+.preview-resize-handle { position:relative; cursor:col-resize; background:var(--cms-bg); border-left:1px solid var(--cms-border); border-right:1px solid var(--cms-border); }
+.preview-resize-handle::after { content:''; position:absolute; top:50%; left:50%; width:2px; height:44px; border-radius:999px; background:var(--cms-border-strong); transform:translate(-50%,-50%); }
+.preview-resize-handle:focus-visible::after,.preview-resize-handle:hover::after { background:var(--cms-accent); }
+body.is-resizing-preview { cursor:col-resize; user-select:none; }
+@media (min-width:901px) {
+  .workspace.studio-workspace.preview-split-open { grid-template-columns:270px minmax(420px,1fr) 8px var(--preview-width,420px); }
+  .workspace.studio-workspace.preview-split-open > .preview-resize-handle { display:block; }
+  .workspace.studio-workspace.preview-split-open > .live-preview-pane { display:flex; }
+  .workspace.studio-workspace.preview-split-open .compact-preview-close { display:grid; }
+}
+@media (min-width:901px) and (max-width:1320px) {
+  .workspace.studio-workspace.preview-split-open { grid-template-columns:220px minmax(380px,1fr) 8px var(--preview-width,380px); }
+}
+@media (max-width:900px) {
+  .workspace.studio-workspace > .preview-resize-handle { display:none !important; }
+  .live-preview-pane.compact-open { display:flex !important; position:fixed; top:42px; right:0; bottom:0; width:min(460px,96vw); z-index:45; box-shadow:-18px 0 44px rgba(32,36,44,.16); }
+  .live-preview-pane.compact-open .compact-preview-close { display:grid; }
 }
 
 /* 2026-08-31 calm editor density */
@@ -2413,10 +2423,10 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
 }
 
 
-/* 2026-09-06 preview is explicit-on-demand, never a permanently competing third column. */
+/* 2026-09-06 preview is explicit-on-demand. Desktop opens as a resizable split view; narrow screens use an overlay. */
 .workspace.studio-workspace {
   position:relative;
-  grid-template-columns:270px minmax(560px,1fr);
+  grid-template-columns:270px minmax(0,1fr);
 }
 .compact-preview-toggle {
   display:inline-flex !important;
@@ -2432,33 +2442,53 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
   color:var(--cms-accent) !important;
 }
 .live-preview-pane { display:none !important; }
-.live-preview-pane.compact-open {
-  display:flex !important;
-  position:absolute !important;
-  top:0 !important;
-  right:0 !important;
-  bottom:0 !important;
-  width:min(520px,46vw) !important;
-  z-index:45;
-  border-left:1px solid var(--cms-border) !important;
-  background:var(--cms-paper) !important;
-  box-shadow:-18px 0 42px rgba(32,36,44,.12) !important;
+.preview-resize-handle { display:none !important; }
+@media (min-width:901px) {
+  .workspace.studio-workspace.preview-split-open {
+    grid-template-columns:270px minmax(420px,1fr) 8px var(--preview-width,420px);
+  }
+  .workspace.studio-workspace.preview-split-open > .preview-resize-handle {
+    display:block !important;
+    grid-column:3;
+    grid-row:1;
+  }
+  .workspace.studio-workspace.preview-split-open > .live-preview-pane.compact-open {
+    display:flex !important;
+    position:relative !important;
+    inset:auto !important;
+    width:auto !important;
+    grid-column:4;
+    grid-row:1;
+    z-index:2;
+    border-left:1px solid var(--cms-border) !important;
+    background:var(--cms-paper) !important;
+    box-shadow:none !important;
+  }
+  .workspace.studio-workspace.preview-split-open .compact-preview-close { display:grid !important; }
 }
-.live-preview-pane.compact-open .compact-preview-close { display:grid !important; }
-.live-google-card h3,.preview-title { color:var(--cms-accent) !important; }
-@media (max-width:1320px) {
-  .workspace.studio-workspace { grid-template-columns:248px minmax(520px,1fr); }
-  .live-preview-pane.compact-open { width:min(480px,52vw) !important; }
+@media (min-width:901px) and (max-width:1320px) {
+  .workspace.studio-workspace { grid-template-columns:220px minmax(0,1fr); }
+  .workspace.studio-workspace.preview-split-open { grid-template-columns:220px minmax(380px,1fr) 8px var(--preview-width,380px); }
 }
-@media (max-width:1180px) {
-  .workspace.studio-workspace { grid-template-columns:240px minmax(0,1fr); }
-  .live-preview-pane.compact-open { width:min(460px,72vw) !important; }
-}
-@media (max-width:760px) {
+@media (max-width:900px) {
   .workspace.studio-workspace { grid-template-columns:1fr; }
-  .live-preview-pane.compact-open { width:min(560px,94vw) !important; }
+  .workspace.studio-workspace > .preview-resize-handle { display:none !important; }
+  .live-preview-pane.compact-open {
+    display:flex !important;
+    position:fixed !important;
+    top:42px !important;
+    right:0 !important;
+    bottom:0 !important;
+    left:auto !important;
+    width:min(460px,96vw) !important;
+    z-index:45;
+    border-left:1px solid var(--cms-border) !important;
+    background:var(--cms-paper) !important;
+    box-shadow:-18px 0 44px rgba(32,36,44,.16) !important;
+  }
+  .live-preview-pane.compact-open .compact-preview-close { display:grid !important; }
 }
-
+.live-google-card h3,.preview-title { color:var(--cms-accent) !important; }
 
 /* 2026-09-06 permanent compact workflow: status/navigation chrome, never an expandable content panel. */
 .admin-shell.workflow-compact .workflow-command-center {

@@ -26,10 +26,10 @@ function elementSource(key, preview, appLocale) {
   if (key === 'intro') return preview?.override?.intro
     ? (english ? 'Custom' : '自定义')
     : preview?.effectiveSeo?.sharedIntro
-      ? (english ? 'Inherited from Base' : '继承自 Base')
+      ? (english ? 'Inherited from Base' : '继承自基础模板')
       : (english ? 'Not set' : '尚未填写');
   if (key === 'localizedName') return preview?.override?.localizedName ? (english ? 'Custom' : '自定义') : (english ? 'Not customized' : '未自定义');
-  return preview?.override?.[key] ? (english ? 'Custom' : '自定义') : (english ? 'Inherited from Base' : '继承自 Base');
+  return preview?.override?.[key] ? (english ? 'Custom' : '自定义') : (english ? 'Inherited from Base' : '继承自基础模板');
 }
 
 function elementEditPath(key, preview, appLocale, editorScope) {
@@ -42,7 +42,7 @@ function elementEditPath(key, preview, appLocale, editorScope) {
   const variantOnly = key === 'imageAlt' || (key === 'localizedName' && preview?.locale === 'en');
   const custom = Boolean(preview?.override?.[key]);
   const baseContext = !variantOnly && !custom;
-  const scope = baseContext ? 'Base Species' : (english ? 'Current page' : '当前页面');
+  const scope = baseContext ? (english ? 'Base template' : '基础模板') : (english ? 'Current page' : '当前页面');
   return `${scope} → ${section} → ${getEditorElementLabel(key, appLocale)}`;
 }
 function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabled, onSelect, onHover, labelLocale = 'zh-CN', children, className = '', readOnlyElement = false }) {
@@ -121,7 +121,7 @@ function GooglePreview({ preview, inspector }) {
     <div className="live-google-card">
       <div className="live-google-brand"><span>A</span><div><strong>AquaGuide</strong><small>aquaguide · {routeMeta?.selfPath}</small></div></div>
       <Inspectable {...inspectProps('seoTitle')}><h3>{effectiveSeo.seoTitle || effectiveSeo.displayName || species.name}</h3></Inspectable>
-      <Inspectable {...inspectProps('metaDescription')}><p>{effectiveSeo.metaDescription || (preview.locale === 'en' ? 'Meta Description has not been written yet.' : '尚未填写 Meta Description。')}</p></Inspectable>
+      <Inspectable {...inspectProps('metaDescription')}><p>{effectiveSeo.metaDescription || (preview.locale === 'en' ? 'Meta Description has not been written yet.' : '尚未填写元描述。')}</p></Inspectable>
     </div>
   );
 }
@@ -134,7 +134,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
   const paneRef = useRef(null);
   const meta = appLocale === 'en'
     ? (stateMeta[readiness?.state] || stateMeta.blocked)
-    : ({ blocked: { label: '已阻止', tone: 'blocked' }, ready_for_review: { label: '待审核', tone: 'review' }, publish_ready: { label: '可生成 Preview', tone: 'ready' } }[readiness?.state] || { label: '已阻止', tone: 'blocked' });
+    : ({ blocked: { label: '已阻止', tone: 'blocked' }, ready_for_review: { label: '待审核', tone: 'review' }, publish_ready: { label: '可生成预览', tone: 'ready' } }[readiness?.state] || { label: '已阻止', tone: 'blocked' });
 
   useEffect(() => {
     const targetMode = getEditorElementMeta(selectedElement)?.previewMode;

@@ -123,3 +123,5 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Upgrade the compact strip into dedicated Progress Navigation: current stage / 4, four clickable stage buttons, complete/current/upcoming states, separate operator filter selection, current-action CTA, and a clear visual divider from the editor canvas.
 - [x] Initial neutralization checkpoint used a blue accent; superseded by the current Graphite / White / one Green accent system.
 - [x] Verify fixed-chrome reduction: 1440/1366 workspace gains 196px vertical space; 390 workspace gains 312px and mobile editor sticky bar drops from ~140px to 46px, with zero horizontal overflow.
+- [x] Make `效果预览` a simultaneous resizable editor/Preview split on desktop, with narrow-screen overlay fallback and no inspector-driven auto-close.
+- [x] Unify interface + content locale switching; remove visible mixed Draft/Preview/Species/Base/Staging state copy from Chinese core chrome and Chinese leakage from English core chrome.

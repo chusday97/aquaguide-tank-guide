@@ -4,11 +4,11 @@ const STORAGE_KEY = 'aquaguide-admin-app-locale';
 const AppLanguageContext = createContext(null);
 
 const zh = {
-  common: { chinese: '中文', english: 'English', all: '全部', issues: '数据问题', review: '待审核', ready: 'Ready', clear: '清除', save: '保存', saving: '保存中…', readonly: '只读', draft: 'Draft', published: 'Published' },
-  top: { product: 'AquaGuide Content', section: 'Species SEO', dataReview: '数据复核', awaiting: '待审核', previewReady: '可预览', reviewMode: '只读演示', admin: 'Admin', signOut: '退出', interfaceLanguage: '界面语言' },
-  sidebar: { content: '内容', species: 'Species SEO 页面', records: '个品种页面', batchGroups: '个模板组', workflowFilter: '当前筛选', search: '搜索名称、学名、品种或 key…', allCategories: '全部种类', noMatch: '没有匹配的基础种。', pages: '个品种页面', baseSpecies: '基础模板', inheritsBase: '使用模板', dataIssue: '存在待复核的数据问题' },
+  common: { chinese: '中文', english: '英文', all: '全部', issues: '数据问题', review: '待审核', ready: '就绪', clear: '清除', save: '保存', saving: '保存中…', readonly: '只读', draft: '草稿', published: '已发布' },
+  top: { product: 'AquaGuide 内容中心', section: '物种 SEO', dataReview: '数据复核', awaiting: '待审核', previewReady: '可预览', reviewMode: '只读演示', admin: 'Admin', signOut: '退出', interfaceLanguage: '界面语言' },
+  sidebar: { content: '内容', species: '物种 SEO 页面', records: '个品种页面', batchGroups: '个模板组', workflowFilter: '当前筛选', search: '搜索名称、学名、品种或 key…', allCategories: '全部种类', noMatch: '没有匹配的基础种。', pages: '个品种页面', baseSpecies: '基础模板', inheritsBase: '使用模板', dataIssue: '存在待复核的数据问题' },
   editor: { base: '管理基础模板', currentPage: '当前页面', contentVersion: '内容版本', seo: '搜索展示', pageContent: '页面正文', advancedSeo: '高级 SEO', metaTitle: 'Meta 标题', metaDescription: 'Meta 描述', h1: '页面 H1', focusKeyword: '目标关键词', sharedIntro: '基础种简介', variantIntro: '当前品种补充', imageAlt: '图片 Alt', indexUrl: '索引与 URL', indexStrategy: '收录策略', canonicalTarget: '主页面', publicUrl: '页面 URL', canonical: 'Canonical', sourceReview: '数据问题', publishCheck: '发布资格', translation: '中英文转化', batchSeo: '批量 SEO', history: '版本历史', workflow: '任务队列' },
-  preview: { title: '效果预览', page: '页面', google: 'Google', mobile: '手机', empty: '选择 Species 后查看前端效果。', generate: '生成 Preview', blockedHint: '完成阻塞项后可生成 Preview', reviewHint: '完成审核后可生成 Preview', previewOnly: '仅预览 · Noindex · 源数据只读', overview: '物种概览与饲养', care: '饲养要点', temperature: '水温', tank: '建议缸体', difficulty: '难度' },
+  preview: { title: '效果预览', page: '页面', google: 'Google', mobile: '手机', empty: '选择 Species 后查看前端效果。', generate: '生成 Preview', blockedHint: '完成阻塞项后可生成预览', reviewHint: '完成审核后可生成预览', previewOnly: '仅预览 · 不收录 · 源数据只读', overview: '物种概览与饲养', care: '饲养要点', temperature: '水温', tank: '建议缸体', difficulty: '难度' },
 };
 const en = {
   common: { chinese: '中文', english: 'English', all: 'All', issues: 'Issues', review: 'Awaiting Review', ready: 'Ready', clear: 'Clear', save: 'Save', saving: 'Saving…', readonly: 'Read-only', draft: 'Draft', published: 'Published' },

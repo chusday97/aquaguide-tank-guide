@@ -190,3 +190,10 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Publish/review status is removed from the editor header. Variant and Base both use one standalone review bar with `审核进度 n/3`, Draft/Published state, review state and the current next action.
 - Desktop review chrome is sticky below the 48px editor context bar; editor content scrolls independently beneath it. Mobile keeps the full standalone bar in document flow plus a compact `审核 n/3 · 状态` indicator in the sticky 46px editor toolbar.
 - Contract now forbids `editor-status-cluster` regression and requires PageReviewStatusBar for both Variant and Base.
+
+## 2026-09-06 SEO Admin split Preview + unified language checkpoint
+- `效果预览` is explicit-on-demand. Desktop opens a simultaneous editor + Preview split; the editor shrinks instead of being covered, and a draggable separator adjusts the balance. Narrow screens keep an overlay Preview.
+- Preview inspector navigation no longer closes Preview when routing to an editable field, so side-by-side compare/edit remains continuous.
+- Interface locale and content locale are now one operator choice in the main workspace. Both top and editor language controls call the same switch action; Chinese/English may not drift independently.
+- Core chrome runtime checks at 1440x900 and 390x844 show zero horizontal overflow. English chrome contains zero Han characters; Chinese chrome contains none of the ordinary English state words Draft/Preview/Species/Base/Staging/Ready.
+- Technical field tokens such as SEO, H1, URL and Canonical remain canonical terms; ordinary product-state language is localized.

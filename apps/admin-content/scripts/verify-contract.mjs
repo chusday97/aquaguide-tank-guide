@@ -220,7 +220,7 @@ assert.match(stylesSource, /workflow-blocked-breakdown/, 'Blocked next actions m
 assert.doesNotMatch(workflowOverviewSource, /Readiness 按 486 条 Species/, 'Workflow overview must not hard-code the legacy 486-species readiness count');
 assert.match(stylesSource, /workflow-queue-row[\s\S]*grid-template-columns:\s*minmax\(0,1fr\) auto/, 'Workflow drawer rows must reserve stable space for copy and counts without label squeezing');
 assert.match(appSource, /workflowGroupKeys/, 'Workflow filters must constrain the Species sidebar');
-assert.match(readinessSource, /导出 Preview Snapshot/, 'Publish-ready UI must expose controlled Preview Snapshot export');
+assert.match(readinessSource, /导出预览快照/, 'Publish-ready UI must expose controlled Preview Snapshot export');
 assert.match(controlledPreviewSource, /noindex,nofollow/, 'Controlled Preview pages must force noindex,nofollow');
 assert.match(controlledPreviewSource, /Disallow: \//, 'Controlled Preview root must disallow crawlers');
 assert.match(controlledPreviewSource, /refuses deployable output directory/, 'Controlled Preview must reject deployable public/dist output');
@@ -237,7 +237,7 @@ assert.match(stylesSource, /editor-tool-drawer-layer[\s\S]*grid-column:\s*2;\s*g
 assert.match(stylesSource, /@media \(max-width: 1320px\)[\s\S]*\.topbar-actions \.admin-email \{ display: none; \}/, 'Responsive topbar must hide admin email before hiding workflow state');
 assert.match(stylesSource, /@media \(max-width: 1180px\) and \(min-width: 761px\)[\s\S]*\.topbar-workflow \{ display: flex; \}/, 'Workflow state must remain visible through common laptop widths');
 assert.match(stylesSource, /@media \(max-width: 760px\)[\s\S]*\.topbar-workflow \{ display: none; \}/, 'Workflow state may collapse only at the narrow single-column breakpoint');
-assert.match(stylesSource, /studio-workspace > \.live-preview-pane \{ grid-column:\s*3;/, 'Live Preview must remain in its own grid column while tools are open');
+assert.match(stylesSource, /studio-workspace > \.preview-resize-handle[\s\S]*grid-column:3[\s\S]*studio-workspace > \.live-preview-pane[\s\S]*grid-column:4/, 'Resizable Preview must remain in its own grid column after the separator while tools are open');
 assert.doesNotMatch(appSource, /<option value="archived">/, 'Species Variant lifecycle UI must expose Draft/Published only');
 assert.doesNotMatch(baseSource, /<option value="archived">/, 'Base Species lifecycle UI must expose Draft/Published only');
 assert.match(appSource, /app-language-switch/, 'Admin must expose one global interface-language switch');
@@ -270,6 +270,13 @@ assert.match(appSource, /renderInheritedOverrideField/, 'Variant editor must use
 assert.doesNotMatch(appSource, /editor-status-cluster/, 'Publish/review status must not regress into the primary editor header');
 assert.match(appSource, /PageReviewStatusBar/, 'Variant editor must render the standalone Page Review Status Bar');
 assert.doesNotMatch(appSource, /editor-statuses[\s\S]*status-pill/, 'Primary editor must not regress to repeated status pills');
+assert.match(appSource, /preview-split-open/, 'Preview must open as a dedicated split-view workspace state on desktop');
+assert.match(appSource, /preview-resize-handle/, 'Desktop Preview must expose a draggable editor/preview separator');
+assert.match(stylesSource, /preview-split-open[\s\S]*var\(--preview-width/, 'Split Preview must resize the editor instead of overlaying it on desktop');
+assert.doesNotMatch(appSource, /source === 'preview'[\s\S]{0,180}setCompactPreviewOpen\(false\)/, 'Preview inspector selection must not close the Preview while editing side-by-side');
+assert.match(appSource, /switchWorkspaceLocale[\s\S]*setContentLocale\(next\)[\s\S]*setAppLocale\(next\)/, 'Workspace language switching must keep interface and content locale synchronized');
+assert.match(appSource, /InterfaceLanguageSwitch onLocaleChange=\{switchWorkspaceLocale\}/, 'Top language switch must use the unified workspace locale action');
+assert.match(appSource, /onClick=\{\(\) => switchWorkspaceLocale\(item\.code\)\}/, 'Editor language switch must use the same unified workspace locale action');
 assert.match(appSource, /advanced-seo-disclosure/, 'Focus keyword and indexing controls must stay behind Advanced SEO disclosure');
 assert.match(appSource, /<textarea rows=\"4\" value=\{form\.intro\}/, 'Variant intro must default to a compact four-row editing surface');
 assert.match(appSource, /advanced-seo-disclosure/, 'Low-frequency keyword/index/canonical controls must stay behind Advanced SEO disclosure');
@@ -341,9 +348,9 @@ assert.match(historySource, /from\('content_revisions'\)/, 'History UI must read
 assert.match(historySource, /restore_species_seo_revision/, 'History UI must use the guarded rollback RPC');
 assert.match(historySource, /armedId/, 'Rollback must require an explicit second click rather than one-click destructive restore');
 assert.match(appSource, /index_strategy: form\.indexStrategy/, 'Variant SEO must persist explicit index strategy');
-assert.match(appSource, /Production 发布未开放/, 'Species publish must remain locked until rollback and staging gates are verified');
+assert.match(appSource, /正式发布未开放/, 'Species publish must remain locked until rollback and staging gates are verified');
 assert.match(appSource, /isPublicSpeciesPublishingEnabled = false/, 'Variant publish gate must remain fail-closed after generator verification');
-assert.match(baseSource, /Production 发布未开放/, 'Base Species publish must remain locked until rollback and staging gates are verified');
+assert.match(baseSource, /正式发布未开放/, 'Base Species publish must remain locked until rollback and staging gates are verified');
 assert.match(baseSource, /isPublicSpeciesPublishingEnabled = false/, 'Base publish gate must remain fail-closed after generator verification');
 assert.match(appSource, /CONTENT_LOCALES/, 'Admin must expose an explicit content-locale switcher');
 assert.match(appSource, /seoRowKey\(row\.catalog_key, row\.locale\)/, 'Localized Variant rows must not collide in client state');

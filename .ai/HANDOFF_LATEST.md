@@ -316,3 +316,10 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Variant/Base both show three-step review progress, content publish state and next action in the same control strip; duplicate status clusters were removed from editor headers.
 - Desktop keeps the bar sticky under editor context controls; mobile uses an additional compact review-progress indicator in its sticky toolbar while the full bar scrolls naturally.
 - Contract was updated to enforce the new architecture rather than the superseded editor-header status requirement.
+
+## 2026-09-06 — SEO Admin resizable Preview + unified language
+- Preview is no longer a desktop overlay. `compactPreviewOpen` now drives `preview-split-open`: sidebar | editor | 8px draggable separator | Preview. Preview width is keyboard/pointer adjustable; selecting an editable element from Preview keeps Preview open.
+- <=900px intentionally uses an overlay instead of forcing unreadable side-by-side panes.
+- Top interface switch and editor content-language switch now share `switchWorkspaceLocale`, synchronizing `appLocale` and `contentLocale`. The historical two-language drift is closed by contract.
+- Contract now protects the split grid, resize handle, non-closing inspector behavior and unified locale action.
+- This round is Aqua SEO Admin only. The user's separate “subscribe current segment -> subscribe competition icon” request belongs to IceGlide and was not written into Aqua.

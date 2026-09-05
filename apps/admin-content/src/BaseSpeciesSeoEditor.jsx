@@ -66,7 +66,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
 
   const save = async (reviewStateOverride = null) => {
     if (!isPublicSpeciesPublishingEnabled && form.status === 'published') {
-      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Production publishing is locked' : 'Production 发布未开放', detail: isUiEnglish ? 'The Base template can only remain a Draft.' : '基础模板当前只能保持 Draft。' });
+      emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Production publishing is locked' : '正式发布未开放', detail: isUiEnglish ? 'The Base template can only remain a Draft.' : '基础模板当前只能保持草稿状态。' });
       return;
     }
     if (readOnly) {
@@ -74,7 +74,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       return;
     }
     if (!schemaReady) {
-      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Base SEO content store is not ready.' : '基础模板 SEO store 尚未就绪。' });
+      emitAdminNotice({ status: 'error', title: isUiEnglish ? 'Save blocked' : '保存被阻止', detail: isUiEnglish ? 'Base SEO content store is not ready.' : '基础模板 SEO 内容存储尚未就绪。' });
       return;
     }
     setSaving(true);
@@ -189,7 +189,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       <div className="base-seo-footer">
         <div>{!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : <span className="footer-context-note">{readOnly ? (isUiEnglish ? 'Read-only preview' : '只读预览') : (isUiEnglish ? `${localeLabel} only` : `仅更新 ${localeLabel}`)}</span>}</div>
         <div className="footer-actions">
-          {!readOnly ? <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Base content status' : 'Base 内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span> : null}
+          {!readOnly ? <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Base content status' : '基础模板内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : '已发布 · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span> : null}
           {contentDirty ? <button className="primary-button" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button> : null}
         </div>
       </div>

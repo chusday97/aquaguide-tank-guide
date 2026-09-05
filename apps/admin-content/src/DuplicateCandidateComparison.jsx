@@ -74,14 +74,14 @@ export default function DuplicateCandidateComparison({
           </div>
           <div className="duplicate-last-edited"><span>{isUiEnglish ? 'SEO last edited' : 'SEO 最近编辑'}</span><strong>{formatDuplicateEditedAt(signals.latestEditedAt, isUiEnglish)}</strong></div>
           <div className="duplicate-candidate-actions">
-            <button type="button" className="secondary-button compact" onClick={() => { setPreviewLocale(locale); setPreviewCatalogKey(member.catalog_key); }}>{isUiEnglish ? 'Preview page' : '查看 Preview'}</button>
+            <button type="button" className="secondary-button compact" onClick={() => { setPreviewLocale(locale); setPreviewCatalogKey(member.catalog_key); }}>{isUiEnglish ? 'Preview page' : '查看预览'}</button>
             {allowKeepSelection ? <button type="button" className={`duplicate-keep-action ${selectedAsCanonical ? 'active' : ''}`} onClick={() => onCanonicalChange?.(member.catalog_key)}>{selectedAsCanonical ? (isUiEnglish ? '✓ Keep this page' : '✓ 保留此页面') : (isUiEnglish ? 'Keep this page' : '保留此页面')}</button> : null}
           </div>
         </section>;
       })}
     </div>
     {previewContext ? <aside className="duplicate-preview-sheet" aria-label={isUiEnglish ? 'Duplicate candidate preview' : '重复候选页面预览'}>
-      <header><div><span>{isUiEnglish ? 'Candidate preview' : '候选页面 Preview'}</span><strong>{previewContext.member.name} · {previewContext.member.catalog_key}</strong></div>
+      <header><div><span>{isUiEnglish ? 'Candidate preview' : '候选页面预览'}</span><strong>{previewContext.member.name} · {previewContext.member.catalog_key}</strong></div>
         <div className="duplicate-preview-actions"><button type="button" className={previewLocale === 'zh-CN' ? 'active' : ''} onClick={() => setPreviewLocale('zh-CN')}>中文</button><button type="button" className={previewLocale === 'en' ? 'active' : ''} onClick={() => setPreviewLocale('en')}>EN</button><button type="button" className="close" onClick={() => setPreviewCatalogKey(null)} aria-label={isUiEnglish ? 'Close preview' : '关闭预览'}>×</button></div>
       </header>
       <div className="duplicate-preview-meta"><span>{isUiEnglish ? 'SEO status' : 'SEO 状态'}: {duplicateStatusLabel(previewContext.variantRow, isUiEnglish)}</span><span>{isUiEnglish ? 'Completeness' : '完整度'}: {duplicateCompleteness(previewContext.variantRow, previewLocale)}%</span><span>{isUiEnglish ? 'SEO last edited' : 'SEO 最近编辑'}: {formatDuplicateEditedAt(previewContext.variantRow?.updated_at, isUiEnglish)}</span></div>
