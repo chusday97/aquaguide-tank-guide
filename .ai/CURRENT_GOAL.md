@@ -8,10 +8,10 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin and P2 Unified Publish Center V1 are complete in code. Care SEO downstream projection, deterministic bilingual routes, Editorial Draft/Review, sanitized explicit Staging handoff and real protected Vercel bilingual acceptance are now complete. The immediate priority is the **Care SEO Index / Production release decision**; default state remains `noindex` and Production locked until explicit authorization.
+P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, and the first AI-assisted Care SEO advisory flow are complete. The explicit release decision is **`hold_noindex`**. The immediate priority is now the **dedicated feature ↔ live-main reconciliation audit**, with no merge or Production action implied.
 
 ## Why this is current
-The upstream Product/Care/Compatibility authorities and Publish Center observability are already converged in code. Care SEO now has deterministic downstream source/route/artifact generation, human Editorial Draft→Review→Approved persistence, approved-only sanitization, completed hosted Staging proof, and an evidence-bound release-readiness gate. Staging is permanently fail-closed to `noindex`; even a hand-edited Staging snapshot with `index` is rejected. The only remaining release blocker is an explicit human decision; there is still no Production write/index action in this gate.
+The defined Operations Studio functional backlog is closed. Care SEO remains fail-closed to `noindex`, with hosted acceptance evidence bound to the exact snapshot/deployment and a human `hold_noindex` decision. AI now reads only immutable Published Care, detects source gaps/conflicts, explains editorial impact and proposes SEO-only Draft fields; applying AI only changes local form state until a human explicitly saves. The remaining project-level risk is branch divergence from live `main`, so the next safe activity is an isolated reconciliation audit before any merge decision.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -34,7 +34,9 @@ Species SEO remains Repo-backed and fail-closed:
 9. [DONE in code] Care SEO Editorial Draft/Review persistence + approved-only sanitized explicit Staging snapshot/handoff.
 10. [DONE] Hosted bilingual Care SEO acceptance on protected Vercel Preview using the free ephemeral local Supabase source path; 2/2 EN/ZH pages passed and remained noindex.
 11. [DONE in code] Release-readiness mechanics: exact snapshot SHA-256 + Vercel acceptance evidence + explicit human decision contract; Staging remains noindex and acceptance-evidence-only commits do not redeploy runtime.
-12. [NEXT / LOCKED] Record the explicit human release decision. Do not create `approve_index_release`, unlock index, or publish Production without user authorization.
+12. [DONE] Explicit Care SEO decision recorded as `hold_noindex`; accepted snapshot/deployment binding is current and Production/index remain locked.
+13. [DONE] AI-assisted Care SEO advisory: Published-only source extraction, conflict detection, impact explanation and SEO Draft suggestion with no auto-write/review/publish.
+14. [NEXT] Dedicated feature ↔ live-main reconciliation audit in isolation; do not merge main until a validated reconciliation candidate is reviewed.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -157,3 +159,12 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
 - `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
 - Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.
+
+## 2026-09-05 Care SEO AI advisory + hold closeout
+- `a3f582c2` adds the Care SEO AI advisory endpoint/UI using the existing OpenAI-compatible/DeepSeek-compatible provider configuration; no new provider or key path was introduced.
+- AI is advisory only: exact Published Care snapshot/version binding, legacy-source refusal, schema-validated output, deterministic source-gap/source-drift checks, forced `noindex`, and no auto-save/review/approve/publish.
+- Admin browser acceptance at 1280/390 proves AI analysis and local form application do not persist Editorial state until explicit Save Draft. Local AI provider is intentionally unconfigured; Vercel Preview/Production already expose `AI_API_KEY`, and deployed health reports DeepSeek `deepseek-v4-flash` configured. No live paid model call was made in this implementation round.
+- Final snapshot-only republish: `fd960667`; Vercel `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` READY; protected hosted acceptance PASS 2/2 EN/ZH with noindex retained.
+- `5899d643` binds the new hosted acceptance evidence and the existing human `hold_noindex` decision to snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`.
+- GitHub light CI: AI commit `33962566946` PASS; reacceptance-test fix `33962759009` PASS; final snapshot `33962809578` PASS; evidence/decision `33962944072` PASS. Heavy remained skipped by policy.
+- All defined functional queue items are now closed. Next: isolated feature ↔ live-main reconciliation audit; no merge/Production/index action is authorized.

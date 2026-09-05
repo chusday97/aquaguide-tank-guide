@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9`
+Remote feature before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 155
+- feature-only commits: 161
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -148,3 +148,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
 - `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
 - Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.
+
+## 2026-09-05 AI advisory / Operations Studio functional closeout
+- AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`.
+- Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`; Vercel `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` READY, hosted 2/2 PASS, noindex.
+- Acceptance + human `hold_noindex` binding: `5899d64343fdc5d6e4929c31ed84a29af437be1c`; light CI `33962944072` PASS.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; pre-doc-sync divergence main-only 269 / feature-only 161; merge base unchanged.
+- All defined functional queue items are closed. Existing merge-safety rule now makes dedicated isolated reconciliation the next step. This is not authorization to merge/rebase main.

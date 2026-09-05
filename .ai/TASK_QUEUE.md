@@ -68,12 +68,21 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Hosted bilingual acceptance for title/meta/H1/canonical/hreflang/robots/source-version before any index unlock.
   - [x] Prove the no-cost acceptance path with ephemeral local Supabase; paid persistent Staging is optional, not required.
   - [x] Keep Production locked unless separately authorized.
-- [ ] Care SEO Index / Production release decision.
+- [x] Care SEO Index / Production release decision.
   - [x] Hosted Staging prerequisite is satisfied.
   - [x] Fail-closed release readiness gate binds the exact Staging snapshot hash to hosted acceptance evidence; Staging builder rejects `index` even if the snapshot is hand-edited.
   - [x] Persist non-secret hosted acceptance evidence without triggering a Vercel runtime deployment.
-  - [ ] Record an explicit human release decision (`hold_noindex` or `approve_index_release`). Until then `noindex` and Production remain locked.
-- [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
+  - [x] Explicit human decision recorded as `hold_noindex`; exact accepted snapshot/deployment are bound and Production/index remain locked.
+- [x] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
+  - [x] Published-Care-only source binding with exact source-version rejection and legacy-source refusal.
+  - [x] AI output is schema-gated to SEO-only fields with forced `noindex`; protected Care rewrites and auto-save/review/publish are rejected.
+  - [x] Admin UI exposes source extraction, conflicts, impact explanation, review warnings and local-only Draft application.
+  - [x] Contract + 1280/390 browser acceptance prove AI generation/application creates no Editorial write until explicit Save Draft.
+
+## Next — dedicated branch reconciliation (no merge yet)
+- [ ] Re-read live `main` / feature refs and run an isolated merge-tree/reconciliation audit against the current accepted feature baseline.
+- [ ] Classify overlap/conflicts by authority and preserve all completed Product/Care, Compatibility, Publish Center, Species SEO and Care SEO invariants.
+- [ ] Validate a reconciliation candidate before any explicit decision to merge `main`; do not change Production/index as part of reconciliation.
 
 ## Stable completed baseline — do not reimplement
 - [x] Product/Care Admin route exists at `/admin/product-content`.

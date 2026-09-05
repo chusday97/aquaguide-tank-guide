@@ -673,3 +673,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
 - `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
 - Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.
+
+## 2026-09-05 — hold_noindex + Care SEO AI advisory closeout
+- User explicitly chose `hold_noindex`; persisted release decision stays bound to accepted snapshot/deployment and cannot unlock Production/index.
+- Added Care SEO AI advisory with Published-Care-only exact version binding, legacy-source rejection, source extraction, conflicts, impact explanation, SEO Draft suggestion, forced noindex and fail-closed provider handling.
+- Admin UI apply is local-only; browser 1280/390 acceptance proves AI generation/application creates no Editorial write before explicit Save Draft.
+- Reused existing Vercel DeepSeek-compatible AI configuration; no new provider/key. Local key absent; no live paid model call made in this round.
+- AI functional `a3f582c2`; two-phase reacceptance test fix `af68d40a`; final snapshot `fd960667`; Vercel `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` READY; hosted verifier 2/2 PASS/noindex.
+- Final snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`; evidence + hold binding commit `5899d643`.
+- CI PASS: `33962566946`, `33962759009`, `33962809578`, `33962944072`; Heavy skipped by policy.
+- All defined P0/P1/P2/AI functional queue items are closed. Next: dedicated feature ↔ live-main reconciliation audit; no merge/Production/index/live-migration action authorized.

@@ -4,8 +4,9 @@ Updated: 2026-09-05
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`
-Latest operational checkpoint: `18711afc content(care-seo): publish staging water stability`
+Current operational HEAD before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`
+Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
+Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -83,12 +84,12 @@ P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Pu
 
 P1 — [DONE in code] Compatibility Admin: Profile/Pair Draft, structural Impact, real server engine Regression, canonical Evidence resolution, explicit human Review/Approve, exact reviewed runtime authority and atomic versioned publish are implemented. Live migrations remain unapplied.
 
-P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE] Care SEO Published projection + Editorial Draft/Review + sanitized explicit Staging handoff + protected Vercel hosted bilingual acceptance. [NEXT / LOCKED] Care SEO Index / Production release decision; keep noindex and Production locked until explicit authorization. Persistent paid Staging is optional; repeat acceptance with the proven ephemeral local Supabase path when needed.
+P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE] Care SEO Published projection + Editorial Draft/Review + sanitized Staging handoff + protected hosted acceptance + release-readiness evidence. [DONE] Explicit decision is `hold_noindex`. [DONE] First AI advisory layer for Published-Care source extraction/conflict/impact/SEO Draft suggestion. [NEXT] Dedicated feature ↔ live-main reconciliation audit only; no merge is authorized yet.
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`; latest functional checkpoint is the same commit.
-- Current measured divergence against live main and current feature HEAD before this docs-only sync: main-only 269 / feature-only 151 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remote before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`.
+- Current measured divergence before this docs-only sync: main-only 269 / feature-only 161 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -254,3 +255,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
 - `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
 - Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.
+
+## 2026-09-05 Care SEO AI advisory / hold closeout
+- Human release decision: `hold_noindex`; Production/index remain locked. `content/care-seo/release-decision.json` is bound to the final accepted snapshot/deployment.
+- AI advisory functional commit `a3f582c2`: explicit Admin action only; immutable Published Care + exact source version; output limited to source extraction, conflicts, impact explanation, review warnings and four SEO Draft fields. `indexStrategy` is forced `noindex`; protected Care facts cannot be rewritten.
+- Applying an AI suggestion updates only local form state. Existing human Save Draft → Submit → Approve flow remains the only persistence/review path. Browser contract proves zero Editorial writes before Save.
+- Existing Vercel AI configuration is reused (DeepSeek-compatible); no new model provider or secret was introduced. Local environment has no AI key, so local calls fail closed rather than fake results. No live paid-model request was made during this round.
+- Final Care SEO Preview: snapshot `fd960667`, Vercel `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D`, hosted verifier PASS 2/2 EN/ZH, `noindex` retained. Evidence/decision binding commit `5899d643`; snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`.
+- Latest evidence CI `33962944072` PASS all light gates including Care SEO release-readiness and AI advisory; Heavy skipped. All defined product/operations queue items are closed.
+- Next safe milestone comes from existing branch-safety policy: isolated feature ↔ live-main reconciliation audit. Do not merge/rebase main directly.

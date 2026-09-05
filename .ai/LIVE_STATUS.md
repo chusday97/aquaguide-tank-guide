@@ -2,8 +2,9 @@
 
 Updated: 2026-09-05
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `18711afc787dc48c814a63de2551ac56f4a99793`
-Latest converged functional baseline: `18711afc content(care-seo): publish staging water stability`
+Operational HEAD before this sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`
+Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
+Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
 ## Product state
 - AquaGuide product includes Species, Aquarium/Care, Compatibility and SEO acquisition flows.
@@ -26,11 +27,11 @@ Latest converged functional baseline: `18711afc content(care-seo): publish stagi
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO projection, Editorial Draft/Review, sanitized handoff, hosted bilingual Staging acceptance and evidence-bound release-readiness mechanics are complete. Current readiness is intentionally false with the sole blocker `explicit_human_release_decision_required`; runtime remains noindex and Production locked.
+P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO projection/editorial/handoff/hosted acceptance/release-readiness are complete, with explicit human decision `hold_noindex`. AI advisory source extraction/conflict/impact/SEO Draft suggestion is also complete and remains human-gated/no-auto-write. The next safe activity is dedicated feature ↔ live-main reconciliation audit; Production/index remain locked.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9`.
+- Feature remote before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -191,3 +192,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
 - `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
 - Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.
+
+## 2026-09-05 Care SEO AI advisory closeout
+- AI advisory is implemented behind authenticated Admin: Published snapshot/version only, deterministic source-gap/source-drift checks, SEO-only schema output, forced noindex and no persistence until explicit Save Draft.
+- UI shows source extraction, search intent/key terms, safety boundaries, conflicts, impact explanation and review warnings; “apply” is local-form-only.
+- Final accepted Preview `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` from snapshot `fd960667`; hosted verifier PASS 2/2 and branch-alias canonical/hreflang remain exact.
+- `5899d643` binds acceptance + `hold_noindex`; readiness is intentionally false with blocker `release_decision_hold`.
+- Latest light CI `33962944072` PASS; Heavy skipped. Production/main/live DB untouched.
