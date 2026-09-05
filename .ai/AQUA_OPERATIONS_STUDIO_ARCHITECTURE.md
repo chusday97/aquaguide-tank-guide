@@ -87,3 +87,5 @@ Publish Center is an operational read/orchestration layer, not a fourth source o
 - Next: read-only release detail/readiness drill-down before any cross-domain write orchestration. Production/main/live DB untouched.
 ## 2026-09-05 Publish Center capability rule
 The Publish Center capability matrix is descriptive, not an execution authority. `available` means the subsystem already has that capability; `partial` means a weaker or incomplete control exists; `locked` means the stage must not execute; `not_applicable` means that subsystem has no separate stage. This matrix must never be interpreted as permission to bypass each subsystem's native auth/review/publish gates.
+## 2026-09-05 Release audit / role decision
+`content_publications` remains Product/Care published authority. `content_publication_events` is append-only audit history only and must never drive public content reads. Business auth remains `user/admin`; SEO remains independent `repo-admin`. Do not introduce editor/reviewer/publisher roles until multiple operators create a concrete separation-of-duties need; permission visibility is preferred over speculative RLS expansion.

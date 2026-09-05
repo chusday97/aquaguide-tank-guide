@@ -103,3 +103,8 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Functional feature HEAD pushed: `bd2e8059654c7df090ef0efe33678d03f44a6b9e`.
 - Preceded by `10b90394 feat(admin): deepen publish center audit view`.
 - No merge/rebase main, live database migration, Production publish, or authority migration occurred.
+## 2026-09-05 Publish Center permission/audit checkpoint
+- Permission checkpoint: `ec5e9a2b93ec909aed17a464ba760823081affa6`.
+- Product/Care audit checkpoint: `2a1c0594017839be2a2665878763bac6871a12bf`.
+- Migration `202609050003_content_publication_audit_history.sql` is repository-only/unapplied.
+- No merge/rebase main, live migration, or Production mutation.

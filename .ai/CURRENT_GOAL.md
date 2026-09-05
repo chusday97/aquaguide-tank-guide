@@ -8,7 +8,7 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin is complete. P2 Unified Publish Center now has the read-only multi-authority feed, event detail/readiness drill-down and a release capability matrix. The immediate priority is **cross-domain orchestration design + roles/audit**, without creating a new write authority or unlocking Production.
+P1 Compatibility Admin is complete. P2 Unified Publish Center now has multi-authority release history, detail/readiness, capability and permission matrices, plus code-level append-only Product/Care audit history with safe current-only fallback. The immediate priority is **read-only cross-domain coordination design**; do not add centralized write orchestration or speculative role splitting.
 
 ## Why this is now P1
 The defined Product/Care authority target is already converged and browser-accepted. The remaining operational risk is release comprehension: a content operator must see which user-facing surfaces change directly, which independent authorities require review, and what the user will see before a decision-critical release is approved.

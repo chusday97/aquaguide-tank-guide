@@ -200,3 +200,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Product/Care has no separate Staging layer; Compatibility live publish remains locked because live migrations are unapplied; SEO Staging is available while Production remains locked.
 - PASS: Publish Center contract, 390/1280 browser flow, API TS, root lint/build, diff hygiene.
 - Next: cross-domain orchestration design + stronger roles/audit; Publish Center must remain a coordination layer, not a fourth authority.
+## 2026-09-05 P2 Publish Center — permission + Product/Care audit checkpoint
+- `ec5e9a2b feat(admin): expose release permission boundaries` shows current Business `admin` and independent SEO `repo-admin` identities/actions without merging auth systems.
+- `2a1c0594 feat(admin): add product care release audit history` adds repository-only migration `202609050003_content_publication_audit_history.sql`.
+- Product/Care audit is append-only (`baseline / published / archived`) with source version, snapshot, actor UUID and timestamp; `content_publications` remains the published authority.
+- Admin Publish/Archive prefers audited service-role RPCs but falls back to existing RPCs only when the new functions are not deployed, preserving deployment-order safety.
+- Publish Center uses full audit history when available and automatically falls back to current-only when the migration/table is unavailable.
+- PASS: Publish Center contract/UI 390/1280, Admin content contract, Product/Care Save→Publish→Preview, API TS, root lint/build.
+- Migration is NOT applied to live DB/Production. Role split is deliberately deferred until multi-operator need is proven.
+- Next: read-only cross-domain coordination design; no centralized write orchestration.

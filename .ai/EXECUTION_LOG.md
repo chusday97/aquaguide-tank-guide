@@ -611,3 +611,10 @@ Next: read-only release detail/readiness drill-down; no cross-domain publish wri
 - Verified SEO auth-required degradation, 390/1280 layout, contract, API TS, lint/build and diff hygiene.
 - Functional commits: `10b90394`, `bd2e8059`. No Production/main/live DB mutation.
 Next: cross-domain orchestration design + roles/audit without moving write authority into Publish Center.
+## 2026-09-05 — Publish Center permission + Product/Care audit history
+- Added read-only permission projection for Business admin and independently authenticated SEO repo-admin; did not alter role/RLS models.
+- Added append-only Product/Care publication audit migration and migration-safe audited RPC fallback.
+- Publish Center upgrades from current-only to revision-history automatically when audit storage is available; 390/1280 browser test covers both states.
+- Product/Care publish-preview regressions, Admin contract, API TS, lint/build pass.
+- Commits: `ec5e9a2b`, `2a1c0594`. Migration not applied live.
+Next: read-only cross-domain coordination design; no centralized writes.

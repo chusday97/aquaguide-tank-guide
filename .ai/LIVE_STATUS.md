@@ -139,3 +139,8 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Capability matrix now shows each authority's Diff / Impact / Preview / Review / Staging / Production state with explicit locked/not-applicable distinctions.
 - Production remains locked; Product/Care current history is still current-only by design.
 - First unfinished P2 item: cross-domain orchestration design + stronger roles/audit.
+## 2026-09-05 Publish Center permission + Product/Care audit
+- Current Business `admin` and SEO `repo-admin` permissions are visible as separate authorities; Production locks are explicit.
+- Product/Care full release audit history exists in code as append-only baseline/publish/archive events with actor/version; migration remains unapplied.
+- Unmigrated environments keep existing publish behavior and Publish Center current-only history via legacy RPC/read fallback.
+- First unfinished P2 item: read-only cross-domain coordination design.

@@ -21,7 +21,7 @@ A new conversation should read this file first, then read the canonical set belo
 Treat the Admin as **Aqua Operations Studio**, not one SEO CMS. Keep Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and user-specific context as separate authorities.
 
 ## Current first incomplete milestone
-All defined P0 work and P1 are closed. P2 Unified Publish Center now has multi-authority `ReleaseEvent` aggregation, selectable release detail, source readiness/current-only coverage, and a typed Diff → Impact → Preview → Review → Staging → Production capability matrix. The first unfinished item is **P2 cross-domain orchestration design + stronger roles/audit**. Keep Publish Center as a coordination layer; do not move Product/Care, Compatibility or SEO write authority, create a fourth authority, or unlock Production.
+All defined P0 work and P1 are closed. P2 Publish Center has multi-authority ReleaseEvent aggregation, detail/readiness, capability + permission boundaries, and code-level Product/Care append-only audit history with migration-safe current-only fallback. The first unfinished item is **read-only cross-domain coordination design**. Do not centralize writes, split roles without a multi-operator requirement, apply live migrations, or unlock Production.
 
 Continue from `TASK_QUEUE.md`; do not reopen completed Product/Care or SEO P0 work unless a new regression is proven.
 

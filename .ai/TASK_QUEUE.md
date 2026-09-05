@@ -53,6 +53,9 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Add per-authority capability matrix for Diff → Impact → Preview → Review → Staging → Production, distinguishing available / partial / locked / not applicable.
   - [ ] Next: design cross-domain orchestration as a coordination layer only; do not move Product/Care, Compatibility or SEO write authority into Publish Center.
 - [ ] Stronger roles/permissions and release audit history.
+  - [x] Expose current Business `admin` vs SEO `repo-admin` permission boundary without merging auth systems.
+  - [x] Add append-only Product/Care publication audit history in code with actor/version/publish/archive events; migration remains unapplied and route falls back to current-only.
+  - [ ] Defer editor/reviewer/publisher role split until a real multi-operator requirement exists; do not expand RLS surface speculatively.
 - [ ] Care SEO as a downstream projection of approved Care Knowledge.
 - [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
 
