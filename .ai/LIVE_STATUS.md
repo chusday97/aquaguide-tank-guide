@@ -221,7 +221,7 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - This remains Species SEO Admin-only work on `feature/admin-content-v0`; PR #144 reconciliation stays parked.
 
 ## 2026-09-05 — SEO Admin focus/layout state
-- Current feature adds Workspace Focus for editor/Preview and a neutral professional CMS palette. Editor/Preview interaction collapses fixed workflow chrome; left Species navigation alone leaves the full workflow visible.
+- Workflow is now permanently compact at the top: 46px desktop / 64px mobile. Editor/Preview interaction no longer changes workflow height and no expand/focus control exists.
 - Desktop workspace gains 196px vertical space in Focus; 390px gains 312px and focused editor controls are 46px high. Production/main/index/live DB remain untouched.
 ## 2026-09-06 — strict CMS visual system
 - Species SEO Admin now has one visual authority: Graphite neutrals + White/paper + Green `#2F6F4E`; no additional semantic hue is allowed. Preview is hidden by default and opens from the always-visible `效果预览` control as an in-workspace overlay drawer.

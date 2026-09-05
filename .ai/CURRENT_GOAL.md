@@ -11,7 +11,7 @@ Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operat
 P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, and the first AI-assisted Care SEO advisory flow are complete. The explicit release decision is **`hold_noindex`**. A newer user-reported usability problem is now the immediate priority: make the **Species SEO Admin understandable and directly acceptable as an operator product**.
 
 ## Why this is current
-The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback tightened the visual system further: state must be obvious **without changing information layout**, fixed chrome must yield space to editing/Preview, and the CMS may use only three visible color families: **Graphite / White / one Green accent**. Warning, review, ready, error and success states must use copy, iconography, border treatment and weight rather than new red/amber/blue/purple hues. Typography is a deliberate hierarchy rather than many near-equal micro sizes. Workflow `attention` stays separate from operator `selected`; normal Species selection remains inside the existing 16×16 square control; batch selection uses that same slot only in batch mode. `当前物种页面` and `基础模板` remain distinct contexts. Draft PR #144 reconciliation stays parked.
+The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback tightened the visual system further: state must be obvious **without changing information layout**, workflow chrome must stay permanently compact to yield space to editing/Preview, and the CMS may use only three visible color families: **Graphite / White / one Green accent**. Warning, review, ready, error and success states must use copy, iconography, border treatment and weight rather than new red/amber/blue/purple hues. Typography is a deliberate hierarchy rather than many near-equal micro sizes. Workflow `attention` stays separate from operator `selected`; normal Species selection remains inside the existing 16×16 square control; batch selection uses that same slot only in batch mode. `当前物种页面` and `基础模板` remain distinct contexts. Draft PR #144 reconciliation stays parked.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -176,11 +176,11 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Current product decision required from the user is UI/operator acceptance feedback, not main reconciliation or Production release.
 
 ## 2026-09-05 SEO Admin workspace-focus / professional theme rule
-- Large workflow guidance is an entry-state aid, not permanent editor chrome. Entering the middle editor or right Preview automatically switches to Workspace Focus; the left Species navigator alone does not.
-- Focus keeps only compact workflow status, counts, primary action, current scope/language and Preview controls; `展开流程` restores the full command center.
+- Publishing workflow is permanent compact chrome, not an expandable panel. It stays fixed-height at the top in navigation, editing and Preview contexts.
+- The compact workflow keeps stage status/counts plus one primary next action. There is no `展开流程 / 专注编辑` mode switch and no interaction-driven height change.
 - At that checkpoint the Admin used a blue interaction accent; this is superseded by the 2026-09-06 Green accent rule below.
 ## 2026-09-06 Species SEO Admin three-color / typography rule
 - Visible CMS palette is hard-limited to three families: Graphite neutrals, White/paper and one Green `#2F6F4E` accent. Semantic states may not introduce additional red/amber/blue/purple hues.
 - Runtime computed-style scans at 1440×900 and 390×844 cover the initial workspace plus all six advanced tools; extra saturated hue count is `0` in every scanned state and page overflow is `0`.
-- Typography hierarchy is explicit: desktop page 24 / section 18 / action 15 / label 13 / body 12 / meta 10px; mobile uses 22 / 17 / 14 / 12 / 11 / 10px. Workspace Focus remains intentionally compact.
+- Typography hierarchy is explicit: workflow chrome uses 8–10px navigation/status type while editor content starts at 18px section / 24px page titles on desktop (17 / 22px mobile).
 - Obsolete 2026-09-05 professional-palette override was removed; Focus layout remains, while the strict design-system block is the final visual authority.

@@ -1758,10 +1758,10 @@ button:focus-visible {
 .variant-main-button > span { width:100%; text-align:left; }
 
 /* Workspace focus: collapse fixed chrome once the operator enters editor/preview. */
-.admin-shell.workspace-focus .topbar { height:44px; min-height:44px; padding-left:13px; padding-right:13px; }
-.admin-shell.workspace-focus .brand-mark.small { width:24px; height:24px; border-radius:6px; font-size:11px; }
-.admin-shell.workspace-focus .brand-row span, .admin-shell.workspace-focus .admin-email { display:none; }
-.admin-shell.workspace-focus .schema-banner {
+.admin-shell.workflow-compact .topbar { height:44px; min-height:44px; padding-left:13px; padding-right:13px; }
+.admin-shell.workflow-compact .brand-mark.small { width:24px; height:24px; border-radius:6px; font-size:11px; }
+.admin-shell.workflow-compact .brand-row span, .admin-shell.workflow-compact .admin-email { display:none; }
+.admin-shell.workflow-compact .schema-banner {
   max-height:25px;
   padding:4px 13px;
   overflow:hidden;
@@ -1770,7 +1770,7 @@ button:focus-visible {
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-.admin-shell.workspace-focus .workflow-command-center {
+.admin-shell.workflow-compact .workflow-command-center {
   display:grid;
   grid-template-columns:auto minmax(360px,1fr) auto;
   align-items:center;
@@ -1779,16 +1779,16 @@ button:focus-visible {
   background:#fbfcfd;
   box-shadow:0 3px 10px rgba(22,27,34,.035);
 }
-.admin-shell.workspace-focus .workflow-command-heading { min-width:128px; margin:0; align-items:center; gap:7px; }
-.admin-shell.workspace-focus .workflow-command-heading > div:first-child { display:block; }
-.admin-shell.workspace-focus .workflow-command-heading small,
-.admin-shell.workspace-focus .workflow-command-heading p,
-.admin-shell.workspace-focus .workflow-locale-chip { display:none; }
-.admin-shell.workspace-focus .workflow-command-heading h1 { margin:0; font-size:11px; letter-spacing:-.01em; white-space:nowrap; }
-.admin-shell.workspace-focus .workflow-heading-actions { margin-left:7px; }
-.admin-shell.workspace-focus .workflow-density-toggle { min-height:26px; padding:0 7px; font-size:8px; }
-.admin-shell.workspace-focus .workflow-stage-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; margin:0; }
-.admin-shell.workspace-focus .workflow-stage-card {
+.admin-shell.workflow-compact .workflow-command-heading { min-width:128px; margin:0; align-items:center; gap:7px; }
+.admin-shell.workflow-compact .workflow-command-heading > div:first-child { display:block; }
+.admin-shell.workflow-compact .workflow-command-heading small,
+.admin-shell.workflow-compact .workflow-command-heading p,
+.admin-shell.workflow-compact .workflow-locale-chip { display:none; }
+.admin-shell.workflow-compact .workflow-command-heading h1 { margin:0; font-size:11px; letter-spacing:-.01em; white-space:nowrap; }
+.admin-shell.workflow-compact .workflow-heading-actions { margin-left:7px; }
+.admin-shell.workflow-compact .workflow-density-toggle { min-height:26px; padding:0 7px; font-size:8px; }
+.admin-shell.workflow-compact .workflow-stage-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; margin:0; }
+.admin-shell.workflow-compact .workflow-stage-card {
   min-height:32px;
   grid-template-columns:20px minmax(0,1fr) auto;
   gap:5px;
@@ -1797,14 +1797,14 @@ button:focus-visible {
   padding:4px 6px;
   box-shadow:none;
 }
-.admin-shell.workspace-focus .workflow-stage-card.selected { padding:4px 6px; border-width:1.5px; }
-.admin-shell.workspace-focus .workflow-stage-card > b { width:20px; height:20px; border-radius:5px; font-size:8px; }
-.admin-shell.workspace-focus .workflow-stage-card > span strong { font-size:9px; }
-.admin-shell.workspace-focus .workflow-stage-card > span small { display:none; }
-.admin-shell.workspace-focus .workflow-stage-card > em { min-width:19px; height:19px; font-size:7px; }
-.admin-shell.workspace-focus .workflow-stage-card.selected::after { display:none; }
-.admin-shell.workspace-focus .workflow-stage-card.done { opacity:.72; }
-.admin-shell.workspace-focus .primary-workflow-guide {
+.admin-shell.workflow-compact .workflow-stage-card.selected { padding:4px 6px; border-width:1.5px; }
+.admin-shell.workflow-compact .workflow-stage-card > b { width:20px; height:20px; border-radius:5px; font-size:8px; }
+.admin-shell.workflow-compact .workflow-stage-card > span strong { font-size:9px; }
+.admin-shell.workflow-compact .workflow-stage-card > span small { display:none; }
+.admin-shell.workflow-compact .workflow-stage-card > em { min-width:19px; height:19px; font-size:7px; }
+.admin-shell.workflow-compact .workflow-stage-card.selected::after { display:none; }
+.admin-shell.workflow-compact .workflow-stage-card.done { opacity:.72; }
+.admin-shell.workflow-compact .primary-workflow-guide {
   min-width:210px;
   margin:0;
   padding:0 0 0 9px;
@@ -1814,49 +1814,49 @@ button:focus-visible {
   align-items:center;
   gap:8px;
 }
-.admin-shell.workspace-focus .primary-workflow-guide-copy { display:block; min-width:0; }
-.admin-shell.workspace-focus .primary-workflow-guide-copy small,
-.admin-shell.workspace-focus .primary-workflow-guide-copy span { display:none; }
-.admin-shell.workspace-focus .primary-workflow-guide-copy strong { display:block; max-width:160px; overflow:hidden; font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
-.admin-shell.workspace-focus .primary-workflow-guide-button { min-height:30px; padding:0 10px; border-radius:6px; font-size:9px; }
-.admin-shell.workspace-focus .editor-context-bar { min-height:48px; height:48px; }
+.admin-shell.workflow-compact .primary-workflow-guide-copy { display:block; min-width:0; }
+.admin-shell.workflow-compact .primary-workflow-guide-copy small,
+.admin-shell.workflow-compact .primary-workflow-guide-copy span { display:none; }
+.admin-shell.workflow-compact .primary-workflow-guide-copy strong { display:block; max-width:160px; overflow:hidden; font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+.admin-shell.workflow-compact .primary-workflow-guide-button { min-height:30px; padding:0 10px; border-radius:6px; font-size:9px; }
+.admin-shell.workflow-compact .editor-context-bar { min-height:48px; height:48px; }
 
 @media (max-width:1180px) {
-  .admin-shell.workspace-focus .workflow-command-center { grid-template-columns:auto minmax(0,1fr); }
-  .admin-shell.workspace-focus .primary-workflow-guide { grid-column:1 / -1; min-width:0; justify-content:flex-end; border-left:0; border-top:1px solid var(--cms-border); padding:5px 0 0; }
+  .admin-shell.workflow-compact .workflow-command-center { grid-template-columns:auto minmax(0,1fr); }
+  .admin-shell.workflow-compact .primary-workflow-guide { grid-column:1 / -1; min-width:0; justify-content:flex-end; border-left:0; border-top:1px solid var(--cms-border); padding:5px 0 0; }
 }
 @media (max-width:760px) {
-  .admin-shell.workspace-focus .topbar { height:42px; min-height:42px; }
-  .admin-shell.workspace-focus .topbar-actions > span:not(.connection-dot),
-  .admin-shell.workspace-focus .brand-row > div:last-child { display:none; }
-  .admin-shell.workspace-focus .schema-banner { max-height:22px; padding:3px 10px; font-size:8px; }
-  .admin-shell.workspace-focus .workflow-command-center { display:grid; grid-template-columns:1fr; gap:5px; padding:5px 8px; }
-  .admin-shell.workspace-focus .workflow-command-heading { min-width:0; display:flex; justify-content:space-between; }
-  .admin-shell.workspace-focus .workflow-command-heading h1 { font-size:10px; }
-  .admin-shell.workspace-focus .workflow-stage-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
-  .admin-shell.workspace-focus .workflow-stage-card { min-height:28px; grid-template-columns:18px 1fr; padding:3px 4px; }
-  .admin-shell.workspace-focus .workflow-stage-card > b { width:18px; height:18px; }
-  .admin-shell.workspace-focus .workflow-stage-card > span strong { overflow:hidden; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
-  .admin-shell.workspace-focus .workflow-stage-card > em { display:none; }
-  .admin-shell.workspace-focus .primary-workflow-guide { display:none; }
-  .admin-shell.workspace-focus .editor-context-bar { min-height:48px; height:auto; padding-top:6px; padding-bottom:6px; }
+  .admin-shell.workflow-compact .topbar { height:42px; min-height:42px; }
+  .admin-shell.workflow-compact .topbar-actions > span:not(.connection-dot),
+  .admin-shell.workflow-compact .brand-row > div:last-child { display:none; }
+  .admin-shell.workflow-compact .schema-banner { max-height:22px; padding:3px 10px; font-size:8px; }
+  .admin-shell.workflow-compact .workflow-command-center { display:grid; grid-template-columns:1fr; gap:5px; padding:5px 8px; }
+  .admin-shell.workflow-compact .workflow-command-heading { min-width:0; display:flex; justify-content:space-between; }
+  .admin-shell.workflow-compact .workflow-command-heading h1 { font-size:10px; }
+  .admin-shell.workflow-compact .workflow-stage-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .admin-shell.workflow-compact .workflow-stage-card { min-height:28px; grid-template-columns:18px 1fr; padding:3px 4px; }
+  .admin-shell.workflow-compact .workflow-stage-card > b { width:18px; height:18px; }
+  .admin-shell.workflow-compact .workflow-stage-card > span strong { overflow:hidden; font-size:8px; text-overflow:ellipsis; white-space:nowrap; }
+  .admin-shell.workflow-compact .workflow-stage-card > em { display:none; }
+  .admin-shell.workflow-compact .primary-workflow-guide { display:none; }
+  .admin-shell.workflow-compact .editor-context-bar { min-height:48px; height:auto; padding-top:6px; padding-bottom:6px; }
 }
 
 @media (max-width:760px) {
-  .admin-shell.workspace-focus .editor-context-bar {
+  .admin-shell.workflow-compact .editor-context-bar {
     height:46px !important;
     min-height:46px !important;
     flex-wrap:nowrap;
     gap:5px;
     padding:5px 8px;
   }
-  .admin-shell.workspace-focus .editor-context-title { display:none; }
-  .admin-shell.workspace-focus .editor-scope-switch,
-  .admin-shell.workspace-focus .locale-switcher.compact { flex:0 1 auto; gap:2px; padding:2px; }
-  .admin-shell.workspace-focus .editor-scope-switch button,
-  .admin-shell.workspace-focus .locale-switcher.compact button { padding:4px 6px; font-size:8px; white-space:nowrap; }
-  .admin-shell.workspace-focus .compact-preview-toggle { min-height:28px; margin-left:auto; padding:4px 7px; font-size:8px; white-space:nowrap; }
-  .admin-shell.workspace-focus .species-sidebar { max-height:31vh; }
+  .admin-shell.workflow-compact .editor-context-title { display:none; }
+  .admin-shell.workflow-compact .editor-scope-switch,
+  .admin-shell.workflow-compact .locale-switcher.compact { flex:0 1 auto; gap:2px; padding:2px; }
+  .admin-shell.workflow-compact .editor-scope-switch button,
+  .admin-shell.workflow-compact .locale-switcher.compact button { padding:4px 6px; font-size:8px; white-space:nowrap; }
+  .admin-shell.workflow-compact .compact-preview-toggle { min-height:28px; margin-left:auto; padding:4px 7px; font-size:8px; white-space:nowrap; }
+  .admin-shell.workflow-compact .species-sidebar { max-height:31vh; }
 }
 /* 2026-09-06 strict three-color CMS system */
 :root {
@@ -2093,14 +2093,14 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
 .page-action-panel { padding:18px 20px; margin-bottom:28px; }
 
 /* Focus mode remains compact, but keeps hierarchy through weight rather than microscopic type. */
-.admin-shell.workspace-focus .workflow-command-heading h1 { font-size:12px !important; font-weight:720 !important; }
-.admin-shell.workspace-focus .workflow-stage-card > span strong { font-size:10px !important; font-weight:680 !important; }
-.admin-shell.workspace-focus .primary-workflow-guide-copy strong { font-size:10px !important; }
-.admin-shell.workspace-focus .editor-context-title strong { font-size:11px !important; }
+.admin-shell.workflow-compact .workflow-command-heading h1 { font-size:12px !important; font-weight:720 !important; }
+.admin-shell.workflow-compact .workflow-stage-card > span strong { font-size:10px !important; font-weight:680 !important; }
+.admin-shell.workflow-compact .primary-workflow-guide-copy strong { font-size:10px !important; }
+.admin-shell.workflow-compact .editor-context-title strong { font-size:11px !important; }
 @media (max-width:760px) {
   :root { --type-page:22px; --type-section:17px; --type-action:14px; --type-label:12px; --type-body:11px; --type-meta:10px; }
   .workflow-command-heading h1 { font-size:20px !important; }
-  .admin-shell.workspace-focus .workflow-stage-card > span strong { font-size:9px !important; }
+  .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size:9px !important; }
   .page-action-panel { padding:16px; }
 }
 
@@ -2457,4 +2457,57 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
 @media (max-width:760px) {
   .workspace.studio-workspace { grid-template-columns:1fr; }
   .live-preview-pane.compact-open { width:min(560px,94vw) !important; }
+}
+
+
+/* 2026-09-06 permanent compact workflow: status/navigation chrome, never an expandable content panel. */
+.admin-shell.workflow-compact .workflow-command-center {
+  min-height:46px;
+  border-bottom:1px solid var(--cms-border);
+}
+.admin-shell.workflow-compact .workflow-command-heading { min-width:96px; }
+.admin-shell.workflow-compact .workflow-command-heading small,
+.admin-shell.workflow-compact .workflow-command-heading p { display:none !important; }
+.admin-shell.workflow-compact .workflow-command-heading h1 {
+  font-size:10px !important;
+  line-height:1.2 !important;
+  font-weight:700 !important;
+  letter-spacing:.04em !important;
+  text-transform:uppercase;
+  color:var(--cms-muted) !important;
+}
+.admin-shell.workflow-compact .workflow-locale-chip {
+  display:inline-flex !important;
+  align-items:center;
+  min-height:22px;
+  padding:0 6px;
+  border:1px solid var(--cms-border);
+  border-radius:6px;
+  background:var(--cms-paper);
+  color:var(--cms-muted);
+  font-size:8px;
+  font-weight:650;
+}
+.admin-shell.workflow-compact .workflow-stage-card > span strong {
+  font-size:9px !important;
+  line-height:1.2 !important;
+  font-weight:650 !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card > b { font-weight:700 !important; }
+.admin-shell.workflow-compact .primary-workflow-guide-copy strong {
+  font-size:9px !important;
+  font-weight:650 !important;
+}
+.admin-shell.workflow-compact .primary-workflow-guide-button {
+  font-size:9px !important;
+  font-weight:700 !important;
+}
+/* Editor typography intentionally starts a full tier above workflow chrome. */
+.editor-header h2,.base-seo-header h2 { font-size:var(--type-page) !important; font-weight:760 !important; }
+.editor-detail-heading h3,.section-heading h3 { font-size:var(--type-section) !important; font-weight:730 !important; }
+@media (max-width:760px) {
+  .admin-shell.workflow-compact .workflow-command-center { min-height:64px; }
+  .admin-shell.workflow-compact .workflow-command-heading { display:none; }
+  .admin-shell.workflow-compact .workflow-locale-chip { display:none !important; }
+  .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size:8px !important; }
 }

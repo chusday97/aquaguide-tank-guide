@@ -740,3 +740,7 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Preview is hidden by default and opened explicitly from the sticky `效果预览` control as an in-workspace overlay drawer; desktop/mobile page overflow remains zero.
 - Replaced the single Blue interaction accent with one Green `#2F6F4E` accent, preserving the three-color Graphite / White / Green rule across primary buttons, selected states and Preview modes.
 - Browser acceptance at 1440×900 and 390×844: Preview closed→open→close works, all Page/Google/Mobile Preview modes show zero extra saturated hue, and Admin contract/root build pass.
+## 2026-09-06 — permanent compact workflow
+- User rejected expandable workflow chrome. Removed `workspaceFocusMode`, `展开流程 / 专注编辑`, and editor/Preview-triggered density changes.
+- Workflow is fixed at 46px desktop / 64px mobile; stage type is 9px / 8px while editor page titles are 24px / 22px and section titles 18px / 17px.
+- 1440/390 browser checks: workflow height unchanged before/after editor scroll; zero horizontal overflow. Admin contract and root build PASS.
