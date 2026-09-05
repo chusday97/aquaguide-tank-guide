@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
 const repo = process.env.GITHUB_REPOSITORY ?? 'chusday97/aquaguide-tank-guide';
-const prNumber = process.env.PREVIEW_PR ?? '142';
+const explicitPrNumber = process.env.PREVIEW_PR?.trim() || null;
 
 function command(name, args) {
   return execFileSync(name, args, { cwd: root, encoding: 'utf8' }).trim();
@@ -39,10 +39,23 @@ const remoteSha = command('git', ['ls-remote', 'origin', `refs/heads/${branch}`]
 const checks = { localSha, branch, remoteSha, remoteSynchronized: remoteSha === localSha };
 
 try {
-  const pr = jsonCommand('gh', ['api', `repos/${repo}/pulls/${prNumber}`]);
-  checks.prSha = pr.head?.sha ?? null;
-  checks.prState = pr.state ?? null;
-  checks.prIsDraft = Boolean(pr.draft);
+  if (explicitPrNumber) {
+    const pr = jsonCommand('gh', ['api', `repos/${repo}/pulls/${explicitPrNumber}`]);
+    checks.prNumber = Number(explicitPrNumber);
+    checks.prSha = pr.head?.sha ?? null;
+    checks.prState = pr.state ?? null;
+    checks.prIsDraft = Boolean(pr.draft);
+  } else {
+    const rows = jsonCommand('gh', [
+      'pr', 'list', '--repo', repo, '--head', branch, '--state', 'open',
+      '--json', 'number,headRefOid,isDraft,state,baseRefName,headRefName',
+    ]);
+    const pr = rows.find((row) => row.headRefName === branch) ?? rows[0] ?? null;
+    checks.prNumber = pr?.number ?? null;
+    checks.prSha = pr?.headRefOid ?? null;
+    checks.prState = pr?.state?.toLowerCase?.() ?? null;
+    checks.prIsDraft = Boolean(pr?.isDraft);
+  }
   checks.prSynchronized = checks.prSha === localSha;
 } catch (error) {
   checks.githubError = error instanceof Error ? error.message : String(error);

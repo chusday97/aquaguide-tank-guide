@@ -199,3 +199,13 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Final accepted Preview `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` from snapshot `fd960667`; hosted verifier PASS 2/2 and branch-alias canonical/hreflang remain exact.
 - `5899d643` binds acceptance + `hold_noindex`; readiness is intentionally false with blocker `release_decision_hold`.
 - Latest light CI `33962944072` PASS; Heavy skipped. Production/main/live DB untouched.
+
+## 2026-09-05 — live-main reconciliation candidate
+- Re-read authoritative refs: feature `3dfa76af8d1493b8a7fb17e950afb7849cfb2eac`; live main `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- Isolated two-parent merge candidate `6e5d9aab906390119408982ad456c50dcb588a7e` resolves 12 real conflicts while preserving main Product/Catalog/immersive UX and feature Operations Studio/SEO/AI authority boundaries.
+- Compatibility now keeps Domain Rules as final decision authority and records reviewed runtime Evidence via separate `evidenceAuthorityVersion`; Admin/API regression callers use the Compatibility Service boundary instead of importing the legacy engine directly.
+- Local PASS: composite build, project truth, Compatibility legacy/domain/runtime/Admin/server regression, Catalog/435-pair matrix, formal 4-module Preview with zero API/resource failures, mobile Care/Aquarium, Admin Content, Publish Center, Admin Repo contracts, local Supabase DB/schema gates.
+- Draft PR #144 created from `codex/reconcile-admin-content-v0-main-20260905` to `main`. GitHub Main Convergence V1, Product Golden Path light validate and Admin Content CI Gate all passed on `6e5d9aab`; heavy suites stayed skipped by policy.
+- AquaGuide Preview for `6e5d9aab` is READY at `aquaguide-cyzedovfy-chusday97s-projects.vercel.app`. The separate Admin Preview project had a branch-allowlist bug; its Vercel Build Command now also permits `codex/reconcile-admin-content-v0-main-*`, and redeploy `dpl_J5EJhtETyvKJWhpGZNTMkhjhB3YB` reached READY.
+- `check:preview-parity` exposed a stale hard-coded PR #142 assumption; current change resolves the open PR by branch by default while preserving `PREVIEW_PR` override. The resolver passes against the deployed `6e5d9aab` checkpoint.
+- Care SEO remains `hold_noindex`; Production, main and live migrations remain untouched. Next gate: current-HEAD Preview parity plus deliberate human visual acceptance; only then present a merge decision.

@@ -79,10 +79,15 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Admin UI exposes source extraction, conflicts, impact explanation, review warnings and local-only Draft application.
   - [x] Contract + 1280/390 browser acceptance prove AI generation/application creates no Editorial write until explicit Save Draft.
 
-## Next — dedicated branch reconciliation (no merge yet)
-- [ ] Re-read live `main` / feature refs and run an isolated merge-tree/reconciliation audit against the current accepted feature baseline.
-- [ ] Classify overlap/conflicts by authority and preserve all completed Product/Care, Compatibility, Publish Center, Species SEO and Care SEO invariants.
-- [ ] Validate a reconciliation candidate before any explicit decision to merge `main`; do not change Production/index as part of reconciliation.
+## Reconciliation candidate — completed, no merge yet
+- [x] Re-read live `main` / feature refs and run an isolated merge-tree/reconciliation audit against the accepted feature baseline.
+- [x] Classify overlap/conflicts by authority and preserve Product/Care, Compatibility, Publish Center, Species SEO and Care SEO invariants.
+- [x] Validate an isolated two-parent reconciliation candidate locally and on Draft PR #144; Production/index/live migrations remain locked.
+
+## Next — human visual acceptance + explicit merge decision
+- [ ] Review the reconciled AquaGuide Preview against the current visual baseline and deliberately accept/update the UI freeze only if the product surface is correct.
+- [ ] Re-run current-HEAD Preview parity/readiness after the parity-resolver commit is deployed.
+- [ ] Only after those gates pass, present an explicit merge decision; do not auto-merge `main`.
 
 ## Stable completed baseline — do not reimplement
 - [x] Product/Care Admin route exists at `/admin/product-content`.
