@@ -112,3 +112,7 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Evidence-based duplicate comparison shared by single/bulk review.
 - [x] Durable import batches + server-side review/publish scope checks.
 - [x] Bilingual Staging readiness + Canonical dependencies + noindex Preview safety.
+
+- [x] Add Workspace Focus mode: entering the editor or Preview collapses fixed chrome to a compact workflow/status strip; explicit `展开流程` restores the full workflow.
+- [x] Replace the green-heavy Admin palette with a neutral CMS system (white/cool gray/graphite + one blue accent); reserve warning/review/success colors for semantic status only.
+- [x] Verify fixed-chrome reduction: 1440/1366 workspace gains 196px vertical space; 390 workspace gains 312px and mobile editor sticky bar drops from ~140px to 46px, with zero horizontal overflow.

@@ -176,3 +176,6 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - `1452bf9c` was the first selected-state pass. Screenshot review showed it over-corrected Species rows by adding a second ✓ badge and stronger row geometry; that visual treatment is superseded by the current correction.
 - Current correction restores stable row geometry: existing 16×16 selection square, left-aligned text, batch-only checkbox semantics, and separate Base/current-page context styling.
 - Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; no merge/rebase of main and no Production mutation.
+
+## 2026-09-05 — SEO Admin workspace-focus checkpoint
+- Workspace Focus/professional palette changes remain on `feature/admin-content-v0` only. No main merge/rebase, Production/index unlock, or live migration is part of this UI round.

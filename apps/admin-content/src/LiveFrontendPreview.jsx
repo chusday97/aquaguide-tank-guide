@@ -126,7 +126,7 @@ function GooglePreview({ preview, inspector }) {
   );
 }
 
-export default function LiveFrontendPreview({ preview, readiness, onGeneratePreview, readOnly = false, selectedElement, onSelectElement, editorScope = 'variant', compactOpen = false, onCloseCompact }) {
+export default function LiveFrontendPreview({ preview, readiness, onGeneratePreview, readOnly = false, selectedElement, onSelectElement, editorScope = 'variant', compactOpen = false, onCloseCompact, onWorkspaceEngage }) {
   const { appLocale, t } = useAppLanguage();
   const [mode, setMode] = useState('page');
   const [hoveredElement, setHoveredElement] = useState(null);
@@ -151,7 +151,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
     return () => cancelAnimationFrame(frame);
   }, [selectedElement, mode]);
 
-  if (!preview?.species) return <aside className={`live-preview-pane ${compactOpen ? 'compact-open' : ''}`}><div className="live-preview-empty">{t('preview.empty')}</div></aside>;
+  if (!preview?.species) return <aside className={`live-preview-pane ${compactOpen ? 'compact-open' : ''}`} onPointerEnter={onWorkspaceEngage} onFocusCapture={onWorkspaceEngage} onWheelCapture={onWorkspaceEngage} onTouchStart={onWorkspaceEngage}><div className="live-preview-empty">{t('preview.empty')}</div></aside>;
   const selectedLabel = selectedElement ? getEditorElementLabel(selectedElement, appLocale) : '';
   const selectedSource = selectedElement ? elementSource(selectedElement, preview, appLocale) : '';
   const selectedPath = selectedElement ? elementEditPath(selectedElement, preview, appLocale, editorScope) : '';
@@ -166,7 +166,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
   };
 
   return (
-    <aside className={`live-preview-pane ${compactOpen ? 'compact-open' : ''}`} ref={paneRef}>
+    <aside className={`live-preview-pane ${compactOpen ? 'compact-open' : ''}`} ref={paneRef} onPointerEnter={onWorkspaceEngage} onFocusCapture={onWorkspaceEngage} onWheelCapture={onWorkspaceEngage} onTouchStart={onWorkspaceEngage}>
       <header className="live-preview-header">
         <div><strong>{t('preview.title')}</strong><small>{getLocaleLabel(preview.locale)}</small></div>
         <div className="preview-header-actions">

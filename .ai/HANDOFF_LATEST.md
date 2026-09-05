@@ -297,3 +297,9 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Stateful controls use `aria-pressed`; selected scope/locale/filter controls receive persistent selected styling.
 - Screenshot correction supersedes the first row treatment: normal Species selection uses only the existing 16×16 square radio; no second ✓ badge is inserted beside the text. The row keeps only a light supporting highlight. Batch mode switches that slot to checkbox semantics.
 - `当前物种页面` vs `基础模板` now has explicit `页 / 模` context styling and impact copy. Browser checks at 1440/390 verify 16×16 controls, left-aligned text and zero overflow. Production/main/index/live DB remain untouched.
+
+## 2026-09-05 — SEO Admin workspace focus + palette checkpoint
+- Added automatic Workspace Focus when the operator enters the editor or live Preview; Species navigation does not trigger it. Full workflow remains recoverable via `展开流程`.
+- Measured at 1440×900 and 1366×768: fixed chrome drops from ~308px to ~112px and workspace gains 196px. At 390×844 workspace grows from 400px to 712px; focused editor sticky controls shrink from ~140px to 46px.
+- Replaced the green-heavy CMS chrome with white/cool-gray/graphite surfaces and a single blue interaction accent. Status colors remain semantic only.
+- Admin contract and root production build pass; zero horizontal overflow in measured desktop/mobile focus states.

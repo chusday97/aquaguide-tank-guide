@@ -607,6 +607,7 @@ export default function App() {
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
   const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
+  const [workspaceFocusMode, setWorkspaceFocusMode] = useState(false);
   const [editorDirty, setEditorDirty] = useState(false);
   const [stagingPublishing, setStagingPublishing] = useState(false);
   const [activityOpen, setActivityOpen] = useState(false);
@@ -1140,7 +1141,7 @@ export default function App() {
   if (role && role !== 'admin') return <Forbidden email={session.user.email} onSignOut={signOut} />;
 
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell ${workspaceFocusMode ? 'workspace-focus' : ''}`}>
       <header className="topbar">
         <div className="brand-row">
           <div className="brand-mark small">A</div>
@@ -1166,7 +1167,7 @@ export default function App() {
       </header>
 
       {isReadOnlyDemoMode ? (
-        <div className="schema-banner">
+        <div className="schema-banner demo-banner">
           <strong>只读 UI 演示：</strong> 这是专门的只读演示环境，不连接任何可写内容源。可以搜索 486 条 Species、体验编辑器和实时前端 Preview，但保存被硬禁用。
         </div>
       ) : !schemaReady || !groupSchemaReady ? (
@@ -1190,7 +1191,12 @@ export default function App() {
             <h1>{appLocale === 'en' ? 'Publishing workflow' : '发布流程'}</h1>
             <p>{appLocale === 'en' ? 'Follow the four stages from left to right. The highlighted stage is what needs attention now.' : '只按从左到右的 4 个阶段处理；高亮项就是现在需要关注的步骤。'}</p>
           </div>
-          <span className="workflow-locale-chip">{contentLocale === 'en' ? 'English' : '中文'}</span>
+          <div className="workflow-heading-actions">
+            <span className="workflow-locale-chip">{contentLocale === 'en' ? 'English' : '中文'}</span>
+            <button type="button" className="workflow-density-toggle" aria-pressed={workspaceFocusMode} onClick={() => setWorkspaceFocusMode((value) => !value)}>
+              {workspaceFocusMode ? (appLocale === 'en' ? 'Expand flow' : '展开流程') : (appLocale === 'en' ? 'Focus workspace' : '专注编辑')}
+            </button>
+          </div>
         </div>
         <div className="workflow-stage-grid">
           <button type="button" aria-pressed={workflowFilter?.key === 'data:pending'} className={`workflow-stage-card ${workflowOverview.dataReview.pending > 0 ? 'attention issue' : 'done'} ${workflowFilter?.key === 'data:pending' ? 'selected' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
@@ -1247,7 +1253,7 @@ export default function App() {
           }}
         />
 
-        <main className={`editor-area studio-editor-area scope-${editorScope}`}>
+        <main className={`editor-area studio-editor-area scope-${editorScope}`} onPointerEnter={() => setWorkspaceFocusMode(true)} onFocusCapture={() => setWorkspaceFocusMode(true)} onWheelCapture={() => setWorkspaceFocusMode(true)} onTouchStart={() => setWorkspaceFocusMode(true)}>
           <div className="editor-context-bar">
             <div className="editor-context-title">
               <small>{appLocale === 'en' ? 'CURRENT WORKSPACE' : '当前工作区'}</small>
@@ -1534,6 +1540,7 @@ export default function App() {
           editorScope={editorScope}
           compactOpen={compactPreviewOpen}
           onCloseCompact={() => setCompactPreviewOpen(false)}
+          onWorkspaceEngage={() => setWorkspaceFocusMode(true)}
         />
       </div>
       <ActivityCenter

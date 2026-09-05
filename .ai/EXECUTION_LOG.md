@@ -722,3 +722,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Added explicit `当前物种页面` vs `基础模板` scope context (`页 / 模`) with different accents and impact copy.
 - Read-only Demo no longer reports `Schema 未应用`; it shows `只读演示 · 不会写入`.
 - PASS: Admin build, Admin contract, root build; browser 1440/390 confirms 16×16 selection controls, left-aligned rows, clear scope contexts, zero row/page overflow. Main/Production/index/live DB untouched.
+
+## 2026-09-05 — SEO Admin focus + palette refinement
+- User reported excessive fixed-header height and an unprofessional green-heavy palette.
+- Implemented editor/Preview-triggered Workspace Focus with explicit restore control; left navigator excluded from auto-collapse.
+- Re-themed primary CMS surfaces to neutral gray/white/graphite + blue accent, keeping semantic status colors scoped.
+- Browser measurements: 1440/1366 +196px workspace height; 390 +312px, editor sticky bar ~140→46px; overflow 0. Admin contract + root build PASS.

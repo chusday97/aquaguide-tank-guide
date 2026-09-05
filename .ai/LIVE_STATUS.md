@@ -219,3 +219,7 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Screenshot-driven correction supersedes the previous strong-row selection treatment: normal Species selection is now shown only in the existing 16×16 square radio; no extra ✓ badge is inserted into the text grid. Batch mode switches the same slot to checkbox semantics. 1440/390 checks confirm left-aligned text, 16×16 controls and zero overflow.
 - Current-page vs Base-template editing now has explicit `页 / 模` context cards with different accents and impact copy. Read-only Demo no longer reports `Schema 未应用`; it says only `只读演示 · 不会写入`.
 - This remains Species SEO Admin-only work on `feature/admin-content-v0`; PR #144 reconciliation stays parked.
+
+## 2026-09-05 — SEO Admin focus/layout state
+- Current feature adds Workspace Focus for editor/Preview and a neutral professional CMS palette. Editor/Preview interaction collapses fixed workflow chrome; left Species navigation alone leaves the full workflow visible.
+- Desktop workspace gains 196px vertical space in Focus; 390px gains 312px and focused editor controls are 46px high. Production/main/index/live DB remain untouched.

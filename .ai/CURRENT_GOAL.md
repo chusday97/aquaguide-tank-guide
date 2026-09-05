@@ -174,3 +174,8 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - This hosted acceptance path is intentionally read-only; it is for UI/workflow validation, not content mutation.
 - Independent `admin-content` writable Preview configuration is incomplete because its Repo Admin/GitHub write credentials are not bound there. Restore them only through a secure secret-binding path; do not expose or manually shuttle values.
 - Current product decision required from the user is UI/operator acceptance feedback, not main reconciliation or Production release.
+
+## 2026-09-05 SEO Admin workspace-focus / professional theme rule
+- Large workflow guidance is an entry-state aid, not permanent editor chrome. Entering the middle editor or right Preview automatically switches to Workspace Focus; the left Species navigator alone does not.
+- Focus keeps only compact workflow status, counts, primary action, current scope/language and Preview controls; `展开流程` restores the full command center.
+- Admin visual system is now neutral CMS chrome: white / cool gray / graphite with one blue interaction accent. Amber/red/green are semantic states only and must not become page-wide theme colors.
