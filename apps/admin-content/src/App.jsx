@@ -7,6 +7,7 @@ import BulkDuplicateReviewPanel from './BulkDuplicateReviewPanel.jsx';
 import BulkEditorialReviewPanel from './BulkEditorialReviewPanel.jsx';
 import ActivityCenter from './ActivityCenter.jsx';
 import BaseSpeciesSeoEditor from './BaseSpeciesSeoEditor.jsx';
+import PageReviewStatusBar from './PageReviewStatusBar.jsx';
 import TranslationPanel from './TranslationPanel.jsx';
 import DataReviewPanel from './DataReviewPanel.jsx';
 import LiveFrontendPreview from './LiveFrontendPreview.jsx';
@@ -373,63 +374,44 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   };
 
   return (
-    <section className="editor-panel">
-      <div className="editor-header">
-        <div>
-          <p className="eyebrow">SPECIES SEO · {getLocaleLabel(locale)}</p>
-          <h2>{species.name}</h2>
-          <p className="scientific-name">{species.scientific_name}</p>
-        </div>
-        <div className="editor-status-cluster" aria-label={isUiEnglish ? 'Current states' : '当前状态'}>
-          <div className="editor-status-item">
-            <small>{isUiEnglish ? 'Publish status' : '发布状态'}</small>
-            <span className="editor-status-value"><span className={`editor-status-dot ${form.status}`}></span><strong>{form.status === 'published' ? (isUiEnglish ? 'Published' : '已发布') : (isUiEnglish ? 'Draft' : '草稿')}</strong></span>
-          </div>
-          <div className="editor-status-item">
-            <small>{isUiEnglish ? 'Review status' : '审核状态'}</small>
-            <strong className={`review-status-pill review-${form.reviewState}`}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Preview approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已批准预览' }[form.reviewState] || form.reviewState)}</strong>
-          </div>
-        </div>
-      </div>
+    <>
+      <PageReviewStatusBar
+        publishStatus={form.status}
+        reviewState={form.reviewState}
+        isUiEnglish={isUiEnglish}
+        scope="page"
+        dirtyHint={contentDirty ? (isUiEnglish ? 'Saving content resets approval to Editing.' : '保存内容后会自动退回“编辑中”，避免旧审核结果继续生效。') : ''}
+      >
+        {contentDirty ? (
+          <button type="button" className="primary-button compact" disabled={saving} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
+        ) : form.reviewState === 'editing' ? (
+          <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
+        ) : form.reviewState === 'ready_for_review' ? (
+          <>
+            <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
+          </>
+        ) : publishReadinessState === 'publish_ready' ? (
+          <>
+            <button type="button" className="ghost-button compact" disabled={saving || stagingPublishing} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+            <button type="button" className="primary-button compact staging-action" disabled={stagingPublishing} onClick={onPublishStaging}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? 'Publish to Staging' : '发布到 Staging')}</button>
+          </>
+        ) : (
+          <>
+            <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+            <button type="button" className="secondary-button compact" onClick={onOpenReadiness}>{isUiEnglish ? 'View blockers' : '查看发布阻塞项'}</button>
+          </>
+        )}
+      </PageReviewStatusBar>
 
-      <section className={`page-action-panel review-${form.reviewState}`} aria-label={isUiEnglish ? 'Editorial workflow' : '内容审核流程'}>
-        <div className="workflow-status-block">
-          <small className="workflow-section-label">{isUiEnglish ? 'Review progress' : '审核进度'}</small>
-          <div className="workflow-stepper-track">
-          <span className={form.reviewState === 'editing' ? 'current' : 'done'}><b>1</b>{isUiEnglish ? 'Editing' : '编辑中'}</span>
-          <i>→</i>
-          <span className={form.reviewState === 'ready_for_review' ? 'current' : form.reviewState === 'approved' ? 'done' : ''}><b>2</b>{isUiEnglish ? 'Awaiting review' : '待审核'}</span>
-          <i>→</i>
-          <span className={form.reviewState === 'approved' ? 'current' : ''}><b>3</b>{isUiEnglish ? 'Preview approved' : '已批准预览'}</span>
+      <section className="editor-panel">
+        <div className="editor-header">
+          <div>
+            <p className="eyebrow">SPECIES SEO · {getLocaleLabel(locale)}</p>
+            <h2>{species.name}</h2>
+            <p className="scientific-name">{species.scientific_name}</p>
           </div>
         </div>
-        <div className="workflow-action-block">
-          <small className="workflow-section-label">{isUiEnglish ? 'Available actions' : '可执行操作'}</small>
-          <div className="workflow-stepper-action">
-          {contentDirty ? (
-            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button>
-          ) : form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : (isUiEnglish ? 'Submit for review' : '提交审核')}</button>
-          ) : form.reviewState === 'ready_for_review' ? (
-            <>
-              <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('approved')}>{saving ? t('common.saving') : (isUiEnglish ? 'Approve Preview' : '批准预览')}</button>
-            </>
-          ) : publishReadinessState === 'publish_ready' ? (
-            <>
-              <button type="button" className="ghost-button compact" disabled={saving || stagingPublishing} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact staging-action" disabled={stagingPublishing} onClick={onPublishStaging}>{stagingPublishing ? (isUiEnglish ? 'Publishing…' : '正在发布…') : (isUiEnglish ? 'Publish to Staging' : '发布到 Staging')}</button>
-            </>
-          ) : (
-            <>
-              <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="secondary-button compact" onClick={onOpenReadiness}>{isUiEnglish ? 'View blockers' : '查看发布阻塞项'}</button>
-            </>
-          )}
-          {contentDirty ? <small>{isUiEnglish ? 'Saving content resets approval to Editing.' : '保存内容后会自动退回“编辑中”，避免旧审核结果继续生效。'}</small> : null}
-          </div>
-        </div>
-      </section>
 
       {!currentHygiene.clean ? (
         <div className="content-hygiene-warning" role="alert">
@@ -444,7 +426,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       <div className="editor-detail-heading">
         <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
         <h3>{isUiEnglish ? 'Page content and SEO fields' : '页面内容与 SEO 字段'}</h3>
-        <p>{isUiEnglish ? 'These fields shape the page. Workflow state changes only when you use the action panel above.' : '下面只负责“内容怎么写”；流程状态只通过上方的关键操作区推进。'}</p>
+        <p>{isUiEnglish ? 'These fields shape the page. Workflow state changes only when you use the action panel above.' : '下面只负责“内容怎么写”；审核状态只通过上方独立的审核进度栏推进。'}</p>
       </div>
       <div className="editor-grid">
         <div className="form-column">
@@ -574,7 +556,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }
 
@@ -800,6 +783,13 @@ export default function App() {
     ? groupPreviewRows[selectedGroupKey] || selectedGroupPersisted
     : null;
   const selectedVariantRecord = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, contentLocale)] : null;
+  const selectedReviewState = editorScope === 'base'
+    ? (selectedGroupPersisted?.review_state || 'editing')
+    : (selectedVariantRecord?.review_state || 'editing');
+  const selectedReviewStep = selectedReviewState === 'approved' ? 3 : selectedReviewState === 'ready_for_review' ? 2 : 1;
+  const selectedReviewLabel = appLocale === 'en'
+    ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Preview approved' }[selectedReviewState] || selectedReviewState)
+    : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已批准预览' }[selectedReviewState] || selectedReviewState);
   const savedLivePreview = useMemo(() => {
     if (!selectedSpecies || !selectedGroup) return null;
     const resolved = resolveEffectiveSeo({
@@ -1251,6 +1241,7 @@ export default function App() {
               <button type="button" aria-pressed={editorScope === 'base'} className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
               <button type="button" aria-pressed={editorScope === 'variant'} className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
             </div>
+            <span className="mobile-review-progress" aria-label={appLocale === 'en' ? 'Current review progress' : '当前审核进度'}>{appLocale === 'en' ? `Review ${selectedReviewStep}/3 · ${selectedReviewLabel}` : `审核 ${selectedReviewStep}/3 · ${selectedReviewLabel}`}</span>
             <button type="button" className="compact-preview-toggle" aria-expanded={compactPreviewOpen} onClick={() => setCompactPreviewOpen((value) => !value)}>{appLocale === 'en' ? 'Preview' : '效果预览'}</button>
             <div className="locale-switcher compact" aria-label="Content language">
               {CONTENT_LOCALES.map((item) => (

@@ -750,3 +750,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Rebuilt the top strip as dedicated Progress Navigation: current stage / 4, four clickable stage buttons, completed/current/upcoming semantics and a current-action CTA.
 - System progress uses `aria-current=step`; clicking another queue only changes `aria-pressed` / outlined filter-selection state, so browsing a queue cannot fake workflow progress.
 - Runtime browser checks at 1440×900 and 390×844: current stage is solid Green, workflow surface is neutral with a 2px Graphite divider, editor canvas is White, four stages remain visible and horizontal overflow is 0.
+
+## 2026-09-06 — standalone page review progress
+- Moved Variant/Base publish status, review state, 3-step audit progress and actions out of editor headers/body into shared `PageReviewStatusBar.jsx`.
+- Desktop: sticky full-width review control strip; mobile: normal-flow full strip + compact sticky-toolbar progress indicator to avoid nested sticky collisions.
+- Updated `verify-contract.mjs` to forbid `editor-status-cluster` regression and require the standalone review control layer for both editor scopes.
+- Browser acceptance PASS at 1440/390 with zero horizontal overflow; Admin contract and root build PASS.

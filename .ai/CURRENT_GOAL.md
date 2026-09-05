@@ -184,3 +184,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Runtime computed-style scans at 1440×900 and 390×844 cover the initial workspace plus all six advanced tools; extra saturated hue count is `0` in every scanned state and page overflow is `0`.
 - Typography hierarchy is explicit: workflow chrome uses 8–10px navigation/status type while editor content starts at 18px section / 24px page titles on desktop (17 / 22px mobile).
 - Obsolete 2026-09-05 professional-palette override was removed; Focus layout remains, while the strict design-system block is the final visual authority.
+
+## 2026-09-06 Species SEO Admin page-review control layer
+- Information architecture is now three explicit layers: global Publish Progress Navigation → current-page `PageReviewStatusBar` → content editor.
+- Publish/review status is removed from the editor header. Variant and Base both use one standalone review bar with `审核进度 n/3`, Draft/Published state, review state and the current next action.
+- Desktop review chrome is sticky below the 48px editor context bar; editor content scrolls independently beneath it. Mobile keeps the full standalone bar in document flow plus a compact `审核 n/3 · 状态` indicator in the sticky 46px editor toolbar.
+- Contract now forbids `editor-status-cluster` regression and requires PageReviewStatusBar for both Variant and Base.

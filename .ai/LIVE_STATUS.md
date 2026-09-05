@@ -228,3 +228,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Computed-style scan PASS at 1440×900 and 390×844 for initial UI and all six advanced tools (`发布资格 / 批量审核 / 批量内容审核 / SEO 模板导入 / 版本历史 / 任务队列`): extra saturated hue count `0`, horizontal overflow `0`.
 - Type hierarchy PASS: desktop 24/18/15/13/12/10px and mobile 22/17/14/12/11/10px; Focus editor bar remains 48px desktop / 46px mobile.
 - Admin contract + Repo backend/API routing + controlled Preview + root build remain PASS locally. Main/Production/index/live DB untouched; Care SEO stays `hold_noindex`.
+
+## 2026-09-06 — current-page review status separation
+- Variant/Base `审核进度 / 关键操作` is no longer inside the 760px editor panel. `PageReviewStatusBar` is a full-width control strip above editor content.
+- Desktop browser acceptance: review bar width 1170px vs editor 760px; after 673px editor scroll the review bar remains sticky while content scrolls away.
+- Mobile: standalone review bar remains separate; sticky editor toolbar continuously exposes `审核 1/3 · 编辑中`, avoiding nested-sticky overlap. 1440/390 horizontal overflow remains 0.
+- Admin contract and root build PASS; Production/main/index/live DB remain untouched.

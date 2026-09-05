@@ -310,3 +310,9 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Typography hierarchy: desktop page 24, section 18, action 15, field/Species label 13, body 12, meta 10px; mobile 22/17/14/12/11/10px. Focus mode remains compact to maximize editing/Preview space.
 - Removed the superseded 2026-09-05 professional-palette block instead of stacking another permanent theme layer. Current design-system block is the final visual authority.
 - Local Admin contract and full root build PASS. No main/Production/index/live-DB mutation; PR #144 stays parked and Care SEO remains `hold_noindex`.
+
+## 2026-09-06 — Page Review Status Bar checkpoint
+- User feedback identified `审核进度 / 可执行操作` as another workflow layer incorrectly embedded in the editor. It is now a standalone `PageReviewStatusBar` between scope context and content editing.
+- Variant/Base both show three-step review progress, content publish state and next action in the same control strip; duplicate status clusters were removed from editor headers.
+- Desktop keeps the bar sticky under editor context controls; mobile uses an additional compact review-progress indicator in its sticky toolbar while the full bar scrolls naturally.
+- Contract was updated to enforce the new architecture rather than the superseded editor-header status requirement.

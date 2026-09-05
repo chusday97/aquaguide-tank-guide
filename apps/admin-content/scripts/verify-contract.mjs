@@ -52,6 +52,7 @@ const [repoBackendClientSource, repoAuthSource, repoStoreSource, repoGithubSourc
 
 const publicGeneratorSource = await readFile(path.join(appRoot, 'scripts/generate-public-species.mjs'), 'utf8');
 const sidebarSource = await readFile(path.join(appRoot, 'src/SpeciesGroupSidebar.jsx'), 'utf8');
+const pageReviewSource = await readFile(path.join(appRoot, 'src/PageReviewStatusBar.jsx'), 'utf8');
 const bulkImportSource = await readFile(path.join(appRoot, 'src/BulkImportPanel.jsx'), 'utf8');
 const bulkDuplicateSource = await readFile(path.join(appRoot, 'src/BulkDuplicateReviewPanel.jsx'), 'utf8');
 const duplicateComparisonSource = await readFile(path.join(appRoot, 'src/DuplicateCandidateComparison.jsx'), 'utf8');
@@ -266,15 +267,17 @@ assert.match(liveFrontendPreviewSource, /getEditorElementLabel\(key, appLocale\)
 assert.match(appSource, /selectedInspectorElement/, 'Admin must keep one shared inspector selection across editor and preview');
 assert.match(appSource, /data-editor-field/, 'Variant editor fields must expose stable inspector targets');
 assert.match(appSource, /renderInheritedOverrideField/, 'Variant editor must use explicit inherited/custom field presentation');
-assert.match(appSource, /editor-status-cluster/, 'Primary editor header must separate publish status from review status');
+assert.doesNotMatch(appSource, /editor-status-cluster/, 'Publish/review status must not regress into the primary editor header');
+assert.match(appSource, /PageReviewStatusBar/, 'Variant editor must render the standalone Page Review Status Bar');
 assert.doesNotMatch(appSource, /editor-statuses[\s\S]*status-pill/, 'Primary editor must not regress to repeated status pills');
 assert.match(appSource, /advanced-seo-disclosure/, 'Focus keyword and indexing controls must stay behind Advanced SEO disclosure');
 assert.match(appSource, /<textarea rows=\"4\" value=\{form\.intro\}/, 'Variant intro must default to a compact four-row editing surface');
 assert.match(appSource, /advanced-seo-disclosure/, 'Low-frequency keyword/index/canonical controls must stay behind Advanced SEO disclosure');
 assert.match(appSource, /open=\{Boolean\(indexBlockReason\)\}/, 'Advanced SEO must automatically surface active index/canonical blockers');
 assert.match(appSource, /inherited-content-disclosure/, 'Inherited Base intro must remain collapsed by default in Variant editing');
-assert.match(appSource, /editor-status-item[\s\S]*Publish status|发布状态/, 'Variant editor must explicitly label publish status');
-assert.match(baseSource, /editor-status-cluster/, 'Base editor must separate publish status from review status');
+assert.match(pageReviewSource, /publishStatus[\s\S]*reviewState/, 'Standalone review chrome must carry both publish and review state');
+assert.doesNotMatch(baseSource, /editor-status-cluster/, 'Base publish/review status must not regress into the editor header');
+assert.match(baseSource, /PageReviewStatusBar/, 'Base editor must use the same standalone Page Review Status Bar');
 assert.match(appSource, /source === 'preview'[\s\S]*const targetScope = variantOnly \|\| variantOverride \? 'variant' : 'base'[\s\S]*runEditorNavigation\(\(\) => setEditorScope\(targetScope\)\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor through the unsaved-change guard');
 assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !custom/, 'Inspector edit path must identify inherited content as Base-owned regardless of current editor scope');
 assert.match(appSource, /content-source-manager/, 'Variant source inheritance must be centralized instead of repeated under every field');
@@ -293,11 +296,11 @@ assert.match(baseSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s
 assert.match(reviewSource, /DuplicateCandidateComparison/, 'Single-group duplicate review must expose the shared comparison evidence before asking for a human conclusion.');
 assert.match(reviewSource, /resolve_species_duplicate_review/, 'Duplicate review UI must use one atomic Repo operation.');
 assert.match(repoStoreSource, /resolveDuplicateReview/, 'Repo store must resolve review decision and SEO policy in one private-store write.');
-assert.match(appSource, /审核进度|Review progress/, 'Variant workflow must label the non-interactive status area as review progress');
-assert.match(appSource, /可执行操作|Available actions/, 'Variant workflow must label buttons as available actions');
-assert.match(baseSource, /审核进度|Review progress/, 'Base workflow must label the non-interactive status area as review progress');
-assert.match(baseSource, /可执行操作|Available actions/, 'Base workflow must label buttons as available actions');
-assert.match(baseSource, /审核状态|Review status/, 'Base review status must remain explicitly labeled');
+assert.match(pageReviewSource, /审核进度|Review progress/, 'Standalone page review chrome must explicitly label review progress');
+assert.match(pageReviewSource, /下一步操作|Next action/, 'Standalone page review chrome must explicitly label the next action');
+assert.match(pageReviewSource, /workflow-stepper-track/, 'Standalone page review chrome must preserve the three-step progress track');
+assert.match(stylesSource, /page-review-status-bar\.page-action-panel[\s\S]*position:sticky/, 'Desktop review progress must stay visible independently from scrolling editor content');
+assert.match(appSource, /mobile-review-progress/, 'Mobile editor chrome must keep compact review progress visible while the standalone bar scrolls naturally');
 assert.match(appSource, /unsaved-indicator/, 'Variant editing must expose an explicit unsaved-change indicator');
 assert.match(baseSource, /unsaved-indicator/, 'Base editing must expose the same unsaved-change indicator');
 assert.match(appSource, /beforeunload/, 'Admin must protect dirty editor state from browser refresh or close');

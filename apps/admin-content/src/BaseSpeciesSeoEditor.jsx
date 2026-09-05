@@ -5,6 +5,7 @@ import { getLocaleLabel } from './localization.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
+import PageReviewStatusBar from './PageReviewStatusBar.jsx';
 
 const isPublicSpeciesPublishingEnabled = false;
 const BASE_EDITORIAL_KEYS = ['seoTitleTemplate', 'metaDescriptionTemplate', 'h1Template', 'sharedIntro'];
@@ -126,53 +127,36 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
   };
 
   return (
-    <section className="base-seo-panel">
-      <div className="base-seo-header">
-        <div>
-          <p className="eyebrow">BASE SPECIES SEO · {localeLabel}</p>
-          <h2>{group.base_scientific_name}</h2>
-          <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 个品种页面可使用这套基础模板；只有有差异的页面才需要单独修改。`}</p>
-        </div>
-        <div className="editor-status-cluster" aria-label={isUiEnglish ? 'Base current states' : '基础种当前状态'}>
-          <div className="editor-status-item">
-            <small>{isUiEnglish ? 'Publish status' : '发布状态'}</small>
-            <span className="editor-status-value"><span className={`editor-status-dot ${form.status}`}></span><strong>{form.status === 'published' ? (isUiEnglish ? 'Published' : '已发布') : (isUiEnglish ? 'Draft' : '草稿')}</strong></span>
-          </div>
-          <div className="editor-status-item">
-            <small>{isUiEnglish ? 'Review status' : '审核状态'}</small>
-            <strong className={`review-status-pill review-${form.reviewState}`}>{isUiEnglish ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Preview approved' }[form.reviewState] || form.reviewState) : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已批准预览' }[form.reviewState] || form.reviewState)}</strong>
-          </div>
-        </div>
-      </div>
-      <section className={`page-action-panel review-${form.reviewState}`} aria-label={isUiEnglish ? 'Base editorial workflow' : '基础种内容审核流程'}>
-        <div className="workflow-status-block">
-          <small className="workflow-section-label">{isUiEnglish ? 'Review progress' : '审核进度'}</small>
-          <div className="workflow-stepper-track">
-          <span className={form.reviewState === 'editing' ? 'current' : 'done'}><b>1</b>{isUiEnglish ? 'Editing' : '编辑中'}</span>
-          <i>→</i>
-          <span className={form.reviewState === 'ready_for_review' ? 'current' : form.reviewState === 'approved' ? 'done' : ''}><b>2</b>{isUiEnglish ? 'Awaiting review' : '待审核'}</span>
-          <i>→</i>
-          <span className={form.reviewState === 'approved' ? 'current' : ''}><b>3</b>{isUiEnglish ? 'Preview approved' : '已批准预览'}</span>
-          </div>
-        </div>
-        <div className="workflow-action-block">
-          <small className="workflow-section-label">{isUiEnglish ? 'Available actions' : '可执行操作'}</small>
-          <div className="workflow-stepper-action">
-          {contentDirty ? (
-            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button>
-          ) : form.reviewState === 'editing' ? (
-            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
-          ) : form.reviewState === 'ready_for_review' ? (
-            <>
-              <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-              <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
-            </>
-          ) : (
+    <>
+      <PageReviewStatusBar
+        publishStatus={form.status}
+        reviewState={form.reviewState}
+        isUiEnglish={isUiEnglish}
+        scope="base"
+        dirtyHint={contentDirty ? (isUiEnglish ? 'Saving this template resets approval to Editing.' : '保存模板后会自动退回“编辑中”，需要重新审核。') : ''}
+      >
+        {contentDirty ? (
+          <button type="button" className="primary-button compact" disabled={saving} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button>
+        ) : form.reviewState === 'editing' ? (
+          <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
+        ) : form.reviewState === 'ready_for_review' ? (
+          <>
             <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
-          )}
+            <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('approved')}>{isUiEnglish ? 'Approve Preview' : '批准预览'}</button>
+          </>
+        ) : (
+          <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>
+        )}
+      </PageReviewStatusBar>
+
+      <section className="base-seo-panel">
+        <div className="base-seo-header">
+          <div>
+            <p className="eyebrow">BASE SPECIES SEO · {localeLabel}</p>
+            <h2>{group.base_scientific_name}</h2>
+            <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 个品种页面可使用这套基础模板；只有有差异的页面才需要单独修改。`}</p>
           </div>
         </div>
-      </section>
       {!baseHygiene.clean ? (
         <div className="content-hygiene-warning" role="alert">
           <div><strong>{isUiEnglish ? 'Test / acceptance copy detected in Base' : '基础模板包含测试 / 验收文案'}</strong><span>{isUiEnglish ? 'Clean the flagged fields before submitting or approving this Base template.' : '清理标记字段后才能提交或批准这套基础模板。'}</span></div>
@@ -185,7 +169,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       <div className="editor-detail-heading">
         <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
         <h3>{isUiEnglish ? 'Base template fields' : '基础模板字段'}</h3>
-        <p>{isUiEnglish ? 'Edit shared copy here. Review actions stay in the workflow panel above.' : '这里只修改共享模板内容；提交和批准统一在上方流程区完成。'}</p>
+        <p>{isUiEnglish ? 'Edit shared copy here. Review actions stay in the workflow panel above.' : '这里只修改共享模板内容；提交和批准统一在上方独立审核进度栏完成。'}</p>
       </div>
       <div className="base-seo-grid">
         <label {...baseFieldProps('seoTitle')}>{isUiEnglish ? 'SEO Title template' : 'Meta 标题模板'}
@@ -209,6 +193,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           {contentDirty ? <button className="primary-button" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button> : null}
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }

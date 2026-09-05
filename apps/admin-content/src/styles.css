@@ -2645,3 +2645,143 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
   .workflow-current-action > strong { font-size:8px; }
   .workflow-current-action > button { min-height:25px; padding:0 7px; font-size:7px; }
 }
+
+/* 2026-09-06 current-page review status is control chrome, not editor content. */
+.page-review-status-bar.page-action-panel {
+  position:sticky;
+  top:48px;
+  z-index:7;
+  width:100%;
+  margin:0;
+  padding:9px 30px;
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr) auto;
+  align-items:center;
+  gap:20px;
+  border:0;
+  border-bottom:2px solid var(--cms-ink) !important;
+  border-radius:0;
+  background:var(--cms-bg) !important;
+  box-shadow:0 7px 16px rgba(32,36,44,.07) !important;
+}
+.page-review-status-bar.page-action-panel::before { display:none !important; content:none !important; }
+.page-review-meta { min-width:0; display:grid; gap:2px; }
+.page-review-meta > small,
+.page-review-status-bar .workflow-section-label {
+  color:var(--cms-muted) !important;
+  font-size:8px !important;
+  font-weight:800 !important;
+  letter-spacing:.08em;
+}
+.page-review-meta > strong { color:var(--cms-ink); font-size:11px; font-weight:760; }
+.page-review-meta > span { display:flex; align-items:center; gap:5px; color:var(--cms-muted); font-size:8px; white-space:nowrap; }
+.page-review-meta .editor-status-dot { width:6px; height:6px; background:var(--cms-ink) !important; }
+.page-review-status-bar .workflow-status-block { min-width:0; }
+.page-review-status-bar .workflow-stepper-track { margin-top:4px; gap:7px; }
+.page-review-status-bar .workflow-stepper-track span {
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:var(--cms-muted) !important;
+  font-size:10px !important;
+  font-weight:650 !important;
+}
+.page-review-status-bar .workflow-stepper-track span > i { margin-left:2px; color:var(--cms-faint) !important; font-size:9px; }
+.page-review-status-bar .workflow-stepper-track span b {
+  width:20px; height:20px; display:grid; place-items:center;
+  border:1px solid var(--cms-border-strong) !important;
+  background:var(--cms-paper) !important;
+  color:var(--cms-muted) !important;
+  font-size:8px; font-weight:760;
+}
+.page-review-status-bar .workflow-stepper-track span.done { color:var(--cms-ink) !important; opacity:.72; }
+.page-review-status-bar .workflow-stepper-track span.current { color:var(--cms-ink) !important; font-weight:760 !important; }
+.page-review-status-bar .workflow-stepper-track span.current b {
+  border-color:var(--cms-accent) !important;
+  background:var(--cms-accent) !important;
+  color:var(--cms-paper) !important;
+}
+.page-review-status-bar .workflow-action-block {
+  min-width:190px;
+  padding-left:18px;
+  border-left:1px solid var(--cms-border-strong);
+}
+.page-review-status-bar .workflow-stepper-action { margin-top:4px; display:flex; align-items:center; justify-content:flex-end; gap:6px; }
+.page-review-status-bar .workflow-stepper-action .primary-button.compact,
+.page-review-status-bar .workflow-stepper-action .ghost-button.compact,
+.page-review-status-bar .workflow-stepper-action .secondary-button.compact {
+  min-height:32px;
+  padding:0 11px;
+  font-size:9px;
+  white-space:nowrap;
+}
+.page-review-dirty-hint { max-width:220px; color:var(--cms-muted); font-size:8px; line-height:1.35; }
+.editor-panel,.base-seo-panel { margin-top:0; }
+
+@media (max-width:1180px) {
+  .page-review-status-bar.page-action-panel {
+    grid-template-columns:125px minmax(0,1fr);
+    gap:12px 16px;
+    padding:8px 22px;
+  }
+  .page-review-status-bar .workflow-action-block {
+    grid-column:1 / -1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:6px 0 0;
+    border-left:0;
+    border-top:1px solid var(--cms-border);
+  }
+  .page-review-status-bar .workflow-stepper-action { margin-top:0; }
+}
+@media (max-width:760px) {
+  .page-review-status-bar.page-action-panel {
+    top:46px;
+    grid-template-columns:1fr;
+    gap:6px;
+    padding:7px 8px;
+  }
+  .page-review-meta { grid-template-columns:auto auto 1fr; align-items:center; gap:6px; }
+  .page-review-meta > small { display:none; }
+  .page-review-meta > strong { font-size:9px; }
+  .page-review-meta > span { justify-self:end; font-size:7px; }
+  .page-review-status-bar .workflow-section-label { display:none; }
+  .page-review-status-bar .workflow-stepper-track { justify-content:space-between; gap:3px; margin:0; }
+  .page-review-status-bar .workflow-stepper-track span { gap:3px; font-size:8px !important; }
+  .page-review-status-bar .workflow-stepper-track span b { width:18px; height:18px; font-size:7px; }
+  .page-review-status-bar .workflow-stepper-track span > i { margin-left:0; font-size:7px; }
+  .page-review-status-bar .workflow-action-block {
+    min-width:0;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    padding:5px 0 0;
+    border-left:0;
+    border-top:1px solid var(--cms-border);
+  }
+  .page-review-status-bar .workflow-stepper-action { width:100%; justify-content:flex-end; }
+  .page-review-status-bar .workflow-stepper-action .primary-button.compact,
+  .page-review-status-bar .workflow-stepper-action .ghost-button.compact,
+  .page-review-status-bar .workflow-stepper-action .secondary-button.compact { min-height:28px; padding:0 8px; font-size:8px; width:auto; }
+  .page-review-dirty-hint { display:none; }
+}
+.mobile-review-progress { display:none; }
+@media (max-width:760px) {
+  .page-review-status-bar.page-action-panel { position:relative; top:auto; }
+  .mobile-review-progress {
+    display:inline-flex;
+    align-items:center;
+    min-height:24px;
+    padding:0 6px;
+    border:1px solid var(--cms-border-strong);
+    border-radius:6px;
+    background:var(--cms-panel);
+    color:var(--cms-ink);
+    font-size:7px;
+    font-weight:720;
+    white-space:nowrap;
+  }
+}
