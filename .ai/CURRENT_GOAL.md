@@ -8,10 +8,10 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, and the first AI-assisted Care SEO advisory flow are complete. The explicit release decision is **`hold_noindex`**. The immediate priority is now the **dedicated feature ↔ live-main reconciliation audit**, with no merge or Production action implied.
+P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, and the first AI-assisted Care SEO advisory flow are complete. The explicit release decision is **`hold_noindex`**. A newer user-reported usability problem is now the immediate priority: make the **Species SEO Admin understandable and directly acceptable as an operator product**.
 
 ## Why this is current
-The defined Operations Studio functional backlog is closed. Care SEO remains fail-closed to `noindex`, with hosted acceptance evidence bound to the exact snapshot/deployment and a human `hold_noindex` decision. AI now reads only immutable Published Care, detects source gaps/conflicts, explains editorial impact and proposes SEO-only Draft fields; applying AI only changes local form state until a human explicitly saves. The remaining project-level risk is branch divergence from live `main`, so the next safe activity is an isolated reconciliation audit before any merge decision.
+The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. The current usability checkpoint reduces first-screen duplication and adds one queue-driven `当前下一步` action. The newest UI must be accepted on the actual SEO Admin surface, not the AquaGuide fish-tank product. Draft PR #144 reconciliation is parked and is not the current user task.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -36,7 +36,7 @@ Species SEO remains Repo-backed and fail-closed:
 11. [DONE in code] Release-readiness mechanics: exact snapshot SHA-256 + Vercel acceptance evidence + explicit human decision contract; Staging remains noindex and acceptance-evidence-only commits do not redeploy runtime.
 12. [DONE] Explicit Care SEO decision recorded as `hold_noindex`; accepted snapshot/deployment binding is current and Production/index remain locked.
 13. [DONE] AI-assisted Care SEO advisory: Published-only source extraction, conflict detection, impact explanation and SEO Draft suggestion with no auto-write/review/publish.
-14. [NEXT] Dedicated feature ↔ live-main reconciliation audit in isolation; do not merge main until a validated reconciliation candidate is reviewed.
+14. [PARKED] Dedicated feature ↔ live-main reconciliation audit exists separately; current user task is Species SEO Admin usability/acceptance.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.

@@ -79,6 +79,16 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Admin UI exposes source extraction, conflicts, impact explanation, review warnings and local-only Draft application.
   - [x] Contract + 1280/390 browser acceptance prove AI generation/application creates no Editorial write until explicit Save Draft.
 
+## Active override — Species SEO Admin usability / acceptance
+- [x] Remove duplicated first-screen bulk review / content review / template import controls from the topbar; keep those capabilities in secondary tools.
+- [x] Add one queue-driven `当前下一步` primary action: data review → editorial review → Preview-ready → editing fallback.
+- [x] Verify 1440px / 390px layout, zero horizontal overflow, CTA queue routing and read-only no-write behavior.
+- [x] Add safe `?demo=1` read-only entry only for localhost / `*.pages.dev`; save/review/publish remain disabled.
+- [ ] Verify the new exact-SHA Cloudflare `/admin/seo/?demo=1` hosted URL after this checkpoint is pushed, then give the user that URL as the canonical UI acceptance entry.
+
+## Parked — dedicated branch reconciliation (not current user scope)
+The isolated reconciliation candidate exists on Draft PR #144. Do not continue/merge it while the user is asking to work on SEO Admin.
+
 ## Next — dedicated branch reconciliation (no merge yet)
 - [ ] Re-read live `main` / feature refs and run an isolated merge-tree/reconciliation audit against the current accepted feature baseline.
 - [ ] Classify overlap/conflicts by authority and preserve all completed Product/Care, Compatibility, Publish Center, Species SEO and Care SEO invariants.

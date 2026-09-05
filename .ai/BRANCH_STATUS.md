@@ -155,3 +155,9 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Acceptance + human `hold_noindex` binding: `5899d64343fdc5d6e4929c31ed84a29af437be1c`; light CI `33962944072` PASS.
 - Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; pre-doc-sync divergence main-only 269 / feature-only 161; merge base unchanged.
 - All defined functional queue items are closed. Existing merge-safety rule now makes dedicated isolated reconciliation the next step. This is not authorization to merge/rebase main.
+
+## 2026-09-05 — SEO Admin usability override
+- Working branch remains `feature/admin-content-v0`; usability functional predecessor `843b9e311ea68bee13b63e71a2093900b6d2f004` is pushed.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282` and is not being merged/rebased in this SEO Admin round.
+- Draft PR #144 belongs to the separate reconciliation branch and is parked while the user is validating SEO Admin.
+- No Production/index/live DB mutation occurred.

@@ -25,7 +25,12 @@ import { assessDataReview, assessPublishReadiness, buildAdminWorkflowOverview, b
 import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 
-const isReadOnlyDemoMode = import.meta.env.VITE_ADMIN_READ_ONLY_DEMO === 'true';
+const queryDemoAllowed = typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1' ||
+  window.location.hostname.endsWith('.pages.dev')
+) && new URLSearchParams(window.location.search).get('demo') === '1';
+const isReadOnlyDemoMode = import.meta.env.VITE_ADMIN_READ_ONLY_DEMO === 'true' || queryDemoAllowed;
 const isPublicSpeciesPublishingEnabled = false;
 const initialParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 const initialContentLocale = initialParams.get('locale') === 'en' ? 'en' : 'zh-CN';

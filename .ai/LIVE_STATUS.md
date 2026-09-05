@@ -199,3 +199,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Final accepted Preview `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` from snapshot `fd960667`; hosted verifier PASS 2/2 and branch-alias canonical/hreflang remain exact.
 - `5899d643` binds acceptance + `hold_noindex`; readiness is intentionally false with blocker `release_decision_hold`.
 - Latest light CI `33962944072` PASS; Heavy skipped. Production/main/live DB untouched.
+
+## 2026-09-05 — SEO Admin usability / acceptance override
+- Active scope is `feature/admin-content-v0` Species SEO Admin, not AquaGuide fish-tank UI and not Draft PR #144 reconciliation.
+- UI checkpoint `843b9e31`: one `当前下一步` action, reduced duplicate topbar tools; Admin contract/root build and 1440/390 read-only browser checks PASS.
+- Safe `?demo=1` mode is localhost/Cloudflare-Pages-only and hard read-only.
+- Vercel currently reports free-plan build-rate limit for new deployments; existing Production/index state is unchanged and no paid upgrade is authorized.
+- Next: verify the new exact-SHA Cloudflare `/admin/seo/?demo=1` entry and use it as the user acceptance URL.

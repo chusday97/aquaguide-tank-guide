@@ -683,3 +683,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Final snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`; evidence + hold binding commit `5899d643`.
 - CI PASS: `33962566946`, `33962759009`, `33962809578`, `33962944072`; Heavy skipped by policy.
 - All defined P0/P1/P2/AI functional queue items are closed. Next: dedicated feature ↔ live-main reconciliation audit; no merge/Production/index/live-migration action authorized.
+
+## 2026-09-05 — Return to Species SEO Admin usability
+- Corrected project scope after user reported the prior acceptance URL was the fish-tank frontend rather than SEO Admin.
+- On `feature/admin-content-v0`, `843b9e31` simplifies first-screen controls and adds a queue-driven `当前下一步` CTA.
+- PASS: Admin contract, full root build, 1440/390 no-overflow browser checks, CTA queue routing, read-only no-write check. Online light CI `33970208210` SUCCESS.
+- Added safe localhost/`*.pages.dev` `?demo=1` read-only entry for hosted UI acceptance while Vercel free build quota is rate-limited.
+- Next: push this checkpoint once, verify exact-SHA Cloudflare `/admin/seo/?demo=1`, then hand that SEO-specific URL to the user. Production/index/main/live DB remain untouched.

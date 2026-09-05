@@ -264,3 +264,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Final Care SEO Preview: snapshot `fd960667`, Vercel `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D`, hosted verifier PASS 2/2 EN/ZH, `noindex` retained. Evidence/decision binding commit `5899d643`; snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`.
 - Latest evidence CI `33962944072` PASS all light gates including Care SEO release-readiness and AI advisory; Heavy skipped. All defined product/operations queue items are closed.
 - Next safe milestone comes from existing branch-safety policy: isolated feature ↔ live-main reconciliation audit. Do not merge/rebase main directly.
+
+## 2026-09-05 — Species SEO Admin operator usability checkpoint
+- User clarified the active product is SEO Admin, not the fish-tank frontend; `feature/admin-content-v0` remains the working branch.
+- `843b9e31` removes duplicated topbar bulk-review/content-review/template-import controls and adds one queue-driven `当前下一步` CTA.
+- Priority order is data issues → editorial review → Preview-ready → continue editing; existing secondary tools and authority gates are preserved.
+- Local 1440/390 browser acceptance: zero horizontal overflow, CTA routes to the correct queue, read-only Demo has zero enabled Save actions.
+- Added a safe query Demo entry restricted to localhost / `*.pages.dev`; it is read-only and cannot Save/Review/Publish.
+- GitHub light CI for `843b9e31`: `33970208210` SUCCESS; Vercel new builds are temporarily account-rate-limited, so no paid upgrade was used.
+- The separate PR #144 reconciliation work is parked. Current next action is hosted `/admin/seo/?demo=1` acceptance on the new Cloudflare exact SHA.
